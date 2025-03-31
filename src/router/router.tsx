@@ -5,33 +5,61 @@ import RecipesPage from "../Pages/RecipesPage";
 import NewRecipePage from "../Pages/NewRecipePage";
 import RecipeDetailPage from "../Pages/RecipeDetailPage";
 import CommentsPage from "@/Pages/CommentsPage";
+import DiscussionPage from "@/Pages/DiscussionPage";
+import NewIngredientPage from "@/Pages/NewIngredientPage";
+import UserDetailPage from "@/Pages/UserDetailPage";
+import AIRecipePage from "@/Pages/AIRecipePage";
+import HomePage from "@/Pages/HomePage";
+import IngredientsPage from "@/Pages/IngredientsPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
-    children: [
-      {
-        path: "mypage",
-        element: <MyPage />,
-      },
-      {
-        path: "recipes",
-        element: <RecipesPage />,
-      },
-      {
-        path: "recipes/new",
-        element: <NewRecipePage />,
-      },
-      {
-        path: "recipes/:id",
-        element: <RecipeDetailPage />,
-      },
-      {
-        path: "recipes/:id/comments",
-        element: <CommentsPage />,
-      },
-    ],
+    element: <HomePage />,
+  },
+  {
+    path: "mypage",
+    element: <MyPage />,
+  },
+  {
+    path: "recipes",
+    element: <RecipesPage />,
+  },
+  {
+    path: "recipes/new",
+    element: <NewRecipePage />,
+  },
+  {
+    path: "recipes/:id",
+    element: <RecipeDetailPage />,
+  },
+  {
+    path: "recipes/:id/comments",
+    element: <CommentsPage />,
+  },
+  {
+    path: "recipes/:id/comments/:commentId",
+    element: <DiscussionPage />,
+  },
+  {
+    path: "users/:id",
+    element: <UserDetailPage user="user" />,
+  },
+  {
+    path: "my",
+    element: <MyPage />,
+  },
+  {
+    path: "users/:id/ingredients/new",
+    element: <NewIngredientPage />,
+  },
+  {
+    path: "air",
+    element: <AIRecipePage />,
+  },
+  {
+    path: "ingredients",
+    element: <IngredientsPage />,
   },
 ]);
 
