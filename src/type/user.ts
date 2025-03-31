@@ -4,4 +4,9 @@ export type User = {
   email: string;
   profileContent: string;
   imageURL: string;
+  username?: string;
+  followers?: number;
+  following?: number;
+  bookmarks?: number;
+  likes?: number;
 };

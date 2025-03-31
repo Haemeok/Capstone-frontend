@@ -17,10 +17,10 @@ const HeartButton = () => {
         isActive={isLiked}
         onToggle={handleToggle}
         icon={<Heart width={24} height={24} />}
-        activeIcon={<Heart className="w-10 h-10 text-red-700 fill-red-700" />}
-        className="w-[100px] h-[100px] flex items-center justify-center border-2 rounded-full p-2"
+        activeIcon={<Heart className="text-red-700 fill-red-700" />}
+        className="w-16 h-16 flex items-center justify-center border-2 rounded-full p-2"
       />
-      <span className="mt-2">{likes}</span>
+      <span className="mt-1 text-sm font-bold">{likes}</span>
     </div>
   );
 };

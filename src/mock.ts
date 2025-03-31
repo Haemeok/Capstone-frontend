@@ -26,6 +26,38 @@ export const ingredients: Ingredient[] = [
 ];
 
 export const categories = ["살라드용", "볶음", "찜", "구이", "국/탕"];
+export const categoriesItems = [
+  {
+    id: 1,
+    name: "살라드용",
+    image: "/images/categories/salad.png",
+    count: 10,
+  },
+  {
+    id: 2,
+    name: "볶음",
+    image: "/images/categories/salad.png",
+    count: 10,
+  },
+  {
+    id: 3,
+    name: "찜",
+    image: "/images/categories/salad.png",
+    count: 10,
+  },
+  {
+    id: 4,
+    name: "구이",
+    image: "/images/categories/salad.png",
+    count: 10,
+  },
+  {
+    id: 5,
+    name: "국/탕",
+    image: "/images/categories/salad.png",
+    count: 10,
+  },
+];
 export const cookingTimes = [
   "10분이내",
   "20분이내",
