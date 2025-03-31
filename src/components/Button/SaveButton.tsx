@@ -16,10 +16,10 @@ const SaveButton = () => {
         onToggle={handleToggle}
         size="default"
         icon={<Bookmark width={24} height={24} />}
-        activeIcon={<Bookmark className="w-10 h-10 fill-zinc-800" />}
-        className="w-[100px] h-[100px] flex items-center justify-center border-2 rounded-full p-2"
+        activeIcon={<Bookmark className="fill-zinc-800" />}
+        className="w-16 h-16 flex items-center justify-center border-2 rounded-full p-2"
       />
-      <p className="font-bold">저장</p>
+      <p className="font-bold text-sm mt-1">저장</p>
     </div>
   );
 };

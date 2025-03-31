@@ -19,6 +19,7 @@ type ToggleIconButtonProps = {
   className?: string;
   size?: "default" | "sm" | "lg" | "icon";
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  children?: React.ReactNode;
 };
 
 const ToggleIconButton = ({
@@ -30,6 +31,7 @@ const ToggleIconButton = ({
   inactiveClassName = "",
   variant = "ghost",
   className = "",
+  children,
   ...props
 }: ToggleIconButtonProps) => {
   const [internalIsActive, setInternalIsActive] = useState(false);
@@ -44,19 +46,19 @@ const ToggleIconButton = ({
   };
 
   return (
-    <Button
+    <button
       type="button"
-      variant={variant}
       onClick={handleClick}
       className={cn(
-        "transition-colors duration-200",
+        "flex items-center justify-center gap-1 cursor-pointer",
         isActive ? activeClassName : inactiveClassName,
         className
       )}
       {...props}
     >
       {isActive ? activeIcon : icon}
-    </Button>
+      {children}
+    </button>
   );
 };
 

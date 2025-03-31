@@ -1,0 +1,49 @@
+import { Clipboard, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+type ProgressButtonProps = {
+  progressPercentage: number;
+  isFormValid: boolean;
+  completedSteps: number;
+  totalSteps: number;
+  onClick?: () => void;
+};
+
+const ProgressButton = ({
+  progressPercentage,
+  isFormValid,
+  completedSteps,
+  totalSteps,
+  onClick,
+}: ProgressButtonProps) => {
+  return (
+    <div className="relative w-full rounded-lg overflow-hidden shadow-md group">
+      <div className="absolute inset-0 bg-gray-300"></div>
+
+      <div
+        className="absolute inset-y-0 left-0 bg-green-600 transition-all duration-700 ease-out group-hover:brightness-110"
+        style={{ width: `${progressPercentage}%` }}
+      ></div>
+
+      <Button
+        className="w-full py-6 text-lg font-semibold relative z-10 bg-transparent hover:bg-transparent transition-none group cursor-pointer"
+        disabled={!isFormValid}
+        onClick={onClick}
+      >
+        <span className="flex items-center justify-center gap-2 text-white drop-shadow-sm">
+          <Clipboard
+            size={20}
+            className="group-hover:scale-120 transition-transform duration-300"
+          />
+          <span>레시피 생성하기</span>
+          <ArrowRight
+            size={16}
+            className="group-hover:translate-x-1 transition-transform duration-300"
+          />
+        </span>
+      </Button>
+    </div>
+  );
+};
+
+export default ProgressButton;
