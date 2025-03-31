@@ -1,5 +1,7 @@
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@100..900&display=swap");
+@import "tailwindcss";
 @import "tw-animate-css";
+
 /*
   ---break---
 */
@@ -20,6 +22,9 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
+  }
+  body {
+    font-family: "Noto Sans KR";
   }
 }
 /*
@@ -146,3 +151,5 @@
     @apply bg-background text-foreground;
   }
 }
+
+@config "../tailwind.config.js";
