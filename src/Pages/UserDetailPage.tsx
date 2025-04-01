@@ -81,7 +81,7 @@ const UserDetailPage = ({ user, onBack }: UserProfileProps) => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-[#5cc570] rounded-full flex items-center justify-center shadow-md">
+              <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-[#58C16A] rounded-full flex items-center justify-center shadow-md">
                 <Edit size={14} className="text-white" />
               </div>
             </div>
@@ -101,7 +101,7 @@ const UserDetailPage = ({ user, onBack }: UserProfileProps) => {
 
           {/* 액션 버튼 */}
           <div className="flex gap-2 mt-4">
-            <Button className="bg-white text-[#5cc570] hover:bg-white/90 px-4 rounded-full">
+            <Button className="bg-white text-[#58C16A] hover:bg-white/90 px-4 rounded-full">
               <Share size={16} className="mr-1" /> Share
             </Button>
             <Button
@@ -122,7 +122,7 @@ const UserDetailPage = ({ user, onBack }: UserProfileProps) => {
               key={tab.id}
               className={`flex-1 py-4 relative ${
                 activeTab === tab.id
-                  ? "text-[#5cc570] font-bold"
+                  ? "text-[#58C16A] font-bold"
                   : "text-gray-500"
               }`}
               onClick={() => setActiveTab(tab.id)}
@@ -132,7 +132,7 @@ const UserDetailPage = ({ user, onBack }: UserProfileProps) => {
                 {tab.label}
               </span>
               {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5cc570]" />
+                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#58C16A]" />
               )}
             </button>
           ))}

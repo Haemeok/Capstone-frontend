@@ -25,38 +25,65 @@ export const ingredients: Ingredient[] = [
   { quantity: "", name: "salt", unit: "tsp" },
 ];
 
-export const categories = ["살라드용", "볶음", "찜", "구이", "국/탕"];
+export const categories = [
+  "🏠홈파티",
+  "🌼피크닉",
+  "🏕️캠핑",
+  "🥗다이어트/건강식",
+  "🍽️혼밥",
+  "🥐브런치",
+  "🍶술안주",
+];
 export const categoriesItems = [
   {
     id: 1,
-    name: "살라드용",
+    name: "🏠홈파티",
     image: "/images/categories/salad.png",
     count: 10,
   },
   {
     id: 2,
-    name: "볶음",
+    name: "🌼피크닉",
     image: "/images/categories/salad.png",
     count: 10,
   },
   {
     id: 3,
-    name: "찜",
+    name: "🏕️캠핑",
     image: "/images/categories/salad.png",
     count: 10,
   },
   {
     id: 4,
-    name: "구이",
+    name: "🥗다이어트/건강식",
     image: "/images/categories/salad.png",
     count: 10,
   },
   {
     id: 5,
-    name: "국/탕",
+    name: "👶아이와 함께",
     image: "/images/categories/salad.png",
     count: 10,
   },
+  {
+    id: 6,
+    name: "🍽️혼밥",
+    image: "/images/categories/salad.png",
+    count: 10,
+  },
+  {
+    id: 7,
+    name: "🍶술안주",
+    image: "/images/categories/salad.png",
+    count: 10,
+  },
+  {
+    id: 8,
+    name: "🥐브런치",
+    image: "/images/categories/salad.png",
+    count: 10,
+  },
+  {},
 ];
 export const cookingTimes = [
   "10분이내",

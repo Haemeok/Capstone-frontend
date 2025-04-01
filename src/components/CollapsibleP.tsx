@@ -28,7 +28,7 @@ const CollapsibleP = () => {
         </div>
 
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="mt-2 text-orange-500">
+          <Button variant="ghost" size="sm" className="mt-2 text-[#5cc570]">
             {isOpen ? (
               <>
                 Read less <ChevronUp size={16} className="ml-1" />
