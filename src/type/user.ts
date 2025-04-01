@@ -5,8 +5,6 @@ export type User = {
   profileContent: string;
   imageURL: string;
   username?: string;
-  followers?: number;
-  following?: number;
   bookmarks?: number;
   likes?: number;
 };

@@ -1,0 +1,43 @@
+export const END_POINTS = {
+  RECIPE: (id: number) => `/recipes/${id}`,
+  RECIPES: "/recipes",
+  RECIPE_SIMPLE: "/recipes/simple",
+
+  RECIPE_SEARCH: "/recipes/search",
+  RECIPE_FILTER: "/recipes/filter",
+
+  RECIPE_COMMENT: (id: number) => `/recipes/${id}/comments`,
+  RECIPE_REPLY: (recipeId: number, commentId: number) =>
+    `/recipes/${recipeId}/comments/${commentId}/replies`,
+  RECIPE_LIKE: (id: number) => `/recipes/${id}/like`,
+  RECIPE_FAVORITE: (id: number) => `/recipes/${id}/favorite`,
+  GOOGLE_LOGIN: "/auth/google/login",
+  GOOGLE_REDIRECT_URI: "/auth/google/redirect",
+  TOKEN_REFRESH: "/auth/refresh",
+  USER_INFO: "/users/me",
+  USER_FAVORITES: "/users/me/favorites",
+  USER_CREATED: (id: number) => `/users/${id}/created`,
+  USER_LIKED: (id: number) => `/users/${id}/liked`,
+  USER_PROFILE: (id: number) => `/users/${id}/profile`,
+};
+
+export const USER_ERROR_MESSAGE = {
+  E500: "인증 정보가 올바르지 않습니다. 다시 시도해 주세요.",
+  E501: "로그인 정보가 유효하지 않습니다. 새로 로그인해 주세요.",
+  E502: "로그인 세션이 만료되었습니다. 다시 로그인해 주세요.",
+  E510: "권한이 없습니다. 관리자에게 문의하세요.",
+  E601: "필수 입력값이 누락되었습니다. 입력을 확인해 주세요.",
+  E661: "요청하신 배너를 찾을 수 없습니다.",
+  E401: "해당 코스를 찾을 수 없습니다.",
+  E402: "코스에 요청한 장소가 포함되지 않았습니다.",
+  E404: "추가하려는 장소가 올바르지 않습니다. 다시 확인해 주세요.",
+  E405: "장소 순서가 올바르지 않습니다. 다시 시도해 주세요.",
+  E406: "해당 코스를 수정할 권한이 없습니다.",
+  E301: "해당 지도를 찾을 수 없습니다.",
+  E302: "지도의 요청한 장소를 찾을 수 없습니다.",
+  E303: "해당 장소가 이미 존재합니다.",
+  E304: "유효하지 않은 지도입니다. 다시 확인해 주세요.",
+  E201: "요청한 장소를 찾을 수 없습니다.",
+  E999: "서버에 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+  E900: "양식이 잘못 되었습니다. 다시 확인해 주세요.",
+};

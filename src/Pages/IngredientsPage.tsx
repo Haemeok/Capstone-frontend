@@ -84,7 +84,7 @@ const IngredientsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f3e7] text-[#333333]">
+    <div className="min-h-screen text-[#333333]">
       {/* 헤더 */}
       <div className="relative flex items-center justify-between p-4 border-b border-[#00473c]/10">
         <button
@@ -98,15 +98,10 @@ const IngredientsPage: React.FC = () => {
         </h1>
         <button
           onClick={handleAddIngredient}
-          className="bg-[#00473c] text-white p-2 rounded-full"
+          className="text-[#5cc570] p-2 rounded-full"
         >
           <Plus size={24} />
         </button>
-      </div>
-
-      {/* 사용자 이름 */}
-      <div className="p-4 border-b border-[#00473c]/10">
-        <h2 className="text-xl font-bold text-[#00473c]">{userName}의 재료</h2>
       </div>
 
       {/* 검색창 */}
@@ -127,7 +122,7 @@ const IngredientsPage: React.FC = () => {
 
       {/* 탭 메뉴 */}
       <div className="flex border-b border-[#00473c]/10">
-        <button className="flex-1 py-3 font-bold text-[#00473c] border-b-2 border-[#00473c]">
+        <button className="flex-1 py-3 font-bold text-[#5cc570] border-b-2 border-[#5cc570]">
           전체
         </button>
         <button className="flex-1 py-3 text-gray-500">가공/유제품</button>
@@ -161,7 +156,7 @@ const IngredientsPage: React.FC = () => {
                 variant={ingredient.isSelected ? "default" : "outline"}
                 className={`rounded-full px-4 ${
                   ingredient.isSelected
-                    ? "bg-[#ff9b50] text-white hover:bg-[#ff9b50]/90 border-0"
+                    ? "bg-[#5cc570] text-white hover:bg-[#5cc570]/90 border-0"
                     : "text-gray-400 border border-gray-300"
                 }`}
               >
