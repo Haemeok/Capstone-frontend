@@ -28,13 +28,6 @@ const SelectButton = ({
       )}
       onClick={onClick}
     >
-      {isSelected ? (
-        <span className="flex items-center justify-center w-4 h-4 relative">
-          <Check size={16} className="text-white absolute" />
-        </span>
-      ) : (
-        <Plus size={14} />
-      )}
       {label}
     </Button>
   );
