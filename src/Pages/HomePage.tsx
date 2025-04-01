@@ -144,39 +144,6 @@ const HomePage = () => {
       </div>
 
       {/* 하단 탭 네비게이션 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3 flex justify-between items-center z-40">
-        <button
-          className="flex flex-col items-center text-[#5cc570]"
-          onClick={() => navigate("/")}
-        >
-          <Home size={24} className="mb-1" />
-          <span className="text-xs">홈</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center text-gray-400"
-          onClick={() => navigate("/ingredients")}
-        >
-          <Refrigerator size={24} className="mb-1" />
-          <span className="text-xs">냉장고</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center text-gray-400"
-          onClick={() => navigate("/air")}
-        >
-          <Sparkles size={24} className="mb-1" />
-          <span className="text-xs">AI 레시피</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center text-gray-400"
-          onClick={() => navigate("/users/1")}
-        >
-          <ChefHat size={24} className="mb-1" />
-          <span className="text-xs">My</span>
-        </button>
-      </div>
     </div>
   );
 };
