@@ -164,38 +164,13 @@ const NewRecipePage: React.FC = () => {
   const progressPercentage = Math.floor((completedSteps / totalSteps) * 100);
 
   return (
-    <div className="min-h-screen bg-[#f4f3e7] text-[#333333] pb-12">
+    <div className="min-h-screen">
       <form id="recipe-form" onSubmit={handleSubmit(onSubmit)}>
         {/* 이미지 영역 및 헤더 */}
         <div className="relative">
-          {/* 상단 네비게이션 */}
-          <div className="absolute top-0 left-0 right-0 z-10 p-4 flex justify-between items-center">
-            <button
-              type="button"
-              className="text-white bg-black/20 rounded-full p-2"
-              onClick={() => navigate(-1)}
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                className="text-white bg-black/20 rounded-full p-2"
-              >
-                <Share size={20} />
-              </button>
-              <button
-                type="button"
-                className="text-white bg-black/20 rounded-full p-2"
-              >
-                <Heart size={20} />
-              </button>
-            </div>
-          </div>
-
           {/* 이미지 영역 */}
           <div
-            className="w-full h-[40vh] bg-[#e2e1d5] flex items-center justify-center cursor-pointer relative"
+            className="w-full h-[40vh] flex items-center justify-center cursor-pointer relative"
             onClick={() => fileInputRef.current?.click()}
           >
             {formValues.thumbnail ? (
@@ -206,8 +181,8 @@ const NewRecipePage: React.FC = () => {
               />
             ) : (
               <div className="text-center">
-                <UploadIcon size={48} className="text-[#00473c] mx-auto mb-3" />
-                <p className="text-[#00473c]">이미지를 업로드해주세요</p>
+                <UploadIcon size={48} className="text-[#58C16A] mx-auto mb-3" />
+                <p className="text-[#58C16A]">이미지를 업로드해주세요</p>
               </div>
             )}
             <input
@@ -243,38 +218,6 @@ const NewRecipePage: React.FC = () => {
 
         {/* 메인 콘텐츠 */}
         <div className="max-w-3xl mx-auto px-4 pt-6">
-          {/* 버튼 그룹 */}
-          <div className="flex gap-2 mb-8">
-            <Button
-              type="button"
-              className="flex-1 bg-[#00473c] hover:bg-[#00473c]/90 text-white"
-              onClick={handleSubmit(onSubmit)}
-            >
-              <ChefHat size={18} className="mr-2" /> Cook
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1 text-[#00473c] border-[#00473c]"
-            >
-              Plan
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1 text-[#00473c] border-[#00473c]"
-            >
-              Remix
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1 text-[#00473c] border-[#00473c]"
-            >
-              Ask
-            </Button>
-          </div>
-
           {/* 레시피 설명 박스 */}
           <div className="bg-white rounded-xl p-4 mb-8 shadow-sm">
             <p className="text-[#777777]">
@@ -366,7 +309,7 @@ const NewRecipePage: React.FC = () => {
           {/* 재료 영역 */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-[#00473c]">재료</h2>
+              <h2 className="text-2xl font-semibold text-[#58C16A]">재료</h2>
               <div className="flex items-center gap-2">
                 <span className="text-[#777777]">인원</span>
                 <select className="bg-white border border-[#00473c]/20 rounded-md p-1">

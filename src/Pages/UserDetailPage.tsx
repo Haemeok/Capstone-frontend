@@ -46,71 +46,60 @@ const UserDetailPage = ({ user, onBack }: UserProfileProps) => {
   const getRecipesByTab = () => {
     switch (activeTab) {
       case "created":
-        return <RecipeGrid recipes={createdRecipes} activeTab={activeTab} />;
+        return <RecipeGrid recipes={createdRecipes} />;
       case "cookbooks":
-        return <RecipeGrid recipes={cookbookRecipes} activeTab={activeTab} />;
+        return <RecipeGrid recipes={cookbookRecipes} />;
       case "calendar":
         return <CalendarBoard />;
       default:
-        return <RecipeGrid recipes={createdRecipes} activeTab={activeTab} />;
+        return <RecipeGrid recipes={createdRecipes} />;
     }
   };
 
   return (
     <div className="min-h-screen overflow-hidden">
       {/* 상단 네비게이션 */}
-      <div className="relative h-[280px] overflow-hidden">
-        {/* 네비게이션 바 */}
-        <div className="relative z-10 flex justify-between items-center p-4">
-          <button onClick={onBack} className="text-black p-2 rounded-full">
-            <ChevronLeft size={24} />
-          </button>
-          <Button variant="ghost" className="text-black p-2 rounded-full">
-            <Settings size={20} />
-          </Button>
+
+      {/* 프로필 정보 */}
+      <div className="relative z-10 px-6">
+        <div className="flex items-end">
+          <div className="relative">
+            <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden shadow-xl">
+              <img
+                src={user.imageURL}
+                alt={user.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-[#58C16A] rounded-full flex items-center justify-center shadow-md">
+              <Edit size={14} className="text-white" />
+            </div>
+          </div>
+
+          <div className="ml-4 mb-2">
+            <h2 className="text-black text-2xl font-bold">{user.name}</h2>
+            <p className="text-black/80 text-sm">
+              {user.username ||
+                "@" + user.name.toLowerCase().replace(/\s/g, "")}
+            </p>
+          </div>
         </div>
 
-        {/* 프로필 정보 */}
-        <div className="relative z-10 px-6">
-          <div className="flex items-end">
-            <div className="relative">
-              <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden shadow-xl">
-                <img
-                  src={user.imageURL}
-                  alt={user.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-[#58C16A] rounded-full flex items-center justify-center shadow-md">
-                <Edit size={14} className="text-white" />
-              </div>
-            </div>
+        <p className="text-black/90 text-sm mt-3 max-w-[90%]">
+          {user.profileContent || "MAKING money | HEALTH FOOD EATING ✓ 🔥"}
+        </p>
 
-            <div className="ml-4 mb-2">
-              <h2 className="text-black text-2xl font-bold">{user.name}</h2>
-              <p className="text-black/80 text-sm">
-                {user.username ||
-                  "@" + user.name.toLowerCase().replace(/\s/g, "")}
-              </p>
-            </div>
-          </div>
-
-          <p className="text-black/90 text-sm mt-3 max-w-[90%]">
-            {user.profileContent || "MAKING money | HEALTH FOOD EATING ✓ 🔥"}
-          </p>
-
-          {/* 액션 버튼 */}
-          <div className="flex gap-2 mt-4">
-            <Button className="bg-white text-[#58C16A] hover:bg-white/90 px-4 rounded-full">
-              <Share size={16} className="mr-1" /> Share
-            </Button>
-            <Button
-              variant="outline"
-              className="bg-transparent border-black text-black hover:bg-white/20 px-4 rounded-full"
-            >
-              <Edit size={16} className="mr-1" /> Edit
-            </Button>
-          </div>
+        {/* 액션 버튼 */}
+        <div className="flex gap-2 mt-4">
+          <Button className="bg-white text-[#58C16A] hover:bg-white/90 px-4 rounded-full">
+            <Share size={16} className="mr-1" /> Share
+          </Button>
+          <Button
+            variant="outline"
+            className="bg-transparent border-black text-black hover:bg-white/20 px-4 rounded-full"
+          >
+            <Edit size={16} className="mr-1" /> Edit
+          </Button>
         </div>
       </div>
 
