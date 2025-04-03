@@ -11,14 +11,17 @@ export const END_POINTS = {
     `/recipes/${recipeId}/comments/${commentId}/replies`,
   RECIPE_LIKE: (id: number) => `/recipes/${id}/like`,
   RECIPE_FAVORITE: (id: number) => `/recipes/${id}/favorite`,
-  GOOGLE_LOGIN: "/auth/google/login",
-  GOOGLE_REDIRECT_URI: "/auth/google/redirect",
+  GOOGLE_LOGIN: "/oauth2/authorization/google",
+  KAKAO_LOGIN: "/oauth2/authorization/kakao",
+  NAVER_LOGIN: "/oauth2/authorization/naver",
+  REDIRECT_URI: "/oauth2/redirect",
   TOKEN_REFRESH: "/auth/refresh",
   USER_INFO: "/users/me",
   USER_FAVORITES: "/users/me/favorites",
   USER_CREATED: (id: number) => `/users/${id}/created`,
   USER_LIKED: (id: number) => `/users/${id}/liked`,
   USER_PROFILE: (id: number) => `/users/${id}/profile`,
+  MY_INFO: "/me",
 };
 
 export const USER_ERROR_MESSAGE = {
