@@ -1,5 +1,6 @@
 import {
   Ingredient,
+  IngredientItem,
   Recipe,
   RecipeGridItem,
   RecipeStep,
@@ -344,23 +345,52 @@ export const createdRecipes: RecipeGridItem[] = [
   {
     id: 1,
     title: "홈메이드 치킨 파프리카",
-    imageUrl: "/recipes/chicken-paprika.jpg",
+    imageUrl:
+      "https://images.services.kitchenstories.io/xS81VNt2AAZ40ucVuKkTIIHuZkY=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3269_Einfacher_fluffiger_Apfelkuchen.jpg",
   },
 
   {
     id: 2,
     title: "치즈 수플레",
-    imageUrl: "/recipes/cheese-souffle.jpg",
+    imageUrl:
+      "https://images.services.kitchenstories.io/uAIq0Ol-MtURpAWD34v0MwUHXGU=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3292_air_fryer_camembert.jpg",
   },
   {
     id: 3,
     title: "타코 볼",
-    imageUrl: "/recipes/taco-bowl.jpg",
+    imageUrl:
+      "https://images.services.kitchenstories.io/OHvQHI8pRjezdt1gHprcyf4jo9Q=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R481-final-photo.jpg",
   },
   {
     id: 4,
     title: "매콤한 베트남 쌀국수",
-    imageUrl: "/recipes/spicy-pho.jpg",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 1,
+    title: "홈메이드 치킨 파프리카",
+    imageUrl:
+      "https://images.services.kitchenstories.io/xS81VNt2AAZ40ucVuKkTIIHuZkY=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3269_Einfacher_fluffiger_Apfelkuchen.jpg",
+  },
+
+  {
+    id: 2,
+    title: "치즈 수플레",
+    imageUrl:
+      "https://images.services.kitchenstories.io/uAIq0Ol-MtURpAWD34v0MwUHXGU=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3292_air_fryer_camembert.jpg",
+  },
+  {
+    id: 3,
+    title: "타코 볼",
+    imageUrl:
+      "https://images.services.kitchenstories.io/OHvQHI8pRjezdt1gHprcyf4jo9Q=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R481-final-photo.jpg",
+  },
+  {
+    id: 4,
+    title: "매콤한 베트남 쌀국수",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
   },
 ];
 
@@ -368,13 +398,41 @@ export const cookbookRecipes: RecipeGridItem[] = [
   {
     id: 5,
     title: "주말 브런치 컬렉션",
-    imageUrl: "/recipes/brunch-collection.jpg",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
   },
 
   {
     id: 6,
     title: "이탈리안 파스타 마스터리",
-    imageUrl: "/recipes/pasta-collection.jpg",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 5,
+    title: "주말 브런치 컬렉션",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+
+  {
+    id: 6,
+    title: "이탈리안 파스타 마스터리",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 5,
+    title: "주말 브런치 컬렉션",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+
+  {
+    id: 6,
+    title: "이탈리안 파스타 마스터리",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
   },
 ];
 
@@ -386,3 +444,174 @@ export const userDetail: User = {
   imageURL:
     "https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png",
 };
+
+export const ingredientItems: IngredientItem[] = [
+  {
+    id: 1,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 2,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 3,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 4,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 5,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 6,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 7,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 8,
+    name: "감",
+    category: "과일",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 9,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 10,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 11,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 12,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 13,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 14,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 15,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 16,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 17,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 18,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 19,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 20,
+    name: "감",
+    category: "과일",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 21,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 22,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 23,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+  {
+    id: 24,
+    name: "파프리카",
+    category: "야채",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+  },
+];

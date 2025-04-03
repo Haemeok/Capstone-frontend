@@ -1,51 +1,47 @@
 import { RecipeGridItem } from "@/type/recipe";
-import { AnimatePresence } from "framer-motion";
-import { motion } from "framer-motion";
+import ToggleIconButton from "./Button/ToggleIconButton";
+import { Heart } from "lucide-react";
+import { useNavigate } from "react-router";
 
 type RecipeGridProps = {
   recipes: RecipeGridItem[];
-  activeTab: string;
 };
 
-const RecipeGrid = ({ recipes, activeTab }: RecipeGridProps) => {
+const RecipeGrid = ({ recipes }: RecipeGridProps) => {
+  const navigate = useNavigate();
   return (
-    <div className="p-4">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          className="grid grid-cols-2 gap-4"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
-        >
-          {recipes.map((recipe) => (
-            <motion.div
-              key={recipe.id}
-              className="rounded-2xl overflow-hidden bg-white shadow-md"
-              whileHover={{
-                y: -5,
-                boxShadow:
-                  "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            >
-              <div className="relative h-48">
-                <img
-                  src={recipe.imageUrl}
-                  alt={recipe.title}
-                  className="w-full h-full object-cover"
+    <div className="p-6">
+      <div className="grid grid-cols-2 gap-4">
+        {recipes.map((recipe) => (
+          <div
+            key={recipe.id}
+            className="rounded-2xl overflow-hidden bg-white shadow-md"
+            onClick={() => {
+              navigate(`/recipes/${recipe.id}`);
+            }}
+          >
+            <div className="relative h-48">
+              <img
+                src={recipe.imageUrl}
+                alt={recipe.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="text-right absolute top-0 right-0 p-2">
+                <ToggleIconButton
+                  icon={<Heart />}
+                  onClick={() => {}}
+                  className="text-white text-right"
                 />
-                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-                  <h3 className="text-white font-bold text-sm">
-                    {recipe.title}
-                  </h3>
-                </div>
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </AnimatePresence>
+              <div className="absolute flex items-end h-1/3 bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                <p className="text-white text-sm font-semibold">
+                  {recipe.title}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

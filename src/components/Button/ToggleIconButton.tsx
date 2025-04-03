@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +35,7 @@ const ToggleIconButton = ({
   ...props
 }: ToggleIconButtonProps) => {
   const [internalIsActive, setInternalIsActive] = useState(false);
-  const isActive =
+  let isActive =
     externalIsActive !== undefined ? externalIsActive : internalIsActive;
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,6 +43,7 @@ const ToggleIconButton = ({
     const newState = !isActive;
     setInternalIsActive(newState);
     onToggle?.(newState);
+    console.log(internalIsActive);
   };
 
   return (
