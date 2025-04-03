@@ -24,6 +24,11 @@ export type Recipe = {
   cookingTime: number;
   cookingTools: string;
   isAigenerated: boolean;
+  youtubeUrl?: string;
+  servings: number;
+  totalIngredientCost?: number;
+  marketPrice?: number;
+  tagNames?: string[];
 };
 
 export type RecipeGridItem = {

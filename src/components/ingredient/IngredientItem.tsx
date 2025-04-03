@@ -12,7 +12,7 @@ type IngredientItemProps = {
 const IngredientItem = ({ ingredient, isDeleteMode }: IngredientItemProps) => {
   const [isActive, setIsActive] = useState(false);
   return (
-    <div className="flex items-center gap-2 bg-gray-200 rounded-lg p-4 relative">
+    <div className="flex items-center gap-2 rounded-lg p-4 relative border-[1.5px] border-gray-200">
       <img
         src={ingredient.imageUrl}
         alt={ingredient.name}
