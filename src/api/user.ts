@@ -21,22 +21,18 @@ export const postLogIn = async (code: string) => {
 };
 
 export const getUserInfo = async () => {
-  const { data } = await axiosInstance.get<User>(END_POINTS.USER_INFO);
+  const { data } = await axiosInstance.get<User>(END_POINTS.USER_INFO, {
+    useAuth: true,
+  });
 
   return data;
 };
 
-export const getRedirectUri = async () => {
-  const { data } = await axiosInstance.get<string>(
-    END_POINTS.GOOGLE_REDIRECT_URI,
-    { useAuth: false }
-  );
+export const getMyInfo = async () => {
+  const { data } = await axiosInstance.get<User>(END_POINTS.MY_INFO, {
+    useAuth: true,
+  });
 
-  return data;
-};
-
-export const deleteLogOut = async () => {
-  const { data } = await axiosInstance.delete(END_POINTS.LOGOUT);
   return data;
 };
 

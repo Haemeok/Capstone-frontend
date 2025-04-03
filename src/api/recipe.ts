@@ -1,5 +1,6 @@
 import { END_POINTS } from "@/constants/api";
 import { axiosInstance } from "./axios";
+import { Recipe } from "@/type/recipe";
 
 const getRecipes = async () => {
   const response = await axiosInstance.get(END_POINTS.RECIPES);
@@ -11,4 +12,19 @@ const getRecipe = async (id: number) => {
   return response.data;
 };
 
-export { getRecipes, getRecipe };
+const postRecipe = async (recipe: Recipe) => {
+  const response = await axiosInstance.post(END_POINTS.RECIPES, recipe);
+  return response.data;
+};
+
+const editRecipe = async (id: number, recipe: Recipe) => {
+  const response = await axiosInstance.put(END_POINTS.RECIPE(id), recipe);
+  return response.data;
+};
+
+const deleteRecipe = async (id: number) => {
+  const response = await axiosInstance.delete(END_POINTS.RECIPE(id));
+  return response.data;
+};
+
+export { getRecipes, getRecipe, postRecipe, editRecipe, deleteRecipe };

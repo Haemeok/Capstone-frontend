@@ -5,6 +5,12 @@ import { axiosInstance } from "./axios";
 
 import { USER_ERROR_MESSAGE } from "@/constants/api";
 import { CustomError } from "./CustomError";
+import {
+  getAccessToken,
+  removeAccessToken,
+  setAccessToken,
+  useUserStore,
+} from "@/store/useUserStore";
 
 interface ErrorResponseData {
   message: string;
@@ -15,7 +21,9 @@ export const checkAndSetToken = (config: InternalAxiosRequestConfig) => {
   if (!config.useAuth || !config.headers || config.headers.Authorization) {
     return config;
   }
-  const accessToken = localStorage.getItem(`ACCESS_TOKEN_KEY`);
+
+  const accessToken = getAccessToken();
+
   if (!accessToken) {
     throw new Error("토큰이 유효하지 않습니다");
   }
@@ -42,18 +50,30 @@ export const handleTokenError = async (
 ) => {
   const originRequest = error.config;
   if (!originRequest) throw error;
-  const { data, status } = error.response!;
+
+  if (!error.response) throw error;
+
+  const { data, status } = error.response;
 
   if (status === 401 && data.message === "만료된 토큰입니다.") {
-    const { token: accessToken } = await postTokenRefresh();
-    originRequest.headers.Authorization = `Bearer ${accessToken}`;
-    localStorage.setItem("ACCESS_TOKEN_KEY", accessToken);
-    return axiosInstance(originRequest);
+    try {
+      const { token: accessToken } = await postTokenRefresh();
+      setAccessToken(accessToken);
+      originRequest.headers.Authorization = `Bearer ${accessToken}`;
+      return axiosInstance(originRequest);
+    } catch (refreshError) {
+      removeAccessToken();
+      useUserStore.getState().logOut();
+
+      throw new Error("로그인이 만료되었습니다. 다시 로그인해주세요.");
+    }
   }
 
   if (data.code === "E500") {
-    localStorage.removeItem("ACCESS_TOKEN_KEY");
+    removeAccessToken();
+    useUserStore.getState().logOut();
     throw new Error("로그인이 필요합니다.");
   }
+
   throw error;
 };
