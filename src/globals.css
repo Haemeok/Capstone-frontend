@@ -84,10 +84,19 @@
 
 @theme {
   --color-cream: #f4f3e7;
+  --color-green: #58c16a;
 }
 
 @utility bg-cream {
   background-color: var(--color-cream);
+}
+
+@utility bg-green {
+  background-color: var(--color-green);
+}
+
+@utility text-green {
+  color: var(--color-green);
 }
 
 .animate-scale-in {

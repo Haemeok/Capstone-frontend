@@ -6,13 +6,14 @@ import NewRecipePage from "../Pages/NewRecipePage";
 import RecipeDetailPage from "../Pages/RecipeDetailPage";
 import CommentsPage from "@/Pages/CommentsPage";
 import DiscussionPage from "@/Pages/DiscussionPage";
-import NewIngredientPage from "@/Pages/NewIngredientPage";
 import UserDetailPage from "@/Pages/UserDetailPage";
 import AIRecipePage from "@/Pages/AIRecipePage";
 import HomePage from "@/Pages/HomePage";
 import IngredientsPage from "@/Pages/IngredientsPage";
 import { userDetail } from "@/mock";
 import SearchPage from "@/Pages/SearchPage";
+import Page from "@/Pages/tPage";
+import NewIngredientsPage from "@/Pages/NewIngredientsPage";
 
 const router = createBrowserRouter([
   {
@@ -38,14 +39,7 @@ const router = createBrowserRouter([
         path: "recipes/:id",
         element: <RecipeDetailPage />,
       },
-      {
-        path: "recipes/:id/comments",
-        element: <CommentsPage />,
-      },
-      {
-        path: "recipes/:id/comments/:commentId",
-        element: <DiscussionPage />,
-      },
+
       {
         path: "users/:id",
         element: <UserDetailPage user={userDetail} />,
@@ -55,12 +49,12 @@ const router = createBrowserRouter([
         element: <MyPage />,
       },
       {
-        path: "users/:id/ingredients/new",
-        element: <NewIngredientPage />,
-      },
-      {
         path: "air",
         element: <AIRecipePage />,
+      },
+      {
+        path: "ingredients/new",
+        element: <NewIngredientsPage />,
       },
       {
         path: "ingredients",
@@ -71,6 +65,18 @@ const router = createBrowserRouter([
         element: <SearchPage />,
       },
     ],
+  },
+  {
+    path: "test",
+    element: <Page />,
+  },
+  {
+    path: "recipes/:id/comments",
+    element: <CommentsPage />,
+  },
+  {
+    path: "recipes/:id/comments/:commentId",
+    element: <DiscussionPage />,
   },
 ]);
 

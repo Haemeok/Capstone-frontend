@@ -112,73 +112,68 @@ const AIRecipePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <div className="max-w-3xl mx-auto p-6">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-green-800">
-            AI레시피 생성
-          </h1>
-          <p className="text-gray-600">
-            나만의 맞춤형 레시피를 AI가 추천해드립니다
-          </p>
-        </div>
+    <>
+      <div className="text-center">
+        <p className="text-gray-600">
+          나만의 맞춤형 레시피를 AI가 추천해드립니다
+        </p>
+      </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-            <IngredientSection
-              ingredients={ingredients}
-              onRemoveIngredient={handleRemoveIngredient}
-              onOpenDrawer={() => setIsDrawerOpen(true)}
-              onRemoveAllIngredients={handleRemoveAllIngredients}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+          <IngredientSection
+            ingredients={ingredients}
+            onRemoveIngredient={handleRemoveIngredient}
+            onOpenDrawer={() => setIsDrawerOpen(true)}
+            onRemoveAllIngredients={handleRemoveAllIngredients}
+          />
+
+          <div className="space-y-6">
+            <SelectionSection
+              title="카테고리"
+              icon={<ChefHat size={18} />}
+              items={categories}
+              selectedItems={selectedCategories}
+              onToggle={toggleCategory}
             />
 
-            <div className="space-y-6">
-              <SelectionSection
-                title="카테고리"
-                icon={<ChefHat size={18} />}
-                items={categories}
-                selectedItems={selectedCategories}
-                onToggle={toggleCategory}
-              />
+            <SelectionSection
+              title="조리시간"
+              icon={<Clock size={18} />}
+              items={cookingTimes}
+              selectedItems={selectedTimes}
+              onToggle={toggleTime}
+            />
 
-              <SelectionSection
-                title="조리시간"
-                icon={<Clock size={18} />}
-                items={cookingTimes}
-                selectedItems={selectedTimes}
-                onToggle={toggleTime}
-              />
-
-              <SelectionSection
-                title="태그"
-                icon={<Tag size={18} />}
-                items={recommendedTags}
-                selectedItems={selectedTags}
-                onToggle={toggleTag}
-                className="border-b-0"
-              />
-            </div>
+            <SelectionSection
+              title="태그"
+              icon={<Tag size={18} />}
+              items={recommendedTags}
+              selectedItems={selectedTags}
+              onToggle={toggleTag}
+              className="border-b-0"
+            />
           </div>
+        </div>
 
-          <ProgressButton
-            progressPercentage={progressPercentage}
-            isFormValid={isFormReady && isDirty}
-            completedSteps={completedSteps}
-            totalSteps={totalSteps}
-            onClick={handleSubmit(onSubmit)}
-          />
-        </form>
-
-        <IngredientsDrawer
-          isOpen={isDrawerOpen}
-          onOpenChange={setIsDrawerOpen}
-          ingredients={ingredients}
-          onAddIngredient={handleAddIngredient}
-          onRemoveIngredient={handleRemoveIngredient}
-          onRemoveAllIngredients={handleRemoveAllIngredients}
+        <ProgressButton
+          progressPercentage={progressPercentage}
+          isFormValid={isFormReady && isDirty}
+          completedSteps={completedSteps}
+          totalSteps={totalSteps}
+          onClick={handleSubmit(onSubmit)}
         />
-      </div>
-    </div>
+      </form>
+
+      <IngredientsDrawer
+        isOpen={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        ingredients={ingredients}
+        onAddIngredient={handleAddIngredient}
+        onRemoveIngredient={handleRemoveIngredient}
+        onRemoveAllIngredients={handleRemoveAllIngredients}
+      />
+    </>
   );
 };
 

@@ -9,7 +9,6 @@ const CommentsPage = () => {
 
   const handleRefresh = () => {
     setIsLoading(true);
-    // 실제로는 여기서 데이터를 새로 가져오는 API 호출이 있을 것입니다
     setTimeout(() => {
       setIsLoading(false);
     }, 800);
@@ -25,7 +24,7 @@ const CommentsPage = () => {
               <ArrowLeft size={20} />
             </Button>
             <h1 className="text-xl font-bold flex items-center">
-              <MessageCircle size={20} className="text-blue-500 mr-2" /> 댓글
+              <MessageCircle size={20} className="text-[#5cc570] mr-2" /> 댓글
             </h1>
           </div>
           <div className="flex">
@@ -33,7 +32,7 @@ const CommentsPage = () => {
               variant="ghost"
               size="icon"
               onClick={handleRefresh}
-              className={isLoading ? "animate-spin text-blue-500" : ""}
+              className={isLoading ? "animate-spin text-[#5cc570]" : ""}
             >
               <RefreshCw size={18} />
             </Button>
@@ -50,7 +49,7 @@ const CommentsPage = () => {
             {comments.length}개의 댓글
           </span>
           <div className="flex items-center text-sm text-gray-500">
-            <span className="font-medium text-blue-500">최신순</span>
+            <span className="font-medium text-[#5cc570]">최신순</span>
             <span className="mx-1">•</span>
             <span>인기순</span>
           </div>
@@ -74,7 +73,7 @@ const CommentsPage = () => {
             <div className="flex-1 bg-gray-100 rounded-full py-2 px-4 text-gray-500">
               댓글을 입력하세요...
             </div>
-            <Button size="sm" variant="ghost" className="text-blue-500">
+            <Button size="sm" variant="ghost" className="text-[#5cc570]">
               게시
             </Button>
           </div>
