@@ -47,7 +47,7 @@ const RecipeDetailPage: React.FC = () => {
           <h2 className="text-xl font-semibold mb-2">Comments</h2>
           <Button
             variant="ghost"
-            className="cursor-pointer"
+            className="cursor-pointer text-[#5cc570]"
             onClick={() => navigate("comments")}
           >
             Read More

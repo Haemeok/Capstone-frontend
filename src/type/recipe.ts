@@ -31,3 +31,10 @@ export type RecipeGridItem = {
   title: string;
   imageUrl: string;
 };
+
+export type IngredientItem = {
+  id: number;
+  name: string;
+  imageUrl: string;
+  category: string;
+};
