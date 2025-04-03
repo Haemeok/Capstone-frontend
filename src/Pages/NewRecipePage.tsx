@@ -22,6 +22,13 @@ import {
   Controller,
   SubmitHandler,
 } from "react-hook-form";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 // 패키지 설치 필요: npm install zod @hookform/resolvers
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import * as z from "zod";
@@ -41,6 +48,7 @@ interface Step {
 
 interface RecipeFormValues {
   title: string;
+  description: string;
   thumbnail: string | null;
   category: string;
   cookingTime: string;
@@ -65,6 +73,7 @@ const NewRecipePage: React.FC = () => {
     // resolver: zodResolver(recipeFormSchema),
     defaultValues: {
       title: "",
+      description: "",
       thumbnail: null,
       category: "",
       cookingTime: "",
@@ -111,6 +120,15 @@ const NewRecipePage: React.FC = () => {
     }
   };
 
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setValue("description", e.target.value, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
+
   // 재료 추가
   const addIngredient = () => {
     const newId =
@@ -152,6 +170,7 @@ const NewRecipePage: React.FC = () => {
   const needSteps = [
     formValues.title.trim() !== "",
     formValues.thumbnail !== null,
+    formValues.description !== "",
     formValues.category !== "",
     formValues.cookingTime !== "",
     formValues.difficulty !== "",
@@ -220,112 +239,119 @@ const NewRecipePage: React.FC = () => {
         <div className="max-w-3xl mx-auto px-4 pt-6">
           {/* 레시피 설명 박스 */}
           <div className="bg-white rounded-xl p-4 mb-8 shadow-sm">
-            <p className="text-[#777777]">
-              레시피에 대한 간단한 설명을 작성하세요. 어떤 특징이 있는지, 어떤
-              상황에서 먹기 좋은지 등을 알려주세요.
-            </p>
+            <textarea
+              className="w-full h-24 text-[#777777]"
+              placeholder="레시피에 대한 간단한 설명을 작성하세요. 어떤 특징이 있는지, 어떤 상황에서 먹기 좋은지 등을 알려주세요."
+              onChange={handleDescriptionChange}
+            />
           </div>
 
           {/* 레벨/조리시간/난이도 정보 */}
-          <div className="grid grid-cols-3 gap-4 border-t border-b border-[#00473c]/20 py-4 mb-8">
-            <div className="text-center">
-              <p className="text-[#777777] mb-1">카테고리</p>
-              <select
-                className={`w-full bg-transparent border-b ${
-                  errors.category ? "border-red-500" : "border-[#00473c]/30"
-                } pb-1 text-center focus:outline-none focus:border-[#00473c]`}
-                {...register("category", {
-                  required: "카테고리를 선택해주세요",
-                })}
-              >
-                <option value="" className="bg-[#f4f3e7]">
-                  선택하기
-                </option>
-                <option value="korean" className="bg-[#f4f3e7]">
-                  한식
-                </option>
-                <option value="western" className="bg-[#f4f3e7]">
-                  양식
-                </option>
-                <option value="japanese" className="bg-[#f4f3e7]">
-                  일식
-                </option>
-                <option value="chinese" className="bg-[#f4f3e7]">
-                  중식
-                </option>
-                <option value="dessert" className="bg-[#f4f3e7]">
-                  디저트
-                </option>
-              </select>
-            </div>
-            <div className="text-center">
-              <p className="text-[#777777] mb-1">조리시간</p>
-              <div className="relative">
-                <input
-                  type="text"
-                  className={`w-full bg-transparent border-b ${
-                    errors.cookingTime
-                      ? "border-red-500"
-                      : "border-[#00473c]/30"
-                  } pb-1 text-center focus:outline-none focus:border-[#00473c]`}
-                  placeholder="30"
-                  {...register("cookingTime", {
-                    required: "조리 시간을 입력해주세요",
-                    pattern: {
-                      value: /^\d+$/,
-                      message: "숫자만 입력 가능합니다",
-                    },
+          <div className="flex justify-center gap-4 border-t border-b border-[#00473c]/20 py-4 mb-8">
+            <div className="flex flex-col flex-1">
+              <div className="text-center flex gap-2 h-10 justify-center items-center">
+                <p className="text-[#777777] mb-1">카테고리</p>
+                <select
+                  className={`w-20 bg-transparent border-1 border-gray-300 rounded-md ${
+                    errors.category ? "border-red-500" : "border-[#00473c]/30"
+                  } pb-1 text-center focus:outline-none`}
+                  {...register("category", {
+                    required: "카테고리를 선택해주세요",
                   })}
-                />
-                <span className="text-sm ml-1">분</span>
+                >
+                  <option value="" className="">
+                    선택하기
+                  </option>
+                  <option value="korean" className="">
+                    한식
+                  </option>
+                  <option value="western" className="">
+                    양식
+                  </option>
+                  <option value="japanese" className="">
+                    일식
+                  </option>
+                  <option value="chinese" className="">
+                    중식
+                  </option>
+                  <option value="dessert" className="">
+                    디저트
+                  </option>
+                </select>
               </div>
+              {errors.category && (
+                <p className="text-red-300 text-xs mt-1 text-center">
+                  {errors.category.message}
+                </p>
+              )}
             </div>
-            <div className="text-center">
-              <p className="text-[#777777] mb-1">난이도</p>
-              <select
-                className={`w-full bg-transparent border-b ${
-                  errors.difficulty ? "border-red-500" : "border-[#00473c]/30"
-                } pb-1 text-center focus:outline-none focus:border-[#00473c]`}
-                {...register("difficulty", {
-                  required: "난이도를 선택해주세요",
-                })}
-              >
-                <option value="" className="bg-[#f4f3e7]">
-                  선택하기
-                </option>
-                <option value="easy" className="bg-[#f4f3e7]">
-                  쉬움
-                </option>
-                <option value="normal" className="bg-[#f4f3e7]">
-                  보통
-                </option>
-                <option value="hard" className="bg-[#f4f3e7]">
-                  어려움
-                </option>
-              </select>
+            <div className="flex flex-col flex-1">
+              <div className="text-center h-10 flex items-center justify-center gap-2">
+                <p className="text-[#777777] mb-1">조리시간</p>
+                <div className="relative">
+                  <input
+                    type="text"
+                    className={`w-20 bg-transparent border-b ${
+                      errors.cookingTime
+                        ? "border-red-500"
+                        : "border-[#00473c]/30"
+                    } pb-1 text-center focus:outline-none focus:border-[#00473c]`}
+                    placeholder="30"
+                    {...register("cookingTime", {
+                      required: "조리 시간을 입력해주세요",
+                      pattern: {
+                        value: /^\d+$/,
+                        message: "숫자만 입력 가능합니다",
+                      },
+                    })}
+                  />
+                  <span className="text-sm ml-1">분</span>
+                </div>
+              </div>
+              {errors.cookingTime && (
+                <p className="text-red-300 text-xs mt-1 text-center">
+                  {errors.cookingTime.message}
+                </p>
+              )}
             </div>
           </div>
 
           {/* 재료 영역 */}
           <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-[#58C16A]">재료</h2>
-              <div className="flex items-center gap-2">
-                <span className="text-[#777777]">인원</span>
-                <select className="bg-white border border-[#00473c]/20 rounded-md p-1">
-                  <option value="1" className="bg-white">
-                    1
-                  </option>
-                  <option value="2" className="bg-white">
-                    2
-                  </option>
-                  <option value="4" className="bg-white">
-                    4
-                  </option>
-                  <option value="8" className="bg-white">
-                    8
-                  </option>
-                </select>
+            <div className="mb-4 flex justify-between items-center h-20 py-4">
+              <h2 className="text-2xl font-semibold text-gray-700">재료</h2>
+              <div className="flex flex-col">
+                <div className="flex w-40 justify-center items-center gap-2 text-center h-full">
+                  <select
+                    className={`bg-transparent border-b ${
+                      errors.difficulty
+                        ? "border-red-500"
+                        : "border-[#00473c]/30"
+                    } pb-1 text-center focus:outline-none focus:border-[#00473c]`}
+                    {...register("difficulty", {
+                      required: "인분을 선택해주세요",
+                    })}
+                  >
+                    <option value="" className="bg-[#f4f3e7]">
+                      선택하기
+                    </option>
+                    <option value="easy" className="bg-[#f4f3e7]">
+                      1
+                    </option>
+                    <option value="normal" className="bg-[#f4f3e7]">
+                      2
+                    </option>
+                    <option value="hard" className="bg-[#f4f3e7]">
+                      3
+                    </option>
+                  </select>
+                  <p className="text-[#777777] mb-1">인분</p>
+                </div>
+                {errors.difficulty && (
+                  <p className="text-red-300 text-xs mt-1 text-center">
+                    {errors.difficulty.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -333,39 +359,38 @@ const NewRecipePage: React.FC = () => {
               {ingredientFields.map((field, index) => (
                 <div
                   key={field.id}
-                  className="flex items-center gap-3 p-3 border-b border-[#00473c]/10 bg-white rounded-lg shadow-sm"
+                  className="flex items-center gap-3 p-3 border-b justify-between border-[#00473c]/10 bg-white rounded-lg shadow-sm"
                 >
-                  <div className="w-10 h-10 bg-[#00473c]/10 rounded-lg flex-shrink-0 flex items-center justify-center">
-                    <ChefHat size={20} className="text-[#00473c]" />
+                  <div className="w-10 h-10 bg-[#58C16A]/10 rounded-lg flex items-center justify-center">
+                    <ChefHat size={20} className="text-[#58C16A]" />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex gap-2">
+
+                  <div className="flex gap-2 flex-1 justify-between">
+                    <input
+                      type="text"
+                      className={`bg-transparent w-20 ${
+                        errors.ingredients?.[index]?.name
+                          ? "border-red-500"
+                          : "border-[#00473c]/10"
+                      } focus:outline-none border-b`}
+                      placeholder="재료명"
+                      {...register(`ingredients.${index}.name`, {
+                        required: index === 0 ? "재료명은 필수입니다" : false,
+                      })}
+                    />
+                    <div className="flex gap-1">
                       <input
                         type="text"
-                        className={`flex-1 bg-transparent ${
-                          errors.ingredients?.[index]?.name
-                            ? "border-red-500"
-                            : "border-[#00473c]/10"
-                        } focus:outline-none border-b`}
-                        placeholder="재료명"
-                        {...register(`ingredients.${index}.name`, {
-                          required: index === 0 ? "재료명은 필수입니다" : false,
-                        })}
+                        className="w-16 bg-transparent border-b border-[#00473c]/10 text-center focus:outline-none focus:border-[#00473c]"
+                        placeholder="수량"
+                        {...register(`ingredients.${index}.amount`)}
                       />
-                      <div className="flex gap-1">
-                        <input
-                          type="text"
-                          className="w-16 bg-transparent border-b border-[#00473c]/10 text-center focus:outline-none focus:border-[#00473c]"
-                          placeholder="수량"
-                          {...register(`ingredients.${index}.amount`)}
-                        />
-                        <input
-                          type="text"
-                          className="w-16 bg-transparent border-b border-[#00473c]/10 text-center focus:outline-none focus:border-[#00473c]"
-                          placeholder="단위"
-                          {...register(`ingredients.${index}.unit`)}
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        className="w-16 bg-transparent border-b border-[#00473c]/10 text-center focus:outline-none focus:border-[#00473c]"
+                        placeholder="단위"
+                        {...register(`ingredients.${index}.unit`)}
+                      />
                     </div>
                     {errors.ingredients?.[index]?.name && (
                       <p className="text-red-500 text-xs mt-1">
@@ -373,42 +398,41 @@ const NewRecipePage: React.FC = () => {
                       </p>
                     )}
                   </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="text-[#777777] hover:text-red-500"
-                    onClick={() =>
-                      ingredientFields.length > 1 && removeIngredient(index)
-                    }
-                  >
-                    <X size={18} />
-                  </Button>
+                  <div className="">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="text-[#777777] hover:text-red-500"
+                      onClick={() =>
+                        ingredientFields.length > 1 && removeIngredient(index)
+                      }
+                    >
+                      <X size={18} />
+                    </Button>
+                  </div>
                 </div>
               ))}
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full mt-2 flex items-center justify-center gap-1 border-dashed border-[#00473c]/40 text-[#00473c] hover:bg-[#00473c]/5"
-                onClick={addIngredient}
-              >
-                <Plus size={16} />
-                재료 추가
-              </Button>
             </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full mt-2 flex items-center justify-center gap-1 border-dashed border-[#58C16A]/40 text-[#58C16A] hover:bg-[#58C16A]/5"
+              onClick={addIngredient}
+            >
+              <Plus size={16} />
+              재료 추가
+            </Button>
           </div>
 
           {/* 조리 과정 영역 */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-[#00473c]">
-              조리 과정
-            </h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-700">조리 과정</h2>
 
             <div className="space-y-4">
               {stepFields.map((step, index) => (
                 <div key={step.id} className="flex gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-[#00473c] rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-[#58C16A] rounded-full flex items-center justify-center text-white font-bold">
                     {index + 1}
                   </div>
                   <div className="flex-1 relative">
@@ -445,7 +469,7 @@ const NewRecipePage: React.FC = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full mt-2 flex items-center justify-center gap-1 border-dashed border-[#00473c]/40 text-[#00473c] hover:bg-[#00473c]/5"
+                className="w-full mt-2 flex items-center justify-center gap-1 border-dashed border-[#58C16A]/40 text-[#58C16A] hover:bg-[#58C16A]/5"
                 onClick={addStep}
               >
                 <Plus size={16} />
