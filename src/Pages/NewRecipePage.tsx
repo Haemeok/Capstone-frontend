@@ -1,67 +1,18 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router";
-import {
-  ArrowLeft,
-  Upload,
-  Plus,
-  X,
-  Camera,
-  ChefHat,
-  Clock,
-  Upload as UploadIcon,
-  BookOpen,
-  ChevronLeft,
-  Share,
-  Heart,
-} from "lucide-react";
+import { Upload as UploadIcon, Plus, X, ChefHat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProgressButton from "@/components/ProgressButton";
-import {
-  useForm,
-  useFieldArray,
-  Controller,
-  SubmitHandler,
-} from "react-hook-form";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-// 패키지 설치 필요: npm install zod @hookform/resolvers
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import * as z from "zod";
+import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 
-// 임시로 타입 정의로 대체
-interface Ingredient {
-  id: number;
-  name: string;
-  amount: string;
-  unit: string;
-}
+import useCreateRecipeMutation from "@/hooks/useCreateRecipeMutation";
+import { Ingredient, Recipe, RecipeStep } from "@/type/recipe";
 
-interface Step {
-  id: number;
-  description: string;
-}
-
-interface RecipeFormValues {
-  title: string;
-  description: string;
-  thumbnail: string | null;
-  category: string;
-  cookingTime: string;
-  difficulty: string;
-  ingredients: Ingredient[];
-  steps: Step[];
-}
-
-const NewRecipePage: React.FC = () => {
+const NewRecipePage = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const createRecipe = useCreateRecipeMutation();
 
-  // react-hook-form 설정
   const {
     register,
     handleSubmit,
@@ -69,22 +20,27 @@ const NewRecipePage: React.FC = () => {
     setValue,
     watch,
     formState: { errors, isValid, isDirty },
-  } = useForm<RecipeFormValues>({
-    // resolver: zodResolver(recipeFormSchema),
+  } = useForm<Recipe>({
     defaultValues: {
       title: "",
+      imageURL: "",
+      ingredients: [{ quantity: "", name: "", unit: "" }],
+      cookingTime: undefined,
+      servings: undefined,
+      dishType: "",
       description: "",
-      thumbnail: null,
-      category: "",
-      cookingTime: "",
-      difficulty: "",
-      ingredients: [{ id: 1, name: "", amount: "", unit: "" }],
-      steps: [{ id: 1, description: "" }],
+      steps: [
+        {
+          ingredients: [{ quantity: "", name: "", unit: "" }],
+          instruction: "",
+          stepImageUrl: "",
+          stepNumber: 0,
+        },
+      ],
     },
     mode: "onChange",
   });
 
-  // 재료와 스텝을 위한 필드 배열 설정
   const {
     fields: ingredientFields,
     append: appendIngredient,
@@ -103,14 +59,13 @@ const NewRecipePage: React.FC = () => {
     name: "steps",
   });
 
-  // 썸네일 업로드 핸들러
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          setValue("thumbnail", e.target.result as string, {
+          setValue("imageURL", e.target.result as string, {
             shouldValidate: true,
             shouldDirty: true,
           });
@@ -129,53 +84,49 @@ const NewRecipePage: React.FC = () => {
     });
   };
 
-  // 재료 추가
   const addIngredient = () => {
     const newId =
       ingredientFields.length > 0
-        ? Math.max(...ingredientFields.map((f) => f.id as number)) + 1
+        ? Math.max(...ingredientFields.map((f) => parseInt(f.id))) + 1
         : 1;
-    appendIngredient({ id: newId, name: "", amount: "", unit: "" });
+    appendIngredient({ id: newId, name: "", quantity: "", unit: "" });
   };
 
-  // 조리 과정 추가
   const addStep = () => {
     const newId =
       stepFields.length > 0
-        ? Math.max(...stepFields.map((f) => f.id as number)) + 1
+        ? Math.max(...stepFields.map((f) => parseInt(f.id))) + 1
         : 1;
-    appendStep({ id: newId, description: "" });
+    appendStep({ id: newId, instruction: "", stepImageUrl: "", stepNumber: 0 });
   };
 
-  // 폼 제출 핸들러
-  const onSubmit: SubmitHandler<RecipeFormValues> = (data) => {
+  const onSubmit: SubmitHandler<Recipe> = (data) => {
     console.log("제출 데이터:", data);
 
-    // 필터링된 데이터로 가공 (빈 재료나 단계 제거)
     const filteredData = {
       ...data,
       ingredients: data.ingredients.filter((i) => i.name.trim() !== ""),
-      steps: data.steps.filter((s) => s.description.trim() !== ""),
+      steps: data.steps.filter((s) => s.instruction.trim() !== ""),
     };
 
     console.log("정제된 제출 데이터:", filteredData);
 
-    // 저장 후 레시피 목록 페이지로 이동
+    createRecipe.mutate(filteredData);
+
     navigate("/recipes");
   };
 
-  // 구성 요소 완료 여부 추적
   const formValues = watch();
 
   const needSteps = [
     formValues.title.trim() !== "",
-    formValues.thumbnail !== null,
+    formValues.imageURL !== "",
     formValues.description !== "",
-    formValues.category !== "",
+    formValues.dishType !== "",
     formValues.cookingTime !== "",
-    formValues.difficulty !== "",
+    formValues.servings !== 0,
     formValues.ingredients.some((i: Ingredient) => i.name.trim() !== ""),
-    formValues.steps.some((s: Step) => s.description.trim() !== ""),
+    formValues.steps.some((s: RecipeStep) => s.instruction.trim() !== ""),
   ];
 
   const completedSteps = needSteps.filter(Boolean).length;
@@ -185,16 +136,14 @@ const NewRecipePage: React.FC = () => {
   return (
     <div className="min-h-screen">
       <form id="recipe-form" onSubmit={handleSubmit(onSubmit)}>
-        {/* 이미지 영역 및 헤더 */}
         <div className="relative">
-          {/* 이미지 영역 */}
           <div
             className="w-full h-[40vh] flex items-center justify-center cursor-pointer relative"
             onClick={() => fileInputRef.current?.click()}
           >
-            {formValues.thumbnail ? (
+            {formValues.imageURL ? (
               <img
-                src={formValues.thumbnail}
+                src={formValues.imageURL}
                 alt="Recipe thumbnail"
                 className="w-full h-full object-cover"
               />
@@ -235,27 +184,24 @@ const NewRecipePage: React.FC = () => {
           </div>
         </div>
 
-        {/* 메인 콘텐츠 */}
         <div className="max-w-3xl mx-auto px-4 pt-6">
-          {/* 레시피 설명 박스 */}
-          <div className="bg-white rounded-xl p-4 mb-8 shadow-sm">
+          <div className="bg-white rounded-xl p-4 mb-4 shadow-sm">
             <textarea
-              className="w-full h-24 text-[#777777]"
+              className="w-full h-24 text-[#777777] focus:outline-none"
               placeholder="레시피에 대한 간단한 설명을 작성하세요. 어떤 특징이 있는지, 어떤 상황에서 먹기 좋은지 등을 알려주세요."
               onChange={handleDescriptionChange}
             />
           </div>
 
-          {/* 레벨/조리시간/난이도 정보 */}
-          <div className="flex justify-center gap-4 border-t border-b border-[#00473c]/20 py-4 mb-8">
+          <div className="flex justify-center gap-4 border-b border-[#00473c]/20 py-4 mb-4">
             <div className="flex flex-col flex-1">
               <div className="text-center flex gap-2 h-10 justify-center items-center">
                 <p className="text-[#777777] mb-1">카테고리</p>
                 <select
                   className={`w-20 bg-transparent border-1 border-gray-300 rounded-md ${
-                    errors.category ? "border-red-500" : "border-[#00473c]/30"
+                    errors.dishType ? "border-red-500" : "border-[#00473c]/30"
                   } pb-1 text-center focus:outline-none`}
-                  {...register("category", {
+                  {...register("dishType", {
                     required: "카테고리를 선택해주세요",
                   })}
                 >
@@ -279,9 +225,9 @@ const NewRecipePage: React.FC = () => {
                   </option>
                 </select>
               </div>
-              {errors.category && (
+              {errors.dishType && (
                 <p className="text-red-300 text-xs mt-1 text-center">
-                  {errors.category.message}
+                  {errors.dishType.message}
                 </p>
               )}
             </div>
@@ -316,40 +262,38 @@ const NewRecipePage: React.FC = () => {
             </div>
           </div>
 
-          {/* 재료 영역 */}
-          <div className="mb-8">
-            <div className="mb-4 flex justify-between items-center h-20 py-4">
+          <div className="mb-4">
+            <div className="flex justify-between items-center h-20 py-4">
               <h2 className="text-2xl font-semibold text-gray-700">재료</h2>
               <div className="flex flex-col">
                 <div className="flex w-40 justify-center items-center gap-2 text-center h-full">
                   <select
                     className={`bg-transparent border-b ${
-                      errors.difficulty
-                        ? "border-red-500"
-                        : "border-[#00473c]/30"
+                      errors.servings ? "border-red-500" : "border-[#00473c]/30"
                     } pb-1 text-center focus:outline-none focus:border-[#00473c]`}
-                    {...register("difficulty", {
+                    {...register("servings", {
                       required: "인분을 선택해주세요",
+                      valueAsNumber: true,
                     })}
                   >
-                    <option value="" className="bg-[#f4f3e7]">
+                    <option value="0" className="bg-[#f4f3e7]">
                       선택하기
                     </option>
-                    <option value="easy" className="bg-[#f4f3e7]">
+                    <option value="1" className="bg-[#f4f3e7]">
                       1
                     </option>
-                    <option value="normal" className="bg-[#f4f3e7]">
+                    <option value="2" className="bg-[#f4f3e7]">
                       2
                     </option>
-                    <option value="hard" className="bg-[#f4f3e7]">
+                    <option value="3" className="bg-[#f4f3e7]">
                       3
                     </option>
                   </select>
                   <p className="text-[#777777] mb-1">인분</p>
                 </div>
-                {errors.difficulty && (
+                {errors.servings && (
                   <p className="text-red-300 text-xs mt-1 text-center">
-                    {errors.difficulty.message}
+                    {errors.servings.message}
                   </p>
                 )}
               </div>
@@ -383,7 +327,7 @@ const NewRecipePage: React.FC = () => {
                         type="text"
                         className="w-16 bg-transparent border-b border-[#00473c]/10 text-center focus:outline-none focus:border-[#00473c]"
                         placeholder="수량"
-                        {...register(`ingredients.${index}.amount`)}
+                        {...register(`ingredients.${index}.quantity`)}
                       />
                       <input
                         type="text"
@@ -425,7 +369,6 @@ const NewRecipePage: React.FC = () => {
             </Button>
           </div>
 
-          {/* 조리 과정 영역 */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-700">조리 과정</h2>
 
@@ -438,19 +381,19 @@ const NewRecipePage: React.FC = () => {
                   <div className="flex-1 relative">
                     <textarea
                       className={`w-full bg-white p-3 rounded-lg ${
-                        errors.steps?.[index]?.description
+                        errors.steps?.[index]?.instruction
                           ? "border border-red-500"
                           : "border border-[#00473c]/20"
                       } focus:outline-none focus:border-[#00473c] shadow-sm min-h-[80px]`}
                       placeholder={`${index + 1}번째 과정을 설명해주세요`}
-                      {...register(`steps.${index}.description`, {
+                      {...register(`steps.${index}.instruction`, {
                         required:
                           index === 0 ? "조리 과정 설명은 필수입니다" : false,
                       })}
                     />
-                    {errors.steps?.[index]?.description && (
+                    {errors.steps?.[index]?.instruction && (
                       <p className="text-red-500 text-xs mt-1">
-                        {errors.steps[index]?.description?.message}
+                        {errors.steps[index]?.instruction?.message}
                       </p>
                     )}
                     <Button
@@ -478,7 +421,6 @@ const NewRecipePage: React.FC = () => {
             </div>
           </div>
 
-          {/* 하단 버튼 영역 */}
           <div className="flex justify-center mt-8">
             <ProgressButton
               progressPercentage={progressPercentage}

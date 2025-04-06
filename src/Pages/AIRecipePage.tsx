@@ -130,7 +130,7 @@ const AIRecipePage = () => {
 
           <div className="space-y-6">
             <SelectionSection
-              title="카테고리"
+              title="태그"
               icon={<ChefHat size={18} />}
               items={categories}
               selectedItems={selectedCategories}
