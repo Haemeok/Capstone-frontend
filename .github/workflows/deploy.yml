@@ -29,8 +29,8 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Setup known_hosts
-        run: mkdir -p ~/.ssh && ssh-keyscan -H -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -39,12 +39,16 @@ jobs:
           known_hosts: unnecessary
           if_key_exists: replace
 
-      - name: Add known hosts via ssh-keyscan (fallback)
-        run: ssh-keyscan -H -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Setup known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        run: ssh -v -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "echo 'Connection successful'"
 
       - name: Deploy with rsync
         run: |
-          set -e
           rsync -avz --delete -e "ssh -p ${{ secrets.SSH_PORT || 22 }}" \
             ./build/ \
             ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}
