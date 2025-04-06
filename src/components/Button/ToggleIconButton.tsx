@@ -53,7 +53,7 @@ const ToggleIconButton = ({
       className={cn(
         "flex items-center justify-center gap-1 cursor-pointer",
         isActive ? activeClassName : inactiveClassName,
-        className
+        className,
       )}
       {...props}
     >

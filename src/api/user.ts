@@ -15,7 +15,7 @@ export const postLogIn = async (code: string) => {
   const { data } = await axiosInstance.post<LogInResponse>(
     END_POINTS.GOOGLE_LOGIN,
     { code },
-    { useAuth: false }
+    { useAuth: false },
   );
   return data;
 };
@@ -38,7 +38,7 @@ export const getMyInfo = async () => {
 
 export const postTokenRefresh = async () => {
   const { data } = await axiosInstance.post<TokenRefrechResponse>(
-    END_POINTS.TOKEN_REFRESH
+    END_POINTS.TOKEN_REFRESH,
   );
   return data;
 };

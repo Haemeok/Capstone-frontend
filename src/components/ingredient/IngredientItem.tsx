@@ -27,7 +27,7 @@ const IngredientItem = ({ ingredient, isDeleteMode }: IngredientItemProps) => {
           onClick={() => setIsActive(!isActive)}
           className={cn(
             "border-2 border-gray-500 rounded-full p-1 w-5 h-5 absolute right-4 top-4",
-            isActive ? "bg-[#5cc570]" : ""
+            isActive ? "bg-[#5cc570]" : "",
           )}
         />
       )}

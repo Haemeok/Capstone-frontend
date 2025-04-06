@@ -47,7 +47,7 @@ const Ratings = ({
 
   const handleClick = (
     idx: number,
-    event: React.MouseEvent<HTMLDivElement>
+    event: React.MouseEvent<HTMLDivElement>,
   ): void => {
     if (readOnly || !onChange) return;
 
@@ -70,7 +70,7 @@ const Ratings = ({
 
   const handleMouseMove = (
     idx: number,
-    event: React.MouseEvent<HTMLDivElement>
+    event: React.MouseEvent<HTMLDivElement>,
   ): void => {
     if (readOnly) return;
 

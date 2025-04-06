@@ -46,7 +46,7 @@ export const handleAPIError = (error: AxiosError<ErrorResponseData>) => {
 };
 
 export const handleTokenError = async (
-  error: AxiosError<ErrorResponseData>
+  error: AxiosError<ErrorResponseData>,
 ) => {
   const originRequest = error.config;
   if (!originRequest) throw error;

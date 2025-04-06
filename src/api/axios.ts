@@ -28,6 +28,6 @@ axiosInstance.interceptors.request.use(checkAndSetToken);
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  handleTokenError
+  handleTokenError,
 );
 axiosInstance.interceptors.response.use((response) => response, handleAPIError);

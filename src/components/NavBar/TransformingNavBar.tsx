@@ -57,14 +57,14 @@ const TransformingNavbar = ({
         if (headerRef.current) {
           headerRef.current.style.setProperty(
             "--nav-opacity",
-            visibleRatio.toString()
+            visibleRatio.toString(),
           );
         }
       },
       {
         threshold: thresholds,
         rootMargin: "-10% 0px 0px 0px", // 상단에서 10% 아래부터 감지 시작
-      }
+      },
     );
 
     // 관찰 대상 요소 감시 시작

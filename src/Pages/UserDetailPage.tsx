@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { RecipeGridItem } from "@/type/recipe";
 import RecipeGrid from "@/components/RecipeGrid";
 import { createdRecipes, cookbookRecipes } from "@/mock";
-import CalendarBoard from "@/components/CalendarBoard";
 import { useUser } from "@/hooks/useUser";
 import { useNavigate } from "react-router";
 
@@ -68,7 +67,7 @@ const UserDetailPage = () => {
       case "북마크":
         return <RecipeGrid recipes={cookbookRecipes} />;
       case "캘린더":
-        return <CalendarBoard />;
+        return <></>;
       default:
         return <RecipeGrid recipes={createdRecipes} />;
     }
