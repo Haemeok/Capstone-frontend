@@ -24,7 +24,7 @@ const SelectButton = ({
         isSelected
           ? "bg-green-600 text-white border-green-600 hover:bg-green-700 hover:border-green-700 hover:text-white"
           : "border-gray-300",
-        className
+        className,
       )}
       onClick={onClick}
     >

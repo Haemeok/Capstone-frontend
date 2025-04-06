@@ -31,7 +31,7 @@ const ScrollTransformNavbar: React.FC = () => {
         if (contentRef.current) {
           contentRef.current.style.setProperty(
             "--scroll-progress",
-            visibleRatio.toString()
+            visibleRatio.toString(),
           );
         }
 
@@ -39,14 +39,14 @@ const ScrollTransformNavbar: React.FC = () => {
         if (headerRef.current) {
           headerRef.current.style.setProperty(
             "--nav-opacity",
-            visibleRatio.toString()
+            visibleRatio.toString(),
           );
         }
       },
       {
         threshold: thresholds,
         rootMargin: "-10% 0px 0px 0px", // 상단에서 10% 아래부터 감지 시작
-      }
+      },
     );
 
     // 이미지 영역 감시 시작

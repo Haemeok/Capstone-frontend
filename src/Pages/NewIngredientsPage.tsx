@@ -68,14 +68,14 @@ const NewIngredientsPage: React.FC = () => {
   };
 
   const filteredIngredients = ingredients.filter((ingredient) =>
-    ingredient.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ingredient.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleIngredientClick = (id: number) => {
     setIngredients(
       ingredients.map((item) =>
-        item.id === id ? { ...item, isSelected: !item.isSelected } : item
-      )
+        item.id === id ? { ...item, isSelected: !item.isSelected } : item,
+      ),
     );
   };
 

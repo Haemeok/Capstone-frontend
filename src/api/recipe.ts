@@ -14,7 +14,7 @@ const getRecipe = async (id: number) => {
 
 export const getRecipeItems = async () => {
   const response = await axiosInstance.get<RecipeGridItem[]>(
-    END_POINTS.RECIPES_SIMPLE
+    END_POINTS.RECIPES_SIMPLE,
   );
   return response.data;
 };

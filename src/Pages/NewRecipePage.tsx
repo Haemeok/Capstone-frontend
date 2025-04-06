@@ -76,7 +76,7 @@ const NewRecipePage = () => {
   };
 
   const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setValue("description", e.target.value, {
       shouldValidate: true,

@@ -67,7 +67,7 @@ const AIRecipePage = () => {
   const toggle = <T,>(
     fieldName: keyof AIRecipeFormData,
     currentItems: T[],
-    item: T
+    item: T,
   ) => {
     let newItems: T[];
     if (currentItems.includes(item)) {
