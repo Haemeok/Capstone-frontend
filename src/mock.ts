@@ -10,20 +10,20 @@ import { User } from "./type/user";
 import { Comment } from "./type/comment";
 
 export const ingredients: Ingredient[] = [
-  { quantity: "250", name: "red cabbage", unit: "g" },
-  { quantity: "2", name: "scallions", unit: "개" },
-  { quantity: "500", name: "oyster mushrooms", unit: "g" },
-  { quantity: "8", name: "olive oil", unit: "큰술" },
-  { quantity: "3", name: "garlic", unit: "쪽" },
-  { quantity: "400", name: "full-fat Greek yogurt", unit: "g" },
-  { quantity: "1", name: "lemon juice", unit: "tsp" },
-  { quantity: "½", name: "maple syrup", unit: "tsp" },
-  { quantity: "1", name: "maple syrup", unit: "큰술" },
-  { quantity: "1", name: "ground cumin", unit: "tsp" },
-  { quantity: "2", name: "sweet paprika powder", unit: "tsp" },
-  { quantity: "1", name: "baharat spice mix", unit: "tsp" },
-  { quantity: "4", name: "flatbreads (small)", unit: "개" },
-  { quantity: "", name: "salt", unit: "tsp" },
+  { id: 1, quantity: "250", name: "red cabbage", unit: "g" },
+  { id: 2, quantity: "2", name: "scallions", unit: "개" },
+  { id: 3, quantity: "500", name: "oyster mushrooms", unit: "g" },
+  { id: 4, quantity: "8", name: "olive oil", unit: "큰술" },
+  { id: 5, quantity: "3", name: "garlic", unit: "쪽" },
+  { id: 6, quantity: "400", name: "full-fat Greek yogurt", unit: "g" },
+  { id: 7, quantity: "1", name: "lemon juice", unit: "tsp" },
+  { id: 8, quantity: "½", name: "maple syrup", unit: "tsp" },
+  { id: 9, quantity: "1", name: "maple syrup", unit: "큰술" },
+  { id: 10, quantity: "1", name: "ground cumin", unit: "tsp" },
+  { id: 11, quantity: "2", name: "sweet paprika powder", unit: "tsp" },
+  { id: 12, quantity: "1", name: "baharat spice mix", unit: "tsp" },
+  { id: 13, quantity: "4", name: "flatbreads (small)", unit: "개" },
+  { id: 14, quantity: "", name: "salt", unit: "tsp" },
 ];
 
 export const categories = [
@@ -103,18 +103,22 @@ export const recommendedTags = [
 
 export const RecipeSteps: RecipeStep[] = [
   {
+    id: 1,
     ingredients: [
       {
+        id: 1,
         quantity: "130",
         name: "margarine",
         unit: "g",
       },
       {
+        id: 2,
         quantity: "130",
         name: "margarine",
         unit: "g",
       },
       {
+        id: 3,
         quantity: "130",
         name: "margarine",
         unit: "g",
@@ -122,25 +126,26 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "To make vegan béchamel, melt margarine in saucepan. Whisk in flour, then slowly whisk in warm soymilk in a steady stream.",
-    utensils: ["saucepan", "whisk"],
-    action: "melt",
     stepImageUrl: "/images/recipes/step-1.jpg",
     stepNumber: 1,
-    cookingTools: "oven",
   },
   {
+    id: 2,
     ingredients: [
       {
+        id: 1,
         quantity: "2",
         name: "nutritional yeast",
         unit: "tbsp",
       },
       {
+        id: 2,
         quantity: "",
         name: "salt",
         unit: "tsp",
       },
       {
+        id: 3,
         quantity: "",
         name: "pepper",
         unit: "tsp",
@@ -148,25 +153,27 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "Stir in nutritional yeast, nutmeg, and salt and pepper to taste.",
-    utensils: [],
-    action: "stir",
     stepImageUrl: "/images/recipes/step-2.jpg",
     stepNumber: 2,
-    cookingTools: "oven",
+    cookingTools: ["oven"],
   },
   {
+    id: 3,
     ingredients: [
       {
+        id: 1,
         quantity: "2",
         name: "nutritional yeast",
         unit: "tbsp",
       },
       {
+        id: 2,
         quantity: "",
         name: "salt",
         unit: "tsp",
       },
       {
+        id: 3,
         quantity: "",
         name: "pepper",
         unit: "tsp",
@@ -174,25 +181,27 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "Preheat oven to 200°C/400°F. Peel onion and garlic, clean mushrooms. Finely chop onion, garlic, and thyme and slice mushrooms.",
-    utensils: [],
-    action: "preheat",
     stepImageUrl: "/images/recipes/step-3.jpg",
     stepNumber: 3,
-    cookingTools: "oven",
+    cookingTools: ["oven"],
   },
   {
+    id: 4,
     ingredients: [
       {
+        id: 1,
         quantity: "2",
         name: "nutritional yeast",
         unit: "tbsp",
       },
       {
+        id: 2,
         quantity: "",
         name: "salt",
         unit: "tsp",
       },
       {
+        id: 3,
         quantity: "",
         name: "pepper",
         unit: "tsp",
@@ -200,25 +209,27 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "Add oil to frying pan, sauté onion, garlic and our VEGGIE WUNDER seasoning (if using) over medium heat until fragrant and softened. Add mushrooms and thyme and cook for a few minutes, until mushrooms start to brown; if needed, add a bit more oil. Add spinach and cook until wilted, stirring often. Season with salt and pepper. Set aside.",
-    utensils: [],
-    action: "sauté",
     stepImageUrl: "/images/recipes/step-4.jpg",
     stepNumber: 4,
-    cookingTools: "oven",
+    cookingTools: ["oven"],
   },
   {
+    id: 5,
     ingredients: [
       {
+        id: 1,
         quantity: "2",
         name: "nutritional yeast",
         unit: "tbsp",
       },
       {
+        id: 2,
         quantity: "",
         name: "salt",
         unit: "tsp",
       },
       {
+        id: 3,
         quantity: "",
         name: "pepper",
         unit: "tsp",
@@ -226,11 +237,9 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "Spread a layer of tomato sauce on bottom of casserole dish. Add a layer of noodles, then a layer of béchamel sauce, and a layer of vegetables. Top with another layer of noodles and tomato sauce, and repeat pattern until casserole dish is filled. Finish with a layer of béchamel sauce and remaining mushrooms and spinach. Garnish with thyme leaves. Bake for approx. 30–40 min. at 200°C/400°F, or until sides start to bubble and top turns golden brown. Let cool slightly before slicing and serving. Enjoy!",
-    utensils: [],
-    action: "bake",
     stepImageUrl: "/images/recipes/step-5.jpg",
     stepNumber: 5,
-    cookingTools: "oven",
+    cookingTools: ["oven"],
   },
 ];
 
@@ -243,12 +252,13 @@ export const user: User = {
   id: 1,
 };
 
-export const recipe: RecipeType = {
+export const recipe: Recipe = {
   id: 1,
   title: `The creamiest vegan lasagna with spinach and mushrooms`,
   imageURL:
     "https://images.services.kitchenstories.io/Q2f9UtDQHKs_yStKPdSqLyNtZl4=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R480-final-photo-_1.jpg",
   ingredients: ingredients,
+  description: "The creamiest vegan lasagna with spinach and mushrooms",
   steps: RecipeSteps,
   dishType: "pasta",
   cookingTime: 30,
@@ -369,26 +379,26 @@ export const createdRecipes: RecipeGridItem[] = [
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
   },
   {
-    id: 1,
+    id: 5,
     title: "홈메이드 치킨 파프리카",
     imageUrl:
       "https://images.services.kitchenstories.io/xS81VNt2AAZ40ucVuKkTIIHuZkY=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3269_Einfacher_fluffiger_Apfelkuchen.jpg",
   },
 
   {
-    id: 2,
+    id: 6,
     title: "치즈 수플레",
     imageUrl:
       "https://images.services.kitchenstories.io/uAIq0Ol-MtURpAWD34v0MwUHXGU=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3292_air_fryer_camembert.jpg",
   },
   {
-    id: 3,
+    id: 7,
     title: "타코 볼",
     imageUrl:
       "https://images.services.kitchenstories.io/OHvQHI8pRjezdt1gHprcyf4jo9Q=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R481-final-photo.jpg",
   },
   {
-    id: 4,
+    id: 8,
     title: "매콤한 베트남 쌀국수",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
@@ -410,27 +420,27 @@ export const cookbookRecipes: RecipeGridItem[] = [
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
   },
   {
-    id: 5,
+    id: 1,
     title: "주말 브런치 컬렉션",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
   },
 
   {
-    id: 6,
+    id: 2,
     title: "이탈리안 파스타 마스터리",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
   },
   {
-    id: 5,
+    id: 3,
     title: "주말 브런치 컬렉션",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
   },
 
   {
-    id: 6,
+    id: 4,
     title: "이탈리안 파스타 마스터리",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",

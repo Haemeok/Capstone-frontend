@@ -10,15 +10,15 @@ const IngredientIcon = ({ className = "" }: IngredientIconProps) => {
       height="20"
       className={`mr-2 inline-block align-middle ${className}`}
     >
-      <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
+      <g fill="none" fillRule="evenodd" transform="translate(1 1)">
         <path
           fill="currentColor"
           d="M11.239 6.86a1.11 1.11 0 1 1-1.57 1.57 1.11 1.11 0 0 1 1.57-1.57"
         ></path>
         <path
           stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           d="m10.454 7.646 7.341-7.3M7.615 7.899H.253c-.14 0-.253 0-.253.14l1.671 9.645c0 .14.114.253.255.253h17.01c.14 0 .255-.056.255-.196l1.492-9.703c0-.14-.113-.139-.254-.139h-6.583"
         ></path>
         <path

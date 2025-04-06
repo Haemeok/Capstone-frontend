@@ -1,7 +1,7 @@
 export const END_POINTS = {
   RECIPE: (id: number) => `/recipes/${id}`,
   RECIPES: "/recipes",
-  RECIPE_SIMPLE: "/recipes/simple",
+  RECIPES_SIMPLE: "/recipes/simple",
 
   RECIPE_SEARCH: "/recipes/search",
   RECIPE_FILTER: "/recipes/filter",
@@ -11,6 +11,7 @@ export const END_POINTS = {
     `/recipes/${recipeId}/comments/${commentId}/replies`,
   RECIPE_LIKE: (id: number) => `/recipes/${id}/like`,
   RECIPE_FAVORITE: (id: number) => `/recipes/${id}/favorite`,
+  RECIPE_VISIBILITY: (id: number) => `/recipes/${id}/visibility`,
   GOOGLE_LOGIN: "/oauth2/authorization/google",
   KAKAO_LOGIN: "/oauth2/authorization/kakao",
   NAVER_LOGIN: "/oauth2/authorization/naver",

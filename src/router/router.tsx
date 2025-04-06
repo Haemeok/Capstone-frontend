@@ -14,6 +14,7 @@ import { userDetail } from "@/mock";
 import SearchPage from "@/Pages/SearchPage";
 import Page from "@/Pages/tPage";
 import NewIngredientsPage from "@/Pages/NewIngredientsPage";
+import ScrollTransformNavbar from "@/Pages/tPage2";
 
 const router = createBrowserRouter([
   {
@@ -35,14 +36,10 @@ const router = createBrowserRouter([
         path: "recipes/new",
         element: <NewRecipePage />,
       },
-      {
-        path: "recipes/:id",
-        element: <RecipeDetailPage />,
-      },
 
       {
         path: "users/:id",
-        element: <UserDetailPage user={userDetail} />,
+        element: <UserDetailPage />,
       },
       {
         path: "my",
@@ -68,7 +65,7 @@ const router = createBrowserRouter([
   },
   {
     path: "test",
-    element: <Page />,
+    element: <ScrollTransformNavbar />,
   },
   {
     path: "recipes/:id/comments",
@@ -77,6 +74,10 @@ const router = createBrowserRouter([
   {
     path: "recipes/:id/comments/:commentId",
     element: <DiscussionPage />,
+  },
+  {
+    path: "recipes/:id",
+    element: <RecipeDetailPage />,
   },
 ]);
 
