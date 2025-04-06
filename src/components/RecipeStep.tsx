@@ -14,7 +14,7 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
       </h3>
       <div className="flex gap-2 items-center">
         <IngredientIcon />
-        {step.ingredients.map((ingredient, index) => (
+        {step.ingredients?.map((ingredient, index) => (
           <div
             key={`${index}-${ingredient.name}`}
             className="flex gap-2 border-2 rounded-2xl p-1"
@@ -27,9 +27,9 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
         ))}
       </div>
       <ul className="flex gap-2">
-        {step.utensils.map((utensil, utensilIndex) => (
-          <li key={utensilIndex} className="text-gray-700">
-            {utensil}
+        {step.cookingTools?.map((cookingTool, cookingToolIndex) => (
+          <li key={cookingToolIndex} className="text-gray-700">
+            {cookingTool}
           </li>
         ))}
       </ul>

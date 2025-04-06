@@ -11,6 +11,8 @@ type ImageProps = {
   className?: string;
   loadingClassName?: string;
   errorClassName?: string;
+  ref?: React.Ref<HTMLImageElement>;
+  blackOverlay?: boolean;
   [key: string]: any;
 };
 const Image = ({
@@ -22,6 +24,8 @@ const Image = ({
   className = "",
   loadingClassName = "",
   errorClassName = "",
+  blackOverlay = false,
+  ref,
   ...imgProps
 }: ImageProps) => {
   const { loaded, error, loading } = useImageLoader(src);
@@ -38,7 +42,14 @@ const Image = ({
     return fallback || <DefaultImageFallback className={loadingClassName} />;
   }
 
-  return <img src={src} alt={alt} className={className} {...imgProps} />;
+  return (
+    <div className="relative w-full h-full">
+      <img src={src} alt={alt} className={className} {...imgProps} ref={ref} />
+      {blackOverlay && (
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
+      )}
+    </div>
+  );
 };
 
 export default Image;

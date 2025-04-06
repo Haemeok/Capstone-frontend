@@ -1,6 +1,6 @@
 import { END_POINTS } from "@/constants/api";
 import { axiosInstance } from "./axios";
-import { Recipe } from "@/type/recipe";
+import { Recipe, RecipeGridItem } from "@/type/recipe";
 
 const getRecipes = async () => {
   const response = await axiosInstance.get(END_POINTS.RECIPES);
@@ -12,8 +12,18 @@ const getRecipe = async (id: number) => {
   return response.data;
 };
 
+export const getRecipeItems = async () => {
+  const response = await axiosInstance.get<RecipeGridItem[]>(
+    END_POINTS.RECIPES_SIMPLE
+  );
+  return response.data;
+};
+
 const postRecipe = async (recipe: Recipe) => {
-  const response = await axiosInstance.post(END_POINTS.RECIPES, recipe);
+  const response = await axiosInstance.post(END_POINTS.RECIPES, recipe, {
+    useAuth: false,
+  });
+  console.log(response.data);
   return response.data;
 };
 
@@ -27,4 +37,28 @@ const deleteRecipe = async (id: number) => {
   return response.data;
 };
 
-export { getRecipes, getRecipe, postRecipe, editRecipe, deleteRecipe };
+const postRecipeLike = async (id: number) => {
+  const response = await axiosInstance.post(END_POINTS.RECIPE_LIKE(id));
+  return response.data;
+};
+
+const postRecipeFavorite = async (id: number) => {
+  const response = await axiosInstance.post(END_POINTS.RECIPE_FAVORITE(id));
+  return response.data;
+};
+
+const postRecipeVisibility = async (id: number) => {
+  const response = await axiosInstance.post(END_POINTS.RECIPE_VISIBILITY(id));
+  return response.data;
+};
+
+export {
+  getRecipes,
+  getRecipe,
+  postRecipe,
+  editRecipe,
+  deleteRecipe,
+  postRecipeLike,
+  postRecipeFavorite,
+  postRecipeVisibility,
+};
