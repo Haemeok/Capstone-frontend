@@ -358,6 +358,10 @@ export const createdRecipes: RecipeGridItem[] = [
     title: "홈메이드 치킨 파프리카",
     imageUrl:
       "https://images.services.kitchenstories.io/xS81VNt2AAZ40ucVuKkTIIHuZkY=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3269_Einfacher_fluffiger_Apfelkuchen.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
 
   {
@@ -365,24 +369,40 @@ export const createdRecipes: RecipeGridItem[] = [
     title: "치즈 수플레",
     imageUrl:
       "https://images.services.kitchenstories.io/uAIq0Ol-MtURpAWD34v0MwUHXGU=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3292_air_fryer_camembert.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
   {
     id: 3,
     title: "타코 볼",
     imageUrl:
       "https://images.services.kitchenstories.io/OHvQHI8pRjezdt1gHprcyf4jo9Q=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R481-final-photo.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
   {
     id: 4,
     title: "매콤한 베트남 쌀국수",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
   {
     id: 5,
     title: "홈메이드 치킨 파프리카",
     imageUrl:
       "https://images.services.kitchenstories.io/xS81VNt2AAZ40ucVuKkTIIHuZkY=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3269_Einfacher_fluffiger_Apfelkuchen.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
 
   {
@@ -390,18 +410,30 @@ export const createdRecipes: RecipeGridItem[] = [
     title: "치즈 수플레",
     imageUrl:
       "https://images.services.kitchenstories.io/uAIq0Ol-MtURpAWD34v0MwUHXGU=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R3292_air_fryer_camembert.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
   {
     id: 7,
     title: "타코 볼",
     imageUrl:
       "https://images.services.kitchenstories.io/OHvQHI8pRjezdt1gHprcyf4jo9Q=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R481-final-photo.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
   {
     id: 8,
     title: "매콤한 베트남 쌀국수",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
 ];
 
@@ -411,6 +443,10 @@ export const cookbookRecipes: RecipeGridItem[] = [
     title: "주말 브런치 컬렉션",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
 
   {
@@ -418,12 +454,20 @@ export const cookbookRecipes: RecipeGridItem[] = [
     title: "이탈리안 파스타 마스터리",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
   {
     id: 1,
     title: "주말 브런치 컬렉션",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
 
   {
@@ -431,12 +475,20 @@ export const cookbookRecipes: RecipeGridItem[] = [
     title: "이탈리안 파스타 마스터리",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
   {
     id: 3,
     title: "주말 브런치 컬렉션",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
 
   {
@@ -444,6 +496,10 @@ export const cookbookRecipes: RecipeGridItem[] = [
     title: "이탈리안 파스타 마스터리",
     imageUrl:
       "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
+    authorName: "홍길동",
+    createdAt: "2021-01-01",
+    likeCount: 10,
+    likedByCurrentUser: false,
   },
 ];
 
