@@ -30,8 +30,8 @@ const CategoriesTabs = () => {
         {categoriesItems.map((category) => (
           <CateGoryItem
             key={category.id}
-            name={category.name}
-            image={category.image}
+            name={category.name || ""}
+            image={category.image || ""}
             count={category.count || 0}
           />
         ))}
