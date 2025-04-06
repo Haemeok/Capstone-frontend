@@ -29,11 +29,14 @@ jobs:
       - name: Build application
         run: npm run build
 
+      - name: Setup known_hosts
+        run: mkdir -p ~/.ssh && ssh-keyscan -H -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          known_hosts: unnecessary
           if_key_exists: replace
 
       - name: Add known hosts via ssh-keyscan (fallback)
