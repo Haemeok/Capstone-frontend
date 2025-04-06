@@ -35,7 +35,14 @@ const HomePage = () => {
       {!isLogged ? (
         <div className="flex h-12 items-center justify-center gap-2 rounded-md border-[1px] border-c_button_gray p-2 px-4">
           <GoogleIcon width={24} height={24} />
-          <Link to={END_POINTS.GOOGLE_LOGIN}>구글 로그인</Link>
+          <button
+            onClick={() =>
+              (window.location.href =
+                "https://www.haemeok.com" + END_POINTS.GOOGLE_LOGIN)
+            }
+          >
+            구글 로그인
+          </button>
         </div>
       ) : (
         user && (

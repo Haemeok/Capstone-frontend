@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useParams, useNavigate, Outlet } from "react-router";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import UserProfile from "@/components/UserProfile";
 import CollapsibleP from "@/components/CollapsibleP";
 
@@ -14,13 +14,30 @@ import LockButton from "@/components/Button/LockButton";
 import Box from "@/components/ui/Box";
 import CommentBox from "@/components/CommentBox";
 import { Button } from "@/components/ui/button";
+import TransformingNavbar from "@/components/NavBar/TransformingNavBar";
 
-const RecipeDetailPage: React.FC = () => {
+const RecipeDetailPage = () => {
   const navigate = useNavigate();
   const [halfRating, setHalfRating] = useState<number>(3.5);
+  const imageRef = useRef<HTMLImageElement>(null);
+
   return (
-    <div className="mx-auto ">
-      <SuspenseImage src={recipe.imageURL} alt={recipe.title} />
+    <div className="mx-auto pb-16">
+      <TransformingNavbar
+        title={recipe.title}
+        targetRef={imageRef}
+        titleThreshold={0.7}
+        textColorThreshold={0.5}
+        shadowThreshold={0.8}
+      />
+      <div ref={imageRef} className="w-full h-64">
+        <SuspenseImage
+          src={recipe.imageURL}
+          alt={recipe.title}
+          className="w-full h-full object-cover"
+          blackOverlay={true}
+        />
+      </div>
       <Box className="flex flex-col gap-4 justify-center items-center">
         <h1 className="text-2xl font-bold mb-4 text-center">{recipe.title}</h1>
         <Ratings

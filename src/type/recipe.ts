@@ -1,31 +1,33 @@
 export type Ingredient = {
+  id: number;
   quantity: string;
   name: string;
   unit: string;
 };
 
 export type RecipeStep = {
-  ingredients: Ingredient[];
+  id: number;
+  ingredients?: Ingredient[];
   instruction: string;
-  utensils: string[];
-  action: string;
+  action?: string;
   stepImageUrl: string;
   stepNumber: number;
-  cookingTools: string;
+  cookingTools?: string[];
 };
 
 export type Recipe = {
   id?: number;
   title: string;
+  description: string;
   imageURL: string;
   ingredients: Ingredient[];
   steps: RecipeStep[];
   dishType: string;
-  cookingTime: number;
+  cookingTime: number | undefined | "";
   cookingTools: string;
   isAigenerated: boolean;
   youtubeUrl?: string;
-  servings: number;
+  servings: number | undefined | "";
   totalIngredientCost?: number;
   marketPrice?: number;
   tagNames?: string[];
@@ -35,6 +37,10 @@ export type RecipeGridItem = {
   id: number;
   title: string;
   imageUrl: string;
+  authorName: string;
+  createdAt: string;
+  likeCount: number;
+  likedByCurrentUser: boolean;
 };
 
 export type IngredientItem = {
