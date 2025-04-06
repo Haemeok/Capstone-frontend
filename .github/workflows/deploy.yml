@@ -31,7 +31,15 @@ jobs:
 
       - name: Install rsync
         run: |
-          which rsync || (sudo apt-get update && sudo apt-get install -y rsync)
+          if ! command -v rsync &> /dev/null
+          then
+            echo "rsync not found, installing..."
+            sudo apt-get update
+            sudo apt-get install -y rsync
+          else
+            echo "rsync already installed"
+          fi
+
           rsync --version
 
       - name: Install SSH key
