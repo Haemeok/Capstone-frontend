@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import UserProfile from "@/components/UserProfile";
 import CollapsibleP from "@/components/CollapsibleP";
@@ -20,9 +20,33 @@ const RecipeDetailPage = () => {
   const navigate = useNavigate();
   const [halfRating, setHalfRating] = useState<number>(3.5);
   const imageRef = useRef<HTMLImageElement>(null);
+  const observerRef = useRef<HTMLDivElement>(null);
+  const [isButtonVisible, setIsButtonVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsButtonVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.5,
+        rootMargin: "0px",
+      }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, []);
 
   return (
-    <div className="mx-auto pb-16">
+    <div className="mx-auto pb-16 relative">
       <TransformingNavbar
         title={recipe.title}
         targetRef={imageRef}
@@ -38,6 +62,7 @@ const RecipeDetailPage = () => {
           blackOverlay={true}
         />
       </div>
+
       <Box className="flex flex-col gap-4 justify-center items-center">
         <h1 className="text-2xl font-bold mb-4 text-center">{recipe.title}</h1>
         <Ratings
@@ -92,9 +117,25 @@ const RecipeDetailPage = () => {
           ))}
         </ul>
       </Box>
+      <div ref={observerRef} className="h-1 w-full" />
       <Box>
         <RecipeStepList RecipeSteps={RecipeSteps} />
       </Box>
+
+      {isButtonVisible && (
+        <div className="fixed bottom-6 justify-center w-full flex z-50">
+          <Button
+            className="rounded-full p-4 bg-[#5cc570] text-white shadow-lg hover:bg-[#4bb560] transition-all"
+            onClick={() =>
+              navigate(`/recipes/${recipe.id}/slideShow`, {
+                state: { recipeSteps: RecipeSteps },
+              })
+            }
+          >
+            요리하기
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

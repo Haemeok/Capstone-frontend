@@ -1,23 +1,27 @@
 import { Clipboard, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type ProgressButtonProps = {
   progressPercentage: number;
   isFormValid: boolean;
-  completedSteps: number;
-  totalSteps: number;
   onClick?: () => void;
+  className?: string;
 };
 
 const ProgressButton = ({
   progressPercentage,
   isFormValid,
-  completedSteps,
-  totalSteps,
   onClick,
+  className,
 }: ProgressButtonProps) => {
   return (
-    <div className="relative w-full rounded-lg overflow-hidden shadow-md group">
+    <div
+      className={cn(
+        "relative w-full rounded-lg overflow-hidden shadow-md group",
+        className
+      )}
+    >
       <div className="absolute inset-0 bg-gray-300"></div>
 
       <div

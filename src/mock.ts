@@ -39,49 +39,57 @@ export const categoriesItems = [
   {
     id: 1,
     name: "🏠홈파티",
-    image: "/images/categories/salad.png",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     count: 10,
   },
   {
     id: 2,
     name: "🌼피크닉",
-    image: "/images/categories/salad.png",
+    image:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     count: 10,
   },
   {
     id: 3,
     name: "🏕️캠핑",
-    image: "/images/categories/salad.png",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     count: 10,
   },
   {
     id: 4,
     name: "🥗다이어트/건강식",
-    image: "/images/categories/salad.png",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     count: 10,
   },
   {
     id: 5,
     name: "👶아이와 함께",
-    image: "/images/categories/salad.png",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     count: 10,
   },
   {
     id: 6,
     name: "🍽️혼밥",
-    image: "/images/categories/salad.png",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     count: 10,
   },
   {
     id: 7,
     name: "🍶술안주",
-    image: "/images/categories/salad.png",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     count: 10,
   },
   {
     id: 8,
     name: "🥐브런치",
-    image: "/images/categories/salad.png",
+    imageUrl:
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     count: 10,
   },
   {},
@@ -127,7 +135,7 @@ export let RecipeSteps: RecipeStep[] = [
     instruction:
       "To make vegan béchamel, melt margarine in saucepan. Whisk in flour, then slowly whisk in warm soymilk in a steady stream.",
     stepImageUrl:
-      "https://images.services.kitchenstories.io/ElYwsXXhveA6Bgi4G0MDJR98Hs8=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step02.jpg",
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     stepNumber: 1,
   },
   {
@@ -155,7 +163,7 @@ export let RecipeSteps: RecipeStep[] = [
     instruction:
       "Stir in nutritional yeast, nutmeg, and salt and pepper to taste.",
     stepImageUrl:
-      "https://images.services.kitchenstories.io/XxlbGHQODxaf6DdIJsQnhpq_9h4=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step01.jpg",
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     stepNumber: 2,
     cookingTools: ["oven"],
   },
@@ -184,7 +192,7 @@ export let RecipeSteps: RecipeStep[] = [
     instruction:
       "Preheat oven to 200°C/400°F. Peel onion and garlic, clean mushrooms. Finely chop onion, garlic, and thyme and slice mushrooms.",
     stepImageUrl:
-      "https://images.services.kitchenstories.io/-xGd-1FDd5Q2hwuWwhj3Qc_ERIY=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step04.jpg",
+      "https://images.services.kitchenstories.io/aWWyLRLa6Z4z5up2sI9UGPMGHQo=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step03.jpg",
     stepNumber: 3,
     cookingTools: ["oven"],
   },
@@ -213,7 +221,7 @@ export let RecipeSteps: RecipeStep[] = [
     instruction:
       "Add oil to frying pan, sauté onion, garlic and our VEGGIE WUNDER seasoning (if using) over medium heat until fragrant and softened. Add mushrooms and thyme and cook for a few minutes, until mushrooms start to brown; if needed, add a bit more oil. Add spinach and cook until wilted, stirring often. Season with salt and pepper. Set aside.",
     stepImageUrl:
-      "https://images.services.kitchenstories.io/aWWyLRLa6Z4z5up2sI9UGPMGHQo=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step03.jpg",
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     stepNumber: 4,
     cookingTools: ["oven"],
   },
@@ -242,7 +250,7 @@ export let RecipeSteps: RecipeStep[] = [
     instruction:
       "Spread a layer of tomato sauce on bottom of casserole dish. Add a layer of noodles, then a layer of béchamel sauce, and a layer of vegetables. Top with another layer of noodles and tomato sauce, and repeat pattern until casserole dish is filled. Finish with a layer of béchamel sauce and remaining mushrooms and spinach. Garnish with thyme leaves. Bake for approx. 30–40 min. at 200°C/400°F, or until sides start to bubble and top turns golden brown. Let cool slightly before slicing and serving. Enjoy!",
     stepImageUrl:
-      "https://images.services.kitchenstories.io/P_C3cQKuB3llMU5CkxCLvsBDDgk=/384x0/filters:quality(80)/images.kitchenstories.io/wagtailOriginalImages/R3264-step-photo-4.jpg",
+      "https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg",
     stepNumber: 5,
     cookingTools: ["oven"],
   },

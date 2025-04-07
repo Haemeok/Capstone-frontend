@@ -7,7 +7,6 @@ import ProgressButton from "@/components/ProgressButton";
 import { categories, cookingTimes, recommendedTags } from "@/mock";
 import { useState } from "react";
 
-// 폼 타입 정의
 interface AIRecipeFormData {
   ingredients: string[];
   selectedCategories: string[];
@@ -18,7 +17,6 @@ interface AIRecipeFormData {
 const AIRecipePage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // react-hook-form 설정
   const {
     handleSubmit,
     setValue,
@@ -34,12 +32,10 @@ const AIRecipePage = () => {
     mode: "onChange",
   });
 
-  // watch로 폼 값 구독
   const formValues = watch();
   const { ingredients, selectedCategories, selectedTimes, selectedTags } =
     formValues;
 
-  // 재료 관련 핸들러
   const handleAddIngredient = (ingredient: string) => {
     const newIngredients = [...ingredients, ingredient];
     setValue("ingredients", newIngredients, {
@@ -63,11 +59,10 @@ const AIRecipePage = () => {
     });
   };
 
-  // 토글 핸들러 함수
   const toggle = <T,>(
     fieldName: keyof AIRecipeFormData,
     currentItems: T[],
-    item: T,
+    item: T
   ) => {
     let newItems: T[];
     if (currentItems.includes(item)) {
@@ -82,7 +77,6 @@ const AIRecipePage = () => {
     });
   };
 
-  // 항목 토글 핸들러
   const toggleCategory = (category: string) =>
     toggle("selectedCategories", selectedCategories, category);
 
@@ -91,7 +85,6 @@ const AIRecipePage = () => {
 
   const toggleTag = (tag: string) => toggle("selectedTags", selectedTags, tag);
 
-  // 진행 상태 계산
   const totalSteps = 4;
   const completedSteps = [
     ingredients.length > 0,
@@ -103,16 +96,14 @@ const AIRecipePage = () => {
   const progressPercentage = Math.floor((completedSteps / totalSteps) * 100);
   const isFormReady = completedSteps === totalSteps;
 
-  // 폼 제출 핸들러
   const onSubmit = (data: AIRecipeFormData) => {
     if (isFormReady) {
       console.log("레시피 생성 요청", data);
-      // API 호출 또는 다른 작업 수행
     }
   };
 
   return (
-    <>
+    <div className="mx-auto relative p-4">
       <div className="text-center">
         <p className="text-gray-600">
           나만의 맞춤형 레시피를 AI가 추천해드립니다
@@ -159,8 +150,6 @@ const AIRecipePage = () => {
         <ProgressButton
           progressPercentage={progressPercentage}
           isFormValid={isFormReady && isDirty}
-          completedSteps={completedSteps}
-          totalSteps={totalSteps}
           onClick={handleSubmit(onSubmit)}
         />
       </form>
@@ -173,7 +162,7 @@ const AIRecipePage = () => {
         onRemoveIngredient={handleRemoveIngredient}
         onRemoveAllIngredients={handleRemoveAllIngredients}
       />
-    </>
+    </div>
   );
 };
 

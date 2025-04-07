@@ -1,42 +1,35 @@
-import * as React from "react";
-
-import { Card, CardContent } from "@/components/ui/card"; // Assuming Card components exist
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
-} from "@/components/ui/carousel"; // Assuming Carousel components exist
-import { Button } from "@/components/ui/button"; // Assuming Button component exists
-import { X, Share, Star, Bookmark } from "lucide-react"; // Assuming lucide-react is installed
-import { RecipeSteps } from "@/mock";
+} from "@/components/ui/carousel";
+import { Button } from "@/components/ui/button";
+import { X, Share, Star, Bookmark } from "lucide-react";
+import { useEffect, useState } from "react";
+import SlideShowContent from "@/components/SlideShowContent";
+import { RecipeStep } from "@/type/recipe";
+import { useLocation, useNavigate } from "react-router";
 
-const TOTAL_STEPS = RecipeSteps.length + 1;
+const RecipeSlideShowPage = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const navigate = useNavigate();
+  const { recipeSteps } = useLocation().state as { recipeSteps: RecipeStep[] };
+  const TOTAL_STEPS = recipeSteps.length + 1;
 
-export default function RecipeSlideShowPage() {
-  const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
-  const [scrollProgress, setScrollProgress] = React.useState(0);
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api) {
       return;
     }
 
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
     const onScroll = () => {
       const progress = api.scrollProgress();
       setScrollProgress(progress);
     };
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
+
     api.on("scroll", onScroll);
 
-    // 초기 스크롤 프로그레스 값 설정
     setScrollProgress(api.scrollProgress());
 
     return () => {
@@ -44,38 +37,37 @@ export default function RecipeSlideShowPage() {
     };
   }, [api]);
 
-  const currentStepData = RecipeSteps[current - 1] || RecipeSteps[0];
-
-  const isLastStep = current === TOTAL_STEPS;
-  console.log(current, TOTAL_STEPS, isLastStep);
-  const getStepProgress = (stepIndex: number) => {
-    const totalSteps = RecipeSteps.length;
-    const stepSize = 1 / totalSteps; // 각 단계당 차지하는 비율
-    const stepStart = stepSize * stepIndex; // 해당 단계의 시작 지점
-    const stepEnd = stepSize * (stepIndex + 1); // 해당 단계의 끝 지점
-
-    // 현재 스크롤 진행도가 해당 단계를 얼마나 지났는지 계산
-    if (scrollProgress < stepStart) {
-      return 0; // 아직 해당 단계에 도달하지 않음
-    } else if (scrollProgress >= stepEnd) {
-      return 100; // 해당 단계를 완전히 통과
-    } else {
-      // 해당 단계 내에서의 진행도 계산
-      const stepProgress = ((scrollProgress - stepStart) / stepSize) * 100;
-      return stepProgress;
+  const handleProgressClick = (index: number) => {
+    if (api) {
+      api.scrollTo(index);
     }
+  };
+
+  const getStepProgress = (stepIndex: number) => {
+    const totalSteps = recipeSteps.length;
+    const stepSize = 1 / totalSteps;
+    const stepStart = stepSize * stepIndex;
+    const stepEnd = stepSize * (stepIndex + 1);
+
+    if (scrollProgress < stepStart) {
+      return 0;
+    } else if (scrollProgress >= stepEnd) {
+      return 100;
+    }
+
+    const stepProgress = ((scrollProgress - stepStart) / stepSize) * 100;
+    return stepProgress;
   };
   return (
     <div className="relative flex flex-col h-screen bg-background text-foreground">
-      {/* Header */}
       <div className="absolute top-0 left-0 right-0 flex justify-between items-center p-4 z-10">
         <Button
           variant="ghost"
           size="icon"
           className="rounded-full bg-black/30 text-white hover:bg-black/50"
+          onClick={() => navigate(-1)}
         >
           <X className="h-5 w-5" />
-          <span className="sr-only">닫기</span>
         </Button>
         <Button
           variant="ghost"
@@ -83,62 +75,17 @@ export default function RecipeSlideShowPage() {
           className="rounded-full bg-black/30 text-white hover:bg-black/50"
         >
           <Share className="h-5 w-5" />
-          <span className="sr-only">공유하기</span>
         </Button>
       </div>
 
-      {/* Carousel */}
       <Carousel
         setApi={setApi}
         className="h-full flex-grow flex flex-col overflow-hidden"
       >
         <CarouselContent className="-ml-0 flex-grow h-full">
-          {RecipeSteps.map((step, index) => (
+          {recipeSteps.map((step, index) => (
             <CarouselItem key={index} className="pl-0 h-full">
-              <div className="flex flex-col h-full">
-                {/* Image Area */}
-                <div className="relative h-3/5">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={step.stepImageUrl}
-                    alt={`Step ${step.stepNumber}`}
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Image Overlay for Step Number? (Optional based on exact design) */}
-                  {/* <div className="absolute top-4 right-4 bg-black/50 text-white text-xs font-bold px-2 py-1 rounded">
-                     {step.step} / {TOTAL_STEPS}
-                   </div> */}
-                </div>
-
-                {/* Content Area */}
-                <div className="p-6 h-full">
-                  {step.ingredients && step.ingredients.length > 0 && (
-                    <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-3">
-                      {/* Placeholder for equipment icons */}
-                      {step.ingredients.map((ingredient) => (
-                        <span
-                          key={ingredient.id}
-                          className="bg-muted px-2 py-1 rounded text-xs"
-                        >
-                          {ingredient.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  {step.instruction && (
-                    <h2 className="text-2xl font-bold mb-4">
-                      {step.instruction}
-                    </h2>
-                  )}
-                  <div className="prose prose-sm max-w-none">
-                    {typeof step.instruction === "string" ? (
-                      <p>{step.instruction}</p>
-                    ) : (
-                      step.instruction
-                    )}
-                  </div>
-                </div>
-              </div>
+              <SlideShowContent step={step} totalSteps={TOTAL_STEPS} />
             </CarouselItem>
           ))}
           <CarouselItem key={TOTAL_STEPS} className="pl-0 h-full">
@@ -155,15 +102,15 @@ export default function RecipeSlideShowPage() {
             </div>
           </CarouselItem>
         </CarouselContent>
-        {/* Hide default navigation buttons */}
-        {/* <CarouselPrevious /> */}
-        {/* <CarouselNext /> */}
       </Carousel>
 
-      {/* Progress Indicator */}
       <div className="flex h-12 border-t border-border bg-background">
-        {RecipeSteps.map((step, index) => (
-          <div key={index} className="flex-1 relative border-r border-border">
+        {recipeSteps.map((step, index) => (
+          <div
+            key={index}
+            className="flex-1 relative border-r border-border"
+            onClick={() => handleProgressClick(index)}
+          >
             <div className="flex items-center justify-center h-full">
               <span className="text-xs font-medium text-muted-foreground absolute top-1 left-2 z-10">
                 {`0${index + 1}`}
@@ -175,11 +122,12 @@ export default function RecipeSlideShowPage() {
             />
           </div>
         ))}
-        {/* Bookmark Icon at the end */}
         <div className="w-12 h-full flex items-center justify-center bg-muted border-l border-border">
           <Bookmark className="h-4 w-4 text-muted-foreground" />
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default RecipeSlideShowPage;
