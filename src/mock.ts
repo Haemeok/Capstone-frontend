@@ -101,7 +101,7 @@ export const recommendedTags = [
   "고단백",
 ];
 
-export const RecipeSteps: RecipeStep[] = [
+export let RecipeSteps: RecipeStep[] = [
   {
     id: 1,
     ingredients: [
@@ -126,7 +126,8 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "To make vegan béchamel, melt margarine in saucepan. Whisk in flour, then slowly whisk in warm soymilk in a steady stream.",
-    stepImageUrl: "/images/recipes/step-1.jpg",
+    stepImageUrl:
+      "https://images.services.kitchenstories.io/ElYwsXXhveA6Bgi4G0MDJR98Hs8=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step02.jpg",
     stepNumber: 1,
   },
   {
@@ -153,7 +154,8 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "Stir in nutritional yeast, nutmeg, and salt and pepper to taste.",
-    stepImageUrl: "/images/recipes/step-2.jpg",
+    stepImageUrl:
+      "https://images.services.kitchenstories.io/XxlbGHQODxaf6DdIJsQnhpq_9h4=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step01.jpg",
     stepNumber: 2,
     cookingTools: ["oven"],
   },
@@ -181,7 +183,8 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "Preheat oven to 200°C/400°F. Peel onion and garlic, clean mushrooms. Finely chop onion, garlic, and thyme and slice mushrooms.",
-    stepImageUrl: "/images/recipes/step-3.jpg",
+    stepImageUrl:
+      "https://images.services.kitchenstories.io/-xGd-1FDd5Q2hwuWwhj3Qc_ERIY=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step04.jpg",
     stepNumber: 3,
     cookingTools: ["oven"],
   },
@@ -209,7 +212,8 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "Add oil to frying pan, sauté onion, garlic and our VEGGIE WUNDER seasoning (if using) over medium heat until fragrant and softened. Add mushrooms and thyme and cook for a few minutes, until mushrooms start to brown; if needed, add a bit more oil. Add spinach and cook until wilted, stirring often. Season with salt and pepper. Set aside.",
-    stepImageUrl: "/images/recipes/step-4.jpg",
+    stepImageUrl:
+      "https://images.services.kitchenstories.io/aWWyLRLa6Z4z5up2sI9UGPMGHQo=/384x0/filters:quality(80)/images.kitchenstories.io/recipeStepImages/16_01_63_ScallionPancake_Step03.jpg",
     stepNumber: 4,
     cookingTools: ["oven"],
   },
@@ -237,7 +241,8 @@ export const RecipeSteps: RecipeStep[] = [
     ],
     instruction:
       "Spread a layer of tomato sauce on bottom of casserole dish. Add a layer of noodles, then a layer of béchamel sauce, and a layer of vegetables. Top with another layer of noodles and tomato sauce, and repeat pattern until casserole dish is filled. Finish with a layer of béchamel sauce and remaining mushrooms and spinach. Garnish with thyme leaves. Bake for approx. 30–40 min. at 200°C/400°F, or until sides start to bubble and top turns golden brown. Let cool slightly before slicing and serving. Enjoy!",
-    stepImageUrl: "/images/recipes/step-5.jpg",
+    stepImageUrl:
+      "https://images.services.kitchenstories.io/P_C3cQKuB3llMU5CkxCLvsBDDgk=/384x0/filters:quality(80)/images.kitchenstories.io/wagtailOriginalImages/R3264-step-photo-4.jpg",
     stepNumber: 5,
     cookingTools: ["oven"],
   },

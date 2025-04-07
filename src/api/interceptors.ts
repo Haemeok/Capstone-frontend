@@ -18,6 +18,11 @@ interface ErrorResponseData {
 }
 
 export const checkAndSetToken = (config: InternalAxiosRequestConfig) => {
+  if (typeof window !== "undefined") {
+    // eslint-disable-next-line no-param-reassign
+    config.headers["X-Source-Origin"] = window.location.origin;
+  }
+
   if (!config.useAuth || !config.headers || config.headers.Authorization) {
     return config;
   }
@@ -46,7 +51,7 @@ export const handleAPIError = (error: AxiosError<ErrorResponseData>) => {
 };
 
 export const handleTokenError = async (
-  error: AxiosError<ErrorResponseData>,
+  error: AxiosError<ErrorResponseData>
 ) => {
   const originRequest = error.config;
   if (!originRequest) throw error;
