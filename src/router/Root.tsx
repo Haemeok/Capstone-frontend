@@ -4,12 +4,8 @@ import { Outlet } from "react-router";
 
 function Root() {
   return (
-    <div className="flex flex-col min-h-screen relative">
-      <div className="fixed top-0 left-0 right-0 z-30">
-        <TopNavBar label="해먹" isActivePrevButton={true} />
-      </div>
-
-      <div className="flex-1 mt-16 mb-20 overflow-y-auto overflow-x-hidden">
+    <div className="flex flex-col relative">
+      <div className="flex-1 mt-16 mb-20 overflow-x-hidden">
         <Outlet />
       </div>
 
