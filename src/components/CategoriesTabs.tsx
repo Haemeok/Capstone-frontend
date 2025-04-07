@@ -1,8 +1,9 @@
 import { categoriesItems } from "@/mock";
 import React from "react";
 import CateGoryItem from "./CateGoryItem";
-
+import { useNavigate } from "react-router";
 const CategoriesTabs = () => {
+  const navigate = useNavigate();
   return (
     <div className="mt-8 w-full">
       <div className="flex justify-between items-center px-6 mb-4">
@@ -28,12 +29,27 @@ const CategoriesTabs = () => {
 
       <div className="pl-6 flex gap-4 w-full overflow-x-auto pb-4 scrollbar-hide">
         {categoriesItems.map((category) => (
-          <CateGoryItem
+          <div
             key={category.id}
-            name={category.name || ""}
-            image={category.image || ""}
-            count={category.count || 0}
-          />
+            className="rounded-2xl overflow-hidden bg-white shadow-md flex-shrink-0"
+            onClick={() => {
+              navigate(`/recipes/${category.id}`);
+            }}
+          >
+            <div className="relative w-48 h-48">
+              <img
+                src={category.imageUrl}
+                alt={category.name}
+                className="w-full h-full object-cover"
+              />
+
+              <div className="absolute flex items-end h-1/3 bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                <p className="text-white text-sm font-semibold">
+                  {category.name}
+                </p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
     </div>

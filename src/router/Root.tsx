@@ -5,7 +5,7 @@ import { Outlet } from "react-router";
 function Root() {
   return (
     <div className="flex flex-col relative">
-      <div className="flex-1 mt-16 mb-20 overflow-x-hidden">
+      <div className="flex-1 mb-20 overflow-x-hidden">
         <Outlet />
       </div>
 

@@ -74,7 +74,7 @@ const UserDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen overflow-hidden">
+    <div className="min-h-screen overflow-hidden mt-20">
       <div className="fixed top-0 left-0 right-0 z-30 p-4 bg-white">
         <h2 className="text-2xl font-bold">프로필</h2>
       </div>
