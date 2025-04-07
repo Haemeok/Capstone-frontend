@@ -15,6 +15,8 @@ import SearchPage from "@/Pages/SearchPage";
 import Page from "@/Pages/tPage";
 import NewIngredientsPage from "@/Pages/NewIngredientsPage";
 import ScrollTransformNavbar from "@/Pages/tPage2";
+import LoginPage from "@/Pages/LoginPage";
+import RecipeSlideShowPage from "@/Pages/RecipeSlideShowPage";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +63,10 @@ const router = createBrowserRouter([
         path: "search",
         element: <SearchPage />,
       },
+      {
+        path: "/login/oauth2/code/google",
+        element: <LoginPage />,
+      },
     ],
   },
   {
@@ -78,6 +84,10 @@ const router = createBrowserRouter([
   {
     path: "recipes/:id",
     element: <RecipeDetailPage />,
+  },
+  {
+    path: "recipes/:id/slideshow",
+    element: <RecipeSlideShowPage />,
   },
 ]);
 
