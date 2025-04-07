@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
 type ToggleIconButtonProps = {
@@ -23,7 +21,7 @@ type ToggleIconButtonProps = {
 };
 
 const ToggleIconButton = ({
-  isActive: externalIsActive,
+  isActive,
   onToggle,
   activeIcon,
   icon,
@@ -34,16 +32,9 @@ const ToggleIconButton = ({
   children,
   ...props
 }: ToggleIconButtonProps) => {
-  const [internalIsActive, setInternalIsActive] = useState(false);
-  let isActive =
-    externalIsActive !== undefined ? externalIsActive : internalIsActive;
-
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     props.onClick?.(e);
-    const newState = !isActive;
-    setInternalIsActive(newState);
-    onToggle?.(newState);
-    console.log(internalIsActive);
+    onToggle?.(!isActive);
   };
 
   return (
@@ -53,7 +44,7 @@ const ToggleIconButton = ({
       className={cn(
         "flex items-center justify-center gap-1 cursor-pointer",
         isActive ? activeClassName : inactiveClassName,
-        className,
+        className
       )}
       {...props}
     >

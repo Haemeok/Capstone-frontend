@@ -1,18 +1,15 @@
 import React, { useRef, useEffect, useState } from "react";
+import PrevButton from "../Button/PrevButton";
+import HeartButton from "../Button/HeartButton";
+import ShareButton from "../Button/ShareButton";
 
 type TransformingNavbarProps = {
   title: string;
-
   targetRef: React.RefObject<HTMLElement | null>;
-
   leftComponent?: React.ReactNode;
-
   rightComponent?: React.ReactNode;
-
   titleThreshold?: number;
-
   textColorThreshold?: number;
-
   shadowThreshold?: number;
 };
 
@@ -45,13 +42,6 @@ const TransformingNavbar = ({
 
         setShowTitle(visibleRatio > titleThreshold);
 
-        console.log(
-          "Intersection Ratio:",
-          entry.intersectionRatio,
-          "Calculated Opacity:",
-          Math.max(0, Math.min(1, visibleRatio))
-        );
-
         if (headerRef.current) {
           headerRef.current.style.setProperty(
             "--nav-opacity",
@@ -75,68 +65,16 @@ const TransformingNavbar = ({
   const textColor =
     navOpacity > textColorThreshold ? "text-black" : "text-white";
 
-  const defaultLeftComponent = (
-    <button
-      className={`p-2 ${textColor} transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
-      aria-label="Go back"
-    >
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M15 19l-7-7 7-7"
-        />
-      </svg>
-    </button>
-  );
-
   const defaultRightComponent = (
-    <div className="flex space-x-2">
-      <button
-        className={`p-2 ${textColor} transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
-        aria-label="Share"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-          />
-        </svg>
-      </button>
-      <button
-        className={`p-2 ${textColor} transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
-        aria-label="Like"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-          />
-        </svg>
-      </button>
+    <div className="flex shrink-0">
+      <HeartButton
+        className={`${textColor} flex-shrink-0 transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
+        ariaLabel="좋아요"
+      />
+      <ShareButton
+        className={`p-2 ${textColor} flex-shrink-0 transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
+        ariaLabel="공유하기"
+      />
     </div>
   );
 
@@ -152,18 +90,19 @@ const TransformingNavbar = ({
             : "none",
       }}
     >
-      {leftComponent || defaultLeftComponent}
+      <div className="flex items-center gap-2 min-w-0 max-w-full">
+        <PrevButton className={`${textColor} shrink-0`} />
 
-      <h1
-        className={`font-bold truncate text-lg transform transition-all duration-300 ${textColor}`}
-        style={{
-          opacity: showTitle ? 1 : 0,
-          transform: showTitle ? "translateY(0)" : "translateY(-10px)",
-        }}
-      >
-        {title}
-      </h1>
-
+        <h1
+          className={`font-bold truncate text-lg transform transition-all duration-300 ${textColor}`}
+          style={{
+            opacity: showTitle ? 1 : 0,
+            transform: showTitle ? "translateY(0)" : "translateY(-10px)",
+          }}
+        >
+          {title}
+        </h1>
+      </div>
       {rightComponent || defaultRightComponent}
     </div>
   );

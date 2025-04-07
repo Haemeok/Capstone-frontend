@@ -49,9 +49,18 @@ const RecipeDetailPage = () => {
           showValue={true}
         />
         <div className="flex gap-4 justify-center">
-          <HeartButton />
-          <SaveButton />
-          <ShareButton />
+          <HeartButton
+            className="flex items-center justify-center border-2 rounded-full p-2 w-16 h-16"
+            label="좋아요"
+          />
+          <SaveButton
+            className="flex items-center justify-center border-2 rounded-full p-2 w-16 h-16"
+            label="저장"
+          />
+          <ShareButton
+            className="flex items-center justify-center border-2 rounded-full p-2 w-16 h-16"
+            label="공유"
+          />
           <LockButton />
         </div>
       </Box>

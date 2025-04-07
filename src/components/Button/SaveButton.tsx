@@ -2,7 +2,13 @@ import { useState } from "react";
 import ToggleIconButton from "./ToggleIconButton";
 import { Bookmark } from "lucide-react";
 
-const SaveButton = () => {
+type SaveButtonProps = {
+  className?: string;
+  onClick?: () => void;
+  label?: string;
+};
+
+const SaveButton = ({ className, onClick, label }: SaveButtonProps) => {
   const [isSaved, setIsSaved] = useState(false);
 
   const handleToggle = (active: boolean) => {
@@ -11,15 +17,19 @@ const SaveButton = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <ToggleIconButton
-        isActive={isSaved}
-        onToggle={handleToggle}
-        size="default"
-        icon={<Bookmark width={24} height={24} />}
-        activeIcon={<Bookmark className="fill-zinc-800" />}
-        className="w-16 h-16 flex items-center justify-center border-2 rounded-full p-2"
-      />
-      <p className="font-bold text-sm mt-1">저장</p>
+      <button
+        onClick={() => handleToggle(!isSaved)}
+        className={`w-16 h-16 ${className}`}
+      >
+        <Bookmark
+          width={24}
+          height={24}
+          className={`transition-all duration-300 ${
+            isSaved ? "fill-zinc-800" : ""
+          } `}
+        />
+      </button>
+      {label && <p className="font-bold text-sm mt-1">{label}</p>}
     </div>
   );
 };
