@@ -26,11 +26,6 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
           </div>
         ))}
       </div>
-      <ul className="flex gap-2">
-        {step.cookingTools?.map((cookingTool, cookingToolIndex) => (
-          <li key={cookingToolIndex}>{cookingTool}</li>
-        ))}
-      </ul>
       <p className="text-left">{step.instruction}</p>
     </div>
   );
