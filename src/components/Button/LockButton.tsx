@@ -23,7 +23,7 @@ const LockButton = () => {
           />
         }
         activeIcon={<LockKeyhole className="transition-all duration-300" />}
-        className="w-16 h-16 flex items-center justify-center border-2 rounded-full p-2"
+        className="w-14 h-14 flex items-center justify-center border-2 rounded-full p-2"
       />
       <p className="text-sm font-bold mt-1">{isLocked ? "비공개" : "공개"}</p>
     </div>

@@ -20,11 +20,11 @@ const SelectButton = ({
       variant="outline"
       size="sm"
       className={cn(
-        "rounded-full flex items-center gap-1.5 cursor-pointer hover:border-green-700 transition-all duration-250",
+        "rounded-full flex items-center gap-1.5 cursor-pointer hover:border-green-700 transition-all duration-100",
         isSelected
-          ? "bg-green-600 text-white border-green-600 hover:bg-green-700 hover:border-green-700 hover:text-white"
+          ? "bg-olive-light text-white border-olive-light hover:bg-olive-light hover:border-olive-light hover:text-white"
           : "border-gray-300",
-        className,
+        className
       )}
       onClick={onClick}
     >

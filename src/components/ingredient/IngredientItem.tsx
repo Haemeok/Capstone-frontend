@@ -12,11 +12,11 @@ type IngredientItemProps = {
 const IngredientItem = ({ ingredient, isDeleteMode }: IngredientItemProps) => {
   const [isActive, setIsActive] = useState(false);
   return (
-    <div className="flex items-center gap-2 rounded-lg p-4 relative border-[1.5px] border-gray-200">
+    <div className="flex items-center gap-2 rounded-lg py-2 px-1 relative border-[1.5px] border-gray-200">
       <img
         src={ingredient.imageUrl}
         alt={ingredient.name}
-        className="w-10 h-10 rounded-md"
+        className="w-15 h-15 rounded-md"
       />
       <div className="flex flex-col">
         <span className="text-xs text-gray-500">{ingredient.category}</span>
@@ -27,7 +27,7 @@ const IngredientItem = ({ ingredient, isDeleteMode }: IngredientItemProps) => {
           onClick={() => setIsActive(!isActive)}
           className={cn(
             "border-2 border-gray-500 rounded-full p-1 w-5 h-5 absolute right-4 top-4",
-            isActive ? "bg-[#5cc570]" : "",
+            isActive ? "bg-[#5cc570]" : ""
           )}
         />
       )}

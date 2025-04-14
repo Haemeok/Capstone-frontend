@@ -68,7 +68,7 @@ const TransformingNavbar = ({
   const defaultRightComponent = (
     <div className="flex shrink-0">
       <HeartButton
-        className={`${textColor} flex-shrink-0 transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
+        buttonClassName={`${textColor} flex-shrink-0 transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
         ariaLabel="좋아요"
       />
       <ShareButton
