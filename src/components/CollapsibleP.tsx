@@ -7,7 +7,7 @@ import { useState } from "react";
 const CollapsibleP = () => {
   const [isOpen, setIsOpen] = useState(false);
   const content =
-    "For any French toast fan, this recipe will be the next fixation, especially from the air fryer! Each part of this recipe is full of flavor; cinnamon, apple, and sugar. Use large bread slices to be able wrap around the apple filling comfortably. Pair them with a simple vanilla yogurt or quark for a dip to take the snacking moment to the next level. They turn out even crispier in this air fryer version, and you can cut off the edges to make croutons later, so keep them around (air fryer croutons are unmatched).";
+    "캐서롤 접시 바닥에 토마토 소스를 한 겹 펴 바릅니다. 국수 층을 올린 다음 베샤멜 소스 층과 야채 층을 추가합니다. 그 위에 면과 토마토 소스를 한 겹 더 얹고 캐서롤 접시가 가득 찰 때까지 이 패턴을 반복합니다. 베샤멜 소스 층과 남은 버섯과 시금치로 마무리합니다. 타임 잎으로 장식합니다. 200°C/400°F에서 약 30~40분간 또는 측면에 기포가 생기고 윗면이 노릇노릇해질 때까지 구워줍니다. 살짝 식힌 후 슬라이스하여 제공합니다. 맛있게 드세요!";
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CardContent className="p-4">
@@ -28,14 +28,18 @@ const CollapsibleP = () => {
         </div>
 
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="mt-2 text-[#5cc570]">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-2 text-[#526c04] font-semibold"
+          >
             {isOpen ? (
               <>
-                Read less <ChevronUp size={16} className="ml-1" />
+                숨기기 <ChevronUp size={16} className="ml-1" />
               </>
             ) : (
               <>
-                Read more <ChevronDown size={16} className="ml-1" />
+                더 읽기 <ChevronDown size={16} className="ml-1" />
               </>
             )}
           </Button>

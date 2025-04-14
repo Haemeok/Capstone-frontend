@@ -1,29 +1,39 @@
+import { END_POINTS } from "@/constants/api";
+import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router";
+
 type CateGoryItemProps = {
+  id: number;
   name: string;
-  image: string;
-  count: number;
+  imageUrl: string;
+  onClick: () => void;
+  className?: string;
 };
 
-const CateGoryItem = ({ name, image, count }: CateGoryItemProps) => {
+const CateGoryItem = ({
+  name,
+  imageUrl,
+  onClick,
+  className,
+}: CateGoryItemProps) => {
+  const navigate = useNavigate();
   return (
-    <div className="flex-shrink-0 w-50 h-70 rounded-xl overflow-hidden relative flex flex-col items-center justify-center mb-2">
-      <div className="absolute inset-0 bg-gradient-to-b from-green-400 to-green-500 rounded-xl"></div>
-
-      <div className="relative z-10 w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl mb-3">
-        {image ? (
-          <img
-            src={image}
-            alt={name}
-            className="w-20 h-20 object-cover rounded-full"
-          />
-        ) : (
-          <div className="w-20 h-20 bg-gray-200 rounded-full"></div>
-        )}
-      </div>
-
-      <div className="z-10 text-center mt-10">
-        <h3 className="text-white text-lg">{name}</h3>
-        <p className="text-white text-md">{count} recipes</p>
+    <div
+      className={cn(
+        "flex-shrink-0 w-50 h-70 rounded-lg overflow-hidden relative shadow-md cursor-pointer",
+        className
+      )}
+      onClick={() => {
+        navigate(END_POINTS.RECIPES_BY_CATEGORY(name));
+      }}
+    >
+      <img
+        src={imageUrl}
+        alt={name}
+        className="w-50 h-70 object-cover img-smooth"
+      />
+      <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent">
+        <h3 className="text-white text-sm font-semibold truncate">{name}</h3>
       </div>
     </div>
   );
