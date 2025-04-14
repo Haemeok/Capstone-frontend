@@ -25,7 +25,7 @@ const ProgressButton = ({
       <div className="absolute inset-0 bg-gray-300"></div>
 
       <div
-        className="absolute inset-y-0 left-0 bg-[#58C16A] transition-all duration-700 ease-out group-hover:brightness-110"
+        className="absolute inset-y-0 left-0 bg-olive-light transition-all duration-700 ease-out group-hover:brightness-110"
         style={{ width: `${progressPercentage}%` }}
       ></div>
 

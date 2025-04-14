@@ -3,17 +3,23 @@ import ToggleIconButton from "./ToggleIconButton";
 import { Heart } from "lucide-react";
 
 type HeartButtonProps = {
-  className?: string;
+  containerClassName?: string;
+  buttonClassName?: string;
   onClick?: () => void;
-  label?: string;
+  isCountShown?: boolean;
   ariaLabel?: string;
+  width?: number;
+  height?: number;
 };
 
 const HeartButton = ({
-  className,
+  containerClassName,
+  buttonClassName,
   onClick,
-  label,
+  isCountShown,
   ariaLabel,
+  width = 24,
+  height = 24,
 }: HeartButtonProps) => {
   const [likes, setLikes] = useState(5);
   const [isLiked, setIsLiked] = useState(false);
@@ -28,21 +34,23 @@ const HeartButton = ({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div
+      className={`flex flex-col gap-1 justify-center items-center ${containerClassName}`}
+    >
       <button
         onClick={() => handleToggle(!isLiked)}
-        className={`w-10 h-10 flex items-center justify-center ${className}`}
+        className={`flex items-center justify-center ${buttonClassName}`}
         aria-label={ariaLabel}
       >
         <Heart
-          width={24}
-          height={24}
-          className={`${label ? "transition-all duration-200" : ""} ${
-            isLiked ? "text-red-700 fill-red-700" : ""
+          width={width}
+          height={height}
+          className={`${isCountShown ? "transition-all duration-200" : ""} ${
+            isLiked ? "text-[#d12d2e] fill-[#d12d2e]" : ""
           } ${isAnimating ? "pulse" : ""}`}
         />
       </button>
-      {label && <span className="mt-1 text-sm font-bold">{likes}</span>}
+      {isCountShown && <span className="text-sm font-bold">{likes}</span>}
     </div>
   );
 };

@@ -21,19 +21,17 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
           >
             <p className="text-left ">{ingredient.name}</p>
             {ingredient.quantity && (
-              <p className="text-left font-bold">{ingredient.quantity}</p>
+              <p className="text-left font-semibold">{ingredient.quantity}</p>
             )}
           </div>
         ))}
       </div>
       <ul className="flex gap-2">
         {step.cookingTools?.map((cookingTool, cookingToolIndex) => (
-          <li key={cookingToolIndex} className="text-gray-700">
-            {cookingTool}
-          </li>
+          <li key={cookingToolIndex}>{cookingTool}</li>
         ))}
       </ul>
-      <p className="text-gray-700 text-left">{step.instruction}</p>
+      <p className="text-left">{step.instruction}</p>
     </div>
   );
 };

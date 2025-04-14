@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ToggleIconButton from "./ToggleIconButton";
 import { Bookmark } from "lucide-react";
 
 type SaveButtonProps = {
@@ -19,7 +18,7 @@ const SaveButton = ({ className, onClick, label }: SaveButtonProps) => {
     <div className="flex flex-col items-center">
       <button
         onClick={() => handleToggle(!isSaved)}
-        className={`w-16 h-16 ${className}`}
+        className={`w-14 h-14 ${className}`}
       >
         <Bookmark
           width={24}
