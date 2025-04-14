@@ -7,7 +7,7 @@ type BoxProps = {
 
 const Box = ({ children, className }: BoxProps) => {
   return (
-    <div className={cn("border border-gray-200 p-4", className)}>
+    <div className={cn("border-y-1 border-[#f7f7f7] p-4", className)}>
       {children}
     </div>
   );
