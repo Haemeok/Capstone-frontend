@@ -5,6 +5,8 @@ export const END_POINTS = {
 
   RECIPE_SEARCH: "/recipes/search",
   RECIPE_FILTER: "/recipes/filter",
+  RECIPES_BY_CATEGORY: (categorySlug: string) =>
+    `/recipes/category/${categorySlug}`,
 
   RECIPE_COMMENT: (id: number) => `/recipes/${id}/comments`,
   RECIPE_REPLY: (recipeId: number, commentId: number) =>

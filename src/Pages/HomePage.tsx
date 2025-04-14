@@ -1,57 +1,65 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router";
-import { Search } from "lucide-react";
 import CategoriesTabs from "@/components/CategoriesTabs";
-import GoogleIcon from "@/components/Icon/GoogleIcon";
-import { END_POINTS } from "@/constants/api";
-import { useUserStore } from "@/store/useUserStore";
-import UserProfile from "@/components/UserProfile";
-
+import CateGoryItem from "@/components/CateGoryItem";
+import { categoriesItems } from "@/mock";
+import { useToastStore } from "@/store/useToastStore";
+import { ChevronRight } from "lucide-react";
 const HomePage = () => {
-  const navigate = useNavigate();
-  const { isLogged, user, logIn, logOut, clearUser } = useUserStore();
-
-  const [activeCategory, setActiveCategory] = useState(0);
-
+  const { addToast, toastList } = useToastStore();
   return (
-    <div className="min-h-screen bg-[#F8F7F4] text-[#222222] overflow-x-hidden">
-      {/* 검색창 */}
-      <div className="absolute -bottom-8 left-0 right-0 px-6 z-30">
-        <div className="bg-white rounded-xl shadow-xl flex items-center p-4 pl-5">
-          <Search size={22} className="text-[#00473c] mr-3" />
-          <input
-            type="text"
-            placeholder="원하는 레시피나 재료를 검색해보세요"
-            className="flex-1 bg-transparent focus:outline-none text-[#333333] text-lg"
-          />
+    <div className="min-h-screen bg-[#f7f7f7] text-gray-800 pb-20">
+      <div className="sticky top-0 bg-[#f7f7f7] backdrop-blur-md z-20 px-6 pt-6 pb-3">
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="text-3xl font-bold">Home</h1>
         </div>
-      </div>
-      {/* 메인 콘텐츠 영역 */}
-      <div className="relative pt-16 pb-24 z-10">
-        {/* 카테고리 섹션 */}
-        <CategoriesTabs />
       </div>
 
-      {!isLogged ? (
-        <div className="flex h-12 items-center justify-center gap-2 rounded-md border-[1px] border-c_button_gray p-2 px-4">
-          <GoogleIcon width={24} height={24} />
-          <button
-            onClick={() =>
-              (window.location.href =
-                "https://www.haemeok.com" + END_POINTS.GOOGLE_LOGIN)
-            }
-          >
-            구글 로그인
-          </button>
-        </div>
-      ) : (
-        user && (
-          <div className="flex justify-between gap-5">
-            <UserProfile user={user} />
-            <button onClick={logOut}>로그아웃</button>
+      <div className="relative z-10">
+        <CategoriesTabs title="카테고리" />
+        <div className="mt-8 w-full">
+          <div className="flex justify-between items-center px-6 mb-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-gray-800">추천 레시피</h2>
+            </div>
+            <button className="text-sm text-gray-500 flex items-center hover:text-gray-700">
+              더보기
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </button>
           </div>
-        )
-      )}
+
+          <div className="pl-6 flex gap-3 w-full overflow-x-auto pb-4 scrollbar-hide">
+            {categoriesItems.map((item) => (
+              <CateGoryItem
+                key={item.id}
+                id={item.id}
+                name={item.name}
+                imageUrl={item.imageUrl}
+                onClick={() => {
+                  // TODO: 실제 라우팅 로직 구현 (예: /recipes/{item.id})
+                  console.log(`Navigating to item: ${item.id}`);
+                  // navigate(`/recipes/${category.id}`);
+                }}
+                className="w-40 h-40"
+              />
+            ))}
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            addToast({ message: "레시피를 생성했어요 !", variant: "success" });
+          }}
+          className="bg-green-500 text-white px-4 py-2 rounded-md"
+        >
+          토스트 테스트 버튼
+        </button>
+        <button
+          onClick={() => {
+            addToast({ message: "문제가 발생했어요", variant: "error" });
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded-md"
+        >
+          토스트 테스트 버튼
+        </button>
+      </div>
     </div>
   );
 };
