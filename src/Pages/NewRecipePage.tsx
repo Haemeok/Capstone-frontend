@@ -426,8 +426,6 @@ const NewRecipePage = () => {
             <ProgressButton
               progressPercentage={progressPercentage}
               isFormValid={isValid && isDirty}
-              completedSteps={completedSteps}
-              totalSteps={totalSteps}
               onClick={handleSubmit(onSubmit)}
             />
           </div>
