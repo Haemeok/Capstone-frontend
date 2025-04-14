@@ -186,3 +186,48 @@
 @utility text-green {
   color: var(--color-green);
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+  }
+  .animate-slideInUp {
+    animation: slideInUp 0.5s ease-in-out forwards;
+  }
+  .animate-fadeOut {
+    animation: fadeOut 0.5s ease-in-out forwards;
+  }
+}
+
+@layer utilities {
+  .text-olive {
+    color: #526c04;
+  }
+  .text-olive-light {
+    color: #609966;
+  }
+  .bg-olive-light {
+    background-color: #91c788;
+  }
+  .bg-olive {
+    background-color: #526c04;
+  }
+  .border-olive-light {
+    border-color: #91c788;
+  }
+  .border-olive {
+    border-color: #526c04;
+  }
+  .text-dark {
+    color: #2a2229;
+  }
+  .border-cgray {
+    border-color: #f7f7f7;
+  }
+  .img-smooth {
+    image-rendering: crisp-edges;
+  }
+}

@@ -2,54 +2,40 @@ import { categoriesItems } from "@/mock";
 import React from "react";
 import CateGoryItem from "./CateGoryItem";
 import { useNavigate } from "react-router";
-const CategoriesTabs = () => {
+import { ChevronRight } from "lucide-react";
+
+type CategoriesTabsProps = {
+  title: string;
+};
+
+const CategoriesTabs = ({ title }: CategoriesTabsProps) => {
   const navigate = useNavigate();
+
   return (
     <div className="mt-8 w-full">
       <div className="flex justify-between items-center px-6 mb-4">
-        <h2 className="text-2xl font-bold">카테고리</h2>
-        <button className="text-sm text-gray-500 flex items-center">
+        <div className="flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+        </div>
+        <button className="text-sm text-gray-500 flex items-center hover:text-gray-700">
           더보기
-          <svg
-            className="w-4 h-4 ml-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+          <ChevronRight className="w-4 h-4 ml-1" />
         </button>
       </div>
 
-      <div className="pl-6 flex gap-4 w-full overflow-x-auto pb-4 scrollbar-hide">
-        {categoriesItems.map((category) => (
-          <div
-            key={category.id}
-            className="rounded-2xl overflow-hidden bg-white shadow-md flex-shrink-0"
+      <div className="pl-6 flex gap-3 w-full overflow-x-auto pb-4 scrollbar-hide">
+        {categoriesItems.map((item) => (
+          <CateGoryItem
+            key={item.id}
+            id={item.id}
+            name={item.name}
+            imageUrl={item.imageUrl}
             onClick={() => {
-              navigate(`/recipes/${category.id}`);
+              // TODO: 실제 라우팅 로직 구현 (예: /recipes/{item.id})
+              console.log(`Navigating to item: ${item.id}`);
+              // navigate(`/recipes/${category.id}`);
             }}
-          >
-            <div className="relative w-48 h-48">
-              <img
-                src={category.imageUrl}
-                alt={category.name}
-                className="w-full h-full object-cover"
-              />
-
-              <div className="absolute flex items-end h-1/3 bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                <p className="text-white text-sm font-semibold">
-                  {category.name}
-                </p>
-              </div>
-            </div>
-          </div>
+          />
         ))}
       </div>
     </div>

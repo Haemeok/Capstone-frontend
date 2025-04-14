@@ -16,14 +16,14 @@ const IngredientSection = ({
   return (
     <div className="mb-6">
       <div
-        className="flex items-center justify-center bg-green-100 p-5 rounded-xl cursor-pointer hover:bg-green-200 transition-all duration-300 border-2 border-dashed border-green-300"
+        className="flex items-center justify-center bg-[#f7f7f7] p-5 rounded-xl cursor-pointer hover:bg-olive-light/80 transition-all duration-300 border-2 border-dashed border-olive-light"
         onClick={onOpenDrawer}
       >
         <div className="flex flex-col items-center">
           <div className="bg-white p-3 rounded-full mb-2 shadow-md">
-            <Plus size={24} className="text-green-600" />
+            <Plus size={24} className="text-olive-light" />
           </div>
-          <span className="font-medium text-green-800">재료 추가하기</span>
+          <span className="font-medium text-olive-light">재료 추가하기</span>
           <span className="text-sm text-gray-500 mt-1">
             {ingredients.length > 0
               ? `${ingredients.length}개의 재료가 추가됨`
