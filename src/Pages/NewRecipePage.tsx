@@ -76,7 +76,7 @@ const NewRecipePage = () => {
   };
 
   const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setValue("description", e.target.value, {
       shouldValidate: true,
@@ -105,6 +105,7 @@ const NewRecipePage = () => {
 
     const filteredData = {
       ...data,
+      imageURL: "123",
       ingredients: data.ingredients.filter((i) => i.name.trim() !== ""),
       steps: data.steps.filter((s) => s.instruction.trim() !== ""),
     };

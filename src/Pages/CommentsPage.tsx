@@ -15,8 +15,7 @@ const CommentsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* 앱 헤더 */}
+    <div className="min-h-screen bg-[#f7f7f7]">
       <header className="sticky top-0 z-10 bg-white shadow-sm border-b p-4">
         <div className="max-w-3xl mx-auto flex justify-between items-center">
           <div className="flex items-center">
@@ -24,7 +23,7 @@ const CommentsPage = () => {
               <ArrowLeft size={20} />
             </Button>
             <h1 className="text-xl font-bold flex items-center">
-              <MessageCircle size={20} className="text-[#5cc570] mr-2" /> 댓글
+              <MessageCircle size={20} className="text-[#526c04] mr-2" /> 댓글
             </h1>
           </div>
           <div className="flex">
@@ -32,7 +31,7 @@ const CommentsPage = () => {
               variant="ghost"
               size="icon"
               onClick={handleRefresh}
-              className={isLoading ? "animate-spin text-[#5cc570]" : ""}
+              className={isLoading ? "animate-spin text-[#526c04]" : ""}
             >
               <RefreshCw size={18} />
             </Button>
@@ -48,8 +47,8 @@ const CommentsPage = () => {
           <span className="text-gray-500 text-sm font-medium">
             {comments.length}개의 댓글
           </span>
-          <div className="flex items-center text-sm text-gray-500">
-            <span className="font-medium text-[#5cc570]">최신순</span>
+          <div className="flex items-center text-sm font-semibold text-olive">
+            <span>최신순</span>
             <span className="mx-1">•</span>
             <span>인기순</span>
           </div>
@@ -73,9 +72,7 @@ const CommentsPage = () => {
             <div className="flex-1 bg-gray-100 rounded-full py-2 px-4 text-gray-500">
               댓글을 입력하세요...
             </div>
-            <Button size="sm" variant="ghost" className="text-[#5cc570]">
-              게시
-            </Button>
+            <button className="text-olive font-semibold">게시</button>
           </div>
         </div>
 

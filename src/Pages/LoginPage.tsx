@@ -1,22 +1,23 @@
-import { useEffect } from "react";
+import GoogleLoginButton from "@/components/Button/GoogleLoginButton";
+import KakaoLoginButton from "@/components/Button/KakaoLoginButton";
+import NaverLoginButton from "@/components/Button/NaverLoginButton";
 import { useNavigate } from "react-router";
-import { useUser } from "@/hooks/useUser";
-
-function GoogleCallback() {
+const LoginPage = () => {
   const navigate = useNavigate();
-  const { refreshTokenOnLoad } = useUser();
+  return (
+    <div className="flex flex-col items-center gap-2 justify-center h-screen bg-[#fbefdb] overflow-y-auto scrollbar-hide">
+      <img src="/meat.png" />
+      <GoogleLoginButton />
+      <NaverLoginButton />
+      <KakaoLoginButton />
+      <button
+        onClick={() => navigate("/")}
+        className="text-sm text-[#747775] underline cursor-pointer"
+      >
+        로그인 없이 볼게요
+      </button>
+    </div>
+  );
+};
 
-  useEffect(() => {
-    refreshTokenOnLoad().then((success) => {
-      if (success) {
-        navigate("/");
-      } else {
-        navigate("/login", { state: { error: "로그인에 실패했습니다." } });
-      }
-    });
-  }, [navigate, refreshTokenOnLoad]);
-
-  return <div>로그인 처리 중...</div>;
-}
-
-export default GoogleCallback;
+export default LoginPage;
