@@ -21,8 +21,8 @@ import { Button } from "@/components/ui/button";
 import { RecipeGridItem } from "@/type/recipe";
 import RecipeGrid from "@/components/RecipeGrid";
 import { createdRecipes, cookbookRecipes } from "@/mock";
-import { useUser } from "@/hooks/useUser";
 import { useNavigate } from "react-router";
+import { useUserStore } from "@/store/useUserStore";
 
 interface Tab {
   id: string;
@@ -31,18 +31,19 @@ interface Tab {
 }
 
 const UserDetailPage = () => {
-  let { user, isLoggedIn } = useUser();
+  const { user } = useUserStore();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<string>("created");
+  const [activeTab, setActiveTab] = useState<string>("나의 레시피");
 
-  const guestUser = {
-    name: "게스트",
-    imageURL: "/default-profile.png",
+  const guestUser: User = {
+    id: 0,
+    nickname: "게스트",
+    profileImage: "/default-profile.png",
     username: "@guest",
     profileContent: "로그인하여 더 많은 기능을 사용해보세요.",
   };
 
-  const displayUser = isLoggedIn && user ? user : guestUser;
+  const displayUser = user ? user : guestUser;
 
   const handleLoginClick = () => {
     navigate("/login");
@@ -52,7 +53,6 @@ const UserDetailPage = () => {
     navigate("/recipes/new");
   };
 
-  isLoggedIn = true;
   const tabs: Tab[] = [
     { id: "나의 레시피", label: "나의 레시피", icon: Award },
     { id: "북마크", label: "북마크", icon: BookOpen },
@@ -85,13 +85,13 @@ const UserDetailPage = () => {
             <div className="relative">
               <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden shadow-xl">
                 <img
-                  src={displayUser.imageURL}
-                  alt={displayUser.name}
+                  src={displayUser.profileImage}
+                  alt={displayUser.nickname}
                   className="w-full h-full object-cover"
                 />
               </div>
-              {isLoggedIn && (
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-[#58C16A] rounded-full flex items-center justify-center shadow-md">
+              {user && (
+                <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-olive-light rounded-full flex items-center justify-center shadow-md">
                   <Edit size={14} className="text-white" />
                 </div>
               )}
@@ -99,24 +99,24 @@ const UserDetailPage = () => {
 
             <div className="ml-4 mb-2">
               <h2 className="text-black text-2xl font-bold">
-                {displayUser.name}
+                {displayUser.nickname}
               </h2>
               <p className="text-black/80 text-sm">
                 {displayUser.username ||
-                  "@" + displayUser.name.toLowerCase().replace(/\s/g, "")}
+                  "@" + displayUser.nickname.toLowerCase().replace(/\s/g, "")}
               </p>
             </div>
           </div>
-          {!isLoggedIn ? (
+          {!displayUser ? (
             <Button
-              className="bg-[#58C16A] text-white hover:bg-[#4CAF50] px-6 rounded-full"
+              className="bg-olive text-white hover:bg-olive-dark px-6 rounded-full"
               onClick={handleLoginClick}
             >
               <LogIn size={16} className="mr-1" /> 로그인
             </Button>
           ) : (
             <Button
-              className="bg-[#58C16A] text-white hover:bg-[#4CAF50] px-6 rounded-full gap-0"
+              className="bg-olive text-white hover:bg-olive-dark px-6 rounded-full gap-0"
               onClick={handleCreateRecipeClick}
             >
               <Plus size={16} className="mr-1" /> 레시피 생성하러가기
@@ -125,7 +125,7 @@ const UserDetailPage = () => {
         </div>
 
         <p className="text-black/90 text-sm mt-3 max-w-[90%]">
-          {!isLoggedIn ? displayUser.profileContent : "테스트 상태메세지"}
+          {!user ? displayUser.profileContent : "테스트 상태메세지"}
         </p>
       </div>
 
@@ -136,9 +136,7 @@ const UserDetailPage = () => {
             <button
               key={tab.id}
               className={`flex-1 py-4 relative ${
-                activeTab === tab.id
-                  ? "text-[#58C16A] font-bold"
-                  : "text-gray-500"
+                activeTab === tab.id ? "text-olive font-bold" : "text-gray-500"
               }`}
               onClick={() => setActiveTab(tab.id)}
             >
@@ -147,14 +145,14 @@ const UserDetailPage = () => {
                 {tab.label}
               </span>
               {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#58C16A]" />
+                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-olive" />
               )}
             </button>
           ))}
         </div>
       </div>
 
-      {isLoggedIn ? (
+      {displayUser ? (
         getRecipesByTab()
       ) : (
         <div className="flex flex-col items-center justify-center p-10 text-center">
