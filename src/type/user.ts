@@ -1,9 +1,9 @@
 export type User = {
   id: number;
-  name: string;
+  nickname: string;
   email?: string;
   profileContent?: string;
-  imageURL: string;
+  profileImage?: string;
   username?: string;
   bookmarks?: number;
   likes?: number;

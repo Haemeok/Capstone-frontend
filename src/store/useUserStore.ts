@@ -1,52 +1,25 @@
-import { User } from "@/type/user";
 import { create } from "zustand";
+import { User } from "@/type/user";
 
-type AuthState = {
-  isLogged: boolean;
+import { removeAccessToken, setAccessToken } from "@/utils/auth";
+
+type UserState = {
   user: User | null;
-  accessToken: string | null;
-  setUser: (user: User) => void;
-  setAccessToken: (token: string) => void;
-  logIn: () => void;
-  logOut: () => void;
-  clearUser: () => void;
-  clearAccessToken: () => void;
+  setUser: (user: User | null) => void;
+  loginAction: (token: string) => void;
+  logoutAction: () => void;
 };
 
-export const useUserStore = create<AuthState>((set) => ({
-  isLogged: false,
+export const useUserStore = create<UserState>((set) => ({
   user: null,
-  accessToken: null,
-  setUser: (user: User) => {
-    set((state) => ({ ...state, user }));
+  setUser: (user) => set({ user }),
+
+  loginAction: (token) => {
+    setAccessToken(token);
   },
-  setAccessToken: (token: string) => {
-    set((state) => ({ ...state, accessToken: token }));
-  },
-  logIn: () => {
-    set(() => ({ isLogged: true }));
-  },
-  logOut: () => {
-    set(() => ({ isLogged: false, user: null, accessToken: null }));
-  },
-  clearUser: () => {
-    set(() => ({ user: null }));
-  },
-  clearAccessToken: () => {
-    set(() => ({ accessToken: null }));
+
+  logoutAction: () => {
+    removeAccessToken();
+    set({ user: null });
   },
 }));
-
-export const getAccessToken = (): string | null => {
-  return useUserStore.getState().accessToken;
-};
-
-export const setAccessToken = (token: string): void => {
-  useUserStore.getState().setAccessToken(token);
-  useUserStore.getState().logIn();
-};
-
-export const removeAccessToken = (): void => {
-  useUserStore.getState().clearAccessToken();
-  useUserStore.getState().logOut();
-};
