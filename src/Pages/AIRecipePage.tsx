@@ -103,9 +103,9 @@ const AIRecipePage = () => {
   };
 
   return (
-    <div className="mx-auto relative p-4">
+    <div className="mx-auto relative p-4 bg-[#f7f7f7]">
       <div className="text-center">
-        <p className="text-gray-600">
+        <p className="text-dark font-semibold text-2xl">
           나만의 맞춤형 레시피를 AI가 추천해드립니다
         </p>
       </div>

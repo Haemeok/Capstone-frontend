@@ -12,7 +12,6 @@ export type RecipeStep = {
   action?: string;
   stepImageUrl: string;
   stepNumber: number;
-  cookingTools?: string[];
 };
 
 export type Recipe = {
@@ -48,4 +47,11 @@ export type IngredientItem = {
   name: string;
   imageUrl: string;
   category: string;
+};
+
+export type CategoryItem = {
+  id: number;
+  name: string;
+  imageUrl: string;
+  count: number;
 };

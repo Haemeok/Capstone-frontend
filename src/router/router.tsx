@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router";
 import Root from "./Root";
-import MyPage from "../Pages/MyPage";
 import RecipesPage from "../Pages/RecipesPage";
 import NewRecipePage from "../Pages/NewRecipePage";
 import RecipeDetailPage from "../Pages/RecipeDetailPage";
@@ -17,6 +16,9 @@ import NewIngredientsPage from "@/Pages/NewIngredientsPage";
 import ScrollTransformNavbar from "@/Pages/tPage2";
 import LoginPage from "@/Pages/LoginPage";
 import RecipeSlideShowPage from "@/Pages/RecipeSlideShowPage";
+import GoogleCallback from "@/Pages/GoogleCallback";
+import Page2 from "@/Pages/tPage3";
+import CategoryDetailPage from "@/Pages/CategoryDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -26,10 +28,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
       },
-      {
-        path: "mypage",
-        element: <MyPage />,
-      },
+
       {
         path: "recipes",
         element: <RecipesPage />,
@@ -43,10 +42,7 @@ const router = createBrowserRouter([
         path: "users/:id",
         element: <UserDetailPage />,
       },
-      {
-        path: "my",
-        element: <MyPage />,
-      },
+
       {
         path: "air",
         element: <AIRecipePage />,
@@ -64,14 +60,18 @@ const router = createBrowserRouter([
         element: <SearchPage />,
       },
       {
-        path: "/login/oauth2/code/google",
-        element: <LoginPage />,
+        path: "/oauth2/redirect",
+        element: <GoogleCallback />,
       },
     ],
   },
   {
     path: "test",
-    element: <ScrollTransformNavbar />,
+    element: <Page />,
+  },
+  {
+    path: "test2",
+    element: <Page2 />,
   },
   {
     path: "recipes/:id/comments",
@@ -88,6 +88,14 @@ const router = createBrowserRouter([
   {
     path: "recipes/:id/slideshow",
     element: <RecipeSlideShowPage />,
+  },
+  {
+    path: "login",
+    element: <LoginPage />,
+  },
+  {
+    path: "recipes/category/:categorySlug",
+    element: <CategoryDetailPage />,
   },
 ]);
 

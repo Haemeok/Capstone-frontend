@@ -46,7 +46,7 @@ const RecipeDetailPage = () => {
   }, []);
 
   return (
-    <div className="mx-auto pb-16 relative">
+    <div className="mx-auto bg-[#ffffff] pb-16 relative text-[#2a2229]">
       <TransformingNavbar
         title={recipe.title}
         targetRef={imageRef}
@@ -62,70 +62,73 @@ const RecipeDetailPage = () => {
           blackOverlay={true}
         />
       </div>
-
-      <Box className="flex flex-col gap-4 justify-center items-center">
-        <h1 className="text-2xl font-bold mb-4 text-center">{recipe.title}</h1>
-        <Ratings
-          precision={0.5}
-          allowHalf={true}
-          value={halfRating}
-          onChange={(value) => setHalfRating(value)}
-          className="w-full"
-          showValue={true}
-        />
-        <div className="flex gap-4 justify-center">
-          <HeartButton
-            className="flex items-center justify-center border-2 rounded-full p-2 w-16 h-16"
-            label="좋아요"
+      <div className="px-2">
+        <Box className="flex flex-col gap-4 justify-center items-center">
+          <h1 className="text-2xl font-bold mb-4 text-center">
+            {recipe.title}
+          </h1>
+          <Ratings
+            precision={0.5}
+            allowHalf={true}
+            value={halfRating}
+            onChange={(value) => setHalfRating(value)}
+            className="w-full"
+            showValue={true}
           />
-          <SaveButton
-            className="flex items-center justify-center border-2 rounded-full p-2 w-16 h-16"
-            label="저장"
-          />
-          <ShareButton
-            className="flex items-center justify-center border-2 rounded-full p-2 w-16 h-16"
-            label="공유"
-          />
-          <LockButton />
-        </div>
-      </Box>
-      <Box>
-        <UserProfile user={user} />
-        <CollapsibleP />
-      </Box>
-      <Box>
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold mb-2">Comments</h2>
-          <Button
-            variant="ghost"
-            className="cursor-pointer text-[#5cc570]"
-            onClick={() => navigate("comments")}
-          >
-            Read More
-          </Button>
-        </div>
-        <CommentBox comment={comments[0]} />
-      </Box>
-      <Box>
-        <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
-        <ul className="flex flex-col gap-1">
-          {ingredients.map((ingredient, index) => (
-            <li key={index} className="grid grid-cols-2 gap-4">
-              <p className="text-left font-bold">{ingredient.name}</p>
-              <p className="text-left">{ingredient.quantity}</p>
-            </li>
-          ))}
-        </ul>
-      </Box>
-      <div ref={observerRef} className="h-1 w-full" />
-      <Box>
-        <RecipeStepList RecipeSteps={RecipeSteps} />
-      </Box>
+          <div className="flex gap-4 justify-center">
+            <HeartButton
+              buttonClassName="w-14 h-14 flex items-center justify-center border-2 rounded-full p-2"
+              isCountShown={true}
+            />
+            <SaveButton
+              className="flex items-center justify-center border-2 rounded-full p-2 w-14 h-14"
+              label="저장"
+            />
+            <ShareButton
+              className="flex items-center justify-center border-2 rounded-full p-2 w-14 h-14"
+              label="공유"
+            />
+            <LockButton />
+          </div>
+        </Box>
+        <Box>
+          <UserProfile user={user} />
+          <CollapsibleP />
+        </Box>
+        <Box>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold mb-2">코멘트</h2>
+            <Button
+              variant="ghost"
+              className="cursor-pointer text-[#526c04] font-semibold"
+              onClick={() => navigate("comments")}
+            >
+              더 읽기
+            </Button>
+          </div>
+          <CommentBox comment={comments[0]} />
+        </Box>
+        <Box>
+          <h2 className="text-xl font-semibold mb-2">재료</h2>
+          <ul className="flex flex-col gap-1">
+            {ingredients.map((ingredient, index) => (
+              <li key={index} className="grid grid-cols-2 gap-4">
+                <p className="text-left font-bold">{ingredient.name}</p>
+                <p className="text-left">{ingredient.quantity}</p>
+              </li>
+            ))}
+          </ul>
+        </Box>
+        <div ref={observerRef} className="h-1 w-full" />
+        <Box>
+          <RecipeStepList RecipeSteps={RecipeSteps} />
+        </Box>
+      </div>
 
       {isButtonVisible && (
         <div className="fixed bottom-6 justify-center w-full flex z-50">
           <Button
-            className="rounded-full p-4 bg-[#5cc570] text-white shadow-lg hover:bg-[#4bb560] transition-all"
+            className="rounded-full p-4 bg-[#526c04] text-white shadow-lg hover:bg-[#526c04] transition-all"
             onClick={() =>
               navigate(`/recipes/${recipe.id}/slideShow`, {
                 state: { recipeSteps: RecipeSteps },
