@@ -1,20 +1,20 @@
-import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router";
-import UserProfile from "@/components/UserProfile";
-import CollapsibleP from "@/components/CollapsibleP";
+import { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import UserProfile from '@/components/UserProfile';
+import CollapsibleP from '@/components/CollapsibleP';
 
-import { recipe, ingredients, user, RecipeSteps, comments } from "@/mock";
-import RecipeStepList from "@/components/RecipeStepList";
-import SuspenseImage from "@/components/Image/SuspenseImage";
-import Ratings from "@/components/Ratings";
-import HeartButton from "@/components/Button/HeartButton";
-import SaveButton from "@/components/Button/SaveButton";
-import ShareButton from "@/components/Button/ShareButton";
-import LockButton from "@/components/Button/LockButton";
-import Box from "@/components/ui/Box";
-import CommentBox from "@/components/CommentBox";
-import { Button } from "@/components/ui/button";
-import TransformingNavbar from "@/components/NavBar/TransformingNavBar";
+import { recipe, ingredients, user, RecipeSteps, comments } from '@/mock';
+import RecipeStepList from '@/components/RecipeStepList';
+import SuspenseImage from '@/components/Image/SuspenseImage';
+import Ratings from '@/components/Ratings';
+import HeartButton from '@/components/Button/HeartButton';
+import SaveButton from '@/components/Button/SaveButton';
+import ShareButton from '@/components/Button/ShareButton';
+import LockButton from '@/components/Button/LockButton';
+import Box from '@/components/ui/Box';
+import CommentBox from '@/components/CommentBox';
+import { Button } from '@/components/ui/button';
+import TransformingNavbar from '@/components/NavBar/TransformingNavBar';
 
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ const RecipeDetailPage = () => {
       },
       {
         threshold: 0.5,
-        rootMargin: "0px",
-      }
+        rootMargin: '0px',
+      },
     );
 
     if (observerRef.current) {
@@ -46,7 +46,7 @@ const RecipeDetailPage = () => {
   }, []);
 
   return (
-    <div className="mx-auto bg-[#ffffff] pb-16 relative text-[#2a2229]">
+    <div className="relative mx-auto bg-[#ffffff] pb-16 text-[#2a2229]">
       <TransformingNavbar
         title={recipe.title}
         targetRef={imageRef}
@@ -54,17 +54,17 @@ const RecipeDetailPage = () => {
         textColorThreshold={0.5}
         shadowThreshold={0.8}
       />
-      <div ref={imageRef} className="w-full h-64">
+      <div ref={imageRef} className="h-64 w-full">
         <SuspenseImage
           src={recipe.imageURL}
           alt={recipe.title}
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
           blackOverlay={true}
         />
       </div>
       <div className="px-2">
-        <Box className="flex flex-col gap-4 justify-center items-center">
-          <h1 className="text-2xl font-bold mb-4 text-center">
+        <Box className="flex flex-col items-center justify-center gap-4">
+          <h1 className="mb-4 text-center text-2xl font-bold">
             {recipe.title}
           </h1>
           <Ratings
@@ -75,17 +75,17 @@ const RecipeDetailPage = () => {
             className="w-full"
             showValue={true}
           />
-          <div className="flex gap-4 justify-center">
+          <div className="flex justify-center gap-4">
             <HeartButton
               buttonClassName="w-14 h-14 flex items-center justify-center border-2 rounded-full p-2"
               isCountShown={true}
             />
             <SaveButton
-              className="flex items-center justify-center border-2 rounded-full p-2 w-14 h-14"
+              className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
               label="저장"
             />
             <ShareButton
-              className="flex items-center justify-center border-2 rounded-full p-2 w-14 h-14"
+              className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
               label="공유"
             />
             <LockButton />
@@ -96,12 +96,12 @@ const RecipeDetailPage = () => {
           <CollapsibleP />
         </Box>
         <Box>
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold mb-2">코멘트</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="mb-2 text-xl font-semibold">코멘트</h2>
             <Button
               variant="ghost"
-              className="cursor-pointer text-[#526c04] font-semibold"
-              onClick={() => navigate("comments")}
+              className="cursor-pointer font-semibold text-[#526c04]"
+              onClick={() => navigate('comments')}
             >
               더 읽기
             </Button>
@@ -109,7 +109,7 @@ const RecipeDetailPage = () => {
           <CommentBox comment={comments[0]} />
         </Box>
         <Box>
-          <h2 className="text-xl font-semibold mb-2">재료</h2>
+          <h2 className="mb-2 text-xl font-semibold">재료</h2>
           <ul className="flex flex-col gap-1">
             {ingredients.map((ingredient, index) => (
               <li key={index} className="grid grid-cols-2 gap-4">
@@ -126,9 +126,9 @@ const RecipeDetailPage = () => {
       </div>
 
       {isButtonVisible && (
-        <div className="fixed bottom-6 justify-center w-full flex z-50">
+        <div className="fixed bottom-6 z-50 flex w-full justify-center">
           <Button
-            className="rounded-full p-4 bg-[#526c04] text-white shadow-lg hover:bg-[#526c04] transition-all"
+            className="rounded-full bg-[#526c04] p-4 text-white shadow-lg transition-all hover:bg-[#526c04]"
             onClick={() =>
               navigate(`/recipes/${recipe.id}/slideShow`, {
                 state: { recipeSteps: RecipeSteps },

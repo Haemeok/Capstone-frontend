@@ -1,9 +1,9 @@
-import { getRecipeItems } from "@/api/recipe";
-import { useQuery } from "@tanstack/react-query";
+import { getRecipeItems } from '@/api/recipe';
+import { useQuery } from '@tanstack/react-query';
 
 const useRecipeItemsQuery = () => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["recipeItems"],
+    queryKey: ['recipeItems'],
     queryFn: getRecipeItems,
   });
 

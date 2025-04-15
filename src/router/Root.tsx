@@ -1,15 +1,15 @@
-import BottomNavBar from "@/components/BottomNavBar";
-import TopNavBar from "@/components/TopNavBar";
-import { Outlet } from "react-router";
+import BottomNavBar from '@/components/BottomNavBar';
+import TopNavBar from '@/components/TopNavBar';
+import { Outlet } from 'react-router';
 
 function Root() {
   return (
-    <div className="flex flex-col relative">
-      <div className="flex-1 mb-20 overflow-x-hidden">
+    <div className="relative flex flex-col">
+      <div className="mb-20 flex-1 overflow-x-hidden">
         <Outlet />
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-30">
+      <div className="fixed right-0 bottom-0 left-0 z-30">
         <BottomNavBar />
       </div>
     </div>

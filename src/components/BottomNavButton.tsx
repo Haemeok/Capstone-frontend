@@ -1,5 +1,5 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router";
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
 type BottomNavButtonProps = {
   icon: React.ReactNode;
@@ -12,8 +12,8 @@ const BottomNavButton = ({ icon, label, path }: BottomNavButtonProps) => {
   const currentPath = useLocation();
   return (
     <button
-      className={`flex flex-col items-center cursor-pointer ${
-        currentPath.pathname === path ? "text-olive" : "text-gray-400"
+      className={`flex cursor-pointer flex-col items-center ${
+        currentPath.pathname === path ? 'text-olive' : 'text-gray-400'
       }`}
       onClick={() => navigate(path)}
     >

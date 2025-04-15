@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export const useImageLoader = (src: string, options = { preload: true }) => {
   const [status, setStatus] = useState({

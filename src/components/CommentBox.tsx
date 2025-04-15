@@ -1,9 +1,9 @@
-import { Avatar } from "@/components/ui/avatar";
-import { Comment } from "@/type/comment";
-import { MessageSquare } from "lucide-react";
-import { useNavigate } from "react-router";
-import { useState } from "react";
-import HeartButton from "@/components/Button/HeartButton";
+import { Avatar } from '@/components/ui/avatar';
+import { Comment } from '@/type/comment';
+import { MessageSquare } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import { useState } from 'react';
+import HeartButton from '@/components/Button/HeartButton';
 
 type CommentProps = {
   comment: Comment;
@@ -31,10 +31,10 @@ const CommentBox = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 w-full p-4  rounded-lg bg-[#fcfbf4]">
-      <div className="flex justify-between items-center">
+    <div className="flex w-full flex-col gap-2 rounded-lg bg-[#fcfbf4] p-4">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Avatar className={`border-2 h-8 w-8`}>
+          <Avatar className={`h-8 w-8 border-2`}>
             <img
               src={comment.user.profileImage}
               alt={comment.user.nickname}
@@ -47,14 +47,14 @@ const CommentBox = ({
         </div>
         <div className="flex items-center">
           <p className="text-sm text-gray-400">{comment.date}</p>
-          <button className="ml-2 text-gray-400 cursor-pointer hover:text-gray-600">
+          <button className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
             •••
           </button>
         </div>
       </div>
       <p className={`text-[#2a2229]`}>{comment.content}</p>
 
-      <div className="flex gap-4 mt-1 items-center">
+      <div className="mt-1 flex items-center gap-4">
         <HeartButton
           containerClassName="flex-row"
           buttonClassName="flex items-center gap-1 text-sm cursor-pointer group w-5 h-5"
@@ -66,12 +66,12 @@ const CommentBox = ({
 
         {!hideReplyButton && (
           <button
-            className="flex items-center gap-1 text-sm cursor-pointer group"
+            className="group flex cursor-pointer items-center gap-1 text-sm"
             onClick={handleReplyClick}
           >
             <MessageSquare
               size={16}
-              className="group-hover:scale-120 transition-all duration-250 group-hover:fill-slate-500"
+              className="transition-all duration-250 group-hover:scale-120 group-hover:fill-slate-500"
             />
             <span className={`text-sm font-semibold`}>
               {comment.replyCount}

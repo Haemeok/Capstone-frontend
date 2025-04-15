@@ -1,12 +1,12 @@
-import React, { useRef } from "react";
-import { useNavigate } from "react-router";
-import { Upload as UploadIcon, Plus, X, ChefHat } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ProgressButton from "@/components/ProgressButton";
-import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
+import React, { useRef } from 'react';
+import { useNavigate } from 'react-router';
+import { Upload as UploadIcon, Plus, X, ChefHat } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import ProgressButton from '@/components/ProgressButton';
+import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
 
-import useCreateRecipeMutation from "@/hooks/useCreateRecipeMutation";
-import { Ingredient, Recipe, RecipeStep } from "@/type/recipe";
+import useCreateRecipeMutation from '@/hooks/useCreateRecipeMutation';
+import { Ingredient, Recipe, RecipeStep } from '@/type/recipe';
 
 const NewRecipePage = () => {
   const navigate = useNavigate();
@@ -22,23 +22,23 @@ const NewRecipePage = () => {
     formState: { errors, isValid, isDirty },
   } = useForm<Recipe>({
     defaultValues: {
-      title: "",
-      imageURL: "",
-      ingredients: [{ quantity: "", name: "", unit: "" }],
+      title: '',
+      imageURL: '',
+      ingredients: [{ quantity: '', name: '', unit: '' }],
       cookingTime: undefined,
       servings: undefined,
-      dishType: "",
-      description: "",
+      dishType: '',
+      description: '',
       steps: [
         {
-          ingredients: [{ quantity: "", name: "", unit: "" }],
-          instruction: "",
-          stepImageUrl: "",
+          ingredients: [{ quantity: '', name: '', unit: '' }],
+          instruction: '',
+          stepImageUrl: '',
           stepNumber: 0,
         },
       ],
     },
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const {
@@ -47,7 +47,7 @@ const NewRecipePage = () => {
     remove: removeIngredient,
   } = useFieldArray({
     control,
-    name: "ingredients",
+    name: 'ingredients',
   });
 
   const {
@@ -56,7 +56,7 @@ const NewRecipePage = () => {
     remove: removeStep,
   } = useFieldArray({
     control,
-    name: "steps",
+    name: 'steps',
   });
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +65,7 @@ const NewRecipePage = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          setValue("imageURL", e.target.result as string, {
+          setValue('imageURL', e.target.result as string, {
             shouldValidate: true,
             shouldDirty: true,
           });
@@ -76,9 +76,9 @@ const NewRecipePage = () => {
   };
 
   const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    setValue("description", e.target.value, {
+    setValue('description', e.target.value, {
       shouldValidate: true,
       shouldDirty: true,
     });
@@ -89,7 +89,7 @@ const NewRecipePage = () => {
       ingredientFields.length > 0
         ? Math.max(...ingredientFields.map((f) => parseInt(f.id))) + 1
         : 1;
-    appendIngredient({ id: newId, name: "", quantity: "", unit: "" });
+    appendIngredient({ id: newId, name: '', quantity: '', unit: '' });
   };
 
   const addStep = () => {
@@ -97,38 +97,38 @@ const NewRecipePage = () => {
       stepFields.length > 0
         ? Math.max(...stepFields.map((f) => parseInt(f.id))) + 1
         : 1;
-    appendStep({ id: newId, instruction: "", stepImageUrl: "", stepNumber: 0 });
+    appendStep({ id: newId, instruction: '', stepImageUrl: '', stepNumber: 0 });
   };
 
   const onSubmit: SubmitHandler<Recipe> = (data) => {
-    console.log("제출 데이터:", data);
+    console.log('제출 데이터:', data);
 
     const filteredData = {
       ...data,
-      imageURL: "123",
-      ingredients: data.ingredients.filter((i) => i.name.trim() !== ""),
-      steps: data.steps.filter((s) => s.instruction.trim() !== ""),
-      tagNames: ["비건", "건강한", "간편한", "영양가있는"],
+      imageURL: '123',
+      ingredients: data.ingredients.filter((i) => i.name.trim() !== ''),
+      steps: data.steps.filter((s) => s.instruction.trim() !== ''),
+      tagNames: ['비건', '건강한', '간편한', '영양가있는'],
     };
 
-    console.log("정제된 제출 데이터:", filteredData);
+    console.log('정제된 제출 데이터:', filteredData);
 
     createRecipe.mutate(filteredData);
 
-    navigate("/recipes");
+    navigate('/recipes');
   };
 
   const formValues = watch();
 
   const needSteps = [
-    formValues.title.trim() !== "",
-    formValues.imageURL !== "",
-    formValues.description !== "",
-    formValues.dishType !== "",
-    formValues.cookingTime !== "",
+    formValues.title.trim() !== '',
+    formValues.imageURL !== '',
+    formValues.description !== '',
+    formValues.dishType !== '',
+    formValues.cookingTime !== '',
     formValues.servings !== 0,
-    formValues.ingredients.some((i: Ingredient) => i.name.trim() !== ""),
-    formValues.steps.some((s: RecipeStep) => s.instruction.trim() !== ""),
+    formValues.ingredients.some((i: Ingredient) => i.name.trim() !== ''),
+    formValues.steps.some((s: RecipeStep) => s.instruction.trim() !== ''),
   ];
 
   const completedSteps = needSteps.filter(Boolean).length;
@@ -140,18 +140,18 @@ const NewRecipePage = () => {
       <form id="recipe-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="relative">
           <div
-            className="w-full h-[40vh] flex items-center justify-center cursor-pointer relative"
+            className="relative flex h-[40vh] w-full cursor-pointer items-center justify-center"
             onClick={() => fileInputRef.current?.click()}
           >
             {formValues.imageURL ? (
               <img
                 src={formValues.imageURL}
                 alt="Recipe thumbnail"
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
             ) : (
               <div className="text-center">
-                <UploadIcon size={48} className="text-[#58C16A] mx-auto mb-3" />
+                <UploadIcon size={48} className="mx-auto mb-3 text-[#58C16A]" />
                 <p className="text-[#58C16A]">이미지를 업로드해주세요</p>
               </div>
             )}
@@ -164,47 +164,47 @@ const NewRecipePage = () => {
             />
           </div>
 
-          <div className="flex flex-col justify-center absolute bottom-0 h-32 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-black/80 to-transparent">
-            <div className="flex items-center w-7/8 max-w-7/8 justify-between">
+          <div className="absolute right-0 bottom-0 left-0 flex h-32 flex-col justify-center bg-gradient-to-t from-black/80 to-transparent p-4 pb-8">
+            <div className="flex w-7/8 max-w-7/8 items-center justify-between">
               <input
                 type="text"
-                className={` bg-transparent text-4xl pb-2 font-bold border-b text-white ${
-                  errors.title ? "border-red-500" : "border-white/30"
-                }  focus:outline-none focus:border-white`}
+                className={`border-b bg-transparent pb-2 text-4xl font-bold text-white ${
+                  errors.title ? 'border-red-500' : 'border-white/30'
+                } focus:border-white focus:outline-none`}
                 placeholder="레시피 이름"
-                {...register("title", {
-                  required: "레시피 이름은 필수입니다",
+                {...register('title', {
+                  required: '레시피 이름은 필수입니다',
                 })}
               />
-              <p className="text-white text-sm">{formValues.title.length}/20</p>
+              <p className="text-sm text-white">{formValues.title.length}/20</p>
             </div>
             {errors.title && (
-              <p className="text-red-300 text-xs mt-1">
+              <p className="mt-1 text-xs text-red-300">
                 {errors.title.message}
               </p>
             )}
           </div>
         </div>
 
-        <div className="max-w-3xl mx-auto px-4 pt-6">
-          <div className="bg-white rounded-xl p-4 mb-4 shadow-sm">
+        <div className="mx-auto max-w-3xl px-4 pt-6">
+          <div className="mb-4 rounded-xl bg-white p-4 shadow-sm">
             <textarea
-              className="w-full h-24 text-[#777777] focus:outline-none"
+              className="h-24 w-full text-[#777777] focus:outline-none"
               placeholder="레시피에 대한 간단한 설명을 작성하세요. 어떤 특징이 있는지, 어떤 상황에서 먹기 좋은지 등을 알려주세요."
               onChange={handleDescriptionChange}
             />
           </div>
 
-          <div className="flex justify-center gap-4 border-b border-[#00473c]/20 py-4 mb-4">
-            <div className="flex flex-col flex-1">
-              <div className="text-center flex gap-2 h-10 justify-center items-center">
-                <p className="text-[#777777] mb-1">카테고리</p>
+          <div className="mb-4 flex justify-center gap-4 border-b border-[#00473c]/20 py-4">
+            <div className="flex flex-1 flex-col">
+              <div className="flex h-10 items-center justify-center gap-2 text-center">
+                <p className="mb-1 text-[#777777]">카테고리</p>
                 <select
-                  className={`w-20 bg-transparent border-1 border-gray-300 rounded-md ${
-                    errors.dishType ? "border-red-500" : "border-[#00473c]/30"
+                  className={`w-20 rounded-md border-1 border-gray-300 bg-transparent ${
+                    errors.dishType ? 'border-red-500' : 'border-[#00473c]/30'
                   } pb-1 text-center focus:outline-none`}
-                  {...register("dishType", {
-                    required: "카테고리를 선택해주세요",
+                  {...register('dishType', {
+                    required: '카테고리를 선택해주세요',
                   })}
                 >
                   <option value="" className="">
@@ -228,36 +228,36 @@ const NewRecipePage = () => {
                 </select>
               </div>
               {errors.dishType && (
-                <p className="text-red-300 text-xs mt-1 text-center">
+                <p className="mt-1 text-center text-xs text-red-300">
                   {errors.dishType.message}
                 </p>
               )}
             </div>
-            <div className="flex flex-col flex-1">
-              <div className="text-center h-10 flex items-center justify-center gap-2">
-                <p className="text-[#777777] mb-1">조리시간</p>
+            <div className="flex flex-1 flex-col">
+              <div className="flex h-10 items-center justify-center gap-2 text-center">
+                <p className="mb-1 text-[#777777]">조리시간</p>
                 <div className="relative">
                   <input
                     type="text"
-                    className={`w-20 bg-transparent border-b ${
+                    className={`w-20 border-b bg-transparent ${
                       errors.cookingTime
-                        ? "border-red-500"
-                        : "border-[#00473c]/30"
-                    } pb-1 text-center focus:outline-none focus:border-[#00473c]`}
+                        ? 'border-red-500'
+                        : 'border-[#00473c]/30'
+                    } pb-1 text-center focus:border-[#00473c] focus:outline-none`}
                     placeholder="30"
-                    {...register("cookingTime", {
-                      required: "조리 시간을 입력해주세요",
+                    {...register('cookingTime', {
+                      required: '조리 시간을 입력해주세요',
                       pattern: {
                         value: /^\d+$/,
-                        message: "숫자만 입력 가능합니다",
+                        message: '숫자만 입력 가능합니다',
                       },
                     })}
                   />
-                  <span className="text-sm ml-1">분</span>
+                  <span className="ml-1 text-sm">분</span>
                 </div>
               </div>
               {errors.cookingTime && (
-                <p className="text-red-300 text-xs mt-1 text-center">
+                <p className="mt-1 text-center text-xs text-red-300">
                   {errors.cookingTime.message}
                 </p>
               )}
@@ -265,16 +265,16 @@ const NewRecipePage = () => {
           </div>
 
           <div className="mb-4">
-            <div className="flex justify-between items-center h-20 py-4">
+            <div className="flex h-20 items-center justify-between py-4">
               <h2 className="text-2xl font-semibold text-gray-700">재료</h2>
               <div className="flex flex-col">
-                <div className="flex w-40 justify-center items-center gap-2 text-center h-full">
+                <div className="flex h-full w-40 items-center justify-center gap-2 text-center">
                   <select
-                    className={`bg-transparent border-b ${
-                      errors.servings ? "border-red-500" : "border-[#00473c]/30"
-                    } pb-1 text-center focus:outline-none focus:border-[#00473c]`}
-                    {...register("servings", {
-                      required: "인분을 선택해주세요",
+                    className={`border-b bg-transparent ${
+                      errors.servings ? 'border-red-500' : 'border-[#00473c]/30'
+                    } pb-1 text-center focus:border-[#00473c] focus:outline-none`}
+                    {...register('servings', {
+                      required: '인분을 선택해주세요',
                       valueAsNumber: true,
                     })}
                   >
@@ -291,10 +291,10 @@ const NewRecipePage = () => {
                       3
                     </option>
                   </select>
-                  <p className="text-[#777777] mb-1">인분</p>
+                  <p className="mb-1 text-[#777777]">인분</p>
                 </div>
                 {errors.servings && (
-                  <p className="text-red-300 text-xs mt-1 text-center">
+                  <p className="mt-1 text-center text-xs text-red-300">
                     {errors.servings.message}
                   </p>
                 )}
@@ -305,41 +305,41 @@ const NewRecipePage = () => {
               {ingredientFields.map((field, index) => (
                 <div
                   key={field.id}
-                  className="flex items-center gap-3 p-3 border-b justify-between border-[#00473c]/10 bg-white rounded-lg shadow-sm"
+                  className="flex items-center justify-between gap-3 rounded-lg border-b border-[#00473c]/10 bg-white p-3 shadow-sm"
                 >
-                  <div className="w-10 h-10 bg-[#58C16A]/10 rounded-lg flex items-center justify-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#58C16A]/10">
                     <ChefHat size={20} className="text-[#58C16A]" />
                   </div>
 
-                  <div className="flex gap-2 flex-1 justify-between">
+                  <div className="flex flex-1 justify-between gap-2">
                     <input
                       type="text"
-                      className={`bg-transparent w-20 ${
+                      className={`w-20 bg-transparent ${
                         errors.ingredients?.[index]?.name
-                          ? "border-red-500"
-                          : "border-[#00473c]/10"
-                      } focus:outline-none border-b`}
+                          ? 'border-red-500'
+                          : 'border-[#00473c]/10'
+                      } border-b focus:outline-none`}
                       placeholder="재료명"
                       {...register(`ingredients.${index}.name`, {
-                        required: index === 0 ? "재료명은 필수입니다" : false,
+                        required: index === 0 ? '재료명은 필수입니다' : false,
                       })}
                     />
                     <div className="flex gap-1">
                       <input
                         type="text"
-                        className="w-16 bg-transparent border-b border-[#00473c]/10 text-center focus:outline-none focus:border-[#00473c]"
+                        className="w-16 border-b border-[#00473c]/10 bg-transparent text-center focus:border-[#00473c] focus:outline-none"
                         placeholder="수량"
                         {...register(`ingredients.${index}.quantity`)}
                       />
                       <input
                         type="text"
-                        className="w-16 bg-transparent border-b border-[#00473c]/10 text-center focus:outline-none focus:border-[#00473c]"
+                        className="w-16 border-b border-[#00473c]/10 bg-transparent text-center focus:border-[#00473c] focus:outline-none"
                         placeholder="단위"
                         {...register(`ingredients.${index}.unit`)}
                       />
                     </div>
                     {errors.ingredients?.[index]?.name && (
-                      <p className="text-red-500 text-xs mt-1">
+                      <p className="mt-1 text-xs text-red-500">
                         {errors.ingredients[index]?.name?.message}
                       </p>
                     )}
@@ -363,7 +363,7 @@ const NewRecipePage = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full mt-2 flex items-center justify-center gap-1 border-dashed border-[#58C16A]/40 text-[#58C16A] hover:bg-[#58C16A]/5"
+              className="mt-2 flex w-full items-center justify-center gap-1 border-dashed border-[#58C16A]/40 text-[#58C16A] hover:bg-[#58C16A]/5"
               onClick={addIngredient}
             >
               <Plus size={16} />
@@ -372,29 +372,29 @@ const NewRecipePage = () => {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-700">조리 과정</h2>
+            <h2 className="mb-4 text-2xl font-bold text-gray-700">조리 과정</h2>
 
             <div className="space-y-4">
               {stepFields.map((step, index) => (
                 <div key={step.id} className="flex gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-[#58C16A] rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#58C16A] font-bold text-white">
                     {index + 1}
                   </div>
-                  <div className="flex-1 relative">
+                  <div className="relative flex-1">
                     <textarea
-                      className={`w-full bg-white p-3 rounded-lg ${
+                      className={`w-full rounded-lg bg-white p-3 ${
                         errors.steps?.[index]?.instruction
-                          ? "border border-red-500"
-                          : "border border-[#00473c]/20"
-                      } focus:outline-none focus:border-[#00473c] shadow-sm min-h-[80px]`}
+                          ? 'border border-red-500'
+                          : 'border border-[#00473c]/20'
+                      } min-h-[80px] shadow-sm focus:border-[#00473c] focus:outline-none`}
                       placeholder={`${index + 1}번째 과정을 설명해주세요`}
                       {...register(`steps.${index}.instruction`, {
                         required:
-                          index === 0 ? "조리 과정 설명은 필수입니다" : false,
+                          index === 0 ? '조리 과정 설명은 필수입니다' : false,
                       })}
                     />
                     {errors.steps?.[index]?.instruction && (
-                      <p className="text-red-500 text-xs mt-1">
+                      <p className="mt-1 text-xs text-red-500">
                         {errors.steps[index]?.instruction?.message}
                       </p>
                     )}
@@ -414,7 +414,7 @@ const NewRecipePage = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full mt-2 flex items-center justify-center gap-1 border-dashed border-[#58C16A]/40 text-[#58C16A] hover:bg-[#58C16A]/5"
+                className="mt-2 flex w-full items-center justify-center gap-1 border-dashed border-[#58C16A]/40 text-[#58C16A] hover:bg-[#58C16A]/5"
                 onClick={addStep}
               >
                 <Plus size={16} />
@@ -423,7 +423,7 @@ const NewRecipePage = () => {
             </div>
           </div>
 
-          <div className="flex justify-center mt-8">
+          <div className="mt-8 flex justify-center">
             <ProgressButton
               progressPercentage={progressPercentage}
               isFormValid={isValid && isDirty}

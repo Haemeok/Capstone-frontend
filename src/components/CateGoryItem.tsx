@@ -1,6 +1,6 @@
-import { END_POINTS } from "@/constants/api";
-import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router";
+import { END_POINTS } from '@/constants/api';
+import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router';
 
 type CateGoryItemProps = {
   id: number;
@@ -20,8 +20,8 @@ const CateGoryItem = ({
   return (
     <div
       className={cn(
-        "flex-shrink-0 w-50 h-70 rounded-lg overflow-hidden relative shadow-md cursor-pointer",
-        className
+        'relative h-70 w-50 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg shadow-md',
+        className,
       )}
       onClick={() => {
         navigate(END_POINTS.RECIPES_BY_CATEGORY(name));
@@ -30,10 +30,10 @@ const CateGoryItem = ({
       <img
         src={imageUrl}
         alt={name}
-        className="w-50 h-70 object-cover img-smooth"
+        className="img-smooth h-70 w-50 object-cover"
       />
-      <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent">
-        <h3 className="text-white text-sm font-semibold truncate">{name}</h3>
+      <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+        <h3 className="truncate text-sm font-semibold text-white">{name}</h3>
       </div>
     </div>
   );

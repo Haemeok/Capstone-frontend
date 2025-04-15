@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 type ToggleIconButtonProps = {
   isActive?: boolean;
@@ -8,14 +8,14 @@ type ToggleIconButtonProps = {
   activeClassName?: string;
   inactiveClassName?: string;
   variant?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link";
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'link';
   className?: string;
-  size?: "default" | "sm" | "lg" | "icon";
+  size?: 'default' | 'sm' | 'lg' | 'icon';
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   children?: React.ReactNode;
 };
@@ -25,10 +25,10 @@ const ToggleIconButton = ({
   onToggle,
   activeIcon,
   icon,
-  activeClassName = "",
-  inactiveClassName = "",
-  variant = "ghost",
-  className = "",
+  activeClassName = '',
+  inactiveClassName = '',
+  variant = 'ghost',
+  className = '',
   children,
   ...props
 }: ToggleIconButtonProps) => {
@@ -42,9 +42,9 @@ const ToggleIconButton = ({
       type="button"
       onClick={handleClick}
       className={cn(
-        "flex items-center justify-center gap-1 cursor-pointer",
+        'flex cursor-pointer items-center justify-center gap-1',
         isActive ? activeClassName : inactiveClassName,
-        className
+        className,
       )}
       {...props}
     >

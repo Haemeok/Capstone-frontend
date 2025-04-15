@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 type StarIconProps = {
   filled: boolean;
@@ -25,7 +25,7 @@ const StarIcon = ({
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`cursor-pointer w-9 h-9 transition-all duration-300 hover:scale-110`}
+      className={`h-9 w-9 cursor-pointer transition-all duration-300 hover:scale-110`}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -40,7 +40,7 @@ const StarIcon = ({
         fill="#f3c734"
         style={{
           opacity: filled ? 1 : 0,
-          transition: "opacity 0.4s ease",
+          transition: 'opacity 0.4s ease',
         }}
       />
 
@@ -50,7 +50,7 @@ const StarIcon = ({
           fill="url(#halfFill)"
           style={{
             opacity: halfFilled ? 1 : 0,
-            transition: "opacity 0.4s ease",
+            transition: 'opacity 0.4s ease',
           }}
         />
       )}

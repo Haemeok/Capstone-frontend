@@ -1,6 +1,6 @@
-import { END_POINTS } from "@/constants/api";
-import { axiosInstance } from "./axios";
-import { Recipe, RecipeGridItem } from "@/type/recipe";
+import { END_POINTS } from '@/constants/api';
+import { axiosInstance } from './axios';
+import { Recipe, RecipeGridItem } from '@/type/recipe';
 
 export const getRecipes = async () => {
   const response = await axiosInstance.get(END_POINTS.RECIPES);
@@ -14,7 +14,7 @@ export const getRecipe = async (id: number) => {
 
 export const getRecipeItems = async () => {
   const response = await axiosInstance.get<RecipeGridItem[]>(
-    END_POINTS.RECIPES_SIMPLE
+    END_POINTS.RECIPES_SIMPLE,
   );
   return response.data;
 };
@@ -54,7 +54,7 @@ export const postRecipeVisibility = async (id: number) => {
 
 export const getRecipesByCategory = async (categorySlug: string) => {
   const response = await axiosInstance.get(
-    END_POINTS.RECIPES_BY_CATEGORY(categorySlug)
+    END_POINTS.RECIPES_BY_CATEGORY(categorySlug),
   );
   return response.data;
 };

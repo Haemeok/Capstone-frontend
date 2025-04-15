@@ -2,8 +2,8 @@ import {
   postRecipeFavorite,
   postRecipeLike,
   postRecipeVisibility,
-} from "@/api/recipe";
-import { useMutation, useQueryClient, QueryKey } from "@tanstack/react-query";
+} from '@/api/recipe';
+import { useMutation, useQueryClient, QueryKey } from '@tanstack/react-query';
 
 type ToggleFunction = (id: number) => Promise<any>;
 
@@ -34,8 +34,8 @@ export const useToggleMutation = (options: UseToggleMutationOptions) => {
 export const useToggleRecipeLike = () => {
   const mutation = useToggleMutation({
     toggleFn: postRecipeLike,
-    resourceQueryKey: "recipe",
-    additionalInvalidateKeys: ["recipes"],
+    resourceQueryKey: 'recipe',
+    additionalInvalidateKeys: ['recipes'],
   });
 
   return mutation;
@@ -44,8 +44,8 @@ export const useToggleRecipeLike = () => {
 export const useToggleRecipeSave = () => {
   const mutation = useToggleMutation({
     toggleFn: postRecipeFavorite,
-    resourceQueryKey: "recipe",
-    additionalInvalidateKeys: ["recipes", "savedRecipes"],
+    resourceQueryKey: 'recipe',
+    additionalInvalidateKeys: ['recipes', 'savedRecipes'],
   });
 
   return mutation;
@@ -54,8 +54,8 @@ export const useToggleRecipeSave = () => {
 export const useToggleRecipeVisibility = () => {
   const mutation = useToggleMutation({
     toggleFn: postRecipeVisibility,
-    resourceQueryKey: "recipe",
-    additionalInvalidateKeys: ["recipes"],
+    resourceQueryKey: 'recipe',
+    additionalInvalidateKeys: ['recipes'],
   });
 
   return mutation;

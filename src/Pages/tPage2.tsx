@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from 'react';
 
 const ScrollTransformNavbar: React.FC = () => {
   const [navOpacity, setNavOpacity] = useState(0);
@@ -30,7 +30,7 @@ const ScrollTransformNavbar: React.FC = () => {
         // 콘텐츠 영역에 CSS 변수 설정 (스크롤 위치에 따른 추가 애니메이션용)
         if (contentRef.current) {
           contentRef.current.style.setProperty(
-            "--scroll-progress",
+            '--scroll-progress',
             visibleRatio.toString(),
           );
         }
@@ -38,14 +38,14 @@ const ScrollTransformNavbar: React.FC = () => {
         // 헤더 색상 트랜지션을 위한 CSS 변수 설정
         if (headerRef.current) {
           headerRef.current.style.setProperty(
-            "--nav-opacity",
+            '--nav-opacity',
             visibleRatio.toString(),
           );
         }
       },
       {
         threshold: thresholds,
-        rootMargin: "-10% 0px 0px 0px", // 상단에서 10% 아래부터 감지 시작
+        rootMargin: '-10% 0px 0px 0px', // 상단에서 10% 아래부터 감지 시작
       },
     );
 
@@ -59,7 +59,7 @@ const ScrollTransformNavbar: React.FC = () => {
   }, []);
 
   // 네비게이션 텍스트 컬러 계산
-  const textColor = navOpacity > 0.5 ? "text-black" : "text-white";
+  const textColor = navOpacity > 0.5 ? 'text-black' : 'text-white';
 
   return (
     <div className="relative">
@@ -67,7 +67,7 @@ const ScrollTransformNavbar: React.FC = () => {
       <div className="relative h-[300px] overflow-hidden">
         <img
           ref={imageRef}
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
           src="https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg"
           alt="Korean marinated eggs"
           loading="eager" // 최상단 이미지는 즉시 로드
@@ -79,19 +79,19 @@ const ScrollTransformNavbar: React.FC = () => {
       {/* 상단 네비게이션 바 */}
       <div
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center justify-between transition-all duration-200"
+        className="fixed top-0 right-0 left-0 z-50 flex h-16 items-center justify-between px-4 transition-all duration-200"
         style={{
           backgroundColor: `rgba(255, 255, 255, ${navOpacity})`,
-          boxShadow: navOpacity > 0.8 ? "0 2px 4px rgba(0, 0, 0, 0.1)" : "none",
+          boxShadow: navOpacity > 0.8 ? '0 2px 4px rgba(0, 0, 0, 0.1)' : 'none',
         }}
       >
         {/* 뒤로가기 버튼 */}
         <button
-          className={`p-2 ${textColor} transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
+          className={`p-2 ${textColor} rounded-full transition-colors duration-300 hover:bg-gray-200/30`}
           aria-label="Go back"
         >
           <svg
-            className="w-6 h-6"
+            className="h-6 w-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -108,10 +108,10 @@ const ScrollTransformNavbar: React.FC = () => {
 
         {/* 타이틀 - 스크롤 후에만 표시 */}
         <h1
-          className={`font-bold text-lg transform transition-all duration-300 ${textColor}`}
+          className={`transform text-lg font-bold transition-all duration-300 ${textColor}`}
           style={{
             opacity: showTitle ? 1 : 0,
-            transform: showTitle ? "translateY(0)" : "translateY(-10px)",
+            transform: showTitle ? 'translateY(0)' : 'translateY(-10px)',
           }}
         >
           Korean marinated eggs
@@ -121,7 +121,7 @@ const ScrollTransformNavbar: React.FC = () => {
       </div>
 
       {/* 콘텐츠 영역 */}
-      <div ref={contentRef} className="bg-white p-4 relative z-10">
+      <div ref={contentRef} className="relative z-10 bg-white p-4">
         {/* 헤더 섹션 - 제목이 스크롤에 따라 살짝 위로 이동하는 효과 */}
         <div
           className="animate-on-scroll transition-transform duration-700"
@@ -129,12 +129,12 @@ const ScrollTransformNavbar: React.FC = () => {
             transform: `translateY(calc(-10px * var(--scroll-progress, 0))`,
           }}
         >
-          <h1 className="text-3xl font-bold mt-2 mb-4">
+          <h1 className="mt-2 mb-4 text-3xl font-bold">
             Korean marinated eggs (Mayak eggs) with rice
           </h1>
 
           {/* 별점 및 평가 */}
-          <div className="flex items-center mb-4">
+          <div className="mb-4 flex items-center">
             <div className="flex text-orange-500">
               <span>★</span>
               <span>★</span>
@@ -147,10 +147,10 @@ const ScrollTransformNavbar: React.FC = () => {
         </div>
 
         {/* 공유 및 좋아요 버튼 */}
-        <div className="flex space-x-4 mb-6 animate-on-scroll">
-          <button className="flex items-center justify-center w-1/2 p-3 border rounded-full hover:bg-gray-100 transition-colors duration-300">
+        <div className="animate-on-scroll mb-6 flex space-x-4">
+          <button className="flex w-1/2 items-center justify-center rounded-full border p-3 transition-colors duration-300 hover:bg-gray-100">
             <svg
-              className="w-5 h-5 mr-2"
+              className="mr-2 h-5 w-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -165,9 +165,9 @@ const ScrollTransformNavbar: React.FC = () => {
             </svg>
             <span>Share</span>
           </button>
-          <button className="flex items-center justify-center w-1/2 p-3 border rounded-full hover:bg-gray-100 transition-colors duration-300">
+          <button className="flex w-1/2 items-center justify-center rounded-full border p-3 transition-colors duration-300 hover:bg-gray-100">
             <svg
-              className="w-5 h-5 mr-2"
+              className="mr-2 h-5 w-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -185,12 +185,12 @@ const ScrollTransformNavbar: React.FC = () => {
         </div>
 
         {/* 사용자 정보 */}
-        <div className="flex items-center mb-6 animate-on-scroll">
-          <div className="w-16 h-16 rounded-full bg-blue-200 overflow-hidden">
+        <div className="animate-on-scroll mb-6 flex items-center">
+          <div className="h-16 w-16 overflow-hidden rounded-full bg-blue-200">
             <img
               src="https://randomuser.me/api/portraits/men/32.jpg"
               alt="Eric Chou"
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               loading="lazy"
             />
           </div>
@@ -199,7 +199,7 @@ const ScrollTransformNavbar: React.FC = () => {
             <p className="text-gray-600">Community member</p>
             <a
               href="https://erictriesit.com/"
-              className="text-orange-500 hover:underline transition-all duration-300"
+              className="text-orange-500 transition-all duration-300 hover:underline"
             >
               erictriesit.com/
             </a>
@@ -207,7 +207,7 @@ const ScrollTransformNavbar: React.FC = () => {
         </div>
 
         {/* 본문 내용 */}
-        <div className="mb-4 animate-on-scroll">
+        <div className="animate-on-scroll mb-4">
           <p className="mb-4 leading-relaxed">
             I've been seeing these Korean Mayak eggs all over TikTok a few
             months ago and finally tried them - highly recommended! For the best
@@ -217,11 +217,11 @@ const ScrollTransformNavbar: React.FC = () => {
 
           <a
             href="#"
-            className="text-orange-500 hover:underline transition-all duration-300 inline-flex items-center"
+            className="inline-flex items-center text-orange-500 transition-all duration-300 hover:underline"
           >
             Read more
             <svg
-              className="w-4 h-4 ml-1"
+              className="ml-1 h-4 w-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -241,15 +241,15 @@ const ScrollTransformNavbar: React.FC = () => {
 
         {/* 리뷰 섹션 */}
         <div className="animate-on-scroll">
-          <div className="flex justify-between items-center mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl font-bold">Reviews</h2>
             <a
               href="#"
-              className="text-orange-500 hover:underline transition-all duration-300 inline-flex items-center"
+              className="inline-flex items-center text-orange-500 transition-all duration-300 hover:underline"
             >
               Read
               <svg
-                className="w-4 h-4 ml-1"
+                className="ml-1 h-4 w-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -264,53 +264,53 @@ const ScrollTransformNavbar: React.FC = () => {
               </svg>
             </a>
           </div>
-          <p className="text-gray-600 mb-4">38 comments - 15 images</p>
+          <p className="mb-4 text-gray-600">38 comments - 15 images</p>
         </div>
 
         {/* 예시 리뷰 이미지들 - 그리드 애니메이션 */}
-        <div className="grid grid-cols-4 gap-2 mb-8 animate-on-scroll">
-          <div className="aspect-square bg-gray-200 rounded overflow-hidden transform transition-transform hover:scale-105">
+        <div className="animate-on-scroll mb-8 grid grid-cols-4 gap-2">
+          <div className="aspect-square transform overflow-hidden rounded bg-gray-200 transition-transform hover:scale-105">
             <img
               src="https://source.unsplash.com/random/200x200/?egg,food,1"
               alt="Review"
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               loading="lazy"
             />
           </div>
-          <div className="aspect-square bg-gray-200 rounded overflow-hidden transform transition-transform hover:scale-105">
+          <div className="aspect-square transform overflow-hidden rounded bg-gray-200 transition-transform hover:scale-105">
             <img
               src="https://source.unsplash.com/random/200x200/?egg,food,2"
               alt="Review"
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               loading="lazy"
             />
           </div>
-          <div className="aspect-square bg-gray-200 rounded overflow-hidden transform transition-transform hover:scale-105">
+          <div className="aspect-square transform overflow-hidden rounded bg-gray-200 transition-transform hover:scale-105">
             <img
               src="https://source.unsplash.com/random/200x200/?egg,food,3"
               alt="Review"
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               loading="lazy"
             />
           </div>
-          <div className="aspect-square bg-gray-200 rounded overflow-hidden relative transform transition-transform hover:scale-105">
+          <div className="relative aspect-square transform overflow-hidden rounded bg-gray-200 transition-transform hover:scale-105">
             <img
               src="https://source.unsplash.com/random/200x200/?egg,food,4"
               alt="Review"
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl font-bold">
+            <div className="bg-opacity-50 absolute inset-0 flex items-center justify-center bg-black text-xl font-bold text-white">
               +12
             </div>
           </div>
         </div>
 
         {/* 레시피 섹션 */}
-        <div className="mt-8 animate-on-scroll">
-          <h2 className="text-2xl font-bold mb-4 flex items-center">
+        <div className="animate-on-scroll mt-8">
+          <h2 className="mb-4 flex items-center text-2xl font-bold">
             <svg
-              className="w-6 h-6 mr-2"
+              className="mr-2 h-6 w-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

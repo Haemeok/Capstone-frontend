@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import StarIcon from "./StarIcon";
+import React, { useState, useEffect, useRef } from 'react';
+import StarIcon from './StarIcon';
 
-type Size = "sm" | "md" | "lg" | "xl";
+type Size = 'sm' | 'md' | 'lg' | 'xl';
 
 type RatingProps = {
   count?: number;
@@ -20,11 +20,11 @@ const Ratings = ({
   value = 0,
   onChange,
   readOnly = false,
-  size = "md",
+  size = 'md',
   showValue = false,
   precision = 1,
   allowHalf = false,
-  className = "",
+  className = '',
 }: RatingProps) => {
   const [hoverValue, setHoverValue] = useState<number>(0);
   const starRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -34,10 +34,10 @@ const Ratings = ({
   }, [count]);
 
   const sizeClasses: Record<Size, string> = {
-    sm: "h-4 w-4",
-    md: "h-6 w-6",
-    lg: "h-8 w-8",
-    xl: "h-10 w-10",
+    sm: 'h-4 w-4',
+    md: 'h-6 w-6',
+    lg: 'h-8 w-8',
+    xl: 'h-10 w-10',
   };
 
   const roundToNearest = (val: number): number => {
@@ -96,7 +96,7 @@ const Ratings = ({
   };
 
   return (
-    <div className={`flex flex-col justify-center items-center ${className}`}>
+    <div className={`flex flex-col items-center justify-center ${className}`}>
       <div className="flex items-center gap-4">
         {[...Array(count)].map((_, idx) => {
           const starValue = idx + 1;
@@ -131,7 +131,7 @@ const Ratings = ({
 
         {showValue && (
           <span className="ml-2 text-sm font-medium">
-            {hoverValue > 0 ? hoverValue.toFixed(1) : value.toFixed(1)} /{" "}
+            {hoverValue > 0 ? hoverValue.toFixed(1) : value.toFixed(1)} /{' '}
             {count}
           </span>
         )}

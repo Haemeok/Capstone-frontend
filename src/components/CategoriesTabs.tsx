@@ -1,8 +1,8 @@
-import { categoriesItems } from "@/mock";
-import React from "react";
-import CateGoryItem from "./CateGoryItem";
-import { useNavigate } from "react-router";
-import { ChevronRight } from "lucide-react";
+import { categoriesItems } from '@/mock';
+import React from 'react';
+import CateGoryItem from './CateGoryItem';
+import { useNavigate } from 'react-router';
+import { ChevronRight } from 'lucide-react';
 
 type CategoriesTabsProps = {
   title: string;
@@ -13,17 +13,17 @@ const CategoriesTabs = ({ title }: CategoriesTabsProps) => {
 
   return (
     <div className="mt-8 w-full">
-      <div className="flex justify-between items-center px-6 mb-4">
+      <div className="mb-4 flex items-center justify-between px-6">
         <div className="flex items-center gap-2">
           <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
         </div>
-        <button className="text-sm text-gray-500 flex items-center hover:text-gray-700">
+        <button className="flex items-center text-sm text-gray-500 hover:text-gray-700">
           더보기
-          <ChevronRight className="w-4 h-4 ml-1" />
+          <ChevronRight className="ml-1 h-4 w-4" />
         </button>
       </div>
 
-      <div className="pl-6 flex gap-3 w-full overflow-x-auto pb-4 scrollbar-hide">
+      <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto pb-4 pl-6">
         {categoriesItems.map((item) => (
           <CateGoryItem
             key={item.id}

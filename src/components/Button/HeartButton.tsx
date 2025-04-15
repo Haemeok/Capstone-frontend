@@ -1,6 +1,6 @@
-import { useState } from "react";
-import ToggleIconButton from "./ToggleIconButton";
-import { Heart } from "lucide-react";
+import { useState } from 'react';
+import ToggleIconButton from './ToggleIconButton';
+import { Heart } from 'lucide-react';
 
 type HeartButtonProps = {
   containerClassName?: string;
@@ -35,7 +35,7 @@ const HeartButton = ({
 
   return (
     <div
-      className={`flex flex-col gap-1 justify-center items-center ${containerClassName}`}
+      className={`flex flex-col items-center justify-center gap-1 ${containerClassName}`}
     >
       <button
         onClick={() => handleToggle(!isLiked)}
@@ -45,9 +45,9 @@ const HeartButton = ({
         <Heart
           width={width}
           height={height}
-          className={`${isCountShown ? "transition-all duration-200" : ""} ${
-            isLiked ? "text-[#d12d2e] fill-[#d12d2e]" : ""
-          } ${isAnimating ? "pulse" : ""}`}
+          className={`${isCountShown ? 'transition-all duration-200' : ''} ${
+            isLiked ? 'fill-[#d12d2e] text-[#d12d2e]' : ''
+          } ${isAnimating ? 'pulse' : ''}`}
         />
       </button>
       {isCountShown && <span className="text-sm font-bold">{likes}</span>}

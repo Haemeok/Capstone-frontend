@@ -1,7 +1,7 @@
-import { create } from "zustand";
-import { User } from "@/type/user";
+import { create } from 'zustand';
+import { User } from '@/type/user';
 
-import { removeAccessToken, setAccessToken } from "@/utils/auth";
+import { removeAccessToken, setAccessToken } from '@/utils/auth';
 
 type UserState = {
   user: User | null;
