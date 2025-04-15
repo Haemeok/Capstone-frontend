@@ -29,7 +29,7 @@ export type Recipe = {
   servings: number | undefined | "";
   totalIngredientCost?: number;
   marketPrice?: number;
-  tagNames?: string[];
+  tagNames: string[];
 };
 
 export type RecipeGridItem = {

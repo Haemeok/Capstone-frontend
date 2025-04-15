@@ -277,6 +277,7 @@ export const recipe: Recipe = {
   cookingTools: "oven",
   isAigenerated: false,
   servings: 4,
+  tagNames: ["비건", "건강한", "간편한", "영양가있는"],
 };
 
 export const comments: Comment[] = [

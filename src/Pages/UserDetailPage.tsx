@@ -59,7 +59,6 @@ const UserDetailPage = () => {
     { id: "캘린더", label: "캘린더", icon: Calendar },
   ];
 
-  // 활성 탭에 따른 레시피 선택
   const getRecipesByTab = () => {
     switch (activeTab) {
       case "나의 레시피":
@@ -107,7 +106,7 @@ const UserDetailPage = () => {
               </p>
             </div>
           </div>
-          {!displayUser ? (
+          {!user ? (
             <Button
               className="bg-olive text-white hover:bg-olive-dark px-6 rounded-full"
               onClick={handleLoginClick}
@@ -129,7 +128,6 @@ const UserDetailPage = () => {
         </p>
       </div>
 
-      {/* 탭 메뉴 */}
       <div className="border-b border-gray-200">
         <div className="flex">
           {tabs.map((tab) => (
@@ -152,7 +150,7 @@ const UserDetailPage = () => {
         </div>
       </div>
 
-      {displayUser ? (
+      {user ? (
         getRecipesByTab()
       ) : (
         <div className="flex flex-col items-center justify-center p-10 text-center">
