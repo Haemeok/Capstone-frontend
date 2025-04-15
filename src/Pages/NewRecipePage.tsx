@@ -108,6 +108,7 @@ const NewRecipePage = () => {
       imageURL: "123",
       ingredients: data.ingredients.filter((i) => i.name.trim() !== ""),
       steps: data.steps.filter((s) => s.instruction.trim() !== ""),
+      tagNames: ["비건", "건강한", "간편한", "영양가있는"],
     };
 
     console.log("정제된 제출 데이터:", filteredData);
