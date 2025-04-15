@@ -1,10 +1,10 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 let toastId = 0;
 
 type ToastState = {
   toastList: ToastType[];
-  addToast: (toast: Omit<ToastType, "id">) => number;
+  addToast: (toast: Omit<ToastType, 'id'>) => number;
   removeToast: (id: number) => void;
 };
 
@@ -12,7 +12,7 @@ export type ToastType = {
   id: number;
   message: string;
   duration?: number;
-  variant: "success" | "error" | "warning" | "info" | "default";
+  variant: 'success' | 'error' | 'warning' | 'info' | 'default';
 };
 
 export const useToastStore = create<ToastState>((set) => ({

@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
-import PrevButton from "../Button/PrevButton";
-import HeartButton from "../Button/HeartButton";
-import ShareButton from "../Button/ShareButton";
+import React, { useRef, useEffect, useState } from 'react';
+import PrevButton from '../Button/PrevButton';
+import HeartButton from '../Button/HeartButton';
+import ShareButton from '../Button/ShareButton';
 
 type TransformingNavbarProps = {
   title: string;
@@ -44,15 +44,15 @@ const TransformingNavbar = ({
 
         if (headerRef.current) {
           headerRef.current.style.setProperty(
-            "--nav-opacity",
-            Math.max(0, Math.min(1, visibleRatio)).toString()
+            '--nav-opacity',
+            Math.max(0, Math.min(1, visibleRatio)).toString(),
           );
         }
       },
       {
         threshold: thresholds,
-        rootMargin: "-10% 0px 0px 0px",
-      }
+        rootMargin: '-10% 0px 0px 0px',
+      },
     );
 
     observer.observe(targetRef.current);
@@ -63,7 +63,7 @@ const TransformingNavbar = ({
   }, [targetRef, titleThreshold]);
 
   const textColor =
-    navOpacity > textColorThreshold ? "text-black" : "text-white";
+    navOpacity > textColorThreshold ? 'text-black' : 'text-white';
 
   const defaultRightComponent = (
     <div className="flex shrink-0">
@@ -72,7 +72,7 @@ const TransformingNavbar = ({
         ariaLabel="좋아요"
       />
       <ShareButton
-        className={`p-2 ${textColor} flex-shrink-0 transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
+        className={`p-2 ${textColor} flex-shrink-0 rounded-full transition-colors duration-300 hover:bg-gray-200/30`}
         ariaLabel="공유하기"
       />
     </div>
@@ -81,23 +81,23 @@ const TransformingNavbar = ({
   return (
     <div
       ref={headerRef}
-      className="fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center justify-between transition-all duration-200"
+      className="fixed top-0 right-0 left-0 z-50 flex h-16 items-center justify-between px-4 transition-all duration-200"
       style={{
         backgroundColor: `rgba(255, 255, 255, ${navOpacity})`,
         boxShadow:
           navOpacity > shadowThreshold
-            ? "0 2px 4px rgba(0, 0, 0, 0.1)"
-            : "none",
+            ? '0 2px 4px rgba(0, 0, 0, 0.1)'
+            : 'none',
       }}
     >
-      <div className="flex items-center gap-2 min-w-0 max-w-full">
+      <div className="flex max-w-full min-w-0 items-center gap-2">
         <PrevButton className={`${textColor} shrink-0`} />
 
         <h1
-          className={`font-bold truncate text-lg transform transition-all duration-300 ${textColor}`}
+          className={`transform truncate text-lg font-bold transition-all duration-300 ${textColor}`}
           style={{
             opacity: showTitle ? 1 : 0,
-            transform: showTitle ? "translateY(0)" : "translateY(-10px)",
+            transform: showTitle ? 'translateY(0)' : 'translateY(-10px)',
           }}
         >
           {title}

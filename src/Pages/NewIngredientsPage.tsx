@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
-import { ChevronLeft, Plus, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { ChevronLeft, Plus, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Ingredient {
   id: number;
@@ -15,44 +15,44 @@ interface Ingredient {
 const mockIngredients: Ingredient[] = [
   {
     id: 1,
-    name: "감",
-    image: "/ingredients/persimmon.jpg",
+    name: '감',
+    image: '/ingredients/persimmon.jpg',
     isSelected: false,
   },
   {
     id: 2,
-    name: "계란",
-    image: "/ingredients/egg.jpg",
+    name: '계란',
+    image: '/ingredients/egg.jpg',
     isSelected: true,
   },
   {
     id: 3,
-    name: "가지",
-    image: "/ingredients/eggplant.jpg",
+    name: '가지',
+    image: '/ingredients/eggplant.jpg',
     isSelected: false,
   },
   {
     id: 4,
-    name: "갈치",
-    image: "/ingredients/cutlassfish.jpg",
+    name: '갈치',
+    image: '/ingredients/cutlassfish.jpg',
     isSelected: false,
   },
   {
     id: 5,
-    name: "감자",
-    image: "/ingredients/potato.jpg",
+    name: '감자',
+    image: '/ingredients/potato.jpg',
     isSelected: true,
   },
   {
     id: 6,
-    name: "감자전분",
-    image: "/ingredients/potato-starch.jpg",
+    name: '감자전분',
+    image: '/ingredients/potato-starch.jpg',
     isSelected: false,
   },
   {
     id: 7,
-    name: "감골주스",
-    image: "/ingredients/persimmon-juice.jpg",
+    name: '감골주스',
+    image: '/ingredients/persimmon-juice.jpg',
     isSelected: true,
   },
 ];
@@ -60,8 +60,8 @@ const mockIngredients: Ingredient[] = [
 const NewIngredientsPage: React.FC = () => {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState<Ingredient[]>(mockIngredients);
-  const [searchQuery, setSearchQuery] = useState("");
-  const userName = "황민현"; // 나중에 실제 사용자 이름으로 변경
+  const [searchQuery, setSearchQuery] = useState('');
+  const userName = '황민현'; // 나중에 실제 사용자 이름으로 변경
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -80,7 +80,7 @@ const NewIngredientsPage: React.FC = () => {
   };
 
   const handleAddIngredient = () => {
-    navigate("/ingredients/new");
+    navigate('/ingredients/new');
   };
 
   return (
@@ -88,13 +88,13 @@ const NewIngredientsPage: React.FC = () => {
       {/* 검색창 */}
       <div className="p-4">
         <div className="relative">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+          <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
             <Search size={18} className="text-gray-400" />
           </div>
           <input
             type="text"
             placeholder="냉장고 속 재료를 찾아보세요!"
-            className="w-full bg-white py-2 pl-10 pr-4 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00473c]"
+            className="w-full rounded-full bg-white py-2 pr-4 pl-10 shadow-sm focus:ring-2 focus:ring-[#00473c] focus:outline-none"
             value={searchQuery}
             onChange={handleSearchChange}
           />
@@ -103,7 +103,7 @@ const NewIngredientsPage: React.FC = () => {
 
       {/* 탭 메뉴 */}
       <div className="flex border-b border-[#00473c]/10">
-        <button className="flex-1 py-3 font-bold text-[#5cc570] border-b-2 border-[#5cc570]">
+        <button className="flex-1 border-b-2 border-[#5cc570] py-3 font-bold text-[#5cc570]">
           전체
         </button>
         <button className="flex-1 py-3 text-gray-500">가공/유제품</button>
@@ -118,15 +118,15 @@ const NewIngredientsPage: React.FC = () => {
           {filteredIngredients.map((ingredient) => (
             <div
               key={ingredient.id}
-              className="flex items-center bg-white p-3 rounded-lg shadow-sm"
+              className="flex items-center rounded-lg bg-white p-3 shadow-sm"
               onClick={() => handleIngredientClick(ingredient.id)}
             >
-              <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden mr-3">
+              <div className="mr-3 h-12 w-12 overflow-hidden rounded-lg bg-gray-200">
                 {ingredient.image && (
                   <img
                     src={ingredient.image}
                     alt={ingredient.name}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                   />
                 )}
               </div>
@@ -134,14 +134,14 @@ const NewIngredientsPage: React.FC = () => {
                 <p className="font-medium">{ingredient.name}</p>
               </div>
               <Button
-                variant={ingredient.isSelected ? "default" : "outline"}
+                variant={ingredient.isSelected ? 'default' : 'outline'}
                 className={`rounded-full px-4 ${
                   ingredient.isSelected
-                    ? "bg-[#5cc570] text-white hover:bg-[#5cc570]/90 border-0"
-                    : "text-gray-400 border border-gray-300"
+                    ? 'border-0 bg-[#5cc570] text-white hover:bg-[#5cc570]/90'
+                    : 'border border-gray-300 text-gray-400'
                 }`}
               >
-                {ingredient.isSelected ? "추가" : "설정"}
+                {ingredient.isSelected ? '추가' : '설정'}
               </Button>
             </div>
           ))}
@@ -149,10 +149,10 @@ const NewIngredientsPage: React.FC = () => {
       </div>
 
       {/* 직접 추가 버튼 */}
-      <div className="fixed bottom-6 right-6">
+      <div className="fixed right-6 bottom-6">
         <Button
           onClick={handleAddIngredient}
-          className="bg-[#333333] hover:bg-[#222222] text-white rounded-lg px-4 py-2 shadow-lg"
+          className="rounded-lg bg-[#333333] px-4 py-2 text-white shadow-lg hover:bg-[#222222]"
         >
           <Plus size={18} className="mr-1" />
           직접 추가

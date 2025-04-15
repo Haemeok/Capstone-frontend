@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router";
-import { Share2 } from "lucide-react";
+import { useNavigate } from 'react-router';
+import { Share2 } from 'lucide-react';
 
 type ShareButtonProps = {
   className?: string;
@@ -18,13 +18,13 @@ const ShareButton = ({
   return (
     <div className="flex flex-col items-center">
       <button
-        onClick={onClick ?? (() => navigate("/recipes"))}
-        className={`w-10 h-10 flex items-center justify-center ${className}`}
+        onClick={onClick ?? (() => navigate('/recipes'))}
+        className={`flex h-10 w-10 items-center justify-center ${className}`}
         aria-label={ariaLabel}
       >
         <Share2 width={24} height={24} />
       </button>
-      {label && <p className="text-sm font-bold mt-1">{label}</p>}
+      {label && <p className="mt-1 text-sm font-bold">{label}</p>}
     </div>
   );
 };

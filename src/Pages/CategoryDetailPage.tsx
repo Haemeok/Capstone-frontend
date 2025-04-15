@@ -1,7 +1,7 @@
-import { getRecipesByCategory } from "@/api/recipe";
-import RecipeGrid from "@/components/RecipeGrid";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { getRecipesByCategory } from '@/api/recipe';
+import RecipeGrid from '@/components/RecipeGrid';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router';
 
 const CategoryDetailPage = () => {
   const { categorySlug } = useParams<{ categorySlug: string }>();
@@ -15,7 +15,7 @@ const CategoryDetailPage = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["recipes", categorySlug],
+    queryKey: ['recipes', categorySlug],
     queryFn: () => {
       return getRecipesByCategory(categorySlug!);
     },
@@ -26,7 +26,7 @@ const CategoryDetailPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">{`${categoryTitle} 레시피`}</h1>
+      <h1 className="mb-4 text-2xl font-bold">{`${categoryTitle} 레시피`}</h1>
       {recipes && recipes.length > 0 ? (
         <RecipeGrid recipes={recipes} />
       ) : (

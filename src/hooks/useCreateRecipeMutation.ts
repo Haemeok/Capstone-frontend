@@ -1,6 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
-import { postRecipe } from "@/api/recipe";
-import { Recipe } from "@/type/recipe";
+import { useMutation } from '@tanstack/react-query';
+import { postRecipe } from '@/api/recipe';
+import { Recipe } from '@/type/recipe';
 
 const useCreateRecipeMutation = () => {
   const mutation = useMutation({

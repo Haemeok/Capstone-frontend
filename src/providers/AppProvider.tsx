@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { useUserQuery } from "@/hooks/useUserQuery";
-import { useUserStore } from "@/store/useUserStore";
+import React, { useEffect } from 'react';
+import { useUserQuery } from '@/hooks/useUserQuery';
+import { useUserStore } from '@/store/useUserStore';
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -20,7 +20,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
     return <div>Loading...</div>;
   }
 
-  console.log("App Initialization Complete. User:", user);
+  console.log('App Initialization Complete. User:', user);
   return <>{children}</>;
 };
 

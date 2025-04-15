@@ -1,5 +1,5 @@
-import { useToastStore } from "@/store/useToastStore";
-import Toast from "@/components/Toast/Toast";
+import { useToastStore } from '@/store/useToastStore';
+import Toast from '@/components/Toast/Toast';
 
 const ToastProvider = () => {
   const toastList = useToastStore((state) => state.toastList);

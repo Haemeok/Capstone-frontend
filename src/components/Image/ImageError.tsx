@@ -4,8 +4,8 @@ type ImageErrorProps = {
 };
 
 const ImageError = ({ message, className }: ImageErrorProps) => (
-  <div className={`image-error ${className || ""}`}>
-    {message || "이미지를 불러올 수 없습니다"}
+  <div className={`image-error ${className || ''}`}>
+    {message || '이미지를 불러올 수 없습니다'}
   </div>
 );
 

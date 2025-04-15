@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import SelectButton from "@/components/SelectButton";
+import { ReactNode } from 'react';
+import SelectButton from '@/components/SelectButton';
 
 type SelectionSectionProps = {
   title: string;
@@ -16,11 +16,11 @@ const SelectionSection = ({
   items,
   selectedItems,
   onToggle,
-  className = "",
+  className = '',
 }: SelectionSectionProps) => {
   return (
     <div className={`border-b pb-5 ${className}`}>
-      <div className="flex items-center gap-2 mb-3">
+      <div className="mb-3 flex items-center gap-2">
         <span className="text-olive">{icon}</span>
         <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
       </div>

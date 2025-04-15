@@ -1,6 +1,6 @@
-import { useImageLoader } from "@/hooks/useImageLoader";
-import ImageError from "./ImageError";
-import DefaultImageFallback from "./DefaultImageFallback";
+import { useImageLoader } from '@/hooks/useImageLoader';
+import ImageError from './ImageError';
+import DefaultImageFallback from './DefaultImageFallback';
 
 type ImageProps = {
   src: string;
@@ -17,13 +17,13 @@ type ImageProps = {
 };
 const Image = ({
   src,
-  alt = "이미지",
+  alt = '이미지',
   fallback,
   errorFallback,
-  errorMessage = "",
-  className = "",
-  loadingClassName = "",
-  errorClassName = "",
+  errorMessage = '',
+  className = '',
+  loadingClassName = '',
+  errorClassName = '',
   blackOverlay = false,
   ref,
   ...imgProps
@@ -43,7 +43,7 @@ const Image = ({
   }
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative h-full w-full">
       <img src={src} alt={alt} className={className} {...imgProps} ref={ref} />
       {blackOverlay && (
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>

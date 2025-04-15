@@ -1,7 +1,7 @@
-import { Suspense } from "react";
-import Image from "./Image";
-import DefaultImageFallback from "./DefaultImageFallback";
-import { circIn } from "framer-motion";
+import { Suspense } from 'react';
+import Image from './Image';
+import DefaultImageFallback from './DefaultImageFallback';
+import { circIn } from 'framer-motion';
 
 type SuspenseImageProps = {
   src: string;

@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { getMyInfo } from "@/api/user";
-import { getAccessToken } from "@/utils/auth";
+import { useQuery } from '@tanstack/react-query';
+import { getMyInfo } from '@/api/user';
+import { getAccessToken } from '@/utils/auth';
 
 export const useUserQuery = () => {
   const hasToken = !!getAccessToken();
@@ -11,7 +11,7 @@ export const useUserQuery = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["user"],
+    queryKey: ['user'],
     queryFn: getMyInfo,
     enabled: hasToken,
     staleTime: 10 * 60 * 1000,

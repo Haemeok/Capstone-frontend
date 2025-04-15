@@ -1,5 +1,5 @@
-import { RecipeStep as RecipeStepType } from "@/type/recipe";
-import RecipeStep from "./RecipeStep";
+import { RecipeStep as RecipeStepType } from '@/type/recipe';
+import RecipeStep from './RecipeStep';
 
 interface RecipeStepProps {
   RecipeSteps: RecipeStepType[];

@@ -1,14 +1,14 @@
-import CategoriesTabs from "@/components/CategoriesTabs";
-import CateGoryItem from "@/components/CateGoryItem";
-import { categoriesItems } from "@/mock";
-import { useToastStore } from "@/store/useToastStore";
-import { ChevronRight } from "lucide-react";
+import CategoriesTabs from '@/components/CategoriesTabs';
+import CateGoryItem from '@/components/CateGoryItem';
+import { categoriesItems } from '@/mock';
+import { useToastStore } from '@/store/useToastStore';
+import { ChevronRight } from 'lucide-react';
 const HomePage = () => {
   const { addToast, toastList } = useToastStore();
   return (
-    <div className="min-h-screen bg-[#f7f7f7] text-gray-800 pb-20">
-      <div className="sticky top-0 bg-[#f7f7f7] backdrop-blur-md z-20 px-6 pt-6 pb-3">
-        <div className="flex justify-between items-center mb-2">
+    <div className="min-h-screen bg-[#f7f7f7] pb-20 text-gray-800">
+      <div className="sticky top-0 z-20 bg-[#f7f7f7] px-6 pt-6 pb-3 backdrop-blur-md">
+        <div className="mb-2 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Home</h1>
         </div>
       </div>
@@ -16,17 +16,17 @@ const HomePage = () => {
       <div className="relative z-10">
         <CategoriesTabs title="카테고리" />
         <div className="mt-8 w-full">
-          <div className="flex justify-between items-center px-6 mb-4">
+          <div className="mb-4 flex items-center justify-between px-6">
             <div className="flex items-center gap-2">
               <h2 className="text-2xl font-bold text-gray-800">추천 레시피</h2>
             </div>
-            <button className="text-sm text-gray-500 flex items-center hover:text-gray-700">
+            <button className="flex items-center text-sm text-gray-500 hover:text-gray-700">
               더보기
-              <ChevronRight className="w-4 h-4 ml-1" />
+              <ChevronRight className="ml-1 h-4 w-4" />
             </button>
           </div>
 
-          <div className="pl-6 flex gap-3 w-full overflow-x-auto pb-4 scrollbar-hide">
+          <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto pb-4 pl-6">
             {categoriesItems.map((item) => (
               <CateGoryItem
                 key={item.id}
@@ -38,24 +38,24 @@ const HomePage = () => {
                   console.log(`Navigating to item: ${item.id}`);
                   // navigate(`/recipes/${category.id}`);
                 }}
-                className="w-40 h-40"
+                className="h-40 w-40"
               />
             ))}
           </div>
         </div>
         <button
           onClick={() => {
-            addToast({ message: "레시피를 생성했어요 !", variant: "success" });
+            addToast({ message: '레시피를 생성했어요 !', variant: 'success' });
           }}
-          className="bg-green-500 text-white px-4 py-2 rounded-md"
+          className="rounded-md bg-green-500 px-4 py-2 text-white"
         >
           토스트 테스트 버튼
         </button>
         <button
           onClick={() => {
-            addToast({ message: "문제가 발생했어요", variant: "error" });
+            addToast({ message: '문제가 발생했어요', variant: 'error' });
           }}
-          className="bg-red-500 text-white px-4 py-2 rounded-md"
+          className="rounded-md bg-red-500 px-4 py-2 text-white"
         >
           토스트 테스트 버튼
         </button>

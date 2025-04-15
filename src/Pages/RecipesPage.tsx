@@ -1,26 +1,26 @@
-import useRecipeItemsQuery from "@/hooks/useRecipeItemsQuery";
-import { Link } from "react-router";
+import useRecipeItemsQuery from '@/hooks/useRecipeItemsQuery';
+import { Link } from 'react-router';
 
 const RecipesPage = () => {
   const { data, isLoading, error } = useRecipeItemsQuery();
 
   const recipes = [
-    { id: 1, title: "Pasta Carbonara" },
-    { id: 2, title: "Chicken Curry" },
-    { id: 3, title: "Vegetable Stir Fry" },
+    { id: 1, title: 'Pasta Carbonara' },
+    { id: 2, title: 'Chicken Curry' },
+    { id: 3, title: 'Vegetable Stir Fry' },
   ];
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Recipes</h1>
+      <h1 className="mb-4 text-2xl font-bold">Recipes</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {data?.map((recipe) => (
-          <div key={recipe.id} className="bg-white shadow-md rounded-lg p-4">
+          <div key={recipe.id} className="rounded-lg bg-white p-4 shadow-md">
             <h2 className="text-xl font-semibold">{recipe.title}</h2>
             <Link
               to={`/recipes/${recipe.id}`}
-              className="text-blue-500 hover:text-blue-700 mt-2 inline-block"
+              className="mt-2 inline-block text-blue-500 hover:text-blue-700"
             >
               View Details
             </Link>

@@ -1,4 +1,4 @@
-import { useToastStore } from "@/store/useToastStore";
+import { useToastStore } from '@/store/useToastStore';
 
 export const useToasts = () => {
   const addToast = useToastStore((state) => state.addToast);
@@ -6,19 +6,19 @@ export const useToasts = () => {
   const toastList = useToastStore((state) => state.toastList);
 
   const showSuccessToast = (message: string, duration?: number) => {
-    return addToast({ message, duration, variant: "success" });
+    return addToast({ message, duration, variant: 'success' });
   };
 
   const showErrorToast = (message: string, duration?: number) => {
-    return addToast({ message, duration, variant: "error" });
+    return addToast({ message, duration, variant: 'error' });
   };
 
   const showInfoToast = (message: string, duration?: number) => {
-    return addToast({ message, duration, variant: "info" });
+    return addToast({ message, duration, variant: 'info' });
   };
 
   const showWarningToast = (message: string, duration?: number) => {
-    return addToast({ message, duration, variant: "warning" });
+    return addToast({ message, duration, variant: 'warning' });
   };
 
   return {

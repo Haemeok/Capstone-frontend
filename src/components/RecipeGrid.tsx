@@ -1,7 +1,7 @@
-import { RecipeGridItem } from "@/type/recipe";
-import ToggleIconButton from "./Button/ToggleIconButton";
-import { Heart } from "lucide-react";
-import { useNavigate } from "react-router";
+import { RecipeGridItem } from '@/type/recipe';
+import ToggleIconButton from './Button/ToggleIconButton';
+import { Heart } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 type RecipeGridProps = {
   recipes: RecipeGridItem[];
@@ -15,7 +15,7 @@ const RecipeGrid = ({ recipes }: RecipeGridProps) => {
         {recipes.map((recipe) => (
           <div
             key={recipe.id}
-            className="rounded-2xl overflow-hidden bg-white shadow-md"
+            className="overflow-hidden rounded-2xl bg-white shadow-md"
             onClick={() => {
               navigate(`/recipes/${recipe.id}`);
             }}
@@ -24,17 +24,17 @@ const RecipeGrid = ({ recipes }: RecipeGridProps) => {
               <img
                 src={recipe.imageUrl}
                 alt={recipe.title}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
-              <div className="text-right absolute top-0 right-0 p-2">
+              <div className="absolute top-0 right-0 p-2 text-right">
                 <ToggleIconButton
                   icon={<Heart />}
                   onClick={() => {}}
-                  className="text-white text-right"
+                  className="text-right text-white"
                 />
               </div>
-              <div className="absolute flex items-end h-1/3 bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                <p className="text-white text-sm font-semibold">
+              <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end bg-gradient-to-t from-black/70 to-transparent p-4">
+                <p className="text-sm font-semibold text-white">
                   {recipe.title}
                 </p>
               </div>

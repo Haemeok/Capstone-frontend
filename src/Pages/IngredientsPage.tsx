@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
-import { ingredientItems } from "@/mock";
-import IngredientItem from "@/components/ingredient/IngredientItem";
-import { useNavigate } from "react-router";
+import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import { ingredientItems } from '@/mock';
+import IngredientItem from '@/components/ingredient/IngredientItem';
+import { useNavigate } from 'react-router';
 const IngredientsPage = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const navigate = useNavigate();
@@ -15,17 +15,17 @@ const IngredientsPage = () => {
             variant="outline"
             onClick={() => setIsDeleteMode(!isDeleteMode)}
           >
-            {isDeleteMode ? "완료" : "재료 삭제"}
+            {isDeleteMode ? '완료' : '재료 삭제'}
           </Button>
           <Button
             variant="outline"
-            onClick={() => navigate("/ingredients/new")}
+            onClick={() => navigate('/ingredients/new')}
           >
             재료 추가
           </Button>
         </div>
       </div>
-      <div className="w-full p-4 grid grid-cols-2 gap-4">
+      <div className="grid w-full grid-cols-2 gap-4 p-4">
         {ingredientItems.map((ingredient, index) => (
           <IngredientItem
             key={ingredient.id}

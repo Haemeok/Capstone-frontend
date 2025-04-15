@@ -3,13 +3,13 @@ import {
   CarouselContent,
   CarouselItem,
   type CarouselApi,
-} from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
-import { X, Share, Star, Bookmark } from "lucide-react";
-import { useEffect, useState } from "react";
-import SlideShowContent from "@/components/SlideShowContent";
-import { RecipeStep } from "@/type/recipe";
-import { useLocation, useNavigate } from "react-router";
+} from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
+import { X, Share, Star, Bookmark } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import SlideShowContent from '@/components/SlideShowContent';
+import { RecipeStep } from '@/type/recipe';
+import { useLocation, useNavigate } from 'react-router';
 
 const RecipeSlideShowPage = () => {
   const [api, setApi] = useState<CarouselApi>();
@@ -28,12 +28,12 @@ const RecipeSlideShowPage = () => {
       setScrollProgress(progress);
     };
 
-    api.on("scroll", onScroll);
+    api.on('scroll', onScroll);
 
     setScrollProgress(api.scrollProgress());
 
     return () => {
-      api.off("scroll", onScroll);
+      api.off('scroll', onScroll);
     };
   }, [api]);
 
@@ -59,8 +59,8 @@ const RecipeSlideShowPage = () => {
     return stepProgress;
   };
   return (
-    <div className="relative flex flex-col h-screen bg-background text-foreground">
-      <div className="absolute top-0 left-0 right-0 flex justify-between items-center p-4 z-10">
+    <div className="bg-background text-foreground relative flex h-screen flex-col">
+      <div className="absolute top-0 right-0 left-0 z-10 flex items-center justify-between p-4">
         <Button
           variant="ghost"
           size="icon"
@@ -80,19 +80,19 @@ const RecipeSlideShowPage = () => {
 
       <Carousel
         setApi={setApi}
-        className="h-full flex-grow flex flex-col overflow-hidden"
+        className="flex h-full flex-grow flex-col overflow-hidden"
       >
-        <CarouselContent className="-ml-0 flex-grow h-full">
+        <CarouselContent className="-ml-0 h-full flex-grow">
           {recipeSteps.map((step, index) => (
-            <CarouselItem key={index} className="pl-0 h-full">
+            <CarouselItem key={index} className="h-full pl-0">
               <SlideShowContent step={step} totalSteps={TOTAL_STEPS} />
             </CarouselItem>
           ))}
-          <CarouselItem key={TOTAL_STEPS} className="pl-0 h-full">
+          <CarouselItem key={TOTAL_STEPS} className="h-full pl-0">
             <div className="mt-8 flex flex-col space-y-3">
               <Button
                 size="lg"
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                className="w-full bg-green-600 text-white hover:bg-green-700"
               >
                 <Bookmark className="mr-2 h-4 w-4" /> 저장하기
               </Button>
@@ -104,15 +104,15 @@ const RecipeSlideShowPage = () => {
         </CarouselContent>
       </Carousel>
 
-      <div className="flex h-12 border-t border-border bg-background">
+      <div className="border-border bg-background flex h-12 border-t">
         {recipeSteps.map((step, index) => (
           <div
             key={index}
-            className="flex-1 relative border-r border-border"
+            className="border-border relative flex-1 border-r"
             onClick={() => handleProgressClick(index)}
           >
-            <div className="flex items-center justify-center h-full">
-              <span className="text-xs font-medium text-muted-foreground absolute top-1 left-2 z-10">
+            <div className="flex h-full items-center justify-center">
+              <span className="text-muted-foreground absolute top-1 left-2 z-10 text-xs font-medium">
                 {`0${index + 1}`}
               </span>
             </div>
@@ -122,8 +122,8 @@ const RecipeSlideShowPage = () => {
             />
           </div>
         ))}
-        <div className="w-12 h-full flex items-center justify-center bg-muted border-l border-border">
-          <Bookmark className="h-4 w-4 text-muted-foreground" />
+        <div className="bg-muted border-border flex h-full w-12 items-center justify-center border-l">
+          <Bookmark className="text-muted-foreground h-4 w-4" />
         </div>
       </div>
     </div>

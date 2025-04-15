@@ -1,8 +1,8 @@
-import { comments } from "@/mock";
-import CommentBox from "@/components/CommentBox";
-import { MessageCircle, RefreshCw, Filter, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { comments } from '@/mock';
+import CommentBox from '@/components/CommentBox';
+import { MessageCircle, RefreshCw, Filter, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
 
 const CommentsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,14 +16,14 @@ const CommentsPage = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f7f7]">
-      <header className="sticky top-0 z-10 bg-white shadow-sm border-b p-4">
-        <div className="max-w-3xl mx-auto flex justify-between items-center">
+      <header className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
+        <div className="mx-auto flex max-w-3xl items-center justify-between">
           <div className="flex items-center">
             <Button variant="ghost" size="icon" className="mr-2">
               <ArrowLeft size={20} />
             </Button>
-            <h1 className="text-xl font-bold flex items-center">
-              <MessageCircle size={20} className="text-[#526c04] mr-2" /> 댓글
+            <h1 className="flex items-center text-xl font-bold">
+              <MessageCircle size={20} className="mr-2 text-[#526c04]" /> 댓글
             </h1>
           </div>
           <div className="flex">
@@ -31,7 +31,7 @@ const CommentsPage = () => {
               variant="ghost"
               size="icon"
               onClick={handleRefresh}
-              className={isLoading ? "animate-spin text-[#526c04]" : ""}
+              className={isLoading ? 'animate-spin text-[#526c04]' : ''}
             >
               <RefreshCw size={18} />
             </Button>
@@ -42,12 +42,12 @@ const CommentsPage = () => {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto p-4">
-        <div className="flex justify-between items-center mb-4 px-2">
-          <span className="text-gray-500 text-sm font-medium">
+      <main className="mx-auto max-w-3xl p-4">
+        <div className="mb-4 flex items-center justify-between px-2">
+          <span className="text-sm font-medium text-gray-500">
             {comments.length}개의 댓글
           </span>
-          <div className="flex items-center text-sm font-semibold text-olive">
+          <div className="text-olive flex items-center text-sm font-semibold">
             <span>최신순</span>
             <span className="mx-1">•</span>
             <span>인기순</span>
@@ -60,16 +60,16 @@ const CommentsPage = () => {
           ))}
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-3 shadow-lg">
-          <div className="max-w-3xl mx-auto flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+        <div className="fixed right-0 bottom-0 left-0 border-t bg-white p-3 shadow-lg">
+          <div className="mx-auto flex max-w-3xl items-center gap-2">
+            <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gray-200">
               <img
                 src="https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png"
                 alt="내 프로필"
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
-            <div className="flex-1 bg-gray-100 rounded-full py-2 px-4 text-gray-500">
+            <div className="flex-1 rounded-full bg-gray-100 px-4 py-2 text-gray-500">
               댓글을 입력하세요...
             </div>
             <button className="text-olive font-semibold">게시</button>

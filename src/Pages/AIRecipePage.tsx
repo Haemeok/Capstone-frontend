@@ -1,11 +1,11 @@
-import { useForm } from "react-hook-form";
-import { ChefHat, Clock, Tag } from "lucide-react";
-import IngredientsDrawer from "@/components/Modal/IngredientsDrawer";
-import SelectionSection from "@/components/SelectionSection";
-import IngredientSection from "@/components/IngredientSection";
-import ProgressButton from "@/components/ProgressButton";
-import { categories, cookingTimes, recommendedTags } from "@/mock";
-import { useState } from "react";
+import { useForm } from 'react-hook-form';
+import { ChefHat, Clock, Tag } from 'lucide-react';
+import IngredientsDrawer from '@/components/Modal/IngredientsDrawer';
+import SelectionSection from '@/components/SelectionSection';
+import IngredientSection from '@/components/IngredientSection';
+import ProgressButton from '@/components/ProgressButton';
+import { categories, cookingTimes, recommendedTags } from '@/mock';
+import { useState } from 'react';
 
 interface AIRecipeFormData {
   ingredients: string[];
@@ -29,7 +29,7 @@ const AIRecipePage = () => {
       selectedTimes: [],
       selectedTags: [],
     },
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const formValues = watch();
@@ -38,7 +38,7 @@ const AIRecipePage = () => {
 
   const handleAddIngredient = (ingredient: string) => {
     const newIngredients = [...ingredients, ingredient];
-    setValue("ingredients", newIngredients, {
+    setValue('ingredients', newIngredients, {
       shouldValidate: true,
       shouldDirty: true,
     });
@@ -46,14 +46,14 @@ const AIRecipePage = () => {
 
   const handleRemoveIngredient = (index: number) => {
     const newIngredients = ingredients.filter((_, i) => i !== index);
-    setValue("ingredients", newIngredients, {
+    setValue('ingredients', newIngredients, {
       shouldValidate: true,
       shouldDirty: true,
     });
   };
 
   const handleRemoveAllIngredients = () => {
-    setValue("ingredients", [], {
+    setValue('ingredients', [], {
       shouldValidate: true,
       shouldDirty: true,
     });
@@ -62,7 +62,7 @@ const AIRecipePage = () => {
   const toggle = <T,>(
     fieldName: keyof AIRecipeFormData,
     currentItems: T[],
-    item: T
+    item: T,
   ) => {
     let newItems: T[];
     if (currentItems.includes(item)) {
@@ -78,12 +78,12 @@ const AIRecipePage = () => {
   };
 
   const toggleCategory = (category: string) =>
-    toggle("selectedCategories", selectedCategories, category);
+    toggle('selectedCategories', selectedCategories, category);
 
   const toggleTime = (time: string) =>
-    toggle("selectedTimes", selectedTimes, time);
+    toggle('selectedTimes', selectedTimes, time);
 
-  const toggleTag = (tag: string) => toggle("selectedTags", selectedTags, tag);
+  const toggleTag = (tag: string) => toggle('selectedTags', selectedTags, tag);
 
   const totalSteps = 4;
   const completedSteps = [
@@ -98,20 +98,20 @@ const AIRecipePage = () => {
 
   const onSubmit = (data: AIRecipeFormData) => {
     if (isFormReady) {
-      console.log("레시피 생성 요청", data);
+      console.log('레시피 생성 요청', data);
     }
   };
 
   return (
-    <div className="mx-auto relative p-4 bg-[#f7f7f7]">
+    <div className="relative mx-auto bg-[#f7f7f7] p-4">
       <div className="text-center">
-        <p className="text-dark font-semibold text-2xl">
+        <p className="text-dark text-2xl font-semibold">
           나만의 맞춤형 레시피를 AI가 추천해드립니다
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
           <IngredientSection
             ingredients={ingredients}
             onRemoveIngredient={handleRemoveIngredient}

@@ -22,11 +22,11 @@ export type Recipe = {
   ingredients: Ingredient[];
   steps: RecipeStep[];
   dishType: string;
-  cookingTime: number | undefined | "";
+  cookingTime: number | undefined | '';
   cookingTools: string;
   isAigenerated: boolean;
   youtubeUrl?: string;
-  servings: number | undefined | "";
+  servings: number | undefined | '';
   totalIngredientCost?: number;
   marketPrice?: number;
   tagNames: string[];

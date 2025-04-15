@@ -1,6 +1,6 @@
-import { Clipboard, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Clipboard, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 type ProgressButtonProps = {
   progressPercentage: number;
@@ -18,31 +18,31 @@ const ProgressButton = ({
   return (
     <div
       className={cn(
-        "relative w-full rounded-lg overflow-hidden shadow-md group",
-        className
+        'group relative w-full overflow-hidden rounded-lg shadow-md',
+        className,
       )}
     >
       <div className="absolute inset-0 bg-gray-300"></div>
 
       <div
-        className="absolute inset-y-0 left-0 bg-olive-light transition-all duration-700 ease-out group-hover:brightness-110"
+        className="bg-olive-light absolute inset-y-0 left-0 transition-all duration-700 ease-out group-hover:brightness-110"
         style={{ width: `${progressPercentage}%` }}
       ></div>
 
       <Button
-        className="w-full py-6 text-lg font-semibold relative z-10 bg-transparent hover:bg-transparent transition-none group cursor-pointer"
+        className="group relative z-10 w-full cursor-pointer bg-transparent py-6 text-lg font-semibold transition-none hover:bg-transparent"
         disabled={!isFormValid}
         onClick={onClick}
       >
         <span className="flex items-center justify-center gap-2 text-white drop-shadow-sm">
           <Clipboard
             size={20}
-            className="group-hover:scale-120 transition-transform duration-300"
+            className="transition-transform duration-300 group-hover:scale-120"
           />
           <span>레시피 생성하기</span>
           <ArrowRight
             size={16}
-            className="group-hover:translate-x-1 transition-transform duration-300"
+            className="transition-transform duration-300 group-hover:translate-x-1"
           />
         </span>
       </Button>
