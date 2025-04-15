@@ -1,6 +1,6 @@
 import { END_POINTS } from '@/constants/api';
 import { axiosInstance } from './axios';
-import { Recipe, RecipeGridItem } from '@/type/recipe';
+import { IngredientItem, Recipe, RecipeGridItem } from '@/type/recipe';
 
 export const getRecipes = async () => {
   const response = await axiosInstance.get(END_POINTS.RECIPES);

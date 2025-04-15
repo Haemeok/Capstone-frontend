@@ -7,7 +7,8 @@ export const END_POINTS = {
   RECIPE_FILTER: '/recipes/filter',
   RECIPES_BY_CATEGORY: (categorySlug: string) =>
     `/recipes/category/${categorySlug}`,
-
+  INGREDIENTS: '/ingredients',
+  INGREDIENTS_BY_ID: (id: number) => `/ingredients/${id}`,
   RECIPE_COMMENT: (id: number) => `/recipes/${id}/comments`,
   RECIPE_REPLY: (recipeId: number, commentId: number) =>
     `/recipes/${recipeId}/comments/${commentId}/replies`,
