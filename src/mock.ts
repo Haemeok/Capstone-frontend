@@ -589,31 +589,27 @@ export const ingredientItems: IngredientItem[] = [
   },
   {
     id: 13,
-    name: '파프리카',
+    name: '가쓰오부시',
     category: '야채',
-    imageUrl:
-      'https://deec3j55ge0ut.cloudfront.net/uploads/pop-up/1674804824093_2e89f21674.jpeg',
+    imageUrl: '/row-1-column-1.webp',
   },
   {
     id: 14,
-    name: '파프리카',
+    name: '가래떡',
     category: '야채',
-    imageUrl:
-      'https://deec3j55ge0ut.cloudfront.net/uploads/pop-up/1674804824093_2e89f21674.jpeg',
+    imageUrl: '/row-1-column-2.webp',
   },
   {
     id: 15,
-    name: '파프리카',
+    name: '가지',
     category: '야채',
-    imageUrl:
-      'https://deec3j55ge0ut.cloudfront.net/uploads/pop-up/1674804824093_2e89f21674.jpeg',
+    imageUrl: '/row-2-column-1.webp',
   },
   {
     id: 16,
-    name: '파프리카',
+    name: '갈치',
     category: '야채',
-    imageUrl:
-      'https://deec3j55ge0ut.cloudfront.net/uploads/pop-up/1674804824093_2e89f21674.jpeg',
+    imageUrl: '/row-2-column-2.webp',
   },
   {
     id: 17,
