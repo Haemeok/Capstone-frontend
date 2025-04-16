@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import ToggleIconButton from '../Button/ToggleIconButton';
 import { cn } from '@/lib/utils';
+import SuspenseImage from '../Image/SuspenseImage';
 
 type IngredientItemProps = {
   ingredient: IngredientItemType;
@@ -13,7 +14,7 @@ const IngredientItem = ({ ingredient, isDeleteMode }: IngredientItemProps) => {
   const [isActive, setIsActive] = useState(false);
   return (
     <div className="relative flex items-center gap-2 rounded-lg border-[1.5px] border-gray-200 px-1 py-2">
-      <img
+      <SuspenseImage
         src={ingredient.imageUrl}
         alt={ingredient.name}
         className="h-15 w-15 rounded-md"

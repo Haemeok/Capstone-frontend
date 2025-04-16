@@ -1,34 +1,31 @@
 export type Ingredient = {
-  id: number;
-  quantity: string;
   name: string;
+  quantity: string;
   unit: string;
 };
 
 export type RecipeStep = {
-  id: number;
-  ingredients?: Ingredient[];
-  instruction: string;
-  action?: string;
-  stepImageUrl: string;
   stepNumber: number;
+  instruction: string;
+  stepImageUrl: string;
+  action?: string;
+  ingredients?: Ingredient[];
 };
 
 export type Recipe = {
   id?: number;
   title: string;
-  description: string;
-  imageURL: string;
-  ingredients: Ingredient[];
-  steps: RecipeStep[];
   dishType: string;
+  description: string;
   cookingTime: number | undefined | '';
-  cookingTools: string;
-  isAigenerated: boolean;
+  imageURL: string;
   youtubeUrl?: string;
+  cookingTools: string[];
   servings: number | undefined | '';
   totalIngredientCost?: number;
   marketPrice?: number;
+  ingredients: Ingredient[];
+  steps: RecipeStep[];
   tagNames: string[];
 };
 

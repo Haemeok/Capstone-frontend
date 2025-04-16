@@ -19,7 +19,7 @@ export const END_POINTS = {
   KAKAO_LOGIN: '/oauth2/authorization/kakao',
   NAVER_LOGIN: '/oauth2/authorization/naver',
   REDIRECT_URI: '/oauth2/redirect',
-  TOKEN_REFRESH: '/auth/refresh',
+  TOKEN_REFRESH: '/token/refresh',
   USER_INFO: '/users/me',
   USER_FAVORITES: '/users/me/favorites',
   USER_CREATED: (id: number) => `/users/${id}/created`,
