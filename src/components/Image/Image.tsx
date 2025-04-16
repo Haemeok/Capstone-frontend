@@ -1,6 +1,7 @@
 import { useImageLoader } from '@/hooks/useImageLoader';
 import ImageError from './ImageError';
 import DefaultImageFallback from './DefaultImageFallback';
+import { Skeleton } from '../ui/skeleton';
 
 type ImageProps = {
   src: string;
@@ -39,16 +40,11 @@ const Image = ({
   }
 
   if (loading) {
-    return fallback || <DefaultImageFallback className={loadingClassName} />;
+    return fallback || <Skeleton className={className} />;
   }
 
   return (
-    <div className="relative h-full w-full">
-      <img src={src} alt={alt} className={className} {...imgProps} ref={ref} />
-      {blackOverlay && (
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
-      )}
-    </div>
+    <img src={src} alt={alt} className={className} {...imgProps} ref={ref} />
   );
 };
 

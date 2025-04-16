@@ -8,7 +8,7 @@ const IngredientsPage = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-gray-200 p-4">
+      <div className="flex items-center justify-between border-b border-gray-200 bg-[#f7f7f7] p-4">
         <h1 className="text-2xl font-bold">도원진님의 냉장고</h1>
         <div className="flex items-center gap-2">
           <Button
