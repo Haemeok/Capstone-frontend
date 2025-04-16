@@ -12,6 +12,7 @@ jobs:
       REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
       REACT_APP_KAKAO_CLIENT_ID: ${{ secrets.REACT_APP_KAKAO_CLIENT_ID }}
       REACT_APP_NAVER_CLIENT_ID: ${{ secrets.REACT_APP_NAVER_CLIENT_ID }}
+      VITE_AXIOS_PROD_BASE_URL: ${{ secrets.VITE_AXIOS_PROD_BASE_URL }}
 
     steps:
       - name: Checkout source code
