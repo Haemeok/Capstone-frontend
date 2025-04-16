@@ -174,13 +174,13 @@ const NewIngredientsPage = () => {
           </p>
         ) : (
           <div className="space-y-3">
-            {data?.pages[0].items.length === 0 && !isFetching && (
+            {data?.items.length === 0 && !isFetching && (
               <p className="text-center text-gray-500">
                 "{searchQuery}"에 해당하는 재료가 없습니다.
               </p>
             )}
             {/* allFetchedIngredients 타입이 IngredientItem[]으로 추론됨 */}
-            {data?.pages[0].items.map((ingredient) => {
+            {data?.items.map((ingredient) => {
               const isAdded = false; // 임시 값
               const isBulkSelected = bulkSelectedIds.has(ingredient.id);
 
@@ -246,7 +246,7 @@ const NewIngredientsPage = () => {
                 더 많은 재료를 불러오는 중...
               </p>
             )}
-            {!hasNextPage && data?.pages[0].items.length > 0 && (
+            {!hasNextPage && data?.items.length && (
               <p className="text-center text-sm text-gray-400">
                 모든 재료를 불러왔습니다.
               </p>
