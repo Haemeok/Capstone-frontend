@@ -11,20 +11,20 @@ import { Comment } from './type/comment';
 import { CategoryItem } from './type/recipe';
 
 export const ingredients: Ingredient[] = [
-  { id: 1, quantity: '250', name: 'red cabbage', unit: 'g' },
-  { id: 2, quantity: '2', name: 'scallions', unit: '개' },
-  { id: 3, quantity: '500', name: 'oyster mushrooms', unit: 'g' },
-  { id: 4, quantity: '8', name: 'olive oil', unit: '큰술' },
-  { id: 5, quantity: '3', name: 'garlic', unit: '쪽' },
-  { id: 6, quantity: '400', name: 'full-fat Greek yogurt', unit: 'g' },
-  { id: 7, quantity: '1', name: 'lemon juice', unit: 'tsp' },
-  { id: 8, quantity: '½', name: 'maple syrup', unit: 'tsp' },
-  { id: 9, quantity: '1', name: 'maple syrup', unit: '큰술' },
-  { id: 10, quantity: '1', name: 'ground cumin', unit: 'tsp' },
-  { id: 11, quantity: '2', name: 'sweet paprika powder', unit: 'tsp' },
-  { id: 12, quantity: '1', name: 'baharat spice mix', unit: 'tsp' },
-  { id: 13, quantity: '4', name: 'flatbreads (small)', unit: '개' },
-  { id: 14, quantity: '', name: 'salt', unit: 'tsp' },
+  { quantity: '250', name: 'red cabbage', unit: 'g' },
+  { quantity: '2', name: 'scallions', unit: '개' },
+  { quantity: '500', name: 'oyster mushrooms', unit: 'g' },
+  { quantity: '8', name: 'olive oil', unit: '큰술' },
+  { quantity: '3', name: 'garlic', unit: '쪽' },
+  { quantity: '400', name: 'full-fat Greek yogurt', unit: 'g' },
+  { quantity: '1', name: 'lemon juice', unit: 'tsp' },
+  { quantity: '½', name: 'maple syrup', unit: 'tsp' },
+  { quantity: '1', name: 'maple syrup', unit: '큰술' },
+  { quantity: '1', name: 'ground cumin', unit: 'tsp' },
+  { quantity: '2', name: 'sweet paprika powder', unit: 'tsp' },
+  { quantity: '1', name: 'baharat spice mix', unit: 'tsp' },
+  { quantity: '4', name: 'flatbreads (small)', unit: '개' },
+  { quantity: '', name: 'salt', unit: 'tsp' },
 ];
 
 export const categories = [
@@ -115,22 +115,18 @@ export const recommendedTags = [
 
 export let RecipeSteps: RecipeStep[] = [
   {
-    id: 1,
     ingredients: [
       {
-        id: 1,
         quantity: '130',
         name: '마가린',
         unit: 'g',
       },
       {
-        id: 2,
         quantity: '130',
         name: '마가린',
         unit: 'g',
       },
       {
-        id: 3,
         quantity: '130',
         name: '마가린',
         unit: 'g',
@@ -143,22 +139,18 @@ export let RecipeSteps: RecipeStep[] = [
     stepNumber: 1,
   },
   {
-    id: 2,
     ingredients: [
       {
-        id: 1,
         quantity: '2',
         name: '비건 베케이라미',
         unit: 'tbsp',
       },
       {
-        id: 2,
         quantity: '',
         name: '비건 우유',
         unit: 'tsp',
       },
       {
-        id: 3,
         quantity: '',
         name: '비건 베케이라미',
         unit: 'tsp',
@@ -170,22 +162,18 @@ export let RecipeSteps: RecipeStep[] = [
     stepNumber: 2,
   },
   {
-    id: 3,
     ingredients: [
       {
-        id: 1,
         quantity: '2',
         name: '영양 효모',
         unit: 'tbsp',
       },
       {
-        id: 2,
         quantity: '',
         name: '소금',
         unit: 'tsp',
       },
       {
-        id: 3,
         quantity: '',
         name: '고추',
         unit: 'tsp',
@@ -198,22 +186,18 @@ export let RecipeSteps: RecipeStep[] = [
     stepNumber: 3,
   },
   {
-    id: 4,
     ingredients: [
       {
-        id: 1,
         quantity: '2',
         name: '버섯',
         unit: 'tbsp',
       },
       {
-        id: 2,
         quantity: '',
         name: '타임',
         unit: 'tsp',
       },
       {
-        id: 3,
         quantity: '',
         name: '버섯',
         unit: 'tsp',
@@ -226,22 +210,18 @@ export let RecipeSteps: RecipeStep[] = [
     stepNumber: 4,
   },
   {
-    id: 5,
     ingredients: [
       {
-        id: 1,
         quantity: '2',
         name: '버섯',
         unit: 'tbsp',
       },
       {
-        id: 2,
         quantity: '',
         name: '소금',
         unit: 'tsp',
       },
       {
-        id: 3,
         quantity: '',
         name: '후추',
         unit: 'tsp',
@@ -274,8 +254,7 @@ export const recipe: Recipe = {
   steps: RecipeSteps,
   dishType: 'pasta',
   cookingTime: 30,
-  cookingTools: 'oven',
-  isAigenerated: false,
+  cookingTools: ['oven'],
   servings: 4,
   tagNames: ['비건', '건강한', '간편한', '영양가있는'],
 };

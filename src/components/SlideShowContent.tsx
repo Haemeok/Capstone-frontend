@@ -21,7 +21,7 @@ const SlideShowContent = ({ step, totalSteps }: SlideShowContentProps) => {
           <div className="text-muted-foreground mb-3 flex items-center space-x-2 text-sm">
             {step.ingredients.map((ingredient) => (
               <span
-                key={ingredient.id}
+                key={ingredient.name}
                 className="bg-muted rounded px-2 py-1 text-xs"
               >
                 {ingredient.name}

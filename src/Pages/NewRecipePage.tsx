@@ -85,19 +85,11 @@ const NewRecipePage = () => {
   };
 
   const addIngredient = () => {
-    const newId =
-      ingredientFields.length > 0
-        ? Math.max(...ingredientFields.map((f) => parseInt(f.id))) + 1
-        : 1;
-    appendIngredient({ id: newId, name: '', quantity: '', unit: '' });
+    appendIngredient({ name: '', quantity: '', unit: '' });
   };
 
   const addStep = () => {
-    const newId =
-      stepFields.length > 0
-        ? Math.max(...stepFields.map((f) => parseInt(f.id))) + 1
-        : 1;
-    appendStep({ id: newId, instruction: '', stepImageUrl: '', stepNumber: 0 });
+    appendStep({ instruction: '', stepImageUrl: '', stepNumber: 0 });
   };
 
   const onSubmit: SubmitHandler<Recipe> = (data) => {
