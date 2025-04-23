@@ -80,15 +80,11 @@
   0% {
     transform: scale(1);
   }
-  25% {
-    transform: scale(1.1);
-  }
+
   50% {
-    transform: scale(1);
+    transform: scale(1.2);
   }
-  75% {
-    transform: scale(1.1);
-  }
+
   100% {
     transform: scale(1);
   }
@@ -138,7 +134,7 @@
 }
 
 .beat {
-  animation: heartbeat 1s ease-in-out infinite;
+  animation: heartbeat 0.25s ease-in-out infinite;
 }
 
 .wobble {
@@ -216,5 +212,17 @@
   }
   .img-smooth {
     image-rendering: crisp-edges;
+  }
+  .font-noto-sans-kr {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .text-mm {
+    font-size: 15px;
+  }
+  .bg-beige {
+    background-color: #f7f4ee;
+  }
+  .text-brown {
+    color: #806f5c;
   }
 }

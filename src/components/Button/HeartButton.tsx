@@ -25,12 +25,16 @@ const HeartButton = ({
   const [isLiked, setIsLiked] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleToggle = (active: boolean) => {
+  const handleToggle = (
+    active: boolean,
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.stopPropagation();
     setIsLiked(active);
     setLikes((prev) => (active ? prev + 1 : prev - 1));
 
     setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 500);
+    setTimeout(() => setIsAnimating(false), 250);
   };
 
   return (
@@ -38,7 +42,7 @@ const HeartButton = ({
       className={`flex flex-col items-center justify-center gap-1 ${containerClassName}`}
     >
       <button
-        onClick={() => handleToggle(!isLiked)}
+        onClick={(e) => handleToggle(!isLiked, e)}
         className={`flex items-center justify-center ${buttonClassName}`}
         aria-label={ariaLabel}
       >
@@ -47,7 +51,7 @@ const HeartButton = ({
           height={height}
           className={`${isCountShown ? 'transition-all duration-200' : ''} ${
             isLiked ? 'fill-[#d12d2e] text-[#d12d2e]' : ''
-          } ${isAnimating ? 'pulse' : ''}`}
+          } ${isAnimating ? 'beat' : ''}`}
         />
       </button>
       {isCountShown && <span className="text-sm font-bold">{likes}</span>}

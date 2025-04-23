@@ -1,3 +1,5 @@
+const BASE_URL = 'https://www.haemeok.com';
+
 export const END_POINTS = {
   RECIPE: (id: number) => `/recipes/${id}`,
   RECIPES: '/recipes',
@@ -15,9 +17,9 @@ export const END_POINTS = {
   RECIPE_LIKE: (id: number) => `/recipes/${id}/like`,
   RECIPE_FAVORITE: (id: number) => `/recipes/${id}/favorite`,
   RECIPE_VISIBILITY: (id: number) => `/recipes/${id}/visibility`,
-  GOOGLE_LOGIN: '/oauth2/authorization/google',
-  KAKAO_LOGIN: '/oauth2/authorization/kakao',
-  NAVER_LOGIN: '/oauth2/authorization/naver',
+  GOOGLE_LOGIN: `${BASE_URL}/oauth2/authorization/google`,
+  KAKAO_LOGIN: `${BASE_URL}/oauth2/authorization/kakao`,
+  NAVER_LOGIN: `${BASE_URL}/oauth2/authorization/naver`,
   REDIRECT_URI: '/oauth2/redirect',
   TOKEN_REFRESH: '/token/refresh',
   USER_INFO: '/users/me',
@@ -26,6 +28,10 @@ export const END_POINTS = {
   USER_LIKED: (id: number) => `/users/${id}/liked`,
   USER_PROFILE: (id: number) => `/users/${id}/profile`,
   MY_INFO: '/me',
+  MY_INGREDIENTS: '/me/fridge/items',
+  MY_INGREDIENTS_BULK: '/me/fridge/items/bulk',
+
+  PRESIGNED_URLS: '/recipes/presigned-urls',
 };
 
 export const USER_ERROR_MESSAGE = {
@@ -48,3 +54,21 @@ export const USER_ERROR_MESSAGE = {
   E999: '서버에 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.',
   E900: '양식이 잘못 되었습니다. 다시 확인해 주세요.',
 };
+
+export const PAGE_SIZE = 10;
+
+export const CATEGORIES = [
+  '전체',
+  '가공/유제품',
+  '빵/떡',
+  '채소',
+  '해산물',
+  '과일',
+  '음료/주류',
+  '곡물',
+  '콩/견과류',
+  '조미료/양념',
+  '고기',
+  '기타',
+  '면',
+];

@@ -18,13 +18,13 @@ export const ingredients: Ingredient[] = [
   { quantity: '3', name: 'garlic', unit: '쪽' },
   { quantity: '400', name: 'full-fat Greek yogurt', unit: 'g' },
   { quantity: '1', name: 'lemon juice', unit: 'tsp' },
-  { quantity: '½', name: 'maple syrup', unit: 'tsp' },
+  { quantity: '0.5', name: 'maple syrup', unit: 'tsp' },
   { quantity: '1', name: 'maple syrup', unit: '큰술' },
   { quantity: '1', name: 'ground cumin', unit: 'tsp' },
   { quantity: '2', name: 'sweet paprika powder', unit: 'tsp' },
   { quantity: '1', name: 'baharat spice mix', unit: 'tsp' },
   { quantity: '4', name: 'flatbreads (small)', unit: '개' },
-  { quantity: '', name: 'salt', unit: 'tsp' },
+  { quantity: '0', name: 'salt', unit: 'tsp' },
 ];
 
 export const categories = [
@@ -146,12 +146,12 @@ export let RecipeSteps: RecipeStep[] = [
         unit: 'tbsp',
       },
       {
-        quantity: '',
+        quantity: '0',
         name: '비건 우유',
         unit: 'tsp',
       },
       {
-        quantity: '',
+        quantity: '0',
         name: '비건 베케이라미',
         unit: 'tsp',
       },
@@ -169,12 +169,12 @@ export let RecipeSteps: RecipeStep[] = [
         unit: 'tbsp',
       },
       {
-        quantity: '',
+        quantity: '0',
         name: '소금',
         unit: 'tsp',
       },
       {
-        quantity: '',
+        quantity: '0',
         name: '고추',
         unit: 'tsp',
       },
@@ -193,12 +193,12 @@ export let RecipeSteps: RecipeStep[] = [
         unit: 'tbsp',
       },
       {
-        quantity: '',
+        quantity: '0',
         name: '타임',
         unit: 'tsp',
       },
       {
-        quantity: '',
+        quantity: '0',
         name: '버섯',
         unit: 'tsp',
       },
@@ -217,12 +217,12 @@ export let RecipeSteps: RecipeStep[] = [
         unit: 'tbsp',
       },
       {
-        quantity: '',
+        quantity: '0',
         name: '소금',
         unit: 'tsp',
       },
       {
-        quantity: '',
+        quantity: '0',
         name: '후추',
         unit: 'tsp',
       },
@@ -343,6 +343,9 @@ export const createdRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
 
   {
@@ -354,6 +357,9 @@ export const createdRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
   {
     id: 3,
@@ -364,6 +370,9 @@ export const createdRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
   {
     id: 4,
@@ -374,6 +383,9 @@ export const createdRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
   {
     id: 5,
@@ -384,6 +396,9 @@ export const createdRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
 
   {
@@ -395,8 +410,14 @@ export const createdRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
   {
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
     id: 7,
     title: '타코 볼',
     imageUrl:
@@ -415,6 +436,9 @@ export const createdRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
 ];
 
@@ -428,6 +452,9 @@ export const cookbookRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
 
   {
@@ -439,6 +466,9 @@ export const cookbookRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
   {
     id: 1,
@@ -449,6 +479,9 @@ export const cookbookRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
 
   {
@@ -460,6 +493,9 @@ export const cookbookRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
   {
     id: 3,
@@ -470,6 +506,9 @@ export const cookbookRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
 
   {
@@ -481,6 +520,9 @@ export const cookbookRecipes: RecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    rating: 4.5,
+    cookingTime: 30,
+    commentCount: 10,
   },
 ];
 

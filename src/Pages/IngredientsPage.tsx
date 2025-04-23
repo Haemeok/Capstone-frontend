@@ -1,11 +1,54 @@
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
-import { ingredientItems } from '@/mock';
 import IngredientItem from '@/components/ingredient/IngredientItem';
 import { useNavigate } from 'react-router';
+import { getIngredients } from '@/api/ingredient';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { IngredientsApiResponse } from '@/api/ingredient';
+import { InfiniteData } from '@tanstack/react-query';
+import { CATEGORIES } from '@/constants/api';
+import { cn } from '@/lib/utils';
+
 const IngredientsPage = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const [sort, setSort] = useState<'asc' | 'desc'>('asc');
   const navigate = useNavigate();
+
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    ref,
+  } = useInfiniteScroll<
+    // useInfiniteScroll 타입 파라미터 업데이트
+    IngredientsApiResponse, // TQueryFnData: API 응답 타입
+    Error, // TError
+    InfiniteData<IngredientsApiResponse>, // TData: useInfiniteQuery가 반환하는 data 타입 (보통 TQueryFnData와 동일)
+    [string, string, 'asc' | 'desc'], // TQueryKey
+    number // TPageParam
+  >({
+    queryKey: ['ingredients', selectedCategory, sort],
+    queryFn: (
+      { pageParam }, // queryFn에 새 API 함수 사용
+    ) =>
+      getIngredients({
+        category: selectedCategory === '전체' ? null : selectedCategory,
+        pageParam,
+        sort,
+        isMine: true,
+      }),
+    getNextPageParam: (lastPage) =>
+      lastPage.last ? null : lastPage.number + 1,
+    initialPageParam: 0,
+  });
+
+  console.log(isFetching, isFetchingNextPage, error);
+
   return (
     <div>
       <div className="flex items-center justify-between border-b border-gray-200 bg-[#f7f7f7] p-4">
@@ -25,15 +68,50 @@ const IngredientsPage = () => {
           </Button>
         </div>
       </div>
-      <div className="grid w-full grid-cols-2 gap-4 p-4">
-        {ingredientItems.map((ingredient, index) => (
-          <IngredientItem
-            key={ingredient.id}
-            ingredient={ingredient}
-            isDeleteMode={isDeleteMode}
-          />
+      <div className="scrollbar-hide mt-3 flex overflow-x-auto border-b border-gray-200">
+        {CATEGORIES.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={cn(
+              'flex-shrink-0 px-4 py-3 text-sm font-medium',
+              selectedCategory === category
+                ? 'border-b-2 border-[#5cc570] text-[#5cc570]'
+                : 'text-gray-500 hover:text-gray-700',
+            )}
+          >
+            {category}
+          </button>
         ))}
       </div>
+      <div className="grid w-full grid-cols-2 gap-4 p-4">
+        {data?.pages
+          .flatMap((page) => page.content)
+          .map((ingredient) => (
+            <IngredientItem
+              key={ingredient.id}
+              ingredient={ingredient}
+              isDeleteMode={isDeleteMode}
+            />
+          ))}
+      </div>
+      {isFetchingNextPage && (
+        <p className="text-center text-gray-500">
+          더 많은 재료를 불러오는 중...
+        </p>
+      )}
+      {!hasNextPage && data?.pages[0].content?.length && (
+        <p className="text-center text-sm text-gray-400">
+          모든 재료를 불러왔습니다.
+        </p>
+      )}
+      {error && (
+        <p className="text-center text-red-500">
+          오류 발생:{' '}
+          {error instanceof Error ? error.message : '알 수 없는 오류'}
+        </p>
+      )}
+      <div ref={ref} className="h-10" />
     </div>
   );
 };

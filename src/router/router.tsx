@@ -1,13 +1,13 @@
 import { createBrowserRouter } from 'react-router';
 import Root from './Root';
 import RecipesPage from '../Pages/RecipesPage';
-import NewRecipePage from '../Pages/NewRecipePage';
+import NewRecipePage from '../Pages/NewRecipe/NewRecipePage';
 import RecipeDetailPage from '../Pages/RecipeDetailPage';
 import CommentsPage from '@/Pages/CommentsPage';
 import DiscussionPage from '@/Pages/DiscussionPage';
 import UserDetailPage from '@/Pages/UserDetailPage';
 import AIRecipePage from '@/Pages/AIRecipePage';
-import HomePage from '@/Pages/HomePage';
+import HomePage from '@/Pages/Home/HomePage';
 import IngredientsPage from '@/Pages/IngredientsPage';
 import { userDetail } from '@/mock';
 import SearchPage from '@/Pages/SearchPage';
@@ -63,6 +63,22 @@ const router = createBrowserRouter([
         path: '/oauth2/redirect',
         element: <GoogleCallback />,
       },
+      {
+        path: 'recipes/:id/comments',
+        element: <CommentsPage />,
+      },
+      {
+        path: 'recipes/:id/comments/:commentId',
+        element: <DiscussionPage />,
+      },
+      {
+        path: 'recipes/:id',
+        element: <RecipeDetailPage />,
+      },
+      {
+        path: 'recipes/category/:categorySlug',
+        element: <CategoryDetailPage />,
+      },
     ],
   },
   {
@@ -73,18 +89,7 @@ const router = createBrowserRouter([
     path: 'test2',
     element: <Page2 />,
   },
-  {
-    path: 'recipes/:id/comments',
-    element: <CommentsPage />,
-  },
-  {
-    path: 'recipes/:id/comments/:commentId',
-    element: <DiscussionPage />,
-  },
-  {
-    path: 'recipes/:id',
-    element: <RecipeDetailPage />,
-  },
+
   {
     path: 'recipes/:id/slideshow',
     element: <RecipeSlideShowPage />,
@@ -92,10 +97,6 @@ const router = createBrowserRouter([
   {
     path: 'login',
     element: <LoginPage />,
-  },
-  {
-    path: 'recipes/category/:categorySlug',
-    element: <CategoryDetailPage />,
   },
 ]);
 

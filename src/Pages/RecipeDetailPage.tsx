@@ -126,7 +126,7 @@ const RecipeDetailPage = () => {
       </div>
 
       {isButtonVisible && (
-        <div className="fixed bottom-6 z-50 flex w-full justify-center">
+        <div className="fixed bottom-20 z-50 flex w-full justify-center">
           <Button
             className="rounded-full bg-[#526c04] p-4 text-white shadow-lg transition-all hover:bg-[#526c04]"
             onClick={() =>
