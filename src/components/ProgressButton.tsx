@@ -32,7 +32,7 @@ const ProgressButton = ({
       <Button
         className="group relative z-10 w-full cursor-pointer bg-transparent py-6 text-lg font-semibold transition-none hover:bg-transparent"
         disabled={!isFormValid}
-        onClick={onClick}
+        type="submit"
       >
         <span className="flex items-center justify-center gap-2 text-white drop-shadow-sm">
           <Clipboard

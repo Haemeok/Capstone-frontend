@@ -62,9 +62,9 @@ const UserDetailPage = () => {
   const getRecipesByTab = () => {
     switch (activeTab) {
       case '나의 레시피':
-        return <RecipeGrid recipes={createdRecipes} />;
+        return <RecipeGrid recipes={createdRecipes} isSimple={false} />;
       case '북마크':
-        return <RecipeGrid recipes={cookbookRecipes} />;
+        return <RecipeGrid recipes={cookbookRecipes} isSimple={true} />;
       case '캘린더':
         return <></>;
       default:

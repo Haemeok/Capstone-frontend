@@ -1,46 +1,84 @@
-import { END_POINTS } from '@/constants/api';
+import { END_POINTS, PAGE_SIZE } from '@/constants/api';
 import { IngredientItem } from '@/type/recipe';
 import { axiosInstance } from './axios';
 
-export type IngredientsApiResponse = {
-  items: IngredientItem[];
-  nextPage: number | null;
-  totalCount?: number;
+type PageResponse<T> = {
+  content: T[];
+
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  number: number;
+
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+  size: number;
+
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+};
+
+export type IngredientsApiResponse = PageResponse<IngredientItem>;
+
+type QueryParams = {
+  page: number;
+  size: number;
+  sort: string;
+  category?: string | null;
+  search?: string;
 };
 
 export const getIngredients = async ({
   category,
   search,
-  pageParam = 1,
+  sort,
+  pageParam = 0,
+  isMine = false,
 }: {
-  category: string;
-  search: string;
+  category: string | null;
+  search?: string;
+  sort: string;
   pageParam: number;
+  isMine: boolean;
 }) => {
-  const response = await axiosInstance.get<IngredientsApiResponse>(
-    END_POINTS.INGREDIENTS,
-    {
-      params: {
-        category,
-        search,
-        pageParam,
-      },
-      useAuth: true,
-    },
-  );
-  return response.data;
-};
+  const apiParams: QueryParams = {
+    page: pageParam,
+    size: PAGE_SIZE,
+    sort: sort === 'asc' ? 'name,asc' : 'name,desc',
+  };
 
-export const addIngredient = async (id: number) => {
-  const response = await axiosInstance.post(END_POINTS.INGREDIENTS_BY_ID(id), {
+  if (category) {
+    apiParams.category = category;
+  }
+
+  if (search) {
+    apiParams.search = search;
+  }
+
+  const endPoint = isMine ? END_POINTS.MY_INGREDIENTS : END_POINTS.INGREDIENTS;
+
+  const response = await axiosInstance.get<IngredientsApiResponse>(endPoint, {
+    params: apiParams,
     useAuth: true,
   });
   return response.data;
 };
 
-export const addIngredientBulk = async (ids: number[]) => {
-  const response = await axiosInstance.post(END_POINTS.INGREDIENTS, {
-    ids,
+export const addIngredient = async (ingredientId: number) => {
+  const response = await axiosInstance.post(END_POINTS.MY_INGREDIENTS, {
+    ingredientId,
+    useAuth: true,
+  });
+  return response.data;
+};
+
+export const addIngredientBulk = async (ingredientIds: number[]) => {
+  const response = await axiosInstance.post(END_POINTS.MY_INGREDIENTS_BULK, {
+    ingredientIds,
     useAuth: true,
   });
   return response.data;

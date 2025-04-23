@@ -1,19 +1,27 @@
-export type Ingredient = {
-  name: string;
-  quantity: string;
-  unit: string;
-};
+export type UserIngredient = Omit<IngredientItem, 'unit' | 'price'>;
+
+export type IngredientPayload = Omit<
+  IngredientItem,
+  'category' | 'price' | 'id' | 'imageUrl'
+>;
 
 export type RecipeStep = {
   stepNumber: number;
   instruction: string;
   stepImageUrl: string;
   action?: string;
-  ingredients?: Ingredient[];
+  ingredients?: IngredientItem[];
+};
+
+export type RecipeStepPayload = Omit<
+  RecipeStep,
+  'stepImageUrl' | 'action' | 'ingredients'
+> & {
+  ingredients: IngredientPayload[];
 };
 
 export type Recipe = {
-  id?: number;
+  id: number;
   title: string;
   dishType: string;
   description: string;
@@ -24,9 +32,45 @@ export type Recipe = {
   servings: number | undefined | '';
   totalIngredientCost?: number;
   marketPrice?: number;
-  ingredients: Ingredient[];
+  ingredients: IngredientItem[];
   steps: RecipeStep[];
   tagNames: string[];
+};
+
+export type RecipePayload = Omit<
+  Recipe,
+  | 'id'
+  | 'ingredients'
+  | 'steps'
+  | 'totalIngredientCost'
+  | 'marketPrice'
+  | 'tagNames'
+  | 'youtubeUrl'
+> & {
+  imageURL: string;
+  ingredients: IngredientPayload[];
+  steps: RecipeStepPayload[];
+  cookingTime: number;
+  servings: number;
+};
+
+export type RecipeFormValues = {
+  title: string;
+  dishType: string;
+  description: string;
+  cookingTime: string | number;
+  servings: string | number;
+  youtubeUrl?: string;
+  cookingTools?: string[];
+  tagNames?: string[];
+  imageFile: FileList | null;
+  ingredients: IngredientPayload[];
+  steps: Array<{
+    stepNumber: number;
+    instruction: string;
+    stepImageFile?: FileList | null;
+    ingredients: IngredientPayload[];
+  }>;
 };
 
 export type RecipeGridItem = {
@@ -34,6 +78,9 @@ export type RecipeGridItem = {
   title: string;
   imageUrl: string;
   authorName: string;
+  rating: number;
+  cookingTime: number;
+  commentCount: number;
   createdAt: string;
   likeCount: number;
   likedByCurrentUser: boolean;
@@ -44,6 +91,9 @@ export type IngredientItem = {
   name: string;
   imageUrl: string;
   category: string;
+  quantity?: string;
+  price: number;
+  unit: string;
 };
 
 export type CategoryItem = {

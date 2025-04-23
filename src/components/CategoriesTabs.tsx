@@ -12,8 +12,8 @@ const CategoriesTabs = ({ title }: CategoriesTabsProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="mt-8 w-full">
-      <div className="mb-4 flex items-center justify-between px-6">
+    <div className="mt-8 w-full p-4">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
         </div>
@@ -23,7 +23,7 @@ const CategoriesTabs = ({ title }: CategoriesTabsProps) => {
         </button>
       </div>
 
-      <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto pb-4 pl-6">
+      <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto rounded-2xl">
         {categoriesItems.map((item) => (
           <CateGoryItem
             key={item.id}

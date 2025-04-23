@@ -1,17 +1,33 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Upload as UploadIcon, Plus, X, ChefHat } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ProgressButton from '@/components/ProgressButton';
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
-
-import useCreateRecipeMutation from '@/hooks/useCreateRecipeMutation';
-import { Ingredient, Recipe, RecipeStep } from '@/type/recipe';
+import { useCreateRecipeWithUpload } from '@/hooks/useCreateRecipeWithUpload';
+import { RecipeFormValues, IngredientPayload } from '@/type/recipe';
+import Steps from '@/Pages/NewRecipe/Steps';
+import { useToasts } from '@/hooks/useToasts';
+import IngredientSelector from './IngredientSelector';
 
 const NewRecipePage = () => {
   const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const createRecipe = useCreateRecipeMutation();
+  const {
+    mutate: createRecipeWithUpload,
+    isUploading,
+    isLoading: isCreatingRecipe,
+    isSuccess,
+    error: recipeCreationError,
+    uploadError,
+    data: createdRecipeData,
+  } = useCreateRecipeWithUpload();
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [stepImagePreviewUrls, setStepImagePreviewUrls] = useState<
+    (string | null)[]
+  >([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { addToast } = useToasts();
 
   const {
     register,
@@ -19,11 +35,12 @@ const NewRecipePage = () => {
     control,
     setValue,
     watch,
+    reset,
     formState: { errors, isValid, isDirty },
-  } = useForm<Recipe>({
+  } = useForm<RecipeFormValues>({
     defaultValues: {
       title: '',
-      imageURL: '',
+      imageFile: null,
       ingredients: [{ quantity: '', name: '', unit: '' }],
       cookingTime: undefined,
       servings: undefined,
@@ -31,12 +48,15 @@ const NewRecipePage = () => {
       description: '',
       steps: [
         {
-          ingredients: [{ quantity: '', name: '', unit: '' }],
           instruction: '',
-          stepImageUrl: '',
-          stepNumber: 0,
+          stepNumber: 1,
+          stepImageFile: null,
+          ingredients: [],
         },
       ],
+      cookingTools: [],
+      tagNames: [],
+      youtubeUrl: '',
     },
     mode: 'onChange',
   });
@@ -50,30 +70,19 @@ const NewRecipePage = () => {
     name: 'ingredients',
   });
 
-  const {
-    fields: stepFields,
-    append: appendStep,
-    remove: removeStep,
-  } = useFieldArray({
-    control,
-    name: 'steps',
-  });
-
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          setValue('imageURL', e.target.result as string, {
-            shouldValidate: true,
-            shouldDirty: true,
-          });
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setValue('imageFile', file, { shouldValidate: true, shouldDirty: true });
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => setImagePreviewUrl(reader.result as string);
+  //     reader.readAsDataURL(file);
+  //   } else {
+  //     setValue('imageFile', null, { shouldValidate: true });
+  //     setImagePreviewUrl(null);
+  //   }
+  //   e.target.value = '';
+  // };
 
   const handleDescriptionChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -84,75 +93,124 @@ const NewRecipePage = () => {
     });
   };
 
-  const addIngredient = () => {
-    appendIngredient({ name: '', quantity: '', unit: '' });
+  const addIngredient = (ingredient: IngredientPayload) => {
+    appendIngredient({
+      name: ingredient.name,
+      quantity: '',
+      unit: ingredient.unit,
+    });
   };
 
-  const addStep = () => {
-    appendStep({ instruction: '', stepImageUrl: '', stepNumber: 0 });
-  };
+  const onSubmit: SubmitHandler<RecipeFormValues> = (formData) => {
+    console.log('폼 데이터:', formData);
 
-  const onSubmit: SubmitHandler<Recipe> = (data) => {
-    console.log('제출 데이터:', data);
-
-    const filteredData = {
-      ...data,
-      imageURL: '123',
-      ingredients: data.ingredients.filter((i) => i.name.trim() !== ''),
-      steps: data.steps.filter((s) => s.instruction.trim() !== ''),
-      tagNames: ['비건', '건강한', '간편한', '영양가있는'],
-    };
-
-    console.log('정제된 제출 데이터:', filteredData);
-
-    createRecipe.mutate(filteredData);
-
-    navigate('/recipes');
+    createRecipeWithUpload(formData, {
+      onSuccess: (createdData) => {
+        console.log('레시피 생성 성공:', createdData);
+        addToast({
+          message: '레시피가 성공적으로 등록되었습니다!',
+          variant: 'success',
+        });
+        reset();
+        setImagePreviewUrl(null);
+        setStepImagePreviewUrls([]);
+        navigate('/recipes');
+      },
+      onError: (error) => {
+        console.error('레시피 생성 실패:', error);
+        addToast({
+          message: `레시피 등록 중 오류가 발생했습니다: ${error.message}`,
+          variant: 'error',
+        });
+      },
+    });
   };
 
   const formValues = watch();
 
   const needSteps = [
     formValues.title.trim() !== '',
-    formValues.imageURL !== '',
-    formValues.description !== '',
-    formValues.dishType !== '',
-    formValues.cookingTime !== '',
-    formValues.servings !== 0,
-    formValues.ingredients.some((i: Ingredient) => i.name.trim() !== ''),
-    formValues.steps.some((s: RecipeStep) => s.instruction.trim() !== ''),
+    formValues.imageFile !== null,
+    formValues.description.trim() !== '',
+    formValues.dishType.trim() !== '',
+    !!formValues.cookingTime,
+    !!formValues.servings,
+    formValues.ingredients.some(
+      (i: IngredientPayload) => i.name?.trim() !== '',
+    ),
+    formValues.steps.some((s) => s.instruction?.trim() !== ''),
   ];
 
   const completedSteps = needSteps.filter(Boolean).length;
   const totalSteps = needSteps.length;
-  const progressPercentage = Math.floor((completedSteps / totalSteps) * 100);
+  const progressPercentage =
+    totalSteps > 0 ? Math.floor((completedSteps / totalSteps) * 100) : 0;
+
+  const isLoading = isUploading || isCreatingRecipe;
+  const submitError = uploadError || recipeCreationError;
+  console.log('Current form errors:', errors);
+
+  const imageFileValue = watch('imageFile');
+
+  // imageFileValue가 변경될 때 미리보기 업데이트
+  useEffect(() => {
+    const fileList = imageFileValue;
+    console.log('imageFileValue (should be FileList):', fileList);
+
+    // FileList의 첫 번째 항목을 가져옵니다. 파일이 없으면 undefined가 됩니다.
+    const actualFile = fileList?.[0]; // Optional chaining 사용
+    console.log('Extracted file (should be File or undefined):', actualFile);
+
+    // 실제 File 객체인지 확인합니다.
+    if (actualFile instanceof File) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreviewUrl(reader.result as string);
+      };
+      // 추출한 실제 파일(actualFile)을 사용합니다.
+      reader.readAsDataURL(actualFile);
+    } else {
+      // 파일이 없거나 유효하지 않은 경우 미리보기 제거
+      setImagePreviewUrl(null);
+    }
+    // imageFileValue (FileList)가 변경될 때마다 이 effect 실행
+  }, [imageFileValue]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50 pb-20">
       <form id="recipe-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="relative">
-          <div
-            className="relative flex h-[40vh] w-full cursor-pointer items-center justify-center"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {formValues.imageURL ? (
-              <img
-                src={formValues.imageURL}
-                alt="Recipe thumbnail"
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="text-center">
-                <UploadIcon size={48} className="mx-auto mb-3 text-[#58C16A]" />
-                <p className="text-[#58C16A]">이미지를 업로드해주세요</p>
-              </div>
-            )}
+          <div className="relative flex h-[40vh] w-full cursor-pointer items-center justify-center border-b bg-gray-200 text-gray-400 hover:bg-gray-300">
+            <label
+              htmlFor="imageFile-input"
+              className="absolute inset-0 cursor-pointer"
+            >
+              {imagePreviewUrl ? (
+                <img
+                  src={imagePreviewUrl}
+                  alt="Recipe thumbnail"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full flex-col items-center justify-center text-center">
+                  <UploadIcon size={48} className="mb-3" />
+                  <p>레시피 대표 이미지 업로드</p>
+                  {errors.imageFile && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.imageFile.message || '이미지 파일은 필수입니다.'}
+                    </p>
+                  )}
+                </div>
+              )}
+            </label>
             <input
               type="file"
-              ref={fileInputRef}
+              id="imageFile-input"
               className="hidden"
               accept="image/*"
-              onChange={handleThumbnailChange}
+              {...register('imageFile', {
+                required: '대표 이미지를 등록해주세요.',
+              })}
             />
           </div>
 
@@ -297,54 +355,46 @@ const NewRecipePage = () => {
               {ingredientFields.map((field, index) => (
                 <div
                   key={field.id}
-                  className="flex items-center justify-between gap-3 rounded-lg border-b border-[#00473c]/10 bg-white p-3 shadow-sm"
+                  className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#58C16A]/10">
-                    <ChefHat size={20} className="text-[#58C16A]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+                    <ChefHat size={20} className="text-green-600" />
                   </div>
 
-                  <div className="flex flex-1 justify-between gap-2">
-                    <input
-                      type="text"
-                      className={`w-20 bg-transparent ${
-                        errors.ingredients?.[index]?.name
-                          ? 'border-red-500'
-                          : 'border-[#00473c]/10'
-                      } border-b focus:outline-none`}
-                      placeholder="재료명"
-                      {...register(`ingredients.${index}.name`, {
-                        required: index === 0 ? '재료명은 필수입니다' : false,
-                      })}
-                    />
+                  <div className="flex flex-1 items-center justify-between gap-2">
+                    <p>{field.name}</p>
+
                     <div className="flex gap-1">
                       <input
-                        type="text"
-                        className="w-16 border-b border-[#00473c]/10 bg-transparent text-center focus:border-[#00473c] focus:outline-none"
+                        type="number"
+                        className={`w-20 rounded border border-gray-300 px-2 py-1 text-center focus:border-green-500 focus:outline-none ${
+                          errors.ingredients?.[index]?.quantity
+                            ? 'border-red-500'
+                            : ''
+                        }`}
                         placeholder="수량"
-                        {...register(`ingredients.${index}.quantity`)}
+                        {...register(`ingredients.${index}.quantity`, {
+                          valueAsNumber: true,
+                          min: { value: 0, message: '0 이상 입력' },
+                        })}
                       />
-                      <input
-                        type="text"
-                        className="w-16 border-b border-[#00473c]/10 bg-transparent text-center focus:border-[#00473c] focus:outline-none"
-                        placeholder="단위"
-                        {...register(`ingredients.${index}.unit`)}
-                      />
+                      {errors.ingredients?.[index]?.quantity && (
+                        <p className="mt-1 text-xs text-red-500">
+                          {errors.ingredients[index]?.quantity?.message}
+                        </p>
+                      )}
                     </div>
-                    {errors.ingredients?.[index]?.name && (
-                      <p className="mt-1 text-xs text-red-500">
-                        {errors.ingredients[index]?.name?.message}
-                      </p>
-                    )}
                   </div>
                   <div className="">
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="text-[#777777] hover:text-red-500"
+                      className="text-gray-500 hover:text-red-500"
                       onClick={() =>
                         ingredientFields.length > 1 && removeIngredient(index)
                       }
+                      disabled={ingredientFields.length <= 1}
                     >
                       <X size={18} />
                     </Button>
@@ -355,71 +405,38 @@ const NewRecipePage = () => {
             <Button
               type="button"
               variant="outline"
-              className="mt-2 flex w-full items-center justify-center gap-1 border-dashed border-[#58C16A]/40 text-[#58C16A] hover:bg-[#58C16A]/5"
-              onClick={addIngredient}
+              className="mt-3 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed border-green-300 py-2 text-green-600 hover:border-green-500 hover:bg-green-50"
+              onClick={() => setIsOpen(true)}
             >
               <Plus size={16} />
               재료 추가
             </Button>
           </div>
+          <IngredientSelector
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            onIngredientSelect={addIngredient}
+          />
 
-          <div className="mb-8">
-            <h2 className="mb-4 text-2xl font-bold text-gray-700">조리 과정</h2>
+          <Steps
+            watch={watch}
+            register={register}
+            errors={errors}
+            setValue={setValue}
+            control={control}
+            stepImagePreviewUrls={stepImagePreviewUrls}
+            setStepImagePreviewUrls={setStepImagePreviewUrls}
+          />
 
-            <div className="space-y-4">
-              {stepFields.map((step, index) => (
-                <div key={step.id} className="flex gap-3">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#58C16A] font-bold text-white">
-                    {index + 1}
-                  </div>
-                  <div className="relative flex-1">
-                    <textarea
-                      className={`w-full rounded-lg bg-white p-3 ${
-                        errors.steps?.[index]?.instruction
-                          ? 'border border-red-500'
-                          : 'border border-[#00473c]/20'
-                      } min-h-[80px] shadow-sm focus:border-[#00473c] focus:outline-none`}
-                      placeholder={`${index + 1}번째 과정을 설명해주세요`}
-                      {...register(`steps.${index}.instruction`, {
-                        required:
-                          index === 0 ? '조리 과정 설명은 필수입니다' : false,
-                      })}
-                    />
-                    {errors.steps?.[index]?.instruction && (
-                      <p className="mt-1 text-xs text-red-500">
-                        {errors.steps[index]?.instruction?.message}
-                      </p>
-                    )}
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute top-2 right-2 text-[#777777] hover:text-red-500"
-                      onClick={() => stepFields.length > 1 && removeStep(index)}
-                    >
-                      <X size={16} />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-
-              <Button
-                type="button"
-                variant="outline"
-                className="mt-2 flex w-full items-center justify-center gap-1 border-dashed border-[#58C16A]/40 text-[#58C16A] hover:bg-[#58C16A]/5"
-                onClick={addStep}
-              >
-                <Plus size={16} />
-                과정 추가
-              </Button>
-            </div>
-          </div>
-
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex flex-col items-center justify-center gap-4">
+            {submitError && (
+              <p className="text-sm text-red-600">
+                오류: {submitError.message}
+              </p>
+            )}
             <ProgressButton
               progressPercentage={progressPercentage}
               isFormValid={isValid && isDirty}
-              onClick={handleSubmit(onSubmit)}
             />
           </div>
         </div>

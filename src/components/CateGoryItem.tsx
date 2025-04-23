@@ -33,7 +33,7 @@ const CateGoryItem = ({
         className="img-smooth h-70 w-50 object-cover"
       />
       <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent p-2">
-        <h3 className="truncate text-sm font-semibold text-white">{name}</h3>
+        <h3 className="truncate text-lg font-semibold text-white">{name}</h3>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Search } from 'lucide-react';
+import { MinusIcon, PlusIcon, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -12,21 +12,16 @@ import {
   useAddIngredientMutation,
   useDeleteIngredientMutation,
 } from '@/hooks/useIngredientMutation';
-
-const CATEGORIES = [
-  '전체',
-  '가공/유제품',
-  '고기',
-  '곡물',
-  '과일',
-  '채소',
-  '해산물',
-];
+import { InfiniteData } from '@tanstack/react-query';
+import { CATEGORIES } from '@/constants/api';
+import PrevButton from '@/components/Button/PrevButton';
+import SuspenseImage from '@/components/Image/SuspenseImage';
 
 const NewIngredientsPage = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<'single' | 'bulk'>('single');
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const [sort, setSort] = useState<'asc' | 'desc'>('asc');
   const [searchQuery, setSearchQuery] = useState('');
   const [bulkSelectedIds, setBulkSelectedIds] = useState<Set<number>>(
     new Set(),
@@ -45,21 +40,24 @@ const NewIngredientsPage = () => {
     // useInfiniteScroll 타입 파라미터 업데이트
     IngredientsApiResponse, // TQueryFnData: API 응답 타입
     Error, // TError
-    IngredientsApiResponse, // TData: useInfiniteQuery가 반환하는 data 타입 (보통 TQueryFnData와 동일)
-    [string, string, string], // TQueryKey
+    InfiniteData<IngredientsApiResponse>, // TData: useInfiniteQuery가 반환하는 data 타입 (보통 TQueryFnData와 동일)
+    [string, string, string, 'asc' | 'desc'], // TQueryKey
     number // TPageParam
   >({
-    queryKey: ['ingredients', selectedCategory, searchQuery],
+    queryKey: ['ingredients', selectedCategory, searchQuery, sort],
     queryFn: (
       { pageParam }, // queryFn에 새 API 함수 사용
     ) =>
       getIngredients({
-        category: selectedCategory,
+        category: selectedCategory === '전체' ? null : selectedCategory,
         search: searchQuery,
         pageParam,
+        sort,
+        isMine: false,
       }),
-    getNextPageParam: (lastPage) => lastPage.nextPage, // 응답 구조에 맞춤
-    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.last ? null : lastPage.number + 1,
+    initialPageParam: 0,
   });
 
   const { mutate: addIngredient } = useAddIngredientMutation();
@@ -73,13 +71,11 @@ const NewIngredientsPage = () => {
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
-    setBulkSelectedIds(new Set());
   };
 
-  const handleModeChange = (newMode: 'single' | 'bulk') => {
-    if (!newMode) return;
+  const handleModeChange = (mode: 'single' | 'bulk') => {
+    const newMode = mode === 'single' ? 'bulk' : 'single';
     setMode(newMode);
-    setBulkSelectedIds(new Set());
   };
 
   const handleCheckboxChange = (id: number) => {
@@ -104,31 +100,27 @@ const NewIngredientsPage = () => {
 
   const handleBulkAdd = () => {
     addIngredientBulk(Array.from(bulkSelectedIds));
+    setBulkSelectedIds(new Set());
   };
 
   return (
-    <div className="flex h-screen flex-col pb-20">
-      {/* 고정 헤더 영역 */}
-      <div className="sticky top-0 z-10 bg-white pb-2 shadow-sm">
-        {/* ... (상단 네비, 모드 토글, 검색창, 탭 메뉴) ... */}
-        {/* 모드 토글 */}
-        <div className="px-4 pb-3">
-          <ToggleGroup
-            type="single"
-            value={mode}
-            onValueChange={handleModeChange}
-            className="grid grid-cols-2"
+    <div className="flex h-screen flex-col bg-[#ffffff] pb-20">
+      <div className="sticky top-0 z-10 pb-2 shadow-sm">
+        <div className="flex justify-between p-4">
+          <PrevButton />
+          <h2 className="text-2xl font-bold">재료 추가</h2>
+          <button
+            className="flex items-center gap-1 rounded-full bg-gray-100 p-2"
+            onClick={() => handleModeChange(mode)}
           >
-            <ToggleGroupItem value="single" aria-label="Toggle single add">
-              하나씩 추가
-            </ToggleGroupItem>
-            <ToggleGroupItem value="bulk" aria-label="Toggle bulk add">
-              한번에 추가
-            </ToggleGroupItem>
-          </ToggleGroup>
+            {mode === 'single' ? (
+              <p className="text-sm">한개씩</p>
+            ) : (
+              <p className="text-sm">여러개</p>
+            )}
+          </button>
         </div>
 
-        {/* 검색창 */}
         <div className="px-4">
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
@@ -137,24 +129,23 @@ const NewIngredientsPage = () => {
             <input
               type="text"
               placeholder="재료 이름을 검색하세요"
-              className="w-full rounded-md border border-gray-300 bg-gray-50 py-2 pr-4 pl-10 focus:border-[#00473c] focus:ring-1 focus:ring-[#00473c]"
+              className="w-full rounded-md border border-gray-300 bg-gray-50 py-2 pr-4 pl-10 focus:outline-none"
               value={searchQuery}
               onChange={handleSearchChange}
             />
           </div>
         </div>
 
-        {/* 탭 메뉴 */}
-        <div className="scrollbar-hide mt-3 flex overflow-x-auto border-b border-gray-200">
+        <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2">
           {CATEGORIES.map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryClick(category)}
               className={cn(
-                'flex-shrink-0 px-4 py-3 text-sm font-medium',
+                'flex-shrink-0 px-4 py-3',
                 selectedCategory === category
-                  ? 'border-b-2 border-[#5cc570] text-[#5cc570]'
-                  : 'text-gray-500 hover:text-gray-700',
+                  ? 'text-olive font-bold'
+                  : 'text-gray-400 hover:text-gray-700',
               )}
             >
               {category}
@@ -163,7 +154,6 @@ const NewIngredientsPage = () => {
         </div>
       </div>
 
-      {/* 스크롤 가능 재료 목록 */}
       <div className="flex-1 overflow-y-auto p-4">
         {status === 'pending' ? (
           <p className="text-center text-gray-500">재료를 불러오는 중...</p>
@@ -174,79 +164,80 @@ const NewIngredientsPage = () => {
           </p>
         ) : (
           <div className="space-y-3">
-            {data?.items.length === 0 && !isFetching && (
+            {data?.pages[0].content?.length === 0 && !isFetching && (
               <p className="text-center text-gray-500">
                 "{searchQuery}"에 해당하는 재료가 없습니다.
               </p>
             )}
-            {/* allFetchedIngredients 타입이 IngredientItem[]으로 추론됨 */}
-            {data?.items.map((ingredient) => {
-              const isAdded = false; // 임시 값
-              const isBulkSelected = bulkSelectedIds.has(ingredient.id);
 
-              return (
-                <div
-                  key={ingredient.id}
-                  className={cn(
-                    'flex items-center rounded-lg bg-white p-3 shadow-sm transition-colors',
-                    mode === 'bulk' && 'cursor-pointer hover:bg-gray-50',
-                    mode === 'bulk' &&
-                      isBulkSelected &&
-                      'border border-green-200 bg-green-50',
-                  )}
-                  onClick={
-                    mode === 'bulk'
-                      ? () => handleCheckboxChange(ingredient.id)
-                      : undefined
-                  }
-                >
-                  {/* ... (이미지, 이름 렌더링) ... */}
-                  <div className="mr-3 h-12 w-12 overflow-hidden rounded-lg bg-gray-100">
-                    {ingredient.imageUrl && ( // IngredientItem 타입에 맞게 imageUrl 사용
-                      <img
-                        src={ingredient.imageUrl}
-                        alt={ingredient.name}
-                        className="h-full w-full object-cover"
+            {data?.pages
+              .flatMap((page) => page.content)
+              .map((ingredient) => {
+                const isAdded = false;
+                const isBulkSelected = bulkSelectedIds.has(ingredient.id);
+
+                return (
+                  <div
+                    key={ingredient.id}
+                    className={cn(
+                      'flex items-center rounded-lg bg-white p-3 shadow-sm transition-colors',
+                      mode === 'bulk' && 'cursor-pointer hover:bg-gray-50',
+                      mode === 'bulk' &&
+                        isBulkSelected &&
+                        'border border-green-200 bg-green-50',
+                      'font-noto-sans-kr',
+                    )}
+                    onClick={
+                      mode === 'bulk'
+                        ? () => handleCheckboxChange(ingredient.id)
+                        : undefined
+                    }
+                  >
+                    <div className="mr-3 h-12 w-12 overflow-hidden rounded-lg bg-gray-100">
+                      {ingredient.imageUrl && (
+                        <img
+                          src={ingredient.imageUrl}
+                          alt={ingredient.name}
+                          className="h-full w-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{ingredient.name}</p>
+                    </div>
+
+                    {mode === 'single' ? (
+                      <Button
+                        size="sm"
+                        variant={isAdded ? 'destructive' : 'default'}
+                        className="bg-beige text-brown rounded-full px-3 font-bold"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSingleAddRemove(ingredient.id, isAdded);
+                        }}
+                      >
+                        {isAdded ? '삭제' : '추가'}
+                      </Button>
+                    ) : (
+                      <Checkbox
+                        id={`ingredient-${ingredient.id}`}
+                        checked={isBulkSelected}
+                        onCheckedChange={() =>
+                          handleCheckboxChange(ingredient.id)
+                        }
+                        className="h-5 w-5 rounded border-gray-300 data-[state=checked]:border-[#5cc570] data-[state=checked]:bg-[#5cc570]"
                       />
                     )}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium">{ingredient.name}</p>
-                  </div>
-
-                  {/* 모드별 버튼/체크박스 */}
-                  {mode === 'single' ? (
-                    <Button
-                      size="sm"
-                      variant={isAdded ? 'destructive' : 'default'}
-                      className="rounded-full px-3"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSingleAddRemove(ingredient.id, isAdded);
-                      }}
-                    >
-                      {isAdded ? '삭제' : '추가'}
-                    </Button>
-                  ) : (
-                    <Checkbox
-                      id={`ingredient-${ingredient.id}`}
-                      checked={isBulkSelected}
-                      onCheckedChange={() =>
-                        handleCheckboxChange(ingredient.id)
-                      }
-                      className="h-5 w-5 rounded border-gray-300 data-[state=checked]:border-[#5cc570] data-[state=checked]:bg-[#5cc570]"
-                    />
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
             <div ref={ref} className="h-10" />
             {isFetchingNextPage && (
               <p className="text-center text-gray-500">
                 더 많은 재료를 불러오는 중...
               </p>
             )}
-            {!hasNextPage && data?.items.length && (
+            {!hasNextPage && data?.pages[0].content?.length && (
               <p className="text-center text-sm text-gray-400">
                 모든 재료를 불러왔습니다.
               </p>
@@ -255,20 +246,19 @@ const NewIngredientsPage = () => {
         )}
       </div>
 
-      {/* 하단 고정 버튼 영역 */}
-      <div className="fixed right-0 bottom-0 left-0 z-10 border-t border-gray-200 bg-white p-4">
-        {/* ... (모드별 버튼 렌더링) ... */}
-
-        <Button
-          onClick={handleBulkAdd}
-          disabled={bulkSelectedIds.size === 0 || isFetching}
-          className="w-full rounded-lg bg-[#5cc570] text-white shadow disabled:opacity-50"
-        >
-          {bulkSelectedIds.size > 0
-            ? `${bulkSelectedIds.size}개 선택 완료`
-            : '추가할 재료 선택'}
-        </Button>
-      </div>
+      {mode === 'bulk' && (
+        <div className="fixed right-0 bottom-20 left-0 z-10 border-t border-gray-200 bg-white p-4">
+          <Button
+            onClick={handleBulkAdd}
+            disabled={bulkSelectedIds.size === 0 || isFetching}
+            className="w-full rounded-lg bg-[#5cc570] text-white shadow disabled:opacity-50"
+          >
+            {bulkSelectedIds.size > 0
+              ? `${bulkSelectedIds.size}개 선택 완료`
+              : '추가할 재료 선택'}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useImageLoader } from '@/hooks/useImageLoader';
 import ImageError from './ImageError';
-import DefaultImageFallback from './DefaultImageFallback';
 import { Skeleton } from '../ui/skeleton';
+import { cn } from '@/lib/utils';
 
 type ImageProps = {
   src: string;
@@ -39,12 +39,20 @@ const Image = ({
     );
   }
 
-  if (loading) {
-    return fallback || <Skeleton className={className} />;
-  }
-
-  return (
-    <img src={src} alt={alt} className={className} {...imgProps} ref={ref} />
+  return loaded ? (
+    <img
+      src={src}
+      alt={alt}
+      className={cn(
+        `${loaded ? 'opacity-100' : 'opacity-0'}`,
+        'transition-opacity duration-300 ease-in-out',
+        className,
+      )}
+      {...imgProps}
+      ref={ref}
+    />
+  ) : (
+    fallback || <Skeleton className={className} />
   );
 };
 
