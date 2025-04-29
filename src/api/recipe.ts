@@ -1,14 +1,15 @@
-import { END_POINTS } from '@/constants/api';
+import { END_POINTS, PAGE_SIZE } from '@/constants/api';
 import { axiosInstance } from './axios';
+import { Recipe, RecipeGridItem, RecipePayload } from '@/type/recipe';
 import {
-  IngredientItem,
-  Recipe,
-  RecipeGridItem,
-  RecipePayload,
-} from '@/type/recipe';
-import { PresignedUrlInfo, PresignedUrlResponse } from '@/type/file';
+  FileObject,
+  PresignedUrlInfo,
+  PresignedUrlResponse,
+  UploadResult,
+} from '@/type/file';
 import { FileInfoRequest } from '@/type/file';
-import { AxiosProgressEvent } from 'axios';
+import { BaseQueryParams, PageResponse } from '@/type/query';
+import { buildParams } from '@/utils/object';
 
 export const getRecipes = async () => {
   const response = await axiosInstance.get(END_POINTS.RECIPES);
@@ -16,21 +17,29 @@ export const getRecipes = async () => {
 };
 
 export const getRecipe = async (id: number) => {
-  const response = await axiosInstance.get(END_POINTS.RECIPE(id));
+  const response = await axiosInstance.get<Recipe>(END_POINTS.RECIPE(id));
   return response.data;
 };
 
-export const getRecipeItems = async () => {
-  const response = await axiosInstance.get<RecipeGridItem[]>(
-    END_POINTS.RECIPES_SIMPLE,
+export const postRecipe = async ({
+  recipe,
+  files,
+}: {
+  recipe: RecipePayload;
+  files: FileInfoRequest[];
+}) => {
+  console.log('Recipe', recipe);
+  console.log('Files', files);
+  const response = await axiosInstance.post<PresignedUrlResponse>(
+    END_POINTS.RECIPE_WITH_IMAGE,
+    {
+      recipe,
+      files,
+    },
+    {
+      useAuth: true,
+    },
   );
-  return response.data;
-};
-
-export const postRecipe = async (recipe: RecipePayload) => {
-  const response = await axiosInstance.post(END_POINTS.RECIPES, recipe, {
-    useAuth: false,
-  });
   console.log(response.data);
   return response.data;
 };
@@ -93,15 +102,7 @@ export const uploadFileToS3 = async (
       headers: {
         'Content-Type': file.type,
       },
-      onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-        const total = progressEvent.total ?? file.size;
-        if (onProgress && total > 0) {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / total,
-          );
-          onProgress(fileKey, percentCompleted);
-        }
-      },
+      useAuth: false,
     });
 
     console.log(
@@ -120,4 +121,103 @@ export const uploadFileToS3 = async (
     );
     throw error;
   }
+};
+
+export const handleS3Upload = async (
+  presignedUrlsInfo: PresignedUrlInfo[],
+  fileObjects: FileObject[],
+): Promise<UploadResult[]> => {
+  if (presignedUrlsInfo.length !== fileObjects.length) {
+    throw new Error('Pre-signed URL 개수와 파일 개수가 일치하지 않습니다.');
+  }
+
+  const uploadPromises = presignedUrlsInfo.map(
+    async (uploadInfo, index): Promise<UploadResult> => {
+      const fileObject = fileObjects[index]?.file;
+      if (!fileObject) {
+        throw new Error(
+          `업로드할 파일 객체를 찾을 수 없습니다 (index: ${index})`,
+        );
+      }
+
+      try {
+        await uploadFileToS3(fileObject, uploadInfo);
+        return {
+          fileKey: uploadInfo.fileKey,
+          success: true,
+          originalIndex: index,
+        };
+      } catch (err) {
+        console.error(
+          `S3 업로드 실패 (파일: ${fileObject.name}, 키: ${uploadInfo.fileKey}):`,
+          err,
+        );
+        return {
+          fileKey: uploadInfo.fileKey,
+          success: false,
+          originalIndex: index,
+          error: err,
+        };
+      }
+    },
+  );
+
+  const uploadResults = await Promise.all(uploadPromises);
+
+  const failedUploads = uploadResults.filter((r) => !r.success);
+  if (failedUploads.length > 0) {
+    console.error('S3 Uploads failed:', failedUploads);
+    const firstError = failedUploads[0]?.error as Error | undefined;
+    throw new Error(
+      `${failedUploads.length}개의 파일 S3 업로드 실패: ${firstError?.message || '알 수 없는 오류'}`,
+    );
+  }
+
+  console.log('모든 파일 S3 업로드 성공');
+  return uploadResults;
+};
+
+export type RecipesApiResponse = PageResponse<RecipeGridItem>;
+
+type RecipeQueryParams = BaseQueryParams & {
+  dishType?: string | null;
+  tagNames?: string[] | null;
+};
+
+export const getRecipeItems = async ({
+  sort,
+  dishType,
+  tagNames,
+  search,
+  pageParam = 0,
+}: {
+  sort: string;
+  dishType?: string | null;
+  tagNames?: string[] | null;
+  search?: string;
+  pageParam?: number;
+}) => {
+  const baseParams: BaseQueryParams = {
+    page: pageParam,
+    size: PAGE_SIZE,
+    sort: `name,${sort}`,
+  };
+
+  const optionalParams: Partial<RecipeQueryParams> = {
+    dishType,
+    tagNames,
+    search,
+  };
+
+  const apiParams = buildParams(baseParams, optionalParams);
+
+  const response = await axiosInstance.get<RecipesApiResponse>(
+    END_POINTS.RECIPE_SEARCH,
+    {
+      params: apiParams,
+      useAuth: false,
+    },
+  );
+
+  return response.data;
 };

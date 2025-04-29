@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-import {
-  checkAndSetToken,
-  handleAPIError,
-  handleTokenError,
-} from '@/api/interceptors';
+import { checkAndSetToken, handleTokenError } from '@/api/interceptors';
 
 const PROD = import.meta.env.PROD;
 
@@ -29,4 +25,3 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   handleTokenError,
 );
-axiosInstance.interceptors.response.use((response) => response, handleAPIError);
