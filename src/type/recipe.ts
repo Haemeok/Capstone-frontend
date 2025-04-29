@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export type UserIngredient = Omit<IngredientItem, 'unit' | 'price'>;
 
 export type IngredientPayload = Omit<
@@ -35,6 +37,7 @@ export type Recipe = {
   ingredients: IngredientItem[];
   steps: RecipeStep[];
   tagNames: string[];
+  author: User;
 };
 
 export type RecipePayload = Omit<
@@ -44,10 +47,10 @@ export type RecipePayload = Omit<
   | 'steps'
   | 'totalIngredientCost'
   | 'marketPrice'
-  | 'tagNames'
   | 'youtubeUrl'
+  | 'imageURL'
+  | 'author'
 > & {
-  imageURL: string;
   ingredients: IngredientPayload[];
   steps: RecipeStepPayload[];
   cookingTime: number;
@@ -62,13 +65,13 @@ export type RecipeFormValues = {
   servings: string | number;
   youtubeUrl?: string;
   cookingTools?: string[];
-  tagNames?: string[];
+  tagNames: string[];
   imageFile: FileList | null;
   ingredients: IngredientPayload[];
   steps: Array<{
     stepNumber: number;
     instruction: string;
-    stepImageFile?: FileList | null;
+    imageFile?: FileList | null;
     ingredients: IngredientPayload[];
   }>;
 };
@@ -102,3 +105,15 @@ export type CategoryItem = {
   imageUrl: string;
   count: number;
 };
+
+export type DefaultOption = {
+  code: null;
+  displayName: string;
+};
+
+export type SpecificOption = {
+  code: string;
+  displayName: string;
+};
+
+export type FilterOption = DefaultOption | SpecificOption;

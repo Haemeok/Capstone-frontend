@@ -47,7 +47,7 @@ const StepItem = ({
 }: StepItemProps) => {
   const stepImageFileValue = useWatch({
     control,
-    name: `steps.${index}.stepImageFile`,
+    name: `steps.${index}.imageFile`,
   });
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const StepItem = ({
   ]);
 
   const removeStepImage = () => {
-    setValue(`steps.${index}.stepImageFile`, null, {
+    setValue(`steps.${index}.imageFile`, null, {
       shouldValidate: true,
       shouldDirty: true,
     });
@@ -159,7 +159,7 @@ const StepItem = ({
               id={`step-image-input-${index}`}
               className="hidden"
               accept="image/*"
-              {...register(`steps.${index}.stepImageFile`)}
+              {...register(`steps.${index}.imageFile`)}
             />
             {stepImagePreviewUrls[index] && (
               <Button
@@ -172,9 +172,9 @@ const StepItem = ({
               </Button>
             )}
           </div>
-          {errors.steps?.[index]?.stepImageFile && (
+          {errors.steps?.[index]?.imageFile && (
             <p className="mt-1 text-xs text-red-500">
-              {String(errors.steps[index]?.stepImageFile?.message) ||
+              {String(errors.steps[index]?.imageFile?.message) ||
                 '이미지 처리 중 오류'}
             </p>
           )}

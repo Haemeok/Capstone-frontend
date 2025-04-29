@@ -1,6 +1,7 @@
 export type FileInfoRequest = {
-  fileName: string;
-  fileType: string;
+  type: 'main' | 'step';
+  contentType: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp';
+  stepIndex?: number;
 };
 
 export type PresignedUrlInfo = {
@@ -10,4 +11,18 @@ export type PresignedUrlInfo = {
 
 export type PresignedUrlResponse = {
   uploads: PresignedUrlInfo[];
+  recipeId: number;
+};
+
+export type FileObject = {
+  file: File;
+  type: 'main' | 'step';
+  stepIndex?: number;
+};
+
+export type UploadResult = {
+  fileKey: string;
+  success: boolean;
+  originalIndex: number;
+  error?: unknown;
 };
