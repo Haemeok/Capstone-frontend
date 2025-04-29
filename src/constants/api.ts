@@ -4,7 +4,7 @@ export const END_POINTS = {
   RECIPE: (id: number) => `/recipes/${id}`,
   RECIPES: '/recipes',
   RECIPES_SIMPLE: '/recipes/simple',
-
+  RECIPE_WITH_IMAGE: '/recipes/with-images',
   RECIPE_SEARCH: '/recipes/search',
   RECIPE_FILTER: '/recipes/filter',
   RECIPES_BY_CATEGORY: (categorySlug: string) =>
@@ -56,19 +56,3 @@ export const USER_ERROR_MESSAGE = {
 };
 
 export const PAGE_SIZE = 10;
-
-export const CATEGORIES = [
-  '전체',
-  '가공/유제품',
-  '빵/떡',
-  '채소',
-  '해산물',
-  '과일',
-  '음료/주류',
-  '곡물',
-  '콩/견과류',
-  '조미료/양념',
-  '고기',
-  '기타',
-  '면',
-];

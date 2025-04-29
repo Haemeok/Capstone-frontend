@@ -28,17 +28,6 @@ export const checkAndSetToken = (config: InternalAxiosRequestConfig) => {
   return config;
 };
 
-export const handleAPIError = (error: AxiosError<ErrorResponseData>) => {
-  if (!error.response) throw error;
-
-  const { data, status } = error.response;
-  const code = Number(data.code.slice(1));
-  const userMessage =
-    USER_ERROR_MESSAGE[data.code as keyof typeof USER_ERROR_MESSAGE];
-
-  throw new CustomError({ code, status, message: data.message, userMessage });
-};
-
 export const handleTokenError = async (
   error: AxiosError<ErrorResponseData>,
 ) => {

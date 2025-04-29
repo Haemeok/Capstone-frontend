@@ -1,35 +1,13 @@
 import { END_POINTS, PAGE_SIZE } from '@/constants/api';
 import { IngredientItem } from '@/type/recipe';
+import { BaseQueryParams, PageResponse } from '@/type/query';
 import { axiosInstance } from './axios';
-
-type PageResponse<T> = {
-  content: T[];
-
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  number: number;
-
-  numberOfElements: number;
-  first: boolean;
-  empty: boolean;
-  size: number;
-
-  sort: {
-    empty: boolean;
-    sorted: boolean;
-    unsorted: boolean;
-  };
-};
+import { buildParams } from '@/utils/object';
 
 export type IngredientsApiResponse = PageResponse<IngredientItem>;
 
-type QueryParams = {
-  page: number;
-  size: number;
-  sort: string;
+type IngredientQueryParams = BaseQueryParams & {
   category?: string | null;
-  search?: string;
 };
 
 export const getIngredients = async ({
@@ -45,19 +23,18 @@ export const getIngredients = async ({
   pageParam: number;
   isMine: boolean;
 }) => {
-  const apiParams: QueryParams = {
+  const baseParams: BaseQueryParams = {
     page: pageParam,
     size: PAGE_SIZE,
-    sort: sort === 'asc' ? 'name,asc' : 'name,desc',
+    sort: `name,${sort}`,
   };
 
-  if (category) {
-    apiParams.category = category;
-  }
+  const optionalParams: Partial<IngredientQueryParams> = {
+    category,
+    search,
+  };
 
-  if (search) {
-    apiParams.search = search;
-  }
+  const apiParams = buildParams(baseParams, optionalParams);
 
   const endPoint = isMine ? END_POINTS.MY_INGREDIENTS : END_POINTS.INGREDIENTS;
 
