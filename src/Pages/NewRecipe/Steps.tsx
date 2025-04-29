@@ -49,7 +49,7 @@ const Steps = ({
     appendStep({
       stepNumber: nextStepNumber,
       instruction: '',
-      stepImageFile: null,
+      imageFile: null,
       ingredients: [],
     });
     setStepImagePreviewUrls([...stepImagePreviewUrls, null]);
