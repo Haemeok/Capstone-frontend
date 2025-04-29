@@ -5,7 +5,7 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { getIngredients, IngredientsApiResponse } from '@/api/ingredient';
 import { IngredientItem, IngredientPayload } from '@/type/recipe'; // Payload 타입 사용
 import { InfiniteData } from '@tanstack/react-query';
-import { CATEGORIES } from '@/constants/api'; // 카테고리 상수 임포트
+import { INGREDIENT_CATEGORIES } from '@/constants/recipe'; // 카테고리 상수 임포트
 import { cn } from '@/lib/utils';
 import {
   DrawerDescription,
@@ -87,10 +87,8 @@ const IngredientSelector = ({
             레시피에 사용할 재료를 검색하고 추가하세요.
           </DrawerDescription>
         </DrawerHeader>
-        {/* 검색 및 필터 */}
+
         <div className="sticky top-0 z-10 bg-white">
-          {' '}
-          {/* Sticky 헤더 */}
           <div className="relative px-4">
             <Search
               size={18}
@@ -105,7 +103,7 @@ const IngredientSelector = ({
             />
           </div>
           <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2">
-            {CATEGORIES.map((category) => (
+            {INGREDIENT_CATEGORIES.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryClick(category)}

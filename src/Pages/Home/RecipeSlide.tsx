@@ -19,7 +19,7 @@ const RecipeSlide = () => {
       <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto">
         {createdRecipes.map((item) => (
           <div key={item.id} className="w-42 flex-shrink-0 rounded-2xl">
-            <RecipeGridItem recipe={item} isSimple={false} />
+            <RecipeGridItem recipe={item} isSimple={false} height={200} />
           </div>
         ))}
       </div>

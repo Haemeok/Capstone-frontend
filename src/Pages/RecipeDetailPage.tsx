@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import UserProfile from '@/components/UserProfile';
 import CollapsibleP from '@/components/CollapsibleP';
 
-import { recipe, ingredients, user, RecipeSteps, comments } from '@/mock';
+import { comments } from '@/mock';
 import RecipeStepList from '@/components/RecipeStepList';
 import SuspenseImage from '@/components/Image/SuspenseImage';
 import Ratings from '@/components/Ratings';
@@ -15,6 +15,7 @@ import Box from '@/components/ui/Box';
 import CommentBox from '@/components/CommentBox';
 import { Button } from '@/components/ui/button';
 import TransformingNavbar from '@/components/NavBar/TransformingNavBar';
+import useRecipeDetailQuery from '@/hooks/useRecipeDetailQuery';
 
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
@@ -22,6 +23,9 @@ const RecipeDetailPage = () => {
   const imageRef = useRef<HTMLImageElement>(null);
   const observerRef = useRef<HTMLDivElement>(null);
   const [isButtonVisible, setIsButtonVisible] = useState(false);
+
+  const { id } = useParams();
+  const { recipeData: recipe } = useRecipeDetailQuery(Number(id));
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -46,7 +50,7 @@ const RecipeDetailPage = () => {
   }, []);
 
   return (
-    <div className="relative mx-auto bg-[#ffffff] pb-16 text-[#2a2229]">
+    <div className="relative mx-auto flex flex-col bg-[#ffffff] pb-16 text-[#2a2229]">
       <TransformingNavbar
         title={recipe.title}
         targetRef={imageRef}
@@ -92,7 +96,7 @@ const RecipeDetailPage = () => {
           </div>
         </Box>
         <Box>
-          <UserProfile user={user} />
+          <UserProfile user={recipe.author} />
           <CollapsibleP />
         </Box>
         <Box>
@@ -111,7 +115,7 @@ const RecipeDetailPage = () => {
         <Box>
           <h2 className="mb-2 text-xl font-semibold">재료</h2>
           <ul className="flex flex-col gap-1">
-            {ingredients.map((ingredient, index) => (
+            {recipe.ingredients.map((ingredient, index) => (
               <li key={index} className="grid grid-cols-2 gap-4">
                 <p className="text-left font-bold">{ingredient.name}</p>
                 <p className="text-left">{ingredient.quantity}</p>
@@ -121,7 +125,7 @@ const RecipeDetailPage = () => {
         </Box>
         <div ref={observerRef} className="h-1 w-full" />
         <Box>
-          <RecipeStepList RecipeSteps={RecipeSteps} />
+          <RecipeStepList RecipeSteps={recipe.steps} />
         </Box>
       </div>
 
@@ -131,7 +135,7 @@ const RecipeDetailPage = () => {
             className="rounded-full bg-[#526c04] p-4 text-white shadow-lg transition-all hover:bg-[#526c04]"
             onClick={() =>
               navigate(`/recipes/${recipe.id}/slideShow`, {
-                state: { recipeSteps: RecipeSteps },
+                state: { recipeSteps: recipe.steps },
               })
             }
           >
