@@ -6,7 +6,7 @@ import { getIngredients } from '@/api/ingredient';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { IngredientsApiResponse } from '@/api/ingredient';
 import { InfiniteData } from '@tanstack/react-query';
-import { CATEGORIES } from '@/constants/api';
+import { INGREDIENT_CATEGORIES } from '@/constants/recipe';
 import { cn } from '@/lib/utils';
 
 const IngredientsPage = () => {
@@ -69,7 +69,7 @@ const IngredientsPage = () => {
         </div>
       </div>
       <div className="scrollbar-hide mt-3 flex overflow-x-auto border-b border-gray-200">
-        {CATEGORIES.map((category) => (
+        {INGREDIENT_CATEGORIES.map((category) => (
           <button
             key={category}
             onClick={() => setSelectedCategory(category)}
