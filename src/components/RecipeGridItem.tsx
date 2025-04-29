@@ -4,23 +4,25 @@ import HeartButton from './Button/HeartButton';
 import { useNavigate } from 'react-router';
 import { RecipeGridItem as RecipeGridItemType } from '@/type/recipe';
 import { Star } from 'lucide-react';
-
+import { Avatar, AvatarFallback } from './ui/avatar';
+import { cn } from '@/lib/utils';
 type RecipeGridItemProps = {
   recipe: RecipeGridItemType;
   isSimple: boolean;
+  height: number;
 };
-const RecipeGridItem = ({ recipe, isSimple }: RecipeGridItemProps) => {
+const RecipeGridItem = ({ recipe, isSimple, height }: RecipeGridItemProps) => {
   const navigate = useNavigate();
   return (
     <div
       key={recipe.id}
-      className="overflow-hidden"
+      className="overflow-hidden shadow-sm"
       onClick={() => {
         navigate(`/recipes/${recipe.id}`);
       }}
     >
       {isSimple && (
-        <div className="relative h-48 rounded-2xl">
+        <div className={cn(`relative min-h-${height} rounded-2xl`)}>
           <SuspenseImage
             src={recipe.imageUrl}
             alt={recipe.title}
@@ -36,7 +38,11 @@ const RecipeGridItem = ({ recipe, isSimple }: RecipeGridItemProps) => {
         </div>
       )}
       {!isSimple && (
-        <div className="bg-beige relative flex h-64 flex-col gap-2 rounded-2xl">
+        <div
+          className={cn(
+            `relative flex min-h-${height} flex-col gap-2 rounded-2xl`,
+          )}
+        >
           <SuspenseImage
             src={recipe.imageUrl}
             alt={recipe.title}
@@ -54,6 +60,18 @@ const RecipeGridItem = ({ recipe, isSimple }: RecipeGridItemProps) => {
               <p className="text-mm text-gray-800">{`(${recipe.commentCount})`}</p>
               <p className="text-mm text-gray-800">·</p>
               <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
+            </div>
+            <div className="flex items-center gap-1">
+              <Avatar className="h-8 w-8 rounded-full">
+                <img
+                  src={'/meat.png'}
+                  alt={recipe.authorName}
+                  className="h-full w-full rounded-full object-cover"
+                />
+              </Avatar>
+              <p className="text-sm font-bold text-gray-800">
+                {recipe.authorName}
+              </p>
             </div>
           </div>
         </div>

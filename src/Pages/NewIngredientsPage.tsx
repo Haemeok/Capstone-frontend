@@ -13,9 +13,8 @@ import {
   useDeleteIngredientMutation,
 } from '@/hooks/useIngredientMutation';
 import { InfiniteData } from '@tanstack/react-query';
-import { CATEGORIES } from '@/constants/api';
+import { INGREDIENT_CATEGORIES } from '@/constants/recipe';
 import PrevButton from '@/components/Button/PrevButton';
-import SuspenseImage from '@/components/Image/SuspenseImage';
 
 const NewIngredientsPage = () => {
   const navigate = useNavigate();
@@ -137,7 +136,7 @@ const NewIngredientsPage = () => {
         </div>
 
         <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2">
-          {CATEGORIES.map((category) => (
+          {INGREDIENT_CATEGORIES.map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryClick(category)}
