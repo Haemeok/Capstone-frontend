@@ -1,32 +1,66 @@
-import useRecipeItemsQuery from '@/hooks/useRecipeItemsQuery';
+import { getRecipeItems, RecipesApiResponse } from '@/api/recipe';
+import RecipeGrid from '@/components/RecipeGrid';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { InfiniteData } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Link } from 'react-router';
 
 const RecipesPage = () => {
-  const { data, isLoading, error } = useRecipeItemsQuery();
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const [sort, setSort] = useState<'asc' | 'desc'>('asc');
+  const [dishType, setDishType] = useState<string | null>(null);
+  const [tagNames, setTagNames] = useState<string[] | null>(null);
+  const [search, setSearch] = useState<string>();
 
-  const recipes = [
-    { id: 1, title: 'Pasta Carbonara' },
-    { id: 2, title: 'Chicken Curry' },
-    { id: 3, title: 'Vegetable Stir Fry' },
-  ];
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    ref,
+  } = useInfiniteScroll<
+    RecipesApiResponse,
+    Error,
+    InfiniteData<RecipesApiResponse>,
+    [string, string, 'asc' | 'desc'],
+    number
+  >({
+    queryKey: ['recipes', selectedCategory, sort],
+    queryFn: ({ pageParam }) =>
+      getRecipeItems({
+        sort,
+        dishType,
+        tagNames,
+        search,
+        pageParam,
+      }),
+    getNextPageParam: (lastPage) =>
+      lastPage.last ? null : lastPage.number + 1,
+    initialPageParam: 0,
+  });
+
+  const recipes = data?.pages.flatMap((page) => page.content) ?? [];
+
+  const noResults = recipes.length === 0 && !isFetching;
+  const noResultsMessage =
+    search && recipes.length === 0
+      ? `"${search}"에 해당하는 레시피가 없습니다.`
+      : `"${selectedCategory}"에 해당하는 레시피가 없습니다.`;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-2">
       <h1 className="mb-4 text-2xl font-bold">Recipes</h1>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {data?.map((recipe) => (
-          <div key={recipe.id} className="rounded-lg bg-white p-4 shadow-md">
-            <h2 className="text-xl font-semibold">{recipe.title}</h2>
-            <Link
-              to={`/recipes/${recipe.id}`}
-              className="mt-2 inline-block text-blue-500 hover:text-blue-700"
-            >
-              View Details
-            </Link>
-          </div>
-        ))}
-      </div>
+      <RecipeGrid
+        recipes={recipes}
+        hasNextPage={hasNextPage}
+        ref={ref}
+        noResults={noResults}
+        noResultsMessage={noResultsMessage}
+      />
     </div>
   );
 };
