@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Upload as UploadIcon, Plus, X, ChefHat } from 'lucide-react';
+import { Upload as UploadIcon, Plus, X, ChefHat, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ProgressButton from '@/components/ProgressButton';
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
@@ -9,6 +9,24 @@ import { RecipeFormValues, IngredientPayload } from '@/type/recipe';
 import Steps from '@/Pages/NewRecipe/Steps';
 import { useToasts } from '@/hooks/useToasts';
 import IngredientSelector from './IngredientSelector';
+import { DISH_TYPES } from '@/constants/recipe';
+import { cn } from '@/lib/utils';
+
+// 추가: 선택 가능한 태그 목록
+const TAG_OPTIONS = [
+  '한식',
+  '양식',
+  '일식',
+  '중식',
+  '간단',
+  '자취',
+  '집밥',
+  '비건',
+  '저탄고지',
+  '다이어트',
+  '간식',
+  '야식',
+];
 
 const NewRecipePage = () => {
   const navigate = useNavigate();
@@ -18,7 +36,6 @@ const NewRecipePage = () => {
     isLoading: isCreatingRecipe,
     isSuccess,
     error: recipeCreationError,
-    uploadError,
     data: createdRecipeData,
   } = useCreateRecipeWithUpload();
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
@@ -41,22 +58,21 @@ const NewRecipePage = () => {
     defaultValues: {
       title: '',
       imageFile: null,
-      ingredients: [{ quantity: '', name: '', unit: '' }],
+      ingredients: [],
       cookingTime: undefined,
-      servings: undefined,
+      servings: 0, // 0을 기본값으로 설정 (선택 안 함 상태)
       dishType: '',
       description: '',
       steps: [
         {
           instruction: '',
           stepNumber: 1,
-          stepImageFile: null,
+          imageFile: null,
           ingredients: [],
         },
       ],
       cookingTools: [],
-      tagNames: [],
-      youtubeUrl: '',
+      tagNames: [], // 태그 기본값
     },
     mode: 'onChange',
   });
@@ -70,35 +86,21 @@ const NewRecipePage = () => {
     name: 'ingredients',
   });
 
-  // const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     setValue('imageFile', file, { shouldValidate: true, shouldDirty: true });
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => setImagePreviewUrl(reader.result as string);
-  //     reader.readAsDataURL(file);
-  //   } else {
-  //     setValue('imageFile', null, { shouldValidate: true });
-  //     setImagePreviewUrl(null);
-  //   }
-  //   e.target.value = '';
-  // };
-
-  const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setValue('description', e.target.value, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-  };
-
   const addIngredient = (ingredient: IngredientPayload) => {
     appendIngredient({
       name: ingredient.name,
       quantity: '',
       unit: ingredient.unit,
     });
+  };
+
+  // 추가: 태그 선택/해제 핸들러
+  const handleTagToggle = (tag: string) => {
+    const currentTags = watch('tagNames') || [];
+    const newTags = currentTags.includes(tag)
+      ? currentTags.filter((t) => t !== tag) // 선택 해제
+      : [...currentTags, tag]; // 선택 추가
+    setValue('tagNames', newTags, { shouldDirty: true, shouldValidate: true });
   };
 
   const onSubmit: SubmitHandler<RecipeFormValues> = (formData) => {
@@ -133,10 +135,11 @@ const NewRecipePage = () => {
     formValues.imageFile !== null,
     formValues.description.trim() !== '',
     formValues.dishType.trim() !== '',
-    !!formValues.cookingTime,
-    !!formValues.servings,
+    (parseInt(String(formValues.cookingTime), 10) || 0) > 0,
+    (parseInt(String(formValues.servings), 10) || 0) > 0,
     formValues.ingredients.some(
-      (i: IngredientPayload) => i.name?.trim() !== '',
+      (i: IngredientPayload) =>
+        i.name?.trim() !== '' && i.quantity?.toString().trim() !== '',
     ),
     formValues.steps.some((s) => s.instruction?.trim() !== ''),
   ];
@@ -147,8 +150,7 @@ const NewRecipePage = () => {
     totalSteps > 0 ? Math.floor((completedSteps / totalSteps) * 100) : 0;
 
   const isLoading = isUploading || isCreatingRecipe;
-  const submitError = uploadError || recipeCreationError;
-  console.log('Current form errors:', errors);
+  const submitError = recipeCreationError;
 
   const imageFileValue = watch('imageFile');
 
@@ -175,6 +177,8 @@ const NewRecipePage = () => {
     }
     // imageFileValue (FileList)가 변경될 때마다 이 effect 실행
   }, [imageFileValue]);
+
+  console.log(errors, isValid, isDirty);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -239,162 +243,163 @@ const NewRecipePage = () => {
         <div className="mx-auto max-w-3xl px-4 pt-6">
           <div className="mb-4 rounded-xl bg-white p-4 shadow-sm">
             <textarea
-              className="h-24 w-full text-[#777777] focus:outline-none"
+              className="h-24 w-full resize-none text-[#777777] focus:outline-none"
               placeholder="레시피에 대한 간단한 설명을 작성하세요. 어떤 특징이 있는지, 어떤 상황에서 먹기 좋은지 등을 알려주세요."
-              onChange={handleDescriptionChange}
+              {...register('description', {
+                required: '레시피 설명을 입력해주세요.',
+              })}
             />
+            {errors.description && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.description.message}
+              </p>
+            )}
           </div>
 
-          <div className="mb-4 flex justify-center gap-4 border-b border-[#00473c]/20 py-4">
-            <div className="flex flex-1 flex-col">
-              <div className="flex h-10 items-center justify-center gap-2 text-center">
-                <p className="mb-1 text-[#777777]">카테고리</p>
-                <select
-                  className={`w-20 rounded-md border-1 border-gray-300 bg-transparent ${
-                    errors.dishType ? 'border-red-500' : 'border-[#00473c]/30'
-                  } pb-1 text-center focus:outline-none`}
-                  {...register('dishType', {
-                    required: '카테고리를 선택해주세요',
-                  })}
-                >
-                  <option value="" className="">
-                    선택하기
+          <div className="flex items-center justify-center gap-x-8 gap-y-6 border-b border-gray-200">
+            {/* 카테고리 섹션 - 세로 배치로 수정 */}
+            <div className="flex flex-col items-center gap-2">
+              <label
+                htmlFor="dishType"
+                className="text-sm font-medium text-gray-700"
+              >
+                카테고리
+              </label>
+              <select
+                id="dishType"
+                className={cn(
+                  `w-28 rounded-lg border bg-gray-50 px-3 py-1.5 text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
+                  errors.dishType ? 'border-red-500' : 'border-gray-300',
+                )}
+                {...register('dishType', {
+                  required: '카테고리를 선택해주세요',
+                })}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  선택
+                </option>
+                {DISH_TYPES.map((dishType) => (
+                  <option key={dishType} value={dishType}>
+                    {dishType}
                   </option>
-                  <option value="korean" className="">
-                    한식
-                  </option>
-                  <option value="western" className="">
-                    양식
-                  </option>
-                  <option value="japanese" className="">
-                    일식
-                  </option>
-                  <option value="chinese" className="">
-                    중식
-                  </option>
-                  <option value="dessert" className="">
-                    디저트
-                  </option>
-                </select>
-              </div>
+                ))}
+              </select>
               {errors.dishType && (
-                <p className="mt-1 text-center text-xs text-red-300">
+                <p className="mt-1 text-center text-xs text-red-500">
                   {errors.dishType.message}
                 </p>
               )}
             </div>
-            <div className="flex flex-1 flex-col">
-              <div className="flex h-10 items-center justify-center gap-2 text-center">
-                <p className="mb-1 text-[#777777]">조리시간</p>
-                <div className="relative">
-                  <input
-                    type="text"
-                    className={`w-20 border-b bg-transparent ${
-                      errors.cookingTime
-                        ? 'border-red-500'
-                        : 'border-[#00473c]/30'
-                    } pb-1 text-center focus:border-[#00473c] focus:outline-none`}
-                    placeholder="30"
-                    {...register('cookingTime', {
-                      required: '조리 시간을 입력해주세요',
-                      pattern: {
-                        value: /^\d+$/,
-                        message: '숫자만 입력 가능합니다',
-                      },
-                    })}
-                  />
-                  <span className="ml-1 text-sm">분</span>
-                </div>
-              </div>
+
+            {/* 조리시간 섹션 - 세로 배치로 수정 */}
+            <div className="flex flex-col items-center gap-2">
+              <label
+                htmlFor="cookingTime"
+                className="text-sm font-medium text-gray-700"
+              >
+                조리시간 (분)
+              </label>
+              <input
+                id="cookingTime"
+                type="number"
+                className={cn(
+                  `w-20 rounded-lg border bg-gray-50 px-3 py-1.5 text-center text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
+                  errors.cookingTime ? 'border-red-500' : 'border-gray-300',
+                )}
+                placeholder="숫자"
+                min="0"
+                {...register('cookingTime', {
+                  required: '조리 시간을 입력해주세요',
+                  valueAsNumber: true,
+                  min: { value: 1, message: '1분 이상 입력해주세요.' },
+                })}
+              />
               {errors.cookingTime && (
-                <p className="mt-1 text-center text-xs text-red-300">
+                <p className="mt-1 text-center text-xs text-red-500">
                   {errors.cookingTime.message}
+                </p>
+              )}
+            </div>
+
+            {/* 인분 섹션 (기존 세로 배치 유지) */}
+            <div className="flex flex-col items-center gap-2">
+              <label
+                htmlFor="servings"
+                className="text-sm font-medium text-gray-700"
+              >
+                인분
+              </label>
+              <input
+                id="servings"
+                type="number"
+                className={cn(
+                  'w-20 rounded-lg border bg-gray-50 px-3 py-1.5 text-center text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none',
+                  errors.servings
+                    ? 'border-red-500 focus:border-red-500'
+                    : 'border-gray-300',
+                )}
+                {...register('servings', {
+                  required: '인분을 선택해주세요',
+                  valueAsNumber: true,
+                  validate: (value) =>
+                    Number(value) > 0 || '1인분 이상 선택해주세요.',
+                })}
+                min="1"
+                placeholder="숫자"
+                defaultValue={1}
+              />
+              {errors.servings && (
+                <p className="mt-1 text-center text-xs text-red-500">
+                  {errors.servings.message}
                 </p>
               )}
             </div>
           </div>
 
           <div className="mb-4">
-            <div className="flex h-20 items-center justify-between py-4">
-              <h2 className="text-2xl font-semibold text-gray-700">재료</h2>
-              <div className="flex flex-col">
-                <div className="flex h-full w-40 items-center justify-center gap-2 text-center">
-                  <select
-                    className={`border-b bg-transparent ${
-                      errors.servings ? 'border-red-500' : 'border-[#00473c]/30'
-                    } pb-1 text-center focus:border-[#00473c] focus:outline-none`}
-                    {...register('servings', {
-                      required: '인분을 선택해주세요',
-                      valueAsNumber: true,
-                    })}
-                  >
-                    <option value="0" className="bg-[#f4f3e7]">
-                      선택하기
-                    </option>
-                    <option value="1" className="bg-[#f4f3e7]">
-                      1
-                    </option>
-                    <option value="2" className="bg-[#f4f3e7]">
-                      2
-                    </option>
-                    <option value="3" className="bg-[#f4f3e7]">
-                      3
-                    </option>
-                  </select>
-                  <p className="mb-1 text-[#777777]">인분</p>
-                </div>
-                {errors.servings && (
-                  <p className="mt-1 text-center text-xs text-red-300">
-                    {errors.servings.message}
-                  </p>
-                )}
-              </div>
+            <div className="flex h-16 items-center justify-between border-b border-gray-200 pb-2">
+              <h2 className="text-xl font-semibold text-gray-700">재료</h2>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 pt-4">
               {ingredientFields.map((field, index) => (
                 <div
                   key={field.id}
                   className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
                     <ChefHat size={20} className="text-green-600" />
                   </div>
 
                   <div className="flex flex-1 items-center justify-between gap-2">
-                    <p>{field.name}</p>
+                    <p className="flex-1 font-medium text-gray-800">
+                      {field.name}
+                    </p>
 
-                    <div className="flex gap-1">
+                    <div className="flex flex-shrink-0 items-center gap-1">
                       <input
-                        type="number"
-                        className={`w-20 rounded border border-gray-300 px-2 py-1 text-center focus:border-green-500 focus:outline-none ${
-                          errors.ingredients?.[index]?.quantity
-                            ? 'border-red-500'
-                            : ''
-                        }`}
-                        placeholder="수량"
+                        type="text"
+                        className={`w-24 rounded border border-gray-300 px-2 py-1 text-right focus:border-green-500 focus:outline-none ${errors.ingredients?.[index]?.quantity ? 'border-red-500' : ''}`}
+                        placeholder="예: 100g, 1개, 약간"
                         {...register(`ingredients.${index}.quantity`, {
-                          valueAsNumber: true,
-                          min: { value: 0, message: '0 이상 입력' },
+                          required: '수량/단위를 입력해주세요.',
                         })}
                       />
                       {errors.ingredients?.[index]?.quantity && (
-                        <p className="mt-1 text-xs text-red-500">
+                        <p className="absolute bottom-[-1rem] text-xs text-red-500">
                           {errors.ingredients[index]?.quantity?.message}
                         </p>
                       )}
                     </div>
                   </div>
-                  <div className="">
+                  <div className="flex-shrink-0">
                     <Button
                       type="button"
                       variant="ghost"
-                      size="sm"
-                      className="text-gray-500 hover:text-red-500"
-                      onClick={() =>
-                        ingredientFields.length > 1 && removeIngredient(index)
-                      }
-                      disabled={ingredientFields.length <= 1}
+                      size="icon"
+                      className="text-gray-400 hover:text-red-500"
+                      onClick={() => removeIngredient(index)}
                     >
                       <X size={18} />
                     </Button>
@@ -405,11 +410,11 @@ const NewRecipePage = () => {
             <Button
               type="button"
               variant="outline"
-              className="mt-3 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed border-green-300 py-2 text-green-600 hover:border-green-500 hover:bg-green-50"
+              className="mt-4 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed border-green-300 py-3 text-green-600 hover:border-green-500 hover:bg-green-50"
               onClick={() => setIsOpen(true)}
             >
               <Plus size={16} />
-              재료 추가
+              재료 추가하기
             </Button>
           </div>
           <IngredientSelector
@@ -427,6 +432,26 @@ const NewRecipePage = () => {
             stepImagePreviewUrls={stepImagePreviewUrls}
             setStepImagePreviewUrls={setStepImagePreviewUrls}
           />
+
+          <div className="mt-6 mb-4">
+            <h2 className="mb-3 text-xl font-semibold text-gray-700">태그</h2>
+            <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-sm">
+              {TAG_OPTIONS.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => handleTagToggle(tag)}
+                  className={`rounded-full border px-3 py-1 text-sm transition-colors ${
+                    formValues.tagNames?.includes(tag)
+                      ? 'border-green-500 bg-green-100 text-green-700'
+                      : 'border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  #{tag}
+                </button>
+              ))}
+            </div>
+          </div>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-4">
             {submitError && (
