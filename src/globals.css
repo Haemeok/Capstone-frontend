@@ -186,43 +186,7 @@
 }
 
 @layer utilities {
-  .text-olive {
-    color: #526c04;
-  }
-  .text-olive-light {
-    color: #609966;
-  }
-  .bg-olive-light {
-    background-color: #91c788;
-  }
-  .bg-olive {
-    background-color: #526c04;
-  }
-  .border-olive-light {
-    border-color: #91c788;
-  }
-  .border-olive {
-    border-color: #526c04;
-  }
-  .text-dark {
-    color: #2a2229;
-  }
-  .border-cgray {
-    border-color: #f7f7f7;
-  }
   .img-smooth {
     image-rendering: crisp-edges;
-  }
-  .font-noto-sans-kr {
-    font-family: 'Noto Sans KR', sans-serif;
-  }
-  .text-mm {
-    font-size: 15px;
-  }
-  .bg-beige {
-    background-color: #f7f4ee;
-  }
-  .text-brown {
-    color: #806f5c;
   }
 }
