@@ -116,7 +116,7 @@ const DiscussionPage = () => {
                 type="text"
                 value={newReply}
                 onChange={(e) => setNewReply(e.target.value)}
-                placeholder={`${parentComment.user.nickname}님에게 답글 남기기...`}
+                placeholder={`${parentComment.author.nickname}님에게 답글 남기기...`}
                 className="w-full bg-transparent py-2 text-sm focus:outline-none"
               />
             </div>

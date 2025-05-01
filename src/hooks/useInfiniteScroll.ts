@@ -66,6 +66,7 @@ export const useInfiniteScroll = <
     isFetchingNextPage,
     status,
     isPending,
+    refetch,
   } = queryResult;
 
   const { ref, inView } = useInView({ threshold });
@@ -99,5 +100,6 @@ export const useInfiniteScroll = <
     status,
     isPending,
     result: queryResult,
+    refetch,
   };
 };
