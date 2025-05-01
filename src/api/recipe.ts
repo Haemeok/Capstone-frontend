@@ -182,19 +182,20 @@ export type RecipesApiResponse = PageResponse<RecipeGridItem>;
 type RecipeQueryParams = BaseQueryParams & {
   dishType?: string | null;
   tagNames?: string[] | null;
+  q?: string | null;
 };
 
 export const getRecipeItems = async ({
   sort,
   dishType,
   tagNames,
-  search,
+  q,
   pageParam = 0,
 }: {
   sort: string;
   dishType?: string | null;
   tagNames?: string[] | null;
-  search?: string;
+  q?: string;
   pageParam?: number;
 }) => {
   const baseParams: BaseQueryParams = {
@@ -206,7 +207,7 @@ export const getRecipeItems = async ({
   const optionalParams: Partial<RecipeQueryParams> = {
     dishType,
     tagNames,
-    search,
+    q,
   };
 
   const apiParams = buildParams(baseParams, optionalParams);
