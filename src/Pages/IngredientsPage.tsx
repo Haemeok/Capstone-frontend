@@ -25,17 +25,14 @@ const IngredientsPage = () => {
     status,
     ref,
   } = useInfiniteScroll<
-    // useInfiniteScroll 타입 파라미터 업데이트
-    IngredientsApiResponse, // TQueryFnData: API 응답 타입
-    Error, // TError
-    InfiniteData<IngredientsApiResponse>, // TData: useInfiniteQuery가 반환하는 data 타입 (보통 TQueryFnData와 동일)
-    [string, string, 'asc' | 'desc'], // TQueryKey
-    number // TPageParam
+    IngredientsApiResponse,
+    Error,
+    InfiniteData<IngredientsApiResponse>,
+    [string, string, 'asc' | 'desc'],
+    number
   >({
     queryKey: ['ingredients', selectedCategory, sort],
-    queryFn: (
-      { pageParam }, // queryFn에 새 API 함수 사용
-    ) =>
+    queryFn: ({ pageParam }) =>
       getIngredients({
         category: selectedCategory === '전체' ? null : selectedCategory,
         pageParam,
@@ -47,7 +44,8 @@ const IngredientsPage = () => {
     initialPageParam: 0,
   });
 
-  console.log(isFetching, isFetchingNextPage, error);
+  const ingredients = data?.pages.flatMap((page) => page.content);
+  console.log(ingredients);
 
   return (
     <div>
@@ -68,7 +66,7 @@ const IngredientsPage = () => {
           </Button>
         </div>
       </div>
-      <div className="scrollbar-hide mt-3 flex overflow-x-auto border-b border-gray-200">
+      <div className="scrollbar-hide flex overflow-x-auto border-b border-gray-200">
         {INGREDIENT_CATEGORIES.map((category) => (
           <button
             key={category}
@@ -85,22 +83,20 @@ const IngredientsPage = () => {
         ))}
       </div>
       <div className="grid w-full grid-cols-2 gap-4 p-4">
-        {data?.pages
-          .flatMap((page) => page.content)
-          .map((ingredient) => (
-            <IngredientItem
-              key={ingredient.id}
-              ingredient={ingredient}
-              isDeleteMode={isDeleteMode}
-            />
-          ))}
+        {ingredients?.map((ingredient) => (
+          <IngredientItem
+            key={ingredient.id}
+            ingredient={ingredient}
+            isDeleteMode={isDeleteMode}
+          />
+        ))}
       </div>
       {isFetchingNextPage && (
         <p className="text-center text-gray-500">
           더 많은 재료를 불러오는 중...
         </p>
       )}
-      {!hasNextPage && data?.pages[0].content?.length && (
+      {!hasNextPage && ingredients?.length && (
         <p className="text-center text-sm text-gray-400">
           모든 재료를 불러왔습니다.
         </p>
