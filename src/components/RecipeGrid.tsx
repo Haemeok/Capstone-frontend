@@ -16,6 +16,7 @@ type RecipeGridProps = {
   ref?: (node: Element | null) => void;
   noResults?: boolean;
   noResultsMessage?: string;
+  lastPageMessage?: string;
 };
 
 const RecipeGrid = ({
@@ -27,6 +28,7 @@ const RecipeGrid = ({
   ref,
   noResults,
   noResultsMessage,
+  lastPageMessage,
 }: RecipeGridProps) => {
   if (isFetching) {
     return (
@@ -37,7 +39,7 @@ const RecipeGrid = ({
   }
 
   return (
-    <div className="p-4">
+    <div className="flex flex-col gap-4 p-4 pb-20">
       <div className="grid grid-cols-2 gap-4 gap-y-6">
         {recipes.map((recipe) => (
           <RecipeGridItem
@@ -50,7 +52,7 @@ const RecipeGrid = ({
       </div>
       <div ref={ref} className="h-10 text-center">
         {!hasNextPage && recipes.length && (
-          <p className="text-sm text-gray-400">모든 재료를 불러왔습니다.</p>
+          <p className="text-sm text-gray-400">{lastPageMessage}</p>
         )}
       </div>
       {noResults && (

@@ -4,30 +4,18 @@ import { MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import HeartButton from '@/components/Button/HeartButton';
+import CommentLikeButton from './comment/CommentLikeButton';
 
 type CommentProps = {
   comment: Comment;
   hideReplyButton?: boolean;
-  onLikeToggle?: (isLiked: boolean) => void;
 };
 
-const CommentBox = ({
-  comment,
-  hideReplyButton = false,
-  onLikeToggle,
-}: CommentProps) => {
+const CommentBox = ({ comment, hideReplyButton = false }: CommentProps) => {
   const navigate = useNavigate();
-  const [isLiked, setIsLiked] = useState(comment.isLiked);
-  const [likeCount, setLikeCount] = useState(comment.likeCount);
 
   const handleReplyClick = () => {
     navigate(`${comment.id}`);
-  };
-
-  const handleLikeToggle = (active: boolean) => {
-    setIsLiked(active);
-    setLikeCount((prev) => (active ? prev + 1 : prev - 1));
-    onLikeToggle?.(active);
   };
 
   return (
@@ -36,17 +24,17 @@ const CommentBox = ({
         <div className="flex items-center gap-2">
           <Avatar className={`h-8 w-8 border-2`}>
             <img
-              src={comment.user.profileImage}
-              alt={comment.user.nickname}
+              src={comment.author.profileImage}
+              alt={comment.author.nickname}
               className="object-cover"
             />
           </Avatar>
           <div>
-            <p className={`font-semibold`}>{comment.user.nickname}</p>
+            <p className={`font-semibold`}>{comment.author.nickname}</p>
           </div>
         </div>
         <div className="flex items-center">
-          <p className="text-sm text-gray-400">{comment.date}</p>
+          <p className="text-sm text-gray-400">{comment.createdAt}</p>
           <button className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
             •••
           </button>
@@ -55,13 +43,10 @@ const CommentBox = ({
       <p className={`text-[#2a2229]`}>{comment.content}</p>
 
       <div className="mt-1 flex items-center gap-4">
-        <HeartButton
-          containerClassName="flex-row"
-          buttonClassName="flex items-center gap-1 text-sm cursor-pointer group w-5 h-5"
-          isCountShown={true}
-          onClick={() => handleLikeToggle(isLiked)}
-          width={16}
-          height={16}
+        <CommentLikeButton
+          commentId={comment.id}
+          initialIsLiked={comment.likedByCurrentUser}
+          initialLikeCount={comment.likeCount}
         />
 
         {!hideReplyButton && (
