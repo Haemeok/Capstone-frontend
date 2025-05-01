@@ -3,9 +3,9 @@ import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { getIngredients, IngredientsApiResponse } from '@/api/ingredient';
-import { IngredientItem, IngredientPayload } from '@/type/recipe'; // Payload 타입 사용
+import { IngredientItem, IngredientPayload } from '@/type/recipe';
 import { InfiniteData } from '@tanstack/react-query';
-import { INGREDIENT_CATEGORIES } from '@/constants/recipe'; // 카테고리 상수 임포트
+import { INGREDIENT_CATEGORIES } from '@/constants/recipe';
 import { cn } from '@/lib/utils';
 import {
   DrawerDescription,
@@ -16,11 +16,12 @@ import {
   DrawerClose,
   DrawerFooter,
 } from '@/components/ui/drawer';
+import useSearch from '@/hooks/useSearch';
 
 type IngredientSelectorProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onIngredientSelect: (ingredient: IngredientPayload) => void; // 선택된 재료 정보 전달 콜백
+  onIngredientSelect: (ingredient: IngredientPayload) => void;
 };
 
 const IngredientSelector = ({
@@ -28,10 +29,11 @@ const IngredientSelector = ({
   onOpenChange,
   onIngredientSelect,
 }: IngredientSelectorProps) => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
 
-  // NewIngredientsPage와 유사하게 useInfiniteScroll 설정
+  const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
+    useSearch();
+
   const {
     data,
     error,
@@ -40,42 +42,33 @@ const IngredientSelector = ({
     isFetching,
     isFetchingNextPage,
     status,
-    ref, // 무한 스크롤 트리거 ref
+    ref,
   } = useInfiniteScroll<
     IngredientsApiResponse,
     Error,
     InfiniteData<IngredientsApiResponse>,
-    [string, string, string], // QueryKey 타입 (category, search, sort-기본값)
+    [string, string, string],
     number
   >({
-    queryKey: ['drawerIngredients', selectedCategory, searchQuery], // 고유한 queryKey 사용
-    queryFn: (
-      { pageParam = 0 }, // 초기 pageParam 설정
-    ) =>
+    queryKey: ['drawerIngredients', selectedCategory, searchQuery],
+    queryFn: ({ pageParam = 0 }) =>
       getIngredients({
         category: selectedCategory === '전체' ? null : selectedCategory,
         search: searchQuery,
         pageParam,
-        sort: 'name,asc', // 이름 오름차순 기본 정렬
-        isMine: false, // 내 재료 여부 필터링 안 함 (필요시 변경)
+        isMine: false,
       }),
     getNextPageParam: (lastPage) =>
       lastPage.last ? null : lastPage.number + 1,
     initialPageParam: 0,
   });
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
 
-  // "추가" 버튼 클릭 시 호출될 함수
   const handleAddClick = (ingredient: IngredientPayload) => {
-    onIngredientSelect(ingredient); // 부모 컴포넌트로 선택된 재료 정보 전달
-    // onOpenChange(false); // Drawer 닫기 (필요에 따라 조절)
+    onIngredientSelect(ingredient);
   };
 
   return (
@@ -89,29 +82,31 @@ const IngredientSelector = ({
         </DrawerHeader>
 
         <div className="sticky top-0 z-10 bg-white">
-          <div className="relative px-4">
-            <Search
-              size={18}
-              className="absolute top-1/2 left-7 -translate-y-1/2 text-gray-400"
-            />
+          <form onSubmit={handleSearchSubmit} className="relative px-4">
             <input
               type="text"
               placeholder="재료 이름을 검색하세요"
               className="w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:outline-none"
-              value={searchQuery}
-              onChange={handleSearchChange}
+              value={inputValue}
+              onChange={handleInputChange}
             />
-          </div>
+            <button type="submit">
+              <Search
+                size={18}
+                className="absolute top-1/2 left-7 -translate-y-1/2 text-gray-400"
+              />
+            </button>
+          </form>
           <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2">
             {INGREDIENT_CATEGORIES.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryClick(category)}
                 className={cn(
-                  'flex-shrink-0 rounded-full px-4 py-1.5 text-sm transition-colors', // 스타일 조정
+                  'flex-shrink-0 rounded-full px-4 py-1.5 text-sm transition-colors',
                   selectedCategory === category
-                    ? 'bg-green-600 font-medium text-white' // 활성 스타일
-                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800', // 비활성 스타일
+                    ? 'bg-green-600 font-medium text-white'
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800',
                 )}
               >
                 {category}
@@ -119,7 +114,6 @@ const IngredientSelector = ({
             ))}
           </div>
         </div>
-        {/* 재료 목록 */}
         <div className="flex h-120 flex-shrink-0 flex-col justify-center overflow-y-auto p-4">
           {status === 'pending' ? (
             <p className="text-center text-gray-500">재료 로딩 중...</p>

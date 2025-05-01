@@ -7,12 +7,14 @@ import React, { useState } from 'react';
 import {
   BASE_DRAWER_CONFIGS,
   DISH_TYPE_CODES,
+  SORT_TYPE_CODES,
   TAG_CODES,
 } from '@/constants/recipe';
 import { DrawerType } from '@/constants/recipe';
 import CategoryDrawer from './CategoryDrawer';
 import RecipeGrid from '@/components/RecipeGrid';
 import FilterChip from '@/components/Button/FilterChip';
+import useSearch from '@/hooks/useSearch';
 
 type DrawerConfig = {
   type: 'dishType' | 'sort' | 'tags';
@@ -25,14 +27,20 @@ type DrawerConfig = {
 };
 
 const SearchPage = () => {
-  const [sort, setSort] = useState<string>('asc');
+  const [sort, setSort] = useState<string>('최신순');
   const [dishType, setDishType] = useState<string>('전체');
   const [tagNames, setTagNames] = useState<string[]>([]);
-  const [search, setSearch] = useState<string>('');
-  const [inputValue, setInputValue] = useState<string>('');
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerConfig, setDrawerConfig] = useState<DrawerConfig | null>(null);
+
+  const {
+    searchQuery,
+    inputValue,
+    handleSearchSubmit,
+    handleInputChange,
+    setInputValue,
+  } = useSearch();
 
   const {
     data,
@@ -50,26 +58,21 @@ const SearchPage = () => {
     [string, string, string, string[], string],
     number
   >({
-    queryKey: ['recipes', dishType, sort, tagNames, search],
+    queryKey: ['recipes', dishType, sort, tagNames, searchQuery],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
-        sort,
+        sort: SORT_TYPE_CODES[sort as keyof typeof SORT_TYPE_CODES],
         dishType: DISH_TYPE_CODES[dishType as keyof typeof DISH_TYPE_CODES],
         tagNames: tagNames.map(
           (tag) => TAG_CODES[tag as keyof typeof TAG_CODES],
         ),
-        search,
+        q: searchQuery,
         pageParam,
       }),
     getNextPageParam: (lastPage) =>
       lastPage.last ? null : lastPage.number + 1,
     initialPageParam: 0,
   });
-
-  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSearch(inputValue);
-  };
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
 
@@ -96,7 +99,7 @@ const SearchPage = () => {
 
   const openDrawer = (type: DrawerType) => {
     const baseConfig = BASE_DRAWER_CONFIGS[type];
-    // 2. 타입에 맞는 동적 상태 접근자 가져오기
+
     const dynamicState = dynamicStateAccessors[type];
 
     if (!baseConfig || !dynamicState) {
@@ -104,7 +107,6 @@ const SearchPage = () => {
       return;
     }
 
-    // 3. 최종 설정 객체 생성 (switch 없이 바로 조합)
     const finalConfig: DrawerConfig = {
       ...baseConfig,
       type,
@@ -120,20 +122,20 @@ const SearchPage = () => {
 
   const noResults = recipes.length === 0 && !isFetching;
   const noResultsMessage =
-    search && recipes.length === 0
-      ? `"${search}"에 해당하는 레시피가 없습니다.`
+    searchQuery && recipes.length === 0
+      ? `"${searchQuery}"에 해당하는 레시피가 없습니다.`
       : `"${dishType}"에 해당하는 레시피가 없습니다.`;
 
   return (
     <div>
-      <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-2">
+      <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
         <form onSubmit={handleSearchSubmit} className="relative">
           <input
             type="search"
             placeholder="레시피를 검색하세요"
             className="w-full rounded-md border border-gray-300 py-2 pr-10 pl-4 focus:outline-none"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleInputChange}
           />
 
           <button
@@ -152,7 +154,7 @@ const SearchPage = () => {
           <FilterChip
             header={sort}
             onClick={() => openDrawer('sort')}
-            isDirty={sort !== 'asc'}
+            isDirty={sort !== '최신순'}
           />
           <FilterChip
             header={tagNames.length > 0 ? tagNames.join(', ') : '태그'}
@@ -167,6 +169,7 @@ const SearchPage = () => {
         ref={ref}
         noResults={noResults}
         noResultsMessage={noResultsMessage}
+        lastPageMessage={'모든 레시피를 불러왔습니다.'}
       />
       <CategoryDrawer
         open={isDrawerOpen}

@@ -8,7 +8,7 @@ import RecipeSlide from './RecipeSlide';
 const HomePage = () => {
   const { addToast, toastList } = useToastStore();
   return (
-    <div className="min-h-screen bg-[#f7f7f7] p-2 pb-20 text-gray-800">
+    <div className="bg-[#f7f7f7] p-2 pb-20 text-gray-800">
       <HomeHeader />
       <div className="relative z-10">
         <CategoriesTabs title="카테고리" />

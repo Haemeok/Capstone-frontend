@@ -16,6 +16,7 @@ import CommentBox from '@/components/CommentBox';
 import { Button } from '@/components/ui/button';
 import TransformingNavbar from '@/components/NavBar/TransformingNavBar';
 import useRecipeDetailQuery from '@/hooks/useRecipeDetailQuery';
+import RecipeLikeButton from '@/components/RecipeLikeButton';
 
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
@@ -49,6 +50,14 @@ const RecipeDetailPage = () => {
     };
   }, []);
 
+  const handleNavigateToComments = () => {
+    navigate(`comments`, {
+      state: {
+        author: recipe.author,
+      },
+    });
+  };
+
   return (
     <div className="relative mx-auto flex flex-col bg-[#ffffff] pb-16 text-[#2a2229]">
       <TransformingNavbar
@@ -80,9 +89,10 @@ const RecipeDetailPage = () => {
             showValue={true}
           />
           <div className="flex justify-center gap-4">
-            <HeartButton
-              buttonClassName="w-14 h-14 flex items-center justify-center border-2 rounded-full p-2"
-              isCountShown={true}
+            <RecipeLikeButton
+              recipeId={recipe.id}
+              initialIsLiked={recipe.likedByCurrentUser}
+              initialLikeCount={recipe.likeCount}
             />
             <SaveButton
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
@@ -105,7 +115,7 @@ const RecipeDetailPage = () => {
             <Button
               variant="ghost"
               className="cursor-pointer font-semibold text-[#526c04]"
-              onClick={() => navigate('comments')}
+              onClick={handleNavigateToComments}
             >
               더 읽기
             </Button>
