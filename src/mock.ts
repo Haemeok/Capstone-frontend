@@ -116,6 +116,16 @@ export const comments: Comment[] = [
     isLiked: false,
   },
   {
+    id: 5,
+    content:
+      '저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!',
+    date: '2021-01-01',
+    user: user,
+    likeCount: 15,
+    replyCount: 3,
+    isLiked: false,
+  },
+  {
     id: 2,
     content:
       '정말 맛있어 보이는 요리네요! 이번 주말에 꼭 해볼게요.정말 맛있어 보이는 요리네요! 이번 주말에 꼭 해볼게요.',
