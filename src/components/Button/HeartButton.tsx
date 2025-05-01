@@ -5,7 +5,9 @@ import { Heart } from 'lucide-react';
 type HeartButtonProps = {
   containerClassName?: string;
   buttonClassName?: string;
-  onClick?: () => void;
+  onClick: () => void;
+  isLiked: boolean;
+  likeCount: number;
   isCountShown?: boolean;
   ariaLabel?: string;
   width?: number;
@@ -16,13 +18,13 @@ const HeartButton = ({
   containerClassName,
   buttonClassName,
   onClick,
+  isLiked,
+  likeCount,
   isCountShown,
   ariaLabel,
   width = 24,
   height = 24,
 }: HeartButtonProps) => {
-  const [likes, setLikes] = useState(5);
-  const [isLiked, setIsLiked] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleToggle = (
@@ -30,8 +32,7 @@ const HeartButton = ({
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.stopPropagation();
-    setIsLiked(active);
-    setLikes((prev) => (active ? prev + 1 : prev - 1));
+    onClick();
 
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 250);
@@ -54,7 +55,7 @@ const HeartButton = ({
           } ${isAnimating ? 'beat' : ''}`}
         />
       </button>
-      {isCountShown && <span className="text-sm font-bold">{likes}</span>}
+      {isCountShown && <span className="text-sm font-bold">{likeCount}</span>}
     </div>
   );
 };
