@@ -38,6 +38,9 @@ export type Recipe = {
   steps: RecipeStep[];
   tagNames: string[];
   author: User;
+  likeCount: number;
+  likedByCurrentUser: boolean;
+  favoriteByCurrentUser: boolean;
 };
 
 export type RecipePayload = Omit<
@@ -50,6 +53,9 @@ export type RecipePayload = Omit<
   | 'youtubeUrl'
   | 'imageURL'
   | 'author'
+  | 'likeCount'
+  | 'likedByCurrentUser'
+  | 'favoriteByCurrentUser'
 > & {
   ingredients: IngredientPayload[];
   steps: RecipeStepPayload[];

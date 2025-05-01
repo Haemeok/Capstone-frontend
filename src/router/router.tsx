@@ -62,11 +62,11 @@ const router = createBrowserRouter([
         element: <GoogleCallback />,
       },
       {
-        path: 'recipes/:id/comments',
+        path: 'recipes/:recipeId/comments',
         element: <CommentsPage />,
       },
       {
-        path: 'recipes/:id/comments/:commentId',
+        path: 'recipes/:recipeId/comments/:commentId',
         element: <DiscussionPage />,
       },
       {
