@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import TransformingNavbar from '@/components/NavBar/TransformingNavBar';
 import useRecipeDetailQuery from '@/hooks/useRecipeDetailQuery';
 import RecipeLikeButton from '@/components/RecipeLikeButton';
+import RecipeNavBarButtons from '@/components/NavBar/RecipeNavBarButtons';
 
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
@@ -66,6 +67,13 @@ const RecipeDetailPage = () => {
         titleThreshold={0.7}
         textColorThreshold={0.5}
         shadowThreshold={0.8}
+        rightComponent={
+          <RecipeNavBarButtons
+            recipeId={recipe.id}
+            initialIsLiked={recipe.likedByCurrentUser}
+            initialLikeCount={recipe.likeCount}
+          />
+        }
       />
       <div ref={imageRef} className="h-64 w-full">
         <SuspenseImage
@@ -93,6 +101,8 @@ const RecipeDetailPage = () => {
               recipeId={recipe.id}
               initialIsLiked={recipe.likedByCurrentUser}
               initialLikeCount={recipe.likeCount}
+              buttonClassName="flex items-center gap-1 text-sm cursor-pointer group w-5 h-5"
+              containerClassName="flex-row"
             />
             <SaveButton
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"

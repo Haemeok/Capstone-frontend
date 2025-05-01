@@ -5,30 +5,32 @@ type RecipeLikeButtonProps = {
   recipeId: number;
   initialIsLiked: boolean;
   initialLikeCount: number;
+  buttonClassName?: string;
+  containerClassName?: string;
+  isCountShown?: boolean;
 };
 
 const RecipeLikeButton = ({
   recipeId,
   initialIsLiked,
   initialLikeCount,
+  buttonClassName,
+  containerClassName,
+  isCountShown = false,
+  ...props
 }: RecipeLikeButtonProps) => {
   const { mutate: toggleLikeMutate, isPending } =
     useLikeRecipeMutation(recipeId);
-
-  const handleClick = () => {
-    toggleLikeMutate();
-  };
 
   return (
     <HeartButton
       isLiked={initialIsLiked}
       likeCount={initialLikeCount}
-      onClick={handleClick}
-      containerClassName="flex-row"
-      buttonClassName="flex items-center gap-1 text-sm cursor-pointer group w-5 h-5"
-      isCountShown={true}
-      width={16}
-      height={16}
+      onClick={toggleLikeMutate}
+      containerClassName={containerClassName}
+      buttonClassName={buttonClassName}
+      isCountShown={isCountShown}
+      {...props}
     />
   );
 };
