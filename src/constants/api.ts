@@ -15,6 +15,7 @@ export const END_POINTS = {
   RECIPE_REPLY: (recipeId: number, commentId: number) =>
     `/recipes/${recipeId}/comments/${commentId}/replies`,
   RECIPE_LIKE: (id: number) => `/recipes/${id}/like`,
+  COMMENT_LIKE: (id: number) => `/comments/${id}/like`,
   RECIPE_FAVORITE: (id: number) => `/recipes/${id}/favorite`,
   RECIPE_VISIBILITY: (id: number) => `/recipes/${id}/visibility`,
   GOOGLE_LOGIN: `${BASE_URL}/oauth2/authorization/google`,

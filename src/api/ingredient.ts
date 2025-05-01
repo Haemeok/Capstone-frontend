@@ -13,20 +13,20 @@ type IngredientQueryParams = BaseQueryParams & {
 export const getIngredients = async ({
   category,
   search,
-  sort,
+  sort = 'ASC',
   pageParam = 0,
   isMine = false,
 }: {
   category: string | null;
   search?: string;
-  sort: string;
+  sort?: string;
   pageParam: number;
   isMine: boolean;
 }) => {
   const baseParams: BaseQueryParams = {
     page: pageParam,
     size: PAGE_SIZE,
-    sort: `name,${sort}`,
+    sort: `ingredient.name,${sort}`,
   };
 
   const optionalParams: Partial<IngredientQueryParams> = {
