@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ToggleIconButton from './ToggleIconButton';
 import { Heart } from 'lucide-react';
+import clsx from 'clsx';
 
 type HeartButtonProps = {
   containerClassName?: string;
@@ -9,7 +10,6 @@ type HeartButtonProps = {
   isLiked: boolean;
   likeCount: number;
   isCountShown?: boolean;
-  ariaLabel?: string;
   width?: number;
   height?: number;
 };
@@ -21,9 +21,9 @@ const HeartButton = ({
   isLiked,
   likeCount,
   isCountShown,
-  ariaLabel,
   width = 24,
   height = 24,
+  ...props
 }: HeartButtonProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -38,14 +38,19 @@ const HeartButton = ({
     setTimeout(() => setIsAnimating(false), 250);
   };
 
+  const finalButtonClassName = clsx(
+    'nav-button-base',
+    `flex items-center justify-center ${buttonClassName}`,
+  );
+
   return (
     <div
       className={`flex flex-col items-center justify-center gap-1 ${containerClassName}`}
     >
       <button
         onClick={(e) => handleToggle(!isLiked, e)}
-        className={`flex items-center justify-center ${buttonClassName}`}
-        aria-label={ariaLabel}
+        className={finalButtonClassName}
+        {...props}
       >
         <Heart
           width={width}

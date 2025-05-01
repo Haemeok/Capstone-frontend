@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import PrevButton from '../Button/PrevButton';
 import HeartButton from '../Button/HeartButton';
 import ShareButton from '../Button/ShareButton';
+import RecipeLikeButton from '../RecipeLikeButton';
 
 type TransformingNavbarProps = {
   title: string;
@@ -38,14 +39,22 @@ const TransformingNavbar = ({
 
         const visibleRatio =
           1 - Math.max(0, Math.min(1, entry.intersectionRatio * 3.5));
-        setNavOpacity(Math.max(0, Math.min(1, visibleRatio)));
+        const currentOpacity = Math.max(0, Math.min(1, visibleRatio));
 
+        setNavOpacity(Math.max(0, Math.min(1, visibleRatio)));
         setShowTitle(visibleRatio > titleThreshold);
 
         if (headerRef.current) {
+          const currentTextColor =
+            currentOpacity > textColorThreshold ? 'text-black' : 'text-white';
+
           headerRef.current.style.setProperty(
             '--nav-opacity',
-            Math.max(0, Math.min(1, visibleRatio)).toString(),
+            currentOpacity.toString(),
+          );
+          headerRef.current.style.setProperty(
+            '--nav-text-color',
+            currentTextColor,
           );
         }
       },
@@ -60,23 +69,10 @@ const TransformingNavbar = ({
     return () => {
       observer.disconnect();
     };
-  }, [targetRef, titleThreshold]);
+  }, [targetRef, titleThreshold, textColorThreshold]);
 
   const textColor =
     navOpacity > textColorThreshold ? 'text-black' : 'text-white';
-
-  const defaultRightComponent = (
-    <div className="flex shrink-0">
-      <HeartButton
-        buttonClassName={`${textColor} flex-shrink-0 transition-colors duration-300 hover:bg-gray-200/30 rounded-full`}
-        ariaLabel="좋아요"
-      />
-      <ShareButton
-        className={`p-2 ${textColor} flex-shrink-0 rounded-full transition-colors duration-300 hover:bg-gray-200/30`}
-        ariaLabel="공유하기"
-      />
-    </div>
-  );
 
   return (
     <div
@@ -103,7 +99,7 @@ const TransformingNavbar = ({
           {title}
         </h1>
       </div>
-      {rightComponent || defaultRightComponent}
+      {rightComponent}
     </div>
   );
 };

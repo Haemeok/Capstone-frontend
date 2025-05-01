@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import HeartButton from '@/components/Button/HeartButton';
 import CommentLikeButton from './comment/CommentLikeButton';
+import SuspenseImage from './Image/SuspenseImage';
 
 type CommentProps = {
   comment: Comment;
@@ -23,8 +24,8 @@ const CommentBox = ({ comment, hideReplyButton = false }: CommentProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Avatar className={`h-8 w-8 border-2`}>
-            <img
-              src={comment.author.profileImage}
+            <SuspenseImage
+              src={comment.author.profileImage || ''}
               alt={comment.author.nickname}
               className="object-cover"
             />
