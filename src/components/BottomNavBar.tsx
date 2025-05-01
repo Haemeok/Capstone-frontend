@@ -3,7 +3,7 @@ import BottomNavButton from './BottomNavButton';
 
 const BottomNavBar = () => {
   return (
-    <div className="fixed right-0 bottom-0 left-0 z-40 flex items-center justify-between border-t border-gray-200 bg-white px-6 py-3 opacity-97">
+    <footer className="fixed right-0 bottom-0 left-0 z-40 flex items-center justify-between border-t border-gray-200 bg-white px-6 py-3 opacity-97">
       <BottomNavButton
         path="/"
         icon={<Home size={24} className="mb-1" />}
@@ -31,7 +31,7 @@ const BottomNavBar = () => {
         icon={<ChefHat size={24} className="mb-1" />}
         label="My"
       />
-    </div>
+    </footer>
   );
 };
 
