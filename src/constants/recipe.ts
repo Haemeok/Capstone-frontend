@@ -95,7 +95,12 @@ export const TAG_CODES = {
   해장: 'HANGOVER',
 };
 
-export const SORT_TYPES = ['asc', 'desc'];
+export const SORT_TYPES = ['최신순', '오래된순'];
+
+export const SORT_TYPE_CODES = {
+  최신순: 'ASC',
+  오래된순: 'DESC',
+};
 
 export const DRAWER_HEADERS = {
   dishType: '요리 유형 선택',
@@ -133,7 +138,9 @@ export const BASE_DRAWER_CONFIGS: Record<DrawerType, BaseDrawerConfig> = {
     header: DRAWER_HEADERS.tags,
     description: DRAWER_DESCRIPTIONS.tags,
     isMultiple: true,
-    availableValues: TAGS,
+    availableValues: TAGS.map(
+      (tag) => `${TAG_EMOJI[tag as keyof typeof TAG_EMOJI]} ${tag}`,
+    ),
   },
 };
 

@@ -1,7 +1,6 @@
 import { IngredientItem as IngredientItemType } from '@/type/recipe';
-import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import ToggleIconButton from '../Button/ToggleIconButton';
+import { useState } from 'react';
+
 import { cn } from '@/lib/utils';
 import SuspenseImage from '../Image/SuspenseImage';
 
@@ -12,6 +11,8 @@ type IngredientItemProps = {
 
 const IngredientItem = ({ ingredient, isDeleteMode }: IngredientItemProps) => {
   const [isActive, setIsActive] = useState(false);
+
+  console.log(ingredient.category, ingredient.name);
   return (
     <div className="relative flex items-center gap-2 rounded-lg border-[1.5px] border-gray-200 px-1 py-2">
       <SuspenseImage

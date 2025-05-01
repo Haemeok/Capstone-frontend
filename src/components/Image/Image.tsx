@@ -34,7 +34,10 @@ const Image = ({
   if (error) {
     return (
       errorFallback || (
-        <ImageError message={errorMessage} className={errorClassName} />
+        <ImageError
+          message={errorMessage}
+          className={errorClassName || className}
+        />
       )
     );
   }

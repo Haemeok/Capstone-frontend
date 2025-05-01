@@ -6,11 +6,7 @@ type ImageErrorProps = {
 };
 
 const ImageError = ({ message, className }: ImageErrorProps) => (
-  <img
-    src={'/noImage.png'}
-    alt="이미지 로드 실패"
-    className={cn(className, 'h-full w-full object-cover')}
-  />
+  <img src={'/noImage.png'} alt="이미지 로드 실패" className={className} />
 );
 
 export default ImageError;
