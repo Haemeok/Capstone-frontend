@@ -4,14 +4,12 @@ import { Outlet } from 'react-router';
 
 function Root() {
   return (
-    <div className="relative flex flex-col">
-      <div className="flex-1 overflow-x-hidden">
+    <div className="">
+      <div className="h-screen overflow-y-auto pb-20">
         <Outlet />
       </div>
 
-      <div className="absolute right-0 bottom-0 left-0 z-30">
-        <BottomNavBar />
-      </div>
+      <BottomNavBar />
     </div>
   );
 }
