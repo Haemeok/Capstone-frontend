@@ -5,7 +5,7 @@ import NewRecipePage from '../Pages/NewRecipe/NewRecipePage';
 import RecipeDetailPage from '../Pages/RecipeDetailPage';
 import CommentsPage from '@/Pages/CommentsPage';
 import DiscussionPage from '@/Pages/DiscussionPage';
-import UserDetailPage from '@/Pages/UserDetailPage';
+import UserDetailPage from '@/Pages/UserPage/UserDetailPage';
 import AIRecipePage from '@/Pages/AIRecipePage';
 import HomePage from '@/Pages/Home/HomePage';
 import IngredientsPage from '@/Pages/IngredientsPage';
