@@ -20,7 +20,7 @@ const CommentBox = ({ comment, hideReplyButton = false }: CommentProps) => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg bg-[#fcfbf4] p-4">
+    <div className="bg-beige flex w-full flex-col gap-2 rounded-2xl p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Avatar className={`h-8 w-8 border-2`}>

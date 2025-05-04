@@ -7,7 +7,9 @@ type RecipeLikeButtonProps = {
   initialLikeCount: number;
   buttonClassName?: string;
   containerClassName?: string;
+  iconClassName?: string;
   isCountShown?: boolean;
+  isOnNavbar?: boolean;
 };
 
 const RecipeLikeButton = ({
@@ -16,7 +18,9 @@ const RecipeLikeButton = ({
   initialLikeCount,
   buttonClassName,
   containerClassName,
+  iconClassName,
   isCountShown = false,
+  isOnNavbar = false,
   ...props
 }: RecipeLikeButtonProps) => {
   const { mutate: toggleLikeMutate, isPending } =
@@ -29,7 +33,9 @@ const RecipeLikeButton = ({
       onClick={toggleLikeMutate}
       containerClassName={containerClassName}
       buttonClassName={buttonClassName}
+      iconClassName={iconClassName}
       isCountShown={isCountShown}
+      isOnNavbar={isOnNavbar}
       {...props}
     />
   );
