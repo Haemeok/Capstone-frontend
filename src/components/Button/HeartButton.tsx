@@ -2,35 +2,37 @@ import { useState } from 'react';
 import ToggleIconButton from './ToggleIconButton';
 import { Heart } from 'lucide-react';
 import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 
 type HeartButtonProps = {
   containerClassName?: string;
   buttonClassName?: string;
+  iconClassName?: string;
   onClick: () => void;
   isLiked: boolean;
   likeCount: number;
   isCountShown?: boolean;
   width?: number;
   height?: number;
+  isOnNavbar?: boolean;
 };
 
 const HeartButton = ({
   containerClassName,
-  buttonClassName,
+  buttonClassName = '',
+  iconClassName = '',
   onClick,
   isLiked,
   likeCount,
   isCountShown,
   width = 24,
   height = 24,
+  isOnNavbar = false,
   ...props
 }: HeartButtonProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleToggle = (
-    active: boolean,
-    e: React.MouseEvent<HTMLButtonElement>,
-  ) => {
+  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onClick();
 
@@ -39,7 +41,7 @@ const HeartButton = ({
   };
 
   const finalButtonClassName = clsx(
-    'nav-button-base',
+    isOnNavbar ? 'nav-button-base' : '',
     `flex items-center justify-center ${buttonClassName}`,
   );
 
@@ -48,16 +50,18 @@ const HeartButton = ({
       className={`flex flex-col items-center justify-center gap-1 ${containerClassName}`}
     >
       <button
-        onClick={(e) => handleToggle(!isLiked, e)}
+        onClick={(e) => handleToggle(e)}
         className={finalButtonClassName}
         {...props}
       >
         <Heart
           width={width}
           height={height}
-          className={`${isCountShown ? 'transition-all duration-200' : ''} ${
-            isLiked ? 'fill-[#d12d2e] text-[#d12d2e]' : ''
-          } ${isAnimating ? 'beat' : ''}`}
+          className={cn(
+            iconClassName,
+            isLiked ? 'fill-[#d12d2e] text-[#d12d2e]' : '',
+            isAnimating ? 'beat' : '',
+          )}
         />
       </button>
       {isCountShown && <span className="text-sm font-bold">{likeCount}</span>}

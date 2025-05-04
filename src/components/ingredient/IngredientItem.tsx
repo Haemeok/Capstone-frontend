@@ -12,9 +12,8 @@ type IngredientItemProps = {
 const IngredientItem = ({ ingredient, isDeleteMode }: IngredientItemProps) => {
   const [isActive, setIsActive] = useState(false);
 
-  console.log(ingredient.category, ingredient.name);
   return (
-    <div className="relative flex items-center gap-2 rounded-lg border-[1.5px] border-gray-200 px-1 py-2">
+    <div className="relative flex items-center gap-4 rounded-lg border-[1.5px] border-gray-200 px-1 py-2">
       <SuspenseImage
         src={ingredient.imageUrl}
         alt={ingredient.name}

@@ -1,5 +1,4 @@
 import { useParams, useNavigate } from 'react-router';
-import { comments, replies } from '@/mock';
 import CommentBox from '@/components/CommentBox';
 import {
   ArrowLeft,
@@ -10,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { comments, replies } from '@/mock';
 
 const DiscussionPage = () => {
   const { id } = useParams<{ id: string }>();
