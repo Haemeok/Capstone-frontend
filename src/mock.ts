@@ -1,10 +1,4 @@
-import {
-  IngredientItem,
-  Recipe,
-  RecipeGridItem,
-  RecipeStep,
-  Recipe as RecipeType,
-} from './type/recipe';
+import { DetailedRecipeGridItem } from './type/recipe';
 import { User } from './type/user';
 import { Comment } from './type/comment';
 import { CategoryItem } from './type/recipe';
@@ -109,51 +103,51 @@ export const comments: Comment[] = [
     id: 1,
     content:
       '저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!',
-    date: '2021-01-01',
-    user: user,
+    createdAt: '2021-01-01',
+    author: user,
     likeCount: 15,
     replyCount: 3,
-    isLiked: false,
+    likedByCurrentUser: false,
   },
   {
     id: 5,
     content:
       '저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!',
-    date: '2021-01-01',
-    user: user,
+    createdAt: '2021-01-01',
+    author: user,
     likeCount: 15,
     replyCount: 3,
-    isLiked: false,
+    likedByCurrentUser: false,
   },
   {
     id: 2,
     content:
       '정말 맛있어 보이는 요리네요! 이번 주말에 꼭 해볼게요.정말 맛있어 보이는 요리네요! 이번 주말에 꼭 해볼게요.',
-    date: '2021-01-01',
-    user: user,
+    createdAt: '2021-01-01',
+    author: user,
     likeCount: 7,
     replyCount: 0,
-    isLiked: true,
+    likedByCurrentUser: true,
   },
   {
     id: 3,
     content:
       '저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!',
-    date: '2021-01-01',
-    user: user,
+    createdAt: '2021-01-01',
+    author: user,
     likeCount: 23,
     replyCount: 5,
-    isLiked: true,
+    likedByCurrentUser: true,
   },
   {
     id: 4,
     content:
       '재료를 조금 변경해서 만들어도 될까요?재료를 조금 변경해서 만들어도 될까요?재료를 조금 변경해서 만들어도 될까요?',
-    date: '2021-01-01',
-    user: user,
+    createdAt: '2021-01-01',
+    author: user,
     likeCount: 4,
     replyCount: 1,
-    isLiked: false,
+    likedByCurrentUser: false,
   },
 ];
 
@@ -161,34 +155,33 @@ export const replies: Comment[] = [
   {
     id: 101,
     content: '정말 맛있어 보이는 요리네요! 이번 주말에 꼭 해볼게요.',
-    date: '2021-01-02',
-    user: user,
+    createdAt: '2021-01-02',
+    author: user,
     likeCount: 3,
     replyCount: 0,
-    isLiked: false,
+    likedByCurrentUser: false,
   },
   {
     id: 102,
     content: '재료를 조금 변경해서 만들어도 될까요?',
-    date: '2021-01-03',
-    user: user,
-
+    createdAt: '2021-01-03',
+    author: user,
     likeCount: 1,
     replyCount: 0,
-    isLiked: true,
+    likedByCurrentUser: true,
   },
   {
     id: 103,
     content: '저는 이 레시피를 조금 변형해서 만들었는데 정말 좋았어요!',
-    date: '2021-01-04',
-    user: user,
+    createdAt: '2021-01-04',
+    author: user,
     likeCount: 5,
     replyCount: 0,
-    isLiked: false,
+    likedByCurrentUser: false,
   },
 ];
 
-export const createdRecipes: RecipeGridItem[] = [
+export const createdRecipes: DetailedRecipeGridItem[] = [
   {
     id: 1,
     title: '홈메이드 치킨 파프리카',
@@ -285,90 +278,6 @@ export const createdRecipes: RecipeGridItem[] = [
   {
     id: 8,
     title: '매콤한 베트남 쌀국수',
-    imageUrl:
-      'https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg',
-    authorName: '홍길동',
-    createdAt: '2021-01-01',
-    likeCount: 10,
-    likedByCurrentUser: false,
-    rating: 4.5,
-    cookingTime: 30,
-    commentCount: 10,
-  },
-];
-
-export const cookbookRecipes: RecipeGridItem[] = [
-  {
-    id: 5,
-    title: '주말 브런치 컬렉션',
-    imageUrl:
-      'https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg',
-    authorName: '홍길동',
-    createdAt: '2021-01-01',
-    likeCount: 10,
-    likedByCurrentUser: false,
-    rating: 4.5,
-    cookingTime: 30,
-    commentCount: 10,
-  },
-
-  {
-    id: 6,
-    title: '이탈리안 파스타 마스터리',
-    imageUrl:
-      'https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg',
-    authorName: '홍길동',
-    createdAt: '2021-01-01',
-    likeCount: 10,
-    likedByCurrentUser: false,
-    rating: 4.5,
-    cookingTime: 30,
-    commentCount: 10,
-  },
-  {
-    id: 1,
-    title: '주말 브런치 컬렉션',
-    imageUrl:
-      'https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg',
-    authorName: '홍길동',
-    createdAt: '2021-01-01',
-    likeCount: 10,
-    likedByCurrentUser: false,
-    rating: 4.5,
-    cookingTime: 30,
-    commentCount: 10,
-  },
-
-  {
-    id: 2,
-    title: '이탈리안 파스타 마스터리',
-    imageUrl:
-      'https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg',
-    authorName: '홍길동',
-    createdAt: '2021-01-01',
-    likeCount: 10,
-    likedByCurrentUser: false,
-    rating: 4.5,
-    cookingTime: 30,
-    commentCount: 10,
-  },
-  {
-    id: 3,
-    title: '주말 브런치 컬렉션',
-    imageUrl:
-      'https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg',
-    authorName: '홍길동',
-    createdAt: '2021-01-01',
-    likeCount: 10,
-    likedByCurrentUser: false,
-    rating: 4.5,
-    cookingTime: 30,
-    commentCount: 10,
-  },
-
-  {
-    id: 4,
-    title: '이탈리안 파스타 마스터리',
     imageUrl:
       'https://images.services.kitchenstories.io/R0FZEANHBTbTmQzRhOTm6hOPPLk=/1080x0/filters:quality(85)/images.kitchenstories.io/wagtailOriginalImages/R412-photo-final-1-4x3.jpg',
     authorName: '홍길동',

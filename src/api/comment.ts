@@ -28,6 +28,7 @@ export const getComments = async ({
 
   const response = await axiosInstance.get<CommentsApiResponse>(END_POINT, {
     params: apiParams,
+    useAuth: 'optional',
   });
 
   return response.data;
