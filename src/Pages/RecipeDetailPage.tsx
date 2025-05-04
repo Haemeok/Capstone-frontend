@@ -3,11 +3,9 @@ import { useNavigate, useParams } from 'react-router';
 import UserProfile from '@/components/UserProfile';
 import CollapsibleP from '@/components/CollapsibleP';
 
-import { comments } from '@/mock';
 import RecipeStepList from '@/components/RecipeStepList';
 import SuspenseImage from '@/components/Image/SuspenseImage';
 import Ratings from '@/components/Ratings';
-import HeartButton from '@/components/Button/HeartButton';
 import SaveButton from '@/components/Button/SaveButton';
 import ShareButton from '@/components/Button/ShareButton';
 import LockButton from '@/components/Button/LockButton';
@@ -59,6 +57,7 @@ const RecipeDetailPage = () => {
     });
   };
 
+  console.log(recipe.comments);
   return (
     <div className="relative mx-auto flex flex-col bg-[#ffffff] pb-16 text-[#2a2229]">
       <TransformingNavbar
@@ -103,6 +102,7 @@ const RecipeDetailPage = () => {
               initialLikeCount={recipe.likeCount}
               buttonClassName="flex items-center gap-1 text-sm cursor-pointer group w-5 h-5"
               containerClassName="flex-row"
+              isOnNavbar={true}
             />
             <SaveButton
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
@@ -130,7 +130,9 @@ const RecipeDetailPage = () => {
               더 읽기
             </Button>
           </div>
-          <CommentBox comment={comments[0]} />
+          {recipe.comments.length > 0 && (
+            <CommentBox comment={recipe.comments[0]} />
+          )}
         </Box>
         <Box>
           <h2 className="mb-2 text-xl font-semibold">재료</h2>

@@ -102,6 +102,9 @@ const NewIngredientsPage = () => {
     setBulkSelectedIds(new Set());
   };
 
+  const ingredientItems = data?.pages.flatMap((page) => page.content);
+  console.log(ingredientItems);
+
   return (
     <div className="flex h-screen flex-col bg-[#ffffff] pb-20">
       <div className="sticky top-0 z-10 pb-2 shadow-sm">
@@ -169,78 +172,78 @@ const NewIngredientsPage = () => {
               </p>
             )}
 
-            {data?.pages
-              .flatMap((page) => page.content)
-              .map((ingredient) => {
-                const isAdded = false;
-                const isBulkSelected = bulkSelectedIds.has(ingredient.id);
+            {ingredientItems?.map((ingredient) => {
+              const isAdded = ingredient.inFridge;
+              const isBulkSelected = bulkSelectedIds.has(ingredient.id);
 
-                return (
-                  <div
-                    key={ingredient.id}
-                    className={cn(
-                      'flex items-center rounded-lg bg-white p-3 shadow-sm transition-colors',
-                      mode === 'bulk' && 'cursor-pointer hover:bg-gray-50',
-                      mode === 'bulk' &&
-                        isBulkSelected &&
-                        'border border-green-200 bg-green-50',
-                      'font-noto-sans-kr',
-                    )}
-                    onClick={
-                      mode === 'bulk'
-                        ? () => handleCheckboxChange(ingredient.id)
-                        : undefined
-                    }
-                  >
-                    <div className="mr-3 h-12 w-12 overflow-hidden rounded-lg bg-gray-100">
-                      {ingredient.imageUrl && (
-                        <img
-                          src={ingredient.imageUrl}
-                          alt={ingredient.name}
-                          className="h-full w-full object-cover"
-                        />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium">{ingredient.name}</p>
-                    </div>
-
-                    {mode === 'single' ? (
-                      <Button
-                        size="sm"
-                        variant={isAdded ? 'destructive' : 'default'}
-                        className="bg-beige text-brown rounded-full px-3 font-bold"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSingleAddRemove(ingredient.id, isAdded);
-                        }}
-                      >
-                        {isAdded ? '삭제' : '추가'}
-                      </Button>
-                    ) : (
-                      <Checkbox
-                        id={`ingredient-${ingredient.id}`}
-                        checked={isBulkSelected}
-                        onCheckedChange={() =>
-                          handleCheckboxChange(ingredient.id)
-                        }
-                        className="h-5 w-5 rounded border-gray-300 data-[state=checked]:border-[#5cc570] data-[state=checked]:bg-[#5cc570]"
+              return (
+                <div
+                  key={ingredient.id}
+                  className={cn(
+                    'flex items-center rounded-lg bg-white p-3 shadow-sm transition-colors',
+                    mode === 'bulk' && 'cursor-pointer hover:bg-gray-50',
+                    mode === 'bulk' &&
+                      isBulkSelected &&
+                      'border border-green-200 bg-green-50',
+                    'font-noto-sans-kr',
+                  )}
+                  onClick={
+                    mode === 'bulk'
+                      ? () => handleCheckboxChange(ingredient.id)
+                      : undefined
+                  }
+                >
+                  <div className="mr-3 h-12 w-12 overflow-hidden rounded-lg bg-gray-100">
+                    {ingredient.imageUrl && (
+                      <img
+                        src={ingredient.imageUrl}
+                        alt={ingredient.name}
+                        className="h-full w-full object-cover"
                       />
                     )}
                   </div>
-                );
-              })}
+                  <div className="flex-1">
+                    <p className="font-medium">{ingredient.name}</p>
+                  </div>
+
+                  {mode === 'single' ? (
+                    <Button
+                      size="sm"
+                      variant={isAdded ? 'destructive' : 'default'}
+                      className="bg-beige text-brown rounded-full px-3 font-bold"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSingleAddRemove(ingredient.id, isAdded);
+                      }}
+                    >
+                      {isAdded ? '삭제' : '추가'}
+                    </Button>
+                  ) : (
+                    <Checkbox
+                      id={`ingredient-${ingredient.id}`}
+                      checked={isBulkSelected}
+                      onCheckedChange={() =>
+                        handleCheckboxChange(ingredient.id)
+                      }
+                      className="h-5 w-5 rounded border-gray-300 data-[state=checked]:border-[#5cc570] data-[state=checked]:bg-[#5cc570]"
+                    />
+                  )}
+                </div>
+              );
+            })}
             <div ref={ref} className="h-10" />
             {isFetchingNextPage && (
               <p className="text-center text-gray-500">
                 더 많은 재료를 불러오는 중...
               </p>
             )}
-            {!hasNextPage && data?.pages[0].content?.length && (
-              <p className="text-center text-sm text-gray-400">
-                모든 재료를 불러왔습니다.
-              </p>
-            )}
+            {!hasNextPage &&
+              ingredientItems &&
+              ingredientItems.length === 0 && (
+                <p className="text-center text-sm text-gray-400">
+                  모든 재료를 불러왔습니다.
+                </p>
+              )}
           </div>
         )}
       </div>

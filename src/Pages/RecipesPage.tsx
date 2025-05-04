@@ -1,5 +1,5 @@
-import { getRecipeItems, RecipesApiResponse } from '@/api/recipe';
-import RecipeGrid from '@/components/RecipeGrid';
+import { getRecipeItems, DetailedRecipesApiResponse } from '@/api/recipe';
+import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { InfiniteData } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -10,7 +10,7 @@ const RecipesPage = () => {
   const [sort, setSort] = useState<'asc' | 'desc'>('asc');
   const [dishType, setDishType] = useState<string | null>(null);
   const [tagNames, setTagNames] = useState<string[] | null>(null);
-  const [search, setSearch] = useState<string>();
+  const [q, setSearch] = useState<string>();
 
   const {
     data,
@@ -22,9 +22,9 @@ const RecipesPage = () => {
     status,
     ref,
   } = useInfiniteScroll<
-    RecipesApiResponse,
+    DetailedRecipesApiResponse,
     Error,
-    InfiniteData<RecipesApiResponse>,
+    InfiniteData<DetailedRecipesApiResponse>,
     [string, string, 'asc' | 'desc'],
     number
   >({
@@ -34,7 +34,7 @@ const RecipesPage = () => {
         sort,
         dishType,
         tagNames,
-        search,
+        q,
         pageParam,
       }),
     getNextPageParam: (lastPage) =>
@@ -46,8 +46,8 @@ const RecipesPage = () => {
 
   const noResults = recipes.length === 0 && !isFetching;
   const noResultsMessage =
-    search && recipes.length === 0
-      ? `"${search}"에 해당하는 레시피가 없습니다.`
+    q && recipes.length === 0
+      ? `"${q}"에 해당하는 레시피가 없습니다.`
       : `"${selectedCategory}"에 해당하는 레시피가 없습니다.`;
 
   return (
@@ -56,6 +56,7 @@ const RecipesPage = () => {
 
       <RecipeGrid
         recipes={recipes}
+        isSimple={false}
         hasNextPage={hasNextPage}
         ref={ref}
         noResults={noResults}
