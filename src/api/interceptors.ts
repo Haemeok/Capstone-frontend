@@ -11,19 +11,31 @@ interface ErrorResponseData {
   code: string;
 }
 
-export const checkAndSetToken = (config: InternalAxiosRequestConfig) => {
-  if (!config.useAuth || !config.headers || config.headers.Authorization) {
+export const checkAndSetToken = (
+  config: InternalAxiosRequestConfig,
+): InternalAxiosRequestConfig => {
+  if (!config.useAuth || !config.headers) {
+    return config;
+  }
+
+  if (config.headers.Authorization) {
     return config;
   }
 
   const accessToken = localStorage.getItem('accessToken');
-  console.log(config);
-  if (!accessToken) {
-    throw new Error('토큰이 유효하지 않습니다');
+
+  if (config.useAuth === true) {
+    if (!accessToken) {
+      throw new Error('토큰이 유효하지 않습니다');
+    }
+
+    config.headers.Authorization = `Bearer ${accessToken}`;
+    return config;
   }
 
-  // eslint-disable-next-line no-param-reassign
-  config.headers.Authorization = `Bearer ${accessToken}`;
+  if (config.useAuth === 'optional' && accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
 
   return config;
 };

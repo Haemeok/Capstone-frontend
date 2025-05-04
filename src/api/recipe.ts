@@ -1,6 +1,11 @@
 import { END_POINTS, PAGE_SIZE } from '@/constants/api';
 import { axiosInstance } from './axios';
-import { Recipe, RecipeGridItem, RecipePayload } from '@/type/recipe';
+import {
+  Recipe,
+  BaseRecipeGridItem,
+  DetailedRecipeGridItem,
+  RecipePayload,
+} from '@/type/recipe';
 import {
   FileObject,
   PresignedUrlInfo,
@@ -11,13 +16,10 @@ import { FileInfoRequest } from '@/type/file';
 import { BaseQueryParams, PageResponse } from '@/type/query';
 import { buildParams } from '@/utils/object';
 
-export const getRecipes = async () => {
-  const response = await axiosInstance.get(END_POINTS.RECIPES);
-  return response.data;
-};
-
 export const getRecipe = async (id: number) => {
-  const response = await axiosInstance.get<Recipe>(END_POINTS.RECIPE(id));
+  const response = await axiosInstance.get<Recipe>(END_POINTS.RECIPE(id), {
+    useAuth: 'optional',
+  });
   return response.data;
 };
 
@@ -31,13 +33,10 @@ export const postRecipe = async ({
   console.log('Recipe', recipe);
   console.log('Files', files);
   const response = await axiosInstance.post<PresignedUrlResponse>(
-    END_POINTS.RECIPE_WITH_IMAGE,
+    END_POINTS.RECIPES,
     {
       recipe,
       files,
-    },
-    {
-      useAuth: true,
     },
   );
   console.log(response.data);
@@ -177,7 +176,8 @@ export const handleS3Upload = async (
   return uploadResults;
 };
 
-export type RecipesApiResponse = PageResponse<RecipeGridItem>;
+export type BaseRecipesApiResponse = PageResponse<BaseRecipeGridItem>;
+export type DetailedRecipesApiResponse = PageResponse<DetailedRecipeGridItem>;
 
 type RecipeQueryParams = BaseQueryParams & {
   dishType?: string | null;
@@ -212,11 +212,57 @@ export const getRecipeItems = async ({
 
   const apiParams = buildParams(baseParams, optionalParams);
 
-  const response = await axiosInstance.get<RecipesApiResponse>(
+  const response = await axiosInstance.get<DetailedRecipesApiResponse>(
     END_POINTS.RECIPE_SEARCH,
     {
       params: apiParams,
-      useAuth: false,
+      useAuth: 'optional',
+    },
+  );
+
+  return response.data;
+};
+
+export const getMyRecipeItems = async ({
+  sort,
+  pageParam = 0,
+}: {
+  sort: string;
+  pageParam?: number;
+}) => {
+  const apiParams: BaseQueryParams = {
+    page: pageParam,
+    size: PAGE_SIZE,
+    sort: `createdAt,${sort}`,
+  };
+
+  const response = await axiosInstance.get<DetailedRecipesApiResponse>(
+    END_POINTS.MY_RECIPES,
+    {
+      params: apiParams,
+    },
+  );
+
+  return response.data;
+};
+
+export const getMyFavoriteItems = async ({
+  sort,
+  pageParam = 0,
+}: {
+  sort: string;
+  pageParam?: number;
+}) => {
+  const apiParams: BaseQueryParams = {
+    page: pageParam,
+    size: PAGE_SIZE,
+    sort: `createdAt,${sort}`,
+  };
+
+  const response = await axiosInstance.get<BaseRecipesApiResponse>(
+    END_POINTS.MY_FAVORITES,
+    {
+      params: apiParams,
     },
   );
 

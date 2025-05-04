@@ -63,7 +63,7 @@ export const addIngredientBulk = async (ingredientIds: number[]) => {
 
 export const deleteIngredient = async (id: number) => {
   const response = await axiosInstance.delete(
-    END_POINTS.INGREDIENTS_BY_ID(id),
+    END_POINTS.MY_INGREDIENTS_BY_ID(id),
     {
       useAuth: true,
     },
