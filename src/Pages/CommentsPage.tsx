@@ -51,7 +51,7 @@ const CommentsPage = () => {
   const comments = data?.pages.flatMap((page) => page.content);
 
   return (
-    <div className="relative h-full bg-[#f7f7f7] pb-24">
+    <div className="relative h-full bg-[#f7f7f7] pb-10">
       <header className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <div className="flex items-center">
@@ -78,7 +78,7 @@ const CommentsPage = () => {
         </div>
       </header>
 
-      <main className="h-full p-4">
+      <main className="p-4">
         <div className="mb-4 flex items-center justify-between px-2">
           <span className="text-sm font-medium text-gray-500">
             {data?.pages[0].totalElements}개의 댓글
@@ -89,17 +89,28 @@ const CommentsPage = () => {
             <span>인기순</span>
           </div>
         </div>
-        {comments?.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
-            <p className="text-sm text-gray-500">댓글이 없습니다.</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {comments?.map((comment) => (
-              <CommentBox comment={comment} hideReplyButton={false} />
-            ))}
-          </div>
-        )}
+        <div className="flex flex-col gap-4">
+          {comments?.map((comment) => (
+            <CommentBox
+              key={comment.id}
+              comment={comment}
+              hideReplyButton={false}
+            />
+          ))}
+        </div>
+        <div ref={ref} className="h-10">
+          {isFetchingNextPage && (
+            <div className="flex justify-center p-4">
+              <p className="text-sm text-gray-500">더 많은 댓글 로딩 중...</p>
+            </div>
+          )}
+
+          {!hasNextPage && comments && comments.length > 0 && (
+            <div className="flex justify-center p-4">
+              <p className="text-sm text-gray-400">마지막 댓글입니다.</p>
+            </div>
+          )}
+        </div>
       </main>
 
       <CommentInput author={author} />

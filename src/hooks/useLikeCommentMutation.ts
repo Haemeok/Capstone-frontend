@@ -10,7 +10,10 @@ type LikeCommentMutationContext = {
   previousCommentsListData?: InfiniteData<CommentsApiResponse>; // onMutate에서 반환될 수 있으므로 optional로 처리하는 것이 더 안전할 수 있습니다.
 };
 
-export const useLikeCommentMutation = (commentId: number, recipeId: number) => {
+export const useLikeCommentMutation = (
+  commentId: number,
+  recipeId: string | undefined,
+) => {
   const queryClient = useQueryClient();
   // 쿼리 키 정의:
   // 1. 특정 레시피의 댓글 목록 (무한 스크롤)
@@ -75,8 +78,8 @@ export const useLikeCommentMutation = (commentId: number, recipeId: number) => {
                         isLiked: !comment.likedByCurrentUser, // mutate에 전달된 'like' 값 (true 또는 false)
                         // 'like'가 true이면 카운트 증가, false이면 감소
                         likeCount: comment.likedByCurrentUser
-                          ? comment.likeCount + 1
-                          : comment.likeCount - 1,
+                          ? comment.likeCount - 1
+                          : comment.likeCount + 1,
                       }
                     : // 다른 댓글은 그대로 둡니다.
                       comment,

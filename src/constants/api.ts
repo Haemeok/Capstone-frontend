@@ -4,7 +4,6 @@ export const END_POINTS = {
   RECIPE: (id: number) => `/recipes/${id}`,
   RECIPES: '/recipes',
   RECIPES_SIMPLE: '/recipes/simple',
-  RECIPE_WITH_IMAGE: '/recipes/with-images',
   RECIPE_SEARCH: '/recipes/search',
   RECIPE_FILTER: '/recipes/filter',
   RECIPES_BY_CATEGORY: (categorySlug: string) =>
@@ -24,14 +23,15 @@ export const END_POINTS = {
   REDIRECT_URI: '/oauth2/redirect',
   TOKEN_REFRESH: '/token/refresh',
   USER_INFO: '/users/me',
-  USER_FAVORITES: '/users/me/favorites',
+  MY_FAVORITES: '/me/favorites',
   USER_CREATED: (id: number) => `/users/${id}/created`,
   USER_LIKED: (id: number) => `/users/${id}/liked`,
   USER_PROFILE: (id: number) => `/users/${id}/profile`,
   MY_INFO: '/me',
   MY_INGREDIENTS: '/me/fridge/items',
+  MY_INGREDIENTS_BY_ID: (id: number) => `/me/fridge/items/${id}`,
   MY_INGREDIENTS_BULK: '/me/fridge/items/bulk',
-
+  MY_RECIPES: '/me/recipes',
   PRESIGNED_URLS: '/recipes/presigned-urls',
 };
 

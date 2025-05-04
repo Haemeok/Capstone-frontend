@@ -1,5 +1,5 @@
-import RecipeGrid from '@/components/RecipeGrid';
-import RecipeGridItem from '@/components/RecipeGridItem';
+import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
+import DetailedRecipeGridItem from '@/components/recipeGrid/DetailedRecipeGridItem';
 import { createdRecipes } from '@/mock';
 import { ChevronRight } from 'lucide-react';
 import React from 'react';
@@ -19,7 +19,7 @@ const RecipeSlide = () => {
       <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto">
         {createdRecipes.map((item) => (
           <div key={item.id} className="w-42 flex-shrink-0 rounded-2xl">
-            <RecipeGridItem recipe={item} isSimple={false} height={200} />
+            <DetailedRecipeGridItem recipe={item} height={200} />
           </div>
         ))}
       </div>
