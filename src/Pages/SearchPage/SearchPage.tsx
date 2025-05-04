@@ -1,5 +1,5 @@
 import { getRecipeItems } from '@/api/recipe';
-import { RecipesApiResponse } from '@/api/recipe';
+import { DetailedRecipesApiResponse } from '@/api/recipe';
 import { InfiniteData } from '@tanstack/react-query';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { ChevronDown, Search } from 'lucide-react';
@@ -12,7 +12,7 @@ import {
 } from '@/constants/recipe';
 import { DrawerType } from '@/constants/recipe';
 import CategoryDrawer from './CategoryDrawer';
-import RecipeGrid from '@/components/RecipeGrid';
+import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 import FilterChip from '@/components/Button/FilterChip';
 import useSearch from '@/hooks/useSearch';
 
@@ -52,9 +52,9 @@ const SearchPage = () => {
     status,
     ref,
   } = useInfiniteScroll<
-    RecipesApiResponse,
+    DetailedRecipesApiResponse,
     Error,
-    InfiniteData<RecipesApiResponse>,
+    InfiniteData<DetailedRecipesApiResponse>,
     [string, string, string, string[], string],
     number
   >({

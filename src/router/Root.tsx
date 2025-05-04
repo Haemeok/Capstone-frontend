@@ -5,7 +5,7 @@ import { Outlet } from 'react-router';
 function Root() {
   return (
     <div className="">
-      <div className="h-screen overflow-y-auto pb-20">
+      <div className="min-h-screen overflow-y-auto">
         <Outlet />
       </div>
 

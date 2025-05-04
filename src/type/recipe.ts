@@ -1,10 +1,10 @@
 import { User } from './user';
-
+import { Comment } from './comment';
 export type UserIngredient = Omit<IngredientItem, 'unit' | 'price'>;
 
 export type IngredientPayload = Omit<
   IngredientItem,
-  'category' | 'price' | 'id' | 'imageUrl'
+  'category' | 'price' | 'id' | 'imageUrl' | 'inFridge'
 >;
 
 export type RecipeStep = {
@@ -37,6 +37,7 @@ export type Recipe = {
   ingredients: IngredientItem[];
   steps: RecipeStep[];
   tagNames: string[];
+  comments: Comment[];
   author: User;
   likeCount: number;
   likedByCurrentUser: boolean;
@@ -82,14 +83,17 @@ export type RecipeFormValues = {
   }>;
 };
 
-export type RecipeGridItem = {
+export type DetailedRecipeGridItem = BaseRecipeGridItem & {
+  rating: number;
+  commentCount: number;
+};
+
+export type BaseRecipeGridItem = {
   id: number;
   title: string;
   imageUrl: string;
   authorName: string;
-  rating: number;
-  cookingTime: number;
-  commentCount: number;
+  cookingTime?: number;
   createdAt: string;
   likeCount: number;
   likedByCurrentUser: boolean;
@@ -103,6 +107,7 @@ export type IngredientItem = {
   quantity?: string;
   price: number;
   unit: string;
+  inFridge: boolean;
 };
 
 export type CategoryItem = {

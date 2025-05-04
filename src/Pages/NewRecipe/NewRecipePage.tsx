@@ -257,7 +257,6 @@ const NewRecipePage = () => {
           </div>
 
           <div className="flex items-center justify-center gap-x-8 gap-y-6 border-b border-gray-200">
-            {/* 카테고리 섹션 - 세로 배치로 수정 */}
             <div className="flex flex-col items-center gap-2">
               <label
                 htmlFor="dishType"
@@ -292,7 +291,6 @@ const NewRecipePage = () => {
               )}
             </div>
 
-            {/* 조리시간 섹션 - 세로 배치로 수정 */}
             <div className="flex flex-col items-center gap-2">
               <label
                 htmlFor="cookingTime"
@@ -322,7 +320,6 @@ const NewRecipePage = () => {
               )}
             </div>
 
-            {/* 인분 섹션 (기존 세로 배치 유지) */}
             <div className="flex flex-col items-center gap-2">
               <label
                 htmlFor="servings"
@@ -358,9 +355,11 @@ const NewRecipePage = () => {
           </div>
 
           <div className="mb-4">
-            <div className="flex h-16 items-center justify-between border-b border-gray-200 pb-2">
-              <h2 className="text-xl font-semibold text-gray-700">재료</h2>
-            </div>
+            {ingredientFields.length > 0 && (
+              <div className="flex h-16 items-center justify-between border-b border-gray-200 pb-2">
+                <h2 className="text-xl font-semibold text-gray-700">재료</h2>
+              </div>
+            )}
 
             <div className="space-y-3 pt-4">
               {ingredientFields.map((field, index) => (
