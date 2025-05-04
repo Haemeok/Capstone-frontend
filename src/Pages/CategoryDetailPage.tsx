@@ -1,5 +1,5 @@
 import { getRecipesByCategory } from '@/api/recipe';
-import RecipeGrid from '@/components/RecipeGrid';
+import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 
