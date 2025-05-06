@@ -224,9 +224,11 @@ export const getRecipeItems = async ({
 };
 
 export const getMyRecipeItems = async ({
+  userId,
   sort,
   pageParam = 0,
 }: {
+  userId: number;
   sort: string;
   pageParam?: number;
 }) => {
@@ -237,7 +239,7 @@ export const getMyRecipeItems = async ({
   };
 
   const response = await axiosInstance.get<DetailedRecipesApiResponse>(
-    END_POINTS.MY_RECIPES,
+    END_POINTS.USER_RECIPES(userId),
     {
       params: apiParams,
     },
@@ -266,5 +268,18 @@ export const getMyFavoriteItems = async ({
     },
   );
 
+  return response.data;
+};
+
+type FinalizeRecipeResponse = {
+  recipeId: number;
+  activeImages: string[];
+  missingImages: string[];
+};
+
+export const finalizeRecipe = async (recipeId: number) => {
+  const response = await axiosInstance.post<FinalizeRecipeResponse>(
+    END_POINTS.RECIPE_FINALIZE(recipeId),
+  );
   return response.data;
 };

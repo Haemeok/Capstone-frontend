@@ -19,6 +19,12 @@ export const axiosInstance = axios.create({
   useAuth: true,
 });
 
+export const axiosAuthInstance = axios.create({
+  baseURL: AXIOS_BASE_URL,
+  timeout: NETWORK.TIMEOUT,
+  withCredentials: true,
+});
+
 axiosInstance.interceptors.request.use(checkAndSetToken);
 
 axiosInstance.interceptors.response.use(

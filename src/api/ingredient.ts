@@ -3,6 +3,7 @@ import { IngredientItem } from '@/type/recipe';
 import { BaseQueryParams, PageResponse } from '@/type/query';
 import { axiosInstance } from './axios';
 import { buildParams } from '@/utils/object';
+import { INGREDIENT_CATEGORY_CODES } from '@/constants/recipe';
 
 export type IngredientsApiResponse = PageResponse<IngredientItem>;
 
@@ -30,7 +31,11 @@ export const getIngredients = async ({
   };
 
   const optionalParams: Partial<IngredientQueryParams> = {
-    category,
+    category: category
+      ? INGREDIENT_CATEGORY_CODES[
+          category as keyof typeof INGREDIENT_CATEGORY_CODES
+        ]
+      : null,
     search,
   };
 
