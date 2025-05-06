@@ -61,7 +61,7 @@ const UserDetailPage = () => {
   const getRecipesByTab = () => {
     switch (activeTab) {
       case '나의 레시피':
-        return <MyRecipesTabContent />;
+        return <MyRecipesTabContent userId={displayUser.id} />;
       case '북마크':
         return <></>;
       case '캘린더':

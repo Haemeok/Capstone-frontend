@@ -8,7 +8,11 @@ type AppProviderProps = {
 
 const AppProvider = ({ children }: AppProviderProps) => {
   const { user, isLoading, isError } = useUserQuery();
-  const { setUser } = useUserStore();
+  const { setUser, initializeAuth } = useUserStore();
+
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
 
   useEffect(() => {
     if (user) {
