@@ -5,6 +5,7 @@ import { Star } from 'lucide-react';
 import { Avatar } from '../ui/avatar';
 import RecipeLikeButton from '../RecipeLikeButton';
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from '@/type/recipe';
+import { useNavigate } from 'react-router';
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
@@ -15,9 +16,12 @@ const DetailedRecipeGridItem = ({
   recipe,
   height,
 }: DetailedRecipeGridItemProps) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className={cn(`relative flex min-h-${height} flex-col gap-2 rounded-2xl`)}
+      onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <SuspenseImage
         src={recipe.imageUrl}
@@ -38,15 +42,15 @@ const DetailedRecipeGridItem = ({
         <p className="truncate font-semibold">{recipe.title}</p>
         <div className="flex items-center gap-[2px]">
           <Star size={15} className="fill-gray-800" />
-          <p className="text-mm text-gray-800">{recipe.rating}</p>
-          <p className="text-mm text-gray-800">{`(${recipe.commentCount})`}</p>
+          <p className="text-mm text-gray-800">{recipe.avgRating}</p>
+          <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
           <p className="text-mm text-gray-800">·</p>
           <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
         </div>
         <div className="flex items-center gap-1">
           <Avatar className="h-8 w-8 rounded-full">
             <img
-              src={'/meat.png'}
+              src={recipe.profileImage}
               alt={recipe.authorName}
               className="h-full w-full rounded-full object-cover"
             />

@@ -17,6 +17,7 @@ export const END_POINTS = {
   COMMENT_LIKE: (id: number) => `/comments/${id}/like`,
   RECIPE_FAVORITE: (id: number) => `/recipes/${id}/favorite`,
   RECIPE_VISIBILITY: (id: number) => `/recipes/${id}/visibility`,
+  RECIPE_FINALIZE: (id: number) => `/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `${BASE_URL}/oauth2/authorization/google`,
   KAKAO_LOGIN: `${BASE_URL}/oauth2/authorization/kakao`,
   NAVER_LOGIN: `${BASE_URL}/oauth2/authorization/naver`,
@@ -24,14 +25,11 @@ export const END_POINTS = {
   TOKEN_REFRESH: '/token/refresh',
   USER_INFO: '/users/me',
   MY_FAVORITES: '/me/favorites',
-  USER_CREATED: (id: number) => `/users/${id}/created`,
-  USER_LIKED: (id: number) => `/users/${id}/liked`,
-  USER_PROFILE: (id: number) => `/users/${id}/profile`,
   MY_INFO: '/me',
   MY_INGREDIENTS: '/me/fridge/items',
   MY_INGREDIENTS_BY_ID: (id: number) => `/me/fridge/items/${id}`,
   MY_INGREDIENTS_BULK: '/me/fridge/items/bulk',
-  MY_RECIPES: '/me/recipes',
+  USER_RECIPES: (id: number) => `/users/${id}/recipes`,
   PRESIGNED_URLS: '/recipes/presigned-urls',
 };
 
