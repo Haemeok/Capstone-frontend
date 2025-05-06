@@ -4,10 +4,13 @@ import { CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { useState } from 'react';
 
-const CollapsibleP = () => {
+type CollapsiblePProps = {
+  content: string;
+};
+
+const CollapsibleP = ({ content }: CollapsiblePProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const content =
-    '캐서롤 접시 바닥에 토마토 소스를 한 겹 펴 바릅니다. 국수 층을 올린 다음 베샤멜 소스 층과 야채 층을 추가합니다. 그 위에 면과 토마토 소스를 한 겹 더 얹고 캐서롤 접시가 가득 찰 때까지 이 패턴을 반복합니다. 베샤멜 소스 층과 남은 버섯과 시금치로 마무리합니다. 타임 잎으로 장식합니다. 200°C/400°F에서 약 30~40분간 또는 측면에 기포가 생기고 윗면이 노릇노릇해질 때까지 구워줍니다. 살짝 식힌 후 슬라이스하여 제공합니다. 맛있게 드세요!';
+
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CardContent className="p-4">
