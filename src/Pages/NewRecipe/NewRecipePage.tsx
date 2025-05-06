@@ -11,22 +11,11 @@ import { useToasts } from '@/hooks/useToasts';
 import IngredientSelector from './IngredientSelector';
 import { DISH_TYPES } from '@/constants/recipe';
 import { cn } from '@/lib/utils';
-
-// 추가: 선택 가능한 태그 목록
-const TAG_OPTIONS = [
-  '한식',
-  '양식',
-  '일식',
-  '중식',
-  '간단',
-  '자취',
-  '집밥',
-  '비건',
-  '저탄고지',
-  '다이어트',
-  '간식',
-  '야식',
-];
+import CookingToolsInput from './CookingToolsInput';
+import RecipeTitleWithImage from './RecipeTitleWithImage';
+import Description from './Description';
+import IngredientSection from './IngredientSection';
+import TagSection from './TagSection';
 
 const NewRecipePage = () => {
   const navigate = useNavigate();
@@ -42,7 +31,6 @@ const NewRecipePage = () => {
   const [stepImagePreviewUrls, setStepImagePreviewUrls] = useState<
     (string | null)[]
   >([]);
-  const [isOpen, setIsOpen] = useState(false);
 
   const { addToast } = useToasts();
 
@@ -76,32 +64,6 @@ const NewRecipePage = () => {
     },
     mode: 'onChange',
   });
-
-  const {
-    fields: ingredientFields,
-    append: appendIngredient,
-    remove: removeIngredient,
-  } = useFieldArray({
-    control,
-    name: 'ingredients',
-  });
-
-  const addIngredient = (ingredient: IngredientPayload) => {
-    appendIngredient({
-      name: ingredient.name,
-      quantity: '',
-      unit: ingredient.unit,
-    });
-  };
-
-  // 추가: 태그 선택/해제 핸들러
-  const handleTagToggle = (tag: string) => {
-    const currentTags = watch('tagNames') || [];
-    const newTags = currentTags.includes(tag)
-      ? currentTags.filter((t) => t !== tag) // 선택 해제
-      : [...currentTags, tag]; // 선택 추가
-    setValue('tagNames', newTags, { shouldDirty: true, shouldValidate: true });
-  };
 
   const onSubmit: SubmitHandler<RecipeFormValues> = (formData) => {
     console.log('폼 데이터:', formData);
@@ -152,109 +114,22 @@ const NewRecipePage = () => {
   const isLoading = isUploading || isCreatingRecipe;
   const submitError = recipeCreationError;
 
-  const imageFileValue = watch('imageFile');
-
-  // imageFileValue가 변경될 때 미리보기 업데이트
-  useEffect(() => {
-    const fileList = imageFileValue;
-    console.log('imageFileValue (should be FileList):', fileList);
-
-    // FileList의 첫 번째 항목을 가져옵니다. 파일이 없으면 undefined가 됩니다.
-    const actualFile = fileList?.[0]; // Optional chaining 사용
-    console.log('Extracted file (should be File or undefined):', actualFile);
-
-    // 실제 File 객체인지 확인합니다.
-    if (actualFile instanceof File) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreviewUrl(reader.result as string);
-      };
-      // 추출한 실제 파일(actualFile)을 사용합니다.
-      reader.readAsDataURL(actualFile);
-    } else {
-      // 파일이 없거나 유효하지 않은 경우 미리보기 제거
-      setImagePreviewUrl(null);
-    }
-    // imageFileValue (FileList)가 변경될 때마다 이 effect 실행
-  }, [imageFileValue]);
-
   console.log(errors, isValid, isDirty);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <form id="recipe-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="relative">
-          <div className="relative flex h-[40vh] w-full cursor-pointer items-center justify-center border-b bg-gray-200 text-gray-400 hover:bg-gray-300">
-            <label
-              htmlFor="imageFile-input"
-              className="absolute inset-0 cursor-pointer"
-            >
-              {imagePreviewUrl ? (
-                <img
-                  src={imagePreviewUrl}
-                  alt="Recipe thumbnail"
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full flex-col items-center justify-center text-center">
-                  <UploadIcon size={48} className="mb-3" />
-                  <p>레시피 대표 이미지 업로드</p>
-                  {errors.imageFile && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.imageFile.message || '이미지 파일은 필수입니다.'}
-                    </p>
-                  )}
-                </div>
-              )}
-            </label>
-            <input
-              type="file"
-              id="imageFile-input"
-              className="hidden"
-              accept="image/*"
-              {...register('imageFile', {
-                required: '대표 이미지를 등록해주세요.',
-              })}
-            />
-          </div>
-
-          <div className="absolute right-0 bottom-0 left-0 flex h-32 flex-col justify-center bg-gradient-to-t from-black/80 to-transparent p-4 pb-8">
-            <div className="flex w-7/8 max-w-7/8 items-center justify-between">
-              <input
-                type="text"
-                className={`border-b bg-transparent pb-2 text-4xl font-bold text-white ${
-                  errors.title ? 'border-red-500' : 'border-white/30'
-                } focus:border-white focus:outline-none`}
-                placeholder="레시피 이름"
-                {...register('title', {
-                  required: '레시피 이름은 필수입니다',
-                })}
-              />
-              <p className="text-sm text-white">{formValues.title.length}/20</p>
-            </div>
-            {errors.title && (
-              <p className="mt-1 text-xs text-red-300">
-                {errors.title.message}
-              </p>
-            )}
-          </div>
-        </div>
+        <RecipeTitleWithImage
+          imagePreviewUrl={imagePreviewUrl}
+          errors={errors}
+          register={register}
+          watch={watch}
+          currentTitle={formValues.title}
+          setImagePreviewUrl={setImagePreviewUrl}
+        />
 
         <div className="mx-auto max-w-3xl px-4 pt-6">
-          <div className="mb-4 rounded-xl bg-white p-4 shadow-sm">
-            <textarea
-              className="h-24 w-full resize-none text-[#777777] focus:outline-none"
-              placeholder="레시피에 대한 간단한 설명을 작성하세요. 어떤 특징이 있는지, 어떤 상황에서 먹기 좋은지 등을 알려주세요."
-              {...register('description', {
-                required: '레시피 설명을 입력해주세요.',
-              })}
-            />
-            {errors.description && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
+          <Description register={register} errors={errors} />
 
           <div className="flex items-center justify-center gap-x-8 gap-y-6 border-b border-gray-200">
             <div className="flex flex-col items-center gap-2">
@@ -354,74 +229,11 @@ const NewRecipePage = () => {
             </div>
           </div>
 
-          <div className="mb-4">
-            {ingredientFields.length > 0 && (
-              <div className="flex h-16 items-center justify-between border-b border-gray-200 pb-2">
-                <h2 className="text-xl font-semibold text-gray-700">재료</h2>
-              </div>
-            )}
-
-            <div className="space-y-3 pt-4">
-              {ingredientFields.map((field, index) => (
-                <div
-                  key={field.id}
-                  className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
-                >
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
-                    <ChefHat size={20} className="text-green-600" />
-                  </div>
-
-                  <div className="flex flex-1 items-center justify-between gap-2">
-                    <p className="flex-1 font-medium text-gray-800">
-                      {field.name}
-                    </p>
-
-                    <div className="flex flex-shrink-0 items-center gap-1">
-                      <input
-                        type="text"
-                        className={`w-24 rounded border border-gray-300 px-2 py-1 text-right focus:border-green-500 focus:outline-none ${errors.ingredients?.[index]?.quantity ? 'border-red-500' : ''}`}
-                        placeholder="예: 100g, 1개, 약간"
-                        {...register(`ingredients.${index}.quantity`, {
-                          required: '수량/단위를 입력해주세요.',
-                        })}
-                      />
-                      {errors.ingredients?.[index]?.quantity && (
-                        <p className="absolute bottom-[-1rem] text-xs text-red-500">
-                          {errors.ingredients[index]?.quantity?.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex-shrink-0">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="text-gray-400 hover:text-red-500"
-                      onClick={() => removeIngredient(index)}
-                    >
-                      <X size={18} />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              className="mt-4 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed border-green-300 py-3 text-green-600 hover:border-green-500 hover:bg-green-50"
-              onClick={() => setIsOpen(true)}
-            >
-              <Plus size={16} />
-              재료 추가하기
-            </Button>
-          </div>
-          <IngredientSelector
-            open={isOpen}
-            onOpenChange={setIsOpen}
-            onIngredientSelect={addIngredient}
+          <IngredientSection
+            control={control}
+            errors={errors}
+            register={register}
           />
-
           <Steps
             watch={watch}
             register={register}
@@ -431,27 +243,12 @@ const NewRecipePage = () => {
             stepImagePreviewUrls={stepImagePreviewUrls}
             setStepImagePreviewUrls={setStepImagePreviewUrls}
           />
-
-          <div className="mt-6 mb-4">
-            <h2 className="mb-3 text-xl font-semibold text-gray-700">태그</h2>
-            <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-sm">
-              {TAG_OPTIONS.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => handleTagToggle(tag)}
-                  className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-                    formValues.tagNames?.includes(tag)
-                      ? 'border-green-500 bg-green-100 text-green-700'
-                      : 'border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  #{tag}
-                </button>
-              ))}
-            </div>
-          </div>
-
+          <CookingToolsInput watch={watch} setValue={setValue} />
+          <TagSection
+            watch={watch}
+            setValue={setValue}
+            tagNames={formValues.tagNames}
+          />
           <div className="mt-8 flex flex-col items-center justify-center gap-4">
             {submitError && (
               <p className="text-sm text-red-600">
