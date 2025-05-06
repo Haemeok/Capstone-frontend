@@ -19,7 +19,6 @@ import RecipeNavBarButtons from '@/components/NavBar/RecipeNavBarButtons';
 
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
-  const [halfRating, setHalfRating] = useState<number>(3.5);
   const imageRef = useRef<HTMLImageElement>(null);
   const observerRef = useRef<HTMLDivElement>(null);
   const [isButtonVisible, setIsButtonVisible] = useState(false);
@@ -57,7 +56,10 @@ const RecipeDetailPage = () => {
     });
   };
 
-  console.log(recipe.comments);
+  const handleNavigateToRating = () => {
+    navigate(`/recipes/${recipe.id}/rate`);
+  };
+
   return (
     <div className="relative mx-auto flex flex-col bg-[#ffffff] pb-16 text-[#2a2229]">
       <TransformingNavbar
@@ -76,33 +78,33 @@ const RecipeDetailPage = () => {
       />
       <div ref={imageRef} className="h-64 w-full">
         <SuspenseImage
-          src={recipe.imageURL}
+          src={recipe.imageUrl}
           alt={recipe.title}
           className="h-full w-full object-cover"
           blackOverlay={true}
         />
       </div>
       <div className="px-2">
-        <Box className="flex flex-col items-center justify-center gap-4">
-          <h1 className="mb-4 text-center text-2xl font-bold">
-            {recipe.title}
-          </h1>
-          <Ratings
-            precision={0.5}
-            allowHalf={true}
-            value={halfRating}
-            onChange={(value) => setHalfRating(value)}
-            className="w-full"
-            showValue={true}
-          />
+        <Box className="flex flex-col items-center justify-center gap-3">
+          <h1 className="text-center text-2xl font-bold">{recipe.title}</h1>
+          <div className="cursor-pointer" onClick={handleNavigateToRating}>
+            <Ratings
+              precision={0.1}
+              allowHalf={true}
+              value={recipe.ratingInfo.avgRating || 0}
+              readOnly={true}
+              className="w-full justify-center"
+              showValue={true}
+            />
+          </div>
           <div className="flex justify-center gap-4">
             <RecipeLikeButton
               recipeId={recipe.id}
               initialIsLiked={recipe.likedByCurrentUser}
               initialLikeCount={recipe.likeCount}
-              buttonClassName="flex items-center gap-1 text-sm cursor-pointer group w-5 h-5"
-              containerClassName="flex-row"
-              isOnNavbar={true}
+              buttonClassName="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
+              isOnNavbar={false}
+              isCountShown={true}
             />
             <SaveButton
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
@@ -117,7 +119,7 @@ const RecipeDetailPage = () => {
         </Box>
         <Box>
           <UserProfile user={recipe.author} />
-          <CollapsibleP />
+          <CollapsibleP content={recipe.description} />
         </Box>
         <Box>
           <div className="flex items-center justify-between">
@@ -138,9 +140,19 @@ const RecipeDetailPage = () => {
           <h2 className="mb-2 text-xl font-semibold">재료</h2>
           <ul className="flex flex-col gap-1">
             {recipe.ingredients.map((ingredient, index) => (
-              <li key={index} className="grid grid-cols-2 gap-4">
+              <li key={index} className="grid grid-cols-3 gap-4">
                 <p className="text-left font-bold">{ingredient.name}</p>
-                <p className="text-left">{ingredient.quantity}</p>
+                <p className="text-left">
+                  {ingredient.quantity}
+                  {ingredient.unit}
+                </p>
+                <p className="text-left">
+                  {ingredient.price
+                    ? ingredient.price *
+                      (ingredient.quantity ? Number(ingredient.quantity) : 1)
+                    : 0}
+                  원
+                </p>
               </li>
             ))}
           </ul>

@@ -14,6 +14,22 @@ export const INGREDIENT_CATEGORIES = [
   '면',
 ];
 
+export const INGREDIENT_CATEGORY_CODES = {
+  전체: '',
+  '가공/유제품': 'dairy',
+  '빵/떡': 'bread',
+  채소: 'vegetable',
+  해산물: 'seafood',
+  과일: 'fruit',
+  '음료/주류': 'beverage',
+  곡물: 'grain',
+  '콩/견과류': 'legume_nut',
+  '조미료/양념': 'seasoning',
+  고기: 'meat',
+  기타: 'other',
+  면: 'noodle',
+};
+
 export const DISH_TYPES = [
   '전체',
   '볶음',
