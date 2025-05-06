@@ -2,11 +2,17 @@ import { BaseRecipesApiResponse, getMyRecipeItems } from '@/api/recipe';
 import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { useUserStore } from '@/store/useUserStore';
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
-const MyRecipesTabContent = () => {
+type MyRecipesTabContentProps = {
+  userId: number;
+};
+
+const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
   const [sort, setSort] = useState<'ASC' | 'DESC'>('ASC');
+
   const {
     data,
     error,
@@ -26,7 +32,8 @@ const MyRecipesTabContent = () => {
     queryKey: ['my-recipes', sort],
     queryFn: ({ pageParam }) =>
       getMyRecipeItems({
-        sort: 'ASC',
+        userId,
+        sort,
         pageParam,
       }),
     getNextPageParam: (lastPage) =>
@@ -34,9 +41,8 @@ const MyRecipesTabContent = () => {
     initialPageParam: 0,
   });
 
-  console.log(error);
-
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
+
   return (
     <RecipeGrid
       recipes={recipes}

@@ -22,18 +22,25 @@ export type RecipeStepPayload = Omit<
   ingredients: IngredientPayload[];
 };
 
+type RatingInfo = {
+  avgRating: number;
+  myRating: number;
+  ratingCount: number;
+};
+
 export type Recipe = {
   id: number;
   title: string;
   dishType: string;
   description: string;
   cookingTime: number | undefined | '';
-  imageURL: string;
+  imageUrl: string;
   youtubeUrl?: string;
   cookingTools: string[];
   servings: number | undefined | '';
   totalIngredientCost?: number;
   marketPrice?: number;
+  ratingInfo: RatingInfo;
   ingredients: IngredientItem[];
   steps: RecipeStep[];
   tagNames: string[];
@@ -57,6 +64,7 @@ export type RecipePayload = Omit<
   | 'likeCount'
   | 'likedByCurrentUser'
   | 'favoriteByCurrentUser'
+  | 'ratingInfo'
 > & {
   ingredients: IngredientPayload[];
   steps: RecipeStepPayload[];
@@ -84,8 +92,8 @@ export type RecipeFormValues = {
 };
 
 export type DetailedRecipeGridItem = BaseRecipeGridItem & {
-  rating: number;
-  commentCount: number;
+  avgRating: number;
+  ratingCount: number;
 };
 
 export type BaseRecipeGridItem = {
@@ -93,6 +101,7 @@ export type BaseRecipeGridItem = {
   title: string;
   imageUrl: string;
   authorName: string;
+  profileImage: string;
   cookingTime?: number;
   createdAt: string;
   likeCount: number;
@@ -105,7 +114,7 @@ export type IngredientItem = {
   imageUrl: string;
   category: string;
   quantity?: string;
-  price: number;
+  price?: number;
   unit: string;
   inFridge: boolean;
 };
