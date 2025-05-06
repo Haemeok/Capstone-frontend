@@ -50,9 +50,9 @@ export const handleTokenError = async (
 
   const { data, status } = error.response;
 
-  if (status === 401 && data.message === '만료된 토큰입니다.') {
+  if (status === 401) {
     try {
-      const { token: accessToken } = await postTokenRefresh();
+      const { accessToken } = await postTokenRefresh();
       localStorage.setItem('accessToken', accessToken);
       originRequest.headers.Authorization = `Bearer ${accessToken}`;
 

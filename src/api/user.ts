@@ -1,10 +1,11 @@
-import { axiosInstance } from '@/api/axios';
+import { axiosAuthInstance, axiosInstance } from '@/api/axios';
 
 import { END_POINTS } from '@/constants/api';
 import { User } from '@/type/user';
 
 type TokenRefrechResponse = {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 export const getUserInfo = async () => {
@@ -24,7 +25,7 @@ export const getMyInfo = async () => {
 };
 
 export const postTokenRefresh = async () => {
-  const { data } = await axiosInstance.post<TokenRefrechResponse>(
+  const { data } = await axiosAuthInstance.post<TokenRefrechResponse>(
     END_POINTS.TOKEN_REFRESH,
   );
   return data;
