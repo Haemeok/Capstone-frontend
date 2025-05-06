@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { getIngredients, IngredientsApiResponse } from '@/api/ingredient';
@@ -30,6 +30,9 @@ const IngredientSelector = ({
   onIngredientSelect,
 }: IngredientSelectorProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
+    new Set(),
+  );
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
@@ -63,12 +66,23 @@ const IngredientSelector = ({
     initialPageParam: 0,
   });
 
+  useEffect(() => {
+    if (open) {
+      setAddedIngredientIds(new Set());
+    }
+  }, [open]);
+
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
 
-  const handleAddClick = (ingredient: IngredientPayload) => {
-    onIngredientSelect(ingredient);
+  const handleAddClick = (ingredient: IngredientItem) => {
+    onIngredientSelect({
+      name: ingredient.name,
+      quantity: '',
+      unit: ingredient.unit,
+    });
+    setAddedIngredientIds((prevIds) => new Set(prevIds).add(ingredient.id));
   };
 
   return (
@@ -144,14 +158,26 @@ const IngredientSelector = ({
                       <p className="font-medium">{ingredient.name}</p>
                       {/* 필요시 다른 정보 표시 (예: 카테고리) */}
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700" // 스타일 조정
-                      onClick={() => handleAddClick(ingredient)} // API 응답 타입 확인 필요
-                    >
-                      추가
-                    </Button>
+                    {addedIngredientIds.has(ingredient.id) ? (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="flex items-center gap-1 text-gray-400"
+                        disabled
+                      >
+                        <Check size={16} />
+                        추가됨
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700"
+                        onClick={() => handleAddClick(ingredient)}
+                      >
+                        추가
+                      </Button>
+                    )}
                   </div>
                 ))}
               <div ref={ref} className="h-10 text-center">
