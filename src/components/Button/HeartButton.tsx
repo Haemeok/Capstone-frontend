@@ -18,7 +18,7 @@ type HeartButtonProps = {
 };
 
 const HeartButton = ({
-  containerClassName,
+  containerClassName = '',
   buttonClassName = '',
   iconClassName = '',
   onClick,
