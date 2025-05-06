@@ -18,6 +18,7 @@ const RecipeNavBarButtons = ({
   return (
     <div className="flex shrink-0">
       <RecipeLikeButton
+        isOnNavbar={true}
         recipeId={recipeId}
         initialIsLiked={initialIsLiked}
         initialLikeCount={initialLikeCount}

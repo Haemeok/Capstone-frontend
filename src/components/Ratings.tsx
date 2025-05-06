@@ -4,7 +4,8 @@ import StarIcon from './StarIcon';
 type Size = 'sm' | 'md' | 'lg' | 'xl';
 
 type RatingProps = {
-  count?: number;
+  starCount?: number;
+  ratingCount?: number;
   value?: number;
   onChange?: (value: number) => void;
   readOnly?: boolean;
@@ -16,11 +17,12 @@ type RatingProps = {
 };
 
 const Ratings = ({
-  count = 5,
+  starCount = 5,
+  ratingCount = 0,
   value = 0,
   onChange,
   readOnly = false,
-  size = 'md',
+  size = 'lg',
   showValue = false,
   precision = 1,
   allowHalf = false,
@@ -30,8 +32,8 @@ const Ratings = ({
   const starRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    starRefs.current = starRefs.current.slice(0, count);
-  }, [count]);
+    starRefs.current = starRefs.current.slice(0, starCount);
+  }, [starCount]);
 
   const sizeClasses: Record<Size, string> = {
     sm: 'h-4 w-4',
@@ -95,10 +97,19 @@ const Ratings = ({
     setHoverValue(0);
   };
 
+  const ratingMessage = (value: number, count: number) => {
+    if (count < 5) {
+      return '아직 평가가 적어요. 평가를 남겨보세요 !';
+    }
+    return `${count}명의 사람들이 ${value}점 줬어요 !`;
+  };
+
   return (
-    <div className={`flex flex-col items-center justify-center ${className}`}>
-      <div className="flex items-center gap-4">
-        {[...Array(count)].map((_, idx) => {
+    <div
+      className={`flex flex-col items-center justify-center ${className} gap-2`}
+    >
+      <div className="flex items-center gap-2">
+        {[...Array(starCount)].map((_, idx) => {
           const starValue = idx + 1;
           const currentValue = hoverValue || value;
 
@@ -128,14 +139,12 @@ const Ratings = ({
             </div>
           );
         })}
-
-        {showValue && (
-          <span className="ml-2 text-sm font-medium">
-            {hoverValue > 0 ? hoverValue.toFixed(1) : value.toFixed(1)} /{' '}
-            {count}
-          </span>
-        )}
       </div>
+      {showValue && (
+        <span className="text-sm text-gray-400">
+          {ratingMessage(value, ratingCount)}
+        </span>
+      )}
     </div>
   );
 };

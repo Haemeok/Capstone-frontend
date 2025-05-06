@@ -46,8 +46,8 @@ const TransformingNavbar = ({
 
         if (headerRef.current) {
           const currentTextColor =
-            currentOpacity > textColorThreshold ? 'text-black' : 'text-white';
-
+            currentOpacity > textColorThreshold ? 'black' : 'white';
+          console.log('currentTextColor', currentTextColor, currentOpacity);
           headerRef.current.style.setProperty(
             '--nav-opacity',
             currentOpacity.toString(),
