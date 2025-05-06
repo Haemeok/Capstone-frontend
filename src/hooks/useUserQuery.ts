@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { getMyInfo } from '@/api/user';
-import { getAccessToken } from '@/utils/auth';
+import { useUserStore } from '@/store/useUserStore';
 
 export const useUserQuery = () => {
-  const hasToken = !!getAccessToken();
+  const hasToken = useUserStore((state) => state.hasToken);
   const {
     data: userData,
     isLoading,

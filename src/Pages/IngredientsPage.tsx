@@ -75,7 +75,7 @@ const IngredientsPage = () => {
             className={cn(
               'flex-shrink-0 px-4 py-3 text-sm font-medium',
               selectedCategory === category
-                ? 'border-b-2 border-[#5cc570] text-[#5cc570]'
+                ? 'text-olive-light'
                 : 'text-gray-500 hover:text-gray-700',
             )}
           >

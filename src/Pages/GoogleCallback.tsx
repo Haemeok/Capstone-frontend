@@ -13,7 +13,6 @@ const GoogleCallback = () => {
 
     if (token) {
       loginAction(token);
-      console.log(token);
       navigate('/', { replace: true });
     } else {
       navigate('/login', { replace: true });
