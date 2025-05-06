@@ -65,6 +65,8 @@ export type RecipePayload = Omit<
   | 'likedByCurrentUser'
   | 'favoriteByCurrentUser'
   | 'ratingInfo'
+  | 'comments'
+  | 'imageUrl'
 > & {
   ingredients: IngredientPayload[];
   steps: RecipeStepPayload[];

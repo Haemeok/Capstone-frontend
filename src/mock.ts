@@ -191,9 +191,11 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
-    rating: 4.5,
     cookingTime: 30,
-    commentCount: 10,
+    ratingCount: 10,
+    profileImage:
+      'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
+    avgRating: 4.5,
   },
 
   {
@@ -205,9 +207,11 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
-    rating: 4.5,
     cookingTime: 30,
-    commentCount: 10,
+    ratingCount: 10,
+    profileImage:
+      'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
+    avgRating: 4.5,
   },
   {
     id: 3,
@@ -218,9 +222,11 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
-    rating: 4.5,
     cookingTime: 30,
-    commentCount: 10,
+    ratingCount: 10,
+    profileImage:
+      'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
+    avgRating: 4.5,
   },
   {
     id: 4,
@@ -231,9 +237,11 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
-    rating: 4.5,
     cookingTime: 30,
-    commentCount: 10,
+    ratingCount: 10,
+    profileImage:
+      'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
+    avgRating: 4.5,
   },
   {
     id: 5,
@@ -244,9 +252,11 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
-    rating: 4.5,
     cookingTime: 30,
-    commentCount: 10,
+    ratingCount: 10,
+    profileImage:
+      'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
+    avgRating: 4.5,
   },
 
   {
@@ -258,14 +268,13 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
-    rating: 4.5,
     cookingTime: 30,
-    commentCount: 10,
+    ratingCount: 10,
+    profileImage:
+      'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
+    avgRating: 4.5,
   },
   {
-    rating: 4.5,
-    cookingTime: 30,
-    commentCount: 10,
     id: 7,
     title: '타코 볼',
     imageUrl:
@@ -274,6 +283,11 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
+    cookingTime: 30,
+    ratingCount: 10,
+    profileImage:
+      'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
+    avgRating: 4.5,
   },
   {
     id: 8,
@@ -284,9 +298,11 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     createdAt: '2021-01-01',
     likeCount: 10,
     likedByCurrentUser: false,
-    rating: 4.5,
     cookingTime: 30,
-    commentCount: 10,
+    ratingCount: 10,
+    profileImage:
+      'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
+    avgRating: 4.5,
   },
 ];
 

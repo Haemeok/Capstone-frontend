@@ -3,13 +3,13 @@ import {
   useQueryClient,
   InfiniteData,
 } from '@tanstack/react-query';
-import { postRecipeLike, RecipesApiResponse } from '@/api/recipe'; // API 함수 예시
+import { postRecipeLike, DetailedRecipesApiResponse } from '@/api/recipe'; // API 함수 예시
 import { Recipe } from '@/type/recipe'; // 레시피 타입 예시
 
 // Context 타입 정의 (낙관적 업데이트 시 필요)
 type LikeRecipeMutationContext = {
   previousRecipeDetail?: Recipe;
-  previousRecipeListData?: InfiniteData<RecipesApiResponse>;
+  previousRecipeListData?: InfiniteData<DetailedRecipesApiResponse>;
   // 다른 리스트 타입이 있다면 추가...
 };
 
@@ -45,7 +45,7 @@ export const useLikeRecipeMutation = (recipeId: number) => {
       // 리스트 데이터도 찾아서 업데이트 (더 복잡) - 여기서는 예시로 하나만 처리
       // 실제로는 활성화된 모든 레시피 리스트 쿼리를 찾아 업데이트해야 할 수 있음
       const previousRecipeListData =
-        queryClient.getQueryData<InfiniteData<RecipesApiResponse>>(
+        queryClient.getQueryData<InfiniteData<DetailedRecipesApiResponse>>(
           recipesListRootKey,
         ); // 또는 더 구체적인 키
 
@@ -66,7 +66,7 @@ export const useLikeRecipeMutation = (recipeId: number) => {
 
       // 3. 캐시 즉시 업데이트 (List) - 구현이 복잡할 수 있음
       if (previousRecipeListData) {
-        queryClient.setQueryData<InfiniteData<RecipesApiResponse>>(
+        queryClient.setQueryData<InfiniteData<DetailedRecipesApiResponse>>(
           recipesListRootKey,
           (oldData) => {
             if (!oldData) return undefined;
