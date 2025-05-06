@@ -5,7 +5,6 @@ import './globals.css';
 import AppProvider from './providers/AppProvider';
 import ToastProvider from './providers/ToastProvider';
 import { queryClient } from './lib/queryClient';
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
