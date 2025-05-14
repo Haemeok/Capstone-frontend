@@ -31,7 +31,7 @@ const TagSection = ({ watch, setValue, tagNames }: TagSectionProps) => {
               onClick={() => handleTagToggle(tagName)}
               className={`rounded-full border px-3 py-1 text-sm transition-colors ${
                 tagNames?.includes(tagName)
-                  ? 'border-green-500 bg-green-100 text-green-700'
+                  ? 'border-olive-mint'
                   : 'border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100'
               }`}
             >

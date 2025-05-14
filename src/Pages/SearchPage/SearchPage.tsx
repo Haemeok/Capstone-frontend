@@ -166,7 +166,7 @@ const SearchPage = () => {
       <RecipeGrid
         recipes={recipes}
         hasNextPage={hasNextPage}
-        ref={ref}
+        observerRef={ref}
         noResults={noResults}
         noResultsMessage={noResultsMessage}
         lastPageMessage={'모든 레시피를 불러왔습니다.'}
