@@ -59,7 +59,7 @@ const HeartButton = ({
           height={height}
           className={cn(
             iconClassName,
-            isLiked ? 'fill-[#d12d2e] text-[#d12d2e]' : '',
+            isLiked ? 'fill-[#d12d2e] text-[#d12d2e] opacity-100' : '',
             isAnimating ? 'beat' : '',
           )}
         />
