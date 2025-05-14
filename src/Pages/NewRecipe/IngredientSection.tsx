@@ -55,7 +55,7 @@ const IngredientSection = ({
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
-                <ChefHat size={20} className="text-green-600" />
+                <ChefHat size={20} className="text-olive-light" />
               </div>
 
               <div className="flex h-full flex-1 items-center justify-between gap-2">
@@ -95,7 +95,7 @@ const IngredientSection = ({
       <Button
         type="button"
         variant="outline"
-        className="mt-4 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed border-green-300 py-3 text-green-600 hover:border-green-500 hover:bg-green-50"
+        className="border-olive-light text-olive-medium mt-4 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed py-3 hover:text-white"
         onClick={() => setIsOpen(true)}
       >
         <Plus size={16} />

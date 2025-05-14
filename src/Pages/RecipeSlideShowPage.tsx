@@ -44,8 +44,7 @@ const RecipeSlideShowPage = () => {
   };
 
   const getStepProgress = (stepIndex: number) => {
-    const totalSteps = recipeSteps.length;
-    const stepSize = 1 / totalSteps;
+    const stepSize = 1 / TOTAL_STEPS;
     const stepStart = stepSize * stepIndex;
     const stepEnd = stepSize * (stepIndex + 1);
 
@@ -117,13 +116,17 @@ const RecipeSlideShowPage = () => {
               </span>
             </div>
             <div
-              className="absolute bottom-0 left-0 h-full bg-[#53be67]"
+              className="bg-olive-mint absolute bottom-0 left-0 h-full"
               style={{ width: `${getStepProgress(index - 1)}%` }}
             />
           </div>
         ))}
-        <div className="bg-muted border-border flex h-full w-12 items-center justify-center border-l">
-          <Bookmark className="text-muted-foreground h-4 w-4" />
+        <div className="bg-muted border-border relative h-full w-12 flex-1 items-center justify-center border-l">
+          <Bookmark className="text-muted-foreground absolute top-1 left-2 z-20 h-4 w-4" />
+          <div
+            className="bg-olive-mint absolute bottom-0 left-0 h-full"
+            style={{ width: `${getStepProgress(recipeSteps.length)}%` }}
+          />
         </div>
       </div>
     </div>
