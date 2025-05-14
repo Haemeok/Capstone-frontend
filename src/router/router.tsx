@@ -3,7 +3,7 @@ import Root from './Root';
 import RecipesPage from '../Pages/RecipesPage';
 import NewRecipePage from '../Pages/NewRecipe/NewRecipePage';
 import RecipeDetailPage from '../Pages/RecipeDetailPage';
-import CommentsPage from '@/Pages/CommentsPage';
+import CommentsPage from '@/Pages/CommentPage/CommentsPage';
 import DiscussionPage from '@/Pages/DiscussionPage';
 import UserDetailPage from '@/Pages/UserPage/UserDetailPage';
 import AIRecipePage from '@/Pages/AIRecipePage';
@@ -17,6 +17,7 @@ import RecipeSlideShowPage from '@/Pages/RecipeSlideShowPage';
 import GoogleCallback from '@/Pages/GoogleCallback';
 
 import CategoryDetailPage from '@/Pages/CategoryDetailPage';
+import ReviewPage from '@/Pages/ReviewPage/ReviewPage';
 
 const router = createBrowserRouter([
   {
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
   {
     path: 'login',
     element: <LoginPage />,
+  },
+  {
+    path: 'recipes/:recipeId/rate',
+    element: <ReviewPage />,
   },
 ]);
 

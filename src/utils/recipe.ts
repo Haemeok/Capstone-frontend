@@ -1,57 +1,106 @@
 import { FileObject } from '@/type/file';
 import { FileInfoRequest } from '@/type/file';
 import { RecipePayload } from '@/type/recipe';
-
+import { convertImageToWebP } from '@/utils/image';
 import { RecipeFormValues } from '@/type/recipe';
 
-export const prepareRecipeData = (
+export const prepareRecipeData = async (
   formData: RecipeFormValues,
-): {
+): Promise<{
   recipeData: RecipePayload;
   filesToUploadInfo: FileInfoRequest[];
   fileObjects: FileObject[];
-} => {
+}> => {
   const filesToUploadInfo: FileInfoRequest[] = [];
   const fileObjects: FileObject[] = [];
 
-  // 메인 이미지 처리
   if (formData.imageFile && formData.imageFile[0]) {
-    const mainImageFile = formData.imageFile[0];
+    const mainImageFileOriginal = formData.imageFile[0];
+    let mainFileToProcess: File = mainImageFileOriginal;
+    let mainContentType: string = mainImageFileOriginal.type;
+    let mainFilename: string = mainImageFileOriginal.name;
+
+    if (mainImageFileOriginal.type.startsWith('image/')) {
+      const webpResult = await convertImageToWebP(mainImageFileOriginal);
+      if (webpResult) {
+        mainFileToProcess = new File([webpResult.blob], webpResult.filename, {
+          type: 'image/webp',
+        });
+        mainContentType = 'image/webp';
+        mainFilename = webpResult.filename;
+      }
+    }
+    // FileInfoRequest에 filename 추가 (서버에서 파일 식별 및 Presigned URL 생성 시 사용될 수 있음)
     filesToUploadInfo.push({
       type: 'main',
-      contentType: mainImageFile.type as FileInfoRequest['contentType'],
+      contentType: mainContentType as FileInfoRequest['contentType'],
     });
-    fileObjects.push({ file: mainImageFile, type: 'main' });
+    fileObjects.push({
+      file: mainFileToProcess,
+      type: 'main',
+    });
   } else {
     throw new Error('레시피 대표 이미지는 필수입니다.');
   }
 
-  // 스텝 이미지 처리
-  formData.steps.forEach((step, index) => {
-    if (step.imageFile && step.imageFile[0]) {
-      const stepImageFile = step.imageFile[0];
-      filesToUploadInfo.push({
-        type: 'step',
-        contentType: stepImageFile.type as FileInfoRequest['contentType'],
-        stepIndex: index,
-      });
-      fileObjects.push({
-        file: stepImageFile,
-        type: 'step',
-        stepIndex: index,
-      });
-    }
+  const stepImageProcessingPromises = formData.steps.map(
+    async (step, index) => {
+      if (step.imageFile && step.imageFile[0]) {
+        const stepImageFileOriginal = step.imageFile[0];
+        let stepFileToProcess: File = stepImageFileOriginal;
+        let stepContentType: string = stepImageFileOriginal.type;
+        let stepFilename: string = stepImageFileOriginal.name;
+
+        if (stepImageFileOriginal.type.startsWith('image/')) {
+          const webpResult = await convertImageToWebP(stepImageFileOriginal);
+          if (webpResult) {
+            stepFileToProcess = new File(
+              [webpResult.blob],
+              webpResult.filename,
+              { type: 'image/webp' },
+            );
+            stepContentType = 'image/webp';
+            stepFilename = webpResult.filename;
+          }
+        }
+        return {
+          // 각 스텝의 처리 결과를 반환
+          fileInfo: {
+            type: 'step' as 'step', // 타입 명시
+            contentType: stepContentType as FileInfoRequest['contentType'],
+            stepIndex: index,
+            filename: stepFilename,
+            // contentLength: stepFileToProcess.size,
+          },
+          fileObject: {
+            file: stepFileToProcess,
+            type: 'step' as 'step',
+            stepIndex: index,
+            // filename: stepFilename (FileObject 타입에 filename 추가 고려)
+          },
+        };
+      }
+      return null; // 이미지가 없는 스텝은 null 반환
+    },
+  );
+
+  // 모든 스텝 이미지 처리가 완료될 때까지 기다림
+  const processedStepImages = (
+    await Promise.all(stepImageProcessingPromises)
+  ).filter((result): result is NonNullable<typeof result> => result !== null);
+
+  processedStepImages.forEach((processed) => {
+    filesToUploadInfo.push(processed.fileInfo);
+    fileObjects.push(processed.fileObject);
   });
 
-  // RecipePayload 생성 (imageURL 제거 또는 서버 처리 의존)
-  // postRecipe API가 imageURL을 생성하거나 받지 않는다고 가정
   const recipeData: RecipePayload = {
     title: formData.title,
     description: formData.description,
     cookingTime: Number(formData.cookingTime) || 0,
     servings: Number(formData.servings) || 0,
     dishType: formData.dishType,
-    // imageURL 필드를 제거하거나, 서버에서 생성한다고 가정
+
     ingredients: formData.ingredients.filter((i) => i.name?.trim()),
     steps: formData.steps
       .filter((s) => s.instruction?.trim())
@@ -64,12 +113,111 @@ export const prepareRecipeData = (
     tagNames: formData.tagNames || [],
   };
 
-  // RecipePayload 타입에 맞게 imageURL 필드 제거 혹은 서버 처리 확인 후 조정 필요
-  // 여기서는 imageURL이 서버에서 처리된다고 가정하고 타입을 맞춤.
-  // 만약 클라이언트에서 빈 문자열이라도 보내야 한다면 타입을 RecipePayload로 유지하고 imageURL: '' 추가
   return {
     recipeData,
     filesToUploadInfo,
     fileObjects,
   };
+};
+
+export const formatTimeAgo = (
+  date: Date | string | number,
+  now: Date = new Date(),
+): string => {
+  const dateP = date + 'Z';
+  const then =
+    typeof date === 'string' || typeof date === 'number'
+      ? new Date(dateP)
+      : date;
+
+  if (isNaN(then.getTime())) {
+    console.error('Invalid date provided to formatTimeAgo:', date);
+    return '유효하지 않은 날짜';
+  }
+
+  const seconds = Math.round((now.getTime() - then.getTime()) / 1000);
+  const minutes = Math.round(seconds / 60);
+  const hours = Math.round(minutes / 60);
+  const days = Math.round(hours / 24);
+  const weeks = Math.round(days / 7);
+  const months = Math.round(days / 30.44);
+  const years = Math.round(days / 365.25);
+
+  if (seconds < 0) {
+    console.warn(
+      "Future date provided to formatTimeAgo, treating as 'just now'. Input:",
+      date,
+    );
+    return '방금 전';
+  }
+
+  if (seconds < 60) {
+    return '방금 전';
+  } else if (minutes < 60) {
+    return `${minutes}분 전`;
+  } else if (hours < 24) {
+    return `${hours}시간 전`;
+  } else if (days === 1) {
+    return '어제';
+  } else if (days < 7) {
+    return `${days}일 전`;
+  } else if (weeks < 5) {
+    return `${weeks}주 전`;
+  } else if (months < 12) {
+    return `${months}개월 전`;
+  }
+
+  if (now.getFullYear() === then.getFullYear()) {
+    return `${then.getMonth() + 1}월 ${then.getDate()}일`;
+  } else {
+    return `${then.getFullYear()}년 ${then.getMonth() + 1}월 ${then.getDate()}일`;
+  }
+};
+
+export const formatPrice = (
+  value: number | string | null | undefined,
+  currencySymbol: string = '',
+  symbolPosition: 'prefix' | 'suffix' = 'suffix',
+): string => {
+  if (value === null || value === undefined || value === '') {
+    const defaultValue = '0';
+    return symbolPosition === 'prefix'
+      ? `${currencySymbol}${defaultValue}`
+      : `${defaultValue}${currencySymbol}`;
+  }
+
+  const num = Number(value);
+
+  if (isNaN(num)) {
+    console.error('Invalid number provided to formatPrice:', value);
+    const errorValue = '0';
+    return symbolPosition === 'prefix'
+      ? `${currencySymbol}${errorValue}`
+      : `${errorValue}${currencySymbol}`;
+  }
+
+  try {
+    const formattedNumber = new Intl.NumberFormat('ko-KR').format(num);
+
+    if (symbolPosition === 'prefix') {
+      return `${currencySymbol}${formattedNumber}`;
+    } else {
+      return `${formattedNumber}${currencySymbol}`;
+    }
+  } catch (error) {
+    console.warn(
+      'Intl.NumberFormat not supported or failed, using fallback for formatPrice:',
+      error,
+    );
+
+    const parts = String(num).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const fallbackFormattedNumber = parts.join('.');
+
+    if (symbolPosition === 'prefix') {
+      return `${currencySymbol}${fallbackFormattedNumber}`;
+    } else {
+      return `${fallbackFormattedNumber}${currencySymbol}`;
+    }
+  }
 };
