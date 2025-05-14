@@ -58,7 +58,7 @@ const RecipesPage = () => {
         recipes={recipes}
         isSimple={false}
         hasNextPage={hasNextPage}
-        ref={ref}
+        observerRef={ref}
         noResults={noResults}
         noResultsMessage={noResultsMessage}
       />
