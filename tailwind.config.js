@@ -6,9 +6,11 @@ module.exports = {
       colors: {
         olive: {
           DEFAULT: '#526c04',
-          light: '#609966',
+          light: '#91c788',
+          medium: '#609966',
+          mint: '#43c278',
         },
-        'olive-light-bg': '#91c788',
+
         dark: {
           DEFAULT: '#2a2229',
           light: '#393a40',
