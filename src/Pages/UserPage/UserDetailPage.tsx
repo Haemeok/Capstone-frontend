@@ -22,6 +22,8 @@ import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 import { useNavigate } from 'react-router';
 import { useUserStore } from '@/store/useUserStore';
 import MyRecipesTabContent from './MyRecipesTabContent';
+import CalendarTabContent from './CalendarTabContent';
+import MyFavoriteRecipesTabContent from './MyFavoriteRecipesTabContent';
 
 interface Tab {
   id: string;
@@ -63,9 +65,9 @@ const UserDetailPage = () => {
       case '나의 레시피':
         return <MyRecipesTabContent userId={displayUser.id} />;
       case '북마크':
-        return <></>;
+        return <MyFavoriteRecipesTabContent />;
       case '캘린더':
-        return <></>;
+        return <CalendarTabContent />;
       default:
         return <></>;
     }
@@ -79,7 +81,7 @@ const UserDetailPage = () => {
 
       <div className="relative z-10 px-6">
         <div className="flex items-end justify-between">
-          <div className="flex items-end">
+          <div className="flex items-end gap-4">
             <div className="relative">
               <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-white shadow-xl">
                 <img
@@ -95,15 +97,9 @@ const UserDetailPage = () => {
               )}
             </div>
 
-            <div className="mb-2 ml-4">
-              <h2 className="text-2xl font-bold text-black">
-                {displayUser.nickname}
-              </h2>
-              <p className="text-sm text-black/80">
-                {displayUser.username ||
-                  '@' + displayUser.nickname.toLowerCase().replace(/\s/g, '')}
-              </p>
-            </div>
+            <h2 className="text-dark mb-5 text-2xl font-bold">
+              {displayUser.nickname}
+            </h2>
           </div>
           {!user ? (
             <Button
@@ -123,7 +119,7 @@ const UserDetailPage = () => {
         </div>
 
         <p className="mt-3 max-w-[90%] text-sm text-black/90">
-          {!user ? displayUser.profileContent : '테스트 상태메세지'}
+          {displayUser.profileContent}
         </p>
       </div>
 
@@ -141,10 +137,9 @@ const UserDetailPage = () => {
             >
               <span className="flex flex-col items-center">
                 <tab.icon size={18} className="mb-1" />
-                <p>{tab.label}</p>
               </span>
               {activeTab === tab.id && (
-                <div className="bg-olive-light absolute right-0 bottom-0 left-0 h-[3px]" />
+                <div className="bg-olive-light absolute bottom-0 left-1/2 h-[3px] w-1/3 -translate-x-1/2" />
               )}
             </button>
           ))}

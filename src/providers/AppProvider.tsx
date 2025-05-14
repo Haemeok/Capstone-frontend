@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import { useUserQuery } from '@/hooks/useUserQuery';
 import { useUserStore } from '@/store/useUserStore';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 type AppProviderProps = {
   children: React.ReactNode;
 };
+
+gsap.registerPlugin(ScrollTrigger);
 
 const AppProvider = ({ children }: AppProviderProps) => {
   const { user, isLoading, isError } = useUserQuery();

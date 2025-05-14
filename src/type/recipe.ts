@@ -139,3 +139,17 @@ export type SpecificOption = {
 };
 
 export type FilterOption = DefaultOption | SpecificOption;
+
+export type RecipeHistoryItem = {
+  recipeId: number;
+  recipeTitle: string;
+  savings: number;
+  imageUrl: string;
+};
+
+export type RecipeDailySummary = {
+  date: string;
+  totalSavings: number;
+  totalCount: number;
+  firstImageUrl: string;
+};
