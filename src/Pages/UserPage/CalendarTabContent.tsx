@@ -31,11 +31,6 @@ export function CalendarTabContent() {
     });
   };
 
-  // 월 이름 포맷팅
-  const formatCaption = (month: Date) => {
-    return <div className="text-xl font-bold">{format(month, 'yyyy.M')}</div>;
-  };
-
   return (
     <div className="w-full">
       <div className="mx-10 mb-5 flex flex-col items-center justify-center border-b border-gray-200 pt-5">
@@ -55,7 +50,9 @@ export function CalendarTabContent() {
         locale={ko}
         month={currentMonth}
         onMonthChange={setCurrentMonth}
-        formatters={{ formatCaption }}
+        formatters={{
+          formatCaption: (month) => format(month, 'yyyy.M'),
+        }}
         modifiers={{
           hasEvent: (date) => getEventForDay(date) !== undefined,
         }}
@@ -86,9 +83,9 @@ export function CalendarTabContent() {
           day_hidden: 'invisible',
         }}
         components={{
-          Day: ({ date, displayMonth }) => {
-            const dateNumber = date.getDate();
-            if (date.getMonth() !== displayMonth.getMonth()) {
+          Day: ({ day }) => {
+            const dateNumber = day.date.getDate();
+            if (day.date.getMonth() !== day.displayMonth.getMonth()) {
               return (
                 <div className="flex h-full w-full items-center justify-center opacity-30">
                   {dateNumber}
@@ -96,14 +93,14 @@ export function CalendarTabContent() {
               );
             }
 
-            const summary = getEventForDay(date);
+            const summary = getEventForDay(day.date);
 
             if (summary) {
               return (
                 <div className="relative h-full w-full">
                   <img
                     src={summary.firstImageUrl}
-                    alt={`이벤트: ${format(date, 'yyyy-MM-dd')}`}
+                    alt={`이벤트: ${format(day.date, 'yyyy-MM-dd')}`}
                     className="h-full w-full rounded-md object-cover"
                   />
                   {summary.totalCount && (
@@ -116,9 +113,9 @@ export function CalendarTabContent() {
             }
             const today = new Date();
             const isToday =
-              date.getDate() === today.getDate() &&
-              date.getMonth() === today.getMonth() &&
-              date.getFullYear() === today.getFullYear();
+              day.date.getDate() === today.getDate() &&
+              day.date.getMonth() === today.getMonth() &&
+              day.date.getFullYear() === today.getFullYear();
 
             return (
               <div
@@ -135,12 +132,26 @@ export function CalendarTabContent() {
               </div>
             );
           },
-          IconLeft: ({ className, ...props }) => (
-            <ChevronLeft className={cn('size-6', className)} {...props} />
-          ),
-          IconRight: ({ className, ...props }) => (
-            <ChevronRight className={cn('size-6', className)} {...props} />
-          ),
+          PreviousMonthButton: ({ className, ...props }) => {
+            return (
+              <button
+                className={cn('flex items-center justify-center', className)}
+                {...props}
+              >
+                <ChevronLeft className="size-6" />
+              </button>
+            );
+          },
+          NextMonthButton: ({ className, ...props }) => {
+            return (
+              <button
+                className={cn('flex items-center justify-center', className)}
+                {...props}
+              >
+                <ChevronRight className="size-6" />
+              </button>
+            );
+          },
         }}
       />
     </div>
