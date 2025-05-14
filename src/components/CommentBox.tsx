@@ -2,11 +2,9 @@ import { Avatar } from '@/components/ui/avatar';
 import { Comment } from '@/type/comment';
 import { MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { useState } from 'react';
-import HeartButton from '@/components/Button/HeartButton';
 import CommentLikeButton from './comment/CommentLikeButton';
 import SuspenseImage from './Image/SuspenseImage';
-
+import { formatTimeAgo } from '@/utils/recipe';
 type CommentProps = {
   comment: Comment;
   hideReplyButton?: boolean;
@@ -18,6 +16,8 @@ const CommentBox = ({ comment, hideReplyButton = false }: CommentProps) => {
   const handleReplyClick = () => {
     navigate(`${comment.id}`);
   };
+
+  const formattedDate = formatTimeAgo(comment.createdAt);
 
   return (
     <div className="bg-beige flex w-full flex-col gap-2 rounded-2xl p-4">
@@ -35,7 +35,7 @@ const CommentBox = ({ comment, hideReplyButton = false }: CommentProps) => {
           </div>
         </div>
         <div className="flex items-center">
-          <p className="text-sm text-gray-400">{comment.createdAt}</p>
+          <p className="text-sm text-gray-400">{formattedDate}</p>
           <button className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
             •••
           </button>

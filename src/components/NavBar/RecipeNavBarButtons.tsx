@@ -24,6 +24,7 @@ const RecipeNavBarButtons = ({
         initialLikeCount={initialLikeCount}
         buttonClassName="flex-shrink-0 transition-colors duration-300 hover:bg-gray-200/30 rounded-full"
         aria-label="좋아요"
+        iconClassName="fill-gray-300 opacity-80"
       />
       <ShareButton
         className={`flex-shrink-0 rounded-full p-2 transition-colors duration-300 hover:bg-gray-200/30`}

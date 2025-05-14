@@ -34,7 +34,7 @@ const DetailedRecipeGridItem = ({
           initialIsLiked={recipe.likedByCurrentUser}
           initialLikeCount={recipe.likeCount}
           buttonClassName="text-white"
-          iconClassName="fill-gray-300/30"
+          iconClassName="fill-gray-300 opacity-80"
         />
       </div>
 
