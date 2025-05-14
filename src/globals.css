@@ -190,7 +190,3 @@
     image-rendering: crisp-edges;
   }
 }
-
-.nav-button-base {
-  color: var(--nav-text-color, white);
-}
