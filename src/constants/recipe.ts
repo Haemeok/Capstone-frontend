@@ -114,8 +114,8 @@ export const TAG_CODES = {
 export const SORT_TYPES = ['최신순', '오래된순'];
 
 export const SORT_TYPE_CODES = {
-  최신순: 'ASC',
-  오래된순: 'DESC',
+  최신순: 'DESC',
+  오래된순: 'ASC',
 };
 
 export const DRAWER_HEADERS = {

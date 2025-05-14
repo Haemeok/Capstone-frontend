@@ -9,9 +9,6 @@ const useAddIngredientMutation = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: addIngredient,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ingredients'] });
-    },
   });
 
   return mutation;

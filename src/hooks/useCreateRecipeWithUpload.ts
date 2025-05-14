@@ -34,16 +34,16 @@ export const useCreateRecipeWithUpload = () => {
     setUploadError(null);
     createRecipeMutation.reset();
 
-    let preparedData: ReturnType<typeof prepareRecipeData>;
+    let preparedDataResult: Awaited<ReturnType<typeof prepareRecipeData>>;
     try {
-      preparedData = prepareRecipeData(formData);
+      preparedDataResult = await prepareRecipeData(formData);
     } catch (prepError: any) {
       console.error('Recipe data preparation failed:', prepError);
       options?.onError?.(prepError);
       return;
     }
 
-    const { recipeData, filesToUploadInfo, fileObjects } = preparedData;
+    const { recipeData, filesToUploadInfo, fileObjects } = preparedDataResult;
 
     createRecipeMutation.mutate(
       { recipe: recipeData, files: filesToUploadInfo },

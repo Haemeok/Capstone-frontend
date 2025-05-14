@@ -31,6 +31,8 @@ export const END_POINTS = {
   MY_INGREDIENTS_BULK: '/me/fridge/items/bulk',
   USER_RECIPES: (id: number) => `/users/${id}/recipes`,
   PRESIGNED_URLS: '/recipes/presigned-urls',
+  RECIPE_HISTORY: '/me/calendar',
+  RATING: (recipeId: number) => `/ratings/recipe/${recipeId}`,
 };
 
 export const USER_ERROR_MESSAGE = {
