@@ -83,7 +83,7 @@ const Steps = ({
         <Button
           type="button"
           variant="outline"
-          className="mt-3 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed border-green-300 py-2 text-green-600 hover:border-green-500 hover:bg-green-50"
+          className="border-olive-light text-olive-medium mt-3 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed py-2"
           onClick={addStep}
         >
           <Plus size={16} />

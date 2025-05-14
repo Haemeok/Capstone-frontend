@@ -16,37 +16,25 @@ import TransformingNavbar from '@/components/NavBar/TransformingNavBar';
 import useRecipeDetailQuery from '@/hooks/useRecipeDetailQuery';
 import RecipeLikeButton from '@/components/RecipeLikeButton';
 import RecipeNavBarButtons from '@/components/NavBar/RecipeNavBarButtons';
+import { formatPrice } from '@/utils/recipe';
+import RequiredAmountDisplay from './RequiredAmountDisplay';
+import useScrollAnimate from '@/hooks/useScrollAnimate';
 
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
   const imageRef = useRef<HTMLImageElement>(null);
   const observerRef = useRef<HTMLDivElement>(null);
-  const [isButtonVisible, setIsButtonVisible] = useState(false);
 
+  const { targetRef: cookButtonRef } = useScrollAnimate<HTMLButtonElement>({
+    triggerRef: observerRef,
+    start: 'top bottom-=100px',
+    toggleActions: 'play none none reset',
+    yOffset: 10,
+    duration: 0.2,
+    delay: 0,
+  });
   const { id } = useParams();
   const { recipeData: recipe } = useRecipeDetailQuery(Number(id));
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsButtonVisible(entry.isIntersecting);
-      },
-      {
-        threshold: 0.5,
-        rootMargin: '0px',
-      },
-    );
-
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
-
-    return () => {
-      if (observerRef.current) {
-        observer.unobserve(observerRef.current);
-      }
-    };
-  }, []);
 
   const handleNavigateToComments = () => {
     navigate(`comments`, {
@@ -59,6 +47,13 @@ const RecipeDetailPage = () => {
   const handleNavigateToRating = () => {
     navigate(`/recipes/${recipe.id}/rate`);
   };
+
+  const totalPrice = formatPrice(
+    recipe.ingredients.reduce(
+      (acc, ingredient) => acc + (ingredient.price ?? 0),
+      0,
+    ),
+  );
 
   return (
     <div className="relative mx-auto flex flex-col bg-[#ffffff] pb-16 text-[#2a2229]">
@@ -126,7 +121,7 @@ const RecipeDetailPage = () => {
             <h2 className="mb-2 text-xl font-semibold">코멘트</h2>
             <Button
               variant="ghost"
-              className="cursor-pointer font-semibold text-[#526c04]"
+              className="text-olive-medium cursor-pointer font-semibold"
               onClick={handleNavigateToComments}
             >
               더 읽기
@@ -136,8 +131,9 @@ const RecipeDetailPage = () => {
             <CommentBox comment={recipe.comments[0]} />
           )}
         </Box>
-        <Box>
+        <Box className="flex flex-col gap-2">
           <h2 className="mb-2 text-xl font-semibold">재료</h2>
+          <RequiredAmountDisplay totalPrice={totalPrice} />
           <ul className="flex flex-col gap-1">
             {recipe.ingredients.map((ingredient, index) => (
               <li key={index} className="grid grid-cols-3 gap-4">
@@ -146,13 +142,7 @@ const RecipeDetailPage = () => {
                   {ingredient.quantity}
                   {ingredient.unit}
                 </p>
-                <p className="text-left">
-                  {ingredient.price
-                    ? ingredient.price *
-                      (ingredient.quantity ? Number(ingredient.quantity) : 1)
-                    : 0}
-                  원
-                </p>
+                <p className="text-left">{formatPrice(ingredient.price)}원</p>
               </li>
             ))}
           </ul>
@@ -163,20 +153,19 @@ const RecipeDetailPage = () => {
         </Box>
       </div>
 
-      {isButtonVisible && (
-        <div className="fixed bottom-20 z-50 flex w-full justify-center">
-          <Button
-            className="rounded-full bg-[#526c04] p-4 text-white shadow-lg transition-all hover:bg-[#526c04]"
-            onClick={() =>
-              navigate(`/recipes/${recipe.id}/slideShow`, {
-                state: { recipeSteps: recipe.steps },
-              })
-            }
-          >
-            요리하기
-          </Button>
-        </div>
-      )}
+      <div className="fixed bottom-20 z-50 flex w-full justify-center">
+        <Button
+          ref={cookButtonRef}
+          className="bg-olive-light rounded-full p-4 text-white shadow-lg"
+          onClick={() =>
+            navigate(`/recipes/${recipe.id}/slideShow`, {
+              state: { recipeSteps: recipe.steps },
+            })
+          }
+        >
+          요리하기
+        </Button>
+      </div>
     </div>
   );
 };

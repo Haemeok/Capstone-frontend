@@ -5,7 +5,10 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { getIngredients, IngredientsApiResponse } from '@/api/ingredient';
 import { IngredientItem, IngredientPayload } from '@/type/recipe';
 import { InfiniteData } from '@tanstack/react-query';
-import { INGREDIENT_CATEGORIES } from '@/constants/recipe';
+import {
+  INGREDIENT_CATEGORIES,
+  INGREDIENT_CATEGORY_CODES,
+} from '@/constants/recipe';
 import { cn } from '@/lib/utils';
 import {
   DrawerDescription,
@@ -56,7 +59,7 @@ const IngredientSelector = ({
     queryKey: ['drawerIngredients', selectedCategory, searchQuery],
     queryFn: ({ pageParam = 0 }) =>
       getIngredients({
-        category: selectedCategory === '전체' ? null : selectedCategory,
+        category: selectedCategory,
         search: searchQuery,
         pageParam,
         isMine: false,
@@ -119,7 +122,7 @@ const IngredientSelector = ({
                 className={cn(
                   'flex-shrink-0 rounded-full px-4 py-1.5 text-sm transition-colors',
                   selectedCategory === category
-                    ? 'bg-green-600 font-medium text-white'
+                    ? 'bg-olive-light font-medium text-white'
                     : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800',
                 )}
               >
@@ -156,7 +159,6 @@ const IngredientSelector = ({
                     </div>
                     <div className="flex-1">
                       <p className="font-medium">{ingredient.name}</p>
-                      {/* 필요시 다른 정보 표시 (예: 카테고리) */}
                     </div>
                     {addedIngredientIds.has(ingredient.id) ? (
                       <Button
@@ -172,7 +174,7 @@ const IngredientSelector = ({
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700"
+                        className="border-olive-light text-olive-light hover:bg-olive-light hover:text-white"
                         onClick={() => handleAddClick(ingredient)}
                       >
                         추가
