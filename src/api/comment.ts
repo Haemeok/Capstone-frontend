@@ -77,3 +77,19 @@ export const postCommentLike = async (commentId: number) => {
   const response = await axiosInstance.post(END_POINTS.COMMENT_LIKE(commentId));
   return response.data;
 };
+
+export const postCommentWithRating = async ({
+  recipeId,
+  rating,
+  comment,
+}: {
+  recipeId: number;
+  rating: number;
+  comment: string;
+}) => {
+  const response = await axiosInstance.post(END_POINTS.RATING(recipeId), {
+    rating,
+    comment,
+  });
+  return response.data;
+};
