@@ -43,7 +43,9 @@ const IngredientsPage = () => {
         isMine: true,
       }),
     getNextPageParam: (lastPage) =>
-      lastPage.last ? null : lastPage.number + 1,
+      lastPage.page.number === lastPage.page.totalPages - 1
+        ? null
+        : lastPage.page.number + 1,
     initialPageParam: 0,
   });
 
@@ -89,6 +91,7 @@ const IngredientsPage = () => {
               scrollTrigger: {
                 trigger: gridAnimateTargetRef.current,
                 start: 'top 85%',
+                markers: true,
                 // markers: process.env.NODE_ENV === 'development',
                 toggleActions: 'play none none none', // 컨테이너가 보일 때 한 번만 재생
                 // (새로운 아이템들에 대한 이 애니메이션 인스턴스가 한 번만 재생)

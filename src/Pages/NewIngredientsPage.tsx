@@ -18,8 +18,6 @@ import PrevButton from '@/components/Button/PrevButton';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger'; // ScrollTrigger import
 
-gsap.registerPlugin(ScrollTrigger); // ScrollTrigger 플러그인 등록
-
 const NewIngredientsPage = () => {
   // ... (useState, useInfiniteScroll 등 기존 상태 및 훅 설정은 거의 동일)
   const navigate = useNavigate();
@@ -57,7 +55,9 @@ const NewIngredientsPage = () => {
         isMine: false,
       }),
     getNextPageParam: (lastPage) =>
-      lastPage.last ? null : lastPage.number + 1,
+      lastPage.page.number === lastPage.page.totalPages - 1
+        ? null
+        : lastPage.page.number + 1,
     initialPageParam: 0,
   });
 
@@ -78,27 +78,16 @@ const NewIngredientsPage = () => {
     sort,
   ]);
 
-  useEffect(() => {
-    // 필터 등이 변경되어 새로운 목록을 가져올 때, 이전에 애니메이션된 아이템 목록을 초기화
-    animatedItemsRef.current.clear();
-    // console.log('Filters changed, cleared animated items.');
+  console.log('queryKeyString', queryKeyString);
 
-    // 기존 ScrollTrigger 인스턴스들을 정리하는 것이 중요합니다.
-    // 가장 확실한 방법은 GSAP 컨텍스트를 사용하여 이전 애니메이션을 정리하는 것입니다.
-    // 이 경우, 아래의 메인 애니메이션 useEffect에서 ctx.revert()를 호출하는 것이
-    // queryKeyString 변경 시 모든 것을 깔끔하게 리셋하는 방법이 됩니다.
-    // 하지만 이렇게 하면 무한 스크롤 시에도 모든게 리셋되므로,
-    // 여기서는 animatedItemsRef만 초기화하고, 아래 useEffect에서 선별적으로 애니메이션합니다.
-    // 더 정교하게 하려면, queryKeyString 변경 시에는 특정 context를 revert하는 방법도 있습니다.
+  useEffect(() => {
+    animatedItemsRef.current.clear();
   }, [queryKeyString]);
 
-  // GSAP 애니메이션 효과
   useEffect(() => {
-    // 데이터 로딩 중이거나, 아이템이 없거나, 에러 발생 시, 또는 ref들이 준비되지 않았을 경우 애니메이션 실행 안 함
     if (
       isFetching || // isFetchingNextPage가 아니라 isFetching을 봐야 초기 로드 및 필터 변경 시 대응
       !ingredientItems ||
-      // ingredientItems.length === 0 || // 첫 페이지 로드 시 items가 비어있을 수 있으므로 이 조건은 빼거나 status와 함께 사용
       error ||
       status === 'pending' || // useInfiniteQuery의 status 활용
       !itemsAnimateTargetRef.current ||
@@ -127,6 +116,7 @@ const NewIngredientsPage = () => {
             delay: newTweenDelay, // 계산된 stagger 딜레이 적용
             ease: 'power2.out',
             scrollTrigger: {
+              markers: true,
               trigger: itemDOMElement,
               scroller: scrollableContainerRef.current, // 실제 스크롤이 일어나는 요소
               start: 'top 95%', // 아이템 상단이 스크롤러 상단 95% 지점에 닿으면
@@ -184,7 +174,12 @@ const NewIngredientsPage = () => {
       return newSet;
     });
   };
-  const { mutate: addIngredient } = useAddIngredientMutation();
+  const { mutate: addIngredient } = useAddIngredientMutation([
+    'ingredients',
+    selectedCategory,
+    searchQuery,
+    sort,
+  ]);
   const { mutate: deleteIngredient } = useDeleteIngredientMutation();
   const { mutate: addIngredientBulk } = useAddIngredientBulkMutation();
 
@@ -192,7 +187,22 @@ const NewIngredientsPage = () => {
     if (isAdded) {
       deleteIngredient(id);
     } else {
-      addIngredient(id);
+      addIngredient(id, {
+        // onSuccess, onError 콜백도 여기서 개별적으로 추가하여 테스트 가능
+        onSuccess: () => {
+          console.log(
+            '[NewIngredientsPage] addIngredient mutation onSuccess for ID:',
+            id,
+          );
+        },
+        onError: (error) => {
+          console.error(
+            '[NewIngredientsPage] addIngredient mutation onError for ID:',
+            id,
+            error,
+          );
+        },
+      });
     }
   };
 

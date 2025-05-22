@@ -10,10 +10,12 @@ const GoogleCallback = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const token = urlParams.get('accessToken');
+    const oauthState = urlParams.get('state');
+    const returnTo = oauthState ? decodeURIComponent(oauthState) : '/';
 
     if (token) {
       loginAction(token);
-      navigate('/', { replace: true });
+      navigate(returnTo, { replace: true });
     } else {
       navigate('/login', { replace: true });
     }

@@ -45,7 +45,7 @@ const Steps = ({
 
   const addStep = () => {
     const currentSteps = watch('steps');
-    const nextStepNumber = currentSteps.length + 1;
+    const nextStepNumber = currentSteps.length;
     appendStep({
       stepNumber: nextStepNumber,
       instruction: '',
