@@ -15,6 +15,7 @@ import {
 import { FileInfoRequest } from '@/type/file';
 import { BaseQueryParams, PageResponse } from '@/type/query';
 import { buildParams } from '@/utils/object';
+import { TagCode } from '@/constants/recipe';
 
 export const getRecipe = async (id: number) => {
   const response = await axiosInstance.get<Recipe>(END_POINTS.RECIPE(id), {
@@ -268,6 +269,26 @@ export const getMyFavoriteItems = async ({
     },
   );
 
+  return response.data;
+};
+
+export const getRecipeItemsByTagNames = async ({
+  tagName,
+  pageParam = 0,
+}: {
+  tagName: TagCode;
+  pageParam?: number;
+}) => {
+  const response = await axiosInstance.get<DetailedRecipesApiResponse>(
+    END_POINTS.RECIPES_BY_TAG(),
+    {
+      params: {
+        tagNames: tagName,
+        page: pageParam,
+        size: PAGE_SIZE,
+      },
+    },
+  );
   return response.data;
 };
 

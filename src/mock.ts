@@ -12,68 +12,7 @@ export const categories = [
   '🥐브런치',
   '🍶술안주',
 ];
-export const categoriesItems: CategoryItem[] = [
-  {
-    id: 1,
-    name: '🏠홈파티',
-    imageUrl: '/cooking2.png',
-    count: 10,
-  },
-  {
-    id: 2,
-    name: '🌼피크닉',
-    imageUrl: '/picnic2.png',
-    count: 10,
-  },
-  {
-    id: 3,
-    name: '🏕️캠핑',
-    imageUrl: '/camping2.png',
-    count: 10,
-  },
-  {
-    id: 4,
-    name: '🥗다이어트|건강식',
-    imageUrl: '/workout (1).png',
-    count: 10,
-  },
-  {
-    id: 5,
-    name: '명절',
-    imageUrl: '/holiday2.png',
-    count: 10,
-  },
-  {
-    id: 6,
-    name: '🍽️혼밥',
-    imageUrl: 'Honbab.png',
-    count: 10,
-  },
-  {
-    id: 7,
-    name: '🍶술안주',
-    imageUrl: 'Beer.png',
-    count: 10,
-  },
-  {
-    id: 8,
-    name: '🥐브런치',
-    imageUrl: 'Brunch.png',
-    count: 10,
-  },
-  {
-    id: 9,
-    name: '🔌에어프라이어',
-    imageUrl: 'AirFry.png',
-    count: 10,
-  },
-  {
-    id: 10,
-    name: '🍱 도시락',
-    imageUrl: 'Dosirac.png',
-    count: 10,
-  },
-];
+
 export const cookingTimes = [
   '10분이내',
   '20분이내',

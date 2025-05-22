@@ -13,10 +13,9 @@ type RecipeSlideProps = {
 
 const RecipeSlide = ({ title, recipes }: RecipeSlideProps) => {
   return (
-    <div className="mt-8 w-full">
+    <div className="mt-2 w-full">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <img src="/homeparty.png" alt="robot" className="h-10 w-10" />
           <h2 className="text-xl font-bold text-gray-800">{title}</h2>
         </div>
         <button className="flex items-center text-sm text-gray-500 hover:text-gray-700">
