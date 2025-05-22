@@ -11,6 +11,8 @@ export const END_POINTS = {
   INGREDIENTS: '/ingredients',
   INGREDIENTS_BY_ID: (id: number) => `/ingredients/${id}`,
   RECIPE_COMMENT: (id: number) => `/recipes/${id}/comments`,
+  RECIPE_COMMENT_BY_ID: (recipeId: number, commentId: number) =>
+    `/recipes/${recipeId}/comments/${commentId}`,
   RECIPE_REPLY: (recipeId: number, commentId: number) =>
     `/recipes/${recipeId}/comments/${commentId}/replies`,
   RECIPE_LIKE: (id: number) => `/recipes/${id}/like`,
@@ -33,6 +35,7 @@ export const END_POINTS = {
   PRESIGNED_URLS: '/recipes/presigned-urls',
   RECIPE_HISTORY: '/me/calendar',
   RATING: (recipeId: number) => `/ratings/recipe/${recipeId}`,
+  LOGOUT: '/token/logout',
 };
 
 export const USER_ERROR_MESSAGE = {
