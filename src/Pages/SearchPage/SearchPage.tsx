@@ -70,12 +70,20 @@ const SearchPage = () => {
         pageParam,
       }),
     getNextPageParam: (lastPage) =>
-      lastPage.last ? null : lastPage.number + 1,
+      lastPage.page.number === lastPage.page.totalPages - 1
+        ? null
+        : lastPage.page.number + 1,
     initialPageParam: 0,
   });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
-
+  const qeuryKeyString = JSON.stringify([
+    'recipes',
+    dishType,
+    sort,
+    tagNames,
+    searchQuery,
+  ]);
   const dynamicStateAccessors = {
     dishType: {
       state: dishType,
@@ -127,7 +135,7 @@ const SearchPage = () => {
       : `"${dishType}"에 해당하는 레시피가 없습니다.`;
 
   return (
-    <div>
+    <div className="flex flex-col bg-[#ffffff]">
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
         <form onSubmit={handleSearchSubmit} className="relative">
           <input
@@ -170,6 +178,7 @@ const SearchPage = () => {
         noResults={noResults}
         noResultsMessage={noResultsMessage}
         lastPageMessage={'모든 레시피를 불러왔습니다.'}
+        queryKeyString={qeuryKeyString}
       />
       <CategoryDrawer
         open={isDrawerOpen}
