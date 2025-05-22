@@ -1,12 +1,4 @@
 import CommentBox from '@/components/CommentBox';
-import {
-  MessageCircle,
-  RefreshCw,
-  Filter,
-  ArrowLeft,
-  ArrowUp,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import CommentInput from '@/components/CommentInput';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
@@ -46,7 +38,9 @@ const CommentsPage = () => {
         pageParam,
       }),
     getNextPageParam: (lastPage) =>
-      lastPage.last ? null : lastPage.number + 1,
+      lastPage.page.number >= lastPage.page.totalPages - 1
+        ? null
+        : lastPage.page.number + 1,
     initialPageParam: 0,
   });
 
@@ -66,7 +60,7 @@ const CommentsPage = () => {
       <main className="p-4">
         <div className="mb-4 flex items-center justify-between px-2">
           <span className="text-sm font-medium text-gray-500">
-            {data?.pages[0].totalElements}개의 댓글
+            {data?.pages[0].page.totalElements}개의 댓글
           </span>
           <div className="flex items-center text-sm font-semibold">
             <button
@@ -90,12 +84,14 @@ const CommentsPage = () => {
             </button>
           </div>
         </div>
+
         <div className="flex flex-col gap-4">
           {comments?.map((comment) => (
             <CommentBox
               key={comment.id}
               comment={comment}
               hideReplyButton={false}
+              recipeId={Number(recipeId)}
             />
           ))}
         </div>
@@ -109,6 +105,13 @@ const CommentsPage = () => {
           {!hasNextPage && comments && comments.length > 0 && (
             <div className="flex justify-center p-4">
               <p className="text-sm text-gray-400">마지막 댓글입니다.</p>
+            </div>
+          )}
+          {comments?.length === 0 && (
+            <div className="flex flex-col items-center justify-center gap-1 p-4">
+              <p className="text-sm text-gray-400">
+                첫번째 댓글을 작성해보세요 !
+              </p>
             </div>
           )}
         </div>

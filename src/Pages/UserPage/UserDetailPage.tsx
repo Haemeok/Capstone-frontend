@@ -1,47 +1,32 @@
 import React, { useState } from 'react';
-import { User } from '@/type/user';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Settings,
-  Share,
-  Edit,
-  Heart,
-  Clock,
-  ChevronLeft,
-  BookOpen,
-  LucideIcon,
-  Award,
-  Users,
-  Bookmark,
-  Calendar,
-  LogIn,
-  Plus,
-} from 'lucide-react';
+import { Edit, LogIn, Plus, LogOut, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 import { useNavigate } from 'react-router';
 import { useUserStore } from '@/store/useUserStore';
 import MyRecipesTabContent from './MyRecipesTabContent';
 import CalendarTabContent from './CalendarTabContent';
 import MyFavoriteRecipesTabContent from './MyFavoriteRecipesTabContent';
-
-interface Tab {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-}
+import useLogoutMutation from '@/hooks/useLogoutMutation';
+import { guestUser, tabs } from '@/constants/user';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 
 const UserDetailPage = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>('나의 레시피');
+  const { mutate: logout } = useLogoutMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const guestUser: User = {
-    id: 0,
-    nickname: '게스트',
-    profileImage: '/default-profile.png',
-    username: '@guest',
-    profileContent: '로그인하여 더 많은 기능을 사용해보세요.',
+  const handleLogoutClick = () => {
+    setIsModalOpen(false);
+    logout();
   };
 
   const displayUser = user ? user : guestUser;
@@ -53,12 +38,6 @@ const UserDetailPage = () => {
   const handleCreateRecipeClick = () => {
     navigate('/recipes/new');
   };
-
-  const tabs: Tab[] = [
-    { id: '나의 레시피', label: '나의 레시피', icon: Award },
-    { id: '북마크', label: '북마크', icon: BookOpen },
-    { id: '캘린더', label: '캘린더', icon: Calendar },
-  ];
 
   const getRecipesByTab = () => {
     switch (activeTab) {
@@ -75,8 +54,11 @@ const UserDetailPage = () => {
 
   return (
     <div className="bg-cgray flex min-h-screen flex-col overflow-hidden">
-      <div className="z-30 bg-white p-4">
+      <div className="z-30 flex justify-between bg-white p-4">
         <h2 className="text-2xl font-bold">프로필</h2>
+        <button onClick={() => setIsModalOpen(true)}>
+          <Settings size={20} className="mr-1" />
+        </button>
       </div>
 
       <div className="relative z-10 px-6">
@@ -103,7 +85,7 @@ const UserDetailPage = () => {
           </div>
           {!user ? (
             <Button
-              className="bg-olive hover:bg-olive-dark rounded-full px-6 text-white"
+              className="bg-olive-medium hover:bg-olive-dark rounded-full px-6 text-white"
               onClick={handleLoginClick}
             >
               <LogIn size={16} className="mr-1" /> 로그인
@@ -154,6 +136,29 @@ const UserDetailPage = () => {
             로그인하여 레시피와 요리 일정을 관리해보세요.
           </p>
         </div>
+      )}
+      {isModalOpen && (
+        <Drawer open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DrawerContent className="p-0">
+            <DrawerHeader>
+              <DrawerTitle className="text-lg">설정</DrawerTitle>
+            </DrawerHeader>
+            <DrawerFooter className="gap-0">
+              <button
+                onClick={handleLogoutClick}
+                className="flex items-center justify-center gap-1 border-t-1 border-gray-200 px-4 py-2 font-semibold text-red-500"
+              >
+                <LogOut size={16} className="mr-1" />
+                <p>로그아웃</p>
+              </button>
+              <DrawerClose asChild>
+                <button className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-semibold">
+                  닫기
+                </button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
       )}
     </div>
   );
