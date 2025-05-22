@@ -38,7 +38,9 @@ const RecipesPage = () => {
         pageParam,
       }),
     getNextPageParam: (lastPage) =>
-      lastPage.last ? null : lastPage.number + 1,
+      lastPage.page.number === lastPage.page.totalPages - 1
+        ? null
+        : lastPage.page.number + 1,
     initialPageParam: 0,
   });
 
