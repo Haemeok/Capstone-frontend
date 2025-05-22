@@ -8,15 +8,24 @@ import { Button } from '@/components/ui/button';
 import { X, Share, Star, Bookmark } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import SlideShowContent from '@/components/SlideShowContent';
-import { RecipeStep } from '@/type/recipe';
-import { useLocation, useNavigate } from 'react-router';
+import { Recipe, RecipeStep } from '@/type/recipe';
+import { useLocation, useNavigate, useParams } from 'react-router';
+import SuspenseImage from '@/components/Image/SuspenseImage';
+import { useToggleRecipeFavorite } from '@/hooks/useToggleMutations';
+import useAuthenticatedAction from '@/hooks/useAuthenticatedAction';
+import useRecipeDetailQuery from '@/hooks/useRecipeDetailQuery';
 
 const RecipeSlideShowPage = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [scrollProgress, setScrollProgress] = useState(0);
+
   const navigate = useNavigate();
-  const { recipeSteps } = useLocation().state as { recipeSteps: RecipeStep[] };
-  const TOTAL_STEPS = recipeSteps.length + 1;
+  const { recipeId } = useParams();
+  const { recipeData: recipe } = useRecipeDetailQuery(Number(recipeId));
+  const { mutate: toggleRecipeFavorite } = useToggleRecipeFavorite(recipe.id);
+
+  const TOTAL_STEPS = recipe.steps.length + 1;
+  const recipeSteps = recipe.steps;
 
   useEffect(() => {
     if (!api) {
@@ -57,6 +66,8 @@ const RecipeSlideShowPage = () => {
     const stepProgress = ((scrollProgress - stepStart) / stepSize) * 100;
     return stepProgress;
   };
+
+  const handleRecipeFavorite = useAuthenticatedAction(toggleRecipeFavorite);
   return (
     <div className="bg-background text-foreground relative flex h-screen flex-col">
       <div className="absolute top-0 right-0 left-0 z-10 flex items-center justify-between p-4">
@@ -87,18 +98,33 @@ const RecipeSlideShowPage = () => {
               <SlideShowContent step={step} totalSteps={TOTAL_STEPS} />
             </CarouselItem>
           ))}
-          <CarouselItem key={TOTAL_STEPS} className="h-full pl-0">
-            <div className="mt-8 flex flex-col space-y-3">
-              <Button
-                size="lg"
-                className="w-full bg-green-600 text-white hover:bg-green-700"
-              >
-                <Bookmark className="mr-2 h-4 w-4" /> 저장하기
-              </Button>
-              <Button variant="outline" size="lg" className="w-full">
-                <Star className="mr-2 h-4 w-4" /> 평가하기
-              </Button>
-            </div>
+          <CarouselItem
+            key={TOTAL_STEPS}
+            className="flex h-full flex-col items-center justify-center gap-3 px-4"
+          >
+            <SuspenseImage
+              src={recipe.imageUrl}
+              alt={recipe.title}
+              className="h-1/2 w-2/3 rounded-2xl object-cover"
+            />
+            <p className="text-md text-dark">
+              {recipe.author.nickname}님의 {recipe.title} 어떠셨나요?
+            </p>
+            <Button
+              size="lg"
+              className="bg-olive-mint w-full text-white"
+              onClick={() => handleRecipeFavorite()}
+            >
+              <Bookmark className="mr-2 h-4 w-4" /> 저장하기
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full"
+              onClick={() => navigate(`/recipes/${recipe.id}/rate`)}
+            >
+              <Star className="mr-2 h-4 w-4" /> 평가하기
+            </Button>
           </CarouselItem>
         </CarouselContent>
       </Carousel>

@@ -54,7 +54,7 @@ const NewRecipePage = () => {
       steps: [
         {
           instruction: '',
-          stepNumber: 1,
+          stepNumber: 0,
           imageFile: null,
           ingredients: [],
         },
@@ -258,6 +258,7 @@ const NewRecipePage = () => {
             <ProgressButton
               progressPercentage={progressPercentage}
               isFormValid={isValid && isDirty}
+              isLoading={isLoading}
             />
           </div>
         </div>
