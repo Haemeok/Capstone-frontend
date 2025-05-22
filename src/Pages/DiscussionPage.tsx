@@ -9,47 +9,73 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { comments, replies } from '@/mock';
+import { Comment } from '@/type/comment';
+import {
+  getReplies,
+  RepliesApiResponse,
+  TotalRepliesApiResponse,
+} from '@/api/comment';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { InfiniteData } from '@tanstack/react-query';
+import CommentInput from '@/components/CommentInput';
+import { comments } from '@/mock';
+import Circle from '@/components/Icon/Circle';
+import { cn } from '@/lib/utils';
 
 const DiscussionPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { commentId } = useParams<{ commentId: string }>();
+  const { recipeId } = useParams<{ recipeId: string }>();
+  const [sort, setSort] = useState<string>('최신순');
   const navigate = useNavigate();
-  const commentId = parseInt(id || '0');
-  const [newReply, setNewReply] = useState('');
 
-  const parentComment = comments.find((comment) => comment.id === commentId);
-
-  if (!parentComment) {
-    return (
-      <div className="flex h-screen flex-col items-center justify-center bg-gray-50 p-4">
-        <div className="max-w-md rounded-lg bg-white p-6 text-center shadow-md">
-          <MessageCircle size={40} className="mx-auto mb-4 text-gray-300" />
-          <h2 className="mb-2 text-xl font-bold text-gray-800">
-            코멘트를 찾을 수 없습니다
-          </h2>
-          <p className="mb-4 text-gray-600">
-            요청하신 코멘트가 삭제되었거나 존재하지 않습니다.
-          </p>
-          <Button
-            onClick={() => navigate(-1)}
-            className="bg-blue-500 hover:bg-blue-600"
-          >
-            돌아가기
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  const handleSendReply = () => {
-    if (newReply.trim()) {
-      console.log('답글 등록:', newReply);
-      setNewReply('');
-    }
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    ref,
+    refetch,
+  } = useInfiniteScroll<
+    TotalRepliesApiResponse,
+    Error,
+    InfiniteData<TotalRepliesApiResponse>,
+    [string, string | undefined, string | undefined, string],
+    number
+  >({
+    queryKey: ['comments', recipeId, commentId, sort],
+    queryFn: ({ pageParam }) =>
+      getReplies({
+        recipeId: Number(recipeId),
+        commentId: Number(commentId),
+        pageParam,
+      }),
+    getNextPageParam: (lastPage) =>
+      lastPage.replies.page.number === lastPage.replies.page.totalPages - 1
+        ? null
+        : lastPage.replies.page.number + 1,
+    initialPageParam: 0,
+  });
+  console.log('data', data);
+  const replies = data?.pages.flatMap((page) => page.replies.content);
+  const parentComment: Comment = {
+    id: data?.pages[0]?.id ?? 0,
+    content: data?.pages[0]?.content ?? '',
+    createdAt: data?.pages[0]?.createdAt ?? '',
+    author: data?.pages[0]?.author ?? {
+      id: 0,
+      nickname: '',
+      profileImage: '',
+    },
+    likeCount: data?.pages[0]?.likeCount ?? 0,
+    replyCount: data?.pages[0]?.replyCount ?? 0,
+    likedByCurrentUser: data?.pages[0]?.likedByCurrentUser ?? false,
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="">
       <header className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <div className="flex items-center">
@@ -61,82 +87,76 @@ const DiscussionPage = () => {
             >
               <ArrowLeft size={20} />
             </Button>
-            <h1 className="text-xl font-bold">토론</h1>
-          </div>
-          <div className="flex">
-            <Button variant="ghost" size="icon">
-              <Share2 size={18} />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal size={18} />
-            </Button>
+            <h1 className="text-xl font-bold">답글</h1>
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl p-4">
-        <CommentBox comment={parentComment} hideReplyButton={true} />
+        <CommentBox
+          comment={parentComment}
+          hideReplyButton={true}
+          recipeId={Number(recipeId)}
+        />
 
         <div className="mb-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="flex items-center text-lg font-semibold">
-              <MessageCircle size={18} className="mr-2 text-blue-500" />
-              답글
-              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-sm text-gray-600">
-                {parentComment.replyCount}
-              </span>
-            </h2>
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-full px-2 py-1 text-xs"
-            >
-              최신순 ▼
-            </Button>
+          <div className="mb-4 flex items-center justify-between px-2">
+            <span className="text-sm font-medium text-gray-500">
+              {data?.pages[0].replies.page.totalElements}개의 댓글
+            </span>
+            <div className="flex items-center text-sm font-semibold">
+              <button
+                className={cn(
+                  'text-gray-400',
+                  sort === '최신순' && 'text-olive-light',
+                )}
+                onClick={() => setSort('최신순')}
+              >
+                최신순
+              </button>
+              <span className="mx-1">•</span>
+              <button
+                className={cn(
+                  'text-gray-400',
+                  sort === '인기순' && 'text-olive-light',
+                )}
+                onClick={() => setSort('인기순')}
+              >
+                인기순
+              </button>
+            </div>
           </div>
 
           <div className="mb-4 space-y-3">
-            {replies.map((reply) => (
-              <CommentBox comment={reply} hideReplyButton={true} />
+            {replies?.map((reply) => (
+              <CommentBox
+                comment={reply}
+                hideReplyButton={true}
+                recipeId={Number(recipeId)}
+              />
             ))}
+            <div ref={ref} className="h-10">
+              {isFetchingNextPage && (
+                <div className="flex justify-center p-4">
+                  <p className="text-sm text-gray-500">
+                    더 많은 댓글 로딩 중...
+                  </p>
+                </div>
+              )}
+
+              {!hasNextPage && replies && replies.length > 0 && (
+                <div className="flex justify-center p-4">
+                  <p className="text-sm text-gray-400">마지막 댓글입니다.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="fixed right-0 bottom-0 left-0 border-t bg-white p-3 shadow-lg">
-          <div className="mx-auto flex max-w-3xl items-center gap-2">
-            <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gray-200">
-              <img
-                src="https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png"
-                alt="내 프로필"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="flex flex-1 items-center rounded-full bg-gray-100 px-4">
-              <input
-                type="text"
-                value={newReply}
-                onChange={(e) => setNewReply(e.target.value)}
-                placeholder={`${parentComment.author.nickname}님에게 답글 남기기...`}
-                className="w-full bg-transparent py-2 text-sm focus:outline-none"
-              />
-            </div>
-            <Button
-              size="icon"
-              variant={newReply.trim() ? 'default' : 'ghost'}
-              className={
-                newReply.trim()
-                  ? 'bg-blue-500 text-white hover:bg-blue-600'
-                  : 'text-gray-400'
-              }
-              onClick={handleSendReply}
-              disabled={!newReply.trim()}
-            >
-              <Send size={18} />
-            </Button>
-          </div>
-        </div>
-
-        <div className="h-20"></div>
+        <CommentInput
+          author={parentComment.author}
+          commentId={Number(commentId)}
+        />
       </main>
     </div>
   );
