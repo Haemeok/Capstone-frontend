@@ -17,17 +17,17 @@ const DetailedRecipeGridItem = ({
   height,
 }: DetailedRecipeGridItemProps) => {
   const navigate = useNavigate();
-
   return (
     <div
-      className={cn(`relative flex min-h-${height} flex-col gap-2 rounded-2xl`)}
+      className={cn(`relative flex h-72 w-48 flex-col gap-2 rounded-2xl`)}
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <SuspenseImage
         src={recipe.imageUrl}
         alt={recipe.title}
-        className="h-full w-full rounded-2xl object-cover"
+        className={cn(`relative h-52 w-full rounded-2xl object-cover`)}
       />
+
       <div className="absolute top-0 right-0 p-2 text-right">
         <RecipeLikeButton
           recipeId={recipe.id}

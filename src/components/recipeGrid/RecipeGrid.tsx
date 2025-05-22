@@ -236,7 +236,7 @@ const RecipeGrid = ({
         <Drawer open={isDrawerOpen} onOpenChange={handleDrawerState}>
           <DrawerContent className="p-4">
             <div className="absolute top-2 left-1/2 flex h-1 w-10 -translate-x-1/2 rounded-2xl bg-slate-400" />
-            <div className="flex flex-col gap-2 rounded-2xl bg-slate-200 p-4">
+            <div className="flex flex-col gap-2 rounded-2xl bg-gray-100 p-4">
               <button
                 className="flex w-full justify-between"
                 onClick={handleEdit}

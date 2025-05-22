@@ -179,6 +179,7 @@ const SearchPage = () => {
         noResultsMessage={noResultsMessage}
         lastPageMessage={'모든 레시피를 불러왔습니다.'}
         queryKeyString={qeuryKeyString}
+        height={72}
       />
       <CategoryDrawer
         open={isDrawerOpen}
