@@ -18,6 +18,8 @@ import GoogleCallback from '@/Pages/GoogleCallback';
 
 import CategoryDetailPage from '@/Pages/CategoryDetailPage';
 import ReviewPage from '@/Pages/ReviewPage/ReviewPage';
+import CalendarDetailPage from '@/Pages/CalendarDetailPage';
+import UserInfoChangePage from '@/Pages/UserInfoChangePage';
 
 const router = createBrowserRouter([
   {
@@ -78,11 +80,15 @@ const router = createBrowserRouter([
         path: 'recipes/category/:categorySlug',
         element: <CategoryDetailPage />,
       },
+      {
+        path: 'calendar/:date',
+        element: <CalendarDetailPage />,
+      },
     ],
   },
 
   {
-    path: 'recipes/:id/slideshow',
+    path: 'recipes/:recipeId/slideshow',
     element: <RecipeSlideShowPage />,
   },
   {
@@ -92,6 +98,10 @@ const router = createBrowserRouter([
   {
     path: 'recipes/:recipeId/rate',
     element: <ReviewPage />,
+  },
+  {
+    path: 'user/info',
+    element: <UserInfoChangePage />,
   },
 ]);
 

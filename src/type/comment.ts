@@ -6,6 +6,6 @@ export type Comment = {
   createdAt: string;
   author: User;
   likeCount: number;
-  replyCount: number;
+  replyCount?: number;
   likedByCurrentUser: boolean;
 };

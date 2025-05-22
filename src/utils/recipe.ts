@@ -18,7 +18,6 @@ export const prepareRecipeData = async (
     const mainImageFileOriginal = formData.imageFile[0];
     let mainFileToProcess: File = mainImageFileOriginal;
     let mainContentType: string = mainImageFileOriginal.type;
-    let mainFilename: string = mainImageFileOriginal.name;
 
     if (mainImageFileOriginal.type.startsWith('image/')) {
       const webpResult = await convertImageToWebP(mainImageFileOriginal);
@@ -27,7 +26,6 @@ export const prepareRecipeData = async (
           type: 'image/webp',
         });
         mainContentType = 'image/webp';
-        mainFilename = webpResult.filename;
       }
     }
     // FileInfoRequest에 filename 추가 (서버에서 파일 식별 및 Presigned URL 생성 시 사용될 수 있음)
@@ -49,7 +47,6 @@ export const prepareRecipeData = async (
         const stepImageFileOriginal = step.imageFile[0];
         let stepFileToProcess: File = stepImageFileOriginal;
         let stepContentType: string = stepImageFileOriginal.type;
-        let stepFilename: string = stepImageFileOriginal.name;
 
         if (stepImageFileOriginal.type.startsWith('image/')) {
           const webpResult = await convertImageToWebP(stepImageFileOriginal);
@@ -60,7 +57,6 @@ export const prepareRecipeData = async (
               { type: 'image/webp' },
             );
             stepContentType = 'image/webp';
-            stepFilename = webpResult.filename;
           }
         }
         return {
@@ -69,7 +65,7 @@ export const prepareRecipeData = async (
             type: 'step' as 'step', // 타입 명시
             contentType: stepContentType as FileInfoRequest['contentType'],
             stepIndex: index,
-            filename: stepFilename,
+
             // contentLength: stepFileToProcess.size,
           },
           fileObject: {
@@ -124,13 +120,12 @@ export const formatTimeAgo = (
   date: Date | string | number,
   now: Date = new Date(),
 ): string => {
-  const dateP = date + 'Z';
   const then =
     typeof date === 'string' || typeof date === 'number'
-      ? new Date(dateP)
+      ? new Date(date)
       : date;
 
-  if (isNaN(then.getTime())) {
+  if (isNaN(then?.getTime())) {
     console.error('Invalid date provided to formatTimeAgo:', date);
     return '유효하지 않은 날짜';
   }
