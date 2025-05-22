@@ -24,6 +24,13 @@ export const getMyInfo = async () => {
   return data;
 };
 
+export const postLogout = async () => {
+  const { data } = await axiosInstance.post(END_POINTS.LOGOUT, {
+    useAuth: true,
+  });
+  return data;
+};
+
 export const postTokenRefresh = async () => {
   const { data } = await axiosAuthInstance.post<TokenRefrechResponse>(
     END_POINTS.TOKEN_REFRESH,

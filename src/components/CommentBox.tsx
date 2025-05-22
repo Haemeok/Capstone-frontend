@@ -1,20 +1,42 @@
 import { Avatar } from '@/components/ui/avatar';
 import { Comment } from '@/type/comment';
-import { MessageSquare } from 'lucide-react';
+import { EllipsisVertical, MessageSquare, Trash } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import CommentLikeButton from './comment/CommentLikeButton';
 import SuspenseImage from './Image/SuspenseImage';
 import { formatTimeAgo } from '@/utils/recipe';
+import { useUserStore } from '@/store/useUserStore';
+import { useState } from 'react';
+import { DeleteModal } from './DeleteModal';
+import useDeleteCommentMutation from '@/hooks/useDeleteCommentMutation';
+
 type CommentProps = {
   comment: Comment;
   hideReplyButton?: boolean;
+  recipeId: number;
 };
 
-const CommentBox = ({ comment, hideReplyButton = false }: CommentProps) => {
+const CommentBox = ({
+  comment,
+  hideReplyButton = false,
+  recipeId,
+}: CommentProps) => {
   const navigate = useNavigate();
+  const { user } = useUserStore();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleReplyClick = () => {
     navigate(`${comment.id}`);
+  };
+
+  const { mutate: deleteComment } = useDeleteCommentMutation(
+    comment.id,
+    recipeId,
+  );
+
+  const handleDelete = () => {
+    setIsDeleteModalOpen(false);
+    deleteComment();
   };
 
   const formattedDate = formatTimeAgo(comment.createdAt);
@@ -36,9 +58,14 @@ const CommentBox = ({ comment, hideReplyButton = false }: CommentProps) => {
         </div>
         <div className="flex items-center">
           <p className="text-sm text-gray-400">{formattedDate}</p>
-          <button className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
-            •••
-          </button>
+          {user?.id === comment.author.id && (
+            <button
+              className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600"
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              <Trash size={15} />
+            </button>
+          )}
         </div>
       </div>
       <p className={`text-[#2a2229]`}>{comment.content}</p>
@@ -65,6 +92,15 @@ const CommentBox = ({ comment, hideReplyButton = false }: CommentProps) => {
           </button>
         )}
       </div>
+      {isDeleteModalOpen && (
+        <DeleteModal
+          open={isDeleteModalOpen}
+          onOpenChange={setIsDeleteModalOpen}
+          title="댓글을 삭제하시겠어요?"
+          onConfirm={handleDelete}
+          description="이 댓글을 삭제하면 복구할 수 없습니다."
+        />
+      )}
     </div>
   );
 };

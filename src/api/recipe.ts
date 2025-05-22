@@ -283,3 +283,10 @@ export const finalizeRecipe = async (recipeId: number) => {
   );
   return response.data;
 };
+
+export const postMyFavoriteRecipe = async (recipeId: number) => {
+  const response = await axiosInstance.post(
+    END_POINTS.RECIPE_FAVORITE(recipeId),
+  );
+  return response.data;
+};

@@ -9,7 +9,7 @@ const AXIOS_BASE_URL = PROD
   : import.meta.env.VITE_AXIOS_DEV_BASE_URL || '/';
 
 const NETWORK = {
-  TIMEOUT: 10000,
+  TIMEOUT: 15 * 1000,
 } as const;
 
 export const axiosInstance = axios.create({
