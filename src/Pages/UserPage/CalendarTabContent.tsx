@@ -8,6 +8,9 @@ import { ko } from 'date-fns/locale';
 import useRecipeHistoryQuery from '@/hooks/useRecipeHistoryQuery';
 import { RecipeDailySummary } from '@/type/recipe';
 import SavingSection from './SavingSection';
+import 'react-day-picker/style.css';
+import SuspenseImage from '@/components/Image/SuspenseImage';
+import { useNavigate } from 'react-router';
 
 export function CalendarTabContent() {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
@@ -24,9 +27,9 @@ export function CalendarTabContent() {
     return recipeHistorySummary?.find((summary) => {
       const summaryDate = new Date(summary.date);
       return (
-        summaryDate.getDate() === day.getDate() &&
-        summaryDate.getMonth() === day.getMonth() &&
-        summaryDate.getFullYear() === day.getFullYear()
+        summaryDate.getDate() === day?.getDate() &&
+        summaryDate.getMonth() === day?.getMonth() &&
+        summaryDate.getFullYear() === day?.getFullYear()
       );
     });
   };
@@ -61,50 +64,53 @@ export function CalendarTabContent() {
         }}
         className="w-full px-4"
         classNames={{
-          months: 'flex flex-col sm:flex-row gap-2',
+          months: 'flex flex-col sm:flex-row gap-2 relative',
           month: 'flex flex-col gap-4 w-full',
+          month_caption:
+            'flex text-xl font-bold text-center items-center justify-center h-9',
+
           caption: 'flex justify-center pt-1 relative items-center w-full',
           caption_label: 'text-xl font-bold',
-          nav: 'absolute inset-0 flex justify-between items-center px-30',
-          nav_button: cn(
-            buttonVariants({ variant: 'outline' }),
-            'size-7 bg-transparent p-0 opacity-50 hover:opacity-100',
-          ),
-          table: 'w-full border-collapse',
-          head_row: 'flex w-full',
-          head_cell:
+          nav: 'absolute w-full flex justify-between items-center px-30 h-9',
+          week: 'flex w-full h-15 text-center items-center',
+          weeks: 'flex flex-col w-full',
+          weekdays: 'flex w-full',
+          weekday:
             'text-muted-foreground rounded-md w-8 font-normal text-[0.8rem] flex-1 text-center',
-          row: 'flex w-full mt-2',
-          cell: 'relative p-0 text-center text-sm flex-1 h-12',
-          day: 'w-full h-full flex items-center justify-center',
-          day_today: 'bg-accent text-accent-foreground',
-          day_outside: 'text-muted-foreground opacity-50',
-          day_disabled: 'text-muted-foreground opacity-50',
-          day_hidden: 'invisible',
+
+          disabled: 'text-muted-foreground opacity-50',
+          hidden: 'invisible',
         }}
         components={{
           Day: ({ day }) => {
-            const dateNumber = day.date.getDate();
-            if (day.date.getMonth() !== day.displayMonth.getMonth()) {
+            const date = day?.date;
+            const dateNumber = date?.getDate();
+            if (date?.getMonth() !== day?.displayMonth.getMonth()) {
               return (
-                <div className="flex h-full w-full items-center justify-center opacity-30">
+                <div className="flex h-full w-full items-center justify-center text-sm opacity-30">
                   {dateNumber}
                 </div>
               );
             }
-
-            const summary = getEventForDay(day.date);
-
+            const yyyyMMdd = format(date, 'yyyy-MM-dd');
+            const summary = getEventForDay(date);
+            const navigate = useNavigate();
+            const handleNavigateToCalendarDetail = () => {
+              navigate(`/calendar/${yyyyMMdd}`);
+            };
             if (summary) {
               return (
-                <div className="relative h-full w-full">
-                  <img
+                <div
+                  className="relative h-full w-full"
+                  onClick={handleNavigateToCalendarDetail}
+                >
+                  <SuspenseImage
                     src={summary.firstImageUrl}
-                    alt={`이벤트: ${format(day.date, 'yyyy-MM-dd')}`}
-                    className="h-full w-full rounded-md object-cover"
+                    alt={`이벤트: ${format(date, 'yyyy-MM-dd')}`}
+                    className="h-full w-full rounded-xl object-cover"
                   />
                   {summary.totalCount && (
-                    <div className="bg-olive-light absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
+                    <div className="bg-olive-mint absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
                       {summary.totalCount}
                     </div>
                   )}
@@ -113,9 +119,9 @@ export function CalendarTabContent() {
             }
             const today = new Date();
             const isToday =
-              day.date.getDate() === today.getDate() &&
-              day.date.getMonth() === today.getMonth() &&
-              day.date.getFullYear() === today.getFullYear();
+              date?.getDate() === today.getDate() &&
+              date?.getMonth() === today.getMonth() &&
+              date?.getFullYear() === today.getFullYear();
 
             return (
               <div
@@ -124,7 +130,7 @@ export function CalendarTabContent() {
                 <p
                   className={cn(
                     'flex h-10 w-10 items-center justify-center rounded-full text-center text-sm',
-                    isToday && 'bg-olive-light-bg text-white',
+                    isToday && 'bg-olive-light text-white',
                   )}
                 >
                   {dateNumber}
@@ -132,26 +138,22 @@ export function CalendarTabContent() {
               </div>
             );
           },
-          PreviousMonthButton: ({ className, ...props }) => {
-            return (
-              <button
-                className={cn('flex items-center justify-center', className)}
-                {...props}
-              >
-                <ChevronLeft className="size-6" />
-              </button>
-            );
-          },
-          NextMonthButton: ({ className, ...props }) => {
-            return (
-              <button
-                className={cn('flex items-center justify-center', className)}
-                {...props}
-              >
-                <ChevronRight className="size-6" />
-              </button>
-            );
-          },
+          PreviousMonthButton: ({ className, ...props }) => (
+            <button
+              className={cn(className, 'flex items-center justify-center')}
+              {...props}
+            >
+              <ChevronLeft className="size-6 text-gray-500" />
+            </button>
+          ),
+          NextMonthButton: ({ className, ...props }) => (
+            <button
+              className={cn(className, 'flex items-center justify-center')}
+              {...props}
+            >
+              <ChevronRight className="size-6 text-gray-500" />
+            </button>
+          ),
         }}
       />
     </div>

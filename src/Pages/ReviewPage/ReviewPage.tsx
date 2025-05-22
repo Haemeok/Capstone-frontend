@@ -47,7 +47,7 @@ const ReviewPage = ({ recipeName = '이 레시피' }: ReviewPageProps) => {
     <div className="flex min-h-screen flex-col bg-white">
       <header className="relative flex items-center justify-center border-b border-gray-200 p-4">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/recipes/${recipeId}`)}
           type="button"
           className="absolute left-4 text-gray-600"
         >
