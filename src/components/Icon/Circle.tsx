@@ -4,10 +4,15 @@ import { LoaderCircleIcon } from 'lucide-react';
 type CircleProps = {
   className?: string;
   props?: React.ComponentProps<typeof LoaderCircleIcon>;
+  size?: number;
 };
 
-const Circle = ({ className, ...props }: CircleProps) => (
-  <LoaderCircleIcon className={cn('animate-spin', className)} {...props} />
+const Circle = ({ className, size, ...props }: CircleProps) => (
+  <LoaderCircleIcon
+    className={cn('animate-spin', className)}
+    {...props}
+    size={size}
+  />
 );
 
 export default Circle;

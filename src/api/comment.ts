@@ -9,12 +9,10 @@ export const getComments = async ({
   pageParam = 0,
   sort,
   recipeId,
-  commentId,
 }: {
   pageParam: number;
   sort: string;
   recipeId: number;
-  commentId?: number;
 }) => {
   const apiParams: BaseQueryParams = {
     page: pageParam,
@@ -22,9 +20,7 @@ export const getComments = async ({
     sort: `createdAt,${sort}`,
   };
 
-  const END_POINT = commentId
-    ? END_POINTS.RECIPE_REPLY(recipeId, commentId)
-    : END_POINTS.RECIPE_COMMENT(recipeId);
+  const END_POINT = END_POINTS.RECIPE_COMMENT(recipeId);
 
   const response = await axiosInstance.get<CommentsApiResponse>(END_POINT, {
     params: apiParams,
@@ -34,18 +30,47 @@ export const getComments = async ({
   return response.data;
 };
 
+export type RepliesApiResponse = PageResponse<Comment>;
+export type TotalRepliesApiResponse = Comment & {
+  replies: RepliesApiResponse;
+};
+
+export const getReplies = async ({
+  pageParam = 0,
+  recipeId,
+  commentId,
+}: {
+  pageParam: number;
+  recipeId: number;
+  commentId: number;
+}) => {
+  const apiParams: BaseQueryParams = {
+    page: pageParam,
+    size: PAGE_SIZE,
+    sort: `createdAt,desc`,
+  };
+
+  const END_POINT = END_POINTS.RECIPE_REPLY(recipeId, commentId);
+
+  const response = await axiosInstance.get<TotalRepliesApiResponse>(END_POINT, {
+    params: apiParams,
+    useAuth: 'optional',
+  });
+
+  console.log('response', response.data);
+  return response.data;
+};
+
 export type PostCommentParams = {
   recipeId: number;
   commentId?: number;
   comment: string;
-  userId: number;
 };
 
 export const postComment = async ({
   recipeId,
   commentId,
   comment,
-  userId,
 }: PostCommentParams): Promise<Comment> => {
   const END_POINT = commentId
     ? END_POINTS.RECIPE_REPLY(recipeId, commentId)
@@ -53,7 +78,6 @@ export const postComment = async ({
 
   const response = await axiosInstance.post<Comment>(END_POINT, {
     content: comment,
-    userId,
   });
   return response.data;
 };
@@ -65,10 +89,7 @@ export const deleteComment = async ({
   recipeId: number;
   commentId: number;
 }) => {
-  const END_POINT = commentId
-    ? END_POINTS.RECIPE_REPLY(recipeId, commentId)
-    : END_POINTS.RECIPE_COMMENT(recipeId);
-
+  const END_POINT = END_POINTS.RECIPE_COMMENT_BY_ID(recipeId, commentId);
   const response = await axiosInstance.delete(END_POINT);
   return response.data;
 };

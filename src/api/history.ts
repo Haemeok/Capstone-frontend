@@ -7,6 +7,13 @@ type RecipeHistoryResponse = {
   monthlyTotalSavings: number;
 };
 
+type RecipeHistoryDetailResponse = {
+  savings: number;
+  recipeId: number;
+  recipeTitle: string;
+  imageUrl: string;
+};
+
 export const getRecipeHistory = async ({
   year,
   month,
@@ -20,6 +27,18 @@ export const getRecipeHistory = async ({
       params: {
         year,
         month,
+      },
+    },
+  );
+  return response.data;
+};
+
+export const getRecipeHistoryDetail = async (date: string) => {
+  const response = await axiosInstance.get<RecipeHistoryDetailResponse[]>(
+    END_POINTS.RECIPE_HISTORY,
+    {
+      params: {
+        date,
       },
     },
   );
