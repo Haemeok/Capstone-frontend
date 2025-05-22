@@ -1,12 +1,14 @@
 import { Clipboard, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import Circle from './Icon/Circle';
 
 type ProgressButtonProps = {
   progressPercentage: number;
   isFormValid: boolean;
   onClick?: () => void;
   className?: string;
+  isLoading?: boolean;
 };
 
 const ProgressButton = ({
@@ -14,6 +16,7 @@ const ProgressButton = ({
   isFormValid,
   onClick,
   className,
+  isLoading,
 }: ProgressButtonProps) => {
   return (
     <div
@@ -31,20 +34,26 @@ const ProgressButton = ({
 
       <Button
         className="group relative z-10 w-full cursor-pointer bg-transparent py-6 text-lg font-semibold transition-none hover:bg-transparent"
-        disabled={!isFormValid}
+        disabled={!isFormValid || isLoading}
         type="submit"
       >
-        <span className="flex items-center justify-center gap-2 text-white drop-shadow-sm">
-          <Clipboard
-            size={20}
-            className="transition-transform duration-300 group-hover:scale-120"
-          />
-          <span>레시피 생성하기</span>
-          <ArrowRight
-            size={16}
-            className="transition-transform duration-300 group-hover:translate-x-1"
-          />
-        </span>
+        {!isLoading ? (
+          <span className="flex items-center justify-center gap-2 text-white drop-shadow-sm">
+            <Clipboard
+              size={20}
+              className="transition-transform duration-300 group-hover:scale-120"
+            />
+            <span>레시피 생성하기</span>
+            <ArrowRight
+              size={16}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </span>
+        ) : (
+          <span className="flex items-center justify-center text-white drop-shadow-sm">
+            <Circle />
+          </span>
+        )}
       </Button>
     </div>
   );
