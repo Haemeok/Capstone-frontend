@@ -19,12 +19,19 @@ import RecipeNavBarButtons from '@/components/NavBar/RecipeNavBarButtons';
 import { formatPrice } from '@/utils/recipe';
 import RequiredAmountDisplay from './RequiredAmountDisplay';
 import useScrollAnimate from '@/hooks/useScrollAnimate';
+import { useToggleRecipeFavorite } from '@/hooks/useToggleMutations';
+import { useToastStore } from '@/store/useToastStore';
 
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
   const imageRef = useRef<HTMLImageElement>(null);
   const observerRef = useRef<HTMLDivElement>(null);
 
+  const { id } = useParams();
+  const { recipeData: recipe } = useRecipeDetailQuery(Number(id));
+
+  const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipe.id);
+  const { addToast } = useToastStore();
   const { targetRef: cookButtonRef } = useScrollAnimate<HTMLButtonElement>({
     triggerRef: observerRef,
     start: 'top bottom-=100px',
@@ -33,8 +40,6 @@ const RecipeDetailPage = () => {
     duration: 0.2,
     delay: 0,
   });
-  const { id } = useParams();
-  const { recipeData: recipe } = useRecipeDetailQuery(Number(id));
 
   const handleNavigateToComments = () => {
     navigate(`comments`, {
@@ -48,6 +53,26 @@ const RecipeDetailPage = () => {
     navigate(`/recipes/${recipe.id}/rate`);
   };
 
+  const handleToggleFavorite = () => {
+    const message = recipe.favoriteByCurrentUser
+      ? '즐겨찾기에서 삭제했습니다.'
+      : '즐겨찾기에 추가했습니다.';
+    toggleFavorite(undefined, {
+      onSuccess: () => {
+        addToast({
+          message,
+          variant: 'success',
+        });
+      },
+      onError: () => {
+        addToast({
+          message,
+          variant: 'error',
+        });
+      },
+    });
+  };
+
   const totalPrice = formatPrice(
     recipe.ingredients.reduce(
       (acc, ingredient) => acc + (ingredient.price ?? 0),
@@ -56,7 +81,7 @@ const RecipeDetailPage = () => {
   );
 
   return (
-    <div className="relative mx-auto flex flex-col bg-[#ffffff] pb-16 text-[#2a2229]">
+    <div className="relative mx-auto flex flex-col bg-[#ffffff] text-[#2a2229]">
       <TransformingNavbar
         title={recipe.title}
         targetRef={imageRef}
@@ -104,6 +129,8 @@ const RecipeDetailPage = () => {
             <SaveButton
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
               label="저장"
+              isFavorite={recipe.favoriteByCurrentUser}
+              onClick={handleToggleFavorite}
             />
             <ShareButton
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
@@ -128,7 +155,11 @@ const RecipeDetailPage = () => {
             </Button>
           </div>
           {recipe.comments.length > 0 && (
-            <CommentBox comment={recipe.comments[0]} />
+            <CommentBox
+              comment={recipe.comments[0]}
+              recipeId={recipe.id}
+              hideReplyButton={true}
+            />
           )}
         </Box>
         <Box className="flex flex-col gap-2">
@@ -157,11 +188,7 @@ const RecipeDetailPage = () => {
         <Button
           ref={cookButtonRef}
           className="bg-olive-light rounded-full p-4 text-white shadow-lg"
-          onClick={() =>
-            navigate(`/recipes/${recipe.id}/slideShow`, {
-              state: { recipeSteps: recipe.steps },
-            })
-          }
+          onClick={() => navigate(`/recipes/${recipe.id}/slideShow`)}
         >
           요리하기
         </Button>
