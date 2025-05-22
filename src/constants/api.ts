@@ -36,6 +36,7 @@ export const END_POINTS = {
   RECIPE_HISTORY: '/me/calendar',
   RATING: (recipeId: number) => `/ratings/recipe/${recipeId}`,
   LOGOUT: '/token/logout',
+  RECIPES_BY_TAG: () => '/recipes/by-tag',
 };
 
 export const USER_ERROR_MESSAGE = {

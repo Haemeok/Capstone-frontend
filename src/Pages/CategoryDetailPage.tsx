@@ -1,38 +1,76 @@
-import { getRecipesByCategory } from '@/api/recipe';
+import {
+  DetailedRecipesApiResponse,
+  getRecipeItemsByTagNames,
+  getRecipesByCategory,
+} from '@/api/recipe';
 import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router';
+import { TAG_CODES_TO_NAME, TagCode } from '@/constants/recipe';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { InfiniteData, useQuery } from '@tanstack/react-query';
+import { useParams, useNavigate } from 'react-router';
+import HomeBanner from './Home/HomeBanner';
+import PrevButton from '@/components/Button/PrevButton';
 
 const CategoryDetailPage = () => {
-  const { categorySlug } = useParams<{ categorySlug: string }>();
+  const { categorySlug: tagCode } = useParams<{ categorySlug: TagCode }>();
+  const navigate = useNavigate();
 
-  if (!categorySlug) {
-    return <div>유효하지 않은 카테고리입니다.</div>;
+  if (!tagCode) {
+    navigate('/');
+    return;
   }
 
+  const tagName = TAG_CODES_TO_NAME[tagCode as keyof typeof TAG_CODES_TO_NAME];
+
   const {
-    data: recipes,
-    isLoading,
+    data,
     error,
-  } = useQuery({
-    queryKey: ['recipes', categorySlug],
-    queryFn: () => {
-      return getRecipesByCategory(categorySlug!);
-    },
-    enabled: !!categorySlug,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    ref,
+  } = useInfiniteScroll<
+    DetailedRecipesApiResponse,
+    Error,
+    InfiniteData<DetailedRecipesApiResponse>,
+    [string, string],
+    number
+  >({
+    queryKey: ['recipes', tagCode],
+    queryFn: ({ pageParam }) =>
+      getRecipeItemsByTagNames({ tagName: tagCode, pageParam }),
+    getNextPageParam: (lastPage) =>
+      lastPage.page.number === lastPage.page.totalPages - 1
+        ? null
+        : lastPage.page.number + 1,
+    initialPageParam: 0,
   });
-  const categoryTitle =
-    categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
+
+  const recipes = data?.pages.flatMap((page) => page.content);
 
   return (
-    <div>
-      <h1 className="mb-4 text-2xl font-bold">{`${categoryTitle} 레시피`}</h1>
+    <div className="bg-white p-2">
+      <header className="relative flex items-center justify-center border-b border-gray-200 p-2">
+        <PrevButton className="absolute left-2" />
+        <h1 className="text-xl font-bold">{`${tagName} 레시피`}</h1>
+      </header>
       {recipes && recipes.length > 0 ? (
         <RecipeGrid recipes={recipes} />
       ) : (
-        <div>레시피가 없습니다.</div>
+        <div className="flex h-[500px] w-full flex-col items-center justify-center p-4">
+          <p className="text-mm text-gray-500">
+            {tagName} 레시피가 아직 없어요 !
+          </p>
+          <HomeBanner
+            title="레시피 생성하러가기"
+            description={`${tagName} 레시피를 만들어보세요!`}
+            image="/robot1.png"
+            to="/recipes/new"
+          />
+        </div>
       )}
-      {/* 페이지네이션 UI 추가 가능 */}
     </div>
   );
 };

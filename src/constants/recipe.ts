@@ -111,6 +111,34 @@ export const TAG_CODES = {
   해장: 'HANGOVER',
 };
 
+export const TAG_CODES_TO_NAME = {
+  HOME_PARTY: '홈파티',
+  PICNIC: '피크닉',
+  CAMPING: '캠핑',
+  HEALTHY: '다이어트 / 건강식',
+  KIDS: '아이와 함께',
+  SOLO: '혼밥',
+  DRINK: '술안주',
+  BRUNCH: '브런치',
+  LATE_NIGHT: '야식',
+  QUICK: '초스피드 / 간단 요리',
+  HOLIDAY: '기념일 / 명절',
+  LUNCHBOX: '도시락',
+  AIR_FRYER: '에어프라이어',
+  HANGOVER: '해장',
+};
+
+type ValueOf<T> = T[keyof T];
+
+export type TagCode = ValueOf<typeof TAG_CODES>;
+
+export const TAG_ITEMS = TAGS.map((tag, index) => ({
+  id: index,
+  name: tag,
+  code: TAG_CODES[tag as keyof typeof TAG_CODES],
+  imageUrl: `/${TAG_CODES[tag as keyof typeof TAG_CODES]}.png`,
+}));
+
 export const SORT_TYPES = ['최신순', '오래된순'];
 
 export const SORT_TYPE_CODES = {
