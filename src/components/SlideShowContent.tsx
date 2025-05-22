@@ -1,5 +1,6 @@
 import React from 'react';
 import { RecipeStep } from '@/type/recipe';
+import SuspenseImage from './Image/SuspenseImage';
 type SlideShowContentProps = {
   step: RecipeStep;
   totalSteps: number;
@@ -9,7 +10,7 @@ const SlideShowContent = ({ step, totalSteps }: SlideShowContentProps) => {
   return (
     <div className="flex h-full flex-col">
       <div className="relative h-3/5">
-        <img
+        <SuspenseImage
           src={step.stepImageUrl}
           alt={`Step ${step.stepNumber}`}
           className="h-full w-full object-cover"

@@ -7,10 +7,11 @@ import { useParams } from 'react-router';
 import { useUserStore } from '@/store/useUserStore';
 
 type CommentInputProps = {
-  author: User;
+  author: User | undefined;
+  commentId?: number;
 };
 
-const CommentInput = ({ author }: CommentInputProps) => {
+const CommentInput = ({ author, commentId }: CommentInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [comment, setComment] = useState('');
   const { recipeId } = useParams();
@@ -41,7 +42,7 @@ const CommentInput = ({ author }: CommentInputProps) => {
       {
         recipeId: Number(recipeId),
         comment,
-        userId: user.id,
+        commentId,
       },
       {
         onSuccess: () => {
@@ -60,7 +61,7 @@ const CommentInput = ({ author }: CommentInputProps) => {
         {!isFocused && (
           <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-white">
             <img
-              src="https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png"
+              src={user?.profileImage}
               alt="내 프로필"
               className="h-full w-full object-cover"
             />
@@ -71,7 +72,7 @@ const CommentInput = ({ author }: CommentInputProps) => {
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder={`${author.nickname}님에게 답글 남기기...`}
+          placeholder={`${author?.nickname}님에게 답글 남기기...`}
           className={`flex-1 resize-none overflow-y-auto rounded-xl border-none bg-white px-3 py-2 text-sm leading-tight placeholder-gray-500 transition-all duration-300 ease-in-out focus:outline-none ${isFocused ? 'ml-0' : ''} ${
             comment ? '' : 'truncate'
           }`}
