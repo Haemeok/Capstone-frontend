@@ -3,6 +3,7 @@ import {
   postRecipeLike,
   postRecipeVisibility,
 } from '@/api/recipe';
+import { Recipe } from '@/type/recipe';
 import { useMutation, useQueryClient, QueryKey } from '@tanstack/react-query';
 
 type ToggleFunction = (id: number) => Promise<any>;
@@ -41,21 +42,47 @@ export const useToggleRecipeLike = () => {
   return mutation;
 };
 
-export const useToggleRecipeSave = () => {
-  const mutation = useToggleMutation({
-    toggleFn: postRecipeFavorite,
-    resourceQueryKey: 'recipe',
-    additionalInvalidateKeys: ['recipes', 'savedRecipes'],
-  });
-
-  return mutation;
-};
-
 export const useToggleRecipeVisibility = () => {
   const mutation = useToggleMutation({
     toggleFn: postRecipeVisibility,
     resourceQueryKey: 'recipe',
     additionalInvalidateKeys: ['recipes'],
+  });
+
+  return mutation;
+};
+export const useToggleRecipeFavorite = (recipeId: number) => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation<void, Error, void, Recipe>({
+    mutationFn: () => postRecipeFavorite(recipeId),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['recipe', recipeId] });
+      const previousRecipe = queryClient.getQueryData<Recipe>([
+        'recipe',
+        recipeId,
+      ]);
+      if (previousRecipe) {
+        queryClient.setQueryData<Recipe>(['recipe', recipeId], (old) =>
+          old
+            ? {
+                ...old,
+                favoriteByCurrentUser: !old.favoriteByCurrentUser,
+              }
+            : old,
+        );
+      }
+      return previousRecipe;
+    },
+    onError: (error, variables, context) => {
+      console.error('즐겨찾기 처리 실패:', error);
+      if (context) {
+        queryClient.setQueryData(['recipe', recipeId], context);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipe', recipeId] });
+      queryClient.invalidateQueries({ queryKey: ['recipes', 'favorite'] });
+    },
   });
 
   return mutation;

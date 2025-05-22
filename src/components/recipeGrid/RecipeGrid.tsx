@@ -1,5 +1,5 @@
 // src/components/RecipeGrid.tsx
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -10,12 +10,11 @@ import {
 import Circle from '../Icon/Circle';
 import SimpleRecipeGridItem from './SimpleRecipeGridItem';
 import DetailedRecipeGridItem from './DetailedRecipeGridItem';
-
-// GSAP ScrollTrigger 플러그인 등록
-if (typeof window !== 'undefined') {
-  // 서버사이드 렌더링 환경 고려
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { Drawer, DrawerContent } from '../ui/drawer';
+import { Pencil, Trash } from 'lucide-react';
+import useDeleteRecipeMutation from '@/hooks/useDeleteRecipeMutation';
+import { DeleteModal } from '../DeleteModal';
+import { useToastStore } from '@/store/useToastStore';
 
 type RecipeGridProps = {
   recipes: BaseRecipeGridItem[] | DetailedRecipeGridItemType[];
@@ -28,6 +27,7 @@ type RecipeGridProps = {
   noResultsMessage?: string;
   lastPageMessage?: string;
   error?: Error | null;
+  queryKeyString?: string;
 };
 
 const RecipeGrid = ({
@@ -41,70 +41,129 @@ const RecipeGrid = ({
   noResultsMessage = '표시할 레시피가 없습니다.',
   lastPageMessage = '모든 레시피를 다 봤어요!',
   error,
+  queryKeyString,
 }: RecipeGridProps) => {
   const gridItemsContainerRef = useRef<HTMLDivElement | null>(null); // GSAP 컨텍스트 범위
-  const gridAnimateTargetRef = useRef<HTMLDivElement | null>(null); // 실제 그리드 아이템들을 감싸는 div
+
+  const itemsAnimateTargetRef = useRef<HTMLDivElement | null>(null);
+  const animatedItemsRef = useRef(new Set<Element>());
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+
+  const handleOpenDrawer = (itemId: number) => {
+    setSelectedItemId(itemId);
+    setIsDrawerOpen(true);
+  };
+  const handleDrawerState = (state: boolean) => {
+    setIsDrawerOpen(state);
+    setSelectedItemId(null);
+  };
+
+  const handleEdit = () => {};
+
+  const handleDeleteModalOpen = () => {
+    setIsDrawerOpen(false);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDelete = () => {
+    setIsDeleteModalOpen(false);
+    deleteRecipe();
+  };
+
+  const { mutate: deleteRecipe, isPending: isDeleting } =
+    useDeleteRecipeMutation(selectedItemId ?? 0);
 
   useEffect(() => {
-    if (!recipes || recipes.length === 0 || error || noResults) {
+    animatedItemsRef.current.clear();
+    // 레이아웃 변경 후 ScrollTrigger 위치 재계산이 필요할 수 있음 (옵션)
+  }, [queryKeyString]);
+
+  useEffect(() => {
+    // 로딩 조건: 초기 로딩 (isFetching && recipes가 비었을 때) 이거나,
+    // 필요한 ref가 없거나, 에러/결과 없음 상태일 때는 애니메이션 실행 안 함.
+    console.log('[ANIMATION EFFECT]', {
+      isFetching,
+      recipesLength: recipes?.length,
+      error: !!error,
+      noResults,
+      hasItemsTarget: !!itemsAnimateTargetRef.current,
+      hasGridContainer: !!gridItemsContainerRef.current,
+      queryKeyString,
+    });
+    if (
+      (isFetching && (!recipes || recipes.length === 0)) || // 초기 로딩
+      !recipes ||
+      recipes.length === 0 ||
+      error ||
+      noResults ||
+      !itemsAnimateTargetRef.current ||
+      !gridItemsContainerRef.current // 컨텍스트 ref
+    ) {
+      console.log('[ANIMATION EFFECT] Skipped');
       return;
     }
 
-    // GSAP Context를 사용하여 애니메이션과 ScrollTrigger를 안전하게 관리
+    // 스크롤 컨텍스트 설정 (컴포넌트 마운트 시 또는 필요시)
+    // 예: gridItemsContainerRef.current가 스크롤 컨테이너라면 scrollContextRef.current = gridItemsContainerRef.current;
+    // 여기서는 기본 window 스크롤을 가정하고 ScrollTrigger의 scroller를 명시하지 않음.
+
     const ctx = gsap.context(() => {
-      if (gridAnimateTargetRef.current) {
-        // 1. 아직 애니메이션이 적용되지 않은 아이템들만 선택
-        //    ':scope > *'는 gridAnimateTargetRef의 직계 자식 요소를 의미.
-        const newItems = Array.from(
-          gridAnimateTargetRef.current.querySelectorAll<HTMLElement>(
-            ':scope > *:not([data-gsap-animated="true"])',
-          ),
-        );
-
-        if (newItems.length > 0) {
-          // 2. 새로 추가된 아이템들에 대해서만 애니메이션 적용
-          gsap.fromTo(
-            newItems, // 타겟: 새로 추가된 아이템들
-            { opacity: 0, y: 30, scale: 0.98 }, // 시작 상태
-            {
-              // 종료 상태
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.5,
-              stagger: {
-                each: 0.08,
-
-                onStart: function () {},
-              },
-              ease: 'power2.out',
-              // ScrollTrigger는 gridAnimateTargetRef(그리드 컨테이너)가 보일 때 발동
-              scrollTrigger: {
-                trigger: gridAnimateTargetRef.current,
-                start: 'top 85%',
-                // markers: process.env.NODE_ENV === 'development',
-                toggleActions: 'play none none none', // 컨테이너가 보일 때 한 번만 재생
-                // (새로운 아이템들에 대한 이 애니메이션 인스턴스가 한 번만 재생)
-                // once: true, // ScrollTrigger 3.11+ 에서 사용 가능. ScrollTrigger 자체가 한 번만 발동.
-                // 이 경우, 새 아이템이 추가될 때마다 새 ScrollTrigger가 생성되므로,
-                // 각 ScrollTrigger 인스턴스는 한 번만 발동하게 됨.
-              },
-              // 애니메이션(들)이 완료된 후 실행
-              onComplete: () => {
-                newItems.forEach((item) => {
-                  item.setAttribute('data-gsap-animated', 'true');
-                });
+      const currentDOMItems = Array.from(
+        itemsAnimateTargetRef.current!.children,
+      );
+      console.log(
+        '[ANIMATION EFFECT] DOM items found:',
+        currentDOMItems.length,
+      );
+      currentDOMItems.forEach((itemDOMElement: Element, index: number) => {
+        if (!animatedItemsRef.current.has(itemDOMElement)) {
+          // CSS로 초기 상태를 설정하는 것을 권장. (예: .recipe-item { opacity: 0; transform: ...})
+          // 여기서는 GSAP set으로 처리.
+          console.log(`[ANIMATION EFFECT] Animating item index: ${index}`);
+          gsap.set(itemDOMElement, { opacity: 0, y: 30, scale: 0.98 });
+          gsap.to(itemDOMElement, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+            onComplete: () => {
+              console.log(
+                `[ANIMATION EFFECT] Animation complete for item index: ${index}`,
+              );
+            },
+            // 한 줄에 2개 아이템이므로, 같은 행의 아이템들은 거의 동시에 트리거될 수 있음.
+            // 미세한 stagger를 원한다면 delay를 index 기반으로 아주 작게 주거나,
+            // ScrollTrigger.batch() 사용 고려.
+            delay: 0, // 예: 같은 행의 두번째 아이템에 약간의 딜레이 (선택적)
+            scrollTrigger: {
+              trigger: itemDOMElement,
+              markers: true,
+              scroller: gridItemsContainerRef.current, // 명시적 스크롤 컨테이너 사용 시
+              start: 'top 95%', // 아이템 상단이 뷰포트 85% 지점에 닿으면
+              toggleActions: 'play none none none', // 한 번만 재생
+              // markers: process.env.NODE_ENV === 'development', // 개발 중에만 마커 표시
+              // once: true, // GSAP 3.11+ 권장 (이 경우 아래 onEnter에서 add는 불필요하거나 다르게 처리)
+              onEnter: () => {
+                animatedItemsRef.current.add(itemDOMElement);
               },
             },
-          );
+          });
         }
-      }
-    }, gridItemsContainerRef); // 컨텍스트 범위 지정
+      });
+      ScrollTrigger.refresh();
+      console.log(
+        '[ANIMATION EFFECT] ScrollTrigger.refresh() called after creating triggers.',
+      );
+    }, gridItemsContainerRef); // 컨텍스트 범위는 gridItemsContainerRef
 
-    // 클린업 함수: 컴포넌트 언마운트 또는 의존성 변경으로 재실행 전 호출
-    return () => ctx.revert();
-  }, [recipes, error, noResults]);
-
+    return () => {
+      ctx.revert();
+    };
+  }, [error, isFetching, noResults, recipes, queryKeyString]);
   // 초기 로딩 중 (recipes 배열이 비어있거나, isFetching이 true인데 recipes가 없는 경우)
   if (isFetching && (!recipes || recipes.length === 0)) {
     return (
@@ -133,37 +192,29 @@ const RecipeGrid = ({
   }
 
   return (
-    <div ref={gridItemsContainerRef} className="flex flex-1 flex-col">
-      <div className="flex flex-col gap-4 p-4 pb-6">
-        <div
-          ref={gridAnimateTargetRef}
-          className="grid grid-cols-2 gap-4 gap-y-6"
-        >
-          {recipes.map((recipe) =>
-            isSimple ? (
-              <SimpleRecipeGridItem
-                key={recipe.id} // key는 필수
-                recipe={recipe as BaseRecipeGridItem}
-                height={height}
-                // data-gsap-animated 속성은 GSAP이 관리하므로 직접 설정할 필요 없음
-              />
-            ) : (
-              <DetailedRecipeGridItem
-                key={recipe.id} // key는 필수
-                recipe={recipe as DetailedRecipeGridItemType}
-                height={height}
-              />
-            ),
-          )}
-        </div>
+    <div ref={gridItemsContainerRef} className="flex flex-1 flex-col p-4">
+      <div
+        className="grid grid-cols-2 gap-4 gap-y-6"
+        ref={itemsAnimateTargetRef}
+      >
+        {recipes.map((recipe) =>
+          isSimple ? (
+            <SimpleRecipeGridItem
+              key={recipe.id} // key는 필수
+              recipe={recipe as BaseRecipeGridItem}
+              height={height}
+              setIsDrawerOpen={handleOpenDrawer}
+              // data-gsap-animated 속성은 GSAP이 관리하므로 직접 설정할 필요 없음
+            />
+          ) : (
+            <DetailedRecipeGridItem
+              key={recipe.id} // key는 필수
+              recipe={recipe as DetailedRecipeGridItemType}
+              height={height}
+            />
+          ),
+        )}
       </div>
-
-      {isFetching && recipes && recipes.length > 0 && (
-        <div className="flex items-center justify-center py-5">
-          <Circle className="text-olive-light h-10 w-10" />
-        </div>
-      )}
-
       <div ref={observerRef} className="h-10 text-center">
         {!isFetching &&
           !hasNextPage &&
@@ -174,6 +225,46 @@ const RecipeGrid = ({
             <p className="text-sm text-gray-500">{lastPageMessage}</p>
           )}
       </div>
+
+      {isFetching && recipes && recipes.length > 0 && (
+        <div className="flex items-center justify-center py-5">
+          <Circle className="text-olive-light h-10 w-10" />
+        </div>
+      )}
+
+      {isDrawerOpen && (
+        <Drawer open={isDrawerOpen} onOpenChange={handleDrawerState}>
+          <DrawerContent className="p-4">
+            <div className="absolute top-2 left-1/2 flex h-1 w-10 -translate-x-1/2 rounded-2xl bg-slate-400" />
+            <div className="flex flex-col gap-2 rounded-2xl bg-slate-200 p-4">
+              <button
+                className="flex w-full justify-between"
+                onClick={handleEdit}
+              >
+                <p>수정</p>
+                <Pencil size={20} />
+              </button>
+              <div className="h-px w-full bg-gray-300" />
+              <button
+                className="flex w-full justify-between text-red-500"
+                onClick={handleDeleteModalOpen}
+              >
+                <p>삭제</p>
+                <Trash size={20} />
+              </button>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+      {isDeleteModalOpen && (
+        <DeleteModal
+          open={isDeleteModalOpen}
+          onOpenChange={setIsDeleteModalOpen}
+          title="레시피를 삭제하시겠어요?"
+          onConfirm={handleDelete}
+          description="이 레시피를 삭제하면 복원할 수 없습니다."
+        />
+      )}
     </div>
   );
 };
