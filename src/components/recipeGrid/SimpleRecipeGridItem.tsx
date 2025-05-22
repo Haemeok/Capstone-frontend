@@ -31,7 +31,7 @@ const SimpleRecipeGridItem = ({
   return (
     <>
       <div
-        className={cn(`relative min-h-${height} rounded-2xl`)}
+        className={cn(`relative h-${height} rounded-2xl`)}
         onClick={handleItemClick}
       >
         <SuspenseImage

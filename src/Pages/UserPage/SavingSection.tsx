@@ -1,15 +1,20 @@
 import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+import { cn } from '@/lib/utils';
 
 // 컴포넌트 Props 정의 (이미지 URL을 받을 수 있도록)
 interface SavingSectionProps {
   imageUrl?: string;
   altText?: string;
+  width?: number;
+  height?: number;
 }
 
 const SavingSection: React.FC<SavingSectionProps> = ({
   imageUrl = '/Coffee.png', // 기본 이미지 경로 (public 폴더에 있다고 가정)
   altText = '움직이는 아이템',
+  width = 100,
+  height = 100,
 }) => {
   const sectionContainerRef = useRef<HTMLDivElement | null>(null); // GSAP Context 범위용
   const imageRef = useRef<HTMLImageElement | null>(null); // 이미지 요소 참조
@@ -89,9 +94,13 @@ const SavingSection: React.FC<SavingSectionProps> = ({
   return (
     <div
       ref={sectionContainerRef}
-      className="mx-auto flex w-full max-w-sm flex-col items-center justify-center p-5"
+      className="mx-auto flex w-fit max-w-sm flex-col items-center justify-center p-5"
     >
-      <div className="flex h-40 w-40 items-center justify-center">
+      <div
+        className={cn(
+          `flex h-${height} w-${width} items-center justify-center`,
+        )}
+      >
         <img
           ref={imageRef}
           src={imageUrl}
