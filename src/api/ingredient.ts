@@ -13,13 +13,13 @@ type IngredientQueryParams = BaseQueryParams & {
 
 export const getIngredients = async ({
   category,
-  search,
+  q,
   sort = 'ASC',
   pageParam = 0,
   isMine = false,
 }: {
   category: string | null;
-  search?: string;
+  q?: string;
   sort?: string;
   pageParam: number;
   isMine: boolean;
@@ -36,7 +36,7 @@ export const getIngredients = async ({
           category as keyof typeof INGREDIENT_CATEGORY_CODES
         ]
       : null,
-    search,
+    q,
   };
 
   const apiParams = buildParams(baseParams, optionalParams);

@@ -45,7 +45,7 @@ export function CalendarTabContent() {
         <p className="mt-1 text-sm text-gray-500">
           커피 한 잔 정도 금액이에요!
         </p>
-        <SavingSection />
+        <SavingSection width={40} height={40} />
       </div>
       <DayPicker
         mode="single"

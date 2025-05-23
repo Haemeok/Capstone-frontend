@@ -2,7 +2,7 @@ export type BaseQueryParams = {
   page: number;
   size: number;
   sort: string;
-  search?: string;
+  q?: string;
 };
 
 export type PageResponse<T> = {

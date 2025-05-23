@@ -96,7 +96,7 @@ const RecipeDetailPage = () => {
           />
         }
       />
-      <div ref={imageRef} className="h-64 w-full">
+      <div ref={imageRef} className="h-112 w-full">
         <SuspenseImage
           src={recipe.imageUrl}
           alt={recipe.title}
