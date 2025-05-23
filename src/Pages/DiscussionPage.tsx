@@ -53,7 +53,7 @@ const DiscussionPage = () => {
         pageParam,
       }),
     getNextPageParam: (lastPage) =>
-      lastPage.replies.page.number === lastPage.replies.page.totalPages - 1
+      lastPage.replies.page.number < lastPage.replies.page.totalPages - 1
         ? null
         : lastPage.replies.page.number + 1,
     initialPageParam: 0,

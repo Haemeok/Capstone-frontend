@@ -49,7 +49,7 @@ const NewIngredientsPage = () => {
     queryFn: ({ pageParam }) =>
       getIngredients({
         category: selectedCategory === '전체' ? null : selectedCategory,
-        search: searchQuery,
+        q: searchQuery,
         pageParam,
         sort,
         isMine: false,

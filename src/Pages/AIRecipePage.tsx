@@ -109,6 +109,12 @@ const AIRecipePage = () => {
           나만의 맞춤형 레시피를 AI가 추천해드립니다
         </p>
       </div>
+      <div className="flex flex-col items-center justify-center gap-2">
+        <img src="/robot.png" alt="robot" className="h-30 w-30" />
+        <p className="text-sm text-gray-500">
+          이런 음식을 주로 잘 만듭니다. 맡겨주세요
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
