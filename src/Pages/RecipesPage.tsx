@@ -4,6 +4,7 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { InfiniteData } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { getNextPageParam } from '@/utils/recipe';
 
 const RecipesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
@@ -37,10 +38,7 @@ const RecipesPage = () => {
         q,
         pageParam,
       }),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.number === lastPage.page.totalPages - 1
-        ? null
-        : lastPage.page.number + 1,
+    getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
 

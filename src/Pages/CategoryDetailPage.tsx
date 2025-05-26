@@ -10,6 +10,7 @@ import { InfiniteData, useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router';
 import HomeBanner from './Home/HomeBanner';
 import PrevButton from '@/components/Button/PrevButton';
+import { getNextPageParam } from '@/utils/recipe';
 
 const CategoryDetailPage = () => {
   const { categorySlug: tagCode } = useParams<{ categorySlug: TagCode }>();
@@ -41,10 +42,7 @@ const CategoryDetailPage = () => {
     queryKey: ['recipes', tagCode],
     queryFn: ({ pageParam }) =>
       getRecipeItemsByTagNames({ tagName: tagCode, pageParam }),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.number === lastPage.page.totalPages - 1
-        ? null
-        : lastPage.page.number + 1,
+    getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
 

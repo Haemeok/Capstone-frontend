@@ -8,6 +8,7 @@ import { SORT_TYPE_CODES } from '@/constants/recipe';
 import { useLocation, useParams } from 'react-router';
 import { cn } from '@/lib/utils';
 import PrevButton from '@/components/Button/PrevButton';
+import { getNextPageParam } from '@/utils/recipe';
 
 const CommentsPage = () => {
   const [sort, setSort] = useState<string>('최신순');
@@ -37,10 +38,7 @@ const CommentsPage = () => {
         recipeId: Number(recipeId),
         pageParam,
       }),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.number >= lastPage.page.totalPages - 1
-        ? null
-        : lastPage.page.number + 1,
+    getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
 

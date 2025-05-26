@@ -52,10 +52,13 @@ const DiscussionPage = () => {
         commentId: Number(commentId),
         pageParam,
       }),
-    getNextPageParam: (lastPage) =>
-      lastPage.replies.page.number < lastPage.replies.page.totalPages - 1
+    getNextPageParam: (lastPage) => {
+      if (lastPage.replies.page.totalPages === 0) return null;
+      return lastPage.replies.page.number ===
+        lastPage.replies.page.totalPages - 1
         ? null
-        : lastPage.replies.page.number + 1,
+        : lastPage.replies.page.number + 1;
+    },
     initialPageParam: 0,
   });
   console.log('data', data);
