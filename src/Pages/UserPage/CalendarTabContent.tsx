@@ -45,7 +45,7 @@ export function CalendarTabContent() {
         <p className="mt-1 text-sm text-gray-500">
           커피 한 잔 정도 금액이에요!
         </p>
-        <SavingSection width={40} height={40} />
+        <SavingSection />
       </div>
       <DayPicker
         mode="single"
@@ -71,7 +71,7 @@ export function CalendarTabContent() {
 
           caption: 'flex justify-center pt-1 relative items-center w-full',
           caption_label: 'text-xl font-bold',
-          nav: 'absolute w-full flex justify-between items-center px-30 h-9',
+          nav: 'absolute  w-full flex justify-center items-center gap-20 h-9',
           week: 'flex w-full h-15 text-center items-center',
           weeks: 'flex flex-col w-full',
           weekdays: 'flex w-full',

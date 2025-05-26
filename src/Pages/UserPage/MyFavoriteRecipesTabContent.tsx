@@ -1,6 +1,6 @@
 import { BaseRecipesApiResponse, getMyFavoriteItems } from '@/api/recipe';
 import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
-
+import { getNextPageParam } from '@/utils/recipe';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
@@ -30,10 +30,7 @@ const MyFavoriteRecipesTabContent = () => {
         sort,
         pageParam,
       }),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.number === lastPage.page.totalPages - 1
-        ? null
-        : lastPage.page.number + 1,
+    getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
 
