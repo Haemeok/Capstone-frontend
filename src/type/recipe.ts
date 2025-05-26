@@ -103,12 +103,18 @@ export type BaseRecipeGridItem = {
   title: string;
   imageUrl: string;
   authorName: string;
+  authorId: number;
   profileImage: string;
   cookingTime?: number;
   createdAt: string;
   likeCount: number;
   likedByCurrentUser: boolean;
 };
+
+export type UserRecipeGridItem = Omit<
+  BaseRecipeGridItem,
+  'authorName' | 'profileImage' | 'likeCount' | 'authorId'
+>;
 
 export type IngredientItem = {
   id: number;
