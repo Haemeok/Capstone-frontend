@@ -6,6 +6,8 @@ import { Avatar } from '../ui/avatar';
 import RecipeLikeButton from '../RecipeLikeButton';
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from '@/type/recipe';
 import { useNavigate } from 'react-router';
+import UserProfileImage from '../UserProfileImage';
+import Username from '../Username';
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
@@ -48,14 +50,11 @@ const DetailedRecipeGridItem = ({
           <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
         </div>
         <div className="flex items-center gap-1">
-          <Avatar className="h-8 w-8 rounded-full">
-            <img
-              src={recipe.profileImage}
-              alt={recipe.authorName}
-              className="h-full w-full rounded-full object-cover"
-            />
-          </Avatar>
-          <p className="text-sm font-bold text-gray-800">{recipe.authorName}</p>
+          <UserProfileImage
+            profileImage={recipe.profileImage}
+            userId={recipe.authorId}
+          />
+          <Username username={recipe.authorName} userId={recipe.authorId} />
         </div>
       </div>
     </div>

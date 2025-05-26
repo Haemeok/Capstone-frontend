@@ -25,7 +25,7 @@ export const END_POINTS = {
   NAVER_LOGIN: `${BASE_URL}/oauth2/authorization/naver`,
   REDIRECT_URI: '/oauth2/redirect',
   TOKEN_REFRESH: '/token/refresh',
-  USER_INFO: '/users/me',
+  USER_INFO: (userId: number) => `/users/${userId}`,
   MY_FAVORITES: '/me/favorites',
   MY_INFO: '/me',
   MY_INGREDIENTS: '/me/fridge/items',
