@@ -9,6 +9,8 @@ import { useUserStore } from '@/store/useUserStore';
 import { useState } from 'react';
 import { DeleteModal } from './DeleteModal';
 import useDeleteCommentMutation from '@/hooks/useDeleteCommentMutation';
+import UserProfileImage from './UserProfileImage';
+import Username from './Username';
 
 type CommentProps = {
   comment: Comment;
@@ -45,16 +47,15 @@ const CommentBox = ({
     <div className="bg-beige flex w-full flex-col gap-2 rounded-2xl p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Avatar className={`h-8 w-8 border-2`}>
-            <SuspenseImage
-              src={comment.author.profileImage || ''}
-              alt={comment.author.nickname}
-              className="object-cover"
-            />
-          </Avatar>
-          <div>
-            <p className={`font-semibold`}>{comment.author.nickname}</p>
-          </div>
+          <UserProfileImage
+            profileImage={comment.author.profileImage || ''}
+            userId={comment.author.id}
+            className="h-8 w-8"
+          />
+          <Username
+            username={comment.author.nickname}
+            userId={comment.author.id}
+          />
         </div>
         <div className="flex items-center">
           <p className="text-sm text-gray-400">{formattedDate}</p>

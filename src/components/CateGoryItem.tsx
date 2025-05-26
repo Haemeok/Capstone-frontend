@@ -1,6 +1,7 @@
 import { TAG_CODES } from '@/constants/recipe';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router';
+import SuspenseImage from './Image/SuspenseImage';
 
 type CateGoryItemProps = {
   id: number;
@@ -24,7 +25,7 @@ const CateGoryItem = ({ name, imageUrl, className }: CateGoryItemProps) => {
         );
       }}
     >
-      <img
+      <SuspenseImage
         src={imageUrl}
         alt={name}
         className="img-smooth h-70 w-50 object-cover"
