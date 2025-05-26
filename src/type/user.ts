@@ -3,7 +3,7 @@ export type User = {
   nickname: string;
   email?: string;
   profileContent?: string;
-  profileImage?: string;
+  profileImage: string;
   username?: string;
   bookmarks?: number;
   likes?: number;
