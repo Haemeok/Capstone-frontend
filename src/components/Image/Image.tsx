@@ -55,7 +55,15 @@ const Image = ({
       ref={ref}
     />
   ) : (
-    fallback || <Skeleton className={className} />
+    fallback || (
+      <Skeleton
+        className={cn(
+          `${loaded ? 'opacity-0' : 'opacity-100'}`,
+          'transition-opacity duration-300 ease-in-out',
+          className,
+        )}
+      />
+    )
   );
 };
 

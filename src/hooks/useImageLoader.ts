@@ -26,6 +26,15 @@ export const useImageLoader = (src: string, options = { preload: true }) => {
     const img = new Image();
     img.src = src;
 
+    if (img.complete) {
+      setStatus({
+        loaded: true,
+        error: false,
+        loading: false,
+      });
+      return;
+    }
+
     img.onload = () => {
       setStatus({
         loaded: true,
