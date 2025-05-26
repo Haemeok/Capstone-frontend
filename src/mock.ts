@@ -132,6 +132,7 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     likedByCurrentUser: false,
     cookingTime: 30,
     ratingCount: 10,
+    authorId: 1,
     profileImage:
       'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
     avgRating: 4.5,
@@ -148,6 +149,7 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     likedByCurrentUser: false,
     cookingTime: 30,
     ratingCount: 10,
+    authorId: 1,
     profileImage:
       'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
     avgRating: 4.5,
@@ -163,6 +165,7 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     likedByCurrentUser: false,
     cookingTime: 30,
     ratingCount: 10,
+    authorId: 1,
     profileImage:
       'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
     avgRating: 4.5,
@@ -178,6 +181,7 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     likedByCurrentUser: false,
     cookingTime: 30,
     ratingCount: 10,
+    authorId: 1,
     profileImage:
       'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
     avgRating: 4.5,
@@ -193,6 +197,7 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     likedByCurrentUser: false,
     cookingTime: 30,
     ratingCount: 10,
+    authorId: 1,
     profileImage:
       'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
     avgRating: 4.5,
@@ -209,6 +214,7 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     likedByCurrentUser: false,
     cookingTime: 30,
     ratingCount: 10,
+    authorId: 1,
     profileImage:
       'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
     avgRating: 4.5,
@@ -224,6 +230,7 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     likedByCurrentUser: false,
     cookingTime: 30,
     ratingCount: 10,
+    authorId: 1,
     profileImage:
       'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
     avgRating: 4.5,
@@ -239,6 +246,7 @@ export const createdRecipes: DetailedRecipeGridItem[] = [
     likedByCurrentUser: false,
     cookingTime: 30,
     ratingCount: 10,
+    authorId: 1,
     profileImage:
       'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
     avgRating: 4.5,
