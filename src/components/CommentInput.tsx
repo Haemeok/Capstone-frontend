@@ -5,7 +5,7 @@ import { User } from '@/type/user';
 import useCreateCommentMutation from '@/hooks/useCreateCommentMutation';
 import { useParams } from 'react-router';
 import { useUserStore } from '@/store/useUserStore';
-
+import SuspenseImage from './Image/SuspenseImage';
 type CommentInputProps = {
   author: User | undefined;
   commentId?: number;
@@ -60,8 +60,8 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
       >
         {!isFocused && (
           <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-white">
-            <img
-              src={user?.profileImage}
+            <SuspenseImage
+              src={user?.profileImage || ''}
               alt="내 프로필"
               className="h-full w-full object-cover"
             />

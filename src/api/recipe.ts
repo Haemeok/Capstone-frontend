@@ -202,7 +202,7 @@ export const getRecipeItems = async ({
   const baseParams: BaseQueryParams = {
     page: pageParam,
     size: PAGE_SIZE,
-    sort: `name,${sort}`,
+    sort: `createdAt,${sort}`,
   };
 
   const optionalParams: Partial<RecipeQueryParams> = {
