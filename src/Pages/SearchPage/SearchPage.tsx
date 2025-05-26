@@ -15,6 +15,7 @@ import CategoryDrawer from './CategoryDrawer';
 import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 import FilterChip from '@/components/Button/FilterChip';
 import useSearch from '@/hooks/useSearch';
+import { getNextPageParam } from '@/utils/recipe';
 
 type DrawerConfig = {
   type: 'dishType' | 'sort' | 'tags';
@@ -69,10 +70,7 @@ const SearchPage = () => {
         q: searchQuery,
         pageParam,
       }),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.number === lastPage.page.totalPages - 1
-        ? null
-        : lastPage.page.number + 1,
+    getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
 

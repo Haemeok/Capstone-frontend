@@ -6,6 +6,7 @@ import { useParams, useNavigate } from 'react-router';
 import { cn } from '@/lib/utils';
 import { useUserStore } from '@/store/useUserStore';
 import { useToastStore } from '@/store/useToastStore';
+import Circle from '@/components/Icon/Circle';
 
 type ReviewPageProps = {
   recipeName?: string; // 레시피 이름 (선택 사항)
@@ -19,7 +20,9 @@ const ReviewPage = ({ recipeName = '이 레시피' }: ReviewPageProps) => {
   const { recipeId } = useParams();
   const navigate = useNavigate();
 
-  const { mutate: postReview } = usePostReviewMutation(Number(recipeId));
+  const { mutate: postReview, isPending } = usePostReviewMutation(
+    Number(recipeId),
+  );
 
   const handleReviewTextChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -32,10 +35,15 @@ const ReviewPage = ({ recipeName = '이 레시피' }: ReviewPageProps) => {
       { comment: reviewText, rating },
       {
         onSuccess: () => {
+          navigate(`/recipes/${recipeId}`, { replace: true });
           addToast({
             message: '코멘트가 작성되었습니다.',
             variant: 'default',
+            position: 'bottom',
+            size: 'medium',
           });
+          setReviewText('');
+          setRating(0);
         },
       },
     );
@@ -101,14 +109,14 @@ const ReviewPage = ({ recipeName = '이 레시피' }: ReviewPageProps) => {
           disabled={submitDisabled}
           onClick={handleSubmit}
           className={cn(
-            'mt-4 w-full rounded-lg py-3 font-semibold text-white',
+            'mt-4 flex w-full items-center justify-center rounded-lg py-3 font-semibold text-white',
             'transition-all duration-300 ease-in-out',
             submitDisabled
               ? 'bg-gray-300'
               : 'bg-olive-light hover:bg-opacity-90',
           )}
         >
-          코멘트 작성하기
+          {isPending ? <Circle size={20} /> : <p>코멘트 작성하기</p>}
         </button>
       </main>
     </div>
