@@ -17,6 +17,7 @@ import { INGREDIENT_CATEGORIES } from '@/constants/recipe';
 import PrevButton from '@/components/Button/PrevButton';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger'; // ScrollTrigger import
+import { getNextPageParam } from '@/utils/recipe';
 
 const NewIngredientsPage = () => {
   // ... (useState, useInfiniteScroll 등 기존 상태 및 훅 설정은 거의 동일)
@@ -54,10 +55,7 @@ const NewIngredientsPage = () => {
         sort,
         isMine: false,
       }),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.number === lastPage.page.totalPages - 1
-        ? null
-        : lastPage.page.number + 1,
+    getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
 

@@ -106,12 +106,6 @@ const UserInfoChangePage: React.FC = () => {
                 : {}
             }
           >
-            <label
-              htmlFor="profileImageInput"
-              className="bg-opacity-60 absolute right-0 bottom-0 flex cursor-pointer items-center justify-center rounded-full bg-black p-1"
-            >
-              <Camera className="h-4 w-4 text-white" />
-            </label>
             <Controller
               name="profileImage"
               control={control}
@@ -127,7 +121,7 @@ const UserInfoChangePage: React.FC = () => {
               )}
             />
             {!initialData.profileImageUrl && (
-              <Camera className="h-10 w-10 text-gray-500" />
+              <Camera className="z-10 h-10 w-10 text-gray-500" />
             )}
           </div>
         </div>

@@ -20,6 +20,7 @@ import {
   DrawerFooter,
 } from '@/components/ui/drawer';
 import useSearch from '@/hooks/useSearch';
+import { getNextPageParam } from '@/utils/recipe';
 
 type IngredientSelectorProps = {
   open: boolean;
@@ -60,14 +61,11 @@ const IngredientSelector = ({
     queryFn: ({ pageParam = 0 }) =>
       getIngredients({
         category: selectedCategory,
-        search: searchQuery,
+        q: searchQuery,
         pageParam,
         isMine: false,
       }),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.number === lastPage.page.totalPages - 1
-        ? null
-        : lastPage.page.number + 1,
+    getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
 
@@ -133,7 +131,7 @@ const IngredientSelector = ({
             ))}
           </div>
         </div>
-        <div className="flex h-120 flex-shrink-0 flex-col justify-center overflow-y-auto p-4">
+        <div className="flex grow flex-col justify-center overflow-y-auto p-4">
           {status === 'pending' ? (
             <p className="text-center text-gray-500">재료 로딩 중...</p>
           ) : status === 'error' ? (
