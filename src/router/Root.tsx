@@ -1,17 +1,14 @@
 import BottomNavBar from '@/components/BottomNavBar';
-import TopNavBar from '@/components/TopNavBar';
+import AnimatedOutlet from './AnimatedOutlet';
 import { Outlet } from 'react-router';
 
-function Root() {
+const Root = () => {
   return (
-    <div className="">
-      <div className="min-h-screen overflow-y-auto pb-20">
-        <Outlet />
-      </div>
-
+    <>
+      <AnimatedOutlet />
       <BottomNavBar />
-    </div>
+    </>
   );
-}
+};
 
 export default Root;

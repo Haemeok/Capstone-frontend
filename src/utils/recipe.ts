@@ -3,6 +3,7 @@ import { FileInfoRequest } from '@/type/file';
 import { RecipePayload } from '@/type/recipe';
 import { convertImageToWebP } from '@/utils/image';
 import { RecipeFormValues } from '@/type/recipe';
+import { PageResponse } from '@/type/query';
 
 export const prepareRecipeData = async (
   formData: RecipeFormValues,
@@ -215,4 +216,11 @@ export const formatPrice = (
       return `${fallbackFormattedNumber}${currencySymbol}`;
     }
   }
+};
+
+export const getNextPageParam = <T>(lastPage: PageResponse<T>) => {
+  if (lastPage.page.totalPages === 0) return null;
+  return lastPage.page.number === lastPage.page.totalPages - 1
+    ? null
+    : lastPage.page.number + 1;
 };

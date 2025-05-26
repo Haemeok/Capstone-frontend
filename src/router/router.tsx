@@ -5,10 +5,9 @@ import NewRecipePage from '../Pages/NewRecipe/NewRecipePage';
 import RecipeDetailPage from '../Pages/RecipeDetailPage';
 import CommentsPage from '@/Pages/CommentPage/CommentsPage';
 import DiscussionPage from '@/Pages/DiscussionPage';
-import UserDetailPage from '@/Pages/UserPage/UserDetailPage';
 import AIRecipePage from '@/Pages/AIRecipePage';
 import HomePage from '@/Pages/Home/HomePage';
-import IngredientsPage from '@/Pages/IngredientsPage';
+import IngredientsPage from '@/Pages/IngredientsPage/IngredientsPage';
 import SearchPage from '@/Pages/SearchPage/SearchPage';
 
 import NewIngredientsPage from '@/Pages/NewIngredientsPage';
@@ -20,6 +19,7 @@ import CategoryDetailPage from '@/Pages/CategoryDetailPage';
 import ReviewPage from '@/Pages/ReviewPage/ReviewPage';
 import CalendarDetailPage from '@/Pages/CalendarDetailPage';
 import UserInfoChangePage from '@/Pages/UserInfoChangePage';
+import UserDetailPage from '@/Pages/UserPage/UserDetailPage';
 
 const router = createBrowserRouter([
   {
@@ -40,12 +40,12 @@ const router = createBrowserRouter([
       },
 
       {
-        path: 'users/:id',
+        path: 'users/:userId',
         element: <UserDetailPage />,
       },
 
       {
-        path: 'air',
+        path: 'ai-recipe',
         element: <AIRecipePage />,
       },
       {
