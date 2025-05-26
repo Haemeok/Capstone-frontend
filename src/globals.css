@@ -173,3 +173,8 @@
     image-rendering: crisp-edges;
   }
 }
+
+.page-wrapper {
+  opacity: 0;
+  visibility: hidden;
+}

@@ -31,6 +31,10 @@ module.exports = {
       backgroundColor: (theme) => ({
         ...theme('colors'),
       }),
+      width: {
+        36: '9rem',
+        40: '10rem',
+      },
     },
   },
 };
