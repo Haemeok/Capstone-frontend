@@ -43,7 +43,7 @@ const UserDetailPage = () => {
               {isOwnProfile && (
                 <UserInfoEditButton
                   nickname={displayUser.nickname}
-                  description={displayUser.profileContent ?? ''}
+                  description={displayUser.introduction ?? ''}
                   profileImageUrl={displayUser.profileImage ?? ''}
                 />
               )}
@@ -57,7 +57,7 @@ const UserDetailPage = () => {
         </div>
 
         <p className="mt-3 max-w-[90%] text-sm text-black/90">
-          {displayUser.profileContent}
+          {displayUser.introduction}
         </p>
       </div>
 
