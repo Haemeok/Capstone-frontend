@@ -16,7 +16,7 @@ const UserProfile = ({ user }: UserProfileProps) => {
         />
         <div className="h-full p-2">
           <Username username={user.nickname} userId={user.id} />
-          <p className="text-left text-sm">{user.profileContent}</p>
+          <p className="text-left text-sm">{user.introduction}</p>
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ export const recommendedTags = [
 export const user: User = {
   nickname: 'Stefanie Hiekmann',
   email: '',
-  profileContent: 'Contributor',
+  introduction: 'Contributor',
   profileImage:
     'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
   id: 1,
@@ -257,7 +257,7 @@ export const userDetail: User = {
   id: 1,
   nickname: 'Stefanie Hiekmann',
   email: '',
-  profileContent: 'Contributor',
+  introduction: 'Contributor',
   profileImage:
     'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
 };

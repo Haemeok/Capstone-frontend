@@ -8,7 +8,7 @@ export const guestUser: User = {
   nickname: '게스트',
   profileImage: '/default-profile.png',
   username: '@guest',
-  profileContent: '',
+  introduction: '',
 };
 
 export type Tab = {
