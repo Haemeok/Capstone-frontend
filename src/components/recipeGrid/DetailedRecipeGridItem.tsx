@@ -1,8 +1,6 @@
 import { cn } from '@/lib/utils';
-import React from 'react';
 import SuspenseImage from '../Image/SuspenseImage';
 import { Star } from 'lucide-react';
-import { Avatar } from '../ui/avatar';
 import RecipeLikeButton from '../RecipeLikeButton';
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from '@/type/recipe';
 import { useNavigate } from 'react-router';
@@ -21,13 +19,13 @@ const DetailedRecipeGridItem = ({
   const navigate = useNavigate();
   return (
     <div
-      className={cn(`relative flex h-72 w-48 flex-col gap-2 rounded-2xl`)}
+      className={cn(`relative flex h-76 w-48 flex-col gap-2 rounded-2xl`)}
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <SuspenseImage
         src={recipe.imageUrl}
         alt={recipe.title}
-        className={cn(`relative h-52 w-full rounded-2xl object-cover`)}
+        className={cn(`relative h-52 min-h-52 w-full rounded-2xl object-cover`)}
       />
 
       <div className="absolute top-0 right-0 p-2 text-right">
@@ -40,7 +38,7 @@ const DetailedRecipeGridItem = ({
         />
       </div>
 
-      <div className="font-noto-sans-kr flex flex-col px-2 pb-2">
+      <div className="flex grow flex-col px-2 pb-2">
         <p className="truncate font-semibold">{recipe.title}</p>
         <div className="flex items-center gap-[2px]">
           <Star size={15} className="fill-gray-800" />
