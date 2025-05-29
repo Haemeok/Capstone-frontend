@@ -26,17 +26,18 @@ type IngredientSelectorProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onIngredientSelect: (ingredient: IngredientPayload) => void;
+  addedIngredientIds: ReadonlySet<number>;
+  setAddedIngredientIds: React.Dispatch<React.SetStateAction<Set<number>>>;
 };
 
 const IngredientSelector = ({
   open,
   onOpenChange,
   onIngredientSelect,
+  addedIngredientIds,
+  setAddedIngredientIds,
 }: IngredientSelectorProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
-  const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
-    new Set(),
-  );
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
@@ -69,12 +70,6 @@ const IngredientSelector = ({
     initialPageParam: 0,
   });
 
-  useEffect(() => {
-    if (open) {
-      setAddedIngredientIds(new Set());
-    }
-  }, [open]);
-
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
@@ -85,9 +80,12 @@ const IngredientSelector = ({
       quantity: '',
       unit: ingredient.unit,
     });
-    setAddedIngredientIds((prevIds) => new Set(prevIds).add(ingredient.id));
+    setAddedIngredientIds((prevIds: Set<number>) =>
+      new Set(prevIds).add(ingredient.id),
+    );
   };
 
+  const ingredientItems = data?.pages.flatMap((page) => page.content);
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="flex w-full flex-col sm:max-w-lg">
@@ -141,47 +139,45 @@ const IngredientSelector = ({
             </p>
           ) : (
             <div className="h-full space-y-2">
-              {data?.pages
-                .flatMap((page) => page.content)
-                .map((ingredient) => (
-                  <div
-                    key={ingredient.id}
-                    className="flex items-center rounded-lg border bg-white p-3 shadow-sm"
-                  >
-                    <div className="mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                      {ingredient.imageUrl && (
-                        <img
-                          src={ingredient.imageUrl}
-                          alt={ingredient.name}
-                          className="h-full w-full object-cover"
-                        />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium">{ingredient.name}</p>
-                    </div>
-                    {addedIngredientIds.has(ingredient.id) ? (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="flex items-center gap-1 text-gray-400"
-                        disabled
-                      >
-                        <Check size={16} />
-                        추가됨
-                      </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-olive-light text-olive-light hover:bg-olive-light hover:text-white"
-                        onClick={() => handleAddClick(ingredient)}
-                      >
-                        추가
-                      </Button>
+              {ingredientItems?.map((ingredient) => (
+                <div
+                  key={ingredient.id}
+                  className="flex items-center rounded-lg border bg-white p-3 shadow-sm"
+                >
+                  <div className="mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                    {ingredient.imageUrl && (
+                      <img
+                        src={ingredient.imageUrl}
+                        alt={ingredient.name}
+                        className="h-full w-full object-cover"
+                      />
                     )}
                   </div>
-                ))}
+                  <div className="flex-1">
+                    <p className="font-medium">{ingredient.name}</p>
+                  </div>
+                  {addedIngredientIds.has(ingredient.id) ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="flex items-center gap-1 text-gray-400"
+                      disabled
+                    >
+                      <Check size={16} />
+                      추가됨
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-olive-light text-olive-light hover:bg-olive-light hover:text-white"
+                      onClick={() => handleAddClick(ingredient)}
+                    >
+                      추가
+                    </Button>
+                  )}
+                </div>
+              ))}
               <div ref={ref} className="h-10 text-center">
                 {!hasNextPage && data?.pages[0]?.content?.length && (
                   <p className="text-sm text-gray-400">
