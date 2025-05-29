@@ -73,13 +73,6 @@ const RecipeDetailPage = () => {
     });
   };
 
-  const totalPrice = formatPrice(
-    recipe.ingredients.reduce(
-      (acc, ingredient) => acc + (ingredient.price ?? 0),
-      0,
-    ),
-  );
-
   return (
     <div className="relative mx-auto flex flex-col bg-[#ffffff] text-[#2a2229]">
       <TransformingNavbar
@@ -136,9 +129,10 @@ const RecipeDetailPage = () => {
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
               label="공유"
             />
-            <LockButton />
+            <LockButton recipeId={recipe.id} initialIsLocked={recipe.private} />
           </div>
         </Box>
+
         <Box>
           <UserProfile user={recipe.author} />
           <CollapsibleP content={recipe.description} />
@@ -164,7 +158,11 @@ const RecipeDetailPage = () => {
         </Box>
         <Box className="flex flex-col gap-2">
           <h2 className="mb-2 text-xl font-semibold">재료</h2>
-          <RequiredAmountDisplay totalPrice={totalPrice} />
+          <RequiredAmountDisplay
+            price={recipe.totalIngredientCost}
+            prefix="이 레시피에 약"
+            suffix="필요해요!"
+          />
           <ul className="flex flex-col gap-1">
             {recipe.ingredients.map((ingredient, index) => (
               <li key={index} className="grid grid-cols-3 gap-4">
@@ -173,11 +171,21 @@ const RecipeDetailPage = () => {
                   {ingredient.quantity}
                   {ingredient.unit}
                 </p>
-                <p className="text-left">{formatPrice(ingredient.price)}원</p>
+                <p className="text-left text-sm text-slate-500">
+                  {formatPrice(ingredient.price)}원
+                </p>
               </li>
             ))}
           </ul>
+          <RequiredAmountDisplay
+            price={recipe.marketPrice - recipe.totalIngredientCost}
+            prefix="배달 물가 대비"
+            suffix="절약해요!"
+            containerClassName="mt-2 flex items-center border-0 text-gray-400 p-0 font-semibold"
+            priceClassName="text-purple-500"
+          />
         </Box>
+
         <div ref={observerRef} className="h-1 w-full" />
         <Box>
           <RecipeStepList RecipeSteps={recipe.steps} />
