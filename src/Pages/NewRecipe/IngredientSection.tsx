@@ -15,14 +15,21 @@ type IngredientSectionProps = {
   control: Control<RecipeFormValues>;
   errors: FieldErrors<RecipeFormValues>;
   register: UseFormRegister<RecipeFormValues>;
+  onRemoveIngredientCallback: (ingredientName: string) => void;
 };
 
 const IngredientSection = ({
   control,
   errors,
   register,
+  onRemoveIngredientCallback,
 }: IngredientSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
+    new Set(),
+  );
+
   const {
     fields: ingredientFields,
     append: appendIngredient,
@@ -39,6 +46,15 @@ const IngredientSection = ({
       unit: ingredient.unit,
     });
   };
+
+  const handleRemoveIngredient = (index: number) => {
+    const ingredientNameToRemove = ingredientFields[index]?.name;
+    removeIngredient(index);
+    if (ingredientNameToRemove) {
+      onRemoveIngredientCallback(ingredientNameToRemove);
+    }
+  };
+
   return (
     <div className="mb-4">
       {ingredientFields.length > 0 && (
@@ -78,7 +94,7 @@ const IngredientSection = ({
                   variant="ghost"
                   size="icon"
                   className="text-gray-400 hover:text-red-500"
-                  onClick={() => removeIngredient(index)}
+                  onClick={() => handleRemoveIngredient(index)}
                 >
                   <X size={18} />
                 </Button>
@@ -106,6 +122,8 @@ const IngredientSection = ({
         open={isOpen}
         onOpenChange={setIsOpen}
         onIngredientSelect={addIngredient}
+        addedIngredientIds={addedIngredientIds}
+        setAddedIngredientIds={setAddedIngredientIds}
       />
     </div>
   );

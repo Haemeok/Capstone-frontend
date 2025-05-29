@@ -1,21 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Upload as UploadIcon, Plus, X, ChefHat, Tag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import ProgressButton from '@/components/ProgressButton';
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
 import { useCreateRecipeWithUpload } from '@/hooks/useCreateRecipeWithUpload';
 import { RecipeFormValues, IngredientPayload } from '@/type/recipe';
 import Steps from '@/Pages/NewRecipe/Steps';
-import { useToasts } from '@/hooks/useToasts';
-import IngredientSelector from './IngredientSelector';
-import { DISH_TYPES } from '@/constants/recipe';
+import { DISH_TYPES, DISH_TYPES_FOR_CREATE_RECIPE } from '@/constants/recipe';
 import { cn } from '@/lib/utils';
 import CookingToolsInput from './CookingToolsInput';
 import RecipeTitleWithImage from './RecipeTitleWithImage';
 import Description from './Description';
 import IngredientSection from './IngredientSection';
 import TagSection from './TagSection';
+import { useToastStore } from '@/store/useToastStore';
 
 const NewRecipePage = () => {
   const navigate = useNavigate();
@@ -23,7 +20,6 @@ const NewRecipePage = () => {
     mutate: createRecipeWithUpload,
     isUploading,
     isLoading: isCreatingRecipe,
-    isSuccess,
     error: recipeCreationError,
     data: createdRecipeData,
   } = useCreateRecipeWithUpload();
@@ -32,7 +28,7 @@ const NewRecipePage = () => {
     (string | null)[]
   >([]);
 
-  const { addToast } = useToasts();
+  const { addToast } = useToastStore();
 
   const {
     register,
@@ -75,10 +71,10 @@ const NewRecipePage = () => {
           message: '레시피가 성공적으로 등록되었습니다!',
           variant: 'success',
         });
+        navigate('/search');
         reset();
         setImagePreviewUrl(null);
         setStepImagePreviewUrls([]);
-        navigate('/recipes');
       },
       onError: (error) => {
         console.error('레시피 생성 실패:', error);
@@ -113,9 +109,22 @@ const NewRecipePage = () => {
 
   const isLoading = isUploading || isCreatingRecipe;
   const submitError = recipeCreationError;
-
-  console.log(errors, isValid, isDirty);
-
+  const handleMainIngredientRemoved = (ingredientName: string) => {
+    const currentSteps = watch('steps'); // or getValues('steps')
+    const updatedSteps = currentSteps.map((step) => {
+      const newStepIngredients = (step.ingredients || []).filter(
+        (ing) => ing.name !== ingredientName,
+      );
+      return {
+        ...step,
+        ingredients: newStepIngredients,
+      };
+    });
+    setValue('steps', updatedSteps, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <form id="recipe-form" onSubmit={handleSubmit(onSubmit)}>
@@ -153,7 +162,7 @@ const NewRecipePage = () => {
                 <option value="" disabled>
                   선택
                 </option>
-                {DISH_TYPES.map((dishType) => (
+                {DISH_TYPES_FOR_CREATE_RECIPE.map((dishType) => (
                   <option key={dishType} value={dishType}>
                     {dishType}
                   </option>
@@ -233,6 +242,7 @@ const NewRecipePage = () => {
             control={control}
             errors={errors}
             register={register}
+            onRemoveIngredientCallback={handleMainIngredientRemoved}
           />
           <Steps
             watch={watch}

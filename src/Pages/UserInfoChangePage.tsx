@@ -2,12 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
 import { Camera } from 'lucide-react'; // lucide-react 아이콘 사용 유지
-
-interface UserProfile {
-  nickname: string;
-  description: string;
-  profileImageUrl?: string;
-}
+import { useUserStore } from '@/store/useUserStore';
 
 interface FormValues {
   nickname: string;
@@ -19,19 +14,13 @@ const MAX_NICKNAME_LENGTH = 20;
 const MAX_DESCRIPTION_LENGTH = 60;
 
 const UserInfoChangePage: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-
-  const initialData = useMemo(() => {
-    return (
-      (location.state?.userData as UserProfile) || {
-        nickname: '',
-        description: '',
-        profileImageUrl: undefined,
-      }
-    );
-  }, [location.state?.userData]);
-
+  const { user } = useUserStore();
+  const initialData = {
+    nickname: user?.nickname || '',
+    description: user?.introduction || '',
+    profileImageUrl: user?.profileImage || '',
+  };
   const {
     control,
     handleSubmit,

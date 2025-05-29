@@ -1,26 +1,40 @@
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollAnimate from '@/hooks/useScrollAnimate';
-
-gsap.registerPlugin(ScrollTrigger);
+import { cn } from '@/lib/utils';
+import { formatPrice } from '@/utils/recipe';
 
 type RequiredAmountDisplayProps = {
-  totalPrice: string;
+  price: number;
+  prefix: string;
+  suffix: string;
+  containerClassName?: string;
+  priceClassName?: string;
 };
 
-const RequiredAmountDisplay = ({ totalPrice }: RequiredAmountDisplayProps) => {
+const RequiredAmountDisplay = ({
+  price,
+  prefix,
+  suffix,
+  containerClassName,
+  priceClassName,
+}: RequiredAmountDisplayProps) => {
   const { targetRef } = useScrollAnimate<HTMLDivElement>();
-
+  const formattedPrice = formatPrice(price);
   return (
     <div
       ref={targetRef}
-      className="mb-2 flex items-center rounded-lg border-1 border-gray-300 p-3 px-2 text-sm"
+      className={cn(
+        'mb-2 flex flex-col gap-2 rounded-lg border-1 border-gray-300 p-3 px-2 text-sm',
+        containerClassName,
+      )}
       style={{ opacity: 0 }}
     >
-      <p>이 레시피에 약</p>
-      <p className="text-olive-mint ml-1">{totalPrice}원</p>
-      <p>이 필요해요!</p>
+      <div className="flex w-fit items-center">
+        <p>{prefix}</p>
+        <p className={cn('text-olive-mint mr-1 ml-1', priceClassName)}>
+          {formattedPrice}원
+        </p>
+        <p>{suffix}</p>
+      </div>
     </div>
   );
 };
