@@ -18,7 +18,7 @@ export const END_POINTS = {
   RECIPE_LIKE: (id: number) => `/recipes/${id}/like`,
   COMMENT_LIKE: (id: number) => `/comments/${id}/like`,
   RECIPE_FAVORITE: (id: number) => `/recipes/${id}/favorite`,
-  RECIPE_VISIBILITY: (id: number) => `/recipes/${id}/visibility`,
+  RECIPE_VISIBILITY: (id: number) => `/recipes/${id}/private`,
   RECIPE_FINALIZE: (id: number) => `/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `${BASE_URL}/oauth2/authorization/google`,
   KAKAO_LOGIN: `${BASE_URL}/oauth2/authorization/kakao`,
@@ -33,6 +33,8 @@ export const END_POINTS = {
   MY_INGREDIENTS_BULK: '/me/fridge/items/bulk',
   USER_RECIPES: (id: number) => `/users/${id}/recipes`,
   PRESIGNED_URLS: '/recipes/presigned-urls',
+  USER_PRESIGNED_URLS: (userId: number) =>
+    `/users/${userId}/profile-image/presign`,
   RECIPE_HISTORY: '/me/calendar',
   RATING: (recipeId: number) => `/ratings/recipe/${recipeId}`,
   LOGOUT: '/token/logout',
