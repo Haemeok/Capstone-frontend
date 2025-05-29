@@ -69,14 +69,6 @@ const StepItem = ({
         }
       };
       reader.readAsDataURL(actualFile);
-    } else {
-      if (currentPreviewUrl !== null) {
-        setStepImagePreviewUrls((prevUrls) => {
-          const newUrls = [...prevUrls];
-          newUrls[index] = null;
-          return newUrls;
-        });
-      }
     }
   }, [
     stepImageFileValue,
@@ -89,6 +81,11 @@ const StepItem = ({
     setValue(`steps.${index}.imageFile`, null, {
       shouldValidate: true,
       shouldDirty: true,
+    });
+    setStepImagePreviewUrls((prevUrls) => {
+      const newUrls = [...prevUrls];
+      newUrls[index] = null;
+      return newUrls;
     });
   };
 

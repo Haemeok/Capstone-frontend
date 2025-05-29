@@ -13,13 +13,15 @@ export type RecipeStep = {
   stepImageUrl: string;
   action?: string;
   ingredients?: IngredientItem[];
+  imageKey: string | null | undefined;
 };
 
 export type RecipeStepPayload = Omit<
   RecipeStep,
-  'stepImageUrl' | 'action' | 'ingredients'
+  'stepImageUrl' | 'action' | 'ingredients' | 'imageKey'
 > & {
   ingredients: IngredientPayload[];
+  imageKey?: string;
 };
 
 type RatingInfo = {
@@ -38,8 +40,9 @@ export type Recipe = {
   youtubeUrl?: string;
   cookingTools: string[];
   servings: number | undefined | '';
-  totalIngredientCost?: number;
-  marketPrice?: number;
+  totalIngredientCost: number;
+  marketPrice: number;
+  imageKey: string | null | undefined;
   ratingInfo: RatingInfo;
   ingredients: IngredientItem[];
   steps: RecipeStep[];
@@ -49,6 +52,7 @@ export type Recipe = {
   likeCount: number;
   likedByCurrentUser: boolean;
   favoriteByCurrentUser: boolean;
+  private: boolean;
 };
 
 export type RecipePayload = Omit<
@@ -67,11 +71,14 @@ export type RecipePayload = Omit<
   | 'ratingInfo'
   | 'comments'
   | 'imageUrl'
+  | 'imageKey'
+  | 'private'
 > & {
   ingredients: IngredientPayload[];
   steps: RecipeStepPayload[];
   cookingTime: number;
   servings: number;
+  imageKey?: string | null;
 };
 
 export type RecipeFormValues = {
@@ -84,11 +91,13 @@ export type RecipeFormValues = {
   cookingTools?: string[];
   tagNames: string[];
   imageFile: FileList | null;
+  imageKey?: string | null;
   ingredients: IngredientPayload[];
   steps: Array<{
     stepNumber: number;
     instruction: string;
     imageFile?: FileList | null;
+    imageKey?: string | null;
     ingredients: IngredientPayload[];
   }>;
 };

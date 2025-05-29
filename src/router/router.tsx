@@ -20,6 +20,7 @@ import ReviewPage from '@/Pages/ReviewPage/ReviewPage';
 import CalendarDetailPage from '@/Pages/CalendarDetailPage';
 import UserInfoChangePage from '@/Pages/UserInfoChangePage';
 import UserDetailPage from '@/Pages/UserPage/UserDetailPage';
+import UpdateRecipePage from '@/Pages/UpdateRecipe/UpdateRecipePage';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: 'recipes/new',
         element: <NewRecipePage />,
+      },
+      {
+        path: 'recipes/:recipeId/edit',
+        element: <UpdateRecipePage />,
       },
 
       {
