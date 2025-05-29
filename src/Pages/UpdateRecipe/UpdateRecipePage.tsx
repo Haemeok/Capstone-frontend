@@ -94,7 +94,7 @@ const UpdateRecipePage = () => {
       const currentStepPreviewUrl = stepImagePreviewUrls[index]; // 현재 스텝의 미리보기 URL
       const currentRHFStepKey = formStep.imageKey; // 현재 RHF에 저장된 스텝의 imageKey
 
-      let newStepImageKey = initialStepDetails.imageKey;
+      let newStepImageKey = initialStepDetails.stepImageKey;
 
       if (currentStepPreviewUrl === null) {
         newStepImageKey = null;

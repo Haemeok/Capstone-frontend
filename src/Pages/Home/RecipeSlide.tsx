@@ -25,9 +25,7 @@ const RecipeSlide = ({ title, recipes }: RecipeSlideProps) => {
       </div>
       <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto">
         {createdRecipes.map((item) => (
-          <div key={item.id} className="flex-1 rounded-2xl">
-            <DetailedRecipeGridItem recipe={item} height={200} />
-          </div>
+          <DetailedRecipeGridItem recipe={item} height={200} />
         ))}
       </div>
     </div>

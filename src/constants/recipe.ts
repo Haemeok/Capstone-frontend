@@ -195,3 +195,6 @@ export type FinalDrawerConfig = BaseDrawerConfig & {
   initialValue: string | string[];
   setValue: (value: string | string[]) => void;
 };
+
+export const FOUR_CUT_IMAGE =
+  'https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/4cut/4cut.png';

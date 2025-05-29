@@ -1,0 +1,65 @@
+import React, { useRef } from 'react';
+import { AIRecommendedRecipe, m } from '@/type/recipe';
+import SuspenseImage from '@/components/Image/SuspenseImage';
+import Box from '@/components/ui/Box';
+import RequiredAmountDisplay from '../RequiredAmountDisplay';
+import { formatPrice } from '@/utils/recipe';
+import RecipeStepList from '@/components/RecipeStepList';
+import useScrollAnimate from '@/hooks/useScrollAnimate';
+
+type AIRecipeDisplayProps = {
+  createdRecipe: AIRecommendedRecipe;
+};
+
+const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
+  const recipe = m;
+  const observerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div>
+      <div>
+        <SuspenseImage
+          src={recipe.imageUrl ?? ''}
+          alt={recipe.title}
+          className="h-48 w-full object-cover"
+        />
+        <h1>{recipe.title}</h1>
+        <p>{recipe.description}</p>
+      </div>
+      <Box className="flex flex-col gap-2">
+        <h2 className="mb-2 text-xl font-semibold">재료</h2>
+        <RequiredAmountDisplay
+          price={recipe.totalIngredientCost}
+          prefix="이 레시피에 약"
+          suffix="필요해요!"
+        />
+        <ul className="flex flex-col gap-1">
+          {recipe.ingredients.map((ingredient, index) => (
+            <li key={index} className="grid grid-cols-3 gap-4">
+              <p className="text-left font-bold">{ingredient.name}</p>
+              <p className="text-left">
+                {ingredient.quantity}
+                {ingredient.unit}
+              </p>
+              <p className="text-left text-sm text-slate-500">
+                {formatPrice(ingredient.price)}원
+              </p>
+            </li>
+          ))}
+        </ul>
+        <RequiredAmountDisplay
+          price={recipe.marketPrice - recipe.totalIngredientCost}
+          prefix="배달 물가 대비"
+          suffix="절약해요!"
+          containerClassName="mt-2 flex items-center border-0 text-gray-400 p-0 font-semibold"
+          priceClassName="text-purple-500"
+        />
+      </Box>
+      <Box>
+        <RecipeStepList RecipeSteps={recipe.steps} />
+      </Box>
+    </div>
+  );
+};
+
+export default AIRecipeDisplay;
