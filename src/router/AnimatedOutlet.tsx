@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useRef } from 'react';
 
 // 페이지 전환 시 적용할 애니메이션 variant입니다.
 // 필요에 따라 다양한 효과로 커스터마이징 할 수 있습니다.
@@ -24,7 +25,7 @@ const pageTransition = {
 
 const AnimatedOutlet = () => {
   const location = useLocation();
-
+  const motionRef = useRef<HTMLDivElement>(null);
   return (
     <AnimatePresence mode="wait" initial={false}>
       {/*
@@ -33,6 +34,7 @@ const AnimatedOutlet = () => {
           location.pathname을 사용하면 경로가 변경될 때마다 새로운 컴포넌트로 인식됩니다.
         */}
       <motion.div
+        ref={motionRef}
         key={location.pathname}
         initial="initial" // 초기 상태 (pageVariants.initial)
         animate="in" // 마운트 시 애니메이션 상태 (pageVariants.in)
@@ -47,7 +49,7 @@ const AnimatedOutlet = () => {
         className="min-h-screen overflow-y-auto pb-20" // 기존 className이 있다면 여기에 적용
       >
         {/* <div className="page-wrapper">  // 또는 Outlet을 한 번 더 감쌀 수 있습니다. */}
-        <Outlet />
+        <Outlet context={{ motionRef }} />
         {/* </div> */}
       </motion.div>
     </AnimatePresence>
