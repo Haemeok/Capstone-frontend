@@ -45,6 +45,8 @@ export const DISH_TYPES = [
   '디저트/간식류',
 ];
 
+export const DISH_TYPES_FOR_CREATE_RECIPE = DISH_TYPES.slice(1);
+
 export const DISH_TYPE_CODES = {
   전체: null,
   볶음: 'FRYING',

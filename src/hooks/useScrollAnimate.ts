@@ -1,6 +1,7 @@
 // src/hooks/useScrollAnimate.ts
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { useOutletContext } from 'react-router';
 
 interface UseScrollAnimateOptions {
   triggerRef?: React.RefObject<HTMLElement | null>;
@@ -17,6 +18,9 @@ const useScrollAnimate = <T extends HTMLElement>(
 ) => {
   const targetRef = useRef<T>(null);
   const animation = useRef<gsap.core.Timeline | null>(null);
+  const { motionRef } = useOutletContext<{
+    motionRef: React.RefObject<HTMLDivElement>;
+  }>();
 
   useEffect(() => {
     const currentTriggerElement =
@@ -26,6 +30,7 @@ const useScrollAnimate = <T extends HTMLElement>(
       animation.current = gsap.timeline({
         scrollTrigger: {
           trigger: currentTriggerElement,
+          scroller: motionRef.current,
           start: options?.start || 'top 85%',
           toggleActions: options?.toggleActions || 'restart none none none',
         },

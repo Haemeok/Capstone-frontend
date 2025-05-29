@@ -49,12 +49,19 @@ const SimpleRecipeGridItem = ({
           />
         </div>
 
-        <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end rounded-2xl bg-gradient-to-t from-black/70 to-transparent p-4">
-          <p className="max-w-4/5 truncate text-[17px] font-semibold text-white">
-            {recipe.title}
-          </p>
-        </div>
-        <div className="absolute right-0 bottom-1 p-2">
+        <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end rounded-2xl bg-gradient-to-t from-black/70 to-transparent" />
+        <p
+          className="absolute bottom-2.5 left-4 max-w-5/7 truncate text-[17px] font-semibold text-white"
+          style={{
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
+            overflow: 'hidden',
+          }}
+        >
+          {recipe.title}
+        </p>
+        <div className="absolute right-2 bottom-2">
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full text-white"
             onClick={handleMenuClick}
