@@ -38,8 +38,6 @@ export const prepareRecipeData = async (
       file: mainFileToProcess,
       type: 'main',
     });
-  } else {
-    throw new Error('레시피 대표 이미지는 필수입니다.');
   }
 
   const stepImageProcessingPromises = formData.steps.map(
@@ -97,6 +95,7 @@ export const prepareRecipeData = async (
     cookingTime: Number(formData.cookingTime) || 0,
     servings: Number(formData.servings) || 0,
     dishType: formData.dishType,
+    imageKey: formData.imageKey,
 
     ingredients: formData.ingredients.filter((i) => i.name?.trim()),
     steps: formData.steps

@@ -22,13 +22,13 @@ const AppProvider = ({ children }: AppProviderProps) => {
     if (user) {
       setUser(user);
     }
+    console.log('App Initialization Complete. User:', user);
   }, [user, setUser]);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  console.log('App Initialization Complete. User:', user);
   return <>{children}</>;
 };
 
