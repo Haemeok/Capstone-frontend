@@ -19,7 +19,7 @@ const DetailedRecipeGridItem = ({
   const navigate = useNavigate();
   return (
     <div
-      className={cn(`relative flex h-76 w-48 flex-col gap-2 rounded-2xl`)}
+      className={cn(`relative flex h-76 shrink-0 flex-col gap-2 rounded-2xl`)}
       onClick={() => navigate(`/recipes/${recipe.id}`)}
     >
       <SuspenseImage

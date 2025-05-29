@@ -17,6 +17,7 @@ const SelectButton = ({
 }: SelectButtonProps) => {
   return (
     <Button
+      type="button"
       variant="outline"
       size="sm"
       className={cn(

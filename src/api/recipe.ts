@@ -1,10 +1,11 @@
 import { END_POINTS, PAGE_SIZE } from '@/constants/api';
-import { axiosInstance } from './axios';
+import { axiosAiInstance, axiosInstance } from './axios';
 import {
   Recipe,
   BaseRecipeGridItem,
   DetailedRecipeGridItem,
   RecipePayload,
+  AIRecommendedRecipe,
 } from '@/type/recipe';
 import {
   FileObject,
@@ -16,6 +17,7 @@ import { FileInfoRequest } from '@/type/file';
 import { BaseQueryParams, PageResponse } from '@/type/query';
 import { buildParams } from '@/utils/object';
 import { TagCode } from '@/constants/recipe';
+import { cookingTimeItems } from '@/mock';
 
 export const getRecipe = async (id: number) => {
   const response = await axiosInstance.get<Recipe>(END_POINTS.RECIPE(id), {
@@ -337,6 +339,38 @@ export const postMyFavoriteRecipe = async (recipeId: number) => {
 export const postRecipeVisibility = async (recipeId: number) => {
   const response = await axiosInstance.post(
     END_POINTS.RECIPE_VISIBILITY(recipeId),
+  );
+  return response.data;
+};
+
+export type AIRecommendedRecipeRequest = {
+  ingredients: string[];
+  dishType: string;
+  cookingTime: string;
+  tagNames: string[];
+};
+
+export const postAIRecommendedRecipe = async (
+  aiRequest: AIRecommendedRecipeRequest,
+) => {
+  const source = 'AI';
+  const parsedAiRequest = {
+    ...aiRequest,
+    cookingTime: cookingTimeItems.find(
+      (opt: { label: string; value: number }) =>
+        opt.label === aiRequest.cookingTime,
+    )?.value,
+  };
+  const response = await axiosAiInstance.post<AIRecommendedRecipe>(
+    END_POINTS.RECIPES,
+    {
+      aiRequest: parsedAiRequest,
+    },
+    {
+      params: {
+        source,
+      },
+    },
   );
   return response.data;
 };

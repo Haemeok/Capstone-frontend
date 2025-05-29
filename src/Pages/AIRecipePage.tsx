@@ -4,16 +4,20 @@ import IngredientSelector from '@/Pages/NewRecipe/IngredientSelector';
 import SelectionSection from '@/components/SelectionSection';
 import IngredientSection from '@/components/IngredientSection';
 import ProgressButton from '@/components/ProgressButton';
-import { categories, cookingTimes, recommendedTags } from '@/mock';
+import {
+  categories,
+  cookingTimeItems,
+  cookingTimes,
+  recommendedTags,
+} from '@/mock';
 import { useState } from 'react';
 import { IngredientPayload } from '@/type/recipe';
+import useCreateAIRecipeMutation from '@/hooks/useCreateAIRecipeMutation';
+import { AIRecommendedRecipeRequest } from '@/api/recipe';
+import LoadingSection from './AIRecipe/LoadingSection';
+import { FOUR_CUT_IMAGE } from '@/constants/recipe';
 
-interface AIRecipeFormData {
-  ingredients: string[];
-  selectedCategories: string[];
-  selectedTimes: string[];
-  selectedTags: string[];
-}
+type AIRecipeFormData = AIRecommendedRecipeRequest;
 
 // Define AI model data
 const aiModels = [
@@ -65,16 +69,15 @@ const AIRecipePage = () => {
   } = useForm<AIRecipeFormData>({
     defaultValues: {
       ingredients: [],
-      selectedCategories: [],
-      selectedTimes: [],
-      selectedTags: [],
+      dishType: '',
+      cookingTime: '',
+      tagNames: [],
     },
     mode: 'onChange',
   });
 
   const formValues = watch();
-  const { ingredients, selectedCategories, selectedTimes, selectedTags } =
-    formValues;
+  const { ingredients, dishType, cookingTime, tagNames } = formValues;
 
   const handleAddIngredient = (ingredientPayload: IngredientPayload) => {
     const newIngredients = [...ingredients, ingredientPayload.name];
@@ -117,34 +120,48 @@ const AIRecipePage = () => {
     });
   };
 
+  const radioToggle = <T,>(fieldName: keyof AIRecipeFormData, item: T) => {
+    setValue(fieldName as any, item, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
+
   const toggleCategory = (category: string) =>
-    toggle('selectedCategories', selectedCategories, category);
+    radioToggle('dishType', category);
 
-  const toggleTime = (time: string) =>
-    toggle('selectedTimes', selectedTimes, time);
+  const toggleTime = (cookingTime: string) =>
+    radioToggle('cookingTime', cookingTime);
 
-  const toggleTag = (tag: string) => toggle('selectedTags', selectedTags, tag);
+  const toggleTag = (tag: string) => toggle('tagNames', tagNames, tag);
 
   const totalSteps = 4;
   const completedSteps = [
     ingredients.length > 0,
-    selectedCategories.length > 0,
-    selectedTimes.length > 0,
-    selectedTags.length > 0,
+    dishType.length > 0,
+    cookingTime.length > 0,
+    tagNames.length > 0,
   ].filter(Boolean).length;
 
   const progressPercentage = Math.floor((completedSteps / totalSteps) * 100);
   const isFormReady = completedSteps === totalSteps;
 
   const onSubmit = (data: AIRecipeFormData) => {
-    if (isFormReady && selectedAI) {
-      console.log(`${selectedAI.name} AI 레시피 생성 요청`, data);
-    }
+    createAIRecipe(data, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
   };
 
   const handleSelectAI = (ai: AIModel) => {
     setSelectedAI(ai);
   };
+
+  const { createAIRecipe, isPending } = useCreateAIRecipeMutation();
 
   if (!selectedAI) {
     return (
@@ -169,6 +186,16 @@ const AIRecipePage = () => {
           ))}
         </div>
       </div>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <LoadingSection
+        name={selectedAI.name}
+        robotImage={selectedAI.image}
+        fourCutImage={FOUR_CUT_IMAGE}
+      />
     );
   }
 
@@ -204,23 +231,25 @@ const AIRecipePage = () => {
               title="종류"
               icon={<ChefHat size={18} />}
               items={categories}
-              selectedItems={selectedCategories}
+              selectedItems={dishType}
               onToggle={toggleCategory}
+              isSingleSelect={true}
             />
 
             <SelectionSection
               title="조리시간"
               icon={<Clock size={18} />}
               items={cookingTimes}
-              selectedItems={selectedTimes}
+              selectedItems={cookingTime ? cookingTime.toString() : ''}
               onToggle={toggleTime}
+              isSingleSelect={true}
             />
 
             <SelectionSection
               title="태그"
               icon={<Tag size={18} />}
               items={recommendedTags}
-              selectedItems={selectedTags}
+              selectedItems={tagNames}
               onToggle={toggleTag}
               className="border-b-0"
             />

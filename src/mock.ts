@@ -20,6 +20,15 @@ export const cookingTimes = [
   '1시간이내',
   '2시간이내',
 ];
+
+export const cookingTimeItems = [
+  { label: '10분이내', value: 10 },
+  { label: '20분이내', value: 20 },
+  { label: '30분이내', value: 30 },
+  { label: '1시간이내', value: 60 },
+  { label: '2시간이내', value: 120 },
+];
+
 export const recommendedTags = [
   '건강한',
   '간편한',

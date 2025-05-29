@@ -25,9 +25,23 @@ export const axiosAuthInstance = axios.create({
   withCredentials: true,
 });
 
+export const axiosAiInstance = axios.create({
+  baseURL: AXIOS_BASE_URL,
+  timeout: 10 * 60 * 1000,
+  withCredentials: true,
+  useAuth: true,
+});
+
 axiosInstance.interceptors.request.use(checkAndSetToken);
 
 axiosInstance.interceptors.response.use(
+  (response) => response,
+  handleTokenError,
+);
+
+axiosAiInstance.interceptors.request.use(checkAndSetToken);
+
+axiosAiInstance.interceptors.response.use(
   (response) => response,
   handleTokenError,
 );

@@ -5,9 +5,10 @@ type SelectionSectionProps = {
   title: string;
   icon: ReactNode;
   items: string[];
-  selectedItems: string[];
+  selectedItems: string | string[];
   onToggle: (item: string) => void;
   className?: string;
+  isSingleSelect?: boolean;
 };
 
 const SelectionSection = ({
@@ -17,6 +18,7 @@ const SelectionSection = ({
   selectedItems,
   onToggle,
   className = '',
+  isSingleSelect = false,
 }: SelectionSectionProps) => {
   return (
     <div className={`border-b pb-5 ${className}`}>
@@ -29,7 +31,11 @@ const SelectionSection = ({
           <SelectButton
             key={item}
             label={item}
-            isSelected={selectedItems.includes(item)}
+            isSelected={
+              isSingleSelect
+                ? selectedItems === item
+                : Array.isArray(selectedItems) && selectedItems.includes(item)
+            }
             onClick={() => onToggle(item)}
           />
         ))}
