@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { RecipeFormValues, RecipePayload } from '@/type/recipe';
 import { FileInfoRequest, PresignedUrlResponse } from '@/type/file';
-import { postRecipe, handleS3Upload } from '@/api/recipe';
+import { postRecipe, handleS3Upload, editRecipe } from '@/api/recipe';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { prepareRecipeData } from '@/utils/recipe';
 import { useFinalizeRecipe } from './useFinalizeRecipe';
@@ -11,17 +11,39 @@ interface UseCreateRecipeOptions {
   onError?: (error: Error) => void;
 }
 
-export const useCreateRecipeWithUpload = () => {
+export const useCreateRecipeWithUpload = (recipeIdForUpdate?: number) => {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadError, setUploadError] = useState<Error | null>(null);
   const queryClient = useQueryClient();
 
+  const actualMutationFn = async (variables: {
+    recipe: RecipePayload;
+    files: FileInfoRequest[];
+    recipeId?: number;
+  }): Promise<PresignedUrlResponse> => {
+    if (recipeIdForUpdate) {
+      if (typeof variables.recipeId !== 'number') {
+        return Promise.reject(
+          new Error('업데이트 작업에는 recipeId가 필수입니다.'),
+        );
+      }
+      return editRecipe({
+        recipe: variables.recipe,
+        files: variables.files,
+        recipeId: variables.recipeId,
+      });
+    }
+
+    const { recipeId, ...postData } = variables;
+    return postRecipe(postData);
+  };
+
   const createRecipeMutation = useMutation<
     PresignedUrlResponse,
     Error,
-    { recipe: RecipePayload; files: FileInfoRequest[] }
+    { recipe: RecipePayload; files: FileInfoRequest[]; recipeId?: number }
   >({
-    mutationFn: postRecipe,
+    mutationFn: actualMutationFn,
   });
 
   const finalizeRecipeMutation = useFinalizeRecipe();
@@ -46,7 +68,11 @@ export const useCreateRecipeWithUpload = () => {
     const { recipeData, filesToUploadInfo, fileObjects } = preparedDataResult;
 
     createRecipeMutation.mutate(
-      { recipe: recipeData, files: filesToUploadInfo },
+      {
+        recipe: recipeData,
+        files: filesToUploadInfo,
+        recipeId: recipeIdForUpdate,
+      },
       {
         onSuccess: async (presignedUrlResponse) => {
           setUploadLoading(true);
@@ -63,6 +89,9 @@ export const useCreateRecipeWithUpload = () => {
             finalizeRecipeMutation.mutate(recipeId, {
               onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: ['recipes'] });
+                queryClient.invalidateQueries({
+                  queryKey: ['recipe', recipeId],
+                });
               },
             });
           } catch (uploadErr: any) {

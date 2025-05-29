@@ -12,6 +12,7 @@ type RecipeTitleWithImageProps = {
   currentTitle: string;
   setImagePreviewUrl: React.Dispatch<React.SetStateAction<string | null>>;
   imagePreviewUrl: string | null;
+  isUpdate?: boolean;
 };
 
 const RecipeTitleWithImage = ({
@@ -21,6 +22,7 @@ const RecipeTitleWithImage = ({
   currentTitle,
   setImagePreviewUrl,
   imagePreviewUrl,
+  isUpdate,
 }: RecipeTitleWithImageProps) => {
   const imageFileValue = watch('imageFile');
 
@@ -35,11 +37,14 @@ const RecipeTitleWithImage = ({
         setImagePreviewUrl(reader.result as string);
       };
       reader.readAsDataURL(actualFile);
-    } else {
-      setImagePreviewUrl(null);
     }
   }, [imageFileValue]);
 
+  const imageFileOption = !isUpdate
+    ? {
+        required: '대표 이미지를 등록해주세요.',
+      }
+    : {};
   return (
     <div className="relative">
       <div className="relative flex h-[40vh] w-full cursor-pointer items-center justify-center border-b bg-gray-200 text-gray-400 hover:bg-gray-300">
@@ -65,14 +70,13 @@ const RecipeTitleWithImage = ({
             </div>
           )}
         </label>
+
         <input
           type="file"
           id="imageFile-input"
           className="hidden"
           accept="image/*"
-          {...register('imageFile', {
-            required: '대표 이미지를 등록해주세요.',
-          })}
+          {...register('imageFile', imageFileOption)}
         />
       </div>
 
