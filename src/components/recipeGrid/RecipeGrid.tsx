@@ -1,4 +1,3 @@
-// src/components/RecipeGrid.tsx
 import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,7 +13,7 @@ import { Drawer, DrawerContent } from '../ui/drawer';
 import { Pencil, Trash } from 'lucide-react';
 import useDeleteRecipeMutation from '@/hooks/useDeleteRecipeMutation';
 import { DeleteModal } from '../DeleteModal';
-import { useToastStore } from '@/store/useToastStore';
+import { useNavigate } from 'react-router';
 
 type RecipeGridProps = {
   recipes: BaseRecipeGridItem[] | DetailedRecipeGridItemType[];
@@ -44,9 +43,10 @@ const RecipeGrid = ({
   queryKeyString,
 }: RecipeGridProps) => {
   const gridItemsContainerRef = useRef<HTMLDivElement | null>(null); // GSAP 컨텍스트 범위
-
   const itemsAnimateTargetRef = useRef<HTMLDivElement | null>(null);
   const animatedItemsRef = useRef(new Set<Element>());
+
+  const navigate = useNavigate();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -61,7 +61,9 @@ const RecipeGrid = ({
     setSelectedItemId(null);
   };
 
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    navigate(`/recipes/${selectedItemId}/edit`);
+  };
 
   const handleDeleteModalOpen = () => {
     setIsDrawerOpen(false);
@@ -82,17 +84,6 @@ const RecipeGrid = ({
   }, [queryKeyString]);
 
   useEffect(() => {
-    // 로딩 조건: 초기 로딩 (isFetching && recipes가 비었을 때) 이거나,
-    // 필요한 ref가 없거나, 에러/결과 없음 상태일 때는 애니메이션 실행 안 함.
-    console.log('[ANIMATION EFFECT]', {
-      isFetching,
-      recipesLength: recipes?.length,
-      error: !!error,
-      noResults,
-      hasItemsTarget: !!itemsAnimateTargetRef.current,
-      hasGridContainer: !!gridItemsContainerRef.current,
-      queryKeyString,
-    });
     if (
       (isFetching && (!recipes || recipes.length === 0)) || // 초기 로딩
       !recipes ||
@@ -102,7 +93,6 @@ const RecipeGrid = ({
       !itemsAnimateTargetRef.current ||
       !gridItemsContainerRef.current // 컨텍스트 ref
     ) {
-      console.log('[ANIMATION EFFECT] Skipped');
       return;
     }
 
@@ -114,15 +104,9 @@ const RecipeGrid = ({
       const currentDOMItems = Array.from(
         itemsAnimateTargetRef.current!.children,
       );
-      console.log(
-        '[ANIMATION EFFECT] DOM items found:',
-        currentDOMItems.length,
-      );
+
       currentDOMItems.forEach((itemDOMElement: Element, index: number) => {
         if (!animatedItemsRef.current.has(itemDOMElement)) {
-          // CSS로 초기 상태를 설정하는 것을 권장. (예: .recipe-item { opacity: 0; transform: ...})
-          // 여기서는 GSAP set으로 처리.
-          console.log(`[ANIMATION EFFECT] Animating item index: ${index}`);
           gsap.set(itemDOMElement, { opacity: 0, y: 30, scale: 0.98 });
           gsap.to(itemDOMElement, {
             opacity: 1,
@@ -130,15 +114,8 @@ const RecipeGrid = ({
             scale: 1,
             duration: 0.5,
             ease: 'power2.out',
-            onComplete: () => {
-              console.log(
-                `[ANIMATION EFFECT] Animation complete for item index: ${index}`,
-              );
-            },
-            // 한 줄에 2개 아이템이므로, 같은 행의 아이템들은 거의 동시에 트리거될 수 있음.
-            // 미세한 stagger를 원한다면 delay를 index 기반으로 아주 작게 주거나,
-            // ScrollTrigger.batch() 사용 고려.
-            delay: 0, // 예: 같은 행의 두번째 아이템에 약간의 딜레이 (선택적)
+
+            delay: 0,
             scrollTrigger: {
               trigger: itemDOMElement,
               markers: true,
@@ -155,9 +132,6 @@ const RecipeGrid = ({
         }
       });
       ScrollTrigger.refresh();
-      console.log(
-        '[ANIMATION EFFECT] ScrollTrigger.refresh() called after creating triggers.',
-      );
     }, gridItemsContainerRef); // 컨텍스트 범위는 gridItemsContainerRef
 
     return () => {
@@ -193,10 +167,7 @@ const RecipeGrid = ({
 
   return (
     <div ref={gridItemsContainerRef} className="flex flex-1 flex-col p-4">
-      <div
-        className="grid grid-cols-2 gap-4 gap-y-6"
-        ref={itemsAnimateTargetRef}
-      >
+      <div className="grid grid-cols-2 gap-4" ref={itemsAnimateTargetRef}>
         {recipes.map((recipe) =>
           isSimple ? (
             <SimpleRecipeGridItem
@@ -215,7 +186,7 @@ const RecipeGrid = ({
           ),
         )}
       </div>
-      <div ref={observerRef} className="h-10 text-center">
+      <div ref={observerRef} className="mt-2 h-10 text-center">
         {!isFetching &&
           !hasNextPage &&
           recipes &&

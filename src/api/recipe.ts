@@ -44,8 +44,25 @@ export const postRecipe = async ({
   return response.data;
 };
 
-export const editRecipe = async (id: number, recipe: Recipe) => {
-  const response = await axiosInstance.put(END_POINTS.RECIPE(id), recipe);
+export const editRecipe = async ({
+  recipeId,
+  recipe,
+  files,
+}: {
+  recipeId: number;
+  recipe: RecipePayload;
+  files: FileInfoRequest[];
+}) => {
+  console.log('Recipe', recipe);
+  console.log('Files', files);
+  const response = await axiosInstance.put<PresignedUrlResponse>(
+    END_POINTS.RECIPE(recipeId),
+    {
+      recipe,
+      files,
+    },
+  );
+  console.log(response.data);
   return response.data;
 };
 
@@ -61,11 +78,6 @@ export const postRecipeLike = async (id: number) => {
 
 export const postRecipeFavorite = async (id: number) => {
   const response = await axiosInstance.post(END_POINTS.RECIPE_FAVORITE(id));
-  return response.data;
-};
-
-export const postRecipeVisibility = async (id: number) => {
-  const response = await axiosInstance.post(END_POINTS.RECIPE_VISIBILITY(id));
   return response.data;
 };
 
@@ -86,6 +98,13 @@ export const postPresignedUrls = async (files: FileInfoRequest[]) => {
     },
   );
   console.log('Received Pre-signed URLs:', response.data);
+  return response.data;
+};
+
+export const getPresignedUrl = async (userId: number) => {
+  const response = await axiosInstance.get<PresignedUrlInfo>(
+    END_POINTS.USER_PRESIGNED_URLS(userId),
+  );
   return response.data;
 };
 
@@ -127,6 +146,9 @@ export const handleS3Upload = async (
   presignedUrlsInfo: PresignedUrlInfo[],
   fileObjects: FileObject[],
 ): Promise<UploadResult[]> => {
+  if (presignedUrlsInfo.length === 0) {
+    return [];
+  }
   if (presignedUrlsInfo.length !== fileObjects.length) {
     throw new Error('Pre-signed URL 개수와 파일 개수가 일치하지 않습니다.');
   }
@@ -308,6 +330,13 @@ export const finalizeRecipe = async (recipeId: number) => {
 export const postMyFavoriteRecipe = async (recipeId: number) => {
   const response = await axiosInstance.post(
     END_POINTS.RECIPE_FAVORITE(recipeId),
+  );
+  return response.data;
+};
+
+export const postRecipeVisibility = async (recipeId: number) => {
+  const response = await axiosInstance.post(
+    END_POINTS.RECIPE_VISIBILITY(recipeId),
   );
   return response.data;
 };

@@ -1,18 +1,24 @@
-import { useState } from 'react';
 import ToggleIconButton from './ToggleIconButton';
 import { LockKeyhole, LockOpen } from 'lucide-react';
+import useRecipeVisibilityMutation from '@/hooks/useRecipeVisibilityMutation';
 
-const LockButton = () => {
-  const [isLocked, setIsLocked] = useState(false);
+type LockButtonProps = {
+  recipeId: number;
+  initialIsLocked: boolean;
+};
 
-  const handleToggle = (active: boolean) => {
-    setIsLocked(active);
+const LockButton = ({ recipeId, initialIsLocked }: LockButtonProps) => {
+  const { mutate: toggleVisibility, isPending } =
+    useRecipeVisibilityMutation(recipeId);
+
+  const handleToggle = () => {
+    toggleVisibility();
   };
 
   return (
     <div className="flex flex-col items-center">
       <ToggleIconButton
-        isActive={isLocked}
+        isActive={initialIsLocked}
         onToggle={handleToggle}
         size="default"
         icon={
@@ -25,7 +31,9 @@ const LockButton = () => {
         activeIcon={<LockKeyhole className="transition-all duration-300" />}
         className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
       />
-      <p className="mt-1 text-sm font-bold">{isLocked ? '비공개' : '공개'}</p>
+      <p className="mt-1 text-sm font-bold">
+        {initialIsLocked ? '비공개' : '공개'}
+      </p>
     </div>
   );
 };
