@@ -34,7 +34,7 @@ const RecipeGrid = ({
   isSimple = false,
   height = 64,
   hasNextPage,
-  isFetching, // 다음 페이지 로딩 중 여부 (초기 로딩이 아님)
+  isFetching,
   observerRef,
   noResults,
   noResultsMessage = '표시할 레시피가 없습니다.',
@@ -42,7 +42,7 @@ const RecipeGrid = ({
   error,
   queryKeyString,
 }: RecipeGridProps) => {
-  const gridItemsContainerRef = useRef<HTMLDivElement | null>(null); // GSAP 컨텍스트 범위
+  const gridItemsContainerRef = useRef<HTMLDivElement | null>(null);
   const itemsAnimateTargetRef = useRef<HTMLDivElement | null>(null);
   const animatedItemsRef = useRef(new Set<Element>());
 
@@ -80,25 +80,20 @@ const RecipeGrid = ({
 
   useEffect(() => {
     animatedItemsRef.current.clear();
-    // 레이아웃 변경 후 ScrollTrigger 위치 재계산이 필요할 수 있음 (옵션)
   }, [queryKeyString]);
 
   useEffect(() => {
     if (
-      (isFetching && (!recipes || recipes.length === 0)) || // 초기 로딩
+      (isFetching && (!recipes || recipes.length === 0)) ||
       !recipes ||
       recipes.length === 0 ||
       error ||
       noResults ||
       !itemsAnimateTargetRef.current ||
-      !gridItemsContainerRef.current // 컨텍스트 ref
+      !gridItemsContainerRef.current
     ) {
       return;
     }
-
-    // 스크롤 컨텍스트 설정 (컴포넌트 마운트 시 또는 필요시)
-    // 예: gridItemsContainerRef.current가 스크롤 컨테이너라면 scrollContextRef.current = gridItemsContainerRef.current;
-    // 여기서는 기본 window 스크롤을 가정하고 ScrollTrigger의 scroller를 명시하지 않음.
 
     const ctx = gsap.context(() => {
       const currentDOMItems = Array.from(
@@ -118,12 +113,10 @@ const RecipeGrid = ({
             delay: 0,
             scrollTrigger: {
               trigger: itemDOMElement,
-              markers: true,
-              scroller: gridItemsContainerRef.current, // 명시적 스크롤 컨테이너 사용 시
-              start: 'top 95%', // 아이템 상단이 뷰포트 85% 지점에 닿으면
-              toggleActions: 'play none none none', // 한 번만 재생
-              // markers: process.env.NODE_ENV === 'development', // 개발 중에만 마커 표시
-              // once: true, // GSAP 3.11+ 권장 (이 경우 아래 onEnter에서 add는 불필요하거나 다르게 처리)
+
+              scroller: gridItemsContainerRef.current,
+              start: 'top 95%',
+              toggleActions: 'play none none none',
               onEnter: () => {
                 animatedItemsRef.current.add(itemDOMElement);
               },
@@ -132,13 +125,13 @@ const RecipeGrid = ({
         }
       });
       ScrollTrigger.refresh();
-    }, gridItemsContainerRef); // 컨텍스트 범위는 gridItemsContainerRef
+    }, gridItemsContainerRef);
 
     return () => {
       ctx.revert();
     };
   }, [error, isFetching, noResults, recipes, queryKeyString]);
-  // 초기 로딩 중 (recipes 배열이 비어있거나, isFetching이 true인데 recipes가 없는 경우)
+
   if (isFetching && (!recipes || recipes.length === 0)) {
     return (
       <div className="flex h-[400px] flex-1 items-center justify-center py-10">
@@ -147,7 +140,6 @@ const RecipeGrid = ({
     );
   }
 
-  // 에러 발생 시
   if (error) {
     return (
       <p className="py-10 text-center text-base text-red-500">
@@ -156,7 +148,6 @@ const RecipeGrid = ({
     );
   }
 
-  // 결과 없음 (noResults가 true이거나, recipes가 비어있는데 로딩/에러도 아닐 때)
   if (noResults || !recipes || recipes.length === 0) {
     return (
       <p className="py-10 text-center text-base text-gray-500">
@@ -171,15 +162,14 @@ const RecipeGrid = ({
         {recipes.map((recipe) =>
           isSimple ? (
             <SimpleRecipeGridItem
-              key={recipe.id} // key는 필수
+              key={recipe.id}
               recipe={recipe as BaseRecipeGridItem}
               height={height}
               setIsDrawerOpen={handleOpenDrawer}
-              // data-gsap-animated 속성은 GSAP이 관리하므로 직접 설정할 필요 없음
             />
           ) : (
             <DetailedRecipeGridItem
-              key={recipe.id} // key는 필수
+              key={recipe.id}
               recipe={recipe as DetailedRecipeGridItemType}
               height={height}
             />

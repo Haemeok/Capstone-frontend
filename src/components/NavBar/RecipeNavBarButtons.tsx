@@ -1,8 +1,6 @@
-// src/components/Recipe/RecipeDetailNavbarActions.tsx (파일 위치 예시)
 import React from 'react';
 import RecipeLikeButton from '@/components/RecipeLikeButton';
 import ShareButton from '@/components/Button/ShareButton';
-import { Recipe } from '@/type/recipe'; // Recipe 타입 import
 
 type RecipeNavBarButtonsProps = {
   recipeId: number;

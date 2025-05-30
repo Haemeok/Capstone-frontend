@@ -39,7 +39,7 @@ const useAddIngredientMutation = (currentQueryKey: readonly unknown[]) => {
                 ...page,
                 content: page.content.map((ingredient) =>
                   ingredient.id === ingredientId
-                    ? { ...ingredient, inFridge: true } // 낙관적 업데이트
+                    ? { ...ingredient, inFridge: true }
                     : ingredient,
                 ),
               })),
@@ -57,10 +57,8 @@ const useAddIngredientMutation = (currentQueryKey: readonly unknown[]) => {
         );
       }
       console.error('재료 추가 실패:', error);
-      // 사용자에게 에러 알림 로직 추가 가능
     },
 
-    // 6. 성공 또는 실패 여부와 관계없이 항상 실행 (데이터 재검증)
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: currentQueryKey });
     },
@@ -132,14 +130,14 @@ const useAddIngredientBulkMutation = () => {
           ['ingredients'],
           (oldData) => {
             if (!oldData) return undefined;
-            const idSet = new Set(ingredientIds); // 검색 효율을 위해 Set 사용
+            const idSet = new Set(ingredientIds);
             return {
               ...oldData,
               pages: oldData.pages.map((page) => ({
                 ...page,
                 content: page.content.map((ingredient) =>
                   idSet.has(ingredient.id)
-                    ? { ...ingredient, inFridge: true } // 낙관적 업데이트
+                    ? { ...ingredient, inFridge: true }
                     : ingredient,
                 ),
               })),

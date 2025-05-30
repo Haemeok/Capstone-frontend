@@ -14,6 +14,23 @@ export const INGREDIENT_CATEGORIES = [
   '면',
 ];
 
+export const INGREDIENT_CATEGORIES_NEW_RECIPE = [
+  '나의 재료',
+  '전체',
+  '가공/유제품',
+  '빵/떡',
+  '채소',
+  '해산물',
+  '과일',
+  '음료/주류',
+  '곡물',
+  '콩/견과류',
+  '조미료/양념',
+  '고기',
+  '기타',
+  '면',
+];
+
 export const INGREDIENT_CATEGORY_CODES = {
   전체: '',
   '가공/유제품': 'dairy',

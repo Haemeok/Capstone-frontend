@@ -1,4 +1,3 @@
-// src/components/DeleteModal.tsx
 import {
   Dialog,
   DialogTrigger,
@@ -9,22 +8,14 @@ import {
   DialogClose,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 
 type DeleteModalProps = {
-  /** 모달 열림 상태 */
   open: boolean;
-  /** open 상태를 관리하는 setter */
   onOpenChange: (open: boolean) => void;
-  /** 헤더에 보여줄 문구 (e.g. "게시글을 삭제하시겠습니까?") */
   title: string;
-  /** 모달 내용 (e.g. "삭제 시 복구할 수 없습니다.") */
   description: string;
-  /** 사용자가 "삭제" 누를 때 호출할 비동기 함수 */
   onConfirm: () => Promise<void> | void;
-  /** 취소 버튼 레이블 (기본: 취소) */
   cancelLabel?: string;
-  /** 확인 버튼 레이블 (기본: 삭제) */
   confirmLabel?: string;
 };
 

@@ -93,7 +93,6 @@ const IngredientsDrawer = ({
             </Button>
           </div>
 
-          {/* 인기 재료 빠른 추가 */}
           <div className="mt-6">
             <h3 className="mb-2 text-sm font-medium text-gray-500">
               인기 재료

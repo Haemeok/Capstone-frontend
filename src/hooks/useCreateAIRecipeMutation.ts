@@ -2,7 +2,7 @@ import { postAIRecommendedRecipe } from '@/api/recipe';
 import { useMutation } from '@tanstack/react-query';
 
 const useCreateAIRecipeMutation = () => {
-  const { mutate: createAIRecipe, isPending } = useMutation({
+  const mutation = useMutation({
     mutationFn: postAIRecommendedRecipe,
     onSuccess: (data) => {
       console.log(data);
@@ -12,7 +12,12 @@ const useCreateAIRecipeMutation = () => {
     },
   });
 
-  return { createAIRecipe, isPending };
+  return {
+    createAIRecipe: mutation.mutate,
+    isPending: mutation.isPending,
+    isSuccess: mutation.isSuccess,
+    data: mutation.data,
+  };
 };
 
 export default useCreateAIRecipeMutation;

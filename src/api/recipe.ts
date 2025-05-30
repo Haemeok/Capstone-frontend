@@ -236,7 +236,7 @@ export const getRecipeItems = async ({
   };
 
   const apiParams = buildParams(baseParams, optionalParams);
-
+  console.log('apiParams', apiParams);
   const response = await axiosInstance.get<DetailedRecipesApiResponse>(
     END_POINTS.RECIPE_SEARCH,
     {
