@@ -15,7 +15,7 @@ const IngredientItem = ({ ingredient, isDeleteMode }: IngredientItemProps) => {
   return (
     <div className="relative flex items-center gap-4 rounded-lg border-[1.5px] border-gray-200 px-1 py-2">
       <SuspenseImage
-        src={ingredient.imageUrl}
+        src={ingredient.imageUrl ?? ''}
         alt={ingredient.name}
         className="h-15 w-15 rounded-md"
       />

@@ -104,6 +104,7 @@ export const prepareRecipeData = async (
         stepNumber: s.stepNumber,
         instruction: s.instruction,
         ingredients: s.ingredients || [],
+        stepImageKey: undefined,
       })),
     cookingTools: formData.cookingTools || [],
     tagNames: formData.tagNames || [],
