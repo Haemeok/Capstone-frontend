@@ -1,4 +1,3 @@
-// src/hooks/useScrollAnimate.ts
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useOutletContext } from 'react-router';

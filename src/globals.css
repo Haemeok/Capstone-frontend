@@ -75,7 +75,6 @@
   }
 }
 
-/* 1. 심장 박동 애니메이션 */
 @keyframes heartbeat {
   0% {
     transform: scale(1);
@@ -90,7 +89,6 @@
   }
 }
 
-/* 2. 흔들림 애니메이션 */
 @keyframes wobble {
   0%,
   100% {
@@ -104,7 +102,6 @@
   }
 }
 
-/* 4. 색상 전환 애니메이션 */
 @keyframes color-transition {
   0% {
     fill: rgba(220, 38, 38, 0);
@@ -116,7 +113,6 @@
   }
 }
 
-/* 5. 튀어오르기 애니메이션 */
 @keyframes bounce {
   0%,
   20%,

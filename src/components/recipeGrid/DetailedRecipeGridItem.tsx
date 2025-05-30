@@ -38,7 +38,7 @@ const DetailedRecipeGridItem = ({
         />
       </div>
 
-      <div className="flex grow flex-col px-2 pb-2">
+      <div className="flex grow flex-col gap-0.5 px-2 pb-2">
         <p className="truncate font-semibold">{recipe.title}</p>
         <div className="flex items-center gap-[2px]">
           <Star size={15} className="fill-gray-800" />

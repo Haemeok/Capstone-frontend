@@ -18,7 +18,7 @@ const useAuthenticatedAction = <T extends any[]>(
         replace: true,
       });
     } else {
-      actionFn(...args); // 실제 액션 실행
+      actionFn(...args);
     }
   };
 };

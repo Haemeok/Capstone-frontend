@@ -28,11 +28,13 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
         ))}
       </div>
       <p className="text-left">{step.instruction}</p>
-      <SuspenseImage
-        src={step.stepImageUrl}
-        alt={`Step ${stepIndex + 1}`}
-        className="w-full rounded-2xl"
-      />
+      {step.stepImageUrl && (
+        <img
+          src={step.stepImageUrl}
+          alt={`Step ${stepIndex + 1}`}
+          className="w-full rounded-2xl"
+        />
+      )}
     </div>
   );
 };

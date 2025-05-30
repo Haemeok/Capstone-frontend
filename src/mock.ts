@@ -1,7 +1,6 @@
 import { DetailedRecipeGridItem } from './type/recipe';
 import { User } from './type/user';
 import { Comment } from './type/comment';
-import { CategoryItem } from './type/recipe';
 
 export const categories = [
   '🏠홈파티',
@@ -271,7 +270,6 @@ export const userDetail: User = {
     'https://images.services.kitchenstories.io/OeGe1CD7jlU0qT1gjUn1_RScHk4=/256x0/filters:quality(100)/images.kitchenstories.io/userImages/Stefanie_Hiekmann_63a34cdd.png',
 };
 
-// --- Mock Data (실제로는 API 호출 등으로 가져와야 함) ---
 export const popularShows = [
   {
     id: 1,
@@ -313,4 +311,3 @@ export const youMightLike = [
     imageUrl: 'https://via.placeholder.com/150x150/d1fae5/047857?text=Podcast',
   },
 ];
-// --- End Mock Data ---
