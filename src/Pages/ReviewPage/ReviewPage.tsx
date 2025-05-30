@@ -1,6 +1,5 @@
-// src/components/ReviewPage.tsx
 import React, { useState } from 'react';
-import Ratings from '@/components/Ratings'; // 가정: Ratings 컴포넌트가 같은 디렉토리에 있습니다.
+import Ratings from '@/components/Ratings';
 import usePostReviewMutation from '@/hooks/usePostReivewMutation';
 import { useParams, useNavigate } from 'react-router';
 import { cn } from '@/lib/utils';
@@ -9,7 +8,7 @@ import { useToastStore } from '@/store/useToastStore';
 import Circle from '@/components/Icon/Circle';
 
 type ReviewPageProps = {
-  recipeName?: string; // 레시피 이름 (선택 사항)
+  recipeName?: string;
 };
 
 const ReviewPage = ({ recipeName = '이 레시피' }: ReviewPageProps) => {

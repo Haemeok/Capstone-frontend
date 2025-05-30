@@ -7,6 +7,7 @@ import { IngredientItem, IngredientPayload } from '@/type/recipe';
 import { InfiniteData } from '@tanstack/react-query';
 import {
   INGREDIENT_CATEGORIES,
+  INGREDIENT_CATEGORIES_NEW_RECIPE,
   INGREDIENT_CATEGORY_CODES,
 } from '@/constants/recipe';
 import { cn } from '@/lib/utils';
@@ -37,7 +38,7 @@ const IngredientSelector = ({
   addedIngredientIds,
   setAddedIngredientIds,
 }: IngredientSelectorProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const [selectedCategory, setSelectedCategory] = useState<string>('나의 재료');
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
@@ -64,7 +65,7 @@ const IngredientSelector = ({
         category: selectedCategory,
         q: searchQuery,
         pageParam,
-        isMine: false,
+        isMine: selectedCategory === '나의 재료' ? true : false,
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
@@ -96,7 +97,7 @@ const IngredientSelector = ({
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="sticky top-0 z-10 bg-white">
+        <div className="bg-white">
           <form onSubmit={handleSearchSubmit} className="relative px-4">
             <input
               type="text"
@@ -113,7 +114,7 @@ const IngredientSelector = ({
             </button>
           </form>
           <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2">
-            {INGREDIENT_CATEGORIES.map((category) => (
+            {INGREDIENT_CATEGORIES_NEW_RECIPE.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryClick(category)}
@@ -129,7 +130,7 @@ const IngredientSelector = ({
             ))}
           </div>
         </div>
-        <div className="flex grow flex-col justify-center overflow-y-auto p-4">
+        <div className="flex h-120 flex-col justify-center overflow-y-auto p-4">
           {status === 'pending' ? (
             <p className="text-center text-gray-500">재료 로딩 중...</p>
           ) : status === 'error' ? (

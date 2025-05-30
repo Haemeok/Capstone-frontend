@@ -56,13 +56,13 @@ const UpdateRecipePage = () => {
       imageFile: null,
       ingredients: recipe.ingredients,
       cookingTime: recipe.cookingTime,
-      servings: recipe.servings, // 0을 기본값으로 설정 (선택 안 함 상태)
+      servings: recipe.servings,
       dishType: recipe.dishType,
       imageKey: recipe.imageKey,
       description: recipe.description,
       steps: recipe.steps,
       cookingTools: recipe.cookingTools,
-      tagNames: recipe.tagNames, // 태그 기본값
+      tagNames: recipe.tagNames,
     },
     mode: 'onChange',
   });
@@ -85,14 +85,14 @@ const UpdateRecipePage = () => {
   const watchedFormSteps = watch('steps');
 
   useEffect(() => {
-    let RHF_stepsArrayChanged = false; // 전체 steps 배열의 imageKey 중 하나라도 바뀌었는지 여부
+    let RHF_stepsArrayChanged = false;
 
     const newRHFStepsPayload = watchedFormSteps.map((formStep, index) => {
-      const newStepData = { ...formStep }; // RHF 업데이트 시 새로운 객체 참조를 위해 복사
+      const newStepData = { ...formStep };
       const initialStepDetails = recipe.steps[index];
 
-      const currentStepPreviewUrl = stepImagePreviewUrls[index]; // 현재 스텝의 미리보기 URL
-      const currentRHFStepKey = formStep.imageKey; // 현재 RHF에 저장된 스텝의 imageKey
+      const currentStepPreviewUrl = stepImagePreviewUrls[index];
+      const currentRHFStepKey = formStep.imageKey;
 
       let newStepImageKey = initialStepDetails.stepImageKey;
 
@@ -112,12 +112,7 @@ const UpdateRecipePage = () => {
     if (RHF_stepsArrayChanged) {
       setValue('steps', newRHFStepsPayload, { shouldDirty: true });
     }
-  }, [
-    stepImagePreviewUrls, // 각 스텝의 미리보기 URL 배열
-    recipe.steps, // 각 스텝의 초기 정보 (URL, Key)
-    setValue,
-    watchedFormSteps, // RHF의 steps 필드 변경 감지 (주의: 무한 루프 가능성)
-  ]);
+  }, [stepImagePreviewUrls, recipe.steps, setValue, watchedFormSteps]);
 
   const onSubmit: SubmitHandler<RecipeFormValues> = (formData) => {
     console.log('폼 데이터:', formData);
@@ -126,8 +121,9 @@ const UpdateRecipePage = () => {
       onSuccess: (createdData) => {
         console.log('레시피 생성 성공:', createdData);
         addToast({
-          message: '레시피가 성공적으로 등록되었습니다!',
+          message: '레시피가 성공적으로 수정되었습니다!',
           variant: 'success',
+          position: 'bottom',
         });
         reset();
         setImagePreviewUrl(null);
@@ -139,13 +135,14 @@ const UpdateRecipePage = () => {
         addToast({
           message: `레시피 등록 중 오류가 발생했습니다: ${error.message}`,
           variant: 'error',
+          position: 'bottom',
         });
       },
     });
   };
 
   const handleMainIngredientRemoved = (ingredientName: string) => {
-    const currentSteps = watch('steps'); // or getValues('steps')
+    const currentSteps = watch('steps');
     const updatedSteps = currentSteps.map((step) => {
       const newStepIngredients = (step.ingredients || []).filter(
         (ing) => ing.name !== ingredientName,

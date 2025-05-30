@@ -45,8 +45,6 @@ const UserInfoChangePage: React.FC = () => {
 
   const onSubmit = (data: FormValues) => {
     console.log('Form data:', data);
-    // TODO: API 호출하여 사용자 정보 업데이트
-    // navigate(-1);
   };
 
   const handleCancel = () => {
@@ -55,7 +53,6 @@ const UserInfoChangePage: React.FC = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      {/* Header */}
       <div className="fixed top-0 right-0 left-0 z-10 flex items-center justify-between border-b border-gray-200 bg-gray-50 p-4">
         <button
           type="button"
@@ -83,7 +80,6 @@ const UserInfoChangePage: React.FC = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-grow flex-col pt-20"
       >
-        {/* Profile Image Section */}
         <div className="relative z-[3] pl-4">
           <div
             className={`relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-cover bg-center ${
@@ -115,9 +111,7 @@ const UserInfoChangePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Form Fields */}
         <div className="mt-4 flex-grow p-4">
-          {/* Nickname Field */}
           <div className="mb-6">
             <label
               htmlFor="nickname"
@@ -160,7 +154,6 @@ const UserInfoChangePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Description Field */}
           <div className="mb-6">
             <label
               htmlFor="description"

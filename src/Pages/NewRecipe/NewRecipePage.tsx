@@ -44,7 +44,7 @@ const NewRecipePage = () => {
       imageFile: null,
       ingredients: [],
       cookingTime: undefined,
-      servings: 0, // 0을 기본값으로 설정 (선택 안 함 상태)
+      servings: 0,
       dishType: '',
       description: '',
       steps: [
@@ -56,7 +56,7 @@ const NewRecipePage = () => {
         },
       ],
       cookingTools: [],
-      tagNames: [], // 태그 기본값
+      tagNames: [],
     },
     mode: 'onChange',
   });
@@ -70,6 +70,7 @@ const NewRecipePage = () => {
         addToast({
           message: '레시피가 성공적으로 등록되었습니다!',
           variant: 'success',
+          position: 'bottom',
         });
         navigate('/search');
         reset();
@@ -81,6 +82,7 @@ const NewRecipePage = () => {
         addToast({
           message: `레시피 등록 중 오류가 발생했습니다: ${error.message}`,
           variant: 'error',
+          position: 'bottom',
         });
       },
     });
@@ -110,7 +112,7 @@ const NewRecipePage = () => {
   const isLoading = isUploading || isCreatingRecipe;
   const submitError = recipeCreationError;
   const handleMainIngredientRemoved = (ingredientName: string) => {
-    const currentSteps = watch('steps'); // or getValues('steps')
+    const currentSteps = watch('steps');
     const updatedSteps = currentSteps.map((step) => {
       const newStepIngredients = (step.ingredients || []).filter(
         (ing) => ing.name !== ingredientName,
