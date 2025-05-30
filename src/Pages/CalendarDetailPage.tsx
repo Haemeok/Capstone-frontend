@@ -16,6 +16,7 @@ const CalendarDetailPage = () => {
     addToast({
       message: '잘못된 접근입니다.',
       variant: 'error',
+      position: 'bottom',
     });
     return;
   }

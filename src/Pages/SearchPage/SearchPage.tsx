@@ -65,7 +65,7 @@ const SearchPage = () => {
         sort: SORT_TYPE_CODES[sort as keyof typeof SORT_TYPE_CODES],
         dishType: DISH_TYPE_CODES[dishType as keyof typeof DISH_TYPE_CODES],
         tagNames: tagNames.map(
-          (tag) => TAG_CODES[tag as keyof typeof TAG_CODES],
+          (tag) => TAG_CODES[tag.slice(3) as keyof typeof TAG_CODES],
         ),
         q: searchQuery,
         pageParam,
@@ -82,6 +82,7 @@ const SearchPage = () => {
     tagNames,
     searchQuery,
   ]);
+
   const dynamicStateAccessors = {
     dishType: {
       state: dishType,

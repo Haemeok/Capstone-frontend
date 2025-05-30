@@ -16,13 +16,11 @@ export function CalendarTabContent() {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
   const year = currentMonth.getFullYear();
-  const month = currentMonth.getMonth() + 1; // getMonth는 0부터 시작하므로 +1
+  const month = currentMonth.getMonth() + 1;
 
-  // useRecipeHistoryQuery 훅 사용
   const { recipeHistorySummary, monthlyTotalSavings, isLoading, error } =
     useRecipeHistoryQuery({ year, month });
 
-  // 해당 날짜에 이벤트가 있는지 확인
   const getEventForDay = (day: Date): RecipeDailySummary | undefined => {
     return recipeHistorySummary?.find((summary) => {
       const summaryDate = new Date(summary.date);

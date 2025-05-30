@@ -18,7 +18,7 @@ type CategoryDrawerProps = {
   onOpenChange: (open: boolean) => void;
   isMultiple: boolean;
   setValue: (value: string[] | string) => void;
-  initialValue: string[] | string; // 외부에서 관리하는 현재 값
+  initialValue: string[] | string;
   availableValues: string[];
   header: string;
   description: string;
@@ -89,11 +89,11 @@ const CategoryDrawer = ({
                     id={`checkbox-${value}`}
                     checked={(internalSelection as string[]).includes(value)}
                     onCheckedChange={() => handleCheckboxChange(value)}
-                    className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 rounded border-gray-300 data-[state=checked]:text-white" // 스타일 조정
+                    className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 rounded border-gray-300 data-[state=checked]:text-white"
                   />
                   <Label
                     htmlFor={`checkbox-${value}`}
-                    className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" // Label 스타일 추가
+                    className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     {value}
                   </Label>
@@ -111,11 +111,11 @@ const CategoryDrawer = ({
                   <RadioGroupItem
                     value={value}
                     id={`radio-${value}`}
-                    className="text-dark-light focus:ring-dark-light h-5 w-5 border-gray-300" // 스타일 조정
+                    className="text-dark-light focus:ring-dark-light h-5 w-5 border-gray-300"
                   />
                   <Label
                     htmlFor={`radio-${value}`}
-                    className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" // Label 스타일 추가
+                    className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     {value}
                   </Label>

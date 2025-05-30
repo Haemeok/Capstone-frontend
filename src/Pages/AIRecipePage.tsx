@@ -11,38 +11,38 @@ import {
   recommendedTags,
 } from '@/mock';
 import { useState } from 'react';
-import { IngredientPayload } from '@/type/recipe';
+import { IngredientPayload, m } from '@/type/recipe';
 import useCreateAIRecipeMutation from '@/hooks/useCreateAIRecipeMutation';
 import { AIRecommendedRecipeRequest } from '@/api/recipe';
 import LoadingSection from './AIRecipe/LoadingSection';
 import { FOUR_CUT_IMAGE } from '@/constants/recipe';
+import AIRecipeDisplay from './AIRecipe/AIRecipeDisplay';
 
 type AIRecipeFormData = AIRecommendedRecipeRequest;
 
-// Define AI model data
 const aiModels = [
   {
     id: 'chefBot',
-    name: '요리사 로봇',
-    image: '/robot.png',
+    name: '기본에 충실한 셰프',
+    image: '/blue.png',
     description: '가장 기본적인 레시피를 추천해 드립니다. 저에게 맡겨주세요!',
   },
   {
     id: 'nutritionBot',
-    name: '영양사 로봇',
-    image: '/nutrition_robot.png', // Placeholder, replace with actual image path
+    name: '창의적인 실험가',
+    image: '/yellow.png',
     description: '균형 잡힌 영양을 고려한 레시피를 전문적으로 추천합니다.',
   },
   {
     id: 'quickBot',
-    name: '스피드 로봇',
-    image: '/quick_robot.png', // Placeholder, replace with actual image path
+    name: '건강 식단 전문',
+    image: '/green.png',
     description: '바쁜 현대인을 위한 빠르고 간편한 레시피를 제공합니다.',
   },
   {
     id: 'gourmetBot',
-    name: '미식가 로봇',
-    image: '/gourmet_robot.png', // Placeholder, replace with actual image path
+    name: '든든한 미식가',
+    image: '/orange.png',
     description: '특별한 날을 위한 고급스럽고 창의적인 레시피를 제안합니다.',
   },
 ];
@@ -161,7 +161,12 @@ const AIRecipePage = () => {
     setSelectedAI(ai);
   };
 
-  const { createAIRecipe, isPending } = useCreateAIRecipeMutation();
+  const {
+    createAIRecipe,
+    isPending,
+    isSuccess,
+    data: createdRecipe,
+  } = useCreateAIRecipeMutation();
 
   if (!selectedAI) {
     return (
@@ -179,9 +184,12 @@ const AIRecipePage = () => {
               <img
                 src={ai.image}
                 alt={ai.name}
-                className="mb-4 h-40 w-40 rounded-full object-cover"
+                className="mb-4 h-40 w-40 object-cover"
               />
               <p className="text-dark text-lg font-medium">{ai.name}</p>
+              <p className="mt-2 text-center text-sm text-gray-600">
+                {ai.description}
+              </p>
             </button>
           ))}
         </div>
@@ -197,6 +205,10 @@ const AIRecipePage = () => {
         fourCutImage={FOUR_CUT_IMAGE}
       />
     );
+  }
+
+  if (isSuccess && createdRecipe) {
+    return <AIRecipeDisplay createdRecipe={createdRecipe} />;
   }
 
   return (

@@ -6,6 +6,7 @@ import RequiredAmountDisplay from '../RequiredAmountDisplay';
 import { formatPrice } from '@/utils/recipe';
 import RecipeStepList from '@/components/RecipeStepList';
 import useScrollAnimate from '@/hooks/useScrollAnimate';
+import CollapsibleP from '@/components/CollapsibleP';
 
 type AIRecipeDisplayProps = {
   createdRecipe: AIRecommendedRecipe;
@@ -21,10 +22,12 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
         <SuspenseImage
           src={recipe.imageUrl ?? ''}
           alt={recipe.title}
-          className="h-48 w-full object-cover"
+          className="h-112 w-full object-cover"
         />
-        <h1>{recipe.title}</h1>
-        <p>{recipe.description}</p>
+        <h1 className="mt-4 text-center text-2xl font-bold">{recipe.title}</h1>
+        <Box>
+          <CollapsibleP content={recipe.description} />
+        </Box>
       </div>
       <Box className="flex flex-col gap-2">
         <h2 className="mb-2 text-xl font-semibold">재료</h2>

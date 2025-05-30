@@ -62,12 +62,14 @@ const RecipeDetailPage = () => {
         addToast({
           message,
           variant: 'success',
+          position: 'bottom',
         });
       },
       onError: () => {
         addToast({
           message,
           variant: 'error',
+          position: 'bottom',
         });
       },
     });
