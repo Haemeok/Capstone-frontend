@@ -35,6 +35,7 @@ const CalendarDetailPage = () => {
         {data?.map((item) => (
           <div
             key={item.recipeId}
+            onClick={() => navigate(`/recipes/${item.recipeId}`)}
             className="flex items-center gap-4 rounded-2xl border-1 border-gray-200 p-4 py-2"
           >
             <SuspenseImage
@@ -45,11 +46,9 @@ const CalendarDetailPage = () => {
             <div className="flex flex-col gap-2">
               <h1 className="text-lg font-bold">{item.recipeTitle}</h1>
               <div className="flex flex-col">
-                <p className="text-sm text-slate-500">
-                  이 레시피를 만드는 데에
-                </p>
+                <p className="text-sm text-slate-500">이 레시피로</p>
                 <p className="text-olive-mint text-mm font-semibold">
-                  {formatPrice(item.savings)}원이 필요해요
+                  {formatPrice(item.savings)}원을 절약했어요
                 </p>
               </div>
             </div>
