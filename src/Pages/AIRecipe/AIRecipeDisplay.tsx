@@ -32,7 +32,7 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
       <Box className="flex flex-col gap-2">
         <h2 className="mb-2 text-xl font-semibold">재료</h2>
         <RequiredAmountDisplay
-          price={recipe.totalIngredientCost}
+          pointText={formatPrice(recipe.totalIngredientCost)}
           prefix="이 레시피에 약"
           suffix="필요해요!"
         />
@@ -51,11 +51,13 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
           ))}
         </ul>
         <RequiredAmountDisplay
-          price={recipe.marketPrice - recipe.totalIngredientCost}
+          pointText={formatPrice(
+            recipe.marketPrice - recipe.totalIngredientCost,
+          )}
           prefix="배달 물가 대비"
           suffix="절약해요!"
           containerClassName="mt-2 flex items-center border-0 text-gray-400 p-0 font-semibold"
-          priceClassName="text-purple-500"
+          textClassName="text-purple-500"
         />
       </Box>
       <Box>
