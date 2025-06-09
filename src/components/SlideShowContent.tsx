@@ -19,27 +19,24 @@ const SlideShowContent = ({ step, totalSteps }: SlideShowContentProps) => {
 
       <div className="h-full p-6">
         {step.ingredients && step.ingredients.length > 0 && (
-          <div className="text-muted-foreground mb-3 flex items-center space-x-2 text-sm">
+          <div className="text-muted-foreground mb-3 flex flex-wrap items-center space-x-2 text-sm">
             {step.ingredients.map((ingredient) => (
               <span
                 key={ingredient.name}
-                className="bg-muted rounded px-2 py-1 text-xs"
+                className="flex items-center justify-center rounded-2xl border-1 border-gray-200 px-2 py-1 text-sm"
               >
-                {ingredient.name}
+                <p className="text-sm">{ingredient.name}</p>
+                <p className="ml-1 text-sm font-semibold">
+                  {ingredient.quantity}
+                  {ingredient.unit}
+                </p>
               </span>
             ))}
           </div>
         )}
         {step.instruction && (
-          <h2 className="mb-4 text-2xl font-bold">{step.instruction}</h2>
+          <p className="mb-4 text-base font-semibold">{step.instruction}</p>
         )}
-        <div className="prose prose-sm max-w-none">
-          {typeof step.instruction === 'string' ? (
-            <p>{step.instruction}</p>
-          ) : (
-            step.instruction
-          )}
-        </div>
       </div>
     </div>
   );
