@@ -14,17 +14,7 @@ const CommentsPage = () => {
   const [sort, setSort] = useState<string>('최신순');
   const { recipeId } = useParams();
   const author = useLocation().state?.author;
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-    ref,
-    refetch,
-  } = useInfiniteScroll<
+  const { data, hasNextPage, isFetchingNextPage, ref } = useInfiniteScroll<
     CommentsApiResponse,
     Error,
     InfiniteData<CommentsApiResponse>,

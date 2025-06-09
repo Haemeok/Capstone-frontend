@@ -1,12 +1,6 @@
 import { useParams, useNavigate } from 'react-router';
 import CommentBox from '@/components/CommentBox';
-import {
-  ArrowLeft,
-  Share2,
-  MoreHorizontal,
-  MessageCircle,
-  Send,
-} from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Comment } from '@/type/comment';
@@ -18,8 +12,6 @@ import {
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { InfiniteData } from '@tanstack/react-query';
 import CommentInput from '@/components/CommentInput';
-import { comments } from '@/mock';
-import Circle from '@/components/Icon/Circle';
 import { cn } from '@/lib/utils';
 
 const DiscussionPage = () => {
@@ -28,17 +20,7 @@ const DiscussionPage = () => {
   const [sort, setSort] = useState<string>('최신순');
   const navigate = useNavigate();
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-    ref,
-    refetch,
-  } = useInfiniteScroll<
+  const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
     TotalRepliesApiResponse,
     Error,
     InfiniteData<TotalRepliesApiResponse>,
@@ -61,21 +43,9 @@ const DiscussionPage = () => {
     },
     initialPageParam: 0,
   });
-  console.log('data', data);
+
   const replies = data?.pages.flatMap((page) => page.replies.content);
-  const parentComment: Comment = {
-    id: data?.pages[0]?.id ?? 0,
-    content: data?.pages[0]?.content ?? '',
-    createdAt: data?.pages[0]?.createdAt ?? '',
-    author: data?.pages[0]?.author ?? {
-      id: 0,
-      nickname: '',
-      profileImage: '',
-    },
-    likeCount: data?.pages[0]?.likeCount ?? 0,
-    replyCount: data?.pages[0]?.replyCount ?? 0,
-    likedByCurrentUser: data?.pages[0]?.likedByCurrentUser ?? false,
-  };
+  const parentComment = data?.pages[0];
 
   return (
     <div className="">
@@ -96,11 +66,19 @@ const DiscussionPage = () => {
       </header>
 
       <main className="mx-auto max-w-3xl p-4">
-        <CommentBox
-          comment={parentComment}
-          hideReplyButton={true}
-          recipeId={Number(recipeId)}
-        />
+        {parentComment ? (
+          <CommentBox
+            comment={parentComment}
+            hideReplyButton={true}
+            recipeId={Number(recipeId)}
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center rounded-2xl border-1 border-gray-200 p-4">
+            <p className="mb-4 text-lg text-gray-500">
+              해당 댓글을 찾을 수 없습니다.
+            </p>
+          </div>
+        )}
 
         <div className="mb-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
           <div className="mb-4 flex items-center justify-between px-2">
@@ -139,10 +117,10 @@ const DiscussionPage = () => {
               />
             ))}
             <div ref={ref} className="h-10">
-              {isFetchingNextPage && (
+              {isFetching && (
                 <div className="flex justify-center p-4">
                   <p className="text-sm text-gray-500">
-                    더 많은 댓글 로딩 중...
+                    더 많은 댓글 로드 중...
                   </p>
                 </div>
               )}
@@ -156,10 +134,12 @@ const DiscussionPage = () => {
           </div>
         </div>
 
-        <CommentInput
-          author={parentComment.author}
-          commentId={Number(commentId)}
-        />
+        {parentComment && (
+          <CommentInput
+            author={parentComment.author}
+            commentId={Number(commentId)}
+          />
+        )}
       </main>
     </div>
   );
