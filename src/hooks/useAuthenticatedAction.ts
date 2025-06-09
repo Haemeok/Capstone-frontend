@@ -1,24 +1,40 @@
 import { useUserStore } from '@/store/useUserStore';
-import { useCallback } from 'react';
-import { END_POINTS } from '@/constants/api';
 import { useNavigate, useLocation } from 'react-router';
+import { useToastStore } from '@/store/useToastStore';
 
-const useAuthenticatedAction = <T extends any[]>(
-  actionFn: (...args: T) => void,
+type UseAuthenticatedActionOptions = {
+  notifyOnly?: boolean;
+};
+
+const useAuthenticatedAction = <TVariables, TOptions, TResult = void>(
+  actionFn: (variables: TVariables, options?: TOptions) => TResult,
+  hookOptions?: UseAuthenticatedActionOptions,
 ) => {
   const { user } = useUserStore();
+  const { addToast } = useToastStore();
   const isAuthenticated = !!user;
   const navigate = useNavigate();
   const location = useLocation();
 
-  return (...args: T) => {
+  return (variables: TVariables, options?: TOptions): TResult | undefined => {
     if (!isAuthenticated) {
+      if (hookOptions?.notifyOnly) {
+        addToast({
+          message: '로그인이 필요합니다.',
+          variant: 'default',
+          position: 'bottom',
+        });
+        return undefined;
+      }
+
       navigate('/login', {
         state: { from: location },
         replace: true,
       });
+
+      return undefined;
     } else {
-      actionFn(...args);
+      return actionFn(variables, options);
     }
   };
 };

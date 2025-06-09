@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import StarIcon from './StarIcon';
+import { formatPrice } from '@/utils/recipe';
 
 type Size = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -98,10 +99,23 @@ const Ratings = ({
   };
 
   const ratingMessage = (value: number, count: number) => {
-    if (count < 5) {
-      return '아직 평가가 적어요. 평가를 남겨보세요 !';
+    if (count < 1) {
+      return (
+        <p className="mt-1 text-sm text-gray-400">
+          아직 평가가 적어요. 평가를 남겨보세요 !
+        </p>
+      );
     }
-    return `${count}명의 사람들이 ${value}점 줬어요 !`;
+    return (
+      <div className="mt-1 flex items-center">
+        <p className="text-olive-mint text-sm font-semibold">
+          {formatPrice(count)}명
+        </p>
+        <p className="text-sm text-gray-400">의 사람들이 평균</p>
+        <p className="text-olive-mint ml-1 text-sm font-semibold">{value}점</p>
+        <p className="text-sm text-gray-400">을 줬어요 !</p>
+      </div>
+    );
   };
 
   return (
@@ -140,11 +154,7 @@ const Ratings = ({
           );
         })}
       </div>
-      {showValue && (
-        <span className="text-sm text-gray-400">
-          {ratingMessage(value, ratingCount)}
-        </span>
-      )}
+      {showValue && ratingMessage(value, ratingCount)}
     </div>
   );
 };

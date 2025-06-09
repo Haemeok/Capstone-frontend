@@ -1,19 +1,22 @@
-import React from 'react';
+import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router';
 
 type UsernameProps = {
   username: string;
   userId: number;
+  className?: string;
 };
 
-const Username = ({ username, userId }: UsernameProps) => {
+const Username = ({ username, userId, className }: UsernameProps) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/users/${userId}`);
   };
   return (
     <button onClick={handleClick}>
-      <p className="text-sm font-bold text-gray-800">{username}</p>
+      <p className={cn('text-sm font-bold text-gray-800', className)}>
+        {username}
+      </p>
     </button>
   );
 };
