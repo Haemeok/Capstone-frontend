@@ -6,6 +6,7 @@ const useSearch = () => {
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     setSearchQuery(inputValue);
   };
 

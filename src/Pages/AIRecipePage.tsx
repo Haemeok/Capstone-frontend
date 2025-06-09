@@ -15,8 +15,9 @@ import { IngredientPayload, m } from '@/type/recipe';
 import useCreateAIRecipeMutation from '@/hooks/useCreateAIRecipeMutation';
 import { AIRecommendedRecipeRequest } from '@/api/recipe';
 import LoadingSection from './AIRecipe/LoadingSection';
-import { FOUR_CUT_IMAGE } from '@/constants/recipe';
+import { DISH_TYPES, FOUR_CUT_IMAGE } from '@/constants/recipe';
 import AIRecipeDisplay from './AIRecipe/AIRecipeDisplay';
+import SuspenseImage from '@/components/Image/SuspenseImage';
 
 type AIRecipeFormData = AIRecommendedRecipeRequest;
 
@@ -30,7 +31,7 @@ const aiModels = [
   {
     id: 'nutritionBot',
     name: '창의적인 실험가',
-    image: '/yellow.png',
+    image: '/create.png',
     description: '균형 잡힌 영양을 고려한 레시피를 전문적으로 추천합니다.',
   },
   {
@@ -170,8 +171,8 @@ const AIRecipePage = () => {
 
   if (!selectedAI) {
     return (
-      <div className="relative mx-auto flex min-h-screen flex-col items-center justify-center bg-[#f7f7f7] p-4">
-        <p className="text-dark mb-8 text-center text-2xl font-semibold">
+      <div className="mx-auto flex h-full flex-col items-center justify-center gap-4 bg-[#f7f7f7] p-4">
+        <p className="text-dark text-center text-2xl font-semibold">
           레시피를 생성할 AI를 선택해주세요.
         </p>
         <div className="grid grid-cols-2 gap-6">
@@ -179,12 +180,12 @@ const AIRecipePage = () => {
             <button
               key={ai.id}
               onClick={() => handleSelectAI(ai)}
-              className="flex flex-col items-center rounded-2xl border bg-white p-6 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+              className="flex flex-col items-center rounded-2xl border bg-white px-4 py-6 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
             >
               <img
                 src={ai.image}
                 alt={ai.name}
-                className="mb-4 h-40 w-40 object-cover"
+                className="mb-4 h-48 w-full rounded-2xl object-cover"
               />
               <p className="text-dark text-lg font-medium">{ai.name}</p>
               <p className="mt-2 text-center text-sm text-gray-600">
@@ -215,14 +216,17 @@ const AIRecipePage = () => {
     <div className="relative mx-auto bg-[#f7f7f7] p-4">
       <div className="text-center">
         <p className="text-dark text-xl font-semibold">
-          {selectedAI.name}가 맞춤형 레시피를 추천해드립니다
+          {selectedAI.name}와 함께
+        </p>
+        <p className="text-dark text-xl font-semibold">
+          맞춤형 레시피를 생성해보세요 !
         </p>
       </div>
       <div className="flex flex-col items-center justify-center gap-2 py-4">
-        <img
+        <SuspenseImage
           src={selectedAI.image}
           alt={selectedAI.name}
-          className="h-40 w-40 rounded-full object-cover shadow-md"
+          className="h-80 w-full rounded-2xl object-cover shadow-md"
         />
         <p className="mt-2 text-center text-sm text-gray-600">
           {selectedAI.description}
@@ -242,7 +246,7 @@ const AIRecipePage = () => {
             <SelectionSection
               title="종류"
               icon={<ChefHat size={18} />}
-              items={categories}
+              items={DISH_TYPES}
               selectedItems={dishType}
               onToggle={toggleCategory}
               isSingleSelect={true}

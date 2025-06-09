@@ -1,18 +1,19 @@
-import {
-  postRecipeFavorite,
-  postRecipeLike,
-  postRecipeVisibility,
-} from '@/api/recipe';
+import { postRecipeFavorite, postRecipeVisibility } from '@/api/recipe';
 import { Recipe } from '@/type/recipe';
-import { useMutation, useQueryClient, QueryKey } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  MutateOptions,
+} from '@tanstack/react-query';
+import useAuthenticatedAction from './useAuthenticatedAction';
 
 type ToggleFunction = (id: number) => Promise<any>;
 
-interface UseToggleMutationOptions {
+type UseToggleMutationOptions = {
   toggleFn: ToggleFunction;
   resourceQueryKey: string;
   additionalInvalidateKeys?: string[];
-}
+};
 
 export const useToggleMutation = (options: UseToggleMutationOptions) => {
   const { toggleFn, resourceQueryKey, additionalInvalidateKeys = [] } = options;
@@ -32,16 +33,6 @@ export const useToggleMutation = (options: UseToggleMutationOptions) => {
   });
 };
 
-export const useToggleRecipeLike = () => {
-  const mutation = useToggleMutation({
-    toggleFn: postRecipeLike,
-    resourceQueryKey: 'recipe',
-    additionalInvalidateKeys: ['recipes'],
-  });
-
-  return mutation;
-};
-
 export const useToggleRecipeVisibility = () => {
   const mutation = useToggleMutation({
     toggleFn: postRecipeVisibility,
@@ -51,9 +42,15 @@ export const useToggleRecipeVisibility = () => {
 
   return mutation;
 };
+
 export const useToggleRecipeFavorite = (recipeId: number) => {
   const queryClient = useQueryClient();
-  const mutation = useMutation<void, Error, void, Recipe>({
+  const { mutate: rawMutate, ...restOfMutation } = useMutation<
+    void,
+    Error,
+    void,
+    Recipe
+  >({
     mutationFn: () => postRecipeFavorite(recipeId),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['recipe', recipeId] });
@@ -85,5 +82,13 @@ export const useToggleRecipeFavorite = (recipeId: number) => {
     },
   });
 
-  return mutation;
+  const authenticatedMutate = useAuthenticatedAction<
+    void,
+    MutateOptions<void, Error, void, Recipe> | undefined,
+    void
+  >(rawMutate, {
+    notifyOnly: true,
+  });
+
+  return { ...restOfMutation, mutate: authenticatedMutate };
 };
