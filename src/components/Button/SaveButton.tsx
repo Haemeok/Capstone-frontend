@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Bookmark } from 'lucide-react';
 
 type SaveButtonProps = {

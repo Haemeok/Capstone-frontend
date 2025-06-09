@@ -157,7 +157,7 @@ const RecipeGrid = ({
   }
 
   return (
-    <div ref={gridItemsContainerRef} className="flex flex-1 flex-col p-4">
+    <div ref={gridItemsContainerRef} className="flex flex-col p-4">
       <div className="grid grid-cols-2 gap-4" ref={itemsAnimateTargetRef}>
         {recipes.map((recipe) =>
           isSimple ? (
@@ -176,7 +176,10 @@ const RecipeGrid = ({
           ),
         )}
       </div>
-      <div ref={observerRef} className="mt-2 h-10 text-center">
+      <div
+        ref={observerRef}
+        className="mt-2 flex h-10 items-center justify-center"
+      >
         {!isFetching &&
           !hasNextPage &&
           recipes &&

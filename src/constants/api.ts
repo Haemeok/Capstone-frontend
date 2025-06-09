@@ -9,6 +9,7 @@ export const END_POINTS = {
   RECIPES_BY_CATEGORY: (categorySlug: string) =>
     `/recipes/category/${categorySlug}`,
   INGREDIENTS: '/ingredients',
+  SEARCH_INGREDIENTS: '/search/ingredients',
   INGREDIENTS_BY_ID: (id: number) => `/ingredients/${id}`,
   RECIPE_COMMENT: (id: number) => `/recipes/${id}/comments`,
   RECIPE_COMMENT_BY_ID: (recipeId: number, commentId: number) =>
@@ -32,6 +33,7 @@ export const END_POINTS = {
   MY_INGREDIENTS_BY_ID: (id: number) => `/me/fridge/items/${id}`,
   MY_INGREDIENTS_BULK: '/me/fridge/items/bulk',
   USER_RECIPES: (id: number) => `/users/${id}/recipes`,
+  USER_STREAK: '/me/streak',
   PRESIGNED_URLS: '/recipes/presigned-urls',
   USER_PRESIGNED_URLS: (userId: number) =>
     `/users/${userId}/profile-image/presign`,
