@@ -6,6 +6,7 @@ import useCreateCommentMutation from '@/hooks/useCreateCommentMutation';
 import { useParams } from 'react-router';
 import { useUserStore } from '@/store/useUserStore';
 import SuspenseImage from './Image/SuspenseImage';
+
 type CommentInputProps = {
   author: User | undefined;
   commentId?: number;
@@ -37,7 +38,6 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
     if (!comment.trim() || !recipeId) return;
     if (!user?.id) return;
 
-    // 뮤테이션 실행 함수 호출 시 변수 객체 전달
     createComment(
       {
         recipeId: Number(recipeId),
@@ -51,17 +51,19 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
       },
     );
   };
-
+  const placeholder = user
+    ? `${author?.nickname}님에게 답글 남기기...`
+    : '로그인 후 이용해주세요.';
   return (
     <div className="fixed right-0 bottom-20 left-0 mx-4 rounded-2xl border-t bg-white px-2 py-1 shadow-md">
       <form
         className="mx-auto flex max-w-3xl items-end gap-2"
         onSubmit={handleSubmit}
       >
-        {!isFocused && (
+        {!isFocused && user && (
           <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-white">
             <SuspenseImage
-              src={user?.profileImage || ''}
+              src={user.profileImage || ''}
               alt="내 프로필"
               className="h-full w-full object-cover"
             />
@@ -72,7 +74,8 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder={`${author?.nickname}님에게 답글 남기기...`}
+          placeholder={placeholder}
+          disabled={!user}
           className={`flex-1 resize-none overflow-y-auto rounded-xl border-none bg-white px-3 py-2 text-sm leading-tight placeholder-gray-500 transition-all duration-300 ease-in-out focus:outline-none ${isFocused ? 'ml-0' : ''} ${
             comment ? '' : 'truncate'
           }`}

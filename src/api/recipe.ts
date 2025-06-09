@@ -15,7 +15,7 @@ import {
 } from '@/type/file';
 import { FileInfoRequest } from '@/type/file';
 import { BaseQueryParams, PageResponse } from '@/type/query';
-import { buildParams } from '@/utils/object';
+import { buildParams, customParamsSerializer } from '@/utils/object';
 import { TagCode } from '@/constants/recipe';
 import { cookingTimeItems } from '@/mock';
 
@@ -100,13 +100,6 @@ export const postPresignedUrls = async (files: FileInfoRequest[]) => {
     },
   );
   console.log('Received Pre-signed URLs:', response.data);
-  return response.data;
-};
-
-export const getPresignedUrl = async (userId: number) => {
-  const response = await axiosInstance.get<PresignedUrlInfo>(
-    END_POINTS.USER_PRESIGNED_URLS(userId),
-  );
   return response.data;
 };
 
@@ -241,6 +234,7 @@ export const getRecipeItems = async ({
     END_POINTS.RECIPE_SEARCH,
     {
       params: apiParams,
+      paramsSerializer: customParamsSerializer,
       useAuth: 'optional',
     },
   );
@@ -304,13 +298,14 @@ export const getRecipeItemsByTagNames = async ({
   pageParam?: number;
 }) => {
   const response = await axiosInstance.get<DetailedRecipesApiResponse>(
-    END_POINTS.RECIPES_BY_TAG(),
+    END_POINTS.RECIPE_SEARCH,
     {
       params: {
         tagNames: tagName,
         page: pageParam,
         size: PAGE_SIZE,
       },
+      useAuth: false,
     },
   );
   return response.data;

@@ -40,6 +40,19 @@ export const checkAndSetToken = (
   return config;
 };
 
+export type ForceLogoutEventDetail = {
+  message: string;
+  reason?: string; // 예: 'REFRESH_TOKEN_EXPIRED', 'ADMIN_FORCED_LOGOUT' 등
+};
+
+// 리프레시 토큰 만료 또는 강제 로그아웃 필요 시 호출
+const dispatchForceLogoutEvent = (detail: ForceLogoutEventDetail) => {
+  const event = new CustomEvent<ForceLogoutEventDetail>('forceLogout', {
+    detail: detail,
+  });
+  window.dispatchEvent(event);
+};
+
 export const handleTokenError = async (
   error: AxiosError<ErrorResponseData>,
 ) => {
@@ -59,6 +72,11 @@ export const handleTokenError = async (
       return axiosInstance(originRequest);
     } catch (refreshError) {
       localStorage.removeItem('accessToken');
+
+      dispatchForceLogoutEvent({
+        message: '로그인이 만료되었습니다. 다시 로그인해주세요.',
+        reason: 'REFRESH_TOKEN_EXPIRED',
+      });
 
       throw new Error('로그인이 만료되었습니다. 다시 로그인해주세요.');
     }
