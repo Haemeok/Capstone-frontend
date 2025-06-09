@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { MinusIcon, PlusIcon, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
@@ -16,9 +15,9 @@ import { INGREDIENT_CATEGORIES } from '@/constants/recipe';
 import PrevButton from '@/components/Button/PrevButton';
 import gsap from 'gsap';
 import { getNextPageParam } from '@/utils/recipe';
+import SuspenseImage from '@/components/Image/SuspenseImage';
 
 const NewIngredientsPage = () => {
-  const navigate = useNavigate();
   const [mode, setMode] = useState<'single' | 'bulk'>('single');
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [sort, setSort] = useState<'asc' | 'desc'>('asc');
@@ -30,7 +29,6 @@ const NewIngredientsPage = () => {
   const {
     data,
     error,
-    fetchNextPage,
     hasNextPage,
     isFetching,
     isFetchingNextPage,
@@ -51,6 +49,7 @@ const NewIngredientsPage = () => {
         pageParam,
         sort,
         isMine: false,
+        isFridge: true,
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
@@ -70,8 +69,6 @@ const NewIngredientsPage = () => {
     searchQuery,
     sort,
   ]);
-
-  console.log('queryKeyString', queryKeyString);
 
   useEffect(() => {
     animatedItemsRef.current.clear();
@@ -142,17 +139,20 @@ const NewIngredientsPage = () => {
     setMode(currentMode === 'single' ? 'bulk' : 'single');
   };
 
-  const handleCheckboxChange = (id: number) => {
+  const handleCheckboxChange = (checked: boolean, id: number) => {
+    console.log(`Checkbox ${id} is now ${checked ? 'checked' : 'unchecked'}`);
+
     setBulkSelectedIds((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
+      if (checked) {
         newSet.add(id);
+      } else {
+        newSet.delete(id);
       }
       return newSet;
     });
   };
+
   const { mutate: addIngredient } = useAddIngredientMutation([
     'ingredients',
     selectedCategory,
@@ -166,21 +166,7 @@ const NewIngredientsPage = () => {
     if (isAdded) {
       deleteIngredient(id);
     } else {
-      addIngredient(id, {
-        onSuccess: () => {
-          console.log(
-            '[NewIngredientsPage] addIngredient mutation onSuccess for ID:',
-            id,
-          );
-        },
-        onError: (error) => {
-          console.error(
-            '[NewIngredientsPage] addIngredient mutation onError for ID:',
-            id,
-            error,
-          );
-        },
-      });
+      addIngredient(id);
     }
   };
 
@@ -227,7 +213,7 @@ const NewIngredientsPage = () => {
               className={cn(
                 'flex-shrink-0 px-4 py-3 text-sm',
                 selectedCategory === category
-                  ? 'text-olive font-bold'
+                  ? 'text-olive-mint font-bold'
                   : 'text-gray-500 hover:text-gray-800',
               )}
             >
@@ -269,30 +255,22 @@ const NewIngredientsPage = () => {
                   key={ingredient.id}
                   className={cn(
                     'flex items-center rounded-lg bg-white p-3 shadow-sm transition-colors',
-                    mode === 'bulk' && 'cursor-pointer hover:bg-gray-50',
-                    mode === 'bulk' &&
-                      isBulkSelected &&
-                      'border-2 border-green-400 bg-green-50 shadow-md',
-                    'font-noto-sans-kr',
+                    mode === 'bulk' && 'cursor-pointer',
+                    mode === 'bulk' && isBulkSelected && 'bg-olive-mint/20',
                   )}
                   onClick={
                     mode === 'bulk'
-                      ? () => handleCheckboxChange(ingredient.id)
+                      ? () =>
+                          handleCheckboxChange(!isBulkSelected, ingredient.id)
                       : undefined
                   }
                 >
                   <div className="mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                    {ingredient.imageUrl ? (
-                      <img
-                        src={ingredient.imageUrl}
-                        alt={ingredient.name}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
-                        No Img
-                      </div>
-                    )}
+                    <SuspenseImage
+                      src={ingredient.imageUrl ?? ''}
+                      alt={ingredient.name}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-gray-800">
@@ -317,15 +295,16 @@ const NewIngredientsPage = () => {
                     >
                       {isAdded ? '빼기' : '추가'}
                     </Button>
-                  ) : (
+                  ) : !isAdded ? (
                     <Checkbox
                       id={`ingredient-${ingredient.id}`}
                       checked={isBulkSelected}
-                      onCheckedChange={() =>
-                        handleCheckboxChange(ingredient.id)
-                      }
                       className="h-5 w-5 rounded border-gray-300 data-[state=checked]:border-green-500 data-[state=checked]:bg-green-500"
                     />
+                  ) : (
+                    <div className="flex items-center justify-center rounded border-gray-300">
+                      <p className="text-sm text-slate-400">보유중</p>
+                    </div>
                   )}
                 </div>
               );
@@ -349,17 +328,15 @@ const NewIngredientsPage = () => {
       </div>
 
       {mode === 'bulk' && (
-        <div className="shadow-top-md fixed inset-x-0 bottom-0 z-20 border-t border-gray-200 bg-white p-4">
-          <Button
-            onClick={handleBulkAdd}
-            disabled={bulkSelectedIds.size === 0 || isFetching}
-            className="w-full rounded-lg bg-green-500 py-3 text-base font-semibold text-white shadow hover:bg-green-600 disabled:bg-gray-300 disabled:opacity-70"
-          >
-            {bulkSelectedIds.size > 0
-              ? `${bulkSelectedIds.size}개 선택 완료`
-              : '추가할 재료 선택'}
-          </Button>
-        </div>
+        <Button
+          onClick={handleBulkAdd}
+          disabled={bulkSelectedIds.size === 0 || isFetching}
+          className="bg-olive-mint fixed bottom-20 left-1/2 -translate-x-1/2 rounded-lg py-3 text-base font-semibold text-white shadow disabled:bg-gray-300 disabled:opacity-70"
+        >
+          {bulkSelectedIds.size > 0
+            ? `${bulkSelectedIds.size}개 선택 완료`
+            : '추가할 재료 선택'}
+        </Button>
       )}
     </div>
   );

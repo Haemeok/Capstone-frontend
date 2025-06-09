@@ -2,9 +2,11 @@ import {
   useMutation,
   useQueryClient,
   InfiniteData,
+  MutateOptions,
 } from '@tanstack/react-query';
 import { postRecipeLike, DetailedRecipesApiResponse } from '@/api/recipe';
 import { Recipe } from '@/type/recipe';
+import useAuthenticatedAction from './useAuthenticatedAction';
 
 type LikeRecipeMutationContext = {
   previousRecipeDetail?: Recipe;
@@ -18,7 +20,12 @@ export const useLikeRecipeMutation = (recipeId: number) => {
 
   const recipesListRootKey = ['recipes'];
 
-  return useMutation<void, Error, void, LikeRecipeMutationContext>({
+  const { mutate: rawMutate, ...restOfMutation } = useMutation<
+    void,
+    Error,
+    void,
+    LikeRecipeMutationContext
+  >({
     mutationFn: () => postRecipeLike(recipeId),
 
     onMutate: async () => {
@@ -98,4 +105,14 @@ export const useLikeRecipeMutation = (recipeId: number) => {
       queryClient.invalidateQueries({ queryKey: recipesListRootKey });
     },
   });
+
+  const authenticatedMutate = useAuthenticatedAction<
+    void,
+    MutateOptions<void, Error, void, LikeRecipeMutationContext> | undefined,
+    void
+  >(rawMutate, {
+    notifyOnly: true,
+  });
+
+  return { ...restOfMutation, mutate: authenticatedMutate };
 };

@@ -86,14 +86,7 @@ export const useCreateRecipeWithUpload = (recipeIdForUpdate?: number) => {
 
             options?.onSuccess?.(presignedUrlResponse);
 
-            finalizeRecipeMutation.mutate(recipeId, {
-              onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ['recipes'] });
-                queryClient.invalidateQueries({
-                  queryKey: ['recipe', recipeId],
-                });
-              },
-            });
+            finalizeRecipeMutation.mutate(recipeId);
           } catch (uploadErr: any) {
             console.error('S3 파일 업로드 중 오류 발생:', uploadErr);
             setUploadError(uploadErr);
