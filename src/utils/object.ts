@@ -11,3 +11,29 @@ export const buildParams = <T extends object>(
   });
   return params;
 };
+
+export const customParamsSerializer = (params: Record<string, any>): string => {
+  const parts: string[] = [];
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === null || typeof value === 'undefined') {
+      return;
+    }
+
+    const encodedKey = encodeURIComponent(key);
+
+    if (Array.isArray(value)) {
+      value.forEach((arrayElement) => {
+        if (arrayElement !== null && typeof arrayElement !== 'undefined') {
+          parts.push(
+            `${encodedKey}=${encodeURIComponent(String(arrayElement))}`,
+          );
+        }
+      });
+    } else {
+      parts.push(`${encodedKey}=${encodeURIComponent(String(value))}`);
+    }
+  });
+
+  return parts.join('&');
+};

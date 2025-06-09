@@ -38,7 +38,7 @@ const AnimatedOutlet = () => {
           height: '100%',
           backgroundColor: '#fff',
         }}
-        className="min-h-screen overflow-y-auto pb-20"
+        className="min-h-screen overflow-y-auto pb-[70px]"
       >
         <Outlet context={{ motionRef }} />
       </motion.div>

@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import Root from './Root';
-import RecipesPage from '../Pages/RecipesPage';
+
 import NewRecipePage from '../Pages/NewRecipe/NewRecipePage';
 import RecipeDetailPage from '../Pages/RecipeDetailPage';
 import CommentsPage from '@/Pages/CommentPage/CommentsPage';
@@ -29,11 +29,6 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <HomePage />,
-      },
-
-      {
-        path: 'recipes',
-        element: <RecipesPage />,
       },
       {
         path: 'recipes/new',

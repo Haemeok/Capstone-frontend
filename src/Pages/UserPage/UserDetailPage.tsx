@@ -7,6 +7,8 @@ import UserTab from './UserTab';
 import SuspenseImage from '@/components/Image/SuspenseImage';
 import SettingsActionButton from './SettingsActionButton';
 import UserInfoEditButton from './UserInfoEditButton';
+import PrevButton from '@/components/Button/PrevButton';
+import Header from './Header';
 
 const UserDetailPage = () => {
   const { user: loggedInUser } = useUserStore();
@@ -23,17 +25,14 @@ const UserDetailPage = () => {
   const displayUser = isOwnProfile ? loggedInUser : (user ?? guestUser);
 
   return (
-    <div className="bg-cgray flex min-h-screen flex-col overflow-hidden">
-      <div className="z-30 flex justify-between bg-white p-4">
-        <h2 className="text-2xl font-bold">프로필</h2>
-        {isOwnProfile && <SettingsActionButton />}
-      </div>
+    <div className="flex flex-col overflow-hidden">
+      <Header isOwnProfile={isOwnProfile} />
 
       <div className="relative z-10 px-6">
         <div className="flex items-end justify-between">
           <div className="flex items-end gap-4">
             <div className="relative">
-              <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-white shadow-xl">
+              <div className="h-24 w-24 overflow-hidden rounded-full">
                 <SuspenseImage
                   src={displayUser.profileImage ?? ''}
                   alt={displayUser.nickname}
@@ -53,10 +52,13 @@ const UserDetailPage = () => {
               {displayUser.nickname}
             </h2>
           </div>
-          <ActionButton isLoggedIn={!!loggedInUser} isOwnProfile={true} />
+          <ActionButton
+            isLoggedIn={!!loggedInUser}
+            isOwnProfile={isOwnProfile}
+          />
         </div>
 
-        <p className="mt-3 max-w-[90%] text-sm text-black/90">
+        <p className="text-mm text-dark mt-3 max-w-[90%]">
           {displayUser.introduction}
         </p>
       </div>
