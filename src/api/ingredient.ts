@@ -17,17 +17,18 @@ export const getIngredients = async ({
   sort = 'ASC',
   pageParam = 0,
   isMine = false,
+  isFridge = false,
 }: {
   category: string | null;
   q?: string;
   sort?: string;
   pageParam: number;
   isMine: boolean;
+  isFridge?: boolean;
 }) => {
-  const baseParams: BaseQueryParams = {
+  const baseParams: Partial<BaseQueryParams> = {
     page: pageParam,
     size: PAGE_SIZE,
-    sort: `ingredient.name,${sort}`,
   };
 
   const optionalParams: Partial<IngredientQueryParams> = {
@@ -41,7 +42,11 @@ export const getIngredients = async ({
 
   const apiParams = buildParams(baseParams, optionalParams);
 
-  const endPoint = isMine ? END_POINTS.MY_INGREDIENTS : END_POINTS.INGREDIENTS;
+  const endPoint = isMine
+    ? END_POINTS.MY_INGREDIENTS
+    : isFridge
+      ? END_POINTS.INGREDIENTS
+      : END_POINTS.SEARCH_INGREDIENTS;
 
   const response = await axiosInstance.get<IngredientsApiResponse>(endPoint, {
     params: apiParams,
@@ -73,5 +78,15 @@ export const deleteIngredient = async (id: number) => {
       useAuth: true,
     },
   );
+  return response.data;
+};
+
+export const deleteIngredientBulk = async (ingredientIds: number[]) => {
+  const response = await axiosInstance.delete(END_POINTS.MY_INGREDIENTS_BULK, {
+    data: {
+      ingredientIds,
+    },
+    useAuth: true,
+  });
   return response.data;
 };

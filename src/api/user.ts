@@ -1,9 +1,10 @@
 import { axiosAuthInstance, axiosInstance } from '@/api/axios';
 
 import { END_POINTS, PAGE_SIZE } from '@/constants/api';
-import { User } from '@/type/user';
+import { User, UserStreak } from '@/type/user';
 import { BaseRecipeGridItem, UserRecipeGridItem } from '@/type/recipe';
 import { PageResponse } from '@/type/query';
+import { PresignedUrlInfo } from '@/type/file';
 type TokenRefrechResponse = {
   accessToken: string;
   refreshToken: string;
@@ -59,6 +60,40 @@ export const postLogout = async () => {
 export const postTokenRefresh = async () => {
   const { data } = await axiosAuthInstance.post<TokenRefrechResponse>(
     END_POINTS.TOKEN_REFRESH,
+  );
+  return data;
+};
+
+export const getUserStreak = async () => {
+  const { data } = await axiosInstance.get<UserStreak>(END_POINTS.USER_STREAK, {
+    useAuth: true,
+  });
+  return data;
+};
+
+export const getPresignedUrl = async (userId: number) => {
+  const response = await axiosInstance.get<PresignedUrlInfo>(
+    END_POINTS.USER_PRESIGNED_URLS(userId),
+    {
+      useAuth: true,
+    },
+  );
+  return response.data;
+};
+
+export type PutUserInfoPayload = {
+  nickname?: string;
+  introduction?: string;
+  profileImageKey?: string;
+};
+
+export const putUserInfo = async (payload: PutUserInfoPayload) => {
+  const { data } = await axiosInstance.patch<User>(
+    END_POINTS.MY_INFO,
+    payload,
+    {
+      useAuth: true,
+    },
   );
   return data;
 };
