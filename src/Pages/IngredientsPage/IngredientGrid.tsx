@@ -12,6 +12,7 @@ type IngredientGridProps = {
   gridAnimateTargetRef: React.RefObject<HTMLDivElement | null>;
   ref: (node?: Element | null | undefined) => void;
   isLoggedIn: boolean;
+  setSelectedIngredientIds: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
 const IngredientGrid = ({
@@ -24,6 +25,7 @@ const IngredientGrid = ({
   gridAnimateTargetRef,
   ref,
   isLoggedIn,
+  setSelectedIngredientIds,
 }: IngredientGridProps) => {
   return isLoggedIn ? (
     <div className="flex grow flex-col gap-4" ref={gridItemsContainerRef}>
@@ -36,6 +38,7 @@ const IngredientGrid = ({
             key={ingredient.id}
             ingredient={ingredient}
             isDeleteMode={isDeleteMode}
+            setSelectedIngredientIds={setSelectedIngredientIds}
           />
         ))}
       </div>

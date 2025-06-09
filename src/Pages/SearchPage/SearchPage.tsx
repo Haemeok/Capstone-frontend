@@ -35,24 +35,10 @@ const SearchPage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerConfig, setDrawerConfig] = useState<DrawerConfig | null>(null);
 
-  const {
-    searchQuery,
-    inputValue,
-    handleSearchSubmit,
-    handleInputChange,
-    setInputValue,
-  } = useSearch();
+  const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
+    useSearch();
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-    ref,
-  } = useInfiniteScroll<
+  const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
     InfiniteData<DetailedRecipesApiResponse>,
