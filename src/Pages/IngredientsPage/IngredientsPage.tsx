@@ -10,11 +10,17 @@ import gsap from 'gsap';
 import { getNextPageParam } from '@/utils/recipe';
 import IngredientGrid from './IngredientGrid';
 import IngredientActionButtons from './IngredientActionButtons';
+import { useDeleteIngredientBulkMutation } from '@/hooks/useIngredientMutation';
 
 const IngredientsPage = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [sort, setSort] = useState<'asc' | 'desc'>('asc');
+  const [selectedIngredientIds, setSelectedIngredientIds] = useState<number[]>(
+    [],
+  );
+  console.log(selectedIngredientIds);
+  const { mutate: deleteIngredientBulk } = useDeleteIngredientBulkMutation();
 
   const { user } = useUserStore();
   const { data, error, hasNextPage, isFetchingNextPage, ref } =
@@ -93,6 +99,10 @@ const IngredientsPage = () => {
     return () => ctx.revert();
   }, [ingredients, error]);
 
+  const handleDeleteIngredientBulk = () => {
+    deleteIngredientBulk(selectedIngredientIds);
+  };
+
   const headerTitle = user?.nickname
     ? `${user?.nickname}님의 냉장고`
     : '로그인 후 냉장고를 관리해보세요';
@@ -105,10 +115,11 @@ const IngredientsPage = () => {
           <IngredientActionButtons
             isDeleteMode={isDeleteMode}
             setIsDeleteMode={setIsDeleteMode}
+            handleDeleteIngredientBulk={handleDeleteIngredientBulk}
           />
         )}
       </div>
-      <div className="scrollbar-hide flex overflow-x-auto border-b border-gray-200">
+      <div className="scrollbar-hide flex shrink-0 overflow-x-auto border-b border-gray-200">
         {INGREDIENT_CATEGORIES.map((category) => (
           <button
             key={category}
@@ -134,6 +145,7 @@ const IngredientsPage = () => {
         gridAnimateTargetRef={gridAnimateTargetRef}
         ref={ref}
         isLoggedIn={!!user}
+        setSelectedIngredientIds={setSelectedIngredientIds}
       />
     </div>
   );

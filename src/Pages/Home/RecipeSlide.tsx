@@ -23,7 +23,10 @@ const RecipeSlide = ({ title, recipes }: RecipeSlideProps) => {
           <ChevronRight size={16} />
         </button>
       </div>
-      <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto">
+      <div
+        className="scrollbar-hide flex w-full gap-3 overflow-x-auto"
+        style={{ overflowY: 'visible' }}
+      >
         {createdRecipes.map((item) => (
           <DetailedRecipeGridItem recipe={item} height={200} />
         ))}
