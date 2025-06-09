@@ -8,16 +8,7 @@ import React, { useState } from 'react';
 const MyFavoriteRecipesTabContent = () => {
   const [sort, setSort] = useState<'ASC' | 'DESC'>('DESC');
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-    ref,
-  } = useInfiniteScroll<
+  const { data, error, hasNextPage, isFetching, ref } = useInfiniteScroll<
     BaseRecipesApiResponse,
     Error,
     InfiniteData<BaseRecipesApiResponse>,

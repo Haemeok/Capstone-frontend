@@ -37,7 +37,7 @@ const ActionButton = ({ isLoggedIn, isOwnProfile }: ActionButtonProps) => {
       className="bg-olive-light gap-0 rounded-full px-6 text-white"
       onClick={handleCreateRecipeClick}
     >
-      <Plus size={16} className="mr-1" /> 레시피 생성하러가기
+      <Plus size={16} className="mr-1" /> 레시피 생성하기
     </Button>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DayPicker } from 'react-day-picker';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Flame, FlameKindling } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { format } from 'date-fns';
@@ -11,9 +11,15 @@ import SavingSection from './SavingSection';
 import 'react-day-picker/style.css';
 import SuspenseImage from '@/components/Image/SuspenseImage';
 import { useNavigate } from 'react-router';
-
+import { formatPrice } from '@/utils/recipe';
+import HomeBanner from '../Home/HomeBanner';
+import RequiredAmountDisplay from '../RequiredAmountDisplay';
+import Box from '@/components/ui/Box';
+import useUserStreakQuery from '@/hooks/useUserStreakQuery';
+import PointDisplayBanner from '../RequiredAmountDisplay';
 export function CalendarTabContent() {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+  const { data: userStreak } = useUserStreakQuery();
 
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth() + 1;
@@ -33,11 +39,15 @@ export function CalendarTabContent() {
   };
 
   return (
-    <div className="w-full">
-      <div className="mx-10 mb-5 flex flex-col items-center justify-center border-b border-gray-200 pt-5">
-        <h3 className="text-xl font-bold">지금까지 해먹 서비스로</h3>
+    <div className="w-full pb-4">
+      <div className="mx-10 flex flex-col items-center justify-center pt-5">
+        <h3 className="text-xl font-bold">
+          {year}년 {month}월 해먹 서비스로
+        </h3>
         <div className="flex gap-1">
-          <h3 className="text-olive-mint text-xl font-bold">4,200원</h3>
+          <h3 className="text-olive-mint text-xl font-bold">
+            {formatPrice(monthlyTotalSavings)}원
+          </h3>
           <h3 className="text-xl font-bold"> 절약했어요</h3>
         </div>
         <p className="mt-1 text-sm text-gray-500">
@@ -45,6 +55,20 @@ export function CalendarTabContent() {
         </p>
         <SavingSection />
       </div>
+      <Box className="p-0 px-4">
+        <PointDisplayBanner
+          pointText={`${userStreak?.streak ?? 0}일`}
+          prefix="해먹 서비스를"
+          suffix="연속 사용 중이에요!"
+          textClassName="text-purple-500 font-semibold"
+          icon={
+            <FlameKindling
+              size={16}
+              className="ml-1 fill-purple-500 text-purple-500"
+            />
+          }
+        />
+      </Box>
       <DayPicker
         mode="single"
         showOutsideDays
