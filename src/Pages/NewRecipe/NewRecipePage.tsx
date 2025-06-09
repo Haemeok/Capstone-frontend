@@ -245,6 +245,7 @@ const NewRecipePage = () => {
             errors={errors}
             register={register}
             onRemoveIngredientCallback={handleMainIngredientRemoved}
+            ingredientIds={[]}
           />
           <Steps
             watch={watch}

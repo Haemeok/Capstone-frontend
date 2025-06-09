@@ -43,33 +43,25 @@ const IngredientSelector = ({
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-    ref,
-  } = useInfiniteScroll<
-    IngredientsApiResponse,
-    Error,
-    InfiniteData<IngredientsApiResponse>,
-    [string, string, string],
-    number
-  >({
-    queryKey: ['drawerIngredients', selectedCategory, searchQuery],
-    queryFn: ({ pageParam = 0 }) =>
-      getIngredients({
-        category: selectedCategory,
-        q: searchQuery,
-        pageParam,
-        isMine: selectedCategory === '나의 재료' ? true : false,
-      }),
-    getNextPageParam: getNextPageParam,
-    initialPageParam: 0,
-  });
+  const { data, error, hasNextPage, isFetching, status, ref } =
+    useInfiniteScroll<
+      IngredientsApiResponse,
+      Error,
+      InfiniteData<IngredientsApiResponse>,
+      [string, string, string],
+      number
+    >({
+      queryKey: ['drawerIngredients', selectedCategory, searchQuery],
+      queryFn: ({ pageParam = 0 }) =>
+        getIngredients({
+          category: selectedCategory,
+          q: searchQuery,
+          pageParam,
+          isMine: selectedCategory === '나의 재료' ? true : false,
+        }),
+      getNextPageParam: getNextPageParam,
+      initialPageParam: 0,
+    });
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
@@ -85,7 +77,7 @@ const IngredientSelector = ({
       new Set(prevIds).add(ingredient.id),
     );
   };
-
+  console.log(addedIngredientIds);
   const ingredientItems = data?.pages.flatMap((page) => page.content);
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
