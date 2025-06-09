@@ -1,8 +1,14 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
-import { Camera } from 'lucide-react'; // lucide-react 아이콘 사용 유지
+import { Camera } from 'lucide-react';
 import { useUserStore } from '@/store/useUserStore';
+import {
+  usePutUserInfoMutation,
+  PutUserInfoVariables,
+} from '@/hooks/usePatchUserInfoMutation';
+import { AxiosError } from 'axios';
+import { User } from '@/type/user';
 
 interface FormValues {
   nickname: string;
@@ -11,16 +17,29 @@ interface FormValues {
 }
 
 const MAX_NICKNAME_LENGTH = 20;
-const MAX_DESCRIPTION_LENGTH = 60;
+const MAX_DESCRIPTION_LENGTH = 600;
+
+interface ApiErrorData {
+  message?: string;
+}
 
 const UserInfoChangePage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
-  const initialData = {
-    nickname: user?.nickname || '',
-    description: user?.introduction || '',
-    profileImageUrl: user?.profileImage || '',
-  };
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(
+    user?.profileImage || null,
+  );
+
+  const initialData = useMemo(
+    () => ({
+      nickname: user?.nickname || '',
+      description: user?.introduction || '',
+      profileImageUrl: user?.profileImage || '',
+    }),
+    [user],
+  );
+
   const {
     control,
     handleSubmit,
@@ -29,22 +48,50 @@ const UserInfoChangePage: React.FC = () => {
     formState: { errors, isValid },
   } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: {
-      nickname: initialData.nickname,
-      description: initialData.description,
-    },
+    defaultValues: initialData,
   });
 
   useEffect(() => {
     setValue('nickname', initialData.nickname);
     setValue('description', initialData.description);
+    setPreviewImageUrl(initialData.profileImageUrl);
+    setProfileImageFile(null);
   }, [initialData, setValue]);
+
+  const { mutate: putUserInfo, isLoading } = usePutUserInfoMutation({
+    onSuccess: () => {
+      navigate(-1);
+    },
+    onError: (error: AxiosError) => {
+      const apiError = error.response?.data as ApiErrorData | undefined;
+      apiError?.message || '프로필 업데이트에 실패했습니다.';
+    },
+  });
 
   const nickname = watch('nickname');
   const description = watch('description');
 
   const onSubmit = (data: FormValues) => {
-    console.log('Form data:', data);
+    const changedData: PutUserInfoVariables = {};
+    let hasChanges = false;
+
+    if (data.nickname !== initialData.nickname) {
+      changedData.nickname = data.nickname;
+      hasChanges = true;
+    }
+    if (data.description !== initialData.description) {
+      changedData.description = data.description;
+      hasChanges = true;
+    }
+    if (profileImageFile) {
+      changedData.profileImageFile = profileImageFile;
+      hasChanges = true;
+    }
+
+    if (!hasChanges) {
+      return;
+    }
+    putUserInfo(changedData);
   };
 
   const handleCancel = () => {
@@ -57,7 +104,7 @@ const UserInfoChangePage: React.FC = () => {
         <button
           type="button"
           onClick={handleCancel}
-          className="cursor-pointer border-none bg-transparent text-base text-blue-500"
+          className="text-olive-mint cursor-pointer border-none bg-transparent text-base font-semibold"
         >
           취소
         </button>
@@ -65,14 +112,14 @@ const UserInfoChangePage: React.FC = () => {
         <button
           type="button"
           onClick={handleSubmit(onSubmit)}
-          disabled={!isValid}
-          className={`border-none bg-transparent text-base font-bold ${
-            isValid
-              ? 'cursor-pointer text-blue-500'
+          disabled={!isValid || isLoading}
+          className={`border-none bg-transparent text-base font-semibold ${
+            isValid && !isLoading
+              ? 'text-olive-mint cursor-pointer'
               : 'cursor-default text-gray-400'
           }`}
         >
-          확인
+          {isLoading ? '저장 중...' : '확인'}
         </button>
       </div>
 
@@ -81,34 +128,51 @@ const UserInfoChangePage: React.FC = () => {
         className="flex flex-grow flex-col pt-20"
       >
         <div className="relative z-[3] pl-4">
-          <div
-            className={`relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-cover bg-center ${
-              initialData.profileImageUrl ? 'bg-transparent' : 'bg-gray-300' // #BDBDBD와 유사한 색상
-            }`}
-            style={
-              initialData.profileImageUrl
-                ? { backgroundImage: `url(${initialData.profileImageUrl})` }
-                : {}
-            }
-          >
-            <Controller
-              name="profileImage"
-              control={control}
-              render={({ field: { onChange, value, ...restField } }) => (
-                <input
-                  {...restField}
-                  id="profileImageInput"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => onChange(e.target.files)}
-                  className="hidden"
-                />
+          <label htmlFor="profileImageInput" className="cursor-pointer">
+            <div
+              className={`relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-cover bg-center ${
+                previewImageUrl ? 'bg-transparent' : 'bg-gray-300'
+              }`}
+              style={
+                previewImageUrl
+                  ? { backgroundImage: `url(${previewImageUrl})` }
+                  : {}
+              }
+            >
+              {!previewImageUrl && (
+                <Camera className="z-10 h-10 w-10 text-gray-500" />
               )}
-            />
-            {!initialData.profileImageUrl && (
-              <Camera className="z-10 h-10 w-10 text-gray-500" />
+            </div>
+          </label>
+          <Controller
+            name="profileImage"
+            control={control}
+            render={({ field: { onChange, value, ...restField } }) => (
+              <input
+                {...restField}
+                id="profileImageInput"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setProfileImageFile(file);
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setPreviewImageUrl(reader.result as string);
+                    };
+                    reader.readAsDataURL(file);
+                    onChange(e.target.files);
+                  } else {
+                    setProfileImageFile(null);
+                    setPreviewImageUrl(initialData.profileImageUrl);
+                    onChange(null);
+                  }
+                }}
+                className="hidden"
+              />
             )}
-          </div>
+          />
         </div>
 
         <div className="mt-4 flex-grow p-4">

@@ -21,7 +21,7 @@ import RequiredAmountDisplay from './RequiredAmountDisplay';
 import useScrollAnimate from '@/hooks/useScrollAnimate';
 import { useToggleRecipeFavorite } from '@/hooks/useToggleMutations';
 import { useToastStore } from '@/store/useToastStore';
-
+import { useUserStore } from '@/store/useUserStore';
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
   const imageRef = useRef<HTMLImageElement>(null);
@@ -32,6 +32,8 @@ const RecipeDetailPage = () => {
 
   const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipe.id);
   const { addToast } = useToastStore();
+  const { user } = useUserStore();
+
   const { targetRef: cookButtonRef } = useScrollAnimate<HTMLButtonElement>({
     triggerRef: observerRef,
     start: 'top bottom-=100px',
@@ -57,6 +59,7 @@ const RecipeDetailPage = () => {
     const message = recipe.favoriteByCurrentUser
       ? '즐겨찾기에서 삭제했습니다.'
       : '즐겨찾기에 추가했습니다.';
+
     toggleFavorite(undefined, {
       onSuccess: () => {
         addToast({
@@ -110,6 +113,7 @@ const RecipeDetailPage = () => {
               readOnly={true}
               className="w-full justify-center"
               showValue={true}
+              ratingCount={recipe.ratingInfo.ratingCount}
             />
           </div>
           <div className="flex justify-center gap-4">
@@ -131,12 +135,17 @@ const RecipeDetailPage = () => {
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
               label="공유"
             />
-            <LockButton recipeId={recipe.id} initialIsLocked={recipe.private} />
+            {recipe.author.id === user?.id && (
+              <LockButton
+                recipeId={recipe.id}
+                initialIsLocked={recipe.private}
+              />
+            )}
           </div>
         </Box>
 
         <Box>
-          <UserProfile user={recipe.author} />
+          <UserProfile user={recipe.author} className="text-xl" />
           <CollapsibleP content={recipe.description} />
         </Box>
         <Box>
@@ -161,7 +170,7 @@ const RecipeDetailPage = () => {
         <Box className="flex flex-col gap-2">
           <h2 className="mb-2 text-xl font-semibold">재료</h2>
           <RequiredAmountDisplay
-            price={recipe.totalIngredientCost}
+            pointText={`${formatPrice(recipe.totalIngredientCost)}원`}
             prefix="이 레시피에 약"
             suffix="필요해요!"
           />
@@ -180,11 +189,13 @@ const RecipeDetailPage = () => {
             ))}
           </ul>
           <RequiredAmountDisplay
-            price={recipe.marketPrice - recipe.totalIngredientCost}
+            pointText={`${formatPrice(
+              recipe.marketPrice - recipe.totalIngredientCost,
+            )}원`}
             prefix="배달 물가 대비"
             suffix="절약해요!"
             containerClassName="mt-2 flex items-center border-0 text-gray-400 p-0 font-semibold"
-            priceClassName="text-purple-500"
+            textClassName="text-purple-500"
           />
         </Box>
 

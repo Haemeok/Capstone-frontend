@@ -34,7 +34,7 @@ const RecipeSlideShowPage = () => {
 
     const onScroll = () => {
       const progress = api.scrollProgress();
-      setScrollProgress(progress);
+      setScrollProgress((progress * recipeSteps.length) / TOTAL_STEPS);
     };
 
     api.on('scroll', onScroll);
@@ -55,19 +55,16 @@ const RecipeSlideShowPage = () => {
   const getStepProgress = (stepIndex: number) => {
     const stepSize = 1 / TOTAL_STEPS;
     const stepStart = stepSize * stepIndex;
-    const stepEnd = stepSize * (stepIndex + 1);
 
-    if (scrollProgress < stepStart) {
-      return 0;
-    } else if (scrollProgress >= stepEnd) {
-      return 100;
-    }
+    const newScrollProgress =
+      stepIndex === TOTAL_STEPS - 1
+        ? scrollProgress + stepSize
+        : scrollProgress;
+    const progressRaw = ((newScrollProgress - stepStart) / stepSize) * 100;
 
-    const stepProgress = ((scrollProgress - stepStart) / stepSize) * 100;
-    return stepProgress;
+    return Math.max(0, Math.min(100, progressRaw));
   };
 
-  const handleRecipeFavorite = useAuthenticatedAction(toggleRecipeFavorite);
   return (
     <div className="bg-background text-foreground relative flex h-screen flex-col">
       <div className="absolute top-0 right-0 left-0 z-10 flex items-center justify-between p-4">
@@ -113,7 +110,7 @@ const RecipeSlideShowPage = () => {
             <Button
               size="lg"
               className="bg-olive-mint w-full text-white"
-              onClick={() => handleRecipeFavorite()}
+              onClick={() => toggleRecipeFavorite()}
             >
               <Bookmark className="mr-2 h-4 w-4" /> 저장하기
             </Button>
@@ -147,7 +144,10 @@ const RecipeSlideShowPage = () => {
             />
           </div>
         ))}
-        <div className="bg-muted border-border relative h-full w-12 flex-1 items-center justify-center border-l">
+        <div
+          onClick={() => handleProgressClick(TOTAL_STEPS)}
+          className="bg-muted border-border relative h-full w-12 flex-1 items-center justify-center border-l"
+        >
           <Bookmark className="text-muted-foreground absolute top-1 left-2 z-20 h-4 w-4" />
           <div
             className="bg-olive-mint absolute bottom-0 left-0 h-full"

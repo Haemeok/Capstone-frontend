@@ -16,6 +16,7 @@ type IngredientSectionProps = {
   errors: FieldErrors<RecipeFormValues>;
   register: UseFormRegister<RecipeFormValues>;
   onRemoveIngredientCallback: (ingredientName: string) => void;
+  ingredientIds: number[];
 };
 
 const IngredientSection = ({
@@ -23,11 +24,12 @@ const IngredientSection = ({
   errors,
   register,
   onRemoveIngredientCallback,
+  ingredientIds,
 }: IngredientSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
-    new Set(),
+    new Set(ingredientIds),
   );
 
   const {
