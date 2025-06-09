@@ -8,3 +8,8 @@ export type User = {
   bookmarks?: number;
   likes?: number;
 };
+
+export type UserStreak = {
+  streak: number;
+  cookedToday: boolean;
+};

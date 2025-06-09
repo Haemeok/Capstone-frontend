@@ -29,6 +29,7 @@ const UpdateRecipePage = () => {
   } = useCreateRecipeWithUpload(Number(recipeId));
 
   const { recipeData: recipe } = useRecipeDetailQuery(Number(recipeId));
+  const ingredientIds = recipe.ingredients.map((ingredient) => ingredient.id);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const [stepImagePreviewUrls, setStepImagePreviewUrls] = useState<
@@ -92,17 +93,18 @@ const UpdateRecipePage = () => {
       const initialStepDetails = recipe.steps[index];
 
       const currentStepPreviewUrl = stepImagePreviewUrls[index];
-      const currentRHFStepKey = formStep.imageKey;
+      const currentFormStepKey = formStep.imageKey;
 
-      let newStepImageKey = initialStepDetails.stepImageKey;
+      let newStepImageKey: string | null | undefined =
+        initialStepDetails?.stepImageKey ?? null;
 
       if (currentStepPreviewUrl === null) {
         newStepImageKey = null;
-      } else if (currentStepPreviewUrl !== initialStepDetails.stepImageUrl) {
+      } else if (currentStepPreviewUrl !== initialStepDetails?.stepImageUrl) {
         newStepImageKey = undefined;
       }
 
-      if (currentRHFStepKey !== newStepImageKey) {
+      if (currentFormStepKey !== newStepImageKey) {
         newStepData.imageKey = newStepImageKey;
         RHF_stepsArrayChanged = true;
       }
@@ -301,6 +303,7 @@ const UpdateRecipePage = () => {
             errors={errors}
             register={register}
             onRemoveIngredientCallback={handleMainIngredientRemoved}
+            ingredientIds={ingredientIds}
           />
           <Steps
             watch={watch}
