@@ -51,6 +51,7 @@ const Steps = ({
       instruction: '',
       imageFile: null,
       ingredients: [],
+      imageKey: null,
     });
     setStepImagePreviewUrls([...stepImagePreviewUrls, null]);
   };
