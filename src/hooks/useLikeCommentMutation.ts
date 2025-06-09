@@ -1,9 +1,11 @@
 import {
   InfiniteData,
+  MutateOptions,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
 import { CommentsApiResponse, postCommentLike } from '@/api/comment';
+import useAuthenticatedAction from './useAuthenticatedAction';
 
 type LikeCommentMutationContext = {
   previousCommentsListData?: InfiniteData<CommentsApiResponse>;
@@ -18,7 +20,12 @@ export const useLikeCommentMutation = (
 
   const commentQueryKey = ['comment', String(commentId)];
 
-  return useMutation<void, Error, void, LikeCommentMutationContext>({
+  const { mutate: rawMutate, ...restOfMutation } = useMutation<
+    void,
+    Error,
+    void,
+    LikeCommentMutationContext
+  >({
     mutationFn: () => postCommentLike(commentId),
 
     onMutate: async () => {
@@ -75,4 +82,14 @@ export const useLikeCommentMutation = (
       queryClient.invalidateQueries({ queryKey: commentQueryKey });
     },
   });
+
+  const authenticatedMutate = useAuthenticatedAction<
+    void,
+    MutateOptions<void, Error, void, LikeCommentMutationContext> | undefined,
+    void
+  >(rawMutate, {
+    notifyOnly: true,
+  });
+
+  return { ...restOfMutation, mutate: authenticatedMutate };
 };

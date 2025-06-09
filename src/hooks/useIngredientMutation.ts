@@ -2,6 +2,7 @@ import {
   addIngredient,
   addIngredientBulk,
   deleteIngredient,
+  deleteIngredientBulk,
   IngredientsApiResponse,
 } from '@/api/ingredient';
 import {
@@ -161,9 +162,57 @@ const useAddIngredientBulkMutation = () => {
     },
   });
 };
+const useDeleteIngredientBulkMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, number[], IngredientMutationContext>({
+    mutationFn: deleteIngredientBulk,
+    onMutate: async (ingredientIds) => {
+      await queryClient.cancelQueries({ queryKey: ['ingredients'] });
+      const previousIngredientsListData = queryClient.getQueryData<
+        InfiniteData<IngredientsApiResponse>
+      >(['ingredients']);
+
+      if (previousIngredientsListData) {
+        queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
+          ['ingredients'],
+          (oldData) => {
+            if (!oldData) return undefined;
+            const idSet = new Set(ingredientIds);
+            return {
+              ...oldData,
+              pages: oldData.pages.map((page) => ({
+                ...page,
+                content: page.content.map((ingredient) =>
+                  idSet.has(ingredient.id)
+                    ? { ...ingredient, inFridge: true }
+                    : ingredient,
+                ),
+              })),
+            };
+          },
+        );
+      }
+      return { previousIngredientsListData };
+    },
+    onError: (error, variables, context) => {
+      if (context?.previousIngredientsListData) {
+        queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
+          ['ingredients'],
+          context.previousIngredientsListData,
+        );
+      }
+      console.error('재료 벌크 삭제 실패:', error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['ingredients'] });
+    },
+  });
+};
 
 export {
   useAddIngredientMutation,
   useDeleteIngredientMutation,
   useAddIngredientBulkMutation,
+  useDeleteIngredientBulkMutation,
 };
