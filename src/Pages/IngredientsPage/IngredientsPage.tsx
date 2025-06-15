@@ -80,8 +80,6 @@ const IngredientsPage = () => {
               scrollTrigger: {
                 trigger: gridAnimateTargetRef.current,
                 start: 'top 85%',
-                markers: true,
-
                 toggleActions: 'play none none none',
               },
 

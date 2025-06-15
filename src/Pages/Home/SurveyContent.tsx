@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 type SurveyContentProps = {
   currentStep: number;
   answers: Record<number, string>;
-  handleRadioChange: (value: string) => void;
+  handleValueChange: (value: string) => void;
 };
 
 const slideVariants = {
@@ -29,7 +29,7 @@ const slideVariants = {
 const SurveyContent = ({
   currentStep,
   answers,
-  handleRadioChange,
+  handleValueChange,
 }: SurveyContentProps) => {
   const currentQuestionData = surveySteps[currentStep];
 
@@ -56,20 +56,36 @@ const SurveyContent = ({
             <RadioGroup
               id={`question-${currentQuestionData.id}`}
               value={answers[currentQuestionData.id] || ''}
-              onValueChange={handleRadioChange}
+              onValueChange={handleValueChange}
               className="grid gap-2"
             >
-              {currentQuestionData.options.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    value={option.value}
-                    id={`${currentQuestionData.id}-${option.value}`}
+              {currentQuestionData.isRadio ? (
+                currentQuestionData.options?.map((option) => (
+                  <div
+                    key={option.value}
+                    className="flex items-center space-x-2"
+                  >
+                    <RadioGroupItem
+                      value={option.value}
+                      id={`${currentQuestionData.id}-${option.value}`}
+                    />
+                    <Label
+                      htmlFor={`${currentQuestionData.id}-${option.value}`}
+                    >
+                      {option.label}
+                    </Label>
+                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <textarea
+                    id={`question-${currentQuestionData.id}`}
+                    value={answers[currentQuestionData.id] || ''}
+                    onChange={(e) => handleValueChange(e.target.value)}
+                    className="w-full rounded-md border border-gray-300 p-2 focus:outline-none"
                   />
-                  <Label htmlFor={`${currentQuestionData.id}-${option.value}`}>
-                    {option.label}
-                  </Label>
                 </div>
-              ))}
+              )}
             </RadioGroup>
           </>
         )}

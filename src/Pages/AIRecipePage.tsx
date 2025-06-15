@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { ChefHat, Clock, Tag } from 'lucide-react';
+import { ChefHat, Clock, Tag, User } from 'lucide-react';
 import IngredientSelector from '@/Pages/NewRecipe/IngredientSelector';
 import SelectionSection from '@/components/SelectionSection';
 import IngredientSection from '@/components/IngredientSection';
@@ -18,6 +18,7 @@ import LoadingSection from './AIRecipe/LoadingSection';
 import { DISH_TYPES, FOUR_CUT_IMAGE } from '@/constants/recipe';
 import AIRecipeDisplay from './AIRecipe/AIRecipeDisplay';
 import SuspenseImage from '@/components/Image/SuspenseImage';
+import SelectButton from '@/components/SelectButton';
 
 type AIRecipeFormData = AIRecommendedRecipeRequest;
 
@@ -73,12 +74,13 @@ const AIRecipePage = () => {
       dishType: '',
       cookingTime: '',
       tagNames: [],
+      servings: 2,
     },
     mode: 'onChange',
   });
 
   const formValues = watch();
-  const { ingredients, dishType, cookingTime, tagNames } = formValues;
+  const { ingredients, dishType, cookingTime, tagNames, servings } = formValues;
 
   const handleAddIngredient = (ingredientPayload: IngredientPayload) => {
     const newIngredients = [...ingredients, ingredientPayload.name];
@@ -101,6 +103,22 @@ const AIRecipePage = () => {
       shouldValidate: true,
       shouldDirty: true,
     });
+  };
+
+  const handleIncrementServings = () => {
+    setValue('servings', servings + 1, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
+
+  const handleDecrementServings = () => {
+    if (servings > 1) {
+      setValue('servings', servings - 1, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
   };
 
   const toggle = <T,>(
@@ -134,14 +152,12 @@ const AIRecipePage = () => {
   const toggleTime = (cookingTime: string) =>
     radioToggle('cookingTime', cookingTime);
 
-  const toggleTag = (tag: string) => toggle('tagNames', tagNames, tag);
-
   const totalSteps = 4;
   const completedSteps = [
     ingredients.length > 0,
     dishType.length > 0,
     cookingTime.length > 0,
-    tagNames.length > 0,
+    servings > 0,
   ].filter(Boolean).length;
 
   const progressPercentage = Math.floor((completedSteps / totalSteps) * 100);
@@ -261,17 +277,34 @@ const AIRecipePage = () => {
               isSingleSelect={true}
             />
 
-            <SelectionSection
-              title="태그"
-              icon={<Tag size={18} />}
-              items={recommendedTags}
-              selectedItems={tagNames}
-              onToggle={toggleTag}
-              className="border-b-0"
-            />
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-olive-mint">
+                <User size={18} />
+              </span>
+              <h2 className="text-lg font-semibold text-gray-800">인분</h2>
+            </div>
+            <div className="flex items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={handleDecrementServings}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300 disabled:opacity-50"
+                disabled={servings <= 1}
+              >
+                -
+              </button>
+              <span className="w-20 text-center font-medium text-gray-800">
+                {servings}인분
+              </span>
+              <button
+                type="button"
+                onClick={handleIncrementServings}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300"
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
-
         <ProgressButton
           progressPercentage={progressPercentage}
           isFormValid={isFormReady && isDirty}

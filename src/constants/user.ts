@@ -30,7 +30,8 @@ export const OtherTabs: Tab[] = [
 interface SurveyStep {
   id: number;
   question: string;
-  options: { value: string; label: string }[];
+  options?: { value: string; label: string }[];
+  isRadio: boolean;
 }
 
 export const surveySteps: SurveyStep[] = [
@@ -44,17 +45,12 @@ export const surveySteps: SurveyStep[] = [
       { value: 'dessert', label: '디저트' },
       { value: 'drink', label: '음료' },
     ],
+    isRadio: true,
   },
   {
     id: 2,
-    question: '어떤 종류의 영화를 가장 좋아하시나요?',
-    options: [
-      { value: 'action', label: '액션' },
-      { value: 'comedy', label: '코미디' },
-      { value: 'drama', label: '드라마' },
-      { value: 'thriller', label: '스릴러' },
-      { value: 'sf', label: 'SF' },
-    ],
+    question: '알레르기가 있는 음식이 있나요? 있다면 알려주세요.',
+    isRadio: false,
   },
   {
     id: 3,
@@ -65,5 +61,6 @@ export const surveySteps: SurveyStep[] = [
       { value: 'dislike', label: ' 싫어함' },
       { value: 'hate', label: ' 못 먹음' },
     ],
+    isRadio: true,
   },
 ];
