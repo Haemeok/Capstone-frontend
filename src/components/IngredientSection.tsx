@@ -16,14 +16,14 @@ const IngredientSection = ({
   return (
     <div className="mb-6">
       <div
-        className="hover:bg-olive-light/80 border-olive-light flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed bg-[#f7f7f7] p-5 transition-all duration-300"
+        className="hover:bg-olive-mint/80 border-olive-mint flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed bg-[#f7f7f7] p-5 transition-all duration-300"
         onClick={onOpenDrawer}
       >
         <div className="flex flex-col items-center">
           <div className="mb-2 rounded-full bg-white p-3 shadow-md">
-            <Plus size={24} className="text-olive-light" />
+            <Plus size={24} className="text-olive-mint" />
           </div>
-          <span className="text-olive-light font-medium">재료 추가하기</span>
+          <span className="text-olive-mint font-medium">재료 추가하기</span>
           <span className="mt-1 text-sm text-gray-500">
             {ingredients.length > 0
               ? `${ingredients.length}개의 재료가 추가됨`
@@ -33,9 +33,9 @@ const IngredientSection = ({
       </div>
 
       {ingredients.length > 0 && (
-        <div className="mt-4 rounded-lg bg-green-50 p-4">
+        <div className="bg-olive-mint/10 mt-4 rounded-lg p-4">
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-sm font-medium text-green-800">선택된 재료</h3>
+            <h3 className="text-olive-mint text-sm font-medium">선택된 재료</h3>
             {ingredients.length > 1 && (
               <button
                 onClick={(e) => {

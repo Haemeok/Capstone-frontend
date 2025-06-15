@@ -55,6 +55,7 @@ const UserDetailPage = () => {
           <ActionButton
             isLoggedIn={!!loggedInUser}
             isOwnProfile={isOwnProfile}
+            isGuest={displayUser.id === guestUser.id}
           />
         </div>
 

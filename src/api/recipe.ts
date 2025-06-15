@@ -343,6 +343,7 @@ export type AIRecommendedRecipeRequest = {
   dishType: string;
   cookingTime: string;
   tagNames: string[];
+  servings: number;
 };
 
 export const postAIRecommendedRecipe = async (

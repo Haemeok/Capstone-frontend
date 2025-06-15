@@ -27,7 +27,7 @@ export const OnboardingSurveyModal = ({
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const { user } = useUserStore();
 
-  const handleRadioChange = (value: string) => {
+  const handleValueChange = (value: string) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [surveySteps[currentStep].id]: value,
@@ -84,7 +84,7 @@ export const OnboardingSurveyModal = ({
         <SurveyContent
           currentStep={currentStep}
           answers={answers}
-          handleRadioChange={handleRadioChange}
+          handleValueChange={handleValueChange}
         />
         <DialogFooter>
           <button

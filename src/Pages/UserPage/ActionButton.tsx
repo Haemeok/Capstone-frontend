@@ -5,9 +5,14 @@ import { useNavigate } from 'react-router';
 type ActionButtonProps = {
   isLoggedIn: boolean;
   isOwnProfile: boolean;
+  isGuest: boolean;
 };
 
-const ActionButton = ({ isLoggedIn, isOwnProfile }: ActionButtonProps) => {
+const ActionButton = ({
+  isLoggedIn,
+  isOwnProfile,
+  isGuest,
+}: ActionButtonProps) => {
   const navigate = useNavigate();
   const handleLoginClick = () => {
     navigate('/login');
@@ -17,11 +22,13 @@ const ActionButton = ({ isLoggedIn, isOwnProfile }: ActionButtonProps) => {
     navigate('/recipes/new');
   };
 
-  if (!isOwnProfile) {
+  console.log(isGuest, isOwnProfile, isLoggedIn);
+
+  if (!isOwnProfile && !isGuest) {
     return <></>;
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn && isGuest) {
     return (
       <Button
         className="bg-olive-medium hover:bg-olive-dark rounded-full px-6 text-white"
