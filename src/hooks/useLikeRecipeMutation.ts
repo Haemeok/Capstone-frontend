@@ -16,7 +16,7 @@ type LikeRecipeMutationContext = {
 export const useLikeRecipeMutation = (recipeId: number) => {
   const queryClient = useQueryClient();
 
-  const recipeDetailQueryKey = ['recipe', recipeId];
+  const recipeDetailQueryKey = ['recipe', recipeId.toString()];
 
   const recipesListRootKey = ['recipes'];
 
@@ -101,8 +101,13 @@ export const useLikeRecipeMutation = (recipeId: number) => {
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: recipeDetailQueryKey });
-
       queryClient.invalidateQueries({ queryKey: recipesListRootKey });
+      console.log(
+        'recipeId',
+        recipeId,
+        recipeDetailQueryKey,
+        recipesListRootKey,
+      );
     },
   });
 

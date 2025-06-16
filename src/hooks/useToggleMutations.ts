@@ -53,7 +53,9 @@ export const useToggleRecipeFavorite = (recipeId: number) => {
   >({
     mutationFn: () => postRecipeFavorite(recipeId),
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['recipe', recipeId] });
+      await queryClient.cancelQueries({
+        queryKey: ['recipe', recipeId.toString()],
+      });
       const previousRecipe = queryClient.getQueryData<Recipe>([
         'recipe',
         recipeId,
@@ -73,11 +75,13 @@ export const useToggleRecipeFavorite = (recipeId: number) => {
     onError: (error, variables, context) => {
       console.error('즐겨찾기 처리 실패:', error);
       if (context) {
-        queryClient.setQueryData(['recipe', recipeId], context);
+        queryClient.setQueryData(['recipe', recipeId.toString()], context);
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipe', recipeId] });
+      queryClient.invalidateQueries({
+        queryKey: ['recipe', recipeId.toString()],
+      });
       queryClient.invalidateQueries({ queryKey: ['recipes', 'favorite'] });
     },
   });
