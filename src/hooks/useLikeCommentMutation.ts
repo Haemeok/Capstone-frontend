@@ -78,6 +78,7 @@ export const useLikeCommentMutation = (
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: commentsListQueryKey });
+      queryClient.invalidateQueries({ queryKey: ['recipe', recipeId] });
 
       queryClient.invalidateQueries({ queryKey: commentQueryKey });
     },

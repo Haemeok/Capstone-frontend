@@ -27,8 +27,8 @@ const RecipeDetailPage = () => {
   const imageRef = useRef<HTMLImageElement>(null);
   const observerRef = useRef<HTMLDivElement>(null);
 
-  const { id } = useParams();
-  const { recipeData: recipe } = useRecipeDetailQuery(Number(id));
+  const { recipeId } = useParams();
+  const { recipeData: recipe } = useRecipeDetailQuery(Number(recipeId));
 
   const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipe.id);
   const { addToast } = useToastStore();
