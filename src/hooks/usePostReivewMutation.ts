@@ -9,6 +9,7 @@ const usePostReviewMutation = (recipeId: number) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments'] });
       queryClient.invalidateQueries({ queryKey: ['recipe', recipeId] });
+      queryClient.invalidateQueries({ queryKey: ['recipes'] });
     },
   });
 
