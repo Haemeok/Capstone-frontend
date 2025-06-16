@@ -62,6 +62,7 @@ const useAddIngredientMutation = (currentQueryKey: readonly unknown[]) => {
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: currentQueryKey });
+      queryClient.invalidateQueries({ queryKey: ['ingredients'] });
     },
   });
 
