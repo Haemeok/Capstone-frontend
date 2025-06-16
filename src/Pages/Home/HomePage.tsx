@@ -7,11 +7,10 @@ import { OnboardingSurveyModal } from './OnboardingSurveyModal';
 import { useEffect, useState } from 'react';
 
 const HomePage = () => {
-  const [isSurveyOpen, setIsSurveyOpen] = useState(false);
+  const [isSurveyOpen, setIsSurveyOpen] = useState(true);
   return (
     <div className="flex flex-col items-center justify-center gap-4 bg-white p-4 text-gray-800">
       <HomeHeader />
-      <button onClick={() => setIsSurveyOpen(true)}>설문조사 보기</button>
       <CategoriesTabs title="카테고리" />
       <HomeBanner
         title="AI 레시피 생성하기"

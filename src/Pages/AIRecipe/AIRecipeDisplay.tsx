@@ -8,6 +8,8 @@ import RecipeStepList from '@/components/RecipeStepList';
 import useScrollAnimate from '@/hooks/useScrollAnimate';
 import CollapsibleP from '@/components/CollapsibleP';
 import { m } from '@/mock';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router';
 
 type AIRecipeDisplayProps = {
   createdRecipe: Recipe;
@@ -16,7 +18,15 @@ type AIRecipeDisplayProps = {
 const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
   const recipe = m;
   const observerRef = useRef<HTMLDivElement>(null);
-
+  const navigate = useNavigate();
+  const { targetRef: cookButtonRef } = useScrollAnimate<HTMLButtonElement>({
+    triggerRef: observerRef,
+    start: 'top bottom-=100px',
+    toggleActions: 'play none none reset',
+    yOffset: 10,
+    duration: 0.2,
+    delay: 0,
+  });
   return (
     <div>
       <div>
@@ -64,6 +74,15 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
       <Box>
         <RecipeStepList RecipeSteps={recipe.steps} />
       </Box>
+      <div className="fixed bottom-20 z-50 flex w-full justify-center">
+        <Button
+          ref={cookButtonRef}
+          className="bg-olive-light rounded-full p-4 text-white shadow-lg"
+          onClick={() => navigate(`/recipes/${createdRecipe?.id}/slideShow`)}
+        >
+          요리하기
+        </Button>
+      </div>
     </div>
   );
 };

@@ -5,43 +5,19 @@ import SelectionSection from '@/components/SelectionSection';
 import IngredientSection from '@/components/IngredientSection';
 import ProgressButton from '@/components/ProgressButton';
 import { cookingTimes } from '@/mock';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { IngredientPayload } from '@/type/recipe';
 import useCreateAIRecipeMutation from '@/hooks/useCreateAIRecipeMutation';
 import { AIRecommendedRecipeRequest } from '@/api/recipe';
 import LoadingSection from './AIRecipe/LoadingSection';
-import { DISH_TYPES, FOUR_CUT_IMAGE } from '@/constants/recipe';
+import { aiModels, DISH_TYPES, FOUR_CUT_IMAGE } from '@/constants/recipe';
 import AIRecipeDisplay from './AIRecipe/AIRecipeDisplay';
 import SuspenseImage from '@/components/Image/SuspenseImage';
+import { Button } from '@/components/ui/button';
+import useScrollAnimate from '@/hooks/useScrollAnimate';
+import { useNavigate } from 'react-router';
 
 type AIRecipeFormData = AIRecommendedRecipeRequest;
-
-const aiModels = [
-  {
-    id: 'chefBot',
-    name: '기본에 충실한 셰프',
-    image: '/blue.png',
-    description: '가장 기본적인 레시피를 추천해 드립니다. 저에게 맡겨주세요!',
-  },
-  {
-    id: 'nutritionBot',
-    name: '창의적인 실험가',
-    image: '/create.png',
-    description: '균형 잡힌 영양을 고려한 레시피를 전문적으로 추천합니다.',
-  },
-  {
-    id: 'quickBot',
-    name: '건강 식단 전문',
-    image: '/green.png',
-    description: '바쁜 현대인을 위한 빠르고 간편한 레시피를 제공합니다.',
-  },
-  {
-    id: 'gourmetBot',
-    name: '든든한 미식가',
-    image: '/orange.png',
-    description: '특별한 날을 위한 고급스럽고 창의적인 레시피를 제안합니다.',
-  },
-];
 
 interface AIModel {
   id: string;
@@ -56,6 +32,7 @@ const AIRecipePage = () => {
   const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
     new Set(),
   );
+  const observerRef = useRef<HTMLDivElement>(null);
 
   const {
     handleSubmit,
@@ -220,7 +197,7 @@ const AIRecipePage = () => {
   if (isSuccess && createdRecipe) {
     return <AIRecipeDisplay createdRecipe={createdRecipe} />;
   }
-
+  console.log(createdRecipe);
   return (
     <div className="relative mx-auto bg-[#f7f7f7] p-4">
       <div className="text-center">
@@ -269,7 +246,7 @@ const AIRecipePage = () => {
               onToggle={toggleTime}
               isSingleSelect={true}
             />
-
+            <div ref={observerRef} className="h-1 w-full" />
             <div className="mb-3 flex items-center gap-2">
               <span className="text-olive-mint">
                 <User size={18} />
