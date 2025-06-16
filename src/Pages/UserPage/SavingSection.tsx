@@ -7,7 +7,7 @@ type SavingSectionProps = {
 };
 
 const SavingSection = ({
-  imageUrl = '/Coffee.png',
+  imageUrl = '/bbq.png',
   altText = '움직이는 아이템',
 }: SavingSectionProps) => {
   const sectionContainerRef = useRef<HTMLDivElement | null>(null);
@@ -81,7 +81,7 @@ const SavingSection = ({
       ref={sectionContainerRef}
       className="mx-auto flex w-fit max-w-sm flex-col items-center justify-center p-5"
     >
-      <div className="flex h-36 w-36 items-center justify-center">
+      <div className="flex h-44 w-44 items-center justify-center">
         <img
           ref={imageRef}
           src={imageUrl}
