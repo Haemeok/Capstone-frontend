@@ -13,9 +13,6 @@ import LoadingSection from './AIRecipe/LoadingSection';
 import { aiModels, DISH_TYPES, FOUR_CUT_IMAGE } from '@/constants/recipe';
 import AIRecipeDisplay from './AIRecipe/AIRecipeDisplay';
 import SuspenseImage from '@/components/Image/SuspenseImage';
-import { Button } from '@/components/ui/button';
-import useScrollAnimate from '@/hooks/useScrollAnimate';
-import { useNavigate } from 'react-router';
 
 type AIRecipeFormData = AIRecommendedRecipeRequest;
 
@@ -168,7 +165,7 @@ const AIRecipePage = () => {
               onClick={() => handleSelectAI(ai)}
               className="flex flex-col items-center rounded-2xl border bg-white px-4 py-6 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
             >
-              <img
+              <SuspenseImage
                 src={ai.image}
                 alt={ai.name}
                 className="mb-4 h-48 w-full rounded-2xl object-cover"
