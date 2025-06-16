@@ -146,7 +146,7 @@ const RecipeSlideShowPage = () => {
         ))}
         <div
           onClick={() => handleProgressClick(TOTAL_STEPS)}
-          className="bg-muted border-border relative h-full w-12 flex-1 items-center justify-center border-l"
+          className="border-border relative h-full w-12 flex-1 items-center justify-center border-l"
         >
           <Bookmark className="text-muted-foreground absolute top-1 left-2 z-20 h-4 w-4" />
           <div

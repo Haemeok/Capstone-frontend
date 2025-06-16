@@ -215,3 +215,30 @@ export type FinalDrawerConfig = BaseDrawerConfig & {
 
 export const FOUR_CUT_IMAGE =
   'https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/4cut/4cut.png';
+
+export const aiModels = [
+  {
+    id: 'chefBot',
+    name: '기본에 충실한 셰프',
+    image: '/blue.png',
+    description: '가장 기본적인 레시피를 추천해 드립니다. 저에게 맡겨주세요!',
+  },
+  {
+    id: 'nutritionBot',
+    name: '창의적인 실험가',
+    image: '/create.png',
+    description: '균형 잡힌 영양을 고려한 레시피를 전문적으로 추천합니다.',
+  },
+  {
+    id: 'quickBot',
+    name: '건강 식단 전문',
+    image: '/green.png',
+    description: '바쁜 현대인을 위한 빠르고 간편한 레시피를 제공합니다.',
+  },
+  {
+    id: 'gourmetBot',
+    name: '든든한 미식가',
+    image: '/orange.png',
+    description: '특별한 날을 위한 고급스럽고 창의적인 레시피를 제안합니다.',
+  },
+];
