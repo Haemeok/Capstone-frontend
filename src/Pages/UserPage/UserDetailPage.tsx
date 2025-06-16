@@ -5,9 +5,7 @@ import ActionButton from './ActionButton';
 import { useUserQuery } from '@/hooks/useUserQuery';
 import UserTab from './UserTab';
 import SuspenseImage from '@/components/Image/SuspenseImage';
-import SettingsActionButton from './SettingsActionButton';
 import UserInfoEditButton from './UserInfoEditButton';
-import PrevButton from '@/components/Button/PrevButton';
 import Header from './Header';
 
 const UserDetailPage = () => {
