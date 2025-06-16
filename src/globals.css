@@ -174,3 +174,22 @@
   opacity: 0;
   visibility: hidden;
 }
+
+.loading {
+  background-size: cover;
+  background-image: url('/public/loading.webp');
+
+  width: 18rem;
+  height: 18rem;
+
+  animation: play-sprite 3s steps(11, start) infinite;
+}
+
+@keyframes play-sprite {
+  from {
+    background-position: 0% 0;
+  }
+  to {
+    background-position: -1100% 0;
+  }
+}

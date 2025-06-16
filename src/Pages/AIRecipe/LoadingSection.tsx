@@ -19,10 +19,7 @@ const LoadingSection = ({
           평균 1분에서 3분 내로 완성합니다
         </p>
       </div>
-      <Circle className="text-olive-mint" size={32} />
-      <div className="flex flex-col items-center justify-center">
-        <img src={fourCutImage} alt={name} className="h-full w-72" />
-      </div>
+      <div className="loading h-72 w-72"></div>
     </div>
   );
 };
