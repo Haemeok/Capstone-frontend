@@ -11,7 +11,6 @@ type CommentLikeButtonProps = {
 
 const CommentLikeButton = ({
   commentId,
-
   initialIsLiked,
   initialLikeCount,
 }: CommentLikeButtonProps) => {

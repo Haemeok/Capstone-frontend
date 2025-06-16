@@ -10,7 +10,7 @@ const useRecipeDetailQuery = (id: number) => {
     error,
     refetch,
   } = useSuspenseQuery<Recipe, Error>({
-    queryKey: ['recipe', id],
+    queryKey: ['recipe', id.toString()],
     queryFn: () => getRecipe(id),
     retry: false,
   });
