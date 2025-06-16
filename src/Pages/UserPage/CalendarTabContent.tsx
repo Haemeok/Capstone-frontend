@@ -51,7 +51,7 @@ export function CalendarTabContent() {
           <h3 className="text-xl font-bold"> 절약했어요</h3>
         </div>
         <p className="mt-1 text-sm text-gray-500">
-          커피 한 잔 정도 금액이에요!
+          BBQ 황금올리브 정도 금액이에요!
         </p>
         <SavingSection />
       </div>
