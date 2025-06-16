@@ -139,9 +139,15 @@ const NewIngredientsPage = () => {
     setMode(currentMode === 'single' ? 'bulk' : 'single');
   };
 
-  const handleCheckboxChange = (checked: boolean, id: number) => {
+  const handleCheckboxChange = (
+    checked: boolean,
+    id: number,
+    isAdded: boolean,
+  ) => {
     console.log(`Checkbox ${id} is now ${checked ? 'checked' : 'unchecked'}`);
-
+    if (isAdded) {
+      return;
+    }
     setBulkSelectedIds((prev) => {
       const newSet = new Set(prev);
       if (checked) {
@@ -261,7 +267,11 @@ const NewIngredientsPage = () => {
                   onClick={
                     mode === 'bulk'
                       ? () =>
-                          handleCheckboxChange(!isBulkSelected, ingredient.id)
+                          handleCheckboxChange(
+                            !isBulkSelected,
+                            ingredient.id,
+                            isAdded,
+                          )
                       : undefined
                   }
                 >

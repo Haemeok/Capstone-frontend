@@ -19,7 +19,7 @@ const IngredientsPage = () => {
   const [selectedIngredientIds, setSelectedIngredientIds] = useState<number[]>(
     [],
   );
-  console.log(selectedIngredientIds);
+
   const { mutate: deleteIngredientBulk } = useDeleteIngredientBulkMutation();
 
   const { user } = useUserStore();
