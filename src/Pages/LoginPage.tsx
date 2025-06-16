@@ -7,8 +7,8 @@ const LoginPage = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
   return (
-    <div className="scrollbar-hide flex h-screen flex-col items-center justify-center gap-2 overflow-y-auto bg-[#fbefdb]">
-      <img src="/meat.png" />
+    <div className="scrollbar-hide flex h-screen flex-col items-center justify-center gap-2 overflow-y-auto">
+      <img src="/login.png" className="mb-4 p-4" />
       <GoogleLoginButton from={from} />
       <NaverLoginButton />
       <KakaoLoginButton />

@@ -4,21 +4,15 @@ import IngredientSelector from '@/Pages/NewRecipe/IngredientSelector';
 import SelectionSection from '@/components/SelectionSection';
 import IngredientSection from '@/components/IngredientSection';
 import ProgressButton from '@/components/ProgressButton';
-import {
-  categories,
-  cookingTimeItems,
-  cookingTimes,
-  recommendedTags,
-} from '@/mock';
+import { cookingTimes } from '@/mock';
 import { useState } from 'react';
-import { IngredientPayload, m } from '@/type/recipe';
+import { IngredientPayload } from '@/type/recipe';
 import useCreateAIRecipeMutation from '@/hooks/useCreateAIRecipeMutation';
 import { AIRecommendedRecipeRequest } from '@/api/recipe';
 import LoadingSection from './AIRecipe/LoadingSection';
 import { DISH_TYPES, FOUR_CUT_IMAGE } from '@/constants/recipe';
 import AIRecipeDisplay from './AIRecipe/AIRecipeDisplay';
 import SuspenseImage from '@/components/Image/SuspenseImage';
-import SelectButton from '@/components/SelectButton';
 
 type AIRecipeFormData = AIRecommendedRecipeRequest;
 
@@ -73,14 +67,13 @@ const AIRecipePage = () => {
       ingredients: [],
       dishType: '',
       cookingTime: '',
-      tagNames: [],
       servings: 2,
     },
     mode: 'onChange',
   });
 
   const formValues = watch();
-  const { ingredients, dishType, cookingTime, tagNames, servings } = formValues;
+  const { ingredients, dishType, cookingTime, servings } = formValues;
 
   const handleAddIngredient = (ingredientPayload: IngredientPayload) => {
     const newIngredients = [...ingredients, ingredientPayload.name];

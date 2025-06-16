@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { AIRecommendedRecipe, m } from '@/type/recipe';
+import { AIRecommendedRecipe, Recipe } from '@/type/recipe';
 import SuspenseImage from '@/components/Image/SuspenseImage';
 import Box from '@/components/ui/Box';
 import RequiredAmountDisplay from '../RequiredAmountDisplay';
@@ -7,9 +7,10 @@ import { formatPrice } from '@/utils/recipe';
 import RecipeStepList from '@/components/RecipeStepList';
 import useScrollAnimate from '@/hooks/useScrollAnimate';
 import CollapsibleP from '@/components/CollapsibleP';
+import { m } from '@/mock';
 
 type AIRecipeDisplayProps = {
-  createdRecipe: AIRecommendedRecipe;
+  createdRecipe: Recipe;
 };
 
 const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {

@@ -342,7 +342,6 @@ export type AIRecommendedRecipeRequest = {
   ingredients: string[];
   dishType: string;
   cookingTime: string;
-  tagNames: string[];
   servings: number;
 };
 
@@ -350,6 +349,7 @@ export const postAIRecommendedRecipe = async (
   aiRequest: AIRecommendedRecipeRequest,
 ) => {
   const source = 'AI';
+  const robotType = 'CLASSIC';
   const parsedAiRequest = {
     ...aiRequest,
     cookingTime: cookingTimeItems.find(
@@ -357,6 +357,7 @@ export const postAIRecommendedRecipe = async (
         opt.label === aiRequest.cookingTime,
     )?.value,
   };
+
   const response = await axiosAiInstance.post<AIRecommendedRecipe>(
     END_POINTS.RECIPES,
     {
@@ -365,8 +366,16 @@ export const postAIRecommendedRecipe = async (
     {
       params: {
         source,
+        robotType,
       },
     },
   );
-  return response.data;
+
+  const { data: recipe } = await axiosAiInstance.get<Recipe>(
+    END_POINTS.RECIPE(response.data.recipeId),
+    {
+      useAuth: 'optional',
+    },
+  );
+  return recipe;
 };
