@@ -2,7 +2,7 @@ import { User } from '@/type/user';
 import { Calendar, LucideIcon } from 'lucide-react';
 import { Award } from 'lucide-react';
 import { BookOpen } from 'lucide-react';
-import { IMAGE_BASE_URL } from './recipe';
+import { IMAGE_BASE_URL, UI_BASE_URL } from './recipe';
 
 export const guestUser: User = {
   id: 0,
@@ -66,5 +66,5 @@ export const surveySteps: SurveyStep[] = [
   },
 ];
 
-export const LOGIN_IMAGE_URL = `${IMAGE_BASE_URL}login.webp`;
-export const NO_IMAGE_URL = `${IMAGE_BASE_URL}no_image.webp`;
+export const LOGIN_IMAGE_URL = `${UI_BASE_URL}login.webp`;
+export const NO_IMAGE_URL = `${UI_BASE_URL}no_image.webp`;

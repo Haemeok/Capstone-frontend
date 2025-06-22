@@ -1,6 +1,10 @@
 export const IMAGE_BASE_URL =
   'https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/';
 
+export const CATEGORY_BASE_URL = `${IMAGE_BASE_URL}category/`;
+export const UI_BASE_URL = `${IMAGE_BASE_URL}ui/`;
+export const SAVINGS_BASE_URL = `${IMAGE_BASE_URL}savings/`;
+
 export const INGREDIENT_CATEGORIES = [
   '전체',
   '가공/유제품',
@@ -260,79 +264,79 @@ export const PRICE_BRACKETS = [
   {
     min: 1000000,
     name: '냉장고',
-    image: `${IMAGE_BASE_URL}refrigerator.webp`,
+    image: `${SAVINGS_BASE_URL}refrigerator.webp`,
     code: 'REFRIGERATOR',
   },
   {
     min: 777777,
     name: 'LUCKY',
-    image: `${IMAGE_BASE_URL}lucky.webp`,
+    image: `${SAVINGS_BASE_URL}lucky.webp`,
     code: 'LUCKY',
   },
   {
     min: 600000, // 60~70만원대
     name: '서울 원룸 월세',
-    image: `${IMAGE_BASE_URL}monthly_rent.webp`,
+    image: `${SAVINGS_BASE_URL}monthly_rent.webp`,
     code: 'MONTHLY_RENT',
   },
   {
     min: 500000,
     name: '시그니엘 1박 2일 2인 호캉스',
-    image: `${IMAGE_BASE_URL}signiel.webp`,
+    image: `${SAVINGS_BASE_URL}signiel.webp`,
     code: 'SIGNIEL',
   },
   {
     min: 400000, // 40만원대
     name: '노스페이스 패딩',
-    image: `${IMAGE_BASE_URL}northface_jacket.webp`,
+    image: `${SAVINGS_BASE_URL}northface_jacket.webp`,
     code: 'NORTHFACE_JACKET',
   },
   {
     min: 350000, // 35~40만원대
     name: 'PT 6회권',
-    image: `${IMAGE_BASE_URL}pt.webp`,
+    image: `${SAVINGS_BASE_URL}pt.webp`,
     code: 'PT',
   },
   {
     min: 300000, // 30~35만원대
     name: '에어 조던',
-    image: `${IMAGE_BASE_URL}air_jordan.webp`,
+    image: `${SAVINGS_BASE_URL}air_jordan.webp`,
     code: 'AIR_JORDAN',
   },
   {
     min: 200000,
     name: '에어팟 (무선 이어폰)',
-    image: `${IMAGE_BASE_URL}airpods.webp`,
+    image: `${SAVINGS_BASE_URL}airpods.webp`,
     code: 'AIRPODS',
   },
   {
     min: 100000,
     name: '제주도, 후쿠오카 비행기 왕복',
-    image: `${IMAGE_BASE_URL}jeju.webp`,
+    image: `${SAVINGS_BASE_URL}jeju.webp`,
     code: 'JEJU',
   },
   {
     min: 50000,
     name: '경기권 오마카세 디너 평균',
-    image: `${IMAGE_BASE_URL}omakase.webp`,
+    image: `${SAVINGS_BASE_URL}omakase.webp`,
     code: 'OMAKASE',
   },
   {
     min: 20000,
     name: 'BBQ 황금올리브 닭다리',
-    image: `${IMAGE_BASE_URL}bbq.webp`,
+    image: `${SAVINGS_BASE_URL}bbq.webp`,
     code: 'BBQ',
   },
   {
     min: 10000,
     name: '메가박스 영화 관람권+팝콘세트',
-    image: `${IMAGE_BASE_URL}movie_ticket.webp`,
+    image: `${SAVINGS_BASE_URL}movie_ticket.webp`,
     code: 'MOVIE_TICKET',
   },
   {
     min: 0,
     name: '커피 한 잔',
-    image: `${IMAGE_BASE_URL}coffee.webp`,
+    image: `${SAVINGS_BASE_URL}coffee.webp`,
     code: 'COFFEE',
   },
 ];
@@ -341,5 +345,5 @@ export const TAG_ITEMS = TAGS.map((tag, index) => ({
   id: index,
   name: tag,
   code: TAG_CODES[tag as keyof typeof TAG_CODES],
-  imageUrl: `${IMAGE_BASE_URL}${TAGS_IMAGE_KEYS[TAG_CODES[tag as keyof typeof TAG_CODES]]}`,
+  imageUrl: `${CATEGORY_BASE_URL}${TAGS_IMAGE_KEYS[TAG_CODES[tag as keyof typeof TAG_CODES]]}`,
 }));
