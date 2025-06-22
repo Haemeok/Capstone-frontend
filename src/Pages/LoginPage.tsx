@@ -3,6 +3,7 @@ import KakaoLoginButton from '@/components/Button/KakaoLoginButton';
 import NaverLoginButton from '@/components/Button/NaverLoginButton';
 import { useNavigate, useLocation } from 'react-router';
 import SuspenseImage from '@/components/Image/SuspenseImage';
+import { LOGIN_IMAGE_URL } from '@/constants/user';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const LoginPage = () => {
   const from = location.state?.from?.pathname || '/';
   return (
     <div className="scrollbar-hide flex h-screen flex-col items-center justify-center gap-2 overflow-y-auto">
-      <SuspenseImage src="/login.png" alt="login" className="mb-4 p-4" />
+      <SuspenseImage src={LOGIN_IMAGE_URL} alt="login" className="mb-4 p-4" />
       <GoogleLoginButton from={from} />
       <NaverLoginButton />
       <KakaoLoginButton />

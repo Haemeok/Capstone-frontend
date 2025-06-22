@@ -102,12 +102,6 @@ export const useLikeRecipeMutation = (recipeId: number) => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: recipeDetailQueryKey });
       queryClient.invalidateQueries({ queryKey: recipesListRootKey });
-      console.log(
-        'recipeId',
-        recipeId,
-        recipeDetailQueryKey,
-        recipesListRootKey,
-      );
     },
   });
 

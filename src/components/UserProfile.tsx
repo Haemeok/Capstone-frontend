@@ -16,7 +16,7 @@ const UserProfile = ({ user, className }: UserProfileProps) => {
           userId={user.id}
           className="h-full w-[80px]"
         />
-        <div className="flex h-full flex-col justify-center p-2">
+        <div className="flex h-full flex-col items-start justify-center p-2">
           <Username
             username={user.nickname}
             userId={user.id}

@@ -3,7 +3,6 @@ import SuspenseImage from '@/components/Image/SuspenseImage';
 import useRecipeHistoryDetailQuery from '@/hooks/useRecipeHistoryDetailQuery';
 import { useToastStore } from '@/store/useToastStore';
 import { formatPrice } from '@/utils/recipe';
-import React from 'react';
 import { useParams, useNavigate } from 'react-router';
 
 const CalendarDetailPage = () => {

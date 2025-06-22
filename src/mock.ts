@@ -62,6 +62,7 @@ export const m: Omit<
     { id: 7, name: '후추', quantity: '0.5', unit: '작은술' },
     { id: 8, name: '식용유', quantity: '1', unit: '큰술' },
   ],
+  aiGenerated: true,
   steps: [
     {
       stepNumber: 1,

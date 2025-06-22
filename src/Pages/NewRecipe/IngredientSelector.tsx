@@ -77,7 +77,6 @@ const IngredientSelector = ({
       new Set(prevIds).add(ingredient.id),
     );
   };
-  console.log(addedIngredientIds);
   const ingredientItems = data?.pages.flatMap((page) => page.content);
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>

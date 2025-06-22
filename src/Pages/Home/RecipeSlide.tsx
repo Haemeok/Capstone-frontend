@@ -1,8 +1,6 @@
-import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 import DetailedRecipeGridItem from '@/components/recipeGrid/DetailedRecipeGridItem';
 import { createdRecipes } from '@/mock';
 import { ChevronRight } from 'lucide-react';
-import React from 'react';
 import { BaseRecipeGridItem } from '@/type/recipe';
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from '@/type/recipe';
 

@@ -144,7 +144,6 @@ const NewIngredientsPage = () => {
     id: number,
     isAdded: boolean,
   ) => {
-    console.log(`Checkbox ${id} is now ${checked ? 'checked' : 'unchecked'}`);
     if (isAdded) {
       return;
     }

@@ -1,4 +1,3 @@
-import React from 'react';
 import SettingsActionButton from './SettingsActionButton';
 import PrevButton from '@/components/Button/PrevButton';
 
