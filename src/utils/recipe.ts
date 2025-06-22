@@ -4,6 +4,7 @@ import { RecipePayload } from '@/type/recipe';
 import { convertImageToWebP } from '@/utils/image';
 import { RecipeFormValues } from '@/type/recipe';
 import { PageResponse } from '@/type/query';
+import { IMAGE_BASE_URL, PRICE_BRACKETS } from '@/constants/recipe';
 
 export const prepareRecipeData = async (
   formData: RecipeFormValues,
@@ -223,4 +224,15 @@ export const getNextPageParam = <T>(lastPage: PageResponse<T>) => {
   return lastPage.page.number === lastPage.page.totalPages - 1
     ? null
     : lastPage.page.number + 1;
+};
+
+export const getProductByPrice = (price: number) => {
+  const product = PRICE_BRACKETS.find((bracket) => price >= bracket.min);
+
+  if (!product) {
+    const defaultProduct = PRICE_BRACKETS[PRICE_BRACKETS.length - 1];
+    return defaultProduct;
+  }
+
+  return product;
 };

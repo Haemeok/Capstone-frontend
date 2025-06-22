@@ -21,6 +21,7 @@ const DetailedRecipeGridItem = ({
     <div
       className={cn(`relative flex h-80 shrink-0 flex-col gap-2 rounded-2xl`)}
       onClick={() => navigate(`/recipes/${recipe.id}`)}
+      key={recipe.id}
     >
       <SuspenseImage
         src={recipe.imageUrl}

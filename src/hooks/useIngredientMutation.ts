@@ -20,7 +20,6 @@ const useAddIngredientMutation = (currentQueryKey: readonly unknown[]) => {
   const mutation = useMutation<void, Error, number, IngredientMutationContext>({
     mutationFn: addIngredient,
     onMutate: async (ingredientId) => {
-      console.log('onMutate', ingredientId);
       await queryClient.cancelQueries({ queryKey: currentQueryKey });
 
       const previousIngredientsListData =
@@ -33,7 +32,6 @@ const useAddIngredientMutation = (currentQueryKey: readonly unknown[]) => {
           currentQueryKey,
           (oldData) => {
             if (!oldData) return undefined;
-            console.log('oldData', oldData);
             return {
               ...oldData,
               pages: oldData.pages.map((page) => ({

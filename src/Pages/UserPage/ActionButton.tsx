@@ -22,8 +22,6 @@ const ActionButton = ({
     navigate('/recipes/new');
   };
 
-  console.log(isGuest, isOwnProfile, isLoggedIn);
-
   if (!isOwnProfile && !isGuest) {
     return <></>;
   }
@@ -44,7 +42,7 @@ const ActionButton = ({
       className="bg-olive-light gap-0 rounded-full px-6 text-white"
       onClick={handleCreateRecipeClick}
     >
-      <Plus size={16} className="mr-1" /> 레시피 생성하기
+      <Plus size={16} className="mr-1" /> 레시피 등록하기
     </Button>
   );
 };

@@ -9,7 +9,7 @@ const TOAST_STYLE = {
   error: 'bg-red-500 text-white',
   warning: 'bg-yellow-500 text-black',
   info: 'bg-blue-500 text-white',
-  default: 'bg-gray-800 text-white',
+  default: 'bg-olive-mint text-white',
 };
 
 const TOAST_SIZE = {
@@ -48,7 +48,7 @@ const Toast = ({
     <div
       className={cn(
         TOAST_STYLE[variant],
-        'z-30 flex h-8 w-11/12 items-center justify-center rounded-md shadow-md',
+        'z-30 flex h-8 w-11/12 items-center justify-center rounded-md px-4 shadow-md',
         TOAST_SIZE[size],
         isVisible ? 'animate-slideInUp' : 'animate-fadeOut',
       )}
