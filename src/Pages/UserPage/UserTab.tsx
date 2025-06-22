@@ -6,18 +6,18 @@ import { MyTabs, OtherTabs, Tab } from '@/constants/user';
 import MyRecipesTabContent from './MyRecipesTabContent';
 
 type UserTabProps = {
-  displayUser: User;
+  user: User | undefined;
   isOwnProfile: boolean;
   isLoggedIn: boolean;
 };
 
-const UserTab = ({ displayUser, isOwnProfile, isLoggedIn }: UserTabProps) => {
+const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
   const [activeTab, setActiveTab] = useState<string>('나의 레시피');
 
   const getRecipesByTab = () => {
     switch (activeTab) {
       case '나의 레시피':
-        return <MyRecipesTabContent userId={displayUser.id} />;
+        return user && <MyRecipesTabContent userId={user.id} />;
       case '북마크':
         return <MyFavoriteRecipesTabContent />;
       case '캘린더':

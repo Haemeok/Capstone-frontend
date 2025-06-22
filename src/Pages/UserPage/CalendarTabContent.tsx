@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DayPicker } from 'react-day-picker';
-import { ChevronLeft, ChevronRight, Flame, FlameKindling } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FlameKindling } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import useRecipeHistoryQuery from '@/hooks/useRecipeHistoryQuery';
@@ -11,13 +10,12 @@ import SavingSection from './SavingSection';
 import 'react-day-picker/style.css';
 import SuspenseImage from '@/components/Image/SuspenseImage';
 import { useNavigate } from 'react-router';
-import { formatPrice } from '@/utils/recipe';
-import HomeBanner from '../Home/HomeBanner';
-import RequiredAmountDisplay from '../RequiredAmountDisplay';
+import { formatPrice, getProductByPrice } from '@/utils/recipe';
 import Box from '@/components/ui/Box';
 import useUserStreakQuery from '@/hooks/useUserStreakQuery';
 import PointDisplayBanner from '../RequiredAmountDisplay';
-export function CalendarTabContent() {
+
+const CalendarTabContent = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const { data: userStreak } = useUserStreakQuery();
 
@@ -38,6 +36,8 @@ export function CalendarTabContent() {
     });
   };
 
+  const product = getProductByPrice(monthlyTotalSavings ?? 0);
+
   return (
     <div className="w-full pb-4">
       <div className="mx-10 flex flex-col items-center justify-center pt-5">
@@ -51,9 +51,9 @@ export function CalendarTabContent() {
           <h3 className="text-xl font-bold"> 절약했어요</h3>
         </div>
         <p className="mt-1 text-sm text-gray-500">
-          BBQ 황금올리브 정도 금액이에요!
+          {product.name} 정도 금액이에요!
         </p>
-        <SavingSection />
+        <SavingSection imageUrl={product.image} altText={product.name} />
       </div>
       <Box className="p-0 px-4">
         <PointDisplayBanner
@@ -180,6 +180,6 @@ export function CalendarTabContent() {
       />
     </div>
   );
-}
+};
 
 export default CalendarTabContent;

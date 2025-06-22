@@ -22,6 +22,7 @@ import useScrollAnimate from '@/hooks/useScrollAnimate';
 import { useToggleRecipeFavorite } from '@/hooks/useToggleMutations';
 import { useToastStore } from '@/store/useToastStore';
 import { useUserStore } from '@/store/useUserStore';
+import AIBadgeButton from '@/components/Button/AIBadgeButton';
 const RecipeDetailPage = () => {
   const navigate = useNavigate();
   const imageRef = useRef<HTMLImageElement>(null);
@@ -104,7 +105,10 @@ const RecipeDetailPage = () => {
       </div>
       <div className="px-2">
         <Box className="flex flex-col items-center justify-center gap-3">
-          <h1 className="text-center text-2xl font-bold">{recipe.title}</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-center text-2xl font-bold">{recipe.title}</h1>
+            {recipe.aiGenerated && <AIBadgeButton />}
+          </div>
           <div className="cursor-pointer" onClick={handleNavigateToRating}>
             <Ratings
               precision={0.1}
