@@ -1,7 +1,7 @@
 export const IMAGE_BASE_URL =
   'https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/';
 
-export const CATEGORY_BASE_URL = `${IMAGE_BASE_URL}category/`;
+export const CATEGORY_BASE_URL = `${IMAGE_BASE_URL}categories/`;
 export const UI_BASE_URL = `${IMAGE_BASE_URL}ui/`;
 export const SAVINGS_BASE_URL = `${IMAGE_BASE_URL}savings/`;
 
