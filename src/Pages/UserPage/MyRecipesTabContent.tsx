@@ -2,10 +2,10 @@ import { BaseRecipesApiResponse, getMyRecipeItems } from '@/api/recipe';
 import RecipeGrid from '@/components/recipeGrid/RecipeGrid';
 
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
-import { useUserStore } from '@/store/useUserStore';
-import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import { InfiniteData } from '@tanstack/react-query';
+import { useState } from 'react';
 import { getNextPageParam } from '@/utils/recipe';
+
 type MyRecipesTabContentProps = {
   userId: number;
 };
@@ -17,10 +17,10 @@ const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
     BaseRecipesApiResponse,
     Error,
     InfiniteData<BaseRecipesApiResponse>,
-    [string, 'ASC' | 'DESC'],
+    [string, string, 'ASC' | 'DESC'],
     number
   >({
-    queryKey: ['recipes', sort],
+    queryKey: ['recipes', userId.toString(), sort],
     queryFn: ({ pageParam }) =>
       getMyRecipeItems({
         userId,

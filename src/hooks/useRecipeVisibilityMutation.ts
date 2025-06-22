@@ -8,7 +8,9 @@ const useRecipeVisibilityMutation = (recipeId: number) => {
   const recipeVisibilityMutation = useMutation({
     mutationFn: () => postRecipeVisibility(recipeId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipe', recipeId] });
+      queryClient.invalidateQueries({
+        queryKey: ['recipe', recipeId.toString()],
+      });
       addToast({
         message: '레시피 공개 상태가 변경되었습니다.',
         variant: 'default',

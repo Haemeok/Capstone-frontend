@@ -63,7 +63,7 @@ const UserDetailPage = () => {
       </div>
 
       <UserTab
-        displayUser={displayUser}
+        user={user}
         isOwnProfile={isOwnProfile}
         isLoggedIn={!!loggedInUser}
       />

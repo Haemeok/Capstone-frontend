@@ -54,27 +54,30 @@ export type Recipe = {
   likedByCurrentUser: boolean;
   favoriteByCurrentUser: boolean;
   private: boolean;
+  aiGenerated: boolean;
 };
 
-export type RecipePayload = Omit<
-  Recipe,
-  | 'id'
-  | 'ingredients'
-  | 'steps'
-  | 'totalIngredientCost'
-  | 'marketPrice'
-  | 'youtubeUrl'
-  | 'imageURL'
-  | 'author'
-  | 'likeCount'
-  | 'likedByCurrentUser'
-  | 'favoriteByCurrentUser'
-  | 'ratingInfo'
-  | 'comments'
-  | 'imageUrl'
-  | 'imageKey'
-  | 'private'
-> & {
+const defaultRecipeKeys = [
+  'id',
+  'ingredients',
+  'steps',
+  'totalIngredientCost',
+  'marketPrice',
+  'youtubeUrl',
+  'imageURL',
+  'author',
+  'likeCount',
+  'likedByCurrentUser',
+  'favoriteByCurrentUser',
+  'ratingInfo',
+  'comments',
+  'imageUrl',
+  'imageKey',
+  'private',
+  'aiGenerated',
+] as const;
+
+export type RecipePayload = Omit<Recipe, (typeof defaultRecipeKeys)[number]> & {
   ingredients: IngredientPayload[];
   steps: RecipeStepPayload[];
   cookingTime: number;
