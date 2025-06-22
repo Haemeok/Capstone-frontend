@@ -7,7 +7,7 @@ type SavingSectionProps = {
 };
 
 const SavingSection = ({
-  imageUrl = '/bbq.png',
+  imageUrl = '',
   altText = '움직이는 아이템',
 }: SavingSectionProps) => {
   const sectionContainerRef = useRef<HTMLDivElement | null>(null);
@@ -60,21 +60,6 @@ const SavingSection = ({
 
     return () => ctx.revert();
   }, []);
-
-  const handleAnimate = () => {
-    if (bobbingTweenRef.current) {
-      bobbingTweenRef.current.kill();
-      bobbingTweenRef.current = null;
-    }
-
-    if (imageRef.current) {
-      gsap.set(imageRef.current, { opacity: 0, y: -30, scale: 0.9 });
-    }
-
-    if (introTimelineRef.current) {
-      introTimelineRef.current.restart();
-    }
-  };
 
   return (
     <div
