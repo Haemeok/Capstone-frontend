@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 const pageVariants = {
   initial: {
@@ -21,13 +21,39 @@ const pageTransition = {
 };
 
 const AnimatedOutlet = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const motionRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const scrollY = sessionStorage.getItem(`scroll_position_${pathname}`);
+
+    if (motionRef.current) {
+      if (scrollY) {
+        setTimeout(() => {
+          if (motionRef.current) {
+            motionRef.current.scrollTo(0, parseInt(scrollY, 10));
+          }
+        }, 0);
+      } else {
+        motionRef.current.scrollTo(0, 0);
+      }
+    }
+
+    return () => {
+      if (motionRef.current && pathname === '/search') {
+        sessionStorage.setItem(
+          `scroll_position_${pathname}`,
+          motionRef.current.scrollTop.toString(),
+        );
+      }
+    };
+  }, [pathname]);
+
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         ref={motionRef}
-        key={location.pathname}
+        key={pathname}
         initial="initial"
         animate="in"
         variants={pageVariants}
