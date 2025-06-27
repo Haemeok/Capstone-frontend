@@ -21,6 +21,7 @@ import CalendarDetailPage from '@/Pages/CalendarDetailPage';
 import UserInfoChangePage from '@/Pages/UserInfoChangePage';
 import UserDetailPage from '@/Pages/UserPage/UserDetailPage';
 import UpdateRecipePage from '@/Pages/UpdateRecipe/UpdateRecipePage';
+import AIRecipeListPage from '@/Pages/AIRecipeListPage';
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: 'ai-recipe',
         element: <AIRecipePage />,
+      },
+      {
+        path: 'ai-recipes',
+        element: <AIRecipeListPage />,
       },
       {
         path: 'ingredients/new',

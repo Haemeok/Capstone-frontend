@@ -1,4 +1,4 @@
-const BASE_URL = 'https://www.haemeok.com';
+export const BASE_URL = 'https://www.haemeok.com';
 
 export const END_POINTS = {
   RECIPE: (id: number) => `/recipes/${id}`,

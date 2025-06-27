@@ -71,6 +71,7 @@ const SurveyContent = ({
                     />
                     <Label
                       htmlFor={`${currentQuestionData.id}-${option.value}`}
+                      className="text-base"
                     >
                       {option.label}
                     </Label>
@@ -82,7 +83,7 @@ const SurveyContent = ({
                     id={`question-${currentQuestionData.id}`}
                     value={answers[currentQuestionData.id] || ''}
                     onChange={(e) => handleValueChange(e.target.value)}
-                    className="w-full rounded-md border border-gray-300 p-2 focus:outline-none"
+                    className="w-full resize-none rounded-md border border-gray-300 p-2 focus:outline-none"
                   />
                 </div>
               )}
