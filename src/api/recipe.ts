@@ -201,6 +201,7 @@ type RecipeQueryParams = BaseQueryParams & {
   dishType?: string | null;
   tagNames?: string[] | null;
   q?: string | null;
+  isAiGenerated?: boolean;
 };
 
 export const getRecipeItems = async ({
@@ -208,17 +209,21 @@ export const getRecipeItems = async ({
   dishType,
   tagNames,
   q,
+  isAiGenerated,
+  size = PAGE_SIZE,
   pageParam = 0,
 }: {
   sort: string;
   dishType?: string | null;
   tagNames?: string[] | null;
   q?: string;
+  isAiGenerated?: boolean;
+  size?: number;
   pageParam?: number;
 }) => {
   const baseParams: BaseQueryParams = {
     page: pageParam,
-    size: PAGE_SIZE,
+    size,
     sort: `createdAt,${sort}`,
   };
 
@@ -226,6 +231,7 @@ export const getRecipeItems = async ({
     dishType,
     tagNames,
     q,
+    isAiGenerated,
   };
 
   const apiParams = buildParams(baseParams, optionalParams);
@@ -242,7 +248,28 @@ export const getRecipeItems = async ({
   return response.data;
 };
 
-export const getMyRecipeItems = async ({
+const fetchPagedRecipes = async <T>(
+  endpoint: string,
+  {
+    sort,
+    pageParam = 0,
+    size = PAGE_SIZE,
+  }: { sort: string; pageParam?: number; size?: number },
+) => {
+  const apiParams: BaseQueryParams = {
+    page: pageParam,
+    size,
+    sort: `createdAt,${sort}`,
+  };
+
+  const response = await axiosInstance.get<T>(endpoint, {
+    params: apiParams,
+  });
+
+  return response.data;
+};
+
+export const getMyRecipeItems = ({
   userId,
   sort,
   pageParam = 0,
@@ -251,64 +278,26 @@ export const getMyRecipeItems = async ({
   sort: string;
   pageParam?: number;
 }) => {
-  const apiParams: BaseQueryParams = {
-    page: pageParam,
-    size: PAGE_SIZE,
-    sort: `createdAt,${sort}`,
-  };
-
-  const response = await axiosInstance.get<DetailedRecipesApiResponse>(
+  return fetchPagedRecipes<DetailedRecipesApiResponse>(
     END_POINTS.USER_RECIPES(userId),
     {
-      params: apiParams,
+      sort,
+      pageParam,
     },
   );
-
-  return response.data;
 };
 
-export const getMyFavoriteItems = async ({
+export const getMyFavoriteItems = ({
   sort,
   pageParam = 0,
 }: {
   sort: string;
   pageParam?: number;
 }) => {
-  const apiParams: BaseQueryParams = {
-    page: pageParam,
-    size: PAGE_SIZE,
-    sort: `createdAt,${sort}`,
-  };
-
-  const response = await axiosInstance.get<BaseRecipesApiResponse>(
-    END_POINTS.MY_FAVORITES,
-    {
-      params: apiParams,
-    },
-  );
-
-  return response.data;
-};
-
-export const getRecipeItemsByTagNames = async ({
-  tagName,
-  pageParam = 0,
-}: {
-  tagName: TagCode;
-  pageParam?: number;
-}) => {
-  const response = await axiosInstance.get<DetailedRecipesApiResponse>(
-    END_POINTS.RECIPE_SEARCH,
-    {
-      params: {
-        tagNames: tagName,
-        page: pageParam,
-        size: PAGE_SIZE,
-      },
-      useAuth: false,
-    },
-  );
-  return response.data;
+  return fetchPagedRecipes<BaseRecipesApiResponse>(END_POINTS.MY_FAVORITES, {
+    sort,
+    pageParam,
+  });
 };
 
 type FinalizeRecipeResponse = {
