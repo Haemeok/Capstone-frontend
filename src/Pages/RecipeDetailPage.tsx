@@ -138,6 +138,7 @@ const RecipeDetailPage = () => {
             <ShareButton
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
               label="공유"
+              message={`${recipe.title} 를 확인해보세요!`}
             />
             {recipe.author.id === user?.id && (
               <LockButton

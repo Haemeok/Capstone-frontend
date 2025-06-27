@@ -88,7 +88,10 @@ export const OnboardingSurveyModal = ({
         />
         <DialogFooter>
           <button
-            className={cn(currentStep > 0 ? 'opacity-100' : 'opacity-0')}
+            className={cn(
+              currentStep > 0 ? 'opacity-100' : 'opacity-0',
+              'rounded-2xl border-1 border-gray-300 px-4 py-2 transition-all duration-300',
+            )}
             onClick={handlePrevious}
           >
             이전
@@ -97,11 +100,13 @@ export const OnboardingSurveyModal = ({
             onClick={handleNext}
             className={cn(
               'rounded-2xl px-4 py-2 text-white transition-all duration-300',
-              !answers[currentQuestionData?.id]
+              !answers[currentQuestionData?.id] && currentQuestionData.isRadio
                 ? 'bg-olive-mint/50'
                 : 'bg-olive-mint',
             )}
-            disabled={!answers[currentQuestionData?.id]}
+            disabled={
+              !answers[currentQuestionData?.id] && currentQuestionData.isRadio
+            }
           >
             {currentStep === totalSteps - 1 ? '완료' : '다음'}
           </button>
