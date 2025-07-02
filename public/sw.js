@@ -1,5 +1,5 @@
 const CACHE_NAME = 'travel-helper-v1';
-const FILES_TO_CACHE = ['/', '/index.html', '/manifest.json', '/logo.svg'];
+const FILES_TO_CACHE = ['/', '/index.html', '/manifest.json', '/pwa_logo.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
