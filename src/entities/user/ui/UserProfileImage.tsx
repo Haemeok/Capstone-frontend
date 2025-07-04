@@ -1,0 +1,39 @@
+import React from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import { Avatar } from "@radix-ui/react-avatar";
+
+import { cn } from "@/lib/utils";
+
+type UserProfileImageProps = {
+  profileImage: string;
+  userId: number;
+  className?: string;
+};
+
+const UserProfileImage = ({
+  profileImage,
+  userId,
+  className,
+}: UserProfileImageProps) => {
+  const router = useRouter();
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    router.push(`/users/${userId}`);
+  };
+  return (
+    <Avatar
+      className={cn("h-8 w-8 rounded-full", className)}
+      onClick={handleClick}
+    >
+      <Image
+        src={profileImage}
+        alt="profileImage"
+        className="h-full w-full rounded-full object-cover"
+      />
+    </Avatar>
+  );
+};
+
+export default UserProfileImage;
