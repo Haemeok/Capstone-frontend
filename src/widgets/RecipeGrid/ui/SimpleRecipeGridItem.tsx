@@ -4,11 +4,11 @@ import { useRouter } from "next/router";
 
 import { EllipsisVertical } from "lucide-react";
 
+import { cn } from "@/shared/lib/utils";
+
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
-
-import { cn } from "@/lib/utils";
 
 type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
@@ -23,7 +23,7 @@ const SimpleRecipeGridItem = ({
 }: SimpleRecipeGridItemProps) => {
   const router = useRouter();
 
-  const handleItemClick = (e: React.MouseEvent) => {
+  const handleItemClick = () => {
     router.push(`/recipes/${recipe.id}`);
   };
 

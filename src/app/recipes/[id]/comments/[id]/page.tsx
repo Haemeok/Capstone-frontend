@@ -1,26 +1,23 @@
 import { useState } from "react";
-import { useNavigate,useParams } from "react-router";
+import { useParams, useRouter } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 
-import {
-  getReplies,
-  RepliesApiResponse,
-  TotalRepliesApiResponse,
-} from "@/api/comment";
-import CommentBox from "@/components/CommentBox";
-import CommentInput from "@/components/CommentInput";
-import { Button } from "@/components/ui/button";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { cn } from "@/lib/utils";
-import { Comment } from "@/type/comment";
+import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/shadcn/button";
+
+import { getReplies, TotalRepliesApiResponse } from "@/entities/comment";
+
+import CommentCard from "@/features/comment-card/ui/CommentCard";
+import { CommentInput } from "@/features/comment-create";
 
 const DiscussionPage = () => {
   const { commentId } = useParams<{ commentId: string }>();
   const { recipeId } = useParams<{ recipeId: string }>();
   const [sort, setSort] = useState<string>("최신순");
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
     TotalRepliesApiResponse,
@@ -58,7 +55,7 @@ const DiscussionPage = () => {
               variant="ghost"
               size="icon"
               className="mr-2"
-              onClick={() => navigate(-1)}
+              onClick={() => router.back()}
             >
               <ArrowLeft size={20} />
             </Button>
@@ -69,7 +66,7 @@ const DiscussionPage = () => {
 
       <main className="mx-auto max-w-3xl p-4">
         {parentComment ? (
-          <CommentBox
+          <CommentCard
             comment={parentComment}
             hideReplyButton={true}
             recipeId={Number(recipeId)}
@@ -112,7 +109,8 @@ const DiscussionPage = () => {
 
           <div className="mb-4 space-y-3">
             {replies?.map((reply) => (
-              <CommentBox
+              <CommentCard
+                key={reply.id}
                 comment={reply}
                 hideReplyButton={true}
                 recipeId={Number(recipeId)}

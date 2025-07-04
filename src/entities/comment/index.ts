@@ -1,2 +1,6 @@
-export type { Comment } from "./model/types";
-export { default as CommentCard } from "./ui/CommentCard";
+export { getComments, getReplies } from "./model/api";
+export type {
+  Comment,
+  CommentsApiResponse,
+  TotalRepliesApiResponse,
+} from "./model/types";

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { MyTabs, OtherTabs, Tab } from '@/constants/user';
-import { User } from '@/type/user';
+import { MyTabs, OtherTabs } from "@/shared/config/constants/user";
 
-import CalendarTabContent from './CalendarTabContent';
-import MyFavoriteRecipesTabContent from './MyFavoriteRecipesTabContent';
-import MyRecipesTabContent from './MyRecipesTabContent';
+import { User } from "@/entities/user";
+
+import { MyFavoriteRecipesTabContent } from "@/features/view-favorite-recipes";
+
+import CalendarTabContent from "@/widgets/CalendarTabContent";
+import MyRecipesTabContent from "@/widgets/MyRecipesTabContent";
 
 type UserTabProps = {
   user: User | undefined;
@@ -14,15 +16,15 @@ type UserTabProps = {
 };
 
 const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
-  const [activeTab, setActiveTab] = useState<string>('나의 레시피');
+  const [activeTab, setActiveTab] = useState<string>("나의 레시피");
 
   const getRecipesByTab = () => {
     switch (activeTab) {
-      case '나의 레시피':
+      case "나의 레시피":
         return user && <MyRecipesTabContent userId={user.id} />;
-      case '북마크':
+      case "북마크":
         return <MyFavoriteRecipesTabContent />;
-      case '캘린더':
+      case "캘린더":
         return <CalendarTabContent />;
       default:
         return <></>;
@@ -40,8 +42,8 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
               key={tab.id}
               className={`relative flex-1 py-4 ${
                 activeTab === tab.id
-                  ? 'text-olive-light font-bold'
-                  : 'text-gray-500'
+                  ? "text-olive-light font-bold"
+                  : "text-gray-500"
               }`}
               onClick={() => setActiveTab(tab.id)}
             >

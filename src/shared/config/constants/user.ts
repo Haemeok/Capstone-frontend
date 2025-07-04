@@ -4,7 +4,7 @@ import { BookOpen } from "lucide-react";
 
 import { User } from "@/entities/user/model/types";
 
-import { IMAGE_BASE_URL, UI_BASE_URL } from "./recipe";
+import { UI_BASE_URL } from "./recipe";
 
 export const guestUser: User = {
   id: 0,

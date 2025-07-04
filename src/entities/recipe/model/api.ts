@@ -2,15 +2,60 @@ import { axiosInstance } from "@/shared/api/axios";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
+import { buildParams, customParamsSerializer } from "@/shared/lib/utils";
 import { FileInfoRequest } from "@/shared/types";
 
-import { Recipe } from "./types";
+import { DetailedRecipesApiResponse, Recipe, RecipeQueryParams } from "./types";
 import { RecipePayload } from "./types";
 
 export const getRecipe = async (id: number) => {
   const response = await axiosInstance.get<Recipe>(END_POINTS.RECIPE(id), {
     useAuth: "optional",
   });
+  return response.data;
+};
+
+export const getRecipeItems = async ({
+  sort,
+  dishType,
+  tagNames,
+  q,
+  isAiGenerated,
+  size = PAGE_SIZE,
+  pageParam = 0,
+}: {
+  sort: string;
+  dishType?: string | null;
+  tagNames?: string[] | null;
+  q?: string;
+  isAiGenerated?: boolean;
+  size?: number;
+  pageParam?: number;
+}) => {
+  const baseParams: BaseQueryParams = {
+    page: pageParam,
+    size,
+    sort: `createdAt,${sort}`,
+  };
+
+  const optionalParams: Partial<RecipeQueryParams> = {
+    dishType,
+    tagNames,
+    q,
+    isAiGenerated,
+  };
+
+  const apiParams = buildParams(baseParams, optionalParams);
+  console.log("apiParams", apiParams);
+  const response = await axiosInstance.get<DetailedRecipesApiResponse>(
+    END_POINTS.RECIPE_SEARCH,
+    {
+      params: apiParams,
+      paramsSerializer: customParamsSerializer,
+      useAuth: "optional",
+    }
+  );
+
   return response.data;
 };
 

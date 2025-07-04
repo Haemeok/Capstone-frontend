@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getUserInfo } from "./api";
+import { getRecipeHistoryDetail, getUserInfo } from "./api";
 
 export const useUserQuery = (userId: number, isOtherProfile: boolean) => {
   const {
@@ -24,4 +24,21 @@ export const useUserQuery = (userId: number, isOtherProfile: boolean) => {
     error,
     refetchUser: refetch,
   };
+};
+
+type QueryOptions = {
+  enabled?: boolean;
+};
+
+export const useRecipeHistoryDetailQuery = (
+  date: string,
+  options?: QueryOptions
+) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["recipeHistoryDetail", date],
+    queryFn: () => getRecipeHistoryDetail(date),
+    ...options,
+  });
+
+  return { data, isLoading, error };
 };

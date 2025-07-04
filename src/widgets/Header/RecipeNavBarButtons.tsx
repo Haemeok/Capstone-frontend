@@ -1,5 +1,3 @@
-import React from "react";
-
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
 import ShareButton from "@/features/share-content/ui/ShareButton";
 

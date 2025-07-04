@@ -1,3 +1,5 @@
+import { InfiniteData } from "@tanstack/react-query";
+
 import { BaseQueryParams, PageResponse } from "@/shared/api/types";
 
 export type IngredientItem = {
@@ -24,4 +26,8 @@ export type IngredientsApiResponse = PageResponse<IngredientItem>;
 
 export type IngredientQueryParams = BaseQueryParams & {
   category?: string | null;
+};
+
+export type IngredientMutationContext = {
+  previousIngredientsListData?: InfiniteData<IngredientsApiResponse>;
 };

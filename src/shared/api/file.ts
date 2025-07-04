@@ -1,3 +1,4 @@
+import { END_POINTS } from "../config/constants/api";
 import { FileObject, PresignedUrlInfo, UploadResult } from "../types";
 import { axiosInstance } from "./axios";
 
@@ -90,4 +91,14 @@ export const handleS3Upload = async (
 
   console.log("모든 파일 S3 업로드 성공");
   return uploadResults;
+};
+
+export const getPresignedUrl = async (userId: number) => {
+  const response = await axiosInstance.get<PresignedUrlInfo>(
+    END_POINTS.USER_PRESIGNED_URLS(userId),
+    {
+      useAuth: true,
+    }
+  );
+  return response.data;
 };

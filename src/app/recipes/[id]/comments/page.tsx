@@ -1,21 +1,26 @@
-import { useEffect,useState } from "react";
-import { useLocation, useParams } from "react-router";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 
-import { CommentsApiResponse, getComments } from "@/api/comment";
-import PrevButton from "@/components/Button/PrevButton";
-import CommentBox from "@/components/CommentBox";
-import CommentInput from "@/components/CommentInput";
-import { SORT_TYPE_CODES } from "@/constants/recipe";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { cn } from "@/lib/utils";
-import { getNextPageParam } from "@/utils/recipe";
+import { SORT_TYPE_CODES } from "@/shared/config/constants/recipe";
+import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { cn } from "@/shared/lib/utils";
+import { getNextPageParam } from "@/shared/lib/utils";
+import PrevButton from "@/shared/ui/PrevButton";
+
+import { CommentsApiResponse,getComments } from "@/entities/comment";
+import { useRecipeDetailQuery } from "@/entities/recipe";
+
+import CommentCard from "@/features/comment-card/ui/CommentCard";
+import { CommentInput } from "@/features/comment-create";
 
 const CommentsPage = () => {
   const [sort, setSort] = useState<string>("최신순");
-  const { recipeId } = useParams();
-  const author = useLocation().state?.author;
+  const params = useParams();
+  const recipeId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { recipeData } = useRecipeDetailQuery(Number(recipeId));
+  const author = recipeData.author;
   const { data, hasNextPage, isFetchingNextPage, ref } = useInfiniteScroll<
     CommentsApiResponse,
     Error,
@@ -77,7 +82,7 @@ const CommentsPage = () => {
 
         <div className="flex flex-col gap-4">
           {comments?.map((comment) => (
-            <CommentBox
+            <CommentCard
               key={comment.id}
               comment={comment}
               hideReplyButton={false}

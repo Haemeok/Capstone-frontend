@@ -6,7 +6,7 @@ import { handleS3Upload } from "@/shared/api/file";
 import { PresignedUrlResponse } from "@/shared/api/types";
 import { FileInfoRequest } from "@/shared/types";
 
-import { editRecipe,postRecipe } from "@/entities/recipe/model/api";
+import { editRecipe, postRecipe } from "@/entities/recipe/model/api";
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { prepareRecipeData } from "../../lib/prepareRecipeData";
@@ -21,7 +21,6 @@ type UseCreateRecipeOptions = {
 export const useCreateRecipeWithUpload = (recipeIdForUpdate?: number) => {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadError, setUploadError] = useState<Error | null>(null);
-  const queryClient = useQueryClient();
 
   const actualMutationFn = async (variables: {
     recipe: RecipePayload;

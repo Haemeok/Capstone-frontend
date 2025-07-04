@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useParams, useRouter } from "next/navigation";
 
-import ProgressButton from "@/shared/ui/ProgressButton";
-import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  useCreateRecipeWithUpload,
-  RecipeFormValues,
-} from "@/features/recipe-create";
-import { IngredientPayload } from "@/entities/ingredient";
-import Steps from "@/entities/recipe/ui/Steps";
 import { DISH_TYPES } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
+import ProgressButton from "@/shared/ui/ProgressButton";
+
+import { IngredientPayload } from "@/entities/ingredient";
+import { useRecipeDetailQuery } from "@/entities/recipe";
+
+import {
+  RecipeFormValues,
+  useCreateRecipeWithUpload,
+} from "@/features/recipe-create";
 import CookingToolsInput from "@/features/recipe-create/ui/CookingToolsInput";
-import RecipeTitleWithImage from "@/Pages/NewRecipe/RecipeTitleWithImage";
-import Description from "@/Pages/NewRecipe/Description";
-import IngredientSection from "@/Pages/NewRecipe/IngredientSection";
-import TagSection from "@/Pages/NewRecipe/TagSection";
-import { useToastStore } from "@/store/useToastStore";
-import useRecipeDetailQuery from "@/hooks/useRecipeDetailQuery";
+import Description from "@/features/recipe-create/ui/Description";
+import IngredientSection from "@/features/recipe-create/ui/IngredientSection";
+import RecipeTitleWithImage from "@/features/recipe-create/ui/RecipeTitleWithImage";
+import Steps from "@/features/recipe-create/ui/Steps";
+import TagSection from "@/features/recipe-create/ui/TagSection";
+
+import { useToastStore } from "@/widgets/Toast";
 
 const UpdateRecipePage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { recipeId } = useParams();
 
   const {
@@ -28,7 +31,6 @@ const UpdateRecipePage = () => {
     isUploading,
     isLoading: isCreatingRecipe,
     error: recipeCreationError,
-    data: createdRecipeData,
   } = useCreateRecipeWithUpload(Number(recipeId));
 
   const { recipeData: recipe } = useRecipeDetailQuery(Number(recipeId));
@@ -53,7 +55,7 @@ const UpdateRecipePage = () => {
     setValue,
     watch,
     reset,
-    formState: { errors, isValid, isDirty },
+    formState: { errors, isValid },
   } = useForm<RecipeFormValues>({
     defaultValues: {
       title: recipe.title,
@@ -133,7 +135,7 @@ const UpdateRecipePage = () => {
         reset();
         setImagePreviewUrl(null);
         setStepImagePreviewUrls([]);
-        navigate("/search");
+        router.push("/search");
       },
       onError: (error) => {
         console.error("레시피 생성 실패:", error);

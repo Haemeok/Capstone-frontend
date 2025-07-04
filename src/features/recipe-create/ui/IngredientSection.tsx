@@ -9,9 +9,9 @@ import {
 import { Plus, X } from "lucide-react";
 import { ChefHat } from "lucide-react";
 
-import { IngredientPayload } from "@/entities/ingredient";
+import { Button } from "@/shared/ui/shadcn/button";
 
-import { Button } from "@/components/ui/button";
+import { IngredientPayload } from "@/entities/ingredient";
 
 import { RecipeFormValues } from "../model/types";
 import IngredientSelector from "./IngredientSelector";

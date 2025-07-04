@@ -1,18 +1,15 @@
 import React, { useState } from "react";
+import Image from "next/image";
 
 import { InfiniteData } from "@tanstack/react-query";
-import { Check,Search } from "lucide-react";
+import { Check, Search } from "lucide-react";
 
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
-
-import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
-import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
-
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/shadcn/button";
 import {
   Drawer,
   DrawerClose,
@@ -21,7 +18,10 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from "@/components/ui/drawer";
+} from "@/shared/ui/shadcn/drawer";
+
+import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
+import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
 
 type IngredientSelectorProps = {
   open: boolean;
@@ -138,7 +138,7 @@ const IngredientSelector = ({
                 >
                   <div className="mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                     {ingredient.imageUrl && (
-                      <img
+                      <Image
                         src={ingredient.imageUrl}
                         alt={ingredient.name}
                         className="h-full w-full object-cover"

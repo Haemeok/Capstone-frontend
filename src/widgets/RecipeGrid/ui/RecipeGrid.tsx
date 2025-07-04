@@ -79,8 +79,7 @@ const RecipeGrid = ({
     deleteRecipe();
   };
 
-  const { mutate: deleteRecipe, isPending: isDeleting } =
-    useDeleteRecipeMutation(selectedItemId ?? 0);
+  const { mutate: deleteRecipe } = useDeleteRecipeMutation(selectedItemId ?? 0);
 
   useEffect(() => {
     animatedItemsRef.current.clear();
@@ -104,7 +103,7 @@ const RecipeGrid = ({
         itemsAnimateTargetRef.current!.children
       );
 
-      currentDOMItems.forEach((itemDOMElement: Element, index: number) => {
+      currentDOMItems.forEach((itemDOMElement: Element) => {
         if (!animatedItemsRef.current.has(itemDOMElement)) {
           gsap.set(itemDOMElement, { opacity: 0, y: 30, scale: 0.98 });
           gsap.to(itemDOMElement, {
@@ -175,7 +174,6 @@ const RecipeGrid = ({
             <DetailedRecipeGridItem
               key={recipe.id}
               recipe={recipe as DetailedRecipeGridItemType}
-              height={height}
             />
           )
         )}

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 type ToggleIconButtonProps = {
   isActive?: boolean;
@@ -27,7 +27,6 @@ const ToggleIconButton = ({
   icon,
   activeClassName = "",
   inactiveClassName = "",
-  variant = "ghost",
   className = "",
   children,
   ...props

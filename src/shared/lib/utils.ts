@@ -28,7 +28,9 @@ export const buildParams = <T extends object>(
   return params;
 };
 
-export const customParamsSerializer = (params: Record<string, any>): string => {
+export const customParamsSerializer = (
+  params: Record<string, unknown>
+): string => {
   const parts: string[] = [];
 
   Object.entries(params).forEach(([key, value]) => {

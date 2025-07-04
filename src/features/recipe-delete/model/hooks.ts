@@ -31,7 +31,7 @@ const useDeleteRecipeMutation = (recipeId: number) => {
         position: "bottom",
       });
     },
-    onError: (error, variables, context) => {
+    onError: (error) => {
       const errorMessage =
         error instanceof Error
           ? error.message
