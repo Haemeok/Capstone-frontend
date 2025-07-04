@@ -1,5 +1,3 @@
-import { usePathname } from "next/navigation";
-
 import { Share2 } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
@@ -20,7 +18,6 @@ const ShareButton = ({
   text = "이 레시피를 확인해보세요!",
   ...props
 }: ShareButtonProps) => {
-  const pathname = usePathname();
   const { addToast } = useToastStore();
 
   const handleShareClick = async () => {

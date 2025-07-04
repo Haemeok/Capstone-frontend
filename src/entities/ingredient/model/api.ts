@@ -5,7 +5,7 @@ import { END_POINTS } from "@/shared/config/constants/api";
 import { INGREDIENT_CATEGORY_CODES } from "@/shared/config/constants/recipe";
 import { buildParams } from "@/shared/lib/utils";
 
-import { IngredientQueryParams,IngredientsApiResponse } from "./types";
+import { IngredientQueryParams, IngredientsApiResponse } from "./types";
 
 export const getIngredients = async ({
   category,
@@ -46,6 +46,14 @@ export const getIngredients = async ({
 
   const response = await axiosInstance.get<IngredientsApiResponse>(endPoint, {
     params: apiParams,
+    useAuth: true,
+  });
+  return response.data;
+};
+
+export const addIngredientBulk = async (ingredientIds: number[]) => {
+  const response = await axiosInstance.post(END_POINTS.MY_INGREDIENTS_BULK, {
+    ingredientIds,
     useAuth: true,
   });
   return response.data;

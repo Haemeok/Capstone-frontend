@@ -1,4 +1,4 @@
-import { useEffect,useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation"; // react-router 대체
 
@@ -7,25 +7,21 @@ import { formatPrice } from "@/shared/lib/format";
 import AIBadgeButton from "@/shared/ui/AIBadgeButton";
 import Box from "@/shared/ui/Box";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
+import RequiredAmountDisplay from "@/shared/ui/PointDisplayBanner";
 import Ratings from "@/shared/ui/Ratings";
-import RequiredAmountDisplay from "@/shared/ui/RequiredAmountDisplay";
 import SaveButton from "@/shared/ui/SaveButton";
-// 5. Shared: 프로젝트 전반에서 재사용되는 범용 코드
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { RecipeStepList, useRecipeDetailQuery } from "@/entities/recipe";
-// 4. Entities: 핵심 데이터(레시피, 유저, 댓글)와 관련된 코드
 import { UserProfile, useUserStore } from "@/entities/user";
 
 import { CommentCard } from "@/features/comment-card";
 import { useToggleRecipeFavorite } from "@/features/recipe-favorite";
-// 3. Features: 사용자의 특정 행동(액션)과 관련된 기능들
 import { RecipeLikeButton } from "@/features/recipe-like";
 import { LockButton } from "@/features/recipe-visibility";
 import ShareButton from "@/features/share-content/ui/ShareButton";
 
 import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
-// 2. Widgets: 여러 기능을 조합한 독립적인 UI 블록
 import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
 import { useToastStore } from "@/widgets/Toast";
 

@@ -1,30 +1,30 @@
-import { ArrowRight,Clipboard } from 'lucide-react';
+import { ArrowRight, Clipboard } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/shadcn/button";
 
-import Circle from './Icon/Circle';
+import Circle from "./Circle";
 
 type ProgressButtonProps = {
   progressPercentage: number;
   isFormValid: boolean;
-  onClick?: () => void;
   className?: string;
   isLoading?: boolean;
+  onClick?: () => void;
 };
 
 const ProgressButton = ({
   progressPercentage,
   isFormValid,
-  onClick,
   className,
   isLoading,
+  onClick,
 }: ProgressButtonProps) => {
   return (
     <div
       className={cn(
-        'group relative w-full overflow-hidden rounded-lg shadow-md',
-        className,
+        "group relative w-full overflow-hidden rounded-lg shadow-md",
+        className
       )}
     >
       <div className="absolute inset-0 bg-gray-300"></div>
@@ -38,6 +38,7 @@ const ProgressButton = ({
         className="group relative z-10 w-full cursor-pointer bg-transparent py-6 text-lg font-semibold transition-none hover:bg-transparent"
         disabled={!isFormValid || isLoading}
         type="submit"
+        onClick={onClick}
       >
         {!isLoading ? (
           <span className="flex items-center justify-center gap-2 text-white drop-shadow-sm">

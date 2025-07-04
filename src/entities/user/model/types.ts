@@ -27,3 +27,21 @@ export type RecipeDailySummary = {
   totalCount: number;
   firstImageUrl: string;
 };
+
+export type RecipeHistoryDetailResponse = {
+  savings: number;
+  recipeId: number;
+  recipeTitle: string;
+  imageUrl: string;
+};
+
+export type PutUserInfoPayload = {
+  nickname?: string;
+  introduction?: string;
+  profileImageKey?: string;
+};
+
+export type RecipeHistoryResponse = {
+  dailySummaries: RecipeDailySummary[];
+  monthlyTotalSavings: number;
+};

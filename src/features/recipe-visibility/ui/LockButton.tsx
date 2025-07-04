@@ -10,8 +10,7 @@ type LockButtonProps = {
 };
 
 const LockButton = ({ recipeId, initialIsLocked }: LockButtonProps) => {
-  const { mutate: toggleVisibility, isPending } =
-    useRecipeVisibilityMutation(recipeId);
+  const { mutate: toggleVisibility } = useRecipeVisibilityMutation(recipeId);
 
   const handleToggle = () => {
     toggleVisibility();

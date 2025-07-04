@@ -1,4 +1,4 @@
-import { PageResponse } from "@/shared/api/types";
+import { BaseQueryParams, PageResponse } from "@/shared/api/types";
 
 import { Comment } from "@/entities/comment";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
@@ -100,4 +100,11 @@ export type RecipeStepPayload = Omit<
 > & {
   ingredients: IngredientPayload[];
   imageKey?: string;
+};
+
+export type RecipeQueryParams = BaseQueryParams & {
+  dishType?: string | null;
+  tagNames?: string[] | null;
+  q?: string | null;
+  isAiGenerated?: boolean;
 };

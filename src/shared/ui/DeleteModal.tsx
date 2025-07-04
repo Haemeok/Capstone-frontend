@@ -6,8 +6,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/shared/ui/shadcn/dialog";
 
 type DeleteModalProps = {
   open: boolean;

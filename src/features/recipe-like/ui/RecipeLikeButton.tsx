@@ -24,8 +24,7 @@ const RecipeLikeButton = ({
   isOnNavbar = false,
   ...props
 }: RecipeLikeButtonProps) => {
-  const { mutate: toggleLikeMutate, isPending } =
-    useLikeRecipeMutation(recipeId);
+  const { mutate: toggleLikeMutate } = useLikeRecipeMutation(recipeId);
 
   return (
     <HeartButton

@@ -12,7 +12,6 @@ type StarIconProps = {
 const StarIcon = ({
   filled,
   halfFilled,
-  hovered,
   onClick,
   onMouseEnter,
   onMouseLeave,

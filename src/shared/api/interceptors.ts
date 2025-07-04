@@ -68,7 +68,7 @@ export const handleTokenError = async (
       originRequest.headers.Authorization = `Bearer ${accessToken}`;
 
       return axiosInstance(originRequest);
-    } catch (refreshError) {
+    } catch {
       localStorage.removeItem("accessToken");
 
       dispatchForceLogoutEvent({

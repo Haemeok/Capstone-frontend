@@ -3,23 +3,19 @@ import { useRouter } from "next/router";
 
 import { Star } from "lucide-react";
 
+import { cn } from "@/shared/lib/utils";
+
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
 
-import { cn } from "@/lib/utils";
-
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
-  height: number;
 };
 
-const DetailedRecipeGridItem = ({
-  recipe,
-  height,
-}: DetailedRecipeGridItemProps) => {
+const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
   const router = useRouter();
   return (
     <div

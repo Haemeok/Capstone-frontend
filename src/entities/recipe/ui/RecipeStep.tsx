@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import IngredientIcon from "@/shared/ui/IngredientIcon";
 
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
@@ -33,7 +35,7 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
       </div>
       <p className="mt-2 text-left">{step.instruction}</p>
       {step.stepImageUrl && (
-        <img
+        <Image
           src={step.stepImageUrl}
           alt={`Step ${stepIndex + 1}`}
           className="mt-2 w-full rounded-2xl"

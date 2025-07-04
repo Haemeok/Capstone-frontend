@@ -8,14 +8,15 @@ import {
   UseFormWatch,
   useWatch,
 } from "react-hook-form";
+import Image from "next/image";
 
 import { UploadIcon, X } from "lucide-react";
 
-import { IngredientPayload } from "@/entities/ingredient";
+import { Button } from "@/shared/ui/shadcn/button";
+import { Checkbox } from "@/shared/ui/shadcn/checkbox";
+import { Label } from "@/shared/ui/shadcn/label";
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { IngredientPayload } from "@/entities/ingredient";
 
 import { RecipeFormValues } from "../model/types";
 
@@ -147,7 +148,7 @@ const StepItem = ({
               }
             >
               {stepImagePreviewUrls[index] ? (
-                <img
+                <Image
                   src={stepImagePreviewUrls[index]!}
                   alt={`Step ${index + 1} preview`}
                   className="h-full w-full object-cover"

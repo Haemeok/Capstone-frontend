@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import { useOutletContext } from 'react-router';
+import { useEffect, useRef } from "react";
+import { useOutletContext } from "react-router";
 
-import { gsap } from 'gsap';
+import { gsap } from "gsap";
 
 interface UseScrollAnimateOptions {
   triggerRef?: React.RefObject<HTMLElement | null>;
@@ -14,7 +14,7 @@ interface UseScrollAnimateOptions {
 }
 
 const useScrollAnimate = <T extends HTMLElement>(
-  options?: UseScrollAnimateOptions,
+  options?: UseScrollAnimateOptions
 ) => {
   const targetRef = useRef<T>(null);
   const animation = useRef<gsap.core.Timeline | null>(null);
@@ -31,8 +31,8 @@ const useScrollAnimate = <T extends HTMLElement>(
         scrollTrigger: {
           trigger: currentTriggerElement,
           scroller: motionRef.current,
-          start: options?.start || 'top 85%',
-          toggleActions: options?.toggleActions || 'restart none none none',
+          start: options?.start || "top 85%",
+          toggleActions: options?.toggleActions || "restart none none none",
         },
       });
 
@@ -43,9 +43,9 @@ const useScrollAnimate = <T extends HTMLElement>(
           opacity: 1,
           y: 0,
           duration: options?.duration ?? 0.7,
-          ease: options?.ease ?? 'power3.out',
+          ease: options?.ease ?? "power3.out",
           delay: options?.delay ?? 0.3,
-        },
+        }
       );
     }
 
