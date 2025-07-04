@@ -1,19 +1,23 @@
-import { IngredientPayload } from "@/entities/ingredient";
-import { RecipeFormValues } from "../model/types";
+import React, { useEffect } from "react";
 import {
   Control,
   FieldArrayWithId,
-  UseFormRegister,
   FieldErrors,
-  UseFormWatch,
+  UseFormRegister,
   UseFormSetValue,
+  UseFormWatch,
   useWatch,
 } from "react-hook-form";
-import React, { useEffect } from "react";
+
 import { UploadIcon, X } from "lucide-react";
+
+import { IngredientPayload } from "@/entities/ingredient";
+
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+
+import { RecipeFormValues } from "../model/types";
 
 type StepItemProps = {
   control: Control<RecipeFormValues>;

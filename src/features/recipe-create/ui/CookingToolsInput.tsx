@@ -1,8 +1,10 @@
-import { RecipeFormValues } from "../model/types";
-import { UseFormWatch } from "react-hook-form";
 import React, { useState } from "react";
+import { UseFormWatch } from "react-hook-form";
 import { UseFormSetValue } from "react-hook-form";
+
 import { X } from "lucide-react";
+
+import { RecipeFormValues } from "../model/types";
 
 type CookingToolsInputProps = {
   watch: UseFormWatch<RecipeFormValues>;

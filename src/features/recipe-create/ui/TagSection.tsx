@@ -1,8 +1,10 @@
-import { RecipeFormValues } from "../model/types";
-import { UseFormSetValue } from "react-hook-form";
 import React from "react";
+import { UseFormSetValue } from "react-hook-form";
 import { UseFormWatch } from "react-hook-form";
+
 import { TAG_EMOJI, TAGS } from "@/shared/config/constants/recipe";
+
+import { RecipeFormValues } from "../model/types";
 type TagSectionProps = {
   watch: UseFormWatch<RecipeFormValues>;
   setValue: UseFormSetValue<RecipeFormValues>;

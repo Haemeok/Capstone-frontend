@@ -1,6 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { finalizeRecipe } from "../api";
+
 import { queryClient } from "@/shared/lib/queryClient";
+
+import { finalizeRecipe } from "../api";
 
 export const useFinalizeRecipe = () => {
   const mutation = useMutation({

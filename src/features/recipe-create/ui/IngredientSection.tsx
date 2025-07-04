@@ -1,8 +1,3 @@
-import { Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { RecipeFormValues } from "../model/types";
-import { IngredientPayload } from "@/entities/ingredient";
-import { ChefHat } from "lucide-react";
 import React, { useState } from "react";
 import {
   Control,
@@ -10,6 +5,15 @@ import {
   useFieldArray,
   UseFormRegister,
 } from "react-hook-form";
+
+import { Plus, X } from "lucide-react";
+import { ChefHat } from "lucide-react";
+
+import { IngredientPayload } from "@/entities/ingredient";
+
+import { Button } from "@/components/ui/button";
+
+import { RecipeFormValues } from "../model/types";
 import IngredientSelector from "./IngredientSelector";
 
 type IngredientSectionProps = {
