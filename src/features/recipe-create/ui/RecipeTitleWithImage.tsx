@@ -1,9 +1,11 @@
-import { RecipeFormValues } from "@/features/recipe-create/model/types";
+import React, { useEffect, useState } from "react";
 import { UseFormWatch } from "react-hook-form";
 import { UseFormRegister } from "react-hook-form";
-import React, { useEffect, useState } from "react";
 import { FieldErrors } from "react-hook-form";
+
 import { UploadIcon } from "lucide-react";
+
+import { RecipeFormValues } from "@/features/recipe-create/model/types";
 
 type RecipeTitleWithImageProps = {
   errors: FieldErrors<RecipeFormValues>;

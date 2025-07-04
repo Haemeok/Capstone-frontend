@@ -1,4 +1,4 @@
-import { RecipeFormValues } from "../model/types";
+import React from "react";
 import {
   Control,
   useFieldArray,
@@ -6,11 +6,13 @@ import {
   UseFormWatch,
 } from "react-hook-form";
 import { UseFormRegister } from "react-hook-form";
-import React from "react";
 import { FieldErrors } from "react-hook-form";
+
 import { Plus } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
+import { RecipeFormValues } from "../model/types";
 import StepItem from "./StepItem";
 
 type StepsProps = {

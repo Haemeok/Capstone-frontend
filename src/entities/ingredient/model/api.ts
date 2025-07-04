@@ -1,10 +1,11 @@
+import { axiosInstance } from "@/shared/api/axios";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PAGE_SIZE } from "@/shared/config/constants/api";
-import { INGREDIENT_CATEGORY_CODES } from "@/shared/config/constants/recipe";
 import { END_POINTS } from "@/shared/config/constants/api";
-import { axiosInstance } from "@/shared/api/axios";
+import { INGREDIENT_CATEGORY_CODES } from "@/shared/config/constants/recipe";
 import { buildParams } from "@/shared/lib/utils";
-import { IngredientsApiResponse, IngredientQueryParams } from "./types";
+
+import { IngredientQueryParams,IngredientsApiResponse } from "./types";
 
 export const getIngredients = async ({
   category,

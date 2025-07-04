@@ -1,5 +1,5 @@
-import { axiosInstance } from "./axios";
 import { FileObject, PresignedUrlInfo, UploadResult } from "../types";
+import { axiosInstance } from "./axios";
 
 export const uploadFileToS3 = async (
   file: File,

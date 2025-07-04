@@ -1,5 +1,6 @@
 import { axiosInstance } from "@/shared/api/axios";
 import { END_POINTS } from "@/shared/config/constants/api";
+
 import { FinalizeRecipeResponse } from "./types";
 
 export const finalizeRecipe = async (recipeId: number) => {

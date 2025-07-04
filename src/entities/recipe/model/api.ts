@@ -1,10 +1,10 @@
 import { axiosInstance } from "@/shared/api/axios";
 import { BaseQueryParams } from "@/shared/api/types";
+import { PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
+import { FileInfoRequest } from "@/shared/types";
 
 import { Recipe } from "./types";
-import { FileInfoRequest } from "@/shared/types";
-import { PresignedUrlResponse } from "@/shared/api/types";
 import { RecipePayload } from "./types";
 
 export const getRecipe = async (id: number) => {

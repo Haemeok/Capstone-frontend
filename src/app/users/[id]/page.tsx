@@ -1,13 +1,12 @@
 import { useParams } from "next/navigation";
 
+import { guestUser } from "@/shared/config/constants/user";
+
 import { useUserQuery } from "@/entities/user";
+import { useUserStore } from "@/entities/user";
 
 import Header from "@/widgets/Header/UserProfileHeader";
 import UserProfileDisplay from "@/widgets/UserProfile/UserProfileDisplay";
-
-import { guestUser } from "@/shared/config/constants/user";
-import { useUserStore } from "@/entities/user";
-
 import UserTab from "@/widgets/UserTab/UserTab";
 
 const UserDetailPage = () => {

@@ -1,6 +1,8 @@
 import { FileInfoRequest, FileObject } from "@/shared/types";
-import { RecipeFormValues } from "../model/types";
+
 import { RecipePayload } from "@/entities/recipe/model/types";
+
+import { RecipeFormValues } from "../model/types";
 
 export const prepareRecipeData = async (
   formData: RecipeFormValues

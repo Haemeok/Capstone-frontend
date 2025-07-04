@@ -1,23 +1,27 @@
 import React, { useState } from "react";
-import { Search, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
+import { InfiniteData } from "@tanstack/react-query";
+import { Check,Search } from "lucide-react";
+
+import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import useSearch from "@/shared/hooks/useSearch";
+import { cn } from "@/shared/lib/utils";
+import { getNextPageParam } from "@/shared/lib/utils";
+
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
-import { InfiniteData } from "@tanstack/react-query";
-import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
-import { cn } from "@/shared/lib/utils";
+
+import { Button } from "@/components/ui/button";
 import {
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerContent,
   Drawer,
   DrawerClose,
+  DrawerContent,
+  DrawerDescription,
   DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
 } from "@/components/ui/drawer";
-import useSearch from "@/shared/hooks/useSearch";
-import { getNextPageParam } from "@/shared/lib/utils";
 
 type IngredientSelectorProps = {
   open: boolean;
