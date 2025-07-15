@@ -1,18 +1,14 @@
 "use client";
 
 import React, { Component, ReactNode } from "react";
-import { useRouter } from "next/navigation";
-
-import { Button } from "./shadcn/button";
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
 }
 
 interface ErrorBoundaryProps {
   children: ReactNode;
-  fallback?: ReactNode;
+  fallback: ReactNode;
 }
 
 export class ErrorBoundary extends Component<
@@ -25,7 +21,7 @@ export class ErrorBoundary extends Component<
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
@@ -38,22 +34,7 @@ export class ErrorBoundary extends Component<
 
   render() {
     if (this.state.hasError) {
-      // 사용자 정의 fallback UI가 있으면 사용, 없으면 기본 UI
-      const router = useRouter();
-      return (
-        this.props.fallback || (
-          <div className="flex w-full items-center justify-center py-8">
-            <p className="text-sm text-gray-500">잠시 문제가 발생했어요.</p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push("/")}
-            >
-              메인으로 이동하기
-            </Button>
-          </div>
-        )
-      );
+      return this.props.fallback; // 문제가 생기면 전달받은 fallback을 렌더링
     }
 
     return this.props.children;
