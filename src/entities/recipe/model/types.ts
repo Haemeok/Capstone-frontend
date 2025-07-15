@@ -49,6 +49,7 @@ export type Recipe = {
   favoriteByCurrentUser: boolean;
   private: boolean;
   aiGenerated: boolean;
+  totalCalories: number;
 };
 
 type RatingInfo = {
@@ -84,6 +85,7 @@ const defaultRecipeKeys = [
   "imageKey",
   "private",
   "aiGenerated",
+  "totalCalories",
 ] as const;
 
 export type RecipePayload = Omit<Recipe, (typeof defaultRecipeKeys)[number]> & {
@@ -107,4 +109,13 @@ export type RecipeQueryParams = BaseQueryParams & {
   tagNames?: string[] | null;
   q?: string | null;
   isAiGenerated?: boolean;
+};
+
+export type RecipeItemsQueryParams = {
+  key: string; // Unique identifier for the query
+  sort?: "desc" | "asc";
+  isAiGenerated?: boolean;
+  tagNames?: string[];
+  q?: string;
+  dishType?: string | null;
 };

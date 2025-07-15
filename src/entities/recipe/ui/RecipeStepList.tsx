@@ -1,6 +1,7 @@
 import { RecipeStep as RecipeStepType } from "@/entities/recipe";
 
 import RecipeStep from "./RecipeStep";
+import Box from "@/shared/ui/Box";
 
 type RecipeStepProps = {
   RecipeSteps: RecipeStepType[];
@@ -8,7 +9,7 @@ type RecipeStepProps = {
 
 const RecipeStepList = ({ RecipeSteps }: RecipeStepProps) => {
   return (
-    <div className="flex flex-col gap-4">
+    <Box className="flex flex-col gap-4">
       {RecipeSteps.map((step, stepIndex) => (
         <RecipeStep
           key={stepIndex}
@@ -17,7 +18,7 @@ const RecipeStepList = ({ RecipeSteps }: RecipeStepProps) => {
           length={RecipeSteps.length}
         />
       ))}
-    </div>
+    </Box>
   );
 };
 

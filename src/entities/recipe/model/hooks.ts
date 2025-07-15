@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { getRecipe } from "./api";
+import { mockRecipeData } from "./mockData";
 import { Recipe } from "./types";
 
 export const useRecipeDetailQuery = (id: number) => {
@@ -22,5 +23,19 @@ export const useRecipeDetailQuery = (id: number) => {
     isError,
     error,
     refetchRecipe: refetch,
+  };
+};
+
+export const useMockRecipeQuery = (
+  recipeId: number
+): {
+  data: Recipe | undefined;
+  isLoading: boolean;
+  error: null;
+} => {
+  return {
+    data: mockRecipeData,
+    isLoading: false,
+    error: null,
   };
 };
