@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 
 import { MyTabs, OtherTabs } from "@/shared/config/constants/user";
