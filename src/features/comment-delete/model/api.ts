@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/shared/api/axios";
+import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 export const deleteComment = async ({
@@ -9,6 +9,6 @@ export const deleteComment = async ({
   commentId: number;
 }) => {
   const END_POINT = END_POINTS.RECIPE_COMMENT_BY_ID(recipeId, commentId);
-  const response = await axiosInstance.delete(END_POINT);
-  return response.data;
+  const response = await api.delete(END_POINT);
+  return response;
 };

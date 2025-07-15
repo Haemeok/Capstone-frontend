@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -65,11 +67,12 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
         onSubmit={handleSubmit}
       >
         {!isFocused && user && (
-          <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-white">
+          <div className="h-8 w-8 flex-shrink-0 overflow-hidden relative rounded-full bg-white">
             <Image
               src={user.profileImage || ""}
               alt="내 프로필"
               className="h-full w-full object-cover"
+              fill
             />
           </div>
         )}
