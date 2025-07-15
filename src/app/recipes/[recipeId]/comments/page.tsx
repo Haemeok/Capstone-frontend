@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useParams } from "next/navigation";
 
@@ -9,7 +11,7 @@ import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
 import PrevButton from "@/shared/ui/PrevButton";
 
-import { CommentsApiResponse,getComments } from "@/entities/comment";
+import { CommentsApiResponse, getComments } from "@/entities/comment";
 import { useRecipeDetailQuery } from "@/entities/recipe";
 
 import CommentCard from "@/features/comment-card/ui/CommentCard";
@@ -17,8 +19,7 @@ import { CommentInput } from "@/features/comment-create";
 
 const CommentsPage = () => {
   const [sort, setSort] = useState<string>("최신순");
-  const params = useParams();
-  const recipeId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { recipeId } = useParams<{ recipeId: string }>();
   const { recipeData } = useRecipeDetailQuery(Number(recipeId));
   const author = recipeData.author;
   const { data, hasNextPage, isFetchingNextPage, ref } = useInfiniteScroll<

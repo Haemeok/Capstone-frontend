@@ -1,3 +1,5 @@
+"use client";
+
 import { useParams } from "next/navigation";
 
 import { guestUser } from "@/shared/config/constants/user";
@@ -14,7 +16,8 @@ const UserDetailPage = () => {
   const { userId: profileId } = useParams();
 
   const isOwnProfile =
-    loggedInUser !== null && Number(profileId) === loggedInUser.id;
+    loggedInUser !== null &&
+    (profileId === "guestUser" || Number(profileId) === loggedInUser.id);
 
   const { user } = useUserQuery(
     Number(profileId),
@@ -22,6 +25,8 @@ const UserDetailPage = () => {
   );
 
   const displayUser = isOwnProfile ? loggedInUser : (user ?? guestUser);
+
+  console.log("displayUser", displayUser, user, loggedInUser, isOwnProfile);
 
   return (
     <div className="flex flex-col overflow-hidden">

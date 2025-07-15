@@ -1,187 +1,54 @@
-import React, { useState } from "react";
+import { getRecipesOnServer } from "@/entities/recipe/model/api";
+import { SearchClient } from "@/widgets/SearchClient";
+import type { Metadata } from "next";
 
-import { InfiniteData } from "@tanstack/react-query";
-import { Search } from "lucide-react";
-
-import {
-  BASE_DRAWER_CONFIGS,
-  DISH_TYPE_CODES,
-  SORT_TYPE_CODES,
-  TAG_CODES,
-} from "@/shared/config/constants/recipe";
-import { DrawerType } from "@/shared/config/constants/recipe";
-import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import useSearch from "@/shared/hooks/useSearch";
-import { getNextPageParam } from "@/shared/lib/utils";
-import FilterChip from "@/shared/ui/FilterChip";
-
-import { getRecipeItems } from "@/entities/recipe";
-import { DetailedRecipesApiResponse } from "@/entities/recipe";
-
-import CategoryDrawer from "@/widgets/CategoryDrawer/CategoryDrawer";
-import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
-
-type DrawerConfig = {
-  type: "dishType" | "sort" | "tags";
-  header: string;
-  description?: string;
-  isMultiple: boolean;
-  availableValues: string[];
-  initialValue: string | string[];
-  setValue: (value: string | string[]) => void;
+type SearchPageProps = {
+  searchParams: Promise<{
+    q?: string;
+    sort?: string;
+    dishType?: string;
+    tagNames?: string | string[];
+  }>;
 };
 
-const SearchPage = () => {
-  const [sort, setSort] = useState<string>("최신순");
-  const [dishType, setDishType] = useState<string>("전체");
-  const [tagNames, setTagNames] = useState<string[]>([]);
+// 1. URL 쿼리에 따라 동적으로 Metadata를 생성합니다.
+export async function generateMetadata({
+  searchParams,
+}: SearchPageProps): Promise<Metadata> {
+  const awaitedSearchParams = await searchParams;
+  const query = awaitedSearchParams.q || "";
+  if (query) {
+    return {
+      title: `${query} 검색 결과 - 해먹`,
+      description: `"${query}"에 대한 레시피 검색 결과입니다.`,
+    };
+  }
+  return {
+    title: "레시피 검색 - 해먹",
+    description: "원하는 레시피를 검색하고 찾아보세요.",
+  };
+}
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [drawerConfig, setDrawerConfig] = useState<DrawerConfig | null>(null);
+// 2. 페이지는 서버 컴포넌트로, searchParams를 받습니다.
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  // 3. 서버에서 URL 쿼리 파라미터를 사용해 초기 데이터를 가져옵니다.
+  const awaitedSearchParams = await searchParams;
+  const tagNames = Array.isArray(awaitedSearchParams.tagNames)
+    ? awaitedSearchParams.tagNames
+    : awaitedSearchParams.tagNames
+      ? [awaitedSearchParams.tagNames]
+      : [];
 
-  const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
-    useSearch();
-
-  const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
-    DetailedRecipesApiResponse,
-    Error,
-    InfiniteData<DetailedRecipesApiResponse>,
-    [string, string, string, string[], string],
-    number
-  >({
-    queryKey: ["recipes", dishType, sort, tagNames, searchQuery],
-    queryFn: ({ pageParam }) =>
-      getRecipeItems({
-        sort: SORT_TYPE_CODES[sort as keyof typeof SORT_TYPE_CODES],
-        dishType: DISH_TYPE_CODES[dishType as keyof typeof DISH_TYPE_CODES],
-        tagNames: tagNames.map(
-          (tag) => TAG_CODES[tag.slice(3) as keyof typeof TAG_CODES]
-        ),
-        q: searchQuery,
-        pageParam,
-      }),
-    getNextPageParam: getNextPageParam,
-    initialPageParam: 0,
+  const initialRecipes = await getRecipesOnServer({
+    key: "search",
+    q: awaitedSearchParams.q,
+    sort: awaitedSearchParams.sort?.toLowerCase() === "asc" ? "asc" : "desc", // DESC/ASC를 desc/asc로 변환
+    dishType: awaitedSearchParams.dishType,
+    tagNames,
   });
 
-  const recipes = data?.pages.flatMap((page) => page.content) ?? [];
-  const qeuryKeyString = JSON.stringify([
-    "recipes",
-    dishType,
-    sort,
-    tagNames,
-    searchQuery,
-  ]);
-
-  const dynamicStateAccessors = {
-    dishType: {
-      state: dishType,
-      setState: (value: string) => {
-        setDishType(value);
-      },
-    },
-    sort: {
-      state: sort,
-      setState: (value: string) => {
-        setSort(value);
-      },
-    },
-    tags: {
-      state: tagNames,
-      setState: (value: string[]) => {
-        setTagNames(value);
-      },
-    },
-  };
-
-  const openDrawer = (type: DrawerType) => {
-    const baseConfig = BASE_DRAWER_CONFIGS[type];
-
-    const dynamicState = dynamicStateAccessors[type];
-
-    if (!baseConfig || !dynamicState) {
-      console.error(`Invalid drawer type or configuration missing: ${type}`);
-      return;
-    }
-
-    const finalConfig: DrawerConfig = {
-      ...baseConfig,
-      type,
-      initialValue: dynamicState.state,
-      setValue: (value: string | string[]) => {
-        dynamicState.setState(value as any);
-      },
-    };
-
-    setDrawerConfig(finalConfig);
-    setIsDrawerOpen(true);
-  };
-
-  const noResults = recipes.length === 0 && !isFetching;
-  const noResultsMessage =
-    searchQuery && recipes.length === 0
-      ? `"${searchQuery}"에 해당하는 레시피가 없습니다.`
-      : `"${dishType}"에 해당하는 레시피가 없습니다.`;
-
   return (
-    <div className="flex flex-col bg-[#ffffff]">
-      <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
-        <form onSubmit={handleSearchSubmit} className="relative">
-          <input
-            type="search"
-            placeholder="레시피를 검색하세요"
-            className="w-full rounded-md border border-gray-300 py-2 pr-10 pl-4 focus:outline-none"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
-
-          <button
-            type="submit"
-            className="absolute top-1/2 right-3 -translate-y-1/2"
-          >
-            <Search size={18} className="text-gray-400" />
-          </button>
-        </form>
-        <div className="flex gap-1 p-2">
-          <FilterChip
-            header={dishType}
-            onClick={() => openDrawer("dishType")}
-            isDirty={dishType !== "전체"}
-          />
-          <FilterChip
-            header={sort}
-            onClick={() => openDrawer("sort")}
-            isDirty={sort !== "최신순"}
-          />
-          <FilterChip
-            header={tagNames.length > 0 ? tagNames.join(", ") : "태그"}
-            onClick={() => openDrawer("tags")}
-            isDirty={tagNames.length > 0}
-          />
-        </div>
-      </div>
-      <RecipeGrid
-        recipes={recipes}
-        hasNextPage={hasNextPage}
-        observerRef={ref}
-        noResults={noResults}
-        noResultsMessage={noResultsMessage}
-        lastPageMessage={"모든 레시피를 불러왔습니다."}
-        queryKeyString={qeuryKeyString}
-        height={72}
-      />
-      <CategoryDrawer
-        open={isDrawerOpen}
-        onOpenChange={setIsDrawerOpen}
-        isMultiple={drawerConfig?.isMultiple ?? false}
-        setValue={drawerConfig?.setValue ?? (() => {})}
-        initialValue={drawerConfig?.initialValue ?? ""}
-        availableValues={drawerConfig?.availableValues ?? []}
-        header={drawerConfig?.header ?? ""}
-        description={drawerConfig?.description ?? ""}
-      />
-    </div>
+    // 4. 모든 상호작용은 클라이언트 컴포넌트에 위임하고, 서버에서 가져온 데이터를 전달합니다.
+    <SearchClient initialRecipes={initialRecipes} />
   );
-};
-
-export default SearchPage;
+}

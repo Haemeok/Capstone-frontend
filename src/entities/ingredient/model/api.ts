@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/shared/api/axios";
+import { api } from "@/shared/api/client";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PAGE_SIZE } from "@/shared/config/constants/api";
 import { END_POINTS } from "@/shared/config/constants/api";
@@ -44,17 +44,17 @@ export const getIngredients = async ({
       ? END_POINTS.INGREDIENTS
       : END_POINTS.SEARCH_INGREDIENTS;
 
-  const response = await axiosInstance.get<IngredientsApiResponse>(endPoint, {
+  console.log("endPoint", endPoint, isMine, isFridge);
+
+  const response = await api.get<IngredientsApiResponse>(endPoint, {
     params: apiParams,
-    useAuth: true,
   });
-  return response.data;
+  return response;
 };
 
 export const addIngredientBulk = async (ingredientIds: number[]) => {
-  const response = await axiosInstance.post(END_POINTS.MY_INGREDIENTS_BULK, {
+  const response = await api.post(END_POINTS.MY_INGREDIENTS_BULK, {
     ingredientIds,
-    useAuth: true,
   });
-  return response.data;
+  return response;
 };

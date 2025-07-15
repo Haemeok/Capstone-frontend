@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -13,7 +15,7 @@ const LoginPage = () => {
   const from = searchParams.get("from") || "/";
   return (
     <div className="scrollbar-hide flex h-screen flex-col items-center justify-center gap-2 overflow-y-auto">
-      <Image src={LOGIN_IMAGE_URL} alt="login" className="mb-4 p-4" />
+      <img src={LOGIN_IMAGE_URL} alt="login" className="mb-4 p-4" />
       <GoogleLoginButton from={from} />
       <NaverLoginButton />
       <KakaoLoginButton />

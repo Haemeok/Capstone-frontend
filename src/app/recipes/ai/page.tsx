@@ -1,3 +1,5 @@
+"use client";
+
 import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";

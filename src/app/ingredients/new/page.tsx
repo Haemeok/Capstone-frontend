@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
@@ -40,6 +42,7 @@ const NewIngredientsPage = () => {
     isFetching,
     isFetchingNextPage,
     status,
+    isPending,
     ref: infiniteScrollTriggerRef,
   } = useInfiniteScroll<
     IngredientsApiResponse,
@@ -86,7 +89,7 @@ const NewIngredientsPage = () => {
       isFetching ||
       !ingredientItems ||
       error ||
-      status === "pending" ||
+      isPending ||
       !itemsAnimateTargetRef.current ||
       !scrollableContainerRef.current
     ) {
@@ -236,8 +239,7 @@ const NewIngredientsPage = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto p-4" ref={scrollableContainerRef}>
-        {status === "pending" &&
-        (!ingredientItems || ingredientItems.length === 0) ? (
+        {isPending && (!ingredientItems || ingredientItems.length === 0) ? (
           <p className="pt-10 text-center text-gray-500">
             재료를 불러오는 중...
           </p>

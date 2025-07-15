@@ -11,13 +11,14 @@ export type IngredientItem = {
   price?: number;
   unit: string;
   inFridge: boolean;
+  calories: number;
 };
 
 export type UserIngredient = Omit<IngredientItem, "unit" | "price">;
 
 export type IngredientPayload = Omit<
   IngredientItem,
-  "category" | "price" | "id" | "imageUrl" | "inFridge"
+  "category" | "price" | "id" | "imageUrl" | "inFridge" | "calories"
 >;
 
 export type IngredientWithAI = Omit<IngredientItem, "inFridge">;
