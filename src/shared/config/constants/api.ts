@@ -41,6 +41,7 @@ export const END_POINTS = {
   RATING: (recipeId: number) => `/ratings/recipe/${recipeId}`,
   LOGOUT: "/token/logout",
   RECIPES_BY_TAG: () => "/recipes/by-tag",
+  MY_SURVEY: "/me/survey",
 };
 
 export const USER_ERROR_MESSAGE = {

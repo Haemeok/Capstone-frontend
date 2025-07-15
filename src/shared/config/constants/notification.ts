@@ -1,0 +1,13 @@
+export const WEBSOCKET_CONFIG = {
+  RECONNECT_INTERVAL: 5 * 1000,
+  MAX_RECONNECT_ATTEMPTS: 5,
+  HEARTBEAT_INTERVAL: 30 * 1000,
+  CONNECTION_TIMEOUT: 10 * 1000,
+} as const;
+
+// 알림 설정
+export const NOTIFICATION_CONFIG = {
+  MAX_NOTIFICATIONS: 100,
+} as const;
+
+export const WEBSOCKET_URL = "";

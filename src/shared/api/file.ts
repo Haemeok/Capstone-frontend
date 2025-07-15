@@ -1,6 +1,7 @@
 import { END_POINTS } from "../config/constants/api";
 import { FileObject, PresignedUrlInfo, UploadResult } from "../types";
-import { axiosInstance } from "./axios";
+import { apiClient } from "./client";
+import { trackError, addBreadcrumb } from "../lib/errorTracking";
 
 export const uploadFileToS3 = async (
   file: File,
@@ -8,18 +9,21 @@ export const uploadFileToS3 = async (
   onProgress?: (fileKey: string, percent: number) => void
 ) => {
   const { presignedUrl, fileKey } = presignedUrlInfo;
-  console.log(`Uploading ${file.name} to S3 with key: ${fileKey}`);
+  addBreadcrumb(`Uploading ${file.name} to S3`, "file_upload", "info");
 
   try {
-    await axiosInstance.put(presignedUrl, file, {
+    await fetch(presignedUrl, {
+      method: "PUT",
+      body: file,
       headers: {
         "Content-Type": file.type,
       },
-      useAuth: false,
     });
 
-    console.log(
-      `Successfully uploaded ${file.name} to S3. File key: ${fileKey}`
+    addBreadcrumb(
+      `Successfully uploaded ${file.name} to S3`,
+      "file_upload",
+      "info"
     );
 
     if (onProgress) {
@@ -28,10 +32,10 @@ export const uploadFileToS3 = async (
 
     return fileKey;
   } catch (error) {
-    console.error(
-      `Error uploading ${file.name} (key: ${fileKey}) to S3:`,
-      error
-    );
+    trackError(error as Error, {
+      tags: { section: "file_upload", action: "s3_upload" },
+      extra: { fileName: file.name, fileKey, fileType: file.type },
+    });
     throw error;
   }
 };
@@ -64,10 +68,14 @@ export const handleS3Upload = async (
           originalIndex: index,
         };
       } catch (err) {
-        console.error(
-          `S3 업로드 실패 (파일: ${fileObject.name}, 키: ${uploadInfo.fileKey}):`,
-          err
-        );
+        trackError(err as Error, {
+          tags: { section: "file_upload", action: "s3_batch_upload" },
+          extra: {
+            fileName: fileObject.name,
+            fileKey: uploadInfo.fileKey,
+            index,
+          },
+        });
         return {
           fileKey: uploadInfo.fileKey,
           success: false,
@@ -82,23 +90,25 @@ export const handleS3Upload = async (
 
   const failedUploads = uploadResults.filter((r) => !r.success);
   if (failedUploads.length > 0) {
-    console.error("S3 Uploads failed:", failedUploads);
     const firstError = failedUploads[0]?.error as Error | undefined;
-    throw new Error(
-      `${failedUploads.length}개의 파일 S3 업로드 실패: ${firstError?.message || "알 수 없는 오류"}`
-    );
+    const errorMessage = `${failedUploads.length}개의 파일 S3 업로드 실패: ${firstError?.message || "알 수 없는 오류"}`;
+
+    trackError(new Error(errorMessage), {
+      tags: { section: "file_upload", action: "batch_upload_failed" },
+      extra: { failedCount: failedUploads.length, failedUploads },
+    });
+
+    throw new Error(errorMessage);
   }
 
-  console.log("모든 파일 S3 업로드 성공");
+  addBreadcrumb("모든 파일 S3 업로드 성공", "file_upload", "info");
   return uploadResults;
 };
 
 export const getPresignedUrl = async (userId: number) => {
-  const response = await axiosInstance.get<PresignedUrlInfo>(
+  const response = await apiClient<PresignedUrlInfo>(
     END_POINTS.USER_PRESIGNED_URLS(userId),
-    {
-      useAuth: true,
-    }
+    { method: "GET" }
   );
-  return response.data;
+  return response;
 };
