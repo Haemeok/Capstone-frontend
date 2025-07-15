@@ -1,24 +1,68 @@
-import { AnimatePresence,motion } from "framer-motion";
+import { ComponentType } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
-import { surveySteps } from "@/shared/config/constants/user";
+import { surveySteps, SurveyStep } from "@/shared/config/constants/user";
 import { Label } from "@/shared/ui/shadcn/label";
-import { RadioGroupItem } from "@/shared/ui/shadcn/radio-group";
-import { RadioGroup } from "@/shared/ui/shadcn/radio-group";
+
+import RadioGroupSurvey from "./ui/RadioGroupSurvey";
+import CheckboxGroupSurvey from "./ui/CheckboxGroupSurvey";
+import TextareaSurvey from "./ui/TextareaSurvey";
+
+type SurveyAnswerValue = string | number | string[];
 
 type SurveyContentProps = {
   currentStep: number;
-  answers: Record<number, string>;
-  handleValueChange: (value: string) => void;
+  answers: Record<number, SurveyAnswerValue>;
+  handleValueChange: (value: SurveyAnswerValue) => void;
+};
+
+// 컴포넌트 맵핑 - 새로운 타입 추가 시 여기만 수정
+const SURVEY_COMPONENT_MAP: Record<string, ComponentType<any>> = {
+  radio: RadioGroupSurvey,
+  checkbox: CheckboxGroupSurvey,
+  textarea: TextareaSurvey,
+};
+
+// Props 생성자 맵핑 - 각 타입별 Props 생성 로직 분리
+const SURVEY_PROPS_CREATORS = {
+  checkbox: (
+    questionData: SurveyStep,
+    answers: Record<number, SurveyAnswerValue>,
+    handleValueChange: (value: SurveyAnswerValue) => void
+  ) => ({
+    questionData,
+    values: (answers[questionData.id] as string[]) || [],
+    onValuesChange: handleValueChange,
+  }),
+
+  default: (
+    questionData: SurveyStep,
+    answers: Record<number, SurveyAnswerValue>,
+    handleValueChange: (value: SurveyAnswerValue) => void
+  ) => ({
+    questionData,
+    value: (answers[questionData.id] as string) || "",
+    onValueChange: handleValueChange,
+  }),
+};
+
+// Props 생성 함수 - switch case 제거
+const createSurveyProps = (
+  questionData: SurveyStep,
+  answers: Record<number, SurveyAnswerValue>,
+  handleValueChange: (value: SurveyAnswerValue) => void
+) => {
+  const propsCreator =
+    SURVEY_PROPS_CREATORS[
+      questionData.type as keyof typeof SURVEY_PROPS_CREATORS
+    ] || SURVEY_PROPS_CREATORS.default;
+
+  return propsCreator(questionData, answers, handleValueChange);
 };
 
 const slideVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    x: 0,
-  },
+  initial: { opacity: 0 },
+  animate: { opacity: 1, x: 0 },
 };
 
 const SurveyContent = ({
@@ -27,6 +71,18 @@ const SurveyContent = ({
   handleValueChange,
 }: SurveyContentProps) => {
   const currentQuestionData = surveySteps[currentStep];
+
+  // 동적 컴포넌트 선택
+  const SurveyComponent =
+    SURVEY_COMPONENT_MAP[currentQuestionData.type] ||
+    SURVEY_COMPONENT_MAP.radio; // fallback
+
+  // Props 생성
+  const surveyProps = createSurveyProps(
+    currentQuestionData,
+    answers,
+    handleValueChange
+  );
 
   return (
     <AnimatePresence initial={false} mode="wait">
@@ -51,41 +107,7 @@ const SurveyContent = ({
             >
               {currentQuestionData.question}
             </Label>
-            <RadioGroup
-              id={`question-${currentQuestionData.id}`}
-              value={answers[currentQuestionData.id] || ""}
-              onValueChange={handleValueChange}
-              className="grid gap-2"
-            >
-              {currentQuestionData.isRadio ? (
-                currentQuestionData.options?.map((option) => (
-                  <div
-                    key={option.value}
-                    className="flex items-center space-x-2"
-                  >
-                    <RadioGroupItem
-                      value={option.value}
-                      id={`${currentQuestionData.id}-${option.value}`}
-                    />
-                    <Label
-                      htmlFor={`${currentQuestionData.id}-${option.value}`}
-                      className="text-base"
-                    >
-                      {option.label}
-                    </Label>
-                  </div>
-                ))
-              ) : (
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <textarea
-                    id={`question-${currentQuestionData.id}`}
-                    value={answers[currentQuestionData.id] || ""}
-                    onChange={(e) => handleValueChange(e.target.value)}
-                    className="w-full resize-none rounded-md border border-gray-300 p-2 focus:outline-none"
-                  />
-                </div>
-              )}
-            </RadioGroup>
+            <SurveyComponent {...surveyProps} />
           </>
         )}
       </motion.div>
