@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
@@ -154,11 +156,14 @@ const AIRecipePage = () => {
               onClick={() => handleSelectAI(ai)}
               className="flex flex-col items-center rounded-2xl border bg-white px-4 py-6 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
             >
-              <Image
-                src={ai.image}
-                alt={ai.name}
-                className="mb-4 h-48 w-full rounded-2xl object-cover"
-              />
+              <div className="relative h-48 w-full rounded-2xl mb-4">
+                <Image
+                  src={ai.image}
+                  alt={ai.name}
+                  className=" rounded-2xl object-cover"
+                  fill
+                />
+              </div>
               <p className="text-dark text-lg font-medium">{ai.name}</p>
               <p className="mt-2 text-center text-sm text-gray-600">
                 {ai.description}
@@ -177,7 +182,7 @@ const AIRecipePage = () => {
   if (isSuccess && createdRecipe) {
     return <AIRecipeDisplay createdRecipe={createdRecipe} />;
   }
-  console.log(createdRecipe);
+
   return (
     <div className="relative mx-auto bg-[#f7f7f7] p-4">
       <div className="text-center">
@@ -189,11 +194,14 @@ const AIRecipePage = () => {
         </p>
       </div>
       <div className="flex flex-col items-center justify-center gap-2 py-4">
-        <Image
-          src={selectedAI.image}
-          alt={selectedAI.name}
-          className="h-80 w-full rounded-2xl object-cover shadow-md"
-        />
+        <div className="relative h-80 w-full rounded-2xl">
+          <Image
+            src={selectedAI.image}
+            alt={selectedAI.name}
+            className=" rounded-2xl object-cover"
+            fill
+          />
+        </div>
         <p className="mt-2 text-center text-sm text-gray-600">
           {selectedAI.description}
         </p>

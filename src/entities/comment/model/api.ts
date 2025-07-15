@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/shared/api/axios";
+import { api } from "@/shared/api/client";
 import { BaseQueryParams } from "@/shared/api/types";
 import { END_POINTS } from "@/shared/config/constants/api";
 import { PAGE_SIZE } from "@/shared/config/constants/api";
@@ -25,12 +25,11 @@ export const getComments = async ({
 
   const END_POINT = END_POINTS.RECIPE_COMMENT(recipeId);
 
-  const response = await axiosInstance.get<CommentsApiResponse>(END_POINT, {
+  const response = await api.get<CommentsApiResponse>(END_POINT, {
     params: apiParams,
-    useAuth: "optional",
   });
 
-  return response.data;
+  return response;
 };
 
 export const getReplies = async ({
@@ -50,11 +49,9 @@ export const getReplies = async ({
 
   const END_POINT = END_POINTS.RECIPE_REPLY(recipeId, commentId);
 
-  const response = await axiosInstance.get<TotalRepliesApiResponse>(END_POINT, {
+  const response = await api.get<TotalRepliesApiResponse>(END_POINT, {
     params: apiParams,
-    useAuth: "optional",
   });
 
-  console.log("response", response.data);
-  return response.data;
+  return response;
 };

@@ -1,8 +1,10 @@
+"use client";
+
 import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-import { AxiosError } from "axios";
+import { ApiError } from "@/shared/api/client";
 import { Camera } from "lucide-react";
 
 import { useUserStore } from "@/entities/user";
@@ -62,9 +64,12 @@ const UserInfoChangePage = () => {
     onSuccess: () => {
       router.back();
     },
-    onError: (error: AxiosError) => {
-      const apiError = error.response?.data as ApiErrorData | undefined;
-      apiError?.message || "프로필 업데이트에 실패했습니다.";
+    onError: (error: ApiError) => {
+      const apiError = error.data as ApiErrorData | undefined;
+      console.error(
+        "프로필 업데이트 실패:",
+        apiError?.message || error.message || "프로필 업데이트에 실패했습니다."
+      );
     },
   });
 

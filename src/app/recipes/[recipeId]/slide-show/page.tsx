@@ -1,8 +1,10 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
-import { Bookmark,Share, Star, X } from "lucide-react";
+import { Bookmark, Share, Star, X } from "lucide-react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 import {
@@ -120,7 +122,7 @@ const RecipeSlideShowPage = () => {
         <CarouselContent className="-ml-0 h-full flex-grow">
           {recipeSteps.map((step, index) => (
             <CarouselItem key={index} className="h-full pl-0">
-              <SlideShowContent step={step} totalSteps={TOTAL_STEPS} />
+              <SlideShowContent step={step} />
             </CarouselItem>
           ))}
           <CarouselItem
