@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -12,7 +14,7 @@ import throttle from "lodash.throttle";
 type UseInfiniteScrollOptions<
   TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
-  TPageParam = number
+  TPageParam = number,
 > = {
   queryKey: TQueryKey;
 
@@ -28,6 +30,7 @@ type UseInfiniteScrollOptions<
   initialPageParam: TPageParam;
   threshold?: number;
   throttleMs?: number;
+  initialData?: InfiniteData<TQueryFnData, TPageParam>;
 };
 
 export const useInfiniteScroll = <
@@ -35,7 +38,7 @@ export const useInfiniteScroll = <
   TError = DefaultError,
   TData = InfiniteData<TQueryFnData>,
   TQueryKey extends QueryKey = QueryKey,
-  TPageParam = number
+  TPageParam = number,
 >({
   queryKey,
   queryFn,
@@ -43,6 +46,7 @@ export const useInfiniteScroll = <
   initialPageParam,
   threshold = 0.5,
   throttleMs = 300,
+  initialData,
 }: UseInfiniteScrollOptions<TQueryFnData, TQueryKey, TPageParam>) => {
   const queryResult = useInfiniteQuery<
     TQueryFnData,
@@ -56,6 +60,7 @@ export const useInfiniteScroll = <
       queryFn({ pageParam } as { pageParam: TPageParam }),
     getNextPageParam,
     initialPageParam,
+    initialData,
   });
 
   const {

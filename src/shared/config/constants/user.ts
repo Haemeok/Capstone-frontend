@@ -9,7 +9,7 @@ import { UI_BASE_URL } from "./recipe";
 export const guestUser: User = {
   id: 0,
   nickname: "게스트",
-  profileImage: "/default-profile.png",
+  profileImage: "",
   username: "@guest",
   introduction: "",
 };
@@ -30,41 +30,62 @@ export const OtherTabs: Tab[] = [
   { id: "나의 레시피", label: "나의 레시피", icon: Award },
 ];
 
-interface SurveyStep {
+type SurveyStepType = "radio" | "textarea" | "checkbox" | "range";
+
+export type SurveyStep = {
   id: number;
   question: string;
+  type: SurveyStepType;
   options?: { value: string; label: string }[];
-  isRadio: boolean;
-}
+  isRadio: boolean; // 호환성을 위해 유지
+  min?: number;
+  max?: number;
+  isMultiple?: boolean;
+};
 
 export const surveySteps: SurveyStep[] = [
   {
     id: 1,
-    question: "가장 선호하는 음식 종류는 무엇인가요?",
-    options: [
-      { value: "soup", label: "국/찌개" },
-      { value: "main", label: "메인" },
-      { value: "side", label: "반찬" },
-      { value: "dessert", label: "디저트" },
-      { value: "drink", label: "음료" },
-    ],
+    question:
+      "매운맛 선호도를 선택해주세요 (1: 전혀 안 매운 것, 5: 아주 매운 것)",
+    type: "radio",
     isRadio: true,
+    options: [
+      { value: "1", label: "1 - 전혀 안 매운 것" },
+      { value: "2", label: "2 - 약간 매운 것" },
+      { value: "3", label: "3 - 보통 매운 것" },
+      { value: "4", label: "4 - 매운 것" },
+      { value: "5", label: "5 - 아주 매운 것" },
+    ],
   },
   {
     id: 2,
     question: "알레르기가 있는 음식이 있나요? 있다면 알려주세요.",
+    type: "textarea",
     isRadio: false,
   },
   {
     id: 3,
-    question: "매운 것을 얼마나 좋아하시나요?",
+    question: "선호하는 요리 테마를 선택해주세요 (복수 선택 가능)",
+    type: "checkbox",
+    isRadio: false,
+    isMultiple: true,
     options: [
-      { value: "love", label: "매우 좋아함" },
-      { value: "like", label: " 좋아함" },
-      { value: "dislike", label: " 싫어함" },
-      { value: "hate", label: " 못 먹음" },
+      { value: "홈파티", label: "🏠 홈파티" },
+      { value: "피크닉", label: "🌼 피크닉" },
+      { value: "캠핑", label: "🏕️ 캠핑" },
+      { value: "다이어트 / 건강식", label: "🥗 다이어트 / 건강식" },
+      { value: "아이와 함께", label: "👶 아이와 함께" },
+      { value: "혼밥", label: "🍽️ 혼밥" },
+      { value: "술안주", label: "🍶 술안주" },
+      { value: "브런치", label: "🥐 브런치" },
+      { value: "야식", label: "🌙 야식" },
+      { value: "초스피드 / 간단 요리", label: "⚡ 초스피드 / 간단 요리" },
+      { value: "기념일 / 명절", label: "🎉 기념일 / 명절" },
+      { value: "도시락", label: "🍱 도시락" },
+      { value: "에어프라이어", label: "🔌 에어프라이어" },
+      { value: "해장", label: "🍲 해장" },
     ],
-    isRadio: true,
   },
 ];
 

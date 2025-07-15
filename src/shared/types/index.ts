@@ -1,3 +1,5 @@
+import type { HIDDEN_NAVBAR_PATHS } from "../config/constants/navigation";
+
 export type DefaultOption = {
   code: null;
   displayName: string;
@@ -33,3 +35,9 @@ export type PresignedUrlInfo = {
   presignedUrl: string;
   fileKey: string;
 };
+
+export type HiddenNavbarPath = (typeof HIDDEN_NAVBAR_PATHS)[number];
+
+// 인증 관련 타입들
+export type { AuthStatus, ServerAuthResult } from "./auth";
+export { isAuthenticated, isTokenExpired, isUnauthenticated } from "./auth";

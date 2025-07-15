@@ -1,7 +1,9 @@
+"use client";
+
 import { useEffect, useRef } from "react";
-import { useOutletContext } from "react-router";
 
 import { gsap } from "gsap";
+import { useScrollContext } from "../lib/ScrollContext";
 
 interface UseScrollAnimateOptions {
   triggerRef?: React.RefObject<HTMLElement | null>;
@@ -18,11 +20,29 @@ const useScrollAnimate = <T extends HTMLElement>(
 ) => {
   const targetRef = useRef<T>(null);
   const animation = useRef<gsap.core.Timeline | null>(null);
-  const { motionRef } = useOutletContext<{
-    motionRef: React.RefObject<HTMLDivElement>;
-  }>();
+  const { motionRef } = useScrollContext();
+
+  const playAnimation = () => {
+    if (!targetRef.current) return;
+
+    gsap.fromTo(
+      targetRef.current,
+      { opacity: 0, y: options?.yOffset ?? 5 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: options?.duration ?? 0.7,
+        ease: options?.ease ?? "power3.out",
+        delay: options?.delay ?? 0.3,
+      }
+    );
+  };
 
   useEffect(() => {
+    if (!motionRef.current || !targetRef.current) {
+      return;
+    }
+
     const currentTriggerElement =
       options?.triggerRef?.current || targetRef.current;
 
@@ -62,7 +82,7 @@ const useScrollAnimate = <T extends HTMLElement>(
     options?.yOffset,
   ]);
 
-  return { targetRef };
+  return { targetRef, playAnimation };
 };
 
 export default useScrollAnimate;
