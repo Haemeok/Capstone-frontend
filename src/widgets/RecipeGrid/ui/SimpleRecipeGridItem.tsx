@@ -1,6 +1,8 @@
+"use client";
+
 import React from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useRouter } from "next/router";
 
 import { EllipsisVertical } from "lucide-react";
 
@@ -42,6 +44,8 @@ const SimpleRecipeGridItem = ({
           src={recipe.imageUrl}
           alt={recipe.title}
           className="h-full w-full rounded-2xl object-cover"
+          width={50}
+          height={50}
         />
         <div className="absolute top-0 right-0 p-2 text-right">
           <RecipeLikeButton
