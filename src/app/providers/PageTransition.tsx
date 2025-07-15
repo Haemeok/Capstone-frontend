@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-import { AnimatePresence,motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { useScrollContext } from "@/shared/lib/ScrollContext";
 
@@ -23,7 +23,7 @@ const pageTransition = {
   type: "tween",
   ease: "easeIn",
   duration: 0.25,
-};
+} as const;
 
 export const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
