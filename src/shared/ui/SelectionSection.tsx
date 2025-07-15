@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
-import SelectButton from '@/components/SelectButton';
+import SelectButton from "@/shared/ui/SelectButton";
 
 type SelectionSectionProps = {
   title: string;
@@ -18,7 +18,7 @@ const SelectionSection = ({
   items,
   selectedItems,
   onToggle,
-  className = '',
+  className = "",
   isSingleSelect = false,
 }: SelectionSectionProps) => {
   return (

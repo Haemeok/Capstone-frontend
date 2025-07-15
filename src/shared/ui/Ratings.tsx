@@ -1,4 +1,6 @@
-import React, { useEffect, useRef,useState } from "react";
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
 
 import { formatPrice } from "@/shared/lib/format";
 

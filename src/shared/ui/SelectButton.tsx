@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from "@/shared/ui/shadcn/button";
+import { cn } from "@/lib/utils";
 
 type SelectButtonProps = {
   label: string;
@@ -20,11 +20,11 @@ const SelectButton = ({
       variant="outline"
       size="sm"
       className={cn(
-        'flex cursor-pointer items-center gap-1.5 rounded-full transition-all duration-100 hover:border-green-700',
+        "flex cursor-pointer items-center gap-1.5 rounded-full transition-all duration-100 hover:border-green-700",
         isSelected
-          ? 'bg-olive-mint border-olive-mint hover:bg-olive-mint hover:border-olive-mint text-white hover:text-white'
-          : 'border-gray-300',
-        className,
+          ? "bg-olive-mint border-olive-mint hover:bg-olive-mint hover:border-olive-mint text-white hover:text-white"
+          : "border-gray-300",
+        className
       )}
       onClick={onClick}
     >

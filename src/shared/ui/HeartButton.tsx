@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useRef } from "react";
 
 import clsx from "clsx";
 import { Heart } from "lucide-react";
@@ -31,37 +33,32 @@ const HeartButton = ({
   isOnNavbar = false,
   ...props
 }: HeartButtonProps) => {
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    onClick();
-
-    setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 250);
-  };
-
   const finalButtonClassName = clsx(
     isOnNavbar ? "nav-button-base" : "",
     `flex items-center justify-center ${buttonClassName}`
   );
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    onClick();
+  };
 
   return (
     <div
       className={`flex flex-col items-center justify-center gap-1 ${containerClassName}`}
     >
       <button
-        onClick={(e) => handleToggle(e)}
-        className={finalButtonClassName}
+        onClick={handleClick}
+        className={cn("heart-button", finalButtonClassName)}
         {...props}
       >
         <Heart
           width={width}
           height={height}
           className={cn(
+            "beat",
             iconClassName,
-            isLiked ? "fill-[#d12d2e] text-[#d12d2e] opacity-100" : "",
-            isAnimating ? "beat" : ""
+            isLiked ? "fill-red-500 text-red-500" : "text-gray-400"
           )}
         />
       </button>

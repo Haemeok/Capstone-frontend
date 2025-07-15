@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+"use client";
+
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 
 import gsap from "gsap";
@@ -71,6 +73,8 @@ const SavingSection = ({
           src={imageUrl}
           alt={altText}
           className="max-h-full w-auto max-w-full object-contain"
+          width={100}
+          height={100}
         />
       </div>
     </div>
