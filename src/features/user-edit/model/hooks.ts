@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 
 import { getPresignedUrl, uploadFileToS3 } from "@/shared/api/file";
 
@@ -9,10 +8,11 @@ import { putUserInfo } from "@/entities/user/model/api";
 import { User } from "@/entities/user/model/types";
 
 import { PutUserInfoVariables } from "./types";
+import { ApiError } from "@/shared/api/errors";
 
 interface UsePutUserInfoMutationProps {
   onSuccess?: (data: User) => void;
-  onError?: (error: AxiosError) => void;
+  onError?: (error: ApiError) => void;
 }
 
 export const usePutUserInfoMutation = ({
@@ -22,7 +22,7 @@ export const usePutUserInfoMutation = ({
   const queryClient = useQueryClient();
   const { user, setUser } = useUserStore();
 
-  const mutation = useMutation<User, AxiosError, PutUserInfoVariables>({
+  const mutation = useMutation<User, ApiError, PutUserInfoVariables>({
     mutationFn: async ({
       nickname,
       description,
@@ -76,14 +76,14 @@ export const usePutUserInfoMutation = ({
         onSuccess(data);
       }
     },
-    onError: (error: AxiosError) => {
+    onError: (error: ApiError) => {
       if (onError) {
         onError(error);
       }
       console.error("Error patching user info:", error);
     },
   });
-  // mutation 객체와 isLoading 상태를 함께 반환합니다.
+
   return {
     ...mutation,
     isLoading: mutation.isPending,
