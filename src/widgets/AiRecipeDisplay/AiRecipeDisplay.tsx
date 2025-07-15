@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
 import { formatPrice } from "@/shared/lib/format";
