@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/shared/api/axios";
+import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 import { Comment } from "@/entities/comment";
@@ -14,8 +14,8 @@ export const postComment = async ({
     ? END_POINTS.RECIPE_REPLY(recipeId, commentId)
     : END_POINTS.RECIPE_COMMENT(recipeId);
 
-  const response = await axiosInstance.post<Comment>(END_POINT, {
+  const response = await api.post<Comment>(END_POINT, {
     content: comment,
   });
-  return response.data;
+  return response;
 };
