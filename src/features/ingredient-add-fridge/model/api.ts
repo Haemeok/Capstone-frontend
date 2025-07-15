@@ -1,18 +1,16 @@
-import { axiosInstance } from "@/shared/api/axios";
+import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 export const addIngredient = async (ingredientId: number) => {
-  const response = await axiosInstance.post(END_POINTS.MY_INGREDIENTS, {
+  const response = await api.post(END_POINTS.MY_INGREDIENTS, {
     ingredientId,
-    useAuth: true,
   });
-  return response.data;
+  return response;
 };
 
 export const addIngredientBulk = async (ingredientIds: number[]) => {
-  const response = await axiosInstance.post(END_POINTS.MY_INGREDIENTS_BULK, {
+  const response = await api.post(END_POINTS.MY_INGREDIENTS_BULK, {
     ingredientIds,
-    useAuth: true,
   });
-  return response.data;
+  return response;
 };
