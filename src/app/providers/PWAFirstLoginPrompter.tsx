@@ -1,8 +1,10 @@
 "use client";
 
 import { usePWAFirstLoginPrompt } from "@/shared/hooks/usePWAFirstLoginPrompt";
-import { usePWAInstallContext } from "./PWAInstallProvider";
+
 import PWAInstallModal from "@/widgets/PWAInstallModal";
+
+import { usePWAInstallContext } from "./PWAInstallProvider";
 
 /**
  * 첫 로그인 시 PWA 설치 모달을 표시하는 컴포넌트

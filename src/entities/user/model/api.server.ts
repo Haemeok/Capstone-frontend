@@ -1,7 +1,8 @@
 import { serverApi } from "@/shared/api/serverApiClient.server";
 import { END_POINTS } from "@/shared/config/constants/api";
-import { User } from "./types";
 import { ServerAuthResult } from "@/shared/types";
+
+import { User } from "./types";
 
 export const getMyInfoOnServer = async (): Promise<ServerAuthResult> => {
   try {

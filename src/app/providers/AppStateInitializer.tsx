@@ -2,16 +2,20 @@
 
 import { useEffect } from "react";
 import { ReactNode } from "react";
-import { useUserStore } from "@/entities/user/model/store";
-import { useToastStore } from "@/widgets/Toast/model/store";
-import { useMyInfoQuery } from "@/entities/user/model/hooks";
-import {
-  ServerAuthResult,
-  isAuthenticated,
-  isTokenExpired,
-} from "@/shared/types";
+
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import {
+  isAuthenticated,
+  isTokenExpired,
+  ServerAuthResult,
+} from "@/shared/types";
+
+import { useMyInfoQuery } from "@/entities/user/model/hooks";
+import { useUserStore } from "@/entities/user/model/store";
+
+import { useToastStore } from "@/widgets/Toast/model/store";
 
 gsap.registerPlugin(ScrollTrigger);
 

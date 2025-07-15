@@ -1,4 +1,5 @@
 import { WEBSOCKET_CONFIG } from "@/shared/config/constants/websocket";
+
 import type { WebSocketConnectionStatus } from "@/entities/notification/model/type";
 
 /**

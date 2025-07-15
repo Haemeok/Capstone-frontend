@@ -1,8 +1,9 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
+
+import { AnimatePresence,motion } from "framer-motion";
 
 import { useScrollContext } from "@/shared/lib/ScrollContext";
 

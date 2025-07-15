@@ -1,12 +1,13 @@
 import Image from "next/image";
 
+import { UserRound } from "lucide-react";
+
 import { guestUser, NO_IMAGE_URL } from "@/shared/config/constants/user";
 
 import UserInfoEditButton from "@/features/edit-user-profile/ui/UserInfoEditButton";
 
 import { User } from "../../entities/user/model/types";
 import ActionButton from "./ActionButton";
-import { UserRound } from "lucide-react";
 
 type UserProfileDisplayProps = {
   user: User;

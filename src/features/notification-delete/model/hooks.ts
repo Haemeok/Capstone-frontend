@@ -3,8 +3,8 @@
 import { useDeleteNotification } from "@/entities/notification";
 
 export {
-  useDeleteNotification,
   useDeleteAllNotifications,
+  useDeleteNotification,
 } from "@/entities/notification";
 
 export const useConfirmDelete = () => {

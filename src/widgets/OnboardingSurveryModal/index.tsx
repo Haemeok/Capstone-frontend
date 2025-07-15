@@ -14,7 +14,8 @@ import {
 } from "@/shared/ui/shadcn/dialog";
 
 import { useUserStore } from "@/entities/user";
-import { useSurveyMutation, SurveyAnswers } from "@/features/user-survey";
+
+import { SurveyAnswers,useSurveyMutation } from "@/features/user-survey";
 
 import SurveyContent from "./SurveyContent";
 

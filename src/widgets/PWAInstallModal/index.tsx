@@ -1,15 +1,15 @@
 "use client";
 
+import { PWA_BENEFITS } from "@/shared/config/constants/pwa";
 import { Button } from "@/shared/ui/shadcn/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/shared/ui/shadcn/dialog";
-import { PWA_BENEFITS } from "@/shared/config/constants/pwa";
 
 type PWAInstallModalProps = {
   isOpen: boolean;

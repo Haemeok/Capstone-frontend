@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import { NotificationDropdown } from "@/widgets/NotificationDropdown";
 
 const HomeHeader = () => {

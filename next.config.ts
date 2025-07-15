@@ -1,5 +1,6 @@
-import { withSentryConfig } from "@sentry/nextjs";
 import withPWA from "next-pwa";
+
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig = withPWA({
   dest: "public",

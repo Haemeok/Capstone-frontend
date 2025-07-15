@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import { gsap } from "gsap";
+
 import { useScrollContext } from "../lib/ScrollContext";
 
 interface UseScrollAnimateOptions {

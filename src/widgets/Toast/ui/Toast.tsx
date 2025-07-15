@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
 import { useToastStore } from "@/widgets/Toast/model/store";
 import { ToastType } from "@/widgets/Toast/model/types";
+
+import { cn } from "@/lib/utils";
 
 type ToastProps = ToastType;
 

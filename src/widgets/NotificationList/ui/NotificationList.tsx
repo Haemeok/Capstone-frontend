@@ -1,10 +1,11 @@
 import { NotificationItem } from "@/entities/notification";
 import type { Notification } from "@/entities/notification/model/type";
+
 import { useNotificationList } from "../model/hooks";
-import { LoadingSkeleton } from "./LoadingSkeleton";
-import { ErrorState } from "./ErrorState";
 import { EmptyState } from "./EmptyState";
+import { ErrorState } from "./ErrorState";
 import { InfiniteScrollTrigger } from "./InfiniteScrollTrigger";
+import { LoadingSkeleton } from "./LoadingSkeleton";
 
 type NotificationListProps = {
   onNotificationClick?: (notification: Notification) => void;

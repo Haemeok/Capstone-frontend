@@ -12,6 +12,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/shared/ui/shadcn/drawer";
+
 import useLogoutMutation from "@/features/auth/model/hooks/useLogoutMutation";
 
 const SettingsActionButton = () => {
