@@ -1,18 +1,22 @@
-import { axiosInstance } from "@/shared/api/axios";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 import { buildParams, customParamsSerializer } from "@/shared/lib/utils";
 import { FileInfoRequest } from "@/shared/types";
 
-import { DetailedRecipesApiResponse, Recipe, RecipeQueryParams } from "./types";
+import {
+  BaseRecipesApiResponse,
+  DetailedRecipesApiResponse,
+  Recipe,
+  RecipeItemsQueryParams,
+  RecipeQueryParams,
+} from "./types";
 import { RecipePayload } from "./types";
+import { api } from "@/shared/api/client";
 
 export const getRecipe = async (id: number) => {
-  const response = await axiosInstance.get<Recipe>(END_POINTS.RECIPE(id), {
-    useAuth: "optional",
-  });
-  return response.data;
+  const response = await api.get<Recipe>(END_POINTS.RECIPE(id));
+  return response;
 };
 
 export const getRecipeItems = async ({
@@ -46,17 +50,16 @@ export const getRecipeItems = async ({
   };
 
   const apiParams = buildParams(baseParams, optionalParams);
-  console.log("apiParams", apiParams);
-  const response = await axiosInstance.get<DetailedRecipesApiResponse>(
+
+  const response = await api.get<DetailedRecipesApiResponse>(
     END_POINTS.RECIPE_SEARCH,
     {
       params: apiParams,
       paramsSerializer: customParamsSerializer,
-      useAuth: "optional",
     }
   );
 
-  return response.data;
+  return response;
 };
 
 export const fetchPagedRecipes = async <T>(
@@ -73,11 +76,11 @@ export const fetchPagedRecipes = async <T>(
     sort: `createdAt,${sort}`,
   };
 
-  const response = await axiosInstance.get<T>(endpoint, {
+  const response = await api.get<T>(endpoint, {
     params: apiParams,
   });
 
-  return response.data;
+  return response;
 };
 
 export const postRecipe = async ({
@@ -87,17 +90,11 @@ export const postRecipe = async ({
   recipe: RecipePayload;
   files: FileInfoRequest[];
 }) => {
-  console.log("Recipe", recipe);
-  console.log("Files", files);
-  const response = await axiosInstance.post<PresignedUrlResponse>(
-    END_POINTS.RECIPES,
-    {
-      recipe,
-      files,
-    }
-  );
-  console.log(response.data);
-  return response.data;
+  const response = await api.post<PresignedUrlResponse>(END_POINTS.RECIPES, {
+    recipe,
+    files,
+  });
+  return response;
 };
 
 export const editRecipe = async ({
@@ -111,13 +108,81 @@ export const editRecipe = async ({
 }) => {
   console.log("Recipe", recipe);
   console.log("Files", files);
-  const response = await axiosInstance.put<PresignedUrlResponse>(
+  const response = await api.put<PresignedUrlResponse>(
     END_POINTS.RECIPE(recipeId),
     {
       recipe,
       files,
     }
   );
-  console.log(response.data);
-  return response.data;
+  console.log(response);
+  return response;
+};
+
+export const getRecipesOnServer = async (
+  params: RecipeItemsQueryParams
+): Promise<DetailedRecipesApiResponse> => {
+  const query = new URLSearchParams({
+    page: "0",
+    size: "10",
+    sort: `createdAt,${params.sort || "desc"}`,
+  });
+
+  if (params.q) query.append("q", params.q);
+  if (params.isAiGenerated) query.append("isAiGenerated", "true");
+  if (params.dishType) query.append("dishType", params.dishType);
+  if (params.tagNames) {
+    params.tagNames.forEach((tag) => query.append("tagNames", tag));
+  }
+
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/recipes/search?${query.toString()}`;
+
+  try {
+    const res = await fetch(API_URL, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      // API 에러 처리
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(`[getRecipesOnServer] Failed to fetch recipes:`, error);
+
+    return {
+      content: [],
+      page: {
+        size: 0,
+        number: 0,
+        totalElements: 0,
+        totalPages: 0,
+      },
+    };
+  }
+};
+
+export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/recipes/${id}`;
+  if (isNaN(id) || id <= 0) {
+    return null;
+  }
+  try {
+    const res = await fetch(API_URL, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        return null;
+      }
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(`[getRecipeOnServer] Failed to fetch recipe ${id}:`, error);
+    return null;
+  }
 };
