@@ -1,5 +1,7 @@
+"use client";
+
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import { Star } from "lucide-react";
 
@@ -10,6 +12,7 @@ import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
+import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
@@ -17,15 +20,26 @@ type DetailedRecipeGridItemProps = {
 
 const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
   const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/recipes/${recipe.id}`);
+  };
+
+  const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
+
   return (
     <div
-      className={cn(`relative flex h-80 shrink-0 flex-col gap-2 rounded-2xl`)}
-      onClick={() => router.push(`/recipes/${recipe.id}`)}
+      className={cn(
+        `relative flex h-80 shrink-0 flex-col gap-2 rounded-2xl cursor-pointer`
+      )}
+      onClick={handleClick}
       key={recipe.id}
     >
       <Image
-        src={recipe.imageUrl}
+        src={imageUrl}
         alt={recipe.title}
+        width={208}
+        height={208}
         className={cn(`relative h-52 min-h-52 w-full rounded-2xl object-cover`)}
       />
 
