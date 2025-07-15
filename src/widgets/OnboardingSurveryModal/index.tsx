@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 
 import { surveySteps } from "@/shared/config/constants/user";
@@ -12,25 +14,42 @@ import {
 } from "@/shared/ui/shadcn/dialog";
 
 import { useUserStore } from "@/entities/user";
+import { useSurveyMutation, SurveyAnswers } from "@/features/user-survey";
 
 import SurveyContent from "./SurveyContent";
 
+type SurveyAnswerValue = string | number | string[];
+
 type OnboardingSurveyModalProps = {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSurveyComplete: (answers: Record<number, string>) => void;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onSurveyComplete?: (answers: Record<number, SurveyAnswerValue>) => void;
 };
 
 export const OnboardingSurveyModal = ({
-  isOpen,
-  onOpenChange,
-  onSurveyComplete,
+  isOpen: propIsOpen,
+  onOpenChange: propOnOpenChange,
+  onSurveyComplete: propOnSurveyComplete,
 }: OnboardingSurveyModalProps) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const { user } = useUserStore();
+  const [internalIsOpen, setInternalIsOpen] = useState(true);
 
-  const handleValueChange = (value: string) => {
+  // 내부 상태 또는 prop 상태 사용
+  const isOpen = propIsOpen !== undefined ? propIsOpen : internalIsOpen;
+  const onOpenChange = propOnOpenChange || setInternalIsOpen;
+  const onSurveyComplete = propOnSurveyComplete || (() => {});
+  const [currentStep, setCurrentStep] = useState(0);
+  const [answers, setAnswers] = useState<Record<number, SurveyAnswerValue>>({});
+  const { user } = useUserStore();
+  const surveyMutation = useSurveyMutation({
+    onSuccess: () => {
+      onSurveyComplete(answers);
+      onOpenChange(false);
+      setAnswers({});
+      setCurrentStep(0);
+    },
+  });
+
+  const handleValueChange = (value: SurveyAnswerValue) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [surveySteps[currentStep].id]: value,
@@ -39,14 +58,20 @@ export const OnboardingSurveyModal = ({
 
   const totalSteps = surveySteps.length;
 
+  const transformAnswersToApiFormat = (): SurveyAnswers => {
+    return {
+      spicyLevel: Number(answers[1]) || 1,
+      allergy: (answers[2] as string) || "",
+      tags: (answers[3] as string[]) || [],
+    };
+  };
+
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      onSurveyComplete(answers);
-      onOpenChange(false);
-      setAnswers({});
-      setCurrentStep(0);
+      const apiData = transformAnswersToApiFormat();
+      surveyMutation.mutate(apiData);
     }
   };
 
@@ -57,6 +82,14 @@ export const OnboardingSurveyModal = ({
   };
 
   const currentQuestionData = surveySteps[currentStep];
+
+  const isCurrentAnswerValid = () => {
+    const currentAnswer = answers[currentQuestionData.id];
+    if (currentQuestionData.type === "checkbox") {
+      return Array.isArray(currentAnswer) && currentAnswer.length > 0;
+    }
+    return currentAnswer !== undefined && currentAnswer !== "";
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -101,17 +134,19 @@ export const OnboardingSurveyModal = ({
           </button>
           <button
             onClick={handleNext}
+            disabled={!isCurrentAnswerValid() || surveyMutation.isPending}
             className={cn(
               "rounded-2xl px-4 py-2 text-white transition-all duration-300",
-              !answers[currentQuestionData?.id] && currentQuestionData.isRadio
-                ? "bg-olive-mint/50"
+              !isCurrentAnswerValid() || surveyMutation.isPending
+                ? "bg-olive-mint/50 cursor-not-allowed"
                 : "bg-olive-mint"
             )}
-            disabled={
-              !answers[currentQuestionData?.id] && currentQuestionData.isRadio
-            }
           >
-            {currentStep === totalSteps - 1 ? "완료" : "다음"}
+            {surveyMutation.isPending
+              ? "제출 중..."
+              : currentStep === totalSteps - 1
+                ? "완료"
+                : "다음"}
           </button>
         </DialogFooter>
       </DialogContent>
