@@ -1,22 +1,25 @@
-import { useEffect, useState } from 'react';
+"use client";
 
-import { cn } from '@/lib/utils';
-import { ToastType, useToastStore } from '@/store/useToastStore';
+import { useEffect, useState } from "react";
+
+import { cn } from "@/lib/utils";
+import { useToastStore } from "@/widgets/Toast/model/store";
+import { ToastType } from "@/widgets/Toast/model/types";
 
 type ToastProps = ToastType;
 
 const TOAST_STYLE = {
-  success: 'bg-olive-light text-white',
-  error: 'bg-red-500 text-white',
-  warning: 'bg-yellow-500 text-black',
-  info: 'bg-blue-500 text-white',
-  default: 'bg-olive-mint text-white',
+  success: "bg-olive-light text-white",
+  error: "bg-red-500 text-white",
+  warning: "bg-yellow-500 text-black",
+  info: "bg-blue-500 text-white",
+  default: "bg-olive-mint text-white",
 };
 
 const TOAST_SIZE = {
-  small: 'w-fit h-8',
-  medium: 'h-8',
-  large: 'h-12',
+  small: "w-fit h-8",
+  medium: "h-8",
+  large: "h-12",
 };
 
 const Toast = ({
@@ -24,7 +27,7 @@ const Toast = ({
   message,
   duration = 1000 * 3,
   variant,
-  size = 'medium',
+  size = "medium",
 }: ToastProps) => {
   const removeToast = useToastStore((state) => state.removeToast);
 
@@ -49,9 +52,9 @@ const Toast = ({
     <div
       className={cn(
         TOAST_STYLE[variant],
-        'z-30 flex h-8 w-11/12 items-center justify-center rounded-md px-4 shadow-md',
+        "z-30 flex h-8 w-11/12 items-center justify-center rounded-md px-4 shadow-md",
         TOAST_SIZE[size],
-        isVisible ? 'animate-slideInUp' : 'animate-fadeOut',
+        isVisible ? "animate-slideInUp" : "animate-fadeOut"
       )}
     >
       {message}
