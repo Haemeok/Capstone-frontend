@@ -13,18 +13,16 @@ import { useUserStore } from "@/entities/user";
 import usePostReviewMutation from "@/features/recipe-review/model/hooks";
 
 import { useToastStore } from "@/widgets/Toast";
+import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
 
-type ReviewPageProps = {
-  recipeName?: string;
-};
-
-const ReviewPage = ({ recipeName = "이 레시피" }: ReviewPageProps) => {
+const ReviewPage = () => {
   const [rating, setRating] = useState<number>(0);
   const [reviewText, setReviewText] = useState<string>("");
   const { user } = useUserStore();
   const { addToast } = useToastStore();
   const { recipeId } = useParams();
   const router = useRouter();
+  const { recipeData } = useRecipeDetailQuery(Number(recipeId));
 
   const { mutate: postReview, isPending } = usePostReviewMutation(
     Number(recipeId)
@@ -72,7 +70,9 @@ const ReviewPage = ({ recipeName = "이 레시피" }: ReviewPageProps) => {
 
       <main className="flex-grow p-6">
         <div className="flex flex-col gap-1 text-center">
-          <h2 className="text-2xl font-bold">{recipeName} 만들어 보셨나요?</h2>
+          <h2 className="text-2xl font-bold">
+            {recipeData.title} 만들어 보셨나요?
+          </h2>
           <h2 className="text-2xl font-bold">평가해주세요!</h2>
           <div className="flex justify-center">
             <Ratings
