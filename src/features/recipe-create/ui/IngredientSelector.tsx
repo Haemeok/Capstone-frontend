@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import Image from "next/image";
 
@@ -43,7 +45,7 @@ const IngredientSelector = ({
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
 
-  const { data, error, hasNextPage, isFetching, status, ref } =
+  const { data, error, hasNextPage, isFetching, status, isPending, ref } =
     useInfiniteScroll<
       IngredientsApiResponse,
       Error,
@@ -122,7 +124,7 @@ const IngredientSelector = ({
           </div>
         </div>
         <div className="flex h-120 flex-col justify-center overflow-y-auto p-4">
-          {status === "pending" ? (
+          {isPending ? (
             <p className="text-center text-gray-500">재료 로딩 중...</p>
           ) : status === "error" ? (
             <p className="text-center text-red-500">
@@ -136,12 +138,13 @@ const IngredientSelector = ({
                   key={ingredient.id}
                   className="flex items-center rounded-lg border bg-white p-3 shadow-sm"
                 >
-                  <div className="mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                  <div className="mr-3 h-12 w-12 flex-shrink-0 relative overflow-hidden rounded-lg bg-gray-100">
                     {ingredient.imageUrl && (
                       <Image
                         src={ingredient.imageUrl}
                         alt={ingredient.name}
                         className="h-full w-full object-cover"
+                        fill
                       />
                     )}
                   </div>

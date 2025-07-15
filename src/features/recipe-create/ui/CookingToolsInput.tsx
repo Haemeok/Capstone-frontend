@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { UseFormWatch } from "react-hook-form";
 import { UseFormSetValue } from "react-hook-form";
