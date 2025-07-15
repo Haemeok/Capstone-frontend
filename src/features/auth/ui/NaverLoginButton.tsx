@@ -12,7 +12,13 @@ const NaverLoginButton = ({ className }: NaverLoginButtonProps) => {
       href={END_POINTS.NAVER_LOGIN}
       className={`flex h-12 w-3/4 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[#03c75a] text-white ${className}`}
     >
-      <Image src="/NaverIcon.png" className="h-12 w-12" alt="Naver" />
+      <Image
+        src="/NaverIcon.png"
+        className="h-12 w-12"
+        alt="Naver"
+        width={48}
+        height={48}
+      />
       <p>네이버로 시작하기</p>
     </a>
   );
