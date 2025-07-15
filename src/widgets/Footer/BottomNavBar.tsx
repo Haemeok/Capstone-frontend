@@ -1,11 +1,21 @@
+"use client";
+
 import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { useUserStore } from "@/entities/user";
+import { shouldHideNavbar } from "@/shared/lib/navigation";
 
 import BottomNavButton from "./BottomNavButton";
 
 const BottomNavBar = () => {
   const { user } = useUserStore();
+  const pathname = usePathname();
+
+  if (shouldHideNavbar(pathname)) {
+    return null;
+  }
+
   return (
     <footer className="fixed right-0 bottom-0 left-0 z-40 flex items-center justify-between border-t border-gray-200 bg-white px-6 py-3 opacity-97">
       <BottomNavButton
@@ -25,7 +35,7 @@ const BottomNavBar = () => {
       />
 
       <BottomNavButton
-        path="/ai-recipe"
+        path="/recipes/new/ai"
         icon={<Sparkles size={24} className="mb-1" />}
         label="AI 레시피"
       />

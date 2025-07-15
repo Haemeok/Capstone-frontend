@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 
@@ -23,7 +25,9 @@ const IngredientItem = ({
       <Image
         src={ingredient.imageUrl ?? ""}
         alt={ingredient.name}
-        className="h-15 w-15 rounded-md"
+        className="rounded-md"
+        width={60}
+        height={60}
       />
       <div className="flex flex-col">
         <span className="text-xs text-gray-500">{ingredient.category}</span>

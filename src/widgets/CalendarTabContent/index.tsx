@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import Image from "next/image";
@@ -54,7 +56,7 @@ const CalendarTabContent = () => {
         </h3>
         <div className="flex gap-1">
           <h3 className="text-olive-mint text-xl font-bold">
-            {formatPrice(monthlyTotalSavings)}원
+            {formatPrice(monthlyTotalSavings, "원")}
           </h3>
           <h3 className="text-xl font-bold"> 절약했어요</h3>
         </div>

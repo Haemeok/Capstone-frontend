@@ -1,8 +1,17 @@
+"use client";
+
 import React, { useEffect, useRef } from "react";
 
 import { gsap } from "gsap";
 
+import { useScrollContext } from "@/shared/lib/ScrollContext";
 import PrevButton from "@/shared/ui/PrevButton";
+
+type AnimationConfig = {
+  titleThreshold: number;
+  textColorThreshold: number;
+  shadowThreshold: number;
+};
 
 type TransformingNavbarProps = {
   title: string;
@@ -14,72 +23,116 @@ type TransformingNavbarProps = {
   shadowThreshold?: number;
 };
 
+const DEFAULT_CONFIG: AnimationConfig = {
+  titleThreshold: 0.7,
+  textColorThreshold: 0.5,
+  shadowThreshold: 0.8,
+} as const;
+
 const TransformingNavbar = ({
   title,
   targetRef,
   leftComponent = <PrevButton />,
   rightComponent,
-  titleThreshold = 0.7,
-  textColorThreshold = 0.5,
-  shadowThreshold = 0.8,
+  titleThreshold = DEFAULT_CONFIG.titleThreshold,
+  textColorThreshold = DEFAULT_CONFIG.textColorThreshold,
+  shadowThreshold = DEFAULT_CONFIG.shadowThreshold,
 }: TransformingNavbarProps) => {
   const headerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
+  // ScrollProvider의 스크롤 컨테이너 사용
+  const { motionRef } = useScrollContext();
+
   useEffect(() => {
-    if (!targetRef.current || !headerRef.current || !titleRef.current) {
+    if (
+      !targetRef.current ||
+      !headerRef.current ||
+      !titleRef.current ||
+      !motionRef.current
+    ) {
       return;
     }
 
     const headerElement = headerRef.current;
     const titleElement = titleRef.current;
-
     const endTrigger = targetRef.current.offsetHeight * 0.8;
+
+    // 애니메이션 설정 구조화
+    const animationConfig = {
+      title: {
+        threshold: titleThreshold,
+        from: { opacity: 0, y: -10 },
+        to: { opacity: 1, y: 0 },
+      },
+      background: {
+        from: { backgroundColor: "rgba(255, 255, 255, 0)" },
+        to: { backgroundColor: "rgba(255, 255, 255, 1)" },
+      },
+      shadow: {
+        threshold: shadowThreshold,
+        from: { boxShadow: "none" },
+        to: { boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" },
+      },
+      textColor: {
+        threshold: textColorThreshold,
+        from: { color: "white" },
+        to: { color: "black" },
+      },
+    } as const;
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: targetRef.current,
+        scroller: motionRef.current, // 스크롤 주체 통일
         start: "top top",
         end: `+=${endTrigger}`,
         scrub: true,
       },
     });
 
+    // 배경색 애니메이션 (시작부터)
     tl.fromTo(
       headerElement,
-      { backgroundColor: "rgba(255, 255, 255, 0)" },
-      { backgroundColor: "rgba(255, 255, 255, 1)" },
+      animationConfig.background.from,
+      animationConfig.background.to,
       0
     );
 
-    const shadowStartTime = `${shadowThreshold * 100}%`;
+    // 그림자 애니메이션
     tl.fromTo(
       headerElement,
-      { boxShadow: "none" },
-      { boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" },
-      shadowStartTime
+      animationConfig.shadow.from,
+      animationConfig.shadow.to,
+      `${animationConfig.shadow.threshold * 100}%`
     );
 
-    const titleStartTime = `${titleThreshold * 100}%`;
+    // 제목 애니메이션
     tl.fromTo(
       titleElement,
-      { opacity: 0, y: -10 },
-      { opacity: 1, y: 0 },
-      titleStartTime
+      animationConfig.title.from,
+      animationConfig.title.to,
+      `${animationConfig.title.threshold * 100}%`
     );
 
-    const textColorChangeTime = `${textColorThreshold * 100}%`;
+    // 텍스트 색상 애니메이션
     tl.fromTo(
       headerElement,
-      { color: "white" },
-      { color: "black" },
-      textColorChangeTime
+      animationConfig.textColor.from,
+      animationConfig.textColor.to,
+      `${animationConfig.textColor.threshold * 100}%`
     );
 
     return () => {
       tl.kill();
     };
-  }, [targetRef, titleThreshold, textColorThreshold, shadowThreshold]);
+  }, [
+    targetRef,
+    titleThreshold,
+    textColorThreshold,
+    shadowThreshold,
+    motionRef,
+  ]);
 
   return (
     <div
@@ -87,12 +140,12 @@ const TransformingNavbar = ({
       className="fixed top-0 right-0 left-0 z-50 flex h-16 items-center justify-between px-4"
       style={{
         backgroundColor: "rgba(255, 255, 255, 0)",
-        color: "white",
+        color: "black",
         boxShadow: "none",
       }}
     >
       <div className="flex max-w-full min-w-0 items-center gap-2">
-        {React.cloneElement(leftComponent as React.ReactElement, {})}
+        {leftComponent}
 
         <h1
           ref={titleRef}
