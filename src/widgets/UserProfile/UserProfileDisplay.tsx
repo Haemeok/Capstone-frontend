@@ -1,11 +1,12 @@
 import Image from "next/image";
 
-import { guestUser } from "@/shared/config/constants/user";
+import { guestUser, NO_IMAGE_URL } from "@/shared/config/constants/user";
 
 import UserInfoEditButton from "@/features/edit-user-profile/ui/UserInfoEditButton";
 
 import { User } from "../../entities/user/model/types";
 import ActionButton from "./ActionButton";
+import { UserRound } from "lucide-react";
 
 type UserProfileDisplayProps = {
   user: User;
@@ -23,12 +24,18 @@ const UserProfileDisplay = ({
       <div className="flex items-end gap-4">
         <div className="relative">
           <div className="h-24 w-24 overflow-hidden rounded-full">
-            <Image
-              src={user.profileImage ?? ""}
-              alt={user.nickname}
-              fill
-              className="object-cover"
-            />
+            {user.profileImage ? (
+              <Image
+                src={user.profileImage}
+                alt={user.nickname}
+                fill
+                className="object-cover rounded-full"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-100 border-2 border-gray-200">
+                <UserRound className="h-20 w-20 text-gray-300" />
+              </div>
+            )}
           </div>
           {isOwnProfile && <UserInfoEditButton />}
         </div>

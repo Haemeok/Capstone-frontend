@@ -1,8 +1,10 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 
 import { LogIn, Plus } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/shadcn/button";
 
 type ActionButtonProps = {
   isLoggedIn: boolean;
