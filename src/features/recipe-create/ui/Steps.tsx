@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Control,
@@ -10,7 +12,7 @@ import { FieldErrors } from "react-hook-form";
 
 import { Plus } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/shadcn/button";
 
 import { RecipeFormValues } from "../model/types";
 import StepItem from "./StepItem";

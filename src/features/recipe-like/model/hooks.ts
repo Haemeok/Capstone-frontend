@@ -41,11 +41,6 @@ export const useLikeRecipeMutation = (recipeId: number) => {
       const previousRecipeDetail =
         queryClient.getQueryData<Recipe>(recipeDetailQueryKey);
 
-      const previousRecipeListData =
-        queryClient.getQueryData<InfiniteData<DetailedRecipesApiResponse>>(
-          recipesListRootKey
-        );
-
       if (previousRecipeDetail) {
         queryClient.setQueryData<Recipe>(recipeDetailQueryKey, (old) =>
           old
@@ -60,33 +55,31 @@ export const useLikeRecipeMutation = (recipeId: number) => {
         );
       }
 
-      if (previousRecipeListData) {
-        queryClient.setQueryData<InfiniteData<DetailedRecipesApiResponse>>(
-          recipesListRootKey,
-          (oldData) => {
-            if (!oldData) return undefined;
-            return {
-              ...oldData,
-              pages: oldData.pages.map((page) => ({
-                ...page,
-                content: page.content.map((recipe) =>
-                  recipe.id === recipeId
-                    ? {
-                        ...recipe,
-                        likedByCurrentUser: !recipe.likedByCurrentUser,
-                        likeCount: recipe.likedByCurrentUser
-                          ? recipe.likeCount - 1
-                          : recipe.likeCount + 1,
-                      }
-                    : recipe
-                ),
-              })),
-            };
-          }
-        );
-      }
+      queryClient.setQueriesData<InfiniteData<DetailedRecipesApiResponse>>(
+        { queryKey: recipesListRootKey },
+        (oldData) => {
+          if (!oldData) return undefined;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              content: page.content.map((recipe) =>
+                recipe.id === recipeId
+                  ? {
+                      ...recipe,
+                      likedByCurrentUser: !recipe.likedByCurrentUser,
+                      likeCount: recipe.likedByCurrentUser
+                        ? recipe.likeCount - 1
+                        : recipe.likeCount + 1,
+                    }
+                  : recipe
+              ),
+            })),
+          };
+        }
+      );
 
-      return { previousRecipeDetail, previousRecipeListData };
+      return { previousRecipeDetail };
     },
 
     onError: (error, variables, context) => {
@@ -94,12 +87,6 @@ export const useLikeRecipeMutation = (recipeId: number) => {
         queryClient.setQueryData(
           recipeDetailQueryKey,
           context.previousRecipeDetail
-        );
-      }
-      if (context?.previousRecipeListData) {
-        queryClient.setQueryData(
-          recipesListRootKey,
-          context.previousRecipeListData
         );
       }
       console.error("좋아요 처리 실패:", error);

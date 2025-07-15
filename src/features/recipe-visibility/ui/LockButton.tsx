@@ -1,3 +1,5 @@
+"use client";
+
 import { LockKeyhole, LockOpen } from "lucide-react";
 
 import ToggleIconButton from "@/shared/ui/ToggleIconButton";

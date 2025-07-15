@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/shared/api/axios";
+import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 export const postCommentWithRating = async ({
@@ -10,9 +10,9 @@ export const postCommentWithRating = async ({
   rating: number;
   comment: string;
 }) => {
-  const response = await axiosInstance.post(END_POINTS.RATING(recipeId), {
+  const response = await api.post(END_POINTS.RATING(recipeId), {
     rating,
     comment,
   });
-  return response.data;
+  return response;
 };

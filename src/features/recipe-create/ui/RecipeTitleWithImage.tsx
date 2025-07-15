@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect } from "react";
 import { UseFormWatch } from "react-hook-form";
 import { UseFormRegister } from "react-hook-form";
@@ -56,7 +58,7 @@ const RecipeTitleWithImage = ({
           className="absolute inset-0 cursor-pointer"
         >
           {imagePreviewUrl ? (
-            <Image
+            <img
               src={imagePreviewUrl}
               alt="Recipe thumbnail"
               className="h-full w-full object-cover"

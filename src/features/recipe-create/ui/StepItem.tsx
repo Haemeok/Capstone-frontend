@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect } from "react";
 import {
   Control,
@@ -142,7 +144,7 @@ const StepItem = ({
           </label>
           <div className="mt-1 flex items-center gap-3">
             <div
-              className="flex h-24 w-24 cursor-pointer items-center justify-center rounded border border-dashed border-gray-300 bg-gray-50 text-gray-400 hover:bg-gray-100"
+              className="flex h-24 w-24 cursor-pointer items-center relative justify-center rounded border border-dashed border-gray-300 bg-gray-50 text-gray-400 hover:bg-gray-100"
               onClick={() =>
                 document.getElementById(`step-image-input-${index}`)?.click()
               }
@@ -152,6 +154,7 @@ const StepItem = ({
                   src={stepImagePreviewUrls[index]!}
                   alt={`Step ${index + 1} preview`}
                   className="h-full w-full object-cover"
+                  fill
                 />
               ) : (
                 <UploadIcon size={24} />

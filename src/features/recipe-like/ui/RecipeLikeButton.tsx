@@ -1,3 +1,5 @@
+"use client";
+
 import HeartButton from "@/shared/ui/HeartButton";
 
 import { useLikeRecipeMutation } from "../model/hooks";

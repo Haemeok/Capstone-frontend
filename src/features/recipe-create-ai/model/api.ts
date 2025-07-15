@@ -1,4 +1,4 @@
-import { axiosAiInstance } from "@/shared/api/axios";
+import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 import { cookingTimeItems } from "@/shared/config/constants/recipe";
 
@@ -22,7 +22,7 @@ export const postAIRecommendedRecipe = async (
     )?.value,
   };
 
-  const response = await axiosAiInstance.post<AIRecommendedRecipe>(
+  const response = await api.post<AIRecommendedRecipe>(
     END_POINTS.RECIPES,
     {
       aiRequest: parsedAiRequest,
@@ -32,14 +32,10 @@ export const postAIRecommendedRecipe = async (
         source,
         robotType,
       },
+      timeout: 10 * 60 * 1000, // AI 요청은 10분 타임아웃
     }
   );
 
-  const { data: recipe } = await axiosAiInstance.get<Recipe>(
-    END_POINTS.RECIPE(response.data.recipeId),
-    {
-      useAuth: "optional",
-    }
-  );
+  const recipe = await api.get<Recipe>(END_POINTS.RECIPE(response.recipeId));
   return recipe;
 };
