@@ -1,11 +1,12 @@
 import { ComponentType } from "react";
+
 import { AnimatePresence, motion } from "framer-motion";
 
-import { surveySteps, SurveyStep } from "@/shared/config/constants/user";
+import { SurveyStep,surveySteps } from "@/shared/config/constants/user";
 import { Label } from "@/shared/ui/shadcn/label";
 
-import RadioGroupSurvey from "./ui/RadioGroupSurvey";
 import CheckboxGroupSurvey from "./ui/CheckboxGroupSurvey";
+import RadioGroupSurvey from "./ui/RadioGroupSurvey";
 import TextareaSurvey from "./ui/TextareaSurvey";
 
 type SurveyAnswerValue = string | number | string[];

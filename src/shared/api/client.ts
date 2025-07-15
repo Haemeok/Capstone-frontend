@@ -1,10 +1,7 @@
-import type { ApiRequestOptions, BatchRequestFunction } from "./types";
-
-import { API_CONFIG, isClient } from "./config";
-
-import { ApiError, createApiError, isErrorResponse } from "./errors";
-
 import { handle401Error } from "./auth";
+import { API_CONFIG, isClient } from "./config";
+import { ApiError, createApiError, isErrorResponse } from "./errors";
+import type { ApiRequestOptions, BatchRequestFunction } from "./types";
 
 export async function apiClient<T = any>(
   url: string,

@@ -1,4 +1,5 @@
 import { api } from "@/shared/api/client";
+
 import type { Notification } from "@/entities/notification/model/type";
 
 /**

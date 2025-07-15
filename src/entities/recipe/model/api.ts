@@ -1,3 +1,4 @@
+import { api } from "@/shared/api/client";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
@@ -12,7 +13,6 @@ import {
   RecipeQueryParams,
 } from "./types";
 import { RecipePayload } from "./types";
-import { api } from "@/shared/api/client";
 
 export const getRecipe = async (id: number) => {
   const response = await api.get<Recipe>(END_POINTS.RECIPE(id));

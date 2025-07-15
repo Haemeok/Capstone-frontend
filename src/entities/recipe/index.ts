@@ -6,10 +6,10 @@ export type {
   DetailedRecipeGridItem,
   DetailedRecipesApiResponse,
   Recipe,
+  RecipeItemsQueryParams,
   RecipePayload,
   RecipeQueryParams,
   RecipeStep,
   RecipeStepPayload,
-  RecipeItemsQueryParams,
 } from "./model/types";
 export { default as RecipeStepList } from "./ui/RecipeStepList";

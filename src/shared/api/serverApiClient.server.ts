@@ -1,7 +1,9 @@
-import "server-only";
 import { cookies } from "next/headers";
-import type { ServerApiRequestOptions } from "./types";
+
 import { API_CONFIG } from "./config";
+import type { ServerApiRequestOptions } from "./types";
+
+import "server-only";
 
 async function serverFetch<T = any>(
   url: string,

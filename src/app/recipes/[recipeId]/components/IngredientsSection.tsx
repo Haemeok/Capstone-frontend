@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { Calculator, DollarSign } from "lucide-react";
 
 import { formatPrice } from "@/shared/lib/format";

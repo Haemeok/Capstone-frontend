@@ -1,20 +1,23 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { InfiniteData } from "@tanstack/react-query";
+
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+
 import {
-  getNotifications,
-  markNotificationAsRead,
-  markAllNotificationsAsRead,
-  deleteNotification,
   deleteAllNotifications,
-  getUnreadNotificationCount,
+  deleteNotification,
+  getNotifications,
   type GetNotificationsParams,
   type GetNotificationsResponse,
+  getUnreadNotificationCount,
+  markAllNotificationsAsRead,
+  markNotificationAsRead,
 } from "./api";
 import { useNotificationStore } from "./store";
-import { InfiniteData } from "@tanstack/react-query";
 
 /**
  * 알림 관련 Query Key 상수들

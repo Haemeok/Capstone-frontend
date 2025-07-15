@@ -1,6 +1,8 @@
-import { getRecipesOnServer } from "@/entities/recipe/model/api";
-import { SearchClient } from "@/widgets/SearchClient";
 import type { Metadata } from "next";
+
+import { getRecipesOnServer } from "@/entities/recipe/model/api";
+
+import { SearchClient } from "@/widgets/SearchClient";
 
 type SearchPageProps = {
   searchParams: Promise<{

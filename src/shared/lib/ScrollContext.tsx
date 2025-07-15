@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, type RefObject } from "react";
+import { createContext, type RefObject,useContext } from "react";
 
 type ScrollContextType = {
   motionRef: RefObject<HTMLDivElement | null>;

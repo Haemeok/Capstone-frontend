@@ -1,9 +1,10 @@
 "use client";
 
 import { useInfiniteNotifications } from "@/entities/notification";
-import { useMarkNotificationAsRead } from "@/features/notification-mark-read/model/hooks";
-import { useDeleteNotification } from "@/features/notification-delete/model/hooks";
 import type { Notification } from "@/entities/notification/model/type";
+
+import { useDeleteNotification } from "@/features/notification-delete/model/hooks";
+import { useMarkNotificationAsRead } from "@/features/notification-mark-read/model/hooks";
 
 export const useNotificationList = () => {
   const infiniteQuery = useInfiniteNotifications();

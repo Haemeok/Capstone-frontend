@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { type ReactNode,useRef } from "react";
 import { usePathname } from "next/navigation";
-import { ScrollContext } from "@/shared/lib/ScrollContext";
+
 import { shouldHideNavbar } from "@/shared/lib/navigation";
+import { ScrollContext } from "@/shared/lib/ScrollContext";
 
 export const ScrollProvider = ({ children }: { children: ReactNode }) => {
   const motionRef = useRef<HTMLDivElement>(null);

@@ -1,11 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { setUserContext } from "@/shared/lib/errorTracking";
 
 import { getMyInfo, getRecipeHistoryDetail, getUserInfo } from "./api";
 import { useUserStore } from "./store";
-import { setUserContext } from "@/shared/lib/errorTracking";
 import { User } from "./types";
 
 export const useUserQuery = (userId: number, isOtherProfile: boolean) => {

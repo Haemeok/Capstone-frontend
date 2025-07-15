@@ -1,7 +1,6 @@
-import { Label } from "@/shared/ui/shadcn/label";
-import { RadioGroupItem, RadioGroup } from "@/shared/ui/shadcn/radio-group";
-
 import { SurveyStep } from "@/shared/config/constants/user";
+import { Label } from "@/shared/ui/shadcn/label";
+import { RadioGroup,RadioGroupItem } from "@/shared/ui/shadcn/radio-group";
 
 type RadioGroupSurveyProps = {
   questionData: SurveyStep;

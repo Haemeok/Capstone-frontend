@@ -1,21 +1,26 @@
 "use client";
 
 import { useState } from "react";
+
 import { Bell, Trash2 } from "lucide-react";
-import {
-  useNotificationStore,
-  NotificationBadge,
-} from "@/entities/notification";
-import { NotificationList } from "@/widgets/NotificationList";
-import { useMarkAllNotificationsAsRead } from "@/features/notification-mark-read/model/hooks";
-import { useDeleteAllNotifications } from "@/features/notification-delete/model/hooks";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/ui/shadcn/popover";
+
+import {
+  NotificationBadge,
+  useNotificationStore,
+} from "@/entities/notification";
 import type { Notification } from "@/entities/notification/model/type";
 import { useUserStore } from "@/entities/user";
+
+import { useDeleteAllNotifications } from "@/features/notification-delete/model/hooks";
+import { useMarkAllNotificationsAsRead } from "@/features/notification-mark-read/model/hooks";
+
+import { NotificationList } from "@/widgets/NotificationList";
 
 type NotificationDropdownProps = {
   className?: string;

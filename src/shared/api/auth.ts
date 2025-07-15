@@ -1,7 +1,7 @@
-import { isClient } from "./config";
-import type { ForceLogoutEventDetail } from "./types";
-import { API_CONFIG } from "./config";
 import { END_POINTS } from "../config/constants/api";
+import { isClient } from "./config";
+import { API_CONFIG } from "./config";
+import type { ForceLogoutEventDetail } from "./types";
 
 export const dispatchForceLogoutEvent = (reason: string, message?: string) => {
   if (isClient) {

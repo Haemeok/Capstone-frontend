@@ -1,12 +1,15 @@
 import type { Metadata, Viewport } from "next";
 
-import "./globals.css";
-import { AppProviders } from "./providers/AppProviders";
+import { conditionalInitSentry } from "@/shared/lib/sentry";
+
+import { getMyInfoOnServer } from "@/entities/user/model/api.server";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import { NotificationTest } from "@/widgets/NotificationTest";
-import { conditionalInitSentry } from "@/shared/lib/sentry";
-import { getMyInfoOnServer } from "@/entities/user/model/api.server";
+
+import { AppProviders } from "./providers/AppProviders";
+
+import "./globals.css";
 
 // Sentry 초기화 (클라이언트 사이드에서만)
 if (typeof window !== "undefined") {

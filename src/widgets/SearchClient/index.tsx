@@ -8,9 +8,9 @@ import CategoryDrawer from "@/widgets/CategoryDrawer/CategoryDrawer";
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
 import { SearchFilters } from "./components/SearchFilters";
-import { useSearchState } from "./hooks/useSearchState";
-import { useSearchResults } from "./hooks/useSearchResults";
 import { useSearchDrawer } from "./hooks/useSearchDrawer";
+import { useSearchResults } from "./hooks/useSearchResults";
+import { useSearchState } from "./hooks/useSearchState";
 
 type SearchClientProps = {
   initialRecipes: DetailedRecipesApiResponse;

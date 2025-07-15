@@ -1,7 +1,7 @@
 import { END_POINTS } from "../config/constants/api";
+import { addBreadcrumb,trackError } from "../lib/errorTracking";
 import { FileObject, PresignedUrlInfo, UploadResult } from "../types";
 import { apiClient } from "./client";
-import { trackError, addBreadcrumb } from "../lib/errorTracking";
 
 export const uploadFileToS3 = async (
   file: File,

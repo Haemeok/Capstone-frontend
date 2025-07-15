@@ -4,8 +4,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-import { ApiError } from "@/shared/api/client";
 import { Camera } from "lucide-react";
+
+import { ApiError } from "@/shared/api/client";
 
 import { useUserStore } from "@/entities/user";
 

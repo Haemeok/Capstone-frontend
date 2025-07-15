@@ -1,10 +1,12 @@
 "use client";
 
-import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-import { useUserStore } from "@/entities/user";
+import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
+
 import { shouldHideNavbar } from "@/shared/lib/navigation";
+
+import { useUserStore } from "@/entities/user";
 
 import BottomNavButton from "./BottomNavButton";
 

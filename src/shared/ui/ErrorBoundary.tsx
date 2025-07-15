@@ -1,8 +1,9 @@
 "use client";
 
 import React, { Component, ReactNode } from "react";
-import { Button } from "./shadcn/button";
 import { useRouter } from "next/navigation";
+
+import { Button } from "./shadcn/button";
 
 interface ErrorBoundaryState {
   hasError: boolean;

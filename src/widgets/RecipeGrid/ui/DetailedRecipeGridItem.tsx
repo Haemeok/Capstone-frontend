@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Star } from "lucide-react";
 
+import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
@@ -12,7 +13,6 @@ import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
-import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;

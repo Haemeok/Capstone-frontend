@@ -1,3 +1,3 @@
-export { useSearchState } from "./useSearchState";
-export { useSearchResults } from "./useSearchResults";
 export { useSearchDrawer } from "./useSearchDrawer";
+export { useSearchResults } from "./useSearchResults";
+export { useSearchState } from "./useSearchState";

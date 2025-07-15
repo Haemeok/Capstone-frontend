@@ -1,7 +1,6 @@
-import { Label } from "@/shared/ui/shadcn/label";
-import { Checkbox } from "@/shared/ui/shadcn/checkbox";
-
 import { SurveyStep } from "@/shared/config/constants/user";
+import { Checkbox } from "@/shared/ui/shadcn/checkbox";
+import { Label } from "@/shared/ui/shadcn/label";
 
 type CheckboxGroupSurveyProps = {
   questionData: SurveyStep;

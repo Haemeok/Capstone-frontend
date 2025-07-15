@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Search } from "lucide-react";
 
 import FilterChip from "@/shared/ui/FilterChip";

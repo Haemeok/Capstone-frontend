@@ -1,7 +1,8 @@
+import Box from "@/shared/ui/Box";
+
 import { RecipeStep as RecipeStepType } from "@/entities/recipe";
 
 import RecipeStep from "./RecipeStep";
-import Box from "@/shared/ui/Box";
 
 type RecipeStepProps = {
   RecipeSteps: RecipeStepType[];

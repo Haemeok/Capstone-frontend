@@ -2,11 +2,13 @@
 
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+
+import { NOTIFICATION_CONFIG } from "@/shared/config/constants/notification";
+
 import type {
   Notification,
   NotificationState,
 } from "@/entities/notification/model/type";
-import { NOTIFICATION_CONFIG } from "@/shared/config/constants/notification";
 
 type NotificationActions = {
   addNotification: (notification: Notification) => void;

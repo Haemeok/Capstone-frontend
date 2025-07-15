@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import { X, Bell } from "lucide-react";
+import { Bell,X } from "lucide-react";
+
 import type { Notification } from "@/entities/notification/model/type";
 
 type NotificationItemProps = {

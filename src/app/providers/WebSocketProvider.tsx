@@ -2,20 +2,22 @@
 
 import {
   createContext,
+  type ReactNode,
   useContext,
   useEffect,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
+
+import { API_CONFIG } from "@/shared/api/config";
 import { SockJSWebSocketManager } from "@/shared/lib/sockjs-websocket";
+
+import { NOTIFICATION_ENDPOINTS } from "@/entities/notification/model/api";
 import type {
   WebSocketConnectionStatus,
   WebSocketMessage,
 } from "@/entities/notification/model/type";
 import { useUserStore } from "@/entities/user";
-import { API_CONFIG } from "@/shared/api/config";
-import { NOTIFICATION_ENDPOINTS } from "@/entities/notification/model/api";
 
 type WebSocketContextValue = {
   connectionStatus: WebSocketConnectionStatus;

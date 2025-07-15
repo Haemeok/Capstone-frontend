@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useUserStore } from "@/entities/user/model/store";
-import { storage } from "@/shared/lib/storage";
+import { useEffect,useState } from "react";
+
 import {
-  PWA_STORAGE_KEYS,
   PWA_PROMPT_DELAY,
+  PWA_STORAGE_KEYS,
 } from "@/shared/config/constants/pwa";
+import { storage } from "@/shared/lib/storage";
+
+import { useUserStore } from "@/entities/user/model/store";
+
 import { usePWAInstall } from "./usePWAInstall";
 
 export const usePWAFirstLoginPrompt = () => {

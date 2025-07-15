@@ -6,8 +6,8 @@ import Box from "@/shared/ui/Box";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 
 import { getRecipeOnServer } from "@/entities/recipe/model/api";
-import { Recipe } from "@/entities/recipe/model/types";
 import { mockRecipeData } from "@/entities/recipe/model/mockData";
+import { Recipe } from "@/entities/recipe/model/types";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 import { UserProfile } from "@/entities/user";
 
@@ -16,8 +16,8 @@ import { CommentCard } from "@/features/comment-card";
 import RecipeDetailHeader from "@/widgets/RecipeDetailHeader";
 import RecipeInteractionButtons from "@/widgets/RecipeInteractionButtons";
 
-import { CookButton } from "./components/CookButton";
 import { CommentMoreButton } from "./components/CommentMoreButton";
+import { CookButton } from "./components/CookButton";
 import IngredientsSection from "./components/IngredientsSection";
 
 interface RecipeDetailPageProps {
