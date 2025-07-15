@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -30,6 +32,8 @@ const UserProfileImage = ({
       <Image
         src={profileImage}
         alt="profileImage"
+        width={32}
+        height={32}
         className="h-full w-full rounded-full object-cover"
       />
     </Avatar>

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+"use client";
 
-import { LogOut,Settings } from 'lucide-react';
+import { useState } from "react";
+
+import { LogOut, Settings } from "lucide-react";
 
 import {
   Drawer,
@@ -9,8 +11,8 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from '@/components/ui/drawer';
-import useLogoutMutation from '@/hooks/useLogoutMutation';
+} from "@/shared/ui/shadcn/drawer";
+import useLogoutMutation from "@/features/auth/model/hooks/useLogoutMutation";
 
 const SettingsActionButton = () => {
   const { mutate: logout } = useLogoutMutation();

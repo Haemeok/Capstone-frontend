@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/shared/api/axios";
+import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 import {
@@ -10,16 +10,16 @@ import {
 } from "./types";
 
 export const getUserInfo = async (userId: number) => {
-  if (typeof userId !== "number") {
-    throw new Error("userId is not a number");
+  if (typeof userId !== "number" || isNaN(userId) || !isFinite(userId)) {
+    throw new Error("userId must be a valid number");
   }
-  const { data } = await axiosInstance.get<User>(END_POINTS.USER_INFO(userId));
+  const data = await api.get<User>(END_POINTS.USER_INFO(userId));
 
   return data;
 };
 
 export const getRecipeHistoryDetail = async (date: string) => {
-  const response = await axiosInstance.get<RecipeHistoryDetailResponse[]>(
+  const response = await api.get<RecipeHistoryDetailResponse[]>(
     END_POINTS.RECIPE_HISTORY,
     {
       params: {
@@ -27,24 +27,16 @@ export const getRecipeHistoryDetail = async (date: string) => {
       },
     }
   );
-  return response.data;
+  return response;
 };
 
 export const putUserInfo = async (payload: PutUserInfoPayload) => {
-  const { data } = await axiosInstance.patch<User>(
-    END_POINTS.MY_INFO,
-    payload,
-    {
-      useAuth: true,
-    }
-  );
+  const data = await api.patch<User>(END_POINTS.MY_INFO, payload);
   return data;
 };
 
 export const getUserStreak = async () => {
-  const { data } = await axiosInstance.get<UserStreak>(END_POINTS.USER_STREAK, {
-    useAuth: true,
-  });
+  const data = await api.get<UserStreak>(END_POINTS.USER_STREAK);
   return data;
 };
 
@@ -55,7 +47,7 @@ export const getRecipeHistory = async ({
   year: number;
   month: number;
 }) => {
-  const response = await axiosInstance.get<RecipeHistoryResponse>(
+  const response = await api.get<RecipeHistoryResponse>(
     END_POINTS.RECIPE_HISTORY,
     {
       params: {
@@ -64,5 +56,11 @@ export const getRecipeHistory = async ({
       },
     }
   );
-  return response.data;
+  return response;
+};
+
+export const getMyInfo = async () => {
+  const data = await api.get<User>(END_POINTS.MY_INFO);
+  console.log("getMyInfo", data);
+  return data;
 };

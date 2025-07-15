@@ -13,7 +13,7 @@ const KakaoLoginButton = ({ className }: KakaoLoginButtonProps) => {
       className={`flex h-12 w-3/4 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[#fee500] p-2 text-black ${className}`}
     >
       <div className="flex h-full w-full items-center justify-center gap-1">
-        <Image src="/KakaoIcon.png" className="h-full" alt="Kakao" />
+        <img src="/KakaoIcon.png" className="h-full" alt="Kakao" />
         <p>카카오로 시작하기</p>
       </div>
     </a>

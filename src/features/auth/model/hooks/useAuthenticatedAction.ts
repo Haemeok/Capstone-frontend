@@ -1,4 +1,6 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 import { useUserStore } from "@/entities/user/model/store";
 
@@ -28,10 +30,7 @@ const useAuthenticatedAction = <TVariables, TOptions, TResult = void>(
         return undefined;
       }
 
-      router.replace({
-        pathname: "/login",
-        query: { redirectUrl: router.asPath },
-      });
+      router.replace(`/login?redirectUrl=${window.location.pathname}`);
 
       return undefined;
     } else {
