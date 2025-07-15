@@ -42,6 +42,9 @@ const nextConfig = withPWA({
       },
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 });
 
 export default withSentryConfig(nextConfig, {

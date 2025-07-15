@@ -15,6 +15,10 @@ const CalendarDetailPage = () => {
   const router = useRouter();
   const { addToast } = useToastStore();
 
+  const { data } = useRecipeHistoryDetailQuery(date, {
+    enabled: !!date,
+  });
+
   if (date === undefined) {
     router.push("/");
     addToast({
@@ -24,10 +28,6 @@ const CalendarDetailPage = () => {
     });
     return;
   }
-
-  const { data } = useRecipeHistoryDetailQuery(date, {
-    enabled: !!date,
-  });
 
   return (
     <div>
