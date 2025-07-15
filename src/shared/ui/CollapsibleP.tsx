@@ -1,4 +1,6 @@
-import { useLayoutEffect,useRef, useState } from "react";
+"use client";
+
+import { useLayoutEffect, useRef, useState } from "react";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 
