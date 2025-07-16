@@ -12,11 +12,19 @@ const nextConfig = withPWA({
     return [
       {
         source: "/api/:path*",
-        destination: "https://www.haemeok.com/api/:path*",
+        destination: "https://api.haemeok.com/:path*",
       },
       {
         source: "/ws/:path*",
-        destination: "https://www.haemeok.com/ws/:path*",
+        destination: "https://api.haemeok.com/ws/:path*",
+      },
+      {
+        source: "/oauth2/:path*",
+        destination: "https://api.haemeok.com/oauth2/:path*",
+      },
+      {
+        source: "/login/:path*",
+        destination: "https://api.haemeok.com/login/:path*",
       },
     ];
   },

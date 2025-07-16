@@ -6,7 +6,7 @@ type GoogleLoginButtonProps = {
 };
 
 const GoogleLoginButton = ({ from = "/" }: GoogleLoginButtonProps) => {
-  const loginUrlWithState = `${END_POINTS.GOOGLE_LOGIN}?state=${encodeURIComponent(from)}`;
+  const loginUrlWithState = `${END_POINTS.GOOGLE_LOGIN}?redirect_uri=${encodeURIComponent(END_POINTS.GOOGLE_REDIRECT_URI)}&state=${encodeURIComponent(from)}`;
   return (
     <a
       href={loginUrlWithState}
