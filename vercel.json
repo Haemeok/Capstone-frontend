@@ -22,7 +22,7 @@
     },
     {
       "source": "/api/:path*",
-      "destination": "https://api.haemeok.com/:path*"
+      "destination": "https://api.haemeok.com/api/:path*"
     }
   ]
 }
