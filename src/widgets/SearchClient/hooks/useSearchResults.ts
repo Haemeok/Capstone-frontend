@@ -5,6 +5,10 @@ import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
+import {
+  DISH_TYPE_CODES,
+  DISH_TYPE_CODES_TO_NAME,
+} from "@/shared/config/constants/recipe";
 
 type UseSearchResultsProps = {
   q: string;
@@ -55,12 +59,15 @@ export const useSearchResults = ({
     tagCodes,
     q,
   ]);
+  const dishType = dishTypeCode
+    ? DISH_TYPE_CODES_TO_NAME[dishTypeCode as keyof typeof DISH_TYPE_CODES]
+    : "전체";
 
   const noResults = recipes.length === 0 && !isFetching;
   const noResultsMessage =
     q && recipes.length === 0
       ? `"${q}"에 해당하는 레시피가 없습니다.`
-      : `"${dishTypeCode}"에 해당하는 레시피가 없습니다.`;
+      : `"${dishType}"에 해당하는 레시피가 없습니다.`;
 
   return {
     recipes,

@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   BASE_DRAWER_CONFIGS,
   DrawerType,
+  TAG_EMOJI,
 } from "@/shared/config/constants/recipe";
 
 type DrawerConfig = {
@@ -45,7 +46,9 @@ export const useSearchDrawer = ({
       setState: updateSort,
     },
     tags: {
-      state: tagNames,
+      state: tagNames.map(
+        (tag) => `${TAG_EMOJI[tag as keyof typeof TAG_EMOJI]} ${tag}`
+      ),
       setState: updateTags,
     },
   };

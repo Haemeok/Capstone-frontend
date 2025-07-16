@@ -17,8 +17,8 @@ import { DetailedRecipesApiResponse } from "@/entities/recipe";
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
 const CategoryDetailPage = () => {
-  const { categorySlug: tagCode } = useParams<{ categorySlug: TagCode }>();
-  const router = useRouter();
+  const { id: tagCode } = useParams<{ id: TagCode }>();
+
   const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
@@ -36,11 +36,6 @@ const CategoryDetailPage = () => {
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
-
-  if (!tagCode) {
-    router.push("/");
-    return;
-  }
 
   const tagName = TAG_CODES_TO_NAME[tagCode as keyof typeof TAG_CODES_TO_NAME];
 

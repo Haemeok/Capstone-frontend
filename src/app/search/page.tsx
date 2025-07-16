@@ -31,9 +31,7 @@ export async function generateMetadata({
   };
 }
 
-// 2. 페이지는 서버 컴포넌트로, searchParams를 받습니다.
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-  // 3. 서버에서 URL 쿼리 파라미터를 사용해 초기 데이터를 가져옵니다.
   const awaitedSearchParams = await searchParams;
   const tagNames = Array.isArray(awaitedSearchParams.tagNames)
     ? awaitedSearchParams.tagNames
@@ -49,8 +47,5 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     tagNames,
   });
 
-  return (
-    // 4. 모든 상호작용은 클라이언트 컴포넌트에 위임하고, 서버에서 가져온 데이터를 전달합니다.
-    <SearchClient initialRecipes={initialRecipes} />
-  );
+  return <SearchClient initialRecipes={initialRecipes} />;
 }

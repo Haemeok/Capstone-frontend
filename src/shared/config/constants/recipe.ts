@@ -86,6 +86,10 @@ export const DISH_TYPE_CODES = {
   "디저트/간식류": "DESSERT",
 };
 
+export const DISH_TYPE_CODES_TO_NAME = Object.fromEntries(
+  Object.entries(DISH_TYPE_CODES).map(([key, value]) => [value, key])
+);
+
 export const TAGS = [
   "홈파티",
   "피크닉",
