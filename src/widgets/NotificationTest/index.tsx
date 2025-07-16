@@ -6,6 +6,7 @@ import { useNotificationStore } from "@/entities/notification";
 import { useUserStore } from "@/entities/user";
 
 import { useWebSocket } from "@/app/providers/WebSocketProvider";
+import { BASE_API_URL } from "@/shared/config/constants/api";
 
 /**
  * 개발 환경에서만 사용하는 알림 시스템 테스트 컴포넌트
@@ -141,11 +142,7 @@ export const NotificationTest = () => {
           디버그 정보
         </summary>
         <div className="mt-2 p-2 bg-gray-100 rounded text-xs font-mono">
-          <div>
-            URL:{" "}
-            {process.env.NEXT_PUBLIC_WS_URL ||
-              "https://www.haemeok.com/ws/notifications"}
-          </div>
+          <div>URL: {BASE_API_URL}</div>
           <div>Mode: SockJS + STOMP</div>
           <div>환경: {process.env.NODE_ENV}</div>
           <div>인증: Cookie-based</div>

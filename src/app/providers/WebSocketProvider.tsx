@@ -9,7 +9,6 @@ import {
   useState,
 } from "react";
 
-import { API_CONFIG } from "@/shared/api/config";
 import { SockJSWebSocketManager } from "@/shared/lib/sockjs-websocket";
 
 import { NOTIFICATION_ENDPOINTS } from "@/entities/notification/model/api";
