@@ -1,7 +1,11 @@
 import { api } from "@/shared/api/client";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PresignedUrlResponse } from "@/shared/api/types";
-import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
+import {
+  BASE_API_URL,
+  END_POINTS,
+  PAGE_SIZE,
+} from "@/shared/config/constants/api";
 import { buildParams, customParamsSerializer } from "@/shared/lib/utils";
 import { FileInfoRequest } from "@/shared/types";
 
@@ -135,7 +139,7 @@ export const getRecipesOnServer = async (
     params.tagNames.forEach((tag) => query.append("tagNames", tag));
   }
 
-  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/recipes/search?${query.toString()}`;
+  const API_URL = `${BASE_API_URL}/recipes/search?${query.toString()}`;
 
   try {
     const res = await fetch(API_URL, {
@@ -164,7 +168,7 @@ export const getRecipesOnServer = async (
 };
 
 export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
-  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/recipes/${id}`;
+  const API_URL = `${BASE_API_URL}/recipes/${id}`;
   if (isNaN(id) || id <= 0) {
     return null;
   }

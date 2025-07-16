@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-import { END_POINTS } from "@/shared/config/constants/api";
+import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,11 +9,7 @@ export async function POST(request: NextRequest) {
     const origin = request.headers.get("origin");
 
     // 백엔드 API URL 구성
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_AXIOS_PROD_BASE_URL
-        : process.env.NEXT_PUBLIC_AXIOS_DEV_BASE_URL ||
-          "https://www.haemeok.com/api";
+    const baseUrl = BASE_API_URL;
 
     // 서버에서 백엔드로 토큰 리프레시 요청
     const response = await fetch(`${baseUrl}${END_POINTS.TOKEN_REFRESH}`, {
