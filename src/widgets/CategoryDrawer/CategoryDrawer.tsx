@@ -40,6 +40,7 @@ const CategoryDrawer = ({
   const [internalSelection, setInternalSelection] = useState<string[] | string>(
     initialValue
   );
+  console.log(internalSelection, initialValue);
 
   useEffect(() => {
     if (open) {

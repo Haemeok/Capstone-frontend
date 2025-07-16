@@ -3,6 +3,7 @@ import React from "react";
 import { Search } from "lucide-react";
 
 import FilterChip from "@/shared/ui/FilterChip";
+import { TAG_EMOJI } from "@/shared/config/constants/recipe";
 
 type SearchFiltersProps = {
   inputValue: string;
@@ -27,6 +28,9 @@ export const SearchFilters = ({
   onSortClick,
   onTagsClick,
 }: SearchFiltersProps) => {
+  const tagNamesWithEmoji = tagNames.map(
+    (tag) => `${TAG_EMOJI[tag as keyof typeof TAG_EMOJI]} ${tag}`
+  );
   return (
     <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
       <form onSubmit={handleSearchSubmit} className="relative">
@@ -58,7 +62,7 @@ export const SearchFilters = ({
           isDirty={sort !== "최신순"}
         />
         <FilterChip
-          header={tagNames.length > 0 ? tagNames.join(", ") : "태그"}
+          header={tagNames.length > 0 ? tagNamesWithEmoji.join(", ") : "태그"}
           onClick={onTagsClick}
           isDirty={tagNames.length > 0}
         />

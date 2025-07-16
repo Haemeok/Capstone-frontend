@@ -6,7 +6,6 @@ const HomeHeader = () => {
   return (
     <div className="px-6 pt-6 pb-3 backdrop-blur-md">
       <div className="mb-2 flex items-center justify-between">
-        {/* 로고 영역 */}
         <div className="flex items-center gap-2">
           <Image
             src="/logo.svg"
@@ -18,7 +17,6 @@ const HomeHeader = () => {
           <p className="text-2xl font-bold">Haemeok</p>
         </div>
 
-        {/* 알림 드롭다운 */}
         <NotificationDropdown />
       </div>
     </div>

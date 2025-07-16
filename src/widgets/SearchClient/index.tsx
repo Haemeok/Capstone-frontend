@@ -17,7 +17,6 @@ type SearchClientProps = {
 };
 
 export const SearchClient = ({ initialRecipes }: SearchClientProps) => {
-  // 1. 검색 상태 관리 (URL 파라미터 기반)
   const {
     q,
     sort,
@@ -34,7 +33,6 @@ export const SearchClient = ({ initialRecipes }: SearchClientProps) => {
     updateTags,
   } = useSearchState();
 
-  // 2. 검색 결과 관리 (무한 스크롤)
   const {
     recipes,
     hasNextPage,
@@ -51,7 +49,6 @@ export const SearchClient = ({ initialRecipes }: SearchClientProps) => {
     initialRecipes,
   });
 
-  // 3. 드로어 상태 관리
   const { isDrawerOpen, setIsDrawerOpen, drawerConfig, openDrawer } =
     useSearchDrawer({
       dishType,
@@ -64,7 +61,6 @@ export const SearchClient = ({ initialRecipes }: SearchClientProps) => {
 
   return (
     <div className="flex flex-col bg-[#ffffff]">
-      {/* 검색 필터 UI */}
       <SearchFilters
         inputValue={inputValue}
         handleInputChange={handleInputChange}
@@ -77,7 +73,6 @@ export const SearchClient = ({ initialRecipes }: SearchClientProps) => {
         onTagsClick={() => openDrawer("tags")}
       />
 
-      {/* 검색 결과 그리드 */}
       <RecipeGrid
         recipes={recipes}
         hasNextPage={hasNextPage}
@@ -89,7 +84,6 @@ export const SearchClient = ({ initialRecipes }: SearchClientProps) => {
         height={72}
       />
 
-      {/* 필터 선택 드로어 */}
       <CategoryDrawer
         open={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
