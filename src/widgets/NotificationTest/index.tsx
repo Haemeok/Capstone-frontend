@@ -2,20 +2,18 @@
 
 import { useState } from "react";
 
-import { useNotificationStore } from "@/entities/notification";
 import { useUserStore } from "@/entities/user";
 
 import { useWebSocket } from "@/app/providers/WebSocketProvider";
 import { BASE_API_URL } from "@/shared/config/constants/api";
+import { useInfiniteNotificationsQuery } from "@/entities/notification";
 
-/**
- * 개발 환경에서만 사용하는 알림 시스템 테스트 컴포넌트
- */
 export const NotificationTest = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { connectionStatus, connect, disconnect } = useWebSocket();
-  const { notifications, unreadCount } = useNotificationStore();
   const { user, isAuthenticated } = useUserStore();
+  const { notifications, unreadCount, ref, totalCount } =
+    useInfiniteNotificationsQuery();
 
   // 프로덕션에서는 렌더링하지 않음
   if (process.env.NODE_ENV === "production") {
@@ -107,13 +105,11 @@ export const NotificationTest = () => {
         </button>
       </div>
 
-      {/* 알림 통계 */}
       <div className="mb-3 p-2 bg-gray-50 rounded text-xs">
         <div>읽지 않은 알림: {unreadCount}개</div>
         <div>전체 알림: {notifications.length}개</div>
       </div>
 
-      {/* 최근 알림 */}
       {notifications.length > 0 && (
         <div>
           <h4 className="text-xs font-medium mb-2">최근 알림:</h4>

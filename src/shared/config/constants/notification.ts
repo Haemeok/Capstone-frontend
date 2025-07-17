@@ -5,9 +5,6 @@ export const WEBSOCKET_CONFIG = {
   CONNECTION_TIMEOUT: 10 * 1000,
 } as const;
 
-// 알림 설정
 export const NOTIFICATION_CONFIG = {
   MAX_NOTIFICATIONS: 100,
 } as const;
-
-export const WEBSOCKET_URL = "";
