@@ -1,5 +1,6 @@
 export const BASE_URL = "https://www.haemeok.com";
 export const BASE_API_URL = "https://api.haemeok.com/api";
+export const BASE_WEBSOCKET_URL = "https://api.haemeok.com";
 
 export const END_POINTS = {
   RECIPE: (id: number) => `/recipes/${id}`,
