@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -52,6 +52,7 @@ export const useRecipeHistoryDetailQuery = (
 };
 
 export const useMyInfoQuery = (initialData?: User) => {
+  const [isMounted, setIsMounted] = useState(false);
   const setUser = useUserStore((state) => state.setUser);
   const {
     data: userData,
@@ -68,6 +69,12 @@ export const useMyInfoQuery = (initialData?: User) => {
   });
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     if (userData) {
       setUser(userData);
       // Sentry 사용자 컨텍스트 설정
@@ -78,7 +85,7 @@ export const useMyInfoQuery = (initialData?: User) => {
     } else if (isError) {
       setUser(null);
     }
-  }, [userData, isError, setUser]);
+  }, [userData, isError, setUser, isMounted]);
 
   return {
     user: userData,

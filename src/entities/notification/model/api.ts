@@ -1,6 +1,11 @@
 import { api } from "@/shared/api/client";
 
-import type { Notification } from "@/entities/notification/model/type";
+import type {
+  Notification,
+  NotificationResponse,
+} from "@/entities/notification/model/type";
+import { PAGE_SIZE } from "@/shared/config/constants/api";
+import { BaseQueryParams } from "@/shared/api/types";
 
 export const NOTIFICATION_ENDPOINTS = {
   SOCKJS: "/ws/notifications",
@@ -11,26 +16,22 @@ export const NOTIFICATION_ENDPOINTS = {
   DELETE_ALL: "/notifications",
 } as const;
 
-export type GetNotificationsParams = {
-  cursor?: string; // 커서 기반 페이지네이션
+export type NotificationsParams = {
   size?: number;
-  isRead?: boolean; // 읽음 상태 필터링
+  pageParam?: number;
 };
 
-export type GetNotificationsResponse = {
-  notifications: Notification[];
-  nextCursor?: string; // 다음 페이지 커서
-  hasNext: boolean;
-  totalCount: number;
-  unreadCount: number;
-};
-
-export const getNotifications = async (
-  params: GetNotificationsParams = {}
-): Promise<GetNotificationsResponse> => {
-  const data = await api.get<GetNotificationsResponse>(
+export const getNotifications = async ({
+  size = PAGE_SIZE,
+  pageParam = 0,
+}: NotificationsParams): Promise<NotificationResponse> => {
+  const baseParams: Partial<BaseQueryParams> = {
+    page: pageParam,
+    size,
+  };
+  const data = await api.get<NotificationResponse>(
     NOTIFICATION_ENDPOINTS.NOTIFICATIONS,
-    { params }
+    { params: baseParams }
   );
   return data;
 };

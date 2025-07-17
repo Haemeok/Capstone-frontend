@@ -1,3 +1,5 @@
+import { PageResponse } from "@/shared/api/types";
+
 export type NotificationType =
   | "NEW_COMMENT" // 새 댓글
   | "NEW_REPLY" // 댓글 답글
@@ -10,19 +12,20 @@ export type NotificationType =
 export type RelatedType = "RECIPE" | "COMMENT" | "USER";
 
 export type Notification = {
-  id: number; // 백엔드: number
-  userId: number; // 수신자 ID
-  actorId: number; // 알림을 발생시킨 사용자 ID
+  id: number;
+  userId: number;
+  actorId: number;
   type: NotificationType;
-  content: string; // 백엔드: content (기존 message)
-  relatedType: RelatedType; // 관련 엔티티 타입
-  relatedId: number; // 관련 엔티티 ID
-  relatedUrl: string; // 클릭 시 이동할 URL
-  createdAt: string; // ISO 8601 형식
-  read: boolean; // 백엔드: read (기존 isRead)
+  content: string;
+  relatedType: RelatedType;
+  relatedId: number;
+  relatedUrl: string;
+  createdAt: string;
+  read: boolean;
 };
 
-// 호환성을 위한 헬퍼 타입 (기존 코드에서 사용)
+export type NotificationResponse = PageResponse<Notification>;
+
 export type NotificationData = {
   recipeId?: number;
   commentId?: number;
