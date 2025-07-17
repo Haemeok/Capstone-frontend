@@ -50,14 +50,6 @@ const nextConfig = withPWA({
       },
     ],
   },
-  buildExclusions: [/\api\//],
-  runtimeCaching: [
-    {
-      urlPattern: /^\/api\//,
-      handler: "NetworkFirst",
-      options: { networkTimeoutSeconds: 10 },
-    },
-  ],
   eslint: {
     ignoreDuringBuilds: true,
   },
