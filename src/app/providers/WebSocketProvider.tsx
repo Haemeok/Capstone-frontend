@@ -17,6 +17,7 @@ import type {
   WebSocketMessage,
 } from "@/entities/notification/model/type";
 import { useUserStore } from "@/entities/user";
+import { BASE_WEBSOCKET_URL } from "@/shared/config/constants/api";
 
 type WebSocketContextValue = {
   connectionStatus: WebSocketConnectionStatus;
@@ -49,7 +50,7 @@ export const WebSocketProvider = ({
   const wsManagerRef = useRef<SockJSWebSocketManager | null>(null);
   const { user } = useUserStore();
 
-  const sockjsUrl = `${NOTIFICATION_ENDPOINTS.SOCKJS}`;
+  const sockjsUrl = `${BASE_WEBSOCKET_URL}${NOTIFICATION_ENDPOINTS.SOCKJS}`;
 
   useEffect(() => {
     if (!user) {

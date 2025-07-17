@@ -2,10 +2,6 @@ import { WEBSOCKET_CONFIG } from "@/shared/config/constants/websocket";
 
 import type { WebSocketConnectionStatus } from "@/entities/notification/model/type";
 
-/**
- * 쿠키 기반 인증을 사용하는 SockJS WebSocket 매니저
- * 브라우저가 자동으로 쿠키를 전송하므로 별도 토큰 처리가 불필요합니다.
- */
 export class SockJSWebSocketManager {
   private socket: any = null;
   private stompClient: any = null;
@@ -20,7 +16,7 @@ export class SockJSWebSocketManager {
 
   constructor(
     url: string,
-    _token: string, // 쿠키 기반에서는 사용하지 않지만 호환성을 위해 유지
+    _token: string,
     callbacks: {
       onStatusChange: (status: WebSocketConnectionStatus) => void;
       onMessage: (message: any) => void;
@@ -28,7 +24,7 @@ export class SockJSWebSocketManager {
     }
   ) {
     this.url = url;
-    // 쿠키 기반에서는 토큰을 저장하지 않음
+
     this.onStatusChange = callbacks.onStatusChange;
     this.onMessage = callbacks.onMessage;
     this.onError = callbacks.onError;
@@ -47,8 +43,6 @@ export class SockJSWebSocketManager {
       const SockJS = (window as any).SockJS;
       const Stomp = (window as any).Stomp;
 
-      // 쿠키 기반 인증에서는 토큰을 URL에 전달하지 않음
-      // 브라우저가 자동으로 쿠키를 전송함
       this.socket = new SockJS(this.url);
       this.stompClient = Stomp.over(this.socket);
 
@@ -57,7 +51,7 @@ export class SockJSWebSocketManager {
       }
 
       this.stompClient.connect(
-        {}, // headers - 쿠키 기반에서는 별도 헤더 불필요
+        {},
         this.onConnected.bind(this),
         this.onConnectionError.bind(this)
       );
@@ -158,7 +152,6 @@ export class SockJSWebSocketManager {
           const notification = JSON.parse(message.body);
           console.log("🔔 알림 수신:", notification);
 
-          // 기존 WebSocket 메시지 포맷으로 변환
           const wsMessage = {
             type: "NOTIFICATION",
             data: notification,
