@@ -13,7 +13,7 @@ const LoginContent = () => {
 
   return (
     <>
-      <GoogleLoginButton from={from} />
+      <GoogleLoginButton />
       <NaverLoginButton />
       <KakaoLoginButton />
       <button
