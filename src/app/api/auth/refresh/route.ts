@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 
     // 백엔드 API URL 구성
     const baseUrl = BASE_API_URL;
-
+    console.log(cookieStore.toString());
     // 서버에서 백엔드로 토큰 리프레시 요청
     const response = await fetch(`${baseUrl}${END_POINTS.TOKEN_REFRESH}`, {
       method: "POST",
