@@ -1,6 +1,10 @@
 export const BASE_URL = "https://www.haemeok.com";
 export const BASE_API_URL = "https://api.haemeok.com/api";
 export const BASE_WEBSOCKET_URL = "https://api.haemeok.com";
+const REDIRECT_URI =
+  process.env.NODE_ENV === "production"
+    ? "https://www.haemeok.com/login/oauth2/code/google"
+    : "http://localhost:3000/login/oauth2/code/google";
 
 export const END_POINTS = {
   RECIPE: (id: number) => `/recipes/${id}`,
@@ -26,7 +30,7 @@ export const END_POINTS = {
   GOOGLE_LOGIN: `/oauth2/authorization/google`,
   KAKAO_LOGIN: `/oauth2/authorization/kakao`,
   NAVER_LOGIN: `/oauth2/authorization/naver`,
-  GOOGLE_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/google`,
+  GOOGLE_REDIRECT_URI: REDIRECT_URI,
   KAKAO_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/kakao`,
   NAVER_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/naver`,
   TOKEN_REFRESH: "/token/refresh",
@@ -46,6 +50,7 @@ export const END_POINTS = {
   LOGOUT: "/token/logout",
   RECIPES_BY_TAG: () => "/recipes/by-tag",
   MY_SURVEY: "/me/survey",
+  GOOGLE_LOGIN_API_ROUTE: "/api/auth/login/google",
 };
 
 export const USER_ERROR_MESSAGE = {
