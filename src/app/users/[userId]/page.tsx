@@ -26,8 +26,6 @@ const UserDetailPage = () => {
 
   const displayUser = isOwnProfile ? loggedInUser : (user ?? guestUser);
 
-  console.log("displayUser", displayUser, user, loggedInUser, isOwnProfile);
-
   return (
     <div className="flex flex-col overflow-hidden">
       <Header isOwnProfile={isOwnProfile} />
@@ -39,7 +37,7 @@ const UserDetailPage = () => {
       />
 
       <UserTab
-        user={user}
+        user={displayUser}
         isOwnProfile={isOwnProfile}
         isLoggedIn={!!loggedInUser}
       />

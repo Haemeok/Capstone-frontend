@@ -26,7 +26,7 @@ const UserProfileImage = ({
   };
   return (
     <Avatar
-      className={cn("h-8 w-8 rounded-full", className)}
+      className={cn("h-8 w-8 rounded-full flex-shrink-0", className)}
       onClick={handleClick}
     >
       <Image

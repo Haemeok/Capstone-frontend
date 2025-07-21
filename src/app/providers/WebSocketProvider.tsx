@@ -54,50 +54,34 @@ export const WebSocketProvider = ({
 
   useEffect(() => {
     if (!user) {
+      // 로그아웃 시 WebSocket 연결 완전히 해제
       if (wsManagerRef.current) {
         wsManagerRef.current.disconnect();
         wsManagerRef.current = null;
       }
+      setConnectionStatus("disconnected");
       return;
     }
 
+    // 로그인 시 새로운 WebSocket 매니저 생성 및 연결
     if (!wsManagerRef.current) {
       wsManagerRef.current = new SockJSWebSocketManager(sockjsUrl, "", {
         onStatusChange: setConnectionStatus,
         onMessage: handleMessage,
         onError: handleError,
       });
+      // 새 연결 시 재연결 상태 리셋
+      wsManagerRef.current.resetReconnection();
+      wsManagerRef.current.connect();
     }
 
-    // 연결 시작
-    wsManagerRef.current.connect();
-
-    // 클린업
+    // 클린업: 컴포넌트 언마운트나 user 상태 변경 시 실행
     return () => {
       if (wsManagerRef.current) {
         wsManagerRef.current.disconnect();
       }
     };
   }, [user, sockjsUrl]);
-
-  // 페이지가 포커스되었을 때 재연결 시도
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (
-        document.visibilityState === "visible" &&
-        user &&
-        wsManagerRef.current
-      ) {
-        if (wsManagerRef.current.getConnectionStatus() === "disconnected") {
-          wsManagerRef.current.connect();
-        }
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () =>
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [user]);
 
   const handleMessage = (message: WebSocketMessage) => {
     switch (message.type) {

@@ -1,6 +1,6 @@
 import HomeBanner from "@/shared/ui/HomeBanner";
 
-import { getRecipesOnServer } from "@/entities/recipe/model/api";
+import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
 import CategoryTabs from "@/widgets/CategoryTabs";
 import HomeHeader from "@/widgets/Header/HomeHeader";
