@@ -1,6 +1,10 @@
+"use client";
+
+import { useEffect } from "react";
+
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import { Bell,X } from "lucide-react";
+import { Bell, X } from "lucide-react";
 
 import type { Notification } from "@/entities/notification/model/type";
 
@@ -22,12 +26,6 @@ export const NotificationItem = ({
   className = "",
 }: NotificationItemProps) => {
   const handleClick = () => {
-    // 읽지 않은 알림이면 읽음 처리
-    if (!notification.read && onRead) {
-      onRead(notification.id);
-    }
-
-    // 클릭 이벤트 실행
     onClick?.(notification);
   };
 
@@ -40,6 +38,12 @@ export const NotificationItem = ({
     addSuffix: true,
     locale: ko,
   });
+
+  useEffect(() => {
+    if (notification.read && onRead) {
+      onRead(notification.id);
+    }
+  }, [notification.read, onRead]);
 
   return (
     <div
@@ -60,17 +64,10 @@ export const NotificationItem = ({
       }}
       aria-label={notification.content}
     >
-      {/* 읽지 않은 알림 표시 */}
       {!notification.read && (
-        <div className="absolute left-2 top-6 w-2 h-2 bg-blue-500 rounded-full" />
+        <div className="w-2 h-2 bg-blue-500 rounded-full" />
       )}
 
-      {/* 알림 아이콘 */}
-      <div className="flex-shrink-0">
-        <Bell size={20} className="text-gray-400" />
-      </div>
-
-      {/* 알림 내용 */}
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">

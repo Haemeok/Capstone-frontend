@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { getRecipesOnServer } from "@/entities/recipe/model/api";
+import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
 import { SearchClient } from "@/widgets/SearchClient";
 

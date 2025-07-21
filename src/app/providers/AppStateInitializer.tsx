@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,13 +10,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   isAuthenticated,
   isTokenExpired,
+  isUnauthenticated,
   ServerAuthResult,
 } from "@/shared/types";
 
-import { useMyInfoQuery } from "@/entities/user/model/hooks";
+import { useAuthManager } from "@/shared/lib/auth/useAuthManager";
 import { useUserStore } from "@/entities/user/model/store";
-
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,28 +29,23 @@ export const AppStateInitializer = ({
   children,
   myInfo,
 }: AppStateInitializerProps) => {
-  const { logoutAction } = useUserStore();
-  const { addToast } = useToastStore();
+  const queryClient = useQueryClient();
+  const { logoutAction, setUser } = useUserStore();
+
+  useAuthManager();
+
+  useMyInfoQuery(myInfo && isAuthenticated(myInfo) ? myInfo.user : undefined);
 
   useEffect(() => {
-    const handleForceLogout = () => {
-      logoutAction();
-      addToast({
-        message: "로그인이 만료되었습니다. 다시 로그인해주세요.",
-        variant: "error",
-      });
-    };
+    if (myInfo && isAuthenticated(myInfo)) {
+      queryClient.setQueryData(["myInfo"], myInfo.user);
+      setUser(myInfo.user);
+    }
 
     if (myInfo && isTokenExpired(myInfo)) {
-      handleForceLogout();
+      logoutAction();
     }
-    window.addEventListener("forceLogout", handleForceLogout);
-    return () => window.removeEventListener("forceLogout", handleForceLogout);
-  }, [myInfo, logoutAction, addToast]);
-
-  const initialData =
-    myInfo && isAuthenticated(myInfo) ? myInfo.user : undefined;
-  const { user } = useMyInfoQuery(initialData);
+  }, [myInfo, queryClient, logoutAction, setUser]);
 
   return <>{children}</>;
 };

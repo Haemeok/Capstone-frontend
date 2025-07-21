@@ -37,6 +37,12 @@ const nextConfig = withPWA({
         pathname: "/**",
       },
       {
+        protocol: "http",
+        hostname: "haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
         port: "",
