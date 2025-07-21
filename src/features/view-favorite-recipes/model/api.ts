@@ -1,4 +1,4 @@
-import { END_POINTS } from "@/shared/config/constants/api";
+import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 
 import { BaseRecipesApiResponse } from "@/entities/recipe";
 import { fetchPagedRecipes } from "@/entities/recipe/model/api";
@@ -12,6 +12,7 @@ export const getMyFavoriteItems = ({
 }) => {
   return fetchPagedRecipes<BaseRecipesApiResponse>(END_POINTS.MY_FAVORITES, {
     sort,
-    pageParam,
+    page: pageParam,
+    size: PAGE_SIZE,
   });
 };
