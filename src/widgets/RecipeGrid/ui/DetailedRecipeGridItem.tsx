@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Star } from "lucide-react";
 
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
 
-import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
+import { DetailedRecipeGridItem as DetailedRecipeGridItemType, Recipe } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
@@ -20,6 +21,14 @@ type DetailedRecipeGridItemProps = {
 
 const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  // React Query 캐시에서 최신 레시피 데이터 가져오기
+  const cachedRecipe = queryClient.getQueryData<Recipe>(["recipe", recipe.id.toString()]);
+  
+  // 캐시된 데이터가 있으면 사용하고, 없으면 초기 데이터 사용
+  const currentLikeCount = cachedRecipe?.likeCount ?? recipe.likeCount;
+  const currentLikedByUser = cachedRecipe?.likedByCurrentUser ?? recipe.likedByCurrentUser;
 
   const handleClick = () => {
     router.push(`/recipes/${recipe.id}`);
@@ -46,8 +55,8 @@ const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
       <div className="absolute top-0 right-0 p-2 text-right">
         <RecipeLikeButton
           recipeId={recipe.id}
-          initialIsLiked={recipe.likedByCurrentUser}
-          initialLikeCount={recipe.likeCount}
+          initialIsLiked={currentLikedByUser}
+          initialLikeCount={currentLikeCount}
           buttonClassName="text-white"
           iconClassName="fill-gray-300 opacity-80"
         />

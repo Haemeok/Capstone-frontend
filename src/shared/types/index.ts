@@ -38,6 +38,5 @@ export type PresignedUrlInfo = {
 
 export type HiddenNavbarPath = (typeof HIDDEN_NAVBAR_PATHS)[number];
 
-// 인증 관련 타입들
 export type { AuthStatus, ServerAuthResult } from "./auth";
 export { isAuthenticated, isTokenExpired, isUnauthenticated } from "./auth";
