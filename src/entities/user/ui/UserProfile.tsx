@@ -23,7 +23,7 @@ const UserProfile = ({ user, className }: UserProfileProps) => {
             userId={user.id}
             className={className}
           />
-          <p className="text-left text-sm">{user.introduction}</p>
+          <p className="text-left text-sm line-clamp-2">{user.introduction}</p>
         </div>
       </div>
     </div>

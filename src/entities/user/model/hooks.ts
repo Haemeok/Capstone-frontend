@@ -61,7 +61,7 @@ export const useMyInfoQuery = (initialData?: User) => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["myInfo"],
     queryFn: getMyInfo,
     staleTime: 10 * 60 * 1000,
     retry: false,
