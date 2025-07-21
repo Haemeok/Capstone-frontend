@@ -32,6 +32,12 @@ export const refreshToken = async (): Promise<boolean> => {
       throw new Error(`Token refresh failed: ${response.statusText}`);
     }
 
+    // 토큰 갱신 성공 시 사용자 정보 다시 가져오기 이벤트 발생
+    if (isClient) {
+      const event = new CustomEvent("tokenRefreshed");
+      window.dispatchEvent(event);
+    }
+
     return true;
   } catch (error) {
     dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");

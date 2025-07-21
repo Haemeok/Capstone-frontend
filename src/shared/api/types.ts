@@ -19,6 +19,14 @@ export interface ForceLogoutEventDetail {
   reason: string;
 }
 
+// 토큰 갱신 이벤트 타입 선언
+declare global {
+  interface WindowEventMap {
+    forceLogout: CustomEvent<ForceLogoutEventDetail>;
+    tokenRefreshed: CustomEvent;
+  }
+}
+
 export type BatchRequestFunction<T> = () => Promise<T>;
 
 export interface ServerApiRequestOptions extends ApiRequestOptions {
