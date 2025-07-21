@@ -1,4 +1,4 @@
-import { END_POINTS } from "@/shared/config/constants/api";
+import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 
 import {
   DetailedRecipesApiResponse,
@@ -18,7 +18,8 @@ export const getMyRecipeItems = ({
     END_POINTS.USER_RECIPES(userId),
     {
       sort,
-      pageParam,
+      page: pageParam,
+      size: PAGE_SIZE,
     }
   );
 };
