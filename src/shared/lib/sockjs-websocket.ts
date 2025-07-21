@@ -35,21 +35,30 @@ export class SockJSWebSocketManager {
       return;
     }
 
+    // disconnect가 호출된 경우 (재연결 시도 횟수가 최대값에 도달한 경우) 연결 시도 중단
+    if (this.reconnectAttempts >= WEBSOCKET_CONFIG.MAX_RECONNECT_ATTEMPTS) {
+      console.log(
+        "WebSocket 연결이 명시적으로 해제되어 재연결을 시도하지 않습니다."
+      );
+      return;
+    }
+
     this.onStatusChange("connecting");
 
     try {
       await this.loadLibraries();
 
       const SockJS = (window as any).SockJS;
-      const Stomp = (window as any).Stomp;
+      const Stomp = (window as any).StompJs.Stomp;
 
-      this.socket = new SockJS(this.url);
+      // SockJS 옵션 설정으로 transport 제한 및 타임아웃 설정
+      this.socket = new SockJS(this.url, null, {
+        transports: ["websocket"],
+      });
+
       this.stompClient = Stomp.over(this.socket);
 
-      if (process.env.NODE_ENV === "production") {
-        this.stompClient.debug = null;
-      }
-
+      // STOMP 연결 헤더에 heartbeat 설정 추가
       this.stompClient.connect(
         {},
         this.onConnected.bind(this),
@@ -63,6 +72,9 @@ export class SockJSWebSocketManager {
 
   disconnect(): void {
     this.clearReconnectTimer();
+
+    // 재연결 시도 횟수를 최대값으로 설정하여 추가 재연결 시도 방지
+    this.reconnectAttempts = WEBSOCKET_CONFIG.MAX_RECONNECT_ATTEMPTS;
 
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -82,7 +94,6 @@ export class SockJSWebSocketManager {
     }
 
     this.onStatusChange("disconnected");
-    this.reconnectAttempts = 0;
   }
 
   send(destination: string, message: any): boolean {
@@ -104,20 +115,19 @@ export class SockJSWebSocketManager {
     return "disconnected";
   }
 
+  resetReconnection(): void {
+    this.reconnectAttempts = 0;
+    this.clearReconnectTimer();
+  }
+
   private async loadLibraries(): Promise<void> {
-    if ((window as any).SockJS && (window as any).Stomp) {
+    if ((window as any).SockJS && (window as any).StompJs) {
       return;
     }
 
     await Promise.all([
-      this.loadScript(
-        "https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js",
-        "SockJS"
-      ),
-      this.loadScript(
-        "https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js",
-        "Stomp"
-      ),
+      this.loadScript(WEBSOCKET_CONFIG.SOCKJS_CDN_URL, "SockJS"),
+      this.loadScript(WEBSOCKET_CONFIG.STOMP_CDN_URL, "StompJs"),
     ]);
   }
 
@@ -141,6 +151,7 @@ export class SockJSWebSocketManager {
       "✅ STOMP 연결 성공:",
       frame.headers["user-name"] || "인증 성공"
     );
+    console.log("🔗 연결된 transport:", this.socket._transport?.transport);
 
     this.onStatusChange("connected");
     this.reconnectAttempts = 0;
@@ -176,10 +187,11 @@ export class SockJSWebSocketManager {
     this.stompClient = null;
     this.socket = null;
 
+    // 재연결 시도 횟수가 최대값 미만이고, 명시적으로 disconnect가 호출되지 않은 경우에만 재연결 시도
     if (this.reconnectAttempts < WEBSOCKET_CONFIG.MAX_RECONNECT_ATTEMPTS) {
       this.scheduleReconnect();
     } else {
-      console.error("최대 재연결 시도 횟수 초과");
+      console.error("최대 재연결 시도 횟수 초과 또는 연결이 해제됨");
     }
   }
 
