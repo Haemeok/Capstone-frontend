@@ -1,3 +1,5 @@
+"use client";
+
 import { getMyIngredientRecipes } from "@/entities/recipe/model/api";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
