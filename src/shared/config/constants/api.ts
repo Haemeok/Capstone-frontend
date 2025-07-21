@@ -36,6 +36,7 @@ export const END_POINTS = {
   TOKEN_REFRESH: "/token/refresh",
   USER_INFO: (userId: number) => `/users/${userId}`,
   MY_FAVORITES: "/me/favorites",
+  MY_INGREDIENT_RECIPES: "/me/fridge/recipes",
   MY_INFO: "/me",
   MY_INGREDIENTS: "/me/fridge/items",
   MY_INGREDIENTS_BY_ID: (id: number) => `/me/fridge/items/${id}`,

@@ -19,10 +19,13 @@ const NotificationButton = () => {
       href="/notifications"
       className="relative p-1 rounded-full hover:bg-gray-100 transition-colors"
     >
-      <Bell size={24} className="text-gray-600 relative" />
-      {unreadCount > 0 && (
-        <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />
-      )}
+      <div className="h-fit w-fit relative p-1">
+        <Bell size={24} className="text-gray-600 " />
+
+        {unreadCount > 0 && (
+          <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />
+        )}
+      </div>
     </Link>
   );
 };

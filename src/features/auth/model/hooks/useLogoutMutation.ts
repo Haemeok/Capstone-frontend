@@ -26,7 +26,7 @@ const useLogoutMutation = () => {
     },
     onSuccess: () => {
       logoutAction();
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["myInfo"] });
     },
     onError: (error) => {
       const errorMessage =

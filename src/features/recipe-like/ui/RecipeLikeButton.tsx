@@ -1,6 +1,10 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 import HeartButton from "@/shared/ui/HeartButton";
+
+import { Recipe } from "@/entities/recipe/model/types";
 
 import { useLikeRecipeMutation } from "../model/hooks";
 
@@ -26,12 +30,21 @@ const RecipeLikeButton = ({
   isOnNavbar = false,
   ...props
 }: RecipeLikeButtonProps) => {
+  const queryClient = useQueryClient();
   const { mutate: toggleLikeMutate } = useLikeRecipeMutation(recipeId);
+
+  const currentRecipe = queryClient.getQueryData<Recipe>([
+    "recipe",
+    recipeId.toString(),
+  ]);
+
+  const isLiked = currentRecipe?.likedByCurrentUser ?? initialIsLiked;
+  const likeCount = currentRecipe?.likeCount ?? initialLikeCount;
 
   return (
     <HeartButton
-      isLiked={initialIsLiked}
-      likeCount={initialLikeCount}
+      isLiked={isLiked}
+      likeCount={likeCount}
       onClick={toggleLikeMutate}
       containerClassName={containerClassName}
       buttonClassName={buttonClassName}
