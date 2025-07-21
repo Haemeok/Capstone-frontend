@@ -222,27 +222,27 @@ export const FOUR_CUT_IMAGE =
 
 export const aiModels = [
   {
-    id: "chefBot",
+    id: "classic",
     name: "기본에 충실한 셰프",
-    image: "/NaverIcon.png",
+    image: `${IMAGE_BASE_URL}robots/classic.webp`,
     description: "가장 기본적인 레시피를 추천해 드립니다. 저에게 맡겨주세요!",
   },
   {
-    id: "nutritionBot",
+    id: "creative",
     name: "창의적인 실험가",
-    image: "/NaverIcon.png",
+    image: `${IMAGE_BASE_URL}robots/creative.webp`,
     description: "균형 잡힌 영양을 고려한 레시피를 전문적으로 추천합니다.",
   },
   {
-    id: "quickBot",
+    id: "healthy",
     name: "건강 식단 전문",
-    image: "/NaverIcon.png",
+    image: `${IMAGE_BASE_URL}robots/healthy.webp`,
     description: "바쁜 현대인을 위한 빠르고 간편한 레시피를 제공합니다.",
   },
   {
-    id: "gourmetBot",
+    id: "gourmet",
     name: "든든한 미식가",
-    image: "/NaverIcon.png",
+    image: `${IMAGE_BASE_URL}robots/gourmet.webp`,
     description: "특별한 날을 위한 고급스럽고 창의적인 레시피를 제안합니다.",
   },
 ];

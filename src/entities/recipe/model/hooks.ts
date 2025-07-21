@@ -4,7 +4,7 @@ import { getRecipe } from "./api";
 import { mockRecipeData } from "./mockData";
 import { Recipe } from "./types";
 
-export const useRecipeDetailQuery = (id: number) => {
+export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
   const {
     data: recipeData,
     isLoading,
@@ -15,6 +15,7 @@ export const useRecipeDetailQuery = (id: number) => {
     queryKey: ["recipe", id.toString()],
     queryFn: () => getRecipe(id),
     retry: false,
+    initialData,
   });
 
   return {

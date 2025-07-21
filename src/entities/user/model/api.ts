@@ -61,6 +61,6 @@ export const getRecipeHistory = async ({
 
 export const getMyInfo = async () => {
   const data = await api.get<User>(END_POINTS.MY_INFO);
-  console.log("getMyInfo", data);
+
   return data;
 };
