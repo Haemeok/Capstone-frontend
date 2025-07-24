@@ -32,7 +32,7 @@ const CommentCard = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleReplyClick = () => {
-    router.push(`${comment.id}`);
+    router.push(`comments/${comment.id}`);
   };
 
   const { mutate: deleteComment } = useDeleteCommentMutation(
