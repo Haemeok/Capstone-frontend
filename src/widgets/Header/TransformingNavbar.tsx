@@ -41,7 +41,6 @@ const TransformingNavbar = ({
   const headerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  // ScrollProvider의 스크롤 컨테이너 사용
   const { motionRef } = useScrollContext();
 
   useEffect(() => {
@@ -58,7 +57,6 @@ const TransformingNavbar = ({
     const titleElement = titleRef.current;
     const endTrigger = targetRef.current.offsetHeight * 0.8;
 
-    // 애니메이션 설정 구조화
     const animationConfig = {
       title: {
         threshold: titleThreshold,
@@ -84,14 +82,13 @@ const TransformingNavbar = ({
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: targetRef.current,
-        scroller: motionRef.current, // 스크롤 주체 통일
+        scroller: motionRef.current,
         start: "top top",
         end: `+=${endTrigger}`,
         scrub: true,
       },
     });
 
-    // 배경색 애니메이션 (시작부터)
     tl.fromTo(
       headerElement,
       animationConfig.background.from,
@@ -99,7 +96,6 @@ const TransformingNavbar = ({
       0
     );
 
-    // 그림자 애니메이션
     tl.fromTo(
       headerElement,
       animationConfig.shadow.from,
@@ -107,7 +103,6 @@ const TransformingNavbar = ({
       `${animationConfig.shadow.threshold * 100}%`
     );
 
-    // 제목 애니메이션
     tl.fromTo(
       titleElement,
       animationConfig.title.from,
@@ -115,7 +110,6 @@ const TransformingNavbar = ({
       `${animationConfig.title.threshold * 100}%`
     );
 
-    // 텍스트 색상 애니메이션
     tl.fromTo(
       headerElement,
       animationConfig.textColor.from,

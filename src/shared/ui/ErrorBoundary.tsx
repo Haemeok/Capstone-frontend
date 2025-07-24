@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback; // 문제가 생기면 전달받은 fallback을 렌더링
+      return this.props.fallback;
     }
 
     return this.props.children;

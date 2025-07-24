@@ -13,7 +13,6 @@ type SearchPageProps = {
   }>;
 };
 
-// 1. URL 쿼리에 따라 동적으로 Metadata를 생성합니다.
 export async function generateMetadata({
   searchParams,
 }: SearchPageProps): Promise<Metadata> {
@@ -42,7 +41,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const initialRecipes = await getRecipesOnServer({
     key: "search",
     q: awaitedSearchParams.q,
-    sort: awaitedSearchParams.sort?.toLowerCase() === "asc" ? "asc" : "desc", // DESC/ASC를 desc/asc로 변환
+    sort: awaitedSearchParams.sort?.toLowerCase() === "asc" ? "asc" : "desc",
     dishType: awaitedSearchParams.dishType,
     tagNames,
   });

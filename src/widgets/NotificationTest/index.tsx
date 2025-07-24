@@ -5,6 +5,7 @@ import { useState } from "react";
 import { BASE_API_URL } from "@/shared/config/constants/api";
 
 import { useInfiniteNotificationsQuery } from "@/entities/notification";
+import { getNotificationMessage } from "@/entities/notification";
 import { useUserStore } from "@/entities/user";
 
 import { useWebSocket } from "@/app/providers/WebSocketProvider";
@@ -16,7 +17,6 @@ export const NotificationTest = () => {
   const { notifications, unreadCount, ref, totalCount } =
     useInfiniteNotificationsQuery();
 
-  // 프로덕션에서는 렌더링하지 않음
   if (process.env.NODE_ENV === "production") {
     return null;
   }
@@ -72,7 +72,6 @@ export const NotificationTest = () => {
         </button>
       </div>
 
-      {/* 연결 상태 */}
       <div className="mb-3">
         <div className="flex items-center gap-2 mb-2">
           <div className={`w-3 h-3 rounded-full ${getStatusColor()}`}></div>
@@ -88,7 +87,6 @@ export const NotificationTest = () => {
         </div>
       </div>
 
-      {/* 연결 제어 */}
       <div className="mb-3 flex gap-2">
         <button
           onClick={connect}
@@ -122,7 +120,12 @@ export const NotificationTest = () => {
                   notification.read ? "bg-gray-100" : "bg-blue-50"
                 }`}
               >
-                <div className="font-medium">{notification.content}</div>
+                <div className="font-medium">
+                  {getNotificationMessage(
+                    notification.type,
+                    notification.actorNickname
+                  )}
+                </div>
                 <div className="text-gray-500">
                   {notification.type} •{" "}
                   {new Date(notification.createdAt).toLocaleTimeString()}
@@ -133,7 +136,6 @@ export const NotificationTest = () => {
         </div>
       )}
 
-      {/* 디버그 정보 */}
       <details className="mt-3">
         <summary className="text-xs cursor-pointer text-gray-600">
           디버그 정보

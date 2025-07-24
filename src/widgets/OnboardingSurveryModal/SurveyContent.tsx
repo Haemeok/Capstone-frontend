@@ -72,12 +72,10 @@ const SurveyContent = ({
 }: SurveyContentProps) => {
   const currentQuestionData = surveySteps[currentStep];
 
-  // 동적 컴포넌트 선택
   const SurveyComponent =
     SURVEY_COMPONENT_MAP[currentQuestionData.type] ||
-    SURVEY_COMPONENT_MAP.radio; // fallback
+    SURVEY_COMPONENT_MAP.radio;
 
-  // Props 생성
   const surveyProps = createSurveyProps(
     currentQuestionData,
     answers,

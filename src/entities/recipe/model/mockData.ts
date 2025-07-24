@@ -2,7 +2,6 @@ import { IngredientItem } from "@/entities/ingredient";
 
 import { Recipe, RecipeStep } from "./types";
 
-// Mock 재료 데이터 (칼로리 포함)
 const mockIngredients: IngredientItem[] = [
   {
     id: 1,
@@ -54,7 +53,6 @@ const mockIngredients: IngredientItem[] = [
   },
 ];
 
-// Mock 조리 단계 데이터
 const mockSteps: RecipeStep[] = [
   {
     stepNumber: 1,
@@ -90,7 +88,6 @@ const mockSteps: RecipeStep[] = [
   },
 ];
 
-// Mock 레시피 데이터
 export const mockRecipeData: Recipe = {
   id: 1,
   title: "헬시 닭가슴살 샐러드 보울",
@@ -104,7 +101,7 @@ export const mockRecipeData: Recipe = {
   servings: 2,
   totalIngredientCost: 5500,
   marketPrice: 12000,
-  totalCalories: 527, // 재료별 칼로리 합계
+  totalCalories: 527,
   imageKey: "recipe_image.jpg",
   ratingInfo: {
     avgRating: 4.5,

@@ -69,7 +69,6 @@ const RecipeSlide = ({
         style={{ overflowY: "visible" }}
       >
         {isLoading ? (
-          // 로딩 상태
           Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="flex-shrink-0">
               <Skeleton className="h-[125px] w-[200px] rounded-xl " />
@@ -80,26 +79,23 @@ const RecipeSlide = ({
             </div>
           ))
         ) : error ? (
-          // 에러 상태 - 서버 문제 시 사용자 친화적 메시지
           <div className="flex w-full h-30 items-center justify-center py-8">
             <p className="text-sm text-gray-500">
               잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.
             </p>
           </div>
         ) : recipes.length === 0 ? (
-          // 빈 데이터 상태
           <div className="flex w-full items-center justify-center py-8">
             <p className="text-sm text-gray-500">아직 레시피가 없어요.</p>
           </div>
         ) : (
-          // 정상 데이터 렌더링
           recipes.map((item) => (
             <DetailedRecipeGridItem
               key={item.id}
               recipe={{
                 ...item,
-                avgRating: 0, // 기본값 설정
-                ratingCount: 0, // 기본값 설정
+                avgRating: 0,
+                ratingCount: 0,
               }}
             />
           ))

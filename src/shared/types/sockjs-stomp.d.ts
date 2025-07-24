@@ -1,5 +1,3 @@
-// SockJS + STOMP CDN 타입 정의 (최소한 필요한 부분만)
-
 declare global {
   interface Window {
     SockJS: typeof SockJS;
@@ -7,7 +5,6 @@ declare global {
   }
 }
 
-// SockJS 타입 정의
 export interface SockJSOptions {
   transports?: string[];
   timeout?: number;
@@ -31,7 +28,6 @@ export interface SockJSInstance {
   close(): void;
 }
 
-// STOMP 타입 정의
 export interface StompHeaders {
   [key: string]: string;
 }

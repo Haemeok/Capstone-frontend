@@ -9,7 +9,10 @@ import { Star } from "lucide-react";
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
 
-import { DetailedRecipeGridItem as DetailedRecipeGridItemType, Recipe } from "@/entities/recipe/model/types";
+import {
+  DetailedRecipeGridItem as DetailedRecipeGridItemType,
+  Recipe,
+} from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
@@ -23,12 +26,14 @@ const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  // React Query 캐시에서 최신 레시피 데이터 가져오기
-  const cachedRecipe = queryClient.getQueryData<Recipe>(["recipe", recipe.id.toString()]);
-  
-  // 캐시된 데이터가 있으면 사용하고, 없으면 초기 데이터 사용
+  const cachedRecipe = queryClient.getQueryData<Recipe>([
+    "recipe",
+    recipe.id.toString(),
+  ]);
+
   const currentLikeCount = cachedRecipe?.likeCount ?? recipe.likeCount;
-  const currentLikedByUser = cachedRecipe?.likedByCurrentUser ?? recipe.likedByCurrentUser;
+  const currentLikedByUser =
+    cachedRecipe?.likedByCurrentUser ?? recipe.likedByCurrentUser;
 
   const handleClick = () => {
     router.push(`/recipes/${recipe.id}`);

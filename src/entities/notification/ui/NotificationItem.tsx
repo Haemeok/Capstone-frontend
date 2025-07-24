@@ -32,7 +32,7 @@ export const NotificationItem = ({
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 부모 클릭 이벤트 방지
+    e.stopPropagation();
     onDelete?.(notification.id);
   };
 

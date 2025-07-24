@@ -40,31 +40,26 @@ export async function apiClient<T = any>(
     }
   }
 
-  // AbortController로 타임아웃 처리
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-  // 요청 옵션 구성
   const requestOptions: RequestInit = {
-    credentials: "include", // 쿠키 자동 전송
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...headers, // fetch가 자동으로 병합
+      ...headers,
     },
     signal: controller.signal,
     ...restOptions,
   };
 
-  // 요청 실행 함수
   const executeRequest = async (): Promise<Response> => {
     return fetch(finalUrl, requestOptions);
   };
 
   try {
-    // 첫 번째 요청 시도
     let response = await executeRequest();
 
-    // 401 에러 시 토큰 리프레시 후 재시도
     if (response.status === 401 && isClient) {
       const retryResponse = await handle401Error(executeRequest);
       if (retryResponse) {
@@ -72,24 +67,20 @@ export async function apiClient<T = any>(
       }
     }
 
-    // 응답 에러 처리
     if (isErrorResponse(response)) {
       throw await createApiError(response);
     }
 
-    // 응답 데이터 파싱 (직접 호출)
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       return response.json();
     }
     return response.text() as any;
   } catch (error) {
-    // AbortError는 타임아웃으로 처리
     if (error instanceof Error && error.name === "AbortError") {
       throw new ApiError(0, "Request timeout", error);
     }
 
-    // ApiError가 아닌 경우 네트워크 에러로 처리
     if (!(error instanceof ApiError)) {
       throw new ApiError(0, "Network Error", error);
     }
@@ -99,7 +90,6 @@ export async function apiClient<T = any>(
   }
 }
 
-// HTTP 메서드별 편의 함수들
 export const api = {
   get: <T = any>(url: string, options?: Omit<ApiRequestOptions, "method">) =>
     apiClient<T>(url, { ...options, method: "GET" }),

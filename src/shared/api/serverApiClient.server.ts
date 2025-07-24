@@ -66,13 +66,11 @@ export async function serverApiClient<T = any>(
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  // 토큰이 없으면 상태에 따라 구분
   if (!accessToken) {
-    // 리프레시 토큰도 없으면 단순 비로그인 상태
     if (!refreshToken) {
       throw new Error("HTTP error! status: 401");
     }
-    // 리프레시 토큰은 있지만 액세스 토큰이 없으면 만료 상태
+
     const error = new Error("REFRESH_TOKEN_EXPIRED");
     (error as any).isRefreshExpired = true;
     throw error;
@@ -89,7 +87,6 @@ export async function serverApiClient<T = any>(
       },
     });
   } catch (error) {
-    // 401 에러인 경우 토큰 만료로 처리
     if (error && typeof error === "object" && "message" in error) {
       const errorMessage = (error as Error).message;
       if (errorMessage.includes("401")) {

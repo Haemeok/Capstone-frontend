@@ -1,11 +1,10 @@
 "use client";
 
-import { useCallback,useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { PWA_STORAGE_KEYS } from "@/shared/config/constants/pwa";
 import { storage } from "@/shared/lib/storage";
 
-// beforeinstallprompt 이벤트 타입 정의
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{
@@ -15,17 +14,12 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-/**
- * PWA 설치 상태와 프롬프트를 관리하는 훅
- */
 export const usePWAInstall = () => {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
 
-  // PWA 설치 상태 확인
   const checkInstallationStatus = useCallback(() => {
-    // 1. 스탠드얼론 모드로 실행 중인지 확인
     if (
       typeof window !== "undefined" &&
       window.matchMedia("(display-mode: standalone)").matches
@@ -33,7 +27,6 @@ export const usePWAInstall = () => {
       return true;
     }
 
-    // 2. iOS Safari의 홈 화면 추가 확인
     if (
       typeof window !== "undefined" &&
       (window.navigator as any).standalone === true
@@ -41,11 +34,9 @@ export const usePWAInstall = () => {
       return true;
     }
 
-    // 3. localStorage에서 설치 상태 확인
     return storage.getBooleanItem(PWA_STORAGE_KEYS.INSTALLED);
   }, []);
 
-  // PWA 설치 프롬프트 실행
   const promptInstall = useCallback(async () => {
     if (!deferredPrompt) return;
 
@@ -65,7 +56,6 @@ export const usePWAInstall = () => {
     }
   }, [deferredPrompt]);
 
-  // 설치 프롬프트 스킵 처리
   const skipInstall = useCallback(() => {
     storage.setBooleanItem(PWA_STORAGE_KEYS.INSTALL_SKIPPED, true);
   }, []);
