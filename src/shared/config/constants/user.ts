@@ -30,39 +30,35 @@ export const OtherTabs: Tab[] = [
   { id: "나의 레시피", label: "나의 레시피", icon: Award },
 ];
 
-type SurveyStepType = "radio" | "textarea" | "checkbox" | "range";
+type SurveyStepType = "radio" | "textarea" | "checkbox" | "range" | "slider";
 
 export type SurveyStep = {
   id: number;
   question: string;
   type: SurveyStepType;
   options?: { value: string; label: string }[];
-  isRadio: boolean; // 호환성을 위해 유지
+  isRadio: boolean;
   min?: number;
   max?: number;
   isMultiple?: boolean;
+  required?: boolean;
 };
 
 export const surveySteps: SurveyStep[] = [
   {
     id: 1,
-    question:
-      "매운맛 선호도를 선택해주세요 (1: 전혀 안 매운 것, 5: 아주 매운 것)",
-    type: "radio",
-    isRadio: true,
-    options: [
-      { value: "1", label: "1 - 전혀 안 매운 것" },
-      { value: "2", label: "2 - 약간 매운 것" },
-      { value: "3", label: "3 - 보통 매운 것" },
-      { value: "4", label: "4 - 매운 것" },
-      { value: "5", label: "5 - 아주 매운 것" },
-    ],
+    question: "매운맛 선호도를 선택해주세요",
+    type: "slider",
+    isRadio: false,
+    min: 1,
+    max: 5,
   },
   {
     id: 2,
     question: "알레르기가 있는 음식이 있나요? 있다면 알려주세요.",
     type: "textarea",
     isRadio: false,
+    required: false,
   },
   {
     id: 3,

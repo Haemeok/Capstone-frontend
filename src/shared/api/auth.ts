@@ -18,7 +18,24 @@ export const dispatchForceLogoutEvent = (reason: string, message?: string) => {
   }
 };
 
+let refreshPromise: Promise<boolean> | null = null;
+
 export const refreshToken = async (): Promise<boolean> => {
+  if (refreshPromise) {
+    return refreshPromise;
+  }
+
+  refreshPromise = performTokenRefresh();
+  
+  try {
+    const result = await refreshPromise;
+    return result;
+  } finally {
+    refreshPromise = null;
+  }
+};
+
+const performTokenRefresh = async (): Promise<boolean> => {
   try {
     const response = await fetch("/api/auth/refresh", {
       method: "POST",
