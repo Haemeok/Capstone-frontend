@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import NotificationButton from "./NotificationButton";
 
 const HomeHeader = () => {

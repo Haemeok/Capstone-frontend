@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 
 import { Share, X } from "lucide-react";
 
-import { Button } from "@/shared/ui/shadcn/button";
 import { useShare } from "@/shared/hooks/useShare";
+import { Button } from "@/shared/ui/shadcn/button";
 
 type SlideShowHeaderProps = {
   title?: string;

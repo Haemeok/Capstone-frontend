@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { ApiError } from "@/shared/api/errors";
 import { getPresignedUrl, uploadFileToS3 } from "@/shared/api/file";
 
 import { useUserStore } from "@/entities/user";
@@ -8,7 +9,6 @@ import { putUserInfo } from "@/entities/user/model/api";
 import { User } from "@/entities/user/model/types";
 
 import { PutUserInfoVariables } from "./types";
-import { ApiError } from "@/shared/api/errors";
 
 interface UsePutUserInfoMutationProps {
   onSuccess?: (data: User) => void;

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 
+import { BASE_API_URL } from "@/shared/config/constants/api";
+
+import { useInfiniteNotificationsQuery } from "@/entities/notification";
 import { useUserStore } from "@/entities/user";
 
 import { useWebSocket } from "@/app/providers/WebSocketProvider";
-import { BASE_API_URL } from "@/shared/config/constants/api";
-import { useInfiniteNotificationsQuery } from "@/entities/notification";
 
 export const NotificationTest = () => {
   const [isVisible, setIsVisible] = useState(false);

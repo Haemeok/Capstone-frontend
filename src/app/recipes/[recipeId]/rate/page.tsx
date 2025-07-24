@@ -8,12 +8,12 @@ import { cn } from "@/shared/lib/utils";
 import Circle from "@/shared/ui/Circle";
 import Ratings from "@/shared/ui/Ratings";
 
+import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
 import { useUserStore } from "@/entities/user";
 
 import usePostReviewMutation from "@/features/recipe-review/model/hooks";
 
 import { useToastStore } from "@/widgets/Toast";
-import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
 
 const ReviewPage = () => {
   const [rating, setRating] = useState<number>(0);
@@ -95,7 +95,9 @@ const ReviewPage = () => {
               <Image
                 src={user?.profileImage || ""}
                 alt="프로필 이미지"
-                className="mr-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-yellow-400 font-semibold text-white"
+                className="mr-3 rounded-full w-8 h-8 flex-shrink-0"
+                width={32}
+                height={32}
               />
               <div className="flex-grow">
                 <p className="font-semibold text-gray-800">{user?.nickname}</p>
