@@ -6,11 +6,8 @@ import { User } from "@/entities/user";
 
 export type BaseRecipesApiResponse = PageResponse<BaseRecipeGridItem>;
 export type DetailedRecipesApiResponse = PageResponse<DetailedRecipeGridItem>;
-
-export type DetailedRecipeGridItem = BaseRecipeGridItem & {
-  avgRating: number;
-  ratingCount: number;
-};
+export type IngredientRecipesApiResponse =
+  PageResponse<IngredientRecipeGridItem>;
 
 export type BaseRecipeGridItem = {
   id: number;
@@ -23,6 +20,15 @@ export type BaseRecipeGridItem = {
   createdAt: string;
   likeCount: number;
   likedByCurrentUser: boolean;
+};
+
+export type DetailedRecipeGridItem = BaseRecipeGridItem & {
+  avgRating: number;
+  ratingCount: number;
+};
+
+export type IngredientRecipeGridItem = DetailedRecipeGridItem & {
+  matchedIngredients: string[];
 };
 
 export type Recipe = {

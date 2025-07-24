@@ -64,7 +64,14 @@ export const useMyInfoQuery = (initialData?: User) => {
     queryKey: ["myInfo"],
     queryFn: getMyInfo,
     staleTime: 10 * 60 * 1000,
-    retry: false,
+    retry: (failureCount, error: any) => {
+      if (error?.status === 401) {
+        return false;
+      }
+
+      return failureCount < 2;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 3000),
     initialData,
   });
 
@@ -77,7 +84,7 @@ export const useMyInfoQuery = (initialData?: User) => {
 
     if (userData) {
       setUser(userData);
-      // Sentry 사용자 컨텍스트 설정
+
       setUserContext({
         id: userData.id.toString(),
         email: userData.email,

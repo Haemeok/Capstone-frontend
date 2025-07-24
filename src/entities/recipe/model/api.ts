@@ -12,6 +12,7 @@ import { FileInfoRequest } from "@/shared/types";
 import {
   BaseRecipesApiResponse,
   DetailedRecipesApiResponse,
+  IngredientRecipesApiResponse,
   Recipe,
   RecipeItemsQueryParams,
   RecipeQueryParams,
@@ -67,7 +68,7 @@ export const getRecipeItems = async ({
 };
 
 export const getMyIngredientRecipes = async () => {
-  return fetchPagedRecipes<DetailedRecipesApiResponse>(
+  return fetchPagedRecipes<IngredientRecipesApiResponse>(
     END_POINTS.MY_INGREDIENT_RECIPES,
     {
       sort: "createdAt,desc",

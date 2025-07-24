@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { formatPrice } from "@/shared/lib/format";
-import AIBadgeButton from "@/shared/ui/AIBadgeButton";
+import BadgeButton from "@/shared/ui/BadgeButton";
 import Box from "@/shared/ui/Box";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
+import { FabButton } from "@/shared/ui/FabButton";
 
 import { getRecipe } from "@/entities/recipe/model/api";
 import { Recipe } from "@/entities/recipe/model/types";
@@ -19,7 +20,6 @@ import RecipeDetailHeader from "@/widgets/RecipeDetailHeader";
 import RecipeInteractionButtons from "@/widgets/RecipeInteractionButtons";
 
 import { CommentMoreButton } from "../components/CommentMoreButton";
-import { CookButton } from "../components/CookButton";
 import IngredientsSection from "../components/IngredientsSection";
 
 interface RecipeDetailClientProps {
@@ -28,19 +28,19 @@ interface RecipeDetailClientProps {
 
 const RecipeDetailClient = ({ initialRecipe }: RecipeDetailClientProps) => {
   const queryClient = useQueryClient();
+  const observerRef = useRef<HTMLDivElement>(null);
   console.log("initialRecipe", initialRecipe);
-  // 서버에서 받은 초기 데이터를 React Query 캐시에 설정
+
   useEffect(() => {
     const queryKey = ["recipe", initialRecipe.id.toString()];
     queryClient.setQueryData(queryKey, initialRecipe);
   }, [initialRecipe, queryClient]);
 
-  // useQuery로 실시간 데이터 관리
   const { data: recipe = initialRecipe } = useQuery({
     queryKey: ["recipe", initialRecipe.id.toString()],
     queryFn: () => getRecipe(initialRecipe.id),
     initialData: initialRecipe,
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: 1000 * 60 * 5,
   });
 
   return (
@@ -51,7 +51,12 @@ const RecipeDetailClient = ({ initialRecipe }: RecipeDetailClientProps) => {
         <Box className="flex flex-col items-center justify-center gap-3">
           <div className="flex items-center gap-2">
             <h1 className="text-center text-2xl font-bold">{recipe.title}</h1>
-            {recipe.aiGenerated && <AIBadgeButton />}
+            {recipe.aiGenerated && (
+              <BadgeButton
+                badgeText="AI의 도움을 받아 작성된 레시피예요"
+                badgeIcon={<p>🧪</p>}
+              />
+            )}
           </div>
 
           <RecipeInteractionButtons recipe={recipe} />
@@ -75,13 +80,17 @@ const RecipeDetailClient = ({ initialRecipe }: RecipeDetailClientProps) => {
             />
           )}
         </Box>
-
+        <div ref={observerRef} className="h-1 w-full" />
         <IngredientsSection recipe={recipe} />
 
         <RecipeStepList RecipeSteps={recipe.steps} />
       </div>
 
-      <CookButton recipeId={recipe.id} />
+      <FabButton
+        to={`/recipes/${recipe.id}/slide-show`}
+        text="요리하기"
+        triggerRef={observerRef}
+      />
     </div>
   );
 };
