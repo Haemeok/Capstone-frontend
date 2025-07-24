@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import Image from "next/image";
 
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import { Bell, X } from "lucide-react";
+import { X } from "lucide-react";
 
+import { getNotificationMessage } from "@/entities/notification/model/constants";
 import type { Notification } from "@/entities/notification/model/type";
 
 type NotificationItemProps = {
@@ -50,7 +52,7 @@ export const NotificationItem = ({
       className={`
         relative flex items-start gap-3 p-4 border-b border-gray-100
         hover:bg-gray-50 cursor-pointer transition-colors
-        ${!notification.read ? "bg-blue-50" : ""}
+        
         ${className}
       `}
       onClick={handleClick}
@@ -62,11 +64,20 @@ export const NotificationItem = ({
           handleClick();
         }
       }}
-      aria-label={notification.content}
-    >
-      {!notification.read && (
-        <div className="w-2 h-2 bg-blue-500 rounded-full" />
+      aria-label={getNotificationMessage(
+        notification.type,
+        notification.actorNickname
       )}
+    >
+      <div className="flex-shrink-0 relative">
+        <Image
+          src={notification.imageUrl}
+          alt={`${notification.actorNickname} 프로필`}
+          width={40}
+          height={40}
+          className="w-10 h-10 rounded-full object-cover"
+        />
+      </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between">
@@ -77,12 +88,14 @@ export const NotificationItem = ({
               ${!notification.read ? "text-gray-900 font-medium" : "text-gray-700"}
             `}
             >
-              {notification.content}
+              {getNotificationMessage(
+                notification.type,
+                notification.actorNickname
+              )}
             </p>
-            <time className="text-xs text-gray-400 mt-2 block">{timeAgo}</time>
+            <time className="text-xs text-gray-400 mt-1 block">{timeAgo}</time>
           </div>
 
-          {/* 액션 버튼들 */}
           {showActions && (
             <div className="flex items-center gap-1 ml-2">
               <button
