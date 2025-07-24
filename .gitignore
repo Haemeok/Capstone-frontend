@@ -10,6 +10,14 @@
 !.yarn/releases
 !.yarn/versions
 
+# next-pwa
+/public/sw.js
+/public/sw.js.map
+/public/workbox-*.js
+/public/worker-*.js
+/public/fallback-*.js
+
+/docs/
 # testing
 /coverage
 

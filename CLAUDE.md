@@ -2,15 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Development Commands
-
-### Core Commands
-
-- `npm run dev` - Start development server with Turbopack for faster builds
-- `npm run build` - Build production version
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint for code quality
-
 ### Project Structure
 
 This is a Next.js 15 project using App Router with TypeScript and Feature-Sliced Design (FSD) architecture.
@@ -33,17 +24,6 @@ Follow strict layer dependency order: `shared` → `entities` → `features` →
 - Use `type` instead of `interface` for TypeScript
 - Server components for SEO/initial data, client components (`"use client"`) for interactions
 - Controlled components for modals/drawers (receive `isOpen`, `onOpenChange` props)
-
-### Import Order (ESLint enforced)
-
-1. React/Next.js imports
-2. Third-party libraries
-3. `@/shared` imports
-4. `@/entities` imports
-5. `@/features` imports
-6. `@/widgets` imports
-7. Other `@/` imports
-8. Relative imports
 
 ## State Management
 
@@ -124,42 +104,29 @@ Follow strict layer dependency order: `shared` → `entities` → `features` →
 
 당신은 Next.js, TypeScript, 그리고 Feature-Sliced Design (FSD) 아키텍처에 능숙한 시니어 프론트엔드 개발자입니다. 당신의 최우선 목표는 가독성, 유지보수성, 확장성이 뛰어난 코드를 작성하는 것입니다.
 
-# 1. 아키텍처 (Architecture)
+## 🚨 CRITICAL RULES (절대 지켜야 할 규칙)
 
-- 이 프로젝트는 **Next.js App Router**와 **Feature-Sliced Design (FSD)** 원칙을 엄격히 따릅니다.
-- **레이어 구조:** `shared` (공유자원) → `entities` (데이터 명사) → `features` (기능 동사) → `widgets` (기능 조합) → `app` (라우팅/레이아웃) 순서의 의존성을 반드시 지켜주세요.
-- **서버/클라이언트 분리:** 서버 컴포넌트에서는 훅(hook)을 사용하지 않으며, 클라이언트 상호작용이 필요한 부분은 반드시 `"use client"`를 사용한 클라이언트 컴포넌트로 분리합니다.
+### 1. NEVER ASK QUESTIONS (절대 묻지 말 것)
 
-# 2. 코드 스타일 및 네이밍 (Code Style & Naming)
+- **DO NOT ask about running `npm run dev`** - Just proceed after code completion
+- **DO NOT ask for confirmation or suggest additional work** after completing tasks
 
-- **가장 중요한 규칙:** 프로젝트 내 **기존 코드의 스타일과 일관성을 최우선**으로 따릅니다.
-- **컴포넌트 선언:** 컴포넌트는 항상 화살표 함수와 `const`로 선언합니다. `function ComponentName() {}` 형식은 사용하지 않습니다.
-  - Good: `const MyComponent = () => { ... }; export default MyComponent`
-  - Bad: `export default function MyComponent() { ... }`
-- **타입 선언:** TypeScript 타입은 `interface` 대신 `type`을 사용합니다.
-- **Magic Number 금지:** 의미를 알 수 없는 숫자는 항상 의미있는 이름을 가진 상수로 선언하세요.
-- **복잡한 조건식:** 2개 이상의 논리 연산자가 포함된 조건문은 `isUserActive`, `canSubmit` 등 의미있는 이름을 가진 변수에 할당하여 가독성을 높입니다.
+### 2. Feature-Sliced Design Strict Compliance (FSD 엄격 준수)
 
-# 3. 상태 관리 및 데이터 Fetching (State & Fetching)
+```
+shared/ → entities/ → features/ → widgets/ → app/
+```
 
-- **상태 관리:** 클라이언트 전역 상태는 **Zustand**, 서버 상태는 **TanStack Query (React Query)**를 사용합니다.
-- **데이터 Fetching:**
-  - **서버:** SEO가 필요하거나 초기 데이터가 중요한 페이지는 서버 컴포넌트 또는 `getServerSideProps`에서 Next.js 내장 `fetch`를 사용합니다.
-  - **클라이언트:** 사용자의 상호작용으로 인한 데이터 요청은 인터셉터가 설정된 `axios` 인스턴스를 사용합니다.
-  - **Hydration:** 서버에서 가져온 초기 데이터는 항상 TanStack Query의 `initialData` 옵션을 통해 클라이언트 상태와 동기화(Hydration)합니다.
+- **NEVER import in reverse direction between layers**
+- **NO cross-imports within same layer**
 
-# 4. 컴포넌트 설계 원칙 (Component Design Principles)
+### 3. Single Responsibility Principle (단일 책임 원칙)
 
-- **단일 책임 원칙:** 하나의 컴포넌트는 하나의 역할만 수행합니다. 렌더링 로직이 복잡하게 나뉘면, 별도의 컴포넌트로 분리하세요.
-  - **Bad:** `if/else`나 삼항 연산자로 완전히 다른 UI를 하나의 컴포넌트 안에서 렌더링하지 마세요.
-  - **Good:** `<SubmitButton>` 안에서 역할을 분리하여 `<ViewerSubmitButton />`과 `<AdminSubmitButton />`을 조건부로 렌더링하세요.
-- **Prop Drilling 금지:** 3단계 이상 `prop`을 그대로 전달해야 한다면, 컴포넌트 조합(Composition)이나 React Context를 사용하여 구조를 개선하세요.
-- **제어 컴포넌트:** 모달이나 드로어처럼 열림/닫힘 상태가 중요한 컴포넌트는, 내부에서 `useState`로 상태를 관리하지 말고, 부모로부터 `isOpen`, `onOpenChange` 같은 `prop`을 받아 제어되도록 설계하세요.
+- **One component = One responsibility**
+- **Split complex conditional rendering** into separate components
+- **Use Context or Composition** when prop drilling exceeds 3 levels
 
-# 5. 프롬프트 작성 시 참고사항
-
-- 이 가이드라인을 기반으로 코드를 생성하거나 리팩토링해주세요.
-- 만약 가이드라인을 따르기 어려운 상황이라면, 그 이유와 함께 몇 가지 대안을 제시해주세요.
+## 📁 Project Structure Patterns
 
 # Frontend Design Guideline
 
