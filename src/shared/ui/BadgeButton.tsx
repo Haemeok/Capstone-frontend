@@ -8,7 +8,12 @@ import {
   PopoverTrigger,
 } from "@/shared/ui/shadcn/popover";
 
-const AIBadgeButton = () => {
+type BadgeButtonProps = {
+  badgeText: string;
+  badgeIcon: React.ReactNode;
+};
+
+const BadgeButton = ({ badgeText, badgeIcon }: BadgeButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -32,16 +37,12 @@ const AIBadgeButton = () => {
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <p style={{ cursor: "pointer" }}>🧪</p>
-      </PopoverTrigger>
+      <PopoverTrigger asChild>{badgeIcon}</PopoverTrigger>
       <PopoverContent className="w-fit py-2">
-        <p className="text-sm text-gray-500">
-          AI의 도움을 받아 작성된 레시피예요
-        </p>
+        <p className="text-sm text-gray-500">{badgeText}</p>
       </PopoverContent>
     </Popover>
   );
 };
 
-export default AIBadgeButton;
+export default BadgeButton;
