@@ -44,8 +44,7 @@ const SimpleRecipeGridItem = ({
           src={recipe.imageUrl}
           alt={recipe.title}
           className="h-full w-full rounded-2xl object-cover"
-          width={50}
-          height={50}
+          fill
         />
         <div className="absolute top-0 right-0 p-2 text-right">
           <RecipeLikeButton

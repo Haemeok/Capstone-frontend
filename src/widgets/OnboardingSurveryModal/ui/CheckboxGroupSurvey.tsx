@@ -13,10 +13,10 @@ const CheckboxGroupSurvey = ({
   values,
   onValuesChange,
 }: CheckboxGroupSurveyProps) => {
-  const handleCheckboxChange = (optionValue: string, checked: boolean) => {
+  const handleCheckboxChange = (optionLabel: string, checked: boolean) => {
     const newValues = checked
-      ? [...values, optionValue]
-      : values.filter((value) => value !== optionValue);
+      ? [...values, optionLabel]
+      : values.filter((value) => value !== optionLabel);
     onValuesChange(newValues);
   };
 
@@ -26,9 +26,9 @@ const CheckboxGroupSurvey = ({
         <div key={option.value} className="flex items-center space-x-2">
           <Checkbox
             id={`${questionData.id}-${option.value}`}
-            checked={values.includes(option.value)}
+            checked={values.includes(option.label)}
             onCheckedChange={(checked) =>
-              handleCheckboxChange(option.value, checked === true)
+              handleCheckboxChange(option.label, checked === true)
             }
           />
           <Label

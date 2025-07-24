@@ -2,11 +2,12 @@ import { ComponentType } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-import { SurveyStep,surveySteps } from "@/shared/config/constants/user";
+import { SurveyStep, surveySteps } from "@/shared/config/constants/user";
 import { Label } from "@/shared/ui/shadcn/label";
 
 import CheckboxGroupSurvey from "./ui/CheckboxGroupSurvey";
 import RadioGroupSurvey from "./ui/RadioGroupSurvey";
+import SliderSurvey from "./ui/SliderSurvey";
 import TextareaSurvey from "./ui/TextareaSurvey";
 
 type SurveyAnswerValue = string | number | string[];
@@ -17,14 +18,13 @@ type SurveyContentProps = {
   handleValueChange: (value: SurveyAnswerValue) => void;
 };
 
-// 컴포넌트 맵핑 - 새로운 타입 추가 시 여기만 수정
 const SURVEY_COMPONENT_MAP: Record<string, ComponentType<any>> = {
   radio: RadioGroupSurvey,
   checkbox: CheckboxGroupSurvey,
   textarea: TextareaSurvey,
+  slider: SliderSurvey,
 };
 
-// Props 생성자 맵핑 - 각 타입별 Props 생성 로직 분리
 const SURVEY_PROPS_CREATORS = {
   checkbox: (
     questionData: SurveyStep,
@@ -47,7 +47,6 @@ const SURVEY_PROPS_CREATORS = {
   }),
 };
 
-// Props 생성 함수 - switch case 제거
 const createSurveyProps = (
   questionData: SurveyStep,
   answers: Record<number, SurveyAnswerValue>,

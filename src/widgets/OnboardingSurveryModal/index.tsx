@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
-import { surveySteps } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
 import {
   Dialog,
@@ -13,87 +12,37 @@ import {
   DialogTitle,
 } from "@/shared/ui/shadcn/dialog";
 
-import { useUserStore } from "@/entities/user";
-
-import { SurveyAnswers,useSurveyMutation } from "@/features/user-survey";
-
+import { useOnboardingSurvey } from "./hooks/useOnboardingSurvey";
+import { useSurveyValidation } from "./hooks/useSurveyValidation";
 import SurveyContent from "./SurveyContent";
 
-type SurveyAnswerValue = string | number | string[];
+export const OnboardingSurveyModal = () => {
+  const {
+    isOpen,
+    currentStep,
+    answers,
+    user,
+    shouldShowSurvey,
+    currentQuestionData,
+    totalSteps,
+    handleValueChange,
+    handleNext,
+    handlePrevious,
+    handleClose,
+    isSubmitting,
+  } = useOnboardingSurvey();
 
-type OnboardingSurveyModalProps = {
-  isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  onSurveyComplete?: (answers: Record<number, SurveyAnswerValue>) => void;
-};
+  const { isCurrentAnswerValid } = useSurveyValidation();
 
-export const OnboardingSurveyModal = ({
-  isOpen: propIsOpen,
-  onOpenChange: propOnOpenChange,
-  onSurveyComplete: propOnSurveyComplete,
-}: OnboardingSurveyModalProps) => {
-  const [internalIsOpen, setInternalIsOpen] = useState(true);
+  if (!shouldShowSurvey) {
+    return null;
+  }
 
-  // 내부 상태 또는 prop 상태 사용
-  const isOpen = propIsOpen !== undefined ? propIsOpen : internalIsOpen;
-  const onOpenChange = propOnOpenChange || setInternalIsOpen;
-  const onSurveyComplete = propOnSurveyComplete || (() => {});
-  const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, SurveyAnswerValue>>({});
-  const { user } = useUserStore();
-  const surveyMutation = useSurveyMutation({
-    onSuccess: () => {
-      onSurveyComplete(answers);
-      onOpenChange(false);
-      setAnswers({});
-      setCurrentStep(0);
-    },
-  });
-
-  const handleValueChange = (value: SurveyAnswerValue) => {
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [surveySteps[currentStep].id]: value,
-    }));
-  };
-
-  const totalSteps = surveySteps.length;
-
-  const transformAnswersToApiFormat = (): SurveyAnswers => {
-    return {
-      spicyLevel: Number(answers[1]) || 1,
-      allergy: (answers[2] as string) || "",
-      tags: (answers[3] as string[]) || [],
-    };
-  };
-
-  const handleNext = () => {
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      const apiData = transformAnswersToApiFormat();
-      surveyMutation.mutate(apiData);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const currentQuestionData = surveySteps[currentStep];
-
-  const isCurrentAnswerValid = () => {
-    const currentAnswer = answers[currentQuestionData.id];
-    if (currentQuestionData.type === "checkbox") {
-      return Array.isArray(currentAnswer) && currentAnswer.length > 0;
-    }
-    return currentAnswer !== undefined && currentAnswer !== "";
-  };
+  const currentAnswer = answers[currentQuestionData.id];
+  const isAnswerValid = isCurrentAnswerValid(currentAnswer, currentQuestionData);
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-center text-lg font-bold">
@@ -135,15 +84,15 @@ export const OnboardingSurveyModal = ({
           </button>
           <button
             onClick={handleNext}
-            disabled={!isCurrentAnswerValid() || surveyMutation.isPending}
+            disabled={!isAnswerValid || isSubmitting}
             className={cn(
               "rounded-2xl px-4 py-2 text-white transition-all duration-300",
-              !isCurrentAnswerValid() || surveyMutation.isPending
+              !isAnswerValid || isSubmitting
                 ? "bg-olive-mint/50 cursor-not-allowed"
                 : "bg-olive-mint"
             )}
           >
-            {surveyMutation.isPending
+            {isSubmitting
               ? "제출 중..."
               : currentStep === totalSteps - 1
                 ? "완료"
