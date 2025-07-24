@@ -15,8 +15,9 @@ export type Notification = {
   id: number;
   userId: number;
   actorId: number;
+  actorNickname: string;
+  imageUrl: string;
   type: NotificationType;
-  content: string;
   relatedType: RelatedType;
   relatedId: number;
   relatedUrl: string;
