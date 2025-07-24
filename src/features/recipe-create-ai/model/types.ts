@@ -3,6 +3,7 @@ export type AIRecommendedRecipeRequest = {
   dishType: string;
   cookingTime: string;
   servings: number;
+  robotType: string;
 };
 
 export type AIRecommendedRecipe = {
