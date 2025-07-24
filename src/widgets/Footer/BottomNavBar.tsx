@@ -8,6 +8,8 @@ import { shouldHideNavbar } from "@/shared/lib/navigation";
 
 import { useUserStore } from "@/entities/user";
 
+import AIRecipeNotificationBadge from "@/widgets/AIRecipeNotificationBadge";
+
 import BottomNavButton from "./BottomNavButton";
 
 const BottomNavBar = () => {
@@ -36,11 +38,13 @@ const BottomNavBar = () => {
         label="냉장고"
       />
 
-      <BottomNavButton
-        path="/recipes/new/ai"
-        icon={<Sparkles size={24} className="mb-1" />}
-        label="AI 레시피"
-      />
+      <AIRecipeNotificationBadge>
+        <BottomNavButton
+          path="/recipes/new/ai"
+          icon={<Sparkles size={24} className="mb-1" />}
+          label="AI 레시피"
+        />
+      </AIRecipeNotificationBadge>
 
       <BottomNavButton
         path={`/users/${user?.id ?? "guestUser"}`}

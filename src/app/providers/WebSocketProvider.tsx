@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 
+import { BASE_WEBSOCKET_URL } from "@/shared/config/constants/api";
 import { SockJSWebSocketManager } from "@/shared/lib/sockjs-websocket";
 
 import { NOTIFICATION_ENDPOINTS } from "@/entities/notification/model/api";
@@ -17,7 +18,6 @@ import type {
   WebSocketMessage,
 } from "@/entities/notification/model/type";
 import { useUserStore } from "@/entities/user";
-import { BASE_WEBSOCKET_URL } from "@/shared/config/constants/api";
 
 type WebSocketContextValue = {
   connectionStatus: WebSocketConnectionStatus;

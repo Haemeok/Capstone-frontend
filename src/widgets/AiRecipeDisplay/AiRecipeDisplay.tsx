@@ -2,14 +2,12 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
-import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
 import { formatPrice } from "@/shared/lib/format";
 import Box from "@/shared/ui/Box";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
+import { FabButton } from "@/shared/ui/FabButton";
 import RequiredAmountDisplay from "@/shared/ui/PointDisplayBanner";
-import { Button } from "@/shared/ui/shadcn/button";
 
 import { Recipe } from "@/entities/recipe";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
@@ -21,15 +19,7 @@ type AIRecipeDisplayProps = {
 const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
   const recipe = createdRecipe;
   const observerRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const { targetRef: cookButtonRef } = useScrollAnimate<HTMLButtonElement>({
-    triggerRef: observerRef,
-    start: "top bottom-=100px",
-    toggleActions: "play none none reset",
-    yOffset: 10,
-    duration: 0.2,
-    delay: 0,
-  });
+
   return (
     <div>
       <div>
@@ -74,18 +64,15 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
           textClassName="text-purple-500"
         />
       </Box>
+      <div ref={observerRef} className="h-1 w-full" />
       <Box>
         <RecipeStepList RecipeSteps={recipe.steps} />
       </Box>
-      <div className="fixed bottom-20 z-50 flex w-full justify-center">
-        <Button
-          ref={cookButtonRef}
-          className="bg-olive-light rounded-full p-4 text-white shadow-lg"
-          onClick={() => router.push(`/recipes/${createdRecipe?.id}/slideShow`)}
-        >
-          요리하기
-        </Button>
-      </div>
+      <FabButton
+        to={`/recipes/${createdRecipe?.id}/slideShow`}
+        text="요리하기"
+        triggerRef={observerRef}
+      />
     </div>
   );
 };

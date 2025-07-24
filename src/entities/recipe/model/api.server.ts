@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 import { BASE_API_URL } from "@/shared/config/constants/api";
 
 import {
@@ -5,7 +7,6 @@ import {
   Recipe,
   RecipeItemsQueryParams,
 } from "./types";
-import { cookies } from "next/headers";
 
 export const getRecipesOnServer = async (
   params: RecipeItemsQueryParams

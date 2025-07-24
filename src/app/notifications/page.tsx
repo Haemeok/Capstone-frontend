@@ -2,14 +2,15 @@
 
 import { Trash2 } from "lucide-react";
 
+import PrevButton from "@/shared/ui/PrevButton";
+import { Button } from "@/shared/ui/shadcn/button";
+
 import {
   NotificationItem,
   useDeleteAllNotifications,
   useDeleteNotification,
   useInfiniteNotificationsQuery,
 } from "@/entities/notification";
-import { Button } from "@/shared/ui/shadcn/button";
-import PrevButton from "@/shared/ui/PrevButton";
 
 const NotificationsPage = () => {
   const { notifications, error, hasNextPage, isFetchingNextPage, ref } =

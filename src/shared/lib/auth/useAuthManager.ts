@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useUserStore } from "@/entities/user/model/store";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 export const useAuthManager = () => {

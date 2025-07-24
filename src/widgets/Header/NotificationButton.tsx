@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { Bell } from "lucide-react";
+
 import { useInfiniteNotificationsQuery } from "@/entities/notification";
 import { useUserStore } from "@/entities/user";
 

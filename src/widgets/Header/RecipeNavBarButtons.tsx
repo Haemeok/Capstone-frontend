@@ -1,5 +1,6 @@
+import ShareButton from "@/shared/ui/ShareButton";
+
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
-import ShareButton from "@/features/share-content/ui/ShareButton";
 
 type RecipeNavBarButtonsProps = {
   recipeId: number;

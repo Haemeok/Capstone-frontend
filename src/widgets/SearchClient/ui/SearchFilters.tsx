@@ -2,8 +2,8 @@ import React from "react";
 
 import { Search } from "lucide-react";
 
-import FilterChip from "@/shared/ui/FilterChip";
 import { TAG_EMOJI } from "@/shared/config/constants/recipe";
+import FilterChip from "@/shared/ui/FilterChip";
 
 type SearchFiltersProps = {
   inputValue: string;

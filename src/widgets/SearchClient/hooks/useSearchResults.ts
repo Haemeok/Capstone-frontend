@@ -1,14 +1,14 @@
 import { InfiniteData } from "@tanstack/react-query";
 
+import {
+  DISH_TYPE_CODES,
+  DISH_TYPE_CODES_TO_NAME,
+} from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
-import {
-  DISH_TYPE_CODES,
-  DISH_TYPE_CODES_TO_NAME,
-} from "@/shared/config/constants/recipe";
 
 type UseSearchResultsProps = {
   q: string;
