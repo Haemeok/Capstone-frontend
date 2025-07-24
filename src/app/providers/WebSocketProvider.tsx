@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 
+import { api } from "@/shared/api/client";
 import { BASE_WEBSOCKET_URL } from "@/shared/config/constants/api";
 import { SockJSWebSocketManager } from "@/shared/lib/sockjs-websocket";
 
@@ -54,7 +55,6 @@ export const WebSocketProvider = ({
 
   useEffect(() => {
     if (!user) {
-      // 로그아웃 시 WebSocket 연결 완전히 해제
       if (wsManagerRef.current) {
         wsManagerRef.current.disconnect();
         wsManagerRef.current = null;
@@ -63,22 +63,43 @@ export const WebSocketProvider = ({
       return;
     }
 
-    // 로그인 시 새로운 WebSocket 매니저 생성 및 연결
-    if (!wsManagerRef.current) {
-      wsManagerRef.current = new SockJSWebSocketManager(sockjsUrl, "", {
-        onStatusChange: setConnectionStatus,
-        onMessage: handleMessage,
-        onError: handleError,
-      });
-      // 새 연결 시 재연결 상태 리셋
-      wsManagerRef.current.resetReconnection();
-      wsManagerRef.current.connect();
-    }
+    const connectWithTicket = async () => {
+      if (wsManagerRef.current) return;
 
-    // 클린업: 컴포넌트 언마운트나 user 상태 변경 시 실행
+      try {
+        console.log("WebSocket: Requesting ticket...");
+
+        const data = await api.post<{ ticket: string }>("/ws-ticket");
+        const ticket = data.ticket;
+
+        if (!ticket) {
+          throw new Error("WebSocket 티켓 발급에 실패했습니다.");
+        }
+
+        console.log("WebSocket: Ticket received, connecting...");
+        const urlWithTicket = `${sockjsUrl}?token=${ticket}`;
+
+        wsManagerRef.current = new SockJSWebSocketManager(urlWithTicket, "", {
+          onStatusChange: setConnectionStatus,
+          onMessage: handleMessage,
+          onError: handleError,
+        });
+        wsManagerRef.current.resetReconnection();
+        wsManagerRef.current.connect();
+      } catch (error) {
+        console.error(
+          "WebSocket 티켓 발급 또는 연결 실패:",
+          error
+        );
+      }
+    };
+
+    connectWithTicket();
+
     return () => {
       if (wsManagerRef.current) {
         wsManagerRef.current.disconnect();
+        wsManagerRef.current = null;
       }
     };
   }, [user, sockjsUrl]);
@@ -86,8 +107,6 @@ export const WebSocketProvider = ({
   const handleMessage = (message: WebSocketMessage) => {
     switch (message.type) {
       case "NOTIFICATION":
-        // 알림 메시지 처리는 notification store에서 담당
-        // 여기서는 이벤트만 발생시킴
         window.dispatchEvent(
           new CustomEvent("notification-received", {
             detail: message.data,
@@ -95,7 +114,6 @@ export const WebSocketProvider = ({
         );
         break;
       case "HEARTBEAT":
-        // 하트비트 응답은 특별한 처리 불필요
         break;
       case "ERROR":
         console.error("WebSocket error:", message.data);
@@ -110,8 +128,6 @@ export const WebSocketProvider = ({
   };
 
   const sendMessage = (message: WebSocketMessage): boolean => {
-    // SockJS에서는 일반적으로 클라이언트에서 메시지를 보내지 않음
-    // 필요시 특정 destination으로 전송 가능
     return wsManagerRef.current?.send("/app/message", message) ?? false;
   };
 
