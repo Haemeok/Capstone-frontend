@@ -1,18 +1,11 @@
-/**
- * PWA 관련 상수 정의
- */
-
-// localStorage 키 상수
 export const PWA_STORAGE_KEYS = {
   INSTALLED: "pwa-installed",
   FIRST_LOGIN_PROMPTED: "pwaFirstLoginPrompted",
   INSTALL_SKIPPED: "pwaInstallSkipped",
 } as const;
 
-// PWA 설치 프롬프트 지연 시간 (ms)
 export const PWA_PROMPT_DELAY = 1000;
 
-// PWA 앱 정보
 export const PWA_APP_INFO = {
   NAME: "해먹 - 홈쿡 레시피 플랫폼",
   SHORT_NAME: "해먹",
@@ -20,7 +13,6 @@ export const PWA_APP_INFO = {
   THEME_COLOR: "#2a2229",
 } as const;
 
-// PWA 설치 혜택 목록
 export const PWA_BENEFITS = [
   "빠른 접속으로 시간 절약",
   "오프라인에서도 레시피 확인 가능",

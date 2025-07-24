@@ -26,12 +26,10 @@ const AIRecipePage = () => {
     return <AIModelSelection />;
   }
 
-  // 레시피 생성 중
   if (isGenerating) {
     return <AiLoading name={selectedAI.name} />;
   }
 
-  // 레시피 생성 완료
   if (isCompleted && generatedRecipeData) {
     return (
       <AIRecipeComplete
@@ -41,12 +39,10 @@ const AIRecipePage = () => {
     );
   }
 
-  // 에러 발생
   if (isError && error) {
     return <AIRecipeError error={error} />;
   }
 
-  // 기본 상태: 레시피 생성 폼
   return <AIRecipeForm />;
 };
 

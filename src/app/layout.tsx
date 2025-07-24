@@ -11,7 +11,6 @@ import { AppProviders } from "./providers/AppProviders";
 
 import "./globals.css";
 
-// Sentry 초기화 (클라이언트 사이드에서만)
 if (typeof window !== "undefined") {
   conditionalInitSentry();
 }

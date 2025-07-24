@@ -278,7 +278,7 @@ export const PRICE_BRACKETS = [
     code: "LUCKY",
   },
   {
-    min: 600000, // 60~70만원대
+    min: 600000,
     name: "서울 원룸 월세",
     image: `${SAVINGS_BASE_URL}monthly_rent.webp`,
     code: "MONTHLY_RENT",
@@ -290,19 +290,19 @@ export const PRICE_BRACKETS = [
     code: "SIGNIEL",
   },
   {
-    min: 400000, // 40만원대
+    min: 400000,
     name: "노스페이스 패딩",
     image: `${SAVINGS_BASE_URL}northface_jacket.webp`,
     code: "NORTHFACE_JACKET",
   },
   {
-    min: 350000, // 35~40만원대
+    min: 350000,
     name: "PT 6회권",
     image: `${SAVINGS_BASE_URL}pt.webp`,
     code: "PT",
   },
   {
-    min: 300000, // 30~35만원대
+    min: 300000,
     name: "에어 조던",
     image: `${SAVINGS_BASE_URL}air_jordan.webp`,
     code: "AIR_JORDAN",

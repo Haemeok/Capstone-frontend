@@ -61,8 +61,8 @@ export const useUnreadNotificationCount = () => {
   return useQuery({
     queryKey: NOTIFICATION_QUERY_KEYS.unreadCount,
     queryFn: getUnreadNotificationCount,
-    staleTime: 1000 * 60 * 2, // 2분
-    refetchInterval: 1000 * 60 * 5, // 5분마다 자동 갱신
+    staleTime: 1000 * 60 * 2,
+    refetchInterval: 1000 * 60 * 5,
   });
 };
 

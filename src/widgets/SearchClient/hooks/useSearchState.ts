@@ -54,18 +54,15 @@ export const useSearchState = () => {
     router.replace(`/search?${newParams.toString()}`);
   };
 
-  // 검색어 제출 핸들러
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateSearchParams({ q: inputValue });
   };
 
-  // 입력값 변경 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
-  // 필터 변경 핸들러들
   const updateDishType = (value: string) => {
     const code = DISH_TYPE_CODES[value as keyof typeof DISH_TYPE_CODES];
     updateSearchParams({ dishType: code || "" });
@@ -78,7 +75,6 @@ export const useSearchState = () => {
 
   const updateTags = (value: string[]) => {
     const codes = value.map((tag) => {
-      // 이모지 제거 후 태그명 추출 (🏠, 🌼 등)
       const cleanTag = tag.replace(/^[\u{1F000}-\u{1F9FF}]\s/u, "").trim();
       return TAG_CODES[cleanTag as keyof typeof TAG_CODES] || cleanTag;
     });
@@ -86,19 +82,16 @@ export const useSearchState = () => {
   };
 
   return {
-    // 현재 상태 (화면 표시용)
     q,
     sort,
     dishType,
     tagNames,
     inputValue,
 
-    // 코드 형태 상태 (API 호출용)
     sortCode,
     dishTypeCode,
     tagCodes,
 
-    // 핸들러들
     handleSearchSubmit,
     handleInputChange,
     setInputValue,

@@ -32,7 +32,6 @@ export const getRecipesOnServer = async (
     });
 
     if (!res.ok) {
-      // API 에러 처리
       throw new Error(`API Error: ${res.status} ${res.statusText}`);
     }
 

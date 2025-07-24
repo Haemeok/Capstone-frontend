@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 
-import { ArrowLeft,ChefHat, Clock, User } from "lucide-react";
+import { ArrowLeft, ChefHat, Clock, User } from "lucide-react";
 
 import { cookingTimes } from "@/shared/config/constants/recipe";
 import { DISH_TYPES } from "@/shared/config/constants/recipe";
@@ -23,8 +23,9 @@ const AIRecipeForm = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const observerRef = useRef<HTMLDivElement>(null);
 
-  const { selectedAI, generateRecipe, resetGeneration } = useAIRecipeGeneration();
-  
+  const { selectedAI, generateRecipe, resetGeneration } =
+    useAIRecipeGeneration();
+
   const {
     formValues,
     ingredients,
@@ -55,12 +56,11 @@ const AIRecipeForm = () => {
   };
 
   if (!selectedAI) {
-    return null; // AI가 선택되지 않은 경우 (이론적으로 발생하지 않아야 함)
+    return null;
   }
 
   return (
     <div className="relative mx-auto bg-[#f7f7f7] p-4">
-      {/* 뒤로가기 버튼 */}
       <div className="mb-4">
         <button
           onClick={handleBackToSelection}

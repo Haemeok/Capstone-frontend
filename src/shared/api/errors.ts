@@ -8,17 +8,14 @@ export class ApiError extends Error {
     this.name = "ApiError";
   }
 
-  // 에러 타입 체크 헬퍼
   static isApiError(error: unknown): error is ApiError {
     return error instanceof ApiError;
   }
 
-  // 특정 상태 코드 체크
   static isStatus(error: unknown, status: number): boolean {
     return ApiError.isApiError(error) && error.status === status;
   }
 
-  // 일반적인 에러 상태 체크 헬퍼들
   static isUnauthorized(error: unknown): boolean {
     return ApiError.isStatus(error, 401);
   }
@@ -41,7 +38,6 @@ export class ApiError extends Error {
     );
   }
 
-  // 에러를 사용자 친화적 메시지로 변환
   toUserMessage(): string {
     switch (this.status) {
       case 400:

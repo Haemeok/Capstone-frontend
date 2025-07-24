@@ -35,7 +35,6 @@ export class SockJSWebSocketManager {
       return;
     }
 
-    // disconnect가 호출된 경우 (재연결 시도 횟수가 최대값에 도달한 경우) 연결 시도 중단
     if (this.reconnectAttempts >= WEBSOCKET_CONFIG.MAX_RECONNECT_ATTEMPTS) {
       console.log(
         "WebSocket 연결이 명시적으로 해제되어 재연결을 시도하지 않습니다."
@@ -51,14 +50,12 @@ export class SockJSWebSocketManager {
       const SockJS = (window as any).SockJS;
       const Stomp = (window as any).StompJs.Stomp;
 
-      // SockJS 옵션 설정으로 transport 제한 및 타임아웃 설정
       this.socket = new SockJS(this.url, null, {
         transports: ["websocket"],
       });
 
       this.stompClient = Stomp.over(this.socket);
 
-      // STOMP 연결 헤더에 heartbeat 설정 추가
       this.stompClient.connect(
         {},
         this.onConnected.bind(this),
@@ -73,7 +70,6 @@ export class SockJSWebSocketManager {
   disconnect(): void {
     this.clearReconnectTimer();
 
-    // 재연결 시도 횟수를 최대값으로 설정하여 추가 재연결 시도 방지
     this.reconnectAttempts = WEBSOCKET_CONFIG.MAX_RECONNECT_ATTEMPTS;
 
     if (this.subscription) {
@@ -187,7 +183,6 @@ export class SockJSWebSocketManager {
     this.stompClient = null;
     this.socket = null;
 
-    // 재연결 시도 횟수가 최대값 미만이고, 명시적으로 disconnect가 호출되지 않은 경우에만 재연결 시도
     if (this.reconnectAttempts < WEBSOCKET_CONFIG.MAX_RECONNECT_ATTEMPTS) {
       this.scheduleReconnect();
     } else {

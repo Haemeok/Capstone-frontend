@@ -26,7 +26,7 @@ export const refreshToken = async (): Promise<boolean> => {
   }
 
   refreshPromise = performTokenRefresh();
-  
+
   try {
     const result = await refreshPromise;
     return result;
@@ -49,7 +49,6 @@ const performTokenRefresh = async (): Promise<boolean> => {
       throw new Error(`Token refresh failed: ${response.statusText}`);
     }
 
-    // 토큰 갱신 성공 시 사용자 정보 다시 가져오기 이벤트 발생
     if (isClient) {
       const event = new CustomEvent("tokenRefreshed");
       window.dispatchEvent(event);
@@ -95,7 +94,6 @@ export const requiresAuth = (url: string): boolean => {
   return !publicEndpoints.some((endpoint) => url.includes(endpoint));
 };
 
-// 401 에러 처리
 export const handle401Error = async (
   originalRequest: () => Promise<Response>
 ): Promise<Response | null> => {
