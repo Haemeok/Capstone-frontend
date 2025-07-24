@@ -1,284 +1,53 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import Image from "next/image";
-
-import { ChefHat, Clock, User } from "lucide-react";
-
-import { cookingTimes } from "@/shared/config/constants/recipe";
-import { aiModels, DISH_TYPES } from "@/shared/config/constants/recipe";
-import ProgressButton from "@/shared/ui/ProgressButton";
-import SelectionSection from "@/shared/ui/SelectionSection";
-
-import { IngredientPayload } from "@/entities/ingredient";
-
-import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
-import {
-  AIRecommendedRecipeRequest,
-  useCreateAIRecipeMutation,
-} from "@/features/recipe-create-ai";
+import { useAIRecipeGeneration } from "@/features/recipe-create-ai";
 
 import AiLoading from "@/widgets/AiLoading/AiLoading";
-import AIRecipeDisplay from "@/widgets/AiRecipeDisplay/AiRecipeDisplay";
-import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
-
-type AIRecipeFormData = AIRecommendedRecipeRequest;
-
-interface AIModel {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-}
+import AIModelSelection from "@/widgets/AIModelSelection";
+import AIRecipeComplete from "@/widgets/AIRecipeComplete";
+import AIRecipeError from "@/widgets/AIRecipeError";
+import AIRecipeForm from "@/widgets/AIRecipeForm";
 
 const AIRecipePage = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedAI, setSelectedAI] = useState<AIModel | null>(null);
-  const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
-    new Set()
-  );
-  const observerRef = useRef<HTMLDivElement>(null);
-
   const {
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { isDirty },
-  } = useForm<AIRecipeFormData>({
-    defaultValues: {
-      ingredients: [],
-      dishType: "",
-      cookingTime: "",
-      servings: 2,
-    },
-    mode: "onChange",
-  });
+    generationState,
+    selectedAI,
+    generatedRecipeData,
+    error,
+    isIdle,
+    isGenerating,
+    isCompleted,
+    isError,
+  } = useAIRecipeGeneration();
 
-  const formValues = watch();
-  const { ingredients, dishType, cookingTime, servings } = formValues;
-
-  const handleAddIngredient = (ingredientPayload: IngredientPayload) => {
-    const newIngredients = [...ingredients, ingredientPayload.name];
-    setValue("ingredients", newIngredients, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-  };
-
-  const handleRemoveIngredient = (index: number) => {
-    const newIngredients = ingredients.filter((_, i) => i !== index);
-    setValue("ingredients", newIngredients, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-  };
-
-  const handleRemoveAllIngredients = () => {
-    setValue("ingredients", [], {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-  };
-
-  const handleIncrementServings = () => {
-    setValue("servings", servings + 1, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-  };
-
-  const handleDecrementServings = () => {
-    if (servings > 1) {
-      setValue("servings", servings - 1, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
-    }
-  };
-
-  const radioToggle = <T,>(fieldName: keyof AIRecipeFormData, item: T) => {
-    setValue(fieldName as any, item, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-  };
-
-  const toggleCategory = (category: string) =>
-    radioToggle("dishType", category);
-
-  const toggleTime = (cookingTime: string) =>
-    radioToggle("cookingTime", cookingTime);
-
-  const totalSteps = 4;
-  const completedSteps = [
-    ingredients.length > 0,
-    dishType.length > 0,
-    cookingTime.length > 0,
-    servings > 0,
-  ].filter(Boolean).length;
-
-  const progressPercentage = Math.floor((completedSteps / totalSteps) * 100);
-  const isFormReady = completedSteps === totalSteps;
-
-  const onSubmit = (data: AIRecipeFormData) => {
-    createAIRecipe(data, {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    });
-  };
-
-  const handleSelectAI = (ai: AIModel) => {
-    setSelectedAI(ai);
-  };
-
-  const {
-    createAIRecipe,
-    isPending,
-    isSuccess,
-    data: createdRecipe,
-  } = useCreateAIRecipeMutation();
+  console.log(isIdle, selectedAI);
 
   if (!selectedAI) {
-    return (
-      <div className="mx-auto flex h-full flex-col items-center justify-center gap-4 bg-[#f7f7f7] p-4">
-        <p className="text-dark text-center text-2xl font-semibold">
-          레시피를 생성할 AI를 선택해주세요.
-        </p>
-        <div className="grid grid-cols-2 gap-6">
-          {aiModels.map((ai) => (
-            <button
-              key={ai.id}
-              onClick={() => handleSelectAI(ai)}
-              className="flex flex-col items-center rounded-2xl border bg-white px-4 py-6 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-            >
-              <div className="relative h-48 w-full rounded-2xl mb-4">
-                <Image
-                  src={ai.image}
-                  alt={ai.name}
-                  className=" rounded-2xl object-cover"
-                  fill
-                />
-              </div>
-              <p className="text-dark text-lg font-medium">{ai.name}</p>
-              <p className="mt-2 text-center text-sm text-gray-600">
-                {ai.description}
-              </p>
-            </button>
-          ))}
-        </div>
-      </div>
-    );
+    return <AIModelSelection />;
   }
 
-  if (isPending) {
+  // 레시피 생성 중
+  if (isGenerating) {
     return <AiLoading name={selectedAI.name} />;
   }
 
-  if (isSuccess && createdRecipe) {
-    return <AIRecipeDisplay createdRecipe={createdRecipe} />;
+  // 레시피 생성 완료
+  if (isCompleted && generatedRecipeData) {
+    return (
+      <AIRecipeComplete
+        selectedAI={selectedAI}
+        generatedRecipe={generatedRecipeData}
+      />
+    );
   }
 
-  return (
-    <div className="relative mx-auto bg-[#f7f7f7] p-4">
-      <div className="text-center">
-        <p className="text-dark text-xl font-semibold">
-          {selectedAI.name}와 함께
-        </p>
-        <p className="text-dark text-xl font-semibold">
-          맞춤형 레시피를 생성해보세요 !
-        </p>
-      </div>
-      <div className="flex flex-col items-center justify-center gap-2 py-4">
-        <div className="relative h-80 w-full rounded-2xl">
-          <Image
-            src={selectedAI.image}
-            alt={selectedAI.name}
-            className=" rounded-2xl object-cover"
-            fill
-          />
-        </div>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          {selectedAI.description}
-        </p>
-      </div>
+  // 에러 발생
+  if (isError && error) {
+    return <AIRecipeError error={error} />;
+  }
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
-          <IngredientManager
-            ingredients={ingredients}
-            onRemoveIngredient={handleRemoveIngredient}
-            onOpenDrawer={() => setIsDrawerOpen(true)}
-            onRemoveAllIngredients={handleRemoveAllIngredients}
-          />
-
-          <div className="space-y-6">
-            <SelectionSection
-              title="종류"
-              icon={<ChefHat size={18} />}
-              items={DISH_TYPES}
-              selectedItems={dishType}
-              onToggle={toggleCategory}
-              isSingleSelect={true}
-            />
-
-            <SelectionSection
-              title="조리시간"
-              icon={<Clock size={18} />}
-              items={cookingTimes}
-              selectedItems={cookingTime ? cookingTime.toString() : ""}
-              onToggle={toggleTime}
-              isSingleSelect={true}
-            />
-            <div ref={observerRef} className="h-1 w-full" />
-            <div className="mb-3 flex items-center gap-2">
-              <span className="text-olive-mint">
-                <User size={18} />
-              </span>
-              <h2 className="text-lg font-semibold text-gray-800">인분</h2>
-            </div>
-            <div className="flex items-center justify-center gap-4">
-              <button
-                type="button"
-                onClick={handleDecrementServings}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300 disabled:opacity-50"
-                disabled={servings <= 1}
-              >
-                -
-              </button>
-              <span className="w-20 text-center font-medium text-gray-800">
-                {servings}인분
-              </span>
-              <button
-                type="button"
-                onClick={handleIncrementServings}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300"
-              >
-                +
-              </button>
-            </div>
-          </div>
-        </div>
-        <ProgressButton
-          progressPercentage={progressPercentage}
-          isFormValid={isFormReady && isDirty}
-          onClick={handleSubmit(onSubmit)}
-        />
-      </form>
-
-      <IngredientSelector
-        open={isDrawerOpen}
-        onOpenChange={setIsDrawerOpen}
-        onIngredientSelect={handleAddIngredient}
-        addedIngredientIds={addedIngredientIds}
-        setAddedIngredientIds={setAddedIngredientIds}
-      />
-    </div>
-  );
+  // 기본 상태: 레시피 생성 폼
+  return <AIRecipeForm />;
 };
 
 export default AIRecipePage;
