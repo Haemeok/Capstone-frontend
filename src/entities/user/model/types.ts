@@ -7,6 +7,7 @@ export type User = {
   username?: string;
   bookmarks?: number;
   likes?: number;
+  surveyCompleted?: boolean;
 };
 
 export type UserStreak = {

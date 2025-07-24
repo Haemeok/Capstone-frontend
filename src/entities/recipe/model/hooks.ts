@@ -1,6 +1,9 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
 
-import { getRecipe } from "./api";
+import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { getNextPageParam } from "@/shared/lib/utils";
+
+import { getMyIngredientRecipes, getRecipe } from "./api";
 import { mockRecipeData } from "./mockData";
 import { Recipe } from "./types";
 
@@ -38,5 +41,33 @@ export const useMockRecipeQuery = (
     data: mockRecipeData,
     isLoading: false,
     error: null,
+  };
+};
+
+export const useMyIngredientRecipesInfiniteQuery = () => {
+  const { ref, isFetchingNextPage, hasNextPage, fetchNextPage, data, error } =
+    useInfiniteScroll({
+      queryKey: ["my-fridge-recipes"],
+      queryFn: getMyIngredientRecipes,
+      getNextPageParam: getNextPageParam,
+      initialPageParam: 0,
+    });
+
+  const recipes = data?.pages.flatMap((page) => page.content) ?? [];
+  const lastPageMessage =
+    recipes.length === 0
+      ? "가능한 레시피가 없습니다."
+      : "더 많은 레시피를 찾아보세요.";
+  const noResults = recipes.length === 0 && !isFetchingNextPage;
+
+  return {
+    recipes,
+    ref,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    error,
+    noResults,
+    lastPageMessage,
   };
 };
