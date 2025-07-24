@@ -7,7 +7,7 @@ import { DetailedRecipesApiResponse } from "@/entities/recipe";
 import CategoryDrawer from "@/widgets/CategoryDrawer/CategoryDrawer";
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
-import { SearchFilters } from "./components/SearchFilters";
+import { SearchFilters } from "./ui/SearchFilters";
 import { useSearchDrawer } from "./hooks/useSearchDrawer";
 import { useSearchResults } from "./hooks/useSearchResults";
 import { useSearchState } from "./hooks/useSearchState";
