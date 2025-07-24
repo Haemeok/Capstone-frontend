@@ -2,8 +2,6 @@ import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 import { cookingTimeItems } from "@/shared/config/constants/recipe";
 
-import { Recipe } from "@/entities/recipe";
-
 import {
   AIRecommendedRecipe,
   AIRecommendedRecipeRequest,
@@ -11,9 +9,9 @@ import {
 
 export const postAIRecommendedRecipe = async (
   aiRequest: AIRecommendedRecipeRequest
-) => {
+): Promise<AIRecommendedRecipe> => {
   const source = "AI";
-  const robotType = "CLASSIC";
+  const robotType = aiRequest.robotType;
   const parsedAiRequest = {
     ...aiRequest,
     cookingTime: cookingTimeItems.find(
@@ -32,10 +30,9 @@ export const postAIRecommendedRecipe = async (
         source,
         robotType,
       },
-      timeout: 10 * 60 * 1000, // AI 요청은 10분 타임아웃
+      timeout: 10 * 60 * 1000,
     }
   );
 
-  const recipe = await api.get<Recipe>(END_POINTS.RECIPE(response.recipeId));
-  return recipe;
+  return response;
 };
