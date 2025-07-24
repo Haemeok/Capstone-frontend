@@ -1,6 +1,7 @@
 "use client";
 
 import SaveButton from "@/shared/ui/SaveButton";
+import ShareButton from "@/shared/ui/ShareButton";
 
 import { Recipe } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user/model/store";
@@ -8,7 +9,6 @@ import { useUserStore } from "@/entities/user/model/store";
 import { useToggleRecipeFavorite } from "@/features/recipe-favorite";
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
 import { LockButton } from "@/features/recipe-visibility";
-import ShareButton from "@/features/share-content/ui/ShareButton";
 
 import { useToastStore } from "@/widgets/Toast";
 
