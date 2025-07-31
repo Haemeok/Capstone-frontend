@@ -89,7 +89,7 @@ export const usePWAInstall = () => {
         window.removeEventListener("appinstalled", handleAppInstalled);
       }
     };
-  }, [checkInstallationStatus]);
+  }, []);
 
   return {
     isInstallable: !!deferredPrompt && !isInstalled,

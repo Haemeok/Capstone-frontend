@@ -1,6 +1,5 @@
 "use client";
 
-import { PWA_BENEFITS } from "@/shared/config/constants/pwa";
 import { Button } from "@/shared/ui/shadcn/button";
 import {
   Dialog,
@@ -36,38 +35,40 @@ const PWAInstallModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-center">
-            📱 해먹을 홈 화면에 추가
-          </DialogTitle>
-          <DialogDescription className="text-center">
-            앱처럼 빠르게 접속하고 해먹의 모든 기능을 편리하게 이용해 보세요!
-          </DialogDescription>
+      <DialogContent className="sm:max-w-sm border-0 shadow-xl">
+        <DialogHeader className="text-sidebar-accent-foreground">
+          <div className="flex justify-center">
+            <img
+              src="/pwa_logo.png"
+              alt="해먹 앱 설치"
+              className="w-20 h-20 rounded-2xl"
+            />
+          </div>
+          <div className="space-y-2">
+            <DialogTitle className="text-lg font-semibold text-gray-900">
+              해먹 앱 설치
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-500 leading-relaxed">
+              홈 화면에 추가하면 앱처럼 빠르게 접속할 수 있어요.
+              <br />
+              별도 업데이트 없이 항상 최신 기능을 사용하세요.
+            </DialogDescription>
+          </div>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4 py-4">
-          {PWA_BENEFITS.map((benefit, index) => (
-            <div
-              key={index}
-              className="flex items-center space-x-3 text-sm text-gray-600"
-            >
-              <span className="text-green-500">✓</span>
-              <span>{benefit}</span>
-            </div>
-          ))}
-        </div>
-
-        <DialogFooter className="flex gap-2 sm:gap-0">
+        <DialogFooter className="flex flex-col gap-3 pt-2">
           <Button
-            variant="outline"
+            onClick={handleInstallClick}
+            className="w-full bg-olive-mint hover:bg-olive-medium text-white font-medium h-12 rounded-xl"
+          >
+            홈 화면에 추가
+          </Button>
+          <Button
+            variant="ghost"
             onClick={handleSkipClick}
-            className="flex-1"
+            className="w-full text-gray-500 hover:text-gray-700 font-medium h-12"
           >
             나중에
-          </Button>
-          <Button onClick={handleInstallClick} className="flex-1">
-            홈 화면에 추가
           </Button>
         </DialogFooter>
       </DialogContent>
