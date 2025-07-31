@@ -174,7 +174,12 @@ const NewIngredientsPage = () => {
     searchQuery,
     sort,
   ]);
-  const { mutate: deleteIngredient } = useDeleteIngredientMutation();
+  const { mutate: deleteIngredient } = useDeleteIngredientMutation([
+    "ingredients",
+    selectedCategory,
+    searchQuery,
+    sort,
+  ]);
   const { mutate: addIngredientBulk } = useAddIngredientBulkMutation();
 
   const handleSingleAddRemove = (id: number, isAdded: boolean) => {
@@ -195,10 +200,10 @@ const NewIngredientsPage = () => {
       ref={pageContainerRef}
       className="flex h-screen flex-col bg-[#ffffff] pb-20"
     >
-      <div className="sticky top-0 z-10 bg-white pb-2 shadow-sm">
-        <div className="flex justify-between p-4">
+      <div className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="flex justify-between px-4 py-2">
           <PrevButton />
-          <h2 className="text-2xl font-bold">재료 추가</h2>
+          <h2 className="text-2xl font-bold flex items-center">재료 추가</h2>
           <button
             className="flex items-center gap-1 rounded-full bg-gray-100 p-2 px-3"
             onClick={() => handleModeChange(mode)}
@@ -220,13 +225,13 @@ const NewIngredientsPage = () => {
             />
           </div>
         </div>
-        <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2">
+        <div className="scrollbar-hide  flex overflow-x-auto px-2  mt-1">
           {INGREDIENT_CATEGORIES.map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryClick(category)}
               className={cn(
-                "flex-shrink-0 px-4 py-3 text-sm",
+                "flex-shrink-0 px-3 py-3 text-sm",
                 selectedCategory === category
                   ? "text-olive-mint font-bold"
                   : "text-gray-500 hover:text-gray-800"
@@ -238,7 +243,7 @@ const NewIngredientsPage = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4" ref={scrollableContainerRef}>
+      <div className="flex-1 overflow-y-auto px-4" ref={scrollableContainerRef}>
         {isPending && (!ingredientItems || ingredientItems.length === 0) ? (
           <p className="pt-10 text-center text-gray-500">
             재료를 불러오는 중...
@@ -284,7 +289,7 @@ const NewIngredientsPage = () => {
                   }
                 >
                   <div className="mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                    <Image
+                    <img
                       src={ingredient.imageUrl ?? ""}
                       alt={ingredient.name}
                       className="h-full w-full object-cover"

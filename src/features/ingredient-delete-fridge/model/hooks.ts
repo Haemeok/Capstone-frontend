@@ -8,20 +8,21 @@ import {
 
 import { deleteIngredient, deleteIngredientBulk } from "./api";
 
-export const useDeleteIngredientMutation = () => {
+export const useDeleteIngredientMutation = (queryKey?: (string | number)[]) => {
   const queryClient = useQueryClient();
 
   return useMutation<void, Error, number, IngredientMutationContext>({
     mutationFn: deleteIngredient,
     onMutate: async (ingredientId) => {
-      await queryClient.cancelQueries({ queryKey: ["ingredients"] });
+      const targetQueryKey = queryKey || ["ingredients"];
+      await queryClient.cancelQueries({ queryKey: targetQueryKey });
       const previousIngredientsListData = queryClient.getQueryData<
         InfiniteData<IngredientsApiResponse>
-      >(["ingredients"]);
+      >(targetQueryKey);
 
       if (previousIngredientsListData) {
         queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
-          ["ingredients"],
+          targetQueryKey,
           (oldData) => {
             if (!oldData) return undefined;
             return {
@@ -29,8 +30,10 @@ export const useDeleteIngredientMutation = () => {
               pages: oldData.pages.map((page) => ({
                 ...page,
 
-                content: page.content.filter(
-                  (ingredient) => ingredient.id !== ingredientId
+                content: page.content.map((ingredient) =>
+                  ingredient.id === ingredientId
+                    ? { ...ingredient, inFridge: false }
+                    : ingredient
                 ),
               })),
             };
@@ -40,16 +43,14 @@ export const useDeleteIngredientMutation = () => {
       return { previousIngredientsListData };
     },
     onError: (error, variables, context) => {
+      const targetQueryKey = queryKey || ["ingredients"];
       if (context?.previousIngredientsListData) {
         queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
-          ["ingredients"],
+          targetQueryKey,
           context.previousIngredientsListData
         );
       }
       console.error("재료 삭제 실패:", error);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
     },
   });
 };
@@ -77,7 +78,7 @@ export const useDeleteIngredientBulkMutation = () => {
                 ...page,
                 content: page.content.map((ingredient) =>
                   idSet.has(ingredient.id)
-                    ? { ...ingredient, inFridge: true }
+                    ? { ...ingredient, inFridge: false }
                     : ingredient
                 ),
               })),
@@ -95,9 +96,6 @@ export const useDeleteIngredientBulkMutation = () => {
         );
       }
       console.error("재료 벌크 삭제 실패:", error);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
     },
   });
 };
