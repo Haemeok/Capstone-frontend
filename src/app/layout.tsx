@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   title: "해먹",
   description: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 해먹어보세요!",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  metadataBase: new URL("https://haemeok.com"),
 };
 
 export const viewport: Viewport = {
