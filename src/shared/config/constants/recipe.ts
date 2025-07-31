@@ -169,6 +169,26 @@ export const SORT_TYPE_CODES = {
   오래된순: "ASC",
 };
 
+export const SORT_CONFIGS = {
+  comment: {
+    최신순: { field: "createdAt", direction: "DESC" },
+    좋아요순: { field: "likeCount", direction: "DESC" },
+  },
+  recipe: {
+    최신순: { field: "createdAt", direction: "DESC" },
+    좋아요순: { field: "likeCount", direction: "DESC" },
+    별점순: { field: "avgRating", direction: "DESC" },
+  },
+} as const;
+
+export type CommentSortType = keyof typeof SORT_CONFIGS.comment;
+export type RecipeSortType = keyof typeof SORT_CONFIGS.recipe;
+
+export type SortConfig = {
+  field: string;
+  direction: string;
+};
+
 export const DRAWER_HEADERS = {
   dishType: "요리 유형 선택",
   sort: "정렬 방식 선택",
@@ -219,33 +239,6 @@ export type FinalDrawerConfig = BaseDrawerConfig & {
 
 export const FOUR_CUT_IMAGE =
   "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/4cut/4cut.png";
-
-export const aiModels = [
-  {
-    id: "CLASSIC",
-    name: "기본에 충실한 셰프",
-    image: `${IMAGE_BASE_URL}robots/classic.webp`,
-    description: "가장 기본적인 레시피를 추천해 드립니다. 저에게 맡겨주세요!",
-  },
-  {
-    id: "CREATIVE",
-    name: "창의적인 실험가",
-    image: `${IMAGE_BASE_URL}robots/creative.webp`,
-    description: "균형 잡힌 영양을 고려한 레시피를 전문적으로 추천합니다.",
-  },
-  {
-    id: "HEALTHY",
-    name: "건강 식단 전문",
-    image: `${IMAGE_BASE_URL}robots/healthy.webp`,
-    description: "바쁜 현대인을 위한 빠르고 간편한 레시피를 제공합니다.",
-  },
-  {
-    id: "GOURMET",
-    name: "든든한 미식가",
-    image: `${IMAGE_BASE_URL}robots/gourmet.webp`,
-    description: "특별한 날을 위한 고급스럽고 창의적인 레시피를 제안합니다.",
-  },
-];
 
 export const TAGS_IMAGE_KEYS: Record<TagCode, string> = {
   AIR_FRYER: "air_fryer.webp",

@@ -2,12 +2,16 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { Info, Star } from "lucide-react";
 
+import { useSort } from "@/shared/hooks/useSort";
 import { cn } from "@/shared/lib/utils";
 import BadgeButton from "@/shared/ui/BadgeButton";
 import PrevButton from "@/shared/ui/PrevButton";
+import RecipeSortButton from "@/shared/ui/RecipeSortButton";
+import RecipeSortDrawer from "@/shared/ui/RecipeSortDrawer";
 
 import { useMyIngredientRecipesInfiniteQuery } from "@/entities/recipe/model/hooks";
 import UserName from "@/entities/user/ui/UserName";
@@ -16,6 +20,11 @@ import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 import { RecipeLikeButton } from "@/features/recipe-like";
 
 const MyFridgePage = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const { currentSort, setSort, getSortParam, availableSorts } =
+    useSort("recipe");
+
   const {
     recipes,
     ref,
@@ -25,9 +34,14 @@ const MyFridgePage = () => {
     error,
     noResults,
     lastPageMessage,
-  } = useMyIngredientRecipesInfiniteQuery();
+  } = useMyIngredientRecipesInfiniteQuery(getSortParam());
 
   const router = useRouter();
+
+  const handleSortChange = (newSort: string) => {
+    setSort(newSort as any);
+    setIsDrawerOpen(false);
+  };
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -35,11 +49,17 @@ const MyFridgePage = () => {
         <PrevButton />
         <h1 className="text-2xl font-bold">요리 가능한 레시피</h1>
       </div>
-      <div className="flex gap-1 items-center justify-end">
-        <p className="text-sm text-gray-500">{recipes.length}개의 레시피</p>
-        <BadgeButton
-          badgeText="현재 내 냉장고에 있는 재료로 만들 수 있는 레시피를 찾아보세요."
-          badgeIcon={<Info size={16} className="text-gray-500" />}
+      <div className="flex gap-2 items-center justify-between">
+        <div className="flex gap-1 items-center">
+          <p className="text-sm text-gray-500">{recipes.length}개의 레시피</p>
+          <BadgeButton
+            badgeText="현재 내 냉장고에 있는 재료로 만들 수 있는 레시피를 찾아보세요."
+            badgeIcon={<Info size={16} className="text-gray-500" />}
+          />
+        </div>
+        <RecipeSortButton
+          currentSort={currentSort}
+          onClick={() => setIsDrawerOpen(true)}
         />
       </div>
 
@@ -51,13 +71,12 @@ const MyFridgePage = () => {
             onClick={() => router.push(`/recipes/${recipe.id}`)}
           >
             <div className="relative h-40 w-40 rounded-2xl">
-              <Image
+              <img
                 src={recipe.imageUrl}
                 alt={recipe.title}
                 className={cn(
                   `h-full w-full relative object-cover rounded-2xl`
                 )}
-                fill
               />
               <div className="absolute top-0 right-0 p-2 text-right">
                 <RecipeLikeButton
@@ -106,6 +125,14 @@ const MyFridgePage = () => {
             )}
         </div>
       </div>
+
+      <RecipeSortDrawer
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        currentSort={currentSort}
+        availableSorts={availableSorts}
+        onSortChange={handleSortChange}
+      />
     </div>
   );
 };

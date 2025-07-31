@@ -67,11 +67,11 @@ export const getRecipeItems = async ({
   return response;
 };
 
-export const getMyIngredientRecipes = async () => {
+export const getMyIngredientRecipes = async (sort: string = "createdAt,desc") => {
   return fetchPagedRecipes<IngredientRecipesApiResponse>(
     END_POINTS.MY_INGREDIENT_RECIPES,
     {
-      sort: "createdAt,desc",
+      sort,
       page: 0,
       size: PAGE_SIZE,
     }
