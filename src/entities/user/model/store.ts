@@ -5,13 +5,15 @@ import { User } from "./types";
 type UserState = {
   user: User | null;
   isAuthenticated: boolean;
+  isLoggingOut: boolean;
   setUser: (user: User | null) => void;
   logoutAction: () => void;
 };
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>((set, get) => ({
   user: null,
   isAuthenticated: false,
+  isLoggingOut: false,
 
   setUser: (user) =>
     set({
@@ -20,6 +22,9 @@ export const useUserStore = create<UserState>((set) => ({
     }),
 
   logoutAction: () => {
-    set({ user: null, isAuthenticated: false });
+    const { isLoggingOut } = get();
+    if (isLoggingOut) return;
+    
+    set({ user: null, isAuthenticated: false, isLoggingOut: false });
   },
 }));

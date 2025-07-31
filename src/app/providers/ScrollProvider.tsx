@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode,useRef } from "react";
+import { type ReactNode, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 import { shouldHideNavbar } from "@/shared/lib/navigation";
@@ -10,7 +10,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
   const motionRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  const paddingClass = shouldHideNavbar(pathname) ? "" : "pb-[70px]";
+  const paddingClass = shouldHideNavbar(pathname) ? "" : "pb-[77px]";
 
   return (
     <ScrollContext.Provider value={{ motionRef }}>

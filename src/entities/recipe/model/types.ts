@@ -56,6 +56,7 @@ export type Recipe = {
   private: boolean;
   aiGenerated: boolean;
   totalCalories: number;
+  createdAt?: string;
 };
 
 type RatingInfo = {
