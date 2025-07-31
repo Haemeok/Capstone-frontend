@@ -1,53 +1,48 @@
 import { useEffect, useState } from "react";
+import {
+  aiModels,
+  type AIModelId,
+  aiModelSteps,
+} from "@/shared/config/constants/aiModel";
 
 type AiLoadingProps = {
-  name: string;
+  aiModelId: AIModelId;
 };
 
-const AiLoading = ({ name }: AiLoadingProps) => {
-  const [dots, setDots] = useState("");
+const AiLoading = ({ aiModelId }: AiLoadingProps) => {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const steps = [
-    "재료를 분석하고 있어요",
-    "맛있는 조합을 찾고 있어요",
-    "요리 순서를 정리하고 있어요",
-    "마지막 손질을 하고 있어요",
-  ];
+  const aiModel = aiModels[aiModelId];
+  const { name, loadingAnimation } = aiModel;
+
+  const animationStyle = {
+    backgroundImage: `url(${loadingAnimation.image})`,
+    backgroundSize: "cover",
+    width: "18rem",
+    height: "18rem",
+    animation: `play-sprite-${aiModelId.toLowerCase()} ${loadingAnimation.duration}s steps(${loadingAnimation.frames}, start) infinite`,
+  };
 
   useEffect(() => {
-    const dotsInterval = setInterval(() => {
-      setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
-    }, 500);
-
     const stepInterval = setInterval(() => {
-      setCurrentStep((prev) => (prev + 1) % steps.length);
+      setCurrentStep((prev) => (prev + 1) % aiModelSteps.length);
     }, 3000);
 
     return () => {
-      clearInterval(dotsInterval);
       clearInterval(stepInterval);
     };
   }, []);
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-8 bg-[#f7f7f7] p-4">
-      <div className="relative">
-        <div className="loading h-64 w-64 opacity-80"></div>
-      </div>
-
-      <div className="text-center space-y-4">
-        <h1 className="text-2xl font-bold text-gray-800">
-          {name}가 레시피를 만들고 있어요{dots}
+    <div className="flex w-full flex-col h-full items-center justify-center gap-6  p-4">
+      <div className="flex flex-col items-center gap-2">
+        <h1 className="text-2xl font-bold text-dark">
+          {name}가 레시피를 만들고 있어요
         </h1>
-
+        <div className="w-72 h-72" style={animationStyle}></div>
         <p className="text-lg text-gray-600 animate-pulse">
-          {steps[currentStep]}
+          {aiModelSteps[currentStep]}
         </p>
-
-        <div className="bg-white rounded-full ">
-          <p className="text-sm text-gray-500">평균 40초~1분 내 완성됩니다!</p>
-        </div>
       </div>
 
       <div className="max-w-sm text-center space-y-3">
@@ -62,6 +57,7 @@ const AiLoading = ({ name }: AiLoadingProps) => {
           </p>
         </div>
       </div>
+      <p className="text-sm text-gray-500">평균 40초~1분 내 완성됩니다!</p>
     </div>
   );
 };
