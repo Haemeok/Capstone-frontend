@@ -49,7 +49,7 @@ const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
       onClick={handleClick}
       key={recipe.id}
     >
-      <Image
+      <img
         src={imageUrl}
         alt={recipe.title}
         width={208}

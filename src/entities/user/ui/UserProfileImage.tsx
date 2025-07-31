@@ -29,7 +29,7 @@ const UserProfileImage = ({
       className={cn("h-8 w-8 rounded-full flex-shrink-0", className)}
       onClick={handleClick}
     >
-      <Image
+      <img
         src={profileImage}
         alt="profileImage"
         width={32}

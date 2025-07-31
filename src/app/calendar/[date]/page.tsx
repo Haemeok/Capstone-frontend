@@ -42,7 +42,7 @@ const CalendarDetailPage = () => {
             onClick={() => router.push(`/recipes/${item.recipeId}`)}
             className="flex items-center gap-4 rounded-2xl border-1 border-gray-200 p-4 py-2"
           >
-            <Image
+            <img
               src={item.imageUrl}
               alt={item.recipeTitle}
               className="h-32 w-32 rounded-md"

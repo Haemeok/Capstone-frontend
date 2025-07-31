@@ -70,7 +70,7 @@ export const NotificationItem = ({
       )}
     >
       <div className="flex-shrink-0 relative">
-        <Image
+        <img
           src={notification.imageUrl}
           alt={`${notification.actorNickname} 프로필`}
           width={40}

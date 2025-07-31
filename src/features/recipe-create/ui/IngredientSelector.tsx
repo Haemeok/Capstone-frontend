@@ -140,11 +140,10 @@ const IngredientSelector = ({
                 >
                   <div className="mr-3 h-12 w-12 flex-shrink-0 relative overflow-hidden rounded-lg bg-gray-100">
                     {ingredient.imageUrl && (
-                      <Image
+                      <img
                         src={ingredient.imageUrl}
                         alt={ingredient.name}
                         className="h-full w-full object-cover"
-                        fill
                       />
                     )}
                   </div>

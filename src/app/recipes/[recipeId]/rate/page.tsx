@@ -92,7 +92,7 @@ const ReviewPage = () => {
           </h3>
           <div className="rounded-lg border border-gray-300 p-4">
             <div className="mb-3 flex items-start">
-              <Image
+              <img
                 src={user?.profileImage || ""}
                 alt="프로필 이미지"
                 className="mr-3 rounded-full w-8 h-8 flex-shrink-0"
