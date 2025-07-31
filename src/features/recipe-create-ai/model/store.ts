@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import type { AIRecommendedRecipe, AIRecommendedRecipeRequest } from "./types";
+import { type AIModelId } from "@/shared/config/constants/aiModel";
 
 export type AIRecipeGenerationState =
   | "idle"
@@ -9,10 +10,15 @@ export type AIRecipeGenerationState =
   | "error";
 
 export type AIModel = {
-  id: string;
+  id: AIModelId;
   name: string;
   description: string;
   image: string;
+  loadingAnimation: {
+    image: string;
+    frames: number;
+    duration: number;
+  };
 };
 
 type AIRecipeStore = {

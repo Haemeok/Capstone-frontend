@@ -27,7 +27,7 @@ const AIRecipePage = () => {
   }
 
   if (isGenerating) {
-    return <AiLoading name={selectedAI.name} />;
+    return <AiLoading aiModelId={selectedAI.id} />;
   }
 
   if (isCompleted && generatedRecipeData) {
