@@ -28,7 +28,7 @@ export const getRecipesOnServer = async (
 
   try {
     const res = await fetch(API_URL, {
-      cache: "no-store",
+      next: { revalidate: 3600 },
     });
 
     if (!res.ok) {
@@ -59,7 +59,7 @@ export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
   try {
     const cookieStore = await cookies();
     const res = await fetch(API_URL, {
-      cache: "no-store",
+      next: { revalidate: 1800 },
       headers: {
         Cookie: cookieStore.toString(),
       },

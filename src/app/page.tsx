@@ -1,4 +1,5 @@
 import HomeBanner from "@/shared/ui/HomeBanner";
+import { homeMetadata } from "@/shared/lib/metadata";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
@@ -6,6 +7,8 @@ import CategoryTabs from "@/widgets/CategoryTabs";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import { OnboardingSurveyModal } from "@/widgets/OnboardingSurveryModal";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
+
+export const metadata = homeMetadata;
 
 const HomePage = async () => {
   const [aiRecipes, partyRecipes] = await Promise.all([
