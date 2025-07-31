@@ -150,11 +150,10 @@ const StepItem = ({
               }
             >
               {stepImagePreviewUrls[index] ? (
-                <Image
+                <img
                   src={stepImagePreviewUrls[index]!}
                   alt={`Step ${index + 1} preview`}
                   className="h-full w-full object-cover"
-                  fill
                 />
               ) : (
                 <UploadIcon size={24} />

@@ -68,11 +68,10 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
       >
         {!isFocused && user && (
           <div className="h-8 w-8 flex-shrink-0 overflow-hidden relative rounded-full bg-white">
-            <Image
+            <img
               src={user.profileImage || ""}
               alt="내 프로필"
               className="h-full w-full object-cover"
-              fill
             />
           </div>
         )}
