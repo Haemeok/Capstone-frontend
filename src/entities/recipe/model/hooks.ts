@@ -44,11 +44,11 @@ export const useMockRecipeQuery = (
   };
 };
 
-export const useMyIngredientRecipesInfiniteQuery = () => {
+export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
   const { ref, isFetchingNextPage, hasNextPage, fetchNextPage, data, error } =
     useInfiniteScroll({
-      queryKey: ["my-fridge-recipes"],
-      queryFn: getMyIngredientRecipes,
+      queryKey: ["my-fridge-recipes", sort],
+      queryFn: () => getMyIngredientRecipes(sort),
       getNextPageParam: getNextPageParam,
       initialPageParam: 0,
     });
