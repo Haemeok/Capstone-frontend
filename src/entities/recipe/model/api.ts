@@ -44,7 +44,7 @@ export const getRecipeItems = async ({
   const baseParams: BaseQueryParams = {
     page: pageParam,
     size,
-    sort: `createdAt,${sort}`,
+    sort,
   };
 
   const optionalParams: Partial<RecipeQueryParams> = {
@@ -67,7 +67,9 @@ export const getRecipeItems = async ({
   return response;
 };
 
-export const getMyIngredientRecipes = async (sort: string = "createdAt,desc") => {
+export const getMyIngredientRecipes = async (
+  sort: string = "createdAt,desc"
+) => {
   return fetchPagedRecipes<IngredientRecipesApiResponse>(
     END_POINTS.MY_INGREDIENT_RECIPES,
     {
@@ -85,7 +87,7 @@ export const fetchPagedRecipes = async <T>(
   const apiParams: BaseQueryParams = {
     page,
     size,
-    sort: `createdAt,${sort}`,
+    sort,
   };
 
   const response = await api.get<T>(endpoint, {

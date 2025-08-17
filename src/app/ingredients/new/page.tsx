@@ -25,6 +25,7 @@ import {
   useAddIngredientMutation,
 } from "@/features/ingredient-add-fridge";
 import { useDeleteIngredientMutation } from "@/features/ingredient-delete-fridge";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 const NewIngredientsPage = () => {
   const [mode, setMode] = useState<"single" | "bulk">("single");
@@ -289,7 +290,7 @@ const NewIngredientsPage = () => {
                   }
                 >
                   <div className="mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                    <img
+                    <SuspenseImage
                       src={ingredient.imageUrl ?? ""}
                       alt={ingredient.name}
                       className="h-full w-full object-cover"

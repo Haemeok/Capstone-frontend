@@ -1,15 +1,19 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 
-import { TAG_CODES_TO_NAME, TagCode } from "@/shared/config/constants/recipe";
+import { TagCode, TAGS_BY_NAME } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { useSort } from "@/shared/hooks/useSort";
 import { getNextPageParam } from "@/shared/lib/utils";
 import Circle from "@/shared/ui/Circle";
 import HomeBanner from "@/shared/ui/HomeBanner";
 import PrevButton from "@/shared/ui/PrevButton";
+import RecipeSortButton from "@/shared/ui/RecipeSortButton";
+import RecipeSortDrawer from "@/shared/ui/RecipeSortDrawer";
 
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
@@ -18,28 +22,37 @@ import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
 const CategoryDetailPage = () => {
   const { id: tagCode } = useParams<{ id: TagCode }>();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const { currentSort, setSort, getSortParam, availableSorts } =
+    useSort("recipe");
 
   const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
     InfiniteData<DetailedRecipesApiResponse>,
-    [string, string],
+    [string, string, string],
     number
   >({
-    queryKey: ["recipes", tagCode],
+    queryKey: ["recipes", tagCode, getSortParam()],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
         tagNames: [tagCode],
         pageParam,
-        sort: "desc",
+        sort: getSortParam(),
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
   });
 
-  const tagName = TAG_CODES_TO_NAME[tagCode as keyof typeof TAG_CODES_TO_NAME];
+  const tagName = TAGS_BY_NAME[tagCode as keyof typeof TAGS_BY_NAME].name;
 
   const recipes = data?.pages.flatMap((page) => page.content);
+
+  const handleSortChange = (newSort: string) => {
+    setSort(newSort as any);
+    setIsDrawerOpen(false);
+  };
 
   return (
     <div className="bg-white p-2">
@@ -47,6 +60,12 @@ const CategoryDetailPage = () => {
         <PrevButton className="absolute left-2" />
         <h1 className="text-xl font-bold">{`${tagName} 레시피`}</h1>
       </header>
+      <div className="flex items-center justify-end p-4">
+        <RecipeSortButton
+          currentSort={currentSort}
+          onClick={() => setIsDrawerOpen(true)}
+        />
+      </div>
       {!isFetching && recipes && recipes.length > 0 ? (
         <RecipeGrid
           recipes={recipes}
@@ -73,6 +92,14 @@ const CategoryDetailPage = () => {
           )}
         </div>
       )}
+
+      <RecipeSortDrawer
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        currentSort={currentSort}
+        availableSorts={availableSorts}
+        onSortChange={handleSortChange}
+      />
     </div>
   );
 };
