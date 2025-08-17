@@ -36,18 +36,18 @@
 ### [Next.js 기반 하이브리드 렌더링 아키텍처 설계 및 웹 성능 최적화](https://glass-writer-f4a.notion.site/Frontend-Developer-2485aca8e19380c7ac2ed382051884f3?p=2485aca8e193802aa985c65ded6b7eed&pm=c)
 
 - **문제**: 초기 아키텍처의 기술적 제약(CSR)으로 신규 트래픽 확보라는 핵심 비즈니스
-목표 달성 불가. 또한, FCP 6.9초의 저조한 성능이 잠재적 사용자 이탈률을 높이는
-리스크로 작용.
+  목표 달성 불가. 또한, FCP 6.9초의 저조한 성능이 잠재적 사용자 이탈률을 높이는
+  리스크로 작용.
 
 - **해결**: 페이지의 특성(데이터 실시간성, SEO 중요도, 인터랙션 유무)에 따라 SSR,
-ISR, CSR을 조합하는 하이브리드 렌더링 아키텍처를 설계 및 구축. 'use client'
-경계를 명확히 하여 클라이언트 번들 사이즈 최소화
+  ISR, CSR을 조합하는 하이브리드 렌더링 아키텍처를 설계 및 구축. 'use client'
+  경계를 명확히 하여 클라이언트 번들 사이즈 최소화
 
 - **성과**: Hydration Mismatch 및 RSC 경계 문제를 해결하며 서버클라이언트
-렌더링 아키텍처에 대한 깊이 있는 이해를 확보.
-Next.js의 렌더링 전략 (ISR)과 TanStack Query의 HydrationBoundary 를 결합하여
-서버 상태와 클라이언트 상태를 효율적으로 동기화. 불필요한 Refetch를 방지하고
-FCP를 6.9초에서 1.7초로 단축.
+  렌더링 아키텍처에 대한 깊이 있는 이해를 확보.
+  Next.js의 렌더링 전략 (ISR)과 TanStack Query의 HydrationBoundary 를 결합하여
+  서버 상태와 클라이언트 상태를 효율적으로 동기화. 불필요한 Refetch를 방지하고
+  FCP를 6.9초에서 1.7초로 단축.
 
 ### [Next/Image 비용 문제로 커스텀 Image 컴포넌트 설계](https://glass-writer-f4a.notion.site/Frontend-Developer-2485aca8e19380c7ac2ed382051884f3?p=2485aca8e193806dbe80ca4a089fc7dc&pm=c)
 
