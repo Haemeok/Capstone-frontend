@@ -10,7 +10,6 @@ type ProgressButtonProps = {
   isFormValid: boolean;
   className?: string;
   isLoading?: boolean;
-  onClick?: () => void;
 };
 
 const ProgressButton = ({
@@ -18,7 +17,6 @@ const ProgressButton = ({
   isFormValid,
   className,
   isLoading,
-  onClick,
 }: ProgressButtonProps) => {
   return (
     <div
@@ -38,7 +36,6 @@ const ProgressButton = ({
         className="group relative z-10 w-full cursor-pointer bg-transparent py-6 text-lg font-semibold transition-none hover:bg-transparent"
         disabled={!isFormValid || isLoading}
         type="submit"
-        onClick={onClick}
       >
         {!isLoading ? (
           <span className="flex items-center justify-center gap-2 text-white drop-shadow-sm">

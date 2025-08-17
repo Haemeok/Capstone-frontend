@@ -9,6 +9,7 @@ import { Recipe } from "@/entities/recipe/model/types";
 
 import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
 import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 interface RecipeDetailHeaderProps {
   recipe: Recipe;
@@ -42,7 +43,7 @@ export default function RecipeDetailHeader({
       />
 
       <div ref={imageRef} className="h-112 w-full">
-        <img
+        <SuspenseImage
           src={recipe.imageUrl}
           alt={recipe.title}
           className="h-full w-full object-cover"

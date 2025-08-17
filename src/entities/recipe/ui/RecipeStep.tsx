@@ -1,8 +1,7 @@
-import Image from "next/image";
-
 import IngredientIcon from "@/shared/ui/IngredientIcon";
 
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type RecipeStepProps = {
   stepIndex: number;
@@ -12,7 +11,7 @@ type RecipeStepProps = {
 
 const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
   return (
-    <div key={stepIndex}>
+    <div key={stepIndex} className="w-full h-full">
       <h3 className="mb-2 text-left text-lg font-semibold">
         Step {stepIndex + 1}/{length}
       </h3>
@@ -34,12 +33,12 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
         ))}
       </div>
       <p className="mt-2 text-left">{step.instruction}</p>
-      <div className="relative w-full h-80">
+      <div className="w-full h-80">
         {step.stepImageUrl && (
-          <img
+          <SuspenseImage
             src={step.stepImageUrl}
             alt={`Step ${stepIndex + 1}`}
-            className="mt-2 w-full rounded-2xl"
+            className="mt-2 w-full rounded-2xl h-full object-cover"
           />
         )}
       </div>

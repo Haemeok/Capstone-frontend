@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+
 import { useRouter } from "next/navigation";
 
 import { EllipsisVertical } from "lucide-react";
@@ -11,6 +11,7 @@ import { cn } from "@/shared/lib/utils";
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
@@ -40,7 +41,7 @@ const SimpleRecipeGridItem = ({
         className={cn(`relative h-${height} rounded-2xl`)}
         onClick={handleItemClick}
       >
-        <img
+        <SuspenseImage
           src={recipe.imageUrl}
           alt={recipe.title}
           width={208}
