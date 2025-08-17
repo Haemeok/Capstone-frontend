@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 
 import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
+import SuspenseImage from "./image/SuspenseImage";
 
 type HomeBannerProps = {
   title: string;
@@ -25,7 +26,7 @@ const HomeBanner = ({ title, description, image, to }: HomeBannerProps) => {
       className="relative mt-2 flex w-full cursor-pointer items-center gap-2 rounded-lg border-1 border-gray-300 p-2 text-sm"
       style={{ opacity: 0 }}
     >
-      <img
+      <SuspenseImage
         src={image}
         alt="Coffee"
         className="h-15 w-15"

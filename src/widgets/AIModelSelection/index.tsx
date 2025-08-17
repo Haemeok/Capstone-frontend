@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
-
 import { aiModels } from "@/shared/config/constants/aiModel";
 
 import {
   type AIModel,
   useAIRecipeGeneration,
 } from "@/features/recipe-create-ai";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 const AIModelSelection = () => {
   const { selectAI } = useAIRecipeGeneration();
@@ -28,15 +27,15 @@ const AIModelSelection = () => {
             onClick={() => handleSelectAI(ai)}
             className="flex flex-col items-center rounded-2xl border bg-white px-4 py-6 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
           >
-            <div className="relative h-48 w-full rounded-2xl mb-4">
-              <img
+            <div className="relative w-full rounded-2xl mb-4">
+              <SuspenseImage
                 src={ai.image}
                 alt={ai.name}
                 className="rounded-2xl object-cover"
               />
             </div>
-            <p className="text-dark text-lg font-medium">{ai.name}</p>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="text-dark text-lg font-bold">{ai.name}</p>
+            <p className="mt-2 text-center text-sm text-gray-500">
               {ai.description}
             </p>
           </button>

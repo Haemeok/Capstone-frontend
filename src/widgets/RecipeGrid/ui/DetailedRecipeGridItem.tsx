@@ -17,6 +17,7 @@ import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
@@ -49,7 +50,7 @@ const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
       onClick={handleClick}
       key={recipe.id}
     >
-      <img
+      <SuspenseImage
         src={imageUrl}
         alt={recipe.title}
         width={208}
