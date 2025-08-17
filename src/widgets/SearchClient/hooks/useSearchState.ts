@@ -7,7 +7,7 @@ import {
   DISH_TYPE_CODES,
   SORT_TYPE_CODES,
   TAG_CODES,
-  TAG_CODES_TO_NAME,
+  TAGS_BY_CODE,
 } from "@/shared/config/constants/recipe";
 
 export const useSearchState = () => {
@@ -31,9 +31,10 @@ export const useSearchState = () => {
       ) || "전체"
     : "전체";
 
-  const tagNames = tagCodes.map(
-    (code) => TAG_CODES_TO_NAME[code as keyof typeof TAG_CODES_TO_NAME] || code
-  );
+  const tagNames = tagCodes.map((code) => {
+    const tag = TAGS_BY_CODE[code as keyof typeof TAGS_BY_CODE];
+    return tag ? `${tag.emoji} ${tag.name}` : code;
+  });
 
   const [inputValue, setInputValue] = useState(q);
 
