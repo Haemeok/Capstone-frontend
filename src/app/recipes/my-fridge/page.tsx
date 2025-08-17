@@ -18,6 +18,7 @@ import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 const MyFridgePage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -71,7 +72,7 @@ const MyFridgePage = () => {
             onClick={() => router.push(`/recipes/${recipe.id}`)}
           >
             <div className="relative h-40 w-40 rounded-2xl">
-              <img
+              <SuspenseImage
                 src={recipe.imageUrl}
                 alt={recipe.title}
                 className={cn(

@@ -8,21 +8,40 @@ import HomeHeader from "@/widgets/Header/HomeHeader";
 import { OnboardingSurveyModal } from "@/widgets/OnboardingSurveryModal";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
 
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+
 export const metadata = homeMetadata;
 
 const HomePage = async () => {
-  const [aiRecipes, partyRecipes] = await Promise.all([
-    getRecipesOnServer({
-      key: "ai-recipes",
-      isAiGenerated: true,
-      sort: "desc",
+  const queryClient = new QueryClient();
+
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["ai-recipes"],
+      queryFn: () =>
+        getRecipesOnServer({
+          isAiGenerated: true,
+          sort: "desc",
+          key: "ai-recipes",
+        }),
     }),
-    getRecipesOnServer({
-      key: "party-recipes",
-      tagNames: ["HOME_PARTY"],
-      sort: "desc",
+    queryClient.prefetchQuery({
+      queryKey: ["party-recipes"],
+      queryFn: () =>
+        getRecipesOnServer({
+          tagNames: ["HOME_PARTY"],
+          sort: "desc",
+          key: "party-recipes",
+        }),
     }),
   ]);
+
+  console.log("dehydrate", dehydrate(queryClient));
+  console.log("queryClient", queryClient.getQueryData(["ai-recipes"]));
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 bg-white p-4 text-gray-800">
@@ -30,27 +49,25 @@ const HomePage = async () => {
       <CategoryTabs title="카테고리" />
       <HomeBanner
         title="AI 레시피 생성하기"
-        description="AI가 추천하는 레시피를 확인해보세요!"
+        description="AI로 나만의 특색있는 레시피를 만들어보세요!"
         image="/robot1.png"
-        to="/ai-recipe"
+        to="/recipes/new/ai"
       />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <RecipeSlideWithErrorBoundary
+          title="AI가 추천하는 레시피"
+          queryKey="ai-recipes"
+          isAiGenerated={true}
+          to="/recipes/ai"
+        />
 
-      <RecipeSlideWithErrorBoundary
-        title="AI가 추천하는 레시피"
-        queryKey="ai-recipes"
-        isAiGenerated={true}
-        to="/ai-recipes"
-        initialData={aiRecipes}
-      />
-
-      <RecipeSlideWithErrorBoundary
-        title="홈파티 레시피"
-        queryKey="party-recipes"
-        tagNames={["HOME_PARTY"]}
-        to="/recipes/category/HOME_PARTY"
-        initialData={partyRecipes}
-      />
-
+        <RecipeSlideWithErrorBoundary
+          title="홈파티 레시피"
+          queryKey="party-recipes"
+          tagNames={["HOME_PARTY"]}
+          to="/recipes/category/HOME_PARTY"
+        />
+      </HydrationBoundary>
       <OnboardingSurveyModal />
     </div>
   );
