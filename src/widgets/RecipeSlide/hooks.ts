@@ -7,7 +7,7 @@ import {
 } from "@/entities/recipe/model/types";
 
 type UseRecipeItemsQueryParams = {
-  key: string; // Unique identifier for the query
+  key: string;
   sort?: "desc" | "asc";
   isAiGenerated?: boolean;
   tagNames?: string[];
@@ -27,7 +27,7 @@ export const useRecipeItemsQuery = (
   initialData?: DetailedRecipesApiResponse
 ) => {
   const queryParams = { sort, isAiGenerated, tagNames, q, dishType };
-  const queryKey = ["recipeItems", key, queryParams];
+  const queryKey = ["recipes", key, queryParams];
 
   const query = useQuery({
     queryKey,
