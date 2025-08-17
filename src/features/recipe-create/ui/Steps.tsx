@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Control,
   useFieldArray,
+  useFormContext,
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
@@ -14,30 +15,17 @@ import { Plus } from "lucide-react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 
-import { RecipeFormValues } from "../model/types";
+import { RecipeFormValues } from "../model/config";
 import StepItem from "./StepItem";
 
-type StepsProps = {
-  watch: UseFormWatch<RecipeFormValues>;
-  register: UseFormRegister<RecipeFormValues>;
-  errors: FieldErrors<RecipeFormValues>;
-  setValue: UseFormSetValue<RecipeFormValues>;
-  control: Control<RecipeFormValues>;
-  stepImagePreviewUrls: (string | null)[];
-  setStepImagePreviewUrls: React.Dispatch<
-    React.SetStateAction<(string | null)[]>
-  >;
-};
+const Steps = () => {
+  const { control, watch, setValue, register } =
+    useFormContext<RecipeFormValues>();
 
-const Steps = ({
-  watch,
-  register,
-  errors,
-  setValue,
-  control,
-  stepImagePreviewUrls,
-  setStepImagePreviewUrls,
-}: StepsProps) => {
+  const [stepImagePreviewUrls, setStepImagePreviewUrls] = useState<
+    (string | null)[]
+  >([]);
+
   const {
     fields: stepFields,
     append: appendStep,
@@ -57,7 +45,6 @@ const Steps = ({
       ingredients: [],
       imageKey: null,
     });
-    setStepImagePreviewUrls([...stepImagePreviewUrls, null]);
   };
 
   return (
@@ -71,17 +58,12 @@ const Steps = ({
             <StepItem
               key={step.id}
               stepId={step.id}
-              control={control}
-              register={register}
               index={index}
-              errors={errors}
-              watch={watch}
-              setValue={setValue}
-              stepImagePreviewUrls={stepImagePreviewUrls}
-              setStepImagePreviewUrls={setStepImagePreviewUrls}
               stepFields={stepFields}
               removeStep={removeStep}
               mainIngredients={mainIngredients}
+              stepImagePreviewUrls={stepImagePreviewUrls}
+              setStepImagePreviewUrls={setStepImagePreviewUrls}
             />
           );
         })}

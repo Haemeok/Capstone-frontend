@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 
 import { InfiniteData } from "@tanstack/react-query";
 import { Check, Search } from "lucide-react";
@@ -24,6 +23,7 @@ import {
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type IngredientSelectorProps = {
   open: boolean;
@@ -140,7 +140,7 @@ const IngredientSelector = ({
                 >
                   <div className="mr-3 h-12 w-12 flex-shrink-0 relative overflow-hidden rounded-lg bg-gray-100">
                     {ingredient.imageUrl && (
-                      <img
+                      <SuspenseImage
                         src={ingredient.imageUrl}
                         alt={ingredient.name}
                         className="h-full w-full object-cover"

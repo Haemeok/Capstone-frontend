@@ -1,35 +1,33 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { UseFormWatch } from "react-hook-form";
-import { UseFormRegister } from "react-hook-form";
-import { FieldErrors } from "react-hook-form";
-import Image from "next/image";
+import { useFormContext, useWatch } from "react-hook-form";
 
 import { UploadIcon } from "lucide-react";
 
-import { RecipeFormValues } from "@/features/recipe-create/model/types";
+import { RecipeFormValues } from "@/features/recipe-create/model/config";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type RecipeTitleWithImageProps = {
-  errors: FieldErrors<RecipeFormValues>;
-  register: UseFormRegister<RecipeFormValues>;
-  watch: UseFormWatch<RecipeFormValues>;
-  currentTitle: string;
   setImagePreviewUrl: React.Dispatch<React.SetStateAction<string | null>>;
   imagePreviewUrl: string | null;
   isUpdate?: boolean;
 };
 
 const RecipeTitleWithImage = ({
-  errors,
-  register,
-  watch,
-  currentTitle,
   setImagePreviewUrl,
   imagePreviewUrl,
   isUpdate,
 }: RecipeTitleWithImageProps) => {
-  const imageFileValue = watch("imageFile");
+  const { register, formState, control } = useFormContext<RecipeFormValues>();
+  const { errors } = formState;
+
+  const imageFileValue = useWatch({ control, name: "imageFile" });
+
+  const currentTitle = useWatch({
+    control,
+    name: "title",
+  });
 
   useEffect(() => {
     const fileList = imageFileValue;
@@ -58,7 +56,7 @@ const RecipeTitleWithImage = ({
           className="absolute inset-0 cursor-pointer"
         >
           {imagePreviewUrl ? (
-            <img
+            <SuspenseImage
               src={imagePreviewUrl}
               alt="Recipe thumbnail"
               className="h-full w-full object-cover"
@@ -93,9 +91,7 @@ const RecipeTitleWithImage = ({
               errors.title ? "border-red-500" : "border-white/30"
             } focus:border-white focus:outline-none`}
             placeholder="레시피 이름"
-            {...register("title", {
-              required: "레시피 이름은 필수입니다",
-            })}
+            {...register("title")}
           />
           <p className="text-sm text-white">{currentTitle.length}/20</p>
         </div>

@@ -1,14 +1,14 @@
 import React from "react";
-import { FieldErrors,UseFormRegister } from "react-hook-form";
+import { FieldErrors, useFormContext, UseFormRegister } from "react-hook-form";
 
-import { RecipeFormValues } from "../model/types";
+import { RecipeFormValues } from "../model/config";
 
-type DescriptionProps = {
-  register: UseFormRegister<RecipeFormValues>;
-  errors: FieldErrors<RecipeFormValues>;
-};
+const Description = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<RecipeFormValues>();
 
-const Description = ({ register, errors }: DescriptionProps) => {
   return (
     <div className="mb-4 rounded-xl bg-white p-4 shadow-sm">
       <textarea

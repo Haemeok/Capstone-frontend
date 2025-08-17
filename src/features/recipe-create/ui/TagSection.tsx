@@ -1,22 +1,19 @@
 import React from "react";
-import { UseFormSetValue } from "react-hook-form";
-import { UseFormWatch } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 
-import { TAG_EMOJI, TAGS } from "@/shared/config/constants/recipe";
+import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
 
-import { RecipeFormValues } from "../model/types";
-type TagSectionProps = {
-  watch: UseFormWatch<RecipeFormValues>;
-  setValue: UseFormSetValue<RecipeFormValues>;
-  tagNames: string[];
-};
+import { RecipeFormValues } from "../model/config";
 
-const TagSection = ({ watch, setValue, tagNames }: TagSectionProps) => {
+const TagSection = () => {
+  const { control, setValue } = useFormContext<RecipeFormValues>();
+
+  const tagNames = useWatch({ control, name: "tagNames" });
+
   const handleTagToggle = (tag: string) => {
-    const currentTags = watch("tagNames") || [];
-    const newTags = currentTags.includes(tag)
-      ? currentTags.filter((t) => t !== tag)
-      : [...currentTags, tag];
+    const newTags = tagNames.includes(tag)
+      ? tagNames.filter((t) => t !== tag)
+      : [...tagNames, tag];
     setValue("tagNames", newTags, { shouldDirty: true, shouldValidate: true });
   };
 
@@ -24,8 +21,8 @@ const TagSection = ({ watch, setValue, tagNames }: TagSectionProps) => {
     <div className="mt-6 mb-4">
       <h2 className="mb-3 text-xl font-semibold text-gray-700">태그</h2>
       <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-sm">
-        {TAGS.map((tag) => {
-          const tagName = `${TAG_EMOJI[tag as keyof typeof TAG_EMOJI]} ${tag}`;
+        {TAG_DEFINITIONS.map((tag) => {
+          const tagName = `${tag.emoji} ${tag.name}`;
           return (
             <button
               key={tagName}
