@@ -90,73 +90,48 @@ export const DISH_TYPE_CODES_TO_NAME = Object.fromEntries(
   Object.entries(DISH_TYPE_CODES).map(([key, value]) => [value, key])
 );
 
-export const TAGS = [
-  "홈파티",
-  "피크닉",
-  "캠핑",
-  "다이어트 / 건강식",
-  "아이와 함께",
-  "혼밥",
-  "술안주",
-  "브런치",
-  "야식",
-  "초스피드 / 간단 요리",
-  "기념일 / 명절",
-  "도시락",
-  "에어프라이어",
-  "해장",
-];
+export const TAG_DEFINITIONS = [
+  { name: "브런치", emoji: "🥐", code: "BRUNCH" },
+  { name: "야식", emoji: "🌙", code: "LATE_NIGHT" },
+  { name: "도시락", emoji: "🍱", code: "LUNCHBOX" },
+  { name: "홈파티", emoji: "🏠", code: "HOME_PARTY" },
+  { name: "피크닉", emoji: "🌼", code: "PICNIC" },
+  { name: "캠핑", emoji: "🏕️", code: "CAMPING" },
+  { name: "다이어트 / 건강식", emoji: "🥗", code: "HEALTHY" },
+  { name: "아이와 함께", emoji: "👶", code: "KIDS" },
+  { name: "혼밥", emoji: "🍽️", code: "SOLO" },
+  { name: "술안주", emoji: "🍶", code: "DRINK" },
+  { name: "초스피드 / 간단 요리", emoji: "⚡", code: "QUICK" },
+  { name: "기념일 / 명절", emoji: "🎉", code: "HOLIDAY" },
+  { name: "에어프라이어", emoji: "🔌", code: "AIR_FRYER" },
+  { name: "해장", emoji: "🍲", code: "HANGOVER" },
+] as const;
 
-export const TAG_EMOJI = {
-  홈파티: "🏠",
-  피크닉: "🌼",
-  캠핑: "🏕️",
-  "다이어트 / 건강식": "🥗",
-  "아이와 함께": "👶",
-  혼밥: "🍽️",
-  술안주: "🍶",
-  브런치: "🥐",
-  야식: "🌙",
-  "초스피드 / 간단 요리": "⚡",
-  "기념일 / 명절": "🎉",
-  도시락: "🍱",
-  에어프라이어: "🔌",
-  해장: "🍲",
-};
+export const TAG_CODES = Object.fromEntries(
+  TAG_DEFINITIONS.map((tag) => [tag.name, tag.code])
+);
 
-export const TAG_CODES = {
-  홈파티: "HOME_PARTY",
-  피크닉: "PICNIC",
-  캠핑: "CAMPING",
-  "다이어트 / 건강식": "HEALTHY",
-  "아이와 함께": "KIDS",
-  혼밥: "SOLO",
-  술안주: "DRINK",
-  브런치: "BRUNCH",
-  야식: "LATE_NIGHT",
-  "초스피드 / 간단 요리": "QUICK",
-  "기념일 / 명절": "HOLIDAY",
-  도시락: "LUNCHBOX",
-  에어프라이어: "AIR_FRYER",
-  해장: "HANGOVER",
-};
+export const TAGS_BY_CODE = TAG_DEFINITIONS.reduce(
+  (acc, tag) => {
+    acc[tag.code] = tag;
+    return acc;
+  },
+  {} as Record<
+    (typeof TAG_DEFINITIONS)[number]["code"],
+    (typeof TAG_DEFINITIONS)[number]
+  >
+);
 
-export const TAG_CODES_TO_NAME = {
-  HOME_PARTY: "홈파티",
-  PICNIC: "피크닉",
-  CAMPING: "캠핑",
-  HEALTHY: "다이어트 / 건강식",
-  KIDS: "아이와 함께",
-  SOLO: "혼밥",
-  DRINK: "술안주",
-  BRUNCH: "브런치",
-  LATE_NIGHT: "야식",
-  QUICK: "초스피드 / 간단 요리",
-  HOLIDAY: "기념일 / 명절",
-  LUNCHBOX: "도시락",
-  AIR_FRYER: "에어프라이어",
-  HANGOVER: "해장",
-};
+export const TAGS_BY_NAME = TAG_DEFINITIONS.reduce(
+  (acc, tag) => {
+    acc[tag.name] = tag;
+    return acc;
+  },
+  {} as Record<
+    (typeof TAG_DEFINITIONS)[number]["name"],
+    (typeof TAG_DEFINITIONS)[number]
+  >
+);
 
 type ValueOf<T> = T[keyof T];
 
@@ -225,9 +200,7 @@ export const BASE_DRAWER_CONFIGS: Record<DrawerType, BaseDrawerConfig> = {
     header: DRAWER_HEADERS.tags,
     description: DRAWER_DESCRIPTIONS.tags,
     isMultiple: true,
-    availableValues: TAGS.map(
-      (tag) => `${TAG_EMOJI[tag as keyof typeof TAG_EMOJI]} ${tag}`
-    ),
+    availableValues: TAG_DEFINITIONS.map((tag) => `${tag.emoji} ${tag.name}`),
   },
 };
 
@@ -338,12 +311,12 @@ export const PRICE_BRACKETS = [
   },
 ];
 
-export const TAG_ITEMS = TAGS.map((tag, index) => ({
+export const TAG_ITEMS = TAG_DEFINITIONS.map((tag, index) => ({
   id: index,
-  name: tag,
-  code: TAG_CODES[tag as keyof typeof TAG_CODES],
+  name: tag.name,
+  code: tag.code,
   imageUrl: `${CATEGORY_BASE_URL}${
-    TAGS_IMAGE_KEYS[TAG_CODES[tag as keyof typeof TAG_CODES]]
+    TAGS_IMAGE_KEYS[tag.code as keyof typeof TAGS_IMAGE_KEYS]
   }`,
 }));
 
