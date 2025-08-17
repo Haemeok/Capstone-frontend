@@ -10,7 +10,7 @@ import { editRecipe, postRecipe } from "@/entities/recipe/model/api";
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { prepareRecipeData } from "../../lib/prepareRecipeData";
-import { RecipeFormValues } from "../types";
+import { RecipeFormValues } from "../config";
 import { useFinalizeRecipe } from "./useFinalizeRecipe";
 
 type UseCreateRecipeOptions = {

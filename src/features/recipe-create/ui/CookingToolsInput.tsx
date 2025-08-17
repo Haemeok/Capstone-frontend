@@ -1,22 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { UseFormWatch } from "react-hook-form";
-import { UseFormSetValue } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 
 import { X } from "lucide-react";
 
-import { RecipeFormValues } from "../model/types";
+import { RecipeFormValues } from "../model/config";
 
-type CookingToolsInputProps = {
-  watch: UseFormWatch<RecipeFormValues>;
-  setValue: UseFormSetValue<RecipeFormValues>;
-};
+const CookingToolsInput = () => {
+  const { control, setValue } = useFormContext<RecipeFormValues>();
+  const cookingToolsValue = useWatch({ control, name: "cookingTools" });
 
-const CookingToolsInput = ({ watch, setValue }: CookingToolsInputProps) => {
   const [currentToolInput, setCurrentToolInput] = useState("");
-
-  const cookingToolsValue = watch("cookingTools") || [];
 
   const handleToolInputKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>
@@ -25,10 +20,8 @@ const CookingToolsInput = ({ watch, setValue }: CookingToolsInputProps) => {
       event.preventDefault();
       const toolName = currentToolInput.trim();
       if (toolName) {
-        const currentTools = watch("cookingTools") || [];
-
-        if (!currentTools.includes(toolName)) {
-          setValue("cookingTools", [...currentTools, toolName], {
+        if (!cookingToolsValue.includes(toolName)) {
+          setValue("cookingTools", [...cookingToolsValue, toolName], {
             shouldDirty: true,
           });
         }
@@ -38,8 +31,9 @@ const CookingToolsInput = ({ watch, setValue }: CookingToolsInputProps) => {
   };
 
   const removeCookingTool = (toolToRemove: string) => {
-    const currentTools = watch("cookingTools") || [];
-    const updatedTools = currentTools.filter((tool) => tool !== toolToRemove);
+    const updatedTools = cookingToolsValue.filter(
+      (tool) => tool !== toolToRemove
+    );
     setValue("cookingTools", updatedTools, { shouldDirty: true });
   };
 

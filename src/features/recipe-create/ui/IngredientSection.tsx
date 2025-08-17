@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Control,
-  FieldErrors,
-  useFieldArray,
-  UseFormRegister,
-} from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { Plus, X } from "lucide-react";
 import { ChefHat } from "lucide-react";
@@ -15,24 +10,24 @@ import { Button } from "@/shared/ui/shadcn/button";
 
 import { IngredientPayload } from "@/entities/ingredient";
 
-import { RecipeFormValues } from "../model/types";
+import { RecipeFormValues } from "../model/config";
 import IngredientSelector from "./IngredientSelector";
 
 type IngredientSectionProps = {
-  control: Control<RecipeFormValues>;
-  errors: FieldErrors<RecipeFormValues>;
-  register: UseFormRegister<RecipeFormValues>;
   onRemoveIngredientCallback: (ingredientName: string) => void;
   ingredientIds: number[];
 };
 
 const IngredientSection = ({
-  control,
-  errors,
-  register,
   onRemoveIngredientCallback,
   ingredientIds,
 }: IngredientSectionProps) => {
+  const {
+    control,
+    formState: { errors },
+    register,
+  } = useFormContext<RecipeFormValues>();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(

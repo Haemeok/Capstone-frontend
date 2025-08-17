@@ -1,16 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import {
-  Control,
-  FieldArrayWithId,
-  FieldErrors,
-  UseFormRegister,
-  UseFormSetValue,
-  UseFormWatch,
-  useWatch,
-} from "react-hook-form";
-import Image from "next/image";
+import { FieldArrayWithId, useFormContext, useWatch } from "react-hook-form";
 
 import { UploadIcon, X } from "lucide-react";
 
@@ -20,16 +11,12 @@ import { Label } from "@/shared/ui/shadcn/label";
 
 import { IngredientPayload } from "@/entities/ingredient";
 
-import { RecipeFormValues } from "../model/types";
+import { RecipeFormValues } from "../model/config";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type StepItemProps = {
-  control: Control<RecipeFormValues>;
-  register: UseFormRegister<RecipeFormValues>;
   index: number;
   stepId: string;
-  errors: FieldErrors<RecipeFormValues>;
-  watch: UseFormWatch<RecipeFormValues>;
-  setValue: UseFormSetValue<RecipeFormValues>;
   stepImagePreviewUrls: (string | null)[];
   setStepImagePreviewUrls: React.Dispatch<
     React.SetStateAction<(string | null)[]>
@@ -40,19 +27,22 @@ type StepItemProps = {
 };
 
 const StepItem = ({
-  control,
-  register,
   index,
   stepId,
-  errors,
-  watch,
-  setValue,
   stepImagePreviewUrls,
   setStepImagePreviewUrls,
   stepFields,
   removeStep,
   mainIngredients,
 }: StepItemProps) => {
+  const {
+    control,
+    watch,
+    setValue,
+    register,
+    formState: { errors },
+  } = useFormContext<RecipeFormValues>();
+
   const stepImageFileValue = useWatch({
     control,
     name: `steps.${index}.imageFile`,
@@ -108,7 +98,11 @@ const StepItem = ({
       if (!currentStepIngredients.some((i) => i.name === ingredient.name)) {
         updatedIngredients = [
           ...currentStepIngredients,
-          { name: ingredient.name, quantity: "", unit: ingredient.unit },
+          {
+            name: ingredient.name,
+            quantity: ingredient.quantity ?? "",
+            unit: ingredient.unit,
+          },
         ];
       } else {
         updatedIngredients = currentStepIngredients;
@@ -150,7 +144,7 @@ const StepItem = ({
               }
             >
               {stepImagePreviewUrls[index] ? (
-                <img
+                <SuspenseImage
                   src={stepImagePreviewUrls[index]!}
                   alt={`Step ${index + 1} preview`}
                   className="h-full w-full object-cover"
