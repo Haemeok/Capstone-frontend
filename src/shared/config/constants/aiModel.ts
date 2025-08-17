@@ -20,7 +20,8 @@ export const aiModels: Record<AIModelId, AIModel> = {
     id: "CREATIVE",
     name: "창의적인 실험가",
     image: `${IMAGE_BASE_URL}robots/creative.webp`,
-    description: "균형 잡힌 영양을 고려한 레시피를 전문적으로 추천합니다.",
+    description:
+      "새로운 맛의 조합을 원하세요? 상상력을 자극하는 레시피를 만나보세요",
     loadingAnimation: {
       image: `${LOADING_BASE_URL}creative.webp`,
       frames: 11,
@@ -31,7 +32,7 @@ export const aiModels: Record<AIModelId, AIModel> = {
     id: "HEALTHY",
     name: "건강 식단 전문",
     image: `${IMAGE_BASE_URL}robots/healthy.webp`,
-    description: "바쁜 현대인을 위한 빠르고 간편한 레시피를 제공합니다.",
+    description: "맛과 건강, 모두 만족시키는 똑똑한 레시피를 알려드릴게요",
     loadingAnimation: {
       image: `${LOADING_BASE_URL}healthy.webp`,
       frames: 13,
@@ -42,7 +43,8 @@ export const aiModels: Record<AIModelId, AIModel> = {
     id: "GOURMET",
     name: "든든한 미식가",
     image: `${IMAGE_BASE_URL}robots/gourmet.webp`,
-    description: "특별한 날을 위한 고급스럽고 창의적인 레시피를 제안합니다.",
+    description:
+      "맛집 웨이팅은 이제 그만! 집에서 근사한 미식의 세계를 즐겨보세요",
     loadingAnimation: {
       image: `${LOADING_BASE_URL}gourmet.webp`,
       frames: 11,
