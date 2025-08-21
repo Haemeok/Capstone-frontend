@@ -36,11 +36,11 @@ export type Recipe = {
   title: string;
   dishType: string;
   description: string;
-  cookingTime: number | undefined | "";
+  cookingTime: number;
   imageUrl: string;
   youtubeUrl?: string;
   cookingTools: string[];
-  servings: number | undefined | "";
+  servings: number;
   totalIngredientCost: number;
   marketPrice: number;
   imageKey: string | null | undefined;
