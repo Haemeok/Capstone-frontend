@@ -46,6 +46,7 @@ export async function apiClient<T = any>(
   const requestOptions: RequestInit = {
     credentials: "include",
     signal: controller.signal,
+    headers,
     ...restOptions,
   };
 
@@ -98,7 +99,7 @@ export const api = {
     apiClient<T>(url, {
       ...options,
       method: "POST",
-      headers: data ? { "Content-Type": "application/json" } : {},
+      headers: { ...options?.headers, ...(data ? { "Content-Type": "application/json" } : {}) },
       body: data ? JSON.stringify(data) : undefined,
     }),
 
@@ -110,7 +111,7 @@ export const api = {
     apiClient<T>(url, {
       ...options,
       method: "PUT",
-      headers: data ? { "Content-Type": "application/json" } : {},
+      headers: { ...options?.headers, ...(data ? { "Content-Type": "application/json" } : {}) },
       body: data ? JSON.stringify(data) : undefined,
     }),
 
@@ -122,7 +123,7 @@ export const api = {
     apiClient<T>(url, {
       ...options,
       method: "PATCH",
-      headers: data ? { "Content-Type": "application/json" } : {},
+      headers: { ...options?.headers, ...(data ? { "Content-Type": "application/json" } : {}) },
       body: data ? JSON.stringify(data) : undefined,
     }),
 
