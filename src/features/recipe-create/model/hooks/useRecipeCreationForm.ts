@@ -27,9 +27,6 @@ export const useRecipeCreationForm = () => {
   });
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-  const [stepImagePreviewUrls, setStepImagePreviewUrls] = useState<
-    (string | null)[]
-  >([]);
 
   const onSubmit: SubmitHandler<RecipeFormValues> = (formData) => {
     createRecipe(formData, {
@@ -44,7 +41,6 @@ export const useRecipeCreationForm = () => {
         methods.reset();
 
         setImagePreviewUrl(null);
-        setStepImagePreviewUrls([]);
       },
       onError: (error) => {
         console.error("레시피 생성 실패:", error);
@@ -82,8 +78,6 @@ export const useRecipeCreationForm = () => {
 
     imagePreviewUrl,
     setImagePreviewUrl,
-    stepImagePreviewUrls,
-    setStepImagePreviewUrls,
 
     handleMainIngredientRemoved,
   };

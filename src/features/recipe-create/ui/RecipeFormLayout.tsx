@@ -19,6 +19,8 @@ type RecipeFormLayoutProps = {
   isLoading: boolean;
   recipeCreationError: Error | null;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  isUpdate?: boolean;
+  ingredientIds?: number[];
 };
 
 const RecipeFormLayout = ({
@@ -28,6 +30,8 @@ const RecipeFormLayout = ({
   isLoading,
   recipeCreationError: submitError,
   onSubmit,
+  isUpdate = false,
+  ingredientIds = [],
 }: RecipeFormLayoutProps) => {
   const {
     register,
@@ -37,6 +41,7 @@ const RecipeFormLayout = ({
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
       <RecipeTitleWithImage
+        isUpdate={isUpdate}
         imagePreviewUrl={imagePreviewUrl}
         setImagePreviewUrl={setImagePreviewUrl}
       />
@@ -144,7 +149,7 @@ const RecipeFormLayout = ({
 
         <IngredientSection
           onRemoveIngredientCallback={handleMainIngredientRemoved}
-          ingredientIds={[]}
+          ingredientIds={ingredientIds}
         />
         <Steps />
         <CookingToolsInput />
