@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/react";
 
 import { conditionalInitSentry } from "@/shared/lib/sentry";
 
@@ -48,6 +49,7 @@ export default async function RootLayout({
           <BottomNavBar />
           <NotificationTest />
         </AppProviders>
+        <Analytics />
       </body>
     </html>
   );
