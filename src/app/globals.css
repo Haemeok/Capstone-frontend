@@ -280,3 +280,12 @@
     background-position: -1100% 0;
   }
 }
+
+@layer utilities {
+  .clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+  }
+}
