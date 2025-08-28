@@ -10,27 +10,20 @@ import TagSection from "@/features/recipe-create/ui/TagSection";
 import { useFormContext } from "react-hook-form";
 import RecipeProgressButton from "./RecipeProgressButton";
 import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
-import { Dispatch, SetStateAction } from "react";
 
 type RecipeFormLayoutProps = {
-  imagePreviewUrl: string | null;
-  setImagePreviewUrl: Dispatch<SetStateAction<string | null>>;
   handleMainIngredientRemoved: (ingredientName: string) => void;
   isLoading: boolean;
   recipeCreationError: Error | null;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
-  isUpdate?: boolean;
   ingredientIds?: number[];
 };
 
 const RecipeFormLayout = ({
-  imagePreviewUrl,
-  setImagePreviewUrl,
   handleMainIngredientRemoved,
   isLoading,
   recipeCreationError: submitError,
   onSubmit,
-  isUpdate = false,
   ingredientIds = [],
 }: RecipeFormLayoutProps) => {
   const {
@@ -40,11 +33,7 @@ const RecipeFormLayout = ({
 
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
-      <RecipeTitleWithImage
-        isUpdate={isUpdate}
-        imagePreviewUrl={imagePreviewUrl}
-        setImagePreviewUrl={setImagePreviewUrl}
-      />
+      <RecipeTitleWithImage />
 
       <div className="mx-auto max-w-3xl px-4 pt-6">
         <Description />

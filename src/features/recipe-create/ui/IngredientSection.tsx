@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { Plus, X } from "lucide-react";
@@ -31,8 +31,14 @@ const IngredientSection = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
-    new Set(ingredientIds)
+    new Set()
   );
+
+  useEffect(() => {
+    if (Array.isArray(ingredientIds)) {
+      setAddedIngredientIds(new Set(ingredientIds));
+    }
+  }, [ingredientIds]);
 
   const {
     fields: ingredientFields,
