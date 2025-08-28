@@ -9,7 +9,11 @@ import { RecipeFormValues } from "../model/config";
 
 const CookingToolsInput = () => {
   const { control, setValue } = useFormContext<RecipeFormValues>();
-  const cookingToolsValue = useWatch({ control, name: "cookingTools" });
+  const cookingToolsValue = useWatch({
+    control,
+    name: "cookingTools",
+    defaultValue: [],
+  });
 
   const [currentToolInput, setCurrentToolInput] = useState("");
 

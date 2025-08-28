@@ -1,43 +1,44 @@
-import { FileInfoRequest, FileObject } from "@/shared/types";
+import {
+  ALLOWED_CONTENT_TYPES,
+  FileInfoRequest,
+  FileObject,
+} from "@/shared/types";
 
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { RecipeFormValues } from "../model/config";
+import { isOneOf } from "@/shared/lib/typeguards";
 
-export const prepareRecipeData = async (
-  formData: RecipeFormValues
-): Promise<{
-  recipeData: RecipePayload;
-  filesToUploadInfo: FileInfoRequest[];
-  fileObjects: FileObject[];
-}> => {
+export const prepareRecipeData = (formData: RecipeFormValues) => {
   const filesToUploadInfo: FileInfoRequest[] = [];
   const fileObjects: FileObject[] = [];
 
-  if (formData.imageFile && formData.imageFile[0]) {
-    const mainImageFile = formData.imageFile[0];
-
+  if (formData.image instanceof File) {
+    if (!isOneOf(formData.image.type, ALLOWED_CONTENT_TYPES)) {
+      throw new Error("Invalid image type");
+    }
     filesToUploadInfo.push({
+      contentType: formData.image.type,
       type: "main",
-      contentType: mainImageFile.type as FileInfoRequest["contentType"],
     });
     fileObjects.push({
-      file: mainImageFile,
+      file: formData.image,
       type: "main",
     });
   }
 
   formData.steps.forEach((step, index) => {
-    if (step.imageFile && step.imageFile[0]) {
-      const stepImageFile = step.imageFile[0];
-
+    if (step.image instanceof File) {
+      if (!isOneOf(step.image.type, ALLOWED_CONTENT_TYPES)) {
+        throw new Error("Invalid image type");
+      }
       filesToUploadInfo.push({
+        contentType: step.image.type,
         type: "step",
-        contentType: stepImageFile.type as FileInfoRequest["contentType"],
         stepIndex: index,
       });
       fileObjects.push({
-        file: stepImageFile,
+        file: step.image,
         type: "step",
         stepIndex: index,
       });
