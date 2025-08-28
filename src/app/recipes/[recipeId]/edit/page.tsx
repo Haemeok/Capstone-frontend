@@ -12,11 +12,9 @@ const UpdateRecipePage = () => {
   const {
     methods,
     onSubmit,
-    imagePreviewUrl,
-    setImagePreviewUrl,
     handleMainIngredientRemoved,
     isLoading,
-    recipeCreationError,
+    error,
     ingredientIds,
   } = useRecipeEditForm(Number(recipeId));
 
@@ -24,13 +22,10 @@ const UpdateRecipePage = () => {
     <div className="min-h-screen bg-gray-50 pb-20">
       <FormProvider {...methods}>
         <RecipeFormLayout
-          imagePreviewUrl={imagePreviewUrl}
-          setImagePreviewUrl={setImagePreviewUrl}
           handleMainIngredientRemoved={handleMainIngredientRemoved}
           isLoading={isLoading}
-          recipeCreationError={recipeCreationError}
+          recipeCreationError={error}
           onSubmit={onSubmit}
-          isUpdate={true}
           ingredientIds={ingredientIds}
         />
       </FormProvider>

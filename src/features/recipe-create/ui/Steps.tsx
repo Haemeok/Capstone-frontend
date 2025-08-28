@@ -1,15 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Control,
-  useFieldArray,
-  useFormContext,
-  UseFormSetValue,
-  UseFormWatch,
-} from "react-hook-form";
-import { UseFormRegister } from "react-hook-form";
-import { FieldErrors } from "react-hook-form";
+import React, { useMemo } from "react";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 import { Plus } from "lucide-react";
 
@@ -19,12 +11,7 @@ import { RecipeFormValues } from "../model/config";
 import StepItem from "./StepItem";
 
 const Steps = () => {
-  const { control, watch, setValue, register } =
-    useFormContext<RecipeFormValues>();
-
-  const [stepImagePreviewUrls, setStepImagePreviewUrls] = useState<
-    (string | null)[]
-  >([]);
+  const { control, watch } = useFormContext<RecipeFormValues>();
 
   const {
     fields: stepFields,
@@ -35,17 +22,33 @@ const Steps = () => {
     name: "steps",
   });
 
+  const stepsValue = useWatch({
+    control,
+    name: "steps",
+    defaultValue: [],
+  });
+
   const addStep = () => {
-    const currentSteps = watch("steps");
-    const nextStepNumber = currentSteps.length;
     appendStep({
-      stepNumber: nextStepNumber,
+      stepNumber: stepsValue.length,
       instruction: "",
-      imageFile: null,
+      image: null,
       ingredients: [],
-      imageKey: null,
     });
   };
+
+  const ingredientUsageMap = useMemo(() => {
+    const map = new Map<string, Set<number>>();
+    stepsValue.forEach((step, index) => {
+      (step.ingredients || []).forEach((ingredient) => {
+        if (!map.has(ingredient.name)) {
+          map.set(ingredient.name, new Set());
+        }
+        map.get(ingredient.name)!.add(index);
+      });
+    });
+    return map;
+  }, [stepsValue]);
 
   return (
     <div className="mb-8">
@@ -53,17 +56,21 @@ const Steps = () => {
 
       <div className="space-y-6">
         {stepFields.map((step, index) => {
-          const mainIngredients = watch("ingredients");
+          const usedElsewhereLookup = new Map<string, boolean>();
+          ingredientUsageMap.forEach((indices, ingName) => {
+            const isUsedElsewhere = Array.from(indices).some(
+              (i) => i !== index
+            );
+            usedElsewhereLookup.set(ingName, isUsedElsewhere);
+          });
+
           return (
             <StepItem
               key={step.id}
-              stepId={step.id}
               index={index}
-              stepFields={stepFields}
               removeStep={removeStep}
-              mainIngredients={mainIngredients}
-              stepImagePreviewUrls={stepImagePreviewUrls}
-              setStepImagePreviewUrls={setStepImagePreviewUrls}
+              isDeletable={stepFields.length > 1}
+              usedElsewhereLookup={usedElsewhereLookup} // 4. 계산된 결과를 prop으로 전달
             />
           );
         })}

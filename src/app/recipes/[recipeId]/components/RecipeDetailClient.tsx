@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import BadgeButton from "@/shared/ui/BadgeButton";
-import Box from "@/shared/ui/Box";
+import Box from "@/shared/ui/primitives/Box";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 import { FabButton } from "@/shared/ui/FabButton";
 
-import { getRecipe } from "@/entities/recipe/model/api";
-import { Recipe } from "@/entities/recipe/model/types";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 import { UserProfile } from "@/entities/user";
 
@@ -21,27 +19,14 @@ import RecipeInteractionButtons from "@/widgets/RecipeInteractionButtons";
 
 import { CommentMoreButton } from "../components/CommentMoreButton";
 import IngredientsSection from "../components/IngredientsSection";
+import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
 
-interface RecipeDetailClientProps {
-  initialRecipe: Recipe;
-}
+type RecipeDetailClientProps = { recipeId: number };
 
-const RecipeDetailClient = ({ initialRecipe }: RecipeDetailClientProps) => {
-  const queryClient = useQueryClient();
+const RecipeDetailClient = ({ recipeId }: RecipeDetailClientProps) => {
   const observerRef = useRef<HTMLDivElement>(null);
-  console.log("initialRecipe", initialRecipe);
 
-  useEffect(() => {
-    const queryKey = ["recipe", initialRecipe.id.toString()];
-    queryClient.setQueryData(queryKey, initialRecipe);
-  }, [initialRecipe, queryClient]);
-
-  const { data: recipe = initialRecipe } = useQuery({
-    queryKey: ["recipe", initialRecipe.id.toString()],
-    queryFn: () => getRecipe(initialRecipe.id),
-    initialData: initialRecipe,
-    staleTime: 1000 * 60 * 5,
-  });
+  const { recipeData: recipe } = useRecipeDetailQuery(recipeId);
 
   return (
     <div className="relative mx-auto flex flex-col bg-[#ffffff] text-[#2a2229]">
