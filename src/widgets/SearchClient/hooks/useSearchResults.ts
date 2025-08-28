@@ -15,7 +15,6 @@ type UseSearchResultsProps = {
   sortCode: string;
   dishTypeCode: string | null;
   tagCodes: string[];
-  initialRecipes: DetailedRecipesApiResponse;
 };
 
 export const useSearchResults = ({
@@ -23,13 +22,7 @@ export const useSearchResults = ({
   sortCode,
   dishTypeCode,
   tagCodes,
-  initialRecipes,
 }: UseSearchResultsProps) => {
-  const initialDataForInfiniteQuery = {
-    pages: [initialRecipes],
-    pageParams: [0],
-  };
-
   const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
@@ -48,7 +41,6 @@ export const useSearchResults = ({
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
-    initialData: initialDataForInfiniteQuery,
   });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
