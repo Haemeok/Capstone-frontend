@@ -1,18 +1,30 @@
 import { Plus, X } from "lucide-react";
+import { useFormContext, useWatch } from "react-hook-form";
+
+import type { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 
 type IngredientManagerProps = {
-  ingredients: string[];
-  onRemoveIngredient: (index: number) => void;
   onOpenDrawer: () => void;
-  onRemoveAllIngredients: () => void;
 };
 
-const IngredientManager = ({
-  ingredients,
-  onRemoveIngredient,
-  onOpenDrawer,
-  onRemoveAllIngredients,
-}: IngredientManagerProps) => {
+const IngredientManager = ({ onOpenDrawer }: IngredientManagerProps) => {
+  const { control, setValue } = useFormContext<AIRecipeFormValues>();
+
+  const ingredients = useWatch({
+    control,
+    name: "ingredients",
+    defaultValue: [],
+  });
+
+  const handleRemoveAllIngredients = () => {
+    setValue("ingredients", [], { shouldDirty: true });
+  };
+
+  const handleRemoveIngredient = (index: number) => {
+    const next = ingredients.filter((_, i) => i !== index);
+    setValue("ingredients", next, { shouldDirty: true });
+  };
+
   return (
     <div className="mb-6">
       <div
@@ -40,7 +52,7 @@ const IngredientManager = ({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onRemoveAllIngredients();
+                  handleRemoveAllIngredients();
                 }}
                 className="cursor-pointer px-2 py-1 text-xs text-red-600 hover:text-red-800"
               >
@@ -58,7 +70,7 @@ const IngredientManager = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    onRemoveIngredient(index);
+                    handleRemoveIngredient(index);
                   }}
                   className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-100 opacity-70 transition-all group-hover:opacity-100 hover:bg-red-100 hover:text-red-500"
                   aria-label={`${ingredient} 삭제`}

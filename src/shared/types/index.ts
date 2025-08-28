@@ -27,9 +27,16 @@ export type UploadResult = {
 
 export type FileInfoRequest = {
   type: "main" | "step";
-  contentType: "image/jpeg" | "image/png" | "image/gif" | "image/webp";
+  contentType: (typeof ALLOWED_CONTENT_TYPES)[number];
   stepIndex?: number;
 };
+
+export const ALLOWED_CONTENT_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+] as const;
 
 export type PresignedUrlInfo = {
   presignedUrl: string;
