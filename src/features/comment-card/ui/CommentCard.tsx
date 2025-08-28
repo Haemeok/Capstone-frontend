@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { MessageSquare, Trash } from "lucide-react";
 
 import { formatTimeAgo } from "@/shared/lib/date";
-import { DeleteModal } from "@/shared/ui/DeleteModal";
+import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
 import { Comment } from "@/entities/comment";
 import { useUserStore } from "@/entities/user";

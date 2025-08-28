@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Calculator, DollarSign } from "lucide-react";
 
 import { formatPrice } from "@/shared/lib/format";
-import Box from "@/shared/ui/Box";
+import Box from "@/shared/ui/primitives/Box";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 import { Button } from "@/shared/ui/shadcn/button";
 
