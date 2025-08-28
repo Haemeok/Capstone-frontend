@@ -1,6 +1,5 @@
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
-import { cookingTimeItems } from "@/shared/config/constants/recipe";
 
 import {
   AIRecommendedRecipe,
@@ -14,10 +13,7 @@ export const postAIRecommendedRecipe = async (
   const robotType = aiRequest.robotType;
   const parsedAiRequest = {
     ...aiRequest,
-    cookingTime: cookingTimeItems.find(
-      (opt: { label: string; value: number }) =>
-        opt.label === aiRequest.cookingTime
-    )?.value,
+    cookingTime: aiRequest.cookingTime,
   };
 
   const response = await api.post<AIRecommendedRecipe>(
