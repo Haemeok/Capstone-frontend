@@ -1,8 +1,3 @@
-/**
- * Sentry 에러 추적 유틸리티
- * 에러 추적, 메시지 로깅, 사용자 컨텍스트 관리
- */
-
 import * as Sentry from "@sentry/nextjs";
 
 export const trackError = (error: Error, context?: Record<string, any>) => {

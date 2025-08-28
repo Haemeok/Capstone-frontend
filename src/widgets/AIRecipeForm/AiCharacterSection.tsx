@@ -1,6 +1,8 @@
-import { AIModel } from "@/features/recipe-create-ai";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 import React from "react";
+
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
+
+import { AIModel } from "@/features/recipe-create-ai";
 
 type AICharacterSectionProps = {
   selectedAI: AIModel;

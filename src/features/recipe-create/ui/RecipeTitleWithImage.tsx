@@ -3,8 +3,9 @@
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
-import { RecipeFormValues } from "@/features/recipe-create/model/config";
 import { ImageUploader } from "@/shared/ui/image/ImageUploader";
+
+import { RecipeFormValues } from "@/features/recipe-create/model/config";
 
 const RecipeTitleWithImage = () => {
   const {

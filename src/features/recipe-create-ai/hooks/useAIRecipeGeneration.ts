@@ -1,8 +1,9 @@
+import { queryClient } from "@/shared/lib/queryClient";
+
 import { useCreateAIRecipeMutation } from "../model/hooks";
 import { AIRecipeFormValues } from "../model/schema";
 import { type AIModel, useAIRecipeStore } from "../model/store";
 import type { AIRecommendedRecipeRequest } from "../model/types";
-import { queryClient } from "@/shared/lib/queryClient";
 
 export const useAIRecipeGeneration = () => {
   const {

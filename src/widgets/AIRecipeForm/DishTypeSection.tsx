@@ -1,10 +1,12 @@
-import { ChefHat } from "lucide-react";
-
-import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
-import { DISH_TYPES } from "@/shared/config/constants/recipe";
-import SelectionSection from "@/shared/ui/SelectionSection";
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+
+import { ChefHat } from "lucide-react";
+
+import { DISH_TYPES } from "@/shared/config/constants/recipe";
+import SelectionSection from "@/shared/ui/SelectionSection";
+
+import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 
 const DishTypeSection = () => {
   const { control, setValue } = useFormContext<AIRecipeFormValues>();

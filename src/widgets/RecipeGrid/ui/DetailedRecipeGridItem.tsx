@@ -8,6 +8,7 @@ import { Star } from "lucide-react";
 
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 import {
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
@@ -17,7 +18,6 @@ import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;

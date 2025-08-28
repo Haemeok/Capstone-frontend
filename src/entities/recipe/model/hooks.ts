@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";

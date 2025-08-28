@@ -41,6 +41,10 @@ const eslintConfig = [
         },
       ],
       "simple-import-sort/exports": "error",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { ignoreRestSiblings: true },
+      ],
     },
   },
   prettierConfig,

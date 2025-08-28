@@ -10,10 +10,10 @@ import { User } from "@/entities/user/model/types";
 
 import { PutUserInfoVariables } from "./types";
 
-interface UsePutUserInfoMutationProps {
+type UsePutUserInfoMutationProps = {
   onSuccess?: (data: User) => void;
   onError?: (error: ApiError) => void;
-}
+};
 
 export const usePutUserInfoMutation = ({
   onSuccess,

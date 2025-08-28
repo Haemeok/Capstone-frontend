@@ -1,7 +1,8 @@
 import { create } from "zustand";
 
-import type { AIRecommendedRecipe, AIRecommendedRecipeRequest } from "./types";
 import { type AIModelId } from "@/shared/config/constants/aiModel";
+
+import type { AIRecommendedRecipe, AIRecommendedRecipeRequest } from "./types";
 
 export type AIRecipeGenerationState =
   | "idle"

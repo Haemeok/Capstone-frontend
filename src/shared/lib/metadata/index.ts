@@ -1,10 +1,10 @@
 export { SEO_CONSTANTS } from "./constants";
 export { homeMetadata } from "./homeMetadata";
 export {
-  generateRecipeMetadata,
   generateNotFoundRecipeMetadata,
+  generateRecipeMetadata,
 } from "./recipeMetadata";
 export {
-  createWebsiteStructuredData,
   createRecipeStructuredData,
+  createWebsiteStructuredData,
 } from "./structuredData";

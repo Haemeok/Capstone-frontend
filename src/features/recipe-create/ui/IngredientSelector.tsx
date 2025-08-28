@@ -10,6 +10,7 @@ import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 import { Button } from "@/shared/ui/shadcn/button";
 import {
   Drawer,
@@ -23,7 +24,6 @@ import {
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type IngredientSelectorProps = {
   open: boolean;

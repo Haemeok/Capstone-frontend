@@ -1,6 +1,7 @@
 import { Suspense } from "react";
-import { Image } from "@/shared/ui/image/Image";
+
 import DefaultImageFallback from "@/shared/ui/image/DefaultImageFallback";
+import { Image } from "@/shared/ui/image/Image";
 
 type SuspenseImageProps = {
   src: string;

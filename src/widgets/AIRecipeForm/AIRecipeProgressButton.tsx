@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
+
 import { FormProgressButton } from "@/shared/ui/form/FormProgressButton";
+
 import {
   aiRecipeFormSchema,
   type AIRecipeFormValues,

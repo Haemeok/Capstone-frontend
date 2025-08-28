@@ -1,4 +1,5 @@
 import type { AIModel } from "@/features/recipe-create-ai";
+
 import { IMAGE_BASE_URL } from "./recipe";
 
 export const LOADING_BASE_URL = `${IMAGE_BASE_URL}loadings/`;

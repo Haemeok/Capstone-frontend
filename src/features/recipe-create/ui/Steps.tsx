@@ -11,7 +11,7 @@ import { RecipeFormValues } from "../model/config";
 import StepItem from "./StepItem";
 
 const Steps = () => {
-  const { control, watch } = useFormContext<RecipeFormValues>();
+  const { control } = useFormContext<RecipeFormValues>();
 
   const {
     fields: stepFields,

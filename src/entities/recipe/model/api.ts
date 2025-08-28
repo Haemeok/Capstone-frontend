@@ -1,11 +1,7 @@
 import { api } from "@/shared/api/client";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PresignedUrlResponse } from "@/shared/api/types";
-import {
-  BASE_API_URL,
-  END_POINTS,
-  PAGE_SIZE,
-} from "@/shared/config/constants/api";
+import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 import { buildParams, customParamsSerializer } from "@/shared/lib/utils";
 import { FileInfoRequest } from "@/shared/types";
 

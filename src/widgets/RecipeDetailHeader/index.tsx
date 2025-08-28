@@ -3,21 +3,19 @@
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 import Ratings from "@/shared/ui/Ratings";
 
 import { Recipe } from "@/entities/recipe/model/types";
 
 import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
 import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
-interface RecipeDetailHeaderProps {
+type RecipeDetailHeaderProps = {
   recipe: Recipe;
-}
+};
 
-export default function RecipeDetailHeader({
-  recipe,
-}: RecipeDetailHeaderProps) {
+const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
   const router = useRouter();
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -63,4 +61,6 @@ export default function RecipeDetailHeader({
       </div>
     </>
   );
-}
+};
+
+export default RecipeDetailHeader;

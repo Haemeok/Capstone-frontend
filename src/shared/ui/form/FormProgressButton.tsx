@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { useFormContext, useWatch, FieldValues } from "react-hook-form";
+import { FieldValues,useFormContext, useWatch } from "react-hook-form";
+
 import { z } from "zod";
 
-import ProgressButton from "@/shared/ui/ProgressButton";
 import { isKeyOf } from "@/shared/lib/typeguards";
+import ProgressButton from "@/shared/ui/ProgressButton";
 
 type FormProgressButtonProps = {
   isLoading: boolean;

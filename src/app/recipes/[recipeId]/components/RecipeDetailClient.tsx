@@ -2,13 +2,12 @@
 
 import { useRef } from "react";
 
-import { useQuery } from "@tanstack/react-query";
-
 import BadgeButton from "@/shared/ui/BadgeButton";
-import Box from "@/shared/ui/primitives/Box";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 import { FabButton } from "@/shared/ui/FabButton";
+import Box from "@/shared/ui/primitives/Box";
 
+import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 import { UserProfile } from "@/entities/user";
 
@@ -17,9 +16,8 @@ import { CommentCard } from "@/features/comment-card";
 import RecipeDetailHeader from "@/widgets/RecipeDetailHeader";
 import RecipeInteractionButtons from "@/widgets/RecipeInteractionButtons";
 
-import { CommentMoreButton } from "../components/CommentMoreButton";
+import CommentMoreButton from "./CommentMoreButton";
 import IngredientsSection from "../components/IngredientsSection";
-import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
 
 type RecipeDetailClientProps = { recipeId: number };
 

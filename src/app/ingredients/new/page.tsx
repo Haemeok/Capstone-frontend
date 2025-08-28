@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
 import { InfiniteData } from "@tanstack/react-query";
 import gsap from "gsap";
@@ -11,6 +10,7 @@ import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 import PrevButton from "@/shared/ui/PrevButton";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
@@ -25,7 +25,6 @@ import {
   useAddIngredientMutation,
 } from "@/features/ingredient-add-fridge";
 import { useDeleteIngredientMutation } from "@/features/ingredient-delete-fridge";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 const NewIngredientsPage = () => {
   const [mode, setMode] = useState<"single" | "bulk">("single");

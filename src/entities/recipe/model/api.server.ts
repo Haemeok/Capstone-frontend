@@ -1,5 +1,6 @@
-import { BASE_API_URL } from "@/shared/config/constants/api";
 import { cookies } from "next/headers";
+
+import { BASE_API_URL } from "@/shared/config/constants/api";
 
 import {
   DetailedRecipesApiResponse,

@@ -1,11 +1,12 @@
-import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
-
-import { SearchClient } from "@/widgets/SearchClient";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+
+import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
+
+import { SearchClient } from "@/widgets/SearchClient";
 
 type SearchPageProps = {
   searchParams: Promise<{
