@@ -320,18 +320,16 @@ export const TAG_ITEMS = TAG_DEFINITIONS.map((tag, index) => ({
   }`,
 }));
 
-export const cookingTimeItems = [
-  { label: "10분이내", value: 10 },
-  { label: "20분이내", value: 20 },
-  { label: "30분이내", value: 30 },
-  { label: "1시간이내", value: 60 },
-  { label: "2시간이내", value: 120 },
-];
+export const COOKING_TIME_ITEMS = {
+  "10분이내": 10,
+  "20분이내": 20,
+  "30분이내": 30,
+  "1시간이내": 60,
+  "2시간이내": 120,
+};
 
-export const cookingTimes = [
-  "10분이내",
-  "20분이내",
-  "30분이내",
-  "1시간이내",
-  "2시간이내",
-];
+export const COOKING_TIME_ITEMS_KEYS = Object.fromEntries(
+  Object.entries(COOKING_TIME_ITEMS).map(([key, value]) => [value, key])
+);
+
+export const COOKING_TIMES = Object.keys(COOKING_TIME_ITEMS);

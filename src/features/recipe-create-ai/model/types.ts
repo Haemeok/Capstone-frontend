@@ -1,7 +1,7 @@
 export type AIRecommendedRecipeRequest = {
   ingredients: string[];
   dishType: string;
-  cookingTime: string;
+  cookingTime: number;
   servings: number;
   robotType: string;
 };
