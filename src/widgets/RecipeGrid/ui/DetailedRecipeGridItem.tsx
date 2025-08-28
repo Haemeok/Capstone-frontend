@@ -45,7 +45,7 @@ const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
   return (
     <div
       className={cn(
-        `relative flex h-80 shrink-0 flex-col gap-2 rounded-2xl cursor-pointer`
+        `relative flex w-55 h-84 shrink-0 flex-col gap-2 rounded-2xl cursor-pointer`
       )}
       onClick={handleClick}
       key={recipe.id}
@@ -69,7 +69,7 @@ const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
       </div>
 
       <div className="flex grow flex-col gap-0.5 px-2 pb-2">
-        <p className="truncate font-semibold">{recipe.title}</p>
+        <p className="clamp-2 font-semibold">{recipe.title}</p>
         <div className="flex items-center gap-[2px]">
           <Star size={15} className="fill-gray-800" />
           <p className="text-mm text-gray-800">{recipe.avgRating}</p>
