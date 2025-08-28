@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 
 import { formatPrice } from "@/shared/lib/format";
-import Box from "@/shared/ui/Box";
+import Box from "@/shared/ui/primitives/Box";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 import { FabButton } from "@/shared/ui/FabButton";
 import RequiredAmountDisplay from "@/shared/ui/PointDisplayBanner";
