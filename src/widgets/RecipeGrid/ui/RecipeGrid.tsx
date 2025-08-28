@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Pencil, Trash } from "lucide-react";
 
 import Circle from "@/shared/ui/Circle";
-import { DeleteModal } from "@/shared/ui/DeleteModal";
+import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 import { Drawer, DrawerContent } from "@/shared/ui/shadcn/drawer";
 
 import {
