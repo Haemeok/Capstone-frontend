@@ -1,10 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getRecipeItems } from "@/entities/recipe";
-import {
-  BaseRecipesApiResponse,
-  DetailedRecipesApiResponse,
-} from "@/entities/recipe/model/types";
 
 type UseRecipeItemsQueryParams = {
   key: string;
@@ -15,17 +11,14 @@ type UseRecipeItemsQueryParams = {
   dishType?: string | null;
 };
 
-export const useRecipeItemsQuery = (
-  {
-    key,
-    sort = "desc",
-    isAiGenerated,
-    tagNames,
-    q,
-    dishType,
-  }: UseRecipeItemsQueryParams,
-  initialData?: DetailedRecipesApiResponse
-) => {
+export const useRecipeItemsQuery = ({
+  key,
+  sort = "desc",
+  isAiGenerated,
+  tagNames,
+  q,
+  dishType,
+}: UseRecipeItemsQueryParams) => {
   const queryParams = { sort, isAiGenerated, tagNames, q, dishType };
   const queryKey = ["recipes", key, queryParams];
 
@@ -33,7 +26,6 @@ export const useRecipeItemsQuery = (
     queryKey,
     queryFn: () => getRecipeItems(queryParams),
     select: (data) => data.content,
-    initialData,
   });
 
   return {

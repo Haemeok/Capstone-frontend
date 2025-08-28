@@ -6,8 +6,6 @@ import { ChevronRight } from "lucide-react";
 
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
-import { DetailedRecipesApiResponse } from "@/entities/recipe/model/types";
-
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 import { useRecipeItemsQuery } from "./hooks";
@@ -18,7 +16,6 @@ type RecipeSlideProps = {
   isAiGenerated?: boolean;
   tagNames?: string[];
   to?: string;
-  initialData?: DetailedRecipesApiResponse;
 };
 
 const RecipeSlide = ({
@@ -27,21 +24,17 @@ const RecipeSlide = ({
   isAiGenerated,
   tagNames,
   to,
-  initialData,
 }: RecipeSlideProps) => {
   const router = useRouter();
   const {
     data: recipes,
     isLoading,
     error,
-  } = useRecipeItemsQuery(
-    {
-      key: queryKey,
-      isAiGenerated,
-      tagNames,
-    },
-    initialData
-  );
+  } = useRecipeItemsQuery({
+    key: queryKey,
+    isAiGenerated,
+    tagNames,
+  });
 
   const handleMoreClick = () => {
     if (to) {

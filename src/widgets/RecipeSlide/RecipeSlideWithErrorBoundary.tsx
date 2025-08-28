@@ -1,7 +1,5 @@
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 
-import { DetailedRecipesApiResponse } from "@/entities/recipe/model/types";
-
 import RecipeSlide from "./index";
 
 type RecipeSlideWithErrorBoundaryProps = {
@@ -10,7 +8,6 @@ type RecipeSlideWithErrorBoundaryProps = {
   isAiGenerated?: boolean;
   tagNames?: string[];
   to?: string;
-  initialData?: DetailedRecipesApiResponse;
 };
 
 const RecipeSlideWithErrorBoundary = (
