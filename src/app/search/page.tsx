@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
-
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
 import { SearchClient } from "@/widgets/SearchClient";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 type SearchPageProps = {
   searchParams: Promise<{
@@ -13,9 +16,7 @@ type SearchPageProps = {
   }>;
 };
 
-export async function generateMetadata({
-  searchParams,
-}: SearchPageProps): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: SearchPageProps) {
   const awaitedSearchParams = await searchParams;
   const query = awaitedSearchParams.q || "";
   if (query) {
@@ -38,13 +39,31 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       ? [awaitedSearchParams.tagNames]
       : [];
 
-  const initialRecipes = await getRecipesOnServer({
-    key: "search",
-    q: awaitedSearchParams.q,
-    sort: awaitedSearchParams.sort?.toLowerCase() === "asc" ? "asc" : "desc",
-    dishType: awaitedSearchParams.dishType,
-    tagNames,
+  const q = awaitedSearchParams.q || "";
+  const sortCode =
+    (awaitedSearchParams.sort || "DESC").toUpperCase() === "ASC"
+      ? "ASC"
+      : "DESC";
+  const dishTypeCode = awaitedSearchParams.dishType || null;
+  const tagCodes = tagNames;
+
+  const queryClient = new QueryClient();
+
+  queryClient.prefetchQuery({
+    queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q],
+    queryFn: () =>
+      getRecipesOnServer({
+        key: "search",
+        q,
+        sort: sortCode.toLowerCase() === "asc" ? "asc" : "desc",
+        dishType: dishTypeCode || undefined,
+        tagNames: tagCodes,
+      }),
   });
 
-  return <SearchClient initialRecipes={initialRecipes} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <SearchClient />
+    </HydrationBoundary>
+  );
 }

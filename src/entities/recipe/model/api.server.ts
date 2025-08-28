@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "@/shared/config/constants/api";
+import { cookies } from "next/headers";
 
 import {
   DetailedRecipesApiResponse,
@@ -26,7 +27,10 @@ export const getRecipesOnServer = async (
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 3600 },
+      headers: {
+        Cookie: cookies().toString(),
+      },
+      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -56,7 +60,10 @@ export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
   }
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 1800 },
+      headers: {
+        Cookie: cookies().toString(),
+      },
+      cache: "no-store",
     });
 
     if (!res.ok) {

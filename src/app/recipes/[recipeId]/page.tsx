@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { getRecipeOnServer } from "@/entities/recipe/model/api.server";
 import { mockRecipeData } from "@/entities/recipe/model/mockData";
-import { Recipe } from "@/entities/recipe/model/types";
+
 import {
   generateRecipeMetadata,
   generateNotFoundRecipeMetadata,
 } from "@/shared/lib/metadata";
 
 import RecipeDetailClient from "./components/RecipeDetailClient";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -42,19 +46,15 @@ export default async function RecipeDetailPage({
   const { recipeId } = await params;
   const numericRecipeId = Number(recipeId);
 
-  const recipe = await getRecipeOnServer(numericRecipeId);
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["recipe", numericRecipeId.toString()],
+    queryFn: () => getRecipeOnServer(numericRecipeId),
+  });
 
-  const useMockData =
-    process.env.NODE_ENV === "development" &&
-    process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
-
-  const displayRecipe = useMockData ? mockRecipeData : recipe;
-
-  if (!displayRecipe) {
-    notFound();
-  }
-
-  const baseRecipe = displayRecipe as Recipe;
-
-  return <RecipeDetailClient initialRecipe={baseRecipe} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <RecipeDetailClient recipeId={numericRecipeId} />
+    </HydrationBoundary>
+  );
 }
