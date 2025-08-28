@@ -12,11 +12,7 @@ import { useSearchResults } from "./hooks/useSearchResults";
 import { useSearchState } from "./hooks/useSearchState";
 import { SearchFilters } from "./ui/SearchFilters";
 
-type SearchClientProps = {
-  initialRecipes: DetailedRecipesApiResponse;
-};
-
-export const SearchClient = ({ initialRecipes }: SearchClientProps) => {
+export const SearchClient = () => {
   const {
     q,
     sort,
@@ -46,7 +42,6 @@ export const SearchClient = ({ initialRecipes }: SearchClientProps) => {
     sortCode,
     dishTypeCode,
     tagCodes,
-    initialRecipes,
   });
 
   const { isDrawerOpen, setIsDrawerOpen, drawerConfig, openDrawer } =
