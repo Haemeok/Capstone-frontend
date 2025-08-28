@@ -12,28 +12,20 @@ import { Label } from "@/shared/ui/shadcn/label";
 import { IngredientPayload } from "@/entities/ingredient";
 
 import { RecipeFormValues } from "../model/config";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
+import { ImageUploader } from "@/shared/ui/image/ImageUploader";
 
 type StepItemProps = {
   index: number;
-  stepId: string;
-  stepImagePreviewUrls: (string | null)[];
-  setStepImagePreviewUrls: React.Dispatch<
-    React.SetStateAction<(string | null)[]>
-  >;
-  stepFields: FieldArrayWithId<RecipeFormValues, "steps", "id">[];
   removeStep: (index: number) => void;
-  mainIngredients: IngredientPayload[];
+  isDeletable: boolean;
+  usedElsewhereLookup: Map<string, boolean>;
 };
 
 const StepItem = ({
   index,
-  stepId,
-  stepImagePreviewUrls,
-  setStepImagePreviewUrls,
-  stepFields,
   removeStep,
-  mainIngredients,
+  isDeletable,
+  usedElsewhereLookup,
 }: StepItemProps) => {
   const {
     control,
@@ -43,49 +35,18 @@ const StepItem = ({
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
 
-  const stepImageFileValue = useWatch({
+  const mainIngredients = useWatch({
     control,
-    name: `steps.${index}.imageFile`,
+    name: "ingredients",
+    defaultValue: [],
+  });
+  const stepIngredients = useWatch({
+    control,
+    name: `steps.${index}.ingredients`,
+    defaultValue: [],
   });
 
-  useEffect(() => {
-    const fileList = stepImageFileValue as FileList;
-    const actualFile = fileList?.[0];
-
-    const currentPreviewUrl = stepImagePreviewUrls[index] ?? null;
-
-    if (actualFile instanceof File) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newPreviewUrl = reader.result as string;
-        if (currentPreviewUrl !== newPreviewUrl) {
-          setStepImagePreviewUrls((prevUrls) => {
-            const newUrls = [...prevUrls];
-            newUrls[index] = newPreviewUrl;
-            return newUrls;
-          });
-        }
-      };
-      reader.readAsDataURL(actualFile);
-    }
-  }, [
-    stepImageFileValue,
-    index,
-    setStepImagePreviewUrls,
-    stepImagePreviewUrls,
-  ]);
-
-  const removeStepImage = () => {
-    setValue(`steps.${index}.imageFile`, null, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-    setStepImagePreviewUrls((prevUrls) => {
-      const newUrls = [...prevUrls];
-      newUrls[index] = null;
-      return newUrls;
-    });
-  };
+  const usedIngredientNamesInThisStep = stepIngredients.map((i) => i.name);
 
   const handleStepIngredientToggle = (
     ingredient: IngredientPayload,
@@ -119,65 +80,13 @@ const StepItem = ({
     });
   };
 
-  const usedIngredientNamesInThisStep = (
-    watch(`steps.${index}.ingredients`) || []
-  ).map((i) => i.name);
-
   return (
-    <div
-      key={stepId}
-      className="relative flex items-start gap-4 rounded-lg p-4 shadow-sm"
-    >
+    <div className="relative flex items-start gap-4 rounded-lg p-4 shadow-sm">
       <div className="bg-olive-light flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-semibold text-white">
         {index + 1}
       </div>
       <div className="flex-1">
-        <div className="mt-3">
-          <label className="block text-sm font-medium text-gray-700">
-            과정 이미지 (선택)
-          </label>
-          <div className="mt-1 flex items-center gap-3">
-            <div
-              className="flex h-24 w-24 cursor-pointer items-center relative justify-center rounded border border-dashed border-gray-300 bg-gray-50 text-gray-400 hover:bg-gray-100"
-              onClick={() =>
-                document.getElementById(`step-image-input-${index}`)?.click()
-              }
-            >
-              {stepImagePreviewUrls[index] ? (
-                <SuspenseImage
-                  src={stepImagePreviewUrls[index]!}
-                  alt={`Step ${index + 1} preview`}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <UploadIcon size={24} />
-              )}
-            </div>
-            <input
-              type="file"
-              id={`step-image-input-${index}`}
-              className="hidden"
-              accept="image/*"
-              {...register(`steps.${index}.imageFile`)}
-            />
-            {stepImagePreviewUrls[index] && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={removeStepImage}
-              >
-                삭제
-              </Button>
-            )}
-          </div>
-          {errors.steps?.[index]?.imageFile && (
-            <p className="mt-1 text-xs text-red-500">
-              {String(errors.steps[index]?.imageFile?.message) ||
-                "이미지 처리 중 오류"}
-            </p>
-          )}
-        </div>
+        <ImageUploader fieldName={`steps.${index}.image`} />
 
         <div className="mt-4 border-t pt-4">
           <h4 className="mb-2 text-sm font-medium text-gray-700">
@@ -189,19 +98,12 @@ const StepItem = ({
                 const isUsedInThisStep = usedIngredientNamesInThisStep.includes(
                   ingredient.name
                 );
-                const isUsedElsewhere = watch("steps").some(
-                  (s, stepIdx) =>
-                    index !== stepIdx &&
-                    (s.ingredients || []).some(
-                      (i) => i.name === ingredient.name
-                    )
-                );
+
+                const isUsedElsewhere =
+                  usedElsewhereLookup.get(ingredient.name) ?? false;
 
                 return (
-                  <div
-                    key={ingredient.name}
-                    className="flex items-center space-x-2"
-                  >
+                  <div key={ingredient.name} className="flex ...">
                     <Checkbox
                       id={`step-${index}-ing-${ingredient.name}`}
                       checked={isUsedInThisStep}
@@ -247,8 +149,8 @@ const StepItem = ({
           variant="ghost"
           size="icon"
           className="text-gray-400 hover:bg-red-100 hover:text-red-600"
-          onClick={() => stepFields.length > 1 && removeStep(index)}
-          disabled={stepFields.length <= 1}
+          onClick={() => removeStep(index)}
+          disabled={!isDeletable}
         >
           <X size={18} />
         </Button>

@@ -12,6 +12,7 @@ export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
     data: recipeData,
     isLoading,
     isError,
+    isSuccess,
     error,
     refetch,
   } = useSuspenseQuery<Recipe, Error>({
@@ -25,6 +26,7 @@ export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
     recipeData,
     isLoading,
     isError,
+    isSuccess,
     error,
     refetchRecipe: refetch,
   };
