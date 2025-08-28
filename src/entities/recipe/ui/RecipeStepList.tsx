@@ -1,4 +1,4 @@
-import Box from "@/shared/ui/Box";
+import Box from "@/shared/ui/primitives/Box";
 
 import { RecipeStep as RecipeStepType } from "@/entities/recipe";
 
