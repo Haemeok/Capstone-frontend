@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useFormContext, useWatch, FieldPath, get } from "react-hook-form";
+import { FieldPath, get,useFormContext, useWatch } from "react-hook-form";
+
 import { UploadIcon } from "lucide-react";
 
-import { RecipeFormValues } from "@/features/recipe-create/model/config";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 import { cn } from "@/shared/lib/utils";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
+
+import { RecipeFormValues } from "@/features/recipe-create/model/config";
 
 type ImageUploaderProps = {
   fieldName: FieldPath<RecipeFormValues>;

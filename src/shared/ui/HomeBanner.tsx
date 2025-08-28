@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { ChevronRight } from "lucide-react";
 
 import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
+
 import SuspenseImage from "./image/SuspenseImage";
 
 type HomeBannerProps = {

@@ -1,7 +1,9 @@
-import { useForm } from "react-hook-form";
-import { IngredientPayload } from "@/entities/ingredient";
-import type { AIRecipeFormValues } from "../model/schema";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { IngredientPayload } from "@/entities/ingredient";
+
+import type { AIRecipeFormValues } from "../model/schema";
 
 export const useAIRecipeForm = () => {
   const methods = useForm<AIRecipeFormValues>({

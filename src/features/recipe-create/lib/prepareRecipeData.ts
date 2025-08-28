@@ -1,3 +1,4 @@
+import { isOneOf } from "@/shared/lib/typeguards";
 import {
   ALLOWED_CONTENT_TYPES,
   FileInfoRequest,
@@ -7,7 +8,6 @@ import {
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { RecipeFormValues } from "../model/config";
-import { isOneOf } from "@/shared/lib/typeguards";
 
 export const prepareRecipeData = (formData: RecipeFormValues) => {
   const filesToUploadInfo: FileInfoRequest[] = [];

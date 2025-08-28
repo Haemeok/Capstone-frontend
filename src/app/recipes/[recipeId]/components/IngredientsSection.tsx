@@ -5,8 +5,8 @@ import { useState } from "react";
 import { Calculator, DollarSign } from "lucide-react";
 
 import { formatPrice } from "@/shared/lib/format";
-import Box from "@/shared/ui/primitives/Box";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
+import Box from "@/shared/ui/primitives/Box";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { Recipe } from "@/entities/recipe/model/types";

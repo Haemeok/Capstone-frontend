@@ -1,14 +1,14 @@
 "use client";
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Info, Star } from "lucide-react";
 
 import { useSort } from "@/shared/hooks/useSort";
 import { cn } from "@/shared/lib/utils";
 import BadgeButton from "@/shared/ui/BadgeButton";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 import PrevButton from "@/shared/ui/PrevButton";
 import RecipeSortButton from "@/shared/ui/RecipeSortButton";
 import RecipeSortDrawer from "@/shared/ui/RecipeSortDrawer";
@@ -18,7 +18,6 @@ import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 const MyFridgePage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

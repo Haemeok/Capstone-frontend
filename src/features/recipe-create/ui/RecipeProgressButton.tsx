@@ -1,6 +1,8 @@
 import React from "react";
-import { recipeFormSchema, RecipeFormValues } from "../model/config";
+
 import { FormProgressButton } from "@/shared/ui/form/FormProgressButton";
+
+import { recipeFormSchema, RecipeFormValues } from "../model/config";
 
 type RecipeProgressButtonProps = {
   isLoading: boolean;

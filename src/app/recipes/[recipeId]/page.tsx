@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
 
-import { getRecipeOnServer } from "@/entities/recipe/model/api.server";
-import { mockRecipeData } from "@/entities/recipe/model/mockData";
-
-import {
-  generateRecipeMetadata,
-  generateNotFoundRecipeMetadata,
-} from "@/shared/lib/metadata";
-
-import RecipeDetailClient from "./components/RecipeDetailClient";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+
+import {
+  generateNotFoundRecipeMetadata,
+  generateRecipeMetadata,
+} from "@/shared/lib/metadata";
+
+import { getRecipeOnServer } from "@/entities/recipe/model/api.server";
+import { mockRecipeData } from "@/entities/recipe/model/mockData";
+
+import RecipeDetailClient from "./components/RecipeDetailClient";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;

@@ -1,5 +1,5 @@
-import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import { cn } from "@/shared/lib/utils";
+import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 type ImageFallbackProps = {
   className?: string;

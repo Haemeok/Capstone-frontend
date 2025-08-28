@@ -11,8 +11,8 @@ import { ChevronLeft, ChevronRight, FlameKindling } from "lucide-react";
 
 import { formatPrice } from "@/shared/lib/format";
 import { getProductByPrice } from "@/shared/lib/recipe";
-import Box from "@/shared/ui/primitives/Box";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
+import Box from "@/shared/ui/primitives/Box";
 import SavingSection from "@/shared/ui/SavingSection";
 
 import { RecipeDailySummary } from "@/entities/user";

@@ -1,5 +1,6 @@
-import { Plus, X } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
+
+import { Plus, X } from "lucide-react";
 
 import type { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 

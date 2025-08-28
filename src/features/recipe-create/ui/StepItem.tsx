@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { FieldArrayWithId, useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 
-import { UploadIcon, X } from "lucide-react";
+import { X } from "lucide-react";
 
+import { ImageUploader } from "@/shared/ui/image/ImageUploader";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Label } from "@/shared/ui/shadcn/label";
@@ -12,7 +12,6 @@ import { Label } from "@/shared/ui/shadcn/label";
 import { IngredientPayload } from "@/entities/ingredient";
 
 import { RecipeFormValues } from "../model/config";
-import { ImageUploader } from "@/shared/ui/image/ImageUploader";
 
 type StepItemProps = {
   index: number;

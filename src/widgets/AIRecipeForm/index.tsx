@@ -1,24 +1,24 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { FormProvider } from "react-hook-form";
 
 import { ArrowLeft } from "lucide-react";
-
-import AIRecipeProgressButton from "./AIRecipeProgressButton";
 
 import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
 import {
   useAIRecipeForm,
   useAIRecipeGeneration,
 } from "@/features/recipe-create-ai";
+import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 
 import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
-import { FormProvider } from "react-hook-form";
-import DishTypeSection from "./DishTypeSection";
-import CookingTimeSection from "./CookingTimeSection";
-import ServingsCounter from "./ServingsCounter";
+
 import AiCharacterSection from "./AiCharacterSection";
-import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
+import AIRecipeProgressButton from "./AIRecipeProgressButton";
+import CookingTimeSection from "./CookingTimeSection";
+import DishTypeSection from "./DishTypeSection";
+import ServingsCounter from "./ServingsCounter";
 
 const AIRecipeForm = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

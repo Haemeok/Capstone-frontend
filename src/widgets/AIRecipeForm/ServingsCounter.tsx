@@ -1,6 +1,8 @@
-import { User } from "lucide-react";
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+
+import { User } from "lucide-react";
+
 import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 
 const ServingsCounter = () => {

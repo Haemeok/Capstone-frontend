@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/shared/ui/shadcn/button";
 
-interface CommentMoreButtonProps {
+type CommentMoreButtonProps = {
   recipeId: number;
-}
+};
 
-export function CommentMoreButton({ recipeId }: CommentMoreButtonProps) {
+const CommentMoreButton = ({ recipeId }: CommentMoreButtonProps) => {
   const router = useRouter();
 
   const handleNavigateToComments = () => {
@@ -24,4 +24,6 @@ export function CommentMoreButton({ recipeId }: CommentMoreButtonProps) {
       더 읽기
     </Button>
   );
-}
+};
+
+export default CommentMoreButton;

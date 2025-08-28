@@ -1,7 +1,7 @@
 import { useImageLoader } from "@/shared/hooks/useImageLoader";
+import { cn } from "@/shared/lib/utils";
 import ImageError from "@/shared/ui/image/ImageError";
 import ImageFallback from "@/shared/ui/image/ImageFallback";
-import { cn } from "@/shared/lib/utils";
 
 type ImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   src: string;

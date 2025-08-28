@@ -1,3 +1,6 @@
+import { useFormContext } from "react-hook-form";
+
+import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
 
 import { RecipeFormValues } from "@/features/recipe-create";
@@ -7,9 +10,8 @@ import IngredientSection from "@/features/recipe-create/ui/IngredientSection";
 import RecipeTitleWithImage from "@/features/recipe-create/ui/RecipeTitleWithImage";
 import Steps from "@/features/recipe-create/ui/Steps";
 import TagSection from "@/features/recipe-create/ui/TagSection";
-import { useFormContext } from "react-hook-form";
+
 import RecipeProgressButton from "./RecipeProgressButton";
-import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
 
 type RecipeFormLayoutProps = {
   handleMainIngredientRemoved: (ingredientName: string) => void;

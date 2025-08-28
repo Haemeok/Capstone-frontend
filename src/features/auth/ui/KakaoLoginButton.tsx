@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { END_POINTS } from "@/shared/config/constants/api";
 
 type KakaoLoginButtonProps = {

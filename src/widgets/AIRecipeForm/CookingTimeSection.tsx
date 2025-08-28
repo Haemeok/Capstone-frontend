@@ -1,3 +1,6 @@
+import React from "react";
+import { useFormContext, useWatch } from "react-hook-form";
+
 import { Clock } from "lucide-react";
 
 import {
@@ -6,8 +9,7 @@ import {
   COOKING_TIMES,
 } from "@/shared/config/constants/recipe";
 import SelectionSection from "@/shared/ui/SelectionSection";
-import React from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+
 import { type AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 
 const CookingTimeSection = () => {

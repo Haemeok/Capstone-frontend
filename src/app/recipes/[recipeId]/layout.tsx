@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 
-interface RecipeLayoutProps {
+type RecipeLayoutProps = {
   children: React.ReactNode;
   params: Promise<{ recipeId: string }>;
-}
+};
 
 export default async function RecipeLayout({
   children,

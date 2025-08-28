@@ -12,13 +12,13 @@ import { LockButton } from "@/features/recipe-visibility";
 
 import { useToastStore } from "@/widgets/Toast";
 
-interface RecipeInteractionButtonsProps {
+type RecipeInteractionButtonsProps = {
   recipe: Recipe;
-}
+};
 
-export default function RecipeInteractionButtons({
+const RecipeInteractionButtons = ({
   recipe,
-}: RecipeInteractionButtonsProps) {
+}: RecipeInteractionButtonsProps) => {
   const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipe.id);
   const { addToast } = useToastStore();
   const { user } = useUserStore();
@@ -72,4 +72,6 @@ export default function RecipeInteractionButtons({
       )}
     </div>
   );
-}
+};
+
+export default RecipeInteractionButtons;

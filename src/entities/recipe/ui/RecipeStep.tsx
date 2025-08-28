@@ -1,7 +1,7 @@
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 import IngredientIcon from "@/shared/ui/IngredientIcon";
 
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type RecipeStepProps = {
   stepIndex: number;

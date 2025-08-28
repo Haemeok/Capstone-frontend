@@ -1,12 +1,12 @@
 "use client";
 
 import { aiModels } from "@/shared/config/constants/aiModel";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 import {
   type AIModel,
   useAIRecipeGeneration,
 } from "@/features/recipe-create-ai";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 const AIModelSelection = () => {
   const { selectAI } = useAIRecipeGeneration();

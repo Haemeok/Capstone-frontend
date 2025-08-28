@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+
 import {
-  aiModels,
   type AIModelId,
+  aiModels,
   aiModelSteps,
 } from "@/shared/config/constants/aiModel";
 

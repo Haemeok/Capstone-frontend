@@ -1,17 +1,16 @@
 "use client";
 
 import React from "react";
-
 import { useRouter } from "next/navigation";
 
 import { EllipsisVertical } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
+import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
 
 type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;

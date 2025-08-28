@@ -6,7 +6,7 @@ import { gsap } from "gsap";
 
 import { useScrollContext } from "../lib/ScrollContext";
 
-interface UseScrollAnimateOptions {
+type UseScrollAnimateOptions = {
   triggerRef?: React.RefObject<HTMLElement | null>;
   start?: string;
   toggleActions?: string;
@@ -14,7 +14,7 @@ interface UseScrollAnimateOptions {
   yOffset?: number;
   duration?: number;
   ease?: string;
-}
+};
 
 const useScrollAnimate = <T extends HTMLElement>(
   options?: UseScrollAnimateOptions

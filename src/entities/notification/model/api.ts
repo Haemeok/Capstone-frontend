@@ -2,10 +2,7 @@ import { api } from "@/shared/api/client";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PAGE_SIZE } from "@/shared/config/constants/api";
 
-import type {
-  Notification,
-  NotificationResponse,
-} from "@/entities/notification/model/type";
+import type { NotificationResponse } from "@/entities/notification/model/type";
 
 export const NOTIFICATION_ENDPOINTS = {
   SOCKJS: "/ws/notifications",

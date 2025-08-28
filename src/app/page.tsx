@@ -1,5 +1,11 @@
-import HomeBanner from "@/shared/ui/HomeBanner";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+
 import { homeMetadata } from "@/shared/lib/metadata";
+import HomeBanner from "@/shared/ui/HomeBanner";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
@@ -7,12 +13,6 @@ import CategoryTabs from "@/widgets/CategoryTabs";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import { OnboardingSurveyModal } from "@/widgets/OnboardingSurveryModal";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
-
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
 
 export const metadata = homeMetadata;
 

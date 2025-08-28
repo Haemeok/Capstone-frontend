@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Image from "next/image";
 
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
