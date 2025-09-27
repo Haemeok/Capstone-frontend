@@ -22,7 +22,7 @@ export async function GET() {
       "redirect_uri",
       `${baseUrl}api/auth/callback/google`
     );
-    console.log(`${baseUrl}api/auth/callback/google`);
+
     googleAuthUrl.searchParams.append("response_type", "code");
     googleAuthUrl.searchParams.append("scope", "openid profile email");
     googleAuthUrl.searchParams.append("state", state);
