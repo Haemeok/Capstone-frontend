@@ -10,7 +10,7 @@ import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
+import { Image } from "@/shared/ui/image/Image";
 import PrevButton from "@/shared/ui/PrevButton";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
@@ -289,7 +289,7 @@ const NewIngredientsPage = () => {
                   }
                 >
                   <div className="mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                    <SuspenseImage
+                    <Image
                       src={ingredient.imageUrl ?? ""}
                       alt={ingredient.name}
                       className="h-full w-full object-cover"
@@ -354,7 +354,7 @@ const NewIngredientsPage = () => {
         <Button
           onClick={handleBulkAdd}
           disabled={bulkSelectedIds.size === 0 || isFetching}
-          className="bg-olive-mint fixed bottom-20 left-1/2 -translate-x-1/2 rounded-lg py-3 text-base font-semibold text-white shadow disabled:bg-gray-300 disabled:opacity-70"
+          className="bg-olive-mint fixed bottom-20 left-1/2 -translate-x-1/2 rounded-lg py-3 text-base font-bold text-white shadow disabled:bg-gray-300 disabled:opacity-70"
         >
           {bulkSelectedIds.size > 0
             ? `${bulkSelectedIds.size}개 선택 완료`

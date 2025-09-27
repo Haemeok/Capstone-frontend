@@ -26,11 +26,7 @@ const UserProfileDisplay = ({
         <div className="relative">
           <div className="h-24 w-24 overflow-hidden rounded-full">
             {user.profileImage ? (
-              <Image
-                src={user.profileImage}
-                alt={user.nickname}
-                className="object-cover rounded-full"
-              />
+              <Image src={user.profileImage} alt={user.nickname} />
             ) : (
               <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-100 border-2 border-gray-200">
                 <UserRound className="h-20 w-20 text-gray-300" />

@@ -2,8 +2,6 @@
 
 import React from "react";
 
-import { DetailedRecipesApiResponse } from "@/entities/recipe";
-
 import CategoryDrawer from "@/widgets/CategoryDrawer/CategoryDrawer";
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
@@ -32,7 +30,7 @@ export const SearchClient = () => {
   const {
     recipes,
     hasNextPage,
-    isFetching,
+
     ref,
     queryKeyString,
     noResults,

@@ -58,13 +58,13 @@ const RecipeSlide = ({
         </button>
       </div>
       <div
-        className="scrollbar-hide flex w-full gap-3 overflow-x-auto"
+        className="scrollbar-hide flex w-full gap-3 overflow-x-auto snap-x snap-mandatory"
         style={{ overflowY: "visible" }}
       >
         {isLoading ? (
           Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="flex-shrink-0">
-              <Skeleton className="h-[125px] w-[200px] rounded-xl " />
+              <Skeleton className="h-[200px] w-[200px] rounded-xl " />
               <div className="mt-2 space-y-2">
                 <Skeleton className="h-4 w-[200px]" />
                 <Skeleton className="h-4 w-[150px]" />
@@ -85,11 +85,8 @@ const RecipeSlide = ({
           recipes.map((item) => (
             <DetailedRecipeGridItem
               key={item.id}
-              recipe={{
-                ...item,
-                avgRating: 0,
-                ratingCount: 0,
-              }}
+              recipe={item}
+              className="basis-[200px] w-[200px] snap-start"
             />
           ))
         )}
