@@ -64,7 +64,7 @@ const ReviewPage = () => {
         >
           취소
         </button>
-        <h1 className="text-xl font-semibold">평가하기</h1>
+        <h1 className="text-xl font-bold">평가하기</h1>
       </header>
 
       <main className="flex-grow p-6">
@@ -77,7 +77,7 @@ const ReviewPage = () => {
             <Ratings
               starCount={5}
               precision={0.5}
-              allowHalf={true}
+              allowHalf
               value={rating}
               onChange={(value) => setRating(value)}
             />
@@ -99,7 +99,7 @@ const ReviewPage = () => {
                 height={32}
               />
               <div className="flex-grow">
-                <p className="font-semibold text-gray-800">{user?.nickname}</p>
+                <p className="font-bold text-gray-800">{user?.nickname}</p>
                 <textarea
                   className="text-dark mt-1 min-h-20 w-full resize-none placeholder-gray-400 focus:outline-none"
                   rows={3}
@@ -116,7 +116,7 @@ const ReviewPage = () => {
           disabled={submitDisabled}
           onClick={handleSubmit}
           className={cn(
-            "mt-4 flex w-full items-center justify-center rounded-lg py-3 font-semibold text-white",
+            "mt-4 flex w-full items-center justify-center rounded-lg py-3 font-bold text-white",
             "transition-all duration-300 ease-in-out",
             submitDisabled
               ? "bg-gray-300"

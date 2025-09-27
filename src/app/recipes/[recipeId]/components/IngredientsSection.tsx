@@ -44,7 +44,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   return (
     <Box className="flex flex-col gap-2">
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">재료</h2>
+        <h2 className="text-xl font-bold">재료</h2>
         <Button
           variant="ghost"
           size="sm"
@@ -96,7 +96,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
           pointText={displayConfig.bottomBanner.pointText}
           prefix={displayConfig.bottomBanner.prefix}
           suffix={displayConfig.bottomBanner.suffix}
-          containerClassName="flex items-center border-0 text-gray-400 p-0 font-semibold"
+          containerClassName="flex items-center border-0 text-gray-400 p-0 font-bold"
           textClassName={displayConfig.bottomBanner.textClassName}
           triggerAnimation={displayMode}
         />

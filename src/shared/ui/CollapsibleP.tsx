@@ -66,7 +66,7 @@ const CollapsibleP = ({ content }: CollapsiblePProps) => {
             <Button
               variant="ghost"
               size="sm"
-              className="mt-2 font-semibold text-[#526c04]"
+              className="mt-2 font-bold text-[#526c04]"
             >
               {isOpen ? (
                 <>

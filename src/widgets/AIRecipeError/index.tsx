@@ -40,7 +40,7 @@ const AIRecipeError = ({ error }: AIRecipeErrorProps) => {
           <div className="pt-4">
             <Button
               onClick={handleRetry}
-              className="w-full h-12 bg-olive-mint hover:bg-olive-mint/90 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
+              className="w-full h-12 bg-olive-mint hover:bg-olive-mint/90 text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
             >
               <RotateCcw className="mr-2 h-5 w-5" />
               다시 시도하기

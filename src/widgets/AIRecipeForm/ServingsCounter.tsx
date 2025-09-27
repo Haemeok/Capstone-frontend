@@ -31,7 +31,7 @@ const ServingsCounter = () => {
         <span className="text-olive-mint">
           <User size={18} />
         </span>
-        <h2 className="text-lg font-semibold text-gray-800">인분</h2>
+        <h2 className="text-lg font-bold text-gray-800">인분</h2>
       </div>
       <div className="flex items-center justify-center gap-4">
         <button

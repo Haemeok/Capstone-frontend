@@ -92,9 +92,7 @@ const CommentCard = ({
               size={16}
               className="transition-all duration-250 group-hover:scale-120 group-hover:fill-slate-500"
             />
-            <span className={`text-sm font-semibold`}>
-              {comment.replyCount}
-            </span>
+            <span className={`text-sm font-bold`}>{comment.replyCount}</span>
           </button>
         )}
       </div>

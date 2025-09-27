@@ -43,7 +43,7 @@ const CookingToolsInput = () => {
 
   return (
     <div className="mb-6">
-      <h2 className="text-xl font-semibold text-gray-700">조리도구</h2>
+      <h2 className="text-xl font-bold text-gray-700">조리도구</h2>
       <div className="rounded-xl bg-white p-4 shadow-sm">
         <div className="mb-3 flex flex-wrap gap-2">
           {cookingToolsValue.map((tool) => (

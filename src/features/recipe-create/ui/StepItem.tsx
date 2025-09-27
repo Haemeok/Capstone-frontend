@@ -81,7 +81,7 @@ const StepItem = ({
 
   return (
     <div className="relative flex items-start gap-4 rounded-lg p-4 shadow-sm">
-      <div className="bg-olive-light flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-semibold text-white">
+      <div className="bg-olive-light flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-bold text-white">
         {index + 1}
       </div>
       <div className="flex-1">

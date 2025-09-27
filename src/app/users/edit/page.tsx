@@ -110,7 +110,7 @@ const UserInfoChangePage = () => {
         <button
           type="button"
           onClick={handleCancel}
-          className="text-olive-mint cursor-pointer border-none bg-transparent text-base font-semibold"
+          className="text-olive-mint cursor-pointer border-none bg-transparent text-base font-bold"
         >
           취소
         </button>
@@ -119,7 +119,7 @@ const UserInfoChangePage = () => {
           type="button"
           onClick={handleSubmit(onSubmit)}
           disabled={!isValid || isLoading}
-          className={`border-none bg-transparent text-base font-semibold ${
+          className={`border-none bg-transparent text-base font-bold ${
             isValid && !isLoading
               ? "text-olive-mint cursor-pointer"
               : "cursor-default text-gray-400"

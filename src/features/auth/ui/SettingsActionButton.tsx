@@ -38,13 +38,13 @@ const SettingsActionButton = () => {
             <DrawerFooter className="gap-0">
               <button
                 onClick={handleLogoutClick}
-                className="flex items-center justify-center gap-1 border-t-1 border-gray-200 px-4 py-2 font-semibold text-red-500"
+                className="flex items-center justify-center gap-1 border-t-1 border-gray-200 px-4 py-2 font-bold text-red-500"
               >
                 <LogOut size={16} className="mr-1" />
                 <p>로그아웃</p>
               </button>
               <DrawerClose asChild>
-                <button className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-semibold">
+                <button className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-bold">
                   닫기
                 </button>
               </DrawerClose>

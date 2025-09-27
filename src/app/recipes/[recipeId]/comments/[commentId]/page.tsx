@@ -70,7 +70,7 @@ const DiscussionPage = () => {
         {parentComment ? (
           <CommentCard
             comment={parentComment}
-            hideReplyButton={true}
+            hideReplyButton
             recipeId={Number(recipeId)}
           />
         ) : (
@@ -88,7 +88,7 @@ const DiscussionPage = () => {
                 <span className="text-sm font-medium text-gray-500">
                   {data?.pages[0].replies.page.totalElements}개의 답글
                 </span>
-                <div className="flex items-center text-sm font-semibold">
+                <div className="flex items-center text-sm font-bold">
                   <button
                     className={cn(
                       "text-gray-400",
@@ -116,7 +116,7 @@ const DiscussionPage = () => {
                   <CommentCard
                     key={reply.id}
                     comment={reply}
-                    hideReplyButton={true}
+                    hideReplyButton
                     recipeId={Number(recipeId)}
                   />
                 ))}
