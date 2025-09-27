@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { Image } from "@/shared/ui/image/Image";
 
 import { Bookmark, Star } from "lucide-react";
 
@@ -28,18 +28,19 @@ type SlideShowCarouselProps = {
 
 const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
   const [api, setApi] = useState<CarouselApi>();
-  
+
   const { mutate: toggleRecipeFavorite } = useToggleRecipeFavorite(recipe.id);
   const { addToast } = useToastStore();
 
   const TOTAL_STEPS = recipe.steps.length + 1;
   const recipeSteps = recipe.steps;
 
-  const { scrollProgress, handleProgressClick, getStepProgress } = useSlideShowProgress({
-    api,
-    totalSteps: TOTAL_STEPS,
-    recipeStepsLength: recipeSteps.length,
-  });
+  const { scrollProgress, handleProgressClick, getStepProgress } =
+    useSlideShowProgress({
+      api,
+      totalSteps: TOTAL_STEPS,
+      recipeStepsLength: recipeSteps.length,
+    });
 
   const handleToggleFavorite = () => {
     const message = recipe.favoriteByCurrentUser
@@ -83,7 +84,6 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
                   src={recipe.imageUrl}
                   alt={recipe.title}
                   className="object-cover"
-                  fill
                 />
               </div>
               <p className="text-lg text-dark text-center mb-6">

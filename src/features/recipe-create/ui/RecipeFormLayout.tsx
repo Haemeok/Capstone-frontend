@@ -7,11 +7,14 @@ import { RecipeFormValues } from "@/features/recipe-create";
 import CookingToolsInput from "@/features/recipe-create/ui/CookingToolsInput";
 import Description from "@/features/recipe-create/ui/Description";
 import IngredientSection from "@/features/recipe-create/ui/IngredientSection";
-import RecipeTitleWithImage from "@/features/recipe-create/ui/RecipeTitleWithImage";
 import Steps from "@/features/recipe-create/ui/Steps";
 import TagSection from "@/features/recipe-create/ui/TagSection";
 
 import RecipeProgressButton from "./RecipeProgressButton";
+import RecipeHeaderSection from "@/features/recipe-create/ui/RecipeHeaderSection";
+import { TitleField } from "../form/fields/TitleField";
+import { MainImageField } from "../form/fields/MainImageField";
+import ServingCounter from "./ServingCounter";
 
 type RecipeFormLayoutProps = {
   handleMainIngredientRemoved: (ingredientName: string) => void;
@@ -35,17 +38,14 @@ const RecipeFormLayout = ({
 
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
-      <RecipeTitleWithImage />
+      <RecipeHeaderSection image={<MainImageField />} title={<TitleField />} />
 
       <div className="mx-auto max-w-3xl px-4 pt-6">
         <Description />
 
-        <div className="flex items-center justify-center gap-x-8 gap-y-6 border-b border-gray-200">
+        <div className="flex items-center mb-4 justify-center gap-x-8 gap-y-6 ">
           <div className="flex flex-col items-center gap-2">
-            <label
-              htmlFor="dishType"
-              className="text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="dishType" className="font-medium text-gray-700">
               카테고리
             </label>
             <select
@@ -76,10 +76,7 @@ const RecipeFormLayout = ({
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <label
-              htmlFor="cookingTime"
-              className="text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="cookingTime" className=" font-medium text-gray-700">
               조리시간 (분)
             </label>
             <input
@@ -103,40 +100,8 @@ const RecipeFormLayout = ({
               </p>
             )}
           </div>
-
-          <div className="flex flex-col items-center gap-2">
-            <label
-              htmlFor="servings"
-              className="text-sm font-medium text-gray-700"
-            >
-              인분
-            </label>
-            <input
-              id="servings"
-              type="number"
-              className={cn(
-                "w-20 rounded-lg border bg-gray-50 px-3 py-1.5 text-center text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                errors.servings
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-gray-300"
-              )}
-              {...register("servings", {
-                required: "인분을 선택해주세요",
-                valueAsNumber: true,
-                validate: (value) =>
-                  Number(value) > 0 || "1인분 이상 선택해주세요.",
-              })}
-              min="1"
-              placeholder="숫자"
-              defaultValue={1}
-            />
-            {errors.servings && (
-              <p className="mt-1 text-center text-xs text-red-500">
-                {errors.servings.message}
-              </p>
-            )}
-          </div>
         </div>
+        <ServingCounter />
 
         <IngredientSection
           onRemoveIngredientCallback={handleMainIngredientRemoved}
