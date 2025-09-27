@@ -18,7 +18,7 @@ const CommentMoreButton = ({ recipeId }: CommentMoreButtonProps) => {
   return (
     <Button
       variant="ghost"
-      className="text-olive-medium cursor-pointer font-semibold"
+      className="text-olive-medium cursor-pointer font-bold"
       onClick={handleNavigateToComments}
     >
       더 읽기

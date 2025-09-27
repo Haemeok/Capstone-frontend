@@ -45,7 +45,7 @@ const PWAInstallModal = ({
             />
           </div>
           <div className="space-y-2">
-            <DialogTitle className="text-lg font-semibold text-gray-900">
+            <DialogTitle className="text-lg font-bold text-gray-900">
               해먹 앱 설치
             </DialogTitle>
             <DialogDescription className="text-sm text-gray-500 leading-relaxed">

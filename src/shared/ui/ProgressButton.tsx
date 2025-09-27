@@ -35,7 +35,7 @@ const ProgressButton = ({
       ></div>
 
       <Button
-        className="group relative z-10 w-full cursor-pointer bg-transparent py-6 text-lg font-semibold transition-none hover:bg-transparent"
+        className="group relative z-10 w-full cursor-pointer bg-transparent py-6 text-lg font-bold transition-none hover:bg-transparent"
         disabled={!isFormValid || isLoading}
         type="submit"
         onClick={onClick}

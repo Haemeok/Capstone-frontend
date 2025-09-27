@@ -67,11 +67,7 @@ const IngredientSection = ({
 
   return (
     <div className="mb-4">
-      {ingredientFields.length > 0 && (
-        <div className="flex h-16 items-center justify-between border-b border-gray-200 pb-2">
-          <h2 className="text-xl font-semibold text-gray-700">재료</h2>
-        </div>
-      )}
+      <h2 className="text-xl font-bold text-gray-700">재료</h2>
 
       <div className="space-y-3 pt-4">
         {ingredientFields.map((field, index) => (

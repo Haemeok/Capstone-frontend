@@ -36,7 +36,7 @@ const CateGoryItem = ({ name, imageUrl, className }: CateGoryItemProps) => {
         height={280}
       />
       <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent p-2">
-        <p className="truncate px-2 text-lg font-semibold text-white">{name}</p>
+        <p className="truncate px-2 text-lg font-bold text-white">{name}</p>
       </div>
     </div>
   );

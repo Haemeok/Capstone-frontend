@@ -52,14 +52,14 @@ const RecipeDetailClient = ({ recipeId }: RecipeDetailClientProps) => {
 
         <Box>
           <div className="flex items-center justify-between">
-            <h2 className="mb-2 text-xl font-semibold">코멘트</h2>
+            <h2 className="mb-2 text-xl font-bold">코멘트</h2>
             <CommentMoreButton recipeId={recipe.id} />
           </div>
           {recipe.comments.length > 0 && (
             <CommentCard
               comment={recipe.comments[0]}
               recipeId={recipe.id}
-              hideReplyButton={true}
+              hideReplyButton
             />
           )}
         </Box>

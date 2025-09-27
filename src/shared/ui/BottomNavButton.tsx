@@ -20,7 +20,7 @@ const BottomNavButton = ({ icon, label, path }: BottomNavButtonProps) => {
       onClick={() => router.push(path)}
     >
       {icon}
-      <span className="text-xs font-semibold">{label}</span>
+      <span className="text-xs font-bold">{label}</span>
     </button>
   );
 };

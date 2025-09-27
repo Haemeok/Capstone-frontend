@@ -58,7 +58,7 @@ const CommentsPage = () => {
           <span className="text-sm font-medium text-gray-500">
             {data?.pages[0].page.totalElements}개의 댓글
           </span>
-          <div className="flex items-center text-sm font-semibold">
+          <div className="flex items-center text-sm font-bold">
             <button
               className={cn(
                 "text-gray-400",

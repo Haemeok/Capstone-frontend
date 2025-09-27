@@ -42,7 +42,7 @@ export const DeleteModal = ({
           </DialogClose>
           <div className="h-[1px] w-full bg-gray-200"></div>
           <button
-            className="my-2 rounded-md px-4 font-semibold text-red-600"
+            className="my-2 rounded-md px-4 font-bold text-red-600"
             onClick={onConfirm}
           >
             {confirmLabel}

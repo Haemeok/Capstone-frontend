@@ -50,7 +50,7 @@ const CalendarDetailPage = () => {
               <h1 className="text-lg font-bold">{item.recipeTitle}</h1>
               <div className="flex flex-col">
                 <p className="text-sm text-slate-500">이 레시피로</p>
-                <p className="text-olive-mint text-mm font-semibold">
+                <p className="text-olive-mint text-mm font-bold">
                   {formatPrice(item.savings)}원을 절약했어요
                 </p>
               </div>

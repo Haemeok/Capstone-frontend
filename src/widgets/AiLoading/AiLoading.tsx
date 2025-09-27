@@ -48,7 +48,7 @@ const AiLoading = ({ aiModelId }: AiLoadingProps) => {
 
       <div className="max-w-sm text-center space-y-3">
         <div className="bg-olive-mint/10 rounded-2xl p-4">
-          <p className="text-olive-mint font-semibold mb-2">💡 잠깐!</p>
+          <p className="text-olive-mint font-bold mb-2">💡 잠깐!</p>
           <p className="text-gray-700 text-sm leading-relaxed">
             다른 작업을 해도 괜찮아요!
             <br />

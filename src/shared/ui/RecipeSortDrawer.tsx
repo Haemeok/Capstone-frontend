@@ -34,7 +34,8 @@ const RecipeSortDrawer = ({
   header = "정렬 방식 선택",
   description,
 }: RecipeSortDrawerProps) => {
-  const [internalSelection, setInternalSelection] = useState<string>(currentSort);
+  const [internalSelection, setInternalSelection] =
+    useState<string>(currentSort);
 
   useEffect(() => {
     if (open) {
@@ -58,7 +59,7 @@ const RecipeSortDrawer = ({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="flex w-full flex-col sm:max-w-lg">
         <DrawerHeader className="text-left">
-          <DrawerTitle className="text-xl font-semibold">{header}</DrawerTitle>
+          <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
           {description && (
             <DrawerDescription className="text-md text-gray-500">
               {description}
