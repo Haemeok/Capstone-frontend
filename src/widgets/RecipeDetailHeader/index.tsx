@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
+import Image from "next/image";
 import Ratings from "@/shared/ui/Ratings";
 
 import { Recipe } from "@/entities/recipe/model/types";
@@ -41,21 +41,22 @@ const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
       />
 
       <div ref={imageRef} className="h-112 w-full">
-        <SuspenseImage
+        <Image
           src={recipe.imageUrl}
           alt={recipe.title}
           className="h-full w-full object-cover"
+          priority
         />
       </div>
 
       <div className="cursor-pointer mt-4" onClick={handleNavigateToRating}>
         <Ratings
           precision={0.1}
-          allowHalf={true}
+          allowHalf
           value={recipe.ratingInfo.avgRating || 0}
-          readOnly={true}
+          readOnly
           className="w-full justify-center"
-          showValue={true}
+          showValue
           ratingCount={recipe.ratingInfo.ratingCount}
         />
       </div>

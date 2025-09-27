@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
-import Image from "next/image";
+import { Image } from "@/shared/ui/image/Image";
 import { useRouter } from "next/navigation";
 
 import { format } from "date-fns";
@@ -70,7 +70,7 @@ const CalendarTabContent = () => {
           pointText={`${userStreak?.streak ?? 0}일`}
           prefix="해먹 서비스를"
           suffix="연속 사용 중이에요!"
-          textClassName="text-purple-500 font-semibold"
+          textClassName="text-purple-500 font-bold"
           icon={
             <FlameKindling
               size={16}

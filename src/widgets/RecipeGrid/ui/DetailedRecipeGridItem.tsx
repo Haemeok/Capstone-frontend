@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
@@ -8,7 +7,7 @@ import { Star } from "lucide-react";
 
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
+import { Image } from "@/shared/ui/image/Image";
 
 import {
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
@@ -21,9 +20,13 @@ import { RecipeLikeButton } from "@/features/recipe-like";
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
+  className?: string;
 };
 
-const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
+const DetailedRecipeGridItem = ({
+  recipe,
+  className,
+}: DetailedRecipeGridItemProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -45,17 +48,17 @@ const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
   return (
     <div
       className={cn(
-        `relative flex w-55 h-84 shrink-0 flex-col gap-2 rounded-2xl cursor-pointer`
+        `relative flex shrink-0 flex-col gap-2 rounded-2xl cursor-pointer`,
+        className
       )}
       onClick={handleClick}
       key={recipe.id}
     >
-      <SuspenseImage
+      <Image
         src={imageUrl}
         alt={recipe.title}
-        width={208}
-        height={208}
-        className={cn(`relative h-52 min-h-52 w-full rounded-2xl object-cover`)}
+        wrapperClassName={cn(`rounded-2xl`)}
+        fit="cover"
       />
 
       <div className="absolute top-0 right-0 p-2 text-right">
@@ -69,7 +72,7 @@ const DetailedRecipeGridItem = ({ recipe }: DetailedRecipeGridItemProps) => {
       </div>
 
       <div className="flex grow flex-col gap-0.5 px-2 pb-2">
-        <p className="clamp-2 font-semibold">{recipe.title}</p>
+        <p className="line-clamp-2 font-bold ">{recipe.title}</p>
         <div className="flex items-center gap-[2px]">
           <Star size={15} className="fill-gray-800" />
           <p className="text-mm text-gray-800">{recipe.avgRating}</p>

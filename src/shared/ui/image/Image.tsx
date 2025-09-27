@@ -1,63 +1,100 @@
-import { useImageLoader } from "@/shared/hooks/useImageLoader";
-import { cn } from "@/shared/lib/utils";
-import ImageError from "@/shared/ui/image/ImageError";
-import ImageFallback from "@/shared/ui/image/ImageFallback";
+"use client";
 
-type ImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
-  src: string;
-  alt?: string;
-  fallback?: React.ReactNode;
+import React, { forwardRef, useMemo } from "react";
+import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
+import { useImageStatus } from "@/shared/hooks/useImageStatus";
+import { Skeleton } from "../shadcn/skeleton";
+
+type Fit = "cover" | "contain";
+
+type ImageProps = Omit<
+  React.ImgHTMLAttributes<HTMLImageElement>,
+  "onLoad" | "onError" | "loading"
+> & {
+  lazy?: boolean;
+  priority?: boolean;
+  aspectRatio?: `${number} / ${number}` | number;
+  width?: number;
+  height?: number;
+  skeleton?: React.ReactNode;
   errorFallback?: React.ReactNode;
-  errorMessage?: string;
-  loadingClassName?: string;
-  errorClassName?: string;
-  ref?: React.Ref<HTMLImageElement>;
+  inViewThreshold?: number;
+  inViewRootMargin?: string;
+  wrapperClassName?: string;
+  imgClassName?: string;
+  fit?: Fit;
 };
 
-export const Image = ({
-  src,
-  alt = "이미지",
-  fallback,
-  errorFallback,
-  errorMessage,
-  className,
-  loadingClassName,
-  errorClassName,
-  ref,
-  ...imgProps
-}: ImageProps) => {
-  const { isLoading, isLoaded, hasError } = useImageLoader(src);
+export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
+  {
+    src,
+    alt = "이미지",
+    lazy = true,
+    priority = false,
+    aspectRatio = "1 / 1",
+    width,
+    height,
+    fit = "cover",
+    skeleton,
+    errorFallback,
+    inViewThreshold,
+    inViewRootMargin,
+    wrapperClassName,
+    imgClassName,
+    ...imgProps
+  },
+  forwardedRef
+) {
+  const { ref: viewportRef, inView } = useInViewOnce({
+    threshold: inViewThreshold,
+    rootMargin: inViewRootMargin,
+  });
+  const actualSrc = useMemo(
+    () => (lazy ? (inView ? src : undefined) : src),
+    [lazy, inView, src]
+  );
 
-  if (hasError) {
-    return (
-      errorFallback || (
-        <ImageError
-          message={errorMessage}
-          className={cn(errorClassName, className)}
-        />
-      )
-    );
-  }
+  const { status, handleImageLoad, handleImageError } = useImageStatus(
+    typeof actualSrc === "string" ? actualSrc : undefined
+  );
 
-  if (isLoading) {
-    return (
-      fallback || (
-        <ImageFallback className={cn(loadingClassName, className)} />
-      )
-    );
-  }
+  const wrapperStyle: React.CSSProperties = {
+    ...(typeof width === "number" ? { width } : null),
+    ...(typeof height === "number" ? { height } : null),
+    aspectRatio: String(aspectRatio),
+  };
+
+  const fitClass = fit === "cover" ? "object-cover" : "object-contain";
 
   return (
-    <img
-      ref={ref}
-      src={src}
-      alt={alt}
-      className={cn(
-        "opacity-0 transition-opacity duration-300 ease-in-out",
-        isLoaded && "opacity-100",
-        className
-      )}
-      {...imgProps}
-    />
+    <div
+      ref={viewportRef}
+      style={wrapperStyle}
+      className={`relative overflow-hidden ${wrapperClassName ?? ""}`}
+    >
+      {status !== "loaded" &&
+        (skeleton ?? <Skeleton className="absolute inset-0" />)}
+
+      {status === "error" &&
+        (errorFallback ?? (
+          <div className="absolute inset-0 grid place-items-center bg-gray-100 text-gray-400">
+            이미지 로드 실패
+          </div>
+        ))}
+
+      <img
+        ref={forwardedRef}
+        src={actualSrc}
+        alt={alt}
+        loading={lazy ? "lazy" : priority ? "eager" : undefined}
+        decoding="async"
+        onLoad={handleImageLoad}
+        onError={handleImageError}
+        className={`absolute inset-0 h-full w-full ${fitClass} transition-opacity duration-300 ${
+          status === "loaded" ? "opacity-100" : "opacity-0"
+        } ${imgClassName ?? ""}`}
+        {...imgProps}
+      />
+    </div>
   );
-};
+});
