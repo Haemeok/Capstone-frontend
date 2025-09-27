@@ -1,0 +1,21 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3000/",
+        "http://localhost:3000/search?q=%EA%B9%80%EC%B9%98%EC%B0%8C%EA%B0%9C"
+      ],
+      "numberOfRuns": 3
+    },
+    "assert": {
+      "assertions": {
+        "first-contentful-paint": ["error", { "maxNumericValue": 2000 }],
+        "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
+        "total-blocking-time": ["error", { "maxNumericValue": 200 }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
+        "categories:seo": ["error", { "minScore": 1 }]
+      }
+    },
+    "upload": { "target": "temporary-public-storage" }
+  }
+}
