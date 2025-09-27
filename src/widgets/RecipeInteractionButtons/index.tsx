@@ -54,7 +54,7 @@ const RecipeInteractionButtons = ({
         initialLikeCount={recipe.likeCount}
         buttonClassName="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
         isOnNavbar={false}
-        isCountShown={true}
+        isCountShown
       />
       <SaveButton
         className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"

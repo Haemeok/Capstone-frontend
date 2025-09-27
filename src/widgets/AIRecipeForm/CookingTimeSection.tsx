@@ -30,7 +30,7 @@ const CookingTimeSection = () => {
       items={COOKING_TIMES}
       selectedItems={COOKING_TIME_ITEMS_KEYS[cookingTime]}
       onToggle={toggleTime}
-      isSingleSelect={true}
+      isSingleSelect
     />
   );
 };
