@@ -27,9 +27,14 @@ export const getRecipesOnServer = async (
   const API_URL = `${BASE_API_URL}/recipes/search?${query.toString()}`;
 
   try {
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore
+      .getAll()
+      .map(({ name, value }) => `${name}=${value}`)
+      .join("; ");
     const res = await fetch(API_URL, {
       headers: {
-        Cookie: cookies().toString(),
+        Cookie: cookieHeader,
       },
       cache: "no-store",
     });
@@ -60,9 +65,14 @@ export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
     return null;
   }
   try {
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore
+      .getAll()
+      .map(({ name, value }) => `${name}=${value}`)
+      .join("; ");
     const res = await fetch(API_URL, {
       headers: {
-        Cookie: cookies().toString(),
+        Cookie: cookieHeader,
       },
       cache: "no-store",
     });
