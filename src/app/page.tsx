@@ -40,9 +40,6 @@ const HomePage = async () => {
     }),
   ]);
 
-  console.log("dehydrate", dehydrate(queryClient));
-  console.log("queryClient", queryClient.getQueryData(["ai-recipes"]));
-
   return (
     <div className="flex flex-col items-center justify-center gap-4 bg-white p-4 text-gray-800">
       <HomeHeader />
@@ -57,7 +54,7 @@ const HomePage = async () => {
         <RecipeSlideWithErrorBoundary
           title="AI가 추천하는 레시피"
           queryKey="ai-recipes"
-          isAiGenerated={true}
+          isAiGenerated
           to="/recipes/ai"
         />
 

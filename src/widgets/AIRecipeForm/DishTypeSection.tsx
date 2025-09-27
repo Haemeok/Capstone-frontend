@@ -21,7 +21,7 @@ const DishTypeSection = () => {
       items={DISH_TYPES}
       selectedItems={dishType ? dishType : ""}
       onToggle={toggleCategory}
-      isSingleSelect={true}
+      isSingleSelect
     />
   );
 };

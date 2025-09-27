@@ -43,7 +43,7 @@ const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
   return (
     <RecipeGrid
       recipes={recipes}
-      isSimple={true}
+      isSimple
       hasNextPage={hasNextPage}
       isFetching={isFetching}
       noResults={recipes.length === 0 && !isFetching}
