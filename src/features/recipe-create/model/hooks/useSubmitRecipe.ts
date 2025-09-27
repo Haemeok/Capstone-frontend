@@ -30,18 +30,13 @@ export const useSubmitRecipe = () => {
         ? editRecipe({ recipe: recipeData, files: filesToUploadInfo, recipeId })
         : postRecipe({ recipe: recipeData, files: filesToUploadInfo }));
 
-      (async () => {
-        try {
-          if (fileObjects.length > 0) {
-            await handleS3Upload(presignedUrlResponse.uploads, fileObjects);
-          }
-          finalizeRecipeMutation.mutate(presignedUrlResponse.recipeId);
+      if (fileObjects.length > 0) {
+        await handleS3Upload(presignedUrlResponse.uploads, fileObjects);
+      }
 
-          await queryClient.invalidateQueries({ queryKey: ["recipes"] });
-        } catch (error) {
-          console.error("백그라운드 파일 업로드 또는 최종 확정 실패:", error);
-        }
-      })();
+      finalizeRecipeMutation.mutate(presignedUrlResponse.recipeId);
+
+      queryClient.invalidateQueries({ queryKey: ["recipes"] });
 
       return presignedUrlResponse;
     },

@@ -1,8 +1,17 @@
 import { z } from "zod";
+import {
+  COOKING_TIME,
+  DESCRIPTION,
+  INGREDIENTS,
+  SERVINGS,
+  TITLE,
+} from "./constants";
+import { STEPS } from "./constants";
+import { MSG } from "./messages";
 
 const imageSchema = z
   .union([
-    z.instanceof(File, { message: "레시피 대표 이미지를 등록해주세요" }),
+    z.instanceof(File, { message: MSG.IMAGE.REQUIRED }),
     z.url(),
     z.null(),
   ])
@@ -10,7 +19,7 @@ const imageSchema = z
 
 const ingredientSchema = z.object({
   name: z.string(),
-  quantity: z.string().min(1, "수량을 입력해주세요"),
+  quantity: z.string().min(1, MSG.DESCRIPTION.QUANTITY),
   unit: z.string(),
 });
 
@@ -21,7 +30,7 @@ const stepIngredientSchema = z.object({
 });
 
 const stepSchema = z.object({
-  instruction: z.string().min(1, "조리 방법을 입력해주세요"),
+  instruction: z.string().min(1, MSG.STEPS.INSTRUCTION),
   stepNumber: z.number().min(0),
   image: imageSchema,
   ingredients: z.array(stepIngredientSchema).default([]),
@@ -29,16 +38,16 @@ const stepSchema = z.object({
 });
 
 export const recipeFormSchema = z.object({
-  title: z.string().min(5, "제목은 5자 이상 입력해주세요"),
+  title: z.string().min(TITLE.MIN, MSG.TITLE.MIN),
   image: imageSchema,
   ingredients: z
     .array(ingredientSchema)
-    .min(1, "최소 1개의 재료를 추가해주세요"),
-  cookingTime: z.coerce.number().min(1, "1분 이상 입력해주세요"),
-  servings: z.coerce.number().min(1, "1인분 이상 선택해주세요"),
-  dishType: z.string().min(1, "카테고리를 선택해주세요"),
-  description: z.string().min(10, "설명은 10자 이상 입력해주세요"),
-  steps: z.array(stepSchema).min(1, "최소 1개의 조리 단계를 추가해주세요"),
+    .min(INGREDIENTS.MIN, MSG.INGREDIENTS.MIN),
+  cookingTime: z.coerce.number().min(COOKING_TIME.MIN, MSG.COOKING_TIME.MIN),
+  servings: z.coerce.number().min(SERVINGS.MIN, MSG.SERVINGS.MIN),
+  dishType: z.string().min(1, MSG.CATEGORY.REQUIRED),
+  description: z.string().min(DESCRIPTION.MIN, MSG.DESCRIPTION.MIN),
+  steps: z.array(stepSchema).min(STEPS.MIN, MSG.STEPS.MIN),
   cookingTools: z.array(z.string()).default([]),
   tagNames: z.array(z.string()).default([]),
   imageKey: z.string().optional().nullable(),
@@ -47,6 +56,7 @@ export const recipeFormSchema = z.object({
 export type RecipeFormValues = z.infer<typeof recipeFormSchema>;
 export type IngredientPayload = z.infer<typeof ingredientSchema>;
 export type StepPayload = z.infer<typeof stepSchema>;
+export type ImageType = z.infer<typeof imageSchema>;
 
 export const RECIPE_FORM_DEFAULT_VALUES: RecipeFormValues = {
   title: "",
