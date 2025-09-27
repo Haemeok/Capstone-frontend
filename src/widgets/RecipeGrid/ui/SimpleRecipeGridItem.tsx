@@ -37,16 +37,11 @@ const SimpleRecipeGridItem = ({
 
   return (
     <>
-      <div
-        className={cn(`relative w-52 h-${height} rounded-2xl`)}
-        onClick={handleItemClick}
-      >
+      <div className={cn(`relative rounded-2xl`)} onClick={handleItemClick}>
         <Image
           src={recipe.imageUrl}
           alt={recipe.title}
           skeleton={<Skeleton className="h-52 w-52 rounded-2xl" />}
-          width={208}
-          height={208}
           className="h-full w-full rounded-2xl object-cover"
         />
         <div className="absolute top-0 right-0 p-2 text-right">

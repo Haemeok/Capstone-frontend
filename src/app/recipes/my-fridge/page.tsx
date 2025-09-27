@@ -8,7 +8,7 @@ import { Info, Star } from "lucide-react";
 import { useSort } from "@/shared/hooks/useSort";
 import { cn } from "@/shared/lib/utils";
 import BadgeButton from "@/shared/ui/BadgeButton";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
+import { Image } from "@/shared/ui/image/Image";
 import PrevButton from "@/shared/ui/PrevButton";
 import RecipeSortButton from "@/shared/ui/RecipeSortButton";
 import RecipeSortDrawer from "@/shared/ui/RecipeSortDrawer";
@@ -30,7 +30,7 @@ const MyFridgePage = () => {
     ref,
     isFetchingNextPage,
     hasNextPage,
-    fetchNextPage,
+
     error,
     noResults,
     lastPageMessage,
@@ -71,7 +71,7 @@ const MyFridgePage = () => {
             onClick={() => router.push(`/recipes/${recipe.id}`)}
           >
             <div className="relative h-40 w-40 rounded-2xl">
-              <SuspenseImage
+              <Image
                 src={recipe.imageUrl}
                 alt={recipe.title}
                 className={cn(
@@ -90,7 +90,7 @@ const MyFridgePage = () => {
             </div>
 
             <div className="flex grow flex-col gap-1 px-2 pb-2">
-              <p className="truncate font-semibold">{recipe.title}</p>
+              <p className="truncate font-bold">{recipe.title}</p>
               <div className="flex items-center gap-[2px]">
                 <Star size={15} className="fill-gray-800" />
                 <p className="text-mm text-gray-800">{recipe.avgRating}</p>
@@ -108,7 +108,7 @@ const MyFridgePage = () => {
                   userId={recipe.authorId}
                 />
               </div>
-              <p className="text-sm text-olive-mint font-semibold truncate mt-2">
+              <p className="text-sm text-olive-mint font-bold truncate mt-2">
                 {recipe.matchedIngredients.join(", ")}
               </p>
             </div>

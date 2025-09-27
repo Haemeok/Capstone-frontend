@@ -14,8 +14,7 @@ export const NotificationTest = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { connectionStatus, connect, disconnect } = useWebSocket();
   const { user, isAuthenticated } = useUserStore();
-  const { notifications, unreadCount, ref, totalCount } =
-    useInfiniteNotificationsQuery();
+  const { notifications, unreadCount } = useInfiniteNotificationsQuery();
 
   if (process.env.NODE_ENV === "production") {
     return null;
