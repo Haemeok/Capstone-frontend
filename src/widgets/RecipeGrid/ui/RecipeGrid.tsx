@@ -163,7 +163,12 @@ const RecipeGrid = ({
 
   return (
     <div ref={gridItemsContainerRef} className="flex flex-col p-4">
-      <div className="grid grid-cols-2 gap-4" ref={itemsAnimateTargetRef}>
+      <div
+        className="grid gap-4
+          [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]
+          lg:[grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]"
+        ref={itemsAnimateTargetRef}
+      >
         {recipes.map((recipe) =>
           isSimple ? (
             <SimpleRecipeGridItem
