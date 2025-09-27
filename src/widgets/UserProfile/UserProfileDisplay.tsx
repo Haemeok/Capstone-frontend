@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Image } from "@/shared/ui/image/Image";
 
 import { UserRound } from "lucide-react";
 
@@ -29,7 +29,6 @@ const UserProfileDisplay = ({
               <Image
                 src={user.profileImage}
                 alt={user.nickname}
-                fill
                 className="object-cover rounded-full"
               />
             ) : (

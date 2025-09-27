@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import { Image } from "@/shared/ui/image/Image";
 
 import { RecipeStep } from "@/entities/recipe";
 
@@ -15,7 +15,6 @@ const SlideShowContent = ({ step }: SlideShowContentProps) => {
           src={step.stepImageUrl}
           alt={`Step ${step.stepNumber}`}
           className="object-cover"
-          fill
         />
       </div>
 
@@ -28,7 +27,7 @@ const SlideShowContent = ({ step }: SlideShowContentProps) => {
                 className="flex items-center justify-center rounded-2xl bg-olive-mint/80 px-2 py-1 text-sm text-white backdrop-blur-sm"
               >
                 <p className="text-sm">{ingredient.name}</p>
-                <p className="ml-1 text-sm font-semibold">
+                <p className="ml-1 text-sm font-bold">
                   {ingredient.quantity}
                   {ingredient.unit}
                 </p>
@@ -37,7 +36,9 @@ const SlideShowContent = ({ step }: SlideShowContentProps) => {
           </div>
         )}
         {step.instruction && (
-          <p className="mb-4 text-base font-semibold text-dark">{step.instruction}</p>
+          <p className="mb-4 text-base font-bold text-dark">
+            {step.instruction}
+          </p>
         )}
       </div>
     </div>

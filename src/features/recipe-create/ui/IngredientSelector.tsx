@@ -10,7 +10,7 @@ import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
-import SuspenseImage from "@/shared/ui/image/SuspenseImage";
+import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 import {
   Drawer,
@@ -140,7 +140,7 @@ const IngredientSelector = ({
                 >
                   <div className="mr-3 h-12 w-12 flex-shrink-0 relative overflow-hidden rounded-lg bg-gray-100">
                     {ingredient.imageUrl && (
-                      <SuspenseImage
+                      <Image
                         src={ingredient.imageUrl}
                         alt={ingredient.name}
                         className="h-full w-full object-cover"

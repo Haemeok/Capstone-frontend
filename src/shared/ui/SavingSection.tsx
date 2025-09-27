@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import Image from "next/image";
 
+import { Image } from "@/shared/ui/image/Image";
 import gsap from "gsap";
 
 type SavingSectionProps = {
@@ -68,13 +68,11 @@ const SavingSection = ({
       className="mx-auto flex w-fit max-w-sm flex-col items-center justify-center p-5"
     >
       <div className="flex h-44 w-44 items-center justify-center">
-        <img
+        <Image
           ref={imageRef}
           src={imageUrl}
           alt={altText}
           className="max-h-full w-auto max-w-full object-contain"
-          width={100}
-          height={100}
         />
       </div>
     </div>

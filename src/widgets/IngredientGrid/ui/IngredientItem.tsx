@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { Image } from "@/shared/ui/image/Image";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -31,7 +31,7 @@ const IngredientItem = ({
       />
       <div className="flex flex-col">
         <span className="text-xs text-gray-500">{ingredient.category}</span>
-        <span className="text-sm font-semibold">{ingredient.name}</span>
+        <span className="text-sm font-bold">{ingredient.name}</span>
       </div>
       {isDeleteMode && (
         <button
