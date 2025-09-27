@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 
-import { TagCode, TAGS_BY_NAME } from "@/shared/config/constants/recipe";
+import { TagCode, TAGS_BY_CODE } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { useSort } from "@/shared/hooks/useSort";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -45,7 +45,8 @@ const CategoryDetailPage = () => {
     initialPageParam: 0,
   });
 
-  const tagName = TAGS_BY_NAME[tagCode as keyof typeof TAGS_BY_NAME].name;
+  const tagDef = TAGS_BY_CODE[tagCode as keyof typeof TAGS_BY_CODE];
+  const tagName = tagDef?.name ?? String(tagCode);
 
   const recipes = data?.pages.flatMap((page) => page.content);
 
