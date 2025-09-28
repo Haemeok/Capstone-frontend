@@ -31,6 +31,9 @@ export const useSubmitRecipe = () => {
         : postRecipe({ recipe: recipeData, files: filesToUploadInfo }));
 
       if (fileObjects.length > 0) {
+        if (!presignedUrlResponse.uploads?.length) {
+          throw new Error("empty presigned uploads");
+        }
         await handleS3Upload(presignedUrlResponse.uploads, fileObjects);
       }
 
