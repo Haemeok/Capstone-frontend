@@ -24,7 +24,6 @@ import SimpleRecipeGridItem from "@/widgets/RecipeGrid/ui/SimpleRecipeGridItem";
 type RecipeGridProps = {
   recipes: BaseRecipeGridItem[] | DetailedRecipeGridItemType[];
   isSimple?: boolean;
-  height?: number;
   hasNextPage?: boolean;
   isFetching?: boolean;
   observerRef?: (node: Element | null) => void;
@@ -38,7 +37,6 @@ type RecipeGridProps = {
 const RecipeGrid = ({
   recipes,
   isSimple = false,
-  height = 64,
   hasNextPage,
   isFetching,
   observerRef,
@@ -174,7 +172,6 @@ const RecipeGrid = ({
             <SimpleRecipeGridItem
               key={recipe.id}
               recipe={recipe as BaseRecipeGridItem}
-              height={height}
               setIsDrawerOpen={handleOpenDrawer}
             />
           ) : (

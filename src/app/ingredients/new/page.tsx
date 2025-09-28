@@ -29,7 +29,7 @@ import { useDeleteIngredientMutation } from "@/features/ingredient-delete-fridge
 const NewIngredientsPage = () => {
   const [mode, setMode] = useState<"single" | "bulk">("single");
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
-  const [sort, setSort] = useState<"asc" | "desc">("asc");
+  const [sort] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState("");
   const [bulkSelectedIds, setBulkSelectedIds] = useState<Set<number>>(
     new Set()

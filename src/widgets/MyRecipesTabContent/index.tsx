@@ -18,7 +18,7 @@ type MyRecipesTabContentProps = {
 };
 
 const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
-  const [sort, setSort] = useState<"ASC" | "DESC">("DESC");
+  const [sort] = useState<"ASC" | "DESC">("DESC");
 
   const { data, error, hasNextPage, isFetching, ref } = useInfiniteScroll<
     BaseRecipesApiResponse,
