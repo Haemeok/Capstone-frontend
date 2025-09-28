@@ -10,7 +10,6 @@ import AIRecipeForm from "@/widgets/AIRecipeForm";
 
 const AIRecipePage = () => {
   const {
-    generationState,
     selectedAI,
     generatedRecipeData,
     error,

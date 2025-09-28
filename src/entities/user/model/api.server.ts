@@ -1,5 +1,5 @@
 import { serverApi } from "@/shared/api/serverApiClient.server";
-import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
+import { BASE_API_URL } from "@/shared/config/constants/api";
 import { ServerAuthResult } from "@/shared/types";
 
 import { User } from "./types";

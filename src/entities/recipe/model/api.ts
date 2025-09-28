@@ -6,11 +6,9 @@ import { buildParams, customParamsSerializer } from "@/shared/lib/utils";
 import { FileInfoRequest } from "@/shared/types";
 
 import {
-  BaseRecipesApiResponse,
   DetailedRecipesApiResponse,
   IngredientRecipesApiResponse,
   Recipe,
-  RecipeItemsQueryParams,
   RecipeQueryParams,
 } from "./types";
 import { RecipePayload } from "./types";

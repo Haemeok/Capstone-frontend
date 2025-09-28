@@ -71,7 +71,7 @@ export const useMarkNotificationAsRead = () => {
 
   return useMutation({
     mutationFn: markNotificationAsRead,
-    onSuccess: (_, notificationId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });
@@ -109,7 +109,7 @@ export const useDeleteNotification = () => {
 
   return useMutation({
     mutationFn: deleteNotification,
-    onSuccess: (_, notificationId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });

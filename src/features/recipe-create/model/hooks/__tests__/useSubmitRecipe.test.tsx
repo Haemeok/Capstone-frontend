@@ -21,11 +21,12 @@ jest.mock("@/features/recipe-create/lib/prepareRecipeData", () => ({
   prepareRecipeData: jest.fn(),
 }));
 
-const { __finalizeMock } = jest.requireMock(
+const finalizeModule = jest.requireMock(
   "@/features/recipe-create/model/hooks/useFinalizeRecipe"
 ) as {
   __finalizeMock: { mutate: jest.Mock; mutateAsync: jest.Mock };
 };
+const { __finalizeMock } = finalizeModule;
 
 import { postRecipe, editRecipe } from "@/entities/recipe/model/api";
 import { handleS3Upload } from "@/shared/api/file";

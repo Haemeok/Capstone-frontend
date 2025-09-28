@@ -32,9 +32,7 @@ export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
   };
 };
 
-export const useMockRecipeQuery = (
-  recipeId: number
-): {
+export const useMockRecipeQuery = (): {
   data: Recipe | undefined;
   isLoading: boolean;
   error: null;

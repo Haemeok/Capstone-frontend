@@ -8,6 +8,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 import { useRecipeHistoryDetailQuery } from "@/entities/user";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
+import { Image } from "@/shared/ui/image/Image";
 
 const CalendarDetailPage = () => {
   const { date } = useParams<{ date: string }>();
@@ -41,7 +42,7 @@ const CalendarDetailPage = () => {
             onClick={() => router.push(`/recipes/${item.recipeId}`)}
             className="flex items-center gap-4 rounded-2xl border-1 border-gray-200 p-4 py-2"
           >
-            <img
+            <Image
               src={item.imageUrl}
               alt={item.recipeTitle}
               className="h-32 w-32 rounded-md"
