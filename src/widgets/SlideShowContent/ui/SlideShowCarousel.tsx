@@ -35,12 +35,11 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
   const TOTAL_STEPS = recipe.steps.length + 1;
   const recipeSteps = recipe.steps;
 
-  const { scrollProgress, handleProgressClick, getStepProgress } =
-    useSlideShowProgress({
-      api,
-      totalSteps: TOTAL_STEPS,
-      recipeStepsLength: recipeSteps.length,
-    });
+  const { handleProgressClick, getStepProgress } = useSlideShowProgress({
+    api,
+    totalSteps: TOTAL_STEPS,
+    recipeStepsLength: recipeSteps.length,
+  });
 
   const handleToggleFavorite = () => {
     const message = recipe.favoriteByCurrentUser
@@ -109,7 +108,7 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
       </Carousel>
 
       <div className="border-border bg-background flex border-t h-12">
-        {recipeSteps.map((step, index) => (
+        {recipeSteps.map((_, index) => (
           <div
             key={index}
             className="border-border relative flex-1 border-r h-full"

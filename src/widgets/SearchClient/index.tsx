@@ -74,7 +74,6 @@ export const SearchClient = () => {
         noResultsMessage={noResultsMessage}
         lastPageMessage={"모든 레시피를 불러왔습니다."}
         queryKeyString={queryKeyString}
-        height={72}
       />
 
       <CategoryDrawer

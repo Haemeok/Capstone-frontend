@@ -15,13 +15,11 @@ import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
-  height: number;
   setIsDrawerOpen: (id: number) => void;
 };
 
 const SimpleRecipeGridItem = ({
   recipe,
-  height,
   setIsDrawerOpen,
 }: SimpleRecipeGridItemProps) => {
   const router = useRouter();
