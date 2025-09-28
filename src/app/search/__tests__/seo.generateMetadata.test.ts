@@ -1,3 +1,10 @@
+/** @jest-environment node */
+
+jest.mock("@/widgets/SearchClient", () => ({
+  __esModule: true,
+  SearchClient: () => null,
+}));
+
 import { generateMetadata } from "@/app/search/page";
 
 function asProm<T>(v: T) {
