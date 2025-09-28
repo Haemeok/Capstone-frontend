@@ -58,7 +58,7 @@ const AIRecipeListPage = () => {
               <HomeBanner
                 title="AI 레시피 생성하러가기"
                 description="새로운 AI 레시피를 만들어보세요!"
-                image="/robot1.png"
+                image="/robot1.webp"
                 to="/ai-recipe"
               />
             </>
