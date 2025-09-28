@@ -46,6 +46,7 @@ const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
           alt={recipe.title}
           className="h-full w-full object-cover"
           priority
+          fetchPriority="high"
         />
       </div>
 

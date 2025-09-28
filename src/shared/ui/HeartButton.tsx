@@ -48,6 +48,7 @@ const HeartButton = ({
       <button
         onClick={handleClick}
         className={cn("heart-button", finalButtonClassName)}
+        aria-label="좋아요 버튼"
         {...props}
       >
         <Heart

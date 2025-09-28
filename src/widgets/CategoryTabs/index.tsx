@@ -16,12 +16,13 @@ const CategoryTabs = ({ title }: CategoryTabsProps) => {
       </div>
 
       <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto rounded-2xl">
-        {TAG_ITEMS.map((item) => (
+        {TAG_ITEMS.map((item, index) => (
           <CateGoryItem
             key={item.id}
             id={item.id}
             name={item.name}
             imageUrl={item.imageUrl}
+            isLcpCandidate={index === 0}
           />
         ))}
       </div>
