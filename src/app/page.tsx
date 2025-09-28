@@ -47,7 +47,7 @@ const HomePage = async () => {
       <HomeBanner
         title="AI 레시피 생성하기"
         description="AI로 나만의 특색있는 레시피를 만들어보세요!"
-        image="/robot1.png"
+        image="/robot1.webp"
         to="/recipes/new/ai"
       />
       <HydrationBoundary state={dehydrate(queryClient)}>

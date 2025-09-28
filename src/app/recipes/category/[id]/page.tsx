@@ -86,7 +86,7 @@ const CategoryDetailPage = () => {
               <HomeBanner
                 title="레시피 생성하러가기"
                 description={`${tagName} 레시피를 만들어보세요!`}
-                image="/robot1.png"
+                image="/robot1.webp"
                 to="/recipes/new"
               />
             </>
