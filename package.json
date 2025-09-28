@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test": "jest --runInBand",
     "test:ssr": "jest --config jest.ssr.config.js --runInBand",
-    "lhci": "lhci autorun"
+    "lhci": "lhci autorun",
+    "analyze": "ANALYZE=true NEXT_TELEMETRY_DISABLED=1 next build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.5.4",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",

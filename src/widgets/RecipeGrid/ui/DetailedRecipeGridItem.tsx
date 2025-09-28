@@ -21,11 +21,13 @@ import { RecipeLikeButton } from "@/features/recipe-like";
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
   className?: string;
+  priority?: boolean;
 };
 
 const DetailedRecipeGridItem = ({
   recipe,
   className,
+  priority,
 }: DetailedRecipeGridItemProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -59,6 +61,7 @@ const DetailedRecipeGridItem = ({
         alt={recipe.title}
         wrapperClassName={cn(`rounded-2xl`)}
         fit="cover"
+        priority={priority}
       />
 
       <div className="absolute top-0 right-0 p-2 text-right">

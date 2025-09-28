@@ -18,6 +18,7 @@ const NotificationButton = () => {
   return (
     <Link
       href="/notifications"
+      aria-label="알림 페이지로 이동"
       className="relative p-1 rounded-full hover:bg-gray-100 transition-colors"
     >
       <div className="h-fit w-fit relative p-1">

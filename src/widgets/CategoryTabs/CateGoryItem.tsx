@@ -12,9 +12,15 @@ type CateGoryItemProps = {
   imageUrl: string;
 
   className?: string;
+  isLcpCandidate?: boolean;
 };
 
-const CateGoryItem = ({ name, imageUrl, className }: CateGoryItemProps) => {
+const CateGoryItem = ({
+  name,
+  imageUrl,
+  className,
+  isLcpCandidate,
+}: CateGoryItemProps) => {
   const router = useRouter();
   return (
     <div
@@ -34,6 +40,8 @@ const CateGoryItem = ({ name, imageUrl, className }: CateGoryItemProps) => {
         className="img-smooth h-70 w-50 object-cover"
         width={200}
         height={280}
+        priority={isLcpCandidate}
+        fetchPriority={isLcpCandidate ? "high" : "auto"}
       />
       <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent p-2">
         <p className="truncate px-2 text-lg font-bold text-white">{name}</p>

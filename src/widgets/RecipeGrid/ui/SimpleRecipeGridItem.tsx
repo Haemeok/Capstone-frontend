@@ -16,11 +16,13 @@ import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
   setIsDrawerOpen: (id: number) => void;
+  priority?: boolean;
 };
 
 const SimpleRecipeGridItem = ({
   recipe,
   setIsDrawerOpen,
+  priority,
 }: SimpleRecipeGridItemProps) => {
   const router = useRouter();
 
@@ -41,6 +43,7 @@ const SimpleRecipeGridItem = ({
           alt={recipe.title}
           skeleton={<Skeleton className="h-52 w-52 rounded-2xl" />}
           className="h-full w-full rounded-2xl object-cover"
+          priority={priority}
         />
         <div className="absolute top-0 right-0 p-2 text-right">
           <RecipeLikeButton

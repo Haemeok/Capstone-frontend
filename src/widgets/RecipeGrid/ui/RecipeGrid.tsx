@@ -167,17 +167,19 @@ const RecipeGrid = ({
           lg:[grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]"
         ref={itemsAnimateTargetRef}
       >
-        {recipes.map((recipe) =>
+        {recipes.map((recipe, index) =>
           isSimple ? (
             <SimpleRecipeGridItem
               key={recipe.id}
               recipe={recipe as BaseRecipeGridItem}
               setIsDrawerOpen={handleOpenDrawer}
+              priority={index === 0}
             />
           ) : (
             <DetailedRecipeGridItem
               key={recipe.id}
               recipe={recipe as DetailedRecipeGridItemType}
+              priority={index === 0}
             />
           )
         )}
