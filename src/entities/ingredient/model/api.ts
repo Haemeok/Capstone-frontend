@@ -10,7 +10,6 @@ import { IngredientQueryParams, IngredientsApiResponse } from "./types";
 export const getIngredients = async ({
   category,
   q,
-  sort = "ASC",
   pageParam = 0,
   isMine = false,
   isFridge = false,

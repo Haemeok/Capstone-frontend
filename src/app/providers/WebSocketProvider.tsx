@@ -42,10 +42,7 @@ type WebSocketProviderProps = {
   url?: string;
 };
 
-export const WebSocketProvider = ({
-  children,
-  url,
-}: WebSocketProviderProps) => {
+export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
   const [connectionStatus, setConnectionStatus] =
     useState<WebSocketConnectionStatus>("disconnected");
   const wsManagerRef = useRef<SockJSWebSocketManager | null>(null);
@@ -87,10 +84,7 @@ export const WebSocketProvider = ({
         wsManagerRef.current.resetReconnection();
         wsManagerRef.current.connect();
       } catch (error) {
-        console.error(
-          "WebSocket 티켓 발급 또는 연결 실패:",
-          error
-        );
+        console.error("WebSocket 티켓 발급 또는 연결 실패:", error);
       }
     };
 

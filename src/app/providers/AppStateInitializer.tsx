@@ -11,7 +11,6 @@ import { useAuthManager } from "@/shared/lib/auth/useAuthManager";
 import {
   isAuthenticated,
   isTokenExpired,
-  isUnauthenticated,
   ServerAuthResult,
 } from "@/shared/types";
 

@@ -14,7 +14,7 @@ import { getMyFavoriteItems } from "@/features/view-favorite-recipes";
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
 const MyFavoriteRecipesTabContent = () => {
-  const [sort, setSort] = useState<"ASC" | "DESC">("DESC");
+  const [sort] = useState<"ASC" | "DESC">("DESC");
 
   const { data, error, hasNextPage, isFetching, ref } = useInfiniteScroll<
     BaseRecipesApiResponse,

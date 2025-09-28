@@ -13,7 +13,7 @@ import {
 } from "@/entities/notification";
 
 const NotificationsPage = () => {
-  const { notifications, error, hasNextPage, isFetchingNextPage, ref } =
+  const { notifications, hasNextPage, isFetchingNextPage, ref } =
     useInfiniteNotificationsQuery();
 
   const { mutate: deleteAllNotifications } = useDeleteAllNotifications();
