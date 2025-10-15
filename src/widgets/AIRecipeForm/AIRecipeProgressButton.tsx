@@ -23,6 +23,7 @@ const AIRecipeProgressButton = ({
       schema={aiRecipeFormSchema}
       isLoading={isLoading}
       onClick={onClick}
+      text="레시피 생성하기"
     />
   );
 };
