@@ -23,6 +23,7 @@ const NewRecipePage = () => {
           isLoading={isLoading}
           recipeCreationError={recipeCreationError}
           onSubmit={onSubmit}
+          isEdit={false}
         />
       </FormProvider>
     </div>

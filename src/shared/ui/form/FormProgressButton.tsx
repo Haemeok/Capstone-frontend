@@ -12,12 +12,14 @@ type FormProgressButtonProps = {
   isLoading: boolean;
   schema: z.ZodObject<any>;
   onClick?: () => void;
+  text: string;
 };
 
 export const FormProgressButton = <T extends FieldValues>({
   schema,
   isLoading,
   onClick,
+  text,
 }: FormProgressButtonProps) => {
   const { control, formState } = useFormContext<T>();
   const { isValid, isDirty } = formState;
@@ -46,6 +48,7 @@ export const FormProgressButton = <T extends FieldValues>({
       isFormValid={isValid && isDirty}
       isLoading={isLoading}
       onClick={onClick}
+      text={text}
     />
   );
 };

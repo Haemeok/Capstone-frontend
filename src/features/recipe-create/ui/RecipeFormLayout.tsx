@@ -22,6 +22,7 @@ type RecipeFormLayoutProps = {
   recipeCreationError: Error | null;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   ingredientIds?: number[];
+  isEdit: boolean;
 };
 
 const RecipeFormLayout = ({
@@ -30,6 +31,7 @@ const RecipeFormLayout = ({
   recipeCreationError: submitError,
   onSubmit,
   ingredientIds = [],
+  isEdit,
 }: RecipeFormLayoutProps) => {
   const {
     register,
@@ -114,7 +116,7 @@ const RecipeFormLayout = ({
           {submitError && (
             <p className="text-sm text-red-600">오류: {submitError.message}</p>
           )}
-          <RecipeProgressButton isLoading={isLoading} />
+          <RecipeProgressButton isLoading={isLoading} isEdit={isEdit} />
         </div>
       </div>
     </form>
