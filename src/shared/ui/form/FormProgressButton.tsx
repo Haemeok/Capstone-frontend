@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FieldValues,useFormContext, useWatch } from "react-hook-form";
+import { FieldValues, useFormContext, useWatch } from "react-hook-form";
 
 import { z } from "zod";
 
@@ -35,8 +35,6 @@ export const FormProgressButton = <T extends FieldValues>({
     }
     return fieldSchema.safeParse(value).success;
   }).length;
-
-  console.log(fieldsSchema, completedSteps, formValues);
 
   const totalSteps = fieldNames.length;
   const progressPercentage =

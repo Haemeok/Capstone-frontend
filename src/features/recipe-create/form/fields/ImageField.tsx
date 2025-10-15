@@ -30,8 +30,6 @@ export const ImageField = <TName extends ImageFieldName>({
     name,
     control,
     defaultValue: undefined,
-    // 필요할 때만 validate 추가
-    // rules: { validate: (v) => /* size/MIME 검사 */ true },
   });
 
   const previewUrl = useImagePreview(field.value);

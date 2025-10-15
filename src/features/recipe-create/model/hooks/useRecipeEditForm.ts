@@ -43,7 +43,7 @@ export const useRecipeEditForm = (recipeId: number) => {
         imageKey: step.stepImageKey,
       })),
       cookingTools: recipe.cookingTools || [],
-      tagNames: recipe.tagNames || [],
+      tags: recipe.tags || [],
     }),
     [recipe]
   );
@@ -54,10 +54,10 @@ export const useRecipeEditForm = (recipeId: number) => {
   });
 
   useEffect(() => {
-    if (isRecipeLoaded) {
+    if (isRecipeLoaded && recipe) {
       methods.reset(defaultFormValues);
     }
-  }, [isRecipeLoaded, defaultFormValues, methods]);
+  }, [isRecipeLoaded, defaultFormValues, methods.reset]);
 
   const onSubmit: SubmitHandler<RecipeFormValues> = (formData) => {
     submitRecipe(

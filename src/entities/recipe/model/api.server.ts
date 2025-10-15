@@ -83,7 +83,6 @@ export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
       }
       throw new Error(`API Error: ${res.status} ${res.statusText}`);
     }
-
     return res.json();
   } catch (error) {
     console.error(`[getRecipeOnServer] Failed to fetch recipe ${id}:`, error);
