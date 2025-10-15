@@ -9,7 +9,7 @@ import { getMyInfoOnServer } from "@/entities/user/model/api.server";
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import { NotificationTest } from "@/widgets/NotificationTest";
 
-import { pretendard700, pretendard400 } from "./fonts";
+import { pretendard } from "./fonts";
 import { AppProviders } from "./providers/AppProviders";
 
 import "./globals.css";
@@ -44,11 +44,8 @@ export default async function RootLayout({
   const myInfo = await getMyInfoOnServer();
 
   return (
-    <html
-      lang="ko"
-      className={`${pretendard700.className} ${pretendard400.className}`}
-    >
-      <body>
+    <html lang="ko" className={`${pretendard.variable}`}>
+      <body className={pretendard.className}>
         <AppProviders myInfo={myInfo}>
           {children}
           <BottomNavBar />
