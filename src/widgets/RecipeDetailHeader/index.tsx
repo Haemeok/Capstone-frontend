@@ -40,13 +40,14 @@ const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
         }
       />
 
-      <div ref={imageRef} className="h-112 w-full">
+      <div ref={imageRef} className="h-112 w-full relative">
         <Image
           src={recipe.imageUrl}
           alt={recipe.title}
           className="h-full w-full object-cover"
           priority
           fetchPriority="high"
+          fill
         />
       </div>
 
