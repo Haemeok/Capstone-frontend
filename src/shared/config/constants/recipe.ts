@@ -333,3 +333,20 @@ export const COOKING_TIME_ITEMS_KEYS = Object.fromEntries(
 );
 
 export const COOKING_TIMES = Object.keys(COOKING_TIME_ITEMS);
+
+export const DEFAULT_WEIGHT_KG = 65;
+
+export const CALORIE_ACTIVITIES = [
+  { name: "가볍게 달리기", met: 8.0 },
+  { name: "보통 속도로 걷기", met: 3.5 },
+  { name: "자전거 타기", met: 6.8 },
+  { name: "줄넘기", met: 10.0 },
+
+  { name: "집안일, 청소하기", met: 3.3 },
+  { name: "반려견과 산책하기", met: 3.0 },
+  { name: "계단 오르기", met: 4.0 },
+  { name: "장 보러 다녀오기", met: 2.3 },
+  { name: "홈트, 스트레칭", met: 2.5 },
+];
+
+export type Activity = (typeof CALORIE_ACTIVITIES)[number];

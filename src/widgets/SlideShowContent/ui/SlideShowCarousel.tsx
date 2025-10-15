@@ -85,9 +85,18 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
                   className="object-cover"
                 />
               </div>
-              <p className="text-lg text-dark text-center mb-6">
-                {recipe.author.nickname}님의 {recipe.title} 어떠셨나요?
-              </p>
+              <div className="w-full mb-4 flex items-center justify-center text-lg text-dark gap-1">
+                <span className="font-bold">{recipe.author.nickname}</span>
+                <span>님의</span>
+                <span className="font-bold">{recipe.title}</span>
+                <span>어떠셨나요?</span>
+              </div>
+              <div className="w-2/3 mb-4 flex flex-col items-center justify-center">
+                <p className="text-center text-gray-500 line-clamp-2">
+                  평가에 참여하면, 마이페이지에서 식비 절약 현황을 한눈에 볼 수
+                  있어요!
+                </p>
+              </div>
               <div className="w-full space-y-3">
                 <button
                   className="bg-olive-mint flex w-full items-center justify-center gap-2 rounded-lg py-2 text-white font-medium"
