@@ -20,8 +20,8 @@ export const getRecipesOnServer = async (
   if (params.q) query.append("q", params.q);
   if (params.isAiGenerated) query.append("isAiGenerated", "true");
   if (params.dishType) query.append("dishType", params.dishType);
-  if (params.tagNames) {
-    params.tagNames.forEach((tag) => query.append("tagNames", tag));
+  if (params.tags) {
+    params.tags.forEach((tag) => query.append("tags", tag));
   }
 
   const API_URL = `${BASE_API_URL}/recipes/search?${query.toString()}`;

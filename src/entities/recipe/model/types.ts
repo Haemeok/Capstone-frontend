@@ -113,16 +113,16 @@ export type RecipeStepPayload = Omit<
 
 export type RecipeQueryParams = BaseQueryParams & {
   dishType?: string | null;
-  tagNames?: string[] | null;
+  tags?: string[] | null;
   q?: string | null;
   isAiGenerated?: boolean;
 };
 
 export type RecipeItemsQueryParams = {
-  key: string; // Unique identifier for the query
+  key: string;
   sort?: "desc" | "asc";
   isAiGenerated?: boolean;
-  tagNames?: string[];
+  tags?: string[];
   q?: string;
   dishType?: string | null;
 };

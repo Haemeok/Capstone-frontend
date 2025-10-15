@@ -13,7 +13,7 @@ type SearchPageProps = {
     q?: string;
     sort?: string;
     dishType?: string;
-    tagNames?: string | string[];
+    tags?: string | string[];
   }>;
 };
 
@@ -34,10 +34,10 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const awaitedSearchParams = await searchParams;
-  const tagNames = Array.isArray(awaitedSearchParams.tagNames)
-    ? awaitedSearchParams.tagNames
-    : awaitedSearchParams.tagNames
-      ? [awaitedSearchParams.tagNames]
+  const tags = Array.isArray(awaitedSearchParams.tags)
+    ? awaitedSearchParams.tags
+    : awaitedSearchParams.tags
+      ? [awaitedSearchParams.tags]
       : [];
 
   const q = awaitedSearchParams.q || "";
@@ -46,7 +46,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       ? "ASC"
       : "DESC";
   const dishTypeCode = awaitedSearchParams.dishType || null;
-  const tagCodes = tagNames;
+  const tagCodes = tags;
 
   const queryClient = new QueryClient();
 
@@ -58,7 +58,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         q,
         sort: sortCode.toLowerCase() === "asc" ? "asc" : "desc",
         dishType: dishTypeCode || undefined,
-        tagNames: tagCodes,
+        tags: tagCodes,
       }),
   });
 

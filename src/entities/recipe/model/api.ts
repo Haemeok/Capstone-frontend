@@ -21,7 +21,7 @@ export const getRecipe = async (id: number) => {
 export const getRecipeItems = async ({
   sort,
   dishType,
-  tagNames,
+  tags,
   q,
   isAiGenerated,
   size = PAGE_SIZE,
@@ -29,7 +29,7 @@ export const getRecipeItems = async ({
 }: {
   sort: string;
   dishType?: string | null;
-  tagNames?: string[] | null;
+  tags?: string[] | null;
   q?: string;
   isAiGenerated?: boolean;
   size?: number;
@@ -43,7 +43,7 @@ export const getRecipeItems = async ({
 
   const optionalParams: Partial<RecipeQueryParams> = {
     dishType,
-    tagNames,
+    tags,
     q,
     isAiGenerated,
   };

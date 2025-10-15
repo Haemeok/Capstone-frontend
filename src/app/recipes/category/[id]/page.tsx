@@ -37,7 +37,7 @@ const CategoryDetailPage = () => {
     queryKey: ["recipes", tagCode, getSortParam()],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
-        tagNames: [tagCode],
+        tags: [tagCode],
         pageParam,
         sort: getSortParam(),
       }),

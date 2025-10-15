@@ -35,7 +35,7 @@ export const useSearchResults = ({
       getRecipeItems({
         sort: sortCode,
         dishType: dishTypeCode,
-        tagNames: tagCodes,
+        tags: tagCodes,
         q: q,
         pageParam,
       }),

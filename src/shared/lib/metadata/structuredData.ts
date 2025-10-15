@@ -15,7 +15,10 @@ export const createWebsiteStructuredData = () => ({
   },
 });
 
-export const createRecipeStructuredData = (recipe: Recipe, recipeId: string) => ({
+export const createRecipeStructuredData = (
+  recipe: Recipe,
+  recipeId: string
+) => ({
   "@context": "https://schema.org",
   "@type": "Recipe",
   name: recipe.title,
@@ -31,13 +34,15 @@ export const createRecipeStructuredData = (recipe: Recipe, recipeId: string) => 
   ...(recipe.servings && {
     recipeYield: `${recipe.servings}인분`,
   }),
-  recipeIngredient: recipe.ingredients?.map((ingredient) => ingredient.name) || [],
-  recipeInstructions: recipe.steps?.map((step, index) => ({
-    "@type": "HowToStep",
-    position: index + 1,
-    text: step.instruction,
-    ...(step.stepImageUrl && { image: step.stepImageUrl }),
-  })) || [],
+  recipeIngredient:
+    recipe.ingredients?.map((ingredient) => ingredient.name) || [],
+  recipeInstructions:
+    recipe.steps?.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      text: step.instruction,
+      ...(step.stepImageUrl && { image: step.stepImageUrl }),
+    })) || [],
   ...(recipe.ratingInfo?.avgRating && {
     aggregateRating: {
       "@type": "AggregateRating",
@@ -54,6 +59,6 @@ export const createRecipeStructuredData = (recipe: Recipe, recipeId: string) => 
   }),
   datePublished: recipe.createdAt || new Date().toISOString(),
   recipeCategory: recipe.dishType,
-  keywords: recipe.tagNames?.join(", "),
+  keywords: recipe.tags?.join(", "),
   url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}`,
 });

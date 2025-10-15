@@ -17,7 +17,7 @@ export const useSearchState = () => {
   const q = searchParams.get("q") || "";
   const sortCode = searchParams.get("sort") || "DESC";
   const dishTypeCode = searchParams.get("dishType") || null;
-  const tagCodes = searchParams.getAll("tagNames") || [];
+  const tagCodes = searchParams.getAll("tags") || [];
 
   const sort =
     Object.keys(SORT_TYPE_CODES).find(
@@ -31,7 +31,7 @@ export const useSearchState = () => {
       ) || "전체"
     : "전체";
 
-  const tagNames = tagCodes.map((code) => {
+  const tags = tagCodes.map((code) => {
     const tag = TAGS_BY_CODE[code as keyof typeof TAGS_BY_CODE];
     return tag ? `${tag.emoji} ${tag.name}` : code;
   });
@@ -79,14 +79,14 @@ export const useSearchState = () => {
       const cleanTag = tag.replace(/^[\u{1F000}-\u{1F9FF}]\s/u, "").trim();
       return TAG_CODES[cleanTag as keyof typeof TAG_CODES] || cleanTag;
     });
-    updateSearchParams({ tagNames: codes });
+    updateSearchParams({ tags: codes });
   };
 
   return {
     q,
     sort,
     dishType,
-    tagNames,
+    tags,
     inputValue,
 
     sortCode,
