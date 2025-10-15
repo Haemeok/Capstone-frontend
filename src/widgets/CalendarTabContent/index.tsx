@@ -9,11 +9,9 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, FlameKindling } from "lucide-react";
 
-import { formatPrice } from "@/shared/lib/format";
 import { getProductByPrice } from "@/shared/lib/recipe";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 import Box from "@/shared/ui/primitives/Box";
-import SavingSection from "@/shared/ui/SavingSection";
 
 import { RecipeDailySummary } from "@/entities/user";
 
@@ -22,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { useRecipeHistoryQuery, useUserStreakQuery } from "./hooks";
 
 import "react-day-picker/style.css";
+import MonthlySavingsSummary from "../MonthlySavingsSummary";
 
 const CalendarTabContent = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
@@ -50,22 +49,21 @@ const CalendarTabContent = () => {
 
   return (
     <div className="w-full pb-4">
-      <div className="mx-10 flex flex-col items-center justify-center pt-5">
-        <h3 className="text-xl font-bold">
-          {year}년 {month}월 해먹 서비스로
-        </h3>
-        <div className="flex gap-1">
-          <h3 className="text-olive-mint text-xl font-bold">
-            {formatPrice(monthlyTotalSavings, "원")}
-          </h3>
-          <h3 className="text-xl font-bold"> 절약했어요</h3>
-        </div>
-        <p className="mt-1 text-sm text-gray-500">
-          {product.name} 정도 금액이에요!
-        </p>
-        <SavingSection imageUrl={product.image} altText={product.name} />
-      </div>
-      <Box className="p-0 px-4">
+      {/* <MonthlySavingsChallenge
+        year={year}
+        month={month}
+        currentSavings={monthlyTotalSavings ?? 0}
+        productName={product.name}
+        productImage={product.image}
+      /> */}
+      <MonthlySavingsSummary
+        year={year}
+        month={month}
+        monthlyTotalSavings={monthlyTotalSavings}
+        productName={product.name}
+        productImage={product.image}
+      />
+      <Box className="p-0 px-4 mt-4">
         <PointDisplayBanner
           pointText={`${userStreak?.streak ?? 0}일`}
           prefix="해먹 서비스를"

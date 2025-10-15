@@ -1,0 +1,102 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+import { formatPrice } from "@/shared/lib/format";
+import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
+import SavingSection from "@/shared/ui/SavingSection";
+
+type MonthlySavingsSummaryProps = {
+  year: number;
+  month: number;
+  monthlyTotalSavings: number | undefined;
+  productName: string;
+  productImage: string;
+};
+
+const MonthlySavingsSummary = ({
+  year,
+  month,
+  monthlyTotalSavings,
+  productName,
+  productImage,
+}: MonthlySavingsSummaryProps) => {
+  const currentSavings = monthlyTotalSavings ?? 0;
+
+  const { currentIndex, currentMin, next, percentageToNext, remainingToNext } =
+    useMemo(() => {
+      const idx = PRICE_BRACKETS.findIndex((b) => currentSavings >= b.min);
+      const safeIndex = idx === -1 ? PRICE_BRACKETS.length - 1 : idx;
+      const currentBracket = PRICE_BRACKETS[safeIndex];
+      const nextBracket =
+        safeIndex > 0 ? PRICE_BRACKETS[safeIndex - 1] : undefined;
+
+      if (!nextBracket) {
+        return {
+          currentIndex: safeIndex,
+          currentMin: currentBracket.min,
+          next: undefined as undefined,
+          percentageToNext: 100,
+          remainingToNext: 0,
+        };
+      }
+
+      const range = Math.max(1, nextBracket.min - currentBracket.min);
+      const progressed = Math.max(0, currentSavings - currentBracket.min);
+      const percent = Math.min(100, Math.floor((progressed / range) * 100));
+      const remaining = Math.max(0, nextBracket.min - currentSavings);
+      return {
+        currentIndex: safeIndex,
+        currentMin: currentBracket.min,
+        next: nextBracket,
+        percentageToNext: percent,
+        remainingToNext: remaining,
+      };
+    }, [currentSavings]);
+
+  return (
+    <div className="mx-10 flex flex-col items-center justify-center pt-5">
+      <h3 className="text-xl font-bold">
+        {year}년 {month}월 해먹 서비스로
+      </h3>
+      <div className="flex gap-1">
+        <h3 className="text-olive-mint text-xl font-bold">
+          {formatPrice(currentSavings, "원")}
+        </h3>
+        <h3 className="text-xl font-bold"> 절약했어요</h3>
+      </div>
+      <p className="mt-1 text-sm text-gray-500">
+        {productName} 정도 금액이에요!
+      </p>
+
+      <SavingSection imageUrl={productImage} altText={productName} />
+
+      <div className="w-full">
+        <div className="bg-gray-200 relative h-4 w-full overflow-hidden rounded-full">
+          <div
+            className="bg-olive-mint absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
+            style={{ width: `${percentageToNext}%` }}
+          >
+            <div
+              className="absolute inset-0 opacity-30"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(45deg, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) 8px, transparent 8px, transparent 16px)",
+              }}
+            />
+          </div>
+        </div>
+        <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
+          <span>현재 단계 {formatPrice(currentMin, "원")}</span>
+          {next ? (
+            <span>다음 단계 {formatPrice(next.min, "원")}</span>
+          ) : (
+            <span>최고 단계 달성</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MonthlySavingsSummary;
