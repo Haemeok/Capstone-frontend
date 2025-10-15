@@ -57,9 +57,9 @@ export const PageTransition = ({ children }: { children: React.ReactNode }) => {
         variants={pageVariants}
         transition={pageTransition}
         style={{
-          position: "absolute",
+          position: "relative",
           width: "100%",
-          height: "100%",
+          minHeight: "100%",
           backgroundColor: "#fff",
         }}
       >
