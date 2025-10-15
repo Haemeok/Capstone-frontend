@@ -18,10 +18,6 @@ export const useAIRecipeForm = () => {
 
   const { setValue, getValues } = methods;
 
-  const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
-    new Set()
-  );
-
   const handleAddIngredient = (ingredientPayload: IngredientPayload) => {
     const currentIngredients = getValues("ingredients");
     const newIngredients = [...currentIngredients, ingredientPayload.name];
@@ -55,8 +51,5 @@ export const useAIRecipeForm = () => {
     handleAddIngredient,
     handleRemoveIngredient,
     handleRemoveAllIngredients,
-
-    addedIngredientIds,
-    setAddedIngredientIds,
   };
 };

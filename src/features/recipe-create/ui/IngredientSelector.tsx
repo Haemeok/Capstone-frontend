@@ -29,7 +29,7 @@ type IngredientSelectorProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onIngredientSelect: (ingredient: IngredientPayload) => void;
-  ingredientIds: number[];
+  ingredientIds?: number[];
 };
 
 const IngredientSelector = ({

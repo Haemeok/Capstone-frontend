@@ -27,12 +27,7 @@ const AIRecipeForm = () => {
   const { selectedAI, generateRecipe, resetGeneration } =
     useAIRecipeGeneration();
 
-  const {
-    methods,
-    handleAddIngredient,
-    addedIngredientIds,
-    setAddedIngredientIds,
-  } = useAIRecipeForm();
+  const { methods, handleAddIngredient } = useAIRecipeForm();
 
   const onSubmit = (data: AIRecipeFormValues) => {
     generateRecipe(data);
@@ -76,8 +71,6 @@ const AIRecipeForm = () => {
           open={isDrawerOpen}
           onOpenChange={setIsDrawerOpen}
           onIngredientSelect={handleAddIngredient}
-          addedIngredientIds={addedIngredientIds}
-          setAddedIngredientIds={setAddedIngredientIds}
         />
       </div>
     </FormProvider>
