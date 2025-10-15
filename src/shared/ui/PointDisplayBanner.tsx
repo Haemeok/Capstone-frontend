@@ -44,7 +44,7 @@ const PointDisplayBanner = ({
     >
       <div className="flex w-fit items-center">
         <p>{prefix}</p>
-        <p className={cn("text-olive-mint mr-1 ml-1", textClassName)}>
+        <p className={cn("text-olive-mint font-bold mr-1 ml-1", textClassName)}>
           {pointText}
         </p>
         <p>{suffix}</p>

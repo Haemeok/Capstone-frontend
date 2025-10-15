@@ -27,7 +27,7 @@ const RecipeDetailClient = ({ recipeId }: RecipeDetailClientProps) => {
   const { recipeData: recipe } = useRecipeDetailQuery(recipeId);
 
   return (
-    <div className="relative mx-auto flex flex-col bg-[#ffffff] text-[#2a2229]">
+    <div className="relative mx-auto flex flex-col">
       <RecipeDetailHeader recipe={recipe} />
 
       <div className="px-2">
@@ -52,15 +52,24 @@ const RecipeDetailClient = ({ recipeId }: RecipeDetailClientProps) => {
 
         <Box>
           <div className="flex items-center justify-between">
-            <h2 className="mb-2 text-xl font-bold">코멘트</h2>
-            <CommentMoreButton recipeId={recipe.id} />
+            <h2 className="text-xl font-bold">코멘트</h2>
+            <CommentMoreButton
+              recipeId={recipe.id}
+              text={recipe.comments.length > 0 ? "더 읽기" : "작성하기"}
+            />
           </div>
-          {recipe.comments.length > 0 && (
+          {recipe.comments.length > 0 ? (
             <CommentCard
               comment={recipe.comments[0]}
               recipeId={recipe.id}
               hideReplyButton
             />
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-1 mt-4">
+              <p className="text-sm text-gray-400">
+                첫번째 댓글을 작성해보세요!
+              </p>
+            </div>
           )}
         </Box>
         <div ref={observerRef} className="h-1 w-full" />
