@@ -17,7 +17,7 @@ const RecipeProgressButton = ({
     <FormProgressButton<RecipeFormValues>
       schema={recipeFormSchema}
       isLoading={isLoading}
-      text={isEdit ? "레시피 수정하기" : "레시피 생성하기"}
+      text={isEdit ? "레시피 수정하기" : "레시피 등록하기"}
     />
   );
 };

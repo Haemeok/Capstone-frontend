@@ -38,7 +38,7 @@ const IngredientSelector = ({
   onIngredientSelect,
   ingredientIds,
 }: IngredientSelectorProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("나의 재료");
+  const [selectedCategory, setSelectedCategory] = useState<string>("전체");
   const [ingredientIdSet, setIngredientIdSet] = useState<Set<number>>(
     new Set(ingredientIds)
   );
