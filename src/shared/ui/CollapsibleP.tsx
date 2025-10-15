@@ -22,6 +22,7 @@ const CollapsibleP = ({ content }: CollapsiblePProps) => {
   useLayoutEffect(() => {
     if (contentRef.current) {
       const currentContentHeight = contentRef.current.scrollHeight;
+
       if (currentContentHeight > MAX_COLLAPSED_HEIGHT_PX) {
         setShowButton(true);
       } else {
@@ -42,7 +43,8 @@ const CollapsibleP = ({ content }: CollapsiblePProps) => {
         <div
           className="prose prose-sm relative w-full max-w-none"
           style={{
-            height: !showButton || isOpen ? "auto" : "100px",
+            height:
+              !showButton || isOpen ? "auto" : `${MAX_COLLAPSED_HEIGHT_PX}px`,
             transition: showButton ? "height 0.3s ease-in-out" : "none",
           }}
         >
@@ -51,7 +53,10 @@ const CollapsibleP = ({ content }: CollapsiblePProps) => {
               !showButton || isOpen ? "" : "max-h-24 overflow-hidden"
             }`}
           >
-            <p ref={contentRef} className="mb-2 break-words">
+            <p
+              ref={contentRef}
+              className="mb-2 break-words whitespace-pre-wrap"
+            >
               {content}
             </p>
           </div>
@@ -66,7 +71,7 @@ const CollapsibleP = ({ content }: CollapsiblePProps) => {
             <Button
               variant="ghost"
               size="sm"
-              className="mt-2 font-bold text-[#526c04]"
+              className="mt-2 font-bold text-olive-light"
             >
               {isOpen ? (
                 <>
