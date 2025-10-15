@@ -6,7 +6,7 @@ type RecipeSlideWithErrorBoundaryProps = {
   title: string;
   queryKey: string;
   isAiGenerated?: boolean;
-  tagNames?: string[];
+  tags?: string[];
   to?: string;
 };
 

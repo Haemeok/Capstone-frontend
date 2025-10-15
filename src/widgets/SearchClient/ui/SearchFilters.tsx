@@ -11,7 +11,7 @@ type SearchFiltersProps = {
   handleSearchSubmit: (e: React.FormEvent) => void;
   dishType: string;
   sort: string;
-  tagNames: string[];
+  tags: string[];
   onDishTypeClick: () => void;
   onSortClick: () => void;
   onTagsClick: () => void;
@@ -23,7 +23,7 @@ export const SearchFilters = ({
   handleSearchSubmit,
   dishType,
   sort,
-  tagNames,
+  tags,
   onDishTypeClick,
   onSortClick,
   onTagsClick,
@@ -59,9 +59,9 @@ export const SearchFilters = ({
           isDirty={sort !== "최신순"}
         />
         <FilterChip
-          header={tagNames.length > 0 ? tagNames.join(", ") : "태그"}
+          header={tags.length > 0 ? tags.join(", ") : "태그"}
           onClick={onTagsClick}
-          isDirty={tagNames.length > 0}
+          isDirty={tags.length > 0}
         />
       </div>
     </div>

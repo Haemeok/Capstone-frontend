@@ -18,7 +18,7 @@ type DrawerConfig = {
 type UseSearchDrawerProps = {
   dishType: string;
   sort: string;
-  tagNames: string[];
+  tags: string[];
   updateDishType: (value: string) => void;
   updateSort: (value: string) => void;
   updateTags: (value: string[]) => void;
@@ -27,7 +27,7 @@ type UseSearchDrawerProps = {
 export const useSearchDrawer = ({
   dishType,
   sort,
-  tagNames,
+  tags,
   updateDishType,
   updateSort,
   updateTags,
@@ -45,7 +45,7 @@ export const useSearchDrawer = ({
       setState: updateSort,
     },
     tags: {
-      state: tagNames,
+      state: tags,
       setState: updateTags,
     },
   };

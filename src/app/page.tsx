@@ -33,7 +33,7 @@ const HomePage = async () => {
       queryKey: ["party-recipes"],
       queryFn: () =>
         getRecipesOnServer({
-          tagNames: ["HOME_PARTY"],
+          tags: ["HOME_PARTY"],
           sort: "desc",
           key: "party-recipes",
         }),
@@ -61,7 +61,7 @@ const HomePage = async () => {
         <RecipeSlideWithErrorBoundary
           title="홈파티 레시피"
           queryKey="party-recipes"
-          tagNames={["HOME_PARTY"]}
+          tags={["HOME_PARTY"]}
           to="/recipes/category/HOME_PARTY"
         />
       </HydrationBoundary>

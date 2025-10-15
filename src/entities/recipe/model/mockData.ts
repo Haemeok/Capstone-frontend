@@ -110,7 +110,7 @@ export const mockRecipeData: Recipe = {
   },
   ingredients: mockIngredients,
   steps: mockSteps,
-  tagNames: ["건강식", "다이어트", "고단백"],
+  tags: ["건강식", "다이어트", "고단백"],
   comments: [
     {
       id: 1,

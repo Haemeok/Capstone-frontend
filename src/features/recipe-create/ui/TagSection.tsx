@@ -8,12 +8,12 @@ import { RecipeFormValues } from "../model/config";
 const TagSection = () => {
   const { control, setValue } = useFormContext<RecipeFormValues>();
 
-  const tagNames = useWatch({ control, name: "tags", defaultValue: [] }) || [];
+  const tags = useWatch({ control, name: "tags", defaultValue: [] }) || [];
 
   const handleTagToggle = (tag: string) => {
-    const newTags = tagNames.includes(tag)
-      ? tagNames.filter((t) => t !== tag)
-      : [...tagNames, tag];
+    const newTags = tags.includes(tag)
+      ? tags.filter((t) => t !== tag)
+      : [...tags, tag];
     setValue("tags", newTags, { shouldDirty: true, shouldValidate: true });
   };
 
@@ -29,7 +29,7 @@ const TagSection = () => {
               type="button"
               onClick={() => handleTagToggle(tagName)}
               className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-                tagNames?.includes(tagName)
+                tags?.includes(tagName)
                   ? "bg-olive-light text-white"
                   : "border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100"
               }`}

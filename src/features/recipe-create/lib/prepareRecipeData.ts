@@ -62,7 +62,7 @@ export const prepareRecipeData = (formData: RecipeFormValues) => {
         stepImageKey: undefined,
       })),
     cookingTools: formData.cookingTools || [],
-    tagNames: formData.tagNames || [],
+    tags: formData.tags || [],
   };
 
   return {

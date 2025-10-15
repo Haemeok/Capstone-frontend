@@ -15,7 +15,7 @@ export const SearchClient = () => {
     q,
     sort,
     dishType,
-    tagNames,
+    tags,
     inputValue,
     sortCode,
     dishTypeCode,
@@ -46,7 +46,7 @@ export const SearchClient = () => {
     useSearchDrawer({
       dishType,
       sort,
-      tagNames,
+      tags,
       updateDishType,
       updateSort,
       updateTags,
@@ -60,7 +60,7 @@ export const SearchClient = () => {
         handleSearchSubmit={handleSearchSubmit}
         dishType={dishType}
         sort={sort}
-        tagNames={tagNames}
+        tags={tags}
         onDishTypeClick={() => openDrawer("dishType")}
         onSortClick={() => openDrawer("sort")}
         onTagsClick={() => openDrawer("tags")}

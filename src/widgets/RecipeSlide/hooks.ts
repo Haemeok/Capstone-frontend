@@ -6,7 +6,7 @@ type UseRecipeItemsQueryParams = {
   key: string;
   sort?: "desc" | "asc";
   isAiGenerated?: boolean;
-  tagNames?: string[];
+  tags?: string[];
   q?: string;
   dishType?: string | null;
 };
@@ -15,11 +15,11 @@ export const useRecipeItemsQuery = ({
   key,
   sort = "desc",
   isAiGenerated,
-  tagNames,
+  tags,
   q,
   dishType,
 }: UseRecipeItemsQueryParams) => {
-  const queryParams = { sort, isAiGenerated, tagNames, q, dishType };
+  const queryParams = { sort, isAiGenerated, tags, q, dishType };
   const queryKey = ["recipes", key, queryParams];
 
   const query = useQuery({

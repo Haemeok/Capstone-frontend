@@ -14,7 +14,7 @@ type RecipeSlideProps = {
   title: string;
   queryKey: string;
   isAiGenerated?: boolean;
-  tagNames?: string[];
+  tags?: string[];
   to?: string;
 };
 
@@ -22,7 +22,7 @@ const RecipeSlide = ({
   title,
   queryKey,
   isAiGenerated,
-  tagNames,
+  tags,
   to,
 }: RecipeSlideProps) => {
   const router = useRouter();
@@ -33,7 +33,7 @@ const RecipeSlide = ({
   } = useRecipeItemsQuery({
     key: queryKey,
     isAiGenerated,
-    tagNames,
+    tags,
   });
 
   const handleMoreClick = () => {
