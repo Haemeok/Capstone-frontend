@@ -2,13 +2,12 @@
 
 import { useRouter } from "next/navigation";
 
-import { Button } from "@/shared/ui/shadcn/button";
-
 type CommentMoreButtonProps = {
   recipeId: number;
+  text: string;
 };
 
-const CommentMoreButton = ({ recipeId }: CommentMoreButtonProps) => {
+const CommentMoreButton = ({ recipeId, text }: CommentMoreButtonProps) => {
   const router = useRouter();
 
   const handleNavigateToComments = () => {
@@ -16,13 +15,12 @@ const CommentMoreButton = ({ recipeId }: CommentMoreButtonProps) => {
   };
 
   return (
-    <Button
-      variant="ghost"
-      className="text-olive-medium cursor-pointer font-bold"
+    <button
+      className="text-olive-light cursor-pointer py-2 px-4"
       onClick={handleNavigateToComments}
     >
-      더 읽기
-    </Button>
+      <p className="text-sm font-bold">{text}</p>
+    </button>
   );
 };
 

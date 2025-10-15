@@ -11,7 +11,10 @@ type RecipeStepProps = {
 
 const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
   return (
-    <div key={stepIndex} className="w-full h-full">
+    <div
+      key={stepIndex}
+      className="w-full h-full pb-4 border-b border-slate-200"
+    >
       <h3 className="mb-2 text-left text-lg font-bold">
         Step {stepIndex + 1}/{length}
       </h3>
@@ -24,7 +27,7 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
           >
             <p className="text-mm text-left">{ingredient.name}</p>
             {ingredient.quantity && (
-              <p className="text-mm text-left font-bold">
+              <p className="text-mm text-left font-bold text-olive-light">
                 {ingredient.quantity}
                 {ingredient.unit}
               </p>
@@ -33,15 +36,15 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
         ))}
       </div>
       <p className="mt-2 text-left">{step.instruction}</p>
-      <div className="w-full h-80">
-        {step.stepImageUrl && (
+      {step.stepImageUrl && (
+        <div className="w-full h-80">
           <Image
             src={step.stepImageUrl}
             alt={`Step ${stepIndex + 1}`}
             className="mt-2 w-full rounded-2xl h-full object-cover"
           />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
