@@ -8,6 +8,7 @@ import Circle from "./Circle";
 type ProgressButtonProps = {
   progressPercentage: number;
   isFormValid: boolean;
+  text: string;
   className?: string;
   isLoading?: boolean;
   onClick?: () => void;
@@ -16,6 +17,7 @@ type ProgressButtonProps = {
 const ProgressButton = ({
   progressPercentage,
   isFormValid,
+  text,
   className,
   isLoading,
   onClick,
@@ -46,7 +48,7 @@ const ProgressButton = ({
               size={20}
               className="transition-transform duration-300 group-hover:scale-120"
             />
-            <span>레시피 생성하기</span>
+            <span>{text}</span>
             <ArrowRight
               size={16}
               className="transition-transform duration-300 group-hover:translate-x-1"

@@ -28,6 +28,7 @@ const RecipeEditClient = ({ recipeId }: RecipeEditClientProps) => {
           recipeCreationError={error}
           onSubmit={onSubmit}
           ingredientIds={ingredientIds}
+          isEdit
         />
       </FormProvider>
     </div>
