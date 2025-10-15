@@ -29,18 +29,19 @@ type IngredientSelectorProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onIngredientSelect: (ingredient: IngredientPayload) => void;
-  addedIngredientIds: ReadonlySet<number>;
-  setAddedIngredientIds: React.Dispatch<React.SetStateAction<Set<number>>>;
+  ingredientIds: number[];
 };
 
 const IngredientSelector = ({
   open,
   onOpenChange,
   onIngredientSelect,
-  addedIngredientIds,
-  setAddedIngredientIds,
+  ingredientIds,
 }: IngredientSelectorProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("나의 재료");
+  const [ingredientIdSet, setIngredientIdSet] = useState<Set<number>>(
+    new Set(ingredientIds)
+  );
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
@@ -75,7 +76,7 @@ const IngredientSelector = ({
       quantity: "",
       unit: ingredient.unit,
     });
-    setAddedIngredientIds((prevIds: Set<number>) =>
+    setIngredientIdSet((prevIds: Set<number>) =>
       new Set(prevIds).add(ingredient.id)
     );
   };
@@ -150,7 +151,7 @@ const IngredientSelector = ({
                   <div className="flex-1">
                     <p className="font-medium">{ingredient.name}</p>
                   </div>
-                  {addedIngredientIds.has(ingredient.id) ? (
+                  {ingredientIdSet.has(ingredient.id) ? (
                     <Button
                       size="sm"
                       variant="ghost"

@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import { Plus, X } from "lucide-react";
-import { ChefHat } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { IngredientPayload } from "@/entities/ingredient";
 
 import { RecipeFormValues } from "../model/config";
+import IngredientItem from "./IngredientItem";
 import IngredientSelector from "./IngredientSelector";
 
 type IngredientSectionProps = {
@@ -29,16 +29,6 @@ const IngredientSection = ({
   } = useFormContext<RecipeFormValues>();
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const [addedIngredientIds, setAddedIngredientIds] = useState<Set<number>>(
-    new Set()
-  );
-
-  useEffect(() => {
-    if (Array.isArray(ingredientIds)) {
-      setAddedIngredientIds(new Set(ingredientIds));
-    }
-  }, [ingredientIds]);
 
   const {
     fields: ingredientFields,
@@ -71,47 +61,14 @@ const IngredientSection = ({
 
       <div className="space-y-3 pt-4">
         {ingredientFields.map((field, index) => (
-          <div
+          <IngredientItem
             key={field.id}
-            className="flex min-h-16 flex-col gap-1 rounded-lg border border-gray-200 bg-white p-2 shadow-sm"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
-                <ChefHat size={20} className="text-olive-light" />
-              </div>
-
-              <div className="flex h-full flex-1 items-center justify-between gap-2">
-                <p className="flex-1 font-medium text-gray-800">{field.name}</p>
-
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    className={`w-20 rounded border border-gray-300 px-2 py-1 text-right focus:border-green-500 focus:outline-none ${errors.ingredients?.[index]?.quantity ? "border-red-500" : ""}`}
-                    {...register(`ingredients.${index}.quantity`, {
-                      required: "수량/단위를 입력해주세요.",
-                    })}
-                  />
-                  <p className="w-10 text-gray-500">{field.unit}</p>
-                </div>
-              </div>
-              <div className="flex-shrink-0">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-400 hover:text-red-500"
-                  onClick={() => handleRemoveIngredient(index)}
-                >
-                  <X size={18} />
-                </Button>
-              </div>
-            </div>
-            {errors.ingredients?.[index]?.quantity && (
-              <p className="w-full text-right text-xs text-red-500">
-                {errors.ingredients[index]?.quantity?.message}
-              </p>
-            )}
-          </div>
+            field={field}
+            index={index}
+            onRemove={handleRemoveIngredient}
+            register={register}
+            error={errors.ingredients?.[index]?.quantity}
+          />
         ))}
       </div>
       <Button
@@ -128,8 +85,7 @@ const IngredientSection = ({
         open={isOpen}
         onOpenChange={setIsOpen}
         onIngredientSelect={addIngredient}
-        addedIngredientIds={addedIngredientIds}
-        setAddedIngredientIds={setAddedIngredientIds}
+        ingredientIds={ingredientIds}
       />
     </div>
   );
