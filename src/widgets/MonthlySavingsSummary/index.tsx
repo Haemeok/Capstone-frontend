@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
-import { formatPrice } from "@/shared/lib/format";
+import { formatNumber } from "@/shared/lib/format";
 import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
 import SavingSection from "@/shared/ui/SavingSection";
 
@@ -61,7 +61,7 @@ const MonthlySavingsSummary = ({
       </h3>
       <div className="flex gap-1">
         <h3 className="text-olive-mint text-xl font-bold">
-          {formatPrice(currentSavings, "원")}
+          {formatNumber(currentSavings, "원")}
         </h3>
         <h3 className="text-xl font-bold"> 절약했어요</h3>
       </div>
@@ -87,9 +87,9 @@ const MonthlySavingsSummary = ({
           </div>
         </div>
         <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
-          <span>현재 단계 {formatPrice(currentMin, "원")}</span>
+          <span>현재 단계 {formatNumber(currentMin, "원")}</span>
           {next ? (
-            <span>다음 단계 {formatPrice(next.min, "원")}</span>
+            <span>다음 단계 {formatNumber(next.min, "원")}</span>
           ) : (
             <span>최고 단계 달성</span>
           )}

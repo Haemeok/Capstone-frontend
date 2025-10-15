@@ -1,11 +1,11 @@
-export const formatPrice = (
+export const formatNumber = (
   value: number | string | null | undefined,
-  currencySymbol: string = "원"
+  unit: string = "원"
 ): string => {
   const num = Number(value);
   const safeNumber = isNaN(num) ? 0 : num;
 
   const formattedNumber = new Intl.NumberFormat("ko-KR").format(safeNumber);
 
-  return `${formattedNumber}${currencySymbol}`;
+  return `${formattedNumber}${unit}`;
 };
