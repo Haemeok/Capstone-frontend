@@ -43,7 +43,9 @@ const UserProfileDisplay = ({
         isGuest={user.id === guestUser.id}
       />
     </div>
-    <p className="text-mm text-dark mt-3 max-w-[90%]">{user.introduction}</p>
+    <p className="text-mm text-dark mt-3 w-full whitespace-pre-line">
+      {user.introduction}
+    </p>
   </div>
 );
 
