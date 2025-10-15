@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { formatPrice } from "@/shared/lib/format";
+import { formatNumber } from "@/shared/lib/format";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { useRecipeHistoryDetailQuery } from "@/entities/user";
@@ -52,7 +52,7 @@ const CalendarDetailPage = () => {
               <div className="flex flex-col">
                 <p className="text-sm text-slate-500">이 레시피로</p>
                 <p className="text-olive-mint text-mm font-bold">
-                  {formatPrice(item.savings)}원을 절약했어요
+                  {formatNumber(item.savings)}원을 절약했어요
                 </p>
               </div>
             </div>

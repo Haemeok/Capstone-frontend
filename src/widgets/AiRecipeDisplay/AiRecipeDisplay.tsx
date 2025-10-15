@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 
-import { formatPrice } from "@/shared/lib/format";
+import { formatNumber } from "@/shared/lib/format";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 import { FabButton } from "@/shared/ui/FabButton";
 import RequiredAmountDisplay from "@/shared/ui/PointDisplayBanner";
@@ -36,7 +36,7 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
       <Box className="flex flex-col gap-2">
         <h2 className="mb-2 text-xl font-bold">재료</h2>
         <RequiredAmountDisplay
-          pointText={formatPrice(recipe.totalIngredientCost)}
+          pointText={formatNumber(recipe.totalIngredientCost)}
           prefix="이 레시피에 약"
           suffix="필요해요!"
         />
@@ -49,13 +49,13 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
                 {ingredient.unit}
               </p>
               <p className="text-left text-sm text-slate-500">
-                {formatPrice(ingredient.price)}원
+                {formatNumber(ingredient.price)}원
               </p>
             </li>
           ))}
         </ul>
         <RequiredAmountDisplay
-          pointText={formatPrice(
+          pointText={formatNumber(
             recipe.marketPrice - recipe.totalIngredientCost
           )}
           prefix="배달 물가 대비"

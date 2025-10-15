@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Calculator, DollarSign } from "lucide-react";
 
-import { formatPrice } from "@/shared/lib/format";
+import { formatNumber } from "@/shared/lib/format";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 import Box from "@/shared/ui/primitives/Box";
-import { Button } from "@/shared/ui/shadcn/button";
 
 import { Recipe } from "@/entities/recipe/model/types";
+import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
 
 type IngredientsSectionProps = {
   recipe: Recipe;
@@ -18,23 +18,30 @@ type IngredientsSectionProps = {
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const [displayMode, setDisplayMode] = useState<"price" | "calories">("price");
 
+  const randomActivity = useMemo(() => getRandomActivity(), [recipe.id]);
+
+  const activityTime = calculateActivityTime(
+    recipe.totalCalories,
+    randomActivity
+  );
+
   const displayConfig = {
     topBanner: {
       pointText:
         displayMode === "price"
-          ? `${formatPrice(recipe.totalIngredientCost, "원")}`
-          : `${recipe.totalCalories}칼로리`,
+          ? `${formatNumber(recipe.totalIngredientCost, "원")}`
+          : `${formatNumber(Math.floor(recipe.totalCalories), "kcal")}`,
       prefix: displayMode === "price" ? "이 레시피에 약" : "이 레시피는 약",
-      suffix: displayMode === "price" ? "필요해요!" : "에요!",
+      suffix: displayMode === "price" ? "필요해요!" : "예요!",
     },
     bottomBanner: {
       pointText:
         displayMode === "price"
-          ? `${formatPrice(
+          ? `${formatNumber(
               recipe.marketPrice - recipe.totalIngredientCost,
               "원"
             )}`
-          : `달리기 ${Math.round(recipe.totalCalories / 10)}분`,
+          : `${randomActivity.name} ${formatNumber(activityTime, "분")}`,
       prefix: displayMode === "price" ? "배달 물가 대비" : "이 칼로리는",
       suffix: displayMode === "price" ? "절약해요!" : "으로 소모 가능해요!",
       textClassName: "text-purple-500",
@@ -45,13 +52,11 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
     <Box className="flex flex-col gap-2">
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-xl font-bold">재료</h2>
-        <Button
-          variant="ghost"
-          size="sm"
+        <button
           onClick={() =>
             setDisplayMode(displayMode === "price" ? "calories" : "price")
           }
-          className="flex items-center gap-1 text-sm cursor-pointer"
+          className="flex items-center gap-1 text-sm rounded-lg border border-gray-200  cursor-pointer p-2"
         >
           {displayMode === "calories" ? (
             <>
@@ -64,7 +69,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
               <p className="text-sm text-slate-500">가격</p>
             </>
           )}
-        </Button>
+        </button>
       </div>
 
       <PointDisplayBanner
@@ -80,18 +85,18 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
             <p className="text-left font-bold">{ingredient.name}</p>
             <p className="text-left">
               {ingredient.quantity}
-              {ingredient.unit}
+              {ingredient.quantity !== "약간" && ingredient.unit}
             </p>
             <p className="text-left text-sm text-slate-500">
               {displayMode === "price"
-                ? `${formatPrice(ingredient.price || 0, "원")}`
-                : `${formatPrice(ingredient.calories, "kcal")}`}
+                ? `${formatNumber(ingredient.price || 0, "원")}`
+                : `${formatNumber(ingredient.calories, "kcal")}`}
             </p>
           </li>
         ))}
       </ul>
 
-      <div className="mt-2" style={{ minHeight: "40px" }}>
+      <div className="mt-2 text-center">
         <PointDisplayBanner
           pointText={displayConfig.bottomBanner.pointText}
           prefix={displayConfig.bottomBanner.prefix}

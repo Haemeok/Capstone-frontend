@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-import { formatPrice } from "@/shared/lib/format";
+import { formatNumber } from "@/shared/lib/format";
 
 import StarIcon from "./StarIcon";
 
@@ -113,7 +113,7 @@ const Ratings = ({
     return (
       <div className="mt-1 flex items-center">
         <p className="text-olive-mint text-sm font-bold">
-          {formatPrice(count, "명")}
+          {formatNumber(count, "명")}
         </p>
         <p className="text-sm text-gray-400">의 사람들이 평균</p>
         <p className="text-olive-mint ml-1 text-sm font-bold">{value}점</p>
