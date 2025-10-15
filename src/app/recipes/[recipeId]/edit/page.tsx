@@ -1,36 +1,32 @@
-"use client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-import { FormProvider } from "react-hook-form";
-import { useParams } from "next/navigation";
+import { getRecipeOnServer } from "@/entities/recipe/model/api.server";
 
-import { useRecipeEditForm } from "@/features/recipe-create/model/hooks/useRecipeEditForm";
-import RecipeFormLayout from "@/features/recipe-create/ui/RecipeFormLayout";
+import RecipeEditClient from "./components/RecipeEditClient";
 
-const UpdateRecipePage = () => {
-  const { recipeId } = useParams();
+type RecipeEditPageProps = {
+  params: Promise<{ recipeId: string }>;
+};
 
-  const {
-    methods,
-    onSubmit,
-    handleMainIngredientRemoved,
-    isLoading,
-    error,
-    ingredientIds,
-  } = useRecipeEditForm(Number(recipeId));
+const RecipeEditPage = async ({ params }: RecipeEditPageProps) => {
+  const { recipeId } = await params;
+  const numericRecipeId = Number(recipeId);
+
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["recipe", numericRecipeId.toString()],
+    queryFn: () => getRecipeOnServer(numericRecipeId),
+  });
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <FormProvider {...methods}>
-        <RecipeFormLayout
-          handleMainIngredientRemoved={handleMainIngredientRemoved}
-          isLoading={isLoading}
-          recipeCreationError={error}
-          onSubmit={onSubmit}
-          ingredientIds={ingredientIds}
-        />
-      </FormProvider>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <RecipeEditClient recipeId={numericRecipeId} />
+    </HydrationBoundary>
   );
 };
 
-export default UpdateRecipePage;
+export default RecipeEditPage;

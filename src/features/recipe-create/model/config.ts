@@ -17,6 +17,12 @@ const imageSchema = z
   ])
   .optional();
 
+const mainImageSchema = z
+  .union([z.instanceof(File), z.url(), z.null()])
+  .refine((val) => val !== null, {
+    message: MSG.IMAGE.REQUIRED,
+  });
+
 const ingredientSchema = z.object({
   name: z.string(),
   quantity: z.string().min(1, MSG.DESCRIPTION.QUANTITY),
@@ -39,7 +45,7 @@ const stepSchema = z.object({
 
 export const recipeFormSchema = z.object({
   title: z.string().min(TITLE.MIN, MSG.TITLE.MIN),
-  image: imageSchema,
+  image: mainImageSchema,
   ingredients: z
     .array(ingredientSchema)
     .min(INGREDIENTS.MIN, MSG.INGREDIENTS.MIN),
@@ -49,7 +55,7 @@ export const recipeFormSchema = z.object({
   description: z.string().min(DESCRIPTION.MIN, MSG.DESCRIPTION.MIN),
   steps: z.array(stepSchema).min(STEPS.MIN, MSG.STEPS.MIN),
   cookingTools: z.array(z.string()).default([]),
-  tagNames: z.array(z.string()).default([]),
+  tags: z.array(z.string()).default([]),
   imageKey: z.string().optional().nullable(),
 });
 
@@ -75,5 +81,5 @@ export const RECIPE_FORM_DEFAULT_VALUES: RecipeFormValues = {
     },
   ],
   cookingTools: [],
-  tagNames: [],
+  tags: [],
 };

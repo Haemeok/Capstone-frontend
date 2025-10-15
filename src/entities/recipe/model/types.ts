@@ -47,7 +47,7 @@ export type Recipe = {
   ratingInfo: RatingInfo;
   ingredients: Omit<IngredientItem, "inFridge">[];
   steps: RecipeStep[];
-  tagNames: string[];
+  tags: string[];
   comments: Comment[];
   author: User;
   likeCount: number;
