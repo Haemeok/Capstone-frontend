@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
+import { FabButton } from "@/shared/ui/FabButton";
 
 import { useUserStore } from "@/entities/user";
 
@@ -17,6 +18,7 @@ import { useInfiniteIngredients } from "./hooks/useInfiniteIngredients";
 import { useIngredientsManager } from "./hooks/useIngredientsManager";
 
 const IngredientsPageClient = () => {
+  const observerRef = useRef<HTMLDivElement>(null);
   const [sort] = useState<"asc" | "desc">("asc");
 
   const { user } = useUserStore();
@@ -46,14 +48,15 @@ const IngredientsPageClient = () => {
     deleteIngredientBulk(selectedIngredientIds);
   };
 
-  const headerTitle = user?.nickname
-    ? `${user?.nickname}님의 냉장고`
-    : "로그인 후 냉장고를 관리해보세요";
+  const headerTitle = !!user
+    ? `${user?.nickname}님의\n냉장고`
+    : "로그인 후 냉장고를\n관리해보세요";
 
   return (
     <div className="flex h-full flex-col">
+      <div ref={observerRef} className="h-1 w-full" />
       <div className="flex items-center justify-between border-b border-gray-200 bg-[#f7f7f7] p-4">
-        <h1 className="text-xl font-bold">{headerTitle}</h1>
+        <h1 className="whitespace-pre-line text-xl font-bold">{headerTitle}</h1>
         {!!user && (
           <IngredientActionButtons
             isDeleteMode={isDeleteMode}
@@ -90,6 +93,14 @@ const IngredientsPageClient = () => {
         isLoggedIn={!!user}
         setSelectedIngredientIds={setSelectedIngredientIds}
       />
+
+      {!!user && (
+        <FabButton
+          to="/recipes/my-fridge"
+          text="내 냉장고로 레시피 찾기"
+          triggerRef={observerRef}
+        />
+      )}
     </div>
   );
 };
