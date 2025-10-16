@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 import {
   dehydrate,
@@ -47,10 +48,16 @@ export default async function RecipeDetailPage({
   const { recipeId } = await params;
   const numericRecipeId = Number(recipeId);
 
+  const recipe = await getRecipeOnServer(numericRecipeId);
+
+  if (!recipe) {
+    notFound();
+  }
+
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["recipe", numericRecipeId.toString()],
-    queryFn: () => getRecipeOnServer(numericRecipeId),
+    queryFn: () => Promise.resolve(recipe),
   });
 
   return (

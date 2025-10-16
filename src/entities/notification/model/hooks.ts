@@ -27,15 +27,15 @@ export const NOTIFICATION_QUERY_KEYS = {
 export const useInfiniteNotificationsQuery = (
   params: NotificationsParams = {}
 ) => {
-  const { data, error, hasNextPage, isFetchingNextPage, ref } =
+  const { data, error, hasNextPage, isFetching, isFetchingNextPage, ref } =
     useInfiniteScroll<
       NotificationResponse,
       Error,
       InfiniteData<NotificationResponse>,
-      string[],
+      readonly ["notifications", "list", NotificationsParams],
       number
     >({
-      queryKey: [NOTIFICATION_QUERY_KEYS.notificationList(params).join("-")],
+      queryKey: NOTIFICATION_QUERY_KEYS.notificationList(params),
       queryFn: ({ pageParam }) => getNotifications({ ...params, pageParam }),
       getNextPageParam: getNextPageParam,
       initialPageParam: 0,
@@ -49,6 +49,7 @@ export const useInfiniteNotificationsQuery = (
     data,
     error,
     hasNextPage,
+    isFetching,
     isFetchingNextPage,
     ref,
     notifications: allNotifications,
@@ -109,16 +110,47 @@ export const useDeleteNotification = () => {
 
   return useMutation({
     mutationFn: deleteNotification,
-    onSuccess: () => {
+    onMutate: async (notificationId: number) => {
+      await queryClient.cancelQueries({
+        queryKey: NOTIFICATION_QUERY_KEYS.notifications,
+      });
+
+      const previousData = queryClient.getQueriesData({
+        queryKey: NOTIFICATION_QUERY_KEYS.notifications,
+      });
+
+      queryClient.setQueriesData<InfiniteData<NotificationResponse>>(
+        { queryKey: NOTIFICATION_QUERY_KEYS.notifications },
+        (old) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              content: page.content.filter((n) => n.id !== notificationId),
+            })),
+          };
+        }
+      );
+
+      return { previousData };
+    },
+    onError: (error: Error, _notificationId, context) => {
+      console.error("Failed to delete notification:", error);
+      if (context?.previousData) {
+        context.previousData.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.unreadCount,
       });
-    },
-    onError: (error: Error) => {
-      console.error("Failed to delete notification:", error);
     },
   });
 };
@@ -128,16 +160,47 @@ export const useDeleteAllNotifications = () => {
 
   return useMutation({
     mutationFn: deleteAllNotifications,
-    onSuccess: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: NOTIFICATION_QUERY_KEYS.notifications,
+      });
+
+      const previousData = queryClient.getQueriesData({
+        queryKey: NOTIFICATION_QUERY_KEYS.notifications,
+      });
+
+      queryClient.setQueriesData<InfiniteData<NotificationResponse>>(
+        { queryKey: NOTIFICATION_QUERY_KEYS.notifications },
+        (old) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              content: [],
+            })),
+          };
+        }
+      );
+
+      return { previousData };
+    },
+    onError: (error: Error, _variables, context) => {
+      console.error("Failed to delete all notifications:", error);
+      if (context?.previousData) {
+        context.previousData.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.unreadCount,
       });
-    },
-    onError: (error: Error) => {
-      console.error("Failed to delete all notifications:", error);
     },
   });
 };
