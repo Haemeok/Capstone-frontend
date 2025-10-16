@@ -33,7 +33,7 @@ const ActionButton = ({
   if (!isLoggedIn && isGuest) {
     return (
       <Button
-        className="bg-olive-medium hover:bg-olive-dark rounded-full px-6 text-white"
+        className="bg-olive-light hover:bg-olive-dark rounded-full px-6 text-white"
         onClick={handleLoginClick}
       >
         <LogIn size={16} className="mr-1" /> 로그인

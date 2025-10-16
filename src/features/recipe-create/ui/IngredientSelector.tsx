@@ -174,7 +174,7 @@ const IngredientSelector = ({
                 </div>
               ))}
               <div ref={ref} className="h-10 text-center">
-                {!hasNextPage && data?.pages[0]?.content?.length && (
+                {!hasNextPage && data?.pages[0]?.content?.length > 0 && (
                   <p className="text-sm text-gray-400">
                     모든 재료를 불러왔습니다.
                   </p>

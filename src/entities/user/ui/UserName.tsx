@@ -16,8 +16,8 @@ const Username = ({ username, userId, className }: UsernameProps) => {
     router.push(`/users/${userId}`);
   };
   return (
-    <button onClick={handleClick}>
-      <p className={cn("text-sm font-bold text-gray-800", className)}>
+    <button onClick={handleClick} className="min-w-0 max-w-full">
+      <p className={cn("text-sm font-bold text-gray-800 truncate", className)}>
         {username}
       </p>
     </button>

@@ -8,6 +8,7 @@ import UserInfoEditButton from "@/features/edit-user-profile/ui/UserInfoEditButt
 
 import { User } from "../../entities/user/model/types";
 import ActionButton from "./ActionButton";
+import CollapsibleP from "@/shared/ui/CollapsibleP";
 
 type UserProfileDisplayProps = {
   user: User;
@@ -21,7 +22,7 @@ const UserProfileDisplay = ({
   loggedInUser,
 }: UserProfileDisplayProps) => (
   <div className="relative z-10 px-6">
-    <div className="flex items-end justify-between">
+    <div className="flex items-end gap-2">
       <div className="flex items-end gap-4">
         <div className="relative">
           <div className="h-24 w-24 overflow-hidden rounded-full">
@@ -35,17 +36,19 @@ const UserProfileDisplay = ({
           </div>
           {isOwnProfile && <UserInfoEditButton />}
         </div>
-        <h2 className="text-dark mb-5 text-2xl font-bold">{user.nickname}</h2>
       </div>
-      <ActionButton
-        isLoggedIn={!!loggedInUser}
-        isOwnProfile={isOwnProfile}
-        isGuest={user.id === guestUser.id}
-      />
+      <div className="grow flex flex-col">
+        <h2 className="text-dark text-xl font-bold mb-2">{user.nickname}</h2>
+        <div className="self-end">
+          <ActionButton
+            isLoggedIn={!!loggedInUser}
+            isOwnProfile={isOwnProfile}
+            isGuest={user.id === guestUser.id}
+          />
+        </div>
+      </div>
     </div>
-    <p className="text-mm text-dark mt-3 w-full whitespace-pre-line">
-      {user.introduction}
-    </p>
+    <CollapsibleP content={user.introduction} height={52} gradientHeight={16} />
   </div>
 );
 
