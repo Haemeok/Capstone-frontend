@@ -8,7 +8,7 @@ type CategoryTabsProps = {
 
 const CategoryTabs = ({ title }: CategoryTabsProps) => {
   return (
-    <div className="mt-8 w-full">
+    <div className="w-full">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold text-gray-800">{title}</h2>

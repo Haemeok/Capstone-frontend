@@ -9,12 +9,16 @@ import { CardContent } from "./shadcn/card";
 import { Collapsible, CollapsibleTrigger } from "./shadcn/collapsible";
 
 type CollapsiblePProps = {
-  content: string;
+  content?: string;
+  height?: number;
+  gradientHeight?: number;
 };
 
-const MAX_COLLAPSED_HEIGHT_PX = 96;
-
-const CollapsibleP = ({ content }: CollapsiblePProps) => {
+const CollapsibleP = ({
+  content = "",
+  height = 96,
+  gradientHeight = 64,
+}: CollapsiblePProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const contentRef = useRef<HTMLParagraphElement>(null);
@@ -23,14 +27,14 @@ const CollapsibleP = ({ content }: CollapsiblePProps) => {
     if (contentRef.current) {
       const currentContentHeight = contentRef.current.scrollHeight;
 
-      if (currentContentHeight > MAX_COLLAPSED_HEIGHT_PX) {
+      if (currentContentHeight > height) {
         setShowButton(true);
       } else {
         setShowButton(false);
         setIsOpen(true);
       }
     }
-  }, [content]);
+  }, [content, height]);
 
   const showGradient = showButton && !isOpen;
 
@@ -41,17 +45,17 @@ const CollapsibleP = ({ content }: CollapsiblePProps) => {
     >
       <CardContent className="p-4">
         <div
-          className="prose prose-sm relative w-full max-w-none"
+          className="relative w-full"
           style={{
-            height:
-              !showButton || isOpen ? "auto" : `${MAX_COLLAPSED_HEIGHT_PX}px`,
+            height: !showButton || isOpen ? "auto" : `${height}px`,
             transition: showButton ? "height 0.3s ease-in-out" : "none",
           }}
         >
           <div
-            className={`${
-              !showButton || isOpen ? "" : "max-h-24 overflow-hidden"
-            }`}
+            className={!showButton || isOpen ? "" : "overflow-hidden"}
+            style={{
+              maxHeight: !showButton || isOpen ? "none" : `${height}px`,
+            }}
           >
             <p
               ref={contentRef}
@@ -62,7 +66,10 @@ const CollapsibleP = ({ content }: CollapsiblePProps) => {
           </div>
 
           {showGradient && (
-            <div className="absolute right-0 bottom-0 left-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
+            <div
+              className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-white to-transparent"
+              style={{ height: `${gradientHeight}px` }}
+            ></div>
           )}
         </div>
 
