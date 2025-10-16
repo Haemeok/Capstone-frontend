@@ -41,7 +41,8 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
           <Image
             src={step.stepImageUrl}
             alt={`Step ${stepIndex + 1}`}
-            className="mt-2 w-full rounded-2xl h-full object-cover"
+            wrapperClassName="mt-2 w-full rounded-2xl h-full"
+            fit="cover"
           />
         </div>
       )}

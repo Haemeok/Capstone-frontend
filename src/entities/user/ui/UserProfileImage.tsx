@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Avatar } from "@radix-ui/react-avatar";
 
 import { cn } from "@/lib/utils";
+import { Image } from "@/shared/ui/image/Image";
 
 type UserProfileImageProps = {
   profileImage: string;
@@ -28,12 +29,11 @@ const UserProfileImage = ({
       className={cn("h-8 w-8 rounded-full flex-shrink-0", className)}
       onClick={handleClick}
     >
-      <img
+      <Image
         src={profileImage}
         alt="profileImage"
-        width={32}
-        height={32}
-        className="h-full w-full rounded-full object-cover"
+        wrapperClassName="h-full w-full rounded-full"
+        fit="cover"
       />
     </Avatar>
   );

@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { TAG_CODES } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
+import { OptimizedImage } from "@/shared/ui/image/OptimizedImage";
 
 type CateGoryItemProps = {
   id: number;
@@ -34,10 +34,11 @@ const CateGoryItem = ({
         );
       }}
     >
-      <Image
+      <OptimizedImage
         src={imageUrl}
         alt={name}
-        className="img-smooth h-70 w-50 object-cover"
+        className="object-cover"
+        wrapperClassName="h-70 w-50"
         width={200}
         height={280}
         priority={isLcpCandidate}

@@ -83,12 +83,14 @@ const DetailedRecipeGridItem = ({
           <p className="text-mm text-gray-800">·</p>
           <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 overflow-hidden">
           <UserProfileImage
             profileImage={recipe.profileImage}
             userId={recipe.authorId}
           />
-          <UserName username={recipe.authorName} userId={recipe.authorId} />
+          <div className="min-w-0 flex-1">
+            <UserName username={recipe.authorName} userId={recipe.authorId} />
+          </div>
         </div>
       </div>
     </div>

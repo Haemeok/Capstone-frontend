@@ -21,6 +21,7 @@ type ImageProps = Omit<
   inViewThreshold?: number;
   inViewRootMargin?: string;
   wrapperClassName?: string;
+  skeletonClassName?: string;
   imgClassName?: string;
   fit?: Fit;
 };
@@ -40,6 +41,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
     inViewThreshold,
     inViewRootMargin,
     wrapperClassName,
+    skeletonClassName,
     imgClassName,
     ...imgProps
   },

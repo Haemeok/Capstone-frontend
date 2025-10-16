@@ -41,8 +41,8 @@ const SimpleRecipeGridItem = ({
         <Image
           src={recipe.imageUrl}
           alt={recipe.title}
-          skeleton={<Skeleton className="h-52 w-52 rounded-2xl" />}
-          className="h-full w-full rounded-2xl object-cover"
+          wrapperClassName="rounded-2xl"
+          fit="cover"
           priority={priority}
         />
         <div className="absolute top-0 right-0 p-2 text-right">

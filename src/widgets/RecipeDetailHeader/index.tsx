@@ -10,6 +10,7 @@ import { Recipe } from "@/entities/recipe/model/types";
 
 import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
 import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
+import { OptimizedImage } from "@/shared/ui/image/OptimizedImage";
 
 type RecipeDetailHeaderProps = {
   recipe: Recipe;
@@ -40,16 +41,16 @@ const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
         }
       />
 
-      <div ref={imageRef} className="h-112 w-full relative">
-        <Image
-          src={recipe.imageUrl}
-          alt={recipe.title}
-          className="h-full w-full object-cover"
-          priority
-          fetchPriority="high"
-          fill
-        />
-      </div>
+      <OptimizedImage
+        ref={imageRef}
+        src={recipe.imageUrl}
+        alt={recipe.title}
+        wrapperClassName="w-full"
+        className="object-cover"
+        fill
+        priority
+        fetchPriority="high"
+      />
 
       <div className="cursor-pointer mt-4" onClick={handleNavigateToRating}>
         <Ratings
