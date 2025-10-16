@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 
