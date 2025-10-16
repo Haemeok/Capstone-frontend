@@ -23,7 +23,7 @@ export const useSearchResults = ({
   dishTypeCode,
   tagCodes,
 }: UseSearchResultsProps) => {
-  const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
+  const { data, hasNextPage, isFetching, isPending, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
     InfiniteData<DetailedRecipesApiResponse>,
@@ -65,6 +65,7 @@ export const useSearchResults = ({
     recipes,
     hasNextPage,
     isFetching,
+    isPending,
     ref,
     queryKeyString,
     noResults,

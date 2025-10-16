@@ -30,7 +30,8 @@ export const SearchClient = () => {
   const {
     recipes,
     hasNextPage,
-
+    isFetching,
+    isPending,
     ref,
     queryKeyString,
     noResults,
@@ -69,6 +70,8 @@ export const SearchClient = () => {
       <RecipeGrid
         recipes={recipes}
         hasNextPage={hasNextPage}
+        isFetching={isFetching}
+        isPending={isPending}
         observerRef={ref}
         noResults={noResults}
         noResultsMessage={noResultsMessage}
