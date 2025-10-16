@@ -9,7 +9,8 @@ const HomeHeader = () => {
         <Image
           src="/logo.svg"
           alt="logo"
-          className="h-10 w-10"
+          wrapperClassName="h-10 w-10"
+          skeletonClassName="h-10 w-10 rounded-full"
           width={40}
           height={40}
         />

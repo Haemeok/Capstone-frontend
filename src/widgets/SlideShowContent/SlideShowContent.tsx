@@ -14,7 +14,7 @@ const SlideShowContent = ({ step }: SlideShowContentProps) => {
         <Image
           src={step.stepImageUrl}
           alt={`Step ${step.stepNumber}`}
-          className="object-cover"
+          fit="cover"
         />
       </div>
 
