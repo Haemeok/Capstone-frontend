@@ -8,6 +8,7 @@ import { Search } from "lucide-react";
 
 import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import useSearch from "@/shared/hooks/useSearch";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
@@ -30,10 +31,11 @@ const NewIngredientsPage = () => {
   const [mode, setMode] = useState<"single" | "bulk">("single");
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
   const [sort] = useState<"asc" | "desc">("asc");
-  const [searchQuery, setSearchQuery] = useState("");
   const [bulkSelectedIds, setBulkSelectedIds] = useState<Set<number>>(
     new Set()
   );
+
+  const { searchQuery, inputValue, handleInputChange } = useSearch();
 
   const {
     data,
@@ -137,10 +139,6 @@ const NewIngredientsPage = () => {
     queryKeyString,
   ]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
@@ -196,19 +194,18 @@ const NewIngredientsPage = () => {
   };
 
   return (
-    <div
-      ref={pageContainerRef}
-      className="flex h-screen flex-col bg-[#ffffff] pb-20"
-    >
+    <div ref={pageContainerRef} className="flex h-screen flex-col pb-20">
       <div className="sticky top-0 z-10 bg-white shadow-sm">
         <div className="flex justify-between px-4 py-2">
           <PrevButton />
-          <h2 className="text-2xl font-bold flex items-center">재료 추가</h2>
+          <h2 className="text-xl font-bold flex items-center">재료 추가</h2>
           <button
-            className="flex items-center gap-1 rounded-full bg-gray-100 p-2 px-3"
+            className="flex items-center bg-olive-light text-white rounded-full px-4 py-2"
             onClick={() => handleModeChange(mode)}
           >
-            <p className="text-sm">{mode === "single" ? "한개씩" : "여러개"}</p>
+            <p className="text-sm ">
+              {mode === "single" ? "한개씩" : "여러개"}
+            </p>
           </button>
         </div>
         <div className="px-4">
@@ -219,9 +216,9 @@ const NewIngredientsPage = () => {
             <input
               type="text"
               placeholder="재료 이름을 검색하세요"
-              className="focus:border-olive focus:ring-olive w-full rounded-md border border-gray-300 bg-gray-50 py-2 pr-4 pl-10 focus:ring-1 focus:outline-none"
-              value={searchQuery}
-              onChange={handleSearchChange}
+              className="focus:border-olive-light focus:ring-olive-light w-full rounded-md border border-gray-300 bg-gray-50 py-2 pr-4 pl-10 focus:ring-1 focus:outline-none"
+              value={inputValue}
+              onChange={handleInputChange}
             />
           </div>
         </div>
@@ -233,7 +230,7 @@ const NewIngredientsPage = () => {
               className={cn(
                 "flex-shrink-0 px-3 py-3 text-sm",
                 selectedCategory === category
-                  ? "text-olive-mint font-bold"
+                  ? "text-olive-light font-bold"
                   : "text-gray-500 hover:text-gray-800"
               )}
             >
@@ -306,17 +303,17 @@ const NewIngredientsPage = () => {
                       size="sm"
                       variant={isAdded ? "outline" : "default"}
                       className={cn(
-                        "rounded-full px-3 text-xs font-bold",
+                        "rounded-full px-4 py-2 text-xs font-bold",
                         isAdded
-                          ? "border-red-500 text-red-500 hover:bg-red-50 hover:text-red-600"
-                          : "bg-olive hover:bg-olive-dark text-white"
+                          ? " text-rose-600 hover:bg-red-50 hover:text-red-600"
+                          : "bg-olive-light hover:bg-olive-dark text-white"
                       )}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleSingleAddRemove(ingredient.id, isAdded);
                       }}
                     >
-                      {isAdded ? "빼기" : "추가"}
+                      {isAdded ? "삭제" : "추가"}
                     </Button>
                   ) : !isAdded ? (
                     <Checkbox
