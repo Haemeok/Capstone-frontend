@@ -19,6 +19,7 @@ import {
 import useDeleteRecipeMutation from "@/features/recipe-delete/model/hooks";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
+import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 import SimpleRecipeGridItem from "@/widgets/RecipeGrid/ui/SimpleRecipeGridItem";
 
 type RecipeGridProps = {
@@ -26,6 +27,7 @@ type RecipeGridProps = {
   isSimple?: boolean;
   hasNextPage?: boolean;
   isFetching?: boolean;
+  isPending?: boolean;
   observerRef?: (node: Element | null) => void;
   noResults?: boolean;
   noResultsMessage?: string;
@@ -39,6 +41,7 @@ const RecipeGrid = ({
   isSimple = false,
   hasNextPage,
   isFetching,
+  isPending,
   observerRef,
   noResults,
   noResultsMessage = "표시할 레시피가 없습니다.",
@@ -87,7 +90,7 @@ const RecipeGrid = ({
 
   useEffect(() => {
     if (
-      (isFetching && (!recipes || recipes.length === 0)) ||
+      isPending ||
       !recipes ||
       recipes.length === 0 ||
       error ||
@@ -133,12 +136,20 @@ const RecipeGrid = ({
     return () => {
       ctx.revert();
     };
-  }, [error, isFetching, noResults, recipes, queryKeyString]);
+  }, [error, isPending, noResults, recipes, queryKeyString]);
 
-  if (isFetching && (!recipes || recipes.length === 0)) {
+  if (isPending) {
     return (
-      <div className="flex h-[400px] flex-1 items-center justify-center py-10">
-        <Circle className="text-olive-light h-15 w-15" />
+      <div className="p-4">
+        <div
+          className="grid gap-4
+            [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]
+            sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]
+            md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))]
+            lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]"
+        >
+          <RecipeGridSkeleton count={6} isSimple={isSimple} />
+        </div>
       </div>
     );
   }
@@ -200,7 +211,7 @@ const RecipeGrid = ({
           )}
       </div>
 
-      {isFetching && recipes && recipes.length > 0 && (
+      {isFetching && (
         <div className="flex items-center justify-center py-5">
           <Circle className="text-olive-light h-10 w-10" />
         </div>
