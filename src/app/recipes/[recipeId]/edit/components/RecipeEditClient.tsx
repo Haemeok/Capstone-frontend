@@ -16,7 +16,6 @@ const RecipeEditClient = ({ recipeId }: RecipeEditClientProps) => {
     handleMainIngredientRemoved,
     isLoading,
     error,
-    ingredientIds,
   } = useRecipeEditForm(recipeId);
 
   return (
@@ -27,7 +26,6 @@ const RecipeEditClient = ({ recipeId }: RecipeEditClientProps) => {
           isLoading={isLoading}
           recipeCreationError={error}
           onSubmit={onSubmit}
-          ingredientIds={ingredientIds}
           isEdit
         />
       </FormProvider>

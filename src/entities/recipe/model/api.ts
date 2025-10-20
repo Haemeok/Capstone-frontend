@@ -1,8 +1,7 @@
 import { api } from "@/shared/api/client";
-import { BaseQueryParams } from "@/shared/api/types";
-import { PresignedUrlResponse } from "@/shared/api/types";
+import { BaseQueryParams, PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
-import { buildParams, customParamsSerializer } from "@/shared/lib/utils";
+import { customParamsSerializer } from "@/shared/lib/utils";
 import { FileInfoRequest } from "@/shared/types";
 
 import {
@@ -18,62 +17,20 @@ export const getRecipe = async (id: number) => {
   return response;
 };
 
-export const getRecipeItems = async ({
-  sort,
-  dishType,
-  tags,
-  q,
-  isAiGenerated,
-  maxCost,
-  period,
-  size = PAGE_SIZE,
-  pageParam = 0,
-}: {
-  sort: string;
-  dishType?: string | null;
-  tags?: string[] | null;
-  q?: string;
-  isAiGenerated?: boolean;
-  maxCost?: number;
-  period?: "weekly" | "monthly";
-  size?: number;
-  pageParam?: number;
-}) => {
-  const baseParams: BaseQueryParams = {
-    page: pageParam,
-    size,
-    sort,
-  };
-
-  const optionalParams: Partial<RecipeQueryParams> = {
-    dishType,
-    tags,
-    q,
-    isAiGenerated,
-  };
-
-  const apiParams = buildParams(baseParams, optionalParams);
-
-  if (maxCost) {
-    apiParams.maxCost = maxCost;
-  }
-  if (period) {
-    apiParams.period = period;
-  }
+export const getRecipeItems = async (params: RecipeQueryParams) => {
+  const { maxCost, period } = params;
 
   let endpoint = END_POINTS.RECIPE_SEARCH;
-  if (maxCost) {
+  if (maxCost !== undefined) {
     endpoint = END_POINTS.RECIPE_BUDGET;
-  } else if (period) {
+  } else if (period !== undefined) {
     endpoint = END_POINTS.RECIPE_POPULAR;
   }
 
-  const response = await api.get<DetailedRecipesApiResponse>(endpoint, {
-    params: apiParams,
+  return api.get<DetailedRecipesApiResponse>(endpoint, {
+    params,
     paramsSerializer: customParamsSerializer,
   });
-
-  return response;
 };
 
 export const getMyIngredientRecipes = async (
@@ -91,50 +48,34 @@ export const getMyIngredientRecipes = async (
 
 export const fetchPagedRecipes = async <T>(
   endpoint: string,
-  { sort, page = 0, size = PAGE_SIZE }: BaseQueryParams
+  params: BaseQueryParams
 ) => {
-  const apiParams: BaseQueryParams = {
-    page,
-    size,
-    sort,
-  };
-
-  const response = await api.get<T>(endpoint, {
-    params: apiParams,
-  });
-
-  return response;
+  return api.get<T>(endpoint, { params });
 };
 
-export const postRecipe = async ({
-  recipe,
-  files,
-}: {
+type RecipeSubmitData = {
   recipe: RecipePayload;
   files: FileInfoRequest[];
-}) => {
-  const response = await api.post<PresignedUrlResponse>(END_POINTS.RECIPES, {
+};
+
+export const postRecipe = async ({ recipe, files }: RecipeSubmitData) => {
+  return api.post<PresignedUrlResponse>(END_POINTS.RECIPES, {
     recipe,
     files,
   });
-  return response;
+};
+
+type RecipeEditData = RecipeSubmitData & {
+  recipeId: number;
 };
 
 export const editRecipe = async ({
   recipeId,
   recipe,
   files,
-}: {
-  recipeId: number;
-  recipe: RecipePayload;
-  files: FileInfoRequest[];
-}) => {
-  const response = await api.put<PresignedUrlResponse>(
-    END_POINTS.RECIPE(recipeId),
-    {
-      recipe,
-      files,
-    }
-  );
-  return response;
+}: RecipeEditData) => {
+  return api.put<PresignedUrlResponse>(END_POINTS.RECIPE(recipeId), {
+    recipe,
+    files,
+  });
 };
