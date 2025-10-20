@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { LogIn, Plus } from "lucide-react";
 
@@ -17,36 +17,25 @@ const ActionButton = ({
   isOwnProfile,
   isGuest,
 }: ActionButtonProps) => {
-  const router = useRouter();
-  const handleLoginClick = () => {
-    router.push("/login");
-  };
-
-  const handleCreateRecipeClick = () => {
-    router.push("/recipes/new");
-  };
-
   if (!isOwnProfile && !isGuest) {
     return <></>;
   }
 
   if (!isLoggedIn && isGuest) {
     return (
-      <Button
-        className="bg-olive-light hover:bg-olive-dark rounded-full px-6 text-white"
-        onClick={handleLoginClick}
-      >
-        <LogIn size={16} className="mr-1" /> 로그인
+      <Button asChild className="bg-olive-light hover:bg-olive-dark rounded-full px-6 text-white">
+        <Link href="/login">
+          <LogIn size={16} className="mr-1" /> 로그인
+        </Link>
       </Button>
     );
   }
 
   return (
-    <Button
-      className="bg-olive-light gap-0 rounded-full px-6 text-white"
-      onClick={handleCreateRecipeClick}
-    >
-      <Plus size={16} className="mr-1" /> 레시피 등록하기
+    <Button asChild className="bg-olive-light gap-0 rounded-full px-6 text-white">
+      <Link href="/recipes/new" prefetch={false}>
+        <Plus size={16} className="mr-1" /> 레시피 등록하기
+      </Link>
     </Button>
   );
 };

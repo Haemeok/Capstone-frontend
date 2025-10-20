@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -18,9 +18,7 @@ export const FabButton = ({
   triggerRef,
   animated = true,
 }: FabButtonProps) => {
-  const router = useRouter();
-
-  const { targetRef } = useScrollAnimate<HTMLButtonElement>({
+  const { targetRef } = useScrollAnimate<HTMLAnchorElement>({
     triggerRef: animated ? triggerRef : undefined,
     start: "top bottom-=100px",
     toggleActions: "play none none reset",
@@ -32,12 +30,10 @@ export const FabButton = ({
   return (
     <>
       <div className="fixed bottom-20 z-50 flex w-full justify-center">
-        <Button
-          ref={targetRef}
-          className="bg-olive-light rounded-full p-4 text-white shadow-lg"
-          onClick={() => router.push(to)}
-        >
-          {text}
+        <Button asChild className="bg-olive-light rounded-full p-4 text-white shadow-lg">
+          <Link href={to} prefetch={false} ref={targetRef}>
+            {text}
+          </Link>
         </Button>
       </div>
     </>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
@@ -11,16 +11,12 @@ type UsernameProps = {
 };
 
 const Username = ({ username, userId, className }: UsernameProps) => {
-  const router = useRouter();
-  const handleClick = () => {
-    router.push(`/users/${userId}`);
-  };
   return (
-    <button onClick={handleClick} className="min-w-0 max-w-full">
-      <p className={cn("text-sm font-bold text-gray-800 truncate", className)}>
+    <Link href={`/users/${userId}`} className="min-w-0 w-full block">
+      <p className={cn("text-sm font-bold text-gray-800 truncate text-left hover:underline", className)}>
         {username}
       </p>
-    </button>
+    </Link>
   );
 };
 

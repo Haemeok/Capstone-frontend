@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { TAG_CODES } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
@@ -21,18 +21,13 @@ const CateGoryItem = ({
   className,
   isLcpCandidate,
 }: CateGoryItemProps) => {
-  const router = useRouter();
   return (
-    <div
+    <Link
+      href={`/recipes/category/${TAG_CODES[name as keyof typeof TAG_CODES]}`}
       className={cn(
-        "relative h-70 w-50 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg shadow-md",
+        "relative h-70 w-50 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg shadow-md block",
         className
       )}
-      onClick={() => {
-        router.push(
-          `/recipes/category/${TAG_CODES[name as keyof typeof TAG_CODES]}`
-        );
-      }}
     >
       <OptimizedImage
         src={imageUrl}
@@ -47,7 +42,7 @@ const CateGoryItem = ({
       <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent p-2">
         <p className="truncate px-2 text-lg font-bold text-white">{name}</p>
       </div>
-    </div>
+    </Link>
   );
 };
 

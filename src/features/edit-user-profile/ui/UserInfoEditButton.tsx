@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Edit } from "lucide-react";
 
@@ -11,17 +11,17 @@ type UserInfoEditButtonProps = {
 };
 
 const UserInfoEditButton = ({ className = "" }: UserInfoEditButtonProps) => {
-  const router = useRouter();
   return (
-    <div
-      onClick={() => router.push("/users/edit")}
+    <Link
+      href="/users/edit"
+      prefetch={false}
       className={cn(
         "bg-olive-light absolute -right-1 -bottom-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow-md",
         className
       )}
     >
       <Edit size={14} className="text-white" />
-    </div>
+    </Link>
   );
 };
 

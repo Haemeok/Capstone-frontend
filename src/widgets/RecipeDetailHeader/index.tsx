@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-import Image from "next/image";
 import Ratings from "@/shared/ui/Ratings";
 
 import { Recipe } from "@/entities/recipe/model/types";
@@ -17,12 +16,7 @@ type RecipeDetailHeaderProps = {
 };
 
 const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
-  const router = useRouter();
   const imageRef = useRef<HTMLImageElement>(null);
-
-  const handleNavigateToRating = () => {
-    router.push(`/recipes/${recipe.id}/rate`);
-  };
 
   return (
     <>
@@ -52,7 +46,7 @@ const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
         fetchPriority="high"
       />
 
-      <div className="cursor-pointer mt-4" onClick={handleNavigateToRating}>
+      <Link href={`/recipes/${recipe.id}/rate`} prefetch={false} className="block mt-4">
         <Ratings
           precision={0.1}
           allowHalf
@@ -62,7 +56,7 @@ const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
           showValue
           ratingCount={recipe.ratingInfo.ratingCount}
         />
-      </div>
+      </Link>
     </>
   );
 };

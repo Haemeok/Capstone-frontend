@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { MessageSquare, Trash } from "lucide-react";
 
@@ -27,13 +27,8 @@ const CommentCard = ({
   hideReplyButton = false,
   recipeId,
 }: CommentProps) => {
-  const router = useRouter();
   const { user } = useUserStore();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const handleReplyClick = () => {
-    router.push(`comments/${comment.id}`);
-  };
 
   const { mutate: deleteComment } = useDeleteCommentMutation(
     comment.id,
@@ -84,16 +79,17 @@ const CommentCard = ({
         />
 
         {!hideReplyButton && (
-          <button
+          <Link
+            href={`comments/${comment.id}`}
+            prefetch={false}
             className="group flex cursor-pointer items-center gap-1 text-sm"
-            onClick={handleReplyClick}
           >
             <MessageSquare
               size={16}
               className="transition-all duration-250 group-hover:scale-120 group-hover:fill-slate-500"
             />
             <span className={`text-sm font-bold`}>{comment.replyCount}</span>
-          </button>
+          </Link>
         )}
       </div>
       {isDeleteModalOpen && (
