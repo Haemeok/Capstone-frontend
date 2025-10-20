@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Avatar } from "@radix-ui/react-avatar";
 
@@ -19,23 +19,21 @@ const UserProfileImage = ({
   userId,
   className,
 }: UserProfileImageProps) => {
-  const router = useRouter();
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    router.push(`/users/${userId}`);
-  };
   return (
-    <Avatar
-      className={cn("h-8 w-8 rounded-full flex-shrink-0", className)}
-      onClick={handleClick}
-    >
-      <Image
-        src={profileImage}
-        alt="profileImage"
-        wrapperClassName="h-full w-full rounded-full"
-        fit="cover"
-      />
-    </Avatar>
+    <div onClick={(e) => e.stopPropagation()}>
+      <Link href={`/users/${userId}`}>
+        <Avatar
+          className={cn("h-8 w-8 rounded-full flex-shrink-0 cursor-pointer", className)}
+        >
+          <Image
+            src={profileImage}
+            alt="profileImage"
+            wrapperClassName="h-full w-full rounded-full"
+            fit="cover"
+          />
+        </Avatar>
+      </Link>
+    </div>
   );
 };
 

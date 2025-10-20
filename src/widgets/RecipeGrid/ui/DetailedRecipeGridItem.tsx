@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { Star } from "lucide-react";
@@ -29,7 +29,6 @@ const DetailedRecipeGridItem = ({
   className,
   priority,
 }: DetailedRecipeGridItemProps) => {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const cachedRecipe = queryClient.getQueryData<Recipe>([
@@ -41,19 +40,15 @@ const DetailedRecipeGridItem = ({
   const currentLikedByUser =
     cachedRecipe?.likedByCurrentUser ?? recipe.likedByCurrentUser;
 
-  const handleClick = () => {
-    router.push(`/recipes/${recipe.id}`);
-  };
-
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
 
   return (
-    <div
+    <Link
+      href={`/recipes/${recipe.id}`}
       className={cn(
         `relative flex shrink-0 flex-col gap-2 rounded-2xl cursor-pointer`,
         className
       )}
-      onClick={handleClick}
       key={recipe.id}
     >
       <Image
@@ -93,7 +88,7 @@ const DetailedRecipeGridItem = ({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

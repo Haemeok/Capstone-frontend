@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type CommentMoreButtonProps = {
   recipeId: number;
@@ -8,19 +8,14 @@ type CommentMoreButtonProps = {
 };
 
 const CommentMoreButton = ({ recipeId, text }: CommentMoreButtonProps) => {
-  const router = useRouter();
-
-  const handleNavigateToComments = () => {
-    router.push(`/recipes/${recipeId}/comments`);
-  };
-
   return (
-    <button
-      className="text-olive-light cursor-pointer py-2 px-4"
-      onClick={handleNavigateToComments}
+    <Link
+      href={`/recipes/${recipeId}/comments`}
+      prefetch={false}
+      className="text-olive-light cursor-pointer py-2 px-4 block text-center"
     >
       <p className="text-sm font-bold">{text}</p>
-    </button>
+    </Link>
   );
 };
 

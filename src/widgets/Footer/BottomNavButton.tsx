@@ -7,15 +7,17 @@ type BottomNavButtonProps = {
   icon: React.ReactNode;
   label: string;
   path: string;
+  onClick?: (e: React.MouseEvent) => void;
 };
 
-const BottomNavButton = ({ icon, label, path }: BottomNavButtonProps) => {
+const BottomNavButton = ({ icon, label, path, onClick }: BottomNavButtonProps) => {
   const currentPath = usePathname();
   const isActive = currentPath === path;
 
   return (
     <Link
       href={path}
+      onClick={onClick}
       className={`flex cursor-pointer flex-col items-center ${
         isActive ? "text-olive-light" : "text-gray-400"
       }`}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Button } from "@/shared/ui/shadcn/button";
 
@@ -16,7 +16,6 @@ const IngredientActionButtons = ({
   setIsDeleteMode,
   handleDeleteIngredientBulk,
 }: IngredientActionButtonsProps) => {
-  const router = useRouter();
   const handleDeleteButtonClick = () => {
     if (isDeleteMode) {
       handleDeleteIngredientBulk();
@@ -29,8 +28,10 @@ const IngredientActionButtons = ({
       <Button variant="outline" onClick={handleDeleteButtonClick}>
         {isDeleteMode ? "완료" : "재료 삭제"}
       </Button>
-      <Button variant="outline" onClick={() => router.push("/ingredients/new")}>
-        재료 추가
+      <Button asChild variant="outline">
+        <Link href="/ingredients/new" prefetch={false}>
+          재료 추가
+        </Link>
       </Button>
     </div>
   );

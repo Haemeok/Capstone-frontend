@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
@@ -16,13 +16,12 @@ type HomeBannerProps = {
 };
 
 const HomeBanner = ({ title, description, image, to }: HomeBannerProps) => {
-  const { targetRef } = useScrollAnimate<HTMLDivElement>();
-  const router = useRouter();
+  const { targetRef } = useScrollAnimate<HTMLAnchorElement>();
 
   return (
-    <div
+    <Link
       ref={targetRef}
-      onClick={() => router.push(to)}
+      href={to}
       className="relative mt-2 flex w-full cursor-pointer items-center gap-2 rounded-lg border-1 border-gray-300 p-2 text-sm"
       style={{ opacity: 0 }}
     >
@@ -39,7 +38,7 @@ const HomeBanner = ({ title, description, image, to }: HomeBannerProps) => {
       </div>
 
       <ChevronRight className="absolute top-1/2 right-2 translate-y-[-50%] text-slate-500" />
-    </div>
+    </Link>
   );
 };
 
