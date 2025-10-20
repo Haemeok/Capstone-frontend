@@ -12,6 +12,7 @@ import {
   ImageType,
   RecipeFormValues,
 } from "@/features/recipe-create/model/config";
+import { createImageChangeHandler } from "@/shared/lib/image";
 
 type ImageFieldName = FieldPathByValue<RecipeFormValues, ImageType>;
 
@@ -45,10 +46,7 @@ export const ImageField = <TName extends ImageFieldName>({
       inputProps={{
         name: field.name,
         onBlur: field.onBlur,
-        onChange: (e) => {
-          const file = (e.target as HTMLInputElement).files?.[0] ?? null;
-          field.onChange(file);
-        },
+        onChange: createImageChangeHandler(field.onChange),
       }}
     />
   );

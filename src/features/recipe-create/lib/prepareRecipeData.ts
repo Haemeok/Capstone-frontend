@@ -8,42 +8,74 @@ import {
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { RecipeFormValues } from "../model/config";
+import { convertToWebP, shouldConvertToWebP } from "@/shared/lib/image";
 
-export const prepareRecipeData = (formData: RecipeFormValues) => {
+const convertToWebPIfNeeded = async (
+  file: File | string | null | undefined
+): Promise<File | string | null> => {
+  if (!file || typeof file === "string") {
+    return file ?? null;
+  }
+
+  if (file.type === "image/webp") {
+    return file;
+  }
+
+  if (shouldConvertToWebP(file)) {
+    try {
+      const { webpFile } = await convertToWebP(file);
+      return webpFile;
+    } catch (error) {
+      console.error(
+        `WebP conversion failed for ${file.name}, using original:`,
+        error
+      );
+      return file;
+    }
+  }
+
+  return file;
+};
+
+export const prepareRecipeData = async (formData: RecipeFormValues) => {
   const filesToUploadInfo: FileInfoRequest[] = [];
   const fileObjects: FileObject[] = [];
 
-  if (formData.image instanceof File) {
-    if (!isOneOf(formData.image.type, ALLOWED_CONTENT_TYPES)) {
+  const mainImage = await convertToWebPIfNeeded(formData.image);
+
+  if (mainImage instanceof File) {
+    if (!isOneOf(mainImage.type, ALLOWED_CONTENT_TYPES)) {
       throw new Error("Invalid image type");
     }
     filesToUploadInfo.push({
-      contentType: formData.image.type,
+      contentType: mainImage.type,
       type: "main",
     });
     fileObjects.push({
-      file: formData.image,
+      file: mainImage,
       type: "main",
     });
   }
 
-  formData.steps.forEach((step, index) => {
-    if (step.image instanceof File) {
-      if (!isOneOf(step.image.type, ALLOWED_CONTENT_TYPES)) {
+  for (const [index, step] of formData.steps.entries()) {
+    const stepImage = await convertToWebPIfNeeded(step.image);
+
+    if (stepImage instanceof File) {
+      if (!isOneOf(stepImage.type, ALLOWED_CONTENT_TYPES)) {
         throw new Error("Invalid image type");
       }
       filesToUploadInfo.push({
-        contentType: step.image.type,
+        contentType: stepImage.type,
         type: "step",
         stepIndex: index,
       });
       fileObjects.push({
-        file: step.image,
+        file: stepImage,
         type: "step",
         stepIndex: index,
       });
     }
-  });
+  }
 
   const recipeData: RecipePayload = {
     title: formData.title,

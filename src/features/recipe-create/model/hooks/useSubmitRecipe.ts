@@ -24,7 +24,7 @@ export const useSubmitRecipe = () => {
       const { formData, recipeId } = variables;
 
       const { recipeData, filesToUploadInfo, fileObjects } =
-        prepareRecipeData(formData);
+        await prepareRecipeData(formData);
 
       const presignedUrlResponse = await (recipeId
         ? editRecipe({ recipe: recipeData, files: filesToUploadInfo, recipeId })
