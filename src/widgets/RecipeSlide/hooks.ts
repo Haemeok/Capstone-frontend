@@ -1,17 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getRecipeItems } from "@/entities/recipe";
-
-type UseRecipeItemsQueryParams = {
-  key: string;
-  sort?: "desc" | "asc";
-  isAiGenerated?: boolean;
-  tags?: string[];
-  q?: string;
-  dishType?: string | null;
-  maxCost?: number;
-  period?: "weekly" | "monthly";
-};
+import { getRecipeItems, RecipeItemsQueryParams } from "@/entities/recipe";
 
 export const useRecipeItemsQuery = ({
   key,
@@ -22,13 +11,12 @@ export const useRecipeItemsQuery = ({
   dishType,
   maxCost,
   period,
-}: UseRecipeItemsQueryParams) => {
-  const queryParams = { sort, isAiGenerated, tags, q, dishType, maxCost, period };
-  const queryKey = ["recipes", key, queryParams];
+}: RecipeItemsQueryParams) => {
+  const queryKey = ["recipes", key, { sort, isAiGenerated, tags, q, dishType, maxCost, period }];
 
   const query = useQuery({
     queryKey,
-    queryFn: () => getRecipeItems(queryParams),
+    queryFn: () => getRecipeItems({ sort, isAiGenerated, tags, q, dishType, maxCost, period }),
     select: (data) => data.content,
   });
 

@@ -24,8 +24,8 @@ const AIRecipeListPage = () => {
     queryFn: ({ pageParam }) =>
       getRecipeItems({
         isAiGenerated: true,
-        pageParam,
         sort: "desc",
+        pageParam,
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
