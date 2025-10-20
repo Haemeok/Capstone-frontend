@@ -72,7 +72,9 @@ const SavingSection = ({
           ref={imageRef}
           src={imageUrl}
           alt={altText}
-          className="max-h-full w-auto max-w-full object-contain"
+          wrapperClassName="h-full w-full"
+          imgClassName="object-contain"
+          fit="contain"
         />
       </div>
     </div>

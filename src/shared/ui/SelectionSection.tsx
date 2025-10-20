@@ -24,7 +24,7 @@ const SelectionSection = ({
   return (
     <div className={`border-b pb-5 ${className}`}>
       <div className="mb-3 flex items-center gap-2">
-        <span className="text-olive-mint">{icon}</span>
+        <span className="text-olive-light">{icon}</span>
         <h2 className="text-lg font-bold text-gray-800">{title}</h2>
       </div>
       <div className="flex flex-wrap gap-2">

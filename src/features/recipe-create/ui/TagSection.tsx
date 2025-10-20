@@ -19,7 +19,7 @@ const TagSection = () => {
 
   return (
     <div className="mt-6 mb-4">
-      <h2 className="mb-3 text-xl font-bold text-gray-700">태그</h2>
+      <h2 className="text-xl font-bold text-gray-700">태그</h2>
       <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-sm">
         {TAG_DEFINITIONS.map((tag) => {
           const tagName = `${tag.emoji} ${tag.name}`;

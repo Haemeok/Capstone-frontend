@@ -52,7 +52,7 @@ const Steps = () => {
 
   return (
     <div className="mb-8">
-      <h2 className="mb-4 text-xl font-bold text-gray-800">조리 과정</h2>
+      <h2 className="text-xl font-bold text-gray-800">조리 과정</h2>
 
       <div className="space-y-6">
         {stepFields.map((step, index) => {
@@ -70,7 +70,7 @@ const Steps = () => {
               index={index}
               removeStep={removeStep}
               isDeletable={stepFields.length > 1}
-              usedElsewhereLookup={usedElsewhereLookup} // 4. 계산된 결과를 prop으로 전달
+              usedElsewhereLookup={usedElsewhereLookup}
             />
           );
         })}

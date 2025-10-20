@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { FieldPath, get, useFormContext, useWatch } from "react-hook-form";
 
-import { UploadIcon } from "lucide-react";
+import { Trash2, UploadIcon } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
@@ -41,22 +41,44 @@ export const ImageUploader = ({ fieldName, className }: ImageUploaderProps) => {
 
   const { ref, onChange, ...rest } = register(fieldName);
 
+  const handleRemoveImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValue(fieldName, null, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    setObjectUrl(null);
+  };
+
   return (
     <div
       className={cn(
-        "relative w-full h-full cursor-pointer bg-gray-200 text-gray-400 hover:bg-gray-300",
+        "relative w-full aspect-square cursor-pointer bg-gray-200 text-gray-400 hover:bg-gray-300 rounded-lg overflow-hidden",
         className
       )}
     >
+      {displayUrl && (
+        <button
+          type="button"
+          onClick={handleRemoveImage}
+          className="absolute top-2 left-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
+        >
+          <Trash2 size={18} />
+        </button>
+      )}
+
       <label
         htmlFor={`${fieldName}-input`}
-        className="absolute inset-0 cursor-pointer"
+        className="absolute inset-0 cursor-pointer z-10"
       >
         {displayUrl ? (
           <Image
             src={displayUrl}
             alt="Image preview"
-            className="h-full w-full object-cover"
+            wrapperClassName="h-full w-full"
+            imgClassName="object-cover"
+            fit="cover"
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center text-center">

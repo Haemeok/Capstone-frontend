@@ -27,11 +27,13 @@ const AIModelSelection = () => {
             onClick={() => handleSelectAI(ai)}
             className="flex flex-col items-center rounded-2xl border bg-white px-4 py-6 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
           >
-            <div className="w-full h-40 rounded-2xl mb-4 overflow-hidden">
+            <div className="w-full aspect-square rounded-2xl mb-4 overflow-hidden">
               <Image
                 src={ai.image}
                 alt={ai.name}
-                className="rounded-2xl object-cover w-full h-full"
+                wrapperClassName="w-full h-full"
+                imgClassName="object-cover"
+                fit="cover"
               />
             </div>
             <p className="text-dark text-lg font-bold">{ai.name}</p>

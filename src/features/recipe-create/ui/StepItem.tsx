@@ -81,11 +81,14 @@ const StepItem = ({
 
   return (
     <div className="relative flex items-start gap-4 rounded-lg p-4 shadow-sm">
-      <div className="bg-olive-light flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-bold text-white">
+      <div className="bg-olive-light flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-bold text-white mt-1">
         {index + 1}
       </div>
-      <div className="flex-1">
-        <ImageUploader fieldName={`steps.${index}.image`} />
+      <div className="flex-1 mt-6">
+        <ImageUploader
+          fieldName={`steps.${index}.image`}
+          className="w-64 h-64"
+        />
 
         <div className="mt-4 border-t pt-4">
           <h4 className="mb-2 text-sm font-medium text-gray-700">
@@ -102,7 +105,10 @@ const StepItem = ({
                   usedElsewhereLookup.get(ingredient.name) ?? false;
 
                 return (
-                  <div key={ingredient.name} className="flex ...">
+                  <div
+                    key={ingredient.name}
+                    className="flex items-center gap-2"
+                  >
                     <Checkbox
                       id={`step-${index}-ing-${ingredient.name}`}
                       checked={isUsedInThisStep}
@@ -147,7 +153,7 @@ const StepItem = ({
           type="button"
           variant="ghost"
           size="icon"
-          className="text-gray-400 hover:bg-red-100 hover:text-red-600"
+          className="text-gray-500 hover:bg-red-100 hover:text-red-600"
           onClick={() => removeStep(index)}
           disabled={!isDeletable}
         >

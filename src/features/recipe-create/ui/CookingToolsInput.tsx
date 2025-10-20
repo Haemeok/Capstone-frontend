@@ -45,24 +45,26 @@ const CookingToolsInput = () => {
     <div className="mb-6">
       <h2 className="text-xl font-bold text-gray-700">조리도구</h2>
       <div className="rounded-xl bg-white p-4 shadow-sm">
-        <div className="mb-3 flex flex-wrap gap-2">
-          {cookingToolsValue.map((tool) => (
-            <div
-              key={tool}
-              className="flex items-center gap-1 rounded-full border border-gray-300 bg-gray-100 px-3 py-1 text-sm text-gray-700"
-            >
-              <span>{tool}</span>
-              <button
-                type="button"
-                onClick={() => removeCookingTool(tool)}
-                className="-mr-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-red-500"
-                aria-label={`Remove ${tool}`}
+        {cookingToolsValue.length > 0 && (
+          <div className="mb-2 flex flex-wrap gap-2">
+            {cookingToolsValue.map((tool) => (
+              <div
+                key={tool}
+                className="flex items-center gap-1 rounded-full border border-gray-300 bg-gray-100 px-3 py-1 text-sm text-gray-700"
               >
-                <X size={14} />
-              </button>
-            </div>
-          ))}
-        </div>
+                <span>{tool}</span>
+                <button
+                  type="button"
+                  onClick={() => removeCookingTool(tool)}
+                  className="-mr-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-red-500"
+                  aria-label={`Remove ${tool}`}
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
         <input
           type="text"
           value={currentToolInput}
