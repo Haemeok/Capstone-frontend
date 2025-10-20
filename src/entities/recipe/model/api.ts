@@ -24,6 +24,8 @@ export const getRecipeItems = async ({
   tags,
   q,
   isAiGenerated,
+  maxCost,
+  period,
   size = PAGE_SIZE,
   pageParam = 0,
 }: {
@@ -32,6 +34,8 @@ export const getRecipeItems = async ({
   tags?: string[] | null;
   q?: string;
   isAiGenerated?: boolean;
+  maxCost?: number;
+  period?: "weekly" | "monthly";
   size?: number;
   pageParam?: number;
 }) => {
@@ -50,13 +54,24 @@ export const getRecipeItems = async ({
 
   const apiParams = buildParams(baseParams, optionalParams);
 
-  const response = await api.get<DetailedRecipesApiResponse>(
-    END_POINTS.RECIPE_SEARCH,
-    {
-      params: apiParams,
-      paramsSerializer: customParamsSerializer,
-    }
-  );
+  if (maxCost) {
+    apiParams.maxCost = maxCost;
+  }
+  if (period) {
+    apiParams.period = period;
+  }
+
+  let endpoint = END_POINTS.RECIPE_SEARCH;
+  if (maxCost) {
+    endpoint = END_POINTS.RECIPE_BUDGET;
+  } else if (period) {
+    endpoint = END_POINTS.RECIPE_POPULAR;
+  }
+
+  const response = await api.get<DetailedRecipesApiResponse>(endpoint, {
+    params: apiParams,
+    paramsSerializer: customParamsSerializer,
+  });
 
   return response;
 };
@@ -114,8 +129,6 @@ export const editRecipe = async ({
   recipe: RecipePayload;
   files: FileInfoRequest[];
 }) => {
-  console.log("Recipe", recipe);
-  console.log("Files", files);
   const response = await api.put<PresignedUrlResponse>(
     END_POINTS.RECIPE(recipeId),
     {
@@ -123,6 +136,5 @@ export const editRecipe = async ({
       files,
     }
   );
-  console.log(response);
   return response;
 };

@@ -8,6 +8,8 @@ type RecipeSlideWithErrorBoundaryProps = {
   isAiGenerated?: boolean;
   tags?: string[];
   to?: string;
+  maxCost?: number;
+  period?: "weekly" | "monthly";
 };
 
 const RecipeSlideWithErrorBoundary = (

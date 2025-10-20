@@ -21,21 +21,21 @@ const HomePage = async () => {
 
   await Promise.all([
     queryClient.prefetchQuery({
-      queryKey: ["ai-recipes"],
+      queryKey: ["budget-recipes"],
       queryFn: () =>
         getRecipesOnServer({
-          isAiGenerated: true,
+          maxCost: 10000,
           sort: "desc",
-          key: "ai-recipes",
+          key: "budget-recipes",
         }),
     }),
     queryClient.prefetchQuery({
-      queryKey: ["party-recipes"],
+      queryKey: ["popular-recipes"],
       queryFn: () =>
         getRecipesOnServer({
-          tags: ["HOME_PARTY"],
+          period: "weekly",
           sort: "desc",
-          key: "party-recipes",
+          key: "popular-recipes",
         }),
     }),
   ]);
@@ -52,17 +52,15 @@ const HomePage = async () => {
       />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <RecipeSlideWithErrorBoundary
-          title="AI가 추천하는 레시피"
-          queryKey="ai-recipes"
-          isAiGenerated
-          to="/recipes/ai"
+          title="만원 이하 가성비 레시피"
+          queryKey="budget-recipes"
+          maxCost={10000}
         />
 
         <RecipeSlideWithErrorBoundary
-          title="홈파티 레시피"
-          queryKey="party-recipes"
-          tags={["HOME_PARTY"]}
-          to="/recipes/category/HOME_PARTY"
+          title="주간 인기 레시피"
+          queryKey="popular-recipes"
+          period="weekly"
         />
       </HydrationBoundary>
       <OnboardingSurveyModal />
