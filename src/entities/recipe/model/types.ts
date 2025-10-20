@@ -125,4 +125,6 @@ export type RecipeItemsQueryParams = {
   tags?: string[];
   q?: string;
   dishType?: string | null;
+  maxCost?: number;
+  period?: "weekly" | "monthly";
 };

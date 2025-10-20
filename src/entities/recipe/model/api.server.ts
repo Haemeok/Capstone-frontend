@@ -23,8 +23,17 @@ export const getRecipesOnServer = async (
   if (params.tags) {
     params.tags.forEach((tag) => query.append("tags", tag));
   }
+  if (params.maxCost) query.append("maxCost", params.maxCost.toString());
+  if (params.period) query.append("period", params.period);
 
-  const API_URL = `${BASE_API_URL}/recipes/search?${query.toString()}`;
+  let endpoint = "/recipes/search";
+  if (params.maxCost) {
+    endpoint = "/recipes/budget";
+  } else if (params.period) {
+    endpoint = "/recipes/popular";
+  }
+
+  const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
 
   try {
     const cookieStore = await cookies();

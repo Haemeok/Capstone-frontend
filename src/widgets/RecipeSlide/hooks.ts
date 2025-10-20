@@ -9,6 +9,8 @@ type UseRecipeItemsQueryParams = {
   tags?: string[];
   q?: string;
   dishType?: string | null;
+  maxCost?: number;
+  period?: "weekly" | "monthly";
 };
 
 export const useRecipeItemsQuery = ({
@@ -18,8 +20,10 @@ export const useRecipeItemsQuery = ({
   tags,
   q,
   dishType,
+  maxCost,
+  period,
 }: UseRecipeItemsQueryParams) => {
-  const queryParams = { sort, isAiGenerated, tags, q, dishType };
+  const queryParams = { sort, isAiGenerated, tags, q, dishType, maxCost, period };
   const queryKey = ["recipes", key, queryParams];
 
   const query = useQuery({
