@@ -12,6 +12,7 @@ export type IngredientItem = {
   unit: string;
   inFridge: boolean;
   calories: number;
+  coupangLink?: string;
 };
 
 export type UserIngredient = Omit<IngredientItem, "unit" | "price">;
