@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 import { Check, Search } from "lucide-react";
@@ -29,19 +29,25 @@ type IngredientSelectorProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onIngredientSelect: (ingredient: IngredientPayload) => void;
-  ingredientIds?: number[];
+  addedIngredientNames: Set<string>;
 };
 
 const IngredientSelector = ({
   open,
   onOpenChange,
   onIngredientSelect,
-  ingredientIds,
+  addedIngredientNames,
 }: IngredientSelectorProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
-  const [ingredientIdSet, setIngredientIdSet] = useState<Set<number>>(
-    new Set(ingredientIds)
+  const [localAddedNames, setLocalAddedNames] = useState<Set<string>>(
+    new Set(addedIngredientNames)
   );
+
+  useEffect(() => {
+    if (open) {
+      setLocalAddedNames(new Set(addedIngredientNames));
+    }
+  }, [open, addedIngredientNames]);
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
@@ -76,8 +82,8 @@ const IngredientSelector = ({
       quantity: "",
       unit: ingredient.unit,
     });
-    setIngredientIdSet((prevIds: Set<number>) =>
-      new Set(prevIds).add(ingredient.id)
+    setLocalAddedNames((prevNames: Set<string>) =>
+      new Set(prevNames).add(ingredient.name)
     );
   };
   const ingredientItems = data?.pages.flatMap((page) => page.content);
@@ -151,7 +157,7 @@ const IngredientSelector = ({
                   <div className="flex-1">
                     <p className="font-medium">{ingredient.name}</p>
                   </div>
-                  {ingredientIdSet.has(ingredient.id) ? (
+                  {localAddedNames.has(ingredient.name) ? (
                     <Button
                       size="sm"
                       variant="ghost"

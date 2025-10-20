@@ -21,7 +21,6 @@ type RecipeFormLayoutProps = {
   isLoading: boolean;
   recipeCreationError: Error | null;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
-  ingredientIds?: number[];
   isEdit: boolean;
 };
 
@@ -30,7 +29,6 @@ const RecipeFormLayout = ({
   isLoading,
   recipeCreationError: submitError,
   onSubmit,
-  ingredientIds = [],
   isEdit,
 }: RecipeFormLayoutProps) => {
   const {
@@ -45,7 +43,7 @@ const RecipeFormLayout = ({
       <div className="mx-auto max-w-3xl px-4 pt-6">
         <Description />
 
-        <div className="flex items-center mb-4 justify-center gap-x-8 gap-y-6 ">
+        <div className="flex items-center mb-4 justify-center gap-6">
           <div className="flex flex-col items-center gap-2">
             <label htmlFor="dishType" className="font-medium text-gray-700">
               카테고리
@@ -57,7 +55,7 @@ const RecipeFormLayout = ({
                 errors.dishType ? "border-red-500" : "border-gray-300"
               )}
               {...register("dishType", {
-                required: "카테고리를 선택해주세요",
+                required: "필수",
               })}
               defaultValue=""
             >
@@ -70,44 +68,51 @@ const RecipeFormLayout = ({
                 </option>
               ))}
             </select>
-            {errors.dishType && (
-              <p className="mt-1 text-center text-xs text-red-500">
-                {errors.dishType.message}
-              </p>
-            )}
+            <div className="min-h-[32px] w-28">
+              {errors.dishType && (
+                <p className="text-center text-xs text-red-500">
+                  {errors.dishType.message}
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <label htmlFor="cookingTime" className=" font-medium text-gray-700">
+            <label htmlFor="cookingTime" className="font-medium text-gray-700">
               조리시간 (분)
             </label>
             <input
               id="cookingTime"
-              type="number"
+              type="text"
+              inputMode="numeric"
               className={cn(
                 `w-20 rounded-lg border bg-gray-50 px-3 py-1.5 text-center text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
                 errors.cookingTime ? "border-red-500" : "border-gray-300"
               )}
               placeholder="숫자"
-              min="0"
               {...register("cookingTime", {
-                required: "조리 시간을 입력해주세요",
-                valueAsNumber: true,
-                min: { value: 1, message: "1분 이상 입력해주세요." },
+                validate: (value) => {
+                  if (!value) return true;
+                  const num = Number(value);
+                  if (isNaN(num)) return "숫자만 입력 가능합니다";
+                  if (num < 1) return "1분 이상 입력해주세요";
+                  return true;
+                },
               })}
             />
-            {errors.cookingTime && (
-              <p className="mt-1 text-center text-xs text-red-500">
-                {errors.cookingTime.message}
-              </p>
-            )}
+            <div className="min-h-[32px] w-24">
+              {errors.cookingTime && (
+                <p className="text-center text-xs text-red-500">
+                  {errors.cookingTime.message}
+                </p>
+              )}
+            </div>
           </div>
         </div>
         <ServingCounter />
 
         <IngredientSection
           onRemoveIngredientCallback={handleMainIngredientRemoved}
-          ingredientIds={ingredientIds}
         />
         <Steps />
         <CookingToolsInput />

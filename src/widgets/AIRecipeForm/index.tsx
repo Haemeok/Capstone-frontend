@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { FormProvider } from "react-hook-form";
+import { FormProvider, useWatch } from "react-hook-form";
 
 import { ArrowLeft } from "lucide-react";
 
@@ -28,6 +28,11 @@ const AIRecipeForm = () => {
     useAIRecipeGeneration();
 
   const { methods, handleAddIngredient } = useAIRecipeForm();
+
+  const ingredients = useWatch({
+    control: methods.control,
+    name: "ingredients",
+  });
 
   const onSubmit = (data: AIRecipeFormValues) => {
     generateRecipe(data);
@@ -71,6 +76,7 @@ const AIRecipeForm = () => {
           open={isDrawerOpen}
           onOpenChange={setIsDrawerOpen}
           onIngredientSelect={handleAddIngredient}
+          addedIngredientNames={new Set(ingredients || [])}
         />
       </div>
     </FormProvider>
