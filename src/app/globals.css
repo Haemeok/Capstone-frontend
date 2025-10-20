@@ -123,6 +123,11 @@
     border-color: var(--color-gray-200, currentColor);
   }
 
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
   .beat {
     transition:
       fill 0.2s ease-in-out,
