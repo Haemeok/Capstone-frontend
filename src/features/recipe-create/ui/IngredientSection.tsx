@@ -15,12 +15,10 @@ import IngredientSelector from "./IngredientSelector";
 
 type IngredientSectionProps = {
   onRemoveIngredientCallback: (ingredientName: string) => void;
-  ingredientIds: number[];
 };
 
 const IngredientSection = ({
   onRemoveIngredientCallback,
-  ingredientIds,
 }: IngredientSectionProps) => {
   const {
     control,
@@ -38,6 +36,10 @@ const IngredientSection = ({
     control,
     name: "ingredients",
   });
+
+  const addedIngredientNames = new Set(
+    ingredientFields.map((field) => field.name)
+  );
 
   const addIngredient = (ingredient: IngredientPayload) => {
     appendIngredient({
@@ -85,7 +87,7 @@ const IngredientSection = ({
         open={isOpen}
         onOpenChange={setIsOpen}
         onIngredientSelect={addIngredient}
-        ingredientIds={ingredientIds}
+        addedIngredientNames={addedIngredientNames}
       />
     </div>
   );

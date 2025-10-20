@@ -44,7 +44,7 @@ const stepSchema = z.object({
 });
 
 export const recipeFormSchema = z.object({
-  title: z.string().min(TITLE.MIN, MSG.TITLE.MIN),
+  title: z.string().min(TITLE.MIN, MSG.TITLE.MIN).max(TITLE.MAX, MSG.TITLE.MAX),
   image: mainImageSchema,
   ingredients: z
     .array(ingredientSchema)

@@ -19,8 +19,8 @@ interface FormValues {
   profileImage?: FileList;
 }
 
-const MAX_NICKNAME_LENGTH = 20;
-const MAX_DESCRIPTION_LENGTH = 600;
+const MAX_NICKNAME_LENGTH = 12;
+const MAX_DESCRIPTION_LENGTH = 200;
 
 interface ApiErrorData {
   message?: string;
