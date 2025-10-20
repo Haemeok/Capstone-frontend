@@ -1,4 +1,4 @@
-import { BaseQueryParams, PageResponse } from "@/shared/api/types";
+import { PageResponse } from "@/shared/api/types";
 
 import { Comment } from "@/entities/comment";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
@@ -112,12 +112,17 @@ export type RecipeStepPayload = Omit<
 };
 
 // API 요청용 (페이지네이션 포함)
-export type RecipeQueryParams = BaseQueryParams & {
+export type RecipeQueryParams = {
+  page?: number;
+  size?: number;
+  sort: string;
+  q?: string;
   dishType?: string | null;
   tags?: string[] | null;
   isAiGenerated?: boolean;
   maxCost?: number;
   period?: "weekly" | "monthly";
+  pageParam?: number; // useInfiniteQuery 호환용
 };
 
 // 서버 사이드 fetching용 (페이지네이션 제외, key 포함)
