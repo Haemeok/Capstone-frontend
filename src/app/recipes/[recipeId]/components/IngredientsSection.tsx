@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { Calculator, DollarSign } from "lucide-react";
+import { Calculator, DollarSign, ShoppingBasketIcon } from "lucide-react";
 
 import { formatNumber } from "@/shared/lib/format";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
@@ -82,7 +82,14 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
       <ul className="flex flex-col gap-1">
         {recipe.ingredients.map((ingredient, index) => (
           <li key={index} className="grid grid-cols-3 gap-4">
-            <p className="text-left font-bold">{ingredient.name}</p>
+            <div className="flex justify-between items-center">
+              <p className="text-left font-bold">{ingredient.name}</p>
+              {ingredient.coupangLink && (
+                <div className="border-1 rounded-lg border-gray-400 p-1">
+                  <ShoppingBasketIcon className="text-gray-400 " size={20} />
+                </div>
+              )}
+            </div>
             <p className="text-left">
               {ingredient.quantity}
               {ingredient.quantity !== "약간" && ingredient.unit}
