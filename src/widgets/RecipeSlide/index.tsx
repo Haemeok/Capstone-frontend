@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
@@ -16,6 +16,8 @@ type RecipeSlideProps = {
   isAiGenerated?: boolean;
   tags?: string[];
   to?: string;
+  maxCost?: number;
+  period?: "weekly" | "monthly";
 };
 
 const RecipeSlide = ({
@@ -24,8 +26,9 @@ const RecipeSlide = ({
   isAiGenerated,
   tags,
   to,
+  maxCost,
+  period,
 }: RecipeSlideProps) => {
-  const router = useRouter();
   const {
     data: recipes,
     isLoading,
@@ -34,13 +37,9 @@ const RecipeSlide = ({
     key: queryKey,
     isAiGenerated,
     tags,
+    maxCost,
+    period,
   });
-
-  const handleMoreClick = () => {
-    if (to) {
-      router.push(to);
-    }
-  };
 
   return (
     <div className="mt-2 w-full">
@@ -48,14 +47,20 @@ const RecipeSlide = ({
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold text-gray-800">{title}</h2>
         </div>
-        <button
-          onClick={handleMoreClick}
-          disabled={!to}
-          className="flex items-center text-sm text-gray-500 hover:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          더보기
-          <ChevronRight size={16} />
-        </button>
+        {to ? (
+          <Link
+            href={to}
+            className="flex items-center text-sm text-gray-500 hover:text-gray-700"
+          >
+            더보기
+            <ChevronRight size={16} />
+          </Link>
+        ) : (
+          <span className="flex items-center text-sm text-gray-400 cursor-not-allowed opacity-50">
+            더보기
+            <ChevronRight size={16} />
+          </span>
+        )}
       </div>
       <div
         className="scrollbar-hide flex w-full gap-3 overflow-x-auto snap-x snap-mandatory"
