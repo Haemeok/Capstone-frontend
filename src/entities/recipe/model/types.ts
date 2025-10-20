@@ -111,13 +111,16 @@ export type RecipeStepPayload = Omit<
   imageKey?: string;
 };
 
+// API 요청용 (페이지네이션 포함)
 export type RecipeQueryParams = BaseQueryParams & {
   dishType?: string | null;
   tags?: string[] | null;
-  q?: string | null;
   isAiGenerated?: boolean;
+  maxCost?: number;
+  period?: "weekly" | "monthly";
 };
 
+// 서버 사이드 fetching용 (페이지네이션 제외, key 포함)
 export type RecipeItemsQueryParams = {
   key: string;
   sort?: "desc" | "asc";

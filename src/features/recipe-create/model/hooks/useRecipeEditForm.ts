@@ -101,18 +101,11 @@ export const useRecipeEditForm = (recipeId: number) => {
     });
   };
 
-  const ingredientIds = useMemo(
-    () => recipe?.ingredients.map((ing) => ing.id) || [],
-    [recipe]
-  );
-
   return {
     methods,
     onSubmit: methods.handleSubmit(onSubmit),
     isLoading: isPending,
     error,
-
     handleMainIngredientRemoved,
-    ingredientIds,
   };
 };
