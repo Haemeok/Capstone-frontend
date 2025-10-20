@@ -37,6 +37,7 @@ const HeartButton = ({
   );
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     e.stopPropagation();
     onClick();
   };

@@ -43,41 +43,48 @@ const DetailedRecipeGridItem = ({
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
 
   return (
-    <Link
-      href={`/recipes/${recipe.id}`}
+    <div
       className={cn(
-        `relative flex shrink-0 flex-col gap-2 rounded-2xl cursor-pointer`,
+        `relative flex shrink-0 flex-col gap-2 rounded-2xl`,
         className
       )}
       key={recipe.id}
     >
-      <Image
-        src={imageUrl}
-        alt={recipe.title}
-        wrapperClassName={cn(`rounded-2xl`)}
-        fit="cover"
-        priority={priority}
-      />
+      <div className="relative">
+        <Link href={`/recipes/${recipe.id}`} className="block">
+          <Image
+            src={imageUrl}
+            alt={recipe.title}
+            wrapperClassName={cn(`rounded-2xl`)}
+            fit="cover"
+            priority={priority}
+          />
+        </Link>
 
-      <div className="absolute top-0 right-0 p-2 text-right">
-        <RecipeLikeButton
-          recipeId={recipe.id}
-          initialIsLiked={currentLikedByUser}
-          initialLikeCount={currentLikeCount}
-          buttonClassName="text-white"
-          iconClassName="fill-gray-300 opacity-80"
-        />
+        <div className="absolute top-0 right-0 p-2 text-right">
+          <RecipeLikeButton
+            recipeId={recipe.id}
+            initialIsLiked={currentLikedByUser}
+            initialLikeCount={currentLikeCount}
+            buttonClassName="text-white"
+            iconClassName="fill-gray-300 opacity-80"
+          />
+        </div>
       </div>
 
       <div className="flex grow flex-col gap-0.5 px-2 pb-2">
-        <p className="line-clamp-2 font-bold">{recipe.title}</p>
-        <div className="flex items-center gap-[2px]">
-          <Star size={15} className="fill-gray-800" />
-          <p className="text-mm text-gray-800">{recipe.avgRating}</p>
-          <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
-          <p className="text-mm text-gray-800">·</p>
-          <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
-        </div>
+        <Link href={`/recipes/${recipe.id}`}>
+          <p className="line-clamp-2 font-bold hover:underline">{recipe.title}</p>
+        </Link>
+        <Link href={`/recipes/${recipe.id}`}>
+          <div className="flex items-center gap-[2px] hover:underline">
+            <Star size={15} className="fill-gray-800" />
+            <p className="text-mm text-gray-800">{recipe.avgRating}</p>
+            <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
+            <p className="text-mm text-gray-800">·</p>
+            <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
+          </div>
+        </Link>
         <div className="flex items-center gap-1 overflow-hidden">
           <UserProfileImage
             profileImage={recipe.profileImage}
@@ -88,7 +95,7 @@ const DetailedRecipeGridItem = ({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
