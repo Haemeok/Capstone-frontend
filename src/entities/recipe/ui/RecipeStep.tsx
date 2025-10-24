@@ -35,7 +35,7 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
           </div>
         ))}
       </div>
-      <p className="mt-2 text-left">{step.instruction}</p>
+      <p className="mt-2 text-left whitespace-pre-wrap">{step.instruction}</p>
       {step.stepImageUrl && (
         <div className="w-full h-80">
           <Image
