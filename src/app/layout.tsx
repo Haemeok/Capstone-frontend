@@ -3,8 +3,6 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import { conditionalInitSentry } from "@/shared/lib/sentry";
-
 import { getMyInfoOnServer } from "@/entities/user/model/api.server";
 
 import { PWA_APP_INFO } from "@/shared/config/constants/pwa";
@@ -16,10 +14,6 @@ import { pretendard } from "./fonts";
 import { AppProviders } from "./providers/AppProviders";
 
 import "./globals.css";
-
-if (typeof window !== "undefined") {
-  conditionalInitSentry();
-}
 
 export const metadata: Metadata = {
   title: "해먹",
@@ -55,7 +49,6 @@ export default async function RootLayout({
         <AppProviders myInfo={myInfo}>
           {children}
           <BottomNavBar />
-          <NotificationTest />
         </AppProviders>
         <Analytics />
         <SpeedInsights />

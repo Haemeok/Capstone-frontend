@@ -1,6 +1,5 @@
 import withPWA from "next-pwa";
 import createBundleAnalyzer from "@next/bundle-analyzer";
-import { withSentryConfig } from "@sentry/nextjs";
 
 const withBundleAnalyzer = createBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -54,12 +53,4 @@ const withPWAConfig = withPWA({
 
 const analyzed = withBundleAnalyzer(withPWAConfig);
 
-export default withSentryConfig(analyzed, {
-  org: "wonjin",
-  project: "javascript-nextjs",
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
-  tunnelRoute: "/monitoring",
-  disableLogger: true,
-  automaticVercelMonitors: true,
-});
+export default analyzed;
