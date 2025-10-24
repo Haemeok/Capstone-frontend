@@ -3,27 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-import { AnimatePresence, motion } from "framer-motion";
-
 import { useScrollContext } from "@/shared/lib/ScrollContext";
-
-const pageVariants = {
-  initial: {
-    opacity: 0.7,
-  },
-  in: {
-    opacity: 1,
-  },
-  out: {
-    opacity: 0,
-  },
-};
-
-const pageTransition = {
-  type: "tween",
-  ease: "easeIn",
-  duration: 0.25,
-} as const;
 
 export const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -48,23 +28,16 @@ export const PageTransition = ({ children }: { children: React.ReactNode }) => {
   }, [pathname, motionRef]);
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={pathname}
-        initial="initial"
-        animate="in"
-        exit="out"
-        variants={pageVariants}
-        transition={pageTransition}
-        style={{
-          position: "relative",
-          width: "100%",
-          minHeight: "100%",
-          backgroundColor: "#fff",
-        }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <div
+      key={pathname}
+      style={{
+        position: "relative",
+        width: "100%",
+        minHeight: "100%",
+        backgroundColor: "#fff",
+      }}
+    >
+      {children}
+    </div>
   );
 };

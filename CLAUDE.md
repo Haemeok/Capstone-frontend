@@ -40,7 +40,6 @@ Follow strict layer dependency order: `shared` → `entities` → `features` →
 - **Styling**: Tailwind CSS with custom color scheme (olive, dark, beige, brown)
 - **Forms**: React Hook Form with validation
 - **Animation**: Framer Motion and GSAP
-- **Monitoring**: Sentry integration for error tracking
 
 ## API Configuration
 
