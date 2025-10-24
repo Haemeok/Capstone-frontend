@@ -1,7 +1,5 @@
 import { ComponentType } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
-
 import { SurveyStep, surveySteps } from "@/shared/config/constants/user";
 import { Label } from "@/shared/ui/shadcn/label";
 
@@ -60,11 +58,6 @@ const createSurveyProps = (
   return propsCreator(questionData, answers, handleValueChange);
 };
 
-const slideVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, x: 0 },
-};
-
 const SurveyContent = ({
   currentStep,
   answers,
@@ -83,33 +76,19 @@ const SurveyContent = ({
   );
 
   return (
-    <AnimatePresence initial={false} mode="wait">
-      <motion.div
-        key={currentStep}
-        variants={slideVariants}
-        initial="initial"
-        animate="animate"
-        transition={{
-          opacity: { type: "tween", duration: 0.05, ease: "easeOut" },
-          type: "spring",
-          stiffness: 400,
-          damping: 20,
-        }}
-        className="grid gap-4 py-2"
-      >
-        {currentQuestionData && (
-          <>
-            <Label
-              htmlFor={`question-${currentQuestionData.id}`}
-              className="text-left text-lg font-bold"
-            >
-              {currentQuestionData.question}
-            </Label>
-            <SurveyComponent {...surveyProps} />
-          </>
-        )}
-      </motion.div>
-    </AnimatePresence>
+    <div key={currentStep} className="grid gap-4 py-2">
+      {currentQuestionData && (
+        <>
+          <Label
+            htmlFor={`question-${currentQuestionData.id}`}
+            className="text-left text-lg font-bold"
+          >
+            {currentQuestionData.question}
+          </Label>
+          <SurveyComponent {...surveyProps} />
+        </>
+      )}
+    </div>
   );
 };
 

@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { setUserContext } from "@/shared/lib/errorTracking";
-
 import { getMyInfo, getRecipeHistoryDetail, getUserInfo } from "./api";
 import { useUserStore } from "./store";
 import { User } from "./types";
@@ -84,11 +82,6 @@ export const useMyInfoQuery = (initialData?: User) => {
 
     if (userData) {
       setUser(userData);
-
-      setUserContext({
-        id: userData.id.toString(),
-        email: userData.email,
-      });
     } else if (isError) {
       setUser(null);
     }
