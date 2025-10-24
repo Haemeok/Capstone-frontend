@@ -2,9 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-import { gsap } from "gsap";
-
-import { useScrollContext } from "../lib/ScrollContext";
+import { gsap } from "@/shared/lib/gsap";
+import { useScrollContext } from "@/shared/lib/ScrollContext";
 
 type UseScrollAnimateOptions = {
   triggerRef?: React.RefObject<HTMLElement | null>;
@@ -20,7 +19,7 @@ const useScrollAnimate = <T extends HTMLElement>(
   options?: UseScrollAnimateOptions
 ) => {
   const targetRef = useRef<T>(null);
-  const animation = useRef<gsap.core.Timeline | null>(null);
+  const animation = useRef<any>(null);
   const { motionRef } = useScrollContext();
 
   const playAnimation = () => {
@@ -49,13 +48,13 @@ const useScrollAnimate = <T extends HTMLElement>(
 
     if (targetRef.current && currentTriggerElement) {
       animation.current = gsap.timeline({
-        scrollTrigger: {
-          trigger: currentTriggerElement,
-          scroller: motionRef.current,
-          start: options?.start || "top 85%",
-          toggleActions: options?.toggleActions || "restart none none none",
-        },
-      });
+          scrollTrigger: {
+            trigger: currentTriggerElement,
+            scroller: motionRef.current,
+            start: options?.start || "top 85%",
+            toggleActions: options?.toggleActions || "restart none none none",
+          },
+        });
 
       animation.current.fromTo(
         targetRef.current,
@@ -81,6 +80,9 @@ const useScrollAnimate = <T extends HTMLElement>(
     options?.toggleActions,
     options?.delay,
     options?.yOffset,
+    options?.duration,
+    options?.ease,
+    motionRef,
   ]);
 
   return { targetRef, playAnimation };

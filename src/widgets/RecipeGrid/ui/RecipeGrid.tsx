@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Pencil, Trash } from "lucide-react";
 
 import Circle from "@/shared/ui/Circle";
@@ -47,12 +45,7 @@ const RecipeGrid = ({
   noResultsMessage = "표시할 레시피가 없습니다.",
   lastPageMessage = "모든 레시피를 다 봤어요!",
   error,
-  queryKeyString,
 }: RecipeGridProps) => {
-  const gridItemsContainerRef = useRef<HTMLDivElement | null>(null);
-  const itemsAnimateTargetRef = useRef<HTMLDivElement | null>(null);
-  const animatedItemsRef = useRef(new Set<Element>());
-
   const router = useRouter();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -83,60 +76,6 @@ const RecipeGrid = ({
   };
 
   const { mutate: deleteRecipe } = useDeleteRecipeMutation(selectedItemId ?? 0);
-
-  useEffect(() => {
-    animatedItemsRef.current.clear();
-  }, [queryKeyString]);
-
-  useEffect(() => {
-    if (
-      isPending ||
-      !recipes ||
-      recipes.length === 0 ||
-      error ||
-      noResults ||
-      !itemsAnimateTargetRef.current ||
-      !gridItemsContainerRef.current
-    ) {
-      return;
-    }
-
-    const ctx = gsap.context(() => {
-      const currentDOMItems = Array.from(
-        itemsAnimateTargetRef.current!.children
-      );
-
-      currentDOMItems.forEach((itemDOMElement: Element) => {
-        if (!animatedItemsRef.current.has(itemDOMElement)) {
-          gsap.set(itemDOMElement, { opacity: 0, y: 30, scale: 0.98 });
-          gsap.to(itemDOMElement, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.5,
-            ease: "power2.out",
-
-            delay: 0,
-            scrollTrigger: {
-              trigger: itemDOMElement,
-
-              scroller: gridItemsContainerRef.current,
-              start: "top 95%",
-              toggleActions: "play none none none",
-              onEnter: () => {
-                animatedItemsRef.current.add(itemDOMElement);
-              },
-            },
-          });
-        }
-      });
-      ScrollTrigger.refresh();
-    }, gridItemsContainerRef);
-
-    return () => {
-      ctx.revert();
-    };
-  }, [error, isPending, noResults, recipes, queryKeyString]);
 
   if (isPending) {
     return (
@@ -171,14 +110,13 @@ const RecipeGrid = ({
   }
 
   return (
-    <div ref={gridItemsContainerRef} className="flex flex-col p-4">
+    <div className="flex flex-col p-4">
       <div
         className="grid gap-4
           [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]
           sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]
           md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))]
           lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]"
-        ref={itemsAnimateTargetRef}
       >
         {recipes.map((recipe, index) =>
           isSimple ? (

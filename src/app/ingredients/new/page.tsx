@@ -3,12 +3,12 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
-import gsap from "gsap";
 import { Search } from "lucide-react";
 
 import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
+import { gsap } from "@/shared/lib/gsap";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
@@ -127,7 +127,10 @@ const NewIngredientsPage = () => {
         }
       });
     }, pageContainerRef);
-    return () => ctx.revert();
+
+    return () => {
+      ctx.revert();
+    };
   }, [
     ingredientItems,
     isFetching,
