@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from "react";
 
+import { gsap } from "@/shared/lib/gsap";
 import { Image } from "@/shared/ui/image/Image";
-import gsap from "gsap";
 
 type SavingSectionProps = {
   imageUrl?: string;
@@ -22,44 +22,46 @@ const SavingSection = ({
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      if (!imageRef.current) {
-        console.error("이미지 요소가 준비되지 않았습니다.");
-        return;
-      }
+        if (!imageRef.current) {
+          console.error("이미지 요소가 준비되지 않았습니다.");
+          return;
+        }
 
-      gsap.set(imageRef.current, { opacity: 0, y: -30, scale: 0.9 });
+        gsap.set(imageRef.current, { opacity: 0, y: -30, scale: 0.9 });
 
-      const tl = gsap.timeline({
-        paused: true,
-        onComplete: () => {
-          if (imageRef.current) {
-            bobbingTweenRef.current = gsap.to(imageRef.current, {
-              y: "-=10",
-              repeat: -1,
-              yoyo: true,
-              duration: 0.7,
-              ease: "sine.inOut",
-              delay: 0.1,
-            });
-          }
-        },
-      });
+        const tl = gsap.timeline({
+          paused: true,
+          onComplete: () => {
+            if (imageRef.current) {
+              bobbingTweenRef.current = gsap.to(imageRef.current, {
+                y: "-=10",
+                repeat: -1,
+                yoyo: true,
+                duration: 0.7,
+                ease: "sine.inOut",
+                delay: 0.1,
+              });
+            }
+          },
+        });
 
-      tl.to(imageRef.current, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.8,
-        ease: "power2.out",
-      });
+        tl.to(imageRef.current, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+        });
 
-      introTimelineRef.current = tl;
-      if (introTimelineRef.current) {
-        introTimelineRef.current.play();
-      }
-    }, sectionContainerRef);
+        introTimelineRef.current = tl;
+        if (introTimelineRef.current) {
+          introTimelineRef.current.play();
+        }
+      }, sectionContainerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+    };
   }, []);
 
   return (

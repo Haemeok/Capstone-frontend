@@ -4,8 +4,6 @@ import { useEffect } from "react";
 import { ReactNode } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useAuthManager } from "@/shared/lib/auth/useAuthManager";
 import {
@@ -16,8 +14,6 @@ import {
 
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 import { useUserStore } from "@/entities/user/model/store";
-
-gsap.registerPlugin(ScrollTrigger);
 
 type AppStateInitializerProps = {
   children: ReactNode;
