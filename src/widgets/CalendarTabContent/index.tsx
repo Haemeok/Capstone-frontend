@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { DayPicker } from "react-day-picker";
 import { Image } from "@/shared/ui/image/Image";
 import { useRouter } from "next/navigation";
 
@@ -10,6 +9,7 @@ import { ko } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, FlameKindling } from "lucide-react";
 
 import { getProductByPrice } from "@/shared/lib/recipe";
+import { DayPickerDynamic } from "@/shared/ui/DayPickerDynamic";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 import Box from "@/shared/ui/primitives/Box";
 
@@ -49,13 +49,6 @@ const CalendarTabContent = () => {
 
   return (
     <div className="w-full pb-4">
-      {/* <MonthlySavingsChallenge
-        year={year}
-        month={month}
-        currentSavings={monthlyTotalSavings ?? 0}
-        productName={product.name}
-        productImage={product.image}
-      /> */}
       <MonthlySavingsSummary
         year={year}
         month={month}
@@ -77,17 +70,17 @@ const CalendarTabContent = () => {
           }
         />
       </Box>
-      <DayPicker
+      <DayPickerDynamic
         mode="single"
         showOutsideDays
         locale={ko}
         month={currentMonth}
         onMonthChange={setCurrentMonth}
         formatters={{
-          formatCaption: (month) => format(month, "yyyy.M"),
+          formatCaption: (month: Date) => format(month, "yyyy.M"),
         }}
         modifiers={{
-          hasEvent: (date) => getEventForDay(date) !== undefined,
+          hasEvent: (date: Date) => getEventForDay(date) !== undefined,
         }}
         modifiersClassNames={{
           hasEvent: "has-event",
@@ -112,7 +105,7 @@ const CalendarTabContent = () => {
           hidden: "invisible",
         }}
         components={{
-          Day: ({ day }) => {
+          Day: ({ day }: any) => {
             const date = day?.date;
             const dateNumber = date?.getDate();
             const router = useRouter();
@@ -168,7 +161,7 @@ const CalendarTabContent = () => {
               </div>
             );
           },
-          PreviousMonthButton: ({ className, ...props }) => (
+          PreviousMonthButton: ({ className, ...props }: any) => (
             <button
               className={cn(className, "flex items-center justify-center")}
               {...props}
@@ -176,7 +169,7 @@ const CalendarTabContent = () => {
               <ChevronLeft className="size-6 text-gray-500" />
             </button>
           ),
-          NextMonthButton: ({ className, ...props }) => (
+          NextMonthButton: ({ className, ...props }: any) => (
             <button
               className={cn(className, "flex items-center justify-center")}
               {...props}
