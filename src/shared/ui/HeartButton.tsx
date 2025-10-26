@@ -42,6 +42,8 @@ const HeartButton = ({
     onClick();
   };
 
+  const ariaLabel = isLiked ? "좋아요 취소" : "좋아요";
+
   return (
     <div
       className={`flex flex-col items-center justify-center gap-1 ${containerClassName}`}
@@ -49,7 +51,9 @@ const HeartButton = ({
       <button
         onClick={handleClick}
         className={cn("heart-button", finalButtonClassName)}
-        aria-label="좋아요 버튼"
+        aria-label={ariaLabel}
+        aria-pressed={isLiked}
+        aria-describedby={isCountShown ? `like-count-${likeCount}` : undefined}
         {...props}
       >
         <Heart
@@ -62,7 +66,15 @@ const HeartButton = ({
           )}
         />
       </button>
-      {isCountShown && <span className="text-sm font-bold">{likeCount}</span>}
+      {isCountShown && (
+        <span
+          className="text-sm font-bold"
+          aria-hidden="true"
+          id={`like-count-${likeCount}`}
+        >
+          {likeCount}
+        </span>
+      )}
     </div>
   );
 };

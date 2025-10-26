@@ -62,6 +62,7 @@ const CommentCard = ({
             <button
               className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600"
               onClick={() => setIsDeleteModalOpen(true)}
+              aria-label="댓글 삭제"
             >
               <Trash size={15} />
             </button>

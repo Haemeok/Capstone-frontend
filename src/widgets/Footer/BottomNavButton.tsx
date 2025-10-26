@@ -21,6 +21,8 @@ const BottomNavButton = ({ icon, label, path, onClick }: BottomNavButtonProps) =
       className={`flex cursor-pointer flex-col items-center ${
         isActive ? "text-olive-light" : "text-gray-400"
       }`}
+      aria-label={label}
+      aria-current={isActive ? "page" : undefined}
     >
       {icon}
       <span className="text-xs font-bold">{label}</span>

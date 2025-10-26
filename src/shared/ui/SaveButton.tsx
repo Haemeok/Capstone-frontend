@@ -15,7 +15,12 @@ const SaveButton = ({
 }: SaveButtonProps) => {
   return (
     <div className="flex flex-col items-center">
-      <button onClick={onClick} className={`h-14 w-14 ${className}`}>
+      <button
+        onClick={onClick}
+        className={`h-14 w-14 ${className}`}
+        aria-label={isFavorite ? "즐겨찾기 제거" : "즐겨찾기 추가"}
+        aria-pressed={isFavorite}
+      >
         <Bookmark
           width={24}
           height={24}

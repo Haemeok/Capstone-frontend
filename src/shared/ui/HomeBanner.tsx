@@ -27,7 +27,7 @@ const HomeBanner = ({ title, description, image, to }: HomeBannerProps) => {
     >
       <Image
         src={image}
-        alt="Coffee"
+        alt={`${title} 배너 이미지`}
         className="h-15 w-15"
         width={60}
         height={60}
@@ -37,7 +37,10 @@ const HomeBanner = ({ title, description, image, to }: HomeBannerProps) => {
         <p className="text-sm text-slate-400">{description}</p>
       </div>
 
-      <ChevronRight className="absolute top-1/2 right-2 translate-y-[-50%] text-slate-500" />
+      <ChevronRight
+        className="absolute top-1/2 right-2 translate-y-[-50%] text-slate-500"
+        aria-hidden="true"
+      />
     </Link>
   );
 };

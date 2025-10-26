@@ -40,6 +40,7 @@ const ToggleIconButton = ({
     <button
       type="button"
       onClick={handleClick}
+      aria-pressed={isActive}
       className={cn(
         "flex cursor-pointer items-center justify-center gap-1",
         isActive ? activeClassName : inactiveClassName,

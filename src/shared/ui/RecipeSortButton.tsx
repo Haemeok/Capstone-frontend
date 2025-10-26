@@ -26,6 +26,8 @@ const RecipeSortButton = ({
         className
       )}
       onClick={onClick}
+      aria-label={`정렬 순서 변경: 현재 ${currentSort}`}
+      aria-expanded={false}
     >
       <p
         className={cn(

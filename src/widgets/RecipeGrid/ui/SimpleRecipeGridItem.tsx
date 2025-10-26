@@ -53,6 +53,7 @@ const SimpleRecipeGridItem = ({
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full text-white"
             onClick={handleMenuClick}
+            aria-label="레시피 옵션 메뉴"
           >
             <EllipsisVertical size={20} />
           </button>

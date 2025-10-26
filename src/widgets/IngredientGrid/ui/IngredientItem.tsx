@@ -43,6 +43,9 @@ const IngredientItem = ({
             "absolute top-4 right-4 h-5 w-5 rounded-full border-2 border-gray-500 p-1",
             isActive ? "bg-[#5cc570]" : ""
           )}
+          role="checkbox"
+          aria-checked={isActive}
+          aria-label={`${ingredient.name} 선택`}
         />
       )}
     </div>

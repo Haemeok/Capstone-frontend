@@ -37,8 +37,10 @@ const BadgeButton = ({ badgeText, badgeIcon }: BadgeButtonProps) => {
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>{badgeIcon}</PopoverTrigger>
-      <PopoverContent className="w-fit py-2">
+      <PopoverTrigger asChild>
+        <button aria-label="배지 정보 표시">{badgeIcon}</button>
+      </PopoverTrigger>
+      <PopoverContent className="w-fit py-2" role="tooltip">
         <p className="text-sm text-gray-500">{badgeText}</p>
       </PopoverContent>
     </Popover>

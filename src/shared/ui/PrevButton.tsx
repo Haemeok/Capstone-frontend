@@ -16,7 +16,7 @@ const PrevButton = ({ className, onClick, size = 24 }: PrevButtonProps) => {
   const handleClick = onClick ?? (() => router.back());
 
   return (
-    <button className={className} onClick={handleClick}>
+    <button className={className} onClick={handleClick} aria-label="뒤로 가기">
       <ArrowLeftIcon size={size} />
     </button>
   );

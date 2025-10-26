@@ -31,7 +31,7 @@ export const FabButton = ({
     <>
       <div className="fixed bottom-20 z-50 flex w-full justify-center">
         <Button asChild className="bg-olive-light rounded-full p-4 text-white shadow-lg">
-          <Link href={to} prefetch={false} ref={targetRef}>
+          <Link href={to} prefetch={false} ref={targetRef} aria-label={text}>
             {text}
           </Link>
         </Button>
