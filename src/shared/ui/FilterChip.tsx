@@ -19,6 +19,8 @@ const FilterChip = ({ header, onClick, isDirty }: FilterChipProps) => {
         isDirty ? "border-dark-light" : "border-gray-300"
       )}
       onClick={onClick}
+      aria-label={`${header} 필터 열기`}
+      aria-expanded={false}
     >
       <p
         className={cn(

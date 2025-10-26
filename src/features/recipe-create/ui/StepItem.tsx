@@ -134,6 +134,15 @@ const StepItem = ({
           )}
         </div>
         <textarea
+          id={`step-instruction-${index}`}
+          aria-label={`${index + 1}번째 조리 과정`}
+          aria-required={index === 0}
+          aria-invalid={!!errors.steps?.[index]?.instruction}
+          aria-describedby={
+            errors.steps?.[index]?.instruction
+              ? `step-instruction-error-${index}`
+              : undefined
+          }
           className={`mt-2 w-full rounded-md border border-gray-300 p-3 ${
             errors.steps?.[index]?.instruction ? "border-red-500" : ""
           } focus:border-olive-light min-h-[100px] resize-none focus:outline-none`}
@@ -143,7 +152,11 @@ const StepItem = ({
           })}
         />
         {errors.steps?.[index]?.instruction && (
-          <p className="mt-1 text-xs text-red-500">
+          <p
+            id={`step-instruction-error-${index}`}
+            className="mt-1 text-xs text-red-500"
+            role="alert"
+          >
             {errors.steps?.[index]?.instruction?.message ?? ""}
           </p>
         )}
@@ -153,11 +166,12 @@ const StepItem = ({
           type="button"
           variant="ghost"
           size="icon"
+          aria-label={`${index + 1}번째 단계 삭제`}
           className="text-gray-500 hover:bg-red-100 hover:text-red-600"
           onClick={() => removeStep(index)}
           disabled={!isDeletable}
         >
-          <X size={18} />
+          <X size={18} aria-hidden="true" />
         </Button>
       </div>
     </div>

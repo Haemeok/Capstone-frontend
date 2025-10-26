@@ -57,6 +57,9 @@ const Toast = ({
         TOAST_SIZE[size],
         isVisible ? "animate-slideInUp" : "animate-fadeOut"
       )}
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
     >
       {message}
     </div>

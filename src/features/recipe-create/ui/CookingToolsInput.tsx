@@ -57,9 +57,9 @@ const CookingToolsInput = () => {
                   type="button"
                   onClick={() => removeCookingTool(tool)}
                   className="-mr-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-red-500"
-                  aria-label={`Remove ${tool}`}
+                  aria-label={`${tool} 삭제`}
                 >
-                  <X size={14} />
+                  <X size={14} aria-hidden="true" />
                 </button>
               </div>
             ))}
@@ -67,9 +67,11 @@ const CookingToolsInput = () => {
         )}
         <input
           type="text"
+          id="cooking-tools-input"
           value={currentToolInput}
           onChange={(e) => setCurrentToolInput(e.target.value)}
           onKeyDown={handleToolInputKeyDown}
+          aria-label="조리도구 입력"
           className="focus:border-olive-light focus:ring-olive-light w-full rounded border border-gray-300 p-2 focus:ring-1 focus:outline-none"
           placeholder="조리도구 입력 후 스페이스바 (예: 냄비 프라이팬)"
         />

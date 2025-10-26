@@ -15,12 +15,14 @@ const UserInfoEditButton = ({ className = "" }: UserInfoEditButtonProps) => {
     <Link
       href="/users/edit"
       prefetch={false}
+      aria-label="프로필 편집"
+      title="프로필 편집"
       className={cn(
         "bg-olive-light absolute -right-1 -bottom-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow-md",
         className
       )}
     >
-      <Edit size={14} className="text-white" />
+      <Edit size={14} className="text-white" aria-hidden="true" />
     </Link>
   );
 };

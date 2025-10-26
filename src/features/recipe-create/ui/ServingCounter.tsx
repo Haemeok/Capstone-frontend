@@ -24,6 +24,7 @@ const ServingsCounter = () => {
       role="spinbutton"
       aria-valuemin={MIN}
       aria-valuenow={value}
+      aria-label="인분 수"
       tabIndex={0}
       className="flex items-center justify-center gap-2"
     >
@@ -31,16 +32,18 @@ const ServingsCounter = () => {
         type="button"
         onClick={dec}
         disabled={value <= MIN}
+        aria-label="인분 줄이기"
         className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300 disabled:opacity-50"
       >
         -
       </button>
-      <span className="w-20 text-center font-medium text-gray-800">
+      <span className="w-20 text-center font-medium text-gray-800" aria-live="polite">
         {value}인분
       </span>
       <button
         type="button"
         onClick={inc}
+        aria-label="인분 늘리기"
         className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300"
       >
         +

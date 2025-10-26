@@ -37,17 +37,19 @@ const ServingsCounter = () => {
         <button
           type="button"
           onClick={handleDecrementServings}
+          aria-label="인분 줄이기"
           className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300 disabled:opacity-50"
           disabled={servings <= 1}
         >
           -
         </button>
-        <span className="w-20 text-center font-medium text-gray-800">
+        <span className="w-20 text-center font-medium text-gray-800" aria-live="polite">
           {servings}인분
         </span>
         <button
           type="button"
           onClick={handleIncrementServings}
+          aria-label="인분 늘리기"
           className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300"
         >
           +

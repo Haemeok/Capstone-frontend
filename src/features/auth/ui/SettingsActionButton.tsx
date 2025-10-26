@@ -26,8 +26,12 @@ const SettingsActionButton = () => {
 
   return (
     <>
-      <button onClick={() => setIsModalOpen(true)}>
-        <Settings size={20} className="mr-1" />
+      <button
+        onClick={() => setIsModalOpen(true)}
+        aria-label="설정"
+        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+      >
+        <Settings size={20} aria-hidden="true" />
       </button>
       {isModalOpen && (
         <Drawer open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -38,10 +42,11 @@ const SettingsActionButton = () => {
             <DrawerFooter className="gap-0">
               <button
                 onClick={handleLogoutClick}
+                aria-label="로그아웃"
                 className="flex items-center justify-center gap-1 border-t-1 border-gray-200 px-4 py-2 font-bold text-red-500"
               >
-                <LogOut size={16} className="mr-1" />
-                <p>로그아웃</p>
+                <LogOut size={16} aria-hidden="true" className="mr-1" />
+                <span>로그아웃</span>
               </button>
               <DrawerClose asChild>
                 <button className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-bold">

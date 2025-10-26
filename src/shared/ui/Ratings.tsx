@@ -34,7 +34,7 @@ const Ratings = ({
   className = "",
 }: RatingProps) => {
   const [hoverValue, setHoverValue] = useState<number>(0);
-  const starRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const starRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     starRefs.current = starRefs.current.slice(0, starCount);
@@ -54,7 +54,7 @@ const Ratings = ({
 
   const handleClick = (
     idx: number,
-    event: React.MouseEvent<HTMLDivElement>
+    event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     if (readOnly || !onChange) return;
 
@@ -77,7 +77,7 @@ const Ratings = ({
 
   const handleMouseMove = (
     idx: number,
-    event: React.MouseEvent<HTMLDivElement>
+    event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     if (readOnly) return;
 
@@ -139,8 +139,9 @@ const Ratings = ({
             currentValue < starValue;
 
           return (
-            <div
+            <button
               key={idx}
+              type="button"
               className={`${sizeClasses[size]} cursor-pointer`}
               ref={(el) => {
                 starRefs.current[idx] = el;
@@ -148,13 +149,22 @@ const Ratings = ({
               onClick={(e) => handleClick(idx, e)}
               onMouseMove={(e) => handleMouseMove(idx, e)}
               onMouseLeave={handleMouseLeave}
+              onKeyDown={(e) => {
+                if (!readOnly && onChange && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  onChange(roundToNearest(starValue));
+                }
+              }}
+              aria-label={`${starValue}점 선택`}
+              tabIndex={readOnly ? -1 : 0}
+              disabled={readOnly}
             >
               <StarIcon
                 filled={isFilled}
                 halfFilled={isHalfFilled}
                 hovered={hoverValue > 0 && hoverValue >= starValue - 0.5}
               />
-            </div>
+            </button>
           );
         })}
       </div>
