@@ -3,6 +3,7 @@ import prettierConfig from "eslint-config-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import reactHooks from "eslint-plugin-react-hooks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -48,6 +49,7 @@ const eslintConfig = [
     },
   },
   prettierConfig,
+  reactHooks.configs.flat.recommended,
 ];
 
 export default eslintConfig;

@@ -41,6 +41,9 @@ const appConfig = {
       { protocol: "https", hostname: "starwalk.space", pathname: "/**" },
     ],
   },
+  experimental: {
+    reactCompiler: true,
+  },
   eslint: { ignoreDuringBuilds: true },
 } satisfies import("next").NextConfig;
 
