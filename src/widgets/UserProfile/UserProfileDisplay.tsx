@@ -48,7 +48,12 @@ const UserProfileDisplay = ({
         </div>
       </div>
     </div>
-    <CollapsibleP content={user.introduction} height={52} gradientHeight={16} />
+    <CollapsibleP
+      content={user.introduction}
+      className="px-0 text-mm"
+      height={52}
+      gradientHeight={16}
+    />
   </div>
 );
 

@@ -7,17 +7,20 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "./shadcn/button";
 import { CardContent } from "./shadcn/card";
 import { Collapsible, CollapsibleTrigger } from "./shadcn/collapsible";
+import { cn } from "../lib/utils";
 
 type CollapsiblePProps = {
   content?: string;
   height?: number;
   gradientHeight?: number;
+  className?: string;
 };
 
 const CollapsibleP = ({
   content = "",
   height = 96,
   gradientHeight = 64,
+  className,
 }: CollapsiblePProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showButton, setShowButton] = useState(false);
@@ -43,7 +46,7 @@ const CollapsibleP = ({
       open={isOpen}
       onOpenChange={showButton ? setIsOpen : undefined}
     >
-      <CardContent className="p-4">
+      <CardContent className={cn("p-4", className)}>
         <div
           className="relative w-full"
           style={{
@@ -79,14 +82,15 @@ const CollapsibleP = ({
               variant="ghost"
               size="sm"
               className="mt-2 font-bold text-olive-light"
+              aria-label={isOpen ? "텍스트 숨기기" : "텍스트 더 읽기"}
             >
               {isOpen ? (
                 <>
-                  숨기기 <ChevronUp size={16} className="ml-1" />
+                  숨기기 <ChevronUp size={16} className="ml-1" aria-hidden="true" />
                 </>
               ) : (
                 <>
-                  더 읽기 <ChevronDown size={16} className="ml-1" />
+                  더 읽기 <ChevronDown size={16} className="ml-1" aria-hidden="true" />
                 </>
               )}
             </Button>

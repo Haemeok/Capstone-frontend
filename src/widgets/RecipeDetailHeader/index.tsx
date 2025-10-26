@@ -46,7 +46,11 @@ const RecipeDetailHeader = ({ recipe }: RecipeDetailHeaderProps) => {
         fetchPriority="high"
       />
 
-      <Link href={`/recipes/${recipe.id}/rate`} prefetch={false} className="block mt-4">
+      <Link
+        href={`/recipes/${recipe.id}/rate`}
+        prefetch={false}
+        className="block mt-4"
+      >
         <Ratings
           precision={0.1}
           allowHalf
