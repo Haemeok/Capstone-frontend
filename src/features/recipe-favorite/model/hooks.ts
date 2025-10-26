@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import { Recipe } from "@/entities/recipe/model/types";
+import { RecipeStatus } from "@/entities/recipe/model/types";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 
@@ -16,19 +16,22 @@ export const useToggleRecipeFavorite = (recipeId: number) => {
     void,
     Error,
     void,
-    Recipe
+    RecipeStatus | undefined
   >({
     mutationFn: () => postRecipeFavorite(recipeId),
     onMutate: async () => {
+      const recipeStatusQueryKey = ["recipe-status", recipeId.toString()];
+
       await queryClient.cancelQueries({
-        queryKey: ["recipe", recipeId.toString()],
+        queryKey: recipeStatusQueryKey,
       });
-      const previousRecipe = queryClient.getQueryData<Recipe>([
-        "recipe",
-        recipeId,
-      ]);
-      if (previousRecipe) {
-        queryClient.setQueryData<Recipe>(["recipe", recipeId], (old) =>
+
+      const previousRecipeStatus = queryClient.getQueryData<RecipeStatus>(
+        recipeStatusQueryKey
+      );
+
+      if (previousRecipeStatus) {
+        queryClient.setQueryData<RecipeStatus>(recipeStatusQueryKey, (old) =>
           old
             ? {
                 ...old,
@@ -37,17 +40,21 @@ export const useToggleRecipeFavorite = (recipeId: number) => {
             : old
         );
       }
-      return previousRecipe;
+
+      return previousRecipeStatus;
     },
     onError: (error, variables, context) => {
       console.error("즐겨찾기 처리 실패:", error);
       if (context) {
-        queryClient.setQueryData(["recipe", recipeId.toString()], context);
+        queryClient.setQueryData(
+          ["recipe-status", recipeId.toString()],
+          context
+        );
       }
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["recipe", recipeId.toString()],
+        queryKey: ["recipe-status", recipeId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: ["recipes", "favorite"] });
     },
@@ -55,7 +62,7 @@ export const useToggleRecipeFavorite = (recipeId: number) => {
 
   const authenticatedMutate = useAuthenticatedAction<
     void,
-    MutateOptions<void, Error, void, Recipe> | undefined,
+    MutateOptions<void, Error, void, RecipeStatus | undefined> | undefined,
     void
   >(rawMutate, {
     notifyOnly: true,

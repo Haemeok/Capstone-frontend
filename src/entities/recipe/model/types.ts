@@ -59,7 +59,7 @@ export type Recipe = {
   createdAt?: string;
 };
 
-type RatingInfo = {
+export type RatingInfo = {
   avgRating: number;
   myRating: number;
   ratingCount: number;
@@ -111,7 +111,6 @@ export type RecipeStepPayload = Omit<
   imageKey?: string;
 };
 
-// API 요청용 (페이지네이션 포함)
 export type RecipeQueryParams = {
   page?: number;
   size?: number;
@@ -122,10 +121,9 @@ export type RecipeQueryParams = {
   isAiGenerated?: boolean;
   maxCost?: number;
   period?: "weekly" | "monthly";
-  pageParam?: number; // useInfiniteQuery 호환용
+  pageParam?: number;
 };
 
-// 서버 사이드 fetching용 (페이지네이션 제외, key 포함)
 export type RecipeItemsQueryParams = {
   key: string;
   sort?: "desc" | "asc";
@@ -135,4 +133,23 @@ export type RecipeItemsQueryParams = {
   dishType?: string | null;
   maxCost?: number;
   period?: "weekly" | "monthly";
+};
+
+export type StaticRecipe = Omit<
+  Recipe,
+  "likeCount" | "likedByCurrentUser" | "favoriteByCurrentUser" | "comments"
+> & {
+  comments: Omit<Comment, "likedByCurrentUser" | "likeCount">[];
+};
+
+export type RecipeStatus = {
+  likeCount: number;
+  likedByCurrentUser: boolean;
+  favoriteByCurrentUser: boolean;
+  myRating: number | null;
+  comments: Array<{
+    id: number;
+    likedByCurrentUser: boolean;
+    likeCount: number;
+  }>;
 };

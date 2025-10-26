@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 
-import type { Recipe } from "@/entities/recipe/model/types";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
 import { createRecipeStructuredData } from "./structuredData";
 
 export const generateRecipeMetadata = (
-  recipe: Recipe,
+  recipe: StaticRecipe,
   recipeId: string
 ): Metadata => {
   const title = `${recipe.title} - ${SEO_CONSTANTS.SITE_NAME}`;
-  const description = recipe.description || `${recipe.title} 레시피를 확인해보세요!`;
+  const description =
+    recipe.description || `${recipe.title} 레시피를 확인해보세요!`;
   const imageUrl = recipe.imageUrl;
   const recipeUrl = `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}`;
 

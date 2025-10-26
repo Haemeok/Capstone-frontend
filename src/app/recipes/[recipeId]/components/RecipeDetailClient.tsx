@@ -1,34 +1,98 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 
 import BadgeButton from "@/shared/ui/BadgeButton";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 import { FabButton } from "@/shared/ui/FabButton";
+import Ratings from "@/shared/ui/Ratings";
 import Box from "@/shared/ui/primitives/Box";
+import { OptimizedImage } from "@/shared/ui/image/OptimizedImage";
 
-import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
+import { useRecipeStatusQuery } from "@/entities/recipe/model/hooks";
+import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 import { UserProfile } from "@/entities/user";
 
 import { CommentCard } from "@/features/comment-card";
 
-import RecipeDetailHeader from "@/widgets/RecipeDetailHeader";
+import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
+import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
 import RecipeInteractionButtons from "@/widgets/RecipeInteractionButtons";
 
 import CommentMoreButton from "./CommentMoreButton";
 import IngredientsSection from "../components/IngredientsSection";
 
-type RecipeDetailClientProps = { recipeId: number };
+type RecipeDetailClientProps = {
+  staticRecipe: StaticRecipe;
+  recipeId: number;
+};
 
-const RecipeDetailClient = ({ recipeId }: RecipeDetailClientProps) => {
+const RecipeDetailClient = ({ staticRecipe, recipeId }: RecipeDetailClientProps) => {
   const observerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
-  const { recipeData: recipe } = useRecipeDetailQuery(recipeId);
+  const { data: status } = useRecipeStatusQuery(recipeId);
+
+  const recipe: Recipe = {
+    ...staticRecipe,
+    likeCount: status?.likeCount ?? 0,
+    likedByCurrentUser: status?.likedByCurrentUser ?? false,
+    favoriteByCurrentUser: status?.favoriteByCurrentUser ?? false,
+    ratingInfo: {
+      ...staticRecipe.ratingInfo,
+      myRating: status?.myRating ?? 0,
+    },
+    comments: staticRecipe.comments.map((comment) => {
+      const statusComment = status?.comments.find((c) => c.id === comment.id);
+      return {
+        ...comment,
+        likedByCurrentUser: statusComment?.likedByCurrentUser ?? false,
+        likeCount: statusComment?.likeCount ?? 0,
+      };
+    }),
+  };
 
   return (
     <div className="relative mx-auto flex flex-col">
-      <RecipeDetailHeader recipe={recipe} />
+      <TransformingNavbar
+        title={staticRecipe.title}
+        targetRef={imageRef}
+        titleThreshold={0.7}
+        textColorThreshold={0.5}
+        shadowThreshold={0.8}
+        rightComponent={
+          <RecipeNavBarButtons
+            recipeId={recipeId}
+            initialIsLiked={status?.likedByCurrentUser ?? false}
+            initialLikeCount={status?.likeCount ?? 0}
+          />
+        }
+      />
+
+      <OptimizedImage
+        ref={imageRef}
+        src={staticRecipe.imageUrl}
+        alt={staticRecipe.title}
+        wrapperClassName="w-full"
+        className="object-cover"
+        fill
+        priority
+        fetchPriority="high"
+      />
+
+      <Link href={`/recipes/${recipeId}/rate`} prefetch={false} className="block mt-4">
+        <Ratings
+          precision={0.1}
+          allowHalf
+          value={staticRecipe.ratingInfo.avgRating || 0}
+          readOnly
+          className="w-full justify-center"
+          showValue
+          ratingCount={staticRecipe.ratingInfo.ratingCount}
+        />
+      </Link>
 
       <div className="px-2">
         <Box className="flex flex-col items-center justify-center gap-3">
