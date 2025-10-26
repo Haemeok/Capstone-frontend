@@ -34,6 +34,7 @@ export const SearchFilters = ({
         <input
           type="search"
           placeholder="레시피를 검색하세요"
+          aria-label="레시피 검색"
           className="w-full rounded-md border border-gray-300 py-2 pr-10 pl-4 focus:outline-none"
           value={inputValue}
           onChange={handleInputChange}
@@ -41,9 +42,10 @@ export const SearchFilters = ({
 
         <button
           type="submit"
-          className="absolute top-1/2 right-3 -translate-y-1/2"
+          aria-label="검색"
+          className="absolute top-1/2 right-3 -translate-y-1/2 p-2"
         >
-          <Search size={18} className="text-gray-400" />
+          <Search size={18} className="text-gray-400" aria-hidden="true" />
         </button>
       </form>
 
