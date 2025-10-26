@@ -21,7 +21,9 @@ const useCreateCommentMutation = (recipeId: number) => {
       queryClient.invalidateQueries({
         queryKey: ["comments", recipeIdString],
       });
-      queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
+      queryClient.invalidateQueries({
+        queryKey: ["recipe-status", recipeIdString],
+      });
       addToast({
         message: "댓글이 등록되었습니다.",
         variant: "success",

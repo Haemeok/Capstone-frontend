@@ -2,17 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-
-import {
   generateNotFoundRecipeMetadata,
   generateRecipeMetadata,
 } from "@/shared/lib/metadata";
 
-import { getRecipeOnServer } from "@/entities/recipe/model/api.server";
+import { getStaticRecipeOnServer } from "@/entities/recipe/model/api.server";
 import { mockRecipeData } from "@/entities/recipe/model/mockData";
 
 import RecipeDetailClient from "./components/RecipeDetailClient";
@@ -21,19 +15,21 @@ interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
 }
 
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: RecipeDetailPageProps): Promise<Metadata> {
   const { recipeId } = await params;
   const numericRecipeId = Number(recipeId);
 
-  const recipe = await getRecipeOnServer(numericRecipeId);
+  const staticRecipe = await getStaticRecipeOnServer(numericRecipeId);
 
   const useMockData =
     process.env.NODE_ENV === "development" &&
     process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
 
-  const displayRecipe = useMockData ? mockRecipeData : recipe;
+  const displayRecipe = useMockData ? mockRecipeData : staticRecipe;
 
   if (!displayRecipe) {
     return generateNotFoundRecipeMetadata();
@@ -48,21 +44,11 @@ export default async function RecipeDetailPage({
   const { recipeId } = await params;
   const numericRecipeId = Number(recipeId);
 
-  const recipe = await getRecipeOnServer(numericRecipeId);
+  const staticRecipe = await getStaticRecipeOnServer(numericRecipeId);
 
-  if (!recipe) {
+  if (!staticRecipe) {
     notFound();
   }
 
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["recipe", numericRecipeId.toString()],
-    queryFn: () => Promise.resolve(recipe),
-  });
-
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <RecipeDetailClient recipeId={numericRecipeId} />
-    </HydrationBoundary>
-  );
+  return <RecipeDetailClient staticRecipe={staticRecipe} recipeId={numericRecipeId} />;
 }

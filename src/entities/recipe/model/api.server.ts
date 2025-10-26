@@ -6,6 +6,7 @@ import {
   DetailedRecipesApiResponse,
   Recipe,
   RecipeItemsQueryParams,
+  StaticRecipe,
 } from "./types";
 
 export const getRecipesOnServer = async (
@@ -95,6 +96,34 @@ export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
     return res.json();
   } catch (error) {
     console.error(`[getRecipeOnServer] Failed to fetch recipe ${id}:`, error);
+    return null;
+  }
+};
+
+export const getStaticRecipeOnServer = async (
+  id: number
+): Promise<StaticRecipe | null> => {
+  const API_URL = `${BASE_API_URL}/v2/recipes/${id}`;
+  if (isNaN(id) || id <= 0) {
+    return null;
+  }
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        return null;
+      }
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+    return res.json();
+  } catch (error) {
+    console.error(
+      `[getStaticRecipeOnServer] Failed to fetch recipe ${id}:`,
+      error
+    );
     return null;
   }
 };

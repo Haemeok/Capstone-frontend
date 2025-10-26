@@ -1,11 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
-import { getMyIngredientRecipes, getRecipe } from "./api";
+import { getMyIngredientRecipes, getRecipe, getRecipeStatus } from "./api";
 import { mockRecipeData } from "./mockData";
-import { Recipe } from "./types";
+import { Recipe, RecipeStatus } from "./types";
 
 export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
   const {
@@ -70,4 +70,12 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
     noResults,
     lastPageMessage,
   };
+};
+
+export const useRecipeStatusQuery = (id: number) => {
+  return useQuery<RecipeStatus>({
+    queryKey: ["recipe-status", id.toString()],
+    queryFn: () => getRecipeStatus(id),
+    staleTime: 0,
+  });
 };

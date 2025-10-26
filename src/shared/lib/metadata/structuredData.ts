@@ -1,4 +1,4 @@
-import type { Recipe } from "@/entities/recipe/model/types";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
 
@@ -16,7 +16,7 @@ export const createWebsiteStructuredData = () => ({
 });
 
 export const createRecipeStructuredData = (
-  recipe: Recipe,
+  recipe: StaticRecipe,
   recipeId: string
 ) => ({
   "@context": "https://schema.org",

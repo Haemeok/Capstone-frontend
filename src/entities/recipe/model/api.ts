@@ -9,6 +9,7 @@ import {
   IngredientRecipesApiResponse,
   Recipe,
   RecipeQueryParams,
+  RecipeStatus,
 } from "./types";
 import { RecipePayload } from "./types";
 
@@ -84,4 +85,9 @@ export const editRecipe = async ({
     recipe,
     files,
   });
+};
+
+export const getRecipeStatus = async (id: number): Promise<RecipeStatus> => {
+  const response = await api.get<RecipeStatus>(`/v2/recipes/${id}/status`);
+  return response;
 };

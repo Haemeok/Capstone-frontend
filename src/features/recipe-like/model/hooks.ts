@@ -7,7 +7,7 @@ import {
 
 import {
   DetailedRecipesApiResponse,
-  Recipe,
+  RecipeStatus,
 } from "@/entities/recipe/model/types";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
@@ -15,14 +15,14 @@ import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticated
 import { postRecipeLike } from "./api";
 
 type LikeRecipeMutationContext = {
-  previousRecipeDetail?: Recipe;
+  previousRecipeStatus?: RecipeStatus;
   previousRecipeListData?: InfiniteData<DetailedRecipesApiResponse>;
 };
 
 export const useLikeRecipeMutation = (recipeId: number) => {
   const queryClient = useQueryClient();
 
-  const recipeDetailQueryKey = ["recipe", recipeId.toString()];
+  const recipeStatusQueryKey = ["recipe-status", recipeId.toString()];
 
   const recipesListRootKey = ["recipes"];
 
@@ -35,14 +35,14 @@ export const useLikeRecipeMutation = (recipeId: number) => {
     mutationFn: () => postRecipeLike(recipeId),
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: recipeDetailQueryKey });
+      await queryClient.cancelQueries({ queryKey: recipeStatusQueryKey });
       await queryClient.cancelQueries({ queryKey: recipesListRootKey });
 
-      const previousRecipeDetail =
-        queryClient.getQueryData<Recipe>(recipeDetailQueryKey);
+      const previousRecipeStatus =
+        queryClient.getQueryData<RecipeStatus>(recipeStatusQueryKey);
 
-      if (previousRecipeDetail) {
-        queryClient.setQueryData<Recipe>(recipeDetailQueryKey, (old) =>
+      if (previousRecipeStatus) {
+        queryClient.setQueryData<RecipeStatus>(recipeStatusQueryKey, (old) =>
           old
             ? {
                 ...old,
@@ -79,21 +79,21 @@ export const useLikeRecipeMutation = (recipeId: number) => {
         }
       );
 
-      return { previousRecipeDetail };
+      return { previousRecipeStatus };
     },
 
     onError: (error, variables, context) => {
-      if (context?.previousRecipeDetail) {
+      if (context?.previousRecipeStatus) {
         queryClient.setQueryData(
-          recipeDetailQueryKey,
-          context.previousRecipeDetail
+          recipeStatusQueryKey,
+          context.previousRecipeStatus
         );
       }
       console.error("좋아요 처리 실패:", error);
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: recipeDetailQueryKey });
+      queryClient.invalidateQueries({ queryKey: recipeStatusQueryKey });
       queryClient.invalidateQueries({ queryKey: recipesListRootKey });
     },
   });

@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import HeartButton from "@/shared/ui/HeartButton";
 
-import { Recipe } from "@/entities/recipe/model/types";
+import { RecipeStatus } from "@/entities/recipe/model/types";
 
 import { useLikeRecipeMutation } from "../model/hooks";
 
@@ -33,13 +33,13 @@ const RecipeLikeButton = ({
   const queryClient = useQueryClient();
   const { mutate: toggleLikeMutate } = useLikeRecipeMutation(recipeId);
 
-  const currentRecipe = queryClient.getQueryData<Recipe>([
-    "recipe",
+  const currentStatus = queryClient.getQueryData<RecipeStatus>([
+    "recipe-status",
     recipeId.toString(),
   ]);
 
-  const isLiked = currentRecipe?.likedByCurrentUser ?? initialIsLiked;
-  const likeCount = currentRecipe?.likeCount ?? initialLikeCount;
+  const isLiked = currentStatus?.likedByCurrentUser ?? initialIsLiked;
+  const likeCount = currentStatus?.likeCount ?? initialLikeCount;
 
   return (
     <HeartButton
