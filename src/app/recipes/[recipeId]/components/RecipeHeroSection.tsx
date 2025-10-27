@@ -1,8 +1,7 @@
 import Link from "next/link";
 
+import { OptimizedImage } from "@/shared/ui/image/OptimizedImage";
 import Ratings from "@/shared/ui/Ratings";
-
-import RecipeHeroImage from "./RecipeHeroImage";
 
 type RecipeHeroSectionProps = {
   imageUrl: string;
@@ -21,7 +20,17 @@ export default function RecipeHeroSection({
 }: RecipeHeroSectionProps) {
   return (
     <>
-      <RecipeHeroImage src={imageUrl} alt={title} />
+      <div id="recipe-hero-image" className="w-full relative">
+        <OptimizedImage
+          src={imageUrl}
+          alt={title}
+          wrapperClassName="w-full"
+          className="object-cover"
+          fill
+          priority
+          fetchPriority="high"
+        />
+      </div>
 
       <Link
         href={`/recipes/${recipeId}/rate`}

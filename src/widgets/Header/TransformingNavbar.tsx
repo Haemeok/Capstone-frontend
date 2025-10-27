@@ -14,7 +14,7 @@ type AnimationConfig = {
 
 type TransformingNavbarProps = {
   title: string;
-  targetRef: React.RefObject<HTMLElement | null>;
+  heroImageId: string;
   leftComponent?: React.ReactNode;
   rightComponent?: React.ReactNode;
   titleThreshold?: number;
@@ -30,7 +30,7 @@ const DEFAULT_CONFIG: AnimationConfig = {
 
 const TransformingNavbar = ({
   title,
-  targetRef,
+  heroImageId,
   leftComponent = <PrevButton />,
   rightComponent,
   titleThreshold = DEFAULT_CONFIG.titleThreshold,
@@ -43,8 +43,10 @@ const TransformingNavbar = ({
   const { motionRef } = useScrollContext();
 
   useEffect(() => {
+    const targetElement = document.getElementById(heroImageId);
+
     if (
-      !targetRef.current ||
+      !targetElement ||
       !headerRef.current ||
       !titleRef.current ||
       !motionRef.current
@@ -54,7 +56,7 @@ const TransformingNavbar = ({
 
     const headerElement = headerRef.current;
     const titleElement = titleRef.current;
-    const endTrigger = targetRef.current!.offsetHeight * 0.8;
+    const endTrigger = targetElement.offsetHeight * 0.8;
 
     const animationConfig = {
         title: {
@@ -80,7 +82,7 @@ const TransformingNavbar = ({
 
     const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: targetRef.current,
+          trigger: targetElement,
           scroller: motionRef.current,
           start: "top top",
           end: `+=${endTrigger}`,
@@ -120,7 +122,7 @@ const TransformingNavbar = ({
       tl.kill();
     };
   }, [
-    targetRef,
+    heroImageId,
     titleThreshold,
     textColorThreshold,
     shadowThreshold,

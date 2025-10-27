@@ -63,17 +63,21 @@ export default async function RecipeDetailPage({
 
   return (
     <RecipeStatusProvider recipeId={numericRecipeId}>
+      <RecipeNavbar
+        title={staticRecipe.title}
+        recipeId={numericRecipeId}
+        heroImageId="recipe-hero-image"
+      />
+
+      <RecipeHeroSection
+        imageUrl={staticRecipe.imageUrl}
+        title={staticRecipe.title}
+        avgRating={staticRecipe.ratingInfo.avgRating}
+        ratingCount={staticRecipe.ratingInfo.ratingCount}
+        recipeId={numericRecipeId}
+      />
+
       <RecipeContainer>
-        <RecipeNavbar title={staticRecipe.title} recipeId={numericRecipeId} />
-
-        <RecipeHeroSection
-          imageUrl={staticRecipe.imageUrl}
-          title={staticRecipe.title}
-          avgRating={staticRecipe.ratingInfo.avgRating}
-          ratingCount={staticRecipe.ratingInfo.ratingCount}
-          recipeId={numericRecipeId}
-        />
-
         <div className="px-2">
           <RecipeInfoSection
             title={staticRecipe.title}
