@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { formatNumber } from "@/shared/lib/format";
 import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
 import SavingSection from "@/shared/ui/SavingSection";
+import CountUp from "@/shared/ui/shadcn/CountUp";
 
 type MonthlySavingsSummaryProps = {
   year: number;
@@ -59,11 +60,17 @@ const MonthlySavingsSummary = ({
       <h3 className="text-xl font-bold">
         {year}년 {month}월 해먹 서비스로
       </h3>
-      <div className="flex gap-1">
-        <h3 className="text-olive-mint text-xl font-bold">
-          {formatNumber(currentSavings, "원")}
-        </h3>
-        <h3 className="text-xl font-bold"> 절약했어요</h3>
+      <div className="flex">
+        <CountUp
+          from={0}
+          to={currentSavings}
+          duration={0.25}
+          separator=","
+          direction="up"
+          className="text-olive-mint text-xl font-bold"
+        />
+        <span className="text-xl font-bold text-olive-mint">원</span>
+        <h3 className="text-xl font-bold ml-1"> 절약했어요</h3>
       </div>
       <p className="mt-1 text-sm text-gray-500">
         {productName} 정도 금액이에요!

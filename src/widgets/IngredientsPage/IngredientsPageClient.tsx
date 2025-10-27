@@ -53,7 +53,7 @@ const IngredientsPageClient = () => {
     : "로그인 후 냉장고를\n관리해보세요";
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       <div ref={observerRef} className="h-1 w-full" />
       <div className="flex items-center justify-between border-b border-gray-200 bg-[#f7f7f7] p-4">
         <h1 className="whitespace-pre-line text-xl font-bold">{headerTitle}</h1>

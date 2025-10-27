@@ -111,9 +111,9 @@ const CalendarTabContent = () => {
             const router = useRouter();
             if (date?.getMonth() !== day?.displayMonth.getMonth()) {
               return (
-                <div className="flex h-full w-full items-center justify-center text-sm opacity-30">
+                <td className="flex h-full w-full items-center justify-center text-sm opacity-30">
                   {dateNumber}
-                </div>
+                </td>
               );
             }
             const yyyyMMdd = format(date, "yyyy-MM-dd");
@@ -123,7 +123,7 @@ const CalendarTabContent = () => {
             };
             if (summary) {
               return (
-                <div
+                <td
                   className="relative h-full w-full"
                   onClick={handleNavigateToCalendarDetail}
                 >
@@ -137,7 +137,7 @@ const CalendarTabContent = () => {
                       {summary.totalCount}
                     </div>
                   )}
-                </div>
+                </td>
               );
             }
             const today = new Date();
@@ -147,7 +147,7 @@ const CalendarTabContent = () => {
               date?.getFullYear() === today.getFullYear();
 
             return (
-              <div
+              <td
                 className={cn("flex h-full w-full items-center justify-center")}
               >
                 <p
@@ -158,7 +158,7 @@ const CalendarTabContent = () => {
                 >
                   {dateNumber}
                 </p>
-              </div>
+              </td>
             );
           },
           PreviousMonthButton: ({ className, ...props }: any) => (
