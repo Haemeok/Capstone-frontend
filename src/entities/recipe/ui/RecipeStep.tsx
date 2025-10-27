@@ -29,7 +29,7 @@ const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
             {ingredient.quantity && (
               <p className="text-mm text-left font-bold text-olive-light">
                 {ingredient.quantity}
-                {ingredient.unit}
+                {ingredient.quantity === "약간" ? "" : ingredient.unit}
               </p>
             )}
           </div>

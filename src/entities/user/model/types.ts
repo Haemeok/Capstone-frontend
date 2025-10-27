@@ -30,7 +30,8 @@ export type RecipeDailySummary = {
 };
 
 export type RecipeHistoryDetailResponse = {
-  savings: number;
+  marketPrice: number;
+  ingredientCost: number;
   recipeId: number;
   recipeTitle: string;
   imageUrl: string;
