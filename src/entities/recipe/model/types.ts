@@ -6,6 +6,8 @@ import { User } from "@/entities/user";
 
 export type BaseRecipesApiResponse = PageResponse<BaseRecipeGridItem>;
 export type DetailedRecipesApiResponse = PageResponse<DetailedRecipeGridItem>;
+export type StaticDetailedRecipesApiResponse =
+  PageResponse<StaticDetailedRecipeGridItem>;
 export type IngredientRecipesApiResponse =
   PageResponse<IngredientRecipeGridItem>;
 
@@ -26,6 +28,11 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   avgRating: number;
   ratingCount: number;
 };
+
+export type StaticDetailedRecipeGridItem = Omit<
+  DetailedRecipeGridItem,
+  "likedByCurrentUser"
+>;
 
 export type IngredientRecipeGridItem = DetailedRecipeGridItem & {
   matchedIngredients: string[];
@@ -153,3 +160,9 @@ export type RecipeStatus = {
     likeCount: number;
   }>;
 };
+
+export type RecipeListItemStatus = {
+  likedByCurrentUser: boolean;
+};
+
+export type RecipesStatusResponse = Record<string, RecipeListItemStatus>;

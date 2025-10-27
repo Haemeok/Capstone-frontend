@@ -37,6 +37,7 @@ export const useLikeRecipeMutation = (recipeId: number) => {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: recipeStatusQueryKey });
       await queryClient.cancelQueries({ queryKey: recipesListRootKey });
+      await queryClient.cancelQueries({ queryKey: ["recipes-status"] });
 
       const previousRecipeStatus =
         queryClient.getQueryData<RecipeStatus>(recipeStatusQueryKey);
@@ -55,29 +56,60 @@ export const useLikeRecipeMutation = (recipeId: number) => {
         );
       }
 
-      queryClient.setQueriesData<InfiniteData<DetailedRecipesApiResponse>>(
-        { queryKey: recipesListRootKey },
-        (oldData) => {
-          if (!oldData) return undefined;
+      queryClient.setQueriesData<
+        InfiniteData<DetailedRecipesApiResponse> | DetailedRecipesApiResponse
+      >({ queryKey: recipesListRootKey }, (oldData) => {
+        if (!oldData) return oldData;
+
+        const updateRecipe = <T extends { id: number; likedByCurrentUser: boolean; likeCount: number }>(
+          recipe: T
+        ): T =>
+          recipe.id === recipeId
+            ? {
+                ...recipe,
+                likedByCurrentUser: !recipe.likedByCurrentUser,
+                likeCount: recipe.likedByCurrentUser ? recipe.likeCount - 1 : recipe.likeCount + 1,
+              }
+            : recipe;
+
+        if ("pages" in oldData) {
           return {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
-              content: page.content.map((recipe) =>
-                recipe.id === recipeId
-                  ? {
-                      ...recipe,
-                      likedByCurrentUser: !recipe.likedByCurrentUser,
-                      likeCount: recipe.likedByCurrentUser
-                        ? recipe.likeCount - 1
-                        : recipe.likeCount + 1,
-                    }
-                  : recipe
-              ),
+              content: page.content.map(updateRecipe),
             })),
           };
         }
-      );
+
+        if ("content" in oldData) {
+          return {
+            ...oldData,
+            content: oldData.content.map(updateRecipe),
+          };
+        }
+
+        return oldData;
+      });
+
+      queryClient.setQueriesData({ queryKey: ["recipes-status"] }, (oldData: unknown) => {
+        if (!oldData || typeof oldData !== "object") return oldData;
+
+        const statusData = oldData as Record<string, { likedByCurrentUser: boolean }>;
+        const recipeIdKey = recipeId.toString();
+
+        if (recipeIdKey in statusData) {
+          return {
+            ...statusData,
+            [recipeIdKey]: {
+              ...statusData[recipeIdKey],
+              likedByCurrentUser: !statusData[recipeIdKey].likedByCurrentUser,
+            },
+          };
+        }
+
+        return oldData;
+      });
 
       return { previousRecipeStatus };
     },
@@ -95,6 +127,7 @@ export const useLikeRecipeMutation = (recipeId: number) => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: recipeStatusQueryKey });
       queryClient.invalidateQueries({ queryKey: recipesListRootKey });
+      queryClient.invalidateQueries({ queryKey: ["recipes-status"] });
     },
   });
 

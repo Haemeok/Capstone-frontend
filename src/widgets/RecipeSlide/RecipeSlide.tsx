@@ -1,46 +1,28 @@
-"use client";
-
 import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
-import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
+import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe";
 
-import { useRecipeItemsQuery } from "./hooks";
+import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 type RecipeSlideProps = {
   title: string;
-  queryKey: string;
-  isAiGenerated?: boolean;
-  tags?: string[];
   to?: string;
-  maxCost?: number;
-  period?: "weekly" | "monthly";
+  recipes: DetailedRecipeGridItemType[];
+  isLoading: boolean;
+  error: Error | null;
 };
 
 const RecipeSlide = ({
   title,
-  queryKey,
-  isAiGenerated,
-  tags,
   to,
-  maxCost,
-  period,
+  recipes,
+  isLoading,
+  error,
 }: RecipeSlideProps) => {
-  const {
-    data: recipes,
-    isLoading,
-    error,
-  } = useRecipeItemsQuery({
-    key: queryKey,
-    isAiGenerated,
-    tags,
-    maxCost,
-    period,
-  });
-
   return (
     <div className="mt-2 w-full">
       <div className="mb-4 flex items-center justify-between">

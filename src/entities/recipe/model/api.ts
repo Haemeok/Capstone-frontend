@@ -10,6 +10,7 @@ import {
   Recipe,
   RecipeQueryParams,
   RecipeStatus,
+  RecipesStatusResponse,
 } from "./types";
 import { RecipePayload } from "./types";
 
@@ -89,5 +90,14 @@ export const editRecipe = async ({
 
 export const getRecipeStatus = async (id: number): Promise<RecipeStatus> => {
   const response = await api.get<RecipeStatus>(`/v2/recipes/${id}/status`);
+  return response;
+};
+
+export const getRecipesStatus = async (
+  recipeIds: number[]
+): Promise<RecipesStatusResponse> => {
+  const response = await api.post<RecipesStatusResponse>(`/v2/recipes/status`, {
+    recipeIds,
+  });
   return response;
 };

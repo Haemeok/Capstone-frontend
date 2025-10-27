@@ -1,6 +1,9 @@
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 
-import RecipeSlide from "./index";
+import { StaticDetailedRecipeGridItem } from "@/entities/recipe";
+
+import DynamicRecipeSlide from "./DynamicRecipeSlide";
+import StaticRecipeSlide from "./StaticRecipeSlide";
 
 type RecipeSlideWithErrorBoundaryProps = {
   title: string;
@@ -10,13 +13,21 @@ type RecipeSlideWithErrorBoundaryProps = {
   to?: string;
   maxCost?: number;
   period?: "weekly" | "monthly";
+  isStatic?: boolean;
+  staticRecipes?: StaticDetailedRecipeGridItem[];
 };
 
-const RecipeSlideWithErrorBoundary = (
-  props: RecipeSlideWithErrorBoundaryProps
-) => {
-  const { title } = props;
-
+const RecipeSlideWithErrorBoundary = ({
+  title,
+  queryKey,
+  isAiGenerated,
+  tags,
+  to,
+  maxCost,
+  period,
+  isStatic = false,
+  staticRecipes = [],
+}: RecipeSlideWithErrorBoundaryProps) => {
   return (
     <ErrorBoundary
       fallback={
@@ -30,7 +41,23 @@ const RecipeSlideWithErrorBoundary = (
         </div>
       }
     >
-      <RecipeSlide {...props} />
+      {isStatic ? (
+        <StaticRecipeSlide
+          title={title}
+          to={to}
+          staticRecipes={staticRecipes}
+        />
+      ) : (
+        <DynamicRecipeSlide
+          title={title}
+          queryKey={queryKey}
+          to={to}
+          isAiGenerated={isAiGenerated}
+          tags={tags}
+          maxCost={maxCost}
+          period={period}
+        />
+      )}
     </ErrorBoundary>
   );
 };
