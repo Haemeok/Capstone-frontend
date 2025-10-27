@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+
 import clsx from "clsx";
 import { Heart } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import CountUp from "@/shared/ui/shadcn/CountUp";
 
 type HeartButtonProps = {
   containerClassName?: string;
@@ -31,6 +34,16 @@ const HeartButton = ({
   isOnNavbar = false,
   ...props
 }: HeartButtonProps) => {
+  const prevLikeCountRef = useRef(likeCount);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  useEffect(() => {
+    const diff = Math.abs(likeCount - prevLikeCountRef.current);
+
+    setShouldAnimate(diff > 1);
+    prevLikeCountRef.current = likeCount;
+  }, [likeCount]);
+
   const finalButtonClassName = clsx(
     isOnNavbar ? "nav-button-base" : "",
     `flex items-center justify-center ${buttonClassName}`
@@ -66,15 +79,17 @@ const HeartButton = ({
           )}
         />
       </button>
-      {isCountShown && (
-        <span
-          className="text-sm font-bold"
-          aria-hidden="true"
-          id={`like-count-${likeCount}`}
-        >
-          {likeCount}
-        </span>
-      )}
+      {isCountShown &&
+        (shouldAnimate ? (
+          <CountUp
+            to={likeCount}
+            duration={0.15}
+            className="text-sm font-bold"
+            startWhen={true}
+          />
+        ) : (
+          <span className="text-sm font-bold">{likeCount}</span>
+        ))}
     </div>
   );
 };
