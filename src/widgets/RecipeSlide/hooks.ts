@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getRecipeItems, RecipeItemsQueryParams } from "@/entities/recipe";
+import {
+  getRecipeItems,
+  getRecipesStatus,
+  RecipeItemsQueryParams,
+} from "@/entities/recipe";
 
 export const useRecipeItemsQuery = ({
   key,
@@ -24,4 +28,12 @@ export const useRecipeItemsQuery = ({
     ...query,
     data: query.data ?? [],
   };
+};
+
+export const useRecipesStatusQuery = (recipeIds: number[]) => {
+  return useQuery({
+    queryKey: ["recipes-status", recipeIds],
+    queryFn: () => getRecipesStatus(recipeIds),
+    enabled: recipeIds.length > 0,
+  });
 };

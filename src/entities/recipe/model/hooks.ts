@@ -76,6 +76,7 @@ export const useRecipeStatusQuery = (id: number) => {
   return useQuery<RecipeStatus>({
     queryKey: ["recipe-status", id.toString()],
     queryFn: () => getRecipeStatus(id),
-    staleTime: 0,
+    staleTime: 30000,
+    refetchOnWindowFocus: true,
   });
 };

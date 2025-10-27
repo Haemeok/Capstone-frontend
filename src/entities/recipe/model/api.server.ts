@@ -6,6 +6,7 @@ import {
   DetailedRecipesApiResponse,
   Recipe,
   RecipeItemsQueryParams,
+  StaticDetailedRecipesApiResponse,
   StaticRecipe,
 } from "./types";
 
@@ -125,5 +126,62 @@ export const getStaticRecipeOnServer = async (
       error
     );
     return null;
+  }
+};
+
+const REVALIDATE_TIME_SECONDS = 3600;
+
+export const getStaticRecipesOnServer = async (
+  params: RecipeItemsQueryParams
+): Promise<StaticDetailedRecipesApiResponse> => {
+  const query = new URLSearchParams({
+    page: "0",
+    size: "10",
+    sort: `createdAt,${params.sort || "desc"}`,
+  });
+
+  if (params.q) query.append("q", params.q);
+  if (params.isAiGenerated) query.append("isAiGenerated", "true");
+  if (params.dishType) query.append("dishType", params.dishType);
+  if (params.tags) {
+    params.tags.forEach((tag) => query.append("tags", tag));
+  }
+  if (params.maxCost) query.append("maxCost", params.maxCost.toString());
+  if (params.period) query.append("period", params.period);
+
+  let endpoint = "/v2/recipes/search";
+  if (params.maxCost) {
+    endpoint = "/v2/recipes/budget";
+  } else if (params.period) {
+    endpoint = "/v2/recipes/popular";
+  }
+
+  const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE_TIME_SECONDS },
+    });
+
+    if (!res.ok) {
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(
+      `[getStaticRecipesOnServer] Failed to fetch recipes:`,
+      error
+    );
+
+    return {
+      content: [],
+      page: {
+        size: 0,
+        number: 0,
+        totalElements: 0,
+        totalPages: 0,
+      },
+    };
   }
 };
