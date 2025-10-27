@@ -8,11 +8,11 @@ import { formatNumber } from "@/shared/lib/format";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 import Box from "@/shared/ui/primitives/Box";
 
-import { Recipe } from "@/entities/recipe/model/types";
+import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
 import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
 
 type IngredientsSectionProps = {
-  recipe: Recipe;
+  recipe: Recipe | StaticRecipe;
 };
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {

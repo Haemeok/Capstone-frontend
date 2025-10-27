@@ -9,7 +9,18 @@ import {
 import { getStaticRecipeOnServer } from "@/entities/recipe/model/api.server";
 import { mockRecipeData } from "@/entities/recipe/model/mockData";
 
-import RecipeDetailClient from "./components/RecipeDetailClient";
+import RecipeSteps from "@/entities/recipe/ui/RecipeStepList";
+
+import { RecipeContainer } from "./components/RecipeContainer";
+import { RecipeStatusProvider } from "./components/RecipeStatusProvider";
+import RecipeNavbar from "./components/RecipeNavbar";
+import RecipeHeroSection from "./components/RecipeHeroSection";
+import RecipeInfoSection from "./components/RecipeInfoSection";
+import RecipeInteractionBar from "./components/RecipeInteractionBar";
+import RecipeCommentsSection from "./components/RecipeCommentsSection";
+import RecipeIngredientsSection from "./components/RecipeIngredientsSection";
+import RecipeFabButton from "./components/RecipeFabButton";
+import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -50,5 +61,41 @@ export default async function RecipeDetailPage({
     notFound();
   }
 
-  return <RecipeDetailClient staticRecipe={staticRecipe} recipeId={numericRecipeId} />;
+  return (
+    <RecipeStatusProvider recipeId={numericRecipeId}>
+      <RecipeContainer>
+        <RecipeNavbar title={staticRecipe.title} recipeId={numericRecipeId} />
+
+        <RecipeHeroSection
+          imageUrl={staticRecipe.imageUrl}
+          title={staticRecipe.title}
+          avgRating={staticRecipe.ratingInfo.avgRating}
+          ratingCount={staticRecipe.ratingInfo.ratingCount}
+          recipeId={numericRecipeId}
+        />
+
+        <div className="px-2">
+          <RecipeInfoSection
+            title={staticRecipe.title}
+            aiGenerated={staticRecipe.aiGenerated}
+            author={staticRecipe.author}
+            description={staticRecipe.description}
+          >
+            <RecipeInteractionBar staticRecipe={staticRecipe} />
+          </RecipeInfoSection>
+
+          <RecipeCommentsSection
+            comments={staticRecipe.comments}
+            recipeId={numericRecipeId}
+          />
+
+          <RecipeIngredientsSection recipe={staticRecipe} />
+
+          <RecipeStepList RecipeSteps={staticRecipe.steps} />
+        </div>
+
+        <RecipeFabButton recipeId={numericRecipeId} />
+      </RecipeContainer>
+    </RecipeStatusProvider>
+  );
 }

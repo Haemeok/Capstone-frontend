@@ -13,18 +13,30 @@ import { LockButton } from "@/features/recipe-visibility";
 import { useToastStore } from "@/widgets/Toast";
 
 type RecipeInteractionButtonsProps = {
-  recipe: Recipe;
+  recipeId: number;
+  initialIsLiked: boolean;
+  initialLikeCount: number;
+  initialIsFavorite: boolean;
+  initialIsPrivate: boolean;
+  title: string;
+  authorId: number;
 };
 
 const RecipeInteractionButtons = ({
-  recipe,
+  recipeId,
+  initialIsLiked,
+  initialLikeCount,
+  initialIsFavorite,
+  initialIsPrivate,
+  title,
+  authorId,
 }: RecipeInteractionButtonsProps) => {
-  const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipe.id);
+  const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipeId);
   const { addToast } = useToastStore();
   const { user } = useUserStore();
 
   const handleToggleFavorite = () => {
-    const message = recipe.favoriteByCurrentUser
+    const message = initialIsFavorite
       ? "즐겨찾기에서 삭제했습니다."
       : "즐겨찾기에 추가했습니다.";
 
@@ -49,9 +61,9 @@ const RecipeInteractionButtons = ({
   return (
     <div className="flex justify-center gap-4">
       <RecipeLikeButton
-        recipeId={recipe.id}
-        initialIsLiked={recipe.likedByCurrentUser}
-        initialLikeCount={recipe.likeCount}
+        recipeId={recipeId}
+        initialIsLiked={initialIsLiked}
+        initialLikeCount={initialLikeCount}
         buttonClassName="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
         isOnNavbar={false}
         isCountShown
@@ -59,16 +71,16 @@ const RecipeInteractionButtons = ({
       <SaveButton
         className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
         label="저장"
-        isFavorite={recipe.favoriteByCurrentUser}
+        isFavorite={initialIsFavorite}
         onClick={handleToggleFavorite}
       />
       <ShareButton
         className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
         label="공유"
-        text={`${recipe.title} 를 확인해보세요!`}
+        text={`${title} 를 확인해보세요!`}
       />
-      {recipe.author.id === user?.id && (
-        <LockButton recipeId={recipe.id} initialIsLocked={recipe.private} />
+      {authorId === user?.id && (
+        <LockButton recipeId={recipeId} initialIsLocked={initialIsPrivate} />
       )}
     </div>
   );
