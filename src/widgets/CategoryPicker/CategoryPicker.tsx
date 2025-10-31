@@ -2,30 +2,27 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/shadcn/dialog";
-import {
   Drawer,
   DrawerClose,
+  DrawerContent,
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "@/shared/ui/shadcn/drawer";
-import { DrawerContent } from "@/shared/ui/shadcn/drawer";
 import { Label } from "@/shared/ui/shadcn/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/ui/shadcn/popover";
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/shadcn/radio-group";
-import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 
-type CategoryDrawerProps = {
+type CategoryPickerProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   isMultiple: boolean;
@@ -33,10 +30,11 @@ type CategoryDrawerProps = {
   initialValue: string[] | string;
   availableValues: string[];
   header: string;
-  description: string;
+  description?: string;
+  triggerButton?: React.ReactNode;
 };
 
-const CategoryDrawer = ({
+const CategoryPicker = ({
   open,
   onOpenChange,
   isMultiple,
@@ -45,7 +43,8 @@ const CategoryDrawer = ({
   description,
   initialValue,
   availableValues,
-}: CategoryDrawerProps) => {
+  triggerButton,
+}: CategoryPickerProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [internalSelection, setInternalSelection] = useState<string[] | string>(
     initialValue
@@ -83,28 +82,25 @@ const CategoryDrawer = ({
     onOpenChange(false);
   };
 
-  // 공통 컨텐츠
   const SelectionContent = () => (
-    <>
+    <div className="space-y-3">
       {isMultiple ? (
-        <div className="space-y-3">
-          {availableValues.map((value) => (
-            <div key={value} className="flex items-center space-x-2">
-              <Checkbox
-                id={`checkbox-${value}`}
-                checked={(internalSelection as string[]).includes(value)}
-                onCheckedChange={() => handleCheckboxChange(value)}
-                className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 rounded border-gray-300 data-[state=checked]:text-white"
-              />
-              <Label
-                htmlFor={`checkbox-${value}`}
-                className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {value}
-              </Label>
-            </div>
-          ))}
-        </div>
+        availableValues.map((value) => (
+          <div key={value} className="flex items-center space-x-2">
+            <Checkbox
+              id={`checkbox-${value}`}
+              checked={(internalSelection as string[]).includes(value)}
+              onCheckedChange={() => handleCheckboxChange(value)}
+              className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 rounded border-gray-300 data-[state=checked]:text-white"
+            />
+            <Label
+              htmlFor={`checkbox-${value}`}
+              className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {value}
+            </Label>
+          </div>
+        ))
       ) : (
         <RadioGroup
           value={internalSelection as string}
@@ -128,7 +124,7 @@ const CategoryDrawer = ({
           ))}
         </RadioGroup>
       )}
-    </>
+    </div>
   );
 
   if (isMobile) {
@@ -170,37 +166,45 @@ const CategoryDrawer = ({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold">{header}</DialogTitle>
-          {description && (
-            <DialogDescription className="text-md text-gray-500">
-              {description}
-            </DialogDescription>
-          )}
-        </DialogHeader>
-        <div className="max-h-[60vh] overflow-y-auto p-4">
-          <SelectionContent />
+    <Popover open={open} onOpenChange={onOpenChange}>
+      <PopoverTrigger asChild>
+        <div></div>
+      </PopoverTrigger>
+
+      <PopoverContent className="w-80" align="start">
+        <div className="space-y-4">
+          <div>
+            <h4 className="font-medium text-base">{header}</h4>
+            {description && (
+              <p className="text-sm text-gray-500 mt-1">{description}</p>
+            )}
+          </div>
+
+          <div className="max-h-[400px] overflow-y-auto">
+            <SelectionContent />
+          </div>
+
+          <div className="flex gap-2 pt-2 border-t">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleReset}
+              className="flex-1"
+            >
+              초기화
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleApply}
+              className="bg-olive-light flex-1 text-white hover:bg-olive-light/90"
+            >
+              완료
+            </Button>
+          </div>
         </div>
-        <DialogFooter className="flex-row gap-2">
-          <Button
-            variant="outline"
-            onClick={handleReset}
-            className="flex-1 rounded-md border-gray-300"
-          >
-            초기화
-          </Button>
-          <Button
-            onClick={handleApply}
-            className="bg-olive-light flex-1 rounded-md text-white"
-          >
-            완료
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </PopoverContent>
+    </Popover>
   );
 };
 
-export default CategoryDrawer;
+export default CategoryPicker;

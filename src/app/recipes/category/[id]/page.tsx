@@ -10,10 +10,11 @@ import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { useSort } from "@/shared/hooks/useSort";
 import { getNextPageParam } from "@/shared/lib/utils";
 import Circle from "@/shared/ui/Circle";
+import { Container } from "@/shared/ui/Container";
 import HomeBanner from "@/shared/ui/HomeBanner";
 import PrevButton from "@/shared/ui/PrevButton";
 import RecipeSortButton from "@/shared/ui/RecipeSortButton";
-import RecipeSortDrawer from "@/shared/ui/RecipeSortDrawer";
+import SortPicker from "@/shared/ui/SortPicker";
 
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
@@ -56,11 +57,12 @@ const CategoryDetailPage = () => {
   };
 
   return (
-    <div className="bg-white p-2">
-      <header className="relative flex items-center justify-center border-b border-gray-200 p-2">
-        <PrevButton className="absolute left-2" />
-        <h1 className="text-xl font-bold">{`${tagName} 레시피`}</h1>
-      </header>
+    <Container>
+      <div className="bg-white">
+        <header className="relative flex items-center justify-center border-b border-gray-200 py-2">
+          <PrevButton className="absolute left-0" />
+          <h1 className="text-xl font-bold">{`${tagName} 레시피`}</h1>
+        </header>
       <div className="flex items-center justify-end p-4">
         <RecipeSortButton
           currentSort={currentSort}
@@ -94,14 +96,21 @@ const CategoryDetailPage = () => {
         </div>
       )}
 
-      <RecipeSortDrawer
+      <SortPicker
         open={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
         currentSort={currentSort}
         availableSorts={availableSorts}
         onSortChange={handleSortChange}
+        triggerButton={
+          <RecipeSortButton
+            currentSort={currentSort}
+            onClick={() => setIsDrawerOpen(true)}
+          />
+        }
       />
-    </div>
+      </div>
+    </Container>
   );
 };
 
