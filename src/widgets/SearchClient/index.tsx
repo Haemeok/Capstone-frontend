@@ -2,7 +2,10 @@
 
 import React from "react";
 
-import CategoryDrawer from "@/widgets/CategoryDrawer/CategoryDrawer";
+import { Container } from "@/shared/ui/Container";
+import { Button } from "@/shared/ui/shadcn/button";
+
+import CategoryPicker from "@/widgets/CategoryPicker/CategoryPicker";
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
 import { useSearchDrawer } from "./hooks/useSearchDrawer";
@@ -54,41 +57,48 @@ export const SearchClient = () => {
     });
 
   return (
-    <div className="flex flex-col bg-[#ffffff]">
-      <SearchFilters
-        inputValue={inputValue}
-        handleInputChange={handleInputChange}
-        handleSearchSubmit={handleSearchSubmit}
-        dishType={dishType}
-        sort={sort}
-        tags={tags}
-        onDishTypeClick={() => openDrawer("dishType")}
-        onSortClick={() => openDrawer("sort")}
-        onTagsClick={() => openDrawer("tags")}
-      />
+    <Container>
+      <div className="flex flex-col bg-[#ffffff]">
+        <SearchFilters
+          inputValue={inputValue}
+          handleInputChange={handleInputChange}
+          handleSearchSubmit={handleSearchSubmit}
+          dishType={dishType}
+          sort={sort}
+          tags={tags}
+          onDishTypeClick={() => openDrawer("dishType")}
+          onSortClick={() => openDrawer("sort")}
+          onTagsClick={() => openDrawer("tags")}
+        />
 
-      <RecipeGrid
-        recipes={recipes}
-        hasNextPage={hasNextPage}
-        isFetching={isFetching}
-        isPending={isPending}
-        observerRef={ref}
-        noResults={noResults}
-        noResultsMessage={noResultsMessage}
-        lastPageMessage={"모든 레시피를 불러왔습니다."}
-        queryKeyString={queryKeyString}
-      />
+        <CategoryPicker
+          open={isDrawerOpen}
+          onOpenChange={setIsDrawerOpen}
+          isMultiple={drawerConfig?.isMultiple ?? false}
+          setValue={drawerConfig?.setValue ?? (() => {})}
+          initialValue={drawerConfig?.initialValue ?? ""}
+          availableValues={drawerConfig?.availableValues ?? []}
+          header={drawerConfig?.header ?? ""}
+          description={drawerConfig?.description ?? ""}
+          triggerButton={
+            <Button variant="outline" size="sm">
+              {drawerConfig?.header ?? "필터"}
+            </Button>
+          }
+        />
 
-      <CategoryDrawer
-        open={isDrawerOpen}
-        onOpenChange={setIsDrawerOpen}
-        isMultiple={drawerConfig?.isMultiple ?? false}
-        setValue={drawerConfig?.setValue ?? (() => {})}
-        initialValue={drawerConfig?.initialValue ?? ""}
-        availableValues={drawerConfig?.availableValues ?? []}
-        header={drawerConfig?.header ?? ""}
-        description={drawerConfig?.description ?? ""}
-      />
-    </div>
+        <RecipeGrid
+          recipes={recipes}
+          hasNextPage={hasNextPage}
+          isFetching={isFetching}
+          isPending={isPending}
+          observerRef={ref}
+          noResults={noResults}
+          noResultsMessage={noResultsMessage}
+          lastPageMessage={"모든 레시피를 불러왔습니다."}
+          queryKeyString={queryKeyString}
+        />
+      </div>
+    </Container>
   );
 };
