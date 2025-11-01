@@ -2,6 +2,8 @@
 
 import { useRef, createContext, useContext, ReactNode } from "react";
 
+import { Container } from "@/shared/ui/Container";
+
 type RecipeContainerContextValue = {
   observerRef: React.RefObject<HTMLDivElement | null>;
 };
@@ -15,7 +17,9 @@ export function RecipeContainer({ children }: { children: ReactNode }) {
 
   return (
     <RecipeContainerContext.Provider value={{ observerRef }}>
-      <div className="relative mx-auto flex flex-col">{children}</div>
+      <Container>
+        <div className="relative flex flex-col">{children}</div>
+      </Container>
     </RecipeContainerContext.Provider>
   );
 }

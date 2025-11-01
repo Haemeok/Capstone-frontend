@@ -10,6 +10,7 @@ import { SORT_TYPE_CODES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
+import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { CommentsApiResponse, getComments } from "@/entities/comment";
@@ -17,6 +18,7 @@ import { useRecipeDetailQuery } from "@/entities/recipe";
 
 import CommentCard from "@/features/comment-card/ui/CommentCard";
 import { CommentInput } from "@/features/comment-create";
+import CommentInputModal from "@/features/comment-create/ui/CommentInputModal";
 
 const CommentsPage = () => {
   const [sort, setSort] = useState<string>("최신순");
@@ -54,67 +56,70 @@ const CommentsPage = () => {
         </div>
       </header>
 
-      <main className="p-4">
-        <div className="mb-4 flex items-center justify-between px-2">
-          <span className="text-sm font-medium text-gray-500">
-            {data?.pages[0].page.totalElements}개의 댓글
-          </span>
-          <div className="flex items-center text-sm font-bold">
-            <button
-              className={cn(
-                "text-gray-400",
-                sort === "최신순" && "text-olive-light"
-              )}
-              onClick={() => setSort("최신순")}
-            >
-              최신순
-            </button>
-            <span className="mx-1">•</span>
-            <button
-              className={cn(
-                "text-gray-400",
-                sort === "인기순" && "text-olive-light"
-              )}
-              onClick={() => setSort("인기순")}
-            >
-              인기순
-            </button>
+      <Container>
+        <main className="py-4">
+          <div className="mb-4 flex items-center justify-between px-2">
+            <span className="text-sm font-medium text-gray-500">
+              {data?.pages[0].page.totalElements}개의 댓글
+            </span>
+            <div className="flex items-center text-sm font-bold">
+              <button
+                className={cn(
+                  "text-gray-400",
+                  sort === "최신순" && "text-olive-light"
+                )}
+                onClick={() => setSort("최신순")}
+              >
+                최신순
+              </button>
+              <span className="mx-1">•</span>
+              <button
+                className={cn(
+                  "text-gray-400",
+                  sort === "인기순" && "text-olive-light"
+                )}
+                onClick={() => setSort("인기순")}
+              >
+                인기순
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-4">
-          {comments?.map((comment) => (
-            <CommentCard
-              key={comment.id}
-              comment={comment}
-              hideReplyButton={false}
-              recipeId={Number(recipeId)}
-            />
-          ))}
-        </div>
-        <div ref={ref} className="h-10">
-          {isFetchingNextPage && (
-            <div className="flex justify-center p-4">
-              <p className="text-sm text-gray-500">더 많은 댓글 로딩 중...</p>
-            </div>
-          )}
+          <div className="flex flex-col gap-4">
+            {comments?.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                hideReplyButton={false}
+                recipeId={Number(recipeId)}
+              />
+            ))}
+          </div>
+          <div ref={ref} className="h-10">
+            {isFetchingNextPage && (
+              <div className="flex justify-center p-4">
+                <p className="text-sm text-gray-500">더 많은 댓글 로딩 중...</p>
+              </div>
+            )}
 
-          {!hasNextPage && comments && comments.length > 0 && (
-            <div className="flex justify-center p-4">
-              <p className="text-sm text-gray-400">마지막 댓글입니다.</p>
-            </div>
-          )}
-          {comments?.length === 0 && (
-            <div className="flex flex-col items-center justify-center gap-1 p-4">
-              <p className="text-sm text-gray-400">
-                첫번째 댓글을 작성해보세요 !
-              </p>
-            </div>
-          )}
-        </div>
-      </main>
+            {!hasNextPage && comments && comments.length > 0 && (
+              <div className="flex justify-center p-4">
+                <p className="text-sm text-gray-400">마지막 댓글입니다.</p>
+              </div>
+            )}
+            {comments?.length === 0 && (
+              <div className="flex flex-col items-center justify-center gap-1 p-4">
+                <p className="text-sm text-gray-400">
+                  첫번째 댓글을 작성해보세요 !
+                </p>
+              </div>
+            )}
+          </div>
+        </main>
+      </Container>
 
       <CommentInput author={author} />
+      <CommentInputModal author={author} />
     </div>
   );
 };

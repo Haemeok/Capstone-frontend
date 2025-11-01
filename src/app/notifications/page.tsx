@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Trash2 } from "lucide-react";
 
+import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 import { Button } from "@/shared/ui/shadcn/button";
 
@@ -39,7 +40,7 @@ const NotificationsPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <Container>
       <div className="flex items-center justify-between relative">
         <PrevButton />
         <h1 className="text-2xl font-bold absolute left-1/2 -translate-x-1/2">
@@ -80,7 +81,7 @@ const NotificationsPage = () => {
           모든 알림을 불러왔습니다.
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 
