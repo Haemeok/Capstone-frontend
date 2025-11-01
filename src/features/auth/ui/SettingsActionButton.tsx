@@ -4,20 +4,15 @@ import { useState } from "react";
 
 import { LogOut, Settings } from "lucide-react";
 
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import useLogoutMutation from "@/features/auth/model/hooks/useLogoutMutation";
 
 const SettingsActionButton = () => {
   const { mutate: logout } = useLogoutMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { Container, Content, Header, Title, Footer, Close } =
+    useResponsiveSheet();
 
   const handleLogoutClick = () => {
     setIsModalOpen(false);
@@ -34,12 +29,12 @@ const SettingsActionButton = () => {
         <Settings size={20} aria-hidden="true" />
       </button>
       {isModalOpen && (
-        <Drawer open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DrawerContent className="p-0">
-            <DrawerHeader>
-              <DrawerTitle className="text-lg">설정</DrawerTitle>
-            </DrawerHeader>
-            <DrawerFooter className="gap-0">
+        <Container open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <Content className="p-0 md:max-w-sm">
+            <Header>
+              <Title className="text-lg">설정</Title>
+            </Header>
+            <Footer className="gap-0">
               <button
                 onClick={handleLogoutClick}
                 aria-label="로그아웃"
@@ -48,14 +43,23 @@ const SettingsActionButton = () => {
                 <LogOut size={16} aria-hidden="true" className="mr-1" />
                 <span>로그아웃</span>
               </button>
-              <DrawerClose asChild>
-                <button className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-bold">
+              {Close ? (
+                <Close asChild>
+                  <button className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-bold">
+                    닫기
+                  </button>
+                </Close>
+              ) : (
+                <button
+                  className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-bold"
+                  onClick={() => setIsModalOpen(false)}
+                >
                   닫기
                 </button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+              )}
+            </Footer>
+          </Content>
+        </Container>
       )}
     </>
   );

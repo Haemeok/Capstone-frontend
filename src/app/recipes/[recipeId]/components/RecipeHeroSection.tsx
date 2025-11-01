@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { OptimizedImage } from "@/shared/ui/image/OptimizedImage";
-import Ratings from "@/shared/ui/Ratings";
+
+import RecipeRatingButton from "./RecipeRatingButton";
 
 type RecipeHeroSectionProps = {
   imageUrl: string;
@@ -19,7 +18,7 @@ export default function RecipeHeroSection({
   recipeId,
 }: RecipeHeroSectionProps) {
   return (
-    <>
+    <section className="flex flex-col items-center justify-center">
       <div id="recipe-hero-image" className="w-full relative">
         <OptimizedImage
           src={imageUrl}
@@ -32,21 +31,11 @@ export default function RecipeHeroSection({
         />
       </div>
 
-      <Link
-        href={`/recipes/${recipeId}/rate`}
-        prefetch={false}
-        className="block mt-4"
-      >
-        <Ratings
-          precision={0.1}
-          allowHalf
-          value={avgRating || 0}
-          readOnly
-          className="w-full justify-center"
-          showValue
-          ratingCount={ratingCount}
-        />
-      </Link>
-    </>
+      <RecipeRatingButton
+        avgRating={avgRating}
+        ratingCount={ratingCount}
+        recipeId={recipeId}
+      />
+    </section>
   );
 }

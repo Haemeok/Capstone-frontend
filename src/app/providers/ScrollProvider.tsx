@@ -10,13 +10,15 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
   const motionRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  const paddingClass = shouldHideNavbar(pathname) ? "" : "pb-[77px]";
+  const scrollClass = shouldHideNavbar(pathname)
+    ? "h-[100dvh] md:h-[calc(100dvh-64px)] md:mt-16"
+    : "h-[100dvh] pb-[77px] md:h-[calc(100dvh-64px)] md:pb-0 md:mt-16";
 
   return (
     <ScrollContext.Provider value={{ motionRef }}>
       <div
         ref={motionRef}
-        className={`h-[100dvh] w-full overflow-y-auto ${paddingClass}`}
+        className={`w-full overflow-y-auto ${scrollClass}`}
       >
         {children}
       </div>

@@ -142,7 +142,7 @@ const Ratings = ({
             <button
               key={idx}
               type="button"
-              className={`${sizeClasses[size]} cursor-pointer`}
+              className={`${sizeClasses[size]} ${readOnly ? "pointer-events-none" : "cursor-pointer"}`}
               ref={(el) => {
                 starRefs.current[idx] = el;
               }}
