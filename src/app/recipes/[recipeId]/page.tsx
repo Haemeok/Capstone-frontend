@@ -6,10 +6,15 @@ import {
   generateRecipeMetadata,
 } from "@/shared/lib/metadata";
 
-import { getStaticRecipeOnServer } from "@/entities/recipe/model/api.server";
+import {
+  getStaticRecipeOnServer,
+  getStaticRecipesOnServer,
+} from "@/entities/recipe/model/api.server";
 import { mockRecipeData } from "@/entities/recipe/model/mockData";
 
 import RecipeSteps from "@/entities/recipe/ui/RecipeStepList";
+
+import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 
 import { RecipeContainer } from "./components/RecipeContainer";
 import { RecipeStatusProvider } from "./components/RecipeStatusProvider";
@@ -26,6 +31,7 @@ interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
 }
 
+export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export async function generateMetadata({
@@ -49,6 +55,17 @@ export async function generateMetadata({
   return generateRecipeMetadata(displayRecipe, recipeId);
 }
 
+export async function generateStaticParams() {
+  const recipes = await getStaticRecipesOnServer({
+    period: "weekly",
+    sort: "desc",
+    key: "popular-recipes",
+  });
+  return recipes.content.map((recipe) => ({
+    recipeId: recipe.id.toString(),
+  }));
+}
+
 export default async function RecipeDetailPage({
   params,
 }: RecipeDetailPageProps) {
@@ -62,23 +79,23 @@ export default async function RecipeDetailPage({
   }
 
   return (
-    <RecipeStatusProvider recipeId={numericRecipeId}>
-      <RecipeNavbar
-        title={staticRecipe.title}
-        recipeId={numericRecipeId}
-        heroImageId="recipe-hero-image"
-      />
+    <>
+      <RecipeStatusProvider recipeId={numericRecipeId}>
+        <RecipeNavbar
+          title={staticRecipe.title}
+          recipeId={numericRecipeId}
+          heroImageId="recipe-hero-image"
+        />
 
-      <RecipeHeroSection
-        imageUrl={staticRecipe.imageUrl}
-        title={staticRecipe.title}
-        avgRating={staticRecipe.ratingInfo.avgRating}
-        ratingCount={staticRecipe.ratingInfo.ratingCount}
-        recipeId={numericRecipeId}
-      />
+        <RecipeHeroSection
+          imageUrl={staticRecipe.imageUrl}
+          title={staticRecipe.title}
+          avgRating={staticRecipe.ratingInfo.avgRating}
+          ratingCount={staticRecipe.ratingInfo.ratingCount}
+          recipeId={numericRecipeId}
+        />
 
-      <RecipeContainer>
-        <div className="px-2">
+        <RecipeContainer>
           <RecipeInfoSection
             title={staticRecipe.title}
             aiGenerated={staticRecipe.aiGenerated}
@@ -93,13 +110,14 @@ export default async function RecipeDetailPage({
             recipeId={numericRecipeId}
           />
 
+          <RecipeFabButton recipeId={numericRecipeId} />
+
           <RecipeIngredientsSection recipe={staticRecipe} />
 
           <RecipeStepList RecipeSteps={staticRecipe.steps} />
-        </div>
-
-        <RecipeFabButton recipeId={numericRecipeId} />
-      </RecipeContainer>
-    </RecipeStatusProvider>
+        </RecipeContainer>
+      </RecipeStatusProvider>
+      <DesktopFooter />
+    </>
   );
 }

@@ -82,7 +82,7 @@ export const editRecipe = async ({
   recipe,
   files,
 }: RecipeEditData) => {
-  return api.put<PresignedUrlResponse>(END_POINTS.RECIPE(recipeId), {
+  return api.put<PresignedUrlResponse>(`/api/recipes/${recipeId}`, {
     recipe,
     files,
   });
