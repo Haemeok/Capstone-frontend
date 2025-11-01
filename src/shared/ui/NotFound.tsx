@@ -11,7 +11,7 @@ type NotFoundWithNotificationProps = {
   emoji?: string;
 };
 
-const NotFoundWithNotification = ({
+const NotFound = ({
   title,
   description,
   emoji = "🚫",
@@ -61,4 +61,4 @@ const NotFoundWithNotification = ({
   );
 };
 
-export default NotFoundWithNotification;
+export default NotFound;
