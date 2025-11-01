@@ -48,7 +48,7 @@ const CalendarTabContent = () => {
   const product = getProductByPrice(monthlyTotalSavings ?? 0);
 
   return (
-    <div className="w-full pb-4">
+    <div className="w-full pb-8 md:pb-12">
       <MonthlySavingsSummary
         year={year}
         month={month}
@@ -95,7 +95,7 @@ const CalendarTabContent = () => {
           caption: "flex justify-center pt-1 relative items-center w-full",
           caption_label: "text-xl font-bold",
           nav: "absolute  w-full flex justify-center items-center gap-20 h-9",
-          week: "flex w-full h-15 text-center items-center",
+          week: "flex w-full h-15 md:h-20 text-center items-center",
           weeks: "flex flex-col w-full",
           weekdays: "flex w-full",
           weekday:

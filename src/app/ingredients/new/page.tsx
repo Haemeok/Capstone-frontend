@@ -197,9 +197,9 @@ const NewIngredientsPage = () => {
   };
 
   return (
-    <div ref={pageContainerRef} className="flex h-screen flex-col pb-20">
-      <div className="sticky top-0 z-10 bg-white shadow-sm">
-        <div className="flex justify-between px-4 py-2">
+    <div ref={pageContainerRef} className="flex flex-col">
+      <div className="sticky top-0 z-10 bg-white ">
+        <div className="flex justify-between px-4 md:px-6 py-2 max-w-4xl mx-auto w-full">
           <PrevButton />
           <h2 className="text-xl font-bold flex items-center">재료 추가</h2>
           <button
@@ -211,7 +211,7 @@ const NewIngredientsPage = () => {
             </p>
           </button>
         </div>
-        <div className="px-4">
+        <div className="px-4 md:px-6 max-w-4xl mx-auto w-full">
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
               <Search size={18} className="text-gray-400" />
@@ -225,7 +225,7 @@ const NewIngredientsPage = () => {
             />
           </div>
         </div>
-        <div className="scrollbar-hide  flex overflow-x-auto px-2  mt-1">
+        <div className="scrollbar-hide flex overflow-x-auto px-2 md:px-6 mt-1 max-w-4xl mx-auto w-full">
           {INGREDIENT_CATEGORIES.map((category) => (
             <button
               key={category}
@@ -243,7 +243,10 @@ const NewIngredientsPage = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4" ref={scrollableContainerRef}>
+      <div
+        className="flex-1 px-4 md:px-6 max-w-4xl mx-auto w-full pb-20"
+        ref={scrollableContainerRef}
+      >
         {isPending && (!ingredientItems || ingredientItems.length === 0) ? (
           <p className="pt-10 text-center text-gray-500">
             재료를 불러오는 중...

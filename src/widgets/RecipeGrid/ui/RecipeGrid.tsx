@@ -79,7 +79,7 @@ const RecipeGrid = ({
 
   if (isPending) {
     return (
-      <div className="p-4">
+      <div>
         <div
           className="grid gap-4
             [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]
@@ -110,7 +110,7 @@ const RecipeGrid = ({
   }
 
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col">
       <div
         className="grid gap-4
           [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]
