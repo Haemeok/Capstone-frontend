@@ -29,12 +29,20 @@ export const FabButton = ({
 
   return (
     <>
-      <div className="fixed bottom-20 z-50 flex w-full justify-center">
-        <Button asChild className="bg-olive-light rounded-full p-4 text-white shadow-lg">
-          <Link href={to} prefetch={false} ref={targetRef} aria-label={text}>
-            {text}
-          </Link>
-        </Button>
+      <div className="fixed bottom-20 left-0 right-0 z-50 flex justify-center">
+        <div className="w-full max-w-4xl px-4 md:px-6 flex justify-center">
+          <Button asChild className="bg-olive-light rounded-full p-4 text-white shadow-lg">
+            <Link
+              href={to}
+              prefetch={false}
+              ref={targetRef}
+              aria-label={text}
+              style={{ opacity: 0 }}
+            >
+              {text}
+            </Link>
+          </Button>
+        </div>
       </div>
     </>
   );

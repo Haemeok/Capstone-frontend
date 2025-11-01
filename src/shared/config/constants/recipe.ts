@@ -305,9 +305,9 @@ export const PRICE_BRACKETS = [
   },
   {
     min: 0,
-    name: "커피 한 잔",
-    image: `${SAVINGS_BASE_URL}coffee.webp`,
-    code: "COFFEE",
+    name: "0",
+    image: `${SAVINGS_BASE_URL}zero.webp`,
+    code: "ZERO",
   },
 ];
 

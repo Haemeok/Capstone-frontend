@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
 import { BASE_API_URL } from "@/shared/config/constants/api";
+import { CACHE_TAGS } from "@/shared/config/constants/cache-tags";
 
 import {
   DetailedRecipesApiResponse,
@@ -110,7 +111,10 @@ export const getStaticRecipeOnServer = async (
   }
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 3600 },
+      next: {
+        revalidate: 3600,
+        tags: [CACHE_TAGS.recipe(id), CACHE_TAGS.recipesAll],
+      },
     });
 
     if (!res.ok) {
@@ -150,17 +154,24 @@ export const getStaticRecipesOnServer = async (
   if (params.period) query.append("period", params.period);
 
   let endpoint = "/v2/recipes/search";
+  let cacheTags: string[] = [CACHE_TAGS.recipesAll];
+
   if (params.maxCost) {
     endpoint = "/v2/recipes/budget";
+    cacheTags.push(CACHE_TAGS.recipesBudget);
   } else if (params.period) {
     endpoint = "/v2/recipes/popular";
+    cacheTags.push(CACHE_TAGS.recipesPopular);
   }
 
   const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: REVALIDATE_TIME_SECONDS },
+      next: {
+        revalidate: REVALIDATE_TIME_SECONDS,
+        tags: cacheTags,
+      },
     });
 
     if (!res.ok) {
@@ -169,10 +180,7 @@ export const getStaticRecipesOnServer = async (
 
     return res.json();
   } catch (error) {
-    console.error(
-      `[getStaticRecipesOnServer] Failed to fetch recipes:`,
-      error
-    );
+    console.error(`[getStaticRecipesOnServer] Failed to fetch recipes:`, error);
 
     return {
       content: [],
