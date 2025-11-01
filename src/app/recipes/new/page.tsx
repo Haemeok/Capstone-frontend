@@ -16,7 +16,7 @@ const NewRecipePage = () => {
   } = useRecipeCreationForm();
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50">
       <FormProvider {...methods}>
         <RecipeFormLayout
           handleMainIngredientRemoved={handleMainIngredientRemoved}

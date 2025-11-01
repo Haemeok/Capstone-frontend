@@ -10,17 +10,9 @@ import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
@@ -86,16 +78,20 @@ const IngredientSelector = ({
       new Set(prevNames).add(ingredient.name)
     );
   };
+
   const ingredientItems = data?.pages.flatMap((page) => page.content);
+  const { Container, Content, Header, Title, Description, Footer, Close } =
+    useResponsiveSheet();
+
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="flex w-full flex-col sm:max-w-lg">
-        <DrawerHeader>
-          <DrawerTitle className="text-xl">재료 검색 및 추가</DrawerTitle>
-          <DrawerDescription className="text-md">
+    <Container open={open} onOpenChange={onOpenChange}>
+      <Content className="flex w-full flex-col sm:max-w-lg md:max-w-2xl">
+        <Header>
+          <Title className="text-xl">재료 검색 및 추가</Title>
+          <Description className="text-md">
             레시피에 사용할 재료를 검색하고 추가하세요.
-          </DrawerDescription>
-        </DrawerHeader>
+          </Description>
+        </Header>
 
         <div className="bg-white">
           <form onSubmit={handleSearchSubmit} className="relative px-4">
@@ -195,15 +191,25 @@ const IngredientSelector = ({
             </div>
           )}
         </div>
-        <DrawerFooter className="mt-auto p-4">
-          <DrawerClose asChild>
-            <Button variant="outline" className="w-full">
+        <Footer className="mt-auto p-4">
+          {Close ? (
+            <Close asChild>
+              <Button variant="outline" className="w-full">
+                닫기
+              </Button>
+            </Close>
+          ) : (
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => onOpenChange(false)}
+            >
               닫기
             </Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+          )}
+        </Footer>
+      </Content>
+    </Container>
   );
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useAIRecipeGeneration } from "@/features/recipe-create-ai";
+import { Container } from "@/shared/ui/Container";
 
 import AiLoading from "@/widgets/AiLoading/AiLoading";
 import AIModelSelection from "@/widgets/AIModelSelection";
@@ -22,27 +23,45 @@ const AIRecipePage = () => {
   console.log(isIdle, selectedAI);
 
   if (!selectedAI) {
-    return <AIModelSelection />;
+    return (
+      <Container>
+        <AIModelSelection />
+      </Container>
+    );
   }
 
   if (isGenerating) {
-    return <AiLoading aiModelId={selectedAI.id} />;
+    return (
+      <Container>
+        <AiLoading aiModelId={selectedAI.id} />
+      </Container>
+    );
   }
 
   if (isCompleted && generatedRecipeData) {
     return (
-      <AIRecipeComplete
-        selectedAI={selectedAI}
-        generatedRecipe={generatedRecipeData}
-      />
+      <Container>
+        <AIRecipeComplete
+          selectedAI={selectedAI}
+          generatedRecipe={generatedRecipeData}
+        />
+      </Container>
     );
   }
 
   if (isError && error) {
-    return <AIRecipeError error={error} />;
+    return (
+      <Container>
+        <AIRecipeError error={error} />
+      </Container>
+    );
   }
 
-  return <AIRecipeForm />;
+  return (
+    <Container>
+      <AIRecipeForm />
+    </Container>
+  );
 };
 
 export default AIRecipePage;

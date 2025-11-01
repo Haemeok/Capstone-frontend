@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { cn } from "@/shared/lib/utils";
 import Circle from "@/shared/ui/Circle";
+import { Container } from "@/shared/ui/Container";
 import Ratings from "@/shared/ui/Ratings";
 
 import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
@@ -60,14 +61,15 @@ const ReviewPage = () => {
         <button
           onClick={() => router.back()}
           type="button"
-          className="absolute left-4 text-gray-600"
+          className="absolute left-4 md:left-0 text-gray-600"
         >
           취소
         </button>
         <h1 className="text-xl font-bold">평가하기</h1>
       </header>
 
-      <main className="flex-grow p-6">
+      <Container>
+        <main className="flex-grow py-6">
         <div className="flex flex-col gap-1 text-center">
           <h2 className="text-2xl font-bold">
             {recipeData.title} 만들어 보셨나요?
@@ -125,7 +127,8 @@ const ReviewPage = () => {
         >
           {isPending ? <Circle size={20} /> : <p>코멘트 작성하기</p>}
         </button>
-      </main>
+        </main>
+      </Container>
     </div>
   );
 };

@@ -8,12 +8,14 @@ import { ArrowLeft } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { cn } from "@/shared/lib/utils";
+import { Container } from "@/shared/ui/Container";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { getReplies, TotalRepliesApiResponse } from "@/entities/comment";
 
 import CommentCard from "@/features/comment-card/ui/CommentCard";
 import { CommentInput } from "@/features/comment-create";
+import CommentInputModal from "@/features/comment-create/ui/CommentInputModal";
 
 const DiscussionPage = () => {
   const { commentId } = useParams<{ commentId: string }>();
@@ -50,7 +52,7 @@ const DiscussionPage = () => {
 
   return (
     <div className="">
-      <header className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
+      <header className="sticky top-0 md:top-16 z-10 border-b bg-white p-4 shadow-sm">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <div className="flex items-center">
             <Button
@@ -66,7 +68,8 @@ const DiscussionPage = () => {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl p-4 ">
+      <Container maxWidth="3xl">
+        <main className="py-4">
         {parentComment ? (
           <CommentCard
             comment={parentComment}
@@ -149,12 +152,19 @@ const DiscussionPage = () => {
         </div>
 
         {parentComment && (
-          <CommentInput
-            author={parentComment.author}
-            commentId={Number(commentId)}
-          />
+          <>
+            <CommentInput
+              author={parentComment.author}
+              commentId={Number(commentId)}
+            />
+            <CommentInputModal
+              author={parentComment.author}
+              commentId={Number(commentId)}
+            />
+          </>
         )}
-      </main>
+        </main>
+      </Container>
     </div>
   );
 };
