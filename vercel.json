@@ -2,27 +2,27 @@
   "rewrites": [
     {
       "source": "/login/:path*",
-      "destination": "https://api.haemeok.com/login/:path*"
+      "destination": "https://api.recipio.kr/login/:path*"
     },
     {
       "source": "/oauth2/:path*",
-      "destination": "https://api.haemeok.com/oauth2/:path*"
+      "destination": "https://api.recipio.kr/oauth2/:path*"
     },
     {
       "source": "/ws/notifications/:path*",
-      "destination": "https://api.haemeok.com/ws/notifications/:path*"
+      "destination": "https://api.recipio.kr/ws/notifications/:path*"
     },
     {
       "source": "/swagger-ui/:path*",
-      "destination": "https://api.haemeok.com/swagger-ui/:path*"
+      "destination": "https://api.recipio.kr/swagger-ui/:path*"
     },
     {
       "source": "/v3/api-docs/:path*",
-      "destination": "https://api.haemeok.com/v3/api-docs/:path*"
+      "destination": "https://api.recipio.kr/v3/api-docs/:path*"
     },
     {
       "source": "/api/:path*",
-      "destination": "https://api.haemeok.com/api/:path*"
+      "destination": "https://api.recipio.kr/api/:path*"
     }
   ]
 }

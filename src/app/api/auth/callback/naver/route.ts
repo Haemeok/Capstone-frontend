@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const xEnv = process.env.NODE_ENV === "development" ? "local" : "prod";
 
     const backendRes = await fetch(
-      `https://api.haemeok.com/login/oauth2/code/naver`,
+      `https://api.recipio.kr/login/oauth2/code/naver`,
       {
         method: "POST",
         headers: {

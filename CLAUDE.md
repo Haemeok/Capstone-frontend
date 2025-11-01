@@ -45,7 +45,7 @@ Follow strict layer dependency order: `shared` → `entities` → `features` →
 
 ### Backend Integration
 
-- API base URL: `https://api.haemeok.com`
+- API base URL: `https://api.recipio.kr`
 - All `/api/*` requests are proxied to backend
 - WebSocket endpoints via `/ws/*`
 - OAuth2 flows via `/oauth2/*` and `/login/*`

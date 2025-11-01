@@ -1,9 +1,9 @@
-export const BASE_URL = "https://www.haemeok.com";
-export const BASE_API_URL = "https://api.haemeok.com/api";
-export const BASE_WEBSOCKET_URL = "https://api.haemeok.com";
+export const BASE_URL = "https://www.recipio.kr/";
+export const BASE_API_URL = "https://api.recipio.kr/api";
+export const BASE_WEBSOCKET_URL = "https://api.recipio.kr";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
-    ? "https://www.haemeok.com/login/oauth2/code/google"
+    ? "https://www.recipio.kr/login/oauth2/code/google"
     : "http://localhost:3000/login/oauth2/code/google";
 
 export const END_POINTS = {
@@ -30,8 +30,8 @@ export const END_POINTS = {
   RECIPE_VISIBILITY: (id: number) => `/recipes/${id}/private`,
   RECIPE_FINALIZE: (id: number) => `/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `/oauth2/authorization/google`,
-  KAKAO_LOGIN: `/oauth2/authorization/kakao`,
-  NAVER_LOGIN: `/oauth2/authorization/naver`,
+  KAKAO_LOGIN: `/api/auth/login/kakao`,
+  NAVER_LOGIN: `/api/auth/login/naver`,
   GOOGLE_REDIRECT_URI: REDIRECT_URI,
   KAKAO_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/kakao`,
   NAVER_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/naver`,

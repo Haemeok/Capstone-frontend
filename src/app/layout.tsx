@@ -8,6 +8,7 @@ import { getMyInfoOnServer } from "@/entities/user/model/api.server";
 import { PWA_APP_INFO } from "@/shared/config/constants/pwa";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
+import DesktopHeader from "@/widgets/Header/DesktopHeader";
 import { NotificationTest } from "@/widgets/NotificationTest";
 
 import { pretendard } from "./fonts";
@@ -21,12 +22,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/image.png", type: "image/png" },
       { url: "/pwa_logo.png", type: "image/png", sizes: "192x192" },
     ],
     apple: "/apple-touch-icon.png",
   },
-  metadataBase: new URL("https://haemeok.com"),
+  metadataBase: new URL("https://recipio.kr/"),
 };
 
 export const viewport: Viewport = {
@@ -47,6 +48,7 @@ export default async function RootLayout({
     <html lang="ko" className={`${pretendard.variable}`}>
       <body className={pretendard.className}>
         <AppProviders myInfo={myInfo}>
+          <DesktopHeader />
           {children}
           <BottomNavBar />
         </AppProviders>

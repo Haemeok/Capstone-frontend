@@ -10,19 +10,19 @@ const appConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "https://api.haemeok.com/api/:path*",
+        destination: "https://api.recipio.kr/api/:path*",
       },
       {
         source: "/ws/:path*",
-        destination: "https://api.haemeok.com/ws/:path*",
+        destination: "https://api.recipio.kr/ws/:path*",
       },
       {
         source: "/oauth2/:path*",
-        destination: "https://api.haemeok.com/oauth2/:path*",
+        destination: "https://api.recipio.kr/oauth2/:path*",
       },
       {
         source: "/login/:path*",
-        destination: "https://api.haemeok.com/login/:path*",
+        destination: "https://api.recipio.kr/login/:path*",
       },
     ];
   },

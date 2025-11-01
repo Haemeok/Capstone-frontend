@@ -31,25 +31,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: "https://haemeok.com",
+      url: "https://www.recipio.kr/",
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,
     },
     {
-      url: "https://haemeok.com/search",
+      url: "https://www.recipio.kr/search",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: "https://haemeok.com/ai-recipe",
+      url: "https://www.recipio.kr/ai-recipe",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: "https://haemeok.com/ai-recipes",
+      url: "https://www.recipio.kr/ai-recipes",
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.7,
@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const recipeRoutes: MetadataRoute.Sitemap = recipeIds.map((id) => ({
-    url: `https://haemeok.com/recipes/${id}`,
+    url: `https://www.recipio.kr/recipes/${id}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.6,
