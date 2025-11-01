@@ -12,17 +12,19 @@ export async function GET(request: NextRequest) {
       !stateFromCookie ||
       stateFromProvider !== stateFromCookie
     ) {
+      console.error("❌ State validation failed!");
       throw new Error("Invalid state parameter. CSRF attack detected.");
     }
 
     if (!code) {
+      console.error("❌ No authorization code!");
       throw new Error("Authorization code not found.");
     }
 
     const xEnv = process.env.NODE_ENV === "development" ? "local" : "prod";
 
     const backendRes = await fetch(
-      `https://api.haemeok.com/login/oauth2/code/kakao`,
+      `https://api.recipio.kr/login/oauth2/code/kakao`,
       {
         method: "POST",
         headers: {
@@ -35,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     if (!backendRes.ok) {
       const errorBody = await backendRes.json().catch(() => undefined);
-      console.error("Backend token exchange failed:", errorBody);
+      console.error("❌ Backend token exchange failed:", errorBody);
       throw new Error("Failed to exchange token with backend.");
     }
 
@@ -52,7 +54,7 @@ export async function GET(request: NextRequest) {
 
     return finalResponse;
   } catch (error) {
-    console.error("OAuth callback error:", error);
+    console.error("❌ OAuth callback error:", error);
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "/";
     return NextResponse.redirect(`${baseUrl}login/error`);
   }

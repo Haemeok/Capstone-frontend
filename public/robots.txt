@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://haemeok.com/sitemap.xml
+Sitemap: https://recipio.com/sitemap.xml
 
 # Block unnecessary paths
 Disallow: /api/
