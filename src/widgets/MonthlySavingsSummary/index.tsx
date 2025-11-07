@@ -7,6 +7,9 @@ import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
 import SavingSection from "@/shared/ui/SavingSection";
 import CountUp from "@/shared/ui/shadcn/CountUp";
 
+import FirstSavingsQuestPanel from "../CalendarTabContent/FirstSavingsQuestPanel";
+import { useUserStore } from "@/entities/user";
+
 type MonthlySavingsSummaryProps = {
   year: number;
   month: number;
@@ -22,6 +25,9 @@ const MonthlySavingsSummary = ({
   productName,
   productImage,
 }: MonthlySavingsSummaryProps) => {
+  const user = useUserStore((state) => state.user);
+  const hasFirstRecord = user?.hasFirstRecord ?? false;
+
   const currentSavings = monthlyTotalSavings ?? 0;
 
   const { currentIndex, currentMin, next, percentageToNext, remainingToNext } =
@@ -55,6 +61,8 @@ const MonthlySavingsSummary = ({
       };
     }, [currentSavings]);
 
+  const isZeroSavings = currentSavings === 0;
+
   return (
     <div className="mx-10 flex flex-col items-center justify-center pt-5">
       <h3 className="text-xl font-bold">
@@ -72,10 +80,13 @@ const MonthlySavingsSummary = ({
         <span className="text-xl font-bold text-olive-mint">원</span>
         <h3 className="text-xl font-bold ml-1"> 절약했어요</h3>
       </div>
-      <p className="mt-1 text-sm text-gray-500">
-        {productName} 정도 금액이에요!
-      </p>
+      {!isZeroSavings && (
+        <p className="mt-1 text-sm text-gray-500">
+          {productName} 정도 금액이에요!
+        </p>
+      )}
 
+      {!hasFirstRecord && <FirstSavingsQuestPanel />}
       <SavingSection imageUrl={productImage} altText={productName} />
 
       <div className="w-full">

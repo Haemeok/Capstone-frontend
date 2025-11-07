@@ -18,7 +18,14 @@ type UserTabProps = {
 };
 
 const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
-  const [activeTab, setActiveTab] = useState<string>("나의 레시피");
+  const getDefaultTab = () => {
+    if (isOwnProfile && user && !user.hasFirstRecord) {
+      return "캘린더";
+    }
+    return "나의 레시피";
+  };
+
+  const [activeTab, setActiveTab] = useState<string>(getDefaultTab());
 
   const getRecipesByTab = () => {
     switch (activeTab) {

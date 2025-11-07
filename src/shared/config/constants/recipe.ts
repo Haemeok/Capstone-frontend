@@ -336,6 +336,10 @@ export const COOKING_TIMES = Object.keys(COOKING_TIME_ITEMS);
 
 export const DEFAULT_WEIGHT_KG = 65;
 
+export const ONBOARDING_RECIPE_ID = 1;
+
+export const COOKING_COMPLETION_MESSAGE_DURATION_MS = 2000;
+
 export const CALORIE_ACTIVITIES = [
   { name: "가볍게 달리기", met: 8.0 },
   { name: "보통 속도로 걷기", met: 3.5 },
