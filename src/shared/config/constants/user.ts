@@ -12,6 +12,7 @@ export const guestUser: User = {
   profileImage: "",
   username: "@guest",
   introduction: "",
+  hasFirstRecord: false,
 };
 
 export type Tab = {
