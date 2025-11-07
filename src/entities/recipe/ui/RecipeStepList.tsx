@@ -10,7 +10,7 @@ type RecipeStepProps = {
 
 const RecipeStepList = ({ RecipeSteps }: RecipeStepProps) => {
   return (
-    <Box className="flex flex-col gap-4">
+    <article className="flex flex-col gap-4">
       {RecipeSteps.map((step, stepIndex) => (
         <RecipeStep
           key={stepIndex}
@@ -19,7 +19,7 @@ const RecipeStepList = ({ RecipeSteps }: RecipeStepProps) => {
           length={RecipeSteps.length}
         />
       ))}
-    </Box>
+    </article>
   );
 };
 

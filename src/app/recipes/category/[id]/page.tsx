@@ -51,11 +51,6 @@ const CategoryDetailPage = () => {
 
   const recipes = data?.pages.flatMap((page) => page.content);
 
-  const handleSortChange = (newSort: string) => {
-    setSort(newSort as any);
-    setIsDrawerOpen(false);
-  };
-
   return (
     <Container>
       <div className="bg-white">
@@ -63,52 +58,45 @@ const CategoryDetailPage = () => {
           <PrevButton className="absolute left-0" />
           <h1 className="text-xl font-bold">{`${tagName} 레시피`}</h1>
         </header>
-      <div className="flex items-center justify-end p-4">
-        <RecipeSortButton
-          currentSort={currentSort}
-          onClick={() => setIsDrawerOpen(true)}
-        />
-      </div>
-      {!isFetching && recipes && recipes.length > 0 ? (
-        <RecipeGrid
-          recipes={recipes}
-          isFetching={isFetching}
-          hasNextPage={hasNextPage}
-          observerRef={ref}
-        />
-      ) : (
-        <div className="flex h-[500px] w-full flex-col items-center justify-center p-4">
-          {isFetching ? (
-            <Circle className="text-olive-mint/60" size={32} />
-          ) : (
-            <>
-              <p className="text-mm text-gray-500">
-                {tagName} 레시피가 아직 없어요 !
-              </p>
-              <HomeBanner
-                title="레시피 생성하러가기"
-                description={`${tagName} 레시피를 만들어보세요!`}
-                image="/robot1.webp"
-                to="/recipes/new"
-              />
-            </>
-          )}
-        </div>
-      )}
-
-      <SortPicker
-        open={isDrawerOpen}
-        onOpenChange={setIsDrawerOpen}
-        currentSort={currentSort}
-        availableSorts={availableSorts}
-        onSortChange={handleSortChange}
-        triggerButton={
+        <div className="flex items-center justify-end p-4">
           <RecipeSortButton
             currentSort={currentSort}
             onClick={() => setIsDrawerOpen(true)}
           />
-        }
-      />
+          <SortPicker
+            open={isDrawerOpen}
+            onOpenChange={setIsDrawerOpen}
+            currentSort={currentSort}
+            availableSorts={availableSorts}
+            onSortChange={(newSort) => setSort(newSort as any)}
+          />
+        </div>
+        {!isFetching && recipes && recipes.length > 0 ? (
+          <RecipeGrid
+            recipes={recipes}
+            isFetching={isFetching}
+            hasNextPage={hasNextPage}
+            observerRef={ref}
+          />
+        ) : (
+          <div className="flex h-[500px] w-full flex-col items-center justify-center p-4">
+            {isFetching ? (
+              <Circle className="text-olive-mint/60" size={32} />
+            ) : (
+              <>
+                <p className="text-mm text-gray-500">
+                  {tagName} 레시피가 아직 없어요 !
+                </p>
+                <HomeBanner
+                  title="레시피 생성하러가기"
+                  description={`${tagName} 레시피를 만들어보세요!`}
+                  image="/robot1.webp"
+                  to="/recipes/new"
+                />
+              </>
+            )}
+          </div>
+        )}
       </div>
     </Container>
   );

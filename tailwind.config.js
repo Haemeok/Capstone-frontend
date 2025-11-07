@@ -48,8 +48,14 @@ module.exports = {
         36: "9rem",
         40: "10rem",
       },
+      zIndex: {
+        sticky: "10",
+        header: "20",
+        dropdown: "30",
+        modal: "40",
+        toast: "50",
+      },
       keyframes: {
-        // shadcn/ui 기본 애니메이션
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },

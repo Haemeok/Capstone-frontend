@@ -24,7 +24,7 @@ export default function RecipeInfoSection({
 }: RecipeInfoSectionProps) {
   return (
     <>
-      <Box className="flex flex-col items-center justify-center gap-3">
+      <section className="flex flex-col items-center justify-center gap-3">
         <div className="flex items-center gap-2">
           <h1 className="text-center text-2xl font-bold">{title}</h1>
           {aiGenerated && (
@@ -36,12 +36,12 @@ export default function RecipeInfoSection({
         </div>
 
         {children}
-      </Box>
+      </section>
 
-      <Box>
+      <section>
         <UserProfile user={author} className="text-xl" />
         <CollapsibleP content={description} />
-      </Box>
+      </section>
     </>
   );
 }
