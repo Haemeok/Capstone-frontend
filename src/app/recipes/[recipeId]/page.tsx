@@ -10,9 +10,6 @@ import {
   getStaticRecipeOnServer,
   getStaticRecipesOnServer,
 } from "@/entities/recipe/model/api.server";
-import { mockRecipeData } from "@/entities/recipe/model/mockData";
-
-import RecipeSteps from "@/entities/recipe/ui/RecipeStepList";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 
@@ -44,17 +41,9 @@ export async function generateMetadata({
 
   const staticRecipe = await getStaticRecipeOnServer(numericRecipeId);
 
-  const useMockData =
-    process.env.NODE_ENV === "development" &&
-    process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
+  if (!staticRecipe) return generateNotFoundRecipeMetadata();
 
-  const displayRecipe = useMockData ? mockRecipeData : staticRecipe;
-
-  if (!displayRecipe) {
-    return generateNotFoundRecipeMetadata();
-  }
-
-  return generateRecipeMetadata(displayRecipe, recipeId);
+  return generateRecipeMetadata(staticRecipe, recipeId);
 }
 
 export async function generateStaticParams() {

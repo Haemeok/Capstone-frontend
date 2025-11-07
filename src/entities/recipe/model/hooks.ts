@@ -4,7 +4,6 @@ import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getMyIngredientRecipes, getRecipe, getRecipeStatus } from "./api";
-import { mockRecipeData } from "./mockData";
 import { Recipe, RecipeStatus } from "./types";
 
 export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
@@ -29,18 +28,6 @@ export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
     isSuccess,
     error,
     refetchRecipe: refetch,
-  };
-};
-
-export const useMockRecipeQuery = (): {
-  data: Recipe | undefined;
-  isLoading: boolean;
-  error: null;
-} => {
-  return {
-    data: mockRecipeData,
-    isLoading: false,
-    error: null,
   };
 };
 
