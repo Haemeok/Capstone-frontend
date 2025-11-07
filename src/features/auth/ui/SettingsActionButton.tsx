@@ -30,28 +30,28 @@ const SettingsActionButton = () => {
       </button>
       {isModalOpen && (
         <Container open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <Content className="p-0 md:max-w-sm">
+          <Content className="p-0 sm:p-6 md:max-w-sm">
             <Header>
               <Title className="text-lg">설정</Title>
             </Header>
-            <Footer className="gap-0">
+            <Footer className="flex-col gap-0 p-0 sm:flex-row sm:justify-end sm:gap-2">
               <button
                 onClick={handleLogoutClick}
                 aria-label="로그아웃"
-                className="flex items-center justify-center gap-1 border-t-1 border-gray-200 px-4 py-2 font-bold text-red-500"
+                className="flex w-full items-center justify-center gap-1 border-t border-gray-200 px-4 py-3 font-bold text-red-500 sm:w-auto sm:rounded-md sm:border-none sm:bg-red-50 sm:py-2 sm:hover:bg-red-100"
               >
                 <LogOut size={16} aria-hidden="true" className="mr-1" />
                 <span>로그아웃</span>
               </button>
               {Close ? (
                 <Close asChild>
-                  <button className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-bold">
+                  <button className="w-full border-t border-gray-200 px-4 py-3 font-bold text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50">
                     닫기
                   </button>
                 </Close>
               ) : (
                 <button
-                  className="text-dark rounded-md border-t-1 border-gray-200 px-4 py-2 font-bold"
+                  className="w-full border-t border-gray-200 px-4 py-3 font-bold text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50"
                   onClick={() => setIsModalOpen(false)}
                 >
                   닫기

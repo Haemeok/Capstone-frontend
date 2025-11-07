@@ -8,7 +8,7 @@ type ContainerProps = {
 
   maxWidth?: "3xl" | "4xl" | "5xl" | "6xl" | "7xl";
 
-  noPadding?: boolean;
+  padding?: boolean;
 };
 
 const MAX_WIDTH_CLASSES = {
@@ -23,13 +23,13 @@ export const Container = ({
   children,
   className = "",
   maxWidth = "4xl",
-  noPadding = false,
+  padding = true,
 }: ContainerProps) => {
   return (
     <div
       className={cn(
         "mx-auto w-full",
-        !noPadding && "px-4 md:px-6",
+        padding ? "px-4 pt-2 md:px-6" : "px-0 pt-0",
         MAX_WIDTH_CLASSES[maxWidth],
         className
       )}

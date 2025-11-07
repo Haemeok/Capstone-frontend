@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
-import { Button } from "@/shared/ui/shadcn/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "@/shared/ui/shadcn/drawer";
@@ -43,31 +40,15 @@ const SortPicker = ({
   triggerButton,
 }: SortPickerProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const [internalSelection, setInternalSelection] =
-    useState<string>(currentSort);
-
-  useEffect(() => {
-    if (open) {
-      setInternalSelection(currentSort);
-    }
-  }, [open, currentSort]);
 
   const handleRadioChange = (value: string) => {
-    setInternalSelection(value);
-  };
-
-  const handleReset = () => {
-    setInternalSelection("최신순");
-  };
-
-  const handleApply = () => {
-    onSortChange(internalSelection);
+    onSortChange(value);
     onOpenChange(false);
   };
 
   const SelectionContent = () => (
     <RadioGroup
-      value={internalSelection}
+      value={currentSort}
       onValueChange={handleRadioChange}
       className="space-y-3"
     >
@@ -101,27 +82,9 @@ const SortPicker = ({
               </DrawerDescription>
             )}
           </DrawerHeader>
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="p-4 pb-6">
             <SelectionContent />
           </div>
-
-          <DrawerFooter className="mt-auto flex-row gap-2 border-t border-gray-200 pt-4">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              className="flex-1 rounded-md border-gray-300"
-            >
-              초기화
-            </Button>
-            <DrawerClose asChild>
-              <Button
-                onClick={handleApply}
-                className="bg-olive-light flex-1 rounded-md text-white"
-              >
-                완료
-              </Button>
-            </DrawerClose>
-          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     );
@@ -133,35 +96,8 @@ const SortPicker = ({
         <div className=""></div>
       </PopoverTrigger>
 
-      <PopoverContent className="w-64" align="start">
-        <div className="space-y-4">
-          <div>
-            <h4 className="font-medium text-base">{header}</h4>
-            {description && (
-              <p className="text-sm text-gray-500 mt-1">{description}</p>
-            )}
-          </div>
-
-          <SelectionContent />
-
-          <div className="flex gap-2 pt-2 border-t">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleReset}
-              className="flex-1"
-            >
-              초기화
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleApply}
-              className="bg-olive-light flex-1 text-white hover:bg-olive-light/90"
-            >
-              완료
-            </Button>
-          </div>
-        </div>
+      <PopoverContent className="w-48 p-4" align="end" sideOffset={20}>
+        <SelectionContent />
       </PopoverContent>
     </Popover>
   );

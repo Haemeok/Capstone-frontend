@@ -16,6 +16,8 @@ import RecipeSteps from "@/entities/recipe/ui/RecipeStepList";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 
+import { RecipeCompleteButton } from "@/features/recipe-complete";
+
 import { RecipeContainer } from "./components/RecipeContainer";
 import { RecipeStatusProvider } from "./components/RecipeStatusProvider";
 import RecipeNavbar from "./components/RecipeNavbar";
@@ -78,6 +80,9 @@ export default async function RecipeDetailPage({
     notFound();
   }
 
+  const saveAmount =
+    staticRecipe.marketPrice - staticRecipe.totalIngredientCost;
+
   return (
     <>
       <RecipeStatusProvider recipeId={numericRecipeId}>
@@ -113,6 +118,12 @@ export default async function RecipeDetailPage({
           <RecipeFabButton recipeId={numericRecipeId} />
 
           <RecipeIngredientsSection recipe={staticRecipe} />
+
+          <RecipeCompleteButton
+            recipeId={numericRecipeId}
+            saveAmount={saveAmount}
+            className="mt-4"
+          />
 
           <RecipeStepList RecipeSteps={staticRecipe.steps} />
         </RecipeContainer>

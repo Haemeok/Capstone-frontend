@@ -12,6 +12,7 @@ import { useUserStore } from "@/entities/user";
 
 import { usePutUserInfoMutation } from "@/features/user-edit/model/hooks";
 import { PutUserInfoVariables } from "@/features/user-edit/model/types";
+import { Container } from "@/shared/ui/Container";
 
 interface FormValues {
   nickname: string;
@@ -105,34 +106,37 @@ const UserInfoChangePage = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
-      <div className="fixed top-0 right-0 left-0 z-10 flex items-center justify-between border-b border-gray-200 bg-gray-50 p-4">
-        <button
-          type="button"
-          onClick={handleCancel}
-          className="text-olive-mint cursor-pointer border-none bg-transparent text-base font-bold"
-        >
-          취소
-        </button>
-        <h1 className="m-0 text-lg font-bold">프로필 변경</h1>
-        <button
-          type="button"
-          onClick={handleSubmit(onSubmit)}
-          disabled={!isValid || isLoading}
-          className={`border-none bg-transparent text-base font-bold ${
-            isValid && !isLoading
-              ? "text-olive-mint cursor-pointer"
-              : "cursor-default text-gray-400"
-          }`}
-        >
-          {isLoading ? "저장 중..." : "확인"}
-        </button>
+    <>
+      <div className="fixed top-0 right-0 left-0 z-sticky border-b border-gray-200 bg-white p-4 sticky-optimized">
+        <div className="mx-auto flex w-full max-w-4xl items-center justify-between">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="text-olive-mint cursor-pointer border-none bg-transparent text-base font-bold"
+          >
+            취소
+          </button>
+          <h1 className="m-0 text-lg font-bold">프로필 변경</h1>
+          <button
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            disabled={!isValid || isLoading}
+            className={`border-none bg-transparent text-base font-bold ${
+              isValid && !isLoading
+                ? "text-olive-mint cursor-pointer"
+                : "cursor-default text-gray-400"
+            }`}
+          >
+            {isLoading ? "저장 중..." : "확인"}
+          </button>
+        </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-grow flex-col pt-20"
-      >
+      <Container>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-grow flex-col pt-20"
+        >
         <div className="relative z-[3] pl-4">
           <label htmlFor="profileImageInput" className="cursor-pointer">
             <div
@@ -267,7 +271,8 @@ const UserInfoChangePage = () => {
           </div>
         </div>
       </form>
-    </div>
+      </Container>
+    </>
   );
 };
 

@@ -9,7 +9,6 @@ import { PWA_APP_INFO } from "@/shared/config/constants/pwa";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
-import { NotificationTest } from "@/widgets/NotificationTest";
 
 import { pretendard } from "./fonts";
 import { AppProviders } from "./providers/AppProviders";
@@ -33,7 +32,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
   themeColor: PWA_APP_INFO.THEME_COLOR,
 };
 
@@ -49,7 +48,7 @@ export default async function RootLayout({
       <body className={pretendard.className}>
         <AppProviders myInfo={myInfo}>
           <DesktopHeader />
-          {children}
+          <main>{children}</main>
           <BottomNavBar />
         </AppProviders>
         <Analytics />
