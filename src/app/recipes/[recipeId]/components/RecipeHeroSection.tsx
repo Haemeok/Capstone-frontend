@@ -19,11 +19,14 @@ export default function RecipeHeroSection({
 }: RecipeHeroSectionProps) {
   return (
     <section className="flex flex-col items-center justify-center">
-      <div id="recipe-hero-image" className="w-full relative">
+      <div
+        id="recipe-hero-image"
+        className="w-full relative md:w-1/2 md:mt-4 max-w-[550px]"
+      >
         <OptimizedImage
           src={imageUrl}
           alt={title}
-          wrapperClassName="w-full"
+          wrapperClassName="w-full md:rounded-2xl"
           className="object-cover"
           fill
           priority

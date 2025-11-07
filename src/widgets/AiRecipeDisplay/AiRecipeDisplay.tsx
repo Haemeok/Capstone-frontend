@@ -29,9 +29,8 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
           className="h-112 w-full object-cover"
         />
         <h1 className="mt-4 text-center text-2xl font-bold">{recipe.title}</h1>
-        <Box>
-          <CollapsibleP content={recipe.description} />
-        </Box>
+
+        <CollapsibleP content={recipe.description} />
       </div>
       <Box className="flex flex-col gap-2">
         <h2 className="mb-2 text-xl font-bold">재료</h2>

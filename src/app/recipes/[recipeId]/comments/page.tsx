@@ -50,7 +50,7 @@ const CommentsPage = () => {
       <header className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <div className="flex items-center gap-2">
-            <PrevButton size={22} />
+            <PrevButton size={22} showOnDesktop={true} />
             <h1 className="flex items-center text-xl font-bold">댓글</h1>
           </div>
         </div>

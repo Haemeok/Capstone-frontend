@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Search } from "lucide-react";
+import { Search, User } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -25,21 +25,21 @@ const DesktopHeader = () => {
   const { user } = useUserStore();
 
   return (
-    <header className="hidden md:block fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+    <header className="hidden md:block fixed top-0 left-0 right-0 z-header bg-white border-b border-gray-200 sticky-optimized">
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link
           href="/"
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
           <Image
-            src="/recipio_logo.svg"
-            alt="Recipeo Logo"
+            src="/logo.svg"
+            alt="Recipio Logo"
             wrapperClassName="h-8 w-8"
             skeletonClassName="h-8 w-8 rounded-full"
             width={32}
             height={32}
           />
-          <span className="text-xl font-bold text-gray-900">Recipeo</span>
+          <span className="text-xl font-bold text-gray-900">Recipi'O</span>
         </Link>
 
         <div className="flex items-center gap-8">
@@ -48,7 +48,7 @@ const DesktopHeader = () => {
               key={link.href}
               href={link.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-gray-900",
+                " font-medium transition-colors hover:text-gray-900",
                 pathname === link.href
                   ? "text-gray-900 font-semibold"
                   : "text-gray-600"
@@ -64,26 +64,29 @@ const DesktopHeader = () => {
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             aria-label="검색"
           >
-            <Search size={20} className="text-gray-600" />
+            <Search size={24} className="text-gray-600" />
           </button>
 
           <NotificationButton />
 
           {user ? (
-            <Link href={`/users/${user.id}`}>
-              <Button variant="ghost" size="sm">
-                마이페이지
-              </Button>
+            <Link
+              href={`/users/${user.id}`}
+              className="text-gray-600 font-sm hover:text-gray-900 transition-colors p-1 rounded-full hover:bg-gray-100"
+            >
+              <div className="flex flex-col items-center">
+                <User size={24} className="text-gray-600" />
+                <p className="text-xs text-gray-600 hover:text-gray-900 transition-colors">
+                  My
+                </p>
+              </div>
             </Link>
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/login">
-                <Button variant="ghost" size="sm">
+                <button className="border-1 border-gray-200  px-4 py-2 rounded-xl transition-colors hover:text-gray-900">
                   로그인
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button size="sm">회원가입</Button>
+                </button>
               </Link>
             </div>
           )}

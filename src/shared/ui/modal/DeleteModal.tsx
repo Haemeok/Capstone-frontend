@@ -29,25 +29,24 @@ export const DeleteModal = ({
 }: DeleteModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm pb-0">
+      <DialogContent className="max-w-sm pb-0 sm:pb-6">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-0 space-x-2">
+        <DialogFooter className="flex-col-reverse gap-0 p-0 sm:flex-row sm:justify-end sm:gap-2">
           <DialogClose asChild>
-            <button className="my-2 rounded-md px-4 text-gray-800">
+            <button className="w-full py-3 text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:px-4 sm:py-2 sm:hover:bg-gray-50">
               {cancelLabel}
             </button>
           </DialogClose>
-          <div className="h-[1px] w-full bg-gray-200"></div>
+          <div className="h-[1px] w-full bg-gray-200 sm:hidden" />
           <button
-            className="my-2 rounded-md px-4 font-bold text-red-600"
             onClick={onConfirm}
+            className="w-full py-3 font-bold text-red-600 sm:w-auto sm:rounded-md sm:bg-red-50 sm:px-4 sm:py-2 sm:hover:bg-red-100"
           >
             {confirmLabel}
           </button>
-          <div className="h-[1px] w-full bg-gray-200"></div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
