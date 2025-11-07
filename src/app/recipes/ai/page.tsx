@@ -36,7 +36,7 @@ const AIRecipeListPage = () => {
   return (
     <div className="bg-white p-2">
       <header className="relative flex items-center justify-center border-b border-gray-200 p-2">
-        <PrevButton className="absolute left-2" />
+        <PrevButton className="absolute left-2" showOnDesktop={true} />
         <h1 className="text-xl font-bold">AI 추천 레시피</h1>
       </header>
       {!isFetching && recipes && recipes.length > 0 ? (

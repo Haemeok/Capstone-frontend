@@ -29,7 +29,7 @@ export const SearchFilters = ({
   onTagsClick,
 }: SearchFiltersProps) => {
   return (
-    <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
+    <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0 sticky-optimized">
       <form onSubmit={handleSearchSubmit} className="relative">
         <input
           type="search"

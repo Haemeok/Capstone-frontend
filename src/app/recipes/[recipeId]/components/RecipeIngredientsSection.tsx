@@ -49,7 +49,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   };
 
   return (
-    <Box className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-xl font-bold">재료</h2>
         <button
@@ -84,21 +84,23 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
           <li key={index} className="grid grid-cols-3 gap-4">
             <div className="flex justify-between items-center">
               <p className="text-left font-bold">{ingredient.name}</p>
-              {ingredient.coupangLink && (
-                <div className="border-1 rounded-lg border-gray-400 p-1">
-                  <ShoppingBasketIcon className="text-gray-400 " size={20} />
-                </div>
-              )}
             </div>
             <p className="text-left">
               {ingredient.quantity}
               {ingredient.quantity !== "약간" && ingredient.unit}
             </p>
-            <p className="text-left text-sm text-slate-500">
-              {displayMode === "price"
-                ? `${formatNumber(ingredient.price || 0, "원")}`
-                : `${formatNumber(ingredient.calories, "kcal")}`}
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-left text-sm text-slate-500">
+                {displayMode === "price"
+                  ? `${formatNumber(ingredient.price || 0, "원")}`
+                  : `${formatNumber(ingredient.calories, "kcal")}`}
+              </p>
+              {ingredient.coupangLink && (
+                <div className="border-1 rounded-md border-gray-400 p-[2px]">
+                  <ShoppingBasketIcon className="text-gray-400 " size={20} />
+                </div>
+              )}
+            </div>
           </li>
         ))}
       </ul>
@@ -113,7 +115,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
           triggerAnimation={displayMode}
         />
       </div>
-    </Box>
+    </div>
   );
 };
 

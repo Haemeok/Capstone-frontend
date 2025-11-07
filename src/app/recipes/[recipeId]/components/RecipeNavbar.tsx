@@ -1,5 +1,7 @@
 "use client";
 
+import PrevButton from "@/shared/ui/PrevButton";
+
 import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
 import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
 
@@ -25,6 +27,7 @@ export default function RecipeNavbar({
       titleThreshold={0.7}
       textColorThreshold={0.5}
       shadowThreshold={0.8}
+      leftComponent={<PrevButton showOnDesktop={true} />}
       rightComponent={
         <RecipeNavBarButtons
           recipeId={recipeId}
