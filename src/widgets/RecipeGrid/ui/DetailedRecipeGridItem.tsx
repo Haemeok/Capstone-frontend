@@ -24,6 +24,15 @@ type DetailedRecipeGridItemProps = {
   priority?: boolean;
 };
 
+const calculateSavings = (
+  marketPrice?: number,
+  ingredientCost?: number
+): number | null => {
+  if (!marketPrice || !ingredientCost) return null;
+  const savings = marketPrice - ingredientCost;
+  return savings > 0 ? savings : null;
+};
+
 const DetailedRecipeGridItem = ({
   recipe,
   className,
@@ -41,6 +50,7 @@ const DetailedRecipeGridItem = ({
     cachedRecipe?.likedByCurrentUser ?? recipe.likedByCurrentUser;
 
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
+  const savings = calculateSavings(recipe.marketPrice, recipe.ingredientCost);
 
   return (
     <div
@@ -76,14 +86,26 @@ const DetailedRecipeGridItem = ({
         </div>
 
         <div className="flex grow flex-col gap-0.5 px-2 pb-2">
-          <p className="line-clamp-2 font-bold hover:underline">{recipe.title}</p>
+          <p className="line-clamp-2 font-bold hover:underline">
+            {recipe.title}
+          </p>
 
-          <div className="flex items-center gap-[2px]">
-            <Star size={15} className="fill-gray-800" />
-            <p className="text-mm text-gray-800">{recipe.avgRating}</p>
-            <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
-            <p className="text-mm text-gray-800">·</p>
-            <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <div className="flex items-center gap-[2px]">
+              <Star size={15} className="fill-gray-800" />
+              <p className="text-mm text-gray-800">{recipe.avgRating}</p>
+              <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
+              <p className="text-mm text-gray-800">·</p>
+              <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
+            </div>
+
+            {savings && (
+              <div className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-olive-light to-olive-medium px-2 py-0.5 shadow-sm">
+                <span className="text-xs font-bold text-white">
+                  {savings.toLocaleString()}원 절약
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </Link>
