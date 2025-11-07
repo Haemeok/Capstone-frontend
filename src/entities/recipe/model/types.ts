@@ -27,6 +27,8 @@ export type BaseRecipeGridItem = {
 export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   avgRating: number;
   ratingCount: number;
+  marketPrice?: number;
+  ingredientCost?: number;
 };
 
 export type StaticDetailedRecipeGridItem = Omit<

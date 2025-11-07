@@ -24,22 +24,20 @@ export const metadata = homeMetadata;
 const HomePage = async () => {
   const queryClient = new QueryClient();
 
-  const [staticPopularRecipes] = await Promise.all([
+  const [staticPopularRecipes, staticBudgetRecipes] = await Promise.all([
     getStaticRecipesOnServer({
       period: "weekly",
       sort: "desc",
       key: "popular-recipes",
     }),
-    queryClient.prefetchQuery({
-      queryKey: ["budget-recipes"],
-      queryFn: () =>
-        getRecipesOnServer({
-          maxCost: 10000,
-          sort: "desc",
-          key: "budget-recipes",
-        }),
+    getStaticRecipesOnServer({
+      maxCost: 10000,
+      sort: "desc",
+      key: "budget-recipes",
     }),
   ]);
+
+  console.log(staticBudgetRecipes);
 
   return (
     <>
@@ -53,13 +51,14 @@ const HomePage = async () => {
             image="/robot1.webp"
             to="/recipes/new/ai"
           />
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <RecipeSlideWithErrorBoundary
-              title="만원 이하 가성비 레시피"
-              queryKey="budget-recipes"
-              maxCost={10000}
-            />
-          </HydrationBoundary>
+
+          <RecipeSlideWithErrorBoundary
+            title="만원 이하 가성비 레시피"
+            queryKey="budget-recipes"
+            maxCost={10000}
+            isStatic
+            staticRecipes={staticBudgetRecipes.content}
+          />
 
           <RecipeSlideWithErrorBoundary
             title="주간 인기 레시피"
