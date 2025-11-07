@@ -8,6 +8,7 @@ export type User = {
   bookmarks?: number;
   likes?: number;
   surveyCompleted?: boolean;
+  hasFirstRecord: boolean;
 };
 
 export type UserStreak = {
