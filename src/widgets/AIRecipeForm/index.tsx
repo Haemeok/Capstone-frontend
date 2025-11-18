@@ -15,7 +15,7 @@ import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
 
 import AiCharacterSection from "./AiCharacterSection";
-import AIRecipeProgressButton from "./AIRecipeProgressButton";
+import AIRecipeSubmitSection from "./AIRecipeSubmitSection";
 import CookingTimeSection from "./CookingTimeSection";
 import DishTypeSection from "./DishTypeSection";
 import ServingsCounter from "./ServingsCounter";
@@ -70,7 +70,7 @@ const AIRecipeForm = () => {
               <ServingsCounter />
             </div>
           </div>
-          <AIRecipeProgressButton isLoading={false} />
+          <AIRecipeSubmitSection isLoading={false} />
         </form>
         <IngredientSelector
           open={isDrawerOpen}
