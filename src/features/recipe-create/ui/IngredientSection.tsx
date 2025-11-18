@@ -5,8 +5,6 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { Plus } from "lucide-react";
 
-import { Button } from "@/shared/ui/shadcn/button";
-
 import { IngredientPayload } from "@/entities/ingredient";
 
 import { RecipeFormValues } from "../model/config";
@@ -73,15 +71,19 @@ const IngredientSection = ({
           />
         ))}
       </div>
-      <Button
+      <button
         type="button"
-        variant="outline"
-        className="border-olive-light text-olive-medium mt-4 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed py-3 hover:text-white"
+        className="group border-olive-light text-olive-medium hover:bg-olive-light/15 mt-4 flex w-full cursor-pointer items-center justify-center gap-1 rounded-lg border-2 border-dashed py-2 transition-all duration-300"
         onClick={() => setIsOpen(true)}
       >
-        <Plus size={16} />
-        재료 추가하기
-      </Button>
+        <Plus
+          size={16}
+          className="transition-transform group-hover:scale-105"
+        />
+        <span className="transition-transform group-hover:scale-105">
+          재료 추가하기
+        </span>
+      </button>
 
       <IngredientSelector
         open={isOpen}

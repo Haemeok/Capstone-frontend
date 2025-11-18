@@ -46,17 +46,17 @@ const CommentsPage = () => {
   const comments = data?.pages.flatMap((page) => page.content);
 
   return (
-    <div className="relative h-full bg-[#f7f7f7] pb-10">
-      <header className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
-        <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <div className="flex items-center gap-2">
-            <PrevButton size={22} showOnDesktop={true} />
-            <h1 className="flex items-center text-xl font-bold">댓글</h1>
+    <div className="relative h-full pb-10">
+      <Container padding={false}>
+        <header className="z-sticky sticky-optimized sticky top-0 border-b bg-white px-4 py-3">
+          <div className="flex max-w-3xl items-center">
+            <div className="flex items-center gap-2">
+              <PrevButton size={22} showOnDesktop={true} />
+              <h1 className="flex items-center text-xl font-bold">댓글</h1>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <Container>
         <main className="py-4">
           <div className="mb-4 flex items-center justify-between px-2">
             <span className="text-sm font-medium text-gray-500">

@@ -30,7 +30,7 @@ const UserDetailPage = () => {
 
   return (
     <>
-      <Container>
+      <Container padding={false}>
         <div className="flex flex-col">
           <Header isOwnProfile={isOwnProfile} />
 

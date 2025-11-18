@@ -40,13 +40,12 @@ const DesktopFooter = () => {
               <h4 className="text-sm font-semibold text-gray-900">서비스</h4>
               <div className="flex flex-col gap-2">
                 {FOOTER_LINKS.service.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
+                  <div
+                    key={link.label}
                     className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                   >
                     {link.label}
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>
@@ -55,13 +54,12 @@ const DesktopFooter = () => {
               <h4 className="text-sm font-semibold text-gray-900">고객지원</h4>
               <div className="flex flex-col gap-2">
                 {FOOTER_LINKS.support.map((link) => (
-                  <Link
+                  <div
                     key={link.href}
-                    href={link.href}
                     className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                   >
                     {link.label}
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>
@@ -81,12 +79,6 @@ const DesktopFooter = () => {
             <div className="flex items-center gap-2">
               <span>제품 및 대외 문의</span>
               <span>|</span>
-              <Link
-                href="https://recipio.team/contact"
-                className="hover:underline"
-              >
-                https://recipio.team/contact
-              </Link>
             </div>
             <div className="mt-2">
               <span>주식회사 레시피오</span>

@@ -91,7 +91,7 @@ const CategoryPicker = ({
               id={`checkbox-${value}`}
               checked={(internalSelection as string[]).includes(value)}
               onCheckedChange={() => handleCheckboxChange(value)}
-              className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 rounded border-gray-300 data-[state=checked]:text-white"
+              className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 cursor-pointer rounded border-gray-300 data-[state=checked]:text-white"
             />
             <Label
               htmlFor={`checkbox-${value}`}
@@ -112,7 +112,7 @@ const CategoryPicker = ({
               <RadioGroupItem
                 value={value}
                 id={`radio-${value}`}
-                className="text-dark-light focus:ring-dark-light h-5 w-5 border-gray-300"
+                className="text-dark-light focus:ring-dark-light h-5 w-5 cursor-pointer border-gray-300"
               />
               <Label
                 htmlFor={`radio-${value}`}
@@ -174,9 +174,9 @@ const CategoryPicker = ({
       <PopoverContent className="w-80" align="start">
         <div className="space-y-4">
           <div>
-            <h4 className="font-medium text-base">{header}</h4>
+            <h4 className="text-base font-medium">{header}</h4>
             {description && (
-              <p className="text-sm text-gray-500 mt-1">{description}</p>
+              <p className="mt-1 text-sm text-gray-500">{description}</p>
             )}
           </div>
 
@@ -184,7 +184,7 @@ const CategoryPicker = ({
             <SelectionContent />
           </div>
 
-          <div className="flex gap-2 pt-2 border-t">
+          <div className="flex gap-2 border-t pt-2">
             <Button
               size="sm"
               variant="outline"
@@ -196,7 +196,7 @@ const CategoryPicker = ({
             <Button
               size="sm"
               onClick={handleApply}
-              className="bg-olive-light flex-1 text-white hover:bg-olive-light/90"
+              className="bg-olive-light hover:bg-olive-light/90 flex-1 text-white"
             >
               완료
             </Button>

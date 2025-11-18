@@ -56,7 +56,7 @@ const CookingToolsInput = () => {
                 <button
                   type="button"
                   onClick={() => removeCookingTool(tool)}
-                  className="-mr-1 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-red-500"
+                  className="-mr-1 cursor-pointer rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-red-500"
                   aria-label={`${tool} 삭제`}
                 >
                   <X size={14} aria-hidden="true" />

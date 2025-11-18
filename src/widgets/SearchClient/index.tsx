@@ -57,7 +57,7 @@ export const SearchClient = () => {
     });
 
   return (
-    <Container>
+    <Container padding={false}>
       <div className="flex flex-col bg-[#ffffff]">
         <SearchFilters
           inputValue={inputValue}

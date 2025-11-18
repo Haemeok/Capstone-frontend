@@ -74,15 +74,19 @@ const Steps = () => {
             />
           );
         })}
-        <Button
+        <button
           type="button"
-          variant="outline"
-          className="border-olive-light text-olive-medium mt-3 flex w-full items-center justify-center gap-1 rounded-lg border-2 border-dashed py-2"
+          className="border-olive-light group text-olive-medium hover:bg-olive-light/15 mt-3 flex w-full cursor-pointer items-center justify-center gap-1 rounded-lg border-2 border-dashed py-2 transition-all duration-300"
           onClick={addStep}
         >
-          <Plus size={16} />
-          과정 추가
-        </Button>
+          <Plus
+            size={16}
+            className="transition-transform group-hover:scale-105"
+          />
+          <span className="transition-transform group-hover:scale-105">
+            과정 추가
+          </span>
+        </button>
       </div>
     </div>
   );
