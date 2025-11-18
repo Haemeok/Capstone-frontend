@@ -4,7 +4,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-import { getRecipeOnServer } from "@/entities/recipe/model/api.server";
+import { getrecipionServer } from "@/entities/recipe/model/api.server";
 
 import RecipeEditClient from "./components/RecipeEditClient";
 
@@ -19,7 +19,7 @@ const RecipeEditPage = async ({ params }: RecipeEditPageProps) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["recipe", numericRecipeId.toString()],
-    queryFn: () => getRecipeOnServer(numericRecipeId),
+    queryFn: () => getrecipionServer(numericRecipeId),
   });
 
   return (

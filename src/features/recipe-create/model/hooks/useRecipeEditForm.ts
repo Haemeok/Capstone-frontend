@@ -70,7 +70,8 @@ export const useRecipeEditForm = (recipeId: number) => {
             position: "bottom",
           });
           methods.reset();
-          router.push("/search");
+          router.refresh();
+          router.push(`/recipes/${recipeId}`);
         },
         onError: (error) => {
           console.error("레시피 수정 실패:", error);

@@ -7,7 +7,7 @@ import {
 } from "@/shared/lib/metadata";
 
 import {
-  getStaticRecipeOnServer,
+  getStaticrecipionServer,
   getStaticRecipesOnServer,
 } from "@/entities/recipe/model/api.server";
 
@@ -30,7 +30,6 @@ interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
 }
 
-export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export async function generateMetadata({
@@ -39,7 +38,7 @@ export async function generateMetadata({
   const { recipeId } = await params;
   const numericRecipeId = Number(recipeId);
 
-  const staticRecipe = await getStaticRecipeOnServer(numericRecipeId);
+  const staticRecipe = await getStaticrecipionServer(numericRecipeId);
 
   if (!staticRecipe) return generateNotFoundRecipeMetadata();
 
@@ -63,7 +62,7 @@ export default async function RecipeDetailPage({
   const { recipeId } = await params;
   const numericRecipeId = Number(recipeId);
 
-  const staticRecipe = await getStaticRecipeOnServer(numericRecipeId);
+  const staticRecipe = await getStaticrecipionServer(numericRecipeId);
 
   if (!staticRecipe) {
     notFound();

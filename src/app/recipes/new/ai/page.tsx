@@ -20,8 +20,6 @@ const AIRecipePage = () => {
     isError,
   } = useAIRecipeGeneration();
 
-  console.log(isIdle, selectedAI);
-
   if (!selectedAI) {
     return (
       <Container>
