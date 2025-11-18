@@ -22,6 +22,7 @@ type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
   className?: string;
   priority?: boolean;
+  prefetch?: boolean;
 };
 
 const calculateSavings = (
@@ -37,6 +38,7 @@ const DetailedRecipeGridItem = ({
   recipe,
   className,
   priority,
+  prefetch = false,
 }: DetailedRecipeGridItemProps) => {
   const queryClient = useQueryClient();
 
@@ -54,16 +56,14 @@ const DetailedRecipeGridItem = ({
 
   return (
     <div
-      className={cn(
-        `relative flex shrink-0 flex-col gap-2 rounded-2xl`,
-        className
-      )}
+      className={cn(`relative flex shrink-0 flex-col rounded-2xl`, className)}
       key={recipe.id}
     >
       <Link
         href={`/recipes/${recipe.id}`}
         className="block"
         aria-label={`${recipe.title} 레시피 보기`}
+        prefetch={prefetch}
       >
         <div className="relative">
           <Image
@@ -90,7 +90,7 @@ const DetailedRecipeGridItem = ({
             {recipe.title}
           </p>
 
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="flex flex-wrap items-center gap-1.5">
             <div className="flex items-center gap-[2px]">
               <Star size={15} className="fill-gray-800" />
               <p className="text-mm text-gray-800">{recipe.avgRating}</p>
@@ -100,7 +100,7 @@ const DetailedRecipeGridItem = ({
             </div>
 
             {savings && (
-              <div className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-olive-light to-olive-medium px-2 py-0.5 shadow-sm">
+              <div className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm">
                 <span className="text-xs font-bold text-white">
                   {savings.toLocaleString()}원 절약
                 </span>

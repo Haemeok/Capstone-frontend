@@ -32,6 +32,7 @@ type RecipeGridProps = {
   lastPageMessage?: string;
   error?: Error | null;
   queryKeyString?: string;
+  prefetch?: boolean;
 };
 
 const RecipeGrid = ({
@@ -45,6 +46,7 @@ const RecipeGrid = ({
   noResultsMessage = "표시할 레시피가 없습니다.",
   lastPageMessage = "모든 레시피를 다 봤어요!",
   error,
+  prefetch = false,
 }: RecipeGridProps) => {
   const router = useRouter();
 
@@ -80,13 +82,7 @@ const RecipeGrid = ({
   if (isPending) {
     return (
       <div>
-        <div
-          className="grid gap-4
-            [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]
-            sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]
-            md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))]
-            lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]"
-        >
+        <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
           <RecipeGridSkeleton count={6} isSimple={isSimple} />
         </div>
       </div>
@@ -103,21 +99,17 @@ const RecipeGrid = ({
 
   if (noResults || !recipes || recipes.length === 0) {
     return (
-      <p className="py-10 text-center text-base text-gray-500">
-        {noResultsMessage}
-      </p>
+      <section className="flex min-h-[500px] items-center justify-center">
+        <p className="py-10 text-center text-base text-gray-500">
+          {noResultsMessage}
+        </p>
+      </section>
     );
   }
 
   return (
     <div className="flex flex-col">
-      <div
-        className="grid gap-4
-          [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))]
-          sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]
-          md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))]
-          lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]"
-      >
+      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 px-2 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
         {recipes.map((recipe, index) =>
           isSimple ? (
             <SimpleRecipeGridItem
@@ -125,12 +117,14 @@ const RecipeGrid = ({
               recipe={recipe as BaseRecipeGridItem}
               setIsDrawerOpen={handleOpenDrawer}
               priority={index === 0}
+              prefetch={prefetch}
             />
           ) : (
             <DetailedRecipeGridItem
               key={recipe.id}
               recipe={recipe as DetailedRecipeGridItemType}
               priority={index === 0}
+              prefetch={prefetch}
             />
           )
         )}

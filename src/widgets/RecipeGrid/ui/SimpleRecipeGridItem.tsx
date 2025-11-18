@@ -16,12 +16,14 @@ type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
   setIsDrawerOpen: (id: number) => void;
   priority?: boolean;
+  prefetch?: boolean;
 };
 
 const SimpleRecipeGridItem = ({
   recipe,
   setIsDrawerOpen,
   priority,
+  prefetch = false,
 }: SimpleRecipeGridItemProps) => {
   const handleMenuClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -31,7 +33,11 @@ const SimpleRecipeGridItem = ({
 
   return (
     <>
-      <Link href={`/recipes/${recipe.id}`} className={cn(`relative rounded-2xl block`)}>
+      <Link
+        href={`/recipes/${recipe.id}`}
+        className={cn(`relative rounded-2xl block`)}
+        prefetch={prefetch}
+      >
         <Image
           src={recipe.imageUrl}
           alt={recipe.title}
