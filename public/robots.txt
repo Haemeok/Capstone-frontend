@@ -1,16 +1,16 @@
+# This file is replaced by src/app/robots.ts in Next.js 15
+# The dynamic robots.ts file is used for production builds
+# See: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
+
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://recipio.com/sitemap.xml
+Sitemap: https://www.recipio.kr/sitemap.xml
 
-# Block unnecessary paths
 Disallow: /api/
 Disallow: /_next/
 Disallow: /static/
-
-# Allow important pages
-Allow: /
-Allow: /recipes/
-Allow: /search
-Allow: /ai-recipe
+Disallow: /login
+Disallow: /users/edit
+Disallow: /recipes/new
+Disallow: /notifications
