@@ -20,7 +20,7 @@ describe("SearchPage generateMetadata", () => {
     };
     const meta = await generateMetadata(params);
 
-    expect(meta.title).toBe("김치찌개 검색 결과 - 해먹");
+    expect(meta.title).toBe("김치찌개 검색 결과 - 레시피오");
     expect(meta.description).toContain("김치찌개");
   });
 
@@ -28,7 +28,7 @@ describe("SearchPage generateMetadata", () => {
     const params: Props = { searchParams: asProm({}) };
     const meta = await generateMetadata(params);
 
-    expect(meta.title).toBe("레시피 검색 - 해먹");
+    expect(meta.title).toBe("레시피 검색 - 레시피오");
     expect(meta.description).toBe("원하는 레시피를 검색하고 찾아보세요.");
   });
 });

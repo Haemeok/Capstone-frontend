@@ -66,7 +66,7 @@ const MonthlySavingsSummary = ({
   return (
     <div className="mx-10 flex flex-col items-center justify-center pt-5">
       <h3 className="text-xl font-bold">
-        {year}년 {month}월 해먹 서비스로
+        {year}년 {month}월 레시피오 서비스로
       </h3>
       <div className="flex">
         <CountUp

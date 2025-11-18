@@ -7,9 +7,9 @@ export const PWA_STORAGE_KEYS = {
 export const PWA_PROMPT_DELAY = 1000;
 
 export const PWA_APP_INFO = {
-  NAME: "해먹 - 홈쿡 레시피 플랫폼",
-  SHORT_NAME: "해먹",
-  DESCRIPTION: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 해먹어보세요!",
+  NAME: "레시피오 - 홈쿡 레시피 플랫폼",
+  SHORT_NAME: "레시피오",
+  DESCRIPTION: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 레시피오어보세요!",
   THEME_COLOR: "#ffffff",
 } as const;
 
