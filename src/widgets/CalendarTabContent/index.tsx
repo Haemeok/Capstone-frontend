@@ -56,10 +56,10 @@ const CalendarTabContent = () => {
         productName={product.name}
         productImage={product.image}
       />
-      <Box className="p-0 px-4 mt-4">
+      <Box className="mt-4 p-0 px-4">
         <PointDisplayBanner
           pointText={`${userStreak?.streak ?? 0}일`}
-          prefix="해먹 서비스를"
+          prefix="레시피오 서비스를"
           suffix="연속 사용 중이에요!"
           textClassName="text-purple-500 font-bold"
           icon={
@@ -95,7 +95,7 @@ const CalendarTabContent = () => {
           caption: "flex justify-center pt-1 relative items-center w-full",
           caption_label: "text-xl font-bold",
           nav: "absolute  w-full flex justify-center items-center gap-20 h-9",
-          week: "flex w-full h-15 md:h-20 text-center items-center",
+          week: "flex w-full h-15 md:h-30 text-center items-center",
           weeks: "flex flex-col w-full",
           weekdays: "flex w-full",
           weekday:
@@ -131,6 +131,7 @@ const CalendarTabContent = () => {
                     src={summary.firstImageUrl}
                     alt={`이벤트: ${format(date, "yyyy-MM-dd")}`}
                     className="h-full w-full rounded-xl object-cover"
+                    wrapperClassName="p-[1px]"
                   />
                   {summary.totalCount && (
                     <div className="bg-olive-mint absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">

@@ -11,13 +11,13 @@ type UseShareProps = {
 export const useShare = () => {
   const { addToast } = useToastStore();
 
-  const share = async ({ 
-    title = "해먹에서 발견한 멋진 레시피!", 
-    text = "이 레시피를 확인해보세요!", 
-    url 
+  const share = async ({
+    title = "레시피오에서 발견한 멋진 레시피!",
+    text = "이 레시피를 확인해보세요!",
+    url,
   }: UseShareProps = {}) => {
     const shareUrl = url || window.location.href;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({

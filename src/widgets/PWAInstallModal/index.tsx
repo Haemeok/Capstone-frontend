@@ -40,13 +40,13 @@ const PWAInstallModal = ({
           <div className="flex justify-center">
             <img
               src="/pwa_logo.png"
-              alt="해먹 앱 설치"
+              alt="레시피오 앱 설치"
               className="w-20 h-20 rounded-2xl"
             />
           </div>
           <div className="space-y-2">
             <DialogTitle className="text-lg font-bold text-gray-900">
-              해먹 앱 설치
+              레시피오 앱 설치
             </DialogTitle>
             <DialogDescription className="text-sm text-gray-500 leading-relaxed">
               홈 화면에 추가하면 앱처럼 빠르게 접속할 수 있어요.

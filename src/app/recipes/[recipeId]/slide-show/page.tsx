@@ -19,7 +19,7 @@ const RecipeSlideShowPage = () => {
   return (
     <div className="bg-background h-screen pb-12">
       <SlideShowHeader
-        title={`${recipe.title} - 해먹`}
+        title={`${recipe.title} - 레시피오`}
         text={`${recipe.author.nickname}님의 ${recipe.title} 레시피를 확인해보세요!`}
       />
       <SlideShowCarousel recipe={recipe} onRateClick={handleRateClick} />

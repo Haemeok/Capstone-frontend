@@ -16,15 +16,15 @@ import { AppProviders } from "./providers/AppProviders";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "해먹",
-  description: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 해먹어보세요!",
+  title: "레시피오",
+  description: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 레시피오어보세요!",
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/image.png", type: "image/png" },
-      { url: "/pwa_logo.png", type: "image/png", sizes: "192x192" },
+      { url: "/app-logo-512.png", type: "image/png", sizes: "192x192" },
+      { url: "/app-logo-512.png", type: "image/png", sizes: "512x512" },
     ],
-    apple: "/apple-touch-icon.png",
+    apple: "/app-logo-512.png",
   },
   metadataBase: new URL("https://recipio.kr/"),
 };

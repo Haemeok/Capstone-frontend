@@ -22,12 +22,12 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
   const query = awaitedSearchParams.q || "";
   if (query) {
     return {
-      title: `${query} 검색 결과 - 해먹`,
+      title: `${query} 검색 결과 - 레시피오`,
       description: `"${query}"에 대한 레시피 검색 결과입니다.`,
     };
   }
   return {
-    title: "레시피 검색 - 해먹",
+    title: "레시피 검색 - 레시피오",
     description: "원하는 레시피를 검색하고 찾아보세요.",
   };
 }
