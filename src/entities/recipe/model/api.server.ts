@@ -71,7 +71,7 @@ export const getRecipesOnServer = async (
   }
 };
 
-export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
+export const getrecipionServer = async (id: number): Promise<Recipe | null> => {
   const API_URL = `${BASE_API_URL}/recipes/${id}`;
   if (isNaN(id) || id <= 0) {
     return null;
@@ -97,12 +97,12 @@ export const getRecipeOnServer = async (id: number): Promise<Recipe | null> => {
     }
     return res.json();
   } catch (error) {
-    console.error(`[getRecipeOnServer] Failed to fetch recipe ${id}:`, error);
+    console.error(`[getrecipionServer] Failed to fetch recipe ${id}:`, error);
     return null;
   }
 };
 
-export const getStaticRecipeOnServer = async (
+export const getStaticrecipionServer = async (
   id: number
 ): Promise<StaticRecipe | null> => {
   const API_URL = `${BASE_API_URL}/v2/recipes/${id}`;
@@ -126,7 +126,7 @@ export const getStaticRecipeOnServer = async (
     return res.json();
   } catch (error) {
     console.error(
-      `[getStaticRecipeOnServer] Failed to fetch recipe ${id}:`,
+      `[getStaticrecipionServer] Failed to fetch recipe ${id}:`,
       error
     );
     return null;
@@ -134,6 +134,63 @@ export const getStaticRecipeOnServer = async (
 };
 
 const REVALIDATE_TIME_SECONDS = 3600;
+
+export const fetchAllRecipesForSitemap = async (): Promise<
+  Array<{ id: number; createdAt: string }>
+> => {
+  const SITEMAP_PAGE_SIZE = 100;
+  const MAX_PAGES = 500;
+  const allRecipes: Array<{ id: number; createdAt: string }> = [];
+
+  try {
+    let currentPage = 0;
+    let hasMorePages = true;
+
+    while (hasMorePages && currentPage < MAX_PAGES) {
+      const query = new URLSearchParams({
+        page: currentPage.toString(),
+        size: SITEMAP_PAGE_SIZE.toString(),
+        sort: "createdAt,desc",
+      });
+
+      const API_URL = `${BASE_API_URL}/v2/recipes/search?${query.toString()}`;
+
+      const res = await fetch(API_URL, {
+        next: {
+          revalidate: REVALIDATE_TIME_SECONDS,
+          tags: [CACHE_TAGS.recipesAll],
+        },
+      });
+
+      if (!res.ok) {
+        console.error(
+          `[fetchAllRecipesForSitemap] API Error: ${res.status} ${res.statusText}`
+        );
+        break;
+      }
+
+      const data: StaticDetailedRecipesApiResponse = await res.json();
+
+      const pageRecipes = data.content.map((recipe) => ({
+        id: recipe.id,
+        createdAt: recipe.createdAt,
+      }));
+
+      allRecipes.push(...pageRecipes);
+
+      hasMorePages = currentPage < data.page.totalPages - 1;
+      currentPage++;
+    }
+
+    return allRecipes;
+  } catch (error) {
+    console.error(
+      "[fetchAllRecipesForSitemap] Failed to fetch recipes:",
+      error
+    );
+    return [];
+  }
+};
 
 export const getStaticRecipesOnServer = async (
   params: RecipeItemsQueryParams

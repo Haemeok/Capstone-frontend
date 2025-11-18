@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 import { Search } from "lucide-react";
@@ -29,6 +29,7 @@ const IngredientSearchDrawer = ({
   onOpenChange,
 }: IngredientSearchDrawerProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
@@ -57,6 +58,12 @@ const IngredientSearchDrawer = ({
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [selectedCategory, searchQuery]);
 
   const { mutate: addIngredient } = useAddIngredientMutation([
     "fridgeIngredients",
@@ -125,7 +132,10 @@ const IngredientSearchDrawer = ({
             ))}
           </div>
         </div>
-        <div className="flex h-120 flex-col justify-center overflow-y-auto p-4">
+        <div
+          ref={scrollContainerRef}
+          className="flex h-120 flex-col justify-center overflow-y-auto p-4"
+        >
           {isPending ? (
             <p className="text-center text-gray-500">재료 로딩 중...</p>
           ) : status === "error" ? (

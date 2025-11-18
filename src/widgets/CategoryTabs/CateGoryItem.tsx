@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { TAG_CODES } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
-import { OptimizedImage } from "@/shared/ui/image/OptimizedImage";
+import { Image } from "@/shared/ui/image/Image";
 
 type CateGoryItemProps = {
   id: number;
@@ -29,7 +29,7 @@ const CateGoryItem = ({
         className
       )}
     >
-      <OptimizedImage
+      <Image
         src={imageUrl}
         alt={name}
         className="object-cover"
