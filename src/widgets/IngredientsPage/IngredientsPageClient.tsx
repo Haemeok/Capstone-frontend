@@ -57,9 +57,9 @@ const IngredientsPageClient = () => {
     <Container padding={false}>
       <div className="flex flex-col">
         <div ref={observerRef} className="w-full" />
-        <div className="sticky top-0 z-sticky bg-white sticky-optimized">
-          <div className="flex items-center justify-between border-b border-gray-200 py-4">
-            <h1 className="whitespace-pre-line text-xl font-bold">
+        <div className="z-sticky sticky-optimized sticky top-0 bg-white">
+          <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4">
+            <h1 className="text-xl font-bold whitespace-pre-line">
               {headerTitle}
             </h1>
             {!!user && (

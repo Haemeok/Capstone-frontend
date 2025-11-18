@@ -3,6 +3,7 @@
 import React from "react";
 import { useController, useFormContext } from "react-hook-form";
 import type { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
+import { cn } from "@/lib/utils";
 
 const MIN = 1;
 
@@ -33,18 +34,25 @@ const ServingsCounter = () => {
         onClick={dec}
         disabled={value <= MIN}
         aria-label="인분 줄이기"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300 disabled:opacity-50"
+        className={cn(
+          "flex h-8 w-8 items-center",
+          "justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors  disabled:opacity-50",
+          value <= MIN ? "opacity-50" : "cursor-pointer hover:bg-gray-300"
+        )}
       >
         -
       </button>
-      <span className="w-20 text-center font-medium text-gray-800" aria-live="polite">
+      <span
+        className="w-20 text-center font-medium text-gray-800"
+        aria-live="polite"
+      >
         {value}인분
       </span>
       <button
         type="button"
         onClick={inc}
         aria-label="인분 늘리기"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300"
+        className="flex h-8 w-8 items-center cursor-pointer justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300"
       >
         +
       </button>

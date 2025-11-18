@@ -24,7 +24,7 @@ const SettingsActionButton = () => {
       <button
         onClick={() => setIsModalOpen(true)}
         aria-label="설정"
-        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+        className="cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-100"
       >
         <Settings size={20} aria-hidden="true" />
       </button>
@@ -38,20 +38,20 @@ const SettingsActionButton = () => {
               <button
                 onClick={handleLogoutClick}
                 aria-label="로그아웃"
-                className="flex w-full items-center justify-center gap-1 border-t border-gray-200 px-4 py-3 font-bold text-red-500 sm:w-auto sm:rounded-md sm:border-none sm:bg-red-50 sm:py-2 sm:hover:bg-red-100"
+                className="flex w-full cursor-pointer items-center justify-center gap-1 border-t border-gray-200 px-4 py-3 font-bold text-red-500 sm:w-auto sm:rounded-md sm:border-none sm:bg-red-50 sm:py-2 sm:hover:bg-red-100"
               >
                 <LogOut size={16} aria-hidden="true" className="mr-1" />
                 <span>로그아웃</span>
               </button>
               {Close ? (
                 <Close asChild>
-                  <button className="w-full border-t border-gray-200 px-4 py-3 font-bold text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50">
+                  <button className="w-full cursor-pointer border-t border-gray-200 px-4 py-3 font-bold text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50">
                     닫기
                   </button>
                 </Close>
               ) : (
                 <button
-                  className="w-full border-t border-gray-200 px-4 py-3 font-bold text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50"
+                  className="w-full cursor-pointer border-t border-gray-200 px-4 py-3 font-bold text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50"
                   onClick={() => setIsModalOpen(false)}
                 >
                   닫기

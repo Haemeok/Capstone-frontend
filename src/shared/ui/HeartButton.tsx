@@ -63,7 +63,7 @@ const HeartButton = ({
     >
       <button
         onClick={handleClick}
-        className={cn("heart-button", finalButtonClassName)}
+        className={cn("heart-button cursor-pointer", finalButtonClassName)}
         aria-label={ariaLabel}
         aria-pressed={isLiked}
         aria-describedby={isCountShown ? `like-count-${likeCount}` : undefined}

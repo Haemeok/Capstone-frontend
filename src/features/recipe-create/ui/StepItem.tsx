@@ -12,6 +12,7 @@ import { Label } from "@/shared/ui/shadcn/label";
 import { IngredientPayload } from "@/entities/ingredient";
 
 import { RecipeFormValues } from "../model/config";
+import { cn } from "@/lib/utils";
 
 type StepItemProps = {
   index: number;
@@ -81,13 +82,13 @@ const StepItem = ({
 
   return (
     <div className="relative flex items-start gap-4 rounded-lg p-4 shadow-sm">
-      <div className="bg-olive-light flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-bold text-white mt-1">
+      <div className="bg-olive-light mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-bold text-white">
         {index + 1}
       </div>
-      <div className="flex-1 mt-6">
+      <div className="mt-6 flex-1">
         <ImageUploader
           fieldName={`steps.${index}.image`}
-          className="w-64 h-64"
+          className="h-64 w-64"
         />
 
         <div className="mt-4 border-t pt-4">
@@ -116,10 +117,11 @@ const StepItem = ({
                         handleStepIngredientToggle(ingredient, !!checked);
                       }}
                       disabled={isUsedElsewhere}
+                      className={cn(!isUsedElsewhere && "cursor-pointer")}
                     />
                     <Label
                       htmlFor={`step-${index}-ing-${ingredient.name}`}
-                      className={`text-sm ${isUsedElsewhere && !isUsedInThisStep ? "text-gray-400 line-through" : "text-gray-800"}`}
+                      className={`text-sm ${isUsedElsewhere && !isUsedInThisStep ? "text-gray-400 line-through" : "cursor-pointer text-gray-800 hover:text-gray-900"}`}
                     >
                       {ingredient.name}
                     </Label>
@@ -162,17 +164,15 @@ const StepItem = ({
         )}
       </div>
       <div className="absolute top-2 right-2">
-        <Button
+        <button
           type="button"
-          variant="ghost"
-          size="icon"
           aria-label={`${index + 1}번째 단계 삭제`}
-          className="text-gray-500 hover:bg-red-100 hover:text-red-600"
+          className="cursor-pointer text-gray-500 hover:bg-red-100 hover:text-red-600"
           onClick={() => removeStep(index)}
           disabled={!isDeletable}
         >
           <X size={18} aria-hidden="true" />
-        </Button>
+        </button>
       </div>
     </div>
   );

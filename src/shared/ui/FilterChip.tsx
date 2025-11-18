@@ -14,7 +14,7 @@ const FilterChip = ({ header, onClick, isDirty }: FilterChipProps) => {
   return (
     <button
       className={cn(
-        "flex items-center justify-center gap-0.5 rounded-2xl border px-2 py-1 max-w-[120px]",
+        "flex max-w-[120px] cursor-pointer items-center justify-center gap-0.5 rounded-2xl border px-2 py-1",
         isDirty ? "bg-dark-light" : "bg-white",
         isDirty ? "border-dark-light" : "border-gray-300"
       )}
@@ -24,7 +24,7 @@ const FilterChip = ({ header, onClick, isDirty }: FilterChipProps) => {
     >
       <p
         className={cn(
-          "text-[15px] truncate",
+          "truncate text-[15px]",
           isDirty ? "text-white" : "text-dark-light"
         )}
       >

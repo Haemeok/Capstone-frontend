@@ -55,7 +55,7 @@ const RecipeFormLayout = ({
               <select
                 id="dishType"
                 className={cn(
-                  `w-28 rounded-lg border bg-gray-50 px-3 py-1.5 text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
+                  `w-28 rounded-lg cursor-pointer border bg-gray-50 px-3 py-1.5 text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
                   errors.dishType ? "border-red-500" : "border-gray-300"
                 )}
                 {...register("dishType", {

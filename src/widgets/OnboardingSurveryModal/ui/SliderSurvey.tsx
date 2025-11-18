@@ -57,11 +57,11 @@ const SliderSurvey = ({
     <div className="space-y-8">
       <div className="text-center">
         <div
-          className={`inline-flex items-center gap-3 px-6 py-3 rounded-full ${currentSpice?.color} transition-all duration-300`}
+          className={`inline-flex items-center gap-3 rounded-full px-6 py-3 ${currentSpice?.color} transition-all duration-300`}
         >
           <span className="text-2xl">{currentSpice?.emoji}</span>
           <div className="text-left">
-            <div className="font-bold text-lg">{numericValue}단계</div>
+            <div className="text-lg font-bold">{numericValue}단계</div>
             <div className="text-sm">{currentSpice?.text}</div>
           </div>
         </div>
@@ -75,12 +75,11 @@ const SliderSurvey = ({
           step={1}
           value={[numericValue]}
           onValueChange={handleSliderChange}
-          className="w-full [&>*[data-slot=slider-track]]:bg-gray-200 [&>*[data-slot=slider-range]]:bg-olive-mint [&>*[data-slot=slider-thumb]]:transition-all [&>*[data-slot=slider-thumb]]:duration-300 [&>*[data-slot=slider-thumb]]:ease-in-out"
+          className="[&>*[data-slot=slider-range]]:bg-olive-mint w-full [&>*[data-slot=slider-thumb]]:transition-all [&>*[data-slot=slider-thumb]]:duration-300 [&>*[data-slot=slider-thumb]]:ease-in-out [&>*[data-slot=slider-track]]:bg-gray-200"
         />
       </div>
 
-      {/* 하단 레이블들 */}
-      <div className="flex justify-between px-4 -mt-2">
+      <div className="-mt-2 flex justify-between px-4">
         {spiceLabels.map((spice) => (
           <div
             key={spice.level}
@@ -90,8 +89,8 @@ const SliderSurvey = ({
                 : "opacity-50 hover:opacity-75"
             }`}
           >
-            <span className="text-lg mb-1">{spice.emoji}</span>
-            <span className="text-xs text-center font-medium">
+            <span className="mb-1 text-lg">{spice.emoji}</span>
+            <span className="text-center text-xs font-medium">
               {spice.level}
             </span>
           </div>
