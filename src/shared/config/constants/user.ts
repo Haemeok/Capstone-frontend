@@ -13,6 +13,7 @@ export const guestUser: User = {
   username: "@guest",
   introduction: "",
   hasFirstRecord: false,
+  remainingAiQuota: 0,
 };
 
 export type Tab = {
