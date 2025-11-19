@@ -44,6 +44,12 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     const data = await backendRes.json();
 
+    console.log("[PUT /api/recipes] Called!", new Date().toISOString());
+    console.log(
+      "[PUT /api/recipes/[recipeId]] Revalidated tags for recipe:",
+      recipeIdNum
+    );
+
     revalidateTag(CACHE_TAGS.recipe(recipeIdNum));
     revalidateTag(CACHE_TAGS.recipesAll);
     revalidateTag(CACHE_TAGS.recipesPopular);
