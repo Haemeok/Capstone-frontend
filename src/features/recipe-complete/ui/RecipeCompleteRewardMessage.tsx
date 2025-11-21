@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogOverlay,
+  DialogTitle,
 } from "@/shared/ui/shadcn/dialog";
 
 type RecipeCompleteRewardMessageProps = {
@@ -36,9 +37,9 @@ const RecipeCompleteRewardMessage = ({
       <DialogOverlay className="bg-black/10" />
       <DialogContent className="max-w-md animate-in zoom-in-95 duration-300 border-2 border-olive-mint p-4 [&>button]:hidden">
         <div className="flex flex-col items-center justify-center">
-          <h1 className="mb-3 text-center text-4xl font-bold text-olive-mint animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <DialogTitle className="mb-3 text-center text-4xl font-bold text-olive-mint animate-in fade-in slide-in-from-bottom-4 duration-500">
             +{formatNumber(saveAmount, "원")} 절약!
-          </h1>
+          </DialogTitle>
           <p className="text-center text-sm leading-relaxed text-gray-600 animate-in fade-in slide-in-from-bottom-2 duration-700">
             마이페이지 →{" "}
             <span className="font-bold text-olive-mint">캘린더</span>

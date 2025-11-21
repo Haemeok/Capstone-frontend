@@ -2,21 +2,23 @@
 
 import { useMemo, useState } from "react";
 
-import { Calculator, DollarSign, ShoppingBasketIcon } from "lucide-react";
+import { ShoppingBasketIcon } from "lucide-react";
 
 import { formatNumber } from "@/shared/lib/format";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
-import Box from "@/shared/ui/primitives/Box";
+import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
 
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
-import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
+
+import NutritionToggle from "./NutritionToggle";
+import NutritionTable from "./NutritionTable";
 
 type IngredientsSectionProps = {
   recipe: Recipe | StaticRecipe;
 };
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
-  const [displayMode, setDisplayMode] = useState<"price" | "calories">("price");
+  const [showNutrition, setShowNutrition] = useState(false);
 
   const randomActivity = useMemo(() => getRandomActivity(), [recipe.id]);
 
@@ -27,23 +29,21 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
 
   const displayConfig = {
     topBanner: {
-      pointText:
-        displayMode === "price"
-          ? `${formatNumber(recipe.totalIngredientCost, "원")}`
-          : `${formatNumber(Math.floor(recipe.totalCalories), "kcal")}`,
-      prefix: displayMode === "price" ? "이 레시피에 약" : "이 레시피는 약",
-      suffix: displayMode === "price" ? "필요해요!" : "예요!",
+      pointText: showNutrition
+        ? `${formatNumber(Math.floor(recipe.totalCalories), "kcal")}`
+        : `${formatNumber(recipe.totalIngredientCost, "원")}`,
+      prefix: showNutrition ? "이 레시피는 약" : "이 레시피에 약",
+      suffix: showNutrition ? "예요!" : "필요해요!",
     },
     bottomBanner: {
-      pointText:
-        displayMode === "price"
-          ? `${formatNumber(
-              recipe.marketPrice - recipe.totalIngredientCost,
-              "원"
-            )}`
-          : `${randomActivity.name} ${formatNumber(activityTime, "분")}`,
-      prefix: displayMode === "price" ? "배달 물가 대비" : "이 칼로리는",
-      suffix: displayMode === "price" ? "절약해요!" : "으로 소모 가능해요!",
+      pointText: showNutrition
+        ? `${randomActivity.name} ${formatNumber(activityTime, "분")}`
+        : `${formatNumber(
+            recipe.marketPrice - recipe.totalIngredientCost,
+            "원"
+          )}`,
+      prefix: showNutrition ? "이 칼로리는" : "배달 물가 대비",
+      suffix: showNutrition ? "으로 소모 가능해요!" : "절약해요!",
       textClassName: "text-purple-500",
     },
   };
@@ -51,59 +51,51 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   return (
     <div className="flex flex-col gap-2">
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-xl font-bold">재료</h2>
-        <button
-          onClick={() =>
-            setDisplayMode(displayMode === "price" ? "calories" : "price")
-          }
-          className="flex items-center gap-1 text-sm rounded-lg border border-gray-200  cursor-pointer p-2"
-        >
-          {displayMode === "calories" ? (
-            <>
-              <Calculator className="h-4 w-4 text-slate-500" />
-              <p className="text-sm text-slate-500">칼로리</p>
-            </>
-          ) : (
-            <>
-              <DollarSign className="h-4 w-4 text-slate-500" />
-              <p className="text-sm text-slate-500">가격</p>
-            </>
-          )}
-        </button>
+        <h2 className="text-xl font-bold">
+          {showNutrition ? "영양성분" : "재료"}
+        </h2>
+        <NutritionToggle
+          isNutrition={showNutrition}
+          onToggle={setShowNutrition}
+        />
       </div>
 
       <PointDisplayBanner
         pointText={displayConfig.topBanner.pointText}
         prefix={displayConfig.topBanner.prefix}
         suffix={displayConfig.topBanner.suffix}
-        triggerAnimation={displayMode}
+        triggerAnimation={showNutrition}
       />
 
-      <ul className="flex flex-col gap-1">
-        {recipe.ingredients.map((ingredient, index) => (
-          <li key={index} className="grid grid-cols-3 gap-4">
-            <div className="flex justify-between items-center">
-              <p className="text-left font-bold">{ingredient.name}</p>
-            </div>
-            <p className="text-left">
-              {ingredient.quantity}
-              {ingredient.quantity !== "약간" && ingredient.unit}
-            </p>
-            <div className="flex items-center gap-2">
-              <p className="text-left text-sm text-slate-500">
-                {displayMode === "price"
-                  ? `${formatNumber(ingredient.price || 0, "원")}`
-                  : `${formatNumber(ingredient.calories, "kcal")}`}
-              </p>
-              {ingredient.coupangLink && (
-                <div className="border-1 rounded-md border-gray-400 p-[2px]">
-                  <ShoppingBasketIcon className="text-gray-400 " size={20} />
+      <div>
+        {showNutrition ? (
+          <NutritionTable totalServings={recipe.servings} />
+        ) : (
+          <ul className="flex flex-col gap-1">
+            {recipe.ingredients.map((ingredient, index) => (
+              <li key={index} className="grid grid-cols-3 gap-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-left font-bold">{ingredient.name}</p>
                 </div>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+                <p className="text-left">
+                  {ingredient.quantity}
+                  {ingredient.quantity !== "약간" && ingredient.unit}
+                </p>
+                <div className="flex items-center gap-2">
+                  <p className="text-left text-sm text-slate-500">
+                    {formatNumber(ingredient.price || 0, "원")}
+                  </p>
+                  {ingredient.coupangLink && (
+                    <div className="rounded-md border-1 border-gray-400 p-[2px]">
+                      <ShoppingBasketIcon className="text-gray-400" size={20} />
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       <div className="mt-2 text-center">
         <PointDisplayBanner
@@ -112,7 +104,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
           suffix={displayConfig.bottomBanner.suffix}
           containerClassName="flex items-center border-0 text-gray-400 p-0 font-bold"
           textClassName={displayConfig.bottomBanner.textClassName}
-          triggerAnimation={displayMode}
+          triggerAnimation={showNutrition}
         />
       </div>
     </div>

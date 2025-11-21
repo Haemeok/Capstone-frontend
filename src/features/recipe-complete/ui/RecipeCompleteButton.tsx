@@ -19,16 +19,11 @@ const RecipeCompleteButton = ({
   saveAmount,
   className,
 }: RecipeCompleteButtonProps) => {
-  const {
-    completeRecipe,
-    isCompleted,
-    isLoading,
-    showReward,
-    setShowReward,
-  } = useRecipeComplete({
-    recipeId,
-    saveAmount,
-  });
+  const { completeRecipe, isCompleted, isLoading, showReward, setShowReward } =
+    useRecipeComplete({
+      recipeId,
+      saveAmount,
+    });
 
   const handleClick = () => {
     if (isCompleted || isLoading) return;
@@ -41,10 +36,10 @@ const RecipeCompleteButton = ({
         onClick={handleClick}
         disabled={isCompleted || isLoading}
         className={cn(
-          "w-full rounded-lg py-3 font-semibold transition-all",
+          "group relative w-full rounded-lg py-3 font-semibold transition-all",
           isCompleted
             ? "cursor-not-allowed bg-gray-200 text-gray-500"
-            : "bg-olive-mint text-white hover:bg-olive-light active:scale-95",
+            : "bg-olive-mint cursor-pointer text-white active:scale-95",
           isLoading && "opacity-70",
           className
         )}
