@@ -1,13 +1,13 @@
 import { PageResponse } from "@/shared/api/types";
 
 export type NotificationType =
-  | "NEW_COMMENT" // 새 댓글
-  | "NEW_REPLY" // 댓글 답글
-  | "AI_RECIPE_DONE" // AI 레시피 생성 완료
-  | "NEW_FAVORITE" // 즐겨찾기 추가
-  | "NEW_RECIPE_LIKE" // 레시피 좋아요
-  | "NEW_COMMENT_LIKE" // 댓글 좋아요
-  | "NEW_RECIPE_RATING"; // 레시피 평점
+  | "NEW_COMMENT"
+  | "NEW_REPLY"
+  | "AI_RECIPE_DONE"
+  | "NEW_FAVORITE"
+  | "NEW_RECIPE_LIKE"
+  | "NEW_COMMENT_LIKE"
+  | "NEW_RECIPE_RATING";
 
 export type RelatedType = "RECIPE" | "COMMENT" | "USER";
 
@@ -34,7 +34,6 @@ export type NotificationData = {
   url?: string;
 };
 
-// 웹소켓 관련 타입들
 export type WebSocketConnectionStatus =
   | "connecting"
   | "connected"
@@ -46,7 +45,6 @@ export type WebSocketMessage = {
   data?: any;
 };
 
-// 알림 상태 관리 타입들
 export type NotificationState = {
   notifications: Notification[];
   unreadCount: number;

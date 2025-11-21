@@ -11,18 +11,16 @@ import { postLogout } from "../api";
 const useLogoutMutation = () => {
   const { logoutAction } = useUserStore();
   const { addToast, removeToast } = useToastStore();
-  
+
   const mutation = useMutation({
     mutationFn: postLogout,
     onMutate: () => {
-      // 로그아웃 상태를 먼저 설정
       useUserStore.setState({ isLoggingOut: true });
 
-      // 리디렉션을 먼저 실행
       if (typeof window !== "undefined") {
         const currentPath = window.location.pathname;
         const userIdMatch = currentPath.match(/^\/users\/(\d+)$/);
-        
+
         if (userIdMatch) {
           window.location.replace("/users/guestUser");
         }

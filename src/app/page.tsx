@@ -22,8 +22,6 @@ import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithE
 export const metadata = homeMetadata;
 
 const HomePage = async () => {
-  const queryClient = new QueryClient();
-
   const [staticPopularRecipes, staticBudgetRecipes] = await Promise.all([
     getStaticRecipesOnServer({
       period: "weekly",
@@ -36,8 +34,6 @@ const HomePage = async () => {
       key: "budget-recipes",
     }),
   ]);
-
-  console.log(staticBudgetRecipes);
 
   return (
     <>

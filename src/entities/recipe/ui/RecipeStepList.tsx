@@ -1,5 +1,3 @@
-import Box from "@/shared/ui/primitives/Box";
-
 import { RecipeStep as RecipeStepType } from "@/entities/recipe";
 
 import RecipeStep from "./RecipeStep";
@@ -10,7 +8,7 @@ type RecipeStepProps = {
 
 const RecipeStepList = ({ RecipeSteps }: RecipeStepProps) => {
   return (
-    <article className="flex flex-col gap-4">
+    <article className="mt-4 flex flex-col gap-4">
       {RecipeSteps.map((step, stepIndex) => (
         <RecipeStep
           key={stepIndex}

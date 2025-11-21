@@ -4,10 +4,10 @@ import NotificationButton from "./NotificationButton";
 
 const HomeHeader = () => {
   return (
-    <div className="md:hidden relative w-full h-20">
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2">
+    <div className="relative h-20 w-full md:hidden">
+      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
         <Image
-          src="/main.png"
+          src="/app-logo-512.png"
           alt="logo"
           wrapperClassName="h-10 w-10"
           skeletonClassName="h-10 w-10 rounded-full"
@@ -17,7 +17,7 @@ const HomeHeader = () => {
         <p className="text-2xl font-bold">Recipi'O</p>
       </div>
 
-      <div className="absolute right-6 top-1/2 -translate-y-1/2">
+      <div className="absolute top-1/2 right-6 -translate-y-1/2">
         <NotificationButton />
       </div>
     </div>

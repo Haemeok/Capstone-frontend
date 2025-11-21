@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Pencil, Trash } from "lucide-react";
 
 import Circle from "@/shared/ui/Circle";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
-import { Drawer, DrawerContent } from "@/shared/ui/shadcn/drawer";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { DialogTitle } from "@/shared/ui/shadcn/dialog";
 
 import {
   BaseRecipeGridItem,
@@ -48,27 +49,25 @@ const RecipeGrid = ({
   error,
   prefetch = false,
 }: RecipeGridProps) => {
-  const router = useRouter();
+  const { isMobile, Container, Content } = useResponsiveSheet();
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
-  const handleOpenDrawer = (itemId: number) => {
+  const handleOpenSheet = (itemId: number) => {
     setSelectedItemId(itemId);
-    setIsDrawerOpen(true);
+    setIsSheetOpen(true);
   };
-  const handleDrawerState = (state: boolean) => {
-    setIsDrawerOpen(state);
-    setSelectedItemId(null);
-  };
-
-  const handleEdit = () => {
-    router.push(`/recipes/${selectedItemId}/edit`);
+  const handleSheetState = (state: boolean) => {
+    setIsSheetOpen(state);
+    if (!state) {
+      setSelectedItemId(null);
+    }
   };
 
   const handleDeleteModalOpen = () => {
-    setIsDrawerOpen(false);
+    setIsSheetOpen(false);
     setIsDeleteModalOpen(true);
   };
 
@@ -115,7 +114,7 @@ const RecipeGrid = ({
             <SimpleRecipeGridItem
               key={recipe.id}
               recipe={recipe as BaseRecipeGridItem}
-              setIsDrawerOpen={handleOpenDrawer}
+              setIsDrawerOpen={handleOpenSheet}
               priority={index === 0}
               prefetch={prefetch}
             />
@@ -149,29 +148,48 @@ const RecipeGrid = ({
         </div>
       )}
 
-      {isDrawerOpen && (
-        <Drawer open={isDrawerOpen} onOpenChange={handleDrawerState}>
-          <DrawerContent className="p-4">
-            <div className="absolute top-2 left-1/2 flex h-1 w-10 -translate-x-1/2 rounded-2xl bg-slate-400" />
-            <div className="flex flex-col gap-2 rounded-2xl bg-gray-100 p-4">
-              <button
-                className="flex w-full justify-between"
-                onClick={handleEdit}
+      {isSheetOpen && (
+        <Container open={isSheetOpen} onOpenChange={handleSheetState}>
+          <Content className={isMobile ? "p-4" : ""}>
+            <DialogTitle className="sr-only">레시피 옵션</DialogTitle>
+            {isMobile && (
+              <div className="absolute top-2 left-1/2 flex h-1 w-10 -translate-x-1/2 rounded-2xl bg-slate-400" />
+            )}
+            <div
+              className={
+                isMobile
+                  ? "flex flex-col gap-2 rounded-2xl bg-gray-100 p-4"
+                  : "flex flex-col gap-0"
+              }
+            >
+              <Link
+                href={`/recipes/${selectedItemId}/edit`}
+                className={
+                  isMobile
+                    ? "flex w-full justify-between cursor-pointer"
+                    : "flex w-full justify-center gap-2 px-6 py-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                }
               >
+                {!isMobile && <Pencil size={20} />}
                 <p>수정</p>
-                <Pencil size={20} />
-              </button>
-              <div className="h-px w-full bg-gray-300" />
+                {isMobile && <Pencil size={20} />}
+              </Link>
+              <div className={isMobile ? "h-px w-full bg-gray-300" : "h-px w-full bg-gray-200"} />
               <button
-                className="flex w-full justify-between text-red-500"
+                className={
+                  isMobile
+                    ? "flex w-full justify-between text-red-500 cursor-pointer"
+                    : "flex w-full justify-center gap-2 px-6 py-4 text-red-500 hover:bg-gray-50 transition-colors cursor-pointer"
+                }
                 onClick={handleDeleteModalOpen}
               >
+                {!isMobile && <Trash size={20} />}
                 <p>삭제</p>
-                <Trash size={20} />
+                {isMobile && <Trash size={20} />}
               </button>
             </div>
-          </DrawerContent>
-        </Drawer>
+          </Content>
+        </Container>
       )}
       {isDeleteModalOpen && (
         <DeleteModal

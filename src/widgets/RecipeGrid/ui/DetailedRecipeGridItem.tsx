@@ -61,15 +61,16 @@ const DetailedRecipeGridItem = ({
     >
       <Link
         href={`/recipes/${recipe.id}`}
-        className="block"
+        className="block group"
         aria-label={`${recipe.title} 레시피 보기`}
         prefetch={prefetch}
       >
-        <div className="relative">
+        <div className="relative overflow-hidden rounded-2xl">
           <Image
             src={imageUrl}
             alt={recipe.title}
             wrapperClassName={cn(`rounded-2xl`)}
+            imgClassName="transition-transform duration-300 ease-in-out group-hover:scale-110"
             fit="cover"
             priority={priority}
           />

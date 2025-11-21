@@ -83,7 +83,6 @@ const CategoryDrawer = ({
     onOpenChange(false);
   };
 
-  // 공통 컨텐츠
   const SelectionContent = () => (
     <>
       {isMultiple ? (
