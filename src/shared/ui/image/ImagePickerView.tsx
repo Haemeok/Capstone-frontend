@@ -1,6 +1,7 @@
 import React from "react";
 import { UploadIcon } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
+import { Image } from "./Image";
 
 type Props = {
   className?: string;
@@ -32,10 +33,11 @@ export function ImagePickerView({
         tabIndex={0}
       >
         {previewUrl ? (
-          <img
+          <Image
             src={previewUrl}
             alt="이미지 미리보기"
-            className="h-full w-full object-cover"
+            wrapperClassName="h-full w-full"
+            fit="cover"
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center text-center">

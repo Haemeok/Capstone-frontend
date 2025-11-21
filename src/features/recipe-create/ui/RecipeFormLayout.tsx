@@ -39,15 +39,12 @@ const RecipeFormLayout = ({
 
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
-      <Container maxWidth="3xl">
-        <RecipeHeaderSection
-          image={<MainImageField />}
-          title={<TitleField />}
-        />
-        <div className="pt-6">
+      <RecipeHeaderSection image={<MainImageField />} title={<TitleField />} />
+      <div className="pt-6">
+        <Container maxWidth="3xl">
           <Description />
 
-          <div className="flex items-center mb-4 justify-center gap-6">
+          <div className="mb-4 flex items-center justify-center gap-6">
             <div className="flex flex-col items-center gap-2">
               <label htmlFor="dishType" className="font-medium text-gray-700">
                 카테고리
@@ -55,7 +52,7 @@ const RecipeFormLayout = ({
               <select
                 id="dishType"
                 className={cn(
-                  `w-28 rounded-lg cursor-pointer border bg-gray-50 px-3 py-1.5 text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
+                  `w-28 cursor-pointer rounded-lg border bg-gray-50 px-3 py-1.5 text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
                   errors.dishType ? "border-red-500" : "border-gray-300"
                 )}
                 {...register("dishType", {
@@ -132,8 +129,8 @@ const RecipeFormLayout = ({
             )}
             <RecipeProgressButton isLoading={isLoading} isEdit={isEdit} />
           </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
     </form>
   );
 };
