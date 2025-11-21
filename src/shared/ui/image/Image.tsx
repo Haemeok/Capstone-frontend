@@ -92,7 +92,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
         decoding="async"
         onLoad={handleImageLoad}
         onError={handleImageError}
-        className={`absolute inset-0 h-full w-full ${fitClass} transition-opacity duration-300 ${
+        className={`absolute inset-0 h-full w-full ${fitClass} transition duration-300 ${
           status === "loaded" ? "opacity-100" : "opacity-0"
         } ${imgClassName ?? ""}`}
         {...imgProps}
