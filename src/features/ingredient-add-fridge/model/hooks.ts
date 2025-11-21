@@ -106,6 +106,7 @@ export const useAddIngredientBulkMutation = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
     },
   });
 };
