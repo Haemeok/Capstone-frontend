@@ -70,7 +70,7 @@ const DetailedRecipeGridItem = ({
             src={imageUrl}
             alt={recipe.title}
             wrapperClassName={cn(`rounded-2xl`)}
-            imgClassName="transition-transform duration-300 ease-in-out group-hover:scale-110"
+            imgClassName="ease-in-out group-hover:scale-110"
             fit="cover"
             priority={priority}
           />
