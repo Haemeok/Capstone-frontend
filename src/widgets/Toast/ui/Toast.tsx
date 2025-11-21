@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { CheckCircle2, Info, AlertCircle, XCircle } from "lucide-react";
+import { CheckCircle2, Info, AlertCircle, XCircle, X } from "lucide-react";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 import { ToastType } from "@/widgets/Toast/model/types";
@@ -20,19 +20,19 @@ const MOBILE_TOAST_STYLE = {
 };
 
 const DESKTOP_TOAST_STYLE = {
-  success: "bg-white border-l-4 border-olive-light text-gray-800",
-  error: "bg-white border-l-4 border-red-500 text-gray-800",
-  warning: "bg-white border-l-4 border-yellow-500 text-gray-800",
-  info: "bg-white border-l-4 border-blue-500 text-gray-800",
-  default: "bg-white border-l-4 border-olive-mint text-gray-800",
+  success: "bg-emerald-50 border border-emerald-100",
+  error: "bg-red-50 border border-red-100",
+  warning: "bg-amber-50 border border-amber-100",
+  info: "bg-blue-50 border border-blue-100",
+  default: "bg-olive-50 border border-olive-100",
 };
 
 const ICON_STYLE = {
-  success: "text-olive-light",
+  success: "text-emerald-500",
   error: "text-red-500",
-  warning: "text-yellow-500",
+  warning: "text-amber-500",
   info: "text-blue-500",
-  default: "text-olive-mint",
+  default: "text-olive-light",
 };
 
 const TOAST_ICON = {
@@ -63,7 +63,7 @@ const Toast = ({
   useEffect(() => {
     const hideTimer = setTimeout(() => {
       setIsVisible(false);
-    }, duration - 500);
+    }, duration - 300);
 
     const removeTimer = setTimeout(() => {
       removeToast(id);
@@ -74,6 +74,13 @@ const Toast = ({
       clearTimeout(removeTimer);
     };
   }, [id, duration, removeToast]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      removeToast(id);
+    }, 300);
+  };
 
   const Icon = TOAST_ICON[variant];
 
@@ -95,16 +102,27 @@ const Toast = ({
 
       <div
         className={cn(
-          "pointer-events-auto hidden items-center gap-3 rounded-lg px-4 py-3 shadow-lg transition-all duration-300 md:flex",
+          "pointer-events-auto hidden w-80 items-center gap-3 rounded-lg px-4 py-3 shadow-lg transition-all duration-300 ease-out md:flex",
           DESKTOP_TOAST_STYLE[variant],
-          isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          isVisible
+            ? "translate-x-0 opacity-100 scale-100"
+            : "translate-x-12 opacity-0 scale-95"
         )}
         role="status"
         aria-live="polite"
         aria-atomic="true"
       >
-        <Icon className={cn("h-5 w-5 flex-shrink-0", ICON_STYLE[variant])} />
-        <p className="text-sm font-medium">{message}</p>
+        <div className="flex-shrink-0">
+          <Icon className={cn("h-5 w-5", ICON_STYLE[variant])} />
+        </div>
+        <p className="flex-1 text-sm font-medium text-gray-800">{message}</p>
+        <button
+          onClick={handleClose}
+          className="flex-shrink-0 rounded-full p-1 transition-colors hover:bg-black/5"
+          aria-label="닫기"
+        >
+          <X className="h-4 w-4 text-gray-600" />
+        </button>
       </div>
     </>
   );
