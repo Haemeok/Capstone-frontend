@@ -35,13 +35,14 @@ const SimpleRecipeGridItem = ({
     <>
       <Link
         href={`/recipes/${recipe.id}`}
-        className={cn(`relative rounded-2xl block`)}
+        className={cn(`relative rounded-2xl block group`)}
         prefetch={prefetch}
       >
         <Image
           src={recipe.imageUrl}
           alt={recipe.title}
-          wrapperClassName="rounded-2xl"
+          wrapperClassName="rounded-2xl overflow-hidden"
+          imgClassName="transition-transform duration-300 ease-in-out group-hover:scale-110"
           fit="cover"
           priority={priority}
         />

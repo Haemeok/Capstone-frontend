@@ -59,7 +59,7 @@ const AIRecipeDisplay = ({ createdRecipe }: AIRecipeDisplayProps) => {
           )}
           prefix="배달 물가 대비"
           suffix="절약해요!"
-          containerClassName="mt-2 flex items-center border-0 text-gray-400 p-0 font-bold"
+          containerClassName="flex items-center border-0 text-gray-400 p-0 font-bold"
           textClassName="text-purple-500"
         />
       </Box>
