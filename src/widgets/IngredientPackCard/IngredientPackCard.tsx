@@ -10,6 +10,7 @@ type IngredientPackCardProps = {
   onViewDetail: (pack: IngredientPack) => void;
   onAddAll: (ingredientIds: number[]) => void;
   isLoading?: boolean;
+  ownedIngredientIds: Set<number>;
 };
 
 const IngredientPackCard = ({
@@ -17,9 +18,13 @@ const IngredientPackCard = ({
   onViewDetail,
   onAddAll,
   isLoading = false,
+  ownedIngredientIds,
 }: IngredientPackCardProps) => {
   const previewImages = pack.ingredients.slice(0, 4);
   const ingredientIds = pack.ingredients.map((ingredient) => ingredient.id);
+  const allOwned = pack.ingredients.every((ingredient) =>
+    ownedIngredientIds.has(ingredient.id)
+  );
 
   return (
     <div className="group flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md">
@@ -59,10 +64,10 @@ const IngredientPackCard = ({
         </Button>
         <Button
           onClick={() => onAddAll(ingredientIds)}
-          disabled={isLoading}
-          className="flex-1 bg-olive-light text-white hover:bg-olive-dark disabled:bg-gray-300"
+          disabled={isLoading || allOwned}
+          className="flex-1 bg-olive-light text-white hover:bg-olive-dark disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {isLoading ? "추가 중..." : "바로추가"}
+          {allOwned ? "추가됨" : isLoading ? "추가 중..." : "바로추가"}
         </Button>
       </div>
     </div>

@@ -17,6 +17,7 @@ type IngredientPackDetailDrawerProps = {
   onOpenChange: (open: boolean) => void;
   onAddSelected: (ingredientIds: number[]) => void;
   isLoading?: boolean;
+  ownedIngredientIds: Set<number>;
 };
 
 const IngredientPackDetailDrawer = ({
@@ -25,15 +26,18 @@ const IngredientPackDetailDrawer = ({
   onOpenChange,
   onAddSelected,
   isLoading = false,
+  ownedIngredientIds,
 }: IngredientPackDetailDrawerProps) => {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     if (open && pack) {
-      const ingredientIds = pack.ingredients.map((ingredient) => ingredient.id);
-      setSelectedIds(new Set(ingredientIds));
+      const availableIds = pack.ingredients
+        .filter((ingredient) => !ownedIngredientIds.has(ingredient.id))
+        .map((ingredient) => ingredient.id);
+      setSelectedIds(new Set(availableIds));
     }
-  }, [open, pack]);
+  }, [open, pack, ownedIngredientIds]);
 
   const handleToggle = (id: number) => {
     setSelectedIds((prev) => {
@@ -49,8 +53,10 @@ const IngredientPackDetailDrawer = ({
 
   const handleSelectAll = () => {
     if (pack) {
-      const ingredientIds = pack.ingredients.map((ingredient) => ingredient.id);
-      setSelectedIds(new Set(ingredientIds));
+      const availableIds = pack.ingredients
+        .filter((ingredient) => !ownedIngredientIds.has(ingredient.id))
+        .map((ingredient) => ingredient.id);
+      setSelectedIds(new Set(availableIds));
     }
   };
 
@@ -101,31 +107,44 @@ const IngredientPackDetailDrawer = ({
           <div className="space-y-2">
             {pack.ingredients.map((ingredient) => {
               const isSelected = selectedIds.has(ingredient.id);
+              const isOwned = ownedIngredientIds.has(ingredient.id);
 
               return (
                 <div
                   key={ingredient.id}
-                  onClick={() => handleToggle(ingredient.id)}
+                  onClick={() => !isOwned && handleToggle(ingredient.id)}
                   className={cn(
-                    "flex items-center rounded-lg border p-3 cursor-pointer transition-colors",
-                    isSelected
+                    "flex items-center rounded-lg border p-3 transition-colors",
+                    isOwned
+                      ? "bg-gray-50 border-gray-200 opacity-50 cursor-not-allowed"
+                      : "cursor-pointer",
+                    !isOwned && isSelected
                       ? "bg-olive-mint/10 border-olive-light"
-                      : "bg-white border-gray-200 hover:bg-gray-50"
+                      : !isOwned && "bg-white border-gray-200 hover:bg-gray-50"
                   )}
                 >
                   <Checkbox
                     id={`ingredient-${ingredient.id}`}
                     checked={isSelected}
+                    disabled={isOwned}
                     onCheckedChange={() => handleToggle(ingredient.id)}
-                    className="h-5 w-5 rounded border-gray-300 data-[state=checked]:border-olive-light data-[state=checked]:bg-olive-light"
+                    className="h-5 w-5 rounded border-gray-300 data-[state=checked]:border-olive-light data-[state=checked]:bg-olive-light disabled:cursor-not-allowed"
                   />
                   <label
                     htmlFor={`ingredient-${ingredient.id}`}
-                    className="ml-3 flex-1 cursor-pointer text-sm font-medium"
+                    className={cn(
+                      "ml-3 flex-1 text-sm font-medium",
+                      isOwned ? "cursor-not-allowed" : "cursor-pointer"
+                    )}
                   >
                     {ingredient.name}
                   </label>
-                  {isSelected && (
+                  {isOwned && (
+                    <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">
+                      보유중
+                    </span>
+                  )}
+                  {!isOwned && isSelected && (
                     <Check size={18} className="text-olive-light" />
                   )}
                 </div>

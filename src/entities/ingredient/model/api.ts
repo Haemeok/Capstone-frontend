@@ -57,3 +57,8 @@ export const addIngredientBulk = async (ingredientIds: number[]) => {
   });
   return response;
 };
+
+export const getMyIngredientIds = async () => {
+  const response = await api.get<number[]>(END_POINTS.MY_INGREDIENTS_IDS);
+  return response;
+};

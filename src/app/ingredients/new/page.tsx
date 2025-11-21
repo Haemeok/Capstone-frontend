@@ -11,6 +11,8 @@ import {
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
+import { useMyIngredientIds } from "@/entities/ingredient";
+
 import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge";
 import IngredientSearchDrawer from "@/features/ingredient-add-fridge/ui/IngredientSearchDrawer";
 import IngredientPackDetailDrawer from "@/features/ingredient-add-fridge/ui/IngredientPackDetailDrawer";
@@ -22,6 +24,7 @@ const NewIngredientsPage = () => {
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
   const [selectedPack, setSelectedPack] = useState<IngredientPack | null>(null);
 
+  const { ingredientIdsSet } = useMyIngredientIds();
   const { mutate: addIngredientBulk, isPending } =
     useAddIngredientBulkMutation();
 
@@ -91,6 +94,7 @@ const NewIngredientsPage = () => {
                 onViewDetail={handlePackViewDetail}
                 onAddAll={handlePackAddAll}
                 isLoading={isPending}
+                ownedIngredientIds={ingredientIdsSet}
               />
             ))}
           </div>
@@ -108,6 +112,7 @@ const NewIngredientsPage = () => {
         onOpenChange={setIsDetailDrawerOpen}
         onAddSelected={handlePackAddSelected}
         isLoading={isPending}
+        ownedIngredientIds={ingredientIdsSet}
       />
     </Container>
   );

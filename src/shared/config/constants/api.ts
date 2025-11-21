@@ -43,6 +43,7 @@ export const END_POINTS = {
   MY_INGREDIENTS: "/me/fridge/items",
   MY_INGREDIENTS_BY_ID: (id: number) => `/me/fridge/items/${id}`,
   MY_INGREDIENTS_BULK: "/me/fridge/items/bulk",
+  MY_INGREDIENTS_IDS: "/me/fridge/items/ids",
   USER_RECIPES: (id: number) => `/users/${id}/recipes`,
   USER_STREAK: "/me/streak",
   PRESIGNED_URLS: "/recipes/presigned-urls",
