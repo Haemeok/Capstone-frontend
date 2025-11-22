@@ -136,11 +136,12 @@ export const getStaticrecipionServer = async (
 const REVALIDATE_TIME_SECONDS = 3600;
 
 export const fetchAllRecipesForSitemap = async (): Promise<
-  Array<{ id: number; createdAt: string }>
+  Array<{ id: number; createdAt: string; imageUrl: string }>
 > => {
   const SITEMAP_PAGE_SIZE = 100;
   const MAX_PAGES = 500;
-  const allRecipes: Array<{ id: number; createdAt: string }> = [];
+  const allRecipes: Array<{ id: number; createdAt: string; imageUrl: string }> =
+    [];
 
   try {
     let currentPage = 0;
@@ -174,6 +175,7 @@ export const fetchAllRecipesForSitemap = async (): Promise<
       const pageRecipes = data.content.map((recipe) => ({
         id: recipe.id,
         createdAt: recipe.createdAt,
+        imageUrl: recipe.imageUrl,
       }));
 
       allRecipes.push(...pageRecipes);

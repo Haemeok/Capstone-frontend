@@ -4,6 +4,7 @@ import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
 import { createRecipeStructuredData } from "./structuredData";
+import { createRecipeBreadcrumb } from "./breadcrumbSchema";
 
 export const generateRecipeMetadata = (
   recipe: StaticRecipe,
@@ -135,9 +136,10 @@ export const generateRecipeMetadata = (
       ...(imageUrl && { images: [imageUrl] }),
     },
     other: {
-      "application/ld+json": JSON.stringify(
-        createRecipeStructuredData(recipe, recipeId)
-      ),
+      "application/ld+json": JSON.stringify([
+        createRecipeStructuredData(recipe, recipeId),
+        createRecipeBreadcrumb(recipe.title, recipeId, recipe.tags),
+      ]),
     },
   };
 };
