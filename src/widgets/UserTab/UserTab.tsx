@@ -49,7 +49,7 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`relative flex-1 py-4 ${
+              className={`relative flex-1 cursor-pointer py-4 ${
                 activeTab === tab.id
                   ? "text-olive-light font-bold"
                   : "text-gray-500"
