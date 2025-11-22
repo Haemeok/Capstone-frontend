@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     ],
     apple: "/app-logo-512.png",
   },
-  metadataBase: new URL("https://recipio.kr/"),
+  metadataBase: new URL("https://www.recipio.kr/"),
 };
 
 export const viewport: Viewport = {

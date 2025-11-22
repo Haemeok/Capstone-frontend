@@ -47,6 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(recipe.createdAt),
       changeFrequency: "weekly",
       priority: 0.9,
+      images: recipe.imageUrl ? [recipe.imageUrl] : undefined,
     }));
 
     return [...staticRoutes, ...recipeRoutes];

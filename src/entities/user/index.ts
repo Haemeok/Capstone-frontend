@@ -3,6 +3,7 @@ export { useUserStore } from "./model/store";
 export type {
   PutUserInfoPayload,
   RecipeDailySummary,
+  RecipeHistoryDetailResponse,
   User,
 } from "./model/types";
 export { default as UserName } from "./ui/UserName";
