@@ -55,7 +55,13 @@ export const useDeleteIngredientMutation = (queryKey?: (string | number)[]) => {
   });
 };
 
-export const useDeleteIngredientBulkMutation = () => {
+type UseDeleteIngredientBulkMutationOptions = {
+  onSuccess?: () => void;
+};
+
+export const useDeleteIngredientBulkMutation = (
+  options?: UseDeleteIngredientBulkMutationOptions
+) => {
   const queryClient = useQueryClient();
 
   return useMutation<void, Error, number[], IngredientMutationContext>({
@@ -87,6 +93,10 @@ export const useDeleteIngredientBulkMutation = () => {
         );
       }
       return { previousIngredientsListData };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      options?.onSuccess?.();
     },
     onError: (error, variables, context) => {
       if (context?.previousIngredientsListData) {

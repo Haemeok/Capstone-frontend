@@ -7,9 +7,16 @@ export const useIngredientsManager = () => {
     []
   );
 
+  const toggleDeleteMode = (enabled: boolean) => {
+    setIsDeleteMode(enabled);
+    if (!enabled) {
+      setSelectedIngredientIds([]);
+    }
+  };
+
   return {
     isDeleteMode,
-    setIsDeleteMode,
+    setIsDeleteMode: toggleDeleteMode,
     selectedCategory,
     setSelectedCategory,
     selectedIngredientIds,

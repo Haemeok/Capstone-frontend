@@ -11,10 +11,10 @@ import { useUserStore } from "@/entities/user";
 
 import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fridge";
 
+import DeleteModeFabButton from "@/widgets/IngredientGrid/ui/DeleteModeFabButton";
 import IngredientActionButtons from "@/widgets/IngredientGrid/ui/IngredientActionButtons";
 import IngredientGrid from "@/widgets/IngredientGrid/ui/IngredientGrid";
 
-import { useGridAnimation } from "./hooks/useGridAnimation";
 import { useInfiniteIngredients } from "./hooks/useInfiniteIngredients";
 import { useIngredientsManager } from "./hooks/useIngredientsManager";
 
@@ -23,7 +23,6 @@ const IngredientsPageClient = () => {
   const [sort] = useState<"asc" | "desc">("asc");
 
   const { user } = useUserStore();
-  const { mutate: deleteIngredientBulk } = useDeleteIngredientBulkMutation();
 
   const {
     isDeleteMode,
@@ -34,16 +33,17 @@ const IngredientsPageClient = () => {
     setSelectedIngredientIds,
   } = useIngredientsManager();
 
+  const { mutate: deleteIngredientBulk } = useDeleteIngredientBulkMutation({
+    onSuccess: () => {
+      setIsDeleteMode(false);
+    },
+  });
+
   const { error, hasNextPage, isFetchingNextPage, ref, ingredients } =
     useInfiniteIngredients({
       category: selectedCategory,
       sort,
     });
-
-  const { gridItemsContainerRef, gridAnimateTargetRef } = useGridAnimation({
-    ingredients,
-    error,
-  });
 
   const handleDeleteIngredientBulk = () => {
     deleteIngredientBulk(selectedIngredientIds);
@@ -93,18 +93,23 @@ const IngredientsPageClient = () => {
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage}
           error={error}
-          gridItemsContainerRef={gridItemsContainerRef}
-          gridAnimateTargetRef={gridAnimateTargetRef}
           ref={ref}
           isLoggedIn={!!user}
           setSelectedIngredientIds={setSelectedIngredientIds}
         />
 
-        {!!user && (
+        {!!user && !isDeleteMode && (
           <FabButton
             to="/recipes/my-fridge"
             text="내 냉장고로 레시피 찾기"
             triggerRef={observerRef}
+          />
+        )}
+
+        {!!user && isDeleteMode && (
+          <DeleteModeFabButton
+            selectedCount={selectedIngredientIds.length}
+            onDelete={handleDeleteIngredientBulk}
           />
         )}
       </div>
