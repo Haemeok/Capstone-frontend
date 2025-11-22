@@ -6,7 +6,7 @@ import { formatNumber } from "@/shared/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useRecipeComplete } from "../model/hooks";
-import RecipeCompleteRewardMessage from "./RecipeCompleteRewardMessage";
+import { LevelUpModal } from "@/features/level-up";
 
 type RecipeCompleteButtonProps = {
   recipeId: number;
@@ -56,10 +56,10 @@ const RecipeCompleteButton = ({
         )}
       </button>
 
-      <RecipeCompleteRewardMessage
-        saveAmount={saveAmount}
+      <LevelUpModal
         isOpen={showReward}
-        onClose={() => setShowReward(false)}
+        onOpenChange={setShowReward}
+        acquiredAmount={saveAmount}
       />
     </>
   );
