@@ -4,12 +4,13 @@ import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 import { TagCode, TAGS_BY_CODE } from "@/shared/config/constants/recipe";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
   children: React.ReactNode;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const tagCode = params.id as TagCode;
+  const { id } = await params;
+  const tagCode = id as TagCode;
   const tagDef = TAGS_BY_CODE[tagCode];
 
   if (!tagDef) {
