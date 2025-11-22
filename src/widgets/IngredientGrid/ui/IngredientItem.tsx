@@ -20,33 +20,67 @@ const IngredientItem = ({
 }: IngredientItemProps) => {
   const [isActive, setIsActive] = useState(false);
 
+  const handleClick = () => {
+    const newActiveState = !isActive;
+    setIsActive(newActiveState);
+
+    setSelectedIngredientIds((prev) => {
+      if (newActiveState) {
+        return [...prev, ingredient.id];
+      } else {
+        return prev.filter((id) => id !== ingredient.id);
+      }
+    });
+  };
+
   return (
-    <div className="relative flex items-center gap-4 rounded-lg border-[1.5px] border-gray-200 px-1 py-2">
+    <div
+      onClick={isDeleteMode ? handleClick : undefined}
+      className={cn(
+        "relative flex items-center gap-4 rounded-lg border-[1.5px] border-gray-200 px-1 py-2",
+        isDeleteMode && "cursor-pointer",
+        isActive && "bg-olive-light/10 border-olive-light"
+      )}
+    >
       <Image
         src={ingredient.imageUrl ?? ""}
         alt={ingredient.name}
-        className="rounded-md"
+        className="rounded-md flex-shrink-0"
         width={60}
         height={60}
       />
-      <div className="flex flex-col">
+      <div className="flex flex-col flex-1 min-w-0 pr-8">
         <span className="text-xs text-gray-500">{ingredient.category}</span>
-        <span className="text-sm font-bold">{ingredient.name}</span>
+        <span className="text-sm font-bold break-words">{ingredient.name}</span>
       </div>
       {isDeleteMode && (
-        <button
-          onClick={() => {
-            setIsActive(!isActive);
-            setSelectedIngredientIds((prev) => [...prev, ingredient.id]);
-          }}
+        <div
           className={cn(
-            "absolute top-4 right-4 h-5 w-5 rounded-full border-2 border-gray-500 p-1",
-            isActive ? "bg-[#5cc570]" : ""
+            "absolute top-4 right-4 h-5 w-5 rounded-full border-2 border-gray-500 flex items-center justify-center",
+            isActive && "bg-[#5cc570] border-[#5cc570]"
           )}
           role="checkbox"
           aria-checked={isActive}
           aria-label={`${ingredient.name} 선택`}
-        />
+        >
+          {isActive && (
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 3L4.5 8.5L2 6"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+        </div>
       )}
     </div>
   );

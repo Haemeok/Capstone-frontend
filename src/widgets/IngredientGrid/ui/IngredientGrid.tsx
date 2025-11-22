@@ -10,8 +10,6 @@ type IngredientGridProps = {
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   error: Error | null;
-  gridItemsContainerRef: React.RefObject<HTMLDivElement | null>;
-  gridAnimateTargetRef: React.RefObject<HTMLDivElement | null>;
   ref: (node?: Element | null | undefined) => void;
   isLoggedIn: boolean;
   setSelectedIngredientIds: React.Dispatch<React.SetStateAction<number[]>>;
@@ -23,18 +21,13 @@ const IngredientGrid = ({
   isFetchingNextPage,
   hasNextPage,
   error,
-  gridItemsContainerRef,
-  gridAnimateTargetRef,
   ref,
   isLoggedIn,
   setSelectedIngredientIds,
 }: IngredientGridProps) => {
   return isLoggedIn ? (
-    <div className="flex grow flex-col gap-4" ref={gridItemsContainerRef}>
-      <div
-        ref={gridAnimateTargetRef}
-        className="grid w-full grid-cols-2 gap-4 p-4"
-      >
+    <div className="flex grow flex-col gap-4">
+      <div className="grid w-full grid-cols-2 gap-4 p-4">
         {ingredients?.map((ingredient) => (
           <IngredientItem
             key={ingredient.id}
