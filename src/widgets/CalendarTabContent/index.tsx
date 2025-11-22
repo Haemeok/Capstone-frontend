@@ -124,14 +124,15 @@ const CalendarTabContent = () => {
             if (summary) {
               return (
                 <td
-                  className="relative h-full w-full"
+                  className="group relative h-full w-full"
                   onClick={handleNavigateToCalendarDetail}
                 >
                   <Image
                     src={summary.firstImageUrl}
                     alt={`이벤트: ${format(date, "yyyy-MM-dd")}`}
                     className="h-full w-full rounded-xl object-cover"
-                    wrapperClassName="p-[1px]"
+                    wrapperClassName="p-[1px] overflow-hidden rounded-xl"
+                    imgClassName="ease-in-out group-hover:scale-110"
                   />
                   {summary.totalCount && (
                     <div className="bg-olive-mint absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
