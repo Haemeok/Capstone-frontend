@@ -96,6 +96,7 @@ export const useDeleteIngredientBulkMutation = (
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
       options?.onSuccess?.();
     },
     onError: (error, variables, context) => {

@@ -16,6 +16,7 @@ type IngredientPackDetailDrawerProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddSelected: (ingredientIds: number[]) => void;
+  onDeleteSelected?: (ingredientIds: number[]) => void;
   isLoading?: boolean;
   ownedIngredientIds: Set<number>;
 };
@@ -25,19 +26,33 @@ const IngredientPackDetailDrawer = ({
   open,
   onOpenChange,
   onAddSelected,
+  onDeleteSelected,
   isLoading = false,
   ownedIngredientIds,
 }: IngredientPackDetailDrawerProps) => {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
+  const allOwned = pack
+    ? pack.ingredients.every((ingredient) =>
+        ownedIngredientIds.has(ingredient.id)
+      )
+    : false;
+
   useEffect(() => {
     if (open && pack) {
-      const availableIds = pack.ingredients
-        .filter((ingredient) => !ownedIngredientIds.has(ingredient.id))
-        .map((ingredient) => ingredient.id);
-      setSelectedIds(new Set(availableIds));
+      if (allOwned) {
+        const ownedIds = pack.ingredients
+          .filter((ingredient) => ownedIngredientIds.has(ingredient.id))
+          .map((ingredient) => ingredient.id);
+        setSelectedIds(new Set(ownedIds));
+      } else {
+        const availableIds = pack.ingredients
+          .filter((ingredient) => !ownedIngredientIds.has(ingredient.id))
+          .map((ingredient) => ingredient.id);
+        setSelectedIds(new Set(availableIds));
+      }
     }
-  }, [open, pack, ownedIngredientIds]);
+  }, [open, pack, ownedIngredientIds, allOwned]);
 
   const handleToggle = (id: number) => {
     setSelectedIds((prev) => {
@@ -53,10 +68,17 @@ const IngredientPackDetailDrawer = ({
 
   const handleSelectAll = () => {
     if (pack) {
-      const availableIds = pack.ingredients
-        .filter((ingredient) => !ownedIngredientIds.has(ingredient.id))
-        .map((ingredient) => ingredient.id);
-      setSelectedIds(new Set(availableIds));
+      if (allOwned) {
+        const ownedIds = pack.ingredients
+          .filter((ingredient) => ownedIngredientIds.has(ingredient.id))
+          .map((ingredient) => ingredient.id);
+        setSelectedIds(new Set(ownedIds));
+      } else {
+        const availableIds = pack.ingredients
+          .filter((ingredient) => !ownedIngredientIds.has(ingredient.id))
+          .map((ingredient) => ingredient.id);
+        setSelectedIds(new Set(availableIds));
+      }
     }
   };
 
@@ -64,8 +86,13 @@ const IngredientPackDetailDrawer = ({
     setSelectedIds(new Set());
   };
 
-  const handleAdd = () => {
-    onAddSelected(Array.from(selectedIds));
+  const handleSubmit = () => {
+    if (allOwned && onDeleteSelected) {
+      onDeleteSelected(Array.from(selectedIds));
+    } else {
+      onAddSelected(Array.from(selectedIds));
+    }
+    setSelectedIds(new Set());
     onOpenChange(false);
   };
 
@@ -108,44 +135,55 @@ const IngredientPackDetailDrawer = ({
             {pack.ingredients.map((ingredient) => {
               const isSelected = selectedIds.has(ingredient.id);
               const isOwned = ownedIngredientIds.has(ingredient.id);
+              const isClickable = allOwned ? isOwned : !isOwned;
 
               return (
                 <div
                   key={ingredient.id}
-                  onClick={() => !isOwned && handleToggle(ingredient.id)}
+                  onClick={() => isClickable && handleToggle(ingredient.id)}
                   className={cn(
                     "flex items-center rounded-lg border p-3 transition-colors",
-                    isOwned
+                    !isClickable
                       ? "bg-gray-50 border-gray-200 opacity-50 cursor-not-allowed"
                       : "cursor-pointer",
-                    !isOwned && isSelected
-                      ? "bg-olive-mint/10 border-olive-light"
-                      : !isOwned && "bg-white border-gray-200 hover:bg-gray-50"
+                    isClickable && isSelected
+                      ? allOwned
+                        ? "bg-red-50 border-red-400"
+                        : "bg-olive-mint/10 border-olive-light"
+                      : isClickable && "bg-white border-gray-200 hover:bg-gray-50"
                   )}
                 >
                   <Checkbox
                     id={`ingredient-${ingredient.id}`}
                     checked={isSelected}
-                    disabled={isOwned}
+                    disabled={!isClickable}
                     onCheckedChange={() => handleToggle(ingredient.id)}
-                    className="h-5 w-5 rounded border-gray-300 data-[state=checked]:border-olive-light data-[state=checked]:bg-olive-light disabled:cursor-not-allowed"
+                    className={cn(
+                      "h-5 w-5 rounded border-gray-300 disabled:cursor-not-allowed",
+                      allOwned
+                        ? "data-[state=checked]:border-red-500 data-[state=checked]:bg-red-500"
+                        : "data-[state=checked]:border-olive-light data-[state=checked]:bg-olive-light"
+                    )}
                   />
                   <label
                     htmlFor={`ingredient-${ingredient.id}`}
                     className={cn(
                       "ml-3 flex-1 text-sm font-medium",
-                      isOwned ? "cursor-not-allowed" : "cursor-pointer"
+                      isClickable ? "cursor-pointer" : "cursor-not-allowed"
                     )}
                   >
                     {ingredient.name}
                   </label>
-                  {isOwned && (
+                  {!allOwned && isOwned && (
                     <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">
                       보유중
                     </span>
                   )}
-                  {!isOwned && isSelected && (
-                    <Check size={18} className="text-olive-light" />
+                  {isClickable && isSelected && (
+                    <Check
+                      size={18}
+                      className={allOwned ? "text-red-500" : "text-olive-light"}
+                    />
                   )}
                 </div>
               );
@@ -155,11 +193,22 @@ const IngredientPackDetailDrawer = ({
 
         <Footer className="flex-shrink-0 border-t p-4">
           <Button
-            onClick={handleAdd}
+            onClick={handleSubmit}
             disabled={selectedIds.size === 0 || isLoading}
-            className="w-full bg-olive-light text-white hover:bg-olive-dark disabled:bg-gray-300"
+            className={cn(
+              "w-full text-white disabled:bg-gray-300",
+              allOwned
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-olive-light hover:bg-olive-dark"
+            )}
           >
-            {isLoading ? "추가 중..." : `${selectedIds.size}개 재료 추가하기`}
+            {isLoading
+              ? allOwned
+                ? "삭제 중..."
+                : "추가 중..."
+              : allOwned
+                ? `${selectedIds.size}개 재료 삭제하기`
+                : `${selectedIds.size}개 재료 추가하기`}
           </Button>
         </Footer>
       </Content>

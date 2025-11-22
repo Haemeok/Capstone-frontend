@@ -9,6 +9,7 @@ type IngredientPackCardProps = {
   pack: IngredientPack;
   onViewDetail: (pack: IngredientPack) => void;
   onAddAll: (ingredientIds: number[]) => void;
+  onDeleteAll: (ingredientIds: number[]) => void;
   isLoading?: boolean;
   ownedIngredientIds: Set<number>;
 };
@@ -17,6 +18,7 @@ const IngredientPackCard = ({
   pack,
   onViewDetail,
   onAddAll,
+  onDeleteAll,
   isLoading = false,
   ownedIngredientIds,
 }: IngredientPackCardProps) => {
@@ -62,13 +64,23 @@ const IngredientPackCard = ({
         >
           상세보기
         </Button>
-        <Button
-          onClick={() => onAddAll(ingredientIds)}
-          disabled={isLoading || allOwned}
-          className="flex-1 bg-olive-light text-white hover:bg-olive-dark disabled:bg-gray-300 disabled:cursor-not-allowed"
-        >
-          {allOwned ? "추가됨" : isLoading ? "추가 중..." : "바로추가"}
-        </Button>
+        {allOwned ? (
+          <Button
+            onClick={() => onDeleteAll(ingredientIds)}
+            disabled={isLoading}
+            className="flex-1 bg-red-500 text-white hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "삭제 중..." : "전체 삭제"}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => onAddAll(ingredientIds)}
+            disabled={isLoading}
+            className="flex-1 bg-olive-light text-white hover:bg-olive-dark disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "추가 중..." : "바로추가"}
+          </Button>
+        )}
       </div>
     </div>
   );

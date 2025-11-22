@@ -16,6 +16,7 @@ import { useMyIngredientIds } from "@/entities/ingredient";
 import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge";
 import IngredientSearchDrawer from "@/features/ingredient-add-fridge/ui/IngredientSearchDrawer";
 import IngredientPackDetailDrawer from "@/features/ingredient-add-fridge/ui/IngredientPackDetailDrawer";
+import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fridge";
 
 import IngredientPackCard from "@/widgets/IngredientPackCard/IngredientPackCard";
 
@@ -25,11 +26,19 @@ const NewIngredientsPage = () => {
   const [selectedPack, setSelectedPack] = useState<IngredientPack | null>(null);
 
   const { ingredientIdsSet } = useMyIngredientIds();
-  const { mutate: addIngredientBulk, isPending } =
+  const { mutate: addIngredientBulk, isPending: isAdding } =
     useAddIngredientBulkMutation();
+  const { mutate: deleteIngredientBulk, isPending: isDeleting } =
+    useDeleteIngredientBulkMutation();
+
+  const isPending = isAdding || isDeleting;
 
   const handlePackAddAll = (ingredientIds: number[]) => {
     addIngredientBulk(ingredientIds);
+  };
+
+  const handlePackDeleteAll = (ingredientIds: number[]) => {
+    deleteIngredientBulk(ingredientIds);
   };
 
   const handlePackViewDetail = (pack: IngredientPack) => {
@@ -39,6 +48,10 @@ const NewIngredientsPage = () => {
 
   const handlePackAddSelected = (ingredientIds: number[]) => {
     addIngredientBulk(ingredientIds);
+  };
+
+  const handlePackDeleteSelected = (ingredientIds: number[]) => {
+    deleteIngredientBulk(ingredientIds);
   };
 
   return (
@@ -93,6 +106,7 @@ const NewIngredientsPage = () => {
                 pack={pack}
                 onViewDetail={handlePackViewDetail}
                 onAddAll={handlePackAddAll}
+                onDeleteAll={handlePackDeleteAll}
                 isLoading={isPending}
                 ownedIngredientIds={ingredientIdsSet}
               />
@@ -111,6 +125,7 @@ const NewIngredientsPage = () => {
         open={isDetailDrawerOpen}
         onOpenChange={setIsDetailDrawerOpen}
         onAddSelected={handlePackAddSelected}
+        onDeleteSelected={handlePackDeleteSelected}
         isLoading={isPending}
         ownedIngredientIds={ingredientIdsSet}
       />
