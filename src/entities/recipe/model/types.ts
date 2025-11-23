@@ -109,6 +109,7 @@ const defaultRecipeKeys = [
   "private",
   "aiGenerated",
   "totalCalories",
+  "nutrition",
 ] as const;
 
 export type RecipePayload = Omit<Recipe, (typeof defaultRecipeKeys)[number]> & {
