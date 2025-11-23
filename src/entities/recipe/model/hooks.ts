@@ -32,20 +32,27 @@ export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
 };
 
 export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
-  const { ref, isFetchingNextPage, hasNextPage, fetchNextPage, data, error } =
-    useInfiniteScroll({
-      queryKey: ["my-fridge-recipes", sort],
-      queryFn: () => getMyIngredientRecipes(sort),
-      getNextPageParam: getNextPageParam,
-      initialPageParam: 0,
-    });
+  const {
+    ref,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    data,
+    error,
+    isPending,
+  } = useInfiniteScroll({
+    queryKey: ["my-fridge-recipes", sort],
+    queryFn: ({ pageParam }) => getMyIngredientRecipes(sort, pageParam),
+    getNextPageParam: getNextPageParam,
+    initialPageParam: 0,
+  });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
   const lastPageMessage =
     recipes.length === 0
       ? "가능한 레시피가 없습니다."
       : "더 많은 레시피를 찾아보세요.";
-  const noResults = recipes.length === 0 && !isFetchingNextPage;
+  const noResults = recipes.length === 0 && !isPending;
 
   return {
     recipes,
@@ -56,6 +63,7 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
     error,
     noResults,
     lastPageMessage,
+    isPending,
   };
 };
 
