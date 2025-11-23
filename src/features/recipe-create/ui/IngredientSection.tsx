@@ -10,6 +10,7 @@ import { IngredientPayload } from "@/entities/ingredient";
 import { RecipeFormValues } from "../model/config";
 import IngredientItem from "./IngredientItem";
 import IngredientSelector from "./IngredientSelector";
+import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 
 type IngredientSectionProps = {
   onRemoveIngredientCallback: (ingredientName: string) => void;
@@ -58,6 +59,8 @@ const IngredientSection = ({
   return (
     <div className="mb-4">
       <h2 className="text-xl font-bold text-gray-700">재료</h2>
+
+      <CookingUnitTooltip />
 
       <div className="space-y-3 pt-4">
         {ingredientFields.map((field, index) => (
