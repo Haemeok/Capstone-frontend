@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Info, Star } from "lucide-react";
 
 import { useSort } from "@/shared/hooks/useSort";
-import { cn } from "@/shared/lib/utils";
 import BadgeButton from "@/shared/ui/BadgeButton";
 import { Container } from "@/shared/ui/Container";
 import { Image } from "@/shared/ui/image/Image";
@@ -31,10 +30,10 @@ const MyFridgePage = () => {
     ref,
     isFetchingNextPage,
     hasNextPage,
-
     error,
     noResults,
     lastPageMessage,
+    isPending,
   } = useMyIngredientRecipesInfiniteQuery(getSortParam());
 
   const router = useRouter();
@@ -75,66 +74,85 @@ const MyFridgePage = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          {recipes.map((recipe) => (
-            <div
-              key={recipe.id}
-              className="flex justify-between items-center relative cursor-pointer gap-2"
-              onClick={() => router.push(`/recipes/${recipe.id}`)}
-            >
-              <div className="relative h-40 w-40 rounded-2xl">
-                <Image
-                  src={recipe.imageUrl}
-                  alt={recipe.title}
-                  className={cn(
-                    `h-full w-full relative object-cover rounded-2xl`
-                  )}
-                />
-                <div className="absolute top-0 right-0 p-2 text-right">
-                  <RecipeLikeButton
-                    recipeId={recipe.id}
-                    initialIsLiked={recipe.likedByCurrentUser}
-                    initialLikeCount={recipe.likeCount}
-                    buttonClassName="text-white"
-                    iconClassName="fill-gray-300 opacity-80"
-                  />
-                </div>
-              </div>
-
-              <div className="flex grow flex-col gap-1 px-2 pb-2">
-                <p className="truncate font-bold">{recipe.title}</p>
-                <div className="flex items-center gap-[2px]">
-                  <Star size={15} className="fill-gray-800" />
-                  <p className="text-mm text-gray-800">{recipe.avgRating}</p>
-                  <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
-                  <p className="text-mm text-gray-800">·</p>
-                  <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <UserProfileImage
-                    profileImage={recipe.profileImage}
-                    userId={recipe.authorId}
-                  />
-                  <UserName
-                    username={recipe.authorName}
-                    userId={recipe.authorId}
-                  />
-                </div>
-                <p className="text-sm text-olive-mint font-bold truncate mt-2">
-                  {recipe.matchedIngredients.join(", ")}
-                </p>
-              </div>
+          {isPending ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-olive-light"></div>
             </div>
-          ))}
-          <div ref={ref} className="mt-2 flex h-10 items-center justify-center">
-            {!isFetchingNextPage &&
-              !hasNextPage &&
-              recipes &&
-              recipes.length > 0 &&
-              !error &&
-              !noResults && (
-                <p className="text-sm text-gray-500">{lastPageMessage}</p>
-              )}
-          </div>
+          ) : noResults ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <div className="text-6xl">🍳</div>
+              <p className="text-lg font-semibold text-gray-700">
+                요리 가능한 레시피가 없습니다
+              </p>
+              <p className="text-sm text-gray-500 text-center">
+                냉장고에 재료를 추가하면
+                <br />더 많은 레시피를 찾을 수 있어요!
+              </p>
+            </div>
+          ) : (
+            <>
+              {recipes.map((recipe) => (
+                <div
+                  key={recipe.id}
+                  className="flex items-start relative cursor-pointer gap-3"
+                  onClick={() => router.push(`/recipes/${recipe.id}`)}
+                >
+                  <div className="relative h-32 w-32 flex-shrink-0 rounded-2xl overflow-hidden">
+                    <Image
+                      src={recipe.imageUrl}
+                      alt={recipe.title}
+                      className="h-full w-full object-cover"
+                      width={128}
+                      height={128}
+                    />
+                    <div className="absolute top-0 right-0 p-2 text-right">
+                      <RecipeLikeButton
+                        recipeId={recipe.id}
+                        initialIsLiked={recipe.likedByCurrentUser}
+                        initialLikeCount={recipe.likeCount}
+                        buttonClassName="text-white"
+                        iconClassName="fill-gray-300 opacity-80"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-1 min-w-0 flex-col gap-1 py-1">
+                    <p className="font-bold text-base line-clamp-2">{recipe.title}</p>
+                    <div className="flex items-center gap-[2px]">
+                      <Star size={15} className="fill-gray-800" />
+                      <p className="text-mm text-gray-800">{recipe.avgRating}</p>
+                      <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
+                      <p className="text-mm text-gray-800">·</p>
+                      <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <UserProfileImage
+                        profileImage={recipe.profileImage}
+                        userId={recipe.authorId}
+                      />
+                      <UserName
+                        username={recipe.authorName}
+                        userId={recipe.authorId}
+                      />
+                    </div>
+                    <p className="text-sm text-olive-mint font-bold mt-2 break-words line-clamp-2">
+                      {recipe.matchedIngredients.join(", ")}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              <div ref={ref} className="mt-2 flex h-10 items-center justify-center">
+                {isFetchingNextPage ? (
+                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-olive-light"></div>
+                ) : (
+                  !hasNextPage &&
+                  recipes.length > 0 && (
+                    <p className="text-sm text-gray-500">{lastPageMessage}</p>
+                  )
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Container>

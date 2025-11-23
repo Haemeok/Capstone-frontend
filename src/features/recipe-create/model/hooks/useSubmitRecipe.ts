@@ -20,14 +20,20 @@ export const useSubmitRecipe = () => {
     mutationFn: async (variables: {
       formData: RecipeFormValues;
       recipeId?: number;
+      isIngredientsModified?: boolean;
     }) => {
-      const { formData, recipeId } = variables;
+      const { formData, recipeId, isIngredientsModified } = variables;
 
       const { recipeData, filesToUploadInfo, fileObjects } =
         await prepareRecipeData(formData);
 
       const presignedUrlResponse = await (recipeId
-        ? editRecipe({ recipe: recipeData, files: filesToUploadInfo, recipeId })
+        ? editRecipe({
+            recipe: recipeData,
+            files: filesToUploadInfo,
+            recipeId,
+            isIngredientsModified,
+          })
         : postRecipe({ recipe: recipeData, files: filesToUploadInfo }));
 
       if (fileObjects.length > 0) {

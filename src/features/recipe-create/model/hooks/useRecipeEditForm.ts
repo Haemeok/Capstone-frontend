@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
@@ -10,7 +10,11 @@ import { useRecipeDetailQuery } from "@/entities/recipe";
 
 import { useToastStore } from "@/widgets/Toast";
 
-import { recipeFormSchema, RecipeFormValues } from "../config";
+import {
+  IngredientPayload,
+  recipeFormSchema,
+  RecipeFormValues,
+} from "../config";
 import { useSubmitRecipe } from "./useSubmitRecipe";
 
 export const useRecipeEditForm = (recipeId: number) => {
@@ -20,6 +24,8 @@ export const useRecipeEditForm = (recipeId: number) => {
 
   const { recipeData: recipe, isSuccess: isRecipeLoaded } =
     useRecipeDetailQuery(recipeId);
+
+  const originalIngredientsRef = useRef<IngredientPayload[]>([]);
 
   const defaultFormValues = useMemo<RecipeFormValues>(
     () => ({
@@ -55,13 +61,36 @@ export const useRecipeEditForm = (recipeId: number) => {
 
   useEffect(() => {
     if (isRecipeLoaded && recipe) {
+      const originalIngredients = recipe.ingredients.map((ingredient) => ({
+        name: ingredient.name,
+        quantity: ingredient.quantity || "",
+        unit: ingredient.unit || "",
+      }));
+      originalIngredientsRef.current = originalIngredients;
       methods.reset(defaultFormValues);
     }
-  }, [isRecipeLoaded, defaultFormValues, methods.reset]);
+  }, [isRecipeLoaded, defaultFormValues, methods.reset, recipe]);
+
+  const checkIngredientsModified = (
+    original: IngredientPayload[],
+    current: IngredientPayload[]
+  ): boolean => {
+    if (original.length !== current.length) return true;
+
+    return original.some((orig, index) => {
+      const curr = current[index];
+      return orig.name !== curr.name || orig.quantity !== curr.quantity;
+    });
+  };
 
   const onSubmit: SubmitHandler<RecipeFormValues> = (formData) => {
+    const isIngredientsModified = checkIngredientsModified(
+      originalIngredientsRef.current,
+      formData.ingredients
+    );
+
     submitRecipe(
-      { formData, recipeId },
+      { formData, recipeId, isIngredientsModified },
       {
         onSuccess: () => {
           addToast({

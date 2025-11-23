@@ -42,13 +42,14 @@ export const getRecipeItems = async (params: RecipeQueryParams) => {
 };
 
 export const getMyIngredientRecipes = async (
-  sort: string = "createdAt,desc"
+  sort: string = "createdAt,desc",
+  pageParam: number = 0
 ) => {
   return fetchPagedRecipes<IngredientRecipesApiResponse>(
     END_POINTS.MY_INGREDIENT_RECIPES,
     {
       sort,
-      page: 0,
+      page: pageParam,
       size: PAGE_SIZE,
     }
   );
@@ -75,16 +76,19 @@ export const postRecipe = async ({ recipe, files }: RecipeSubmitData) => {
 
 type RecipeEditData = RecipeSubmitData & {
   recipeId: number;
+  isIngredientsModified?: boolean;
 };
 
 export const editRecipe = async ({
   recipeId,
   recipe,
   files,
+  isIngredientsModified,
 }: RecipeEditData) => {
   return api.put<PresignedUrlResponse>(`/recipes/${recipeId}`, {
     recipe,
     files,
+    isIngredientsModified,
   });
 };
 
