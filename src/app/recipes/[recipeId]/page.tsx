@@ -25,12 +25,11 @@ import RecipeCommentsSection from "./components/RecipeCommentsSection";
 import RecipeIngredientsSection from "./components/RecipeIngredientsSection";
 import RecipeFabButton from "./components/RecipeFabButton";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
+import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
 }
-
-export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -112,6 +111,8 @@ export default async function RecipeDetailPage({
             saveAmount={saveAmount}
             className="mt-4"
           />
+
+          <CookingUnitTooltip />
 
           <RecipeStepList RecipeSteps={staticRecipe.steps} />
         </RecipeContainer>

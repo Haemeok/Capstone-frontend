@@ -69,7 +69,10 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
 
       <div>
         {showNutrition ? (
-          <NutritionTable totalServings={recipe.servings} />
+          <NutritionTable
+            totalServings={recipe.servings}
+            nutrition={recipe.nutrition}
+          />
         ) : (
           <ul className="flex flex-col gap-1">
             {recipe.ingredients.map((ingredient, index) => (

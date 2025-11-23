@@ -2,13 +2,22 @@
 
 import { useState } from "react";
 import { cn } from "@/shared/lib/utils";
+import NutritionItem from "./NutritionItem";
 
 type NutritionTableProps = {
+  nutrition: {
+    protein: number;
+    carbohydrate: number;
+    fat: number;
+    sugar: number;
+    sodium: number;
+  };
   totalServings: number;
   className?: string;
 };
 
 const NutritionTable = ({
+  nutrition,
   totalServings,
   className,
 }: NutritionTableProps) => {
@@ -30,23 +39,16 @@ const NutritionTable = ({
 
   const servingRatio = currentServings / totalServings;
 
-  const baseNutrition = {
-    sodium: 1234,
-    carbs: 50,
-    protein: 30,
-    fat: 20,
-  };
-
   const scaledNutrition = {
-    sodium: Math.round(baseNutrition.sodium * servingRatio),
-    carbs: Math.round(baseNutrition.carbs * servingRatio),
-    protein: Math.round(baseNutrition.protein * servingRatio),
-    fat: Math.round(baseNutrition.fat * servingRatio),
+    sodium: Math.round(nutrition.sodium * servingRatio),
+    carbs: Math.round(nutrition.carbohydrate * servingRatio),
+    protein: Math.round(nutrition.protein * servingRatio),
+    fat: Math.round(nutrition.fat * servingRatio),
+    sugar: Math.round(nutrition.sugar * servingRatio),
   };
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      {/* Serving counter */}
       <div className="flex items-center justify-end gap-2">
         <span className="text-sm text-gray-600">인분</span>
         <div className="flex items-center gap-1">
@@ -58,7 +60,7 @@ const NutritionTable = ({
             className={cn(
               "flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors",
               currentServings <= MIN_SERVINGS
-                ? "opacity-50 cursor-not-allowed"
+                ? "cursor-not-allowed opacity-50"
                 : "cursor-pointer hover:bg-gray-300"
             )}
           >
@@ -75,7 +77,7 @@ const NutritionTable = ({
             className={cn(
               "flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors",
               currentServings >= totalServings
-                ? "opacity-50 cursor-not-allowed"
+                ? "cursor-not-allowed opacity-50"
                 : "cursor-pointer hover:bg-gray-300"
             )}
           >
@@ -84,32 +86,24 @@ const NutritionTable = ({
         </div>
       </div>
 
-      {/* Nutrition grid - 2x2 layout */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1 rounded-lg border border-gray-200 p-3">
-          <p className="text-xs text-gray-500">나트륨</p>
-          <p className="text-base font-bold text-gray-800">
-            {scaledNutrition.sodium}mg
-          </p>
-        </div>
-        <div className="flex flex-col gap-1 rounded-lg border border-gray-200 p-3">
-          <p className="text-xs text-gray-500">탄수화물</p>
-          <p className="text-base font-bold text-gray-800">
-            {scaledNutrition.carbs}g
-          </p>
-        </div>
-        <div className="flex flex-col gap-1 rounded-lg border border-gray-200 p-3">
-          <p className="text-xs text-gray-500">단백질</p>
-          <p className="text-base font-bold text-gray-800">
-            {scaledNutrition.protein}g
-          </p>
-        </div>
-        <div className="flex flex-col gap-1 rounded-lg border border-gray-200 p-3">
-          <p className="text-xs text-gray-500">지방</p>
-          <p className="text-base font-bold text-gray-800">
-            {scaledNutrition.fat}g
-          </p>
-        </div>
+        <NutritionItem
+          label="나트륨"
+          value={scaledNutrition.sodium}
+          unit="mg"
+        />
+        <NutritionItem
+          label="탄수화물"
+          value={scaledNutrition.carbs}
+          unit="g"
+        />
+        <NutritionItem
+          label="단백질"
+          value={scaledNutrition.protein}
+          unit="g"
+        />
+        <NutritionItem label="지방" value={scaledNutrition.fat} unit="g" />
+        <NutritionItem label="당" value={scaledNutrition.sugar} unit="g" />
       </div>
     </div>
   );
