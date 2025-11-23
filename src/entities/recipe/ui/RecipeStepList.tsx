@@ -15,6 +15,7 @@ const RecipeStepList = ({ RecipeSteps }: RecipeStepProps) => {
           stepIndex={stepIndex}
           step={step}
           length={RecipeSteps.length}
+          isFirstStep={stepIndex === 0}
         />
       ))}
     </article>
