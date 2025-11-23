@@ -50,7 +50,7 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
           <CountUp
             from={data.previousTotal}
             to={data.newTotal}
-            duration={1.2}
+            duration={0.2}
             separator=","
             direction="up"
             className="text-olive-mint text-5xl font-bold"
