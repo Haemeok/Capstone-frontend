@@ -1,13 +1,17 @@
 import React from "react";
 import { Image } from "@/shared/ui/image/Image";
+import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
 
 import { RecipeStep } from "@/entities/recipe";
+import { StepTimer } from "@/features/step-timer";
 
 type SlideShowContentProps = {
   step: RecipeStep;
 };
 
 const SlideShowContent = ({ step }: SlideShowContentProps) => {
+  const timeInSeconds = extractTimeFromText(step.instruction);
+
   return (
     <div className="flex h-full flex-col">
       <div className="relative w-full">
@@ -35,6 +39,13 @@ const SlideShowContent = ({ step }: SlideShowContentProps) => {
             ))}
           </div>
         )}
+
+        {timeInSeconds && (
+          <div className="mb-3 flex justify-center">
+            <StepTimer targetSeconds={timeInSeconds} />
+          </div>
+        )}
+
         {step.instruction && (
           <p className="text-dark mb-4 text-base font-bold whitespace-pre-wrap">
             {step.instruction}
