@@ -72,13 +72,13 @@ const MonthlySavingsSummary = ({
         <CountUp
           from={0}
           to={currentSavings}
-          duration={0.25}
+          duration={0.1}
           separator=","
           direction="up"
           className="text-olive-mint text-xl font-bold"
         />
-        <span className="text-xl font-bold text-olive-mint">원</span>
-        <h3 className="text-xl font-bold ml-1"> 절약했어요</h3>
+        <span className="text-olive-mint text-xl font-bold">원</span>
+        <h3 className="ml-1 text-xl font-bold"> 절약했어요</h3>
       </div>
       {!isZeroSavings && (
         <p className="mt-1 text-sm text-gray-500">
@@ -90,7 +90,7 @@ const MonthlySavingsSummary = ({
       <SavingSection imageUrl={productImage} altText={productName} />
 
       <div className="w-full">
-        <div className="bg-gray-200 relative h-4 w-full overflow-hidden rounded-full">
+        <div className="relative h-4 w-full overflow-hidden rounded-full bg-gray-200">
           <div
             className="bg-olive-mint absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
             style={{ width: `${percentageToNext}%` }}

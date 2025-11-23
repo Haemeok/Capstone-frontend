@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/shared/ui/shadcn/dialog";
 import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
+import { useRecipeHistoryQuery } from "@/widgets/CalendarTabContent/hooks";
 import type { LevelUpPhase, LevelUpData } from "../model/types";
 import Phase1Acquired from "./Phase1Acquired";
 import Phase2Absorb from "./Phase2Absorb";
@@ -19,21 +20,68 @@ type LevelUpModalProps = {
   acquiredAmount?: number; // 실제 획득 금액 (옵셔널)
 };
 
+const calculateLevelUpData = (
+  monthlyTotal: number,
+  acquired: number
+): LevelUpData => {
+  // monthlyTotal은 이미 acquired가 포함되어 있으므로 빼서 이전 값을 구함
+  const previousTotal = Math.max(0, monthlyTotal - acquired);
+  const newTotal = monthlyTotal;
+
+  const currentBracket =
+    PRICE_BRACKETS.find((b) => previousTotal >= b.min) ||
+    PRICE_BRACKETS[PRICE_BRACKETS.length - 1];
+
+  const currentIndex = PRICE_BRACKETS.indexOf(currentBracket);
+  const nextBracket =
+    currentIndex > 0 ? PRICE_BRACKETS[currentIndex - 1] : undefined;
+
+  if (!nextBracket) {
+    return {
+      acquired,
+      previousTotal,
+      newTotal,
+      currentBracket,
+      nextBracket: undefined,
+      percentageToNext: 100,
+      isLevelUp: false,
+    };
+  }
+
+  const range = Math.max(1, nextBracket.min - currentBracket.min);
+  const progress = Math.max(0, newTotal - currentBracket.min);
+  const percentage = Math.min(100, Math.floor((progress / range) * 100));
+  const isLevelUp = newTotal >= nextBracket.min;
+
+  return {
+    acquired,
+    previousTotal,
+    newTotal,
+    currentBracket,
+    nextBracket,
+    percentageToNext: percentage,
+    isLevelUp,
+  };
+};
+
 const LevelUpModal = ({
   isOpen,
   onOpenChange,
   acquiredAmount,
 }: LevelUpModalProps) => {
-  // Phase 2, 3은 하드코딩 데이터 사용 (나중에 API 연동)
-  const HARDCODED_DATA: LevelUpData = {
-    acquired: acquiredAmount || 4082, // 실제 획득 금액 또는 기본값
-    previousTotal: 84000,
-    newTotal: 88082,
-    currentBracket: PRICE_BRACKETS.find((b) => b.min === 10000)!,
-    nextBracket: PRICE_BRACKETS.find((b) => b.min === 20000),
-    percentageToNext: 80,
-    isLevelUp: false,
-  };
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
+
+  const { monthlyTotalSavings } = useRecipeHistoryQuery({ year, month });
+
+  const levelUpData = useMemo(() => {
+    return calculateLevelUpData(
+      monthlyTotalSavings || 0,
+      acquiredAmount || 0
+    );
+  }, [monthlyTotalSavings, acquiredAmount]);
+
   const [currentPhase, setCurrentPhase] = useState<LevelUpPhase>("acquired");
 
   useEffect(() => {
@@ -44,15 +92,13 @@ const LevelUpModal = ({
   }, [isOpen]);
 
   const handlePhase1Complete = () => {
-    // ⏸️ 자동 전환 비활성화 (수동 테스트용)
-    // setTimeout(() => {
-    //   setCurrentPhase("absorb");
-    // }, 1800);
+    setTimeout(() => {
+      setCurrentPhase("absorb");
+    }, 1800);
   };
 
   const handlePhase2Complete = () => {
-    // ⏸️ 자동 전환 비활성화 (수동 테스트용)
-    // setCurrentPhase("accumulate");
+    setCurrentPhase("accumulate");
   };
 
   const getPhaseTitle = () => {
@@ -68,23 +114,6 @@ const LevelUpModal = ({
     }
   };
 
-  // 🎮 수동 제어 버튼 핸들러
-  const handleManualNext = () => {
-    if (currentPhase === "acquired") {
-      setCurrentPhase("absorb");
-    } else if (currentPhase === "absorb") {
-      setCurrentPhase("accumulate");
-    }
-  };
-
-  const handleManualPrev = () => {
-    if (currentPhase === "accumulate") {
-      setCurrentPhase("absorb");
-    } else if (currentPhase === "absorb") {
-      setCurrentPhase("acquired");
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
@@ -94,44 +123,21 @@ const LevelUpModal = ({
 
         {currentPhase === "acquired" && (
           <Phase1Acquired
-            amount={HARDCODED_DATA.acquired}
+            amount={levelUpData.acquired}
             onComplete={handlePhase1Complete}
           />
         )}
 
         {currentPhase === "absorb" && (
           <Phase2Absorb
-            amount={HARDCODED_DATA.acquired}
+            amount={levelUpData.acquired}
             onComplete={handlePhase2Complete}
           />
         )}
 
         {currentPhase === "accumulate" && (
-          <Phase3Accumulate data={HARDCODED_DATA} />
+          <Phase3Accumulate data={levelUpData} />
         )}
-
-        {/* 🎮 수동 제어 버튼 (테스트용) */}
-        <div className="flex items-center justify-between gap-3 border-t border-gray-200 pt-4">
-          <button
-            onClick={handleManualPrev}
-            disabled={currentPhase === "acquired"}
-            className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 disabled:opacity-30"
-          >
-            ← 이전 단계
-          </button>
-          <span className="text-xs text-gray-500">
-            {currentPhase === "acquired" && "Phase 1/3"}
-            {currentPhase === "absorb" && "Phase 2/3"}
-            {currentPhase === "accumulate" && "Phase 3/3"}
-          </span>
-          <button
-            onClick={handleManualNext}
-            disabled={currentPhase === "accumulate"}
-            className="rounded-lg bg-olive-mint px-4 py-2 text-sm font-medium text-white disabled:opacity-30"
-          >
-            다음 단계 →
-          </button>
-        </div>
       </DialogContent>
     </Dialog>
   );
