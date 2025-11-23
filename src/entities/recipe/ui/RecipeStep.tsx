@@ -1,23 +1,39 @@
 import { Image } from "@/shared/ui/image/Image";
 import IngredientIcon from "@/shared/ui/IngredientIcon";
+import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
 
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
+import { StepTimer } from "@/features/step-timer";
+import { WakeLockButton } from "@/features/screen-wake-lock";
 
 type RecipeStepProps = {
   stepIndex: number;
   step: RecipeStepType;
   length: number;
+  isFirstStep?: boolean;
 };
 
-const RecipeStep = ({ stepIndex, step, length }: RecipeStepProps) => {
+const RecipeStep = ({ stepIndex, step, length, isFirstStep = false }: RecipeStepProps) => {
+  const timeInSeconds = extractTimeFromText(step.instruction);
+
   return (
     <div
       key={stepIndex}
       className="w-full h-full pb-4 border-b border-slate-200"
     >
-      <h3 className="mb-2 text-left text-lg font-bold">
-        Step {stepIndex + 1}/{length}
-      </h3>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <h3 className="text-left text-lg font-bold">
+            Step {stepIndex + 1}/{length}
+          </h3>
+          {isFirstStep && (
+            <div className="md:hidden">
+              <WakeLockButton />
+            </div>
+          )}
+        </div>
+        {timeInSeconds && <StepTimer targetSeconds={timeInSeconds} />}
+      </div>
       <div className="flex flex-wrap items-center gap-1">
         <IngredientIcon />
         {step.ingredients?.map((ingredient, index) => (
