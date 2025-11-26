@@ -45,7 +45,7 @@ const RecipeSlide = ({
             <ChevronRight size={16} />
           </Link>
         ) : (
-          <span className="flex items-center text-sm text-gray-400 cursor-not-allowed opacity-50">
+          <span className="flex cursor-not-allowed items-center text-sm text-gray-400 opacity-50">
             더보기
             <ChevronRight size={16} />
           </span>
@@ -56,7 +56,7 @@ const RecipeSlide = ({
         <div className="flex w-full gap-3 overflow-x-auto">
           {Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="flex-shrink-0">
-              <Skeleton className="h-[200px] w-[200px] rounded-xl " />
+              <Skeleton className="h-[200px] w-[200px] rounded-xl" />
               <div className="mt-2 space-y-2">
                 <Skeleton className="h-4 w-[200px]" />
                 <Skeleton className="h-4 w-[150px]" />
@@ -65,7 +65,7 @@ const RecipeSlide = ({
           ))}
         </div>
       ) : error ? (
-        <div className="flex w-full h-30 items-center justify-center py-8">
+        <div className="flex h-30 w-full items-center justify-center py-8">
           <p className="text-sm text-gray-500">
             잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.
           </p>
@@ -84,13 +84,13 @@ const RecipeSlide = ({
         >
           <CarouselContent className="-ml-3">
             {recipes.map((item) => (
-              <CarouselItem key={item.id} className="pl-3 basis-[200px]">
+              <CarouselItem key={item.id} className="basis-[200px] pl-3">
                 <DetailedRecipeGridItem recipe={item} />
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="hidden md:flex -left-4" />
-          <CarouselNext className="hidden md:flex -right-4" />
+          <CarouselPrevious className="-left-4 hidden cursor-pointer md:flex" />
+          <CarouselNext className="-right-4 hidden cursor-pointer md:flex" />
         </Carousel>
       )}
     </div>

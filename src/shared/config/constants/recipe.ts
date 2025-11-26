@@ -336,7 +336,7 @@ export const COOKING_TIMES = Object.keys(COOKING_TIME_ITEMS);
 
 export const DEFAULT_WEIGHT_KG = 65;
 
-export const ONBOARDING_RECIPE_ID = 1;
+export const ONBOARDING_RECIPE_ID = 261;
 
 export const COOKING_COMPLETION_MESSAGE_DURATION_MS = 2000;
 

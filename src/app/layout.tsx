@@ -16,7 +16,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "레시피오",
-  description: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 레시피오어보세요!",
+  description: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 해먹어보세요!",
   manifest: "/manifest.json",
   icons: {
     icon: [
