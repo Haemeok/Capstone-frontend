@@ -1,16 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Image } from "@/shared/ui/image/Image";
-import { useRouter } from "next/navigation";
 
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, FlameKindling } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { getProductByPrice } from "@/shared/lib/recipe";
 import { DayPickerDynamic } from "@/shared/ui/DayPickerDynamic";
-import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 import Box from "@/shared/ui/primitives/Box";
 
 import { RecipeDailySummary } from "@/entities/user";
@@ -18,12 +15,20 @@ import { RecipeDailySummary } from "@/entities/user";
 import { cn } from "@/lib/utils";
 
 import { useRecipeHistoryQuery, useUserStreakQuery } from "./hooks";
+import { CalendarMode } from "./types";
+import { findConsecutiveRanges, getRangeForDay } from "./lib/consecutiveDaysHelper";
+import { StreakModeToggle } from "./components/StreakModeToggle";
+import { StreakInfoBanner } from "./components/StreakInfoBanner";
+import { CalendarDayStreak } from "./components/CalendarDayStreak";
+import { CalendarDayPhoto } from "./components/CalendarDayPhoto";
+import { CalendarDayEmpty } from "./components/CalendarDayEmpty";
 
 import "react-day-picker/style.css";
 import MonthlySavingsSummary from "../MonthlySavingsSummary";
 
 const CalendarTabContent = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+  const [calendarMode, setCalendarMode] = useState<CalendarMode>("streak");
   const { data: userStreak } = useUserStreakQuery();
 
   const year = currentMonth.getFullYear();
@@ -45,6 +50,7 @@ const CalendarTabContent = () => {
     });
   };
 
+  const consecutiveRanges = findConsecutiveRanges(recipeHistorySummary ?? []);
   const product = getProductByPrice(monthlyTotalSavings ?? 0);
 
   return (
@@ -56,19 +62,13 @@ const CalendarTabContent = () => {
         productName={product.name}
         productImage={product.image}
       />
+      <div className="mt-4 flex items-center justify-center px-4">
+        <StreakModeToggle mode={calendarMode} onModeChange={setCalendarMode} />
+      </div>
       <Box className="mt-4 p-0 px-4">
-        <PointDisplayBanner
-          pointText={`${userStreak?.streak ?? 0}일`}
-          prefix="레시피오 서비스를"
-          suffix="연속 사용 중이에요!"
-          textClassName="text-purple-500 font-bold"
-          icon={
-            <FlameKindling
-              size={16}
-              className="ml-1 fill-purple-500 text-purple-500"
-            />
-          }
-        />
+        {calendarMode === "streak" ? (
+          <StreakInfoBanner streakCount={userStreak?.streak ?? 0} />
+        ) : null}
       </Box>
       <DayPickerDynamic
         mode="single"
@@ -108,7 +108,7 @@ const CalendarTabContent = () => {
           Day: ({ day }: any) => {
             const date = day?.date;
             const dateNumber = date?.getDate();
-            const router = useRouter();
+
             if (date?.getMonth() !== day?.displayMonth.getMonth()) {
               return (
                 <td className="flex h-full w-full items-center justify-center text-sm opacity-30">
@@ -116,52 +116,32 @@ const CalendarTabContent = () => {
                 </td>
               );
             }
-            const yyyyMMdd = format(date, "yyyy-MM-dd");
+
             const summary = getEventForDay(date);
-            const handleNavigateToCalendarDetail = () => {
-              router.push(`/calendar/${yyyyMMdd}`);
-            };
-            if (summary) {
-              return (
-                <td
-                  className="group relative h-full w-full"
-                  onClick={handleNavigateToCalendarDetail}
-                >
-                  <Image
-                    src={summary.firstImageUrl}
-                    alt={`이벤트: ${format(date, "yyyy-MM-dd")}`}
-                    className="h-full w-full rounded-xl object-cover"
-                    wrapperClassName="p-[1px] overflow-hidden rounded-xl"
-                    imgClassName="ease-in-out group-hover:scale-110"
-                  />
-                  {summary.totalCount && (
-                    <div className="bg-olive-mint absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
-                      {summary.totalCount}
-                    </div>
-                  )}
-                </td>
-              );
-            }
             const today = new Date();
             const isToday =
               date?.getDate() === today.getDate() &&
               date?.getMonth() === today.getMonth() &&
               date?.getFullYear() === today.getFullYear();
 
-            return (
-              <td
-                className={cn("flex h-full w-full items-center justify-center")}
-              >
-                <p
-                  className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-full text-center text-sm",
-                    isToday && "bg-olive-light text-white"
-                  )}
-                >
-                  {dateNumber}
-                </p>
-              </td>
-            );
+            if (calendarMode === "streak") {
+              const range = getRangeForDay(date, consecutiveRanges);
+              if (summary) {
+                return (
+                  <CalendarDayStreak
+                    date={date}
+                    dateNumber={dateNumber}
+                    range={range}
+                  />
+                );
+              }
+              return <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />;
+            } else {
+              if (summary) {
+                return <CalendarDayPhoto date={date} summary={summary} />;
+              }
+              return <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />;
+            }
           },
           PreviousMonthButton: ({ className, ...props }: any) => (
             <button
