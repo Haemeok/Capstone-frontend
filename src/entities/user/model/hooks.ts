@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getMyInfo, getRecipeHistoryDetail, getUserInfo } from "./api";
+import { getMyInfo, getUserInfo } from "./api";
 import { useUserStore } from "./store";
 import { User } from "./types";
 
@@ -30,23 +30,6 @@ export const useUserQuery = (userId: number, isOtherProfile: boolean) => {
     error,
     refetchUser: refetch,
   };
-};
-
-type QueryOptions = {
-  enabled?: boolean;
-};
-
-export const useRecipeHistoryDetailQuery = (
-  date: string,
-  options?: QueryOptions
-) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["recipeHistoryDetail", date],
-    queryFn: () => getRecipeHistoryDetail(date),
-    ...options,
-  });
-
-  return { data, isLoading, error };
 };
 
 export const useMyInfoQuery = (initialData?: User) => {

@@ -13,6 +13,8 @@ import {
   RecipesStatusResponse,
 } from "./types";
 import { RecipePayload } from "./types";
+import { RecipeHistoryResponse } from "@/entities/user/model/types";
+import { RecipeHistoryDetailResponse } from "./record";
 
 export const getRecipe = async (id: number) => {
   const response = await api.get<Recipe>(END_POINTS.RECIPE(id));
@@ -86,9 +88,11 @@ export const editRecipe = async ({
   isIngredientsModified,
 }: RecipeEditData) => {
   return api.put<PresignedUrlResponse>(`/recipes/${recipeId}`, {
-    recipe,
+    recipe: {
+      ...recipe,
+      isIngredientsModified,
+    },
     files,
-    isIngredientsModified,
   });
 };
 
@@ -103,5 +107,36 @@ export const getRecipesStatus = async (
   const response = await api.post<RecipesStatusResponse>(`/v2/recipes/status`, {
     recipeIds,
   });
+  return response;
+};
+
+export const getRecipeHistory = async ({
+  year,
+  month,
+}: {
+  year: number;
+  month: number;
+}) => {
+  const response = await api.get<RecipeHistoryResponse>(
+    END_POINTS.RECIPE_HISTORY,
+    {
+      params: {
+        year,
+        month,
+      },
+    }
+  );
+  return response;
+};
+
+export const getRecipeHistoryItems = async (date: string) => {
+  const response = await api.get<RecipeHistoryDetailResponse[]>(
+    END_POINTS.RECIPE_HISTORY,
+    {
+      params: {
+        date,
+      },
+    }
+  );
   return response;
 };

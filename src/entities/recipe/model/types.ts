@@ -66,13 +66,15 @@ export type Recipe = {
   aiGenerated: boolean;
   totalCalories: number;
   createdAt?: string;
-  nutrition: {
-    protein: number;
-    carbohydrate: number;
-    fat: number;
-    sugar: number;
-    sodium: number;
-  };
+  nutrition: Nutrition;
+};
+
+export type Nutrition = {
+  protein: number;
+  carbohydrate: number;
+  fat: number;
+  sugar: number;
+  sodium: number;
 };
 
 export type RatingInfo = {

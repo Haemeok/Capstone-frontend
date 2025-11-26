@@ -46,12 +46,16 @@ const StepTimer = ({ targetSeconds }: StepTimerProps) => {
     <div className="flex items-center gap-2">
       <TimerRoot
         variant={isOvertime ? "destructive" : "default"}
-        size="md"
+        size="sm"
         loading={isRunning}
-        className="gap-1"
+        className={cn("gap-1 md:text-sm", isOvertime && "animate-shake")}
       >
-        <TimerDisplay size="md" time={formattedTime.display} />
-        <span className="text-[10px] opacity-60">
+        <TimerDisplay
+          size="sm"
+          time={formattedTime.display}
+          className="md:text-sm"
+        />
+        <span className="text-[10px] opacity-60 md:text-xs">
           / {formatTargetTime(targetSeconds)}
         </span>
       </TimerRoot>
@@ -61,28 +65,34 @@ const StepTimer = ({ targetSeconds }: StepTimerProps) => {
           type="button"
           onClick={handlePlayPause}
           className={cn(
-            "flex h-6 w-6 items-center justify-center rounded-full transition-all hover:scale-110",
+            "flex cursor-pointer items-center justify-center rounded-full transition-all",
+            "h-6 w-6 md:h-9 md:w-9",
             isOvertime
-              ? "bg-red-100 text-red-600 hover:bg-red-200"
-              : "bg-olive-light/10 text-olive-dark hover:bg-olive-light/20"
+              ? "bg-red-100 text-red-600"
+              : "bg-olive-light/10 text-olive-dark"
           )}
           aria-label={isRunning ? "일시정지" : "시작"}
         >
-          {isRunning ? <Pause size={12} /> : <Play size={12} />}
+          {isRunning ? (
+            <Pause size={12} className="md:h-5 md:w-5" />
+          ) : (
+            <Play size={12} className="md:h-5 md:w-5" />
+          )}
         </button>
 
         <button
           type="button"
           onClick={handleReset}
           className={cn(
-            "flex h-6 w-6 items-center justify-center rounded-full transition-all hover:scale-110",
+            "flex cursor-pointer items-center justify-center rounded-full transition-all",
+            "h-6 w-6 md:h-9 md:w-9",
             isOvertime
-              ? "bg-red-100 text-red-600 hover:bg-red-200"
-              : "bg-olive-light/10 text-olive-dark hover:bg-olive-light/20"
+              ? "bg-red-100 text-red-600"
+              : "bg-olive-light/10 text-olive-dark"
           )}
           aria-label="초기화"
         >
-          <RotateCcw size={12} />
+          <RotateCcw size={12} className="md:h-5 md:w-5" />
         </button>
       </div>
     </div>
