@@ -9,3 +9,11 @@ export const finalizeRecipe = async (recipeId: number) => {
   );
   return response;
 };
+
+export const postRecipeReactions = async (
+  recipeId: number,
+  data: { likeCount: number; ratingCount: number }
+) => {
+  const response = await api.post(`/test/recipes/${recipeId}/reactions`, data);
+  return response;
+};
