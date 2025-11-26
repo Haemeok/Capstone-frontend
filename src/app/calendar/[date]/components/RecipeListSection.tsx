@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Image } from "@/shared/ui/image/Image";
 import { formatNumber } from "@/shared/lib/format";
-import type { RecipeHistoryDetailResponse } from "@/entities/user";
+import { RecipeHistoryDetailResponse } from "@/entities/recipe/model/record";
 
 type RecipeListSectionProps = {
   data: RecipeHistoryDetailResponse[] | undefined;

@@ -1,9 +1,9 @@
-export { useRecipeHistoryDetailQuery, useUserQuery } from "./model/hooks";
+export { useUserQuery } from "./model/hooks";
 export { useUserStore } from "./model/store";
 export type {
   PutUserInfoPayload,
   RecipeDailySummary,
-  RecipeHistoryDetailResponse,
+  RecipeHistoryResponse,
   User,
 } from "./model/types";
 export { default as UserName } from "./ui/UserName";

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/shared/lib/utils";
-import type { RecipeHistoryDetailResponse } from "@/entities/user";
+import { RecipeHistoryDetailResponse } from "@/entities/recipe/model/record";
 
 type NutrientBarProps = {
   label: string;
