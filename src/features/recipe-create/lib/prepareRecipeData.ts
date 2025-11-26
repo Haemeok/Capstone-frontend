@@ -8,34 +8,7 @@ import {
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { RecipeFormValues } from "../model/config";
-import { convertToWebP, shouldConvertToWebP } from "@/shared/lib/image";
-
-const convertToWebPIfNeeded = async (
-  file: File | string | null | undefined
-): Promise<File | string | null> => {
-  if (!file || typeof file === "string") {
-    return file ?? null;
-  }
-
-  if (file.type === "image/webp") {
-    return file;
-  }
-
-  if (shouldConvertToWebP(file)) {
-    try {
-      const { webpFile } = await convertToWebP(file);
-      return webpFile;
-    } catch (error) {
-      console.error(
-        `WebP conversion failed for ${file.name}, using original:`,
-        error
-      );
-      return file;
-    }
-  }
-
-  return file;
-};
+import { convertToWebPIfNeeded } from "@/shared/lib/image";
 
 export const prepareRecipeData = async (formData: RecipeFormValues) => {
   const filesToUploadInfo: FileInfoRequest[] = [];
