@@ -28,6 +28,7 @@ import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import RecipeTagsSection from "./components/RecipeTagsSection";
 import RecipeCookingInfoSection from "./components/RecipeCookingInfoSection";
+import { CoupangDisclosure } from "./components/CoupangDisclosure";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -119,6 +120,8 @@ export default async function RecipeDetailPage({
             saveAmount={saveAmount}
             className="mt-4"
           />
+
+          <CoupangDisclosure />
 
           <CookingUnitTooltip />
 
