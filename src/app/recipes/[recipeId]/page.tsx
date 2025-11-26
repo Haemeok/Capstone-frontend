@@ -26,6 +26,8 @@ import RecipeIngredientsSection from "./components/RecipeIngredientsSection";
 import RecipeFabButton from "./components/RecipeFabButton";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
+import RecipeTagsSection from "./components/RecipeTagsSection";
+import RecipeCookingInfoSection from "./components/RecipeCookingInfoSection";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -97,6 +99,12 @@ export default async function RecipeDetailPage({
             <RecipeInteractionBar staticRecipe={staticRecipe} />
           </RecipeInfoSection>
 
+          <RecipeCookingInfoSection
+            cookingTime={staticRecipe.cookingTime}
+            cookingTools={staticRecipe.cookingTools}
+            servings={staticRecipe.servings}
+          />
+
           <RecipeCommentsSection
             comments={staticRecipe.comments}
             recipeId={numericRecipeId}
@@ -115,6 +123,8 @@ export default async function RecipeDetailPage({
           <CookingUnitTooltip />
 
           <RecipeStepList RecipeSteps={staticRecipe.steps} />
+
+          <RecipeTagsSection tags={staticRecipe.tags} />
         </RecipeContainer>
       </RecipeStatusProvider>
       <DesktopFooter />

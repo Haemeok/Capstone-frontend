@@ -7,7 +7,7 @@ import { DollarSign, Salad } from "lucide-react";
 import PrevButton from "@/shared/ui/PrevButton";
 import IconToggle from "@/shared/ui/IconToggle";
 
-import { useRecipeHistoryDetailQuery } from "@/entities/user";
+import { useRecipeHistoryItemsQuery } from "@/entities/recipe/model/hooks";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 
@@ -24,9 +24,7 @@ const CalendarDetailPage = () => {
   const { addToast } = useToastStore();
   const [activeTab, setActiveTab] = useState<TabType>("savings");
 
-  const { data } = useRecipeHistoryDetailQuery(date, {
-    enabled: !!date,
-  });
+  const { data } = useRecipeHistoryItemsQuery(date, !!date);
 
   if (date === undefined) {
     router.push("/");
@@ -76,7 +74,7 @@ const CalendarDetailPage = () => {
           totalMarketPrice={totalMarketPrice}
         />
       ) : (
-        <NutritionCard />
+        <NutritionCard data={data} />
       )}
 
       <RecipeListSection data={data} />

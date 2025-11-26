@@ -1,3 +1,10 @@
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/shared/ui/shadcn/carousel";
 import { TAG_ITEMS } from "@/shared/config/constants/recipe";
 
 import CateGoryItem from "./CateGoryItem";
@@ -15,17 +22,28 @@ const CategoryTabs = ({ title }: CategoryTabsProps) => {
         </div>
       </div>
 
-      <div className="scrollbar-hide flex w-full gap-3 overflow-x-auto rounded-2xl">
-        {TAG_ITEMS.map((item, index) => (
-          <CateGoryItem
-            key={item.id}
-            id={item.id}
-            name={item.name}
-            imageUrl={item.imageUrl}
-            isLcpCandidate={index === 0}
-          />
-        ))}
-      </div>
+      <Carousel
+        opts={{
+          align: "start",
+          loop: false,
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="gap-3">
+          {TAG_ITEMS.map((item, index) => (
+            <CarouselItem key={item.id} className="basis-[200px]">
+              <CateGoryItem
+                id={item.id}
+                name={item.name}
+                imageUrl={item.imageUrl}
+                isLcpCandidate={index === 0}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="-left-4 hidden cursor-pointer md:flex" />
+        <CarouselNext className="-right-4 hidden cursor-pointer md:flex" />
+      </Carousel>
     </div>
   );
 };

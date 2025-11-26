@@ -12,6 +12,7 @@ import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
 
 import NutritionToggle from "./NutritionToggle";
 import NutritionTable from "./NutritionTable";
+import Link from "next/link";
 
 type IngredientsSectionProps = {
   recipe: Recipe | StaticRecipe;
@@ -89,9 +90,18 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                     {formatNumber(ingredient.price || 0, "원")}
                   </p>
                   {ingredient.coupangLink && (
-                    <div className="rounded-md border-1 border-gray-400 p-[2px]">
-                      <ShoppingBasketIcon className="text-gray-400" size={20} />
-                    </div>
+                    <Link
+                      href={ingredient.coupangLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div className="rounded-md border-1 border-gray-400 p-[2px]">
+                        <ShoppingBasketIcon
+                          className="text-gray-400"
+                          size={20}
+                        />
+                      </div>
+                    </Link>
                   )}
                 </div>
               </li>

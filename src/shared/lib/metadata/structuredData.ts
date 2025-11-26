@@ -105,6 +105,13 @@ export const createRecipeStructuredData = (
     ...(recipe.totalCalories && {
       nutrition: {
         "@type": "NutritionInformation",
+        ...(recipe.nutrition && {
+          protein: `${recipe.nutrition.protein} g`,
+          carbohydrate: `${recipe.nutrition.carbohydrate} g`,
+          fat: `${recipe.nutrition.fat} g`,
+          sugar: `${recipe.nutrition.sugar} g`,
+          sodium: `${recipe.nutrition.sodium} mg`,
+        }),
         calories: `${recipe.totalCalories} calories`,
       },
     }),

@@ -61,7 +61,10 @@ const MonthlySavingsSummary = ({
       };
     }, [currentSavings]);
 
-  const isZeroSavings = currentSavings === 0;
+  const savingText =
+    currentSavings === 0
+      ? `아직 절약을 시작하지 않았어요!`
+      : `${productName} 정도 금액이에요!`;
 
   return (
     <div className="mx-10 flex flex-col items-center justify-center pt-5">
@@ -80,11 +83,7 @@ const MonthlySavingsSummary = ({
         <span className="text-olive-mint text-xl font-bold">원</span>
         <h3 className="ml-1 text-xl font-bold"> 절약했어요</h3>
       </div>
-      {!isZeroSavings && (
-        <p className="mt-1 text-sm text-gray-500">
-          {productName} 정도 금액이에요!
-        </p>
-      )}
+      <p className="mt-1 text-sm text-gray-500">{savingText}</p>
 
       {!hasFirstRecord && <FirstSavingsQuestPanel />}
       <SavingSection imageUrl={productImage} altText={productName} />
