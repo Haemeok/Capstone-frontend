@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getRecipeHistory, getUserStreak } from "@/entities/user/model/api";
+import { getUserStreak } from "@/entities/user/model/api";
+import { getRecipeHistory } from "@/entities/recipe/model/api";
 
 export const useUserStreakQuery = () => {
   const { data, isLoading, error } = useQuery({
