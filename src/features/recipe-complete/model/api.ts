@@ -1,6 +1,6 @@
 import { api } from "@/shared/api/client";
 
-import { RecipeRecordResponse } from "@/entities/recipe/model/recordTypes";
+import { RecipeRecordResponse } from "@/entities/recipe/model/record";
 
 export const createRecipeRecord = async (
   recipeId: number
