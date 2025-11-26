@@ -107,7 +107,7 @@ const UserInfoChangePage = () => {
 
   return (
     <>
-      <div className="fixed top-0 right-0 left-0 z-sticky border-b border-gray-200 bg-white p-4 sticky-optimized">
+      <div className="fixed top-0 right-0 left-0 z-header border-b border-gray-200 bg-white p-4 sticky-optimized md:relative md:z-auto">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between">
           <button
             type="button"
@@ -135,7 +135,7 @@ const UserInfoChangePage = () => {
       <Container>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-grow flex-col pt-20"
+          className="flex flex-grow flex-col pt-20 md:pt-0"
         >
         <div className="relative z-[3] pl-4">
           <label htmlFor="profileImageInput" className="cursor-pointer">
