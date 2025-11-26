@@ -42,6 +42,7 @@ export const useRecipeComplete = ({
 
       queryClient.invalidateQueries({ queryKey: ["recipeHistory"] });
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["recipeHistoryItems"] });
     },
     onError: (error: any) => {
       const errorMessage =

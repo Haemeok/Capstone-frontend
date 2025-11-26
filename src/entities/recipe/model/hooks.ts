@@ -3,7 +3,12 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
-import { getMyIngredientRecipes, getRecipe, getRecipeStatus } from "./api";
+import {
+  getMyIngredientRecipes,
+  getRecipe,
+  getRecipeHistoryItems,
+  getRecipeStatus,
+} from "./api";
 import { Recipe, RecipeStatus } from "./types";
 
 export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
@@ -74,4 +79,14 @@ export const useRecipeStatusQuery = (id: number) => {
     staleTime: 30000,
     refetchOnWindowFocus: true,
   });
+};
+
+export const useRecipeHistoryItemsQuery = (date: string, enabled?: boolean) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["recipeHistoryItems", date],
+    queryFn: () => getRecipeHistoryItems(date),
+    enabled,
+  });
+
+  return { data, isLoading, error };
 };

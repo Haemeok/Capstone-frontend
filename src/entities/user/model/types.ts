@@ -31,14 +31,6 @@ export type RecipeDailySummary = {
   firstImageUrl: string;
 };
 
-export type RecipeHistoryDetailResponse = {
-  marketPrice: number;
-  ingredientCost: number;
-  recipeId: number;
-  recipeTitle: string;
-  imageUrl: string;
-};
-
 export type PutUserInfoPayload = {
   nickname?: string;
   introduction?: string;

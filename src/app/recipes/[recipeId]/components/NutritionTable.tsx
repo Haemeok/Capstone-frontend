@@ -3,15 +3,10 @@
 import { useState } from "react";
 import { cn } from "@/shared/lib/utils";
 import NutritionItem from "./NutritionItem";
+import { Nutrition } from "@/entities/recipe/model/types";
 
 type NutritionTableProps = {
-  nutrition: {
-    protein: number;
-    carbohydrate: number;
-    fat: number;
-    sugar: number;
-    sodium: number;
-  };
+  nutrition: Nutrition;
   totalServings: number;
   className?: string;
 };
@@ -24,9 +19,10 @@ const NutritionTable = ({
   const [currentServings, setCurrentServings] = useState(1);
 
   const MIN_SERVINGS = 1;
+  const MAX_SERVINGS = 20;
 
   const handleIncrement = () => {
-    if (currentServings < totalServings) {
+    if (currentServings < MAX_SERVINGS) {
       setCurrentServings((prev) => prev + 1);
     }
   };
@@ -52,37 +48,29 @@ const NutritionTable = ({
       <div className="flex items-center justify-end gap-2">
         <span className="text-sm text-gray-600">인분</span>
         <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={handleDecrement}
-            disabled={currentServings <= MIN_SERVINGS}
-            aria-label="인분 줄이기"
-            className={cn(
-              "flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors",
-              currentServings <= MIN_SERVINGS
-                ? "cursor-not-allowed opacity-50"
-                : "cursor-pointer hover:bg-gray-300"
-            )}
-          >
-            -
-          </button>
+          {currentServings > MIN_SERVINGS && (
+            <button
+              type="button"
+              onClick={handleDecrement}
+              aria-label="인분 줄이기"
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+            >
+              -
+            </button>
+          )}
           <span className="w-10 text-center text-sm font-medium text-gray-800">
             {currentServings}
           </span>
-          <button
-            type="button"
-            onClick={handleIncrement}
-            disabled={currentServings >= totalServings}
-            aria-label="인분 늘리기"
-            className={cn(
-              "flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors",
-              currentServings >= totalServings
-                ? "cursor-not-allowed opacity-50"
-                : "cursor-pointer hover:bg-gray-300"
-            )}
-          >
-            +
-          </button>
+          {currentServings < MAX_SERVINGS && (
+            <button
+              type="button"
+              onClick={handleIncrement}
+              aria-label="인분 늘리기"
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+            >
+              +
+            </button>
+          )}
         </div>
       </div>
 

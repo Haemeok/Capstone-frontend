@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/shared/lib/utils";
+import type { RecipeHistoryDetailResponse } from "@/entities/user";
 
 type NutrientBarProps = {
   label: string;
@@ -14,6 +15,7 @@ type NutrientBarProps = {
 const NutrientBar = ({ label, value, max, color, unit }: NutrientBarProps) => {
   const [animate, setAnimate] = useState(false);
   const percentage = Math.min((value / max) * 100, 100);
+  const isComplete = value >= max;
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimate(true), 100);
@@ -23,17 +25,22 @@ const NutrientBar = ({ label, value, max, color, unit }: NutrientBarProps) => {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-gray-700">{label}</span>
-        <span className="text-gray-600">
-          {value}
+        <span className="text-gray-700">{label}</span>
+        <span
+          className={cn(
+            isComplete ? "text-olive-dark font-bold" : "text-gray-600"
+          )}
+        >
+          {Math.round(value)}
           {unit} / {max}
           {unit}
+          {isComplete && " ✓"}
         </span>
       </div>
       <div className="relative h-3 w-full overflow-hidden rounded-full bg-gray-100">
         <div
           className={cn(
-            "absolute left-0 top-0 h-full rounded-full transition-all duration-1000 ease-out",
+            "absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out",
             color
           )}
           style={{
@@ -51,7 +58,7 @@ type SodiumStatusProps = {
 
 const SodiumStatus = ({ sodium }: SodiumStatusProps) => {
   const getSodiumStatus = () => {
-    if (sodium <= 2000) {
+    if (sodium <= 3000) {
       return {
         emoji: "🟢",
         label: "좋음",
@@ -59,7 +66,7 @@ const SodiumStatus = ({ sodium }: SodiumStatusProps) => {
         color: "text-green-600",
       };
     }
-    if (sodium <= 3000) {
+    if (sodium <= 4000) {
       return {
         emoji: "🟡",
         label: "보통",
@@ -93,15 +100,22 @@ const SodiumStatus = ({ sodium }: SodiumStatusProps) => {
   );
 };
 
-const NutritionCard = () => {
-  // 하드코딩 값
-  const TOTAL_CALORIES = 1850;
-  const RECOMMENDED_CALORIES = 2000;
-  const CARBS = 250;
-  const PROTEIN = 80;
-  const FAT = 50;
-  const SODIUM = 2500;
+type NutritionCardProps = {
+  data: RecipeHistoryDetailResponse[] | undefined;
+};
 
+const NutritionCard = ({ data }: NutritionCardProps) => {
+  const TOTAL_CALORIES =
+    data?.reduce((sum, item) => sum + item.calories, 0) ?? 0;
+  const CARBS =
+    data?.reduce((sum, item) => sum + item.nutrition.carbohydrate, 0) ?? 0;
+  const PROTEIN =
+    data?.reduce((sum, item) => sum + item.nutrition.protein, 0) ?? 0;
+  const FAT = data?.reduce((sum, item) => sum + item.nutrition.fat, 0) ?? 0;
+  const SODIUM =
+    data?.reduce((sum, item) => sum + item.nutrition.sodium, 0) ?? 0;
+
+  const RECOMMENDED_CALORIES = 2000;
   const CARBS_MAX = 300;
   const PROTEIN_MAX = 100;
   const FAT_MAX = 70;
@@ -111,23 +125,23 @@ const NutritionCard = () => {
   );
 
   return (
-    <div className="mx-4 mb-4 space-y-4 rounded-2xl border-1 border-olive-light/30 p-6">
-      {/* 헤더: 총 칼로리 */}
+    <div className="border-olive-light/30 mx-4 mb-4 space-y-4 rounded-2xl border-1 p-6">
       <div className="border-b border-gray-200 pb-4 text-center">
         <p className="mb-1 text-sm text-gray-500">오늘의 총 섭취 칼로리</p>
         <div className="flex items-baseline justify-center gap-2">
-          <span className="text-4xl font-bold text-olive-mint">
+          <span className="text-olive-mint text-4xl font-bold">
             {TOTAL_CALORIES.toLocaleString()}
           </span>
           <span className="text-xl font-medium text-gray-600">kcal</span>
         </div>
         <p className="mt-2 text-sm font-medium text-gray-600">
           권장량의{" "}
-          <span className="font-bold text-olive-dark">{caloriePercentage}%</span>
+          <span className="font-bold text-violet-500">
+            {caloriePercentage}%
+          </span>
         </p>
       </div>
 
-      {/* 바디: 3대 영양소 막대 그래프 */}
       <div className="space-y-4 py-2">
         <NutrientBar
           label="탄수화물"
@@ -152,7 +166,6 @@ const NutritionCard = () => {
         />
       </div>
 
-      {/* 푸터: 나트륨 신호등 */}
       <div className="pt-2">
         <SodiumStatus sodium={SODIUM} />
       </div>
