@@ -1,0 +1,47 @@
+import Link from "next/link";
+
+import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
+
+type RecipeTagsSectionProps = {
+  tags: string[];
+};
+
+export default function RecipeTagsSection({ tags }: RecipeTagsSectionProps) {
+  if (!tags || tags.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="mt-6">
+      <h2 className="mb-3 text-lg font-bold text-dark">태그</h2>
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag) => {
+          const tagDef = TAG_DEFINITIONS.find(
+            (def) => `${def.emoji} ${def.name}` === tag
+          );
+
+          if (!tagDef) {
+            return (
+              <span
+                key={tag}
+                className="rounded-full border border-olive-light bg-olive-light/10 px-3 py-1.5 text-sm text-dark"
+              >
+                {tag}
+              </span>
+            );
+          }
+
+          return (
+            <Link
+              key={tag}
+              href={`/recipes/category/${tagDef.code}`}
+              className="rounded-full border border-olive-light bg-olive-light/10 px-3 py-1.5 text-sm text-dark transition-colors hover:bg-olive-light hover:text-white"
+            >
+              {tag}
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}

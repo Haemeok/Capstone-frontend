@@ -16,11 +16,18 @@ export const homeMetadata: Metadata = {
     url: SEO_CONSTANTS.SITE_URL,
     type: SEO_CONSTANTS.OG_TYPE.WEBSITE,
     locale: SEO_CONSTANTS.LOCALE,
+    images: [
+      {
+        url: SEO_CONSTANTS.DEFAULT_IMAGE,
+        alt: `${SEO_CONSTANTS.SITE_NAME} 로고`,
+      },
+    ],
   },
   twitter: {
     card: SEO_CONSTANTS.TWITTER_CARD,
     title: `${SEO_CONSTANTS.SITE_NAME} - AI가 추천하는 홈쿡 레시피`,
     description: "AI가 추천하는 맛있는 홈쿡 레시피로 집에서 간편하게 요리해보세요.",
+    images: [SEO_CONSTANTS.DEFAULT_IMAGE],
   },
   other: {
     "application/ld+json": JSON.stringify(createWebsiteStructuredData()),
