@@ -11,6 +11,8 @@ import { useAdminRecipeUpload } from "@/features/recipe-create/model/hooks/useAd
 const AdminRecipeUploadPage = () => {
   const [jsonInput, setJsonInput] = useState("");
   const [mainImage, setMainImage] = useState<File | null>(null);
+  const [likeCount, setLikeCount] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
   const { uploadRecipe, isPending, error } = useAdminRecipeUpload();
 
   const previewUrl = useImagePreview(mainImage);
@@ -26,7 +28,12 @@ const AdminRecipeUploadPage = () => {
 
     try {
       const parsedData: RecipePayload = JSON.parse(jsonInput);
-      uploadRecipe({ recipeData: parsedData, mainImage });
+      uploadRecipe({
+        recipeData: parsedData,
+        mainImage,
+        likeCount,
+        ratingCount,
+      });
     } catch (err) {
       alert(
         "JSON 파싱 오류: " +
@@ -116,6 +123,41 @@ const AdminRecipeUploadPage = () => {
               className="h-96 w-full rounded-lg border border-gray-300 p-4 font-mono text-sm"
               placeholder="레시피 JSON 데이터를 입력하세요..."
             />
+          </div>
+
+          <div className="mb-6 grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="likeCount"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                좋아요 수 100이하
+              </label>
+              <input
+                id="likeCount"
+                type="number"
+                value={likeCount}
+                onChange={(e) => setLikeCount(Number(e.target.value))}
+                min="0"
+                className="w-full rounded-lg border border-gray-300 p-3"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="ratingCount"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                평가 수 100이하
+              </label>
+              <input
+                id="ratingCount"
+                type="number"
+                value={ratingCount}
+                onChange={(e) => setRatingCount(Number(e.target.value))}
+                min="0"
+                className="w-full rounded-lg border border-gray-300 p-3"
+              />
+            </div>
           </div>
 
           {error && (

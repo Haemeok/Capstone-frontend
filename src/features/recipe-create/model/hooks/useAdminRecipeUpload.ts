@@ -13,10 +13,13 @@ import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { useFinalizeRecipe } from "./useFinalizeRecipe";
 import { convertToWebPIfNeeded } from "@/shared/lib/image";
+import { postRecipeReactions } from "../api";
 
 type AdminRecipeUploadParams = {
   recipeData: RecipePayload;
   mainImage: File;
+  likeCount?: number;
+  ratingCount?: number;
 };
 
 export const useAdminRecipeUpload = () => {
@@ -28,7 +31,12 @@ export const useAdminRecipeUpload = () => {
     isPending,
     error,
   } = useMutation({
-    mutationFn: async ({ recipeData, mainImage }: AdminRecipeUploadParams) => {
+    mutationFn: async ({
+      recipeData,
+      mainImage,
+      likeCount = 0,
+      ratingCount = 0,
+    }: AdminRecipeUploadParams) => {
       const filesToUploadInfo: FileInfoRequest[] = [];
       const fileObjects: FileObject[] = [];
 
@@ -64,7 +72,12 @@ export const useAdminRecipeUpload = () => {
         await handleS3Upload(presignedUrlResponse.uploads, fileObjects);
       }
 
-      finalizeRecipeMutation.mutate(presignedUrlResponse.recipeId);
+      await finalizeRecipeMutation.mutateAsync(presignedUrlResponse.recipeId);
+
+      await postRecipeReactions(presignedUrlResponse.recipeId, {
+        likeCount,
+        ratingCount,
+      });
 
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
 
