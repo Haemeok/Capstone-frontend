@@ -122,3 +122,30 @@ export const createImageChangeHandler = (
     }
   };
 };
+
+export const convertToWebPIfNeeded = async (
+  file: File | string | null | undefined
+): Promise<File | string | null> => {
+  if (!file || typeof file === "string") {
+    return file ?? null;
+  }
+
+  if (file.type === "image/webp") {
+    return file;
+  }
+
+  if (shouldConvertToWebP(file)) {
+    try {
+      const { webpFile } = await convertToWebP(file);
+      return webpFile;
+    } catch (error) {
+      console.error(
+        `WebP conversion failed for ${file.name}, using original:`,
+        error
+      );
+      return file;
+    }
+  }
+
+  return file;
+};
