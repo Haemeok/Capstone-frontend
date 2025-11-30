@@ -31,12 +31,12 @@ export const StreakInfoBanner = ({ streakCount }: StreakInfoBannerProps) => {
   return (
     <div
       ref={targetRef}
-      className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-4"
+      className="flex w-full items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-4"
       style={{ opacity: 0 }}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex w-full items-center gap-3">
         <Fire width={48} height={48} className={config.flameColor} />
-        <div className="flex flex-col gap-1">
+        <div className="flex w-full flex-col gap-1">
           <p className="text-3xl font-bold">
             <span className={config.flameColor}>{streakCount}일</span>
           </p>

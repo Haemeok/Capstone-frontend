@@ -7,9 +7,9 @@ const HomeHeader = () => {
     <div className="relative h-20 w-full md:hidden">
       <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
         <Image
-          src="/app-logo-512.png"
+          src="/web-app-manifest-192x192.png"
           alt="logo"
-          wrapperClassName="h-10 w-10"
+          wrapperClassName="h-10 w-10 rounded-lg"
           skeletonClassName="h-10 w-10 rounded-full"
           width={40}
           height={40}

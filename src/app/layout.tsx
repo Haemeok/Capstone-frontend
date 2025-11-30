@@ -20,12 +20,33 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/app-logo-512.png", type: "image/png", sizes: "192x192" },
-      { url: "/app-logo-512.png", type: "image/png", sizes: "512x512" },
+      { url: "/web-app-manifest-192x192.png", type: "image/png", sizes: "192x192" },
+      { url: "/web-app-manifest-512x512.png", type: "image/png", sizes: "512x512" },
     ],
-    apple: "/app-logo-512.png",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "레시피오",
   },
   metadataBase: new URL("https://www.recipio.kr/"),
+  openGraph: {
+    title: "레시피오",
+    description: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 해먹어보세요!",
+    url: "https://www.recipio.kr/",
+    siteName: "레시피오 - recipio",
+    images: [
+      {
+        url: "/back1.webp",
+        alt: "레시피오 - 홈쿡 레시피",
+      },
+    ],
+    locale: "ko_KR",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {

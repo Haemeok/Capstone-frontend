@@ -53,7 +53,6 @@ export const CalendarDayStreak = ({
       className="group relative h-full w-full cursor-pointer p-0"
       onClick={handleClick}
     >
-      {/* Full-cell Airbnb-style background */}
       <div
         className={cn(
           "absolute inset-0",
@@ -62,9 +61,10 @@ export const CalendarDayStreak = ({
         )}
       />
 
-      {/* Day content with flame */}
       <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-0.5">
-        <Fire width={24} height={24} className={cn(flameConfig.flameColor, "md:w-10 md:h-10")} />
+        <Fire
+          className={cn(flameConfig.flameColor, "h-6 w-6 md:h-10 md:w-10")}
+        />
         <p className={cn("text-xs font-medium", flameConfig.flameColor)}>
           {dateNumber}
         </p>
