@@ -52,8 +52,8 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
     rootMargin: inViewRootMargin,
   });
   const actualSrc = useMemo(
-    () => (lazy ? (inView ? src : undefined) : src),
-    [lazy, inView, src]
+    () => (priority ? src : (lazy ? (inView ? src : undefined) : src)),
+    [priority, lazy, inView, src]
   );
 
   const { status, handleImageLoad, handleImageError } = useImageStatus(
@@ -74,7 +74,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
       style={wrapperStyle}
       className={`relative overflow-hidden ${wrapperClassName ?? ""}`}
     >
-      {status !== "loaded" &&
+      {status !== "loaded" && !priority &&
         (skeleton ?? <Skeleton className="absolute inset-0" />)}
 
       {status === "error" &&
@@ -89,10 +89,13 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
         src={actualSrc}
         alt={alt}
         loading={priority ? "eager" : lazy ? "lazy" : undefined}
+        fetchPriority={priority ? "high" : undefined}
         decoding="async"
         onLoad={handleImageLoad}
         onError={handleImageError}
-        className={`absolute inset-0 h-full w-full ${fitClass} transition duration-300 ${
+        className={`absolute inset-0 h-full w-full ${fitClass} ${
+          priority ? '' : 'transition duration-300'
+        } ${
           status === "loaded" ? "opacity-100" : "opacity-0"
         } ${imgClassName ?? ""}`}
         {...imgProps}

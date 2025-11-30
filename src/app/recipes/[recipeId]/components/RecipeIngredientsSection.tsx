@@ -77,31 +77,37 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         ) : (
           <ul className="flex flex-col gap-1">
             {recipe.ingredients.map((ingredient, index) => (
-              <li key={index} className="grid grid-cols-3 gap-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-left font-bold">{ingredient.name}</p>
-                </div>
-                <p className="text-left">
+              <li
+                key={index}
+                className="grid grid-cols-[1.5fr_1.5fr_1fr_32px] items-center gap-3"
+              >
+                <p className="text-left font-bold">{ingredient.name}</p>
+
+                <p className="text-left whitespace-nowrap">
                   {ingredient.quantity}
                   {ingredient.quantity !== "약간" && ingredient.unit}
                 </p>
-                <div className="flex items-center gap-2">
-                  <p className="text-left text-sm text-slate-500">
-                    {formatNumber(ingredient.price || 0, "원")}
-                  </p>
-                  {ingredient.coupangLink && (
+
+                <p className="text-right text-sm text-slate-500">
+                  {formatNumber(ingredient.price || 0, "원")}
+                </p>
+
+                <div className="flex items-center justify-center">
+                  {ingredient.coupangLink ? (
                     <Link
                       href={ingredient.coupangLink}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <div className="rounded-md border-1 border-gray-400 p-[2px]">
+                      <div className="rounded-md border border-gray-400 p-[2px]">
                         <ShoppingBasketIcon
                           className="text-gray-400"
                           size={20}
                         />
                       </div>
                     </Link>
+                  ) : (
+                    <div className="w-6" />
                   )}
                 </div>
               </li>
