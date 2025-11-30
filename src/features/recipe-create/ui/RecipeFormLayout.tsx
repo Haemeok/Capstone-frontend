@@ -3,8 +3,13 @@ import { useFormContext } from "react-hook-form";
 import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
+import { useFormProgress } from "@/shared/lib/hooks/useFormProgress";
 
-import { RecipeFormValues } from "@/features/recipe-create";
+import {
+  RecipeFormValues,
+  recipeFormSchema,
+  FIELD_LABELS,
+} from "@/features/recipe-create";
 import CookingToolsInput from "@/features/recipe-create/ui/CookingToolsInput";
 import Description from "@/features/recipe-create/ui/Description";
 import IngredientSection from "@/features/recipe-create/ui/IngredientSection";
@@ -37,6 +42,11 @@ const RecipeFormLayout = ({
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
 
+  const { missingFieldLabels } = useFormProgress<RecipeFormValues>(
+    recipeFormSchema,
+    { fieldLabels: FIELD_LABELS }
+  );
+
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
       <RecipeHeaderSection image={<MainImageField />} title={<TitleField />} />
@@ -47,13 +57,13 @@ const RecipeFormLayout = ({
           <div className="mb-4 flex items-center justify-center gap-6">
             <div className="flex flex-col items-center gap-2">
               <label htmlFor="dishType" className="font-medium text-gray-700">
-                카테고리
+                {FIELD_LABELS.dishType}
               </label>
               <select
                 id="dishType"
                 className={cn(
-                  `w-28 cursor-pointer rounded-lg border bg-gray-50 px-3 py-1.5 text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
-                  errors.dishType ? "border-red-500" : "border-gray-300"
+                  `focus:border-olive-light focus:ring-olive-light w-28 cursor-pointer rounded-lg border bg-gray-50 px-3 py-1.5 text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:ring-1 focus:outline-none`,
+                  errors.dishType ? "border-red-500" : "border-olive-light"
                 )}
                 {...register("dishType", {
                   required: "필수",
@@ -83,14 +93,14 @@ const RecipeFormLayout = ({
                 htmlFor="cookingTime"
                 className="font-medium text-gray-700"
               >
-                조리시간 (분)
+                {FIELD_LABELS.cookingTime} (분)
               </label>
               <input
                 id="cookingTime"
                 type="text"
                 inputMode="numeric"
                 className={cn(
-                  `w-20 rounded-lg border bg-gray-50 px-3 py-1.5 text-center text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none`,
+                  `focus:border-olive-light focus:ring-olive-light w-20 rounded-lg border bg-gray-50 px-3 py-1.5 text-center text-sm text-gray-900 transition-colors duration-150 ease-in-out focus:ring-1 focus:outline-none`,
                   errors.cookingTime ? "border-red-500" : "border-gray-300"
                 )}
                 placeholder="숫자"
@@ -122,6 +132,14 @@ const RecipeFormLayout = ({
           <CookingToolsInput />
           <TagSection />
           <div className="mt-8 flex flex-col items-center justify-center gap-4">
+            {missingFieldLabels.length > 0 && (
+              <p className="rounded-md bg-amber-50 px-4 py-2 text-sm text-amber-600">
+                다음 항목을 입력해주세요:{" "}
+                <span className="font-semibold">
+                  {missingFieldLabels.join(", ")}
+                </span>
+              </p>
+            )}
             {submitError && (
               <p className="text-sm text-red-600">
                 오류: {submitError.message}

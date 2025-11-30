@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
-import { Check, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
@@ -11,11 +11,12 @@ import useSearch from "@/shared/hooks/useSearch";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
+
+import IngredientListItem from "./IngredientListItem";
 
 type IngredientSelectorProps = {
   open: boolean;
@@ -68,18 +69,24 @@ const IngredientSelector = ({
     setSelectedCategory(category);
   };
 
-  const handleAddClick = (ingredient: IngredientItem) => {
-    onIngredientSelect({
-      name: ingredient.name,
-      quantity: "",
-      unit: ingredient.unit,
-    });
-    setLocalAddedNames((prevNames: Set<string>) =>
-      new Set(prevNames).add(ingredient.name)
-    );
-  };
+  const handleAddClick = useCallback(
+    (ingredient: IngredientItem) => {
+      onIngredientSelect({
+        name: ingredient.name,
+        quantity: "",
+        unit: ingredient.unit,
+      });
+      setLocalAddedNames((prevNames: Set<string>) =>
+        new Set(prevNames).add(ingredient.name)
+      );
+    },
+    [onIngredientSelect]
+  );
 
-  const ingredientItems = data?.pages.flatMap((page) => page.content);
+  const ingredientItems = useMemo(
+    () => data?.pages.flatMap((page) => page.content),
+    [data?.pages]
+  );
   const { Container, Content, Header, Title, Description, Footer, Close } =
     useResponsiveSheet();
 
@@ -137,43 +144,12 @@ const IngredientSelector = ({
           ) : (
             <div className="h-full space-y-2">
               {ingredientItems?.map((ingredient) => (
-                <div
+                <IngredientListItem
                   key={ingredient.id}
-                  className="flex items-center rounded-lg border bg-white p-3 shadow-sm"
-                >
-                  <div className="mr-3 h-12 w-12 flex-shrink-0 relative overflow-hidden rounded-lg bg-gray-100">
-                    {ingredient.imageUrl && (
-                      <Image
-                        src={ingredient.imageUrl}
-                        alt={ingredient.name}
-                        className="h-full w-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium">{ingredient.name}</p>
-                  </div>
-                  {localAddedNames.has(ingredient.name) ? (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="flex items-center gap-1 text-gray-400"
-                      disabled
-                    >
-                      <Check size={16} />
-                      추가됨
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-olive-light text-olive-light hover:bg-olive-light hover:text-white"
-                      onClick={() => handleAddClick(ingredient)}
-                    >
-                      추가
-                    </Button>
-                  )}
-                </div>
+                  ingredient={ingredient}
+                  isAdded={localAddedNames.has(ingredient.name)}
+                  onAddClick={handleAddClick}
+                />
               ))}
               <div ref={ref} className="h-10 text-center">
                 {!hasNextPage && data?.pages[0]?.content?.length > 0 && (

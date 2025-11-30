@@ -73,6 +73,10 @@ export default async function RecipeDetailPage({
   const saveAmount =
     staticRecipe.marketPrice - staticRecipe.totalIngredientCost;
 
+  const hasAllStepImages = staticRecipe.steps.every(
+    (step) => step.stepImageUrl !== null && step.stepImageUrl !== ""
+  );
+
   return (
     <>
       <RecipeStatusProvider recipeId={numericRecipeId}>
@@ -111,7 +115,10 @@ export default async function RecipeDetailPage({
             recipeId={numericRecipeId}
           />
 
-          <RecipeFabButton recipeId={numericRecipeId} />
+          <RecipeFabButton
+            recipeId={numericRecipeId}
+            hasAllStepImages={hasAllStepImages}
+          />
 
           <RecipeIngredientsSection recipe={staticRecipe} />
 

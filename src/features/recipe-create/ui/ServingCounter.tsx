@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 const MIN = 1;
 
-const ServingsCounter = () => {
+const ServingCounter = () => {
   const { control } = useFormContext<AIRecipeFormValues>();
 
   const { field } = useController<AIRecipeFormValues, "servings">({
@@ -36,7 +36,7 @@ const ServingsCounter = () => {
         aria-label="인분 줄이기"
         className={cn(
           "flex h-8 w-8 items-center",
-          "justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors  disabled:opacity-50",
+          "justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors disabled:opacity-50",
           value <= MIN ? "opacity-50" : "cursor-pointer hover:bg-gray-300"
         )}
       >
@@ -52,7 +52,7 @@ const ServingsCounter = () => {
         type="button"
         onClick={inc}
         aria-label="인분 늘리기"
-        className="flex h-8 w-8 items-center cursor-pointer justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300"
+        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-lg text-gray-600 transition-colors hover:bg-gray-300"
       >
         +
       </button>
@@ -60,4 +60,4 @@ const ServingsCounter = () => {
   );
 };
 
-export default ServingsCounter;
+export default ServingCounter;

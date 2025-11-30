@@ -5,6 +5,7 @@ import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
 
 import { RecipeFormValues } from "../model/config";
 import { cn } from "@/lib/utils";
+import { FIELD_LABELS } from "../model/constants";
 
 const TagSection = () => {
   const { control, setValue } = useFormContext<RecipeFormValues>();
@@ -20,7 +21,7 @@ const TagSection = () => {
 
   return (
     <div className="mt-6 mb-4">
-      <h2 className="text-xl font-bold text-gray-700">태그</h2>
+      <h2 className="text-xl font-bold text-gray-700">{FIELD_LABELS.tags}</h2>
       <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-sm">
         {TAG_DEFINITIONS.map((tag) => {
           const tagName = `${tag.emoji} ${tag.name}`;
@@ -30,7 +31,7 @@ const TagSection = () => {
               type="button"
               onClick={() => handleTagToggle(tagName)}
               className={cn(
-                "rounded-full border px-3 py-1 cursor-pointer text-sm transition-colors",
+                "cursor-pointer rounded-full border px-3 py-1 text-sm transition-colors",
                 tags?.includes(tagName)
                   ? "bg-olive-light text-white"
                   : "border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100"

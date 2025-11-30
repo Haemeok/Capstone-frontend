@@ -6,6 +6,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { X } from "lucide-react";
 
 import { RecipeFormValues } from "../model/config";
+import { FIELD_LABELS } from "../model/constants";
 
 const CookingToolsInput = () => {
   const { control, setValue } = useFormContext<RecipeFormValues>();
@@ -43,7 +44,9 @@ const CookingToolsInput = () => {
 
   return (
     <div className="mb-6">
-      <h2 className="text-xl font-bold text-gray-700">조리도구</h2>
+      <h2 className="text-xl font-bold text-gray-700">
+        {FIELD_LABELS.cookingTools}
+      </h2>
       <div className="rounded-xl bg-white p-4 shadow-sm">
         {cookingToolsValue.length > 0 && (
           <div className="mb-2 flex flex-wrap gap-2">
