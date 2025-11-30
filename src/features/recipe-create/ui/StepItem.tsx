@@ -147,8 +147,8 @@ const StepItem = ({
           }
           className={`mt-2 w-full rounded-md border border-gray-300 p-3 ${
             errors.steps?.[index]?.instruction ? "border-red-500" : ""
-          } focus:border-olive-light min-h-[100px] resize-none focus:outline-none`}
-          placeholder={`${index + 1}번째 과정을 설명해주세요`}
+          } focus:border-olive-light min-h-[100px] resize-none focus:border-2 focus:outline-none`}
+          placeholder={`${index + 1}번째 과정을 설명해주세요.`}
           {...register(`steps.${index}.instruction`, {
             required: index === 0 ? "조리 과정 설명은 필수입니다" : false,
           })}

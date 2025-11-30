@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { FieldValues, useFormContext, useWatch } from "react-hook-form";
+import { FieldValues, useFormContext } from "react-hook-form";
 
 import { z } from "zod";
 
-import { isKeyOf } from "@/shared/lib/typeguards";
 import ProgressButton from "@/shared/ui/ProgressButton";
+import { useFormProgress } from "@/shared/lib/hooks/useFormProgress";
 
 type FormProgressButtonProps = {
   isLoading: boolean;
@@ -21,26 +21,10 @@ export const FormProgressButton = <T extends FieldValues>({
   onClick,
   text,
 }: FormProgressButtonProps) => {
-  const { control, formState } = useFormContext<T>();
+  const { formState } = useFormContext<T>();
   const { isValid, isDirty } = formState;
 
-  const formValues = useWatch({ control });
-
-  const fieldsSchema = schema.shape as Record<string, z.ZodTypeAny>;
-  const fieldNames = Object.keys(fieldsSchema);
-
-  const completedSteps = fieldNames.filter((key) => {
-    const fieldSchema = fieldsSchema[key];
-    let value: unknown = undefined;
-    if (isKeyOf(formValues, key)) {
-      value = formValues[key];
-    }
-    return fieldSchema.safeParse(value).success;
-  }).length;
-
-  const totalSteps = fieldNames.length;
-  const progressPercentage =
-    totalSteps > 0 ? Math.floor((completedSteps / totalSteps) * 100) : 0;
+  const { progressPercentage } = useFormProgress<T>(schema);
 
   return (
     <ProgressButton
