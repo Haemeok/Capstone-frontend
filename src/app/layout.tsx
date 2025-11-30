@@ -11,6 +11,7 @@ import DesktopHeader from "@/widgets/Header/DesktopHeader";
 
 import { pretendard } from "./fonts";
 import { AppProviders } from "./providers/AppProviders";
+import GoogleAnalytics from "./GoogleAnalytics";
 
 import "./globals.css";
 
@@ -72,6 +73,7 @@ export default async function RootLayout({
           <BottomNavBar />
         </AppProviders>
         <Analytics />
+        <GoogleAnalytics />
       </body>
     </html>
   );
