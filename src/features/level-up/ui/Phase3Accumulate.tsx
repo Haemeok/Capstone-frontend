@@ -19,7 +19,6 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
     const ctx = gsap.context(() => {
       if (!progressBarRef.current) return;
 
-      // 프로그레스 바 차오르는 애니메이션
       gsap.fromTo(
         progressBarRef.current,
         {
@@ -43,7 +42,6 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
 
   return (
     <div className="flex h-[500px] flex-col px-6 py-4">
-      {/* 헤더: 누적 금액 */}
       <div className="mb-6 text-center">
         <p className="mb-2 text-sm text-gray-500">이번 달 누적 절약 금액</p>
         <div className="flex items-baseline justify-center gap-1">
@@ -59,14 +57,12 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
         </div>
       </div>
 
-      {/* 프로그레스 바 */}
       <div className="mb-6 px-0 pb-2">
         <div className="relative h-5 w-full overflow-hidden rounded-full bg-gray-200">
           <div
             ref={progressBarRef}
-            className="bg-olive-mint absolute inset-y-0 left-0 rounded-full transition-all"
+            className="bg-olive-mint absolute inset-y-0 left-0 rounded-full"
           >
-            {/* 스트라이프 패턴 */}
             <div
               className="absolute inset-0 opacity-30"
               style={{
@@ -86,7 +82,6 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
         </div>
       </div>
 
-      {/* 현재/다음 단계 아이템 */}
       <div className="flex flex-1 flex-col items-center justify-center">
         {showLevelUp && data.nextBracket ? (
           <>
