@@ -7,12 +7,18 @@ import {
   type AIModel,
   useAIRecipeGeneration,
 } from "@/features/recipe-create-ai";
+import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 
 const AIModelSelection = () => {
   const { selectAI } = useAIRecipeGeneration();
 
+  const authenticatedSelectAI = useAuthenticatedAction<AIModel, undefined>(
+    selectAI,
+    { notifyOnly: true }
+  );
+
   const handleSelectAI = (ai: AIModel) => {
-    selectAI(ai);
+    authenticatedSelectAI(ai);
   };
 
   return (

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useToastStore } from "@/widgets/Toast";
+import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 
 import { createRecipeRecord } from "./api";
 import { useRecipeCompleteStore } from "./store";
@@ -43,6 +44,7 @@ export const useRecipeComplete = ({
       queryClient.invalidateQueries({ queryKey: ["recipeHistory"] });
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
       queryClient.invalidateQueries({ queryKey: ["recipeHistoryItems"] });
+      queryClient.invalidateQueries({ queryKey: ["userStreak"] });
     },
     onError: (error: any) => {
       const errorMessage =
@@ -55,8 +57,13 @@ export const useRecipeComplete = ({
     },
   });
 
+  const authenticatedCompleteRecipe = useAuthenticatedAction<void, undefined>(
+    mutate,
+    { notifyOnly: true }
+  );
+
   return {
-    completeRecipe: mutate,
+    completeRecipe: authenticatedCompleteRecipe,
     isCompleted: hasCompletedRecipe,
     isLoading: isPending,
     error,
