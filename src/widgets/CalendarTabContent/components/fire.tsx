@@ -1,18 +1,18 @@
 type FireProps = {
+  className?: string;
   width?: number;
   height?: number;
-  className?: string;
 };
 
-export const Fire = ({ width = 32, height = 32, className }: FireProps) => {
+export const Fire = ({ className, width, height }: FireProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
       viewBox="0 0 2200 2200"
+      className={className}
       width={width}
       height={height}
-      className={className}
     >
       <g>
         <g>

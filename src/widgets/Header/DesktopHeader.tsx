@@ -35,8 +35,13 @@ const DesktopHeader = () => {
             href="/"
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
           >
-            <Image src="/app-logo-512.png" alt="Recipio Logo" width={32} />
-            <span className="text-xl font-bold text-gray-900">RECIPI'O</span>
+            <Image
+              src="/web-app-manifest-192x192.png"
+              alt="Recipio Logo"
+              wrapperClassName="rounded-lg"
+              width={32}
+            />
+            <span className="text-xl font-bold text-gray-900">Recipi'O</span>
           </Link>
 
           <div className="flex items-center gap-8">

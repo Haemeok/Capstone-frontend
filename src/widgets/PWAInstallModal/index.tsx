@@ -39,9 +39,9 @@ const PWAInstallModal = ({
         <DialogHeader className="text-sidebar-accent-foreground">
           <div className="flex justify-center">
             <img
-              src="/app-logo-512.png"
+              src="/web-app-manifest-192x192.png"
               alt="레시피오 앱 설치"
-              className="h-20 w-20 rounded-2xl"
+              className="h-20 w-20 rounded-lg"
             />
           </div>
           <div className="space-y-2">
@@ -49,27 +49,26 @@ const PWAInstallModal = ({
               레시피오 앱 설치
             </DialogTitle>
             <DialogDescription className="text-sm leading-relaxed text-gray-500">
-              홈 화면에 추가하면 앱처럼 빠르게 접속할 수 있어요.
+              ✔️ 홈 화면에 추가하면 앱처럼 빠르게 접속할 수 있어요.
               <br />
-              별도 업데이트 없이 항상 최신 기능을 사용하세요.
+              ✔️ 별도 업데이트 없이 항상 최신 기능을 사용하세요.
             </DialogDescription>
           </div>
         </DialogHeader>
 
         <DialogFooter className="flex flex-col gap-3 pt-2 sm:flex-col">
-          <Button
+          <button
             onClick={handleInstallClick}
-            className="bg-olive-mint hover:bg-olive-medium h-12 w-full rounded-xl font-medium text-white"
+            className="bg-olive-medium h-12 w-full rounded-xl font-medium text-white"
           >
             홈 화면에 추가
-          </Button>
-          <Button
-            variant="ghost"
+          </button>
+          <button
             onClick={handleSkipClick}
-            className="h-12 w-full font-medium text-gray-500 hover:text-gray-700"
+            className="h-12 w-full border border-gray-200 font-medium text-gray-500 hover:text-gray-700"
           >
             나중에
-          </Button>
+          </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
