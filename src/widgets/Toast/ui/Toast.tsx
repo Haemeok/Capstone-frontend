@@ -24,7 +24,7 @@ const DESKTOP_TOAST_STYLE = {
   error: "bg-red-50 border border-red-100",
   warning: "bg-amber-50 border border-amber-100",
   info: "bg-blue-50 border border-blue-100",
-  default: "bg-olive-50 border border-olive-100",
+  default: "bg-green-50 border border-green-100",
 };
 
 const ICON_STYLE = {
