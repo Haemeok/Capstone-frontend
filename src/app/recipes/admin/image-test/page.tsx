@@ -21,7 +21,7 @@ const AdminImageTestPage = () => {
   } = useMutation({
     mutationFn: async (data: unknown) => {
       const result = await api.post<ImageGenerationResponse>(
-        "/test/ai-recipe/image",
+        "https://api.recipio.kr/api/test/ai-recipe/image",
         data,
         {
           timeout: 180000,
