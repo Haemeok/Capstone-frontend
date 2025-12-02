@@ -117,7 +117,7 @@ const IngredientPackDetailDrawer = ({
               size="sm"
               variant="outline"
               onClick={handleSelectAll}
-              className="flex-1"
+              className="flex-1 cursor-pointer"
             >
               전체 선택
             </Button>
@@ -125,7 +125,7 @@ const IngredientPackDetailDrawer = ({
               size="sm"
               variant="outline"
               onClick={handleDeselectAll}
-              className="flex-1"
+              className="flex-1 cursor-pointer"
             >
               선택 해제
             </Button>
@@ -140,7 +140,6 @@ const IngredientPackDetailDrawer = ({
               return (
                 <div
                   key={ingredient.id}
-                  onClick={() => isClickable && handleToggle(ingredient.id)}
                   className={cn(
                     "flex items-center rounded-lg border p-3 transition-colors",
                     !isClickable
@@ -152,14 +151,19 @@ const IngredientPackDetailDrawer = ({
                         : "bg-olive-mint/10 border-olive-light"
                       : isClickable && "bg-white border-gray-200 hover:bg-gray-50"
                   )}
+                  onClick={() => isClickable && handleToggle(ingredient.id)}
                 >
                   <Checkbox
                     id={`ingredient-${ingredient.id}`}
                     checked={isSelected}
                     disabled={!isClickable}
-                    onCheckedChange={() => handleToggle(ingredient.id)}
+                    onCheckedChange={() => {
+                      if (isClickable) {
+                        handleToggle(ingredient.id);
+                      }
+                    }}
                     className={cn(
-                      "h-5 w-5 rounded border-gray-300 disabled:cursor-not-allowed",
+                      "h-5 w-5 rounded border-gray-300 disabled:cursor-not-allowed cursor-pointer",
                       allOwned
                         ? "data-[state=checked]:border-red-500 data-[state=checked]:bg-red-500"
                         : "data-[state=checked]:border-olive-light data-[state=checked]:bg-olive-light"
@@ -171,6 +175,12 @@ const IngredientPackDetailDrawer = ({
                       "ml-3 flex-1 text-sm font-medium",
                       isClickable ? "cursor-pointer" : "cursor-not-allowed"
                     )}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isClickable) {
+                        handleToggle(ingredient.id);
+                      }
+                    }}
                   >
                     {ingredient.name}
                   </label>
@@ -196,7 +206,7 @@ const IngredientPackDetailDrawer = ({
             onClick={handleSubmit}
             disabled={selectedIds.size === 0 || isLoading}
             className={cn(
-              "w-full text-white disabled:bg-gray-300",
+              "w-full text-white disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed",
               allOwned
                 ? "bg-red-500 hover:bg-red-600"
                 : "bg-olive-light hover:bg-olive-dark"

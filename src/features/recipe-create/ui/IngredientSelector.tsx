@@ -122,7 +122,7 @@ const IngredientSelector = ({
                 key={category}
                 onClick={() => handleCategoryClick(category)}
                 className={cn(
-                  "flex-shrink-0 rounded-full px-4 py-1.5 text-sm transition-colors",
+                  "flex-shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-sm transition-colors",
                   selectedCategory === category
                     ? "bg-olive-light font-medium text-white"
                     : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
@@ -170,14 +170,14 @@ const IngredientSelector = ({
         <Footer className="mt-auto p-4">
           {Close ? (
             <Close asChild>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full cursor-pointer">
                 닫기
               </Button>
             </Close>
           ) : (
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full cursor-pointer"
               onClick={() => onOpenChange(false)}
             >
               닫기

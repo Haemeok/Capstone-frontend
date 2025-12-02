@@ -20,7 +20,7 @@ const IngredientListItem = ({
 }: IngredientListItemProps) => {
   return (
     <div className="flex items-center rounded-lg border bg-white p-3 shadow-sm">
-      <div className="mr-3 h-12 w-12 flex-shrink-0 relative overflow-hidden rounded-lg bg-gray-100">
+      <div className="relative mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
         {ingredient.imageUrl && (
           <Image
             src={ingredient.imageUrl}
@@ -46,7 +46,7 @@ const IngredientListItem = ({
         <Button
           size="sm"
           variant="outline"
-          className="border-olive-light text-olive-light hover:bg-olive-light hover:text-white"
+          className="border-olive-light text-olive-light hover:bg-olive-light cursor-pointer hover:text-white"
           onClick={() => onAddClick(ingredient)}
         >
           추가

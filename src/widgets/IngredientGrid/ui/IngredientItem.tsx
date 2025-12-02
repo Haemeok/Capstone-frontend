@@ -45,19 +45,20 @@ const IngredientItem = ({
       <Image
         src={ingredient.imageUrl ?? ""}
         alt={ingredient.name}
-        className="rounded-md flex-shrink-0"
+        wrapperClassName="rounded-md"
+        imgClassName="flex-shrink-0"
         width={60}
         height={60}
       />
-      <div className="flex flex-col flex-1 min-w-0 pr-8">
+      <div className="flex min-w-0 flex-1 flex-col pr-8">
         <span className="text-xs text-gray-500">{ingredient.category}</span>
         <span className="text-sm font-bold break-words">{ingredient.name}</span>
       </div>
       {isDeleteMode && (
         <div
           className={cn(
-            "absolute top-4 right-4 h-5 w-5 rounded-full border-2 border-gray-500 flex items-center justify-center",
-            isActive && "bg-[#5cc570] border-[#5cc570]"
+            "absolute top-4 right-4 flex h-5 w-5 items-center justify-center rounded-full border-2 border-gray-500",
+            isActive && "border-[#5cc570] bg-[#5cc570]"
           )}
           role="checkbox"
           aria-checked={isActive}

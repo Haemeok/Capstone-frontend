@@ -33,14 +33,6 @@ const NewIngredientsPage = () => {
 
   const isPending = isAdding || isDeleting;
 
-  const handlePackAddAll = (ingredientIds: number[]) => {
-    addIngredientBulk(ingredientIds);
-  };
-
-  const handlePackDeleteAll = (ingredientIds: number[]) => {
-    deleteIngredientBulk(ingredientIds);
-  };
-
   const handlePackViewDetail = (pack: IngredientPack) => {
     setSelectedPack(pack);
     setIsDetailDrawerOpen(true);
@@ -105,9 +97,6 @@ const NewIngredientsPage = () => {
                 key={pack.name + pack.description}
                 pack={pack}
                 onViewDetail={handlePackViewDetail}
-                onAddAll={handlePackAddAll}
-                onDeleteAll={handlePackDeleteAll}
-                isLoading={isPending}
                 ownedIngredientIds={ingredientIdsSet}
               />
             ))}
