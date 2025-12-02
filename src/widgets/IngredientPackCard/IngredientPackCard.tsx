@@ -5,23 +5,26 @@ import { Button } from "@/shared/ui/shadcn/button";
 
 import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
 
+import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge/model/hooks";
+import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fridge/model/hooks";
+
 type IngredientPackCardProps = {
   pack: IngredientPack;
   onViewDetail: (pack: IngredientPack) => void;
-  onAddAll: (ingredientIds: number[]) => void;
-  onDeleteAll: (ingredientIds: number[]) => void;
-  isLoading?: boolean;
   ownedIngredientIds: Set<number>;
 };
 
 const IngredientPackCard = ({
   pack,
   onViewDetail,
-  onAddAll,
-  onDeleteAll,
-  isLoading = false,
   ownedIngredientIds,
 }: IngredientPackCardProps) => {
+  const { mutate: addIngredientBulk, isPending: isAdding } =
+    useAddIngredientBulkMutation();
+  const { mutate: deleteIngredientBulk, isPending: isDeleting } =
+    useDeleteIngredientBulkMutation();
+
+  const isLoading = isAdding || isDeleting;
   const previewImages = pack.ingredients.slice(0, 4);
   const ingredientIds = pack.ingredients.map((ingredient) => ingredient.id);
   const allOwned = pack.ingredients.every((ingredient) =>
@@ -60,23 +63,23 @@ const IngredientPackCard = ({
           onClick={() => onViewDetail(pack)}
           disabled={isLoading}
           variant="outline"
-          className="flex-1 border-olive-light text-olive-light hover:bg-olive-mint/10"
+          className="flex-1 border-olive-light text-olive-light hover:bg-olive-mint/10 cursor-pointer disabled:cursor-not-allowed"
         >
           상세보기
         </Button>
         {allOwned ? (
           <Button
-            onClick={() => onDeleteAll(ingredientIds)}
+            onClick={() => deleteIngredientBulk(ingredientIds)}
             disabled={isLoading}
-            className="flex-1 bg-red-500 text-white hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="flex-1 bg-red-500 text-white hover:bg-red-600 disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed"
           >
             {isLoading ? "삭제 중..." : "전체 삭제"}
           </Button>
         ) : (
           <Button
-            onClick={() => onAddAll(ingredientIds)}
+            onClick={() => addIngredientBulk(ingredientIds)}
             disabled={isLoading}
-            className="flex-1 bg-olive-light text-white hover:bg-olive-dark disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="flex-1 bg-olive-light text-white hover:bg-olive-dark disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed"
           >
             {isLoading ? "추가 중..." : "바로추가"}
           </Button>
