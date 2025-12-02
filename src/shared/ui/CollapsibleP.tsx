@@ -81,16 +81,26 @@ const CollapsibleP = ({
             <Button
               variant="ghost"
               size="sm"
-              className="mt-2 font-bold text-olive-light"
+              className="text-olive-light mt-2 font-bold"
               aria-label={isOpen ? "텍스트 숨기기" : "텍스트 더 읽기"}
             >
               {isOpen ? (
                 <>
-                  숨기기 <ChevronUp size={16} className="ml-1" aria-hidden="true" />
+                  숨기기{" "}
+                  <ChevronUp
+                    size={16}
+                    className="ml-1 cursor-pointer"
+                    aria-hidden="true"
+                  />
                 </>
               ) : (
                 <>
-                  더 읽기 <ChevronDown size={16} className="ml-1" aria-hidden="true" />
+                  더 읽기{" "}
+                  <ChevronDown
+                    size={16}
+                    className="ml-1 cursor-pointer"
+                    aria-hidden="true"
+                  />
                 </>
               )}
             </Button>

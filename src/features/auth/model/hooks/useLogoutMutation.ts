@@ -17,15 +17,6 @@ const useLogoutMutation = () => {
     onMutate: () => {
       useUserStore.setState({ isLoggingOut: true });
 
-      if (typeof window !== "undefined") {
-        const currentPath = window.location.pathname;
-        const userIdMatch = currentPath.match(/^\/users\/(\d+)$/);
-
-        if (userIdMatch) {
-          window.location.replace("/users/guestUser");
-        }
-      }
-
       const deletingToastId = addToast({
         message: "로그아웃 중...",
         variant: "default",
@@ -39,6 +30,15 @@ const useLogoutMutation = () => {
     onSuccess: () => {
       logoutAction();
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+
+      if (typeof window !== "undefined") {
+        const currentPath = window.location.pathname;
+        const userIdMatch = currentPath.match(/^\/users\/(\d+)$/);
+
+        if (userIdMatch) {
+          window.location.replace("/users/guestUser");
+        }
+      }
     },
     onError: (error) => {
       const errorMessage =
