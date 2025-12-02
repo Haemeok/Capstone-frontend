@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import { EllipsisVertical } from "lucide-react";
 
@@ -9,6 +10,7 @@ import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
+import { useUserStore } from "@/entities/user";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
 
@@ -25,6 +27,14 @@ const SimpleRecipeGridItem = ({
   priority,
   prefetch = false,
 }: SimpleRecipeGridItemProps) => {
+  const params = useParams();
+  const { user: loggedInUser } = useUserStore();
+
+  const profileUserId = params?.userId ? Number(params.userId) : null;
+  const isOwnRecipe = loggedInUser?.id === recipe.authorId;
+  const isOnOwnProfile = loggedInUser?.id === profileUserId;
+  const showActionButton = isOwnRecipe && isOnOwnProfile;
+
   const handleMenuClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -42,7 +52,7 @@ const SimpleRecipeGridItem = ({
           src={recipe.imageUrl}
           alt={recipe.title}
           wrapperClassName="rounded-2xl overflow-hidden"
-          imgClassName="ease-in-out group-hover:scale-110"
+          imgClassName="transition-transform duration-300 ease-in-out group-hover:scale-110"
           fit="cover"
           priority={priority}
         />
@@ -56,15 +66,17 @@ const SimpleRecipeGridItem = ({
           />
         </div>
 
-        <div className="absolute top-0 right-0 p-0.5">
-          <button
-            className="flex h-8 w-8 items-center justify-center rounded-full text-white"
-            onClick={handleMenuClick}
-            aria-label="레시피 옵션 메뉴"
-          >
-            <EllipsisVertical size={20} />
-          </button>
-        </div>
+        {showActionButton && (
+          <div className="absolute top-0 right-0 p-0.5">
+            <button
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white"
+              onClick={handleMenuClick}
+              aria-label="레시피 옵션 메뉴"
+            >
+              <EllipsisVertical size={20} />
+            </button>
+          </div>
+        )}
 
         <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end rounded-2xl bg-gradient-to-t from-black/70 to-transparent" />
         <p className="absolute right-4 bottom-2.5 left-4 line-clamp-2 text-[17px] font-bold text-white">
