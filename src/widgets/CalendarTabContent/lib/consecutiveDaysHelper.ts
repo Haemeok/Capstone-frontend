@@ -1,10 +1,12 @@
+import { parseISO } from "date-fns";
+
 import { RecipeDailySummary } from "@/entities/user";
 
 import { ConsecutiveRange } from "../types";
 import { getFlameLevel } from "./streakCalculator";
 
 const toMidnight = (dateInput: string | Date): number => {
-  const date = new Date(dateInput);
+  const date = typeof dateInput === "string" ? parseISO(dateInput) : dateInput;
   date.setHours(0, 0, 0, 0);
   return date.getTime();
 };

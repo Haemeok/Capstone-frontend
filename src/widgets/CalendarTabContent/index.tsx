@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -41,7 +41,7 @@ const CalendarTabContent = () => {
 
   const getEventForDay = (day: Date): RecipeDailySummary | undefined => {
     return recipeHistorySummary?.find((summary) => {
-      const summaryDate = new Date(summary.date);
+      const summaryDate = parseISO(summary.date);
       return (
         summaryDate.getDate() === day?.getDate() &&
         summaryDate.getMonth() === day?.getMonth() &&
