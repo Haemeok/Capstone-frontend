@@ -62,13 +62,6 @@ const DesktopHeader = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <button
-              className="rounded-lg p-2 transition-colors hover:bg-gray-100"
-              aria-label="검색"
-            >
-              <Search size={24} className="text-gray-600" />
-            </button>
-
             <NotificationButton />
 
             {user ? (

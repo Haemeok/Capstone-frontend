@@ -42,6 +42,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/back1.webp",
+        width: 1200,
+        height: 630,
         alt: "레시피오 - 홈쿡 레시피",
       },
     ],
