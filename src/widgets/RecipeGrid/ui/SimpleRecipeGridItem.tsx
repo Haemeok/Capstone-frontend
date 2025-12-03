@@ -31,9 +31,9 @@ const SimpleRecipeGridItem = ({
   const { user: loggedInUser } = useUserStore();
 
   const profileUserId = params?.userId ? Number(params.userId) : null;
-  const isOwnRecipe = loggedInUser?.id === recipe.authorId;
   const isOnOwnProfile = loggedInUser?.id === profileUserId;
-  const showActionButton = isOwnRecipe && isOnOwnProfile;
+  const showActionButton = isOnOwnProfile;
+  console.log(profileUserId, isOnOwnProfile, showActionButton);
 
   const handleMenuClick = (e: React.MouseEvent) => {
     e.preventDefault();
