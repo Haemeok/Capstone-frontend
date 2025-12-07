@@ -12,6 +12,7 @@ import { Image } from "@/shared/ui/image/Image";
 import { useUserStore } from "@/entities/user";
 
 import LoginDialog from "@/features/auth/ui/LoginDialog";
+import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 
 import NotificationButton from "./NotificationButton";
 
@@ -77,14 +78,14 @@ const DesktopHeader = () => {
                 </div>
               </Link>
             ) : (
-              <div className="flex items-center gap-2">
+              <LoginPromotionBadge variant="desktop">
                 <button
                   onClick={() => setIsLoginDialogOpen(true)}
                   className="cursor-pointer rounded-xl border-1 border-gray-200 px-4 py-2 transition-colors hover:text-gray-900"
                 >
                   로그인
                 </button>
-              </div>
+              </LoginPromotionBadge>
             )}
           </div>
         </nav>

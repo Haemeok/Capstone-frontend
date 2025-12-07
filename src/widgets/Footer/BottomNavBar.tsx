@@ -12,6 +12,7 @@ import { UnsavedChangesModal } from "@/shared/ui/modal/UnsavedChangesModal";
 import { useUserStore } from "@/entities/user";
 
 import AIRecipeNotificationBadge from "@/widgets/AIRecipeNotificationBadge";
+import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 
 import BottomNavButton from "./BottomNavButton";
 
@@ -84,12 +85,14 @@ const BottomNavBar = () => {
           />
         </AIRecipeNotificationBadge>
 
-        <BottomNavButton
-          path={`/users/${user?.id ?? "guestUser"}`}
-          icon={<ChefHat size={24} className="mb-1" />}
-          label="My"
-          onClick={handleNavClick(`/users/${user?.id ?? "guestUser"}`)}
-        />
+        <LoginPromotionBadge variant="mobile">
+          <BottomNavButton
+            path={`/users/${user?.id ?? "guestUser"}`}
+            icon={<ChefHat size={24} className="mb-1" />}
+            label="My"
+            onClick={handleNavClick(`/users/${user?.id ?? "guestUser"}`)}
+          />
+        </LoginPromotionBadge>
       </footer>
 
       <UnsavedChangesModal
