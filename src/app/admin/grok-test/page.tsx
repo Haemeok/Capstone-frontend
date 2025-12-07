@@ -41,7 +41,9 @@ const GrokTestPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="mx-auto max-w-4xl">
-        <h1 className="mb-6 text-3xl font-bold">Grok AI 테스트 (Vercel AI Gateway)</h1>
+        <h1 className="mb-6 text-3xl font-bold">
+          Grok AI 테스트 (Vercel AI Gateway)
+        </h1>
 
         <form
           onSubmit={handleSubmit}
@@ -58,16 +60,14 @@ const GrokTestPage = () => {
               id="prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="h-64 w-full rounded-lg border border-gray-300 p-4 font-mono text-sm focus:border-olive-mint focus:outline-none focus:ring-2 focus:ring-olive-mint"
+              className="focus:border-olive-mint focus:ring-olive-mint h-64 w-full rounded-lg border border-gray-300 p-4 font-mono text-sm focus:ring-2 focus:outline-none"
               placeholder="Grok에게 물어볼 내용을 입력하세요..."
             />
           </div>
 
           {error && (
             <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
-              <p className="text-sm text-red-600">
-                오류: {error}
-              </p>
+              <p className="text-sm text-red-600">오류: {error}</p>
             </div>
           )}
 
@@ -94,9 +94,9 @@ const GrokTestPage = () => {
           <div className="rounded-lg bg-white p-6 shadow">
             <h2 className="mb-4 text-xl font-semibold">Grok 응답</h2>
             <div className="max-h-[600px] overflow-auto">
-              <div className="whitespace-pre-wrap rounded bg-gray-100 p-4 text-sm">
+              <pre className="rounded bg-gray-100 p-4 text-sm whitespace-pre-wrap">
                 {response}
-              </div>
+              </pre>
             </div>
           </div>
         )}
