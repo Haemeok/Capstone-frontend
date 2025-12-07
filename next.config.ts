@@ -1,4 +1,4 @@
-import withPWA from "next-pwa";
+import withSerwistInit from "@serwist/next";
 import createBundleAnalyzer from "@next/bundle-analyzer";
 
 const withBundleAnalyzer = createBundleAnalyzer({
@@ -47,13 +47,16 @@ const appConfig = {
   eslint: { ignoreDuringBuilds: true },
 } satisfies import("next").NextConfig;
 
-const withPWAConfig = withPWA({
-  dest: "public",
-  register: true,
-  skipWaiting: true,
+const withSerwist = withSerwistInit({
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+  cacheOnNavigation: true,
+  reloadOnOnline: false,
   disable: process.env.NODE_ENV === "development",
-})(appConfig) as unknown as import("next").NextConfig;
+  register: true,
+});
 
-const analyzed = withBundleAnalyzer(withPWAConfig);
+const withSerwistConfig = withSerwist(appConfig);
+const analyzed = withBundleAnalyzer(withSerwistConfig);
 
 export default analyzed;
