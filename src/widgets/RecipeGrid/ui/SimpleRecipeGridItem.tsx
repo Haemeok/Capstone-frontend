@@ -52,7 +52,7 @@ const SimpleRecipeGridItem = ({
           src={recipe.imageUrl}
           alt={recipe.title}
           wrapperClassName="rounded-2xl overflow-hidden"
-          imgClassName="transition-transform duration-300 ease-in-out group-hover:scale-110"
+          imgClassName="transition-all duration-300 ease-in-out group-hover:scale-110"
           fit="cover"
           priority={priority}
         />

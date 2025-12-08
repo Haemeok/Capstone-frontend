@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -30,12 +31,20 @@ export const AppStateInitializer = ({
   const queryClient = useQueryClient();
   const { logoutAction, setUser } = useUserStore();
   const { addToast } = useToastStore();
+  const searchParams = useSearchParams();
 
   useAuthManager();
 
   useMyInfoQuery(myInfo && isAuthenticated(myInfo) ? myInfo.user : undefined);
 
   useEffect(() => {
+    const isFromOAuth = searchParams.get("from") === "oauth";
+
+   
+    if (isFromOAuth) {
+      window.history.replaceState({}, "", "/");
+    }
+
     if (myInfo && isAuthenticated(myInfo)) {
       queryClient.setQueryData(["myInfo"], myInfo.user);
       setUser(myInfo.user);
@@ -47,12 +56,14 @@ export const AppStateInitializer = ({
       logoutAction();
       setLoginState(false);
 
-      addToast({
-        message: "로그인이 만료되었습니다. 다시 로그인해주세요.",
-        variant: "error",
-      });
+      if (!isFromOAuth) {
+        addToast({
+          message: "로그인이 만료되었습니다. 다시 로그인해주세요.",
+          variant: "error",
+        });
+      }
     }
-  }, [myInfo, queryClient, logoutAction, setUser, addToast]);
+  }, [myInfo, queryClient, logoutAction, setUser, addToast, searchParams]);
 
   return <>{children}</>;
 };
