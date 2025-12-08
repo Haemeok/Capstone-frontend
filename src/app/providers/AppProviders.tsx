@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 
@@ -26,9 +26,11 @@ export const AppProviders = ({
       <PWAInstallProvider>
         <ScrollProvider>
           <WebSocketProvider>
-            <AppStateInitializer myInfo={myInfo}>
-              {children}
-            </AppStateInitializer>
+            <Suspense fallback={null}>
+              <AppStateInitializer myInfo={myInfo}>
+                {children}
+              </AppStateInitializer>
+            </Suspense>
             <ToastProvider />
             <PWAFirstLoginPrompter />
           </WebSocketProvider>
