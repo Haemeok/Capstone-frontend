@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import Link from "next/link";
 
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Trash, Sparkles } from "lucide-react";
 
 import Circle from "@/shared/ui/Circle";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
@@ -34,6 +34,7 @@ type RecipeGridProps = {
   error?: Error | null;
   queryKeyString?: string;
   prefetch?: boolean;
+  showAIRecipeCTA?: boolean;
 };
 
 const RecipeGrid = ({
@@ -48,6 +49,7 @@ const RecipeGrid = ({
   lastPageMessage = "모든 레시피를 다 봤어요!",
   error,
   prefetch = false,
+  showAIRecipeCTA = false,
 }: RecipeGridProps) => {
   const { isMobile, Container, Content } = useResponsiveSheet();
 
@@ -97,6 +99,30 @@ const RecipeGrid = ({
   }
 
   if (noResults || !recipes || recipes.length === 0) {
+    if (showAIRecipeCTA) {
+      return (
+        <section className="flex min-h-[500px] items-center justify-center px-4">
+          <div className="flex max-w-md flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-gray-800">
+                {noResultsMessage}
+              </h3>
+              <p className="text-sm text-gray-600">
+                30초만에 AI에게 레시피 생성을 맡겨보세요
+              </p>
+            </div>
+            <Link
+              href="/recipes/new/ai"
+              className="bg-olive-light hover:bg-olive-700 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-colors"
+            >
+              <Sparkles size={20} />
+              <span>AI 레시피 생성하기</span>
+            </Link>
+          </div>
+        </section>
+      );
+    }
+
     return (
       <section className="flex min-h-[500px] items-center justify-center">
         <p className="py-10 text-center text-base text-gray-500">
@@ -166,20 +192,26 @@ const RecipeGrid = ({
                 href={`/recipes/${selectedItemId}/edit`}
                 className={
                   isMobile
-                    ? "flex w-full justify-between cursor-pointer"
-                    : "flex w-full justify-center gap-2 px-6 py-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                    ? "flex w-full cursor-pointer justify-between"
+                    : "flex w-full cursor-pointer justify-center gap-2 px-6 py-4 transition-colors hover:bg-gray-50"
                 }
               >
                 {!isMobile && <Pencil size={20} />}
                 <p>수정</p>
                 {isMobile && <Pencil size={20} />}
               </Link>
-              <div className={isMobile ? "h-px w-full bg-gray-300" : "h-px w-full bg-gray-200"} />
+              <div
+                className={
+                  isMobile
+                    ? "h-px w-full bg-gray-300"
+                    : "h-px w-full bg-gray-200"
+                }
+              />
               <button
                 className={
                   isMobile
-                    ? "flex w-full justify-between text-red-500 cursor-pointer"
-                    : "flex w-full justify-center gap-2 px-6 py-4 text-red-500 hover:bg-gray-50 transition-colors cursor-pointer"
+                    ? "flex w-full cursor-pointer justify-between text-red-500"
+                    : "flex w-full cursor-pointer justify-center gap-2 px-6 py-4 text-red-500 transition-colors hover:bg-gray-50"
                 }
                 onClick={handleDeleteModalOpen}
               >

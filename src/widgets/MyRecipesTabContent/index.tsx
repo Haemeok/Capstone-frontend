@@ -47,13 +47,10 @@ const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
       hasNextPage={hasNextPage}
       isFetching={isFetching}
       noResults={recipes.length === 0 && !isFetching}
-      noResultsMessage={
-        recipes.length === 0
-          ? "작성한 레시피가 없습니다."
-          : "레시피를 작성해보세요."
-      }
+      noResultsMessage="작성한 레시피가 없습니다."
       observerRef={ref}
       error={error}
+      showAIRecipeCTA
     />
   );
 };
