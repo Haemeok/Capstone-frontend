@@ -40,7 +40,6 @@ export const AppStateInitializer = ({
   useEffect(() => {
     const isFromOAuth = searchParams.get("from") === "oauth";
 
-   
     if (isFromOAuth) {
       window.history.replaceState({}, "", "/");
     }
@@ -52,18 +51,12 @@ export const AppStateInitializer = ({
       setLoginState(true);
     }
 
+    
     if (myInfo && isTokenExpired(myInfo)) {
       logoutAction();
       setLoginState(false);
-
-      if (!isFromOAuth) {
-        addToast({
-          message: "로그인이 만료되었습니다. 다시 로그인해주세요.",
-          variant: "error",
-        });
-      }
     }
-  }, [myInfo, queryClient, logoutAction, setUser, addToast, searchParams]);
+  }, [myInfo, queryClient, logoutAction, setUser, searchParams]);
 
   return <>{children}</>;
 };

@@ -66,11 +66,17 @@ export async function serverApiClient<T = any>(
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
+  console.log("🔑 SSR serverApiClient - accessToken:", accessToken ? `${accessToken.substring(0, 20)}...` : "NONE");
+  console.log("🔑 SSR serverApiClient - refreshToken:", refreshToken ? "EXISTS" : "NONE");
+
   if (!accessToken) {
+    console.log("⚠️ No accessToken, checking refreshToken...");
     if (!refreshToken) {
+      console.log("❌ No refreshToken either, throwing 401");
       throw new Error("HTTP error! status: 401");
     }
 
+    console.log("⚠️ No accessToken but refreshToken exists, returning EXPIRED");
     const error = new Error("REFRESH_TOKEN_EXPIRED");
     (error as any).isRefreshExpired = true;
     throw error;
@@ -79,6 +85,7 @@ export async function serverApiClient<T = any>(
   const { headers = {}, ...restOptions } = options;
 
   try {
+    console.log("📡 SSR fetching:", url);
     return await serverFetch<T>(url, {
       ...restOptions,
       headers: {
@@ -87,9 +94,11 @@ export async function serverApiClient<T = any>(
       },
     });
   } catch (error) {
+    console.log("❌ SSR fetch failed:", error);
     if (error && typeof error === "object" && "message" in error) {
       const errorMessage = (error as Error).message;
       if (errorMessage.includes("401")) {
+        console.log("⚠️ Got 401 error, converting to EXPIRED");
         const refreshError = new Error("REFRESH_TOKEN_EXPIRED");
         (refreshError as any).isRefreshExpired = true;
         throw refreshError;
