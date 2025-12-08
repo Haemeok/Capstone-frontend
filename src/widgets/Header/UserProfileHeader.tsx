@@ -21,7 +21,7 @@ const Header = ({ isOwnProfile }: HeaderProps) => {
   if (isOwnProfile) {
     return (
       <>
-        <div className="relative z-30 flex justify-between overflow-visible bg-white p-4">
+        <div className="relative flex justify-between overflow-visible bg-white p-4">
           <h2 className="text-2xl font-bold">프로필</h2>
           {user ? (
             <SettingsActionButton />
@@ -29,7 +29,7 @@ const Header = ({ isOwnProfile }: HeaderProps) => {
             <LoginPromotionBadge variant="mobile-detailed">
               <button
                 onClick={() => setIsLoginDialogOpen(true)}
-                className="cursor-pointer rounded-xl border-1 border-gray-200 bg-olive-mint px-4 py-2 text-white transition-colors hover:bg-olive-700"
+                className="bg-olive-mint hover:bg-olive-700 cursor-pointer rounded-xl border-1 border-gray-200 px-4 py-2 text-white transition-colors"
               >
                 로그인
               </button>
@@ -45,7 +45,7 @@ const Header = ({ isOwnProfile }: HeaderProps) => {
   }
 
   return (
-    <div className="z-30 flex gap-4 bg-white p-4">
+    <div className="flex gap-4 bg-white p-4">
       <PrevButton />
       <h2 className="text-2xl font-bold">프로필</h2>
     </div>

@@ -1,7 +1,23 @@
 import { END_POINTS } from "../config/constants/api";
+import { PWA_STORAGE_KEYS } from "../config/constants/pwa";
+import { storage } from "../lib/storage";
 import { isClient } from "./config";
 import { API_CONFIG } from "./config";
 import type { ForceLogoutEventDetail } from "./types";
+
+export const setLoginState = (state: boolean) => {
+  if (!isClient) return;
+  if (state) {
+    storage.setBooleanItem(PWA_STORAGE_KEYS.IS_LOGGED_IN, true);
+  } else {
+    storage.removeItem(PWA_STORAGE_KEYS.IS_LOGGED_IN);
+  }
+};
+
+const getLoginState = (): boolean => {
+  if (!isClient) return false;
+  return storage.getBooleanItem(PWA_STORAGE_KEYS.IS_LOGGED_IN);
+};
 
 export const dispatchForceLogoutEvent = (reason: string, message?: string) => {
   if (isClient) {
@@ -50,13 +66,17 @@ const performTokenRefresh = async (): Promise<boolean> => {
     }
 
     if (isClient) {
+      setLoginState(true);
+
       const event = new CustomEvent("tokenRefreshed");
       window.dispatchEvent(event);
     }
 
     return true;
   } catch (error) {
-    dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
+    if (getLoginState()) {
+      dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
+    }
     return false;
   }
 };
@@ -71,12 +91,15 @@ export const performLogout = async (): Promise<boolean> => {
       credentials: "include",
     });
 
+    setLoginState(false);
+
     if (response.ok) {
       return true;
     }
 
     throw new Error(`Logout failed: ${response.statusText}`);
   } catch (error) {
+    setLoginState(false);
     return false;
   }
 };
