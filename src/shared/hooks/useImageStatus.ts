@@ -6,9 +6,13 @@ export type ImageStatus = "idle" | "loading" | "loaded" | "error";
 
 export const useImageStatus = (src?: string) => {
   const [status, setStatus] = useState<ImageStatus>(src ? "loading" : "idle");
+  const [retryCount, setRetryCount] = useState(0);
+  const [retrying, setRetrying] = useState(false);
 
   useEffect(() => {
     setStatus(src ? "loading" : "idle");
+    setRetryCount(0);
+    setRetrying(false);
   }, [src]);
 
   const handleImageLoad = async (
@@ -22,10 +26,25 @@ export const useImageStatus = (src?: string) => {
     } catch {
     } finally {
       setStatus("loaded");
+      setRetrying(false);
     }
   };
 
-  const handleImageError = () => setStatus("error");
+  const handleImageError = () => {
+    if (retryCount < 1) {
+      setRetrying(true);
+      setStatus("loading");
 
-  return { status, handleImageLoad, handleImageError };
+      const delay = 1000 + Math.random() * 1000;
+      setTimeout(() => {
+        setRetryCount((prev) => prev + 1);
+        setRetrying(false);
+      }, delay);
+    } else {
+      setStatus("error");
+      setRetrying(false);
+    }
+  };
+
+  return { status, handleImageLoad, handleImageError, retryCount, retrying };
 };

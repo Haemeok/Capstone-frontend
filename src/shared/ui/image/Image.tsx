@@ -56,9 +56,8 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
     [priority, lazy, inView, src]
   );
 
-  const { status, handleImageLoad, handleImageError } = useImageStatus(
-    typeof actualSrc === "string" ? actualSrc : undefined
-  );
+  const { status, handleImageLoad, handleImageError, retryCount } =
+    useImageStatus(typeof actualSrc === "string" ? actualSrc : undefined);
 
   const wrapperStyle: React.CSSProperties = {
     ...(typeof width === "number" ? { width } : null),
@@ -85,6 +84,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
         ))}
 
       <img
+        key={`${actualSrc}-retry-${retryCount}`}
         ref={forwardedRef}
         src={actualSrc}
         alt={alt}
@@ -94,10 +94,8 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
         onLoad={handleImageLoad}
         onError={handleImageError}
         className={`absolute inset-0 h-full w-full ${fitClass} ${
-          priority ? '' : 'transition duration-300'
-        } ${
-          status === "loaded" ? "opacity-100" : "opacity-0"
-        } ${imgClassName ?? ""}`}
+          priority ? "" : "transition duration-300"
+        } ${status === "loaded" ? "opacity-100" : "opacity-0"} ${imgClassName ?? ""}`}
         {...imgProps}
       />
     </div>
