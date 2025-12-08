@@ -21,20 +21,20 @@ export default function RecipeCookingInfoSection({
         </div>
 
         <div className="flex items-center gap-3">
+          <span className="text-2xl">👥</span>
+          <div className="flex flex-col">
+            <span className="text-xs text-gray-500">인분</span>
+            <span className="text-dark font-semibold">{servings}인분</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
           <span className="text-2xl">🔪</span>
           <div className="flex flex-col">
             <span className="text-xs text-gray-500">조리 도구</span>
             <span className="text-dark font-semibold">
               {cookingTools.length > 0 ? cookingTools.join(", ") : "정보 없음"}
             </span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">👥</span>
-          <div className="flex flex-col">
-            <span className="text-xs text-gray-500">인분</span>
-            <span className="text-dark font-semibold">{servings}인분</span>
           </div>
         </div>
       </div>

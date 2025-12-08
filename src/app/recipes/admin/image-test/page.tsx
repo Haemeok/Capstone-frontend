@@ -65,7 +65,6 @@ const AdminImageTestPage = () => {
           <h2 className="mb-4 text-xl font-semibold">JSON 형식</h2>
           <pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
             {`{
-  "model": "GEMINI" | "IMAGEN",
   "requestData": {
     "title": string,
     "dishType": string,
