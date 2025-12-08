@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, BookOpen } from "lucide-react";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import useLogoutMutation from "@/features/auth/model/hooks/useLogoutMutation";
 
+import IOSInstallGuideModal from "@/widgets/IOSInstallGuideModal";
+
 const SettingsActionButton = () => {
   const { mutate: logout } = useLogoutMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const { Container, Content, Header, Title, Footer, Close } =
     useResponsiveSheet();
 
@@ -18,6 +21,16 @@ const SettingsActionButton = () => {
     setIsModalOpen(false);
     logout();
   };
+
+  const handleGuideClick = () => {
+    setIsModalOpen(false);
+    setIsGuideModalOpen(true);
+  };
+
+  const isInstalled =
+    typeof window !== "undefined" &&
+    (window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as any).standalone === true);
 
   return (
     <>
@@ -34,6 +47,36 @@ const SettingsActionButton = () => {
             <Header>
               <Title className="text-lg">설정</Title>
             </Header>
+
+            {!isInstalled && (
+              <div className="border-t border-gray-200 p-4 sm:border-none">
+                <div className="border-olive-mint bg-olive-mint/5 relative rounded-lg border-2 p-4">
+                  <div className="bg-brown/80 text-beige absolute -top-3 right-3 rounded-full px-3 py-1 text-xs font-bold shadow-sm">
+                    🎁 AI 레시피 매일 1회 무료!
+                  </div>
+                  <button
+                    onClick={handleGuideClick}
+                    className="w-full text-left"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="bg-olive-mint flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg text-white">
+                        <BookOpen size={20} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-gray-900">
+                          레시피오 앱 설치 가이드
+                        </h3>
+                        <p className="mt-1 text-sm text-gray-600">
+                          홈 화면에 추가하고 더 빠르게 사용하세요
+                        </p>
+                      </div>
+                      <div className="text-gray-400">›</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
+
             <Footer className="flex-col gap-0 p-0 sm:flex-row sm:justify-end sm:gap-2">
               <button
                 onClick={handleLogoutClick}
@@ -61,6 +104,11 @@ const SettingsActionButton = () => {
           </Content>
         </Container>
       )}
+
+      <IOSInstallGuideModal
+        isOpen={isGuideModalOpen}
+        onOpenChange={setIsGuideModalOpen}
+      />
     </>
   );
 };

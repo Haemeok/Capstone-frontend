@@ -32,14 +32,14 @@
   "categories": ["food", "lifestyle", "cooking"],
   "screenshots": [
     {
-      "src": "/web-app-manifest-512x512.png",
-      "sizes": "512x512",
+      "src": "/screen-shot-1.png",
+      "sizes": "1170x2532",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "/web-app-manifest-512x512.png",
-      "sizes": "512x512",
+      "src": "/screen-shot-2.png",
+      "sizes": "1170x2532",
       "type": "image/png",
       "form_factor": "wide"
     }

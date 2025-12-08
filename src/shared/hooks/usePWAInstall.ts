@@ -14,10 +14,22 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+const isIOSSafari = () => {
+  if (typeof window === "undefined") return false;
+
+  const ua = window.navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
+  const isStandalone = (window.navigator as any).standalone === true;
+  const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/.test(ua);
+
+  return isIOS && isSafari && !isStandalone;
+};
+
 export const usePWAInstall = () => {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
 
   const checkInstallationStatus = useCallback(() => {
     if (
@@ -62,6 +74,7 @@ export const usePWAInstall = () => {
 
   useEffect(() => {
     setIsInstalled(checkInstallationStatus());
+    setIsIOS(isIOSSafari());
 
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
@@ -89,11 +102,12 @@ export const usePWAInstall = () => {
         window.removeEventListener("appinstalled", handleAppInstalled);
       }
     };
-  }, []);
+  }, [checkInstallationStatus]);
 
   return {
-    isInstallable: !!deferredPrompt && !isInstalled,
+    isInstallable: (!!deferredPrompt || isIOS) && !isInstalled,
     isInstalled,
+    isIOS,
     promptInstall,
     skipInstall,
   };
