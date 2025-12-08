@@ -6,6 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { useUserStore } from "@/entities/user/model/store";
 
+import { setLoginState } from "@/shared/api/auth";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 export const useAuthManager = () => {
@@ -20,6 +22,8 @@ export const useAuthManager = () => {
 
     const handleForceLogout = (event: CustomEvent) => {
       logoutAction();
+
+      setLoginState(false);
 
       const message =
         event.detail?.message ||
