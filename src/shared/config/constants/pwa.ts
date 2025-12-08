@@ -2,6 +2,7 @@ export const PWA_STORAGE_KEYS = {
   INSTALLED: "pwa-installed",
   FIRST_LOGIN_PROMPTED: "pwaFirstLoginPrompted",
   INSTALL_SKIPPED: "pwaInstallSkipped",
+  IS_LOGGED_IN: "isLoggedIn",
 } as const;
 
 export const PWA_PROMPT_DELAY = 1000;

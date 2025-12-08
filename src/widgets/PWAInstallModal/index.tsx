@@ -1,5 +1,7 @@
 "use client";
 
+import { Share } from "lucide-react";
+
 import { Button } from "@/shared/ui/shadcn/button";
 import {
   Dialog,
@@ -15,6 +17,7 @@ type PWAInstallModalProps = {
   onOpenChange: (open: boolean) => void;
   onInstall: () => void;
   onSkip: () => void;
+  isIOS?: boolean;
 };
 
 const PWAInstallModal = ({
@@ -22,10 +25,13 @@ const PWAInstallModal = ({
   onOpenChange,
   onInstall,
   onSkip,
+  isIOS = false,
 }: PWAInstallModalProps) => {
   const handleInstallClick = () => {
     onInstall();
-    onOpenChange(false);
+    if (!isIOS) {
+      onOpenChange(false);
+    }
   };
 
   const handleSkipClick = () => {
@@ -56,18 +62,56 @@ const PWAInstallModal = ({
           </div>
         </DialogHeader>
 
+        {isIOS ? (
+          <div className="space-y-3 rounded-lg bg-gray-50 p-4">
+            <p className="text-sm font-medium text-gray-700">
+              아래 단계를 따라 설치하세요:
+            </p>
+            <div className="space-y-2 text-sm text-gray-600">
+              <div className="flex items-start gap-2">
+                <span className="bg-olive-mint flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
+                  1
+                </span>
+                <span>
+                  하단의{" "}
+                  <Share className="inline-block" size={16} strokeWidth={2} />{" "}
+                  <strong>공유 버튼</strong>을 탭하세요
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="bg-olive-mint flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
+                  2
+                </span>
+                <span>
+                  <strong>"홈 화면에 추가"</strong>를 선택하세요
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="bg-olive-mint flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
+                  3
+                </span>
+                <span>
+                  <strong>"추가"</strong>를 탭하여 완료하세요
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         <DialogFooter className="flex flex-col gap-3 pt-2 sm:flex-col">
-          <button
-            onClick={handleInstallClick}
-            className="bg-olive-medium h-12 w-full rounded-xl font-medium text-white"
-          >
-            홈 화면에 추가
-          </button>
+          {!isIOS && (
+            <button
+              onClick={handleInstallClick}
+              className="bg-olive-medium h-12 w-full rounded-xl font-medium text-white"
+            >
+              홈 화면에 추가
+            </button>
+          )}
           <button
             onClick={handleSkipClick}
             className="h-12 w-full border border-gray-200 font-medium text-gray-500 hover:text-gray-700"
           >
-            나중에
+            {isIOS ? "닫기" : "나중에"}
           </button>
         </DialogFooter>
       </DialogContent>
