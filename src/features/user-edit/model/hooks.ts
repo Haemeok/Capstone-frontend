@@ -31,7 +31,10 @@ export const usePutUserInfoMutation = ({
       let profileImageFileKey: string | undefined = undefined;
 
       if (profileImageFile && user) {
-        const presignedUrlInfo = await getPresignedUrl(user.id);
+        const presignedUrlInfo = await getPresignedUrl(
+          user.id,
+          profileImageFile.type
+        );
         profileImageFileKey = await uploadFileToS3(
           profileImageFile,
           presignedUrlInfo
