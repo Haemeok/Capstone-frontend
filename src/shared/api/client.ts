@@ -99,7 +99,10 @@ export const api = {
     apiClient<T>(url, {
       ...options,
       method: "POST",
-      headers: { ...options?.headers, ...(data ? { "Content-Type": "application/json" } : {}) },
+      headers: {
+        ...options?.headers,
+        ...(data ? { "Content-Type": "application/json" } : {}),
+      },
       body: data ? JSON.stringify(data) : undefined,
     }),
 
@@ -111,7 +114,10 @@ export const api = {
     apiClient<T>(url, {
       ...options,
       method: "PUT",
-      headers: { ...options?.headers, ...(data ? { "Content-Type": "application/json" } : {}) },
+      headers: {
+        ...options?.headers,
+        ...(data ? { "Content-Type": "application/json" } : {}),
+      },
       body: data ? JSON.stringify(data) : undefined,
     }),
 
@@ -123,7 +129,10 @@ export const api = {
     apiClient<T>(url, {
       ...options,
       method: "PATCH",
-      headers: { ...options?.headers, ...(data ? { "Content-Type": "application/json" } : {}) },
+      headers: {
+        ...options?.headers,
+        ...(data ? { "Content-Type": "application/json" } : {}),
+      },
       body: data ? JSON.stringify(data) : undefined,
     }),
 

@@ -43,7 +43,6 @@ export async function GET(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "/";
     const redirectUrl = new URL(baseUrl);
-    redirectUrl.searchParams.set("from", "oauth");
     const finalResponse = NextResponse.redirect(redirectUrl);
 
     finalResponse.cookies.set("state", "", { maxAge: 0 });

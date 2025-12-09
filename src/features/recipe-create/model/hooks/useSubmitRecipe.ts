@@ -47,6 +47,12 @@ export const useSubmitRecipe = () => {
 
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
 
+      if (recipeId) {
+        queryClient.invalidateQueries({
+          queryKey: ["recipe", recipeId.toString()],
+        });
+      }
+
       return presignedUrlResponse;
     },
   });
