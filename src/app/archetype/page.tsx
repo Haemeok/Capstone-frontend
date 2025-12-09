@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Container } from "@/shared/ui/Container";
 
 import ArchetypeLanding2 from "@/features/archetype/ui/ArchetypeLanding2";
+import ArchetypeLanding from "@/features/archetype/ui/ArchetypeLanding";
 import ArchetypeFunnel from "@/features/archetype/ui/ArchetypeFunnel";
 import ArchetypeResult from "@/features/archetype/ui/ArchetypeResult";
 
@@ -31,7 +32,7 @@ const ArchetypePage = () => {
 
   return (
     <Container padding={false}>
-      {step === "landing" && <ArchetypeLanding2 onStart={handleStart} />}
+      {step === "landing" && <ArchetypeLanding onStart={handleStart} />}
       {step === "funnel" && <ArchetypeFunnel onComplete={handleComplete} />}
       {step === "result" && (
         <ArchetypeResult result={result} onRestart={handleRestart} />
