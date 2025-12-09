@@ -55,7 +55,6 @@ Follow strict layer dependency order: `shared` → `entities` → `features` →
 
 - Cookie-based authentication with automatic refresh
 - 401 errors trigger token refresh in `apiClient`
-- Server-side user info fetching in `getMyInfoOnServer`
 
 ## Key Features
 

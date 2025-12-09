@@ -1,4 +1,4 @@
-export const TITLE = { MIN: 5, MAX: 25 };
+export const TITLE = { MIN: 5, MAX: 30 };
 export const IMAGE = {
   MAX_MB: 5,
   MIME: /^image\/(png|jpe?g|webp|gif|avif)$/i,

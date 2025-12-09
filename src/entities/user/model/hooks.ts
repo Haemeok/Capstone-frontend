@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getMyInfo, getUserInfo } from "./api";
 import { useUserStore } from "./store";
-import { User } from "./types";
 
 export const useUserQuery = (userId: number, isOtherProfile: boolean) => {
   const {
@@ -32,7 +31,7 @@ export const useUserQuery = (userId: number, isOtherProfile: boolean) => {
   };
 };
 
-export const useMyInfoQuery = (initialData?: User) => {
+export const useMyInfoQuery = () => {
   const [isMounted, setIsMounted] = useState(false);
   const setUser = useUserStore((state) => state.setUser);
   const {
@@ -53,7 +52,6 @@ export const useMyInfoQuery = (initialData?: User) => {
       return failureCount < 2;
     },
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 3000),
-    initialData,
   });
 
   useEffect(() => {
