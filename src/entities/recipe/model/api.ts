@@ -87,7 +87,7 @@ export const editRecipe = async ({
   files,
   isIngredientsModified,
 }: RecipeEditData) => {
-  return api.put<PresignedUrlResponse>(`/recipes/${recipeId}`, {
+  return api.put<PresignedUrlResponse>(`/bff/recipes/${recipeId}`, {
     recipe: {
       ...recipe,
       isIngredientsModified,

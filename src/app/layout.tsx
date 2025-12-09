@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from "next";
 
 import { Analytics } from "@vercel/analytics/react";
 
-import { getMyInfoOnServer } from "@/entities/user/model/api.server";
-
 import { PWA_APP_INFO } from "@/shared/config/constants/pwa";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
@@ -21,8 +19,16 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/web-app-manifest-192x192.png", type: "image/png", sizes: "192x192" },
-      { url: "/web-app-manifest-512x512.png", type: "image/png", sizes: "512x512" },
+      {
+        url: "/web-app-manifest-192x192.png",
+        type: "image/png",
+        sizes: "192x192",
+      },
+      {
+        url: "/web-app-manifest-512x512.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
     ],
     apple: [
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
@@ -64,10 +70,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const myInfo = await getMyInfoOnServer();
-
   return (
-    <html lang="ko" className={`${pretendard.variable} ${notoSerifKr.variable}`}>
+    <html
+      lang="ko"
+      className={`${pretendard.variable} ${notoSerifKr.variable}`}
+    >
       <head>
         <link
           rel="apple-touch-icon"
@@ -89,7 +96,7 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-title" content="레시피오" />
       </head>
       <body className={pretendard.className}>
-        <AppProviders myInfo={myInfo}>
+        <AppProviders>
           <DesktopHeader />
           <main>{children}</main>
           <BottomNavBar />

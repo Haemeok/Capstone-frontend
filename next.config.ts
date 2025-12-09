@@ -9,7 +9,8 @@ const appConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
+        // Exclude /api/bff/* from rewrite - these go to Next.js API routes
+        source: "/api/:path((?!bff).*)*",
         destination: "https://api.recipio.kr/api/:path*",
       },
       {

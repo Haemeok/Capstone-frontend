@@ -21,7 +21,7 @@
       "destination": "https://api.recipio.kr/v3/api-docs/:path*"
     },
     {
-      "source": "/api/:path*",
+      "source": "/api/:path((?!bff).*)*",
       "destination": "https://api.recipio.kr/api/:path*"
     }
   ]

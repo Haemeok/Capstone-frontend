@@ -44,9 +44,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     const data = await backendRes.json();
 
-    console.log("[PUT /api/recipes] Called!", new Date().toISOString());
+    console.log("[BFF PUT /api/bff/recipes] Called!", new Date().toISOString());
     console.log(
-      "[PUT /api/recipes/[recipeId]] Revalidated tags for recipe:",
+      "[BFF PUT /api/bff/recipes/[recipeId]] Revalidated tags for recipe:",
       recipeIdNum
     );
 
@@ -56,7 +56,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("[PUT /api/recipes/[recipeId]] Error:", error);
+    console.error("[BFF PUT /api/bff/recipes/[recipeId]] Error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -96,13 +96,19 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
 
     const data = await backendRes.json().catch(() => ({}));
 
+    console.log("[BFF DELETE /api/bff/recipes] Called!", new Date().toISOString());
+    console.log(
+      "[BFF DELETE /api/bff/recipes/[recipeId]] Revalidated tags for recipe:",
+      recipeIdNum
+    );
+
     revalidateTag(CACHE_TAGS.recipe(recipeIdNum));
     revalidateTag(CACHE_TAGS.recipesAll);
     revalidateTag(CACHE_TAGS.recipesPopular);
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("[DELETE /api/recipes/[recipeId]] Error:", error);
+    console.error("[BFF DELETE /api/bff/recipes/[recipeId]] Error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
