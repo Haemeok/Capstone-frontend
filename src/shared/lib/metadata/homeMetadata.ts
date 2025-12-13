@@ -7,12 +7,18 @@ export const homeMetadata: Metadata = {
   title: `${SEO_CONSTANTS.SITE_NAME} - AI가 추천하는 홈쿡 레시피`,
   description: `AI가 추천하는 맛있는 홈쿡 레시피로 집에서 간편하게 요리해보세요. 이번주 인기 레시피와 홈파티 레시피까지!`,
   keywords: [...SEO_CONSTANTS.DEFAULT_KEYWORDS, "홈파티"],
+  verification: {
+    other: {
+      "naver-site-verification": "7c2a4d7a2d320196a11bcf8e31524a1827f41b99",
+    },
+  },
   alternates: {
     canonical: SEO_CONSTANTS.SITE_URL,
   },
   openGraph: {
     title: `${SEO_CONSTANTS.SITE_NAME} - AI가 추천하는 홈쿡 레시피`,
-    description: "AI가 추천하는 맛있는 홈쿡 레시피로 집에서 간편하게 요리해보세요.",
+    description:
+      "AI가 추천하는 맛있는 홈쿡 레시피로 집에서 간편하게 요리해보세요.",
     url: SEO_CONSTANTS.SITE_URL,
     type: SEO_CONSTANTS.OG_TYPE.WEBSITE,
     locale: SEO_CONSTANTS.LOCALE,
@@ -26,7 +32,8 @@ export const homeMetadata: Metadata = {
   twitter: {
     card: SEO_CONSTANTS.TWITTER_CARD,
     title: `${SEO_CONSTANTS.SITE_NAME} - AI가 추천하는 홈쿡 레시피`,
-    description: "AI가 추천하는 맛있는 홈쿡 레시피로 집에서 간편하게 요리해보세요.",
+    description:
+      "AI가 추천하는 맛있는 홈쿡 레시피로 집에서 간편하게 요리해보세요.",
     images: [SEO_CONSTANTS.DEFAULT_IMAGE],
   },
   other: {

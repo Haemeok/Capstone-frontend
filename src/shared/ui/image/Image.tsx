@@ -83,21 +83,23 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
           </div>
         ))}
 
-      <img
-        key={`${actualSrc}-retry-${retryCount}`}
-        ref={forwardedRef}
-        src={actualSrc}
-        alt={alt}
-        loading={priority ? "eager" : lazy ? "lazy" : undefined}
-        fetchPriority={priority ? "high" : undefined}
-        decoding="async"
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        className={`absolute inset-0 h-full w-full ${fitClass} ${
-          priority ? "" : "transition duration-300"
-        } ${status === "loaded" ? "opacity-100" : "opacity-0"} ${imgClassName ?? ""}`}
-        {...imgProps}
-      />
+      {actualSrc && (
+        <img
+          key={`${actualSrc}-retry-${retryCount}`}
+          ref={forwardedRef}
+          src={actualSrc}
+          alt={alt}
+          loading={priority ? "eager" : lazy ? "lazy" : undefined}
+          fetchPriority={priority ? "high" : undefined}
+          decoding="async"
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+          className={`absolute inset-0 h-full w-full ${fitClass} ${
+            priority ? "" : "transition duration-300"
+          } ${status === "loaded" ? "opacity-100" : "opacity-0"} ${imgClassName ?? ""}`}
+          {...imgProps}
+        />
+      )}
     </div>
   );
 });

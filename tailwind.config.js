@@ -36,7 +36,6 @@ module.exports = {
       },
       fontFamily: {
         "noto-sans-kr": ['"Noto Sans KR"', "sans-serif"],
-        serif: ["var(--font-noto-serif-kr)", "Noto Serif KR", "serif"],
       },
       borderColor: (theme) => ({
         ...theme("colors"),
