@@ -15,7 +15,7 @@ export const useSearchState = () => {
   const searchParams = useSearchParams();
 
   const q = searchParams.get("q") || "";
-  const sortCode = searchParams.get("sort") || "DESC";
+  const sortCode = searchParams.get("sort") || "createdAt,DESC";
   const dishTypeCode = searchParams.get("dishType") || null;
   const tagCodes = searchParams.getAll("tags") || [];
 
