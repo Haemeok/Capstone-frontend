@@ -11,7 +11,7 @@ import ShareCard from "./ShareCard";
 import { useShareImage } from "./hooks/useShareImage";
 import { QRCodeSVG } from "qrcode.react";
 import { RotateCcw } from "lucide-react";
-import { robotoMono, alegreya } from "./fonts";
+import { robotoMono, alegreya, notoSerifKR } from "./fonts";
 import Link from "next/link";
 
 type ArchetypeResultProps = {
@@ -50,7 +50,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
   return (
     <>
       <div
-        className={`flex min-h-screen items-center justify-center ${robotoMono.variable} ${alegreya.variable} bg-white`}
+        className={`flex min-h-screen items-center justify-center ${notoSerifKR.variable} ${robotoMono.variable} ${alegreya.variable} bg-white`}
       >
         <div
           className="relative w-full max-w-xl bg-[#F4F1EA] p-8 text-gray-900"
@@ -291,7 +291,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
               </Link>
               <button
                 onClick={downloadImage}
-                className="rounded-lg bg-gray-900 px-6 py-2 text-sm font-semibold text-white shadow-md transition-colors hover:bg-gray-800"
+                className="cursor-pointer rounded-lg bg-gray-900 px-6 py-2 text-sm font-semibold text-white shadow-md transition-colors hover:bg-gray-800"
               >
                 {isLoading ? "티켓 발권 중..." : "티켓 저장하기"}
               </button>
