@@ -29,7 +29,7 @@ const LoginPromotionBadge = ({
         <div className="animate-bounce-soft absolute top-12 right-0 z-[100] w-64 transform rounded-lg border border-green-100 bg-white p-4 shadow-xl">
           <button
             onClick={() => setIsDesktopBadgeClosed(true)}
-            className="absolute top-2 right-2 text-gray-400 transition-colors hover:text-gray-600"
+            className="absolute top-2 right-2 cursor-pointer text-gray-400 transition-colors hover:text-gray-600"
             aria-label="닫기"
           >
             <X size={16} />

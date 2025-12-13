@@ -99,7 +99,11 @@ export const generateRecipeMetadata = (
     }
   });
 
-  const imageUrl = recipe.imageUrl;
+  const fullImageUrl = recipe.imageUrl
+    ? recipe.imageUrl.startsWith("http")
+      ? recipe.imageUrl
+      : `${SEO_CONSTANTS.SITE_URL}${recipe.imageUrl.startsWith("/") ? "" : "/"}${recipe.imageUrl}`
+    : SEO_CONSTANTS.DEFAULT_IMAGE;
   const recipeUrl = `${SEO_CONSTANTS.SITE_URL}recipes/${recipeId}`;
 
   return {
@@ -120,12 +124,12 @@ export const generateRecipeMetadata = (
       url: recipeUrl,
       type: SEO_CONSTANTS.OG_TYPE.ARTICLE,
       locale: SEO_CONSTANTS.LOCALE,
-      ...(imageUrl && {
+      ...(fullImageUrl && {
         images: [
           {
-            url: imageUrl,
-            width: 500,
-            height: 500,
+            url: fullImageUrl,
+            width: 800,
+            height: 400,
             alt: `${recipe.title} - ${SEO_CONSTANTS.SITE_NAME}`,
           },
         ],
@@ -135,7 +139,7 @@ export const generateRecipeMetadata = (
       card: SEO_CONSTANTS.TWITTER_CARD,
       title: seoTitle,
       description,
-      ...(imageUrl && { images: [imageUrl] }),
+      ...(fullImageUrl && { images: [fullImageUrl] }),
     },
     other: {
       "application/ld+json": JSON.stringify([
