@@ -10,7 +10,7 @@ const ProgressBar = ({ current, total }: ProgressBarProps) => {
         <div
           key={index}
           className={`h-1 flex-1 rounded-full transition-colors ${
-            index < current ? "bg-olive-mint" : "bg-gray-300"
+            index < current ? "bg-dark" : "bg-gray-300"
           }`}
         />
       ))}
