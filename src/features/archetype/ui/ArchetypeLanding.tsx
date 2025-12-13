@@ -1,79 +1,88 @@
-"use client";
-
-import { useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { Image } from "@/shared/ui/image";
 
 type ArchetypeLandingProps = {
   onStart: () => void;
 };
 
 const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
-  const [currentVideo, setCurrentVideo] = useState<"A" | "B">("A");
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const handleVideoEnd = () => {
-    if (currentVideo === "A") {
-      setCurrentVideo("B");
-    }
-  };
-
   return (
-    <div className="bg-beige relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
-      <div className="relative w-full">
-        <video
-          ref={videoRef}
-          key={currentVideo}
-          autoPlay
-          muted
-          playsInline
-          loop={currentVideo === "B"}
-          onEnded={handleVideoEnd}
-          className="h-[70vh] w-full object-cover"
-        >
-          <source
-            src={currentVideo === "A" ? "/videoA.webm" : "/videoB.webm"}
-            type="video/webm"
-          />
-        </video>
+    <div className="relative h-screen w-full overflow-hidden">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover"
+      >
+        <source
+          src="https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/videos/landing.webm"
+          type="video/webm"
+        />
+      </video>
 
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="absolute top-8 left-1/2 z-20 -translate-x-1/2"
-        >
-          <h1 className="text-brown font-serif text-6xl font-bold tracking-wider md:text-7xl lg:text-8xl">
-            Fine Dining Test
-          </h1>
-        </motion.div>
+      <div className="absolute inset-0 bg-black/60" />
+
+      <div className="relative z-10 flex h-full flex-col items-center justify-between px-6 py-20">
+        <div className="flex flex-col items-center space-y-12">
+          <div className="space-y-4 text-center">
+            <h1 className="-space-y-2 font-serif text-6xl leading-none font-light tracking-wide text-white md:-space-y-3 md:text-7xl lg:-space-y-4 lg:text-8xl">
+              <div>DISCOVER YOUR</div>
+              <div>
+                <span className="font-semibold">FINE DINING</span>
+              </div>
+              <div>PERSONA</div>
+            </h1>
+          </div>
+
+          <div className="max-w-2xl space-y-4 text-center">
+            <p className="text-xl leading-relaxed font-light text-white/90 md:text-2xl">
+              나를 파인다이닝 디쉬로 표현하고 공유해보세요
+            </p>
+            <p className="text-base font-light text-white/70 md:text-lg">
+              5가지 질문으로 알아보는 나만의 식사 스타일
+              <br />
+              소요 시간: 약 1분
+            </p>
+          </div>
+
+          <button
+            onClick={onStart}
+            className="group relative mb-8 cursor-pointer overflow-hidden rounded-full border-2 border-white bg-transparent px-12 py-4 text-lg font-semibold tracking-wide text-white transition-all duration-300 hover:bg-white hover:text-black"
+          >
+            <span className="relative z-10">테스트 하러가기</span>
+          </button>
+        </div>
+
+        <div className="flex flex-row items-center justify-center gap-4 pb-8">
+          <div className="relative flex h-64 w-48 -rotate-6 items-center justify-center overflow-hidden rounded-lg border-2 border-white/30 bg-gray-300/20 shadow-xl backdrop-blur-xs transition-transform hover:rotate-0">
+            <Image
+              src="/arche/landing1.png"
+              alt="Archetype Landing 1"
+              wrapperClassName="h-64 w-48"
+              className="h-full w-full object-cover blur-[1px]"
+            />
+            <div className="absolute inset-0 bg-black/10" />
+          </div>
+          <div className="relative flex h-64 w-48 rotate-0 items-center justify-center overflow-hidden rounded-lg border-2 border-white/40 bg-gray-300/30 shadow-2xl backdrop-blur-lg">
+            <Image
+              src="/arche/landing2.png"
+              alt="Archetype Landing 2"
+              wrapperClassName="h-64 w-48"
+              className="h-full w-full object-cover blur-[1px]"
+            />
+            <div className="absolute inset-0 bg-black/10" />
+          </div>
+          <div className="relative flex h-64 w-48 rotate-6 items-center justify-center overflow-hidden rounded-lg border-2 border-white/30 bg-gray-300/20 shadow-xl backdrop-blur-sm transition-transform hover:rotate-0">
+            <Image
+              src="/arche/landing3.png"
+              alt="Archetype Landing 3"
+              wrapperClassName="h-64 w-48"
+              className="h-full w-full object-cover blur-[1px]"
+            />
+            <div className="absolute inset-0 bg-black/10" />
+          </div>
+        </div>
       </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-        className="relative z-10 mt-10 mb-8 space-y-2 text-center"
-      >
-        <p className="text-brown font-serif text-2xl leading-tight font-medium tracking-tight">
-          나를 파인다이닝 디쉬로
-          <br />
-          표현해보세요
-        </p>
-        <p className="text-brown/70 text-sm font-medium tracking-normal">
-          소요 시간: 약 1분
-        </p>
-      </motion.div>
-
-      <motion.button
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-        onClick={onStart}
-        className="group border-brown bg-beige text-brown hover:bg-brown hover:text-beige relative z-10 w-full max-w-xs cursor-pointer overflow-hidden rounded-xl border-2 px-10 py-4 font-serif text-lg font-semibold tracking-wide shadow-md transition-all duration-300 hover:shadow-lg"
-      >
-        <span className="relative z-10">테스트 하러가기</span>
-        <div className="bg-brown absolute inset-0 -z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      </motion.button>
     </div>
   );
 };
