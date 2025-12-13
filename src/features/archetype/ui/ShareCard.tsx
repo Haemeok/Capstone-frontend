@@ -6,7 +6,7 @@ import {
   getIndex,
   imageUrl,
 } from "../model/archeTypeResult";
-import { robotoMono, alegreya } from "./fonts";
+import { robotoMono, alegreya, notoSerifKR } from "./fonts";
 
 type ShareCardProps = {
   id: string;
@@ -31,7 +31,7 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
   return (
     <div
       id={id}
-      className={`flex min-h-0 w-full flex-col bg-[#F4F1EA] px-8 py-10 ${robotoMono.variable} ${alegreya.variable}`}
+      className={`flex min-h-0 w-full flex-col bg-[#F4F1EA] px-8 py-10 ${notoSerifKR.variable} ${robotoMono.variable} ${alegreya.variable}`}
     >
       <div
         className="mb-8 flex items-center justify-between text-sm font-medium tracking-wide text-gray-800"
