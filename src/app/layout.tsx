@@ -7,7 +7,7 @@ import { PWA_APP_INFO } from "@/shared/config/constants/pwa";
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
 
-import { pretendard, notoSerifKr } from "./fonts";
+import { pretendard } from "./fonts";
 import { AppProviders } from "./providers/AppProviders";
 import GoogleAnalytics from "./GoogleAnalytics";
 
@@ -31,13 +31,13 @@ export const metadata: Metadata = {
       },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/apple-touch-icon.png?v=2", sizes: "180x180", type: "image/png" },
     ],
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "레시피오",
+    title: "레시피오 - 홈쿡 레시피 플랫폼",
   },
   metadataBase: new URL("https://www.recipio.kr/"),
   openGraph: {
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
+  maximumScale: 1,
   themeColor: PWA_APP_INFO.THEME_COLOR,
 };
 
@@ -73,28 +73,8 @@ export default async function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${pretendard.variable} ${notoSerifKr.variable}`}
+      className={pretendard.variable}
     >
-      <head>
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="152x152"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="120x120"
-          href="/apple-touch-icon.png"
-        />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="레시피오" />
-      </head>
       <body className={pretendard.className}>
         <AppProviders>
           <DesktopHeader />
