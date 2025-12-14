@@ -21,7 +21,7 @@ export type ArchetypeResult = {
 };
 
 export const imageUrl = (code: string) =>
-  `https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/archetype/${code}.webp `;
+  `https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/archetype/${code}.webp`;
 
 export const getIndex = (code: string) => {
   return Object.entries(ARCHETYPE_RESULTS).findIndex(
