@@ -37,11 +37,15 @@ export const useShareImage = (elementId: string) => {
   const downloadImage = async () => {
     if (!imageUrl) {
       alert("이미지 생성 중입니다. 잠시만 기다려주세요!");
+      console.error("Image generation failed:", imageUrl);
       return;
     }
 
     try {
-      if (navigator.share && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      if (
+        navigator.share &&
+        /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      ) {
         const blob = await fetch(imageUrl).then((res) => res.blob());
         const file = new File([blob], `recipio-ticket-${Date.now()}.png`, {
           type: "image/png",
