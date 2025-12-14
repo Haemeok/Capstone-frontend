@@ -141,6 +141,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
                     style={{
                       filter: "contrast(1.05) sepia(0.1)",
                     }}
+                    priority={false}
                   />
                 </div>
               </div>
