@@ -26,6 +26,7 @@ const CategoryTabs = ({ title }: CategoryTabsProps) => {
         opts={{
           align: "start",
           loop: false,
+          dragFree: true,
         }}
         className="w-full"
       >

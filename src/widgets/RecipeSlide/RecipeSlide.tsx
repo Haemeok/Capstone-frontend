@@ -79,6 +79,7 @@ const RecipeSlide = ({
           opts={{
             align: "start",
             loop: false,
+            dragFree: true,
           }}
           className="w-full"
         >
