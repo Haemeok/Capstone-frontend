@@ -21,8 +21,9 @@ export default function RecipeHeroSection({
     <section className="flex flex-col items-center justify-center">
       <div
         id="recipe-hero-image"
-        className="w-full relative md:w-1/2 md:mt-4 max-w-[550px]"
+        className="relative w-full max-w-[550px] overflow-hidden md:mt-4 md:w-1/2 md:rounded-2xl"
       >
+        <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 h-32 bg-gradient-to-b from-black/60 to-transparent md:hidden" />
         <OptimizedImage
           src={imageUrl}
           alt={title}

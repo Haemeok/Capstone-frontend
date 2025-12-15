@@ -28,6 +28,7 @@ import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import RecipeTagsSection from "./components/RecipeTagsSection";
 import RecipeCookingInfoSection from "./components/RecipeCookingInfoSection";
+import RecipeCookingTipsSection from "./components/RecipeCookingTipsSection";
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
 
 interface RecipeDetailPageProps {
@@ -131,6 +132,8 @@ export default async function RecipeDetailPage({
           <CoupangDisclosure />
 
           <CookingUnitTooltip />
+
+          <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
 
           <RecipeStepList RecipeSteps={staticRecipe.steps} />
 

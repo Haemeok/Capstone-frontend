@@ -67,6 +67,7 @@ export type Recipe = {
   totalCalories: number;
   createdAt?: string;
   nutrition: Nutrition;
+  cookingTips?: string;
 };
 
 export type Nutrition = {
