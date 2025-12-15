@@ -2,6 +2,8 @@ import React from "react";
 
 import { IngredientItem as IngredientItemType } from "@/entities/ingredient";
 
+import IngredientsLoginCTA from "@/features/auth/ui/IngredientsLoginCTA";
+
 import IngredientItem from "@/widgets/IngredientGrid/ui/IngredientItem";
 
 type IngredientGridProps = {
@@ -56,11 +58,7 @@ const IngredientGrid = ({
       <div ref={ref} className="h-10" />
     </div>
   ) : (
-    <div className="flex h-full flex-col items-center justify-center">
-      <p className="text-center text-sm text-gray-400">
-        로그인 후 냉장고를 관리해보세요.
-      </p>
-    </div>
+    <IngredientsLoginCTA />
   );
 };
 
