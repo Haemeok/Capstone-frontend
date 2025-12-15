@@ -92,13 +92,6 @@ const TransformingNavbar = ({
 
     tl.fromTo(
       headerElement,
-      { opacity: 0, pointerEvents: "none" },
-      { opacity: 1, pointerEvents: "auto" },
-      "10%"
-    );
-
-    tl.fromTo(
-      headerElement,
       animationConfig.background.from,
       animationConfig.background.to,
       "10%"
@@ -139,8 +132,7 @@ const TransformingNavbar = ({
   return (
     <div
       ref={headerRef}
-      className="fixed top-0 right-0 left-0 z-header flex h-16 items-center justify-between px-4 sticky-optimized
-                 md:opacity-0 md:pointer-events-none"
+      className="z-header sticky-optimized fixed top-0 right-0 left-0 flex h-16 items-center justify-between px-4 md:pointer-events-none md:opacity-0"
       style={{
         backgroundColor: "rgba(255, 255, 255, 0)",
         color: "black",

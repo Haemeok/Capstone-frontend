@@ -65,6 +65,7 @@ const RecipeInteractionButtons = ({
         initialIsLiked={initialIsLiked}
         initialLikeCount={initialLikeCount}
         buttonClassName="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
+        defaultColorClass="text-gray-900"
         isOnNavbar={false}
         isCountShown
       />

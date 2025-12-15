@@ -17,6 +17,7 @@ type RecipeLikeButtonProps = {
   iconClassName?: string;
   isCountShown?: boolean;
   isOnNavbar?: boolean;
+  defaultColorClass?: string;
 };
 
 const RecipeLikeButton = ({
@@ -28,6 +29,7 @@ const RecipeLikeButton = ({
   iconClassName,
   isCountShown = false,
   isOnNavbar = false,
+  defaultColorClass,
   ...props
 }: RecipeLikeButtonProps) => {
   const queryClient = useQueryClient();
@@ -51,6 +53,7 @@ const RecipeLikeButton = ({
       iconClassName={iconClassName}
       isCountShown={isCountShown}
       isOnNavbar={isOnNavbar}
+      defaultColorClass={defaultColorClass}
       {...props}
     />
   );
