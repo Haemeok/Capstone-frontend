@@ -189,14 +189,14 @@ const CategoryPicker = ({
               size="sm"
               variant="outline"
               onClick={handleReset}
-              className="flex-1"
+              className="flex-1 cursor-pointer"
             >
               초기화
             </Button>
             <Button
               size="sm"
               onClick={handleApply}
-              className="bg-olive-light hover:bg-olive-light/90 flex-1 text-white"
+              className="bg-olive-light hover:bg-olive-light/90 flex-1 cursor-pointer text-white"
             >
               완료
             </Button>
