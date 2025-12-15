@@ -65,7 +65,7 @@ const LoginPromotionBadge = ({
       )}
 
       {variant === "mobile-detailed" && (
-        <div className="absolute right-0 bottom-full z-[100] mb-2 w-64 max-w-[calc(100vw-3rem)]">
+        <div className="absolute right-0 top-full z-[100] mt-2 w-64 max-w-[calc(100vw-2rem)]">
           <div className="rounded-lg border border-green-100 bg-white p-3 shadow-xl">
             <p className="text-sm font-bold text-gray-800">
               📸 사진 없는 레시피는 그만!
@@ -80,8 +80,8 @@ const LoginPromotionBadge = ({
             <div className="mt-1 text-[10px] text-gray-400">
               신규 가입자 한정 혜택
             </div>
-            <div className="absolute top-full right-8">
-              <div className="h-0 w-0 border-t-6 border-r-6 border-l-6 border-transparent border-t-white"></div>
+            <div className="absolute bottom-full right-8">
+              <div className="h-0 w-0 border-b-6 border-r-6 border-l-6 border-transparent border-b-white"></div>
             </div>
           </div>
         </div>

@@ -26,7 +26,7 @@ const Header = ({ isOwnProfile }: HeaderProps) => {
           {user ? (
             <SettingsActionButton />
           ) : (
-            <LoginPromotionBadge variant="mobile-detailed">
+            <LoginPromotionBadge variant="desktop">
               <button
                 onClick={() => setIsLoginDialogOpen(true)}
                 className="bg-olive-mint hover:bg-olive-700 cursor-pointer rounded-xl border-1 border-gray-200 px-4 py-2 text-white transition-colors"
