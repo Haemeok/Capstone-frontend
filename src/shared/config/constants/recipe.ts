@@ -229,7 +229,7 @@ export const TAGS_IMAGE_KEYS: Record<TagCode, string> = {
   PICNIC: "picnic.webp",
   QUICK: "quick.webp",
   SOLO: "solo.webp",
-  CHEF_RECIPE: "chef_recipe.webp",
+  CHEF_RECIPE: "chef.webp",
 };
 
 export const PRICE_BRACKETS = [
