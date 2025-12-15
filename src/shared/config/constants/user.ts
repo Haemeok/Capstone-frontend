@@ -83,6 +83,7 @@ export const surveySteps: SurveyStep[] = [
       { value: "도시락", label: "🍱 도시락" },
       { value: "에어프라이어", label: "🔌 에어프라이어" },
       { value: "해장", label: "🍲 해장" },
+      { value: "셰프 레시피", label: "👨‍🍳 셰프 레시피" },
     ],
   },
 ];
