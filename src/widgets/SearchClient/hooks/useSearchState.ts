@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   DISH_TYPE_CODES,
   SORT_TYPE_CODES,
-  TAG_CODES,
+  TAG_DEFINITIONS,
   TAGS_BY_CODE,
 } from "@/shared/config/constants/recipe";
 
@@ -44,10 +44,11 @@ export const useSearchState = () => {
     const newParams = new URLSearchParams(searchParams.toString());
 
     Object.entries(newFilters).forEach(([key, value]) => {
+      newParams.delete(key);
+
       if (Array.isArray(value)) {
-        newParams.delete(key);
         value.forEach((v) => newParams.append(key, v));
-      } else {
+      } else if (value) {
         newParams.set(key, value);
       }
     });
@@ -76,8 +77,10 @@ export const useSearchState = () => {
 
   const updateTags = (value: string[]) => {
     const codes = value.map((tag) => {
-      const cleanTag = tag.replace(/^[\u{1F000}-\u{1F9FF}]\s/u, "").trim();
-      return TAG_CODES[cleanTag as keyof typeof TAG_CODES] || cleanTag;
+      const matchedTag = TAG_DEFINITIONS.find(
+        (def) => tag === `${def.emoji} ${def.name}` || tag === def.name
+      );
+      return matchedTag ? matchedTag.code : tag;
     });
     updateSearchParams({ tags: codes });
   };
