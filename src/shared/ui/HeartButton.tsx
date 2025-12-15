@@ -19,6 +19,7 @@ type HeartButtonProps = {
   width?: number;
   height?: number;
   isOnNavbar?: boolean;
+  defaultColorClass?: string;
 };
 
 const HeartButton = ({
@@ -32,6 +33,7 @@ const HeartButton = ({
   width = 24,
   height = 24,
   isOnNavbar = false,
+  defaultColorClass = "text-gray-400",
   ...props
 }: HeartButtonProps) => {
   const prevLikeCountRef = useRef(likeCount);
@@ -75,7 +77,7 @@ const HeartButton = ({
           className={cn(
             "beat",
             iconClassName,
-            isLiked ? "fill-red-500 text-red-500" : "text-gray-400"
+            isLiked ? "fill-red-500 text-red-500" : defaultColorClass
           )}
         />
       </button>
