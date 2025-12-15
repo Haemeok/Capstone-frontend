@@ -23,7 +23,6 @@ const SavingSection = ({
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (!imageRef.current) {
-        console.error("이미지 요소가 준비되지 않았습니다.");
         return;
       }
 
@@ -62,7 +61,7 @@ const SavingSection = ({
     return () => {
       ctx.revert();
     };
-  }, []);
+  }, [imageUrl]);
 
   return (
     <div

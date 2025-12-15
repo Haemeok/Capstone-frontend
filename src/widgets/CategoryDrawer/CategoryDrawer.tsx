@@ -186,13 +186,13 @@ const CategoryDrawer = ({
           <Button
             variant="outline"
             onClick={handleReset}
-            className="flex-1 rounded-md border-gray-300"
+            className="flex-1 cursor-pointer rounded-md border-gray-300"
           >
             초기화
           </Button>
           <Button
             onClick={handleApply}
-            className="bg-olive-light flex-1 rounded-md text-white"
+            className="bg-olive-light flex-1 cursor-pointer rounded-md text-white"
           >
             완료
           </Button>

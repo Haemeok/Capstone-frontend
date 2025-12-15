@@ -75,7 +75,14 @@ const DetailedRecipeGridItem = ({
             priority={priority}
           />
 
-          <div className="absolute top-0 right-0 p-2 text-right">
+          <div className="absolute top-0 left-0 right-0 flex items-start justify-between p-2">
+            {savings && (
+              <div className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm">
+                <span className="text-xs font-bold text-white">
+                  {savings.toLocaleString()}원 절약
+                </span>
+              </div>
+            )}
             <RecipeLikeButton
               recipeId={recipe.id}
               initialIsLiked={currentLikedByUser}
@@ -91,22 +98,12 @@ const DetailedRecipeGridItem = ({
             {recipe.title}
           </p>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            <div className="flex items-center gap-[2px]">
-              <Star size={15} className="fill-gray-800" />
-              <p className="text-mm text-gray-800">{recipe.avgRating}</p>
-              <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
-              <p className="text-mm text-gray-800">·</p>
-              <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
-            </div>
-
-            {savings && (
-              <div className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm">
-                <span className="text-xs font-bold text-white">
-                  {savings.toLocaleString()}원 절약
-                </span>
-              </div>
-            )}
+          <div className="flex items-center gap-[2px]">
+            <Star size={15} className="fill-gray-800" />
+            <p className="text-mm text-gray-800">{recipe.avgRating}</p>
+            <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
+            <p className="text-mm text-gray-800">·</p>
+            <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
           </div>
         </div>
       </Link>

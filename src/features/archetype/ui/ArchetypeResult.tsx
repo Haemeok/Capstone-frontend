@@ -137,7 +137,6 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
                     src={imageUrl(resultData.code)}
                     alt={resultData.header.title}
                     wrapperClassName="w-full h-full"
-                    className="h-full w-full object-cover"
                     style={{
                       filter: "contrast(1.05) sepia(0.1)",
                     }}
