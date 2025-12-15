@@ -105,6 +105,7 @@ export const TAG_DEFINITIONS = [
   { name: "기념일 / 명절", emoji: "🎉", code: "HOLIDAY" },
   { name: "에어프라이어", emoji: "🔌", code: "AIR_FRYER" },
   { name: "해장", emoji: "🍲", code: "HANGOVER" },
+  { name: "셰프 레시피", emoji: "👨‍🍳", code: "CHEF_RECIPE" },
 ] as const;
 
 export const TAG_CODES = Object.fromEntries(
@@ -228,6 +229,7 @@ export const TAGS_IMAGE_KEYS: Record<TagCode, string> = {
   PICNIC: "picnic.webp",
   QUICK: "quick.webp",
   SOLO: "solo.webp",
+  CHEF_RECIPE: "chef_recipe.webp",
 };
 
 export const PRICE_BRACKETS = [
