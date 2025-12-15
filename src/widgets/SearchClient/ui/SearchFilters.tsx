@@ -2,7 +2,6 @@ import React from "react";
 
 import { Search } from "lucide-react";
 
-import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
 import FilterChip from "@/shared/ui/FilterChip";
 
 type SearchFiltersProps = {
@@ -29,7 +28,7 @@ export const SearchFilters = ({
   onTagsClick,
 }: SearchFiltersProps) => {
   return (
-    <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0 sticky-optimized">
+    <div className="sticky-optimized sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
       <form onSubmit={handleSearchSubmit} className="relative">
         <input
           type="search"
