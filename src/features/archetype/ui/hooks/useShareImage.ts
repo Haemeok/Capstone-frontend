@@ -16,15 +16,29 @@ export const useShareImage = (elementId: string) => {
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-      const dataURL = await toPng(shareElement, {
-        cacheBust: false,
+      const options = {
+        cacheBust: true,
         backgroundColor: "#FFFEF7",
-        pixelRatio: isMobile ? 1.5 : 2,
+        pixelRatio: isMobile ? 2 : 3,
         style: {
           height: "auto",
         },
-      });
 
+        fetchRequestInit: {
+          cache: "no-cache",
+        } as RequestInit,
+      };
+
+      try {
+        await toPng(shareElement, options);
+      } catch (e) {
+        console.warn(
+          "Warm-up capture failed (expected behavior on some devices):",
+          e
+        );
+      }
+
+      const dataURL = await toPng(shareElement, options);
       setImageUrl(dataURL);
     } catch (error) {
       console.error("Image generation failed:", error);
@@ -37,15 +51,13 @@ export const useShareImage = (elementId: string) => {
   const downloadImage = async () => {
     if (!imageUrl) {
       alert("이미지 생성 중입니다. 잠시만 기다려주세요!");
-      console.error("Image generation failed:", imageUrl);
       return;
     }
 
     try {
-      if (
-        navigator.share &&
-        /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-      ) {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      if (navigator.share && isMobile) {
         const blob = await fetch(imageUrl).then((res) => res.blob());
         const file = new File([blob], `recipio-ticket-${Date.now()}.png`, {
           type: "image/png",
@@ -63,15 +75,25 @@ export const useShareImage = (elementId: string) => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        alert("티켓이 앨범에 저장되었습니다!");
       }
     } catch (error) {
-      console.error("Download/Share failed:", error);
-      const link = document.createElement("a");
-      link.download = `recipio-ticket-${Date.now()}.png`;
-      link.href = imageUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (error instanceof Error && error.name !== "AbortError") {
+        console.error("Download/Share failed:", error);
+
+        try {
+          const link = document.createElement("a");
+          link.download = `recipio-ticket-${Date.now()}.png`;
+          link.href = imageUrl;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          alert("티켓이 저장되었습니다!");
+        } catch (downloadError) {
+          alert("저장에 실패했습니다. 화면을 캡처해서 사용해주세요.");
+        }
+      }
     }
   };
 
