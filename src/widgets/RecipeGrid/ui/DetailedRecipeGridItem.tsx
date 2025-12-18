@@ -63,7 +63,7 @@ const DetailedRecipeGridItem = ({
         href={`/recipes/${recipe.id}`}
         className="group block"
         aria-label={`${recipe.title} 레시피 보기`}
-        prefetch={prefetch}
+        prefetch={prefetch ? true : null}
       >
         <div className="relative overflow-hidden rounded-2xl">
           <Image

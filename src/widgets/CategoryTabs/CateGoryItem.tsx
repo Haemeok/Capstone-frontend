@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 
 import { TAG_CODES } from "@/shared/config/constants/recipe";

@@ -46,7 +46,7 @@ const SimpleRecipeGridItem = ({
       <Link
         href={`/recipes/${recipe.id}`}
         className={cn(`group relative block rounded-2xl`)}
-        prefetch={prefetch}
+        prefetch={prefetch ? true : null}
       >
         <Image
           src={recipe.imageUrl}
