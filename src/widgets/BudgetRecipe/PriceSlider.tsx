@@ -30,7 +30,7 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
     <div className="space-y-6">
       <div className="space-y-2 text-center">
         <p className="text-sm font-medium text-gray-600">목표 예산</p>
-        <div className="text-4xl font-bold text-purple-500">
+        <div className="text-4xl font-bold text-olive-medium">
           {value.toLocaleString()}원
         </div>
       </div>
@@ -42,7 +42,7 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
           step={BUDGET_STEP}
           value={[value]}
           onValueChange={handleValueChange}
-          className="[&>*[data-slot=slider-track]]:bg-olive-light [&>*[data-slot=slider-range]]:bg-olive-medium [&>*[data-slot=slider-thumb]]:border-olive-medium [&>*[data-slot=slider-thumb]]:bg-white"
+          className="[&>*[data-slot=slider-track]]:bg-gray-200 [&>*[data-slot=slider-range]]:bg-olive-medium [&>*[data-slot=slider-thumb]]:border-olive-medium [&>*[data-slot=slider-thumb]]:bg-white"
         />
         <div className="mt-2 flex justify-between text-xs text-gray-400">
           <span>{BUDGET_MIN.toLocaleString()}원</span>
@@ -50,34 +50,28 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2 text-center">
         {savings <= 0 ? (
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
-            <p className="text-sm text-gray-600">
-              직장인 평균 한끼 예산({AVERAGE_MEAL_PRICE.toLocaleString()}원)이에요
+          <p className="text-sm text-gray-500">
+            직장인 평균 한끼 예산({AVERAGE_MEAL_PRICE.toLocaleString()}원)이에요
+          </p>
+        ) : (
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-medium text-gray-600">
+              직장인 평균 한끼보다{" "}
+              <span className="font-bold text-olive-medium">
+                {savings.toLocaleString()}원
+              </span>{" "}
+              절약해요
+            </p>
+            <p className="text-xs text-gray-500">
+              매일 드시면 한 달에{" "}
+              <span className="font-bold text-olive-medium">
+                {Math.floor(monthlySavings / 10000)}만 원
+              </span>{" "}
+              아껴요!
             </p>
           </div>
-        ) : (
-          <>
-            <div className="flex items-center justify-center gap-2 rounded-lg border-2 border-olive-light bg-olive-light/10 p-4">
-              <TrendingDown className="h-5 w-5 text-olive-medium" />
-              <p className="text-sm font-medium text-gray-800">
-                직장인 평균 한끼보다{" "}
-                <span className="font-bold text-olive-medium">
-                  {savings.toLocaleString()}원
-                </span>{" "}
-                절약해요!
-              </p>
-            </div>
-
-            <div className="flex items-center justify-center gap-2 rounded-lg border-2 border-olive-mint bg-gradient-to-r from-olive-light to-olive-mint p-4 text-white shadow-md">
-              <Sparkles className="h-5 w-5" />
-              <p className="text-sm font-bold">
-                매일 이렇게 드시면 한 달에{" "}
-                {Math.floor(monthlySavings / 10000)}만 원 아껴요!
-              </p>
-            </div>
-          </>
         )}
       </div>
     </div>
