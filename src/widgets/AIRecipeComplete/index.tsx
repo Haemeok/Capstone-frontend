@@ -1,6 +1,5 @@
 "use client";
 
-import { Image } from "@/shared/ui/image/Image";
 import { useRouter } from "next/navigation";
 
 import { ChefHat, RotateCcw } from "lucide-react";
@@ -37,35 +36,26 @@ const AIRecipeComplete = ({
   };
 
   return (
-    <div className="flex h-full items-center justify-center bg-[#f7f7f7] p-4">
+    <div className="flex min-h-[calc(100dvh-77px)] items-center justify-center bg-white p-4">
       <div className="w-full max-w-md">
-        <div className="relative rounded-3xl bg-white p-8 shadow-2xl border-8 border-olive-mint/20">
-          <div className="relative z-10 text-center space-y-6">
-            <div className="mx-auto w-20 h-20 rounded-full bg-olive-mint/10 flex items-center justify-center mb-4">
+        <div className="relative rounded-3xl bg-white p-8 shadow-2xl border-8 border-olive-light/20">
+          <div className="relative z-10 text-center space-y-4">
+            <div className="mx-auto w-20 h-20 rounded-full bg-olive-light/10 flex items-center justify-center mb-4">
               <div className="text-4xl">🎉</div>
             </div>
 
             <div>
-              <h1 className="text-2xl font-bold text-gray-800 mb-2">
+              <h1 className="text-2xl font-bold text-gray-800">
                 레시피 생성 완료!
               </h1>
-              <p className="text-gray-600">
-                {selectedAI.name}가 맛있는 레시피를 만들어 드렸어요!
-              </p>
             </div>
 
-            <div className="relative h-44 w-44 mx-auto rounded-2xl overflow-hidden shadow-lg">
-              <Image
-                src={selectedAI.image}
-                alt={selectedAI.name}
-                className="object-cover"
-              />
-            </div>
+            
 
             <div className="space-y-3 pt-4">
               <Button
                 onClick={handleGoToRecipe}
-                className="w-full h-12 bg-olive-mint hover:bg-olive-mint/90 text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
+                className="w-full h-12 bg-olive-light hover:bg-olive-light/90 text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
               >
                 <ChefHat className="mr-2 h-5 w-5" />
                 레시피 보러가기

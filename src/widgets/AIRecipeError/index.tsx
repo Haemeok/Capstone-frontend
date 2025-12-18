@@ -4,19 +4,12 @@ import { AlertCircle, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 
-import { useAIRecipeGeneration } from "@/features/recipe-create-ai";
-
 type AIRecipeErrorProps = {
   error: string;
+  onRetry?: () => void;
 };
 
-const AIRecipeError = ({ error }: AIRecipeErrorProps) => {
-  const { resetGeneration } = useAIRecipeGeneration();
-
-  const handleRetry = () => {
-    resetGeneration();
-  };
-
+const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f7f7f7] p-4">
       <div className="w-full max-w-md">
@@ -39,7 +32,7 @@ const AIRecipeError = ({ error }: AIRecipeErrorProps) => {
 
           <div className="pt-4">
             <Button
-              onClick={handleRetry}
+              onClick={onRetry}
               className="w-full h-12 bg-olive-mint hover:bg-olive-mint/90 text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
             >
               <RotateCcw className="mr-2 h-5 w-5" />

@@ -5,26 +5,21 @@ import {
   AIRecommendedRecipe,
   AIRecommendedRecipeRequest,
 } from "@/features/recipe-create-ai/model/types";
+import { AIModelId } from "@/shared/config/constants/aiModel";
 
 export const postAIRecommendedRecipe = async (
-  aiRequest: AIRecommendedRecipeRequest
+  aiRequest: AIRecommendedRecipeRequest,
+  concept: AIModelId
 ): Promise<AIRecommendedRecipe> => {
-  const source = "AI";
-  const robotType = aiRequest.robotType;
-  const parsedAiRequest = {
-    ...aiRequest,
-    cookingTime: aiRequest.cookingTime,
-  };
 
   const response = await api.post<AIRecommendedRecipe>(
-    END_POINTS.RECIPES,
+    END_POINTS.RECIPE_AI,
     {
-      aiRequest: parsedAiRequest,
+      aiRequest,
     },
     {
       params: {
-        source,
-        robotType,
+        concept,
       },
       timeout: 10 * 60 * 1000,
     }

@@ -31,11 +31,11 @@ export const useImageStatus = (src?: string) => {
   };
 
   const handleImageError = () => {
-    if (retryCount < 1) {
+    if (retryCount < 3) {
       setRetrying(true);
       setStatus("loading");
 
-      const delay = 1000 + Math.random() * 1000;
+      const delay = 2000;
       setTimeout(() => {
         setRetryCount((prev) => prev + 1);
         setRetrying(false);
