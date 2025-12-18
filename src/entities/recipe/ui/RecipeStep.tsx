@@ -51,17 +51,17 @@ const RecipeStep = ({ stepIndex, step, length, isFirstStep = false }: RecipeStep
           </div>
         ))}
       </div>
-      <p className="mt-2 text-left whitespace-pre-wrap">{step.instruction}</p>
-      {step.stepImageUrl && (
-        <div className="w-full h-80">
+      <div className="mt-2 flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
+        <p className="whitespace-pre-wrap text-left md:flex-1">{step.instruction}</p>
+        {step.stepImageUrl && (
           <Image
             src={step.stepImageUrl}
             alt={`Step ${stepIndex + 1}`}
-            wrapperClassName="mt-2 w-full rounded-2xl h-full"
+            wrapperClassName="mx-auto w-full max-w-[300px] rounded-2xl md:mx-0 md:w-[300px] shrink-0"
             fit="cover"
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

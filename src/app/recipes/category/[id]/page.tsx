@@ -28,6 +28,8 @@ const CategoryDetailPage = () => {
   const { currentSort, setSort, getSortParam, availableSorts } =
     useSort("recipe");
 
+  const sortParam = getSortParam();
+
   const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
@@ -35,12 +37,12 @@ const CategoryDetailPage = () => {
     [string, string, string],
     number
   >({
-    queryKey: ["recipes", tagCode, getSortParam()],
+    queryKey: ["recipes", tagCode, sortParam],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
         tags: [tagCode],
         pageParam,
-        sort: getSortParam(),
+        sort: sortParam,
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
@@ -56,7 +58,9 @@ const CategoryDetailPage = () => {
       <div className="bg-white">
         <header className="relative flex items-center justify-center border-b border-gray-200 py-2">
           <PrevButton className="absolute left-0" />
-          <h1 className="text-xl font-bold">{`${tagName} 레시피`}</h1>
+          <h1 className="text-xl font-bold">
+            {tagName.endsWith("레시피") ? tagName : `${tagName} 레시피`}
+          </h1>
         </header>
         <div className="flex items-center justify-end p-4">
           <RecipeSortButton
@@ -71,7 +75,7 @@ const CategoryDetailPage = () => {
             onSortChange={(newSort) => setSort(newSort as any)}
           />
         </div>
-        {!isFetching && recipes && recipes.length > 0 ? (
+        {recipes && recipes.length > 0 ? (
           <RecipeGrid
             recipes={recipes}
             isFetching={isFetching}
