@@ -105,27 +105,29 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
         </div>
 
         <div className="flex flex-1 flex-col items-center justify-center">
-          {showLevelUp && data.nextBracket ? (
+          {showLevelUp ? (
             <>
               <div className="mb-4">
                 <p className="text-olive-mint text-center text-2xl font-bold">
-                  🎉 레벨 업!
+                  {data.nextBracket ? "🎉 레벨 업!" : "👑 최고 단계 달성!"}
                 </p>
                 <p className="mt-1 text-center text-sm text-gray-600">
-                  다음 목표를 향해 달려가세요!
+                  {data.nextBracket
+                    ? "다음 목표를 향해 달려가세요!"
+                    : "모든 단계를 정복하셨습니다!"}
                 </p>
               </div>
               <div className="h-44">
                 <SavingSection
-                  imageUrl={data.nextBracket.image}
-                  altText={data.nextBracket.name}
+                  imageUrl={data.currentBracket.image}
+                  altText={data.currentBracket.name}
                 />
               </div>
               <p className="mt-2 text-center text-lg font-bold text-gray-800">
-                {data.nextBracket.name}
+                {data.currentBracket.name}
               </p>
               <p className="mt-1 text-center text-sm text-gray-500">
-                {formatNumber(data.nextBracket.min, "원")} 정도 금액이에요!
+                {formatNumber(data.currentBracket.min, "원")} 이상 달성했어요!
               </p>
             </>
           ) : (
@@ -133,7 +135,7 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
               <p className="text-center text-sm text-gray-600">
                 현재 단계는...
               </p>
-              <div className="h-54">
+              <div className="h-44">
                 <SavingSection
                   imageUrl={data.currentBracket.image}
                   altText={data.currentBracket.name}

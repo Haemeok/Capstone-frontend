@@ -96,7 +96,9 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
           onError={handleImageError}
           className={`absolute inset-0 h-full w-full ${fitClass} ${
             priority ? "" : "transition duration-300"
-          } ${status === "loaded" ? "opacity-100" : "opacity-0"} ${imgClassName ?? ""}`}
+          } ${status === "loaded" || priority ? "opacity-100" : "opacity-0"} ${
+            imgClassName ?? ""
+          }`}
           {...imgProps}
         />
       )}
