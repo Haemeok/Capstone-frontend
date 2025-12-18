@@ -47,6 +47,10 @@ module.exports = {
       width: {
         36: "9rem",
         40: "10rem",
+        50: "12.5rem",
+      },
+      height: {
+        70: "17.5rem",
       },
       zIndex: {
         sticky: "10",

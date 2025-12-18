@@ -91,21 +91,21 @@ export const DISH_TYPE_CODES_TO_NAME = Object.fromEntries(
 );
 
 export const TAG_DEFINITIONS = [
+  { name: "셰프 레시피", emoji: "👨‍🍳", code: "CHEF_RECIPE" },
+  { name: "홈파티", emoji: "🏠", code: "HOME_PARTY" },
   { name: "브런치", emoji: "🥐", code: "BRUNCH" },
+  { name: "초스피드 / 간단 요리", emoji: "⚡", code: "QUICK" },
   { name: "야식", emoji: "🌙", code: "LATE_NIGHT" },
   { name: "도시락", emoji: "🍱", code: "LUNCHBOX" },
-  { name: "홈파티", emoji: "🏠", code: "HOME_PARTY" },
   { name: "피크닉", emoji: "🌼", code: "PICNIC" },
   { name: "캠핑", emoji: "🏕️", code: "CAMPING" },
   { name: "다이어트 / 건강식", emoji: "🥗", code: "HEALTHY" },
   { name: "아이와 함께", emoji: "👶", code: "KIDS" },
   { name: "혼밥", emoji: "🍽️", code: "SOLO" },
   { name: "술안주", emoji: "🍶", code: "DRINK" },
-  { name: "초스피드 / 간단 요리", emoji: "⚡", code: "QUICK" },
   { name: "기념일 / 명절", emoji: "🎉", code: "HOLIDAY" },
   { name: "에어프라이어", emoji: "🔌", code: "AIR_FRYER" },
   { name: "해장", emoji: "🍲", code: "HANGOVER" },
-  { name: "셰프 레시피", emoji: "👨‍🍳", code: "CHEF_RECIPE" },
 ] as const;
 
 export const TAG_CODES = Object.fromEntries(

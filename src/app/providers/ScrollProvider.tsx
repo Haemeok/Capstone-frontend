@@ -18,7 +18,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
     <ScrollContext.Provider value={{ motionRef }}>
       <div
         ref={motionRef}
-        className={`w-full overflow-y-auto ${scrollClass}`}
+        className={`w-full flex flex-col overflow-y-auto ${scrollClass}`}
       >
         {children}
       </div>
