@@ -153,7 +153,7 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
         style={{ fontFamily: "var(--font-pretendard), serif" }}
       >
         <div
-          className="h-16 w-16 flex-shrink-0 rounded-full border border-gray-300 shadow-sm"
+          className="h-16 w-16 flex-shrink-0 rounded-full border border-gray-300"
           style={{
             backgroundColor: resultData.color.hex,
           }}
