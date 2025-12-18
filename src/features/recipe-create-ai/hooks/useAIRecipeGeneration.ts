@@ -39,13 +39,15 @@ export const useAIRecipeGeneration = () => {
       return;
     }
 
-    const requestData: AIRecommendedRecipeRequest = {
+    const requestData = {
       ...data,
-      robotType: selectedAI.id,
-    };
+    } as AIRecommendedRecipeRequest;
 
     startGeneration(selectedAI, requestData);
-    createAIRecipe(requestData);
+    createAIRecipe({
+      request: requestData,
+      concept: selectedAI.id as any,
+    });
   };
 
   const resetGeneration = () => {

@@ -14,15 +14,8 @@ const AiLoading = ({ aiModelId }: AiLoadingProps) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const aiModel = aiModels[aiModelId];
-  const { name, loadingAnimation } = aiModel;
+  const { name, } = aiModel;
 
-  const animationStyle = {
-    backgroundImage: `url(${loadingAnimation.image})`,
-    backgroundSize: "cover",
-    width: "18rem",
-    height: "18rem",
-    animation: `play-sprite-${aiModelId.toLowerCase()} ${loadingAnimation.duration}s steps(${loadingAnimation.frames}, start) infinite`,
-  };
 
   useEffect(() => {
     const stepInterval = setInterval(() => {
@@ -35,12 +28,11 @@ const AiLoading = ({ aiModelId }: AiLoadingProps) => {
   }, []);
 
   return (
-    <div className="flex w-full flex-col h-full items-center justify-center gap-6  p-4">
+    <div className="flex w-full min-h-[calc(100dvh-77px)] flex-col items-center justify-center gap-6  p-4">
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-2xl font-bold text-dark">
           {name}가 레시피를 만들고 있어요
         </h1>
-        <div className="w-72 h-72" style={animationStyle}></div>
         <p className="text-lg text-gray-600 animate-pulse">
           {aiModelSteps[currentStep]}
         </p>
