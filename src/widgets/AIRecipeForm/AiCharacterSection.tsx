@@ -18,15 +18,6 @@ const AiCharacterSection = ({ selectedAI }: AICharacterSectionProps) => {
         </p>
       </div>
       <div className="flex flex-col items-center justify-center gap-2 py-4">
-        <div className="w-full max-w-xs aspect-square rounded-2xl overflow-hidden">
-          <Image
-            src={selectedAI.image}
-            alt={selectedAI.name}
-            wrapperClassName="w-full h-full"
-            imgClassName="object-cover"
-            fit="cover"
-          />
-        </div>
         <p className="mt-2 text-center text-sm text-gray-600">
           {selectedAI.description}
         </p>

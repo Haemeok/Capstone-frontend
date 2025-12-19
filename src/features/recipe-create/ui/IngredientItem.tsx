@@ -2,11 +2,13 @@
 
 import { UseFormRegister, useFormContext, useWatch } from "react-hook-form";
 
-import { ChefHat, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { Button } from "@/shared/ui/shadcn/button";
+import { Image } from "@/shared/ui/image/Image";
 
 import { RecipeFormValues } from "../model/config";
+import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
 
 type IngredientItemProps = {
   field: { id: string; name: string; unit: string };
@@ -45,8 +47,15 @@ const IngredientItem = ({
     <div className="flex min-h-16 flex-col gap-1 rounded-lg border border-gray-200 bg-white p-2 shadow-sm">
       <div className="flex items-center justify-between gap-2">
         <div className="flex h-full flex-1 items-center gap-2">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-green-100">
-            <ChefHat size={20} className="text-olive-light" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+            <Image
+              src={INGREDIENT_IMAGE_URL(field.name)}
+              alt={field.name}
+              wrapperClassName="h-full w-full rounded-lg"
+              fit="cover"
+              width={40}
+              height={40}
+            />
           </div>
           <p className="flex-1 font-medium text-gray-800">{field.name}</p>
 

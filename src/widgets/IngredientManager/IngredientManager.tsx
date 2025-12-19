@@ -3,6 +3,8 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { Plus, X } from "lucide-react";
 
 import type { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
+import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
+import { Image } from "@/shared/ui/image/Image";
 
 type IngredientManagerProps = {
   onOpenDrawer: () => void;
@@ -32,13 +34,13 @@ const IngredientManager = ({ onOpenDrawer }: IngredientManagerProps) => {
         type="button"
         onClick={onOpenDrawer}
         aria-label="재료 추가하기"
-        className="hover:bg-olive-mint/80 border-olive-mint flex w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed bg-[#f7f7f7] p-5 transition-all duration-300"
+        className="hover:bg-olive-light/80 border-olive-light flex w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed bg-[#f7f7f7] p-5 transition-all duration-300"
       >
         <div className="flex flex-col items-center">
           <div className="mb-2 rounded-full bg-white p-3 shadow-md">
-            <Plus size={24} className="text-olive-mint" aria-hidden="true" />
+            <Plus size={24} className="text-olive-light" aria-hidden="true" />
           </div>
-          <span className="text-olive-mint font-medium">재료 추가하기</span>
+          <span className="text-olive-light font-medium">재료 추가하기</span>
           <span className="mt-1 text-sm text-gray-500">
             {ingredients.length > 0
               ? `${ingredients.length}개의 재료가 추가됨`
@@ -48,9 +50,11 @@ const IngredientManager = ({ onOpenDrawer }: IngredientManagerProps) => {
       </button>
 
       {ingredients.length > 0 && (
-        <div className="bg-olive-mint/10 mt-4 rounded-lg p-4">
-          <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-olive-mint text-sm font-medium">선택된 재료</h3>
+        <div className="bg-olive-light/10 mt-4 rounded-lg p-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-olive-light text-sm font-medium">
+              선택된 재료
+            </h3>
             {ingredients.length > 1 && (
               <button
                 type="button"
@@ -65,24 +69,36 @@ const IngredientManager = ({ onOpenDrawer }: IngredientManagerProps) => {
               </button>
             )}
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-3 gap-x-1 gap-y-4 min-[375px]:grid-cols-4 sm:grid-cols-5 md:grid-cols-6">
             {ingredients.map((ingredient, index) => (
               <div
-                key={index}
-                className="group flex items-center justify-between gap-2 rounded-full border border-green-200 bg-white px-4 py-2 text-sm shadow-sm"
+                key={ingredient}
+                className="group relative flex flex-col items-center gap-1.5"
               >
-                <span>{ingredient}</span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemoveIngredient(index);
-                  }}
-                  className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-100 opacity-70 transition-all group-hover:opacity-100 hover:bg-red-100 hover:text-red-500"
-                  aria-label={`${ingredient} 삭제`}
-                >
-                  <X size={14} aria-hidden="true" />
-                </button>
+                <div className="relative">
+                  <div className="relative h-14 w-14 overflow-hidden rounded-full border border-white bg-white shadow-sm ring-1 ring-green-100/50">
+                    <Image
+                      src={INGREDIENT_IMAGE_URL(ingredient)}
+                      alt={ingredient}
+                      wrapperClassName="h-full w-full"
+                      fit="cover"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveIngredient(index);
+                    }}
+                    className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+                    aria-label={`${ingredient} 삭제`}
+                  >
+                    <X size={10} strokeWidth={3} aria-hidden="true" />
+                  </button>
+                </div>
+                <span className="w-full truncate text-center text-xs font-medium text-gray-700">
+                  {ingredient}
+                </span>
               </div>
             ))}
           </div>
