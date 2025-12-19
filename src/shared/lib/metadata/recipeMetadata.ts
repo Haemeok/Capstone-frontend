@@ -10,6 +10,10 @@ export const generateRecipeMetadata = (
   recipe: StaticRecipe,
   recipeId: string
 ): Metadata => {
+  const isChefRecipe =
+    recipe.title.includes("흑백요리사") ||
+    recipe.tags.some((tag) => tag === "셰프 레시피");
+
   const titleKeywords: string[] = [];
 
   const BUDGET_FRIENDLY_THRESHOLD = 5000;
@@ -55,7 +59,7 @@ export const generateRecipeMetadata = (
 
   const MAX_TITLE_KEYWORDS = 2;
   const titlePrefix = titleKeywords.slice(0, MAX_TITLE_KEYWORDS).join("");
-  const seoTitle = titlePrefix
+  const defaultTitle = titlePrefix
     ? `${titlePrefix} ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`
     : `${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
 
@@ -65,7 +69,7 @@ export const generateRecipeMetadata = (
   const timeInfo = recipe.cookingTime ? `${recipe.cookingTime}분 소요` : "";
   const additionalInfo = [costInfo, timeInfo].filter(Boolean).join(", ");
 
-  const description = recipe.description
+  const defaultDescription = recipe.description
     ? `${recipe.description}${additionalInfo ? ` (${additionalInfo})` : ""}`
     : `${recipe.title} 레시피! AI가 제안하는 ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원 가성비 요리법을 확인하세요.`;
 
@@ -106,9 +110,9 @@ export const generateRecipeMetadata = (
     : SEO_CONSTANTS.DEFAULT_IMAGE;
   const recipeUrl = `${SEO_CONSTANTS.SITE_URL}recipes/${recipeId}`;
 
-  return {
-    title: seoTitle,
-    description,
+  const baseMetadata: Metadata = {
+    title: defaultTitle,
+    description: defaultDescription,
     keywords: [
       ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
       recipe.title,
@@ -119,8 +123,8 @@ export const generateRecipeMetadata = (
       canonical: recipeUrl,
     },
     openGraph: {
-      title: seoTitle,
-      description,
+      title: defaultTitle,
+      description: defaultDescription,
       url: recipeUrl,
       type: SEO_CONSTANTS.OG_TYPE.ARTICLE,
       locale: SEO_CONSTANTS.LOCALE,
@@ -137,8 +141,8 @@ export const generateRecipeMetadata = (
     },
     twitter: {
       card: SEO_CONSTANTS.TWITTER_CARD,
-      title: seoTitle,
-      description,
+      title: defaultTitle,
+      description: defaultDescription,
       ...(fullImageUrl && { images: [fullImageUrl] }),
     },
     other: {
@@ -148,6 +152,45 @@ export const generateRecipeMetadata = (
       ]),
     },
   };
+
+  // 2. 셰프 레시피일 경우 메타데이터 오버라이딩 (덮어쓰기)
+  if (isChefRecipe) {
+    const chefTitle = `[15분 레시피] ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
+    const chefDescription = `흑백요리사, 냉장고를 부탁해 등 유명 셰프들의 15분 레시피 후기를 만나보세요. ${recipe.title} 레시피로 집에서 파인다이닝을 즐겨보세요!`;
+    const chefKeywords = [
+      "흑백요리사",
+      "흑백요리사2",
+      "냉장고를부탁해",
+      "15분레시피",
+      "냉장고를부탁해 15분레시피",
+      "셰프 레시피",
+      "파인다이닝",
+      "RECIPIO",
+      "안성재",
+      "최현석",
+      "에드워드 리",
+      ...(baseMetadata.keywords as string[]), // 기존 키워드도 포함
+    ];
+
+    return {
+      ...baseMetadata,
+      title: chefTitle,
+      description: chefDescription,
+      keywords: chefKeywords,
+      openGraph: {
+        ...baseMetadata.openGraph,
+        title: chefTitle,
+        description: chefDescription,
+      },
+      twitter: {
+        ...baseMetadata.twitter,
+        title: chefTitle,
+        description: chefDescription,
+      },
+    };
+  }
+
+  return baseMetadata;
 };
 
 export const generateNotFoundRecipeMetadata = (): Metadata => ({
