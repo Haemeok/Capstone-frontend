@@ -9,15 +9,15 @@ import {
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export function generateStaticParams() {
   return [{ id: "CHEF_RECIPE" }];
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const { id } = params;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
   const tagCode = id as TagCode;
   const tagDef = TAGS_BY_CODE[tagCode];
   const tagName = tagDef?.name ?? "레시피";
