@@ -1,109 +1,123 @@
-"use client";
+import { Metadata } from "next";
+import CategoryDetailClient from "./CategoryDetailClient";
+import {
+  TAGS_BY_CODE,
+  CATEGORY_BASE_URL,
+  TAGS_IMAGE_KEYS,
+  TagCode,
+} from "@/shared/config/constants/recipe";
+import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
-
-import { InfiniteData } from "@tanstack/react-query";
-
-import { TagCode, TAGS_BY_CODE } from "@/shared/config/constants/recipe";
-import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import { useSort } from "@/shared/hooks/useSort";
-import { getNextPageParam } from "@/shared/lib/utils";
-import Circle from "@/shared/ui/Circle";
-import { Container } from "@/shared/ui/Container";
-import HomeBanner from "@/shared/ui/HomeBanner";
-import PrevButton from "@/shared/ui/PrevButton";
-import RecipeSortButton from "@/shared/ui/RecipeSortButton";
-import SortPicker from "@/shared/ui/SortPicker";
-
-import { getRecipeItems } from "@/entities/recipe";
-import { DetailedRecipesApiResponse } from "@/entities/recipe";
-
-import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
-
-const CategoryDetailPage = () => {
-  const { id: tagCode } = useParams<{ id: TagCode }>();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const { currentSort, setSort, getSortParam, availableSorts } =
-    useSort("recipe");
-
-  const sortParam = getSortParam();
-
-  const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
-    DetailedRecipesApiResponse,
-    Error,
-    InfiniteData<DetailedRecipesApiResponse>,
-    [string, string, string],
-    number
-  >({
-    queryKey: ["recipes", tagCode, sortParam],
-    queryFn: ({ pageParam }) =>
-      getRecipeItems({
-        tags: [tagCode],
-        pageParam,
-        sort: sortParam,
-      }),
-    getNextPageParam: getNextPageParam,
-    initialPageParam: 0,
-  });
-
-  const tagDef = TAGS_BY_CODE[tagCode as keyof typeof TAGS_BY_CODE];
-  const tagName = tagDef?.name ?? String(tagCode);
-
-  const recipes = data?.pages.flatMap((page) => page.content);
-
-  return (
-    <Container>
-      <div className="bg-white">
-        <header className="relative flex items-center justify-center border-b border-gray-200 py-2">
-          <PrevButton className="absolute left-0" />
-          <h1 className="text-xl font-bold">
-            {tagName.endsWith("레시피") ? tagName : `${tagName} 레시피`}
-          </h1>
-        </header>
-        <div className="flex items-center justify-end p-4">
-          <RecipeSortButton
-            currentSort={currentSort}
-            onClick={() => setIsDrawerOpen(true)}
-          />
-          <SortPicker
-            open={isDrawerOpen}
-            onOpenChange={setIsDrawerOpen}
-            currentSort={currentSort}
-            availableSorts={availableSorts}
-            onSortChange={(newSort) => setSort(newSort as any)}
-          />
-        </div>
-        {recipes && recipes.length > 0 ? (
-          <RecipeGrid
-            recipes={recipes}
-            isFetching={isFetching}
-            hasNextPage={hasNextPage}
-            observerRef={ref}
-          />
-        ) : (
-          <div className="flex h-[500px] w-full flex-col items-center justify-center p-4">
-            {isFetching ? (
-              <Circle className="text-olive-mint/60" size={32} />
-            ) : (
-              <>
-                <p className="text-mm text-gray-500">
-                  {tagName} 레시피가 아직 없어요 !
-                </p>
-                <HomeBanner
-                  title="레시피 생성하러가기"
-                  description={`${tagName} 레시피를 만들어보세요!`}
-                  image="/robot1.webp"
-                  to="/recipes/new"
-                />
-              </>
-            )}
-          </div>
-        )}
-      </div>
-    </Container>
-  );
+type Props = {
+  params: { id: string };
 };
 
-export default CategoryDetailPage;
+export function generateStaticParams() {
+  return [{ id: "CHEF_RECIPE" }];
+}
+
+export function generateMetadata({ params }: Props): Metadata {
+  const { id } = params;
+  const tagCode = id as TagCode;
+  const tagDef = TAGS_BY_CODE[tagCode];
+  const tagName = tagDef?.name ?? "레시피";
+
+  const title = `${tagName} 모음 | ${SEO_CONSTANTS.SITE_NAME}`;
+  const description = `${tagName}를 ${SEO_CONSTANTS.SITE_NAME}에서 확인해보세요. 다양한 ${tagName} 관련 요리를 추천해드립니다.`;
+  const url = `${SEO_CONSTANTS.SITE_URL}recipes/category/${id}`;
+
+  const tagImageKey = TAGS_IMAGE_KEYS[tagCode];
+  const imageUrl = tagImageKey
+    ? `${CATEGORY_BASE_URL}${tagImageKey}`
+    : SEO_CONSTANTS.DEFAULT_IMAGE;
+
+  const baseMetadata: Metadata = {
+    title,
+    description,
+    keywords: [
+      ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
+      tagName,
+      `${tagName} 레시피`,
+      "요리 추천",
+    ],
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SEO_CONSTANTS.SITE_NAME,
+      locale: SEO_CONSTANTS.LOCALE,
+      type: SEO_CONSTANTS.OG_TYPE.WEBSITE,
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 600,
+          alt: `${tagName} 대표 이미지`,
+        },
+      ],
+    },
+    twitter: {
+      card: SEO_CONSTANTS.TWITTER_CARD,
+      title,
+      description,
+      images: [imageUrl],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+
+  if (id === "CHEF_RECIPE") {
+    const chefTitle = "흑백요리사 & 15분 레시피 후기 모음 | RECIPIO";
+    const chefDescription =
+      "다양한 흑백요리사, 냉장고를 부탁해 등 유명 셰프들의 15분 레시피 후기를 만나보세요. 집에서 즐기는 파인다이닝, 누구나 쉽게 따라 할 수 있는 셰프의 비법을 공개합니다.";
+
+    return {
+      ...baseMetadata,
+      title: chefTitle,
+      description: chefDescription,
+      keywords: [
+        "흑백요리사",
+        "흑백요리사2",
+        "냉장고를부탁해",
+        "15분레시피",
+        "냉장고를부탁해 15분레시피",
+        "셰프 레시피",
+        "파인다이닝",
+        "RECIPIO",
+        "안성재",
+        "최현석",
+        "에드워드 리",
+      ],
+      openGraph: {
+        ...baseMetadata.openGraph,
+        title: chefTitle,
+        description: chefDescription,
+        images: [
+          {
+            url: imageUrl,
+            width: 800,
+            height: 600,
+            alt: "셰프 레시피 컬렉션",
+          },
+        ],
+      },
+      twitter: {
+        ...baseMetadata.twitter,
+        title: chefTitle,
+        description: chefDescription,
+        images: [imageUrl],
+      },
+    };
+  }
+
+  return baseMetadata;
+}
+
+export default function Page() {
+  return <CategoryDetailClient />;
+}
