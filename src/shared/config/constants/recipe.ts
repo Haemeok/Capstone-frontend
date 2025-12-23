@@ -171,14 +171,17 @@ export const DRAWER_HEADERS = {
   dishType: "요리 유형 선택",
   sort: "정렬 방식 선택",
   tags: "태그 선택",
+  nutrition: "영양성분 및 가격",
 };
 
 export const DRAWER_DESCRIPTIONS = {
   dishType: "원하는 요리 유형을 선택하세요.",
   tags: "원하는 태그를 모두 선택하세요.",
+  nutrition: "원하는 범위를 설정하세요.",
 };
 
-export type DrawerType = "dishType" | "sort" | "tags";
+export type DrawerType = "dishType" | "sort" | "tags" | "nutrition";
+export type BaseDrawerType = Exclude<DrawerType, "nutrition">;
 
 export type BaseDrawerConfig = {
   header: string;
@@ -187,7 +190,7 @@ export type BaseDrawerConfig = {
   availableValues: string[];
 };
 
-export const BASE_DRAWER_CONFIGS: Record<DrawerType, BaseDrawerConfig> = {
+export const BASE_DRAWER_CONFIGS: Record<BaseDrawerType, BaseDrawerConfig> = {
   dishType: {
     header: DRAWER_HEADERS.dishType,
     description: DRAWER_DESCRIPTIONS.dishType,
@@ -205,12 +208,6 @@ export const BASE_DRAWER_CONFIGS: Record<DrawerType, BaseDrawerConfig> = {
     isMultiple: true,
     availableValues: TAG_DEFINITIONS.map((tag) => `${tag.emoji} ${tag.name}`),
   },
-};
-
-export type FinalDrawerConfig = BaseDrawerConfig & {
-  type: DrawerType;
-  initialValue: string | string[];
-  setValue: (value: string | string[]) => void;
 };
 
 export const FOUR_CUT_IMAGE =
@@ -400,3 +397,15 @@ export const CALORIE_ACTIVITIES = [
 ];
 
 export type Activity = (typeof CALORIE_ACTIVITIES)[number];
+
+export const NUTRITION_RANGES = {
+  cost: { min: 0, max: 50000, step: 1000, unit: "원", label: "재료비" },
+  calories: { min: 0, max: 2000, step: 50, unit: "kcal", label: "칼로리" },
+  carb: { min: 0, max: 300, step: 10, unit: "g", label: "탄수화물" },
+  protein: { min: 0, max: 200, step: 5, unit: "g", label: "단백질" },
+  fat: { min: 0, max: 100, step: 5, unit: "g", label: "지방" },
+  sugar: { min: 0, max: 100, step: 5, unit: "g", label: "당류" },
+  sodium: { min: 0, max: 5000, step: 100, unit: "mg", label: "나트륨" },
+} as const;
+
+export type NutritionFilterKey = keyof typeof NUTRITION_RANGES;
