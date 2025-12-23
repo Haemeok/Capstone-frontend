@@ -3,6 +3,7 @@ import { InfiniteData } from "@tanstack/react-query";
 import {
   DISH_TYPE_CODES,
   DISH_TYPE_CODES_TO_NAME,
+  NutritionFilterKey,
 } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -10,11 +11,16 @@ import { getNextPageParam } from "@/shared/lib/utils";
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
 
+type NutritionFilterValues = {
+  [K in NutritionFilterKey]: [number, number];
+};
+
 type UseSearchResultsProps = {
   q: string;
   sortCode: string;
   dishTypeCode: string | null;
   tagCodes: string[];
+  nutritionParams: Partial<NutritionFilterValues>;
 };
 
 export const useSearchResults = ({
@@ -22,15 +28,28 @@ export const useSearchResults = ({
   sortCode,
   dishTypeCode,
   tagCodes,
+  nutritionParams,
 }: UseSearchResultsProps) => {
+  const nutritionQueryParams: Record<string, number> = {};
+  Object.entries(nutritionParams).forEach(([key, value]) => {
+    const filterKey = key as NutritionFilterKey;
+    const capitalizedKey = filterKey.charAt(0).toUpperCase() + filterKey.slice(1);
+    if (value) {
+      nutritionQueryParams[`min${capitalizedKey}`] = value[0];
+      nutritionQueryParams[`max${capitalizedKey}`] = value[1];
+    }
+  });
+
+  const nutritionKeyString = JSON.stringify(nutritionQueryParams);
+
   const { data, hasNextPage, isFetching, isPending, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
     InfiniteData<DetailedRecipesApiResponse>,
-    [string, string | null, string, string, string],
+    [string, string | null, string, string, string, string],
     number
   >({
-    queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q],
+    queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q, nutritionKeyString],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
         sort: sortCode,
@@ -38,6 +57,7 @@ export const useSearchResults = ({
         tags: tagCodes,
         q: q,
         pageParam,
+        ...nutritionQueryParams,
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
@@ -50,6 +70,7 @@ export const useSearchResults = ({
     sortCode,
     tagCodes,
     q,
+    nutritionKeyString,
   ]);
   const dishType = dishTypeCode
     ? DISH_TYPE_CODES_TO_NAME[dishTypeCode as keyof typeof DISH_TYPE_CODES]
