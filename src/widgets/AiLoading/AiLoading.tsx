@@ -14,8 +14,7 @@ const AiLoading = ({ aiModelId }: AiLoadingProps) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const aiModel = aiModels[aiModelId];
-  const { name, } = aiModel;
-
+  const { name } = aiModel;
 
   useEffect(() => {
     const stepInterval = setInterval(() => {
@@ -28,20 +27,20 @@ const AiLoading = ({ aiModelId }: AiLoadingProps) => {
   }, []);
 
   return (
-    <div className="flex w-full min-h-[calc(100dvh-77px)] flex-col items-center justify-center gap-6  p-4">
+    <div className="flex min-h-[calc(100dvh-77px)] w-full flex-col items-center justify-center gap-6 p-4">
       <div className="flex flex-col items-center gap-2">
-        <h1 className="text-2xl font-bold text-dark">
-          {name}가 레시피를 만들고 있어요
+        <h1 className="text-dark text-2xl font-bold">
+          {name} 레시피를 만들고 있어요
         </h1>
-        <p className="text-lg text-gray-600 animate-pulse">
+        <p className="animate-pulse text-lg text-gray-600">
           {aiModelSteps[currentStep]}
         </p>
       </div>
 
-      <div className="max-w-sm text-center space-y-3">
+      <div className="max-w-sm space-y-3 text-center">
         <div className="bg-olive-mint/10 rounded-2xl p-4">
-          <p className="text-olive-mint font-bold mb-2">💡 잠깐!</p>
-          <p className="text-gray-700 text-sm leading-relaxed">
+          <p className="text-olive-mint mb-2 font-bold">💡 잠깐!</p>
+          <p className="text-sm leading-relaxed text-gray-700">
             다른 작업을 해도 괜찮아요!
             <br />
             다른 페이지를 둘러보시거나 냉장고를 확인해보세요.
@@ -50,7 +49,7 @@ const AiLoading = ({ aiModelId }: AiLoadingProps) => {
           </p>
         </div>
       </div>
-      <p className="text-sm text-gray-500">평균 40초~1분 내 완성됩니다!</p>
+      <p className="text-sm text-gray-500">평균 30초안에 완성됩니다!</p>
     </div>
   );
 };

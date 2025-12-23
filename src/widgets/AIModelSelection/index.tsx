@@ -8,6 +8,13 @@ import { aiModels, AIModelId } from "@/shared/config/constants/aiModel";
 import { Image } from "@/shared/ui/image/Image";
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 import { cn } from "@/shared/lib/utils";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/shared/ui/shadcn/carousel";
 
 const AIModelSelection = () => {
   const router = useRouter();
@@ -61,56 +68,74 @@ const AIModelSelection = () => {
   );
 
   return (
-    <div className="mx-auto flex h-full flex-col items-center justify-center gap-4 p-4">
+    <div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 py-4">
       <p className="text-dark text-center text-2xl font-bold">
         레시피를 생성할 AI를 선택해주세요.
       </p>
-      <div className="grid grid-cols-2 gap-6">
-        {Object.values(aiModels).map((ai) => {
-          const isFineDining = ai.id === "FINE_DINING";
-          
-          return (
-            <button
-              key={ai.id}
-              onClick={() => !isFineDining && authenticatedSelectAI(ai.id)}
-              disabled={isFineDining}
-              className={cn(
-                "relative flex flex-col items-center rounded-2xl border bg-white px-4 py-6 shadow-lg transition-all",
-                !isFineDining && "hover:scale-105 hover:shadow-xl",
-                isFineDining && "cursor-not-allowed overflow-hidden"
-              )}
-            >
-              <div className={cn("w-full h-full flex flex-col items-center", isFineDining && "blur-sm opacity-50")}>
-                <div className="w-full aspect-square rounded-2xl mb-4 overflow-hidden">
-                  <Image
-                    src={ai.image}
-                    alt={ai.name}
-                    wrapperClassName="w-full h-full"
-                    imgClassName="object-cover"
-                    fit="cover"
-                  />
-                </div>
-                <p className="text-dark text-lg font-bold">{ai.name}</p>
-                <p className="mt-2 text-center text-sm text-gray-500">
-                  {ai.description}
-                </p>
-              </div>
 
-              {isFineDining && (
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/10">
-                  <div className="flex flex-col items-center rounded-xl bg-black/60 px-4 py-3 text-white backdrop-blur-md">
-                    <Clock className="mb-2 h-6 w-6 text-olive-light" />
-                    <p className="mb-1 text-xs font-bold text-olive-light">COMING SOON</p>
-                    <p className="font-mono text-sm font-bold tracking-widest">
-                      {timeLeft || "Loading..."}
+      <Carousel
+        opts={{
+          align: "center",
+          loop: false,
+        }}
+        className="w-full max-w-sm"
+      >
+        <CarouselContent className="-ml-4">
+          {Object.values(aiModels).map((ai) => {
+            const isFineDining = ai.id === "FINE_DINING";
+
+            return (
+              <CarouselItem key={ai.id} className="basis-[85%] pl-4">
+                <button
+                  onClick={() => !isFineDining && authenticatedSelectAI(ai.id)}
+                  disabled={isFineDining}
+                  className={cn(
+                    "relative flex aspect-[2/3] w-full flex-col overflow-hidden rounded-xl bg-gray-100 shadow-lg transition-all",
+                    !isFineDining && "active:scale-[0.98]",
+                    isFineDining && "cursor-not-allowed"
+                  )}
+                >
+                  <div className="absolute inset-0">
+                    <Image
+                      src={ai.image}
+                      alt={ai.name}
+                      wrapperClassName="w-full h-full"
+                      imgClassName="object-cover"
+                      fit="cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                  </div>
+
+                  <div className="relative z-10 flex h-full flex-col justify-end p-6 text-left">
+                    <p className="text-2xl font-bold text-white">{ai.name}</p>
+                    <p className="mt-2 text-sm font-light text-white/90">
+                      {ai.description}
                     </p>
                   </div>
-                </div>
-              )}
-            </button>
-          );
-        })}
-      </div>
+
+                  {isFineDining && (
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                      <div className="flex flex-col items-center rounded-xl bg-black/60 px-5 py-4 text-white backdrop-blur-md">
+                        <Clock className="text-olive-light mb-2 h-8 w-8" />
+                        <p className="text-olive-light mb-1 text-xs font-bold">
+                          COMING SOON
+                        </p>
+                        <p className="font-mono text-base font-bold tracking-widest">
+                          {timeLeft || "Loading..."}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </button>
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+        <div className="hidden md:block">
+          <CarouselPrevious />
+          <CarouselNext />
+        </div>
+      </Carousel>
     </div>
   );
 };
