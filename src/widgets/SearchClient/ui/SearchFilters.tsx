@@ -11,9 +11,11 @@ type SearchFiltersProps = {
   dishType: string;
   sort: string;
   tags: string[];
+  isNutritionDirty: boolean;
   onDishTypeClick: () => void;
   onSortClick: () => void;
   onTagsClick: () => void;
+  onNutritionClick: () => void;
 };
 
 export const SearchFilters = ({
@@ -23,9 +25,11 @@ export const SearchFilters = ({
   dishType,
   sort,
   tags,
+  isNutritionDirty,
   onDishTypeClick,
   onSortClick,
   onTagsClick,
+  onNutritionClick,
 }: SearchFiltersProps) => {
   return (
     <div className="sticky-optimized sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
@@ -63,6 +67,11 @@ export const SearchFilters = ({
           header={tags.length > 0 ? tags.join(", ") : "태그"}
           onClick={onTagsClick}
           isDirty={tags.length > 0}
+        />
+        <FilterChip
+          header="필터"
+          onClick={onNutritionClick}
+          isDirty={isNutritionDirty}
         />
       </div>
     </div>

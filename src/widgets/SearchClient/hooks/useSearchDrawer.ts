@@ -1,81 +1,16 @@
 import { useState } from "react";
 
-import {
-  BASE_DRAWER_CONFIGS,
-  DrawerType,
-} from "@/shared/config/constants/recipe";
+import { DrawerType } from "@/shared/config/constants/recipe";
 
-type DrawerConfig = {
-  type: "dishType" | "sort" | "tags";
-  header: string;
-  description?: string;
-  isMultiple: boolean;
-  availableValues: string[];
-  initialValue: string | string[];
-  setValue: (value: string | string[]) => void;
-};
+export const useFilterDrawer = () => {
+  const [activeDrawer, setActiveDrawer] = useState<DrawerType | null>(null);
 
-type UseSearchDrawerProps = {
-  dishType: string;
-  sort: string;
-  tags: string[];
-  updateDishType: (value: string) => void;
-  updateSort: (value: string) => void;
-  updateTags: (value: string[]) => void;
-};
-
-export const useSearchDrawer = ({
-  dishType,
-  sort,
-  tags,
-  updateDishType,
-  updateSort,
-  updateTags,
-}: UseSearchDrawerProps) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [drawerConfig, setDrawerConfig] = useState<DrawerConfig | null>(null);
-
-  const dynamicStateAccessors = {
-    dishType: {
-      state: dishType,
-      setState: updateDishType,
-    },
-    sort: {
-      state: sort,
-      setState: updateSort,
-    },
-    tags: {
-      state: tags,
-      setState: updateTags,
-    },
-  };
-
-  const openDrawer = (type: DrawerType) => {
-    const baseConfig = BASE_DRAWER_CONFIGS[type];
-    const dynamicState = dynamicStateAccessors[type];
-
-    if (!baseConfig || !dynamicState) {
-      console.error(`Invalid drawer type or configuration missing: ${type}`);
-      return;
-    }
-
-    const finalConfig: DrawerConfig = {
-      ...baseConfig,
-      type,
-      initialValue: dynamicState.state,
-      setValue: (value: string | string[]) => {
-        dynamicState.setState(value as any);
-      },
-    };
-
-    setDrawerConfig(finalConfig);
-    setIsDrawerOpen(true);
-  };
+  const openDrawer = (type: DrawerType) => setActiveDrawer(type);
+  const closeDrawer = () => setActiveDrawer(null);
 
   return {
-    isDrawerOpen,
-    setIsDrawerOpen,
-    drawerConfig,
+    activeDrawer,
     openDrawer,
+    closeDrawer,
   };
 };
