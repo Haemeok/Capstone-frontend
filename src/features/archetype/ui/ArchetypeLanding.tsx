@@ -6,7 +6,7 @@ type ArchetypeLandingProps = {
 
 const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-hidden">
       <video
         autoPlay
         loop
@@ -22,7 +22,7 @@ const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
 
       <div className="absolute inset-0 bg-black/60" />
 
-      <div className="relative z-10 flex h-full flex-col items-center justify-between px-6 py-20">
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-between px-6 py-20">
         <div className="flex flex-col items-center space-y-12">
           <div className="space-y-4 text-center">
             <h1 className="-space-y-2 font-serif text-6xl leading-none font-light tracking-wide text-white md:-space-y-3 md:text-7xl lg:-space-y-4 lg:text-8xl">

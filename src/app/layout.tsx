@@ -71,14 +71,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="ko"
-      className={pretendard.variable}
-    >
+    <html lang="ko" className={`scroll-smooth ${pretendard.variable}`}>
       <body className={pretendard.className}>
         <AppProviders>
           <DesktopHeader />
-          <main className="flex-1 w-full flex flex-col">{children}</main>
+          <main className="flex w-full flex-col">{children}</main>
           <BottomNavBar />
         </AppProviders>
         <Analytics />

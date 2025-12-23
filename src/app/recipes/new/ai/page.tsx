@@ -36,7 +36,7 @@ const AIRecipePage = () => {
   }
 
   return (
-    <Container padding={false}>
+    <Container padding={false} className="min-h-full">
       <AIModelSelection />
     </Container>
   );
