@@ -37,7 +37,11 @@ const NutritionRecipePage = () => {
   const router = useRouter();
   const [mode, setMode] = useState<NutritionMode>("MACRO");
 
-  const { generationState, generatedRecipeData, error: storeError } = useAIRecipeStore();
+  const {
+    generationState,
+    generatedRecipeData,
+    error: storeError,
+  } = useAIRecipeStore();
   const { createAIRecipe, reset: resetMutation } = useCreateAIRecipeMutation();
 
   const isPending = generationState === "generating";
@@ -45,16 +49,17 @@ const NutritionRecipePage = () => {
   const recipeData = generatedRecipeData;
   const error = storeError ? { message: storeError } : null;
 
-  const { control, handleSubmit, watch, setValue, reset } = useForm<NutritionFormValues>({
-    defaultValues: {
-      mode: "MACRO",
-      targetStyle: "Asian_Style",
-      targetCalories: "제한 없음",
-      targetCarbs: "70",
-      targetProtein: "25",
-      targetFat: "15",
-    },
-  });
+  const { control, handleSubmit, watch, setValue, reset } =
+    useForm<NutritionFormValues>({
+      defaultValues: {
+        mode: "MACRO",
+        targetStyle: "Asian_Style",
+        targetCalories: "제한 없음",
+        targetCarbs: "70",
+        targetProtein: "25",
+        targetFat: "15",
+      },
+    });
 
   useEffect(() => {
     reset({
@@ -75,10 +80,16 @@ const NutritionRecipePage = () => {
 
     const payload = {
       targetStyle: data.targetStyle,
-      targetCalories: mode === "MACRO" ? "제한 없음" : formatValue(data.targetCalories, "kcal"),
-      targetCarbs: mode === "MACRO" ? formatValue(data.targetCarbs, "g") : "제한 없음",
-      targetProtein: mode === "MACRO" ? formatValue(data.targetProtein, "g") : "제한 없음",
-      targetFat: mode === "MACRO" ? formatValue(data.targetFat, "g") : "제한 없음",
+      targetCalories:
+        mode === "MACRO"
+          ? "제한 없음"
+          : formatValue(data.targetCalories, "kcal"),
+      targetCarbs:
+        mode === "MACRO" ? formatValue(data.targetCarbs, "g") : "제한 없음",
+      targetProtein:
+        mode === "MACRO" ? formatValue(data.targetProtein, "g") : "제한 없음",
+      targetFat:
+        mode === "MACRO" ? formatValue(data.targetFat, "g") : "제한 없음",
     };
 
     createAIRecipe({
@@ -119,12 +130,12 @@ const NutritionRecipePage = () => {
 
   return (
     <Container padding={false}>
-      <div className=" mx-auto bg-[#f7f7f7] p-4">
+      <div className="mx-auto bg-[#f7f7f7] p-4">
         <div className="mb-4 flex items-center gap-2">
           <PrevButton className="md:hidden" />
           <button
             onClick={() => router.back()}
-            className="hidden md:flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+            className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
           >
             <ArrowLeft size={20} />
             <span className="text-sm font-medium">AI 다시 선택하기</span>
@@ -167,7 +178,7 @@ const NutritionRecipePage = () => {
               onClick={() => setMode("MACRO")}
               className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all ${
                 mode === "MACRO"
-                  ? "bg-white text-olive-medium shadow-sm"
+                  ? "text-olive-medium bg-white shadow-sm"
                   : "text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -177,7 +188,7 @@ const NutritionRecipePage = () => {
               onClick={() => setMode("CALORIE")}
               className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all ${
                 mode === "CALORIE"
-                  ? "bg-white text-olive-medium shadow-sm"
+                  ? "text-olive-medium bg-white shadow-sm"
                   : "text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -186,7 +197,10 @@ const NutritionRecipePage = () => {
           </div>
 
           {mode === "MACRO" ? (
-            <div key="macro-sliders" className="animate-in fade-in slide-in-from-top-2 space-y-8">
+            <div
+              key="macro-sliders"
+              className="animate-in fade-in slide-in-from-top-2 space-y-8"
+            >
               <MacroSlider
                 key="carbs"
                 control={control}
@@ -219,7 +233,10 @@ const NutritionRecipePage = () => {
               />
             </div>
           ) : (
-            <div key="calorie-sliders" className="animate-in fade-in slide-in-from-top-2 space-y-8">
+            <div
+              key="calorie-sliders"
+              className="animate-in fade-in slide-in-from-top-2 space-y-8"
+            >
               <MacroSlider
                 key="calories"
                 control={control}
@@ -236,10 +253,10 @@ const NutritionRecipePage = () => {
 
         <button
           onClick={handleSubmit(onSubmit)}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-olive-light to-olive-medium px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5"
+          className="from-olive-light to-olive-medium flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
         >
           <ChefHat className="h-6 w-6" />
-          <span>건강 식단 추천받기</span>
+          <span>건강 식단 생성하기</span>
         </button>
       </div>
     </Container>
@@ -248,7 +265,8 @@ const NutritionRecipePage = () => {
 
 const getGuidanceMessage = (name: string, value: number) => {
   if (name === "targetCalories") {
-    if (value < 500) return "다이어트나 가벼운 식사에 적합해요 (성인 여성 한 끼 권장량 이하)";
+    if (value < 500)
+      return "다이어트나 가벼운 식사에 적합해요 (성인 여성 한 끼 권장량 이하)";
     if (value <= 800) return "일반적인 성인 한 끼 식사 권장량이에요";
     return "활동량이 많거나 벌크업 중인 분들에게 추천해요";
   }
@@ -269,7 +287,15 @@ const getGuidanceMessage = (name: string, value: number) => {
   return "";
 };
 
-const MacroSlider = ({ control, name, label, unit, max, step, defaultValue }: any) => {
+const MacroSlider = ({
+  control,
+  name,
+  label,
+  unit,
+  max,
+  step,
+  defaultValue,
+}: any) => {
   return (
     <Controller
       control={control}
@@ -282,23 +308,26 @@ const MacroSlider = ({ control, name, label, unit, max, step, defaultValue }: an
           field.onChange(vals[0].toString());
         };
 
-        const guidance = !isUnlimited ? getGuidanceMessage(name, sliderValue) : "";
+        const guidance = !isUnlimited
+          ? getGuidanceMessage(name, sliderValue)
+          : "";
 
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-bold text-gray-700">
-                {label}
-              </label>
+              <label className="text-sm font-bold text-gray-700">{label}</label>
               <div className="flex items-center gap-3">
                 {!isUnlimited && (
-                  <span className="font-mono text-lg font-bold text-olive-medium">
-                    {sliderValue}{unit}
+                  <span className="text-olive-medium font-mono text-lg font-bold">
+                    {sliderValue}
+                    {unit}
                   </span>
                 )}
                 <button
                   type="button"
-                  onClick={() => field.onChange(isUnlimited ? defaultValue : "제한 없음")} 
+                  onClick={() =>
+                    field.onChange(isUnlimited ? defaultValue : "제한 없음")
+                  }
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                     isUnlimited
                       ? "bg-olive-medium text-white"
@@ -309,25 +338,30 @@ const MacroSlider = ({ control, name, label, unit, max, step, defaultValue }: an
                 </button>
               </div>
             </div>
-            
-            <div className={isUnlimited ? "opacity-30 pointer-events-none" : ""}>
-               <Slider
+
+            <div
+              className={isUnlimited ? "pointer-events-none opacity-30" : ""}
+            >
+              <Slider
                 min={0}
                 max={max}
                 step={step}
                 value={[sliderValue]}
                 onValueChange={handleSliderChange}
                 disabled={isUnlimited}
-                className="[&>*[data-slot=slider-track]]:bg-gray-200 [&>*[data-slot=slider-range]]:bg-olive-medium [&>*[data-slot=slider-thumb]]:border-olive-medium [&>*[data-slot=slider-thumb]]:bg-white"
+                className="[&>*[data-slot=slider-range]]:bg-olive-medium [&>*[data-slot=slider-thumb]]:border-olive-medium [&>*[data-slot=slider-thumb]]:bg-white [&>*[data-slot=slider-track]]:bg-gray-200"
               />
               <div className="mt-1 flex justify-between text-xs text-gray-400">
                 <span>0{unit}</span>
-                <span>{max}{unit}</span>
+                <span>
+                  {max}
+                  {unit}
+                </span>
               </div>
-              
+
               {guidance && (
-                <div className="mt-3 flex items-start gap-2 rounded-lg bg-olive-light/10 p-3 text-xs text-gray-600 animate-in fade-in slide-in-from-top-1">
-                  <Info className="h-4 w-4 shrink-0 text-olive-medium" />
+                <div className="bg-olive-light/10 animate-in fade-in slide-in-from-top-1 mt-3 flex items-start gap-2 rounded-lg p-3 text-xs text-gray-600">
+                  <Info className="text-olive-medium h-4 w-4 shrink-0" />
                   <span>{guidance}</span>
                 </div>
               )}

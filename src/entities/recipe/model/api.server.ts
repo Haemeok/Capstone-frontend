@@ -30,9 +30,10 @@ export const getRecipesOnServer = async (
   if (params.period) query.append("period", params.period);
 
   let endpoint = "/recipes/search";
-  if (params.maxCost) {
+
+  if (params.key === "budget-recipes") {
     endpoint = "/recipes/budget";
-  } else if (params.period) {
+  } else if (params.key === "popular-recipes") {
     endpoint = "/recipes/popular";
   }
 
@@ -215,10 +216,10 @@ export const getStaticRecipesOnServer = async (
   let endpoint = "/v2/recipes/search";
   let cacheTags: string[] = [CACHE_TAGS.recipesAll];
 
-  if (params.maxCost) {
+  if (params.key === "budget-recipes") {
     endpoint = "/v2/recipes/budget";
     cacheTags.push(CACHE_TAGS.recipesBudget);
-  } else if (params.period) {
+  } else if (params.key === "popular-recipes") {
     endpoint = "/v2/recipes/popular";
     cacheTags.push(CACHE_TAGS.recipesPopular);
   }

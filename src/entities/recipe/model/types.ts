@@ -140,8 +140,21 @@ export type RecipeQueryParams = {
   tags?: string[] | null;
   isAiGenerated?: boolean;
   maxCost?: number;
+  minCost?: number;
   period?: "weekly" | "monthly";
   pageParam?: number;
+  minCalories?: number;
+  maxCalories?: number;
+  minCarb?: number;
+  maxCarb?: number;
+  minProtein?: number;
+  maxProtein?: number;
+  minFat?: number;
+  maxFat?: number;
+  minSugar?: number;
+  maxSugar?: number;
+  minSodium?: number;
+  maxSodium?: number;
 };
 
 export type RecipeItemsQueryParams = {

@@ -28,7 +28,7 @@ export const Container = ({
   return (
     <div
       className={cn(
-        "mx-auto w-full min-h-full bg-white",
+        "mx-auto w-full bg-white",
         padding ? "px-4 pt-2 md:px-6" : "px-0 pt-0",
         MAX_WIDTH_CLASSES[maxWidth],
         className
