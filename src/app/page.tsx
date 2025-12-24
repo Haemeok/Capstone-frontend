@@ -10,6 +10,9 @@ import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import { OnboardingSurveyModal } from "@/widgets/OnboardingSurveryModal";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
+import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
+
+import { aiModelBanners } from "@/shared/config/constants/aiModel";
 
 export const metadata = homeMetadata;
 
@@ -67,6 +70,8 @@ const HomePage = async () => {
             </div>
           </Link>
           <CategoryTabs title="카테고리" />
+
+          <HomeBannerCarousel slides={aiModelBanners} variant="white" />
 
           <RecipeSlideWithErrorBoundary
             title="만원 이하 가성비 레시피"

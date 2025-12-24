@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -57,17 +59,60 @@ const HomeBannerCarousel = ({
         <div className="flex">
           {slides.map((slide) => (
             <div key={slide.id} className="relative min-w-0 flex-[0_0_100%]">
-              <a
+              <Link
                 href={slide.link}
-                className="from-olive to-olive-light block aspect-[16/3] w-full bg-gradient-to-r"
+                className="relative block aspect-[16/6] w-full overflow-hidden md:aspect-[16/4]"
               >
-                <div className="flex h-full items-center justify-center">
-                  <div className="text-center text-white">
-                    <h2 className="mb-2 text-3xl font-bold">{slide.title}</h2>
-                    <p className="text-lg">{slide.description}</p>
+                <Image
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                  priority
+                />
+                <div className="absolute inset-0 bg-black/50" />
+                <div className="relative flex h-full items-center justify-center px-6 pb-16 md:pb-6">
+                  <div className="max-w-3xl text-center text-white">
+                    {slide.badge && (
+                      <div className="flex justify-center">
+                        <span
+                          className={cn(
+                            "rounded-full px-4 py-1.5 text-sm font-semibold",
+                            slide.badge.variant === "success" &&
+                              "bg-green-500 text-white",
+                            slide.badge.variant === "warning" &&
+                              "bg-red-500 text-white",
+                            slide.badge.variant === "default" &&
+                              "bg-white/20 text-white backdrop-blur-sm"
+                          )}
+                        >
+                          {slide.badge.text}
+                        </span>
+                      </div>
+                    )}
+                    <h2 className="mb-3 text-2xl leading-tight font-bold md:text-4xl md:leading-tight">
+                      {slide.highlight ? (
+                        <>
+                          {slide.title}
+                          <br />
+                          <span
+                            className="bg-gradient-to-r bg-clip-text text-transparent"
+                            style={{
+                              backgroundImage: `linear-gradient(to right, ${slide.highlight.color}, ${slide.highlight.color})`,
+                            }}
+                          >
+                            {slide.highlight.text}
+                          </span>
+                        </>
+                      ) : (
+                        slide.title
+                      )}
+                    </h2>
+                    <p className="text-sm md:text-lg">{slide.description}</p>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           ))}
         </div>
