@@ -67,9 +67,11 @@ const IngredientRecipePage = () => {
   const onSubmit = (data: AIRecipeFormValues) => {
     createAIRecipe({
       request: {
-        ...data,
-        robotType: "INGREDIENT_FOCUS",
-      } as any,
+        ingredientIds: data.ingredients.map((ing) => ing.id),
+        dishType: data.dishType,
+        cookingTime: data.cookingTime,
+        servings: data.servings,
+      },
       concept: "INGREDIENT_FOCUS",
     });
   };

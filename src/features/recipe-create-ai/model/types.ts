@@ -1,5 +1,5 @@
 export type IngredientFocusRequest = {
-  ingredients: Array<{ id: number; name: string }>;
+  ingredientIds: number[];
   dishType: string;
   cookingTime: number;
   servings: number;
