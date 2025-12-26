@@ -13,24 +13,34 @@ import { getNextPageParam } from "@/shared/lib/utils";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Button } from "@/shared/ui/shadcn/button";
 
-import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
-import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
+import {
+  getIngredients,
+  IngredientsApiResponse,
+} from "@/entities/ingredient";
+import { IngredientItem } from "@/entities/ingredient";
 
 import IngredientListItem from "./IngredientListItem";
 
-type IngredientSelectorProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onIngredientSelect: (ingredient: IngredientPayload) => void;
-  addedIngredientNames: Set<string>;
+type BaseIngredientPayload = {
+  id?: number;
+  name: string;
 };
 
-const IngredientSelector = ({
+type IngredientSelectorProps<T extends BaseIngredientPayload> = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onIngredientSelect: (ingredient: T) => void;
+  addedIngredientNames: Set<string>;
+  mapIngredientToPayload: (ingredient: IngredientItem) => T;
+};
+
+const IngredientSelector = <T extends BaseIngredientPayload>({
   open,
   onOpenChange,
   onIngredientSelect,
   addedIngredientNames,
-}: IngredientSelectorProps) => {
+  mapIngredientToPayload,
+}: IngredientSelectorProps<T>) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
   const [localAddedNames, setLocalAddedNames] = useState<Set<string>>(
     new Set(addedIngredientNames)
@@ -71,16 +81,13 @@ const IngredientSelector = ({
 
   const handleAddClick = useCallback(
     (ingredient: IngredientItem) => {
-      onIngredientSelect({
-        name: ingredient.name,
-        quantity: "",
-        unit: ingredient.unit,
-      });
+      const payload = mapIngredientToPayload(ingredient);
+      onIngredientSelect(payload);
       setLocalAddedNames((prevNames: Set<string>) =>
         new Set(prevNames).add(ingredient.name)
       );
     },
-    [onIngredientSelect]
+    [onIngredientSelect, mapIngredientToPayload]
   );
 
   const ingredientItems = useMemo(

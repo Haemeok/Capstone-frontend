@@ -96,6 +96,12 @@ const IngredientSection = ({
         onOpenChange={setIsOpen}
         onIngredientSelect={addIngredient}
         addedIngredientNames={addedIngredientNames}
+        mapIngredientToPayload={(ingredient) => ({
+          id: ingredient.id,
+          name: ingredient.name,
+          quantity: "",
+          unit: ingredient.unit,
+        })}
       />
     </div>
   );

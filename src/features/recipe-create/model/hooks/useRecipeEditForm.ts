@@ -45,7 +45,11 @@ export const useRecipeEditForm = (recipeId: number) => {
         instruction: step.instruction,
         stepNumber: index,
         image: step.stepImageUrl,
-        ingredients: step.ingredients || [],
+        ingredients: (step.ingredients || []).map((ing) => ({
+          name: ing.name,
+          quantity: ing.quantity || "",
+          unit: ing.unit,
+        })),
         imageKey: step.stepImageKey,
       })),
       cookingTools: recipe.cookingTools || [],

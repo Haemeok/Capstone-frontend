@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { IngredientPayload } from "@/entities/ingredient";
+import { AIIngredientPayload } from "@/entities/ingredient";
 
 import type { AIRecipeFormValues } from "../model/schema";
 
@@ -18,9 +17,15 @@ export const useAIRecipeForm = () => {
 
   const { setValue, getValues } = methods;
 
-  const handleAddIngredient = (ingredientPayload: IngredientPayload) => {
+  const handleAddIngredient = (ingredientPayload: AIIngredientPayload) => {
     const currentIngredients = getValues("ingredients");
-    const newIngredients = [...currentIngredients, ingredientPayload.name];
+    const newIngredients = [
+      ...currentIngredients,
+      {
+        id: ingredientPayload.id,
+        name: ingredientPayload.name,
+      },
+    ];
 
     setValue("ingredients", newIngredients, {
       shouldValidate: true,

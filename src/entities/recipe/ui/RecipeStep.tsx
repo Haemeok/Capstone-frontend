@@ -1,6 +1,9 @@
+import { useMemo } from "react";
+
 import { Image } from "@/shared/ui/image/Image";
 import IngredientIcon from "@/shared/ui/IngredientIcon";
 import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
+import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
 
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
 import { StepTimer } from "@/features/step-timer";
@@ -14,7 +17,11 @@ type RecipeStepProps = {
 };
 
 const RecipeStep = ({ stepIndex, step, length, isFirstStep = false }: RecipeStepProps) => {
-  const timeInSeconds = extractTimeFromText(step.instruction);
+  const { terms: cookingTerms, cleanedText } = useMemo(
+    () => extractCookingTerms(step.instruction),
+    [step.instruction]
+  );
+  const timeInSeconds = extractTimeFromText(cleanedText);
 
   return (
     <div
@@ -52,7 +59,22 @@ const RecipeStep = ({ stepIndex, step, length, isFirstStep = false }: RecipeStep
         ))}
       </div>
       <div className="mt-2 flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
-        <p className="whitespace-pre-wrap text-left md:flex-1">{step.instruction}</p>
+        <div className="md:flex-1">
+          <p className="whitespace-pre-wrap text-left">{cleanedText}</p>
+          {cookingTerms.length > 0 && (
+            <div className="mt-3 space-y-2">
+              {cookingTerms.map((term, index) => (
+                <div
+                  key={index}
+                  className="rounded-lg bg-gray-50 p-3 text-sm"
+                >
+                  <span className="font-semibold">📖 {term.term}</span>{" "}
+                  <span className="text-gray-600">{term.description}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         {step.stepImageUrl && (
           <Image
             src={step.stepImageUrl}

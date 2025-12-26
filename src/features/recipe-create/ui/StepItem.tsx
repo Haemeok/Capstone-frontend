@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { X } from "lucide-react";
 
 import { ImageUploader } from "@/shared/ui/image/ImageUploader";
-import { Button } from "@/shared/ui/shadcn/button";
+
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Label } from "@/shared/ui/shadcn/label";
 
