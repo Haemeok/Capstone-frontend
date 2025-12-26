@@ -104,7 +104,7 @@ const IngredientSearchDrawer = ({
             <input
               type="text"
               placeholder="재료 이름을 검색하세요"
-              className="w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:outline-none focus:border-olive-light focus:ring-1 focus:ring-olive-light"
+              className="focus:border-olive-light focus:ring-olive-light w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:ring-1 focus:outline-none"
               value={inputValue}
               onChange={handleInputChange}
             />
@@ -151,9 +151,9 @@ const IngredientSearchDrawer = ({
                 return (
                   <div
                     key={ingredient.id}
-                    className="flex items-center rounded-lg border bg-white p-3 shadow-sm"
+                    className="flex items-center rounded-lg border bg-white p-2 pr-3 shadow-sm"
                   >
-                    <div className="mr-3 h-12 w-12 flex-shrink-0 relative overflow-hidden rounded-lg bg-gray-100">
+                    <div className="relative mr-3 h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                       {ingredient.imageUrl && (
                         <Image
                           src={ingredient.imageUrl}

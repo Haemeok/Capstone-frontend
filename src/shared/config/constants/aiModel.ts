@@ -126,6 +126,10 @@ export const aiModelBanners: BannerSlide[] = [
     description: "합리적인 가격으로 누리는 프리미엄 홈 다이닝",
     image: aiModels.COST_EFFECTIVE.image,
     link: "/recipes/new/ai/price",
+    badge: {
+      text: "💰 가성비 최고",
+      variant: "default",
+    },
     highlight: {
       text: "레스토랑 부럽지 않은 한 끼",
       color: "#ffffff",
