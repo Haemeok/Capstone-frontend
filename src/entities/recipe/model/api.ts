@@ -22,7 +22,7 @@ export const getRecipe = async (id: number) => {
 };
 
 export const getRecipeItems = async (params: RecipeQueryParams) => {
-  const { maxCost, period, pageParam, page, size, ...restParams } = params;
+  const { pageParam, page, size, ...restParams } = params;
 
   const apiParams: RecipeQueryParams = {
     page: pageParam ?? page ?? 0,
@@ -31,11 +31,6 @@ export const getRecipeItems = async (params: RecipeQueryParams) => {
   };
 
   let endpoint = END_POINTS.RECIPE_SEARCH;
-  if (maxCost !== undefined) {
-    endpoint = END_POINTS.RECIPE_BUDGET;
-  } else if (period !== undefined) {
-    endpoint = END_POINTS.RECIPE_POPULAR;
-  }
 
   return api.get<DetailedRecipesApiResponse>(endpoint, {
     params: apiParams,

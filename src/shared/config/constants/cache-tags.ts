@@ -4,6 +4,7 @@ export const CACHE_TAGS = {
   recipesAll: "recipes-all",
   recipesPopular: "recipes-popular",
   recipesBudget: "recipes-budget",
+  recipesRecommended: (id: number) => `recipes-recommended-${id}`,
   recipesSearch: (query: string) => `recipes-search-${query}`,
   recipesByCategory: (categoryId: number) => `recipes-category-${categoryId}`,
 

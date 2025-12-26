@@ -7,6 +7,7 @@ import {
   DetailedRecipesApiResponse,
   Recipe,
   RecipeItemsQueryParams,
+  StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   StaticRecipe,
 } from "./types";
@@ -222,6 +223,9 @@ export const getStaticRecipesOnServer = async (
   } else if (params.key === "popular-recipes") {
     endpoint = "/v2/recipes/popular";
     cacheTags.push(CACHE_TAGS.recipesPopular);
+  } else if (params.key === "recommended-recipes" && params.recipeId) {
+    endpoint = `/recipes/${params.recipeId}/recommendations`;
+    cacheTags.push(CACHE_TAGS.recipesRecommended(params.recipeId));
   }
 
   const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
@@ -251,5 +255,35 @@ export const getStaticRecipesOnServer = async (
         totalPages: 0,
       },
     };
+  }
+};
+export const getRecommendedRecipesOnServer = async (
+  recipeId: number
+): Promise<StaticDetailedRecipeGridItem[]> => {
+  const endpoint = `/recipes/${recipeId}/recommendations`;
+  const cacheTags = [
+    CACHE_TAGS.recipesAll,
+    CACHE_TAGS.recipesRecommended(recipeId),
+  ];
+
+  const API_URL = `${BASE_API_URL}${endpoint}`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: REVALIDATE_TIME_SECONDS,
+        tags: cacheTags,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(`[getStaticRecipesOnServer] Failed to fetch recipes:`, error);
+
+    return [];
   }
 };
