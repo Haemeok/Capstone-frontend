@@ -76,7 +76,11 @@ const AIRecipeForm = () => {
           open={isDrawerOpen}
           onOpenChange={setIsDrawerOpen}
           onIngredientSelect={handleAddIngredient}
-          addedIngredientNames={new Set(ingredients || [])}
+          addedIngredientNames={new Set((ingredients || []).map((ing) => ing.name))}
+          mapIngredientToPayload={(ingredient) => ({
+            id: ingredient.id,
+            name: ingredient.name,
+          })}
         />
       </div>
     </FormProvider>

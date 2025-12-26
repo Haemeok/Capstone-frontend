@@ -8,7 +8,7 @@ import PriceSlider from "./PriceSlider";
 import CategorySelector from "./CategorySelector";
 import { BUDGET_DEFAULT } from "@/shared/config/constants/budget";
 import { useCreateAIRecipeMutation } from "@/features/recipe-create-ai";
-import { aiModels } from "@/shared/config/constants/aiModel";
+
 import AiLoading from "@/widgets/AiLoading/AiLoading";
 import AIRecipeComplete from "@/widgets/AIRecipeComplete";
 import AIRecipeError from "@/widgets/AIRecipeError";
@@ -20,7 +20,11 @@ const BudgetRecipe = () => {
   const [budget, setBudget] = useState(BUDGET_DEFAULT);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const { generationState, generatedRecipeData, error: storeError } = useAIRecipeStore();
+  const {
+    generationState,
+    generatedRecipeData,
+    error: storeError,
+  } = useAIRecipeStore();
   const { createAIRecipe, reset } = useCreateAIRecipeMutation();
 
   const isPending = generationState === "generating";
@@ -54,10 +58,7 @@ const BudgetRecipe = () => {
   if (isSuccess && recipeData) {
     return (
       <Container className="h-full" padding={false}>
-        <AIRecipeComplete
-          selectedAI={aiModels["COST_EFFECTIVE"]}
-          generatedRecipe={recipeData}
-        />
+        <AIRecipeComplete generatedRecipe={recipeData} />
       </Container>
     );
   }
@@ -96,10 +97,10 @@ const BudgetRecipe = () => {
         <button
           onClick={handleGenerateRecipe}
           disabled={!selectedCategory}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-olive-light to-olive-medium px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-lg"
+          className="from-olive-light to-olive-medium flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-lg"
         >
           <ChefHat className="h-6 w-6" />
-          <span>레시피 추천받기</span>
+          <span>레시피 생성하기</span>
         </button>
       </div>
     </Container>

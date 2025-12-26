@@ -27,6 +27,9 @@ const AIRecipePage = () => {
         case "NUTRITION_BALANCE":
           router.replace("/recipes/new/ai/nutrition");
           break;
+        case "FINE_DINING":
+          router.replace("/recipes/new/ai/finedining");
+          break;
       }
     }
   }, [shouldRedirect, selectedAI, router]);

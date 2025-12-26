@@ -1,5 +1,5 @@
 export type IngredientFocusRequest = {
-  ingredients: string[];
+  ingredients: Array<{ id: number; name: string }>;
   dishType: string;
   cookingTime: number;
   servings: number;
@@ -7,22 +7,27 @@ export type IngredientFocusRequest = {
 
 export type CostEffectiveRequest = {
   targetBudget: number;
-  targetCategory: string; // '면요리' | '밥요리' ...
+  targetCategory: string;
 };
 
 export type NutritionBalanceRequest = {
-  targetStyle: string; // 'Asian_Style' | 'Western_Style' | 'Light_Fresh'
-  targetCalories: string; // '1000kcal' or '제한 없음'
-  targetCarbs: string; // '30g' or '제한 없음'
+  targetStyle: string;
+  targetCalories: string;
+  targetCarbs: string;
   targetProtein: string;
   targetFat: string;
 };
 
-// 유니온 타입
+export type FineDiningRequest = {
+  ingredientIds: number[];
+  diningTier: "WHITE" | "BLACK";
+};
+
 export type AIRecommendedRecipeRequest =
   | IngredientFocusRequest
   | CostEffectiveRequest
-  | NutritionBalanceRequest;
+  | NutritionBalanceRequest
+  | FineDiningRequest;
 
 export type AIRecommendedRecipe = {
   recipeId: number;

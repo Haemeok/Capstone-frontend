@@ -1,36 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { ChefHat, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 
-import {
-  type AIModel,
-  useAIRecipeStore,
-} from "@/features/recipe-create-ai/model/store";
+import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
 import type { AIRecommendedRecipe } from "@/features/recipe-create-ai/model/types";
 import Link from "next/link";
 
 type AIRecipeCompleteProps = {
-  selectedAI: AIModel;
   generatedRecipe: AIRecommendedRecipe;
 };
 
-const AIRecipeComplete = ({
-  selectedAI,
-  generatedRecipe,
-}: AIRecipeCompleteProps) => {
-  const router = useRouter();
+const AIRecipeComplete = ({ generatedRecipe }: AIRecipeCompleteProps) => {
   const { resetStore } = useAIRecipeStore();
-
-  const handleGoToRecipe = () => {
-    if (generatedRecipe.recipeId) {
-      router.replace(`/recipes/${generatedRecipe.recipeId}`);
-      resetStore();
-    }
-  };
 
   const handleStartOver = () => {
     resetStore();
@@ -54,6 +37,7 @@ const AIRecipeComplete = ({
             <div className="space-y-3 pt-4">
               <Link
                 href={`/recipes/${generatedRecipe.recipeId}`}
+                onClick={handleStartOver}
                 className="bg-olive-light hover:bg-olive-light/90 flex h-12 w-full items-center justify-center rounded-xl text-lg font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl"
               >
                 <ChefHat className="mr-2 h-5 w-5" />
