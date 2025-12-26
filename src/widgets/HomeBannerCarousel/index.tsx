@@ -72,7 +72,7 @@ const HomeBannerCarousel = ({
                   priority
                 />
                 <div className="absolute inset-0 bg-black/50" />
-                <div className="relative flex h-full items-center justify-center px-6 pb-16 md:pb-6">
+                <div className="relative flex h-full items-center justify-center px-6 pb-6 sm:pb-16 md:pb-6">
                   <div className="max-w-3xl text-center text-white">
                     {slide.badge && (
                       <div className="flex justify-center">
@@ -109,7 +109,9 @@ const HomeBannerCarousel = ({
                         slide.title
                       )}
                     </h2>
-                    <p className="text-sm md:text-lg">{slide.description}</p>
+                    <p className="hidden text-sm sm:block md:text-lg">
+                      {slide.description}
+                    </p>
                   </div>
                 </div>
               </Link>

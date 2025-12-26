@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { Container } from "@/shared/ui/Container";
 
 const FOOTER_LINKS = {
@@ -15,10 +13,10 @@ const FOOTER_LINKS = {
 
 const DesktopFooter = () => {
   return (
-    <footer className="hidden md:block w-full border-t border-gray-200 bg-gray-50 mt-16">
+    <footer className="mt-16 hidden w-full border-t border-gray-200 bg-gray-50 md:block">
       <Container className="py-12">
         <div className="flex flex-col gap-8">
-          <div className="text-center py-4 bg-white rounded-lg border border-gray-200">
+          <div className="rounded-lg border border-gray-200 bg-white py-4 text-center">
             <p className="text-lg font-semibold text-gray-800">
               지금까지 <span className="text-olive-light">★1,234,567</span>개의
               평가가 생성되었어요
@@ -29,7 +27,7 @@ const DesktopFooter = () => {
             <h3 className="text-lg font-bold text-gray-900">
               Recipio (레시피오)
             </h3>
-            <p className="text-sm text-gray-600 max-w-xl">
+            <p className="max-w-xl text-sm text-gray-600">
               AI 기반 레시피 추천 서비스로, 냉장고 재료만으로 맛있는 요리를
               만들어보세요.
             </p>
@@ -42,7 +40,7 @@ const DesktopFooter = () => {
                 {FOOTER_LINKS.service.map((link) => (
                   <div
                     key={link.label}
-                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                    className="text-sm text-gray-600 transition-colors hover:text-gray-900"
                   >
                     {link.label}
                   </div>
@@ -56,7 +54,7 @@ const DesktopFooter = () => {
                 {FOOTER_LINKS.support.map((link) => (
                   <div
                     key={link.href}
-                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                    className="text-sm text-gray-600 transition-colors hover:text-gray-900"
                   >
                     {link.label}
                   </div>
@@ -65,7 +63,7 @@ const DesktopFooter = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 text-xs text-gray-500 border-t border-gray-200 pt-6">
+          <div className="flex flex-col gap-2 border-t border-gray-200 pt-6 text-xs text-gray-500">
             <div className="flex items-center gap-2">
               <span>고객센터 정보</span>
               <span>|</span>
