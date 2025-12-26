@@ -17,17 +17,27 @@ export const useShareImage = (elementId: string) => {
         try {
           originalSrcs.set(img, img.src);
 
-          const response = await fetch(img.src, { mode: "cors" });
+          const response = await fetch(img.src, {
+            mode: "cors",
+            cache: "no-cache",
+          });
+
           const blob = await response.blob();
 
-          return new Promise<void>((resolve) => {
+          await new Promise<void>((resolve, reject) => {
             const reader = new FileReader();
-            reader.onloadend = () => {
+            reader.onloadend = async () => {
               if (reader.result) {
                 img.src = reader.result as string;
+                try {
+                  await img.decode();
+                  resolve();
+                } catch (e) {
+                  reject(e);
+                }
               }
-              resolve();
             };
+            reader.onerror = reject;
             reader.readAsDataURL(blob);
           });
         } catch (error) {
@@ -59,6 +69,8 @@ export const useShareImage = (elementId: string) => {
 
       cleanupImages = await convertImagesToBase64(shareElement);
 
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
       const options = {
@@ -69,6 +81,7 @@ export const useShareImage = (elementId: string) => {
           height: "auto",
         },
         skipAutoScale: true,
+        fontEmbedCSS: "",
       };
 
       try {
