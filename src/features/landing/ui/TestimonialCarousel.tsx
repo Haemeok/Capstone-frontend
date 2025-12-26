@@ -26,10 +26,10 @@ const TESTIMONIALS: Testimonial[] = [
     name: "박준호",
     role: "대학생 · 부산",
     content:
-      "유튜브 보면서 재료 메모하는 게 정말 귀찮았는데, 여기는 레시피가 깔끔하게 정리되어 있어서 좋아요. 1인 가구 레시피도 많아서 자주 이용하고 있어요.",
+      "요즘같은 고물가 시대에 추천해요. 가성비 레시피로 한끼당 3천원에 해결하고 있어요. 개발자님 감사합니다. 잘쓸게요!",
     avatar: "👨‍🎓",
     rating: 5,
-    highlight: "주 3회 이상 요리 시작",
+    highlight: "월 50만원 외식비 절감",
   },
   {
     name: "이서연",
@@ -38,13 +38,13 @@ const TESTIMONIALS: Testimonial[] = [
       "아이들 간식부터 저녁 메뉴까지 다양한 레시피가 있어서 매일 메뉴 고민이 사라졌어요. 특히 영양 정보가 표시되어 있어서 건강한 식단 관리에 큰 도움이 돼요.",
     avatar: "👩‍🍳",
     rating: 5,
-    highlight: "월 30만원 외식비 절감",
+    highlight: "다이어트 성공률 50% 증가",
   },
   {
     name: "최동욱",
     role: "요리 초보 · 대전",
     content:
-      "요리를 처음 시작하는데 단계별로 설명이 잘 되어 있어서 실패 없이 만들 수 있었어요. 이제는 친구들 초대해서 요리해줄 수 있을 정도로 실력이 늘었어요!",
+      "유명 셰프 레시피 후기도 많아서 재밌어요. 특히 김풍 레시피 정말 맛있었어요. 다른 셰프 레시피 후기들도 많이 올려주세요",
     avatar: "👨‍🍳",
     rating: 5,
     highlight: "2개월 만에 요리 실력 향상",
@@ -60,7 +60,9 @@ const StarRating = ({ rating }: { rating: number }) => {
         <svg
           key={index}
           className={`h-5 w-5 ${
-            index < rating ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"
+            index < rating
+              ? "fill-yellow-400 text-yellow-400"
+              : "fill-gray-200 text-gray-200"
           }`}
           viewBox="0 0 20 20"
         >
@@ -85,8 +87,8 @@ export const TestimonialCarousel = () => {
   const currentTestimonial = TESTIMONIALS[currentIndex];
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-beige/30 via-white to-white px-4 py-20 md:py-32">
-      <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-purple-200/20 blur-3xl" />
+    <section className="from-beige/30 relative w-full overflow-hidden bg-gradient-to-b via-white to-white px-4 py-20 md:py-32">
+      <div className="absolute top-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-purple-200/20 blur-3xl" />
 
       <div className="relative mx-auto max-w-6xl">
         <motion.div
@@ -99,7 +101,7 @@ export const TestimonialCarousel = () => {
           <div className="mb-4 inline-block rounded-full bg-purple-50 px-4 py-1 text-sm font-semibold text-purple-600">
             사용자 후기
           </div>
-          <h2 className="mb-4 text-4xl font-extrabold text-dark md:text-5xl">
+          <h2 className="text-dark mb-4 text-4xl font-extrabold md:text-5xl">
             이미 많은 분들이 경험하고 있어요
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-600">
@@ -117,20 +119,20 @@ export const TestimonialCarousel = () => {
               transition={{ duration: 0.4 }}
               className="relative"
             >
-              <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r from-olive-light/20 via-olive-mint/20 to-olive-medium/20 opacity-50 blur-2xl" />
+              <div className="from-olive-light/20 via-olive-mint/20 to-olive-medium/20 absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r opacity-50 blur-2xl" />
 
               <div className="relative overflow-hidden rounded-[2rem] border border-gray-200/50 bg-white p-10 shadow-2xl md:p-14">
-                <div className="absolute right-8 top-8 text-8xl text-olive-light/10">
+                <div className="text-olive-light/10 absolute top-8 right-8 text-8xl">
                   "
                 </div>
 
                 <div className="relative mb-8 flex items-start justify-between">
                   <div className="flex items-center gap-5">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-olive-light/20 to-olive-mint/20 text-4xl shadow-lg">
+                    <div className="from-olive-light/20 to-olive-mint/20 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br text-4xl shadow-lg">
                       {currentTestimonial.avatar}
                     </div>
                     <div>
-                      <h3 className="mb-1 text-2xl font-extrabold text-dark">
+                      <h3 className="text-dark mb-1 text-2xl font-extrabold">
                         {currentTestimonial.name}
                       </h3>
                       <p className="mb-2 text-sm text-gray-500">
@@ -140,8 +142,8 @@ export const TestimonialCarousel = () => {
                     </div>
                   </div>
 
-                  <div className="hidden rounded-xl bg-olive-mint/10 px-4 py-2 md:block">
-                    <p className="text-sm font-bold text-olive-medium">
+                  <div className="bg-olive-mint/10 hidden rounded-xl px-4 py-2 md:block">
+                    <p className="text-olive-medium text-sm font-bold">
                       {currentTestimonial.highlight}
                     </p>
                   </div>
@@ -151,8 +153,8 @@ export const TestimonialCarousel = () => {
                   "{currentTestimonial.content}"
                 </p>
 
-                <div className="mt-6 block rounded-xl bg-olive-mint/10 px-4 py-2 md:hidden">
-                  <p className="text-sm font-bold text-olive-medium">
+                <div className="bg-olive-mint/10 mt-6 block rounded-xl px-4 py-2 md:hidden">
+                  <p className="text-olive-medium text-sm font-bold">
                     {currentTestimonial.highlight}
                   </p>
                 </div>
@@ -174,7 +176,7 @@ export const TestimonialCarousel = () => {
               <div
                 className={`h-3 rounded-full transition-all ${
                   index === currentIndex
-                    ? "bg-olive-medium shadow-lg shadow-olive-medium/30"
+                    ? "bg-olive-medium shadow-olive-medium/30 shadow-lg"
                     : "bg-gray-300 group-hover:bg-gray-400"
                 }`}
               />
@@ -189,9 +191,9 @@ export const TestimonialCarousel = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-16 text-center"
         >
-          <div className="inline-flex flex-col gap-2 rounded-2xl bg-gradient-to-r from-olive-light/5 to-olive-mint/5 px-8 py-6 backdrop-blur-sm sm:flex-row sm:items-center sm:gap-4">
+          <div className="from-olive-light/5 to-olive-mint/5 inline-flex flex-col gap-2 rounded-2xl bg-gradient-to-r px-8 py-6 backdrop-blur-sm sm:flex-row sm:items-center sm:gap-4">
             <div className="flex items-center justify-center gap-2">
-              <span className="text-4xl font-extrabold text-olive-medium">
+              <span className="text-olive-medium text-4xl font-extrabold">
                 4.9
               </span>
               <div>
@@ -201,7 +203,7 @@ export const TestimonialCarousel = () => {
             </div>
             <div className="h-px w-full bg-gray-300 sm:h-10 sm:w-px" />
             <div className="text-center">
-              <p className="text-2xl font-extrabold text-dark">1,200+</p>
+              <p className="text-dark text-2xl font-extrabold">1,200+</p>
               <p className="text-xs text-gray-500">누적 사용자 후기</p>
             </div>
           </div>

@@ -4,10 +4,14 @@ import Link from "next/link";
 import { motion } from "motion/react";
 
 import { Button } from "@/shared/ui/shadcn/button";
+import { markLandingVisited } from "@/app/landing/actions";
 
 export const HeroSection = () => {
+  const handleStartClick = async () => {
+    await markLandingVisited();
+  };
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-beige/30 to-white">
+    <section className="via-beige/30 relative overflow-hidden bg-gradient-to-b from-white to-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(145,199,136,0.1),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(67,194,120,0.08),transparent_50%)]" />
 
@@ -15,13 +19,13 @@ export const HeroSection = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative flex min-h-[85vh] flex-col items-center justify-center px-4 py-20 text-center md:py-32"
+        className="relative flex min-h-[85vh] flex-col items-center justify-center px-4 pt-20 text-center md:pt-32"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="mb-6 inline-block rounded-full border border-olive-light/30 bg-olive-light/10 px-6 py-2 text-sm font-medium text-olive-medium backdrop-blur-sm"
+          className="border-olive-light/30 bg-olive-light/10 text-olive-medium mb-6 inline-block rounded-full border px-6 py-2 text-sm font-medium backdrop-blur-sm"
         >
           🍳 1,000+ 레시피 · AI 추천 · 스마트 재료 관리
         </motion.div>
@@ -30,13 +34,13 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-8 max-w-5xl text-5xl font-extrabold leading-[1.15] tracking-tight text-dark md:text-7xl lg:text-8xl"
+          className="text-dark mb-8 max-w-5xl text-5xl leading-[1.15] font-extrabold tracking-tight md:text-7xl lg:text-8xl"
         >
           매일의 요리를
           <br />
           <span className="relative inline-block">
-            <span className="absolute -inset-1 animate-pulse bg-gradient-to-r from-olive-light via-olive-mint to-olive-medium opacity-20 blur-2xl" />
-            <span className="relative bg-gradient-to-r from-olive via-olive-medium to-olive-mint bg-clip-text text-transparent">
+            <span className="from-olive-light via-olive-mint to-olive-medium absolute -inset-1 animate-pulse bg-gradient-to-r opacity-20 blur-2xl" />
+            <span className="from-olive via-olive-medium to-olive-mint relative bg-gradient-to-r bg-clip-text text-transparent">
               더 쉽고 즐겁게
             </span>
           </span>
@@ -50,7 +54,7 @@ export const HeroSection = () => {
         >
           복잡한 레시피 검색은 그만, 냉장고 재료로 바로 만드는
           <br className="hidden sm:block" />
-          <span className="font-semibold text-olive-medium">
+          <span className="text-olive-medium font-semibold">
             당신만을 위한 맞춤 레시피
           </span>
           를 경험하세요
@@ -65,20 +69,12 @@ export const HeroSection = () => {
           <Button
             asChild
             size="lg"
-            className="group relative h-14 overflow-hidden bg-gradient-to-r from-olive-medium to-olive-mint px-8 text-lg font-bold text-white shadow-2xl shadow-olive-medium/30 transition-all hover:shadow-2xl hover:shadow-olive-mint/40"
+            className="group from-olive-medium to-olive-mint shadow-olive-medium/30 hover:shadow-olive-mint/40 relative h-14 overflow-hidden bg-gradient-to-r px-8 text-lg font-bold text-white shadow-2xl transition-all hover:shadow-2xl"
           >
-            <Link href="/recipes/new/ai">
+            <Link href="/" onClick={handleStartClick}>
               <span className="relative z-10">무료로 시작하기</span>
-              <span className="absolute inset-0 -z-0 bg-gradient-to-r from-olive to-olive-medium opacity-0 transition-opacity group-hover:opacity-100" />
+              <span className="from-olive to-olive-medium absolute inset-0 -z-0 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100" />
             </Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="h-14 border-2 border-olive-medium/30 bg-white/80 px-8 text-lg font-semibold text-olive backdrop-blur-sm transition-all hover:border-olive-medium hover:bg-olive-medium/5"
-          >
-            <Link href="/search">인기 레시피 둘러보기 →</Link>
           </Button>
         </motion.div>
 
