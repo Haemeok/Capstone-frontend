@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
-import { createRecipeStructuredData } from "./structuredData";
-import { createRecipeBreadcrumb } from "./breadcrumbSchema";
 
 export const generateRecipeMetadata = (
   recipe: StaticRecipe,
@@ -15,6 +13,10 @@ export const generateRecipeMetadata = (
     recipe.tags.some((tag) => tag === "셰프 레시피");
 
   const titleKeywords: string[] = [];
+
+  const baseUrl = SEO_CONSTANTS.SITE_URL.endsWith("/")
+    ? SEO_CONSTANTS.SITE_URL.slice(0, -1)
+    : SEO_CONSTANTS.SITE_URL;
 
   const BUDGET_FRIENDLY_THRESHOLD = 5000;
   const AFFORDABLE_THRESHOLD = 10000;
@@ -103,12 +105,7 @@ export const generateRecipeMetadata = (
     }
   });
 
-  const fullImageUrl = recipe.imageUrl
-    ? recipe.imageUrl.startsWith("http")
-      ? recipe.imageUrl
-      : `${SEO_CONSTANTS.SITE_URL}${recipe.imageUrl.startsWith("/") ? "" : "/"}${recipe.imageUrl}`
-    : SEO_CONSTANTS.DEFAULT_IMAGE;
-  const recipeUrl = `${SEO_CONSTANTS.SITE_URL}recipes/${recipeId}`;
+  const fullPageUrl = `${baseUrl}/recipes/${recipeId}`;
 
   const baseMetadata: Metadata = {
     title: defaultTitle,
@@ -120,40 +117,32 @@ export const generateRecipeMetadata = (
       ...dynamicKeywords,
     ],
     alternates: {
-      canonical: recipeUrl,
+      canonical: fullPageUrl,
     },
     openGraph: {
       title: defaultTitle,
       description: defaultDescription,
-      url: recipeUrl,
+      url: fullPageUrl,
+      siteName: SEO_CONSTANTS.SITE_NAME,
       type: SEO_CONSTANTS.OG_TYPE.ARTICLE,
       locale: SEO_CONSTANTS.LOCALE,
-      ...(fullImageUrl && {
-        images: [
-          {
-            url: fullImageUrl,
-            width: 800,
-            height: 400,
-            alt: `${recipe.title} - ${SEO_CONSTANTS.SITE_NAME}`,
-          },
-        ],
-      }),
+      images: [
+        {
+          url: recipe.imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${recipe.title} - ${SEO_CONSTANTS.SITE_NAME}`,
+        },
+      ],
     },
     twitter: {
       card: SEO_CONSTANTS.TWITTER_CARD,
       title: defaultTitle,
       description: defaultDescription,
-      ...(fullImageUrl && { images: [fullImageUrl] }),
-    },
-    other: {
-      "application/ld+json": JSON.stringify([
-        createRecipeStructuredData(recipe, recipeId),
-        createRecipeBreadcrumb(recipe.title, recipeId, recipe.tags),
-      ]),
+      images: [recipe.imageUrl],
     },
   };
 
-  // 2. 셰프 레시피일 경우 메타데이터 오버라이딩 (덮어쓰기)
   if (isChefRecipe) {
     const chefTitle = `[15분 레시피] ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
     const chefDescription = `흑백요리사, 냉장고를 부탁해 등 유명 셰프들의 15분 레시피 후기를 만나보세요. ${recipe.title} 레시피로 집에서 파인다이닝을 즐겨보세요!`;

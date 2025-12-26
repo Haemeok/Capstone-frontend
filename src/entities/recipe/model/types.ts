@@ -68,6 +68,13 @@ export type Recipe = {
   createdAt?: string;
   nutrition: Nutrition;
   cookingTips?: string;
+  components?: RecipeComponent[];
+};
+
+export type RecipeComponent = {
+  role: "Main" | "Sauce" | "Garnish" | "Accent" | "Crunch" | "Pickle/Gel";
+  name?: string;
+  description?: string;
 };
 
 export type Nutrition = {
@@ -166,6 +173,7 @@ export type RecipeItemsQueryParams = {
   dishType?: string | null;
   maxCost?: number;
   period?: "weekly" | "monthly";
+  recipeId?: number;
 };
 
 export type StaticRecipe = Omit<

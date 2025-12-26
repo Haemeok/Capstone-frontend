@@ -12,8 +12,8 @@ export default function RecipeTagsSection({ tags }: RecipeTagsSectionProps) {
   }
 
   return (
-    <section className="mt-6">
-      <h2 className="mb-3 text-lg font-bold text-dark">태그</h2>
+    <section className="mt-6 mb-6">
+      <h2 className="text-dark mb-3 text-lg font-bold">태그</h2>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => {
           const tagDef = TAG_DEFINITIONS.find(
@@ -24,7 +24,7 @@ export default function RecipeTagsSection({ tags }: RecipeTagsSectionProps) {
             return (
               <span
                 key={tag}
-                className="rounded-full border border-olive-light bg-olive-light/10 px-3 py-1.5 text-sm text-dark"
+                className="border-olive-light bg-olive-light/10 text-dark rounded-full border px-3 py-1.5 text-sm"
               >
                 {tag}
               </span>
@@ -35,7 +35,7 @@ export default function RecipeTagsSection({ tags }: RecipeTagsSectionProps) {
             <Link
               key={tag}
               href={`/recipes/category/${tagDef.code}`}
-              className="rounded-full border border-olive-light bg-olive-light/10 px-3 py-1.5 text-sm text-dark transition-colors hover:bg-olive-light hover:text-white"
+              className="border-olive-light bg-olive-light/10 text-dark hover:bg-olive-light rounded-full border px-3 py-1.5 text-sm transition-colors hover:text-white"
             >
               {tag}
             </Link>

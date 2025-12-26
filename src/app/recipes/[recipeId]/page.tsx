@@ -9,6 +9,7 @@ import {
 import {
   getStaticrecipionServer,
   getStaticRecipesOnServer,
+  getRecommendedRecipesOnServer,
 } from "@/entities/recipe/model/api.server";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
@@ -30,6 +31,7 @@ import RecipeTagsSection from "./components/RecipeTagsSection";
 import RecipeCookingInfoSection from "./components/RecipeCookingInfoSection";
 import RecipeCookingTipsSection from "./components/RecipeCookingTipsSection";
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
+import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -65,7 +67,10 @@ export default async function RecipeDetailPage({
   const { recipeId } = await params;
   const numericRecipeId = Number(recipeId);
 
-  const staticRecipe = await getStaticrecipionServer(numericRecipeId);
+  const [staticRecipe, recommendedRecipes] = await Promise.all([
+    getStaticrecipionServer(numericRecipeId),
+    getRecommendedRecipesOnServer(numericRecipeId),
+  ]);
 
   if (!staticRecipe) {
     notFound();
@@ -77,6 +82,10 @@ export default async function RecipeDetailPage({
   const hasAllStepImages = staticRecipe.steps.every(
     (step) => step.stepImageUrl !== null && step.stepImageUrl !== ""
   );
+
+  const recommendLabel = staticRecipe.tags.includes("👨‍🍳 셰프 레시피")
+    ? "더 다양한 셰프 레시피를 만나보세요"
+    : "이런 레시피는 어떠신가요?";
 
   return (
     <>
@@ -138,6 +147,13 @@ export default async function RecipeDetailPage({
           <RecipeStepList RecipeSteps={staticRecipe.steps} />
 
           <RecipeTagsSection tags={staticRecipe.tags} />
+
+          {recommendedRecipes.length > 0 && (
+            <StaticRecipeSlide
+              title={recommendLabel}
+              staticRecipes={recommendedRecipes}
+            />
+          )}
         </RecipeContainer>
       </RecipeStatusProvider>
       <DesktopFooter />
