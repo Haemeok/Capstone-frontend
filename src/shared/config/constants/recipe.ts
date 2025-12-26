@@ -409,3 +409,73 @@ export const NUTRITION_RANGES = {
 } as const;
 
 export type NutritionFilterKey = keyof typeof NUTRITION_RANGES;
+
+export const NUTRITION_THEMES = {
+  KETO: {
+    label: "🥑 키토",
+    description: "탄수화물 최소화, 지방 위주",
+    values: {
+      carb: [0, 30] as [number, number],
+      protein: [50, 150] as [number, number],
+      fat: [40, 100] as [number, number],
+    },
+  },
+  LOW_SUGAR: {
+    label: "🍬 저당",
+    description: "당류 섭취 제한",
+    values: {
+      sugar: [0, 15] as [number, number],
+      carb: [0, 100] as [number, number],
+    },
+  },
+  LOW_FAT: {
+    label: "🥗 저지방",
+    description: "지방 섭취 최소화",
+    values: {
+      fat: [0, 20] as [number, number],
+      calories: [0, 600] as [number, number],
+    },
+  },
+  HIGH_PROTEIN: {
+    label: "💪 고단백",
+    description: "단백질 섭취 극대화",
+    values: {
+      protein: [60, 200] as [number, number],
+      calories: [400, 1500] as [number, number],
+    },
+  },
+  LOW_SODIUM: {
+    label: "🧂 저염식",
+    description: "나트륨 섭취 제한",
+    values: {
+      sodium: [0, 800] as [number, number],
+    },
+  },
+  BALANCED: {
+    label: "⚖️ 균형식",
+    description: "영양소 균형",
+    values: {
+      carb: [80, 150] as [number, number],
+      protein: [40, 100] as [number, number],
+      fat: [20, 50] as [number, number],
+      calories: [400, 800] as [number, number],
+    },
+  },
+  BUDGET: {
+    label: "💰 저예산",
+    description: "비용 절감",
+    values: {
+      cost: [0, 10000] as [number, number],
+    },
+  },
+  LOW_CALORIE: {
+    label: "🔥 저칼로리",
+    description: "칼로리 제한",
+    values: {
+      calories: [0, 500] as [number, number],
+      fat: [0, 15] as [number, number],
+    },
+  },
+} as const;
+
+export type NutritionThemeKey = keyof typeof NUTRITION_THEMES;

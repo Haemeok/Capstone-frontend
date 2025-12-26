@@ -77,67 +77,58 @@ export const SearchClient = () => {
           onNutritionClick={() => openDrawer("nutrition")}
         />
 
-        <Drawer
-          open={!!activeDrawer}
-          onOpenChange={(open) => !open && closeDrawer()}
-        >
-          <DrawerContent>
-            {activeDrawer === "dishType" && (
-              <CategoryPicker
-                open={true}
-                onOpenChange={(open) => !open && closeDrawer()}
-                isMultiple={false}
-                setValue={(val) => {
-                  updateDishType(val as string);
-                  closeDrawer();
-                }}
-                initialValue={dishType}
-                availableValues={DISH_TYPES}
-                header={BASE_DRAWER_CONFIGS.dishType.header}
-                description={BASE_DRAWER_CONFIGS.dishType.description}
-                triggerButton={<></>}
-              />
+        {activeDrawer === "dishType" && (
+          <CategoryPicker
+            open={true}
+            onOpenChange={(open) => !open && closeDrawer()}
+            isMultiple={false}
+            setValue={(val) => {
+              updateDishType(val as string);
+              closeDrawer();
+            }}
+            initialValue={dishType}
+            availableValues={DISH_TYPES}
+            header={BASE_DRAWER_CONFIGS.dishType.header}
+            description={BASE_DRAWER_CONFIGS.dishType.description}
+          />
+        )}
+        {activeDrawer === "sort" && (
+          <CategoryPicker
+            open={true}
+            onOpenChange={(open) => !open && closeDrawer()}
+            isMultiple={false}
+            setValue={(val) => {
+              updateSort(val as string);
+              closeDrawer();
+            }}
+            initialValue={sort}
+            availableValues={SORT_TYPES}
+            header={BASE_DRAWER_CONFIGS.sort.header}
+            description={BASE_DRAWER_CONFIGS.sort.description}
+          />
+        )}
+        {activeDrawer === "tags" && (
+          <CategoryPicker
+            open={true}
+            onOpenChange={(open) => !open && closeDrawer()}
+            isMultiple={true}
+            setValue={(val) => updateTags(val as string[])}
+            initialValue={tags}
+            availableValues={TAG_DEFINITIONS.map(
+              (tag) => `${tag.emoji} ${tag.name}`
             )}
-            {activeDrawer === "sort" && (
-              <CategoryPicker
-                open={true}
-                onOpenChange={(open) => !open && closeDrawer()}
-                isMultiple={false}
-                setValue={(val) => {
-                  updateSort(val as string);
-                  closeDrawer();
-                }}
-                initialValue={sort}
-                availableValues={SORT_TYPES}
-                header={BASE_DRAWER_CONFIGS.sort.header}
-                description={BASE_DRAWER_CONFIGS.sort.description}
-                triggerButton={<></>}
-              />
-            )}
-            {activeDrawer === "tags" && (
-              <CategoryPicker
-                open={true}
-                onOpenChange={(open) => !open && closeDrawer()}
-                isMultiple={true}
-                setValue={(val) => updateTags(val as string[])}
-                initialValue={tags}
-                availableValues={TAG_DEFINITIONS.map(
-                  (tag) => `${tag.emoji} ${tag.name}`
-                )}
-                header={BASE_DRAWER_CONFIGS.tags.header}
-                description={BASE_DRAWER_CONFIGS.tags.description}
-                triggerButton={<></>}
-              />
-            )}
-            {activeDrawer === "nutrition" && (
-              <NutritionFilterContent
-                initialValues={nutritionParams}
-                onApply={updateNutritionFilters}
-                onClose={closeDrawer}
-              />
-            )}
-          </DrawerContent>
-        </Drawer>
+            header={BASE_DRAWER_CONFIGS.tags.header}
+            description={BASE_DRAWER_CONFIGS.tags.description}
+          />
+        )}
+        {activeDrawer === "nutrition" && (
+          <NutritionFilterContent
+            initialValues={nutritionParams}
+            onApply={updateNutritionFilters}
+            open={true}
+            onOpenChange={(open) => !open && closeDrawer()}
+          />
+        )}
 
         <RecipeGrid
           recipes={recipes}
