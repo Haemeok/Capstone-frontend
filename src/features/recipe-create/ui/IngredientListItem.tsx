@@ -20,7 +20,7 @@ const IngredientListItem = ({
 }: IngredientListItemProps) => {
   return (
     <div className="flex items-center rounded-lg border bg-white p-3 shadow-sm">
-      <div className="relative mr-3 h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+      <div className="relative mr-3 h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
         {ingredient.imageUrl && (
           <Image
             src={ingredient.imageUrl}
