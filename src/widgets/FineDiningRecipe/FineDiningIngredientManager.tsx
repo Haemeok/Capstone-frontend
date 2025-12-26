@@ -1,7 +1,7 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import { Plus, X } from "lucide-react";
 
-import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
+import { INGREDIENT_BLACK_IMAGE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
 
 type FineDiningIngredientManagerProps = {
@@ -66,9 +66,7 @@ const FineDiningIngredientManager = ({
       {ingredients.length > 0 && (
         <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900">
-              선택된 재료
-            </h3>
+            <h3 className="text-sm font-semibold text-gray-900">선택된 재료</h3>
             {ingredients.length > 1 && (
               <button
                 type="button"
@@ -92,7 +90,7 @@ const FineDiningIngredientManager = ({
                 <div className="relative">
                   <div className="relative h-14 w-14 overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm">
                     <Image
-                      src={INGREDIENT_IMAGE_URL(ingredient.name)}
+                      src={INGREDIENT_BLACK_IMAGE_URL(ingredient.name)}
                       alt={ingredient.name}
                       wrapperClassName="h-full w-full"
                       fit="cover"

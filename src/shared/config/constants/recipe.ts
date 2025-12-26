@@ -5,8 +5,11 @@ export const CATEGORY_BASE_URL = `${IMAGE_BASE_URL}categories/`;
 export const UI_BASE_URL = `${IMAGE_BASE_URL}ui/`;
 export const SAVINGS_BASE_URL = `${IMAGE_BASE_URL}savings/`;
 export const INGREDIENT_BASE_URL = `${IMAGE_BASE_URL}ingredients/`;
+export const INGREDIENT_BLACK_BASE_URL = `${IMAGE_BASE_URL}ingredients-black/`;
 export const INGREDIENT_IMAGE_URL = (name: string) =>
   `${INGREDIENT_BASE_URL}${name}.webp`;
+export const INGREDIENT_BLACK_IMAGE_URL = (name: string) =>
+  `${INGREDIENT_BLACK_BASE_URL}${name}.webp`;
 export const INGREDIENT_CATEGORIES = [
   "전체",
   "가공/유제품",
