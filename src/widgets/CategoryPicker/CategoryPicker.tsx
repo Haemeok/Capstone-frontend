@@ -31,7 +31,6 @@ type CategoryPickerProps = {
   availableValues: string[];
   header: string;
   description?: string;
-  triggerButton?: React.ReactNode;
 };
 
 const CategoryPicker = ({
@@ -43,7 +42,6 @@ const CategoryPicker = ({
   description,
   initialValue,
   availableValues,
-  triggerButton,
 }: CategoryPickerProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [internalSelection, setInternalSelection] = useState<string[] | string>(
