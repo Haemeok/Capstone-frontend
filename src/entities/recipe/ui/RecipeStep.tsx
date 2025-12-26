@@ -16,19 +16,30 @@ type RecipeStepProps = {
   isFirstStep?: boolean;
 };
 
-const RecipeStep = ({ stepIndex, step, length, isFirstStep = false }: RecipeStepProps) => {
-  const { terms: cookingTerms, cleanedText } = useMemo(
+const RecipeStep = ({
+  stepIndex,
+  step,
+  length,
+  isFirstStep = false,
+}: RecipeStepProps) => {
+  const { segments, allTerms: cookingTerms } = useMemo(
     () => extractCookingTerms(step.instruction),
     [step.instruction]
   );
-  const timeInSeconds = extractTimeFromText(cleanedText);
+
+  const plainText = useMemo(
+    () => segments.map((seg) => seg.text).join(""),
+    [segments]
+  );
+
+  const timeInSeconds = extractTimeFromText(plainText);
 
   return (
     <div
       key={stepIndex}
-      className="w-full h-full pb-4 border-b border-slate-200"
+      className="h-full w-full border-b border-slate-200 pb-4"
     >
-      <div className="flex items-center justify-between mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h3 className="text-left text-lg font-bold">
             Step {stepIndex + 1}/{length}
@@ -50,7 +61,7 @@ const RecipeStep = ({ stepIndex, step, length, isFirstStep = false }: RecipeStep
           >
             <p className="text-mm text-left">{ingredient.name}</p>
             {ingredient.quantity && (
-              <p className="text-mm text-left font-bold text-olive-light">
+              <p className="text-mm text-olive-light text-left font-bold">
                 {ingredient.quantity}
                 {ingredient.quantity === "약간" ? "" : ingredient.unit}
               </p>
@@ -60,14 +71,24 @@ const RecipeStep = ({ stepIndex, step, length, isFirstStep = false }: RecipeStep
       </div>
       <div className="mt-2 flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
         <div className="md:flex-1">
-          <p className="whitespace-pre-wrap text-left">{cleanedText}</p>
+          <p className="whitespace-pre-wrap text-left">
+            {segments.map((segment, index) =>
+              segment.isTerm ? (
+                <span
+                  key={index}
+                  className="rounded bg-olive-light/10 px-1 font-semibold text-olive-light"
+                >
+                  {segment.text}
+                </span>
+              ) : (
+                <span key={index}>{segment.text}</span>
+              )
+            )}
+          </p>
           {cookingTerms.length > 0 && (
             <div className="mt-3 space-y-2">
               {cookingTerms.map((term, index) => (
-                <div
-                  key={index}
-                  className="rounded-lg bg-gray-50 p-3 text-sm"
-                >
+                <div key={index} className="rounded-lg bg-gray-50 p-3 text-sm">
                   <span className="font-semibold">📖 {term.term}</span>{" "}
                   <span className="text-gray-600">{term.description}</span>
                 </div>

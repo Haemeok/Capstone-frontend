@@ -3,24 +3,43 @@ export type CookingTerm = {
   description: string;
 };
 
+export type TextSegment = {
+  text: string;
+  isTerm?: boolean;
+  termData?: CookingTerm;
+};
+
 export type CookingTermsResult = {
-  terms: CookingTerm[];
-  cleanedText: string;
+  segments: TextSegment[];
+  allTerms: CookingTerm[];
 };
 
 export const extractCookingTerms = (text: string): CookingTermsResult => {
   const pattern = /\*\*([^(]+)\(([^)]+)\)\*\*/g;
-  const terms: CookingTerm[] = [];
+  const allTerms: CookingTerm[] = [];
+  const segments: TextSegment[] = [];
+
+  let lastIndex = 0;
   let match;
 
   while ((match = pattern.exec(text)) !== null) {
-    terms.push({
-      term: match[1].trim(),
-      description: match[2].trim(),
-    });
+    if (match.index > lastIndex) {
+      segments.push({ text: text.slice(lastIndex, match.index) });
+    }
+
+    const term = match[1].trim();
+    const description = match[2].trim();
+    const termData = { term, description };
+
+    allTerms.push(termData);
+    segments.push({ text: term, isTerm: true, termData });
+
+    lastIndex = pattern.lastIndex;
   }
 
-  const cleanedText = text.replace(pattern, (_, term) => `*${term.trim()}`);
+  if (lastIndex < text.length) {
+    segments.push({ text: text.slice(lastIndex) });
+  }
 
-  return { terms, cleanedText };
+  return { segments, allTerms };
 };
