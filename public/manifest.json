@@ -29,19 +29,5 @@
       "purpose": "maskable"
     }
   ],
-  "categories": ["food", "lifestyle", "cooking"],
-  "screenshots": [
-    {
-      "src": "/screen-shot-1.png",
-      "sizes": "1170x2532",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/screen-shot-2.png",
-      "sizes": "1170x2532",
-      "type": "image/png",
-      "form_factor": "wide"
-    }
-  ]
+  "categories": ["food", "lifestyle", "cooking"]
 }
