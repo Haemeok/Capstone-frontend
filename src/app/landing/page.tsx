@@ -1,4 +1,4 @@
-import { homeMetadata } from "@/shared/lib/metadata";
+"use client";
 
 import {
   HeroSection,
@@ -10,8 +10,6 @@ import {
 } from "@/features/landing";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
-
-export const metadata = homeMetadata;
 
 const LandingPage = () => {
   return (
