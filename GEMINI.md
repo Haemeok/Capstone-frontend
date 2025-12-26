@@ -18,14 +18,6 @@
 - **Magic Number 금지:** 의미를 알 수 없는 숫자는 항상 의미있는 이름을 가진 상수로 선언하세요.
 - **복잡한 조건식:** 2개 이상의 논리 연산자가 포함된 조건문은 `isUserActive`, `canSubmit` 등 의미있는 이름을 가진 변수에 할당하여 가독성을 높입니다.
 
-# 3. 상태 관리 및 데이터 Fetching (State & Fetching)
-
-- **상태 관리:** 클라이언트 전역 상태는 **Zustand**, 서버 상태는 **TanStack Query (React Query)**를 사용합니다.
-- **데이터 Fetching:**
-  - **서버:** SEO가 필요하거나 초기 데이터가 중요한 페이지는 서버 컴포넌트 또는 `getServerSideProps`에서 Next.js 내장 `fetch`를 사용합니다.
-  - **클라이언트:** 사용자의 상호작용으로 인한 데이터 요청은 인터셉터가 설정된 `axios` 인스턴스를 사용합니다.
-  - **Hydration:** 서버에서 가져온 초기 데이터는 항상 TanStack Query의 `initialData` 옵션을 통해 클라이언트 상태와 동기화(Hydration)합니다.
-
 # 4. 컴포넌트 설계 원칙 (Component Design Principles)
 
 - **단일 책임 원칙:** 하나의 컴포넌트는 하나의 역할만 수행합니다. 렌더링 로직이 복잡하게 나뉘면, 별도의 컴포넌트로 분리하세요.
