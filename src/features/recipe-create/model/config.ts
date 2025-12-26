@@ -31,7 +31,7 @@ const ingredientSchema = z.object({
 
 const stepIngredientSchema = z.object({
   name: z.string(),
-  quantity: z.string().optional(),
+  quantity: z.string(),
   unit: z.string(),
 });
 

@@ -17,10 +17,17 @@ export type IngredientItem = {
 
 export type UserIngredient = Omit<IngredientItem, "unit" | "price">;
 
-export type IngredientPayload = Omit<
-  IngredientItem,
-  "category" | "price" | "id" | "imageUrl" | "inFridge" | "calories"
->;
+export type IngredientPayload = {
+  id?: number;
+  name: string;
+  quantity: string;
+  unit: string;
+};
+
+export type AIIngredientPayload = {
+  id: number;
+  name: string;
+};
 
 export type IngredientWithAI = Omit<IngredientItem, "inFridge">;
 
