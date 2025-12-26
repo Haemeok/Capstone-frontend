@@ -68,6 +68,13 @@ export type Recipe = {
   createdAt?: string;
   nutrition: Nutrition;
   cookingTips?: string;
+  fineDiningInfo?: {
+    components: RecipeComponent[];
+    plating: {
+      vessel: string;
+      guide: string;
+    };
+  };
   components?: RecipeComponent[];
 };
 

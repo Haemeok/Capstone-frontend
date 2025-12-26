@@ -30,6 +30,8 @@ import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import RecipeTagsSection from "./components/RecipeTagsSection";
 import RecipeCookingInfoSection from "./components/RecipeCookingInfoSection";
 import RecipeCookingTipsSection from "./components/RecipeCookingTipsSection";
+import RecipeComponentsSection from "./components/RecipeComponentsSection";
+import RecipePlatingSection from "./components/RecipePlatingSection";
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
 import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
 
@@ -142,9 +144,22 @@ export default async function RecipeDetailPage({
 
           <CookingUnitTooltip />
 
+          {staticRecipe.fineDiningInfo?.components && (
+            <RecipeComponentsSection
+              components={staticRecipe.fineDiningInfo.components}
+            />
+          )}
+
           <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
 
           <RecipeStepList RecipeSteps={staticRecipe.steps} />
+
+          {staticRecipe.fineDiningInfo?.plating && (
+            <RecipePlatingSection
+              vessel={staticRecipe.fineDiningInfo.plating.vessel}
+              guide={staticRecipe.fineDiningInfo.plating.guide}
+            />
+          )}
 
           <RecipeTagsSection tags={staticRecipe.tags} />
 
