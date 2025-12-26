@@ -109,10 +109,7 @@ const NutritionRecipePage = () => {
   if (isSuccess && recipeData) {
     return (
       <Container padding={false} className="h-full">
-        <AIRecipeComplete
-          selectedAI={aiModels["NUTRITION_BALANCE"]}
-          generatedRecipe={recipeData}
-        />
+        <AIRecipeComplete generatedRecipe={recipeData} />
       </Container>
     );
   }

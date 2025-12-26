@@ -22,20 +22,23 @@ import DishTypeSection from "@/widgets/AIRecipeForm/DishTypeSection";
 import CookingTimeSection from "@/widgets/AIRecipeForm/CookingTimeSection";
 import ServingsCounter from "@/widgets/AIRecipeForm/ServingsCounter";
 import AIRecipeSubmitSection from "@/widgets/AIRecipeForm/AIRecipeSubmitSection";
-
+import { AIIngredientPayload } from "@/entities/ingredient";
 
 const IngredientRecipePage = () => {
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  
-  const { generationState, generatedRecipeData, error: storeError } = useAIRecipeStore();
+
+  const {
+    generationState,
+    generatedRecipeData,
+    error: storeError,
+  } = useAIRecipeStore();
   const { createAIRecipe, reset } = useCreateAIRecipeMutation();
 
   const isPending = generationState === "generating";
   const isSuccess = generationState === "completed";
   const recipeData = generatedRecipeData;
   const error = storeError ? { message: storeError } : null;
-
 
   const methods = useForm<AIRecipeFormValues>({
     defaultValues: {
@@ -51,10 +54,13 @@ const IngredientRecipePage = () => {
     name: "ingredients",
   });
 
-  const handleAddIngredient = (ingredient: { name: string }) => {
+  const handleAddIngredient = (ingredient: AIIngredientPayload) => {
     const currentIngredients = methods.getValues("ingredients");
-    if (!currentIngredients.includes(ingredient.name)) {
-      methods.setValue("ingredients", [...currentIngredients, ingredient.name]);
+    if (!currentIngredients.some((ing) => ing.id === ingredient.id)) {
+      methods.setValue("ingredients", [
+        ...currentIngredients,
+        { id: ingredient.id, name: ingredient.name },
+      ]);
     }
   };
 
@@ -62,12 +68,11 @@ const IngredientRecipePage = () => {
     createAIRecipe({
       request: {
         ...data,
-        robotType: "INGREDIENT_FOCUS", 
-      } as any, 
+        robotType: "INGREDIENT_FOCUS",
+      } as any,
       concept: "INGREDIENT_FOCUS",
     });
   };
-
 
   if (isPending) {
     return (
@@ -80,10 +85,7 @@ const IngredientRecipePage = () => {
   if (isSuccess && recipeData) {
     return (
       <Container className="h-full" padding={false}>
-        <AIRecipeComplete
-          selectedAI={aiModels["INGREDIENT_FOCUS"]}
-          generatedRecipe={recipeData}
-        />
+        <AIRecipeComplete generatedRecipe={recipeData} />
       </Container>
     );
   }
@@ -107,15 +109,15 @@ const IngredientRecipePage = () => {
             <PrevButton className="md:hidden" />
             <button
               onClick={() => router.back()}
-              className="hidden md:flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+              className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
             >
               <ArrowLeft size={20} />
               <span className="text-sm font-medium">AI 다시 선택하기</span>
             </button>
           </div>
-          
+
           <AiCharacterSection selectedAI={aiModels["INGREDIENT_FOCUS"]} />
-          
+
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
               <IngredientManager onOpenDrawer={() => setIsDrawerOpen(true)} />
@@ -129,12 +131,18 @@ const IngredientRecipePage = () => {
             </div>
             <AIRecipeSubmitSection isLoading={isPending} />
           </form>
-          
+
           <IngredientSelector
             open={isDrawerOpen}
             onOpenChange={setIsDrawerOpen}
             onIngredientSelect={handleAddIngredient}
-            addedIngredientNames={new Set(ingredients || [])}
+            addedIngredientNames={
+              new Set((ingredients || []).map((ing) => ing.name))
+            }
+            mapIngredientToPayload={(ingredient) => ({
+              id: ingredient.id,
+              name: ingredient.name,
+            })}
           />
         </div>
       </FormProvider>
@@ -143,4 +151,3 @@ const IngredientRecipePage = () => {
 };
 
 export default IngredientRecipePage;
-
