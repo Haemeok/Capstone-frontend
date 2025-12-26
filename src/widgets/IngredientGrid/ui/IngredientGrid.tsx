@@ -15,6 +15,7 @@ type IngredientGridProps = {
   ref: (node?: Element | null | undefined) => void;
   isLoggedIn: boolean;
   setSelectedIngredientIds: React.Dispatch<React.SetStateAction<number[]>>;
+  selectedIngredientIds: number[];
 };
 
 const IngredientGrid = ({
@@ -26,6 +27,7 @@ const IngredientGrid = ({
   ref,
   isLoggedIn,
   setSelectedIngredientIds,
+  selectedIngredientIds,
 }: IngredientGridProps) => {
   return isLoggedIn ? (
     <div className="flex grow flex-col gap-4">
@@ -36,6 +38,7 @@ const IngredientGrid = ({
             ingredient={ingredient}
             isDeleteMode={isDeleteMode}
             setSelectedIngredientIds={setSelectedIngredientIds}
+            isSelected={selectedIngredientIds.includes(ingredient.id)}
           />
         ))}
       </div>

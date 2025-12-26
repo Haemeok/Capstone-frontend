@@ -49,6 +49,19 @@ const IngredientsPageClient = () => {
     deleteIngredientBulk(selectedIngredientIds);
   };
 
+  const allIngredientIds = ingredients?.map((i) => i.id) ?? [];
+  const isAllSelected =
+    allIngredientIds.length > 0 &&
+    allIngredientIds.every((id) => selectedIngredientIds.includes(id));
+
+  const handleToggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIngredientIds([]);
+    } else {
+      setSelectedIngredientIds(allIngredientIds);
+    }
+  };
+
   const headerTitle = !!user
     ? `${user?.nickname}님의\n냉장고`
     : "로그인 후 냉장고를\n관리해보세요";
@@ -66,7 +79,8 @@ const IngredientsPageClient = () => {
               <IngredientActionButtons
                 isDeleteMode={isDeleteMode}
                 setIsDeleteMode={setIsDeleteMode}
-                handleDeleteIngredientBulk={handleDeleteIngredientBulk}
+                onToggleSelectAll={handleToggleSelectAll}
+                isAllSelected={isAllSelected}
               />
             )}
           </div>
@@ -96,6 +110,7 @@ const IngredientsPageClient = () => {
           ref={ref}
           isLoggedIn={!!user}
           setSelectedIngredientIds={setSelectedIngredientIds}
+          selectedIngredientIds={selectedIngredientIds}
         />
 
         {!!user && !isDeleteMode && (

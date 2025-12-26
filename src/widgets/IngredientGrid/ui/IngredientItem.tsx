@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Image } from "@/shared/ui/image/Image";
 
 import { cn } from "@/shared/lib/utils";
@@ -11,21 +10,18 @@ type IngredientItemProps = {
   ingredient: IngredientItemType;
   isDeleteMode: boolean;
   setSelectedIngredientIds: React.Dispatch<React.SetStateAction<number[]>>;
+  isSelected: boolean;
 };
 
 const IngredientItem = ({
   ingredient,
   isDeleteMode,
   setSelectedIngredientIds,
+  isSelected,
 }: IngredientItemProps) => {
-  const [isActive, setIsActive] = useState(false);
-
   const handleClick = () => {
-    const newActiveState = !isActive;
-    setIsActive(newActiveState);
-
     setSelectedIngredientIds((prev) => {
-      if (newActiveState) {
+      if (!prev.includes(ingredient.id)) {
         return [...prev, ingredient.id];
       } else {
         return prev.filter((id) => id !== ingredient.id);
@@ -39,7 +35,7 @@ const IngredientItem = ({
       className={cn(
         "relative flex items-center gap-4 rounded-lg border-[1.5px] border-gray-200 px-1 py-2",
         isDeleteMode && "cursor-pointer",
-        isActive && "bg-olive-light/10 border-olive-light"
+        isSelected && "bg-olive-light/10 border-olive-light"
       )}
     >
       <Image
@@ -58,13 +54,13 @@ const IngredientItem = ({
         <div
           className={cn(
             "absolute top-4 right-4 flex h-5 w-5 items-center justify-center rounded-full border-2 border-gray-500",
-            isActive && "border-[#5cc570] bg-[#5cc570]"
+            isSelected && "border-[#5cc570] bg-[#5cc570]"
           )}
           role="checkbox"
-          aria-checked={isActive}
+          aria-checked={isSelected}
           aria-label={`${ingredient.name} 선택`}
         >
-          {isActive && (
+          {isSelected && (
             <svg
               width="12"
               height="12"
