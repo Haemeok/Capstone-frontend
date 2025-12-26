@@ -41,17 +41,18 @@ const NotificationsPage = () => {
 
   return (
     <Container>
-      <div className="flex items-center justify-between relative">
+      <div className="relative flex h-10 items-center justify-between">
         <PrevButton />
-        <h1 className="text-2xl font-bold absolute left-1/2 -translate-x-1/2">
+        <h1 className="absolute left-1/2 -translate-x-1/2 text-2xl font-bold">
           알림
         </h1>
         <Button
           variant="outline"
           size="sm"
+          className="absolute right-0 cursor-pointer"
           onClick={() => deleteAllNotifications()}
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="h-4 w-4" />
           모두 삭제
         </Button>
       </div>
@@ -72,12 +73,10 @@ const NotificationsPage = () => {
       <div ref={ref} className="h-4" />
       {isFetchingNextPage && <div>Loading more...</div>}
       {!hasNextPage && !isFetching && notifications.length === 0 && (
-        <div className="text-center text-gray-500 py-4">
-          알림이 없습니다.
-        </div>
+        <div className="py-4 text-center text-gray-500">알림이 없습니다.</div>
       )}
       {!hasNextPage && notifications.length > 0 && (
-        <div className="text-center text-gray-500 py-4">
+        <div className="py-4 text-center text-gray-500">
           모든 알림을 불러왔습니다.
         </div>
       )}

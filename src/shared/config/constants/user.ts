@@ -1,6 +1,5 @@
-import { Calendar, LucideIcon } from "lucide-react";
+import { Bookmark, Calendar, LucideIcon } from "lucide-react";
 import { Award } from "lucide-react";
-import { BookOpen } from "lucide-react";
 
 import { User } from "@/entities/user/model/types";
 
@@ -24,7 +23,7 @@ export type Tab = {
 
 export const MyTabs: Tab[] = [
   { id: "나의 레시피", label: "나의 레시피", icon: Award },
-  { id: "북마크", label: "북마크", icon: BookOpen },
+  { id: "북마크", label: "북마크", icon: Bookmark },
   { id: "캘린더", label: "캘린더", icon: Calendar },
 ];
 

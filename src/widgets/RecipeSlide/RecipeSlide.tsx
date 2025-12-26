@@ -36,7 +36,7 @@ const RecipeSlide = ({
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold text-gray-800">{title}</h2>
         </div>
-        {to ? (
+        {to && (
           <Link
             href={to}
             className="flex items-center text-sm text-gray-500 hover:text-gray-700"
@@ -44,11 +44,6 @@ const RecipeSlide = ({
             더보기
             <ChevronRight size={16} />
           </Link>
-        ) : (
-          <span className="flex cursor-not-allowed items-center text-sm text-gray-400 opacity-50">
-            더보기
-            <ChevronRight size={16} />
-          </span>
         )}
       </div>
 
