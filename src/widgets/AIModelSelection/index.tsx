@@ -37,13 +37,13 @@ const AIModelSelection = () => {
   );
 
   return (
-    <div className="flex h-screen w-full items-center justify-center overflow-hidden p-4">
-      <div className="flex w-full max-w-7xl flex-col items-center gap-6">
-        <p className="text-dark text-center text-2xl font-bold">
-          레시피를 생성할 AI를 선택해주세요.
+    <div className="flex min-h-screen w-full items-center justify-center p-4">
+      <div className="flex w-full max-w-5xl flex-col items-center gap-8">
+        <p className="text-dark text-center text-xl font-bold md:text-3xl">
+          어떤 AI와 함께 요리할까요?
         </p>
 
-        <div className="md:hidden w-full">
+        <div className="w-full md:hidden">
           <Carousel
             opts={{
               align: "center",
@@ -57,20 +57,18 @@ const AIModelSelection = () => {
                   <CarouselItem key={ai.id} className="basis-[85%] pl-4">
                     <button
                       onClick={() => authenticatedSelectAI(ai.id)}
-                      className="relative flex aspect-[2/3] w-full flex-col overflow-hidden rounded-xl bg-gray-100 shadow-lg transition-all active:scale-[0.98]"
+                      className="grid w-full cursor-pointer overflow-hidden rounded-2xl bg-gray-100 shadow-lg transition-all active:scale-[0.98]"
                     >
-                      <div className="absolute inset-0">
-                        <Image
-                          src={ai.image}
-                          alt={ai.name}
-                          wrapperClassName="w-full h-full"
-                          imgClassName="object-cover"
-                          fit="cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                      </div>
+                      <Image
+                        src={ai.image}
+                        alt={ai.name}
+                        wrapperClassName="col-start-1 row-start-1 h-full w-full"
+                        imgClassName="object-cover"
+                        fit="cover"
+                      />
+                      <div className="z-10 col-start-1 row-start-1 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                      <div className="relative z-10 flex h-full flex-col justify-end p-6 text-left">
+                      <div className="z-20 col-start-1 row-start-1 flex h-full flex-col justify-end p-6 text-left">
                         <p className="text-2xl font-bold text-white">
                           {ai.name}
                         </p>
@@ -86,26 +84,24 @@ const AIModelSelection = () => {
           </Carousel>
         </div>
 
-        <div className="hidden md:grid w-full max-w-4xl grid-cols-2 gap-6">
+        <div className="hidden w-full grid-cols-2 gap-6 md:grid">
           {Object.values(aiModels).map((ai) => {
             return (
               <button
                 key={ai.id}
                 onClick={() => authenticatedSelectAI(ai.id)}
-                className="relative flex aspect-[4/5] w-full flex-col overflow-hidden rounded-xl bg-gray-100 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="grid w-full cursor-pointer overflow-hidden rounded-2xl bg-gray-100 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <div className="absolute inset-0">
-                  <Image
-                    src={ai.image}
-                    alt={ai.name}
-                    wrapperClassName="w-full h-full"
-                    imgClassName="object-cover"
-                    fit="cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                </div>
+                <Image
+                  src={ai.image}
+                  alt={ai.name}
+                  wrapperClassName="col-start-1 row-start-1 h-full w-full"
+                  imgClassName="object-cover"
+                  fit="cover"
+                />
+                <div className="z-10 col-start-1 row-start-1 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                <div className="relative z-10 flex h-full flex-col justify-end p-6 text-left">
+                <div className="z-20 col-start-1 row-start-1 flex h-full flex-col justify-end p-6 text-left">
                   <p className="text-2xl font-bold text-white">{ai.name}</p>
                   <p className="mt-2 text-sm font-light text-white/90">
                     {ai.description}
