@@ -10,6 +10,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 import { useCreateAIRecipeMutation } from "@/features/recipe-create-ai";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
 import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
+import { buildIngredientFocusRequest } from "@/features/recipe-create-ai/model/adapters";
 import { aiModels } from "@/shared/config/constants/aiModel";
 
 import AiLoading from "@/widgets/AiLoading/AiLoading";
@@ -65,13 +66,15 @@ const IngredientRecipePage = () => {
   };
 
   const onSubmit = (data: AIRecipeFormValues) => {
+    const request = buildIngredientFocusRequest({
+      ingredientIds: data.ingredients.map((ing) => ing.id),
+      dishType: data.dishType,
+      cookingTime: data.cookingTime,
+      servings: data.servings,
+    });
+
     createAIRecipe({
-      request: {
-        ingredientIds: data.ingredients.map((ing) => ing.id),
-        dishType: data.dishType,
-        cookingTime: data.cookingTime,
-        servings: data.servings,
-      },
+      request,
       concept: "INGREDIENT_FOCUS",
     });
   };

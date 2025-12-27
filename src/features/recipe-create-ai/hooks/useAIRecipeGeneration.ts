@@ -3,7 +3,8 @@ import { queryClient } from "@/shared/lib/queryClient";
 import { useCreateAIRecipeMutation } from "../model/hooks";
 import { AIRecipeFormValues } from "../model/schema";
 import { type AIModel, useAIRecipeStore } from "../model/store";
-import type { AIRecommendedRecipeRequest } from "../model/types";
+import { buildIngredientFocusRequest } from "../model/adapters";
+import type { AIModelId } from "../model/types";
 
 export const useAIRecipeGeneration = () => {
   const {
@@ -39,14 +40,17 @@ export const useAIRecipeGeneration = () => {
       return;
     }
 
-    const requestData = {
-      ...data,
-    } as AIRecommendedRecipeRequest;
+    const request = buildIngredientFocusRequest({
+      ingredientIds: data.ingredients.map((ing) => ing.id),
+      dishType: data.dishType,
+      cookingTime: data.cookingTime,
+      servings: data.servings,
+    });
 
-    startGeneration(selectedAI, requestData);
+    startGeneration(selectedAI, request);
     createAIRecipe({
-      request: requestData,
-      concept: selectedAI.id as any,
+      request,
+      concept: selectedAI.id as AIModelId,
     });
   };
 
