@@ -51,6 +51,14 @@ const AdminRecipeUploadPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="mx-auto max-w-4xl">
+        <div className="mb-20 flex flex-col gap-2">
+          <p className="flex items-center gap-2 text-sm">
+            <span className="text-sm text-emerald-700">
+              [베스트 셀러] 쇼츠 게시판 &gt;
+            </span>{" "}
+          </p>
+          <p className="text-2xl">냉부시절과 다른 마음가짐인 다크호스 정호영</p>
+        </div>
         <h1 className="mb-6 text-3xl font-bold">관리자용 레시피 업로드</h1>
 
         <div className="mb-6 rounded-lg bg-white p-6 shadow">

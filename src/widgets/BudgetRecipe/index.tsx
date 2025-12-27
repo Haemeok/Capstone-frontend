@@ -8,6 +8,7 @@ import PriceSlider from "./PriceSlider";
 import CategorySelector from "./CategorySelector";
 import { BUDGET_DEFAULT } from "@/shared/config/constants/budget";
 import { useCreateAIRecipeMutation } from "@/features/recipe-create-ai";
+import type { CostEffectiveRequest } from "@/features/recipe-create-ai/model/types";
 
 import AiLoading from "@/widgets/AiLoading/AiLoading";
 import AIRecipeComplete from "@/widgets/AIRecipeComplete";
@@ -38,11 +39,13 @@ const BudgetRecipe = () => {
       return;
     }
 
+    const request: CostEffectiveRequest = {
+      targetBudget: budget,
+      targetCategory: selectedCategory,
+    };
+
     createAIRecipe({
-      request: {
-        targetBudget: budget,
-        targetCategory: selectedCategory,
-      },
+      request,
       concept: "COST_EFFECTIVE",
     });
   };

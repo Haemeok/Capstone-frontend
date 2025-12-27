@@ -7,6 +7,7 @@ import { ArrowLeft, ChefHat, Info } from "lucide-react";
 
 import { Container } from "@/shared/ui/Container";
 import { useCreateAIRecipeMutation } from "@/features/recipe-create-ai";
+import type { NutritionBalanceRequest } from "@/features/recipe-create-ai/model/types";
 import { aiModels } from "@/shared/config/constants/aiModel";
 import AiLoading from "@/widgets/AiLoading/AiLoading";
 import AIRecipeComplete from "@/widgets/AIRecipeComplete";
@@ -78,7 +79,7 @@ const NutritionRecipePage = () => {
       return `${val}${unit}`;
     };
 
-    const payload = {
+    const request: NutritionBalanceRequest = {
       targetStyle: data.targetStyle,
       targetCalories:
         mode === "MACRO"
@@ -93,7 +94,7 @@ const NutritionRecipePage = () => {
     };
 
     createAIRecipe({
-      request: payload,
+      request,
       concept: "NUTRITION_BALANCE",
     });
   };

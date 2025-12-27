@@ -29,6 +29,19 @@ export type AIRecommendedRecipeRequest =
   | NutritionBalanceRequest
   | FineDiningRequest;
 
+export type AIModelId =
+  | "INGREDIENT_FOCUS"
+  | "COST_EFFECTIVE"
+  | "NUTRITION_BALANCE"
+  | "FINE_DINING";
+
+export type AIModelRequestMap = {
+  INGREDIENT_FOCUS: IngredientFocusRequest;
+  COST_EFFECTIVE: CostEffectiveRequest;
+  NUTRITION_BALANCE: NutritionBalanceRequest;
+  FINE_DINING: FineDiningRequest;
+};
+
 export type AIRecommendedRecipe = {
   recipeId: number;
 };

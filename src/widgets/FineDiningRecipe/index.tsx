@@ -9,6 +9,7 @@ import DifficultyTierSelector from "./DifficultyTierSelector";
 import FineDiningIngredientManager from "./FineDiningIngredientManager";
 import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
 import { useCreateAIRecipeMutation } from "@/features/recipe-create-ai";
+import type { FineDiningRequest } from "@/features/recipe-create-ai/model/types";
 import AiLoading from "@/widgets/AiLoading/AiLoading";
 import AIRecipeComplete from "@/widgets/AIRecipeComplete";
 import AIRecipeError from "@/widgets/AIRecipeError";
@@ -74,11 +75,13 @@ const FineDiningRecipe = () => {
   const handleGenerateRecipe = () => {
     const formData = methods.getValues();
 
+    const request: FineDiningRequest = {
+      ingredientIds: formData.ingredients.map((ing) => ing.id),
+      diningTier: formData.diningTier,
+    };
+
     createAIRecipe({
-      request: {
-        ingredientIds: formData.ingredients.map((ing) => ing.id),
-        diningTier: formData.diningTier,
-      },
+      request,
       concept: "FINE_DINING",
     });
   };
