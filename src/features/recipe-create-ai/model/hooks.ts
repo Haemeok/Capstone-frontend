@@ -4,6 +4,7 @@ import { postAIRecommendedRecipe } from "./api";
 import type { AIRecommendedRecipe, AIRecommendedRecipeRequest } from "./types";
 import { aiModels, AIModelId } from "@/shared/config/constants/aiModel";
 import { useAIRecipeStore } from "./store";
+import { useRouter } from "next/navigation";
 
 type CreateAIRecipeVariables = {
   request: AIRecommendedRecipeRequest;
@@ -16,7 +17,7 @@ export const useCreateAIRecipeMutation = (callbacks?: {
 }) => {
   const { startGeneration, completeGeneration, failGeneration, resetStore } =
     useAIRecipeStore();
-
+  const router = useRouter();
   const mutation = useMutation<
     AIRecommendedRecipe,
     Error,
@@ -28,6 +29,7 @@ export const useCreateAIRecipeMutation = (callbacks?: {
       startGeneration(aiModels[concept], request);
     },
     onSuccess: (data) => {
+      router.prefetch(`/recipes/${data.recipeId}`);
       setTimeout(() => {
         completeGeneration(data);
         callbacks?.onSuccess?.(data);
