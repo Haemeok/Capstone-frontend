@@ -33,7 +33,7 @@ export const useCreateAIRecipeMutation = (callbacks?: {
       setTimeout(() => {
         completeGeneration(data);
         callbacks?.onSuccess?.(data);
-      }, 8000);
+      }, 10 * 1000);
     },
     onError: (error) => {
       failGeneration(error.message || "레시피 생성 실패");
