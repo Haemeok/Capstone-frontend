@@ -1,10 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { postAIRecommendedRecipe } from "./api";
-import type {
-  AIRecommendedRecipe,
-  AIRecommendedRecipeRequest,
-} from "./types";
+import type { AIRecommendedRecipe, AIRecommendedRecipeRequest } from "./types";
 import { aiModels, AIModelId } from "@/shared/config/constants/aiModel";
 import { useAIRecipeStore } from "./store";
 
@@ -31,8 +28,10 @@ export const useCreateAIRecipeMutation = (callbacks?: {
       startGeneration(aiModels[concept], request);
     },
     onSuccess: (data) => {
-      completeGeneration(data);
-      callbacks?.onSuccess?.(data);
+      setTimeout(() => {
+        completeGeneration(data);
+        callbacks?.onSuccess?.(data);
+      }, 8000);
     },
     onError: (error) => {
       failGeneration(error.message || "레시피 생성 실패");
