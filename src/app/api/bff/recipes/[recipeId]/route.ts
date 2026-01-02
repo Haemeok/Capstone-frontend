@@ -44,12 +44,6 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     const data = await backendRes.json();
 
-    console.log("[BFF PUT /api/bff/recipes] Called!", new Date().toISOString());
-    console.log(
-      "[BFF PUT /api/bff/recipes/[recipeId]] Revalidated tags for recipe:",
-      recipeIdNum
-    );
-
     revalidateTag(CACHE_TAGS.recipe(recipeIdNum));
     revalidateTag(CACHE_TAGS.recipesAll);
     revalidateTag(CACHE_TAGS.recipesPopular);
@@ -95,12 +89,6 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     }
 
     const data = await backendRes.json().catch(() => ({}));
-
-    console.log("[BFF DELETE /api/bff/recipes] Called!", new Date().toISOString());
-    console.log(
-      "[BFF DELETE /api/bff/recipes/[recipeId]] Revalidated tags for recipe:",
-      recipeIdNum
-    );
 
     revalidateTag(CACHE_TAGS.recipe(recipeIdNum));
     revalidateTag(CACHE_TAGS.recipesAll);
