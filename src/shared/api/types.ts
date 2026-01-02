@@ -69,5 +69,5 @@ export type PageResponse<T> = {
 
 export type PresignedUrlResponse = {
   uploads: PresignedUrlInfo[];
-  recipeId: number;
+  recipeId: string;
 };

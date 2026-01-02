@@ -14,7 +14,7 @@ import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 import { getMyRecipeItems } from "./api";
 
 type MyRecipesTabContentProps = {
-  userId: number;
+  userId: string;
 };
 
 const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
@@ -27,7 +27,7 @@ const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
     [string, string, "ASC" | "DESC"],
     number
   >({
-    queryKey: ["recipes", userId.toString(), sort],
+    queryKey: ["recipes", userId, sort],
     queryFn: ({ pageParam }) =>
       getMyRecipeItems({
         userId,

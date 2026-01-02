@@ -1,5 +1,5 @@
 export type IngredientFocusRequest = {
-  ingredientIds: number[];
+  ingredientIds: string[];
   dishType: string;
   cookingTime: number;
   servings: number;
@@ -19,7 +19,7 @@ export type NutritionBalanceRequest = {
 };
 
 export type FineDiningRequest = {
-  ingredientIds: number[];
+  ingredientIds: string[];
   diningTier: "WHITE" | "BLACK";
 };
 

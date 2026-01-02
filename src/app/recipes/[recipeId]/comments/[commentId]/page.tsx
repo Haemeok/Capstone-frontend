@@ -34,7 +34,7 @@ const DiscussionPage = () => {
     queryFn: ({ pageParam }) =>
       getReplies({
         recipeId,
-        commentId: Number(commentId),
+        commentId,
         pageParam,
       }),
     getNextPageParam: (lastPage) => {
@@ -150,11 +150,11 @@ const DiscussionPage = () => {
             <>
               <CommentInput
                 author={parentComment.author}
-                commentId={Number(commentId)}
+                commentId={commentId}
               />
               <CommentInputModal
                 author={parentComment.author}
-                commentId={Number(commentId)}
+                commentId={commentId}
               />
             </>
           )}

@@ -196,7 +196,7 @@ export type RecipeStatus = {
   favoriteByCurrentUser: boolean;
   myRating: number | null;
   comments: Array<{
-    id: number;
+    id: string;
     likedByCurrentUser: boolean;
     likeCount: number;
   }>;

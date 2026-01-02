@@ -1,5 +1,5 @@
 export type BatchUpdateResult = {
-  recipeId: number;
+  recipeId: string;
   status: "fulfilled" | "rejected";
   value?: any;
   reason?: any;
@@ -15,4 +15,3 @@ export type BatchUpdateState = {
   successCount: number;
   failCount: number;
 };
-

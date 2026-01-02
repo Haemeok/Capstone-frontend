@@ -1,7 +1,7 @@
 import type { IngredientFocusRequest } from "./types";
 
 export const buildIngredientFocusRequest = (data: {
-  ingredientIds: number[];
+  ingredientIds: string[];
   dishType: string;
   cookingTime: number;
   servings: number;

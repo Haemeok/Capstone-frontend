@@ -6,7 +6,7 @@ import { User } from "@/entities/user/model/types";
 import { UI_BASE_URL } from "./recipe";
 
 export const guestUser: User = {
-  id: 0,
+  id: "0",
   nickname: "게스트",
   profileImage: "",
   username: "@guest",

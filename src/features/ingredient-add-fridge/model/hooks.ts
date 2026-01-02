@@ -12,7 +12,7 @@ export const useAddIngredientMutation = (
   currentQueryKey: readonly unknown[]
 ) => {
   const queryClient = useQueryClient();
-  const mutation = useMutation<void, Error, number, IngredientMutationContext>({
+  const mutation = useMutation<void, Error, string, IngredientMutationContext>({
     mutationFn: addIngredient,
     onMutate: async (ingredientId) => {
       await queryClient.cancelQueries({ queryKey: currentQueryKey });
@@ -65,7 +65,7 @@ export const useAddIngredientMutation = (
 export const useAddIngredientBulkMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, number[], IngredientMutationContext>({
+  return useMutation<void, Error, string[], IngredientMutationContext>({
     mutationFn: addIngredientBulk,
     onMutate: async (ingredientIds) => {
       await queryClient.cancelQueries({ queryKey: ["ingredients"] });

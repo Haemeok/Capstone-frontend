@@ -13,16 +13,13 @@ import { getNextPageParam } from "@/shared/lib/utils";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Button } from "@/shared/ui/shadcn/button";
 
-import {
-  getIngredients,
-  IngredientsApiResponse,
-} from "@/entities/ingredient";
+import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
 import { IngredientItem } from "@/entities/ingredient";
 
 import IngredientListItem from "./IngredientListItem";
 
 type BaseIngredientPayload = {
-  id?: number;
+  id?: string;
   name: string;
 };
 

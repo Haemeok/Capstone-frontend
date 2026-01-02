@@ -4,7 +4,7 @@ export const aiRecipeFormSchema = z.object({
   ingredients: z
     .array(
       z.object({
-        id: z.number(),
+        id: z.string(),
         name: z.string(),
       })
     )

@@ -14,8 +14,8 @@ type IngredientGridProps = {
   error: Error | null;
   ref: (node?: Element | null | undefined) => void;
   isLoggedIn: boolean;
-  setSelectedIngredientIds: React.Dispatch<React.SetStateAction<number[]>>;
-  selectedIngredientIds: number[];
+  setSelectedIngredientIds: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedIngredientIds: string[];
 };
 
 const IngredientGrid = ({

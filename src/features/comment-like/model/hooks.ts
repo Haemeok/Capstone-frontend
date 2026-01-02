@@ -8,14 +8,14 @@ import {
 import { RecipeStatus } from "@/entities/recipe/model/types";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
-import { CommentsApiResponse,postCommentLike } from "@/features/comment-like";
+import { CommentsApiResponse, postCommentLike } from "@/features/comment-like";
 
 type LikeCommentMutationContext = {
   previousCommentsListData?: InfiniteData<CommentsApiResponse>;
   previousRecipeStatus?: RecipeStatus;
 };
 
-export const useLikeCommentMutation = (commentId: number, recipeId: string) => {
+export const useLikeCommentMutation = (commentId: string, recipeId: string) => {
   const queryClient = useQueryClient();
   const commentsListQueryKey = ["comments", recipeId];
   const recipeStatusQueryKey = ["recipe-status", recipeId];

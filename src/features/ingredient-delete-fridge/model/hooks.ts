@@ -11,14 +11,15 @@ import { deleteIngredient, deleteIngredientBulk } from "./api";
 export const useDeleteIngredientMutation = (queryKey?: (string | number)[]) => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, number, IngredientMutationContext>({
+  return useMutation<void, Error, string, IngredientMutationContext>({
     mutationFn: deleteIngredient,
     onMutate: async (ingredientId) => {
       const targetQueryKey = queryKey || ["ingredients"];
       await queryClient.cancelQueries({ queryKey: targetQueryKey });
-      const previousIngredientsListData = queryClient.getQueryData<
-        InfiniteData<IngredientsApiResponse>
-      >(targetQueryKey);
+      const previousIngredientsListData =
+        queryClient.getQueryData<InfiniteData<IngredientsApiResponse>>(
+          targetQueryKey
+        );
 
       if (previousIngredientsListData) {
         queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
@@ -64,7 +65,7 @@ export const useDeleteIngredientBulkMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, number[], IngredientMutationContext>({
+  return useMutation<void, Error, string[], IngredientMutationContext>({
     mutationFn: deleteIngredientBulk,
     onMutate: async (ingredientIds) => {
       await queryClient.cancelQueries({ queryKey: ["ingredients"] });

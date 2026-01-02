@@ -18,9 +18,7 @@ const BatchUpdatePage = () => {
     const ids = input
       .split(/[\n,]+/) // Split by newline or comma
       .map((s) => s.trim()) // Remove whitespace
-      .filter((s) => s !== "") // Remove empty strings
-      .map((s) => Number(s)) // Convert to number
-      .filter((n) => !isNaN(n)); // Remove invalid numbers
+      .filter((s) => s !== ""); // Remove empty strings
 
     if (ids.length === 0) {
       alert("유효한 Recipe ID를 입력해주세요.");

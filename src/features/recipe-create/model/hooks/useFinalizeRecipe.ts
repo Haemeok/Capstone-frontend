@@ -6,7 +6,7 @@ import { finalizeRecipe } from "../api";
 
 export const useFinalizeRecipe = () => {
   const mutation = useMutation({
-    mutationFn: (recipeId: number) => finalizeRecipe(recipeId),
+    mutationFn: (recipeId: string) => finalizeRecipe(recipeId),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
       queryClient.invalidateQueries({

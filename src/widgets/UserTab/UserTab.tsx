@@ -90,7 +90,7 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
         </div>
       </div>
 
-      {!isLoggedIn && user?.id === 0 ? (
+      {!isLoggedIn && user?.id === "0" ? (
         <div className="flex grow flex-col items-center justify-center p-10 text-center">
           <p className="mb-4 text-gray-500">
             로그인하여 레시피와 요리 일정을 관리해보세요.

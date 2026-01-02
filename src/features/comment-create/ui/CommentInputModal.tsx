@@ -18,16 +18,17 @@ import { useUserStore } from "@/entities/user/model/store";
 
 import useCreateCommentMutation from "@/features/comment-create/model/hooks";
 import CommentInputForm from "./CommentInputForm";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type CommentInputModalProps = {
   author: User | undefined;
-  commentId?: number;
+  commentId?: string;
 };
 
 const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { recipeId } = useParams();
-  const { createComment } = useCreateCommentMutation(Number(recipeId));
+  const { recipeId } = useRecipeStatus();
+  const { createComment } = useCreateCommentMutation(recipeId);
   const { user } = useUserStore();
 
   const handleSubmit = (comment: string) => {
@@ -35,7 +36,7 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
 
     createComment(
       {
-        recipeId: Number(recipeId),
+        recipeId,
         comment,
         commentId,
       },
@@ -52,7 +53,7 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
       <DialogTrigger asChild>
         <Button
           size="icon"
-          className="hidden md:flex fixed bottom-6 right-6 h-14 w-14 rounded-full bg-olive text-white shadow-lg hover:bg-olive-dark"
+          className="bg-olive hover:bg-olive-dark fixed right-6 bottom-6 hidden h-14 w-14 rounded-full text-white shadow-lg md:flex"
           aria-label="댓글 작성"
         >
           <MessageCircle size={24} />

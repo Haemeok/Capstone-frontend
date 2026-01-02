@@ -20,7 +20,7 @@ import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
 import { AIIngredientPayload } from "@/entities/ingredient";
 
 type FineDiningFormValues = {
-  ingredients: Array<{ id: number; name: string }>;
+  ingredients: Array<{ id: string; name: string }>;
   diningTier: "WHITE" | "BLACK";
 };
 
@@ -58,7 +58,7 @@ const FineDiningRecipe = () => {
       methods.setValue("ingredients", [
         ...currentIngredients,
         {
-          id: ingredientPayload.id!,
+          id: ingredientPayload.id,
           name: ingredientPayload.name,
         },
       ]);

@@ -73,7 +73,7 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           commentId={comment.id}
           initialIsLiked={comment.likedByCurrentUser}
           initialLikeCount={comment.likeCount}
-          recipeId={recipeId.toString()}
+          recipeId={recipeId}
         />
 
         {!hideReplyButton && (

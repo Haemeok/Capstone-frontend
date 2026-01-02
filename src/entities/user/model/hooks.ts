@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getMyInfo, getUserInfo } from "./api";
 import { useUserStore } from "./store";
 
-export const useUserQuery = (userId: number, isOtherProfile: boolean) => {
+export const useUserQuery = (userId: string, isOtherProfile: boolean) => {
   const {
     data: userData,
     isLoading,
@@ -19,7 +19,7 @@ export const useUserQuery = (userId: number, isOtherProfile: boolean) => {
     queryFn: () => getUserInfo(userId),
     staleTime: 10 * 60 * 1000,
     retry: false,
-    enabled: isOtherProfile,
+    enabled: isOtherProfile && userId !== undefined,
   });
 
   return {

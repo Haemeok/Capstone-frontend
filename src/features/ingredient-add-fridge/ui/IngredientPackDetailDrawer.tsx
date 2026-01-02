@@ -15,10 +15,10 @@ type IngredientPackDetailDrawerProps = {
   pack: IngredientPack | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddSelected: (ingredientIds: number[]) => void;
-  onDeleteSelected?: (ingredientIds: number[]) => void;
+  onAddSelected: (ingredientIds: string[]) => void;
+  onDeleteSelected?: (ingredientIds: string[]) => void;
   isLoading?: boolean;
-  ownedIngredientIds: Set<number>;
+  ownedIngredientIds: Set<string>;
 };
 
 const IngredientPackDetailDrawer = ({
@@ -30,7 +30,7 @@ const IngredientPackDetailDrawer = ({
   isLoading = false,
   ownedIngredientIds,
 }: IngredientPackDetailDrawerProps) => {
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const allOwned = pack
     ? pack.ingredients.every((ingredient) =>
@@ -54,7 +54,7 @@ const IngredientPackDetailDrawer = ({
     }
   }, [open, pack, ownedIngredientIds, allOwned]);
 
-  const handleToggle = (id: number) => {
+  const handleToggle = (id: string) => {
     setSelectedIds((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
@@ -143,13 +143,14 @@ const IngredientPackDetailDrawer = ({
                   className={cn(
                     "flex items-center rounded-lg border p-3 transition-colors",
                     !isClickable
-                      ? "bg-gray-50 border-gray-200 opacity-50 cursor-not-allowed"
+                      ? "cursor-not-allowed border-gray-200 bg-gray-50 opacity-50"
                       : "cursor-pointer",
                     isClickable && isSelected
                       ? allOwned
-                        ? "bg-red-50 border-red-400"
+                        ? "border-red-400 bg-red-50"
                         : "bg-olive-mint/10 border-olive-light"
-                      : isClickable && "bg-white border-gray-200 hover:bg-gray-50"
+                      : isClickable &&
+                          "border-gray-200 bg-white hover:bg-gray-50"
                   )}
                   onClick={() => isClickable && handleToggle(ingredient.id)}
                 >
@@ -163,7 +164,7 @@ const IngredientPackDetailDrawer = ({
                       }
                     }}
                     className={cn(
-                      "h-5 w-5 rounded border-gray-300 disabled:cursor-not-allowed cursor-pointer",
+                      "h-5 w-5 cursor-pointer rounded border-gray-300 disabled:cursor-not-allowed",
                       allOwned
                         ? "data-[state=checked]:border-red-500 data-[state=checked]:bg-red-500"
                         : "data-[state=checked]:border-olive-light data-[state=checked]:bg-olive-light"
@@ -185,7 +186,7 @@ const IngredientPackDetailDrawer = ({
                     {ingredient.name}
                   </label>
                   {!allOwned && isOwned && (
-                    <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">
+                    <span className="rounded bg-gray-200 px-2 py-1 text-xs text-gray-500">
                       보유중
                     </span>
                   )}
@@ -206,7 +207,7 @@ const IngredientPackDetailDrawer = ({
             onClick={handleSubmit}
             disabled={selectedIds.size === 0 || isLoading}
             className={cn(
-              "w-full text-white disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed",
+              "w-full cursor-pointer text-white disabled:cursor-not-allowed disabled:bg-gray-300",
               allOwned
                 ? "bg-red-500 hover:bg-red-600"
                 : "bg-olive-light hover:bg-olive-dark"
