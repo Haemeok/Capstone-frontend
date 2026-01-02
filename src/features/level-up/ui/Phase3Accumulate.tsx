@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { gsap } from "@/shared/lib/gsap";
+import { useUserStore } from "@/entities/user";
 import SavingSection from "@/shared/ui/SavingSection";
 import CountUp from "@/shared/ui/shadcn/CountUp";
+import { Button } from "@/shared/ui/shadcn/button";
 import { formatNumber } from "@/shared/lib/format";
 import {
   Confetti,
@@ -14,9 +17,11 @@ import type { LevelUpData } from "../model/types";
 
 type Phase3AccumulateProps = {
   data: LevelUpData;
+  onClose: () => void;
 };
 
-const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
+const Phase3Accumulate = ({ data, onClose }: Phase3AccumulateProps) => {
+  const { user } = useUserStore();
   const progressBarRef = useRef<HTMLDivElement>(null);
   const confettiRef = useRef<ConfettiRef>(null);
   const [showLevelUp, setShowLevelUp] = useState(false);
@@ -63,7 +68,7 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
         className="pointer-events-none fixed z-9999 h-full w-full"
         manualstart={true}
       />
-      <div className="flex h-[500px] flex-col px-6 py-4">
+      <div className="flex flex-col px-6 py-4">
         <div className="mb-6 text-center">
           <p className="mb-2 text-sm text-gray-500">이번 달 누적 절약 금액</p>
           <div className="flex items-baseline justify-center gap-1">
@@ -149,6 +154,17 @@ const Phase3Accumulate = ({ data }: Phase3AccumulateProps) => {
               </p>
             </>
           )}
+        </div>
+
+        <div className="mt-6 px-4">
+          <Link href={`/users/${user?.id}?tab=캘린더`} prefetch={false}>
+            <Button
+              onClick={onClose}
+              className="bg-olive-mint hover:bg-olive-dark w-full rounded-md py-3 text-white"
+            >
+              이번 달 기록 확인하기
+            </Button>
+          </Link>
         </div>
       </div>
     </>

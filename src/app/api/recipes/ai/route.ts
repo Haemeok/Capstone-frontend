@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BASE_API_URL } from "@/shared/config/constants/api";
 
-// Vercel Serverless Function Timeout 설정 (초 단위)
-export const maxDuration = 300; 
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
@@ -28,9 +27,8 @@ export async function POST(req: NextRequest) {
     });
 
     const data = await res.json();
-    
-    return NextResponse.json(data, { status: res.status });
 
+    return NextResponse.json(data, { status: res.status });
   } catch (error) {
     console.error("AI Recipe Proxy Error:", error);
     return NextResponse.json(
@@ -39,4 +37,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

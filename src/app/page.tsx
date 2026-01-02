@@ -8,7 +8,6 @@ import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
 import CategoryTabs from "@/widgets/CategoryTabs";
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
-import { OnboardingSurveyModal } from "@/widgets/OnboardingSurveryModal";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 
@@ -85,7 +84,6 @@ const HomePage = async () => {
             isStatic
             staticRecipes={staticPopularRecipes.content}
           />
-          <OnboardingSurveyModal />
         </div>
       </Container>
       <DesktopFooter />

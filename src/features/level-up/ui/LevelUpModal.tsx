@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/shadcn/dialog";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
 import { useRecipeHistoryQuery } from "@/widgets/CalendarTabContent/hooks";
 import type { LevelUpPhase, LevelUpData } from "../model/types";
@@ -17,24 +12,32 @@ import Phase3Accumulate from "./Phase3Accumulate";
 type LevelUpModalProps = {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  acquiredAmount?: number; // 실제 획득 금액 (옵셔널)
+  acquiredAmount?: number;
 };
 
 const calculateLevelUpData = (
   monthlyTotal: number,
   acquired: number
 ): LevelUpData => {
-  // monthlyTotal은 이미 acquired가 포함되어 있으므로 빼서 이전 값을 구함
   const previousTotal = Math.max(0, monthlyTotal - acquired);
   const newTotal = monthlyTotal;
 
   const currentBracket =
+    PRICE_BRACKETS.find((b) => newTotal >= b.min) ||
+    PRICE_BRACKETS[PRICE_BRACKETS.length - 1];
+
+  const previousBracket =
     PRICE_BRACKETS.find((b) => previousTotal >= b.min) ||
     PRICE_BRACKETS[PRICE_BRACKETS.length - 1];
 
   const currentIndex = PRICE_BRACKETS.indexOf(currentBracket);
+
   const nextBracket =
-    currentIndex > 0 ? PRICE_BRACKETS[currentIndex - 1] : undefined;
+    currentIndex < PRICE_BRACKETS.length - 1
+      ? PRICE_BRACKETS[currentIndex + 1]
+      : undefined;
+
+  const isLevelUp = previousBracket !== currentBracket;
 
   if (!nextBracket) {
     return {
@@ -44,14 +47,13 @@ const calculateLevelUpData = (
       currentBracket,
       nextBracket: undefined,
       percentageToNext: 100,
-      isLevelUp: false,
+      isLevelUp,
     };
   }
 
   const range = Math.max(1, nextBracket.min - currentBracket.min);
   const progress = Math.max(0, newTotal - currentBracket.min);
   const percentage = Math.min(100, Math.floor((progress / range) * 100));
-  const isLevelUp = newTotal >= nextBracket.min;
 
   return {
     acquired,
@@ -73,19 +75,17 @@ const LevelUpModal = ({
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
 
+  const { Container, Content, Header, Title } = useResponsiveSheet();
+
   const { monthlyTotalSavings } = useRecipeHistoryQuery({ year, month });
 
   const levelUpData = useMemo(() => {
-    return calculateLevelUpData(
-      monthlyTotalSavings || 0,
-      acquiredAmount || 0
-    );
+    return calculateLevelUpData(monthlyTotalSavings || 0, acquiredAmount || 0);
   }, [monthlyTotalSavings, acquiredAmount]);
 
   const [currentPhase, setCurrentPhase] = useState<LevelUpPhase>("acquired");
 
   useEffect(() => {
-    // 모달이 열릴 때마다 Phase 1부터 시작
     if (isOpen) {
       setCurrentPhase("acquired");
     }
@@ -115,11 +115,11 @@ const LevelUpModal = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-center">{getPhaseTitle()}</DialogTitle>
-        </DialogHeader>
+    <Container open={isOpen} onOpenChange={onOpenChange}>
+      <Content className="max-w-md">
+        <Header>
+          <Title className="text-center">{getPhaseTitle()}</Title>
+        </Header>
 
         {currentPhase === "acquired" && (
           <Phase1Acquired
@@ -136,10 +136,13 @@ const LevelUpModal = ({
         )}
 
         {currentPhase === "accumulate" && (
-          <Phase3Accumulate data={levelUpData} />
+          <Phase3Accumulate
+            data={levelUpData}
+            onClose={() => onOpenChange(false)}
+          />
         )}
-      </DialogContent>
-    </Dialog>
+      </Content>
+    </Container>
   );
 };
 
