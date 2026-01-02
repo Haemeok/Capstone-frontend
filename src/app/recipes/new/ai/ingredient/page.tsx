@@ -48,6 +48,7 @@ const IngredientRecipePage = () => {
       cookingTime: 0,
       servings: 1,
     },
+    mode: "onChange",
   });
 
   const ingredients = useWatch({
@@ -124,7 +125,10 @@ const IngredientRecipePage = () => {
 
           <AiCharacterSection selectedAI={aiModels["INGREDIENT_FOCUS"]} />
 
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            className="pb-20 md:pb-0"
+          >
             <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
               <IngredientManager onOpenDrawer={() => setIsDrawerOpen(true)} />
 

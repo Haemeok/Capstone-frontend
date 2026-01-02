@@ -53,7 +53,7 @@ const AIModelSelection = () => {
                   imgClassName="object-cover"
                   fit="cover"
                 />
-                <div className="z-10 col-start-1 row-start-1 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="pointer-events-none z-10 col-start-1 row-start-1 h-full w-full bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                 <div className="z-20 col-start-1 row-start-1 flex h-full flex-col justify-end p-4 text-left md:p-6">
                   <p className="text-lg font-bold text-white md:text-2xl">

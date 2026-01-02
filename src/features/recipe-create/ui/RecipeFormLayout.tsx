@@ -131,15 +131,7 @@ const RecipeFormLayout = ({
           <Steps />
           <CookingToolsInput />
           <TagSection />
-          <div className="mt-8 flex flex-col items-center justify-center gap-4">
-            {missingFieldLabels.length > 0 && (
-              <p className="rounded-md bg-amber-50 px-4 py-2 text-sm text-amber-600">
-                다음 항목을 입력해주세요:{" "}
-                <span className="font-semibold">
-                  {missingFieldLabels.join(", ")}
-                </span>
-              </p>
-            )}
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 pb-20 md:pb-8">
             {submitError && (
               <p className="text-sm text-red-600">
                 오류: {submitError.message}

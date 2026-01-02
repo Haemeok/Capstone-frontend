@@ -143,7 +143,7 @@ const NutritionRecipePage = () => {
 
   return (
     <Container padding={false}>
-      <div className="mx-auto bg-[#f7f7f7] p-4">
+      <div className="mx-auto bg-[#f7f7f7] p-4 pb-24 md:pb-4">
         <div className="mb-4 flex items-center gap-2">
           <PrevButton className="text-gray-600 md:hidden" />
           <button

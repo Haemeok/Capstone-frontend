@@ -120,7 +120,7 @@ const FineDiningRecipe = () => {
   return (
     <Container padding={false}>
       <FormProvider {...methods}>
-        <div className="mx-auto max-w-2xl space-y-8 p-4">
+        <div className="mx-auto max-w-2xl space-y-8 p-4 pb-24 md:pb-4">
           <div className="mb-4 flex items-center gap-2">
             <PrevButton className="text-gray-600 md:hidden" />
             <button
