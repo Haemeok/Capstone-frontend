@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { MyTabs, OtherTabs } from "@/shared/config/constants/user";
 
@@ -18,7 +19,18 @@ type UserTabProps = {
 };
 
 const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
+  const searchParams = useSearchParams();
+
   const getDefaultTab = () => {
+    const tabParam = searchParams.get("tab");
+    if (tabParam) {
+      const validTabs = isOwnProfile ? MyTabs : OtherTabs;
+      const isValidTab = validTabs.some((tab) => tab.id === tabParam);
+      if (isValidTab) {
+        return tabParam;
+      }
+    }
+
     if (isOwnProfile && user && !user.hasFirstRecord) {
       return "캘린더";
     }
@@ -26,6 +38,17 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
   };
 
   const [activeTab, setActiveTab] = useState<string>(getDefaultTab());
+
+  useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    if (tabParam) {
+      const validTabs = isOwnProfile ? MyTabs : OtherTabs;
+      const isValidTab = validTabs.some((tab) => tab.id === tabParam);
+      if (isValidTab) {
+        setActiveTab(tabParam);
+      }
+    }
+  }, [searchParams, isOwnProfile]);
 
   const getRecipesByTab = () => {
     switch (activeTab) {

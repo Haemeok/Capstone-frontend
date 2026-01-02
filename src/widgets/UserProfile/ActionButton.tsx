@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { LogIn, Plus } from "lucide-react";
 
+import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { Button } from "@/shared/ui/shadcn/button";
 
 type ActionButtonProps = {
@@ -23,16 +24,24 @@ const ActionButton = ({
 
   if (!isLoggedIn && isGuest) {
     return (
-      <Button asChild className="bg-olive-light hover:bg-olive-dark rounded-full px-6 text-white">
-        <Link href="/login">
-          <LogIn size={16} className="mr-1" /> 로그인
-        </Link>
-      </Button>
+      <LoginPromotionBadge variant="desktop">
+        <Button
+          asChild
+          className="bg-olive-light hover:bg-olive-dark rounded-full px-6 text-white"
+        >
+          <Link href="/login">
+            <LogIn size={16} className="mr-1" /> 로그인
+          </Link>
+        </Button>
+      </LoginPromotionBadge>
     );
   }
 
   return (
-    <Button asChild className="bg-olive-light gap-0 rounded-full px-6 text-white">
+    <Button
+      asChild
+      className="bg-olive-light gap-0 rounded-full px-6 text-white"
+    >
       <Link href="/recipes/new" prefetch={false}>
         <Plus size={16} className="mr-1" /> 레시피 등록하기
       </Link>
