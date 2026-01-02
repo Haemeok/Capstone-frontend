@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 import { markLandingVisited } from "@/app/landing/actions";
+import { CarouselRow } from "./RecipeCarousel";
 
 export const HeroSection = () => {
   const handleStartClick = async () => {
@@ -19,7 +20,7 @@ export const HeroSection = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative flex min-h-[85vh] flex-col items-center justify-center px-4 pt-20 text-center md:pt-32"
+        className="relative flex min-h-[70vh] flex-col items-center justify-center px-4 pt-20 text-center md:pt-32"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -98,6 +99,14 @@ export const HeroSection = () => {
           </div>
         </motion.div>
       </motion.div>
+
+      {/* Recipe Carousel Section */}
+      <div className="relative mt-12 pb-8">
+        <div className="space-y-5">
+          <CarouselRow direction="left" />
+          <CarouselRow direction="right" />
+        </div>
+      </div>
     </section>
   );
 };
