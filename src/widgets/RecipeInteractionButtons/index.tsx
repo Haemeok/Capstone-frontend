@@ -13,7 +13,7 @@ import { LockButton } from "@/features/recipe-visibility";
 import { useToastStore } from "@/widgets/Toast";
 
 type RecipeInteractionButtonsProps = {
-  recipeId: number;
+  recipeId: string;
   initialIsLiked: boolean;
   initialLikeCount: number;
   initialIsFavorite: boolean;

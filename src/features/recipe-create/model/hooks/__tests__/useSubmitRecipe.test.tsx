@@ -178,7 +178,7 @@ it("기존 레시피 수정 시, 첨부 파일이 없으면 서버 데이터만 
   const onError = jest.fn();
 
   await act(async () => {
-    submit({ formData: dummyForm, recipeId: 321 }, { onSuccess, onError });
+    submit({ formData: dummyForm, recipeId: "321" }, { onSuccess, onError });
   });
 
   await waitFor(() => {

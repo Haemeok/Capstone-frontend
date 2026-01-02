@@ -11,7 +11,7 @@ import { createRecipeRecord } from "./api";
 import { useRecipeCompleteStore } from "./store";
 
 type UseRecipeCompleteOptions = {
-  recipeId: number;
+  recipeId: string;
   saveAmount: number;
   onRewardShow?: (saveAmount: number) => void;
 };

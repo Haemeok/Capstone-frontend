@@ -1,14 +1,14 @@
 import { create } from "zustand";
 
 type RecipeCompleteStore = {
-  completedRecipeIds: Set<number>;
-  addCompletedRecipe: (recipeId: number) => void;
-  hasCompletedRecipe: (recipeId: number) => boolean;
+  completedRecipeIds: Set<string>;
+  addCompletedRecipe: (recipeId: string) => void;
+  hasCompletedRecipe: (recipeId: string) => boolean;
   clearCompletedRecipes: () => void;
 };
 
 export const useRecipeCompleteStore = create<RecipeCompleteStore>((set, get) => ({
-  completedRecipeIds: new Set<number>(),
+  completedRecipeIds: new Set<string>(),
 
   addCompletedRecipe: (recipeId) => {
     set((state) => {
@@ -23,6 +23,6 @@ export const useRecipeCompleteStore = create<RecipeCompleteStore>((set, get) => 
   },
 
   clearCompletedRecipes: () => {
-    set({ completedRecipeIds: new Set<number>() });
+    set({ completedRecipeIds: new Set<string>() });
   },
 }));

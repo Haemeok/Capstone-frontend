@@ -11,7 +11,7 @@ import { User } from "@/entities/user";
 type CommentInputFormProps = {
   author: User | undefined;
   user: User | null;
-  commentId?: number;
+  commentId?: string;
   onSubmit: (comment: string) => void;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -72,7 +72,7 @@ const CommentInputForm = ({
       aria-label={ariaLabel}
     >
       {!isFocused && user && (
-        <div className="h-8 w-8 flex-shrink-0 overflow-hidden relative rounded-full bg-white">
+        <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-white">
           <Image
             src={user.profileImage || ""}
             alt="내 프로필"

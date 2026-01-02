@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { postCommentWithRating } from "./api";
 
-const usePostReviewMutation = (recipeId: number) => {
+const usePostReviewMutation = (recipeId: string) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: ({ comment, rating }: { comment: string; rating: number }) =>
@@ -10,7 +10,7 @@ const usePostReviewMutation = (recipeId: number) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments"] });
       queryClient.invalidateQueries({
-        queryKey: ["recipe", recipeId.toString()],
+        queryKey: ["recipe", recipeId],
       });
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
     },

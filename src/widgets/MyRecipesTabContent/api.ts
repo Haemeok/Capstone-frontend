@@ -10,7 +10,7 @@ export const getMyRecipeItems = ({
   sort,
   pageParam = 0,
 }: {
-  userId: number;
+  userId: string;
   sort: string;
   pageParam?: number;
 }) => {

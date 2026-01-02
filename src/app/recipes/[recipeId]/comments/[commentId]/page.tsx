@@ -33,7 +33,7 @@ const DiscussionPage = () => {
     queryKey: ["comments", recipeId, commentId, sort],
     queryFn: ({ pageParam }) =>
       getReplies({
-        recipeId: Number(recipeId),
+        recipeId,
         commentId: Number(commentId),
         pageParam,
       }),
@@ -71,11 +71,7 @@ const DiscussionPage = () => {
       <Container maxWidth="3xl">
         <main className="py-4">
           {parentComment ? (
-            <CommentCard
-              comment={parentComment}
-              hideReplyButton
-              recipeId={Number(recipeId)}
-            />
+            <CommentCard comment={parentComment} hideReplyButton />
           ) : (
             <div className="flex flex-col items-center justify-center rounded-2xl border-1 border-gray-200 p-4">
               <p className="mb-4 text-lg text-gray-500">
@@ -120,7 +116,6 @@ const DiscussionPage = () => {
                       key={reply.id}
                       comment={reply}
                       hideReplyButton
-                      recipeId={Number(recipeId)}
                     />
                   ))}
                   <div ref={ref} className="h-10">

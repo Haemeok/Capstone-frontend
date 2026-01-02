@@ -9,7 +9,7 @@ import { RecipeStatus } from "@/entities/recipe/model/types";
 import { useLikeRecipeMutation } from "../model/hooks";
 
 type RecipeLikeButtonProps = {
-  recipeId: number;
+  recipeId: string;
   initialIsLiked: boolean;
   initialLikeCount: number;
   buttonClassName?: string;
@@ -37,7 +37,7 @@ const RecipeLikeButton = ({
 
   const currentStatus = queryClient.getQueryData<RecipeStatus>([
     "recipe-status",
-    recipeId.toString(),
+    recipeId,
   ]);
 
   const isLiked = currentStatus?.likedByCurrentUser ?? initialIsLiked;

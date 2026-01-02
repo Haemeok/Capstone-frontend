@@ -17,7 +17,7 @@ import {
 } from "../config";
 import { useSubmitRecipe } from "./useSubmitRecipe";
 
-export const useRecipeEditForm = (recipeId: number) => {
+export const useRecipeEditForm = (recipeId: string) => {
   const router = useRouter();
   const { addToast } = useToastStore();
   const { submitRecipe, isPending, error } = useSubmitRecipe();

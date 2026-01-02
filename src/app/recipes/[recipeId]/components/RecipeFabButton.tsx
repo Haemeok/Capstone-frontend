@@ -3,18 +3,17 @@
 import { FabButton } from "@/shared/ui/FabButton";
 
 import { useRecipeContainer } from "./RecipeContainer";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type RecipeFabButtonProps = {
-  recipeId: number;
   hasAllStepImages: boolean;
 };
 
 export default function RecipeFabButton({
-  recipeId,
   hasAllStepImages,
 }: RecipeFabButtonProps) {
   const { observerRef } = useRecipeContainer();
-
+  const { recipeId } = useRecipeStatus();
   if (!hasAllStepImages) {
     return null;
   }

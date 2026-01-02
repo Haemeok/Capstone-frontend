@@ -12,11 +12,6 @@ type RouteContext = {
 export async function PUT(request: NextRequest, context: RouteContext) {
   try {
     const { recipeId } = await context.params;
-    const recipeIdNum = Number(recipeId);
-
-    if (isNaN(recipeIdNum) || recipeIdNum <= 0) {
-      return NextResponse.json({ error: "Invalid recipe ID" }, { status: 400 });
-    }
 
     const body = await request.json();
     const cookieStore = await cookies();
@@ -44,7 +39,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     const data = await backendRes.json();
 
-    revalidateTag(CACHE_TAGS.recipe(recipeIdNum));
+    revalidateTag(CACHE_TAGS.recipe(recipeId));
     revalidateTag(CACHE_TAGS.recipesAll);
     revalidateTag(CACHE_TAGS.recipesPopular);
 
@@ -61,11 +56,6 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
     const { recipeId } = await context.params;
-    const recipeIdNum = Number(recipeId);
-
-    if (isNaN(recipeIdNum) || recipeIdNum <= 0) {
-      return NextResponse.json({ error: "Invalid recipe ID" }, { status: 400 });
-    }
 
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
@@ -90,7 +80,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
 
     const data = await backendRes.json().catch(() => ({}));
 
-    revalidateTag(CACHE_TAGS.recipe(recipeIdNum));
+    revalidateTag(CACHE_TAGS.recipe(recipeId));
     revalidateTag(CACHE_TAGS.recipesAll);
     revalidateTag(CACHE_TAGS.recipesPopular);
 

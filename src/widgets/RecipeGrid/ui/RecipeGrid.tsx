@@ -55,9 +55,9 @@ const RecipeGrid = ({
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
-  const handleOpenSheet = (itemId: number) => {
+  const handleOpenSheet = (itemId: string) => {
     setSelectedItemId(itemId);
     setIsSheetOpen(true);
   };
@@ -78,7 +78,9 @@ const RecipeGrid = ({
     deleteRecipe();
   };
 
-  const { mutate: deleteRecipe } = useDeleteRecipeMutation(selectedItemId ?? 0);
+  const { mutate: deleteRecipe } = useDeleteRecipeMutation(
+    selectedItemId ?? ""
+  );
 
   if (isPending) {
     return (

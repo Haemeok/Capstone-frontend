@@ -19,10 +19,10 @@ type LikeRecipeMutationContext = {
   previousRecipeListData?: InfiniteData<DetailedRecipesApiResponse>;
 };
 
-export const useLikeRecipeMutation = (recipeId: number) => {
+export const useLikeRecipeMutation = (recipeId: string) => {
   const queryClient = useQueryClient();
 
-  const recipeStatusQueryKey = ["recipe-status", recipeId.toString()];
+  const recipeStatusQueryKey = ["recipe-status", recipeId];
 
   const recipesListRootKey = ["recipes"];
 
@@ -61,14 +61,22 @@ export const useLikeRecipeMutation = (recipeId: number) => {
       >({ queryKey: recipesListRootKey }, (oldData) => {
         if (!oldData) return oldData;
 
-        const updateRecipe = <T extends { id: number; likedByCurrentUser: boolean; likeCount: number }>(
+        const updateRecipe = <
+          T extends {
+            id: string;
+            likedByCurrentUser: boolean;
+            likeCount: number;
+          },
+        >(
           recipe: T
         ): T =>
           recipe.id === recipeId
             ? {
                 ...recipe,
                 likedByCurrentUser: !recipe.likedByCurrentUser,
-                likeCount: recipe.likedByCurrentUser ? recipe.likeCount - 1 : recipe.likeCount + 1,
+                likeCount: recipe.likedByCurrentUser
+                  ? recipe.likeCount - 1
+                  : recipe.likeCount + 1,
               }
             : recipe;
 
@@ -92,24 +100,30 @@ export const useLikeRecipeMutation = (recipeId: number) => {
         return oldData;
       });
 
-      queryClient.setQueriesData({ queryKey: ["recipes-status"] }, (oldData: unknown) => {
-        if (!oldData || typeof oldData !== "object") return oldData;
+      queryClient.setQueriesData(
+        { queryKey: ["recipes-status"] },
+        (oldData: unknown) => {
+          if (!oldData || typeof oldData !== "object") return oldData;
 
-        const statusData = oldData as Record<string, { likedByCurrentUser: boolean }>;
-        const recipeIdKey = recipeId.toString();
+          const statusData = oldData as Record<
+            string,
+            { likedByCurrentUser: boolean }
+          >;
+          const recipeIdKey = recipeId.toString();
 
-        if (recipeIdKey in statusData) {
-          return {
-            ...statusData,
-            [recipeIdKey]: {
-              ...statusData[recipeIdKey],
-              likedByCurrentUser: !statusData[recipeIdKey].likedByCurrentUser,
-            },
-          };
+          if (recipeIdKey in statusData) {
+            return {
+              ...statusData,
+              [recipeIdKey]: {
+                ...statusData[recipeIdKey],
+                likedByCurrentUser: !statusData[recipeIdKey].likedByCurrentUser,
+              },
+            };
+          }
+
+          return oldData;
         }
-
-        return oldData;
-      });
+      );
 
       return { previousRecipeStatus };
     },

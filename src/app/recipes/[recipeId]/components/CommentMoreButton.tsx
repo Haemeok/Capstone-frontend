@@ -2,17 +2,19 @@
 
 import Link from "next/link";
 
+import { useRecipeStatus } from "@/features/recipe-status";
+
 type CommentMoreButtonProps = {
-  recipeId: number;
   text: string;
 };
 
-const CommentMoreButton = ({ recipeId, text }: CommentMoreButtonProps) => {
+const CommentMoreButton = ({ text }: CommentMoreButtonProps) => {
+  const { recipeId } = useRecipeStatus();
   return (
     <Link
       href={`/recipes/${recipeId}/comments`}
       prefetch={false}
-      className="text-olive-light cursor-pointer py-2 px-4 block text-center"
+      className="text-olive-light block cursor-pointer px-4 py-2 text-center"
     >
       <p className="text-sm font-bold">{text}</p>
     </Link>

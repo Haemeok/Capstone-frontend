@@ -6,7 +6,7 @@ import { useRecipeEditForm } from "@/features/recipe-create/model/hooks/useRecip
 import RecipeFormLayout from "@/features/recipe-create/ui/RecipeFormLayout";
 
 type RecipeEditClientProps = {
-  recipeId: number;
+  recipeId: string;
 };
 
 const RecipeEditClient = ({ recipeId }: RecipeEditClientProps) => {

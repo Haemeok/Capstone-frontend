@@ -8,6 +8,7 @@ import { RecipeStatus } from "@/entities/recipe/model/types";
 type RecipeStatusContextValue = {
   status: RecipeStatus | undefined;
   isLoading: boolean;
+  recipeId: string;
 };
 
 const RecipeStatusContext = createContext<RecipeStatusContextValue | null>(
@@ -18,13 +19,13 @@ export function RecipeStatusProvider({
   recipeId,
   children,
 }: {
-  recipeId: number;
+  recipeId: string;
   children: ReactNode;
 }) {
   const { data: status, isLoading } = useRecipeStatusQuery(recipeId);
 
   return (
-    <RecipeStatusContext.Provider value={{ status, isLoading }}>
+    <RecipeStatusContext.Provider value={{ status, isLoading, recipeId }}>
       {children}
     </RecipeStatusContext.Provider>
   );
@@ -33,9 +34,7 @@ export function RecipeStatusProvider({
 export function useRecipeStatus() {
   const context = useContext(RecipeStatusContext);
   if (!context) {
-    throw new Error(
-      "useRecipeStatus must be used within RecipeStatusProvider"
-    );
+    throw new Error("useRecipeStatus must be used within RecipeStatusProvider");
   }
   return context;
 }

@@ -5,7 +5,7 @@ import { useToastStore } from "@/widgets/Toast";
 
 import { deleteRecipe } from "./api";
 
-const useDeleteRecipeMutation = (recipeId: number) => {
+const useDeleteRecipeMutation = (recipeId: string) => {
   const queryClient = useQueryClient();
   const { addToast, removeToast } = useToastStore();
   const deleteRecipeMutation = useMutation({

@@ -20,13 +20,11 @@ const ReviewPage = () => {
   const [reviewText, setReviewText] = useState<string>("");
   const { user } = useUserStore();
   const { addToast } = useToastStore();
-  const { recipeId } = useParams();
+  const { recipeId } = useParams<{ recipeId: string }>();
   const router = useRouter();
-  const { recipeData } = useRecipeDetailQuery(Number(recipeId));
+  const { recipeData } = useRecipeDetailQuery(recipeId);
 
-  const { mutate: postReview, isPending } = usePostReviewMutation(
-    Number(recipeId)
-  );
+  const { mutate: postReview, isPending } = usePostReviewMutation(recipeId);
 
   const handleReviewTextChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>

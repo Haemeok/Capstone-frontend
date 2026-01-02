@@ -11,7 +11,7 @@ import {
 } from "./api";
 import { Recipe, RecipeStatus } from "./types";
 
-export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
+export const useRecipeDetailQuery = (id: string, initialData?: Recipe) => {
   const {
     data: recipeData,
     isLoading,
@@ -20,7 +20,7 @@ export const useRecipeDetailQuery = (id: number, initialData?: Recipe) => {
     error,
     refetch,
   } = useSuspenseQuery<Recipe, Error>({
-    queryKey: ["recipe", id.toString()],
+    queryKey: ["recipe", id],
     queryFn: () => getRecipe(id),
     retry: false,
     initialData,
@@ -72,9 +72,9 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
   };
 };
 
-export const useRecipeStatusQuery = (id: number) => {
+export const useRecipeStatusQuery = (id: string) => {
   return useQuery<RecipeStatus>({
-    queryKey: ["recipe-status", id.toString()],
+    queryKey: ["recipe-status", id],
     queryFn: () => getRecipeStatus(id),
     staleTime: 30000,
     refetchOnWindowFocus: true,

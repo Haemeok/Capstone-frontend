@@ -7,7 +7,7 @@ import { useToastStore } from "@/widgets/Toast/model/store";
 import { postComment } from "./api";
 import { PostCommentParams } from "./types";
 
-const useCreateCommentMutation = (recipeId: number) => {
+const useCreateCommentMutation = (recipeId: string) => {
   const queryClient = useQueryClient();
   const { addToast } = useToastStore();
   const { mutate: createComment } = useMutation<
@@ -17,12 +17,11 @@ const useCreateCommentMutation = (recipeId: number) => {
   >({
     mutationFn: (params: PostCommentParams) => postComment(params),
     onSuccess: () => {
-      const recipeIdString = recipeId.toString();
       queryClient.invalidateQueries({
-        queryKey: ["comments", recipeIdString],
+        queryKey: ["comments", recipeId],
       });
       queryClient.invalidateQueries({
-        queryKey: ["recipe-status", recipeIdString],
+        queryKey: ["recipe-status", recipeId],
       });
       addToast({
         message: "댓글이 등록되었습니다.",

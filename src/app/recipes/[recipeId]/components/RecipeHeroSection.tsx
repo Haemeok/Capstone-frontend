@@ -7,7 +7,6 @@ type RecipeHeroSectionProps = {
   title: string;
   avgRating: number;
   ratingCount: number;
-  recipeId: number;
 };
 
 export default function RecipeHeroSection({
@@ -15,13 +14,12 @@ export default function RecipeHeroSection({
   title,
   avgRating,
   ratingCount,
-  recipeId,
 }: RecipeHeroSectionProps) {
   return (
     <section className="flex flex-col items-center justify-center bg-white">
       <div
         id="recipe-hero-image"
-        className="relative w-full sm:max-w-[768px] md:max-w-[550px] overflow-hidden md:mt-4 md:w-1/2 md:rounded-2xl"
+        className="relative w-full overflow-hidden sm:max-w-[768px] md:mt-4 md:w-1/2 md:max-w-[550px] md:rounded-2xl"
       >
         <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 h-32 bg-gradient-to-b from-black/60 to-transparent md:hidden" />
         <OptimizedImage
@@ -35,11 +33,7 @@ export default function RecipeHeroSection({
         />
       </div>
 
-      <RecipeRatingButton
-        avgRating={avgRating}
-        ratingCount={ratingCount}
-        recipeId={recipeId}
-      />
+      <RecipeRatingButton avgRating={avgRating} ratingCount={ratingCount} />
     </section>
   );
 }
