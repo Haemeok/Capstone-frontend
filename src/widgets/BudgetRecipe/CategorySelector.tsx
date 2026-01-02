@@ -1,5 +1,6 @@
 "use client";
 
+import { Check } from "lucide-react";
 import { getCategoriesForBudget } from "@/shared/config/constants/budget";
 
 type CategorySelectorProps = {
@@ -16,7 +17,7 @@ const CategorySelector = ({
   const categories = getCategoriesForBudget(budget);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="text-center">
         <h2 className="text-xl font-bold text-gray-900">
           어떤 음식이 땡기시나요?
@@ -26,21 +27,37 @@ const CategorySelector = ({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => onChange(category.value)}
-            className={`flex items-center gap-3 rounded-lg border-2 px-4 py-3 text-left transition-all ${
-              selectedCategory === category.value
-                ? "border-olive-light bg-olive-light text-white shadow-md"
-                : "border-gray-200 bg-white text-gray-700 hover:border-olive-light hover:bg-olive-light/10"
-            }`}
-          >
-            <span className="text-2xl">{category.emoji}</span>
-            <span className="font-medium">{category.label}</span>
-          </button>
-        ))}
+      <div className="grid grid-cols-2 gap-3">
+        {categories.map((category) => {
+          const isSelected = selectedCategory === category.value;
+
+          return (
+            <button
+              key={category.id}
+              onClick={() => onChange(category.value)}
+              className={`relative flex flex-col items-center gap-2 rounded-xl border-2 px-4 py-5 transition-all active:scale-95 ${
+                isSelected
+                  ? "border-olive-light bg-olive-light/10 shadow-md"
+                  : "hover:border-olive-light border-gray-200 bg-white hover:scale-[1.02] hover:shadow-sm"
+              }`}
+            >
+              {isSelected && (
+                <div className="bg-olive-light absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full">
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                </div>
+              )}
+
+              <span className="text-3xl">{category.emoji}</span>
+              <span
+                className={`text-center text-sm font-semibold ${
+                  isSelected ? "text-olive-light" : "text-gray-700"
+                }`}
+              >
+                {category.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,17 +1,11 @@
 "use client";
 
-import { TrendingDown, Sparkles } from "lucide-react";
 import { Slider } from "@/shared/ui/shadcn/slider";
 import {
   BUDGET_MIN,
   BUDGET_MAX,
   BUDGET_STEP,
-  AVERAGE_MEAL_PRICE,
 } from "@/shared/config/constants/budget";
-import {
-  calculateSavings,
-  calculateMonthlySavings,
-} from "@/shared/lib/budget/calculations";
 
 type PriceSliderProps = {
   value: number;
@@ -23,56 +17,27 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
     onChange(values[0]);
   };
 
-  const savings = calculateSavings(value);
-  const monthlySavings = calculateMonthlySavings(value);
-
   return (
     <div className="space-y-6">
-      <div className="space-y-2 text-center">
+      <div className="space-y-3 text-center">
         <p className="text-sm font-medium text-gray-600">목표 예산</p>
-        <div className="text-4xl font-bold text-olive-medium">
+        <div className="text-5xl font-black text-olive-light transition-all duration-300">
           {value.toLocaleString()}원
         </div>
       </div>
 
-      <div className="px-4">
+      <div className="px-2 py-4">
         <Slider
           min={BUDGET_MIN}
           max={BUDGET_MAX}
           step={BUDGET_STEP}
           value={[value]}
           onValueChange={handleValueChange}
-          className="[&>*[data-slot=slider-track]]:bg-gray-200 [&>*[data-slot=slider-range]]:bg-olive-medium [&>*[data-slot=slider-thumb]]:border-olive-medium [&>*[data-slot=slider-thumb]]:bg-white"
         />
-        <div className="mt-2 flex justify-between text-xs text-gray-400">
+        <div className="mt-3 flex justify-between text-xs font-medium text-gray-500">
           <span>{BUDGET_MIN.toLocaleString()}원</span>
           <span>{BUDGET_MAX.toLocaleString()}원</span>
         </div>
-      </div>
-
-      <div className="space-y-2 text-center">
-        {savings <= 0 ? (
-          <p className="text-sm text-gray-500">
-            직장인 평균 한끼 예산({AVERAGE_MEAL_PRICE.toLocaleString()}원)이에요
-          </p>
-        ) : (
-          <div className="flex flex-col gap-1">
-            <p className="text-sm font-medium text-gray-600">
-              직장인 평균 한끼보다{" "}
-              <span className="font-bold text-olive-medium">
-                {savings.toLocaleString()}원
-              </span>{" "}
-              절약해요
-            </p>
-            <p className="text-xs text-gray-500">
-              매일 드시면 한 달에{" "}
-              <span className="font-bold text-olive-medium">
-                {Math.floor(monthlySavings / 10000)}만 원
-              </span>{" "}
-              아껴요!
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );

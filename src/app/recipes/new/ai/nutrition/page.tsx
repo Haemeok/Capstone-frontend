@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ChefHat, Info } from "lucide-react";
+import { ArrowLeft, ChefHat } from "lucide-react";
 
 import { Container } from "@/shared/ui/Container";
 import { useCreateAIRecipeMutation } from "@/features/recipe-create-ai";
@@ -29,9 +29,24 @@ type NutritionFormValues = {
 };
 
 const STYLES = [
-  { value: "Asian_Style", label: "🍚 아시안 스타일" },
-  { value: "Western_Style", label: "🍝 양식 스타일" },
-  { value: "Light_Fresh", label: "🥗 가볍고 신선하게" },
+  {
+    value: "Asian_Style",
+    icon: "🥢",
+    label: "아시안 스타일",
+    description: "한식, 중식, 일식",
+  },
+  {
+    value: "Western_Style",
+    icon: "🥩",
+    label: "양식 스타일",
+    description: "이탈리안, 프렌치",
+  },
+  {
+    value: "Light_Fresh",
+    icon: "🥗",
+    label: "가볍고 신선하게",
+    description: "샐러드, 건강식",
+  },
 ];
 
 const NutritionRecipePage = () => {
@@ -130,7 +145,7 @@ const NutritionRecipePage = () => {
     <Container padding={false}>
       <div className="mx-auto bg-[#f7f7f7] p-4">
         <div className="mb-4 flex items-center gap-2">
-          <PrevButton className="md:hidden" />
+          <PrevButton className="text-gray-600 md:hidden" />
           <button
             onClick={() => router.back()}
             className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
@@ -153,19 +168,31 @@ const NutritionRecipePage = () => {
             <label className="block text-sm font-bold text-gray-700">
               요리 스타일
             </label>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-3 gap-3">
               {STYLES.map((style) => (
                 <button
                   key={style.value}
                   type="button"
                   onClick={() => setValue("targetStyle", style.value)}
-                  className={`flex-1 rounded-lg py-3 text-sm font-medium transition-all ${
+                  className={`flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all ${
                     watch("targetStyle") === style.value
-                      ? "bg-olive-medium text-white shadow-md"
-                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                      ? "border-olive-light bg-olive-light/10 shadow-[0_0_0_3px_rgba(145,199,136,0.2)]"
+                      : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
                   }`}
                 >
-                  {style.label}
+                  <span className="text-4xl">{style.icon}</span>
+                  <span
+                    className={`text-sm font-bold text-pretty break-keep ${
+                      watch("targetStyle") === style.value
+                        ? "text-olive-light"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {style.label}
+                  </span>
+                  <span className="text-xs text-pretty break-keep text-gray-500">
+                    {style.description}
+                  </span>
                 </button>
               ))}
             </div>
@@ -176,7 +203,7 @@ const NutritionRecipePage = () => {
               onClick={() => setMode("MACRO")}
               className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all ${
                 mode === "MACRO"
-                  ? "text-olive-medium bg-white shadow-sm"
+                  ? "text-olive-light bg-white shadow-sm"
                   : "text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -186,7 +213,7 @@ const NutritionRecipePage = () => {
               onClick={() => setMode("CALORIE")}
               className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all ${
                 mode === "CALORIE"
-                  ? "text-olive-medium bg-white shadow-sm"
+                  ? "text-olive-light bg-white shadow-sm"
                   : "text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -251,10 +278,10 @@ const NutritionRecipePage = () => {
 
         <button
           onClick={handleSubmit(onSubmit)}
-          className="from-olive-light to-olive-medium flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+          className="bg-olive-light hover:bg-olive-medium flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
         >
           <ChefHat className="h-6 w-6" />
-          <span>건강 식단 생성하기</span>
+          <span>레시피 생성하기</span>
         </button>
       </div>
     </Container>
@@ -263,24 +290,25 @@ const NutritionRecipePage = () => {
 
 const getGuidanceMessage = (name: string, value: number) => {
   if (name === "targetCalories") {
-    if (value < 500)
-      return "다이어트나 가벼운 식사에 적합해요 (성인 여성 한 끼 권장량 이하)";
-    if (value <= 800) return "일반적인 성인 한 끼 식사 권장량이에요";
-    return "활동량이 많거나 벌크업 중인 분들에게 추천해요";
+    if (value < 500) return "⚡ 다이어트 집중 모드!";
+    if (value <= 800) return "🍽️ 딱 좋은 한 끼";
+    if (value <= 1200) return "💪 에너지 충전!";
+    return "🔥 벌크업 가즈아!";
   }
   if (name === "targetProtein") {
-    if (value < 20) return "가볍게 단백질을 보충하고 싶을 때 좋아요";
-    if (value <= 40) return "일반적인 근육 유지 및 회복에 필요한 양이에요";
-    return "고강도 운동 후 근육 합성에 최적화된 양이에요 (체중 1kg당 1.6~2g 권장)";
+    if (value < 20) return "🥗 가벼운 단백질";
+    if (value <= 40) return "💪 균형 잡힌 근육 케어";
+    return "🏋️ 득근 가즈아!";
   }
   if (name === "targetCarbs") {
-    if (value < 50) return "저탄수화물 식단(키토제닉)에 가까워요";
-    if (value <= 100) return "적절한 에너지를 공급하는 균형 잡힌 양이에요";
-    return "에너지 소모가 많은 날 든든하게 챙겨드세요";
+    if (value < 50) return "🔥 저탄고지 모드!";
+    if (value <= 100) return "⚖️ 균형 잡힌 에너지";
+    return "⚡ 에너지 폭발!";
   }
   if (name === "targetFat") {
-    if (value < 15) return "저지방 식단으로 가볍게 즐기세요";
-    return "적당한 지방은 포만감을 오래 유지해줘요";
+    if (value < 15) return "🥗 클린 식단!";
+    if (value <= 30) return "👍 적당한 포만감";
+    return "🧈 건강한 지방 섭취";
   }
   return "";
 };
@@ -316,24 +344,42 @@ const MacroSlider = ({
               <label className="text-sm font-bold text-gray-700">{label}</label>
               <div className="flex items-center gap-3">
                 {!isUnlimited && (
-                  <span className="text-olive-medium font-mono text-lg font-bold">
+                  <span className="text-olive-light font-mono text-lg font-bold">
                     {sliderValue}
                     {unit}
                   </span>
                 )}
-                <button
-                  type="button"
-                  onClick={() =>
-                    field.onChange(isUnlimited ? defaultValue : "제한 없음")
-                  }
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                    isUnlimited
-                      ? "bg-olive-medium text-white"
-                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                  }`}
-                >
-                  상관 없음
-                </button>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-xs font-medium transition-colors ${
+                      isUnlimited ? "text-gray-400" : "text-olive-light"
+                    }`}
+                  >
+                    지정
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      field.onChange(isUnlimited ? defaultValue : "제한 없음")
+                    }
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      isUnlimited ? "bg-olive-light" : "bg-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
+                        isUnlimited ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                  <span
+                    className={`text-xs font-medium transition-colors ${
+                      isUnlimited ? "text-olive-light" : "text-gray-400"
+                    }`}
+                  >
+                    자동
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -347,7 +393,6 @@ const MacroSlider = ({
                 value={[sliderValue]}
                 onValueChange={handleSliderChange}
                 disabled={isUnlimited}
-                className="[&>*[data-slot=slider-range]]:bg-olive-medium [&>*[data-slot=slider-thumb]]:border-olive-medium [&>*[data-slot=slider-thumb]]:bg-white [&>*[data-slot=slider-track]]:bg-gray-200"
               />
               <div className="mt-1 flex justify-between text-xs text-gray-400">
                 <span>0{unit}</span>
@@ -358,9 +403,10 @@ const MacroSlider = ({
               </div>
 
               {guidance && (
-                <div className="bg-olive-light/10 animate-in fade-in slide-in-from-top-1 mt-3 flex items-start gap-2 rounded-lg p-3 text-xs text-gray-600">
-                  <Info className="text-olive-medium h-4 w-4 shrink-0" />
-                  <span>{guidance}</span>
+                <div className="animate-in fade-in slide-in-from-top-1 mt-3 flex justify-center">
+                  <span className="inline-block rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-bold text-gray-600">
+                    {guidance}
+                  </span>
                 </div>
               )}
             </div>

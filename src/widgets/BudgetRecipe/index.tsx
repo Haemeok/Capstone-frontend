@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ChefHat } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ChefHat, ArrowLeft } from "lucide-react";
 
 import BudgetHeader from "./BudgetHeader";
 import PriceSlider from "./PriceSlider";
@@ -18,6 +19,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
 
 const BudgetRecipe = () => {
+  const router = useRouter();
   const [budget, setBudget] = useState(BUDGET_DEFAULT);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -79,13 +81,20 @@ const BudgetRecipe = () => {
 
   return (
     <Container padding={false}>
-      <div className="mx-auto max-w-2xl space-y-8 px-4">
-        <div className="md:hidden">
-          <PrevButton />
+      <div className="mx-auto max-w-2xl space-y-6 p-4">
+        <div className="mb-4 flex items-center gap-2">
+          <PrevButton className="text-gray-600 md:hidden" />
+          <button
+            onClick={() => router.back()}
+            className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
+          >
+            <ArrowLeft size={20} />
+            <span className="text-sm font-medium">AI 다시 선택하기</span>
+          </button>
         </div>
         <BudgetHeader />
 
-        <div className="space-y-6 rounded-2xl bg-white p-6 shadow-lg">
+        <div className="space-y-4 rounded-2xl bg-white p-6 shadow-lg">
           <PriceSlider value={budget} onChange={setBudget} />
         </div>
 
@@ -100,7 +109,7 @@ const BudgetRecipe = () => {
         <button
           onClick={handleGenerateRecipe}
           disabled={!selectedCategory}
-          className="from-olive-light to-olive-medium flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-lg"
+          className="bg-olive-light hover:bg-olive-medium flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-lg"
         >
           <ChefHat className="h-6 w-6" />
           <span>레시피 생성하기</span>

@@ -44,8 +44,8 @@ const IngredientRecipePage = () => {
   const methods = useForm<AIRecipeFormValues>({
     defaultValues: {
       ingredients: [],
-      dishType: "메인요리",
-      cookingTime: 30,
+      dishType: "",
+      cookingTime: 0,
       servings: 1,
     },
   });
@@ -58,10 +58,11 @@ const IngredientRecipePage = () => {
   const handleAddIngredient = (ingredient: AIIngredientPayload) => {
     const currentIngredients = methods.getValues("ingredients");
     if (!currentIngredients.some((ing) => ing.id === ingredient.id)) {
-      methods.setValue("ingredients", [
-        ...currentIngredients,
-        { id: ingredient.id, name: ingredient.name },
-      ]);
+      methods.setValue(
+        "ingredients",
+        [...currentIngredients, { id: ingredient.id, name: ingredient.name }],
+        { shouldValidate: true, shouldDirty: true }
+      );
     }
   };
 

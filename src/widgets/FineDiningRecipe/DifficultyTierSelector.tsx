@@ -23,7 +23,7 @@ const DifficultyTierSelector = ({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-2 gap-3 md:gap-6">
         {FINE_DINING_TIERS.map((option) => (
           <button
             key={option.value}
@@ -49,22 +49,24 @@ const DifficultyTierSelector = ({
               )}
             </div>
 
-            <div className="flex flex-col p-6 text-left">
+            <div className="flex flex-col p-4 text-left md:p-6">
               <h4
                 className={cn(
-                  "mb-2 text-xl font-bold transition-colors",
+                  "mb-2 text-lg font-bold transition-colors md:text-xl",
                   selected === option.value ? "text-gray-900" : "text-gray-700"
                 )}
               >
                 {option.label}
               </h4>
-              <p className="mb-4 text-sm text-gray-500">{option.description}</p>
+              <p className="mb-3 text-xs text-gray-500 md:mb-4 md:text-sm">
+                {option.description}
+              </p>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5 md:space-y-2">
                 {option.features.map((feature, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-2 text-sm text-gray-600"
+                    className="flex items-start gap-2 text-xs text-gray-600 md:text-sm"
                   >
                     <span className="mt-0.5 text-gray-400">•</span>
                     <span>{feature}</span>
