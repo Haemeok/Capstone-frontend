@@ -6,7 +6,7 @@ export type RecipeRecordResponse = {
 };
 
 export type RecipeCompletionState = {
-  recipeId: number;
+  recipeId: string;
   recordId: number;
   savedAmount: number;
   completedAt: string;
@@ -16,7 +16,7 @@ export type RecipeHistoryDetailResponse = {
   marketPrice: number;
   ingredientCost: number;
   nutrition: Nutrition;
-  recipeId: number;
+  recipeId: string;
   recipeTitle: string;
   imageUrl: string;
   calories: number;

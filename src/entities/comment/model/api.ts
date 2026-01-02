@@ -15,7 +15,7 @@ export const getComments = async ({
 }: {
   pageParam: number;
   sort: string;
-  recipeId: number;
+  recipeId: string;
 }) => {
   const apiParams: BaseQueryParams = {
     page: pageParam,
@@ -38,8 +38,8 @@ export const getReplies = async ({
   commentId,
 }: {
   pageParam: number;
-  recipeId: number;
-  commentId: number;
+  recipeId: string;
+  commentId: string;
 }) => {
   const apiParams: BaseQueryParams = {
     page: pageParam,

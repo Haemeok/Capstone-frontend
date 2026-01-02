@@ -16,7 +16,7 @@ import { RecipePayload } from "./types";
 import { RecipeHistoryResponse } from "@/entities/user/model/types";
 import { RecipeHistoryDetailResponse } from "./record";
 
-export const getRecipe = async (id: number) => {
+export const getRecipe = async (id: string) => {
   const response = await api.get<Recipe>(END_POINTS.RECIPE(id));
   return response;
 };
@@ -72,7 +72,7 @@ export const postRecipe = async ({ recipe, files }: RecipeSubmitData) => {
 };
 
 type RecipeEditData = RecipeSubmitData & {
-  recipeId: number;
+  recipeId: string;
   isIngredientsModified?: boolean;
 };
 
@@ -91,13 +91,13 @@ export const editRecipe = async ({
   });
 };
 
-export const getRecipeStatus = async (id: number): Promise<RecipeStatus> => {
+export const getRecipeStatus = async (id: string): Promise<RecipeStatus> => {
   const response = await api.get<RecipeStatus>(`/v2/recipes/${id}/status`);
   return response;
 };
 
 export const getRecipesStatus = async (
-  recipeIds: number[]
+  recipeIds: string[]
 ): Promise<RecipesStatusResponse> => {
   const response = await api.post<RecipesStatusResponse>(`/v2/recipes/status`, {
     recipeIds,

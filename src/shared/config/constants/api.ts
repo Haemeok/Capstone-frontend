@@ -7,7 +7,7 @@ const REDIRECT_URI =
     : "http://localhost:3000/login/oauth2/code/google";
 
 export const END_POINTS = {
-  RECIPE: (id: number) => `/recipes/${id}`,
+  RECIPE: (id: string) => `/recipes/${id}`,
   RECIPES: "/recipes",
   RECIPE_AI: "/recipes/ai",
   RECIPES_SIMPLE: "/recipes/simple",
@@ -19,17 +19,17 @@ export const END_POINTS = {
     `/recipes/category/${categorySlug}`,
   INGREDIENTS: "/ingredients",
   SEARCH_INGREDIENTS: "/search/ingredients",
-  INGREDIENTS_BY_ID: (id: number) => `/ingredients/${id}`,
-  RECIPE_COMMENT: (id: number) => `/recipes/${id}/comments`,
-  RECIPE_COMMENT_BY_ID: (recipeId: number, commentId: number) =>
+  INGREDIENTS_BY_ID: (id: string) => `/ingredients/${id}`,
+  RECIPE_COMMENT: (id: string) => `/recipes/${id}/comments`,
+  RECIPE_COMMENT_BY_ID: (recipeId: string, commentId: string) =>
     `/recipes/${recipeId}/comments/${commentId}`,
-  RECIPE_REPLY: (recipeId: number, commentId: number) =>
+  RECIPE_REPLY: (recipeId: string, commentId: string) =>
     `/recipes/${recipeId}/comments/${commentId}/replies`,
-  RECIPE_LIKE: (id: number) => `/recipes/${id}/like`,
-  COMMENT_LIKE: (id: number) => `/comments/${id}/like`,
-  RECIPE_FAVORITE: (id: number) => `/recipes/${id}/favorite`,
-  RECIPE_VISIBILITY: (id: number) => `/recipes/${id}/private`,
-  RECIPE_FINALIZE: (id: number) => `/recipes/${id}/finalize`,
+  RECIPE_LIKE: (id: string) => `/recipes/${id}/like`,
+  COMMENT_LIKE: (id: string) => `/comments/${id}/like`,
+  RECIPE_FAVORITE: (id: string) => `/recipes/${id}/favorite`,
+  RECIPE_VISIBILITY: (id: string) => `/recipes/${id}/private`,
+  RECIPE_FINALIZE: (id: string) => `/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `/oauth2/authorization/google`,
   KAKAO_LOGIN: `/api/auth/login/kakao`,
   NAVER_LOGIN: `/api/auth/login/naver`,
@@ -37,21 +37,21 @@ export const END_POINTS = {
   KAKAO_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/kakao`,
   NAVER_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/naver`,
   TOKEN_REFRESH: "/token/refresh",
-  USER_INFO: (userId: number) => `/users/${userId}`,
+  USER_INFO: (userId: string) => `/users/${userId}`,
   MY_FAVORITES: "/me/favorites",
   MY_INGREDIENT_RECIPES: "/me/fridge/recipes",
   MY_INFO: "/me",
   MY_INGREDIENTS: "/me/fridge/items",
-  MY_INGREDIENTS_BY_ID: (id: number) => `/me/fridge/items/${id}`,
+  MY_INGREDIENTS_BY_ID: (id: string) => `/me/fridge/items/${id}`,
   MY_INGREDIENTS_BULK: "/me/fridge/items/bulk",
   MY_INGREDIENTS_IDS: "/me/fridge/items/ids",
-  USER_RECIPES: (id: number) => `/users/${id}/recipes`,
+  USER_RECIPES: (id: string) => `/users/${id}/recipes`,
   USER_STREAK: "/me/streak",
   PRESIGNED_URLS: "/recipes/presigned-urls",
-  USER_PRESIGNED_URLS: (userId: number) =>
+  USER_PRESIGNED_URLS: (userId: string) =>
     `/users/${userId}/profile-image/presign`,
   RECIPE_HISTORY: "/me/calendar",
-  RATING: (recipeId: number) => `/ratings/recipe/${recipeId}`,
+  RATING: (recipeId: string) => `/ratings/recipe/${recipeId}`,
   LOGOUT: "/token/logout",
   RECIPES_BY_TAG: () => "/recipes/by-tag",
   MY_SURVEY: "/me/survey",

@@ -6,13 +6,13 @@ export const STORAGE_KEYS = {
 export const MAX_RECENT_AI_RECIPES = 10;
 
 export type AIRecentRecipeItem = {
-  recipeId: number;
+  recipeId: string;
   aiModelId: string;
   timestamp: number;
   title: string;
   imageUrl: string;
   authorName: string;
-  authorId: number;
+  authorId: string;
   profileImage: string;
   cookingTime?: number;
   createdAt: string;

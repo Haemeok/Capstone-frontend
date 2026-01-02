@@ -4,7 +4,7 @@ import RecipeInteractionButtons from "@/widgets/RecipeInteractionButtons";
 
 import { StaticRecipe } from "@/entities/recipe/model/types";
 
-import { useRecipeStatus } from "./RecipeStatusProvider";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type RecipeInteractionBarProps = {
   staticRecipe: StaticRecipe;

@@ -14,17 +14,16 @@ type RecipeEditPageProps = {
 
 const RecipeEditPage = async ({ params }: RecipeEditPageProps) => {
   const { recipeId } = await params;
-  const numericRecipeId = Number(recipeId);
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["recipe", numericRecipeId.toString()],
-    queryFn: () => getrecipionServer(numericRecipeId),
+    queryKey: ["recipe", recipeId],
+    queryFn: () => getrecipionServer(Number(recipeId)),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <RecipeEditClient recipeId={numericRecipeId} />
+      <RecipeEditClient recipeId={recipeId} />
     </HydrationBoundary>
   );
 };

@@ -8,7 +8,7 @@ import ToggleIconButton from "@/shared/ui/ToggleIconButton";
 import useRecipeVisibilityMutation from "../model/useRecipeVisibilityMutation";
 
 type LockButtonProps = {
-  recipeId: number;
+  recipeId: string;
   initialIsLocked: boolean;
 };
 

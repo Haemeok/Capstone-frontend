@@ -15,19 +15,16 @@ import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { useDeleteCommentMutation } from "@/features/comment-delete";
 import CommentLikeButton from "@/features/comment-like/ui/CommentLikeButton";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type CommentProps = {
   comment: Comment;
   hideReplyButton?: boolean;
-  recipeId: number;
 };
 
-const CommentCard = ({
-  comment,
-  hideReplyButton = false,
-  recipeId,
-}: CommentProps) => {
+const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
   const { user } = useUserStore();
+  const { recipeId } = useRecipeStatus();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { mutate: deleteComment } = useDeleteCommentMutation(

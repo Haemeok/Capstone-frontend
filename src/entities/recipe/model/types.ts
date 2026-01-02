@@ -12,11 +12,11 @@ export type IngredientRecipesApiResponse =
   PageResponse<IngredientRecipeGridItem>;
 
 export type BaseRecipeGridItem = {
-  id: number;
+  id: string;
   title: string;
   imageUrl: string;
   authorName: string;
-  authorId: number;
+  authorId: string;
   profileImage: string;
   cookingTime?: number;
   createdAt: string;
@@ -41,7 +41,7 @@ export type IngredientRecipeGridItem = DetailedRecipeGridItem & {
 };
 
 export type Recipe = {
-  id: number;
+  id: string;
   title: string;
   dishType: string;
   description: string;
@@ -180,7 +180,7 @@ export type RecipeItemsQueryParams = {
   dishType?: string | null;
   maxCost?: number;
   period?: "weekly" | "monthly";
-  recipeId?: number;
+  recipeId?: string;
 };
 
 export type StaticRecipe = Omit<

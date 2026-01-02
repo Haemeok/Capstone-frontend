@@ -16,7 +16,7 @@ import { RecipeLikeButton } from "@/features/recipe-like";
 
 type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
-  setIsDrawerOpen: (id: number) => void;
+  setIsDrawerOpen: (id: string) => void;
   priority?: boolean;
   prefetch?: boolean;
 };
@@ -30,7 +30,7 @@ const SimpleRecipeGridItem = ({
   const params = useParams();
   const { user: loggedInUser } = useUserStore();
 
-  const profileUserId = params?.userId ? Number(params.userId) : null;
+  const profileUserId = params?.userId ? params.userId : null;
   const isOnOwnProfile = loggedInUser?.id === profileUserId;
   const showActionButton = isOnOwnProfile;
   console.log(profileUserId, isOnOwnProfile, showActionButton);

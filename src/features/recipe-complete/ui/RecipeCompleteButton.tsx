@@ -7,23 +7,20 @@ import { cn } from "@/lib/utils";
 
 import { useRecipeComplete } from "../model/hooks";
 import { LevelUpModal } from "@/features/level-up";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type RecipeCompleteButtonProps = {
-  recipeId: number;
   saveAmount: number;
   className?: string;
 };
 
 const RecipeCompleteButton = ({
-  recipeId,
   saveAmount,
   className,
 }: RecipeCompleteButtonProps) => {
+  const { recipeId } = useRecipeStatus();
   const { completeRecipe, isCompleted, isLoading, showReward, setShowReward } =
-    useRecipeComplete({
-      recipeId,
-      saveAmount,
-    });
+    useRecipeComplete({ recipeId, saveAmount });
 
   const handleClick = () => {
     if (isCompleted || isLoading) return;

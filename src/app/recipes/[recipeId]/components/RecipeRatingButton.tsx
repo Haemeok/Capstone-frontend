@@ -5,21 +5,22 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/entities/user/model/store";
 import Ratings from "@/shared/ui/Ratings";
 import { useToastStore } from "@/widgets/Toast/model/store";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type RecipeRatingButtonProps = {
   avgRating: number;
   ratingCount: number;
-  recipeId: number;
 };
 
 export default function RecipeRatingButton({
   avgRating,
   ratingCount,
-  recipeId,
 }: RecipeRatingButtonProps) {
-  const router = useRouter();
   const { user } = useUserStore();
   const { addToast } = useToastStore();
+  const { recipeId } = useRecipeStatus();
+
+  const router = useRouter();
 
   const handleRatingClick = () => {
     if (!user) {
@@ -35,7 +36,7 @@ export default function RecipeRatingButton({
   };
 
   return (
-    <div onClick={handleRatingClick} className="mt-4 p-2 w-fit cursor-pointer">
+    <div onClick={handleRatingClick} className="mt-4 w-fit cursor-pointer p-2">
       <Ratings
         precision={0.1}
         allowHalf

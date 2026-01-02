@@ -3,7 +3,7 @@ import ShareButton from "@/shared/ui/ShareButton";
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
 
 type RecipeNavBarButtonsProps = {
-  recipeId: number;
+  recipeId: string;
   initialIsLiked: boolean;
   initialLikeCount: number;
 };

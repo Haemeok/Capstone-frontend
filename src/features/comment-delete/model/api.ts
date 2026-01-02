@@ -5,8 +5,8 @@ export const deleteComment = async ({
   recipeId,
   commentId,
 }: {
-  recipeId: number;
-  commentId: number;
+  recipeId: string;
+  commentId: string;
 }) => {
   const END_POINT = END_POINTS.RECIPE_COMMENT_BY_ID(recipeId, commentId);
   const response = await api.delete(END_POINT);

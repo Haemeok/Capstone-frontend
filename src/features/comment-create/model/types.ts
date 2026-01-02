@@ -1,5 +1,5 @@
 export type PostCommentParams = {
-  recipeId: number;
-  commentId?: number;
+  recipeId: string;
+  commentId?: string;
   comment: string;
 };

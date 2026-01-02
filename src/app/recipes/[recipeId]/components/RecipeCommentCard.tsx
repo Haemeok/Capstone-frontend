@@ -4,17 +4,13 @@ import { CommentCard } from "@/features/comment-card";
 
 import { Comment } from "@/entities/comment";
 
-import { useRecipeStatus } from "./RecipeStatusProvider";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type RecipeCommentCardProps = {
   comment: Omit<Comment, "likedByCurrentUser" | "likeCount">;
-  recipeId: number;
 };
 
-export default function RecipeCommentCard({
-  comment,
-  recipeId,
-}: RecipeCommentCardProps) {
+export default function RecipeCommentCard({ comment }: RecipeCommentCardProps) {
   const { status } = useRecipeStatus();
 
   const statusComment = status?.comments.find((c) => c.id === comment.id);
@@ -24,7 +20,5 @@ export default function RecipeCommentCard({
     likeCount: statusComment?.likeCount ?? 0,
   };
 
-  return (
-    <CommentCard comment={fullComment} recipeId={recipeId} hideReplyButton />
-  );
+  return <CommentCard comment={fullComment} hideReplyButton />;
 }

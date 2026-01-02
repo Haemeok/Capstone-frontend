@@ -7,7 +7,7 @@ import { deleteComment } from "./api";
 
 export const useDeleteCommentMutation = (
   commentId: number,
-  recipeId: number
+  recipeId: string
 ) => {
   const queryClient = useQueryClient();
   const { addToast, removeToast } = useToastStore();

@@ -8,15 +8,16 @@ import { useUserStore } from "@/entities/user/model/store";
 
 import useCreateCommentMutation from "@/features/comment-create/model/hooks";
 import CommentInputForm from "./CommentInputForm";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type CommentInputProps = {
   author: User | undefined;
-  commentId?: number;
+  commentId?: string;
 };
 
 const CommentInput = ({ author, commentId }: CommentInputProps) => {
-  const { recipeId } = useParams();
-  const { createComment } = useCreateCommentMutation(Number(recipeId));
+  const { recipeId } = useRecipeStatus();
+  const { createComment } = useCreateCommentMutation(recipeId);
   const { user } = useUserStore();
   const { setInputFocused } = useInputFocusStore();
 
@@ -24,7 +25,7 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
     if (!recipeId || !user?.id) return;
 
     createComment({
-      recipeId: Number(recipeId),
+      recipeId,
       comment,
       commentId,
     });
@@ -39,7 +40,7 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
   };
 
   return (
-    <div className="md:hidden fixed right-0 bottom-20 left-0 mx-4 rounded-2xl border-t bg-white px-2 py-1 shadow-md">
+    <div className="fixed right-0 bottom-20 left-0 mx-4 rounded-2xl border-t bg-white px-2 py-1 shadow-md md:hidden">
       <div className="mx-auto max-w-3xl">
         <CommentInputForm
           author={author}

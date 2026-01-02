@@ -16,11 +16,24 @@ export const useRecipeItemsQuery = ({
   maxCost,
   period,
 }: RecipeItemsQueryParams) => {
-  const queryKey = ["recipes", key, { sort, isAiGenerated, tags, q, dishType, maxCost, period }];
+  const queryKey = [
+    "recipes",
+    key,
+    { sort, isAiGenerated, tags, q, dishType, maxCost, period },
+  ];
 
   const query = useQuery({
     queryKey,
-    queryFn: () => getRecipeItems({ sort, isAiGenerated, tags, q, dishType, maxCost, period }),
+    queryFn: () =>
+      getRecipeItems({
+        sort,
+        isAiGenerated,
+        tags,
+        q,
+        dishType,
+        maxCost,
+        period,
+      }),
     select: (data) => data.content,
   });
 
@@ -30,7 +43,7 @@ export const useRecipeItemsQuery = ({
   };
 };
 
-export const useRecipesStatusQuery = (recipeIds: number[]) => {
+export const useRecipesStatusQuery = (recipeIds: string[]) => {
   return useQuery({
     queryKey: ["recipes-status", recipeIds],
     queryFn: () => getRecipesStatus(recipeIds),

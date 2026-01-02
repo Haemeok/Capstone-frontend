@@ -9,8 +9,8 @@ import SlideShowHeader from "@/widgets/SlideShowHeader";
 
 const RecipeSlideShowPage = () => {
   const router = useRouter();
-  const { recipeId } = useParams();
-  const { recipeData: recipe } = useRecipeDetailQuery(Number(recipeId));
+  const { recipeId } = useParams<{ recipeId: string }>();
+  const { recipeData: recipe } = useRecipeDetailQuery(recipeId);
 
   const handleRateClick = () => {
     router.push(`/recipes/${recipe.id}/rate`);

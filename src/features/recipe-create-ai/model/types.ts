@@ -43,5 +43,5 @@ export type AIModelRequestMap = {
 };
 
 export type AIRecommendedRecipe = {
-  recipeId: number;
+  recipeId: string;
 };

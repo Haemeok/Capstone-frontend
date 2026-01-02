@@ -105,12 +105,10 @@ export const getrecipionServer = async (id: number): Promise<Recipe | null> => {
 };
 
 export const getStaticrecipionServer = async (
-  id: number
+  id: string
 ): Promise<StaticRecipe | null> => {
   const API_URL = `${BASE_API_URL}/v2/recipes/${id}`;
-  if (isNaN(id) || id <= 0) {
-    return null;
-  }
+
   try {
     const res = await fetch(API_URL, {
       next: {
@@ -138,11 +136,11 @@ export const getStaticrecipionServer = async (
 const REVALIDATE_TIME_SECONDS = 3600;
 
 export const fetchAllRecipesForSitemap = async (): Promise<
-  Array<{ id: number; createdAt: string; imageUrl: string }>
+  Array<{ id: string; createdAt: string; imageUrl: string }>
 > => {
   const SITEMAP_PAGE_SIZE = 100;
   const MAX_PAGES = 500;
-  const allRecipes: Array<{ id: number; createdAt: string; imageUrl: string }> =
+  const allRecipes: Array<{ id: string; createdAt: string; imageUrl: string }> =
     [];
 
   try {
@@ -258,7 +256,7 @@ export const getStaticRecipesOnServer = async (
   }
 };
 export const getRecommendedRecipesOnServer = async (
-  recipeId: number
+  recipeId: string
 ): Promise<StaticDetailedRecipeGridItem[]> => {
   const endpoint = `/recipes/${recipeId}/recommendations`;
   const cacheTags = [

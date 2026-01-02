@@ -79,7 +79,7 @@ export const handleS3Upload = async (
   return uploadResults;
 };
 
-export const getPresignedUrl = async (userId: number, contentType: string) => {
+export const getPresignedUrl = async (userId: string, contentType: string) => {
   const response = await apiClient<PresignedUrlInfo>(
     `${END_POINTS.USER_PRESIGNED_URLS(userId)}?contentType=${encodeURIComponent(contentType)}`,
     { method: "GET" }

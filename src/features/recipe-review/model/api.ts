@@ -6,7 +6,7 @@ export const postCommentWithRating = async ({
   rating,
   comment,
 }: {
-  recipeId: number;
+  recipeId: string;
   rating: number;
   comment: string;
 }) => {

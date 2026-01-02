@@ -19,7 +19,7 @@ export const useSubmitRecipe = () => {
   } = useMutation({
     mutationFn: async (variables: {
       formData: RecipeFormValues;
-      recipeId?: number;
+      recipeId?: string;
       isIngredientsModified?: boolean;
     }) => {
       const { formData, recipeId, isIngredientsModified } = variables;
@@ -49,7 +49,7 @@ export const useSubmitRecipe = () => {
 
       if (recipeId) {
         queryClient.invalidateQueries({
-          queryKey: ["recipe", recipeId.toString()],
+          queryKey: ["recipe", recipeId],
         });
       }
 

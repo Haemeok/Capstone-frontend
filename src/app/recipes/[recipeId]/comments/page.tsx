@@ -19,11 +19,12 @@ import { useRecipeDetailQuery } from "@/entities/recipe";
 import CommentCard from "@/features/comment-card/ui/CommentCard";
 import { CommentInput } from "@/features/comment-create";
 import CommentInputModal from "@/features/comment-create/ui/CommentInputModal";
+import { RecipeStatusProvider } from "@/features/recipe-status";
 
 const CommentsPage = () => {
   const [sort, setSort] = useState<string>("최신순");
   const { recipeId } = useParams<{ recipeId: string }>();
-  const { recipeData } = useRecipeDetailQuery(Number(recipeId));
+  const { recipeData } = useRecipeDetailQuery(recipeId);
   const author = recipeData.author;
   const { data, hasNextPage, isFetchingNextPage, ref } = useInfiniteScroll<
     CommentsApiResponse,
@@ -36,7 +37,7 @@ const CommentsPage = () => {
     queryFn: ({ pageParam }) =>
       getComments({
         sort: SORT_TYPE_CODES[sort as keyof typeof SORT_TYPE_CODES],
-        recipeId: Number(recipeId),
+        recipeId,
         pageParam,
       }),
     getNextPageParam: getNextPageParam,
@@ -46,7 +47,8 @@ const CommentsPage = () => {
   const comments = data?.pages.flatMap((page) => page.content);
 
   return (
-    <div className="relative h-full pb-10">
+    <RecipeStatusProvider recipeId={recipeId}>
+      <div className="relative h-full pb-10">
       <Container padding={false}>
         <header className="z-sticky sticky-optimized sticky top-0 border-b bg-white px-4 py-3">
           <div className="flex max-w-3xl items-center">
@@ -91,7 +93,6 @@ const CommentsPage = () => {
                 key={comment.id}
                 comment={comment}
                 hideReplyButton={false}
-                recipeId={Number(recipeId)}
               />
             ))}
           </div>
@@ -121,6 +122,7 @@ const CommentsPage = () => {
       <CommentInput author={author} />
       <CommentInputModal author={author} />
     </div>
+    </RecipeStatusProvider>
   );
 };
 

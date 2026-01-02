@@ -10,7 +10,7 @@ import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticated
 
 import { postRecipeFavorite } from "./api";
 
-export const useToggleRecipeFavorite = (recipeId: number) => {
+export const useToggleRecipeFavorite = (recipeId: string) => {
   const queryClient = useQueryClient();
   const { mutate: rawMutate, ...restOfMutation } = useMutation<
     void,
@@ -20,7 +20,7 @@ export const useToggleRecipeFavorite = (recipeId: number) => {
   >({
     mutationFn: () => postRecipeFavorite(recipeId),
     onMutate: async () => {
-      const recipeStatusQueryKey = ["recipe-status", recipeId.toString()];
+      const recipeStatusQueryKey = ["recipe-status", recipeId];
 
       await queryClient.cancelQueries({
         queryKey: recipeStatusQueryKey,
@@ -47,14 +47,14 @@ export const useToggleRecipeFavorite = (recipeId: number) => {
       console.error("즐겨찾기 처리 실패:", error);
       if (context) {
         queryClient.setQueryData(
-          ["recipe-status", recipeId.toString()],
+          ["recipe-status", recipeId],
           context
         );
       }
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["recipe-status", recipeId.toString()],
+        queryKey: ["recipe-status", recipeId],
       });
       queryClient.invalidateQueries({ queryKey: ["recipes", "favorite"] });
     },

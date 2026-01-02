@@ -3,10 +3,7 @@ import { END_POINTS } from "@/shared/config/constants/api";
 
 import { PutUserInfoPayload, User, UserStreak } from "./types";
 
-export const getUserInfo = async (userId: number) => {
-  if (typeof userId !== "number" || isNaN(userId) || !isFinite(userId)) {
-    throw new Error("userId must be a valid number");
-  }
+export const getUserInfo = async (userId: string) => {
   const data = await api.get<User>(END_POINTS.USER_INFO(userId));
 
   return data;

@@ -5,20 +5,18 @@ import PrevButton from "@/shared/ui/PrevButton";
 import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
 import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
 
-import { useRecipeStatus } from "./RecipeStatusProvider";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 type RecipeNavbarProps = {
   title: string;
-  recipeId: number;
   heroImageId: string;
 };
 
 export default function RecipeNavbar({
   title,
-  recipeId,
   heroImageId,
 }: RecipeNavbarProps) {
-  const { status } = useRecipeStatus();
+  const { status, recipeId } = useRecipeStatus();
 
   return (
     <TransformingNavbar
