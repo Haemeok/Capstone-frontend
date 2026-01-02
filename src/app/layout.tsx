@@ -75,7 +75,7 @@ export default async function RootLayout({
       <body className={pretendard.className}>
         <AppProviders>
           <DesktopHeader />
-          <main className="flex w-full flex-col">{children}</main>
+          <main className="flex h-full w-full flex-col">{children}</main>
           <BottomNavBar />
         </AppProviders>
         <Analytics />

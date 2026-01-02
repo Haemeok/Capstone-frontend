@@ -6,6 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/shared/lib/queryClient";
 
+import { AICreditPrompter } from "./AICreditPrompter";
 import { AppStateInitializer } from "./AppStateInitializer";
 import { PWAFirstLoginPrompter } from "./PWAFirstLoginPrompter";
 import { PWAInstallProvider } from "./PWAInstallProvider";
@@ -22,6 +23,7 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
             <AppStateInitializer>{children}</AppStateInitializer>
             <ToastProvider />
             <PWAFirstLoginPrompter />
+            <AICreditPrompter />
           </WebSocketProvider>
         </ScrollProvider>
       </PWAInstallProvider>
