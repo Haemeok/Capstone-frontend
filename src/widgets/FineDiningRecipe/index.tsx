@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { ChefHat } from "lucide-react";
+import { ChefHat, ArrowLeft } from "lucide-react";
 
 import DifficultyTierSelector from "./DifficultyTierSelector";
 import FineDiningIngredientManager from "./FineDiningIngredientManager";
@@ -24,6 +25,7 @@ type FineDiningFormValues = {
 };
 
 const FineDiningRecipe = () => {
+  const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const methods = useForm<FineDiningFormValues>({
@@ -119,22 +121,25 @@ const FineDiningRecipe = () => {
     <Container padding={false}>
       <FormProvider {...methods}>
         <div className="mx-auto max-w-2xl space-y-8 p-4">
-          <div className="md:hidden">
-            <PrevButton />
+          <div className="mb-4 flex items-center gap-2">
+            <PrevButton className="text-gray-600 md:hidden" />
+            <button
+              onClick={() => router.back()}
+              className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
+            >
+              <ArrowLeft size={20} />
+              <span className="text-sm font-medium">AI 다시 선택하기</span>
+            </button>
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-            <FineDiningIngredientManager
-              onOpenDrawer={() => setIsDrawerOpen(true)}
-            />
-          </div>
+          <FineDiningIngredientManager
+            onOpenDrawer={() => setIsDrawerOpen(true)}
+          />
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-            <DifficultyTierSelector
-              selected={diningTier}
-              onSelect={handleTierSelect}
-            />
-          </div>
+          <DifficultyTierSelector
+            selected={diningTier}
+            onSelect={handleTierSelect}
+          />
 
           <button
             onClick={handleGenerateRecipe}

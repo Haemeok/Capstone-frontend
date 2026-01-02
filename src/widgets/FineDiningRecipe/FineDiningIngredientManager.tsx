@@ -1,5 +1,5 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { Plus, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 import { INGREDIENT_BLACK_IMAGE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
@@ -44,24 +44,28 @@ const FineDiningIngredientManager = ({
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={onOpenDrawer}
-        aria-label="재료 추가하기"
-        className="flex w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-6 transition-all duration-300 hover:border-gray-400 hover:bg-gray-100"
-      >
-        <div className="flex flex-col items-center">
-          <div className="mb-3 rounded-full bg-white p-3 shadow-md">
-            <Plus size={24} className="text-gray-700" aria-hidden="true" />
-          </div>
-          <span className="font-medium text-gray-900">재료 추가하기</span>
-          <span className="mt-1 text-sm text-gray-500">
-            {ingredients.length > 0
-              ? `${ingredients.length}개의 재료가 추가됨`
-              : "레시피 생성을 위해 재료를 추가해주세요"}
+      <div className="space-y-2">
+        <button
+          type="button"
+          onClick={onOpenDrawer}
+          aria-label="재료 검색하기"
+          className="group relative flex w-full cursor-pointer items-center border-b-2 border-gray-300 pb-3 transition-colors hover:border-gray-900"
+        >
+          <Search
+            size={20}
+            className="mr-3 text-gray-400 transition-colors group-hover:text-gray-900"
+            aria-hidden="true"
+          />
+          <span className="text-base text-gray-500 group-hover:text-gray-900">
+            재료를 검색하세요...
           </span>
-        </div>
-      </button>
+        </button>
+        {ingredients.length > 0 && (
+          <p className="text-sm text-gray-600">
+            {ingredients.length}개의 재료가 추가됨
+          </p>
+        )}
+      </div>
 
       {ingredients.length > 0 && (
         <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">

@@ -1,11 +1,14 @@
 "use client";
 
+import { useEffect } from "react";
 import { ChefHat, RotateCcw } from "lucide-react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
 import type { AIRecommendedRecipe } from "@/features/recipe-create-ai/model/types";
+import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
+import { addRecentAIRecipe } from "@/shared/config/constants/localStorage";
 import Link from "next/link";
 
 type AIRecipeCompleteProps = {
@@ -13,7 +16,25 @@ type AIRecipeCompleteProps = {
 };
 
 const AIRecipeComplete = ({ generatedRecipe }: AIRecipeCompleteProps) => {
-  const { resetStore } = useAIRecipeStore();
+  const { resetStore, selectedAI } = useAIRecipeStore();
+  const { recipeData } = useRecipeDetailQuery(generatedRecipe.recipeId);
+
+  useEffect(() => {
+    if (recipeData && selectedAI) {
+      addRecentAIRecipe({
+        recipeId: recipeData.id,
+        aiModelId: selectedAI.id,
+        timestamp: Date.now(),
+        title: recipeData.title,
+        imageUrl: recipeData.imageUrl,
+        authorName: recipeData.author.nickname,
+        authorId: recipeData.author.id,
+        profileImage: recipeData.author.profileImage,
+        cookingTime: recipeData.cookingTime,
+        createdAt: recipeData.createdAt || new Date().toISOString(),
+      });
+    }
+  }, [recipeData, selectedAI]);
 
   const handleStartOver = () => {
     resetStore();
