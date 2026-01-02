@@ -185,7 +185,7 @@ it("기존 레시피 수정 시, 첨부 파일이 없으면 서버 데이터만 
     expect(editRecipe).toHaveBeenCalledWith({
       recipe: { d: 1 },
       files: [],
-      recipeId: 321,
+      recipeId: "321",
     });
     expect(postRecipe).not.toHaveBeenCalled();
     expect(handleS3Upload).not.toHaveBeenCalled();
