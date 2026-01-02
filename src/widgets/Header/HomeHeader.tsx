@@ -26,7 +26,7 @@ const HomeHeader = () => {
           aria-label="앱 설치 가이드"
         >
           <Download size={14} />
-          <span className="text-xs font-bold">앱 설치</span>
+          <span className="w-10 text-xs font-bold">앱 설치</span>
         </Link>
       </div>
 
