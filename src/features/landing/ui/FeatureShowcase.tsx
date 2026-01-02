@@ -14,7 +14,7 @@ const FEATURES: Feature[] = [
   {
     badge: "유명 최신 레시피",
     badgeColor: "bg-blue-50 text-blue-600",
-    title: "1,000개 이상의 검증된 레시피",
+    title: "5,000개 이상의 검증된 레시피",
     description:
       "다양한 카테고리의 레시피와 유명 유튜버, 셰프들의 레시피 후기들을 만나보세요",
     benefits: ["유명 최신 레시피", "유튜버, 셰프들의 레시피 후기"],
@@ -44,7 +44,7 @@ const FEATURES: Feature[] = [
 
 export const FeatureShowcase = () => {
   return (
-    <section className="from-beige/30 to-beige/30 relative w-full overflow-hidden bg-gradient-to-b via-white px-4 py-20 md:py-32">
+    <section className="from-beige/30 to-beige/30 relative w-full overflow-hidden bg-gradient-to-b via-white px-4 py-12 md:py-20">
       <div className="bg-olive-mint/10 absolute top-1/4 left-0 h-96 w-96 rounded-full blur-3xl" />
       <div className="bg-olive-light/10 absolute right-0 bottom-1/4 h-96 w-96 rounded-full blur-3xl" />
 

@@ -12,7 +12,7 @@ const ANIMATION_DURATION = 50;
 
 const RECIPE_CATEGORIES = [
   1314, 1313, 1312, 1311, 1310, 1309, 1308, 1305, 1304, 1303, 1302, 1301, 1300,
-  1299, 1298, 1297, 1296, 1295, 1294, 1293, 1292, 1291, 1290, 1189, 1188, 1187,
+  1298, 1297, 1296, 1295, 1294, 1293, 1292, 1291, 1290, 1189, 1188, 1187,
 ];
 
 const RecipeCard = ({
@@ -38,7 +38,7 @@ const RecipeCard = ({
   );
 };
 
-const CarouselRow = ({
+export const CarouselRow = ({
   direction = "left",
 }: {
   direction?: "left" | "right";
