@@ -78,14 +78,7 @@ const DesktopFooter = () => {
               <span>제품 및 대외 문의</span>
               <span>|</span>
             </div>
-            <div className="mt-2">
-              <span>주식회사 레시피오</span>
-              <span className="mx-2">|</span>
-              <span>대표 이사 | 서울특별시 강남구 테헤란로 123</span>
-            </div>
-            <div>
-              <span>사업자 등록 번호 123-45-67890</span>
-            </div>
+
             <div className="mt-4 text-gray-400">
               © 2025 by Recipio, Inc. All rights reserved.
             </div>

@@ -2,8 +2,8 @@
 
 import {
   HeroSection,
-  RecipeCarousel,
   ProblemCards,
+  StatsSection,
   FeatureShowcase,
   TestimonialCarousel,
   FinalCTA,
@@ -16,8 +16,8 @@ const LandingPage = () => {
     <>
       <div className="flex flex-col bg-white">
         <HeroSection />
-        <RecipeCarousel />
         <ProblemCards />
+        <StatsSection />
         <FeatureShowcase />
         <TestimonialCarousel />
         <FinalCTA />

@@ -26,7 +26,7 @@ const LoginPromotionBadge = ({
       {children}
 
       {variant === "desktop" && !isDesktopBadgeClosed && (
-        <div className="animate-bounce-soft absolute top-12 right-0 z-[100] w-64 transform rounded-lg border border-green-100 bg-white p-4 shadow-xl">
+        <div className="animate-bounce-soft absolute top-12 right-0 z-[100] w-64 max-w-[calc(100vw-2rem)] transform rounded-lg border border-green-100 bg-white p-4 shadow-xl">
           <button
             onClick={() => setIsDesktopBadgeClosed(true)}
             className="absolute top-2 right-2 cursor-pointer text-gray-400 transition-colors hover:text-gray-600"
