@@ -3,7 +3,7 @@ import { PageResponse } from "@/shared/api/types";
 import { User } from "@/entities/user";
 
 export type Comment = {
-  id: number;
+  id: string;
   content: string;
   createdAt: string;
   author: User;

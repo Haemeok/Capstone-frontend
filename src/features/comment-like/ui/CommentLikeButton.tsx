@@ -5,7 +5,7 @@ import HeartButton from "@/shared/ui/HeartButton";
 import { useLikeCommentMutation } from "@/features/comment-like";
 
 type CommentLikeButtonProps = {
-  commentId: number;
+  commentId: string;
   recipeId: string;
   initialIsLiked: boolean;
   initialLikeCount: number;

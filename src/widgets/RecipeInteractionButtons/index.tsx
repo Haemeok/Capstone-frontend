@@ -19,7 +19,7 @@ type RecipeInteractionButtonsProps = {
   initialIsFavorite: boolean;
   initialIsPrivate: boolean;
   title: string;
-  authorId: number;
+  authorId: string;
 };
 
 const RecipeInteractionButtons = ({

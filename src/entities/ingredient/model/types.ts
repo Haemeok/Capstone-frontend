@@ -3,7 +3,7 @@ import { InfiniteData } from "@tanstack/react-query";
 import { BaseQueryParams, PageResponse } from "@/shared/api/types";
 
 export type IngredientItem = {
-  id: number;
+  id: string;
   name: string;
   imageUrl?: string;
   category?: string;
@@ -18,14 +18,14 @@ export type IngredientItem = {
 export type UserIngredient = Omit<IngredientItem, "unit" | "price">;
 
 export type IngredientPayload = {
-  id?: number;
+  id?: string;
   name: string;
   quantity: string;
   unit: string;
 };
 
 export type AIIngredientPayload = {
-  id: number;
+  id: string;
   name: string;
 };
 

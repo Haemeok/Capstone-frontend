@@ -11,7 +11,7 @@ import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fr
 type IngredientPackCardProps = {
   pack: IngredientPack;
   onViewDetail: (pack: IngredientPack) => void;
-  ownedIngredientIds: Set<number>;
+  ownedIngredientIds: Set<string>;
 };
 
 const IngredientPackCard = ({
@@ -63,7 +63,7 @@ const IngredientPackCard = ({
           onClick={() => onViewDetail(pack)}
           disabled={isLoading}
           variant="outline"
-          className="flex-1 border-olive-light text-olive-light hover:bg-olive-mint/10 cursor-pointer disabled:cursor-not-allowed"
+          className="border-olive-light text-olive-light hover:bg-olive-mint/10 flex-1 cursor-pointer disabled:cursor-not-allowed"
         >
           상세보기
         </Button>
@@ -71,7 +71,7 @@ const IngredientPackCard = ({
           <Button
             onClick={() => deleteIngredientBulk(ingredientIds)}
             disabled={isLoading}
-            className="flex-1 bg-red-500 text-white hover:bg-red-600 disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed"
+            className="flex-1 cursor-pointer bg-red-500 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {isLoading ? "삭제 중..." : "전체 삭제"}
           </Button>
@@ -79,7 +79,7 @@ const IngredientPackCard = ({
           <Button
             onClick={() => addIngredientBulk(ingredientIds)}
             disabled={isLoading}
-            className="flex-1 bg-olive-light text-white hover:bg-olive-dark disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed"
+            className="bg-olive-light hover:bg-olive-dark flex-1 cursor-pointer text-white disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {isLoading ? "추가 중..." : "바로추가"}
           </Button>

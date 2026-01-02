@@ -8,7 +8,7 @@ import { Image } from "@/shared/ui/image/Image";
 
 type UserProfileImageProps = {
   profileImage: string;
-  userId: number;
+  userId: string;
   className?: string;
 };
 
@@ -20,7 +20,10 @@ const UserProfileImage = ({
   return (
     <Link href={`/users/${userId}`}>
       <div
-        className={cn("h-8 w-8 rounded-full flex-shrink-0 cursor-pointer overflow-hidden", className)}
+        className={cn(
+          "h-8 w-8 flex-shrink-0 cursor-pointer overflow-hidden rounded-full",
+          className
+        )}
       >
         <Image
           src={profileImage}

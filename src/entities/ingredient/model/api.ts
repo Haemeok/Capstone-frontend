@@ -51,7 +51,7 @@ export const getIngredients = async ({
   return response;
 };
 
-export const addIngredientBulk = async (ingredientIds: number[]) => {
+export const addIngredientBulk = async (ingredientIds: string[]) => {
   const response = await api.post(END_POINTS.MY_INGREDIENTS_BULK, {
     ingredientIds,
   });
@@ -59,6 +59,6 @@ export const addIngredientBulk = async (ingredientIds: number[]) => {
 };
 
 export const getMyIngredientIds = async () => {
-  const response = await api.get<number[]>(END_POINTS.MY_INGREDIENTS_IDS);
+  const response = await api.get<string[]>(END_POINTS.MY_INGREDIENTS_IDS);
   return response;
 };

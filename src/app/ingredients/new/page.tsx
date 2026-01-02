@@ -38,18 +38,18 @@ const NewIngredientsPage = () => {
     setIsDetailDrawerOpen(true);
   };
 
-  const handlePackAddSelected = (ingredientIds: number[]) => {
+  const handlePackAddSelected = (ingredientIds: string[]) => {
     addIngredientBulk(ingredientIds);
   };
 
-  const handlePackDeleteSelected = (ingredientIds: number[]) => {
+  const handlePackDeleteSelected = (ingredientIds: string[]) => {
     deleteIngredientBulk(ingredientIds);
   };
 
   return (
     <Container padding={false}>
-      <div className=" bg-white pb-10">
-        <header className="sticky top-0 z-sticky border-b border-gray-200 bg-white px-4 py-3 md:px-6 sticky-optimized">
+      <div className="bg-white pb-10">
+        <header className="z-sticky sticky-optimized sticky top-0 border-b border-gray-200 bg-white px-4 py-3 md:px-6">
           <div className="flex items-center gap-2">
             <PrevButton />
             <h1 className="text-xl font-bold">재료 추가</h1>

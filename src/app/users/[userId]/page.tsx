@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 
 import { guestUser } from "@/shared/config/constants/user";
 import { Container } from "@/shared/ui/Container";
@@ -19,12 +19,13 @@ const UserDetailPage = () => {
 
   const isOwnProfile =
     loggedInUser !== null &&
-    (profileId === "guestUser" || Number(profileId) === loggedInUser.id);
+    (profileId === "guestUser" || profileId === loggedInUser.id);
 
-  const { user } = useUserQuery(
-    Number(profileId),
-    Number(profileId) !== loggedInUser?.id
-  );
+  if (typeof profileId !== "string") {
+    notFound();
+  }
+
+  const { user } = useUserQuery(profileId, profileId !== loggedInUser?.id);
 
   const displayUser = isOwnProfile ? loggedInUser : (user ?? guestUser);
 

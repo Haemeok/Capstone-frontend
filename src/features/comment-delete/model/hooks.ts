@@ -6,7 +6,7 @@ import { useToastStore } from "@/widgets/Toast/model/store";
 import { deleteComment } from "./api";
 
 export const useDeleteCommentMutation = (
-  commentId: number,
+  commentId: string,
   recipeId: string
 ) => {
   const queryClient = useQueryClient();

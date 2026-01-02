@@ -77,7 +77,7 @@ const IngredientSearchDrawer = ({
     searchQuery,
   ]);
 
-  const handleAddRemoveClick = (id: number, isAdded: boolean) => {
+  const handleAddRemoveClick = (id: string, isAdded: boolean) => {
     if (isAdded) {
       deleteIngredient(id);
     } else {

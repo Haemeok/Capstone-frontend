@@ -9,7 +9,7 @@ import { IngredientItem as IngredientItemType } from "@/entities/ingredient";
 type IngredientItemProps = {
   ingredient: IngredientItemType;
   isDeleteMode: boolean;
-  setSelectedIngredientIds: React.Dispatch<React.SetStateAction<number[]>>;
+  setSelectedIngredientIds: React.Dispatch<React.SetStateAction<string[]>>;
   isSelected: boolean;
 };
 
