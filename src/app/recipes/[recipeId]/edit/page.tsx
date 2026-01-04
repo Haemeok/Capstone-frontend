@@ -18,7 +18,7 @@ const RecipeEditPage = async ({ params }: RecipeEditPageProps) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["recipe", recipeId],
-    queryFn: () => getrecipionServer(Number(recipeId)),
+    queryFn: () => getrecipionServer(recipeId),
   });
 
   return (
