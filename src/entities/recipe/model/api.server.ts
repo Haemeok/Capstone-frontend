@@ -73,11 +73,9 @@ export const getRecipesOnServer = async (
   }
 };
 
-export const getrecipionServer = async (id: number): Promise<Recipe | null> => {
+export const getrecipionServer = async (id: string): Promise<Recipe | null> => {
   const API_URL = `${BASE_API_URL}/recipes/${id}`;
-  if (isNaN(id) || id <= 0) {
-    return null;
-  }
+
   try {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
