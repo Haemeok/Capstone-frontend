@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import {
@@ -24,6 +24,9 @@ export const useSearchState = () => {
   const sortCode = searchParams.get("sort") || "createdAt,DESC";
   const dishTypeCode = searchParams.get("dishType") || null;
   const tagCodes = searchParams.getAll("tags") || [];
+  const types = searchParams.getAll("types").length > 0
+    ? searchParams.getAll("types")
+    : ["USER", "AI", "YOUTUBE"];
 
   const sort =
     Object.keys(SORT_TYPE_CODES).find(
@@ -43,6 +46,18 @@ export const useSearchState = () => {
   });
 
   const [inputValue, setInputValue] = useState(q);
+
+  useEffect(() => {
+    const hasTypes = searchParams.has("types");
+
+    if (!hasTypes) {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.append("types", "USER");
+      newParams.append("types", "AI");
+      newParams.append("types", "YOUTUBE");
+      router.replace(`/search?${newParams.toString()}`);
+    }
+  }, []);
 
   const updateSearchParams = (
     newFilters: Record<string, string | string[]>
@@ -133,6 +148,10 @@ export const useSearchState = () => {
     updateNutritionFilters({});
   };
 
+  const updateTypes = (newTypes: string[]) => {
+    updateSearchParams({ types: newTypes });
+  };
+
   return {
     q,
     sort,
@@ -147,6 +166,8 @@ export const useSearchState = () => {
     nutritionParams,
     isNutritionDirty,
 
+    types,
+
     handleSearchSubmit,
     handleInputChange,
     setInputValue,
@@ -155,5 +176,6 @@ export const useSearchState = () => {
     updateTags,
     updateNutritionFilters,
     clearNutritionFilters,
+    updateTypes,
   };
 };
