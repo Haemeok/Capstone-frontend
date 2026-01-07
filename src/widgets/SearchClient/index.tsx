@@ -33,12 +33,14 @@ export const SearchClient = () => {
     tagCodes,
     nutritionParams,
     isNutritionDirty,
+    types,
     handleSearchSubmit,
     handleInputChange,
     updateDishType,
     updateSort,
     updateTags,
     updateNutritionFilters,
+    updateTypes,
   } = useSearchState();
 
   const {
@@ -56,6 +58,7 @@ export const SearchClient = () => {
     dishTypeCode,
     tagCodes,
     nutritionParams,
+    types,
   });
 
   const { activeDrawer, openDrawer, closeDrawer } = useFilterDrawer();
@@ -125,6 +128,8 @@ export const SearchClient = () => {
           <NutritionFilterContent
             initialValues={nutritionParams}
             onApply={updateNutritionFilters}
+            initialTypes={types}
+            onTypesChange={updateTypes}
             open={true}
             onOpenChange={(open) => !open && closeDrawer()}
           />
