@@ -1,10 +1,11 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Image } from "@/shared/ui/image/Image";
 import { useRouter } from "next/navigation";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import { X } from "lucide-react";
+import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
 
 type AICreditDrawerProps = {
   isOpen: boolean;
@@ -14,6 +15,20 @@ type AICreditDrawerProps = {
 const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
   const router = useRouter();
   const { Container, Content, Title } = useResponsiveSheet();
+  const confettiRef = useRef<ConfettiRef>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        confettiRef.current?.fire({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          zIndex: 9999,
+        });
+      }, 300);
+    }
+  }, [isOpen]);
 
   const handleCTAClick = () => {
     onOpenChange(false);
@@ -22,38 +37,45 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
 
   return (
     <Container open={isOpen} onOpenChange={onOpenChange}>
-      <Content className="border-0 bg-white shadow-xl sm:max-w-md">
+      <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md">
+        <Confetti
+          ref={confettiRef}
+          className="pointer-events-none absolute inset-0 z-50 h-full w-full"
+          manualstart={true}
+        />
         <Title className="sr-only">AI 무료 이용권</Title>
 
-        <div className="flex flex-col items-center px-6">
-          <div className="mt-4 flex justify-center">
+        <div className="flex flex-col items-center px-6 pb-8">
+          <div className="mt-8 flex justify-center">
             <Image
               src="/gift.png"
               alt="AI 무료 이용권"
-              wrapperClassName="relative h-60 w-60"
+              wrapperClassName="relative h-48 w-48 animate-bounce-soft"
               priority
             />
           </div>
 
-          <div className="mt-4 text-center">
-            <h2 className="text-2xl font-bold text-gray-900">
-              AI 무료 이용권을 드렸어요!
+          <div className="mt-6 text-center">
+            <h2 className="text-2xl font-bold break-keep text-gray-900">
+              AI 무료 생성권 도착!
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-gray-600">
-              하루 1개씩 AI 무료 이용권을 제공해요
+            <p className="mt-3 text-base leading-relaxed break-keep text-gray-600">
+              매일 1회 무료로 만들어 드려요!
               <br />
-              AI와 함께 나만의 레시피를 만들어보세요
+              <span className="font-bold text-red-500">
+                ⚠️ 오늘 다 써야 내일 또 충전돼요!
+              </span>
             </p>
           </div>
 
           <button
             onClick={handleCTAClick}
-            className="bg-olive-light mt-8 h-14 w-full cursor-pointer rounded-2xl text-base font-semibold text-white"
+            className="bg-olive-light mt-8 h-14 w-full cursor-pointer rounded-2xl text-lg font-bold text-white shadow-lg transition-colors hover:shadow-xl active:scale-[0.98]"
           >
-            AI 레시피 만들기
+            지금 바로 만들기
           </button>
 
-          <div className="mx-auto mt-6 h-1 w-32 rounded-full bg-gray-300 sm:hidden" />
+          <div className="mx-auto mt-6 h-1 w-32 rounded-full bg-gray-200 sm:hidden" />
         </div>
       </Content>
     </Container>

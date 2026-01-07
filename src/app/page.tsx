@@ -67,8 +67,6 @@ const HomePage = async () => {
           </Link>
           <CategoryTabs title="카테고리" />
 
-          <HomeBannerCarousel slides={aiModelBanners} variant="white" />
-
           <RecipeSlideWithErrorBoundary
             title="만원 이하 가성비 레시피"
             queryKey="budget-recipes"

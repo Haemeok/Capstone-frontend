@@ -37,7 +37,7 @@ const NotFound = ({
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-center p-4">
       <div className="flex max-w-md flex-col items-center gap-6 text-center">
         <div className="text-6xl">{emoji}</div>
         <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
@@ -51,7 +51,7 @@ const NotFound = ({
           </button>
           <button
             onClick={handleGoHome}
-            className="rounded-lg bg-olive-light px-6 py-3 font-medium text-white transition-colors hover:bg-olive-dark"
+            className="bg-olive-light hover:bg-olive-dark rounded-lg px-6 py-3 font-medium text-white transition-colors"
           >
             홈으로 가기
           </button>

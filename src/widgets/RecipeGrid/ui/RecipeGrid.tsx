@@ -115,7 +115,7 @@ const RecipeGrid = ({
             </div>
             <Link
               href="/recipes/new/ai"
-              className="bg-olive-light hover:bg-olive-700 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-colors"
+              className="bg-olive-light hover:bg-olive-light/90 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-colors"
             >
               <Sparkles size={20} />
               <span>AI 레시피 생성하기</span>

@@ -14,7 +14,7 @@ const AiCharacterSection = ({ selectedAI }: AICharacterSectionProps) => {
       <div className="text-center">
         <p className="text-dark text-xl font-bold">{selectedAI.name}와 함께</p>
         <p className="text-dark text-xl font-bold">
-          맞춤형 레시피를 생성해보세요 !
+          맞춤형 레시피를 생성해보세요
         </p>
       </div>
       <div className="flex flex-col items-center justify-center gap-2 py-4">
