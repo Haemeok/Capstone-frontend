@@ -28,12 +28,13 @@ const useLogoutMutation = () => {
       return { deletingToastId };
     },
     onSuccess: () => {
+      useUserStore.setState({ isLoggingOut: false });
       logoutAction();
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
       if (typeof window !== "undefined") {
         const currentPath = window.location.pathname;
-        const userIdMatch = currentPath.match(/^\/users\/(\d+)$/);
+        const userIdMatch = currentPath.match(/^\/users\/([^/]+)$/);
 
         if (userIdMatch) {
           window.location.replace("/users/guestUser");

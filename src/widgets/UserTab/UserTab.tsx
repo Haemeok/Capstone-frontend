@@ -32,9 +32,9 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
     }
 
     if (isOwnProfile && user && !user.hasFirstRecord) {
-      return "캘린더";
+      return "calendar";
     }
-    return "나의 레시피";
+    return "recipes";
   };
 
   const [activeTab, setActiveTab] = useState<string>(getDefaultTab());
@@ -52,11 +52,11 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
 
   const getRecipesByTab = () => {
     switch (activeTab) {
-      case "나의 레시피":
-        return user && <MyRecipesTabContent userId={user.id} />;
-      case "북마크":
+      case "recipes":
+        return user && <MyRecipesTabContent userId={user.id} isOwnProfile={isOwnProfile} />;
+      case "saved":
         return <MyFavoriteRecipesTabContent />;
-      case "캘린더":
+      case "calendar":
         return <CalendarTabContent />;
       default:
         return <></>;
