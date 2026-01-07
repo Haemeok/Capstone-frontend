@@ -18,7 +18,7 @@ import BottomNavButton from "./BottomNavButton";
 
 const isRecipeEditPage = (pathname: string) => {
   return (
-    pathname === "/recipes/new" ||
+    pathname === "/recipes/new/manual" ||
     (pathname.startsWith("/recipes/") && pathname.includes("/edit"))
   );
 };
@@ -56,7 +56,7 @@ const BottomNavBar = () => {
 
   return (
     <>
-      <footer className="md:hidden fixed right-0 bottom-0 left-0 z-dropdown flex items-center justify-between border-t border-gray-200 bg-white px-6 pt-3 pb-5 opacity-97 sticky-optimized supports-[height:100dvh]:pb-[max(env(safe-area-inset-bottom),1.25rem)]">
+      <footer className="z-dropdown sticky-optimized fixed right-0 bottom-0 left-0 flex items-center justify-between border-t border-gray-200 bg-white px-6 pt-3 pb-5 opacity-97 supports-[height:100dvh]:pb-[max(env(safe-area-inset-bottom),1.25rem)] md:hidden">
         <BottomNavButton
           path="/"
           icon={<Home size={24} className="mb-1" />}

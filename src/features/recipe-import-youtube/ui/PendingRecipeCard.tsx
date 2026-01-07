@@ -1,0 +1,75 @@
+"use client";
+
+import React from "react";
+import { Image } from "@/shared/ui/image/Image";
+import { YoutubeMeta } from "../model/types";
+import { useYoutubeImportStore } from "../model/store";
+import { Loader2, XCircle, CheckCircle } from "lucide-react";
+
+type PendingRecipeCardProps = {
+  url: string;
+};
+
+export const PendingRecipeCard = ({ url }: PendingRecipeCardProps) => {
+  const importItem = useYoutubeImportStore((state) => state.imports[url]);
+  const removeImport = useYoutubeImportStore((state) => state.removeImport);
+
+  if (!importItem) return null;
+
+  const { meta, status, error } = importItem;
+
+  return (
+    <div className="group relative block h-full overflow-hidden rounded-2xl bg-gray-100">
+      <div className="relative aspect-square">
+        <Image
+          src={meta.thumbnailUrl}
+          alt={meta.title}
+          width={100}
+          height={100}
+          fit="cover"
+          imgClassName={`transition-opacity ${
+            status === "pending" ? "opacity-50" : "opacity-70"
+          }`}
+          sizes="(max-width: 640px) 160px, (max-width: 768px) 180px, (max-width: 1024px) 200px, 220px"
+        />
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+          <div className="space-y-3 px-4 text-center">
+            {status === "pending" && (
+              <>
+                <Loader2 className="mx-auto h-10 w-10 animate-spin text-white" />
+                <p className="text-sm font-semibold text-white">분석 중...</p>
+              </>
+            )}
+            {status === "success" && (
+              <>
+                <CheckCircle className="mx-auto h-10 w-10 text-green-400" />
+                <p className="text-sm font-semibold text-white">완료!</p>
+              </>
+            )}
+            {status === "error" && (
+              <>
+                <XCircle className="mx-auto h-10 w-10 text-red-400" />
+                <p className="text-xs font-semibold break-keep text-white">
+                  {error || "실패"}
+                </p>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeImport(url);
+                  }}
+                  className="mt-2 text-xs text-white/80 underline hover:text-white"
+                >
+                  닫기
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end rounded-2xl bg-gradient-to-t from-black/70 to-transparent" />
+      <p className="absolute right-4 bottom-2.5 left-4 line-clamp-2 text-[17px] font-bold text-white">
+        {meta.title}
+      </p>
+    </div>
+  );
+};
