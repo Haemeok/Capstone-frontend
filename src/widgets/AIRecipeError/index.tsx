@@ -11,21 +11,21 @@ type AIRecipeErrorProps = {
 
 const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f7f7f7] p-4">
+    <div className="flex items-center justify-center bg-[#f7f7f7] p-4">
       <div className="w-full max-w-md">
-        <div className="rounded-3xl bg-white p-8 shadow-2xl text-center space-y-6">
-          <div className="mx-auto w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mb-4">
+        <div className="space-y-6 rounded-3xl bg-white p-8 text-center shadow-2xl">
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100">
             <AlertCircle className="h-10 w-10 text-red-600" />
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">
+            <h1 className="mb-2 text-2xl font-bold text-gray-800">
               레시피 생성 실패
             </h1>
-            <p className="text-gray-600 mb-4">
+            <p className="mb-4 text-gray-600">
               레시피 생성 중 문제가 발생했습니다.
             </p>
-            <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+            <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
               {error}
             </p>
           </div>
@@ -33,7 +33,7 @@ const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
           <div className="pt-4">
             <Button
               onClick={onRetry}
-              className="w-full h-12 bg-olive-mint hover:bg-olive-mint/90 text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
+              className="bg-olive-mint hover:bg-olive-mint/90 h-12 w-full rounded-xl text-lg font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl"
             >
               <RotateCcw className="mr-2 h-5 w-5" />
               다시 시도하기
