@@ -15,9 +15,13 @@ import { getMyRecipeItems } from "./api";
 
 type MyRecipesTabContentProps = {
   userId: string;
+  isOwnProfile: boolean;
 };
 
-const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
+const MyRecipesTabContent = ({
+  userId,
+  isOwnProfile,
+}: MyRecipesTabContentProps) => {
   const [sort] = useState<"ASC" | "DESC">("DESC");
 
   const { data, error, hasNextPage, isFetching, ref } = useInfiniteScroll<
@@ -50,7 +54,7 @@ const MyRecipesTabContent = ({ userId }: MyRecipesTabContentProps) => {
       noResultsMessage="작성한 레시피가 없습니다."
       observerRef={ref}
       error={error}
-      showAIRecipeCTA
+      showAIRecipeCTA={isOwnProfile}
     />
   );
 };
