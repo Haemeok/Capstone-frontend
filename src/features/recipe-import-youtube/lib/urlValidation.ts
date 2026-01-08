@@ -6,7 +6,6 @@ export type UrlValidationResult =
   | { valid: false; error: string };
 
 export const validateYoutubeUrl = (url: string): UrlValidationResult => {
-  console.log(url);
   if (!url || url.trim() === "") {
     return { valid: false, error: "URL을 입력해주세요." };
   }

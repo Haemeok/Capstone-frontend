@@ -9,7 +9,6 @@ export async function POST(request: NextRequest) {
     const origin = request.headers.get("origin");
 
     const baseUrl = BASE_API_URL;
-    console.log(cookieStore.toString());
 
     const response = await fetch(`${baseUrl}${END_POINTS.TOKEN_REFRESH}`, {
       method: "POST",
@@ -20,8 +19,6 @@ export async function POST(request: NextRequest) {
         ...(origin && { Origin: origin }),
       },
     });
-
-    console.log("response", response);
 
     if (!response.ok) {
       const errorBody = await response.json();

@@ -64,8 +64,6 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
       if (wsManagerRef.current) return;
 
       try {
-        console.log("WebSocket: Requesting ticket...");
-
         const data = await api.post<{ ticket: string }>("/ws-ticket");
         const ticket = data.ticket;
 
@@ -73,7 +71,6 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
           throw new Error("WebSocket 티켓 발급에 실패했습니다.");
         }
 
-        console.log("WebSocket: Ticket received, connecting...");
         const urlWithTicket = `${sockjsUrl}?token=${ticket}`;
 
         wsManagerRef.current = new SockJSWebSocketManager(urlWithTicket, "", {

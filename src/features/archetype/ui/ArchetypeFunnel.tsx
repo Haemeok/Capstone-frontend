@@ -27,7 +27,6 @@ const ArchetypeFunnel = () => {
           newAnswers.toUpperCase() as keyof typeof ARCHETYPE_RESULTS
         ].code;
 
-      console.log("완성된 답변:", newAnswers);
       router.push(`/archetype/${code}`);
     } else {
       setCurrentStep(currentStep + 1);

@@ -88,7 +88,6 @@ export default async function RecipeDetailPage({
     ? "더 다양한 셰프 레시피를 만나보세요"
     : "이런 레시피는 어떠신가요?";
 
-  console.log(staticRecipe.youtubeUrl);
   return (
     <>
       <RecipeStatusProvider recipeId={recipeId}>
