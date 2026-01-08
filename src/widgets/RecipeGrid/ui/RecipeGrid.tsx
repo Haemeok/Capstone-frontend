@@ -9,11 +9,15 @@ import Circle from "@/shared/ui/Circle";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { DialogTitle } from "@/shared/ui/shadcn/dialog";
+import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
+import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 import {
   BaseRecipeGridItem,
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
 } from "@/entities/recipe/model/types";
+
+import { RecipeLikeButton } from "@/features/recipe-like";
 
 import useDeleteRecipeMutation from "@/features/recipe-delete/model/hooks";
 
@@ -35,6 +39,15 @@ type RecipeGridProps = {
   queryKeyString?: string;
   prefetch?: boolean;
   showAIRecipeCTA?: boolean;
+};
+
+const calculateSavings = (
+  marketPrice?: number,
+  ingredientCost?: number
+): number | null => {
+  if (!marketPrice || !ingredientCost) return null;
+  const savings = marketPrice - ingredientCost;
+  return savings > 0 ? savings : null;
 };
 
 const RecipeGrid = ({
@@ -137,24 +150,65 @@ const RecipeGrid = ({
   return (
     <div className="flex flex-col">
       <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 px-2 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
-        {recipes.map((recipe, index) =>
-          isSimple ? (
-            <SimpleRecipeGridItem
-              key={recipe.id}
-              recipe={recipe as BaseRecipeGridItem}
-              setIsDrawerOpen={handleOpenSheet}
-              priority={index === 0}
-              prefetch={prefetch}
+        {recipes.map((recipe, index) => {
+          if (isSimple) {
+            return (
+              <SimpleRecipeGridItem
+                key={recipe.id}
+                recipe={recipe as BaseRecipeGridItem}
+                setIsDrawerOpen={handleOpenSheet}
+                priority={index === 0}
+                prefetch={prefetch}
+              />
+            );
+          }
+
+          const detailedRecipe = recipe as DetailedRecipeGridItemType;
+          const savings = calculateSavings(
+            detailedRecipe.marketPrice,
+            detailedRecipe.ingredientCost
+          );
+
+          const leftBadge = (
+            <RecipeLikeButton
+              key="like"
+              recipeId={detailedRecipe.id}
+              initialIsLiked={detailedRecipe.likedByCurrentUser}
+              initialLikeCount={detailedRecipe.likeCount}
+              buttonClassName="text-white"
+              iconClassName="fill-gray-300 opacity-80"
             />
-          ) : (
+          );
+
+          let rightBadge = null;
+          if (savings) {
+            rightBadge = (
+              <div
+                key="savings"
+                className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm"
+              >
+                <span className="text-xs font-bold text-white">
+                  {savings.toLocaleString()}원 절약
+                </span>
+              </div>
+            );
+          } else if (detailedRecipe.isYoutube) {
+            rightBadge = <YouTubeIconBadge key="youtube" />;
+          } else if (detailedRecipe.isAiGenerated) {
+            rightBadge = <AIGeneratedBadge key="ai" />;
+          }
+
+          return (
             <DetailedRecipeGridItem
               key={recipe.id}
-              recipe={recipe as DetailedRecipeGridItemType}
+              recipe={detailedRecipe}
               priority={index === 0}
               prefetch={prefetch}
+              leftBadge={leftBadge}
+              rightBadge={rightBadge}
             />
-          )
-        )}
+          );
+        })}
       </div>
       <div
         ref={observerRef}

@@ -23,15 +23,8 @@ type DetailedRecipeGridItemProps = {
   className?: string;
   priority?: boolean;
   prefetch?: boolean;
-};
-
-const calculateSavings = (
-  marketPrice?: number,
-  ingredientCost?: number
-): number | null => {
-  if (!marketPrice || !ingredientCost) return null;
-  const savings = marketPrice - ingredientCost;
-  return savings > 0 ? savings : null;
+  leftBadge?: React.ReactNode;
+  rightBadge?: React.ReactNode;
 };
 
 const DetailedRecipeGridItem = ({
@@ -39,6 +32,8 @@ const DetailedRecipeGridItem = ({
   className,
   priority,
   prefetch = false,
+  leftBadge,
+  rightBadge,
 }: DetailedRecipeGridItemProps) => {
   const queryClient = useQueryClient();
 
@@ -52,7 +47,6 @@ const DetailedRecipeGridItem = ({
     cachedRecipe?.likedByCurrentUser ?? recipe.likedByCurrentUser;
 
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
-  const savings = calculateSavings(recipe.marketPrice, recipe.ingredientCost);
 
   return (
     <div
@@ -75,26 +69,16 @@ const DetailedRecipeGridItem = ({
             priority={priority}
           />
 
-          <div className="absolute top-0 left-0 right-0 flex items-start justify-between p-2">
-            {savings && (
-              <div className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm">
-                <span className="text-xs font-bold text-white">
-                  {savings.toLocaleString()}원 절약
-                </span>
-              </div>
-            )}
-            <RecipeLikeButton
-              recipeId={recipe.id}
-              initialIsLiked={currentLikedByUser}
-              initialLikeCount={currentLikeCount}
-              buttonClassName="text-white"
-              iconClassName="fill-gray-300 opacity-80"
-            />
-          </div>
+          {(leftBadge || rightBadge) && (
+            <div className="absolute top-0 right-0 left-0 flex items-start justify-between gap-2 p-2">
+              {leftBadge && <div className="flex gap-2">{leftBadge}</div>}
+              {rightBadge && <div className="flex gap-2">{rightBadge}</div>}
+            </div>
+          )}
         </div>
 
         <div className="flex grow flex-col gap-0.5 px-2 pb-2">
-          <p className="line-clamp-2 font-bold hover:underline">
+          <p className="line-clamp-2 font-bold break-keep hover:underline">
             {recipe.title}
           </p>
 

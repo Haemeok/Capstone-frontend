@@ -29,6 +29,8 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   ratingCount: number;
   marketPrice?: number;
   ingredientCost?: number;
+  isYoutube?: boolean;
+  isAiGenerated?: boolean;
 };
 
 export type StaticDetailedRecipeGridItem = Omit<

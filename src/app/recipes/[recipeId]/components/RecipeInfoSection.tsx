@@ -6,6 +6,7 @@ import Box from "@/shared/ui/primitives/Box";
 
 import { UserProfile } from "@/entities/user";
 import { User } from "@/entities/user/model/types";
+import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 
 type RecipeInfoSectionProps = {
   title: string;
@@ -30,7 +31,7 @@ export default function RecipeInfoSection({
           {aiGenerated && (
             <BadgeButton
               badgeText="AI의 도움을 받아 작성된 레시피예요"
-              badgeIcon={<p>🧪</p>}
+              badgeIcon={<AIGeneratedBadge />}
             />
           )}
         </div>
