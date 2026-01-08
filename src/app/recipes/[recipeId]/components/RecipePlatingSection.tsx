@@ -6,6 +6,12 @@ type RecipePlatingSectionProps = {
   className?: string;
 };
 
+const formatGuide = (text: string): string => {
+  return text.replace(/(\d+\.\s)/g, (match, _p1, offset) => {
+    return offset === 0 ? match : "\n" + match;
+  });
+};
+
 export default function RecipePlatingSection({
   vessel,
   guide,
@@ -30,7 +36,7 @@ export default function RecipePlatingSection({
               플레이팅 가이드
             </span>
             <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-700">
-              {guide}
+              {formatGuide(guide)}
             </p>
           </div>
         </div>

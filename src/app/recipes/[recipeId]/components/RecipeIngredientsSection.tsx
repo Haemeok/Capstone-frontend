@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { ShoppingBasketIcon } from "lucide-react";
 
 import { formatNumber } from "@/shared/lib/format";
+import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
 
@@ -20,29 +21,49 @@ type IngredientsSectionProps = {
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const [showNutrition, setShowNutrition] = useState(false);
+  const [currentServings, setCurrentServings] = useState(1);
 
   const randomActivity = useMemo(() => getRandomActivity(), [recipe.id]);
 
-  const activityTime = calculateActivityTime(
-    recipe.totalCalories,
+  const servingRatio = currentServings / recipe.servings;
+
+  const MIN_SERVINGS = 1;
+  const MAX_SERVINGS = 20;
+
+  const handleIncrement = () => {
+    if (currentServings < MAX_SERVINGS) {
+      setCurrentServings((prev) => prev + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (currentServings > MIN_SERVINGS) {
+      setCurrentServings((prev) => prev - 1);
+    }
+  };
+
+  const scaledCalories = Math.floor(recipe.totalCalories * servingRatio);
+  const scaledIngredientCost = Math.round(
+    recipe.totalIngredientCost * servingRatio
+  );
+  const scaledMarketPrice = Math.round(recipe.marketPrice * servingRatio);
+  const scaledActivityTime = calculateActivityTime(
+    scaledCalories,
     randomActivity
   );
 
   const displayConfig = {
     topBanner: {
       pointText: showNutrition
-        ? `${formatNumber(Math.floor(recipe.totalCalories), "kcal")}`
-        : `${formatNumber(recipe.totalIngredientCost, "원")}`,
+        ? `${formatNumber(scaledCalories, "kcal")}`
+        : `${formatNumber(scaledIngredientCost, "원")}`,
       prefix: showNutrition ? "이 레시피는 약" : "이 레시피에 약",
       suffix: showNutrition ? "예요!" : "필요해요!",
     },
     bottomBanner: {
       pointText: showNutrition
-        ? `${randomActivity.name} ${formatNumber(activityTime, "분")}`
-        : `${formatNumber(
-            recipe.marketPrice - recipe.totalIngredientCost,
-            "원"
-          )}`,
+        ? `${randomActivity.name} ${formatNumber(scaledActivityTime, "분")}`
+        : `${formatNumber(scaledMarketPrice - scaledIngredientCost, "원")}`,
       prefix: showNutrition ? "이 칼로리는" : "배달 물가 대비",
       suffix: showNutrition ? "으로 소모 가능해요!" : "절약해요!",
       textClassName: "text-purple-500",
@@ -65,54 +86,95 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         pointText={displayConfig.topBanner.pointText}
         prefix={displayConfig.topBanner.prefix}
         suffix={displayConfig.topBanner.suffix}
-        triggerAnimation={showNutrition}
       />
 
       <div>
         {showNutrition ? (
           <NutritionTable
             totalServings={recipe.servings}
+            currentServings={currentServings}
+            onServingsChange={setCurrentServings}
             nutrition={recipe.nutrition}
           />
         ) : (
-          <ul className="flex flex-col gap-1">
-            {recipe.ingredients.map((ingredient, index) => (
-              <li
-                key={index}
-                className="grid grid-cols-[1.5fr_1.5fr_1fr_32px] items-center gap-3"
-              >
-                <p className="text-left font-bold">{ingredient.name}</p>
+          <>
+            <div className="mb-3 flex items-center justify-end gap-2">
+              <span className="text-sm text-gray-600">인분</span>
+              <div className="flex items-center gap-1">
+                {currentServings > MIN_SERVINGS && (
+                  <button
+                    type="button"
+                    onClick={handleDecrement}
+                    aria-label="인분 줄이기"
+                    className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+                  >
+                    -
+                  </button>
+                )}
+                <span className="w-10 text-center text-sm font-medium text-gray-800">
+                  {currentServings}
+                </span>
+                {currentServings < MAX_SERVINGS && (
+                  <button
+                    type="button"
+                    onClick={handleIncrement}
+                    aria-label="인분 늘리기"
+                    className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+                  >
+                    +
+                  </button>
+                )}
+              </div>
+            </div>
+            <ul className="flex flex-col gap-1">
+              {recipe.ingredients.map((ingredient, index) => {
+                const convertedQuantity = convertIngredientQuantity(
+                  ingredient.quantity,
+                  servingRatio
+                );
 
-                <p className="text-left whitespace-nowrap">
-                  {ingredient.quantity}
-                  {ingredient.quantity !== "약간" && ingredient.unit}
-                </p>
+                return (
+                  <li
+                    key={index}
+                    className="grid grid-cols-[1.5fr_1.5fr_1fr_32px] items-center gap-3"
+                  >
+                    <p className="text-left font-bold">{ingredient.name}</p>
 
-                <p className="text-right text-sm text-slate-500">
-                  {formatNumber(ingredient.price || 0, "원")}
-                </p>
+                    <p className="text-left whitespace-nowrap">
+                      {convertedQuantity}
+                      {convertedQuantity !== "약간" && ingredient.unit}
+                    </p>
 
-                <div className="flex items-center justify-center">
-                  {ingredient.coupangLink ? (
-                    <Link
-                      href={ingredient.coupangLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <div className="rounded-md border border-gray-400 p-[2px]">
-                        <ShoppingBasketIcon
-                          className="text-gray-400"
-                          size={20}
-                        />
-                      </div>
-                    </Link>
-                  ) : (
-                    <div className="w-6" />
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+                    <p className="text-right text-sm text-slate-500">
+                      {formatNumber(
+                        Math.round((ingredient.price || 0) * servingRatio),
+                        "원"
+                      )}
+                    </p>
+
+                    <div className="flex items-center justify-center">
+                      {ingredient.coupangLink ? (
+                        <Link
+                          href={ingredient.coupangLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <div className="rounded-md border border-gray-400 p-[2px]">
+                            <ShoppingBasketIcon
+                              className="text-gray-400"
+                              size={20}
+                            />
+                          </div>
+                        </Link>
+                      ) : (
+                        <div className="w-6" />
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
         )}
       </div>
 
@@ -123,7 +185,6 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
           suffix={displayConfig.bottomBanner.suffix}
           containerClassName="flex items-center border-0 text-gray-400 p-0 font-bold"
           textClassName={displayConfig.bottomBanner.textClassName}
-          triggerAnimation={showNutrition}
         />
       </div>
     </div>
