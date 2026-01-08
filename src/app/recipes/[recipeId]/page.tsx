@@ -35,6 +35,7 @@ import RecipePlatingSection from "./components/RecipePlatingSection";
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
 import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
 import RecipeVideoSection from "./components/RecipeVideoSection";
+import { ScrollReset } from "./components/ScrollReset";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -89,7 +90,7 @@ export default async function RecipeDetailPage({
     : "이런 레시피는 어떠신가요?";
 
   return (
-    <>
+    <ScrollReset>
       <RecipeStatusProvider recipeId={recipeId}>
         <RecipeNavbar
           title={staticRecipe.title}
@@ -187,6 +188,6 @@ export default async function RecipeDetailPage({
         </RecipeContainer>
       </RecipeStatusProvider>
       <DesktopFooter />
-    </>
+    </ScrollReset>
   );
 }
