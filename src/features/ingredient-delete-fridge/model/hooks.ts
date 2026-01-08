@@ -100,6 +100,10 @@ export const useDeleteIngredientBulkMutation = (
       queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
       options?.onSuccess?.();
     },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
+    },
     onError: (error, variables, context) => {
       if (context?.previousIngredientsListData) {
         queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
