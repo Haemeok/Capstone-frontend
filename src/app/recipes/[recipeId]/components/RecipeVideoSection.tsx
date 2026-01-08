@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useRef, useState } from "react";
 import { Pin } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 
 import {
   YouTubeVideoPlayer,
@@ -49,35 +49,62 @@ export default function RecipeVideoSection({
 
   return (
     <VideoPlayerContext.Provider value={{ seekToTimeline }}>
-      <section className={cn("my-6", isSticky && "invisible")}>
-        <div className="relative">
-          <YouTubeVideoPlayer ref={playerRef} videoUrl={videoUrl} />
+      <section className="relative">
+        <div
+          className={cn(
+            "w-full transition-all",
+            isSticky ? "my-6 block aspect-video" : "hidden h-0"
+          )}
+        />
+
+        <div
+          className={cn(
+            "z-50 transition-all duration-300 ease-in-out",
+            isSticky
+              ? "fixed top-20 right-0 left-0 mx-auto w-full px-4 md:max-w-3xl"
+              : "relative my-6 w-full"
+          )}
+        >
+          <div
+            className={cn(
+              "bg-card relative overflow-hidden rounded-xl border shadow-sm transition-all",
+              isSticky && "shadow-2xl"
+            )}
+          >
+            <YouTubeVideoPlayer ref={playerRef} videoUrl={videoUrl} />
+          </div>
 
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="absolute -top-11 right-0 w-fit"
+            layout
+            className={cn(
+              "absolute z-10 w-fit",
+              isSticky ? "-top-12 left-1/2 -translate-x-1/2" : "-top-11 right-0"
+            )}
           >
             <Button
               variant="secondary"
-              size="icon"
+              size={isSticky ? "icon" : "default"}
               onClick={toggleSticky}
               className={cn(
-                "bg-background/80 hover:bg-background/90 w-full cursor-pointer rounded-2xl px-3 py-2 shadow-md backdrop-blur-sm transition-colors",
-                isSticky && "bg-primary/80 hover:bg-primary/90"
+                "cursor-pointer shadow-md backdrop-blur-sm transition-all",
+                isSticky
+                  ? "bg-primary/80 hover:bg-primary/90 text-primary-foreground h-10 w-10 rounded-full"
+                  : "bg-background/80 hover:bg-background/90 rounded-2xl px-3 py-2"
               )}
-              aria-label={"영상 고정"}
+              aria-label={isSticky ? "영상 고정 해제" : "영상 고정"}
             >
               <motion.div
                 animate={{ rotate: isSticky ? 45 : 0 }}
                 className="flex items-center justify-center gap-1"
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                <p className="text-sm font-medium">영상 고정</p>
+                {!isSticky && (
+                  <span className="text-sm font-medium">영상 고정</span>
+                )}
                 <Pin
                   className={cn(
-                    "h-5 w-5 transition-all",
-                    isSticky && "text-primary-foreground fill-current"
+                    "h-5 w-5 fill-current transition-all",
+                    isSticky && "text-primary-foreground"
                   )}
                 />
               </motion.div>
@@ -85,44 +112,6 @@ export default function RecipeVideoSection({
           </motion.div>
         </div>
       </section>
-
-      <AnimatePresence>
-        {isSticky && (
-          <motion.div
-            initial={{ opacity: 0, y: 100, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 100, scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-20 z-50 w-full md:max-w-3xl"
-          >
-            <div className="bg-card relative rounded-xl border shadow-2xl">
-              <YouTubeVideoPlayer ref={playerRef} videoUrl={videoUrl} />
-
-              {/* Pin button in sticky mode */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="absolute -top-12 right-1/2 translate-x-1/2"
-              >
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  onClick={toggleSticky}
-                  className="bg-primary/80 hover:bg-primary/90 h-10 w-10 cursor-pointer rounded-full shadow-md backdrop-blur-sm"
-                  aria-label="영상 고정 해제"
-                >
-                  <motion.div
-                    animate={{ rotate: 45 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  >
-                    <Pin className="text-primary-foreground h-5 w-5 fill-current" />
-                  </motion.div>
-                </Button>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {children}
     </VideoPlayerContext.Provider>

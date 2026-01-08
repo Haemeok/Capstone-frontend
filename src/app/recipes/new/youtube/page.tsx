@@ -139,7 +139,7 @@ const YoutubeImportPage = () => {
             </h1>
             <p className="text-lg text-gray-500">
               영상만 보고 따라하기 힘드셨나요?
-              <br className="hidden md:block" />
+              <br />
               <span className="text-olive-light font-bold">
                 영상과 레시피를 한눈에
               </span>{" "}
