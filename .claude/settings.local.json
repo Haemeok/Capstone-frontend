@@ -4,7 +4,9 @@
       "Bash(npm install:*)",
       "Bash(cat:*)",
       "Bash(npm run build:*)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "WebFetch(domain:code.claude.com)",
+      "Bash(node -e:*)"
     ],
     "deny": [],
     "ask": []

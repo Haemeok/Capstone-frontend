@@ -20,18 +20,22 @@ export const homeMetadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/web-app-manifest-192x192.png",
+        url: "https://www.recipio.kr/web-app-manifest-192x192.png",
         type: "image/png",
         sizes: "192x192",
       },
       {
-        url: "/web-app-manifest-512x512.png",
+        url: "https://www.recipio.kr/web-app-manifest-512x512.png",
         type: "image/png",
         sizes: "512x512",
       },
     ],
     apple: [
-      { url: "/apple-touch-icon.png?v=2", sizes: "180x180", type: "image/png" },
+      {
+        url: "https://www.recipio.kr/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
     ],
   },
   appleWebApp: {
@@ -46,7 +50,7 @@ export const homeMetadata: Metadata = {
     siteName: "레시피오 - recipio",
     images: [
       {
-        url: "/back1.webp",
+        url: "https://www.recipio.kr/back1.webp",
         width: 1200,
         height: 630,
         alt: "레시피오 - 홈쿡 레시피",
