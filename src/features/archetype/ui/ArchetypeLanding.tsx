@@ -1,3 +1,4 @@
+import { LANDING_BASE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image";
 
 type ArchetypeLandingProps = {
@@ -56,7 +57,7 @@ const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
         <div className="flex flex-row items-center justify-center gap-4 pb-8">
           <div className="relative flex h-64 w-48 -rotate-6 items-center justify-center overflow-hidden rounded-lg border-2 border-white/30 bg-gray-300/20 shadow-xl backdrop-blur-xs transition-transform hover:rotate-0">
             <Image
-              src="/arche/landing1.png"
+              src={`${LANDING_BASE_URL}landing1.png`}
               alt="Archetype Landing 1"
               wrapperClassName="h-64 w-48"
               className="h-full w-full object-cover blur-[1px]"
@@ -65,7 +66,7 @@ const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
           </div>
           <div className="relative flex h-64 w-48 rotate-0 items-center justify-center overflow-hidden rounded-lg border-2 border-white/40 bg-gray-300/30 shadow-2xl backdrop-blur-lg">
             <Image
-              src="/arche/landing2.png"
+              src={`${LANDING_BASE_URL}landing2.png`}
               alt="Archetype Landing 2"
               wrapperClassName="h-64 w-48"
               className="h-full w-full object-cover blur-[1px]"
@@ -74,7 +75,7 @@ const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
           </div>
           <div className="relative flex h-64 w-48 rotate-6 items-center justify-center overflow-hidden rounded-lg border-2 border-white/30 bg-gray-300/20 shadow-xl backdrop-blur-sm transition-transform hover:rotate-0">
             <Image
-              src="/arche/landing3.png"
+              src={`${LANDING_BASE_URL}landing3.png`}
               alt="Archetype Landing 3"
               wrapperClassName="h-64 w-48"
               className="h-full w-full object-cover blur-[1px]"
