@@ -14,6 +14,7 @@ import {
 import { Container } from "@/shared/ui/Container";
 import { Image } from "@/shared/ui/image/Image";
 import PrevButton from "@/shared/ui/PrevButton";
+import { GUIDE_BASE_URL } from "@/shared/config/constants/recipe";
 
 type TabType = "ios" | "android";
 
@@ -86,21 +87,21 @@ const InstallGuidePage = () => {
                 step={1}
                 title="공유 버튼 탭하기"
                 description="사파리 하단 메뉴바에서 공유 아이콘을 찾아 탭해주세요."
-                imageSrc="/제목 없음.png"
+                imageSrc={`${GUIDE_BASE_URL}install2.png`}
                 icon={<Share size={20} />}
               />
               <GuideStep
                 step={2}
                 title="메뉴 위로 드래그"
                 description="공유 시트가 열리면 아래로 스크롤하여 메뉴를 확인해주세요."
-                imageSrc="/제목 없음3.png"
+                imageSrc={`${GUIDE_BASE_URL}install3.png`}
                 icon={<ArrowLeft className="rotate-90" size={20} />}
               />
               <GuideStep
                 step={3}
                 title="홈 화면에 추가"
                 description="'홈 화면에 추가' 버튼을 찾아 선택해주세요."
-                imageSrc="/제목 없음1.png"
+                imageSrc={`${GUIDE_BASE_URL}install4.png`}
                 icon={<Download size={20} />}
               />
             </div>
@@ -110,7 +111,7 @@ const InstallGuidePage = () => {
                 step={1}
                 title="공유 버튼 탭하기"
                 description="크롬 브라우저 우측 상단의 공유 아이콘을 탭해주세요."
-                imageSrc="/install1.png"
+                imageSrc={`${GUIDE_BASE_URL}install1.png`}
                 // Android placeholder images or generic icons since specific ones weren't provided
                 icon={<Share size={20} />}
               />
@@ -118,14 +119,14 @@ const InstallGuidePage = () => {
                 step={2}
                 title="메뉴 위로 드래그"
                 description="공유 시트가 열리면 아래로 스크롤하여 메뉴를 확인해주세요."
-                imageSrc="/제목 없음3.png"
+                imageSrc={`${GUIDE_BASE_URL}install3.png`}
                 icon={<ArrowLeft className="rotate-90" size={20} />}
               />
               <GuideStep
                 step={3}
                 title="홈 화면에 추가"
                 description="'홈 화면에 추가' 버튼을 찾아 선택해주세요."
-                imageSrc="/제목 없음1.png"
+                imageSrc={`${GUIDE_BASE_URL}install4.png`}
                 icon={<Download size={20} />}
               />
             </div>

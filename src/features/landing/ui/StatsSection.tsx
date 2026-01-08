@@ -3,6 +3,10 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Image } from "@/shared/ui/image/Image";
+import {
+  ICON_BASE_URL,
+  IMAGE_BASE_URL,
+} from "@/shared/config/constants/recipe";
 
 type StatCard = {
   image: string;
@@ -14,28 +18,28 @@ type StatCard = {
 
 const STATS: StatCard[] = [
   {
-    image: "/landing/money.webp",
+    image: `${ICON_BASE_URL}money.webp`,
     metric: "45%",
     label: "월 평균 식비 절감",
     description: "배달·외식 대비 절약 효과",
     accent: "from-green-500/10 to-emerald-500/10",
   },
   {
-    image: "/landing/clock.webp",
+    image: `${ICON_BASE_URL}clock.webp`,
     metric: "48분",
     label: "일 평균 고민 시간 단축",
     description: "'오늘 뭐 먹지?' 결정 시간",
     accent: "from-blue-500/10 to-cyan-500/10",
   },
   {
-    image: "/landing/food.webp",
+    image: `${ICON_BASE_URL}food.webp`,
     metric: "98%",
     label: "냉장고 재료 소진율",
     description: "버려지는 식재료 최소화",
     accent: "from-orange-500/10 to-amber-500/10",
   },
   {
-    image: "/landing/book.webp",
+    image: `${ICON_BASE_URL}book.webp`,
     metric: "5,000+",
     label: "검증된 셰프 레시피",
     description: "매주 업데이트되는 큐레이션",

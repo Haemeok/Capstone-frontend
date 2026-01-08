@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { Image } from "@/shared/ui/image/Image";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type ProblemCard = {
   image: string;
@@ -12,27 +13,27 @@ type ProblemCard = {
 
 const PROBLEMS: ProblemCard[] = [
   {
-    image: "/landing/graph.webp",
+    image: `${ICON_BASE_URL}graph.webp`,
     title: "치솟는 외식물가와 배달물가",
     description:
       "매일 오르는 외식 비용, 이제는 집에서 요리하는 것이 더 경제적이에요",
     accent: "from-red-500/10 to-orange-500/10",
   },
   {
-    image: "/landing/note.webp",
+    image: `${ICON_BASE_URL}note.webp`,
     title: "재료 정리가 불편한 유튜브 영상",
     description:
       "영상을 보며 재료를 일일이 메모하고 정리하는 번거로움, 이제 그만!",
     accent: "from-yellow-500/10 to-amber-500/10",
   },
   {
-    image: "/landing/search.webp",
+    image: `${ICON_BASE_URL}search.webp`,
     title: "남은 재료, 어떻게 처리하죠?",
     description: "레시피대로 만들었는데 남은 재료 처리가 고민이신가요?",
     accent: "from-blue-500/10 to-cyan-500/10",
   },
   {
-    image: "/landing/sleep.webp",
+    image: `${ICON_BASE_URL}sleep.webp`,
     title: "요리 시간이 너무 오래 걸려요",
     description:
       "바쁜 일상 속에서도 빠르고 간편하게 만들 수 있는 레시피가 필요해요",
