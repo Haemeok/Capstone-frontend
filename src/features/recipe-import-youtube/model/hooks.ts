@@ -2,8 +2,12 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getYoutubeMeta } from "./actions";
-import { triggerYoutubeImport } from "./api";
-import { YoutubeMeta, YoutubeImportResponse } from "./types";
+import { checkYoutubeDuplicate, triggerYoutubeImport } from "./api";
+import {
+  YoutubeDuplicateCheckResponse,
+  YoutubeMeta,
+  YoutubeImportResponse,
+} from "./types";
 
 export const useYoutubeMeta = (url: string | null) => {
   return useQuery<YoutubeMeta | null>({
@@ -29,5 +33,18 @@ export const useYoutubeImport = () => {
         queryClient.invalidateQueries({ queryKey: ["user-recipes"] });
       }
     },
+  });
+};
+
+export const useYoutubeDuplicateCheck = (url: string | null) => {
+  return useQuery<YoutubeDuplicateCheckResponse>({
+    queryKey: ["youtube-duplicate-check", url],
+    queryFn: () => {
+      if (!url) return Promise.resolve({});
+      return checkYoutubeDuplicate(url);
+    },
+    enabled: !!url,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
   });
 };

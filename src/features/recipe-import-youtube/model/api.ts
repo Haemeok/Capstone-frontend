@@ -1,4 +1,4 @@
-import { YoutubeImportResponse } from "./types";
+import { YoutubeImportResponse, YoutubeDuplicateCheckResponse } from "./types";
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
@@ -11,5 +11,13 @@ export const triggerYoutubeImport = async (
   return api.post<YoutubeImportResponse>(END_POINTS.RECIPE_EXTRACT, null, {
     params: { url },
     timeout: 10 * 60 * 1000,
+  });
+};
+
+export const checkYoutubeDuplicate = async (
+  url: string
+): Promise<YoutubeDuplicateCheckResponse> => {
+  return api.get<YoutubeDuplicateCheckResponse>("/recipes/youtube/check", {
+    params: { url },
   });
 };

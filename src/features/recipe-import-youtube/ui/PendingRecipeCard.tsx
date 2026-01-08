@@ -24,13 +24,9 @@ export const PendingRecipeCard = ({ url }: PendingRecipeCardProps) => {
         <Image
           src={meta.thumbnailUrl}
           alt={meta.title}
-          width={100}
-          height={100}
-          fit="cover"
-          imgClassName={`transition-opacity ${
+          imgClassName={`transition-opacity w-full h-full ${
             status === "pending" ? "opacity-50" : "opacity-70"
           }`}
-          sizes="(max-width: 640px) 160px, (max-width: 768px) 180px, (max-width: 1024px) 200px, 220px"
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black/40">
           <div className="space-y-3 px-4 text-center">
