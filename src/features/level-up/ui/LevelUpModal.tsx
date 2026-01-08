@@ -33,9 +33,7 @@ const calculateLevelUpData = (
   const currentIndex = PRICE_BRACKETS.indexOf(currentBracket);
 
   const nextBracket =
-    currentIndex < PRICE_BRACKETS.length - 1
-      ? PRICE_BRACKETS[currentIndex + 1]
-      : undefined;
+    currentIndex > 0 ? PRICE_BRACKETS[currentIndex - 1] : undefined;
 
   const isLevelUp = previousBracket !== currentBracket;
 

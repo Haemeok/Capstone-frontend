@@ -16,7 +16,7 @@ export type AIModelId =
 export const aiModels: Record<AIModelId, AIModel> = {
   INGREDIENT_FOCUS: {
     id: "INGREDIENT_FOCUS",
-    name: "냉장고 파먹기",
+    name: "냉장고 속 재료",
     image: `${IMAGE_BASE_URL}ai-concepts/ingredient-focus-2x3.webp`,
     description: "집에 있는 재료로 만드는 최고의 요리",
     loadingAnimation: {
