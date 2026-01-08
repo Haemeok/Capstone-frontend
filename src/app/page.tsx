@@ -46,7 +46,10 @@ const HomePage = async () => {
               preload="metadata"
               className="absolute inset-0 h-full w-full object-cover"
             >
-              <source src="/arche/video.webm" type="video/webm" />
+              <source
+                src="https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/videos/landingVideo.webm"
+                type="video/webm"
+              />
             </video>
             <div className="absolute inset-0 bg-black/40" />
             <div className="relative z-10 flex h-24 flex-col items-center justify-center space-y-4 px-6 py-8 md:h-40 md:space-y-6">
