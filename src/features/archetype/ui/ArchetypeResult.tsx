@@ -50,7 +50,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
   return (
     <>
       <div
-        className={`flex min-h-screen items-center justify-center ${notoSerifKR.variable} ${robotoMono.variable} ${alegreya.variable} bg-white`}
+        className={`flex items-center justify-center ${notoSerifKR.variable} ${robotoMono.variable} ${alegreya.variable} bg-white`}
       >
         <div
           className="relative w-full max-w-xl bg-[#F4F1EA] p-8 text-gray-900"

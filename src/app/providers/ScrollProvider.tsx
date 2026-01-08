@@ -12,7 +12,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
 
   const scrollClass = shouldHideNavbar(pathname)
     ? "h-[100dvh] md:h-[calc(100dvh-64px)] md:mt-16"
-    : "h-[100dvh] pb-[77px] md:h-[calc(100dvh-64px)] md:pb-0 md:mt-16";
+    : "h-[100dvh] md:h-[calc(100dvh-64px)] md:mt-16";
 
   return (
     <ScrollContext.Provider value={{ motionRef }}>

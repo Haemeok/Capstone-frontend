@@ -22,13 +22,13 @@ export type Tab = {
 };
 
 export const MyTabs: Tab[] = [
-  { id: "나의 레시피", label: "나의 레시피", icon: Award },
-  { id: "북마크", label: "북마크", icon: Bookmark },
-  { id: "캘린더", label: "캘린더", icon: Calendar },
+  { id: "recipes", label: "나의 레시피", icon: Award },
+  { id: "saved", label: "북마크", icon: Bookmark },
+  { id: "calendar", label: "캘린더", icon: Calendar },
 ];
 
 export const OtherTabs: Tab[] = [
-  { id: "나의 레시피", label: "나의 레시피", icon: Award },
+  { id: "recipes", label: "나의 레시피", icon: Award },
 ];
 
 type SurveyStepType = "radio" | "textarea" | "checkbox" | "range" | "slider";

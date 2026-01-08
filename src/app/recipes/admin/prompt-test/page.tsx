@@ -23,7 +23,11 @@ const AdminPromptTestPage = () => {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState<unknown>(null);
 
-  const { mutate: testPrompt, isPending, error } = useMutation({
+  const {
+    mutate: testPrompt,
+    isPending,
+    error,
+  } = useMutation({
     mutationFn: async (data: PromptTestRequest) => {
       const result = await api.post("/test/ai-recipe/prompt", data);
       return result;
@@ -204,7 +208,7 @@ const AdminPromptTestPage = () => {
           <button
             type="submit"
             disabled={isPending}
-            className="bg-olive-mint hover:bg-olive-700 w-full cursor-pointer rounded-lg px-6 py-3 font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="bg-olive-light w-full cursor-pointer rounded-lg px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {isPending ? "테스트 중..." : "프롬프트 테스트"}
           </button>
@@ -214,7 +218,7 @@ const AdminPromptTestPage = () => {
           <div className="rounded-lg bg-white p-6 shadow">
             <h2 className="mb-4 text-xl font-semibold">응답 결과</h2>
             <div className="max-h-[600px] overflow-auto">
-              <pre className="whitespace-pre-wrap rounded bg-gray-100 p-4 text-sm">
+              <pre className="rounded bg-gray-100 p-4 text-sm whitespace-pre-wrap">
                 {JSON.stringify(response, null, 2) || ""}
               </pre>
             </div>

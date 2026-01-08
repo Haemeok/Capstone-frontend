@@ -37,7 +37,7 @@ const CateGoryItem = ({
         fit="cover"
         fetchPriority={isLcpCandidate ? "high" : "auto"}
       />
-      <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+      <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/90 to-transparent p-2 pt-8">
         <p className="truncate px-2 text-lg font-bold text-white">{name}</p>
       </div>
     </Link>

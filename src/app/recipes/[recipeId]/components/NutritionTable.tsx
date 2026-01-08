@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { cn } from "@/shared/lib/utils";
 import NutritionItem from "./NutritionItem";
 import { Nutrition } from "@/entities/recipe/model/types";
@@ -8,28 +7,30 @@ import { Nutrition } from "@/entities/recipe/model/types";
 type NutritionTableProps = {
   nutrition: Nutrition;
   totalServings: number;
+  currentServings: number;
+  onServingsChange: (servings: number) => void;
   className?: string;
 };
 
 const NutritionTable = ({
   nutrition,
   totalServings,
+  currentServings,
+  onServingsChange,
   className,
 }: NutritionTableProps) => {
-  const [currentServings, setCurrentServings] = useState(1);
-
   const MIN_SERVINGS = 1;
   const MAX_SERVINGS = 20;
 
   const handleIncrement = () => {
     if (currentServings < MAX_SERVINGS) {
-      setCurrentServings((prev) => prev + 1);
+      onServingsChange(currentServings + 1);
     }
   };
 
   const handleDecrement = () => {
     if (currentServings > MIN_SERVINGS) {
-      setCurrentServings((prev) => prev - 1);
+      onServingsChange(currentServings - 1);
     }
   };
 

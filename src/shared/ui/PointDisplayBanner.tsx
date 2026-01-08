@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { cn } from "@/lib/utils";
 
 import useScrollAnimate from "../hooks/useScrollAnimate";
@@ -13,8 +11,6 @@ type PointDisplayBannerProps = {
   containerClassName?: string;
   textClassName?: string;
   icon?: React.ReactNode;
-
-  triggerAnimation?: any;
 };
 
 const PointDisplayBanner = ({
@@ -24,23 +20,16 @@ const PointDisplayBanner = ({
   containerClassName,
   textClassName,
   icon,
-  triggerAnimation,
 }: PointDisplayBannerProps) => {
-  const { targetRef, playAnimation } = useScrollAnimate<HTMLDivElement>();
+  const { targetRef } = useScrollAnimate<HTMLDivElement>();
 
-  useEffect(() => {
-    if (triggerAnimation !== undefined) {
-      playAnimation();
-    }
-  }, [triggerAnimation, playAnimation]);
   return (
     <div
       ref={targetRef}
       className={cn(
-        "flex gap-2 rounded-lg border-1 border-gray-300 p-3 px-2 text-sm",
+        "flex gap-2 rounded-lg border-1 border-gray-300 p-3 px-2 text-sm opacity-0",
         containerClassName
       )}
-      style={{ opacity: 0 }}
     >
       <div className="flex w-fit items-center">
         <p>{prefix}</p>
