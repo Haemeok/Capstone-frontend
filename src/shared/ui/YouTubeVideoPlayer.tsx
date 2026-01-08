@@ -48,12 +48,9 @@ export const YouTubeVideoPlayer = forwardRef<
         let seekSeconds = amount;
 
         if (type === "fraction") {
-          // For fraction type, we'll need to get duration first
-          // This is a limitation of iframe API - we'll default to treating it as seconds
           seekSeconds = amount;
         }
 
-        // Use YouTube iframe postMessage API
         iframeRef.current.contentWindow?.postMessage(
           JSON.stringify({
             event: "command",
@@ -63,7 +60,6 @@ export const YouTubeVideoPlayer = forwardRef<
           "*"
         );
 
-        // Auto-play after seeking
         setTimeout(() => {
           iframeRef.current?.contentWindow?.postMessage(
             JSON.stringify({
@@ -83,7 +79,6 @@ export const YouTubeVideoPlayer = forwardRef<
     },
   }));
 
-  // Store iframe ref when component mounts and video is playing
   useEffect(() => {
     const findIframe = () => {
       const iframe = document.querySelector(
@@ -93,24 +88,20 @@ export const YouTubeVideoPlayer = forwardRef<
       if (iframe) {
         iframeRef.current = iframe;
 
-        // Enable YouTube iframe API
         if (iframe.src && !iframe.src.includes("enablejsapi=1")) {
           const url = new URL(iframe.src);
           url.searchParams.set("enablejsapi", "1");
           iframe.src = url.toString();
         }
 
-        // Call onReady if provided
         if (onReady) {
           onReady();
         }
       }
     };
 
-    // Try to find iframe immediately
     findIframe();
 
-    // Also set up observer for when iframe is created
     const observer = new MutationObserver(findIframe);
     observer.observe(document.body, {
       childList: true,
@@ -125,8 +116,8 @@ export const YouTubeVideoPlayer = forwardRef<
   return (
     <YouTubePlayer
       videoId={videoId}
-      title="Recipe Video"
       defaultExpanded={false}
+      expandButtonClassName="hidden"
     />
   );
 });
