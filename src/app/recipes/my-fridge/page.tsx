@@ -46,12 +46,12 @@ const MyFridgePage = () => {
   return (
     <Container>
       <div className="flex flex-col gap-4">
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           <PrevButton />
           <h1 className="text-2xl font-bold">요리 가능한 레시피</h1>
         </div>
-        <div className="flex gap-2 items-center justify-between">
-          <div className="flex gap-1 items-center">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1">
             <p className="text-sm text-gray-500">{recipes.length}개의 레시피</p>
             <BadgeButton
               badgeText="현재 내 냉장고에 있는 재료로 만들 수 있는 레시피를 찾아보세요."
@@ -76,15 +76,15 @@ const MyFridgePage = () => {
         <div className="flex flex-col gap-4">
           {isPending ? (
             <div className="flex items-center justify-center py-20">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-olive-light"></div>
+              <div className="border-t-olive-light h-12 w-12 animate-spin rounded-full border-4 border-gray-200"></div>
             </div>
           ) : noResults ? (
-            <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <div className="flex flex-col items-center justify-center gap-4 py-20">
               <div className="text-6xl">🍳</div>
               <p className="text-lg font-semibold text-gray-700">
                 요리 가능한 레시피가 없습니다
               </p>
-              <p className="text-sm text-gray-500 text-center">
+              <p className="text-center text-sm text-gray-500">
                 냉장고에 재료를 추가하면
                 <br />더 많은 레시피를 찾을 수 있어요!
               </p>
@@ -94,10 +94,10 @@ const MyFridgePage = () => {
               {recipes.map((recipe) => (
                 <div
                   key={recipe.id}
-                  className="flex items-start relative cursor-pointer gap-3"
+                  className="relative flex cursor-pointer items-start gap-3"
                   onClick={() => router.push(`/recipes/${recipe.id}`)}
                 >
-                  <div className="relative h-32 w-32 flex-shrink-0 rounded-2xl overflow-hidden">
+                  <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-2xl">
                     <Image
                       src={recipe.imageUrl}
                       alt={recipe.title}
@@ -116,11 +116,15 @@ const MyFridgePage = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-1 min-w-0 flex-col gap-1 py-1">
-                    <p className="font-bold text-base line-clamp-2">{recipe.title}</p>
+                  <div className="flex min-w-0 flex-1 flex-col gap-1 py-1">
+                    <p className="line-clamp-2 text-base font-bold">
+                      {recipe.title}
+                    </p>
                     <div className="flex items-center gap-[2px]">
                       <Star size={15} className="fill-gray-800" />
-                      <p className="text-mm text-gray-800">{recipe.avgRating}</p>
+                      <p className="text-mm text-gray-800">
+                        {recipe.avgRating}
+                      </p>
                       <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
                       <p className="text-mm text-gray-800">·</p>
                       <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
@@ -135,15 +139,25 @@ const MyFridgePage = () => {
                         userId={recipe.authorId}
                       />
                     </div>
-                    <p className="text-sm text-olive-mint font-bold mt-2 break-words line-clamp-2">
-                      {recipe.matchedIngredients.join(", ")}
-                    </p>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {recipe.matchedIngredients.map((ingredient, index) => (
+                        <span
+                          key={index}
+                          className="bg-olive-mint/10 text-olive-mint rounded-lg px-2 py-1 text-xs leading-none font-bold"
+                        >
+                          {ingredient}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
-              <div ref={ref} className="mt-2 flex h-10 items-center justify-center">
+              <div
+                ref={ref}
+                className="mt-2 flex h-10 items-center justify-center"
+              >
                 {isFetchingNextPage ? (
-                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-olive-light"></div>
+                  <div className="border-t-olive-light h-8 w-8 animate-spin rounded-full border-4 border-gray-200"></div>
                 ) : (
                   !hasNextPage &&
                   recipes.length > 0 && (

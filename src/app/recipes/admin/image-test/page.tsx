@@ -114,7 +114,7 @@ const AdminImageTestPage = () => {
           <button
             type="submit"
             disabled={isPending}
-            className="bg-olive-mint hover:bg-olive-700 w-full cursor-pointer rounded-lg px-6 py-3 font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="bg-olive-light w-full cursor-pointer rounded-lg px-6 py-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {isPending ? "생성 중..." : "이미지 생성"}
           </button>

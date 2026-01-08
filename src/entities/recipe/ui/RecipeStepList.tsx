@@ -1,3 +1,5 @@
+"use client";
+
 import { RecipeStep as RecipeStepType } from "@/entities/recipe";
 
 import RecipeStep from "./RecipeStep";
