@@ -11,7 +11,7 @@ export default function RecipeCookingInfoSection({
 }: RecipeCookingInfoSectionProps) {
   return (
     <section className="bg-beige-light my-6 rounded-xl border border-gray-200 p-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="flex items-center justify-between lg:grid lg:grid-cols-3">
         <div className="flex items-center gap-3">
           <span className="text-2xl">⏱️</span>
           <div className="flex flex-col">

@@ -19,7 +19,7 @@ import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlVali
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 import { useToastStore } from "@/widgets/Toast";
 import { Container } from "@/shared/ui/Container";
-import PrevButton from "@/shared/ui/PrevButton";
+
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import { Image } from "@/shared/ui/image/Image";
 import { SAVINGS_BASE_URL } from "@/shared/config/constants/recipe";
@@ -115,14 +115,6 @@ const YoutubeImportPage = () => {
 
   return (
     <Container className="min-h-screen bg-white pb-20">
-      {/* Header */}
-      <div className="sticky top-0 z-10 hidden items-center gap-4 bg-white/80 py-4 backdrop-blur-md md:hidden">
-        <PrevButton />
-        <h1 className="text-2xl font-bold text-gray-900">
-          유튜브 레시피 가져오기
-        </h1>
-      </div>
-
       <div className="mx-auto flex w-full max-w-xl flex-col items-center pt-8 md:pt-12">
         <Image
           src={`${SAVINGS_BASE_URL}youtube_premium.webp`}
@@ -131,7 +123,6 @@ const YoutubeImportPage = () => {
           imgClassName="drop-shadow-xl"
         />
 
-        {/* Title Section */}
         <div className="mb-8 space-y-6 text-center">
           <div className="space-y-2">
             <h1 className="text-3xl font-extrabold text-gray-900 md:text-4xl">
@@ -150,33 +141,33 @@ const YoutubeImportPage = () => {
           <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 md:grid-cols-4">
             <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-gray-50 p-3 text-center">
               <div className="text-olive-light rounded-full bg-white p-2 shadow-sm">
-                <Sparkles className="h-4 w-4" />
+                <Sparkles className="h-6 w-6" />
               </div>
-              <span className="text-xs font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-600">
                 영양성분·칼로리
               </span>
             </div>
             <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-gray-50 p-3 text-center">
               <div className="text-olive-light rounded-full bg-white p-2 shadow-sm">
-                <Coins className="h-4 w-4" />
+                <Coins className="h-6 w-6" />
               </div>
-              <span className="text-xs font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-600">
                 예상 원가 분석
               </span>
             </div>
             <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-gray-50 p-3 text-center">
               <div className="text-olive-light rounded-full bg-white p-2 shadow-sm">
-                <Timer className="h-4 w-4" />
+                <Timer className="h-6 w-6" />
               </div>
-              <span className="text-xs font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-600">
                 조리 타이머
               </span>
             </div>
             <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-gray-50 p-3 text-center">
               <div className="text-olive-light rounded-full bg-white p-2 shadow-sm">
-                <ChefHat className="h-4 w-4" />
+                <ChefHat className="h-6 w-6" />
               </div>
-              <span className="text-xs font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-600">
                 인분수 변환
               </span>
             </div>
@@ -184,7 +175,6 @@ const YoutubeImportPage = () => {
         </div>
 
         <section className="w-full space-y-10">
-          {/* Input Section */}
           <div className="w-full space-y-8">
             <div className="relative mx-auto w-full transition-all duration-300 hover:-translate-y-1">
               <div
@@ -225,7 +215,6 @@ const YoutubeImportPage = () => {
             </div>
           </div>
 
-          {/* Loading State */}
           {(isLoadingMeta ||
             isFetchingMeta ||
             isCheckingDuplicate ||
@@ -242,7 +231,6 @@ const YoutubeImportPage = () => {
             </div>
           )}
 
-          {/* Error State */}
           {validatedUrl && !isLoadingMeta && !youtubeMeta && (
             <div className="animate-fade-in mx-auto w-full rounded-2xl bg-red-50/80 p-6 text-center text-red-600">
               <p className="font-medium">
@@ -253,7 +241,6 @@ const YoutubeImportPage = () => {
             </div>
           )}
 
-          {/* Duplicate Recipe Section */}
           {youtubeMeta &&
             !isLoadingMeta &&
             !isFetchingMeta &&
@@ -274,7 +261,6 @@ const YoutubeImportPage = () => {
               </div>
             )}
 
-          {/* Preview Card - Only show if not duplicate */}
           {youtubeMeta &&
             !isLoadingMeta &&
             !isFetchingMeta &&
