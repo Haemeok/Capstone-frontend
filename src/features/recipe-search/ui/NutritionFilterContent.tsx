@@ -21,6 +21,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from "@/shared/ui/shadcn/drawer";
 import {
   Popover,
@@ -28,9 +29,9 @@ import {
   PopoverTrigger,
 } from "@/shared/ui/shadcn/popover";
 
-type NutritionRangeValue = [number, number];
+export type NutritionRangeValue = [number, number];
 
-type NutritionFilterValues = {
+export type NutritionFilterValues = {
   [K in NutritionFilterKey]?: NutritionRangeValue;
 };
 
@@ -41,6 +42,7 @@ type NutritionFilterContentProps = {
   onApply: (values: NutritionFilterValues) => void;
   initialTypes: string[];
   onTypesChange: (types: string[]) => void;
+  trigger?: React.ReactNode;
 };
 
 export const NutritionFilterContent = ({
@@ -50,6 +52,7 @@ export const NutritionFilterContent = ({
   onApply,
   initialTypes,
   onTypesChange,
+  trigger,
 }: NutritionFilterContentProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [selectedTheme, setSelectedTheme] = useState<NutritionThemeKey | null>(
@@ -156,9 +159,7 @@ export const NutritionFilterContent = ({
   const RecipeTypeFilters = () => {
     const handleTypeToggle = (type: string) => {
       setTypes((prev) =>
-        prev.includes(type)
-          ? prev.filter((t) => t !== type)
-          : [...prev, type]
+        prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
       );
     };
 
@@ -247,6 +248,7 @@ export const NutritionFilterContent = ({
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
+        {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
         <DrawerContent className="flex w-full flex-col sm:max-w-lg">
           <DrawerHeader className="text-left">
             <DrawerTitle className="text-xl font-bold">필터</DrawerTitle>
@@ -286,9 +288,7 @@ export const NutritionFilterContent = ({
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverTrigger asChild>
-        <div></div>
-      </PopoverTrigger>
+      <PopoverTrigger asChild>{trigger || <div></div>}</PopoverTrigger>
 
       <PopoverContent className="w-[680px]" align="start">
         <div className="space-y-4">

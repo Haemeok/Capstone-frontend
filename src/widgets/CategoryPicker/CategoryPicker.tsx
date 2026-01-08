@@ -13,6 +13,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from "@/shared/ui/shadcn/drawer";
 import { Label } from "@/shared/ui/shadcn/label";
 import {
@@ -31,6 +32,7 @@ type CategoryPickerProps = {
   availableValues: string[];
   header: string;
   description?: string;
+  trigger?: React.ReactNode;
 };
 
 const CategoryPicker = ({
@@ -42,6 +44,7 @@ const CategoryPicker = ({
   description,
   initialValue,
   availableValues,
+  trigger,
 }: CategoryPickerProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [internalSelection, setInternalSelection] = useState<string[] | string>(
@@ -128,6 +131,7 @@ const CategoryPicker = ({
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
+        {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
         <DrawerContent className="flex w-full flex-col sm:max-w-lg">
           <DrawerHeader className="text-left">
             <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
@@ -165,9 +169,7 @@ const CategoryPicker = ({
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverTrigger asChild>
-        <div></div>
-      </PopoverTrigger>
+      <PopoverTrigger asChild>{trigger || <div></div>}</PopoverTrigger>
 
       <PopoverContent className="w-80" align="start">
         <div className="space-y-4">

@@ -1,18 +1,9 @@
 "use client";
 
-import {
-  BASE_DRAWER_CONFIGS,
-  DISH_TYPES,
-  SORT_TYPES,
-  TAG_DEFINITIONS,
-} from "@/shared/config/constants/recipe";
 import { Container } from "@/shared/ui/Container";
-import { Drawer, DrawerContent } from "@/shared/ui/shadcn/drawer";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 
-import CategoryPicker from "@/widgets/CategoryPicker/CategoryPicker";
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
-import { NutritionFilterContent } from "@/features/recipe-search/ui/NutritionFilterContent";
 
 import { useFilterDrawer } from "./hooks/useSearchDrawer";
 import { useSearchResults } from "./hooks/useSearchResults";
@@ -74,66 +65,17 @@ export const SearchClient = () => {
           sort={sort}
           tags={tags}
           isNutritionDirty={isNutritionDirty}
-          onDishTypeClick={() => openDrawer("dishType")}
-          onSortClick={() => openDrawer("sort")}
-          onTagsClick={() => openDrawer("tags")}
-          onNutritionClick={() => openDrawer("nutrition")}
+          activeDrawer={activeDrawer}
+          openDrawer={openDrawer}
+          closeDrawer={closeDrawer}
+          updateDishType={updateDishType}
+          updateSort={updateSort}
+          updateTags={updateTags}
+          updateNutritionFilters={updateNutritionFilters}
+          updateTypes={updateTypes}
+          nutritionParams={nutritionParams}
+          types={types}
         />
-
-        {activeDrawer === "dishType" && (
-          <CategoryPicker
-            open={true}
-            onOpenChange={(open) => !open && closeDrawer()}
-            isMultiple={false}
-            setValue={(val) => {
-              updateDishType(val as string);
-              closeDrawer();
-            }}
-            initialValue={dishType}
-            availableValues={DISH_TYPES}
-            header={BASE_DRAWER_CONFIGS.dishType.header}
-            description={BASE_DRAWER_CONFIGS.dishType.description}
-          />
-        )}
-        {activeDrawer === "sort" && (
-          <CategoryPicker
-            open={true}
-            onOpenChange={(open) => !open && closeDrawer()}
-            isMultiple={false}
-            setValue={(val) => {
-              updateSort(val as string);
-              closeDrawer();
-            }}
-            initialValue={sort}
-            availableValues={SORT_TYPES}
-            header={BASE_DRAWER_CONFIGS.sort.header}
-            description={BASE_DRAWER_CONFIGS.sort.description}
-          />
-        )}
-        {activeDrawer === "tags" && (
-          <CategoryPicker
-            open={true}
-            onOpenChange={(open) => !open && closeDrawer()}
-            isMultiple={true}
-            setValue={(val) => updateTags(val as string[])}
-            initialValue={tags}
-            availableValues={TAG_DEFINITIONS.map(
-              (tag) => `${tag.emoji} ${tag.name}`
-            )}
-            header={BASE_DRAWER_CONFIGS.tags.header}
-            description={BASE_DRAWER_CONFIGS.tags.description}
-          />
-        )}
-        {activeDrawer === "nutrition" && (
-          <NutritionFilterContent
-            initialValues={nutritionParams}
-            onApply={updateNutritionFilters}
-            initialTypes={types}
-            onTypesChange={updateTypes}
-            open={true}
-            onOpenChange={(open) => !open && closeDrawer()}
-          />
-        )}
 
         <RecipeGrid
           recipes={recipes}
