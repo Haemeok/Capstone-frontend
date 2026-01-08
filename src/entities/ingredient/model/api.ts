@@ -13,6 +13,7 @@ export const getIngredients = async ({
   pageParam = 0,
   isMine = false,
   isFridge = false,
+  size = PAGE_SIZE,
 }: {
   category: string | null;
   q?: string;
@@ -20,10 +21,11 @@ export const getIngredients = async ({
   pageParam: number;
   isMine: boolean;
   isFridge?: boolean;
+  size?: number;
 }) => {
   const baseParams: Partial<BaseQueryParams> = {
     page: pageParam,
-    size: PAGE_SIZE,
+    size,
   };
 
   const optionalParams: Partial<IngredientQueryParams> = {
@@ -42,8 +44,6 @@ export const getIngredients = async ({
     : isFridge
       ? END_POINTS.INGREDIENTS
       : END_POINTS.SEARCH_INGREDIENTS;
-
-  console.log("endPoint", endPoint, isMine, isFridge);
 
   const response = await api.get<IngredientsApiResponse>(endPoint, {
     params: apiParams,
