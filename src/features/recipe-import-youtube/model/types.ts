@@ -18,3 +18,7 @@ export type ExtractionStatus = {
     message: string;
   };
 };
+
+export type YoutubeDuplicateCheckResponse = {
+  recipeId?: string;
+};

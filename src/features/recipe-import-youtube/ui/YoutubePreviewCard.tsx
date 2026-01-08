@@ -13,7 +13,7 @@ export const YoutubePreviewCard = ({
   isLoading = false,
 }: YoutubePreviewCardProps) => {
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 mx-auto mt-6 w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm duration-300">
+    <div className="mx-auto mt-6 w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm duration-300">
       <div className="mb-4 flex gap-4">
         <Image
           src={meta.thumbnailUrl}
@@ -37,7 +37,7 @@ export const YoutubePreviewCard = ({
         className="bg-olive-light w-full rounded-lg py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? (
-          <span className="flex items-center justify-center gap-2">
+          <span className="flex items-center justify-center gap-2 text-white">
             <svg
               className="h-5 w-5 animate-spin"
               xmlns="http://www.w3.org/2000/svg"
