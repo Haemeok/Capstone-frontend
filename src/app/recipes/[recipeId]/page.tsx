@@ -34,6 +34,7 @@ import RecipeComponentsSection from "./components/RecipeComponentsSection";
 import RecipePlatingSection from "./components/RecipePlatingSection";
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
 import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
+import RecipeVideoSection from "./components/RecipeVideoSection";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -87,6 +88,7 @@ export default async function RecipeDetailPage({
     ? "더 다양한 셰프 레시피를 만나보세요"
     : "이런 레시피는 어떠신가요?";
 
+  console.log(staticRecipe.youtubeUrl);
   return (
     <>
       <RecipeStatusProvider recipeId={recipeId}>
@@ -118,27 +120,55 @@ export default async function RecipeDetailPage({
             servings={staticRecipe.servings}
           />
 
-          <RecipeCommentsSection comments={staticRecipe.comments} />
+          {staticRecipe.youtubeUrl ? (
+            <RecipeVideoSection videoUrl={staticRecipe.youtubeUrl}>
+              <RecipeCommentsSection comments={staticRecipe.comments} />
 
-          <RecipeFabButton hasAllStepImages={hasAllStepImages} />
+              <RecipeFabButton hasAllStepImages={hasAllStepImages} />
 
-          <RecipeIngredientsSection recipe={staticRecipe} />
+              <RecipeIngredientsSection recipe={staticRecipe} />
 
-          <RecipeCompleteButton saveAmount={saveAmount} className="mt-4" />
+              <RecipeCompleteButton saveAmount={saveAmount} className="mt-4" />
 
-          <CoupangDisclosure />
+              <CoupangDisclosure />
 
-          <CookingUnitTooltip />
+              <CookingUnitTooltip />
 
-          {staticRecipe.fineDiningInfo?.components && (
-            <RecipeComponentsSection
-              components={staticRecipe.fineDiningInfo.components}
-            />
+              {staticRecipe.fineDiningInfo?.components && (
+                <RecipeComponentsSection
+                  components={staticRecipe.fineDiningInfo.components}
+                />
+              )}
+
+              <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
+
+              <RecipeStepList RecipeSteps={staticRecipe.steps} />
+            </RecipeVideoSection>
+          ) : (
+            <>
+              <RecipeCommentsSection comments={staticRecipe.comments} />
+
+              <RecipeFabButton hasAllStepImages={hasAllStepImages} />
+
+              <RecipeIngredientsSection recipe={staticRecipe} />
+
+              <RecipeCompleteButton saveAmount={saveAmount} className="mt-4" />
+
+              <CoupangDisclosure />
+
+              <CookingUnitTooltip />
+
+              {staticRecipe.fineDiningInfo?.components && (
+                <RecipeComponentsSection
+                  components={staticRecipe.fineDiningInfo.components}
+                />
+              )}
+
+              <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
+
+              <RecipeStepList RecipeSteps={staticRecipe.steps} />
+            </>
           )}
-
-          <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
-
-          <RecipeStepList RecipeSteps={staticRecipe.steps} />
 
           {staticRecipe.fineDiningInfo?.plating && (
             <RecipePlatingSection

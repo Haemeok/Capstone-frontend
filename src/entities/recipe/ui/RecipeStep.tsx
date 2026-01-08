@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 
 import { Image } from "@/shared/ui/image/Image";
@@ -8,6 +10,7 @@ import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
 import { StepTimer } from "@/features/step-timer";
 import { WakeLockButton } from "@/features/screen-wake-lock";
+import { useVideoPlayer } from "@/app/recipes/[recipeId]/components/RecipeVideoSection";
 
 type RecipeStepProps = {
   stepIndex: number;
@@ -22,6 +25,7 @@ const RecipeStep = ({
   length,
   isFirstStep = false,
 }: RecipeStepProps) => {
+  const videoPlayer = useVideoPlayer();
   const { segments, allTerms: cookingTerms } = useMemo(
     () => extractCookingTerms(step.instruction),
     [step.instruction]
@@ -53,7 +57,7 @@ const RecipeStep = ({
         {timeInSeconds && <StepTimer targetSeconds={timeInSeconds} />}
       </div>
       <div className="flex flex-wrap items-center gap-1">
-        <IngredientIcon />
+        {step.ingredients && step.ingredients.length > 0 && <IngredientIcon />}
         {step.ingredients?.map((ingredient, index) => (
           <div
             key={`${index}-${ingredient.name}`}
@@ -71,12 +75,12 @@ const RecipeStep = ({
       </div>
       <div className="mt-2 flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
         <div className="md:flex-1">
-          <p className="whitespace-pre-wrap text-left">
+          <p className="text-left whitespace-pre-wrap">
             {segments.map((segment, index) =>
               segment.isTerm ? (
                 <span
                   key={index}
-                  className="rounded bg-olive-light/10 px-1 font-semibold text-olive-light"
+                  className="bg-olive-light/10 text-olive-light rounded px-1 font-semibold"
                 >
                   {segment.text}
                 </span>
@@ -85,6 +89,14 @@ const RecipeStep = ({
               )
             )}
           </p>
+          {step.timeline && videoPlayer && (
+            <button
+              onClick={() => videoPlayer.seekToTimeline(step.timeline!)}
+              className="bg-olive-light/10 text-olive-light hover:bg-olive-light/20 mt-2 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-all"
+            >
+              {step.timeline}
+            </button>
+          )}
           {cookingTerms.length > 0 && (
             <div className="mt-3 space-y-2">
               {cookingTerms.map((term, index) => (

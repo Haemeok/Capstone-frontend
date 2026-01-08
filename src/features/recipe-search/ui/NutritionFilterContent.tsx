@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { Slider } from "@/shared/ui/shadcn/slider";
 import { Button } from "@/shared/ui/shadcn/button";
+import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import {
   NUTRITION_RANGES,
   NutritionFilterKey,
@@ -38,6 +39,8 @@ type NutritionFilterContentProps = {
   onOpenChange: (open: boolean) => void;
   initialValues: NutritionFilterValues;
   onApply: (values: NutritionFilterValues) => void;
+  initialTypes: string[];
+  onTypesChange: (types: string[]) => void;
 };
 
 export const NutritionFilterContent = ({
@@ -45,11 +48,14 @@ export const NutritionFilterContent = ({
   onOpenChange,
   initialValues,
   onApply,
+  initialTypes,
+  onTypesChange,
 }: NutritionFilterContentProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [selectedTheme, setSelectedTheme] = useState<NutritionThemeKey | null>(
     null
   );
+  const [types, setTypes] = useState<string[]>(initialTypes);
   const [values, setValues] = useState<NutritionFilterValues>(() => {
     // Initialize with provided values or default ranges
     const init: NutritionFilterValues = {};
@@ -76,8 +82,9 @@ export const NutritionFilterContent = ({
         ];
       });
       setValues(init);
+      setTypes(initialTypes);
     }
-  }, [open, initialValues]);
+  }, [open, initialValues, initialTypes]);
 
   const handleThemeSelect = (themeKey: NutritionThemeKey) => {
     if (selectedTheme === themeKey) {
@@ -136,6 +143,7 @@ export const NutritionFilterContent = ({
     });
 
     onApply(filteredValues);
+    onTypesChange(types);
     onOpenChange(false);
   };
 
@@ -144,6 +152,40 @@ export const NutritionFilterContent = ({
     const range = NUTRITION_RANGES[key];
     return value && (value[0] !== range.min || value[1] !== range.max);
   });
+
+  const RecipeTypeFilters = () => {
+    const handleTypeToggle = (type: string) => {
+      setTypes((prev) =>
+        prev.includes(type)
+          ? prev.filter((t) => t !== type)
+          : [...prev, type]
+      );
+    };
+
+    return (
+      <div className="space-y-3 border-b pb-4">
+        <h5 className="text-sm font-semibold text-gray-700">레시피 유형</h5>
+        <div className="flex gap-4">
+          <label className="flex cursor-pointer items-center gap-2">
+            <Checkbox
+              checked={types.includes("AI")}
+              onCheckedChange={() => handleTypeToggle("AI")}
+              className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
+            />
+            <span className="text-sm text-gray-700">AI 레시피</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2">
+            <Checkbox
+              checked={types.includes("YOUTUBE")}
+              onCheckedChange={() => handleTypeToggle("YOUTUBE")}
+              className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
+            />
+            <span className="text-sm text-gray-700">유튜브 레시피</span>
+          </label>
+        </div>
+      </div>
+    );
+  };
 
   const ThemeSelector = () => (
     <div className="space-y-3">
@@ -207,13 +249,11 @@ export const NutritionFilterContent = ({
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerContent className="flex w-full flex-col sm:max-w-lg">
           <DrawerHeader className="text-left">
-            <DrawerTitle className="text-xl font-bold">영양 성분</DrawerTitle>
-            <DrawerDescription className="text-md text-gray-500">
-              원하는 영양 성분 범위를 설정하세요
-            </DrawerDescription>
+            <DrawerTitle className="text-xl font-bold">필터</DrawerTitle>
           </DrawerHeader>
           <div className="flex-1 overflow-y-auto p-4">
             <div className="space-y-6">
+              <RecipeTypeFilters />
               <ThemeSelector />
               <div className="border-t pt-4">
                 <SliderContent />
@@ -253,11 +293,11 @@ export const NutritionFilterContent = ({
       <PopoverContent className="w-[680px]" align="start">
         <div className="space-y-4">
           <div>
-            <h4 className="text-base font-medium">영양 성분</h4>
-            <p className="mt-1 text-sm text-gray-500">
-              원하는 영양 성분 범위를 설정하세요
-            </p>
+            <h4 className="">필터</h4>
+            <p className="text-sm text-gray-500">원하는 필터를 설정하세요.</p>
           </div>
+
+          <RecipeTypeFilters />
 
           <ThemeSelector />
 
