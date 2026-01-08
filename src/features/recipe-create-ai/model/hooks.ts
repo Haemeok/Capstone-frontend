@@ -30,10 +30,8 @@ export const useCreateAIRecipeMutation = (callbacks?: {
     },
     onSuccess: (data) => {
       router.prefetch(`/recipes/${data.recipeId}`);
-      setTimeout(() => {
-        completeGeneration(data);
-        callbacks?.onSuccess?.(data);
-      }, 10 * 1000);
+      completeGeneration(data);
+      callbacks?.onSuccess?.(data);
     },
     onError: (error) => {
       failGeneration(error.message || "레시피 생성 실패");
