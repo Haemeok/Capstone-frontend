@@ -2,7 +2,19 @@ import React from "react";
 
 import { Search } from "lucide-react";
 
+import {
+  NutritionFilterContent,
+  NutritionFilterValues,
+} from "@/features/recipe-search/ui/NutritionFilterContent";
+import {
+  BASE_DRAWER_CONFIGS,
+  DISH_TYPES,
+  DrawerType,
+  SORT_TYPES,
+  TAG_DEFINITIONS,
+} from "@/shared/config/constants/recipe";
 import FilterChip from "@/shared/ui/FilterChip";
+import CategoryPicker from "@/widgets/CategoryPicker/CategoryPicker";
 
 type SearchFiltersProps = {
   inputValue: string;
@@ -12,10 +24,16 @@ type SearchFiltersProps = {
   sort: string;
   tags: string[];
   isNutritionDirty: boolean;
-  onDishTypeClick: () => void;
-  onSortClick: () => void;
-  onTagsClick: () => void;
-  onNutritionClick: () => void;
+  activeDrawer: DrawerType | null;
+  openDrawer: (id: DrawerType) => void;
+  closeDrawer: () => void;
+  updateDishType: (val: string) => void;
+  updateSort: (val: string) => void;
+  updateTags: (val: string[]) => void;
+  updateNutritionFilters: (val: NutritionFilterValues) => void;
+  updateTypes: (val: string[]) => void;
+  nutritionParams: NutritionFilterValues;
+  types: string[];
 };
 
 export const SearchFilters = ({
@@ -26,10 +44,16 @@ export const SearchFilters = ({
   sort,
   tags,
   isNutritionDirty,
-  onDishTypeClick,
-  onSortClick,
-  onTagsClick,
-  onNutritionClick,
+  activeDrawer,
+  openDrawer,
+  closeDrawer,
+  updateDishType,
+  updateSort,
+  updateTags,
+  updateNutritionFilters,
+  updateTypes,
+  nutritionParams,
+  types,
 }: SearchFiltersProps) => {
   return (
     <div className="sticky-optimized sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
@@ -53,25 +77,69 @@ export const SearchFilters = ({
       </form>
 
       <div className="flex gap-1 p-2">
-        <FilterChip
-          header={dishType}
-          onClick={onDishTypeClick}
-          isDirty={dishType !== "전체"}
+        <CategoryPicker
+          trigger={
+            <FilterChip header={dishType} isDirty={dishType !== "전체"} />
+          }
+          open={activeDrawer === "dishType"}
+          onOpenChange={(open) =>
+            open ? openDrawer("dishType") : closeDrawer()
+          }
+          isMultiple={false}
+          setValue={(val) => {
+            updateDishType(val as string);
+            closeDrawer();
+          }}
+          initialValue={dishType}
+          availableValues={DISH_TYPES}
+          header={BASE_DRAWER_CONFIGS.dishType.header}
+          description={BASE_DRAWER_CONFIGS.dishType.description}
         />
-        <FilterChip
-          header={sort}
-          onClick={onSortClick}
-          isDirty={sort !== "최신순"}
+
+        <CategoryPicker
+          trigger={<FilterChip header={sort} isDirty={sort !== "최신순"} />}
+          open={activeDrawer === "sort"}
+          onOpenChange={(open) => (open ? openDrawer("sort") : closeDrawer())}
+          isMultiple={false}
+          setValue={(val) => {
+            updateSort(val as string);
+            closeDrawer();
+          }}
+          initialValue={sort}
+          availableValues={SORT_TYPES}
+          header={BASE_DRAWER_CONFIGS.sort.header}
+          description={BASE_DRAWER_CONFIGS.sort.description}
         />
-        <FilterChip
-          header={tags.length > 0 ? tags.join(", ") : "태그"}
-          onClick={onTagsClick}
-          isDirty={tags.length > 0}
+
+        <CategoryPicker
+          trigger={
+            <FilterChip
+              header={tags.length > 0 ? tags.join(", ") : "태그"}
+              isDirty={tags.length > 0}
+            />
+          }
+          open={activeDrawer === "tags"}
+          onOpenChange={(open) => (open ? openDrawer("tags") : closeDrawer())}
+          isMultiple={true}
+          setValue={(val) => updateTags(val as string[])}
+          initialValue={tags}
+          availableValues={TAG_DEFINITIONS.map(
+            (tag) => `${tag.emoji} ${tag.name}`
+          )}
+          header={BASE_DRAWER_CONFIGS.tags.header}
+          description={BASE_DRAWER_CONFIGS.tags.description}
         />
-        <FilterChip
-          header="필터"
-          onClick={onNutritionClick}
-          isDirty={isNutritionDirty}
+
+        <NutritionFilterContent
+          trigger={<FilterChip header="필터" isDirty={isNutritionDirty} />}
+          initialValues={nutritionParams}
+          onApply={updateNutritionFilters}
+          initialTypes={types}
+          onTypesChange={updateTypes}
+          open={activeDrawer === "nutrition"}
+          onOpenChange={(open) =>
+            open ? openDrawer("nutrition") : closeDrawer()
+          }
         />
       </div>
     </div>
