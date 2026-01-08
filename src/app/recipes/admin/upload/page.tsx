@@ -57,7 +57,9 @@ const AdminRecipeUploadPage = () => {
               [베스트 셀러] 쇼츠 게시판 &gt;
             </span>{" "}
           </p>
-          <p className="text-2xl">정호영이 1초만에 샘킴을 고른 이유?</p>
+          <p className="text-2xl">
+            흑백요리사 조용한 분위기가 너무 그리운 샘킴
+          </p>
         </div>
         <h1 className="mb-6 text-3xl font-bold">관리자용 레시피 업로드</h1>
 
