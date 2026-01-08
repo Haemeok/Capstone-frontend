@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { Maximize2, Minimize2, Play } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -40,29 +40,41 @@ interface YouTubePlayerProps {
   playerClassName?: string;
 }
 
-export function YouTubePlayer({
-  videoId,
-  title,
-  defaultExpanded = false,
-  customThumbnail,
+export interface YouTubePlayerRef {
+  play: () => void;
+}
 
-  // Styling props
-  className,
-  containerClassName,
-  expandedClassName,
-  thumbnailClassName,
-  thumbnailImageClassName,
-  playButtonClassName,
-  playIconClassName,
-  titleClassName,
-  controlsClassName,
-  expandButtonClassName,
-  backdropClassName,
-  playerClassName,
-}: YouTubePlayerProps) {
-  const [expanded, setExpanded] = useState(defaultExpanded);
-  const [playing, setPlaying] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
+  (
+    {
+      videoId,
+      title,
+      defaultExpanded = false,
+      customThumbnail,
+
+      // Styling props
+      className,
+      containerClassName,
+      expandedClassName,
+      thumbnailClassName,
+      thumbnailImageClassName,
+      playButtonClassName,
+      playIconClassName,
+      titleClassName,
+      controlsClassName,
+      expandButtonClassName,
+      backdropClassName,
+      playerClassName,
+    },
+    ref
+  ) => {
+    const [expanded, setExpanded] = useState(defaultExpanded);
+    const [playing, setPlaying] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+
+    useImperativeHandle(ref, () => ({
+      play: () => setPlaying(true),
+    }));
 
   // Extract video ID from full URL if needed
   const extractVideoId = (id: string) => {
@@ -340,7 +352,9 @@ export function YouTubePlayer({
       </AnimatePresence>
     </>
   );
-}
+});
+
+YouTubePlayer.displayName = "YouTubePlayer";
 
 // Controls Component
 interface YouTubePlayerControlsProps {

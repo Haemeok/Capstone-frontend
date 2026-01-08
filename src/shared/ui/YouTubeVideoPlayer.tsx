@@ -1,7 +1,10 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, useEffect } from "react";
-import { YouTubePlayer } from "@/shared/ui/shadcn/youtube-video-player";
+import {
+  YouTubePlayer,
+  type YouTubePlayerRef,
+} from "@/shared/ui/shadcn/youtube-video-player";
 
 export type YouTubeVideoPlayerRef = {
   seekTo: (amount: number, type?: "seconds" | "fraction") => void;
@@ -38,41 +41,56 @@ export const YouTubeVideoPlayer = forwardRef<
   YouTubeVideoPlayerProps
 >(({ videoUrl, onReady }, ref) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const internalPlayerRef = useRef<YouTubePlayerRef>(null);
+  const pendingSeekRef = useRef<{
+    amount: number;
+    type: "seconds" | "fraction";
+  } | null>(null);
   const videoId = extractYouTubeVideoId(videoUrl);
 
-  useImperativeHandle(ref, () => ({
-    seekTo: (amount: number, type: "seconds" | "fraction" = "seconds") => {
-      if (!iframeRef.current) return;
+  const performSeek = (amount: number, type: "seconds" | "fraction") => {
+    if (!iframeRef.current) return;
 
-      try {
-        let seekSeconds = amount;
+    try {
+      let seekSeconds = amount;
 
-        if (type === "fraction") {
-          seekSeconds = amount;
-        }
+      if (type === "fraction") {
+        seekSeconds = amount;
+      }
 
-        iframeRef.current.contentWindow?.postMessage(
+      iframeRef.current.contentWindow?.postMessage(
+        JSON.stringify({
+          event: "command",
+          func: "seekTo",
+          args: [seekSeconds, true],
+        }),
+        "*"
+      );
+
+      setTimeout(() => {
+        iframeRef.current?.contentWindow?.postMessage(
           JSON.stringify({
             event: "command",
-            func: "seekTo",
-            args: [seekSeconds, true],
+            func: "playVideo",
+            args: [],
           }),
           "*"
         );
+      }, 100);
+    } catch (error) {
+      console.error("Failed to seek video:", error);
+    }
+  };
 
-        setTimeout(() => {
-          iframeRef.current?.contentWindow?.postMessage(
-            JSON.stringify({
-              event: "command",
-              func: "playVideo",
-              args: [],
-            }),
-            "*"
-          );
-        }, 100);
-      } catch (error) {
-        console.error("Failed to seek video:", error);
+  useImperativeHandle(ref, () => ({
+    seekTo: (amount: number, type: "seconds" | "fraction" = "seconds") => {
+      if (!iframeRef.current) {
+        pendingSeekRef.current = { amount, type };
+        internalPlayerRef.current?.play();
+        return;
       }
+
+      performSeek(amount, type);
     },
     getInternalPlayer: () => {
       return iframeRef.current;
@@ -92,6 +110,19 @@ export const YouTubeVideoPlayer = forwardRef<
           const url = new URL(iframe.src);
           url.searchParams.set("enablejsapi", "1");
           iframe.src = url.toString();
+
+          // If there is a pending seek, we need to wait for the reload
+          if (pendingSeekRef.current) {
+            setTimeout(findIframe, 500);
+          }
+        } else if (pendingSeekRef.current) {
+          const { amount, type } = pendingSeekRef.current;
+          pendingSeekRef.current = null;
+
+          // Wait a bit for the iframe to be fully ready
+          setTimeout(() => {
+            performSeek(amount, type);
+          }, 500);
         }
 
         if (onReady) {
@@ -115,6 +146,7 @@ export const YouTubeVideoPlayer = forwardRef<
 
   return (
     <YouTubePlayer
+      ref={internalPlayerRef}
       videoId={videoId}
       defaultExpanded={false}
       expandButtonClassName="hidden"

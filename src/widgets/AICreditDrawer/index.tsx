@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type AICreditDrawerProps = {
   isOpen: boolean;
@@ -48,7 +49,7 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
         <div className="flex flex-col items-center px-6 pb-8">
           <div className="mt-8 flex justify-center">
             <Image
-              src="/gift.png"
+              src={`${ICON_BASE_URL}gift.webp`}
               alt="AI 무료 이용권"
               wrapperClassName="relative h-48 w-48 animate-bounce-soft"
               priority
