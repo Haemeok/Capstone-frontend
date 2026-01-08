@@ -21,6 +21,7 @@ type UseSearchResultsProps = {
   dishTypeCode: string | null;
   tagCodes: string[];
   nutritionParams: Partial<NutritionFilterValues>;
+  types: string[];
 };
 
 export const useSearchResults = ({
@@ -29,6 +30,7 @@ export const useSearchResults = ({
   dishTypeCode,
   tagCodes,
   nutritionParams,
+  types,
 }: UseSearchResultsProps) => {
   const nutritionQueryParams: Record<string, number> = {};
   Object.entries(nutritionParams).forEach(([key, value]) => {
@@ -42,14 +44,16 @@ export const useSearchResults = ({
 
   const nutritionKeyString = JSON.stringify(nutritionQueryParams);
 
+  const typesString = types.join(",");
+
   const { data, hasNextPage, isFetching, isPending, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
     InfiniteData<DetailedRecipesApiResponse>,
-    [string, string | null, string, string, string, string],
+    [string, string | null, string, string, string, string, string],
     number
   >({
-    queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q, nutritionKeyString],
+    queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q, nutritionKeyString, typesString],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
         sort: sortCode,
@@ -58,6 +62,7 @@ export const useSearchResults = ({
         q: q,
         pageParam,
         ...nutritionQueryParams,
+        types,
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
@@ -71,6 +76,7 @@ export const useSearchResults = ({
     tagCodes,
     q,
     nutritionKeyString,
+    typesString,
   ]);
   const dishType = dishTypeCode
     ? DISH_TYPE_CODES_TO_NAME[dishTypeCode as keyof typeof DISH_TYPE_CODES]

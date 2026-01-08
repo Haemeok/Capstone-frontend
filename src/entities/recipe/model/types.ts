@@ -103,6 +103,7 @@ export type RecipeStep = {
   instruction: string;
   stepImageUrl: string;
   action?: string;
+  timeline?: string;
   ingredients?: IngredientItem[];
   stepImageKey: string | null | undefined;
 };
@@ -153,6 +154,7 @@ export type RecipeQueryParams = {
   dishType?: string | null;
   tags?: string[] | null;
   isAiGenerated?: boolean;
+  types?: string[];
   maxCost?: number;
   minCost?: number;
   period?: "weekly" | "monthly";
