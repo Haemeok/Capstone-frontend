@@ -70,7 +70,7 @@ const DetailedRecipeGridItem = ({
           />
 
           {(leftBadge || rightBadge) && (
-            <div className="absolute top-0 right-0 left-0 flex items-start justify-between gap-2 p-2">
+            <div className="absolute top-0 right-0 left-0 z-10 flex items-start justify-between gap-2 p-2">
               {leftBadge && <div className="flex gap-2">{leftBadge}</div>}
               {rightBadge && <div className="flex gap-2">{rightBadge}</div>}
             </div>
