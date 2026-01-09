@@ -56,7 +56,7 @@ export const SearchFilters = ({
   types,
 }: SearchFiltersProps) => {
   return (
-    <div className="sticky-optimized sticky top-0 z-10 border-b border-gray-200 bg-white p-4 pb-0">
+    <div className="sticky-optimized sticky top-0 z-20 border-b border-gray-200 bg-white p-4 pb-0">
       <form onSubmit={handleSearchSubmit} className="relative">
         <input
           type="search"

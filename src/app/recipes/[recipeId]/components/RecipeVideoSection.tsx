@@ -59,10 +59,10 @@ export default function RecipeVideoSection({
 
         <div
           className={cn(
-            "z-50 transition-all duration-300 ease-in-out",
+            "transition-all duration-300 ease-in-out",
             isSticky
-              ? "fixed top-20 right-0 left-0 mx-auto w-full px-4 md:max-w-3xl"
-              : "relative my-6 w-full"
+              ? "fixed top-20 right-0 left-0 z-50 mx-auto w-full px-4 md:max-w-3xl"
+              : "relative z-0 my-6 w-full"
           )}
         >
           <div
