@@ -1,5 +1,3 @@
-import { Youtube } from "lucide-react";
-
 import { cn } from "@/shared/lib/utils";
 
 type YouTubeIconBadgeProps = {
@@ -13,6 +11,9 @@ const YouTubeIconBadge = ({ className }: YouTubeIconBadgeProps) => {
         role="img"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
+        width={28}
+        height={28}
+        preserveAspectRatio="xMidYMid"
         className="fill-red-500"
       >
         <title>YouTube</title>
