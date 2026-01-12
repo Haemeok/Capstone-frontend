@@ -21,7 +21,7 @@ type IngredientsSectionProps = {
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const [showNutrition, setShowNutrition] = useState(false);
-  const [currentServings, setCurrentServings] = useState(1);
+  const [currentServings, setCurrentServings] = useState(recipe.servings);
 
   const randomActivity = useMemo(() => getRandomActivity(), [recipe.id]);
 
@@ -128,8 +128,9 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
             </div>
             <ul className="flex flex-col gap-1">
               {recipe.ingredients.map((ingredient, index) => {
-                const convertedQuantity = convertIngredientQuantity(
+                const converted = convertIngredientQuantity(
                   ingredient.quantity,
+                  ingredient.unit,
                   servingRatio
                 );
 
@@ -141,8 +142,8 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                     <p className="text-left font-bold">{ingredient.name}</p>
 
                     <p className="text-left whitespace-nowrap">
-                      {convertedQuantity}
-                      {convertedQuantity !== "약간" && ingredient.unit}
+                      {converted.quantity}
+                      {converted.quantity !== "약간" && converted.unit}
                     </p>
 
                     <p className="text-right text-sm text-slate-500">
