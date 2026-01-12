@@ -1,4 +1,4 @@
-import { ImageWithFallback } from "@/shared/ui/image/ImageWithFallback";
+import { Image } from "@/shared/ui/image/Image";
 import { YoutubeMeta } from "../model/types";
 import {
   extractYouTubeVideoId,
@@ -24,8 +24,8 @@ export const YoutubePreviewCard = ({
   return (
     <div className="mx-auto mt-6 w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm duration-300">
       <div className="mb-4 flex gap-4">
-        <ImageWithFallback
-          srcs={thumbnailUrls}
+        <Image
+          src={thumbnailUrls}
           alt={meta.title}
           fit="cover"
           width={160}

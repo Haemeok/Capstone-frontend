@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
 import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
-import { ImageWithFallback } from "@/shared/ui/image/ImageWithFallback";
+import { Image } from "@/shared/ui/image/Image";
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -157,8 +157,8 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
                   )}
                 >
                   {getThumbnailUrls().length > 0 && (
-                    <ImageWithFallback
-                      srcs={getThumbnailUrls()}
+                    <Image
+                      src={getThumbnailUrls()}
                       alt={title || "Video thumbnail"}
                       priority
                       lazy={false}
@@ -277,8 +277,8 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
                         )}
                       >
                         {getThumbnailUrls().length > 0 && (
-                          <ImageWithFallback
-                            srcs={getThumbnailUrls()}
+                          <Image
+                            src={getThumbnailUrls()}
                             alt={title || "Video thumbnail"}
                             priority
                             lazy={false}
