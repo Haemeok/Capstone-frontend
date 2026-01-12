@@ -1,14 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { useUserStore } from "@/entities/user";
 
-import SettingsActionButton from "@/features/auth/ui/SettingsActionButton";
-import LoginDialog from "@/features/auth/ui/LoginDialog";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
+
+const SettingsActionButton = dynamic(
+  () => import("@/features/auth/ui/SettingsActionButton"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-9 w-9 rounded-full animate-pulse bg-gray-200" />
+    ),
+  }
+);
+
+const LoginDialog = dynamic(
+  () => import("@/features/auth/ui/LoginDialog"),
+  { ssr: false }
+);
 
 type HeaderProps = {
   isOwnProfile: boolean;

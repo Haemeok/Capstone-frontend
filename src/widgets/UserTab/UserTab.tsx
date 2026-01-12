@@ -2,15 +2,50 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import { MyTabs, OtherTabs } from "@/shared/config/constants/user";
+import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { User } from "@/entities/user";
 
-import { MyFavoriteRecipesTabContent } from "@/features/view-favorite-recipes";
+import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 
-import CalendarTabContent from "@/widgets/CalendarTabContent";
-import MyRecipesTabContent from "@/widgets/MyRecipesTabContent";
+const MyRecipesTabContent = dynamic(
+  () => import("@/widgets/MyRecipesTabContent"),
+  {
+    loading: () => (
+      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))] p-4">
+        <RecipeGridSkeleton count={8} isSimple />
+      </div>
+    ),
+  }
+);
+
+const MyFavoriteRecipesTabContent = dynamic(
+  () =>
+    import("@/features/view-favorite-recipes").then((mod) => ({
+      default: mod.MyFavoriteRecipesTabContent,
+    })),
+  {
+    loading: () => (
+      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))] p-4">
+        <RecipeGridSkeleton count={8} isSimple={false} />
+      </div>
+    ),
+  }
+);
+
+const CalendarTabContent = dynamic(
+  () => import("@/widgets/CalendarTabContent"),
+  {
+    loading: () => (
+      <div className="p-4">
+        <Skeleton className="h-96 w-full rounded-lg" />
+      </div>
+    ),
+  }
+);
 
 type UserTabProps = {
   user: User | undefined;
