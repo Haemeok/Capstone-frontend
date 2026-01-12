@@ -13,6 +13,9 @@ import {
 } from "@/shared/config/constants/recipe";
 import { getTypedKeys, getTypedEntries } from "@/shared/lib/types/utils";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
+import UserRecipeBadge from "@/shared/ui/badge/UserRecipeBadge";
+import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
+import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import {
   Drawer,
   DrawerClose,
@@ -166,14 +169,28 @@ export const NutritionFilterContent = ({
     return (
       <div className="space-y-3 border-b pb-4">
         <h5 className="text-sm font-semibold text-gray-700">레시피 유형</h5>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
+          <label className="flex cursor-pointer items-center gap-2">
+            <Checkbox
+              checked={types.includes("USER")}
+              onCheckedChange={() => handleTypeToggle("USER")}
+              className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
+            />
+            <span className="flex items-center gap-1.5 text-sm text-gray-700">
+              <UserRecipeBadge />
+              사용자 레시피
+            </span>
+          </label>
           <label className="flex cursor-pointer items-center gap-2">
             <Checkbox
               checked={types.includes("AI")}
               onCheckedChange={() => handleTypeToggle("AI")}
               className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
             />
-            <span className="text-sm text-gray-700">AI 레시피</span>
+            <span className="flex items-center gap-1.5 text-sm text-gray-700">
+              <AIGeneratedBadge />
+              AI 레시피
+            </span>
           </label>
           <label className="flex cursor-pointer items-center gap-2">
             <Checkbox
@@ -181,7 +198,10 @@ export const NutritionFilterContent = ({
               onCheckedChange={() => handleTypeToggle("YOUTUBE")}
               className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
             />
-            <span className="text-sm text-gray-700">유튜브 레시피</span>
+            <span className="flex items-center gap-1.5 text-sm text-gray-700">
+              <YouTubeIconBadge className="h-5 w-5" />
+              유튜브 레시피
+            </span>
           </label>
         </div>
       </div>
