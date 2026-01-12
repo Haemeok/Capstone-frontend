@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
+import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
+import { ImageWithFallback } from "@/shared/ui/image/ImageWithFallback";
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -119,11 +121,9 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
     };
   }, [expanded]);
 
-  const getThumbnailUrl = () => {
-    if (customThumbnail) return customThumbnail;
-    return actualVideoId
-      ? `https://i.ytimg.com/vi/${actualVideoId}/hqdefault.jpg`
-      : "";
+  const getThumbnailUrls = () => {
+    if (customThumbnail) return [customThumbnail];
+    return actualVideoId ? getYouTubeThumbnailUrls(actualVideoId) : [];
   };
 
   return (
@@ -156,15 +156,18 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
                     thumbnailClassName
                   )}
                 >
-                  {getThumbnailUrl() && (
-                    <motion.img
-                      layoutId={`youtube-player-thumbnail-${videoId}`}
-                      src={getThumbnailUrl()}
+                  {getThumbnailUrls().length > 0 && (
+                    <ImageWithFallback
+                      srcs={getThumbnailUrls()}
                       alt={title || "Video thumbnail"}
-                      className={cn(
-                        "absolute inset-0 h-full w-full object-cover opacity-70",
+                      priority
+                      lazy={false}
+                      wrapperClassName="absolute inset-0"
+                      imgClassName={cn(
+                        "object-cover opacity-70",
                         thumbnailImageClassName
                       )}
+                      aspectRatio="16 / 9"
                     />
                   )}
                 </motion.div>
@@ -273,15 +276,18 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
                           thumbnailClassName
                         )}
                       >
-                        {getThumbnailUrl() && (
-                          <motion.img
-                            layoutId={`youtube-player-thumbnail-${videoId}`}
-                            src={getThumbnailUrl()}
+                        {getThumbnailUrls().length > 0 && (
+                          <ImageWithFallback
+                            srcs={getThumbnailUrls()}
                             alt={title || "Video thumbnail"}
-                            className={cn(
-                              "absolute inset-0 h-full w-full object-cover opacity-70",
+                            priority
+                            lazy={false}
+                            wrapperClassName="absolute inset-0"
+                            imgClassName={cn(
+                              "object-cover opacity-70",
                               thumbnailImageClassName
                             )}
+                            aspectRatio="16 / 9"
                           />
                         )}
                       </motion.div>

@@ -1,5 +1,9 @@
-import { Image } from "@/shared/ui/image/Image";
+import { ImageWithFallback } from "@/shared/ui/image/ImageWithFallback";
 import { YoutubeMeta } from "../model/types";
+import {
+  extractYouTubeVideoId,
+  getYouTubeThumbnailUrls,
+} from "@/shared/lib/youtube/getYouTubeThumbnail";
 
 type YoutubePreviewCardProps = {
   meta: YoutubeMeta;
@@ -12,15 +16,21 @@ export const YoutubePreviewCard = ({
   onConfirm,
   isLoading = false,
 }: YoutubePreviewCardProps) => {
+  const videoId = extractYouTubeVideoId(meta.url);
+  const thumbnailUrls = videoId
+    ? [meta.thumbnailUrl, ...getYouTubeThumbnailUrls(videoId)]
+    : [meta.thumbnailUrl];
+
   return (
     <div className="mx-auto mt-6 w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm duration-300">
       <div className="mb-4 flex gap-4">
-        <Image
-          src={meta.thumbnailUrl}
+        <ImageWithFallback
+          srcs={thumbnailUrls}
           alt={meta.title}
           fit="cover"
           width={160}
           height={90}
+          aspectRatio="16 / 9"
           wrapperClassName="rounded-lg"
         />
 

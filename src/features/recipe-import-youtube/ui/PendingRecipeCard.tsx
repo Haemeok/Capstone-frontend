@@ -1,10 +1,14 @@
 "use client";
 
 import React from "react";
-import { Image } from "@/shared/ui/image/Image";
+import { ImageWithFallback } from "@/shared/ui/image/ImageWithFallback";
 import { YoutubeMeta } from "../model/types";
 import { useYoutubeImportStore } from "../model/store";
 import { Loader2, XCircle, CheckCircle } from "lucide-react";
+import {
+  extractYouTubeVideoId,
+  getYouTubeThumbnailUrls,
+} from "@/shared/lib/youtube/getYouTubeThumbnail";
 
 type PendingRecipeCardProps = {
   url: string;
@@ -18,12 +22,18 @@ export const PendingRecipeCard = ({ url }: PendingRecipeCardProps) => {
 
   const { meta, status, error } = importItem;
 
+  const videoId = extractYouTubeVideoId(meta.url);
+  const thumbnailUrls = videoId
+    ? [meta.thumbnailUrl, ...getYouTubeThumbnailUrls(videoId)]
+    : [meta.thumbnailUrl];
+
   return (
     <div className="group relative block h-full overflow-hidden rounded-2xl bg-gray-100">
       <div className="relative aspect-square">
-        <Image
-          src={meta.thumbnailUrl}
+        <ImageWithFallback
+          srcs={thumbnailUrls}
           alt={meta.title}
+          aspectRatio="1 / 1"
           imgClassName={`transition-opacity w-full h-full ${
             status === "pending" ? "opacity-50" : "opacity-70"
           }`}

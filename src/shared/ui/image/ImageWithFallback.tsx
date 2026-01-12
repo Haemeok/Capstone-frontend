@@ -1,16 +1,17 @@
 "use client";
 
-import React, { forwardRef, useMemo } from "react";
+import React, { forwardRef, useMemo, useState, useEffect } from "react";
 import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
 import { useImageStatus } from "@/shared/hooks/useImageStatus";
 import { Skeleton } from "../shadcn/skeleton";
 
 type Fit = "cover" | "contain";
 
-type ImageProps = Omit<
+type ImageWithFallbackProps = Omit<
   React.ImgHTMLAttributes<HTMLImageElement>,
-  "onLoad" | "onError" | "loading"
+  "onLoad" | "onError" | "loading" | "src"
 > & {
+  srcs: string[];
   lazy?: boolean;
   priority?: boolean;
   aspectRatio?: `${number} / ${number}` | number;
@@ -26,9 +27,12 @@ type ImageProps = Omit<
   fit?: Fit;
 };
 
-export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
+export const ImageWithFallback = forwardRef<
+  HTMLImageElement,
+  ImageWithFallbackProps
+>(function ImageWithFallback(
   {
-    src,
+    srcs,
     alt = "이미지",
     lazy = true,
     priority = false,
@@ -47,17 +51,37 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   },
   forwardedRef
 ) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const currentSrc = srcs[currentIndex];
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [srcs]);
+
   const { ref: viewportRef, inView } = useInViewOnce({
     threshold: inViewThreshold,
     rootMargin: inViewRootMargin,
   });
+
   const actualSrc = useMemo(
-    () => (priority ? src : lazy ? (inView ? src : undefined) : src),
-    [priority, lazy, inView, src]
+    () =>
+      priority ? currentSrc : lazy ? (inView ? currentSrc : undefined) : currentSrc,
+    [priority, lazy, inView, currentSrc]
   );
 
   const { status, handleImageLoad, handleImageError, retryCount } =
     useImageStatus(typeof actualSrc === "string" ? actualSrc : undefined);
+
+  const handleError = () => {
+    const hasMoreFallbacks = currentIndex < srcs.length - 1;
+
+    if (hasMoreFallbacks) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      handleImageError();
+    }
+  };
 
   const wrapperStyle: React.CSSProperties = {
     ...(typeof width === "number" ? { width } : null),
@@ -93,7 +117,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
           fetchPriority={priority ? "high" : undefined}
           decoding="async"
           onLoad={handleImageLoad}
-          onError={handleImageError}
+          onError={handleError}
           className={`absolute inset-0 h-full w-full ${fitClass} transition duration-300 ${status === "loaded" ? "opacity-100" : "opacity-0"} ${
             imgClassName ?? ""
           }`}

@@ -24,6 +24,7 @@ import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import { Image } from "@/shared/ui/image/Image";
 import { SAVINGS_BASE_URL } from "@/shared/config/constants/recipe";
 import { Search, Sparkles, ChefHat, Timer, Coins } from "lucide-react";
+import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 const youtubeUrlSchema = z.object({
   url: z.string().refine(
@@ -102,8 +103,22 @@ const YoutubeImportPage = () => {
 
     startImport(validatedUrl, youtubeMeta, queryClient, () => {
       addToast({
-        message: "레시피 분석이 완료되었습니다!",
-        variant: "success",
+        message: "",
+        variant: "rich-youtube",
+        position: "bottom",
+        persistent: true,
+        dismissible: "both",
+        richContent: {
+          thumbnail: youtubeMeta.thumbnailUrl,
+          title: "유튜브 레시피 추출이 완료 되었어요!",
+          subtitle: youtubeMeta.title,
+          badgeIcon: <YouTubeIconBadge className="h-6 w-6" />,
+        },
+        action: {
+          onClick: () => {
+            router.push(`/users/${user.id}?tab=saved`);
+          },
+        },
       });
     });
   };

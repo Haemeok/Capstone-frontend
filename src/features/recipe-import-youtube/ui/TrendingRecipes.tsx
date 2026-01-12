@@ -2,8 +2,9 @@
 
 import { useRef, useState, useEffect } from "react";
 import { cn } from "@/shared/lib/utils";
-import { Image } from "@/shared/ui/image/Image";
+import { ImageWithFallback } from "@/shared/ui/image/ImageWithFallback";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
 
 const TRENDING_RECIPES = [
   {
@@ -125,12 +126,14 @@ export const TrendingRecipes = ({
             className="group w-40 flex-shrink-0 text-left"
           >
             <div className="group-hover:border-olive-light relative mb-2 aspect-video w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100 transition-colors">
-              <Image
-                src={`https://img.youtube.com/vi/${recipe.videoId}/mqdefault.jpg`}
+              <ImageWithFallback
+                srcs={getYouTubeThumbnailUrls(recipe.videoId)}
                 alt={recipe.title}
                 width={160}
                 height={90}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                aspectRatio="16 / 9"
+                wrapperClassName="absolute inset-0"
+                imgClassName="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
             </div>
