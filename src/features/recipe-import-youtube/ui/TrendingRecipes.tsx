@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { cn } from "@/shared/lib/utils";
-import { ImageWithFallback } from "@/shared/ui/image/ImageWithFallback";
+import { Image } from "@/shared/ui/image/Image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
 
@@ -126,8 +126,8 @@ export const TrendingRecipes = ({
             className="group w-40 flex-shrink-0 text-left"
           >
             <div className="group-hover:border-olive-light relative mb-2 aspect-video w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100 transition-colors">
-              <ImageWithFallback
-                srcs={getYouTubeThumbnailUrls(recipe.videoId)}
+              <Image
+                src={getYouTubeThumbnailUrls(recipe.videoId)}
                 alt={recipe.title}
                 width={160}
                 height={90}

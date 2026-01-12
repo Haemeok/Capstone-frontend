@@ -5,7 +5,7 @@ import { ChevronRight } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { ToastType } from "../model/types";
 import { useToastStore } from "../model/store";
-import { ImageWithFallback } from "@/shared/ui/image/ImageWithFallback";
+import { Image } from "@/shared/ui/image";
 import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
 
 type RichToastProps = ToastType;
@@ -158,8 +158,8 @@ export const RichToast = ({
       <div className="flex items-center gap-3">
         {thumbnailUrls.length > 0 && (
           <div className="flex-shrink-0">
-            <ImageWithFallback
-              srcs={thumbnailUrls}
+            <Image
+              src={thumbnailUrls}
               alt="thumbnail"
               fit="cover"
               aspectRatio="1 / 1"
