@@ -32,6 +32,10 @@ export default function RecipeVideoSection({
   videoUrl,
   children,
 }: RecipeVideoSectionProps) {
+  if (videoUrl === "") {
+    return <>{children}</>;
+  }
+
   const playerRef = useRef<YouTubeVideoPlayerRef>(null);
   const [isSticky, setIsSticky] = useState(false);
 
@@ -49,7 +53,7 @@ export default function RecipeVideoSection({
 
   return (
     <VideoPlayerContext.Provider value={{ seekToTimeline }}>
-      <section className="relative">
+      <section className="relative mt-4">
         <div
           className={cn(
             "w-full transition-all",
@@ -78,7 +82,7 @@ export default function RecipeVideoSection({
             layout
             className={cn(
               "absolute z-10 w-fit",
-              isSticky ? "-top-12 left-1/2 -translate-x-1/2" : "-top-11 right-0"
+              isSticky ? "-top-12 left-1/2 -translate-x-1/2" : "-top-10 right-0"
             )}
           >
             <Button
@@ -88,8 +92,8 @@ export default function RecipeVideoSection({
               className={cn(
                 "cursor-pointer shadow-md backdrop-blur-sm transition-all",
                 isSticky
-                  ? "bg-primary/80 hover:bg-primary/90 text-primary-foreground h-10 w-10 rounded-full"
-                  : "bg-background/80 hover:bg-background/90 rounded-2xl px-3 py-2"
+                  ? "bg-primary/80 hover:bg-primary/90 text-primary-foreground border-primary h-10 w-10 rounded-full"
+                  : "bg-background/80 hover:bg-background/90 border-olive-light text-olive-light rounded-2xl border-1 px-3 py-2"
               )}
               aria-label={isSticky ? "영상 고정 해제" : "영상 고정"}
             >
