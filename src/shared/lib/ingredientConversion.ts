@@ -1,74 +1,73 @@
-const parseQuantity = (quantity: string): number | null => {
-  const trimmed = quantity.trim();
+const TOLERANCE = 0.01;
+const SMALL_SPOON_TO_BIG_SPOON_THRESHOLD = 3;
+const BIG_SPOON_TO_ML_THRESHOLD = 10;
+const BIG_SPOON_TO_ML_RATIO = 15;
+const SMALL_SPOON_TO_BIG_SPOON_RATIO = 3;
 
-  if (trimmed === "약간" || trimmed === "") {
-    return null;
-  }
-
-  const mixedMatch = trimmed.match(/^(\d+)\s+(\d+)\/(\d+)$/);
-  if (mixedMatch) {
-    const whole = parseInt(mixedMatch[1], 10);
-    const numerator = parseInt(mixedMatch[2], 10);
-    const denominator = parseInt(mixedMatch[3], 10);
-    return whole + numerator / denominator;
-  }
-  const fractionMatch = trimmed.match(/^(\d+)\/(\d+)$/);
-  if (fractionMatch) {
-    const numerator = parseInt(fractionMatch[1], 10);
-    const denominator = parseInt(fractionMatch[2], 10);
-    return numerator / denominator;
-  }
-
-  const number = parseFloat(trimmed);
-  if (!isNaN(number)) {
-    return number;
-  }
-
-  return null;
+type ConvertedIngredient = {
+  quantity: string;
+  unit: string;
 };
 
-const formatQuantity = (value: number): string => {
-  const fractions = [
-    { value: 0.125, text: "1/8" },
-    { value: 0.25, text: "1/4" },
-    { value: 0.333, text: "1/3" },
-    { value: 0.5, text: "1/2" },
-    { value: 0.667, text: "2/3" },
-    { value: 0.75, text: "3/4" },
-  ];
-
-  const tolerance = 0.01;
-
+const formatDecimalToString = (value: number): string => {
   const whole = Math.floor(value);
   const decimal = value - whole;
 
-  if (decimal < tolerance) {
+  if (decimal < TOLERANCE) {
     return whole.toString();
   }
 
-  for (const fraction of fractions) {
-    if (Math.abs(decimal - fraction.value) < tolerance) {
-      return whole > 0 ? `${whole} ${fraction.text}` : fraction.text;
-    }
+  return value.toFixed(2).replace(/\.?0+$/, "");
+};
+
+const convertUnitIfNeeded = (
+  quantity: number,
+  unit: string
+): { quantity: number; unit: string } => {
+  let convertedQuantity = quantity;
+  let convertedUnit = unit;
+
+  if (unit === "작은술" && quantity >= SMALL_SPOON_TO_BIG_SPOON_THRESHOLD) {
+    convertedQuantity = quantity / SMALL_SPOON_TO_BIG_SPOON_RATIO;
+    convertedUnit = "큰술";
   }
 
-  return value.toFixed(1).replace(/\.0$/, "");
+  if (convertedUnit === "큰술" && convertedQuantity >= BIG_SPOON_TO_ML_THRESHOLD) {
+    convertedQuantity = convertedQuantity * BIG_SPOON_TO_ML_RATIO;
+    convertedUnit = "ml";
+  }
+
+  return { quantity: convertedQuantity, unit: convertedUnit };
 };
 
 export const convertIngredientQuantity = (
   quantity: string | undefined,
+  unit: string,
   servingRatio: number
-): string => {
-  if (!quantity) {
-    return "";
+): ConvertedIngredient => {
+  if (!quantity || quantity.trim() === "") {
+    return { quantity: "", unit };
   }
 
-  const parsed = parseQuantity(quantity);
+  const trimmedQuantity = quantity.trim();
 
-  if (parsed === null) {
-    return quantity;
+  if (trimmedQuantity === "약간") {
+    return { quantity: "약간", unit };
   }
 
-  const scaled = parsed * servingRatio;
-  return formatQuantity(scaled);
+  const parsedQuantity = parseFloat(trimmedQuantity);
+
+  if (isNaN(parsedQuantity)) {
+    return { quantity, unit };
+  }
+
+  const scaledQuantity = parsedQuantity * servingRatio;
+  const { quantity: convertedQuantity, unit: convertedUnit } = convertUnitIfNeeded(scaledQuantity, unit);
+
+  const formattedQuantity =
+    convertedUnit === "ml"
+      ? Math.round(convertedQuantity).toString()
+      : formatDecimalToString(convertedQuantity);
+
+  return { quantity: formattedQuantity, unit: convertedUnit };
 };

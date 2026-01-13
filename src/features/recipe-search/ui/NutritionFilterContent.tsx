@@ -170,36 +170,36 @@ export const NutritionFilterContent = ({
       <div className="space-y-3 border-b pb-4">
         <h5 className="text-sm font-semibold text-gray-700">레시피 유형</h5>
         <div className="flex flex-wrap gap-4">
-          <label className="flex cursor-pointer items-center gap-2">
+          <label className="flex cursor-pointer items-center gap-3">
             <Checkbox
               checked={types.includes("USER")}
               onCheckedChange={() => handleTypeToggle("USER")}
               className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
             />
-            <span className="flex items-center gap-1.5 text-sm text-gray-700">
+            <span className="flex items-center gap-2 text-sm text-gray-700">
               <UserRecipeBadge />
               사용자 레시피
             </span>
           </label>
-          <label className="flex cursor-pointer items-center gap-2">
+          <label className="flex cursor-pointer items-center gap-3">
             <Checkbox
               checked={types.includes("AI")}
               onCheckedChange={() => handleTypeToggle("AI")}
               className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
             />
-            <span className="flex items-center gap-1.5 text-sm text-gray-700">
+            <span className="flex items-center gap-2 text-sm text-gray-700">
               <AIGeneratedBadge />
               AI 레시피
             </span>
           </label>
-          <label className="flex cursor-pointer items-center gap-2">
+          <label className="flex cursor-pointer items-center gap-3">
             <Checkbox
               checked={types.includes("YOUTUBE")}
               onCheckedChange={() => handleTypeToggle("YOUTUBE")}
               className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
             />
-            <span className="flex items-center gap-1.5 text-sm text-gray-700">
-              <YouTubeIconBadge className="h-5 w-5" />
+            <span className="flex items-center gap-2 text-sm text-gray-700">
+              <YouTubeIconBadge />
               유튜브 레시피
             </span>
           </label>
