@@ -8,7 +8,7 @@ const AIGeneratedBadge = ({ className }: AIGeneratedBadgeProps) => {
   return (
     <div
       className={cn(
-        "bg-olive-mint inline-flex h-5 items-center justify-center rounded-full px-2.5",
+        "bg-olive-mint inline-flex h-5 items-center justify-center rounded-full px-[10px]",
         className
       )}
       aria-label="AI 생성 레시피"

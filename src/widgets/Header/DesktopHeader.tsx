@@ -30,7 +30,7 @@ const DesktopHeader = () => {
 
   return (
     <>
-      <header className="z-header sticky-optimized fixed top-0 right-0 left-0 hidden border-b border-gray-200 bg-white md:block">
+      <header className="z-dropdown sticky-optimized fixed top-0 right-0 left-0 hidden border-b border-gray-200 bg-white md:block">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link
             href="/"

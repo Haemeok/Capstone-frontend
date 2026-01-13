@@ -27,7 +27,7 @@ const ActionButton = ({
       <LoginPromotionBadge variant="desktop">
         <Button
           asChild
-          className="bg-olive-light hover:bg-olive-dark rounded-full px-6 text-white"
+          className="bg-white border border-olive-light hover:bg-olive-light/10 rounded-full px-6 text-olive-light"
         >
           <Link href="/login">
             <LogIn size={16} className="mr-1" /> 로그인
@@ -40,7 +40,7 @@ const ActionButton = ({
   return (
     <Button
       asChild
-      className="bg-olive-light gap-0 rounded-full px-6 text-white"
+      className="bg-white border border-olive-light hover:bg-olive-light/10 gap-0 rounded-full px-6 text-olive-light"
     >
       <Link href="/recipes/new" prefetch={false}>
         <Plus size={16} className="mr-1" /> 레시피 등록하기
