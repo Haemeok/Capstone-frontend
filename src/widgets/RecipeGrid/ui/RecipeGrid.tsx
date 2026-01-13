@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 import { Pencil, Trash, Sparkles } from "lucide-react";
@@ -39,6 +39,7 @@ type RecipeGridProps = {
   queryKeyString?: string;
   prefetch?: boolean;
   showAIRecipeCTA?: boolean;
+  useLCP?: boolean;
 };
 
 const calculateSavings = (
@@ -63,6 +64,7 @@ const RecipeGrid = ({
   error,
   prefetch = false,
   showAIRecipeCTA = false,
+  useLCP = true,
 }: RecipeGridProps) => {
   const { isMobile, Container, Content } = useResponsiveSheet();
 
@@ -202,7 +204,7 @@ const RecipeGrid = ({
             <DetailedRecipeGridItem
               key={recipe.id}
               recipe={detailedRecipe}
-              priority={index === 0}
+              priority={index === 0 && useLCP}
               prefetch={prefetch}
               leftBadge={leftBadge}
               rightBadge={rightBadge}
