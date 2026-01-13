@@ -40,8 +40,8 @@ export const homeMetadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
-    title: "레시피오 - 홈쿡 레시피 플랫폼",
+    statusBarStyle: "black-translucent",
+    title: "레시피오",
   },
   openGraph: {
     title: "레시피오",
@@ -68,5 +68,6 @@ export const homeMetadata: Metadata = {
   },
   other: {
     "application/ld+json": JSON.stringify(createWebsiteStructuredData()),
+    "mobile-web-app-capable": "yes",
   },
 };
