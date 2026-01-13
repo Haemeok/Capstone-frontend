@@ -34,6 +34,7 @@ const MyFridgePage = () => {
     noResults,
     lastPageMessage,
     isPending,
+    totalCount,
   } = useMyIngredientRecipesInfiniteQuery(getSortParam());
 
   const router = useRouter();
@@ -52,7 +53,7 @@ const MyFridgePage = () => {
         </div>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1">
-            <p className="text-sm text-gray-500">{recipes.length}개의 레시피</p>
+            <p className="text-sm text-gray-500">{totalCount}개의 레시피</p>
             <BadgeButton
               badgeText="현재 내 냉장고에 있는 재료로 만들 수 있는 레시피를 찾아보세요."
               badgeIcon={<Info size={16} className="text-gray-500" />}

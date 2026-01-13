@@ -18,11 +18,11 @@ const UserInfoEditButton = ({ className = "" }: UserInfoEditButtonProps) => {
       aria-label="프로필 편집"
       title="프로필 편집"
       className={cn(
-        "bg-olive-light absolute -right-1 -bottom-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow-md",
+        "bg-white border border-olive-light absolute -right-1 -bottom-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow-md hover:bg-olive-light/10",
         className
       )}
     >
-      <Edit size={14} className="text-white" aria-hidden="true" />
+      <Edit size={14} className="text-olive-light" aria-hidden="true" />
     </Link>
   );
 };

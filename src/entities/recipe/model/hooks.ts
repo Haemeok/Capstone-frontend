@@ -69,6 +69,7 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
     noResults,
     lastPageMessage,
     isPending,
+    totalCount: data?.pages[0]?.page.totalElements ?? 0,
   };
 };
 
