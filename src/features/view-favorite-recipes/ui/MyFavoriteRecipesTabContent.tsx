@@ -70,6 +70,7 @@ const MyFavoriteRecipesTabContent = () => {
         }
         observerRef={ref}
         error={error}
+        useLCP={false}
       />
     </div>
   );

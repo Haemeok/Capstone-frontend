@@ -78,7 +78,7 @@ const SimpleRecipeGridItem = ({
         )}
 
         <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end rounded-2xl bg-gradient-to-t from-black/70 to-transparent" />
-        <p className="absolute right-4 bottom-2.5 left-4 line-clamp-2 text-[17px] font-bold text-white">
+        <p className="word-break absolute right-4 bottom-2.5 left-4 line-clamp-2 text-[17px] font-bold text-pretty text-white">
           {recipe.title}
         </p>
       </Link>
