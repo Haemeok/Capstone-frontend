@@ -9,9 +9,6 @@ import CategoryTabs from "@/widgets/CategoryTabs";
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
-import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
-
-import { aiModelBanners } from "@/shared/config/constants/aiModel";
 
 export const metadata = homeMetadata;
 
