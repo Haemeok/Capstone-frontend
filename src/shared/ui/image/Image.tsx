@@ -1,9 +1,10 @@
 "use client";
 
-import React, { forwardRef, useMemo, useState, useEffect } from "react";
+import React, { forwardRef } from "react";
 import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
-import { useImageStatus } from "@/shared/hooks/useImageStatus";
+import { useImageWithFallback } from "@/shared/hooks/useImageWithFallback";
 import { Skeleton } from "../shadcn/skeleton";
+import { cn } from "@/shared/lib/utils";
 
 type Fit = "cover" | "contain";
 
@@ -48,40 +49,21 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   },
   forwardedRef
 ) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const currentSrc = useMemo(() => {
-    return Array.isArray(src) ? src[currentIndex] : src;
-  }, [src, currentIndex]);
-
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [src]);
-
+  // 1. Viewport 감지
   const { ref: viewportRef, inView } = useInViewOnce({
     threshold: inViewThreshold,
     rootMargin: inViewRootMargin,
   });
 
-  const actualSrc = useMemo(
-    () => (priority ? currentSrc : lazy ? (inView ? currentSrc : undefined) : currentSrc),
-    [priority, lazy, inView, currentSrc]
-  );
+  // 2. 이미지 로딩 로직 (전부 훅에 위임)
+  const image = useImageWithFallback({
+    src,
+    lazy,
+    priority,
+    inView,
+  });
 
-  const { status, handleImageLoad, handleImageError, retryCount } =
-    useImageStatus(typeof actualSrc === "string" ? actualSrc : undefined);
-
-  const handleError = () => {
-    if (Array.isArray(src)) {
-      const hasMoreFallbacks = currentIndex < src.length - 1;
-      if (hasMoreFallbacks) {
-        setCurrentIndex((prev) => prev + 1);
-        return;
-      }
-    }
-    handleImageError();
-  };
-
+  // 3. 스타일 계산
   const wrapperStyle: React.CSSProperties = {
     ...(typeof width === "number" ? { width } : null),
     ...(typeof height === "number" ? { height } : null),
@@ -90,36 +72,43 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
 
   const fitClass = fit === "cover" ? "object-cover" : "object-contain";
 
+  // 4. 렌더링 (순수 선언적)
   return (
     <div
       ref={viewportRef}
       style={wrapperStyle}
       className={`relative overflow-hidden ${wrapperClassName ?? ""}`}
     >
-      {status !== "loaded" &&
+      {/* 로딩 중 스켈레톤 */}
+      {image.status !== "loaded" &&
         (skeleton ?? <Skeleton className="absolute inset-0" />)}
 
-      {status === "error" &&
+      {/* 에러 폴백 */}
+      {image.status === "error" &&
         (errorFallback ?? (
           <div className="absolute inset-0 grid place-items-center bg-gray-100 text-gray-400">
             이미지 로드 실패
           </div>
         ))}
 
-      {actualSrc && (
+      {/* 이미지 */}
+      {image.src && (
         <img
-          key={`${actualSrc}-retry-${retryCount}`}
+          key={`${image.src}-retry-${image.retryCount}`}
           ref={forwardedRef}
-          src={actualSrc}
+          src={image.src}
           alt={alt}
           loading={priority ? "eager" : lazy ? "lazy" : undefined}
           fetchPriority={priority ? "high" : undefined}
           decoding="async"
-          onLoad={handleImageLoad}
-          onError={handleError}
-          className={`absolute inset-0 h-full w-full ${fitClass} transition duration-300 ${status === "loaded" ? "opacity-100" : "opacity-0"} ${
-            imgClassName ?? ""
-          }`}
+          onLoad={image.onLoad}
+          onError={image.onError}
+          className={cn(
+            "absolute inset-0 h-full w-full transition-opacity duration-300",
+            image.status === "loaded" ? "opacity-100" : "opacity-0",
+            fitClass,
+            imgClassName
+          )}
           {...imgProps}
         />
       )}
