@@ -1,10 +1,11 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
 
-import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
-import { Recipe } from "@/entities/recipe/model/types";
+import {
+  useRecipeDetailQuery,
+  useRecipeStatusQuery,
+} from "@/entities/recipe/model/hooks";
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 import { useToggleRecipeFavorite } from "@/features/recipe-favorite/model/hooks";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
@@ -18,17 +19,13 @@ const DuplicateRecipeSection = ({
   recipeId,
   onSaveSuccess,
 }: DuplicateRecipeSectionProps) => {
-  const queryClient = useQueryClient();
   const { recipeData, isLoading } = useRecipeDetailQuery(recipeId);
+  const { data: recipeStatus } = useRecipeStatusQuery(recipeId);
   const { mutate: toggleFavorite, isPending: isSaving } =
     useToggleRecipeFavorite(recipeId);
 
-  const cachedRecipeStatus = queryClient.getQueryData<Recipe>([
-    "recipe-status",
-    recipeId,
-  ]);
   const isFavorited =
-    cachedRecipeStatus?.favoriteByCurrentUser ??
+    recipeStatus?.favoriteByCurrentUser ??
     recipeData?.favoriteByCurrentUser ??
     false;
 

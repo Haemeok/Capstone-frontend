@@ -11,6 +11,15 @@ export type StaticDetailedRecipesApiResponse =
 export type IngredientRecipesApiResponse =
   PageResponse<IngredientRecipeGridItem>;
 
+export type TrendingYoutubeRecipe = {
+  title: string;
+  videoId: string;
+  channelName: string;
+  thumbnailUrl: string;
+  viewCount: number;
+  videoUrl: string;
+};
+
 export type BaseRecipeGridItem = {
   id: string;
   title: string;

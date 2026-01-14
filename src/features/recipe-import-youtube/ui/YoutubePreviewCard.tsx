@@ -22,7 +22,7 @@ export const YoutubePreviewCard = ({
     : [meta.thumbnailUrl];
 
   return (
-    <div className="mx-auto mt-6 w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm duration-300">
+    <div className="mx-auto w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-4 shadow-sm duration-300">
       <div className="mb-4 flex gap-4">
         <Image
           src={thumbnailUrls}
@@ -38,13 +38,13 @@ export const YoutubePreviewCard = ({
           <h3 className="text-dark mb-1 line-clamp-2 text-lg font-semibold">
             {meta.title}
           </h3>
-          <p className="text-sm text-gray-600">{meta.channelName}</p>
+          <p className="text-gray-600">{meta.channelName}</p>
         </div>
       </div>
       <button
         onClick={onConfirm}
         disabled={isLoading}
-        className="bg-olive-light w-full rounded-lg py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        className="border-olive-light hover:bg-olive-light/10 w-full rounded-lg border-1 py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2 text-white">
@@ -71,7 +71,7 @@ export const YoutubePreviewCard = ({
             처리 중...
           </span>
         ) : (
-          "이 영상으로 레시피 가져오기"
+          <p className="text-olive-light">이 영상으로 레시피 가져오기</p>
         )}
       </button>
     </div>

@@ -1,7 +1,6 @@
 import { api } from "@/shared/api/client";
 import { BaseQueryParams, PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
-import { customParamsSerializer } from "@/shared/lib/utils";
 import { FileInfoRequest } from "@/shared/types";
 
 import {
@@ -11,6 +10,7 @@ import {
   RecipeQueryParams,
   RecipeStatus,
   RecipesStatusResponse,
+  TrendingYoutubeRecipe,
 } from "./types";
 import { RecipePayload } from "./types";
 import { RecipeHistoryResponse } from "@/entities/user/model/types";
@@ -34,7 +34,6 @@ export const getRecipeItems = async (params: RecipeQueryParams) => {
 
   return api.get<DetailedRecipesApiResponse>(endpoint, {
     params: apiParams,
-    paramsSerializer: customParamsSerializer,
   });
 };
 
@@ -102,6 +101,15 @@ export const getRecipesStatus = async (
   const response = await api.post<RecipesStatusResponse>(`/v2/recipes/status`, {
     recipeIds,
   });
+  return response;
+};
+
+export const getTrendingYoutubeRecipes = async (): Promise<
+  TrendingYoutubeRecipe[]
+> => {
+  const response = await api.get<TrendingYoutubeRecipe[]>(
+    END_POINTS.RECIPE_YOUTUBE_RECOMMEND
+  );
   return response;
 };
 

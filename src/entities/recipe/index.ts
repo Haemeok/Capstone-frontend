@@ -13,5 +13,6 @@ export type {
   RecipeStepPayload,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
+  TrendingYoutubeRecipe,
 } from "./model/types";
 export { default as RecipeStepList } from "./ui/RecipeStepList";

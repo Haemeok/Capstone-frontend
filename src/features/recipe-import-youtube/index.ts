@@ -3,6 +3,7 @@ export {
   YoutubePreviewCard,
   CreationModeSelector,
   TrendingRecipes,
+  TrendingRecipesSkeleton,
   UsageGuide,
   PendingRecipeCard,
   DuplicateRecipeSection,

@@ -8,8 +8,9 @@ import {
   getRecipe,
   getRecipeHistoryItems,
   getRecipeStatus,
+  getTrendingYoutubeRecipes,
 } from "./api";
-import { Recipe, RecipeStatus } from "./types";
+import { Recipe, RecipeStatus, TrendingYoutubeRecipe } from "./types";
 
 export const useRecipeDetailQuery = (id: string, initialData?: Recipe) => {
   const {
@@ -90,4 +91,13 @@ export const useRecipeHistoryItemsQuery = (date: string, enabled?: boolean) => {
   });
 
   return { data, isLoading, error };
+};
+
+export const useTrendingYoutubeRecipesQuery = () => {
+  return useSuspenseQuery<TrendingYoutubeRecipe[], Error>({
+    queryKey: ["trending-youtube-recipes"],
+    queryFn: () => getTrendingYoutubeRecipes(),
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
+  });
 };
