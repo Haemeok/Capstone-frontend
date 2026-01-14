@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 import { ConsecutiveRange } from "../types";
 import { getFlameLevel } from "../lib/streakCalculator";
 import { isFirstInRange, isLastInRange } from "../lib/consecutiveDaysHelper";
-import { Fire } from "./fire";
+import { Image } from "@/shared/ui/image/Image";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type CalendarDayStreakProps = {
   date: Date;
@@ -62,8 +63,12 @@ export const CalendarDayStreak = ({
       />
 
       <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-0.5">
-        <Fire
-          className={cn(flameConfig.flameColor, "h-6 w-6 md:h-10 md:w-10")}
+        <Image
+          src={`${ICON_BASE_URL}streak_fire.webp`}
+          alt="스트릭"
+          wrapperClassName={cn("h-6 w-6 md:h-10 md:w-10")}
+          lazy={false}
+          imgClassName={cn(flameConfig.flameColor)}
         />
         <p className={cn("text-xs font-medium", flameConfig.flameColor)}>
           {dateNumber}

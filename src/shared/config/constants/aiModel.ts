@@ -2,7 +2,7 @@ import type { AIModel } from "@/features/recipe-create-ai";
 
 import type { BannerSlide } from "@/widgets/HomeBannerCarousel/types";
 
-import { IMAGE_BASE_URL } from "./recipe";
+import { IMAGE_BASE_URL, SAVINGS_BASE_URL, ICON_BASE_URL } from "./recipe";
 
 export const LOADING_BASE_URL = `${IMAGE_BASE_URL}loadings/`;
 export const AI_CONCEPTS_BASE_URL = `${IMAGE_BASE_URL}ai-concepts/`;
@@ -65,6 +65,7 @@ export const aiModelSteps = [
   "맛있는 조합을 찾고 있어요",
   "요리 순서를 정리하고 있어요",
   "마지막 손질을 하고 있어요",
+  "레시피를 완성하고 있어요",
 ];
 
 export type DiningTier = "WHITE" | "BLACK";
@@ -106,63 +107,54 @@ export const FINE_DINING_TIERS: TierOption[] = [
 
 export const aiModelBanners: BannerSlide[] = [
   {
-    id: "INGREDIENT_FOCUS",
-    title: "냉장고 속 재료가",
-    description: "남은 재료로 만드는, 버릴 것 하나 없는 완벽한 한 끼",
-    image: aiModels.INGREDIENT_FOCUS.image,
+    id: "YOUTUBE_IMPORT",
+    title: "링크만 넣으면\n레시피 추출 0원",
+    subTitle: "유튜브 영상 멈추기 귀찮을 땐?",
+    image: `${SAVINGS_BASE_URL}youtube_premium.webp`,
+    link: "/recipes/new/youtube",
+    badge: {
+      text: "EVENT",
+      variant: "event",
+    },
+    highlight: {
+      text: "0원",
+      color: "#ff0000",
+    },
+    backgroundColor: "#FFF8E1", // Soft Yellow
+    imagePosition: "right",
+  },
+  {
+    id: "INGREDIENT_AI",
+    title: "AI 셰프가 짜주는\n맞춤 식단 무료",
+    subTitle: "냉장고 속 재료로 뭐 해먹지?",
+    image: `${ICON_BASE_URL}ai_chef.webp`,
     link: "/recipes/new/ai/ingredient",
     badge: {
-      text: "🎯 AI 레시피 추천",
-      variant: "default",
-    },
-    highlight: {
-      text: "특별한 요리로 태어납니다",
-      color: "#ffffff",
-    },
-  },
-  {
-    id: "COST_EFFECTIVE",
-    title: "만원으로 시작하는",
-    description: "합리적인 가격으로 누리는 프리미엄 홈 다이닝",
-    image: aiModels.COST_EFFECTIVE.image,
-    link: "/recipes/new/ai/price",
-    badge: {
-      text: "💰 가성비 최고",
-      variant: "default",
-    },
-    highlight: {
-      text: "레스토랑 부럽지 않은 한 끼",
-      color: "#ffffff",
-    },
-  },
-  {
-    id: "NUTRITION_BALANCE",
-    title: "맛있게 먹으면서",
-    description: "탄단지 밸런스부터 칼로리까지, 영양을 디자인하다",
-    image: aiModels.NUTRITION_BALANCE.image,
-    link: "/recipes/new/ai/nutrition",
-    badge: {
-      text: "💪 건강한 식단",
-      variant: "success",
-    },
-    highlight: {
-      text: "건강해지는 가장 쉬운 방법",
-      color: "#10b981",
-    },
-  },
-  {
-    id: "FINE_DINING",
-    title: "미슐랭의 기술을",
-    description: "파인 다이닝 셰프의 노하우로 완성하는 특별한 순간",
-    image: aiModels.FINE_DINING.image,
-    link: "/recipes/new/ai/finedining",
-    badge: {
-      text: "⭐ 프리미엄 레시피",
+      text: "기간한정",
       variant: "warning",
     },
     highlight: {
-      text: "우리 집 식탁에서",
-      color: "#ffffff",
+      text: "무료",
+      color: "#10b981",
     },
+    backgroundColor: "#E8F5E9", // Soft Green
+    imagePosition: "right",
+  },
+  {
+    id: "FINE_DINING_AI",
+    title: "파인다이닝 셰프의\n고품격 레시피 무료",
+    subTitle: "평범한 집밥의 화려한 변신",
+    image: `${ICON_BASE_URL}record_camera.webp`,
+    link: "/recipes/new/ai/finedining",
+    badge: {
+      text: "NEW",
+      variant: "new",
+    },
+    highlight: {
+      text: "무료",
+      color: "#9333ea",
+    },
+    backgroundColor: "#F3E5F5", // Soft Purple
+    imagePosition: "right",
   },
 ];

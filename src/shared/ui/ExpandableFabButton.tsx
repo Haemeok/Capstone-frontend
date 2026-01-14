@@ -106,7 +106,7 @@ export const ExpandableFabButton = ({
                   >
                     <Button
                       className={cn(
-                        "border-olive-light text-olive-light h-12 cursor-pointer gap-2 rounded-full border-2 bg-white px-4 py-2 shadow-xl",
+                        "border-olive-light text-olive-light h-12 cursor-pointer gap-0.5 rounded-full border-2 bg-white px-4 py-2 shadow-xl",
                         "hover:bg-olive-light/10 transition-colors"
                       )}
                     >
@@ -121,8 +121,8 @@ export const ExpandableFabButton = ({
           <button
             onClick={handleToggle}
             className={cn(
-              "bg-olive-light h-14 w-14 cursor-pointer rounded-full text-white shadow-2xl",
-              "hover:bg-olive-light/90 transition-colors",
+              "border-olive-light h-14 w-14 cursor-pointer rounded-full border-2 bg-white shadow-2xl",
+              "hover:bg-olive-light/30 transition-colors",
               "flex items-center justify-center"
             )}
             aria-label={ariaLabel}
