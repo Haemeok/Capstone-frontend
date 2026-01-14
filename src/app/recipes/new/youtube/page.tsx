@@ -4,12 +4,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useState, useMemo, Suspense } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDebounce } from "@/shared/hooks/useDebounce";
+import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
 import {
   YoutubePreviewCard,
   TrendingRecipes,
+  TrendingRecipesSkeleton,
   useYoutubeMeta,
   useYoutubeImportStore,
   useYoutubeDuplicateCheck,
@@ -22,8 +24,11 @@ import { Container } from "@/shared/ui/Container";
 
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import { Image } from "@/shared/ui/image/Image";
-import { SAVINGS_BASE_URL } from "@/shared/config/constants/recipe";
-import { Search, Sparkles, ChefHat, Timer, Coins } from "lucide-react";
+import {
+  SAVINGS_BASE_URL,
+  ICON_BASE_URL,
+} from "@/shared/config/constants/recipe";
+import { Search } from "lucide-react";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 const youtubeUrlSchema = z.object({
@@ -92,6 +97,15 @@ const YoutubeImportPage = () => {
 
   const isDuplicate = duplicateCheck?.recipeId !== undefined;
 
+  const hasYoutubeData =
+    youtubeMeta &&
+    !isLoadingMeta &&
+    !isFetchingMeta &&
+    !isCheckingDuplicate &&
+    !isFetchingDuplicate;
+
+  const previewSectionRef = useAutoScrollOnMobile(!!hasYoutubeData, 500);
+
   const handleConfirmImport = async () => {
     if (!validatedUrl || !videoId || !user || !youtubeMeta) return;
 
@@ -101,7 +115,7 @@ const YoutubeImportPage = () => {
       variant: "info",
     });
 
-    startImport(validatedUrl, youtubeMeta, queryClient, () => {
+    startImport(validatedUrl, youtubeMeta, queryClient, (recipeId: string) => {
       addToast({
         message: "",
         variant: "rich-youtube",
@@ -113,10 +127,12 @@ const YoutubeImportPage = () => {
           title: "유튜브 레시피 추출이 완료 되었어요!",
           subtitle: youtubeMeta.title,
           badgeIcon: <YouTubeIconBadge className="h-6 w-6" />,
+          recipeId,
         },
         action: {
+          label: "보러가기",
           onClick: () => {
-            router.push(`/users/${user.id}?tab=saved`);
+            router.push(`/recipes/${recipeId}`);
           },
         },
       });
@@ -155,33 +171,45 @@ const YoutubeImportPage = () => {
 
           <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 md:grid-cols-4">
             <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-gray-50 p-3 text-center">
-              <div className="text-olive-light rounded-full bg-white p-2 shadow-sm">
-                <Sparkles className="h-6 w-6" />
-              </div>
+              <Image
+                src={`${ICON_BASE_URL}nutrition_info.webp`}
+                alt="영양성분"
+                wrapperClassName="w-16 h-16"
+                lazy={false}
+              />
               <span className="text-sm font-semibold text-gray-600">
                 영양성분·칼로리
               </span>
             </div>
             <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-gray-50 p-3 text-center">
-              <div className="text-olive-light rounded-full bg-white p-2 shadow-sm">
-                <Coins className="h-6 w-6" />
-              </div>
+              <Image
+                src={`${ICON_BASE_URL}cost_analysis.webp`}
+                alt="원가 분석"
+                wrapperClassName="w-16 h-16"
+                lazy={false}
+              />
               <span className="text-sm font-semibold text-gray-600">
                 예상 원가 분석
               </span>
             </div>
             <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-gray-50 p-3 text-center">
-              <div className="text-olive-light rounded-full bg-white p-2 shadow-sm">
-                <Timer className="h-6 w-6" />
-              </div>
+              <Image
+                src={`${ICON_BASE_URL}timer_tool.webp`}
+                alt="타이머"
+                wrapperClassName="w-16 h-16"
+                lazy={false}
+              />
               <span className="text-sm font-semibold text-gray-600">
                 조리 타이머
               </span>
             </div>
             <div className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-gray-50 p-3 text-center">
-              <div className="text-olive-light rounded-full bg-white p-2 shadow-sm">
-                <ChefHat className="h-6 w-6" />
-              </div>
+              <Image
+                src={`${ICON_BASE_URL}portion_calculator.webp`}
+                alt="인분 변환"
+                wrapperClassName="w-16 h-16"
+                lazy={false}
+              />
               <span className="text-sm font-semibold text-gray-600">
                 인분수 변환
               </span>
@@ -223,10 +251,14 @@ const YoutubeImportPage = () => {
             </div>
 
             <div className="w-full overflow-hidden rounded-3xl bg-gray-50/50">
-              <TrendingRecipes
-                onSelect={handleTrendingSelect}
-                className="w-full"
-              />
+              <Suspense
+                fallback={<TrendingRecipesSkeleton className="w-full" />}
+              >
+                <TrendingRecipes
+                  onSelect={handleTrendingSelect}
+                  className="w-full"
+                />
+              </Suspense>
             </div>
           </div>
 
@@ -234,7 +266,10 @@ const YoutubeImportPage = () => {
             isFetchingMeta ||
             isCheckingDuplicate ||
             isFetchingDuplicate) && (
-            <div className="mx-auto w-full animate-pulse rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div
+              ref={previewSectionRef}
+              className="mx-auto w-full animate-pulse rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
+            >
               <div className="flex gap-4">
                 <Skeleton className="h-24 w-40 rounded-xl" />
                 <div className="flex-1 space-y-3 py-2">

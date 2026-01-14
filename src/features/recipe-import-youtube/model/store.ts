@@ -22,7 +22,7 @@ type YoutubeImportStore = {
     url: string,
     meta: YoutubeMeta,
     queryClient: QueryClient,
-    onSuccess?: () => void
+    onSuccess?: (recipeId: string) => void
   ) => Promise<void>;
 };
 
@@ -75,7 +75,7 @@ export const useYoutubeImportStore = create<YoutubeImportStore>((set, get) => ({
         }, 3000);
         setTimeout(() => {
           removeImport(url);
-          onSuccess?.();
+          onSuccess?.(response.recipeId);
         }, 3000);
       } else {
         updateStatus(url, "error", response.message);
