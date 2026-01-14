@@ -4,13 +4,15 @@ import React, { useEffect, useState } from "react";
 
 import { Slider } from "@/shared/ui/shadcn/slider";
 import { Button } from "@/shared/ui/shadcn/button";
-import { Checkbox } from "@/shared/ui/shadcn/checkbox";
+import { cn } from "@/shared/lib/utils";
 import {
   NUTRITION_RANGES,
   NutritionFilterKey,
   NUTRITION_THEMES,
   NutritionThemeKey,
+  ICON_BASE_URL,
 } from "@/shared/config/constants/recipe";
+import { Image } from "@/shared/ui/image/Image";
 import { getTypedKeys, getTypedEntries } from "@/shared/lib/types/utils";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import UserRecipeBadge from "@/shared/ui/badge/UserRecipeBadge";
@@ -75,6 +77,10 @@ export const NutritionFilterContent = ({
     });
     return init;
   });
+  const [dragState, setDragState] = useState<{
+    key: NutritionFilterKey | null;
+    value: NutritionRangeValue | null;
+  }>({ key: null, value: null });
 
   useEffect(() => {
     if (open) {
@@ -117,11 +123,15 @@ export const NutritionFilterContent = ({
     if (newValue.length !== 2) return;
 
     const [min, max] = newValue;
+    console.log(`[Slider Change] key: ${key}, newValue: [${min}, ${max}]`);
+
     setSelectedTheme(null);
-    setValues((prev) => ({
-      ...prev,
-      [key]: [min, max],
-    }));
+    setValues((prev) => {
+      console.log("[Before]:", prev);
+      const next = { ...prev, [key]: [min, max] };
+      console.log("[After]:", next);
+      return next;
+    });
   };
 
   const handleReset = () => {
@@ -148,6 +158,10 @@ export const NutritionFilterContent = ({
       }
     });
 
+    console.log("[handleApply] Current values:", values);
+    console.log("[handleApply] Filtered values:", filteredValues);
+    console.log("[handleApply] Types:", types);
+
     onApply(filteredValues);
     onTypesChange(types);
     onOpenChange(false);
@@ -169,40 +183,49 @@ export const NutritionFilterContent = ({
     return (
       <div className="space-y-3 border-b pb-4">
         <h5 className="text-sm font-semibold text-gray-700">레시피 유형</h5>
-        <div className="flex flex-wrap gap-4">
-          <label className="flex cursor-pointer items-center gap-3">
-            <Checkbox
-              checked={types.includes("USER")}
-              onCheckedChange={() => handleTypeToggle("USER")}
-              className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
-            />
-            <span className="flex items-center gap-2 text-sm text-gray-700">
-              <UserRecipeBadge />
+        <div className="grid grid-cols-3 gap-3">
+          <button
+            onClick={() => handleTypeToggle("USER")}
+            className={cn(
+              "flex cursor-pointer flex-col items-center gap-2 rounded-xl p-4 transition-all",
+              types.includes("USER")
+                ? "bg-olive-light/10 border-olive-light border-2"
+                : "border-2 border-transparent bg-gray-50 hover:border-gray-300"
+            )}
+          >
+            <UserRecipeBadge className="bg-gray-200" />
+            <span className="text-center text-xs leading-tight font-medium text-gray-700">
               사용자 레시피
             </span>
-          </label>
-          <label className="flex cursor-pointer items-center gap-3">
-            <Checkbox
-              checked={types.includes("AI")}
-              onCheckedChange={() => handleTypeToggle("AI")}
-              className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
-            />
-            <span className="flex items-center gap-2 text-sm text-gray-700">
-              <AIGeneratedBadge />
+          </button>
+          <button
+            onClick={() => handleTypeToggle("AI")}
+            className={cn(
+              "flex cursor-pointer flex-col items-center gap-2 rounded-xl p-4 transition-all",
+              types.includes("AI")
+                ? "bg-olive-light/10 border-olive-light border-2"
+                : "border-2 border-transparent bg-gray-50 hover:border-gray-300"
+            )}
+          >
+            <AIGeneratedBadge />
+            <span className="text-center text-xs leading-tight font-medium text-gray-700">
               AI 레시피
             </span>
-          </label>
-          <label className="flex cursor-pointer items-center gap-3">
-            <Checkbox
-              checked={types.includes("YOUTUBE")}
-              onCheckedChange={() => handleTypeToggle("YOUTUBE")}
-              className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light"
-            />
-            <span className="flex items-center gap-2 text-sm text-gray-700">
-              <YouTubeIconBadge />
+          </button>
+          <button
+            onClick={() => handleTypeToggle("YOUTUBE")}
+            className={cn(
+              "flex cursor-pointer flex-col items-center gap-2 rounded-xl p-4 transition-all",
+              types.includes("YOUTUBE")
+                ? "bg-olive-light/10 border-olive-light border-2"
+                : "border-2 border-transparent bg-gray-50 hover:border-gray-300"
+            )}
+          >
+            <YouTubeIconBadge />
+            <span className="text-center text-xs leading-tight font-medium text-gray-700">
               유튜브 레시피
             </span>
-          </label>
+          </button>
         </div>
       </div>
     );
@@ -224,7 +247,15 @@ export const NutritionFilterContent = ({
                 : "hover:bg-gray-50"
             }
           >
-            {theme.label}
+            <div className="flex items-center gap-2">
+              <Image
+                src={`${ICON_BASE_URL}${theme.icon}`}
+                alt={theme.label}
+                wrapperClassName="w-4 h-4"
+                lazy={false}
+              />
+              <span>{theme.label}</span>
+            </div>
           </Button>
         ))}
       </div>
@@ -234,7 +265,10 @@ export const NutritionFilterContent = ({
   const SliderContent = () => (
     <div className="grid gap-6 md:grid-cols-2">
       {getTypedEntries(NUTRITION_RANGES).map(([key, config]) => {
-        const currentValue = values[key] || [config.min, config.max];
+        const currentValue =
+          dragState.key === key && dragState.value
+            ? dragState.value
+            : values[key] || [config.min, config.max];
 
         return (
           <div key={key} className="space-y-3">
@@ -252,7 +286,21 @@ export const NutritionFilterContent = ({
               max={config.max}
               step={config.step}
               value={currentValue}
-              onValueChange={(newValue) => handleSliderChange(key, newValue)}
+              style={{ touchAction: "none" }}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+              }}
+              onValueChange={(newValue) => {
+                setDragState({
+                  key,
+                  value: newValue as NutritionRangeValue,
+                });
+              }}
+              onValueCommit={(newValue) => {
+                handleSliderChange(key, newValue);
+                setDragState({ key: null, value: null });
+              }}
+              data-vaul-no-drag
               className="[&>*[data-slot=slider-range]]:bg-olive-light [&>*[data-slot=slider-thumb]]:border-olive-light [&>*[data-slot=slider-thumb]]:bg-white [&>*[data-slot=slider-track]]:bg-gray-200"
             />
             <div className="flex justify-between text-xs text-gray-400">
@@ -273,34 +321,37 @@ export const NutritionFilterContent = ({
           <DrawerHeader className="text-left">
             <DrawerTitle className="text-xl font-bold">필터</DrawerTitle>
           </DrawerHeader>
+
+          {/* Overflow 컨테이너: 테마 선택만 스크롤 */}
           <div className="flex-1 overflow-y-auto p-4">
             <div className="space-y-6">
               <RecipeTypeFilters />
               <ThemeSelector />
-              <div className="border-t pt-4">
-                <SliderContent />
-              </div>
             </div>
-          </div>
 
-          <DrawerFooter className="mt-auto flex-row gap-2 border-t border-gray-200 pt-4">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              disabled={!isAnyFilterActive}
-              className="flex-1 rounded-md border-gray-300"
-            >
-              초기화
-            </Button>
-            <DrawerClose asChild>
+            <div className="border-t bg-white p-4">
+              <SliderContent />
+            </div>
+
+            <DrawerFooter className="mt-auto flex-row gap-2 border-t border-gray-200 pt-4">
               <Button
-                onClick={handleApply}
-                className="bg-olive-light flex-1 rounded-md text-white"
+                variant="outline"
+                onClick={handleReset}
+                disabled={!isAnyFilterActive}
+                className="flex-1 rounded-md border-gray-300"
               >
-                완료
+                초기화
               </Button>
-            </DrawerClose>
-          </DrawerFooter>
+              <DrawerClose asChild>
+                <Button
+                  onClick={handleApply}
+                  className="bg-olive-light flex-1 rounded-md text-white"
+                >
+                  완료
+                </Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </div>
         </DrawerContent>
       </Drawer>
     );
@@ -319,9 +370,13 @@ export const NutritionFilterContent = ({
 
           <RecipeTypeFilters />
 
-          <ThemeSelector />
+          {/* Overflow 컨테이너: 테마 선택만 스크롤 */}
+          <div className="max-h-[200px] overflow-y-auto">
+            <ThemeSelector />
+          </div>
 
-          <div className="max-h-[500px] overflow-y-auto border-t pt-4">
+          {/* Overflow 밖: 슬라이더 영역 (스크롤 없음) */}
+          <div className="border-t pt-4">
             <SliderContent />
           </div>
 

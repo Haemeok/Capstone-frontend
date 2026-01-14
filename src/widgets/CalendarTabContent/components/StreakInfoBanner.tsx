@@ -1,6 +1,7 @@
 import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
 import { getFlameLevel } from "../lib/streakCalculator";
-import { Fire } from "./fire";
+import { Image } from "@/shared/ui/image/Image";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { useEffect } from "react";
 
 type StreakInfoBannerProps = {
@@ -35,7 +36,13 @@ export const StreakInfoBanner = ({ streakCount }: StreakInfoBannerProps) => {
       style={{ opacity: 0 }}
     >
       <div className="flex w-full items-center gap-3">
-        <Fire width={48} height={48} className={config.flameColor} />
+        <Image
+          src={`${ICON_BASE_URL}streak_fire.webp`}
+          alt="스트릭"
+          wrapperClassName="w-12 h-12"
+          lazy={false}
+          imgClassName={config.flameColor}
+        />
         <div className="flex w-full flex-col gap-1">
           <p className="text-3xl font-bold">
             <span className={config.flameColor}>{streakCount}일</span>

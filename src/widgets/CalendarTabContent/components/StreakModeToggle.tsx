@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 
 import { CalendarMode } from "../types";
-import { Fire } from "./fire";
+import { Image } from "@/shared/ui/image/Image";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type StreakModeToggleProps = {
   mode: CalendarMode;
@@ -24,7 +25,12 @@ export const StreakModeToggle = ({
             : "text-gray-500 hover:bg-gray-100"
         )}
       >
-        <Fire width={24} height={24} />
+        <Image
+          src={`${ICON_BASE_URL}streak_fire.webp`}
+          alt="스트릭"
+          wrapperClassName="w-6 h-6"
+          lazy={false}
+        />
         스트릭
       </button>
 
@@ -38,7 +44,13 @@ export const StreakModeToggle = ({
             : "text-gray-500 hover:bg-gray-100"
         )}
       >
-        📸 기록
+        <Image
+          src={`${ICON_BASE_URL}record_camera.webp`}
+          alt="기록"
+          wrapperClassName="w-6 h-6"
+          lazy={false}
+        />
+        기록
       </button>
     </div>
   );

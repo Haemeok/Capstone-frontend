@@ -1,15 +1,21 @@
 import Link from "next/link";
-import { Search, Sparkles, LogIn } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { Button } from "@/shared/ui/shadcn/button";
+import { Image } from "@/shared/ui/image/Image";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 const IngredientsLoginCTA = () => {
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4 py-8">
       <div className="w-full max-w-md rounded-2xl border border-green-100 bg-white p-8 shadow-xl">
         <div className="mb-8 space-y-4">
-          <div className="flex items-start gap-3">
-            <div className="bg-olive-mint/10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg">
-              <Sparkles className="text-olive-mint h-5 w-5" />
+          <div className="flex items-start gap-2">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg">
+              <Image
+                src={`${ICON_BASE_URL}ai.webp`}
+                alt="AI"
+                wrapperClassName="w-10 h-10"
+              />
             </div>
             <div>
               <h3 className="mb-1 font-semibold text-gray-900">
@@ -21,9 +27,13 @@ const IngredientsLoginCTA = () => {
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
-            <div className="bg-olive-mint/10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg">
-              <Search className="text-olive-mint h-5 w-5" />
+          <div className="flex items-start gap-2">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg">
+              <Image
+                src={`${ICON_BASE_URL}search_intro.webp`}
+                alt="레시피 검색"
+                wrapperClassName="w-10 h-10"
+              />
             </div>
             <div>
               <h3 className="mb-1 font-semibold text-gray-900">

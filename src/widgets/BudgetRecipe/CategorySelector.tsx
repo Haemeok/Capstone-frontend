@@ -2,6 +2,8 @@
 
 import { Check } from "lucide-react";
 import { getCategoriesForBudget } from "@/shared/config/constants/budget";
+import { Image } from "@/shared/ui/image";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type CategorySelectorProps = {
   budget: number;
@@ -47,7 +49,11 @@ const CategorySelector = ({
                 </div>
               )}
 
-              <span className="text-3xl">{category.emoji}</span>
+              <Image
+                src={`${ICON_BASE_URL}${category.image}`}
+                alt={category.label}
+                wrapperClassName="w-12 h-12"
+              />
               <span
                 className={`text-center text-sm font-semibold ${
                   isSelected ? "text-olive-light" : "text-gray-700"

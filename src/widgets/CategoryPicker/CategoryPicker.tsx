@@ -5,6 +5,11 @@ import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
+import { Image } from "@/shared/ui/image/Image";
+import {
+  ICON_BASE_URL,
+  DISH_TYPE_ICONS,
+} from "@/shared/config/constants/recipe";
 import {
   Drawer,
   DrawerClose,
@@ -96,8 +101,16 @@ const CategoryPicker = ({
             />
             <Label
               htmlFor={`checkbox-${value}`}
-              className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="flex cursor-pointer items-center gap-1 text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
+              {DISH_TYPE_ICONS[value] && (
+                <Image
+                  src={`${ICON_BASE_URL}${DISH_TYPE_ICONS[value]}`}
+                  alt={value}
+                  wrapperClassName="w-8 h-8"
+                  lazy={false}
+                />
+              )}
               {value}
             </Label>
           </div>
@@ -117,8 +130,16 @@ const CategoryPicker = ({
               />
               <Label
                 htmlFor={`radio-${value}`}
-                className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="flex cursor-pointer items-center gap-1 text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
+                {DISH_TYPE_ICONS[value] && (
+                  <Image
+                    src={`${ICON_BASE_URL}${DISH_TYPE_ICONS[value]}`}
+                    alt={value}
+                    wrapperClassName="w-8 h-8"
+                    lazy={false}
+                  />
+                )}
                 {value}
               </Label>
             </div>
