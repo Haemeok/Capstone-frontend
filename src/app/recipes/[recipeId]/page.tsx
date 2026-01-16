@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import {
   generateNotFoundRecipeMetadata,
   generateRecipeMetadata,
-} from "@/shared/lib/metadata";
+} from "@/entities/recipe/lib/metadata";
 import { headers } from "next/headers";
 import {
   getStaticrecipionServer,
