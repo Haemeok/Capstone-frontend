@@ -143,7 +143,7 @@ export const RichToast = ({
   const toastContent = (
     <div
       className={cn(
-        "pointer-events-auto z-30 rounded-2xl bg-white shadow-2xl relative",
+        "pointer-events-auto relative z-30 rounded-2xl bg-white shadow-2xl",
         "md:border-olive-mint/60 w-full px-4 py-3 md:w-96 md:border-1 md:p-6",
         !isDragging && "transition-transform duration-300 ease-out",
         isVisible && dragOffset === 0 && "animate-slideInUp",
@@ -171,7 +171,7 @@ export const RichToast = ({
           e.stopPropagation();
           handleDismiss();
         }}
-        className="hidden md:flex absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors z-10"
+        className="absolute top-3 right-3 z-10 hidden text-gray-400 transition-colors hover:text-gray-600 md:flex"
         aria-label="닫기"
       >
         <X className="h-5 w-5" />
@@ -192,7 +192,7 @@ export const RichToast = ({
 
         <div className="min-w-0 flex-1 space-y-1">
           {richContent?.title && (
-            <div className="flex items-center gap-2 text-base leading-snug font-bold">
+            <div className="flex items-start gap-2 text-base leading-snug font-bold">
               {richContent.badgeIcon}
               <span>{richContent.title}</span>
             </div>
