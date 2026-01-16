@@ -21,11 +21,15 @@ type IngredientsSectionProps = {
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const [showNutrition, setShowNutrition] = useState(false);
-  const [currentServings, setCurrentServings] = useState(recipe.servings);
+
+  const isValidServings = recipe.servings > 0 && Number.isFinite(recipe.servings);
+  const [currentServings, setCurrentServings] = useState(
+    isValidServings ? recipe.servings : 1
+  );
 
   const randomActivity = useMemo(() => getRandomActivity(), [recipe.id]);
 
-  const servingRatio = currentServings / recipe.servings;
+  const servingRatio = isValidServings ? currentServings / recipe.servings : 1;
 
   const MIN_SERVINGS = 1;
   const MAX_SERVINGS = 20;
@@ -98,34 +102,36 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
           />
         ) : (
           <>
-            <div className="mb-3 flex items-center justify-end gap-2">
-              <span className="text-sm text-gray-600">인분</span>
-              <div className="flex items-center gap-1">
-                {currentServings > MIN_SERVINGS && (
-                  <button
-                    type="button"
-                    onClick={handleDecrement}
-                    aria-label="인분 줄이기"
-                    className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
-                  >
-                    -
-                  </button>
-                )}
-                <span className="w-10 text-center text-sm font-medium text-gray-800">
-                  {currentServings}
-                </span>
-                {currentServings < MAX_SERVINGS && (
-                  <button
-                    type="button"
-                    onClick={handleIncrement}
-                    aria-label="인분 늘리기"
-                    className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
-                  >
-                    +
-                  </button>
-                )}
+            {isValidServings && (
+              <div className="mb-3 flex items-center justify-end gap-2">
+                <span className="text-sm text-gray-600">인분</span>
+                <div className="flex items-center gap-1">
+                  {currentServings > MIN_SERVINGS && (
+                    <button
+                      type="button"
+                      onClick={handleDecrement}
+                      aria-label="인분 줄이기"
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+                  )}
+                  <span className="w-10 text-center text-sm font-medium text-gray-800">
+                    {currentServings}
+                  </span>
+                  {currentServings < MAX_SERVINGS && (
+                    <button
+                      type="button"
+                      onClick={handleIncrement}
+                      aria-label="인분 늘리기"
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
             <ul className="flex flex-col gap-1">
               {recipe.ingredients.map((ingredient, index) => {
                 const converted = convertIngredientQuantity(

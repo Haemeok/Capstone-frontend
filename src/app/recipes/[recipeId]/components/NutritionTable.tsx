@@ -34,7 +34,8 @@ const NutritionTable = ({
     }
   };
 
-  const servingRatio = currentServings / totalServings;
+  const isValidServings = totalServings > 0 && Number.isFinite(totalServings);
+  const servingRatio = isValidServings ? currentServings / totalServings : 1;
 
   const scaledNutrition = {
     sodium: Math.round(nutrition.sodium * servingRatio),
@@ -46,34 +47,36 @@ const NutritionTable = ({
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      <div className="flex items-center justify-end gap-2">
-        <span className="text-sm text-gray-600">인분</span>
-        <div className="flex items-center gap-1">
-          {currentServings > MIN_SERVINGS && (
-            <button
-              type="button"
-              onClick={handleDecrement}
-              aria-label="인분 줄이기"
-              className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
-            >
-              -
-            </button>
-          )}
-          <span className="w-10 text-center text-sm font-medium text-gray-800">
-            {currentServings}
-          </span>
-          {currentServings < MAX_SERVINGS && (
-            <button
-              type="button"
-              onClick={handleIncrement}
-              aria-label="인분 늘리기"
-              className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
-            >
-              +
-            </button>
-          )}
+      {isValidServings && (
+        <div className="flex items-center justify-end gap-2">
+          <span className="text-sm text-gray-600">인분</span>
+          <div className="flex items-center gap-1">
+            {currentServings > MIN_SERVINGS && (
+              <button
+                type="button"
+                onClick={handleDecrement}
+                aria-label="인분 줄이기"
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+              >
+                -
+              </button>
+            )}
+            <span className="w-10 text-center text-sm font-medium text-gray-800">
+              {currentServings}
+            </span>
+            {currentServings < MAX_SERVINGS && (
+              <button
+                type="button"
+                onClick={handleIncrement}
+                aria-label="인분 늘리기"
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+              >
+                +
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="grid grid-cols-2 gap-3">
         <NutritionItem

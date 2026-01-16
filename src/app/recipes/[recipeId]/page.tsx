@@ -80,6 +80,8 @@ export default async function RecipeDetailPage({
     headers();
   }
 
+  console.log(staticRecipe);
+
   const saveAmount =
     staticRecipe.marketPrice - staticRecipe.totalIngredientCost;
 
@@ -90,6 +92,16 @@ export default async function RecipeDetailPage({
   const recommendLabel = staticRecipe.tags.includes("👨‍🍳 셰프 레시피")
     ? "더 다양한 셰프 레시피를 만나보세요"
     : "이런 레시피는 어떠신가요?";
+
+  const youtubeMetadata = staticRecipe.youtubeChannelName
+    ? {
+        channelName: staticRecipe.youtubeChannelName,
+        videoTitle: staticRecipe.youtubeVideoTitle,
+        channelProfileUrl: staticRecipe.youtubeChannelProfileUrl,
+        subscriberCount: staticRecipe.youtubeSubscriberCount,
+        thumbnailUrl: staticRecipe.youtubeThumbnailUrl,
+      }
+    : undefined;
 
   return (
     <ScrollReset>
@@ -122,7 +134,10 @@ export default async function RecipeDetailPage({
             servings={staticRecipe.servings}
           />
 
-          <RecipeVideoSection videoUrl={staticRecipe.youtubeUrl ?? ""}>
+          <RecipeVideoSection
+            videoUrl={staticRecipe.youtubeUrl ?? ""}
+            youtubeMetadata={youtubeMetadata}
+          >
             <RecipeCommentsSection comments={staticRecipe.comments} />
 
             <RecipeFabButton hasAllStepImages={hasAllStepImages} />
