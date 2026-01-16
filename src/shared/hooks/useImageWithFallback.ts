@@ -10,6 +10,7 @@ type UseImageWithFallbackParams = {
   lazy: boolean;
   priority: boolean;
   inView: boolean;
+  onRetry?: () => void;
 };
 
 export const useImageWithFallback = ({
@@ -17,6 +18,7 @@ export const useImageWithFallback = ({
   lazy,
   priority,
   inView,
+  onRetry,
 }: UseImageWithFallbackParams) => {
   const srcArray = useMemo(() => (Array.isArray(src) ? src : [src]), [src]);
   const [fallbackIndex, setFallbackIndex] = useState(0);
@@ -36,12 +38,18 @@ export const useImageWithFallback = ({
   useEffect(() => {
     setFallbackIndex(0);
     setRetryCount(0);
+
+    if (isNoImageUrl) {
+      setStatus("loaded");
+      return;
+    }
+
     if (effectiveSrc) {
       setStatus("loading");
     } else {
       setStatus("idle");
     }
-  }, [src, effectiveSrc]);
+  }, [src, effectiveSrc, isNoImageUrl]);
 
   useEffect(() => {
     if (isNoImageUrl) {
@@ -67,7 +75,8 @@ export const useImageWithFallback = ({
   const handleError = useCallback(() => {
     if (hasMoreFallbacks) {
       setFallbackIndex((prev) => prev + 1);
-    } else if (retryCount < 3) {
+    } else if (!isNoImageUrl && retryCount < 3) {
+      onRetry?.();
       setStatus("loading");
       const RETRY_DELAY_MS = 2000;
       setTimeout(() => {
@@ -76,7 +85,7 @@ export const useImageWithFallback = ({
     } else {
       setStatus("error");
     }
-  }, [hasMoreFallbacks, retryCount]);
+  }, [hasMoreFallbacks, retryCount, isNoImageUrl, onRetry]);
 
   return {
     src: effectiveSrc,

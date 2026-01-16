@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/link";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { Pencil, Trash, Sparkles } from "lucide-react";
 
 import Circle from "@/shared/ui/Circle";
@@ -41,6 +42,7 @@ type RecipeGridProps = {
   prefetch?: boolean;
   showAIRecipeCTA?: boolean;
   useLCP?: boolean;
+  queryKeyToInvalidate?: unknown[];
 };
 
 const calculateSavings = (
@@ -66,7 +68,9 @@ const RecipeGrid = ({
   prefetch = false,
   showAIRecipeCTA = false,
   useLCP = true,
+  queryKeyToInvalidate,
 }: RecipeGridProps) => {
+  const queryClient = useQueryClient();
   const { isMobile, Container, Content } = useResponsiveSheet();
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -97,6 +101,12 @@ const RecipeGrid = ({
   const { mutate: deleteRecipe } = useDeleteRecipeMutation(
     selectedItemId ?? ""
   );
+
+  const handleImageRetry = useCallback(() => {
+    if (queryKeyToInvalidate) {
+      queryClient.invalidateQueries({ queryKey: queryKeyToInvalidate });
+    }
+  }, [queryClient, queryKeyToInvalidate]);
 
   if (isPending) {
     return (
@@ -219,6 +229,7 @@ const RecipeGrid = ({
               prefetch={prefetch}
               leftBadge={leftBadge}
               rightBadge={rightBadge}
+              onImageRetry={queryKeyToInvalidate ? handleImageRetry : undefined}
             />
           );
         })}
