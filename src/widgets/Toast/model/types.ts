@@ -18,6 +18,7 @@ export type ToastType = {
     title?: string;
     badgeIcon?: React.ReactNode;
     subtitle?: string;
+    recipeId?: string;
   };
   action?: {
     label?: string;
