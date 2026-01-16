@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
+export async function DELETE(context: RouteContext) {
   try {
     const { recipeId } = await context.params;
 
