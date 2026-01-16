@@ -3,60 +3,41 @@ import { InfiniteData } from "@tanstack/react-query";
 import {
   DISH_TYPE_CODES,
   DISH_TYPE_CODES_TO_NAME,
-  NutritionFilterKey,
 } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
+import { convertNutritionToQueryParams } from "@/shared/lib/nutrition/parseNutritionParams";
 
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
+import { useDishTypeCode } from "@/features/filter-dish-type";
+import { useSortCode } from "@/features/filter-sort";
+import { useTagCodes } from "@/features/filter-tags";
+import { useNutritionParams } from "@/features/recipe-search";
+import { useSearchQuery } from "@/features/search-input";
 
-type NutritionFilterValues = {
-  [K in NutritionFilterKey]: [number, number];
-};
+export const useSearchResults = () => {
+  const dishTypeCode = useDishTypeCode();
+  const sortCode = useSortCode();
+  const tagCodes = useTagCodes();
+  const { nutritionParams, types } = useNutritionParams();
+  const { q } = useSearchQuery();
 
-type UseSearchResultsProps = {
-  q: string;
-  sortCode: string;
-  dishTypeCode: string | null;
-  tagCodes: string[];
-  nutritionParams: Partial<NutritionFilterValues>;
-  types: string[];
-};
-
-export const useSearchResults = ({
-  q,
-  sortCode,
-  dishTypeCode,
-  tagCodes,
-  nutritionParams,
-  types,
-}: UseSearchResultsProps) => {
-  const nutritionQueryParams: Record<string, number> = {};
-  Object.entries(nutritionParams).forEach(([key, value]) => {
-    const filterKey = key as NutritionFilterKey;
-    const capitalizedKey = filterKey.charAt(0).toUpperCase() + filterKey.slice(1);
-    if (value) {
-      nutritionQueryParams[`min${capitalizedKey}`] = value[0];
-      nutritionQueryParams[`max${capitalizedKey}`] = value[1];
-    }
-  });
-
+  const nutritionQueryParams = convertNutritionToQueryParams(nutritionParams);
   const nutritionKeyString = JSON.stringify(nutritionQueryParams);
-
   const typesString = types.join(",");
 
   const { data, hasNextPage, isFetching, isPending, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
     InfiniteData<DetailedRecipesApiResponse>,
-    [string, string | null, string, string, string, string, string],
+    [string, string | null, string | null, string, string, string, string],
     number
   >({
     queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q, nutritionKeyString, typesString],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
-        sort: sortCode,
+        sort: sortCode || "createdAt,DESC",
         dishType: dishTypeCode,
         tags: tagCodes,
         q: q,
