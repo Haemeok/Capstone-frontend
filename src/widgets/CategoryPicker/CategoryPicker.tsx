@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -62,7 +62,7 @@ const CategoryPicker = ({
     }
   }, [open, initialValue]);
 
-  const handleCheckboxChange = (value: string) => {
+  const handleCheckboxChange = useCallback((value: string) => {
     setInternalSelection((prevSelection) => {
       const currentSelection = Array.isArray(prevSelection)
         ? prevSelection
@@ -73,11 +73,11 @@ const CategoryPicker = ({
         return [...currentSelection, value];
       }
     });
-  };
+  }, []);
 
-  const handleRadioChange = (value: string) => {
+  const handleRadioChange = useCallback((value: string) => {
     setInternalSelection(value);
-  };
+  }, []);
 
   const handleReset = () => {
     setInternalSelection(isMultiple ? [] : "");
@@ -88,15 +88,29 @@ const CategoryPicker = ({
     onOpenChange(false);
   };
 
-  const SelectionContent = () => (
-    <div className="space-y-3">
-      {isMultiple ? (
-        availableValues.map((value) => (
-          <div key={value} className="flex items-center space-x-2">
+  type CategoryItemProps = {
+    value: string;
+    isSelected: boolean;
+    onToggle: (value: string) => void;
+    isMultiple: boolean;
+  };
+
+  const CategoryItem = React.memo(({
+    value,
+    isSelected,
+    onToggle,
+    isMultiple,
+  }: CategoryItemProps) => {
+    const handleChange = () => onToggle(value);
+
+    return (
+      <div className="flex items-center space-x-2">
+        {isMultiple ? (
+          <>
             <Checkbox
               id={`checkbox-${value}`}
-              checked={(internalSelection as string[]).includes(value)}
-              onCheckedChange={() => handleCheckboxChange(value)}
+              checked={isSelected}
+              onCheckedChange={handleChange}
               className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 cursor-pointer rounded border-gray-300 data-[state=checked]:text-white"
             />
             <Label
@@ -113,7 +127,47 @@ const CategoryPicker = ({
               )}
               {value}
             </Label>
-          </div>
+          </>
+        ) : (
+          <>
+            <RadioGroupItem
+              value={value}
+              id={`radio-${value}`}
+              className="text-dark-light focus:ring-dark-light h-5 w-5 cursor-pointer border-gray-300"
+            />
+            <Label
+              htmlFor={`radio-${value}`}
+              className="flex cursor-pointer items-center gap-1 text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {DISH_TYPE_ICONS[value] && (
+                <Image
+                  src={`${ICON_BASE_URL}${DISH_TYPE_ICONS[value]}`}
+                  alt={value}
+                  wrapperClassName="w-8 h-8"
+                  lazy={false}
+                />
+              )}
+              {value}
+            </Label>
+          </>
+        )}
+      </div>
+    );
+  });
+
+  CategoryItem.displayName = "CategoryItem";
+
+  const SelectionContent = () => (
+    <div className="space-y-3">
+      {isMultiple ? (
+        availableValues.map((value) => (
+          <CategoryItem
+            key={value}
+            value={value}
+            isSelected={(internalSelection as string[]).includes(value)}
+            onToggle={handleCheckboxChange}
+            isMultiple={true}
+          />
         ))
       ) : (
         <RadioGroup
@@ -122,27 +176,13 @@ const CategoryPicker = ({
           className="space-y-3"
         >
           {availableValues.map((value) => (
-            <div key={value} className="flex items-center space-x-2">
-              <RadioGroupItem
-                value={value}
-                id={`radio-${value}`}
-                className="text-dark-light focus:ring-dark-light h-5 w-5 cursor-pointer border-gray-300"
-              />
-              <Label
-                htmlFor={`radio-${value}`}
-                className="flex cursor-pointer items-center gap-1 text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {DISH_TYPE_ICONS[value] && (
-                  <Image
-                    src={`${ICON_BASE_URL}${DISH_TYPE_ICONS[value]}`}
-                    alt={value}
-                    wrapperClassName="w-8 h-8"
-                    lazy={false}
-                  />
-                )}
-                {value}
-              </Label>
-            </div>
+            <CategoryItem
+              key={value}
+              value={value}
+              isSelected={internalSelection === value}
+              onToggle={handleRadioChange}
+              isMultiple={false}
+            />
           ))}
         </RadioGroup>
       )}
