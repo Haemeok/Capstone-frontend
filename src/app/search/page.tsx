@@ -3,8 +3,14 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
+import {
+  parseNutritionParams,
+  parseTypes,
+  convertNutritionToQueryParams,
+} from "@/shared/lib/nutrition/parseNutritionParams";
 
 import { SearchClient } from "@/widgets/SearchClient";
 
@@ -14,6 +20,7 @@ type SearchPageProps = {
     sort?: string;
     dishType?: string;
     tags?: string | string[];
+    types?: string;
   }>;
 };
 
@@ -34,11 +41,21 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const awaitedSearchParams = await searchParams;
-  const tags = Array.isArray(awaitedSearchParams.tags)
-    ? awaitedSearchParams.tags
-    : awaitedSearchParams.tags
-      ? [awaitedSearchParams.tags]
-      : [];
+
+  const typesParam = awaitedSearchParams.types;
+  if (!typesParam) {
+    const params = new URLSearchParams(
+      awaitedSearchParams as Record<string, string>
+    );
+    params.set("types", "USER,AI,YOUTUBE");
+    redirect(`/search?${params.toString()}`);
+  }
+
+  const tags = awaitedSearchParams.tags
+    ? (typeof awaitedSearchParams.tags === "string"
+        ? awaitedSearchParams.tags.split(",").filter(Boolean)
+        : awaitedSearchParams.tags)
+    : [];
 
   const q = awaitedSearchParams.q || "";
   const sortCode =
@@ -48,10 +65,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const dishTypeCode = awaitedSearchParams.dishType || null;
   const tagCodes = tags;
 
+  const nutritionParams = parseNutritionParams(awaitedSearchParams);
+  const nutritionQueryParams = convertNutritionToQueryParams(nutritionParams);
+  const types = parseTypes(awaitedSearchParams);
+
   const queryClient = new QueryClient();
 
   queryClient.prefetchQuery({
-    queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q],
+    queryKey: [
+      "recipes",
+      dishTypeCode,
+      sortCode,
+      tagCodes.join(","),
+      q,
+      JSON.stringify(nutritionQueryParams),
+      types.join(","),
+    ],
     queryFn: () =>
       getRecipesOnServer({
         key: "search",
@@ -59,6 +88,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         sort: sortCode.toLowerCase() === "asc" ? "asc" : "desc",
         dishType: dishTypeCode || undefined,
         tags: tagCodes,
+        types,
+        ...nutritionQueryParams,
       }),
   });
 

@@ -77,6 +77,21 @@ export const DISH_TYPES = [
   "디저트/간식류",
 ];
 
+export const DISH_TYPE_ICONS: Record<string, string> = {
+  "전체": "all.webp",
+  "볶음": "frying.webp",
+  "국/찌개/탕": "soup_stew.webp",
+  "구이": "grill.webp",
+  "무침/샐러드": "salad.webp",
+  "튀김/부침": "fried_pan.webp",
+  "찜/조림": "steamed_braised.webp",
+  "오븐요리": "oven.webp",
+  "생식/회": "raw.webp",
+  "절임/피클류": "pickle.webp",
+  "밥/면/파스타": "rice_noodle.webp",
+  "디저트/간식류": "dessert.webp",
+} as const;
+
 export const DISH_TYPES_FOR_CREATE_RECIPE = DISH_TYPES.slice(1);
 
 export const DISH_TYPE_CODES = {
@@ -418,7 +433,8 @@ export type NutritionFilterKey = keyof typeof NUTRITION_RANGES;
 
 export const NUTRITION_THEMES = {
   KETO: {
-    label: "🥑 키토",
+    label: "키토",
+    icon: "keto.webp",
     description: "탄수화물 최소화, 지방 위주",
     values: {
       carb: [0, 30] as [number, number],
@@ -427,7 +443,8 @@ export const NUTRITION_THEMES = {
     },
   },
   LOW_SUGAR: {
-    label: "🍬 저당",
+    label: "저당",
+    icon: "low_sugar.webp",
     description: "당류 섭취 제한",
     values: {
       sugar: [0, 15] as [number, number],
@@ -435,7 +452,8 @@ export const NUTRITION_THEMES = {
     },
   },
   LOW_FAT: {
-    label: "🥗 저지방",
+    label: "저지방",
+    icon: "low_fat.webp",
     description: "지방 섭취 최소화",
     values: {
       fat: [0, 20] as [number, number],
@@ -443,7 +461,8 @@ export const NUTRITION_THEMES = {
     },
   },
   HIGH_PROTEIN: {
-    label: "💪 고단백",
+    label: "고단백",
+    icon: "high_protein.webp",
     description: "단백질 섭취 극대화",
     values: {
       protein: [60, 200] as [number, number],
@@ -451,14 +470,16 @@ export const NUTRITION_THEMES = {
     },
   },
   LOW_SODIUM: {
-    label: "🧂 저염식",
+    label: "저염식",
+    icon: "low_sodium.webp",
     description: "나트륨 섭취 제한",
     values: {
       sodium: [0, 800] as [number, number],
     },
   },
   BALANCED: {
-    label: "⚖️ 균형식",
+    label: "균형식",
+    icon: "balanced.webp",
     description: "영양소 균형",
     values: {
       carb: [80, 150] as [number, number],
@@ -468,14 +489,16 @@ export const NUTRITION_THEMES = {
     },
   },
   BUDGET: {
-    label: "💰 저예산",
+    label: "저예산",
+    icon: "low_cost.webp",
     description: "비용 절감",
     values: {
       cost: [0, 10000] as [number, number],
     },
   },
   LOW_CALORIE: {
-    label: "🔥 저칼로리",
+    label: "저칼로리",
+    icon: "low_calorie.webp",
     description: "칼로리 제한",
     values: {
       calories: [0, 500] as [number, number],
