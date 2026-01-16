@@ -6,14 +6,19 @@ import * as SliderPrimitive from "@radix-ui/react-slider";
 
 import { cn } from "@/shared/lib/utils";
 
+type SliderProps = React.ComponentProps<typeof SliderPrimitive.Root> & {
+  thumbClassName?: string;
+};
+
 function Slider({
   className,
+  thumbClassName,
   defaultValue,
   value,
   min = 0,
   max = 100,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: SliderProps) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -54,7 +59,10 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
-          className="boreder-gray-200 block size-8 shrink-0 rounded-full border-1 bg-white shadow-2xl focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+          className={cn(
+            "boreder-gray-200 block size-8 shrink-0 cursor-pointer rounded-full border-1 bg-white shadow-2xl focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+            thumbClassName
+          )}
         />
       ))}
     </SliderPrimitive.Root>
