@@ -94,7 +94,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
       {/* 이미지 */}
       {image.src && (
         <img
-          key={`${image.src}-retry-${image.retryCount}`}
+          key={image.src}
           ref={forwardedRef}
           src={image.src}
           alt={alt}
