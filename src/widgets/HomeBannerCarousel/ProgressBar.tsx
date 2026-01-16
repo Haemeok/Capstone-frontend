@@ -9,6 +9,8 @@ type ProgressBarProps = {
   interval?: number;
   variant?: ButtonVariant;
   onComplete?: () => void;
+  className?: string; // For the track
+  indicatorClassName?: string; // For the progress bar itself
 };
 
 const DEFAULT_INTERVAL_MS = 5000;
@@ -18,6 +20,8 @@ export const ProgressBar = ({
   interval = DEFAULT_INTERVAL_MS,
   variant = "white",
   onComplete,
+  className,
+  indicatorClassName,
 }: ProgressBarProps) => {
   const progressRef = useRef<HTMLDivElement>(null);
 
@@ -80,12 +84,13 @@ export const ProgressBar = ({
   }, [isPaused, interval]);
 
   return (
-    <div className="h-0.5 flex-1 translate-z-0 overflow-hidden rounded-full bg-white/30">
+    <div className={cn("h-1 flex-1 translate-z-0 overflow-hidden rounded-full bg-gray-200", className)}>
       <div
         ref={progressRef}
         className={cn(
           "h-full transition-none will-change-[width]",
-          variant === "white" ? "bg-white" : "bg-black"
+          !indicatorClassName && (variant === "white" ? "bg-white" : "bg-black"),
+          indicatorClassName
         )}
         style={{ width: "0%" }}
       />
