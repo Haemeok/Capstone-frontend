@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
 import { ToastType } from "../model/types";
 import { useToastStore } from "../model/store";
@@ -12,6 +13,7 @@ type RichToastProps = ToastType;
 
 const SWIPE_THRESHOLD = 100;
 const TRANSITION_DURATION = 300;
+const MAX_TOAST_DURATION = 30000;
 
 const extractVideoIdFromThumbnail = (thumbnailUrl: string): string | null => {
   const match = thumbnailUrl.match(/\/vi\/([^/]+)\//);
@@ -43,22 +45,24 @@ export const RichToast = ({
     return [richContent.thumbnail];
   }, [richContent?.thumbnail]);
 
+  const effectiveDuration = Math.min(duration, MAX_TOAST_DURATION);
+
   useEffect(() => {
     if (persistent) return;
 
     const hideTimer = setTimeout(() => {
       setIsVisible(false);
-    }, duration - TRANSITION_DURATION);
+    }, effectiveDuration - TRANSITION_DURATION);
 
     const removeTimer = setTimeout(() => {
       removeToast(id);
-    }, duration);
+    }, effectiveDuration);
 
     return () => {
       clearTimeout(hideTimer);
       clearTimeout(removeTimer);
     };
-  }, [id, duration, persistent, removeToast]);
+  }, [id, effectiveDuration, persistent, removeToast]);
 
   const handleDismiss = () => {
     setIsVisible(false);
@@ -131,15 +135,20 @@ export const RichToast = ({
   };
 
   const opacity = Math.max(0, 1 - dragOffset / 200);
+  const isClickable = Boolean(richContent?.recipeId);
+  const recipeUrl = richContent?.recipeId
+    ? `/recipes/${richContent.recipeId}`
+    : undefined;
 
-  return (
+  const toastContent = (
     <div
       className={cn(
-        "pointer-events-auto z-30 rounded-2xl bg-white shadow-2xl",
+        "pointer-events-auto z-30 rounded-2xl bg-white shadow-2xl relative",
         "md:border-olive-mint/60 w-full px-4 py-3 md:w-96 md:border-1 md:p-6",
         !isDragging && "transition-transform duration-300 ease-out",
         isVisible && dragOffset === 0 && "animate-slideInUp",
-        !isVisible && dragOffset === 0 && "animate-slideOutDown"
+        !isVisible && dragOffset === 0 && "animate-slideOutDown",
+        isClickable && "cursor-pointer"
       )}
       style={{
         transform: `translateY(${dragOffset}px)`,
@@ -155,6 +164,19 @@ export const RichToast = ({
       aria-live="polite"
       aria-atomic="true"
     >
+      {/* Close button - desktop only */}
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleDismiss();
+        }}
+        className="hidden md:flex absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors z-10"
+        aria-label="닫기"
+      >
+        <X className="h-5 w-5" />
+      </button>
+
       <div className="flex items-center gap-3">
         {thumbnailUrls.length > 0 && (
           <div className="flex-shrink-0">
@@ -170,10 +192,10 @@ export const RichToast = ({
 
         <div className="min-w-0 flex-1 space-y-1">
           {richContent?.title && (
-            <p className="text-base leading-snug font-bold">
+            <div className="flex items-center gap-2 text-base leading-snug font-bold">
               {richContent.badgeIcon}
-              {richContent.title}
-            </p>
+              <span>{richContent.title}</span>
+            </div>
           )}
           {richContent?.subtitle && (
             <p className="truncate text-sm leading-snug text-gray-600">
@@ -184,7 +206,11 @@ export const RichToast = ({
 
         {action && (
           <button
-            onClick={handleActionClick}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleActionClick();
+            }}
             className="hover:text-olive-light flex flex-shrink-0 items-center gap-1 transition-colors"
             aria-label={action.label}
           >
@@ -194,5 +220,11 @@ export const RichToast = ({
         )}
       </div>
     </div>
+  );
+
+  return isClickable && recipeUrl ? (
+    <Link href={recipeUrl}>{toastContent}</Link>
+  ) : (
+    toastContent
   );
 };
