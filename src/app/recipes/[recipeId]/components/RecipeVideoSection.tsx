@@ -11,6 +11,7 @@ import {
 } from "@/shared/ui/YouTubeVideoPlayer";
 import { Button } from "@/shared/ui/shadcn/button";
 import { cn } from "@/shared/lib/utils";
+import { Image } from "@/shared/ui/image/Image";
 
 type VideoPlayerContextType = {
   seekToTimeline: (timeline: string) => void;
@@ -23,13 +24,23 @@ export const useVideoPlayer = () => {
   return context;
 };
 
+type YoutubeMetadata = {
+  channelName?: string;
+  videoTitle?: string;
+  channelProfileUrl?: string;
+  subscriberCount?: number;
+  thumbnailUrl?: string;
+};
+
 type RecipeVideoSectionProps = {
   videoUrl: string;
+  youtubeMetadata?: YoutubeMetadata;
   children?: React.ReactNode;
 };
 
 export default function RecipeVideoSection({
   videoUrl,
+  youtubeMetadata,
   children,
 }: RecipeVideoSectionProps) {
   if (videoUrl === "") {
@@ -51,9 +62,24 @@ export default function RecipeVideoSection({
     setIsSticky(!isSticky);
   };
 
+  const shouldShowYoutubeInfo =
+    !isSticky &&
+    youtubeMetadata?.channelName &&
+    youtubeMetadata?.channelProfileUrl;
+
+  const formatSubscriberCount = (count: number): string => {
+    if (count >= 10000) {
+      return `${(count / 10000).toFixed(1)}만명`;
+    }
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}천명`;
+    }
+    return `${count}명`;
+  };
+
   return (
     <VideoPlayerContext.Provider value={{ seekToTimeline }}>
-      <section className="relative mt-4">
+      <section className="relative">
         <div
           className={cn(
             "w-full transition-all",
@@ -71,20 +97,35 @@ export default function RecipeVideoSection({
         >
           <div
             className={cn(
-              "bg-card relative overflow-hidden rounded-xl border shadow-sm transition-all",
-              isSticky && "shadow-2xl"
+              "flex items-center gap-2",
+              isSticky ? "justify-center" : "justify-between"
             )}
           >
-            <YouTubeVideoPlayer ref={playerRef} videoUrl={videoUrl} />
-          </div>
+            {shouldShowYoutubeInfo ? (
+              <div className="bg-background/80 flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 shadow-md backdrop-blur-sm">
+                <Image
+                  src={youtubeMetadata.channelProfileUrl!}
+                  alt={youtubeMetadata.channelName!}
+                  wrapperClassName="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden shrink-0"
+                  imgClassName="object-cover"
+                  fit="cover"
+                />
+                <div className="flex min-w-0 flex-col">
+                  <span className="line-clamp-1 text-sm font-medium">
+                    {youtubeMetadata.channelName}
+                  </span>
+                  {youtubeMetadata.subscriberCount && (
+                    <span className="text-xs text-gray-600">
+                      구독자{" "}
+                      {formatSubscriberCount(youtubeMetadata.subscriberCount)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ) : (
+              !isSticky && <div />
+            )}
 
-          <motion.div
-            layout
-            className={cn(
-              "absolute z-10 w-fit",
-              isSticky ? "-top-12 left-1/2 -translate-x-1/2" : "-top-10 right-0"
-            )}
-          >
             <Button
               variant="secondary"
               size={isSticky ? "icon" : "default"}
@@ -113,7 +154,16 @@ export default function RecipeVideoSection({
                 />
               </motion.div>
             </Button>
-          </motion.div>
+          </div>
+
+          <div
+            className={cn(
+              "bg-card relative overflow-hidden rounded-xl border shadow-sm transition-all",
+              isSticky && "shadow-2xl"
+            )}
+          >
+            <YouTubeVideoPlayer ref={playerRef} videoUrl={videoUrl} />
+          </div>
         </div>
       </section>
 
