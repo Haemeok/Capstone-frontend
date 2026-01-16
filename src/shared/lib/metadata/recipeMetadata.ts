@@ -2,15 +2,212 @@ import type { Metadata } from "next";
 
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
-import { SEO_CONSTANTS } from "./constants";
+import { SEO_CONSTANTS, YOUTUBE_SEO } from "./constants";
+
+type RecipeType =
+  | "chef-tv-show"
+  | "youtube-famous"
+  | "youtube-medium"
+  | "youtube-standard"
+  | "standard";
+
+type YoutubeMetadata = {
+  channelName: string;
+  videoTitle?: string;
+  thumbnailUrl?: string;
+  channelProfileUrl?: string;
+  subscriberCount?: number;
+};
+
+const extractYoutubeMetadata = (
+  recipe: StaticRecipe
+): YoutubeMetadata | undefined => {
+  if (!recipe.youtubeUrl || !recipe.youtubeChannelName) {
+    return undefined;
+  }
+
+  return {
+    channelName: recipe.youtubeChannelName,
+    videoTitle: recipe.youtubeVideoTitle,
+    thumbnailUrl: recipe.youtubeThumbnailUrl,
+    channelProfileUrl: recipe.youtubeChannelProfileUrl,
+    subscriberCount: recipe.youtubeSubscriberCount,
+  };
+};
+
+const determineRecipeType = (
+  recipe: StaticRecipe,
+  youtubeMetadata?: YoutubeMetadata
+): RecipeType => {
+  const isChefRecipe =
+    recipe.title.includes("흑백요리사") ||
+    recipe.tags.some((tag) => tag === "셰프 레시피");
+
+  if (isChefRecipe) {
+    return "chef-tv-show";
+  }
+
+  if (youtubeMetadata?.channelName) {
+    const subscriberCount = youtubeMetadata.subscriberCount || 0;
+
+    if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.FAMOUS) {
+      return "youtube-famous";
+    } else if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MEDIUM) {
+      return "youtube-medium";
+    } else {
+      return "youtube-standard";
+    }
+  }
+
+  return "standard";
+};
+
+const formatSubscriberCount = (count: number): string => {
+  if (count >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MILLION) {
+    const millions = Math.floor(count / 10000) / 100;
+    return `${millions}만명`;
+  } else if (count >= 10000) {
+    const tenThousands = Math.floor(count / 10000);
+    return `${tenThousands}만명`;
+  } else if (count >= 1000) {
+    const thousands = Math.floor(count / 1000);
+    return `${thousands}천명`;
+  }
+  return `${count}명`;
+};
+
+const generateYoutubeTitlePrefix = (
+  channelName: string,
+  subscriberCount?: number
+): string => {
+  if (
+    subscriberCount &&
+    subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.FAMOUS
+  ) {
+    return `[${channelName} 레시피]`;
+  } else if (
+    subscriberCount &&
+    subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MEDIUM
+  ) {
+    return "[유튜브 레시피]";
+  }
+  return "";
+};
+
+const generateYoutubeTitleSuffix = (channelName: string): string => {
+  return `[${channelName}]`;
+};
+
+const generateYoutubeDescription = (
+  recipe: StaticRecipe,
+  baseDescription: string,
+  youtubeMetadata: YoutubeMetadata
+): string => {
+  const subscriberCount = youtubeMetadata.subscriberCount || 0;
+
+  let channelContext = "";
+  if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MILLION) {
+    channelContext = `구독자 ${formatSubscriberCount(subscriberCount)}의 ${youtubeMetadata.channelName}이(가) 공개한 ${recipe.title} 레시피를 레시피오에서 만나보세요!`;
+  } else if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.FAMOUS) {
+    channelContext = `인기 유튜버 ${youtubeMetadata.channelName}의 ${recipe.title} 레시피를 레시피오에서 만나보세요!`;
+  } else {
+    channelContext = `${youtubeMetadata.channelName} 채널의 ${recipe.title} 레시피를 레시피오에서 만나보세요!`;
+  }
+
+  const valueProposition =
+    "원본 영상의 핵심 내용을 정리하여 재료비용과 영양정보를 추가했습니다.";
+
+  const details: string[] = [];
+
+  if (youtubeMetadata.videoTitle) {
+    details.push(`📺 원본 영상: ${youtubeMetadata.videoTitle}`);
+  }
+
+  if (subscriberCount > 0) {
+    details.push(
+      `👤 크리에이터: ${youtubeMetadata.channelName} (구독자 ${formatSubscriberCount(subscriberCount)})`
+    );
+  }
+
+  if (recipe.totalIngredientCost > 0) {
+    const savings = recipe.marketPrice - recipe.totalIngredientCost;
+    if (savings > 0) {
+      details.push(
+        `💰 예상 재료비: ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원 (시장가 대비 ${savings.toLocaleString("ko-KR")}원 절약)`
+      );
+    } else {
+      details.push(
+        `💰 예상 재료비: ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원`
+      );
+    }
+  }
+
+  if (recipe.cookingTime) {
+    details.push(`⏱️ 조리 시간: ${recipe.cookingTime}분`);
+  }
+
+  if (recipe.totalCalories) {
+    details.push(`🍽️ 1인분 기준: 칼로리 ${recipe.totalCalories}kcal`);
+  }
+
+  const detailsSection = details.length > 0 ? `\n\n${details.join("\n")}` : "";
+
+  return `${channelContext} ${valueProposition}\n\n${baseDescription}${detailsSection}`;
+};
+
+const generateYoutubeKeywords = (
+  recipe: StaticRecipe,
+  youtubeMetadata: YoutubeMetadata
+): string[] => {
+  const keywords: string[] = [];
+
+  keywords.push(...YOUTUBE_SEO.KEYWORDS);
+
+  keywords.push(
+    youtubeMetadata.channelName,
+    `${youtubeMetadata.channelName} 레시피`,
+    `${youtubeMetadata.channelName} 요리`,
+    `${youtubeMetadata.channelName} ${recipe.title}`
+  );
+
+  const subscriberCount = youtubeMetadata.subscriberCount || 0;
+  if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MILLION) {
+    keywords.push("유명 셰프", "인기 유튜버", "백만 유튜버");
+  } else if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.FAMOUS) {
+    keywords.push("인기 요리 채널", "구독자 많은 레시피");
+  }
+
+  keywords.push(
+    `${recipe.title} 유튜브`,
+    `${recipe.title} 만들기 영상`,
+    `${recipe.title} 요리법 유튜브`
+  );
+
+  return keywords;
+};
+
+const selectOptimalImages = (
+  recipe: StaticRecipe,
+  youtubeMetadata?: YoutubeMetadata
+): { primary: string; secondary?: string } => {
+  if (youtubeMetadata?.thumbnailUrl) {
+    return {
+      primary: youtubeMetadata.thumbnailUrl,
+      secondary: recipe.imageUrl !== youtubeMetadata.thumbnailUrl ? recipe.imageUrl : undefined,
+    };
+  }
+
+  return {
+    primary: recipe.imageUrl,
+  };
+};
 
 export const generateRecipeMetadata = (
   recipe: StaticRecipe,
   recipeId: string
 ): Metadata => {
-  const isChefRecipe =
-    recipe.title.includes("흑백요리사") ||
-    recipe.tags.some((tag) => tag === "셰프 레시피");
+  const youtubeMetadata = extractYoutubeMetadata(recipe);
+  const recipeType = determineRecipeType(recipe, youtubeMetadata);
 
   const titleKeywords: string[] = [];
 
@@ -61,9 +258,35 @@ export const generateRecipeMetadata = (
 
   const MAX_TITLE_KEYWORDS = 2;
   const titlePrefix = titleKeywords.slice(0, MAX_TITLE_KEYWORDS).join("");
-  const defaultTitle = titlePrefix
-    ? `${titlePrefix} ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`
-    : `${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
+
+  let defaultTitle = "";
+  if (youtubeMetadata && recipeType !== "chef-tv-show") {
+    const youtubePrefix = generateYoutubeTitlePrefix(
+      youtubeMetadata.channelName,
+      youtubeMetadata.subscriberCount
+    );
+
+    if (recipeType === "youtube-famous" || recipeType === "youtube-medium") {
+      if (recipeType === "youtube-medium" && youtubePrefix) {
+        defaultTitle = `${youtubePrefix} ${titlePrefix} ${recipe.title} - ${youtubeMetadata.channelName} | ${SEO_CONSTANTS.SITE_NAME}`;
+      } else {
+        defaultTitle = youtubePrefix
+          ? `${youtubePrefix} ${titlePrefix} ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`
+          : `${titlePrefix} ${recipe.title} - ${youtubeMetadata.channelName} | ${SEO_CONSTANTS.SITE_NAME}`;
+      }
+    } else {
+      const youtubeSuffix = generateYoutubeTitleSuffix(
+        youtubeMetadata.channelName
+      );
+      defaultTitle = titlePrefix
+        ? `${titlePrefix} ${recipe.title} ${youtubeSuffix} | ${SEO_CONSTANTS.SITE_NAME}`
+        : `${recipe.title} ${youtubeSuffix} | ${SEO_CONSTANTS.SITE_NAME}`;
+    }
+  } else {
+    defaultTitle = titlePrefix
+      ? `${titlePrefix} ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`
+      : `${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
+  }
 
   const costInfo = recipe.totalIngredientCost
     ? `예상비용: ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원`
@@ -71,9 +294,14 @@ export const generateRecipeMetadata = (
   const timeInfo = recipe.cookingTime ? `${recipe.cookingTime}분 소요` : "";
   const additionalInfo = [costInfo, timeInfo].filter(Boolean).join(", ");
 
-  const defaultDescription = recipe.description
+  const baseDescription = recipe.description
     ? `${recipe.description}${additionalInfo ? ` (${additionalInfo})` : ""}`
     : `${recipe.title} 레시피! AI가 제안하는 ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원 가성비 요리법을 확인하세요.`;
+
+  const defaultDescription =
+    youtubeMetadata && recipeType !== "chef-tv-show"
+      ? generateYoutubeDescription(recipe, baseDescription, youtubeMetadata)
+      : baseDescription;
 
   const dynamicKeywords: string[] = [];
 
@@ -105,7 +333,38 @@ export const generateRecipeMetadata = (
     }
   });
 
+  const youtubeKeywords =
+    youtubeMetadata && recipeType !== "chef-tv-show"
+      ? generateYoutubeKeywords(recipe, youtubeMetadata)
+      : [];
+
   const fullPageUrl = `${baseUrl}/recipes/${recipeId}`;
+
+  const images = selectOptimalImages(recipe, youtubeMetadata);
+  const ogImages = [
+    {
+      url: images.primary,
+      width: 1200,
+      height: 630,
+      alt: youtubeMetadata
+        ? `${recipe.title} - ${youtubeMetadata.channelName}`
+        : `${recipe.title} - ${SEO_CONSTANTS.SITE_NAME}`,
+    },
+  ];
+
+  if (images.secondary) {
+    ogImages.push({
+      url: images.secondary,
+      width: 1200,
+      height: 630,
+      alt: `${recipe.title} 완성 사진`,
+    });
+  }
+
+  const twitterImages = [images.primary];
+  if (images.secondary) {
+    twitterImages.push(images.secondary);
+  }
 
   const baseMetadata: Metadata = {
     title: defaultTitle,
@@ -115,6 +374,7 @@ export const generateRecipeMetadata = (
       recipe.title,
       ...recipe.tags,
       ...dynamicKeywords,
+      ...youtubeKeywords,
     ],
     alternates: {
       canonical: fullPageUrl,
@@ -126,24 +386,17 @@ export const generateRecipeMetadata = (
       siteName: SEO_CONSTANTS.SITE_NAME,
       type: SEO_CONSTANTS.OG_TYPE.ARTICLE,
       locale: SEO_CONSTANTS.LOCALE,
-      images: [
-        {
-          url: recipe.imageUrl,
-          width: 1200,
-          height: 630,
-          alt: `${recipe.title} - ${SEO_CONSTANTS.SITE_NAME}`,
-        },
-      ],
+      images: ogImages,
     },
     twitter: {
       card: SEO_CONSTANTS.TWITTER_CARD,
       title: defaultTitle,
       description: defaultDescription,
-      images: [recipe.imageUrl],
+      images: twitterImages,
     },
   };
 
-  if (isChefRecipe) {
+  if (recipeType === "chef-tv-show") {
     const chefTitle = `[15분 레시피] ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
     const chefDescription = `흑백요리사, 냉장고를 부탁해 등 유명 셰프들의 15분 레시피 후기를 만나보세요. ${recipe.title} 레시피로 집에서 파인다이닝을 즐겨보세요!`;
     const chefKeywords = [
@@ -158,7 +411,7 @@ export const generateRecipeMetadata = (
       "안성재",
       "최현석",
       "에드워드 리",
-      ...(baseMetadata.keywords as string[]), // 기존 키워드도 포함
+      ...(baseMetadata.keywords as string[]),
     ];
 
     return {
