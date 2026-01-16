@@ -11,6 +11,7 @@ import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { DialogTitle } from "@/shared/ui/shadcn/dialog";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
+import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 
 import {
   BaseRecipeGridItem,
@@ -193,6 +194,16 @@ const RecipeGrid = ({
                   {savings.toLocaleString()}원 절약
                 </span>
               </div>
+            );
+          } else if (
+            detailedRecipe.isYoutube &&
+            detailedRecipe.youtubeChannelName
+          ) {
+            rightBadge = (
+              <YouTubeChannelBadge
+                key="youtube"
+                channelName={detailedRecipe.youtubeChannelName}
+              />
             );
           } else if (detailedRecipe.isYoutube) {
             rightBadge = <YouTubeIconBadge key="youtube" />;
