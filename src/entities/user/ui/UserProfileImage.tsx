@@ -5,6 +5,10 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
+import {
+  generateUserGradient,
+  isDefaultProfileImage,
+} from "@/shared/lib/colors";
 
 type UserProfileImageProps = {
   profileImage: string;
@@ -17,6 +21,9 @@ const UserProfileImage = ({
   userId,
   className,
 }: UserProfileImageProps) => {
+  const isDefault = isDefaultProfileImage(profileImage);
+  const gradientStyle = isDefault ? generateUserGradient(userId) : undefined;
+
   return (
     <Link href={`/users/${userId}`}>
       <div
@@ -24,6 +31,7 @@ const UserProfileImage = ({
           "h-8 w-8 flex-shrink-0 cursor-pointer overflow-hidden rounded-full",
           className
         )}
+        style={gradientStyle}
       >
         <Image
           src={profileImage}
