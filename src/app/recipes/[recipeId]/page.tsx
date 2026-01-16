@@ -5,7 +5,6 @@ import {
   generateNotFoundRecipeMetadata,
   generateRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
-import { headers } from "next/headers";
 import {
   getStaticrecipionServer,
   getStaticRecipesOnServer,
@@ -76,12 +75,6 @@ export default async function RecipeDetailPage({
     notFound();
   }
 
-  if (!staticRecipe.imageUrl) {
-    headers();
-  }
-
-  console.log(staticRecipe);
-
   const saveAmount =
     staticRecipe.marketPrice - staticRecipe.totalIngredientCost;
 
@@ -112,6 +105,7 @@ export default async function RecipeDetailPage({
         />
 
         <RecipeHeroSection
+          recipeId={recipeId}
           imageUrl={staticRecipe.imageUrl}
           title={staticRecipe.title}
           avgRating={staticRecipe.ratingInfo.avgRating}
