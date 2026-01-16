@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Image } from "@/shared/ui/image/Image";
-import { YoutubeMeta } from "../model/types";
 import { useYoutubeImportStore } from "../model/store";
 import { Loader2, XCircle, CheckCircle } from "lucide-react";
 import {

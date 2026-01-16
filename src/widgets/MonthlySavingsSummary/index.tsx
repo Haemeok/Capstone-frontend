@@ -30,36 +30,35 @@ const MonthlySavingsSummary = ({
 
   const currentSavings = monthlyTotalSavings ?? 0;
 
-  const { currentIndex, currentMin, next, percentageToNext, remainingToNext } =
-    useMemo(() => {
-      const idx = PRICE_BRACKETS.findIndex((b) => currentSavings >= b.min);
-      const safeIndex = idx === -1 ? PRICE_BRACKETS.length - 1 : idx;
-      const currentBracket = PRICE_BRACKETS[safeIndex];
-      const nextBracket =
-        safeIndex > 0 ? PRICE_BRACKETS[safeIndex - 1] : undefined;
+  const { currentMin, next, percentageToNext } = useMemo(() => {
+    const idx = PRICE_BRACKETS.findIndex((b) => currentSavings >= b.min);
+    const safeIndex = idx === -1 ? PRICE_BRACKETS.length - 1 : idx;
+    const currentBracket = PRICE_BRACKETS[safeIndex];
+    const nextBracket =
+      safeIndex > 0 ? PRICE_BRACKETS[safeIndex - 1] : undefined;
 
-      if (!nextBracket) {
-        return {
-          currentIndex: safeIndex,
-          currentMin: currentBracket.min,
-          next: undefined as undefined,
-          percentageToNext: 100,
-          remainingToNext: 0,
-        };
-      }
-
-      const range = Math.max(1, nextBracket.min - currentBracket.min);
-      const progressed = Math.max(0, currentSavings - currentBracket.min);
-      const percent = Math.min(100, Math.floor((progressed / range) * 100));
-      const remaining = Math.max(0, nextBracket.min - currentSavings);
+    if (!nextBracket) {
       return {
         currentIndex: safeIndex,
         currentMin: currentBracket.min,
-        next: nextBracket,
-        percentageToNext: percent,
-        remainingToNext: remaining,
+        next: undefined as undefined,
+        percentageToNext: 100,
+        remainingToNext: 0,
       };
-    }, [currentSavings]);
+    }
+
+    const range = Math.max(1, nextBracket.min - currentBracket.min);
+    const progressed = Math.max(0, currentSavings - currentBracket.min);
+    const percent = Math.min(100, Math.floor((progressed / range) * 100));
+    const remaining = Math.max(0, nextBracket.min - currentSavings);
+    return {
+      currentIndex: safeIndex,
+      currentMin: currentBracket.min,
+      next: nextBracket,
+      percentageToNext: percent,
+      remainingToNext: remaining,
+    };
+  }, [currentSavings]);
 
   const savingText =
     currentSavings === 0

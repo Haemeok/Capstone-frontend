@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 
 import BadgeButton from "@/shared/ui/BadgeButton";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
-import Box from "@/shared/ui/primitives/Box";
 
 import { UserProfile } from "@/entities/user";
 import { User } from "@/entities/user/model/types";

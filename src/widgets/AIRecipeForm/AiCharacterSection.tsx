@@ -1,7 +1,5 @@
 import React from "react";
 
-import { Image } from "@/shared/ui/image/Image";
-
 import { AIModel } from "@/features/recipe-create-ai";
 
 type AICharacterSectionProps = {

@@ -1,5 +1,3 @@
-import { notFound } from "next/navigation";
-
 type RecipeLayoutProps = {
   children: React.ReactNode;
   params: Promise<{ recipeId: string }>;

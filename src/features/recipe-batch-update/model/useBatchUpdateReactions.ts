@@ -13,15 +13,7 @@ export const useBatchUpdateReactions = () => {
   });
 
   const generateRandomStats = () => {
-    // 3. 좋아요와 평점개수는 5~35개 사이로 랜덤한 값으로 설정할 것
-    // 좋아요가 항상 더 많게 고를 것
-    const min = 5;
-    const max = 35;
-
-    // ratingCount range: 5 to 34 (to allow at least 35 for likeCount)
     const ratingCount = Math.floor(Math.random() * (34 - 5 + 1)) + 5;
-
-    // likeCount range: ratingCount + 1 to 35
     const likeCount =
       Math.floor(Math.random() * (35 - (ratingCount + 1) + 1)) +
       (ratingCount + 1);

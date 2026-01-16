@@ -2,21 +2,15 @@
 
 import Link from "next/link";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
-import {
-  DetailedRecipeGridItem as DetailedRecipeGridItemType,
-  Recipe,
-} from "@/entities/recipe/model/types";
+import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
-
-import { RecipeLikeButton } from "@/features/recipe-like";
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
@@ -35,17 +29,6 @@ const DetailedRecipeGridItem = ({
   leftBadge,
   rightBadge,
 }: DetailedRecipeGridItemProps) => {
-  const queryClient = useQueryClient();
-
-  const cachedRecipe = queryClient.getQueryData<Recipe>([
-    "recipe",
-    recipe.id.toString(),
-  ]);
-
-  const currentLikeCount = cachedRecipe?.likeCount ?? recipe.likeCount;
-  const currentLikedByUser =
-    cachedRecipe?.likedByCurrentUser ?? recipe.likedByCurrentUser;
-
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
 
   return (

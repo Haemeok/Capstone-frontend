@@ -30,7 +30,6 @@ const MyFridgePage = () => {
     ref,
     isFetchingNextPage,
     hasNextPage,
-    error,
     noResults,
     lastPageMessage,
     isPending,

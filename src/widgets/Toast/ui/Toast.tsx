@@ -17,6 +17,7 @@ const MOBILE_TOAST_STYLE = {
   warning: "bg-yellow-500 text-black",
   info: "bg-blue-500 text-white",
   default: "bg-olive-mint text-white",
+  "rich-youtube": "bg-olive-mint text-white",
 };
 
 const DESKTOP_TOAST_STYLE = {

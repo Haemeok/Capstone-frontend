@@ -2,7 +2,6 @@
 
 import { Share } from "lucide-react";
 
-import { Button } from "@/shared/ui/shadcn/button";
 import {
   Dialog,
   DialogContent,

@@ -1,15 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import {
-  ArrowLeft,
-  Check,
-  Smartphone,
-  Download,
-  Share,
-  Menu,
-} from "lucide-react";
+
+import { ArrowLeft, Check, Smartphone, Download, Share } from "lucide-react";
 
 import { Container } from "@/shared/ui/Container";
 import { Image } from "@/shared/ui/image/Image";

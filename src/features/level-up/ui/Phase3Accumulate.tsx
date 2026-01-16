@@ -8,11 +8,7 @@ import SavingSection from "@/shared/ui/SavingSection";
 import CountUp from "@/shared/ui/shadcn/CountUp";
 import { Button } from "@/shared/ui/shadcn/button";
 import { formatNumber } from "@/shared/lib/format";
-import {
-  Confetti,
-  ConfettiButton,
-  type ConfettiRef,
-} from "@/shared/ui/shadcn/confetti";
+import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
 import type { LevelUpData } from "../model/types";
 
 type Phase3AccumulateProps = {

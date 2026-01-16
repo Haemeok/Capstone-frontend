@@ -8,8 +8,7 @@ import { usePWAInstallContext } from "./PWAInstallProvider";
 
 export const PWAFirstLoginPrompter = () => {
   const { shouldShowPrompt, hidePrompt } = usePWAFirstLoginPrompt();
-  const { promptInstall, skipInstall, isInstallable, isIOS } =
-    usePWAInstallContext();
+  const { promptInstall, skipInstall, isInstallable } = usePWAInstallContext();
 
   if (!isInstallable || !shouldShowPrompt) {
     return null;
