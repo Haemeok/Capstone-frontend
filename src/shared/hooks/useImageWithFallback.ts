@@ -49,7 +49,7 @@ export const useImageWithFallback = ({
     } else {
       setStatus("idle");
     }
-  }, [src, effectiveSrc, isNoImageUrl]);
+  }, [src, effectiveSrc, isNoImageUrl, priority, inView]);
 
   useEffect(() => {
     if (isNoImageUrl) {
@@ -75,6 +75,7 @@ export const useImageWithFallback = ({
   const handleError = useCallback(() => {
     if (hasMoreFallbacks) {
       setFallbackIndex((prev) => prev + 1);
+      setStatus("loading");
     } else if (!isNoImageUrl && retryCount < 3) {
       onRetry?.();
       setStatus("loading");
@@ -85,7 +86,7 @@ export const useImageWithFallback = ({
     } else {
       setStatus("error");
     }
-  }, [hasMoreFallbacks, retryCount, isNoImageUrl, onRetry]);
+  }, [hasMoreFallbacks, retryCount, isNoImageUrl, onRetry, fallbackIndex]);
 
   return {
     src: effectiveSrc,
