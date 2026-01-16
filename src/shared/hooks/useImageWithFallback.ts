@@ -21,6 +21,7 @@ export const useImageWithFallback = ({
   onRetry,
 }: UseImageWithFallbackParams) => {
   const srcArray = useMemo(() => (Array.isArray(src) ? src : [src]), [src]);
+  const srcKey = useMemo(() => JSON.stringify(src), [src]);
   const [fallbackIndex, setFallbackIndex] = useState(0);
 
   const currentSrc = srcArray[fallbackIndex];
@@ -49,7 +50,8 @@ export const useImageWithFallback = ({
     } else {
       setStatus("idle");
     }
-  }, [src, effectiveSrc, isNoImageUrl, priority, inView]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcKey, priority, inView]);
 
   useEffect(() => {
     if (isNoImageUrl) {
