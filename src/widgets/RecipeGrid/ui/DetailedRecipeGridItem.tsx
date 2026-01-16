@@ -86,8 +86,12 @@ const DetailedRecipeGridItem = ({
             <Star size={15} className="fill-gray-800" />
             <p className="text-mm text-gray-800">{recipe.avgRating}</p>
             <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
-            <p className="text-mm text-gray-800">·</p>
-            <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
+            {recipe.cookingTime != null && (
+              <>
+                <p className="text-mm text-gray-800">·</p>
+                <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
+              </>
+            )}
           </div>
         </div>
       </Link>

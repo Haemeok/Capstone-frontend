@@ -40,6 +40,7 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   ingredientCost?: number;
   isYoutube?: boolean;
   isAiGenerated?: boolean;
+  youtubeChannelName?: string;
 };
 
 export type StaticDetailedRecipeGridItem = Omit<
@@ -59,6 +60,11 @@ export type Recipe = {
   cookingTime: number;
   imageUrl: string;
   youtubeUrl?: string;
+  youtubeChannelName?: string;
+  youtubeVideoTitle?: string;
+  youtubeThumbnailUrl?: string;
+  youtubeChannelProfileUrl?: string;
+  youtubeSubscriberCount?: number;
   cookingTools: string[];
   servings: number;
   totalIngredientCost: number;
@@ -192,8 +198,22 @@ export type RecipeItemsQueryParams = {
   q?: string;
   dishType?: string | null;
   maxCost?: number;
+  minCost?: number;
   period?: "weekly" | "monthly";
   recipeId?: string;
+  types?: string[];
+  minCalories?: number;
+  maxCalories?: number;
+  minCarb?: number;
+  maxCarb?: number;
+  minProtein?: number;
+  maxProtein?: number;
+  minFat?: number;
+  maxFat?: number;
+  minSugar?: number;
+  maxSugar?: number;
+  minSodium?: number;
+  maxSodium?: number;
 };
 
 export type StaticRecipe = Omit<

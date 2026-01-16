@@ -12,6 +12,7 @@ import {
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
+import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe";
 
@@ -120,6 +121,13 @@ const RecipeSlide = ({
                       {savings.toLocaleString()}원 절약
                     </span>
                   </div>
+                );
+              } else if (item.isYoutube && item.youtubeChannelName) {
+                rightBadge = (
+                  <YouTubeChannelBadge
+                    key="youtube"
+                    channelName={item.youtubeChannelName}
+                  />
                 );
               } else if (item.isYoutube) {
                 rightBadge = <YouTubeIconBadge key="youtube" />;

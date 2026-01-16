@@ -1,27 +1,39 @@
 import { cn } from "@/shared/lib/utils";
 
-type YouTubeIconBadgeProps = {
+type YouTubeChannelBadgeProps = {
+  channelName: string;
   className?: string;
 };
 
-const YouTubeIconBadge = ({ className }: YouTubeIconBadgeProps) => {
+const YouTubeChannelBadge = ({
+  channelName,
+  className,
+}: YouTubeChannelBadgeProps) => {
   return (
-    <div className={cn("flex h-7 w-7 items-center justify-center", className)}>
+    <div
+      className={cn(
+        "flex max-w-[140px] items-center gap-1.5 rounded-full bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm md:max-w-[180px]",
+        className
+      )}
+    >
       <svg
         role="img"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        width={28}
-        height={28}
+        width={20}
+        height={20}
         preserveAspectRatio="xMidYMid"
-        className="fill-red-500"
+        className="shrink-0 fill-red-500"
       >
         <title>YouTube</title>
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
         <path d="M9.545 8.432v7.136L15.818 12z" fill="white" />
       </svg>
+      <span className={"truncate text-xs font-medium text-gray-800"}>
+        {channelName}
+      </span>
     </div>
   );
 };
 
-export default YouTubeIconBadge;
+export default YouTubeChannelBadge;
