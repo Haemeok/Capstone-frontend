@@ -53,7 +53,8 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
       <DialogTrigger asChild>
         <Button
           size="icon"
-          className="bg-olive hover:bg-olive-dark fixed right-6 bottom-6 hidden h-14 w-14 rounded-full text-white shadow-lg md:flex"
+          className="bg-olive-light hover:bg-olive-light/90 fixed bottom-24 hidden h-14 w-14 rounded-full text-white shadow-lg md:flex"
+          style={{ right: "max(1.5rem, calc((100vw - 896px) / 2 - 5rem))" }}
           aria-label="댓글 작성"
         >
           <MessageCircle size={24} />
