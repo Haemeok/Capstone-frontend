@@ -6,7 +6,7 @@ export const CreationModeSelector = () => {
   return (
     <div className="flex h-full items-center justify-center p-6">
       <div className="w-full max-w-4xl">
-        <h1 className="text-dark mb-4 text-center text-3xl font-bold">
+        <h1 className="text-dark mb-4 text-center text-3xl font-bold text-pretty break-keep">
           어떻게 레시피를 만드시겠어요?
         </h1>
         <p className="mb-12 text-center text-pretty break-keep text-gray-500">
@@ -53,7 +53,7 @@ export const CreationModeSelector = () => {
                 />
               </div>
               <div className="flex flex-col items-center gap-4">
-                <h2 className="text-dark text-lg font-bold md:text-2xl">
+                <h2 className="text-dark text-lg font-bold text-pretty break-keep md:text-2xl">
                   유튜브로 가져오기
                 </h2>
                 <p className="text-pretty break-keep text-gray-500">

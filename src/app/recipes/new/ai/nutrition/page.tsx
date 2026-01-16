@@ -16,6 +16,8 @@ import AIRecipeError from "@/widgets/AIRecipeError";
 import PrevButton from "@/shared/ui/PrevButton";
 import { Slider } from "@/shared/ui/shadcn/slider";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
+import { Image } from "@/shared/ui/image";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type NutritionMode = "MACRO" | "CALORIE";
 
@@ -31,19 +33,19 @@ type NutritionFormValues = {
 const STYLES = [
   {
     value: "Asian_Style",
-    icon: "🥢",
+    image: "asian_style.webp",
     label: "아시안 스타일",
     description: "한식, 중식, 일식",
   },
   {
     value: "Western_Style",
-    icon: "🥩",
+    image: "western_style.webp",
     label: "양식 스타일",
     description: "이탈리안, 프렌치",
   },
   {
     value: "Light_Fresh",
-    icon: "🥗",
+    image: "diet_light.webp",
     label: "가볍고 신선하게",
     description: "샐러드, 건강식",
   },
@@ -180,7 +182,11 @@ const NutritionRecipePage = () => {
                       : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
                   }`}
                 >
-                  <span className="text-4xl">{style.icon}</span>
+                  <Image
+                    src={`${ICON_BASE_URL}${style.image}`}
+                    alt={style.label}
+                    wrapperClassName="w-12 h-12"
+                  />
                   <span
                     className={`text-sm font-bold text-pretty break-keep ${
                       watch("targetStyle") === style.value

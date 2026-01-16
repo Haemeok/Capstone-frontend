@@ -24,11 +24,28 @@ export const getRecipesOnServer = async (
   if (params.q) query.append("q", params.q);
   if (params.isAiGenerated) query.append("isAiGenerated", "true");
   if (params.dishType) query.append("dishType", params.dishType);
-  if (params.tags) {
-    params.tags.forEach((tag) => query.append("tags", tag));
+  if (params.tags && params.tags.length > 0) {
+    query.set("tags", params.tags.join(","));
   }
-  if (params.maxCost) query.append("maxCost", params.maxCost.toString());
+  if (params.types && params.types.length > 0) {
+    query.set("types", params.types.join(","));
+  }
+  if (params.maxCost !== undefined) query.append("maxCost", params.maxCost.toString());
+  if (params.minCost !== undefined) query.append("minCost", params.minCost.toString());
   if (params.period) query.append("period", params.period);
+
+  if (params.minCalories !== undefined) query.append("minCalories", params.minCalories.toString());
+  if (params.maxCalories !== undefined) query.append("maxCalories", params.maxCalories.toString());
+  if (params.minCarb !== undefined) query.append("minCarb", params.minCarb.toString());
+  if (params.maxCarb !== undefined) query.append("maxCarb", params.maxCarb.toString());
+  if (params.minProtein !== undefined) query.append("minProtein", params.minProtein.toString());
+  if (params.maxProtein !== undefined) query.append("maxProtein", params.maxProtein.toString());
+  if (params.minFat !== undefined) query.append("minFat", params.minFat.toString());
+  if (params.maxFat !== undefined) query.append("maxFat", params.maxFat.toString());
+  if (params.minSugar !== undefined) query.append("minSugar", params.minSugar.toString());
+  if (params.maxSugar !== undefined) query.append("maxSugar", params.maxSugar.toString());
+  if (params.minSodium !== undefined) query.append("minSodium", params.minSodium.toString());
+  if (params.maxSodium !== undefined) query.append("maxSodium", params.maxSodium.toString());
 
   let endpoint = "/recipes/search";
 
@@ -204,8 +221,8 @@ export const getStaticRecipesOnServer = async (
   if (params.q) query.append("q", params.q);
   if (params.isAiGenerated) query.append("isAiGenerated", "true");
   if (params.dishType) query.append("dishType", params.dishType);
-  if (params.tags) {
-    params.tags.forEach((tag) => query.append("tags", tag));
+  if (params.tags && params.tags.length > 0) {
+    query.set("tags", params.tags.join(","));
   }
   if (params.maxCost) query.append("maxCost", params.maxCost.toString());
   if (params.period) query.append("period", params.period);
