@@ -3,7 +3,6 @@
 import SaveButton from "@/shared/ui/SaveButton";
 import ShareButton from "@/shared/ui/ShareButton";
 
-import { Recipe } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user/model/store";
 
 import { useToggleRecipeFavorite } from "@/features/recipe-favorite";

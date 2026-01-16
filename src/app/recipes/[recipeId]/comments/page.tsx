@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { notFound } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 
@@ -49,79 +48,81 @@ const CommentsPage = () => {
   return (
     <RecipeStatusProvider recipeId={recipeId}>
       <div className="relative h-full pb-10">
-      <Container padding={false}>
-        <header className="z-sticky sticky-optimized sticky top-0 border-b bg-white px-4 py-3">
-          <div className="flex max-w-3xl items-center">
-            <div className="flex items-center gap-2">
-              <PrevButton size={22} showOnDesktop={true} />
-              <h1 className="flex items-center text-xl font-bold">댓글</h1>
+        <Container padding={false}>
+          <header className="z-sticky sticky-optimized sticky top-0 border-b bg-white px-4 py-3">
+            <div className="flex max-w-3xl items-center">
+              <div className="flex items-center gap-2">
+                <PrevButton size={22} showOnDesktop={true} />
+                <h1 className="flex items-center text-xl font-bold">댓글</h1>
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        <main className="py-4">
-          <div className="mb-4 flex items-center justify-between px-2">
-            <span className="text-sm font-medium text-gray-500">
-              {data?.pages[0].page.totalElements}개의 댓글
-            </span>
-            <div className="flex items-center text-sm font-bold">
-              <button
-                className={cn(
-                  "text-gray-400",
-                  sort === "최신순" && "text-olive-light"
-                )}
-                onClick={() => setSort("최신순")}
-              >
-                최신순
-              </button>
-              <span className="mx-1">•</span>
-              <button
-                className={cn(
-                  "text-gray-400",
-                  sort === "인기순" && "text-olive-light"
-                )}
-                onClick={() => setSort("인기순")}
-              >
-                인기순
-              </button>
+          <main className="py-4">
+            <div className="mb-4 flex items-center justify-between px-2">
+              <span className="text-sm font-medium text-gray-500">
+                {data?.pages[0].page.totalElements}개의 댓글
+              </span>
+              <div className="flex items-center text-sm font-bold">
+                <button
+                  className={cn(
+                    "text-gray-400",
+                    sort === "최신순" && "text-olive-light"
+                  )}
+                  onClick={() => setSort("최신순")}
+                >
+                  최신순
+                </button>
+                <span className="mx-1">•</span>
+                <button
+                  className={cn(
+                    "text-gray-400",
+                    sort === "인기순" && "text-olive-light"
+                  )}
+                  onClick={() => setSort("인기순")}
+                >
+                  인기순
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-col gap-4">
-            {comments?.map((comment) => (
-              <CommentCard
-                key={comment.id}
-                comment={comment}
-                hideReplyButton={false}
-              />
-            ))}
-          </div>
-          <div ref={ref} className="h-10">
-            {isFetchingNextPage && (
-              <div className="flex justify-center p-4">
-                <p className="text-sm text-gray-500">더 많은 댓글 로딩 중...</p>
-              </div>
-            )}
+            <div className="flex flex-col gap-4">
+              {comments?.map((comment) => (
+                <CommentCard
+                  key={comment.id}
+                  comment={comment}
+                  hideReplyButton={false}
+                />
+              ))}
+            </div>
+            <div ref={ref} className="h-10">
+              {isFetchingNextPage && (
+                <div className="flex justify-center p-4">
+                  <p className="text-sm text-gray-500">
+                    더 많은 댓글 로딩 중...
+                  </p>
+                </div>
+              )}
 
-            {!hasNextPage && comments && comments.length > 0 && (
-              <div className="flex justify-center p-4">
-                <p className="text-sm text-gray-400">마지막 댓글입니다.</p>
-              </div>
-            )}
-            {comments?.length === 0 && (
-              <div className="flex flex-col items-center justify-center gap-1 p-4">
-                <p className="text-sm text-gray-400">
-                  첫번째 댓글을 작성해보세요 !
-                </p>
-              </div>
-            )}
-          </div>
-        </main>
-      </Container>
+              {!hasNextPage && comments && comments.length > 0 && (
+                <div className="flex justify-center p-4">
+                  <p className="text-sm text-gray-400">마지막 댓글입니다.</p>
+                </div>
+              )}
+              {comments?.length === 0 && (
+                <div className="flex flex-col items-center justify-center gap-1 p-4">
+                  <p className="text-sm text-gray-400">
+                    첫번째 댓글을 작성해보세요 !
+                  </p>
+                </div>
+              )}
+            </div>
+          </main>
+        </Container>
 
-      <CommentInput author={author} />
-      <CommentInputModal author={author} />
-    </div>
+        <CommentInput author={author} />
+        <CommentInputModal author={author} />
+      </div>
     </RecipeStatusProvider>
   );
 };

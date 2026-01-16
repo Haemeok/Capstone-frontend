@@ -22,7 +22,8 @@ export const makeBaseRecipe = (
       nickname: "요리왕",
       email: "test@test.com",
       profileImage: "https://example.com/profile.jpg",
-      createdAt: "2024-01-01T00:00:00Z",
+      hasFirstRecord: false,
+      remainingAiQuota: 10,
     },
     totalCalories: 350,
     nutrition: {

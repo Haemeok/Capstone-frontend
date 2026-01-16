@@ -5,8 +5,6 @@ import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 import { Plus } from "lucide-react";
 
-import { Button } from "@/shared/ui/shadcn/button";
-
 import { RecipeFormValues } from "../model/config";
 import StepItem from "./StepItem";
 import { FIELD_LABELS } from "../model/constants";

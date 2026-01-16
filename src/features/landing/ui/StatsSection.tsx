@@ -3,10 +3,7 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Image } from "@/shared/ui/image/Image";
-import {
-  ICON_BASE_URL,
-  IMAGE_BASE_URL,
-} from "@/shared/config/constants/recipe";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type StatCard = {
   image: string;

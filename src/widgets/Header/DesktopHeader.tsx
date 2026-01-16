@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Search, User } from "lucide-react";
+import { User } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";

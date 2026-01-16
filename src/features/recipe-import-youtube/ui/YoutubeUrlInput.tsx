@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ClipboardEvent, ChangeEvent, useEffect } from "react";
+import { ClipboardEvent, ChangeEvent } from "react";
 import { validateYoutubeUrl } from "../lib/urlValidation";
 
 type YoutubeUrlInputProps = {

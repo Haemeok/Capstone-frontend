@@ -1,6 +1,6 @@
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
-import { SEO_CONSTANTS, YOUTUBE_SEO } from "./constants";
+import { YOUTUBE_SEO } from "./constants";
 import type { YoutubeMetadata } from "./youtube";
 import { formatSubscriberCount } from "./youtube";
 

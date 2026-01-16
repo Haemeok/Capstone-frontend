@@ -6,10 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   parseNutritionParams,
   parseTypes,
-  convertNutritionToQueryParams,
   type NutritionFilterValues,
 } from "@/shared/lib/nutrition/parseNutritionParams";
-import { NUTRITION_RANGES, type NutritionFilterKey } from "@/shared/config/constants/recipe";
+import {
+  NUTRITION_RANGES,
+  type NutritionFilterKey,
+} from "@/shared/config/constants/recipe";
 
 export const useNutritionParams = () => {
   const router = useRouter();

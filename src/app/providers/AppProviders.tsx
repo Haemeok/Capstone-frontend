@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, Suspense } from "react";
+import { type ReactNode } from "react";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 

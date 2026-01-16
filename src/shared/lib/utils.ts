@@ -27,14 +27,3 @@ export const buildParams = <T extends object>(
   });
   return params;
 };
-
-const buildSafeParams = <T extends object> (base: T, optionals: Partial<T>) => {
-  const params = { ...base };
-  for (const key in optionals) {
-    if (optionals[key] !== null && optionals[key] !== undefined) {
-      params[key] = optionals[key];
-    }
-  }
-  return params;
-};
-

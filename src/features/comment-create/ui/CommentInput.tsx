@@ -1,7 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
-
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
 import { User } from "@/entities/user";
 import { useUserStore } from "@/entities/user/model/store";

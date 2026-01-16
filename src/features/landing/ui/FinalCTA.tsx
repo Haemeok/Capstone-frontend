@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Image } from "@/shared/ui/image/Image";
 
 import { Button } from "@/shared/ui/shadcn/button";
 import { markLandingVisited } from "@/app/landing/actions";

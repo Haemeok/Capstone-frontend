@@ -3,13 +3,8 @@ import { useFormContext } from "react-hook-form";
 import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
-import { useFormProgress } from "@/shared/lib/hooks/useFormProgress";
 
-import {
-  RecipeFormValues,
-  recipeFormSchema,
-  FIELD_LABELS,
-} from "@/features/recipe-create";
+import { RecipeFormValues, FIELD_LABELS } from "@/features/recipe-create";
 import CookingToolsInput from "@/features/recipe-create/ui/CookingToolsInput";
 import Description from "@/features/recipe-create/ui/Description";
 import IngredientSection from "@/features/recipe-create/ui/IngredientSection";
@@ -41,11 +36,6 @@ const RecipeFormLayout = ({
     register,
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
-
-  const { missingFieldLabels } = useFormProgress<RecipeFormValues>(
-    recipeFormSchema,
-    { fieldLabels: FIELD_LABELS }
-  );
 
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
