@@ -29,7 +29,7 @@ export const TrendingRecipes = ({
   onSelect,
   className,
 }: TrendingRecipesProps) => {
-  const { data: trendingRecipes } = useTrendingYoutubeRecipesQuery();
+  const { data: trendingRecipes = [] } = useTrendingYoutubeRecipesQuery();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
