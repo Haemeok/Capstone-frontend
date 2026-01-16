@@ -94,10 +94,11 @@ export const useRecipeHistoryItemsQuery = (date: string, enabled?: boolean) => {
 };
 
 export const useTrendingYoutubeRecipesQuery = () => {
-  return useSuspenseQuery<TrendingYoutubeRecipe[], Error>({
+  return useQuery<TrendingYoutubeRecipe[], Error>({
     queryKey: ["trending-youtube-recipes"],
     queryFn: () => getTrendingYoutubeRecipes(),
     staleTime: 1000 * 60 * 30,
     gcTime: 1000 * 60 * 60,
+    initialData: [],
   });
 };
