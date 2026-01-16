@@ -130,7 +130,6 @@ const YoutubeImportPage = () => {
           recipeId,
         },
         action: {
-          label: "보러가기",
           onClick: () => {
             router.push(`/recipes/${recipeId}`);
           },

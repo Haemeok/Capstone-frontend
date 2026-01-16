@@ -101,7 +101,7 @@ const RecipeGrid = ({
   if (isPending) {
     return (
       <div>
-        <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
+        <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
           <RecipeGridSkeleton count={6} isSimple={isSimple} />
         </div>
       </div>
@@ -152,7 +152,7 @@ const RecipeGrid = ({
 
   return (
     <div className="flex flex-col">
-      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 px-2 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
+      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 px-2 sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
         {recipes.map((recipe, index) => {
           if (isSimple) {
             return (
