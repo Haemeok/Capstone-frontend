@@ -19,6 +19,7 @@ type DetailedRecipeGridItemProps = {
   prefetch?: boolean;
   leftBadge?: React.ReactNode;
   rightBadge?: React.ReactNode;
+  onImageRetry?: () => void;
 };
 
 const DetailedRecipeGridItem = ({
@@ -28,6 +29,7 @@ const DetailedRecipeGridItem = ({
   prefetch = false,
   leftBadge,
   rightBadge,
+  onImageRetry,
 }: DetailedRecipeGridItemProps) => {
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
 
@@ -50,6 +52,7 @@ const DetailedRecipeGridItem = ({
             imgClassName="transition-all duration-300 ease-in-out group-hover:scale-110"
             fit="cover"
             priority={priority}
+            onRetry={onImageRetry}
           />
 
           {(leftBadge || rightBadge) && (

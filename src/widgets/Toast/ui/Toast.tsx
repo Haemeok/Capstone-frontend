@@ -26,6 +26,7 @@ const DESKTOP_TOAST_STYLE = {
   warning: "bg-amber-50 border border-amber-100",
   info: "bg-blue-50 border border-blue-100",
   default: "bg-green-50 border border-green-100",
+  "rich-youtube": "bg-green-50 border border-green-100",
 };
 
 const ICON_STYLE = {
@@ -34,6 +35,7 @@ const ICON_STYLE = {
   warning: "text-amber-500",
   info: "text-blue-500",
   default: "text-olive-light",
+  "rich-youtube": "text-olive-light",
 };
 
 const TOAST_ICON = {
@@ -42,6 +44,7 @@ const TOAST_ICON = {
   warning: AlertCircle,
   info: Info,
   default: Info,
+  "rich-youtube": Info,
 };
 
 const TOAST_SIZE = {

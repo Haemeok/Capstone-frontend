@@ -26,6 +26,7 @@ type ImageProps = Omit<
   skeletonClassName?: string;
   imgClassName?: string;
   fit?: Fit;
+  onRetry?: () => void;
 };
 
 export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
@@ -45,6 +46,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
     wrapperClassName,
     skeletonClassName,
     imgClassName,
+    onRetry,
     ...imgProps
   },
   forwardedRef
@@ -61,6 +63,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
     lazy,
     priority,
     inView,
+    onRetry,
   });
 
   // 3. 스타일 계산

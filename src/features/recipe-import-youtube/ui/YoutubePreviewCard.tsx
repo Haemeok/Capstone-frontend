@@ -47,7 +47,7 @@ export const YoutubePreviewCard = ({
         className="border-olive-light hover:bg-olive-light/10 w-full rounded-lg border-1 py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? (
-          <span className="flex items-center justify-center gap-2 text-white">
+          <span className="text-olive-light flex items-center justify-center gap-2">
             <svg
               className="h-5 w-5 animate-spin"
               xmlns="http://www.w3.org/2000/svg"

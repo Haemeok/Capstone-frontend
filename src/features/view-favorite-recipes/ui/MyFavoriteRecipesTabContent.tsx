@@ -71,6 +71,7 @@ const MyFavoriteRecipesTabContent = () => {
         observerRef={ref}
         error={error}
         useLCP={false}
+        queryKeyToInvalidate={["recipes", "favorite", sort]}
       />
     </div>
   );
