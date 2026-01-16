@@ -20,6 +20,7 @@ export const END_POINTS = {
   RECIPE_EXTRACT: "/recipes/extract",
   RECIPE_EXTRACT_STATUS: "/recipes/extract/status",
   RECIPE_YOUTUBE_META: "/recipes/youtube/meta",
+  RECIPE_YOUTUBE_RECOMMEND: "/recipes/youtube/recommend",
   INGREDIENTS: "/ingredients",
   SEARCH_INGREDIENTS: "/search/ingredients",
   INGREDIENTS_BY_ID: (id: string) => `/ingredients/${id}`,

@@ -11,3 +11,23 @@ export const SEO_CONSTANTS = {
     ARTICLE: "article" as const,
   },
 } as const;
+
+export const YOUTUBE_SEO = {
+  KEYWORDS: [
+    "유튜브 레시피",
+    "유튜브 요리",
+    "영상 레시피",
+    "동영상 레시피",
+    "요리 유튜브",
+    "레시피 영상",
+    "따라하기 쉬운 레시피",
+    "영상으로 배우는 요리",
+    "유튜브 맛집",
+    "유튜버 추천 레시피",
+  ],
+  SUBSCRIBER_THRESHOLDS: {
+    FAMOUS: 100000,
+    MEDIUM: 10000,
+    MILLION: 1000000,
+  },
+} as const;
