@@ -3,6 +3,10 @@ import { Image } from "@/shared/ui/image/Image";
 import { UserRound } from "lucide-react";
 
 import { guestUser } from "@/shared/config/constants/user";
+import {
+  generateUserGradient,
+  isDefaultProfileImage,
+} from "@/shared/lib/colors";
 
 import UserInfoEditButton from "@/features/edit-user-profile/ui/UserInfoEditButton";
 
@@ -25,7 +29,14 @@ const UserProfileDisplay = ({
     <div className="flex items-end gap-2">
       <div className="flex items-end gap-4">
         <div className="relative">
-          <div className="h-24 w-24 overflow-hidden rounded-full">
+          <div
+            className="h-24 w-24 overflow-hidden rounded-full"
+            style={
+              user.profileImage && isDefaultProfileImage(user.profileImage)
+                ? generateUserGradient(user.id)
+                : undefined
+            }
+          >
             {user.profileImage ? (
               <Image src={user.profileImage} alt={user.nickname} />
             ) : (
