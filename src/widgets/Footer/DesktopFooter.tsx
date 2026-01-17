@@ -16,13 +16,6 @@ const DesktopFooter = () => {
     <footer className="mt-16 hidden w-full border-t border-gray-200 bg-gray-50 md:block">
       <Container className="py-12">
         <div className="flex flex-col gap-8">
-          <div className="rounded-lg border border-gray-200 bg-white py-4 text-center">
-            <p className="text-lg font-semibold text-gray-800">
-              지금까지 <span className="text-olive-light">★1,234,567</span>개의
-              평가가 생성되었어요
-            </p>
-          </div>
-
           <div className="flex flex-col gap-3">
             <h3 className="text-lg font-bold text-gray-900">
               Recipio (레시피오)
