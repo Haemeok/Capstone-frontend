@@ -22,15 +22,15 @@ export const PendingRecipeCard = ({ url }: PendingRecipeCardProps) => {
   const { meta, status, error } = importItem;
 
   const videoId = extractYouTubeVideoId(meta.url);
-  const thumbnailUrls = videoId
-    ? [meta.thumbnailUrl, ...getYouTubeThumbnailUrls(videoId)]
-    : [meta.thumbnailUrl];
+  const thumbnailUrl = videoId
+    ? getYouTubeThumbnailUrls(videoId)[0] ?? meta.thumbnailUrl
+    : meta.thumbnailUrl;
 
   return (
     <div className="group relative block h-full overflow-hidden rounded-2xl bg-gray-100">
       <div className="relative aspect-square">
         <Image
-          src={thumbnailUrls}
+          src={thumbnailUrl}
           alt={meta.title}
           aspectRatio="1 / 1"
           imgClassName={`transition-opacity w-full h-full ${

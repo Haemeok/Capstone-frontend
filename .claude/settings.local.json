@@ -6,7 +6,11 @@
       "Bash(npm run build:*)",
       "Bash(git mv:*)",
       "WebFetch(domain:code.claude.com)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(find:*)",
+      "Read(//c/Users/for/Desktop/haemeok-next/**)",
+      "Bash(done)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []

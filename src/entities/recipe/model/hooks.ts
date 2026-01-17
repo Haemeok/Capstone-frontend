@@ -99,6 +99,5 @@ export const useTrendingYoutubeRecipesQuery = () => {
     queryFn: () => getTrendingYoutubeRecipes(),
     staleTime: 1000 * 60 * 30,
     gcTime: 1000 * 60 * 60,
-    initialData: [],
   });
 };
