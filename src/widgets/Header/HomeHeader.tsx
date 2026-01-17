@@ -9,10 +9,11 @@ import { Image } from "@/shared/ui/image/Image";
 import PWAInstallModal from "@/widgets/PWAInstallModal";
 
 import NotificationButton from "./NotificationButton";
+import Link from "next/link";
 
 const HomeHeader = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {  isIOS, promptInstall, skipInstall } =
+  const { isIOS, promptInstall, skipInstall } =
     usePWAInstallContext();
 
   return (
@@ -30,16 +31,26 @@ const HomeHeader = () => {
             />
             <p className="text-2xl font-bold">Recipi'O</p>
           </div>
-          
+          {isIOS ? (
+            <Link href="/install-guide">
+              <button
+                className="bg-olive-light/10 text-olive-light hover:bg-olive-light/20 flex h-8 items-center justify-center gap-1.5 rounded-full px-3 transition-colors"
+                aria-label="앱 설치"
+              >
+                <Download size={14} />
+                <span className="w-10 text-xs font-bold">앱 설치</span>
+              </button>
+            </Link>
+          ) : (
             <button
-              onClick={() => setIsModalOpen(true)}
               className="bg-olive-light/10 text-olive-light hover:bg-olive-light/20 flex h-8 items-center justify-center gap-1.5 rounded-full px-3 transition-colors"
               aria-label="앱 설치"
+              onClick={() => setIsModalOpen(true)}
             >
               <Download size={14} />
               <span className="w-10 text-xs font-bold">앱 설치</span>
             </button>
-          
+          )}
         </div>
 
         <div className="absolute top-1/2 right-6 -translate-y-1/2">
