@@ -1,6 +1,7 @@
 export const STORAGE_KEYS = {
   AI_RECENT_RECIPES: "ai_recent_recipes",
   AI_CREDIT_PROMPTED: "ai_credit_prompted",
+  YOUTUBE_EXTRACTION_PROMPTED: "youtube_extraction_prompted",
 } as const;
 
 export const MAX_RECENT_AI_RECIPES = 10;
