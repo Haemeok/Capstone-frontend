@@ -147,7 +147,7 @@ const YoutubeImportPage = () => {
     <Container className="min-h-screen bg-white pb-20">
       <div className="mx-auto flex w-full max-w-xl flex-col items-center pt-8 md:pt-12">
         <Image
-          src={`${SAVINGS_BASE_URL}youtube_premium.webp`}
+          src={`${ICON_BASE_URL}youtube.webp`}
           alt="YouTube Premium"
           wrapperClassName="w-1/2"
           imgClassName="drop-shadow-xl"

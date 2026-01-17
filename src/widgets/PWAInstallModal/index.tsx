@@ -90,61 +90,21 @@ const PWAInstallModal = ({
           </ul>
         </div>
 
-        {/* iOS 안내 섹션 */}
-        {isIOS && (
-          <div className="mx-6 mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
-            <p className="mb-3 text-sm font-semibold text-amber-800">
-              Safari에서 설치하기
-            </p>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <span className="from-olive-medium to-olive-mint flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-xs font-bold text-white shadow-sm">
-                  1
-                </span>
-                <span className="pt-0.5 text-sm text-amber-700">
-                  하단{" "}
-                  <Share
-                    className="text-olive-medium mx-0.5 inline-block"
-                    size={16}
-                  />{" "}
-                  <strong>공유</strong> 버튼 탭
-                </span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="from-olive-medium to-olive-mint flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-xs font-bold text-white shadow-sm">
-                  2
-                </span>
-                <span className="pt-0.5 text-sm text-amber-700">
-                  <strong>"홈 화면에 추가"</strong> 선택
-                </span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="from-olive-medium to-olive-mint flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-xs font-bold text-white shadow-sm">
-                  3
-                </span>
-                <span className="pt-0.5 text-sm text-amber-700">
-                  <strong>"추가"</strong> 탭하여 완료
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 버튼 영역 */}
+        
         <DialogFooter className="flex flex-col gap-2.5 border-t border-gray-100 bg-gray-50/50 px-6 py-4 sm:flex-col">
-          {!isIOS && (
+          
             <button
               onClick={handleInstallClick}
               className="from-olive-medium to-olive-mint h-12 w-full rounded-xl bg-gradient-to-r font-semibold text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-105 active:scale-[0.98]"
             >
               홈 화면에 추가하기
             </button>
-          )}
+          
           <button
             onClick={handleSkipClick}
             className="h-11 w-full rounded-xl font-medium text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
           >
-            {isIOS ? "닫기" : "나중에 할게요"}
+            나중에 할게요
           </button>
         </DialogFooter>
       </DialogContent>
