@@ -17,15 +17,15 @@ export const YoutubePreviewCard = ({
   isLoading = false,
 }: YoutubePreviewCardProps) => {
   const videoId = extractYouTubeVideoId(meta.url);
-  const thumbnailUrls = videoId
-    ? [meta.thumbnailUrl, ...getYouTubeThumbnailUrls(videoId)]
-    : [meta.thumbnailUrl];
+  const thumbnailUrl = videoId
+    ? getYouTubeThumbnailUrls(videoId)[0] ?? meta.thumbnailUrl
+    : meta.thumbnailUrl;
 
   return (
     <div className="mx-auto w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-4 shadow-sm duration-300">
       <div className="mb-4 flex gap-4">
         <Image
-          src={thumbnailUrls}
+          src={thumbnailUrl}
           alt={meta.title}
           fit="cover"
           width={160}

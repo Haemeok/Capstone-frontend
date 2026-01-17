@@ -1,17 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { NO_IMAGE_URL } from "@/shared/config/constants/user";
+import { useCallback, useEffect, useState } from "react";
 
 export type ImageStatus = "idle" | "loading" | "loaded" | "error";
 
 type UseImageWithFallbackParams = {
-  src: string | string[];
+  src: string;
   lazy: boolean;
   priority: boolean;
   inView: boolean;
   onRetry?: () => void;
 };
+
+const MAX_RETRY_COUNT = 2;
+const RETRY_DELAY_MS = 2000;
 
 export const useImageWithFallback = ({
   src,
@@ -20,44 +22,24 @@ export const useImageWithFallback = ({
   inView,
   onRetry,
 }: UseImageWithFallbackParams) => {
-  const srcArray = useMemo(() => (Array.isArray(src) ? src : [src]), [src]);
-  const srcKey = useMemo(() => JSON.stringify(src), [src]);
-  const [fallbackIndex, setFallbackIndex] = useState(0);
-
-  const currentSrc = srcArray[fallbackIndex];
-  const hasMoreFallbacks = fallbackIndex < srcArray.length - 1;
-  const isNoImageUrl = currentSrc === NO_IMAGE_URL;
-
-  const shouldLoadImmediately = priority;
-  const shouldWaitForViewport = lazy && !inView;
-  const effectiveSrc =
-    shouldLoadImmediately || !shouldWaitForViewport ? currentSrc : undefined;
-
   const [status, setStatus] = useState<ImageStatus>("idle");
   const [retryCount, setRetryCount] = useState(0);
 
+  const shouldLoadImmediately = priority;
+  const shouldWaitForViewport = lazy && !inView;
+  const shouldLoad = shouldLoadImmediately || !shouldWaitForViewport;
+
+  const effectiveSrc = shouldLoad ? src : undefined;
+
   useEffect(() => {
-    setFallbackIndex(0);
     setRetryCount(0);
 
-    if (isNoImageUrl) {
-      setStatus("loaded");
-      return;
-    }
-
-    if (effectiveSrc) {
+    if (shouldLoad) {
       setStatus("loading");
     } else {
       setStatus("idle");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [srcKey, priority, inView]);
-
-  useEffect(() => {
-    if (isNoImageUrl) {
-      setFallbackIndex(0);
-    }
-  }, [isNoImageUrl]);
+  }, [src, shouldLoad]);
 
   const handleLoad = useCallback(
     async (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -67,6 +49,7 @@ export const useImageWithFallback = ({
           await imageElement.decode();
         }
       } catch {
+        // decode 실패는 무시
       } finally {
         setStatus("loaded");
       }
@@ -75,20 +58,16 @@ export const useImageWithFallback = ({
   );
 
   const handleError = useCallback(() => {
-    if (hasMoreFallbacks) {
-      setFallbackIndex((prev) => prev + 1);
-      setStatus("loading");
-    } else if (!isNoImageUrl && retryCount < 3) {
+    if (retryCount < MAX_RETRY_COUNT) {
       onRetry?.();
       setStatus("loading");
-      const RETRY_DELAY_MS = 2000;
       setTimeout(() => {
         setRetryCount((prev) => prev + 1);
       }, RETRY_DELAY_MS);
     } else {
       setStatus("error");
     }
-  }, [hasMoreFallbacks, retryCount, isNoImageUrl, onRetry, fallbackIndex]);
+  }, [retryCount, onRetry]);
 
   return {
     src: effectiveSrc,

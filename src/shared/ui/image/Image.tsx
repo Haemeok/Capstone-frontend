@@ -12,7 +12,7 @@ type ImageProps = Omit<
   React.ImgHTMLAttributes<HTMLImageElement>,
   "onLoad" | "onError" | "loading" | "src"
 > & {
-  src: string | string[];
+  src: string;
   lazy?: boolean;
   priority?: boolean;
   aspectRatio?: `${number} / ${number}` | number;
