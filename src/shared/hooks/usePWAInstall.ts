@@ -105,7 +105,7 @@ export const usePWAInstall = () => {
   }, [checkInstallationStatus]);
 
   return {
-    isInstallable: (!!deferredPrompt || isIOS) && !isInstalled,
+    isInstallable: !!deferredPrompt && !isInstalled,
     isInstalled,
     isIOS,
     promptInstall,
