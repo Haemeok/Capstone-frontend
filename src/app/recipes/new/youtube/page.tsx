@@ -25,7 +25,6 @@ import { Container } from "@/shared/ui/Container";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import { Image } from "@/shared/ui/image/Image";
 import {
-  SAVINGS_BASE_URL,
   ICON_BASE_URL,
 } from "@/shared/config/constants/recipe";
 import { Search } from "lucide-react";
