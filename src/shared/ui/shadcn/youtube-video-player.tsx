@@ -121,9 +121,9 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
       };
     }, [expanded]);
 
-    const getThumbnailUrls = () => {
-      if (customThumbnail) return [customThumbnail];
-      return actualVideoId ? getYouTubeThumbnailUrls(actualVideoId) : [];
+    const getThumbnailUrl = (): string | undefined => {
+      if (customThumbnail) return customThumbnail;
+      return actualVideoId ? getYouTubeThumbnailUrls(actualVideoId)[0] : undefined;
     };
 
     return (
@@ -156,9 +156,9 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
                       thumbnailClassName
                     )}
                   >
-                    {getThumbnailUrls().length > 0 && (
+                    {getThumbnailUrl() && (
                       <Image
-                        src={getThumbnailUrls()}
+                        src={getThumbnailUrl()!}
                         alt={title || "Video thumbnail"}
                         priority
                         lazy={false}
@@ -276,9 +276,9 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
                             thumbnailClassName
                           )}
                         >
-                          {getThumbnailUrls().length > 0 && (
+                          {getThumbnailUrl() && (
                             <Image
-                              src={getThumbnailUrls()}
+                              src={getThumbnailUrl()!}
                               alt={title || "Video thumbnail"}
                               priority
                               lazy={false}

@@ -35,14 +35,14 @@ export const RichToast = ({
   const startY = useRef(0);
   const currentY = useRef(0);
 
-  const thumbnailUrls = useMemo(() => {
-    if (!richContent?.thumbnail) return [];
+  const thumbnailUrl = useMemo(() => {
+    if (!richContent?.thumbnail) return undefined;
 
     const videoId = extractVideoIdFromThumbnail(richContent.thumbnail);
     if (videoId) {
-      return [richContent.thumbnail, ...getYouTubeThumbnailUrls(videoId)];
+      return getYouTubeThumbnailUrls(videoId)[0] ?? richContent.thumbnail;
     }
-    return [richContent.thumbnail];
+    return richContent.thumbnail;
   }, [richContent?.thumbnail]);
 
   const effectiveDuration = Math.min(duration, MAX_TOAST_DURATION);
@@ -178,10 +178,10 @@ export const RichToast = ({
       </button>
 
       <div className="flex items-center gap-3">
-        {thumbnailUrls.length > 0 && (
+        {thumbnailUrl && (
           <div className="flex-shrink-0">
             <Image
-              src={thumbnailUrls}
+              src={thumbnailUrl}
               alt="thumbnail"
               fit="cover"
               aspectRatio="1 / 1"

@@ -1,6 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
 import { useImageWithFallback } from "../useImageWithFallback";
-import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 
 describe("useImageWithFallback", () => {
   beforeEach(() => {
@@ -20,11 +19,10 @@ describe("useImageWithFallback", () => {
           src: "test.jpg",
           priority: true,
           lazy: true,
-          inView: false, // viewport 밖이지만
+          inView: false,
         })
       );
 
-      // priority가 우선하여 즉시 src 설정
       expect(result.current.src).toBe("test.jpg");
       expect(result.current.status).toBe("loading");
     });
@@ -41,20 +39,36 @@ describe("useImageWithFallback", () => {
         { initialProps: { inView: false } }
       );
 
-      // 초기: viewport 밖이므로 src 없음
       expect(result.current.src).toBeUndefined();
       expect(result.current.status).toBe("idle");
 
-      // viewport 진입
       rerender({ inView: true });
 
-      // effect 재실행되어 src 설정
       expect(result.current.src).toBe("test.jpg");
       expect(result.current.status).toBe("loading");
     });
   });
 
   describe("Retry logic", () => {
+    it("에러 시 onRetry 콜백 호출", () => {
+      const onRetry = jest.fn();
+      const { result } = renderHook(() =>
+        useImageWithFallback({
+          src: "test.jpg",
+          priority: true,
+          lazy: false,
+          inView: true,
+          onRetry,
+        })
+      );
+
+      act(() => {
+        result.current.onError();
+      });
+
+      expect(onRetry).toHaveBeenCalledTimes(1);
+    });
+
     it("에러 시 retryCount 증가 (2초 후)", () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
@@ -67,17 +81,14 @@ describe("useImageWithFallback", () => {
 
       const initialRetryCount = result.current.retryCount;
 
-      // 에러 발생
       act(() => {
         result.current.onError();
       });
 
-      // 2초 대기 (S3 업로드 시간)
       act(() => {
         jest.advanceTimersByTime(2000);
       });
 
-      // retryCount 증가 확인
       expect(result.current.retryCount).toBe(initialRetryCount + 1);
     });
 
@@ -91,50 +102,11 @@ describe("useImageWithFallback", () => {
         })
       );
 
-      // retryCount가 return object에 포함되어야 함
       expect(result.current).toHaveProperty("retryCount");
       expect(typeof result.current.retryCount).toBe("number");
     });
 
-    it("fallback array가 있으면 순차 진행", () => {
-      const { result } = renderHook(() =>
-        useImageWithFallback({
-          src: ["test1.jpg", "test2.jpg", "test3.jpg"],
-          priority: true,
-          lazy: false,
-          inView: true,
-        })
-      );
-
-      // 첫 번째 이미지
-      expect(result.current.src).toBe("test1.jpg");
-
-      // 에러 → 두 번째 이미지
-      act(() => {
-        result.current.onError();
-      });
-      expect(result.current.src).toBe("test2.jpg");
-
-      // 에러 → 세 번째 이미지
-      act(() => {
-        result.current.onError();
-      });
-      expect(result.current.src).toBe("test3.jpg");
-
-      // 마지막 이미지도 실패 → retry 로직으로 전환
-      act(() => {
-        result.current.onError();
-      });
-      expect(result.current.status).toBe("loading");
-
-      // 2초 후 retryCount 증가
-      act(() => {
-        jest.advanceTimersByTime(2000);
-      });
-      expect(result.current.retryCount).toBe(1);
-    });
-
-    it("retry 3번 초과 시 error 상태", () => {
+    it("retry 2번 초과 시 error 상태", () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
           src: "test.jpg",
@@ -144,8 +116,8 @@ describe("useImageWithFallback", () => {
         })
       );
 
-      // 3번 retry
-      for (let i = 0; i < 3; i++) {
+      // 2번 retry
+      for (let i = 0; i < 2; i++) {
         act(() => {
           result.current.onError();
         });
@@ -154,7 +126,7 @@ describe("useImageWithFallback", () => {
         });
       }
 
-      // 4번째는 error 상태
+      // 3번째는 error 상태
       act(() => {
         result.current.onError();
       });
@@ -162,21 +134,38 @@ describe("useImageWithFallback", () => {
     });
   });
 
-  describe("Edge cases", () => {
-    it("NO_IMAGE_URL일 때 즉시 loaded 상태", () => {
+  describe("Lazy loading", () => {
+    it("lazy=true, inView=false일 때 idle 상태", () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
-          src: NO_IMAGE_URL,
+          src: "test.jpg",
           priority: false,
           lazy: true,
           inView: false,
         })
       );
 
-      expect(result.current.status).toBe("loaded");
+      expect(result.current.src).toBeUndefined();
+      expect(result.current.status).toBe("idle");
     });
 
-    it("src 변경 시 retryCount와 fallbackIndex 초기화", () => {
+    it("lazy=false일 때 즉시 로드", () => {
+      const { result } = renderHook(() =>
+        useImageWithFallback({
+          src: "test.jpg",
+          priority: false,
+          lazy: false,
+          inView: false,
+        })
+      );
+
+      expect(result.current.src).toBe("test.jpg");
+      expect(result.current.status).toBe("loading");
+    });
+  });
+
+  describe("State reset on src change", () => {
+    it("src 변경 시 retryCount 초기화", () => {
       const { result, rerender } = renderHook(
         ({ src }) =>
           useImageWithFallback({
@@ -188,7 +177,6 @@ describe("useImageWithFallback", () => {
         { initialProps: { src: "test1.jpg" } }
       );
 
-      // 에러 발생으로 retryCount 증가
       act(() => {
         result.current.onError();
       });
@@ -197,11 +185,33 @@ describe("useImageWithFallback", () => {
       });
       expect(result.current.retryCount).toBe(1);
 
-      // src 변경
       rerender({ src: "test2.jpg" });
 
-      // retryCount 초기화 확인
       expect(result.current.retryCount).toBe(0);
+    });
+
+    it("src 변경 시 status 재평가", () => {
+      const { result, rerender } = renderHook(
+        ({ src }) =>
+          useImageWithFallback({
+            src,
+            priority: true,
+            lazy: false,
+            inView: true,
+          }),
+        { initialProps: { src: "test1.jpg" } }
+      );
+
+      // 에러 상태로 만듦
+      for (let i = 0; i < 3; i++) {
+        act(() => result.current.onError());
+        act(() => jest.advanceTimersByTime(2000));
+      }
+      expect(result.current.status).toBe("error");
+
+      // src 변경 시 loading으로 리셋
+      rerender({ src: "test2.jpg" });
+      expect(result.current.status).toBe("loading");
     });
   });
 });
