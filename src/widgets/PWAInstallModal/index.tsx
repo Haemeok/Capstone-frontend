@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Share, Smartphone, Zap } from "lucide-react";
+import { CheckCircle2, Smartphone, Zap } from "lucide-react";
 
 import { PWA_BENEFITS } from "@/shared/config/constants/pwa";
 import {
