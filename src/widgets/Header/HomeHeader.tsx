@@ -12,7 +12,7 @@ import NotificationButton from "./NotificationButton";
 
 const HomeHeader = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isInstallable, isIOS, promptInstall, skipInstall } =
+  const {  isIOS, promptInstall, skipInstall } =
     usePWAInstallContext();
 
   return (
@@ -30,7 +30,7 @@ const HomeHeader = () => {
             />
             <p className="text-2xl font-bold">Recipi'O</p>
           </div>
-          {isInstallable && (
+          
             <button
               onClick={() => setIsModalOpen(true)}
               className="bg-olive-light/10 text-olive-light hover:bg-olive-light/20 flex h-8 items-center justify-center gap-1.5 rounded-full px-3 transition-colors"
@@ -39,7 +39,7 @@ const HomeHeader = () => {
               <Download size={14} />
               <span className="w-10 text-xs font-bold">앱 설치</span>
             </button>
-          )}
+          
         </div>
 
         <div className="absolute top-1/2 right-6 -translate-y-1/2">
