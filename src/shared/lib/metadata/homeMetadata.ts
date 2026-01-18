@@ -32,7 +32,7 @@ export const homeMetadata: Metadata = {
     ],
     apple: [
       {
-        url: "https://www.recipio.kr/apple-touch-icon1.png",
+        url: "https://www.recipio.kr/apple-touch-icon.png",
         sizes: "180x180",
         type: "image/png",
       },
