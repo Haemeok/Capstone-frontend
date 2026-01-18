@@ -164,6 +164,82 @@ describe("useImageWithFallback", () => {
     });
   });
 
+  describe("handleLoad with decode timeout", () => {
+    it("decode()가 pending 상태여도 타임아웃 후 loaded 상태로 전환", async () => {
+      const { result } = renderHook(() =>
+        useImageWithFallback({
+          src: "test.jpg",
+          priority: true,
+          lazy: false,
+          inView: true,
+        })
+      );
+
+      const mockImageElement = {
+        decode: () => new Promise(() => {}),
+      } as unknown as HTMLImageElement;
+
+      const mockEvent = {
+        currentTarget: mockImageElement,
+      } as React.SyntheticEvent<HTMLImageElement>;
+
+      await act(async () => {
+        result.current.onLoad(mockEvent);
+        jest.advanceTimersByTime(100);
+      });
+
+      expect(result.current.status).toBe("loaded");
+    });
+
+    it("decode()가 정상 resolve되면 loaded 상태로 전환", async () => {
+      const { result } = renderHook(() =>
+        useImageWithFallback({
+          src: "test.jpg",
+          priority: true,
+          lazy: false,
+          inView: true,
+        })
+      );
+
+      const mockImageElement = {
+        decode: () => Promise.resolve(),
+      } as unknown as HTMLImageElement;
+
+      const mockEvent = {
+        currentTarget: mockImageElement,
+      } as React.SyntheticEvent<HTMLImageElement>;
+
+      await act(async () => {
+        await result.current.onLoad(mockEvent);
+      });
+
+      expect(result.current.status).toBe("loaded");
+    });
+
+    it("decode()가 없는 경우에도 loaded 상태로 전환", async () => {
+      const { result } = renderHook(() =>
+        useImageWithFallback({
+          src: "test.jpg",
+          priority: true,
+          lazy: false,
+          inView: true,
+        })
+      );
+
+      const mockImageElement = {} as unknown as HTMLImageElement;
+
+      const mockEvent = {
+        currentTarget: mockImageElement,
+      } as React.SyntheticEvent<HTMLImageElement>;
+
+      await act(async () => {
+        await result.current.onLoad(mockEvent);
+      });
+
+      expect(result.current.status).toBe("loaded");
+    });
+  });
+
   describe("State reset on src change", () => {
     it("src 변경 시 retryCount 초기화", () => {
       const { result, rerender } = renderHook(
