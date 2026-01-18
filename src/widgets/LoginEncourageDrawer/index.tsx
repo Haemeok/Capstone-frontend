@@ -1,22 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Image } from "@/shared/ui/image/Image";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import LoginDialog from "@/features/auth/ui/LoginDialog";
 
 type LoginEncourageDrawerProps = {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  icon?: ReactNode;
+  message?: string;
 };
 
 const LoginEncourageDrawer = ({
   isOpen,
   onOpenChange,
+  icon,
+  message = "유튜브 레시피 편하게 요리하세요!",
 }: LoginEncourageDrawerProps) => {
   const router = useRouter();
   const { Container, Content, Title } = useResponsiveSheet();
@@ -59,12 +62,14 @@ const LoginEncourageDrawer = ({
                 지금{" "}
                 <span className="text-olive-light">3초</span>만에 가입하고,
               </p>
-              <div className="mt-2 flex items-center justify-center gap-1">
-                <YouTubeIconBadge className="h-6 w-6" />
-                <p className="text-xl font-bold text-gray-700">
-                  유튜브 레시피 편하게 요리하세요!
-                </p>
-              </div>
+              {icon ? (
+                <div className="mt-2 flex items-center justify-center gap-1">
+                  {icon}
+                  <p className="text-xl font-bold text-gray-700">{message}</p>
+                </div>
+              ) : (
+                <p className="mt-2 text-xl font-bold text-gray-700">{message}</p>
+              )}
             </div>
 
             <button
@@ -75,7 +80,7 @@ const LoginEncourageDrawer = ({
             </button>
 
             <p className="mt-4 text-center text-xs text-gray-400">
-              로그인하면 하단 정책에 동의한걸로 간주합니다.
+              로그인하면 하단 정책에 동의한 것으로 간주합니다.
               <br />
               <a
                 href="https://www.notion.so/2ecc8d1def7c8068ad97e3f6318b6d90"

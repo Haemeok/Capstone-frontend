@@ -9,12 +9,14 @@ type YoutubePreviewCardProps = {
   meta: YoutubeMeta;
   onConfirm: () => void;
   isLoading?: boolean;
+  disabled?: boolean;
 };
 
 export const YoutubePreviewCard = ({
   meta,
   onConfirm,
   isLoading = false,
+  disabled = false,
 }: YoutubePreviewCardProps) => {
   const videoId = extractYouTubeVideoId(meta.url);
   const thumbnailUrl = videoId
@@ -43,7 +45,7 @@ export const YoutubePreviewCard = ({
       </div>
       <button
         onClick={onConfirm}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         className="border-olive-light hover:bg-olive-light/10 w-full rounded-lg border-1 py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLoading ? (
