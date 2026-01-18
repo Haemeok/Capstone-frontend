@@ -3,7 +3,7 @@
 import { useUserStore } from "@/entities/user";
 
 import AIRecipeProgressButton from "./AIRecipeProgressButton";
-import AIUsageLimitBanner from "./AIUsageLimitBanner";
+import UsageLimitBanner from "./UsageLimitBanner";
 
 type AIRecipeSubmitSectionProps = {
   isLoading: boolean;
@@ -19,7 +19,7 @@ const AIRecipeSubmitSection = ({
 
   return (
     <div>
-      {hasNoQuota && <AIUsageLimitBanner />}
+      {hasNoQuota && <UsageLimitBanner />}
       <AIRecipeProgressButton isLoading={isLoading} onClick={onClick} />
     </div>
   );
