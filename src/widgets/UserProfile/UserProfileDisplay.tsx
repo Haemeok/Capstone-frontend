@@ -26,8 +26,8 @@ const UserProfileDisplay = ({
   loggedInUser,
 }: UserProfileDisplayProps) => (
   <div className="relative z-10 px-6">
-    <div className="flex items-end gap-2">
-      <div className="flex items-end gap-4">
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         <div className="relative">
           <div
             className="h-24 w-24 overflow-hidden rounded-full"

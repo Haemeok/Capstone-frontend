@@ -1,29 +1,29 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useCallback,useState } from "react";
 import Link from "next/link";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Pencil, Trash, Sparkles } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
+import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
+import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import Circle from "@/shared/ui/Circle";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
-import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { DialogTitle } from "@/shared/ui/shadcn/dialog";
-import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
-import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 
 import {
   BaseRecipeGridItem,
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
 } from "@/entities/recipe/model/types";
 
+import useDeleteRecipeMutation from "@/features/recipe-delete/model/hooks";
 import { RecipeLikeButton } from "@/features/recipe-like";
 
-import useDeleteRecipeMutation from "@/features/recipe-delete/model/hooks";
-
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
+import EmptyRecipeCTA from "@/widgets/RecipeGrid/ui/EmptyRecipeCTA";
 import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 import SimpleRecipeGridItem from "@/widgets/RecipeGrid/ui/SimpleRecipeGridItem";
 
@@ -128,27 +128,7 @@ const RecipeGrid = ({
 
   if (noResults || !recipes || recipes.length === 0) {
     if (showAIRecipeCTA) {
-      return (
-        <section className="flex min-h-[500px] items-center justify-center px-4">
-          <div className="flex max-w-md flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold text-gray-800">
-                {noResultsMessage}
-              </h3>
-              <p className="text-sm text-gray-600">
-                30초만에 AI에게 레시피 생성을 맡겨보세요
-              </p>
-            </div>
-            <Link
-              href="/recipes/new/ai"
-              className="bg-olive-light hover:bg-olive-light/90 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-colors"
-            >
-              <Sparkles size={20} />
-              <span>AI 레시피 생성하기</span>
-            </Link>
-          </div>
-        </section>
-      );
+      return <EmptyRecipeCTA noResultsMessage={noResultsMessage} />;
     }
 
     return (
