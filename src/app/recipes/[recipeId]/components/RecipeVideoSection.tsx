@@ -149,7 +149,7 @@ export default function RecipeVideoSection({
                 <Pin
                   className={cn(
                     "h-5 w-5 fill-current transition-all",
-                    isSticky ? "text-primary-foreground" : "text-fuchsia-300"
+                    isSticky ? "text-primary-foreground" : "text-red-400"
                   )}
                 />
               </motion.div>
