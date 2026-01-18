@@ -3,11 +3,8 @@
 import SaveButton from "@/shared/ui/SaveButton";
 import ShareButton from "@/shared/ui/ShareButton";
 
-import { useUserStore } from "@/entities/user/model/store";
-
 import { useToggleRecipeFavorite } from "@/features/recipe-favorite";
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
-import { LockButton } from "@/features/recipe-visibility";
 
 import { useToastStore } from "@/widgets/Toast";
 
@@ -32,7 +29,6 @@ const RecipeInteractionButtons = ({
 }: RecipeInteractionButtonsProps) => {
   const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipeId);
   const { addToast } = useToastStore();
-  const { user } = useUserStore();
 
   const handleToggleFavorite = () => {
     const message = initialIsFavorite
@@ -79,9 +75,7 @@ const RecipeInteractionButtons = ({
         label="공유"
         text={`${title} 를 확인해보세요!`}
       />
-      {authorId === user?.id && (
-        <LockButton recipeId={recipeId} initialIsLocked={initialIsPrivate} />
-      )}
+      
     </div>
   );
 };
