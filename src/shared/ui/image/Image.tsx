@@ -98,7 +98,14 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
       {image.src && (
         <img
           key={`${image.src}-${image.retryCount ?? 0}`}
-          ref={forwardedRef}
+          ref={(node) => {
+            image.imgRef(node);
+            if (typeof forwardedRef === "function") {
+              forwardedRef(node);
+            } else if (forwardedRef) {
+              forwardedRef.current = node;
+            }
+          }}
           src={image.src}
           alt={alt}
           loading={priority ? "eager" : lazy ? "lazy" : undefined}

@@ -240,6 +240,69 @@ describe("useImageWithFallback", () => {
     });
   });
 
+  describe("imgRef with complete check", () => {
+    it("이미 로드 완료된 이미지(complete=true)면 즉시 loaded 상태로 전환", () => {
+      const { result } = renderHook(() =>
+        useImageWithFallback({
+          src: "test.jpg",
+          priority: true,
+          lazy: false,
+          inView: true,
+        })
+      );
+
+      const mockImg = {
+        complete: true,
+        naturalWidth: 100,
+      } as HTMLImageElement;
+
+      act(() => {
+        result.current.imgRef(mockImg);
+      });
+
+      expect(result.current.status).toBe("loaded");
+    });
+
+    it("아직 로드 중인 이미지(complete=false)면 loading 상태 유지", () => {
+      const { result } = renderHook(() =>
+        useImageWithFallback({
+          src: "test.jpg",
+          priority: true,
+          lazy: false,
+          inView: true,
+        })
+      );
+
+      const mockImg = {
+        complete: false,
+        naturalWidth: 0,
+      } as HTMLImageElement;
+
+      act(() => {
+        result.current.imgRef(mockImg);
+      });
+
+      expect(result.current.status).toBe("loading");
+    });
+
+    it("null이 전달되면 상태 변경 없음", () => {
+      const { result } = renderHook(() =>
+        useImageWithFallback({
+          src: "test.jpg",
+          priority: true,
+          lazy: false,
+          inView: true,
+        })
+      );
+
+      act(() => {
+        result.current.imgRef(null);
+      });
+
+      expect(result.current.status).toBe("loading");
+    });
+  });
+
   describe("State reset on src change", () => {
     it("src 변경 시 retryCount 초기화", () => {
       const { result, rerender } = renderHook(
