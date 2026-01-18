@@ -103,3 +103,16 @@ export const isRetryableError = (error: ApiError): boolean => {
 export const isErrorResponse = (response: Response): boolean => {
   return !response.ok;
 };
+
+export type ApiErrorResponse = {
+  code: number | string;
+  message: string;
+  retryAfter?: number;
+};
+
+export const getErrorData = (error: ApiError): ApiErrorResponse | null => {
+  if (error.data && typeof error.data === "object" && "code" in error.data) {
+    return error.data as ApiErrorResponse;
+  }
+  return null;
+};

@@ -55,7 +55,7 @@ export const PendingRecipeCard = ({ url }: PendingRecipeCardProps) => {
               <>
                 <XCircle className="mx-auto h-10 w-10 text-red-400" />
                 <p className="text-xs font-semibold break-keep text-white">
-                  {error || "실패"}
+                  {error?.message || "실패"}
                 </p>
                 <button
                   onClick={(e) => {

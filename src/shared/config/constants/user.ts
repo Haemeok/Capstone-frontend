@@ -13,6 +13,7 @@ export const guestUser: User = {
   introduction: "",
   hasFirstRecord: false,
   remainingAiQuota: 0,
+  remainingYoutubeQuota: 0,
 };
 
 export type Tab = {
