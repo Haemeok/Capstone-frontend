@@ -120,7 +120,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
               />
             </button>
           </form>
-          <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2">
+          <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2 pb-3">
             {INGREDIENT_CATEGORIES_NEW_RECIPE.map((category) => (
               <button
                 key={category}
@@ -137,7 +137,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
             ))}
           </div>
         </div>
-        <div className="flex h-120 flex-col justify-center overflow-y-auto p-4">
+        <div className="flex h-120 flex-col justify-start overflow-y-auto p-4">
           {isPending ? (
             <p className="text-center text-gray-500">재료 로딩 중...</p>
           ) : status === "error" ? (

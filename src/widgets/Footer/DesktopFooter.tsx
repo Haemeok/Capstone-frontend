@@ -95,7 +95,12 @@ const DesktopFooter = () => {
               <span>도원진</span>
             </div>
             <div className="flex items-center gap-2">
-              <span>고객센터 / 광고 문의</span>
+              <span>고객센터</span>
+              <span>|</span>
+              <span>recipio.cs@gmail.com</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>광고 문의</span>
               <span>|</span>
               <span>recipio.kr@gmail.com</span>
             </div>

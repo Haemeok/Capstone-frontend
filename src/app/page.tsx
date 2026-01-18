@@ -7,6 +7,8 @@ import CategoryTabs from "@/widgets/CategoryTabs";
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
+import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 export const metadata = homeMetadata;
 
@@ -31,6 +33,21 @@ const HomePage = async () => {
           <HomeHeader />
 
           <CategoryTabs title="카테고리" />
+
+          <HomeBannerCarousel
+            slides={[
+              {
+                id: "youtube",
+                title: "유튜브 링크만으로\n레시피를 등록하세요",
+                ctaText: "유튜브 레시피 바로 추출하기",
+                link: "/recipes/new/youtube",
+                backgroundColor: "#f87171",
+                backgroundImage: "/gold.png",
+                mainImage: `${ICON_BASE_URL}youtube.webp`,
+              },
+            ]}
+          />
+
           <RecipeSlideWithErrorBoundary
             title="만원 이하 가성비 레시피"
             queryKey="budget-recipes"
