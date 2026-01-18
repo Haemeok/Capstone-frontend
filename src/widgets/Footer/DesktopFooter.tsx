@@ -5,7 +5,7 @@ const FOOTER_LINKS = {
     { label: "서비스 이용약관", href: "/terms" },
     {
       label: "개인정보 처리방침",
-      href: "https://www.notion.so/2ecc8d1def7c8068ad97e3f6318b6d90",
+      href: "https://grizzly-taker-1ad.notion.site/2ecc8d1def7c8068ad97e3f6318b6d90?pvs=74",
       external: true,
     },
   ],

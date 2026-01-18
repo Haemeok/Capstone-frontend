@@ -83,7 +83,7 @@ const LoginEncourageDrawer = ({
               로그인하면 하단 정책에 동의한 것으로 간주합니다.
               <br />
               <a
-                href="https://www.notion.so/2ecc8d1def7c8068ad97e3f6318b6d90"
+                href="https://grizzly-taker-1ad.notion.site/2ecc8d1def7c8068ad97e3f6318b6d90?pvs=74"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline hover:text-gray-600"
