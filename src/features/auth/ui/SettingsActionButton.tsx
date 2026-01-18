@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, FileText } from "lucide-react";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
@@ -35,6 +35,36 @@ const SettingsActionButton = () => {
             <Header>
               <Title className="text-lg">설정</Title>
             </Header>
+
+            <div className="flex flex-col border-t border-gray-200 sm:border-none">
+              <a
+                href="https://www.notion.so/2ecc8d1def7c8068ad97e3f6318b6d90"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                <FileText size={16} aria-hidden="true" />
+                <span>개인정보처리방침</span>
+              </a>
+              <a
+                href="https://slashpage.com/recipio/n5w9812gwype424kpgze"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                <span aria-hidden="true">💬</span>
+                <span>사용후기</span>
+              </a>
+              <a
+                href="https://slashpage.com/recipio/943zqpmqxn63g2wnvy87"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                <span aria-hidden="true">🐛</span>
+                <span>오류제보</span>
+              </a>
+            </div>
 
             <Footer className="flex-col gap-0 p-0 sm:flex-row sm:justify-end sm:gap-2">
               <button
