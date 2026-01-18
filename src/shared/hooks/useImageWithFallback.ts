@@ -14,6 +14,7 @@ type UseImageWithFallbackParams = {
 
 const MAX_RETRY_COUNT = 2;
 const RETRY_DELAY_MS = 2000;
+const DECODE_TIMEOUT_MS = 100;
 
 export const useImageWithFallback = ({
   src,
@@ -46,7 +47,12 @@ export const useImageWithFallback = ({
       const imageElement = event.currentTarget;
       try {
         if (typeof imageElement.decode === "function") {
-          await imageElement.decode();
+          await Promise.race([
+            imageElement.decode(),
+            new Promise<void>((resolve) =>
+              setTimeout(resolve, DECODE_TIMEOUT_MS)
+            ),
+          ]);
         }
       } catch {
         // decode 실패는 무시
