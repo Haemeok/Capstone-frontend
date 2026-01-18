@@ -23,6 +23,7 @@ import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlVali
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 import { useToastStore } from "@/widgets/Toast";
 import { Container } from "@/shared/ui/Container";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import { Image } from "@/shared/ui/image/Image";
@@ -46,6 +47,17 @@ const youtubeUrlSchema = z.object({
 });
 
 type YoutubeUrlFormValues = z.infer<typeof youtubeUrlSchema>;
+
+const DuplicateRecipeErrorFallback = () => (
+  <div className="mx-auto w-full max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-6 text-center">
+    <p className="font-medium text-amber-800">
+      레시피 정보를 불러올 수 없습니다.
+    </p>
+    <p className="mt-1 text-sm text-amber-600">
+      해당 레시피가 삭제되었거나 비공개 상태일 수 있습니다.
+    </p>
+  </div>
+);
 
 const YoutubeImportPage = () => {
   const router = useRouter();
@@ -306,15 +318,17 @@ const YoutubeImportPage = () => {
             isDuplicate &&
             duplicateCheck?.recipeId && (
               <div className="animate-fade-in-up">
-                <DuplicateRecipeSection
-                  recipeId={duplicateCheck.recipeId}
-                  onSaveSuccess={() => {
-                    addToast({
-                      message: "레시피가 저장되었습니다!",
-                      variant: "success",
-                    });
-                  }}
-                />
+                <ErrorBoundary fallback={<DuplicateRecipeErrorFallback />}>
+                  <DuplicateRecipeSection
+                    recipeId={duplicateCheck.recipeId}
+                    onSaveSuccess={() => {
+                      addToast({
+                        message: "레시피가 저장되었습니다!",
+                        variant: "success",
+                      });
+                    }}
+                  />
+                </ErrorBoundary>
               </div>
             )}
 

@@ -24,6 +24,7 @@ export const makeBaseRecipe = (
       profileImage: "https://example.com/profile.jpg",
       hasFirstRecord: false,
       remainingAiQuota: 10,
+      remainingYoutubeQuota: 10,
     },
     totalCalories: 350,
     nutrition: {
