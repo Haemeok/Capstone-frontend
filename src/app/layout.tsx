@@ -31,12 +31,16 @@ export const metadata: Metadata = {
       },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      {
+        url: "https://www.recipio.kr/apple-touch-icon1.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
     ],
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "레시피오",
   },
   metadataBase: new URL("https://www.recipio.kr/"),
