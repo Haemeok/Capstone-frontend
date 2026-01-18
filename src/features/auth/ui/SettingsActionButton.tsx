@@ -38,7 +38,7 @@ const SettingsActionButton = () => {
 
             <div className="flex flex-col border-t border-gray-200 sm:border-none">
               <a
-                href="https://www.notion.so/2ecc8d1def7c8068ad97e3f6318b6d90"
+                href="https://grizzly-taker-1ad.notion.site/2ecc8d1def7c8068ad97e3f6318b6d90?pvs=74"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
