@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { YoutubeMeta } from "./types";
 import { triggerYoutubeImport } from "./api";
 import { QueryClient } from "@tanstack/react-query";
+import { toYoutubeImportError, YoutubeImportError } from "../lib/errors";
 
 type ImportStatus = "pending" | "success" | "error";
 
@@ -9,14 +10,18 @@ type PendingImport = {
   url: string;
   meta: YoutubeMeta;
   status: ImportStatus;
-  error?: string;
+  error?: YoutubeImportError;
   startTime: number;
 };
 
 type YoutubeImportStore = {
   imports: Record<string, PendingImport>;
   addImport: (url: string, meta: YoutubeMeta) => void;
-  updateStatus: (url: string, status: ImportStatus, error?: string) => void;
+  updateStatus: (
+    url: string,
+    status: ImportStatus,
+    error?: YoutubeImportError
+  ) => void;
   removeImport: (url: string) => void;
   startImport: (
     url: string,
@@ -72,22 +77,21 @@ export const useYoutubeImportStore = create<YoutubeImportStore>((set, get) => ({
         setTimeout(() => {
           queryClient.invalidateQueries({ queryKey: ["recipes"] });
           queryClient.invalidateQueries({ queryKey: ["recipes", "favorite"] });
+          queryClient.invalidateQueries({ queryKey: ["myInfo"] });
         }, 3000);
         setTimeout(() => {
           removeImport(url);
           onSuccess?.(response.recipeId);
         }, 3000);
       } else {
-        updateStatus(url, "error", response.message);
+        const errorInfo = toYoutubeImportError({
+          data: response,
+        } as unknown);
+        updateStatus(url, "error", errorInfo);
       }
     } catch (error) {
-      updateStatus(
-        url,
-        "error",
-        error instanceof Error
-          ? error.message
-          : "알 수 없는 오류가 발생했습니다."
-      );
+      const errorInfo = toYoutubeImportError(error);
+      updateStatus(url, "error", errorInfo);
     }
   },
 }));

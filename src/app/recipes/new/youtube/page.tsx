@@ -18,6 +18,7 @@ import {
   DuplicateRecipeSection,
 } from "@/features/recipe-import-youtube";
 import LoginEncourageDrawer from "@/widgets/LoginEncourageDrawer";
+import AIUsageLimitBanner from "@/widgets/AIRecipeForm/AIUsageLimitBanner";
 import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlValidation";
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 import { useToastStore } from "@/widgets/Toast";
@@ -51,6 +52,7 @@ const YoutubeImportPage = () => {
   const queryClient = useQueryClient();
   const addToast = useToastStore((state) => state.addToast);
   const { user } = useMyInfoQuery();
+  const hasNoQuota = user?.remainingYoutubeQuota === 0;
 
   const [currentUrl, setCurrentUrl] = useState("");
   const [isLoginDrawerOpen, setIsLoginDrawerOpen] = useState(false);
@@ -323,10 +325,12 @@ const YoutubeImportPage = () => {
             !isFetchingDuplicate &&
             !isDuplicate && (
               <div className="animate-fade-in-up">
+                {hasNoQuota && <AIUsageLimitBanner />}
                 <YoutubePreviewCard
                   meta={youtubeMeta}
                   onConfirm={handleConfirmImport}
                   isLoading={isImporting}
+                  disabled={hasNoQuota}
                 />
               </div>
             )}
@@ -336,6 +340,7 @@ const YoutubeImportPage = () => {
       <LoginEncourageDrawer
         isOpen={isLoginDrawerOpen}
         onOpenChange={setIsLoginDrawerOpen}
+        icon={<YouTubeIconBadge className="h-6 w-6" />}
       />
     </Container>
   );

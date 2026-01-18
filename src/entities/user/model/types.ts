@@ -10,6 +10,7 @@ export type User = {
   surveyCompleted?: boolean;
   hasFirstRecord: boolean;
   remainingAiQuota: number;
+  remainingYoutubeQuota: number;
 };
 
 export type UserStreak = {
