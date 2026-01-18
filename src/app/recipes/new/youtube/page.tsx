@@ -18,7 +18,7 @@ import {
   DuplicateRecipeSection,
 } from "@/features/recipe-import-youtube";
 import LoginEncourageDrawer from "@/widgets/LoginEncourageDrawer";
-import AIUsageLimitBanner from "@/widgets/AIRecipeForm/AIUsageLimitBanner";
+import UsageLimitBanner from "@/widgets/AIRecipeForm/UsageLimitBanner";
 import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlValidation";
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 import { useToastStore } from "@/widgets/Toast";
@@ -339,7 +339,9 @@ const YoutubeImportPage = () => {
             !isFetchingDuplicate &&
             !isDuplicate && (
               <div className="animate-fade-in-up">
-                {hasNoQuota && <AIUsageLimitBanner />}
+                {hasNoQuota && (
+                  <UsageLimitBanner message="오늘 유튜브 레시피 추출 횟수를 모두 사용했어요." />
+                )}
                 <YoutubePreviewCard
                   meta={youtubeMeta}
                   onConfirm={handleConfirmImport}

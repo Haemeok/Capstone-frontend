@@ -24,7 +24,11 @@ export const YoutubePreviewCard = ({
     : meta.thumbnailUrl;
 
   return (
-    <div className="mx-auto w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-4 shadow-sm duration-300">
+    <div
+      className={`mx-auto w-full max-w-2xl rounded-xl border bg-white p-4 shadow-sm duration-300 ${
+        disabled ? "border-gray-300 opacity-60" : "border-gray-200"
+      }`}
+    >
       <div className="mb-4 flex gap-4">
         <Image
           src={thumbnailUrl}
@@ -46,7 +50,11 @@ export const YoutubePreviewCard = ({
       <button
         onClick={onConfirm}
         disabled={isLoading || disabled}
-        className="border-olive-light hover:bg-olive-light/10 w-full rounded-lg border-1 py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        className={`w-full rounded-lg border-1 py-3 font-medium transition-colors ${
+          disabled
+            ? "cursor-not-allowed border-gray-300 bg-gray-100 text-gray-400"
+            : "border-olive-light text-olive-light hover:bg-olive-light/10 disabled:cursor-not-allowed disabled:opacity-50"
+        }`}
       >
         {isLoading ? (
           <span className="text-olive-light flex items-center justify-center gap-2">
@@ -73,7 +81,9 @@ export const YoutubePreviewCard = ({
             처리 중...
           </span>
         ) : (
-          <p className="text-olive-light">이 영상으로 레시피 가져오기</p>
+          <p className={disabled ? "text-gray-400" : "text-olive-light"}>
+            이 영상으로 레시피 가져오기
+          </p>
         )}
       </button>
     </div>
