@@ -19,7 +19,7 @@ export default function RecipeCookingInfoSection({
           <Image
             src={`${ICON_BASE_URL}cooking_time.webp`}
             alt="조리 시간"
-            wrapperClassName="w-12 h-12"
+            wrapperClassName="w-12 h-12 flex-shrink-0"
           />
           <div className="flex min-w-0 flex-col">
             <span className="text-xs text-gray-500">조리 시간</span>
@@ -33,7 +33,7 @@ export default function RecipeCookingInfoSection({
           <Image
             src={`${ICON_BASE_URL}serving_size.webp`}
             alt="인분"
-            wrapperClassName="w-12 h-12"
+            wrapperClassName="w-12 h-12 flex-shrink-0"
           />
           <div className="flex min-w-0 flex-col">
             <span className="text-xs text-gray-500">인분</span>
@@ -47,7 +47,7 @@ export default function RecipeCookingInfoSection({
           <Image
             src={`${ICON_BASE_URL}kitchen_tools.webp`}
             alt="조리 도구"
-            wrapperClassName="w-12 h-12"
+            wrapperClassName="w-12 h-12 flex-shrink-0"
           />
           <div className="flex min-w-0 flex-col">
             <span className="text-xs text-gray-500">조리 도구</span>

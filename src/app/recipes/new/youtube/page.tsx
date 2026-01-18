@@ -17,6 +17,7 @@ import {
   useYoutubeDuplicateCheck,
   DuplicateRecipeSection,
 } from "@/features/recipe-import-youtube";
+import LoginEncourageDrawer from "@/widgets/LoginEncourageDrawer";
 import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlValidation";
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 import { useToastStore } from "@/widgets/Toast";
@@ -52,6 +53,7 @@ const YoutubeImportPage = () => {
   const { user } = useMyInfoQuery();
 
   const [currentUrl, setCurrentUrl] = useState("");
+  const [isLoginDrawerOpen, setIsLoginDrawerOpen] = useState(false);
   const debouncedUrl = useDebounce(currentUrl, 500);
 
   const {
@@ -106,7 +108,12 @@ const YoutubeImportPage = () => {
   const previewSectionRef = useAutoScrollOnMobile(!!hasYoutubeData, 500);
 
   const handleConfirmImport = async () => {
-    if (!validatedUrl || !videoId || !user || !youtubeMeta) return;
+    if (!validatedUrl || !videoId || !youtubeMeta) return;
+
+    if (!user) {
+      setIsLoginDrawerOpen(true);
+      return;
+    }
 
     router.push(`/users/${user.id}?tab=saved`);
     addToast({
@@ -325,6 +332,11 @@ const YoutubeImportPage = () => {
             )}
         </section>
       </div>
+
+      <LoginEncourageDrawer
+        isOpen={isLoginDrawerOpen}
+        onOpenChange={setIsLoginDrawerOpen}
+      />
     </Container>
   );
 };

@@ -3,10 +3,18 @@ import { Container } from "@/shared/ui/Container";
 const FOOTER_LINKS = {
   service: [
     { label: "서비스 이용약관", href: "/terms" },
-    { label: "개인정보 처리방침", href: "/privacy" },
+    {
+      label: "개인정보 처리방침",
+      href: "https://www.notion.so/2ecc8d1def7c8068ad97e3f6318b6d90",
+      external: true,
+    },
   ],
   support: [
-    { label: "고객센터", href: "/support" },
+    {
+      label: "오류제보",
+      href: "https://slashpage.com/recipio/943zqpmqxn63g2wnvy87",
+      external: true,
+    },
     { label: "광고/제휴 문의", href: "/contact" },
   ],
 } as const;
@@ -30,50 +38,70 @@ const DesktopFooter = () => {
             <div className="flex flex-col gap-3">
               <h4 className="text-sm font-semibold text-gray-900">서비스</h4>
               <div className="flex flex-col gap-2">
-                {FOOTER_LINKS.service.map((link) => (
-                  <div
-                    key={link.label}
-                    className="text-sm text-gray-600 transition-colors hover:text-gray-900"
-                  >
-                    {link.label}
-                  </div>
-                ))}
+                {FOOTER_LINKS.service.map((link) =>
+                  "external" in link && link.external ? (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-gray-600 transition-colors hover:text-gray-900"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <div
+                      key={link.label}
+                      className="text-sm text-gray-600 transition-colors hover:text-gray-900"
+                    >
+                      {link.label}
+                    </div>
+                  )
+                )}
               </div>
             </div>
 
             <div className="flex flex-col gap-3">
               <h4 className="text-sm font-semibold text-gray-900">고객지원</h4>
               <div className="flex flex-col gap-2">
-                {FOOTER_LINKS.support.map((link) => (
-                  <div
-                    key={link.href}
-                    className="text-sm text-gray-600 transition-colors hover:text-gray-900"
-                  >
-                    {link.label}
-                  </div>
-                ))}
+                {FOOTER_LINKS.support.map((link) =>
+                  "external" in link && link.external ? (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-gray-600 transition-colors hover:text-gray-900"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <div
+                      key={link.label}
+                      className="text-sm text-gray-600 transition-colors hover:text-gray-900"
+                    >
+                      {link.label}
+                    </div>
+                  )
+                )}
               </div>
             </div>
           </div>
 
           <div className="flex flex-col gap-2 border-t border-gray-200 pt-6 text-xs text-gray-500">
             <div className="flex items-center gap-2">
-              <span>고객센터 정보</span>
+              <span>대표</span>
               <span>|</span>
-              <span>cs@recipio.co.kr</span>
+              <span>도원진</span>
             </div>
             <div className="flex items-center gap-2">
-              <span>광고 문의</span>
+              <span>고객센터 / 광고 문의</span>
               <span>|</span>
-              <span>ad-sales@recipio.com / 제휴 광고 소재 문의</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>제품 및 대외 문의</span>
-              <span>|</span>
+              <span>recipio.kr@gmail.com</span>
             </div>
 
             <div className="mt-4 text-gray-400">
-              © 2025 by Recipio, Inc. All rights reserved.
+              Copyright © 2026 Team Recipio. All rights reserved.
             </div>
           </div>
         </div>
