@@ -75,10 +75,20 @@ export const useImageWithFallback = ({
     }
   }, [retryCount, onRetry]);
 
+  const imgRef = useCallback(
+    (img: HTMLImageElement | null) => {
+      if (img && img.complete && img.naturalWidth > 0 && status === "loading") {
+        setStatus("loaded");
+      }
+    },
+    [status]
+  );
+
   return {
     src: effectiveSrc,
     status,
     retryCount,
+    imgRef,
     onLoad: handleLoad,
     onError: handleError,
   };
