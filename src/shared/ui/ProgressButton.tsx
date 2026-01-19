@@ -11,6 +11,7 @@ type ProgressButtonProps = {
   text: string;
   className?: string;
   isLoading?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
 };
 
@@ -20,6 +21,7 @@ const ProgressButton = ({
   text,
   className,
   isLoading,
+  disabled,
   onClick,
 }: ProgressButtonProps) => {
   return (
@@ -38,7 +40,7 @@ const ProgressButton = ({
 
       <Button
         className="group relative z-10 w-full cursor-pointer bg-transparent py-6 text-lg font-bold transition-none hover:bg-transparent"
-        disabled={!isFormValid || isLoading}
+        disabled={disabled || !isFormValid || isLoading}
         type="submit"
         onClick={onClick}
       >

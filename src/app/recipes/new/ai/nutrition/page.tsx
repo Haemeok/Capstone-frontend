@@ -12,6 +12,7 @@ import { aiModels } from "@/shared/config/constants/aiModel";
 import AiLoading from "@/widgets/AiLoading/AiLoading";
 import AIRecipeComplete from "@/widgets/AIRecipeComplete";
 import AIRecipeError from "@/widgets/AIRecipeError";
+import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 
 import PrevButton from "@/shared/ui/PrevButton";
 import { Slider } from "@/shared/ui/shadcn/slider";
@@ -282,13 +283,18 @@ const NutritionRecipePage = () => {
           )}
         </div>
 
-        <button
-          onClick={handleSubmit(onSubmit)}
-          className="bg-olive-light hover:bg-olive-medium flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
-        >
-          <ChefHat className="h-6 w-6" />
-          <span>레시피 생성하기</span>
-        </button>
+        <UsageLimitSection>
+          {({ hasNoQuota }) => (
+            <button
+              onClick={handleSubmit(onSubmit)}
+              disabled={hasNoQuota}
+              className="bg-olive-light hover:bg-olive-medium flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-lg"
+            >
+              <ChefHat className="h-6 w-6" />
+              <span>레시피 생성하기</span>
+            </button>
+          )}
+        </UsageLimitSection>
       </div>
     </Container>
   );

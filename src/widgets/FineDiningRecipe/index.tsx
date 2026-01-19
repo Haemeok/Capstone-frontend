@@ -14,6 +14,7 @@ import type { FineDiningRequest } from "@/features/recipe-create-ai/model/types"
 import AiLoading from "@/widgets/AiLoading/AiLoading";
 import AIRecipeComplete from "@/widgets/AIRecipeComplete";
 import AIRecipeError from "@/widgets/AIRecipeError";
+import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
@@ -141,14 +142,18 @@ const FineDiningRecipe = () => {
             onSelect={handleTierSelect}
           />
 
-          <button
-            onClick={handleGenerateRecipe}
-            disabled={!isFormValid}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:hover:shadow-lg"
-          >
-            <ChefHat className="h-6 w-6" />
-            <span>레시피 생성하기</span>
-          </button>
+          <UsageLimitSection>
+            {({ hasNoQuota }) => (
+              <button
+                onClick={handleGenerateRecipe}
+                disabled={hasNoQuota || !isFormValid}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:hover:shadow-lg"
+              >
+                <ChefHat className="h-6 w-6" />
+                <span>레시피 생성하기</span>
+              </button>
+            )}
+          </UsageLimitSection>
 
           <IngredientSelector
             open={isDrawerOpen}

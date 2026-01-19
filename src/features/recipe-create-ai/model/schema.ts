@@ -8,11 +8,10 @@ export const aiRecipeFormSchema = z.object({
         name: z.string(),
       })
     )
-    .min(3, "최소 3개의 재료를 선택해주세요")
-    .default([]),
-  dishType: z.string().min(1, "요리 종류를 선택해주세요").default(""),
-  cookingTime: z.number().int().min(1, "조리 시간을 선택해주세요").default(0),
-  servings: z.number().int().min(1).default(2),
+    .min(3, "최소 3개의 재료를 선택해주세요"),
+  dishType: z.string().min(1, "요리 종류를 선택해주세요"),
+  cookingTime: z.number().int().min(1, "조리 시간을 선택해주세요"),
+  servings: z.number().int().min(1),
 });
 
 export type AIRecipeFormValues = z.infer<typeof aiRecipeFormSchema>;
