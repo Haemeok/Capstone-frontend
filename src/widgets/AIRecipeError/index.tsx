@@ -11,7 +11,7 @@ type AIRecipeErrorProps = {
 
 const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
   return (
-    <div className="flex items-center justify-center bg-[#f7f7f7] p-4">
+    <div className="flex h-full items-center justify-center bg-[#f7f7f7] p-4">
       <div className="w-full max-w-md">
         <div className="space-y-6 rounded-3xl bg-white p-8 text-center shadow-2xl">
           <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100">

@@ -9,7 +9,11 @@ import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 import { useCreateAIRecipeMutation } from "@/features/recipe-create-ai";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
-import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AIRecipeFormValues,
+  aiRecipeFormSchema,
+} from "@/features/recipe-create-ai/model/schema";
 import { buildIngredientFocusRequest } from "@/features/recipe-create-ai/model/adapters";
 import { aiModels } from "@/shared/config/constants/aiModel";
 
@@ -22,7 +26,8 @@ import AiCharacterSection from "@/widgets/AIRecipeForm/AiCharacterSection";
 import DishTypeSection from "@/widgets/AIRecipeForm/DishTypeSection";
 import CookingTimeSection from "@/widgets/AIRecipeForm/CookingTimeSection";
 import ServingsCounter from "@/widgets/AIRecipeForm/ServingsCounter";
-import AIRecipeSubmitSection from "@/widgets/AIRecipeForm/AIRecipeSubmitSection";
+import AIRecipeProgressButton from "@/widgets/AIRecipeForm/AIRecipeProgressButton";
+import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 import { AIIngredientPayload } from "@/entities/ingredient";
 
 const IngredientRecipePage = () => {
@@ -42,13 +47,14 @@ const IngredientRecipePage = () => {
   const error = storeError ? { message: storeError } : null;
 
   const methods = useForm<AIRecipeFormValues>({
+    resolver: zodResolver(aiRecipeFormSchema),
     defaultValues: {
       ingredients: [],
       dishType: "",
       cookingTime: 0,
       servings: 1,
     },
-    mode: "onChange",
+    mode: "all",
   });
 
   const ingredients = useWatch({
@@ -139,7 +145,14 @@ const IngredientRecipePage = () => {
                 <ServingsCounter />
               </div>
             </div>
-            <AIRecipeSubmitSection isLoading={isPending} />
+            <UsageLimitSection>
+              {({ hasNoQuota }) => (
+                <AIRecipeProgressButton
+                  isLoading={isPending}
+                  disabled={hasNoQuota}
+                />
+              )}
+            </UsageLimitSection>
           </form>
 
           <IngredientSelector

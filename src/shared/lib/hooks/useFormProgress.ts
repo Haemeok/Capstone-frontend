@@ -11,8 +11,14 @@ export const useFormProgress = <T extends FieldValues>(
   schema: z.ZodObject<any>,
   options?: UseFormProgressOptions
 ) => {
-  const { control } = useFormContext<T>();
-  const formValues = useWatch({ control });
+  const { control, getValues } = useFormContext<T>();
+  const watchedValues = useWatch({ control });
+  // useWatch가 초기 렌더링 시 빈 객체를 반환하거나 undefined 값을 포함할 수 있음
+  // getValues()를 기본으로 하고, watchedValues에서 undefined가 아닌 값만 덮어씀
+  const definedWatchedValues = Object.fromEntries(
+    Object.entries(watchedValues).filter(([_, v]) => v !== undefined)
+  );
+  const formValues = { ...getValues(), ...definedWatchedValues };
 
   const fieldsSchema = schema.shape;
   const fieldNames = Object.keys(fieldsSchema);

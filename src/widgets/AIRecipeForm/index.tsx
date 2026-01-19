@@ -15,10 +15,11 @@ import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
 
 import AiCharacterSection from "./AiCharacterSection";
-import AIRecipeSubmitSection from "./AIRecipeSubmitSection";
+import AIRecipeProgressButton from "./AIRecipeProgressButton";
 import CookingTimeSection from "./CookingTimeSection";
 import DishTypeSection from "./DishTypeSection";
 import ServingsCounter from "./ServingsCounter";
+import UsageLimitSection from "./UsageLimitSection";
 
 const AIRecipeForm = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -70,7 +71,11 @@ const AIRecipeForm = () => {
               <ServingsCounter />
             </div>
           </div>
-          <AIRecipeSubmitSection isLoading={false} />
+          <UsageLimitSection>
+            {({ hasNoQuota }) => (
+              <AIRecipeProgressButton isLoading={false} disabled={hasNoQuota} />
+            )}
+          </UsageLimitSection>
         </form>
         <IngredientSelector
           open={isDrawerOpen}

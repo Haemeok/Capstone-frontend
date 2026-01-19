@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FieldValues, useFormContext } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 
 import { z } from "zod";
 
@@ -14,6 +14,7 @@ type FormProgressButtonProps = {
   onClick?: () => void;
   text: string;
   fieldLabels?: Record<string, string>;
+  disabled?: boolean;
 };
 
 export const FormProgressButton = <T extends FieldValues>({
@@ -22,14 +23,10 @@ export const FormProgressButton = <T extends FieldValues>({
   onClick,
   text,
   fieldLabels,
+  disabled,
 }: FormProgressButtonProps) => {
-  const { formState } = useFormContext<T>();
-  const { isValid } = formState;
-
-  const { progressPercentage, missingFieldLabels } = useFormProgress<T>(
-    schema,
-    { fieldLabels }
-  );
+  const { progressPercentage, missingFieldLabels, isComplete } =
+    useFormProgress<T>(schema, { fieldLabels });
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
@@ -41,8 +38,9 @@ export const FormProgressButton = <T extends FieldValues>({
       )}
       <ProgressButton
         progressPercentage={progressPercentage}
-        isFormValid={isValid}
+        isFormValid={isComplete}
         isLoading={isLoading}
+        disabled={disabled}
         onClick={onClick}
         text={text}
       />
