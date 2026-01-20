@@ -212,7 +212,7 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
 
               {playing && (
                 <iframe
-                  src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
+                  src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
                   title={title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
