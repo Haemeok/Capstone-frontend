@@ -1,13 +1,16 @@
 "use client";
 
+import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
 import { useUserStore } from "@/entities/user/model/store";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useLoginEncourageDrawerStore } from "@/widgets/LoginEncourageDrawer/model/store";
 
 type UseAuthenticatedActionOptions = {
   notifyOnly?: boolean;
+  drawerIcon?: ReactNode;
+  drawerMessage?: string;
 };
 
 const useAuthenticatedAction = <TVariables, TOptions, TResult = void>(
@@ -15,17 +18,15 @@ const useAuthenticatedAction = <TVariables, TOptions, TResult = void>(
   hookOptions?: UseAuthenticatedActionOptions
 ) => {
   const { user } = useUserStore();
-  const { addToast } = useToastStore();
-  const isAuthenticated = !!user;
+  const { openDrawer } = useLoginEncourageDrawerStore();
   const router = useRouter();
 
   return (variables: TVariables, options?: TOptions): TResult | undefined => {
-    if (!isAuthenticated) {
+    if (!user) {
       if (hookOptions?.notifyOnly) {
-        addToast({
-          message: "로그인이 필요합니다.",
-          variant: "default",
-          position: "bottom",
+        openDrawer({
+          icon: hookOptions.drawerIcon,
+          message: hookOptions.drawerMessage,
         });
         return undefined;
       }
