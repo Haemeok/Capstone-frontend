@@ -5,4 +5,7 @@ export * from "./TrendingRecipes";
 export * from "./TrendingRecipesSkeleton";
 export * from "./UsageGuide";
 export * from "./PendingRecipeCard";
+export * from "./PendingRecipeSection";
+export * from "./PlaceholderCard";
+export * from "./CircularProgress";
 export { default as DuplicateRecipeSection } from "./DuplicateRecipeSection";

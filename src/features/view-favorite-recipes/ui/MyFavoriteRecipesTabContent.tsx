@@ -12,7 +12,7 @@ import { BaseRecipesApiResponse } from "@/entities/recipe";
 import { getMyFavoriteItems } from "@/features/view-favorite-recipes";
 import {
   useYoutubeImportStore,
-  PendingRecipeCard,
+  PendingRecipeSection,
 } from "@/features/recipe-import-youtube";
 
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
@@ -46,16 +46,7 @@ const MyFavoriteRecipesTabContent = () => {
   return (
     <div>
       {hasPendingImports && (
-        <div className="mb-6">
-          <h3 className="text-olive-700 mb-3 text-sm font-semibold">
-            처리 중인 레시피
-          </h3>
-          <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(200px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
-            {pendingImportKeys.map((url) => (
-              <PendingRecipeCard key={url} url={url} />
-            ))}
-          </div>
-        </div>
+        <PendingRecipeSection pendingUrls={pendingImportKeys} />
       )}
       <RecipeGrid
         recipes={recipes}

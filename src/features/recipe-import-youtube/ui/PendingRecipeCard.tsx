@@ -1,13 +1,37 @@
 "use client";
 
-import React from "react";
+import { useState, useEffect } from "react";
 import { Image } from "@/shared/ui/image/Image";
 import { useYoutubeImportStore } from "../model/store";
-import { Loader2, XCircle, CheckCircle } from "lucide-react";
+import { XCircle, CheckCircle } from "lucide-react";
 import {
   extractYouTubeVideoId,
   getYouTubeThumbnailUrls,
 } from "@/shared/lib/youtube/getYouTubeThumbnail";
+import { CircularProgress } from "./CircularProgress";
+import { calculateFakeProgress } from "../lib/progress";
+
+type ImportStatus = "pending" | "success" | "error";
+
+const UPDATE_INTERVAL_MS = 2000;
+
+const useFakeProgress = (startTime: number, status: ImportStatus) => {
+  const [progress, setProgress] = useState(() =>
+    calculateFakeProgress(startTime)
+  );
+
+  useEffect(() => {
+    if (status !== "pending") return;
+
+    const interval = setInterval(() => {
+      setProgress(calculateFakeProgress(startTime));
+    }, UPDATE_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [startTime, status]);
+
+  return status === "success" ? 100 : progress;
+};
 
 type PendingRecipeCardProps = {
   url: string;
@@ -16,6 +40,11 @@ type PendingRecipeCardProps = {
 export const PendingRecipeCard = ({ url }: PendingRecipeCardProps) => {
   const importItem = useYoutubeImportStore((state) => state.imports[url]);
   const removeImport = useYoutubeImportStore((state) => state.removeImport);
+
+  const progress = useFakeProgress(
+    importItem?.startTime ?? Date.now(),
+    importItem?.status ?? "pending"
+  );
 
   if (!importItem) return null;
 
@@ -33,17 +62,18 @@ export const PendingRecipeCard = ({ url }: PendingRecipeCardProps) => {
           src={thumbnailUrl}
           alt={meta.title}
           aspectRatio="1 / 1"
-          imgClassName={`transition-opacity w-full h-full ${
-            status === "pending" ? "opacity-50" : "opacity-70"
-          }`}
+          imgClassName={`transition-opacity w-full h-full ${status === "pending" ? "opacity-50" : "opacity-70"
+            }`}
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black/40">
           <div className="space-y-3 px-4 text-center">
             {status === "pending" && (
-              <>
-                <Loader2 className="mx-auto h-10 w-10 animate-spin text-white" />
-                <p className="text-sm font-semibold text-white">분석 중...</p>
-              </>
+              <div className="relative mx-auto h-20 w-20">
+                <CircularProgress value={progress} size={80} strokeWidth={6} />
+                <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-white">
+                  {progress}%
+                </span>
+              </div>
             )}
             {status === "success" && (
               <>
