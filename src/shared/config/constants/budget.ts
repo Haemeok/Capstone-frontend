@@ -60,7 +60,7 @@ export const BUDGET_CATEGORIES: Record<number, CategoryOption[]> = {
       image: "seafood.webp",
       value: "해산물요리",
     },
-    { id: "alcohol", label: "홈술/안주", image: "random.webp", value: "술안주" },
+    { id: "alcohol", label: "홈술/안주", image: "drinking_snacks.webp", value: "술안주" },
     {
       id: "any",
       label: "아무거나 상관없어",
