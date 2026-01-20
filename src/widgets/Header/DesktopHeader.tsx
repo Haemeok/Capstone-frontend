@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
 import { User } from "lucide-react";
@@ -11,8 +12,12 @@ import { Image } from "@/shared/ui/image/Image";
 
 import { useUserStore } from "@/entities/user";
 
-import LoginDialog from "@/features/auth/ui/LoginDialog";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
+
+const LoginDialog = dynamic(
+  () => import("@/features/auth/ui/LoginDialog"),
+  { ssr: false }
+);
 
 import NotificationButton from "./NotificationButton";
 
