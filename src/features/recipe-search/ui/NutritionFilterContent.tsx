@@ -61,7 +61,7 @@ export const NutritionFilterContent = ({
   }, [values, types, onApply, onOpenChange]);
 
   const content = (
-    <div className="space-y-6 pb-4">
+    <div className="space-y-6">
       <RecipeTypeSelector
         selectedTypes={types}
         onTypesChange={handleTypesChange}
@@ -75,13 +75,6 @@ export const NutritionFilterContent = ({
       <div className="border-t pt-4">
         <NutritionSliders values={values} onValueChange={handleSliderChange} />
       </div>
-
-      <NutritionFilterActions
-        onReset={reset}
-        onApply={handleApply}
-        isResetDisabled={!isModified}
-        isMobile={isMobile}
-      />
     </div>
   );
 
@@ -93,7 +86,15 @@ export const NutritionFilterContent = ({
           <DrawerHeader>
             <DrawerTitle>필터</DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-8">{content}</div>
+          <div className="flex-1 overflow-y-auto px-4">{content}</div>
+          <div className="px-4 pb-8">
+            <NutritionFilterActions
+              onReset={reset}
+              onApply={handleApply}
+              isResetDisabled={!isModified}
+              isMobile={isMobile}
+            />
+          </div>
         </DrawerContent>
       </Drawer>
     );
@@ -111,7 +112,13 @@ export const NutritionFilterContent = ({
             </p>
           </div>
         </div>
-        <div className="max-h-[600px] overflow-y-auto">{content}</div>
+        <div className="max-h-[500px] overflow-y-auto">{content}</div>
+        <NutritionFilterActions
+          onReset={reset}
+          onApply={handleApply}
+          isResetDisabled={!isModified}
+          isMobile={isMobile}
+        />
       </PopoverContent>
     </Popover>
   );
