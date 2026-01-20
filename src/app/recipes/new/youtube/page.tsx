@@ -241,8 +241,8 @@ const YoutubeImportPage = () => {
             <div className="relative mx-auto w-full transition-all duration-300 hover:-translate-y-1">
               <div
                 className={`relative flex items-center overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] ring-1 transition-all focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:ring-2 ${errors.url
-                    ? "ring-red-500 focus-within:ring-red-500"
-                    : "focus-within:ring-olive-light ring-gray-100"
+                  ? "ring-red-500 focus-within:ring-red-500"
+                  : "focus-within:ring-olive-light ring-gray-100"
                   }`}
               >
                 <div className="pl-6 text-gray-400">
@@ -268,16 +268,7 @@ const YoutubeImportPage = () => {
               )}
             </div>
 
-            <div className="w-full overflow-hidden rounded-3xl bg-gray-50/50">
-              <Suspense
-                fallback={<TrendingRecipesSkeleton className="w-full" />}
-              >
-                <TrendingRecipes
-                  onSelect={handleTrendingSelect}
-                  className="w-full"
-                />
-              </Suspense>
-            </div>
+
           </div>
 
           {(isLoadingMeta ||
@@ -350,6 +341,16 @@ const YoutubeImportPage = () => {
               </div>
             )}
         </section>
+        <div className="mt-4 w-full overflow-hidden rounded-3xl bg-gray-50/50">
+          <Suspense
+            fallback={<TrendingRecipesSkeleton className="w-full" />}
+          >
+            <TrendingRecipes
+              onSelect={handleTrendingSelect}
+              className="w-full"
+            />
+          </Suspense>
+        </div>
       </div>
 
       <LoginEncourageDrawer

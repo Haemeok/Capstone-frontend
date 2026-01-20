@@ -153,7 +153,7 @@ const Phase3Accumulate = ({ data, onClose }: Phase3AccumulateProps) => {
         </div>
 
         <div className="mt-6 px-4">
-          <Link href={`/users/${user?.id}?tab=캘린더`} prefetch={false}>
+          <Link href={`/users/${user?.id}?tab=calendar`} prefetch={false}>
             <Button
               onClick={onClose}
               className="bg-olive-mint hover:bg-olive-dark w-full rounded-md py-3 text-white"
