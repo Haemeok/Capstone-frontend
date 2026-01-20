@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 
+import { cn } from "@/shared/lib/utils";
+
 import { useUserStore } from "@/entities/user";
 import { Image } from "../image";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
@@ -10,11 +12,13 @@ import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 type LoginPromotionBadgeProps = {
   variant: "desktop" | "mobile" | "mobile-detailed";
   children: React.ReactNode;
+  popupClassName?: string;
 };
 
 const LoginPromotionBadge = ({
   variant,
   children,
+  popupClassName,
 }: LoginPromotionBadgeProps) => {
   const { user } = useUserStore();
   const [isDesktopBadgeClosed, setIsDesktopBadgeClosed] = useState(false);
@@ -28,7 +32,12 @@ const LoginPromotionBadge = ({
       {children}
 
       {variant === "desktop" && !isDesktopBadgeClosed && (
-        <div className="animate-bounce-soft absolute top-12 right-0 z-[100] w-72 max-w-[calc(100vw-2rem)] transform rounded-lg border border-green-100 bg-white p-4 shadow-xl">
+        <div
+          className={cn(
+            "animate-bounce-soft absolute top-12 right-0 z-[100] w-72 max-w-[calc(100vw-2rem)] transform rounded-lg border border-green-100 bg-white p-4 shadow-xl",
+            popupClassName
+          )}
+        >
           <button
             onClick={() => setIsDesktopBadgeClosed(true)}
             className="absolute top-2 right-2 cursor-pointer text-gray-400 transition-colors hover:text-gray-600"
