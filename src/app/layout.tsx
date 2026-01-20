@@ -6,6 +6,7 @@ import { PWA_APP_INFO } from "@/shared/config/constants/pwa";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
+import GlobalLoginEncourageDrawer from "@/widgets/LoginEncourageDrawer/GlobalLoginEncourageDrawer";
 
 import { pretendard } from "./fonts";
 import { AppProviders } from "./providers/AppProviders";
@@ -83,6 +84,7 @@ export default async function RootLayout({
             {children}
           </main>
           <BottomNavBar />
+          <GlobalLoginEncourageDrawer />
         </AppProviders>
         <Analytics />
         <GoogleAnalytics />
