@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
@@ -13,26 +13,20 @@ const LoginDialog = dynamic(
   { ssr: false }
 );
 
-type LoginEncourageDrawerProps = {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  icon?: ReactNode;
-  message?: string;
-};
+import { useLoginEncourageDrawerStore } from "./model/store";
 
-const LoginEncourageDrawer = ({
-  isOpen,
-  onOpenChange,
-  icon,
-  message = "유튜브 레시피 편하게 요리하세요!",
-}: LoginEncourageDrawerProps) => {
+const DEFAULT_MESSAGE = "로그인하고 더 많은 기능을 이용해보세요!";
+
+const GlobalLoginEncourageDrawer = () => {
   const router = useRouter();
   const { Container, Content, Title } = useResponsiveSheet();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
+  const { isOpen, icon, message, closeDrawer } = useLoginEncourageDrawerStore();
+
   const handleCTAClick = () => {
-    onOpenChange(false);
+    closeDrawer();
 
     if (isMobile) {
       router.push("/login");
@@ -43,7 +37,7 @@ const LoginEncourageDrawer = ({
 
   return (
     <>
-      <Container open={isOpen} onOpenChange={onOpenChange}>
+      <Container open={isOpen} onOpenChange={(open) => !open && closeDrawer()}>
         <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md">
           <Title className="sr-only">로그인 필요</Title>
 
@@ -64,16 +58,19 @@ const LoginEncourageDrawer = ({
 
             <div className="mt-6 text-center">
               <p className="text-xl font-bold break-keep text-gray-700">
-                지금{" "}
-                <span className="text-olive-light">3초</span>만에 가입하고,
+                지금 <span className="text-olive-light">3초</span>만에 가입하고,
               </p>
               {icon ? (
                 <div className="mt-2 flex items-center justify-center gap-1">
                   {icon}
-                  <p className="text-xl font-bold text-gray-700">{message}</p>
+                  <p className="text-xl font-bold text-gray-700">
+                    {message || DEFAULT_MESSAGE}
+                  </p>
                 </div>
               ) : (
-                <p className="mt-2 text-xl font-bold text-gray-700">{message}</p>
+                <p className="mt-2 text-xl font-bold text-gray-700">
+                  {message || DEFAULT_MESSAGE}
+                </p>
               )}
             </div>
 
@@ -112,4 +109,4 @@ const LoginEncourageDrawer = ({
   );
 };
 
-export default LoginEncourageDrawer;
+export default GlobalLoginEncourageDrawer;
