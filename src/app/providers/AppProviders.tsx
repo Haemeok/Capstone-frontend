@@ -6,27 +6,32 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/shared/lib/queryClient";
 
-import { YoutubeExtractionPrompter } from "./YoutubeExtractionPrompter";
 import { AppStateInitializer } from "./AppStateInitializer";
+import { PostHogPageView } from "./PostHogPageView";
+import { PostHogProvider } from "./PostHogProvider";
 import { PWAFirstLoginPrompter } from "./PWAFirstLoginPrompter";
 import { PWAInstallProvider } from "./PWAInstallProvider";
 import { ScrollProvider } from "./ScrollProvider";
 import ToastProvider from "./ToastProvider";
 import { WebSocketProvider } from "./WebSocketProvider";
+import { YoutubeExtractionPrompter } from "./YoutubeExtractionPrompter";
 
 export const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <PWAInstallProvider>
-        <ScrollProvider>
-          <WebSocketProvider>
-            <AppStateInitializer>{children}</AppStateInitializer>
-            <ToastProvider />
-            <PWAFirstLoginPrompter />
-            <YoutubeExtractionPrompter />
-          </WebSocketProvider>
-        </ScrollProvider>
-      </PWAInstallProvider>
-    </QueryClientProvider>
+    <PostHogProvider>
+      <PostHogPageView />
+      <QueryClientProvider client={queryClient}>
+        <PWAInstallProvider>
+          <ScrollProvider>
+            <WebSocketProvider>
+              <AppStateInitializer>{children}</AppStateInitializer>
+              <ToastProvider />
+              <PWAFirstLoginPrompter />
+              <YoutubeExtractionPrompter />
+            </WebSocketProvider>
+          </ScrollProvider>
+        </PWAInstallProvider>
+      </QueryClientProvider>
+    </PostHogProvider>
   );
 };

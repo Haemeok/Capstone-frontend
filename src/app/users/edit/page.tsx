@@ -121,11 +121,10 @@ const UserInfoChangePage = () => {
             type="button"
             onClick={handleSubmit(onSubmit)}
             disabled={!isValid || isLoading}
-            className={`border-none bg-transparent text-base font-bold ${
-              isValid && !isLoading
+            className={`border-none bg-transparent text-base font-bold ${isValid && !isLoading
                 ? "text-olive-mint cursor-pointer"
                 : "cursor-default text-gray-400"
-            }`}
+              }`}
           >
             {isLoading ? "저장 중..." : "확인"}
           </button>
@@ -137,140 +136,137 @@ const UserInfoChangePage = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-grow flex-col pt-20 md:pt-0"
         >
-        <div className="relative z-[3] pl-4">
-          <label htmlFor="profileImageInput" className="cursor-pointer">
-            <div
-              className={`relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-cover bg-center ${
-                previewImageUrl ? "bg-transparent" : "bg-gray-300"
-              }`}
-              style={
-                previewImageUrl
-                  ? { backgroundImage: `url(${previewImageUrl})` }
-                  : {}
-              }
-            >
-              {!previewImageUrl && (
-                <Camera className="z-10 h-10 w-10 text-gray-500" />
-              )}
-            </div>
-          </label>
-          <Controller
-            name="profileImage"
-            control={control}
-            render={({ field: { onChange, value, ...restField } }) => (
-              <input
-                {...restField}
-                id="profileImageInput"
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setProfileImageFile(file);
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      setPreviewImageUrl(reader.result as string);
-                    };
-                    reader.readAsDataURL(file);
-                    onChange(e.target.files);
-                  } else {
-                    setProfileImageFile(null);
-                    setPreviewImageUrl(initialData.profileImageUrl);
-                    onChange(null);
-                  }
-                }}
-                className="hidden"
-              />
-            )}
-          />
-        </div>
-
-        <div className="mt-4 flex-grow p-4">
-          <div className="mb-6">
-            <label
-              htmlFor="nickname"
-              className="mb-1 block text-sm text-gray-600"
-            >
-              이름
+          <div className="relative z-[3] pl-4">
+            <label htmlFor="profileImageInput" className="cursor-pointer">
+              <div
+                className={`relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-cover bg-center ${previewImageUrl ? "bg-transparent" : "bg-gray-300"
+                  }`}
+                style={
+                  previewImageUrl
+                    ? { backgroundImage: `url(${previewImageUrl})` }
+                    : {}
+                }
+              >
+                {!previewImageUrl && (
+                  <Camera className="z-10 h-10 w-10 text-gray-500" />
+                )}
+              </div>
             </label>
             <Controller
-              name="nickname"
+              name="profileImage"
               control={control}
-              rules={{
-                required: "닉네임을 입력해주세요.",
-                maxLength: {
-                  value: MAX_NICKNAME_LENGTH,
-                  message: `닉네임은 ${MAX_NICKNAME_LENGTH}자 이하로 입력해주세요.`,
-                },
-              }}
-              render={({ field }) => (
+              render={({ field: { onChange, value, ...restField } }) => (
                 <input
-                  {...field}
-                  id="nickname"
-                  type="text"
-                  className={`w-full border-b border-none p-3 text-base focus:outline-none ${
-                    errors.nickname
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:border-blue-500"
-                  }`}
+                  {...restField}
+                  id="profileImageInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setProfileImageFile(file);
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setPreviewImageUrl(reader.result as string);
+                      };
+                      reader.readAsDataURL(file);
+                      onChange(e.target.files);
+                    } else {
+                      setProfileImageFile(null);
+                      setPreviewImageUrl(initialData.profileImageUrl);
+                      onChange(null);
+                    }
+                  }}
+                  className="hidden"
                 />
               )}
             />
-            <div className="mt-1 flex justify-between">
-              {errors.nickname && (
-                <p className="m-0 text-xs text-red-500">
-                  {errors.nickname.message}
-                </p>
-              )}
-              <p className="m-0 ml-auto text-xs text-gray-500">
-                {nickname?.length || 0}/{MAX_NICKNAME_LENGTH}
-              </p>
-            </div>
           </div>
 
-          <div className="mb-6">
-            <label
-              htmlFor="description"
-              className="mb-1 block text-sm text-gray-600"
-            >
-              소개
-            </label>
-            <Controller
-              name="description"
-              control={control}
-              rules={{
-                maxLength: {
-                  value: MAX_DESCRIPTION_LENGTH,
-                  message: `소개는 ${MAX_DESCRIPTION_LENGTH}자 이하로 입력해주세요.`,
-                },
-              }}
-              render={({ field }) => (
-                <textarea
-                  {...field}
-                  id="description"
-                  placeholder="소개를 입력해주세요."
-                  rows={3}
-                  className={`w-full resize-none border-b border-none p-3 text-base focus:outline-none ${
-                    errors.description
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:border-blue-500"
-                  }`}
-                />
-              )}
-            />
-            <div className="mt-1 flex justify-between">
-              {errors.description && (
-                <p className="m-0 text-xs text-red-500">
-                  {errors.description.message}
+          <div className="mt-4 flex-grow p-4">
+            <div className="mb-6">
+              <label
+                htmlFor="nickname"
+                className="mb-1 block text-sm text-gray-600"
+              >
+                이름
+              </label>
+              <Controller
+                name="nickname"
+                control={control}
+                rules={{
+                  required: "닉네임을 입력해주세요.",
+                  maxLength: {
+                    value: MAX_NICKNAME_LENGTH,
+                    message: `닉네임은 ${MAX_NICKNAME_LENGTH}자 이하로 입력해주세요.`,
+                  },
+                }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="nickname"
+                    type="text"
+                    className={`w-full rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:border-olive-light focus:bg-white focus:outline-none focus:ring-1 focus:ring-olive-light/20 ${errors.nickname
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-gray-200"
+                      }`}
+                  />
+                )}
+              />
+              <div className="mt-1 flex justify-between">
+                {errors.nickname && (
+                  <p className="m-0 text-xs text-red-500">
+                    {errors.nickname.message}
+                  </p>
+                )}
+                <p className="m-0 ml-auto text-xs text-gray-500">
+                  {nickname?.length || 0}/{MAX_NICKNAME_LENGTH}
                 </p>
-              )}
-              <p className="m-0 ml-auto text-xs text-gray-500">
-                {description?.length || 0}/{MAX_DESCRIPTION_LENGTH}
-              </p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label
+                htmlFor="description"
+                className="mb-1 block text-sm text-gray-600"
+              >
+                소개
+              </label>
+              <Controller
+                name="description"
+                control={control}
+                rules={{
+                  maxLength: {
+                    value: MAX_DESCRIPTION_LENGTH,
+                    message: `소개는 ${MAX_DESCRIPTION_LENGTH}자 이하로 입력해주세요.`,
+                  },
+                }}
+                render={({ field }) => (
+                  <textarea
+                    {...field}
+                    id="description"
+                    placeholder="소개를 입력해주세요."
+                    rows={3}
+                    className={`w-full resize-none rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:border-olive-light focus:bg-white focus:outline-none focus:ring-1 focus:ring-olive-light/20 ${errors.description
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-gray-200"
+                      }`}
+                  />
+                )}
+              />
+              <div className="mt-1 flex justify-between">
+                {errors.description && (
+                  <p className="m-0 text-xs text-red-500">
+                    {errors.description.message}
+                  </p>
+                )}
+                <p className="m-0 ml-auto text-xs text-gray-500">
+                  {description?.length || 0}/{MAX_DESCRIPTION_LENGTH}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
       </Container>
     </>
   );
