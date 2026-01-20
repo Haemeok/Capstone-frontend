@@ -88,6 +88,7 @@ export const RichToast = ({
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
+    e.preventDefault();
     currentY.current = e.touches[0].clientY;
     const offset = currentY.current - startY.current;
     if (offset > 0) {
@@ -115,6 +116,7 @@ export const RichToast = ({
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging) return;
+    e.preventDefault();
     currentY.current = e.clientY;
     const offset = currentY.current - startY.current;
     if (offset > 0) {
@@ -140,6 +142,10 @@ export const RichToast = ({
     ? `/recipes/${richContent.recipeId}`
     : undefined;
 
+  const handleLinkClick = () => {
+    removeToast(id);
+  };
+
   const toastContent = (
     <div
       className={cn(
@@ -153,6 +159,8 @@ export const RichToast = ({
       style={{
         transform: `translateY(${dragOffset}px)`,
         opacity: isDragging ? opacity : 1,
+        touchAction:
+          dismissible === "swipe" || dismissible === "both" ? "none" : "auto",
       }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -177,7 +185,7 @@ export const RichToast = ({
         <X className="h-5 w-5" />
       </button>
 
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3">
         {thumbnailUrl && (
           <div className="flex-shrink-0">
             <Image
@@ -190,11 +198,11 @@ export const RichToast = ({
           </div>
         )}
 
-        <div className="min-w-0 flex-1 space-y-1">
+        <div className="min-w-0 flex-1 space-y-1 overflow-hidden">
           {richContent?.title && (
             <div className="flex items-start gap-2 text-base leading-snug font-bold">
               {richContent.badgeIcon}
-              <span>{richContent.title}</span>
+              <span className="min-w-0 line-clamp-2">{richContent.title}</span>
             </div>
           )}
           {richContent?.subtitle && (
@@ -223,7 +231,9 @@ export const RichToast = ({
   );
 
   return isClickable && recipeUrl ? (
-    <Link href={recipeUrl}>{toastContent}</Link>
+    <Link href={recipeUrl} className="min-w-0 max-w-full" onClick={handleLinkClick}>
+      {toastContent}
+    </Link>
   ) : (
     toastContent
   );

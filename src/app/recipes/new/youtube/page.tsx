@@ -144,7 +144,7 @@ const YoutubeImportPage = () => {
         dismissible: "both",
         richContent: {
           thumbnail: youtubeMeta.thumbnailUrl,
-          title: "유튜브 레시피 추출이 완료 되었어요!",
+          title: "레시피 추출이 완료 되었어요!",
           subtitle: youtubeMeta.title,
           badgeIcon: <YouTubeIconBadge className="h-6 w-6" />,
           recipeId,
@@ -240,11 +240,10 @@ const YoutubeImportPage = () => {
           <div className="w-full space-y-8">
             <div className="relative mx-auto w-full transition-all duration-300 hover:-translate-y-1">
               <div
-                className={`relative flex items-center overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] ring-1 transition-all focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:ring-2 ${
-                  errors.url
+                className={`relative flex items-center overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] ring-1 transition-all focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:ring-2 ${errors.url
                     ? "ring-red-500 focus-within:ring-red-500"
                     : "focus-within:ring-olive-light ring-gray-100"
-                }`}
+                  }`}
               >
                 <div className="pl-6 text-gray-400">
                   <Search className="h-6 w-6" />
@@ -285,20 +284,20 @@ const YoutubeImportPage = () => {
             isFetchingMeta ||
             isCheckingDuplicate ||
             isFetchingDuplicate) && (
-            <div
-              ref={previewSectionRef}
-              className="mx-auto w-full animate-pulse rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
-            >
-              <div className="flex gap-4">
-                <Skeleton className="h-24 w-40 rounded-xl" />
-                <div className="flex-1 space-y-3 py-2">
-                  <Skeleton className="h-6 w-3/4 rounded-md" />
-                  <Skeleton className="h-4 w-1/2 rounded-md" />
+              <div
+                ref={previewSectionRef}
+                className="mx-auto w-full animate-pulse rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
+              >
+                <div className="flex gap-4">
+                  <Skeleton className="h-24 w-40 rounded-xl" />
+                  <div className="flex-1 space-y-3 py-2">
+                    <Skeleton className="h-6 w-3/4 rounded-md" />
+                    <Skeleton className="h-4 w-1/2 rounded-md" />
+                  </div>
                 </div>
+                <Skeleton className="mt-6 h-14 w-full rounded-xl" />
               </div>
-              <Skeleton className="mt-6 h-14 w-full rounded-xl" />
-            </div>
-          )}
+            )}
 
           {validatedUrl && !isLoadingMeta && !youtubeMeta && (
             <div className="animate-fade-in mx-auto w-full rounded-2xl bg-red-50/80 p-6 text-center text-red-600">
