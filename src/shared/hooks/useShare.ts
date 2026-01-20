@@ -1,5 +1,6 @@
 "use client";
 
+import { isAppWebView, triggerNativeShare } from "@/shared/lib/bridge";
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 type UseShareProps = {
@@ -18,6 +19,13 @@ export const useShare = () => {
   }: UseShareProps = {}) => {
     const shareUrl = url || window.location.href;
 
+    // WebView 환경: 네이티브 공유로 위임
+    if (isAppWebView()) {
+      triggerNativeShare({ title, text, url: shareUrl });
+      return;
+    }
+
+    // 웹 환경: 기존 로직 유지
     if (navigator.share) {
       try {
         await navigator.share({
