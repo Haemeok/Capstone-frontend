@@ -24,7 +24,7 @@ const ActionButton = ({
 
   if (!isLoggedIn && isGuest) {
     return (
-      <LoginPromotionBadge variant="desktop">
+      <LoginPromotionBadge variant="desktop" popupClassName="md:hidden">
         <Button
           asChild
           className="bg-white border border-olive-light hover:bg-olive-light/10 rounded-full px-6 text-olive-light"

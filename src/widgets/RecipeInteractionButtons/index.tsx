@@ -2,6 +2,7 @@
 
 import SaveButton from "@/shared/ui/SaveButton";
 import ShareButton from "@/shared/ui/ShareButton";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useToggleRecipeFavorite } from "@/features/recipe-favorite";
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
@@ -31,6 +32,8 @@ const RecipeInteractionButtons = ({
   const { addToast } = useToastStore();
 
   const handleToggleFavorite = () => {
+    triggerHaptic("Medium");
+
     const message = initialIsFavorite
       ? "즐겨찾기에서 삭제했습니다."
       : "즐겨찾기에 추가했습니다.";
