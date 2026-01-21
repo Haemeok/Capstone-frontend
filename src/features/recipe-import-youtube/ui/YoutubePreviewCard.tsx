@@ -25,9 +25,8 @@ export const YoutubePreviewCard = ({
 
   return (
     <div
-      className={`mx-auto w-full max-w-2xl rounded-xl border bg-white p-4 shadow-sm duration-300 ${
-        disabled ? "border-gray-300 opacity-60" : "border-gray-200"
-      }`}
+      className={`mx-auto w-full max-w-2xl rounded-xl border bg-white p-4 shadow-sm duration-300 ${disabled ? "border-gray-300 opacity-60" : "border-gray-200"
+        }`}
     >
       <div className="mb-4 flex gap-4">
         <Image
@@ -50,11 +49,10 @@ export const YoutubePreviewCard = ({
       <button
         onClick={onConfirm}
         disabled={isLoading || disabled}
-        className={`w-full rounded-lg border-1 py-3 font-medium transition-colors ${
-          disabled
+        className={`w-full cursor-pointer rounded-lg border-1 py-3 font-medium transition-colors ${disabled
             ? "cursor-not-allowed border-gray-300 bg-gray-100 text-gray-400"
             : "border-olive-light text-olive-light hover:bg-olive-light/10 disabled:cursor-not-allowed disabled:opacity-50"
-        }`}
+          }`}
       >
         {isLoading ? (
           <span className="text-olive-light flex items-center justify-center gap-2">
