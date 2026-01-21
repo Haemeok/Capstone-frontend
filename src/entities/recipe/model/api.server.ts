@@ -10,6 +10,7 @@ import {
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   StaticRecipe,
+  TrendingYoutubeRecipe,
 } from "./types";
 
 export const getRecipesOnServer = async (
@@ -297,6 +298,35 @@ export const getRecommendedRecipesOnServer = async (
   } catch (error) {
     console.error(`[getStaticRecipesOnServer] Failed to fetch recipes:`, error);
 
+    return [];
+  }
+};
+
+const TRENDING_REVALIDATE_TIME_SECONDS = 1800;
+
+export const getTrendingYoutubeRecipesOnServer = async (): Promise<
+  TrendingYoutubeRecipe[]
+> => {
+  const API_URL = `${BASE_API_URL}/recipes/youtube/recommend`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: TRENDING_REVALIDATE_TIME_SECONDS,
+        tags: [CACHE_TAGS.recipesAll],
+      },
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(
+      "[getTrendingYoutubeRecipesOnServer] Failed to fetch trending recipes:",
+      error
+    );
     return [];
   }
 };
