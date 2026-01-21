@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 
-import { Star } from "lucide-react";
-
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
+import { StarIcon } from "@/shared/ui/icons";
 import { Image } from "@/shared/ui/image/Image";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
@@ -69,7 +68,7 @@ const DetailedRecipeGridItem = ({
           </p>
 
           <div className="flex items-center gap-[2px]">
-            <Star size={15} className="fill-gray-800" />
+            <StarIcon size={15} className="fill-gray-800" />
             <p className="text-mm text-gray-800">{recipe.avgRating}</p>
             <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
             {recipe.cookingTime != null && (
