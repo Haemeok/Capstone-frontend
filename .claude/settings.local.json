@@ -10,7 +10,10 @@
       "Bash(find:*)",
       "Read(//c/Users/for/Desktop/haemeok-next/**)",
       "Bash(done)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(npx tsc:*)",
+      "Bash(dir /s \"C:\\\\Users\\\\for\\\\Desktop\\\\haemeok-next\\\\src\\\\app\\\\recipes\\\\[recipeId]\\\\components\")",
+      "Bash(npx eslint:*)"
     ],
     "deny": [],
     "ask": []
