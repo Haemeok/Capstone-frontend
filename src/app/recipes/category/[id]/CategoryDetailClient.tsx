@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
@@ -14,12 +15,23 @@ import { Container } from "@/shared/ui/Container";
 import HomeBanner from "@/shared/ui/HomeBanner";
 import PrevButton from "@/shared/ui/PrevButton";
 import RecipeSortButton from "@/shared/ui/RecipeSortButton";
-import SortPicker from "@/shared/ui/SortPicker";
 
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
 
-import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
+import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
+
+const SortPicker = dynamic(() => import("@/shared/ui/SortPicker"), {
+  ssr: false,
+});
+
+const RecipeGrid = dynamic(
+  () => import("@/widgets/RecipeGrid/ui/RecipeGrid"),
+  {
+    loading: () => <RecipeGridSkeleton count={6} />,
+    ssr: false,
+  }
+);
 
 const CategoryDetailClient = () => {
   const { id: tagCode } = useParams<{ id: TagCode }>();
