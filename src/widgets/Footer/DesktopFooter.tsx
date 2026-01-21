@@ -16,6 +16,11 @@ const FOOTER_LINKS = {
       external: true,
     },
     { label: "광고/제휴 문의", href: "/contact" },
+    {
+      label: "저작권 신고 및 게시 중단 요청",
+      href: "https://docs.google.com/forms/d/e/1FAIpQLSdVUjr7LsnvG-WVG46cBhQOOUJN82irzTaKVS2Uthl6qKZgVg/viewform?usp=publish-editor",
+      external: true,
+    },
   ],
 } as const;
 

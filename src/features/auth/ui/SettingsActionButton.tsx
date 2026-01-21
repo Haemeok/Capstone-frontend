@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { LogOut, Settings, FileText } from "lucide-react";
+import { LogOut, Settings, FileText, AlertTriangle } from "lucide-react";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
@@ -63,6 +63,15 @@ const SettingsActionButton = () => {
               >
                 <span aria-hidden="true">🐛</span>
                 <span>오류제보</span>
+              </a>
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdVUjr7LsnvG-WVG46cBhQOOUJN82irzTaKVS2Uthl6qKZgVg/viewform?usp=publish-editor"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                <AlertTriangle size={16} aria-hidden="true" />
+                <span>저작권 신고 및 게시 중단 요청</span>
               </a>
             </div>
 
