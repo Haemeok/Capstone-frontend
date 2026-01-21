@@ -44,7 +44,7 @@ export const TrendingRecipes = ({
 
   useEffect(() => {
     updateScrollButtons();
-  }, []);
+  }, [trendingRecipes]);
 
   const handlePrev = () => {
     if (!scrollContainerRef.current) return;
