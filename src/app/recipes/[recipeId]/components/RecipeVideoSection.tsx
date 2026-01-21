@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Pin } from "lucide-react";
-import { motion } from "motion/react";
 
 import {
   YouTubeVideoPlayer,
@@ -165,10 +164,11 @@ export default function RecipeVideoSection({
               )}
               aria-label={isSticky ? "영상 고정 해제" : "영상 고정"}
             >
-              <motion.div
-                animate={{ rotate: isSticky ? 45 : 0 }}
-                className="flex items-center justify-center gap-1"
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              <div
+                className={cn(
+                  "flex items-center justify-center gap-1 transition-transform duration-300",
+                  isSticky && "rotate-45"
+                )}
               >
                 {!isSticky && (
                   <span className="text-sm font-medium">영상 고정</span>
@@ -179,7 +179,7 @@ export default function RecipeVideoSection({
                     isSticky ? "text-primary-foreground" : "text-red-400"
                   )}
                 />
-              </motion.div>
+              </div>
             </Button>
           </div>
 
