@@ -1,6 +1,7 @@
 "use client";
 
 import HeartButton from "@/shared/ui/HeartButton";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useLikeCommentMutation } from "@/features/comment-like";
 
@@ -23,6 +24,7 @@ const CommentLikeButton = ({
   );
 
   const handleClick = () => {
+    triggerHaptic("Light");
     toggleLikeMutate();
   };
 

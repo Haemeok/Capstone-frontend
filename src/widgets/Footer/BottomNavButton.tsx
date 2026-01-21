@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 type BottomNavButtonProps = {
   icon: React.ReactNode;
   label: string;
@@ -23,7 +25,10 @@ const BottomNavButton = ({
   return (
     <Link
       href={path}
-      onClick={onClick}
+      onClick={(e) => {
+        triggerHaptic("Light");
+        onClick?.(e);
+      }}
       className={`flex cursor-pointer flex-col items-center ${
         isActive ? "text-olive-light" : "text-gray-400"
       }`}

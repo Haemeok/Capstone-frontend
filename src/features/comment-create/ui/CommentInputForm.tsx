@@ -6,6 +6,7 @@ import { ArrowUp } from "lucide-react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 import { Image } from "@/shared/ui/image/Image";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { User } from "@/entities/user";
 
 type CommentInputFormProps = {
@@ -53,6 +54,7 @@ const CommentInputForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!comment.trim()) return;
+    triggerHaptic("Light");
     onSubmit(comment);
     setComment("");
   };

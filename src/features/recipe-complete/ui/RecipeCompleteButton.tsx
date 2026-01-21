@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 
 import { formatNumber } from "@/shared/lib/format";
 import { cn } from "@/lib/utils";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useRecipeComplete } from "../model/hooks";
 import { LevelUpModal } from "@/features/level-up";
@@ -24,6 +25,7 @@ const RecipeCompleteButton = ({
 
   const handleClick = () => {
     if (isCompleted || isLoading) return;
+    triggerHaptic("Success");
     completeRecipe();
   };
 

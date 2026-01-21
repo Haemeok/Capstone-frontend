@@ -3,6 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 
 import HeartButton from "@/shared/ui/HeartButton";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { RecipeStatus } from "@/entities/recipe/model/types";
 
@@ -43,11 +44,16 @@ const RecipeLikeButton = ({
   const isLiked = currentStatus?.likedByCurrentUser ?? initialIsLiked;
   const likeCount = currentStatus?.likeCount ?? initialLikeCount;
 
+  const handleLikeClick = () => {
+    triggerHaptic("Light");
+    toggleLikeMutate();
+  };
+
   return (
     <HeartButton
       isLiked={isLiked}
       likeCount={likeCount}
-      onClick={toggleLikeMutate}
+      onClick={handleLikeClick}
       containerClassName={containerClassName}
       buttonClassName={buttonClassName}
       iconClassName={iconClassName}

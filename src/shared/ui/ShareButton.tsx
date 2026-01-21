@@ -4,6 +4,7 @@ import { Share2 } from "lucide-react";
 
 import { useShare } from "@/shared/hooks/useShare";
 import { cn } from "@/shared/lib/utils";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 type ShareButtonProps = {
   className?: string;
@@ -24,6 +25,7 @@ const ShareButton = ({
   const { share } = useShare();
 
   const handleShareClick = () => {
+    triggerHaptic("Light");
     share({ title, text, url });
   };
 
