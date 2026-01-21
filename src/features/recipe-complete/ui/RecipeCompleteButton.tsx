@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
 
 import { formatNumber } from "@/shared/lib/format";
@@ -7,8 +8,12 @@ import { cn } from "@/lib/utils";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useRecipeComplete } from "../model/hooks";
-import { LevelUpModal } from "@/features/level-up";
 import { useRecipeStatus } from "@/features/recipe-status";
+
+const LevelUpModal = dynamic(
+  () => import("@/features/level-up").then((mod) => mod.LevelUpModal),
+  { ssr: false }
+);
 
 type RecipeCompleteButtonProps = {
   saveAmount: number;

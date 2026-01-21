@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import { aiModels, AIModelId } from "@/shared/config/constants/aiModel";
 import { Image } from "@/shared/ui/image/Image";
 import { useUserStore } from "@/entities/user/model/store";
-import LoginEncourageDrawer from "@/widgets/LoginEncourageDrawer";
+
+const LoginEncourageDrawer = dynamic(
+  () => import("@/widgets/LoginEncourageDrawer"),
+  { ssr: false }
+);
 
 const AIModelSelection = () => {
   const router = useRouter();
