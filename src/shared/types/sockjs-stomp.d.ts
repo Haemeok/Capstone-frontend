@@ -2,6 +2,11 @@ declare global {
   interface Window {
     SockJS: typeof SockJS;
     Stomp: typeof Stomp;
+    gapi?: {
+      ytsubscribe?: {
+        go: () => void;
+      };
+    };
   }
 }
 

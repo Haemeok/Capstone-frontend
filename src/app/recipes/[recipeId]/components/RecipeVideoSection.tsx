@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Pin } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -12,6 +12,7 @@ import {
 import { Button } from "@/shared/ui/shadcn/button";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
+import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 type VideoPlayerContextType = {
   seekToTimeline: (timeline: string) => void;
@@ -30,6 +31,7 @@ type YoutubeMetadata = {
   channelProfileUrl?: string;
   subscriberCount?: number;
   thumbnailUrl?: string;
+  channelId?: string;
 };
 
 type RecipeVideoSectionProps = {
@@ -61,6 +63,23 @@ export default function RecipeVideoSection({
   const toggleSticky = () => {
     setIsSticky(!isSticky);
   };
+
+  useEffect(() => {
+    if (!youtubeMetadata?.channelId) return;
+
+    const existingScript = document.querySelector(
+      'script[src="https://apis.google.com/js/platform.js"]'
+    );
+
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = "https://apis.google.com/js/platform.js";
+      script.async = true;
+      document.body.appendChild(script);
+    } else if (window.gapi?.ytsubscribe) {
+      window.gapi.ytsubscribe.go();
+    }
+  }, [youtubeMetadata?.channelId]);
 
   const shouldShowYoutubeInfo =
     !isSticky &&
@@ -121,6 +140,14 @@ export default function RecipeVideoSection({
                     </span>
                   )}
                 </div>
+                {youtubeMetadata.channelId && (
+                  <div
+                    className="g-ytsubscribe shrink-0"
+                    data-channelid={youtubeMetadata.channelId}
+                    data-layout="default"
+                    data-count="hidden"
+                  />
+                )}
               </div>
             ) : (
               !isSticky && <div />
@@ -163,7 +190,26 @@ export default function RecipeVideoSection({
             )}
           >
             <YouTubeVideoPlayer ref={playerRef} videoUrl={videoUrl} />
+            <a
+              href={videoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute z-20 right-2 bottom-2 flex items-center gap-1 rounded-lg bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+            >
+              <YouTubeIconBadge className="h-5 w-5" />
+              <span>원본 영상</span>
+            </a>
           </div>
+          {!isSticky && (
+            <div className="flex flex-col items-center justify-center">
+              <p className="mt-2 text-center text-xs text-gray-500">
+                이 영상은 유튜브 공식 플레이어로 재생되며,
+              </p>
+              <p className="text-center text-xs text-gray-500">
+                조회수와 수익은 100% 원작자에게 돌아갑니다.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
