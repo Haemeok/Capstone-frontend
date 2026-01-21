@@ -119,7 +119,15 @@ const YoutubeImportPage = () => {
     !isCheckingDuplicate &&
     !isFetchingDuplicate;
 
-  const previewSectionRef = useAutoScrollOnMobile(!!hasYoutubeData, 500);
+  const isShowingPreviewSection =
+    isLoadingMeta ||
+    isFetchingMeta ||
+    isCheckingDuplicate ||
+    isFetchingDuplicate ||
+    (validatedUrl && !youtubeMeta) ||
+    hasYoutubeData;
+
+  const previewSectionRef = useAutoScrollOnMobile(!!isShowingPreviewSection, 500);
 
   const handleConfirmImport = async () => {
     if (!validatedUrl || !videoId || !youtubeMeta) return;
@@ -271,12 +279,12 @@ const YoutubeImportPage = () => {
 
           </div>
 
+          <div ref={previewSectionRef}>
           {(isLoadingMeta ||
             isFetchingMeta ||
             isCheckingDuplicate ||
             isFetchingDuplicate) && (
               <div
-                ref={previewSectionRef}
                 className="mx-auto w-full animate-pulse rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
               >
                 <div className="flex gap-4">
@@ -340,6 +348,7 @@ const YoutubeImportPage = () => {
                 />
               </div>
             )}
+          </div>
         </section>
         <div className="mt-4 w-full overflow-hidden rounded-3xl bg-gray-50/50">
           <Suspense
