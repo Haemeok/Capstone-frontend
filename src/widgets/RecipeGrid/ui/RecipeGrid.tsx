@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useCallback,useState } from "react";
+import React, { useCallback, useState } from "react";
 import Link from "next/link";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Pencil, Trash } from "lucide-react";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { PencilIcon, TrashIcon } from "@/shared/ui/icons";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
@@ -256,9 +256,9 @@ const RecipeGrid = ({
                     : "flex w-full cursor-pointer justify-center gap-2 px-6 py-4 transition-colors hover:bg-gray-50"
                 }
               >
-                {!isMobile && <Pencil size={20} />}
+                {!isMobile && <PencilIcon size={20} />}
                 <p>수정</p>
-                {isMobile && <Pencil size={20} />}
+                {isMobile && <PencilIcon size={20} />}
               </Link>
               <div
                 className={
@@ -275,9 +275,9 @@ const RecipeGrid = ({
                 }
                 onClick={handleDeleteModalOpen}
               >
-                {!isMobile && <Trash size={20} />}
+                {!isMobile && <TrashIcon size={20} />}
                 <p>삭제</p>
-                {isMobile && <Trash size={20} />}
+                {isMobile && <TrashIcon size={20} />}
               </button>
             </div>
           </Content>

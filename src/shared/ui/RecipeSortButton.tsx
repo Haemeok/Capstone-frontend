@@ -1,8 +1,7 @@
 import React from "react";
 
-import { ChevronDown } from "lucide-react";
-
 import { cn } from "@/shared/lib/utils";
+import { ChevronDownIcon } from "@/shared/ui/icons";
 
 type RecipeSortButtonProps = {
   currentSort: string;
@@ -37,7 +36,7 @@ const RecipeSortButton = ({
       >
         {currentSort}
       </p>
-      <ChevronDown
+      <ChevronDownIcon
         className={cn(isDirty ? "text-white" : "text-dark-light")}
         size={20}
       />
