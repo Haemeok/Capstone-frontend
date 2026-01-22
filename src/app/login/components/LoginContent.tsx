@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
+import AppleLoginButton from "@/features/auth/ui/AppleLoginButton";
 import GoogleLoginButton from "@/features/auth/ui/GoogleLoginButton";
 import KakaoLoginButton from "@/features/auth/ui/KakaoLoginButton";
 import NaverLoginButton from "@/features/auth/ui/NaverLoginButton";
@@ -40,6 +41,7 @@ const LoginContent = () => {
         </div>
 
         <div className="w-full max-w-md space-y-4">
+          <AppleLoginButton />
           <GoogleLoginButton />
           <NaverLoginButton />
           <KakaoLoginButton />

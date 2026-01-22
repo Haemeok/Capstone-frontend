@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 
 import crypto from "crypto";
 
+import { getBaseUrl } from "@/shared/lib/env/getBaseUrl";
+
 export async function GET() {
   try {
     const state = crypto.randomBytes(16).toString("hex");
@@ -10,10 +12,10 @@ export async function GET() {
       "https://accounts.google.com/o/oauth2/v2/auth"
     );
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = getBaseUrl();
     const googleClientId = process.env.GOOGLE_CLIENT_ID;
 
-    if (!baseUrl || !googleClientId) {
+    if (!googleClientId) {
       throw new Error("환경 변수가 설정되지 않았습니다.");
     }
 

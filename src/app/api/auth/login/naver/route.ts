@@ -2,16 +2,18 @@ import { NextResponse } from "next/server";
 
 import crypto from "crypto";
 
+import { getBaseUrl } from "@/shared/lib/env/getBaseUrl";
+
 export async function GET() {
   try {
     const state = crypto.randomBytes(16).toString("hex");
 
     const naverAuthUrl = new URL("https://nid.naver.com/oauth2.0/authorize");
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = getBaseUrl();
     const naverClientId = process.env.NAVER_CLIENT_ID;
 
-    if (!baseUrl || !naverClientId) {
+    if (!naverClientId) {
       throw new Error("환경 변수가 설정되지 않았습니다.");
     }
 

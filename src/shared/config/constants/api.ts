@@ -60,6 +60,7 @@ export const END_POINTS = {
   RECIPES_BY_TAG: () => "/recipes/by-tag",
   MY_SURVEY: "/me/survey",
   GOOGLE_LOGIN_API_ROUTE: "/api/auth/login/google",
+  APPLE_LOGIN: "/api/auth/login/apple",
 };
 
 export const USER_ERROR_MESSAGE = {

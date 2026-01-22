@@ -18,13 +18,11 @@ import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
-import { useToastStore } from "@/shared/model/toastStore";
 
 const BudgetRecipe = () => {
   const router = useRouter();
   const [budget, setBudget] = useState(BUDGET_DEFAULT);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const showToast = useToastStore((state) => state.showToast);
 
   const {
     generationState,
@@ -39,10 +37,7 @@ const BudgetRecipe = () => {
   const error = storeError ? { message: storeError } : null;
 
   const handleGenerateRecipe = () => {
-    if (!selectedCategory) {
-      showToast("음식 종류를 선택해주세요!", "error");
-      return;
-    }
+    if (!selectedCategory) return;
 
     const request: CostEffectiveRequest = {
       targetBudget: budget,
