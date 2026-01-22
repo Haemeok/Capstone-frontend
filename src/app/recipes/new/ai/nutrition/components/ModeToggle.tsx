@@ -1,5 +1,7 @@
 "use client";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { NutritionMode } from "../constants";
 
 type ModeToggleProps = {
@@ -8,11 +10,18 @@ type ModeToggleProps = {
 };
 
 const ModeToggle = ({ mode, onModeChange }: ModeToggleProps) => {
+  const handleModeChange = (newMode: NutritionMode) => {
+    if (mode !== newMode) {
+      triggerHaptic("Light");
+      onModeChange(newMode);
+    }
+  };
+
   return (
     <div className="flex rounded-xl bg-gray-100 p-1">
       <button
         type="button"
-        onClick={() => onModeChange("MACRO")}
+        onClick={() => handleModeChange("MACRO")}
         className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all ${
           mode === "MACRO"
             ? "text-olive-light bg-white shadow-sm"
@@ -23,7 +32,7 @@ const ModeToggle = ({ mode, onModeChange }: ModeToggleProps) => {
       </button>
       <button
         type="button"
-        onClick={() => onModeChange("CALORIE")}
+        onClick={() => handleModeChange("CALORIE")}
         className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all ${
           mode === "CALORIE"
             ? "text-olive-light bg-white shadow-sm"

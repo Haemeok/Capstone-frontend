@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import { Control, Controller } from "react-hook-form";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { Slider } from "@/shared/ui/shadcn/slider";
 
 import { getGuidanceMessage, NutritionFormValues } from "../constants";
@@ -28,6 +30,8 @@ const MacroSlider = ({
   step,
   defaultValue,
 }: MacroSliderProps) => {
+  const lastStepRef = useRef<number | null>(null);
+
   return (
     <Controller
       control={control}
@@ -37,7 +41,20 @@ const MacroSlider = ({
         const sliderValue = isUnlimited ? 0 : Number(field.value) || 0;
 
         const handleSliderChange = (vals: number[]) => {
-          field.onChange(vals[0].toString());
+          const newValue = vals[0];
+          const currentStep = Math.floor(newValue / step);
+
+          if (lastStepRef.current !== null && currentStep !== lastStepRef.current) {
+            triggerHaptic("Light");
+          }
+          lastStepRef.current = currentStep;
+
+          field.onChange(newValue.toString());
+        };
+
+        const handleToggle = () => {
+          triggerHaptic("Light");
+          field.onChange(isUnlimited ? defaultValue : "제한 없음");
         };
 
         const guidance = !isUnlimited
@@ -65,9 +82,7 @@ const MacroSlider = ({
                   </span>
                   <button
                     type="button"
-                    onClick={() =>
-                      field.onChange(isUnlimited ? defaultValue : "제한 없음")
-                    }
+                    onClick={handleToggle}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                       isUnlimited ? "bg-olive-light" : "bg-gray-300"
                     }`}
