@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getBaseUrl } from "@/shared/lib/env/getBaseUrl";
+import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
       throw new Error("Authorization code not found.");
     }
 
-    const xEnv = process.env.NODE_ENV === "development" ? "local" : "prod";
+    const xEnv = getEnvHeader();
 
     const requestBody: { code: string; state: string; user?: string } = {
       code,

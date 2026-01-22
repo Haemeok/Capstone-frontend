@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getBaseUrl } from "@/shared/lib/env/getBaseUrl";
+import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
       throw new Error("Authorization code not found.");
     }
 
-    const xEnv = process.env.NODE_ENV === "development" ? "local" : "prod";
+    const xEnv = getEnvHeader();
 
     const backendRes = await fetch(
       `https://api.recipio.kr/login/oauth2/code/google`,
