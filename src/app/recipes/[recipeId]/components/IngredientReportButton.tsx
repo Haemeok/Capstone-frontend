@@ -16,7 +16,7 @@ export const IngredientReportButton = ({
       type="button"
       onClick={onToggle}
       className={cn(
-        "text-sm font-medium transition-colors cursor-pointer",
+        "text-sm font-medium transition-colors cursor-pointer hidden",
         isReportMode
           ? "text-olive-light"
           : "text-gray-400 hover:text-gray-600"
