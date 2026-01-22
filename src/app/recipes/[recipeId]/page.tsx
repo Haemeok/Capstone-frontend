@@ -88,12 +88,12 @@ export default async function RecipeDetailPage({
 
   const youtubeMetadata = staticRecipe.youtubeChannelName
     ? {
-        channelName: staticRecipe.youtubeChannelName,
-        videoTitle: staticRecipe.youtubeVideoTitle,
-        channelProfileUrl: staticRecipe.youtubeChannelProfileUrl,
-        subscriberCount: staticRecipe.youtubeSubscriberCount,
-        thumbnailUrl: staticRecipe.youtubeThumbnailUrl,
-      }
+      channelName: staticRecipe.youtubeChannelName,
+      videoTitle: staticRecipe.youtubeVideoTitle,
+      channelProfileUrl: staticRecipe.youtubeChannelProfileUrl,
+      subscriberCount: staticRecipe.youtubeSubscriberCount,
+      thumbnailUrl: staticRecipe.youtubeThumbnailUrl,
+    }
     : undefined;
 
   return (
