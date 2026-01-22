@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { ChefHat, ArrowLeft } from "lucide-react";
 
 import DifficultyTierSelector from "./DifficultyTierSelector";
 import FineDiningIngredientManager from "./FineDiningIngredientManager";
@@ -16,9 +15,12 @@ import AIRecipeComplete from "@/widgets/AIRecipeComplete";
 import AIRecipeError from "@/widgets/AIRecipeError";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 import { Container } from "@/shared/ui/Container";
+import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
 import { AIIngredientPayload } from "@/entities/ingredient";
+
+const MIN_FINE_DINING_INGREDIENTS = 3;
 
 type FineDiningFormValues = {
   ingredients: Array<{ id: string; name: string }>;
@@ -116,7 +118,9 @@ const FineDiningRecipe = () => {
     );
   }
 
-  const isFormValid = (ingredients?.length ?? 0) >= 3 && diningTier !== null;
+  const isFormValid =
+    (ingredients?.length ?? 0) >= MIN_FINE_DINING_INGREDIENTS &&
+    diningTier !== null;
 
   return (
     <Container padding={false}>
@@ -128,7 +132,7 @@ const FineDiningRecipe = () => {
               onClick={() => router.back()}
               className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
             >
-              <ArrowLeft size={20} />
+              <ArrowLeftIcon size={20} />
               <span className="text-sm font-medium">AI 다시 선택하기</span>
             </button>
           </div>
@@ -149,7 +153,7 @@ const FineDiningRecipe = () => {
                 disabled={hasNoQuota || !isFormValid}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:hover:shadow-lg"
               >
-                <ChefHat className="h-6 w-6" />
+                <ChefHatIcon className="h-6 w-6" />
                 <span>레시피 생성하기</span>
               </button>
             )}

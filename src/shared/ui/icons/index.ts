@@ -1,4 +1,11 @@
+export { default as ArrowLeftIcon } from "./ArrowLeftIcon";
+export { default as ChefHatIcon } from "./ChefHatIcon";
+export { default as CheckIcon } from "./CheckIcon";
 export { default as ChevronDownIcon } from "./ChevronDownIcon";
-export { default as StarIcon } from "./StarIcon";
 export { default as PencilIcon } from "./PencilIcon";
+export { default as SearchIcon } from "./SearchIcon";
+export { default as SparklesIcon } from "./SparklesIcon";
+export { default as StarIcon } from "./StarIcon";
 export { default as TrashIcon } from "./TrashIcon";
+export { default as TrendingDownIcon } from "./TrendingDownIcon";
+export { default as XIcon } from "./XIcon";

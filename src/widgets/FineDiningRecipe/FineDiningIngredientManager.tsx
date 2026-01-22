@@ -1,7 +1,7 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { Search, X } from "lucide-react";
 
 import { INGREDIENT_BLACK_IMAGE_URL } from "@/shared/config/constants/recipe";
+import { SearchIcon, XIcon } from "@/shared/ui/icons";
 import { Image } from "@/shared/ui/image/Image";
 
 type FineDiningIngredientManagerProps = {
@@ -51,10 +51,9 @@ const FineDiningIngredientManager = ({
           aria-label="재료 검색하기"
           className="group relative flex w-full cursor-pointer items-center border-b-2 border-gray-300 pb-3 transition-colors hover:border-gray-900"
         >
-          <Search
+          <SearchIcon
             size={20}
             className="mr-3 text-gray-400 transition-colors group-hover:text-gray-900"
-            aria-hidden="true"
           />
           <span className="text-base text-gray-500 group-hover:text-gray-900">
             재료를 검색하세요...
@@ -109,7 +108,7 @@ const FineDiningIngredientManager = ({
                     className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 shadow-sm transition-all hover:border-gray-900 hover:bg-gray-900 hover:text-white"
                     aria-label={`${ingredient.name} 삭제`}
                   >
-                    <X size={10} strokeWidth={3} aria-hidden="true" />
+                    <XIcon size={10} />
                   </button>
                 </div>
                 <span className="w-full truncate text-center text-xs font-medium text-gray-700">
