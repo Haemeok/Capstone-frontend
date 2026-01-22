@@ -3,6 +3,7 @@ import { Container } from "@/shared/ui/Container";
 
 import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
 
+import { BridgeTest } from "@/widgets/BridgeTest";
 import CategoryTabs from "@/widgets/CategoryTabs";
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
@@ -28,6 +29,7 @@ const HomePage = async () => {
 
   return (
     <>
+      <BridgeTest />
       <Container>
         <div className="flex flex-col items-center justify-center gap-4 bg-white text-gray-800">
           <HomeHeader />
