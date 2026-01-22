@@ -26,7 +26,7 @@ export const ReportCategoryButton = ({
       type="button"
       onClick={onSelect}
       className={cn(
-        "w-full cursor-pointer rounded-2xl border-2 p-4 text-left transition-all",
+        "w-full cursor-pointer rounded-xl border-2 px-4 py-3 text-left transition-all",
         isSelected
           ? "border-olive-light bg-olive-light/5 ring-2 ring-olive-light/20"
           : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"

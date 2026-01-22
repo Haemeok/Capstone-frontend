@@ -16,10 +16,10 @@ export const IngredientReportButton = ({
       type="button"
       onClick={onToggle}
       className={cn(
-        "text-sm font-medium transition-colors cursor-pointer hidden",
+        "cursor-pointer rounded-lg px-2 py-1 text-xs font-medium transition-all",
         isReportMode
-          ? "text-olive-light"
-          : "text-gray-400 hover:text-gray-600"
+          ? "bg-olive-light/10 text-olive-light"
+          : "text-gray-400 hover:bg-gray-100 hover:text-gray-500"
       )}
     >
       {isReportMode ? "완료" : "오류 신고"}

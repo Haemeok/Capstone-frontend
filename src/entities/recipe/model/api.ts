@@ -148,20 +148,19 @@ export const getRecipeHistoryItems = async (date: string) => {
 export type IngredientReportReason =
   | "WRONG_QUANTITY"
   | "WRONG_NAME"
-  | "MISSING_INGREDIENT";
+  | "NOT_EXIST"
+  | "MISSING"
+  | "ETC";
 
 export type IngredientReportData = {
+  ingredientName: string;
   reason: IngredientReportReason;
   memo?: string;
 };
 
 export const reportIngredient = async (
   recipeId: string,
-  ingredientId: string,
   data: IngredientReportData
 ) => {
-  return api.post(
-    `/recipes/${recipeId}/ingredients/${ingredientId}/reports`,
-    data
-  );
+  return api.post(`/recipes/${recipeId}/reports`, data);
 };

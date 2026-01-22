@@ -21,7 +21,7 @@ export const ReportSuccessView = () => {
           cy="25"
           r="20"
           fill="none"
-          stroke="#3b82f6"
+          stroke="#43c278"
           strokeWidth="3"
           variants={{
             hidden: { pathLength: 0 },
@@ -32,7 +32,7 @@ export const ReportSuccessView = () => {
         <motion.path
           d="M14 27 L22 35 L36 18"
           fill="none"
-          stroke="#3b82f6"
+          stroke="#43c278"
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
