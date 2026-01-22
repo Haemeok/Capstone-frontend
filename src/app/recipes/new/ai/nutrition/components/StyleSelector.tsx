@@ -1,5 +1,6 @@
 "use client";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image";
 
 import { NUTRITION_STYLES } from "../constants";
@@ -10,6 +11,13 @@ type StyleSelectorProps = {
 };
 
 const StyleSelector = ({ value, onChange }: StyleSelectorProps) => {
+  const handleChange = (newValue: string) => {
+    if (value !== newValue) {
+      triggerHaptic("Light");
+      onChange(newValue);
+    }
+  };
+
   return (
     <div className="space-y-3">
       <label className="block text-sm font-bold text-gray-700">
@@ -23,7 +31,7 @@ const StyleSelector = ({ value, onChange }: StyleSelectorProps) => {
             <button
               key={style.value}
               type="button"
-              onClick={() => onChange(style.value)}
+              onClick={() => handleChange(style.value)}
               className={`flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all ${
                 isSelected
                   ? "border-olive-light bg-olive-light/10 shadow-[0_0_0_3px_rgba(145,199,136,0.2)]"

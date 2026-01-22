@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
@@ -135,6 +136,7 @@ export const YoutubePreviewSection = ({
     });
 
     startImport(validatedUrl, youtubeMeta, queryClient, (recipeId: string) => {
+      triggerHaptic("Success");
       addToast({
         message: "",
         variant: "rich-youtube",
@@ -167,6 +169,7 @@ export const YoutubePreviewSection = ({
             <DuplicateRecipeSection
               recipeId={duplicateCheck.recipeId}
               onSaveSuccess={() => {
+                triggerHaptic("Success");
                 addToast({
                   message: "레시피가 저장되었습니다!",
                   variant: "success",
