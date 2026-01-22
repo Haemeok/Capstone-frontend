@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRecipeDetailQuery } from "@/entities/recipe";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { useToastStore } from "@/widgets/Toast";
 
 import {
@@ -97,6 +99,7 @@ export const useRecipeEditForm = (recipeId: string) => {
       { formData, recipeId, isIngredientsModified },
       {
         onSuccess: () => {
+          triggerHaptic("Success");
           addToast({
             message: "레시피가 성공적으로 수정되었습니다!",
             variant: "success",

@@ -1,6 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { useToastStore } from "@/widgets/Toast";
 
 import { deleteRecipe } from "./api";
@@ -22,6 +24,7 @@ const useDeleteRecipeMutation = (recipeId: string) => {
       return { deletingToastId };
     },
     onSuccess: () => {
+      triggerHaptic("Success");
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
       addToast({
