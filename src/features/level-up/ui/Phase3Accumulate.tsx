@@ -64,9 +64,9 @@ const Phase3Accumulate = ({ data, onClose }: Phase3AccumulateProps) => {
         className="pointer-events-none fixed z-9999 h-full w-full"
         manualstart={true}
       />
-      <div className="flex flex-col px-6 py-4">
-        <div className="mb-6 text-center">
-          <p className="mb-2 text-sm text-gray-500">이번 달 누적 절약 금액</p>
+      <div className="flex flex-col px-5 pb-6 pt-2">
+        {/* 금액 표시 - 토스 스타일 큰 숫자 */}
+        <div className="mb-5 text-center">
           <div className="flex items-baseline justify-center gap-1">
             <CountUp
               from={data.previousTotal}
@@ -74,89 +74,59 @@ const Phase3Accumulate = ({ data, onClose }: Phase3AccumulateProps) => {
               duration={0.2}
               separator=","
               direction="up"
-              className="text-olive-mint text-5xl font-bold"
+              className="text-olive-mint text-[40px] font-extrabold tracking-tight"
             />
-            <span className="text-olive-mint text-4xl font-bold">원</span>
+            <span className="text-olive-mint text-2xl font-bold">원</span>
           </div>
         </div>
 
-        <div className="mb-6 px-0 pb-2">
-          <div className="relative h-5 w-full overflow-hidden rounded-full bg-gray-200">
+        {/* 프로그레스 바 */}
+        <div className="mb-5">
+          <div className="relative h-3 w-full overflow-hidden rounded-full bg-gray-100">
             <div
               ref={progressBarRef}
               className="bg-olive-mint absolute inset-y-0 left-0 rounded-full"
-            >
-              <div
-                className="absolute inset-0 opacity-30"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(45deg, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) 8px, transparent 8px, transparent 16px)",
-                }}
-              />
-            </div>
+            />
           </div>
-          <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
-            <span>현재 단계 {formatNumber(data.currentBracket.min, "원")}</span>
+          <div className="mt-3 flex items-center justify-between text-sm text-gray-500">
+            <span>{formatNumber(data.currentBracket.min, "원")}</span>
             {data.nextBracket ? (
-              <span>다음 단계 {formatNumber(data.nextBracket.min, "원")}</span>
+              <span>{formatNumber(data.nextBracket.min, "원")}</span>
             ) : (
-              <span>최고 단계 달성!</span>
+              <span className="text-olive-mint font-medium">최고 단계!</span>
             )}
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col items-center justify-center">
-          {showLevelUp ? (
-            <>
-              <div className="mb-4">
-                <p className="text-olive-mint text-center text-2xl font-bold">
-                  {data.nextBracket ? "🎉 레벨 업!" : "👑 최고 단계 달성!"}
-                </p>
-                <p className="mt-1 text-center text-sm text-gray-600">
-                  {data.nextBracket
-                    ? "다음 목표를 향해 달려가세요!"
-                    : "모든 단계를 정복하셨습니다!"}
-                </p>
-              </div>
-              <div className="h-44">
-                <SavingSection
-                  imageUrl={data.currentBracket.image}
-                  altText={data.currentBracket.name}
-                />
-              </div>
-              <p className="mt-2 text-center text-lg font-bold text-gray-800">
-                {data.currentBracket.name}
-              </p>
-              <p className="mt-1 text-center text-sm text-gray-500">
-                {formatNumber(data.currentBracket.min, "원")} 이상 달성했어요!
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-center text-sm text-gray-600">
-                현재 단계는...
-              </p>
-              <div className="h-44">
-                <SavingSection
-                  imageUrl={data.currentBracket.image}
-                  altText={data.currentBracket.name}
-                />
-              </div>
-              <p className="mt-2 text-center text-lg font-bold text-gray-800">
-                {data.currentBracket.name}
-              </p>
-              <p className="mt-1 text-center text-sm text-gray-500">
-                {formatNumber(data.currentBracket.min, "원")} 정도 금액이에요!
-              </p>
-            </>
+        {/* 메인 콘텐츠 */}
+        <div className="flex flex-col items-center">
+          {showLevelUp && (
+            <p className="text-olive-mint mb-4 text-center text-2xl font-extrabold">
+              {data.nextBracket ? "🎉 레벨 업!" : "👑 최고 단계 달성!"}
+            </p>
           )}
+
+          <SavingSection
+            imageUrl={data.currentBracket.image}
+            altText={data.currentBracket.name}
+          />
+
+          <p className="text-center text-lg font-semibold text-gray-900">
+            {data.currentBracket.name}
+          </p>
+          <p className="mt-0.5 text-center text-sm text-gray-500">
+            {showLevelUp
+              ? `${formatNumber(data.currentBracket.min, "원")} 이상 달성!`
+              : `${formatNumber(data.currentBracket.min, "원")} 절약 중`}
+          </p>
         </div>
 
-        <div className="mt-6 px-4">
+        {/* CTA 버튼 - 에어비엔비 스타일 */}
+        <div className="mt-6">
           <Link href={`/users/${user?.id}?tab=calendar`} prefetch={false}>
             <Button
               onClick={onClose}
-              className="bg-olive-mint hover:bg-olive-dark w-full rounded-md py-3 text-white"
+              className="bg-olive-mint hover:bg-olive-dark h-14 w-full rounded-xl text-base font-semibold text-white"
             >
               이번 달 기록 확인하기
             </Button>
