@@ -3,7 +3,7 @@ import {
   FINE_DINING_TIERS,
   DiningTier,
 } from "@/shared/config/constants/aiModel";
-import { Check } from "lucide-react";
+import { CheckIcon } from "@/shared/ui/icons";
 
 type DifficultyTierSelectorProps = {
   selected: DiningTier | null;
@@ -44,7 +44,7 @@ const DifficultyTierSelector = ({
               />
               {selected === option.value && (
                 <div className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-white shadow-lg">
-                  <Check size={18} strokeWidth={3} />
+                  <CheckIcon size={18} />
                 </div>
               )}
             </div>

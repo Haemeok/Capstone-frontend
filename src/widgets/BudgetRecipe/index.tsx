@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChefHat, ArrowLeft } from "lucide-react";
 
 import BudgetHeader from "./BudgetHeader";
 import PriceSlider from "./PriceSlider";
@@ -16,13 +15,16 @@ import AIRecipeComplete from "@/widgets/AIRecipeComplete";
 import AIRecipeError from "@/widgets/AIRecipeError";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 import { Container } from "@/shared/ui/Container";
+import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
+import { useToastStore } from "@/shared/model/toastStore";
 
 const BudgetRecipe = () => {
   const router = useRouter();
   const [budget, setBudget] = useState(BUDGET_DEFAULT);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const showToast = useToastStore((state) => state.showToast);
 
   const {
     generationState,
@@ -38,7 +40,7 @@ const BudgetRecipe = () => {
 
   const handleGenerateRecipe = () => {
     if (!selectedCategory) {
-      alert("음식 종류를 선택해주세요!");
+      showToast("음식 종류를 선택해주세요!", "error");
       return;
     }
 
@@ -89,7 +91,7 @@ const BudgetRecipe = () => {
             onClick={() => router.back()}
             className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeftIcon size={20} />
             <span className="text-sm font-medium">AI 다시 선택하기</span>
           </button>
         </div>
@@ -114,7 +116,7 @@ const BudgetRecipe = () => {
               disabled={hasNoQuota || !selectedCategory}
               className="bg-olive-light hover:bg-olive-medium flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-lg"
             >
-              <ChefHat className="h-6 w-6" />
+              <ChefHatIcon className="h-6 w-6" />
               <span>레시피 생성하기</span>
             </button>
           )}
