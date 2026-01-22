@@ -7,12 +7,15 @@ import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const error = searchParams.get("error");
+  const errorDescription = searchParams.get("error_description");
+
+  console.log("🍎 [Apple OAuth GET] 요청 수신");
+  console.log("🍎 [Apple OAuth GET] URL:", request.url);
+  console.log("🍎 [Apple OAuth GET] error:", error);
+  console.log("🍎 [Apple OAuth GET] error_description:", errorDescription);
+  console.log("🍎 [Apple OAuth GET] 모든 params:", Object.fromEntries(searchParams));
 
   const baseUrl = getBaseUrlFromRequest(request);
-
-  if (error) {
-    console.error("Apple OAuth error (GET):", error);
-  }
 
   // GET으로 온 경우 = 취소 또는 에러 → 로그인 에러 페이지로
   return NextResponse.redirect(`${baseUrl}login/error`);
