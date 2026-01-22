@@ -43,6 +43,136 @@ Follow strict layer dependency order: `shared` → `entities` → `features` →
 - **Forms**: React Hook Form with validation
 - **Animation**: Framer Motion and GSAP
 
+## UI/UX Design Guidelines (Toss + Airbnb Style)
+
+**CRITICAL: 모든 UI 작업 시 반드시 이 가이드라인을 참고하세요.**
+
+### 디자인 철학
+
+1. **심플함과 명확함** (Toss 스타일)
+   - 한 화면에 하나의 핵심 액션만 강조
+   - 불필요한 장식 요소 제거
+   - 여백(whitespace)을 충분히 활용
+
+2. **따뜻하고 친근한 느낌** (Airbnb 스타일)
+   - 날카로운 모서리 대신 부드러운 라운드 (rounded-xl, rounded-2xl)
+   - 친근한 마이크로카피 사용
+   - 사용자를 존중하는 어조
+
+### 컬러 시스템
+
+```
+Primary: olive (olive-light, olive-dark)
+Background: beige 계열 (따뜻한 배경)
+Text: dark (gray-900, gray-700, gray-500)
+Accent: brown 계열
+Error: red-500 (최소한으로 사용)
+Success: green-500 (최소한으로 사용)
+```
+
+### 타이포그래피
+
+- **제목**: text-xl ~ text-2xl, font-bold, text-gray-900
+- **본문**: text-base, text-gray-700
+- **설명/보조**: text-sm, text-gray-500
+- **라벨**: text-sm, font-medium, text-gray-600
+
+### 버튼 스타일
+
+```tsx
+// Primary 버튼 (주요 액션)
+className="h-14 w-full rounded-2xl bg-olive-light text-white font-bold text-lg shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
+
+// Secondary 버튼 (보조 액션)
+className="h-12 rounded-xl bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-colors"
+
+// Disabled 상태
+className="cursor-not-allowed bg-gray-100 text-gray-400"
+```
+
+### 카드/컨테이너
+
+```tsx
+// 기본 카드
+className="rounded-2xl bg-white p-6 shadow-sm"
+
+// 선택 가능한 카드 (hover 효과)
+className="rounded-2xl bg-white p-4 border border-gray-100 hover:border-olive-light hover:shadow-md transition-all cursor-pointer"
+
+// 선택된 상태
+className="rounded-2xl bg-olive-light/5 p-4 border-2 border-olive-light"
+```
+
+### 입력 필드
+
+```tsx
+// 텍스트 입력
+className="w-full rounded-xl border border-gray-200 p-4 text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light transition-colors"
+
+// Textarea
+className="h-24 w-full resize-none rounded-xl border border-gray-200 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
+```
+
+### 애니메이션 원칙
+
+1. **부드럽고 자연스럽게**
+   - duration: 200ms ~ 300ms
+   - easing: ease-out 또는 spring
+   - 과하지 않은 미세한 움직임
+
+2. **의미 있는 피드백**
+   - 버튼 클릭: scale(0.98) + shadow 변화
+   - 호버: 배경색/테두리 변화
+   - 로딩: subtle pulse 또는 skeleton
+
+```tsx
+// Framer Motion 기본 설정
+initial={{ opacity: 0, y: 10 }}
+animate={{ opacity: 1, y: 0 }}
+exit={{ opacity: 0, y: -10 }}
+transition={{ duration: 0.2, ease: "easeOut" }}
+```
+
+### Drawer/Modal 스타일
+
+```tsx
+// 컨텐츠 영역
+className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md rounded-t-3xl sm:rounded-2xl"
+
+// 헤더
+className="px-6 pt-6 pb-4"
+
+// 제목
+className="text-xl font-bold text-gray-900"
+
+// 설명
+className="text-sm text-gray-500 mt-1"
+```
+
+### 선택 옵션 (라디오/체크박스 대체)
+
+```tsx
+// 옵션 버튼
+className={cn(
+  "w-full rounded-xl border-2 p-4 text-left transition-all",
+  isSelected
+    ? "border-olive-light bg-olive-light/5"
+    : "border-gray-100 hover:border-gray-200"
+)}
+
+// 선택 시 체크 아이콘
+{isSelected && <CheckIcon className="h-5 w-5 text-olive-light" />}
+```
+
+### 피해야 할 것
+
+- ❌ 과한 그림자 (shadow-2xl 남용)
+- ❌ 날카로운 모서리 (rounded-sm, rounded-md)
+- ❌ 강렬한 색상 대비 (빨강/파랑 직접 사용)
+- ❌ 복잡한 그라데이션
+- ❌ 너무 작은 터치 영역 (최소 44px)
+- ❌ 빽빽한 레이아웃 (여백 부족)
+
 ## API Configuration
 
 ### Backend Integration
@@ -65,6 +195,29 @@ Follow strict layer dependency order: `shared` → `entities` → `features` →
 - Progressive Web App with offline capabilities
 - Service worker registration (disabled in development)
 - App install prompts and first-login flows
+
+### Haptic Feedback (iOS/Android PWA)
+
+**CRITICAL: 모든 인터랙티브 UI 요소에 햅틱 피드백 적용**
+
+자세한 가이드라인은 `.claude/skills/haptic-feedback/SKILL.md` 참조.
+
+```typescript
+import { triggerHaptic } from "@/shared/lib/bridge";
+
+// 사용 가능한 스타일
+triggerHaptic("Success"); // 완료/성공 시
+triggerHaptic("Light");   // 일반 UI 인터랙션
+triggerHaptic("Medium");  // 중요한 액션
+triggerHaptic("Heavy");   // 매우 중요한 액션
+triggerHaptic("Warning"); // 경고
+triggerHaptic("Error");   // 에러
+```
+
+**필수 적용 위치:**
+- `Success`: mutation onSuccess (레시피/댓글 생성/수정/삭제)
+- `Light`: 토글, 탭 전환, 필터 칩, 캘린더 네비게이션
+- `Light` (step-based): 슬라이더 (useRef로 step 추적하여 성능 최적화)
 
 ### Real-time Features
 
