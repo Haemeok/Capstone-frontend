@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Comment } from "@/entities/comment";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 import { postComment } from "./api";
@@ -17,6 +19,7 @@ const useCreateCommentMutation = (recipeId: string) => {
   >({
     mutationFn: (params: PostCommentParams) => postComment(params),
     onSuccess: () => {
+      triggerHaptic("Success");
       queryClient.invalidateQueries({
         queryKey: ["comments", recipeId],
       });

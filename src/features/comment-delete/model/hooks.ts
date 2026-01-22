@@ -1,6 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 import { deleteComment } from "./api";
@@ -25,6 +27,7 @@ export const useDeleteCommentMutation = (
       return { deletingToastId };
     },
     onSuccess: () => {
+      triggerHaptic("Success");
       queryClient.invalidateQueries({ queryKey: ["comments"] });
       queryClient.invalidateQueries({ queryKey: ["comment", commentId] });
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });

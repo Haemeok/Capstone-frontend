@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { useToastStore } from "@/widgets/Toast";
 
 import {
@@ -31,6 +33,7 @@ export const useRecipeCreationForm = () => {
       { formData },
       {
         onSuccess: () => {
+          triggerHaptic("Success");
           addToast({
             message: "레시피가 성공적으로 등록되었습니다!",
             variant: "success",
