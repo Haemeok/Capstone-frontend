@@ -1,4 +1,4 @@
-import { TrendingDown, Sparkles } from "lucide-react";
+import { SparklesIcon, TrendingDownIcon } from "@/shared/ui/icons";
 import {
   calculateSavings,
   calculateMonthlySavings,
@@ -26,7 +26,7 @@ const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-center gap-2 rounded-lg border-2 border-olive-light bg-olive-light/10 p-4">
-        <TrendingDown className="text-olive-medium h-5 w-5" />
+        <TrendingDownIcon className="text-olive-medium h-5 w-5" />
         <p className="text-sm font-medium text-gray-800">
           직장인 평균 한끼보다{" "}
           <span className="text-olive-medium font-bold">
@@ -37,7 +37,7 @@ const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
       </div>
 
       <div className="flex items-center justify-center gap-2 rounded-lg border-2 border-olive-mint bg-gradient-to-r from-olive-light to-olive-mint p-4 text-white shadow-md">
-        <Sparkles className="h-5 w-5" />
+        <SparklesIcon className="h-5 w-5" />
         <p className="text-sm font-bold">
           매일 이렇게 드시면 한 달에{" "}
           {Math.floor(monthlySavings / 10000)}만 원 아껴요!

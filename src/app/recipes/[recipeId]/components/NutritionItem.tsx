@@ -1,4 +1,5 @@
 import React from "react";
+
 import { formatNumber } from "@/shared/lib/format";
 
 type NutritionItemProps = {

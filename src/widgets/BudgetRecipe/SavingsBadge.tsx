@@ -1,7 +1,7 @@
 "use client";
 
-import { TrendingDown } from "lucide-react";
 import CountUp from "@/shared/ui/shadcn/CountUp";
+import { TrendingDownIcon } from "@/shared/ui/icons";
 import { calculateMonthlySavings } from "@/shared/lib/budget/calculations";
 
 type SavingsBadgeProps = {
@@ -18,7 +18,7 @@ const SavingsBadge = ({ budget }: SavingsBadgeProps) => {
   return (
     <div className="from-olive-light/20 to-olive-mint/20 relative overflow-hidden rounded-2xl bg-gradient-to-br p-6 shadow-md">
       <div className="absolute right-4 top-4 opacity-10">
-        <TrendingDown className="h-16 w-16" />
+        <TrendingDownIcon className="h-16 w-16" />
       </div>
 
       <div className="relative flex items-center gap-3">

@@ -1,7 +1,7 @@
 "use client";
 
-import { Check } from "lucide-react";
 import { getCategoriesForBudget } from "@/shared/config/constants/budget";
+import { CheckIcon } from "@/shared/ui/icons";
 import { Image } from "@/shared/ui/image";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
@@ -45,7 +45,7 @@ const CategorySelector = ({
             >
               {isSelected && (
                 <div className="bg-olive-light absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full">
-                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                  <CheckIcon size={12} className="text-white" />
                 </div>
               )}
 
