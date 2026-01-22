@@ -3,6 +3,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
 
+// Apple 취소/에러 시 GET으로 오는 경우 처리
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const error = searchParams.get("error");
+
+  const baseUrl = getBaseUrlFromRequest(request);
+
+  if (error) {
+    console.error("Apple OAuth error (GET):", error);
+  }
+
+  // GET으로 온 경우 = 취소 또는 에러 → 로그인 에러 페이지로
+  return NextResponse.redirect(`${baseUrl}login/error`);
+}
+
+// Apple 성공 시 POST로 오는 경우 처리
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
