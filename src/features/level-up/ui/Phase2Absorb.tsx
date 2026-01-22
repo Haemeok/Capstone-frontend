@@ -87,18 +87,17 @@ const Phase2Absorb = ({ amount, onComplete }: Phase2AbsorbProps) => {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-[500px] flex-col px-6 py-4"
+      className="relative flex flex-col px-5 pb-4 pt-2"
     >
-      {/* Phase 3과 동일한 헤더 공간 확보 (mb-6) */}
-      <div className="mb-6 text-center">
-        <p className="mb-2 text-sm text-gray-500">획득 금액</p>
-        <div className="relative flex items-baseline justify-center gap-2">
+      {/* 금액 표시 */}
+      <div className="mb-5 text-center">
+        <div className="relative flex items-baseline justify-center gap-1">
           <div
             ref={amountRef}
-            className="text-olive-mint flex items-baseline gap-2"
+            className="text-olive-mint flex items-baseline gap-1"
           >
-            <span className="text-5xl font-bold">+</span>
-            <span className="text-4xl font-bold">
+            <span className="text-3xl font-bold">+</span>
+            <span className="text-[36px] font-extrabold tracking-tight">
               {formatNumber(amount, "원")}
             </span>
           </div>
@@ -106,26 +105,23 @@ const Phase2Absorb = ({ amount, onComplete }: Phase2AbsorbProps) => {
             ref={particleRef}
             className="absolute inset-0 flex items-center justify-center opacity-0"
           >
-            <div className="bg-olive-mint h-20 w-20 rounded-full shadow-lg" />
+            <div className="bg-olive-mint h-16 w-16 rounded-full shadow-lg" />
           </div>
         </div>
       </div>
 
-      {/* Phase 3과 동일한 프로그레스 바 위치 (mb-6 px-0 pb-2) */}
-      <div className="mb-6 px-0 pb-2">
+      {/* 프로그레스 바 */}
+      <div className="mb-5">
         <div
           ref={targetBarRef}
-          className="relative h-5 w-full overflow-hidden rounded-full bg-gray-200"
+          className="relative h-3 w-full overflow-hidden rounded-full bg-gray-100"
         >
           <div className="bg-olive-mint/30 absolute inset-0 w-1/3 rounded-full" />
         </div>
-        <p className="mt-2 text-center text-sm text-gray-500">
+        <p className="mt-3 text-center text-sm text-gray-500">
           이번 달 누적 바에 흡수 중...
         </p>
       </div>
-
-      {/* 하단 여백 (flex-1) */}
-      <div className="flex-1" />
     </div>
   );
 };
