@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       throw new Error("Authorization code not found.");
     }
 
-    const xEnv = getEnvHeader();
+    const xEnv = getEnvHeader(request);
 
     const backendRes = await fetch(
       `https://api.recipio.kr/login/oauth2/code/google`,

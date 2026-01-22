@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const baseUrl = getBaseUrlFromRequest(request);
 
   // GET으로 온 경우 = 취소 또는 에러 → 로그인 에러 페이지로
-  return NextResponse.redirect(`${baseUrl}login/error`);
+  return NextResponse.redirect(`${baseUrl}login/error`, 303);
 }
 
 // Apple 성공 시 POST로 오는 경우 처리
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error("🍎 [Apple OAuth POST] Apple에서 에러 반환:", error);
       const baseUrl = getBaseUrlFromRequest(request);
-      return NextResponse.redirect(`${baseUrl}login/error`);
+      return NextResponse.redirect(`${baseUrl}login/error`, 303);
     }
 
     const stateFromCookie = request.cookies.get("state")?.value;
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       throw new Error("Authorization code not found.");
     }
 
-    const xEnv = getEnvHeader();
+    const xEnv = getEnvHeader(request);
     const baseUrl = getBaseUrlFromRequest(request);
 
     console.log("🍎 [Apple OAuth POST] 백엔드 요청 준비:");
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     console.log("🍎 [Apple OAuth POST] Set-Cookie 헤더 수:", setCookieHeaders.length);
 
     const redirectUrl = new URL(baseUrl);
-    const finalResponse = NextResponse.redirect(redirectUrl);
+    const finalResponse = NextResponse.redirect(redirectUrl, 303);
 
     finalResponse.cookies.set("state", "", { maxAge: 0 });
 
@@ -123,6 +123,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("🍎 [Apple OAuth POST] ❌ 에러 발생:", error);
     const baseUrl = getBaseUrlFromRequest(request);
-    return NextResponse.redirect(`${baseUrl}login/error`);
+    return NextResponse.redirect(`${baseUrl}login/error`, 303);
   }
 }
