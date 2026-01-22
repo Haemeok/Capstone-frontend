@@ -2,6 +2,8 @@ import React, { forwardRef } from "react";
 
 import { ChevronDown } from "lucide-react";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { cn } from "@/lib/utils";
 
 type FilterChipProps = {
@@ -20,7 +22,10 @@ const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
           isDirty ? "bg-dark-light" : "bg-white",
           isDirty ? "border-dark-light" : "border-gray-300"
         )}
-        onClick={onClick}
+        onClick={() => {
+          triggerHaptic("Light");
+          onClick?.();
+        }}
         aria-label={`${header} 필터 열기`}
         aria-expanded={false}
       >

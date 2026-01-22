@@ -1,3 +1,4 @@
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { cn } from "@/lib/utils";
@@ -27,7 +28,10 @@ const SelectButton = ({
           : "border-gray-300",
         className
       )}
-      onClick={onClick}
+      onClick={() => {
+        triggerHaptic("Light");
+        onClick();
+      }}
     >
       {label}
     </Button>
