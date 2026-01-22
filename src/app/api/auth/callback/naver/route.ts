@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { getBaseUrl } from "@/shared/lib/env/getBaseUrl";
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -41,7 +43,7 @@ export async function GET(request: NextRequest) {
 
     const setCookieHeaders = backendRes.headers.getSetCookie();
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "/";
+    const baseUrl = getBaseUrl();
     const redirectUrl = new URL(baseUrl);
     const finalResponse = NextResponse.redirect(redirectUrl);
 
@@ -54,7 +56,7 @@ export async function GET(request: NextRequest) {
     return finalResponse;
   } catch (error) {
     console.error("OAuth callback error:", error);
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "/";
+    const baseUrl = getBaseUrl();
     return NextResponse.redirect(`${baseUrl}login/error`);
   }
 }
