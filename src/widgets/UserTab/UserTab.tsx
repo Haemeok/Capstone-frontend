@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 
 import { MyTabs, OtherTabs } from "@/shared/config/constants/user";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { User } from "@/entities/user";
@@ -112,7 +113,12 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
                   ? "text-olive-light font-bold"
                   : "text-gray-500"
               }`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                if (activeTab !== tab.id) {
+                  triggerHaptic("Light");
+                  setActiveTab(tab.id);
+                }
+              }}
             >
               <span className="flex flex-col items-center">
                 <tab.icon size={18} className="mb-1" />

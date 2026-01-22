@@ -1,8 +1,10 @@
 import { cn } from "@/lib/utils";
 
-import { CalendarMode } from "../types";
-import { Image } from "@/shared/ui/image/Image";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { triggerHaptic } from "@/shared/lib/bridge";
+import { Image } from "@/shared/ui/image/Image";
+
+import { CalendarMode } from "../types";
 
 type StreakModeToggleProps = {
   mode: CalendarMode;
@@ -13,11 +15,18 @@ export const StreakModeToggle = ({
   mode,
   onModeChange,
 }: StreakModeToggleProps) => {
+  const handleModeChange = (newMode: CalendarMode) => {
+    if (mode !== newMode) {
+      triggerHaptic("Light");
+      onModeChange(newMode);
+    }
+  };
+
   return (
     <div className="inline-flex gap-2">
       <button
         type="button"
-        onClick={() => onModeChange("streak")}
+        onClick={() => handleModeChange("streak")}
         className={cn(
           "flex cursor-pointer items-center gap-1 rounded-md px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap",
           mode === "streak"
@@ -36,7 +45,7 @@ export const StreakModeToggle = ({
 
       <button
         type="button"
-        onClick={() => onModeChange("photo")}
+        onClick={() => handleModeChange("photo")}
         className={cn(
           "flex cursor-pointer items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap",
           mode === "photo"

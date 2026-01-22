@@ -6,6 +6,7 @@ import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { getProductByPrice } from "@/shared/lib/recipe";
 import { DayPickerDynamic } from "@/shared/ui/DayPickerDynamic";
 import Box from "@/shared/ui/primitives/Box";
@@ -143,17 +144,25 @@ const CalendarTabContent = () => {
               return <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />;
             }
           },
-          PreviousMonthButton: ({ className, ...props }: any) => (
+          PreviousMonthButton: ({ className, onClick, ...props }: any) => (
             <button
               className={cn(className, "flex items-center justify-center")}
+              onClick={(e) => {
+                triggerHaptic("Light");
+                onClick?.(e);
+              }}
               {...props}
             >
               <ChevronLeft className="size-6 text-gray-500" />
             </button>
           ),
-          NextMonthButton: ({ className, ...props }: any) => (
+          NextMonthButton: ({ className, onClick, ...props }: any) => (
             <button
               className={cn(className, "flex items-center justify-center")}
+              onClick={(e) => {
+                triggerHaptic("Light");
+                onClick?.(e);
+              }}
               {...props}
             >
               <ChevronRight className="size-6 text-gray-500" />
