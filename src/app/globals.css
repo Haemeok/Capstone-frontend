@@ -123,15 +123,17 @@
     border-color: var(--color-gray-200, currentColor);
   }
 
-  /* 웹뷰 네이티브 앱 터치 UX */
-  * {
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
-  }
+  /* 웹뷰 네이티브 앱 터치 UX - 터치 디바이스에서만 적용 */
+  @media (pointer: coarse) {
+    * {
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  *:not(input):not(textarea) {
-    -webkit-user-select: none;
-    user-select: none;
+    *:not(input):not(textarea) {
+      -webkit-user-select: none;
+      user-select: none;
+    }
   }
 
   html,
