@@ -1,19 +1,31 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-import { ShoppingBasketIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 
 import { formatNumber } from "@/shared/lib/format";
 import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
-import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
+import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 
+import { IngredientItem } from "@/entities/ingredient";
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
 
-import NutritionToggle from "./NutritionToggle";
+import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
+
+import { IngredientListItem } from "./IngredientListItem";
+import { IngredientsSectionHeader } from "./IngredientsSectionHeader";
 import NutritionTable from "./NutritionTable";
-import Link from "next/link";
+import { ServingsControl } from "./ServingsControl";
+
+const IngredientReportDrawer = dynamic(
+  () =>
+    import("./IngredientReportDrawer").then((mod) => mod.IngredientReportDrawer),
+  { ssr: false }
+);
+
+const MIN_SERVINGS = 1;
+const MAX_SERVINGS = 20;
 
 type IngredientsSectionProps = {
   recipe: Recipe | StaticRecipe;
@@ -21,29 +33,32 @@ type IngredientsSectionProps = {
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const [showNutrition, setShowNutrition] = useState(false);
+  const [isReportMode, setIsReportMode] = useState(false);
+  const [reportingIngredient, setReportingIngredient] =
+    useState<IngredientItem | null>(null);
+  const [isReportDrawerOpen, setIsReportDrawerOpen] = useState(false);
 
   const isValidServings = recipe.servings > 0 && Number.isFinite(recipe.servings);
   const [currentServings, setCurrentServings] = useState(
     isValidServings ? recipe.servings : 1
   );
 
-  const randomActivity = useMemo(() => getRandomActivity(), [recipe.id]);
-
+  const randomActivity = useMemo(() => getRandomActivity(), []);
   const servingRatio = isValidServings ? currentServings / recipe.servings : 1;
 
-  const MIN_SERVINGS = 1;
-  const MAX_SERVINGS = 20;
-
-  const handleIncrement = () => {
-    if (currentServings < MAX_SERVINGS) {
-      setCurrentServings((prev) => prev + 1);
+  const handleReportClick = useAuthenticatedAction(
+    (ingredient: IngredientItem) => {
+      setReportingIngredient(ingredient);
+      setIsReportDrawerOpen(true);
+    },
+    {
+      notifyOnly: true,
+      drawerMessage: "재료 오류 신고를 이용해보세요!",
     }
-  };
+  );
 
-  const handleDecrement = () => {
-    if (currentServings > MIN_SERVINGS) {
-      setCurrentServings((prev) => prev - 1);
-    }
+  const handleReportSuccess = () => {
+    setIsReportMode(false);
   };
 
   const scaledCalories = Math.floor(recipe.totalCalories * servingRatio);
@@ -76,15 +91,12 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-xl font-bold">
-          {showNutrition ? "영양성분" : "재료"}
-        </h2>
-        <NutritionToggle
-          isNutrition={showNutrition}
-          onToggle={setShowNutrition}
-        />
-      </div>
+      <IngredientsSectionHeader
+        showNutrition={showNutrition}
+        onNutritionToggle={setShowNutrition}
+        isReportMode={isReportMode}
+        onReportModeToggle={() => setIsReportMode((prev) => !prev)}
+      />
 
       <PointDisplayBanner
         pointText={displayConfig.topBanner.pointText}
@@ -103,34 +115,13 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         ) : (
           <>
             {isValidServings && (
-              <div className="mb-3 flex items-center justify-end gap-2">
-                <span className="text-sm text-gray-600">인분</span>
-                <div className="flex items-center gap-1">
-                  {currentServings > MIN_SERVINGS && (
-                    <button
-                      type="button"
-                      onClick={handleDecrement}
-                      aria-label="인분 줄이기"
-                      className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
-                    >
-                      -
-                    </button>
-                  )}
-                  <span className="w-10 text-center text-sm font-medium text-gray-800">
-                    {currentServings}
-                  </span>
-                  {currentServings < MAX_SERVINGS && (
-                    <button
-                      type="button"
-                      onClick={handleIncrement}
-                      aria-label="인분 늘리기"
-                      className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
-                    >
-                      +
-                    </button>
-                  )}
-                </div>
-              </div>
+              <ServingsControl
+                currentServings={currentServings}
+                minServings={MIN_SERVINGS}
+                maxServings={MAX_SERVINGS}
+                onIncrement={() => setCurrentServings((prev) => prev + 1)}
+                onDecrement={() => setCurrentServings((prev) => prev - 1)}
+              />
             )}
             <ul className="flex flex-col gap-1">
               {recipe.ingredients.map((ingredient, index) => {
@@ -140,44 +131,26 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                   servingRatio
                 );
 
+                const ingredientWithId = {
+                  ...ingredient,
+                  id: ingredient.id ?? `ingredient-${index}`,
+                  inFridge: false,
+                  calories: 0,
+                } as IngredientItem;
+
                 return (
-                  <li
+                  <IngredientListItem
                     key={index}
-                    className="grid grid-cols-[1.5fr_1.5fr_1fr_32px] items-center gap-3"
-                  >
-                    <p className="text-left font-bold">{ingredient.name}</p>
-
-                    <p className="text-left whitespace-nowrap">
-                      {converted.quantity}
-                      {converted.quantity !== "약간" && converted.unit}
-                    </p>
-
-                    <p className="text-right text-sm text-slate-500">
-                      {formatNumber(
-                        Math.round((ingredient.price || 0) * servingRatio),
-                        "원"
-                      )}
-                    </p>
-
-                    <div className="flex items-center justify-center">
-                      {ingredient.coupangLink ? (
-                        <Link
-                          href={ingredient.coupangLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <div className="rounded-md border border-gray-400 p-[2px]">
-                            <ShoppingBasketIcon
-                              className="text-gray-400"
-                              size={20}
-                            />
-                          </div>
-                        </Link>
-                      ) : (
-                        <div className="w-6" />
-                      )}
-                    </div>
-                  </li>
+                    ingredient={ingredientWithId}
+                    displayQuantity={converted.quantity}
+                    displayUnit={converted.unit}
+                    displayPrice={formatNumber(
+                      Math.round((ingredient.price || 0) * servingRatio),
+                      "원"
+                    )}
+                    isReportMode={isReportMode}
+                    onReport={handleReportClick}
+                  />
                 );
               })}
             </ul>
@@ -194,6 +167,14 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
           textClassName={displayConfig.bottomBanner.textClassName}
         />
       </div>
+
+      <IngredientReportDrawer
+        isOpen={isReportDrawerOpen}
+        onOpenChange={setIsReportDrawerOpen}
+        ingredient={reportingIngredient}
+        recipeId={recipe.id}
+        onSuccess={handleReportSuccess}
+      />
     </div>
   );
 };

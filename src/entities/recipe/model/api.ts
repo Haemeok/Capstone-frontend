@@ -3,18 +3,19 @@ import { BaseQueryParams, PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 import { FileInfoRequest } from "@/shared/types";
 
+import { RecipeHistoryResponse } from "@/entities/user/model/types";
+
+import { RecipeHistoryDetailResponse } from "./record";
 import {
   DetailedRecipesApiResponse,
   IngredientRecipesApiResponse,
   Recipe,
   RecipeQueryParams,
-  RecipeStatus,
   RecipesStatusResponse,
+  RecipeStatus,
   TrendingYoutubeRecipe,
 } from "./types";
 import { RecipePayload } from "./types";
-import { RecipeHistoryResponse } from "@/entities/user/model/types";
-import { RecipeHistoryDetailResponse } from "./record";
 
 export const getRecipe = async (id: string) => {
   const response = await api.get<Recipe>(END_POINTS.RECIPE(id));
@@ -30,7 +31,7 @@ export const getRecipeItems = async (params: RecipeQueryParams) => {
     ...restParams,
   };
 
-  let endpoint = END_POINTS.RECIPE_SEARCH;
+  const endpoint = END_POINTS.RECIPE_SEARCH;
 
   return api.get<DetailedRecipesApiResponse>(endpoint, {
     params: apiParams,
@@ -142,4 +143,25 @@ export const getRecipeHistoryItems = async (date: string) => {
     }
   );
   return response;
+};
+
+export type IngredientReportReason =
+  | "WRONG_QUANTITY"
+  | "WRONG_NAME"
+  | "MISSING_INGREDIENT";
+
+export type IngredientReportData = {
+  reason: IngredientReportReason;
+  memo?: string;
+};
+
+export const reportIngredient = async (
+  recipeId: string,
+  ingredientId: string,
+  data: IngredientReportData
+) => {
+  return api.post(
+    `/recipes/${recipeId}/ingredients/${ingredientId}/reports`,
+    data
+  );
 };
