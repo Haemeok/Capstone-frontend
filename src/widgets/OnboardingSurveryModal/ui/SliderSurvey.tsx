@@ -1,4 +1,7 @@
+import { useRef } from "react";
+
 import { SurveyStep } from "@/shared/config/constants/user";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { Slider } from "@/shared/ui/shadcn/slider";
 
 type SliderSurveyProps = {
@@ -13,9 +16,17 @@ const SliderSurvey = ({
   onValueChange,
 }: SliderSurveyProps) => {
   const numericValue = typeof value === "string" ? parseInt(value) || 1 : value;
+  const lastStepRef = useRef<number | null>(null);
 
   const handleSliderChange = (values: number[]) => {
-    onValueChange(values[0].toString());
+    const newValue = values[0];
+
+    if (lastStepRef.current !== null && newValue !== lastStepRef.current) {
+      triggerHaptic("Light");
+    }
+    lastStepRef.current = newValue;
+
+    onValueChange(newValue.toString());
   };
 
   const spiceLabels = [
