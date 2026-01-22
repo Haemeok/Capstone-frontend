@@ -1,16 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import crypto from "crypto";
 
-import { getBaseUrl } from "@/shared/lib/env/getBaseUrl";
+import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const state = crypto.randomBytes(16).toString("hex");
 
     const naverAuthUrl = new URL("https://nid.naver.com/oauth2.0/authorize");
 
-    const baseUrl = getBaseUrl();
+    const baseUrl = getBaseUrlFromRequest(request);
     const naverClientId = process.env.NAVER_CLIENT_ID;
 
     if (!naverClientId) {
