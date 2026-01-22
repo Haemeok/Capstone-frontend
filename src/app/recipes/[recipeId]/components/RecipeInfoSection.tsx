@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 
+import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import BadgeButton from "@/shared/ui/BadgeButton";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 
 import { UserProfile } from "@/entities/user";
 import { User } from "@/entities/user/model/types";
-import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 
 type RecipeInfoSectionProps = {
   title: string;

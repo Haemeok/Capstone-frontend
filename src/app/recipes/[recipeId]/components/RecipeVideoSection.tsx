@@ -1,17 +1,18 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+
 import { Pin } from "lucide-react";
 
+import { cn } from "@/shared/lib/utils";
+import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
+import { Image } from "@/shared/ui/image/Image";
+import { Button } from "@/shared/ui/shadcn/button";
 import {
-  YouTubeVideoPlayer,
   parseTimelineToSeconds,
+  YouTubeVideoPlayer,
   type YouTubeVideoPlayerRef,
 } from "@/shared/ui/YouTubeVideoPlayer";
-import { Button } from "@/shared/ui/shadcn/button";
-import { cn } from "@/shared/lib/utils";
-import { Image } from "@/shared/ui/image/Image";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 type VideoPlayerContextType = {
   seekToTimeline: (timeline: string) => void;

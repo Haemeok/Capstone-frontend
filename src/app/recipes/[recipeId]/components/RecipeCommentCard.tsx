@@ -1,9 +1,8 @@
 "use client";
 
-import { CommentCard } from "@/features/comment-card";
-
 import { Comment } from "@/entities/comment";
 
+import { CommentCard } from "@/features/comment-card";
 import { useRecipeStatus } from "@/features/recipe-status";
 
 type RecipeCommentCardProps = {

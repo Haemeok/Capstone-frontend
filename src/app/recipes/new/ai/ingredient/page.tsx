@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Container } from "@/shared/ui/Container";
+import { ArrowLeftIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
 import { useCreateAIRecipeMutation } from "@/features/recipe-create-ai";
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
@@ -124,7 +124,7 @@ const IngredientRecipePage = () => {
               onClick={() => router.back()}
               className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
             >
-              <ArrowLeft size={20} />
+              <ArrowLeftIcon size={20} />
               <span className="text-sm font-medium">AI 다시 선택하기</span>
             </button>
           </div>
