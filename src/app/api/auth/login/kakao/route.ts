@@ -1,16 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import crypto from "crypto";
 
-import { getBaseUrl } from "@/shared/lib/env/getBaseUrl";
+import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const state = crypto.randomBytes(16).toString("hex");
 
     const kakaoAuthUrl = new URL("https://kauth.kakao.com/oauth/authorize");
 
-    const baseUrl = getBaseUrl();
+    const baseUrl = getBaseUrlFromRequest(request);
     const kakaoClientId = process.env.KAKAO_CLIENT_ID;
 
     if (!kakaoClientId) {
