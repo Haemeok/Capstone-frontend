@@ -1,10 +1,10 @@
 "use client";
 
-import RecipeInteractionButtons from "@/widgets/RecipeInteractionButtons";
-
 import { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { useRecipeStatus } from "@/features/recipe-status";
+
+import RecipeInteractionButtons from "@/widgets/RecipeInteractionButtons";
 
 type RecipeInteractionBarProps = {
   staticRecipe: StaticRecipe;

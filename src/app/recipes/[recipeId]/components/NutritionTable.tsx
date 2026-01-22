@@ -1,8 +1,10 @@
 "use client";
 
 import { cn } from "@/shared/lib/utils";
-import NutritionItem from "./NutritionItem";
+
 import { Nutrition } from "@/entities/recipe/model/types";
+
+import NutritionItem from "./NutritionItem";
 
 type NutritionTableProps = {
   nutrition: Nutrition;

@@ -2,10 +2,10 @@
 
 import PrevButton from "@/shared/ui/PrevButton";
 
-import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
-import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
-
 import { useRecipeStatus } from "@/features/recipe-status";
+
+import RecipeNavBarButtons from "@/widgets/Header/RecipeNavBarButtons";
+import TransformingNavbar from "@/widgets/Header/TransformingNavbar";
 
 type RecipeNavbarProps = {
   title: string;

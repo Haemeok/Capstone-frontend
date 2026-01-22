@@ -1,6 +1,6 @@
 "use client";
 
-import { Utensils, Apple } from "lucide-react";
+import { Apple,Utensils } from "lucide-react";
 
 import IconToggle from "@/shared/ui/IconToggle";
 

@@ -2,8 +2,9 @@
 
 import { FabButton } from "@/shared/ui/FabButton";
 
-import { useRecipeContainer } from "./RecipeContainer";
 import { useRecipeStatus } from "@/features/recipe-status";
+
+import { useRecipeContainer } from "./RecipeContainer";
 
 type RecipeFabButtonProps = {
   hasAllStepImages: boolean;

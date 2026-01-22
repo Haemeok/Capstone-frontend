@@ -2,10 +2,13 @@
 
 import { useRouter } from "next/navigation";
 
-import { useUserStore } from "@/entities/user/model/store";
 import Ratings from "@/shared/ui/Ratings";
-import { useToastStore } from "@/widgets/Toast/model/store";
+
+import { useUserStore } from "@/entities/user/model/store";
+
 import { useRecipeStatus } from "@/features/recipe-status";
+
+import { useToastStore } from "@/widgets/Toast/model/store";
 
 type RecipeRatingButtonProps = {
   avgRating: number;
