@@ -1,5 +1,6 @@
 "use client";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
 type IconToggleOption<T> = {
@@ -31,9 +32,10 @@ const IconToggle = <T extends string | boolean>({
         "flex h-8 w-44 cursor-pointer overflow-hidden rounded-full border border-gray-200 bg-gray-100 transition-all duration-300",
         className
       )}
-      onClick={() =>
-        onChange(isRightSelected ? leftOption.value : rightOption.value)
-      }
+      onClick={() => {
+        triggerHaptic("Light");
+        onChange(isRightSelected ? leftOption.value : rightOption.value);
+      }}
       role="button"
       tabIndex={0}
       aria-label={`${isRightSelected ? leftOption.label : rightOption.label} 보기`}
