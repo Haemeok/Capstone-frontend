@@ -1,38 +1,39 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
+
 import {
   generateNotFoundRecipeMetadata,
   generateRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
 import {
-  getStaticrecipionServer,
-  getStaticRecipesOnServer,
   getRecommendedRecipesOnServer,
+  getStaticRecipesOnServer,
+  getStaticrecipionServer,
 } from "@/entities/recipe/model/api.server";
-
-import DesktopFooter from "@/widgets/Footer/DesktopFooter";
+import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
 import { RecipeCompleteButton } from "@/features/recipe-complete";
-
-import { RecipeContainer } from "./components/RecipeContainer";
 import { RecipeStatusProvider } from "@/features/recipe-status";
-import RecipeNavbar from "./components/RecipeNavbar";
-import RecipeHeroSection from "./components/RecipeHeroSection";
-import RecipeInfoSection from "./components/RecipeInfoSection";
-import RecipeInteractionBar from "./components/RecipeInteractionBar";
+
+import DesktopFooter from "@/widgets/Footer/DesktopFooter";
+import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
+
+import { CoupangDisclosure } from "./components/CoupangDisclosure";
 import RecipeCommentsSection from "./components/RecipeCommentsSection";
-import RecipeIngredientsSection from "./components/RecipeIngredientsSection";
-import RecipeFabButton from "./components/RecipeFabButton";
-import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
-import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
-import RecipeTagsSection from "./components/RecipeTagsSection";
+import RecipeComponentsSection from "./components/RecipeComponentsSection";
+import { RecipeContainer } from "./components/RecipeContainer";
 import RecipeCookingInfoSection from "./components/RecipeCookingInfoSection";
 import RecipeCookingTipsSection from "./components/RecipeCookingTipsSection";
-import RecipeComponentsSection from "./components/RecipeComponentsSection";
+import RecipeFabButton from "./components/RecipeFabButton";
+import RecipeHeroSection from "./components/RecipeHeroSection";
+import RecipeInfoSection from "./components/RecipeInfoSection";
+import RecipeIngredientsSection from "./components/RecipeIngredientsSection";
+import RecipeInteractionBar from "./components/RecipeInteractionBar";
+import RecipeNavbar from "./components/RecipeNavbar";
 import RecipePlatingSection from "./components/RecipePlatingSection";
-import { CoupangDisclosure } from "./components/CoupangDisclosure";
-import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
+import RecipeTagsSection from "./components/RecipeTagsSection";
 import RecipeVideoSection from "./components/RecipeVideoSection";
 import { ScrollReset } from "./components/ScrollReset";
 
@@ -74,7 +75,7 @@ export default async function RecipeDetailPage({
   if (!staticRecipe) {
     notFound();
   }
-
+  console.log(staticRecipe);
   const saveAmount =
     staticRecipe.marketPrice - staticRecipe.totalIngredientCost;
 
@@ -88,12 +89,13 @@ export default async function RecipeDetailPage({
 
   const youtubeMetadata = staticRecipe.youtubeChannelName
     ? {
-      channelName: staticRecipe.youtubeChannelName,
-      videoTitle: staticRecipe.youtubeVideoTitle,
-      channelProfileUrl: staticRecipe.youtubeChannelProfileUrl,
-      subscriberCount: staticRecipe.youtubeSubscriberCount,
-      thumbnailUrl: staticRecipe.youtubeThumbnailUrl,
-    }
+        channelName: staticRecipe.youtubeChannelName,
+        videoTitle: staticRecipe.youtubeVideoTitle,
+        channelProfileUrl: staticRecipe.youtubeChannelProfileUrl,
+        subscriberCount: staticRecipe.youtubeSubscriberCount,
+        thumbnailUrl: staticRecipe.youtubeThumbnailUrl,
+        channelId: staticRecipe.youtubeChannelId,
+      }
     : undefined;
 
   return (

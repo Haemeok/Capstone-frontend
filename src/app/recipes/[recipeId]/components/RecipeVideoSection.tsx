@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 
 import { Pin } from "lucide-react";
 
@@ -45,12 +45,12 @@ export default function RecipeVideoSection({
   youtubeMetadata,
   children,
 }: RecipeVideoSectionProps) {
+  const playerRef = useRef<YouTubeVideoPlayerRef>(null);
+  const [isSticky, setIsSticky] = useState(false);
+
   if (videoUrl === "") {
     return <>{children}</>;
   }
-
-  const playerRef = useRef<YouTubeVideoPlayerRef>(null);
-  const [isSticky, setIsSticky] = useState(false);
 
   const seekToTimeline = (timeline: string) => {
     const seconds = parseTimelineToSeconds(timeline);
@@ -64,22 +64,6 @@ export default function RecipeVideoSection({
     setIsSticky(!isSticky);
   };
 
-  useEffect(() => {
-    if (!youtubeMetadata?.channelId) return;
-
-    const existingScript = document.querySelector(
-      'script[src="https://apis.google.com/js/platform.js"]'
-    );
-
-    if (!existingScript) {
-      const script = document.createElement("script");
-      script.src = "https://apis.google.com/js/platform.js";
-      script.async = true;
-      document.body.appendChild(script);
-    } else if (window.gapi?.ytsubscribe) {
-      window.gapi.ytsubscribe.go();
-    }
-  }, [youtubeMetadata?.channelId]);
 
   const shouldShowYoutubeInfo =
     !isSticky &&
@@ -121,7 +105,7 @@ export default function RecipeVideoSection({
             )}
           >
             {shouldShowYoutubeInfo ? (
-              <div className="bg-background/80 flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 shadow-md backdrop-blur-sm">
+              <div className="bg-background/80 flex max-w-[70%] items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 shadow-md backdrop-blur-sm">
                 <Image
                   src={youtubeMetadata.channelProfileUrl!}
                   alt={youtubeMetadata.channelName!}
@@ -129,8 +113,8 @@ export default function RecipeVideoSection({
                   imgClassName="object-cover"
                   fit="cover"
                 />
-                <div className="flex min-w-0 flex-col">
-                  <span className="line-clamp-1 text-sm font-medium">
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <span className="truncate text-sm font-medium">
                     {youtubeMetadata.channelName}
                   </span>
                   {youtubeMetadata.subscriberCount && (
@@ -141,12 +125,14 @@ export default function RecipeVideoSection({
                   )}
                 </div>
                 {youtubeMetadata.channelId && (
-                  <div
-                    className="g-ytsubscribe shrink-0"
-                    data-channelid={youtubeMetadata.channelId}
-                    data-layout="default"
-                    data-count="hidden"
-                  />
+                  <a
+                    href={`https://www.youtube.com/channel/${youtubeMetadata.channelId}?sub_confirmation=1`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 rounded-full bg-red-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-700"
+                  >
+                    구독
+                  </a>
                 )}
               </div>
             ) : (
