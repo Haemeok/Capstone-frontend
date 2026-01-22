@@ -24,26 +24,54 @@ export async function GET(request: NextRequest) {
 // Apple 성공 시 POST로 오는 경우 처리
 export async function POST(request: NextRequest) {
   try {
+    console.log("🍎 [Apple OAuth POST] 요청 수신");
+    console.log("🍎 [Apple OAuth POST] URL:", request.url);
+    console.log("🍎 [Apple OAuth POST] Host:", request.headers.get("host"));
+
     const formData = await request.formData();
     const stateFromApple = formData.get("state") as string | null;
     const code = formData.get("code") as string | null;
     const user = formData.get("user") as string | null;
+    const error = formData.get("error") as string | null;
+
+    console.log("🍎 [Apple OAuth POST] formData 파싱 결과:");
+    console.log("  - code:", code ? `${code.substring(0, 20)}...` : null);
+    console.log("  - state:", stateFromApple);
+    console.log("  - user:", user ? "(있음)" : "(없음)");
+    console.log("  - error:", error);
+
+    // POST로 왔는데 error가 있으면 실패
+    if (error) {
+      console.error("🍎 [Apple OAuth POST] Apple에서 에러 반환:", error);
+      const baseUrl = getBaseUrlFromRequest(request);
+      return NextResponse.redirect(`${baseUrl}login/error`);
+    }
 
     const stateFromCookie = request.cookies.get("state")?.value;
+    console.log("🍎 [Apple OAuth POST] Cookie state:", stateFromCookie);
 
     if (
       !stateFromApple ||
       !stateFromCookie ||
       stateFromApple !== stateFromCookie
     ) {
+      console.error("🍎 [Apple OAuth POST] State 불일치!");
+      console.error("  - Apple state:", stateFromApple);
+      console.error("  - Cookie state:", stateFromCookie);
       throw new Error("Invalid state parameter. CSRF attack detected.");
     }
 
     if (!code) {
+      console.error("🍎 [Apple OAuth POST] code가 없음!");
       throw new Error("Authorization code not found.");
     }
 
     const xEnv = getEnvHeader();
+    const baseUrl = getBaseUrlFromRequest(request);
+
+    console.log("🍎 [Apple OAuth POST] 백엔드 요청 준비:");
+    console.log("  - X-Env:", xEnv);
+    console.log("  - baseUrl:", baseUrl);
 
     const requestBody: { code: string; state: string; user?: string } = {
       code,
@@ -53,6 +81,8 @@ export async function POST(request: NextRequest) {
     if (user) {
       requestBody.user = user;
     }
+
+    console.log("🍎 [Apple OAuth POST] 백엔드 호출: https://api.recipio.kr/login/oauth2/code/apple");
 
     const backendRes = await fetch(
       `https://api.recipio.kr/login/oauth2/code/apple`,
@@ -66,15 +96,19 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    console.log("🍎 [Apple OAuth POST] 백엔드 응답:");
+    console.log("  - status:", backendRes.status);
+    console.log("  - statusText:", backendRes.statusText);
+
     if (!backendRes.ok) {
       const errorBody = await backendRes.json().catch(() => undefined);
-      console.error("Backend token exchange failed for Apple:", errorBody);
+      console.error("🍎 [Apple OAuth POST] 백엔드 에러 응답:", JSON.stringify(errorBody, null, 2));
       throw new Error("Failed to exchange token with backend.");
     }
 
     const setCookieHeaders = backendRes.headers.getSetCookie();
+    console.log("🍎 [Apple OAuth POST] Set-Cookie 헤더 수:", setCookieHeaders.length);
 
-    const baseUrl = getBaseUrlFromRequest(request);
     const redirectUrl = new URL(baseUrl);
     const finalResponse = NextResponse.redirect(redirectUrl);
 
@@ -84,9 +118,10 @@ export async function POST(request: NextRequest) {
       finalResponse.headers.append("Set-Cookie", cookie);
     });
 
+    console.log("🍎 [Apple OAuth POST] ✅ 성공! 리다이렉트:", baseUrl);
     return finalResponse;
   } catch (error) {
-    console.error("Apple OAuth callback error:", error);
+    console.error("🍎 [Apple OAuth POST] ❌ 에러 발생:", error);
     const baseUrl = getBaseUrlFromRequest(request);
     return NextResponse.redirect(`${baseUrl}login/error`);
   }
