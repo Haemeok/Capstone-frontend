@@ -34,12 +34,13 @@ const SettingsActionButton = () => {
   const isInApp = isAppWebView();
   const canWithdraw = user?.id === WITHDRAW_ALLOWED_USER_ID;
   const notificationStatus = useNotificationPermissionStore((state) => state.status);
-  const isNotificationEnabled = notificationStatus === "granted";
+  const [isNotificationOn, setIsNotificationOn] = useState(notificationStatus === "granted");
 
   const handleNotificationToggle = () => {
-    if (!isNotificationEnabled) {
+    if (!isNotificationOn) {
       requestNotificationPermission();
     }
+    setIsNotificationOn(!isNotificationOn);
   };
 
   const handleLogoutClick = () => {
@@ -82,17 +83,14 @@ const SettingsActionButton = () => {
                   </div>
                   <button
                     onClick={handleNotificationToggle}
-                    disabled={isNotificationEnabled}
-                    className={`relative h-6 w-11 rounded-full transition-colors ${
-                      isNotificationEnabled
-                        ? "bg-green-500"
-                        : "bg-gray-300"
-                    } ${isNotificationEnabled ? "cursor-default" : "cursor-pointer"}`}
-                    aria-label={isNotificationEnabled ? "알림 켜짐" : "알림 켜기"}
+                    className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${
+                      isNotificationOn ? "bg-green-500" : "bg-gray-300"
+                    }`}
+                    aria-label={isNotificationOn ? "알림 끄기" : "알림 켜기"}
                   >
                     <span
                       className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                        isNotificationEnabled ? "translate-x-5" : "translate-x-0"
+                        isNotificationOn ? "translate-x-5" : "translate-x-0"
                       }`}
                     />
                   </button>
