@@ -1,9 +1,10 @@
 "use client";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import SaveButton from "@/shared/ui/SaveButton";
 import ShareButton from "@/shared/ui/ShareButton";
-import { triggerHaptic } from "@/shared/lib/bridge";
 
+import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 import { useToggleRecipeFavorite } from "@/features/recipe-favorite";
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
 
@@ -30,8 +31,10 @@ const RecipeInteractionButtons = ({
 }: RecipeInteractionButtonsProps) => {
   const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipeId);
   const { addToast } = useToastStore();
+  const { checkAndTrigger } = useNotificationPermissionTrigger();
 
   const handleToggleFavorite = () => {
+    if (!checkAndTrigger("save")) return;
     triggerHaptic("Medium");
 
     const message = initialIsFavorite
