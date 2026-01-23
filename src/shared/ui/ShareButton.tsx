@@ -3,8 +3,10 @@
 import { Share2 } from "lucide-react";
 
 import { useShare } from "@/shared/hooks/useShare";
-import { cn } from "@/shared/lib/utils";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { cn } from "@/shared/lib/utils";
+
+import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 
 type ShareButtonProps = {
   className?: string;
@@ -23,8 +25,10 @@ const ShareButton = ({
   ...props
 }: ShareButtonProps) => {
   const { share } = useShare();
+  const { checkAndTrigger } = useNotificationPermissionTrigger();
 
   const handleShareClick = () => {
+    if (!checkAndTrigger("share")) return;
     triggerHaptic("Light");
     share({ title, text, url });
   };

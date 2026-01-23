@@ -2,10 +2,12 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 
-import HeartButton from "@/shared/ui/HeartButton";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import HeartButton from "@/shared/ui/HeartButton";
 
 import { RecipeStatus } from "@/entities/recipe/model/types";
+
+import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 
 import { useLikeRecipeMutation } from "../model/hooks";
 
@@ -36,6 +38,8 @@ const RecipeLikeButton = ({
   const queryClient = useQueryClient();
   const { mutate: toggleLikeMutate } = useLikeRecipeMutation(recipeId);
 
+  const { checkAndTrigger } = useNotificationPermissionTrigger();
+
   const currentStatus = queryClient.getQueryData<RecipeStatus>([
     "recipe-status",
     recipeId,
@@ -45,6 +49,7 @@ const RecipeLikeButton = ({
   const likeCount = currentStatus?.likeCount ?? initialLikeCount;
 
   const handleLikeClick = () => {
+    if (!checkAndTrigger("like")) return;
     triggerHaptic("Light");
     toggleLikeMutate();
   };
