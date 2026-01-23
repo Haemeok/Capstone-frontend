@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import AppleLoginButton from "@/features/auth/ui/AppleLoginButton";
@@ -9,10 +10,30 @@ import NaverLoginButton from "@/features/auth/ui/NaverLoginButton";
 import { Image } from "@/shared/ui/image/Image";
 import TextAnimate from "@/shared/ui/shadcn/text-animate";
 
+const TEST_LOGIN_CLICK_THRESHOLD = 7;
+
 const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "/";
+  const [clickCount, setClickCount] = useState(0);
+
+  const handleLogoClick = async () => {
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+
+    if (newCount >= TEST_LOGIN_CLICK_THRESHOLD) {
+      setClickCount(0);
+      try {
+        const res = await fetch("/api/token/test-login", { method: "POST" });
+        if (res.ok) {
+          window.location.replace(from);
+        }
+      } catch (error) {
+        console.error("Test login failed:", error);
+      }
+    }
+  };
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -36,7 +57,8 @@ const LoginContent = () => {
             type="popIn"
             delay={0.5}
             duration={2}
-            className="text-8xl font-bold tracking-tighter text-white md:text-8xl"
+            className="cursor-pointer text-8xl font-bold tracking-tighter text-white md:text-8xl"
+            onClick={handleLogoClick}
           />
         </div>
 

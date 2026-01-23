@@ -136,6 +136,17 @@
     }
   }
 
+  /* 앱 WebView에서만 스크롤바 숨김 */
+  html.is-app-webview {
+    *::-webkit-scrollbar {
+      display: none;
+    }
+
+    * {
+      scrollbar-width: none;
+    }
+  }
+
   html,
   body {
     overflow-x: hidden;
