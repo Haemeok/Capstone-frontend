@@ -1,14 +1,18 @@
 "use client";
 
 import dynamic from "next/dynamic";
+
 import { Loader2 } from "lucide-react";
 
-import { formatNumber } from "@/shared/lib/format";
-import { cn } from "@/lib/utils";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { formatNumber } from "@/shared/lib/format";
+
+import { useNotificationPermissionTrigger } from "@/features/notification-permission";
+import { useRecipeStatus } from "@/features/recipe-status";
+
+import { cn } from "@/lib/utils";
 
 import { useRecipeComplete } from "../model/hooks";
-import { useRecipeStatus } from "@/features/recipe-status";
 
 const LevelUpModal = dynamic(
   () => import("@/features/level-up").then((mod) => mod.LevelUpModal),
@@ -27,9 +31,11 @@ const RecipeCompleteButton = ({
   const { recipeId } = useRecipeStatus();
   const { completeRecipe, isCompleted, isLoading, showReward, setShowReward } =
     useRecipeComplete({ recipeId, saveAmount });
+  const { checkAndTrigger } = useNotificationPermissionTrigger();
 
   const handleClick = () => {
     if (isCompleted || isLoading) return;
+    if (!checkAndTrigger("complete")) return;
     triggerHaptic("Success");
     completeRecipe();
   };
