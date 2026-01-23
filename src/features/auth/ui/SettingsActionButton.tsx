@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 
-import { LogOut, Settings, FileText, AlertTriangle, UserX } from "lucide-react";
+import { LogOut, Settings, FileText, AlertTriangle, UserX, Bell } from "lucide-react";
 
 import { useUserStore } from "@/entities/user";
+import { isAppWebView, requestNotificationPermission } from "@/shared/lib/bridge";
+import { useNotificationPermissionStore } from "@/features/notification-permission";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import {
   Dialog,
@@ -29,7 +31,16 @@ const SettingsActionButton = () => {
   const { Container, Content, Header, Title, Footer, Close } =
     useResponsiveSheet();
 
+  const isInApp = isAppWebView();
   const canWithdraw = user?.id === WITHDRAW_ALLOWED_USER_ID;
+  const notificationStatus = useNotificationPermissionStore((state) => state.status);
+  const isNotificationEnabled = notificationStatus === "granted";
+
+  const handleNotificationToggle = () => {
+    if (!isNotificationEnabled) {
+      requestNotificationPermission();
+    }
+  };
 
   const handleLogoutClick = () => {
     setIsModalOpen(false);
@@ -63,6 +74,30 @@ const SettingsActionButton = () => {
             </Header>
 
             <div className="flex flex-col border-t border-gray-200 sm:border-none">
+              {isInApp && (
+                <div className="flex w-full items-center justify-between px-4 py-3">
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <Bell size={16} aria-hidden="true" />
+                    <span>알림</span>
+                  </div>
+                  <button
+                    onClick={handleNotificationToggle}
+                    disabled={isNotificationEnabled}
+                    className={`relative h-6 w-11 rounded-full transition-colors ${
+                      isNotificationEnabled
+                        ? "bg-green-500"
+                        : "bg-gray-300"
+                    } ${isNotificationEnabled ? "cursor-default" : "cursor-pointer"}`}
+                    aria-label={isNotificationEnabled ? "알림 켜짐" : "알림 켜기"}
+                  >
+                    <span
+                      className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                        isNotificationEnabled ? "translate-x-5" : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+                </div>
+              )}
               <a
                 href="https://grizzly-taker-1ad.notion.site/2ecc8d1def7c8068ad97e3f6318b6d90?pvs=74"
                 target="_blank"
