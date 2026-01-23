@@ -16,13 +16,13 @@ export const IngredientReportButton = ({
       type="button"
       onClick={onToggle}
       className={cn(
-        "cursor-pointer rounded-lg px-2 py-1 text-xs font-medium transition-all",
+        "cursor-pointer rounded-lg px-2.5 py-1 text-xs font-medium transition-all",
         isReportMode
           ? "bg-olive-light/10 text-olive-light"
-          : "text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+          : "bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-600"
       )}
     >
-      {isReportMode ? "완료" : "오류 신고"}
+      {isReportMode ? "완료" : "🏳️ 제보"}
     </button>
   );
 };
