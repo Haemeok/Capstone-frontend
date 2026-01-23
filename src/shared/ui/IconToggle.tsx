@@ -5,7 +5,7 @@ import { cn } from "@/shared/lib/utils";
 
 type IconToggleOption<T> = {
   icon: React.ReactNode;
-  label: string;
+  label?: string;
   value: T;
 };
 
@@ -64,14 +64,14 @@ const IconToggle = <T extends string | boolean>({
           >
             {leftOption.icon}
           </div>
-          <span
+          {leftOption.label && <span
             className={cn(
               "text-sm font-medium transition-colors duration-300",
               !isRightSelected ? "text-gray-800" : "text-gray-500"
             )}
           >
             {leftOption.label}
-          </span>
+          </span>}
         </div>
 
         <div
@@ -88,14 +88,14 @@ const IconToggle = <T extends string | boolean>({
           >
             {rightOption.icon}
           </div>
-          <span
+          {rightOption.label && <span
             className={cn(
               "text-sm font-medium transition-colors duration-300",
               isRightSelected ? "text-gray-800" : "text-gray-500"
             )}
           >
             {rightOption.label}
-          </span>
+          </span>}
         </div>
       </div>
     </div>

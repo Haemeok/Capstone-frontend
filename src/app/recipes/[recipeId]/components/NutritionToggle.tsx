@@ -1,6 +1,6 @@
 "use client";
 
-import { Apple,Utensils } from "lucide-react";
+import { Apple, Utensils } from "lucide-react";
 
 import IconToggle from "@/shared/ui/IconToggle";
 
@@ -19,12 +19,12 @@ const NutritionToggle = ({
     <IconToggle<boolean>
       leftOption={{
         icon: <Utensils className="h-4 w-4" strokeWidth={2} />,
-        label: "재료",
+
         value: false,
       }}
       rightOption={{
         icon: <Apple className="h-4 w-4" strokeWidth={2} />,
-        label: "영양성분",
+
         value: true,
       }}
       value={isNutrition}
