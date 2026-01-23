@@ -1,5 +1,16 @@
 export { isAppWebView, postMessage } from "./client";
 export { triggerHaptic } from "./haptic";
-export { triggerNativeShare } from "./share";
+export {
+  checkNotificationStatus,
+  requestNotificationPermission,
+} from "./notification";
 export type { SharePayload } from "./share";
-export type { HapticStyle, BridgeMessage, BridgeMessageType } from "./types";
+export { triggerNativeShare } from "./share";
+export type {
+  AppToWebMessage,
+  BridgeMessage,
+  BridgeMessageType,
+  HapticStyle,
+  NotificationStatus,
+} from "./types";
+export { useAppMessageListener } from "./useAppMessage";

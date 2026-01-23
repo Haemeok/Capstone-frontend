@@ -1,6 +1,11 @@
 type StorageKey = string;
 type StorageValue = string | null;
 
+type StorageItemWithExpiry<T> = {
+  value: T;
+  expiresAt: number;
+};
+
 class SafeStorage {
   private isAvailable(): boolean {
     try {
@@ -51,6 +56,38 @@ class SafeStorage {
 
   setBooleanItem(key: StorageKey, value: boolean): boolean {
     return this.setItem(key, value.toString());
+  }
+
+  getItemWithExpiry<T>(key: StorageKey): T | null {
+    const raw = this.getItem(key);
+    if (!raw) return null;
+
+    try {
+      const parsed: StorageItemWithExpiry<T> = JSON.parse(raw);
+
+      if (typeof parsed.expiresAt !== "number") {
+        return null;
+      }
+
+      const now = Date.now();
+
+      if (now >= parsed.expiresAt) {
+        this.removeItem(key);
+        return null;
+      }
+
+      return parsed.value;
+    } catch {
+      return null;
+    }
+  }
+
+  setItemWithExpiry<T>(key: StorageKey, value: T, ttlMs: number): boolean {
+    const item: StorageItemWithExpiry<T> = {
+      value,
+      expiresAt: Date.now() + ttlMs,
+    };
+    return this.setItem(key, JSON.stringify(item));
   }
 }
 
