@@ -18,20 +18,13 @@ const LoginContent = () => {
   const from = searchParams.get("from") || "/";
   const [clickCount, setClickCount] = useState(0);
 
-  const handleLogoClick = async () => {
+  const handleLogoClick = () => {
     const newCount = clickCount + 1;
     setClickCount(newCount);
 
     if (newCount >= TEST_LOGIN_CLICK_THRESHOLD) {
       setClickCount(0);
-      try {
-        const res = await fetch("/api/token/test-login", { method: "POST" });
-        if (res.ok) {
-          window.location.replace(from);
-        }
-      } catch (error) {
-        console.error("Test login failed:", error);
-      }
+      window.location.href = "/api/token/test-login";
     }
   };
 
