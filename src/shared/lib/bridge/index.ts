@@ -1,3 +1,4 @@
+export { AppWebViewDetector } from "./AppWebViewDetector";
 export { isAppWebView, postMessage } from "./client";
 export { triggerHaptic } from "./haptic";
 export {

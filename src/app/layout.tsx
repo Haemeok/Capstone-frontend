@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 
 import { Analytics } from "@vercel/analytics/react";
 
+import { AppWebViewDetector } from "@/shared/lib/bridge";
 import { PWA_APP_INFO } from "@/shared/config/constants/pwa";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
@@ -79,6 +80,7 @@ export default async function RootLayout({
   return (
     <html lang="ko" className={`scroll-smooth ${pretendard.variable}`}>
       <body className={pretendard.className}>
+        <AppWebViewDetector />
         <AppProviders>
           <DesktopHeader />
           <main className="flex w-full flex-1 flex-col pb-[77px] md:pb-0">

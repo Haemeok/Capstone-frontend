@@ -11,7 +11,7 @@ import {
 } from "@/features/notification-permission";
 
 const GlobalNotificationPermissionDrawer = () => {
-  const { isDrawerOpen, closeDrawer, updateStatusFromApp } =
+  const { isDrawerOpen, closeDrawer, updateStatusFromApp, showSuccess } =
     useNotificationPermissionStore();
   const { handleAccept, handleDecline } = useNotificationPermissionActions();
 
@@ -33,6 +33,7 @@ const GlobalNotificationPermissionDrawer = () => {
       onOpenChange={(open) => !open && closeDrawer()}
       onAccept={handleAccept}
       onDecline={handleDecline}
+      showSuccess={showSuccess}
     />
   );
 };
