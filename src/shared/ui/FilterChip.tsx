@@ -6,14 +6,13 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { cn } from "@/lib/utils";
 
-type FilterChipProps = {
+type FilterChipProps = React.ComponentPropsWithoutRef<"button"> & {
   header: string;
-  onClick?: () => void;
   isDirty: boolean;
 };
 
 const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
-  ({ header, onClick, isDirty }, ref) => {
+  ({ header, onClick, isDirty, ...props }, ref) => {
     return (
       <button
         ref={ref}
@@ -22,10 +21,11 @@ const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
           isDirty ? "bg-dark-light" : "bg-white",
           isDirty ? "border-dark-light" : "border-gray-300"
         )}
-        onClick={() => {
+        onClick={(e) => {
           triggerHaptic("Light");
-          onClick?.();
+          onClick?.(e);
         }}
+        {...props}
         aria-label={`${header} 필터 열기`}
         aria-expanded={false}
       >
