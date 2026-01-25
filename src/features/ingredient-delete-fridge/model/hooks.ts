@@ -53,6 +53,11 @@ export const useDeleteIngredientMutation = (queryKey?: (string | number)[]) => {
       }
       console.error("재료 삭제 실패:", error);
     },
+    onSettled: () => {
+      const targetQueryKey = queryKey || ["ingredients"];
+      queryClient.invalidateQueries({ queryKey: targetQueryKey });
+      queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
+    },
   });
 };
 
