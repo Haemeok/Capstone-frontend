@@ -4,6 +4,8 @@ import { IngredientItem as IngredientItemType } from "@/entities/ingredient";
 
 import IngredientsLoginCTA from "@/features/auth/ui/IngredientsLoginCTA";
 
+import IngredientEmptyState from "@/widgets/IngredientGrid/ui/IngredientEmptyState";
+import IngredientGridSkeleton from "@/widgets/IngredientGrid/ui/IngredientGridSkeleton";
 import IngredientItem from "@/widgets/IngredientGrid/ui/IngredientItem";
 
 type IngredientGridProps = {
@@ -22,16 +24,18 @@ const IngredientGrid = ({
   ingredients,
   isDeleteMode,
   isFetchingNextPage,
-  hasNextPage,
   error,
   ref,
   isLoggedIn,
   setSelectedIngredientIds,
   selectedIngredientIds,
 }: IngredientGridProps) => {
+  const showEmptyState =
+    !isFetchingNextPage && ingredients && ingredients.length === 0;
+
   return isLoggedIn ? (
-    <div className="flex grow flex-col gap-4">
-      <div className="grid w-full grid-cols-2 gap-4 p-4">
+    <div className="flex grow flex-col gap-5">
+      <div className="grid w-full grid-cols-2 gap-5 p-5">
         {ingredients?.map((ingredient) => (
           <IngredientItem
             key={ingredient.id}
@@ -41,17 +45,9 @@ const IngredientGrid = ({
             isSelected={selectedIngredientIds.includes(ingredient.id)}
           />
         ))}
+        {isFetchingNextPage && <IngredientGridSkeleton count={4} />}
+        {showEmptyState && <IngredientEmptyState />}
       </div>
-      {isFetchingNextPage && (
-        <p className="text-center text-gray-500">
-          더 많은 재료를 불러오는 중...
-        </p>
-      )}
-      {!hasNextPage && ingredients && ingredients.length === 0 && (
-        <p className="text-center text-sm text-gray-400">
-          모든 재료를 불러왔습니다.
-        </p>
-      )}
       {error && (
         <p className="text-center text-red-500">
           오류 발생:{" "}

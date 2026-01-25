@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InfiniteData } from "@tanstack/react-query";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import {
   IngredientMutationContext,
   IngredientsApiResponse,
@@ -101,6 +103,7 @@ export const useDeleteIngredientBulkMutation = (
       return { previousIngredientsListData };
     },
     onSuccess: () => {
+      triggerHaptic("Success");
       queryClient.invalidateQueries({ queryKey: ["ingredients"] });
       queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
       options?.onSuccess?.();
