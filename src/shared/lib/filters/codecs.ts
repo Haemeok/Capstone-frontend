@@ -62,3 +62,14 @@ export const queryCodec = {
     return param || "";
   },
 };
+
+export const ingredientsCodec = {
+  encode: (values: string[]): string | null => {
+    if (values.length === 0) return null;
+    return values.join(",");
+  },
+  decode: (param: string | null): string[] => {
+    if (!param) return [];
+    return param.split(",").filter(Boolean);
+  },
+};
