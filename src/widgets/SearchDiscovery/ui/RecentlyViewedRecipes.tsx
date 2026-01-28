@@ -2,6 +2,13 @@
 
 import { useRecentlyViewedRecipes } from "@/shared/hooks/useRecentlyViewedRecipes";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/shared/ui/shadcn/carousel";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
@@ -34,22 +41,33 @@ const RecentlyViewedRecipes = () => {
         </button>
       </div>
 
-      <div className="scrollbar-hide -mx-4 flex gap-3 overflow-x-auto px-4">
-        {validRecipes.map((recipe) => (
-          <div key={recipe.id} className="w-[180px] shrink-0">
-            <DetailedRecipeGridItem
-              recipe={{
-                ...recipe,
-                avgRating: recipe.avgRating ?? 0,
-                ratingCount: recipe.ratingCount ?? 0,
-                createdAt: "",
-                likeCount: 0,
-                likedByCurrentUser: false,
-              }}
-            />
-          </div>
-        ))}
-      </div>
+      <Carousel
+        opts={{
+          align: "start",
+          loop: false,
+          dragFree: true,
+        }}
+        className="-mx-4 px-4"
+      >
+        <CarouselContent className="-ml-3">
+          {validRecipes.map((recipe) => (
+            <CarouselItem key={recipe.id} className="basis-[180px] pl-3">
+              <DetailedRecipeGridItem
+                recipe={{
+                  ...recipe,
+                  avgRating: recipe.avgRating ?? 0,
+                  ratingCount: recipe.ratingCount ?? 0,
+                  createdAt: "",
+                  likeCount: 0,
+                  likedByCurrentUser: false,
+                }}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-0 hidden cursor-pointer md:flex" />
+        <CarouselNext className="right-0 hidden cursor-pointer md:flex" />
+      </Carousel>
     </section>
   );
 };

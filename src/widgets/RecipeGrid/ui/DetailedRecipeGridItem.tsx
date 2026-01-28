@@ -2,14 +2,30 @@
 
 import Link from "next/link";
 
+import { Bookmark, Clock, Crown, Eye, Flame } from "lucide-react";
+
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
+import { saveRecentlyViewedRecipe } from "@/shared/hooks/useRecentlyViewedRecipes";
+import { formatCount } from "@/shared/lib/format";
 import { cn } from "@/shared/lib/utils";
-import { StarIcon } from "@/shared/ui/icons";
 import { Image } from "@/shared/ui/image/Image";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
+
+const getViewCountTier = (count: number) => {
+  // LV.3: 100만+ (초대박) - 왕관
+  if (count >= 1000000) {
+    return { icon: Crown, iconColor: "text-amber-500", strokeWidth: 2.5 };
+  }
+  // LV.2: 10만 ~ 100만 (인기) - 불꽃
+  if (count >= 100000) {
+    return { icon: Flame, iconColor: "text-orange-500", strokeWidth: 2.5 };
+  }
+  // LV.1: 10만 미만 (일반) - 눈
+  return { icon: Eye, iconColor: "text-gray-400", strokeWidth: 2 };
+};
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
@@ -32,6 +48,23 @@ const DetailedRecipeGridItem = ({
 }: DetailedRecipeGridItemProps) => {
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
 
+  const handleClick = () => {
+    saveRecentlyViewedRecipe({
+      id: recipe.id,
+      title: recipe.title,
+      imageUrl: recipe.imageUrl,
+      authorName: recipe.authorName,
+      authorId: recipe.authorId,
+      profileImage: recipe.profileImage,
+      cookingTime: recipe.cookingTime,
+      avgRating: recipe.avgRating,
+      ratingCount: recipe.ratingCount,
+      isYoutube: recipe.isYoutube,
+      youtubeVideoViewCount: recipe.youtubeVideoViewCount,
+      favoriteCount: recipe.favoriteCount,
+    });
+  };
+
   return (
     <div
       className={cn(`relative flex shrink-0 flex-col rounded-2xl`, className)}
@@ -42,6 +75,7 @@ const DetailedRecipeGridItem = ({
         className="group block"
         aria-label={`${recipe.title} 레시피 보기`}
         prefetch={prefetch ? true : null}
+        onClick={handleClick}
       >
         <div className="relative overflow-hidden rounded-2xl">
           <Image
@@ -67,15 +101,34 @@ const DetailedRecipeGridItem = ({
             {recipe.title}
           </p>
 
-          <div className="flex items-center gap-[2px]">
-            <StarIcon size={15} className="fill-gray-800" />
-            <p className="text-mm text-gray-800">{recipe.avgRating}</p>
-            <p className="text-mm text-gray-800">{`(${recipe.ratingCount})`}</p>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            {recipe.isYoutube && recipe.youtubeVideoViewCount != null && (() => {
+              const tier = getViewCountTier(recipe.youtubeVideoViewCount);
+              const IconComponent = tier.icon;
+              return (
+                <div className="flex items-center gap-1">
+                  <IconComponent
+                    size={14}
+                    className={tier.iconColor}
+                    strokeWidth={tier.strokeWidth}
+                  />
+                  <span>{formatCount(recipe.youtubeVideoViewCount)}</span>
+                </div>
+              );
+            })()}
+
+            {recipe.favoriteCount != null && (
+              <div className="flex items-center gap-1">
+                <Bookmark size={14} className="text-gray-400" />
+                <span>{formatCount(recipe.favoriteCount)}</span>
+              </div>
+            )}
+
             {recipe.cookingTime != null && (
-              <>
-                <p className="text-mm text-gray-800">·</p>
-                <p className="text-mm text-gray-800">{`${recipe.cookingTime}분`}</p>
-              </>
+              <div className="flex items-center gap-1">
+                <Clock size={14} className="text-gray-400" />
+                <span>{recipe.cookingTime}분</span>
+              </div>
             )}
           </div>
         </div>
