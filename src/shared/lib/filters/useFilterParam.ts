@@ -28,7 +28,7 @@ export const useFilterParam = <T>(paramName: string, codec: Codec<T>) => {
         newParams.delete(paramName);
       }
 
-      router.replace(`/search?${newParams.toString()}`);
+      router.replace(`/search/results?${newParams.toString()}`);
     },
     [router, searchParams, paramName, codec]
   );
