@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import crypto from "crypto";
-
+import { createOAuthState } from "@/shared/lib/auth/oauthState";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 
 export async function GET(request: NextRequest) {
   try {
-    const state = crypto.randomBytes(16).toString("hex");
+    const { searchParams } = new URL(request.url);
+    const platform = searchParams.get("platform");
+
+    const { state, csrfToken } = createOAuthState(
+      platform === "app" ? "app" : undefined
+    );
 
     const appleAuthUrl = new URL("https://appleid.apple.com/auth/authorize");
 
@@ -29,7 +33,7 @@ export async function GET(request: NextRequest) {
 
     const response = NextResponse.redirect(appleAuthUrl);
 
-    response.cookies.set("state", state, {
+    response.cookies.set("state", csrfToken, {
       path: "/",
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { parseOAuthState } from "@/shared/lib/auth/oauthState";
+import {
+  generateExchangeCode,
+  storeTokenForExchange,
+} from "@/shared/lib/auth/tokenExchangeCache";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
+
+const DEEP_LINK_SCHEME = "recipio://auth/callback";
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,17 +17,15 @@ export async function GET(request: NextRequest) {
     const code = searchParams.get("code");
     const stateFromCookie = request.cookies.get("state")?.value;
 
-    if (
-      !stateFromProvider ||
-      !stateFromCookie ||
-      stateFromProvider !== stateFromCookie
-    ) {
-      console.error("❌ State validation failed!");
+    const { csrfToken, isApp } = parseOAuthState(stateFromProvider);
+
+    if (!csrfToken || !stateFromCookie || csrfToken !== stateFromCookie) {
+      console.error("State validation failed!");
       throw new Error("Invalid state parameter. CSRF attack detected.");
     }
 
     if (!code) {
-      console.error("❌ No authorization code!");
+      console.error("No authorization code!");
       throw new Error("Authorization code not found.");
     }
 
@@ -40,13 +45,23 @@ export async function GET(request: NextRequest) {
 
     if (!backendRes.ok) {
       const errorBody = await backendRes.json().catch(() => undefined);
-      console.error("❌ Backend token exchange failed:", errorBody);
+      console.error("Backend token exchange failed:", errorBody);
       throw new Error("Failed to exchange token with backend.");
     }
 
     const setCookieHeaders = backendRes.headers.getSetCookie();
-
     const baseUrl = getBaseUrlFromRequest(request);
+
+    if (isApp) {
+      const exchangeCode = generateExchangeCode();
+      storeTokenForExchange(exchangeCode, setCookieHeaders);
+
+      const deepLinkUrl = `${DEEP_LINK_SCHEME}?code=${exchangeCode}`;
+      const response = NextResponse.redirect(deepLinkUrl);
+      response.cookies.set("state", "", { maxAge: 0 });
+      return response;
+    }
+
     const redirectUrl = new URL(baseUrl);
     const finalResponse = NextResponse.redirect(redirectUrl);
 
@@ -58,7 +73,7 @@ export async function GET(request: NextRequest) {
 
     return finalResponse;
   } catch (error) {
-    console.error("❌ OAuth callback error:", error);
+    console.error("OAuth callback error:", error);
     const baseUrl = getBaseUrlFromRequest(request);
     return NextResponse.redirect(`${baseUrl}login/error`);
   }
