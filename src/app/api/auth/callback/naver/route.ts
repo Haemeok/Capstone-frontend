@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { parseOAuthState } from "@/shared/lib/auth/oauthState";
+import {
+  generateExchangeCode,
+  storeTokenForExchange,
+} from "@/shared/lib/auth/tokenExchangeCache";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
+
+const DEEP_LINK_SCHEME = "recipio://auth/callback";
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,11 +17,9 @@ export async function GET(request: NextRequest) {
     const code = searchParams.get("code");
     const stateFromCookie = request.cookies.get("state")?.value;
 
-    if (
-      !stateFromProvider ||
-      !stateFromCookie ||
-      stateFromProvider !== stateFromCookie
-    ) {
+    const { csrfToken, isApp } = parseOAuthState(stateFromProvider);
+
+    if (!csrfToken || !stateFromCookie || csrfToken !== stateFromCookie) {
       throw new Error("Invalid state parameter. CSRF attack detected.");
     }
 
@@ -43,8 +48,18 @@ export async function GET(request: NextRequest) {
     }
 
     const setCookieHeaders = backendRes.headers.getSetCookie();
-
     const baseUrl = getBaseUrlFromRequest(request);
+
+    if (isApp) {
+      const exchangeCode = generateExchangeCode();
+      storeTokenForExchange(exchangeCode, setCookieHeaders);
+
+      const deepLinkUrl = `${DEEP_LINK_SCHEME}?code=${exchangeCode}`;
+      const response = NextResponse.redirect(deepLinkUrl);
+      response.cookies.set("state", "", { maxAge: 0 });
+      return response;
+    }
+
     const redirectUrl = new URL(baseUrl);
     const finalResponse = NextResponse.redirect(redirectUrl);
 
