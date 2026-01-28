@@ -52,7 +52,7 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
         alt={page.title}
         aspectRatio="3 / 4"
         wrapperClassName="absolute inset-0"
-        imgClassName="transition-transform duration-500 group-active:scale-105"
+        imgClassName="transition-all duration-500 group-active:scale-105"
         fit="cover"
       />
 

@@ -73,12 +73,12 @@ export const CONTENT_PAGES: ContentPage[] = [
     imageUrl: `${CATEGORY_BASE_URL}late_night.webp`,
     searchParams: { tags: ["LATE_NIGHT"], maxCalories: 500 },
   },
-  
+
   {
     id: "youtube-mukbang",
     title: "📺 먹방 유튜버가 숨긴",
     subtitle: "영상 속 그 음식 직접 만들기",
-    imageUrl: `${CATEGORY_BASE_URL}late_night.webp`,
+    imageUrl: `${CATEGORY_BASE_URL}holiday.webp`,
     searchParams: { tags: ["LATE_NIGHT"], types: ["YOUTUBE"] },
   },
   {
@@ -114,7 +114,7 @@ export const CONTENT_PAGES: ContentPage[] = [
     id: "protein-bulk",
     title: "💪 헬창들의 찐 식단 공개",
     subtitle: "단백질 30g 이상 벌크업",
-    imageUrl: `${CATEGORY_BASE_URL}high_protein.webp`,
+    imageUrl: `${CATEGORY_BASE_URL}camping.webp`,
     searchParams: { minProtein: 30 },
   },
 ];
