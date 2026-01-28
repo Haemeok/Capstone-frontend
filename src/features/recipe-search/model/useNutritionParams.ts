@@ -57,7 +57,7 @@ export const useNutritionParams = () => {
         newParams.delete("types");
       }
 
-      router.replace(`/search?${newParams.toString()}`);
+      router.replace(`/search/results?${newParams.toString()}`);
     },
     [router, searchParams]
   );

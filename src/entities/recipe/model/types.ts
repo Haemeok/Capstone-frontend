@@ -41,6 +41,8 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   isYoutube?: boolean;
   isAiGenerated?: boolean;
   youtubeChannelName?: string;
+  favoriteCount?: number;
+  youtubeVideoViewCount?: number;
 };
 
 export type StaticDetailedRecipeGridItem = Omit<
@@ -189,6 +191,7 @@ export type RecipeQueryParams = {
   maxSugar?: number;
   minSodium?: number;
   maxSodium?: number;
+  ingredientIds?: string[];
 };
 
 export type RecipeItemsQueryParams = {
@@ -215,6 +218,7 @@ export type RecipeItemsQueryParams = {
   maxSugar?: number;
   minSodium?: number;
   maxSodium?: number;
+  ingredientIds?: string[];
 };
 
 export type StaticRecipe = Omit<
