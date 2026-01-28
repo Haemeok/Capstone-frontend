@@ -21,6 +21,7 @@ import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
 
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
+import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
 import RecipeCommentsSection from "./components/RecipeCommentsSection";
 import RecipeComponentsSection from "./components/RecipeComponentsSection";
 import { RecipeContainer } from "./components/RecipeContainer";
@@ -100,6 +101,18 @@ export default async function RecipeDetailPage({
 
   return (
     <ScrollReset>
+      <RecentlyViewedTracker
+        recipeId={recipeId}
+        title={staticRecipe.title}
+        imageUrl={staticRecipe.imageUrl}
+        authorName={staticRecipe.author.nickname}
+        authorId={staticRecipe.author.id}
+        profileImage={staticRecipe.author.profileImage}
+        cookingTime={staticRecipe.cookingTime}
+        avgRating={staticRecipe.ratingInfo.avgRating}
+        ratingCount={staticRecipe.ratingInfo.ratingCount}
+        isYoutube={!!staticRecipe.youtubeUrl}
+      />
       <RecipeStatusProvider recipeId={recipeId}>
         <RecipeNavbar
           title={staticRecipe.title}
