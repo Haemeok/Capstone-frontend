@@ -16,7 +16,7 @@ export const SearchClient = () => {
     ref,
     queryKeyString,
     noResults,
-    noResultsMessage,
+    resetFilters,
   } = useSearchResults();
 
   return (
@@ -31,7 +31,7 @@ export const SearchClient = () => {
           isPending={isPending}
           observerRef={ref}
           noResults={noResults}
-          noResultsMessage={noResultsMessage}
+          onResetFilters={resetFilters}
           lastPageMessage={"모든 레시피를 불러왔습니다."}
           queryKeyString={queryKeyString}
         />
