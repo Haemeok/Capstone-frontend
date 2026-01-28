@@ -1,101 +1,10 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import { redirect } from "next/navigation";
+import { SearchDiscoveryClient } from "@/widgets/SearchDiscovery";
 
-import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
-import {
-  parseNutritionParams,
-  parseTypes,
-  convertNutritionToQueryParams,
-} from "@/shared/lib/nutrition/parseNutritionParams";
-
-import { SearchClient } from "@/widgets/SearchClient";
-
-type SearchPageProps = {
-  searchParams: Promise<{
-    q?: string;
-    sort?: string;
-    dishType?: string;
-    tags?: string | string[];
-    types?: string;
-  }>;
+export const metadata = {
+  title: "레시피 탐색 - 레시피오",
+  description: "다양한 레시피를 탐색하고 발견하세요.",
 };
 
-export async function generateMetadata({ searchParams }: SearchPageProps) {
-  const awaitedSearchParams = await searchParams;
-  const query = awaitedSearchParams.q || "";
-  if (query) {
-    return {
-      title: `${query} 검색 결과 - 레시피오`,
-      description: `"${query}"에 대한 레시피 검색 결과입니다.`,
-    };
-  }
-  return {
-    title: "레시피 검색 - 레시피오",
-    description: "원하는 레시피를 검색하고 찾아보세요.",
-  };
-}
-
-export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const awaitedSearchParams = await searchParams;
-
-  const typesParam = awaitedSearchParams.types;
-  if (!typesParam) {
-    const params = new URLSearchParams(
-      awaitedSearchParams as Record<string, string>
-    );
-    params.set("types", "USER,AI,YOUTUBE");
-    redirect(`/search?${params.toString()}`);
-  }
-
-  const tags = awaitedSearchParams.tags
-    ? (typeof awaitedSearchParams.tags === "string"
-        ? awaitedSearchParams.tags.split(",").filter(Boolean)
-        : awaitedSearchParams.tags)
-    : [];
-
-  const q = awaitedSearchParams.q || "";
-  const sortCode =
-    (awaitedSearchParams.sort || "DESC").toUpperCase() === "ASC"
-      ? "ASC"
-      : "DESC";
-  const dishTypeCode = awaitedSearchParams.dishType || null;
-  const tagCodes = tags;
-
-  const nutritionParams = parseNutritionParams(awaitedSearchParams);
-  const nutritionQueryParams = convertNutritionToQueryParams(nutritionParams);
-  const types = parseTypes(awaitedSearchParams);
-
-  const queryClient = new QueryClient();
-
-  queryClient.prefetchQuery({
-    queryKey: [
-      "recipes",
-      dishTypeCode,
-      sortCode,
-      tagCodes.join(","),
-      q,
-      JSON.stringify(nutritionQueryParams),
-      types.join(","),
-    ],
-    queryFn: () =>
-      getRecipesOnServer({
-        key: "search",
-        q,
-        sort: sortCode.toLowerCase() === "asc" ? "asc" : "desc",
-        dishType: dishTypeCode || undefined,
-        tags: tagCodes,
-        types,
-        ...nutritionQueryParams,
-      }),
-  });
-
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <SearchClient />
-    </HydrationBoundary>
-  );
+export default function SearchPage() {
+  return <SearchDiscoveryClient />;
 }
