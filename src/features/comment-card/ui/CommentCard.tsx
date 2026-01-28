@@ -40,7 +40,7 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
   const formattedDate = formatTimeAgo(comment.createdAt);
 
   return (
-    <div className="bg-beige flex w-full flex-col gap-2 rounded-2xl p-4">
+    <div className="flex w-full flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <UserProfileImage
@@ -57,11 +57,11 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           <p className="text-sm text-gray-400">{formattedDate}</p>
           {user?.id === comment.author.id && (
             <button
-              className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600"
+              className="ml-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
               onClick={() => setIsDeleteModalOpen(true)}
               aria-label="댓글 삭제"
             >
-              <Trash size={15} />
+              <Trash size={16} />
             </button>
           )}
         </div>
@@ -80,13 +80,13 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           <Link
             href={`comments/${comment.id}`}
             prefetch={false}
-            className="group flex cursor-pointer items-center gap-1 text-sm"
+            className="group flex cursor-pointer items-center gap-1 rounded-full px-2 py-1 text-sm text-gray-500 transition-colors hover:bg-gray-100"
           >
             <MessageSquare
               size={16}
-              className="transition-all duration-250 group-hover:scale-120 group-hover:fill-slate-500"
+              className="transition-all duration-250 group-hover:scale-110"
             />
-            <span className={`text-sm font-bold`}>{comment.replyCount}</span>
+            <span className="text-sm font-medium">{comment.replyCount}</span>
           </Link>
         )}
       </div>

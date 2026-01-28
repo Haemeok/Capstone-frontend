@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
+import { MessageSquare } from "lucide-react";
 
 import { SORT_TYPE_CODES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
@@ -63,21 +64,24 @@ const CommentsPage = () => {
               <span className="text-sm font-medium text-gray-500">
                 {data?.pages[0].page.totalElements}개의 댓글
               </span>
-              <div className="flex items-center text-sm font-bold">
+              <div className="flex items-center gap-1">
                 <button
                   className={cn(
-                    "text-gray-400",
-                    sort === "최신순" && "text-olive-light"
+                    "rounded-full px-3 py-1 text-sm font-medium transition-colors",
+                    sort === "최신순"
+                      ? "bg-olive-light/10 text-olive-light"
+                      : "text-gray-400 hover:bg-gray-100"
                   )}
                   onClick={() => setSort("최신순")}
                 >
                   최신순
                 </button>
-                <span className="mx-1">•</span>
                 <button
                   className={cn(
-                    "text-gray-400",
-                    sort === "인기순" && "text-olive-light"
+                    "rounded-full px-3 py-1 text-sm font-medium transition-colors",
+                    sort === "인기순"
+                      ? "bg-olive-light/10 text-olive-light"
+                      : "text-gray-400 hover:bg-gray-100"
                   )}
                   onClick={() => setSort("인기순")}
                 >
@@ -97,10 +101,9 @@ const CommentsPage = () => {
             </div>
             <div ref={ref} className="h-10">
               {isFetchingNextPage && (
-                <div className="flex justify-center p-4">
-                  <p className="text-sm text-gray-500">
-                    더 많은 댓글 로딩 중...
-                  </p>
+                <div className="flex items-center justify-center gap-2 p-4">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-olive-light border-t-transparent" />
+                  <p className="text-sm text-gray-500">댓글 불러오는 중</p>
                 </div>
               )}
 
@@ -110,9 +113,11 @@ const CommentsPage = () => {
                 </div>
               )}
               {comments?.length === 0 && (
-                <div className="flex flex-col items-center justify-center gap-1 p-4">
-                  <p className="text-sm text-gray-400">
-                    첫번째 댓글을 작성해보세요 !
+                <div className="flex flex-col items-center justify-center gap-2 py-12">
+                  <MessageSquare size={40} className="text-gray-300" />
+                  <p className="text-sm text-gray-500">아직 댓글이 없어요</p>
+                  <p className="text-xs text-gray-400">
+                    첫 번째 댓글을 남겨보세요
                   </p>
                 </div>
               )}
