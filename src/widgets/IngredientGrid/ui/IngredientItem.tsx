@@ -46,12 +46,10 @@ const IngredientItem = ({
       <Image
         src={ingredient.imageUrl ?? ""}
         alt={ingredient.name}
-        wrapperClassName="rounded-xl"
+        wrapperClassName="size-[60px] rounded-xl"
         imgClassName="flex-shrink-0"
-        width={60}
-        height={60}
       />
-      <div className="flex min-w-0 flex-1 flex-col pr-8">
+      <div className="flex min-w-0 flex-1 flex-col">
         <span className="text-xs font-medium text-gray-400">
           {ingredient.category}
         </span>

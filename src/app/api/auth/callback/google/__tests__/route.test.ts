@@ -6,13 +6,12 @@ import { NextRequest } from "next/server";
 import { GET } from "../route";
 
 // 모킹
-jest.mock("@/shared/lib/auth/oauthState", () => ({
-  parseOAuthState: jest.fn(),
+jest.mock("@/shared/lib/auth/crypto", () => ({
+  encryptTokenData: jest.fn(() => "encrypted-token-data"),
 }));
 
-jest.mock("@/shared/lib/auth/tokenExchangeCache", () => ({
-  generateExchangeCode: jest.fn(() => "mock-exchange-code-123"),
-  storeTokenForExchange: jest.fn(),
+jest.mock("@/shared/lib/auth/oauthState", () => ({
+  parseOAuthState: jest.fn(),
 }));
 
 jest.mock("@/shared/lib/env/getBaseUrl", () => ({
@@ -23,20 +22,15 @@ jest.mock("@/shared/lib/env/getEnvHeader", () => ({
   getEnvHeader: jest.fn(() => "local"),
 }));
 
+import { encryptTokenData } from "@/shared/lib/auth/crypto";
 import { parseOAuthState } from "@/shared/lib/auth/oauthState";
-import {
-  generateExchangeCode,
-  storeTokenForExchange,
-} from "@/shared/lib/auth/tokenExchangeCache";
 
 const mockedParseOAuthState = parseOAuthState as jest.MockedFunction<
   typeof parseOAuthState
 >;
-const mockedGenerateExchangeCode = generateExchangeCode as jest.MockedFunction<
-  typeof generateExchangeCode
+const mockedEncryptTokenData = encryptTokenData as jest.MockedFunction<
+  typeof encryptTokenData
 >;
-const mockedStoreTokenForExchange =
-  storeTokenForExchange as jest.MockedFunction<typeof storeTokenForExchange>;
 
 // fetch 모킹
 const mockFetch = jest.fn();
@@ -172,12 +166,11 @@ describe("GET /api/auth/callback/google", () => {
       const response = await GET(request);
 
       expect(response.status).toBe(307);
-      expect(response.headers.get("Location")).toBe(
-        "recipio://auth/callback?code=mock-exchange-code-123"
-      );
+      const location = response.headers.get("Location");
+      expect(location).toContain("recipio://auth/callback?code=");
     });
 
-    it("교환 코드가 생성되고 캐시에 저장되어야 함", async () => {
+    it("토큰이 암호화되어 딥링크에 포함되어야 함", async () => {
       mockFetch.mockResolvedValue(createSuccessfulBackendResponse());
 
       const request = createMockRequest(
@@ -186,11 +179,7 @@ describe("GET /api/auth/callback/google", () => {
       );
       await GET(request);
 
-      expect(mockedGenerateExchangeCode).toHaveBeenCalled();
-      expect(mockedStoreTokenForExchange).toHaveBeenCalledWith(
-        "mock-exchange-code-123",
-        MOCK_COOKIES
-      );
+      expect(mockedEncryptTokenData).toHaveBeenCalledWith(MOCK_COOKIES);
     });
 
     it("state 쿠키가 삭제되어야 함", async () => {
