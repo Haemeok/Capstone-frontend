@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { encryptTokenData } from "@/shared/lib/auth/crypto";
 import { parseOAuthState } from "@/shared/lib/auth/oauthState";
+import {
+  generateExchangeCode,
+  storeTokenForExchange,
+} from "@/shared/lib/auth/tokenExchangeCache";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
 
@@ -74,8 +77,10 @@ export async function POST(request: NextRequest) {
     const setCookieHeaders = backendRes.headers.getSetCookie();
 
     if (isApp) {
-      const encryptedToken = encryptTokenData(setCookieHeaders);
-      const deepLinkUrl = `${DEEP_LINK_SCHEME}?code=${encodeURIComponent(encryptedToken)}`;
+      const exchangeCode = generateExchangeCode();
+      storeTokenForExchange(exchangeCode, setCookieHeaders);
+
+      const deepLinkUrl = `${DEEP_LINK_SCHEME}?code=${exchangeCode}`;
       const response = NextResponse.redirect(deepLinkUrl, 303);
       response.cookies.set("state", "", { maxAge: 0 });
       return response;
