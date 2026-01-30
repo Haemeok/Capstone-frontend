@@ -15,7 +15,8 @@
       "Bash(dir /s \"C:\\\\Users\\\\for\\\\Desktop\\\\haemeok-next\\\\src\\\\app\\\\recipes\\\\[recipeId]\\\\components\")",
       "Bash(npx eslint:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(xargs cat:*)"
     ],
     "deny": [],
     "ask": []

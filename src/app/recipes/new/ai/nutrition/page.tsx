@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
@@ -19,7 +19,8 @@ import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 import {
   NutritionMode,
   NutritionFormValues,
-  DEFAULT_FORM_VALUES,
+  MODE_DEFAULTS,
+  MACRO_MODE_DEFAULTS,
 } from "./constants";
 import { MacroSlider, ModeToggle, StyleSelector } from "./components";
 
@@ -40,12 +41,14 @@ const NutritionRecipePage = () => {
 
   const { control, handleSubmit, watch, setValue, reset } =
     useForm<NutritionFormValues>({
-      defaultValues: DEFAULT_FORM_VALUES,
+      defaultValues: MACRO_MODE_DEFAULTS,
     });
 
-  useEffect(() => {
-    reset({ ...DEFAULT_FORM_VALUES, mode });
-  }, [mode, reset]);
+  // 모드 변경 시 form을 먼저 reset한 후 mode 상태 변경 (애니메이션 깜빡임 방지)
+  const handleModeChange = (newMode: NutritionMode) => {
+    reset(MODE_DEFAULTS[newMode]);
+    setMode(newMode);
+  };
 
   const onSubmit = (data: NutritionFormValues) => {
     const formatValue = (val: string, unit: string) => {
@@ -129,7 +132,7 @@ const NutritionRecipePage = () => {
             onChange={(value) => setValue("targetStyle", value)}
           />
 
-          <ModeToggle mode={mode} onModeChange={setMode} />
+          <ModeToggle mode={mode} onModeChange={handleModeChange} />
 
           {mode === "MACRO" ? (
             <div

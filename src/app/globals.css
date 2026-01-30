@@ -145,6 +145,11 @@
     * {
       scrollbar-width: none;
     }
+
+    /* Bottom Drawer safe area 자동 처리 */
+    [data-slot="drawer-content"][data-vaul-drawer-direction="bottom"] {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
   }
 
   html,

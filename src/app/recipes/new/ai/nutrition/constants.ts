@@ -32,7 +32,7 @@ export const NUTRITION_STYLES = [
   },
 ] as const;
 
-export const DEFAULT_FORM_VALUES: NutritionFormValues = {
+export const MACRO_MODE_DEFAULTS: NutritionFormValues = {
   mode: "MACRO",
   targetStyle: "Asian_Style",
   targetCalories: "제한 없음",
@@ -40,6 +40,20 @@ export const DEFAULT_FORM_VALUES: NutritionFormValues = {
   targetProtein: "25",
   targetFat: "15",
 };
+
+export const CALORIE_MODE_DEFAULTS: NutritionFormValues = {
+  mode: "CALORIE",
+  targetStyle: "Asian_Style",
+  targetCalories: "700",
+  targetCarbs: "제한 없음",
+  targetProtein: "제한 없음",
+  targetFat: "제한 없음",
+};
+
+export const MODE_DEFAULTS = {
+  MACRO: MACRO_MODE_DEFAULTS,
+  CALORIE: CALORIE_MODE_DEFAULTS,
+} as const;
 
 export const getGuidanceMessage = (name: string, value: number): string => {
   if (name === "targetCalories") {
