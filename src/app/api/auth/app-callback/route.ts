@@ -1,27 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { decryptTokenData } from "@/shared/lib/auth/crypto";
+import { retrieveAndDeleteToken } from "@/shared/lib/auth/tokenExchangeCache";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 
 export async function GET(request: NextRequest) {
-  const baseUrl = getBaseUrlFromRequest(request);
-
   try {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get("code");
+    const baseUrl = getBaseUrlFromRequest(request);
 
     if (!code) {
-      console.error("[App Callback] 토큰 코드가 없음");
+      console.error("[App Callback] 교환 코드가 없음");
       return NextResponse.redirect(`${baseUrl}login/error?reason=invalid`);
     }
 
-    let cookies: string[];
+    const cookies = retrieveAndDeleteToken(code);
 
-    try {
-      cookies = decryptTokenData(code);
-    } catch (decryptError) {
-      console.error("[App Callback] 토큰 복호화 실패:", decryptError);
-      return NextResponse.redirect(`${baseUrl}login/error?reason=invalid_token`);
+    if (!cookies) {
+      console.error("[App Callback] 교환 코드가 만료되었거나 존재하지 않음");
+      return NextResponse.redirect(`${baseUrl}login/error?reason=expired`);
     }
 
     const response = NextResponse.redirect(baseUrl);
@@ -33,6 +30,7 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (error) {
     console.error("[App Callback] 에러 발생:", error);
+    const baseUrl = getBaseUrlFromRequest(request);
     return NextResponse.redirect(`${baseUrl}login/error`);
   }
 }
