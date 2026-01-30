@@ -14,7 +14,7 @@ const FEATURES: Feature[] = [
   {
     badge: "유명 최신 레시피",
     badgeColor: "bg-blue-50 text-blue-600",
-    title: "5,000개 이상의 검증된 레시피",
+    title: "10,000개 이상의 검증된 레시피",
     description:
       "다양한 카테고리의 레시피와 유명 유튜버, 셰프들의 레시피 후기들을 만나보세요",
     benefits: ["유명 최신 레시피", "유튜버, 셰프들의 레시피 후기"],

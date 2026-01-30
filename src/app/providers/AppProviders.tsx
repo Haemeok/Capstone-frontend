@@ -23,7 +23,10 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
       <PostHogPageView />
       <QueryClientProvider client={queryClient}>
         <PWAInstallProvider>
+<<<<<<< HEAD
           <KeyboardAwareProvider>
+=======
+>>>>>>> 1b9a8c88101afa6ef8ba274951d49e8092ceb059
             <ScrollProvider>
               <WebSocketProvider>
                 <AppStateInitializer>{children}</AppStateInitializer>
@@ -32,7 +35,10 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
                 <YoutubeExtractionPrompter />
               </WebSocketProvider>
             </ScrollProvider>
+<<<<<<< HEAD
           </KeyboardAwareProvider>
+=======
+>>>>>>> 1b9a8c88101afa6ef8ba274951d49e8092ceb059
         </PWAInstallProvider>
       </QueryClientProvider>
     </PostHogProvider>

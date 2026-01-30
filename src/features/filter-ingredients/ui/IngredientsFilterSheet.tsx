@@ -109,10 +109,14 @@ export const IngredientsFilterSheet = ({ open, onOpenChange }: Props) => {
 
   return (
     <Container open={open} onOpenChange={onOpenChange}>
+<<<<<<< HEAD
       <Content
         className="flex h-[85vh] w-full flex-col sm:h-auto sm:max-h-[80vh] sm:max-w-lg md:max-w-2xl"
         style={contentStyle}
       >
+=======
+      <Content className="flex h-[85vh] w-full flex-col sm:h-auto sm:max-h-[80vh] sm:max-w-lg md:max-w-2xl">
+>>>>>>> 1b9a8c88101afa6ef8ba274951d49e8092ceb059
         <Header className="flex-shrink-0 px-4 pt-4 pb-4 sm:px-6 sm:pt-6">
           <Title className="text-xl font-bold text-gray-900">
             재료로 검색하기
