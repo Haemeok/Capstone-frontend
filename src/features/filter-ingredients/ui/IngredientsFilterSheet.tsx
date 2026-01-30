@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 
@@ -9,7 +9,6 @@ import useSearch from "@/shared/hooks/useSearch";
 import { getNextPageParam } from "@/shared/lib/utils";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { triggerHaptic } from "@/shared/lib/bridge";
-import { useKeyboardStore } from "@/shared/store/useKeyboardStore";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
@@ -26,16 +25,12 @@ type Props = {
   onOpenChange: (open: boolean) => void;
 };
 
-const DEFAULT_MAX_HEIGHT_VH = 85;
-const MIN_CONTENT_HEIGHT_PX = 200;
-
 export const IngredientsFilterSheet = ({ open, onOpenChange }: Props) => {
   const [savedIngredients, setSavedIngredients] = useIngredientsFilter();
   const selection = useIngredientSelection();
   const [category, setCategory] = useState("전체");
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasInitialized = useRef(false);
-  const { keyboardHeight, isKeyboardOpen } = useKeyboardStore();
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
@@ -87,36 +82,9 @@ export const IngredientsFilterSheet = ({ open, onOpenChange }: Props) => {
   const { Container, Content, Header, Title, Description, Footer, Close } =
     useResponsiveSheet();
 
-  // 키보드가 열렸을 때 동적으로 높이 계산
-  const contentStyle = useMemo(() => {
-    if (!isKeyboardOpen || keyboardHeight === 0) {
-      return undefined;
-    }
-
-    // 키보드 높이만큼 줄이되, 최소 높이 보장
-    const viewportHeight = typeof window !== "undefined" ? window.innerHeight : 0;
-    const defaultMaxHeight = (viewportHeight * DEFAULT_MAX_HEIGHT_VH) / 100;
-    const adjustedHeight = Math.max(
-      defaultMaxHeight - keyboardHeight,
-      MIN_CONTENT_HEIGHT_PX
-    );
-
-    return {
-      maxHeight: `${adjustedHeight}px`,
-      transition: "max-height 0.25s ease-out",
-    };
-  }, [isKeyboardOpen, keyboardHeight]);
-
   return (
     <Container open={open} onOpenChange={onOpenChange}>
-<<<<<<< HEAD
-      <Content
-        className="flex h-[85vh] w-full flex-col sm:h-auto sm:max-h-[80vh] sm:max-w-lg md:max-w-2xl"
-        style={contentStyle}
-      >
-=======
       <Content className="flex h-[85vh] w-full flex-col sm:h-auto sm:max-h-[80vh] sm:max-w-lg md:max-w-2xl">
->>>>>>> 1b9a8c88101afa6ef8ba274951d49e8092ceb059
         <Header className="flex-shrink-0 px-4 pt-4 pb-4 sm:px-6 sm:pt-6">
           <Title className="text-xl font-bold text-gray-900">
             재료로 검색하기
