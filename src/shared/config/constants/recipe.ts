@@ -13,53 +13,44 @@ export const INGREDIENT_IMAGE_URL = (name: string) =>
   `${INGREDIENT_BASE_URL}${name}.webp`;
 export const INGREDIENT_BLACK_IMAGE_URL = (name: string) =>
   `${INGREDIENT_BLACK_BASE_URL}${name}.webp`;
-export const INGREDIENT_CATEGORIES = [
-  "전체",
-  "가공/유제품",
-  "빵/떡",
-  "채소",
-  "해산물",
-  "과일",
-  "음료/주류",
-  "곡물",
-  "콩/견과류",
-  "조미료/양념",
+
+export const INGREDIENT_CATEGORIES_BASE = [
   "고기",
-  "기타",
+  "채소",
+  "조미료/양념",
+  "해산물",
+  "가공/유제품",
+  "곡물",
+  "과일",
+  "콩/견과류",
+  "음료/주류",
+  "빵/떡",
   "면",
-];
+  "기타",
+] as const;
+
+export const INGREDIENT_CATEGORIES = ["전체", ...INGREDIENT_CATEGORIES_BASE];
 
 export const INGREDIENT_CATEGORIES_NEW_RECIPE = [
   "나의 재료",
   "전체",
-  "가공/유제품",
-  "빵/떡",
-  "채소",
-  "해산물",
-  "과일",
-  "음료/주류",
-  "곡물",
-  "콩/견과류",
-  "조미료/양념",
-  "고기",
-  "기타",
-  "면",
+  ...INGREDIENT_CATEGORIES_BASE,
 ];
 
-export const INGREDIENT_CATEGORY_CODES = {
+export const INGREDIENT_CATEGORY_CODES: Record<string, string> = {
   전체: "",
+  고기: "meat",
+  채소: "vegetable",
+  "조미료/양념": "seasoning",
+  해산물: "seafood",
+  곡물: "grain",
+  과일: "fruit",
+  "콩/견과류": "legume_nut",
+  "음료/주류": "beverage",
   "가공/유제품": "dairy",
   "빵/떡": "bread",
-  채소: "vegetable",
-  해산물: "seafood",
-  과일: "fruit",
-  "음료/주류": "beverage",
-  곡물: "grain",
-  "콩/견과류": "legume_nut",
-  "조미료/양념": "seasoning",
-  고기: "meat",
-  기타: "other",
   면: "noodle",
+  기타: "other",
 };
 
 export const DISH_TYPES = [

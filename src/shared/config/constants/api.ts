@@ -57,6 +57,7 @@ export const END_POINTS = {
   RECIPE_HISTORY: "/me/calendar",
   RATING: (recipeId: string) => `/ratings/recipe/${recipeId}`,
   LOGOUT: "/token/logout",
+  DELETE_ACCOUNT: "/me",
   RECIPES_BY_TAG: () => "/recipes/by-tag",
   MY_SURVEY: "/me/survey",
   GOOGLE_LOGIN_API_ROUTE: "/api/auth/login/google",

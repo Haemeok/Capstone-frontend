@@ -49,19 +49,19 @@ const HomePage = async () => {
           />
 
           <RecipeSlideWithErrorBoundary
-            title="만원 이하 가성비 레시피"
-            queryKey="budget-recipes"
-            maxCost={10000}
-            isStatic
-            staticRecipes={staticBudgetRecipes.content}
-          />
-
-          <RecipeSlideWithErrorBoundary
             title="주간 인기 레시피"
             queryKey="popular-recipes"
             period="weekly"
             isStatic
             staticRecipes={staticPopularRecipes.content}
+          />
+
+          <RecipeSlideWithErrorBoundary
+            title="만원 이하 가성비 레시피"
+            queryKey="budget-recipes"
+            maxCost={10000}
+            isStatic
+            staticRecipes={staticBudgetRecipes.content}
           />
         </div>
       </Container>

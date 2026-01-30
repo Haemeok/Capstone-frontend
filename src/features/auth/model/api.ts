@@ -24,3 +24,7 @@ export const postLogout = async () => {
   const data = await api.post(END_POINTS.LOGOUT);
   return data;
 };
+
+export const deleteAccount = async () => {
+  return await api.delete(END_POINTS.DELETE_ACCOUNT);
+};
