@@ -7,6 +7,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/shared/lib/queryClient";
 
 import { AppStateInitializer } from "./AppStateInitializer";
+import { KeyboardAwareProvider } from "./KeyboardAwareProvider";
 import { PostHogPageView } from "./PostHogPageView";
 import { PostHogProvider } from "./PostHogProvider";
 import { PWAFirstLoginPrompter } from "./PWAFirstLoginPrompter";
@@ -22,14 +23,16 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
       <PostHogPageView />
       <QueryClientProvider client={queryClient}>
         <PWAInstallProvider>
-          <ScrollProvider>
-            <WebSocketProvider>
-              <AppStateInitializer>{children}</AppStateInitializer>
+          <KeyboardAwareProvider>
+            <ScrollProvider>
+              <WebSocketProvider>
+                <AppStateInitializer>{children}</AppStateInitializer>
               <ToastProvider />
-              <PWAFirstLoginPrompter />
-              <YoutubeExtractionPrompter />
-            </WebSocketProvider>
-          </ScrollProvider>
+                <PWAFirstLoginPrompter />
+                <YoutubeExtractionPrompter />
+              </WebSocketProvider>
+            </ScrollProvider>
+          </KeyboardAwareProvider>
         </PWAInstallProvider>
       </QueryClientProvider>
     </PostHogProvider>
