@@ -26,9 +26,9 @@ export const HeroSection = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="border-olive-light/30 bg-olive-light/10 text-olive-medium mb-6 inline-block rounded-full border px-6 py-2 text-sm font-medium backdrop-blur-sm"
+          className="border-olive-light/30 bg-olive-light/10 font-bold text-olive-medium mb-6 inline-block rounded-full border px-6 py-2 text-sm  backdrop-blur-sm"
         >
-          🍳 1,000+ 레시피 · AI 추천 · 스마트 재료 관리
+          🍳 10,000+ 레시피 · AI 추천 · 스마트 재료 관리
         </motion.div>
 
         <motion.h1

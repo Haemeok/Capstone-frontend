@@ -37,7 +37,7 @@ const STATS: StatCard[] = [
   },
   {
     image: `${ICON_BASE_URL}book.webp`,
-    metric: "5,000+",
+    metric: "10,000+",
     label: "검증된 셰프 레시피",
     description: "매주 업데이트되는 큐레이션",
     accent: "from-purple-500/10 to-pink-500/10",
@@ -67,7 +67,7 @@ const AnimatedCounter = ({ value }: { value: string }) => {
   return (
     <div
       ref={ref}
-      className="from-olive-light via-olive-mint to-olive-medium bg-gradient-to-br bg-clip-text text-3xl font-extrabold text-transparent md:text-4xl lg:text-5xl"
+      className="from-olive-light via-olive-mint to-olive-medium bg-gradient-to-br bg-clip-text text-3xl font-extrabold text-transparent md:text-4xl"
     >
       {displayValue}
     </div>
