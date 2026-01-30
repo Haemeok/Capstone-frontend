@@ -35,7 +35,7 @@ const IngredientGrid = ({
 
   return isLoggedIn ? (
     <div className="flex grow flex-col gap-5">
-      <div className="grid w-full grid-cols-2 gap-5 p-5">
+      <div className="grid w-full grid-cols-1 min-[350px]:grid-cols-2 gap-5 p-5">
         {ingredients?.map((ingredient) => (
           <IngredientItem
             key={ingredient.id}

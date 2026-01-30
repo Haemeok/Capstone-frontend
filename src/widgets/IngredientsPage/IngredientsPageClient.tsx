@@ -98,7 +98,7 @@ const IngredientsPageClient = () => {
               />
             )}
           </div>
-          <div className="scrollbar-hide flex shrink-0 gap-2 overflow-x-auto border-b border-gray-100 px-5 py-3">
+          <div className="scrollbar-hide flex shrink-0 gap-2 overflow-x-auto border-b border-gray-100 px-5 py-3 sm:flex-wrap sm:overflow-x-visible">
             {INGREDIENT_CATEGORIES.map((category) => (
               <button
                 key={category}
