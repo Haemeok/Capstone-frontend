@@ -4,35 +4,25 @@ import { useState } from "react";
 
 import { LogOut, Settings, FileText, AlertTriangle, UserX, Bell } from "lucide-react";
 
-import { useUserStore } from "@/entities/user";
 import { isAppWebView, requestNotificationPermission } from "@/shared/lib/bridge";
 import { useNotificationPermissionStore } from "@/features/notification-permission";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/shadcn/dialog";
+import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
+import useDeleteAccountMutation from "@/features/auth/model/hooks/useDeleteAccountMutation";
 import useLogoutMutation from "@/features/auth/model/hooks/useLogoutMutation";
-
-const WITHDRAW_ALLOWED_USER_ID = "lBg4xR1e";
 
 const SettingsActionButton = () => {
   const { mutate: logout } = useLogoutMutation();
+  const { mutate: deleteAccount, isPending: isDeleting } =
+    useDeleteAccountMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWithdrawDialogOpen, setIsWithdrawDialogOpen] = useState(false);
-  const user = useUserStore((state) => state.user);
 
   const { Container, Content, Header, Title, Footer, Close } =
     useResponsiveSheet();
 
   const isInApp = isAppWebView();
-  const canWithdraw = user?.id === WITHDRAW_ALLOWED_USER_ID;
   const notificationStatus = useNotificationPermissionStore((state) => state.status);
   const [isNotificationOn, setIsNotificationOn] = useState(notificationStatus === "granted");
 
@@ -55,7 +45,7 @@ const SettingsActionButton = () => {
   const handleWithdrawConfirm = () => {
     setIsWithdrawDialogOpen(false);
     setIsModalOpen(false);
-    logout();
+    deleteAccount();
   };
 
   return (
@@ -132,15 +122,14 @@ const SettingsActionButton = () => {
                 <AlertTriangle size={16} aria-hidden="true" />
                 <span>저작권 신고 및 게시 중단 요청</span>
               </a>
-              {canWithdraw && (
-                <button
-                  onClick={handleWithdrawClick}
-                  className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
-                >
-                  <UserX size={16} aria-hidden="true" />
-                  <span>회원탈퇴</span>
-                </button>
-              )}
+              <button
+                onClick={handleWithdrawClick}
+                disabled={isDeleting}
+                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <UserX size={16} aria-hidden="true" />
+                <span>회원탈퇴</span>
+              </button>
             </div>
 
             <Footer className="flex-col gap-0 p-0 sm:flex-row sm:justify-end sm:gap-2">
@@ -171,31 +160,15 @@ const SettingsActionButton = () => {
         </Container>
       )}
 
-      <Dialog open={isWithdrawDialogOpen} onOpenChange={setIsWithdrawDialogOpen}>
-        <DialogContent className="max-w-sm pb-0">
-          <DialogHeader>
-            <DialogTitle>정말 탈퇴하시겠어요?</DialogTitle>
-            <DialogDescription>
-              탈퇴 후에는 계정을 복구할 수 없습니다.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-0 space-x-2">
-            <DialogClose asChild>
-              <button className="my-2 rounded-md px-4 text-gray-800">
-                취소
-              </button>
-            </DialogClose>
-            <div className="h-[1px] w-full bg-gray-200"></div>
-            <button
-              className="my-2 rounded-md px-4 font-bold text-red-600"
-              onClick={handleWithdrawConfirm}
-            >
-              탈퇴하기
-            </button>
-            <div className="h-[1px] w-full bg-gray-200"></div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteModal
+        open={isWithdrawDialogOpen}
+        onOpenChange={setIsWithdrawDialogOpen}
+        title="정말 탈퇴하시겠어요?"
+        description="탈퇴 후에는 계정을 복구할 수 없습니다."
+        onConfirm={handleWithdrawConfirm}
+        cancelLabel="취소"
+        confirmLabel={isDeleting ? "삭제 중..." : "탈퇴하기"}
+      />
     </>
   );
 };
