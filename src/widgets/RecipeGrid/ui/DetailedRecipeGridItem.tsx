@@ -101,7 +101,7 @@ const DetailedRecipeGridItem = ({
             {recipe.title}
           </p>
 
-          <div className="flex items-center gap-1 text-sm text-gray-500">
+          <div className="flex items-center gap-2 text-sm text-gray-500">
             {recipe.isYoutube && recipe.youtubeVideoViewCount != null && (() => {
               const tier = getViewCountTier(recipe.youtubeVideoViewCount);
               const IconComponent = tier.icon;

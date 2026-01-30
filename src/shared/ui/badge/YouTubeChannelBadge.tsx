@@ -12,7 +12,7 @@ const YouTubeChannelBadge = ({
   return (
     <div
       className={cn(
-        "flex max-w-[120px] min-[390px]:max-w-[140px] items-center gap-1.5 rounded-full bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm",
+        "flex max-w-[140px] items-center gap-1.5 rounded-full bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm",
         className
       )}
     >

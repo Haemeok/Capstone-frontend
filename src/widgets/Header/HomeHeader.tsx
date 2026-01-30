@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 
+
+
 import { usePWAInstallContext } from "@/app/providers/PWAInstallProvider";
 import { Image } from "@/shared/ui/image/Image";
 import PWAInstallModal from "@/widgets/PWAInstallModal";
 
 import NotificationButton from "./NotificationButton";
+
 
 const HomeHeader = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
