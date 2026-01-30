@@ -26,7 +26,7 @@ export const SearchFilters = () => {
       {/* 검색바 + 뒤로가기 + 필터 아이콘 */}
       <div className="flex items-center gap-2">
         <PrevButton onClick={handleBack} size={24} className="shrink-0" />
-        <div className="min-w-0 flex-1">
+        <div className="flex-1">
           <SearchInput />
         </div>
         <NutritionFilterIconButton />
