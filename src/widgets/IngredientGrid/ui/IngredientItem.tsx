@@ -51,7 +51,7 @@ const IngredientItem = ({
         width={60}
         height={60}
       />
-      <div className="flex min-w-0 flex-1 flex-col pr-8">
+      <div className="flex min-w-0 flex-1 flex-col">
         <span className="text-xs font-medium text-gray-400">
           {ingredient.category}
         </span>
