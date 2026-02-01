@@ -121,6 +121,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                 maxServings={MAX_SERVINGS}
                 onIncrement={() => setCurrentServings((prev) => prev + 1)}
                 onDecrement={() => setCurrentServings((prev) => prev - 1)}
+                isReportMode={isReportMode}
               />
             )}
             <ul className="flex flex-col gap-1">
