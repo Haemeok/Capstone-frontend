@@ -1,22 +1,23 @@
 import { END_POINTS } from "../config/constants/api";
-import { PWA_STORAGE_KEYS } from "../config/constants/pwa";
 import { storage } from "../lib/storage";
 import { isClient } from "./config";
 import { API_CONFIG } from "./config";
 import type { ForceLogoutEventDetail } from "./types";
 
+const LOGIN_STATE_KEY = "isLoggedIn";
+
 export const setLoginState = (state: boolean) => {
   if (!isClient) return;
   if (state) {
-    storage.setBooleanItem(PWA_STORAGE_KEYS.IS_LOGGED_IN, true);
+    storage.setBooleanItem(LOGIN_STATE_KEY, true);
   } else {
-    storage.removeItem(PWA_STORAGE_KEYS.IS_LOGGED_IN);
+    storage.removeItem(LOGIN_STATE_KEY);
   }
 };
 
 const getLoginState = (): boolean => {
   if (!isClient) return false;
-  return storage.getBooleanItem(PWA_STORAGE_KEYS.IS_LOGGED_IN);
+  return storage.getBooleanItem(LOGIN_STATE_KEY);
 };
 
 export const dispatchForceLogoutEvent = (reason: string, message?: string) => {

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
-import { PWA_STORAGE_KEYS } from "@/shared/config/constants/pwa";
 import { storage } from "@/shared/lib/storage";
 
 import { useUserStore } from "@/entities/user/model/store";
@@ -34,15 +33,10 @@ export const useYoutubeExtractionPrompt = () => {
   useEffect(() => {
     if (!checkShouldShowPrompt()) return;
 
-    const pwaPromptShown = storage.getBooleanItem(
-      PWA_STORAGE_KEYS.FIRST_LOGIN_PROMPTED
-    );
-    const delay = pwaPromptShown ? YOUTUBE_EXTRACTION_PROMPT_DELAY_MS : 0;
-
     const timeoutId = setTimeout(() => {
       setShouldShowPrompt(true);
       markAsPrompted();
-    }, delay);
+    }, YOUTUBE_EXTRACTION_PROMPT_DELAY_MS);
 
     return () => clearTimeout(timeoutId);
   }, [user]);

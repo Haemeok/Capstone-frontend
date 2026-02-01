@@ -57,6 +57,7 @@ export const useToggleRecipeFavorite = (recipeId: string) => {
         queryKey: ["recipe-status", recipeId],
       });
       queryClient.invalidateQueries({ queryKey: ["recipes", "favorite"] });
+      queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
     },
   });
 

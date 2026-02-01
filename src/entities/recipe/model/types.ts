@@ -68,6 +68,7 @@ export type Recipe = {
   youtubeChannelProfileUrl?: string;
   youtubeSubscriberCount?: number;
   youtubeChannelId?: string;
+  extractorId?: string | null;
   cookingTools: string[];
   servings: number;
   totalIngredientCost: number;

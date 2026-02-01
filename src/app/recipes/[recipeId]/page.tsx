@@ -133,6 +133,7 @@ export default async function RecipeDetailPage({
             aiGenerated={staticRecipe.aiGenerated}
             author={staticRecipe.author}
             description={staticRecipe.description}
+            extractorId={staticRecipe.extractorId}
           >
             <RecipeInteractionBar staticRecipe={staticRecipe} />
           </RecipeInfoSection>
