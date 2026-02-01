@@ -16,6 +16,8 @@ import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlVali
 
 type FormValueSetter = (url: string) => void;
 
+type UrlSource = "direct" | "trending" | null;
+
 type YoutubeUrlContextValue = {
   currentUrl: string;
   setCurrentUrl: (url: string) => void;
@@ -24,6 +26,7 @@ type YoutubeUrlContextValue = {
   videoId: string | null;
   registerFormSetter: (setter: FormValueSetter) => void;
   selectTrendingRecipe: (url: string) => void;
+  urlSource: UrlSource;
 };
 
 const YoutubeUrlContext = createContext<YoutubeUrlContextValue | null>(null);
@@ -36,11 +39,13 @@ type YoutubeUrlProviderProps = {
 
 export const YoutubeUrlProvider = ({ children }: YoutubeUrlProviderProps) => {
   const [currentUrl, setCurrentUrlState] = useState("");
+  const [urlSource, setUrlSource] = useState<UrlSource>(null);
   const debouncedUrl = useDebounce(currentUrl, DEBOUNCE_DELAY_MS);
   const formSetterRef = useRef<FormValueSetter | null>(null);
 
   const setCurrentUrl = useCallback((url: string) => {
     setCurrentUrlState(url);
+    setUrlSource(url.trim() ? "direct" : null);
   }, []);
 
   const registerFormSetter = useCallback((setter: FormValueSetter) => {
@@ -52,6 +57,7 @@ export const YoutubeUrlProvider = ({ children }: YoutubeUrlProviderProps) => {
       formSetterRef.current(url);
     }
     setCurrentUrlState(url);
+    setUrlSource("trending");
   }, []);
 
   const validatedUrlResult = useMemo(
@@ -73,6 +79,7 @@ export const YoutubeUrlProvider = ({ children }: YoutubeUrlProviderProps) => {
       videoId,
       registerFormSetter,
       selectTrendingRecipe,
+      urlSource,
     }),
     [
       currentUrl,
@@ -82,6 +89,7 @@ export const YoutubeUrlProvider = ({ children }: YoutubeUrlProviderProps) => {
       videoId,
       registerFormSetter,
       selectTrendingRecipe,
+      urlSource,
     ]
   );
 

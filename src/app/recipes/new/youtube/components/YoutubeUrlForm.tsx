@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import * as z from "zod";
 
 import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlValidation";
@@ -30,12 +30,20 @@ export const YoutubeUrlForm = () => {
   const {
     register,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<YoutubeUrlFormValues>({
     resolver: zodResolver(youtubeUrlSchema),
     defaultValues: { url: "" },
     mode: "onBlur",
   });
+
+  const currentUrl = watch("url");
+
+  const handleClear = () => {
+    setValue("url", "");
+    setCurrentUrl("");
+  };
 
   useEffect(() => {
     registerFormSetter((url: string) => {
@@ -61,9 +69,19 @@ export const YoutubeUrlForm = () => {
             onChange: (e) => setCurrentUrl(e.target.value),
           })}
           placeholder="유튜브 링크를 붙여넣으세요"
-          className="w-full bg-transparent px-4 py-5 text-lg text-gray-900 placeholder:text-gray-400 focus:outline-none"
+          className="w-full bg-transparent py-5 pl-4 pr-12 text-lg text-gray-900 placeholder:text-gray-400 focus:outline-none"
           autoComplete="off"
         />
+        {currentUrl && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="absolute right-4 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            aria-label="입력 지우기"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
       {errors.url && (
         <p

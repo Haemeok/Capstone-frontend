@@ -72,7 +72,7 @@ export const YoutubePreviewSection = ({
   const queryClient = useQueryClient();
   const addToast = useToastStore((state) => state.addToast);
   const { user } = useMyInfoQuery();
-  const { validatedUrl, videoId } = useYoutubeUrl();
+  const { validatedUrl, videoId, urlSource } = useYoutubeUrl();
 
   const hasNoQuota = user?.remainingYoutubeQuota === 0;
 
@@ -168,6 +168,8 @@ export const YoutubePreviewSection = ({
           <ErrorBoundary fallback={<DuplicateRecipeErrorFallback />}>
             <DuplicateRecipeSection
               recipeId={duplicateCheck.recipeId}
+              youtubeMeta={youtubeMeta}
+              urlSource={urlSource}
               onSaveSuccess={() => {
                 triggerHaptic("Success");
                 addToast({

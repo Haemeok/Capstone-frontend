@@ -5,11 +5,13 @@ import { useState } from "react";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 import { TrendingYoutubeRecipe } from "@/entities/recipe/model/types";
+import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
 import LoginEncourageDrawer from "@/widgets/LoginEncourageDrawer";
 
 import { TrendingRecipesClient } from "./TrendingRecipesClient";
 import { YoutubePreviewSection } from "./YoutubePreviewSection";
+import { YoutubeQuotaBadge } from "./YoutubeQuotaBadge";
 import { YoutubeUrlForm } from "./YoutubeUrlForm";
 import { YoutubeUrlProvider } from "./YoutubeUrlProvider";
 
@@ -21,6 +23,7 @@ export const YoutubeClientSection = ({
   trendingRecipes,
 }: YoutubeClientSectionProps) => {
   const [isLoginDrawerOpen, setIsLoginDrawerOpen] = useState(false);
+  const { user } = useMyInfoQuery();
 
   const handleLoginRequired = () => {
     setIsLoginDrawerOpen(true);
@@ -30,6 +33,7 @@ export const YoutubeClientSection = ({
     <YoutubeUrlProvider>
       <div className="mx-auto flex w-full max-w-xl flex-col items-center">
         <section className="w-full mt-4 flex flex-col gap-4">
+          <YoutubeQuotaBadge remainingQuota={user?.remainingYoutubeQuota} />
           <YoutubeUrlForm />
           <YoutubePreviewSection onLoginRequired={handleLoginRequired} />
         </section>

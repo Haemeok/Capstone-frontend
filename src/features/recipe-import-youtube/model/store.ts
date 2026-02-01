@@ -68,6 +68,9 @@ export const useYoutubeImportStore = create<YoutubeImportStore>((set, get) => ({
     if (get().imports[url]) return;
 
     addImport(url, meta);
+    setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+    }, 1500);
 
     try {
       const response = await triggerYoutubeImport(url);
