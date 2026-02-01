@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/react";
 
 import { AppWebViewDetector } from "@/shared/lib/bridge";
-import { PWA_APP_INFO } from "@/shared/config/constants/pwa";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
@@ -69,7 +68,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: PWA_APP_INFO.THEME_COLOR,
+  themeColor: "#ffffff",
 };
 
 export default async function RootLayout({
