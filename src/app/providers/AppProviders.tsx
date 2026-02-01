@@ -9,8 +9,6 @@ import { queryClient } from "@/shared/lib/queryClient";
 import { AppStateInitializer } from "./AppStateInitializer";
 import { PostHogPageView } from "./PostHogPageView";
 import { PostHogProvider } from "./PostHogProvider";
-import { PWAFirstLoginPrompter } from "./PWAFirstLoginPrompter";
-import { PWAInstallProvider } from "./PWAInstallProvider";
 import { ScrollProvider } from "./ScrollProvider";
 import ToastProvider from "./ToastProvider";
 import { WebSocketProvider } from "./WebSocketProvider";
@@ -21,16 +19,13 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
     <PostHogProvider>
       <PostHogPageView />
       <QueryClientProvider client={queryClient}>
-        <PWAInstallProvider>
-          <ScrollProvider>
-            <WebSocketProvider>
-              <AppStateInitializer>{children}</AppStateInitializer>
-              <ToastProvider />
-              <PWAFirstLoginPrompter />
-              <YoutubeExtractionPrompter />
-            </WebSocketProvider>
-          </ScrollProvider>
-        </PWAInstallProvider>
+        <ScrollProvider>
+          <WebSocketProvider>
+            <AppStateInitializer>{children}</AppStateInitializer>
+            <ToastProvider />
+            <YoutubeExtractionPrompter />
+          </WebSocketProvider>
+        </ScrollProvider>
       </QueryClientProvider>
     </PostHogProvider>
   );
