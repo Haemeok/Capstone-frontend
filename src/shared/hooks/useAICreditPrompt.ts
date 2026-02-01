@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
-import { PWA_STORAGE_KEYS } from "@/shared/config/constants/pwa";
 import { storage } from "@/shared/lib/storage";
 
 import { useUserStore } from "@/entities/user/model/store";
@@ -33,15 +32,10 @@ export const useAICreditPrompt = () => {
   useEffect(() => {
     if (!checkShouldShowPrompt()) return;
 
-    const pwaPromptShown = storage.getBooleanItem(
-      PWA_STORAGE_KEYS.FIRST_LOGIN_PROMPTED
-    );
-    const delay = pwaPromptShown ? AI_CREDIT_PROMPT_DELAY : 0;
-
     const timeoutId = setTimeout(() => {
       setShouldShowPrompt(true);
       markAsPrompted();
-    }, delay);
+    }, AI_CREDIT_PROMPT_DELAY);
 
     return () => clearTimeout(timeoutId);
   }, [user]);

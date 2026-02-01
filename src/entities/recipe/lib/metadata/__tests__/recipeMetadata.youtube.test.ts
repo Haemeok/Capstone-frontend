@@ -39,15 +39,15 @@ describe("YouTube Recipe Metadata Generation", () => {
       expect(keywords).toContain("김치찌개 유튜브");
     });
 
-    it("YouTube 썸네일이 OpenGraph 이미지로 우선 사용된다", () => {
+    it("레시피 이미지가 OpenGraph 이미지로 우선 사용된다", () => {
       const recipe = makeYoutubeFamousRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
 
       const ogImages = meta.openGraph?.images as any[];
-      expect(ogImages[0].url).toBe(recipe.youtubeThumbnailUrl);
+      expect(ogImages[0].url).toBe(recipe.imageUrl);
     });
 
-    it("레시피 이미지가 OpenGraph 보조 이미지로 포함된다", () => {
+    it("YouTube 썸네일이 OpenGraph 보조 이미지로 포함된다", () => {
       const recipe = makeYoutubeFamousRecipe({
         imageUrl: "https://example.com/recipe-image.jpg",
         youtubeThumbnailUrl: "https://img.youtube.com/vi/test/maxresdefault.jpg",
@@ -56,8 +56,8 @@ describe("YouTube Recipe Metadata Generation", () => {
 
       const ogImages = meta.openGraph?.images as any[];
       expect(ogImages).toHaveLength(2);
-      expect(ogImages[0].url).toBe(recipe.youtubeThumbnailUrl);
-      expect(ogImages[1].url).toBe(recipe.imageUrl);
+      expect(ogImages[0].url).toBe(recipe.imageUrl);
+      expect(ogImages[1].url).toBe(recipe.youtubeThumbnailUrl);
     });
 
     it("구독자 100만 이상일 때 '유명 셰프' 키워드가 포함된다", () => {
@@ -303,12 +303,12 @@ describe("YouTube Recipe Metadata Generation", () => {
   });
 
   describe("Twitter Metadata", () => {
-    it("Twitter 카드에 YouTube 썸네일이 포함된다", () => {
+    it("Twitter 카드에 레시피 이미지가 포함된다", () => {
       const recipe = makeYoutubeFamousRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
 
       const twitterImages = meta.twitter?.images as string[];
-      expect(twitterImages[0]).toBe(recipe.youtubeThumbnailUrl);
+      expect(twitterImages[0]).toBe(recipe.imageUrl);
     });
 
     it("YouTube 썸네일과 레시피 이미지가 다르면 둘 다 포함된다", () => {
@@ -320,8 +320,8 @@ describe("YouTube Recipe Metadata Generation", () => {
 
       const twitterImages = meta.twitter?.images as string[];
       expect(twitterImages).toHaveLength(2);
-      expect(twitterImages[0]).toBe(recipe.youtubeThumbnailUrl);
-      expect(twitterImages[1]).toBe(recipe.imageUrl);
+      expect(twitterImages[0]).toBe(recipe.imageUrl);
+      expect(twitterImages[1]).toBe(recipe.youtubeThumbnailUrl);
     });
   });
 });

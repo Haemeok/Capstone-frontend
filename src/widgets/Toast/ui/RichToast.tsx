@@ -231,7 +231,7 @@ export const RichToast = ({
   );
 
   return isClickable && recipeUrl ? (
-    <Link href={recipeUrl} className="min-w-0 max-w-full" onClick={handleLinkClick}>
+    <Link href={recipeUrl} className="w-full min-w-0" onClick={handleLinkClick}>
       {toastContent}
     </Link>
   ) : (

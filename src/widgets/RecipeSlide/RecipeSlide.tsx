@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
@@ -13,6 +14,7 @@ import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
+import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe";
 
@@ -28,14 +30,58 @@ type RecipeSlideProps = {
   error: Error | null;
 };
 
-const calculateSavings = (
-  marketPrice?: number,
-  ingredientCost?: number
-): number | null => {
-  if (!marketPrice || !ingredientCost) return null;
-  const savings = marketPrice - ingredientCost;
-  return savings > 0 ? savings : null;
+const getRecipeRightBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {
+  if (recipe.ingredientCost) {
+    const tierBadge = (
+      <BudgetTierBadge key="budget" ingredientCost={recipe.ingredientCost} />
+    );
+    if (tierBadge) return tierBadge;
+  }
+
+  if (recipe.isYoutube && recipe.youtubeChannelName) {
+    return (
+      <YouTubeChannelBadge key="youtube" channelName={recipe.youtubeChannelName} />
+    );
+  }
+
+  if (recipe.isYoutube) {
+    return <YouTubeIconBadge key="youtube" />;
+  }
+
+  if (recipe.isAiGenerated) {
+    return <AIGeneratedBadge key="ai" />;
+  }
+
+  return null;
 };
+
+const RecipeSlideLoading = () => (
+  <div className="flex w-full gap-3 overflow-x-auto">
+    {Array.from({ length: 5 }).map((_, index) => (
+      <div key={index} className="flex-shrink-0">
+        <Skeleton className="h-[200px] w-[200px] rounded-xl" />
+        <div className="mt-2 space-y-2">
+          <Skeleton className="h-4 w-[200px]" />
+          <Skeleton className="h-4 w-[150px]" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const RecipeSlideError = () => (
+  <div className="flex h-30 w-full items-center justify-center py-8">
+    <p className="text-sm text-gray-500">
+      잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.
+    </p>
+  </div>
+);
+
+const RecipeSlideEmpty = () => (
+  <div className="flex w-full items-center justify-center py-8">
+    <p className="text-sm text-gray-500">아직 레시피가 없어요.</p>
+  </div>
+);
 
 const RecipeSlide = ({
   title,
@@ -44,6 +90,45 @@ const RecipeSlide = ({
   isLoading,
   error,
 }: RecipeSlideProps) => {
+  const renderContent = () => {
+    if (isLoading) return <RecipeSlideLoading />;
+    if (error) return <RecipeSlideError />;
+    if (recipes.length === 0) return <RecipeSlideEmpty />;
+
+    return (
+      <Carousel
+        opts={{
+          align: "start",
+          loop: false,
+          dragFree: true,
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-3">
+          {recipes.map((item) => (
+            <CarouselItem key={item.id} className="basis-[200px] pl-3">
+              <DetailedRecipeGridItem
+                recipe={item}
+                leftBadge={
+                  <RecipeLikeButton
+                    recipeId={item.id}
+                    initialIsLiked={item.likedByCurrentUser}
+                    initialLikeCount={item.likeCount}
+                    buttonClassName="text-white"
+                    iconClassName="fill-gray-300 opacity-80"
+                  />
+                }
+                rightBadge={getRecipeRightBadge(item)}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="-left-4 hidden cursor-pointer md:flex" />
+        <CarouselNext className="-right-4 hidden cursor-pointer md:flex" />
+      </Carousel>
+    );
+  };
+
   return (
     <div className="mt-2 w-full">
       <div className="mb-4 flex items-center justify-between">
@@ -61,95 +146,7 @@ const RecipeSlide = ({
         )}
       </div>
 
-      {isLoading ? (
-        <div className="flex w-full gap-3 overflow-x-auto">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="flex-shrink-0">
-              <Skeleton className="h-[200px] w-[200px] rounded-xl" />
-              <div className="mt-2 space-y-2">
-                <Skeleton className="h-4 w-[200px]" />
-                <Skeleton className="h-4 w-[150px]" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : error ? (
-        <div className="flex h-30 w-full items-center justify-center py-8">
-          <p className="text-sm text-gray-500">
-            잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.
-          </p>
-        </div>
-      ) : recipes.length === 0 ? (
-        <div className="flex w-full items-center justify-center py-8">
-          <p className="text-sm text-gray-500">아직 레시피가 없어요.</p>
-        </div>
-      ) : (
-        <Carousel
-          opts={{
-            align: "start",
-            loop: false,
-            dragFree: true,
-          }}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-3">
-            {recipes.map((item) => {
-              const savings = calculateSavings(
-                item.marketPrice,
-                item.ingredientCost
-              );
-
-              const leftBadge = (
-                <RecipeLikeButton
-                  key="like"
-                  recipeId={item.id}
-                  initialIsLiked={item.likedByCurrentUser}
-                  initialLikeCount={item.likeCount}
-                  buttonClassName="text-white"
-                  iconClassName="fill-gray-300 opacity-80"
-                />
-              );
-
-              let rightBadge = null;
-              if (savings) {
-                rightBadge = (
-                  <div
-                    key="savings"
-                    className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm"
-                  >
-                    <span className="text-xs font-bold text-white">
-                      {savings.toLocaleString()}원 절약
-                    </span>
-                  </div>
-                );
-              } else if (item.isYoutube && item.youtubeChannelName) {
-                rightBadge = (
-                  <YouTubeChannelBadge
-                    key="youtube"
-                    channelName={item.youtubeChannelName}
-                  />
-                );
-              } else if (item.isYoutube) {
-                rightBadge = <YouTubeIconBadge key="youtube" />;
-              } else if (item.isAiGenerated) {
-                rightBadge = <AIGeneratedBadge key="ai" />;
-              }
-
-              return (
-                <CarouselItem key={item.id} className="basis-[200px] pl-3">
-                  <DetailedRecipeGridItem
-                    recipe={item}
-                    leftBadge={leftBadge}
-                    rightBadge={rightBadge}
-                  />
-                </CarouselItem>
-              );
-            })}
-          </CarouselContent>
-          <CarouselPrevious className="-left-4 hidden cursor-pointer md:flex" />
-          <CarouselNext className="-right-4 hidden cursor-pointer md:flex" />
-        </Carousel>
-      )}
+      {renderContent()}
     </div>
   );
 };
