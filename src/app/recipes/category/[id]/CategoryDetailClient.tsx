@@ -55,6 +55,7 @@ const CategoryDetailClient = () => {
         tags: [tagCode],
         pageParam,
         sort: sortParam,
+        types: ["USER", "AI", "YOUTUBE"],
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
