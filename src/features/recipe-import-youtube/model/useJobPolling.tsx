@@ -46,7 +46,8 @@ export const useJobPolling = () => {
     (idempotencyKey: string, recipeId: string) => {
       const jobsState = useYoutubeImportStoreV2.getState().jobs;
       const job = jobsState[idempotencyKey];
-      if (!job) return;
+      
+      if (!job || job.state === "completed") return;
 
       const meta = job.meta;
 
@@ -85,13 +86,29 @@ export const useJobPolling = () => {
 
   const handleJobFail = useCallback(
     (idempotencyKey: string, errorMessage: string) => {
+      const jobsState = useYoutubeImportStoreV2.getState().jobs;
+      const job = jobsState[idempotencyKey];
+      // 이미 실패/완료된 job이면 중복 처리 방지
+      if (!job || job.state === "completed" || job.state === "failed") return;
+
       failJob(idempotencyKey, errorMessage);
+
+      // 실패 시 사용자에게 피드백
+      addToast({
+        message: errorMessage,
+        variant: "error",
+      });
     },
-    [failJob]
+    [failJob, addToast]
   );
 
   const handleZombieRecovery = useCallback(
     async (job: ActiveJob) => {
+      // 오프라인이면 재시도하지 않고 대기
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        return;
+      }
+
       if (job.retryCount >= JOB_POLLING_CONFIG.MAX_RETRY_COUNT) {
         handleJobFail(
           job.idempotencyKey,
