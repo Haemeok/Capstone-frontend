@@ -1,5 +1,10 @@
 "use client";
 
+import Link from "next/link";
+import { Pencil } from "lucide-react";
+
+import { useUserStore } from "@/entities/user";
+
 import { triggerHaptic } from "@/shared/lib/bridge";
 import SaveButton from "@/shared/ui/SaveButton";
 import ShareButton from "@/shared/ui/ShareButton";
@@ -29,9 +34,12 @@ const RecipeInteractionButtons = ({
   title,
   authorId,
 }: RecipeInteractionButtonsProps) => {
+  const { user } = useUserStore();
   const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipeId);
   const { addToast } = useToastStore();
   const { checkAndTrigger } = useNotificationPermissionTrigger();
+
+  const isOwner = user?.id === authorId;
 
   const handleToggleFavorite = () => {
     if (!checkAndTrigger("save")) return;
@@ -76,6 +84,19 @@ const RecipeInteractionButtons = ({
         isFavorite={initialIsFavorite}
         onClick={handleToggleFavorite}
       />
+      {isOwner && (
+        <div className="flex flex-col items-center">
+          <Link
+            href={`/recipes/${recipeId}/edit`}
+            className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
+            aria-label="레시피 수정"
+            onClick={() => triggerHaptic("Light")}
+          >
+            <Pencil width={24} height={24} />
+          </Link>
+          <p className="mt-1 text-sm font-bold">수정</p>
+        </div>
+      )}
       <ShareButton
         className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
         label="공유"

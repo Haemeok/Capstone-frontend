@@ -16,14 +16,17 @@ export const CircularProgress = ({
   const gradientId = useId();
   const glowId = useId();
 
-  const radius = (size - strokeWidth) / 2;
+  // 점과 glow를 위한 내부 패딩
+  const padding = 3;
+  const center = size / 2;
+  const radius = (size - strokeWidth - padding * 2) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (value / 100) * circumference;
 
   // 진행률 끝점의 각도 계산 (SVG가 -90도 회전되어 있으므로 보정 불필요)
   const progressAngle = (value / 100) * 2 * Math.PI;
-  const dotX = size / 2 + radius * Math.cos(progressAngle);
-  const dotY = size / 2 + radius * Math.sin(progressAngle);
+  const dotX = center + radius * Math.cos(progressAngle);
+  const dotY = center + radius * Math.sin(progressAngle);
 
   return (
     <svg
@@ -51,8 +54,8 @@ export const CircularProgress = ({
 
       {/* Background track */}
       <circle
-        cx={size / 2}
-        cy={size / 2}
+        cx={center}
+        cy={center}
         r={radius}
         fill="none"
         stroke="rgba(255,255,255,0.15)"
@@ -61,8 +64,8 @@ export const CircularProgress = ({
 
       {/* Progress arc with gradient and glow */}
       <circle
-        cx={size / 2}
-        cy={size / 2}
+        cx={center}
+        cy={center}
         r={radius}
         fill="none"
         stroke={`url(#${gradientId})`}

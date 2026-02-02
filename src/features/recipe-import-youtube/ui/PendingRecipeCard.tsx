@@ -97,13 +97,13 @@ export const PendingRecipeCard = ({ url }: PendingRecipeCardProps) => {
           <div className="px-4 text-center">
             {status === "pending" && (
               <>
-                <div className="relative mx-auto h-21 w-21">
+                <AnimatedStatusText />
+                <div className="relative mx-auto mt-2 h-20 w-20 overflow-visible">
                   <CircularProgress value={progress} size={80} strokeWidth={6} />
                   <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-white drop-shadow-md">
                     {progress}%
                   </span>
                 </div>
-                <AnimatedStatusText />
               </>
             )}
             {status === "success" && (
@@ -179,10 +179,11 @@ export const PendingRecipeCardV2 = ({
           }`}
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-          <div className="px-4 text-center">
+          <div className="px-4 text-center flex flex-col items-center justify-center -mt-4">
             {status === "pending" && (
               <>
-                <div className="relative mx-auto h-21 w-21">
+                <AnimatedStatusText />
+                <div className="relative h-20 w-20">
                   <CircularProgress
                     value={Math.round(progress)}
                     size={80}
@@ -192,7 +193,6 @@ export const PendingRecipeCardV2 = ({
                     {Math.round(progress)}%
                   </span>
                 </div>
-                <AnimatedStatusText />
               </>
             )}
             {status === "success" && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -27,9 +27,20 @@ export const useRecipeComplete = ({
   const addCompletedRecipe = useRecipeCompleteStore(
     (state) => state.addCompletedRecipe
   );
+  const isHydrated = useRecipeCompleteStore((state) => state.isHydrated);
+  const hydrateFromStorage = useRecipeCompleteStore(
+    (state) => state.hydrateFromStorage
+  );
   const hasCompletedRecipe = useRecipeCompleteStore((state) =>
     state.hasCompletedRecipe(recipeId)
   );
+
+  // 클라이언트 마운트 시 localStorage에서 hydration
+  useEffect(() => {
+    if (!isHydrated) {
+      hydrateFromStorage();
+    }
+  }, [isHydrated, hydrateFromStorage]);
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: () => createRecipeRecord(recipeId),
@@ -64,7 +75,8 @@ export const useRecipeComplete = ({
 
   return {
     completeRecipe: authenticatedCompleteRecipe,
-    isCompleted: hasCompletedRecipe,
+    // hydration 전에는 false 반환 (플래시 방지)
+    isCompleted: isHydrated ? hasCompletedRecipe : false,
     isLoading: isPending,
     error,
     showReward,
