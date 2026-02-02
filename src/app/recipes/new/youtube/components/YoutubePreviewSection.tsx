@@ -1,21 +1,21 @@
 "use client";
 
+import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 
-import { useQueryClient } from "@tanstack/react-query";
-
-import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
 import { triggerHaptic } from "@/shared/lib/bridge";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
+import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
 import {
+  createExtractionJobV2,
   DuplicateRecipeSection,
   useYoutubeDuplicateCheck,
-  useYoutubeImportStore,
+  useYoutubeImportStoreV2,
   useYoutubeMeta,
   YoutubePreviewCard,
 } from "@/features/recipe-import-youtube";
@@ -69,10 +69,10 @@ export const YoutubePreviewSection = ({
   onLoginRequired,
 }: YoutubePreviewSectionProps) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const addToast = useToastStore((state) => state.addToast);
   const { user } = useMyInfoQuery();
   const { validatedUrl, videoId, urlSource } = useYoutubeUrl();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hasNoQuota = user?.remainingYoutubeQuota === 0;
 
@@ -88,11 +88,16 @@ export const YoutubePreviewSection = ({
     isFetching: isFetchingDuplicate,
   } = useYoutubeDuplicateCheck(validatedUrl);
 
-  const startImport = useYoutubeImportStore((state) => state.startImport);
-  const importStatus = useYoutubeImportStore((state) =>
-    validatedUrl ? state.imports[validatedUrl]?.status : undefined
+  const createJob = useYoutubeImportStoreV2((state) => state.createJob);
+  const setJobId = useYoutubeImportStoreV2((state) => state.setJobId);
+  const failJob = useYoutubeImportStoreV2((state) => state.failJob);
+  const existingJob = useYoutubeImportStoreV2((state) =>
+    validatedUrl ? state.getJobByUrl(validatedUrl) : undefined
   );
-  const isImporting = importStatus === "pending";
+
+  const isImporting =
+    isSubmitting ||
+    (existingJob?.state === "creating" || existingJob?.state === "polling");
   const isDuplicate = duplicateCheck?.recipeId !== undefined;
 
   const hasYoutubeData =
@@ -129,32 +134,38 @@ export const YoutubePreviewSection = ({
       return;
     }
 
+    if (existingJob) {
+      router.push(`/users/${user.id}?tab=saved`);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const idempotencyKey = createJob(validatedUrl, youtubeMeta);
+
     router.push(`/users/${user.id}?tab=saved`);
     addToast({
       message: "영상을 분석 중입니다. 잠시만 기다려주세요.",
       variant: "info",
     });
 
-    startImport(validatedUrl, youtubeMeta, queryClient, (recipeId: string) => {
-      triggerHaptic("Success");
+    try {
+      const { jobId } = await createExtractionJobV2(
+        validatedUrl,
+        idempotencyKey
+      );
+      setJobId(idempotencyKey, jobId);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "추출에 실패했습니다.";
+      failJob(idempotencyKey, errorMessage);
       addToast({
-        message: "",
-        variant: "rich-youtube",
-        position: "bottom",
-        persistent: true,
-        dismissible: "both",
-        richContent: {
-          thumbnail: youtubeMeta.thumbnailUrl,
-          title: "레시피 추출이 완료 되었어요!",
-          subtitle: youtubeMeta.title,
-          badgeIcon: <YouTubeIconBadge className="h-6 w-6" />,
-          recipeId,
-        },
-        action: {
-          onClick: () => router.push(`/recipes/${recipeId}`),
-        },
+        message: errorMessage,
+        variant: "error",
       });
-    });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

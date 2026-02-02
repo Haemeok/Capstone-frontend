@@ -1,4 +1,9 @@
-import { YoutubeImportResponse, YoutubeDuplicateCheckResponse } from "./types";
+import {
+  YoutubeImportResponse,
+  YoutubeDuplicateCheckResponse,
+  JobCreationResponse,
+  JobStatusResponse,
+} from "./types";
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
@@ -20,4 +25,22 @@ export const checkYoutubeDuplicate = async (
   return api.get<YoutubeDuplicateCheckResponse>("/recipes/youtube/check", {
     params: { url },
   });
+};
+
+// ========== Job Polling API (V2) ==========
+
+export const createExtractionJobV2 = async (
+  url: string,
+  idempotencyKey: string
+): Promise<JobCreationResponse> => {
+  return api.post<JobCreationResponse>("/recipes/extract/v2", null, {
+    params: { url },
+    headers: { "Idempotency-Key": idempotencyKey },
+  });
+};
+
+export const getYoutubeJobStatus = async (
+  jobId: string
+): Promise<JobStatusResponse> => {
+  return api.get<JobStatusResponse>(`/recipes/youtube/status/${jobId}`);
 };

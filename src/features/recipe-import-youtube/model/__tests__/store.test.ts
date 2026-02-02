@@ -129,7 +129,7 @@ describe("useYoutubeImportStore", () => {
       expect(result.current.imports[mockMeta.url].status).toBe("error");
     });
 
-    it("실패 시 쿼리를 무효화하지 않아야 함", async () => {
+    it("실패 시에도 myInfo는 무효화하지만 recipes는 무효화하지 않아야 함", async () => {
       mockedTriggerYoutubeImport.mockResolvedValueOnce({
         code: 500,
         message: "Server error",
@@ -150,7 +150,17 @@ describe("useYoutubeImportStore", () => {
         jest.advanceTimersByTime(3000);
       });
 
-      expect(invalidateQueriesSpy).not.toHaveBeenCalled();
+      // myInfo는 시작 시 1500ms 후 무조건 무효화됨
+      expect(invalidateQueriesSpy).toHaveBeenCalledWith({
+        queryKey: ["myInfo"],
+      });
+      // 하지만 실패 시 recipes 관련 쿼리는 무효화되지 않아야 함
+      expect(invalidateQueriesSpy).not.toHaveBeenCalledWith({
+        queryKey: ["recipes"],
+      });
+      expect(invalidateQueriesSpy).not.toHaveBeenCalledWith({
+        queryKey: ["recipes", "favorite"],
+      });
     });
 
     it("동일 URL로 중복 import를 시작하지 않아야 함", async () => {

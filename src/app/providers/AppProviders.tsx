@@ -13,6 +13,7 @@ import { ScrollProvider } from "./ScrollProvider";
 import ToastProvider from "./ToastProvider";
 import { WebSocketProvider } from "./WebSocketProvider";
 import { YoutubeExtractionPrompter } from "./YoutubeExtractionPrompter";
+import { YoutubeImportProvider } from "./YoutubeImportProvider";
 
 export const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
@@ -21,7 +22,9 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         <ScrollProvider>
           <WebSocketProvider>
-            <AppStateInitializer>{children}</AppStateInitializer>
+            <YoutubeImportProvider>
+              <AppStateInitializer>{children}</AppStateInitializer>
+            </YoutubeImportProvider>
             <ToastProvider />
             <YoutubeExtractionPrompter />
           </WebSocketProvider>
