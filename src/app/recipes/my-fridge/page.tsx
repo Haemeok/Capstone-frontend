@@ -1,121 +1,21 @@
-"use client";
-
-import { useState } from "react";
-
-import { Info } from "lucide-react";
-
-import { useSort } from "@/shared/hooks/useSort";
-import { triggerHaptic } from "@/shared/lib/bridge";
-import BadgeButton from "@/shared/ui/BadgeButton";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
-import RecipeSortButton from "@/shared/ui/RecipeSortButton";
-import SortPicker from "@/shared/ui/SortPicker";
-
-import { useMyIngredientRecipesInfiniteQuery } from "@/entities/recipe/model/hooks";
-
-import {
-  MyFridgeEmptyState,
-  MyFridgeRecipeCard,
-  MyFridgeRecipeSkeleton,
-} from "@/widgets/MyFridgeRecipes";
 
 const MyFridgePage = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const { currentSort, setSort, getSortParam, availableSorts } =
-    useSort("recipe");
-
-  const {
-    recipes,
-    ref,
-    isFetchingNextPage,
-    hasNextPage,
-    noResults,
-    lastPageMessage,
-    isPending,
-    totalCount,
-  } = useMyIngredientRecipesInfiniteQuery(getSortParam());
-
-  const handleSortChange = (newSort: string) => {
-    triggerHaptic("Light");
-    setSort(newSort as typeof currentSort);
-    setIsDrawerOpen(false);
-  };
-
-  const handleSortButtonClick = () => {
-    triggerHaptic("Light");
-    setIsDrawerOpen(true);
-  };
-
   return (
     <Container>
-      <div className="flex flex-col gap-5">
-        {/* Header */}
-        <div className="flex items-center gap-3">
-          <PrevButton />
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              요리 가능한 레시피
-            </h1>
-            <p className="text-sm text-gray-500">
-              내 냉장고 재료로 만들 수 있어요
-            </p>
-          </div>
-        </div>
-
-        {/* Info Bar */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <p className="text-sm font-medium text-gray-600">
-              {totalCount}개의 레시피
-            </p>
-            <BadgeButton
-              badgeText="현재 내 냉장고에 있는 재료로 만들 수 있는 레시피를 찾아보세요."
-              badgeIcon={<Info size={16} className="text-gray-400" />}
-            />
-          </div>
-          <div className="flex flex-col items-start">
-            <RecipeSortButton
-              currentSort={currentSort}
-              onClick={handleSortButtonClick}
-            />
-            <SortPicker
-              open={isDrawerOpen}
-              onOpenChange={setIsDrawerOpen}
-              currentSort={currentSort}
-              availableSorts={availableSorts}
-              onSortChange={handleSortChange}
-            />
-          </div>
-        </div>
-
-        {/* Recipe List */}
-        <div className="flex flex-col gap-4">
-          {isPending ? (
-            <MyFridgeRecipeSkeleton count={4} />
-          ) : noResults ? (
-            <MyFridgeEmptyState />
-          ) : (
-            <>
-              {recipes.map((recipe) => (
-                <MyFridgeRecipeCard key={recipe.id} recipe={recipe} />
-              ))}
-              <div
-                ref={ref}
-                className="mt-2 flex h-10 items-center justify-center"
-              >
-                {isFetchingNextPage ? (
-                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-olive-light"></div>
-                ) : (
-                  !hasNextPage &&
-                  recipes.length > 0 && (
-                    <p className="text-sm text-gray-500">{lastPageMessage}</p>
-                  )
-                )}
-              </div>
-            </>
-          )}
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 p-4">
+        <PrevButton className="absolute left-4 top-4" />
+        <div className="text-6xl">🔧</div>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900">
+            서비스 점검 중이에요
+          </h1>
+          <p className="mt-2 text-gray-500">
+            더 나은 서비스를 위해 준비 중입니다.
+            <br />
+            빠른 시일 내에 돌아올게요!
+          </p>
         </div>
       </div>
     </Container>
