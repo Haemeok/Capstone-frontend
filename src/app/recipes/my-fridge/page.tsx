@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 
-import { Info } from "lucide-react";
-
 import { useSort } from "@/shared/hooks/useSort";
 import { triggerHaptic } from "@/shared/lib/bridge";
-import BadgeButton from "@/shared/ui/BadgeButton";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 import RecipeSortButton from "@/shared/ui/RecipeSortButton";
@@ -63,30 +60,19 @@ const MyFridgePage = () => {
           </div>
         </div>
 
-        {/* Info Bar */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <p className="text-sm font-medium text-gray-600">
-              {recipes.length}개의 레시피
-            </p>
-            <BadgeButton
-              badgeText="현재 내 냉장고에 있는 재료로 만들 수 있는 레시피를 찾아보세요."
-              badgeIcon={<Info size={16} className="text-gray-400" />}
-            />
-          </div>
-          <div className="flex flex-col items-start">
-            <RecipeSortButton
-              currentSort={currentSort}
-              onClick={handleSortButtonClick}
-            />
-            <SortPicker
-              open={isDrawerOpen}
-              onOpenChange={setIsDrawerOpen}
-              currentSort={currentSort}
-              availableSorts={availableSorts}
-              onSortChange={handleSortChange}
-            />
-          </div>
+        {/* Sort */}
+        <div className="flex justify-end">
+          <RecipeSortButton
+            currentSort={currentSort}
+            onClick={handleSortButtonClick}
+          />
+          <SortPicker
+            open={isDrawerOpen}
+            onOpenChange={setIsDrawerOpen}
+            currentSort={currentSort}
+            availableSorts={availableSorts}
+            onSortChange={handleSortChange}
+          />
         </div>
 
         {/* Recipe List */}

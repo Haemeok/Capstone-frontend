@@ -212,6 +212,7 @@ const RecipeGrid = ({
               <YouTubeChannelBadge
                 key="youtube"
                 channelName={detailedRecipe.youtubeChannelName}
+                className="min-[390px]:max-w-[140px]"
               />
             );
           } else if (detailedRecipe.isYoutube) {

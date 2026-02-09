@@ -105,7 +105,7 @@ const DuplicateRecipeSection = ({
   };
 
   const rightBadge = channelName ? (
-    <YouTubeChannelBadge channelName={channelName} />
+    <YouTubeChannelBadge channelName={channelName} className="min-[390px]:max-w-[140px]" />
   ) : (
     <YouTubeIconBadge />
   );
