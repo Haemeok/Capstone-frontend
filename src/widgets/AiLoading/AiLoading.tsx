@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 
 import {
@@ -6,15 +8,40 @@ import {
   aiModelSteps,
 } from "@/shared/config/constants/aiModel";
 
+import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
+
 type AiLoadingProps = {
   aiModelId: AIModelId;
+  progress?: number;
+  startTime?: number;
 };
 
-const AiLoading = ({ aiModelId }: AiLoadingProps) => {
+const UPDATE_INTERVAL_MS = 2000;
+
+const useFakeProgress = (startTime: number) => {
+  const [progress, setProgress] = useState(() =>
+    calculateFakeProgress(startTime)
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(calculateFakeProgress(startTime));
+    }, UPDATE_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [startTime]);
+
+  return progress;
+};
+
+const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const aiModel = aiModels[aiModelId];
   const { name } = aiModel;
+
+  const fakeProgress = useFakeProgress(startTime ?? Date.now());
+  const displayProgress = Math.max(progress, fakeProgress);
 
   useEffect(() => {
     const stepInterval = setInterval(() => {
@@ -37,6 +64,20 @@ const AiLoading = ({ aiModelId }: AiLoadingProps) => {
         </p>
       </div>
 
+      {/* Progress Bar */}
+      <div className="w-full max-w-xs">
+        <div className="mb-2 flex justify-between text-sm text-gray-500">
+          <span>진행률</span>
+          <span>{displayProgress}%</span>
+        </div>
+        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+          <div
+            className="bg-olive-light h-full rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${displayProgress}%` }}
+          />
+        </div>
+      </div>
+
       <div className="max-w-sm space-y-3 text-center">
         <div className="bg-olive-mint/10 rounded-2xl p-4">
           <p className="text-olive-mint mb-2 font-bold">💡 잠깐!</p>
@@ -49,7 +90,7 @@ const AiLoading = ({ aiModelId }: AiLoadingProps) => {
           </p>
         </div>
       </div>
-      <p className="text-sm text-gray-500">평균 30초안에 완성됩니다!</p>
+      <p className="text-sm text-gray-500">보통 2~3분 정도 걸려요</p>
     </div>
   );
 };

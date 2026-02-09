@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 
 import { clearAllPersistedJobs } from "../persistence";
 import { useYoutubeImportStoreV2 } from "../store";
@@ -125,7 +125,8 @@ describe("useJobPolling - 중복 처리 방지", () => {
       jest.spyOn(api, "getYoutubeJobStatus").mockResolvedValue({
         jobId: "job-123",
         status: "FAILED",
-        errorMessage: "추출 실패",
+        code: "907",
+        message: "추출 실패",
       });
 
       let key: string;
@@ -144,7 +145,9 @@ describe("useJobPolling - 중복 처리 방지", () => {
       // Job이 failed 상태인지 확인
       const job = useYoutubeImportStoreV2.getState().jobs[key!];
       expect(job?.state).toBe("failed");
-      expect(job?.errorMessage).toBe("추출 실패");
+      expect(job?.code).toBe("907");
+      // code 907은 mapJobFailureMessage에 의해 매핑됨
+      expect(job?.message).toBe("유튜브 링크만 가능해요");
     });
 
     it("이미 completed 상태인 job에 fail 호출해도 무시해야 함", async () => {
@@ -173,7 +176,7 @@ describe("useJobPolling - 중복 처리 방지", () => {
       // Job은 completed 상태 유지
       const job = useYoutubeImportStoreV2.getState().jobs[key!];
       expect(job?.state).toBe("completed");
-      expect(job?.errorMessage).toBeUndefined();
+      expect(job?.message).toBeUndefined();
     });
   });
 
@@ -194,7 +197,7 @@ describe("useJobPolling - 중복 처리 방지", () => {
       let key: string;
       act(() => {
         key = useYoutubeImportStoreV2.getState().createJob(mockMeta.url, mockMeta);
-        useYoutubeImportStoreV2.getState().failJob(key, "에러");
+        useYoutubeImportStoreV2.getState().failJob(key, undefined, "에러");
       });
 
       const pendingJobs = useYoutubeImportStoreV2.getState().getPendingJobs();
@@ -213,7 +216,7 @@ describe("useJobPolling - 중복 처리 방지", () => {
         useYoutubeImportStoreV2.getState().completeJob(key3, "recipe-3"); // completed
 
         const key4 = useYoutubeImportStoreV2.getState().createJob("url4", mockMeta);
-        useYoutubeImportStoreV2.getState().failJob(key4, "에러"); // failed
+        useYoutubeImportStoreV2.getState().failJob(key4, undefined, "에러"); // failed
       });
 
       const pendingJobs = useYoutubeImportStoreV2.getState().getPendingJobs();

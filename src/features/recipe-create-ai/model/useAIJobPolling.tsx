@@ -7,47 +7,43 @@ import { useRouter } from "next/navigation";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 import { useToastStore } from "@/widgets/Toast";
 
-import { JOB_POLLING_CONFIG } from "../lib/constants";
-import { mapJobFailureMessage } from "../lib/errors";
-import { createExtractionJobV2, getYoutubeJobStatus } from "./api";
-import { useYoutubeImportStoreV2 } from "./store";
-import { ActiveJob } from "./types";
+import { AI_JOB_POLLING_CONFIG } from "../lib/constants";
+import { createAIRecipeJobV2, getAIRecipeJobStatus } from "./api";
+import { useAIRecipeStoreV2 } from "./store";
+import { ActiveAIJob } from "./types";
 
-export const useJobPolling = () => {
+export const useAIJobPolling = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const addToast = useToastStore((state) => state.addToast);
   const isVisible = useDocumentVisibility();
 
-  const jobs = useYoutubeImportStoreV2((state) => state.jobs);
-  const completeJob = useYoutubeImportStoreV2((state) => state.completeJob);
-  const failJob = useYoutubeImportStoreV2((state) => state.failJob);
-  const updateJobProgress = useYoutubeImportStoreV2(
+  const jobs = useAIRecipeStoreV2((state) => state.jobs);
+  const completeJob = useAIRecipeStoreV2((state) => state.completeJob);
+  const failJob = useAIRecipeStoreV2((state) => state.failJob);
+  const updateJobProgress = useAIRecipeStoreV2(
     (state) => state.updateJobProgress
   );
-  const updateLastPollTime = useYoutubeImportStoreV2(
+  const updateLastPollTime = useAIRecipeStoreV2(
     (state) => state.updateLastPollTime
   );
-  const incrementRetryCount = useYoutubeImportStoreV2(
+  const incrementRetryCount = useAIRecipeStoreV2(
     (state) => state.incrementRetryCount
   );
-  const setJobId = useYoutubeImportStoreV2((state) => state.setJobId);
-  const removeJob = useYoutubeImportStoreV2((state) => state.removeJob);
-  const getPendingJobs = useYoutubeImportStoreV2(
-    (state) => state.getPendingJobs
-  );
+  const setJobId = useAIRecipeStoreV2((state) => state.setJobId);
+  const removeJob = useAIRecipeStoreV2((state) => state.removeJob);
+  const getPendingJobs = useAIRecipeStoreV2((state) => state.getPendingJobs);
 
   const isPollingRef = useRef(false);
 
   const handleJobComplete = useCallback(
     (idempotencyKey: string, recipeId: string) => {
-      const jobsState = useYoutubeImportStoreV2.getState().jobs;
+      const jobsState = useAIRecipeStoreV2.getState().jobs;
       const job = jobsState[idempotencyKey];
-      
+
       if (!job || job.state === "completed") return;
 
       const meta = job.meta;
@@ -61,18 +57,11 @@ export const useJobPolling = () => {
       triggerHaptic("Success");
 
       addToast({
-        message: "",
-        variant: "rich-youtube",
+        message: `${meta.displayName} 레시피가 완성되었어요!`,
+        variant: "success",
         position: "bottom",
         persistent: true,
         dismissible: "both",
-        richContent: {
-          thumbnail: meta.thumbnailUrl,
-          title: "레시피 추출이 완료 되었어요!",
-          subtitle: meta.title,
-          badgeIcon: <YouTubeIconBadge className="h-6 w-6" />,
-          recipeId,
-        },
         action: {
           onClick: () => router.push(`/recipes/${recipeId}`),
         },
@@ -87,7 +76,7 @@ export const useJobPolling = () => {
 
   const handleJobFail = useCallback(
     (idempotencyKey: string, code: string | undefined, message: string) => {
-      const jobsState = useYoutubeImportStoreV2.getState().jobs;
+      const jobsState = useAIRecipeStoreV2.getState().jobs;
       const job = jobsState[idempotencyKey];
       // 이미 실패/완료된 job이면 중복 처리 방지
       if (!job || job.state === "completed" || job.state === "failed") return;
@@ -104,13 +93,13 @@ export const useJobPolling = () => {
   );
 
   const handleZombieRecovery = useCallback(
-    async (job: ActiveJob) => {
+    async (job: ActiveAIJob) => {
       // 오프라인이면 재시도하지 않고 대기
       if (typeof navigator !== "undefined" && !navigator.onLine) {
         return;
       }
 
-      if (job.retryCount >= JOB_POLLING_CONFIG.MAX_RETRY_COUNT) {
+      if (job.retryCount >= AI_JOB_POLLING_CONFIG.MAX_RETRY_COUNT) {
         handleJobFail(
           job.idempotencyKey,
           undefined,
@@ -122,8 +111,9 @@ export const useJobPolling = () => {
       incrementRetryCount(job.idempotencyKey);
 
       try {
-        const response = await createExtractionJobV2(
-          job.url,
+        const response = await createAIRecipeJobV2(
+          job.request,
+          job.concept,
           job.idempotencyKey
         );
         setJobId(job.idempotencyKey, response.jobId);
@@ -135,17 +125,17 @@ export const useJobPolling = () => {
   );
 
   const pollJob = useCallback(
-    async (job: ActiveJob) => {
+    async (job: ActiveAIJob) => {
       if (!job.jobId) {
         const timeSinceStart = Date.now() - job.startTime;
-        if (timeSinceStart > JOB_POLLING_CONFIG.ZOMBIE_THRESHOLD_MS) {
+        if (timeSinceStart > AI_JOB_POLLING_CONFIG.ZOMBIE_THRESHOLD_MS) {
           await handleZombieRecovery(job);
         }
         return;
       }
 
       try {
-        const status = await getYoutubeJobStatus(job.jobId);
+        const status = await getAIRecipeJobStatus(job.jobId);
 
         updateLastPollTime(job.idempotencyKey);
 
@@ -165,7 +155,7 @@ export const useJobPolling = () => {
             handleJobFail(
               job.idempotencyKey,
               status.code,
-              mapJobFailureMessage(status)
+              status.message || "AI 레시피 생성에 실패했습니다."
             );
             break;
 
@@ -180,7 +170,7 @@ export const useJobPolling = () => {
         }
       } catch {
         const timeSinceLastPoll = Date.now() - job.lastPollTime;
-        if (timeSinceLastPoll > JOB_POLLING_CONFIG.ZOMBIE_THRESHOLD_MS) {
+        if (timeSinceLastPoll > AI_JOB_POLLING_CONFIG.ZOMBIE_THRESHOLD_MS) {
           await handleZombieRecovery(job);
         }
       }
@@ -210,7 +200,7 @@ export const useJobPolling = () => {
 
       try {
         const currentPendingJobs =
-          useYoutubeImportStoreV2.getState().getPendingJobs();
+          useAIRecipeStoreV2.getState().getPendingJobs();
         await Promise.all(currentPendingJobs.map(pollJob));
       } finally {
         isPollingRef.current = false;
@@ -221,7 +211,7 @@ export const useJobPolling = () => {
 
     const intervalId = setInterval(
       pollAllJobs,
-      JOB_POLLING_CONFIG.POLLING_INTERVAL_MS
+      AI_JOB_POLLING_CONFIG.POLLING_INTERVAL_MS
     );
 
     return () => {
