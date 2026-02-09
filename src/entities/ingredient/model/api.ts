@@ -70,7 +70,7 @@ export const getMyIngredientIds = async () => {
 export const getIngredientNames = async (ids: string[]) => {
   if (ids.length === 0) return { content: [] };
   const response = await api.get<IngredientNamesResponse>(
-    `/api/ingredients/names`,
+    `/ingredients/names`,
     { params: { ids: ids.join(",") } }
   );
   return response;
