@@ -32,13 +32,18 @@ const getViewCountTier = (count: number) => {
 
 const getRightBadge = (recipe: MyFridgeRecipeItem) => {
   if (recipe.isYoutube && recipe.youtubeChannelName) {
-    return <YouTubeChannelBadge channelName={recipe.youtubeChannelName} />;
+    return (
+      <YouTubeChannelBadge
+        channelName={recipe.youtubeChannelName}
+        className="max-w-[72px] min-[400px]:max-w-[100px] min-[400px]:px-2 min-[400px]:py-1 px-1.5 py-0.5"
+      />
+    );
   }
   if (recipe.isYoutube) {
-    return <YouTubeIconBadge />;
+    return <YouTubeIconBadge className="h-5 w-5 min-[400px]:h-7 min-[400px]:w-7" />;
   }
   if (recipe.isAiGenerated) {
-    return <AIGeneratedBadge />;
+    return <AIGeneratedBadge className="h-4 px-1.5 min-[400px]:h-5 min-[400px]:px-[10px]" />;
   }
   return null;
 };
@@ -64,15 +69,13 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
       whileTap={{ scale: 0.99 }}
     >
       {/* 이미지 */}
-      <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-xl">
+      <div className="relative w-28 min-[390px]:w-32 min-[430px]:w-36 sm:w-[188px] flex-shrink-0 overflow-hidden rounded-xl">
         <Image
           src={recipe.imageUrl}
           alt={recipe.title}
           wrapperClassName="h-full w-full"
           skeletonClassName="h-full w-full"
           aspectRatio="1 / 1"
-          width={112}
-          height={112}
         />
 
         {/* 배지: 좌상단=좋아요, 우상단=YT/AI (RecipeGrid 패턴) */}
@@ -95,19 +98,19 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
 
       {/* 정보 */}
       <div className="flex min-w-0 flex-1 flex-col gap-1 py-0.5">
-        <p className="line-clamp-2 text-sm font-bold text-gray-900">
+        <p className="line-clamp-2 text-base font-bold text-gray-900">
           {recipe.title}
         </p>
 
         {/* 조회수 · 즐겨찾기 · 조리시간 */}
-        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
           {recipe.isYoutube && recipe.youtubeVideoViewCount != null && (() => {
             const tier = getViewCountTier(recipe.youtubeVideoViewCount);
             const IconComponent = tier.icon;
             return (
               <div className="flex items-center gap-0.5">
                 <IconComponent
-                  size={12}
+                  size={14}
                   className={tier.iconColor}
                   strokeWidth={tier.strokeWidth}
                 />
@@ -116,15 +119,15 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
             );
           })()}
 
-          {recipe.favoriteCount > 0 && (
+          {recipe.favoriteCount != null && recipe.favoriteCount > 0 && (
             <div className="flex items-center gap-0.5">
-              <Bookmark size={12} className="text-gray-400" />
+              <Bookmark size={14} className="text-gray-400" />
               <span>{formatCount(recipe.favoriteCount)}</span>
             </div>
           )}
 
           <div className="flex items-center gap-0.5">
-            <Clock size={12} className="text-gray-400" />
+            <Clock size={14} className="text-gray-400" />
             <span>{recipe.cookingTime}분</span>
           </div>
         </div>

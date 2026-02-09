@@ -40,7 +40,7 @@ const getRecipeRightBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {
 
   if (recipe.isYoutube && recipe.youtubeChannelName) {
     return (
-      <YouTubeChannelBadge key="youtube" channelName={recipe.youtubeChannelName} />
+      <YouTubeChannelBadge key="youtube" channelName={recipe.youtubeChannelName} className="min-[390px]:max-w-[140px]" />
     );
   }
 
