@@ -9,16 +9,10 @@ type SelectedIngredient = {
   name: string;
 };
 
-export const useIngredientSelection = () => {
-  const [selected, setSelected] = useState<SelectedIngredient[]>([]);
-
-  const initFromIds = useCallback((ids: string[]) => {
-    setSelected((prev) => {
-      const existing = prev.filter((item) => ids.includes(item.id));
-      const newIds = ids.filter((id) => !prev.some((item) => item.id === id));
-      return [...existing, ...newIds.map((id) => ({ id, name: id }))];
-    });
-  }, []);
+export const useIngredientSelection = (
+  initialData: SelectedIngredient[] = []
+) => {
+  const [selected, setSelected] = useState<SelectedIngredient[]>(initialData);
 
   const toggle = useCallback((id: string, name: string) => {
     triggerHaptic("Light");
@@ -54,6 +48,5 @@ export const useIngredientSelection = () => {
     toggle,
     remove,
     reset,
-    initFromIds,
   };
 };
