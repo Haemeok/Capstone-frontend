@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Project Structure
 
 This is a Next.js 15 project using App Router with TypeScript and Feature-Sliced Design (FSD) architecture.
+The service runs as both a **web application** and a **React Native WebView app** (iOS/Android). This is NOT a PWA.
 
 ## Architecture
 
@@ -190,13 +191,13 @@ className={cn(
 
 ## Key Features
 
-### PWA Support
+### App Distribution
 
-- Progressive Web App with offline capabilities
-- Service worker registration (disabled in development)
-- App install prompts and first-login flows
+- **Web**: Next.js 웹 애플리케이션 (recipio.kr)
+- **Mobile App**: React Native WebView 앱 (iOS/Android 스토어 배포)
+- Web과 앱은 동일한 Next.js 코드베이스를 공유하며, 네이티브 기능은 WebView 브릿지를 통해 제공
 
-### Haptic Feedback (iOS/Android PWA)
+### Haptic Feedback (iOS/Android WebView)
 
 **CRITICAL: 모든 인터랙티브 UI 요소에 햅틱 피드백 적용**
 
