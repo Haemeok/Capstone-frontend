@@ -121,7 +121,7 @@ type YoutubeImportStoreV2 = {
     resultRecipeId?: string
   ) => void;
   completeJob: (idempotencyKey: string, recipeId: string) => void;
-  failJob: (idempotencyKey: string, errorMessage: string) => void;
+  failJob: (idempotencyKey: string, code: string | undefined, message: string) => void;
   removeJob: (idempotencyKey: string) => void;
 
   hydrateFromStorage: () => void;
@@ -247,7 +247,7 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
       });
     },
 
-    failJob: (idempotencyKey, errorMessage) => {
+    failJob: (idempotencyKey, code, message) => {
       removePersistedJob(idempotencyKey);
 
       set((state) => {
@@ -260,7 +260,8 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
             [idempotencyKey]: {
               ...job,
               state: "failed" as JobState,
-              errorMessage,
+              code,
+              message,
             },
           },
         };

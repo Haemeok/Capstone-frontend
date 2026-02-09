@@ -1,5 +1,5 @@
 import { ApiError } from "@/shared/api/errors";
-import { toYoutubeImportError } from "../errors";
+import { mapJobFailureMessage, toYoutubeImportError } from "../errors";
 
 describe("toYoutubeImportError", () => {
   describe("에러 코드별 메시지 변환", () => {
@@ -117,5 +117,77 @@ describe("toYoutubeImportError", () => {
       expect(result.message).toBe("유튜브 링크만 가능해요");
       expect(result.code).toBe(907);
     });
+  });
+});
+
+describe("mapJobFailureMessage", () => {
+  it("code 901 → API 메시지를 그대로 반환", () => {
+    const result = mapJobFailureMessage({
+      code: "901",
+      message: "레시피 아님: 예능/토크 - 조리법 없음",
+    });
+    expect(result).toBe("레시피 아님: 예능/토크 - 조리법 없음");
+  });
+
+  it("code 907 → 유튜브 링크 전용 메시지", () => {
+    const result = mapJobFailureMessage({
+      code: "907",
+      message: "Unsupported URL",
+    });
+    expect(result).toBe("유튜브 링크만 가능해요");
+  });
+
+  it("code 701 → AI 생성 실패 메시지", () => {
+    const result = mapJobFailureMessage({
+      code: "701",
+      message: "AI generation failed",
+    });
+    expect(result).toBe("일시적 오류입니다. 잠시 후 다시 시도해 주세요");
+  });
+
+  it("code 429 retryAfter 없음 → 내일 다시 시도해주세요", () => {
+    const result = mapJobFailureMessage({
+      code: "429",
+      message: "Rate limit exceeded",
+    });
+    expect(result).toBe("내일 다시 시도해주세요");
+  });
+
+  it("code 429 retryAfter 1시간 이내 → 잠시 후 다시 시도해주세요", () => {
+    const result = mapJobFailureMessage({
+      code: "429",
+      message: "Rate limit exceeded",
+      retryAfter: 1000 * 60 * 30,
+    });
+    expect(result).toBe("잠시 후 다시 시도해주세요");
+  });
+
+  it("code 429 retryAfter 5시간 → 5시간 후 다시 시도해주세요", () => {
+    const result = mapJobFailureMessage({
+      code: "429",
+      message: "Rate limit exceeded",
+      retryAfter: 1000 * 60 * 60 * 5,
+    });
+    expect(result).toBe("5시간 후 다시 시도해주세요");
+  });
+
+  it("알 수 없는 code → API 메시지를 그대로 반환", () => {
+    const result = mapJobFailureMessage({
+      code: "999",
+      message: "Unknown error occurred",
+    });
+    expect(result).toBe("Unknown error occurred");
+  });
+
+  it("code 없음 → message 반환", () => {
+    const result = mapJobFailureMessage({
+      message: "추출에 실패했습니다.",
+    });
+    expect(result).toBe("추출에 실패했습니다.");
+  });
+
+  it("code, message 모두 없음 → 기본 메시지", () => {
+    const result = mapJobFailureMessage({});
+    expect(result).toBe("알 수 없는 오류가 발생했습니다");
   });
 });

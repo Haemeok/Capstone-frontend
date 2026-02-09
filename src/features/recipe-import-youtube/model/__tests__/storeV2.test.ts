@@ -178,12 +178,13 @@ describe("useYoutubeImportStoreV2", () => {
       });
 
       act(() => {
-        result.current.failJob(key!, "추출 실패");
+        result.current.failJob(key!, "907", "추출 실패");
       });
 
       expect(result.current.jobs[key!]).toMatchObject({
         state: "failed",
-        errorMessage: "추출 실패",
+        code: "907",
+        message: "추출 실패",
       });
     });
 
@@ -196,7 +197,7 @@ describe("useYoutubeImportStoreV2", () => {
       });
 
       act(() => {
-        result.current.failJob(key!, "에러");
+        result.current.failJob(key!, undefined, "에러");
       });
 
       const persisted = loadPersistedJobs();
@@ -368,7 +369,7 @@ describe("useYoutubeImportStoreV2", () => {
       let key: string;
       act(() => {
         key = result.current.createJob(mockMeta.url, mockMeta);
-        result.current.failJob(key!, "에러");
+        result.current.failJob(key!, undefined, "에러");
       });
 
       const pending = result.current.getPendingJobs();
