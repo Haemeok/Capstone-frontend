@@ -8,14 +8,16 @@ import { motion } from "motion/react";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 
-import { IngredientRecipeGridItem } from "@/entities/recipe/model/types";
+import { MyFridgeRecipeItem } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeLikeButton } from "@/features/recipe-like";
 
+import ExpandableIngredients from "./ExpandableIngredients";
+
 type MyFridgeRecipeCardProps = {
-  recipe: IngredientRecipeGridItem;
+  recipe: MyFridgeRecipeItem;
 };
 
 const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
@@ -78,16 +80,10 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
           <UserName username={recipe.authorName} userId={recipe.authorId} />
         </div>
 
-        <div className="mt-1 flex flex-wrap gap-1.5">
-          {recipe.matchedIngredients.map((ingredient, index) => (
-            <span
-              key={index}
-              className="rounded-full bg-olive-light/10 px-2.5 py-1 text-xs font-bold text-olive-light"
-            >
-              {ingredient}
-            </span>
-          ))}
-        </div>
+        <ExpandableIngredients
+          matchedIngredients={recipe.matchedIngredients}
+          missingIngredients={recipe.missingIngredients}
+        />
       </div>
     </motion.div>
   );

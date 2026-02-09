@@ -9,6 +9,8 @@ import { RecipeHistoryDetailResponse } from "./record";
 import {
   DetailedRecipesApiResponse,
   IngredientRecipesApiResponse,
+  MyFridgePageResponse,
+  MyFridgeRecipeItem,
   Recipe,
   RecipeQueryParams,
   RecipesStatusResponse,
@@ -50,6 +52,16 @@ export const getMyIngredientRecipes = async (
       size: PAGE_SIZE,
     }
   );
+};
+
+// my-fridge 전용 API (V2 - totalElements/totalPages 없는 응답)
+export const getMyFridgeRecipes = async (
+  sort: string = "createdAt,desc",
+  pageParam: number = 0
+): Promise<MyFridgePageResponse<MyFridgeRecipeItem>> => {
+  return api.get(END_POINTS.MY_INGREDIENT_RECIPES, {
+    params: { sort, page: pageParam, size: PAGE_SIZE },
+  });
 };
 
 export const fetchPagedRecipes = async <T>(

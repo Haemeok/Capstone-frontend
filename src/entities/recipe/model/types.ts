@@ -54,6 +54,28 @@ export type IngredientRecipeGridItem = DetailedRecipeGridItem & {
   matchedIngredients: string[];
 };
 
+// ========== My Fridge Page Types ==========
+
+// my-fridge 전용 페이지 응답 (totalElements/totalPages 없음)
+export type MyFridgePageResponse<T> = {
+  content: T[];
+  page: {
+    size: number;
+    number: number;
+  };
+};
+
+// 빠진 재료 타입
+export type MissingIngredient = {
+  name: string;
+  coupangLink?: string;
+};
+
+// my-fridge 레시피 아이템 (빠진 재료 포함)
+export type MyFridgeRecipeItem = IngredientRecipeGridItem & {
+  missingIngredients: MissingIngredient[];
+};
+
 export type Recipe = {
   id: string;
   title: string;
