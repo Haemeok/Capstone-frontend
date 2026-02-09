@@ -5,7 +5,11 @@ import { END_POINTS } from "@/shared/config/constants/api";
 import { INGREDIENT_CATEGORY_CODES } from "@/shared/config/constants/recipe";
 import { buildParams } from "@/shared/lib/utils";
 
-import { IngredientQueryParams, IngredientsApiResponse } from "./types";
+import {
+  IngredientQueryParams,
+  IngredientsApiResponse,
+  IngredientNamesResponse,
+} from "./types";
 
 export const getIngredients = async ({
   category,
@@ -60,5 +64,14 @@ export const addIngredientBulk = async (ingredientIds: string[]) => {
 
 export const getMyIngredientIds = async () => {
   const response = await api.get<string[]>(END_POINTS.MY_INGREDIENTS_IDS);
+  return response;
+};
+
+export const getIngredientNames = async (ids: string[]) => {
+  if (ids.length === 0) return { content: [] };
+  const response = await api.get<IngredientNamesResponse>(
+    `/api/ingredients/names`,
+    { params: { ids: ids.join(",") } }
+  );
   return response;
 };

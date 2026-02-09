@@ -36,7 +36,9 @@ export type JobStatusResponse = {
   status: JobStatus;
   progress?: number;
   resultRecipeId?: string;
-  errorMessage?: string;
+  code?: string;
+  message?: string;
+  retryAfter?: number;
 };
 
 export type PersistedJob = {
@@ -55,5 +57,7 @@ export type ActiveJob = PersistedJob & {
   state: JobState;
   progress: number;
   resultRecipeId?: string;
-  errorMessage?: string;
+  code?: string;
+  message?: string;
+  retryAfter?: number;
 };

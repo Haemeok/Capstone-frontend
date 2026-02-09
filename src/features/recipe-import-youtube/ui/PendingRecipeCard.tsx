@@ -160,7 +160,7 @@ export const PendingRecipeCardV2 = ({
 
   if (!job) return null;
 
-  const { meta, errorMessage } = job;
+  const { meta, message } = job;
 
   const videoId = extractYouTubeVideoId(meta.url);
   const thumbnailUrl = videoId
@@ -205,7 +205,7 @@ export const PendingRecipeCardV2 = ({
               <>
                 <XCircle className="mx-auto h-10 w-10 text-red-400" />
                 <p className="mt-2 break-keep text-xs font-semibold text-white">
-                  {errorMessage || "실패"}
+                  {message || "실패"}
                 </p>
                 <button
                   onClick={(e) => {

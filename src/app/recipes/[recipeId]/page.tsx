@@ -76,7 +76,9 @@ export default async function RecipeDetailPage({
   if (!staticRecipe) {
     notFound();
   }
+
   console.log(staticRecipe);
+  
   const saveAmount =
     staticRecipe.marketPrice - staticRecipe.totalIngredientCost;
 

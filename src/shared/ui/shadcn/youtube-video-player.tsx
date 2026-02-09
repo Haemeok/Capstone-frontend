@@ -100,6 +100,13 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
 
     const handlePlay = () => {
       setPlaying(true);
+
+      // YouTube iframe이 히스토리에 push하는 것을 상쇄
+      // 모바일 WebView에서 뒤로가기 시 YouTube URL로 이동하는 버그 방지
+      setTimeout(() => {
+        window.history.back();
+        window.history.pushState(null, "", window.location.href);
+      }, 100);
     };
 
     const toggleExpand = () => {
