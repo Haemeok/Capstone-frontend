@@ -2,11 +2,16 @@
 
 import { Image } from "@/shared/ui/image/Image";
 
+import AppInstallButton from "./AppInstallButton";
 import NotificationButton from "./NotificationButton";
 
 const HomeHeader = () => {
   return (
     <div className="relative h-20 w-full md:hidden">
+      <div className="absolute top-1/2 left-4 -translate-y-1/2">
+        <AppInstallButton />
+      </div>
+
       <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
         <div className="flex items-center gap-2">
           <Image
