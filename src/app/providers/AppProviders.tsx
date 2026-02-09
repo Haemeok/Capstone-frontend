@@ -6,6 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/shared/lib/queryClient";
 
+import { AIRecipeProvider } from "./AIRecipeProvider";
 import { AppStateInitializer } from "./AppStateInitializer";
 import { PostHogPageView } from "./PostHogPageView";
 import { PostHogProvider } from "./PostHogProvider";
@@ -23,7 +24,9 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
         <ScrollProvider>
           <WebSocketProvider>
             <YoutubeImportProvider>
-              <AppStateInitializer>{children}</AppStateInitializer>
+              <AIRecipeProvider>
+                <AppStateInitializer>{children}</AppStateInitializer>
+              </AIRecipeProvider>
             </YoutubeImportProvider>
             <ToastProvider />
             <YoutubeExtractionPrompter />

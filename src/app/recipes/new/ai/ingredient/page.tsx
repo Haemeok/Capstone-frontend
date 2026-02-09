@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
@@ -16,7 +16,6 @@ import { buildIngredientFocusRequest } from "@/features/recipe-create-ai/model/a
 import { aiModels } from "@/shared/config/constants/aiModel";
 import { useAIRecipeStoreV2 } from "@/features/recipe-create-ai/model/store";
 import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
-import { useAIJobPolling } from "@/features/recipe-create-ai/model/useAIJobPolling";
 import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 
 import AiLoading from "@/widgets/AiLoading/AiLoading";
@@ -45,17 +44,6 @@ const IngredientRecipePage = () => {
   const failJob = useAIRecipeStoreV2((state) => state.failJob);
   const removeJob = useAIRecipeStoreV2((state) => state.removeJob);
   const getJobByConcept = useAIRecipeStoreV2((state) => state.getJobByConcept);
-  const hydrateFromStorage = useAIRecipeStoreV2(
-    (state) => state.hydrateFromStorage
-  );
-
-  // Hydrate on mount
-  useEffect(() => {
-    hydrateFromStorage();
-  }, [hydrateFromStorage]);
-
-  // Start polling
-  useAIJobPolling();
 
   // Get current job for this concept
   const job = getJobByConcept(CONCEPT);

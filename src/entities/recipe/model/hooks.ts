@@ -3,8 +3,6 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
-import { PAGE_SIZE } from "@/shared/config/constants/api";
-
 import {
   getMyFridgeRecipes,
   getMyIngredientRecipes,
@@ -85,12 +83,11 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
 
 // my-fridge V2 훅 (totalElements/totalPages 없는 응답)
 export const useMyFridgeRecipesInfiniteQuery = (sort?: string) => {
-  // totalPages 없으므로 content.length < size로 마지막 페이지 판단
   const getMyFridgeNextPageParam = (
     lastPage: MyFridgePageResponse<MyFridgeRecipeItem>
   ) => {
-    if (lastPage.content.length < PAGE_SIZE) return null;
-    return lastPage.page.number + 1;
+    if (lastPage.last) return null;
+    return lastPage.number + 1;
   };
 
   const {

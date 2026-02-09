@@ -152,9 +152,7 @@ describe("useJobPolling - 중복 처리 방지", () => {
 
     it("이미 completed 상태인 job에 fail 호출해도 무시해야 함", async () => {
       // 먼저 complete 응답 후 fail 응답 시뮬레이션
-      const mockGetStatus = jest
-        .spyOn(api, "getYoutubeJobStatus")
-        .mockResolvedValueOnce({
+      jest.spyOn(api, "getYoutubeJobStatus").mockResolvedValueOnce({
           jobId: "job-123",
           status: "COMPLETED",
           resultRecipeId: "recipe-456",

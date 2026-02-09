@@ -56,13 +56,12 @@ export type IngredientRecipeGridItem = DetailedRecipeGridItem & {
 
 // ========== My Fridge Page Types ==========
 
-// my-fridge 전용 페이지 응답 (totalElements/totalPages 없음)
+// my-fridge 전용 페이지 응답 (Spring Boot Page 구조)
 export type MyFridgePageResponse<T> = {
   content: T[];
-  page: {
-    size: number;
-    number: number;
-  };
+  number: number;
+  size: number;
+  last: boolean;
 };
 
 // 빠진 재료 타입
