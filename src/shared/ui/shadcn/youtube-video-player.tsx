@@ -262,14 +262,22 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
               )}
 
               {playing && (
-                <iframe
-                  src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
-                  title={title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
-                  allowFullScreen
-                  className="h-full w-full border-0"
-                />
+                <>
+                  {/* 좌상단 프로필 영역 클릭 차단 (WebView에서 navigation 방지) */}
+                  <div
+                    className="absolute left-0 top-0 z-10"
+                    style={{ width: "80px", height: "50px" }}
+                    aria-hidden="true"
+                  />
+                  <iframe
+                    src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
+                    title={title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
+                    allowFullScreen
+                    className="h-full w-full border-0"
+                  />
+                </>
               )}
 
               {/* Controls Overlay */}
@@ -383,14 +391,22 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
                     )}
 
                     {playing && (
-                      <iframe
-                        src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
-                        title={title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
-                        allowFullScreen
-                        className="h-full w-full border-0"
-                      />
+                      <>
+                        {/* 좌상단 프로필 영역 클릭 차단 (WebView에서 navigation 방지) */}
+                        <div
+                          className="absolute left-0 top-0 z-10"
+                          style={{ width: "80px", height: "50px" }}
+                          aria-hidden="true"
+                        />
+                        <iframe
+                          src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
+                          title={title}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
+                          allowFullScreen
+                          className="h-full w-full border-0"
+                        />
+                      </>
                     )}
 
                     {/* Controls Overlay */}
