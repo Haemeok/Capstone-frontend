@@ -60,3 +60,24 @@ export const toYoutubeImportError = (error: unknown): YoutubeImportError => {
   // Case 2: Regular Error / Unknown
   return { message: DEFAULT_ERROR_MESSAGE };
 };
+
+export const mapJobFailureMessage = (status: {
+  code?: string;
+  message?: string;
+  retryAfter?: number;
+}): string => {
+  if (status.code) {
+    const numericCode = parseInt(status.code, 10);
+    const mapper = ERROR_MESSAGES[numericCode];
+    if (mapper) {
+      return typeof mapper === "function"
+        ? mapper({
+            code: numericCode,
+            message: status.message || "",
+            retryAfter: status.retryAfter,
+          })
+        : mapper;
+    }
+  }
+  return status.message || DEFAULT_ERROR_MESSAGE;
+};

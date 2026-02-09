@@ -20,9 +20,13 @@ import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 const MyFavoriteRecipesTabContent = () => {
   const [sort] = useState<"ASC" | "DESC">("DESC");
   const jobs = useYoutubeImportStoreV2((state) => state.jobs);
-  const pendingJobKeys = Object.keys(jobs).filter((key) => {
+  const visibleJobKeys = Object.keys(jobs).filter((key) => {
     const job = jobs[key];
-    return job.state === "creating" || job.state === "polling";
+    return (
+      job.state === "creating" ||
+      job.state === "polling" ||
+      job.state === "failed"
+    );
   });
 
   const { data, error, hasNextPage, isFetching, ref } = useInfiniteScroll<
@@ -44,19 +48,19 @@ const MyFavoriteRecipesTabContent = () => {
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
 
-  const hasPendingJobs = pendingJobKeys.length > 0;
+  const hasVisibleJobs = visibleJobKeys.length > 0;
 
   return (
     <div>
-      {hasPendingJobs && (
-        <PendingRecipeSectionV2 pendingJobKeys={pendingJobKeys} />
+      {hasVisibleJobs && (
+        <PendingRecipeSectionV2 pendingJobKeys={visibleJobKeys} />
       )}
       <RecipeGrid
         recipes={recipes}
         isSimple={false}
         hasNextPage={hasNextPage}
         isFetching={isFetching}
-        noResults={recipes.length === 0 && !isFetching && !hasPendingJobs}
+        noResults={recipes.length === 0 && !isFetching && !hasVisibleJobs}
         noResultsMessage={
           recipes.length === 0
             ? "즐겨찾기한 레시피가 없습니다."

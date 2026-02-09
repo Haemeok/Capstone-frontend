@@ -158,7 +158,7 @@ export const YoutubePreviewSection = ({
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "추출에 실패했습니다.";
-      failJob(idempotencyKey, errorMessage);
+      failJob(idempotencyKey, undefined, errorMessage);
       addToast({
         message: errorMessage,
         variant: "error",
