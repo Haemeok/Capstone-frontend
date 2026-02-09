@@ -169,10 +169,16 @@ export const SORT_CONFIGS = {
     좋아요순: { field: "likeCount", direction: "DESC" },
     별점순: { field: "avgRating", direction: "DESC" },
   },
+  myFridge: {
+    최신순: { field: "createdAt", direction: "DESC" },
+    좋아요순: { field: "favoriteCount", direction: "DESC" },
+    별점순: { field: "avgRating", direction: "DESC" },
+  },
 } as const;
 
 export type CommentSortType = keyof typeof SORT_CONFIGS.comment;
 export type RecipeSortType = keyof typeof SORT_CONFIGS.recipe;
+export type MyFridgeSortType = keyof typeof SORT_CONFIGS.myFridge;
 
 export type SortConfig = {
   field: string;

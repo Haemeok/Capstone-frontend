@@ -3,14 +3,23 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
+import { PAGE_SIZE } from "@/shared/config/constants/api";
+
 import {
+  getMyFridgeRecipes,
   getMyIngredientRecipes,
   getRecipe,
   getRecipeHistoryItems,
   getRecipeStatus,
   getTrendingYoutubeRecipes,
 } from "./api";
-import { Recipe, RecipeStatus, TrendingYoutubeRecipe } from "./types";
+import {
+  MyFridgePageResponse,
+  MyFridgeRecipeItem,
+  Recipe,
+  RecipeStatus,
+  TrendingYoutubeRecipe,
+} from "./types";
 
 export const useRecipeDetailQuery = (id: string, initialData?: Recipe) => {
   const {
@@ -71,6 +80,51 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
     lastPageMessage,
     isPending,
     totalCount: data?.pages[0]?.page.totalElements ?? 0,
+  };
+};
+
+// my-fridge V2 훅 (totalElements/totalPages 없는 응답)
+export const useMyFridgeRecipesInfiniteQuery = (sort?: string) => {
+  // totalPages 없으므로 content.length < size로 마지막 페이지 판단
+  const getMyFridgeNextPageParam = (
+    lastPage: MyFridgePageResponse<MyFridgeRecipeItem>
+  ) => {
+    if (lastPage.content.length < PAGE_SIZE) return null;
+    return lastPage.page.number + 1;
+  };
+
+  const {
+    ref,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    data,
+    error,
+    isPending,
+  } = useInfiniteScroll({
+    queryKey: ["my-fridge-recipes-v2", sort],
+    queryFn: ({ pageParam }) => getMyFridgeRecipes(sort, pageParam),
+    getNextPageParam: getMyFridgeNextPageParam,
+    initialPageParam: 0,
+  });
+
+  const recipes = data?.pages.flatMap((page) => page.content) ?? [];
+  const lastPageMessage =
+    recipes.length === 0
+      ? "가능한 레시피가 없습니다."
+      : "더 많은 레시피를 찾아보세요.";
+  const noResults = recipes.length === 0 && !isPending;
+
+  return {
+    recipes,
+    ref,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    error,
+    noResults,
+    lastPageMessage,
+    isPending,
   };
 };
 
