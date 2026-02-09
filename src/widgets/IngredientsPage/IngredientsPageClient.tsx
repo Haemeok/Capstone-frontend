@@ -4,10 +4,15 @@ import React, { useRef, useState } from "react";
 
 import { AnimatePresence } from "motion/react";
 
-import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
+import {
+  ICON_BASE_URL,
+  INGREDIENT_CATEGORIES,
+} from "@/shared/config/constants/recipe";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
+import { ExpandableFabButton } from "@/shared/ui/ExpandableFabButton";
+import { Image } from "@/shared/ui/image/Image";
 
 import { useUserStore } from "@/entities/user";
 
@@ -121,6 +126,47 @@ const IngredientsPageClient = () => {
           setSelectedIngredientIds={setSelectedIngredientIds}
           selectedIngredientIds={selectedIngredientIds}
         />
+
+        {!!user && !isDeleteMode && (
+          <ExpandableFabButton
+            icon={
+              <Image
+                src={`${ICON_BASE_URL}cook_button.webp`}
+                alt="요리"
+                wrapperClassName="w-8 h-8"
+              />
+            }
+            ariaLabel="레시피 옵션"
+            animated={true}
+            triggerRef={observerRef}
+            items={[
+              {
+                icon: (
+                  <Image
+                    src={`${ICON_BASE_URL}cookable_list.webp`}
+                    alt="냉장고"
+                    wrapperClassName="w-6 h-6"
+                  />
+                ),
+                label: "내 냉장고로 레시피 찾기",
+                href: "/recipes/my-fridge",
+                prefetch: false,
+              },
+              {
+                icon: (
+                  <Image
+                    src={`${ICON_BASE_URL}ai.webp`}
+                    alt="AI"
+                    wrapperClassName="w-6 h-6"
+                  />
+                ),
+                label: "AI로 생성하기",
+                href: "/recipes/new/ai/ingredient",
+                prefetch: false,
+              },
+            ]}
+          />
+        )}
 
         <AnimatePresence>
           {!!user && isDeleteMode && (

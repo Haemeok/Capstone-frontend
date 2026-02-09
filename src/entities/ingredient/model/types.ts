@@ -40,3 +40,6 @@ export type IngredientQueryParams = BaseQueryParams & {
 export type IngredientMutationContext = {
   previousIngredientsListData?: InfiniteData<IngredientsApiResponse>;
 };
+
+export type IngredientNameItem = { id: string; name: string };
+export type IngredientNamesResponse = { content: IngredientNameItem[] };
