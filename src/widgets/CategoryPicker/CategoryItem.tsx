@@ -20,55 +20,49 @@ const CategoryItem = React.memo(
   ({ value, isSelected, onToggle, isMultiple }: CategoryItemProps) => {
     const handleChange = () => onToggle(value);
 
-    return (
-      <div className="flex items-center space-x-2">
-        {isMultiple ? (
-          <>
-            <Checkbox
-              id={`checkbox-${value}`}
-              checked={isSelected}
-              onCheckedChange={handleChange}
-              className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 cursor-pointer rounded border-gray-300 data-[state=checked]:text-white"
-            />
-            <Label
-              htmlFor={`checkbox-${value}`}
-              className="flex cursor-pointer items-center gap-1 text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {DISH_TYPE_ICONS[value] && (
-                <Image
-                  src={`${ICON_BASE_URL}${DISH_TYPE_ICONS[value]}`}
-                  alt={value}
-                  wrapperClassName="w-8 h-8"
-                  lazy={false}
-                />
-              )}
-              {value}
-            </Label>
-          </>
-        ) : (
-          <>
-            <RadioGroupItem
-              value={value}
-              id={`radio-${value}`}
-              className="text-dark-light focus:ring-dark-light h-5 w-5 cursor-pointer border-gray-300"
-            />
-            <Label
-              htmlFor={`radio-${value}`}
-              className="flex cursor-pointer items-center gap-1 text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {DISH_TYPE_ICONS[value] && (
-                <Image
-                  src={`${ICON_BASE_URL}${DISH_TYPE_ICONS[value]}`}
-                  alt={value}
-                  wrapperClassName="w-8 h-8"
-                  lazy={false}
-                />
-              )}
-              {value}
-            </Label>
-          </>
+    const labelContent = (
+      <>
+        {DISH_TYPE_ICONS[value] && (
+          <Image
+            src={`${ICON_BASE_URL}${DISH_TYPE_ICONS[value]}`}
+            alt={value}
+            wrapperClassName="w-8 h-8"
+            lazy={false}
+          />
         )}
-      </div>
+        <span>{value}</span>
+      </>
+    );
+
+    if (isMultiple) {
+      return (
+        <Label
+          htmlFor={`checkbox-${value}`}
+          className="-mx-2 flex min-h-[44px] cursor-pointer select-none items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium transition-colors active:bg-gray-100"
+        >
+          <Checkbox
+            id={`checkbox-${value}`}
+            checked={isSelected}
+            onCheckedChange={handleChange}
+            className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 shrink-0 cursor-pointer rounded border-gray-300 data-[state=checked]:text-white"
+          />
+          {labelContent}
+        </Label>
+      );
+    }
+
+    return (
+      <Label
+        htmlFor={`radio-${value}`}
+        className="-mx-2 flex min-h-[44px] cursor-pointer select-none items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium transition-colors active:bg-gray-100"
+      >
+        <RadioGroupItem
+          value={value}
+          id={`radio-${value}`}
+          className="text-dark-light focus:ring-dark-light h-5 w-5 shrink-0 cursor-pointer border-gray-300"
+        />
+        {labelContent}
+      </Label>
     );
   }
 );

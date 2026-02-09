@@ -108,7 +108,7 @@ const CategoryDrawer = ({
         <RadioGroup
           value={internalSelection as string}
           onValueChange={handleRadioChange}
-          className="space-y-3"
+          className="gap-0"
         >
           {availableValues.map((value) => (
             <div key={value} className="flex items-center space-x-2">

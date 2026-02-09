@@ -87,7 +87,7 @@ const CategoryPicker = ({
   };
 
   const selectionContent = isMultiple ? (
-    <div className="space-y-3">
+    <div className="space-y-1">
       {availableValues.map((value) => (
         <CategoryItem
           key={value}
@@ -102,7 +102,7 @@ const CategoryPicker = ({
     <RadioGroup
       value={internalSelection as string}
       onValueChange={handleRadioChange}
-      className="space-y-3"
+      className="gap-0"
     >
       {availableValues.map((value) => (
         <CategoryItem

@@ -5,6 +5,7 @@ import { Maximize2, Minimize2, Play } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { cn } from "@/shared/lib/utils";
+import { isAppWebView } from "@/shared/lib/bridge";
 import { Button } from "@/shared/ui/shadcn/button";
 import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
 import { Image } from "@/shared/ui/image/Image";
@@ -100,14 +101,57 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
 
     const handlePlay = () => {
       setPlaying(true);
-
-      // YouTube iframe이 히스토리에 push하는 것을 상쇄
-      // 모바일 WebView에서 뒤로가기 시 YouTube URL로 이동하는 버그 방지
-      setTimeout(() => {
-        window.history.back();
-        window.history.pushState(null, "", window.location.href);
-      }, 100);
     };
+
+    // YouTube iframe이 히스토리에 push하는 것을 방지
+    // 모바일 WebView에서만 적용 (일반 브라우저에서는 정상 동작 유지)
+    useEffect(() => {
+      if (!playing) return;
+      if (!isAppWebView()) {
+        console.log("[YouTubePlayer] Not in WebView, skipping history fix");
+        return;
+      }
+
+      console.log("[YouTubePlayer] WebView detected, applying history fix");
+      const currentUrl = window.location.href;
+      const initialHistoryLength = window.history.length;
+      console.log("[YouTubePlayer] Initial history length:", initialHistoryLength);
+
+      const handlePopState = (event: PopStateEvent) => {
+        console.log("[YouTubePlayer] popstate fired:", {
+          currentHref: window.location.href,
+          expectedHref: currentUrl,
+          historyLength: window.history.length,
+          state: event.state,
+        });
+
+        // 뒤로가기 시도 시 현재 URL 유지 (YouTube 히스토리 무시)
+        if (window.location.href !== currentUrl) {
+          console.log("[YouTubePlayer] URL changed, restoring to:", currentUrl);
+          window.history.pushState(null, "", currentUrl);
+        }
+      };
+
+      // 초기에 히스토리 상태 설정
+      window.history.pushState(null, "", currentUrl);
+      window.addEventListener("popstate", handlePopState);
+
+      // 디버깅: 히스토리 길이 변화 추적
+      const historyCheckInterval = setInterval(() => {
+        if (window.history.length !== initialHistoryLength) {
+          console.log("[YouTubePlayer] History length changed:", {
+            initial: initialHistoryLength,
+            current: window.history.length,
+            diff: window.history.length - initialHistoryLength,
+          });
+        }
+      }, 1000);
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+        clearInterval(historyCheckInterval);
+      };
+    }, [playing]);
 
     const toggleExpand = () => {
       setExpanded(!expanded);
