@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 
 import { Button } from "@/shared/ui/shadcn/button";
+import { StoreBadges } from "@/shared/ui/StoreBadges";
 import { markLandingVisited } from "@/app/landing/actions";
 import { CarouselRow } from "./RecipeCarousel";
 
@@ -80,9 +81,18 @@ export const HeroSection = () => {
         </motion.div>
 
         <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="mt-8"
+        >
+          <StoreBadges showAndroidNote />
+        </motion.div>
+
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
+          transition={{ duration: 1, delay: 1.2 }}
           className="mt-16 flex flex-wrap items-center justify-center gap-8 text-sm text-gray-500"
         >
           <div className="flex items-center gap-2">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 
 import { Button } from "@/shared/ui/shadcn/button";
+import { StoreBadges } from "@/shared/ui/StoreBadges";
 import { markLandingVisited } from "@/app/landing/actions";
 
 export const FinalCTA = () => {
@@ -61,6 +62,16 @@ export const FinalCTA = () => {
               <Link href="/search">인기 레시피 둘러보기</Link>
             </Button>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-10"
+          >
+            <StoreBadges showAndroidNote />
+          </motion.div>
         </motion.div>
       </div>
     </section>
