@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
+import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
+
+import { getRecipe } from "@/entities/recipe";
 
 import { useToastStore } from "@/widgets/Toast";
 
@@ -40,7 +43,7 @@ export const useAIJobPolling = () => {
   const isPollingRef = useRef(false);
 
   const handleJobComplete = useCallback(
-    (idempotencyKey: string, recipeId: string) => {
+    async (idempotencyKey: string, recipeId: string) => {
       const jobsState = useAIRecipeStoreV2.getState().jobs;
       const job = jobsState[idempotencyKey];
 
@@ -56,16 +59,41 @@ export const useAIJobPolling = () => {
 
       triggerHaptic("Success");
 
-      addToast({
-        message: `${meta.displayName} 레시피가 완성되었어요!`,
-        variant: "success",
-        position: "bottom",
-        persistent: true,
-        dismissible: "both",
-        action: {
-          onClick: () => router.push(`/recipes/${recipeId}`),
-        },
-      });
+      try {
+        const recipe = await queryClient.fetchQuery({
+          queryKey: ["recipe", recipeId],
+          queryFn: () => getRecipe(recipeId),
+        });
+
+        addToast({
+          message: "",
+          variant: "rich-youtube",
+          position: "bottom",
+          persistent: true,
+          dismissible: "both",
+          richContent: {
+            thumbnail: recipe.imageUrl,
+            title: "AI 레시피가 완성되었어요!",
+            subtitle: recipe.title,
+            badgeIcon: <AIGeneratedBadge className="flex-shrink-0" />,
+            recipeId,
+          },
+          action: {
+            onClick: () => router.push(`/recipes/${recipeId}`),
+          },
+        });
+      } catch {
+        addToast({
+          message: `${meta.displayName} 레시피가 완성되었어요!`,
+          variant: "success",
+          position: "bottom",
+          persistent: true,
+          dismissible: "both",
+          action: {
+            onClick: () => router.push(`/recipes/${recipeId}`),
+          },
+        });
+      }
 
       setTimeout(() => {
         removeJob(idempotencyKey);

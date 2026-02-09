@@ -19,7 +19,14 @@ jest.mock("next/navigation", () => ({
 jest.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({
     invalidateQueries: jest.fn(),
+    fetchQuery: jest.fn().mockResolvedValue({
+      imageUrl: "https://example.com/image.jpg",
+      title: "테스트 레시피",
+    }),
   }),
+}));
+jest.mock("@/entities/recipe", () => ({
+  getRecipe: jest.fn(),
 }));
 jest.mock("@/widgets/Toast", () => ({
   useToastStore: () => jest.fn(),

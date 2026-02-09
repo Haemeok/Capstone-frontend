@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import BudgetHeader from "./BudgetHeader";
@@ -10,7 +10,6 @@ import { BUDGET_DEFAULT } from "@/shared/config/constants/budget";
 import type { CostEffectiveRequest } from "@/features/recipe-create-ai/model/types";
 import { useAIRecipeStoreV2 } from "@/features/recipe-create-ai/model/store";
 import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
-import { useAIJobPolling } from "@/features/recipe-create-ai/model/useAIJobPolling";
 import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 import { aiModels } from "@/shared/config/constants/aiModel";
 
@@ -36,17 +35,6 @@ const BudgetRecipe = () => {
   const failJob = useAIRecipeStoreV2((state) => state.failJob);
   const removeJob = useAIRecipeStoreV2((state) => state.removeJob);
   const getJobByConcept = useAIRecipeStoreV2((state) => state.getJobByConcept);
-  const hydrateFromStorage = useAIRecipeStoreV2(
-    (state) => state.hydrateFromStorage
-  );
-
-  // Hydrate on mount
-  useEffect(() => {
-    hydrateFromStorage();
-  }, [hydrateFromStorage]);
-
-  // Start polling
-  useAIJobPolling();
 
   // Get current job for this concept
   const job = getJobByConcept(CONCEPT);
