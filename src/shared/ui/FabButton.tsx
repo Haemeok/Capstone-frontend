@@ -29,7 +29,7 @@ export const FabButton = ({
 
   return (
     <>
-      <div className="fixed bottom-20 left-0 right-0 z-header flex justify-center sticky-optimized">
+      <div className="fixed bottom-28 left-0 right-0 z-header flex justify-center sticky-optimized">
         <div className="w-full max-w-4xl px-4 md:px-6 flex justify-center">
           <Button asChild className="bg-olive-light rounded-full p-4 text-white shadow-lg">
             <Link

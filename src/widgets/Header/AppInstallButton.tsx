@@ -29,11 +29,11 @@ const AppInstallButton = () => {
   return (
     <button
       onClick={handleClick}
-      className="bg-olive-light/10 text-olive-dark flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-semibold transition-colors active:scale-[0.97]"
+      className="text-olive-light flex items-center gap-1 py-1 text-xs font-semibold transition-colors active:scale-[0.97]"
       aria-label="앱 설치하기"
     >
       <Download className="h-3.5 w-3.5" />
-      <span>앱</span>
+      <span>앱 설치</span>
     </button>
   );
 };

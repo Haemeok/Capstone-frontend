@@ -78,7 +78,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="ko" className={`scroll-smooth ${pretendard.variable}`}>
-      <body className={pretendard.className}>
+      <body className={`${pretendard.className} bg-white`}>
         <AppWebViewDetector />
         <AppProviders>
           <DesktopHeader />
