@@ -7,12 +7,8 @@ import NotificationButton from "./NotificationButton";
 
 const HomeHeader = () => {
   return (
-    <div className="relative h-20 w-full md:hidden">
-      <div className="absolute top-1/2 left-4 -translate-y-1/2">
-        <AppInstallButton />
-      </div>
-
-      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
+    <div className="flex w-full flex-col items-center pt-4 pb-2 md:hidden">
+      <div className="flex w-full items-center justify-center px-6">
         <div className="flex items-center gap-2">
           <Image
             src="/web-app-manifest-192x192.png"
@@ -24,11 +20,11 @@ const HomeHeader = () => {
           />
           <p className="text-2xl font-bold">Recipi'O</p>
         </div>
+        <div className="absolute right-6">
+          <NotificationButton />
+        </div>
       </div>
-
-      <div className="absolute top-1/2 right-6 -translate-y-1/2">
-        <NotificationButton />
-      </div>
+      <AppInstallButton />
     </div>
   );
 };
