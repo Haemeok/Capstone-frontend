@@ -7,12 +7,16 @@ import { useRouter } from "next/navigation";
 import { Camera } from "lucide-react";
 
 import { ApiError } from "@/shared/api/client";
+import { getErrorData } from "@/shared/api/errors";
+import { triggerHaptic } from "@/shared/lib/bridge";
+import { Container } from "@/shared/ui/Container";
 
 import { useUserStore } from "@/entities/user";
 
 import { usePutUserInfoMutation } from "@/features/user-edit/model/hooks";
 import { PutUserInfoVariables } from "@/features/user-edit/model/types";
-import { Container } from "@/shared/ui/Container";
+
+import { useToastStore } from "@/widgets/Toast";
 
 interface FormValues {
   nickname: string;
@@ -22,14 +26,12 @@ interface FormValues {
 
 const MAX_NICKNAME_LENGTH = 12;
 const MAX_DESCRIPTION_LENGTH = 200;
-
-interface ApiErrorData {
-  message?: string;
-}
+const DUPLICATE_NICKNAME_CODE = "102";
 
 const UserInfoChangePage = () => {
   const router = useRouter();
   const { user } = useUserStore();
+  const { addToast } = useToastStore();
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(
     user?.profileImage || null
@@ -49,6 +51,8 @@ const UserInfoChangePage = () => {
     handleSubmit,
     watch,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors, isValid },
   } = useForm<FormValues>({
     mode: "onChange",
@@ -64,14 +68,24 @@ const UserInfoChangePage = () => {
 
   const { mutate: putUserInfo, isLoading } = usePutUserInfoMutation({
     onSuccess: () => {
+      triggerHaptic("Success");
       router.back();
     },
     onError: (error: ApiError) => {
-      const apiError = error.data as ApiErrorData | undefined;
-      console.error(
-        "프로필 업데이트 실패:",
-        apiError?.message || error.message || "프로필 업데이트에 실패했습니다."
-      );
+      triggerHaptic("Error");
+      const errorData = getErrorData(error);
+
+      if (String(errorData?.code) === DUPLICATE_NICKNAME_CODE) {
+        setError("nickname", {
+          type: "server",
+          message: errorData!.message,
+        });
+      } else {
+        addToast({
+          message: "프로필 업데이트에 실패했습니다. 다시 시도해주세요.",
+          variant: "error",
+        });
+      }
     },
   });
 
@@ -206,6 +220,12 @@ const UserInfoChangePage = () => {
                     {...field}
                     id="nickname"
                     type="text"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      if (errors.nickname?.type === "server") {
+                        clearErrors("nickname");
+                      }
+                    }}
                     className={`w-full rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:border-olive-light focus:bg-white focus:outline-none focus:ring-1 focus:ring-olive-light/20 ${errors.nickname
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-gray-200"

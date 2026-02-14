@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, ReactNode } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
@@ -87,14 +88,13 @@ const LoginEncourageDrawer = ({
             <p className="mt-4 text-center text-xs text-gray-400">
               로그인하면 하단 정책에 동의한 것으로 간주합니다.
               <br />
-              <a
-                href="https://grizzly-taker-1ad.notion.site/2ecc8d1def7c8068ad97e3f6318b6d90?pvs=74"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/privacy"
                 className="underline hover:text-gray-600"
+                prefetch={false}
               >
                 개인정보처리방침
-              </a>
+              </Link>
             </p>
 
             <div className="mx-auto mt-4 h-1 w-32 rounded-full bg-gray-200 sm:hidden" />

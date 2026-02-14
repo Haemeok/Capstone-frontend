@@ -105,6 +105,7 @@ export const DISH_TYPE_CODES_TO_NAME = Object.fromEntries(
 );
 
 export const TAG_DEFINITIONS = [
+  { name: "설날 / 명절", emoji: "🎉", code: "HOLIDAY" },
   { name: "셰프 레시피", emoji: "👨‍🍳", code: "CHEF_RECIPE" },
   { name: "홈파티", emoji: "🏠", code: "HOME_PARTY" },
   { name: "브런치", emoji: "🥐", code: "BRUNCH" },
@@ -117,7 +118,6 @@ export const TAG_DEFINITIONS = [
   { name: "아이와 함께", emoji: "👶", code: "KIDS" },
   { name: "혼밥", emoji: "🍽️", code: "SOLO" },
   { name: "술안주", emoji: "🍶", code: "DRINK" },
-  { name: "기념일 / 명절", emoji: "🎉", code: "HOLIDAY" },
   { name: "에어프라이어", emoji: "🔌", code: "AIR_FRYER" },
   { name: "해장", emoji: "🍲", code: "HANGOVER" },
 ] as const;

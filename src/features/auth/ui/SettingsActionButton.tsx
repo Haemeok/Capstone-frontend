@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import { LogOut, Settings, FileText, AlertTriangle, UserX, Bell } from "lucide-react";
 
@@ -86,15 +87,13 @@ const SettingsActionButton = () => {
                   </button>
                 </div>
               )}
-              <a
-                href="https://grizzly-taker-1ad.notion.site/2ecc8d1def7c8068ad97e3f6318b6d90?pvs=74"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/privacy"
                 className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
               >
                 <FileText size={16} aria-hidden="true" />
                 <span>개인정보처리방침</span>
-              </a>
+              </Link>
               <a
                 href="https://slashpage.com/recipio/n5w9812gwype424kpgze"
                 target="_blank"

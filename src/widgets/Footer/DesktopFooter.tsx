@@ -1,13 +1,11 @@
+import Link from "next/link";
+
 import { Container } from "@/shared/ui/Container";
 
 const FOOTER_LINKS = {
   service: [
     { label: "서비스 이용약관", href: "/terms" },
-    {
-      label: "개인정보 처리방침",
-      href: "https://grizzly-taker-1ad.notion.site/2ecc8d1def7c8068ad97e3f6318b6d90?pvs=74",
-      external: true,
-    },
+    { label: "개인정보 처리방침", href: "/privacy" },
   ],
   support: [
     {
@@ -55,12 +53,13 @@ const DesktopFooter = () => {
                       {link.label}
                     </a>
                   ) : (
-                    <div
+                    <Link
                       key={link.label}
+                      href={link.href}
                       className="text-sm text-gray-600 transition-colors hover:text-gray-900"
                     >
                       {link.label}
-                    </div>
+                    </Link>
                   )
                 )}
               </div>
@@ -81,12 +80,13 @@ const DesktopFooter = () => {
                       {link.label}
                     </a>
                   ) : (
-                    <div
+                    <Link
                       key={link.label}
+                      href={link.href}
                       className="text-sm text-gray-600 transition-colors hover:text-gray-900"
                     >
                       {link.label}
-                    </div>
+                    </Link>
                   )
                 )}
               </div>
