@@ -57,7 +57,7 @@ const RecipeSortDrawer = ({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="flex w-full flex-col sm:max-w-lg">
+      <DrawerContent className="flex w-full flex-col">
         <DrawerHeader className="text-left">
           <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
           {description && (

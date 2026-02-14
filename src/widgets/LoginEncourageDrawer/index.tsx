@@ -44,7 +44,7 @@ const LoginEncourageDrawer = ({
   return (
     <>
       <Container open={isOpen} onOpenChange={onOpenChange}>
-        <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md">
+        <Content className="overflow-hidden border-0 bg-white shadow-xl">
           <Title className="sr-only">로그인 필요</Title>
 
           <div className="flex flex-col items-center px-6 pb-8 pt-8">
