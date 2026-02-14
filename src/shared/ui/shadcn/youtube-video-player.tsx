@@ -103,21 +103,22 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
       setPlaying(true);
     };
 
-    // YouTube iframe이 히스토리에 push하는 것을 처리
-    // 뒤로가기 시 아직 같은 페이지면 (YouTube entry만 제거됨) 한번 더 back
+    // YouTube iframe이 히스토리에 push하는 것을 방지
+    // 모바일 WebView에서만 적용
     useEffect(() => {
       if (!playing || !isAppWebView()) return;
 
       const currentUrl = window.location.href;
 
       const handlePopState = () => {
-        // 뒤로가기 했는데 아직 같은 페이지라면 YouTube entry만 제거된 것
-        if (window.location.href === currentUrl) {
-          window.history.back();
+        // YouTube가 히스토리에 추가한 entry로 이동하면 원래 URL로 복구
+        if (window.location.href !== currentUrl) {
+          window.history.replaceState(null, "", currentUrl);
         }
       };
 
-      window.addEventListener("popstate", handlePopState, { once: true });
+      // pushState 호출 안 함 - 히스토리 추가 없음
+      window.addEventListener("popstate", handlePopState);
 
       return () => {
         window.removeEventListener("popstate", handlePopState);
