@@ -42,7 +42,7 @@ export const IngredientsFilterSheet = ({
 
   return (
     <Container open={open} onOpenChange={onOpenChange}>
-      <Content className="flex h-[85vh] w-full flex-col sm:h-auto sm:max-h-[80vh] sm:max-w-lg md:max-w-2xl">
+      <Content className="flex h-[85vh] w-full flex-col md:h-auto md:max-h-[80vh] md:max-w-2xl">
         {open && (
           <IngredientsFilterSheetContent
             key={initialIngredients.map((i) => i.id).join(",")}

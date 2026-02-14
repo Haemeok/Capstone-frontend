@@ -96,7 +96,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
 
   return (
     <Container open={open} onOpenChange={onOpenChange}>
-      <Content className="flex w-full flex-col sm:max-w-lg md:max-w-2xl">
+      <Content className="flex w-full flex-col md:max-w-2xl">
         <Header>
           <Title className="text-xl">재료 검색 및 추가</Title>
           <Description className="text-md">

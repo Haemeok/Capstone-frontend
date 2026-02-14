@@ -103,7 +103,7 @@ const IngredientPackDetailDrawer = ({
 
   return (
     <Container open={open} onOpenChange={onOpenChange}>
-      <Content className="flex h-[80vh] max-h-[800px] w-full flex-col sm:max-w-lg md:max-w-2xl">
+      <Content className="flex h-[80vh] max-h-[800px] w-full flex-col md:max-w-2xl">
         <Header>
           <Title className="text-xl">{pack.name}</Title>
           <Description className="text-md">

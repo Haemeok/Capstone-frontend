@@ -139,7 +139,7 @@ export const IngredientReportDrawer = ({
 
   return (
     <Container open={isOpen} onOpenChange={handleOpenChange}>
-      <Content className="border-0 bg-white shadow-xl sm:max-w-md">
+      <Content className="border-0 bg-white shadow-xl">
         <AnimatePresence mode="wait">
           {showSuccess ? (
             <ReportSuccessView key="success" />

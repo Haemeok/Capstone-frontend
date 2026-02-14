@@ -98,7 +98,7 @@ export const NotificationPermissionDrawer = ({
 
   return (
     <Container open={isOpen} onOpenChange={onOpenChange}>
-      <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md">
+      <Content className="overflow-hidden border-0 bg-white shadow-xl">
         <Title className="sr-only">알림 권한 요청</Title>
 
         <AnimatePresence mode="wait">

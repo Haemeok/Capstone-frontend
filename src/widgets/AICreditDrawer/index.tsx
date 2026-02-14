@@ -38,7 +38,7 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
 
   return (
     <Container open={isOpen} onOpenChange={onOpenChange}>
-      <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md">
+      <Content className="overflow-hidden border-0 bg-white shadow-xl">
         <Confetti
           ref={confettiRef}
           className="pointer-events-none absolute inset-0 z-50 h-full w-full"
