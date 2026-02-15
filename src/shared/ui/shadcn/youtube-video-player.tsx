@@ -108,17 +108,19 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
     useEffect(() => {
       if (!playing || !isAppWebView()) return;
 
-      const currentUrl = window.location.href;
+      const recipePageUrl = window.location.href;
 
       const handlePopState = () => {
-        // YouTube가 히스토리에 추가한 entry로 이동하면 원래 URL로 복구
-        if (window.location.href !== currentUrl) {
-          window.history.replaceState(null, "", currentUrl);
+        // 뒤로가기 했는데 아직 레시피 페이지면 YouTube entry만 제거된 것
+        // 한 번 더 back 해서 실제 이전 페이지로 이동
+        if (window.location.href === recipePageUrl) {
+          setTimeout(() => {
+            window.history.back();
+          }, 0);
         }
       };
 
-      // pushState 호출 안 함 - 히스토리 추가 없음
-      window.addEventListener("popstate", handlePopState);
+      window.addEventListener("popstate", handlePopState, { once: true });
 
       return () => {
         window.removeEventListener("popstate", handlePopState);
