@@ -106,16 +106,7 @@ export const YouTubeVideoPlayer = forwardRef<
       if (iframe) {
         iframeRef.current = iframe;
 
-        if (iframe.src && !iframe.src.includes("enablejsapi=1")) {
-          const url = new URL(iframe.src);
-          url.searchParams.set("enablejsapi", "1");
-          iframe.src = url.toString();
-
-          // If there is a pending seek, we need to wait for the reload
-          if (pendingSeekRef.current) {
-            setTimeout(findIframe, 500);
-          }
-        } else if (pendingSeekRef.current) {
+       if (pendingSeekRef.current) {
           const { amount, type } = pendingSeekRef.current;
           pendingSeekRef.current = null;
 

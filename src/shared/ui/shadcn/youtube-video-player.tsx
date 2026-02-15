@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useImperativeHandle,useState } from "react";
+
 import { Maximize2, Minimize2, Play } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { cn } from "@/shared/lib/utils";
-import { isAppWebView } from "@/shared/lib/bridge";
-import { Button } from "@/shared/ui/shadcn/button";
 import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
 import { Image } from "@/shared/ui/image/Image";
+import { Button } from "@/shared/ui/shadcn/button";
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -102,30 +102,6 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
     const handlePlay = () => {
       setPlaying(true);
     };
-
-    // YouTube iframe이 히스토리에 push하는 것을 방지
-    // 모바일 WebView에서만 적용
-    useEffect(() => {
-      if (!playing || !isAppWebView()) return;
-
-      const recipePageUrl = window.location.href;
-
-      const handlePopState = () => {
-        // 뒤로가기 했는데 아직 레시피 페이지면 YouTube entry만 제거된 것
-        // 한 번 더 back 해서 실제 이전 페이지로 이동
-        if (window.location.href === recipePageUrl) {
-          setTimeout(() => {
-            window.history.back();
-          }, 0);
-        }
-      };
-
-      window.addEventListener("popstate", handlePopState, { once: true });
-
-      return () => {
-        window.removeEventListener("popstate", handlePopState);
-      };
-    }, [playing]);
 
     const toggleExpand = () => {
       setExpanded(!expanded);
@@ -237,7 +213,7 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
 
               {playing && (
                 <iframe
-                  src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
+                  src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1&enablejsapi=1&origin=${typeof window !== "undefined" ? window.location.origin : ""}`}
                   title={title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   sandbox="allow-scripts allow-same-origin allow-presentation"
@@ -358,7 +334,7 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
 
                     {playing && (
                       <iframe
-                        src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
+                        src={`https://www.youtube.com/embed/${actualVideoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1&enablejsapi=1&origin=${typeof window !== "undefined" ? window.location.origin : ""}`}
                         title={title}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         sandbox="allow-scripts allow-same-origin allow-presentation"
