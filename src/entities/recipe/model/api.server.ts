@@ -128,7 +128,7 @@ export const getStaticrecipionServer = async (
   try {
     const res = await fetch(API_URL, {
       next: {
-        revalidate: 3600,
+        revalidate: 43200,
         tags: [CACHE_TAGS.recipe(id), CACHE_TAGS.recipesAll],
       },
     });
@@ -149,7 +149,7 @@ export const getStaticrecipionServer = async (
   }
 };
 
-const REVALIDATE_TIME_SECONDS = 3600;
+const REVALIDATE_TIME_SECONDS = 43200;
 
 export const fetchAllRecipesForSitemap = async (): Promise<
   Array<{ id: string; createdAt: string; imageUrl: string }>
