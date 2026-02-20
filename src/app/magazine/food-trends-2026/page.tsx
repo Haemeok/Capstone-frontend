@@ -2,6 +2,7 @@ import { Metadata } from "next";
 
 import ArticleLayout from "@/shared/ui/article/ArticleLayout";
 import ArticleSection from "@/shared/ui/article/ArticleSection";
+import type { TocItem } from "@/shared/ui/article/types";
 
 export const metadata: Metadata = {
   title: "2026년 식문화 트렌드: 식탁을 바꾸는 8가지 키워드 | 레시피오",
@@ -9,12 +10,24 @@ export const metadata: Metadata = {
     "홀푸즈 마켓 트렌드 리포트를 기반으로 정리한 2026년 식문화 트렌드. 탈로우의 재발견부터 식초 르네상스까지, 올해 우리 식탁을 바꿀 핵심 키워드를 소개합니다.",
 };
 
+const TOC_ITEMS: TocItem[] = [
+  { id: "tallow", title: "건강한 지방, 탈로우의 재발견" },
+  { id: "fiber", title: "차세대 영양소, 식이섬유" },
+  { id: "couture", title: "주방의 꾸뛰르화" },
+  { id: "frozen", title: "냉동 식품의 미식화" },
+  { id: "vinegar", title: "식초 르네상스의 도래" },
+  { id: "sweets", title: "단맛의 전환, 마인드풀 스위츠" },
+  { id: "instant", title: "즉석 식품의 재정의" },
+  { id: "micro", title: "마이크로 레스토랑의 확산" },
+];
+
 const FoodTrends2026Page = () => {
   return (
     <ArticleLayout
       title="2026년, 우리는 무엇을 먹게 될까?"
       subtitle="푸드 매거진"
       date="2026. 2. 14"
+      tocItems={TOC_ITEMS}
     >
       <p className="text-[15px] leading-relaxed text-gray-700">
         홀푸즈 마켓(Whole Foods Market)이 매년 발표하는 트렌드 리포트는 전 세계
@@ -23,7 +36,7 @@ const FoodTrends2026Page = () => {
         탐방하며 정리한 2026년 식문화 트렌드를 소개합니다.
       </p>
 
-      <ArticleSection title="1. 건강한 지방, 탈로우의 재발견">
+      <ArticleSection id="tallow" title="1. 건강한 지방, 탈로우의 재발견">
         <p>
           비프 탈로우(소기름)가 식물성 오일의 대안으로 주목받고 있습니다.
           &quot;노즈 투 테일(Nose to Tail)&quot; 음식 철학과 맞닿아 있는 이
@@ -37,7 +50,7 @@ const FoodTrends2026Page = () => {
         </p>
       </ArticleSection>
 
-      <ArticleSection title="2. 차세대 영양소, 식이섬유">
+      <ArticleSection id="fiber" title="2. 차세대 영양소, 식이섬유">
         <p>
           단백질 강화 시대를 지나 이제 식이섬유가 영양의 중심에 섭니다.
           프리바이오틱스 기반 탄산음료, 이눌린이 첨가된 파스타와 베이글, 식이섬유
@@ -49,7 +62,7 @@ const FoodTrends2026Page = () => {
         </p>
       </ArticleSection>
 
-      <ArticleSection title="3. 주방의 꾸뛰르화">
+      <ArticleSection id="couture" title="3. 주방의 꾸뛰르화">
         <p>
           주방이 단순한 조리 공간을 넘어 라이프스타일을 표현하는 공간으로
           진화하고 있습니다. 고급 올리브오일 병, 감각적인 디자인의 캔 참치,
@@ -62,7 +75,7 @@ const FoodTrends2026Page = () => {
         </p>
       </ArticleSection>
 
-      <ArticleSection title="4. 냉동 식품의 미식화">
+      <ArticleSection id="frozen" title="4. 냉동 식품의 미식화">
         <p>
           편의식의 대명사였던 냉동식품이 레스토랑 수준으로 진화하고 있습니다.
           &quot;레디 투 히트(Ready to Heat)&quot; 메뉴들은 로컬 퀴진을 구현한
@@ -75,7 +88,7 @@ const FoodTrends2026Page = () => {
         </p>
       </ArticleSection>
 
-      <ArticleSection title="5. 식초 르네상스의 도래">
+      <ArticleSection id="vinegar" title="5. 식초 르네상스의 도래">
         <p>
           식초를 마시고 즐기는 시대가 옵니다. 크래프트 식초, 생유산균이 살아있는
           비정제 식초, 과일과 허브로 풍미를 낸 수제 식초 음료가 새로운 음료
@@ -88,7 +101,7 @@ const FoodTrends2026Page = () => {
         </p>
       </ArticleSection>
 
-      <ArticleSection title="6. 단맛의 전환, 마인드풀 스위츠">
+      <ArticleSection id="sweets" title="6. 단맛의 전환, 마인드풀 스위츠">
         <p>
           달콤함을 포기하지 않되 마음의 짐은 덜고 싶어하는 소비자들이 늘고
           있습니다. 대추야자 페이스트, 허브로 풍미를 더한 젤리, 메이플 시럽을
@@ -100,7 +113,7 @@ const FoodTrends2026Page = () => {
         </p>
       </ArticleSection>
 
-      <ArticleSection title="7. 즉석 식품의 재정의">
+      <ArticleSection id="instant" title="7. 즉석 식품의 재정의">
         <p>
           즉석 식품이 원재료 품질과 영양을 개선한 형태로 재탄생하고 있습니다.
           뼈를 고아 만든 베이스의 고단백 컵라면, 1회용 푸어오버 라떼 파우치 등
@@ -112,7 +125,7 @@ const FoodTrends2026Page = () => {
         </p>
       </ArticleSection>
 
-      <ArticleSection title="8. 마이크로 레스토랑의 확산">
+      <ArticleSection id="micro" title="8. 마이크로 레스토랑의 확산">
         <p>
           코로나19 이후 늘어난 홈쿠커들이 자신의 집에서 작은 레스토랑을 여는
           트렌드가 확산되고 있습니다. 도심이 아닌 주택가에서도 카페, 칵테일 바,

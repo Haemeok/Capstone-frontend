@@ -105,7 +105,6 @@ export const DISH_TYPE_CODES_TO_NAME = Object.fromEntries(
 );
 
 export const TAG_DEFINITIONS = [
-  { name: "설날 / 명절", emoji: "🎉", code: "HOLIDAY" },
   { name: "셰프 레시피", emoji: "👨‍🍳", code: "CHEF_RECIPE" },
   { name: "홈파티", emoji: "🏠", code: "HOME_PARTY" },
   { name: "브런치", emoji: "🥐", code: "BRUNCH" },
@@ -117,6 +116,7 @@ export const TAG_DEFINITIONS = [
   { name: "다이어트 / 건강식", emoji: "🥗", code: "HEALTHY" },
   { name: "아이와 함께", emoji: "👶", code: "KIDS" },
   { name: "혼밥", emoji: "🍽️", code: "SOLO" },
+  { name: "기념일 / 명절", emoji: "🎉", code: "HOLIDAY" },
   { name: "술안주", emoji: "🍶", code: "DRINK" },
   { name: "에어프라이어", emoji: "🔌", code: "AIR_FRYER" },
   { name: "해장", emoji: "🍲", code: "HANGOVER" },
@@ -432,20 +432,58 @@ export const NUTRITION_THEMES = {
   KETO: {
     label: "키토",
     icon: "keto.webp",
-    description: "탄수화물 최소화, 지방 위주",
+    description: "저탄수 고지방, 케토시스 유도",
     values: {
-      carb: [0, 30] as [number, number],
-      protein: [50, 150] as [number, number],
-      fat: [40, 100] as [number, number],
+      carb: [0, 20] as [number, number],
+      protein: [15, 50] as [number, number],
+      fat: [30, 80] as [number, number],
     },
   },
   LOW_SUGAR: {
     label: "저당",
     icon: "low_sugar.webp",
-    description: "당류 섭취 제한",
+    description: "당류 최소화, 혈당 관리",
     values: {
+      sugar: [0, 10] as [number, number],
+      carb: [0, 80] as [number, number],
+    },
+  },
+  HIGH_PROTEIN: {
+    label: "고단백",
+    icon: "high_protein.webp",
+    description: "단백질 우선, 근손실 방지",
+    values: {
+      protein: [30, 80] as [number, number],
+      calories: [300, 800] as [number, number],
+    },
+  },
+  WEGOVY_FRIENDLY: {
+    label: "위고비 친화",
+    icon: "low_calorie.webp",
+    description: "소화 부담 적은 고단백 식단",
+    values: {
+      protein: [20, 40] as [number, number],
+      fat: [0, 20] as [number, number],
+      calories: [200, 450] as [number, number],
+    },
+  },
+  ANTI_AGING: {
+    label: "항노화",
+    icon: "balanced.webp",
+    description: "항산화 영양소 풍부",
+    values: {
+      calories: [250, 600] as [number, number],
       sugar: [0, 15] as [number, number],
-      carb: [0, 100] as [number, number],
+      sodium: [0, 800] as [number, number],
+    },
+  },
+  LOW_CALORIE: {
+    label: "저칼로리",
+    icon: "low_calorie.webp",
+    description: "칼로리 제한, 체중 감량",
+    values: {
+      calories: [0, 500] as [number, number],
+      fat: [0, 15] as [number, number],
     },
   },
   LOW_FAT: {
@@ -455,15 +493,6 @@ export const NUTRITION_THEMES = {
     values: {
       fat: [0, 20] as [number, number],
       calories: [0, 600] as [number, number],
-    },
-  },
-  HIGH_PROTEIN: {
-    label: "고단백",
-    icon: "high_protein.webp",
-    description: "단백질 섭취 극대화",
-    values: {
-      protein: [60, 200] as [number, number],
-      calories: [400, 1500] as [number, number],
     },
   },
   LOW_SODIUM: {
@@ -477,7 +506,7 @@ export const NUTRITION_THEMES = {
   BALANCED: {
     label: "균형식",
     icon: "balanced.webp",
-    description: "영양소 균형",
+    description: "영양소 균형 잡힌 식단",
     values: {
       carb: [80, 150] as [number, number],
       protein: [40, 100] as [number, number],
@@ -491,15 +520,6 @@ export const NUTRITION_THEMES = {
     description: "비용 절감",
     values: {
       cost: [0, 10000] as [number, number],
-    },
-  },
-  LOW_CALORIE: {
-    label: "저칼로리",
-    icon: "low_calorie.webp",
-    description: "칼로리 제한",
-    values: {
-      calories: [0, 500] as [number, number],
-      fat: [0, 15] as [number, number],
     },
   },
 } as const;

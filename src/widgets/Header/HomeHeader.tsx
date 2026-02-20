@@ -1,5 +1,6 @@
 "use client";
 
+import { requestAppReview } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 
 import AppInstallButton from "./AppInstallButton";
@@ -20,7 +21,13 @@ const HomeHeader = () => {
           />
           <p className="text-2xl font-bold">Recipi'O</p>
         </div>
-        <div className="absolute right-6">
+        <div className="absolute right-6 flex items-center gap-2">
+          <button
+            onClick={() => requestAppReview()}
+            className="rounded-lg bg-olive-light px-2 py-1 text-xs font-medium text-white"
+          >
+            리뷰 테스트
+          </button>
           <NotificationButton />
         </div>
       </div>

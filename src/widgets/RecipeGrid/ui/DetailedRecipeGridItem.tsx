@@ -96,7 +96,7 @@ const DetailedRecipeGridItem = ({
           )}
         </div>
 
-        <div className="flex grow flex-col gap-0.5 px-2 pb-2">
+        <div className="flex grow flex-col gap-0.5 px-1 pb-2">
           <p className="line-clamp-2 font-bold break-keep hover:underline">
             {recipe.title}
           </p>
@@ -106,7 +106,7 @@ const DetailedRecipeGridItem = ({
               const tier = getViewCountTier(recipe.youtubeVideoViewCount);
               const IconComponent = tier.icon;
               return (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-0.5">
                   <IconComponent
                     size={14}
                     className={tier.iconColor}
@@ -118,14 +118,14 @@ const DetailedRecipeGridItem = ({
             })()}
 
             {recipe.favoriteCount != null && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5">
                 <Bookmark size={14} className="text-gray-400" />
                 <span>{formatCount(recipe.favoriteCount)}</span>
               </div>
             )}
 
             {recipe.cookingTime != null && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5">
                 <Clock size={14} className="text-gray-400" />
                 <span>{recipe.cookingTime}분</span>
               </div>
