@@ -8,6 +8,7 @@ import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
 import GlobalLoginEncourageDrawer from "@/widgets/LoginEncourageDrawer/GlobalLoginEncourageDrawer";
 import GlobalNotificationPermissionDrawer from "@/widgets/NotificationPermissionDrawer";
+import GlobalReviewGateDrawer from "@/widgets/ReviewGateDrawer";
 
 import { pretendard } from "./fonts";
 import { AppProviders } from "./providers/AppProviders";
@@ -88,6 +89,7 @@ export default async function RootLayout({
           <BottomNavBar />
           <GlobalLoginEncourageDrawer />
           <GlobalNotificationPermissionDrawer />
+          <GlobalReviewGateDrawer />
         </AppProviders>
         <Analytics />
         <GoogleAnalytics />

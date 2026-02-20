@@ -4,6 +4,17 @@ Always use Context7 MCP when I need library/API documentation, code generation, 
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Critical Rules
+
+### Build vs Type Check
+- **After code changes, use `npx tsc --noEmit` for type checking only**
+- **Before running `npm run build`:**
+  1. Check if localhost is running: `netstat -ano | findstr :3000`
+  2. If running, kill the process: `taskkill /PID <pid> /F`
+  3. Run build: `npm run build`
+  4. Restore localhost: `npm run dev` (in background)
+- Only run build when explicitly requested by user
+
 ### Project Structure
 
 This is a Next.js 15 project using App Router with TypeScript and Feature-Sliced Design (FSD) architecture.
