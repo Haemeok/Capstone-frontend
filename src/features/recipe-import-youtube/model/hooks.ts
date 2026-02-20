@@ -1,6 +1,8 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { trackReviewAction } from "@/shared/lib/review";
+
 import { getYoutubeMeta } from "./actions";
 import { checkYoutubeDuplicate, triggerYoutubeImport } from "./api";
 import {
@@ -31,6 +33,7 @@ export const useYoutubeImport = () => {
       if ("recipeId" in data) {
         queryClient.invalidateQueries({ queryKey: ["my-recipes"] });
         queryClient.invalidateQueries({ queryKey: ["user-recipes"] });
+        trackReviewAction("youtube_extract");
       }
     },
   });
