@@ -46,16 +46,15 @@ const StepTimer = ({ targetSeconds }: StepTimerProps) => {
     <div className="flex items-center gap-2">
       <TimerRoot
         variant={isOvertime ? "destructive" : "default"}
-        size="sm"
+        size="md"
         loading={isRunning}
-        className={cn("gap-1 md:text-sm", isOvertime && "animate-shake")}
+        className={cn("gap-1", isOvertime && "animate-shake")}
       >
         <TimerDisplay
-          size="sm"
+          size="md"
           time={formattedTime.display}
-          className="md:text-sm"
         />
-        <span className="text-[10px] opacity-60 md:text-xs">
+        <span className="text-xs opacity-60">
           / {formatTargetTime(targetSeconds)}
         </span>
       </TimerRoot>
@@ -66,7 +65,7 @@ const StepTimer = ({ targetSeconds }: StepTimerProps) => {
           onClick={handlePlayPause}
           className={cn(
             "flex cursor-pointer items-center justify-center rounded-full transition-all",
-            "h-6 w-6 md:h-9 md:w-9",
+            "h-8 w-8 md:h-9 md:w-9",
             isOvertime
               ? "bg-red-100 text-red-600"
               : "bg-olive-light/10 text-olive-dark"
@@ -74,9 +73,9 @@ const StepTimer = ({ targetSeconds }: StepTimerProps) => {
           aria-label={isRunning ? "일시정지" : "시작"}
         >
           {isRunning ? (
-            <Pause size={12} className="md:h-5 md:w-5" />
+            <Pause size={14} className="md:h-5 md:w-5" />
           ) : (
-            <Play size={12} className="md:h-5 md:w-5" />
+            <Play size={14} className="md:h-5 md:w-5" />
           )}
         </button>
 
@@ -85,14 +84,14 @@ const StepTimer = ({ targetSeconds }: StepTimerProps) => {
           onClick={handleReset}
           className={cn(
             "flex cursor-pointer items-center justify-center rounded-full transition-all",
-            "h-6 w-6 md:h-9 md:w-9",
+            "h-8 w-8 md:h-9 md:w-9",
             isOvertime
               ? "bg-red-100 text-red-600"
               : "bg-olive-light/10 text-olive-dark"
           )}
           aria-label="초기화"
         >
-          <RotateCcw size={12} className="md:h-5 md:w-5" />
+          <RotateCcw size={14} className="md:h-5 md:w-5" />
         </button>
       </div>
     </div>

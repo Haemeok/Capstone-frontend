@@ -86,9 +86,18 @@ export default function RecipeVideoSection({
         <div
           className={cn(
             "w-full transition-all",
-            isSticky ? "my-6 block aspect-video" : "hidden h-0"
+            isSticky
+              ? "my-6 flex aspect-video items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50"
+              : "hidden h-0"
           )}
-        />
+        >
+          {isSticky && (
+            <div className="flex flex-col items-center gap-1 text-gray-400">
+              <Pin className="h-5 w-5" />
+              <span className="text-xs">영상이 상단에 고정되었습니다</span>
+            </div>
+          )}
+        </div>
 
         <div
           className={cn(
