@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { invalidateRecipeCache } from "@/app/recipes/[recipeId]/actions";
 import { Comment } from "@/entities/comment";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -18,7 +19,7 @@ const useCreateCommentMutation = (recipeId: string) => {
     PostCommentParams
   >({
     mutationFn: (params: PostCommentParams) => postComment(params),
-    onSuccess: () => {
+    onSuccess: async () => {
       triggerHaptic("Success");
       queryClient.invalidateQueries({
         queryKey: ["comments", recipeId],
@@ -29,6 +30,7 @@ const useCreateCommentMutation = (recipeId: string) => {
       queryClient.invalidateQueries({
         queryKey: ["recipe", recipeId],
       });
+      await invalidateRecipeCache(recipeId);
       addToast({
         message: "댓글이 등록되었습니다.",
         variant: "success",
