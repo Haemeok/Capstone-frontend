@@ -7,6 +7,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToastStore } from "@/widgets/Toast";
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 
+import { trackReviewAction } from "@/shared/lib/review";
+
 import { createRecipeRecord } from "./api";
 import { useRecipeCompleteStore } from "./store";
 
@@ -47,6 +49,7 @@ export const useRecipeComplete = ({
     onSuccess: () => {
       addCompletedRecipe(recipeId);
       setShowReward(true);
+      trackReviewAction("cooking_complete");
 
       if (onRewardShow) {
         onRewardShow(saveAmount);

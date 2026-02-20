@@ -3,6 +3,12 @@ export const STORAGE_KEYS = {
   AI_CREDIT_PROMPTED: "ai_credit_prompted",
   YOUTUBE_EXTRACTION_PROMPTED: "youtube_extraction_prompted",
   COMPLETED_RECIPES: "completed_recipes",
+  REVIEW_ACTION_RECIPE_SAVE: "review_action_recipe_save",
+  REVIEW_ACTION_YOUTUBE_EXTRACT: "review_action_youtube_extract",
+  REVIEW_ACTION_AI_GENERATION: "review_action_ai_generation",
+  REVIEW_ACTION_COOKING_COMPLETE: "review_action_cooking_complete",
+  REVIEW_REQUESTED: "review_requested",
+  REVIEW_GATE_DECLINED: "review_gate_declined",
 } as const;
 
 export const MAX_RECENT_AI_RECIPES = 10;

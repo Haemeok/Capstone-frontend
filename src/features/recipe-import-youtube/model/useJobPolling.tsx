@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { trackReviewAction } from "@/shared/lib/review";
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
@@ -58,6 +59,7 @@ export const useJobPolling = () => {
       queryClient.invalidateQueries({ queryKey: ["recipes", "favorite"] });
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
+      trackReviewAction("youtube_extract");
       triggerHaptic("Success");
 
       addToast({

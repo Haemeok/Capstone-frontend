@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
+import { trackReviewAction } from "@/shared/lib/review";
+
 import { postAIRecommendedRecipe } from "./api";
 import type { AIRecommendedRecipe, AIRecommendedRecipeRequest } from "./types";
 import { aiModels, AIModelId } from "@/shared/config/constants/aiModel";
@@ -31,6 +33,7 @@ export const useCreateAIRecipeMutation = (callbacks?: {
     onSuccess: (data) => {
       router.prefetch(`/recipes/${data.recipeId}`);
       completeGeneration(data);
+      trackReviewAction("ai_generation");
       callbacks?.onSuccess?.(data);
     },
     onError: (error) => {
