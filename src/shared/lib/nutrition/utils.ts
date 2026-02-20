@@ -50,11 +50,10 @@ export const filterModifiedNutritionValues = (
 };
 
 export const applyNutritionTheme = (
-  themeKey: NutritionThemeKey,
-  currentValues: NutritionFilterValues
+  themeKey: NutritionThemeKey
 ): NutritionFilterValues => {
   const theme = NUTRITION_THEMES[themeKey];
-  const newValues = { ...currentValues };
+  const newValues = createDefaultNutritionValues();
   const themeEntries = getTypedEntries(theme.values);
 
   themeEntries.forEach(([key, range]) => {

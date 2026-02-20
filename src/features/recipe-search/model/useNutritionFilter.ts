@@ -41,7 +41,7 @@ export const useNutritionFilter = (
       }
 
       setSelectedTheme(themeKey);
-      setValues((prev) => applyNutritionTheme(themeKey, prev));
+      setValues(applyNutritionTheme(themeKey));
     },
     [selectedTheme]
   );
