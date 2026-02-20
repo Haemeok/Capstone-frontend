@@ -3,10 +3,14 @@ import { type ReactNode } from "react";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
+import type { TocItem } from "./types";
+import ArticleWithToc from "./ArticleWithToc";
+
 type ArticleLayoutProps = {
   title: string;
   subtitle?: string;
   date?: string;
+  tocItems?: TocItem[];
   children: ReactNode;
 };
 
@@ -14,10 +18,13 @@ const ArticleLayout = ({
   title,
   subtitle,
   date,
+  tocItems,
   children,
 }: ArticleLayoutProps) => {
+  const hasToc = tocItems && tocItems.length > 0;
+
   return (
-    <Container maxWidth="3xl" className="pb-20">
+    <Container maxWidth={hasToc ? "5xl" : "3xl"} className="pb-20">
       <div className="py-2 md:hidden">
         <PrevButton />
       </div>
@@ -36,7 +43,11 @@ const ArticleLayout = ({
         )}
       </header>
 
-      <div className="space-y-10">{children}</div>
+      {hasToc ? (
+        <ArticleWithToc items={tocItems}>{children}</ArticleWithToc>
+      ) : (
+        <div className="space-y-10">{children}</div>
+      )}
     </Container>
   );
 };
