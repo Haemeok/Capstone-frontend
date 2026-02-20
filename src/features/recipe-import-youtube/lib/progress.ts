@@ -1,11 +1,15 @@
 type ProgressPoint = { time: number; progress: number };
 
+const MAX_FAKE_PROGRESS = 95;
+
 const PROGRESS_CURVE: ProgressPoint[] = [
   { time: 0, progress: 0 },
-  { time: 60, progress: 50 }, // 0~60초: 0→50%
-  { time: 120, progress: 75 }, // 60~120초: 50→75%
-  { time: 150, progress: 90 }, // 120~150초: 75→90%
-  { time: 180, progress: 95 }, // 150~180초: 90→95%
+  { time: 5, progress: 10 }, // 0~5초: 즉각 피드백
+  { time: 15, progress: 25 }, // 5~15초: 초반 빠른 상승
+  { time: 40, progress: 45 }, // 15~40초: 첫 폴링 응답 전까지 상승
+  { time: 90, progress: 65 }, // 40~90초: 서버 인계 구간
+  { time: 150, progress: 85 }, // 90~150초: 완만한 상승
+  { time: 210, progress: 95 }, // 150~210초: 긴 꼬리
 ];
 
 export const calculateFakeProgress = (startTime: number): number => {
@@ -20,7 +24,10 @@ export const calculateFakeProgress = (startTime: number): number => {
 
     if (elapsedSeconds <= curr.time) {
       const ratio = (elapsedSeconds - prev.time) / (curr.time - prev.time);
-      return Math.round(prev.progress + ratio * (curr.progress - prev.progress));
+      const interpolated = Math.round(
+        prev.progress + ratio * (curr.progress - prev.progress)
+      );
+      return Math.min(interpolated, MAX_FAKE_PROGRESS);
     }
   }
 

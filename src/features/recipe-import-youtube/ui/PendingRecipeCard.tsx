@@ -156,7 +156,9 @@ export const PendingRecipeCardV2 = ({
   const fakeProgress = useFakeProgress(job?.startTime ?? Date.now(), status);
   const realProgress = job?.progress ?? 0;
   const progress =
-    status === "success" ? 100 : Math.max(fakeProgress, realProgress);
+    status === "success"
+      ? 100
+      : Math.min(Math.max(fakeProgress, realProgress), 100);
 
   if (!job) return null;
 
