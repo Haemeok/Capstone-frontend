@@ -44,10 +44,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const recipeRoutes: MetadataRoute.Sitemap = recipes.map((recipe) => ({
       url: `${SITE_URL}recipes/${recipe.id}`,
-      lastModified: new Date(recipe.createdAt),
+      lastModified: new Date(recipe.updatedAt),
       changeFrequency: "weekly",
       priority: 0.9,
-      images: recipe.imageUrl ? [recipe.imageUrl] : undefined,
     }));
 
     return [...staticRoutes, ...recipeRoutes];

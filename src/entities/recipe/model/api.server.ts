@@ -151,56 +151,29 @@ export const getStaticrecipionServer = async (
 
 const REVALIDATE_TIME_SECONDS = 43200;
 
+const SITEMAP_REVALIDATE_SECONDS = 86400;
+
 export const fetchAllRecipesForSitemap = async (): Promise<
-  Array<{ id: string; createdAt: string; imageUrl: string }>
+  Array<{ id: string; updatedAt: string }>
 > => {
-  const SITEMAP_PAGE_SIZE = 100;
-  const MAX_PAGES = 500;
-  const allRecipes: Array<{ id: string; createdAt: string; imageUrl: string }> =
-    [];
+  const API_URL = `${BASE_API_URL}/recipes/sitemap`;
 
   try {
-    let currentPage = 0;
-    let hasMorePages = true;
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: SITEMAP_REVALIDATE_SECONDS,
+        tags: [CACHE_TAGS.recipesAll],
+      },
+    });
 
-    while (hasMorePages && currentPage < MAX_PAGES) {
-      const query = new URLSearchParams({
-        page: currentPage.toString(),
-        size: SITEMAP_PAGE_SIZE.toString(),
-        sort: "createdAt,desc",
-      });
-
-      const API_URL = `${BASE_API_URL}/v2/recipes/search?${query.toString()}`;
-
-      const res = await fetch(API_URL, {
-        next: {
-          revalidate: REVALIDATE_TIME_SECONDS,
-          tags: [CACHE_TAGS.recipesAll],
-        },
-      });
-
-      if (!res.ok) {
-        console.error(
-          `[fetchAllRecipesForSitemap] API Error: ${res.status} ${res.statusText}`
-        );
-        break;
-      }
-
-      const data: StaticDetailedRecipesApiResponse = await res.json();
-
-      const pageRecipes = data.content.map((recipe) => ({
-        id: recipe.id,
-        createdAt: recipe.createdAt,
-        imageUrl: recipe.imageUrl,
-      }));
-
-      allRecipes.push(...pageRecipes);
-
-      hasMorePages = currentPage < data.page.totalPages - 1;
-      currentPage++;
+    if (!res.ok) {
+      console.error(
+        `[fetchAllRecipesForSitemap] API Error: ${res.status} ${res.statusText}`
+      );
+      return [];
     }
 
-    return allRecipes;
+    return res.json();
   } catch (error) {
     console.error(
       "[fetchAllRecipesForSitemap] Failed to fetch recipes:",
