@@ -6,9 +6,7 @@ export {
   TrendingRecipesSkeleton,
   UsageGuide,
   PendingRecipeCard,
-  PendingRecipeCardV2,
   PendingRecipeSection,
-  PendingRecipeSectionV2,
   PlaceholderCard,
   DuplicateRecipeSection,
 } from "./ui";
