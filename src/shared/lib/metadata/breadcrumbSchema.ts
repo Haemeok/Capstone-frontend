@@ -51,14 +51,14 @@ export const createRecipeBreadcrumb = (
     if (tagDef) {
       items.push({
         name: tagDef.name,
-        url: `${SEO_CONSTANTS.SITE_URL}recipes/category/${firstTagCode}`,
+        url: `${SEO_CONSTANTS.SITE_URL}/recipes/category/${firstTagCode}`,
       });
     }
   }
 
   items.push({
     name: recipeTitle,
-    url: `${SEO_CONSTANTS.SITE_URL}recipes/${recipeId}`,
+    url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}`,
   });
 
   return createBreadcrumbListElement(items);
@@ -75,7 +75,7 @@ export const createCategoryBreadcrumb = (
     },
     {
       name: `${categoryName} 레시피`,
-      url: `${SEO_CONSTANTS.SITE_URL}recipes/category/${categoryCode}`,
+      url: `${SEO_CONSTANTS.SITE_URL}/recipes/category/${categoryCode}`,
     },
   ];
 
@@ -93,7 +93,7 @@ export const createUserProfileBreadcrumb = (
     },
     {
       name: `${userName}님의 프로필`,
-      url: `${SEO_CONSTANTS.SITE_URL}users/${userId}`,
+      url: `${SEO_CONSTANTS.SITE_URL}/users/${userId}`,
     },
   ];
 

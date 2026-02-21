@@ -14,25 +14,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${SITE_URL}search`,
+      url: `${SITE_URL}/search`,
       lastModified: new Date(),
       changeFrequency: "hourly",
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}recipes/ai`,
+      url: `${SITE_URL}/recipes/ai`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
-      url: `${SITE_URL}recipes/my-fridge`,
+      url: `${SITE_URL}/recipes/my-fridge`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.7,
     },
     {
-      url: `${SITE_URL}ingredients`,
+      url: `${SITE_URL}/ingredients`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.6,
@@ -43,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const recipes = await fetchAllRecipesForSitemap();
 
     const recipeRoutes: MetadataRoute.Sitemap = recipes.map((recipe) => ({
-      url: `${SITE_URL}recipes/${recipe.id}`,
+      url: `${SITE_URL}/recipes/${recipe.id}`,
       lastModified: new Date(recipe.updatedAt),
       changeFrequency: "weekly",
       priority: 0.9,
