@@ -1,4 +1,3 @@
-import withSerwistInit from "@serwist/next";
 import createBundleAnalyzer from "@next/bundle-analyzer";
 
 const withBundleAnalyzer = createBundleAnalyzer({
@@ -59,16 +58,4 @@ const appConfig = {
   eslint: { ignoreDuringBuilds: true },
 } satisfies import("next").NextConfig;
 
-const withSerwist = withSerwistInit({
-  swSrc: "src/app/sw.ts",
-  swDest: "public/sw.js",
-  cacheOnNavigation: true,
-  reloadOnOnline: false,
-  disable: process.env.NODE_ENV === "development",
-  register: true,
-});
-
-const withSerwistConfig = withSerwist(appConfig);
-const analyzed = withBundleAnalyzer(withSerwistConfig);
-
-export default analyzed;
+export default withBundleAnalyzer(appConfig);

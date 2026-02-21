@@ -19,33 +19,6 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "레시피오",
   description: "AI가 추천하는 홈쿡 레시피로 집에서 맛있게 해먹어보세요!",
-  manifest: "/manifest.json?v=260102",
-  icons: {
-    icon: [
-      {
-        url: "/web-app-manifest-192x192.png",
-        type: "image/png",
-        sizes: "192x192",
-      },
-      {
-        url: "/web-app-manifest-512x512.png",
-        type: "image/png",
-        sizes: "512x512",
-      },
-    ],
-    apple: [
-      {
-        url: "https://www.recipio.kr/apple-touch-icon.png",
-        sizes: "180x180",
-        type: "image/png",
-      },
-    ],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "레시피오",
-  },
   metadataBase: new URL("https://www.recipio.kr/"),
   openGraph: {
     title: "레시피오",

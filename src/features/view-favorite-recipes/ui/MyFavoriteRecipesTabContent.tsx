@@ -12,7 +12,7 @@ import { BaseRecipesApiResponse } from "@/entities/recipe";
 import { getMyFavoriteItems } from "@/features/view-favorite-recipes";
 import {
   useYoutubeImportStoreV2,
-  PendingRecipeSectionV2,
+  PendingRecipeSection,
 } from "@/features/recipe-import-youtube";
 
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
@@ -53,7 +53,7 @@ const MyFavoriteRecipesTabContent = () => {
   return (
     <div>
       {hasVisibleJobs && (
-        <PendingRecipeSectionV2 pendingJobKeys={visibleJobKeys} />
+        <PendingRecipeSection pendingJobKeys={visibleJobKeys} />
       )}
       <RecipeGrid
         recipes={recipes}

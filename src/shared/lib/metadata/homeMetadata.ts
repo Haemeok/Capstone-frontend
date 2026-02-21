@@ -7,8 +7,6 @@ export const homeMetadata: Metadata = {
   title: `${SEO_CONSTANTS.SITE_NAME} - AI가 추천하는 홈쿡 레시피`,
   description: `AI가 추천하는 맛있는 홈쿡 레시피로 집에서 간편하게 요리해보세요. 이번주 인기 레시피와 홈파티 레시피까지!`,
   keywords: [...SEO_CONSTANTS.DEFAULT_KEYWORDS, "홈파티"],
-  manifest: "/manifest.json",
-
   verification: {
     other: {
       "naver-site-verification": "7c2a4d7a2d320196a11bcf8e31524a1827f41b99",
@@ -16,32 +14,6 @@ export const homeMetadata: Metadata = {
   },
   alternates: {
     canonical: SEO_CONSTANTS.SITE_URL,
-  },
-  icons: {
-    icon: [
-      {
-        url: "https://www.recipio.kr/web-app-manifest-192x192.png",
-        type: "image/png",
-        sizes: "192x192",
-      },
-      {
-        url: "https://www.recipio.kr/web-app-manifest-512x512.png",
-        type: "image/png",
-        sizes: "512x512",
-      },
-    ],
-    apple: [
-      {
-        url: "https://www.recipio.kr/apple-touch-icon.png",
-        sizes: "180x180",
-        type: "image/png",
-      },
-    ],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "레시피오",
   },
   openGraph: {
     title: "레시피오",
@@ -68,6 +40,5 @@ export const homeMetadata: Metadata = {
   },
   other: {
     "application/ld+json": JSON.stringify(createWebsiteStructuredData()),
-    "mobile-web-app-capable": "yes",
   },
 };

@@ -10,13 +10,6 @@
 !.yarn/releases
 !.yarn/versions
 
-# Serwist PWA
-/public/sw*
-/public/swe-worker*
-/public/workbox-*.js
-/public/worker-*.js
-/public/fallback-*.js
-
 /docs/
 # testing
 /coverage
