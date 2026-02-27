@@ -1,5 +1,4 @@
 import { SEO_CONSTANTS } from "./constants";
-import { TagCode, TAGS_BY_CODE } from "@/shared/config/constants/recipe";
 
 type BreadcrumbItem = {
   name: string;
@@ -7,7 +6,6 @@ type BreadcrumbItem = {
 };
 
 type BreadcrumbListSchema = {
-  "@context": "https://schema.org";
   "@type": "BreadcrumbList";
   itemListElement: Array<{
     "@type": "ListItem";
@@ -21,7 +19,6 @@ const createBreadcrumbListElement = (
   items: BreadcrumbItem[]
 ): BreadcrumbListSchema => {
   return {
-    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
@@ -34,32 +31,22 @@ const createBreadcrumbListElement = (
 
 export const createRecipeBreadcrumb = (
   recipeTitle: string,
-  recipeId: string,
-  tags?: string[]
-): BreadcrumbListSchema => {
+  recipeId: string
+) => {
   const items: BreadcrumbItem[] = [
     {
-      name: "홈",
+      name: SEO_CONSTANTS.SITE_NAME,
       url: SEO_CONSTANTS.SITE_URL,
     },
+    {
+      name: "레시피",
+      url: `${SEO_CONSTANTS.SITE_URL}/recipes`,
+    },
+    {
+      name: recipeTitle,
+      url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}`,
+    },
   ];
-
-  if (tags && tags.length > 0) {
-    const firstTagCode = tags[0] as TagCode;
-    const tagDef = TAGS_BY_CODE[firstTagCode];
-
-    if (tagDef) {
-      items.push({
-        name: tagDef.name,
-        url: `${SEO_CONSTANTS.SITE_URL}/recipes/category/${firstTagCode}`,
-      });
-    }
-  }
-
-  items.push({
-    name: recipeTitle,
-    url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}`,
-  });
 
   return createBreadcrumbListElement(items);
 };
