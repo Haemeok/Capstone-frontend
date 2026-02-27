@@ -54,12 +54,12 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mb-12 max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl"
         >
-          복잡한 레시피 검색은 그만, 냉장고 재료로 바로 만드는
-          <br className="hidden sm:block" />
           <span className="text-olive-medium font-semibold">
-            당신만을 위한 맞춤 레시피
+            만개 이상의 검증된 레시피
           </span>
-          를 경험하세요
+          에서 AI가 찾아주는
+          <br className="hidden sm:block" />
+          나만의 맞춤 레시피를 경험하세요
         </motion.p>
 
         <motion.div

@@ -37,7 +37,7 @@ export const FinalCTA = () => {
             </h2>
 
             <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl">
-              1,000개 이상의 레시피와 AI 추천, 스마트 재료 관리까지
+              10,000개 이상의 레시피와 AI 추천, 스마트 재료 관리까지
               <br className="hidden sm:block" />
               지금 바로 무료로 시작해보세요
             </p>
