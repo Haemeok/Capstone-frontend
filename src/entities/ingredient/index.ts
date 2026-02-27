@@ -1,3 +1,8 @@
-export * from "./model/api";
-export * from "./model/types";
-export * from "./model/hooks";
+export { getIngredientNames, getIngredients } from "./model/api";
+export { useMyIngredientIds } from "./model/hooks";
+export type {
+  AIIngredientPayload,
+  IngredientItem,
+  IngredientPayload,
+  IngredientsApiResponse,
+} from "./model/types";

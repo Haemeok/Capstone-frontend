@@ -20,12 +20,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}/recipes/ai`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-    {
       url: `${SITE_URL}/recipes/my-fridge`,
       lastModified: new Date(),
       changeFrequency: "daily",

@@ -9,7 +9,6 @@
 - [홈](https://www.recipio.kr/): 인기 레시피, 최신 레시피, AI 추천
 - [레시피 상세보기](https://www.recipio.kr/recipes/{id}): 레시피 재료, 조리법, 영양정보, 평점, 조리시간, 영상 정보 (schema.org/Recipe JSON-LD 포함)
 - [레시피 검색 결과](https://www.recipio.kr/search/result): 키워드, 카테고리, 재료 기반 레시피 검색 결과
-- [AI 추천 레시피](https://www.recipio.kr/recipes/ai): AI가 사용자 맞춤 추천하는 레시피
 
 ## 레시피 데이터
 
