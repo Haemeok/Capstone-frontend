@@ -2,15 +2,15 @@
 
 import React from "react";
 import { useController, useFormContext } from "react-hook-form";
-import type { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
+import type { RecipeFormValues } from "@/features/recipe-create/model/config";
 import { cn } from "@/lib/utils";
 
 const MIN = 1;
 
 const ServingCounter = () => {
-  const { control } = useFormContext<AIRecipeFormValues>();
+  const { control } = useFormContext<RecipeFormValues>();
 
-  const { field } = useController<AIRecipeFormValues, "servings">({
+  const { field } = useController<RecipeFormValues, "servings">({
     name: "servings",
     control,
     defaultValue: 1,

@@ -1,5 +1,13 @@
-export * from "./model/api";
-export * from "./model/hooks";
+export {
+  fetchPagedRecipes,
+  getRecipe,
+  getRecipeItems,
+  getRecipesStatus,
+} from "./model/api";
+export {
+  useRecipeDetailQuery,
+  useTrendingYoutubeRecipesQuery,
+} from "./model/hooks";
 export type {
   BaseRecipeGridItem,
   BaseRecipesApiResponse,
