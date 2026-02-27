@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 import { cn } from "@/shared/lib/utils";
+import { Image } from "@/shared/ui/image/Image";
 import { notoSansKr } from "@/app/fonts/notoSansKr";
 
 import { ProgressBar } from "./ProgressBar";
@@ -91,17 +92,27 @@ const HomeBannerCarousel = ({
 
                   <div className="relative w-24 h-24 md:w-28 md:h-28 flex-none rotate-12">
                     {slide.backgroundImage && (
-                      <img
-                        src={slide.backgroundImage}
-                        alt=""
-                        className="absolute inset-0 h-full w-full scale-[2] object-contain"
-                      />
+                      <div className="absolute inset-0 scale-[2]">
+                        <Image
+                          src={slide.backgroundImage}
+                          alt=""
+                          fit="contain"
+                          aspectRatio="1 / 1"
+                          skeleton={null}
+                          errorFallback={null}
+                        />
+                      </div>
                     )}
-                    <img
-                      src={slide.mainImage}
-                      alt={slide.title}
-                      className="absolute inset-0 h-full w-full object-contain drop-shadow-xl transition-transform duration-300 hover:scale-110"
-                    />
+                    <div className="absolute inset-0">
+                      <Image
+                        src={slide.mainImage}
+                        alt={slide.title}
+                        fit="contain"
+                        aspectRatio="1 / 1"
+                        skeleton={null}
+                        imgClassName="drop-shadow-xl transition-transform duration-300 hover:scale-110"
+                      />
+                    </div>
                   </div>
                 </div>
               </Link>
