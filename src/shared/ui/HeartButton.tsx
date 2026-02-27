@@ -4,9 +4,13 @@ import { useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
 import { Heart } from "lucide-react";
+import dynamic from "next/dynamic";
 
 import { cn } from "@/lib/utils";
-import CountUp from "@/shared/ui/shadcn/CountUp";
+
+const CountUp = dynamic(() => import("@/shared/ui/shadcn/CountUp"), {
+  ssr: false,
+});
 
 type HeartButtonProps = {
   containerClassName?: string;

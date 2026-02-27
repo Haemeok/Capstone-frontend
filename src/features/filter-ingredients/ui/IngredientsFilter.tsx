@@ -3,13 +3,21 @@
 import { useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 
 import FilterChip from "@/shared/ui/FilterChip";
 
 import { getIngredientNames } from "@/entities/ingredient";
 
 import { useIngredientsFilter } from "../model/useIngredientsFilter";
-import { IngredientsFilterSheet } from "./IngredientsFilterSheet";
+
+const IngredientsFilterSheet = dynamic(
+  () =>
+    import("./IngredientsFilterSheet").then((m) => ({
+      default: m.IngredientsFilterSheet,
+    })),
+  { ssr: false }
+);
 
 export const IngredientsFilter = () => {
   const [selectedIngredients, setSavedIngredients] = useIngredientsFilter();

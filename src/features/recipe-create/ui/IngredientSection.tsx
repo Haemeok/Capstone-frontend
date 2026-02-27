@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import dynamic from "next/dynamic";
 
 import { Plus } from "lucide-react";
 
@@ -9,7 +10,11 @@ import { IngredientPayload } from "@/entities/ingredient";
 
 import { RecipeFormValues } from "../model/config";
 import IngredientItem from "./IngredientItem";
-import IngredientSelector from "./IngredientSelector";
+import type OriginalIngredientSelector from "./IngredientSelector";
+
+const IngredientSelector = dynamic(() => import("./IngredientSelector"), {
+  ssr: false,
+}) as unknown as typeof OriginalIngredientSelector;
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { FIELD_LABELS } from "../model/constants";
 
