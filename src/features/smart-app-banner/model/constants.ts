@@ -1,0 +1,6 @@
+const DISMISS_DURATION_DAYS = 7;
+
+export const DISMISS_DURATION_MS =
+  DISMISS_DURATION_DAYS * 24 * 60 * 60 * 1000;
+
+export const SHOW_DELAY_MS = 2000;
