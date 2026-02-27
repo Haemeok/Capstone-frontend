@@ -41,7 +41,7 @@ export const StoreBadges = ({
           <img
             src="/Download_on_the_App_Store_Badge_KR.svg"
             alt="App Store에서 다운로드"
-            className="h-11"
+            className="h-14"
           />
         </motion.a>
         <motion.a
@@ -56,7 +56,7 @@ export const StoreBadges = ({
           <img
             src="/googlePlay_Badge_Web_color_ko.png"
             alt="Google Play에서 다운로드"
-            className="h-11"
+            className="h-14"
           />
         </motion.a>
       </div>

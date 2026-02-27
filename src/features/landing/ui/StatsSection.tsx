@@ -15,6 +15,13 @@ type StatCard = {
 
 const STATS: StatCard[] = [
   {
+    image: `${ICON_BASE_URL}book.webp`,
+    metric: "10,000+",
+    label: "검증된 셰프 레시피",
+    description: "매주 업데이트되는 큐레이션",
+    accent: "from-purple-500/10 to-pink-500/10",
+  },
+  {
     image: `${ICON_BASE_URL}money.webp`,
     metric: "45%",
     label: "월 평균 식비 절감",
@@ -34,13 +41,6 @@ const STATS: StatCard[] = [
     label: "냉장고 재료 소진율",
     description: "버려지는 식재료 최소화",
     accent: "from-orange-500/10 to-amber-500/10",
-  },
-  {
-    image: `${ICON_BASE_URL}book.webp`,
-    metric: "10,000+",
-    label: "검증된 셰프 레시피",
-    description: "매주 업데이트되는 큐레이션",
-    accent: "from-purple-500/10 to-pink-500/10",
   },
 ];
 const AnimatedCounter = ({ value }: { value: string }) => {
