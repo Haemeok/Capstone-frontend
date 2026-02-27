@@ -17,7 +17,7 @@ export const getRecipesOnServer = async (
   params: RecipeItemsQueryParams
 ): Promise<DetailedRecipesApiResponse> => {
   const query = new URLSearchParams({
-    page: "0",
+    page: String(params.page ?? 0),
     size: "10",
     sort: `createdAt,${params.sort || "desc"}`,
   });
@@ -30,6 +30,9 @@ export const getRecipesOnServer = async (
   }
   if (params.types && params.types.length > 0) {
     query.set("types", params.types.join(","));
+  }
+  if (params.ingredientIds && params.ingredientIds.length > 0) {
+    query.set("ingredientIds", params.ingredientIds.join(","));
   }
   if (params.maxCost !== undefined) query.append("maxCost", params.maxCost.toString());
   if (params.minCost !== undefined) query.append("minCost", params.minCost.toString());

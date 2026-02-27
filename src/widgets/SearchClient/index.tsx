@@ -7,7 +7,15 @@ import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 import { useSearchResults } from "./hooks/useSearchResults";
 import { SearchFilters } from "./ui/SearchFilters";
 
-export const SearchClient = () => {
+type SearchClientProps = {
+  initialPage?: number;
+  nextPageHref?: string;
+};
+
+export const SearchClient = ({
+  initialPage = 0,
+  nextPageHref,
+}: SearchClientProps) => {
   const {
     recipes,
     hasNextPage,
@@ -17,7 +25,7 @@ export const SearchClient = () => {
     queryKeyString,
     noResults,
     resetFilters,
-  } = useSearchResults();
+  } = useSearchResults(initialPage);
 
   return (
     <Container padding={false}>
@@ -34,6 +42,7 @@ export const SearchClient = () => {
           onResetFilters={resetFilters}
           lastPageMessage={"모든 레시피를 불러왔습니다."}
           queryKeyString={queryKeyString}
+          nextPageHref={nextPageHref}
         />
       </div>
     </Container>

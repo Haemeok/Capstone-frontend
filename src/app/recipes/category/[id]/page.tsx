@@ -7,24 +7,32 @@ import {
   TagCode,
 } from "@/shared/config/constants/recipe";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
+import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
 type Props = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ page?: string }>;
 };
 
 export function generateStaticParams() {
   return [{ id: "CHEF_RECIPE" }];
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { id } = await params;
+  const awaitedSearchParams = await searchParams;
   const tagCode = id as TagCode;
   const tagDef = TAGS_BY_CODE[tagCode];
   const tagName = tagDef?.name ?? "레시피";
 
-  const title = `${tagName} 모음 | ${SEO_CONSTANTS.SITE_NAME}`;
+  const page = Math.max(0, parseInt(awaitedSearchParams.page || "0", 10) || 0);
+  const pageLabel = page > 0 ? ` (${page + 1}페이지)` : "";
+
+  const title = `${tagName} 모음${pageLabel} | ${SEO_CONSTANTS.SITE_NAME}`;
   const description = `${tagName}를 ${SEO_CONSTANTS.SITE_NAME}에서 확인해보세요. 다양한 ${tagName} 관련 요리를 추천해드립니다.`;
-  const url = `${SEO_CONSTANTS.SITE_URL}recipes/category/${id}`;
+  const canonicalSearch = page > 0 ? `?page=${page}` : "";
+  const url = `${SEO_CONSTANTS.SITE_URL}recipes/category/${id}${canonicalSearch}`;
 
   const tagImageKey = TAGS_IMAGE_KEYS[tagCode];
   const imageUrl = tagImageKey
@@ -118,6 +126,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return baseMetadata;
 }
 
-export default function Page() {
-  return <CategoryDetailClient />;
+export default async function Page({ params, searchParams }: Props) {
+  const { id: tagCode } = await params;
+  const awaitedSearchParams = await searchParams;
+
+  const page = Math.max(
+    0,
+    parseInt(awaitedSearchParams.page || "0", 10) || 0
+  );
+
+  const pageData = await getRecipesOnServer({
+    key: "search",
+    page,
+    tags: [tagCode],
+    types: ["USER", "AI", "YOUTUBE"],
+  });
+
+  const totalPages = pageData.page.totalPages;
+  const hasNextPage = page < totalPages - 1;
+
+  const nextPageHref = hasNextPage
+    ? buildNextPageUrl(
+        awaitedSearchParams,
+        page + 1,
+        `/recipes/category/${tagCode}`
+      )
+    : undefined;
+
+  return (
+    <CategoryDetailClient initialPage={page} nextPageHref={nextPageHref} />
+  );
 }

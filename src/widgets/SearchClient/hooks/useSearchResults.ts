@@ -17,7 +17,7 @@ import { useTagCodes } from "@/features/filter-tags";
 import { useNutritionParams } from "@/features/recipe-search";
 import { useSearchQuery } from "@/features/search-input";
 
-export const useSearchResults = () => {
+export const useSearchResults = (initialPage: number = 0) => {
   const router = useRouter();
   const dishTypeCode = useDishTypeCode();
   const sortCode = useSortCode();
@@ -51,7 +51,7 @@ export const useSearchResults = () => {
         ingredientIds: ingredientIds.length > 0 ? ingredientIds : undefined,
       }),
     getNextPageParam: getNextPageParam,
-    initialPageParam: 0,
+    initialPageParam: initialPage,
   });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
