@@ -238,7 +238,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.title).toContain("[3천원]");
+      expect(meta.title).toContain("[💰3천원]");
     });
 
     it("재료비 5천~1만원이면 '[만원요리]' 키워드가 제목에 포함된다", () => {
@@ -247,7 +247,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.title).toContain("[만원요리]");
+      expect(meta.title).toContain("[💰만원요리]");
     });
 
     it("재료비 1만원 초과면 비용 키워드가 제목에 포함되지 않는다", () => {
@@ -268,7 +268,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.title).toContain("[15분컷]");
+      expect(meta.title).toContain("[⏱️15분컷]");
     });
 
     it("조리시간 16~30분이면 '[초간단]' 키워드가 제목에 포함된다", () => {
@@ -277,7 +277,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.title).toContain("[초간단]");
+      expect(meta.title).toContain("[⚡초간단]");
     });
 
     it("조리시간 30분 초과면 시간 키워드가 제목에 포함되지 않는다", () => {

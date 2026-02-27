@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 
 import type { StaticRecipe } from "@/entities/recipe/model/types";
+import { createRecipeBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 
 import { SEO_CONSTANTS } from "./constants";
+import { createRecipeStructuredData } from "./schema";
 import {
   determineRecipeType,
   generateYoutubeDescription,
@@ -32,9 +34,9 @@ export const generateRecipeMetadata = (
   if (recipe.totalIngredientCost > 0) {
     if (recipe.totalIngredientCost <= BUDGET_FRIENDLY_THRESHOLD) {
       const thousandWon = Math.floor(recipe.totalIngredientCost / 1000);
-      titleKeywords.push(`[${thousandWon}천원]`);
+      titleKeywords.push(`[💰${thousandWon}천원]`);
     } else if (recipe.totalIngredientCost <= AFFORDABLE_THRESHOLD) {
-      titleKeywords.push("[만원요리]");
+      titleKeywords.push("[💰만원요리]");
     }
   }
 
@@ -42,22 +44,22 @@ export const generateRecipeMetadata = (
   const EASY_RECIPE_TIME = 30;
 
   if (recipe.cookingTime <= QUICK_RECIPE_TIME) {
-    titleKeywords.push("[15분컷]");
+    titleKeywords.push("[⏱️15분컷]");
   } else if (recipe.cookingTime <= EASY_RECIPE_TIME) {
-    titleKeywords.push("[초간단]");
+    titleKeywords.push("[⚡초간단]");
   }
 
   const tagKeywordMap: Record<string, string> = {
-    다이어트: "다이어트",
-    자취: "자취생",
-    "1인분": "1인분",
-    간편식: "간편식",
-    야식: "야식",
-    도시락: "도시락",
-    다이어트식단: "저칼로리",
-    단백질: "단백질",
-    채식: "채식",
-    비건: "비건",
+    다이어트: "🥗다이어트",
+    자취: "🏠자취생",
+    "1인분": "🍽️1인분",
+    간편식: "✨간편식",
+    야식: "🌙야식",
+    도시락: "🍱도시락",
+    다이어트식단: "🥗저칼로리",
+    단백질: "💪단백질",
+    채식: "🌿채식",
+    비건: "🌱비건",
   };
 
   recipe.tags.forEach((tag) => {
@@ -177,6 +179,14 @@ export const generateRecipeMetadata = (
     twitterImages.push(images.secondary);
   }
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      createRecipeBreadcrumb(recipe.title, recipeId),
+      createRecipeStructuredData(recipe, recipeId),
+    ],
+  };
+
   const baseMetadata: Metadata = {
     title: defaultTitle,
     description: defaultDescription,
@@ -204,6 +214,9 @@ export const generateRecipeMetadata = (
       title: defaultTitle,
       description: defaultDescription,
       images: twitterImages,
+    },
+    other: {
+      "application/ld+json": JSON.stringify(structuredData),
     },
   };
 

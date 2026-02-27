@@ -78,7 +78,6 @@ export const createRecipeStructuredData = (
       };
 
   return {
-    "@context": "https://schema.org",
     "@type": "Recipe",
     name: recipe.title,
     description: enhancedDescription,
