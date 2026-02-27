@@ -33,7 +33,15 @@ const RecipeGrid = dynamic(
   }
 );
 
-const CategoryDetailClient = () => {
+type CategoryDetailClientProps = {
+  initialPage?: number;
+  nextPageHref?: string;
+};
+
+const CategoryDetailClient = ({
+  initialPage = 0,
+  nextPageHref,
+}: CategoryDetailClientProps) => {
   const { id: tagCode } = useParams<{ id: TagCode }>();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -58,7 +66,7 @@ const CategoryDetailClient = () => {
         types: ["USER", "AI", "YOUTUBE"],
       }),
     getNextPageParam: getNextPageParam,
-    initialPageParam: 0,
+    initialPageParam: initialPage,
   });
 
   const tagDef = TAGS_BY_CODE[tagCode as keyof typeof TAGS_BY_CODE];
@@ -94,6 +102,7 @@ const CategoryDetailClient = () => {
             isFetching={isFetching}
             hasNextPage={hasNextPage}
             observerRef={ref}
+            nextPageHref={nextPageHref}
           />
         ) : (
           <div className="flex h-[500px] w-full flex-col items-center justify-center p-4">

@@ -44,6 +44,7 @@ type RecipeGridProps = {
   useLCP?: boolean;
   queryKeyToInvalidate?: unknown[];
   onResetFilters?: () => void;
+  nextPageHref?: string;
 };
 
 const calculateSavings = (
@@ -71,6 +72,7 @@ const RecipeGrid = ({
   useLCP = true,
   queryKeyToInvalidate,
   onResetFilters,
+  nextPageHref,
 }: RecipeGridProps) => {
   const queryClient = useQueryClient();
   const { isMobile, Container, Content } = useResponsiveSheet();
@@ -236,8 +238,13 @@ const RecipeGrid = ({
       </div>
       <div
         ref={observerRef}
-        className="mt-2 flex h-10 items-center justify-center"
+        className="relative mt-2 flex h-10 items-center justify-center"
       >
+        {nextPageHref && hasNextPage && (
+          <a href={nextPageHref} className="sr-only" tabIndex={-1}>
+            다음 페이지
+          </a>
+        )}
         {!isFetching &&
           !hasNextPage &&
           recipes &&
