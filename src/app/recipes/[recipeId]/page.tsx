@@ -17,6 +17,7 @@ import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
 import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { RecipeStatusProvider } from "@/features/recipe-status";
+import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 
@@ -196,6 +197,7 @@ export default async function RecipeDetailPage({
         </RecipeContainer>
       </RecipeStatusProvider>
       <DesktopFooter />
+      <SmartAppBanner />
     </ScrollReset>
   );
 }

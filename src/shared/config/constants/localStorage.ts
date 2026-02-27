@@ -9,6 +9,7 @@ export const STORAGE_KEYS = {
   REVIEW_ACTION_COOKING_COMPLETE: "review_action_cooking_complete",
   REVIEW_REQUESTED: "review_requested",
   REVIEW_GATE_DECLINED: "review_gate_declined",
+  SMART_APP_BANNER_DISMISSED: "smart_app_banner_dismissed",
 } as const;
 
 export const MAX_RECENT_AI_RECIPES = 10;
