@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
@@ -21,10 +20,7 @@ import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 
-const StaticRecipeSlide = dynamic(
-  () => import("@/widgets/RecipeSlide/StaticRecipeSlide"),
-  { ssr: false }
-);
+import LazyStaticRecipeSlide from "./components/LazyStaticRecipeSlide";
 
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
@@ -189,7 +185,7 @@ export default async function RecipeDetailPage({
           <RecipeTagsSection tags={staticRecipe.tags} />
 
           {recommendedRecipes.length > 0 && (
-            <StaticRecipeSlide
+            <LazyStaticRecipeSlide
               title={recommendLabel}
               staticRecipes={recommendedRecipes}
             />

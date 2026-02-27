@@ -21,16 +21,32 @@ jest.mock("@/shared/lib/storage", () => ({
 const mockedUseIsApp = useIsApp as jest.MockedFunction<typeof useIsApp>;
 const mockedStorage = storage as jest.Mocked<typeof storage>;
 
+const IOS_USER_AGENT =
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15";
+const ANDROID_USER_AGENT =
+  "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/120.0";
+
+const setUserAgent = (ua: string) => {
+  Object.defineProperty(navigator, "userAgent", {
+    value: ua,
+    configurable: true,
+  });
+};
+
 describe("useSmartAppBanner", () => {
+  const originalUserAgent = navigator.userAgent;
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
     mockedUseIsApp.mockReturnValue(false);
     mockedStorage.getItemWithExpiry.mockReturnValue(null);
+    setUserAgent(IOS_USER_AGENT);
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    setUserAgent(originalUserAgent);
   });
 
   describe("isVisible", () => {
@@ -42,6 +58,18 @@ describe("useSmartAppBanner", () => {
 
     it("앱 WebView에서는 배너가 표시되지 않아야 함", () => {
       mockedUseIsApp.mockReturnValue(true);
+
+      const { result } = renderHook(() => useSmartAppBanner());
+
+      act(() => {
+        jest.advanceTimersByTime(SHOW_DELAY_MS);
+      });
+
+      expect(result.current.isVisible).toBe(false);
+    });
+
+    it("안드로이드에서는 배너가 표시되지 않아야 함", () => {
+      setUserAgent(ANDROID_USER_AGENT);
 
       const { result } = renderHook(() => useSmartAppBanner());
 
@@ -64,7 +92,7 @@ describe("useSmartAppBanner", () => {
       expect(result.current.isVisible).toBe(false);
     });
 
-    it("웹 브라우저에서 딜레이 후 배너가 표시되어야 함", () => {
+    it("iOS 웹 브라우저에서 딜레이 후 배너가 표시되어야 함", () => {
       const { result } = renderHook(() => useSmartAppBanner());
 
       expect(result.current.isVisible).toBe(false);

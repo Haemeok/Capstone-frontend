@@ -8,12 +8,18 @@ import { storage } from "@/shared/lib/storage";
 
 import { DISMISS_DURATION_MS, SHOW_DELAY_MS } from "./constants";
 
+const isIOS = () => {
+  if (typeof navigator === "undefined") return false;
+  return /iPad|iPhone|iPod/.test(navigator.userAgent);
+};
+
 export const useSmartAppBanner = () => {
   const isApp = useIsApp();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (isApp) return;
+    if (!isIOS()) return;
 
     const isDismissed = storage.getItemWithExpiry<boolean>(
       STORAGE_KEYS.SMART_APP_BANNER_DISMISSED

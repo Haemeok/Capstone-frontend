@@ -3,27 +3,17 @@
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
-import {
-  ANDROID_FORM_URL,
-  APP_STORE_URL,
-} from "@/shared/config/constants/appStore";
+import { APP_STORE_URL } from "@/shared/config/constants/appStore";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useSmartAppBanner } from "../model/useSmartAppBanner";
-
-const getStoreUrl = () => {
-  if (typeof window === "undefined") return APP_STORE_URL;
-  const ua = navigator.userAgent;
-  if (/iPad|iPhone|iPod/.test(ua)) return APP_STORE_URL;
-  return ANDROID_FORM_URL;
-};
 
 export const SmartAppBanner = () => {
   const { isVisible, dismiss } = useSmartAppBanner();
 
   const handleCtaClick = () => {
     triggerHaptic("Light");
-    window.open(getStoreUrl(), "_blank", "noopener,noreferrer");
+    window.open(APP_STORE_URL, "_blank", "noopener,noreferrer");
   };
 
   const handleDismiss = () => {
@@ -51,14 +41,9 @@ export const SmartAppBanner = () => {
                 height={40}
               />
 
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold leading-tight text-gray-900">
-                  이 레시피를 폰에 저장해두고
-                </p>
-                <p className="mt-0.5 text-xs text-gray-500">
-                  장볼 때 꺼내보세요
-                </p>
-              </div>
+              <p className="min-w-0 text-pretty break-keep flex-1 text-sm font-medium text-gray-700">
+                앱에서 더 편하게 사용해보세요
+              </p>
 
               <button
                 onClick={handleCtaClick}
