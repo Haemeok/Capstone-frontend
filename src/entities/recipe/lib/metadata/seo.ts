@@ -43,28 +43,6 @@ export const determineRecipeType = (
   return "standard";
 };
 
-export const generateYoutubeTitlePrefix = (
-  channelName: string,
-  subscriberCount?: number
-): string => {
-  if (
-    subscriberCount &&
-    subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.FAMOUS
-  ) {
-    return `[${channelName} 레시피]`;
-  } else if (
-    subscriberCount &&
-    subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MEDIUM
-  ) {
-    return "[유튜브 레시피]";
-  }
-  return "";
-};
-
-export const generateYoutubeTitleSuffix = (channelName: string): string => {
-  return `[${channelName}]`;
-};
-
 export const generateYoutubeDescription = (
   recipe: StaticRecipe,
   baseDescription: string,

@@ -9,8 +9,6 @@ import {
   determineRecipeType,
   generateYoutubeDescription,
   generateYoutubeKeywords,
-  generateYoutubeTitlePrefix,
-  generateYoutubeTitleSuffix,
   selectOptimalImages,
 } from "./seo";
 import { extractYoutubeMetadata } from "./youtube";
@@ -22,84 +20,70 @@ export const generateRecipeMetadata = (
   const youtubeMetadata = extractYoutubeMetadata(recipe);
   const recipeType = determineRecipeType(recipe, youtubeMetadata);
 
-  const titleKeywords: string[] = [];
-
   const baseUrl = SEO_CONSTANTS.SITE_URL.endsWith("/")
     ? SEO_CONSTANTS.SITE_URL.slice(0, -1)
     : SEO_CONSTANTS.SITE_URL;
 
   const BUDGET_FRIENDLY_THRESHOLD = 5000;
   const AFFORDABLE_THRESHOLD = 10000;
-
-  if (recipe.totalIngredientCost > 0) {
-    if (recipe.totalIngredientCost <= BUDGET_FRIENDLY_THRESHOLD) {
-      const thousandWon = Math.floor(recipe.totalIngredientCost / 1000);
-      titleKeywords.push(`[💰${thousandWon}천원]`);
-    } else if (recipe.totalIngredientCost <= AFFORDABLE_THRESHOLD) {
-      titleKeywords.push("[💰만원요리]");
-    }
-  }
-
   const QUICK_RECIPE_TIME = 15;
   const EASY_RECIPE_TIME = 30;
 
-  if (recipe.cookingTime <= QUICK_RECIPE_TIME) {
-    titleKeywords.push("[⏱️15분컷]");
-  } else if (recipe.cookingTime <= EASY_RECIPE_TIME) {
-    titleKeywords.push("[⚡초간단]");
-  }
-
   const tagKeywordMap: Record<string, string> = {
-    다이어트: "🥗다이어트",
-    자취: "🏠자취생",
-    "1인분": "🍽️1인분",
-    간편식: "✨간편식",
-    야식: "🌙야식",
-    도시락: "🍱도시락",
-    다이어트식단: "🥗저칼로리",
-    단백질: "💪단백질",
-    채식: "🌿채식",
-    비건: "🌱비건",
+    다이어트: "[다이어트🥗]",
+    자취: "[자취생🏠]",
+    "1인분": "[1인분🍽️]",
+    간편식: "[간편식✨]",
+    야식: "[야식🌙]",
+    도시락: "[도시락🍱]",
+    다이어트식단: "[저칼로리🥗]",
+    단백질: "[단백질💪]",
+    채식: "[채식🌿]",
+    비건: "[비건🌱]",
   };
 
-  recipe.tags.forEach((tag) => {
+  // 키워드 우선순위: 태그 → 시간 → 비용 (1개만 선택)
+  let titleBracket = "";
+
+  for (const tag of recipe.tags) {
     const keyword = tagKeywordMap[tag];
-    if (keyword && !titleKeywords.includes(keyword)) {
-      titleKeywords.push(keyword);
+    if (keyword) {
+      titleBracket = keyword;
+      break;
     }
-  });
-
-  const MAX_TITLE_KEYWORDS = 2;
-  const titlePrefix = titleKeywords.slice(0, MAX_TITLE_KEYWORDS).join("");
-
-  let defaultTitle = "";
-  if (youtubeMetadata && recipeType !== "chef-tv-show") {
-    const youtubePrefix = generateYoutubeTitlePrefix(
-      youtubeMetadata.channelName,
-      youtubeMetadata.subscriberCount
-    );
-
-    if (recipeType === "youtube-famous" || recipeType === "youtube-medium") {
-      if (recipeType === "youtube-medium" && youtubePrefix) {
-        defaultTitle = `${youtubePrefix} ${titlePrefix} ${recipe.title} - ${youtubeMetadata.channelName} | ${SEO_CONSTANTS.SITE_NAME}`;
-      } else {
-        defaultTitle = youtubePrefix
-          ? `${youtubePrefix} ${titlePrefix} ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`
-          : `${titlePrefix} ${recipe.title} - ${youtubeMetadata.channelName} | ${SEO_CONSTANTS.SITE_NAME}`;
-      }
-    } else {
-      const youtubeSuffix = generateYoutubeTitleSuffix(
-        youtubeMetadata.channelName
-      );
-      defaultTitle = titlePrefix
-        ? `${titlePrefix} ${recipe.title} ${youtubeSuffix} | ${SEO_CONSTANTS.SITE_NAME}`
-        : `${recipe.title} ${youtubeSuffix} | ${SEO_CONSTANTS.SITE_NAME}`;
-    }
-  } else {
-    defaultTitle = titlePrefix
-      ? `${titlePrefix} ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`
-      : `${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
   }
+
+  if (!titleBracket) {
+    if (recipe.cookingTime <= QUICK_RECIPE_TIME) {
+      titleBracket = "[15분컷⏱️]";
+    } else if (recipe.cookingTime <= EASY_RECIPE_TIME) {
+      titleBracket = "[초간단⚡]";
+    }
+  }
+
+  if (!titleBracket && recipe.totalIngredientCost > 0) {
+    if (recipe.totalIngredientCost <= BUDGET_FRIENDLY_THRESHOLD) {
+      const thousandWon = Math.floor(recipe.totalIngredientCost / 1000);
+      titleBracket = `[${thousandWon}천원💰]`;
+    } else if (recipe.totalIngredientCost <= AFFORDABLE_THRESHOLD) {
+      titleBracket = "[만원💰]";
+    }
+  }
+
+  const timeText = recipe.cookingTime > 0 ? `${recipe.cookingTime}분 완성` : "";
+  const youtubeSource =
+    youtubeMetadata && recipeType !== "chef-tv-show"
+      ? `(출처: ${youtubeMetadata.channelName} 유튜브)`
+      : "";
+
+  const titleParts = [
+    titleBracket,
+    recipe.title,
+    timeText,
+    youtubeSource,
+  ].filter(Boolean);
+
+  const defaultTitle = `${titleParts.join(" ")} | ${SEO_CONSTANTS.SITE_NAME}`;
 
   const costInfo = recipe.totalIngredientCost
     ? `예상비용: ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원`
@@ -221,20 +205,14 @@ export const generateRecipeMetadata = (
   };
 
   if (recipeType === "chef-tv-show") {
-    const chefTitle = `[15분 레시피] ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
-    const chefDescription = `흑백요리사, 냉장고를 부탁해 등 유명 셰프들의 15분 레시피 후기를 만나보세요. ${recipe.title} 레시피로 집에서 파인다이닝을 즐겨보세요!`;
+    const chefTitle = `[셰프레시피👨‍🍳] ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
+    const chefDescription = recipe.description
+      ? `${recipe.description} ${recipe.title} 레시피를 레시피오에서 만나보세요!`
+      : `${recipe.title} 셰프 레시피를 레시피오에서 만나보세요!`;
     const chefKeywords = [
-      "흑백요리사",
-      "흑백요리사2",
-      "냉장고를부탁해",
-      "15분레시피",
-      "냉장고를부탁해 15분레시피",
       "셰프 레시피",
+      "15분레시피",
       "파인다이닝",
-      "RECIPIO",
-      "안성재",
-      "최현석",
-      "에드워드 리",
       ...(baseMetadata.keywords as string[]),
     ];
 
