@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import BudgetHeader from "./BudgetHeader";
 import PriceSlider from "./PriceSlider";
@@ -12,11 +13,17 @@ import { useAIRecipeStoreV2 } from "@/features/recipe-create-ai/model/store";
 import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
 import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 import { aiModels } from "@/shared/config/constants/aiModel";
-
-import AiLoading from "@/widgets/AiLoading/AiLoading";
-import AIRecipeComplete from "@/widgets/AIRecipeComplete";
-import AIRecipeError from "@/widgets/AIRecipeError";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
+
+const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
+  ssr: false,
+});
+const AIRecipeComplete = dynamic(() => import("@/widgets/AIRecipeComplete"), {
+  ssr: false,
+});
+const AIRecipeError = dynamic(() => import("@/widgets/AIRecipeError"), {
+  ssr: false,
+});
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";

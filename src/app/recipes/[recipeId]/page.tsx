@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
@@ -18,7 +19,11 @@ import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { RecipeStatusProvider } from "@/features/recipe-status";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
-import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
+
+const StaticRecipeSlide = dynamic(
+  () => import("@/widgets/RecipeSlide/StaticRecipeSlide"),
+  { ssr: false }
+);
 
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";

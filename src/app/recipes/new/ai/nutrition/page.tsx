@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
@@ -12,10 +13,17 @@ import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
 import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 import type { NutritionBalanceRequest } from "@/features/recipe-create-ai/model/types";
 import { aiModels } from "@/shared/config/constants/aiModel";
-import AiLoading from "@/widgets/AiLoading/AiLoading";
-import AIRecipeComplete from "@/widgets/AIRecipeComplete";
-import AIRecipeError from "@/widgets/AIRecipeError";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
+
+const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
+  ssr: false,
+});
+const AIRecipeComplete = dynamic(() => import("@/widgets/AIRecipeComplete"), {
+  ssr: false,
+});
+const AIRecipeError = dynamic(() => import("@/widgets/AIRecipeError"), {
+  ssr: false,
+});
 
 import {
   NutritionMode,

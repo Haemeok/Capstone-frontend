@@ -2,12 +2,17 @@
 
 import { useState } from "react";
 
+import dynamic from "next/dynamic";
+
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 import { TrendingYoutubeRecipe } from "@/entities/recipe/model/types";
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
-import LoginEncourageDrawer from "@/widgets/LoginEncourageDrawer";
+const LoginEncourageDrawer = dynamic(
+  () => import("@/widgets/LoginEncourageDrawer"),
+  { ssr: false }
+);
 
 import { TrendingRecipesClient } from "./TrendingRecipesClient";
 import { YoutubePreviewSection } from "./YoutubePreviewSection";

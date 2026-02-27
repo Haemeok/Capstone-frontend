@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 
 import { Pin } from "lucide-react";
 
@@ -8,11 +9,31 @@ import { cn } from "@/shared/lib/utils";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
-import {
-  parseTimelineToSeconds,
-  YouTubeVideoPlayer,
-  type YouTubeVideoPlayerRef,
-} from "@/shared/ui/YouTubeVideoPlayer";
+import type { YouTubeVideoPlayerRef } from "@/shared/ui/YouTubeVideoPlayer";
+
+const YouTubeVideoPlayer = dynamic(
+  () =>
+    import("@/shared/ui/YouTubeVideoPlayer").then(
+      (mod) => mod.YouTubeVideoPlayer
+    ),
+  { ssr: false }
+);
+
+const parseTimelineToSeconds = (timeline: string): number => {
+  const parts = timeline.split(":").map(Number);
+
+  if (parts.length === 2) {
+    const [minutes, seconds] = parts;
+    return minutes * 60 + seconds;
+  }
+
+  if (parts.length === 3) {
+    const [hours, minutes, seconds] = parts;
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+
+  return 0;
+};
 
 type VideoPlayerContextType = {
   seekToTimeline: (timeline: string) => void;
@@ -63,7 +84,6 @@ export default function RecipeVideoSection({
   const toggleSticky = () => {
     setIsSticky(!isSticky);
   };
-
 
   const shouldShowYoutubeInfo =
     !isSticky &&
@@ -214,5 +234,4 @@ export default function RecipeVideoSection({
   );
 }
 
-export { parseTimelineToSeconds };
 export type { RecipeVideoSectionProps };

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon } from "@/shared/ui/icons";
@@ -18,9 +19,6 @@ import { useAIRecipeStoreV2 } from "@/features/recipe-create-ai/model/store";
 import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
 import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 
-import AiLoading from "@/widgets/AiLoading/AiLoading";
-import AIRecipeComplete from "@/widgets/AIRecipeComplete";
-import AIRecipeError from "@/widgets/AIRecipeError";
 import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
 import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
 import AiCharacterSection from "@/widgets/AIRecipeForm/AiCharacterSection";
@@ -30,6 +28,16 @@ import ServingsCounter from "@/widgets/AIRecipeForm/ServingsCounter";
 import AIRecipeProgressButton from "@/widgets/AIRecipeForm/AIRecipeProgressButton";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 import { AIIngredientPayload } from "@/entities/ingredient";
+
+const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
+  ssr: false,
+});
+const AIRecipeComplete = dynamic(() => import("@/widgets/AIRecipeComplete"), {
+  ssr: false,
+});
+const AIRecipeError = dynamic(() => import("@/widgets/AIRecipeError"), {
+  ssr: false,
+});
 
 const CONCEPT = "INGREDIENT_FOCUS" as const;
 

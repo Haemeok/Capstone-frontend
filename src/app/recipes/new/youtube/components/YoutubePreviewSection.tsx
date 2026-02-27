@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -11,14 +12,18 @@ import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
+import { YoutubePreviewCard } from "@/features/recipe-import-youtube/ui/YoutubePreviewCard";
 import {
-  createExtractionJobV2,
-  DuplicateRecipeSection,
-  useYoutubeDuplicateCheck,
-  useYoutubeImportStoreV2,
   useYoutubeMeta,
-  YoutubePreviewCard,
-} from "@/features/recipe-import-youtube";
+  useYoutubeDuplicateCheck,
+} from "@/features/recipe-import-youtube/model/hooks";
+import { useYoutubeImportStoreV2 } from "@/features/recipe-import-youtube/model/store";
+import { createExtractionJobV2 } from "@/features/recipe-import-youtube/model/api";
+
+const DuplicateRecipeSection = dynamic(
+  () => import("@/features/recipe-import-youtube/ui/DuplicateRecipeSection"),
+  { ssr: false }
+);
 
 import UsageLimitBanner from "@/widgets/AIRecipeForm/UsageLimitBanner";
 import { useToastStore } from "@/widgets/Toast";
