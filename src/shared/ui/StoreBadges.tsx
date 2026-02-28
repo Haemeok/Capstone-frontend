@@ -6,7 +6,7 @@ import { useIsApp } from "@/shared/hooks/useIsApp";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   APP_STORE_URL,
-  ANDROID_FORM_URL,
+  PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
 
 type StoreBadgesProps = {
@@ -45,7 +45,7 @@ export const StoreBadges = ({
           />
         </motion.a>
         <motion.a
-          href={ANDROID_FORM_URL}
+          href={PLAY_STORE_URL}
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}
