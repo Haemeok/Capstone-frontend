@@ -6,14 +6,14 @@ import { useIsApp } from "@/shared/hooks/useIsApp";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   APP_STORE_URL,
-  ANDROID_FORM_URL,
+  PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
 
 const getStoreUrl = () => {
   if (typeof window === "undefined") return APP_STORE_URL;
   const ua = navigator.userAgent;
   if (/iPad|iPhone|iPod/.test(ua)) return APP_STORE_URL;
-  return ANDROID_FORM_URL;
+  return PLAY_STORE_URL;
 };
 
 const AppInstallButton = () => {
