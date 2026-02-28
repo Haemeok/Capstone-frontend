@@ -109,6 +109,7 @@ const RecipeSlide = ({
             <CarouselItem key={item.id} className="basis-[200px] pl-3">
               <DetailedRecipeGridItem
                 recipe={item}
+                prefetch
                 leftBadge={
                   <RecipeLikeButton
                     recipeId={item.id}
