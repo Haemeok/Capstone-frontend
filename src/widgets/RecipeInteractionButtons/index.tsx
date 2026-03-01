@@ -100,7 +100,8 @@ const RecipeInteractionButtons = ({
       <ShareButton
         className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
         label="공유"
-        text={`${title} 를 확인해보세요!`}
+        title={`${title} - 레시피오`}
+        text={`${title} 레시피를 확인해보세요!`}
       />
       
     </div>

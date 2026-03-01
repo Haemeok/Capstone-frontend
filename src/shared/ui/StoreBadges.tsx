@@ -60,11 +60,6 @@ export const StoreBadges = ({
           />
         </motion.a>
       </div>
-      {showAndroidNote && (
-        <p className="text-xs text-gray-400">
-          * Android는 이메일로 설치 링크를 보내드립니다
-        </p>
-      )}
     </div>
   );
 };
