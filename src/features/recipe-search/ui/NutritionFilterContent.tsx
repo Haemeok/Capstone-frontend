@@ -81,7 +81,7 @@ export const NutritionFilterContent = ({
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
+        <DrawerTrigger asChild>{trigger ?? <div />}</DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>필터</DrawerTitle>
@@ -102,7 +102,7 @@ export const NutritionFilterContent = ({
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
-      {trigger && <PopoverTrigger asChild>{trigger}</PopoverTrigger>}
+      <PopoverTrigger asChild>{trigger ?? <div />}</PopoverTrigger>
       <PopoverContent className="w-[680px]" align="start">
         <div className="flex items-center justify-between mb-4">
           <div>
