@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { create } from "zustand";
 
 import { type AIModelId } from "@/shared/config/constants/aiModel";
@@ -346,3 +347,13 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
     return get().getPendingJobs().length;
   },
 }));
+
+export const useJobByConcept = (concept: AIModelId) => {
+  return useAIRecipeStoreV2(
+    useCallback(
+      (state: AIRecipeStoreV2) =>
+        Object.values(state.jobs).find((job) => job.concept === concept),
+      [concept]
+    )
+  );
+};

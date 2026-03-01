@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
+import { addRecentAIRecipe } from "@/shared/config/constants/localStorage";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 
 import { getRecipe } from "@/entities/recipe";
@@ -63,6 +64,19 @@ export const useAIJobPolling = () => {
         const recipe = await queryClient.fetchQuery({
           queryKey: ["recipe", recipeId],
           queryFn: () => getRecipe(recipeId),
+        });
+
+        addRecentAIRecipe({
+          recipeId: recipe.id,
+          aiModelId: meta.concept,
+          timestamp: Date.now(),
+          title: recipe.title,
+          imageUrl: recipe.imageUrl,
+          authorName: recipe.author.nickname,
+          authorId: recipe.author.id,
+          profileImage: recipe.author.profileImage,
+          cookingTime: recipe.cookingTime,
+          createdAt: recipe.createdAt || new Date().toISOString(),
         });
 
         addToast({

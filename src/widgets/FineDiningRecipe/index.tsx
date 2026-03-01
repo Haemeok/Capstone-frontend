@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 
 import DifficultyTierSelector from "./DifficultyTierSelector";
 import FineDiningIngredientManager from "./FineDiningIngredientManager";
-import { useAIRecipeStoreV2 } from "@/features/recipe-create-ai/model/store";
+import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
 import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
 import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 import type { FineDiningRequest } from "@/features/recipe-create-ai/model/types";
@@ -16,9 +16,6 @@ import { aiModels } from "@/shared/config/constants/aiModel";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 
 const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
-  ssr: false,
-});
-const AIRecipeComplete = dynamic(() => import("@/widgets/AIRecipeComplete"), {
   ssr: false,
 });
 const AIRecipeError = dynamic(() => import("@/widgets/AIRecipeError"), {
@@ -55,9 +52,9 @@ const FineDiningRecipe = () => {
   const setJobId = useAIRecipeStoreV2((state) => state.setJobId);
   const failJob = useAIRecipeStoreV2((state) => state.failJob);
   const removeJob = useAIRecipeStoreV2((state) => state.removeJob);
-  const getJobByConcept = useAIRecipeStoreV2((state) => state.getJobByConcept);
-  // Get current job for this concept
-  const job = getJobByConcept(CONCEPT);
+
+  // Get current job for this concept (subscribes to state.jobs for re-renders)
+  const job = useJobByConcept(CONCEPT);
 
   const ingredients = useWatch({
     control: methods.control,
@@ -148,15 +145,7 @@ const FineDiningRecipe = () => {
     );
   }
 
-  if (isSuccess && job?.resultRecipeId) {
-    return (
-      <Container className="h-full" padding={false}>
-        <AIRecipeComplete generatedRecipe={{ recipeId: job.resultRecipeId }} />
-      </Container>
-    );
-  }
-
-  if (isFailed && job) {
+if (isFailed && job) {
     return (
       <Container padding={false}>
         <AIRecipeError

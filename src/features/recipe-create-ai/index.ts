@@ -9,6 +9,7 @@ export { useCreateAIRecipeMutation } from "./model/hooks";
 export {
   useAIRecipeStore,
   useAIRecipeStoreV2,
+  useJobByConcept,
 } from "./model/store";
 export type { AIRecipeGenerationState, AIModel } from "./model/store";
 export type {

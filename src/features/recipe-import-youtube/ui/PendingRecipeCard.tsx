@@ -10,6 +10,7 @@ import {
 } from "@/shared/lib/youtube/getYouTubeThumbnail";
 import { Image } from "@/shared/ui/image/Image";
 
+import { calculateFakeProgress } from "../lib/progress";
 import { useYoutubeImportStoreV2 } from "../model/store";
 import { JobState } from "../model/types";
 import { CircularProgress } from "./CircularProgress";
@@ -37,8 +38,14 @@ const getIncrement = (currentProgress: number): number => {
   return 0.5;
 };
 
-const useSmoothProgress = (realProgress: number, status: ImportStatus) => {
-  const [displayed, setDisplayed] = useState(0);
+const useSmoothProgress = (
+  realProgress: number,
+  status: ImportStatus,
+  startTime: number
+) => {
+  const [displayed, setDisplayed] = useState(() =>
+    Math.max(realProgress, calculateFakeProgress(startTime))
+  );
   const realRef = useRef(realProgress);
   realRef.current = realProgress;
 
@@ -85,7 +92,7 @@ export const PendingRecipeCard = ({
   const status = job ? jobStateToImportStatus(job.state) : "pending";
 
   const realProgress = job?.progress ?? 0;
-  const progress = useSmoothProgress(realProgress, status);
+  const progress = useSmoothProgress(realProgress, status, job?.startTime ?? Date.now());
 
   if (!job) return null;
 
