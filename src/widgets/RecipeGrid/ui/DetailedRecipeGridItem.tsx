@@ -96,17 +96,17 @@ const DetailedRecipeGridItem = ({
           )}
         </div>
 
-        <div className="flex grow flex-col gap-0.5 px-1 pb-2">
-          <p className="line-clamp-2 font-bold break-keep hover:underline">
+        <div className="flex grow flex-col gap-1 px-2 pt-2 pb-1">
+          <p className="line-clamp-2 font-bold leading-snug break-keep hover:underline">
             {recipe.title}
           </p>
 
-          <div className="flex items-center gap-1 text-sm text-gray-500">
+          <div className="flex items-center gap-2 overflow-hidden text-sm text-gray-500">
             {recipe.isYoutube && recipe.youtubeVideoViewCount != null && (() => {
               const tier = getViewCountTier(recipe.youtubeVideoViewCount);
               const IconComponent = tier.icon;
               return (
-                <div className="flex items-center gap-0.5">
+                <div className="flex shrink-0 items-center gap-0.5">
                   <IconComponent
                     size={14}
                     className={tier.iconColor}
@@ -118,14 +118,14 @@ const DetailedRecipeGridItem = ({
             })()}
 
             {recipe.favoriteCount != null && (
-              <div className="flex items-center gap-0.5">
+              <div className="flex shrink-0 items-center gap-0.5">
                 <Bookmark size={14} className="text-gray-400" />
                 <span>{formatCount(recipe.favoriteCount)}</span>
               </div>
             )}
 
             {recipe.cookingTime != null && (
-              <div className="flex items-center gap-0.5">
+              <div className="flex shrink-0 items-center gap-0.5">
                 <Clock size={14} className="text-gray-400" />
                 <span>{recipe.cookingTime}분</span>
               </div>
@@ -134,7 +134,7 @@ const DetailedRecipeGridItem = ({
         </div>
       </Link>
 
-      <div className="flex items-center gap-1 overflow-hidden px-2 pb-2">
+      <div className="flex items-center gap-1.5 overflow-hidden px-2 pb-2">
         <UserProfileImage
           profileImage={recipe.profileImage}
           userId={recipe.authorId}

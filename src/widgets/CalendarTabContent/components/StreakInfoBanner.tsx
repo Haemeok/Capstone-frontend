@@ -32,7 +32,7 @@ export const StreakInfoBanner = ({ streakCount }: StreakInfoBannerProps) => {
   return (
     <div
       ref={targetRef}
-      className="flex w-full items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-4"
+      className="flex w-full items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-white p-5"
       style={{ opacity: 0 }}
     >
       <div className="flex w-full items-center gap-3">
@@ -44,7 +44,7 @@ export const StreakInfoBanner = ({ streakCount }: StreakInfoBannerProps) => {
           imgClassName={config.flameColor}
         />
         <div className="flex w-full flex-col gap-1">
-          <p className="text-3xl font-bold">
+          <p className="text-2xl font-bold">
             <span className={config.flameColor}>{streakCount}일</span>
           </p>
           <p className="text-sm text-gray-600">{message}</p>

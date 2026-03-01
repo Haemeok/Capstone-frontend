@@ -30,7 +30,7 @@ export const TabNavigation = ({
               key={tab.id}
               type="button"
               className={cn(
-                "relative flex-1 cursor-pointer py-5 transition-colors",
+                "relative flex-1 cursor-pointer py-4 transition-colors",
                 isActive ? "text-olive-light" : "text-gray-400"
               )}
               onClick={() => onTabChange(tab.id)}
@@ -39,7 +39,7 @@ export const TabNavigation = ({
                 <tab.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
                 <span
                   className={cn(
-                    "text-xs transition-all",
+                    "text-sm transition-all",
                     isActive ? "font-bold" : "font-medium"
                   )}
                 >

@@ -25,8 +25,8 @@ const UserProfileDisplay = ({
   isOwnProfile,
   loggedInUser,
 }: UserProfileDisplayProps) => (
-  <div className="relative z-10 px-6">
-    <div className="flex items-center gap-2">
+  <div className="relative z-10 px-5 pt-4 pb-1">
+    <div className="flex items-center gap-4">
       <div className="flex items-center gap-4">
         <div className="relative">
           <div
@@ -61,7 +61,7 @@ const UserProfileDisplay = ({
     </div>
     <CollapsibleP
       content={user.introduction}
-      className="px-0 text-mm"
+      className="px-0 pt-3 pb-2 text-mm"
       height={52}
       gradientHeight={16}
     />

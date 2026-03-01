@@ -63,10 +63,10 @@ const CalendarTabContent = () => {
         productName={product.name}
         productImage={product.image}
       />
-      <div className="mt-4 flex items-center justify-center px-4">
+      <div className="mt-5 flex items-center justify-center px-5">
         <StreakModeToggle mode={calendarMode} onModeChange={setCalendarMode} />
       </div>
-      <Box className="mt-4 p-0 px-4">
+      <Box className="mt-4 p-0 px-5">
         {calendarMode === "streak" ? (
           <StreakInfoBanner streakCount={userStreak?.streak ?? 0} />
         ) : null}
@@ -86,7 +86,7 @@ const CalendarTabContent = () => {
         modifiersClassNames={{
           hasEvent: "has-event",
         }}
-        className="w-full px-4"
+        className="w-full px-5"
         classNames={{
           months: "flex flex-col sm:flex-row gap-2 relative",
           month: "flex flex-col gap-4 w-full",
@@ -95,12 +95,12 @@ const CalendarTabContent = () => {
 
           caption: "flex justify-center pt-1 relative items-center w-full",
           caption_label: "text-xl font-bold",
-          nav: "absolute  w-full flex justify-center items-center gap-20 h-9",
+          nav: "absolute w-full flex justify-center items-center gap-16 h-9",
           week: "flex w-full h-15 md:h-30 text-center items-center",
           weeks: "flex flex-col w-full",
           weekdays: "flex w-full",
           weekday:
-            "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem] flex-1 text-center",
+            "text-muted-foreground rounded-md w-8 font-normal text-sm flex-1 text-center",
 
           disabled: "text-muted-foreground opacity-50",
           hidden: "invisible",

@@ -66,7 +66,7 @@ const MonthlySavingsSummary = ({
       : `${productName} 정도 금액이에요!`;
 
   return (
-    <div className="mx-10 flex flex-col items-center justify-center pt-5">
+    <div className="mx-5 flex flex-col items-center justify-center pt-6">
       <h3 className="text-xl font-bold">
         {year}년 {month}월 레시피오 서비스로
       </h3>
@@ -82,7 +82,7 @@ const MonthlySavingsSummary = ({
         <span className="text-olive-mint text-xl font-bold">원</span>
         <h3 className="ml-1 text-xl font-bold"> 절약했어요</h3>
       </div>
-      <p className="mt-1 text-sm text-gray-500">{savingText}</p>
+      <p className="mt-1.5 text-sm text-gray-500">{savingText}</p>
 
       {!hasFirstRecord && <FirstSavingsQuestPanel />}
       <SavingSection imageUrl={productImage} altText={productName} />
@@ -102,7 +102,7 @@ const MonthlySavingsSummary = ({
             />
           </div>
         </div>
-        <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
+        <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
           <span>현재 단계 {formatNumber(currentMin, "원")}</span>
           {next ? (
             <span>다음 단계 {formatNumber(next.min, "원")}</span>
