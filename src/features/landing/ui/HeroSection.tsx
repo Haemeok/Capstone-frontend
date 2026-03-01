@@ -29,7 +29,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="border-olive-light/30 bg-olive-light/10 font-bold text-olive-medium mb-6 inline-block rounded-full border px-6 py-2 text-sm  backdrop-blur-sm"
         >
-          🍳 10,000+ 레시피 · AI 추천 · 스마트 재료 관리
+          🍳 20,000+ 레시피 · AI 추천 · 스마트 재료 관리
         </motion.div>
 
         <motion.h1
