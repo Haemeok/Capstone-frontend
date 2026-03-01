@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { SEO_CONSTANTS } from "./constants";
-import { createWebsiteStructuredData } from "./structuredData";
 
 export const homeMetadata: Metadata = {
   title: `${SEO_CONSTANTS.SITE_NAME} - AI가 추천하는 홈쿡 레시피`,
@@ -37,8 +36,5 @@ export const homeMetadata: Metadata = {
     description:
       "AI가 추천하는 맛있는 홈쿡 레시피로 집에서 간편하게 요리해보세요.",
     images: [SEO_CONSTANTS.DEFAULT_IMAGE],
-  },
-  other: {
-    "application/ld+json": JSON.stringify(createWebsiteStructuredData()),
   },
 };

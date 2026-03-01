@@ -163,14 +163,6 @@ export const generateRecipeMetadata = (
     twitterImages.push(images.secondary);
   }
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      createRecipeBreadcrumb(recipe.title, recipeId),
-      createRecipeStructuredData(recipe, recipeId),
-    ],
-  };
-
   const baseMetadata: Metadata = {
     title: defaultTitle,
     description: defaultDescription,
@@ -198,9 +190,6 @@ export const generateRecipeMetadata = (
       title: defaultTitle,
       description: defaultDescription,
       images: twitterImages,
-    },
-    other: {
-      "application/ld+json": JSON.stringify(structuredData),
     },
   };
 
@@ -236,6 +225,17 @@ export const generateRecipeMetadata = (
 
   return baseMetadata;
 };
+
+export const generateRecipeJsonLd = (
+  recipe: StaticRecipe,
+  recipeId: string
+) => ({
+  "@context": "https://schema.org",
+  "@graph": [
+    createRecipeBreadcrumb(recipe.title, recipeId),
+    createRecipeStructuredData(recipe, recipeId),
+  ],
+});
 
 export const generateNotFoundRecipeMetadata = (): Metadata => ({
   title: `레시피를 찾을 수 없습니다 - ${SEO_CONSTANTS.SITE_NAME}`,

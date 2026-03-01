@@ -5,6 +5,7 @@ import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 
 import {
   generateNotFoundRecipeMetadata,
+  generateRecipeJsonLd,
   generateRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
 import {
@@ -101,8 +102,16 @@ export default async function RecipeDetailPage({
       }
     : undefined;
 
+  const jsonLd = generateRecipeJsonLd(staticRecipe, recipeId);
+
   return (
     <ScrollReset>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <RecentlyViewedTracker
         recipeId={recipeId}
         title={staticRecipe.title}

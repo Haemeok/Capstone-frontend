@@ -13,8 +13,14 @@ import {
 } from "@/shared/lib/nutrition/parseNutritionParams";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import {
+  buildSearchTitle,
+  buildSearchDescription,
+} from "@/entities/recipe/lib/metadata/searchMeta";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
+import type { RecipeItemsQueryParams } from "@/entities/recipe/model/types";
+import { createSearchResultsJsonLd } from "@/entities/recipe/lib/metadata/schema";
 
 import { SearchClient } from "@/widgets/SearchClient";
 
@@ -46,25 +52,79 @@ type SearchResultsPageProps = {
   searchParams: Promise<SearchResultsSearchParams>;
 };
 
+type ParsedSearchParams = {
+  query: RecipeItemsQueryParams;
+  page: number;
+  q: string;
+  dishTypeCode: string | null;
+  sortCode: string;
+  tags: string[];
+  types: string[];
+  ingredientIds: string[];
+  nutritionQueryParams: Record<string, number>;
+};
+
+const parseSearchQueryParams = (
+  params: SearchResultsSearchParams
+): ParsedSearchParams => {
+  const page = Math.max(0, parseInt(params.page || "0", 10) || 0);
+  const q = params.q || "";
+
+  const tags = params.tags
+    ? typeof params.tags === "string"
+      ? params.tags.split(",").filter(Boolean)
+      : params.tags
+    : [];
+
+  const sortCode =
+    (params.sort || "DESC").toUpperCase() === "ASC" ? "ASC" : "DESC";
+  const dishTypeCode = params.dishType || null;
+
+  const nutritionParams = parseNutritionParams(params);
+  const nutritionQueryParams = convertNutritionToQueryParams(nutritionParams);
+  const types = parseTypes(params);
+
+  const ingredientIds = params.ingredientIds
+    ? params.ingredientIds.split(",").filter(Boolean)
+    : [];
+
+  return {
+    query: {
+      key: "search",
+      page,
+      q,
+      sort: sortCode.toLowerCase() === "asc" ? "asc" : "desc",
+      dishType: dishTypeCode || undefined,
+      tags,
+      types,
+      ingredientIds: ingredientIds.length > 0 ? ingredientIds : undefined,
+      ...nutritionQueryParams,
+    },
+    page,
+    q,
+    dishTypeCode,
+    sortCode,
+    tags,
+    types,
+    ingredientIds,
+    nutritionQueryParams,
+  };
+};
+
 export async function generateMetadata({
   searchParams,
 }: SearchResultsPageProps): Promise<Metadata> {
   const awaitedSearchParams = await searchParams;
-  const query = awaitedSearchParams.q || "";
-  const page = Math.max(
-    0,
-    parseInt(awaitedSearchParams.page || "0", 10) || 0
-  );
+  const { query: queryParams, page, q } = parseSearchQueryParams(awaitedSearchParams);
 
-  const pageLabel = page > 0 ? ` (${page + 1}페이지)` : "";
+  const pageData = await getRecipesOnServer(queryParams);
+  const totalElements = pageData.page.totalElements;
+  const firstImage = pageData.content[0]?.imageUrl;
 
-  const title = query
-    ? `${query} 검색 결과${pageLabel} - 레시피오`
-    : `레시피 검색 결과${pageLabel} - 레시피오`;
+  const title = buildSearchTitle(q, totalElements, page);
+  const description = buildSearchDescription(q, totalElements);
 
-  const description = query
-    ? `"${query}"에 대한 레시피 검색 결과입니다.`
-    : "필터를 적용한 레시피 검색 결과입니다.";
+  const ogImage = firstImage || SEO_CONSTANTS.DEFAULT_IMAGE;
 
   const canonicalParams = new URLSearchParams();
   for (const [key, value] of Object.entries(awaitedSearchParams)) {
@@ -72,12 +132,24 @@ export async function generateMetadata({
       canonicalParams.set(key, Array.isArray(value) ? value.join(",") : value);
     }
   }
-
   const canonicalSearch = canonicalParams.toString();
 
   return {
     title,
     description,
+    openGraph: {
+      title,
+      description,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+      siteName: SEO_CONSTANTS.SITE_NAME,
+      locale: SEO_CONSTANTS.LOCALE,
+    },
+    twitter: {
+      card: SEO_CONSTANTS.TWITTER_CARD,
+      title,
+      description,
+      images: [ogImage],
+    },
     alternates: {
       canonical: `${SEO_CONSTANTS.SITE_URL}/search/results${canonicalSearch ? `?${canonicalSearch}` : ""}`,
     },
@@ -88,73 +160,35 @@ export default async function SearchResultsPage({
   searchParams,
 }: SearchResultsPageProps) {
   const awaitedSearchParams = await searchParams;
-
-  const page = Math.max(
-    0,
-    parseInt(awaitedSearchParams.page || "0", 10) || 0
-  );
-
-  const tags = awaitedSearchParams.tags
-    ? typeof awaitedSearchParams.tags === "string"
-      ? awaitedSearchParams.tags.split(",").filter(Boolean)
-      : awaitedSearchParams.tags
-    : [];
-
-  const q = awaitedSearchParams.q || "";
-  const sortCode =
-    (awaitedSearchParams.sort || "DESC").toUpperCase() === "ASC"
-      ? "ASC"
-      : "DESC";
-  const dishTypeCode = awaitedSearchParams.dishType || null;
-  const tagCodes = tags;
-
-  const nutritionParams = parseNutritionParams(awaitedSearchParams);
-  const nutritionQueryParams = convertNutritionToQueryParams(nutritionParams);
-  const types = parseTypes(awaitedSearchParams);
-
-  const ingredientIds = awaitedSearchParams.ingredientIds
-    ? awaitedSearchParams.ingredientIds.split(",").filter(Boolean)
-    : [];
+  const {
+    query: queryParams,
+    page,
+    q,
+    dishTypeCode,
+    sortCode,
+    tags,
+    types,
+    ingredientIds,
+    nutritionQueryParams,
+  } = parseSearchQueryParams(awaitedSearchParams);
 
   const queryClient = new QueryClient();
 
-  // 기존 prefetchQuery 유지 (렌더링 동작 변경 없음)
   queryClient.prefetchQuery({
     queryKey: [
       "recipes",
       dishTypeCode,
       sortCode,
-      tagCodes.join(","),
+      tags.join(","),
       q,
       JSON.stringify(nutritionQueryParams),
       types.join(","),
+      ingredientIds.join(","),
     ],
-    queryFn: () =>
-      getRecipesOnServer({
-        key: "search",
-        page,
-        q,
-        sort: sortCode.toLowerCase() === "asc" ? "asc" : "desc",
-        dishType: dishTypeCode || undefined,
-        tags: tagCodes,
-        types,
-        ingredientIds: ingredientIds.length > 0 ? ingredientIds : undefined,
-        ...nutritionQueryParams,
-      }),
+    queryFn: () => getRecipesOnServer(queryParams),
   });
 
-  // SEO용 totalPages 조회 (별도 fetch)
-  const pageData = await getRecipesOnServer({
-    key: "search",
-    page,
-    q,
-    sort: sortCode.toLowerCase() === "asc" ? "asc" : "desc",
-    dishType: dishTypeCode || undefined,
-    tags: tagCodes,
-    types,
-    ingredientIds: ingredientIds.length > 0 ? ingredientIds : undefined,
-    ...nutritionQueryParams,
-  });
+  const pageData = await getRecipesOnServer(queryParams);
 
   const totalPages = pageData.page.totalPages;
   const hasNextPage = page < totalPages - 1;
@@ -163,8 +197,22 @@ export default async function SearchResultsPage({
     ? buildNextPageUrl(awaitedSearchParams, page + 1)
     : undefined;
 
+  const title = buildSearchTitle(q, pageData.page.totalElements, page);
+  const jsonLd = createSearchResultsJsonLd(
+    q,
+    pageData.content,
+    pageData.page.totalElements,
+    title
+  );
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <SearchClient initialPage={page} nextPageHref={nextPageHref} />
     </HydrationBoundary>
   );

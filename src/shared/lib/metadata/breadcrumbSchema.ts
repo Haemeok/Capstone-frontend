@@ -69,6 +69,27 @@ export const createCategoryBreadcrumb = (
   return createBreadcrumbListElement(items);
 };
 
+export const createSearchBreadcrumb = (
+  query: string
+): BreadcrumbListSchema => {
+  const items: BreadcrumbItem[] = [
+    {
+      name: "홈",
+      url: SEO_CONSTANTS.SITE_URL,
+    },
+    {
+      name: "검색",
+      url: `${SEO_CONSTANTS.SITE_URL}/search`,
+    },
+    {
+      name: query ? `"${query}" 검색결과` : "검색결과",
+      url: `${SEO_CONSTANTS.SITE_URL}/search/results${query ? `?q=${encodeURIComponent(query)}` : ""}`,
+    },
+  ];
+
+  return createBreadcrumbListElement(items);
+};
+
 export const createUserProfileBreadcrumb = (
   userName: string,
   userId: string

@@ -1,4 +1,5 @@
 import { homeMetadata } from "@/shared/lib/metadata";
+import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
 import { Container } from "@/shared/ui/Container";
 
 import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
@@ -26,8 +27,16 @@ const HomePage = async () => {
     }),
   ]);
 
+  const jsonLd = createWebsiteStructuredData();
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <Container>
         <div className="flex flex-col items-center justify-center gap-4 bg-white text-gray-800">
           <HomeHeader />

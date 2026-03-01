@@ -1,6 +1,10 @@
-import type { StaticRecipe } from "@/entities/recipe/model/types";
+import type {
+  DetailedRecipeGridItem,
+  StaticRecipe,
+} from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
+import { createSearchBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 import { createEnhancedVideoObject, extractYoutubeMetadata } from "./youtube";
 
 export const createWebsiteStructuredData = () => ({
@@ -152,3 +156,29 @@ export const createRecipeStructuredData = (
     url: `${SEO_CONSTANTS.SITE_URL}recipes/${recipeId}`,
   };
 };
+
+const MAX_SEARCH_ITEMS = 10;
+
+export const createSearchResultsJsonLd = (
+  query: string,
+  recipes: DetailedRecipeGridItem[],
+  totalElements: number,
+  title: string
+) => ({
+  "@context": "https://schema.org",
+  "@graph": [
+    createSearchBreadcrumb(query),
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: totalElements,
+      itemListElement: recipes.slice(0, MAX_SEARCH_ITEMS).map((recipe, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipe.id}`,
+        name: recipe.title,
+        image: recipe.imageUrl,
+      })),
+    },
+  ],
+});
