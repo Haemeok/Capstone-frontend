@@ -2,7 +2,9 @@
 
 import React from "react";
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
+
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useSearchQuery } from "../model";
 
@@ -18,6 +20,11 @@ export const SearchInput = () => {
     setInputValue(e.target.value);
   };
 
+  const handleClear = () => {
+    triggerHaptic("Light");
+    setInputValue("");
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="rounded-2xl bg-gray-100 p-1">
@@ -31,6 +38,16 @@ export const SearchInput = () => {
             value={inputValue}
             onChange={handleChange}
           />
+          {inputValue && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              aria-label="입력 지우기"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
         </div>
       </div>
     </form>

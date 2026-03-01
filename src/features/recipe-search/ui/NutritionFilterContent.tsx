@@ -103,7 +103,7 @@ export const NutritionFilterContent = ({
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>{trigger ?? <div />}</PopoverTrigger>
-      <PopoverContent className="w-[680px]" align="start">
+      <PopoverContent className="w-[680px]" align="start" sideOffset={24}>
         <div className="flex items-center justify-between mb-4">
           <div>
             <h4 className="font-medium leading-none">필터</h4>

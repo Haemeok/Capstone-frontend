@@ -418,7 +418,7 @@ export type Activity = (typeof CALORIE_ACTIVITIES)[number];
 
 export const NUTRITION_RANGES = {
   cost: { min: 0, max: 50000, step: 1000, unit: "원", label: "재료비" },
-  calories: { min: 0, max: 2000, step: 50, unit: "kcal", label: "칼로리" },
+  calories: { min: 0, max: 3000, step: 50, unit: "kcal", label: "칼로리" },
   carb: { min: 0, max: 300, step: 10, unit: "g", label: "탄수화물" },
   protein: { min: 0, max: 200, step: 5, unit: "g", label: "단백질" },
   fat: { min: 0, max: 100, step: 5, unit: "g", label: "지방" },
