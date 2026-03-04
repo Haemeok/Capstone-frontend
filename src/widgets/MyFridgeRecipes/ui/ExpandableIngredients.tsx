@@ -47,7 +47,7 @@ const ExpandableIngredients = ({
     : missingNames.slice(0, VISIBLE_COUNT);
 
   return (
-    <div className="mt-1.5 flex flex-col gap-1">
+    <div className="mt-2 flex flex-col gap-1.5">
       {/* 매치된 재료 */}
       {matchedIngredients.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">

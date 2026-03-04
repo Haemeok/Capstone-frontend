@@ -64,7 +64,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
 
   return (
     <motion.div
-      className="relative flex cursor-pointer items-start gap-3 rounded-2xl bg-white p-3 shadow-sm transition-all hover:shadow-md"
+      className="relative flex cursor-pointer items-start gap-4 rounded-2xl bg-white p-4 shadow-sm transition-all hover:shadow-md"
       onClick={handleCardClick}
       whileTap={{ scale: 0.99 }}
     >
@@ -97,13 +97,13 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
       </div>
 
       {/* 정보 */}
-      <div className="flex min-w-0 flex-1 flex-col gap-1 py-0.5">
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5 py-1">
         <p className="line-clamp-2 text-base font-bold text-gray-900">
           {recipe.title}
         </p>
 
         {/* 조회수 · 즐겨찾기 · 조리시간 */}
-        <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
+        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
           {recipe.isYoutube && recipe.youtubeVideoViewCount != null && (() => {
             const tier = getViewCountTier(recipe.youtubeVideoViewCount);
             const IconComponent = tier.icon;

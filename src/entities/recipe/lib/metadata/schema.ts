@@ -113,7 +113,6 @@ export const createRecipeStructuredData = (
         name: `Step ${index + 1}`,
         position: index + 1,
         text: step.instruction,
-        url: `${SEO_CONSTANTS.SITE_URL}recipes/${recipeId}#step-${index + 1}`,
         ...(step.stepImageUrl && { image: step.stepImageUrl }),
       })) || [],
 

@@ -12,7 +12,7 @@ const MyFridgeRecipeSkeleton = ({
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}
-          className="flex items-start gap-4 rounded-2xl bg-white p-3 shadow-sm"
+          className="flex items-start gap-4 rounded-2xl bg-white p-4 shadow-sm"
         >
           <Skeleton className="h-32 w-32 flex-shrink-0 rounded-xl" />
           <div className="flex flex-1 flex-col gap-2 py-1">

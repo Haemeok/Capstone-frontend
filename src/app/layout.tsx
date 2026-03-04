@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 
-import { Analytics } from "@vercel/analytics/react";
-
 import { AppWebViewDetector } from "@/shared/lib/bridge";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
@@ -64,7 +62,6 @@ export default async function RootLayout({
           <GlobalNotificationPermissionDrawer />
           <GlobalReviewGateDrawer />
         </AppProviders>
-        <Analytics />
         <GoogleAnalytics />
       </body>
     </html>

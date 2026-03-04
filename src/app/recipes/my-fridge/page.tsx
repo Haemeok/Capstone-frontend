@@ -46,7 +46,7 @@ const MyFridgePage = () => {
 
   return (
     <Container>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-6">
         {/* Header */}
         <div className="flex items-center gap-3">
           <PrevButton />

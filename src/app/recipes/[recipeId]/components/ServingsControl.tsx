@@ -21,9 +21,10 @@ export const ServingsControl = ({
 }: ServingsControlProps) => {
   return (
     <div className="mb-3 flex items-center justify-between gap-2">
-      <AnimatePresence>
-        {isReportMode && (
+      <AnimatePresence mode="wait">
+        {isReportMode ? (
           <motion.p
+            key="report"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
@@ -31,6 +32,19 @@ export const ServingsControl = ({
             className="text-sm text-olive-light font-medium"
           >
             문제가 있는 재료를 눌러주세요
+          </motion.p>
+        ) : (
+          <motion.p
+            key="guide"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="text-xs text-gray-400"
+          >
+            💡 간과 양념은 취향에 따라 다를 수 있어요.
+            <br />
+            조금씩 나눠 넣으며 맛을 봐주세요!
           </motion.p>
         )}
       </AnimatePresence>
