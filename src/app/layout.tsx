@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "레시피오 - recipio",
     images: [
       {
-        url: "/back1.webp",
+        url: "/og.png",
         width: 1200,
         height: 630,
         alt: "레시피오 - 홈쿡 레시피",
