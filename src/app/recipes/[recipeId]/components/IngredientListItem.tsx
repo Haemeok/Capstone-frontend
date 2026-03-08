@@ -2,20 +2,15 @@
 
 import Link from "next/link";
 
-import { AnimatePresence } from "framer-motion";
 import { ShoppingBasketIcon } from "lucide-react";
 
 import { IngredientItem } from "@/entities/ingredient";
-
-import { IngredientReportIcon } from "./IngredientReportIcon";
 
 type IngredientListItemProps = {
   ingredient: IngredientItem;
   displayQuantity: string;
   displayUnit: string;
   displayPrice: string;
-  isReportMode: boolean;
-  onReport: (ingredient: IngredientItem) => void;
 };
 
 export const IngredientListItem = ({
@@ -23,8 +18,6 @@ export const IngredientListItem = ({
   displayQuantity,
   displayUnit,
   displayPrice,
-  isReportMode,
-  onReport,
 }: IngredientListItemProps) => {
   return (
     <li className="grid grid-cols-[1.5fr_1.5fr_1fr_auto] items-center gap-3">
@@ -38,11 +31,6 @@ export const IngredientListItem = ({
       <p className="text-right text-sm text-slate-500">{displayPrice}</p>
 
       <div className="flex items-center justify-center gap-1">
-        <AnimatePresence>
-          {isReportMode && (
-            <IngredientReportIcon ingredient={ingredient} onReport={onReport} />
-          )}
-        </AnimatePresence>
         {ingredient.coupangLink ? (
           <Link
             href={ingredient.coupangLink}

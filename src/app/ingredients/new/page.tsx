@@ -52,11 +52,11 @@ const NewIngredientsPage = () => {
         <header className="z-sticky sticky-optimized sticky top-0 border-b border-gray-200 bg-white px-4 py-3 md:px-6">
           <div className="flex items-center gap-2">
             <PrevButton />
-            <h1 className="text-xl font-bold">재료 추가</h1>
+            <h1 className="text-xl font-bold text-gray-900">재료 추가</h1>
           </div>
         </header>
 
-        <div className="px-4 py-4 md:px-6">
+        <div className="px-4 py-6 md:px-6">
           <button
             type="button"
             onClick={() => setIsSearchDrawerOpen(true)}
@@ -82,16 +82,16 @@ const NewIngredientsPage = () => {
         </div>
 
         <div className="px-4 md:px-6">
-          <div className="mb-4">
+          <div className="mb-5">
             <h2 className="text-lg font-bold text-gray-800">
               추천 재료 패키지
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1.5 text-sm text-gray-500">
               한 번에 여러 재료를 냉장고에 추가해보세요
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {INGREDIENT_PACKS.map((pack) => (
               <IngredientPackCard
                 key={pack.name + pack.description}

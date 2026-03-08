@@ -8,19 +8,21 @@ import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 
-import { IngredientItem } from "@/entities/ingredient";
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
-
-import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 
 import { IngredientListItem } from "./IngredientListItem";
 import { IngredientsSectionHeader } from "./IngredientsSectionHeader";
 import NutritionTable from "./NutritionTable";
 import { ServingsControl } from "./ServingsControl";
 
-const IngredientReportDrawer = dynamic(
+const IngredientReportSheet = dynamic(
   () =>
-    import("./IngredientReportDrawer").then((mod) => mod.IngredientReportDrawer),
+    import("./IngredientReportSheet").then((mod) => mod.IngredientReportSheet),
+  { ssr: false }
+);
+
+const IngredientCopySheet = dynamic(
+  () => import("./IngredientCopySheet").then((mod) => mod.IngredientCopySheet),
   { ssr: false }
 );
 
@@ -33,10 +35,8 @@ type IngredientsSectionProps = {
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const [showNutrition, setShowNutrition] = useState(false);
-  const [isReportMode, setIsReportMode] = useState(false);
-  const [reportingIngredient, setReportingIngredient] =
-    useState<IngredientItem | null>(null);
-  const [isReportDrawerOpen, setIsReportDrawerOpen] = useState(false);
+  const [isReportSheetOpen, setIsReportSheetOpen] = useState(false);
+  const [isCopySheetOpen, setIsCopySheetOpen] = useState(false);
 
   const isValidServings = recipe.servings > 0 && Number.isFinite(recipe.servings);
   const [currentServings, setCurrentServings] = useState(
@@ -45,21 +45,6 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
 
   const randomActivity = useMemo(() => getRandomActivity(), []);
   const servingRatio = isValidServings ? currentServings / recipe.servings : 1;
-
-  const handleReportClick = useAuthenticatedAction(
-    (ingredient: IngredientItem) => {
-      setReportingIngredient(ingredient);
-      setIsReportDrawerOpen(true);
-    },
-    {
-      notifyOnly: true,
-      drawerMessage: "재료 오류 신고를 이용해보세요!",
-    }
-  );
-
-  const handleReportSuccess = () => {
-    setIsReportMode(false);
-  };
 
   const scaledCalories = Math.floor(recipe.totalCalories * servingRatio);
   const scaledIngredientCost = Math.round(
@@ -94,8 +79,8 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
       <IngredientsSectionHeader
         showNutrition={showNutrition}
         onNutritionToggle={setShowNutrition}
-        isReportMode={isReportMode}
-        onReportModeToggle={() => setIsReportMode((prev) => !prev)}
+        onCopyOpen={() => setIsCopySheetOpen(true)}
+        onReportOpen={() => setIsReportSheetOpen(true)}
       />
 
       <PointDisplayBanner
@@ -121,7 +106,6 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                 maxServings={MAX_SERVINGS}
                 onIncrement={() => setCurrentServings((prev) => prev + 1)}
                 onDecrement={() => setCurrentServings((prev) => prev - 1)}
-                isReportMode={isReportMode}
               />
             )}
             <ul className="flex flex-col gap-1">
@@ -132,25 +116,21 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                   servingRatio
                 );
 
-                const ingredientWithId = {
-                  ...ingredient,
-                  id: ingredient.id ?? `ingredient-${index}`,
-                  inFridge: false,
-                  calories: 0,
-                } as IngredientItem;
-
                 return (
                   <IngredientListItem
                     key={index}
-                    ingredient={ingredientWithId}
+                    ingredient={{
+                      ...ingredient,
+                      id: ingredient.id ?? `ingredient-${index}`,
+                      inFridge: false,
+                      calories: 0,
+                    }}
                     displayQuantity={converted.quantity}
                     displayUnit={converted.unit}
                     displayPrice={formatNumber(
                       Math.round((ingredient.price || 0) * servingRatio),
                       "원"
                     )}
-                    isReportMode={isReportMode}
-                    onReport={handleReportClick}
                   />
                 );
               })}
@@ -169,12 +149,20 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         />
       </div>
 
-      <IngredientReportDrawer
-        isOpen={isReportDrawerOpen}
-        onOpenChange={setIsReportDrawerOpen}
-        ingredient={reportingIngredient}
-        recipeId={recipe.id}
-        onSuccess={handleReportSuccess}
+      <IngredientReportSheet
+        isOpen={isReportSheetOpen}
+        onOpenChange={setIsReportSheetOpen}
+        recipe={recipe}
+        servingRatio={servingRatio}
+      />
+
+      <IngredientCopySheet
+        isOpen={isCopySheetOpen}
+        onOpenChange={setIsCopySheetOpen}
+        recipe={recipe}
+        currentServings={currentServings}
+        servingRatio={servingRatio}
+        onServingsChange={setCurrentServings}
       />
     </div>
   );

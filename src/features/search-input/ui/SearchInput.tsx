@@ -5,6 +5,7 @@ import React from "react";
 import { Search, X } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { cn } from "@/shared/lib/utils";
 
 import { useSearchQuery } from "../model";
 
@@ -38,16 +39,17 @@ export const SearchInput = () => {
             value={inputValue}
             onChange={handleChange}
           />
-          {inputValue && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-              aria-label="입력 지우기"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handleClear}
+            className={cn(
+              "rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600",
+              !inputValue && "invisible"
+            )}
+            aria-label="입력 지우기"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
       </div>
     </form>

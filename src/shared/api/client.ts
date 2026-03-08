@@ -1,7 +1,9 @@
 import { handle401Error } from "./auth";
-import { API_CONFIG, isClient } from "./config";
+import { API_CONFIG, isClient, isServer } from "./config";
 import { ApiError, createApiError, isErrorResponse } from "./errors";
 import type { ApiRequestOptions, BatchRequestFunction } from "./types";
+
+import { BASE_API_URL } from "@/shared/config/constants/api";
 
 export async function apiClient<T = any>(
   url: string,
@@ -16,9 +18,10 @@ export async function apiClient<T = any>(
     ...restOptions
   } = options;
 
+  const defaultBaseURL = isServer ? BASE_API_URL : API_CONFIG.baseURL;
   const fullUrl = url.startsWith("http")
     ? url
-    : `${baseURL || API_CONFIG.baseURL}${url}`;
+    : `${baseURL || defaultBaseURL}${url}`;
 
   let finalUrl = fullUrl;
 
@@ -26,7 +29,7 @@ export async function apiClient<T = any>(
     if (paramsSerializer) {
       finalUrl = `${finalUrl}?${paramsSerializer(params)}`;
     } else {
-      const urlObj = new URL(fullUrl, window.location.origin);
+      const urlObj = new URL(fullUrl, isServer ? fullUrl : window.location.origin);
       Object.entries(params).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           if (Array.isArray(value)) {
