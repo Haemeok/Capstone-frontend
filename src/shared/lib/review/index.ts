@@ -1,1 +1,5 @@
-export { checkAndTriggerReviewGate, trackReviewAction } from "./tracker";
+export {
+  checkAndTriggerReviewGate,
+  shouldShowReviewGate,
+  trackReviewAction,
+} from "./tracker";

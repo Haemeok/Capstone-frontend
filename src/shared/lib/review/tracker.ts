@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
+import { isAppWebView } from "@/shared/lib/bridge";
 import { storage } from "@/shared/lib/storage";
 
 type ReviewAction =
@@ -39,13 +40,24 @@ const isAnyThresholdMet = (): boolean => {
   );
 };
 
-// 액션 카운트만 증가 (리뷰 요청 완료된 경우 패스)
-export const trackReviewAction = (action: ReviewAction): void => {
-  if (storage.getBooleanItem(STORAGE_KEYS.REVIEW_REQUESTED)) return;
-  incrementActionCount(action);
+export const shouldShowReviewGate = (): boolean => {
+  if (!isAppWebView()) return false;
+  if (storage.getBooleanItem(STORAGE_KEYS.REVIEW_REQUESTED)) return false;
+  const isDeclined = storage.getItemWithExpiry<boolean>(
+    STORAGE_KEYS.REVIEW_GATE_DECLINED
+  );
+  if (isDeclined) return false;
+  return isAnyThresholdMet();
 };
 
-// threshold 충족 시 콜백 호출 (Happiness Gate 다이얼로그 표시용)
+// 액션 카운트 증가 후 리뷰 게이트 표시 여부 반환
+export const trackReviewAction = (action: ReviewAction): boolean => {
+  if (storage.getBooleanItem(STORAGE_KEYS.REVIEW_REQUESTED)) return false;
+  incrementActionCount(action);
+  return shouldShowReviewGate();
+};
+
+// threshold 충족 시 콜백 호출 (테스트용)
 export const checkAndTriggerReviewGate = (onShouldShow: () => void): void => {
   if (storage.getBooleanItem(STORAGE_KEYS.REVIEW_REQUESTED)) return;
   if (isAnyThresholdMet()) {

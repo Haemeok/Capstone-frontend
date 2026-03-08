@@ -6,6 +6,9 @@ import { Loader2 } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatNumber } from "@/shared/lib/format";
+import { shouldShowReviewGate } from "@/shared/lib/review";
+
+import { scheduleReviewGate } from "@/features/review-gate";
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 import { useRecipeStatus } from "@/features/recipe-status";
@@ -40,6 +43,13 @@ const RecipeCompleteButton = ({
     completeRecipe();
   };
 
+  const handleRewardClose = (open: boolean) => {
+    setShowReward(open);
+    if (!open && shouldShowReviewGate()) {
+      scheduleReviewGate();
+    }
+  };
+
   return (
     <>
       <button
@@ -68,7 +78,7 @@ const RecipeCompleteButton = ({
 
       <LevelUpModal
         isOpen={showReward}
-        onOpenChange={setShowReward}
+        onOpenChange={handleRewardClose}
         acquiredAmount={saveAmount}
       />
     </>

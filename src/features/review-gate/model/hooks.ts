@@ -27,7 +27,7 @@ export const useReviewGateTrigger = () => {
       return;
     }
 
-    // 부정 응답 후 30일 미경과 → 패스
+    // 부정 응답 후 15일 미경과 → 패스
     const isDeclined = storage.getItemWithExpiry<boolean>(
       STORAGE_KEYS.REVIEW_GATE_DECLINED
     );
@@ -56,7 +56,7 @@ export const useReviewGateActions = () => {
   // 부정 응답: 피드백 페이지로 이동
   const handleNegative = useCallback(() => {
     triggerHaptic("Light");
-    // 30일 후 재요청 허용
+    // 15일 후 재요청 허용
     storage.setItemWithExpiry(
       STORAGE_KEYS.REVIEW_GATE_DECLINED,
       true,

@@ -10,6 +10,8 @@ import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticated
 
 import { trackReviewAction } from "@/shared/lib/review";
 
+import { scheduleReviewGate } from "@/features/review-gate";
+
 import { postRecipeFavorite } from "./api";
 
 export const useToggleRecipeFavorite = (recipeId: string) => {
@@ -47,7 +49,8 @@ export const useToggleRecipeFavorite = (recipeId: string) => {
     },
     onSuccess: (_data, _variables, context) => {
       if (context && !context.favoriteByCurrentUser) {
-        trackReviewAction("recipe_save");
+        const shouldShow = trackReviewAction("recipe_save");
+        if (shouldShow) scheduleReviewGate();
       }
     },
     onError: (error, variables, context) => {
