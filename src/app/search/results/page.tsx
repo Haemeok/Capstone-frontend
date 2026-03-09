@@ -174,7 +174,7 @@ export default async function SearchResultsPage({
 
   const queryClient = new QueryClient();
 
-  queryClient.prefetchQuery({
+  const pageData = await queryClient.fetchQuery({
     queryKey: [
       "recipes",
       dishTypeCode,
@@ -187,8 +187,6 @@ export default async function SearchResultsPage({
     ],
     queryFn: () => getRecipesOnServer(queryParams),
   });
-
-  const pageData = await getRecipesOnServer(queryParams);
 
   const totalPages = pageData.page.totalPages;
   const hasNextPage = page < totalPages - 1;

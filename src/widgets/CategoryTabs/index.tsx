@@ -37,6 +37,7 @@ const CategoryTabs = ({ title }: CategoryTabsProps) => {
                 id={item.id}
                 name={item.name}
                 imageUrl={item.imageUrl}
+                isLcpCandidate={index === 0}
               />
             </CarouselItem>
           ))}

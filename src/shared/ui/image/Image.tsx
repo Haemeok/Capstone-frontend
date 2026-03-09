@@ -51,10 +51,11 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   },
   forwardedRef
 ) {
-  // 1. Viewport 감지
+  // 1. Viewport 감지 (priority 시 skip)
   const { ref: viewportRef, inView } = useInViewOnce({
     threshold: inViewThreshold,
     rootMargin: inViewRootMargin,
+    skip: priority,
   });
 
   // 2. 이미지 로딩 로직 (전부 훅에 위임)
@@ -114,7 +115,8 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
           onLoad={image.onLoad}
           onError={image.onError}
           className={cn(
-            "absolute inset-0 h-full w-full transition-opacity duration-300",
+            "absolute inset-0 h-full w-full",
+            priority ? "" : "transition-opacity duration-300",
             image.status === "loaded" ? "opacity-100" : "opacity-0",
             fitClass,
             imgClassName

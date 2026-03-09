@@ -50,6 +50,16 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="ko" className={`scroll-smooth ${pretendard.variable}`}>
+      <head>
+        <link
+          rel="preconnect"
+          href="https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com"
+        />
+        <link
+          rel="dns-prefetch"
+          href="https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com"
+        />
+      </head>
       <body className={`${pretendard.className} bg-white`}>
         <AppWebViewDetector />
         <AppProviders>
