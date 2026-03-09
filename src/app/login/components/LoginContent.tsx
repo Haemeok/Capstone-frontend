@@ -1,22 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import AppleLoginButton from "@/features/auth/ui/AppleLoginButton";
 import GoogleLoginButton from "@/features/auth/ui/GoogleLoginButton";
 import KakaoLoginButton from "@/features/auth/ui/KakaoLoginButton";
 import NaverLoginButton from "@/features/auth/ui/NaverLoginButton";
+import { storage } from "@/shared/lib/storage";
 import { Image } from "@/shared/ui/image/Image";
 import TextAnimate from "@/shared/ui/shadcn/text-animate";
 
 const TEST_LOGIN_CLICK_THRESHOLD = 7;
+const LAST_LOGIN_PROVIDER_KEY = "last_login_provider";
+
+type SocialProvider = "google" | "kakao" | "naver" | "apple";
 
 const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "/";
   const [clickCount, setClickCount] = useState(0);
+
+  const lastProvider = storage.getItem(
+    LAST_LOGIN_PROVIDER_KEY
+  ) as SocialProvider | null;
+
+  const saveProvider = useCallback((provider: SocialProvider) => {
+    storage.setItem(LAST_LOGIN_PROVIDER_KEY, provider);
+  }, []);
 
   const handleLogoClick = () => {
     const newCount = clickCount + 1;
@@ -56,10 +68,22 @@ const LoginContent = () => {
         </div>
 
         <div className="w-full max-w-md space-y-4">
-          <AppleLoginButton />
-          <GoogleLoginButton />
-          <NaverLoginButton />
-          <KakaoLoginButton />
+          <GoogleLoginButton
+            isRecent={lastProvider === "google"}
+            onClickCapture={() => saveProvider("google")}
+          />
+          <KakaoLoginButton
+            isRecent={lastProvider === "kakao"}
+            onClickCapture={() => saveProvider("kakao")}
+          />
+          <NaverLoginButton
+            isRecent={lastProvider === "naver"}
+            onClickCapture={() => saveProvider("naver")}
+          />
+          <AppleLoginButton
+            isRecent={lastProvider === "apple"}
+            onClickCapture={() => saveProvider("apple")}
+          />
           <button
             onClick={() => router.replace(from)}
             className="w-full cursor-pointer text-center text-sm text-white/90 underline underline-offset-4 transition-colors hover:text-white"
