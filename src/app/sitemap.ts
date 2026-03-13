@@ -45,10 +45,11 @@ export async function generateSitemaps() {
   ];
 }
 
-export default async function sitemap(props: {
-  id: Promise<string>;
+export default async function sitemap({
+  id,
+}: {
+  id: number;
 }): Promise<MetadataRoute.Sitemap> {
-  const id = parseInt(await props.id, 10);
 
   // id 0: static routes
   if (id === 0) {
