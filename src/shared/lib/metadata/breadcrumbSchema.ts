@@ -70,21 +70,18 @@ export const createCategoryBreadcrumb = (
 };
 
 export const createSearchBreadcrumb = (
-  query: string
+  query: string,
+  canonicalUrl?: string
 ): BreadcrumbListSchema => {
+  const breadcrumbName = query ? `${query} 검색결과` : "검색결과";
+  const breadcrumbUrl =
+    canonicalUrl ||
+    `${SEO_CONSTANTS.SITE_URL}/search/results${query ? `?q=${encodeURIComponent(query)}` : ""}`;
+
   const items: BreadcrumbItem[] = [
-    {
-      name: "홈",
-      url: SEO_CONSTANTS.SITE_URL,
-    },
-    {
-      name: "검색",
-      url: `${SEO_CONSTANTS.SITE_URL}/search`,
-    },
-    {
-      name: query ? `"${query}" 검색결과` : "검색결과",
-      url: `${SEO_CONSTANTS.SITE_URL}/search/results${query ? `?q=${encodeURIComponent(query)}` : ""}`,
-    },
+    { name: "홈", url: SEO_CONSTANTS.SITE_URL },
+    { name: "검색", url: `${SEO_CONSTANTS.SITE_URL}/search` },
+    { name: breadcrumbName, url: breadcrumbUrl },
   ];
 
   return createBreadcrumbListElement(items);

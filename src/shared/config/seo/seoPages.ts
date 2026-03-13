@@ -49,17 +49,50 @@ const COST_BRACKETS = [
 type NutritionThemeConfig = {
   key: string;
   label: string;
+  seoLabel: string;
   params: Record<string, number>;
 };
 
 const NUTRITION_THEMES_FOR_SEO: NutritionThemeConfig[] = [
-  { key: "HIGH_PROTEIN", label: "고단백", params: { minProtein: 30, maxCalories: 800 } },
-  { key: "LOW_CALORIE", label: "저칼로리", params: { maxCalories: 500, maxFat: 15 } },
-  { key: "KETO", label: "키토", params: { maxCarb: 20, minFat: 30 } },
-  { key: "LOW_SUGAR", label: "저당", params: { maxSugar: 10, maxCarb: 80 } },
-  { key: "BALANCED", label: "균형식", params: { minCarb: 80, maxCarb: 150, minProtein: 40, maxProtein: 100 } },
-  { key: "LOW_SODIUM", label: "저염식", params: { maxSodium: 800 } },
-  { key: "LOW_FAT", label: "저지방", params: { maxFat: 20, maxCalories: 600 } },
+  // ── 식단러 특화 (params 많은 것 먼저 → buildEnhancedQuery 매칭 우선) ──
+  { key: "DIET_MEAL", label: "다이어트식단", seoLabel: "다이어트 식단용 저칼로리 고단백",
+    params: { minProtein: 25, maxCalories: 500, maxFat: 15 } },
+  { key: "BALANCED", label: "균형식", seoLabel: "영양 균형 잡힌",
+    params: { minCarb: 80, maxCarb: 150, minProtein: 40, maxProtein: 100 } },
+  { key: "HIGH_PROTEIN_LOW_FAT", label: "고단백저지방", seoLabel: "고단백 저지방",
+    params: { minProtein: 30, maxFat: 15, maxCalories: 600 } },
+  { key: "BULK_MEAL", label: "벌크업", seoLabel: "벌크업 고탄수 고단백",
+    params: { minProtein: 40, minCarb: 80 } },
+
+  // ── 단백질 3단계 (헬스인 세분화) ──
+  { key: "HIGH_PROTEIN", label: "고단백", seoLabel: "단백질 30g 이상 고단백",
+    params: { minProtein: 30, maxCalories: 800 } },
+  { key: "HIGH_PROTEIN_40", label: "고단백40", seoLabel: "한끼 단백질 40g 채우는",
+    params: { minProtein: 40 } },
+  { key: "HIGH_PROTEIN_50", label: "고단백50", seoLabel: "단백질 50g 폭탄",
+    params: { minProtein: 50 } },
+
+  // ── 다이어트 핵심 ──
+  { key: "LOW_CALORIE", label: "저칼로리", seoLabel: "500kcal 이하 저칼로리",
+    params: { maxCalories: 500, maxFat: 15 } },
+  { key: "ULTRA_LOW_CAL", label: "극저칼", seoLabel: "300kcal 이하 극저칼로리",
+    params: { maxCalories: 300 } },
+
+  // ── 탄수/당류 제한 ──
+  { key: "KETO", label: "키토", seoLabel: "탄수화물 20g 이하 키토",
+    params: { maxCarb: 20, minFat: 30 } },
+  { key: "LOW_CARB", label: "저탄수", seoLabel: "저탄수화물",
+    params: { maxCarb: 50 } },
+  { key: "LOW_SUGAR", label: "저당", seoLabel: "당류 10g 이하 저당",
+    params: { maxSugar: 10, maxCarb: 80 } },
+  { key: "ZERO_SUGAR", label: "제로슈거", seoLabel: "당류 거의 제로",
+    params: { maxSugar: 3, maxCarb: 30 } },
+
+  // ── 기타 건강 ──
+  { key: "LOW_SODIUM", label: "저염식", seoLabel: "나트륨 800mg 이하 저염",
+    params: { maxSodium: 800 } },
+  { key: "LOW_FAT", label: "저지방", seoLabel: "지방 20g 이하 저지방",
+    params: { maxFat: 20, maxCalories: 600 } },
 ];
 
 // ── 부자연스러운 조합 필터 ──
@@ -142,6 +175,24 @@ const INVALID_INGREDIENT_NUTRITION = new Set([
   // 단 재료 + 저당
   "초콜릿:LOW_SUGAR", "꿀:LOW_SUGAR", "사탕:LOW_SUGAR",
   "아이스크림:LOW_SUGAR", "케이크:LOW_SUGAR",
+  // 고지방 재료 + 고단백저지방/다이어트식단
+  "삼겹살:HIGH_PROTEIN_LOW_FAT", "베이컨:HIGH_PROTEIN_LOW_FAT",
+  "우삼겹:HIGH_PROTEIN_LOW_FAT", "항정살:HIGH_PROTEIN_LOW_FAT",
+  "버터:HIGH_PROTEIN_LOW_FAT", "크림치즈:HIGH_PROTEIN_LOW_FAT",
+  "스팸:HIGH_PROTEIN_LOW_FAT",
+  "삼겹살:DIET_MEAL", "베이컨:DIET_MEAL", "스팸:DIET_MEAL",
+  "우삼겹:DIET_MEAL", "항정살:DIET_MEAL", "버터:DIET_MEAL",
+  // 극저칼로리 부적합
+  "삼겹살:ULTRA_LOW_CAL", "차돌박이:ULTRA_LOW_CAL", "우삼겹:ULTRA_LOW_CAL",
+  "베이컨:ULTRA_LOW_CAL", "스팸:ULTRA_LOW_CAL", "버터:ULTRA_LOW_CAL",
+  "항정살:ULTRA_LOW_CAL", "크림치즈:ULTRA_LOW_CAL",
+  // 제로슈거 부적합
+  "꿀:ZERO_SUGAR", "초콜릿:ZERO_SUGAR", "아이스크림:ZERO_SUGAR",
+  "케이크:ZERO_SUGAR", "사탕:ZERO_SUGAR",
+  // 저탄수 부적합
+  "밥:LOW_CARB", "즉석밥:LOW_CARB", "떡:LOW_CARB", "빵:LOW_CARB",
+  "식빵:LOW_CARB", "파스타면:LOW_CARB", "라면:LOW_CARB", "국수:LOW_CARB",
+  "우동:LOW_CARB", "감자:LOW_CARB", "고구마:LOW_CARB", "옥수수:LOW_CARB",
 ]);
 
 // 인기 tags (3차원 조합용)
@@ -271,23 +322,23 @@ export const generateSeoPages = (): SeoPage[] => {
   for (const theme of NUTRITION_THEMES_FOR_SEO) {
     addPage({
       params: { ...theme.params },
-      title: `${theme.label} 레시피`,
-      description: `${theme.label} 식단에 맞는 레시피 모음입니다.`,
+      title: `${theme.seoLabel} 레시피`,
+      description: `${theme.seoLabel} 레시피를 한눈에 비교하세요. 재료비부터 영양성분까지 다 나옵니다.`,
     });
 
     for (const tag of TAG_ENTRIES) {
       addPage({
         params: { ...theme.params, tags: tag.code },
-        title: `${theme.label} ${tag.name} 레시피`,
-        description: `${tag.name}에 맞는 ${theme.label} 레시피 모음입니다.`,
+        title: `${theme.seoLabel} ${tag.name} 레시피`,
+        description: `${tag.name}에 맞는 ${theme.seoLabel} 레시피를 확인하세요.`,
       });
     }
 
     for (const dish of DISH_TYPE_ENTRIES) {
       addPage({
         params: { ...theme.params, dishType: dish.code },
-        title: `${theme.label} ${dish.name} 레시피`,
-        description: `${theme.label} ${dish.name} 레시피 모음입니다.`,
+        title: `${theme.seoLabel} ${dish.name} 레시피`,
+        description: `${theme.seoLabel} ${dish.name} 레시피를 확인하세요.`,
       });
     }
   }
@@ -298,8 +349,8 @@ export const generateSeoPages = (): SeoPage[] => {
       if (INVALID_INGREDIENT_NUTRITION.has(`${ing.name}:${theme.key}`)) continue;
       addPage({
         params: { ingredientIds: ing.id, ...theme.params },
-        title: `${theme.label} ${ing.name} 레시피`,
-        description: `${theme.label} 식단에 맞는 ${ing.name} 요리 레시피입니다.`,
+        title: `${theme.seoLabel} ${ing.name} 레시피`,
+        description: `${theme.seoLabel} ${ing.name} 요리 레시피를 확인하세요.`,
       });
     }
   }
@@ -319,6 +370,27 @@ export const generateSeoPages = (): SeoPage[] => {
           description: `${tag.name}에 딱 맞는 ${ing.name} ${dish.name} 레시피입니다.`,
         });
       }
+    }
+  }
+
+  // ── K. 영양테마 × 가격 (가성비 식단) ──
+  const FITNESS_THEME_KEYS = new Set([
+    "HIGH_PROTEIN", "HIGH_PROTEIN_40", "HIGH_PROTEIN_50",
+    "HIGH_PROTEIN_LOW_FAT", "DIET_MEAL",
+  ]);
+  const FITNESS_COST_BRACKETS = [
+    { value: 3000, label: "3천원" },
+    { value: 5000, label: "5천원" },
+  ];
+
+  for (const theme of NUTRITION_THEMES_FOR_SEO) {
+    if (!FITNESS_THEME_KEYS.has(theme.key)) continue;
+    for (const cost of FITNESS_COST_BRACKETS) {
+      addPage({
+        params: { ...theme.params, maxCost: cost.value },
+        title: `${cost.label}으로 ${theme.seoLabel} 레시피`,
+        description: `${cost.label} 이하 갓성비로 ${theme.seoLabel} 레시피를 비교하세요.`,
+      });
     }
   }
 

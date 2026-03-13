@@ -162,11 +162,12 @@ export const createSearchResultsJsonLd = (
   query: string,
   recipes: DetailedRecipeGridItem[],
   totalElements: number,
-  title: string
+  title: string,
+  canonicalUrl?: string
 ) => ({
   "@context": "https://schema.org",
   "@graph": [
-    createSearchBreadcrumb(query),
+    createSearchBreadcrumb(query, canonicalUrl),
     {
       "@type": "ItemList",
       name: title,

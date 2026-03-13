@@ -21,6 +21,7 @@ import {
   getIngredientNamesByIds,
   SEO_DISH_TYPE_ENTRIES,
   SEO_TAG_ENTRIES,
+  NUTRITION_THEMES_FOR_SEO,
 } from "@/shared/config/seo/seoPages";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
@@ -154,7 +155,42 @@ const buildEnhancedQuery = (
     }
   }
 
+  // nutrition params → 테마 SEO 라벨 매칭
+  const matchedTheme = NUTRITION_THEMES_FOR_SEO.find((theme) =>
+    Object.entries(theme.params).every(([key, value]) => {
+      const paramValue = params[key as keyof SearchResultsSearchParams];
+      return paramValue !== undefined && parseInt(String(paramValue), 10) === value;
+    })
+  );
+  if (matchedTheme) {
+    parts.push(matchedTheme.seoLabel);
+  }
+
   return parts.length > 0 ? parts.join(" ") : "";
+};
+
+const CANONICAL_PARAM_ORDER = [
+  "q", "ingredientIds", "dishType", "tags", "types",
+  "minCost", "maxCost",
+  "minCalories", "maxCalories",
+  "minCarb", "maxCarb",
+  "minProtein", "maxProtein",
+  "minFat", "maxFat",
+  "minSugar", "maxSugar",
+  "minSodium", "maxSodium",
+  "sort", "page",
+] as const;
+
+const buildCanonicalUrl = (params: SearchResultsSearchParams): string => {
+  const canonicalParams = new URLSearchParams();
+  for (const key of CANONICAL_PARAM_ORDER) {
+    const value = params[key as keyof SearchResultsSearchParams];
+    if (value !== undefined) {
+      canonicalParams.set(key, Array.isArray(value) ? value.join(",") : String(value));
+    }
+  }
+  const search = canonicalParams.toString();
+  return `${SEO_CONSTANTS.SITE_URL}/search/results${search ? `?${search}` : ""}`;
 };
 
 export async function generateMetadata({
@@ -174,14 +210,7 @@ export async function generateMetadata({
   const description = buildSearchDescription(enhancedQ, totalElements);
 
   const ogImage = firstImage || SEO_CONSTANTS.DEFAULT_IMAGE;
-
-  const canonicalParams = new URLSearchParams();
-  for (const [key, value] of Object.entries(awaitedSearchParams)) {
-    if (value !== undefined) {
-      canonicalParams.set(key, Array.isArray(value) ? value.join(",") : value);
-    }
-  }
-  const canonicalSearch = canonicalParams.toString();
+  const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
 
   const MIN_RESULTS_FOR_INDEX = 8;
 
@@ -206,7 +235,7 @@ export async function generateMetadata({
       images: [ogImage],
     },
     alternates: {
-      canonical: `${SEO_CONSTANTS.SITE_URL}/search/results${canonicalSearch ? `?${canonicalSearch}` : ""}`,
+      canonical: canonicalUrl,
     },
   };
 }
@@ -250,12 +279,15 @@ export default async function SearchResultsPage({
     ? buildNextPageUrl(awaitedSearchParams, page + 1)
     : undefined;
 
-  const title = buildSearchTitle(q, pageData.page.totalElements, page);
+  const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
+  const title = buildSearchTitle(enhancedQ, pageData.page.totalElements, page);
+  const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
   const jsonLd = createSearchResultsJsonLd(
-    q,
+    enhancedQ,
     pageData.content,
     pageData.page.totalElements,
-    title
+    title,
+    canonicalUrl
   );
 
   return (
