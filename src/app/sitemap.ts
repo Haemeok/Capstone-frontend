@@ -77,11 +77,15 @@ export default async function sitemap({
   const start = chunkIndex * SITEMAP_CHUNK_SIZE;
   const slice = seoPages.slice(start, start + SITEMAP_CHUNK_SIZE);
 
-  return slice.map((page) => ({
-    url: `${SITE_URL}/search/results?${new URLSearchParams(
+  return slice.map((page) => {
+    const qs = new URLSearchParams(
       Object.entries(page.params).map(([k, v]) => [k, String(v)])
-    ).toString()}`,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
+    ).toString();
+
+    return {
+      url: `${SITE_URL}/search/results?${qs.replace(/&/g, "&amp;")}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    };
+  });
 }
