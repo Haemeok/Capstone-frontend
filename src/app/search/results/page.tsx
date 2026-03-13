@@ -17,6 +17,11 @@ import {
   buildSearchTitle,
   buildSearchDescription,
 } from "@/entities/recipe/lib/metadata/searchMeta";
+import {
+  getIngredientNamesByIds,
+  SEO_DISH_TYPE_ENTRIES,
+  SEO_TAG_ENTRIES,
+} from "@/shared/config/seo/seoPages";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 import type { RecipeItemsQueryParams } from "@/entities/recipe/model/types";
@@ -111,6 +116,47 @@ const parseSearchQueryParams = (
   };
 };
 
+const buildEnhancedQuery = (
+  params: SearchResultsSearchParams,
+  q: string
+): string => {
+  if (q) return q;
+
+  const parts: string[] = [];
+
+  // tags → 한글명
+  if (params.tags) {
+    const tagCodes = typeof params.tags === "string" ? params.tags.split(",") : params.tags;
+    for (const code of tagCodes) {
+      const tag = SEO_TAG_ENTRIES.find((t) => t.code === code);
+      if (tag) parts.push(tag.name);
+    }
+  }
+
+  // ingredientIds → 재료명
+  if (params.ingredientIds) {
+    const ids = params.ingredientIds.split(",").filter(Boolean);
+    const names = getIngredientNamesByIds(ids);
+    parts.push(...names);
+  }
+
+  // dishType → 한글명
+  if (params.dishType) {
+    const dish = SEO_DISH_TYPE_ENTRIES.find((d) => d.code === params.dishType);
+    if (dish) parts.push(dish.name);
+  }
+
+  // maxCost
+  if (params.maxCost) {
+    const cost = parseInt(params.maxCost, 10);
+    if (cost > 0) {
+      parts.push(cost >= 10000 ? `${cost / 10000}만원 이하` : `${cost}원 이하`);
+    }
+  }
+
+  return parts.length > 0 ? parts.join(" ") : "";
+};
+
 export async function generateMetadata({
   searchParams,
 }: SearchResultsPageProps): Promise<Metadata> {
@@ -121,8 +167,11 @@ export async function generateMetadata({
   const totalElements = pageData.page.totalElements;
   const firstImage = pageData.content[0]?.imageUrl;
 
-  const title = buildSearchTitle(q, totalElements, page);
-  const description = buildSearchDescription(q, totalElements);
+  // 구조화된 파라미터에서 향상된 검색어 생성
+  const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
+
+  const title = buildSearchTitle(enhancedQ, totalElements, page);
+  const description = buildSearchDescription(enhancedQ, totalElements);
 
   const ogImage = firstImage || SEO_CONSTANTS.DEFAULT_IMAGE;
 
@@ -134,9 +183,15 @@ export async function generateMetadata({
   }
   const canonicalSearch = canonicalParams.toString();
 
+  const MIN_RESULTS_FOR_INDEX = 8;
+
   return {
     title,
     description,
+    robots: {
+      index: totalElements >= MIN_RESULTS_FOR_INDEX,
+      follow: true,
+    },
     openGraph: {
       title,
       description,
