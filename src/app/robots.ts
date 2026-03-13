@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
-import { generateSeoPages } from "@/shared/config/seo/seoPages";
 
 /**
  * AI 검색/인용 봇 — 완전 허용
@@ -132,12 +131,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/",
       },
     ],
-    sitemap: (() => {
-      const SITEMAP_CHUNK_SIZE = 5000;
-      const seoPageCount = generateSeoPages().length;
-      const searchChunks = Math.ceil(seoPageCount / SITEMAP_CHUNK_SIZE);
-      const totalSitemaps = 2 + searchChunks; // 0=static, 1=recipes, 2+=SEO
-      return Array.from({ length: totalSitemaps }, (_, i) => `${SITE_URL}/sitemap/${i}.xml`);
-    })(),
+    sitemap: [
+      `${SITE_URL}/sitemap.xml`,
+      `${SITE_URL}/recipes/sitemap.xml`,
+    ],
   };
 }
