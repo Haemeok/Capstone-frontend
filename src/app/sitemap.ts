@@ -4,6 +4,7 @@ import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 import { generateSeoPages } from "@/shared/config/seo/seoPages";
 
 const SITE_URL = SEO_CONSTANTS.SITE_URL;
+const SITEMAP_CHUNK_SIZE = 10000;
 
 const staticRoutes: MetadataRoute.Sitemap = [
   {
@@ -32,7 +33,7 @@ const staticRoutes: MetadataRoute.Sitemap = [
   },
 ];
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+const buildAllRoutes = (): MetadataRoute.Sitemap => {
   const routes: MetadataRoute.Sitemap = [...staticRoutes];
 
   const seoPages = generateSeoPages();
@@ -49,4 +50,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   return routes;
+};
+
+export async function generateSitemaps() {
+  const total = staticRoutes.length + generateSeoPages().length;
+  const count = Math.ceil(total / SITEMAP_CHUNK_SIZE);
+  return Array.from({ length: count }, (_, i) => ({ id: i }));
+}
+
+export default async function sitemap(props: {
+  id: Promise<string>;
+}): Promise<MetadataRoute.Sitemap> {
+  const id = Number(await props.id);
+  const allRoutes = buildAllRoutes();
+  const start = id * SITEMAP_CHUNK_SIZE;
+  return allRoutes.slice(start, start + SITEMAP_CHUNK_SIZE);
 }
