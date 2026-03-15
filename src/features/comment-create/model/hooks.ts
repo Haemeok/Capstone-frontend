@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { invalidateRecipeCache } from "@/app/recipes/[recipeId]/actions";
 import { Comment } from "@/entities/comment";
 
+import { invalidateCache } from "@/shared/config/cache";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
@@ -30,7 +30,7 @@ const useCreateCommentMutation = (recipeId: string) => {
       queryClient.invalidateQueries({
         queryKey: ["recipe", recipeId],
       });
-      await invalidateRecipeCache(recipeId);
+      await invalidateCache({ type: "COMMENT_CHANGED", recipeId });
       addToast({
         message: "댓글이 등록되었습니다.",
         variant: "success",

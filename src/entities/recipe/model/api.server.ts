@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 import { BASE_API_URL } from "@/shared/config/constants/api";
-import { CACHE_TAGS } from "@/shared/config/constants/cache-tags";
+import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 
 import {
   DetailedRecipesApiResponse,
@@ -131,8 +131,8 @@ export const getStaticrecipionServer = async (
   try {
     const res = await fetch(API_URL, {
       next: {
-        revalidate: 43200,
-        tags: [CACHE_TAGS.recipe(id), CACHE_TAGS.recipesAll],
+        revalidate: REVALIDATION_TIMES.RECIPE_DETAIL,
+        tags: [CACHE_TAGS.recipe(id)],
       },
     });
 
@@ -152,10 +152,6 @@ export const getStaticrecipionServer = async (
   }
 };
 
-const REVALIDATE_TIME_SECONDS = 43200;
-
-const SITEMAP_REVALIDATE_SECONDS = 86400;
-
 export const fetchAllRecipesForSitemap = async (): Promise<
   Array<{ id: string; updatedAt: string }>
 > => {
@@ -164,8 +160,8 @@ export const fetchAllRecipesForSitemap = async (): Promise<
   try {
     const res = await fetch(API_URL, {
       next: {
-        revalidate: SITEMAP_REVALIDATE_SECONDS,
-        tags: [CACHE_TAGS.recipesAll],
+        revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
+        tags: [CACHE_TAGS.recipesSitemap],
       },
     });
 
@@ -205,17 +201,21 @@ export const getStaticRecipesOnServer = async (
   if (params.period) query.append("period", params.period);
 
   let endpoint = "/v2/recipes/search";
-  let cacheTags: string[] = [CACHE_TAGS.recipesAll];
+  let cacheTags: string[] = [];
+  let revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
 
   if (params.key === "budget-recipes") {
     endpoint = "/v2/recipes/budget";
-    cacheTags.push(CACHE_TAGS.recipesBudget);
+    cacheTags = [CACHE_TAGS.recipesBudget];
+    revalidateTime = REVALIDATION_TIMES.RECIPES_BUDGET;
   } else if (params.key === "popular-recipes") {
     endpoint = "/v2/recipes/popular";
-    cacheTags.push(CACHE_TAGS.recipesPopular);
+    cacheTags = [CACHE_TAGS.recipesPopular];
+    revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
   } else if (params.key === "recommended-recipes" && params.recipeId) {
     endpoint = `/recipes/${params.recipeId}/recommendations`;
-    cacheTags.push(CACHE_TAGS.recipesRecommended(params.recipeId));
+    cacheTags = [CACHE_TAGS.recipesRecommended(params.recipeId)];
+    revalidateTime = REVALIDATION_TIMES.RECIPES_RECOMMENDED;
   }
 
   const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
@@ -223,7 +223,7 @@ export const getStaticRecipesOnServer = async (
   try {
     const res = await fetch(API_URL, {
       next: {
-        revalidate: REVALIDATE_TIME_SECONDS,
+        revalidate: revalidateTime,
         tags: cacheTags,
       },
     });
@@ -251,17 +251,14 @@ export const getRecommendedRecipesOnServer = async (
   recipeId: string
 ): Promise<StaticDetailedRecipeGridItem[]> => {
   const endpoint = `/recipes/${recipeId}/recommendations`;
-  const cacheTags = [
-    CACHE_TAGS.recipesAll,
-    CACHE_TAGS.recipesRecommended(recipeId),
-  ];
+  const cacheTags = [CACHE_TAGS.recipesRecommended(recipeId)];
 
   const API_URL = `${BASE_API_URL}${endpoint}`;
 
   try {
     const res = await fetch(API_URL, {
       next: {
-        revalidate: REVALIDATE_TIME_SECONDS,
+        revalidate: REVALIDATION_TIMES.RECIPES_RECOMMENDED,
         tags: cacheTags,
       },
     });
@@ -278,8 +275,6 @@ export const getRecommendedRecipesOnServer = async (
   }
 };
 
-const TRENDING_REVALIDATE_TIME_SECONDS = 1800;
-
 export const getTrendingYoutubeRecipesOnServer = async (): Promise<
   TrendingYoutubeRecipe[]
 > => {
@@ -288,8 +283,8 @@ export const getTrendingYoutubeRecipesOnServer = async (): Promise<
   try {
     const res = await fetch(API_URL, {
       next: {
-        revalidate: TRENDING_REVALIDATE_TIME_SECONDS,
-        tags: [CACHE_TAGS.recipesAll],
+        revalidate: REVALIDATION_TIMES.RECIPES_TRENDING,
+        tags: [CACHE_TAGS.recipesTrending],
       },
     });
 

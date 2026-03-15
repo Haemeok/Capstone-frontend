@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 
 import api from "@/shared/api/client";
 
-import { invalidateRecipeCache } from "../actions";
+import { invalidateCache } from "@/shared/config/cache";
 
 const IMAGE_CHECK_DELAY_MS = 2000;
 const MAX_RETRY_COUNT = 2;
@@ -60,7 +60,7 @@ export const useRecipeImageCheck = ({
           setImageUrl(recipe.imageUrl);
 
           // 2. 다음 사용자: 서버 캐시 무효화
-          await invalidateRecipeCache(recipeId);
+          await invalidateCache({ type: "RECIPE_MUTATED", recipeId });
         } else {
           // 이미지가 없으면 재시도 카운트 증가
           setRetryCount((prev) => prev + 1);

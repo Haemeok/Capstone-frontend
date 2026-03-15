@@ -1,8 +1,8 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
 
 import api from "@/shared/api/client";
+import { invalidateCache } from "@/shared/config/cache";
 
-import { invalidateRecipeCache } from "../actions";
 import { useRecipeImageCheck, IMAGE_CHECK_CONFIG } from "./useRecipeImageCheck";
 
 // Mock dependencies
@@ -13,13 +13,13 @@ jest.mock("@/shared/api/client", () => ({
   },
 }));
 
-jest.mock("../actions", () => ({
-  invalidateRecipeCache: jest.fn(),
+jest.mock("@/shared/config/cache", () => ({
+  invalidateCache: jest.fn(),
 }));
 
 const mockedApi = api as jest.Mocked<typeof api>;
-const mockedInvalidateRecipeCache =
-  invalidateRecipeCache as jest.MockedFunction<typeof invalidateRecipeCache>;
+const mockedInvalidateCache =
+  invalidateCache as jest.MockedFunction<typeof invalidateCache>;
 
 describe("useRecipeImageCheck", () => {
   beforeEach(() => {
@@ -53,7 +53,7 @@ describe("useRecipeImageCheck", () => {
     mockedApi.get.mockResolvedValueOnce({
       imageUrl: "https://example.com/new-image.jpg",
     });
-    mockedInvalidateRecipeCache.mockResolvedValueOnce(undefined);
+    mockedInvalidateCache.mockResolvedValueOnce(undefined);
 
     const { result } = renderHook(() =>
       useRecipeImageCheck({
@@ -76,7 +76,10 @@ describe("useRecipeImageCheck", () => {
     });
 
     expect(mockedApi.get).toHaveBeenCalledWith("/v2/recipes/123");
-    expect(mockedInvalidateRecipeCache).toHaveBeenCalledWith("123");
+    expect(mockedInvalidateCache).toHaveBeenCalledWith({
+      type: "RECIPE_MUTATED",
+      recipeId: "123",
+    });
     expect(result.current.retryCount).toBe(0);
   });
 
@@ -137,14 +140,14 @@ describe("useRecipeImageCheck", () => {
       expect(result.current.retryCount).toBe(1);
     });
 
-    expect(mockedInvalidateRecipeCache).not.toHaveBeenCalled();
+    expect(mockedInvalidateCache).not.toHaveBeenCalled();
   });
 
   it("두 번째 시도에서 이미지 발견 시 성공 처리", async () => {
     mockedApi.get
       .mockResolvedValueOnce({ imageUrl: null }) // 첫 번째: 없음
       .mockResolvedValueOnce({ imageUrl: "https://example.com/found.jpg" }); // 두 번째: 있음
-    mockedInvalidateRecipeCache.mockResolvedValueOnce(undefined);
+    mockedInvalidateCache.mockResolvedValueOnce(undefined);
 
     const { result } = renderHook(() =>
       useRecipeImageCheck({
@@ -172,6 +175,9 @@ describe("useRecipeImageCheck", () => {
     });
 
     expect(mockedApi.get).toHaveBeenCalledTimes(2);
-    expect(mockedInvalidateRecipeCache).toHaveBeenCalledWith("123");
+    expect(mockedInvalidateCache).toHaveBeenCalledWith({
+      type: "RECIPE_MUTATED",
+      recipeId: "123",
+    });
   });
 });
