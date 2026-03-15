@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { invalidateRecipeCache } from "@/app/recipes/[recipeId]/actions";
-
+import { invalidateCache } from "@/shared/config/cache";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
@@ -32,7 +31,7 @@ export const useDeleteCommentMutation = (
       queryClient.invalidateQueries({ queryKey: ["comments"] });
       queryClient.invalidateQueries({ queryKey: ["comment", commentId] });
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
-      await invalidateRecipeCache(recipeId);
+      await invalidateCache({ type: "COMMENT_CHANGED", recipeId });
       addToast({
         message: "댓글이 삭제되었습니다.",
         variant: "default",

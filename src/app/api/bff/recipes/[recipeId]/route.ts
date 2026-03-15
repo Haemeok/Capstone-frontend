@@ -1,24 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 import { BASE_API_URL } from "@/shared/config/constants/api";
-import { CACHE_TAGS } from "@/shared/config/constants/cache-tags";
+import { invalidateCache } from "@/shared/config/cache";
 
 type RouteContext = {
   params: Promise<{ recipeId: string }>;
 };
 
+const getCookieHeader = async () => {
+  const cookieStore = await cookies();
+  return cookieStore
+    .getAll()
+    .map(({ name, value }) => `${name}=${value}`)
+    .join("; ");
+};
+
+const handleBackendError = async (backendRes: Response) => {
+  const errorBody = await backendRes.json().catch(() => ({}));
+  return NextResponse.json(
+    { error: errorBody },
+    { status: backendRes.status }
+  );
+};
+
 export async function PUT(request: NextRequest, context: RouteContext) {
   try {
     const { recipeId } = await context.params;
-
     const body = await request.json();
-    const cookieStore = await cookies();
-    const cookieHeader = cookieStore
-      .getAll()
-      .map(({ name, value }) => `${name}=${value}`)
-      .join("; ");
+    const cookieHeader = await getCookieHeader();
 
     const backendRes = await fetch(`${BASE_API_URL}/recipes/${recipeId}`, {
       method: "PUT",
@@ -30,18 +40,12 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     });
 
     if (!backendRes.ok) {
-      const errorBody = await backendRes.json().catch(() => ({}));
-      return NextResponse.json(
-        { error: errorBody },
-        { status: backendRes.status }
-      );
+      return handleBackendError(backendRes);
     }
 
     const data = await backendRes.json();
 
-    revalidateTag(CACHE_TAGS.recipe(recipeId));
-    revalidateTag(CACHE_TAGS.recipesAll);
-    revalidateTag(CACHE_TAGS.recipesPopular);
+    await invalidateCache({ type: "RECIPE_MUTATED", recipeId });
 
     return NextResponse.json(data);
   } catch (error) {
@@ -56,12 +60,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
     const { recipeId } = await context.params;
-
-    const cookieStore = await cookies();
-    const cookieHeader = cookieStore
-      .getAll()
-      .map(({ name, value }) => `${name}=${value}`)
-      .join("; ");
+    const cookieHeader = await getCookieHeader();
 
     const backendRes = await fetch(`${BASE_API_URL}/recipes/${recipeId}`, {
       method: "DELETE",
@@ -71,18 +70,12 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     });
 
     if (!backendRes.ok) {
-      const errorBody = await backendRes.json().catch(() => ({}));
-      return NextResponse.json(
-        { error: errorBody },
-        { status: backendRes.status }
-      );
+      return handleBackendError(backendRes);
     }
 
     const data = await backendRes.json().catch(() => ({}));
 
-    revalidateTag(CACHE_TAGS.recipe(recipeId));
-    revalidateTag(CACHE_TAGS.recipesAll);
-    revalidateTag(CACHE_TAGS.recipesPopular);
+    await invalidateCache({ type: "RECIPE_DELETED", recipeId });
 
     return NextResponse.json(data);
   } catch (error) {

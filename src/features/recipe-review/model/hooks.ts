@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { invalidateRecipeCache } from "@/app/recipes/[recipeId]/actions";
+import { invalidateCache } from "@/shared/config/cache";
 
 import { postCommentWithRating } from "./api";
 
@@ -16,7 +16,7 @@ const usePostReviewMutation = (recipeId: string) => {
       });
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
 
-      await invalidateRecipeCache(recipeId);
+      await invalidateCache({ type: "COMMENT_CHANGED", recipeId });
     },
   });
 
