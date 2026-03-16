@@ -3,17 +3,23 @@ import { END_POINTS } from "@/shared/config/constants/api";
 type KakaoLoginButtonProps = {
   className?: string;
   isRecent?: boolean;
+  isApp?: boolean;
   onClickCapture?: () => void;
 };
 
 const KakaoLoginButton = ({
   className,
   isRecent,
+  isApp,
   onClickCapture,
 }: KakaoLoginButtonProps) => {
+  const href = isApp
+    ? `${END_POINTS.KAKAO_LOGIN}?platform=app`
+    : END_POINTS.KAKAO_LOGIN;
+
   return (
     <a
-      href={END_POINTS.KAKAO_LOGIN}
+      href={href}
       onClickCapture={onClickCapture}
       className={`relative flex h-12 w-full flex-shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[#fee500] p-2 text-black ${className}`}
     >

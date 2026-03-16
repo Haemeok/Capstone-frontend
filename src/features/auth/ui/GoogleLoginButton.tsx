@@ -3,16 +3,22 @@ import GoogleIcon from "@/shared/ui/GoogleIcon";
 
 type GoogleLoginButtonProps = {
   isRecent?: boolean;
+  isApp?: boolean;
   onClickCapture?: () => void;
 };
 
 const GoogleLoginButton = ({
   isRecent,
+  isApp,
   onClickCapture,
 }: GoogleLoginButtonProps) => {
+  const href = isApp
+    ? `${END_POINTS.GOOGLE_LOGIN_API_ROUTE}?platform=app`
+    : END_POINTS.GOOGLE_LOGIN_API_ROUTE;
+
   return (
     <a
-      href={`${END_POINTS.GOOGLE_LOGIN_API_ROUTE}`}
+      href={href}
       onClickCapture={onClickCapture}
       className="relative flex h-12 w-full flex-shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#747775] bg-white text-current no-underline"
     >
