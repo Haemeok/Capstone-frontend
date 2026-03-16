@@ -3,16 +3,22 @@ import AppleIcon from "@/shared/ui/AppleIcon";
 
 type AppleLoginButtonProps = {
   isRecent?: boolean;
+  isApp?: boolean;
   onClickCapture?: () => void;
 };
 
 const AppleLoginButton = ({
   isRecent,
+  isApp,
   onClickCapture,
 }: AppleLoginButtonProps) => {
+  const href = isApp
+    ? `${END_POINTS.APPLE_LOGIN}?platform=app`
+    : END_POINTS.APPLE_LOGIN;
+
   return (
     <a
-      href={END_POINTS.APPLE_LOGIN}
+      href={href}
       onClickCapture={onClickCapture}
       className="relative flex h-12 w-full flex-shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-black text-white no-underline"
     >

@@ -7,6 +7,7 @@ import AppleLoginButton from "@/features/auth/ui/AppleLoginButton";
 import GoogleLoginButton from "@/features/auth/ui/GoogleLoginButton";
 import KakaoLoginButton from "@/features/auth/ui/KakaoLoginButton";
 import NaverLoginButton from "@/features/auth/ui/NaverLoginButton";
+import { useIsApp } from "@/shared/hooks/useIsApp";
 import { storage } from "@/shared/lib/storage";
 import { Image } from "@/shared/ui/image/Image";
 import TextAnimate from "@/shared/ui/shadcn/text-animate";
@@ -20,6 +21,7 @@ const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "/";
+  const isApp = useIsApp();
   const [clickCount, setClickCount] = useState(0);
 
   const lastProvider = storage.getItem(
@@ -71,18 +73,22 @@ const LoginContent = () => {
           <GoogleLoginButton
             isRecent={lastProvider === "google"}
             onClickCapture={() => saveProvider("google")}
+            isApp={isApp}
           />
           <KakaoLoginButton
             isRecent={lastProvider === "kakao"}
             onClickCapture={() => saveProvider("kakao")}
+            isApp={isApp}
           />
           <NaverLoginButton
             isRecent={lastProvider === "naver"}
             onClickCapture={() => saveProvider("naver")}
+            isApp={isApp}
           />
           <AppleLoginButton
             isRecent={lastProvider === "apple"}
             onClickCapture={() => saveProvider("apple")}
+            isApp={isApp}
           />
           <button
             onClick={() => router.replace(from)}
