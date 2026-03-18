@@ -10,7 +10,15 @@
     "test": "jest --runInBand",
     "test:ssr": "jest --config jest.ssr.config.js --runInBand",
     "lhci": "lhci autorun",
-    "analyze": "ANALYZE=true NEXT_TELEMETRY_DISABLED=1 next build"
+    "analyze": "ANALYZE=true NEXT_TELEMETRY_DISABLED=1 next build",
+    "seo:discover": "tsx scripts/seo-discover.ts",
+    "seo:discover:full": "tsx scripts/seo-discover.ts --full",
+    "seo:discover:keywords": "tsx scripts/seo-discover-keywords.ts",
+    "seo:report": "tsx scripts/seo-report.ts",
+    "seo:trend:naver": "tsx scripts/seo-trend-naver.ts",
+    "seo:trend:gsc": "tsx scripts/seo-trend-gsc.ts",
+    "seo:audit": "tsx scripts/seo-audit.ts",
+    "seo:classify": "tsx scripts/seo-classify.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.76",

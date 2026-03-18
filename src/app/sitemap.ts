@@ -1,10 +1,18 @@
 import type { MetadataRoute } from "next";
 
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
-import { generateSeoPages } from "@/shared/config/seo/seoPages";
 
 const SITE_URL = SEO_CONSTANTS.SITE_URL;
 const SITEMAP_CHUNK_SIZE = 10000;
+
+// allowlist = source of truth
+let allowlistPages: Array<Record<string, string | number>> = [];
+try {
+  const allowlist = require("@/shared/config/seo/sitemap-allowlist.json");
+  allowlistPages = allowlist.pages || [];
+} catch {
+  // allowlist 없으면 빈 배열
+}
 
 const staticRoutes: MetadataRoute.Sitemap = [
   {
@@ -36,10 +44,9 @@ const staticRoutes: MetadataRoute.Sitemap = [
 const buildAllRoutes = (): MetadataRoute.Sitemap => {
   const routes: MetadataRoute.Sitemap = [...staticRoutes];
 
-  const seoPages = generateSeoPages();
-  for (const page of seoPages) {
+  for (const params of allowlistPages) {
     const qs = new URLSearchParams(
-      Object.entries(page.params).map(([k, v]) => [k, String(v)])
+      Object.entries(params).map(([k, v]) => [k, String(v)])
     ).toString();
 
     routes.push({
@@ -53,7 +60,7 @@ const buildAllRoutes = (): MetadataRoute.Sitemap => {
 };
 
 export async function generateSitemaps() {
-  const total = staticRoutes.length + generateSeoPages().length;
+  const total = staticRoutes.length + allowlistPages.length;
   const count = Math.ceil(total / SITEMAP_CHUNK_SIZE);
   return Array.from({ length: count }, (_, i) => ({ id: i }));
 }
