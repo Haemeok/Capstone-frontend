@@ -21,7 +21,9 @@
       "WebFetch(domain:posthog.com)",
       "mcp__plugin_context7_context7__resolve-library-id",
       "mcp__plugin_context7_context7__query-docs",
-      "WebFetch(domain:api.recipio.kr)"
+      "WebFetch(domain:api.recipio.kr)",
+      "Bash(npx tsx:*)",
+      "Bash(awk -F'&' '{print NF}')"
     ],
     "deny": [],
     "ask": []

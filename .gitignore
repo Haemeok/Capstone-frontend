@@ -38,6 +38,9 @@ yarn-error.log*
 .vercel
 .vscode/
 
+# seo pipeline data (분석 결과, 로컬용)
+/data/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
@@ -53,3 +56,5 @@ debug.log
 docs.md
 feedback.md
 job-polling.md
+
+*.zip

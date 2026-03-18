@@ -198,8 +198,7 @@ const INVALID_INGREDIENT_NUTRITION = new Set([
 // 인기 tags (3차원 조합용)
 const POPULAR_TAGS = ["SOLO", "QUICK", "HEALTHY"];
 
-// 인기 재료 상위 100개 (3차원 조합용 — 순서가 API 인기순)
-const TOP_INGREDIENT_COUNT = 100;
+// 3차원 조합은 Tier 1 재료만 사용 (기존: TOP_INGREDIENT_COUNT = 100)
 
 // ── 타입 ──
 
@@ -356,8 +355,9 @@ export const generateSeoPages = (): SeoPage[] => {
   }
 
   // ── J. 3차원 조합: 재료 × dishType × tags (상위 인기 재료만) ──
-  const topIngredients = mainIngredients.slice(0, TOP_INGREDIENT_COUNT);
-  for (const ing of topIngredients) {
+  // Tier 1 재료만 사용하여 조합 폭발 방지
+  const tier1Ingredients = mainIngredients.filter((i) => i.tier === 1);
+  for (const ing of tier1Ingredients.length > 0 ? tier1Ingredients : mainIngredients.slice(0, 100)) {
     for (const dish of DISH_TYPE_ENTRIES) {
       if (INVALID_INGREDIENT_DISH.has(`${ing.name}:${dish.code}`)) continue;
       for (const tagCode of POPULAR_TAGS) {
@@ -392,6 +392,90 @@ export const generateSeoPages = (): SeoPage[] => {
         description: `${cost.label} 이하 갓성비로 ${theme.seoLabel} 레시피를 비교하세요.`,
       });
     }
+  }
+
+  // ── L. 재료 쌍 조합 (자연스러운 궁합) ──
+  const INGREDIENT_PAIRS: Array<{ ids: [string, string]; names: [string, string] }> = [];
+  const ingById = new Map(mainIngredients.map((i) => [i.name, i.id]));
+
+  const PAIR_NAMES: Array<[string, string]> = [
+    // 한식 대표 궁합
+    ["두부", "김치"], ["삼겹살", "김치"], ["돼지고기", "김치"],
+    ["소고기", "무"], ["소고기", "대파"], ["닭고기", "감자"],
+    ["감자", "양파"], ["감자", "당근"], ["계란", "밥"],
+    ["계란", "김치"], ["계란", "양파"], ["계란", "대파"],
+    ["두부", "대파"], ["두부", "양파"], ["오징어", "양파"],
+    // 다이어트/헬스
+    ["닭가슴살", "고구마"], ["닭가슴살", "양배추"], ["닭가슴살", "브로콜리"],
+    ["닭가슴살", "계란"], ["두부", "양배추"], ["연어", "아보카도"],
+    // 양식
+    ["파스타면", "양파"], ["파스타면", "베이컨"], ["파스타면", "새우"],
+    ["감자", "치즈"], ["빵", "계란"], ["아보카도", "계란"],
+    // 일식/중식
+    ["밥", "김"], ["참치", "밥"], ["새우", "양파"],
+    ["돼지고기", "양파"], ["소고기", "양파"], ["닭고기", "양파"],
+    // 가성비
+    ["라면", "계란"], ["라면", "김치"], ["떡볶이떡", "계란"],
+    ["어묵", "대파"], ["스팸", "계란"], ["스팸", "김치"],
+  ];
+
+  for (const [name1, name2] of PAIR_NAMES) {
+    const id1 = ingById.get(name1);
+    const id2 = ingById.get(name2);
+    if (id1 && id2) {
+      INGREDIENT_PAIRS.push({ ids: [id1, id2], names: [name1, name2] });
+    }
+  }
+
+  for (const pair of INGREDIENT_PAIRS) {
+    addPage({
+      params: { ingredientIds: `${pair.ids[0]},${pair.ids[1]}` },
+      title: `${pair.names[0]} ${pair.names[1]} 레시피`,
+      description: `${pair.names[0]}과 ${pair.names[1]}로 만드는 요리 레시피 모음입니다.`,
+    });
+  }
+
+  // ── M. dishType × maxCost × tags (재료 없는 3D) ──
+  const POPULAR_TAGS_FOR_3D = ["SOLO", "QUICK", "HEALTHY", "LATE_NIGHT", "LUNCHBOX"];
+  for (const dish of DISH_TYPE_ENTRIES) {
+    for (const cost of COST_BRACKETS) {
+      for (const tagCode of POPULAR_TAGS_FOR_3D) {
+        const tag = TAG_ENTRIES.find((t) => t.code === tagCode);
+        if (!tag) continue;
+        addPage({
+          params: { dishType: dish.code, maxCost: cost.value, tags: tagCode },
+          title: `${cost.label} 이하 ${tag.name} ${dish.name} 레시피`,
+          description: `${cost.label} 이하로 만드는 ${tag.name} ${dish.name} 레시피입니다.`,
+        });
+      }
+    }
+  }
+
+  // ── N. 시즌 키워드 (텍스트 기반) ──
+  const SEASON_KEYWORDS: string[] = [
+    // 봄 (3-5월)
+    "냉이 레시피", "달래 무침", "달래 요리", "두릅 튀김", "두릅 요리",
+    "봄나물 요리", "봄나물 비빔밥", "쑥 요리", "미나리 요리",
+    // 여름 (6-8월)
+    "콩국수", "냉면 만들기", "냉채 레시피", "오이냉국", "냉파스타",
+    "수박화채", "팥빙수 만들기", "여름 보양식", "삼계탕 만들기",
+    // 가을 (9-11월)
+    "버섯전골", "꽃게탕", "대하구이", "전어구이", "가을 제철 요리",
+    "고구마 요리", "밤 요리", "단호박 요리", "무생채 만들기",
+    // 겨울 (12-2월)
+    "어묵탕 만들기", "호빵 만들기", "군고구마", "붕어빵 만들기",
+    "김장김치 만들기", "겨울 찌개", "뜨끈한 국물 요리", "호떡 만들기",
+    // 명절/기념일
+    "설날 요리", "추석 요리", "명절 음식", "잡채 만들기", "전 만들기",
+    "크리스마스 요리", "발렌타인 디저트", "화이트데이 요리",
+  ];
+
+  for (const keyword of SEASON_KEYWORDS) {
+    addPage({
+      params: { q: keyword },
+      title: keyword.includes("레시피") ? keyword : `${keyword} 레시피`,
+      description: `${keyword}를 찾아보세요. 재료비부터 영양성분까지 비교할 수 있습니다.`,
+    });
   }
 
   return pages;

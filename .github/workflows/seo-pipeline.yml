@@ -1,0 +1,65 @@
+name: SEO Growth Pipeline
+
+on:
+  schedule:
+    # 매주 월요일 새벽 3시 UTC (KST 12시)
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "실행 모드"
+        required: false
+        default: "discover"
+        type: choice
+        options:
+          - discover
+          - discover-full
+          - discover-keywords
+
+jobs:
+  seo-growth:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci
+
+      # 매주 자동: ACTIVE 확장 + IMMATURE 재검사
+      - name: SEO Discover (incremental)
+        if: ${{ github.event_name == 'schedule' || inputs.mode == 'discover' }}
+        run: npm run seo:discover
+
+      # 초기 전수 탐색
+      - name: SEO Discover (full)
+        if: ${{ inputs.mode == 'discover-full' }}
+        run: npm run seo:discover:full
+        timeout-minutes: 90
+
+      # 트렌드 키워드 탐색
+      - name: SEO Discover Keywords
+        if: ${{ inputs.mode == 'discover-keywords' }}
+        run: npm run seo:discover:keywords
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+
+      # 리포트
+      - name: SEO Report
+        run: npm run seo:report
+
+      # allowlist 변경 시 자동 커밋 + 배포
+      - name: Commit and push
+        run: |
+          git config user.name "SEO Pipeline Bot"
+          git config user.email "bot@recipio.kr"
+          git add src/shared/config/seo/sitemap-allowlist.json
+          git diff --cached --quiet || git commit -m "chore: grow SEO sitemap allowlist [skip ci]"
+          git push
