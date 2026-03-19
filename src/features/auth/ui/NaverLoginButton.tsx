@@ -3,23 +3,17 @@ import { END_POINTS } from "@/shared/config/constants/api";
 type NaverLoginButtonProps = {
   className?: string;
   isRecent?: boolean;
-  isApp?: boolean;
   onClickCapture?: () => void;
 };
 
 const NaverLoginButton = ({
   className,
   isRecent,
-  isApp,
   onClickCapture,
 }: NaverLoginButtonProps) => {
-  const href = isApp
-    ? `${END_POINTS.NAVER_LOGIN}?platform=app`
-    : END_POINTS.NAVER_LOGIN;
-
   return (
     <a
-      href={href}
+      href={END_POINTS.NAVER_LOGIN}
       onClickCapture={onClickCapture}
       className={`relative flex h-12 w-full flex-shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[#03c75a] text-white ${className}`}
     >
