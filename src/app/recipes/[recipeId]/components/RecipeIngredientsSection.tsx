@@ -9,6 +9,7 @@ import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
+import { AIExtractionNotice } from "@/features/recipe-import-youtube/ui/AIExtractionNotice";
 
 import { IngredientListItem } from "./IngredientListItem";
 import { IngredientsSectionHeader } from "./IngredientsSectionHeader";
@@ -34,6 +35,7 @@ type IngredientsSectionProps = {
 };
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
+  const isYoutubeExtracted = "youtubeUrl" in recipe && !!recipe.youtubeUrl;
   const [showNutrition, setShowNutrition] = useState(false);
   const [isReportSheetOpen, setIsReportSheetOpen] = useState(false);
   const [isCopySheetOpen, setIsCopySheetOpen] = useState(false);
@@ -82,6 +84,8 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         onCopyOpen={() => setIsCopySheetOpen(true)}
         onReportOpen={() => setIsReportSheetOpen(true)}
       />
+
+      {isYoutubeExtracted && <AIExtractionNotice />}
 
       <PointDisplayBanner
         pointText={displayConfig.topBanner.pointText}

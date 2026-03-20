@@ -1,4 +1,5 @@
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import BetaBadge from "@/shared/ui/badge/BetaBadge";
 import { Image } from "@/shared/ui/image/Image";
 
 export const YoutubeImportHero = () => {
@@ -13,9 +14,12 @@ export const YoutubeImportHero = () => {
 
       <div className="mb-8 space-y-6 text-center">
         <div className="space-y-2">
-          <h1 className="text-3xl font-extrabold text-gray-900 md:text-4xl">
-            유튜브 레시피 가져오기
-          </h1>
+          <div className="flex items-center justify-center gap-2">
+            <h1 className="text-3xl font-extrabold text-gray-900 md:text-4xl">
+              유튜브 레시피 가져오기
+            </h1>
+            <BetaBadge />
+          </div>
           <p className="text-lg text-gray-500">
             영상만 보고 따라하기 힘드셨나요?
             <br />

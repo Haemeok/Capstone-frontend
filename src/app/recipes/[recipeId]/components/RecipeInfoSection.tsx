@@ -33,7 +33,11 @@ export default function RecipeInfoSection({
           <h1 className="text-center text-pretty break-keep text-2xl font-bold">{title}</h1>
           {aiGenerated && (
             <BadgeButton
-              badgeText="AI의 도움을 받아 작성된 레시피예요"
+              badgeText={
+                extractorId
+                  ? "유튜브 영상에서 AI가 추출한 레시피예요 (Beta)"
+                  : "AI의 도움을 받아 작성된 레시피예요"
+              }
               badgeIcon={<AIGeneratedBadge />}
             />
           )}
