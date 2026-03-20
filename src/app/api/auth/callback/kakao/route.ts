@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { encryptTokenData } from "@/shared/lib/auth/crypto";
+import { storeTempToken } from "@/shared/lib/auth/tempToken";
 import { parseOAuthState } from "@/shared/lib/auth/oauthState";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
@@ -16,13 +17,20 @@ export async function GET(request: NextRequest) {
 
     const { csrfToken, isApp } = parseOAuthState(stateFromProvider);
 
+    console.log("[Kakao Callback] === 진단 로그 ===");
+    console.log("[Kakao Callback] isApp:", isApp);
+    console.log("[Kakao Callback] hasCode:", !!code);
+    console.log("[Kakao Callback] hasCsrf:", !!csrfToken);
+    console.log("[Kakao Callback] hasStateCookie:", !!stateFromCookie);
+    console.log("[Kakao Callback] csrfMatch:", csrfToken === stateFromCookie);
+
     if (!csrfToken || !stateFromCookie || csrfToken !== stateFromCookie) {
-      console.error("State validation failed!");
+      console.error("[Kakao Callback] State validation failed!");
       throw new Error("Invalid state parameter. CSRF attack detected.");
     }
 
     if (!code) {
-      console.error("No authorization code!");
+      console.error("[Kakao Callback] No authorization code!");
       throw new Error("Authorization code not found.");
     }
 
@@ -50,8 +58,19 @@ export async function GET(request: NextRequest) {
     const baseUrl = getBaseUrlFromRequest(request);
 
     if (isApp) {
+      if (process.env.USE_TEMP_TOKEN === "true") {
+        const token = await storeTempToken(setCookieHeaders);
+        const deepLinkUrl = `${DEEP_LINK_SCHEME}?code=${token}`;
+        console.log("[Kakao Callback] Deep link (temp token) URL length:", deepLinkUrl.length);
+        const response = NextResponse.redirect(deepLinkUrl);
+        response.cookies.set("state", "", { maxAge: 0 });
+        return response;
+      }
+
       const encryptedToken = encryptTokenData(setCookieHeaders);
       const deepLinkUrl = `${DEEP_LINK_SCHEME}?code=${encodeURIComponent(encryptedToken)}`;
+      console.log("[Kakao Callback] Deep link URL length:", deepLinkUrl.length);
+      console.log("[Kakao Callback] Encrypted token length:", encryptedToken.length);
       const response = NextResponse.redirect(deepLinkUrl);
       response.cookies.set("state", "", { maxAge: 0 });
       return response;
