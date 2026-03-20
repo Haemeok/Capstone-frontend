@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { decryptTokenData } from "@/shared/lib/auth/crypto";
+import { retrieveTempToken } from "@/shared/lib/auth/tempToken";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 
 export async function GET(request: NextRequest) {
@@ -18,9 +19,13 @@ export async function GET(request: NextRequest) {
     let cookies: string[];
 
     try {
-      cookies = decryptTokenData(code);
-    } catch (decryptError) {
-      console.error("[App Callback] 토큰 복호화 실패:", decryptError);
+      if (process.env.USE_TEMP_TOKEN === "true") {
+        cookies = await retrieveTempToken(code);
+      } else {
+        cookies = decryptTokenData(code);
+      }
+    } catch (error) {
+      console.error("[App Callback] 토큰 처리 실패:", error);
       return NextResponse.redirect(
         `${baseUrl}login/error?reason=invalid_token`
       );
