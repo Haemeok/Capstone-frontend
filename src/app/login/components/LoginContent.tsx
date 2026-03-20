@@ -100,7 +100,6 @@ const LoginContent = () => {
 };
 
 const AndroidAppLoginNotice = () => {
-  const isApp = useIsApp();
   const [isAndroid, setIsAndroid] = useState(false);
 
   useEffect(() => {
