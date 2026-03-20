@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Info } from "lucide-react";
 
@@ -8,7 +8,7 @@ import AppleLoginButton from "@/features/auth/ui/AppleLoginButton";
 import GoogleLoginButton from "@/features/auth/ui/GoogleLoginButton";
 import KakaoLoginButton from "@/features/auth/ui/KakaoLoginButton";
 import NaverLoginButton from "@/features/auth/ui/NaverLoginButton";
-import { useIsApp } from "@/shared/hooks/useIsApp";
+
 import { storage } from "@/shared/lib/storage";
 import { Image } from "@/shared/ui/image/Image";
 import TextAnimate from "@/shared/ui/shadcn/text-animate";
@@ -100,11 +100,6 @@ const LoginContent = () => {
 };
 
 const AndroidAppLoginNotice = () => {
-  const [isAndroid, setIsAndroid] = useState(false);
-
-  useEffect(() => {
-    setIsAndroid(/android/i.test(navigator.userAgent));
-  }, []);
 
   // TODO: 테스트 후 원복 — if (!isApp || !isAndroid) return null;
   if (false) return null;
