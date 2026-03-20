@@ -1,9 +1,13 @@
+import { Info } from "lucide-react";
+
 import { Image } from "@/shared/ui/image/Image";
-import { YoutubeMeta } from "../model/types";
+
 import {
   extractYouTubeVideoId,
   getYouTubeThumbnailUrls,
 } from "@/shared/lib/youtube/getYouTubeThumbnail";
+
+import { YoutubeMeta } from "../model/types";
 
 type YoutubePreviewCardProps = {
   meta: YoutubeMeta;
@@ -46,6 +50,11 @@ export const YoutubePreviewCard = ({
           <p className="text-gray-600">{meta.channelName}</p>
         </div>
       </div>
+      <p className="mb-3 flex items-center gap-1.5 text-xs text-gray-400">
+        <Info className="h-3.5 w-3.5 shrink-0" />
+        AI가 영상에서 재료를 추출해요. 실제와 다를 수 있으니 확인 후
+        사용해주세요.
+      </p>
       <button
         onClick={onConfirm}
         disabled={isLoading || disabled}
