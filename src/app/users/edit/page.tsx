@@ -27,6 +27,7 @@ interface FormValues {
 const MAX_NICKNAME_LENGTH = 12;
 const MAX_DESCRIPTION_LENGTH = 200;
 const DUPLICATE_NICKNAME_CODE = "102";
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const UserInfoChangePage = () => {
   const router = useRouter();
@@ -36,6 +37,7 @@ const UserInfoChangePage = () => {
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(
     user?.profileImage || null
   );
+  const [imageError, setImageError] = useState<string | null>(null);
 
   const initialData = useMemo(
     () => ({
@@ -153,7 +155,7 @@ const UserInfoChangePage = () => {
           <div className="relative z-[3] pl-4">
             <label htmlFor="profileImageInput" className="cursor-pointer">
               <div
-                className={`relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-cover bg-center ${previewImageUrl ? "bg-transparent" : "bg-gray-300"
+                className={`relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-[3px] bg-cover bg-center transition-colors ${imageError ? "border-red-400" : "border-white"} ${previewImageUrl ? "bg-transparent" : "bg-gray-300"
                   }`}
                 style={
                   previewImageUrl
@@ -174,10 +176,19 @@ const UserInfoChangePage = () => {
                   {...restField}
                   id="profileImageInput"
                   type="file"
-                  accept="image/*"
+                  accept=".jpg,.jpeg,.png,.webp"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
+                      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+                        setImageError(
+                          "JPG, PNG, WebP 형식만 업로드할 수 있어요."
+                        );
+                        triggerHaptic("Error");
+                        e.target.value = "";
+                        return;
+                      }
+                      setImageError(null);
                       setProfileImageFile(file);
                       const reader = new FileReader();
                       reader.onloadend = () => {
@@ -195,6 +206,9 @@ const UserInfoChangePage = () => {
                 />
               )}
             />
+            {imageError && (
+              <p className="mt-2 text-xs text-red-500">{imageError}</p>
+            )}
           </div>
 
           <div className="mt-4 flex-grow p-4">
