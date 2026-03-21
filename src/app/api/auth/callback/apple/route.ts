@@ -93,13 +93,11 @@ export async function POST(request: NextRequest) {
     const redirectUrl = new URL(baseUrl);
     const finalResponse = NextResponse.redirect(redirectUrl, 303);
 
+    finalResponse.cookies.set("state", "", { maxAge: 0 });
+
     setCookieHeaders.forEach((cookie) => {
       finalResponse.headers.append("Set-Cookie", cookie);
     });
-    finalResponse.headers.append(
-      "Set-Cookie",
-      "state=; Path=/; Max-Age=0"
-    );
 
     return finalResponse;
   } catch (error) {

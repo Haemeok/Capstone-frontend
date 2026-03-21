@@ -67,13 +67,11 @@ export async function GET(request: NextRequest) {
     const redirectUrl = new URL(baseUrl);
     const finalResponse = NextResponse.redirect(redirectUrl);
 
+    finalResponse.cookies.set("state", "", { maxAge: 0 });
+
     setCookieHeaders.forEach((cookie) => {
       finalResponse.headers.append("Set-Cookie", cookie);
     });
-    finalResponse.headers.append(
-      "Set-Cookie",
-      "state=; Path=/; Max-Age=0"
-    );
 
     return finalResponse;
   } catch (error) {

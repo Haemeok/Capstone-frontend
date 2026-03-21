@@ -8,6 +8,11 @@ export async function POST(request: NextRequest) {
     const cookieStore = await cookies();
     const origin = request.headers.get("origin");
 
+    const allCookies = cookieStore.getAll();
+    console.log("[Refresh] Cookies received:", allCookies.map(c => c.name));
+    console.log("[Refresh] Has refreshToken:", allCookies.some(c => c.name === "refreshToken"));
+    console.log("[Refresh] Has accessToken:", allCookies.some(c => c.name === "accessToken"));
+
     const baseUrl = BASE_API_URL;
 
     const response = await fetch(`${baseUrl}${END_POINTS.TOKEN_REFRESH}`, {
