@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { ARCHETYPE_RESULTS } from "@/features/archetype/model/archeTypeResult";
 import ArchetypeResult from "@/features/archetype/ui/ArchetypeResult";
 import { Container } from "@/shared/ui/Container";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 export async function generateStaticParams() {
   const items = Object.values(ARCHETYPE_RESULTS);
@@ -32,7 +34,11 @@ export default async function ArchetypePage({ params }: PageProps) {
 
   return (
     <Container padding={false}>
-      <ArchetypeResult result={archetypeKey} />
+      <ErrorBoundary
+        fallback={<SectionErrorFallback message="결과를 표시할 수 없어요" />}
+      >
+        <ArchetypeResult result={archetypeKey} />
+      </ErrorBoundary>
     </Container>
   );
 }
