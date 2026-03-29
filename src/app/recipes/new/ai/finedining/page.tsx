@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import FineDiningRecipe from "@/widgets/FineDiningRecipe";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 export const metadata: Metadata = {
   title: "파인 다이닝 레시피 생성 | Recipio",
@@ -7,7 +9,15 @@ export const metadata: Metadata = {
 };
 
 const FineDiningPage = () => {
-  return <FineDiningRecipe />;
+  return (
+    <ErrorBoundary
+      fallback={
+        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
+      }
+    >
+      <FineDiningRecipe />
+    </ErrorBoundary>
+  );
 };
 
 export default FineDiningPage;
