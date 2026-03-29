@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import HeartButton from "@/shared/ui/HeartButton";
@@ -35,15 +35,13 @@ const RecipeLikeButton = ({
   defaultColorClass,
   ...props
 }: RecipeLikeButtonProps) => {
-  const queryClient = useQueryClient();
   const { mutate: toggleLikeMutate } = useLikeRecipeMutation(recipeId);
-
   const { checkAndTrigger } = useNotificationPermissionTrigger();
 
-  const currentStatus = queryClient.getQueryData<RecipeStatus>([
-    "recipe-status",
-    recipeId,
-  ]);
+  const { data: currentStatus } = useQuery<RecipeStatus>({
+    queryKey: ["recipe-status", recipeId],
+    enabled: false,
+  });
 
   const isLiked = currentStatus?.likedByCurrentUser ?? initialIsLiked;
   const likeCount = currentStatus?.likeCount ?? initialLikeCount;
