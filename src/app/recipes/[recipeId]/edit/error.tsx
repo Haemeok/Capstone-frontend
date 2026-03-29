@@ -1,9 +1,13 @@
 "use client";
 
-import type { NextErrorProps } from "@/shared/types";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 
-const RecipeEditError = ({ reset }: NextErrorProps) => {
+type ErrorProps = {
+  error: Error & { digest?: string };
+  reset: () => void;
+};
+
+const RecipeEditError = ({ reset }: ErrorProps) => {
   return (
     <ErrorFallback reset={reset} message="레시피 수정 페이지를 불러올 수 없어요" />
   );
