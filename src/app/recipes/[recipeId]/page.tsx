@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import {
   generateNotFoundRecipeMetadata,
@@ -155,32 +157,56 @@ export default async function RecipeDetailPage({
             servings={staticRecipe.servings}
           />
 
-          <RecipeVideoSection
-            videoUrl={staticRecipe.youtubeUrl ?? ""}
-            youtubeMetadata={youtubeMetadata}
+          <ErrorBoundary
+            fallback={
+              <SectionErrorFallback message="비디오를 불러올 수 없어요" />
+            }
           >
-            <RecipeCommentsSection comments={staticRecipe.comments} />
+            <RecipeVideoSection
+              videoUrl={staticRecipe.youtubeUrl ?? ""}
+              youtubeMetadata={youtubeMetadata}
+            >
+              <ErrorBoundary
+                fallback={
+                  <SectionErrorFallback message="댓글을 불러올 수 없어요" />
+                }
+              >
+                <RecipeCommentsSection comments={staticRecipe.comments} />
+              </ErrorBoundary>
 
-            <RecipeFabButton hasAllStepImages={hasAllStepImages} />
+              <RecipeFabButton hasAllStepImages={hasAllStepImages} />
 
-            <RecipeIngredientsSection recipe={staticRecipe} />
+              <ErrorBoundary
+                fallback={
+                  <SectionErrorFallback message="재료 정보를 불러올 수 없어요" />
+                }
+              >
+                <RecipeIngredientsSection recipe={staticRecipe} />
+              </ErrorBoundary>
 
-            <RecipeCompleteButton saveAmount={saveAmount} className="mt-4" />
+              <RecipeCompleteButton saveAmount={saveAmount} className="mt-4" />
 
-            <CoupangDisclosure />
+              <CoupangDisclosure />
 
-            <CookingUnitTooltip />
+              <CookingUnitTooltip />
 
-            {staticRecipe.fineDiningInfo?.components && (
-              <RecipeComponentsSection
-                components={staticRecipe.fineDiningInfo.components}
-              />
-            )}
+              {staticRecipe.fineDiningInfo?.components && (
+                <RecipeComponentsSection
+                  components={staticRecipe.fineDiningInfo.components}
+                />
+              )}
 
-            <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
+              <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
 
-            <RecipeStepList RecipeSteps={staticRecipe.steps} />
-          </RecipeVideoSection>
+              <ErrorBoundary
+                fallback={
+                  <SectionErrorFallback message="조리 순서를 불러올 수 없어요" />
+                }
+              >
+                <RecipeStepList RecipeSteps={staticRecipe.steps} />
+              </ErrorBoundary>
+            </RecipeVideoSection>
+          </ErrorBoundary>
 
           {staticRecipe.fineDiningInfo?.plating && (
             <RecipePlatingSection
