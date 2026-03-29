@@ -1,3 +1,4 @@
+import { beforeSend } from "./filters";
 import type { SentryUser } from "./types";
 
 type SentryModule = typeof import("@sentry/browser");
@@ -5,7 +6,6 @@ type SentryModule = typeof import("@sentry/browser");
 let sentryModule: SentryModule | null = null;
 let isInitialized = false;
 
-const MAX_ERROR_QUEUE_SIZE = 50;
 const errorQueue: Array<{ error: unknown; tags?: Record<string, string> }> = [];
 const pendingUserUpdate: { current: SentryUser | null } = { current: null };
 
@@ -34,20 +34,13 @@ const initSentry = async () => {
 
   try {
     const Sentry = await import("@sentry/browser");
-    const { isIgnoredError, isOfflineError } = await import("./filters");
     sentryModule = Sentry;
 
     Sentry.init({
       dsn: SENTRY_DSN,
       sampleRate: 1.0,
       environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || "production",
-      beforeSend(event) {
-        if (isIgnoredError(event)) return null;
-        if (isOfflineError(event) && typeof navigator !== "undefined" && !navigator.onLine) {
-          return null;
-        }
-        return event;
-      },
+      beforeSend: beforeSend as any,
       defaultIntegrations: false,
       integrations: [
         Sentry.breadcrumbsIntegration(),
@@ -83,9 +76,7 @@ const captureException = (
   tags?: Record<string, string>
 ) => {
   if (!sentryModule) {
-    if (errorQueue.length < MAX_ERROR_QUEUE_SIZE) {
-      errorQueue.push({ error, tags });
-    }
+    errorQueue.push({ error, tags });
     return;
   }
 
