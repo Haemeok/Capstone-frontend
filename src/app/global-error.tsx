@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { captureException } from "@/shared/lib/sentry";
+import { captureException, scheduleInit } from "@/shared/lib/sentry";
 
 export default function GlobalError({
   error,
@@ -12,11 +12,12 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
+    scheduleInit();
     captureException(error);
   }, [error]);
 
   return (
-    <html>
+    <html lang="ko">
       <body>
         <div className="flex min-h-screen flex-col items-center justify-center p-4">
           <div className="flex max-w-md flex-col items-center gap-6 text-center">

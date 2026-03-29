@@ -96,23 +96,17 @@ export async function apiClient<T = any>(
     }
     return response.text() as any;
   } catch (error) {
+    const method = (restOptions as RequestInit).method || "GET";
+
     if (error instanceof Error && error.name === "AbortError") {
       const timeoutError = new ApiError(0, "Request timeout", error);
-      sentryCaptureException(timeoutError, {
-        "api.endpoint": url,
-        "api.method": (restOptions as RequestInit).method || "GET",
-        "page.path": typeof window !== "undefined" ? window.location.pathname : "unknown",
-      });
+      sentryCaptureException(timeoutError, createApiErrorTags(url, method));
       throw timeoutError;
     }
 
     if (!(error instanceof ApiError)) {
       const networkError = new ApiError(0, "Network Error", error);
-      sentryCaptureException(networkError, {
-        "api.endpoint": url,
-        "api.method": (restOptions as RequestInit).method || "GET",
-        "page.path": typeof window !== "undefined" ? window.location.pathname : "unknown",
-      });
+      sentryCaptureException(networkError, createApiErrorTags(url, method));
       throw networkError;
     }
     throw error;

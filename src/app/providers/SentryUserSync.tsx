@@ -14,7 +14,7 @@ export const SentryUserSync = () => {
 
   useEffect(() => {
     if (user?.id) {
-      setUser({ id: user.id });
+      setUser({ id: String(user.id) });
     } else {
       setUser(null);
     }

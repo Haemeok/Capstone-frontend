@@ -1,4 +1,4 @@
-type SentryEvent = {
+type SentryEventLike = {
   exception?: {
     values?: Array<{
       type?: string;
@@ -14,7 +14,7 @@ const IGNORED_ERRORS = [
 
 const IGNORED_ERROR_TYPES = ["AbortError"] as const;
 
-const isIgnoredError = (event: SentryEvent): boolean => {
+const isIgnoredError = (event: SentryEventLike): boolean => {
   const exceptionValues = event.exception?.values;
   if (!exceptionValues?.length) return false;
 
@@ -34,7 +34,7 @@ const isIgnoredError = (event: SentryEvent): boolean => {
   return false;
 };
 
-const isOfflineError = (event: SentryEvent): boolean => {
+const isOfflineError = (event: SentryEventLike): boolean => {
   const value = event.exception?.values?.[0]?.value;
   if (!value) return false;
 
@@ -45,14 +45,4 @@ const isOfflineError = (event: SentryEvent): boolean => {
   );
 };
 
-const beforeSend = (event: SentryEvent): SentryEvent | null => {
-  if (isIgnoredError(event)) return null;
-
-  if (isOfflineError(event) && typeof navigator !== "undefined" && !navigator.onLine) {
-    return null;
-  }
-
-  return event;
-};
-
-export { beforeSend, isIgnoredError, isOfflineError };
+export { isIgnoredError, isOfflineError };
