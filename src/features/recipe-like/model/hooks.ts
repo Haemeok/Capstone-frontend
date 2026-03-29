@@ -7,6 +7,8 @@ import {
 
 import {
   DetailedRecipesApiResponse,
+  MyFridgePageResponse,
+  MyFridgeRecipeItem,
   RecipeStatus,
 } from "@/entities/recipe/model/types";
 
@@ -38,6 +40,7 @@ export const useLikeRecipeMutation = (recipeId: string) => {
       await queryClient.cancelQueries({ queryKey: recipeStatusQueryKey });
       await queryClient.cancelQueries({ queryKey: recipesListRootKey });
       await queryClient.cancelQueries({ queryKey: ["recipes-status"] });
+      await queryClient.cancelQueries({ queryKey: ["my-fridge-recipes-v2"] });
 
       const previousRecipeStatus =
         queryClient.getQueryData<RecipeStatus>(recipeStatusQueryKey);
@@ -56,29 +59,29 @@ export const useLikeRecipeMutation = (recipeId: string) => {
         );
       }
 
+      const updateRecipe = <
+        T extends {
+          id: string;
+          likedByCurrentUser: boolean;
+          likeCount: number;
+        },
+      >(
+        recipe: T
+      ): T =>
+        recipe.id === recipeId
+          ? {
+              ...recipe,
+              likedByCurrentUser: !recipe.likedByCurrentUser,
+              likeCount: recipe.likedByCurrentUser
+                ? recipe.likeCount - 1
+                : recipe.likeCount + 1,
+            }
+          : recipe;
+
       queryClient.setQueriesData<
         InfiniteData<DetailedRecipesApiResponse> | DetailedRecipesApiResponse
       >({ queryKey: recipesListRootKey }, (oldData) => {
         if (!oldData) return oldData;
-
-        const updateRecipe = <
-          T extends {
-            id: string;
-            likedByCurrentUser: boolean;
-            likeCount: number;
-          },
-        >(
-          recipe: T
-        ): T =>
-          recipe.id === recipeId
-            ? {
-                ...recipe,
-                likedByCurrentUser: !recipe.likedByCurrentUser,
-                likeCount: recipe.likedByCurrentUser
-                  ? recipe.likeCount - 1
-                  : recipe.likeCount + 1,
-              }
-            : recipe;
 
         if ("pages" in oldData) {
           return {
@@ -98,6 +101,20 @@ export const useLikeRecipeMutation = (recipeId: string) => {
         }
 
         return oldData;
+      });
+
+      queryClient.setQueriesData<
+        InfiniteData<MyFridgePageResponse<MyFridgeRecipeItem>>
+      >({ queryKey: ["my-fridge-recipes-v2"] }, (oldData) => {
+        if (!oldData || !("pages" in oldData)) return oldData;
+
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            content: page.content.map(updateRecipe),
+          })),
+        };
       });
 
       queryClient.setQueriesData(
@@ -142,6 +159,7 @@ export const useLikeRecipeMutation = (recipeId: string) => {
       queryClient.invalidateQueries({ queryKey: recipeStatusQueryKey });
       queryClient.invalidateQueries({ queryKey: recipesListRootKey });
       queryClient.invalidateQueries({ queryKey: ["recipes-status"] });
+      queryClient.invalidateQueries({ queryKey: ["my-fridge-recipes-v2"] });
     },
   });
 
