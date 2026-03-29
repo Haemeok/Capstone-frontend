@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import BudgetRecipe from "@/widgets/BudgetRecipe";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 export const metadata: Metadata = {
   title: "가성비 레시피 생성 | Recipio",
@@ -8,7 +10,15 @@ export const metadata: Metadata = {
 };
 
 const BudgetRecipePage = () => {
-  return <BudgetRecipe />;
+  return (
+    <ErrorBoundary
+      fallback={
+        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
+      }
+    >
+      <BudgetRecipe />
+    </ErrorBoundary>
+  );
 };
 
 export default BudgetRecipePage;
