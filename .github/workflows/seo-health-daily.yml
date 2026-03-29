@@ -1,0 +1,24 @@
+name: SEO Health Check (Daily)
+
+on:
+  schedule:
+    - cron: "0 19 * * *" # KST 04:00 daily
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Run daily SEO health check
+        run: npx tsx scripts/seo-health/run.ts --tier daily
