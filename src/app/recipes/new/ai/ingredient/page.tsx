@@ -155,61 +155,61 @@ const IngredientRecipePage = () => {
   }
 
   return (
-      <Container padding={false}>
-        <FormProvider {...methods}>
-          <div className="relative mx-auto p-4">
-            <div className="mb-4 flex items-center gap-2">
-              <PrevButton className="md:hidden" />
-              <button
-                onClick={() => router.back()}
-                className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
-              >
-                <ArrowLeftIcon size={20} />
-                <span className="text-sm font-medium">AI 다시 선택하기</span>
-              </button>
-            </div>
-
-            <AiCharacterSection selectedAI={aiModels[CONCEPT]} />
-
-            <form
-              onSubmit={methods.handleSubmit(onSubmit)}
-              className="pb-20 md:pb-0"
+    <Container padding={false}>
+      <FormProvider {...methods}>
+        <div className="relative mx-auto p-4">
+          <div className="mb-4 flex items-center gap-2">
+            <PrevButton className="md:hidden" />
+            <button
+              onClick={() => router.back()}
+              className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
             >
-              <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
-                <IngredientManager onOpenDrawer={() => setIsDrawerOpen(true)} />
-
-                <div className="space-y-6">
-                  <DishTypeSection />
-                  <CookingTimeSection />
-                  <div className="h-1 w-full" />
-                  <ServingsCounter />
-                </div>
-              </div>
-              <UsageLimitSection>
-                {({ hasNoQuota }) => (
-                  <AIRecipeProgressButton
-                    isLoading={isSubmitting}
-                    disabled={hasNoQuota}
-                  />
-                )}
-              </UsageLimitSection>
-            </form>
-
-            <IngredientSelector
-              open={isDrawerOpen}
-              onOpenChange={setIsDrawerOpen}
-              onIngredientSelect={handleAddIngredient}
-              addedIngredientNames={
-                new Set((ingredients || []).map((ing) => ing.name))
-              }
-              mapIngredientToPayload={(ingredient) => ({
-                id: ingredient.id,
-                name: ingredient.name,
-              })}
-            />
+              <ArrowLeftIcon size={20} />
+              <span className="text-sm font-medium">AI 다시 선택하기</span>
+            </button>
           </div>
-        </FormProvider>
-      </Container>
+
+          <AiCharacterSection selectedAI={aiModels[CONCEPT]} />
+
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            className="pb-20 md:pb-0"
+          >
+            <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
+              <IngredientManager onOpenDrawer={() => setIsDrawerOpen(true)} />
+
+              <div className="space-y-6">
+                <DishTypeSection />
+                <CookingTimeSection />
+                <div className="h-1 w-full" />
+                <ServingsCounter />
+              </div>
+            </div>
+            <UsageLimitSection>
+              {({ hasNoQuota }) => (
+                <AIRecipeProgressButton
+                  isLoading={isSubmitting}
+                  disabled={hasNoQuota}
+                />
+              )}
+            </UsageLimitSection>
+          </form>
+
+          <IngredientSelector
+            open={isDrawerOpen}
+            onOpenChange={setIsDrawerOpen}
+            onIngredientSelect={handleAddIngredient}
+            addedIngredientNames={
+              new Set((ingredients || []).map((ing) => ing.name))
+            }
+            mapIngredientToPayload={(ingredient) => ({
+              id: ingredient.id,
+              name: ingredient.name,
+            })}
+          />
+        </div>
+      </FormProvider>
+    </Container>
   );
 };
 
