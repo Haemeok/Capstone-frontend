@@ -152,14 +152,14 @@ export const useLikeRecipeMutation = (recipeId: string) => {
           context.previousRecipeStatus
         );
       }
+      queryClient.invalidateQueries({ queryKey: recipesListRootKey });
+      queryClient.invalidateQueries({ queryKey: ["my-fridge-recipes-v2"] });
       console.error("좋아요 처리 실패:", error);
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: recipeStatusQueryKey });
-      queryClient.invalidateQueries({ queryKey: recipesListRootKey });
       queryClient.invalidateQueries({ queryKey: ["recipes-status"] });
-      queryClient.invalidateQueries({ queryKey: ["my-fridge-recipes-v2"] });
     },
   });
 
