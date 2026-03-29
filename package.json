@@ -18,7 +18,9 @@
     "seo:trend:naver": "tsx scripts/seo-trend-naver.ts",
     "seo:trend:gsc": "tsx scripts/seo-trend-gsc.ts",
     "seo:audit": "tsx scripts/seo-audit.ts",
-    "seo:classify": "tsx scripts/seo-classify.ts"
+    "seo:classify": "tsx scripts/seo-classify.ts",
+    "seo:health": "tsx scripts/seo-health/run.ts --tier daily",
+    "seo:health:deep": "tsx scripts/seo-health/run.ts --tier deep"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.76",
@@ -87,6 +89,7 @@
     "jest": "^30.1.3",
     "jest-environment-jsdom": "^30.1.2",
     "minimatch": "^10.0.3",
+    "node-html-parser": "^7.1.0",
     "prettier": "^3.8.0",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4",
