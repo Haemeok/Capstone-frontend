@@ -75,6 +75,7 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
       case "calendar":
         return (
           <ErrorBoundary
+            key="calendar-tab"
             fallback={<SectionErrorFallback message="캘린더를 불러올 수 없어요" />}
           >
             <CalendarTabContent />
