@@ -1,13 +1,9 @@
 "use client";
 
+import type { NextErrorProps } from "@/shared/types";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 
-type ErrorProps = {
-  error: Error & { digest?: string };
-  reset: () => void;
-};
-
-const YoutubeImportError = ({ reset }: ErrorProps) => {
+const YoutubeImportError = ({ reset }: NextErrorProps) => {
   return <ErrorFallback reset={reset} />;
 };
 
