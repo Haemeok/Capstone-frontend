@@ -1,6 +1,8 @@
 "use client";
 
 import { Container } from "@/shared/ui/Container";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
@@ -32,18 +34,22 @@ export const SearchClient = ({
       <div className="flex flex-col bg-[#ffffff]">
         <SearchFilters />
 
-        <RecipeGrid
-          recipes={recipes}
-          hasNextPage={hasNextPage}
-          isFetching={isFetching}
-          isPending={isPending}
-          observerRef={ref}
-          noResults={noResults}
-          onResetFilters={resetFilters}
-          lastPageMessage={"모든 레시피를 불러왔습니다."}
-          queryKeyString={queryKeyString}
-          nextPageHref={nextPageHref}
-        />
+        <ErrorBoundary
+          fallback={<SectionErrorFallback message="검색 결과를 표시할 수 없어요" />}
+        >
+          <RecipeGrid
+            recipes={recipes}
+            hasNextPage={hasNextPage}
+            isFetching={isFetching}
+            isPending={isPending}
+            observerRef={ref}
+            noResults={noResults}
+            onResetFilters={resetFilters}
+            lastPageMessage={"모든 레시피를 불러왔습니다."}
+            queryKeyString={queryKeyString}
+            nextPageHref={nextPageHref}
+          />
+        </ErrorBoundary>
       </div>
     </Container>
   );

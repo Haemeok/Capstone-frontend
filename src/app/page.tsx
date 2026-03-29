@@ -1,6 +1,8 @@
 import { homeMetadata } from "@/shared/lib/metadata";
 import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
 import { Container } from "@/shared/ui/Container";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
 
@@ -43,19 +45,23 @@ const HomePage = async () => {
 
           <CategoryTabs title="카테고리" />
 
-          <HomeBannerCarousel
-            slides={[
-              {
-                id: "youtube",
-                title: "유튜브 링크만으로\n레시피를 등록하세요",
-                ctaText: "유튜브 레시피 바로 추출하기",
-                link: "/recipes/new/youtube",
-                backgroundColor: "#f87171",
-                backgroundImage: "/gold.png",
-                mainImage: `${ICON_BASE_URL}youtube.webp`,
-              },
-            ]}
-          />
+          <ErrorBoundary
+            fallback={<SectionErrorFallback message="배너를 불러올 수 없어요" />}
+          >
+            <HomeBannerCarousel
+              slides={[
+                {
+                  id: "youtube",
+                  title: "유튜브 링크만으로\n레시피를 등록하세요",
+                  ctaText: "유튜브 레시피 바로 추출하기",
+                  link: "/recipes/new/youtube",
+                  backgroundColor: "#f87171",
+                  backgroundImage: "/gold.png",
+                  mainImage: `${ICON_BASE_URL}youtube.webp`,
+                },
+              ]}
+            />
+          </ErrorBoundary>
 
           <RecipeSlideWithErrorBoundary
             title="주간 인기 레시피"

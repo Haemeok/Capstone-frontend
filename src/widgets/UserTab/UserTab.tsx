@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import { User } from "@/entities/user";
 
@@ -71,7 +73,13 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
       case "saved":
         return <MyFavoriteRecipesTabContent />;
       case "calendar":
-        return <CalendarTabContent />;
+        return (
+          <ErrorBoundary
+            fallback={<SectionErrorFallback message="캘린더를 불러올 수 없어요" />}
+          >
+            <CalendarTabContent />
+          </ErrorBoundary>
+        );
       default:
         return null;
     }
