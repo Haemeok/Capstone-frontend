@@ -1,0 +1,38 @@
+name: SEO Health Check (Deep)
+
+on:
+  schedule:
+    - cron: "0 18 */3 * *" # KST 03:00 every 3 days
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Install Chrome for Lighthouse
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+
+      - name: Restore sitemap URL count cache
+        uses: actions/cache@v4
+        with:
+          path: sitemap-url-count-cache.json
+          key: seo-sitemap-count-${{ github.run_id }}
+          restore-keys: seo-sitemap-count-
+
+      - name: Run deep SEO health check
+        run: npx tsx scripts/seo-health/run.ts --tier deep
+        env:
+          CHROME_PATH: /usr/bin/chromium-browser
