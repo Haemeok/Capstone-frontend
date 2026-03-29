@@ -47,9 +47,9 @@ const RecipeLikeButton = ({
   const likeCount = currentStatus?.likeCount ?? initialLikeCount;
 
   const handleLikeClick = () => {
-    if (!checkAndTrigger("like")) return;
     triggerHaptic("Light");
     toggleLikeMutate();
+    checkAndTrigger("like");
   };
 
   return (
