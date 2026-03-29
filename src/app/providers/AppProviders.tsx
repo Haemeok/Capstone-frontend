@@ -15,11 +15,13 @@ import ToastProvider from "./ToastProvider";
 import { WebSocketProvider } from "./WebSocketProvider";
 import { YoutubeExtractionPrompter } from "./YoutubeExtractionPrompter";
 import { YoutubeImportProvider } from "./YoutubeImportProvider";
+import { SentryUserSync } from "./SentryUserSync";
 
 export const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
     <PostHogProvider>
       <PostHogPageView />
+      <SentryUserSync />
       <QueryClientProvider client={queryClient}>
         <ScrollProvider>
           <WebSocketProvider>
