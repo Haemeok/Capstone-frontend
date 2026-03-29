@@ -40,7 +40,6 @@ const RecipeLikeButton = ({
 
   const { data: currentStatus } = useQuery<RecipeStatus>({
     queryKey: ["recipe-status", recipeId],
-    queryFn: () => Promise.reject(),
     enabled: false,
   });
 
@@ -48,9 +47,9 @@ const RecipeLikeButton = ({
   const likeCount = currentStatus?.likeCount ?? initialLikeCount;
 
   const handleLikeClick = () => {
+    if (!checkAndTrigger("like")) return;
     triggerHaptic("Light");
     toggleLikeMutate();
-    checkAndTrigger("like");
   };
 
   return (
