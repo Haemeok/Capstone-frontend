@@ -4,6 +4,9 @@ import { ApiError, createApiError, isErrorResponse } from "./errors";
 import type { ApiRequestOptions, BatchRequestFunction } from "./types";
 
 import { BASE_API_URL } from "@/shared/config/constants/api";
+import { captureException as sentryCaptureException } from "@/shared/lib/sentry";
+import { createApiErrorTags } from "@/shared/lib/sentry";
+import { getErrorData } from "./errors";
 
 export async function apiClient<T = any>(
   url: string,
@@ -68,7 +71,23 @@ export async function apiClient<T = any>(
     }
 
     if (isErrorResponse(response)) {
-      throw await createApiError(response);
+      const apiError = await createApiError(response);
+
+      const shouldCapture =
+        ApiError.isServerError(apiError) || ApiError.isForbidden(apiError);
+
+      if (shouldCapture) {
+        const errorData = getErrorData(apiError);
+        const method = (restOptions as RequestInit).method || "GET";
+        const tags = createApiErrorTags(
+          url,
+          method,
+          errorData?.code?.toString()
+        );
+        sentryCaptureException(apiError, tags);
+      }
+
+      throw apiError;
     }
 
     const contentType = response.headers.get("content-type");
@@ -78,11 +97,23 @@ export async function apiClient<T = any>(
     return response.text() as any;
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
-      throw new ApiError(0, "Request timeout", error);
+      const timeoutError = new ApiError(0, "Request timeout", error);
+      sentryCaptureException(timeoutError, {
+        "api.endpoint": url,
+        "api.method": (restOptions as RequestInit).method || "GET",
+        "page.path": typeof window !== "undefined" ? window.location.pathname : "unknown",
+      });
+      throw timeoutError;
     }
 
     if (!(error instanceof ApiError)) {
-      throw new ApiError(0, "Network Error", error);
+      const networkError = new ApiError(0, "Network Error", error);
+      sentryCaptureException(networkError, {
+        "api.endpoint": url,
+        "api.method": (restOptions as RequestInit).method || "GET",
+        "page.path": typeof window !== "undefined" ? window.location.pathname : "unknown",
+      });
+      throw networkError;
     }
     throw error;
   } finally {
