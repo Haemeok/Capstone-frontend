@@ -21,13 +21,7 @@ export const fetchWithRetry = async (
         config.request.timeoutMs
       );
 
-      const res = await fetch(url, {
-        method,
-        signal: controller.signal,
-        headers: {
-          "User-Agent": "RecipioSEOHealthCheck/1.0",
-        },
-      });
+      const res = await fetch(url, { method, signal: controller.signal });
       clearTimeout(timeout);
 
       const body = method === "HEAD" ? "" : await res.text();
