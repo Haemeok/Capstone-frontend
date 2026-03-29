@@ -145,11 +145,6 @@ const NutritionRecipePage = () => {
   }
 
   return (
-    <ErrorBoundary
-      fallback={
-        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
-      }
-    >
       <Container padding={false}>
       <div className="mx-auto bg-[#f7f7f7] p-4 pb-24 md:pb-4">
         <div className="mb-4 flex items-center gap-2">
@@ -245,7 +240,6 @@ const NutritionRecipePage = () => {
         </UsageLimitSection>
       </div>
       </Container>
-    </ErrorBoundary>
   );
 };
 
