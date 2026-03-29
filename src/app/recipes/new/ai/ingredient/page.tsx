@@ -155,11 +155,6 @@ const IngredientRecipePage = () => {
   }
 
   return (
-    <ErrorBoundary
-      fallback={
-        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
-      }
-    >
       <Container padding={false}>
         <FormProvider {...methods}>
           <div className="relative mx-auto p-4">
@@ -215,7 +210,6 @@ const IngredientRecipePage = () => {
           </div>
         </FormProvider>
       </Container>
-    </ErrorBoundary>
   );
 };
 
