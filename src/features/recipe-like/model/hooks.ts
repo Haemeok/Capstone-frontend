@@ -160,7 +160,6 @@ export const useLikeRecipeMutation = (recipeId: string) => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: recipeStatusQueryKey });
       queryClient.invalidateQueries({ queryKey: ["recipes-status"] });
-      queryClient.invalidateQueries({ queryKey: ["my-fridge-recipes-v2"] });
     },
   });
 
