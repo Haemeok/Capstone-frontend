@@ -1,6 +1,20 @@
 "use client";
 
-export default function GlobalError({ reset }: { reset: () => void }) {
+import { useEffect } from "react";
+
+import { captureException } from "@/shared/lib/sentry";
+
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    captureException(error);
+  }, [error]);
+
   return (
     <html>
       <body>
