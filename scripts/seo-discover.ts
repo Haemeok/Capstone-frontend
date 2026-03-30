@@ -14,7 +14,7 @@ import {
   DATA_DIR, ALLOWLIST_PATH, ARCHIVE_PATH, SEEN_PATH, today,
 } from "./lib/seo-constants";
 import {
-  type ParamSet, sleep, paramsToKey, fetchResultCount,
+  type ParamSet, sleep, paramsToKey, fetchResultCount, safeReadJson,
 } from "./lib/seo-utils";
 
 const LOG_PATH = path.join(DATA_DIR, `discover-log-${today()}.json`);
@@ -47,25 +47,18 @@ type Archive = {
 // ── 데이터 로드 ──
 
 const loadAllowlist = (): Allowlist => {
-  if (fs.existsSync(ALLOWLIST_PATH)) {
-    return JSON.parse(fs.readFileSync(ALLOWLIST_PATH, "utf-8"));
-  }
-  return { generatedAt: "", stats: { totalActive: 0, addedThisCycle: 0, promotedFromImmature: 0 }, pages: [] };
+  const data = safeReadJson<Allowlist>(ALLOWLIST_PATH);
+  return data ?? { generatedAt: "", stats: { totalActive: 0, addedThisCycle: 0, promotedFromImmature: 0 }, pages: [] };
 };
 
 const loadArchive = (): Archive => {
-  if (fs.existsSync(ARCHIVE_PATH)) {
-    return JSON.parse(fs.readFileSync(ARCHIVE_PATH, "utf-8"));
-  }
-  return { immature: [], empty: [] };
+  const data = safeReadJson<Archive>(ARCHIVE_PATH);
+  return data ?? { immature: [], empty: [] };
 };
 
 const loadSeen = (): Set<string> => {
-  if (fs.existsSync(SEEN_PATH)) {
-    const data: string[] = JSON.parse(fs.readFileSync(SEEN_PATH, "utf-8"));
-    return new Set(data);
-  }
-  return new Set();
+  const data = safeReadJson<string[]>(SEEN_PATH);
+  return data ? new Set(data) : new Set();
 };
 
 const saveSeen = (seen: Set<string>) => {

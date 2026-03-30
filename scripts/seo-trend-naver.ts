@@ -13,6 +13,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import { sleep } from "./lib/seo-utils";
 
 const DATA_DIR = path.resolve(process.cwd(), "data");
 const AUDIT_PATH = path.join(DATA_DIR, "seo-audit-latest.json");
@@ -95,8 +96,6 @@ const fetchTrend = async (
   return data.results;
 };
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 // 최근 4주간 평균 ratio → relativeVolume
 const calcRelativeVolume = (data: Array<{ ratio: number }>): number => {
   if (data.length === 0) return 0;
@@ -111,7 +110,8 @@ const calcTrendDirection = (
   if (data.length < 4) return "stable";
   const recent = data.slice(-2).reduce((a, b) => a + b.ratio, 0) / 2;
   const prev = data.slice(-4, -2).reduce((a, b) => a + b.ratio, 0) / 2;
-  const change = prev > 0 ? (recent - prev) / prev : 0;
+  if (prev < 0.01) return recent > 0.01 ? "rising" : "stable";
+  const change = (recent - prev) / prev;
   if (change > 0.15) return "rising";
   if (change < -0.15) return "declining";
   return "stable";

@@ -30,67 +30,49 @@ const main = async () => {
   const tier = parseTier();
   console.log(`Running SEO health check (tier: ${tier})\n`);
 
-  const allResults: CheckResult[] = [];
+  // Step 1: robots.txt + sitemaps 병렬 실행 (독립적)
+  console.log("Checking robots.txt + sitemaps...");
+  const [robotsResults, { results: sitemapResults, allUrls }] =
+    await Promise.all([checkRobots(), checkSitemaps()]);
 
-  // Step 1: robots.txt
-  console.log("Checking robots.txt...");
-  const robotsResults = await checkRobots();
-  allResults.push(...robotsResults);
+  const allResults: CheckResult[] = [...robotsResults, ...sitemapResults];
 
-  // Step 2: Sitemaps
-  console.log("Checking sitemaps...");
-  const { results: sitemapResults, allUrls } = await checkSitemaps();
-  allResults.push(...sitemapResults);
-
-  // Step 3: Build sample page list
+  // Step 2: 샘플 구성
   const recipeSampleUrls = pickRecipeSampleUrls(allUrls);
-  const fixedSamplePages = [
-    ...config.samplePages,
-    ...recipeSampleUrls,
-  ];
+  const fixedSamplePages = [...config.samplePages, ...recipeSampleUrls];
+  const randomUrls = pickRandomSampleUrls(allUrls);
 
   console.log(
-    `Sample pages: ${fixedSamplePages.length} fixed + ${config.randomSampleCount} random`
+    `Sample pages: ${fixedSamplePages.length} fixed + ${randomUrls.length} random`
   );
 
-  // Step 4: OG tags on fixed samples
-  console.log("Checking OG tags (fixed samples)...");
-  const ogResults = await checkOgTags(fixedSamplePages);
-  allResults.push(...ogResults);
+  // Step 3: OG + JSON-LD + Canonical + Random OG 병렬 실행
+  console.log("Checking OG tags, JSON-LD, canonical, random samples...");
+  const [ogResults, jsonLdResults, canonicalResults, randomResults] =
+    await Promise.all([
+      checkOgTags(fixedSamplePages),
+      checkJsonLd(fixedSamplePages),
+      checkCanonical(fixedSamplePages),
+      checkOgTags(randomUrls),
+    ]);
 
-  // Step 5: JSON-LD on fixed samples
-  console.log("Checking JSON-LD (fixed samples)...");
-  const jsonLdResults = await checkJsonLd(fixedSamplePages);
-  allResults.push(...jsonLdResults);
-
-  // Step 6: Canonical on fixed samples
-  console.log("Checking canonical URLs (fixed samples)...");
-  const canonicalResults = await checkCanonical(fixedSamplePages);
-  allResults.push(...canonicalResults);
-
-  // Step 7: Random sample spot-check (OG tags only)
-  console.log("Checking random samples from sitemap...");
-  const randomUrls = pickRandomSampleUrls(allUrls);
-  const randomResults = await checkOgTags(randomUrls);
-  allResults.push(...randomResults);
+  allResults.push(...ogResults, ...jsonLdResults, ...canonicalResults, ...randomResults);
 
   // Deep-only checks
   if (tier === "deep") {
-    // Step 8: Sitemap URL count drop detection
-    console.log("Checking sitemap URL count changes...");
-    const countResults = await checkSitemapUrlCountDrop(allUrls);
-    allResults.push(...countResults);
-
-    // Step 9: Lighthouse SEO
-    console.log("Running Lighthouse SEO audit...");
+    console.log("Running deep checks...");
     const lighthousePages = ["/", ...recipeSampleUrls.slice(0, 2)];
+
+    // URL count + recipe meta 병렬, Lighthouse는 순차 (무거움)
+    const [countResults, recipeMetaResults] = await Promise.all([
+      checkSitemapUrlCountDrop(allUrls),
+      checkRecipeMeta(recipeSampleUrls),
+    ]);
+    allResults.push(...countResults, ...recipeMetaResults);
+
+    console.log("Running Lighthouse SEO audit...");
     const lighthouseResults = await checkLighthouseSeo(lighthousePages);
     allResults.push(...lighthouseResults);
-
-    // Step 10: Recipe metadata consistency
-    console.log("Checking recipe metadata consistency...");
-    const recipeMetaResults = await checkRecipeMeta(recipeSampleUrls);
-    allResults.push(...recipeMetaResults);
   }
 
   reportAndExit(allResults);

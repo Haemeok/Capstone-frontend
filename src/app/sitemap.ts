@@ -41,7 +41,11 @@ const staticRoutes: MetadataRoute.Sitemap = [
   },
 ];
 
+let _cachedRoutes: MetadataRoute.Sitemap | null = null;
+
 const buildAllRoutes = (): MetadataRoute.Sitemap => {
+  if (_cachedRoutes) return _cachedRoutes;
+
   const routes: MetadataRoute.Sitemap = [...staticRoutes];
 
   for (const params of allowlistPages) {
@@ -56,6 +60,7 @@ const buildAllRoutes = (): MetadataRoute.Sitemap => {
     });
   }
 
+  _cachedRoutes = routes;
   return routes;
 };
 
