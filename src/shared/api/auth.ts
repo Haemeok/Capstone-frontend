@@ -36,8 +36,19 @@ export const dispatchForceLogoutEvent = (reason: string, message?: string) => {
 };
 
 let refreshPromise: Promise<boolean> | null = null;
+let lastRefreshFailTime = 0;
+const REFRESH_COOLDOWN_MS = 5000;
 
 export const refreshToken = async (): Promise<boolean> => {
+  if (!getLoginState()) {
+    return false;
+  }
+
+  const now = Date.now();
+  if (now - lastRefreshFailTime < REFRESH_COOLDOWN_MS) {
+    return false;
+  }
+
   if (refreshPromise) {
     return refreshPromise;
   }
@@ -46,6 +57,9 @@ export const refreshToken = async (): Promise<boolean> => {
 
   try {
     const result = await refreshPromise;
+    if (!result) {
+      lastRefreshFailTime = Date.now();
+    }
     return result;
   } finally {
     refreshPromise = null;
