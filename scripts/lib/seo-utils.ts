@@ -118,10 +118,8 @@ export const CATEGORY_LABELS: Record<string, string> = {
 
 export const safeReadJson = <T>(filePath: string): T | null => {
   try {
-    if (!fs.existsSync(filePath)) return null;
     return JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  } catch (err) {
-    console.error(`JSON 파싱 실패: ${filePath}`, err);
+  } catch {
     return null;
   }
 };

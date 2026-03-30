@@ -8,9 +8,12 @@ export type IngredientEntry = {
   tier?: 1 | 2 | 3;
 };
 
+let _cached: IngredientEntry[] | null = null;
+
 export const loadIngredients = (): IngredientEntry[] => {
-  const raw = fs.readFileSync(INGREDIENTS_JSON_PATH, "utf-8");
-  return JSON.parse(raw);
+  if (_cached) return _cached;
+  _cached = JSON.parse(fs.readFileSync(INGREDIENTS_JSON_PATH, "utf-8"));
+  return _cached!;
 };
 
 export const loadMainIngredients = (): IngredientEntry[] =>

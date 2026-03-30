@@ -14,11 +14,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import { sleep } from "./lib/seo-utils";
+import { DATA_DIR, today } from "./lib/seo-constants";
 
-const DATA_DIR = path.resolve(process.cwd(), "data");
 const AUDIT_PATH = path.join(DATA_DIR, "seo-audit-latest.json");
-const today = new Date().toISOString().split("T")[0];
-const OUTPUT_PATH = path.join(DATA_DIR, `seo-trend-naver-${today}.json`);
+const OUTPUT_PATH = path.join(DATA_DIR, `seo-trend-naver-${today()}.json`);
 
 const NAVER_CLIENT_ID = process.env.NAVER_CLIENT_ID;
 const NAVER_CLIENT_SECRET = process.env.NAVER_CLIENT_SECRET;
