@@ -10,16 +10,16 @@ import {
   DATA_DIR, ALLOWLIST_PATH, ARCHIVE_PATH,
 } from "./lib/seo-constants";
 import {
-  type ParamSet, classifyCategory, CATEGORY_LABELS,
+  type ParamSet, classifyCategory, CATEGORY_LABELS, safeReadJson,
 } from "./lib/seo-utils";
 
 const main = () => {
-  if (!fs.existsSync(ALLOWLIST_PATH)) {
+  const allowlist = safeReadJson<{ generatedAt: string; stats?: { addedThisCycle: number; promotedFromImmature: number }; pages: ParamSet[] }>(ALLOWLIST_PATH);
+  if (!allowlist) {
     console.error("allowlist가 없습니다. 먼저 seo:discover를 실행하세요.");
     process.exit(1);
   }
 
-  const allowlist = JSON.parse(fs.readFileSync(ALLOWLIST_PATH, "utf-8"));
   const pages: ParamSet[] = allowlist.pages;
 
   // 카테고리별 집계
@@ -32,8 +32,8 @@ const main = () => {
   // 아카이브 통계
   let immatureCount = 0;
   let emptyCount = 0;
-  if (fs.existsSync(ARCHIVE_PATH)) {
-    const archive = JSON.parse(fs.readFileSync(ARCHIVE_PATH, "utf-8"));
+  const archive = safeReadJson<{ immature: unknown[]; empty: unknown[] }>(ARCHIVE_PATH);
+  if (archive) {
     immatureCount = archive.immature?.length || 0;
     emptyCount = archive.empty?.length || 0;
   }
@@ -73,7 +73,8 @@ const main = () => {
   if (logFiles.length > 0) {
     console.log(`\n=== 성장 히스토리 ===`);
     for (const file of logFiles.slice(-10)) {
-      const log = JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), "utf-8"));
+      const log = safeReadJson<{ date: string; mode: string; newActive: number; prevActive: number }>(path.join(DATA_DIR, file));
+      if (!log) continue;
       const growth = log.newActive - log.prevActive;
       const arrow = growth > 0 ? `+${growth}` : String(growth);
       console.log(`  ${log.date} [${log.mode}]: ${log.prevActive} → ${log.newActive} (${arrow})`);
