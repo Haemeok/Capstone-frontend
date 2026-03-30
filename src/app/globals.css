@@ -214,7 +214,7 @@
   }
 }
 
-.heart-button:active .beat {
+.animate-heartbeat {
   animation: heartbeat 0.25s ease-in-out;
 }
 

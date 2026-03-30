@@ -66,7 +66,6 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
     <motion.div
       className="relative flex cursor-pointer items-start gap-4 rounded-2xl bg-white p-4 shadow-sm transition-all hover:shadow-md"
       onClick={handleCardClick}
-      whileTap={{ scale: 0.99 }}
     >
       {/* 이미지 */}
       <div className="relative w-28 min-[390px]:w-32 min-[430px]:w-36 sm:w-[188px] flex-shrink-0 overflow-hidden rounded-xl">

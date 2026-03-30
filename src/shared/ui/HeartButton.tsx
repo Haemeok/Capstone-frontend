@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
 import { Heart } from "lucide-react";
@@ -55,9 +55,16 @@ const HeartButton = ({
     `flex items-center justify-center ${buttonClassName}`
   );
 
+  const [isBouncing, setIsBouncing] = useState(false);
+
+  const handleAnimationEnd = useCallback(() => {
+    setIsBouncing(false);
+  }, []);
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    setIsBouncing(true);
     onClick();
   };
 
@@ -80,9 +87,11 @@ const HeartButton = ({
           height={height}
           className={cn(
             "beat",
+            isBouncing && "animate-heartbeat",
             iconClassName,
             isLiked ? "fill-red-500 text-red-500" : defaultColorClass
           )}
+          onAnimationEnd={handleAnimationEnd}
         />
       </button>
       {isCountShown &&
