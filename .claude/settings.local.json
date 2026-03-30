@@ -38,7 +38,8 @@
       "Bash(python3 -m pip install -r tistory/requirements.txt)",
       "Bash(ls /c/Python*/python.exe)",
       "Read(//c/Users/user/AppData/Local/Programs/**)",
-      "Bash(\"/c/Users/user/AppData/Local/Microsoft/WindowsApps/python.exe\" --version 2>&1)"
+      "Bash(\"/c/Users/user/AppData/Local/Microsoft/WindowsApps/python.exe\" --version 2>&1)",
+      "Bash(gh run:*)"
     ],
     "deny": [],
     "ask": []
