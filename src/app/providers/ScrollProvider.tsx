@@ -12,10 +12,43 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
   const motionRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const scrollSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollLockRef = useRef<number | null>(null);
+  const rafRef = useRef(0);
 
   const scrollClass = shouldHideNavbar(pathname)
     ? "h-[100dvh] md:h-[calc(100dvh-64px)] md:mt-16"
     : "h-[100dvh] md:h-[calc(100dvh-64px)] md:mt-16";
+
+  // sticky 헤더 내 input 타이핑 시 브라우저 scrollIntoView 방지
+  useEffect(() => {
+    const scrollContainer = motionRef.current;
+    if (!scrollContainer) return;
+
+    const handleInput = (e: Event) => {
+      const target = e.target;
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement
+      ) {
+        if (scrollLockRef.current === null) {
+          scrollLockRef.current = scrollContainer.scrollTop;
+        }
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = requestAnimationFrame(() => {
+          if (scrollLockRef.current !== null) {
+            scrollContainer.scrollTop = scrollLockRef.current;
+          }
+          scrollLockRef.current = null;
+        });
+      }
+    };
+
+    scrollContainer.addEventListener("input", handleInput, { capture: true });
+    return () =>
+      scrollContainer.removeEventListener("input", handleInput, {
+        capture: true,
+      });
+  }, []);
 
   useEffect(() => {
     const scrollContainer = motionRef.current;
@@ -56,7 +89,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
     <ScrollContext.Provider value={{ motionRef }}>
       <div
         ref={motionRef}
-        className={`w-full flex flex-col overflow-y-auto scroll-pt-20 ${scrollClass}`}
+        className={`w-full flex flex-col overflow-y-auto scroll-pt-20 scrollbar-hide ${scrollClass}`}
       >
         {children}
       </div>

@@ -22,7 +22,7 @@ export const SearchFilters = () => {
   };
 
   return (
-    <div className="sticky-optimized sticky top-0 z-20 border-b border-gray-200 bg-white p-4 pb-0">
+    <div className="sticky top-0 z-20 border-b border-gray-200 bg-white p-4 pb-0">
       {/* 검색바 + 뒤로가기 + 필터 아이콘 */}
       <div className="flex items-center gap-2">
         <PrevButton onClick={handleBack} size={24} className="shrink-0" />
