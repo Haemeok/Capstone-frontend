@@ -94,17 +94,20 @@ const HeartButton = ({
           onAnimationEnd={handleAnimationEnd}
         />
       </button>
-      {isCountShown &&
-        (shouldAnimate ? (
-          <CountUp
-            to={likeCount}
-            duration={0.15}
-            className="text-sm font-bold"
-            startWhen={true}
-          />
-        ) : (
-          <span className="text-sm font-bold">{likeCount}</span>
-        ))}
+      {isCountShown && (
+        <span className="h-5 text-sm font-bold">
+          {shouldAnimate ? (
+            <CountUp
+              to={likeCount}
+              duration={0.15}
+              className="text-sm font-bold"
+              startWhen={true}
+            />
+          ) : (
+            likeCount
+          )}
+        </span>
+      )}
     </div>
   );
 };
