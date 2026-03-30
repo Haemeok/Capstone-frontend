@@ -23,8 +23,10 @@ const LOG_PATH = path.join(DATA_DIR, `discover-keywords-log-${today()}.json`);
 
 // ── 키워드 생성 엔진 ──
 
-const generateNewKeywords = (): string[] => {
-  const keywords: string[] = [];
+type TaggedKeyword = { keyword: string; strategy: string };
+
+const generateNewKeywords = (): TaggedKeyword[] => {
+  const keywords: TaggedKeyword[] = [];
 
   // ── 1. 재료 × 상황 × 요리법 (3단어 롱테일) ──
   const ingredients = [
@@ -73,25 +75,25 @@ const generateNewKeywords = (): string[] => {
   // 재료 × 상황
   for (const ing of ingredients) {
     for (const sit of situations) {
-      keywords.push(`${sit} ${ing} 요리`);
-      keywords.push(`${sit} ${ing} 레시피`);
-      keywords.push(`${ing} ${sit}`);
+      keywords.push({ keyword: `${sit} ${ing} 요리`, strategy: "ing_situation_method" });
+      keywords.push({ keyword: `${sit} ${ing} 레시피`, strategy: "ing_situation_method" });
+      keywords.push({ keyword: `${ing} ${sit}`, strategy: "ing_situation_method" });
     }
   }
 
   // 재료 × 요리법
   for (const ing of ingredients) {
     for (const method of methods) {
-      keywords.push(`${ing} ${method} 만들기`);
-      keywords.push(`간단 ${ing} ${method}`);
-      keywords.push(`${ing} ${method} 황금레시피`);
+      keywords.push({ keyword: `${ing} ${method} 만들기`, strategy: "ing_situation_method" });
+      keywords.push({ keyword: `간단 ${ing} ${method}`, strategy: "ing_situation_method" });
+      keywords.push({ keyword: `${ing} ${method} 황금레시피`, strategy: "ing_situation_method" });
     }
   }
 
   // 상황 × 요리법
   for (const sit of situations) {
     for (const method of methods) {
-      keywords.push(`${sit} ${method} 레시피`);
+      keywords.push({ keyword: `${sit} ${method} 레시피`, strategy: "ing_situation_method" });
     }
   }
 
@@ -126,7 +128,7 @@ const generateNewKeywords = (): string[] => {
     "만원의행복", "오천원 저녁", "삼천원 한끼", "이천원 간식",
     "편의점 재료 요리", "마트 할인 재료 요리",
   ];
-  keywords.push(...trending);
+  keywords.push(...trending.map((kw) => ({ keyword: kw, strategy: "trending" })));
 
   // ── 3. 재료쌍 텍스트 ──
   const pairs = [
@@ -137,10 +139,10 @@ const generateNewKeywords = (): string[] => {
     "참치 밥", "베이컨 계란", "고구마 닭가슴살", "양배추 닭가슴살",
   ];
   for (const pair of pairs) {
-    keywords.push(`${pair} 요리`);
-    keywords.push(`${pair} 레시피`);
-    keywords.push(`${pair} 볶음`);
-    keywords.push(`${pair} 덮밥`);
+    keywords.push({ keyword: `${pair} 요리`, strategy: "ingredient_pairs" });
+    keywords.push({ keyword: `${pair} 레시피`, strategy: "ingredient_pairs" });
+    keywords.push({ keyword: `${pair} 볶음`, strategy: "ingredient_pairs" });
+    keywords.push({ keyword: `${pair} 덮밥`, strategy: "ingredient_pairs" });
   }
 
   // ── 4. "~없이" / "~대신" 패턴 ──
@@ -150,18 +152,18 @@ const generateNewKeywords = (): string[] => {
     "밥 대신 두부", "면 대신 곤약", "빵 대신 요리",
     "라면 대신 건강면", "설탕 대신 스테비아",
   ];
-  keywords.push(...substitutions);
+  keywords.push(...substitutions.map((kw) => ({ keyword: kw, strategy: "substitution" })));
 
   // ── 5. "~로 만드는" 패턴 ──
   for (const ing of ingredients) {
-    keywords.push(`${ing}로 만드는 반찬`);
-    keywords.push(`${ing}로 만드는 한끼`);
-    keywords.push(`${ing} 하나로 만드는 요리`);
-    keywords.push(`${ing} 대량소비 레시피`);
-    keywords.push(`${ing} 활용 레시피`);
-    keywords.push(`${ing} 요리 추천`);
-    keywords.push(`${ing} 맛있게 만드는 법`);
-    keywords.push(`${ing} 황금비율`);
+    keywords.push({ keyword: `${ing}로 만드는 반찬`, strategy: "making_pattern" });
+    keywords.push({ keyword: `${ing}로 만드는 한끼`, strategy: "making_pattern" });
+    keywords.push({ keyword: `${ing} 하나로 만드는 요리`, strategy: "making_pattern" });
+    keywords.push({ keyword: `${ing} 대량소비 레시피`, strategy: "making_pattern" });
+    keywords.push({ keyword: `${ing} 활용 레시피`, strategy: "making_pattern" });
+    keywords.push({ keyword: `${ing} 요리 추천`, strategy: "making_pattern" });
+    keywords.push({ keyword: `${ing} 맛있게 만드는 법`, strategy: "making_pattern" });
+    keywords.push({ keyword: `${ing} 황금비율`, strategy: "making_pattern" });
   }
 
   // ── 6. 요리명 × 수식어 (만들기, 만드는법, 레시피, 황금레시피) ──
@@ -183,7 +185,7 @@ const generateNewKeywords = (): string[] => {
   const suffixes = ["만들기", "만드는법", "레시피", "황금레시피", "맛있게 만드는 법", "간단 레시피", "초간단"];
   for (const dish of dishes) {
     for (const suf of suffixes) {
-      keywords.push(`${dish} ${suf}`);
+      keywords.push({ keyword: `${dish} ${suf}`, strategy: "dish_suffix" });
     }
   }
 
@@ -191,8 +193,8 @@ const generateNewKeywords = (): string[] => {
   const pairIngredients = ingredients.slice(0, 40); // 상위 40개
   for (let i = 0; i < pairIngredients.length; i++) {
     for (let j = i + 1; j < pairIngredients.length; j++) {
-      keywords.push(`${pairIngredients[i]} ${pairIngredients[j]} 요리`);
-      keywords.push(`${pairIngredients[i]} ${pairIngredients[j]} 레시피`);
+      keywords.push({ keyword: `${pairIngredients[i]} ${pairIngredients[j]} 요리`, strategy: "pair_expansion" });
+      keywords.push({ keyword: `${pairIngredients[i]} ${pairIngredients[j]} 레시피`, strategy: "pair_expansion" });
     }
   }
 
@@ -203,13 +205,18 @@ const generateNewKeywords = (): string[] => {
   for (const q of quickSits) {
     for (const t of targetSits) {
       for (const m of quickMethods) {
-        keywords.push(`${q} ${t} ${m}`);
+        keywords.push({ keyword: `${q} ${t} ${m}`, strategy: "situation_method" });
       }
     }
   }
 
-  // 중복 제거
-  return [...new Set(keywords)];
+  // 중복 제거 (keyword 필드 기준)
+  const seen = new Set<string>();
+  return keywords.filter(({ keyword }) => {
+    if (seen.has(keyword)) return false;
+    seen.add(keyword);
+    return true;
+  });
 };
 
 // ── 메인 ──
@@ -235,7 +242,7 @@ const main = async () => {
 
   // 새 키워드 생성
   const allKeywords = generateNewKeywords();
-  const newKeywords = allKeywords.filter((kw) => !existingQs.has(kw));
+  const newKeywords = allKeywords.filter(({ keyword }) => !existingQs.has(keyword));
 
   console.log(`=== SEO 키워드 탐색 ===`);
   console.log(`생성된 키워드: ${allKeywords.length}개`);
@@ -248,18 +255,21 @@ const main = async () => {
   let emptyCount = 0;
   const added: string[] = [];
   const startTime = Date.now();
+  const strategyStats: Record<string, { generated: number; active: number }> = {};
 
   for (let i = 0; i < newKeywords.length; i += CONCURRENCY) {
     const batch = newKeywords.slice(i, i + CONCURRENCY);
 
     const results = await Promise.all(
-      batch.map(async (kw) => {
-        const count = await fetchResultCount(kw);
-        return { keyword: kw, count };
+      batch.map(async (item) => {
+        const count = await fetchResultCount(item.keyword);
+        return { keyword: item.keyword, strategy: item.strategy, count };
       })
     );
 
-    for (const { keyword, count } of results) {
+    for (const { keyword, strategy, count } of results) {
+      const stat = (strategyStats[strategy] ??= { generated: 0, active: 0 });
+      stat.generated++;
       if (count >= MIN_RESULTS) {
         const params = { q: keyword };
         const key = paramsToKey(params);
@@ -269,6 +279,7 @@ const main = async () => {
           addedCount++;
           added.push(keyword);
         }
+        stat.active++;
       } else if (count > 0) {
         immatureCount++;
       } else {
@@ -311,6 +322,7 @@ const main = async () => {
     empty: emptyCount,
     durationMs,
     sampleAdded: added.slice(0, 30),
+    strategyStats,
   };
   fs.writeFileSync(LOG_PATH, JSON.stringify(log, null, 2), "utf-8");
 
@@ -324,6 +336,12 @@ const main = async () => {
     console.log(`\n=== 추가된 키워드 (상위 20) ===`);
     added.slice(0, 20).forEach((kw) => console.log(`  + "${kw}"`));
     if (added.length > 20) console.log(`  ... 외 ${added.length - 20}개`);
+  }
+
+  console.log("\n=== 전략별 전환율 ===");
+  for (const [strategy, stat] of Object.entries(strategyStats).sort(([, a], [, b]) => b.active - a.active)) {
+    const rate = stat.generated > 0 ? ((stat.active / stat.generated) * 100).toFixed(1) : "0.0";
+    console.log(`  ${strategy.padEnd(25)} ${String(stat.generated).padStart(6)} 생성 → ${String(stat.active).padStart(5)} ACTIVE (${rate}%)`);
   }
 
   console.log(`\nallowlist: ${ALLOWLIST_PATH}`);
