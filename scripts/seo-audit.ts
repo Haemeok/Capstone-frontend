@@ -8,20 +8,13 @@
 import * as fs from "fs";
 import * as path from "path";
 import { generateSeoPages, type SeoPage } from "../src/shared/config/seo/seoPages";
-
-// ── 설정 ──
-
-const API_BASE = "https://api.recipio.kr/api/recipes/search";
-const CONCURRENCY = 20;
-const DELAY_BETWEEN_BATCH_MS = 100;
-const MAX_RETRIES = 3;
-const RETRY_BACKOFF_MS = [1000, 3000, 10000];
-const TIMEOUT_MS = 10000;
-const MIN_RESULTS_FOR_ACTIVE = 8;
-const MAX_ERROR_RATE = 0.1; // 10% 이상 에러 시 중단
-
-const DATA_DIR = path.resolve(process.cwd(), "data");
-const today = new Date().toISOString().split("T")[0];
+import {
+  CONCURRENCY, DELAY_MS, MAX_ERROR_RATE, MIN_RESULTS,
+  DATA_DIR, today,
+} from "./lib/seo-constants";
+import {
+  sleep, fetchResultCount, classifyCategory,
+} from "./lib/seo-utils";
 
 // ── 타입 ──
 
@@ -61,83 +54,7 @@ type AuditResult = {
   pages: AuditedPage[];
 };
 
-// ── 카테고리 분류 ──
-
-const classifyCategory = (params: Record<string, string | number>): string => {
-  const keys = Object.keys(params);
-  const hasIng = keys.includes("ingredientIds");
-  const hasDish = keys.includes("dishType");
-  const hasTag = keys.includes("tags");
-  const hasCost = keys.includes("maxCost");
-  const hasQ = keys.includes("q");
-  const hasNutrition = keys.some(
-    (k) => (k.startsWith("min") || k.startsWith("max")) && k !== "maxCost"
-  );
-
-  if (hasQ) return "A_TEXT_KEYWORD";
-  if (hasIng && hasDish && hasTag) return "J_TRIPLE";
-  if (hasIng && hasNutrition) return "I_ING_NUTRITION";
-  if (hasIng && hasDish) return "C_ING_DISH";
-  if (hasIng && hasTag) return "D_ING_TAG";
-  if (hasIng && hasCost) return "E_ING_COST";
-  if (hasIng) return "B_ING_ONLY";
-  if (hasNutrition && hasCost) return "K_NUTRITION_COST";
-  if (hasDish && hasTag) return "F_DISH_TAG";
-  if (hasCost) return "G_COST_COMBO";
-  if (hasNutrition) return "H_NUTRITION_COMBO";
-  return "Z_OTHER";
-};
-
-// ── API 호출 ──
-
-const fetchResultCount = async (
-  params: Record<string, string | number>
-): Promise<number> => {
-  const query = new URLSearchParams({
-    page: "0",
-    size: "1",
-    sort: "createdAt,desc",
-  });
-
-  for (const [key, value] of Object.entries(params)) {
-    query.set(key, String(value));
-  }
-
-  const url = `${API_BASE}?${query.toString()}`;
-
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-      const res = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeout);
-
-      if (!res.ok) {
-        if (res.status >= 500 && attempt < MAX_RETRIES) {
-          await sleep(RETRY_BACKOFF_MS[attempt]);
-          continue;
-        }
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
-      return data.page?.totalElements ?? 0;
-    } catch (err) {
-      if (attempt < MAX_RETRIES) {
-        await sleep(RETRY_BACKOFF_MS[attempt]);
-        continue;
-      }
-      throw err;
-    }
-  }
-
-  return -1; // unreachable
-};
-
 // ── 유틸 ──
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const median = (nums: number[]): number => {
   if (nums.length === 0) return 0;
@@ -150,7 +67,7 @@ const median = (nums: number[]): number => {
 
 const getStatus = (count: number): PageStatus => {
   if (count < 0) return "ERROR";
-  if (count >= MIN_RESULTS_FOR_ACTIVE) return "ACTIVE";
+  if (count >= MIN_RESULTS) return "ACTIVE";
   if (count > 0) return "IMMATURE";
   return "EMPTY";
 };
@@ -254,7 +171,7 @@ const main = async () => {
 
     // 배치 간 딜레이
     if (i + CONCURRENCY < pagesToCheck.length) {
-      await sleep(DELAY_BETWEEN_BATCH_MS);
+      await sleep(DELAY_MS);
     }
   }
 
@@ -311,7 +228,7 @@ const main = async () => {
     pages: results,
   };
 
-  const outputPath = path.join(DATA_DIR, `seo-audit-${today}.json`);
+  const outputPath = path.join(DATA_DIR, `seo-audit-${today()}.json`);
   const latestPath = path.join(DATA_DIR, "seo-audit-latest.json");
 
   fs.writeFileSync(outputPath, JSON.stringify(auditResult, null, 2), "utf-8");
@@ -338,7 +255,7 @@ const main = async () => {
   // 이전 감사와 diff
   const prevFiles = fs
     .readdirSync(DATA_DIR)
-    .filter((f) => f.startsWith("seo-audit-") && f !== `seo-audit-${today}.json` && f !== "seo-audit-latest.json")
+    .filter((f) => f.startsWith("seo-audit-") && f !== `seo-audit-${today()}.json` && f !== "seo-audit-latest.json")
     .sort()
     .reverse();
 
