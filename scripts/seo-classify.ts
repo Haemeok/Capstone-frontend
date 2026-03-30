@@ -8,8 +8,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import { loadIngredientMap } from "./lib/load-ingredients";
+import { DATA_DIR } from "./lib/seo-constants";
 
-const DATA_DIR = path.resolve(process.cwd(), "data");
 const AUDIT_PATH = path.join(DATA_DIR, "seo-audit-latest.json");
 const REPORT_PATH = path.join(DATA_DIR, "seo-analysis-report.json");
 

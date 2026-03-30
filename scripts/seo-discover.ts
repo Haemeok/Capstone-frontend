@@ -347,13 +347,15 @@ const main = async () => {
   // 기존 중 ACTIVE로 승격되지 않은 것만 유지
   const activeKeys = new Set(allowlist.pages.map(paramsToKey));
   for (const e of [...archive.immature, ...newImmature]) {
-    if (!activeKeys.has(paramsToKey(e.params))) {
-      immatureMap.set(paramsToKey(e.params), e);
+    const key = paramsToKey(e.params);
+    if (!activeKeys.has(key)) {
+      immatureMap.set(key, e);
     }
   }
   for (const e of [...archive.empty, ...newEmpty]) {
-    if (!activeKeys.has(paramsToKey(e.params))) {
-      emptyMap.set(paramsToKey(e.params), e);
+    const key = paramsToKey(e.params);
+    if (!activeKeys.has(key)) {
+      emptyMap.set(key, e);
     }
   }
 

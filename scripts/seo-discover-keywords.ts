@@ -16,7 +16,7 @@ import {
   CONCURRENCY, DELAY_MS, MIN_RESULTS, DATA_DIR, ALLOWLIST_PATH, today,
 } from "./lib/seo-constants";
 import {
-  sleep, paramsToKey, fetchResultCount,
+  sleep, paramsToKey, fetchResultCount, safeReadJson,
 } from "./lib/seo-utils";
 
 const LOG_PATH = path.join(DATA_DIR, `discover-keywords-log-${today()}.json`);
@@ -227,12 +227,9 @@ const main = async () => {
   }
 
   // allowlist 로드
-  let allowlist: { generatedAt: string; stats: any; pages: Array<Record<string, string | number>> };
-  if (fs.existsSync(ALLOWLIST_PATH)) {
-    allowlist = JSON.parse(fs.readFileSync(ALLOWLIST_PATH, "utf-8"));
-  } else {
-    allowlist = { generatedAt: "", stats: { totalActive: 0, addedThisCycle: 0, promotedFromImmature: 0 }, pages: [] };
-  }
+  type AllowlistData = { generatedAt: string; stats: { totalActive: number; addedThisCycle: number; promotedFromImmature: number }; pages: Array<Record<string, string | number>> };
+  const defaultAllowlist: AllowlistData = { generatedAt: "", stats: { totalActive: 0, addedThisCycle: 0, promotedFromImmature: 0 }, pages: [] };
+  let allowlist: AllowlistData = safeReadJson<AllowlistData>(ALLOWLIST_PATH) ?? defaultAllowlist;
 
   // 기존 q 키워드 수집 (중복 방지)
   const existingKeys = new Set(allowlist.pages.map(paramsToKey));

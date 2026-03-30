@@ -13,7 +13,7 @@ import {
   DATA_DIR, today,
 } from "./lib/seo-constants";
 import {
-  sleep, fetchResultCount, classifyCategory,
+  sleep, fetchResultCount, classifyCategory, paramsToKey,
 } from "./lib/seo-utils";
 
 // ── 타입 ──
@@ -191,10 +191,11 @@ const main = async () => {
 
   for (const [cat, pages] of Object.entries(categoryPages)) {
     const counts = pages.map((p) => p.resultCount).filter((c) => c >= 0);
-    const active = pages.filter((p) => p.status === "ACTIVE").length;
-    const immature = pages.filter((p) => p.status === "IMMATURE").length;
-    const empty = pages.filter((p) => p.status === "EMPTY").length;
-    const error = pages.filter((p) => p.status === "ERROR").length;
+    const statusCounts = { ACTIVE: 0, IMMATURE: 0, EMPTY: 0, ERROR: 0 };
+    for (const p of pages) {
+      if (p.status in statusCounts) statusCounts[p.status as keyof typeof statusCounts]++;
+    }
+    const { ACTIVE: active, IMMATURE: immature, EMPTY: empty, ERROR: error } = statusCounts;
     const failed = immature + empty;
 
     byCategory[cat] = {
@@ -262,14 +263,14 @@ const main = async () => {
   if (prevFiles.length > 0) {
     const prevPath = path.join(DATA_DIR, prevFiles[0]);
     const prev: AuditResult = JSON.parse(fs.readFileSync(prevPath, "utf-8"));
-    const prevMap = new Map(prev.pages.map((p) => [JSON.stringify(p.params), p.status]));
+    const prevMap = new Map(prev.pages.map((p) => [paramsToKey(p.params), p.status]));
 
     let promoted = 0;
     let demoted = 0;
     let newPages = 0;
 
     for (const page of results) {
-      const key = JSON.stringify(page.params);
+      const key = paramsToKey(page.params);
       const prevStatus = prevMap.get(key);
       if (!prevStatus) {
         newPages++;
