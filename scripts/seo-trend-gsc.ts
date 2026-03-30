@@ -15,10 +15,10 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import { DATA_DIR, today } from "./lib/seo-constants";
+import { classifyCategory } from "./lib/seo-utils";
 
-const DATA_DIR = path.resolve(process.cwd(), "data");
-const today = new Date().toISOString().split("T")[0];
-const OUTPUT_PATH = path.join(DATA_DIR, `seo-trend-gsc-${today}.json`);
+const OUTPUT_PATH = path.join(DATA_DIR, `seo-trend-gsc-${today()}.json`);
 
 const KEY_PATH = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
 const SITE_URL = "https://www.recipio.kr";
@@ -142,7 +142,7 @@ const main = async () => {
   const accessToken = await getAccessToken(serviceAccount);
   console.log("인증 성공\n");
 
-  const endDate = today;
+  const endDate = today();
   const startDate = new Date(Date.now() - 30 * 86400000)
     .toISOString()
     .split("T")[0];
@@ -222,16 +222,9 @@ const main = async () => {
 
   for (const row of pageRows) {
     const url = row.keys[0];
-    let cat = "OTHER";
-    if (url.includes("q=")) cat = "A_TEXT_KEYWORD";
-    else if (url.includes("ingredientIds=") && url.includes("dishType=") && url.includes("tags=")) cat = "J_TRIPLE";
-    else if (url.includes("ingredientIds=") && url.includes("dishType=")) cat = "C_ING_DISH";
-    else if (url.includes("ingredientIds=") && url.includes("tags=")) cat = "D_ING_TAG";
-    else if (url.includes("ingredientIds=") && url.includes("maxCost=")) cat = "E_ING_COST";
-    else if (url.includes("ingredientIds=") && (url.includes("minProtein=") || url.includes("maxCalories="))) cat = "I_ING_NUTRITION";
-    else if (url.includes("ingredientIds=")) cat = "B_ING_ONLY";
-    else if (url.includes("dishType=") && url.includes("tags=")) cat = "F_DISH_TAG";
-    else if (url.includes("maxCost=")) cat = "G_COST_COMBO";
+    const queryString = url.includes("?") ? url.split("?")[1] : "";
+    const urlParams = Object.fromEntries(new URLSearchParams(queryString).entries());
+    const cat = classifyCategory(urlParams);
 
     if (!categoryROI[cat]) {
       categoryROI[cat] = { totalClicks: 0, totalImpressions: 0, avgCTR: 0, pageCount: 0 };

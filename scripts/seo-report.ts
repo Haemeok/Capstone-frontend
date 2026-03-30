@@ -6,36 +6,12 @@
 
 import * as fs from "fs";
 import * as path from "path";
-
-const DATA_DIR = path.resolve(process.cwd(), "data");
-const ALLOWLIST_PATH = path.resolve(process.cwd(), "src/shared/config/seo/sitemap-allowlist.json");
-const ARCHIVE_PATH = path.join(DATA_DIR, "seo-archive.json");
-
-type ParamSet = Record<string, string | number>;
-
-const classifyCategory = (params: ParamSet): string => {
-  const keys = Object.keys(params);
-  const hasIng = keys.includes("ingredientIds");
-  const hasDish = keys.includes("dishType");
-  const hasTag = keys.includes("tags");
-  const hasCost = keys.includes("maxCost");
-  const hasQ = keys.includes("q");
-
-  if (hasQ) return "A. 텍스트 키워드";
-  if (hasIng && hasDish && hasTag) return "J. 재료×dish×tag";
-  if (hasIng && hasDish) return "C. 재료×dishType";
-  if (hasIng && hasTag) return "D. 재료×tags";
-  if (hasIng && hasCost) return "E. 재료×cost";
-  if (hasIng) return "B. 재료 단독";
-  if (hasDish && hasTag && hasCost) return "M. dish×tag×cost";
-  if (hasDish && hasTag) return "F. dish×tag";
-  if (hasDish && hasCost) return "dish×cost";
-  if (hasTag && hasCost) return "tag×cost";
-  if (hasCost) return "G. cost 조합";
-  if (hasDish) return "dishType 단독";
-  if (hasTag) return "tag 단독";
-  return "기타";
-};
+import {
+  DATA_DIR, ALLOWLIST_PATH, ARCHIVE_PATH,
+} from "./lib/seo-constants";
+import {
+  type ParamSet, classifyCategory, CATEGORY_LABELS,
+} from "./lib/seo-utils";
 
 const main = () => {
   if (!fs.existsSync(ALLOWLIST_PATH)) {
@@ -88,8 +64,9 @@ const main = () => {
   console.log(`\n=== 카테고리별 ACTIVE ===`);
   const sorted = [...categories.entries()].sort(([, a], [, b]) => b - a);
   for (const [cat, count] of sorted) {
+    const label = CATEGORY_LABELS[cat] ?? cat;
     const bar = "█".repeat(Math.ceil(count / (pages.length / 30)));
-    console.log(`  ${cat.padEnd(20)} ${String(count).padStart(6)}  ${bar}`);
+    console.log(`  ${label.padEnd(20)} ${String(count).padStart(6)}  ${bar}`);
   }
 
   // 성장 히스토리

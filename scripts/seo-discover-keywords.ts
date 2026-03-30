@@ -12,50 +12,14 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import {
+  CONCURRENCY, DELAY_MS, MIN_RESULTS, DATA_DIR, ALLOWLIST_PATH, today,
+} from "./lib/seo-constants";
+import {
+  sleep, paramsToKey, fetchResultCount,
+} from "./lib/seo-utils";
 
-const API_BASE = "https://api.recipio.kr/api/recipes/search";
-const CONCURRENCY = 20;
-const DELAY_MS = 100;
-const TIMEOUT_MS = 10000;
-const MAX_RETRIES = 3;
-const RETRY_BACKOFF = [1000, 3000, 10000];
-const MIN_RESULTS = 8;
-
-const ALLOWLIST_PATH = path.resolve(process.cwd(), "src/shared/config/seo/sitemap-allowlist.json");
-const DATA_DIR = path.resolve(process.cwd(), "data");
-const today = new Date().toISOString().split("T")[0];
-const LOG_PATH = path.join(DATA_DIR, `discover-keywords-log-${today}.json`);
-
-// ── 유틸 ──
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-const paramsToKey = (params: Record<string, string | number>): string =>
-  JSON.stringify(Object.entries(params).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => [k, String(v)]));
-
-const fetchResultCount = async (q: string): Promise<number> => {
-  const query = new URLSearchParams({ page: "0", size: "1", sort: "createdAt,desc", q });
-  const url = `${API_BASE}?${query.toString()}`;
-
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-      const res = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!res.ok) {
-        if (res.status >= 500 && attempt < MAX_RETRIES) { await sleep(RETRY_BACKOFF[attempt]); continue; }
-        throw new Error(`HTTP ${res.status}`);
-      }
-      const data = await res.json();
-      return data.page?.totalElements ?? 0;
-    } catch {
-      if (attempt < MAX_RETRIES) { await sleep(RETRY_BACKOFF[attempt]); continue; }
-      return -1;
-    }
-  }
-  return -1;
-};
+const LOG_PATH = path.join(DATA_DIR, `discover-keywords-log-${today()}.json`);
 
 // ── 키워드 생성 엔진 ──
 
@@ -339,7 +303,7 @@ const main = async () => {
 
   // 로그 저장
   const log = {
-    date: today,
+    date: today(),
     totalGenerated: allKeywords.length,
     newKeywords: newKeywords.length,
     added: addedCount,

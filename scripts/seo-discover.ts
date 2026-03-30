@@ -9,30 +9,19 @@
 import * as fs from "fs";
 import * as path from "path";
 import { MAIN_INGREDIENTS } from "../src/shared/config/seo/ingredients";
+import {
+  CONCURRENCY, DELAY_MS, MAX_ERROR_RATE, MIN_RESULTS,
+  DATA_DIR, ALLOWLIST_PATH, ARCHIVE_PATH, SEEN_PATH, today,
+} from "./lib/seo-constants";
+import {
+  type ParamSet, sleep, paramsToKey, fetchResultCount,
+} from "./lib/seo-utils";
 
-// ── 설정 ──
-
-const API_BASE = "https://api.recipio.kr/api/recipes/search";
-const CONCURRENCY = 20;
-const DELAY_MS = 100;
-const MAX_RETRIES = 3;
-const RETRY_BACKOFF = [1000, 3000, 10000];
-const TIMEOUT_MS = 10000;
-const MIN_RESULTS = 8;
-const MAX_ERROR_RATE = 0.1;
-
-const DATA_DIR = path.resolve(process.cwd(), "data");
-const ALLOWLIST_PATH = path.resolve(process.cwd(), "src/shared/config/seo/sitemap-allowlist.json");
-const ARCHIVE_PATH = path.join(DATA_DIR, "seo-archive.json");
-const SEEN_PATH = path.join(DATA_DIR, "seo-seen.json");
-const today = new Date().toISOString().split("T")[0];
-const LOG_PATH = path.join(DATA_DIR, `discover-log-${today}.json`);
+const LOG_PATH = path.join(DATA_DIR, `discover-log-${today()}.json`);
 
 const isFullMode = process.argv.includes("--full");
 
 // ── 타입 ──
-
-type ParamSet = Record<string, string | number>;
 
 type Allowlist = {
   generatedAt: string;
@@ -53,57 +42,6 @@ type ArchiveEntry = {
 type Archive = {
   immature: ArchiveEntry[];
   empty: ArchiveEntry[];
-};
-
-// ── 유틸 ──
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-const paramsToKey = (params: ParamSet): string =>
-  JSON.stringify(
-    Object.entries(params)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([k, v]) => [k, String(v)])
-  );
-
-const fetchResultCount = async (params: ParamSet): Promise<number> => {
-  const query = new URLSearchParams({
-    page: "0",
-    size: "1",
-    sort: "createdAt,desc",
-  });
-  for (const [key, value] of Object.entries(params)) {
-    query.set(key, String(value));
-  }
-
-  const url = `${API_BASE}?${query.toString()}`;
-
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-      const res = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeout);
-
-      if (!res.ok) {
-        if (res.status >= 500 && attempt < MAX_RETRIES) {
-          await sleep(RETRY_BACKOFF[attempt]);
-          continue;
-        }
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
-      return data.page?.totalElements ?? 0;
-    } catch {
-      if (attempt < MAX_RETRIES) {
-        await sleep(RETRY_BACKOFF[attempt]);
-        continue;
-      }
-      return -1;
-    }
-  }
-  return -1;
 };
 
 // ── 데이터 로드 ──
@@ -437,7 +375,7 @@ const main = async () => {
 
   // 로그 저장
   const log = {
-    date: today,
+    date: today(),
     mode: isFullMode ? "full" : "incremental",
     prevActive: prevTotal,
     newActive: allowlist.pages.length,
