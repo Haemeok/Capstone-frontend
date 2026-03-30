@@ -7,6 +7,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import { loadIngredientMap } from "./lib/load-ingredients";
 
 const DATA_DIR = path.resolve(process.cwd(), "data");
 const AUDIT_PATH = path.join(DATA_DIR, "seo-audit-latest.json");
@@ -45,22 +46,6 @@ type IngredientReport = {
   tier: 1 | 2 | 3;
 };
 
-// ── 재료 데이터 로드 ──
-
-const loadIngredients = (): Map<string, string> => {
-  const ingPath = path.resolve(process.cwd(), "src/shared/config/seo/ingredients.ts");
-  const content = fs.readFileSync(ingPath, "utf-8");
-  const map = new Map<string, string>();
-  const regex = /\{ id: "([^"]+)", name: "([^"]+)", isMainIngredient: (true|false) \}/g;
-  let match;
-  while ((match = regex.exec(content)) !== null) {
-    if (match[3] === "true") {
-      map.set(match[1], match[2]);
-    }
-  }
-  return map;
-};
-
 // ── Tier 분류 ──
 
 const classifyTier = (successRate: number, avgResultCount: number): 1 | 2 | 3 => {
@@ -78,7 +63,7 @@ const main = () => {
   }
 
   const audit: AuditResult = JSON.parse(fs.readFileSync(AUDIT_PATH, "utf-8"));
-  const ingredientNames = loadIngredients();
+  const ingredientNames = loadIngredientMap();
 
   // ── 1. 재료별 성적표 ──
   const ingredientStats = new Map<string, { total: number; active: number; results: number[] }>();
