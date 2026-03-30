@@ -40,6 +40,7 @@ const RecipeLikeButton = ({
 
   const { data: currentStatus } = useQuery<RecipeStatus>({
     queryKey: ["recipe-status", recipeId],
+    queryFn: () => Promise.reject(),
     enabled: false,
   });
 
