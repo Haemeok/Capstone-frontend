@@ -28,7 +28,17 @@
       "Bash(find /c/Users/for/Desktop/recipio-app -type f \\\\\\(-name *.swift -o -name *.java -o -name *.kotlin \\\\\\))",
       "Bash(where python3:*)",
       "Bash(where python:*)",
-      "Bash(where py:*)"
+      "Bash(where py:*)",
+      "Bash(npm ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(export PATH=\"/c/Program Files/GitHub CLI:$PATH\")",
+      "Bash(gh workflow:*)",
+      "Bash(pip install:*)",
+      "Bash(python3 -m pip install -r tistory/requirements.txt)",
+      "Bash(ls /c/Python*/python.exe)",
+      "Read(//c/Users/user/AppData/Local/Programs/**)",
+      "Bash(\"/c/Users/user/AppData/Local/Microsoft/WindowsApps/python.exe\" --version 2>&1)"
     ],
     "deny": [],
     "ask": []
