@@ -8,10 +8,14 @@ export async function POST(request: NextRequest) {
     const cookieStore = await cookies();
     const origin = request.headers.get("origin");
 
-    const allCookies = cookieStore.getAll();
-    console.log("[Refresh] Cookies received:", allCookies.map(c => c.name));
-    console.log("[Refresh] Has refreshToken:", allCookies.some(c => c.name === "refreshToken"));
-    console.log("[Refresh] Has accessToken:", allCookies.some(c => c.name === "accessToken"));
+    const hasRefreshToken = cookieStore.getAll().some(c => c.name === "refreshToken");
+
+    if (!hasRefreshToken) {
+      return NextResponse.json(
+        { error: "No refresh token available" },
+        { status: 401 }
+      );
+    }
 
     const baseUrl = BASE_API_URL;
 
