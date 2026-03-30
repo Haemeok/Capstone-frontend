@@ -39,7 +39,9 @@
       "Bash(ls /c/Python*/python.exe)",
       "Read(//c/Users/user/AppData/Local/Programs/**)",
       "Bash(\"/c/Users/user/AppData/Local/Microsoft/WindowsApps/python.exe\" --version 2>&1)",
-      "Bash(gh run:*)"
+      "Bash(gh run:*)",
+      "Bash(find /c/Users/user/Desktop/recipio/Capstone-frontend/src -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\))",
+      "Skill(commit-commands:commit)"
     ],
     "deny": [],
     "ask": []
