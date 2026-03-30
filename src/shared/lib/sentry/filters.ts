@@ -10,6 +10,8 @@ type SentryEventLike = {
 const IGNORED_ERRORS = [
   "ResizeObserver loop",
   "ResizeObserver loop completed with undelivered notifications",
+  "NEXT_REDIRECT",
+  "NEXT_NOT_FOUND",
 ] as const;
 
 const IGNORED_ERROR_TYPES = ["AbortError"] as const;
