@@ -18,7 +18,7 @@ export const ServingsControl = ({
   return (
     <div className="mb-3 flex items-center justify-between gap-2">
       <p className="text-xs text-gray-400">
-        💡 간과 양념은 취향에 따라 다를 수 있어요.
+        간과 양념은 취향에 따라 다를 수 있어요.
         <br />
         조금씩 나눠 넣으며 맛을 봐주세요!
       </p>
