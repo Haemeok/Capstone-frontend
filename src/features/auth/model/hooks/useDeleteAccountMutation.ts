@@ -26,8 +26,9 @@ const useDeleteAccountMutation = () => {
     },
     onSuccess: () => {
       triggerHaptic("Success");
-      logoutAction();
+      queryClient.cancelQueries();
       queryClient.clear();
+      logoutAction();
 
       addToast({
         message: "계정이 삭제되었습니다.",
