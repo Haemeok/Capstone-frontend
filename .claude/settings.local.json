@@ -41,7 +41,20 @@
       "Bash(\"/c/Users/user/AppData/Local/Microsoft/WindowsApps/python.exe\" --version 2>&1)",
       "Bash(gh run:*)",
       "Bash(find /c/Users/user/Desktop/recipio/Capstone-frontend/src -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\))",
-      "Skill(commit-commands:commit)"
+      "Skill(commit-commands:commit)",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_type",
+      "mcp__plugin_playwright_playwright__browser_close",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_resize",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "Bash(vercel inspect:*)",
+      "Bash(vercel whoami:*)",
+      "Bash(npm list:*)",
+      "Bash(command -v vercel)",
+      "Bash(npm i:*)"
     ],
     "deny": [],
     "ask": []

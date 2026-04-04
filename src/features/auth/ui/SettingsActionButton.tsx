@@ -20,7 +20,7 @@ const SettingsActionButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWithdrawDialogOpen, setIsWithdrawDialogOpen] = useState(false);
 
-  const { Container, Content, Header, Title, Footer, Close } =
+  const { Container, Content, Header, Title, Description, Footer, Close } =
     useResponsiveSheet();
 
   const isInApp = isAppWebView();
@@ -63,6 +63,7 @@ const SettingsActionButton = () => {
           <Content className="p-0 sm:p-6 md:max-w-sm">
             <Header>
               <Title className="text-lg">설정</Title>
+              <Description className="sr-only">앱 설정 및 계정 관리</Description>
             </Header>
 
             <div className="flex flex-col border-t border-gray-200 sm:border-none">
