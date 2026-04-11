@@ -68,7 +68,7 @@ export const useJobPolling = () => {
         message: "",
         variant: "rich-youtube",
         position: "bottom",
-        persistent: true,
+        duration: 8000,
         dismissible: "both",
         richContent: {
           thumbnail: meta.thumbnailUrl,
