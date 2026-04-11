@@ -6,7 +6,9 @@ import { Image } from "@/shared/ui/image/Image";
 import IngredientIcon from "@/shared/ui/IngredientIcon";
 import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
 import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
+import { matchIngredientsFromText } from "@/shared/lib/matchIngredientsFromText";
 
+import { IngredientItem } from "@/entities/ingredient";
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
 import { StepTimer } from "@/features/step-timer";
 import { WakeLockButton } from "@/features/screen-wake-lock";
@@ -17,6 +19,7 @@ type RecipeStepProps = {
   step: RecipeStepType;
   length: number;
   isFirstStep?: boolean;
+  recipeIngredients?: Omit<IngredientItem, "inFridge">[];
 };
 
 const RecipeStep = ({
@@ -24,6 +27,7 @@ const RecipeStep = ({
   step,
   length,
   isFirstStep = false,
+  recipeIngredients,
 }: RecipeStepProps) => {
   const videoPlayer = useVideoPlayer();
   const { segments, allTerms: cookingTerms } = useMemo(
@@ -37,6 +41,18 @@ const RecipeStep = ({
   );
 
   const timeInSeconds = extractTimeFromText(plainText);
+
+  const hasBackendIngredients =
+    step.ingredients && step.ingredients.length > 0;
+
+  const fallbackIngredients = useMemo(() => {
+    if (hasBackendIngredients || !recipeIngredients) return [];
+    return matchIngredientsFromText(step.instruction, recipeIngredients);
+  }, [hasBackendIngredients, recipeIngredients, step.instruction]);
+
+  const displayIngredients = hasBackendIngredients
+    ? step.ingredients!
+    : fallbackIngredients;
 
   return (
     <div
@@ -57,8 +73,8 @@ const RecipeStep = ({
         {timeInSeconds && <StepTimer targetSeconds={timeInSeconds} />}
       </div>
       <div className="flex flex-wrap items-center gap-1">
-        {step.ingredients && step.ingredients.length > 0 && <IngredientIcon />}
-        {step.ingredients?.map((ingredient, index) => (
+        {displayIngredients.length > 0 && <IngredientIcon />}
+        {displayIngredients.map((ingredient, index) => (
           <div
             key={`${index}-${ingredient.name}`}
             className="flex gap-2 rounded-xl border-1 border-slate-200 p-1 px-2"
