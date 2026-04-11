@@ -2,8 +2,6 @@
 
 import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Info } from "lucide-react";
-
 import AppleLoginButton from "@/features/auth/ui/AppleLoginButton";
 import GoogleLoginButton from "@/features/auth/ui/GoogleLoginButton";
 import KakaoLoginButton from "@/features/auth/ui/KakaoLoginButton";
@@ -69,7 +67,6 @@ const LoginContent = () => {
         </div>
 
         <div className="w-full max-w-md space-y-4">
-          <AndroidAppLoginNotice />
           <GoogleLoginButton
             isRecent={lastProvider === "google"}
             onClickCapture={() => saveProvider("google")}
@@ -94,25 +91,6 @@ const LoginContent = () => {
           </button>
         </div>
       </div>
-    </div>
-  );
-};
-
-const AndroidAppLoginNotice = () => {
-
-  // TODO: 테스트 후 원복 — if (!isApp || !isAndroid) return null;
-  if (false) return null;
-
-  return (
-    <div className="flex items-start gap-2.5 rounded-2xl bg-white/15 px-4 py-3 backdrop-blur-sm">
-      <Info className="mt-0.5 h-4 w-4 shrink-0 text-white/80" />
-      <p className="text-sm leading-snug text-white/90">
-        카카오 로그인 시{" "}
-        <span className="font-semibold text-white">
-          이메일/비밀번호를 직접 입력
-        </span>
-        해주세요. 카카오톡 앱 로그인은 일부 기기에서 동작하지 않을 수 있어요.
-      </p>
     </div>
   );
 };
