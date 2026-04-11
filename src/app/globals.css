@@ -237,14 +237,25 @@
     }
     scrollbar-width: none;
   }
-  .animate-slideInUp {
-    animation: slideInUp 0.5s ease-in-out forwards;
+  /* === Rich Toast Animations === */
+  .animate-richToastIn {
+    animation: richToastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
-  .animate-fadeOut {
-    animation: fadeOut 0.5s ease-in-out forwards;
+  .animate-richToastOut-auto {
+    animation: richToastOutAuto 0.3s ease-out forwards;
+  }
+  .animate-richToastOut-button {
+    animation: richToastOutButton 0.2s ease-in forwards;
   }
   .animate-slideOutDown {
     animation: slideOutDown 0.3s ease-in-out forwards;
+  }
+  /* 일반 Toast용 (기존 호환) */
+  .animate-slideInUp {
+    animation: richToastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .animate-fadeOut {
+    animation: richToastOutAuto 0.3s ease-out forwards;
   }
 
   .sticky-optimized {
@@ -305,5 +316,53 @@
   to {
     transform: translateY(100%);
     opacity: 0;
+  }
+}
+
+@keyframes richToastIn {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes richToastOutAuto {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+@keyframes richToastOutButton {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes richToastProgress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }
