@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { ChevronRight, X } from "lucide-react";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
 import { ToastType } from "../model/types";
@@ -25,7 +25,6 @@ const extractVideoIdFromThumbnail = (thumbnailUrl: string): string | null => {
 export const RichToast = ({
   id,
   richContent,
-  action,
   persistent = false,
   dismissible = "both",
   duration = 5000,
@@ -126,15 +125,6 @@ export const RichToast = ({
     },
     [clearTimers, removeToast, id]
   );
-
-  const handleActionClick = () => {
-    if (action?.onClick) {
-      action.onClick();
-    }
-    if (dismissible === "action" || dismissible === "both") {
-      handleDismiss("button");
-    }
-  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     handlePause();
@@ -301,27 +291,13 @@ export const RichToast = ({
           )}
         </div>
 
-        {action && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleActionClick();
-            }}
-            className="hover:text-olive-light flex flex-shrink-0 items-center gap-1 transition-colors"
-            aria-label={action.label}
-          >
-            <span className="text-sm font-semibold">{action.label}</span>
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        )}
       </div>
 
       {/* Progress bar */}
       {!persistent && (
         <div className="absolute right-4 bottom-0 left-4 h-0.5 overflow-hidden rounded-full">
           <div
-            className="h-full w-full origin-left rounded-full bg-olive-light/40"
+            className="h-full w-full origin-left rounded-full bg-olive-light"
             style={{
               animation: `richToastProgress ${effectiveDuration}ms linear forwards`,
               animationPlayState: isPaused ? "paused" : "running",
