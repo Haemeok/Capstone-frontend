@@ -1,24 +1,7 @@
 import { END_POINTS } from "../config/constants/api";
-import { storage } from "../lib/storage";
 import { isClient } from "./config";
 import { API_CONFIG } from "./config";
 import type { ForceLogoutEventDetail } from "./types";
-
-const LOGIN_STATE_KEY = "isLoggedIn";
-
-export const setLoginState = (state: boolean) => {
-  if (!isClient) return;
-  if (state) {
-    storage.setBooleanItem(LOGIN_STATE_KEY, true);
-  } else {
-    storage.removeItem(LOGIN_STATE_KEY);
-  }
-};
-
-const getLoginState = (): boolean => {
-  if (!isClient) return false;
-  return storage.getBooleanItem(LOGIN_STATE_KEY);
-};
 
 export const dispatchForceLogoutEvent = (reason: string, message?: string) => {
   if (isClient) {
@@ -39,13 +22,26 @@ let refreshPromise: Promise<boolean> | null = null;
 let lastRefreshFailTime = 0;
 const REFRESH_COOLDOWN_MS = 5000;
 
-export const refreshToken = async (): Promise<boolean> => {
-  if (!getLoginState()) {
-    return false;
+const logAuth = (event: string, data?: Record<string, unknown>) => {
+  if (isClient) {
+    console.log(`[Auth] ${event}`, {
+      ...data,
+      timestamp: new Date().toISOString(),
+      hasCookies: document.cookie.length > 0,
+      cookieNames: document.cookie
+        .split(";")
+        .map((c) => c.trim().split("=")[0])
+        .filter(Boolean),
+    });
   }
+};
 
+export const refreshToken = async (): Promise<boolean> => {
   const now = Date.now();
   if (now - lastRefreshFailTime < REFRESH_COOLDOWN_MS) {
+    logAuth("refresh-blocked-cooldown", {
+      remainingMs: REFRESH_COOLDOWN_MS - (now - lastRefreshFailTime),
+    });
     return false;
   }
 
@@ -67,6 +63,8 @@ export const refreshToken = async (): Promise<boolean> => {
 };
 
 const performTokenRefresh = async (): Promise<boolean> => {
+  logAuth("refresh-start");
+
   try {
     const response = await fetch("/api/auth/refresh", {
       method: "POST",
@@ -77,21 +75,23 @@ const performTokenRefresh = async (): Promise<boolean> => {
     });
 
     if (!response.ok) {
+      logAuth("refresh-failed", { status: response.status });
       throw new Error(`Token refresh failed: ${response.statusText}`);
     }
 
-    if (isClient) {
-      setLoginState(true);
+    logAuth("refresh-success");
 
+    if (isClient) {
       const event = new CustomEvent("tokenRefreshed");
       window.dispatchEvent(event);
     }
 
     return true;
   } catch (error) {
-    if (getLoginState()) {
-      dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
-    }
+    logAuth("refresh-error-forceLogout", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
     return false;
   }
 };
@@ -106,15 +106,12 @@ export const performLogout = async (): Promise<boolean> => {
       credentials: "include",
     });
 
-    setLoginState(false);
-
     if (response.ok) {
       return true;
     }
 
     throw new Error(`Logout failed: ${response.statusText}`);
   } catch (error) {
-    setLoginState(false);
     return false;
   }
 };

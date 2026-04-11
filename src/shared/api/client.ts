@@ -64,9 +64,20 @@ export async function apiClient<T = any>(
     let response = await executeRequest();
 
     if (response.status === 401 && isClient) {
+      console.log("[Auth] 401-detected", {
+        url,
+        timestamp: new Date().toISOString(),
+        cookieNames: document.cookie
+          .split(";")
+          .map((c) => c.trim().split("=")[0])
+          .filter(Boolean),
+      });
       const retryResponse = await handle401Error(executeRequest);
       if (retryResponse) {
+        console.log("[Auth] 401-retry-success", { url });
         response = retryResponse;
+      } else {
+        console.log("[Auth] 401-retry-failed", { url });
       }
     }
 
