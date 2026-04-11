@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { ChevronRight, X } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
@@ -8,12 +8,14 @@ import { ToastType } from "../model/types";
 import { useToastStore } from "../model/store";
 import { Image } from "@/shared/ui/image";
 import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 type RichToastProps = ToastType;
 
 const SWIPE_THRESHOLD = 100;
 const TRANSITION_DURATION = 300;
 const MAX_TOAST_DURATION = 30000;
+const CLOSE_BUTTON_DELAY_MS = 500;
 
 const extractVideoIdFromThumbnail = (thumbnailUrl: string): string | null => {
   const match = thumbnailUrl.match(/\/vi\/([^/]+)\//);
@@ -34,6 +36,13 @@ export const RichToast = ({
   const [dragOffset, setDragOffset] = useState(0);
   const startY = useRef(0);
   const currentY = useRef(0);
+  const [dismissType, setDismissType] = useState<"auto" | "button" | "swipe">(
+    "auto"
+  );
+  const [showCloseButton, setShowCloseButton] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const remainingTimeRef = useRef(0);
+  const timerStartRef = useRef(0);
 
   const thumbnailUrl = useMemo(() => {
     if (!richContent?.thumbnail) return undefined;
@@ -47,40 +56,88 @@ export const RichToast = ({
 
   const effectiveDuration = Math.min(duration, MAX_TOAST_DURATION);
 
+  // Close button delayed fade-in
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCloseButton(true);
+    }, CLOSE_BUTTON_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Pausable timer logic
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const removeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const startTimers = useCallback(
+    (remaining: number) => {
+      timerStartRef.current = Date.now();
+      remainingTimeRef.current = remaining;
+
+      hideTimerRef.current = setTimeout(() => {
+        setDismissType("auto");
+        setIsVisible(false);
+      }, remaining - TRANSITION_DURATION);
+
+      removeTimerRef.current = setTimeout(() => {
+        removeToast(id);
+      }, remaining);
+    },
+    [id, removeToast]
+  );
+
+  const clearTimers = useCallback(() => {
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    if (removeTimerRef.current) clearTimeout(removeTimerRef.current);
+  }, []);
+
   useEffect(() => {
     if (persistent) return;
+    startTimers(effectiveDuration);
+    return clearTimers;
+  }, [persistent, effectiveDuration, startTimers, clearTimers]);
 
-    const hideTimer = setTimeout(() => {
+  // Pause/Resume handlers
+  const handlePause = useCallback(() => {
+    if (persistent || isPaused) return;
+    clearTimers();
+    const elapsed = Date.now() - timerStartRef.current;
+    remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+    setIsPaused(true);
+    triggerHaptic("Light");
+  }, [persistent, isPaused, clearTimers]);
+
+  const handleResume = useCallback(() => {
+    if (persistent || !isPaused) return;
+    setIsPaused(false);
+    if (remainingTimeRef.current > TRANSITION_DURATION) {
+      startTimers(remainingTimeRef.current);
+    }
+  }, [persistent, isPaused, startTimers]);
+
+  const handleDismiss = useCallback(
+    (type: "auto" | "button" | "swipe" = "auto") => {
+      clearTimers();
+      setDismissType(type);
       setIsVisible(false);
-    }, effectiveDuration - TRANSITION_DURATION);
-
-    const removeTimer = setTimeout(() => {
-      removeToast(id);
-    }, effectiveDuration);
-
-    return () => {
-      clearTimeout(hideTimer);
-      clearTimeout(removeTimer);
-    };
-  }, [id, effectiveDuration, persistent, removeToast]);
-
-  const handleDismiss = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      removeToast(id);
-    }, TRANSITION_DURATION);
-  };
+      const exitDuration = type === "button" ? 200 : TRANSITION_DURATION;
+      setTimeout(() => {
+        removeToast(id);
+      }, exitDuration);
+    },
+    [clearTimers, removeToast, id]
+  );
 
   const handleActionClick = () => {
     if (action?.onClick) {
       action.onClick();
     }
     if (dismissible === "action" || dismissible === "both") {
-      handleDismiss();
+      handleDismiss("button");
     }
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    handlePause();
     if (dismissible !== "swipe" && dismissible !== "both") return;
     setIsDragging(true);
     startY.current = e.touches[0].clientY;
@@ -97,13 +154,17 @@ export const RichToast = ({
   };
 
   const handleTouchEnd = () => {
-    if (!isDragging) return;
+    if (!isDragging) {
+      handleResume();
+      return;
+    }
     setIsDragging(false);
 
     if (dragOffset > SWIPE_THRESHOLD) {
-      handleDismiss();
+      handleDismiss("swipe");
     } else {
       setDragOffset(0);
+      handleResume();
     }
   };
 
@@ -130,7 +191,7 @@ export const RichToast = ({
     (e.target as HTMLElement).releasePointerCapture(e.pointerId);
 
     if (dragOffset > SWIPE_THRESHOLD) {
-      handleDismiss();
+      handleDismiss("swipe");
     } else {
       setDragOffset(0);
     }
@@ -149,18 +210,36 @@ export const RichToast = ({
   const toastContent = (
     <div
       className={cn(
-        "pointer-events-auto relative z-30 rounded-2xl bg-white shadow-2xl",
+        "pointer-events-auto relative z-30 rounded-2xl bg-white",
+        isPaused
+          ? "shadow-[0_25px_60px_-12px_rgba(0,0,0,0.35)]"
+          : "shadow-2xl",
         "md:border-olive-mint/60 w-full px-4 py-3 md:w-96 md:border-1 md:p-6",
         !isDragging && "transition-transform duration-300 ease-out",
-        isVisible && dragOffset === 0 && "animate-slideInUp",
-        !isVisible && dragOffset === 0 && "animate-slideOutDown",
+        isVisible && dragOffset === 0 && "animate-richToastIn",
+        !isVisible &&
+          dragOffset === 0 &&
+          dismissType === "auto" &&
+          "animate-richToastOut-auto",
+        !isVisible &&
+          dragOffset === 0 &&
+          dismissType === "button" &&
+          "animate-richToastOut-button",
+        !isVisible &&
+          dragOffset === 0 &&
+          dismissType === "swipe" &&
+          "animate-slideOutDown",
         isClickable && "cursor-pointer"
       )}
       style={{
-        transform: `translateY(${dragOffset}px)`,
+        transform: `translateY(${dragOffset}px)${isPaused && !isDragging ? " scale(1.01)" : ""}`,
         opacity: isDragging ? opacity : 1,
         touchAction:
           dismissible === "swipe" || dismissible === "both" ? "none" : "auto",
+        transition:
+          isPaused && !isDragging
+            ? "transform 0.15s ease-out, box-shadow 0.15s ease-out"
+            : undefined,
       }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -168,21 +247,31 @@ export const RichToast = ({
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
+      onMouseEnter={handlePause}
+      onMouseLeave={handleResume}
       role="status"
       aria-live="polite"
       aria-atomic="true"
     >
-      {/* Close button - desktop only */}
+      {/* Close button - mobile visible with fade-in */}
       <button
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          handleDismiss();
+          handleDismiss("button");
         }}
-        className="absolute top-3 right-3 z-10 hidden text-gray-400 transition-colors hover:text-gray-600 md:flex"
+        className={cn(
+          "absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/5 text-gray-400 transition-all hover:bg-black/10 hover:text-gray-600 md:top-3 md:right-3 md:h-auto md:w-auto md:bg-transparent",
+          showCloseButton
+            ? "scale-100 opacity-100"
+            : "pointer-events-none scale-80 opacity-0"
+        )}
+        style={{
+          transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
+        }}
         aria-label="닫기"
       >
-        <X className="h-5 w-5" />
+        <X className="h-4 w-4 md:h-5 md:w-5" />
       </button>
 
       <div className="flex min-w-0 items-center gap-3">
@@ -227,11 +316,28 @@ export const RichToast = ({
           </button>
         )}
       </div>
+
+      {/* Progress bar */}
+      {!persistent && (
+        <div className="absolute right-4 bottom-0 left-4 h-0.5 overflow-hidden rounded-full">
+          <div
+            className="h-full w-full origin-left rounded-full bg-olive-light/40"
+            style={{
+              animation: `richToastProgress ${effectiveDuration}ms linear forwards`,
+              animationPlayState: isPaused ? "paused" : "running",
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 
   return isClickable && recipeUrl ? (
-    <Link href={recipeUrl} className="w-full min-w-0" onClick={handleLinkClick}>
+    <Link
+      href={recipeUrl}
+      className="w-full min-w-0"
+      onClick={handleLinkClick}
+    >
       {toastContent}
     </Link>
   ) : (
