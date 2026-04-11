@@ -74,6 +74,7 @@ export const usePutUserInfoMutation = ({
     },
     onSuccess: (data: User) => {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["user", data.id] });
       setUser(data);
       if (onSuccess) {
         onSuccess(data);
