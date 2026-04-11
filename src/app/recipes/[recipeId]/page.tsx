@@ -203,7 +203,10 @@ export default async function RecipeDetailPage({
                   <SectionErrorFallback message="조리 순서를 불러올 수 없어요" />
                 }
               >
-                <RecipeStepList RecipeSteps={staticRecipe.steps} />
+                <RecipeStepList
+                  RecipeSteps={staticRecipe.steps}
+                  recipeIngredients={staticRecipe.ingredients}
+                />
               </ErrorBoundary>
             </RecipeVideoSection>
           </ErrorBoundary>
