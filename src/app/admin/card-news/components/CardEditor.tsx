@@ -225,32 +225,35 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
             </p>
 
             {/* 썸네일 미리보기 */}
-            <div
-              className="origin-top-left"
-              style={{ transform: "scale(0.35)", width: 1080, height: 1350 }}
-            >
-              <ThumbnailCard
-                ref={thumbnailRef}
-                imageUrl={thumbnail.imageUrl}
-                hooking={texts.hooking}
-                subject={texts.subject}
-              />
+            <div style={{ width: 1080 * 0.35, height: 1350 * 0.35, overflow: "hidden" }}>
+              <div
+                className="origin-top-left"
+                style={{ transform: "scale(0.35)", width: 1080, height: 1350 }}
+              >
+                <ThumbnailCard
+                  ref={thumbnailRef}
+                  imageUrl={thumbnail.imageUrl}
+                  hooking={texts.hooking}
+                  subject={texts.subject}
+                />
+              </div>
             </div>
 
             {/* 레시피 카드 미리보기 */}
             {recipes.map((recipe, i) => (
-              <div
-                key={recipe.id}
-                className="origin-top-left"
-                style={{ transform: "scale(0.35)", width: 1080, height: 1350 }}
-              >
-                <RecipeCard
-                  ref={recipeRefs.current[i]}
-                  imageUrl={recipe.imageUrl}
-                  title={recipe.title}
-                  summary={texts.summaries[i + 1]?.summary ?? ""}
-                  boxPosition={boxPositions[i] ?? "bottom"}
-                />
+              <div key={recipe.id} style={{ width: 1080 * 0.35, height: 1350 * 0.35, overflow: "hidden" }}>
+                <div
+                  className="origin-top-left"
+                  style={{ transform: "scale(0.35)", width: 1080, height: 1350 }}
+                >
+                  <RecipeCard
+                    ref={recipeRefs.current[i]}
+                    imageUrl={recipe.imageUrl}
+                    title={recipe.title}
+                    summary={texts.summaries[i + 1]?.summary ?? ""}
+                    boxPosition={boxPositions[i] ?? "bottom"}
+                  />
+                </div>
               </div>
             ))}
           </div>
