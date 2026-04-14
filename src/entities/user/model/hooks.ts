@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -32,7 +32,6 @@ export const useUserQuery = (userId: string, isOtherProfile: boolean) => {
 };
 
 export const useMyInfoQuery = () => {
-  const [isMounted, setIsMounted] = useState(false);
   const setUser = useUserStore((state) => state.setUser);
   const {
     data: userData,
@@ -55,18 +54,12 @@ export const useMyInfoQuery = () => {
   });
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isMounted) return;
-
     if (userData) {
       setUser(userData);
     } else if (isError) {
       setUser(null);
     }
-  }, [userData, isError, setUser, isMounted]);
+  }, [userData, isError, setUser]);
 
   return {
     user: userData,
