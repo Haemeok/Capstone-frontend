@@ -31,7 +31,7 @@ const NAV_LINKS = [
 
 const DesktopHeader = () => {
   const pathname = usePathname();
-  const { user } = useUserStore();
+  const { user, isAuthReady } = useUserStore();
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
   return (
@@ -71,7 +71,9 @@ const DesktopHeader = () => {
           <div className="flex items-center gap-4">
             <NotificationButton />
 
-            {user ? (
+            {!isAuthReady ? (
+              <div className="h-10 w-[72px] animate-pulse rounded-xl bg-gray-100" />
+            ) : user ? (
               <Link
                 href={`/users/${user.id}`}
                 className="font-sm rounded-full p-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"

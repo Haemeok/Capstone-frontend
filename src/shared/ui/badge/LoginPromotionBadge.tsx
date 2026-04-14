@@ -20,10 +20,10 @@ const LoginPromotionBadge = ({
   children,
   popupClassName,
 }: LoginPromotionBadgeProps) => {
-  const { user } = useUserStore();
+  const { user, isAuthReady } = useUserStore();
   const [isDesktopBadgeClosed, setIsDesktopBadgeClosed] = useState(false);
 
-  if (user) {
+  if (user || !isAuthReady) {
     return <>{children}</>;
   }
 
