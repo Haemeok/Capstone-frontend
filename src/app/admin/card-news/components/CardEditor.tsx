@@ -9,6 +9,7 @@ import { askGrok } from "@/app/actions/grok";
 import { saveAllCards } from "../lib/capture";
 import { buildCardNewsPrompt } from "../lib/prompt";
 import { RecipeCard } from "./cards/RecipeCard";
+import { RecipeSummaryCard } from "./cards/RecipeSummaryCard";
 import { ThumbnailCard } from "./cards/ThumbnailCard";
 
 type CardEditorProps = {
@@ -36,10 +37,12 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
 
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const recipeRefs = useRef<React.RefObject<HTMLDivElement | null>[]>([]);
+  const summaryRefs = useRef<React.RefObject<HTMLDivElement | null>[]>([]);
 
   // 레시피별 ref 초기화
   useEffect(() => {
     recipeRefs.current = recipes.map(() => createRef<HTMLDivElement>());
+    summaryRefs.current = recipes.map(() => createRef<HTMLDivElement>());
     setBoxPositions(recipes.map(() => getRandomPosition()));
   }, [recipes]);
 
@@ -109,10 +112,11 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
     if (!texts) return;
     setSaving(true);
     try {
-      const allRefs = [thumbnailRef, ...recipeRefs.current];
+      const allRefs = [thumbnailRef, ...recipeRefs.current, ...summaryRefs.current];
       const allNames = [
         "thumbnail.png",
         ...recipes.map((r, i) => `recipe-${i + 1}-${r.title}.png`),
+        ...recipes.map((r, i) => `summary-${i + 1}-${r.title}.png`),
       ];
       await saveAllCards(allRefs, allNames, folderName);
       alert("저장 완료!");
@@ -221,14 +225,14 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
           {/* 오른쪽: 미리보기 */}
           <div className="flex-1 space-y-6 overflow-auto">
             <p className="text-xs text-gray-400">
-              미리보기 (축소됨, 실제 저장은 1080x1350)
+              미리보기 (축소됨, 실제 저장은 1080x1080)
             </p>
 
             {/* 썸네일 미리보기 */}
-            <div style={{ width: 1080 * 0.35, height: 1350 * 0.35, overflow: "hidden" }}>
+            <div style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
               <div
                 className="origin-top-left"
-                style={{ transform: "scale(0.35)", width: 1080, height: 1350 }}
+                style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
               >
                 <ThumbnailCard
                   ref={thumbnailRef}
@@ -241,10 +245,10 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
 
             {/* 레시피 카드 미리보기 */}
             {recipes.map((recipe, i) => (
-              <div key={recipe.id} style={{ width: 1080 * 0.35, height: 1350 * 0.35, overflow: "hidden" }}>
+              <div key={recipe.id} style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
                 <div
                   className="origin-top-left"
-                  style={{ transform: "scale(0.35)", width: 1080, height: 1350 }}
+                  style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
                 >
                   <RecipeCard
                     ref={recipeRefs.current[i]}
@@ -252,6 +256,29 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
                     title={recipe.title}
                     summary={texts.summaries[i + 1]?.summary ?? ""}
                     boxPosition={boxPositions[i] ?? "bottom"}
+                  />
+                </div>
+              </div>
+            ))}
+
+            {/* 요약 카드 미리보기 */}
+            <p className="mt-6 text-xs text-gray-400">요약 티켓 카드</p>
+            {recipes.map((recipe, i) => (
+              <div key={`summary-${recipe.id}`} style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
+                <div
+                  className="origin-top-left"
+                  style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
+                >
+                  <RecipeSummaryCard
+                    ref={summaryRefs.current[i]}
+                    recipeId={Number(recipe.id)}
+                    imageUrl={recipe.imageUrl}
+                    title={recipe.title}
+                    description={texts.summaries[i + 1]?.summary ?? ""}
+                    tags={recipe.tags ?? []}
+                    ingredients={recipe.ingredients?.map(
+                      (ing) => `${ing.name} ${ing.quantity ?? ""}${ing.unit ?? ""}`.trim()
+                    ) ?? []}
                   />
                 </div>
               </div>
