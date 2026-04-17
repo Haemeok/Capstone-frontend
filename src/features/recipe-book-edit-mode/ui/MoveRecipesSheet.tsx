@@ -1,5 +1,8 @@
 "use client";
 
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import {
   Dialog,
@@ -19,6 +22,8 @@ import {
   useMoveRecipes,
   useRecipeBooks,
 } from "@/entities/recipe-book";
+
+import { CreateRecipeBookSheet } from "@/features/recipe-book-create";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 
@@ -41,6 +46,7 @@ export const MoveRecipesSheet = ({
   const selectedIds = useEditModeStore((s) => s.selectedIds);
   const exit = useEditModeStore((s) => s.exit);
   const addToast = useToastStore((state) => state.addToast);
+  const [createOpen, setCreateOpen] = useState(false);
 
   const targets = (books ?? []).filter((b) => b.id !== fromBookId);
   const count = selectedIds.size;
@@ -69,9 +75,19 @@ export const MoveRecipesSheet = ({
 
   const Body = (
     <div className="px-2 pb-6">
+      <button
+        type="button"
+        className="flex w-full items-center gap-3 rounded-xl px-4 py-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100"
+        onClick={() => setCreateOpen(true)}
+      >
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-olive-light/10 text-olive-light">
+          <PlusIcon size={18} />
+        </span>
+        <span className="font-medium text-gray-900">새 레시피북 만들기</span>
+      </button>
       {targets.length === 0 ? (
-        <p className="px-4 py-8 text-center text-sm text-gray-500">
-          이동할 다른 레시피북이 없어요. 먼저 새 레시피북을 만들어주세요.
+        <p className="px-4 py-6 text-center text-sm text-gray-500">
+          이동할 다른 레시피북이 없어요. 새로 만들어보세요.
         </p>
       ) : (
         <ul>
@@ -95,22 +111,18 @@ export const MoveRecipesSheet = ({
     </div>
   );
 
-  if (isDesktop) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
-          <DialogHeader className="px-6 pt-6 pb-2">
-            <DialogTitle className="text-xl font-bold text-gray-900">
-              어느 레시피북으로 이동할까요?
-            </DialogTitle>
-          </DialogHeader>
-          {Body}
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  return (
+  const sheet = isDesktop ? (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
+        <DialogHeader className="px-6 pt-6 pb-2">
+          <DialogTitle className="text-xl font-bold text-gray-900">
+            어느 레시피북으로 이동할까요?
+          </DialogTitle>
+        </DialogHeader>
+        {Body}
+      </DialogContent>
+    </Dialog>
+  ) : (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="rounded-t-3xl">
         <DrawerHeader className="px-6 pt-6 pb-2 text-left">
@@ -121,5 +133,12 @@ export const MoveRecipesSheet = ({
         {Body}
       </DrawerContent>
     </Drawer>
+  );
+
+  return (
+    <>
+      {sheet}
+      <CreateRecipeBookSheet open={createOpen} onOpenChange={setCreateOpen} />
+    </>
   );
 };
