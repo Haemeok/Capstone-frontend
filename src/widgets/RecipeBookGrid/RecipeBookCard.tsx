@@ -2,7 +2,10 @@
 
 import { useRouter } from "next/navigation";
 
-import { useRecipeBookDetail } from "@/entities/recipe-book";
+import {
+  useDisplayedRecipeCount,
+  useRecipeBookDetail,
+} from "@/entities/recipe-book";
 
 import { RecipeBookCardMenu } from "./RecipeBookCardMenu";
 import { RecipeBookThumbnailGrid } from "./RecipeBookThumbnailGrid";
@@ -26,10 +29,7 @@ export const RecipeBookCard = ({
   const { data } = useRecipeBookDetail(bookId);
 
   const previewRecipes = data?.recipes.slice(0, PREVIEW_RECIPE_COUNT) ?? [];
-  // TEMP: backend list API returns recipeCount = 0 (not initialized).
-  // Workaround until backend fix: derive count from the detail fetch's recipes array.
-  // Caveat: bounded by page size (20) — large books undercount. Revisit when backend ships fix.
-  const displayedCount = data?.recipes?.length ?? recipeCount;
+  const displayedCount = useDisplayedRecipeCount(bookId, recipeCount);
 
   const handleClick = () => {
     router.push(`/recipe-books/${bookId}`);
