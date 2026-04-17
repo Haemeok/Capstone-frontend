@@ -1,11 +1,11 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import SaveButton from "@/shared/ui/SaveButton";
 
-import { useRecipeBooks } from "@/entities/recipe-book";
+import { RECIPE_BOOK_QUERY_KEYS, type RecipeBook } from "@/entities/recipe-book";
 import { getRecipeStatus } from "@/entities/recipe/model/api";
 import { RecipeStatus } from "@/entities/recipe/model/types";
 
@@ -38,8 +38,7 @@ const RecipeSaveButton = ({
   const { mutate: toggleFavorite } = useToggleRecipeSave(recipeId);
   const { checkAndTrigger } = useNotificationPermissionTrigger();
   const { addToast } = useToastStore();
-  const { data: books } = useRecipeBooks();
-  const defaultBook = books?.find((b) => b.isDefault);
+  const queryClient = useQueryClient();
 
   const { data: currentStatus } = useQuery<RecipeStatus>({
     queryKey: ["recipe-status", recipeId],
@@ -65,6 +64,10 @@ const RecipeSaveButton = ({
             position: "bottom",
           });
         } else {
+          const books = queryClient.getQueryData<RecipeBook[]>(
+            RECIPE_BOOK_QUERY_KEYS.list()
+          );
+          const defaultBook = books?.find((b) => b.isDefault);
           notifySaved(defaultBook);
         }
       },
