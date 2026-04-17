@@ -6,6 +6,7 @@ type SaveButtonProps = {
   className?: string;
   iconClassName?: string;
   defaultColorClass?: string;
+  selectedColorClass?: string;
   onClick?: () => void;
   label?: string;
   isFavorite: boolean;
@@ -15,6 +16,7 @@ const SaveButton = ({
   className,
   iconClassName,
   defaultColorClass = "text-gray-400",
+  selectedColorClass = "fill-dark text-dark",
   onClick,
   label,
   isFavorite,
@@ -34,12 +36,12 @@ const SaveButton = ({
         aria-pressed={isFavorite}
       >
         <Bookmark
-          width={26}
-          height={26}
+          width={24}
+          height={24}
           className={cn(
             "transition-all duration-300",
             iconClassName,
-            isFavorite ? "fill-dark text-dark" : defaultColorClass
+            isFavorite ? selectedColorClass : defaultColorClass
           )}
         />
       </button>

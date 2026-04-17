@@ -23,6 +23,7 @@ type RecipeSaveButtonProps = {
   buttonClassName?: string;
   iconClassName?: string;
   defaultColorClass?: string;
+  selectedColorClass?: string;
   label?: string;
 };
 
@@ -32,6 +33,7 @@ const RecipeSaveButton = ({
   buttonClassName,
   iconClassName,
   defaultColorClass,
+  selectedColorClass,
   label,
 }: RecipeSaveButtonProps) => {
   const { mutate: toggleFavorite } = useToggleRecipeSave(recipeId);
@@ -104,6 +106,7 @@ const RecipeSaveButton = ({
         className={buttonClassName}
         iconClassName={iconClassName}
         defaultColorClass={defaultColorClass}
+        selectedColorClass={selectedColorClass}
         onClick={handleClick}
         isFavorite={isFavorite}
         label={label}

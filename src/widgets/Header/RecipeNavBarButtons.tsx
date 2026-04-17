@@ -17,6 +17,8 @@ const RecipeNavBarButtons = ({
         recipeId={recipeId}
         initialIsFavorite={initialIsFavorite}
         buttonClassName="flex-shrink-0 rounded-full p-2 transition-colors duration-300 hover:bg-gray-200/30"
+        defaultColorClass="text-current"
+        selectedColorClass="fill-current text-current"
       />
       <ShareButton
         className="flex-shrink-0 rounded-full p-2 transition-colors duration-300 hover:bg-gray-200/30"
