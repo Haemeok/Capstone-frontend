@@ -17,7 +17,7 @@ const SaveButton = ({
     <div className="flex flex-col items-center">
       <button
         onClick={onClick}
-        className={`h-14 w-14 ${className}`}
+        className={className}
         aria-label={isFavorite ? "저장 해제" : "저장"}
         aria-pressed={isFavorite}
       >
