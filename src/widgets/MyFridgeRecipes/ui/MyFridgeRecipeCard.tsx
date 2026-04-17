@@ -16,7 +16,7 @@ import { MyFridgeRecipeItem } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
-import { RecipeLikeButton } from "@/features/recipe-like";
+import { RecipeSaveButton } from "@/features/recipe-save";
 
 import ExpandableIngredients from "./ExpandableIngredients";
 
@@ -83,12 +83,10 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex gap-1">
-            <RecipeLikeButton
+            <RecipeSaveButton
               recipeId={recipe.id}
-              initialIsLiked={recipe.likedByCurrentUser}
-              initialLikeCount={recipe.likeCount}
+              initialIsFavorite={recipe.favoriteByCurrentUser}
               buttonClassName="text-white"
-              iconClassName="fill-gray-300 opacity-80"
             />
           </div>
           {rightBadge && <div className="flex gap-1">{rightBadge}</div>}
