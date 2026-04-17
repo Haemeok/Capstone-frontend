@@ -115,6 +115,7 @@ const RecipeSlide = ({
                     recipeId={item.id}
                     initialIsFavorite={item.favoriteByCurrentUser}
                     buttonClassName="text-white"
+                    iconClassName="fill-gray-300 opacity-80"
                   />
                 }
                 rightBadge={getRecipeRightBadge(item)}

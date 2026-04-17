@@ -21,6 +21,7 @@ type RecipeSaveButtonProps = {
   recipeId: string;
   initialIsFavorite: boolean;
   buttonClassName?: string;
+  iconClassName?: string;
   label?: string;
 };
 
@@ -28,6 +29,7 @@ const RecipeSaveButton = ({
   recipeId,
   initialIsFavorite,
   buttonClassName,
+  iconClassName,
   label,
 }: RecipeSaveButtonProps) => {
   const { mutate: toggleFavorite } = useToggleRecipeSave(recipeId);
@@ -98,6 +100,7 @@ const RecipeSaveButton = ({
     <>
       <SaveButton
         className={buttonClassName}
+        iconClassName={iconClassName}
         onClick={handleClick}
         isFavorite={isFavorite}
         label={label}

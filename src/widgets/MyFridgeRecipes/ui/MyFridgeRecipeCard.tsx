@@ -87,6 +87,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
               recipeId={recipe.id}
               initialIsFavorite={recipe.favoriteByCurrentUser}
               buttonClassName="text-white"
+              iconClassName="fill-gray-300 opacity-80"
             />
           </div>
           {rightBadge && <div className="flex gap-1">{rightBadge}</div>}

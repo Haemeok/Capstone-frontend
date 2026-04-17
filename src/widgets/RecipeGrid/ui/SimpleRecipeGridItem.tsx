@@ -60,6 +60,7 @@ const SimpleRecipeGridItem = ({
             recipeId={recipe.id}
             initialIsFavorite={recipe.favoriteByCurrentUser}
             buttonClassName="text-white"
+            iconClassName="fill-gray-300 opacity-80"
           />
         </div>
 

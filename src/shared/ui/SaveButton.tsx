@@ -1,7 +1,10 @@
 import { Bookmark } from "lucide-react";
 
+import { cn } from "@/shared/lib/utils";
+
 type SaveButtonProps = {
   className?: string;
+  iconClassName?: string;
   onClick?: () => void;
   label?: string;
   isFavorite: boolean;
@@ -9,6 +12,7 @@ type SaveButtonProps = {
 
 const SaveButton = ({
   className,
+  iconClassName,
   onClick,
   label,
   isFavorite,
@@ -28,11 +32,13 @@ const SaveButton = ({
         aria-pressed={isFavorite}
       >
         <Bookmark
-          width={24}
-          height={24}
-          className={`transition-all duration-300 ${
-            isFavorite ? "fill-dark" : ""
-          }`}
+          width={30}
+          height={30}
+          className={cn(
+            "transition-all duration-300",
+            iconClassName,
+            isFavorite && "fill-dark"
+          )}
         />
       </button>
       {label && <p className="mt-1 text-sm font-bold">{label}</p>}

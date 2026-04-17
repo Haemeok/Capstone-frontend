@@ -189,6 +189,7 @@ const RecipeGrid = ({
               recipeId={detailedRecipe.id}
               initialIsFavorite={detailedRecipe.favoriteByCurrentUser}
               buttonClassName="text-white"
+              iconClassName="fill-gray-300 opacity-80"
             />
           );
 
