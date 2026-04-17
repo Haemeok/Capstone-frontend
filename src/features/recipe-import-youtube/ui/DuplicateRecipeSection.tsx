@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-import { Bookmark, Check } from "lucide-react";
+import { Bookmark } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
@@ -146,11 +146,6 @@ const DuplicateRecipeSection = ({
   return (
     <>
       <div className="mx-auto w-full max-w-md space-y-6 rounded-3xl bg-white p-8 shadow-lg">
-        {/* Success Icon */}
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-olive-light/10">
-          <Check className="h-8 w-8 text-olive-light" />
-        </div>
-
         {/* Text Content */}
         <div className="text-center">
           <h3 className="text-xl font-bold text-gray-900">
