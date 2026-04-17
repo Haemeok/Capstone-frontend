@@ -53,6 +53,16 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
     [status?.ingredientIdsInFridge]
   );
 
+  const ownedIndices = useMemo(() => {
+    const owned = new Set<number>();
+    recipe.ingredients.forEach((ingredient, index) => {
+      if (ingredient.id && fridgeIngredientIds.has(ingredient.id)) {
+        owned.add(index);
+      }
+    });
+    return owned;
+  }, [recipe.ingredients, fridgeIngredientIds]);
+
   const randomActivity = useMemo(() => getRandomActivity(), []);
   const servingRatio = isValidServings ? currentServings / recipe.servings : 1;
 
@@ -175,6 +185,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         currentServings={currentServings}
         servingRatio={servingRatio}
         onServingsChange={setCurrentServings}
+        ownedIndices={ownedIndices}
       />
     </div>
   );

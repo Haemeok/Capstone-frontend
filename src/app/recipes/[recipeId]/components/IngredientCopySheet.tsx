@@ -26,6 +26,15 @@ type IngredientCopySheetProps = {
   currentServings: number;
   servingRatio: number;
   onServingsChange: (servings: number) => void;
+  ownedIndices: Set<number>;
+};
+
+const computeMissingIndices = (total: number, owned: Set<number>) => {
+  const missing = new Set<number>();
+  for (let i = 0; i < total; i++) {
+    if (!owned.has(i)) missing.add(i);
+  }
+  return missing;
 };
 
 export const IngredientCopySheet = ({
@@ -35,18 +44,29 @@ export const IngredientCopySheet = ({
   currentServings,
   servingRatio,
   onServingsChange,
+  ownedIndices,
 }: IngredientCopySheetProps) => {
   const { Container, Content, Header, Title, Description } =
     useResponsiveSheet();
   const { addToast } = useToastStore();
 
   const [mode, setMode] = useState<CopyMode>("copy");
-  const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
-    () => new Set(recipe.ingredients.map((_, i) => i))
+  const [selectedIndices, setSelectedIndices] = useState<Set<number>>(() =>
+    computeMissingIndices(recipe.ingredients.length, ownedIndices)
   );
   const [checkedIndices, setCheckedIndices] = useState<Set<number>>(new Set());
   const [isCopied, setIsCopied] = useState(false);
   const copiedTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setSelectedIndices(
+        computeMissingIndices(recipe.ingredients.length, ownedIndices)
+      );
+    }
+  }
 
   const ingredients = recipe.ingredients.map((ingredient, index) => {
     const converted = convertIngredientQuantity(
