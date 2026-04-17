@@ -1,1 +1,1 @@
-export { useToggleRecipeFavorite } from "./model/hooks";
+export { useToggleRecipeSave } from "./model/hooks";

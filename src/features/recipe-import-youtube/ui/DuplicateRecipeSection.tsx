@@ -7,7 +7,7 @@ import { Bookmark, Check } from "lucide-react";
 
 import { useRecipeDetailQuery, useRecipeStatusQuery } from "@/entities/recipe/model/hooks";
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
-import { useToggleRecipeFavorite } from "@/features/recipe-save/model/hooks";
+import { useToggleRecipeSave } from "@/features/recipe-save/model/hooks";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
@@ -33,7 +33,7 @@ const DuplicateRecipeSection = ({
   const { data: recipeStatus } = useRecipeStatusQuery(recipeId);
 
   const { mutate: toggleFavorite } =
-    useToggleRecipeFavorite(recipeId);
+    useToggleRecipeSave(recipeId);
 
   const isFavorited = recipeStatus?.favoriteByCurrentUser ?? false;
   const hasAutoSavedRef = useRef(false);

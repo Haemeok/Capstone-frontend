@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 
 import { RecipeStatus } from "@/entities/recipe/model/types";
+import { RECIPE_BOOK_QUERY_KEYS } from "@/entities/recipe-book";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 
@@ -12,9 +13,9 @@ import { trackReviewAction } from "@/shared/lib/review";
 
 import { scheduleReviewGate } from "@/features/review-gate";
 
-import { postRecipeFavorite } from "./api";
+import { postRecipeSave } from "./api";
 
-export const useToggleRecipeFavorite = (recipeId: string) => {
+export const useToggleRecipeSave = (recipeId: string) => {
   const queryClient = useQueryClient();
   const { mutate: rawMutate, ...restOfMutation } = useMutation<
     void,
@@ -22,7 +23,7 @@ export const useToggleRecipeFavorite = (recipeId: string) => {
     void,
     RecipeStatus | undefined
   >({
-    mutationFn: () => postRecipeFavorite(recipeId),
+    mutationFn: () => postRecipeSave(recipeId).then(() => undefined),
     onMutate: async () => {
       const recipeStatusQueryKey = ["recipe-status", recipeId];
 
@@ -54,19 +55,22 @@ export const useToggleRecipeFavorite = (recipeId: string) => {
       }
     },
     onError: (error, variables, context) => {
-      console.error("즐겨찾기 처리 실패:", error);
+      console.error("저장 처리 실패:", error);
       if (context) {
-        queryClient.setQueryData(
-          ["recipe-status", recipeId],
-          context
-        );
+        queryClient.setQueryData(["recipe-status", recipeId], context);
       }
     },
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["recipe-status", recipeId],
       });
-      queryClient.invalidateQueries({ queryKey: ["recipes", "favorite"] });
+      queryClient.invalidateQueries({ queryKey: ["recipes", "saved"] });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_BOOK_QUERY_KEYS.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_BOOK_QUERY_KEYS.savedBooks(recipeId),
+      });
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
     },
   });

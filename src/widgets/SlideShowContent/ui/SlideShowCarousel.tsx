@@ -14,7 +14,7 @@ import {
 
 import { type Recipe } from "@/entities/recipe";
 
-import { useToggleRecipeFavorite } from "@/features/recipe-save";
+import { useToggleRecipeSave } from "@/features/recipe-save";
 
 import { useToastStore } from "@/widgets/Toast";
 
@@ -29,7 +29,7 @@ type SlideShowCarouselProps = {
 const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
   const [api, setApi] = useState<CarouselApi>();
 
-  const { mutate: toggleRecipeFavorite } = useToggleRecipeFavorite(recipe.id);
+  const { mutate: toggleRecipeFavorite } = useToggleRecipeSave(recipe.id);
   const { addToast } = useToastStore();
 
   const TOTAL_STEPS = recipe.steps.length + 1;

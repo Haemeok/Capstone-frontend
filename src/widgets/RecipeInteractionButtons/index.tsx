@@ -10,7 +10,7 @@ import SaveButton from "@/shared/ui/SaveButton";
 import ShareButton from "@/shared/ui/ShareButton";
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
-import { useToggleRecipeFavorite } from "@/features/recipe-save";
+import { useToggleRecipeSave } from "@/features/recipe-save";
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
 
 import { useToastStore } from "@/widgets/Toast";
@@ -35,7 +35,7 @@ const RecipeInteractionButtons = ({
   authorId,
 }: RecipeInteractionButtonsProps) => {
   const { user } = useUserStore();
-  const { mutate: toggleFavorite } = useToggleRecipeFavorite(recipeId);
+  const { mutate: toggleFavorite } = useToggleRecipeSave(recipeId);
   const { addToast } = useToastStore();
   const { checkAndTrigger } = useNotificationPermissionTrigger();
 
