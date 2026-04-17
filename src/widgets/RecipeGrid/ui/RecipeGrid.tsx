@@ -188,7 +188,7 @@ const RecipeGrid = ({
               key="save"
               recipeId={detailedRecipe.id}
               initialIsFavorite={detailedRecipe.favoriteByCurrentUser}
-              buttonClassName="flex h-9 w-9 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-sm"
+              buttonClassName="text-white"
               iconClassName="fill-gray-300 opacity-80"
             />
           );
