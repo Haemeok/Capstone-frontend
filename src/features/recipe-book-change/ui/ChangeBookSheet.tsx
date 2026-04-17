@@ -11,19 +11,7 @@ import {
 
 import { CreateRecipeBookSheet } from "@/features/recipe-book-create";
 
-import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/shadcn/dialog";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 
@@ -45,8 +33,6 @@ type Props = {
   onMoveComplete?: (toBookId: string, toBookName: string) => void;
 };
 
-const DESKTOP_BREAKPOINT = "(min-width: 768px)";
-
 export const ChangeBookSheet = ({
   open,
   onOpenChange,
@@ -54,7 +40,7 @@ export const ChangeBookSheet = ({
   fromBookId: fromBookIdProp,
   onMoveComplete,
 }: Props) => {
-  const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT);
+  const { Container, Content, Header, Title } = useResponsiveSheet();
   const { data: books } = useRecipeBooks();
   const moveMutation = useMoveRecipes();
   const addToast = useToastStore((s) => s.addToast);
@@ -136,33 +122,18 @@ export const ChangeBookSheet = ({
     </div>
   );
 
-  const sheet = isDesktop ? (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
-        <DialogHeader className="px-6 pt-6 pb-2">
-          <DialogTitle className="text-xl font-bold text-gray-900">
-            어느 레시피북으로 옮길까요?
-          </DialogTitle>
-        </DialogHeader>
-        {Body}
-      </DialogContent>
-    </Dialog>
-  ) : (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="rounded-t-3xl">
-        <DrawerHeader className="px-6 pt-6 pb-2 text-left">
-          <DrawerTitle className="text-xl font-bold text-gray-900">
-            어느 레시피북으로 옮길까요?
-          </DrawerTitle>
-        </DrawerHeader>
-        {Body}
-      </DrawerContent>
-    </Drawer>
-  );
-
   return (
     <>
-      {sheet}
+      <Container open={open} onOpenChange={onOpenChange}>
+        <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
+          <Header className="px-6 pt-6 pb-2 text-left">
+            <Title className="text-xl font-bold text-gray-900">
+              어느 레시피북으로 옮길까요?
+            </Title>
+          </Header>
+          {Body}
+        </Content>
+      </Container>
       <CreateRecipeBookSheet open={createOpen} onOpenChange={setCreateOpen} />
     </>
   );

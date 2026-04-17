@@ -5,19 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/shadcn/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import {
   getRecipeBookErrorMessage,
@@ -46,7 +34,7 @@ export const RenameRecipeBookSheet = ({
   bookId,
   currentName,
 }: Props) => {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { Container, Content, Header, Title } = useResponsiveSheet();
   const { data: books } = useRecipeBooks();
   const updateMutation = useUpdateRecipeBookName(bookId);
   const addToast = useToastStore((state) => state.addToast);
@@ -128,31 +116,16 @@ export const RenameRecipeBookSheet = ({
     </form>
   );
 
-  if (isDesktop) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
-          <DialogHeader className="px-6 pt-6 pb-4">
-            <DialogTitle className="text-xl font-bold text-gray-900">
-              레시피북 이름 변경
-            </DialogTitle>
-          </DialogHeader>
-          {Body}
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="rounded-t-3xl">
-        <DrawerHeader className="px-6 pt-6 pb-4 text-left">
-          <DrawerTitle className="text-xl font-bold text-gray-900">
+    <Container open={open} onOpenChange={onOpenChange}>
+      <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
+        <Header className="px-6 pt-6 pb-4 text-left">
+          <Title className="text-xl font-bold text-gray-900">
             레시피북 이름 변경
-          </DrawerTitle>
-        </DrawerHeader>
+          </Title>
+        </Header>
         {Body}
-      </DrawerContent>
-    </Drawer>
+      </Content>
+    </Container>
   );
 };

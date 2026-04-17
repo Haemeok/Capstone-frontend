@@ -3,19 +3,7 @@
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 
-import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/shadcn/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import {
   getRecipeBookErrorMessage,
@@ -40,7 +28,7 @@ export const MoveRecipesSheet = ({
   onOpenChange,
   fromBookId,
 }: Props) => {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { Container, Content, Header, Title } = useResponsiveSheet();
   const { data: books } = useRecipeBooks();
   const moveMutation = useMoveRecipes();
   const selectedIds = useEditModeStore((s) => s.selectedIds);
@@ -109,33 +97,18 @@ export const MoveRecipesSheet = ({
     </div>
   );
 
-  const sheet = isDesktop ? (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
-        <DialogHeader className="px-6 pt-6 pb-2">
-          <DialogTitle className="text-xl font-bold text-gray-900">
-            어느 레시피북으로 이동할까요?
-          </DialogTitle>
-        </DialogHeader>
-        {Body}
-      </DialogContent>
-    </Dialog>
-  ) : (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="rounded-t-3xl">
-        <DrawerHeader className="px-6 pt-6 pb-2 text-left">
-          <DrawerTitle className="text-xl font-bold text-gray-900">
-            어느 레시피북으로 이동할까요?
-          </DrawerTitle>
-        </DrawerHeader>
-        {Body}
-      </DrawerContent>
-    </Drawer>
-  );
-
   return (
     <>
-      {sheet}
+      <Container open={open} onOpenChange={onOpenChange}>
+        <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
+          <Header className="px-6 pt-6 pb-2 text-left">
+            <Title className="text-xl font-bold text-gray-900">
+              어느 레시피북으로 이동할까요?
+            </Title>
+          </Header>
+          {Body}
+        </Content>
+      </Container>
       <CreateRecipeBookSheet open={createOpen} onOpenChange={setCreateOpen} />
     </>
   );
