@@ -31,7 +31,7 @@ const SaveButton = ({
           width={24}
           height={24}
           className={`transition-all duration-300 ${
-            isFavorite ? "fill-current stroke-current" : ""
+            isFavorite ? "fill-dark" : ""
           }`}
         />
       </button>
