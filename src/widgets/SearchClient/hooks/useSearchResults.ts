@@ -42,7 +42,7 @@ export const useSearchResults = (initialPage: number = 0) => {
     queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q, nutritionKeyString, typesString, ingredientsString],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
-        sort: sortCode || "createdAt,DESC",
+        sort: sortCode || "popularityScore,DESC",
         dishType: dishTypeCode,
         tags: tagCodes,
         q: q,

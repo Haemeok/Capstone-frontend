@@ -82,8 +82,10 @@ const parseSearchQueryParams = (
       : params.tags
     : [];
 
-  const sortCode =
-    (params.sort || "DESC").toUpperCase() === "ASC" ? "ASC" : "DESC";
+  const rawSort = params.sort?.trim() || "popularityScore,DESC";
+  const sortCode = rawSort.includes(",")
+    ? rawSort
+    : `createdAt,${rawSort.toUpperCase() === "ASC" ? "ASC" : "DESC"}`;
   const dishTypeCode = params.dishType || null;
 
   const nutritionParams = parseNutritionParams(params);
@@ -99,7 +101,7 @@ const parseSearchQueryParams = (
       key: "search",
       page,
       q,
-      sort: sortCode.toLowerCase() === "asc" ? "asc" : "desc",
+      sort: sortCode,
       dishType: dishTypeCode || undefined,
       tags,
       types,

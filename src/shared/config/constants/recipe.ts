@@ -152,9 +152,10 @@ type ValueOf<T> = T[keyof T];
 
 export type TagCode = ValueOf<typeof TAG_CODES>;
 
-export const SORT_TYPES = ["최신순", "오래된순"];
+export const SORT_TYPES = ["인기순", "최신순", "오래된순"];
 
 export const SORT_TYPE_CODES = {
+  인기순: "popularityScore,DESC",
   최신순: "createdAt,DESC",
   오래된순: "createdAt,ASC",
 };

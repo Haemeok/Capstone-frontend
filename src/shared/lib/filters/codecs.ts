@@ -23,11 +23,11 @@ export const sortCodec = {
     return SORT_TYPE_CODES[value as keyof typeof SORT_TYPE_CODES] || null;
   },
   decode: (code: string | null): string => {
-    if (!code) return "최신순";
+    if (!code) return "인기순";
     const key = Object.keys(SORT_TYPE_CODES).find(
       (k) => SORT_TYPE_CODES[k as keyof typeof SORT_TYPE_CODES] === code
     );
-    return key || "최신순";
+    return key || "인기순";
   },
 };
 

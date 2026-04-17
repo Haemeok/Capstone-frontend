@@ -13,13 +13,18 @@ import {
   TrendingYoutubeRecipe,
 } from "./types";
 
+const resolveSortParam = (sort: string | undefined, fallback: string): string => {
+  if (!sort) return fallback;
+  return sort.includes(",") ? sort : `createdAt,${sort}`;
+};
+
 export const getRecipesOnServer = async (
   params: RecipeItemsQueryParams
 ): Promise<DetailedRecipesApiResponse> => {
   const query = new URLSearchParams({
     page: String(params.page ?? 0),
     size: "10",
-    sort: `createdAt,${params.sort || "desc"}`,
+    sort: resolveSortParam(params.sort, "createdAt,desc"),
   });
 
   if (params.q) query.append("q", params.q);
@@ -188,7 +193,7 @@ export const getStaticRecipesOnServer = async (
   const query = new URLSearchParams({
     page: "0",
     size: "10",
-    sort: `createdAt,${params.sort || "desc"}`,
+    sort: resolveSortParam(params.sort, "createdAt,desc"),
   });
 
   if (params.q) query.append("q", params.q);

@@ -220,7 +220,7 @@ export type RecipeQueryParams = {
 export type RecipeItemsQueryParams = {
   key: string;
   page?: number;
-  sort?: "desc" | "asc";
+  sort?: string;
   isAiGenerated?: boolean;
   tags?: string[];
   q?: string;

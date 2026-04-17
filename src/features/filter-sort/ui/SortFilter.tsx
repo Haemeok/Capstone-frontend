@@ -23,7 +23,7 @@ export const SortFilter = () => {
 
   return (
     <CategoryPicker
-      trigger={<FilterChip header={sort} isDirty={sort !== "최신순"} />}
+      trigger={<FilterChip header={sort} isDirty={sort !== "인기순"} />}
       open={isOpen}
       onOpenChange={setIsOpen}
       isMultiple={false}
