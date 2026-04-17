@@ -1,24 +1,25 @@
 "use client";
 
-import {
-  useMoveRecipes,
-  useRecipeBooks,
-  getRecipeBookErrorMessage,
-} from "@/entities/recipe-book";
-
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/shared/ui/shadcn/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/shared/ui/shadcn/drawer";
+
+import {
+  getRecipeBookErrorMessage,
+  useMoveRecipes,
+  useRecipeBooks,
+} from "@/entities/recipe-book";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 import { useEditModeStore } from "../model/useEditModeStore";
@@ -70,7 +71,7 @@ export const MoveRecipesSheet = ({
     <div className="px-2 pb-6">
       {targets.length === 0 ? (
         <p className="px-4 py-8 text-center text-sm text-gray-500">
-          이동할 다른 폴더가 없어요. 먼저 새 폴더를 만들어주세요.
+          이동할 다른 레시피북이 없어요. 먼저 새 레시피북을 만들어주세요.
         </p>
       ) : (
         <ul>
@@ -100,7 +101,7 @@ export const MoveRecipesSheet = ({
         <DialogContent className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
           <DialogHeader className="px-6 pt-6 pb-2">
             <DialogTitle className="text-xl font-bold text-gray-900">
-              어느 폴더로 이동할까요?
+              어느 레시피북으로 이동할까요?
             </DialogTitle>
           </DialogHeader>
           {Body}
@@ -114,7 +115,7 @@ export const MoveRecipesSheet = ({
       <DrawerContent className="rounded-t-3xl">
         <DrawerHeader className="px-6 pt-6 pb-2 text-left">
           <DrawerTitle className="text-xl font-bold text-gray-900">
-            어느 폴더로 이동할까요?
+            어느 레시피북으로 이동할까요?
           </DrawerTitle>
         </DrawerHeader>
         {Body}

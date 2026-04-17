@@ -2,29 +2,31 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  recipeBookFormSchema,
-  type RecipeBookFormValues,
-  useCreateRecipeBook,
-  useRecipeBooks,
-  getRecipeBookErrorMessage,
-} from "@/entities/recipe-book";
-
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/shared/ui/shadcn/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/shared/ui/shadcn/drawer";
+
+import {
+  getRecipeBookErrorMessage,
+  recipeBookFormSchema,
+  type RecipeBookFormValues,
+  useCreateRecipeBook,
+  useRecipeBooks,
+} from "@/entities/recipe-book";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 const NAME_MAX_LENGTH = 50;
@@ -54,12 +56,12 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
     const trimmed = values.name.trim();
     const isDuplicate = books?.some((b) => b.name === trimmed) ?? false;
     if (isDuplicate) {
-      form.setError("name", { message: "이미 같은 이름의 폴더가 있어요" });
+      form.setError("name", { message: "이미 같은 이름의 레시피북이 있어요" });
       return;
     }
     try {
       await createMutation.mutateAsync({ name: trimmed });
-      addToast({ message: "폴더가 만들어졌어요", variant: "success" });
+      addToast({ message: "레시피북이 만들어졌어요", variant: "success" });
       onOpenChange(false);
     } catch (error) {
       const message = getRecipeBookErrorMessage(error);
@@ -79,7 +81,7 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
       <div>
         <input
           {...form.register("name")}
-          placeholder="폴더 이름"
+          placeholder="레시피북 이름"
           maxLength={NAME_MAX_LENGTH}
           className="focus:border-olive-light focus:ring-olive-light w-full rounded-xl border border-gray-200 p-4 text-gray-900 transition-colors placeholder:text-gray-400 focus:ring-1 focus:outline-none"
           autoFocus
@@ -116,7 +118,7 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
         <DialogContent className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
           <DialogHeader className="px-6 pt-6 pb-4">
             <DialogTitle className="text-xl font-bold text-gray-900">
-              새 폴더 만들기
+              새 레시피북 만들기
             </DialogTitle>
           </DialogHeader>
           {Body}
@@ -130,7 +132,7 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
       <DrawerContent className="rounded-t-3xl">
         <DrawerHeader className="px-6 pt-6 pb-4 text-left">
           <DrawerTitle className="text-xl font-bold text-gray-900">
-            새 폴더 만들기
+            새 레시피북 만들기
           </DrawerTitle>
         </DrawerHeader>
         {Body}

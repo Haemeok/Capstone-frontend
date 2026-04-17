@@ -1,10 +1,12 @@
 "use client";
 
-import {
-  useDeleteRecipeBook,
-  getRecipeBookErrorMessage,
-} from "@/entities/recipe-book";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
+
+import {
+  getRecipeBookErrorMessage,
+  useDeleteRecipeBook,
+} from "@/entities/recipe-book";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 type Props = {
@@ -29,7 +31,7 @@ export const DeleteRecipeBookModal = ({
     try {
       await deleteMutation.mutateAsync(bookId);
       addToast({
-        message: `"${bookName}" 폴더가 삭제되었어요`,
+        message: `"${bookName}" 레시피북이 삭제되었어요`,
         variant: "success",
       });
       onOpenChange(false);
@@ -46,8 +48,8 @@ export const DeleteRecipeBookModal = ({
     <DeleteModal
       open={open}
       onOpenChange={onOpenChange}
-      title={`"${bookName}" 폴더를 삭제할까요?`}
-      description="이 폴더에만 저장된 레시피는 저장 목록에서도 사라져요."
+      title={`"${bookName}" 레시피북을 삭제할까요?`}
+      description="이 레시피북에만 저장된 레시피는 저장 목록에서도 사라져요."
       confirmLabel="삭제"
       cancelLabel="취소"
       onConfirm={handleConfirm}
