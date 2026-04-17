@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getNextPageParam = <T>(lastPage: PageResponse<T>) => {
+  if (!lastPage?.page) return null;
   if (lastPage.page.totalPages === 0) return null;
   return lastPage.page.number === lastPage.page.totalPages - 1
     ? null
