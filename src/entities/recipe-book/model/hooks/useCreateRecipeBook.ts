@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import {
   createRecipeBook,
   type CreateRecipeBookRequest,
   type RecipeBook,
 } from "@/entities/recipe-book/api";
-import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { RECIPE_BOOK_QUERY_KEYS } from "../queryKeys";
 

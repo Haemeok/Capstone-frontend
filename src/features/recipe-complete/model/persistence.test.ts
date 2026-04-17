@@ -1,10 +1,10 @@
+import { getKSTDateString } from "../lib/dateUtils";
 import {
-  loadCompletedRecipes,
   addCompletedRecipeRecord,
   clearCompletedRecipes,
+  loadCompletedRecipes,
   persistCompletedRecipes,
 } from "./persistence";
-import { getKSTDateString } from "../lib/dateUtils";
 
 describe("persistence", () => {
   beforeEach(() => {

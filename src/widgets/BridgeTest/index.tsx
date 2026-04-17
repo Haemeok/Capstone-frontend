@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect,useState } from "react";
 
+import type { BridgeMessageType,HapticStyle } from "@/shared/lib/bridge";
 import {
   isAppWebView,
   postMessage,
   triggerHaptic,
   triggerNativeShare,
 } from "@/shared/lib/bridge";
-import type { HapticStyle, BridgeMessageType } from "@/shared/lib/bridge";
 
 const HAPTIC_STYLES: HapticStyle[] = [
   "Light",

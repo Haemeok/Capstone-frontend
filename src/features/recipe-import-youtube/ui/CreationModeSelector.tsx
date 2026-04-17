@@ -1,6 +1,7 @@
+import Link from "next/link";
+
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
-import Link from "next/link";
 
 export const CreationModeSelector = () => {
   return (

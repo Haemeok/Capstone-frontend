@@ -1,10 +1,12 @@
 "use client";
 
 import React, { forwardRef } from "react";
-import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
+
 import { useImageWithFallback } from "@/shared/hooks/useImageWithFallback";
-import { Skeleton } from "../shadcn/skeleton";
+import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
 import { cn } from "@/shared/lib/utils";
+
+import { Skeleton } from "../shadcn/skeleton";
 
 type Fit = "cover" | "contain";
 

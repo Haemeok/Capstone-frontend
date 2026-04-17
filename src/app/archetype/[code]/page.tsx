@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
-import { ARCHETYPE_RESULTS } from "@/features/archetype/model/archeTypeResult";
-import ArchetypeResult from "@/features/archetype/ui/ArchetypeResult";
+
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
+
+import { ARCHETYPE_RESULTS } from "@/features/archetype/model/archeTypeResult";
+import ArchetypeResult from "@/features/archetype/ui/ArchetypeResult";
 
 export async function generateStaticParams() {
   const items = Object.values(ARCHETYPE_RESULTS);

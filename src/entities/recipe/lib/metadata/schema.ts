@@ -1,10 +1,11 @@
+import { createSearchBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
+
 import type {
   DetailedRecipeGridItem,
   StaticRecipe,
 } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
-import { createSearchBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 import { createEnhancedVideoObject, extractYoutubeMetadata } from "./youtube";
 
 export const createWebsiteStructuredData = () => ({

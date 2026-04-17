@@ -11,11 +11,11 @@ import { AppStateInitializer } from "./AppStateInitializer";
 import { PostHogPageView } from "./PostHogPageView";
 import { PostHogProvider } from "./PostHogProvider";
 import { ScrollProvider } from "./ScrollProvider";
+import { SentryUserSync } from "./SentryUserSync";
 import ToastProvider from "./ToastProvider";
 import { WebSocketProvider } from "./WebSocketProvider";
 import { YoutubeExtractionPrompter } from "./YoutubeExtractionPrompter";
 import { YoutubeImportProvider } from "./YoutubeImportProvider";
-import { SentryUserSync } from "./SentryUserSync";
 
 export const AppProviders = ({ children }: { children: ReactNode }) => {
   return (

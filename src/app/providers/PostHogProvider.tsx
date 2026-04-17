@@ -1,8 +1,9 @@
 "use client";
 
+import { type ReactNode,useEffect, useState } from "react";
+
 import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
-import { useEffect, useState, type ReactNode } from "react";
 
 let isPostHogInitialized = false;
 

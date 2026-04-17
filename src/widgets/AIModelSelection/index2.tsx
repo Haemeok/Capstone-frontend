@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 
 import { AIModelId, aiModels } from "@/shared/config/constants/aiModel";
 import { getRecentAIRecipes } from "@/shared/config/constants/localStorage";
-import { Image } from "@/shared/ui/image/Image";
 import { SAVINGS_BASE_URL } from "@/shared/config/constants/recipe";
+import { Image } from "@/shared/ui/image/Image";
+
 import type { StaticDetailedRecipeGridItem } from "@/entities/recipe";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";

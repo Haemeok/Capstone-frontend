@@ -8,9 +8,9 @@ import { Search } from "lucide-react";
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
-import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";

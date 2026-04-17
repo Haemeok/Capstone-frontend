@@ -5,8 +5,8 @@ import { FieldValues } from "react-hook-form";
 
 import { z } from "zod";
 
-import ProgressButton from "@/shared/ui/ProgressButton";
 import { useFormProgress } from "@/shared/lib/hooks/useFormProgress";
+import ProgressButton from "@/shared/ui/ProgressButton";
 
 type FormProgressButtonProps = {
   isLoading: boolean;

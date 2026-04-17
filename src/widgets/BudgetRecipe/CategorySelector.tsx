@@ -1,9 +1,9 @@
 "use client";
 
 import { getCategoriesForBudget } from "@/shared/config/constants/budget";
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { CheckIcon } from "@/shared/ui/icons";
 import { Image } from "@/shared/ui/image";
-import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type CategorySelectorProps = {
   budget: number;

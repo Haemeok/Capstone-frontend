@@ -1,7 +1,7 @@
-export { HeroSection } from "./ui/HeroSection";
-export { RecipeCarousel } from "./ui/RecipeCarousel";
-export { ProblemCards } from "./ui/ProblemCards";
-export { StatsSection } from "./ui/StatsSection";
 export { FeatureShowcase } from "./ui/FeatureShowcase";
-export { TestimonialCarousel } from "./ui/TestimonialCarousel";
 export { FinalCTA } from "./ui/FinalCTA";
+export { HeroSection } from "./ui/HeroSection";
+export { ProblemCards } from "./ui/ProblemCards";
+export { RecipeCarousel } from "./ui/RecipeCarousel";
+export { StatsSection } from "./ui/StatsSection";
+export { TestimonialCarousel } from "./ui/TestimonialCarousel";

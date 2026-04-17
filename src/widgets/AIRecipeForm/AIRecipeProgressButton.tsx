@@ -5,8 +5,8 @@ import React from "react";
 import { FormProgressButton } from "@/shared/ui/form/FormProgressButton";
 
 import {
-  aiRecipeFormSchema,
   AI_RECIPE_FIELD_LABELS,
+  aiRecipeFormSchema,
   type AIRecipeFormValues,
 } from "@/features/recipe-create-ai/model/schema";
 

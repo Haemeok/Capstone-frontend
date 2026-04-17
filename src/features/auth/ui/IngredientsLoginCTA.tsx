@@ -1,8 +1,10 @@
 import Link from "next/link";
+
 import { LogIn } from "lucide-react";
-import { Button } from "@/shared/ui/shadcn/button";
-import { Image } from "@/shared/ui/image/Image";
+
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { Image } from "@/shared/ui/image/Image";
+import { Button } from "@/shared/ui/shadcn/button";
 
 const IngredientsLoginCTA = () => {
   return (

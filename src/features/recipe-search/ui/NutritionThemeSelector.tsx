@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/shared/ui/shadcn/button";
-import { Image } from "@/shared/ui/image/Image";
 import {
+  ICON_BASE_URL,
   NUTRITION_THEMES,
   NutritionThemeKey,
-  ICON_BASE_URL,
 } from "@/shared/config/constants/recipe";
 import { getTypedEntries } from "@/shared/lib/types/utils";
+import { Image } from "@/shared/ui/image/Image";
+import { Button } from "@/shared/ui/shadcn/button";
 
 type NutritionThemeSelectorProps = {
   selectedTheme: NutritionThemeKey | null;

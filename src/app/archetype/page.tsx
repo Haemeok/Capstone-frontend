@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { Container } from "@/shared/ui/Container";
 
-import ArchetypeLanding3 from "@/features/archetype/ui/ArchetypeLanding";
 import ArchetypeFunnel from "@/features/archetype/ui/ArchetypeFunnel";
+import ArchetypeLanding3 from "@/features/archetype/ui/ArchetypeLanding";
 
 type Step = "landing" | "funnel";
 

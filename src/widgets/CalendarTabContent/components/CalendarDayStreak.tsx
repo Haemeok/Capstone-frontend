@@ -1,13 +1,15 @@
 import { useRouter } from "next/navigation";
+
 import { format } from "date-fns";
+
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { Image } from "@/shared/ui/image/Image";
 
 import { cn } from "@/lib/utils";
 
-import { ConsecutiveRange } from "../types";
-import { getFlameLevel } from "../lib/streakCalculator";
 import { isFirstInRange, isLastInRange } from "../lib/consecutiveDaysHelper";
-import { Image } from "@/shared/ui/image/Image";
-import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { getFlameLevel } from "../lib/streakCalculator";
+import { ConsecutiveRange } from "../types";
 
 type CalendarDayStreakProps = {
   date: Date;

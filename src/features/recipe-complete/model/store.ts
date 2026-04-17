@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
 import {
-  loadCompletedRecipes,
   addCompletedRecipeRecord,
   clearCompletedRecipes as clearPersistedRecipes,
+  loadCompletedRecipes,
 } from "./persistence";
 
 type RecipeCompleteStore = {

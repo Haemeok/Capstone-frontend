@@ -1,3 +1,4 @@
+import { convertToWebPIfNeeded } from "@/shared/lib/image";
 import { isOneOf } from "@/shared/lib/typeguards";
 import {
   ALLOWED_CONTENT_TYPES,
@@ -8,7 +9,6 @@ import {
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { RecipeFormValues } from "../model/config";
-import { convertToWebPIfNeeded } from "@/shared/lib/image";
 
 export const prepareRecipeData = async (formData: RecipeFormValues) => {
   const filesToUploadInfo: FileInfoRequest[] = [];

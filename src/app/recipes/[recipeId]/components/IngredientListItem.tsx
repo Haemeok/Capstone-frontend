@@ -28,12 +28,7 @@ export const IngredientListItem = ({
           <BadgeButton
             badgeText="내 냉장고에 있는 재료예요"
             badgeIcon={
-              <span
-                className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-olive-light/15 text-olive-dark"
-                aria-label="냉장고 보유 재료"
-              >
-                <Refrigerator size={12} />
-              </span>
+              <Refrigerator size={18} className="text-gray-500" />
             }
           />
         )}

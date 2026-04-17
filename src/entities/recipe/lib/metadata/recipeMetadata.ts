@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
-import type { StaticRecipe } from "@/entities/recipe/model/types";
 import { createRecipeBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
+
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
 import { createRecipeStructuredData } from "./schema";

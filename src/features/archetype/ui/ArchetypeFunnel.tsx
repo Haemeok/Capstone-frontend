@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
-import { ARCHETYPE_QUESTIONS } from "../model/questions";
-import ProgressBar from "./ProgressBar";
-import { alegreya, robotoMono } from "./fonts";
 import { useRouter } from "next/navigation";
+
+import { AnimatePresence,motion } from "framer-motion";
+
 import { ARCHETYPE_RESULTS } from "../model/archeTypeResult";
+import { ARCHETYPE_QUESTIONS } from "../model/questions";
+import { alegreya, robotoMono } from "./fonts";
+import ProgressBar from "./ProgressBar";
 
 const ArchetypeFunnel = () => {
   const [currentStep, setCurrentStep] = useState(0);

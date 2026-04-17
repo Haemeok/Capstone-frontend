@@ -1,8 +1,8 @@
 "use client";
 
-import CountUp from "@/shared/ui/shadcn/CountUp";
-import { TrendingDownIcon } from "@/shared/ui/icons";
 import { calculateMonthlySavings } from "@/shared/lib/budget/calculations";
+import { TrendingDownIcon } from "@/shared/ui/icons";
+import CountUp from "@/shared/ui/shadcn/CountUp";
 
 type SavingsBadgeProps = {
   budget: number;

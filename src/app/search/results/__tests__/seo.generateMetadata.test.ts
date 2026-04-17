@@ -14,11 +14,12 @@ jest.mock("@/entities/recipe/model/api.server", () => ({
   }),
 }));
 
-import { generateMetadata } from "@/app/search/results/page";
 import {
-  buildSearchTitle,
   buildSearchDescription,
+  buildSearchTitle,
 } from "@/entities/recipe/lib/metadata/searchMeta";
+
+import { generateMetadata } from "@/app/search/results/page";
 
 function asProm<T>(v: T) {
   return Promise.resolve(v);

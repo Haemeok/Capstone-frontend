@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+
 import { ListIcon } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
@@ -12,8 +13,8 @@ import {
   DrawerTitle,
 } from "@/shared/ui/shadcn/drawer";
 
-import type { TocItem } from "./types";
 import ArticleTocList from "./ArticleTocList";
+import type { TocItem } from "./types";
 
 type ArticleTocMobileFabProps = {
   items: TocItem[];

@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+
 import { gsap } from "gsap";
+
 import { IMAGE_BASE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
 

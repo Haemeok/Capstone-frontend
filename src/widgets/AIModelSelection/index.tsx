@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
-import { aiModels, AIModelId } from "@/shared/config/constants/aiModel";
+import { AIModelId,aiModels } from "@/shared/config/constants/aiModel";
 import { Image } from "@/shared/ui/image/Image";
+
 import { useUserStore } from "@/entities/user/model/store";
 
 const LoginEncourageDrawer = dynamic(

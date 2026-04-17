@@ -1,9 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
 
+import * as api from "../api";
 import { clearAllPersistedJobs } from "../persistence";
 import { useAIRecipeStoreV2 } from "../store";
-import { AIJobMeta, AIRecommendedRecipeRequest, AIModelId } from "../types";
-import * as api from "../api";
+import { AIJobMeta, AIModelId,AIRecommendedRecipeRequest } from "../types";
 
 // Mock dependencies
 jest.mock("../api");

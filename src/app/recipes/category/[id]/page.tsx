@@ -1,14 +1,17 @@
 import { Metadata } from "next";
-import CategoryDetailClient from "./CategoryDetailClient";
+
 import {
-  TAGS_BY_CODE,
   CATEGORY_BASE_URL,
-  TAGS_IMAGE_KEYS,
   TagCode,
+  TAGS_BY_CODE,
+  TAGS_IMAGE_KEYS,
 } from "@/shared/config/constants/recipe";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
+
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
+
+import CategoryDetailClient from "./CategoryDetailClient";
 
 type Props = {
   params: Promise<{ id: string }>;

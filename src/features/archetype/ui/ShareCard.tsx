@@ -1,12 +1,13 @@
 "use client";
 
 import { QRCodeSVG } from "qrcode.react";
+
 import {
   ARCHETYPE_RESULTS,
   getIndex,
   imageUrl,
 } from "../model/archeTypeResult";
-import { robotoMono, alegreya, notoSerifKR } from "./fonts";
+import { alegreya, notoSerifKR,robotoMono } from "./fonts";
 
 type ShareCardProps = {
   id: string;

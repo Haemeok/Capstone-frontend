@@ -1,6 +1,7 @@
 import React from "react";
-import { renderHook, act, waitFor } from "@testing-library/react";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { act, renderHook, waitFor } from "@testing-library/react";
 
 jest.mock("@/entities/recipe/model/api", () => ({
   postRecipe: jest.fn(),
@@ -28,8 +29,10 @@ const finalizeModule = jest.requireMock(
 };
 const { __finalizeMock } = finalizeModule;
 
-import { postRecipe, editRecipe } from "@/entities/recipe/model/api";
 import { handleS3Upload } from "@/shared/api/file";
+
+import { editRecipe,postRecipe } from "@/entities/recipe/model/api";
+
 import { prepareRecipeData } from "@/features/recipe-create/lib/prepareRecipeData";
 import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
 

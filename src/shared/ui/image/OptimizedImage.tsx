@@ -1,10 +1,11 @@
 "use client";
 
 import React, { forwardRef } from "react";
-import Image from "next/image";
 import type { ImageProps as NextImageProps } from "next/image";
+import Image from "next/image";
 
 import { useImageStatus } from "@/shared/hooks/useImageStatus";
+
 import { Skeleton } from "../shadcn/skeleton";
 
 type OptimizedImageProps = Omit<NextImageProps, "onLoad" | "onError"> & {

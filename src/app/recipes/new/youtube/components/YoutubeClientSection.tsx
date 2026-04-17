@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import dynamic from "next/dynamic";
 
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";

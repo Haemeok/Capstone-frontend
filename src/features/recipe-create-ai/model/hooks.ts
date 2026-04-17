@@ -1,14 +1,15 @@
+import { useRouter } from "next/navigation";
+
 import { useMutation } from "@tanstack/react-query";
 
+import { AIModelId,aiModels } from "@/shared/config/constants/aiModel";
 import { trackReviewAction } from "@/shared/lib/review";
 
 import { scheduleReviewGate } from "@/features/review-gate";
 
 import { postAIRecommendedRecipe } from "./api";
-import type { AIRecommendedRecipe, AIRecommendedRecipeRequest } from "./types";
-import { aiModels, AIModelId } from "@/shared/config/constants/aiModel";
 import { useAIRecipeStore } from "./store";
-import { useRouter } from "next/navigation";
+import type { AIRecommendedRecipe, AIRecommendedRecipeRequest } from "./types";
 
 type CreateAIRecipeVariables = {
   request: AIRecommendedRecipeRequest;

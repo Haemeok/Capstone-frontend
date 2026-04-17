@@ -1,2 +1,2 @@
+export { useDishTypeCode,useDishTypeFilter } from "./model";
 export { DishTypeFilter } from "./ui";
-export { useDishTypeFilter, useDishTypeCode } from "./model";

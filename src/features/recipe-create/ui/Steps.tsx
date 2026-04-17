@@ -6,8 +6,8 @@ import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { Plus } from "lucide-react";
 
 import { RecipeFormValues } from "../model/config";
-import StepItem from "./StepItem";
 import { FIELD_LABELS } from "../model/constants";
+import StepItem from "./StepItem";
 
 const Steps = () => {
   const { control } = useFormContext<RecipeFormValues>();

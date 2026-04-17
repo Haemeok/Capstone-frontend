@@ -7,26 +7,26 @@ import {
 } from "@tanstack/react-query";
 
 import {
+  getIngredientNamesByIds,
+  NUTRITION_THEMES_FOR_SEO,
+  SEO_DISH_TYPE_ENTRIES,
+  SEO_TAG_ENTRIES,
+} from "@/shared/config/seo/seoPages";
+import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import {
   convertNutritionToQueryParams,
   parseNutritionParams,
   parseTypes,
 } from "@/shared/lib/nutrition/parseNutritionParams";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
-import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
-import {
-  buildSearchTitle,
-  buildSearchDescription,
-} from "@/entities/recipe/lib/metadata/searchMeta";
-import {
-  getIngredientNamesByIds,
-  SEO_DISH_TYPE_ENTRIES,
-  SEO_TAG_ENTRIES,
-  NUTRITION_THEMES_FOR_SEO,
-} from "@/shared/config/seo/seoPages";
 
+import { createSearchResultsJsonLd } from "@/entities/recipe/lib/metadata/schema";
+import {
+  buildSearchDescription,
+  buildSearchTitle,
+} from "@/entities/recipe/lib/metadata/searchMeta";
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 import type { RecipeItemsQueryParams } from "@/entities/recipe/model/types";
-import { createSearchResultsJsonLd } from "@/entities/recipe/lib/metadata/schema";
 
 import { SearchClient } from "@/widgets/SearchClient";
 

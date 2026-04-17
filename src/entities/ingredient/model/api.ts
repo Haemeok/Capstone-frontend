@@ -6,9 +6,9 @@ import { INGREDIENT_CATEGORY_CODES } from "@/shared/config/constants/recipe";
 import { buildParams } from "@/shared/lib/utils";
 
 import {
+  IngredientNamesResponse,
   IngredientQueryParams,
   IngredientsApiResponse,
-  IngredientNamesResponse,
 } from "./types";
 
 export const getIngredients = async ({

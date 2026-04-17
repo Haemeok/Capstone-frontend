@@ -1,12 +1,14 @@
 "use client";
 
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
+
 import { User } from "@/entities/user";
 import { useUserStore } from "@/entities/user/model/store";
 
 import useCreateCommentMutation from "@/features/comment-create/model/hooks";
-import CommentInputForm from "./CommentInputForm";
 import { useRecipeStatus } from "@/features/recipe-status";
+
+import CommentInputForm from "./CommentInputForm";
 
 type CommentInputProps = {
   author: User | undefined;

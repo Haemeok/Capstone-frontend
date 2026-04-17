@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
 import { useQuery } from "@tanstack/react-query";
-import dynamic from "next/dynamic";
 
 import FilterChip from "@/shared/ui/FilterChip";
 

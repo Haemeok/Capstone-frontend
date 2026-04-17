@@ -3,15 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { LogOut, Settings, FileText, AlertTriangle, UserX, Bell } from "lucide-react";
+import { AlertTriangle, Bell,FileText, LogOut, Settings, UserX } from "lucide-react";
 
 import { isAppWebView, requestNotificationPermission } from "@/shared/lib/bridge";
-import { useNotificationPermissionStore } from "@/features/notification-permission";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
 import useDeleteAccountMutation from "@/features/auth/model/hooks/useDeleteAccountMutation";
 import useLogoutMutation from "@/features/auth/model/hooks/useLogoutMutation";
+import { useNotificationPermissionStore } from "@/features/notification-permission";
 
 const SettingsActionButton = () => {
   const { mutate: logout } = useLogoutMutation();

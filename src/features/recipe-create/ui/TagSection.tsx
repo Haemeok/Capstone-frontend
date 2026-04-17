@@ -3,8 +3,9 @@ import { useFormContext, useWatch } from "react-hook-form";
 
 import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
 
-import { RecipeFormValues } from "../model/config";
 import { cn } from "@/lib/utils";
+
+import { RecipeFormValues } from "../model/config";
 import { FIELD_LABELS } from "../model/constants";
 
 const TagSection = () => {

@@ -1,13 +1,13 @@
 import { api } from "@/shared/api/client";
+import { AIModelId } from "@/shared/config/constants/aiModel";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 import {
-  AIRecommendedRecipe,
-  AIRecommendedRecipeRequest,
   AIJobCreationResponse,
   AIJobStatusResponse,
+  AIRecommendedRecipe,
+  AIRecommendedRecipeRequest,
 } from "@/features/recipe-create-ai/model/types";
-import { AIModelId } from "@/shared/config/constants/aiModel";
 
 export const postAIRecommendedRecipe = async (
   aiRequest: AIRecommendedRecipeRequest,

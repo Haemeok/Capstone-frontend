@@ -1,9 +1,9 @@
-import { SparklesIcon, TrendingDownIcon } from "@/shared/ui/icons";
-import {
-  calculateSavings,
-  calculateMonthlySavings,
-} from "@/shared/lib/budget/calculations";
 import { AVERAGE_MEAL_PRICE } from "@/shared/config/constants/budget";
+import {
+  calculateMonthlySavings,
+  calculateSavings,
+} from "@/shared/lib/budget/calculations";
+import { SparklesIcon, TrendingDownIcon } from "@/shared/ui/icons";
 
 type SavingsDisplayProps = {
   budget: number;

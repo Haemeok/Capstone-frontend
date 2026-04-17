@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { useUserStore } from "@/entities/user";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { queryClient } from "@/shared/lib/queryClient";
+
+import { useUserStore } from "@/entities/user";
+
 import { useToastStore } from "@/widgets/Toast";
 
 import { deleteAccount } from "../api";

@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 
-import { formatNumber } from "@/shared/lib/format";
 import { COOKING_COMPLETION_MESSAGE_DURATION_MS } from "@/shared/config/constants/recipe";
+import { formatNumber } from "@/shared/lib/format";
 import {
   Dialog,
   DialogContent,

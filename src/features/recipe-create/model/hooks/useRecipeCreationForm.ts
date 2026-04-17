@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
-
 import { triggerHaptic } from "@/shared/lib/bridge";
+
+import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
 
 import { useToastStore } from "@/widgets/Toast";
 

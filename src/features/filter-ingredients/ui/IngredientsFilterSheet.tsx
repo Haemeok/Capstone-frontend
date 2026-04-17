@@ -1,23 +1,23 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect,useRef, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { getNextPageParam } from "@/shared/lib/utils";
-import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { getNextPageParam } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
 
 import { useIngredientSelection } from "../model/useIngredientSelection";
-import { IngredientSearchInput } from "./IngredientSearchInput";
 import { IngredientCategoryTabs } from "./IngredientCategoryTabs";
-import { SelectedIngredientChips } from "./SelectedIngredientChips";
 import { IngredientGrid } from "./IngredientGrid";
+import { IngredientSearchInput } from "./IngredientSearchInput";
+import { SelectedIngredientChips } from "./SelectedIngredientChips";
 
 type SelectedIngredient = {
   id: string;

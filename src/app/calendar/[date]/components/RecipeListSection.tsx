@@ -1,9 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+
 import { UtensilsCrossed } from "lucide-react";
-import { Image } from "@/shared/ui/image/Image";
+
 import { formatNumber } from "@/shared/lib/format";
+import { Image } from "@/shared/ui/image/Image";
+
 import { RecipeHistoryDetailResponse } from "@/entities/recipe/model/record";
 
 type RecipeListSectionProps = {

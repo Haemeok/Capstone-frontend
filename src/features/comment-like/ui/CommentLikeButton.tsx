@@ -1,7 +1,7 @@
 "use client";
 
-import HeartButton from "@/shared/ui/HeartButton";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import HeartButton from "@/shared/ui/HeartButton";
 
 import { useLikeCommentMutation } from "@/features/comment-like";
 

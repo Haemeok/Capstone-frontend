@@ -1,9 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
 
+import * as api from "../api";
 import { clearAllPersistedJobs } from "../persistence";
 import { useYoutubeImportStoreV2 } from "../store";
 import { YoutubeMeta } from "../types";
-import * as api from "../api";
 
 // Mock dependencies
 jest.mock("../api");

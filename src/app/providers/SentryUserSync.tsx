@@ -2,8 +2,9 @@
 
 import { useEffect } from "react";
 
-import { useUserStore } from "@/entities/user/model/store";
 import { scheduleInit, setUser } from "@/shared/lib/sentry";
+
+import { useUserStore } from "@/entities/user/model/store";
 
 export const SentryUserSync = () => {
   const user = useUserStore((state) => state.user);

@@ -1,13 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-
-import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import { triggerHaptic } from "@/shared/lib/bridge";
-import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { addRecentAIRecipe } from "@/shared/config/constants/localStorage";
+import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 
 import { getRecipe } from "@/entities/recipe";

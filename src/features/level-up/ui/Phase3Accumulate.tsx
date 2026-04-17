@@ -2,13 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { gsap } from "@/shared/lib/gsap";
-import { useUserStore } from "@/entities/user";
-import SavingSection from "@/shared/ui/SavingSection";
-import CountUp from "@/shared/ui/shadcn/CountUp";
-import { Button } from "@/shared/ui/shadcn/button";
+
 import { formatNumber } from "@/shared/lib/format";
+import { gsap } from "@/shared/lib/gsap";
+import SavingSection from "@/shared/ui/SavingSection";
+import { Button } from "@/shared/ui/shadcn/button";
 import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
+import CountUp from "@/shared/ui/shadcn/CountUp";
+
+import { useUserStore } from "@/entities/user";
+
 import type { LevelUpData } from "../model/types";
 
 type Phase3AccumulateProps = {

@@ -5,14 +5,14 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { X } from "lucide-react";
 
 import { ImageUploader } from "@/shared/ui/image/ImageUploader";
-
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Label } from "@/shared/ui/shadcn/label";
 
 import { IngredientPayload } from "@/entities/ingredient";
 
-import { RecipeFormValues } from "../model/config";
 import { cn } from "@/lib/utils";
+
+import { RecipeFormValues } from "../model/config";
 
 type StepItemProps = {
   index: number;

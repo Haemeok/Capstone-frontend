@@ -1,6 +1,6 @@
 export { default as ArrowLeftIcon } from "./ArrowLeftIcon";
-export { default as ChefHatIcon } from "./ChefHatIcon";
 export { default as CheckIcon } from "./CheckIcon";
+export { default as ChefHatIcon } from "./ChefHatIcon";
 export { default as ChevronDownIcon } from "./ChevronDownIcon";
 export { default as PencilIcon } from "./PencilIcon";
 export { default as SearchIcon } from "./SearchIcon";

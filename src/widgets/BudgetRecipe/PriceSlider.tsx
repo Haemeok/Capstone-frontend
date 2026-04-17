@@ -1,11 +1,11 @@
 "use client";
 
-import { Slider } from "@/shared/ui/shadcn/slider";
 import {
-  BUDGET_MIN,
   BUDGET_MAX,
+  BUDGET_MIN,
   BUDGET_STEP,
 } from "@/shared/config/constants/budget";
+import { Slider } from "@/shared/ui/shadcn/slider";
 
 type PriceSliderProps = {
   value: number;

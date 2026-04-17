@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
+
 import { X } from "lucide-react";
 
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
 
 import { useUserStore } from "@/entities/user";
+
 import { Image } from "../image";
-import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 type LoginPromotionBadgeProps = {
   variant: "desktop" | "mobile" | "mobile-detailed";

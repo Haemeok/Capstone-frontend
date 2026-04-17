@@ -1,16 +1,9 @@
 import { useCallback } from "react";
+
 import { create } from "zustand";
 
 import { type AIModelId } from "@/shared/config/constants/aiModel";
 
-import type {
-  AIRecommendedRecipe,
-  AIRecommendedRecipeRequest,
-  ActiveAIJob,
-  AIJobMeta,
-  AIJobState,
-  PersistedAIJob,
-} from "./types";
 import {
   addPersistedJob,
   generateIdempotencyKey,
@@ -18,6 +11,14 @@ import {
   removePersistedJob,
   updatePersistedJob,
 } from "./persistence";
+import type {
+  ActiveAIJob,
+  AIJobMeta,
+  AIJobState,
+  AIRecommendedRecipe,
+  AIRecommendedRecipeRequest,
+  PersistedAIJob,
+} from "./types";
 
 export type AIRecipeGenerationState =
   | "idle"

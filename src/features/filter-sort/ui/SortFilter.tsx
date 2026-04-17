@@ -7,6 +7,7 @@ import {
   SORT_TYPES,
 } from "@/shared/config/constants/recipe";
 import FilterChip from "@/shared/ui/FilterChip";
+
 import CategoryPicker from "@/widgets/CategoryPicker/CategoryPicker";
 
 import { useSortFilter } from "../model";

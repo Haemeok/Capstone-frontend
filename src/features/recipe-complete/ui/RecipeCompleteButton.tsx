@@ -8,10 +8,9 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatNumber } from "@/shared/lib/format";
 import { shouldShowReviewGate } from "@/shared/lib/review";
 
-import { scheduleReviewGate } from "@/features/review-gate";
-
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 import { useRecipeStatus } from "@/features/recipe-status";
+import { scheduleReviewGate } from "@/features/review-gate";
 
 import { cn } from "@/lib/utils";
 

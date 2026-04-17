@@ -1,14 +1,14 @@
 "use client";
 
-import { UseFormRegister, useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, UseFormRegister, useWatch } from "react-hook-form";
 
 import { X } from "lucide-react";
 
-import { Button } from "@/shared/ui/shadcn/button";
+import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
+import { Button } from "@/shared/ui/shadcn/button";
 
 import { RecipeFormValues } from "../model/config";
-import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
 
 type IngredientItemProps = {
   field: { id: string; name: string; unit: string };

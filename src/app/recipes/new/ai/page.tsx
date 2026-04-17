@@ -4,8 +4,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { Container } from "@/shared/ui/Container";
-import AIModelSelection from "@/widgets/AIModelSelection";
+
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
+
+import AIModelSelection from "@/widgets/AIModelSelection";
 
 const AIRecipePage = () => {
   const router = useRouter();

@@ -7,6 +7,7 @@ import {
   TAG_DEFINITIONS,
 } from "@/shared/config/constants/recipe";
 import FilterChip from "@/shared/ui/FilterChip";
+
 import CategoryPicker from "@/widgets/CategoryPicker/CategoryPicker";
 
 import { useTagsFilter } from "../model";

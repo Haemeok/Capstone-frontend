@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 import { TagCode, TAGS_BY_CODE } from "@/shared/config/constants/recipe";
+import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
 type Props = {
   params: Promise<{ id: string }>;

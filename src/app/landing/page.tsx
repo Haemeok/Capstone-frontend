@@ -1,12 +1,12 @@
 "use client";
 
 import {
+  FeatureShowcase,
+  FinalCTA,
   HeroSection,
   ProblemCards,
   StatsSection,
-  FeatureShowcase,
   TestimonialCarousel,
-  FinalCTA,
 } from "@/features/landing";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";

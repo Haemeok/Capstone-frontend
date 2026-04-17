@@ -16,6 +16,7 @@ const IngredientSelector = dynamic(() => import("./IngredientSelector"), {
   ssr: false,
 }) as unknown as typeof OriginalIngredientSelector;
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
+
 import { FIELD_LABELS } from "../model/constants";
 
 type IngredientSectionProps = {

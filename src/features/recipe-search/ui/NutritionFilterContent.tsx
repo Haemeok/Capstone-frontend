@@ -3,6 +3,8 @@
 import React, { useCallback } from "react";
 
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
+import type { NutritionFilterValues } from "@/shared/lib/nutrition/utils";
+import { filterModifiedNutritionValues } from "@/shared/lib/nutrition/utils";
 import {
   Drawer,
   DrawerContent,
@@ -15,14 +17,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/ui/shadcn/popover";
-import { filterModifiedNutritionValues } from "@/shared/lib/nutrition/utils";
-import type { NutritionFilterValues } from "@/shared/lib/nutrition/utils";
 
 import { useNutritionFilter } from "../model/useNutritionFilter";
-import { RecipeTypeSelector } from "./RecipeTypeSelector";
-import { NutritionThemeSelector } from "./NutritionThemeSelector";
-import { NutritionSliders } from "./NutritionSliders";
 import { NutritionFilterActions } from "./NutritionFilterActions";
+import { NutritionSliders } from "./NutritionSliders";
+import { NutritionThemeSelector } from "./NutritionThemeSelector";
+import { RecipeTypeSelector } from "./RecipeTypeSelector";
 
 type NutritionFilterContentProps = {
   open: boolean;

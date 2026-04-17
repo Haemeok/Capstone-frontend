@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useRecipeDetailQuery } from "@/entities/recipe";
-
 import { triggerHaptic } from "@/shared/lib/bridge";
+
+import { useRecipeDetailQuery } from "@/entities/recipe";
 
 import { useToastStore } from "@/widgets/Toast";
 

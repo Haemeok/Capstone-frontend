@@ -1,6 +1,6 @@
 "use client";
 
-import { useFilterParam, sortCodec } from "@/shared/lib/filters";
+import { sortCodec,useFilterParam } from "@/shared/lib/filters";
 
 export const useSortFilter = () => {
   return useFilterParam("sort", sortCodec);

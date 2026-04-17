@@ -2,19 +2,20 @@
 
 import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+
 import { DollarSign, Salad } from "lucide-react";
 
-import PrevButton from "@/shared/ui/PrevButton";
+import { Container } from "@/shared/ui/Container";
 import IconToggle from "@/shared/ui/IconToggle";
+import PrevButton from "@/shared/ui/PrevButton";
 
 import { useRecipeHistoryItemsQuery } from "@/entities/recipe/model/hooks";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 
-import SavingsCard from "./components/SavingsCard";
 import NutritionCard from "./components/NutritionCard";
 import RecipeListSection from "./components/RecipeListSection";
-import { Container } from "@/shared/ui/Container";
+import SavingsCard from "./components/SavingsCard";
 
 type TabType = "savings" | "nutrition";
 

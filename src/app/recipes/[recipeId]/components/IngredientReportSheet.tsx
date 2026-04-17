@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ChevronRight, Plus } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
-import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 
 import {
   IngredientReportReason,

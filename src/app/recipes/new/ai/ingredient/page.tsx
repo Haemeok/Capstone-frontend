@@ -2,34 +2,37 @@
 
 import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { aiModels } from "@/shared/config/constants/aiModel";
 import { Container } from "@/shared/ui/Container";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { ArrowLeftIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
-import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AIRecipeFormValues,
-  aiRecipeFormSchema,
-} from "@/features/recipe-create-ai/model/schema";
-import { buildIngredientFocusRequest } from "@/features/recipe-create-ai/model/adapters";
-import { aiModels } from "@/shared/config/constants/aiModel";
-import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
-import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
-import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 
-import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
-import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
-import AiCharacterSection from "@/widgets/AIRecipeForm/AiCharacterSection";
-import DishTypeSection from "@/widgets/AIRecipeForm/DishTypeSection";
-import CookingTimeSection from "@/widgets/AIRecipeForm/CookingTimeSection";
-import ServingsCounter from "@/widgets/AIRecipeForm/ServingsCounter";
-import AIRecipeProgressButton from "@/widgets/AIRecipeForm/AIRecipeProgressButton";
-import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 import { AIIngredientPayload } from "@/entities/ingredient";
+
+import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
+import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
+import { buildIngredientFocusRequest } from "@/features/recipe-create-ai/model/adapters";
+import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
+import {
+  aiRecipeFormSchema,
+  AIRecipeFormValues,
+} from "@/features/recipe-create-ai/model/schema";
+import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
+
+import AiCharacterSection from "@/widgets/AIRecipeForm/AiCharacterSection";
+import AIRecipeProgressButton from "@/widgets/AIRecipeForm/AIRecipeProgressButton";
+import CookingTimeSection from "@/widgets/AIRecipeForm/CookingTimeSection";
+import DishTypeSection from "@/widgets/AIRecipeForm/DishTypeSection";
+import ServingsCounter from "@/widgets/AIRecipeForm/ServingsCounter";
+import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
+import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
 
 const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
   ssr: false,

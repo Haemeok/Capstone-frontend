@@ -1,7 +1,9 @@
 import { Metadata } from "next";
-import FineDiningRecipe from "@/widgets/FineDiningRecipe";
+
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
+
+import FineDiningRecipe from "@/widgets/FineDiningRecipe";
 
 export const metadata: Metadata = {
   title: "파인 다이닝 레시피 생성 | Recipio",

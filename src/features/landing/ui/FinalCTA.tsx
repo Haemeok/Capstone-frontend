@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+
 import { motion } from "motion/react";
 
 import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
+
 import { markLandingVisited } from "@/app/landing/actions";
 
 export const FinalCTA = () => {

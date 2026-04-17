@@ -2,13 +2,15 @@
 
 import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+
+import { storage } from "@/shared/lib/storage";
+import { Image } from "@/shared/ui/image/Image";
+import TextAnimate from "@/shared/ui/shadcn/text-animate";
+
 import AppleLoginButton from "@/features/auth/ui/AppleLoginButton";
 import GoogleLoginButton from "@/features/auth/ui/GoogleLoginButton";
 import KakaoLoginButton from "@/features/auth/ui/KakaoLoginButton";
 import NaverLoginButton from "@/features/auth/ui/NaverLoginButton";
-import { storage } from "@/shared/lib/storage";
-import { Image } from "@/shared/ui/image/Image";
-import TextAnimate from "@/shared/ui/shadcn/text-animate";
 
 const TEST_LOGIN_CLICK_THRESHOLD = 7;
 const LAST_LOGIN_PROVIDER_KEY = "last_login_provider";

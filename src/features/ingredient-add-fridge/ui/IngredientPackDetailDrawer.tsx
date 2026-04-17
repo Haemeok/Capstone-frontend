@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect,useState } from "react";
 
 import { Check } from "lucide-react";
 
+import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
-
-import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
 
 type IngredientPackDetailDrawerProps = {
   pack: IngredientPack | null;

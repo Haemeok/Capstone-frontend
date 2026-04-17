@@ -3,12 +3,13 @@
 import React from "react";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-import { Image } from "@/shared/ui/image/Image";
 import {
   generateUserGradient,
   isDefaultProfileImage,
 } from "@/shared/lib/colors";
+import { Image } from "@/shared/ui/image/Image";
+
+import { cn } from "@/lib/utils";
 
 type UserProfileImageProps = {
   profileImage: string;

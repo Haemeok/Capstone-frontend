@@ -1,2 +1,2 @@
+export type { LevelUpData, LevelUpPhase, PriceBracket } from "./model/types";
 export { default as LevelUpModal } from "./ui/LevelUpModal";
-export type { LevelUpPhase, LevelUpData, PriceBracket } from "./model/types";

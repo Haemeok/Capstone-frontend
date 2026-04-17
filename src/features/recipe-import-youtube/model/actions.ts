@@ -1,7 +1,7 @@
 "use server";
 
-import { YoutubeMeta } from "./types";
 import { extractVideoId } from "../lib/urlValidation";
+import { YoutubeMeta } from "./types";
 
 export const getYoutubeMeta = async (
   videoUrl: string

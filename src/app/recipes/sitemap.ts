@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 
-import { fetchAllRecipesForSitemap } from "@/entities/recipe/model/api.server";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+
+import { fetchAllRecipesForSitemap } from "@/entities/recipe/model/api.server";
 
 const SITE_URL = SEO_CONSTANTS.SITE_URL;
 const SITEMAP_CHUNK_SIZE = 10000;

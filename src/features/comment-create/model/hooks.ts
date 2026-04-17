@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { Comment } from "@/entities/comment";
-
 import { invalidateCache } from "@/shared/config/cache";
 import { triggerHaptic } from "@/shared/lib/bridge";
+
+import { Comment } from "@/entities/comment";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 

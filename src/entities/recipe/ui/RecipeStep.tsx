@@ -2,16 +2,18 @@
 
 import { useMemo } from "react";
 
+import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
+import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
+import { matchIngredientsFromText } from "@/shared/lib/matchIngredientsFromText";
 import { Image } from "@/shared/ui/image/Image";
 import IngredientIcon from "@/shared/ui/IngredientIcon";
-import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
-import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
-import { matchIngredientsFromText } from "@/shared/lib/matchIngredientsFromText";
 
 import { IngredientItem } from "@/entities/ingredient";
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
-import { StepTimer } from "@/features/step-timer";
+
 import { WakeLockButton } from "@/features/screen-wake-lock";
+import { StepTimer } from "@/features/step-timer";
+
 import { useVideoPlayer } from "@/app/recipes/[recipeId]/components/RecipeVideoSection";
 
 type RecipeStepProps = {

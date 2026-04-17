@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/shared/lib/utils";
-import UserRecipeBadge from "@/shared/ui/badge/UserRecipeBadge";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
+import UserRecipeBadge from "@/shared/ui/badge/UserRecipeBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 type RecipeTypeSelectorProps = {

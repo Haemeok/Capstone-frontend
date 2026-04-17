@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { MessageCircle } from "lucide-react";
 
+import { Button } from "@/shared/ui/shadcn/button";
 import {
   Dialog,
   DialogContent,
@@ -11,13 +12,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/ui/shadcn/dialog";
-import { Button } from "@/shared/ui/shadcn/button";
+
 import { User } from "@/entities/user";
 import { useUserStore } from "@/entities/user/model/store";
 
 import useCreateCommentMutation from "@/features/comment-create/model/hooks";
-import CommentInputForm from "./CommentInputForm";
 import { useRecipeStatus } from "@/features/recipe-status";
+
+import CommentInputForm from "./CommentInputForm";
 
 type CommentInputModalProps = {
   author: User | undefined;

@@ -1,11 +1,10 @@
 import { Info } from "lucide-react";
 
-import { Image } from "@/shared/ui/image/Image";
-
 import {
   extractYouTubeVideoId,
   getYouTubeThumbnailUrls,
 } from "@/shared/lib/youtube/getYouTubeThumbnail";
+import { Image } from "@/shared/ui/image/Image";
 
 import { YoutubeMeta } from "../model/types";
 

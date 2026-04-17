@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/shared/lib/gsap";
+
 import { formatNumber } from "@/shared/lib/format";
+import { gsap } from "@/shared/lib/gsap";
 
 type Phase2AbsorbProps = {
   amount: number;

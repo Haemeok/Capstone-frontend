@@ -2,10 +2,10 @@
 
 import { type ReactNode, useMemo } from "react";
 
-import type { TocItem } from "./types";
-import { useActiveSection } from "./hooks/useActiveSection";
 import ArticleTocDesktop from "./ArticleTocDesktop";
 import ArticleTocMobileFab from "./ArticleTocMobileFab";
+import { useActiveSection } from "./hooks/useActiveSection";
+import type { TocItem } from "./types";
 
 type ArticleWithTocProps = {
   items: TocItem[];

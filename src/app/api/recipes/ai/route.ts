@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { BASE_API_URL } from "@/shared/config/constants/api";
 
 export const maxDuration = 300;

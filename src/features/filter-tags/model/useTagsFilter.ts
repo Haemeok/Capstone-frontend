@@ -1,7 +1,7 @@
 "use client";
 
-import { useFilterParam, tagsCodec } from "@/shared/lib/filters";
 import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
+import { tagsCodec,useFilterParam } from "@/shared/lib/filters";
 
 export const useTagsFilter = () => {
   return useFilterParam("tags", tagsCodec);

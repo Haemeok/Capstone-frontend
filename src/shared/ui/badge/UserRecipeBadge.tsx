@@ -1,5 +1,6 @@
-import { cn } from "@/shared/lib/utils";
 import { UserRound } from "lucide-react";
+
+import { cn } from "@/shared/lib/utils";
 
 type UserRecipeBadgeProps = {
   className?: string;

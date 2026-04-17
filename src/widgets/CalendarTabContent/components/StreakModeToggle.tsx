@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
-
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
+
+import { cn } from "@/lib/utils";
 
 import { CalendarMode } from "../types";
 

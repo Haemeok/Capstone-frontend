@@ -1,9 +1,12 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useEffect,useRef, useState } from "react";
+
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { useTrendingYoutubeRecipesQuery } from "@/entities/recipe";
 
 const CARD_WIDTH = 160;

@@ -1,9 +1,9 @@
-import { renderHook, waitFor, act } from "@testing-library/react";
+import { act,renderHook, waitFor } from "@testing-library/react";
 
 import api from "@/shared/api/client";
 import { invalidateCache } from "@/shared/config/cache";
 
-import { useRecipeImageCheck, IMAGE_CHECK_CONFIG } from "./useRecipeImageCheck";
+import { IMAGE_CHECK_CONFIG,useRecipeImageCheck } from "./useRecipeImageCheck";
 
 // Mock dependencies
 jest.mock("@/shared/api/client", () => ({

@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { Image } from "@/shared/ui/image/Image";
+
+import { motion } from "motion/react";
+
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { Image } from "@/shared/ui/image/Image";
 
 type StatCard = {
   image: string;

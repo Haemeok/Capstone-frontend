@@ -6,13 +6,15 @@ import {
   useController,
   useFormContext,
 } from "react-hook-form";
+
 import { useImagePreview } from "@/shared/hooks/useImagePreview";
+import { createImageChangeHandler } from "@/shared/lib/image";
 import { ImagePickerView } from "@/shared/ui/image/ImagePickerView";
+
 import {
   ImageType,
   RecipeFormValues,
 } from "@/features/recipe-create/model/config";
-import { createImageChangeHandler } from "@/shared/lib/image";
 
 type ImageFieldName = FieldPathByValue<RecipeFormValues, ImageType>;
 

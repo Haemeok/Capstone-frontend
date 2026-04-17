@@ -1,19 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+
+import { aiModels } from "@/shared/config/constants/aiModel";
+import { BUDGET_DEFAULT } from "@/shared/config/constants/budget";
+
+import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
+import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
+import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
+import type { CostEffectiveRequest } from "@/features/recipe-create-ai/model/types";
+
+import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 
 import BudgetHeader from "./BudgetHeader";
-import PriceSlider from "./PriceSlider";
 import CategorySelector from "./CategorySelector";
-import { BUDGET_DEFAULT } from "@/shared/config/constants/budget";
-import type { CostEffectiveRequest } from "@/features/recipe-create-ai/model/types";
-import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
-import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
-import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
-import { aiModels } from "@/shared/config/constants/aiModel";
-import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
+import PriceSlider from "./PriceSlider";
 
 const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
   ssr: false,

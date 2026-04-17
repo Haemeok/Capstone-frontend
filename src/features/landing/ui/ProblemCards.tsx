@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Image } from "@/shared/ui/image/Image";
+
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { Image } from "@/shared/ui/image/Image";
 
 type ProblemCard = {
   image: string;

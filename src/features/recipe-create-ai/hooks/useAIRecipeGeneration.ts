@@ -1,9 +1,9 @@
 import { queryClient } from "@/shared/lib/queryClient";
 
+import { buildIngredientFocusRequest } from "../model/adapters";
 import { useCreateAIRecipeMutation } from "../model/hooks";
 import { AIRecipeFormValues } from "../model/schema";
 import { type AIModel, useAIRecipeStore } from "../model/store";
-import { buildIngredientFocusRequest } from "../model/adapters";
 import type { AIModelId } from "../model/types";
 
 export const useAIRecipeGeneration = () => {

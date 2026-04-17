@@ -3,10 +3,10 @@
  */
 import { generateRecipeMetadata } from "../recipeMetadata";
 import {
+  makeBaseRecipe,
   makeYoutubeFamousRecipe,
   makeYoutubeMediumRecipe,
   makeYoutubeStandardRecipe,
-  makeBaseRecipe,
 } from "./fixtures/recipeFactory";
 
 describe("YouTube Recipe Metadata Generation", () => {

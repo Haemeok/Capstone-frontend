@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { removeRecipesFromBook } from "@/entities/recipe-book/api";
 import { triggerHaptic } from "@/shared/lib/bridge";
+
+import { removeRecipesFromBook } from "@/entities/recipe-book/api";
 
 import { invalidateBookCaches } from "./invalidate";
 

@@ -23,16 +23,14 @@ import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 
-import LazyStaticRecipeSlide from "./components/LazyStaticRecipeSlide";
-
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
+import LazyStaticRecipeSlide from "./components/LazyStaticRecipeSlide";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
 import RecipeCommentsSection from "./components/RecipeCommentsSection";
 import RecipeComponentsSection from "./components/RecipeComponentsSection";
 import { RecipeContainer } from "./components/RecipeContainer";
 import RecipeCookingInfoSection from "./components/RecipeCookingInfoSection";
 import RecipeCookingTipsSection from "./components/RecipeCookingTipsSection";
-import RecipeFabButton from "./components/RecipeFabButton";
 import RecipeHeroSection from "./components/RecipeHeroSection";
 import RecipeInfoSection from "./components/RecipeInfoSection";
 import RecipeIngredientsSection from "./components/RecipeIngredientsSection";
@@ -84,10 +82,6 @@ export default async function RecipeDetailPage({
 
   const saveAmount =
     staticRecipe.marketPrice - staticRecipe.totalIngredientCost;
-
-  const hasAllStepImages = staticRecipe.steps.every(
-    (step) => step.stepImageUrl !== null && step.stepImageUrl !== ""
-  );
 
   const recommendLabel = staticRecipe.tags.includes("👨‍🍳 셰프 레시피")
     ? "더 다양한 셰프 레시피를 만나보세요"
@@ -173,8 +167,6 @@ export default async function RecipeDetailPage({
               >
                 <RecipeCommentsSection comments={staticRecipe.comments} />
               </ErrorBoundary>
-
-              <RecipeFabButton hasAllStepImages={hasAllStepImages} />
 
               <ErrorBoundary
                 fallback={

@@ -2,19 +2,21 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
-import { Container } from "@/shared/ui/Container";
-import PrevButton from "@/shared/ui/PrevButton";
-import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
-import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
-import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
-import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
-import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
-import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
-import type { NutritionBalanceRequest } from "@/features/recipe-create-ai/model/types";
 import { aiModels } from "@/shared/config/constants/aiModel";
+import { Container } from "@/shared/ui/Container";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
+import PrevButton from "@/shared/ui/PrevButton";
+import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
+
+import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
+import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
+import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
+import type { NutritionBalanceRequest } from "@/features/recipe-create-ai/model/types";
+
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 
 const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
@@ -24,13 +26,13 @@ const AIRecipeError = dynamic(() => import("@/widgets/AIRecipeError"), {
   ssr: false,
 });
 
-import {
-  NutritionMode,
-  NutritionFormValues,
-  MODE_DEFAULTS,
-  MACRO_MODE_DEFAULTS,
-} from "./constants";
 import { MacroSlider, ModeToggle, StyleSelector } from "./components";
+import {
+  MACRO_MODE_DEFAULTS,
+  MODE_DEFAULTS,
+  NutritionFormValues,
+  NutritionMode,
+} from "./constants";
 
 const CONCEPT = "NUTRITION_BALANCE" as const;
 

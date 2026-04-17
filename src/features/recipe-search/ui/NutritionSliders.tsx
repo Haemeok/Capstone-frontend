@@ -1,12 +1,12 @@
 "use client";
 
-import { Slider } from "@/shared/ui/shadcn/slider";
 import {
   NUTRITION_RANGES,
   NutritionFilterKey,
 } from "@/shared/config/constants/recipe";
-import { getTypedEntries } from "@/shared/lib/types/utils";
 import { NutritionFilterValues } from "@/shared/lib/nutrition/utils";
+import { getTypedEntries } from "@/shared/lib/types/utils";
+import { Slider } from "@/shared/ui/shadcn/slider";
 
 type NutritionSlidersProps = {
   values: NutritionFilterValues;

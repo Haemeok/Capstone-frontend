@@ -2,12 +2,12 @@
 
 import { useRef, useState } from "react";
 
-import { Check, ClipboardList, Copy, Minus, Plus } from "lucide-react";
 import { motion } from "framer-motion";
+import { Check, ClipboardList, Copy, Minus, Plus } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
-import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 import { cn } from "@/shared/lib/utils";
 
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";

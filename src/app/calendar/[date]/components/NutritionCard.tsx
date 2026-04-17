@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { cn } from "@/shared/lib/utils";
+
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
+
 import { RecipeHistoryDetailResponse } from "@/entities/recipe/model/record";
 
 type NutrientBarProps = {

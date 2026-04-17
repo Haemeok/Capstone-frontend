@@ -1,6 +1,7 @@
 "use client";
 
 import { FC, useRef } from "react";
+
 import { HTMLMotionProps, motion } from "motion/react";
 
 type AnimationType =

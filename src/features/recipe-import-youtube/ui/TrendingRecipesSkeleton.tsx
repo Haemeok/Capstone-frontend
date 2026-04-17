@@ -1,6 +1,7 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { cn } from "@/shared/lib/utils";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type TrendingRecipesSkeletonProps = {
   className?: string;

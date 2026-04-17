@@ -15,17 +15,17 @@ import { RecipeDailySummary } from "@/entities/user";
 
 import { cn } from "@/lib/utils";
 
-import { useRecipeHistoryQuery, useUserStreakQuery } from "./hooks";
-import { CalendarMode } from "./types";
-import { findConsecutiveRanges, getRangeForDay } from "./lib/consecutiveDaysHelper";
-import { StreakModeToggle } from "./components/StreakModeToggle";
-import { StreakInfoBanner } from "./components/StreakInfoBanner";
-import { CalendarDayStreak } from "./components/CalendarDayStreak";
-import { CalendarDayPhoto } from "./components/CalendarDayPhoto";
+import MonthlySavingsSummary from "../MonthlySavingsSummary";
 import { CalendarDayEmpty } from "./components/CalendarDayEmpty";
+import { CalendarDayPhoto } from "./components/CalendarDayPhoto";
+import { CalendarDayStreak } from "./components/CalendarDayStreak";
+import { StreakInfoBanner } from "./components/StreakInfoBanner";
+import { StreakModeToggle } from "./components/StreakModeToggle";
+import { useRecipeHistoryQuery, useUserStreakQuery } from "./hooks";
+import { findConsecutiveRanges, getRangeForDay } from "./lib/consecutiveDaysHelper";
+import { CalendarMode } from "./types";
 
 import "react-day-picker/style.css";
-import MonthlySavingsSummary from "../MonthlySavingsSummary";
 
 const CalendarTabContent = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());

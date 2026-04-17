@@ -1,15 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-
-import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
+import { useQueryClient } from "@tanstack/react-query";
+
+import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { trackReviewAction } from "@/shared/lib/review";
-import { scheduleReviewGate } from "@/features/review-gate";
-import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
+
+import { scheduleReviewGate } from "@/features/review-gate";
 
 import { useToastStore } from "@/widgets/Toast";
 

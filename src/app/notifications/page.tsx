@@ -8,6 +8,7 @@ import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 import { Button } from "@/shared/ui/shadcn/button";
 
+import type { Notification } from "@/entities/notification";
 import {
   NotificationItem,
   NotificationSkeleton,
@@ -16,7 +17,6 @@ import {
   useInfiniteNotificationsQuery,
   useMarkNotificationAsRead,
 } from "@/entities/notification";
-import type { Notification } from "@/entities/notification";
 
 const NotificationsPage = () => {
   const router = useRouter();

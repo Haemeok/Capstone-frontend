@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 
 export const maxDuration = 300; // 5분 (Pro Plan 기준)

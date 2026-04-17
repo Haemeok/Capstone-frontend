@@ -1,8 +1,10 @@
-import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
-import { getFlameLevel } from "../lib/streakCalculator";
-import { Image } from "@/shared/ui/image/Image";
-import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { useEffect } from "react";
+
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
+import { Image } from "@/shared/ui/image/Image";
+
+import { getFlameLevel } from "../lib/streakCalculator";
 
 type StreakInfoBannerProps = {
   streakCount: number;

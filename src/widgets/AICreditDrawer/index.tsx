@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Image } from "@/shared/ui/image/Image";
 import { useRouter } from "next/navigation";
 
-import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { Image } from "@/shared/ui/image/Image";
+import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
 
 type AICreditDrawerProps = {
   isOpen: boolean;

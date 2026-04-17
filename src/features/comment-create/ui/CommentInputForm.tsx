@@ -4,9 +4,10 @@ import { useState } from "react";
 
 import { ArrowUp } from "lucide-react";
 
-import { Button } from "@/shared/ui/shadcn/button";
-import { Image } from "@/shared/ui/image/Image";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { Image } from "@/shared/ui/image/Image";
+import { Button } from "@/shared/ui/shadcn/button";
+
 import { User } from "@/entities/user";
 
 type CommentInputFormProps = {

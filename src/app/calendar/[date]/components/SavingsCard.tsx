@@ -1,5 +1,5 @@
-import { formatNumber } from "@/shared/lib/format";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { formatNumber } from "@/shared/lib/format";
 import { Image } from "@/shared/ui/image/Image";
 import CountUp from "@/shared/ui/shadcn/CountUp";
 

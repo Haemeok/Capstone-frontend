@@ -1,24 +1,23 @@
 "use client";
 
 import { useState } from "react";
-
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
-import { triggerHaptic } from "@/shared/lib/bridge";
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
-import { YoutubePreviewCard } from "@/features/recipe-import-youtube/ui/YoutubePreviewCard";
+import { createExtractionJobV2 } from "@/features/recipe-import-youtube/model/api";
 import {
-  useYoutubeMeta,
   useYoutubeDuplicateCheck,
+  useYoutubeMeta,
 } from "@/features/recipe-import-youtube/model/hooks";
 import { useYoutubeImportStoreV2 } from "@/features/recipe-import-youtube/model/store";
-import { createExtractionJobV2 } from "@/features/recipe-import-youtube/model/api";
+import { YoutubePreviewCard } from "@/features/recipe-import-youtube/ui/YoutubePreviewCard";
 
 const DuplicateRecipeSection = dynamic(
   () => import("@/features/recipe-import-youtube/ui/DuplicateRecipeSection"),

@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
+
+import { RotateCcw } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
+
 import { Image } from "@/shared/ui/image/Image";
+
 import {
   ARCHETYPE_RESULTS,
   getIndex,
   imageUrl,
 } from "../model/archeTypeResult";
-import ShareCard from "./ShareCard";
+import { alegreya, notoSerifKR,robotoMono } from "./fonts";
 import { useShareImage } from "./hooks/useShareImage";
-import { QRCodeSVG } from "qrcode.react";
-import { RotateCcw } from "lucide-react";
-import { robotoMono, alegreya, notoSerifKR } from "./fonts";
-import Link from "next/link";
+import ShareCard from "./ShareCard";
 
 type ArchetypeResultProps = {
   result: keyof typeof ARCHETYPE_RESULTS;

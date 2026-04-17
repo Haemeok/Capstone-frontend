@@ -1,7 +1,9 @@
 import { Metadata } from "next";
-import BudgetRecipe from "@/widgets/BudgetRecipe";
+
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
+
+import BudgetRecipe from "@/widgets/BudgetRecipe";
 
 export const metadata: Metadata = {
   title: "가성비 레시피 생성 | Recipio",

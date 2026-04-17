@@ -1,6 +1,9 @@
 import React from "react";
+
 import { UploadIcon } from "lucide-react";
+
 import { cn } from "@/shared/lib/utils";
+
 import { Image } from "./Image";
 
 type Props = {

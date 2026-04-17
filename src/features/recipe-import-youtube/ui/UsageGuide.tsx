@@ -1,4 +1,4 @@
-import { Share2, Link, Clipboard } from "lucide-react";
+import { Clipboard,Link, Share2 } from "lucide-react";
 
 export const UsageGuide = () => {
   const steps = [

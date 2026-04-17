@@ -1,6 +1,6 @@
 "use client";
 
-import { useFilterParam, dishTypeCodec } from "@/shared/lib/filters";
+import { dishTypeCodec,useFilterParam } from "@/shared/lib/filters";
 
 export const useDishTypeFilter = () => {
   return useFilterParam("dishType", dishTypeCodec);

@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef,useState } from "react";
 
 import api from "@/shared/api/client";
-
 import { invalidateCache } from "@/shared/config/cache";
 
 const IMAGE_CHECK_DELAY_MS = 2000;

@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { api } from "@/shared/api/client";
+
+import { useUserStore } from "@/entities/user/model/store";
+
+const ADMIN_USER_ID = "X1BoaJNZ";
 
 type ImageGenerationResponse = {
   imageKey: string;
@@ -49,6 +54,8 @@ interface ParsedRecipe {
 }
 
 const GrokBatchAnalyzer = () => {
+  const user = useUserStore((state) => state.user);
+  const isAuthReady = useUserStore((state) => state.isAuthReady);
   const [rawInput, setRawInput] = useState("");
   const [recipes, setRecipes] = useState<ParsedRecipe[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -167,6 +174,14 @@ const GrokBatchAnalyzer = () => {
 
   const completedCount = recipes.filter((r) => r.status === "success").length;
   const errorCount = recipes.filter((r) => r.status === "error").length;
+
+  if (!isAuthReady) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (!user || user.id !== ADMIN_USER_ID) {
+    return <div>접근 권한이 없습니다.</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">

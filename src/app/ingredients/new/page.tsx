@@ -14,8 +14,8 @@ import PrevButton from "@/shared/ui/PrevButton";
 import { useMyIngredientIds } from "@/entities/ingredient";
 
 import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge";
-import IngredientSearchDrawer from "@/features/ingredient-add-fridge/ui/IngredientSearchDrawer";
 import IngredientPackDetailDrawer from "@/features/ingredient-add-fridge/ui/IngredientPackDetailDrawer";
+import IngredientSearchDrawer from "@/features/ingredient-add-fridge/ui/IngredientSearchDrawer";
 import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fridge";
 
 import IngredientPackCard from "@/widgets/IngredientPackCard/IngredientPackCard";

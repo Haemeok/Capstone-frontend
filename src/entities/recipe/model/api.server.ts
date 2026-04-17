@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
-import { BASE_API_URL } from "@/shared/config/constants/api";
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
+import { BASE_API_URL } from "@/shared/config/constants/api";
 
 import {
   DetailedRecipesApiResponse,

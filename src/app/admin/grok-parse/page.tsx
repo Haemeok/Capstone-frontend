@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+
+import { useUserStore } from "@/entities/user/model/store";
+
 import { askGrok } from "@/app/actions/grok";
+
+const ADMIN_USER_ID = "X1BoaJNZ";
 // 만약 별도 파일로 분리하지 않으셨다면, 이 import 대신 아래 주석 처리된 inline 함수를 사용하세요.
 import { recipePrompt } from "./components/prompt";
 
@@ -18,6 +23,8 @@ interface ParsedRecipe {
 }
 
 const RecipeManager = () => {
+  const user = useUserStore((state) => state.user);
+  const isAuthReady = useUserStore((state) => state.isAuthReady);
   const [rawInput, setRawInput] = useState("");
   const [recipes, setRecipes] = useState<ParsedRecipe[]>([]);
 
@@ -145,6 +152,14 @@ const RecipeManager = () => {
 
   // UI 헬퍼: 완료된 개수 계산
   const completedCount = recipes.filter((r) => r.status === "success").length;
+
+  if (!isAuthReady) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (!user || user.id !== ADMIN_USER_ID) {
+    return <div>접근 권한이 없습니다.</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">

@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
 import Link from "next/link";
+
 import { Bookmark, Check } from "lucide-react";
 
-import { useRecipeDetailQuery, useRecipeStatusQuery } from "@/entities/recipe/model/hooks";
-import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
-import { useToggleRecipeSave } from "@/features/recipe-save/model/hooks";
-import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
+import { Skeleton } from "@/shared/ui/shadcn/skeleton";
+
+import { useRecipeDetailQuery, useRecipeStatusQuery } from "@/entities/recipe/model/hooks";
+
+import { useToggleRecipeSave } from "@/features/recipe-save/model/hooks";
+
+import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 import { YoutubeMeta } from "../model/types";
 

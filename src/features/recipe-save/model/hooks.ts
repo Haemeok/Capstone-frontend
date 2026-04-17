@@ -4,13 +4,12 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import { trackReviewAction } from "@/shared/lib/review";
+
 import { RecipeStatus } from "@/entities/recipe/model/types";
 import { RECIPE_BOOK_QUERY_KEYS } from "@/entities/recipe-book";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
-
-import { trackReviewAction } from "@/shared/lib/review";
-
 import { scheduleReviewGate } from "@/features/review-gate";
 
 import { postRecipeSave } from "./api";

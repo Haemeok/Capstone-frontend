@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { useMutation } from "@tanstack/react-query";
+
 import { api } from "@/shared/api/client";
 import { Image } from "@/shared/ui/image/Image";
 
