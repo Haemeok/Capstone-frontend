@@ -39,7 +39,7 @@ const SaveButton = ({
           width={24}
           height={24}
           className={cn(
-            "transition-all duration-300",
+            "transition-colors duration-300",
             iconClassName,
             isFavorite ? selectedColorClass : defaultColorClass
           )}
