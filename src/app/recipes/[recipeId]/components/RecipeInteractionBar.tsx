@@ -18,8 +18,6 @@ export default function RecipeInteractionBar({
   return (
     <RecipeInteractionButtons
       recipeId={staticRecipe.id}
-      initialIsLiked={status?.likedByCurrentUser ?? false}
-      initialLikeCount={status?.likeCount ?? 0}
       initialIsFavorite={status?.favoriteByCurrentUser ?? false}
       initialIsPrivate={staticRecipe.private}
       title={staticRecipe.title}

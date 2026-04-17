@@ -15,15 +15,12 @@ import { useUserStore } from "@/entities/user";
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 import { ChangeBookSheet } from "@/features/recipe-book-change";
-import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
 import { useToggleRecipeSave } from "@/features/recipe-save";
 
 import { useToastStore } from "@/widgets/Toast";
 
 type RecipeInteractionButtonsProps = {
   recipeId: string;
-  initialIsLiked: boolean;
-  initialLikeCount: number;
   initialIsFavorite: boolean;
   initialIsPrivate: boolean;
   title: string;
@@ -32,8 +29,6 @@ type RecipeInteractionButtonsProps = {
 
 const RecipeInteractionButtons = ({
   recipeId,
-  initialIsLiked,
-  initialLikeCount,
   initialIsFavorite,
   initialIsPrivate,
   title,
@@ -106,15 +101,6 @@ const RecipeInteractionButtons = ({
   return (
     <>
       <div className="flex justify-center gap-4">
-        <RecipeLikeButton
-          recipeId={recipeId}
-          initialIsLiked={initialIsLiked}
-          initialLikeCount={initialLikeCount}
-          buttonClassName="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
-          defaultColorClass="text-gray-900"
-          isOnNavbar={false}
-          isCountShown
-        />
         <SaveButton
           className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
           label="저장"
