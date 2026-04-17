@@ -12,6 +12,7 @@ import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
+import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
 export const metadata = homeMetadata;
 
@@ -81,6 +82,7 @@ const HomePage = async () => {
         </div>
       </Container>
       <DesktopFooter />
+      <ToastDebugButton />
     </>
   );
 };
