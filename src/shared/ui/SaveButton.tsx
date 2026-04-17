@@ -16,7 +16,7 @@ const SaveButton = ({
   className,
   iconClassName,
   defaultColorClass = "text-gray-400",
-  selectedColorClass = "fill-brown stroke-white",
+  selectedColorClass = "fill-black stroke-white",
   onClick,
   label,
   isFavorite,
