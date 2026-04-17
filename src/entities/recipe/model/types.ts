@@ -261,6 +261,9 @@ export type RecipeStatus = {
     likedByCurrentUser: boolean;
     likeCount: number;
   }>;
+  ingredientIdsInFridge: string[];
+  clonedByMe: boolean;
+  remixCount: number;
 };
 
 export type RecipeListItemStatus = {
