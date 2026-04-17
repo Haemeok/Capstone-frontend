@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-import { CheckCircle2, Info, AlertCircle, XCircle, X } from "lucide-react";
+import { AlertCircle, Bookmark,CheckCircle2, Info, X,XCircle } from "lucide-react";
+
+import { cn } from "@/shared/lib/utils";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 import { ToastType } from "@/widgets/Toast/model/types";
-
-import { cn } from "@/shared/lib/utils";
 
 type ToastProps = ToastType;
 
@@ -18,6 +18,7 @@ const MOBILE_TOAST_STYLE = {
   info: "bg-blue-500 text-white",
   default: "bg-olive-mint text-white",
   "rich-youtube": "bg-olive-mint text-white",
+  action: "bg-white text-gray-900 border border-gray-100 shadow-lg",
 };
 
 const DESKTOP_TOAST_STYLE = {
@@ -27,6 +28,7 @@ const DESKTOP_TOAST_STYLE = {
   info: "bg-blue-50 border border-blue-100",
   default: "bg-green-50 border border-green-100",
   "rich-youtube": "bg-green-50 border border-green-100",
+  action: "bg-white border border-gray-100 shadow-md",
 };
 
 const ICON_STYLE = {
@@ -36,6 +38,7 @@ const ICON_STYLE = {
   info: "text-blue-500",
   default: "text-olive-light",
   "rich-youtube": "text-olive-light",
+  action: "text-olive-light",
 };
 
 const TOAST_ICON = {
@@ -45,6 +48,7 @@ const TOAST_ICON = {
   info: Info,
   default: Info,
   "rich-youtube": Info,
+  action: Bookmark,
 };
 
 const TOAST_SIZE = {
@@ -59,6 +63,7 @@ const Toast = ({
   duration = 1000 * 3,
   variant,
   size = "medium",
+  action,
 }: ToastProps) => {
   const removeToast = useToastStore((state) => state.removeToast);
 
@@ -101,7 +106,19 @@ const Toast = ({
         aria-live="polite"
         aria-atomic="true"
       >
-        {message}
+        <span className="flex-1 truncate text-center">{message}</span>
+        {variant === "action" && action && (
+          <button
+            type="button"
+            onClick={() => {
+              action.onClick();
+              removeToast(id);
+            }}
+            className="ml-3 shrink-0 text-sm font-medium text-olive-light underline underline-offset-2"
+          >
+            {action.label ?? "변경"}
+          </button>
+        )}
       </div>
 
       <div
@@ -120,6 +137,18 @@ const Toast = ({
           <Icon className={cn("h-5 w-5", ICON_STYLE[variant])} />
         </div>
         <p className="flex-1 text-sm font-medium text-gray-800">{message}</p>
+        {variant === "action" && action && (
+          <button
+            type="button"
+            onClick={() => {
+              action.onClick();
+              removeToast(id);
+            }}
+            className="ml-3 shrink-0 text-sm font-medium text-olive-light underline underline-offset-2"
+          >
+            {action.label ?? "변경"}
+          </button>
+        )}
         <button
           onClick={handleClose}
           className="flex-shrink-0 rounded-full p-1 transition-colors hover:bg-black/5"

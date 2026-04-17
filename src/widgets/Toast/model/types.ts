@@ -8,7 +8,8 @@ export type ToastType = {
     | "warning"
     | "info"
     | "default"
-    | "rich-youtube";
+    | "rich-youtube"
+    | "action";
   size?: "small" | "medium" | "large";
   position?: "top" | "middle" | "bottom";
   persistent?: boolean;
