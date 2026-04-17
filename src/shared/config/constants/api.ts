@@ -32,6 +32,12 @@ export const END_POINTS = {
   RECIPE_LIKE: (id: string) => `/recipes/${id}/like`,
   COMMENT_LIKE: (id: string) => `/comments/${id}/like`,
   RECIPE_FAVORITE: (id: string) => `/recipes/${id}/favorite`,
+  RECIPE_SAVE: (id: string) => `/recipes/${id}/favorite`, // 동일 endpoint, 마이그레이션용 alias
+  RECIPE_SAVED_BOOKS: (recipeId: string) => `/recipes/${recipeId}/saved-books`,
+  RECIPE_BOOKS: "/me/recipe-books",
+  RECIPE_BOOK: (bookId: string) => `/me/recipe-books/${bookId}`,
+  RECIPE_BOOK_RECIPES: (bookId: string) => `/me/recipe-books/${bookId}/recipes`,
+  RECIPE_BOOK_ORDER: "/me/recipe-books/order",
   RECIPE_VISIBILITY: (id: string) => `/recipes/${id}/private`,
   RECIPE_FINALIZE: (id: string) => `/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `/oauth2/authorization/google`,
