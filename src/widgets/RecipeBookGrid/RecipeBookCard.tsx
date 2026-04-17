@@ -32,12 +32,22 @@ export const RecipeBookCard = ({
   };
 
   return (
-    <div className="group relative cursor-pointer" onClick={handleClick}>
-      <RecipeBookThumbnailGrid recipes={previewRecipes} />
-      {!isDefault && <RecipeBookCardMenu bookId={bookId} bookName={name} />}
-      <div className="mt-2 px-1">
-        <p className="truncate text-base font-bold text-gray-900">{name}</p>
-        <p className="text-sm text-gray-500">저장된 레시피 {recipeCount}개</p>
+    <div className="group">
+      <button
+        type="button"
+        onClick={handleClick}
+        className="block w-full cursor-pointer text-left"
+      >
+        <RecipeBookThumbnailGrid recipes={previewRecipes} />
+      </button>
+      <div className="mt-2 flex items-center justify-between gap-2 px-1">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-base font-bold text-gray-900">{name}</p>
+          <p className="text-sm text-gray-500">저장된 레시피 {recipeCount}개</p>
+        </div>
+        {!isDefault && (
+          <RecipeBookCardMenu bookId={bookId} bookName={name} />
+        )}
       </div>
     </div>
   );
