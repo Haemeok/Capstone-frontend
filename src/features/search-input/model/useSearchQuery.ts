@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback,useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { useRecentSearches } from "@/shared/hooks/useRecentSearches";
@@ -13,6 +13,10 @@ export const useSearchQuery = () => {
   const { addSearch } = useRecentSearches();
 
   const [inputValue, setInputValue] = useState(q);
+
+  useEffect(() => {
+    setInputValue(q);
+  }, [q]);
 
   const submitSearch = useCallback(
     (searchTerm: string) => {
