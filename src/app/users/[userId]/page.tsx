@@ -8,7 +8,6 @@ import { Container } from "@/shared/ui/Container";
 import { useUserQuery } from "@/entities/user";
 import { useUserStore } from "@/entities/user";
 
-import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import Header from "@/widgets/Header/UserProfileHeader";
 import UserProfileDisplay from "@/widgets/UserProfile/UserProfileDisplay";
 import UserTab from "@/widgets/UserTab/UserTab";
@@ -48,7 +47,6 @@ const UserDetailPage = () => {
           />
         </div>
       </Container>
-      <DesktopFooter />
     </>
   );
 };

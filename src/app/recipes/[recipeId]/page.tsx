@@ -21,8 +21,6 @@ import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { RecipeStatusProvider } from "@/features/recipe-status";
 import { SmartAppBanner } from "@/features/smart-app-banner";
 
-import DesktopFooter from "@/widgets/Footer/DesktopFooter";
-
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
 import LazyStaticRecipeSlide from "./components/LazyStaticRecipeSlide";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
@@ -220,7 +218,6 @@ export default async function RecipeDetailPage({
           )}
         </RecipeContainer>
       </RecipeStatusProvider>
-      <DesktopFooter />
       <SmartAppBanner />
     </ScrollReset>
   );
