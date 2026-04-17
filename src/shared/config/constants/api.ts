@@ -61,6 +61,7 @@ export const END_POINTS = {
   USER_PRESIGNED_URLS: (userId: string) =>
     `/users/${userId}/profile-image/presign`,
   RECIPE_HISTORY: "/me/calendar",
+  RECORDS_TIMELINE: "/me/records/timeline",
   RATING: (recipeId: string) => `/ratings/recipe/${recipeId}`,
   LOGOUT: "/token/logout",
   DELETE_ACCOUNT: "/me",

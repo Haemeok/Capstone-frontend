@@ -21,3 +21,24 @@ export type RecipeHistoryDetailResponse = {
   imageUrl: string;
   calories: number;
 };
+
+export type RecordTimelineItem = {
+  recordId: string;
+  recipeId: string;
+  recipeTitle: string;
+  ingredientCost: number;
+  marketPrice: number;
+  nutrition: Nutrition;
+  calories: number;
+  imageUrl: string;
+};
+
+export type RecordTimelineGroup = {
+  date: string;
+  records: RecordTimelineItem[];
+};
+
+export type RecordTimelineResponse = {
+  groups: RecordTimelineGroup[];
+  hasNext: boolean;
+};
