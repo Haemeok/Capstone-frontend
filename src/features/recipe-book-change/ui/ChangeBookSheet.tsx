@@ -31,11 +31,29 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   recipeId: string;
+  /**
+   * Override the source book. If omitted, falls back to the user's default book
+   * (or the first book by displayOrder if no isDefault flag is set).
+   * Pass this when chaining moves so the next move's "from" matches the previous "to".
+   */
+  fromBookId?: string;
+  /**
+   * Called after a successful move. When provided, the sheet does NOT show its
+   * own success toast — the parent is expected to handle messaging
+   * (e.g. show another action toast for chained moves).
+   */
+  onMoveComplete?: (toBookId: string, toBookName: string) => void;
 };
 
 const DESKTOP_BREAKPOINT = "(min-width: 768px)";
 
-export const ChangeBookSheet = ({ open, onOpenChange, recipeId }: Props) => {
+export const ChangeBookSheet = ({
+  open,
+  onOpenChange,
+  recipeId,
+  fromBookId: fromBookIdProp,
+  onMoveComplete,
+}: Props) => {
   const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT);
   const { data: books } = useRecipeBooks();
   const moveMutation = useMoveRecipes();
@@ -44,39 +62,36 @@ export const ChangeBookSheet = ({ open, onOpenChange, recipeId }: Props) => {
 
   const defaultBook = books?.find((b) => b.isDefault);
   // Fallback: if no book has isDefault: true (backend data issue), use the first book
-  // ordered by displayOrder. Recipe is guaranteed to be in the default book after save.
+  // ordered by displayOrder.
   const sortedBooks = [...(books ?? [])].sort(
     (a, b) => a.displayOrder - b.displayOrder
   );
-  const fromBookId = defaultBook?.id ?? sortedBooks[0]?.id;
+  const fromBookId = fromBookIdProp ?? defaultBook?.id ?? sortedBooks[0]?.id;
   const targets = (books ?? []).filter((b) => b.id !== fromBookId);
 
   const handleSelect = async (toBookId: string, toBookName: string) => {
     if (!fromBookId) {
-      console.warn("[ChangeBookSheet] no fromBookId; books:", books);
       addToast({
-        message: "기본 레시피북을 찾을 수 없어요. 새로고침해주세요.",
+        message: "현재 레시피북을 찾을 수 없어요. 새로고침해주세요.",
         variant: "error",
       });
       return;
     }
-    console.log("[ChangeBookSheet] move", {
-      fromBookId,
-      toBookId,
-      toBookName,
-      recipeId,
-    });
     try {
       await moveMutation.mutateAsync({
         fromBookId,
         toBookId,
         recipeIds: [recipeId],
       });
-      addToast({
-        message: `${toBookName}으로 이동했어요`,
-        variant: "success",
-      });
       onOpenChange(false);
+      if (onMoveComplete) {
+        onMoveComplete(toBookId, toBookName);
+      } else {
+        addToast({
+          message: `${toBookName}으로 이동했어요`,
+          variant: "success",
+        });
+      }
     } catch (error) {
       addToast({
         message: getRecipeBookErrorMessage(error),

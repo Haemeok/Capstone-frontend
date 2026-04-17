@@ -47,8 +47,25 @@ const RecipeInteractionButtons = ({
   const defaultBook = books?.find((b) => b.isDefault);
 
   const [changeOpen, setChangeOpen] = useState(false);
+  // Tracks where the recipe currently lives — starts at default book,
+  // updates after each successful move so chained "변경" toasts work.
+  const [currentBookId, setCurrentBookId] = useState<string | undefined>();
 
   const isOwner = user?.id === authorId;
+
+  const showSaveToast = (bookName: string | undefined) => {
+    addToast({
+      message: bookName
+        ? `${bookName}에 저장되었습니다.`
+        : `"저장된 레시피"에 보관되었습니다.`,
+      variant: "action",
+      position: "bottom",
+      action: {
+        label: "변경",
+        onClick: () => setChangeOpen(true),
+      },
+    });
+  };
 
   const handleToggleFavorite = () => {
     if (!checkAndTrigger("save")) return;
@@ -63,17 +80,9 @@ const RecipeInteractionButtons = ({
             position: "bottom",
           });
         } else {
-          addToast({
-            message: defaultBook
-              ? `${defaultBook.name}에 저장되었습니다.`
-              : `"저장된 레시피"에 보관되었습니다.`,
-            variant: "action",
-            position: "bottom",
-            action: {
-              label: "변경",
-              onClick: () => setChangeOpen(true),
-            },
-          });
+          // Reset chain to default book whenever a fresh save happens
+          setCurrentBookId(defaultBook?.id);
+          showSaveToast(defaultBook?.name);
         }
       },
       onError: () => {
@@ -87,6 +96,11 @@ const RecipeInteractionButtons = ({
         });
       },
     });
+  };
+
+  const handleMoveComplete = (toBookId: string, toBookName: string) => {
+    setCurrentBookId(toBookId);
+    showSaveToast(toBookName);
   };
 
   return (
@@ -131,6 +145,8 @@ const RecipeInteractionButtons = ({
         open={changeOpen}
         onOpenChange={setChangeOpen}
         recipeId={recipeId}
+        fromBookId={currentBookId}
+        onMoveComplete={handleMoveComplete}
       />
     </>
   );
