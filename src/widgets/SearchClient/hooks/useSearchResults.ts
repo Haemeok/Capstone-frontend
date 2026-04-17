@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 
+import { SORT_TYPE_CODES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { convertNutritionToQueryParams } from "@/shared/lib/nutrition/parseNutritionParams";
@@ -42,7 +43,7 @@ export const useSearchResults = (initialPage: number = 0) => {
     queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q, nutritionKeyString, typesString, ingredientsString],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
-        sort: sortCode || "popularityScore,DESC",
+        sort: sortCode || SORT_TYPE_CODES["인기순"],
         dishType: dishTypeCode,
         tags: tagCodes,
         q: q,

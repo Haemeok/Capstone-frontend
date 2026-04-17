@@ -4,16 +4,16 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { deleteRecipeBook } from "@/entities/recipe-book/api";
 
-import { RECIPE_BOOK_QUERY_KEYS } from "../queryKeys";
+import { invalidateBookCaches } from "./invalidate";
 
 export const useDeleteRecipeBook = () => {
   const queryClient = useQueryClient();
 
   return useMutation<{ message: string }, Error, string>({
     mutationFn: (bookId) => deleteRecipeBook(bookId),
-    onSuccess: () => {
+    onSuccess: (_data, bookId) => {
       triggerHaptic("Success");
-      queryClient.invalidateQueries({ queryKey: RECIPE_BOOK_QUERY_KEYS.all });
+      invalidateBookCaches(queryClient, { bookIds: [bookId] });
     },
   });
 };

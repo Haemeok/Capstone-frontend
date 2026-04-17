@@ -8,6 +8,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import SaveButton from "@/shared/ui/SaveButton";
 
 import { useRecipeBooks } from "@/entities/recipe-book";
+import { getRecipeStatus } from "@/entities/recipe/model/api";
 import { RecipeStatus } from "@/entities/recipe/model/types";
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
@@ -44,7 +45,7 @@ const RecipeSaveButton = ({
 
   const { data: currentStatus } = useQuery<RecipeStatus>({
     queryKey: ["recipe-status", recipeId],
-    queryFn: () => Promise.reject(),
+    queryFn: () => getRecipeStatus(recipeId),
     enabled: false,
   });
 
