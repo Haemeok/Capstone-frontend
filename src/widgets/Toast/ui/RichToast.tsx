@@ -203,11 +203,11 @@ export const RichToast = ({
   const toastContent = (
     <div
       className={cn(
-        "pointer-events-auto relative z-30 rounded-2xl bg-white",
+        "pointer-events-auto relative z-30 rounded-2xl bg-white text-gray-900 border border-gray-100",
         isPaused
           ? "shadow-[0_25px_60px_-12px_rgba(0,0,0,0.35)]"
-          : "shadow-2xl",
-        "md:border-olive-mint/60 w-full px-4 py-3 md:w-96 md:border-1 md:p-6",
+          : "shadow-lg md:shadow-md",
+        "w-full px-4 py-3 md:w-96 md:p-6",
         !isDragging && "transition-transform duration-300 ease-out",
         isVisible && dragOffset === 0 && "animate-richToastIn",
         !isVisible &&
@@ -282,7 +282,7 @@ export const RichToast = ({
 
         <div className="min-w-0 flex-1 space-y-1 overflow-hidden">
           {richContent?.title && (
-            <div className="flex items-start gap-2 text-base leading-snug font-bold">
+            <div className="flex items-start gap-2 text-base leading-snug font-bold text-gray-900">
               {richContent.badgeIcon}
               <span className="min-w-0 line-clamp-2">{richContent.title}</span>
             </div>
