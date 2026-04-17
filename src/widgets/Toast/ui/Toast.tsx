@@ -99,7 +99,7 @@ const Toast = ({
         <div
           className={cn(
             MOBILE_TOAST_STYLE[variant],
-            "z-30 flex w-11/12 items-center justify-between gap-3 rounded-xl px-5 py-4 shadow-md md:hidden",
+            "pointer-events-auto z-30 flex w-11/12 items-center justify-between gap-3 rounded-xl px-5 py-4 shadow-md md:hidden",
             isVisible ? "animate-slideInUp" : "animate-fadeOut"
           )}
           role="status"
