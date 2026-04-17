@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import {
   dehydrate,
   HydrationBoundary,
+  type InfiniteData,
   QueryClient,
 } from "@tanstack/react-query";
 
@@ -19,6 +20,7 @@ import {
   parseTypes,
 } from "@/shared/lib/nutrition/parseNutritionParams";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
+import { getNextPageParam } from "@/shared/lib/utils";
 
 import { createSearchResultsJsonLd } from "@/entities/recipe/lib/metadata/schema";
 import {
@@ -26,7 +28,10 @@ import {
   buildSearchTitle,
 } from "@/entities/recipe/lib/metadata/searchMeta";
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
-import type { RecipeItemsQueryParams } from "@/entities/recipe/model/types";
+import type {
+  DetailedRecipesApiResponse,
+  RecipeItemsQueryParams,
+} from "@/entities/recipe/model/types";
 
 import { SearchClient } from "@/widgets/SearchClient";
 
@@ -260,21 +265,35 @@ export default async function SearchResultsPage({
 
   const queryClient = new QueryClient();
 
-  const pageData = await queryClient.fetchQuery({
-    queryKey: [
-      "recipes",
-      dishTypeCode,
-      sortCode,
-      tags.join(","),
-      q,
-      JSON.stringify(nutritionQueryParams),
-      types.join(","),
-      ingredientIds.join(","),
-    ],
+  const queryKey = [
+    "recipes",
+    dishTypeCode,
+    sortCode,
+    tags.join(","),
+    q,
+    JSON.stringify(nutritionQueryParams),
+    types.join(","),
+    ingredientIds.join(","),
+  ] as const;
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey,
     queryFn: () => getRecipesOnServer(queryParams),
+    initialPageParam: page,
+    getNextPageParam,
+    pages: 1,
   });
 
-  const totalPages = pageData.page.totalPages;
+  const cached =
+    queryClient.getQueryData<InfiniteData<DetailedRecipesApiResponse, number>>(
+      queryKey
+    );
+  const firstPage: DetailedRecipesApiResponse = cached?.pages[0] ?? {
+    content: [],
+    page: { size: 0, number: page, totalElements: 0, totalPages: 0 },
+  };
+
+  const totalPages = firstPage.page.totalPages;
   const hasNextPage = page < totalPages - 1;
 
   const nextPageHref = hasNextPage
@@ -282,12 +301,12 @@ export default async function SearchResultsPage({
     : undefined;
 
   const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
-  const title = buildSearchTitle(enhancedQ, pageData.page.totalElements, page);
+  const title = buildSearchTitle(enhancedQ, firstPage.page.totalElements, page);
   const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
   const jsonLd = createSearchResultsJsonLd(
     enhancedQ,
-    pageData.content,
-    pageData.page.totalElements,
+    firstPage.content,
+    firstPage.page.totalElements,
     title,
     canonicalUrl
   );
