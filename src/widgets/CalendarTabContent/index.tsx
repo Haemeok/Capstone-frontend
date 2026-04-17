@@ -69,7 +69,9 @@ const CalendarTabContent = () => {
         <StreakModeToggle mode={calendarMode} onModeChange={setCalendarMode} />
       </div>
       <Box className="mt-4 p-0 px-5">
-        <StreakInfoBanner streakCount={userStreak?.streak ?? 0} />
+        {calendarMode === "streak" ? (
+          <StreakInfoBanner streakCount={userStreak?.streak ?? 0} />
+        ) : null}
       </Box>
       <DayPickerDynamic
         mode="single"
