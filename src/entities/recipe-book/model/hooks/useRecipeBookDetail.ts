@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getRecipeBookDetail } from "@/entities/recipe-book/api";
 
-import { RECIPE_BOOK_QUERY_KEYS } from "../queryKeys";
+import { DEFAULT_BOOK_SORT, RECIPE_BOOK_QUERY_KEYS } from "../queryKeys";
 
 type Options = {
   enabled?: boolean;
@@ -10,7 +10,7 @@ type Options = {
 
 export const useRecipeBookDetail = (
   bookId: string,
-  sort: string = "addedAt,desc",
+  sort: string = DEFAULT_BOOK_SORT,
   options: Options = {}
 ) => {
   return useQuery({

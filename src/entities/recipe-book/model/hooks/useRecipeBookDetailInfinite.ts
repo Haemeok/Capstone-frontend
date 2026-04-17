@@ -5,11 +5,11 @@ import {
   type RecipeBookDetail,
 } from "@/entities/recipe-book/api";
 
-import { RECIPE_BOOK_QUERY_KEYS } from "../queryKeys";
+import { DEFAULT_BOOK_SORT, RECIPE_BOOK_QUERY_KEYS } from "../queryKeys";
 
 export const useRecipeBookDetailInfinite = (
   bookId: string,
-  sort: string = "addedAt,desc"
+  sort: string = DEFAULT_BOOK_SORT
 ) => {
   const queryClient = useQueryClient();
   const previewKey = RECIPE_BOOK_QUERY_KEYS.detail(bookId, sort);

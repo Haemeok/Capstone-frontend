@@ -7,7 +7,7 @@ import {
 } from "@/entities/recipe-book/api";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import { RECIPE_BOOK_QUERY_KEYS } from "../queryKeys";
+import { invalidateBookCaches } from "./invalidate";
 
 export const useUpdateRecipeBookName = (bookId: string) => {
   const queryClient = useQueryClient();
@@ -16,13 +16,7 @@ export const useUpdateRecipeBookName = (bookId: string) => {
     mutationFn: (body) => updateRecipeBookName(bookId, body),
     onSuccess: () => {
       triggerHaptic("Success");
-      queryClient.invalidateQueries({ queryKey: RECIPE_BOOK_QUERY_KEYS.list() });
-      queryClient.invalidateQueries({
-        queryKey: [...RECIPE_BOOK_QUERY_KEYS.all, "detail", bookId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: [...RECIPE_BOOK_QUERY_KEYS.all, "infinite", bookId],
-      });
+      invalidateBookCaches(queryClient, { bookIds: [bookId] });
     },
   });
 };
