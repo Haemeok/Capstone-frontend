@@ -95,31 +95,44 @@ const Toast = ({
 
   return (
     <>
-      <div
-        className={cn(
-          MOBILE_TOAST_STYLE[variant],
-          "z-30 flex h-8 w-11/12 items-center justify-center rounded-md px-4 shadow-md md:hidden",
-          TOAST_SIZE[size],
-          isVisible ? "animate-slideInUp" : "animate-fadeOut"
-        )}
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <span className="flex-1 truncate text-center">{message}</span>
-        {variant === "action" && action && (
+      {variant === "action" && action ? (
+        <div
+          className={cn(
+            MOBILE_TOAST_STYLE[variant],
+            "z-30 flex w-11/12 items-center justify-between gap-3 rounded-xl px-5 py-4 shadow-md md:hidden",
+            isVisible ? "animate-slideInUp" : "animate-fadeOut"
+          )}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <span className="flex-1 text-sm">{message}</span>
           <button
             type="button"
             onClick={() => {
               action.onClick();
               removeToast(id);
             }}
-            className="ml-3 shrink-0 text-sm font-medium text-olive-light underline underline-offset-2"
+            className="shrink-0 px-2 py-1 text-sm font-bold text-olive-light underline underline-offset-2"
           >
             {action.label ?? "변경"}
           </button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div
+          className={cn(
+            MOBILE_TOAST_STYLE[variant],
+            "z-30 flex h-8 w-11/12 items-center justify-center rounded-md px-4 shadow-md md:hidden",
+            TOAST_SIZE[size],
+            isVisible ? "animate-slideInUp" : "animate-fadeOut"
+          )}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <span className="flex-1 truncate text-center">{message}</span>
+        </div>
+      )}
 
       <div
         className={cn(

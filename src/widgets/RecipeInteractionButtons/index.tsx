@@ -66,7 +66,7 @@ const RecipeInteractionButtons = ({
           addToast({
             message: defaultBook
               ? `${defaultBook.name}에 저장되었습니다.`
-              : "저장되었습니다.",
+              : `"저장된 레시피"에 보관되었습니다.`,
             variant: "action",
             position: "bottom",
             action: {
