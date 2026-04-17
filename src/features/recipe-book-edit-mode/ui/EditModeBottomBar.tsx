@@ -54,10 +54,10 @@ export const EditModeBottomBar = ({ bookId, allRecipeIds }: Props) => {
               disabled={!hasSelection}
               onClick={() => setMoveOpen(true)}
               className={cn(
-                "h-12 rounded-xl px-6 text-base font-bold transition-all active:scale-[0.98]",
+                "h-12 rounded-xl border px-6 text-base font-bold transition-all active:scale-[0.98]",
                 hasSelection
-                  ? "text-gray-700 hover:bg-gray-50"
-                  : "cursor-not-allowed text-gray-300"
+                  ? "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  : "cursor-not-allowed border-gray-100 text-gray-300"
               )}
             >
               이동
@@ -67,10 +67,10 @@ export const EditModeBottomBar = ({ bookId, allRecipeIds }: Props) => {
               disabled={!hasSelection}
               onClick={() => setDeleteOpen(true)}
               className={cn(
-                "h-12 rounded-xl px-6 text-base font-bold transition-all active:scale-[0.98]",
+                "h-12 rounded-xl border px-6 text-base font-bold transition-all active:scale-[0.98]",
                 hasSelection
-                  ? "text-red-500 hover:bg-red-50"
-                  : "cursor-not-allowed text-gray-300"
+                  ? "border-red-200 text-red-500 hover:bg-red-50"
+                  : "cursor-not-allowed border-gray-100 text-gray-300"
               )}
             >
               삭제
