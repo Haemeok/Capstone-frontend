@@ -19,7 +19,6 @@ import {
 
 import {
   getRecipeBookErrorMessage,
-  RecipeBookCountText,
   useMoveRecipes,
   useRecipeBooks,
 } from "@/entities/recipe-book";
@@ -101,10 +100,7 @@ export const MoveRecipesSheet = ({
                 disabled={moveMutation.isPending}
               >
                 <span className="font-medium text-gray-900">{b.name}</span>
-                <RecipeBookCountText
-                  bookId={b.id}
-                  fallback={b.recipeCount}
-                />
+                <span className="text-sm text-gray-500">{b.recipeCount}개</span>
               </button>
             </li>
           ))}

@@ -2,10 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import {
-  useDisplayedRecipeCount,
-  useRecipeBookDetail,
-} from "@/entities/recipe-book";
+import { useRecipeBookDetail } from "@/entities/recipe-book";
 
 import { RecipeBookCardMenu } from "./RecipeBookCardMenu";
 import { RecipeBookThumbnailGrid } from "./RecipeBookThumbnailGrid";
@@ -29,7 +26,6 @@ export const RecipeBookCard = ({
   const { data } = useRecipeBookDetail(bookId);
 
   const previewRecipes = data?.recipes.slice(0, PREVIEW_RECIPE_COUNT) ?? [];
-  const displayedCount = useDisplayedRecipeCount(bookId, recipeCount);
 
   const handleClick = () => {
     router.push(`/recipe-books/${bookId}`);
@@ -47,7 +43,7 @@ export const RecipeBookCard = ({
       <div className="mt-2 flex items-center justify-between gap-2 px-1">
         <div className="min-w-0 flex-1">
           <p className="truncate text-base font-bold text-gray-900">{name}</p>
-          <p className="text-sm text-gray-500">저장된 레시피 {displayedCount}개</p>
+          <p className="text-sm text-gray-500">저장된 레시피 {recipeCount}개</p>
         </div>
         {!isDefault && (
           <RecipeBookCardMenu bookId={bookId} bookName={name} />
