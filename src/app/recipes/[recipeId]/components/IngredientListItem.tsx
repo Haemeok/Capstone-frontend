@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { Refrigerator,ShoppingBasketIcon } from "lucide-react";
+import { Refrigerator, ShoppingBasketIcon } from "lucide-react";
 
 import BadgeButton from "@/shared/ui/BadgeButton";
 
