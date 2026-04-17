@@ -11,7 +11,7 @@ import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import { BaseRecipesApiResponse } from "@/entities/recipe";
 
-import { getMyFavoriteItems } from "@/features/view-favorite-recipes";
+import { getMySavedRecipes } from "@/features/view-saved-recipes";
 import {
   useYoutubeImportStoreV2,
   PendingRecipeSection,
@@ -40,7 +40,7 @@ const MyFavoriteRecipesTabContent = () => {
   >({
     queryKey: ["recipes", "favorite", sort],
     queryFn: ({ pageParam }) =>
-      getMyFavoriteItems({
+      getMySavedRecipes({
         sort,
         pageParam,
       }),

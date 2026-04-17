@@ -3,7 +3,7 @@ import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 import { BaseRecipesApiResponse } from "@/entities/recipe";
 import { fetchPagedRecipes } from "@/entities/recipe/model/api";
 
-export const getMyFavoriteItems = ({
+export const getMySavedRecipes = ({
   sort,
   pageParam = 0,
 }: {

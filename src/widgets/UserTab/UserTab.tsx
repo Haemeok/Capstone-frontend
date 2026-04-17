@@ -25,10 +25,10 @@ const MyRecipesTabContent = dynamic(
   }
 );
 
-const MyFavoriteRecipesTabContent = dynamic(
+const MySavedRecipesTabContent = dynamic(
   () =>
-    import("@/features/view-favorite-recipes").then((mod) => ({
-      default: mod.MyFavoriteRecipesTabContent,
+    import("@/features/view-saved-recipes").then((mod) => ({
+      default: mod.MySavedRecipesTabContent,
     })),
   {
     loading: () => (
@@ -71,7 +71,7 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
           )
         );
       case "saved":
-        return <MyFavoriteRecipesTabContent />;
+        return <MySavedRecipesTabContent />;
       case "calendar":
         return (
           <ErrorBoundary
