@@ -14,7 +14,7 @@ import {
 
 import { type Recipe } from "@/entities/recipe";
 
-import { useToggleRecipeFavorite } from "@/features/recipe-favorite";
+import { useToggleRecipeFavorite } from "@/features/recipe-save";
 
 import { useToastStore } from "@/widgets/Toast";
 

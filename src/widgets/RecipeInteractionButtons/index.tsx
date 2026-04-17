@@ -10,7 +10,7 @@ import SaveButton from "@/shared/ui/SaveButton";
 import ShareButton from "@/shared/ui/ShareButton";
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
-import { useToggleRecipeFavorite } from "@/features/recipe-favorite";
+import { useToggleRecipeFavorite } from "@/features/recipe-save";
 import RecipeLikeButton from "@/features/recipe-like/ui/RecipeLikeButton";
 
 import { useToastStore } from "@/widgets/Toast";
