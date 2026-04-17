@@ -11,23 +11,23 @@ import { ToastType } from "@/widgets/Toast/model/types";
 
 type ToastProps = ToastType;
 
-const MOBILE_TOAST_STYLE = {
-  success: "bg-olive-light text-white",
-  error: "bg-red-500 text-white",
-  warning: "bg-yellow-500 text-black",
-  info: "bg-blue-500 text-white",
-  default: "bg-olive-mint text-white",
-  "rich-youtube": "bg-olive-mint text-white",
+const MOBILE_TOAST_STYLE: Record<ToastType["variant"], string> = {
+  success: "bg-white text-gray-900 border border-gray-100 shadow-lg",
+  error: "bg-white text-gray-900 border border-gray-100 shadow-lg",
+  warning: "bg-white text-gray-900 border border-gray-100 shadow-lg",
+  info: "bg-white text-gray-900 border border-gray-100 shadow-lg",
+  default: "bg-white text-gray-900 border border-gray-100 shadow-lg",
+  "rich-youtube": "bg-white text-gray-900 border border-gray-100 shadow-lg",
   action: "bg-white text-gray-900 border border-gray-100 shadow-lg",
 };
 
-const DESKTOP_TOAST_STYLE = {
-  success: "bg-emerald-50 border border-emerald-100",
-  error: "bg-red-50 border border-red-100",
-  warning: "bg-amber-50 border border-amber-100",
-  info: "bg-blue-50 border border-blue-100",
-  default: "bg-green-50 border border-green-100",
-  "rich-youtube": "bg-green-50 border border-green-100",
+const DESKTOP_TOAST_STYLE: Record<ToastType["variant"], string> = {
+  success: "bg-white border border-gray-100 shadow-md",
+  error: "bg-white border border-gray-100 shadow-md",
+  warning: "bg-white border border-gray-100 shadow-md",
+  info: "bg-white border border-gray-100 shadow-md",
+  default: "bg-white border border-gray-100 shadow-md",
+  "rich-youtube": "bg-white border border-gray-100 shadow-md",
   action: "bg-white border border-gray-100 shadow-md",
 };
 
@@ -51,18 +51,11 @@ const TOAST_ICON = {
   action: Bookmark,
 };
 
-const TOAST_SIZE = {
-  small: "w-fit h-8",
-  medium: "h-8",
-  large: "h-12",
-};
-
 const Toast = ({
   id,
   message,
   duration = 1000 * 3,
   variant,
-  size = "medium",
   action,
 }: ToastProps) => {
   const removeToast = useToastStore((state) => state.removeToast);
@@ -95,18 +88,19 @@ const Toast = ({
 
   return (
     <>
-      {variant === "action" && action ? (
-        <div
-          className={cn(
-            MOBILE_TOAST_STYLE[variant],
-            "pointer-events-auto z-30 flex w-11/12 items-center justify-between gap-3 rounded-xl px-5 py-4 shadow-md md:hidden",
-            isVisible ? "animate-slideInUp" : "animate-fadeOut"
-          )}
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <span className="flex-1 text-sm">{message}</span>
+      <div
+        className={cn(
+          MOBILE_TOAST_STYLE[variant],
+          "pointer-events-auto z-30 flex w-11/12 items-center gap-3 rounded-xl px-5 py-3 shadow-md md:hidden",
+          isVisible ? "animate-slideInUp" : "animate-fadeOut"
+        )}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <Icon className={cn("h-5 w-5 shrink-0", ICON_STYLE[variant])} />
+        <span className="flex-1 text-sm">{message}</span>
+        {variant === "action" && action && (
           <button
             type="button"
             onClick={() => {
@@ -117,22 +111,8 @@ const Toast = ({
           >
             {action.label ?? "변경"}
           </button>
-        </div>
-      ) : (
-        <div
-          className={cn(
-            MOBILE_TOAST_STYLE[variant],
-            "z-30 flex h-8 w-11/12 items-center justify-center rounded-md px-4 shadow-md md:hidden",
-            TOAST_SIZE[size],
-            isVisible ? "animate-slideInUp" : "animate-fadeOut"
-          )}
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <span className="flex-1 truncate text-center">{message}</span>
-        </div>
-      )}
+        )}
+      </div>
 
       <div
         className={cn(
