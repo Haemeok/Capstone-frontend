@@ -1,15 +1,12 @@
-export type ToastType = {
+type ToastAction = {
+  label?: string;
+  onClick: () => void;
+};
+
+type ToastBase = {
   id: number;
   message: string;
   duration?: number;
-  variant:
-    | "success"
-    | "error"
-    | "warning"
-    | "info"
-    | "default"
-    | "rich-youtube"
-    | "action";
   size?: "small" | "medium" | "large";
   position?: "top" | "middle" | "bottom";
   persistent?: boolean;
@@ -21,8 +18,24 @@ export type ToastType = {
     subtitle?: string;
     recipeId?: string;
   };
-  action?: {
-    label?: string;
-    onClick: () => void;
-  };
+  action?: ToastAction;
 };
+
+/**
+ * variant === "action" 일 때는 action prop 필수.
+ * 다른 variant 에서도 action 을 optional 로 첨부 가능 (rich-youtube 의 "보기" 버튼 등).
+ */
+export type ToastType =
+  | (ToastBase & {
+      variant:
+        | "success"
+        | "error"
+        | "warning"
+        | "info"
+        | "default"
+        | "rich-youtube";
+    })
+  | (ToastBase & {
+      variant: "action";
+      action: ToastAction;
+    });
