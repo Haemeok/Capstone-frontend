@@ -12,7 +12,7 @@ import { Image } from "@/shared/ui/image/Image";
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user";
 
-import { RecipeLikeButton } from "@/features/recipe-like";
+import { RecipeSaveButton } from "@/features/recipe-save";
 
 type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
@@ -56,12 +56,10 @@ const SimpleRecipeGridItem = ({
           priority={priority}
         />
         <div className="absolute top-0 left-0 p-2">
-          <RecipeLikeButton
+          <RecipeSaveButton
             recipeId={recipe.id}
-            initialIsLiked={recipe.likedByCurrentUser}
-            initialLikeCount={recipe.likeCount}
+            initialIsFavorite={recipe.favoriteByCurrentUser}
             buttonClassName="text-white"
-            iconClassName="fill-gray-300 opacity-80"
           />
         </div>
 
