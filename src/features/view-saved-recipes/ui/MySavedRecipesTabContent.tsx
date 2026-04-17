@@ -19,7 +19,7 @@ import {
 
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
-const MyFavoriteRecipesTabContent = () => {
+const MySavedRecipesTabContent = () => {
   const [sort] = useState<"ASC" | "DESC">("DESC");
   const jobs = useYoutubeImportStoreV2((state) => state.jobs);
   const visibleJobKeys = Object.keys(jobs).filter((key) => {
@@ -38,7 +38,7 @@ const MyFavoriteRecipesTabContent = () => {
     [string, string, "ASC" | "DESC"],
     number
   >({
-    queryKey: ["recipes", "favorite", sort],
+    queryKey: ["recipes", "saved", sort],
     queryFn: ({ pageParam }) =>
       getMySavedRecipes({
         sort,
@@ -76,17 +76,17 @@ const MyFavoriteRecipesTabContent = () => {
           noResults={recipes.length === 0 && !isFetching && !hasVisibleJobs}
           noResultsMessage={
             recipes.length === 0
-              ? "즐겨찾기한 레시피가 없습니다."
-              : "즐겨찾기한 레시피를 추가해보세요."
+              ? "저장한 레시피가 없습니다."
+              : "저장한 레시피를 추가해보세요."
           }
           observerRef={ref}
           error={error}
           useLCP={false}
-          queryKeyToInvalidate={["recipes", "favorite", sort]}
+          queryKeyToInvalidate={["recipes", "saved", sort]}
         />
       </ErrorBoundary>
     </div>
   );
 };
 
-export default MyFavoriteRecipesTabContent;
+export default MySavedRecipesTabContent;

@@ -57,7 +57,7 @@ export const useJobPolling = () => {
       completeJob(idempotencyKey, recipeId);
 
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
-      queryClient.invalidateQueries({ queryKey: ["recipes", "favorite"] });
+      queryClient.invalidateQueries({ queryKey: ["recipes", "saved"] });
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
       const shouldShow = trackReviewAction("youtube_extract");

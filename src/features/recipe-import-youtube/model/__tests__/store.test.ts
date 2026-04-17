@@ -83,7 +83,7 @@ describe("useYoutubeImportStore", () => {
         queryKey: ["recipes"],
       });
       expect(invalidateQueriesSpy).toHaveBeenCalledWith({
-        queryKey: ["recipes", "favorite"],
+        queryKey: ["recipes", "saved"],
       });
     });
 
@@ -159,7 +159,7 @@ describe("useYoutubeImportStore", () => {
         queryKey: ["recipes"],
       });
       expect(invalidateQueriesSpy).not.toHaveBeenCalledWith({
-        queryKey: ["recipes", "favorite"],
+        queryKey: ["recipes", "saved"],
       });
     });
 

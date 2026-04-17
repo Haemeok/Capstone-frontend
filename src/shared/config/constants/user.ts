@@ -24,7 +24,7 @@ export type Tab = {
 
 export const MyTabs: Tab[] = [
   { id: "recipes", label: "나의 레시피", icon: Award },
-  { id: "saved", label: "북마크", icon: Bookmark },
+  { id: "saved", label: "저장", icon: Bookmark },
   { id: "calendar", label: "캘린더", icon: Calendar },
 ];
 

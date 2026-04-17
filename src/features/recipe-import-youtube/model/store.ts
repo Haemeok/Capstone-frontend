@@ -88,7 +88,7 @@ export const useYoutubeImportStore = create<YoutubeImportStore>((set, get) => ({
         updateStatus(url, "success");
         setTimeout(() => {
           queryClient.invalidateQueries({ queryKey: ["recipes"] });
-          queryClient.invalidateQueries({ queryKey: ["recipes", "favorite"] });
+          queryClient.invalidateQueries({ queryKey: ["recipes", "saved"] });
           queryClient.invalidateQueries({ queryKey: ["myInfo"] });
         }, 3000);
         setTimeout(() => {

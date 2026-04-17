@@ -18,7 +18,7 @@ const SaveButton = ({
       <button
         onClick={onClick}
         className={`h-14 w-14 ${className}`}
-        aria-label={isFavorite ? "즐겨찾기 제거" : "즐겨찾기 추가"}
+        aria-label={isFavorite ? "저장 해제" : "저장"}
         aria-pressed={isFavorite}
       >
         <Bookmark
