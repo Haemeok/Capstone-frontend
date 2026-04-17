@@ -16,7 +16,7 @@ const SaveButton = ({
   className,
   iconClassName,
   defaultColorClass = "text-gray-400",
-  selectedColorClass = "fill-olive-light text-olive-light",
+  selectedColorClass = "fill-olive-light stroke-olive-medium",
   onClick,
   label,
   isFavorite,
@@ -38,6 +38,7 @@ const SaveButton = ({
         <Bookmark
           width={24}
           height={24}
+          strokeWidth={isFavorite ? 1 : 2}
           className={cn(
             "transition-all duration-300",
             iconClassName,
