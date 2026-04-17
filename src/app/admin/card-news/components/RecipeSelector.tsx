@@ -4,14 +4,14 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getRecipe, getRecipeItems } from "@/entities/recipe/model/api";
-import { DetailedRecipeGridItem, Recipe } from "@/entities/recipe/model/types";
+import { DetailedRecipeGridItem, Recipe, RecipeQueryParams } from "@/entities/recipe/model/types";
 
 type RecipeSelectorProps = {
-  query: string;
+  filter: Record<string, unknown>;
   onComplete: (thumbnail: Recipe, cards: Recipe[]) => void;
 };
 
-export const RecipeSelector = ({ query, onComplete }: RecipeSelectorProps) => {
+export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
   const [recipes, setRecipes] = useState<DetailedRecipeGridItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [thumbnailId, setThumbnailId] = useState<string | null>(null);
@@ -22,7 +22,7 @@ export const RecipeSelector = ({ query, onComplete }: RecipeSelectorProps) => {
     const fetchRecipes = async () => {
       setLoading(true);
       try {
-        const res = await getRecipeItems({ q: query, sort: "likeCount,desc", size: 30 });
+        const res = await getRecipeItems({ ...filter, sort: "likeCount,desc", size: 30 } as RecipeQueryParams);
         setRecipes(res.content);
       } catch (err) {
         console.error("레시피 검색 실패:", err);
@@ -31,7 +31,7 @@ export const RecipeSelector = ({ query, onComplete }: RecipeSelectorProps) => {
       }
     };
     fetchRecipes();
-  }, [query]);
+  }, [filter]);
 
   const toggleCard = useCallback((id: string) => {
     setCardIds((prev) => {
@@ -69,7 +69,7 @@ export const RecipeSelector = ({ query, onComplete }: RecipeSelectorProps) => {
   return (
     <div>
       <p className="mb-2 text-sm text-gray-500">
-        &ldquo;{query}&rdquo; 검색 결과 {recipes.length}개
+        필터 조합 검색 결과 {recipes.length}개
       </p>
 
       {/* 선택 상태 */}

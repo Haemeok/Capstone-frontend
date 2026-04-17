@@ -2,6 +2,8 @@
 
 import { createRef, useEffect, useRef, useState } from "react";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { Recipe } from "@/entities/recipe/model/types";
 
 import { askGrok } from "@/app/actions/grok";
@@ -10,10 +12,11 @@ import { saveAllCards } from "../lib/capture";
 import { buildCardNewsPrompt } from "../lib/prompt";
 import { RecipeCard } from "./cards/RecipeCard";
 import { RecipeSummaryCard } from "./cards/RecipeSummaryCard";
+import { type CardTheme,THEME_LIST } from "./cards/themes";
 import { ThumbnailCard } from "./cards/ThumbnailCard";
 
 type CardEditorProps = {
-  query: string;
+  filter: Record<string, unknown>;
   thumbnail: Recipe;
   recipes: Recipe[];
 };
@@ -28,12 +31,13 @@ const getRandomPosition = (): "top" | "bottom" => {
   return Math.random() > 0.5 ? "top" : "bottom";
 };
 
-export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
+export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
   const [texts, setTexts] = useState<CardTexts | null>(null);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [folderName, setFolderName] = useState("");
   const [boxPositions, setBoxPositions] = useState<("top" | "bottom")[]>([]);
+  const [theme, setTheme] = useState<CardTheme>("classic");
 
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const recipeRefs = useRef<React.RefObject<HTMLDivElement | null>[]>([]);
@@ -50,7 +54,7 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
   const generateTexts = async () => {
     setGenerating(true);
     try {
-      const prompt = buildCardNewsPrompt(query, thumbnail, recipes);
+      const prompt = buildCardNewsPrompt(filter, thumbnail, recipes);
       const result = await askGrok(prompt);
 
       if (!result.success) {
@@ -76,7 +80,37 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
 
   // 초기 생성
   useEffect(() => {
-    generateTexts();
+    let cancelled = false;
+    const run = async () => {
+      setGenerating(true);
+      try {
+        const prompt = buildCardNewsPrompt(filter, thumbnail, recipes);
+        const result = await askGrok(prompt);
+        if (cancelled) return;
+
+        if (!result.success) {
+          alert(`AI 생성 실패: ${result.error}`);
+          return;
+        }
+
+        let json = result.message.trim();
+        if (json.startsWith("```")) {
+          json = json.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+        }
+
+        const parsed: CardTexts = JSON.parse(json);
+        setTexts(parsed);
+        setFolderName(parsed.subject);
+      } catch (err) {
+        if (cancelled) return;
+        console.error("AI 텍스트 파싱 실패:", err);
+        alert("AI 응답 파싱에 실패했습니다. 다시 시도해주세요.");
+      } finally {
+        if (!cancelled) setGenerating(false);
+      }
+    };
+    run();
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -112,11 +146,10 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
     if (!texts) return;
     setSaving(true);
     try {
-      const allRefs = [thumbnailRef, ...recipeRefs.current, ...summaryRefs.current];
+      const allRefs = [thumbnailRef, ...recipeRefs.current];
       const allNames = [
         "thumbnail.png",
-        ...recipes.map((r, i) => `recipe-${i + 1}-${r.title}.png`),
-        ...recipes.map((r, i) => `summary-${i + 1}-${r.title}.png`),
+        ...recipes.map((r, i) => `recipe-${i + 1}-${r.title.replace(/[\\/:*?"<>|]/g, "_")}.png`),
       ];
       await saveAllCards(allRefs, allNames, folderName);
       alert("저장 완료!");
@@ -139,6 +172,67 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
 
   return (
     <div>
+      {/* 캡처용 오프스크린 DOM (화면에 보이지 않음, refs 연결) */}
+      {texts && (
+        <div style={{ position: "fixed", left: -9999, top: 0, pointerEvents: "none" }} aria-hidden>
+          <ThumbnailCard
+            ref={thumbnailRef}
+            imageUrl={thumbnail.imageUrl}
+            hooking={texts.hooking}
+            subject={texts.subject}
+            theme={theme}
+          />
+          {recipes.map((recipe, i) => (
+            <RecipeCard
+              key={`capture-recipe-${recipe.id}`}
+              ref={recipeRefs.current[i]}
+              imageUrl={recipe.imageUrl}
+              title={recipe.title}
+              summary={texts.summaries[i + 1]?.summary ?? ""}
+              boxPosition={boxPositions[i] ?? "bottom"}
+              index={i + 1}
+              theme={theme}
+            />
+          ))}
+          {recipes.map((recipe, i) => (
+            <RecipeSummaryCard
+              key={`capture-summary-${recipe.id}`}
+              ref={summaryRefs.current[i]}
+              recipeId={Number(recipe.id)}
+              imageUrl={recipe.imageUrl}
+              title={recipe.title}
+              description={texts.summaries[i + 1]?.summary ?? ""}
+              tags={recipe.tags ?? []}
+              ingredients={recipe.ingredients?.map(
+                (ing) => `${ing.name} ${ing.quantity ?? ""}${ing.unit ?? ""}`.trim()
+              ) ?? []}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* 테마 선택 */}
+      <div className="mb-4 flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-500">테마</span>
+        {THEME_LIST.map(({ key, name, desc }) => (
+          <button
+            key={key}
+            onClick={() => {
+              setTheme(key);
+              triggerHaptic("Light");
+            }}
+            className={`rounded-xl px-3 py-2 text-left transition-all ${
+              theme === key
+                ? "bg-olive-light text-white shadow-md"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            <span className="block text-sm font-bold">{name}</span>
+            <span className={`block text-xs ${theme === key ? "text-white/80" : "text-gray-400"}`}>{desc}</span>
+          </button>
+        ))}
+      </div>
+
       {/* 상단 컨트롤 */}
       <div className="mb-6 flex items-center gap-3">
         <button
@@ -235,10 +329,10 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
                 style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
               >
                 <ThumbnailCard
-                  ref={thumbnailRef}
                   imageUrl={thumbnail.imageUrl}
                   hooking={texts.hooking}
                   subject={texts.subject}
+                  theme={theme}
                 />
               </div>
             </div>
@@ -251,11 +345,12 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
                   style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
                 >
                   <RecipeCard
-                    ref={recipeRefs.current[i]}
                     imageUrl={recipe.imageUrl}
                     title={recipe.title}
                     summary={texts.summaries[i + 1]?.summary ?? ""}
                     boxPosition={boxPositions[i] ?? "bottom"}
+                    index={i + 1}
+                    theme={theme}
                   />
                 </div>
               </div>
@@ -270,7 +365,6 @@ export const CardEditor = ({ query, thumbnail, recipes }: CardEditorProps) => {
                   style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
                 >
                   <RecipeSummaryCard
-                    ref={summaryRefs.current[i]}
                     recipeId={Number(recipe.id)}
                     imageUrl={recipe.imageUrl}
                     title={recipe.title}

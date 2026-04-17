@@ -1,5 +1,5 @@
 // src/app/admin/card-news/lib/capture.ts
-import html2canvas from "html2canvas";
+import { toBlob } from "html-to-image";
 
 declare global {
   interface Window {
@@ -12,32 +12,24 @@ declare global {
 const SCALE = 3;
 
 export const captureElement = async (element: HTMLElement): Promise<Blob> => {
-  const canvas = await html2canvas(element, {
-    scale: SCALE,
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: null,
-    width: element.offsetWidth,
-    height: element.offsetHeight,
+  const blob = await toBlob(element, {
+    pixelRatio: SCALE,
+    cacheBust: true,
+    skipAutoScale: true,
+    backgroundColor: undefined,
   });
 
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (blob) resolve(blob);
-        else reject(new Error("Canvas toBlob failed"));
-      },
-      "image/png",
-      1.0
-    );
-  });
+  if (!blob) throw new Error("toBlob returned null");
+  return blob;
 };
 
 export const saveAllCards = async (
   cardRefs: React.RefObject<HTMLDivElement | null>[],
   fileNames: string[],
-  folderName: string
+  folderName: string,
 ) => {
+  await document.fonts.ready;
+
   // File System Access API 지원 확인
   if (!("showDirectoryPicker" in window)) {
     // fallback: 개별 다운로드
@@ -59,7 +51,9 @@ export const saveAllCards = async (
   const rootHandle = await window.showDirectoryPicker!({ mode: "readwrite" });
 
   // 하위 폴더 생성
-  const subHandle = await rootHandle.getDirectoryHandle(folderName, { create: true });
+  const subHandle = await rootHandle.getDirectoryHandle(folderName, {
+    create: true,
+  });
 
   // 각 카드 캡처 + 저장
   for (let i = 0; i < cardRefs.length; i++) {
@@ -67,7 +61,9 @@ export const saveAllCards = async (
     if (!el) continue;
 
     const blob = await captureElement(el);
-    const fileHandle = await subHandle.getFileHandle(fileNames[i], { create: true });
+    const fileHandle = await subHandle.getFileHandle(fileNames[i], {
+      create: true,
+    });
     const writable = await fileHandle.createWritable();
     await writable.write(blob);
     await writable.close();

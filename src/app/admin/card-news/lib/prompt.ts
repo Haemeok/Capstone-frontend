@@ -1,6 +1,12 @@
 import { Recipe } from "@/entities/recipe/model/types";
 
-export const buildCardNewsPrompt = (query: string, thumbnail: Recipe, recipes: Recipe[]) => {
+const formatFilter = (filter: Record<string, unknown>): string => {
+  return Object.entries(filter)
+    .map(([key, val]) => `${key}: ${String(val)}`)
+    .join(", ");
+};
+
+export const buildCardNewsPrompt = (filter: Record<string, unknown>, thumbnail: Recipe, recipes: Recipe[]) => {
   const recipeDetails = [thumbnail, ...recipes]
     .map((r, i) => {
       const ingredients = r.ingredients
@@ -18,7 +24,7 @@ export const buildCardNewsPrompt = (query: string, thumbnail: Recipe, recipes: R
 
 아래 검색 키워드와 레시피 정보를 보고 JSON 형식으로 응답하세요.
 
-검색 키워드: "${query}"
+필터 조합: ${formatFilter(filter)}
 
 ${recipeDetails}
 
@@ -36,7 +42,7 @@ ${recipeDetails}
 
 규칙:
 - hooking: 감탄사, 강조 표현 사용. 호기심 유발. "이거 진짜...", "알면 인생이 바뀌는..." 스타일.
-- subject: 키워드 기반으로 자연스럽게. "~모음 zip", "~top5", "~꿀조합" 스타일.
+- subject: 필터 조합 기반으로 자연스럽게. "~모음 zip", "~top5", "~꿀조합" 스타일.
 - summaries: 각 레시피마다 하나씩. 재료(이름+양)와 핵심 조리법을 간결하게 5줄로.
 - summaries 배열 순서는 위 레시피 순서와 동일하게 (레시피 1이 썸네일용).`;
 };

@@ -4,9 +4,10 @@
 import { useState } from "react";
 
 import { Recipe } from "@/entities/recipe/model/types";
+import { useUserStore } from "@/entities/user/model/store";
 
+import { AdminSearchFilters } from "./components/AdminSearchFilters";
 import { CardEditor } from "./components/CardEditor";
-import { FilterBrowser } from "./components/FilterBrowser";
 import { RecipeSelector } from "./components/RecipeSelector";
 
 type Step = "filter" | "recipe" | "editor";
@@ -22,13 +23,17 @@ const STEP_LABELS: Record<Step, string> = {
   editor: "3. 카드 편집 & 저장",
 };
 
+const ADMIN_USER_ID = "X1BoaJNZ";
+
 const CardNewsPage = () => {
+  const user = useUserStore((state) => state.user);
+  const isAuthReady = useUserStore((state) => state.isAuthReady);
   const [step, setStep] = useState<Step>("filter");
-  const [selectedQuery, setSelectedQuery] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState<Record<string, unknown>>({});
   const [selectedRecipes, setSelectedRecipes] = useState<SelectedRecipes | null>(null);
 
-  const handleFilterSelect = (query: string) => {
-    setSelectedQuery(query);
+  const handleSearch = (params: Record<string, unknown>) => {
+    setSelectedFilter(params);
     setStep("recipe");
   };
 
@@ -40,12 +45,28 @@ const CardNewsPage = () => {
   const handleBack = () => {
     if (step === "recipe") {
       setStep("filter");
-      setSelectedQuery("");
+      setSelectedFilter({});
     } else if (step === "editor") {
       setStep("recipe");
       setSelectedRecipes(null);
     }
   };
+
+  if (!isAuthReady) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-gray-400">로딩 중...</p>
+      </div>
+    );
+  }
+
+  if (!user || user.id !== ADMIN_USER_ID) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-gray-500">접근 권한이 없습니다.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl bg-white p-6">
@@ -76,13 +97,13 @@ const CardNewsPage = () => {
         </button>
       )}
 
-      {step === "filter" && <FilterBrowser onSelect={handleFilterSelect} />}
+      {step === "filter" && <AdminSearchFilters onSearch={handleSearch} />}
       {step === "recipe" && (
-        <RecipeSelector query={selectedQuery} onComplete={handleRecipesSelected} />
+        <RecipeSelector filter={selectedFilter} onComplete={handleRecipesSelected} />
       )}
       {step === "editor" && selectedRecipes && (
         <CardEditor
-          query={selectedQuery}
+          filter={selectedFilter}
           thumbnail={selectedRecipes.thumbnail}
           recipes={selectedRecipes.cards}
         />
