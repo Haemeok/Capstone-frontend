@@ -10,8 +10,6 @@ import {
   CarouselPrevious,
 } from "@/shared/ui/shadcn/carousel";
 
-import { RecipeSaveButton } from "@/features/recipe-save";
-
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 const RecentlyViewedRecipes = () => {
@@ -64,14 +62,6 @@ const RecentlyViewedRecipes = () => {
                   likedByCurrentUser: false,
                   favoriteByCurrentUser: false,
                 }}
-                saveBadge={
-                  <RecipeSaveButton
-                    recipeId={recipe.id}
-                    initialIsFavorite={false}
-                    buttonClassName="text-white"
-                    iconClassName="fill-gray-300 opacity-80"
-                  />
-                }
               />
             </CarouselItem>
           ))}
