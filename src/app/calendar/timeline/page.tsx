@@ -53,12 +53,8 @@ const TimelineRecordsPage = () => {
           </div>
         ) : (
           <>
-            {groups.map((group, index) => (
-              <TimelineDateGroup
-                key={group.date}
-                group={group}
-                prevDate={groups[index - 1]?.date}
-              />
+            {groups.map((group) => (
+              <TimelineDateGroup key={group.date} group={group} />
             ))}
 
             <div

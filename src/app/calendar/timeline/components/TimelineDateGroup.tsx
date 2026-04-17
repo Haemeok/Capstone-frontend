@@ -14,11 +14,10 @@ import { formatTimelineDateHeader } from "../lib/formatTimelineDateHeader";
 
 type TimelineDateGroupProps = {
   group: RecordTimelineGroup;
-  prevDate?: string;
 };
 
-export const TimelineDateGroup = ({ group, prevDate }: TimelineDateGroupProps) => {
-  const label = formatTimelineDateHeader(group.date, prevDate);
+export const TimelineDateGroup = ({ group }: TimelineDateGroupProps) => {
+  const label = formatTimelineDateHeader(group.date);
 
   return (
     <section className="pt-6 first:pt-0">
