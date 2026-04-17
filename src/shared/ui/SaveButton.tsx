@@ -13,10 +13,16 @@ const SaveButton = ({
   label,
   isFavorite,
 }: SaveButtonProps) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick?.();
+  };
+
   return (
     <div className="flex flex-col items-center">
       <button
-        onClick={onClick}
+        onClick={handleClick}
         className={className}
         aria-label={isFavorite ? "저장 해제" : "저장"}
         aria-pressed={isFavorite}
@@ -25,8 +31,8 @@ const SaveButton = ({
           width={24}
           height={24}
           className={`transition-all duration-300 ${
-            isFavorite ? "fill-dark" : ""
-          } `}
+            isFavorite ? "fill-current stroke-current" : ""
+          }`}
         />
       </button>
       {label && <p className="mt-1 text-sm font-bold">{label}</p>}
