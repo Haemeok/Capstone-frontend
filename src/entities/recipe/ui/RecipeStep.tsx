@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 
 import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
 import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
@@ -22,6 +22,7 @@ type RecipeStepProps = {
   length: number;
   isFirstStep?: boolean;
   recipeIngredients?: Omit<IngredientItem, "inFridge">[];
+  headerExtra?: ReactNode;
 };
 
 const RecipeStep = ({
@@ -30,6 +31,7 @@ const RecipeStep = ({
   length,
   isFirstStep = false,
   recipeIngredients,
+  headerExtra,
 }: RecipeStepProps) => {
   const videoPlayer = useVideoPlayer();
   const { segments, allTerms: cookingTerms } = useMemo(
@@ -72,7 +74,10 @@ const RecipeStep = ({
             </div>
           )}
         </div>
-        {timeInSeconds && <StepTimer targetSeconds={timeInSeconds} />}
+        <div className="flex items-center gap-2">
+          {timeInSeconds && <StepTimer targetSeconds={timeInSeconds} />}
+          {headerExtra}
+        </div>
       </div>
       <div className="flex flex-wrap items-center gap-1">
         {displayIngredients.length > 0 && <IngredientIcon />}

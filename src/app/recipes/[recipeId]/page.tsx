@@ -178,8 +178,6 @@ export default async function RecipeDetailPage({
 
               <CoupangDisclosure />
 
-              <CookingUnitTooltip />
-
               {staticRecipe.fineDiningInfo?.components && (
                 <RecipeComponentsSection
                   components={staticRecipe.fineDiningInfo.components}
@@ -196,6 +194,7 @@ export default async function RecipeDetailPage({
                 <RecipeStepList
                   RecipeSteps={staticRecipe.steps}
                   recipeIngredients={staticRecipe.ingredients}
+                  firstStepHeaderExtra={<CookingUnitTooltip inline />}
                 />
               </ErrorBoundary>
             </RecipeVideoSection>
