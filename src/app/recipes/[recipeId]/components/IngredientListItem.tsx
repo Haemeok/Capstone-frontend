@@ -24,13 +24,15 @@ export const IngredientListItem = ({
   return (
     <li className="grid grid-cols-[1.5fr_1.5fr_1fr_auto] items-center gap-3">
       <div className="flex items-center gap-1.5 text-left">
-        {ingredient.inFridge && (
+        {ingredient.inFridge ? (
           <BadgeButton
             badgeText="내 냉장고에 있는 재료예요"
             badgeIcon={
               <Refrigerator size={18} className="text-gray-500" />
             }
           />
+        ) : (
+          <span aria-hidden className="inline-block w-[18px] shrink-0" />
         )}
         <p className="font-bold">{ingredient.name}</p>
       </div>
