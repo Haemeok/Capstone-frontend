@@ -122,6 +122,7 @@ const toBaseRecipe = (r: BookRecipe): BaseRecipeGridItem => ({
   createdAt: r.addedAt,
   likeCount: 0,
   likedByCurrentUser: false,
+  favoriteByCurrentUser: false,
 });
 
 export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {

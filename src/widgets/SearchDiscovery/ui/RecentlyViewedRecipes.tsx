@@ -60,6 +60,7 @@ const RecentlyViewedRecipes = () => {
                   createdAt: "",
                   likeCount: 0,
                   likedByCurrentUser: false,
+                  favoriteByCurrentUser: false,
                 }}
               />
             </CarouselItem>

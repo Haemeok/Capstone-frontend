@@ -31,6 +31,7 @@ export type BaseRecipeGridItem = {
   createdAt: string;
   likeCount: number;
   likedByCurrentUser: boolean;
+  favoriteByCurrentUser: boolean;
 };
 
 export type DetailedRecipeGridItem = BaseRecipeGridItem & {
@@ -47,7 +48,7 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
 
 export type StaticDetailedRecipeGridItem = Omit<
   DetailedRecipeGridItem,
-  "likedByCurrentUser"
+  "likedByCurrentUser" | "favoriteByCurrentUser"
 >;
 
 export type IngredientRecipeGridItem = DetailedRecipeGridItem & {

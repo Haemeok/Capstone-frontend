@@ -27,6 +27,7 @@ const StaticRecipeSlide = ({
     (recipe: StaticDetailedRecipeGridItem) => ({
       ...recipe,
       likedByCurrentUser: statusData?.[recipe.id]?.likedByCurrentUser ?? false,
+      favoriteByCurrentUser: statusData?.[recipe.id]?.favoriteByCurrentUser ?? false,
     })
   );
 

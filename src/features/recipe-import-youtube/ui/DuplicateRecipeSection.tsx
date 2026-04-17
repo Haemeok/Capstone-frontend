@@ -99,6 +99,7 @@ const DuplicateRecipeSection = ({
     createdAt: recipeData.createdAt ?? "",
     likeCount: recipeData.likeCount,
     likedByCurrentUser: recipeData.likedByCurrentUser,
+    favoriteByCurrentUser: recipeData.favoriteByCurrentUser,
     avgRating: recipeData.ratingInfo.avgRating,
     ratingCount: recipeData.ratingInfo.ratingCount,
     marketPrice: recipeData.marketPrice,
