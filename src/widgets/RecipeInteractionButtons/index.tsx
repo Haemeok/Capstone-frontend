@@ -62,21 +62,17 @@ const RecipeInteractionButtons = ({
             variant: "success",
             position: "bottom",
           });
-        } else if (defaultBook) {
+        } else {
           addToast({
-            message: `${defaultBook.name}에 저장되었습니다.`,
+            message: defaultBook
+              ? `${defaultBook.name}에 저장되었습니다.`
+              : "저장되었습니다.",
             variant: "action",
             position: "bottom",
             action: {
               label: "변경",
               onClick: () => setChangeOpen(true),
             },
-          });
-        } else {
-          addToast({
-            message: "저장되었습니다.",
-            variant: "success",
-            position: "bottom",
           });
         }
       },
@@ -131,14 +127,11 @@ const RecipeInteractionButtons = ({
           text={`${title} 레시피를 확인해보세요!`}
         />
       </div>
-      {defaultBook && (
-        <ChangeBookSheet
-          open={changeOpen}
-          onOpenChange={setChangeOpen}
-          recipeId={recipeId}
-          fromBookId={defaultBook.id}
-        />
-      )}
+      <ChangeBookSheet
+        open={changeOpen}
+        onOpenChange={setChangeOpen}
+        recipeId={recipeId}
+      />
     </>
   );
 };

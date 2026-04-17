@@ -1,22 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
 import { PlusIcon } from "lucide-react";
-
-import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/shadcn/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
 
 import {
   getRecipeBookErrorMessage,
@@ -26,32 +11,49 @@ import {
 
 import { CreateRecipeBookSheet } from "@/features/recipe-book-create";
 
+import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/shared/ui/shadcn/drawer";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/shared/ui/shadcn/dialog";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   recipeId: string;
-  fromBookId: string;
 };
 
 const DESKTOP_BREAKPOINT = "(min-width: 768px)";
 
-export const ChangeBookSheet = ({
-  open,
-  onOpenChange,
-  recipeId,
-  fromBookId,
-}: Props) => {
+export const ChangeBookSheet = ({ open, onOpenChange, recipeId }: Props) => {
   const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT);
   const { data: books } = useRecipeBooks();
   const moveMutation = useMoveRecipes();
   const addToast = useToastStore((s) => s.addToast);
   const [createOpen, setCreateOpen] = useState(false);
 
+  const defaultBook = books?.find((b) => b.isDefault);
+  const fromBookId = defaultBook?.id;
   const targets = (books ?? []).filter((b) => b.id !== fromBookId);
 
   const handleSelect = async (toBookId: string, toBookName: string) => {
+    if (!fromBookId) {
+      addToast({
+        message: "잠시 후 다시 시도해주세요.",
+        variant: "error",
+      });
+      return;
+    }
     try {
       await moveMutation.mutateAsync({
         fromBookId,
@@ -95,7 +97,7 @@ export const ChangeBookSheet = ({
                 type="button"
                 className="flex w-full items-center justify-between rounded-xl px-4 py-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50"
                 onClick={() => handleSelect(b.id, b.name)}
-                disabled={moveMutation.isPending}
+                disabled={moveMutation.isPending || !fromBookId}
               >
                 <span className="font-medium text-gray-900">{b.name}</span>
                 <span className="text-sm text-gray-500">{b.recipeCount}개</span>
