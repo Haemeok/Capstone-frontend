@@ -43,17 +43,29 @@ export const ChangeBookSheet = ({ open, onOpenChange, recipeId }: Props) => {
   const [createOpen, setCreateOpen] = useState(false);
 
   const defaultBook = books?.find((b) => b.isDefault);
-  const fromBookId = defaultBook?.id;
+  // Fallback: if no book has isDefault: true (backend data issue), use the first book
+  // ordered by displayOrder. Recipe is guaranteed to be in the default book after save.
+  const sortedBooks = [...(books ?? [])].sort(
+    (a, b) => a.displayOrder - b.displayOrder
+  );
+  const fromBookId = defaultBook?.id ?? sortedBooks[0]?.id;
   const targets = (books ?? []).filter((b) => b.id !== fromBookId);
 
   const handleSelect = async (toBookId: string, toBookName: string) => {
     if (!fromBookId) {
+      console.warn("[ChangeBookSheet] no fromBookId; books:", books);
       addToast({
-        message: "잠시 후 다시 시도해주세요.",
+        message: "기본 레시피북을 찾을 수 없어요. 새로고침해주세요.",
         variant: "error",
       });
       return;
     }
+    console.log("[ChangeBookSheet] move", {
+      fromBookId,
+      toBookId,
+      toBookName,
+      recipeId,
+    });
     try {
       await moveMutation.mutateAsync({
         fromBookId,
@@ -97,7 +109,7 @@ export const ChangeBookSheet = ({ open, onOpenChange, recipeId }: Props) => {
                 type="button"
                 className="flex w-full items-center justify-between rounded-xl px-4 py-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50"
                 onClick={() => handleSelect(b.id, b.name)}
-                disabled={moveMutation.isPending || !fromBookId}
+                disabled={moveMutation.isPending}
               >
                 <span className="font-medium text-gray-900">{b.name}</span>
                 <span className="text-sm text-gray-500">{b.recipeCount}개</span>
