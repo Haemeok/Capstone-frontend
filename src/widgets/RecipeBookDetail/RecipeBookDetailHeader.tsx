@@ -1,14 +1,15 @@
 "use client";
 
-import { PencilIcon } from "lucide-react";
 import { useState } from "react";
 
-import type { RecipeBook } from "@/entities/recipe-book";
+import { PencilIcon } from "lucide-react";
+
 import PrevButton from "@/shared/ui/PrevButton";
 
-import { RenameRecipeBookSheet } from "@/features/recipe-book-rename";
+import type { RecipeBook } from "@/entities/recipe-book";
 
 import { useEditModeStore } from "@/features/recipe-book-edit-mode";
+import { RenameRecipeBookSheet } from "@/features/recipe-book-rename";
 
 type Props = {
   book: RecipeBook;
@@ -32,12 +33,12 @@ export const RecipeBookDetailHeader = ({ book }: Props) => {
             <PrevButton icon="back" showOnDesktop />
           )}
           {isEditMode ? (
-            <span className="text-base font-bold text-gray-900">
+            <span className="text-lg font-bold text-gray-900">
               {selectedCount}개 선택
             </span>
           ) : (
             <div className="flex min-w-0 items-center gap-1">
-              <span className="truncate text-base font-bold text-gray-900">
+              <span className="truncate text-lg font-bold text-gray-900">
                 {book.name}
               </span>
               {!book.isDefault && (
