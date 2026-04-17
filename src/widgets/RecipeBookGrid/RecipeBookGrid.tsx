@@ -1,9 +1,10 @@
 "use client";
 
-import { useRecipeBooks } from "@/entities/recipe-book";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
+
+import { useRecipeBooks } from "@/entities/recipe-book";
 
 import { CreateRecipeBookCard } from "./CreateRecipeBookCard";
 import { RecipeBookCard } from "./RecipeBookCard";
@@ -28,7 +29,7 @@ export const RecipeBookGrid = () => {
   if (isLoading) return <GridSkeleton />;
 
   if (error) {
-    return <SectionErrorFallback message="폴더 목록을 불러올 수 없어요" />;
+    return <SectionErrorFallback message="레시피북 목록을 불러올 수 없어요" />;
   }
 
   const list = books ?? [];
@@ -36,7 +37,7 @@ export const RecipeBookGrid = () => {
 
   return (
     <ErrorBoundary
-      fallback={<SectionErrorFallback message="폴더를 불러올 수 없어요" />}
+      fallback={<SectionErrorFallback message="레시피북을 불러올 수 없어요" />}
     >
       <div className="grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
         {list.map((book) => (

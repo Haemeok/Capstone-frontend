@@ -1,16 +1,18 @@
 "use client";
 
-import { MoreVerticalIcon } from "lucide-react";
 import { useState } from "react";
 
-import { DeleteRecipeBookModal } from "@/features/recipe-book-delete";
-import { RenameRecipeBookSheet } from "@/features/recipe-book-rename";
+import { MoreVerticalIcon } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/shared/ui/shadcn/dropdown-menu";
+
+import { DeleteRecipeBookModal } from "@/features/recipe-book-delete";
+import { RenameRecipeBookSheet } from "@/features/recipe-book-rename";
 
 type Props = {
   bookId: string;
@@ -29,7 +31,7 @@ export const RecipeBookCardMenu = ({ bookId, bookName }: Props) => {
             type="button"
             onClick={(e) => e.stopPropagation()}
             className="absolute right-2 top-2 rounded-full bg-white/80 p-1 backdrop-blur transition-colors hover:bg-white"
-            aria-label="폴더 메뉴"
+            aria-label="레시피북 메뉴"
           >
             <MoreVerticalIcon size={18} className="text-gray-700" />
           </button>
