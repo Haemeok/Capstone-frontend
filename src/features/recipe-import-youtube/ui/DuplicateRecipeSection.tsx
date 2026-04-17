@@ -137,7 +137,7 @@ const DuplicateRecipeSection = ({
     youtubeChannelName: channelName,
   };
 
-  const rightBadge = channelName ? (
+  const infoBadge = channelName ? (
     <YouTubeChannelBadge channelName={channelName} className="min-[390px]:max-w-[140px]" />
   ) : (
     <YouTubeIconBadge />
@@ -166,7 +166,7 @@ const DuplicateRecipeSection = ({
         <div className="mx-auto w-[180px]">
           <DetailedRecipeGridItem
             recipe={detailedRecipeItem}
-            rightBadge={rightBadge}
+            infoBadge={infoBadge}
             priority
           />
         </div>

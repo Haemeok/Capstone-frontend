@@ -32,8 +32,8 @@ type DetailedRecipeGridItemProps = {
   className?: string;
   priority?: boolean;
   prefetch?: boolean;
-  leftBadge?: React.ReactNode;
-  rightBadge?: React.ReactNode;
+  infoBadge?: React.ReactNode;
+  saveBadge?: React.ReactNode;
   onImageRetry?: () => void;
 };
 
@@ -42,8 +42,8 @@ const DetailedRecipeGridItem = ({
   className,
   priority,
   prefetch = false,
-  leftBadge,
-  rightBadge,
+  infoBadge,
+  saveBadge,
   onImageRetry,
 }: DetailedRecipeGridItemProps) => {
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
@@ -88,10 +88,10 @@ const DetailedRecipeGridItem = ({
             onRetry={onImageRetry}
           />
 
-          {(leftBadge || rightBadge) && (
+          {(infoBadge || saveBadge) && (
             <div className="absolute top-0 right-0 left-0 z-10 flex items-start justify-between gap-2 p-2">
-              {leftBadge && <div className="flex gap-2">{leftBadge}</div>}
-              {rightBadge && <div className="flex gap-2">{rightBadge}</div>}
+              {infoBadge ? <div className="flex gap-2">{infoBadge}</div> : <div />}
+              {saveBadge && <div className="flex gap-2">{saveBadge}</div>}
             </div>
           )}
         </div>

@@ -110,7 +110,8 @@ const RecipeSlide = ({
               <DetailedRecipeGridItem
                 recipe={item}
                 prefetch
-                leftBadge={
+                infoBadge={getRecipeRightBadge(item)}
+                saveBadge={
                   <RecipeSaveButton
                     recipeId={item.id}
                     initialIsFavorite={item.favoriteByCurrentUser}
@@ -118,7 +119,6 @@ const RecipeSlide = ({
                     iconClassName="fill-gray-300 opacity-80"
                   />
                 }
-                rightBadge={getRecipeRightBadge(item)}
               />
             </CarouselItem>
           ))}

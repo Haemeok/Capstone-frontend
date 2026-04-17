@@ -183,7 +183,7 @@ const RecipeGrid = ({
             detailedRecipe.ingredientCost
           );
 
-          const leftBadge = (
+          const saveBadge = (
             <RecipeSaveButton
               key="save"
               recipeId={detailedRecipe.id}
@@ -193,9 +193,9 @@ const RecipeGrid = ({
             />
           );
 
-          let rightBadge = null;
+          let infoBadge = null;
           if (savings) {
-            rightBadge = (
+            infoBadge = (
               <div
                 key="savings"
                 className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm"
@@ -209,7 +209,7 @@ const RecipeGrid = ({
             detailedRecipe.isYoutube &&
             detailedRecipe.youtubeChannelName
           ) {
-            rightBadge = (
+            infoBadge = (
               <YouTubeChannelBadge
                 key="youtube"
                 channelName={detailedRecipe.youtubeChannelName}
@@ -217,9 +217,9 @@ const RecipeGrid = ({
               />
             );
           } else if (detailedRecipe.isYoutube) {
-            rightBadge = <YouTubeIconBadge key="youtube" />;
+            infoBadge = <YouTubeIconBadge key="youtube" />;
           } else if (detailedRecipe.isAiGenerated) {
-            rightBadge = <AIGeneratedBadge key="ai" />;
+            infoBadge = <AIGeneratedBadge key="ai" />;
           }
 
           return (
@@ -228,8 +228,8 @@ const RecipeGrid = ({
               recipe={detailedRecipe}
               priority={index === 0 && useLCP}
               prefetch={prefetch}
-              leftBadge={leftBadge}
-              rightBadge={rightBadge}
+              infoBadge={infoBadge}
+              saveBadge={saveBadge}
               onImageRetry={queryKeyToInvalidate ? handleImageRetry : undefined}
             />
           );
