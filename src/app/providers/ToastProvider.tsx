@@ -10,7 +10,9 @@ const ToastProvider = () => {
   const toastList = useToastStore((state) => state.toastList);
 
   const getToastsByPosition = (position: ToastPosition) => {
-    return toastList.filter((toast) => toast.position === position);
+    return toastList.filter(
+      (toast) => (toast.position ?? "bottom") === position
+    );
   };
 
   const topToasts = getToastsByPosition("top");
