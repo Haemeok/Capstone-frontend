@@ -1,6 +1,5 @@
-import Image from "next/image";
-
 import type { BookRecipe } from "@/entities/recipe-book";
+import { Image } from "@/shared/ui/image/Image";
 
 type Props = {
   recipes: BookRecipe[];
@@ -19,18 +18,13 @@ export const RecipeBookThumbnailGrid = ({ recipes }: Props) => {
             return <div key={idx} className="rounded-lg" aria-hidden />;
           }
           return (
-            <div
+            <Image
               key={recipe.recipeId}
-              className="relative overflow-hidden rounded-lg bg-gray-50 shadow-sm"
-            >
-              <Image
-                src={recipe.imageUrl}
-                alt={recipe.title}
-                fill
-                sizes="(min-width: 1024px) 12vw, (min-width: 640px) 22vw, 45vw"
-                className="object-cover"
-              />
-            </div>
+              src={recipe.imageUrl}
+              alt={recipe.title}
+              fit="cover"
+              wrapperClassName="h-full w-full rounded-lg bg-gray-50 shadow-sm"
+            />
           );
         })}
       </div>
