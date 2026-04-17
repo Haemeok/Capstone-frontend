@@ -68,9 +68,6 @@ export const useToggleRecipeSave = (recipeId: string) => {
       queryClient.invalidateQueries({
         queryKey: RECIPE_BOOK_QUERY_KEYS.all,
       });
-      queryClient.invalidateQueries({
-        queryKey: RECIPE_BOOK_QUERY_KEYS.savedBooks(recipeId),
-      });
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
     },
   });

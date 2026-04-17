@@ -45,9 +45,7 @@ const RecipeInteractionButtons = ({
     if (!checkAndTrigger("save")) return;
     triggerHaptic("Medium");
 
-    const message = initialIsFavorite
-      ? "저장에서 삭제했습니다."
-      : "저장에 추가했습니다.";
+    const message = initialIsFavorite ? "저장을 해제했습니다." : "저장했습니다.";
 
     toggleFavorite(undefined, {
       onSuccess: () => {

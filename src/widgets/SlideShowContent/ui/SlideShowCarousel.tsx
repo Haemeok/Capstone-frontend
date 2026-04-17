@@ -42,9 +42,7 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
   });
 
   const handleToggleFavorite = () => {
-    const message = recipe.favoriteByCurrentUser
-      ? "저장에서 삭제했습니다."
-      : "저장에 추가했습니다.";
+    const message = recipe.favoriteByCurrentUser ? "저장을 해제했습니다." : "저장했습니다.";
 
     toggleRecipeFavorite(undefined, {
       onSuccess: () => {
