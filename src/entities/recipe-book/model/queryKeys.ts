@@ -1,4 +1,6 @@
-export const DEFAULT_BOOK_SORT = "addedAt,desc";
+// TODO: switch back to "addedAt,desc" once backend supports it as a sort key.
+// addedAt is a join-table column not exposed via JPA Pageable, so it currently 500s.
+export const DEFAULT_BOOK_SORT = "createdAt,desc";
 
 export const RECIPE_BOOK_QUERY_KEYS = {
   all: ["recipe-books"] as const,
