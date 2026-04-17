@@ -20,7 +20,7 @@ import {
 } from "@/entities/recipe/model/types";
 
 import useDeleteRecipeMutation from "@/features/recipe-delete/model/hooks";
-import { RecipeLikeButton } from "@/features/recipe-like";
+import { RecipeSaveButton } from "@/features/recipe-save";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 import EmptyRecipeCTA from "@/widgets/RecipeGrid/ui/EmptyRecipeCTA";
@@ -184,13 +184,11 @@ const RecipeGrid = ({
           );
 
           const leftBadge = (
-            <RecipeLikeButton
-              key="like"
+            <RecipeSaveButton
+              key="save"
               recipeId={detailedRecipe.id}
-              initialIsLiked={detailedRecipe.likedByCurrentUser}
-              initialLikeCount={detailedRecipe.likeCount}
+              initialIsFavorite={detailedRecipe.favoriteByCurrentUser}
               buttonClassName="text-white"
-              iconClassName="fill-gray-300 opacity-80"
             />
           );
 
