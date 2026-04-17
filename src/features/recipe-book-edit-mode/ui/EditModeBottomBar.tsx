@@ -54,9 +54,9 @@ export const EditModeBottomBar = ({ bookId, allRecipeIds }: Props) => {
               disabled={!hasSelection}
               onClick={() => setMoveOpen(true)}
               className={cn(
-                "rounded-xl px-4 py-2 text-sm font-medium transition-colors",
+                "h-12 rounded-xl px-6 text-base font-bold transition-all active:scale-[0.98]",
                 hasSelection
-                  ? "text-gray-700 hover:bg-gray-100"
+                  ? "text-gray-700 hover:bg-gray-50"
                   : "cursor-not-allowed text-gray-300"
               )}
             >
@@ -67,7 +67,7 @@ export const EditModeBottomBar = ({ bookId, allRecipeIds }: Props) => {
               disabled={!hasSelection}
               onClick={() => setDeleteOpen(true)}
               className={cn(
-                "rounded-xl px-4 py-2 text-sm font-bold transition-colors",
+                "h-12 rounded-xl px-6 text-base font-bold transition-all active:scale-[0.98]",
                 hasSelection
                   ? "text-red-500 hover:bg-red-50"
                   : "cursor-not-allowed text-gray-300"
