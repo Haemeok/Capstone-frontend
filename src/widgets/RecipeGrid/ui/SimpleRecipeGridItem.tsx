@@ -19,6 +19,7 @@ type SimpleRecipeGridItemProps = {
   setIsDrawerOpen: (id: string) => void;
   priority?: boolean;
   prefetch?: boolean;
+  hideSaveButton?: boolean;
 };
 
 const SimpleRecipeGridItem = ({
@@ -26,6 +27,7 @@ const SimpleRecipeGridItem = ({
   setIsDrawerOpen,
   priority,
   prefetch = false,
+  hideSaveButton = false,
 }: SimpleRecipeGridItemProps) => {
   const params = useParams();
   const { user: loggedInUser } = useUserStore();
@@ -55,14 +57,16 @@ const SimpleRecipeGridItem = ({
           fit="cover"
           priority={priority}
         />
-        <div className="absolute top-0 left-0 p-2">
-          <RecipeSaveButton
-            recipeId={recipe.id}
-            initialIsFavorite={recipe.favoriteByCurrentUser}
-            buttonClassName="text-white"
-            iconClassName="fill-gray-300 opacity-80"
-          />
-        </div>
+        {!hideSaveButton && (
+          <div className="absolute top-0 left-0 p-2">
+            <RecipeSaveButton
+              recipeId={recipe.id}
+              initialIsFavorite={recipe.favoriteByCurrentUser}
+              buttonClassName="text-white"
+              iconClassName="fill-gray-300 opacity-80"
+            />
+          </div>
+        )}
 
         {showActionButton && (
           <div className="absolute top-0 right-0 p-0.5">

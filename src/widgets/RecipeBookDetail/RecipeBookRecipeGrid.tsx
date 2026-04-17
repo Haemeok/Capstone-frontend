@@ -179,6 +179,7 @@ export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
               recipe={recipe}
               setIsDrawerOpen={noopOpenDrawer}
               prefetch={false}
+              hideSaveButton
             />
             {isEditMode && <SelectionOverlay recipeId={recipe.id} />}
           </div>
