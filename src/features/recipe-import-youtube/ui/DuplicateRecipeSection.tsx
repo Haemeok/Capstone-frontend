@@ -1,19 +1,23 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { Bookmark, Check } from "lucide-react";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
+import { useRecipeBooks } from "@/entities/recipe-book";
 import { useRecipeDetailQuery, useRecipeStatusQuery } from "@/entities/recipe/model/hooks";
 
+import { ChangeBookSheet } from "@/features/recipe-book-change";
 import { useToggleRecipeSave } from "@/features/recipe-save/model/hooks";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
+import { useToastStore } from "@/widgets/Toast";
 
 import { YoutubeMeta } from "../model/types";
 
@@ -23,30 +27,56 @@ type DuplicateRecipeSectionProps = {
   recipeId: string;
   youtubeMeta?: YoutubeMeta;
   urlSource?: UrlSource;
-  onSaveSuccess?: () => void;
 };
 
 const DuplicateRecipeSection = ({
   recipeId,
   youtubeMeta,
   urlSource,
-  onSaveSuccess,
 }: DuplicateRecipeSectionProps) => {
   const { recipeData, isLoading } = useRecipeDetailQuery(recipeId);
   const { data: recipeStatus } = useRecipeStatusQuery(recipeId);
 
-  const { mutate: toggleFavorite } =
-    useToggleRecipeSave(recipeId);
+  const { mutate: toggleFavorite } = useToggleRecipeSave(recipeId);
+  const { addToast } = useToastStore();
+  const { data: books } = useRecipeBooks();
+  const defaultBook = books?.find((b) => b.isDefault);
+
+  const [changeOpen, setChangeOpen] = useState(false);
+  const [currentBookId, setCurrentBookId] = useState<string | undefined>();
 
   const isFavorited = recipeStatus?.favoriteByCurrentUser ?? false;
   const hasAutoSavedRef = useRef(false);
 
-  const handleSaveClick = () => {
-    toggleFavorite(undefined, {
-      onSuccess: () => {
-        onSaveSuccess?.();
+  const showSaveToast = (bookName: string | undefined) => {
+    addToast({
+      message: bookName
+        ? `${bookName}에 저장되었습니다.`
+        : `"저장된 레시피"에 보관되었습니다.`,
+      variant: "action",
+      position: "bottom",
+      action: {
+        label: "변경",
+        onClick: () => setChangeOpen(true),
       },
     });
+  };
+
+  const handleSaveSuccess = () => {
+    triggerHaptic("Success");
+    setCurrentBookId(defaultBook?.id);
+    showSaveToast(defaultBook?.name);
+  };
+
+  const handleSaveClick = () => {
+    toggleFavorite(undefined, {
+      onSuccess: handleSaveSuccess,
+    });
+  };
+
+  const handleMoveComplete = (toBookId: string, toBookName: string) => {
+    setCurrentBookId(toBookId);
+    showSaveToast(toBookName);
   };
 
   useEffect(() => {
@@ -61,12 +91,11 @@ const DuplicateRecipeSection = ({
     if (shouldAutoSave) {
       hasAutoSavedRef.current = true;
       toggleFavorite(undefined, {
-        onSuccess: () => {
-          onSaveSuccess?.();
-        },
+        onSuccess: handleSaveSuccess,
       });
     }
-  }, [isLoading, recipeStatus, isFavorited, toggleFavorite, onSaveSuccess, urlSource]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, recipeStatus, isFavorited, toggleFavorite, urlSource]);
 
   if (isLoading) {
     return (
@@ -115,64 +144,74 @@ const DuplicateRecipeSection = ({
   );
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6 rounded-3xl bg-white p-8 shadow-lg">
-      {/* Success Icon */}
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-olive-light/10">
-        <Check className="h-8 w-8 text-olive-light" />
-      </div>
+    <>
+      <div className="mx-auto w-full max-w-md space-y-6 rounded-3xl bg-white p-8 shadow-lg">
+        {/* Success Icon */}
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-olive-light/10">
+          <Check className="h-8 w-8 text-olive-light" />
+        </div>
 
-      {/* Text Content */}
-      <div className="text-center">
-        <h3 className="text-xl font-bold text-gray-900">
-          레시피가 이미 존재해요!
-        </h3>
-        <p className="mt-2 text-sm text-gray-500">
-          크레딧이 차감되지 않았어요.
-          {urlSource === "direct" && (
-            <>
-              <br />
-              저장된 레시피에 추가되었어요.
-            </>
-          )}
-        </p>
-      </div>
+        {/* Text Content */}
+        <div className="text-center">
+          <h3 className="text-xl font-bold text-gray-900">
+            레시피가 이미 존재해요!
+          </h3>
+          <p className="mt-2 text-sm text-gray-500">
+            크레딧이 차감되지 않았어요.
+            {urlSource === "direct" && (
+              <>
+                <br />
+                저장된 레시피에 추가되었어요.
+              </>
+            )}
+          </p>
+        </div>
 
-      {/* Recipe Card */}
-      <div className="mx-auto w-[180px]">
-        <DetailedRecipeGridItem
-          recipe={detailedRecipeItem}
-          rightBadge={rightBadge}
-          priority
-        />
-      </div>
+        {/* Recipe Card */}
+        <div className="mx-auto w-[180px]">
+          <DetailedRecipeGridItem
+            recipe={detailedRecipeItem}
+            rightBadge={rightBadge}
+            priority
+          />
+        </div>
 
-      {/* Actions */}
-      <div className="space-y-3">
-        <Link
-          href={`/recipes/${recipeId}`}
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-olive-light text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
-        >
-          레시피 보러가기
-        </Link>
-
-        {!isFavorited && (
-          <button
-            onClick={handleSaveClick}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white font-medium text-gray-700 transition-colors hover:bg-gray-50"
+        {/* Actions */}
+        <div className="space-y-3">
+          <Link
+            href={`/recipes/${recipeId}`}
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-olive-light text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
           >
-            <Bookmark size={18} />
-            내 레시피에 저장하기
-          </button>
+            레시피 보러가기
+          </Link>
+
+          {!isFavorited && (
+            <button
+              onClick={handleSaveClick}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white font-medium text-gray-700 transition-colors hover:bg-gray-50"
+            >
+              <Bookmark size={18} />
+              내 레시피에 저장하기
+            </button>
+          )}
+        </div>
+
+        {/* Saved Indicator */}
+        {isFavorited && (
+          <p className="text-center text-sm text-olive-light">
+            이미 저장된 레시피예요
+          </p>
         )}
       </div>
 
-      {/* Saved Indicator */}
-      {isFavorited && (
-        <p className="text-center text-sm text-olive-light">
-          이미 저장된 레시피예요
-        </p>
-      )}
-    </div>
+      <ChangeBookSheet
+        open={changeOpen}
+        onOpenChange={setChangeOpen}
+        recipeId={recipeId}
+        fromBookId={currentBookId}
+        onMoveComplete={handleMoveComplete}
+      />
+    </>
   );
 };
 

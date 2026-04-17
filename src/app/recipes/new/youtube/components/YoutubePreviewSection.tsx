@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
-import { triggerHaptic } from "@/shared/lib/bridge";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
@@ -185,13 +184,6 @@ export const YoutubePreviewSection = ({
               recipeId={duplicateCheck.recipeId}
               youtubeMeta={youtubeMeta}
               urlSource={urlSource}
-              onSaveSuccess={() => {
-                triggerHaptic("Success");
-                addToast({
-                  message: "레시피가 저장되었습니다!",
-                  variant: "success",
-                });
-              }}
             />
           </ErrorBoundary>
         </div>
