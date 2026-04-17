@@ -29,8 +29,7 @@ export default function RecipeNavbar({
       rightComponent={
         <RecipeNavBarButtons
           recipeId={recipeId}
-          initialIsLiked={status?.likedByCurrentUser ?? false}
-          initialLikeCount={status?.likeCount ?? 0}
+          initialIsFavorite={status?.favoriteByCurrentUser ?? false}
         />
       }
     />
