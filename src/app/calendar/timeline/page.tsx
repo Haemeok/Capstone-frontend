@@ -35,7 +35,7 @@ const TimelineRecordsPage = () => {
 
   return (
     <Container>
-      <header className="relative flex items-center justify-center pt-4 pb-2">
+      <header className="sticky top-0 z-10 flex items-center justify-center bg-white pt-4 pb-2">
         <PrevButton className="absolute left-0" />
         <h1 className="text-xl font-bold text-gray-900">요리 기록</h1>
       </header>
