@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 
-import { ShoppingBasketIcon } from "lucide-react";
+import { Refrigerator,ShoppingBasketIcon } from "lucide-react";
+
+import BadgeButton from "@/shared/ui/BadgeButton";
 
 import { IngredientItem } from "@/entities/ingredient";
 
@@ -21,7 +23,22 @@ export const IngredientListItem = ({
 }: IngredientListItemProps) => {
   return (
     <li className="grid grid-cols-[1.5fr_1.5fr_1fr_auto] items-center gap-3">
-      <p className="text-left font-bold">{ingredient.name}</p>
+      <div className="flex items-center gap-1.5 text-left">
+        {ingredient.inFridge && (
+          <BadgeButton
+            badgeText="내 냉장고에 있는 재료예요"
+            badgeIcon={
+              <span
+                className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-olive-light/15 text-olive-dark"
+                aria-label="냉장고 보유 재료"
+              >
+                <Refrigerator size={12} />
+              </span>
+            }
+          />
+        )}
+        <p className="font-bold">{ingredient.name}</p>
+      </div>
 
       <p className="whitespace-nowrap text-left">
         {displayQuantity}
