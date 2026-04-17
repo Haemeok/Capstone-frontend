@@ -268,6 +268,7 @@ export type RecipeStatus = {
 
 export type RecipeListItemStatus = {
   likedByCurrentUser: boolean;
+  favoriteByCurrentUser: boolean;
 };
 
 export type RecipesStatusResponse = Record<string, RecipeListItemStatus>;
