@@ -5,7 +5,7 @@ import { FileInfoRequest } from "@/shared/types";
 
 import { RecipeHistoryResponse } from "@/entities/user/model/types";
 
-import { RecipeHistoryDetailResponse } from "./record";
+import { RecipeHistoryDetailResponse, RecordTimelineResponse } from "./record";
 import {
   DetailedRecipesApiResponse,
   IngredientRecipesApiResponse,
@@ -151,6 +151,26 @@ export const getRecipeHistoryItems = async (date: string) => {
     {
       params: {
         date,
+      },
+    }
+  );
+  return response;
+};
+
+export const getRecordsTimeline = async ({
+  page,
+  size,
+}: {
+  page: number;
+  size: number;
+}) => {
+  const response = await api.get<RecordTimelineResponse>(
+    END_POINTS.RECORDS_TIMELINE,
+    {
+      params: {
+        page,
+        size,
+        sort: "createdAt,desc",
       },
     }
   );
