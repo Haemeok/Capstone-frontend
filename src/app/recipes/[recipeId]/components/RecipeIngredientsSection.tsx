@@ -9,7 +9,9 @@ import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
 import PointDisplayBanner from "@/shared/ui/PointDisplayBanner";
 
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
+
 import { AIExtractionNotice } from "@/features/recipe-import-youtube/ui/AIExtractionNotice";
+import { useRecipeStatus } from "@/features/recipe-status";
 
 import { IngredientListItem } from "./IngredientListItem";
 import { IngredientsSectionHeader } from "./IngredientsSectionHeader";
@@ -43,6 +45,12 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const isValidServings = recipe.servings > 0 && Number.isFinite(recipe.servings);
   const [currentServings, setCurrentServings] = useState(
     isValidServings ? recipe.servings : 1
+  );
+
+  const { status } = useRecipeStatus();
+  const fridgeIngredientIds = useMemo(
+    () => new Set(status?.ingredientIdsInFridge ?? []),
+    [status?.ingredientIdsInFridge]
   );
 
   const randomActivity = useMemo(() => getRandomActivity(), []);
@@ -119,14 +127,18 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                   ingredient.unit,
                   servingRatio
                 );
+                const ingredientId = ingredient.id ?? `ingredient-${index}`;
+                const inFridge = ingredient.id
+                  ? fridgeIngredientIds.has(ingredient.id)
+                  : false;
 
                 return (
                   <IngredientListItem
                     key={index}
                     ingredient={{
                       ...ingredient,
-                      id: ingredient.id ?? `ingredient-${index}`,
-                      inFridge: false,
+                      id: ingredientId,
+                      inFridge,
                       calories: 0,
                     }}
                     displayQuantity={converted.quantity}
