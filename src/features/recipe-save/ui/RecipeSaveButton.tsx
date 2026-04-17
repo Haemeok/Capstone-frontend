@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { useQuery } from "@tanstack/react-query";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -12,11 +10,11 @@ import { getRecipeStatus } from "@/entities/recipe/model/api";
 import { RecipeStatus } from "@/entities/recipe/model/types";
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
-import { ChangeBookSheet } from "@/features/recipe-book-change";
 
 import { useToastStore } from "@/widgets/Toast";
 
 import { useToggleRecipeSave } from "../model/hooks";
+import { useSaveToastWithChange } from "../model/useSaveToastWithChange";
 
 type RecipeSaveButtonProps = {
   recipeId: string;
@@ -52,22 +50,7 @@ const RecipeSaveButton = ({
   const isFavorite =
     currentStatus?.favoriteByCurrentUser ?? initialIsFavorite;
 
-  const [changeOpen, setChangeOpen] = useState(false);
-  const [currentBookId, setCurrentBookId] = useState<string | undefined>();
-
-  const showSaveToast = (bookName: string | undefined) => {
-    addToast({
-      message: bookName
-        ? `${bookName}에 저장되었습니다.`
-        : `"저장된 레시피"에 보관되었습니다.`,
-      variant: "action",
-      position: "bottom",
-      action: {
-        label: "변경",
-        onClick: () => setChangeOpen(true),
-      },
-    });
-  };
+  const { notifySaved, changeSheet } = useSaveToastWithChange(recipeId);
 
   const handleClick = () => {
     if (!checkAndTrigger("save")) return;
@@ -82,8 +65,7 @@ const RecipeSaveButton = ({
             position: "bottom",
           });
         } else {
-          setCurrentBookId(defaultBook?.id);
-          showSaveToast(defaultBook?.name);
+          notifySaved(defaultBook);
         }
       },
       onError: () => {
@@ -94,11 +76,6 @@ const RecipeSaveButton = ({
         });
       },
     });
-  };
-
-  const handleMoveComplete = (toBookId: string, toBookName: string) => {
-    setCurrentBookId(toBookId);
-    showSaveToast(toBookName);
   };
 
   return (
@@ -112,13 +89,7 @@ const RecipeSaveButton = ({
         isFavorite={isFavorite}
         label={label}
       />
-      <ChangeBookSheet
-        open={changeOpen}
-        onOpenChange={setChangeOpen}
-        recipeId={recipeId}
-        fromBookId={currentBookId}
-        onMoveComplete={handleMoveComplete}
-      />
+      {changeSheet}
     </>
   );
 };

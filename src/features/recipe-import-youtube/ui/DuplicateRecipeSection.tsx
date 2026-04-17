@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 
 import { Bookmark } from "lucide-react";
@@ -13,11 +13,10 @@ import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import { useRecipeBooks } from "@/entities/recipe-book";
 import { useRecipeDetailQuery, useRecipeStatusQuery } from "@/entities/recipe/model/hooks";
 
-import { ChangeBookSheet } from "@/features/recipe-book-change";
 import { useToggleRecipeSave } from "@/features/recipe-save/model/hooks";
+import { useSaveToastWithChange } from "@/features/recipe-save/model/useSaveToastWithChange";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
-import { useToastStore } from "@/widgets/Toast";
 
 import { YoutubeMeta } from "../model/types";
 
@@ -38,45 +37,23 @@ const DuplicateRecipeSection = ({
   const { data: recipeStatus } = useRecipeStatusQuery(recipeId);
 
   const { mutate: toggleFavorite } = useToggleRecipeSave(recipeId);
-  const { addToast } = useToastStore();
   const { data: books } = useRecipeBooks();
   const defaultBook = books?.find((b) => b.isDefault);
 
-  const [changeOpen, setChangeOpen] = useState(false);
-  const [currentBookId, setCurrentBookId] = useState<string | undefined>();
+  const { notifySaved, changeSheet } = useSaveToastWithChange(recipeId);
 
   const isFavorited = recipeStatus?.favoriteByCurrentUser ?? false;
   const hasAutoSavedRef = useRef(false);
 
-  const showSaveToast = (bookName: string | undefined) => {
-    addToast({
-      message: bookName
-        ? `${bookName}에 저장되었습니다.`
-        : `"저장된 레시피"에 보관되었습니다.`,
-      variant: "action",
-      position: "bottom",
-      action: {
-        label: "변경",
-        onClick: () => setChangeOpen(true),
-      },
-    });
-  };
-
-  const handleSaveSuccess = () => {
+  const handleSaveSuccess = useCallback(() => {
     triggerHaptic("Success");
-    setCurrentBookId(defaultBook?.id);
-    showSaveToast(defaultBook?.name);
-  };
+    notifySaved(defaultBook);
+  }, [notifySaved, defaultBook]);
 
   const handleSaveClick = () => {
     toggleFavorite(undefined, {
       onSuccess: handleSaveSuccess,
     });
-  };
-
-  const handleMoveComplete = (toBookId: string, toBookName: string) => {
-    setCurrentBookId(toBookId);
-    showSaveToast(toBookName);
   };
 
   useEffect(() => {
@@ -94,8 +71,14 @@ const DuplicateRecipeSection = ({
         onSuccess: handleSaveSuccess,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, recipeStatus, isFavorited, toggleFavorite, urlSource]);
+  }, [
+    isLoading,
+    recipeStatus,
+    isFavorited,
+    toggleFavorite,
+    urlSource,
+    handleSaveSuccess,
+  ]);
 
   if (isLoading) {
     return (
@@ -199,13 +182,7 @@ const DuplicateRecipeSection = ({
         )}
       </div>
 
-      <ChangeBookSheet
-        open={changeOpen}
-        onOpenChange={setChangeOpen}
-        recipeId={recipeId}
-        fromBookId={currentBookId}
-        onMoveComplete={handleMoveComplete}
-      />
+      {changeSheet}
     </>
   );
 };
