@@ -10,9 +10,11 @@ import { CreateRecipeBookCard } from "./CreateRecipeBookCard";
 import { RecipeBookCard } from "./RecipeBookCard";
 
 const MAX_FOLDERS = 5;
+const GRID_CLASS =
+  "grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
 
 const GridSkeleton = () => (
-  <div className="grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+  <div className={GRID_CLASS}>
     {Array.from({ length: MAX_FOLDERS }).map((_, i) => (
       <div key={i}>
         <Skeleton className="aspect-square w-full rounded-2xl" />
@@ -39,7 +41,7 @@ export const RecipeBookGrid = () => {
     <ErrorBoundary
       fallback={<SectionErrorFallback message="레시피북을 불러올 수 없어요" />}
     >
-      <div className="grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+      <div className={GRID_CLASS}>
         {list.map((book) => (
           <RecipeBookCard
             key={book.id}
