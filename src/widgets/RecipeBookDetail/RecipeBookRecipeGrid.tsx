@@ -1,33 +1,33 @@
 "use client";
 
-import { CheckIcon } from "lucide-react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
 
 import type { InfiniteData } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-
-import {
-  getRecipeBookDetail,
-  RECIPE_BOOK_QUERY_KEYS,
-  type BookRecipe,
-  type RecipeBookDetail,
-} from "@/entities/recipe-book";
-
-import { useEditModeStore } from "@/features/recipe-book-edit-mode";
+import { CheckIcon } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { cn } from "@/shared/lib/utils";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
+
+import {
+  type BookRecipe,
+  DEFAULT_BOOK_SORT,
+  getRecipeBookDetail,
+  RECIPE_BOOK_QUERY_KEYS,
+  type RecipeBookDetail,
+} from "@/entities/recipe-book";
+
+import { useEditModeStore } from "@/features/recipe-book-edit-mode";
 
 type Props = {
   bookId: string;
   onAllIdsChange: (ids: string[]) => void;
 };
 
-const SORT = "addedAt,desc";
 const PAGE_SIZE = 20;
 const SKELETON_COUNT = 8;
 
@@ -43,7 +43,7 @@ const EmptyState = () => {
       </p>
       <button
         type="button"
-        onClick={() => router.push("/search/result")}
+        onClick={() => router.push("/search/results")}
         className="bg-olive-light rounded-xl px-5 py-3 text-sm font-bold text-white transition-all active:scale-[0.98]"
       >
         레시피 둘러보기 →
@@ -115,7 +115,7 @@ export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
   const queryClient = useQueryClient();
   const isEditMode = useEditModeStore((s) => s.isEditMode);
 
-  const previewKey = RECIPE_BOOK_QUERY_KEYS.detail(bookId, SORT);
+  const previewKey = RECIPE_BOOK_QUERY_KEYS.detail(bookId, DEFAULT_BOOK_SORT);
   const previewData = queryClient.getQueryData<RecipeBookDetail>(previewKey);
 
   const { data, isPending, hasNextPage, isFetching, ref } = useInfiniteScroll<
@@ -125,12 +125,12 @@ export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
     readonly unknown[],
     number
   >({
-    queryKey: RECIPE_BOOK_QUERY_KEYS.detailInfinite(bookId, SORT),
+    queryKey: RECIPE_BOOK_QUERY_KEYS.detailInfinite(bookId, DEFAULT_BOOK_SORT),
     queryFn: ({ pageParam }) =>
       getRecipeBookDetail(bookId, {
         page: pageParam,
         size: PAGE_SIZE,
-        sort: SORT,
+        sort: DEFAULT_BOOK_SORT,
       }),
     getNextPageParam: (last, all) => (last.hasNext ? all.length : undefined),
     initialPageParam: 0,
