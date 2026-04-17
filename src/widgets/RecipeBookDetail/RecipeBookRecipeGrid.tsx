@@ -4,7 +4,7 @@ import { CheckIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import type { InfiniteData } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
@@ -141,9 +141,16 @@ export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
 
   const recipes = data?.pages.flatMap((p) => p.recipes) ?? [];
 
+  const lastIdsKeyRef = useRef("");
+
   useEffect(() => {
-    onAllIdsChange(recipes.map((r) => r.recipeId));
-  }, [recipes, onAllIdsChange]);
+    const ids =
+      data?.pages.flatMap((p) => p.recipes.map((r) => r.recipeId)) ?? [];
+    const key = ids.join(",");
+    if (key === lastIdsKeyRef.current) return;
+    lastIdsKeyRef.current = key;
+    onAllIdsChange(ids);
+  }, [data, onAllIdsChange]);
 
   if (isPending && recipes.length === 0) return <GridSkeleton />;
   if (!isFetching && recipes.length === 0) return <EmptyState />;
