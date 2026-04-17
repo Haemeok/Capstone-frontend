@@ -4,8 +4,8 @@ import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import {
-  useYoutubeImportStoreV2,
   PendingRecipeSection,
+  useYoutubeImportStoreV2,
 } from "@/features/recipe-import-youtube";
 
 import { RecipeBookGrid } from "@/widgets/RecipeBookGrid";

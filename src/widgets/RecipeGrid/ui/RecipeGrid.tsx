@@ -6,11 +6,11 @@ import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import { PencilIcon, TrashIcon } from "@/shared/ui/icons";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import Circle from "@/shared/ui/Circle";
+import { PencilIcon, TrashIcon } from "@/shared/ui/icons";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 import { DialogTitle } from "@/shared/ui/shadcn/dialog";
 

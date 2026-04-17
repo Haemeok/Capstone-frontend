@@ -1,11 +1,12 @@
 "use client";
 
+import { isAppWebView } from "@/shared/lib/bridge";
+
 import {
   ReviewGateDrawer,
   useReviewGateActions,
   useReviewGateStore,
 } from "@/features/review-gate";
-import { isAppWebView } from "@/shared/lib/bridge";
 
 const GlobalReviewGateDrawer = () => {
   const { isDrawerOpen, closeDrawer } = useReviewGateStore();

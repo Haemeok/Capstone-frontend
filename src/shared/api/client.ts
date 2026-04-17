@@ -1,12 +1,12 @@
-import { handle401Error } from "./auth";
-import { API_CONFIG, isClient, isServer } from "./config";
-import { ApiError, createApiError, isErrorResponse } from "./errors";
-import type { ApiRequestOptions, BatchRequestFunction } from "./types";
-
 import { BASE_API_URL } from "@/shared/config/constants/api";
 import { captureException as sentryCaptureException } from "@/shared/lib/sentry";
 import { createApiErrorTags } from "@/shared/lib/sentry";
+
+import { handle401Error } from "./auth";
+import { API_CONFIG, isClient, isServer } from "./config";
+import { ApiError, createApiError, isErrorResponse } from "./errors";
 import { getErrorData } from "./errors";
+import type { ApiRequestOptions, BatchRequestFunction } from "./types";
 
 export async function apiClient<T = any>(
   url: string,

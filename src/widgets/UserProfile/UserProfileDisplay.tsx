@@ -1,5 +1,3 @@
-import { Image } from "@/shared/ui/image/Image";
-
 import { UserRound } from "lucide-react";
 
 import { guestUser } from "@/shared/config/constants/user";
@@ -7,12 +5,13 @@ import {
   generateUserGradient,
   isDefaultProfileImage,
 } from "@/shared/lib/colors";
+import CollapsibleP from "@/shared/ui/CollapsibleP";
+import { Image } from "@/shared/ui/image/Image";
 
 import UserInfoEditButton from "@/features/edit-user-profile/ui/UserInfoEditButton";
 
 import { User } from "../../entities/user/model/types";
 import ActionButton from "./ActionButton";
-import CollapsibleP from "@/shared/ui/CollapsibleP";
 
 type UserProfileDisplayProps = {
   user: User;

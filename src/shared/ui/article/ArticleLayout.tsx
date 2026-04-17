@@ -3,8 +3,8 @@ import { type ReactNode } from "react";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
-import type { TocItem } from "./types";
 import ArticleWithToc from "./ArticleWithToc";
+import type { TocItem } from "./types";
 
 type ArticleLayoutProps = {
   title: string;

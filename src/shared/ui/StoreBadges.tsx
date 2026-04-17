@@ -2,12 +2,12 @@
 
 import { motion } from "motion/react";
 
-import { useIsApp } from "@/shared/hooks/useIsApp";
-import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   APP_STORE_URL,
   PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
+import { useIsApp } from "@/shared/hooks/useIsApp";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 type StoreBadgesProps = {
   showAndroidNote?: boolean;

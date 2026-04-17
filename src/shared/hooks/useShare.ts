@@ -1,6 +1,7 @@
 "use client";
 
 import { isAppWebView, triggerNativeShare } from "@/shared/lib/bridge";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 type UseShareProps = {

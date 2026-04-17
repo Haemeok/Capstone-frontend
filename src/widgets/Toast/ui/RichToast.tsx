@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { X } from "lucide-react";
+import { useCallback,useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { cn } from "@/shared/lib/utils";
-import { ToastType } from "../model/types";
-import { useToastStore } from "../model/store";
-import { Image } from "@/shared/ui/image";
-import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
+
+import { X } from "lucide-react";
+
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { cn } from "@/shared/lib/utils";
+import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
+import { Image } from "@/shared/ui/image";
+
+import { useToastStore } from "../model/store";
+import { ToastType } from "../model/types";
 
 type RichToastProps = ToastType;
 

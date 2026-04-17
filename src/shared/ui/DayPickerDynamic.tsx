@@ -1,8 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { ComponentProps } from "react";
 import { DayPicker } from "react-day-picker";
+import dynamic from "next/dynamic";
 
 const DayPickerLazy = dynamic(
   () => import("react-day-picker").then((mod) => ({ default: mod.DayPicker })),

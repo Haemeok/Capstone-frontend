@@ -107,4 +107,4 @@ const setUser = (user: SentryUser | null) => {
   }
 };
 
-export { scheduleInit, captureException, setUser };
+export { captureException, scheduleInit, setUser };

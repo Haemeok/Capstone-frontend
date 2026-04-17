@@ -7,10 +7,10 @@ import { motion } from "motion/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatCount } from "@/shared/lib/format";
-import { Image } from "@/shared/ui/image/Image";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
+import { Image } from "@/shared/ui/image/Image";
 
 import { MyFridgeRecipeItem } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";

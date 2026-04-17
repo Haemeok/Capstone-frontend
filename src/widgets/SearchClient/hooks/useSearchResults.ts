@@ -1,15 +1,16 @@
 import { useCallback } from "react";
-
-import { InfiniteData } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
+import { InfiniteData } from "@tanstack/react-query";
+
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import { getNextPageParam } from "@/shared/lib/utils";
-import { convertNutritionToQueryParams } from "@/shared/lib/nutrition/parseNutritionParams";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { convertNutritionToQueryParams } from "@/shared/lib/nutrition/parseNutritionParams";
+import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
+
 import { useDishTypeCode } from "@/features/filter-dish-type";
 import { useIngredientsFilter } from "@/features/filter-ingredients";
 import { useSortCode } from "@/features/filter-sort";

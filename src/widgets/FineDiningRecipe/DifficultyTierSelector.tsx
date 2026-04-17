@@ -1,8 +1,8 @@
-import { cn } from "@/shared/lib/utils";
 import {
-  FINE_DINING_TIERS,
   DiningTier,
+  FINE_DINING_TIERS,
 } from "@/shared/config/constants/aiModel";
+import { cn } from "@/shared/lib/utils";
 import { CheckIcon } from "@/shared/ui/icons";
 
 type DifficultyTierSelectorProps = {

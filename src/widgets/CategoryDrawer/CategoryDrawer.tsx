@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import {
@@ -23,7 +24,6 @@ import {
 import { DrawerContent } from "@/shared/ui/shadcn/drawer";
 import { Label } from "@/shared/ui/shadcn/label";
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/shadcn/radio-group";
-import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 
 type CategoryDrawerProps = {
   open: boolean;

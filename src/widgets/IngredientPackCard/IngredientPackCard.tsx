@@ -1,9 +1,8 @@
 "use client";
 
+import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
-
-import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
 
 import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge/model/hooks";
 import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fridge/model/hooks";

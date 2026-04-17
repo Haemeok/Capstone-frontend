@@ -4,7 +4,7 @@ import {
   NutritionFilterKey,
   NutritionThemeKey,
 } from "@/shared/config/constants/recipe";
-import { getTypedKeys, getTypedEntries } from "@/shared/lib/types/utils";
+import { getTypedEntries,getTypedKeys } from "@/shared/lib/types/utils";
 
 export type NutritionRangeValue = [number, number];
 

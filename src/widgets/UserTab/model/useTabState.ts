@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useCallback, useEffect,useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { MyTabs, OtherTabs, Tab } from "@/shared/config/constants/user";

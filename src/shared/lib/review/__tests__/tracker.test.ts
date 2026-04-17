@@ -1,6 +1,6 @@
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
 
-import { trackReviewAction, checkAndTriggerReviewGate } from "../tracker";
+import { checkAndTriggerReviewGate,trackReviewAction } from "../tracker";
 
 describe("trackReviewAction", () => {
   beforeEach(() => {

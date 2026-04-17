@@ -3,6 +3,10 @@ import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
+import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
+import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
+import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
+import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import {
   Carousel,
   CarouselContent,
@@ -11,10 +15,6 @@ import {
   CarouselPrevious,
 } from "@/shared/ui/shadcn/carousel";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
-import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
-import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
-import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe";
 

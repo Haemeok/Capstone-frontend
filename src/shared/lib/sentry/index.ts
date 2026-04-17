@@ -1,3 +1,3 @@
-export { scheduleInit, captureException, setUser } from "./client";
+export { captureException, scheduleInit, setUser } from "./client";
 export { createApiErrorTags } from "./tags";
-export type { SentryUser, ApiErrorTag } from "./types";
+export type { ApiErrorTag,SentryUser } from "./types";

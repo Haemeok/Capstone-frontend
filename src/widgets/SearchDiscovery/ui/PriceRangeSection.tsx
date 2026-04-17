@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { Coins, Banknote, Gem } from "lucide-react";
+import { Banknote, Coins, Gem } from "lucide-react";
 
 import { PRICE_RANGES } from "@/shared/config/constants/content-pages";
 import { triggerHaptic } from "@/shared/lib/bridge";

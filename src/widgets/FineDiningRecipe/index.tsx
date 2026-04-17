@@ -1,19 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+
+import { aiModels } from "@/shared/config/constants/aiModel";
+
+import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
+import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
+import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
+import type { FineDiningRequest } from "@/features/recipe-create-ai/model/types";
+
+import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 
 import DifficultyTierSelector from "./DifficultyTierSelector";
 import FineDiningIngredientManager from "./FineDiningIngredientManager";
-import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
-import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
-import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
-import type { FineDiningRequest } from "@/features/recipe-create-ai/model/types";
-import { aiModels } from "@/shared/config/constants/aiModel";
-import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
 
 const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
   ssr: false,
@@ -21,11 +24,13 @@ const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
 const AIRecipeError = dynamic(() => import("@/widgets/AIRecipeError"), {
   ssr: false,
 });
-import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
+
 import { AIIngredientPayload } from "@/entities/ingredient";
+
+import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
 
 const CONCEPT = "FINE_DINING" as const;
 const MIN_FINE_DINING_INGREDIENTS = 3;

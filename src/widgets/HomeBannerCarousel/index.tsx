@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
 
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
+
 import { notoSansKr } from "@/app/fonts/notoSansKr";
 
 import { ProgressBar } from "./ProgressBar";

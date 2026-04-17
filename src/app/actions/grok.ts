@@ -1,7 +1,7 @@
 "use server";
 
-import { generateText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
+import { generateText } from "ai";
 
 const xai = createOpenAI({
   name: "xai",

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
+
+import { AnimatePresence,motion } from "motion/react";
 
 import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
-import { Button } from "@/shared/ui/shadcn/button";
 import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/shadcn/button";
 
 type ExpandableFabButtonItem = {
   icon: React.ReactNode;

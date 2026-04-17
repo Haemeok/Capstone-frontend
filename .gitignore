@@ -64,3 +64,16 @@ article/
 
 # Tistory auto-posting
 tistory/
+
+# python cache (from .claude skill scripts)
+__pycache__/
+*.pyc
+
+# claude local state
+.claude/projects/
+
+# playwright MCP local state
+.playwright-mcp/
+
+# generated reports
+frontend-api-changes-*.html

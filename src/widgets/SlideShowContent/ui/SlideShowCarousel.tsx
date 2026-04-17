@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Image } from "@/shared/ui/image/Image";
 
 import { Bookmark, Star } from "lucide-react";
 
+import { Image } from "@/shared/ui/image/Image";
 import {
   Carousel,
   type CarouselApi,

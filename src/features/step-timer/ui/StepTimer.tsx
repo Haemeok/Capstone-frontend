@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Play, Pause, RotateCcw } from "lucide-react";
 
-import { TimerRoot, TimerDisplay, useTimer } from "@/shared/ui/shadcn/timer";
+import { Pause, Play, RotateCcw } from "lucide-react";
+
 import { cn } from "@/shared/lib/utils";
+import { TimerDisplay, TimerRoot, useTimer } from "@/shared/ui/shadcn/timer";
 
 type StepTimerProps = {
   targetSeconds: number;

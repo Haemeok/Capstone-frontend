@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
-
 import { useRouter } from "next/navigation";
+
+import { triggerHaptic } from "@/shared/lib/bridge";
+import PrevButton from "@/shared/ui/PrevButton";
 
 import { DishTypeFilter } from "@/features/filter-dish-type";
 import { IngredientsFilter } from "@/features/filter-ingredients";
@@ -10,8 +12,6 @@ import { SortFilter } from "@/features/filter-sort";
 import { TagsFilter } from "@/features/filter-tags";
 import { NutritionFilterIconButton } from "@/features/recipe-search";
 import { SearchInput } from "@/features/search-input";
-import { triggerHaptic } from "@/shared/lib/bridge";
-import PrevButton from "@/shared/ui/PrevButton";
 
 export const SearchFilters = () => {
   const router = useRouter();

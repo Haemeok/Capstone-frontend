@@ -1,3 +1,4 @@
+import { TAG_ITEMS } from "@/shared/config/constants/recipe";
 import {
   Carousel,
   CarouselContent,
@@ -5,7 +6,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/shared/ui/shadcn/carousel";
-import { TAG_ITEMS } from "@/shared/config/constants/recipe";
 
 import CateGoryItem from "./CateGoryItem";
 

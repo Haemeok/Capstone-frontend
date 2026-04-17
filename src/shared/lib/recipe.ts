@@ -1,8 +1,8 @@
 import {
-  PRICE_BRACKETS,
-  DEFAULT_WEIGHT_KG,
-  CALORIE_ACTIVITIES,
   Activity,
+  CALORIE_ACTIVITIES,
+  DEFAULT_WEIGHT_KG,
+  PRICE_BRACKETS,
 } from "../config/constants/recipe";
 
 export const getProductByPrice = (price: number) => {

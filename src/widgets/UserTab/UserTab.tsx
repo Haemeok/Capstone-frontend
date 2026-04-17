@@ -2,17 +2,17 @@
 
 import dynamic from "next/dynamic";
 
-import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
+import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { User } from "@/entities/user";
 
 import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 
 import { useTabState } from "./model/useTabState";
-import { TabNavigation } from "./ui/TabNavigation";
 import { EmptyState } from "./ui/EmptyState";
+import { TabNavigation } from "./ui/TabNavigation";
 
 const MyRecipesTabContent = dynamic(
   () => import("@/widgets/MyRecipesTabContent"),

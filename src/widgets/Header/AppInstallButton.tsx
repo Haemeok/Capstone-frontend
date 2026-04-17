@@ -2,12 +2,12 @@
 
 import { Download } from "lucide-react";
 
-import { useIsApp } from "@/shared/hooks/useIsApp";
-import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   APP_STORE_URL,
   PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
+import { useIsApp } from "@/shared/hooks/useIsApp";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 const getStoreUrl = () => {
   if (typeof window === "undefined") return APP_STORE_URL;

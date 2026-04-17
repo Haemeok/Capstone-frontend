@@ -9,8 +9,8 @@ import GlobalNotificationPermissionDrawer from "@/widgets/NotificationPermission
 import GlobalReviewGateDrawer from "@/widgets/ReviewGateDrawer";
 
 import { pretendard } from "./fonts";
-import { AppProviders } from "./providers/AppProviders";
 import GoogleAnalytics from "./GoogleAnalytics";
+import { AppProviders } from "./providers/AppProviders";
 
 import "./globals.css";
 

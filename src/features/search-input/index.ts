@@ -1,2 +1,2 @@
-export { SearchInput } from "./ui";
 export { useSearchQuery } from "./model";
+export { SearchInput } from "./ui";

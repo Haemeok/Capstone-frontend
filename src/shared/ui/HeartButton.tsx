@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 
 import clsx from "clsx";
 import { Heart } from "lucide-react";
-import dynamic from "next/dynamic";
 
 import { cn } from "@/lib/utils";
 

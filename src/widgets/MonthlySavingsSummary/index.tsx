@@ -2,13 +2,14 @@
 
 import { useMemo } from "react";
 
-import { formatNumber } from "@/shared/lib/format";
 import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
+import { formatNumber } from "@/shared/lib/format";
 import SavingSection from "@/shared/ui/SavingSection";
 import CountUp from "@/shared/ui/shadcn/CountUp";
 
-import FirstSavingsQuestPanel from "../CalendarTabContent/FirstSavingsQuestPanel";
 import { useUserStore } from "@/entities/user";
+
+import FirstSavingsQuestPanel from "../CalendarTabContent/FirstSavingsQuestPanel";
 
 type MonthlySavingsSummaryProps = {
   year: number;

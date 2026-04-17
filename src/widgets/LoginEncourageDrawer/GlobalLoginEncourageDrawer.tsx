@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
-import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
 
 const LoginDialog = dynamic(

@@ -1,8 +1,10 @@
 import React from "react";
-import { Image } from "@/shared/ui/image/Image";
+
 import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
+import { Image } from "@/shared/ui/image/Image";
 
 import { RecipeStep } from "@/entities/recipe";
+
 import { StepTimer } from "@/features/step-timer";
 
 type SlideShowContentProps = {

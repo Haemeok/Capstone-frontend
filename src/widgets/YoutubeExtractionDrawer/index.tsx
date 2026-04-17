@@ -3,10 +3,10 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import SavingSection from "@/shared/ui/SavingSection";
+import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
 
 type YoutubeExtractionDrawerProps = {
   isOpen: boolean;

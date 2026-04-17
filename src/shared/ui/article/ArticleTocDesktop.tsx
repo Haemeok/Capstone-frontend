@@ -1,7 +1,7 @@
 "use client";
 
-import type { TocItem } from "./types";
 import ArticleTocList from "./ArticleTocList";
+import type { TocItem } from "./types";
 
 type ArticleTocDesktopProps = {
   items: TocItem[];

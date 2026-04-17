@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { User } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
+import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { Image } from "@/shared/ui/image/Image";
 
 import { useUserStore } from "@/entities/user";
-
-import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 
 const LoginDialog = dynamic(
   () => import("@/features/auth/ui/LoginDialog"),

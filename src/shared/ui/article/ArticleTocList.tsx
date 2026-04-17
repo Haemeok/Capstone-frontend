@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/shared/lib/utils";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { cn } from "@/shared/lib/utils";
 
 import type { TocItem } from "./types";
 

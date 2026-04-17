@@ -1,18 +1,18 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
 
 import { shouldHideNavbar } from "@/shared/lib/navigation";
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
+import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { UnsavedChangesModal } from "@/shared/ui/modal/UnsavedChangesModal";
 
 import { useUserStore } from "@/entities/user";
 
 import AIRecipeNotificationBadge from "@/widgets/AIRecipeNotificationBadge";
-import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 
 import BottomNavButton from "./BottomNavButton";
 

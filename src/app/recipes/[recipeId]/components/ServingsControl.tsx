@@ -16,13 +16,8 @@ export const ServingsControl = ({
   onDecrement,
 }: ServingsControlProps) => {
   return (
-    <div className="mb-3 flex items-center justify-between gap-2">
-      <p className="text-xs text-gray-400">
-        간과 양념은 취향에 따라 다를 수 있어요.
-        <br />
-        조금씩 나눠 넣으며 맛을 봐주세요!
-      </p>
-      <div className="flex items-center gap-2 ml-auto">
+    <div className="mb-3 flex items-center justify-end gap-2">
+      <div className="flex items-center gap-2">
         <span className="text-sm text-gray-600">인분</span>
         <div className="flex items-center gap-1">
           {currentServings > minServings && (

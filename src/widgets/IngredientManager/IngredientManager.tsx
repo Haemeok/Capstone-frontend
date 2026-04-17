@@ -2,9 +2,10 @@ import { useFormContext, useWatch } from "react-hook-form";
 
 import { Plus, X } from "lucide-react";
 
-import type { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
+
+import type { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 
 type IngredientManagerProps = {
   onOpenDrawer: () => void;

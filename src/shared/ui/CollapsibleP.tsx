@@ -4,10 +4,10 @@ import { useLayoutEffect, useRef, useState } from "react";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 
+import { cn } from "../lib/utils";
 import { Button } from "./shadcn/button";
 import { CardContent } from "./shadcn/card";
 import { Collapsible, CollapsibleTrigger } from "./shadcn/collapsible";
-import { cn } from "../lib/utils";
 
 type CollapsiblePProps = {
   content?: string;

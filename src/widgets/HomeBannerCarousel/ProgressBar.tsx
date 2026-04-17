@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+
 import { cn } from "@/shared/lib/utils";
+
 import { ButtonVariant } from "./types";
 
 type ProgressBarProps = {

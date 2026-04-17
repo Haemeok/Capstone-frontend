@@ -1,3 +1,4 @@
+import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { homeMetadata } from "@/shared/lib/metadata";
 import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
 import { Container } from "@/shared/ui/Container";
@@ -9,9 +10,8 @@ import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
 import CategoryTabs from "@/widgets/CategoryTabs";
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
-import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
-import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
 
 export const metadata = homeMetadata;
 
