@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import Link from "next/link";
+
 import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -29,7 +31,7 @@ import "react-day-picker/style.css";
 
 const CalendarTabContent = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
-  const [calendarMode, setCalendarMode] = useState<CalendarMode>("streak");
+  const [calendarMode, setCalendarMode] = useState<CalendarMode>("photo");
   const { data: userStreak } = useUserStreakQuery();
 
   const year = currentMonth.getFullYear();
@@ -67,9 +69,7 @@ const CalendarTabContent = () => {
         <StreakModeToggle mode={calendarMode} onModeChange={setCalendarMode} />
       </div>
       <Box className="mt-4 p-0 px-5">
-        {calendarMode === "streak" ? (
-          <StreakInfoBanner streakCount={userStreak?.streak ?? 0} />
-        ) : null}
+        <StreakInfoBanner streakCount={userStreak?.streak ?? 0} />
       </Box>
       <DayPickerDynamic
         mode="single"
@@ -170,6 +170,14 @@ const CalendarTabContent = () => {
           ),
         }}
       />
+      <Link
+        href="/calendar/timeline"
+        onClick={() => triggerHaptic("Light")}
+        className="mt-2 flex w-full items-center justify-center gap-1 px-5 py-4 text-sm text-gray-600 transition-colors hover:text-gray-900"
+      >
+        모든 요리 기록 보기
+        <ChevronRight className="size-4" />
+      </Link>
     </div>
   );
 };
