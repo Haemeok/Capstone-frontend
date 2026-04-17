@@ -5,7 +5,6 @@ import { useState } from "react";
 import { cn } from "@/shared/lib/utils";
 
 import { useEditModeStore } from "../model/useEditModeStore";
-
 import { BulkDeleteConfirmModal } from "./BulkDeleteConfirmModal";
 import { MoveRecipesSheet } from "./MoveRecipesSheet";
 
@@ -57,8 +56,8 @@ export const EditModeBottomBar = ({ bookId, allRecipeIds }: Props) => {
               className={cn(
                 "rounded-xl px-4 py-2 text-sm font-medium transition-colors",
                 hasSelection
-                  ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  : "cursor-not-allowed bg-gray-50 text-gray-400"
+                  ? "text-gray-700 hover:bg-gray-100"
+                  : "cursor-not-allowed text-gray-300"
               )}
             >
               이동
@@ -68,10 +67,10 @@ export const EditModeBottomBar = ({ bookId, allRecipeIds }: Props) => {
               disabled={!hasSelection}
               onClick={() => setDeleteOpen(true)}
               className={cn(
-                "rounded-xl px-4 py-2 text-sm font-medium transition-colors",
+                "rounded-xl px-4 py-2 text-sm font-bold transition-colors",
                 hasSelection
-                  ? "bg-red-500 text-white hover:bg-red-600"
-                  : "cursor-not-allowed bg-gray-50 text-gray-400"
+                  ? "text-red-500 hover:bg-red-50"
+                  : "cursor-not-allowed text-gray-300"
               )}
             >
               삭제
