@@ -1,6 +1,7 @@
 export { useAddRecipesToBook } from "./useAddRecipesToBook";
 export { useCreateRecipeBook } from "./useCreateRecipeBook";
 export { useDeleteRecipeBook } from "./useDeleteRecipeBook";
+export { useDisplayedRecipeCount } from "./useDisplayedRecipeCount";
 export { useMoveRecipes } from "./useMoveRecipes";
 export { useRecipeBookDetail } from "./useRecipeBookDetail";
 export { useRecipeBookDetailInfinite } from "./useRecipeBookDetailInfinite";
