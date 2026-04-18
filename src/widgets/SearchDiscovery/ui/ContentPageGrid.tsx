@@ -15,8 +15,8 @@ import ContentPageCard from "./ContentPageCard";
 const ContentPageGrid = () => {
   return (
     <Carousel
-      opts={{ align: "start", dragFree: true, containScroll: "trimSnaps" }}
-      className="relative"
+      opts={{ align: "start", loop: false, dragFree: true, containScroll: "trimSnaps" }}
+      className="-mx-4 px-4"
     >
       <CarouselContent className="-ml-3">
         {CONTENT_PAGES.map((page) => (
@@ -25,8 +25,8 @@ const ContentPageGrid = () => {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="left-2 hidden md:flex" />
-      <CarouselNext className="right-2 hidden md:flex" />
+      <CarouselPrevious className="left-0 hidden md:flex" />
+      <CarouselNext className="right-0 hidden md:flex" />
     </Carousel>
   );
 };
