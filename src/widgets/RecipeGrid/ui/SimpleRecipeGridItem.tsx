@@ -43,49 +43,51 @@ const SimpleRecipeGridItem = ({
   };
 
   return (
-    <>
+    <div className={cn("group relative block rounded-2xl")}>
+      <Image
+        src={recipe.imageUrl}
+        alt={recipe.title}
+        wrapperClassName="rounded-2xl overflow-hidden"
+        imgClassName="transition-all duration-300 ease-in-out group-hover:scale-110"
+        fit="cover"
+        priority={priority}
+      />
+
+      <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end rounded-2xl bg-gradient-to-t from-black/70 to-transparent" />
+      <p className="word-break absolute right-4 bottom-2.5 left-4 line-clamp-2 text-[17px] font-bold text-pretty text-white">
+        {recipe.title}
+      </p>
+
       <Link
         href={`/recipes/${recipe.id}`}
-        className={cn(`group relative block rounded-2xl`)}
+        aria-label={recipe.title}
         prefetch={prefetch ? true : null}
-      >
-        <Image
-          src={recipe.imageUrl}
-          alt={recipe.title}
-          wrapperClassName="rounded-2xl overflow-hidden"
-          imgClassName="transition-all duration-300 ease-in-out group-hover:scale-110"
-          fit="cover"
-          priority={priority}
-        />
-        {!hideSaveButton && (
-          <div className="absolute top-0 left-0 p-2">
-            <RecipeSaveButton
-              recipeId={recipe.id}
-              initialIsFavorite={recipe.favoriteByCurrentUser}
-              buttonClassName="text-white"
-              iconClassName="fill-gray-300 opacity-80"
-            />
-          </div>
-        )}
+        className="absolute inset-0 rounded-2xl"
+      />
 
-        {showActionButton && (
-          <div className="absolute top-0 right-0 p-0.5">
-            <button
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white"
-              onClick={handleMenuClick}
-              aria-label="레시피 옵션 메뉴"
-            >
-              <EllipsisVertical size={20} />
-            </button>
-          </div>
-        )}
+      {!hideSaveButton && (
+        <div className="absolute top-0 left-0 p-2">
+          <RecipeSaveButton
+            recipeId={recipe.id}
+            initialIsFavorite={recipe.favoriteByCurrentUser}
+            buttonClassName="text-white"
+            iconClassName="fill-gray-300 opacity-80"
+          />
+        </div>
+      )}
 
-        <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end rounded-2xl bg-gradient-to-t from-black/70 to-transparent" />
-        <p className="word-break absolute right-4 bottom-2.5 left-4 line-clamp-2 text-[17px] font-bold text-pretty text-white">
-          {recipe.title}
-        </p>
-      </Link>
-    </>
+      {showActionButton && (
+        <div className="absolute top-0 right-0 p-0.5">
+          <button
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white"
+            onClick={handleMenuClick}
+            aria-label="레시피 옵션 메뉴"
+          >
+            <EllipsisVertical size={20} />
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 
