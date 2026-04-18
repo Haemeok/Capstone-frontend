@@ -221,6 +221,10 @@ export const getStaticRecipesOnServer = async (
     endpoint = `/recipes/${params.recipeId}/recommendations`;
     cacheTags = [CACHE_TAGS.recipesRecommended(params.recipeId)];
     revalidateTime = REVALIDATION_TIMES.RECIPES_RECOMMENDED;
+  } else if (params.key === "latest-recipes") {
+    // endpoint stays /v2/recipes/search; sort defaults to createdAt,desc via resolveSortParam
+    cacheTags = [CACHE_TAGS.recipesLatest];
+    revalidateTime = REVALIDATION_TIMES.RECIPES_LATEST;
   }
 
   const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
