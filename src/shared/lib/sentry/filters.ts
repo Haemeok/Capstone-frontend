@@ -12,6 +12,9 @@ const IGNORED_ERRORS = [
   "ResizeObserver loop completed with undelivered notifications",
   "NEXT_REDIRECT",
   "NEXT_NOT_FOUND",
+  "adsbygoogle",
+  "googlesyndication",
+  "pagead2",
 ] as const;
 
 const IGNORED_ERROR_TYPES = ["AbortError"] as const;
