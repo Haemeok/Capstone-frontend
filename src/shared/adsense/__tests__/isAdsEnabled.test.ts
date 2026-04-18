@@ -1,5 +1,3 @@
-import { isAdsEnabled } from "../lib/isAdsEnabled";
-
 describe("isAdsEnabled", () => {
   const ORIGINAL_ENV = process.env;
 
