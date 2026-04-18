@@ -9,7 +9,11 @@ import { cn } from "@/shared/lib/utils";
 
 import { useSearchQuery } from "../model";
 
-export const SearchInput = () => {
+type SearchInputProps = {
+  onFocus?: () => void;
+};
+
+export const SearchInput = ({ onFocus }: SearchInputProps = {}) => {
   const { inputValue, setInputValue, submitSearch } = useSearchQuery();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -38,6 +42,7 @@ export const SearchInput = () => {
             className="min-w-0 flex-1 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none"
             value={inputValue}
             onChange={handleChange}
+            onFocus={onFocus}
           />
           <button
             type="button"
