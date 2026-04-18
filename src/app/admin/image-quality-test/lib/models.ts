@@ -32,14 +32,6 @@ export const MODELS: readonly ModelConfig[] = [
     pricePerImage: 0.011,
   },
   {
-    id: "flux-2-schnell",
-    label: "Flux 2 Schnell",
-    vendor: "BFL",
-    provider: "fal",
-    endpoint: "fal-ai/flux-2/schnell",
-    pricePerImage: 0.015,
-  },
-  {
     id: "imagen-4-fast",
     label: "Imagen 4 Fast",
     vendor: "Google",
@@ -68,7 +60,7 @@ export const MODELS: readonly ModelConfig[] = [
     label: "Wan 2.6 Image",
     vendor: "Alibaba",
     provider: "fal",
-    endpoint: "fal-ai/wan/v2.6/text-to-image",
+    endpoint: "wan/v2.6/text-to-image",
     pricePerImage: 0.03,
   },
   {
@@ -76,8 +68,8 @@ export const MODELS: readonly ModelConfig[] = [
     label: "Flux 2 Dev",
     vendor: "BFL",
     provider: "fal",
-    endpoint: "fal-ai/flux-2/dev",
-    pricePerImage: 0.03,
+    endpoint: "fal-ai/flux-2",
+    pricePerImage: 0.012,
   },
   {
     id: "seedream-v4",
