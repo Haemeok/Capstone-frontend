@@ -10,7 +10,7 @@ import { DishTypeFilter } from "@/features/filter-dish-type";
 import { IngredientsFilter } from "@/features/filter-ingredients";
 import { SortFilter } from "@/features/filter-sort";
 import { TagsFilter } from "@/features/filter-tags";
-import { NutritionFilterIconButton } from "@/features/recipe-search";
+import { NutritionFilterChipButton } from "@/features/recipe-search/ui/NutritionFilterChipButton";
 import { SearchInput } from "@/features/search-input";
 
 export const SearchFilters = () => {
@@ -23,17 +23,18 @@ export const SearchFilters = () => {
 
   return (
     <div className="sticky top-0 z-20 border-b border-gray-200 bg-white p-4 pb-0">
-      {/* 검색바 + 뒤로가기 + 필터 아이콘 */}
+      {/* 검색바 + 뒤로가기 (필터 아이콘 제거됨) */}
       <div className="flex items-center gap-2">
         <PrevButton onClick={handleBack} size={24} className="shrink-0" />
         <div className="min-w-0 flex-1">
           <SearchInput />
         </div>
-        <NutritionFilterIconButton />
       </div>
 
-      {/* 가로 스크롤 필터 칩 */}
-      <div className="scrollbar-hide -mx-4 flex gap-1.5 overflow-x-auto px-4 py-2">
+      {/* 가로 스크롤 필터 칩 — 보라색 필터 chip + 구분선 + 기존 chips */}
+      <div className="scrollbar-hide -mx-4 flex items-center gap-1.5 overflow-x-auto px-4 py-2">
+        <NutritionFilterChipButton />
+        <span className="h-6 w-px shrink-0 self-center bg-gray-200" />
         <DishTypeFilter />
         <SortFilter />
         <TagsFilter />
