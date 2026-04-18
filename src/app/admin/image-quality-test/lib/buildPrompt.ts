@@ -89,7 +89,7 @@ Category: {{DISH_TYPE}}.
 
 **[Visual Details (AI Inference)]**
 - **Plating & Vessel:** **Select the most appropriate tableware that perfectly matches the cuisine type and the title.**
-  **ALL tableware must be completely plain and unbranded:** no maker's mark, no stamp/seal, no logo, no engraving, no embossed marks, no calligraphy, no patterns. Use solid-color blank surfaces only.
+  **ALL tableware must be completely plain and unbranded:** no maker’s mark, no stamp/seal, no logo, no engraving, no embossed marks, no calligraphy, no patterns. Use solid-color blank surfaces only.
   **Served on a SINGLE plate/bowl.**
 - **Texture:** Render the food texture realistically based on the cooking method. Enhance the glistening details of oils, sauces, or moisture to make it look freshly cooked and steaming hot.
 
