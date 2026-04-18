@@ -17,6 +17,8 @@ import {
 } from "@/entities/recipe/model/api.server";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
+import { InArticleAdSlot } from "@/shared/adsense";
+
 import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { RecipeStatusProvider } from "@/features/recipe-status";
 import { SmartAppBanner } from "@/features/smart-app-banner";
@@ -185,6 +187,8 @@ export default async function RecipeDetailPage({
               )}
 
               <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
+
+              <InArticleAdSlot className="my-6" />
 
               <ErrorBoundary
                 fallback={
