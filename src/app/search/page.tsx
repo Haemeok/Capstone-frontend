@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 
+import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
+
 import { SearchDiscoveryClient } from "@/widgets/SearchDiscovery";
 
 export const metadata = {
@@ -7,10 +9,25 @@ export const metadata = {
   description: "다양한 레시피를 탐색하고 발견하세요.",
 };
 
-export default function SearchPage() {
+type SearchPageProps = {
+  searchParams: Promise<{ focused?: string }>;
+};
+
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const { focused } = await searchParams;
+  const isFocused = focused === "1";
+
+  const latestData = await getStaticRecipesOnServer({
+    key: "latest-recipes",
+    page: 0,
+  });
+
   return (
     <Suspense>
-      <SearchDiscoveryClient />
+      <SearchDiscoveryClient
+        focused={isFocused}
+        latestRecipes={latestData.content}
+      />
     </Suspense>
   );
 }
