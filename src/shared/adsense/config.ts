@@ -7,7 +7,7 @@ export const AD_SLOT_IDS = {
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_INARTICLE || "",
 } as const;
 
-export const SEARCH_AD_EVERY_N_CARDS = 10;
+export const SEARCH_AD_EVERY_N_CARDS = 8;
 
 export const IS_AD_TEST_MODE = process.env.NODE_ENV !== "production";
 
