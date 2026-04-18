@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
+import { AdSenseScript } from "@/shared/adsense";
 import { AppWebViewDetector } from "@/shared/lib/bridge";
 
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
@@ -72,6 +73,7 @@ export default async function RootLayout({
           <GlobalReviewGateDrawer />
         </AppProviders>
         <GoogleAnalytics />
+        <AdSenseScript />
       </body>
     </html>
   );
