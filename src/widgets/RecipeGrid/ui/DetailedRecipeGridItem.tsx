@@ -15,15 +15,12 @@ import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 const getViewCountTier = (count: number) => {
-  // LV.3: 100만+ (초대박) - 왕관
   if (count >= 1000000) {
     return { icon: Crown, iconColor: "text-amber-500", strokeWidth: 2.5 };
   }
-  // LV.2: 10만 ~ 100만 (인기) - 불꽃
   if (count >= 100000) {
     return { icon: Flame, iconColor: "text-orange-500", strokeWidth: 2.5 };
   }
-  // LV.1: 10만 미만 (일반) - 눈
   return { icon: Eye, iconColor: "text-gray-400", strokeWidth: 2 };
 };
 
@@ -70,13 +67,7 @@ const DetailedRecipeGridItem = ({
       className={cn(`relative flex shrink-0 flex-col rounded-2xl`, className)}
       key={recipe.id}
     >
-      <Link
-        href={`/recipes/${recipe.id}`}
-        className="group block"
-        aria-label={`${recipe.title} 레시피 보기`}
-        prefetch={prefetch ? true : null}
-        onClick={handleClick}
-      >
+      <div className="group relative">
         <div className="relative overflow-hidden rounded-2xl">
           <Image
             src={imageUrl}
@@ -87,13 +78,6 @@ const DetailedRecipeGridItem = ({
             priority={priority}
             onRetry={onImageRetry}
           />
-
-          {(infoBadge || saveBadge) && (
-            <div className="absolute top-0 right-0 left-0 z-10 flex items-start justify-between gap-2 p-2">
-              {infoBadge ? <div className="flex gap-2">{infoBadge}</div> : <div />}
-              {saveBadge && <div className="flex gap-2">{saveBadge}</div>}
-            </div>
-          )}
         </div>
 
         <div className="flex grow flex-col gap-1 px-2 pt-2 pb-1">
@@ -132,7 +116,22 @@ const DetailedRecipeGridItem = ({
             )}
           </div>
         </div>
-      </Link>
+
+        <Link
+          href={`/recipes/${recipe.id}`}
+          className="absolute inset-0 rounded-2xl"
+          aria-label={`${recipe.title} 레시피 보기`}
+          prefetch={prefetch ? true : null}
+          onClick={handleClick}
+        />
+
+        {(infoBadge || saveBadge) && (
+          <div className="absolute top-0 right-0 left-0 flex items-start justify-between gap-2 p-2">
+            {infoBadge ? <div className="flex gap-2">{infoBadge}</div> : <div />}
+            {saveBadge && <div className="flex gap-2">{saveBadge}</div>}
+          </div>
+        )}
+      </div>
 
       <div className="flex items-center gap-1.5 overflow-hidden px-2 pb-2">
         <UserProfileImage
