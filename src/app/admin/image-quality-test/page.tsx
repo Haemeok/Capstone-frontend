@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 
 import { Square } from "lucide-react";
 
+import { getRecipe } from "@/entities/recipe/model/api";
 import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user/model/store";
 
@@ -26,6 +27,7 @@ const ImageQualityTestPage = () => {
 
   const [recipe, setRecipe] = useState<DetailedRecipeGridItem | null>(null);
   const [prompt, setPrompt] = useState("");
+  const [promptLoading, setPromptLoading] = useState(false);
   const [enabledIds, setEnabledIds] = useState<string[]>([]);
   const [history, setHistory] = useState<CostHistory>(() =>
     typeof window === "undefined" ? EMPTY_HISTORY : loadCostHistory()
@@ -37,9 +39,28 @@ const ImageQualityTestPage = () => {
     setHistory(loadCostHistory());
   }, []);
 
-  const handleRecipeSelect = useCallback((r: DetailedRecipeGridItem) => {
+  const handleRecipeSelect = useCallback(async (r: DetailedRecipeGridItem) => {
     setRecipe(r);
-    setPrompt(buildPrompt({ title: r.title }));
+    setPromptLoading(true);
+    setPrompt("레시피 상세 조회 중...");
+    try {
+      const detail = await getRecipe(r.id);
+      setPrompt(
+        buildPrompt({
+          title: detail.title,
+          description: detail.description,
+          dishType: detail.dishType,
+          ingredients: detail.ingredients,
+          steps: detail.steps,
+          fineDiningInfo: detail.fineDiningInfo,
+        })
+      );
+    } catch (err) {
+      console.error("레시피 상세 조회 실패:", err);
+      setPrompt(buildPrompt({ title: r.title }));
+    } finally {
+      setPromptLoading(false);
+    }
   }, []);
 
   const handleGenerate = useCallback(async () => {
@@ -99,7 +120,7 @@ const ImageQualityTestPage = () => {
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleGenerate}
-                  disabled={running || enabledIds.length === 0 || prompt.length === 0}
+                  disabled={running || enabledIds.length === 0 || prompt.length === 0 || promptLoading}
                   className="h-12 rounded-2xl bg-olive-light px-6 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
                 >
                   {running ? "생성 중…" : `생성 (${enabledIds.length}개 모델)`}
