@@ -48,6 +48,7 @@ export const SearchClient = ({
             lastPageMessage={"모든 레시피를 불러왔습니다."}
             queryKeyString={queryKeyString}
             nextPageHref={nextPageHref}
+            showInFeedAds
           />
         </ErrorBoundary>
       </div>
