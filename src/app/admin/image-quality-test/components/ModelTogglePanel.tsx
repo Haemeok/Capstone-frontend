@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { MODELS } from "../lib/models";
 import { loadEnabledModels, saveEnabledModels } from "../lib/toggleStorage";
@@ -8,13 +8,15 @@ import { loadEnabledModels, saveEnabledModels } from "../lib/toggleStorage";
 type Props = { onChange: (enabledIds: string[]) => void };
 
 export const ModelTogglePanel = ({ onChange }: Props) => {
-  const [enabled, setEnabled] = useState<string[]>([]);
+  const [enabled, setEnabled] = useState<string[]>(() => loadEnabledModels());
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
   useEffect(() => {
-    const ids = loadEnabledModels();
-    setEnabled(ids);
-    onChange(ids);
-  }, [onChange]);
+    onChangeRef.current(enabled);
+    // Intentionally fires once on mount to notify parent of the localStorage-loaded initial set.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggle = (id: string) => {
     const next = enabled.includes(id) ? enabled.filter((x) => x !== id) : [...enabled, id];

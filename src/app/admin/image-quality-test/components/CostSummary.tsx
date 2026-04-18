@@ -1,26 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import type { CostHistory } from "../lib/costStorage";
-import { loadCostHistory, resetCostHistory } from "../lib/costStorage";
 import { MODELS } from "../lib/models";
 
-type Props = { refreshKey: number };
+type Props = {
+  history: CostHistory;
+  onReset: () => void;
+};
 
-const EMPTY: CostHistory = { byModel: {}, totalCount: 0, totalCost: 0 };
-
-export const CostSummary = ({ refreshKey }: Props) => {
-  const [history, setHistory] = useState<CostHistory>(EMPTY);
-
-  useEffect(() => {
-    setHistory(loadCostHistory());
-  }, [refreshKey]);
-
+export const CostSummary = ({ history, onReset }: Props) => {
   const handleReset = () => {
     if (!confirm("누적 비용 기록을 초기화하시겠어요?")) return;
-    resetCostHistory();
-    setHistory(EMPTY);
+    onReset();
   };
 
   return (

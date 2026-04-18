@@ -1,25 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 type Props = {
-  initialPrompt: string;
+  value: string;
   onChange: (prompt: string) => void;
 };
 
-export const PromptEditor = ({ initialPrompt, onChange }: Props) => {
-  const [value, setValue] = useState(initialPrompt);
-
-  useEffect(() => {
-    setValue(initialPrompt);
-    onChange(initialPrompt);
-  }, [initialPrompt, onChange]);
-
-  const handleChange = (next: string) => {
-    setValue(next);
-    onChange(next);
-  };
-
+export const PromptEditor = ({ value, onChange }: Props) => {
   return (
     <div className="rounded-2xl border border-gray-100 bg-white p-4">
       <div className="mb-2 flex items-center justify-between">
@@ -28,7 +14,7 @@ export const PromptEditor = ({ initialPrompt, onChange }: Props) => {
       </div>
       <textarea
         value={value}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         className="h-32 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
         placeholder="레시피에서 자동 생성됩니다"
       />
