@@ -44,13 +44,13 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
     <Link
       href={buildSearchUrl(page.searchParams)}
       onClick={() => triggerHaptic("Light")}
-      className="group relative block aspect-[3/4] cursor-pointer overflow-hidden rounded-2xl"
+      className="group relative block aspect-[5/3] w-[210px] flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl"
     >
       
       <Image
         src={page.imageUrl}
         alt={page.title}
-        aspectRatio="3 / 4"
+        aspectRatio="5 / 3"
         wrapperClassName="absolute inset-0"
         imgClassName="transition-all duration-500 group-active:scale-105"
         fit="cover"
