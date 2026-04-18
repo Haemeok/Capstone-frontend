@@ -4,15 +4,11 @@ import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
 const SITE_URL = SEO_CONSTANTS.SITE_URL;
 const SITEMAP_CHUNK_SIZE = 10000;
+const ALLOWLIST_URL =
+  "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/seo/allowlist.json";
+const ALLOWLIST_REVALIDATE_SECONDS = 3600;
 
-// allowlist = source of truth
-let allowlistPages: Array<Record<string, string | number>> = [];
-try {
-  const allowlist = require("@/shared/config/seo/sitemap-allowlist.json");
-  allowlistPages = allowlist.pages || [];
-} catch {
-  // allowlist 없으면 빈 배열
-}
+type AllowlistPage = Record<string, string | number>;
 
 const staticRoutes: MetadataRoute.Sitemap = [
   {
@@ -41,11 +37,21 @@ const staticRoutes: MetadataRoute.Sitemap = [
   },
 ];
 
-let _cachedRoutes: MetadataRoute.Sitemap | null = null;
+const fetchAllowlistPages = async (): Promise<AllowlistPage[]> => {
+  try {
+    const res = await fetch(ALLOWLIST_URL, {
+      next: { revalidate: ALLOWLIST_REVALIDATE_SECONDS },
+    });
+    if (!res.ok) return [];
+    const data = (await res.json()) as { pages?: AllowlistPage[] };
+    return data.pages ?? [];
+  } catch {
+    return [];
+  }
+};
 
-const buildAllRoutes = (): MetadataRoute.Sitemap => {
-  if (_cachedRoutes) return _cachedRoutes;
-
+const buildAllRoutes = async (): Promise<MetadataRoute.Sitemap> => {
+  const allowlistPages = await fetchAllowlistPages();
   const routes: MetadataRoute.Sitemap = [...staticRoutes];
 
   for (const params of allowlistPages) {
@@ -60,11 +66,11 @@ const buildAllRoutes = (): MetadataRoute.Sitemap => {
     });
   }
 
-  _cachedRoutes = routes;
   return routes;
 };
 
 export async function generateSitemaps() {
+  const allowlistPages = await fetchAllowlistPages();
   const total = staticRoutes.length + allowlistPages.length;
   const count = Math.ceil(total / SITEMAP_CHUNK_SIZE);
   return Array.from({ length: count }, (_, i) => ({ id: i }));
@@ -74,7 +80,7 @@ export default async function sitemap(props: {
   id: Promise<string>;
 }): Promise<MetadataRoute.Sitemap> {
   const id = Number(await props.id);
-  const allRoutes = buildAllRoutes();
+  const allRoutes = await buildAllRoutes();
   const start = id * SITEMAP_CHUNK_SIZE;
   return allRoutes.slice(start, start + SITEMAP_CHUNK_SIZE);
 }

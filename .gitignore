@@ -41,6 +41,9 @@ yarn-error.log*
 # seo pipeline data (분석 결과, 로컬용)
 /data/
 
+# seo sitemap allowlist (S3에서 호스팅, 워크플로우에서 생성)
+/src/shared/config/seo/sitemap-allowlist.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
