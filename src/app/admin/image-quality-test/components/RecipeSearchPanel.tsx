@@ -14,6 +14,7 @@ type Props = {
 
 const PLACEHOLDER = "레시피 이름 (예: 김치찌개)";
 const SEARCH_SIZE = 30;
+const ALL_TYPES = ["USER", "AI", "YOUTUBE"];
 
 export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
   const [keyword, setKeyword] = useState("");
@@ -22,7 +23,12 @@ export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
   const { data, isFetching } = useQuery({
     queryKey: ["admin-image-test-search", submitted],
     queryFn: () =>
-      getRecipeItems({ q: submitted, sort: "likeCount,desc", size: SEARCH_SIZE }),
+      getRecipeItems({
+        q: submitted,
+        sort: "likeCount,desc",
+        size: SEARCH_SIZE,
+        types: ALL_TYPES,
+      }),
     enabled: submitted.length > 0,
     staleTime: 60_000,
   });
