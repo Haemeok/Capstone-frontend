@@ -13,7 +13,7 @@ type SearchInputProps = {
   onFocus?: () => void;
 };
 
-export const SearchInput = ({ onFocus }: SearchInputProps = {}) => {
+export const SearchInput = ({ onFocus }: SearchInputProps) => {
   const { inputValue, setInputValue, submitSearch } = useSearchQuery();
 
   const handleSubmit = (e: React.FormEvent) => {
