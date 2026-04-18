@@ -81,9 +81,13 @@ const ImageQualityTestPage = () => {
     <div className="mx-auto min-h-screen max-w-7xl bg-beige-light/40 p-4 md:p-6">
       <h1 className="mb-4 text-2xl font-bold text-gray-900">이미지 생성 모델 비교</h1>
 
+      {/* 검색: 전체 너비로 배치해 여러 결과를 한번에 볼 수 있게 */}
+      <div className="mb-4">
+        <RecipeSearchPanel selectedId={recipe?.id ?? null} onSelect={handleRecipeSelect} />
+      </div>
+
       <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
         <aside className="space-y-4">
-          <RecipeSearchPanel selectedId={recipe?.id ?? null} onSelect={handleRecipeSelect} />
           <ModelTogglePanel onChange={setEnabledIds} />
           <CostSummary history={history} onReset={handleResetCost} />
         </aside>
@@ -113,7 +117,7 @@ const ImageQualityTestPage = () => {
             </>
           ) : (
             <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-8 text-center text-gray-400">
-              왼쪽에서 레시피를 먼저 선택하세요
+              상단 검색에서 레시피를 먼저 선택하세요
             </div>
           )}
         </main>

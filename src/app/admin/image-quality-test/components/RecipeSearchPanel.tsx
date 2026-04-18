@@ -13,6 +13,7 @@ type Props = {
 };
 
 const PLACEHOLDER = "레시피 이름 (예: 김치찌개)";
+const SEARCH_SIZE = 30;
 
 export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
   const [keyword, setKeyword] = useState("");
@@ -21,7 +22,7 @@ export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
   const { data, isFetching } = useQuery({
     queryKey: ["admin-image-test-search", submitted],
     queryFn: () =>
-      getRecipeItems({ q: submitted, sort: "likeCount,desc", size: 20 }),
+      getRecipeItems({ q: submitted, sort: "likeCount,desc", size: SEARCH_SIZE }),
     enabled: submitted.length > 0,
     staleTime: 60_000,
   });
@@ -57,28 +58,41 @@ export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
         <p className="text-xs text-gray-400">검색 결과가 없습니다.</p>
       )}
 
-      <div className="max-h-[360px] space-y-2 overflow-y-auto">
+      {items.length > 0 && (
+        <div className="mb-2 flex items-baseline justify-between">
+          <p className="text-xs text-gray-500">검색 결과 {items.length}개</p>
+          {selectedId && (
+            <p className="text-xs text-olive-light">✓ 선택됨</p>
+          )}
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {items.map((r) => {
           const isSelected = r.id === selectedId;
           return (
             <button
               key={r.id}
               onClick={() => onSelect(r)}
-              className={`flex w-full items-center gap-3 rounded-xl border-2 p-2 text-left text-sm transition-colors ${
+              className={`overflow-hidden rounded-xl border-2 text-left transition-colors ${
                 isSelected
                   ? "border-olive-light bg-olive-light/5"
                   : "border-gray-100 hover:border-gray-200"
               }`}
             >
-              {r.imageUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={r.imageUrl}
-                  alt=""
-                  className="h-12 w-12 rounded-lg object-cover"
-                />
-              )}
-              <span className="truncate text-gray-900">{r.title}</span>
+              <div className="aspect-square w-full bg-gray-100">
+                {r.imageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={r.imageUrl}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                )}
+              </div>
+              <p className="line-clamp-2 px-2 py-1.5 text-xs text-gray-900">
+                {r.title}
+              </p>
             </button>
           );
         })}
