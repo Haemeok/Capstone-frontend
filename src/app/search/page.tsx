@@ -17,16 +17,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { focused } = await searchParams;
   const isFocused = focused === "1";
 
-  const latestData = await getStaticRecipesOnServer({
-    key: "latest-recipes",
-    page: 0,
-  });
+  const latestRecipes = isFocused
+    ? []
+    : (await getStaticRecipesOnServer({ key: "latest-recipes", page: 0 })).content;
 
   return (
     <Suspense>
       <SearchDiscoveryClient
         focused={isFocused}
-        latestRecipes={latestData.content}
+        latestRecipes={latestRecipes}
       />
     </Suspense>
   );
