@@ -160,6 +160,8 @@ export default async function RecipeDetailPage({
               videoUrl={staticRecipe.youtubeUrl ?? ""}
               youtubeMetadata={youtubeMetadata}
             >
+              <InArticleAdSlot className="my-6" />
+
               <ErrorBoundary
                 fallback={
                   <SectionErrorFallback message="댓글을 불러올 수 없어요" />
@@ -187,8 +189,6 @@ export default async function RecipeDetailPage({
               )}
 
               <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
-
-              <InArticleAdSlot className="my-6" />
 
               <ErrorBoundary
                 fallback={
