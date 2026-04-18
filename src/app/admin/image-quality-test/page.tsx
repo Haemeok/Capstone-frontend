@@ -134,7 +134,13 @@ const ImageQualityTestPage = () => {
                   </button>
                 )}
               </div>
-              <ComparisonGrid enabledIds={enabledIds} results={results} onRetry={handleRetry} />
+              <ComparisonGrid
+                enabledIds={enabledIds}
+                results={results}
+                onRetry={handleRetry}
+                originalImageUrl={recipe.imageUrl}
+                originalLabel={recipe.title}
+              />
             </>
           ) : (
             <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-8 text-center text-gray-400">

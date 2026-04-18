@@ -13,7 +13,7 @@ type Props = {
 };
 
 const PLACEHOLDER = "레시피 이름 (예: 김치찌개)";
-const SEARCH_SIZE = 30;
+const SEARCH_SIZE = 20;
 const ALL_TYPES = ["USER", "AI", "YOUTUBE"];
 
 export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
