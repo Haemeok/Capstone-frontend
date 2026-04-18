@@ -14,6 +14,13 @@ import { PencilIcon, TrashIcon } from "@/shared/ui/icons";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 import { DialogTitle } from "@/shared/ui/shadcn/dialog";
 
+import { InFeedAdSlot } from "@/shared/adsense";
+import { SEARCH_AD_EVERY_N_CARDS } from "@/shared/adsense/config";
+import {
+  insertAdsIntoFeed,
+  type FeedItem,
+} from "@/shared/adsense/lib/insertAdsIntoFeed";
+
 import {
   BaseRecipeGridItem,
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
@@ -45,6 +52,7 @@ type RecipeGridProps = {
   queryKeyToInvalidate?: unknown[];
   onResetFilters?: () => void;
   nextPageHref?: string;
+  showInFeedAds?: boolean;
 };
 
 const calculateSavings = (
@@ -73,6 +81,7 @@ const RecipeGrid = ({
   queryKeyToInvalidate,
   onResetFilters,
   nextPageHref,
+  showInFeedAds = false,
 }: RecipeGridProps) => {
   const queryClient = useQueryClient();
   const { isMobile, Container, Content } = useResponsiveSheet();
@@ -161,10 +170,27 @@ const RecipeGrid = ({
     );
   }
 
+  type RecipeInput = BaseRecipeGridItem | DetailedRecipeGridItemType;
+
+  const feedItems: FeedItem<RecipeInput>[] = showInFeedAds
+    ? insertAdsIntoFeed<RecipeInput>(
+        recipes as RecipeInput[],
+        SEARCH_AD_EVERY_N_CARDS
+      )
+    : (recipes as RecipeInput[]).map((r) => ({
+        __kind: "recipe" as const,
+        recipe: r,
+      }));
+
   return (
     <div className="flex flex-col">
       <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 px-2 sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
-        {recipes.map((recipe, index) => {
+        {feedItems.map((item, index) => {
+          if (item.__kind === "ad") {
+            return <InFeedAdSlot key={item.key} />;
+          }
+          const recipe = item.recipe;
+
           if (isSimple) {
             return (
               <SimpleRecipeGridItem
