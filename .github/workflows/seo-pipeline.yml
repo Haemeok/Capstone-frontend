@@ -19,8 +19,6 @@ on:
 jobs:
   seo-growth:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +29,21 @@ jobs:
           cache: "npm"
 
       - run: npm ci
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      # 이전 실행 결과를 S3에서 내려받아 incremental 베이스로 사용
+      - name: Seed allowlist from S3
+        run: |
+          mkdir -p src/shared/config/seo
+          aws s3 cp s3://haemeok-s3-bucket/seo/allowlist.json \
+            src/shared/config/seo/sitemap-allowlist.json \
+            || echo "No existing allowlist on S3, starting fresh"
 
       # 매주 자동: ACTIVE 확장 + IMMATURE 재검사
       - name: SEO Discover (incremental)
@@ -55,11 +68,10 @@ jobs:
       - name: SEO Report
         run: npm run seo:report
 
-      # allowlist 변경 시 자동 커밋 + 배포
-      - name: Commit and push
+      # 결과를 S3에 업로드 (sitemap.ts가 여기서 fetch)
+      - name: Upload allowlist to S3
         run: |
-          git config user.name "SEO Pipeline Bot"
-          git config user.email "bot@recipio.kr"
-          git add src/shared/config/seo/sitemap-allowlist.json
-          git diff --cached --quiet || git commit -m "chore: grow SEO sitemap allowlist [skip ci]"
-          git push
+          aws s3 cp src/shared/config/seo/sitemap-allowlist.json \
+            s3://haemeok-s3-bucket/seo/allowlist.json \
+            --content-type application/json \
+            --cache-control "public, max-age=3600"
