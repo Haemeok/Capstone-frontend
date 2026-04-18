@@ -1,8 +1,8 @@
 import { getModelById,MODELS } from "./models";
 
 describe("MODELS registry", () => {
-  it("has exactly 8 entries", () => {
-    expect(MODELS).toHaveLength(8);
+  it("has exactly 9 entries", () => {
+    expect(MODELS).toHaveLength(9);
   });
 
   it("has unique ids", () => {

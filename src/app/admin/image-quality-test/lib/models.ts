@@ -23,6 +23,15 @@ export const MODELS: readonly ModelConfig[] = [
     pricePerImage: 0.005,
   },
   {
+    id: "gpt-image-1-mini-medium",
+    label: "GPT Image 1 Mini (Medium)",
+    vendor: "OpenAI",
+    provider: "openai",
+    endpoint: "gpt-image-1-mini",
+    extra: { quality: "medium" },
+    pricePerImage: 0.011,
+  },
+  {
     id: "flux-2-schnell",
     label: "Flux 2 Schnell",
     vendor: "BFL",
