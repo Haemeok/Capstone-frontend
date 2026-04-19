@@ -6,8 +6,6 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
-import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
-
 import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 import { SearchInput } from "@/features/search-input";
 
@@ -21,13 +19,9 @@ import SaveButton from "./ui/SaveButton";
 
 type SearchDiscoveryClientProps = {
   focused: boolean;
-  latestRecipes: DetailedRecipeGridItem[];
 };
 
-const SearchDiscoveryClient = ({
-  focused,
-  latestRecipes,
-}: SearchDiscoveryClientProps) => {
+const SearchDiscoveryClient = ({ focused }: SearchDiscoveryClientProps) => {
   const router = useRouter();
 
   const handleSearchFocus = () => {
@@ -64,7 +58,7 @@ const SearchDiscoveryClient = ({
           </>
         ) : (
           <>
-            <LatestRecipesSlide initialRecipes={latestRecipes} />
+            <LatestRecipesSlide />
 
             <section className="space-y-4">
               <h3 className="text-lg font-bold text-gray-900">
