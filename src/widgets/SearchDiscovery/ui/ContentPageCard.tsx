@@ -44,30 +44,29 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
     <Link
       href={buildSearchUrl(page.searchParams)}
       onClick={() => triggerHaptic("Light")}
-      className="group relative block aspect-[5/3] w-[210px] flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl"
+      className="group block w-[210px] flex-shrink-0 cursor-pointer"
     >
-      
-      <Image
-        src={page.imageUrl}
-        alt={page.title}
-        aspectRatio="5 / 3"
-        wrapperClassName="absolute inset-0"
-        imgClassName="transition-all duration-500 group-active:scale-105"
-        fit="cover"
-      />
+      <div className="relative aspect-[5/3] overflow-hidden rounded-2xl">
+        <Image
+          src={page.imageUrl}
+          alt={page.title}
+          aspectRatio="5 / 3"
+          wrapperClassName="absolute inset-0"
+          imgClassName="transition-all duration-500 group-active:scale-105"
+          fit="cover"
+        />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        {isYoutube && (
+          <YouTubeIconBadge className="absolute right-2 top-2 h-6 w-6 drop-shadow-lg" />
+        )}
+      </div>
 
-      {isYoutube && (
-        <YouTubeIconBadge className="absolute right-2 top-2 h-6 w-6 drop-shadow-lg" />
-      )}
-
-      <div className="absolute bottom-0 left-0 right-0 p-3">
-        <p className="text-sm font-bold leading-tight text-white text-pretty break-keep drop-shadow-lg">
+      <div className="px-1 pt-2">
+        <p className="line-clamp-1 text-sm font-bold text-gray-900 break-keep">
           {page.title}
         </p>
         {page.subtitle && (
-          <p className="mt-0.5 text-xs leading-tight text-white/80 drop-shadow-lg">
+          <p className="mt-0.5 line-clamp-1 text-xs text-gray-500">
             {page.subtitle}
           </p>
         )}

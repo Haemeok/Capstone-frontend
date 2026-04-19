@@ -57,7 +57,7 @@ const SearchDiscoveryClient = ({
 
             <section className="space-y-4">
               <h3 className="text-lg font-bold text-gray-900">
-                🍳 이런 레시피 어때요?
+                이런 레시피 어때요?
               </h3>
               <ContentPageGrid />
             </section>
