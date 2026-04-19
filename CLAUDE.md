@@ -6,6 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Critical Rules
 
+### Superpowers workflow 종료 규칙 (compounding enforcement)
+
+**superpowers 하네스의 모든 최종 단계에서 `compounding-lessons` 스킬 호출은 필수다.**
+
+- `finishing-a-development-branch`의 4가지 옵션(merge / PR / keep / discard) 중 어느 것이 선택되든, 해당 옵션 실행이 끝난 직후 `compounding-lessons`를 반드시 invoke.
+- `subagent-driven-development`와 `executing-plans`의 마지막 task가 완료된 직후에도 동일하게 invoke.
+- "이번 세션은 딱히 컴파운드할 게 없어 보인다"는 자체 판단으로 건너뛰지 말 것. 일단 호출하고, 메타 스킬 자체가 "nothing to compound"라고 자가 보고하도록 맡겨라. 습관 강제가 우선.
+- 프로젝트 로컬 `finishing-a-development-branch` 스킬(`.claude/skills/finishing-a-development-branch/SKILL.md`)이 plugin의 `superpowers:finishing-a-development-branch`를 override한다. 플러그인 버전이 아니라 로컬 버전을 사용할 것. (로컬 버전이 plugin 버전과 동일 + Step 6로 compounding-lessons 호출 단계가 추가되어 있음.)
+
 ### Route / ID 규약
 - **`recipeId`, `userId`, `bookId` 등 모든 리소스 ID는 문자열(nanoid/uuid)이다. 숫자 아님.**
   - 경로 정규식을 짤 때 `\d+` 금지. `[^/]+` 사용.
