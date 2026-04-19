@@ -88,16 +88,16 @@ export const SearchInput = ({ onFocus }: SearchInputProps) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex items-center gap-2.5 rounded-full bg-gray-100 px-4 py-2.5">
+      <div className="flex items-center gap-2 rounded-full bg-gray-100 px-3.5 py-2">
         <Search
-          className="h-5 w-5 shrink-0 text-gray-500"
+          className="h-4 w-4 shrink-0 text-gray-400"
           aria-hidden="true"
         />
         <input
           type="text"
           placeholder={placeholder}
           aria-label="레시피 검색"
-          className="min-w-0 flex-1 bg-transparent text-base text-gray-800 placeholder:text-gray-500 focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent text-base text-gray-700 placeholder:text-gray-400 focus:outline-none"
           value={inputValue}
           onChange={handleChange}
           onFocus={onFocus}
@@ -106,12 +106,12 @@ export const SearchInput = ({ onFocus }: SearchInputProps) => {
           type="button"
           onClick={handleClear}
           className={cn(
-            "rounded-full p-1 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700",
+            "rounded-full p-0.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600",
             !inputValue && "invisible"
           )}
           aria-label="입력 지우기"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
       </div>
     </form>
