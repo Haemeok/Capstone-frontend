@@ -31,10 +31,10 @@ export const NutritionFilterChipButton = () => {
         type="button"
         onClick={handleClick}
         className={cn(
-          "flex shrink-0 items-center gap-1.5 rounded-full border-2 px-3 py-1.5 text-sm font-medium transition-colors",
+          "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-colors",
           isNutritionDirty
-            ? "border-purple-600 bg-purple-50 text-purple-700"
-            : "border-purple-500 bg-white text-purple-600 hover:bg-purple-50"
+            ? "border-purple-700 bg-purple-50 text-purple-800"
+            : "border-purple-600 bg-white text-purple-700 hover:bg-purple-50"
         )}
         aria-label="상세 필터"
       >
