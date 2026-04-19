@@ -16,9 +16,11 @@ const SaveButton = () => {
       href="/recipe-books"
       onClick={handleClick}
       aria-label="저장한 레시피북"
-      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 active:scale-95"
+      className="relative p-1 rounded-full hover:bg-gray-100 transition-colors"
     >
-      <Bookmark className="h-5 w-5" strokeWidth={2} />
+      <div className="h-fit w-fit relative p-1">
+        <Bookmark size={24} className="text-gray-600" />
+      </div>
     </Link>
   );
 };

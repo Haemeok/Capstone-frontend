@@ -15,26 +15,45 @@ const SLIDE_DURATION_S = 0.6;
 const SLIDE_Y_OFFSET = 8;
 const SLIDE_EASE = [0.22, 1, 0.36, 1] as const;
 
+// 모바일 입력창(≈280px, text-sm)에서 한 줄로 들어가는 총 글자 상한.
+// 이 이상은 하단 `overflow-hidden whitespace-nowrap` 가 잘라내므로
+// 핵심 키워드가 뒤로 밀리지 않도록 카피 단계에서 맞춰줄 것.
+const MAX_PLACEHOLDER_CHARS = 20;
+
 const BREAKFAST_PLACEHOLDERS = [
-  "아침에 든든한 사과 레시피",
-  "활기찬 시작, 계란 레시피",
-  "햇살 같은 한 그릇, 오트밀 레시피",
-  "잠 깨우는 한 입, 그릭요거트 레시피",
+  '출근 전 "계란 레시피" 검색',
+  '간단한 "토스트 레시피" 검색',
+  '건강식 "그릭요거트 레시피" 검색',
+  '따뜻한 "북엇국 레시피" 검색',
 ];
 
 const LUNCH_PLACEHOLDERS = [
-  "에너지 가득 채우는 닭가슴살 레시피",
-  "바쁜 날엔 후딱, 비빔밥 레시피",
-  "맑은 국물 한 그릇, 미역국 레시피",
-  "든든한 한 끼, 김치찌개 레시피",
+  '오늘은 "김치찌개 레시피" 검색',
+  '불맛 가득 "제육덮밥 레시피" 검색',
+  '한 그릇 "비빔밥 레시피" 검색',
+  '바삭한 "돈까스 레시피" 검색',
 ];
 
 const DINNER_PLACEHOLDERS = [
-  "포근한 저녁, 된장찌개 레시피",
-  "오늘의 마무리, 삼겹살 레시피",
-  "따뜻한 한 그릇, 칼국수 레시피",
-  "온 가족 모이는 날, 잡채 레시피",
+  '양념 가득 "불고기 레시피" 검색',
+  '구수한 "된장찌개 레시피" 검색',
+  '오늘은 불금 "삼겹살 레시피" 검색',
+  '매콤한 "닭볶음탕 레시피" 검색',
 ];
+
+if (process.env.NODE_ENV !== "production") {
+  const overflow = [
+    ...BREAKFAST_PLACEHOLDERS,
+    ...LUNCH_PLACEHOLDERS,
+    ...DINNER_PLACEHOLDERS,
+  ].filter((s) => s.length > MAX_PLACEHOLDER_CHARS);
+  if (overflow.length > 0) {
+    console.warn(
+      `[SearchInput] placeholder exceeds ${MAX_PLACEHOLDER_CHARS} chars:`,
+      overflow
+    );
+  }
+}
 
 const MORNING_HOUR_START = 5;
 const LUNCH_HOUR_START = 11;
@@ -90,7 +109,7 @@ export const SearchInput = ({ onFocus }: SearchInputProps) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex items-center gap-2 rounded-full bg-gray-200 px-3.5 py-2">
+      <div className="flex items-center gap-2 rounded-full bg-gray-100 px-3.5 py-2">
         <Search
           className="h-4 w-4 shrink-0 text-gray-500"
           aria-hidden="true"
@@ -113,7 +132,7 @@ export const SearchInput = ({ onFocus }: SearchInputProps) => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -SLIDE_Y_OFFSET, opacity: 0 }}
                 transition={{ duration: SLIDE_DURATION_S, ease: SLIDE_EASE }}
-                className="pointer-events-none absolute inset-0 flex items-center text-sm text-gray-500"
+                className="pointer-events-none absolute inset-0 flex items-center overflow-hidden whitespace-nowrap text-sm text-gray-500"
               >
                 {currentPlaceholder}
               </motion.span>
