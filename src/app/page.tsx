@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { homeMetadata } from "@/shared/lib/metadata";
 import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
@@ -41,7 +43,9 @@ const HomePage = async () => {
         }}
       />
       <Container className="pt-0">
-      <HomeHeader />
+        <Suspense fallback={<div className="h-14 md:hidden" />}>
+          <HomeHeader />
+        </Suspense>
         <div className="flex flex-col items-center justify-center bg-white text-gray-800">
 
           <CategoryTabs title="카테고리" />
