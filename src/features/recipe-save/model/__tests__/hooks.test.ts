@@ -62,6 +62,37 @@ describe("useToggleRecipeSave optimistic updates", () => {
     });
   });
 
+  it("toggles favoriteByCurrentUser in non-infinite recipes cache (e.g. ['recipes', 'latest'])", async () => {
+    (api.postRecipeSave as jest.Mock).mockResolvedValue({ saved: true });
+
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    const recipeId = "r1";
+    queryClient.setQueryData(["recipes", "latest"], {
+      content: [
+        { id: "r1", favoriteByCurrentUser: false },
+        { id: "r2", favoriteByCurrentUser: false },
+      ],
+      page: { size: 20, number: 0, totalElements: 2, totalPages: 1 },
+    });
+
+    const { result } = renderHook(() => useToggleRecipeSave(recipeId), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    act(() => result.current.mutate());
+
+    await waitFor(() => {
+      const data = queryClient.getQueryData<{
+        content: { id: string; favoriteByCurrentUser: boolean }[];
+      }>(["recipes", "latest"]);
+      expect(data?.content[0].favoriteByCurrentUser).toBe(true);
+      expect(data?.content[1].favoriteByCurrentUser).toBe(false);
+    });
+  });
+
   it("toggles favoriteByCurrentUser in recipes-status batch cache", async () => {
     (api.postRecipeSave as jest.Mock).mockResolvedValue({ saved: true });
 
