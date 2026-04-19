@@ -3,10 +3,7 @@ import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
-import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
-import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import {
   Carousel,
   CarouselContent,
@@ -32,26 +29,10 @@ type RecipeSlideProps = {
 
 const getRecipeRightBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {
   if (recipe.ingredientCost) {
-    const tierBadge = (
+    return (
       <BudgetTierBadge key="budget" ingredientCost={recipe.ingredientCost} />
     );
-    if (tierBadge) return tierBadge;
   }
-
-  if (recipe.isYoutube && recipe.youtubeChannelName) {
-    return (
-      <YouTubeChannelBadge key="youtube" channelName={recipe.youtubeChannelName} className="min-[390px]:max-w-[140px]" />
-    );
-  }
-
-  if (recipe.isYoutube) {
-    return <YouTubeIconBadge key="youtube" />;
-  }
-
-  if (recipe.isAiGenerated) {
-    return <AIGeneratedBadge key="ai" />;
-  }
-
   return null;
 };
 
@@ -106,10 +87,11 @@ const RecipeSlide = ({
       >
         <CarouselContent className="-ml-3">
           {recipes.map((item) => (
-            <CarouselItem key={item.id} className="basis-[200px] pl-3">
+            <CarouselItem key={item.id} className="basis-2/5 pl-3 sm:basis-[200px]">
               <DetailedRecipeGridItem
                 recipe={item}
                 prefetch
+                hideCookingTime
                 infoBadge={getRecipeRightBadge(item)}
                 saveBadge={
                   <RecipeSaveButton
@@ -131,9 +113,9 @@ const RecipeSlide = ({
 
   return (
     <div className="mt-2 w-full">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-gray-800">{title}</h2>
+          <h2 className="text-lg font-bold text-gray-800">{title}</h2>
         </div>
         {to && (
           <Link
