@@ -54,7 +54,7 @@ const FloatingCreateRecipeButton = () => {
         prefetch={false}
         aria-label="레시피 등록하기"
         onClick={() => triggerHaptic("Light")}
-        className="flex h-14 w-full items-center justify-center gap-1 overflow-hidden rounded-full bg-olive-light font-bold text-white shadow-lg active:scale-[0.98] transition-transform"
+        className="flex h-14 w-full items-center justify-center overflow-hidden rounded-full bg-olive-light pl-4 pr-5 font-bold text-white shadow-lg active:scale-[0.98] transition-transform"
       >
         <Plus size={20} className="shrink-0" />
         <motion.span
@@ -62,8 +62,7 @@ const FloatingCreateRecipeButton = () => {
           animate={{
             opacity: collapsed ? 0 : 1,
             width: collapsed ? 0 : "auto",
-            marginLeft: collapsed ? 0 : 0,
-            marginRight: collapsed ? 0 : 4,
+            marginLeft: collapsed ? 0 : 4,
           }}
           transition={{ duration: 0.18, ease: "easeOut" }}
         >
