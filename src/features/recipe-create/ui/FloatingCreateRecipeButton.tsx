@@ -34,6 +34,12 @@ const FloatingCreateRecipeButton = () => {
     return () => observer.disconnect();
   }, []);
 
+  useLayoutEffect(() => {
+    const el = motionRef.current;
+    if (!el) return;
+    setCollapsed(el.scrollTop > el.clientHeight * COLLAPSE_RATIO);
+  }, [motionRef]);
+
   useEffect(() => {
     const el = motionRef.current;
     if (!el) return;
@@ -56,7 +62,6 @@ const FloatingCreateRecipeButton = () => {
       onScroll();
     };
 
-    updateCollapsed();
     el.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
 
@@ -77,33 +82,35 @@ const FloatingCreateRecipeButton = () => {
         <Plus size={20} />
         <span className="ml-1">레시피</span>
       </div>
-      <MotionLink
-        href="/recipes/new"
-        prefetch={false}
-        aria-label="레시피 등록하기"
-        onClick={() => triggerHaptic("Light")}
-        className="md:hidden z-header sticky-optimized fixed bottom-24 right-5 flex h-14 items-center justify-center overflow-hidden rounded-full bg-olive-light font-bold text-white shadow-lg active:scale-[0.98] transition-transform duration-150"
-        initial={false}
-        animate={{
-          width: collapsed ? COLLAPSED_WIDTH : (expandedWidth ?? "auto"),
-          paddingLeft: collapsed ? COLLAPSED_PADDING : EXPANDED_PADDING_LEFT,
-          paddingRight: collapsed ? COLLAPSED_PADDING : EXPANDED_PADDING_RIGHT,
-        }}
-        transition={{ type: "spring", stiffness: 380, damping: 32 }}
-      >
-        <Plus size={20} className="shrink-0" />
-        <motion.span
-          className="shrink-0 whitespace-nowrap overflow-hidden"
+      {expandedWidth !== null && (
+        <MotionLink
+          href="/recipes/new"
+          prefetch={false}
+          aria-label="레시피 등록하기"
+          onClick={() => triggerHaptic("Light")}
+          className="md:hidden z-header sticky-optimized fixed bottom-24 right-5 flex h-14 items-center justify-center overflow-hidden rounded-full bg-olive-light font-bold text-white shadow-lg active:scale-[0.98] transition-transform duration-150"
+          initial={false}
           animate={{
-            opacity: collapsed ? 0 : 1,
-            width: collapsed ? 0 : "auto",
-            marginLeft: collapsed ? 0 : 4,
+            width: collapsed ? COLLAPSED_WIDTH : expandedWidth,
+            paddingLeft: collapsed ? COLLAPSED_PADDING : EXPANDED_PADDING_LEFT,
+            paddingRight: collapsed ? COLLAPSED_PADDING : EXPANDED_PADDING_RIGHT,
           }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
+          transition={{ type: "spring", stiffness: 380, damping: 32 }}
         >
-          레시피
-        </motion.span>
-      </MotionLink>
+          <Plus size={20} className="shrink-0" />
+          <motion.span
+            className="shrink-0 whitespace-nowrap overflow-hidden"
+            animate={{
+              opacity: collapsed ? 0 : 1,
+              width: collapsed ? 0 : "auto",
+              marginLeft: collapsed ? 0 : 4,
+            }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+          >
+            레시피
+          </motion.span>
+        </MotionLink>
+      )}
     </>
   );
 };
