@@ -1,30 +1,28 @@
 "use client";
 
-import { Image } from "@/shared/ui/image/Image";
+import { useRouter } from "next/navigation";
 
-import AppInstallButton from "./AppInstallButton";
+import { SearchInput } from "@/features/search-input";
+
 import NotificationButton from "./NotificationButton";
+import SavedRecipeBooksButton from "./SavedRecipeBooksButton";
 
 const HomeHeader = () => {
+  const router = useRouter();
+
+  const handleSearchFocus = () => {
+    router.push("/search?focused=1", { scroll: false });
+  };
+
   return (
-    <div className="relative flex w-full flex-col items-center pt-4 pb-2 md:hidden">
-      <div className="relative flex w-full items-center justify-center px-6">
-        <div className="flex items-center gap-2">
-          <Image
-            src="/web-app-manifest-192x192.png"
-            alt="logo"
-            wrapperClassName="h-10 w-10 rounded-lg"
-            skeletonClassName="h-10 w-10 rounded-full"
-            width={40}
-            height={40}
-          />
-          <p className="text-2xl font-bold">Recipi'O</p>
+    <div className="sticky top-0 z-10 -mx-4 mb-4 flex w-full flex-col items-center bg-white px-4 pt-4 pb-2 md:hidden">
+      <div className="flex w-full items-center gap-1">
+        <div className="min-w-0 flex-1">
+          <SearchInput onFocus={handleSearchFocus} />
         </div>
-        <div className="absolute right-6 flex items-center gap-2">
-          <NotificationButton />
-        </div>
+        <NotificationButton />
+        <SavedRecipeBooksButton />
       </div>
-      <AppInstallButton />
     </div>
   );
 };

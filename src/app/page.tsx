@@ -41,7 +41,7 @@ const HomePage = async () => {
         }}
       />
       <Container>
-        <div className="flex flex-col items-center justify-center gap-4 bg-white text-gray-800">
+        <div className="flex flex-col items-center justify-center bg-white text-gray-800">
           <HomeHeader />
 
           <CategoryTabs title="카테고리" />
