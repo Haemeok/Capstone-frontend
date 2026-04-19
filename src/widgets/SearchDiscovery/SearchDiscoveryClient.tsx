@@ -1,9 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-import { Plus } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Container } from "@/shared/ui/Container";
@@ -11,6 +8,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 
 import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 
+import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 import { SearchInput } from "@/features/search-input";
 
 import RecipeSlide from "@/widgets/RecipeSlide/RecipeSlide";
@@ -90,18 +88,7 @@ const SearchDiscoveryClient = ({
           </>
         )}
       </div>
-      {!focused && (
-        <Link
-          href="/recipes/new"
-          prefetch={false}
-          aria-label="레시피 등록하기"
-          onClick={() => triggerHaptic("Light")}
-          className="md:hidden z-header sticky-optimized fixed bottom-24 right-5 flex h-14 items-center gap-1 rounded-full bg-olive-light pl-4 pr-5 font-bold text-white shadow-lg active:scale-[0.98] transition-transform"
-        >
-          <Plus size={20} />
-          <span>레시피</span>
-        </Link>
-      )}
+      {!focused && <FloatingCreateRecipeButton />}
     </Container>
   );
 };
