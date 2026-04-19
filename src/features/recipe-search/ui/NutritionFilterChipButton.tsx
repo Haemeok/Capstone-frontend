@@ -33,8 +33,8 @@ export const NutritionFilterChipButton = () => {
         className={cn(
           "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-colors",
           isNutritionDirty
-            ? "border-purple-700 bg-purple-50 text-purple-800"
-            : "border-purple-600 bg-white text-purple-700 hover:bg-purple-50"
+            ? "border-purple-400 text-purple-500"
+            : "border-purple-300 bg-white text-purple-400 hover:bg-purple-50"
         )}
         aria-label="상세 필터"
       >

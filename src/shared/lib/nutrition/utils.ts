@@ -4,7 +4,7 @@ import {
   NutritionFilterKey,
   NutritionThemeKey,
 } from "@/shared/config/constants/recipe";
-import { getTypedEntries,getTypedKeys } from "@/shared/lib/types/utils";
+import { getTypedEntries, getTypedKeys } from "@/shared/lib/types/utils";
 
 export type NutritionRangeValue = [number, number];
 
@@ -69,4 +69,27 @@ export const hasModifiedNutritionValues = (
   return getTypedKeys(values).some((key) =>
     isNutritionValueModified(key, values[key])
   );
+};
+
+export const deriveThemeFromValues = (
+  values: NutritionFilterValues
+): NutritionThemeKey | null => {
+  for (const [themeKey, theme] of getTypedEntries(NUTRITION_THEMES)) {
+    const themeKeys = getTypedKeys(theme.values) as NutritionFilterKey[];
+
+    const allThemeKeysMatch = themeKeys.every((k) => {
+      const v = values[k];
+      const t = theme.values[k as keyof typeof theme.values] as
+        | NutritionRangeValue
+        | undefined;
+      return v && t && v[0] === t[0] && v[1] === t[1];
+    });
+    if (!allThemeKeysMatch) continue;
+
+    const otherKeysDefault = getTypedKeys(NUTRITION_RANGES)
+      .filter((k) => !themeKeys.includes(k))
+      .every((k) => !isNutritionValueModified(k, values[k]));
+    if (otherKeysDefault) return themeKey;
+  }
+  return null;
 };

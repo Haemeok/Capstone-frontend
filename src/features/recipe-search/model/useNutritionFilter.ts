@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo,useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { NutritionThemeKey } from "@/shared/config/constants/recipe";
 import { NutritionFilterKey } from "@/shared/config/constants/recipe";
+import { NutritionThemeKey } from "@/shared/config/constants/recipe";
 import {
   applyNutritionTheme,
   createDefaultNutritionValues,
+  deriveThemeFromValues,
   hasModifiedNutritionValues,
   NutritionFilterValues,
 } from "@/shared/lib/nutrition/utils";
@@ -16,9 +17,6 @@ export const useNutritionFilter = (
   initialValues: NutritionFilterValues,
   initialTypes: string[]
 ) => {
-  const [selectedTheme, setSelectedTheme] = useState<NutritionThemeKey | null>(
-    null
-  );
   const [types, setTypes] = useState<string[]>(initialTypes);
   const [values, setValues] = useState<NutritionFilterValues>(() => {
     const defaultValues = createDefaultNutritionValues();
@@ -33,15 +31,17 @@ export const useNutritionFilter = (
     }
   }, [open, initialValues, initialTypes]);
 
+  const selectedTheme = useMemo<NutritionThemeKey | null>(
+    () => deriveThemeFromValues(values),
+    [values]
+  );
+
   const handleThemeSelect = useCallback(
     (themeKey: NutritionThemeKey) => {
       if (selectedTheme === themeKey) {
         setValues(createDefaultNutritionValues());
-        setSelectedTheme(null);
         return;
       }
-
-      setSelectedTheme(themeKey);
       setValues(applyNutritionTheme(themeKey));
     },
     [selectedTheme]
@@ -53,12 +53,8 @@ export const useNutritionFilter = (
         ...prev,
         [key]: newValue,
       }));
-
-      if (selectedTheme !== null) {
-        setSelectedTheme(null);
-      }
     },
-    [selectedTheme]
+    []
   );
 
   const handleTypesChange = useCallback((newTypes: string[]) => {
@@ -67,7 +63,6 @@ export const useNutritionFilter = (
 
   const reset = useCallback(() => {
     setValues(createDefaultNutritionValues());
-    setSelectedTheme(null);
   }, []);
 
   const isModified = useMemo(
