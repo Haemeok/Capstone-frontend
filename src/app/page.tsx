@@ -40,7 +40,7 @@ const HomePage = async () => {
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <Container>
+      <Container className="pt-0">
         <div className="flex flex-col items-center justify-center bg-white text-gray-800">
           <HomeHeader />
 
