@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import type { InfiniteData } from "@tanstack/react-query";
@@ -9,6 +10,7 @@ import { CheckIcon } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { cn } from "@/shared/lib/utils";
+import { Image } from "@/shared/ui/image/Image";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import {
@@ -18,11 +20,8 @@ import {
   RECIPE_BOOK_QUERY_KEYS,
   type RecipeBookDetail,
 } from "@/entities/recipe-book";
-import type { BaseRecipeGridItem } from "@/entities/recipe/model/types";
 
 import { useEditModeStore } from "@/features/recipe-book-edit-mode";
-
-import SimpleRecipeGridItem from "@/widgets/RecipeGrid/ui/SimpleRecipeGridItem";
 
 type Props = {
   bookId: string;
@@ -32,7 +31,29 @@ type Props = {
 const PAGE_SIZE = 20;
 const SKELETON_COUNT = 8;
 
-const noopOpenDrawer = () => {};
+const GRID_CLASS =
+  "grid grid-cols-2 gap-3 p-3 sm:gap-4 sm:p-4 md:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
+
+const RecipeBookGridItem = ({ recipe }: { recipe: BookRecipe }) => (
+  <div className="group relative block overflow-hidden rounded-xl">
+    <Image
+      src={recipe.imageUrl}
+      alt={recipe.title}
+      wrapperClassName="overflow-hidden rounded-xl"
+      imgClassName="transition-all duration-300 ease-in-out group-hover:scale-110"
+      fit="cover"
+    />
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 rounded-b-xl bg-gradient-to-t from-black/70 to-transparent" />
+    <p className="word-break absolute right-3 bottom-2 left-3 line-clamp-2 text-[15px] leading-tight text-pretty text-white">
+      {recipe.title}
+    </p>
+    <Link
+      href={`/recipes/${recipe.recipeId}`}
+      aria-label={recipe.title}
+      className="absolute inset-0 rounded-xl"
+    />
+  </div>
+);
 
 const EmptyState = () => {
   const router = useRouter();
@@ -56,12 +77,9 @@ const EmptyState = () => {
 };
 
 const GridSkeleton = () => (
-  <div className="grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+  <div className={GRID_CLASS}>
     {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-      <div key={i}>
-        <Skeleton className="aspect-[4/5] w-full rounded-2xl" />
-        <Skeleton className="mt-2 h-5 w-3/4 rounded" />
-      </div>
+      <Skeleton key={i} className="aspect-[4/5] w-full rounded-xl" />
     ))}
   </div>
 );
@@ -97,34 +115,6 @@ const SelectionOverlay = ({ recipeId }: { recipeId: string }) => {
   );
 };
 
-/**
- * Map BookRecipe → BaseRecipeGridItem.
- *
- * BookRecipe (from recipe-book API) only includes:
- *   recipeId, title, imageUrl, dishType, addedAt
- *
- * BaseRecipeGridItem additionally requires author info, like state, and
- * profileImage. Since the recipe-book endpoint does not return these,
- * we use safe defaults:
- *   - authorName / authorId / profileImage: empty strings (not displayed
- *     by SimpleRecipeGridItem; it only shows title + like button)
- *   - createdAt: addedAt as proxy
- *   - likeCount: 0 / likedByCurrentUser: false (RecipeLikeButton will
- *     hydrate real state via its own query if needed)
- */
-const toBaseRecipe = (r: BookRecipe): BaseRecipeGridItem => ({
-  id: r.recipeId,
-  title: r.title,
-  imageUrl: r.imageUrl,
-  authorName: "",
-  authorId: "",
-  profileImage: "",
-  createdAt: r.addedAt,
-  likeCount: 0,
-  likedByCurrentUser: false,
-  favoriteByCurrentUser: false,
-});
-
 export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
   const queryClient = useQueryClient();
   const isEditMode = useEditModeStore((s) => s.isEditMode);
@@ -154,7 +144,6 @@ export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
   });
 
   const recipes = data?.pages.flatMap((p) => p.recipes) ?? [];
-  const mappedRecipes = recipes.map(toBaseRecipe);
 
   const lastIdsKeyRef = useRef("");
 
@@ -172,16 +161,11 @@ export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
 
   return (
     <div className={isEditMode ? "pb-24" : ""}>
-      <div className="grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
-        {mappedRecipes.map((recipe) => (
-          <div key={recipe.id} className="relative">
-            <SimpleRecipeGridItem
-              recipe={recipe}
-              setIsDrawerOpen={noopOpenDrawer}
-              prefetch={false}
-              hideSaveButton
-            />
-            {isEditMode && <SelectionOverlay recipeId={recipe.id} />}
+      <div className={GRID_CLASS}>
+        {recipes.map((recipe) => (
+          <div key={recipe.recipeId} className="relative">
+            <RecipeBookGridItem recipe={recipe} />
+            {isEditMode && <SelectionOverlay recipeId={recipe.recipeId} />}
           </div>
         ))}
       </div>
