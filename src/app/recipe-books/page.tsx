@@ -15,7 +15,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 
 import { useUserStore } from "@/entities/user";
 
-import { RecipeBookGrid } from "@/widgets/RecipeBookGrid/RecipeBookGrid";
+import { RecipeBookGrid } from "@/widgets/RecipeBookGrid";
 
 export default function RecipeBooksPage() {
   const router = useRouter();
