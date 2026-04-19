@@ -1,5 +1,6 @@
 export { invalidateBookCaches } from "./invalidate";
 export { useAddRecipesToBook } from "./useAddRecipesToBook";
+export { useBookRecipeIds } from "./useBookRecipeIds";
 export { useCreateRecipeBook } from "./useCreateRecipeBook";
 export { useDeleteRecipeBook } from "./useDeleteRecipeBook";
 export { useMoveRecipes } from "./useMoveRecipes";

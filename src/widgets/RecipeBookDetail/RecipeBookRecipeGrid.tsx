@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -14,6 +14,7 @@ import { Image } from "@/shared/ui/image/Image";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import {
+  BOOK_DETAIL_PAGE_SIZE,
   type BookRecipe,
   DEFAULT_BOOK_SORT,
   getRecipeBookDetail,
@@ -25,14 +26,12 @@ import { useEditModeStore } from "@/features/recipe-book-edit-mode";
 
 type Props = {
   bookId: string;
-  onAllIdsChange: (ids: string[]) => void;
 };
 
-const PAGE_SIZE = 20;
 const SKELETON_COUNT = 8;
 
 const GRID_CLASS =
-  "grid grid-cols-2 gap-3 p-3 sm:gap-4 sm:p-4 md:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
+  "grid grid-cols-2 gap-3 py-3 sm:gap-4 sm:py-4 md:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
 
 const RecipeBookGridItem = ({ recipe }: { recipe: BookRecipe }) => (
   <div className="group relative block overflow-hidden rounded-xl">
@@ -115,7 +114,7 @@ const SelectionOverlay = ({ recipeId }: { recipeId: string }) => {
   );
 };
 
-export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
+export const RecipeBookRecipeGrid = ({ bookId }: Props) => {
   const queryClient = useQueryClient();
   const isEditMode = useEditModeStore((s) => s.isEditMode);
 
@@ -133,7 +132,7 @@ export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
     queryFn: ({ pageParam }) =>
       getRecipeBookDetail(bookId, {
         page: pageParam,
-        size: PAGE_SIZE,
+        size: BOOK_DETAIL_PAGE_SIZE,
         sort: DEFAULT_BOOK_SORT,
       }),
     getNextPageParam: (last, all) => (last.hasNext ? all.length : undefined),
@@ -144,17 +143,6 @@ export const RecipeBookRecipeGrid = ({ bookId, onAllIdsChange }: Props) => {
   });
 
   const recipes = data?.pages.flatMap((p) => p.recipes) ?? [];
-
-  const lastIdsKeyRef = useRef("");
-
-  useEffect(() => {
-    const ids =
-      data?.pages.flatMap((p) => p.recipes.map((r) => r.recipeId)) ?? [];
-    const key = ids.join(",");
-    if (key === lastIdsKeyRef.current) return;
-    lastIdsKeyRef.current = key;
-    onAllIdsChange(ids);
-  }, [data, onAllIdsChange]);
 
   if (isPending && recipes.length === 0) return <GridSkeleton />;
   if (!isFetching && recipes.length === 0) return <EmptyState />;

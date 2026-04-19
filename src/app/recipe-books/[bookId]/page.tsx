@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { notFound, useParams } from "next/navigation";
 
 import { Container } from "@/shared/ui/Container";
@@ -23,8 +23,6 @@ export default function RecipeBookDetailPage() {
   const { data: books, isLoading } = useRecipeBooks();
   const exit = useEditModeStore((s) => s.exit);
 
-  const [allRecipeIds, setAllRecipeIds] = useState<string[]>([]);
-
   // Page unmount → exit edit mode (so navigating between books resets state)
   useEffect(() => {
     return () => exit();
@@ -45,10 +43,10 @@ export default function RecipeBookDetailPage() {
   }
 
   return (
-    <Container className="min-h-screen bg-white">
+    <Container className="pt-0">
       <RecipeBookDetailHeader book={book} />
-      <RecipeBookRecipeGrid bookId={bookId} onAllIdsChange={setAllRecipeIds} />
-      <EditModeBottomBar bookId={bookId} allRecipeIds={allRecipeIds} />
+      <RecipeBookRecipeGrid bookId={bookId} />
+      <EditModeBottomBar bookId={bookId} />
     </Container>
   );
 }

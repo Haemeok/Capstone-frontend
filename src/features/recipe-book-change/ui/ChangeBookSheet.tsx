@@ -5,6 +5,7 @@ import { PlusIcon } from "lucide-react";
 
 import {
   getRecipeBookErrorMessage,
+  MAX_RECIPE_BOOKS,
   useMoveRecipes,
   useRecipeBooks,
 } from "@/entities/recipe-book";
@@ -54,6 +55,7 @@ export const ChangeBookSheet = ({
   );
   const fromBookId = fromBookIdProp ?? defaultBook?.id ?? sortedBooks[0]?.id;
   const targets = (books ?? []).filter((b) => b.id !== fromBookId);
+  const canCreateMore = (books?.length ?? 0) < MAX_RECIPE_BOOKS;
 
   const handleSelect = async (toBookId: string, toBookName: string) => {
     if (!fromBookId) {
@@ -88,19 +90,23 @@ export const ChangeBookSheet = ({
 
   const Body = (
     <div className="px-2 pb-6">
-      <button
-        type="button"
-        className="flex w-full items-center gap-3 rounded-xl px-4 py-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100"
-        onClick={() => setCreateOpen(true)}
-      >
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-olive-light/10 text-olive-light">
-          <PlusIcon size={18} />
-        </span>
-        <span className="font-medium text-gray-900">새 레시피북 만들기</span>
-      </button>
+      {canCreateMore && (
+        <button
+          type="button"
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100"
+          onClick={() => setCreateOpen(true)}
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-olive-light/10 text-olive-light">
+            <PlusIcon size={18} />
+          </span>
+          <span className="font-medium text-gray-900">새 레시피북 만들기</span>
+        </button>
+      )}
       {targets.length === 0 ? (
         <p className="px-4 py-6 text-center text-sm text-gray-500">
-          이동할 다른 레시피북이 없어요. 새로 만들어보세요.
+          {canCreateMore
+            ? "이동할 다른 레시피북이 없어요. 새로 만들어보세요."
+            : "이동할 다른 레시피북이 없어요."}
         </p>
       ) : (
         <ul>
