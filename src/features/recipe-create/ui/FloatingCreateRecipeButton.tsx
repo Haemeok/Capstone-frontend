@@ -7,19 +7,24 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { useScrollContext } from "@/shared/lib/ScrollContext";
 
 const COLLAPSE_RATIO = 0.5;
 
 const FloatingCreateRecipeButton = () => {
+  const { motionRef } = useScrollContext();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
+    const el = motionRef.current;
+    if (!el) return;
+
     let rafId: number | null = null;
-    let threshold = window.innerHeight * COLLAPSE_RATIO;
+    let threshold = el.clientHeight * COLLAPSE_RATIO;
 
     const updateCollapsed = () => {
       rafId = null;
-      setCollapsed(window.scrollY > threshold);
+      setCollapsed(el.scrollTop > threshold);
     };
 
     const onScroll = () => {
@@ -28,20 +33,20 @@ const FloatingCreateRecipeButton = () => {
     };
 
     const onResize = () => {
-      threshold = window.innerHeight * COLLAPSE_RATIO;
+      threshold = el.clientHeight * COLLAPSE_RATIO;
       onScroll();
     };
 
     updateCollapsed();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    el.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
 
     return () => {
       if (rafId !== null) window.cancelAnimationFrame(rafId);
-      window.removeEventListener("scroll", onScroll);
+      el.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, []);
+  }, [motionRef]);
 
   return (
     <motion.div
