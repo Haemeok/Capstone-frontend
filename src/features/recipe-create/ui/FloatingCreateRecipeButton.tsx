@@ -7,9 +7,10 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { cn } from "@/shared/lib/utils";
 import { useScrollContext } from "@/shared/lib/ScrollContext";
 
-const COLLAPSE_RATIO = 0.5;
+const COLLAPSE_RATIO = 0.2;
 
 const FloatingCreateRecipeButton = () => {
   const { motionRef } = useScrollContext();
@@ -59,7 +60,10 @@ const FloatingCreateRecipeButton = () => {
         prefetch={false}
         aria-label="레시피 등록하기"
         onClick={() => triggerHaptic("Light")}
-        className="flex h-14 w-full items-center justify-center overflow-hidden rounded-full bg-olive-light pl-4 pr-5 font-bold text-white shadow-lg active:scale-[0.98] transition-transform"
+        className={cn(
+          "flex h-14 w-full items-center justify-center overflow-hidden rounded-full bg-olive-light font-bold text-white shadow-lg active:scale-[0.98] transition-[padding,transform] duration-200 ease-out",
+          collapsed ? "pl-[18px] pr-[18px]" : "pl-4 pr-5"
+        )}
       >
         <Plus size={20} className="shrink-0" />
         <motion.span
