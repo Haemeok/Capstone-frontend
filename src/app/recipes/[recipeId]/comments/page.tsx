@@ -49,7 +49,6 @@ const CommentsPage = () => {
   return (
     <RecipeStatusProvider recipeId={recipeId}>
       <div className="relative h-full pb-10">
-        <Container padding={false}>
           <header className="z-sticky sticky-optimized sticky top-0 border-b bg-white px-4 py-3">
             <div className="flex max-w-3xl items-center">
               <div className="flex items-center gap-2">
@@ -58,6 +57,7 @@ const CommentsPage = () => {
               </div>
             </div>
           </header>
+        <Container className="pt-0">
 
           <main className="py-4">
             <div className="mb-4 flex items-center justify-between px-2">

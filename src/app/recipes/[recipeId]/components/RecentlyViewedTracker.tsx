@@ -15,8 +15,10 @@ type RecentlyViewedTrackerProps = {
   avgRating?: number;
   ratingCount?: number;
   isYoutube?: boolean;
+  youtubeChannelName?: string;
   youtubeVideoViewCount?: number;
   favoriteCount?: number;
+  isAiGenerated?: boolean;
 };
 
 const RecentlyViewedTracker = ({
@@ -30,8 +32,10 @@ const RecentlyViewedTracker = ({
   avgRating,
   ratingCount,
   isYoutube,
+  youtubeChannelName,
   youtubeVideoViewCount,
   favoriteCount,
+  isAiGenerated,
 }: RecentlyViewedTrackerProps) => {
   const { addRecipe } = useRecentlyViewedRecipes();
 
@@ -48,8 +52,10 @@ const RecentlyViewedTracker = ({
         avgRating,
         ratingCount,
         isYoutube,
+        youtubeChannelName,
         youtubeVideoViewCount,
         favoriteCount,
+        isAiGenerated,
       });
     }
     // addRecipe is stable (no dependencies), only run when recipeId changes

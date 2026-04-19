@@ -176,7 +176,7 @@ export default function RecipeVideoSection({
                 "cursor-pointer shadow-md backdrop-blur-sm transition-all",
                 isSticky
                   ? "bg-primary/80 hover:bg-primary/90 text-primary-foreground border-primary h-10 w-10 rounded-full"
-                  : "bg-olive-light hover:bg-olive-medium text-white rounded-2xl px-3 py-2"
+                  : "bg-white hover:bg-olive-medium border-1 border-olive-light text-olive-light rounded-2xl px-3 py-2"
               )}
               aria-label={isSticky ? "영상 고정 해제" : "영상 고정"}
             >
@@ -187,14 +187,11 @@ export default function RecipeVideoSection({
                 )}
               >
                 {!isSticky && (
-                  <span className="text-sm font-medium">영상 고정</span>
+                  <span className="text-sm font-medium text-olive-light">영상 고정</span>
                 )}
-                <Pin
-                  className={cn(
-                    "h-5 w-5 fill-current transition-all",
-                    isSticky ? "text-primary-foreground" : "text-red-400"
-                  )}
-                />
+                {isSticky && (
+                  <Pin className="h-5 w-5 fill-current transition-all text-red-400" />
+                )}
               </div>
             </Button>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useMemo } from "react";
+import { useMemo } from "react";
 
 import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
 import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
@@ -22,7 +22,6 @@ type RecipeStepProps = {
   length: number;
   isFirstStep?: boolean;
   recipeIngredients?: Omit<IngredientItem, "inFridge">[];
-  headerExtra?: ReactNode;
 };
 
 const RecipeStep = ({
@@ -31,7 +30,6 @@ const RecipeStep = ({
   length,
   isFirstStep = false,
   recipeIngredients,
-  headerExtra,
 }: RecipeStepProps) => {
   const videoPlayer = useVideoPlayer();
   const { segments, allTerms: cookingTerms } = useMemo(
@@ -74,10 +72,11 @@ const RecipeStep = ({
             </div>
           )}
         </div>
-        <div className="flex items-center gap-2">
-          {timeInSeconds && <StepTimer targetSeconds={timeInSeconds} />}
-          {headerExtra}
-        </div>
+        {timeInSeconds && (
+          <div className="flex items-center gap-2">
+            <StepTimer targetSeconds={timeInSeconds} />
+          </div>
+        )}
       </div>
       <div className="flex flex-wrap items-center gap-1">
         {displayIngredients.length > 0 && <IngredientIcon />}
@@ -115,7 +114,7 @@ const RecipeStep = ({
           {step.timeline && videoPlayer && (
             <button
               onClick={() => videoPlayer.seekToTimeline(step.timeline!)}
-              className="bg-olive-light/10 text-olive-light hover:bg-olive-light/20 mt-2 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-all"
+              className="border-olive-light text-olive-light hover:bg-olive-light/10 mt-2 inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium transition-all"
             >
               {step.timeline}
             </button>

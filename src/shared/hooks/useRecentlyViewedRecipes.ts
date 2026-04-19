@@ -13,8 +13,10 @@ export type RecentRecipe = {
   avgRating?: number;
   ratingCount?: number;
   isYoutube?: boolean;
+  youtubeChannelName?: string;
   youtubeVideoViewCount?: number;
   favoriteCount?: number;
+  isAiGenerated?: boolean;
 };
 
 const STORAGE_KEY = "recently-viewed-recipes";
