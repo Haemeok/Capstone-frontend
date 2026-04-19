@@ -13,17 +13,14 @@ import {
   CarouselPrevious,
 } from "@/shared/ui/shadcn/carousel";
 
-import type {
-  DetailedRecipeGridItem as DetailedRecipeGridItemType,
-  StaticDetailedRecipeGridItem,
-} from "@/entities/recipe/model/types";
+import type { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 const LATEST_HREF = "/search/results?sort=createdAt%2CDESC";
 
 type LatestRecipesSectionProps = {
-  recipes: StaticDetailedRecipeGridItem[];
+  recipes: DetailedRecipeGridItemType[];
 };
 
 const LatestRecipesSection = ({ recipes }: LatestRecipesSectionProps) => {
@@ -57,9 +54,8 @@ const LatestRecipesSection = ({ recipes }: LatestRecipesSectionProps) => {
           {recipes.map((recipe) => (
             <CarouselItem key={recipe.id} className="basis-auto pl-3">
               <DetailedRecipeGridItem
-                recipe={recipe as DetailedRecipeGridItemType}
-                className="w-[180px]"
-                hideCookingTime
+                recipe={recipe}
+                className="w-[200px]"
               />
             </CarouselItem>
           ))}

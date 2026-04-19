@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Container } from "@/shared/ui/Container";
 
-import type { StaticDetailedRecipeGridItem } from "@/entities/recipe/model/types";
+import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 
 import { SearchInput } from "@/features/search-input";
 
@@ -18,7 +18,7 @@ import SaveButton from "./ui/SaveButton";
 
 type SearchDiscoveryClientProps = {
   focused: boolean;
-  latestRecipes: StaticDetailedRecipeGridItem[];
+  latestRecipes: DetailedRecipeGridItem[];
 };
 
 const SearchDiscoveryClient = ({

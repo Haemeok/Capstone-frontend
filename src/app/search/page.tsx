@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
+import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
 import { SearchDiscoveryClient } from "@/widgets/SearchDiscovery";
 
@@ -19,7 +19,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const latestRecipes = isFocused
     ? []
-    : (await getStaticRecipesOnServer({ key: "latest-recipes", page: 0 })).content;
+    : (await getRecipesOnServer({ key: "search", page: 0, sort: "createdAt,desc" })).content;
 
   return (
     <Suspense>
