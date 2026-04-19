@@ -13,7 +13,6 @@ export const getTagsToInvalidate = (event: InvalidationEvent): string[] => {
         CACHE_TAGS.recipesPopular,
         CACHE_TAGS.recipesBudget,
         CACHE_TAGS.recipesRecommended(event.recipeId),
-        CACHE_TAGS.recipesLatest,
         CACHE_TAGS.recipesSitemap,
       ];
     case "RECIPE_DELETED":
@@ -22,7 +21,6 @@ export const getTagsToInvalidate = (event: InvalidationEvent): string[] => {
         CACHE_TAGS.recipesPopular,
         CACHE_TAGS.recipesBudget,
         CACHE_TAGS.recipesRecommended(event.recipeId),
-        CACHE_TAGS.recipesLatest,
         CACHE_TAGS.recipesSitemap,
         CACHE_TAGS.recipesTrending,
       ];
