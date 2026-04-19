@@ -30,33 +30,22 @@ export const TabNavigation = ({
               key={tab.id}
               type="button"
               className={cn(
-                "relative flex-1 cursor-pointer py-4 transition-colors",
-                isActive ? "text-olive-light" : "text-gray-400"
+                "relative flex-1 cursor-pointer py-4 text-sm transition-colors",
+                isActive ? "font-bold text-black" : "font-medium text-gray-400"
               )}
               onClick={() => onTabChange(tab.id)}
             >
-              <div className="flex flex-col items-center gap-1.5">
-                <tab.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                <span
-                  className={cn(
-                    "text-sm transition-all",
-                    isActive ? "font-bold" : "font-medium"
-                  )}
-                >
-                  {tab.label}
-                </span>
-              </div>
+              {tab.label}
             </button>
           );
         })}
       </div>
-      {/* 슬라이딩 인디케이터 */}
       <motion.div
-        className="absolute bottom-0 h-[3px] rounded-full bg-olive-light"
+        className="absolute bottom-0 h-[2px] bg-black"
         initial={false}
         animate={{
-          left: `${activeTabIndex * tabWidth + tabWidth / 4}%`,
-          width: `${tabWidth / 2}%`,
+          left: `${activeTabIndex * tabWidth}%`,
+          width: `${tabWidth}%`,
         }}
         transition={{
           type: "spring",

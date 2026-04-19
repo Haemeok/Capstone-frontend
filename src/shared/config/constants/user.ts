@@ -29,7 +29,7 @@ export const MyTabs: Tab[] = [
 ];
 
 export const OtherTabs: Tab[] = [
-  { id: "recipes", label: "나의 레시피", icon: Award },
+  { id: "recipes", label: "레시피", icon: Award },
 ];
 
 type SurveyStepType = "radio" | "textarea" | "checkbox" | "range" | "slider";
