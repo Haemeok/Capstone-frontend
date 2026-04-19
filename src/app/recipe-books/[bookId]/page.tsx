@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
 
+import { Container } from "@/shared/ui/Container";
+
 import { useRecipeBooks } from "@/entities/recipe-book";
 
 import {
@@ -30,9 +32,9 @@ export default function RecipeBookDetailPage() {
 
   if (isLoading) {
     return (
-      <div>
+      <Container>
         <div className="h-14 border-b border-gray-100 bg-white" />
-      </div>
+      </Container>
     );
   }
 
@@ -43,10 +45,10 @@ export default function RecipeBookDetailPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
+    <Container className="min-h-screen bg-white">
       <RecipeBookDetailHeader book={book} />
       <RecipeBookRecipeGrid bookId={bookId} onAllIdsChange={setAllRecipeIds} />
       <EditModeBottomBar bookId={bookId} allRecipeIds={allRecipeIds} />
-    </main>
+    </Container>
   );
 }
