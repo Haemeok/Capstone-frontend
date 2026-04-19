@@ -32,7 +32,9 @@ const PRICE_ICONS: Record<string, React.ReactNode> = {
 const PriceRangeSection = () => {
   return (
     <section className="space-y-4">
-      <h3 className="text-lg font-bold text-gray-900">💰 예산별 레시피</h3>
+      <h3 className="text-lg font-bold text-gray-900">
+        지갑은 가볍게, 식탁은 든든하게
+      </h3>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {PRICE_RANGES.map((range) => (
