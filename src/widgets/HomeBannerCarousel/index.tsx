@@ -52,7 +52,7 @@ const HomeBannerCarousel = ({
 
   return (
     <div
-      className="relative md:hidden w-full overflow-hidden rounded-2xl"
+      className="relative md:hidden w-full overflow-hidden rounded-2xl mb-4"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
