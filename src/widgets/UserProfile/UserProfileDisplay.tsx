@@ -26,29 +26,27 @@ const UserProfileDisplay = ({
 }: UserProfileDisplayProps) => (
   <div className="relative z-10 px-5 pt-4 pb-1">
     <div className="flex items-center gap-4">
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <div
-            className="h-24 w-24 overflow-hidden rounded-full"
-            style={
-              user.profileImage && isDefaultProfileImage(user.profileImage)
-                ? generateUserGradient(user.id)
-                : undefined
-            }
-          >
-            {user.profileImage ? (
-              <Image src={user.profileImage} alt={user.nickname} />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-100 border-2 border-gray-200">
-                <UserRound className="h-20 w-20 text-gray-300" />
-              </div>
-            )}
+      <div
+        className="h-24 w-24 shrink-0 overflow-hidden rounded-full"
+        style={
+          user.profileImage && isDefaultProfileImage(user.profileImage)
+            ? generateUserGradient(user.id)
+            : undefined
+        }
+      >
+        {user.profileImage ? (
+          <Image src={user.profileImage} alt={user.nickname} />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-100 border-2 border-gray-200">
+            <UserRound className="h-20 w-20 text-gray-300" />
           </div>
-          {isOwnProfile && <UserInfoEditButton />}
-        </div>
+        )}
       </div>
       <div className="grow flex flex-col">
-        <h2 className="text-dark text-xl font-bold mb-2">{user.nickname}</h2>
+        <div className="flex items-center gap-2 mb-2">
+          <h2 className="text-dark text-base font-bold">{user.nickname}</h2>
+          {isOwnProfile && <UserInfoEditButton />}
+        </div>
         <div className="self-end">
           <ActionButton
             isLoggedIn={!!loggedInUser}

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 
-import { Edit } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 type UserInfoEditButtonProps = {
   className?: string;
@@ -17,12 +18,13 @@ const UserInfoEditButton = ({ className = "" }: UserInfoEditButtonProps) => {
       prefetch={false}
       aria-label="프로필 편집"
       title="프로필 편집"
+      onClick={() => triggerHaptic("Light")}
       className={cn(
-        "bg-white border border-olive-light absolute -right-1 -bottom-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow-md hover:bg-olive-light/10",
+        "inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors",
         className
       )}
     >
-      <Edit size={14} className="text-olive-light" aria-hidden="true" />
+      <Pencil size={12} aria-hidden="true" />
     </Link>
   );
 };
