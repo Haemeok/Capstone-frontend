@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
-import { Image } from "@/shared/ui/image/Image";
 import {
   Carousel,
   CarouselContent,
@@ -14,7 +13,12 @@ import {
   CarouselPrevious,
 } from "@/shared/ui/shadcn/carousel";
 
-import type { StaticDetailedRecipeGridItem } from "@/entities/recipe/model/types";
+import type {
+  DetailedRecipeGridItem as DetailedRecipeGridItemType,
+  StaticDetailedRecipeGridItem,
+} from "@/entities/recipe/model/types";
+
+import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 const LATEST_HREF = "/search/results?sort=createdAt%2CDESC";
 
@@ -52,23 +56,11 @@ const LatestRecipesSection = ({ recipes }: LatestRecipesSectionProps) => {
         <CarouselContent className="-ml-3">
           {recipes.map((recipe) => (
             <CarouselItem key={recipe.id} className="basis-auto pl-3">
-              <Link
-                href={`/recipes/${recipe.id}`}
-                onClick={handleHaptic}
-                className="block w-[140px] flex-shrink-0"
-              >
-                <div className="aspect-square overflow-hidden rounded-2xl">
-                  <Image
-                    src={recipe.imageUrl}
-                    alt={recipe.title}
-                    aspectRatio="1 / 1"
-                    fit="cover"
-                  />
-                </div>
-                <p className="mt-2 line-clamp-2 text-sm font-medium leading-tight text-gray-900">
-                  {recipe.title}
-                </p>
-              </Link>
+              <DetailedRecipeGridItem
+                recipe={recipe as DetailedRecipeGridItemType}
+                className="w-[180px]"
+                hideCookingTime
+              />
             </CarouselItem>
           ))}
         </CarouselContent>
