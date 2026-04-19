@@ -8,13 +8,16 @@ import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 
 import { SearchInput } from "@/features/search-input";
 
+import RecipeSlide from "@/widgets/RecipeSlide/RecipeSlide";
+
 import ContentPageGrid from "./ui/ContentPageGrid";
-import LatestRecipesSection from "./ui/LatestRecipesSection";
 import NutritionThemeSection from "./ui/NutritionThemeSection";
 import PriceRangeSection from "./ui/PriceRangeSection";
 import RecentlyViewedRecipes from "./ui/RecentlyViewedRecipes";
 import RecentSearchChips from "./ui/RecentSearchChips";
 import SaveButton from "./ui/SaveButton";
+
+const LATEST_RECIPES_HREF = "/search/results?sort=createdAt%2CDESC";
 
 type SearchDiscoveryClientProps = {
   focused: boolean;
@@ -53,7 +56,13 @@ const SearchDiscoveryClient = ({
           </>
         ) : (
           <>
-            <LatestRecipesSection recipes={latestRecipes} />
+            <RecipeSlide
+              title="따끈따끈한 최신 레시피"
+              to={LATEST_RECIPES_HREF}
+              recipes={latestRecipes}
+              isLoading={false}
+              error={null}
+            />
 
             <section className="space-y-4">
               <h3 className="text-lg font-bold text-gray-900">
