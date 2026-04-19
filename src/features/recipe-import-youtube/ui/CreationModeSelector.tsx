@@ -2,10 +2,14 @@ import Link from "next/link";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
+import PrevButton from "@/shared/ui/PrevButton";
 
 export const CreationModeSelector = () => {
   return (
-    <div className="flex h-full items-center justify-center p-6">
+    <div className="relative flex h-full items-center justify-center p-6">
+      <div className="absolute left-2 top-2 md:hidden">
+        <PrevButton size={24} className="p-2 text-gray-700" />
+      </div>
       <div className="w-full max-w-4xl">
         <h1 className="text-dark mb-4 text-center text-3xl font-bold text-pretty break-keep">
           어떻게 레시피를 만드시겠어요?

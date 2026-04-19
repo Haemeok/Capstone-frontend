@@ -39,7 +39,9 @@ const RecipeFormLayout = ({
 
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
-      <RecipeHeaderSection image={<MainImageField />} title={<TitleField />} />
+      <Container maxWidth="3xl" padding={false}>
+        <RecipeHeaderSection image={<MainImageField />} title={<TitleField />} />
+      </Container>
       <div className="pt-6">
         <Container maxWidth="3xl">
           <Description />
