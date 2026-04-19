@@ -6,6 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Critical Rules
 
+### Route / ID 규약
+- **`recipeId`, `userId`, `bookId` 등 모든 리소스 ID는 문자열(nanoid/uuid)이다. 숫자 아님.**
+  - 경로 정규식을 짤 때 `\d+` 금지. `[^/]+` 사용.
+  - 예: `/^\/recipes\/\d+$/` ❌ → `/^\/recipes\/[^/]+$/` ✅
+  - 단, `[^/]+` 로 매칭할 때 `new`, `my-fridge`, `admin`, `category` 같은 예약된 단일 세그먼트 경로와 충돌할 수 있으니 negative lookahead로 명시적으로 제외할 것.
+
 ### Build vs Type Check
 - **After code changes, use `npx tsc --noEmit` for type checking only**
 - **Before running `npm run build`:**
