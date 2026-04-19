@@ -15,8 +15,8 @@ const HomeHeader = () => {
   };
 
   return (
-    <div className="sticky top-0 z-10 -mx-4 mb-4 flex w-full flex-col items-center bg-white px-4 pt-4 pb-2 md:hidden">
-      <div className="flex w-full items-center gap-1">
+    <div className="sticky top-0 z-10 -mx-4 mb-4 bg-white px-4 pt-4 pb-2 md:hidden">
+      <div className="flex items-center gap-1">
         <div className="min-w-0 flex-1">
           <SearchInput onFocus={handleSearchFocus} />
         </div>
