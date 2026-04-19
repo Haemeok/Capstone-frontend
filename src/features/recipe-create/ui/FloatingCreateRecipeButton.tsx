@@ -93,9 +93,10 @@ const FloatingCreateRecipeButton = () => {
       >
         <Plus size={20} className="shrink-0" />
         <motion.span
-          className="shrink-0 whitespace-nowrap"
+          className="shrink-0 whitespace-nowrap overflow-hidden"
           animate={{
             opacity: collapsed ? 0 : 1,
+            width: collapsed ? 0 : "auto",
             marginLeft: collapsed ? 0 : 4,
           }}
           transition={{ duration: 0.15, ease: "easeOut" }}
