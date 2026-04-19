@@ -25,7 +25,7 @@ export const RecipeBookDetailHeader = ({ book }: Props) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-gray-100 bg-white px-4">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-gray-100 bg-white">
         <div className="flex flex-1 items-center gap-2 overflow-hidden">
           {isEditMode ? (
             <PrevButton icon="close" onClick={exit} showOnDesktop />

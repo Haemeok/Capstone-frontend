@@ -4,18 +4,17 @@ import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
-import { useRecipeBooks } from "@/entities/recipe-book";
+import { MAX_RECIPE_BOOKS, useRecipeBooks } from "@/entities/recipe-book";
 
 import { CreateRecipeBookCard } from "./CreateRecipeBookCard";
 import { RecipeBookCard } from "./RecipeBookCard";
 
-const MAX_FOLDERS = 5;
 const GRID_CLASS =
   "grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
 
 const GridSkeleton = () => (
   <div className={GRID_CLASS}>
-    {Array.from({ length: MAX_FOLDERS }).map((_, i) => (
+    {Array.from({ length: MAX_RECIPE_BOOKS }).map((_, i) => (
       <div key={i}>
         <Skeleton className="aspect-square w-full rounded-2xl" />
         <Skeleton className="mt-2 h-5 w-2/3 rounded" />
@@ -35,7 +34,7 @@ export const RecipeBookGrid = () => {
   }
 
   const list = books ?? [];
-  const showCreateCard = list.length < MAX_FOLDERS;
+  const showCreateCard = list.length < MAX_RECIPE_BOOKS;
 
   return (
     <ErrorBoundary

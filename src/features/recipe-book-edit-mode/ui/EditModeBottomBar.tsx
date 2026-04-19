@@ -4,20 +4,23 @@ import { useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
+import { useBookRecipeIds } from "@/entities/recipe-book";
+
 import { useEditModeStore } from "../model/useEditModeStore";
 import { BulkDeleteConfirmModal } from "./BulkDeleteConfirmModal";
 import { MoveRecipesSheet } from "./MoveRecipesSheet";
 
 type Props = {
   bookId: string;
-  allRecipeIds: string[];
 };
 
-export const EditModeBottomBar = ({ bookId, allRecipeIds }: Props) => {
+export const EditModeBottomBar = ({ bookId }: Props) => {
   const isEditMode = useEditModeStore((s) => s.isEditMode);
   const selectedIds = useEditModeStore((s) => s.selectedIds);
   const selectAll = useEditModeStore((s) => s.selectAll);
   const clear = useEditModeStore((s) => s.clear);
+
+  const allRecipeIds = useBookRecipeIds(bookId);
 
   const [moveOpen, setMoveOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
