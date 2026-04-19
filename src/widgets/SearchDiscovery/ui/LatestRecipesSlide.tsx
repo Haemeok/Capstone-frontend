@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -31,12 +33,14 @@ const buildInitialData = (
 });
 
 const LatestRecipesSlide = ({ initialRecipes }: Props) => {
+  const [initialUpdatedAt] = useState(() => Date.now());
+
   const { data, isLoading, error } = useQuery<DetailedRecipesApiResponse>({
     queryKey: LATEST_RECIPES_QUERY_KEY,
     queryFn: () =>
       getRecipeItems({ page: 0, sort: "createdAt,desc" }),
     initialData: buildInitialData(initialRecipes),
-    initialDataUpdatedAt: Date.now(),
+    initialDataUpdatedAt: initialUpdatedAt,
     staleTime: FIVE_MINUTES_MS,
   });
 
