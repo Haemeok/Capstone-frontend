@@ -63,6 +63,7 @@ Reference these guidelines when:
 
 - `client-swr-dedup` - Use SWR for automatic request deduplication
 - `client-event-listeners` - Deduplicate global event listeners
+- `client-scroll-container-listener` - Subscribe to the actual scroll container, not window, when the app uses a custom scroll wrapper
 
 ### 5. Re-render Optimization (MEDIUM)
 
@@ -83,6 +84,7 @@ Reference these guidelines when:
 - `rendering-hydration-no-flicker` - Use inline script for client-only data
 - `rendering-activity` - Use Activity component for show/hide
 - `rendering-conditional-render` - Use ternary, not && for conditionals
+- `rendering-framer-motion-fixed-width` - Animate Framer Motion width between fixed pixel values, not to "auto" (prevents spring jitter and first-render flicker)
 
 ### 7. JavaScript Performance (LOW-MEDIUM)
 
