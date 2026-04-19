@@ -5,8 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import {
   type DetailedRecipeGridItem,
   type DetailedRecipesApiResponse,
+  getRecipeItems,
 } from "@/entities/recipe";
-import { getRecipeItems } from "@/entities/recipe/model/api";
 
 import RecipeSlide from "@/widgets/RecipeSlide/RecipeSlide";
 
@@ -36,6 +36,7 @@ const LatestRecipesSlide = ({ initialRecipes }: Props) => {
     queryFn: () =>
       getRecipeItems({ page: 0, sort: "createdAt,desc" }),
     initialData: buildInitialData(initialRecipes),
+    initialDataUpdatedAt: Date.now(),
     staleTime: FIVE_MINUTES_MS,
   });
 
@@ -47,7 +48,7 @@ const LatestRecipesSlide = ({ initialRecipes }: Props) => {
       to={LATEST_RECIPES_HREF}
       recipes={recipes}
       isLoading={isLoading && recipes.length === 0}
-      error={error as Error | null}
+      error={error}
     />
   );
 };
