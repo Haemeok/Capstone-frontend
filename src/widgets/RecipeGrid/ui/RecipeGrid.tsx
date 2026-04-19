@@ -6,9 +6,6 @@ import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
-import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import Circle from "@/shared/ui/Circle";
 import { PencilIcon, TrashIcon } from "@/shared/ui/icons";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
@@ -63,6 +60,12 @@ const calculateSavings = (
   const savings = marketPrice - ingredientCost;
   return savings > 0 ? savings : null;
 };
+
+const DETAILED_GRID_CLASS =
+  "grid gap-4 px-2 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
+
+const SIMPLE_GRID_CLASS =
+  "grid grid-cols-3 gap-px sm:gap-0.5 md:gap-1 md:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
 
 const RecipeGrid = ({
   recipes,
@@ -121,10 +124,12 @@ const RecipeGrid = ({
     }
   }, [queryClient, queryKeyToInvalidate]);
 
+  const gridClass = isSimple ? SIMPLE_GRID_CLASS : DETAILED_GRID_CLASS;
+
   if (isPending) {
     return (
       <div>
-        <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+        <div className={gridClass}>
           <RecipeGridSkeleton count={6} isSimple={isSimple} />
         </div>
       </div>
@@ -184,7 +189,7 @@ const RecipeGrid = ({
 
   return (
     <div className="flex flex-col">
-      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 px-2 sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+      <div className={gridClass}>
         {feedItems.map((item, index) => {
           if (item.__kind === "ad") {
             return <InFeedAdSlot key={item.key} />;
@@ -219,34 +224,16 @@ const RecipeGrid = ({
             />
           );
 
-          let infoBadge = null;
-          if (savings) {
-            infoBadge = (
-              <div
-                key="savings"
-                className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm"
-              >
-                <span className="text-xs font-bold text-white">
-                  {savings.toLocaleString()}원 절약
-                </span>
-              </div>
-            );
-          } else if (
-            detailedRecipe.isYoutube &&
-            detailedRecipe.youtubeChannelName
-          ) {
-            infoBadge = (
-              <YouTubeChannelBadge
-                key="youtube"
-                channelName={detailedRecipe.youtubeChannelName}
-                className="min-[390px]:max-w-[140px]"
-              />
-            );
-          } else if (detailedRecipe.isYoutube) {
-            infoBadge = <YouTubeIconBadge key="youtube" />;
-          } else if (detailedRecipe.isAiGenerated) {
-            infoBadge = <AIGeneratedBadge key="ai" />;
-          }
+          const infoBadge = savings ? (
+            <div
+              key="savings"
+              className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm"
+            >
+              <span className="text-xs font-bold text-white">
+                {savings.toLocaleString()}원 절약
+              </span>
+            </div>
+          ) : null;
 
           return (
             <DetailedRecipeGridItem
