@@ -13,6 +13,7 @@ type IngredientListItemProps = {
   displayQuantity: string;
   displayUnit: string;
   displayPrice: string;
+  reserveFridgeSpace: boolean;
 };
 
 export const IngredientListItem = ({
@@ -20,6 +21,7 @@ export const IngredientListItem = ({
   displayQuantity,
   displayUnit,
   displayPrice,
+  reserveFridgeSpace,
 }: IngredientListItemProps) => {
   return (
     <li className="grid grid-cols-[1.5fr_1.5fr_1fr_auto] items-center gap-3">
@@ -31,9 +33,9 @@ export const IngredientListItem = ({
               <Refrigerator size={18} className="text-gray-500" />
             }
           />
-        ) : (
+        ) : reserveFridgeSpace ? (
           <span aria-hidden className="inline-block w-[18px] shrink-0" />
-        )}
+        ) : null}
         <p className="font-bold">{ingredient.name}</p>
       </div>
 

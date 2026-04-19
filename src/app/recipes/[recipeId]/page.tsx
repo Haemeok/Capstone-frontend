@@ -119,6 +119,8 @@ export default async function RecipeDetailPage({
         avgRating={staticRecipe.ratingInfo.avgRating}
         ratingCount={staticRecipe.ratingInfo.ratingCount}
         isYoutube={!!staticRecipe.youtubeUrl}
+        youtubeChannelName={staticRecipe.youtubeChannelName}
+        isAiGenerated={staticRecipe.aiGenerated}
       />
       <RecipeStatusProvider recipeId={recipeId}>
         <RecipeNavbar
@@ -188,7 +190,10 @@ export default async function RecipeDetailPage({
                 />
               )}
 
-              <RecipeCookingTipsSection tips={staticRecipe.cookingTips} />
+              <RecipeCookingTipsSection
+                tips={staticRecipe.cookingTips}
+                headerExtra={<CookingUnitTooltip inline />}
+              />
 
               <ErrorBoundary
                 fallback={
@@ -198,7 +203,6 @@ export default async function RecipeDetailPage({
                 <RecipeStepList
                   RecipeSteps={staticRecipe.steps}
                   recipeIngredients={staticRecipe.ingredients}
-                  firstStepHeaderExtra={<CookingUnitTooltip inline />}
                 />
               </ErrorBoundary>
             </RecipeVideoSection>

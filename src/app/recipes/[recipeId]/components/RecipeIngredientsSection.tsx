@@ -10,7 +10,6 @@ import RollingPointBanner from "@/shared/ui/RollingPointBanner";
 
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
 
-import { AIExtractionNotice } from "@/features/recipe-import-youtube/ui/AIExtractionNotice";
 import { useRecipeStatus } from "@/features/recipe-status";
 
 import { IngredientListItem } from "./IngredientListItem";
@@ -37,7 +36,6 @@ type IngredientsSectionProps = {
 };
 
 const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
-  const isYoutubeExtracted = "youtubeUrl" in recipe && !!recipe.youtubeUrl;
   const [showNutrition, setShowNutrition] = useState(false);
   const [isReportSheetOpen, setIsReportSheetOpen] = useState(false);
   const [isCopySheetOpen, setIsCopySheetOpen] = useState(false);
@@ -113,8 +111,6 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         onReportOpen={() => setIsReportSheetOpen(true)}
       />
 
-      {isYoutubeExtracted && <AIExtractionNotice />}
-
       <div>
         {showNutrition ? (
           <NutritionTable
@@ -161,6 +157,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                       Math.round((ingredient.price || 0) * servingRatio),
                       "원"
                     )}
+                    reserveFridgeSpace={ownedIndices.size > 0}
                   />
                 );
               })}

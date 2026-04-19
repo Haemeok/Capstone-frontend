@@ -11,7 +11,7 @@ export default function RecipeCommentsSection({
   comments,
 }: RecipeCommentsSectionProps) {
   return (
-    <section>
+    <section className="mb-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">코멘트</h2>
         <CommentMoreButton
