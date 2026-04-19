@@ -35,10 +35,10 @@ export const SearchFilters = () => {
       <div className="scrollbar-hide -mx-4 flex items-center gap-1.5 overflow-x-auto px-4 py-2">
         <NutritionFilterChipButton />
         <span className="h-6 w-px shrink-0 self-center bg-gray-200" />
+        <IngredientsFilter />
         <DishTypeFilter />
         <SortFilter />
         <TagsFilter />
-        <IngredientsFilter />
       </div>
     </div>
   );
