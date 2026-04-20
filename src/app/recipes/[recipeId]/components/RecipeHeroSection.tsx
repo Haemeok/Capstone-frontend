@@ -28,7 +28,6 @@ const RecipeHeroSection = ({
         id="recipe-hero-image"
         className="relative aspect-square w-full overflow-hidden sm:max-w-[550px] sm:mx-auto md:mt-4 md:w-1/2 md:max-w-[550px] md:rounded-2xl"
       >
-        <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 h-32 bg-gradient-to-b from-black/60 to-transparent md:hidden" />
         {imageUrl && (
           // eslint-disable-next-line @next/next/no-img-element -- LCP image: plain <img> lets the browser preload scanner fire before JS hydration; next/image and the project's custom Image both add a hook chain that delays the hero.
           <img

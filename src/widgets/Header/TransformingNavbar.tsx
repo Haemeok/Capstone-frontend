@@ -39,6 +39,7 @@ const TransformingNavbar = ({
 }: TransformingNavbarProps) => {
   const headerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
 
   const { motionRef } = useScrollContext();
 
@@ -49,6 +50,7 @@ const TransformingNavbar = ({
       !targetElement ||
       !headerRef.current ||
       !titleRef.current ||
+      !backdropRef.current ||
       !motionRef.current
     ) {
       return;
@@ -56,6 +58,7 @@ const TransformingNavbar = ({
 
     const headerElement = headerRef.current;
     const titleElement = titleRef.current;
+    const backdropElement = backdropRef.current;
     const endTrigger = targetElement.offsetHeight * 0.8;
 
     const animationConfig = {
@@ -78,6 +81,10 @@ const TransformingNavbar = ({
         from: { color: "white" },
         to: { color: "black" },
       },
+      backdrop: {
+        from: { opacity: 1 },
+        to: { opacity: 0 },
+      },
     } as const;
 
     const tl = gsap.timeline({
@@ -89,6 +96,13 @@ const TransformingNavbar = ({
         scrub: true,
       },
     });
+
+    tl.fromTo(
+      backdropElement,
+      animationConfig.backdrop.from,
+      animationConfig.backdrop.to,
+      "0%"
+    );
 
     tl.fromTo(
       headerElement,
@@ -139,6 +153,12 @@ const TransformingNavbar = ({
         boxShadow: "none",
       }}
     >
+      <div
+        aria-hidden
+        ref={backdropRef}
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-black/60 to-transparent md:hidden"
+      />
+
       <div className="flex max-w-full min-w-0 items-center gap-2">
         {leftComponent}
 
