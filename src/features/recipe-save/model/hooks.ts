@@ -13,7 +13,7 @@ import {
   MyFridgeRecipeItem,
   RecipeStatus,
 } from "@/entities/recipe/model/types";
-import { invalidateBookCaches } from "@/entities/recipe-book";
+import { RECIPE_BOOK_QUERY_KEYS } from "@/entities/recipe-book";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 import { scheduleReviewGate } from "@/features/review-gate";
@@ -158,7 +158,9 @@ export const useToggleRecipeSave = (recipeId: string) => {
       queryClient.invalidateQueries({ queryKey: recipeStatusQueryKey });
       queryClient.invalidateQueries({ queryKey: ["recipes-status"] });
       queryClient.invalidateQueries({ queryKey: ["recipes", "saved"] });
-      invalidateBookCaches(queryClient, { recipeIds: [recipeId] });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_BOOK_QUERY_KEYS.all,
+      });
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
     },
   });

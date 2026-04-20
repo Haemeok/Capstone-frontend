@@ -12,8 +12,9 @@ import {
 
 import RecipeSlide from "@/widgets/RecipeSlide/RecipeSlide";
 
-const LATEST_RECIPES_HREF = "/search/results?sort=createdAt%2CDESC";
-const LATEST_RECIPES_QUERY_KEY = ["recipes", "latest"] as const;
+const LATEST_RECIPES_TYPES = ["USER", "YOUTUBE"] as const;
+const LATEST_RECIPES_HREF = `/search/results?sort=createdAt%2CDESC&types=${LATEST_RECIPES_TYPES.join(",")}`;
+const LATEST_RECIPES_QUERY_KEY = ["recipes", "latest", ...LATEST_RECIPES_TYPES] as const;
 
 const LatestRecipesSlide = () => {
   const { data, isPending, error } = useInfiniteScroll<
@@ -25,7 +26,11 @@ const LatestRecipesSlide = () => {
   >({
     queryKey: LATEST_RECIPES_QUERY_KEY,
     queryFn: ({ pageParam }) =>
-      getRecipeItems({ pageParam, sort: "createdAt,desc" }),
+      getRecipeItems({
+        pageParam,
+        sort: "createdAt,desc",
+        types: [...LATEST_RECIPES_TYPES],
+      }),
     initialPageParam: 0,
     getNextPageParam,
   });
