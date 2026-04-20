@@ -60,6 +60,7 @@ export const useRecipeComplete = ({
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
       queryClient.invalidateQueries({ queryKey: ["recipeHistoryItems"] });
       queryClient.invalidateQueries({ queryKey: ["userStreak"] });
+      queryClient.invalidateQueries({ queryKey: ["recordsTimeline"] });
     },
     onError: (error: any) => {
       const errorMessage =

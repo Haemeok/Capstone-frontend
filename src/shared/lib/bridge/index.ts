@@ -2,6 +2,7 @@
 export { AppWebViewDetector } from "./AppWebViewDetector";
 export { isAppWebView, postMessage } from "./client";
 export { useAppMessageListener } from "./useAppMessage";
+export { useAuthDiagBridge } from "./useAuthDiagBridge";
 
 // haptic
 export { triggerHaptic } from "./haptic";
@@ -22,6 +23,7 @@ export { requestAppReview } from "./review";
 export type { SharePayload } from "./share";
 export type {
   AppToWebMessage,
+  AuthDiagBridgePayload,
   BridgeMessage,
   BridgeMessageType,
   HapticStyle,
