@@ -36,29 +36,43 @@ const logAuth = (event: string, data?: Record<string, unknown>) => {
   }
 };
 
-export const refreshToken = async (): Promise<boolean> => {
+type RefreshOptions = { silent?: boolean };
+
+export const refreshToken = async (
+  options: RefreshOptions = {}
+): Promise<boolean> => {
+  const { silent = false } = options;
+
   const now = Date.now();
   if (now - lastRefreshFailTime < REFRESH_COOLDOWN_MS) {
     logAuth("refresh-blocked-cooldown", {
       remainingMs: REFRESH_COOLDOWN_MS - (now - lastRefreshFailTime),
+      silent,
     });
+    // cooldown은 이전 실제 실패에서 발생 — 그때 이미 dispatch됐거나 의도적으로
+    // silent였던 것. 여기서 재발행하면 중복.
     return false;
   }
 
-  if (refreshPromise) {
-    return refreshPromise;
+  if (!refreshPromise) {
+    refreshPromise = performTokenRefresh();
   }
 
-  refreshPromise = performTokenRefresh();
+  const ongoing = refreshPromise;
 
   try {
-    const result = await refreshPromise;
+    const result = await ongoing;
     if (!result) {
       lastRefreshFailTime = Date.now();
+      if (!silent) {
+        dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
+      }
     }
     return result;
   } finally {
-    refreshPromise = null;
+    if (refreshPromise === ongoing) {
+      refreshPromise = null;
+    }
   }
 };
 
@@ -76,7 +90,7 @@ const performTokenRefresh = async (): Promise<boolean> => {
 
     if (!response.ok) {
       logAuth("refresh-failed", { status: response.status });
-      throw new Error(`Token refresh failed: ${response.statusText}`);
+      return false;
     }
 
     logAuth("refresh-success");
@@ -88,10 +102,9 @@ const performTokenRefresh = async (): Promise<boolean> => {
 
     return true;
   } catch (error) {
-    logAuth("refresh-error-forceLogout", {
+    logAuth("refresh-error", {
       error: error instanceof Error ? error.message : String(error),
     });
-    dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
     return false;
   }
 };
@@ -129,10 +142,13 @@ export const requiresAuth = (url: string): boolean => {
   return !publicEndpoints.some((endpoint) => url.includes(endpoint));
 };
 
+type Handle401Options = { silent?: boolean };
+
 export const handle401Error = async (
-  originalRequest: () => Promise<Response>
+  originalRequest: () => Promise<Response>,
+  options: Handle401Options = {}
 ): Promise<Response | null> => {
-  const refreshed = await refreshToken();
+  const refreshed = await refreshToken({ silent: options.silent });
 
   if (refreshed) {
     try {
