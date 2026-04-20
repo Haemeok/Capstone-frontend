@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import {
+  authDiagLog,
+  fingerprintFromSetCookies,
+  generateDiagId,
+} from "@/shared/lib/auth/diag";
 import { encryptTokenData } from "@/shared/lib/auth/crypto";
 import { parseOAuthState } from "@/shared/lib/auth/oauthState";
 import { storeTempToken } from "@/shared/lib/auth/tempToken";
@@ -7,8 +12,12 @@ import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 import { getEnvHeader } from "@/shared/lib/env/getEnvHeader";
 
 const DEEP_LINK_SCHEME = "recipio://auth/callback";
+const DIAG_SOURCE = "next-oauth-callback-kakao";
 
 export async function GET(request: NextRequest) {
+  const diagId = generateDiagId();
+  authDiagLog({ phase: "oauth-callback-start", source: DIAG_SOURCE, diagId });
+
   try {
     const { searchParams } = new URL(request.url);
     const stateFromProvider = searchParams.get("state");
@@ -48,6 +57,14 @@ export async function GET(request: NextRequest) {
       }
     );
 
+    authDiagLog({
+      phase: "oauth-backend-response",
+      source: DIAG_SOURCE,
+      diagId,
+      status: backendRes.status,
+      meta: { isApp },
+    });
+
     if (!backendRes.ok) {
       const errorBody = await backendRes.json().catch(() => undefined);
       console.error("Backend token exchange failed:", errorBody);
@@ -55,6 +72,24 @@ export async function GET(request: NextRequest) {
     }
 
     const setCookieHeaders = backendRes.headers.getSetCookie();
+    const backendSetCookieAccessFp = fingerprintFromSetCookies(
+      setCookieHeaders,
+      "accessToken"
+    );
+    const backendSetCookieRefreshFp = fingerprintFromSetCookies(
+      setCookieHeaders,
+      "refreshToken"
+    );
+
+    authDiagLog({
+      phase: "oauth-backend-setcookie",
+      source: DIAG_SOURCE,
+      diagId,
+      backendSetCookieAccessFp,
+      backendSetCookieRefreshFp,
+      meta: { setCookieCount: setCookieHeaders.length, isApp },
+    });
+
     const baseUrl = getBaseUrlFromRequest(request);
 
     if (isApp) {
@@ -64,6 +99,14 @@ export async function GET(request: NextRequest) {
         console.log("[Kakao Callback] Deep link (temp token) URL length:", deepLinkUrl.length);
         const response = NextResponse.redirect(deepLinkUrl);
         response.cookies.set("state", "", { maxAge: 0 });
+        authDiagLog({
+          phase: "oauth-app-deeplink-redirect",
+          source: DIAG_SOURCE,
+          diagId,
+          backendSetCookieAccessFp,
+          backendSetCookieRefreshFp,
+          meta: { tokenMode: "temp" },
+        });
         return response;
       }
 
@@ -73,6 +116,14 @@ export async function GET(request: NextRequest) {
       console.log("[Kakao Callback] Encrypted token length:", encryptedToken.length);
       const response = NextResponse.redirect(deepLinkUrl);
       response.cookies.set("state", "", { maxAge: 0 });
+      authDiagLog({
+        phase: "oauth-app-deeplink-redirect",
+        source: DIAG_SOURCE,
+        diagId,
+        backendSetCookieAccessFp,
+        backendSetCookieRefreshFp,
+        meta: { tokenMode: "encrypted" },
+      });
       return response;
     }
 
@@ -85,9 +136,26 @@ export async function GET(request: NextRequest) {
       finalResponse.headers.append("Set-Cookie", cookie);
     });
 
+    authDiagLog({
+      phase: "oauth-web-redirect",
+      source: DIAG_SOURCE,
+      diagId,
+      backendSetCookieAccessFp,
+      backendSetCookieRefreshFp,
+      meta: { appendedCount: setCookieHeaders.length },
+    });
+
     return finalResponse;
   } catch (error) {
     console.error("OAuth callback error:", error);
+    authDiagLog({
+      phase: "oauth-callback-exception",
+      source: DIAG_SOURCE,
+      diagId,
+      meta: {
+        error: error instanceof Error ? error.message : String(error),
+      },
+    });
     const baseUrl = getBaseUrlFromRequest(request);
     return NextResponse.redirect(`${baseUrl}login/error`);
   }

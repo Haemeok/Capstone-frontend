@@ -21,12 +21,18 @@ export type BridgeMessage<T = unknown> = {
 };
 
 // 앱 → 웹 메시지
-export type AppToWebMessageType = "NOTIFICATION_STATUS";
+export type AppToWebMessageType = "NOTIFICATION_STATUS" | "AUTH_DIAG";
 
-export type AppToWebMessage = {
-  type: "NOTIFICATION_STATUS";
-  payload: { status: NotificationStatus };
+export type AuthDiagBridgePayload = {
+  phase: string;
+  source: string;
+  diagId: string;
+  meta?: Record<string, unknown>;
 };
+
+export type AppToWebMessage =
+  | { type: "NOTIFICATION_STATUS"; payload: { status: NotificationStatus } }
+  | { type: "AUTH_DIAG"; payload: AuthDiagBridgePayload };
 
 // haptic
 export type HapticStyle =

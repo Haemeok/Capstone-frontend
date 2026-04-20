@@ -19,10 +19,11 @@ export const useAppMessageListener = (handlers: MessageHandlers) => {
         const data =
           typeof event.data === "string" ? JSON.parse(event.data) : event.data;
 
-        const { type, payload } = data as AppToWebMessage;
+        const message = data as AppToWebMessage;
+        const handler = handlers[message.type];
 
-        if (type && handlers[type]) {
-          handlers[type]?.(payload);
+        if (handler) {
+          (handler as (payload: unknown) => void)(message.payload);
         }
       } catch {
         // 파싱 실패 시 무시 (다른 메시지일 수 있음)

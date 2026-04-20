@@ -8,6 +8,22 @@ import { useUserStore } from "@/entities/user/model/store";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 
+const generateClientDiagId = (): string => {
+  const rand = Math.floor(Math.random() * 0xffffffff).toString(16);
+  return rand.padStart(8, "0");
+};
+
+const pingDebugCookie = (phase: string, diagId: string, source: string) => {
+  const params = new URLSearchParams({ phase, diagId, source });
+  fetch(`/api/auth/debug-cookie?${params.toString()}`, {
+    method: "GET",
+    credentials: "include",
+    cache: "no-store",
+  }).catch(() => {
+    // 진단용 엔드포인트 호출 실패는 무시 (feature flag off 시 404)
+  });
+};
+
 export const useAuthManager = () => {
   const queryClient = useQueryClient();
   const { logoutAction } = useUserStore();
@@ -16,6 +32,11 @@ export const useAuthManager = () => {
   useEffect(() => {
     const handleTokenRefresh = () => {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+      pingDebugCookie(
+        "after-token-refresh",
+        generateClientDiagId(),
+        "web-token-refreshed"
+      );
     };
 
     const handleForceLogout = (event: CustomEvent) => {
