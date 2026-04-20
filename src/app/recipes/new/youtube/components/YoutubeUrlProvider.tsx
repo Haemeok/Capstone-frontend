@@ -35,11 +35,17 @@ const DEBOUNCE_DELAY_MS = 500;
 
 type YoutubeUrlProviderProps = {
   children: ReactNode;
+  initialUrl?: string;
 };
 
-export const YoutubeUrlProvider = ({ children }: YoutubeUrlProviderProps) => {
-  const [currentUrl, setCurrentUrlState] = useState("");
-  const [urlSource, setUrlSource] = useState<UrlSource>(null);
+export const YoutubeUrlProvider = ({
+  children,
+  initialUrl = "",
+}: YoutubeUrlProviderProps) => {
+  const [currentUrl, setCurrentUrlState] = useState(initialUrl);
+  const [urlSource, setUrlSource] = useState<UrlSource>(
+    initialUrl.trim() ? "direct" : null
+  );
   const debouncedUrl = useDebounce(currentUrl, DEBOUNCE_DELAY_MS);
   const formSetterRef = useRef<FormValueSetter | null>(null);
 

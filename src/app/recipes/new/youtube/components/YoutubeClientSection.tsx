@@ -21,10 +21,12 @@ import { YoutubeUrlProvider } from "./YoutubeUrlProvider";
 
 type YoutubeClientSectionProps = {
   trendingRecipes: TrendingYoutubeRecipe[];
+  initialUrl: string;
 };
 
 export const YoutubeClientSection = ({
   trendingRecipes,
+  initialUrl,
 }: YoutubeClientSectionProps) => {
   const [isLoginDrawerOpen, setIsLoginDrawerOpen] = useState(false);
   const { user } = useMyInfoQuery();
@@ -34,7 +36,7 @@ export const YoutubeClientSection = ({
   };
 
   return (
-    <YoutubeUrlProvider>
+    <YoutubeUrlProvider initialUrl={initialUrl}>
       <div className="mx-auto flex w-full max-w-xl flex-col items-center">
         <section className="w-full mt-4 flex flex-col gap-4">
           <YoutubeQuotaBadge remainingQuota={user?.remainingYoutubeQuota} />

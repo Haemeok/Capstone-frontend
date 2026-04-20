@@ -6,14 +6,24 @@ import { YoutubeClientSection } from "./components/YoutubeClientSection";
 import { YoutubeFeatureCards } from "./components/YoutubeFeatureCards";
 import { YoutubeImportHero } from "./components/YoutubeImportHero";
 
-const YoutubeImportPage = async () => {
-  const trendingRecipes = await getTrendingYoutubeRecipesOnServer();
+type YoutubeImportPageProps = {
+  searchParams: Promise<{ url?: string }>;
+};
+
+const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
+  const [{ url }, trendingRecipes] = await Promise.all([
+    searchParams,
+    getTrendingYoutubeRecipesOnServer(),
+  ]);
 
   return (
     <Container className="min-h-screen bg-white pb-20">
       <YoutubeImportHero />
       <YoutubeFeatureCards />
-      <YoutubeClientSection trendingRecipes={trendingRecipes} />
+      <YoutubeClientSection
+        trendingRecipes={trendingRecipes}
+        initialUrl={url ?? ""}
+      />
     </Container>
   );
 };

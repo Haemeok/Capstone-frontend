@@ -25,7 +25,11 @@ const youtubeUrlSchema = z.object({
 type YoutubeUrlFormValues = z.infer<typeof youtubeUrlSchema>;
 
 export const YoutubeUrlForm = () => {
-  const { setCurrentUrl, registerFormSetter } = useYoutubeUrl();
+  const {
+    setCurrentUrl,
+    registerFormSetter,
+    currentUrl: providerInitialUrl,
+  } = useYoutubeUrl();
 
   const {
     register,
@@ -34,7 +38,7 @@ export const YoutubeUrlForm = () => {
     formState: { errors },
   } = useForm<YoutubeUrlFormValues>({
     resolver: zodResolver(youtubeUrlSchema),
-    defaultValues: { url: "" },
+    defaultValues: { url: providerInitialUrl },
     mode: "onBlur",
   });
 
