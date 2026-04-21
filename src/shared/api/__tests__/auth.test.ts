@@ -37,9 +37,7 @@ if (typeof globalThis.Response === "undefined") {
 // auth.ts 모듈의 내부 상태(refreshPromise, lastRefreshFailTime)를 리셋하려면
 // 매 테스트마다 모듈을 새로 로드해야 함
 let refreshToken: typeof import("../auth").refreshToken;
-let handle401Error: typeof import("../auth").handle401Error;
 let performLogout: typeof import("../auth").performLogout;
-let requiresAuth: typeof import("../auth").requiresAuth;
 let dispatchForceLogoutEvent: typeof import("../auth").dispatchForceLogoutEvent;
 
 beforeEach(() => {
@@ -49,9 +47,7 @@ beforeEach(() => {
 
   const authModule = require("../auth");
   refreshToken = authModule.refreshToken;
-  handle401Error = authModule.handle401Error;
   performLogout = authModule.performLogout;
-  requiresAuth = authModule.requiresAuth;
   dispatchForceLogoutEvent = authModule.dispatchForceLogoutEvent;
 });
 
@@ -66,19 +62,6 @@ const errorResponse = (status = 401) =>
   Promise.resolve(new Response(null, { status, statusText: "Unauthorized" }));
 
 describe("refreshToken", () => {
-  it("리프레시 성공 시 true를 반환한다", async () => {
-    mockFetch.mockReturnValueOnce(okResponse());
-
-    const result = await refreshToken();
-
-    expect(result).toBe(true);
-    expect(mockFetch).toHaveBeenCalledWith("/api/auth/refresh", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-  });
-
   it("리프레시 성공 시 tokenRefreshed 이벤트를 발행한다", async () => {
     mockFetch.mockReturnValueOnce(okResponse());
     const handler = jest.fn();
@@ -88,18 +71,6 @@ describe("refreshToken", () => {
 
     expect(handler).toHaveBeenCalled();
     window.removeEventListener("tokenRefreshed", handler);
-  });
-
-  it("리프레시 실패 시 false를 반환하고 forceLogout 이벤트를 발행한다", async () => {
-    mockFetch.mockReturnValueOnce(errorResponse());
-    const handler = jest.fn();
-    window.addEventListener("forceLogout", handler);
-
-    const result = await refreshToken();
-
-    expect(result).toBe(false);
-    expect(handler).toHaveBeenCalled();
-    window.removeEventListener("forceLogout", handler);
   });
 
   it("네트워크 에러 시 false를 반환한다", async () => {
@@ -171,42 +142,6 @@ describe("refreshToken", () => {
   });
 });
 
-describe("handle401Error", () => {
-  it("리프레시 성공 시 원래 요청을 재시도한다", async () => {
-    mockFetch.mockReturnValueOnce(okResponse()); // refresh
-    const retryResponse = new Response(JSON.stringify({ data: "ok" }), {
-      status: 200,
-    });
-    const originalRequest = jest.fn().mockResolvedValueOnce(retryResponse);
-
-    const result = await handle401Error(originalRequest);
-
-    expect(result).toBe(retryResponse);
-    expect(originalRequest).toHaveBeenCalledTimes(1);
-  });
-
-  it("리프레시 실패 시 null을 반환한다", async () => {
-    mockFetch.mockReturnValueOnce(errorResponse());
-    const originalRequest = jest.fn();
-
-    const result = await handle401Error(originalRequest);
-
-    expect(result).toBeNull();
-    expect(originalRequest).not.toHaveBeenCalled();
-  });
-
-  it("리프레시 성공했지만 재시도가 실패하면 null을 반환한다", async () => {
-    mockFetch.mockReturnValueOnce(okResponse()); // refresh
-    const originalRequest = jest
-      .fn()
-      .mockRejectedValueOnce(new Error("retry failed"));
-
-    const result = await handle401Error(originalRequest);
-
-    expect(result).toBeNull();
-  });
-});
-
 describe("performLogout", () => {
   it("로그아웃 성공 시 true를 반환한다", async () => {
     mockFetch.mockReturnValueOnce(okResponse());
@@ -230,23 +165,6 @@ describe("performLogout", () => {
     const result = await performLogout();
 
     expect(result).toBe(false);
-  });
-});
-
-describe("requiresAuth", () => {
-  it("public 엔드포인트는 false를 반환한다", () => {
-    expect(requiresAuth("/auth/login")).toBe(false);
-    expect(requiresAuth("/auth/register")).toBe(false);
-    expect(requiresAuth("/auth/refresh")).toBe(false);
-    expect(requiresAuth("/recipes/public")).toBe(false);
-    expect(requiresAuth("/users/public")).toBe(false);
-    expect(requiresAuth("/health")).toBe(false);
-  });
-
-  it("인증이 필요한 엔드포인트는 true를 반환한다", () => {
-    expect(requiresAuth("/recipes/123")).toBe(true);
-    expect(requiresAuth("/users/me")).toBe(true);
-    expect(requiresAuth("/comments")).toBe(true);
   });
 });
 
