@@ -74,18 +74,33 @@ Auth logic is spread across `apiClient`, `auth.ts`, `handle401Error`, `useAuthMa
 
 ## Regression Lock (이 파일 바꾸면 어느 테스트가 깨진다)
 
-코드 변경이 이 계약을 위반하면 `auth-contract.test.ts`가 빨간불로 변한다. 주요 매핑:
+`src/shared/api/__tests__/auth-contract.test.ts` 기준. 코드 변경이 계약을 위반하면 나열된 `it`가 실패한다.
 
-| 코드 변경 | 깨지는 행 |
+### 전체 매트릭스 (`Auth Contract: State × Endpoint matrix`)
+
+12 rows. 각 row가 `"$state × $endpoint > contract: forceLogout=..., refresh=..., retry=..., result=..."` 이름으로 실행됨. 매트릭스의 어떤 셀이 깨지든 이 describe 블록에서 노출된다. 추가로 `"명세 문서와 row 개수가 일치한다 (명세 누락 방지)"` 테스트가 row 개수가 12에서 벗어나면 즉시 실패한다.
+
+### 주요 회귀 시나리오 → 실패하는 it
+
+| 코드 변경 | 실패하는 `it` (파일: auth-contract.test.ts 기준) |
 |---|---|
-| `performTokenRefresh`의 catch에서 `dispatchForceLogoutEvent` 호출 복원 | ANONYMOUS × optional-auth, BOTH_EXPIRED × optional-auth (2 row + edge E2) |
-| `apiClient`가 `silentOn401`을 `handle401Error`에 전달하지 않음 | optional-auth 열 전체 (4 row) |
-| `getRecipeStatus`에서 `silentOn401: true` 제거 | getRecipeStatus end-to-end 전용 테스트 |
-| `refreshToken`의 cooldown 분기 제거 | C2 |
-| `refreshToken`의 dedup(refreshPromise 공유) 제거 | C1 |
-| `useUserStore.logoutAction`에서 `user=null` 제거 | Zustand 단위 테스트 (별도) |
+| `performTokenRefresh`의 catch에서 `dispatchForceLogoutEvent` 복원 | `ANONYMOUS × optional-auth > contract: forceLogout=false, ...`, `BOTH_EXPIRED × optional-auth > contract: forceLogout=false, ...`, `E2-silent: silent=true면 refresh network error에도 forceLogout 없음` |
+| `apiClient`가 `silentOn401`을 `handle401Error`에 전달 안 함 (destructure 누락 또는 인자 제거) | optional-auth 열 전체 4 row (`ANONYMOUS × optional-auth`, `VALID × optional-auth`, `ACCESS_EXPIRED × optional-auth`, `BOTH_EXPIRED × optional-auth`), `E2-silent: silent=true면 refresh network error에도 forceLogout 없음`, `getRecipeStatus는 익명 사용자에게 forceLogout을 발행하지 않는다`, `getRecipesStatus (배치)도 동일하게 익명에서 toast 없음` |
+| `getRecipeStatus`/`getRecipesStatus`에서 `silentOn401: true` 제거 | `getRecipeStatus는 익명 사용자에게 forceLogout을 발행하지 않는다`, `getRecipesStatus (배치)도 동일하게 익명에서 toast 없음` |
+| `refreshToken`의 cooldown 분기 제거 | `C2: cooldown 내 재시도 → refresh 호출되지 않고 forceLogout 재발행 없음` |
+| `refreshToken`의 dedup (refreshPromise 공유) 제거 | `C1: 두 요청이 동시에 401 → refresh는 1번만 호출된다 (dedup)` |
+| `refreshToken`이 cooldown 만료를 인식 못 함 (`lastRefreshFailTime` 리셋 로직 오류 등) | `C3: cooldown 만료 후 재시도 → refresh 다시 호출된다` |
+| `handle401Error`가 refresh 성공 후 retry 에러에서 null 반환 안 함 | `E1: refresh 200 성공 후 retry가 401이면 ApiError 반환하지만 forceLogout은 없다` |
+| `performTokenRefresh`가 throw로 복귀 (pure boolean 반환을 깨뜨림) | cooldown 경로가 불안정해져 C2/C3/매트릭스 동시 영향. 대표적으로 `ACCESS_EXPIRED × optional-auth/required`의 retry=true 가정이 깨짐 |
 
-이 표는 Task 9에서 실제 it 이름으로 업데이트될 예정.
+### 매트릭스에 row 추가 시 업데이트해야 할 곳
+
+1. 이 문서의 Contract Matrix 표
+2. `src/shared/api/__tests__/auth-contract.test.ts`의 `CONTRACT` 배열
+3. `"명세 문서와 row 개수가 일치한다"` 테스트의 `toHaveLength(n)` 값
+4. 이 Regression Lock 표의 해당 시나리오 반영
+
+누락 시 `"명세 문서와 row 개수가 일치한다"` 단일 테스트가 곧바로 실패하여 drift를 막는다.
 
 ## Out of scope (이 계약이 다루지 않는 것)
 
