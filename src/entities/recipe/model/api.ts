@@ -105,22 +105,18 @@ export const editRecipe = async ({
 
 export const getRecipeStatus = async (id: string): Promise<RecipeStatus> => {
   // optional-auth endpoint: 쿠키 있으면 개인화(liked/saved), 없으면 공개 필드.
-  // silentOn401: true로 익명 호출이 "로그인 만료" 토스트를 띄우지 않게 한다.
-  // 계약: docs/auth-contract.md (ANONYMOUS × optional-auth)
-  const response = await api.get<RecipeStatus>(`/v2/recipes/${id}/status`, {
-    silentOn401: true,
-  });
+  // 익명 사용자는 refresh response body 시그널("No refresh token available")로
+  // 라우트 무관하게 forceLogout dispatch가 스킵된다. 계약: docs/auth-contract.md
+  const response = await api.get<RecipeStatus>(`/v2/recipes/${id}/status`);
   return response;
 };
 
 export const getRecipesStatus = async (
   recipeIds: string[]
 ): Promise<RecipesStatusResponse> => {
-  const response = await api.post<RecipesStatusResponse>(
-    `/v2/recipes/status`,
-    { recipeIds },
-    { silentOn401: true }
-  );
+  const response = await api.post<RecipesStatusResponse>(`/v2/recipes/status`, {
+    recipeIds,
+  });
   return response;
 };
 

@@ -18,7 +18,6 @@ export async function apiClient<T = any>(
     baseURL,
     headers = {},
     paramsSerializer,
-    silentOn401 = false,
     ...restOptions
   } = options;
 
@@ -73,9 +72,7 @@ export async function apiClient<T = any>(
           .map((c) => c.trim().split("=")[0])
           .filter(Boolean),
       });
-      const retryResponse = await handle401Error(executeRequest, {
-        silent: silentOn401,
-      });
+      const retryResponse = await handle401Error(executeRequest);
       if (retryResponse) {
         console.log("[Auth] 401-retry-success", { url });
         response = retryResponse;
