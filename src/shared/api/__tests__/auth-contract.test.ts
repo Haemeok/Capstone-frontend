@@ -61,7 +61,7 @@ const CONTRACT: ContractRow[] = [
   {
     state: "ANONYMOUS",
     endpoint: "required",
-    expected: { forceLogout: true, refreshCalls: 1, retry: false, result: "apiError401" },
+    expected: { forceLogout: false, refreshCalls: 1, retry: false, result: "apiError401" },
   },
   // VALID row
   {
@@ -104,7 +104,7 @@ const CONTRACT: ContractRow[] = [
   {
     state: "BOTH_EXPIRED",
     endpoint: "optional-auth",
-    expected: { forceLogout: false, refreshCalls: 1, retry: false, result: "apiError401" },
+    expected: { forceLogout: true, refreshCalls: 1, retry: false, result: "apiError401" },
   },
   {
     state: "BOTH_EXPIRED",
@@ -252,8 +252,8 @@ describe("Auth Contract: Edge cases", () => {
     detach();
   });
 
-  it("E2: refresh fetch가 네트워크 에러면 silent 여부에 따라 forceLogout 분기 (non-silent)", async () => {
-    // silent=false (required): 원요청 401 → refresh network error → forceLogout 발행
+  it("E2: refresh fetch가 네트워크 에러면 forceLogout을 발행한다", async () => {
+    // 원요청 401 → refresh network error → forceLogout 발행
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
       .mockRejectedValueOnce(new Error("Network error"));
@@ -264,30 +264,23 @@ describe("Auth Contract: Edge cases", () => {
     expect(handler).toHaveBeenCalled();
     detach();
   });
-
-  it("E2-silent: silent=true면 refresh network error에도 forceLogout 없음", async () => {
-    mockFetch
-      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
-      .mockRejectedValueOnce(new Error("Network error"));
-
-    const { handler, detach } = withForceLogoutHandler();
-
-    await apiClient("/v2/recipes/x/status").catch(() => undefined);
-
-    expect(handler).not.toHaveBeenCalled();
-    detach();
-  });
 });
 
 // ========================================================================
-// getRecipeStatus end-to-end (엔드포인트 선언부가 silentOn401을 유지하는지 검증)
+// getRecipeStatus end-to-end (익명 사용자에게 forceLogout 없음 검증)
 // ========================================================================
 
 describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () => {
   it("getRecipeStatus는 익명 사용자에게 forceLogout을 발행하지 않는다", async () => {
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
-      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })));
+      .mockReturnValueOnce(
+        Promise.resolve(
+          new Response(JSON.stringify({ error: "No refresh token available" }), {
+            status: 401,
+          })
+        )
+      );
 
     const { handler, detach } = withForceLogoutHandler();
     const { getRecipeStatus } = require("@/entities/recipe/model/api");
@@ -301,7 +294,13 @@ describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () 
   it("getRecipesStatus (배치)도 동일하게 익명에서 toast 없음", async () => {
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
-      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })));
+      .mockReturnValueOnce(
+        Promise.resolve(
+          new Response(JSON.stringify({ error: "No refresh token available" }), {
+            status: 401,
+          })
+        )
+      );
 
     const { handler, detach } = withForceLogoutHandler();
     const { getRecipesStatus } = require("@/entities/recipe/model/api");
@@ -309,6 +308,64 @@ describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () 
     await getRecipesStatus(["a", "b"]).catch(() => undefined);
 
     expect(handler).not.toHaveBeenCalled();
+    detach();
+  });
+});
+
+// ========================================================================
+// 라우트 무관 anonymous silent 검증
+// 계약의 핵심: 익명 사용자는 어떤 엔드포인트를 때리든 토스트 없음.
+// silentOn401 per-request 옵션 없이 refresh response body 시그널만으로 성립.
+// ========================================================================
+
+describe("Auth Contract: Route-agnostic anonymous silence", () => {
+  const anonymousRefreshSetup = () => {
+    mockFetch
+      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
+      .mockReturnValueOnce(
+        Promise.resolve(
+          new Response(JSON.stringify({ error: "No refresh token available" }), {
+            status: 401,
+          })
+        )
+      );
+  };
+
+  it("익명 사용자가 required 라우트(/v2/users/me)를 때려도 forceLogout 없음", async () => {
+    anonymousRefreshSetup();
+    const { handler, detach } = withForceLogoutHandler();
+
+    await apiClient("/v2/users/me").catch(() => undefined);
+
+    expect(handler).not.toHaveBeenCalled();
+    detach();
+  });
+
+  it("익명 사용자가 optional-auth 라우트(/v2/recipes/x/status)를 때려도 forceLogout 없음", async () => {
+    anonymousRefreshSetup();
+    const { handler, detach } = withForceLogoutHandler();
+
+    await apiClient("/v2/recipes/x/status").catch(() => undefined);
+
+    expect(handler).not.toHaveBeenCalled();
+    detach();
+  });
+
+  it("진짜 만료 사용자는 어떤 라우트든 forceLogout 발행", async () => {
+    mockFetch
+      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
+      .mockReturnValueOnce(
+        Promise.resolve(
+          new Response(JSON.stringify({ error: "Token refresh failed" }), {
+            status: 401,
+          })
+        )
+      );
+    const { handler, detach } = withForceLogoutHandler();
+
+    await apiClient("/v2/recipes/x/status").catch(() => undefined);
+
+    expect(handler).toHaveBeenCalled();
     detach();
   });
 });
