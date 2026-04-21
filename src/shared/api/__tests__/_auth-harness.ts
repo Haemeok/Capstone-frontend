@@ -48,15 +48,20 @@ export const ensureResponsePolyfill = () => {
 };
 
 const makeResponse = (body: any, status: number) =>
-  new (globalThis as any).Response(body, { status });
+  new (globalThis as any).Response(
+    body !== null ? JSON.stringify(body) : null,
+    { status }
+  );
+
+// Next /api/auth/refresh route가 쿠키 없는 사용자에게 내려주는 body.error 값.
+// auth.ts의 NO_SESSION_ERROR_MESSAGE와 동일해야 한다.
+export const NO_SESSION_REFRESH_BODY = { error: "No refresh token available" };
+// 진짜 만료된 사용자가 받는 body (Next route가 line 84-87에서 생성).
+export const EXPIRED_REFRESH_BODY = { error: "Token refresh failed" };
 
 export type Scenario = {
   state: SessionState;
   endpoint: EndpointKind;
-  /**
-   * optional-auth는 silentOn401=true로 호출, required는 false로 호출.
-   * public은 silentOn401 없음 — 어차피 401 안 남.
-   */
   data?: any;
 };
 
@@ -92,10 +97,19 @@ export const arrangeScenario = (
       return { expectedRefreshCalls: 1, expectedRetry: true };
 
     case "ANONYMOUS":
+      mockFetch
+        .mockReturnValueOnce(Promise.resolve(makeResponse(null, 401))) // 원요청
+        .mockReturnValueOnce(
+          Promise.resolve(makeResponse(NO_SESSION_REFRESH_BODY, 401))
+        ); // refresh: 쿠키 없음 시그널
+      return { expectedRefreshCalls: 1, expectedRetry: false };
+
     case "BOTH_EXPIRED":
       mockFetch
         .mockReturnValueOnce(Promise.resolve(makeResponse(null, 401))) // 원요청
-        .mockReturnValueOnce(Promise.resolve(makeResponse(null, 401))); // refresh 실패
+        .mockReturnValueOnce(
+          Promise.resolve(makeResponse(EXPIRED_REFRESH_BODY, 401))
+        ); // refresh: 진짜 만료
       return { expectedRefreshCalls: 1, expectedRetry: false };
   }
 };
@@ -159,15 +173,15 @@ export const withForceLogoutHandler = () => {
 };
 
 /**
- * 엔드포인트 종류별 URL과 옵션 매핑.
+ * 엔드포인트 종류별 URL 매핑.
  */
-export const endpointSpec = (kind: EndpointKind): { url: string; silentOn401: boolean } => {
+export const endpointSpec = (kind: EndpointKind): { url: string } => {
   switch (kind) {
     case "public":
-      return { url: "/auth/login", silentOn401: false };
+      return { url: "/auth/login" };
     case "optional-auth":
-      return { url: "/v2/recipes/test-id/status", silentOn401: true };
+      return { url: "/v2/recipes/test-id/status" };
     case "required":
-      return { url: "/v2/users/me", silentOn401: false };
+      return { url: "/v2/users/me" };
   }
 };
