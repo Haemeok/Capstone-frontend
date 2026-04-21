@@ -129,9 +129,7 @@ describe("Auth Contract: State × Endpoint matrix", () => {
 
         let apiResult: { success: true; data: any } | { success: false; error: any };
         try {
-          const data = await apiClient(spec.url, {
-            silentOn401: spec.silentOn401,
-          });
+          const data = await apiClient(spec.url);
           apiResult = { success: true, data };
         } catch (error) {
           apiResult = { success: false, error };
@@ -274,9 +272,7 @@ describe("Auth Contract: Edge cases", () => {
 
     const { handler, detach } = withForceLogoutHandler();
 
-    await apiClient("/v2/recipes/x/status", { silentOn401: true }).catch(
-      () => undefined
-    );
+    await apiClient("/v2/recipes/x/status").catch(() => undefined);
 
     expect(handler).not.toHaveBeenCalled();
     detach();

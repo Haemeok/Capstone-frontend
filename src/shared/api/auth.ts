@@ -18,9 +18,16 @@ export const dispatchForceLogoutEvent = (reason: string, message?: string) => {
   }
 };
 
-let refreshPromise: Promise<boolean> | null = null;
+type RefreshResult = "success" | "no_session" | "expired" | "network_error";
+
+let refreshPromise: Promise<RefreshResult> | null = null;
 let lastRefreshFailTime = 0;
 const REFRESH_COOLDOWN_MS = 5000;
+
+// /api/auth/refresh route가 쿠키 없음을 감지해 내려주는 body error 메시지.
+// 이 시그널이 오면 "한 번도 로그인 안 한 사용자"로 간주해 forceLogout dispatch를 스킵한다.
+// 계약 정의: docs/auth-contract.md (Refresh response discrimination)
+const NO_SESSION_ERROR_MESSAGE = "No refresh token available";
 
 const logAuth = (event: string, data?: Record<string, unknown>) => {
   if (isClient) {
@@ -36,21 +43,14 @@ const logAuth = (event: string, data?: Record<string, unknown>) => {
   }
 };
 
-type RefreshOptions = { silent?: boolean };
-
-export const refreshToken = async (
-  options: RefreshOptions = {}
-): Promise<boolean> => {
-  const { silent = false } = options;
-
+export const refreshToken = async (): Promise<boolean> => {
   const now = Date.now();
   if (now - lastRefreshFailTime < REFRESH_COOLDOWN_MS) {
     logAuth("refresh-blocked-cooldown", {
       remainingMs: REFRESH_COOLDOWN_MS - (now - lastRefreshFailTime),
-      silent,
     });
-    // cooldown은 이전 실제 실패에서 발생 — 그때 이미 dispatch됐거나 의도적으로
-    // silent였던 것. 여기서 재발행하면 중복.
+    // cooldown 경로는 이전 실제 실패/no_session 때 이미 결정이 내려진 상태.
+    // 여기서 재발행하지 않는다 (중복 방지).
     return false;
   }
 
@@ -62,13 +62,15 @@ export const refreshToken = async (
 
   try {
     const result = await ongoing;
-    if (!result) {
-      lastRefreshFailTime = Date.now();
-      if (!silent) {
-        dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
-      }
+    if (result === "success") {
+      return true;
     }
-    return result;
+    lastRefreshFailTime = Date.now();
+    if (result === "expired" || result === "network_error") {
+      dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
+    }
+    // "no_session"은 조용히 실패 — 쿠키가 애초에 없는 사용자라 "로그인 만료"는 거짓말.
+    return false;
   } finally {
     if (refreshPromise === ongoing) {
       refreshPromise = null;
@@ -76,7 +78,7 @@ export const refreshToken = async (
   }
 };
 
-const performTokenRefresh = async (): Promise<boolean> => {
+const performTokenRefresh = async (): Promise<RefreshResult> => {
   logAuth("refresh-start");
 
   try {
@@ -88,24 +90,31 @@ const performTokenRefresh = async (): Promise<boolean> => {
       credentials: "include",
     });
 
-    if (!response.ok) {
-      logAuth("refresh-failed", { status: response.status });
-      return false;
+    if (response.ok) {
+      logAuth("refresh-success");
+      if (isClient) {
+        const event = new CustomEvent("tokenRefreshed");
+        window.dispatchEvent(event);
+      }
+      return "success";
     }
 
-    logAuth("refresh-success");
+    const body = await response.json().catch(() => null);
+    const isNoSession =
+      response.status === 401 && body?.error === NO_SESSION_ERROR_MESSAGE;
 
-    if (isClient) {
-      const event = new CustomEvent("tokenRefreshed");
-      window.dispatchEvent(event);
+    if (isNoSession) {
+      logAuth("refresh-no-session");
+      return "no_session";
     }
 
-    return true;
+    logAuth("refresh-expired", { status: response.status });
+    return "expired";
   } catch (error) {
-    logAuth("refresh-error", {
+    logAuth("refresh-network-error", {
       error: error instanceof Error ? error.message : String(error),
     });
-    return false;
+    return "network_error";
   }
 };
 
@@ -142,13 +151,10 @@ export const requiresAuth = (url: string): boolean => {
   return !publicEndpoints.some((endpoint) => url.includes(endpoint));
 };
 
-type Handle401Options = { silent?: boolean };
-
 export const handle401Error = async (
-  originalRequest: () => Promise<Response>,
-  options: Handle401Options = {}
+  originalRequest: () => Promise<Response>
 ): Promise<Response | null> => {
-  const refreshed = await refreshToken({ silent: options.silent });
+  const refreshed = await refreshToken();
 
   if (refreshed) {
     try {
