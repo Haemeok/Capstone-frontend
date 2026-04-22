@@ -12,12 +12,29 @@ type Feature = {
 
 const FEATURES: Feature[] = [
   {
-    badge: "유명 최신 레시피",
-    badgeColor: "bg-blue-50 text-blue-600",
-    title: "20,000개 이상의 검증된 레시피",
+    badge: "YouTube 추출",
+    badgeColor: "bg-red-50 text-red-600",
+    title: "YouTube 링크 하나로 레시피 완성",
     description:
-      "다양한 카테고리의 레시피와 유명 유튜버, 셰프들의 레시피 후기들을 만나보세요",
-    benefits: ["유명 최신 레시피", "유튜버, 셰프들의 레시피 후기"],
+      "영상을 멈추고 재료를 메모할 필요 없어요. 링크만 붙여넣으면 재료·조리순서·분량까지 자동 추출됩니다.",
+    benefits: [
+      "재료 자동 정리",
+      "조리 순서 단계별 정리",
+      "영상과 함께 보관",
+      "좋아하는 유튜버 레시피 그대로",
+    ],
+  },
+  {
+    badge: "30,000+ 레시피",
+    badgeColor: "bg-blue-50 text-blue-600",
+    title: "국내 최대 규모의 큐레이션 레시피",
+    description:
+      "YouTube 기반 레시피부터 AI 생성, 유명 홈쿡 레시피까지 30,000개 이상을 한 곳에서 탐색할 수 있어요.",
+    benefits: [
+      "유명 최신 레시피",
+      "YouTube 기반 레시피 다수 보유",
+      "상황별·기념일별 태그 분류",
+    ],
   },
   {
     badge: "AI 추천",
@@ -67,7 +84,7 @@ export const FeatureShowcase = () => {
           </p>
         </motion.div>
 
-        <div className="space-y-32">
+        <div className="space-y-24">
           {FEATURES.map((feature, index) => {
             const isReversed = index % 2 === 1;
 
