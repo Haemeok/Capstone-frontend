@@ -1,14 +1,30 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import Link from "next/link";
 
 import { Bookmark } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
+import { useUserStore } from "@/entities/user/model/store";
+
+import { useLoginEncourageDrawerStore } from "@/widgets/LoginEncourageDrawer/model/store";
+
 const SavedRecipeBooksButton = () => {
-  const handleClick = () => {
+  const { user } = useUserStore();
+  const { openDrawer } = useLoginEncourageDrawerStore();
+
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     triggerHaptic("Light");
+
+    if (!user) {
+      e.preventDefault();
+      openDrawer({
+        icon: <Bookmark size={24} className="text-olive-light" />,
+        message: "저장한 레시피북을 확인해보세요!",
+      });
+    }
   };
 
   return (

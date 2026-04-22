@@ -15,8 +15,12 @@ export const useLoginEncourageDrawerStore = create<LoginEncourageDrawerStore>(
     isOpen: false,
     icon: undefined,
     message: undefined,
-    openDrawer: (options) => set({ isOpen: true, ...options }),
-    closeDrawer: () =>
-      set({ isOpen: false, icon: undefined, message: undefined }),
+    openDrawer: (options) =>
+      set({
+        isOpen: true,
+        icon: options?.icon,
+        message: options?.message,
+      }),
+    closeDrawer: () => set({ isOpen: false }),
   })
 );
