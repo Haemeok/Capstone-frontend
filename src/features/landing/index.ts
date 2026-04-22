@@ -4,4 +4,5 @@ export { HeroSection } from "./ui/HeroSection";
 export { ProblemCards } from "./ui/ProblemCards";
 export { RecipeCarousel } from "./ui/RecipeCarousel";
 export { StatsSection } from "./ui/StatsSection";
+export { TagChipsSection } from "./ui/TagChipsSection";
 export { TestimonialCarousel } from "./ui/TestimonialCarousel";
