@@ -18,9 +18,9 @@ type StatCard = {
 const STATS: StatCard[] = [
   {
     image: `${ICON_BASE_URL}book.webp`,
-    metric: "20,000+",
-    label: "검증된 셰프 레시피",
-    description: "매주 업데이트되는 큐레이션",
+    metric: "30,000+",
+    label: "큐레이션 레시피",
+    description: "YouTube · 유명 레시피 · AI 생성까지",
     accent: "from-purple-500/10 to-pink-500/10",
   },
   {
