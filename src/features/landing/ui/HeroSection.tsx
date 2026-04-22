@@ -32,7 +32,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="border-olive-light/30 bg-olive-light/10 font-bold text-olive-medium mb-6 inline-block rounded-full border px-6 py-2 text-sm  backdrop-blur-sm"
         >
-          🍳 20,000+ 레시피 · AI 추천 · 스마트 재료 관리
+          🍳 30,000+ 레시피 · YouTube 링크 추출 · AI 맞춤 추천
         </motion.div>
 
         <motion.h1
@@ -58,11 +58,11 @@ export const HeroSection = () => {
           className="mb-12 max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl"
         >
           <span className="text-olive-medium font-semibold">
-            만개 이상의 검증된 레시피
+            YouTube 링크 하나로 레시피를 저장
           </span>
-          에서 AI가 찾아주는
+          하고,
           <br className="hidden sm:block" />
-          나만의 맞춤 레시피를 경험하세요
+          30,000+ 레시피에서 AI가 맞춤 추천해드려요
         </motion.p>
 
         <motion.div
