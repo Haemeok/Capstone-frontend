@@ -29,9 +29,6 @@ export const PostHogProvider = ({ children }: { children: ReactNode }) => {
           disable_session_recording: true,
           autocapture: false,
           capture_dead_clicks: false,
-          loaded: (ph) => {
-            ph.capture("$pageview", { $current_url: window.location.href });
-          },
         });
         isPostHogInitialized = true;
       };
