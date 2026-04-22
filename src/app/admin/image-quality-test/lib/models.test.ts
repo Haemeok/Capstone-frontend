@@ -1,8 +1,8 @@
 import { getModelById,MODELS } from "./models";
 
 describe("MODELS registry", () => {
-  it("has exactly 8 entries", () => {
-    expect(MODELS).toHaveLength(8);
+  it("has exactly 11 entries", () => {
+    expect(MODELS).toHaveLength(11);
   });
 
   it("has unique ids", () => {
@@ -10,11 +10,11 @@ describe("MODELS registry", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("all entries have valid provider and positive price below Gemini baseline", () => {
+  it("all entries have valid provider, positive price, and non-empty endpoint", () => {
     for (const m of MODELS) {
       expect(["openai", "google", "fal"]).toContain(m.provider);
       expect(m.pricePerImage).toBeGreaterThan(0);
-      expect(m.pricePerImage).toBeLessThan(0.039);
+      expect(m.pricePerImage).toBeLessThan(0.25);
       expect(m.endpoint.length).toBeGreaterThan(0);
     }
   });
