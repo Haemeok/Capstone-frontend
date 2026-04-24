@@ -43,3 +43,34 @@ export type IngredientMutationContext = {
 
 export type IngredientNameItem = { id: string; name: string };
 export type IngredientNamesResponse = { content: IngredientNameItem[] };
+
+export type StorageInfo = {
+  temperatureLabel: string;
+  durationLabel: string;
+  tip: string;
+};
+
+export type PairingIngredient = {
+  id: string;
+  name: string;
+  imageUrl?: string;
+};
+
+export type CookingMethod = {
+  id: string;
+  name: string;
+  icon: string;
+};
+
+export type IngredientDetail = {
+  id: string;
+  name: string;
+  imageUrl?: string;
+  categoryLabel: string;
+  storage: StorageInfo;
+  pairings: {
+    good: PairingIngredient[];
+    bad: PairingIngredient[];
+  };
+  cookingMethods: CookingMethod[];
+};
