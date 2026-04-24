@@ -1,6 +1,8 @@
 "use client";
 
-import { AnimatePresence,motion } from "motion/react";
+import Link from "next/link";
+
+import { AnimatePresence, motion } from "motion/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
@@ -21,7 +23,7 @@ const IngredientItem = ({
   setSelectedIngredientIds,
   isSelected,
 }: IngredientItemProps) => {
-  const handleClick = () => {
+  const handleDeleteModeClick = () => {
     triggerHaptic("Light");
     setSelectedIngredientIds((prev) => {
       if (!prev.includes(ingredient.id)) {
@@ -32,9 +34,13 @@ const IngredientItem = ({
     });
   };
 
-  return (
+  const handleNavigateClick = () => {
+    triggerHaptic("Light");
+  };
+
+  const tile = (
     <motion.div
-      onClick={isDeleteMode ? handleClick : undefined}
+      onClick={isDeleteMode ? handleDeleteModeClick : undefined}
       className={cn(
         "relative flex items-center gap-4 rounded-2xl bg-white px-3 py-3 shadow-sm transition-all",
         isDeleteMode && "cursor-pointer",
@@ -100,6 +106,21 @@ const IngredientItem = ({
         </motion.div>
       )}
     </motion.div>
+  );
+
+  if (isDeleteMode) {
+    return tile;
+  }
+
+  return (
+    <Link
+      href={`/ingredients/${ingredient.id}`}
+      onClick={handleNavigateClick}
+      className="block"
+      aria-label={`${ingredient.name} 상세 보기`}
+    >
+      {tile}
+    </Link>
   );
 };
 
