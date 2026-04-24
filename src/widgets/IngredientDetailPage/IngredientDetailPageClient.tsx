@@ -1,5 +1,3 @@
-"use client";
-
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
