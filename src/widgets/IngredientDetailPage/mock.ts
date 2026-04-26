@@ -27,8 +27,8 @@ export const INGREDIENT_DETAIL_MOCKS: Record<string, IngredientDetail> = {
       { id: "braise", name: "조림", icon: "🥘" },
     ],
   },
-  carrot: {
-    id: "carrot",
+  "8LB1p7wk": {
+    id: "8LB1p7wk",
     name: "당근",
     imageUrl: "/mock/ingredients/carrot.png",
     categoryLabel: "뿌리·구근류",
