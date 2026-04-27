@@ -8,10 +8,6 @@ import * as apiModule from "../api";
 import { useChatMutation } from "../hooks";
 
 jest.mock("../api");
-jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
-jest.mock("@/widgets/Toast", () => ({
-  useToastStore: () => ({ addToast: jest.fn() }),
-}));
 
 const wrapper = ({ children }: { children: ReactNode }) => {
   const client = new QueryClient({
@@ -22,7 +18,6 @@ const wrapper = ({ children }: { children: ReactNode }) => {
 
 describe("useChatMutation", () => {
   afterEach(() => {
-    jest.restoreAllMocks();
     jest.clearAllMocks();
   });
 
