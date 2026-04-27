@@ -1,36 +1,54 @@
-import type { PairingIngredient } from "@/entities/ingredient";
-
-import PairingChip from "./PairingChip";
-
 type PairingSectionProps = {
-  good: PairingIngredient[];
-  bad: PairingIngredient[];
+  good: string[];
+  bad: string[];
 };
 
-const ChipRow = ({ items }: { items: PairingIngredient[] }) => {
-  if (items.length === 0) {
-    return <p className="text-sm text-gray-400 px-1">해당 재료 없음</p>;
-  }
-
-  return (
-    <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-5 px-5 py-1">
-      {items.map((item) => (
-        <PairingChip key={item.id} ingredient={item} />
-      ))}
-    </div>
-  );
-};
+const PairingChipRow = ({ items }: { items: string[] }) => (
+  <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-5 px-5 py-1">
+    {items.map((name) => (
+      <span
+        key={name}
+        className="inline-flex items-center rounded-full border border-gray-200 px-3 py-2 text-sm text-gray-700 flex-shrink-0"
+      >
+        {name}
+      </span>
+    ))}
+  </div>
+);
 
 const PairingSection = ({ good, bad }: PairingSectionProps) => {
+  const hasGood = good.length > 0;
+  const hasBad = bad.length > 0;
+
+  if (!hasGood && !hasBad) {
+    return null;
+  }
+
   return (
     <section className="px-5 py-6 border-t border-gray-100">
       <h2 className="text-lg font-bold text-gray-800 mb-3">궁합 재료</h2>
 
-      <p className="text-sm font-medium text-gray-600 mb-2">같이 먹으면 좋아요</p>
-      <ChipRow items={good} />
+      {hasGood && (
+        <>
+          <p className="text-sm font-medium text-gray-600 mb-2">
+            같이 먹으면 좋아요
+          </p>
+          <PairingChipRow items={good} />
+        </>
+      )}
 
-      <p className="text-sm font-medium text-gray-600 mb-2 mt-4">피해야 해요</p>
-      <ChipRow items={bad} />
+      {hasBad && (
+        <>
+          <p
+            className={`text-sm font-medium text-gray-600 mb-2 ${
+              hasGood ? "mt-4" : ""
+            }`}
+          >
+            피해야 해요
+          </p>
+          <PairingChipRow items={bad} />
+        </>
+      )}
     </section>
   );
 };
