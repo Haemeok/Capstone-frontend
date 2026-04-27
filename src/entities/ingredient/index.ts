@@ -1,12 +1,15 @@
-export { getIngredientNames, getIngredients } from "./model/api";
-export { useMyIngredientIds } from "./model/hooks";
+export {
+  getIngredientDetail,
+  getIngredientNames,
+  getIngredients,
+} from "./model/api";
+export { useIngredientRecipesQuery, useMyIngredientIds } from "./model/hooks";
 export type {
   AIIngredientPayload,
-  CookingMethod,
-  IngredientDetail,
+  IngredientDetailApiResponse,
+  IngredientDetailView,
   IngredientItem,
   IngredientPayload,
   IngredientsApiResponse,
-  PairingIngredient,
-  StorageInfo,
+  IngredientStorageView,
 } from "./model/types";

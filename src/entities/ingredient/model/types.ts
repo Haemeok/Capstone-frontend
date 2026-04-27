@@ -1,5 +1,6 @@
 import { InfiniteData } from "@tanstack/react-query";
 
+import type { DetailedRecipeGridItem } from "@/entities/recipe";
 import { BaseQueryParams, PageResponse } from "@/shared/api/types";
 
 export type IngredientItem = {
@@ -44,33 +45,37 @@ export type IngredientMutationContext = {
 export type IngredientNameItem = { id: string; name: string };
 export type IngredientNamesResponse = { content: IngredientNameItem[] };
 
-export type StorageInfo = {
-  temperatureLabel: string;
-  durationLabel: string;
-  tip: string;
-};
-
-export type PairingIngredient = {
+export type IngredientDetailApiResponse = {
   id: string;
   name: string;
-  imageUrl?: string;
+  category: string | null;
+  imageUrl: string | null;
+  storageLocation: string | null;
+  storageTemperature: string | null;
+  storageDuration: string | null;
+  storageNotes: string | null;
+  goodPairs: string | null;
+  badPairs: string | null;
+  recommendedCookingMethods: string | null;
+  recipes: DetailedRecipeGridItem[];
 };
 
-export type CookingMethod = {
-  id: string;
-  name: string;
-  icon: string;
+export type IngredientStorageView = {
+  location: string | null;
+  temperature: string | null;
+  duration: string | null;
+  notes: string | null;
 };
 
-export type IngredientDetail = {
+export type IngredientDetailView = {
   id: string;
   name: string;
-  imageUrl?: string;
-  categoryLabel: string;
-  storage: StorageInfo;
+  imageUrl: string | null;
+  categoryLabel: string | null;
+  storage: IngredientStorageView;
   pairings: {
-    good: PairingIngredient[];
-    bad: PairingIngredient[];
+    good: string[];
+    bad: string[];
   };
-  cookingMethods: CookingMethod[];
+  cookingMethods: string[];
 };
