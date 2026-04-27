@@ -19,6 +19,7 @@ import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
 import { InArticleAdSlot } from "@/shared/adsense";
 
+import { ChatLauncher } from "@/features/recipe-chat";
 import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { RecipeStatusProvider } from "@/features/recipe-status";
 import { SmartAppBanner } from "@/features/smart-app-banner";
@@ -224,6 +225,7 @@ export default async function RecipeDetailPage({
             />
           )}
         </RecipeContainer>
+        <ChatLauncher recipeId={recipeId} />
       </RecipeStatusProvider>
       <SmartAppBanner />
     </ScrollReset>
