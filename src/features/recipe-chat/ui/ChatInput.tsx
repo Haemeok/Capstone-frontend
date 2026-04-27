@@ -43,18 +43,22 @@ const ChatInput = ({
   const trimmed = text.trim();
   const canSubmit = !isDisabled && trimmed.length > 0;
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const submit = () => {
     if (!canSubmit) return;
     triggerHaptic("Light");
     onSubmit(trimmed);
     setText("");
   };
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    submit();
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as unknown as FormEvent);
+      submit();
     }
   };
 

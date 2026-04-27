@@ -10,10 +10,17 @@ jest.mock("@/shared/store/useInputFocusStore", () => ({
 }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import ChatInput from "../ChatInput";
 
+const mockHaptic = triggerHaptic as jest.Mock;
+
 describe("ChatInput", () => {
-  beforeEach(() => mockOpenDrawer.mockClear());
+  beforeEach(() => {
+    mockOpenDrawer.mockClear();
+    mockHaptic.mockClear();
+  });
 
   it("when unauthenticated, clicking the disabled input opens login drawer", () => {
     render(
@@ -44,6 +51,7 @@ describe("ChatInput", () => {
     fireEvent.change(textarea, { target: { value: "이거 매워요?" } });
     fireEvent.click(screen.getByLabelText("질문 전송"));
     expect(onSubmit).toHaveBeenCalledWith("이거 매워요?");
+    expect(mockHaptic).toHaveBeenCalledWith("Light");
   });
 
   it("when locked (quota exhausted), submit button is disabled", () => {
