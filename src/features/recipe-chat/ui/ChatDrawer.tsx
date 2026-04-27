@@ -10,7 +10,10 @@ import { useUserStore } from "@/entities/user/model/store";
 
 import { useToastStore } from "@/widgets/Toast";
 
-import { getChatErrorBehavior } from "../model/errorMessages";
+import {
+  CHAT_ERROR_BEHAVIOR,
+  getChatErrorBehavior,
+} from "../model/errorMessages";
 import { useChatMutation, useChatQuotaQuery } from "../model/hooks";
 import type { ChatErrorCode, ChatMessage, ChatResponse } from "../model/types";
 
@@ -18,19 +21,10 @@ import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import ChatMessageList from "./ChatMessageList";
 
-const KNOWN_CODES: ChatErrorCode[] = [
-  "703",
-  "704",
-  "705",
-  "706",
-  "707",
-  "708",
-  "709",
-  "710",
-  "401",
-  "207",
-  "201",
-];
+const KNOWN_CODES = Object.keys(CHAT_ERROR_BEHAVIOR) as ChatErrorCode[];
+
+const isPendingMessage = (m: ChatMessage) =>
+  m.role === "assistant" && "status" in m && m.status === "pending";
 
 const resolveChatErrorCode = (err: ApiError): ChatErrorCode => {
   const data = getErrorData(err);
@@ -68,7 +62,10 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
   });
 
   const isQuotaExhausted = !!quota && quota.remaining === 0;
-  const lockedFromError = stickyLockCode === "705" || stickyLockCode === "706" || stickyLockCode === "207";
+  const lockedFromError =
+    stickyLockCode === "705" ||
+    stickyLockCode === "706" ||
+    stickyLockCode === "207";
   const isLocked = isQuotaExhausted || lockedFromError;
 
   const lockedReason = useMemo(() => {
@@ -87,36 +84,17 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
     return null;
   }, [stickyLockCode]);
 
-  const replaceLastPending = useCallback(
-    (next: ChatMessage) => {
-      setMessages((prev) => {
-        const lastIdx = [...prev]
-          .reverse()
-          .findIndex(
-            (m) => m.role === "assistant" && "status" in m && m.status === "pending"
-          );
-        if (lastIdx === -1) return [...prev, next];
-        const realIdx = prev.length - 1 - lastIdx;
-        return [...prev.slice(0, realIdx), next, ...prev.slice(realIdx + 1)];
-      });
-    },
-    []
-  );
+  const replaceLastPending = useCallback((next: ChatMessage) => {
+    setMessages((prev) => {
+      const lastIdx = [...prev].reverse().findIndex(isPendingMessage);
+      if (lastIdx === -1) return [...prev, next];
+      const realIdx = prev.length - 1 - lastIdx;
+      return [...prev.slice(0, realIdx), next, ...prev.slice(realIdx + 1)];
+    });
+  }, []);
 
-  const sendQuestion = useCallback(
+  const runMutation = useCallback(
     (question: string) => {
-      const userMsg: ChatMessage = {
-        id: newId(),
-        role: "user",
-        text: question,
-      };
-      const pendingMsg: ChatMessage = {
-        id: newId(),
-        role: "assistant",
-        status: "pending",
-      };
-      setMessages((prev) => [...prev, userMsg, pendingMsg]);
-
       mutate(
         { recipeId, question, sessionId: sessionIdRef.current },
         {
@@ -159,6 +137,24 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
     [recipeId, mutate, replaceLastPending, addToast, onOpenChange]
   );
 
+  const sendQuestion = useCallback(
+    (question: string) => {
+      const userMsg: ChatMessage = {
+        id: newId(),
+        role: "user",
+        text: question,
+      };
+      const pendingMsg: ChatMessage = {
+        id: newId(),
+        role: "assistant",
+        status: "pending",
+      };
+      setMessages((prev) => [...prev, userMsg, pendingMsg]);
+      runMutation(question);
+    },
+    [runMutation]
+  );
+
   const handleRetry = useCallback(
     (sourceQuestion: string) => {
       setMessages((prev) => {
@@ -177,46 +173,15 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
           role: "assistant",
           status: "pending",
         };
-        return [...prev.slice(0, realIdx), pendingMsg, ...prev.slice(realIdx + 1)];
+        return [
+          ...prev.slice(0, realIdx),
+          pendingMsg,
+          ...prev.slice(realIdx + 1),
+        ];
       });
-
-      mutate(
-        { recipeId, question: sourceQuestion, sessionId: sessionIdRef.current },
-        {
-          onSuccess: (res: ChatResponse) => {
-            replaceLastPending({
-              id: newId(),
-              role: "assistant",
-              text: res.answer,
-              fromLlm: res.fromLlm,
-              intent: res.intent,
-            });
-            triggerHaptic("Light");
-          },
-          onError: (err) => {
-            const code = resolveChatErrorCode(err);
-            const behavior = getChatErrorBehavior(code);
-            replaceLastPending({
-              id: newId(),
-              role: "system",
-              code,
-              retryable: !!behavior.retryable,
-              sourceQuestion,
-            });
-            if (behavior.toast) {
-              addToast({
-                message: behavior.toast.message,
-                variant: behavior.toast.variant,
-                position: "bottom",
-              });
-            }
-            if (behavior.haptic) triggerHaptic(behavior.haptic);
-            if (behavior.inputLock) setStickyLockCode(code);
-          },
-        }
-      );
+      runMutation(sourceQuestion);
     },
-    [recipeId, mutate, replaceLastPending, addToast]
+    [runMutation]
   );
 
   return (
@@ -241,9 +206,7 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
           )}
           <ChatInput
             isAuthenticated={isAuthenticated}
-            isPending={messages.some(
-              (m) => m.role === "assistant" && "status" in m && m.status === "pending"
-            )}
+            isPending={messages.some(isPendingMessage)}
             isLocked={isLocked}
             lockedReason={lockedReason}
             onSubmit={sendQuestion}
