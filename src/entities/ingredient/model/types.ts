@@ -45,6 +45,16 @@ export type IngredientMutationContext = {
 export type IngredientNameItem = { id: string; name: string };
 export type IngredientNamesResponse = { content: IngredientNameItem[] };
 
+export type IngredientNutrition = {
+  calories: number;
+  protein: number;
+  carb: number;
+  fat: number;
+  fiber?: number;
+  sugar?: number;
+  sodium?: number;
+};
+
 export type IngredientDetailApiResponse = {
   id: string;
   name: string;
@@ -58,6 +68,14 @@ export type IngredientDetailApiResponse = {
   badPairs: string | null;
   recommendedCookingMethods: string | null;
   recipes: DetailedRecipeGridItem[];
+  // 백엔드 추가 대기 — 현재 응답엔 없을 수 있어 모두 optional
+  shortDescription?: string | null;
+  coupangLink?: string | null;
+  nutritionPer100g?: IngredientNutrition | null;
+  seasonMonths?: number[] | null;
+  benefits?: string[] | null;
+  prepTip?: string | null;
+  substitutes?: string | null; // 슬래시 구분 — 페어링과 동일
 };
 
 export type IngredientStorageView = {
@@ -78,4 +96,12 @@ export type IngredientDetailView = {
     bad: string[];
   };
   cookingMethods: string[];
+  // 신규
+  shortDescription: string | null;
+  coupangLink: string | null;
+  nutrition: IngredientNutrition | null;
+  seasonMonths: number[]; // [] if null/undefined
+  benefits: string[]; // [] if null/undefined
+  prepTip: string | null;
+  substitutes: string[]; // [] if null/undefined
 };

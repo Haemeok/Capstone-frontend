@@ -9,6 +9,7 @@ export type {
   IngredientDetailApiResponse,
   IngredientDetailView,
   IngredientItem,
+  IngredientNutrition,
   IngredientPayload,
   IngredientsApiResponse,
   IngredientStorageView,
