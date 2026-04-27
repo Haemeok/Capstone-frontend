@@ -1,10 +1,16 @@
 import { notFound } from "next/navigation";
 
 import {
-  IngredientDetailPageClient,
-  getIngredientDetail,
-  getIngredientRecipes,
-} from "@/widgets/IngredientDetailPage";
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+
+import { parseIngredientDetail } from "@/entities/ingredient/lib/parseIngredientDetail";
+import { getIngredientDetailOnServer } from "@/entities/ingredient/model/api.server";
+import { ingredientRecipesQueryKey } from "@/entities/ingredient/model/hooks";
+
+import { IngredientDetailPageClient } from "@/widgets/IngredientDetailPage";
 
 type IngredientDetailPageProps = {
   params: Promise<{ ingredientId: string }>;
@@ -12,15 +18,25 @@ type IngredientDetailPageProps = {
 
 const IngredientDetailPage = async ({ params }: IngredientDetailPageProps) => {
   const { ingredientId } = await params;
-  const detail = getIngredientDetail(ingredientId);
 
-  if (!detail) {
+  const apiResponse = await getIngredientDetailOnServer(ingredientId);
+
+  if (!apiResponse) {
     notFound();
   }
 
-  const recipes = getIngredientRecipes(ingredientId);
+  const detail = parseIngredientDetail(apiResponse);
 
-  return <IngredientDetailPageClient detail={detail} recipes={recipes} />;
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(ingredientRecipesQueryKey(ingredientId), {
+    content: apiResponse.recipes,
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <IngredientDetailPageClient detail={detail} />
+    </HydrationBoundary>
+  );
 };
 
 export default IngredientDetailPage;

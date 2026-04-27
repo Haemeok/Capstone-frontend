@@ -1,24 +1,20 @@
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
-import type { IngredientDetail } from "@/entities/ingredient";
-import type { DetailedRecipeGridItem } from "@/entities/recipe";
-
-import RecipeSlide from "@/widgets/RecipeSlide/RecipeSlide";
+import type { IngredientDetailView } from "@/entities/ingredient";
 
 import CookingMethodsSection from "./ui/CookingMethodsSection";
 import IngredientHero from "./ui/IngredientHero";
+import IngredientRecipesSlide from "./IngredientRecipesSlide";
 import PairingSection from "./ui/PairingSection";
 import StorageInfoCard from "./ui/StorageInfoCard";
 
 type IngredientDetailPageClientProps = {
-  detail: IngredientDetail;
-  recipes: DetailedRecipeGridItem[];
+  detail: IngredientDetailView;
 };
 
 const IngredientDetailPageClient = ({
   detail,
-  recipes,
 }: IngredientDetailPageClientProps) => {
   return (
     <Container padding={false}>
@@ -39,12 +35,7 @@ const IngredientDetailPageClient = ({
       <CookingMethodsSection methods={detail.cookingMethods} />
 
       <section className="px-5 py-6 border-t border-gray-100">
-        <RecipeSlide
-          title="이 재료로 만들 수 있는 레시피"
-          recipes={recipes}
-          isLoading={false}
-          error={null}
-        />
+        <IngredientRecipesSlide ingredientId={detail.id} />
       </section>
     </Container>
   );
