@@ -28,7 +28,14 @@ const isPendingMessage = (m: ChatMessage) =>
 
 const resolveChatErrorCode = (err: ApiError): ChatErrorCode => {
   const data = getErrorData(err);
-  const raw = data?.code != null ? String(data.code) : "710";
+  if (data?.code == null) {
+    // No recognizable error envelope — likely shape drift from backend.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[recipe-chat] missing error code in response", err.data);
+    }
+    return "710";
+  }
+  const raw = String(data.code);
   return (KNOWN_CODES as string[]).includes(raw)
     ? (raw as ChatErrorCode)
     : "710";
@@ -149,7 +156,15 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
         role: "assistant",
         status: "pending",
       };
-      setMessages((prev) => [...prev, userMsg, pendingMsg]);
+      setMessages((prev) => [
+        ...prev.map((m) =>
+          m.role === "system" && m.retryable
+            ? { ...m, retryable: false }
+            : m
+        ),
+        userMsg,
+        pendingMsg,
+      ]);
       runMutation(question);
     },
     [runMutation]
