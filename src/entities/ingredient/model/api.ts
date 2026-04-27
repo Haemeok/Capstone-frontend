@@ -6,6 +6,7 @@ import { INGREDIENT_CATEGORY_CODES } from "@/shared/config/constants/recipe";
 import { buildParams } from "@/shared/lib/utils";
 
 import {
+  IngredientDetailApiResponse,
   IngredientNamesResponse,
   IngredientQueryParams,
   IngredientsApiResponse,
@@ -72,6 +73,15 @@ export const getIngredientNames = async (ids: string[]) => {
   const response = await api.get<IngredientNamesResponse>(
     `/ingredients/names`,
     { params: { ids: ids.join(",") } }
+  );
+  return response;
+};
+
+export const getIngredientDetail = async (
+  id: string
+): Promise<IngredientDetailApiResponse> => {
+  const response = await api.get<IngredientDetailApiResponse>(
+    END_POINTS.INGREDIENTS_BY_ID(id)
   );
   return response;
 };
