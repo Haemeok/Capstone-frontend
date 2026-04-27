@@ -69,6 +69,8 @@ export const END_POINTS = {
   MY_SURVEY: "/me/survey",
   GOOGLE_LOGIN_API_ROUTE: "/api/auth/login/google",
   APPLE_LOGIN: "/api/auth/login/apple",
+  CHAT: (recipeId: string) => `/recipes/${recipeId}/chat`,
+  CHAT_QUOTA: "/chat/quota",
 };
 
 export const USER_ERROR_MESSAGE = {
