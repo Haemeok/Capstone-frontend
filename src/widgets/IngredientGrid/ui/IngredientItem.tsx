@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { AnimatePresence, motion } from "motion/react";
+import { ChevronRight } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
@@ -65,6 +66,13 @@ const IngredientItem = ({
           {ingredient.name}
         </span>
       </div>
+      {!isDeleteMode && (
+        <ChevronRight
+          size={16}
+          className="text-gray-300 flex-shrink-0"
+          aria-hidden
+        />
+      )}
       {isDeleteMode && (
         <motion.div
           className={cn(
