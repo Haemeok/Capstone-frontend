@@ -3,7 +3,7 @@ import type {
   IngredientDetailView,
 } from "../model/types";
 
-const parseSlashList = (raw: string | null): string[] => {
+const parseSlashList = (raw: string | null | undefined): string[] => {
   if (!raw) return [];
   return raw
     .split("/")
@@ -29,4 +29,11 @@ export const parseIngredientDetail = (
     bad: parseSlashList(api.badPairs),
   },
   cookingMethods: parseSlashList(api.recommendedCookingMethods),
+  shortDescription: api.shortDescription ?? null,
+  coupangLink: api.coupangLink ?? null,
+  nutrition: api.nutritionPer100g ?? null,
+  seasonMonths: api.seasonMonths ?? [],
+  benefits: api.benefits ?? [],
+  prepTip: api.prepTip ?? null,
+  substitutes: parseSlashList(api.substitutes),
 });
