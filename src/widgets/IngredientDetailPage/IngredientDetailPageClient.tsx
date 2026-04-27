@@ -3,11 +3,17 @@ import PrevButton from "@/shared/ui/PrevButton";
 
 import type { IngredientDetailView } from "@/entities/ingredient";
 
+import BenefitsList from "./ui/BenefitsList";
 import CookingMethodsSection from "./ui/CookingMethodsSection";
+import CoupangPurchaseCard from "./ui/CoupangPurchaseCard";
 import IngredientHero from "./ui/IngredientHero";
 import IngredientRecipesSlide from "./IngredientRecipesSlide";
+import NutritionCard from "./ui/NutritionCard";
 import PairingSection from "./ui/PairingSection";
+import PrepTipCard from "./ui/PrepTipCard";
+import SeasonStrip from "./ui/SeasonStrip";
 import StorageInfoCard from "./ui/StorageInfoCard";
+import SubstitutesSection from "./ui/SubstitutesSection";
 
 type IngredientDetailPageClientProps = {
   detail: IngredientDetailView;
@@ -26,11 +32,25 @@ const IngredientDetailPageClient = ({
         name={detail.name}
         categoryLabel={detail.categoryLabel}
         imageUrl={detail.imageUrl}
+        shortDescription={detail.shortDescription}
+        caloriesPer100g={detail.nutrition?.calories ?? null}
       />
+
+      <CoupangPurchaseCard href={detail.coupangLink} />
 
       <StorageInfoCard storage={detail.storage} />
 
+      <SeasonStrip months={detail.seasonMonths} />
+
+      <NutritionCard nutrition={detail.nutrition} />
+
+      <BenefitsList benefits={detail.benefits} />
+
+      <PrepTipCard tip={detail.prepTip} />
+
       <PairingSection good={detail.pairings.good} bad={detail.pairings.bad} />
+
+      <SubstitutesSection items={detail.substitutes} />
 
       <CookingMethodsSection methods={detail.cookingMethods} />
 
