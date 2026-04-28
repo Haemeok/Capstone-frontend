@@ -35,6 +35,7 @@ export const prepareRemixPayload = (
     // fields that need payload-specific mapping
     ingredients,
     steps,
+    youtubeUrl,
     ...rest
   } = recipe as Recipe & { extractorId?: unknown };
 
@@ -59,6 +60,7 @@ export const prepareRemixPayload = (
 
   return {
     ...rest,
+    youtubeUrl,
     ingredients: ingredientPayloads,
     steps: stepPayloads,
     originRecipeId,

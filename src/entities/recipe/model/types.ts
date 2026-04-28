@@ -182,6 +182,7 @@ export type RecipePayload = Omit<Recipe, (typeof defaultRecipeKeys)[number]> & {
   servings: number;
   imageKey?: string | null;
   originRecipeId?: string;
+  youtubeUrl?: string;
 };
 
 export type RecipeStepPayload = Omit<

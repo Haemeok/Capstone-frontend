@@ -63,15 +63,18 @@ describe("prepareRemixPayload", () => {
     expect(result).not.toHaveProperty("extractorId");
   });
 
-  it("preserves youtube channel meta fields for round-trip", () => {
-    // youtubeUrl is intentionally excluded from RecipePayload (in defaultRecipeKeys).
-    // Other youtube meta fields (channelName, videoTitle, etc.) are preserved.
+  it("preserves youtube meta fields for round-trip", () => {
+    // All youtube meta fields must round-trip for remix cards/lists per backend spec.
+    // youtubeUrl is optional on RecipePayload (defaultRecipeKeys omits it from the
+    // base Omit, but it is re-added explicitly to support remix submission).
     const recipe = {
       ...baseRecipe(),
+      youtubeUrl: "https://youtu.be/abc",
       youtubeChannelName: "ch",
       youtubeVideoTitle: "비빔밥 만들기",
     } as Recipe;
     const result = prepareRemixPayload(recipe, "ORIGIN_ID");
+    expect(result.youtubeUrl).toBe("https://youtu.be/abc");
     expect(result.youtubeChannelName).toBe("ch");
     expect(result.youtubeVideoTitle).toBe("비빔밥 만들기");
   });
