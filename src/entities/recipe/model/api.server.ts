@@ -7,6 +7,7 @@ import {
   DetailedRecipesApiResponse,
   Recipe,
   RecipeItemsQueryParams,
+  RecipeStatus,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   StaticRecipe,
@@ -16,6 +17,40 @@ import {
 const resolveSortParam = (sort: string | undefined, fallback: string): string => {
   if (!sort) return fallback;
   return sort.includes(",") ? sort : `createdAt,${sort}`;
+};
+
+export const getRecipeStatusOnServer = async (
+  recipeId: string
+): Promise<RecipeStatus | null> => {
+  const API_URL = `${BASE_API_URL}/v2/recipes/${recipeId}/status`;
+
+  try {
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore
+      .getAll()
+      .map(({ name, value }) => `${name}=${value}`)
+      .join("; ");
+    const res = await fetch(API_URL, {
+      headers: {
+        Cookie: cookieHeader,
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        return null;
+      }
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+    return res.json();
+  } catch (error) {
+    console.error(
+      `[getRecipeStatusOnServer] Failed to fetch recipe status ${recipeId}:`,
+      error
+    );
+    return null;
+  }
 };
 
 export const getRecipesOnServer = async (

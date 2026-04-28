@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { InArticleAdSlot } from "@/shared/adsense";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
@@ -13,13 +13,10 @@ import {
   generateRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
 import {
-  getRecommendedRecipesOnServer,
   getStaticRecipesOnServer,
   getStaticrecipionServer,
 } from "@/entities/recipe/model/api.server";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
-
-import { InArticleAdSlot } from "@/shared/adsense";
 
 import { ChatLauncher } from "@/features/recipe-chat";
 import { RecipeCompleteButton } from "@/features/recipe-complete";
@@ -27,7 +24,7 @@ import { RecipeStatusProvider } from "@/features/recipe-status";
 import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
-import LazyStaticRecipeSlide from "./components/LazyStaticRecipeSlide";
+import LazyRecommendedRecipeSlide from "./components/LazyRecommendedRecipeSlide";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
 import RecipeCommentsSection from "./components/RecipeCommentsSection";
 import RecipeComponentsSection from "./components/RecipeComponentsSection";
@@ -75,10 +72,7 @@ export default async function RecipeDetailPage({
 }: RecipeDetailPageProps) {
   const { recipeId } = await params;
 
-  const [staticRecipe, recommendedRecipes] = await Promise.all([
-    getStaticrecipionServer(recipeId),
-    getRecommendedRecipesOnServer(recipeId),
-  ]);
+  const staticRecipe = await getStaticrecipionServer(recipeId);
 
   if (!staticRecipe) {
     notFound();
@@ -86,10 +80,6 @@ export default async function RecipeDetailPage({
 
   const saveAmount =
     staticRecipe.marketPrice - staticRecipe.totalIngredientCost;
-
-  const recommendLabel = staticRecipe.tags.includes("👨‍🍳 셰프 레시피")
-    ? "더 다양한 셰프 레시피를 만나보세요"
-    : "이런 레시피는 어떠신가요?";
 
   const youtubeMetadata = staticRecipe.youtubeChannelName
     ? {
@@ -106,7 +96,7 @@ export default async function RecipeDetailPage({
 
   return (
     <ScrollReset>
-      <Suspense>
+      <Suspense fallback={null}>
         <RemixRedirectToast />
       </Suspense>
       <script
@@ -224,12 +214,10 @@ export default async function RecipeDetailPage({
 
           <RecipeTagsSection tags={staticRecipe.tags} />
 
-          {recommendedRecipes.length > 0 && (
-            <LazyStaticRecipeSlide
-              title={recommendLabel}
-              staticRecipes={recommendedRecipes}
-            />
-          )}
+          <LazyRecommendedRecipeSlide
+            recipeId={recipeId}
+            tags={staticRecipe.tags}
+          />
         </RecipeContainer>
         <ChatLauncher recipeId={recipeId} />
       </RecipeStatusProvider>

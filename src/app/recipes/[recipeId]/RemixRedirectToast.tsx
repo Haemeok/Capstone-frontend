@@ -6,6 +6,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 
+import { REMIX_REDIRECT_ERRORS } from "./lib/remixRedirectErrors";
+
 export const RemixRedirectToast = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -15,10 +17,10 @@ export const RemixRedirectToast = () => {
   useEffect(() => {
     const err = searchParams.get("error");
 
-    if (err === "not-cloneable") {
+    if (err === REMIX_REDIRECT_ERRORS.NOT_CLONEABLE) {
       addToast({ message: "이 레시피는 편집할 수 없어요", variant: "error" });
       router.replace(pathname);
-    } else if (err === "already-cloned") {
+    } else if (err === REMIX_REDIRECT_ERRORS.ALREADY_CLONED) {
       addToast({ message: "이미 편집한 레시피예요", variant: "error" });
       router.replace(pathname);
     }
