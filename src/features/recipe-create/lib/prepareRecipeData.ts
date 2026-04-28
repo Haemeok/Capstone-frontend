@@ -68,7 +68,6 @@ export const prepareRecipeData = async (formData: RecipeFormValues) => {
       })),
     cookingTools: formData.cookingTools || [],
     tags: formData.tags || [],
-    isCloneable: false,
   };
 
   return {
