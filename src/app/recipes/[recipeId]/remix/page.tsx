@@ -8,8 +8,8 @@ import {
 } from "@tanstack/react-query";
 
 import {
-  getrecipionServer,
   getRecipeStatusOnServer,
+  getStaticrecipionServer,
 } from "@/entities/recipe/model/api.server";
 import { getMeOnServer } from "@/entities/user/model/api.server";
 
@@ -31,8 +31,9 @@ const RemixPage = async ({ params }: RemixPageProps) => {
   }
 
   // (B) recipe detail + status 병렬 fetch
+  // isCloneable은 V2 detail static에만 포함되므로 V2 endpoint 사용
   const [recipe, recipeStatus] = await Promise.all([
-    getrecipionServer(recipeId),
+    getStaticrecipionServer(recipeId),
     getRecipeStatusOnServer(recipeId),
   ]);
 
@@ -64,7 +65,7 @@ const RemixPage = async ({ params }: RemixPageProps) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["recipe", recipeId],
-    queryFn: () => getrecipionServer(recipeId),
+    queryFn: () => getStaticrecipionServer(recipeId),
   });
 
   return (
