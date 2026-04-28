@@ -119,6 +119,7 @@ export type Recipe = {
     };
   };
   components?: RecipeComponent[];
+  isCloneable: boolean;
 };
 
 export type RecipeComponent = {
@@ -179,6 +180,7 @@ export type RecipePayload = Omit<Recipe, (typeof defaultRecipeKeys)[number]> & {
   cookingTime: number;
   servings: number;
   imageKey?: string | null;
+  originRecipeId?: string;
 };
 
 export type RecipeStepPayload = Omit<

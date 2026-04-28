@@ -36,6 +36,7 @@ export const makeBaseRecipe = (
     },
     private: false,
     aiGenerated: false,
+    isCloneable: false,
     cookingTools: ["냄비"],
     imageKey: null,
     createdAt: "2024-01-01T00:00:00Z",
