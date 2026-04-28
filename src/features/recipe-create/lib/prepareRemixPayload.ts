@@ -37,7 +37,7 @@ export const prepareRemixPayload = (
     steps,
     youtubeUrl,
     ...rest
-  } = recipe as Recipe & { extractorId?: unknown };
+  } = recipe;
 
   const ingredientPayloads: IngredientPayload[] = ingredients.map((ing) => ({
     id: ing.id,

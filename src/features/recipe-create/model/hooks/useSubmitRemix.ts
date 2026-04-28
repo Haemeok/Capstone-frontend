@@ -1,7 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { handleS3Upload } from "@/shared/api/file";
+import { ApiError } from "@/shared/api/errors";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { FileInfoRequest, FileObject } from "@/shared/types";
 
@@ -9,6 +10,10 @@ import { postRecipe } from "@/entities/recipe/model/api";
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
+import { useFinalizeRecipe } from "./useFinalizeRecipe";
+
+const REMIX_ALREADY_EXISTS_CODE = "211";
+const REMIX_NOT_ALLOWED_CODE = "212";
 
 type SubmitRemixVars = {
   originRecipeId: string;
@@ -22,6 +27,8 @@ type SubmitRemixVars = {
 export const useSubmitRemix = () => {
   const router = useRouter();
   const { addToast } = useToastStore();
+  const queryClient = useQueryClient();
+  const finalizeRecipeMutation = useFinalizeRecipe();
 
   const { mutate: submitRemix, isPending, error } = useMutation({
     mutationFn: async (vars: SubmitRemixVars) => {
@@ -39,6 +46,10 @@ export const useSubmitRemix = () => {
         await handleS3Upload(presignedUrlResponse.uploads, fileObjects);
       }
 
+      finalizeRecipeMutation.mutate(presignedUrlResponse.recipeId);
+
+      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+
       return { ...presignedUrlResponse, originRecipeId };
     },
     onSuccess: (data) => {
@@ -47,17 +58,18 @@ export const useSubmitRemix = () => {
       router.replace(`/recipes/${data.recipeId}`);
     },
     onError: (error: unknown, vars) => {
-      const code = (error as { data?: { code?: number | string } })?.data?.code;
-
-      if (String(code) === "211") {
-        addToast({ message: "이미 편집한 레시피예요", variant: "error" });
-        router.replace(`/recipes/${vars.originRecipeId}`);
-        return;
-      }
-      if (String(code) === "212") {
-        addToast({ message: "이 레시피는 편집할 수 없어요", variant: "error" });
-        router.replace(`/recipes/${vars.originRecipeId}`);
-        return;
+      if (ApiError.isApiError(error)) {
+        const code = String(error.data?.code ?? "");
+        if (code === REMIX_ALREADY_EXISTS_CODE) {
+          addToast({ message: "이미 편집한 레시피예요", variant: "error" });
+          router.replace(`/recipes/${vars.originRecipeId}`);
+          return;
+        }
+        if (code === REMIX_NOT_ALLOWED_CODE) {
+          addToast({ message: "이 레시피는 편집할 수 없어요", variant: "error" });
+          router.replace(`/recipes/${vars.originRecipeId}`);
+          return;
+        }
       }
       addToast({ message: "잠시 후 다시 시도해주세요", variant: "error" });
     },

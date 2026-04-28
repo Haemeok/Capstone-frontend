@@ -18,15 +18,21 @@ jest.mock("@/widgets/Toast/model/store", () => ({
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({ replace: jest.fn() })),
 }));
+jest.mock("@/features/recipe-create/model/hooks/useFinalizeRecipe", () => ({
+  useFinalizeRecipe: jest.fn(() => ({ mutate: jest.fn() })),
+}));
 
 import { useRouter } from "next/navigation";
 
+import { ApiError } from "@/shared/api/errors";
 import { handleS3Upload } from "@/shared/api/file";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { postRecipe } from "@/entities/recipe/model/api";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
+
+import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { useSubmitRemix } from "@/features/recipe-create/model/hooks/useSubmitRemix";
 
@@ -52,7 +58,7 @@ function renderUseSubmitRemix() {
   return { submitRemix: result.current.submitRemix, mockRouter, mockAddToast };
 }
 
-const dummyRecipePayload = { title: "remix" } as any;
+const dummyRecipePayload = { title: "remix" } as unknown as RecipePayload;
 const makePresign = (recipeId = "new-abc", uploads: any[] = []) => ({
   recipeId,
   uploads,
@@ -132,7 +138,7 @@ describe("useSubmitRemix", () => {
   });
 
   it("redirects to origin with error toast on 409 RECIPE_REMIX_ALREADY_EXISTS (code 211)", async () => {
-    const apiError = { status: 409, data: { code: 211, message: "already cloned" } };
+    const apiError = new ApiError(409, "Conflict", { code: 211, message: "already cloned" });
     (postRecipe as jest.Mock).mockRejectedValue(apiError);
 
     const { submitRemix, mockRouter, mockAddToast } = renderUseSubmitRemix();
@@ -160,7 +166,7 @@ describe("useSubmitRemix", () => {
   });
 
   it("redirects to origin with error toast on 403 RECIPE_REMIX_NOT_ALLOWED (code 212)", async () => {
-    const apiError = { status: 403, data: { code: 212, message: "not allowed" } };
+    const apiError = new ApiError(403, "Forbidden", { code: 212, message: "not allowed" });
     (postRecipe as jest.Mock).mockRejectedValue(apiError);
 
     const { submitRemix, mockRouter, mockAddToast } = renderUseSubmitRemix();
