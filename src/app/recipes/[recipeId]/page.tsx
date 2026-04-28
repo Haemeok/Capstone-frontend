@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -41,6 +43,7 @@ import RecipePlatingSection from "./components/RecipePlatingSection";
 import RecipeTagsSection from "./components/RecipeTagsSection";
 import RecipeVideoSection from "./components/RecipeVideoSection";
 import { ScrollReset } from "./components/ScrollReset";
+import { RemixRedirectToast } from "./RemixRedirectToast";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -103,6 +106,9 @@ export default async function RecipeDetailPage({
 
   return (
     <ScrollReset>
+      <Suspense>
+        <RemixRedirectToast />
+      </Suspense>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
