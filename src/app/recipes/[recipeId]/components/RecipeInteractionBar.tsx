@@ -22,6 +22,7 @@ export default function RecipeInteractionBar({
       initialIsPrivate={staticRecipe.private}
       title={staticRecipe.title}
       authorId={staticRecipe.author.id}
+      isCloneable={staticRecipe.isCloneable}
     />
   );
 }
