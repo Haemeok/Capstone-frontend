@@ -1,17 +1,7 @@
-import type { Recipe } from "@/entities/recipe/model/types";
+import type { Recipe, RecipeStep } from "@/entities/recipe/model/types";
 
-import { deriveActionShots } from "./actionDerivation";
-import { classifyIngredient } from "./classifier";
-import { translateIngredient, translateSeasoning } from "./translate";
-import type {
-  FinalThemeKey,
-  QuotaMode,
-  SequenceCategory,
-  SequenceImage,
-  SequenceSubcategory,
-} from "./types";
-
-export type VegetableInput = { name: string; quantity?: string; unit: string };
+import { translateIngredient } from "./translate";
+import type { FinalThemeKey, SequenceImage } from "./types";
 
 const ENV_LOCK = `[ENVIRONMENT LOCK — IDENTICAL ACROSS ALL IMAGES]
 - Surface: matte light-grey/white kitchen countertop, slight realistic texture
@@ -26,330 +16,131 @@ const ABSOLUTE_NO_TEXT = `[ABSOLUTE NO-TEXT RULE]
 - No logos, no brands, no labels, no packaging, no stamps, no engraved markings.
 - If any text would appear, remove it completely and leave the surface blank.`;
 
-const NEGATIVES_BASE = `[Negative Prompts]
---no people, --no hands, --no arms, --no faces,
+const NEGATIVES_FOR_STEP = `--no people, --no faces, --no body parts beyond a hand at the edge,
 --no text, --no watermark, --no caption,
 --no logo, --no brand, --no label, --no packaging,
---no maker mark, --no seal, --no stamp, --no engraving, --no embossed, --no calligraphy,
+--no maker mark, --no seal, --no stamp, --no engraving,
 --no plastic look, --no blurry, --no distorted`;
 
-const NEGATIVES_HANDS_OK = `[Negative Prompts]
---no faces,
---no text, --no watermark, --no caption,
---no logo, --no brand, --no label, --no packaging,
---no maker mark, --no seal, --no stamp, --no engraving, --no embossed, --no calligraphy,
---no plastic look, --no blurry, --no distorted`;
-
-const SEASONING_ANGLES = [
-  "Direct top-down 90° flat angle",
-  "Slightly tilted three-quarter view at about 45°, looking down into the bowl",
-  "Casual side angle at 30°, capturing the depth of the bowl and a clear silhouette of the spoon resting on the rim",
-  "Dynamic close-up at 60° from above, with the bowl and spoon offset slightly to one side of the frame",
-] as const;
-
-const pickAngle = <T,>(arr: ReadonlyArray<T>): T =>
-  arr[Math.floor(Math.random() * arr.length)];
-
-const formatAmount = (quantity: string | undefined, unit: string): string => {
-  const q = (quantity ?? "").trim();
-  if (q.length === 0 && unit.length === 0) return "the appropriate amount";
-  return `${q}${unit}`;
-};
-
-export const buildVegetableTrayPrompt = (input: VegetableInput): string => {
-  const en = translateIngredient(input.name);
-  const amount = formatAmount(input.quantity, input.unit);
-
-  return `Top-down 90° photo of a single rectangular SILVER STAINLESS STEEL TRAY (~30cm wide).
-Subject: ${en} (${input.name}) — ${amount}, properly prepped (washed, peeled, cut as appropriate for typical Korean home cooking).
-Naturally scattered on the tray — slightly imperfect, NOT arranged in a grid.
-The tray fills ~70% of the frame.
-
-${ENV_LOCK}
-
-${NEGATIVES_BASE}, --no other ingredients, --no side dishes
-
-${ABSOLUTE_NO_TEXT}`;
-};
-
-export type SeasoningInput = { name: string; quantity?: string; unit: string };
-
-export const buildSeasoningSinglePrompt = (input: SeasoningInput): string => {
-  const en = translateSeasoning(input.name);
-  const amount = formatAmount(input.quantity, input.unit);
-
-  return `${pickAngle(SEASONING_ANGLES)} photo of a small mirror-finish STAINLESS STEEL BOWL (~12cm diameter).
-Inside the bowl: exactly ${amount} of ${en} (${input.name}).
-A matching SPOON is naturally placed in the scene — it can rest on the rim, lean against the bowl, lie flat next to it, or be partially dipped in the substance, whichever feels most natural for the chosen camera angle. The substance should be visible both on the spoon's scoop AND in the bowl in correct proportion.
-For "1 큰술" / "1 spoonful" — render a level or slightly heaped tablespoon's worth.
-For "1 작은술" — render a teaspoon-sized amount.
-For "약간" / "꼬집" — render a tiny pinch's worth, just a few specks.
-The visible quantity must precisely match the spec — do not overflow or underfill.
-
-${ENV_LOCK}
-
-${NEGATIVES_BASE}, --no brand bottles, --no labels on containers, --no other ingredients
-
-${ABSOLUTE_NO_TEXT}`;
-};
-
-export const buildSeasoningCombinedPrompt = (
-  items: SeasoningInput[]
+const buildRecipeContext = (
+  recipe: Recipe,
+  position: number,
+  total: number
 ): string => {
-  const lines = items
-    .map(
-      (i) =>
-        `  • ${translateSeasoning(i.name)} (${i.name}): ${formatAmount(i.quantity, i.unit)}`
-    )
-    .join("\n");
+  const dishLabel = recipe.dishType
+    ? `${recipe.title} (a ${recipe.dishType})`
+    : recipe.title;
+  return `[RECIPE CONTEXT — KEEP COHERENT WITH FINAL DISH]
+Final dish being prepared: ${dishLabel}
+This sequence has ${total} images total. This image: number ${position} of ${total}.
+All images in this sequence belong to ONE coherent recipe — same kitchen, same lighting, same cookware family, leading toward the dish above.
+DO NOT show this text in the image. NO captions, NO labels, NO printed words.`;
+};
 
-  return `${pickAngle(SEASONING_ANGLES)} photo of a single rectangular SILVER STAINLESS STEEL TRAY (~30cm wide).
-On the tray, multiple SMALL ceramic dishes (small saucers, ~7cm each), each holding ONE of the following seasonings in the exact specified quantity:
-${lines}
+export const buildStepPrompt = (
+  step: RecipeStep,
+  recipe: Recipe,
+  position: number,
+  total: number
+): string => {
+  const ctx = buildRecipeContext(recipe, position, total);
+  const instruction = step.instruction?.trim() || "(no instruction)";
+  const actionHint = step.action?.trim() || "(unspecified)";
+  const stepIngredients =
+    (step.ingredients ?? [])
+      .map((i) => {
+        const en = translateIngredient(i.name);
+        const qtyUnit = `${i.quantity ?? ""}${i.unit ?? ""}`.trim();
+        return qtyUnit
+          ? `${i.name} (${en}) — ${qtyUnit}`
+          : `${i.name} (${en})`;
+      })
+      .join("; ") || "(none specified)";
 
-Each dish clearly separated, naturally arranged. A small plain spoon resting beside one of the dishes (NOT held by anyone).
+  return `${ctx}
+
+[STEP DESCRIPTION — RENDER EXACTLY THIS, NOTHING INVENTED]
+Korean instruction (verbatim, treat this as the ground truth — render the literal moment described): ${instruction}
+Action hint (Korean verb): ${actionHint}
+Ingredients used in this step: ${stepIngredients}
+
+[CRITICAL — DO NOT INVENT]
+Render only the literal moment described in the Korean instruction above. Do NOT add or substitute actions.
+- If the instruction says "담는다" / "넣는다" / "붓는다" (put in / add / pour), show items being placed into a vessel — NOT chopped, NOT stirred.
+- If the instruction says "섞는다" / "휘젓는다" (mix / whisk), show mixing or whisking — NOT pouring.
+- If the instruction says "볶는다" / "굽는다" (stir-fry / pan-cook), show that action with a hot pan and oil sheen.
+- If the instruction says "썬다" / "다진다" (slice / mince), show cutting on a board.
+- If the instruction says "끓인다" / "삶는다" (boil / simmer), show a pot with bubbles and steam.
+- If the instruction says "휴지" / "기다린다" (rest / wait), show the dough/mixture sitting still in the bowl, no active motion.
+- Match the literal Korean verb. The model is multilingual — trust the source instruction.
+
+[SCENE COMPOSITION]
+Korean home kitchen counter (light wooden or matte light-grey). Stainless steel cookware where the step requires it; wooden cutting board where the step requires cutting; mixing bowls where the step requires combining.
+Camera angle: choose whichever feels MOST NATURAL for the literal action — top-down 90° for prep on a tray, three-quarter 30~45° for active cooking or cutting, eye-level for stirring/pouring. Avoid rigid identical angles across all steps.
+A single hand or pair of hands may be partially visible at the frame edge (cropped at wrist), holding the relevant tool or ingredient. NO face, NO body, NO other person.
 
 ${ENV_LOCK}
 
-${NEGATIVES_BASE}, --no brand bottles, --no labels, --no other ingredients
-
-${ABSOLUTE_NO_TEXT}`;
-};
-
-export type MeatInput = { name: string; quantity?: string; unit: string };
-
-export const buildMeatTrayPrompt = (input: MeatInput): string => {
-  const en = translateIngredient(input.name);
-  const amount = formatAmount(input.quantity, input.unit);
-
-  return `Top-down 90° photo of a SILVER STAINLESS STEEL TRAY (~30cm wide).
-Subject: ${en} (${input.name}) — ${amount}, prepped (sliced, cubed, or ground as the recipe implies).
-The visible amount on the tray must clearly match the spec.
-Light glossy raw look (slight moisture sheen), realistic texture.
-
-${ENV_LOCK}
-
-${NEGATIVES_BASE}, --no other ingredients, --no garnish
-
-${ABSOLUTE_NO_TEXT}`;
-};
-
-const ACTION_BODY_BY_KEY: Record<string, string> = {
-  stir_fry: `Top-down 90° photo of a stainless steel wok or pan on a gas burner.
-Action mid-state: vegetables and (where applicable) meat being stir-fried, oil sheen visible, slight wisps of steam, food slightly tossed (motion-frozen).
-Surrounding context: edge of gas burner partially visible.
-A spatula may rest on the pan edge — NOT held by anyone.`,
-  simmer: `Top-down 90° photo of a stainless steel pot on a gas burner.
-Action mid-state: a Korean stew/soup simmering, steam rising softly, gentle surface bubbles.
-Surrounding context: edge of gas burner partially visible.
-A ladle may rest on the pot edge — NOT held by anyone.`,
-  cutting_board: `Natural 30~45° three-quarter angle photo, looking down at a wooden cutting board on a kitchen counter — the kind of POV a home cook actually has while prepping ingredients.
-Mid-action state: the knife edge is mid-stroke through the ingredient (e.g., a green onion, garlic clove, or vegetable on the board), with several already-cut pieces in a small natural pile to one side.
-A single hand visible at the edge of the frame holding the knife handle, cropped at the wrist — NO face, NO body, NO other person.
-Authentic prep mess: cut scraps and a few peels at the corner of the board, a few drops of moisture on the wood, slight knife marks on the surface, the cutting board showing realistic wear.
-A second hand may be partially visible holding/steadying the ingredient (cropped at wrist) — also no face, no body.`,
-  mix_bowl: `Top-down 90° photo of a large stainless steel mixing bowl.
-Inside: ingredients being seasoned/mixed (e.g., 무침 or 비빔), glossy with sauce, partial coverage indicating mid-mixing.
-A pair of plain chopsticks or a spoon resting on the bowl edge — NOT held by anyone.`,
-  deep_fry: `Top-down 90° photo of a stainless steel deep-frying pot on a gas burner.
-Action mid-state: ingredients being deep-fried in clear oil, golden crispy color forming, oil bubbling around them.`,
-  steam_action: `Top-down 90° photo of a Korean steaming setup (steel steamer over a pot) on a gas burner.
-Active steam billowing out, lid slightly ajar to reveal the contents inside.`,
-};
-
-export const buildActionPrompt = (actionKey: string): string => {
-  const body =
-    ACTION_BODY_BY_KEY[actionKey] ??
-    `Top-down 90° photo of a Korean home cooking action mid-state on a stainless cookware. NO hands visible.`;
-
-  const isCuttingBoard = actionKey === "cutting_board";
-
-  const closingLine = isCuttingBoard
-    ? `Only the active hand(s) at the frame edge are visible. NO face, NO body, NO other person.`
-    : `NO hands, NO arms, NO body parts visible. The cookware sits on its own.`;
-
-  const negatives = isCuttingBoard ? NEGATIVES_HANDS_OK : NEGATIVES_BASE;
-
-  return `${body}
-
-${closingLine}
-
-${ENV_LOCK}
-
-${negatives}
+[Negative Prompts]
+${NEGATIVES_FOR_STEP}
 
 ${ABSOLUTE_NO_TEXT}`;
 };
 
 export const buildFinalThemePrompt = (
   theme: FinalThemeKey,
-  dishTitle: string
+  recipe: Recipe,
+  position: number,
+  total: number
 ): string => {
-  const titleLine = `Dish: ${dishTitle}.`;
+  const ctx = buildRecipeContext(recipe, position, total);
+  // theme === "korean_mom_phone" only
+  void theme;
+  return `${ctx}
 
-  switch (theme) {
-    case "korean_mom_phone":
-      return `${titleLine}
+[FINAL — THE COMPLETED DISH]
+This is the FINAL plated result of all the prep/cooking shown in the previous ${total - 1} images. Show the dish "${recipe.title}" plated and ready to eat.
+
 A casual, slightly imperfect smartphone photo (iPhone or Galaxy) of the dish on a normal Korean home dining table.
 Angle: 30~45° downward — the angle of someone sitting at the table and just snapping the photo. NOT a professional flat-lay, NOT magazine-styled.
 Slightly cool color temperature (cold-white indoor LED ceiling light), subtle ceiling-light reflection visible on the table or plate edge.
 Authentic background details (one or two of these, partially cropped at the frame edge): the corner of a 반찬통 (Korean side-dish container) lid, a folded paper napkin, a slight water droplet on the table, the corner of a TV remote, a glass of water.
 Plate: ordinary Korean home tableware — chipped Corelle-style, plastic melamine, or mismatched ceramic. NOT styled, NOT premium.
-Chopsticks dropped casually next to the plate, slightly off-axis.
+Chopsticks or fork dropped casually next to the plate, slightly off-axis (use whichever fits the dish type).
 Slightly off-center framing. Lived-in, real-life vibe.
 
-${NEGATIVES_BASE}, --no professional styling, --no magazine layout
+[Negative Prompts]
+${NEGATIVES_FOR_STEP}, --no professional styling, --no magazine layout
 
 ${ABSOLUTE_NO_TEXT}`;
-  }
 };
 
-const FINAL_THEMES: ReadonlyArray<{ key: FinalThemeKey; label: string }> = [
-  { key: "korean_mom_phone", label: "엄마 폰스냅" },
-];
+export const buildSequencePrompts = (recipe: Recipe): SequenceImage[] => {
+  const sortedSteps = recipe.steps
+    .slice()
+    .sort((a, b) => a.stepNumber - b.stepNumber);
+  const total = sortedSteps.length + 1; // +1 for final
 
-const ID_SLUG_MAX_LENGTH = 24;
+  const stepImages: SequenceImage[] = sortedSteps.map((step, idx) => {
+    const position = idx + 1;
+    const labelSource = (step.action ?? step.instruction ?? "").slice(0, 30);
+    return {
+      id: `step-${step.stepNumber}`,
+      category: "step",
+      subcategory: "step",
+      label: `Step ${step.stepNumber}: ${labelSource}`,
+      prompt: buildStepPrompt(step, recipe, position, total),
+    };
+  });
 
-const slug = (s: string): string =>
-  s.replace(/\s+/g, "-").slice(0, ID_SLUG_MAX_LENGTH);
+  const finalImage: SequenceImage = {
+    id: "final-korean_mom_phone",
+    category: "final",
+    subcategory: "final_theme",
+    label: "엄마 폰스냅",
+    prompt: buildFinalThemePrompt("korean_mom_phone", recipe, total, total),
+    themeKey: "korean_mom_phone",
+  };
 
-const makeId = (
-  category: SequenceCategory,
-  subcategory: SequenceSubcategory,
-  ...parts: string[]
-): string => [category, subcategory, ...parts.map(slug)].join("-");
-
-export const buildSequencePrompts = (
-  recipe: Recipe,
-  mode: QuotaMode
-): SequenceImage[] => {
-  const out: SequenceImage[] = [];
-
-  const veggies: typeof recipe.ingredients = [];
-  const meats: typeof recipe.ingredients = [];
-  const mainSeasonings: typeof recipe.ingredients = [];
-  const minorSeasonings: typeof recipe.ingredients = [];
-
-  for (const ing of recipe.ingredients) {
-    const role = classifyIngredient({ ...ing, inFridge: false });
-    switch (role) {
-      case "vegetable":
-        veggies.push(ing);
-        break;
-      case "meat":
-        meats.push(ing);
-        break;
-      case "seasoning_main":
-        mainSeasonings.push(ing);
-        break;
-      case "seasoning_minor":
-        minorSeasonings.push(ing);
-        break;
-      // "other" -> skip
-    }
-  }
-
-  for (const v of veggies) {
-    out.push({
-      id: makeId("prep", "vegetable", v.name),
-      category: "prep",
-      subcategory: "vegetable",
-      label: `${v.name} ${v.quantity ?? ""}${v.unit}`.trim(),
-      prompt: buildVegetableTrayPrompt({
-        name: v.name,
-        quantity: v.quantity,
-        unit: v.unit,
-      }),
-    });
-  }
-
-  for (const m of meats) {
-    out.push({
-      id: makeId("prep", "meat", m.name),
-      category: "prep",
-      subcategory: "meat",
-      label: `${m.name} ${m.quantity ?? ""}${m.unit}`.trim(),
-      prompt: buildMeatTrayPrompt({
-        name: m.name,
-        quantity: m.quantity,
-        unit: m.unit,
-      }),
-    });
-  }
-
-  for (const s of mainSeasonings) {
-    out.push({
-      id: makeId("prep", "seasoning_main", s.name, s.quantity ?? "", s.unit),
-      category: "prep",
-      subcategory: "seasoning_main",
-      label: `${s.name} ${s.quantity ?? ""}${s.unit}`.trim(),
-      prompt: buildSeasoningSinglePrompt({
-        name: s.name,
-        quantity: s.quantity,
-        unit: s.unit,
-      }),
-    });
-  }
-
-  if (minorSeasonings.length > 0) {
-    if (mode === "single") {
-      for (const s of minorSeasonings) {
-        out.push({
-          id: makeId(
-            "prep",
-            "seasoning_minor_single",
-            s.name,
-            s.quantity ?? "",
-            s.unit
-          ),
-          category: "prep",
-          subcategory: "seasoning_minor_single",
-          label: `${s.name} ${s.quantity ?? ""}${s.unit}`.trim(),
-          prompt: buildSeasoningSinglePrompt({
-            name: s.name,
-            quantity: s.quantity,
-            unit: s.unit,
-          }),
-        });
-      }
-    } else {
-      out.push({
-        id: makeId("prep", "seasoning_minor_combined", "all"),
-        category: "prep",
-        subcategory: "seasoning_minor_combined",
-        label: `마이너 양념 ${minorSeasonings.length}종`,
-        prompt: buildSeasoningCombinedPrompt(
-          minorSeasonings.map((s) => ({
-            name: s.name,
-            quantity: s.quantity,
-            unit: s.unit,
-          }))
-        ),
-      });
-    }
-  }
-
-  const actions = deriveActionShots(recipe.steps);
-  for (const a of actions) {
-    out.push({
-      id: makeId("action", "action", a.actionKey),
-      category: "action",
-      subcategory: "action",
-      label: a.label,
-      prompt: buildActionPrompt(a.actionKey),
-    });
-  }
-
-  for (const t of FINAL_THEMES) {
-    out.push({
-      id: makeId("final", "final_theme", t.key),
-      category: "final",
-      subcategory: "final_theme",
-      label: t.label,
-      prompt: buildFinalThemePrompt(t.key, recipe.title),
-      themeKey: t.key,
-    });
-  }
-
-  return out;
+  return [...stepImages, finalImage];
 };

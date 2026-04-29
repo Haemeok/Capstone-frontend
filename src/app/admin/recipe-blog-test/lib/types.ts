@@ -1,17 +1,7 @@
-export type QuotaMode = "single" | "combined";
+export type SequenceCategory = "step" | "final";
+export type SequenceSubcategory = "step" | "final_theme";
 
 export type FinalThemeKey = "korean_mom_phone";
-
-export type SequenceCategory = "prep" | "action" | "final";
-
-export type SequenceSubcategory =
-  | "vegetable"
-  | "seasoning_main"
-  | "seasoning_minor_combined"
-  | "seasoning_minor_single"
-  | "meat"
-  | "action"
-  | "final_theme";
 
 export type SequenceImage = {
   id: string;
