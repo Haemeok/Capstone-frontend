@@ -1,5 +1,6 @@
 import {
   buildActionPrompt,
+  buildFinalThemePrompt,
   buildMeatTrayPrompt,
   buildSeasoningCombinedPrompt,
   buildSeasoningSinglePrompt,
@@ -158,5 +159,47 @@ describe("buildActionPrompt", () => {
   it("falls back to a generic cooking scene for unknown action keys", () => {
     const p = buildActionPrompt("zzz_unknown");
     expect(p).toContain("Korean home cooking action");
+  });
+});
+
+describe("buildFinalThemePrompt — korean_mom_phone", () => {
+  it("emphasizes casual non-styled smartphone vibe", () => {
+    const p = buildFinalThemePrompt("korean_mom_phone", "김치찌개");
+    expect(p).toContain("smartphone photo");
+    expect(p).toContain("30~45°");
+    expect(p).toContain("NOT magazine-styled");
+    expect(p).toContain("반찬통");
+  });
+
+  it("includes the dish title", () => {
+    const p = buildFinalThemePrompt("korean_mom_phone", "잡채");
+    expect(p).toContain("잡채");
+  });
+});
+
+describe("buildFinalThemePrompt — family_table_wide", () => {
+  it("includes 공깃밥 + kimchi + side dish context", () => {
+    const p = buildFinalThemePrompt("family_table_wide", "비빔밥");
+    expect(p).toContain("공깃밥");
+    expect(p).toContain("kimchi");
+    expect(p).toContain("45°");
+  });
+});
+
+describe("buildFinalThemePrompt — magazine_flat_lay", () => {
+  it("requests strict overhead 90° editorial style", () => {
+    const p = buildFinalThemePrompt("magazine_flat_lay", "갈비찜");
+    expect(p).toContain("90°");
+    expect(p).toContain("flat-lay");
+    expect(p).toContain("marble");
+  });
+});
+
+describe("buildFinalThemePrompt — steam_hero", () => {
+  it("requests low-angle close-up with steam", () => {
+    const p = buildFinalThemePrompt("steam_hero", "부대찌개");
+    expect(p).toContain("low angle");
+    expect(p).toContain("steam");
+    expect(p).toContain("Rembrandt");
   });
 });

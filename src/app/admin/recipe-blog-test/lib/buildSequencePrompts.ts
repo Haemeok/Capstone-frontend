@@ -1,4 +1,5 @@
 import { translateIngredient, translateSeasoning } from "./translate";
+import type { FinalThemeKey } from "./types";
 
 export type VegetableInput = { name: string; quantity?: string; unit: string };
 
@@ -141,4 +142,66 @@ ${ENV_LOCK}
 ${NEGATIVES_BASE}
 
 ${ABSOLUTE_NO_TEXT}`;
+};
+
+export const buildFinalThemePrompt = (
+  theme: FinalThemeKey,
+  dishTitle: string
+): string => {
+  const titleLine = `Dish: ${dishTitle}.`;
+
+  switch (theme) {
+    case "korean_mom_phone":
+      return `${titleLine}
+A casual, slightly imperfect smartphone photo (iPhone or Galaxy) of the dish on a normal Korean home dining table.
+Angle: 30~45° downward — the angle of someone sitting at the table and just snapping the photo. NOT a professional flat-lay, NOT magazine-styled.
+Slightly cool color temperature (cold-white indoor LED ceiling light), subtle ceiling-light reflection visible on the table or plate edge.
+Authentic background details (one or two of these, partially cropped at the frame edge): the corner of a 반찬통 (Korean side-dish container) lid, a folded paper napkin, a slight water droplet on the table, the corner of a TV remote, a glass of water.
+Plate: ordinary Korean home tableware — chipped Corelle-style, plastic melamine, or mismatched ceramic. NOT styled, NOT premium.
+Chopsticks dropped casually next to the plate, slightly off-axis.
+Slightly off-center framing. Lived-in, real-life vibe.
+
+${NEGATIVES_BASE}, --no professional styling, --no magazine layout
+
+${ABSOLUTE_NO_TEXT}`;
+
+    case "family_table_wide":
+      return `${titleLine}
+A 45° angle photo of the dish as the centerpiece of a Korean family dinner table.
+Wooden dining table.
+Visible context (around the main dish): a small bowl of steamed white rice (공깃밥), a small plate of kimchi, 1~2 small Korean side dishes (반찬) like spinach 무침 or stir-fried 어묵.
+Warm tungsten / golden hour lighting, cozy homey atmosphere.
+Korean ceramic or brass tableware (놋그릇 OK).
+Composition: the main dish is the hero (centered, larger), supporting elements visible at the edges but not crowding.
+
+${NEGATIVES_BASE}, --no Western cutlery, --no fork, --no knife
+
+${ABSOLUTE_NO_TEXT}`;
+
+    case "magazine_flat_lay":
+      return `${titleLine}
+True top-down 90° editorial flat-lay photo of the dish.
+Background: white marble OR charcoal slate.
+Composition: minimalist, near-symmetric, intentional negative space.
+Hard side lighting from the left at 30°, sharp clean shadow on the right side.
+Props: a folded linen napkin, copper or wood cutlery (no engraving, no logo), a small dish of garnish.
+Style: professional cookbook / magazine spread quality. Sharp focus, vivid colors, clean glossy textures.
+
+${NEGATIVES_BASE}
+
+${ABSOLUTE_NO_TEXT}`;
+
+    case "steam_hero":
+      return `${titleLine}
+Eye-level low angle close-up of the dish, dish fills 70%+ of the frame.
+Visible steam actively rising from the dish, captured in motion, soft and volumetric.
+Dark moody background (out of focus, deep brown/black).
+Rembrandt-style side lighting — single soft light from the left, deep falloff on the right side of the frame.
+Cinematic hero shot feel. Glossy oils/sauces catching the light.
+Shallow depth of field, food razor-sharp, background completely blurred.
+
+${NEGATIVES_BASE}
+
+${ABSOLUTE_NO_TEXT}`;
+  }
 };
