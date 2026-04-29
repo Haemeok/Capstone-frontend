@@ -12,9 +12,8 @@ export type SequenceImage = {
   themeKey?: FinalThemeKey;
 };
 
-export type SequenceModelId = "gpt-image-2-low" | "gpt-image-2-medium";
+export type SequenceModelId = "gpt-image-2-low";
 
 export const SEQUENCE_MODEL_IDS: readonly SequenceModelId[] = [
   "gpt-image-2-low",
-  "gpt-image-2-medium",
 ] as const;

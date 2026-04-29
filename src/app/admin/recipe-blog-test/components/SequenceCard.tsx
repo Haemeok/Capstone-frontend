@@ -19,7 +19,6 @@ type Props = {
 
 const MODEL_LABEL: Record<SequenceModelId, string> = {
   "gpt-image-2-low": "Low",
-  "gpt-image-2-medium": "Medium",
 };
 
 export const SequenceCard = ({ image, results, onRetry }: Props) => {
@@ -45,7 +44,7 @@ export const SequenceCard = ({ image, results, onRetry }: Props) => {
         </pre>
       )}
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         {SEQUENCE_MODEL_IDS.map((modelId) => {
           const cell = cells?.[modelId] ?? { status: "idle" as const };
           return (

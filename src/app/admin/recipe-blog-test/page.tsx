@@ -122,7 +122,6 @@ const RecipeBlogTestPage = () => {
             <p className="font-semibold text-gray-900">사용 모델 (고정)</p>
             <ul className="mt-1 list-disc pl-4">
               <li>GPT Image 2 Low ($0.006/img)</li>
-              <li>GPT Image 2 Medium ($0.053/img)</li>
             </ul>
           </div>
 
@@ -143,8 +142,7 @@ const RecipeBlogTestPage = () => {
                     {recipe.title}
                   </p>
                   <p className="mt-1 text-xs text-gray-500">
-                    이미지 {sequence.length}장 × 2모델 = {sequence.length * 2}회
-                    호출 · 예상 비용 ≈ ${estimatedCost.toFixed(2)}
+                    이미지 {sequence.length}장 · 예상 비용 ≈ ${estimatedCost.toFixed(2)}
                   </p>
                 </div>
                 <button
