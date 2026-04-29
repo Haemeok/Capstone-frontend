@@ -87,3 +87,58 @@ ${NEGATIVES_BASE}, --no brand bottles, --no labels, --no other ingredients
 
 ${ABSOLUTE_NO_TEXT}`;
 };
+
+export type MeatInput = { name: string; quantity?: string; unit: string };
+
+export const buildMeatTrayPrompt = (input: MeatInput): string => {
+  const en = translateIngredient(input.name);
+  const amount = formatAmount(input.quantity, input.unit);
+
+  return `Top-down 90° photo of a SILVER STAINLESS STEEL TRAY (~30cm wide).
+Subject: ${en} (${input.name}) — ${amount}, prepped (sliced, cubed, or ground as the recipe implies).
+The visible amount on the tray must clearly match the spec.
+Light glossy raw look (slight moisture sheen), realistic texture.
+
+${ENV_LOCK}
+
+${NEGATIVES_BASE}, --no other ingredients, --no garnish
+
+${ABSOLUTE_NO_TEXT}`;
+};
+
+const ACTION_BODY_BY_KEY: Record<string, string> = {
+  stir_fry: `Top-down 90° photo of a stainless steel wok or pan on a gas burner.
+Action mid-state: vegetables and (where applicable) meat being stir-fried, oil sheen visible, slight wisps of steam, food slightly tossed (motion-frozen).
+Surrounding context: edge of gas burner partially visible.
+A spatula may rest on the pan edge — NOT held by anyone.`,
+  simmer: `Top-down 90° photo of a stainless steel pot on a gas burner.
+Action mid-state: a Korean stew/soup simmering, steam rising softly, gentle surface bubbles.
+Surrounding context: edge of gas burner partially visible.
+A ladle may rest on the pot edge — NOT held by anyone.`,
+  cutting_board: `Top-down 90° photo of a wooden cutting board on a kitchen counter.
+Subject: ingredients in mid-prep — partially sliced or chopped, knife resting beside (NOT held by anyone).
+A small scattering of trimmings nearby.`,
+  mix_bowl: `Top-down 90° photo of a large stainless steel mixing bowl.
+Inside: ingredients being seasoned/mixed (e.g., 무침 or 비빔), glossy with sauce, partial coverage indicating mid-mixing.
+A pair of plain chopsticks or a spoon resting on the bowl edge — NOT held by anyone.`,
+  deep_fry: `Top-down 90° photo of a stainless steel deep-frying pot on a gas burner.
+Action mid-state: ingredients being deep-fried in clear oil, golden crispy color forming, oil bubbling around them.`,
+  steam_action: `Top-down 90° photo of a Korean steaming setup (steel steamer over a pot) on a gas burner.
+Active steam billowing out, lid slightly ajar to reveal the contents inside.`,
+};
+
+export const buildActionPrompt = (actionKey: string): string => {
+  const body =
+    ACTION_BODY_BY_KEY[actionKey] ??
+    `Top-down 90° photo of a Korean home cooking action mid-state on a stainless cookware. NO hands visible.`;
+
+  return `${body}
+
+NO hands, NO arms, NO body parts visible. The cookware sits on its own.
+
+${ENV_LOCK}
+
+${NEGATIVES_BASE}
+
+${ABSOLUTE_NO_TEXT}`;
+};

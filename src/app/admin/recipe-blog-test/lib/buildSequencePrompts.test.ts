@@ -1,4 +1,6 @@
 import {
+  buildActionPrompt,
+  buildMeatTrayPrompt,
   buildSeasoningCombinedPrompt,
   buildSeasoningSinglePrompt,
   buildVegetableTrayPrompt,
@@ -105,5 +107,56 @@ describe("buildSeasoningCombinedPrompt", () => {
     ]);
     expect(p).toContain("1꼬집");
     expect(p).toContain("1작은술");
+  });
+});
+
+describe("buildMeatTrayPrompt", () => {
+  it("renders a stainless tray with the protein name and quantity", () => {
+    const p = buildMeatTrayPrompt({
+      name: "돼지고기",
+      quantity: "300",
+      unit: "g",
+    });
+    expect(p).toContain("SILVER STAINLESS STEEL TRAY");
+    expect(p).toContain("pork");
+    expect(p).toContain("300g");
+    expect(p).toContain("[ENVIRONMENT LOCK");
+  });
+
+  it("includes negatives", () => {
+    const p = buildMeatTrayPrompt({
+      name: "닭가슴살",
+      quantity: "200",
+      unit: "g",
+    });
+    expect(p).toContain("--no people");
+    expect(p).toContain("--no text");
+  });
+});
+
+describe("buildActionPrompt", () => {
+  it("renders stir_fry as a hot wok scene with no hands", () => {
+    const p = buildActionPrompt("stir_fry");
+    expect(p).toContain("stainless");
+    expect(p).toContain("stir-fried");
+    expect(p).toContain("--no hands");
+    expect(p).toContain("[ENVIRONMENT LOCK");
+  });
+
+  it("renders simmer with steam and bubbles", () => {
+    const p = buildActionPrompt("simmer");
+    expect(p).toContain("simmering");
+    expect(p).toContain("steam");
+  });
+
+  it("renders cutting_board action with knife resting (not held)", () => {
+    const p = buildActionPrompt("cutting_board");
+    expect(p).toContain("cutting board");
+    expect(p).toContain("knife resting");
+  });
+
+  it("falls back to a generic cooking scene for unknown action keys", () => {
+    const p = buildActionPrompt("zzz_unknown");
+    expect(p).toContain("Korean home cooking action");
   });
 });
