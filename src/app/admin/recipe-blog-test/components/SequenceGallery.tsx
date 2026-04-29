@@ -6,7 +6,6 @@ import {
   type SequenceModelId,
 } from "../lib/types";
 import type { SequenceResults } from "../lib/useSequenceGenerate";
-
 import { SequenceCard } from "./SequenceCard";
 
 type Props = {
@@ -16,9 +15,8 @@ type Props = {
 };
 
 const SECTIONS: ReadonlyArray<{ key: SequenceCategory; title: string }> = [
-  { key: "prep", title: "Prep — 재료 / 양념 / 고기" },
-  { key: "action", title: "Action — 조리 과정" },
-  { key: "final", title: "Final — 4테마 완성 컷" },
+  { key: "step", title: "조리 과정 (Steps)" },
+  { key: "final", title: "완성 (Final)" },
 ];
 
 export const SequenceGallery = ({ sequence, results, onRetry }: Props) => {
