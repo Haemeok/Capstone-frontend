@@ -3,6 +3,7 @@ export {
   getRecipe,
   getRecipeItems,
   getRecipesStatus,
+  getRecommendedRecipes,
 } from "./model/api";
 export {
   useRecipeDetailQuery,

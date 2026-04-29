@@ -15,6 +15,7 @@ import {
   RecipeQueryParams,
   RecipesStatusResponse,
   RecipeStatus,
+  StaticDetailedRecipeGridItem,
   TrendingYoutubeRecipe,
 } from "./types";
 import { RecipePayload } from "./types";
@@ -198,4 +199,12 @@ export const reportIngredient = async (
   data: IngredientReportData
 ) => {
   return api.post(`/recipes/${recipeId}/reports`, data);
+};
+
+export const getRecommendedRecipes = async (
+  recipeId: string
+): Promise<StaticDetailedRecipeGridItem[]> => {
+  return api.get<StaticDetailedRecipeGridItem[]>(
+    END_POINTS.RECIPE_RECOMMENDATIONS(recipeId)
+  );
 };

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getRecipeItems,
   getRecipesStatus,
+  getRecommendedRecipes,
   RecipeItemsQueryParams,
 } from "@/entities/recipe";
 
@@ -48,5 +49,16 @@ export const useRecipesStatusQuery = (recipeIds: string[]) => {
     queryKey: ["recipes-status", recipeIds],
     queryFn: () => getRecipesStatus(recipeIds),
     enabled: recipeIds.length > 0,
+  });
+};
+
+export const useRecommendedRecipesQuery = (
+  recipeId: string,
+  options?: { enabled?: boolean }
+) => {
+  return useQuery({
+    queryKey: ["recipes-recommended", recipeId],
+    queryFn: () => getRecommendedRecipes(recipeId),
+    enabled: options?.enabled ?? true,
   });
 };

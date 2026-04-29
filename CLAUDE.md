@@ -21,6 +21,35 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - 예: `/^\/recipes\/\d+$/` ❌ → `/^\/recipes\/[^/]+$/` ✅
   - 단, `[^/]+` 로 매칭할 때 `new`, `my-fridge`, `admin`, `category` 같은 예약된 단일 세그먼트 경로와 충돌할 수 있으니 negative lookahead로 명시적으로 제외할 것.
 
+### Plan / Task / Commit 분할 규칙 (anti-fragmentation)
+
+**과분할 금지. 한 commit = 한 의미 단위.** 각 신규 컴포넌트/유틸리티를 무조건 별 task/commit 으로 나누지 말 것.
+
+#### 기준
+- **묶어라:** 같은 PR 의 같은 테마 작업 (예: "5개 신규 presentational 섹션 컴포넌트 추가") 은 하나의 task + 하나의 commit
+- **묶어라:** 50줄 이하 presentational 컴포넌트는 다른 비슷한 컴포넌트와 합칠 것
+- **묶어라:** 단순 시각 변경 (배경색 토글, 아이콘 추가, 클래스 변경) 은 같은 영역이면 한 commit
+- **나눠라:** 타입 변경 / 파서 / API 함수 / 오케스트레이터 와이어업 같은 **layer 가 다른** 변경은 별 commit
+- **나눠라:** TDD 가 적용되는 진짜 로직 (테스트 + 구현) 은 task 분리 정당
+- **나눠라:** 회귀 위험이 있는 critical change (예: SSR 전환, auth 변경) 은 분리해 bisect 가능하게
+
+#### subagent ceremony 비용 인식
+- 매 task 마다 implementer 디스패치 + 잠재적 dual review = 토큰/시간 폭발
+- "verbatim 코드 복사" task 만 5개 연달아 만들면 ceremony 가 작업의 핵심을 압도
+- Plan 작성 시 task 수 = 의미 있는 의사결정 단위 수. "코드 라인 수 / 파일 수" 가 아님
+- 3~5개 신규 presentational 컴포넌트는 한 task 로 충분. 8개 신규 component 인데 8 task 로 쪼갠 건 명백한 과분할
+
+#### 구체 예시 (이 프로젝트 기준)
+- ❌ "Task 11: BenefitsList 신규" + "Task 12: PrepTipCard 신규" → 한 task
+- ❌ "Storage 색 코딩" + "조리법 이모지" + "Hero 확대" 따로 commit → 한 commit ("visual polish")
+- ✅ "타입 확장" + "파서 매핑" + "오케스트레이터 와이어업" 분리 — layer 다름
+- ✅ "신규 lib 함수 + 그 unit test" 분리 — TDD 정당화
+
+#### Plan / Subagent-driven workflow 적용
+- writing-plans 시 task 수 자체가 의미 단위 수. 50줄 컴포넌트 8개를 8 task 로 만드는 건 plan 실패
+- 사용자가 명시적 분할 요구하지 않는 한 묶을 것
+- 의심되면 묶고, 사용자가 "왜 이렇게 큰 commit 이야" 라고 묻기를 기다려라 (역방향이 토큰 효율 훨씬 우월)
+
 ### Build vs Type Check
 - **After code changes, use `npx tsc --noEmit` for type checking only**
 - **Before running `npm run build`:**
