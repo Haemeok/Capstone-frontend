@@ -1,9 +1,12 @@
+import type { Recipe } from "@/entities/recipe/model/types";
+
 import {
   buildActionPrompt,
   buildFinalThemePrompt,
   buildMeatTrayPrompt,
   buildSeasoningCombinedPrompt,
   buildSeasoningSinglePrompt,
+  buildSequencePrompts,
   buildVegetableTrayPrompt,
 } from "./buildSequencePrompts";
 
@@ -201,5 +204,116 @@ describe("buildFinalThemePrompt — steam_hero", () => {
     expect(p).toContain("low angle");
     expect(p).toContain("steam");
     expect(p).toContain("Rembrandt");
+  });
+});
+
+const FAKE_RECIPE: Recipe = {
+  id: "r1",
+  title: "김치찌개",
+  dishType: "Soup",
+  description: "",
+  cookingTime: 30,
+  imageUrl: "",
+  cookingTools: [],
+  servings: 2,
+  totalIngredientCost: 0,
+  marketPrice: 0,
+  imageKey: null,
+  ratingInfo: { avgRating: 0, myRating: 0, ratingCount: 0 },
+  ingredients: [
+    { id: "i1", name: "양파", quantity: "1", unit: "개", calories: 0 },
+    { id: "i2", name: "당근", quantity: "1", unit: "개", calories: 0 },
+    { id: "i3", name: "돼지고기", quantity: "300", unit: "g", calories: 0 },
+    { id: "i4", name: "간장", quantity: "2", unit: "큰술", calories: 0 },
+    { id: "i5", name: "고추장", quantity: "1", unit: "큰술", calories: 0 },
+    { id: "i6", name: "후추", quantity: "약간", unit: "", calories: 0 },
+    { id: "i7", name: "깨", quantity: "1", unit: "작은술", calories: 0 },
+  ],
+  steps: [
+    {
+      stepNumber: 1,
+      instruction: "재료를 손질한다",
+      action: "썰기",
+      stepImageUrl: "",
+      stepImageKey: null,
+    },
+    {
+      stepNumber: 2,
+      instruction: "팬에 볶는다",
+      action: "볶기",
+      stepImageUrl: "",
+      stepImageKey: null,
+    },
+    {
+      stepNumber: 3,
+      instruction: "끓인다",
+      action: "끓이기",
+      stepImageUrl: "",
+      stepImageKey: null,
+    },
+  ],
+  tags: [],
+  comments: [],
+  author: {
+    id: "u",
+    nickname: "u",
+    profileImage: "",
+    hasFirstRecord: false,
+    remainingAiQuota: 0,
+    remainingYoutubeQuota: 0,
+  },
+  likeCount: 0,
+  likedByCurrentUser: false,
+  favoriteByCurrentUser: false,
+  private: false,
+  aiGenerated: false,
+  totalCalories: 0,
+  nutrition: { protein: 0, carbohydrate: 0, fat: 0, sugar: 0, sodium: 0 },
+};
+
+describe("buildSequencePrompts (orchestrator)", () => {
+  it("produces vegetables + main seasonings + meat + actions + 4 finals in single mode", () => {
+    const out = buildSequencePrompts(FAKE_RECIPE, "single");
+    const cats = out.map((s) => `${s.category}:${s.subcategory}`);
+    expect(cats.filter((c) => c === "prep:vegetable")).toHaveLength(2);
+    expect(cats.filter((c) => c === "prep:meat")).toHaveLength(1);
+    expect(cats.filter((c) => c === "prep:seasoning_main")).toHaveLength(2);
+    expect(cats.filter((c) => c === "prep:seasoning_minor_single")).toHaveLength(2);
+    expect(cats.filter((c) => c === "action:action")).toHaveLength(3);
+    expect(cats.filter((c) => c === "final:final_theme")).toHaveLength(4);
+  });
+
+  it("collapses minor seasonings into one combined card in combined mode", () => {
+    const out = buildSequencePrompts(FAKE_RECIPE, "combined");
+    const cats = out.map((s) => `${s.category}:${s.subcategory}`);
+    expect(cats.filter((c) => c === "prep:seasoning_minor_single")).toHaveLength(0);
+    expect(cats.filter((c) => c === "prep:seasoning_minor_combined")).toHaveLength(1);
+    expect(cats.filter((c) => c === "prep:seasoning_main")).toHaveLength(2);
+  });
+
+  it("preserves stable, unique ids", () => {
+    const out = buildSequencePrompts(FAKE_RECIPE, "single");
+    const ids = out.map((s) => s.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("emits 4 final theme prompts in this exact order", () => {
+    const out = buildSequencePrompts(FAKE_RECIPE, "single");
+    const finals = out.filter((s) => s.category === "final");
+    expect(finals.map((s) => s.themeKey)).toEqual([
+      "korean_mom_phone",
+      "family_table_wide",
+      "magazine_flat_lay",
+      "steam_hero",
+    ]);
+  });
+
+  it("returns empty array (or only finals) when the recipe has no ingredients and no steps", () => {
+    const minimal: Recipe = { ...FAKE_RECIPE, ingredients: [], steps: [] };
+    const out = buildSequencePrompts(minimal, "single");
+    const cats = new Set(out.map((s) => s.category));
+    expect(cats.has("prep")).toBe(false);
+    expect(cats.has("action")).toBe(false);
+    expect(out.filter((s) => s.category === "final")).toHaveLength(4);
   });
 });

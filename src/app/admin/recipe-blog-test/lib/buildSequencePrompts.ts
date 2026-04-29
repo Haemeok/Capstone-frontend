@@ -1,5 +1,15 @@
+import type { Recipe } from "@/entities/recipe/model/types";
+
+import { deriveActionShots } from "./actionDerivation";
+import { classifyIngredient } from "./classifier";
 import { translateIngredient, translateSeasoning } from "./translate";
-import type { FinalThemeKey } from "./types";
+import type {
+  FinalThemeKey,
+  QuotaMode,
+  SequenceCategory,
+  SequenceImage,
+  SequenceSubcategory,
+} from "./types";
 
 export type VegetableInput = { name: string; quantity?: string; unit: string };
 
@@ -204,4 +214,157 @@ ${NEGATIVES_BASE}
 
 ${ABSOLUTE_NO_TEXT}`;
   }
+};
+
+const FINAL_THEMES: ReadonlyArray<{ key: FinalThemeKey; label: string }> = [
+  { key: "korean_mom_phone", label: "엄마 폰스냅" },
+  { key: "family_table_wide", label: "가정식 밥상" },
+  { key: "magazine_flat_lay", label: "매거진 플랫레이" },
+  { key: "steam_hero", label: "김 모락모락 히어로샷" },
+];
+
+const ID_SLUG_MAX_LENGTH = 24;
+
+const slug = (s: string): string =>
+  s.replace(/\s+/g, "-").slice(0, ID_SLUG_MAX_LENGTH);
+
+const makeId = (
+  category: SequenceCategory,
+  subcategory: SequenceSubcategory,
+  ...parts: string[]
+): string => [category, subcategory, ...parts.map(slug)].join("-");
+
+export const buildSequencePrompts = (
+  recipe: Recipe,
+  mode: QuotaMode
+): SequenceImage[] => {
+  const out: SequenceImage[] = [];
+
+  const veggies: typeof recipe.ingredients = [];
+  const meats: typeof recipe.ingredients = [];
+  const mainSeasonings: typeof recipe.ingredients = [];
+  const minorSeasonings: typeof recipe.ingredients = [];
+
+  for (const ing of recipe.ingredients) {
+    const role = classifyIngredient({ ...ing, inFridge: false });
+    switch (role) {
+      case "vegetable":
+        veggies.push(ing);
+        break;
+      case "meat":
+        meats.push(ing);
+        break;
+      case "seasoning_main":
+        mainSeasonings.push(ing);
+        break;
+      case "seasoning_minor":
+        minorSeasonings.push(ing);
+        break;
+      // "other" -> skip
+    }
+  }
+
+  for (const v of veggies) {
+    out.push({
+      id: makeId("prep", "vegetable", v.name),
+      category: "prep",
+      subcategory: "vegetable",
+      label: `${v.name} ${v.quantity ?? ""}${v.unit}`.trim(),
+      prompt: buildVegetableTrayPrompt({
+        name: v.name,
+        quantity: v.quantity,
+        unit: v.unit,
+      }),
+    });
+  }
+
+  for (const m of meats) {
+    out.push({
+      id: makeId("prep", "meat", m.name),
+      category: "prep",
+      subcategory: "meat",
+      label: `${m.name} ${m.quantity ?? ""}${m.unit}`.trim(),
+      prompt: buildMeatTrayPrompt({
+        name: m.name,
+        quantity: m.quantity,
+        unit: m.unit,
+      }),
+    });
+  }
+
+  for (const s of mainSeasonings) {
+    out.push({
+      id: makeId("prep", "seasoning_main", s.name, s.quantity ?? "", s.unit),
+      category: "prep",
+      subcategory: "seasoning_main",
+      label: `${s.name} ${s.quantity ?? ""}${s.unit}`.trim(),
+      prompt: buildSeasoningSinglePrompt({
+        name: s.name,
+        quantity: s.quantity,
+        unit: s.unit,
+      }),
+    });
+  }
+
+  if (minorSeasonings.length > 0) {
+    if (mode === "single") {
+      for (const s of minorSeasonings) {
+        out.push({
+          id: makeId(
+            "prep",
+            "seasoning_minor_single",
+            s.name,
+            s.quantity ?? "",
+            s.unit
+          ),
+          category: "prep",
+          subcategory: "seasoning_minor_single",
+          label: `${s.name} ${s.quantity ?? ""}${s.unit}`.trim(),
+          prompt: buildSeasoningSinglePrompt({
+            name: s.name,
+            quantity: s.quantity,
+            unit: s.unit,
+          }),
+        });
+      }
+    } else {
+      out.push({
+        id: makeId("prep", "seasoning_minor_combined", "all"),
+        category: "prep",
+        subcategory: "seasoning_minor_combined",
+        label: `마이너 양념 ${minorSeasonings.length}종`,
+        prompt: buildSeasoningCombinedPrompt(
+          minorSeasonings.map((s) => ({
+            name: s.name,
+            quantity: s.quantity,
+            unit: s.unit,
+          }))
+        ),
+      });
+    }
+  }
+
+  const actions = deriveActionShots(recipe.steps);
+  for (const a of actions) {
+    out.push({
+      id: makeId("action", "action", a.actionKey),
+      category: "action",
+      subcategory: "action",
+      label: a.label,
+      prompt: buildActionPrompt(a.actionKey),
+    });
+  }
+
+  for (const t of FINAL_THEMES) {
+    out.push({
+      id: makeId("final", "final_theme", t.key),
+      category: "final",
+      subcategory: "final_theme",
+      label: t.label,
+      prompt: buildFinalThemePrompt(t.key, recipe.title),
+      themeKey: t.key,
+    });
+  }
+
+  return out;
 };
