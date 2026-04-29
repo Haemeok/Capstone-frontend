@@ -40,6 +40,16 @@ const NEGATIVES_HANDS_OK = `[Negative Prompts]
 --no maker mark, --no seal, --no stamp, --no engraving, --no embossed, --no calligraphy,
 --no plastic look, --no blurry, --no distorted`;
 
+const SEASONING_ANGLES = [
+  "Direct top-down 90° flat angle",
+  "Slightly tilted three-quarter view at about 45°, looking down into the bowl",
+  "Casual side angle at 30°, capturing the depth of the bowl and a clear silhouette of the spoon resting on the rim",
+  "Dynamic close-up at 60° from above, with the bowl and spoon offset slightly to one side of the frame",
+] as const;
+
+const pickAngle = <T,>(arr: ReadonlyArray<T>): T =>
+  arr[Math.floor(Math.random() * arr.length)];
+
 const formatAmount = (quantity: string | undefined, unit: string): string => {
   const q = (quantity ?? "").trim();
   if (q.length === 0 && unit.length === 0) return "the appropriate amount";
@@ -68,9 +78,9 @@ export const buildSeasoningSinglePrompt = (input: SeasoningInput): string => {
   const en = translateSeasoning(input.name);
   const amount = formatAmount(input.quantity, input.unit);
 
-  return `Top-down 90° photo of a small mirror-finish STAINLESS STEEL BOWL (~12cm diameter).
+  return `${pickAngle(SEASONING_ANGLES)} photo of a small mirror-finish STAINLESS STEEL BOWL (~12cm diameter).
 Inside the bowl: exactly ${amount} of ${en} (${input.name}).
-A matching SPOON visible from the front of the frame, handle pointing toward camera, scoop side resting on or just above the bowl rim, with the substance visibly on the spoon scoop AND in the bowl in correct proportion.
+A matching SPOON is naturally placed in the scene — it can rest on the rim, lean against the bowl, lie flat next to it, or be partially dipped in the substance, whichever feels most natural for the chosen camera angle. The substance should be visible both on the spoon's scoop AND in the bowl in correct proportion.
 For "1 큰술" / "1 spoonful" — render a level or slightly heaped tablespoon's worth.
 For "1 작은술" — render a teaspoon-sized amount.
 For "약간" / "꼬집" — render a tiny pinch's worth, just a few specks.
@@ -93,7 +103,7 @@ export const buildSeasoningCombinedPrompt = (
     )
     .join("\n");
 
-  return `Top-down 90° photo of a single rectangular SILVER STAINLESS STEEL TRAY (~30cm wide).
+  return `${pickAngle(SEASONING_ANGLES)} photo of a single rectangular SILVER STAINLESS STEEL TRAY (~30cm wide).
 On the tray, multiple SMALL ceramic dishes (small saucers, ~7cm each), each holding ONE of the following seasonings in the exact specified quantity:
 ${lines}
 

@@ -65,7 +65,10 @@ describe("buildSeasoningSinglePrompt", () => {
     expect(p).toContain("STAINLESS STEEL BOWL");
     expect(p).toContain("Korean soy sauce");
     expect(p).toContain("1 큰술");
-    expect(p).toContain("SPOON visible from the front");
+    expect(p).toContain("SPOON");
+    expect(p).toMatch(
+      /(Direct top-down 90°|three-quarter view|side angle|Dynamic close-up at 60°)/
+    );
   });
 
   it("renders ground black pepper with a tiny amount when quantity is 약간", () => {
@@ -102,6 +105,9 @@ describe("buildSeasoningCombinedPrompt", () => {
     expect(p).toContain("ground black pepper");
     expect(p).toContain("toasted sesame seeds");
     expect(p).toContain("fine sea salt");
+    expect(p).toMatch(
+      /(Direct top-down 90°|three-quarter view|side angle|Dynamic close-up at 60°)/
+    );
   });
 
   it("shows the quantity for each seasoning", () => {
