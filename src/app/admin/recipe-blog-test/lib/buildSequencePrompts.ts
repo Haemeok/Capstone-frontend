@@ -33,6 +33,13 @@ const NEGATIVES_BASE = `[Negative Prompts]
 --no maker mark, --no seal, --no stamp, --no engraving, --no embossed, --no calligraphy,
 --no plastic look, --no blurry, --no distorted`;
 
+const NEGATIVES_HANDS_OK = `[Negative Prompts]
+--no faces,
+--no text, --no watermark, --no caption,
+--no logo, --no brand, --no label, --no packaging,
+--no maker mark, --no seal, --no stamp, --no engraving, --no embossed, --no calligraphy,
+--no plastic look, --no blurry, --no distorted`;
+
 const formatAmount = (quantity: string | undefined, unit: string): string => {
   const q = (quantity ?? "").trim();
   if (q.length === 0 && unit.length === 0) return "the appropriate amount";
@@ -126,9 +133,11 @@ A spatula may rest on the pan edge — NOT held by anyone.`,
 Action mid-state: a Korean stew/soup simmering, steam rising softly, gentle surface bubbles.
 Surrounding context: edge of gas burner partially visible.
 A ladle may rest on the pot edge — NOT held by anyone.`,
-  cutting_board: `Top-down 90° photo of a wooden cutting board on a kitchen counter.
-Subject: ingredients in mid-prep — partially sliced or chopped, knife resting beside (NOT held by anyone).
-A small scattering of trimmings nearby.`,
+  cutting_board: `Natural 30~45° three-quarter angle photo, looking down at a wooden cutting board on a kitchen counter — the kind of POV a home cook actually has while prepping ingredients.
+Mid-action state: the knife edge is mid-stroke through the ingredient (e.g., a green onion, garlic clove, or vegetable on the board), with several already-cut pieces in a small natural pile to one side.
+A single hand visible at the edge of the frame holding the knife handle, cropped at the wrist — NO face, NO body, NO other person.
+Authentic prep mess: cut scraps and a few peels at the corner of the board, a few drops of moisture on the wood, slight knife marks on the surface, the cutting board showing realistic wear.
+A second hand may be partially visible holding/steadying the ingredient (cropped at wrist) — also no face, no body.`,
   mix_bowl: `Top-down 90° photo of a large stainless steel mixing bowl.
 Inside: ingredients being seasoned/mixed (e.g., 무침 or 비빔), glossy with sauce, partial coverage indicating mid-mixing.
 A pair of plain chopsticks or a spoon resting on the bowl edge — NOT held by anyone.`,
@@ -143,13 +152,21 @@ export const buildActionPrompt = (actionKey: string): string => {
     ACTION_BODY_BY_KEY[actionKey] ??
     `Top-down 90° photo of a Korean home cooking action mid-state on a stainless cookware. NO hands visible.`;
 
+  const isCuttingBoard = actionKey === "cutting_board";
+
+  const closingLine = isCuttingBoard
+    ? `Only the active hand(s) at the frame edge are visible. NO face, NO body, NO other person.`
+    : `NO hands, NO arms, NO body parts visible. The cookware sits on its own.`;
+
+  const negatives = isCuttingBoard ? NEGATIVES_HANDS_OK : NEGATIVES_BASE;
+
   return `${body}
 
-NO hands, NO arms, NO body parts visible. The cookware sits on its own.
+${closingLine}
 
 ${ENV_LOCK}
 
-${NEGATIVES_BASE}
+${negatives}
 
 ${ABSOLUTE_NO_TEXT}`;
 };

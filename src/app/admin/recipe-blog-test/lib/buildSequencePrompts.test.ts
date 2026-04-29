@@ -153,10 +153,17 @@ describe("buildActionPrompt", () => {
     expect(p).toContain("steam");
   });
 
-  it("renders cutting_board action with knife resting (not held)", () => {
+  it("renders cutting_board action as a realistic prep scene (mid-stroke, hand at frame edge OK)", () => {
     const p = buildActionPrompt("cutting_board");
     expect(p).toContain("cutting board");
-    expect(p).toContain("knife resting");
+    expect(p).toContain("mid-stroke");
+    // cutting_board는 손 OK이므로 --no hands가 포함되면 안 됨
+    expect(p).not.toMatch(/--no hands/);
+  });
+
+  it("keeps --no hands for non-cutting actions", () => {
+    expect(buildActionPrompt("stir_fry")).toMatch(/--no hands/);
+    expect(buildActionPrompt("simmer")).toMatch(/--no hands/);
   });
 
   it("falls back to a generic cooking scene for unknown action keys", () => {
