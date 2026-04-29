@@ -4,15 +4,6 @@ import { useCallback, useMemo, useState } from "react";
 
 import { Square } from "lucide-react";
 
-import { CostSummary } from "@/app/admin/image-quality-test/components/CostSummary";
-import { RecipeSearchPanel } from "@/app/admin/image-quality-test/components/RecipeSearchPanel";
-import {
-  loadCostHistory,
-  resetCostHistory,
-  type CostHistory,
-} from "@/app/admin/image-quality-test/lib/costStorage";
-import { getModelById } from "@/app/admin/image-quality-test/lib/models";
-
 import { getRecipe } from "@/entities/recipe/model/api";
 import type {
   DetailedRecipeGridItem,
@@ -20,10 +11,18 @@ import type {
 } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user/model/store";
 
-import { QuotaModeToggle } from "./components/QuotaModeToggle";
+import { CostSummary } from "@/app/admin/image-quality-test/components/CostSummary";
+import { RecipeSearchPanel } from "@/app/admin/image-quality-test/components/RecipeSearchPanel";
+import {
+  type CostHistory,
+  loadCostHistory,
+  resetCostHistory,
+} from "@/app/admin/image-quality-test/lib/costStorage";
+import { getModelById } from "@/app/admin/image-quality-test/lib/models";
+
 import { SequenceGallery } from "./components/SequenceGallery";
 import { buildSequencePrompts } from "./lib/buildSequencePrompts";
-import { SEQUENCE_MODEL_IDS, type QuotaMode } from "./lib/types";
+import { SEQUENCE_MODEL_IDS } from "./lib/types";
 import { useSequenceGenerate } from "./lib/useSequenceGenerate";
 
 const ADMIN_USER_ID = "X1BoaJNZ";
@@ -36,7 +35,6 @@ const RecipeBlogTestPage = () => {
 
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [recipeLoading, setRecipeLoading] = useState(false);
-  const [mode, setMode] = useState<QuotaMode>("single");
   const [history, setHistory] = useState<CostHistory>(() =>
     typeof window === "undefined" ? EMPTY_HISTORY : loadCostHistory()
   );
@@ -44,8 +42,8 @@ const RecipeBlogTestPage = () => {
   const { results, running, generate, retry, cancel } = useSequenceGenerate();
 
   const sequence = useMemo(
-    () => (recipe ? buildSequencePrompts(recipe, mode) : []),
-    [recipe, mode]
+    () => (recipe ? buildSequencePrompts(recipe) : []),
+    [recipe]
   );
 
   const estimatedCost = useMemo(() => {
@@ -120,11 +118,6 @@ const RecipeBlogTestPage = () => {
 
       <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
         <aside className="space-y-4">
-          <div className="rounded-2xl border border-gray-100 bg-white p-4">
-            <p className="mb-2 text-xs font-semibold text-gray-500">출력 모드</p>
-            <QuotaModeToggle value={mode} onChange={setMode} />
-          </div>
-
           <div className="rounded-2xl border border-gray-100 bg-white p-4 text-xs text-gray-700">
             <p className="font-semibold text-gray-900">사용 모델 (고정)</p>
             <ul className="mt-1 list-disc pl-4">
