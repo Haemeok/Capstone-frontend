@@ -1,4 +1,4 @@
-import { translateIngredient } from "./translate";
+import { translateIngredient, translateSeasoning } from "./translate";
 
 export type VegetableInput = { name: string; quantity?: string; unit: string };
 
@@ -40,6 +40,50 @@ The tray fills ~70% of the frame.
 ${ENV_LOCK}
 
 ${NEGATIVES_BASE}, --no other ingredients, --no side dishes
+
+${ABSOLUTE_NO_TEXT}`;
+};
+
+export type SeasoningInput = { name: string; quantity?: string; unit: string };
+
+export const buildSeasoningSinglePrompt = (input: SeasoningInput): string => {
+  const en = translateSeasoning(input.name);
+  const amount = formatAmount(input.quantity, input.unit);
+
+  return `Top-down 90° photo of a small mirror-finish STAINLESS STEEL BOWL (~12cm diameter).
+Inside the bowl: exactly ${amount} of ${en} (${input.name}).
+A matching SPOON visible from the front of the frame, handle pointing toward camera, scoop side resting on or just above the bowl rim, with the substance visibly on the spoon scoop AND in the bowl in correct proportion.
+For "1 큰술" / "1 spoonful" — render a level or slightly heaped tablespoon's worth.
+For "1 작은술" — render a teaspoon-sized amount.
+For "약간" / "꼬집" — render a tiny pinch's worth, just a few specks.
+The visible quantity must precisely match the spec — do not overflow or underfill.
+
+${ENV_LOCK}
+
+${NEGATIVES_BASE}, --no brand bottles, --no labels on containers, --no other ingredients
+
+${ABSOLUTE_NO_TEXT}`;
+};
+
+export const buildSeasoningCombinedPrompt = (
+  items: SeasoningInput[]
+): string => {
+  const lines = items
+    .map(
+      (i) =>
+        `  • ${translateSeasoning(i.name)} (${i.name}): ${formatAmount(i.quantity, i.unit)}`
+    )
+    .join("\n");
+
+  return `Top-down 90° photo of a single rectangular SILVER STAINLESS STEEL TRAY (~30cm wide).
+On the tray, multiple SMALL ceramic dishes (small saucers, ~7cm each), each holding ONE of the following seasonings in the exact specified quantity:
+${lines}
+
+Each dish clearly separated, naturally arranged. A small plain spoon resting beside one of the dishes (NOT held by anyone).
+
+${ENV_LOCK}
+
+${NEGATIVES_BASE}, --no brand bottles, --no labels, --no other ingredients
 
 ${ABSOLUTE_NO_TEXT}`;
 };
