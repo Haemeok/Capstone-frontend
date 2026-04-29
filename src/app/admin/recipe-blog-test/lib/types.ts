@@ -1,10 +1,6 @@
 export type QuotaMode = "single" | "combined";
 
-export type FinalThemeKey =
-  | "korean_mom_phone"
-  | "family_table_wide"
-  | "magazine_flat_lay"
-  | "steam_hero";
+export type FinalThemeKey = "korean_mom_phone";
 
 export type SequenceCategory = "prep" | "action" | "final";
 

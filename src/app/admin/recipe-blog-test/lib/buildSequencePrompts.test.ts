@@ -180,33 +180,6 @@ describe("buildFinalThemePrompt — korean_mom_phone", () => {
   });
 });
 
-describe("buildFinalThemePrompt — family_table_wide", () => {
-  it("includes 공깃밥 + kimchi + side dish context", () => {
-    const p = buildFinalThemePrompt("family_table_wide", "비빔밥");
-    expect(p).toContain("공깃밥");
-    expect(p).toContain("kimchi");
-    expect(p).toContain("45°");
-  });
-});
-
-describe("buildFinalThemePrompt — magazine_flat_lay", () => {
-  it("requests strict overhead 90° editorial style", () => {
-    const p = buildFinalThemePrompt("magazine_flat_lay", "갈비찜");
-    expect(p).toContain("90°");
-    expect(p).toContain("flat-lay");
-    expect(p).toContain("marble");
-  });
-});
-
-describe("buildFinalThemePrompt — steam_hero", () => {
-  it("requests low-angle close-up with steam", () => {
-    const p = buildFinalThemePrompt("steam_hero", "부대찌개");
-    expect(p).toContain("low angle");
-    expect(p).toContain("steam");
-    expect(p).toContain("Rembrandt");
-  });
-});
-
 const FAKE_RECIPE: Recipe = {
   id: "r1",
   title: "김치찌개",
@@ -272,7 +245,7 @@ const FAKE_RECIPE: Recipe = {
 };
 
 describe("buildSequencePrompts (orchestrator)", () => {
-  it("produces vegetables + main seasonings + meat + actions + 4 finals in single mode", () => {
+  it("produces vegetables + main seasonings + meat + actions + 1 final in single mode", () => {
     const out = buildSequencePrompts(FAKE_RECIPE, "single");
     const cats = out.map((s) => `${s.category}:${s.subcategory}`);
     expect(cats.filter((c) => c === "prep:vegetable")).toHaveLength(2);
@@ -280,7 +253,7 @@ describe("buildSequencePrompts (orchestrator)", () => {
     expect(cats.filter((c) => c === "prep:seasoning_main")).toHaveLength(2);
     expect(cats.filter((c) => c === "prep:seasoning_minor_single")).toHaveLength(2);
     expect(cats.filter((c) => c === "action:action")).toHaveLength(3);
-    expect(cats.filter((c) => c === "final:final_theme")).toHaveLength(4);
+    expect(cats.filter((c) => c === "final:final_theme")).toHaveLength(1);
   });
 
   it("collapses minor seasonings into one combined card in combined mode", () => {
@@ -297,15 +270,10 @@ describe("buildSequencePrompts (orchestrator)", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("emits 4 final theme prompts in this exact order", () => {
+  it("emits 1 final theme prompt (korean_mom_phone only)", () => {
     const out = buildSequencePrompts(FAKE_RECIPE, "single");
     const finals = out.filter((s) => s.category === "final");
-    expect(finals.map((s) => s.themeKey)).toEqual([
-      "korean_mom_phone",
-      "family_table_wide",
-      "magazine_flat_lay",
-      "steam_hero",
-    ]);
+    expect(finals.map((s) => s.themeKey)).toEqual(["korean_mom_phone"]);
   });
 
   it("returns empty array (or only finals) when the recipe has no ingredients and no steps", () => {
@@ -314,6 +282,6 @@ describe("buildSequencePrompts (orchestrator)", () => {
     const cats = new Set(out.map((s) => s.category));
     expect(cats.has("prep")).toBe(false);
     expect(cats.has("action")).toBe(false);
-    expect(out.filter((s) => s.category === "final")).toHaveLength(4);
+    expect(out.filter((s) => s.category === "final")).toHaveLength(1);
   });
 });
