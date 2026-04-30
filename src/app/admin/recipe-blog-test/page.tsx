@@ -22,12 +22,15 @@ import { getModelById } from "@/app/admin/image-quality-test/lib/models";
 
 import { SequenceGallery } from "./components/SequenceGallery";
 import { buildSequencePrompts } from "./lib/buildSequencePrompts";
+import { saveSequenceImages, type SaveItem } from "./lib/saveSequenceImages";
 import { SEQUENCE_MODEL_IDS } from "./lib/types";
 import { useSequenceGenerate } from "./lib/useSequenceGenerate";
 
 const ADMIN_USER_ID = "X1BoaJNZ";
 const EMPTY_HISTORY: CostHistory = { byModel: {}, totalCount: 0, totalCost: 0 };
 const COST_CONFIRM_THRESHOLD_USD = 2;
+const PRIMARY_MODEL_ID = "gpt-image-2-low" as const;
+const FILE_NAME_UNSAFE = /[\\/:*?"<>|]/g;
 
 const RecipeBlogTestPage = () => {
   const user = useUserStore((s) => s.user);
@@ -86,6 +89,42 @@ const RecipeBlogTestPage = () => {
     resetCostHistory();
     setHistory(EMPTY_HISTORY);
   }, []);
+
+  const successCount = useMemo(
+    () =>
+      sequence.filter(
+        (img) => results[img.id]?.[PRIMARY_MODEL_ID]?.status === "success"
+      ).length,
+    [sequence, results]
+  );
+
+  const handleSaveAll = useCallback(async () => {
+    if (!recipe || successCount === 0) return;
+
+    const items: SaveItem[] = sequence
+      .map((img, idx) => {
+        const cell = results[img.id]?.[PRIMARY_MODEL_ID];
+        if (!cell || cell.status !== "success") return null;
+        const seq = String(idx + 1).padStart(2, "0");
+        const safeId = img.id.replace(FILE_NAME_UNSAFE, "_");
+        return { imageUrl: cell.imageUrl, fileName: `${seq}-${safeId}.png` };
+      })
+      .filter((x): x is SaveItem => x !== null);
+
+    const safeTitle = recipe.title.replace(FILE_NAME_UNSAFE, "_");
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const folderName = `recipe-blog-${safeTitle}-${today}`;
+
+    try {
+      await saveSequenceImages(items, folderName);
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      console.error("이미지 저장 실패:", err);
+      window.alert(
+        `저장 실패: ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
+  }, [recipe, sequence, results, successCount]);
 
   if (!isAuthReady) {
     return (
@@ -162,6 +201,14 @@ const RecipeBlogTestPage = () => {
                     <Square className="h-4 w-4 fill-red-500" /> 취소
                   </button>
                 )}
+                <button
+                  type="button"
+                  onClick={handleSaveAll}
+                  disabled={running || successCount === 0}
+                  className="h-12 rounded-2xl border-2 border-olive-light bg-white px-4 text-sm font-medium text-olive-light transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
+                >
+                  전부 저장 ({successCount})
+                </button>
               </div>
 
               <SequenceGallery
