@@ -1,7 +1,7 @@
 import type { Recipe, RecipeStep } from "@/entities/recipe/model/types";
 
 import {
-  buildFinalThemePrompt,
+  buildFinalPlatedPrompt,
   buildSequencePrompts,
   buildStepPrompt,
 } from "./buildSequencePrompts";
@@ -152,16 +152,72 @@ describe("buildStepPrompt", () => {
     expect(p).toContain("[ENVIRONMENT LOCK");
     expect(p).toContain("ABSOLUTE NO-TEXT RULE");
   });
+
+  it("does not include CONTINUITY block on step 1 (no prev steps)", () => {
+    const step: RecipeStep = {
+      stepNumber: 1,
+      instruction: "재료 손질",
+      stepImageUrl: "",
+      stepImageKey: null,
+    };
+    const p = buildStepPrompt(step, FAKE_RECIPE, 1, 3, []);
+    expect(p).not.toContain("[CONTINUITY");
+  });
+
+  it("includes CONTINUITY block listing every prior step's instruction (cumulative state)", () => {
+    const step: RecipeStep = {
+      stepNumber: 3,
+      instruction: "감자 5분 더 끓인다",
+      stepImageUrl: "",
+      stepImageKey: null,
+    };
+    const prevSteps: RecipeStep[] = [
+      {
+        stepNumber: 1,
+        instruction: "고기를 넣고 볶는다",
+        stepImageUrl: "",
+        stepImageKey: null,
+      },
+      {
+        stepNumber: 2,
+        instruction: "물을 붓고 끓인다",
+        stepImageUrl: "",
+        stepImageKey: null,
+      },
+    ];
+    const p = buildStepPrompt(step, FAKE_RECIPE, 3, 4, prevSteps);
+    expect(p).toContain("[CONTINUITY");
+    expect(p).toContain("Step 1: 고기를 넣고 볶는다");
+    expect(p).toContain("Step 2: 물을 붓고 끓인다");
+    expect(p).toContain("Do NOT start from an empty fresh vessel");
+  });
+
+  it("when step has no ingredients, hints the model to read names from the Korean instruction", () => {
+    const step: RecipeStep = {
+      stepNumber: 1,
+      instruction: "깻잎과 들깨가루를 넣는다",
+      stepImageUrl: "",
+      stepImageKey: null,
+    };
+    const p = buildStepPrompt(step, FAKE_RECIPE, 1, 3);
+    expect(p).toContain("any ingredient names mentioned there are the ones being added now");
+  });
 });
 
-describe("buildFinalThemePrompt", () => {
+describe("buildFinalPlatedPrompt", () => {
   it("renders mom phone snapshot with recipe context and dish title", () => {
     const recipe = { ...FAKE_RECIPE, title: "딸기 두바이 케이크", dishType: "Dessert" };
-    const p = buildFinalThemePrompt("korean_mom_phone", recipe, 6, 6);
+    const p = buildFinalPlatedPrompt(recipe, 6, 6);
     expect(p).toContain("딸기 두바이 케이크");
     expect(p).toContain("smartphone photo");
     expect(p).toContain("number 6 of 6");
     expect(p).toContain("NOT magazine-styled");
+  });
+
+  it("instructs the model to inherit visual continuity from the reference", () => {
+    const p = buildFinalPlatedPrompt(FAKE_RECIPE, 4, 4);
+    expect(p).toContain("REFERENCE CONTINUITY");
+    expect(p).toContain("reference image");
   });
 });
 
@@ -179,7 +235,9 @@ describe("buildSequencePrompts (orchestrator)", () => {
     expect(out).toHaveLength(4);
     expect(out.slice(0, 3).map((s) => s.category)).toEqual(["step", "step", "step"]);
     expect(out[3].category).toBe("final");
-    expect(out[3].themeKey).toBe("korean_mom_phone");
+    expect(out[3].subcategory).toBe("final_plated");
+    expect(out[3].requiresReference).toBe(true);
+    expect(out[3].referenceFromImageId).toBe("step-3");
   });
 
   it("sorts steps by stepNumber regardless of input order", () => {
@@ -207,5 +265,58 @@ describe("buildSequencePrompts (orchestrator)", () => {
     const out = buildSequencePrompts({ ...FAKE_RECIPE, steps: [] });
     expect(out).toHaveLength(1);
     expect(out[0].category).toBe("final");
+  });
+
+  it("does not require a reference when the recipe has zero steps", () => {
+    const out = buildSequencePrompts({ ...FAKE_RECIPE, steps: [] });
+    expect(out[0].requiresReference).toBeFalsy();
+    expect(out[0].referenceFromImageId).toBeUndefined();
+  });
+
+  it("anchors the final image's reference to the last step by stepNumber", () => {
+    const recipe = {
+      ...FAKE_RECIPE,
+      steps: [
+        { stepNumber: 7, instruction: "C", stepImageUrl: "", stepImageKey: null },
+        { stepNumber: 2, instruction: "A", stepImageUrl: "", stepImageKey: null },
+        { stepNumber: 5, instruction: "B", stepImageUrl: "", stepImageKey: null },
+      ],
+    };
+    const out = buildSequencePrompts(recipe);
+    const finalImg = out[out.length - 1];
+    expect(finalImg.referenceFromImageId).toBe("step-7");
+  });
+
+  it("step images do not require a reference (only final consumes a reference image)", () => {
+    const recipe = {
+      ...FAKE_RECIPE,
+      steps: [
+        { stepNumber: 1, instruction: "A", stepImageUrl: "", stepImageKey: null },
+        { stepNumber: 2, instruction: "B", stepImageUrl: "", stepImageKey: null },
+        { stepNumber: 3, instruction: "C", stepImageUrl: "", stepImageKey: null },
+      ],
+    };
+    const out = buildSequencePrompts(recipe);
+    const stepImages = out.filter((s) => s.category === "step");
+    for (const s of stepImages) {
+      expect(s.requiresReference).toBeFalsy();
+      expect(s.referenceFromImageId).toBeUndefined();
+    }
+  });
+
+  it("each step prompt embeds CONTINUITY listing all earlier step instructions in order", () => {
+    const recipe = {
+      ...FAKE_RECIPE,
+      steps: [
+        { stepNumber: 1, instruction: "고기를 볶는다", stepImageUrl: "", stepImageKey: null },
+        { stepNumber: 2, instruction: "물을 붓는다", stepImageUrl: "", stepImageKey: null },
+        { stepNumber: 3, instruction: "감자를 넣는다", stepImageUrl: "", stepImageKey: null },
+      ],
+    };
+    const out = buildSequencePrompts(recipe);
+    const step3 = out.find((s) => s.id === "step-3")!;
+    expect(step3.prompt).toContain("Step 1: 고기를 볶는다");
+    expect(step3.prompt).toContain("Step 2: 물을 붓는다");
+    expect(step3.prompt).not.toContain("Step 3: 감자를 넣는다");
   });
 });

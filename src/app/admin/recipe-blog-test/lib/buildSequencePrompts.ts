@@ -1,7 +1,7 @@
 import type { Recipe, RecipeStep } from "@/entities/recipe/model/types";
 
 import { translateAction, translateIngredient } from "./translate";
-import type { FinalThemeKey, SequenceImage } from "./types";
+import type { SequenceImage } from "./types";
 
 const NO_TEXT_BANNER = `[NO TEXT IN IMAGE — STRICT, READ FIRST]
 The image must contain absolutely no printed words. No Korean, no English, no numbers, no captions, no signs, no logos, no labels, no brand markings on bottles, packaging, or cookware. Surfaces stay blank where text would naturally appear.`;
@@ -76,11 +76,28 @@ const formatIngredientLine = (
   return qtyUnit ? `${i.name} (${en}) — ${qtyUnit}` : `${i.name} (${en})`;
 };
 
+const buildContinuityBlock = (prevSteps: RecipeStep[]): string => {
+  if (prevSteps.length === 0) return "";
+  const lines = prevSteps
+    .map(
+      (s) =>
+        `- Step ${s.stepNumber}: ${s.instruction?.trim() || "(no instruction)"}`
+    )
+    .join("\n");
+  return `[CONTINUITY — earlier steps of this same recipe have already happened]
+${lines}
+
+The cookware in front of you is the cumulative result of those steps. It already contains everything those steps put into it (now visibly cooked-down, simmered, stirred-in, or transformed — not raw, not fresh). A reference image of the most recent state is provided when available; preserve the same pot or pan, the same liquid level and color, the same already-present ingredients. Do NOT start from an empty fresh vessel. This step only adds the specific action described below to that existing state.
+
+`;
+};
+
 export const buildStepPrompt = (
   step: RecipeStep,
   recipe: Recipe,
   position: number,
-  total: number
+  total: number,
+  prevSteps: RecipeStep[] = []
 ): string => {
   const ctx = buildRecipeContext(recipe, position, total);
   const instruction = step.instruction?.trim() || "(no instruction)";
@@ -94,18 +111,20 @@ export const buildStepPrompt = (
 
   const ingredientList =
     (step.ingredients ?? []).map(formatIngredientLine).join("; ") ||
-    "(none specified for this step)";
+    "(none specified for this step — read the Korean instruction; any ingredient names mentioned there are the ones being added now)";
 
   const handsDirective =
     actionEnglishKey && ACTIVE_HANDS_KEYS.has(actionEnglishKey)
       ? "A single hand or pair of hands ARE visible at the frame edge, cropped at the wrist, actively engaged in the action (holding knife, spatula, ingredient). No face, no body, no other person."
       : "No hands visible. The ingredients and cookware sit on the surface on their own — calm, clean, static.";
 
+  const continuity = buildContinuityBlock(prevSteps);
+
   return `${NO_TEXT_BANNER}
 
 ${ctx}
 
-[STEP DESCRIPTION — RENDER EXACTLY THIS, NOTHING INVENTED]
+${continuity}[STEP DESCRIPTION — RENDER EXACTLY THIS, NOTHING INVENTED]
 Korean instruction (verbatim, treat this as the ground truth — render the literal moment described): ${instruction}
 Action hint (Korean verb): ${actionHint}
 Action interpretation (English visual reference): ${actionVisualRef}
@@ -138,20 +157,21 @@ ${NEGATIVES_NATURAL}
 Render no printed text, captions, signs, labels, or logos anywhere in the image. Surfaces stay blank.`;
 };
 
-export const buildFinalThemePrompt = (
-  theme: FinalThemeKey,
+export const buildFinalPlatedPrompt = (
   recipe: Recipe,
   position: number,
   total: number
 ): string => {
   const ctx = buildRecipeContext(recipe, position, total);
-  void theme;
   return `${NO_TEXT_BANNER}
 
 ${ctx}
 
 [FINAL — THE COMPLETED DISH]
 This is the final plated result of all the prep and cooking shown in the previous ${total - 1} images. Show "${recipe.title}" plated and ready to eat.
+
+[REFERENCE CONTINUITY — IMPORTANT]
+A reference image from the same cooking sequence is provided. Maintain visual continuity with it: same kitchen surface tone and material, same lighting feel and color temperature family, same level of home-cooking realism. The dish itself should now be plated and presented as ready to eat — do not copy the action shot, only inherit the world.
 
 A casual, slightly imperfect smartphone photo (iPhone or Galaxy) of the dish on a normal Korean home dining table.
 Angle: 30~45° downward — the angle of someone sitting at the table, just snapping a quick photo. NOT a professional flat-lay, NOT magazine-styled.
@@ -177,22 +197,25 @@ export const buildSequencePrompts = (recipe: Recipe): SequenceImage[] => {
   const stepImages: SequenceImage[] = sortedSteps.map((step, idx) => {
     const position = idx + 1;
     const labelSource = (step.action ?? step.instruction ?? "").slice(0, 30);
+    const prevSteps = sortedSteps.slice(0, idx);
     return {
       id: `step-${step.stepNumber}`,
       category: "step",
       subcategory: "step",
       label: `Step ${step.stepNumber}: ${labelSource}`,
-      prompt: buildStepPrompt(step, recipe, position, total),
+      prompt: buildStepPrompt(step, recipe, position, total, prevSteps),
     };
   });
 
+  const lastStep = sortedSteps[sortedSteps.length - 1];
   const finalImage: SequenceImage = {
-    id: "final-korean_mom_phone",
+    id: "final-plated",
     category: "final",
-    subcategory: "final_theme",
-    label: "엄마 폰스냅",
-    prompt: buildFinalThemePrompt("korean_mom_phone", recipe, total, total),
-    themeKey: "korean_mom_phone",
+    subcategory: "final_plated",
+    label: "엄마 폰스냅 (완성)",
+    prompt: buildFinalPlatedPrompt(recipe, total, total),
+    requiresReference: lastStep != null,
+    referenceFromImageId: lastStep ? `step-${lastStep.stepNumber}` : undefined,
   };
 
   return [...stepImages, finalImage];

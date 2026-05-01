@@ -30,7 +30,7 @@ export async function askGrok(prompt: string): Promise<AskGrokResult> {
 
   try {
     const { text } = await generateText({
-      model: xai("grok-4-fast-reasoning"),
+      model: xai("grok-4-1-fast-reasoning"),
       prompt: prompt,
     });
 

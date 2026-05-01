@@ -1,7 +1,5 @@
 export type SequenceCategory = "step" | "final";
-export type SequenceSubcategory = "step" | "final_theme";
-
-export type FinalThemeKey = "korean_mom_phone";
+export type SequenceSubcategory = "step" | "final_plated";
 
 export type SequenceImage = {
   id: string;
@@ -9,7 +7,8 @@ export type SequenceImage = {
   subcategory: SequenceSubcategory;
   label: string;
   prompt: string;
-  themeKey?: FinalThemeKey;
+  requiresReference?: boolean;
+  referenceFromImageId?: string;
 };
 
 export type SequenceModelId = "gpt-image-2-low";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 
 import { Square } from "lucide-react";
 
@@ -11,6 +11,8 @@ import type {
 } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user/model/store";
 
+import { enqueueBlogPostForPublish } from "@/app/actions/blogPublishQueue";
+import { generateRecipeBlogPost } from "@/app/actions/recipeBlog";
 import { CostSummary } from "@/app/admin/image-quality-test/components/CostSummary";
 import { RecipeSearchPanel } from "@/app/admin/image-quality-test/components/RecipeSearchPanel";
 import {
@@ -20,9 +22,11 @@ import {
 } from "@/app/admin/image-quality-test/lib/costStorage";
 import { getModelById } from "@/app/admin/image-quality-test/lib/models";
 
+import { BlogPostPreview } from "./components/BlogPostPreview";
 import { SequenceGallery } from "./components/SequenceGallery";
+import type { BlogPost } from "./lib/blogPost.schema";
 import { buildSequencePrompts } from "./lib/buildSequencePrompts";
-import { saveSequenceImages, type SaveItem } from "./lib/saveSequenceImages";
+import { type SaveItem,saveSequenceImages } from "./lib/saveSequenceImages";
 import { SEQUENCE_MODEL_IDS } from "./lib/types";
 import { useSequenceGenerate } from "./lib/useSequenceGenerate";
 
@@ -43,6 +47,20 @@ const RecipeBlogTestPage = () => {
   );
 
   const { results, running, generate, retry, cancel } = useSequenceGenerate();
+
+  const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
+  const [blogSeeds, setBlogSeeds] = useState<{
+    lead: string;
+    closing: string;
+  } | null>(null);
+  const [blogError, setBlogError] = useState<string | null>(null);
+  const [blogPending, startBlogTransition] = useTransition();
+
+  const [enqueuePending, startEnqueueTransition] = useTransition();
+  const [enqueueMessage, setEnqueueMessage] = useState<{
+    kind: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const sequence = useMemo(
     () => (recipe ? buildSequencePrompts(recipe) : []),
@@ -97,6 +115,69 @@ const RecipeBlogTestPage = () => {
       ).length,
     [sequence, results]
   );
+
+  const handleGenerateBlogPost = useCallback(() => {
+    if (!recipe) return;
+    setBlogError(null);
+    startBlogTransition(async () => {
+      const res = await generateRecipeBlogPost(recipe);
+      if (!res.success) {
+        setBlogError(res.error);
+        setBlogPost(null);
+        setBlogSeeds(null);
+        return;
+      }
+      setBlogPost(res.post);
+      setBlogSeeds(res.usedSeeds);
+    });
+  }, [recipe]);
+
+  const handleEnqueueBlogPost = useCallback(() => {
+    if (!recipe || !blogPost) return;
+    setEnqueueMessage(null);
+
+    const imageUrlsBySlot: Record<string, string> = {};
+    for (const seq of sequence) {
+      const cell = results[seq.id]?.[PRIMARY_MODEL_ID];
+      if (cell?.status === "success") {
+        imageUrlsBySlot[seq.id] = cell.imageUrl;
+      }
+    }
+
+    const recipeMeta = {
+      servings: recipe.servings,
+      ingredients: (recipe.ingredients ?? []).map((ing) => ({
+        name: ing.name,
+        quantity: ing.quantity ?? null,
+        unit: ing.unit ?? null,
+      })),
+      brandLink: {
+        text: "이 레시피 자세히 보기",
+        url: `https://recipio.kr/recipes/${recipe.id}`,
+      },
+    };
+
+    startEnqueueTransition(async () => {
+      const res = await enqueueBlogPostForPublish({
+        post: blogPost,
+        recipeTitle: recipe.title,
+        imageUrlsBySlot,
+        recipeMeta,
+      });
+      if (!res.success) {
+        setEnqueueMessage({ kind: "error", text: res.error });
+        return;
+      }
+      const skippedNote =
+        res.skippedSlots.length > 0
+          ? ` (이미지 ${res.skippedSlots.length}장 누락: ${res.skippedSlots.join(", ")})`
+          : "";
+      setEnqueueMessage({
+        kind: "success",
+        text: `발행 큐에 담았어요. ${res.packagePath}${skippedNote}`,
+      });
+    });
+  }, [recipe, blogPost, sequence, results]);
 
   const handleSaveAll = useCallback(async () => {
     if (!recipe || successCount === 0) return;
@@ -216,6 +297,74 @@ const RecipeBlogTestPage = () => {
                 results={results}
                 onRetry={retry}
               />
+
+              <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4">
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-900">
+                    블로그 글 생성
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    grok-4-1-fast-reasoning · 매거진 톤 · 위 이미지 시퀀스와 자동 매칭됩니다
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleGenerateBlogPost}
+                  disabled={blogPending}
+                  className="h-12 rounded-2xl bg-gray-900 px-6 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                >
+                  {blogPending ? "생성 중…" : blogPost ? "다시 생성" : "글 생성"}
+                </button>
+              </div>
+
+              {blogError && (
+                <p className="rounded-2xl bg-red-50 p-4 text-sm text-red-500">
+                  {blogError}
+                </p>
+              )}
+
+              {blogPost && (
+                <>
+                  <BlogPostPreview
+                    post={blogPost}
+                    recipe={recipe}
+                    results={results}
+                    primaryModelId={PRIMARY_MODEL_ID}
+                    usedSeeds={blogSeeds ?? undefined}
+                  />
+
+                  <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4">
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-gray-900">
+                        네이버 블로그 발행 큐로 보내기
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        post.json + 생성된 이미지를 큐 폴더에 담아 둡니다. 발행은 recipioReview의 <code className="rounded bg-gray-100 px-1">npm run blog:publish</code>로요.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleEnqueueBlogPost}
+                      disabled={enqueuePending}
+                      className="h-12 rounded-2xl border-2 border-gray-900 bg-white px-6 text-sm font-bold text-gray-900 transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
+                    >
+                      {enqueuePending ? "보내는 중…" : "발행 큐로 보내기"}
+                    </button>
+                  </div>
+
+                  {enqueueMessage && (
+                    <p
+                      className={`rounded-2xl p-4 text-sm ${
+                        enqueueMessage.kind === "success"
+                          ? "bg-green-50 text-green-700"
+                          : "bg-red-50 text-red-500"
+                      }`}
+                    >
+                      {enqueueMessage.text}
+                    </p>
+                  )}
+                </>
+              )}
             </>
           )}
 
