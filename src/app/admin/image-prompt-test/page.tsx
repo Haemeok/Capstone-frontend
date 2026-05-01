@@ -19,6 +19,10 @@ import {
   resetCostHistory,
 } from "@/app/admin/image-quality-test/lib/costStorage";
 import { getModelById } from "@/app/admin/image-quality-test/lib/models";
+import {
+  type SaveItem,
+  saveSequenceImages,
+} from "@/app/admin/recipe-blog-test/lib/saveSequenceImages";
 
 import { PromptVariantCard } from "./components/PromptVariantCard";
 import { PROMPT_VARIANTS } from "./lib/promptVariants";
@@ -27,6 +31,7 @@ import { usePromptCompare, type VariantRun } from "./lib/usePromptCompare";
 const ADMIN_USER_ID = "X1BoaJNZ";
 const FIXED_MODEL_ID = "gpt-image-2-low" as const;
 const EMPTY_HISTORY: CostHistory = { byModel: {}, totalCount: 0, totalCost: 0 };
+const FILE_NAME_UNSAFE = /[\\/:*?"<>|]/g;
 
 const ImagePromptTestPage = () => {
   const user = useUserStore((s) => s.user);
@@ -114,6 +119,44 @@ const ImagePromptTestPage = () => {
     setHistory(EMPTY_HISTORY);
   }, []);
 
+  const successCount = useMemo(
+    () =>
+      PROMPT_VARIANTS.reduce(
+        (n, v) => n + (results[v.id]?.status === "success" ? 1 : 0),
+        0
+      ),
+    [results]
+  );
+
+  const handleSaveAll = useCallback(async () => {
+    if (!recipe || successCount === 0) return;
+
+    const safeTitle = recipe.title.replace(FILE_NAME_UNSAFE, "_");
+
+    const items: SaveItem[] = PROMPT_VARIANTS.map((v) => {
+      const cell = results[v.id];
+      if (cell?.status !== "success") return null;
+      const safeLabel = v.label.replace(FILE_NAME_UNSAFE, "_");
+      return {
+        imageUrl: cell.imageUrl,
+        fileName: `${safeTitle} - ${safeLabel}.png`,
+      };
+    }).filter((x): x is SaveItem => x !== null);
+
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const folderName = `prompt-compare-${safeTitle}-${today}`;
+
+    try {
+      await saveSequenceImages(items, folderName);
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      console.error("이미지 저장 실패:", err);
+      window.alert(
+        `저장 실패: ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
+  }, [recipe, results, successCount]);
+
   if (!isAuthReady) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -197,6 +240,14 @@ const ImagePromptTestPage = () => {
                     <Square className="h-4 w-4 fill-red-500" /> 취소
                   </button>
                 )}
+                <button
+                  type="button"
+                  onClick={handleSaveAll}
+                  disabled={running || successCount === 0}
+                  className="h-12 rounded-2xl border-2 border-olive-light bg-white px-4 text-sm font-medium text-olive-light transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
+                >
+                  전부 저장 ({successCount})
+                </button>
               </div>
 
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
