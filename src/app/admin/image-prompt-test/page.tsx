@@ -200,7 +200,7 @@ const ImagePromptTestPage = () => {
                 )}
               </div>
 
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {recipe.imageUrl && (
                   <div className="overflow-hidden rounded-2xl border-2 border-olive-light bg-white shadow-sm">
                     <div className="aspect-square w-full bg-gray-50">

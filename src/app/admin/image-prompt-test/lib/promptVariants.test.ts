@@ -36,8 +36,8 @@ const fixtureRecipe = {
 } as unknown as Recipe;
 
 describe("PROMPT_VARIANTS", () => {
-  it("has exactly 5 slots", () => {
-    expect(PROMPT_VARIANTS).toHaveLength(5);
+  it("has exactly 9 slots", () => {
+    expect(PROMPT_VARIANTS).toHaveLength(9);
   });
 
   it("has unique ids", () => {
@@ -61,11 +61,76 @@ describe("PROMPT_VARIANTS", () => {
     expect(out).not.toMatch(/previous \d+ images/);
     expect(out).not.toContain("REFERENCE CONTINUITY");
   });
+});
 
-  it("variants 3-5 are placeholders that build empty strings", () => {
-    for (const v of PROMPT_VARIANTS.slice(2)) {
-      expect(v.isPlaceholder).toBe(true);
-      expect(v.build(fixtureRecipe)).toBe("");
+describe("PROMPT_VARIANTS archetype slots (3–9)", () => {
+  const ARCHETYPES = [
+    {
+      id: "korean-magazine",
+      anchorMatch: /수퍼레시피|올리브매거진/,
+      handsAllowed: false,
+    },
+    {
+      id: "western-influencer",
+      anchorMatch: /NYT Cooking|Bon Appétit/,
+      handsAllowed: false,
+    },
+    {
+      id: "moody-dark",
+      anchorMatch: /Bea Lubas|Christina Greve/,
+      handsAllowed: false,
+    },
+    {
+      id: "top-down-flatlay",
+      anchorMatch: /Marion Grasby|sookoonjon/,
+      handsAllowed: true,
+    },
+    {
+      id: "abundance-golden",
+      anchorMatch: /Half Baked Harvest|Tieghan Gerard/,
+      handsAllowed: false,
+    },
+    {
+      id: "action-process",
+      anchorMatch: /Smitten Kitchen|Hetty Lui McKinnon/,
+      handsAllowed: true,
+    },
+    {
+      id: "nordic-minimal",
+      anchorMatch: /Skye Gyngell|Magnus Nilsson/,
+      handsAllowed: false,
+    },
+  ] as const;
+
+  it.each(ARCHETYPES)(
+    "$id interpolates recipe title, embeds attribution, and uses the shared vessel-shape rule",
+    ({ id, anchorMatch }) => {
+      const variant = PROMPT_VARIANTS.find((v) => v.id === id);
+      expect(variant).toBeDefined();
+      const out = variant!.build(fixtureRecipe);
+      expect(out).toContain("김치찌개");
+      expect(out).toContain("Recipe dishType: Soup");
+      expect(out).toMatch(anchorMatch);
+      expect(out).toContain("Vessel SHAPE is inferred from the dish type");
+      expect(out).toContain("ABSOLUTE NO-TEXT RULE");
     }
-  });
+  );
+
+  it.each(ARCHETYPES.filter((a) => !a.handsAllowed))(
+    "$id excludes hands explicitly",
+    ({ id }) => {
+      const variant = PROMPT_VARIANTS.find((v) => v.id === id)!;
+      const out = variant.build(fixtureRecipe);
+      expect(out).toMatch(/No hands\.?/);
+    }
+  );
+
+  it.each(ARCHETYPES.filter((a) => a.handsAllowed))(
+    "$id describes a cropped hand at the frame edge",
+    ({ id }) => {
+      const variant = PROMPT_VARIANTS.find((v) => v.id === id)!;
+      const out = variant.build(fixtureRecipe);
+      expect(out).toMatch(/cropped at the wrist/);
+    }
+  );
 });
