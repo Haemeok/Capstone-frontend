@@ -7,7 +7,6 @@ export type PromptVariant = {
   label: string;
   description: string;
   build: (recipe: Recipe) => string;
-  isPlaceholder?: true;
 };
 
 const buildProductionPrompt = (recipe: Recipe): string =>
@@ -198,7 +197,7 @@ const ABUNDANCE_GOLDEN: Archetype = {
 Angle: 30–45° three-quarter, often slightly close-up on the dish so only part of the surrounding table shows.
 Lighting: golden-hour late-afternoon warm sunlight from one side at 3500–4000K, creating long warm shadows; sometimes lit through fabric or a window with a slight bloom.
 Surface: aged wood with rich grain, dark or light, slightly weathered; or a draped natural-fiber linen cloth in cream, oat, or rust. Often shows visible flour dust, salt grains, or oil traces.
-Vessel material: warm-toned stoneware (terracotta, rust, deep-amber) or aged enamelware. Earthy, generous in size, with patina.
+Vessel material: warm-toned stoneware (terracotta, rust, deep-amber) or aged enamelware. Earthy, with patina.
 Mood: abundant, generous, golden, indulgent — like a celebratory home meal.`,
   composition:
     "Dish positioned slightly off-center. Around the dish: a scattering of fresh herbs (whole sprigs and torn pieces), a sprinkle of flaky salt, drops of olive oil on the surface, a small wooden cutting board with extra ingredients (lemon wedge, garlic clove, herb bunch). On the dish itself: a visible drizzle of sauce or oil captured mid-pour, a generous garnish of fresh herbs. A small pitcher or oil bottle partially in frame at the edge. Slightly messy, lived-in abundance. No hands.",

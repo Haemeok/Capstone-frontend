@@ -76,7 +76,6 @@ const ImagePromptTestPage = () => {
     setPrompts((prev) => {
       const next = { ...prev };
       for (const v of PROMPT_VARIANTS) {
-        if (v.isPlaceholder) continue;
         next[v.id] = v.build(recipe);
       }
       return next;

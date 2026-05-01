@@ -126,11 +126,21 @@ describe("PROMPT_VARIANTS archetype slots (3–9)", () => {
   );
 
   it.each(ARCHETYPES.filter((a) => a.handsAllowed))(
-    "$id describes a cropped hand at the frame edge",
+    "$id describes a cropped hand at the frame edge and does not exclude hands",
     ({ id }) => {
       const variant = PROMPT_VARIANTS.find((v) => v.id === id)!;
       const out = variant.build(fixtureRecipe);
       expect(out).toMatch(/cropped at the wrist/);
+      // Regression guard: a future edit must not contradict the cropped-hand
+      // composition by adding "No hands." to extraExclusions.
+      expect(out).not.toMatch(/No hands\.?/);
     }
   );
+
+  it("each archetype produces a distinct prompt (guards against copy-paste)", () => {
+    const builds = ARCHETYPES.map(
+      ({ id }) => PROMPT_VARIANTS.find((v) => v.id === id)!.build(fixtureRecipe)
+    );
+    expect(new Set(builds).size).toBe(builds.length);
+  });
 });

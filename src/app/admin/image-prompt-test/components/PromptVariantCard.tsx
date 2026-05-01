@@ -47,11 +47,7 @@ export const PromptVariantCard = ({
       <textarea
         value={prompt}
         onChange={(e) => onPromptChange(e.target.value)}
-        placeholder={
-          variant.isPlaceholder
-            ? "이 슬롯에 비교하고 싶은 프롬프트를 직접 작성하세요"
-            : "레시피 선택 시 자동 생성됩니다"
-        }
+        placeholder="레시피 선택 시 자동 생성됩니다"
         className="h-40 w-full resize-none rounded-xl border border-gray-200 p-3 text-xs text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
       />
       <p className="text-right text-[10px] text-gray-400">{prompt.length} chars</p>
