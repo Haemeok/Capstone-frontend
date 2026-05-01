@@ -56,6 +56,7 @@ const FAKE_RECIPE: Recipe = {
   favoriteByCurrentUser: false,
   private: false,
   aiGenerated: false,
+  isCloneable: false,
   totalCalories: 240,
   nutrition: { protein: 12, carbohydrate: 30, fat: 6, sugar: 2, sodium: 800 },
 };

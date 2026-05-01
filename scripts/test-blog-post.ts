@@ -81,6 +81,7 @@ const FAKE_RECIPE_GAJI: Recipe = {
   favoriteByCurrentUser: false,
   private: false,
   aiGenerated: false,
+  isCloneable: false,
   totalCalories: 996,
   nutrition: { protein: 57, carbohydrate: 173, fat: 32, sugar: 53, sodium: 58140 },
 };
