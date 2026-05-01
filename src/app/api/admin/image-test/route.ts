@@ -19,21 +19,28 @@ const BACKEND_ME_URL = "https://api.recipio.kr/api/me";
 // gate is client-only (anyone can curl this endpoint directly), so without
 // this server check a malicious caller could burn OpenAI/Google/fal credits
 // at will.
+//
+// Backend auth model is cookie-based, not Bearer (see src/app/api/auth/
+// refresh/route.ts and src/shared/api/client.ts which uses credentials:
+// "include"). We forward the incoming cookie jar verbatim so the backend
+// can authenticate the same way it would for any other request.
 const assertAdmin = async (): Promise<NextResponse | null> => {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
-  if (!accessToken) {
+  if (!cookieStore.get("accessToken")?.value) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let user: { id?: string };
   try {
     const res = await fetch(BACKEND_ME_URL, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Cookie: cookieStore.toString() },
       cache: "no-store",
     });
     if (!res.ok) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Unauthorized", upstream: res.status },
+        { status: 401 }
+      );
     }
     user = (await res.json()) as { id?: string };
   } catch {
