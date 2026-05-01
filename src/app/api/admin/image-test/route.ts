@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 import { generateViaFal } from "@/app/admin/image-quality-test/lib/adapters/falAdapter";
@@ -11,9 +12,47 @@ import { getModelById } from "@/app/admin/image-quality-test/lib/models";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
+const ADMIN_USER_ID = "X1BoaJNZ";
+const BACKEND_ME_URL = "https://api.recipio.kr/api/me";
+
+// Verifies the incoming request comes from the admin user. The page-level
+// gate is client-only (anyone can curl this endpoint directly), so without
+// this server check a malicious caller could burn OpenAI/Google/fal credits
+// at will.
+const assertAdmin = async (): Promise<NextResponse | null> => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  if (!accessToken) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  let user: { id?: string };
+  try {
+    const res = await fetch(BACKEND_ME_URL, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    user = (await res.json()) as { id?: string };
+  } catch {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (user.id !== ADMIN_USER_ID) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  return null;
+};
+
 type Body = { modelId: string; prompt: string; referenceImageUrl?: string };
 
 export async function POST(req: NextRequest) {
+  const guardResponse = await assertAdmin();
+  if (guardResponse) return guardResponse;
+
   let body: Body;
   try {
     body = (await req.json()) as Body;
