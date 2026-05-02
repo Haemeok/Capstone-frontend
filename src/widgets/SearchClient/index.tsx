@@ -6,6 +6,7 @@ import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
+import { useResetSearchFilters } from "./hooks/useResetSearchFilters";
 import { useSearchResults } from "./hooks/useSearchResults";
 import { SearchFilters } from "./ui/SearchFilters";
 
@@ -26,8 +27,8 @@ export const SearchClient = ({
     ref,
     queryKeyString,
     noResults,
-    resetFilters,
   } = useSearchResults(initialPage);
+  const resetFilters = useResetSearchFilters();
 
   return (
     <Container padding={false}>

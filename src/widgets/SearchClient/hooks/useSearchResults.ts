@@ -1,78 +1,52 @@
-import { useCallback } from "react";
-import { useRouter } from "next/navigation";
-
 import { InfiniteData } from "@tanstack/react-query";
 
 import { SORT_TYPE_CODES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import { triggerHaptic } from "@/shared/lib/bridge";
-import { convertNutritionToQueryParams } from "@/shared/lib/nutrition/parseNutritionParams";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getRecipeItems } from "@/entities/recipe";
 import { DetailedRecipesApiResponse } from "@/entities/recipe";
 
-import { useDishTypeCode } from "@/features/filter-dish-type";
-import { useIngredientsFilter } from "@/features/filter-ingredients";
-import { useSortCode } from "@/features/filter-sort";
-import { useTagCodes } from "@/features/filter-tags";
-import { useNutritionParams } from "@/features/recipe-search";
-import { useSearchQuery } from "@/features/search-input";
+import { useSearchFilterSnapshot } from "./useSearchFilterSnapshot";
 
 export const useSearchResults = (initialPage: number = 0) => {
-  const router = useRouter();
-  const dishTypeCode = useDishTypeCode();
-  const sortCode = useSortCode();
-  const tagCodes = useTagCodes();
-  const [ingredientIds] = useIngredientsFilter();
-  const { nutritionParams, types } = useNutritionParams();
-  const { q } = useSearchQuery();
-
-  const nutritionQueryParams = convertNutritionToQueryParams(nutritionParams);
-  const nutritionKeyString = JSON.stringify(nutritionQueryParams);
-  const typesString = types.join(",");
-  const ingredientsString = ingredientIds.join(",");
+  const {
+    dishTypeCode,
+    sortCode,
+    tagCodes,
+    ingredientIds,
+    q,
+    nutritionQueryParams,
+    types,
+    queryKey,
+    queryKeyString,
+  } = useSearchFilterSnapshot();
 
   const { data, hasNextPage, isFetching, isPending, ref } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
     InfiniteData<DetailedRecipesApiResponse>,
-    [string, string | null, string | null, string, string, string, string, string],
+    typeof queryKey,
     number
   >({
-    queryKey: ["recipes", dishTypeCode, sortCode, tagCodes.join(","), q, nutritionKeyString, typesString, ingredientsString],
+    queryKey,
     queryFn: ({ pageParam }) =>
       getRecipeItems({
         sort: sortCode || SORT_TYPE_CODES["인기순"],
         dishType: dishTypeCode,
         tags: tagCodes,
-        q: q,
+        q,
         pageParam,
         ...nutritionQueryParams,
         types,
         ingredientIds: ingredientIds.length > 0 ? ingredientIds : undefined,
       }),
-    getNextPageParam: getNextPageParam,
+    getNextPageParam,
     initialPageParam: initialPage,
   });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
-  const queryKeyString = JSON.stringify([
-    "recipes",
-    dishTypeCode,
-    sortCode,
-    tagCodes,
-    q,
-    nutritionKeyString,
-    typesString,
-    ingredientsString,
-  ]);
   const noResults = recipes.length === 0 && !isFetching;
-
-  const resetFilters = useCallback(() => {
-    triggerHaptic("Light");
-    router.replace("/search/results?types=USER,AI,YOUTUBE");
-  }, [router]);
 
   return {
     recipes,
@@ -82,6 +56,5 @@ export const useSearchResults = (initialPage: number = 0) => {
     ref,
     queryKeyString,
     noResults,
-    resetFilters,
   };
 };
