@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { InArticleAdSlot } from "@/shared/adsense";
+import { BottomAnchorAdSlot, InArticleAdSlot } from "@/shared/adsense";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
@@ -221,6 +221,7 @@ export default async function RecipeDetailPage({
         </RecipeContainer>
         <ChatLauncher recipeId={recipeId} />
       </RecipeStatusProvider>
+      <BottomAnchorAdSlot />
       <SmartAppBanner />
     </ScrollReset>
   );
