@@ -43,10 +43,10 @@ const IngredientItem = ({
     <motion.div
       onClick={isDeleteMode ? handleDeleteModeClick : undefined}
       className={cn(
-        "relative flex items-center gap-4 rounded-2xl bg-white px-3 py-3 shadow-sm transition-all",
+        "relative flex items-center gap-4 rounded-2xl bg-white px-3 py-3 border border-gray-100 transition-colors",
         isDeleteMode && "cursor-pointer",
-        isSelected && "ring-2 ring-olive-light bg-olive-light/5",
-        !isDeleteMode && "hover:shadow-md hover:scale-[1.02]"
+        isSelected && "bg-olive-light/10 border-olive-light",
+        !isDeleteMode && "active:bg-gray-50"
       )}
       whileTap={isDeleteMode ? { scale: 0.98 } : undefined}
     >
@@ -59,7 +59,7 @@ const IngredientItem = ({
         height={60}
       />
       <div className="flex min-w-0 flex-1 flex-col">
-        <span className="text-xs font-medium text-gray-400">
+        <span className="text-xs font-medium text-gray-500">
           {ingredient.category}
         </span>
         <span className="break-words text-sm font-bold text-gray-900">
@@ -69,14 +69,14 @@ const IngredientItem = ({
       {!isDeleteMode && (
         <ChevronRight
           size={16}
-          className="text-gray-300 flex-shrink-0"
+          className="text-gray-400 flex-shrink-0"
           aria-hidden
         />
       )}
       {isDeleteMode && (
         <motion.div
           className={cn(
-            "absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors",
+            "absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border transition-colors",
             isSelected
               ? "border-olive-light bg-olive-light"
               : "border-gray-300 bg-white"

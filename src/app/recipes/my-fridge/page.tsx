@@ -91,7 +91,7 @@ const MyFridgePage = () => {
                 className="mt-2 flex h-10 items-center justify-center"
               >
                 {isFetchingNextPage ? (
-                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-olive-light"></div>
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-olive-light"></div>
                 ) : (
                   !hasNextPage &&
                   recipes.length > 0 && (

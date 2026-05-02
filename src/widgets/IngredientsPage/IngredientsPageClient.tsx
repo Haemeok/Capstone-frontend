@@ -73,16 +73,16 @@ const IngredientsPageClient = () => {
   };
 
   const headerTitle = !!user
-    ? `${user?.nickname}님의\n냉장고`
-    : "로그인 후 냉장고를\n관리해보세요";
+    ? `${user?.nickname}님의 냉장고`
+    : "로그인 후 냉장고를 관리해보세요";
 
   return (
     <Container padding={false}>
       <div className="flex flex-col">
         <div ref={observerRef} className="w-full" />
         <div className="z-sticky sticky-optimized sticky top-0 bg-white">
-          <div className="flex items-center justify-between px-5 py-5">
-            <h1 className="whitespace-pre-line text-2xl font-bold text-gray-900">
+          <div className="flex items-center justify-between gap-3 px-5 py-5">
+            <h1 className="text-2xl font-bold text-gray-900 break-keep leading-snug max-w-[55%]">
               {headerTitle}
             </h1>
             {!!user && (
@@ -100,10 +100,10 @@ const IngredientsPageClient = () => {
                 key={category}
                 onClick={() => handleCategoryChange(category)}
                 className={cn(
-                  "flex-shrink-0 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all",
+                  "flex-shrink-0 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors",
                   selectedCategory === category
-                    ? "bg-olive-light text-white shadow-sm"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    ? "bg-olive-light text-white"
+                    : "bg-gray-100 text-gray-600 active:bg-gray-200"
                 )}
               >
                 {category}

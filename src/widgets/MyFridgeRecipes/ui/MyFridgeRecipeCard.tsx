@@ -64,7 +64,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
 
   return (
     <motion.div
-      className="relative flex cursor-pointer items-start gap-4 rounded-2xl bg-white p-4 shadow-sm transition-all hover:shadow-md"
+      className="relative flex cursor-pointer items-start gap-4 rounded-2xl bg-white p-4 border border-gray-100 transition-colors active:bg-gray-50"
       onClick={handleCardClick}
     >
       {/* 이미지 */}

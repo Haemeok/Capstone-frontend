@@ -3,6 +3,8 @@
 import React from "react";
 import Link from "next/link";
 
+import { Trash2 } from "lucide-react";
+
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -30,37 +32,45 @@ const IngredientActionButtons = ({
     onToggleSelectAll?.();
   };
 
-  return (
-    <div className="flex items-center gap-2">
-      {isDeleteMode && (
+  if (isDeleteMode) {
+    return (
+      <div className="flex items-center gap-2">
         <Button
           onClick={handleToggleSelectAll}
-          className="h-10 cursor-pointer rounded-xl bg-gray-100 px-4 font-medium text-gray-700 transition-all hover:bg-gray-200 active:scale-[0.98]"
+          className="h-10 cursor-pointer rounded-xl bg-gray-100 px-4 font-medium text-gray-700 transition-colors active:bg-gray-200"
         >
           {isAllSelected ? "취소" : "전체 선택"}
         </Button>
-      )}
-      <Button
+        <Button
+          onClick={handleDeleteButtonClick}
+          className="h-10 cursor-pointer rounded-xl bg-olive-light px-4 font-medium text-white transition-colors active:bg-olive-light/90"
+        >
+          완료
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <button
+        type="button"
         onClick={handleDeleteButtonClick}
         className={cn(
-          "h-10 cursor-pointer rounded-xl px-4 font-medium transition-all active:scale-[0.98]",
-          isDeleteMode
-            ? "bg-olive-light text-white hover:bg-olive-light/90"
-            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+          "flex items-center gap-1 cursor-pointer text-sm text-gray-500 transition-colors active:text-gray-700"
         )}
       >
-        {isDeleteMode ? "완료" : "재료 삭제"}
+        <Trash2 size={14} />
+        <span>삭제</span>
+      </button>
+      <Button
+        asChild
+        className="h-10 cursor-pointer rounded-xl bg-olive-light px-4 font-medium text-white transition-colors active:bg-olive-light/90"
+      >
+        <Link href="/ingredients/new" prefetch={false}>
+          재료 추가
+        </Link>
       </Button>
-      {!isDeleteMode && (
-        <Button
-          asChild
-          className="h-10 cursor-pointer rounded-xl bg-olive-light px-4 font-medium text-white transition-all hover:bg-olive-light/90 active:scale-[0.98]"
-        >
-          <Link href="/ingredients/new" prefetch={false}>
-            재료 추가
-          </Link>
-        </Button>
-      )}
     </div>
   );
 };

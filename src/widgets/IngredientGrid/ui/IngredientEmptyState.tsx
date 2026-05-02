@@ -6,10 +6,12 @@ import { Button } from "@/shared/ui/shadcn/button";
 
 const IngredientEmptyState = () => {
   return (
-    <div className="col-span-2 flex min-h-[300px] flex-col items-center justify-center gap-4 px-6 py-8">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-        <Refrigerator className="h-10 w-10 text-gray-400" />
-      </div>
+    <div className="col-span-2 flex min-h-[300px] flex-col items-center justify-center gap-5 px-6 py-8">
+      <Refrigerator
+        className="h-16 w-16 text-gray-300"
+        strokeWidth={1.5}
+        aria-hidden
+      />
       <div className="space-y-2 text-center">
         <h3 className="text-lg font-bold text-gray-900">
           아직 등록된 재료가 없어요
@@ -21,7 +23,7 @@ const IngredientEmptyState = () => {
         </p>
       </div>
       <Link href="/ingredients/new">
-        <Button className="h-12 cursor-pointer rounded-xl bg-olive-light px-6 font-medium text-white transition-all hover:bg-olive-light/90 active:scale-[0.98]">
+        <Button className="h-12 cursor-pointer rounded-xl bg-olive-light px-6 font-medium text-white transition-colors active:bg-olive-light/90">
           재료 추가하기
         </Button>
       </Link>
