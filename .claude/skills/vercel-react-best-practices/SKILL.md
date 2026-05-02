@@ -64,6 +64,7 @@ Reference these guidelines when:
 - `client-swr-dedup` - Use SWR for automatic request deduplication
 - `client-event-listeners` - Deduplicate global event listeners
 - `client-scroll-container-listener` - Subscribe to the actual scroll container, not window, when the app uses a custom scroll wrapper
+- `client-tanstack-prefetch-key-match` - Keep TanStack Query queryKey byte-identical between SSR prefetch and client hook to avoid silent hydration cache miss
 
 ### 5. Re-render Optimization (MEDIUM)
 
