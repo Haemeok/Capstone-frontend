@@ -29,7 +29,7 @@ export const SmartAppBanner = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="fixed bottom-[77px] left-0 right-0 z-sticky md:hidden sticky-optimized"
+          className="fixed bottom-[77px] left-0 right-0 z-toast md:hidden sticky-optimized"
         >
           <div className="mx-auto w-full max-w-4xl px-3 pb-2">
             <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-lg">

@@ -22,7 +22,7 @@ const ChatFloatingButton = ({ onClick, className }: ChatFloatingButtonProps) => 
       onClick={handleClick}
       aria-label="레시피 챗봇 열기"
       className={cn(
-        "fixed bottom-24 right-4 z-40 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-olive-light text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.95]",
+        "fixed bottom-24 right-4 z-sticky flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-olive-light text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.95]",
         className
       )}
     >
