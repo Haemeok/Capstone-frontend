@@ -74,7 +74,7 @@ const ChatInput = ({
       ? (lockedReason ?? "지금은 사용할 수 없어요")
       : isPending
         ? "답변 작성 중..."
-        : "궁금한 걸 물어보세요";
+        : "이 레시피에 대해서 어떤 게 궁금하신가요?";
 
   const counterColor =
     text.length >= COUNTER_WARN_THRESHOLD ? "text-red-500" : "text-gray-400";
@@ -88,7 +88,7 @@ const ChatInput = ({
         data-testid="chat-input-wrapper"
         onClick={handleUnauthClick}
         className={cn(
-          "flex items-end gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 transition-colors",
+          "flex items-end gap-2 rounded-xl border border-gray-200 bg-white px-3 py-1.5 transition-colors",
           isAuthenticated &&
             !isLocked &&
             "focus-within:border-olive-light focus-within:ring-1 focus-within:ring-olive-light",
@@ -106,7 +106,7 @@ const ChatInput = ({
           placeholder={placeholder}
           rows={1}
           maxLength={MAX_LENGTH}
-          className="flex-1 resize-none bg-transparent text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed"
+          className="flex-1 resize-none bg-transparent py-1 text-sm leading-6 text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed"
         />
         <button
           type="submit"
@@ -129,6 +129,9 @@ const ChatInput = ({
             {text.length} / {MAX_LENGTH}
           </p>
         )}
+      <p className="mt-2 text-center text-[11px] text-gray-400">
+        레시피오 AI는 실수할 수 있어요
+      </p>
     </form>
   );
 };

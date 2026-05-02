@@ -1,6 +1,7 @@
 import { RefreshCw } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
+import { Image } from "@/shared/ui/image/Image";
 
 import { SYSTEM_BUBBLE_LABEL } from "../model/errorMessages";
 import type { ChatMessage } from "../model/types";
@@ -11,6 +12,15 @@ type ChatMessageBubbleProps = {
   message: ChatMessage;
   onRetry?: (sourceQuestion: string) => void;
 };
+
+const BotAvatar = () => (
+  <Image
+    src="/web-app-manifest-192x192.png"
+    alt="Recipio"
+    width={28}
+    wrapperClassName="mt-0.5 shrink-0 rounded-lg"
+  />
+);
 
 const ChatMessageBubble = ({ message, onRetry }: ChatMessageBubbleProps) => {
   if (message.role === "user") {
@@ -25,7 +35,8 @@ const ChatMessageBubble = ({ message, onRetry }: ChatMessageBubbleProps) => {
 
   if (message.role === "assistant" && "status" in message && message.status === "pending") {
     return (
-      <div className="flex justify-start">
+      <div className="flex items-start justify-start gap-2">
+        <BotAvatar />
         <div className="rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-3">
           <PendingDots />
         </div>
@@ -35,7 +46,8 @@ const ChatMessageBubble = ({ message, onRetry }: ChatMessageBubbleProps) => {
 
   if (message.role === "assistant" && "text" in message) {
     return (
-      <div className="flex justify-start">
+      <div className="flex items-start justify-start gap-2">
+        <BotAvatar />
         <div
           className={cn(
             "max-w-[85%] rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-2.5",

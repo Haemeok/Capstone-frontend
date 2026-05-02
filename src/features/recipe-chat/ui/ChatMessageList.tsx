@@ -8,16 +8,22 @@ import ChatMessageBubble from "./ChatMessageBubble";
 type ChatMessageListProps = {
   messages: ChatMessage[];
   onRetry: (sourceQuestion: string) => void;
+  onQuickQuestion?: (question: string) => void;
 };
 
-const ChatMessageList = ({ messages, onRetry }: ChatMessageListProps) => {
+const ChatMessageList = ({
+  messages,
+  onRetry,
+  onQuickQuestion,
+}: ChatMessageListProps) => {
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
   }, [messages]);
 
-  if (messages.length === 0) return <ChatEmptyState />;
+  if (messages.length === 0)
+    return <ChatEmptyState onQuickQuestion={onQuickQuestion} />;
 
   return (
     <div

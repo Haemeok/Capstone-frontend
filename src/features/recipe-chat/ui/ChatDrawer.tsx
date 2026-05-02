@@ -216,7 +216,13 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
             </div>
           ) : (
             <div className="flex-1 overflow-y-auto">
-              <ChatMessageList messages={messages} onRetry={handleRetry} />
+              <ChatMessageList
+                messages={messages}
+                onRetry={handleRetry}
+                onQuickQuestion={
+                  isAuthenticated && !isLocked ? sendQuestion : undefined
+                }
+              />
             </div>
           )}
           <ChatInput
