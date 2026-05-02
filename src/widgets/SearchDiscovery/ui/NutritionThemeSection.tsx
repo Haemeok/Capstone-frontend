@@ -8,45 +8,27 @@ import {
   NutritionThemeKey,
 } from "@/shared/config/constants/recipe";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 import { Image } from "@/shared/ui/image/Image";
 
-const buildNutritionUrl = (themeKey: NutritionThemeKey) => {
-  const theme = NUTRITION_THEMES[themeKey];
-  const urlParams = new URLSearchParams();
-  urlParams.set("types", "USER,AI,YOUTUBE");
-
-  const { values } = theme;
-
-  if ("carb" in values) {
-    urlParams.set("minCarb", String(values.carb[0]));
-    urlParams.set("maxCarb", String(values.carb[1]));
-  }
-  if ("protein" in values) {
-    urlParams.set("minProtein", String(values.protein[0]));
-    urlParams.set("maxProtein", String(values.protein[1]));
-  }
-  if ("fat" in values) {
-    urlParams.set("minFat", String(values.fat[0]));
-    urlParams.set("maxFat", String(values.fat[1]));
-  }
-  if ("sugar" in values) {
-    urlParams.set("minSugar", String(values.sugar[0]));
-    urlParams.set("maxSugar", String(values.sugar[1]));
-  }
-  if ("sodium" in values) {
-    urlParams.set("minSodium", String(values.sodium[0]));
-    urlParams.set("maxSodium", String(values.sodium[1]));
-  }
-  if ("calories" in values) {
-    urlParams.set("minCalories", String(values.calories[0]));
-    urlParams.set("maxCalories", String(values.calories[1]));
-  }
-  if ("cost" in values) {
-    urlParams.set("minCost", String(values.cost[0]));
-    urlParams.set("maxCost", String(values.cost[1]));
-  }
-
-  return `/search/results?${urlParams.toString()}`;
+const buildNutritionHref = (themeKey: NutritionThemeKey) => {
+  const { values } = NUTRITION_THEMES[themeKey];
+  return buildSearchResultsUrl({
+    minCarb: "carb" in values ? values.carb[0] : undefined,
+    maxCarb: "carb" in values ? values.carb[1] : undefined,
+    minProtein: "protein" in values ? values.protein[0] : undefined,
+    maxProtein: "protein" in values ? values.protein[1] : undefined,
+    minFat: "fat" in values ? values.fat[0] : undefined,
+    maxFat: "fat" in values ? values.fat[1] : undefined,
+    minSugar: "sugar" in values ? values.sugar[0] : undefined,
+    maxSugar: "sugar" in values ? values.sugar[1] : undefined,
+    minSodium: "sodium" in values ? values.sodium[0] : undefined,
+    maxSodium: "sodium" in values ? values.sodium[1] : undefined,
+    minCalories: "calories" in values ? values.calories[0] : undefined,
+    maxCalories: "calories" in values ? values.calories[1] : undefined,
+    minCost: "cost" in values ? values.cost[0] : undefined,
+    maxCost: "cost" in values ? values.cost[1] : undefined,
+  });
 };
 
 const NutritionThemeSection = () => {
@@ -64,7 +46,7 @@ const NutritionThemeSection = () => {
           return (
             <Link
               key={key}
-              href={buildNutritionUrl(key)}
+              href={buildNutritionHref(key)}
               onClick={() => triggerHaptic("Light")}
               className="flex w-24 shrink-0 cursor-pointer flex-col items-center gap-2 rounded-2xl bg-gray-50 p-4 active:bg-gray-100"
             >

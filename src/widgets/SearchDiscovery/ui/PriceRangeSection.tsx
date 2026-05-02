@@ -6,16 +6,7 @@ import { Banknote, Coins, Gem } from "lucide-react";
 
 import { PRICE_RANGES } from "@/shared/config/constants/content-pages";
 import { triggerHaptic } from "@/shared/lib/bridge";
-
-const buildPriceUrl = (minCost?: number, maxCost?: number) => {
-  const urlParams = new URLSearchParams();
-  urlParams.set("types", "USER,AI,YOUTUBE");
-
-  if (minCost !== undefined) urlParams.set("minCost", String(minCost));
-  if (maxCost !== undefined) urlParams.set("maxCost", String(maxCost));
-
-  return `/search/results?${urlParams.toString()}`;
-};
+import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 
 const PRICE_ICONS: Record<string, React.ReactNode> = {
   "under-5000": <Coins size={32} strokeWidth={1.5} className="text-amber-600" />,
@@ -40,7 +31,10 @@ const PriceRangeSection = () => {
         {PRICE_RANGES.map((range) => (
           <Link
             key={range.id}
-            href={buildPriceUrl(range.minCost, range.maxCost)}
+            href={buildSearchResultsUrl({
+              minCost: range.minCost,
+              maxCost: range.maxCost,
+            })}
             onClick={() => triggerHaptic("Light")}
             className="group flex aspect-[3/2] flex-col items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white transition-all hover:border-gray-300 hover:shadow-md active:scale-[0.98]"
           >

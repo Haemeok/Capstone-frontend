@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { ContentPage } from "@/shared/config/constants/content-pages";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -11,38 +12,12 @@ type ContentPageCardProps = {
   page: ContentPage;
 };
 
-const buildSearchUrl = (params: ContentPage["searchParams"]) => {
-  const urlParams = new URLSearchParams();
-  const types = params.types ?? ["USER", "AI", "YOUTUBE"];
-  urlParams.set("types", types.join(","));
-
-  if (params.q) urlParams.set("q", params.q);
-  if (params.dishType) urlParams.set("dishType", params.dishType);
-  if (params.tags) urlParams.set("tags", params.tags.join(","));
-  if (params.ingredientIds)
-    urlParams.set("ingredientIds", params.ingredientIds.join(","));
-  if (params.minCost !== undefined)
-    urlParams.set("minCost", String(params.minCost));
-  if (params.maxCost !== undefined)
-    urlParams.set("maxCost", String(params.maxCost));
-  if (params.minCalories !== undefined)
-    urlParams.set("minCalories", String(params.minCalories));
-  if (params.maxCalories !== undefined)
-    urlParams.set("maxCalories", String(params.maxCalories));
-  if (params.minProtein !== undefined)
-    urlParams.set("minProtein", String(params.minProtein));
-  if (params.maxProtein !== undefined)
-    urlParams.set("maxProtein", String(params.maxProtein));
-
-  return `/search/results?${urlParams.toString()}`;
-};
-
 const ContentPageCard = ({ page }: ContentPageCardProps) => {
   const isYoutube = page.searchParams.types?.includes("YOUTUBE");
 
   return (
     <Link
-      href={buildSearchUrl(page.searchParams)}
+      href={buildSearchResultsUrl(page.searchParams)}
       onClick={() => triggerHaptic("Light")}
       className="group block w-[210px] flex-shrink-0 cursor-pointer"
     >

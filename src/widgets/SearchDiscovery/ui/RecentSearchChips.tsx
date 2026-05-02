@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 
 import { useRecentSearches } from "@/shared/hooks/useRecentSearches";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 
 const RecentSearchChips = () => {
   const router = useRouter();
@@ -17,7 +18,7 @@ const RecentSearchChips = () => {
 
   const handleChipClick = (query: string) => {
     triggerHaptic("Light");
-    router.push(`/search/results?q=${encodeURIComponent(query)}&types=USER,AI,YOUTUBE`);
+    router.push(buildSearchResultsUrl({ q: query }));
   };
 
   const handleRemove = (e: React.MouseEvent, query: string) => {
