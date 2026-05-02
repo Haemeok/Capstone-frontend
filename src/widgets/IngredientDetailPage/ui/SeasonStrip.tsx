@@ -1,3 +1,5 @@
+import { Sprout } from "lucide-react";
+
 type SeasonStripProps = {
   months: number[]; // 1~12
 };
@@ -13,7 +15,8 @@ const SeasonStrip = ({ months }: SeasonStripProps) => {
 
   return (
     <section className="px-5 py-6 border-t border-gray-100">
-      <h2 className="text-lg font-bold text-gray-800 mb-3">제철</h2>
+      <h2 className="text-lg font-bold text-gray-900 mb-1">제철</h2>
+      <p className="text-sm text-gray-500 mb-3">가장 맛있는 시기예요</p>
 
       <div className="flex justify-between gap-1">
         {ALL_MONTHS.map((m) => {
@@ -22,12 +25,12 @@ const SeasonStrip = ({ months }: SeasonStripProps) => {
           return (
             <div
               key={m}
-              className={`flex-1 h-9 rounded-md flex items-center justify-center text-xs font-medium transition-colors ${
+              className={`flex-1 h-9 rounded-lg flex items-center justify-center text-xs font-medium transition-colors ${
                 inSeason
                   ? isCurrent
                     ? "bg-olive-light text-white"
-                    : "bg-olive-light/20 text-olive-dark"
-                  : "bg-gray-50 text-gray-400"
+                    : "bg-olive-light/15 text-olive-dark"
+                  : "bg-gray-100 text-gray-400"
               }`}
             >
               {m}
@@ -37,8 +40,9 @@ const SeasonStrip = ({ months }: SeasonStripProps) => {
       </div>
 
       {isInSeasonNow && (
-        <p className="mt-3 text-sm font-medium text-olive-dark">
-          🌿 지금이 제철!
+        <p className="mt-3 text-sm font-medium text-olive-dark flex items-center gap-1.5">
+          <Sprout size={14} />
+          <span>지금이 제철!</span>
         </p>
       )}
     </section>

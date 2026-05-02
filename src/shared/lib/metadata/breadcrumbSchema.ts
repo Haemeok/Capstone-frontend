@@ -87,6 +87,22 @@ export const createSearchBreadcrumb = (
   return createBreadcrumbListElement(items);
 };
 
+export const createIngredientBreadcrumb = (
+  ingredientName: string,
+  ingredientId: string
+): BreadcrumbListSchema => {
+  const items: BreadcrumbItem[] = [
+    { name: "홈", url: SEO_CONSTANTS.SITE_URL },
+    { name: "재료", url: `${SEO_CONSTANTS.SITE_URL}/ingredients` },
+    {
+      name: ingredientName,
+      url: `${SEO_CONSTANTS.SITE_URL}/ingredients/${ingredientId}`,
+    },
+  ];
+
+  return createBreadcrumbListElement(items);
+};
+
 export const createUserProfileBreadcrumb = (
   userName: string,
   userId: string

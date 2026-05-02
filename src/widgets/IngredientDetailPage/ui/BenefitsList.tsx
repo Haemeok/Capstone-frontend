@@ -7,7 +7,8 @@ const BenefitsList = ({ benefits }: BenefitsListProps) => {
 
   return (
     <section className="px-5 py-6 border-t border-gray-100">
-      <h2 className="text-lg font-bold text-gray-800 mb-3">효능</h2>
+      <h2 className="text-lg font-bold text-gray-900 mb-1">효능</h2>
+      <p className="text-sm text-gray-500 mb-3">이런 점이 좋아요</p>
 
       <ul className="flex flex-col gap-2">
         {benefits.map((benefit) => (

@@ -36,9 +36,9 @@ const IngredientDetailPageClient = ({
         caloriesPer100g={detail.nutrition?.calories ?? null}
       />
 
-      <CoupangPurchaseCard href={detail.coupangLink} />
-
       <StorageInfoCard storage={detail.storage} />
+
+      <CoupangPurchaseCard href={detail.coupangLink} />
 
       <SeasonStrip months={detail.seasonMonths} />
 
@@ -55,7 +55,10 @@ const IngredientDetailPageClient = ({
       <CookingMethodsSection methods={detail.cookingMethods} />
 
       <section className="px-5 py-6 border-t border-gray-100">
-        <IngredientRecipesSlide ingredientId={detail.id} />
+        <IngredientRecipesSlide
+          ingredientId={detail.id}
+          ingredientName={detail.name}
+        />
       </section>
     </Container>
   );
