@@ -1,1027 +1,112 @@
 # CLAUDE.md
 
-Always use Context7 MCP when I need library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
+이 프로젝트는 **Next.js 15 (App Router) + TypeScript + Feature-Sliced Design**. Web과 React Native WebView 앱(iOS/Android)이 같은 코드베이스 공유.
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+라이브러리/API 문서가 필요하면 **Context7 MCP**를 먼저 쓸 것 (사용자가 묻지 않아도).
+
+---
+
+## 작업별 가이드 (Lookup Table)
+
+매 세션마다 모든 가이드를 컨텍스트에 끌고 다니지 말 것. **해당 작업 시작 직전에 Read**.
+
+| 작업 | 참고 문서 |
+|---|---|
+| UI/디자인 작업 | `docs/guides/design.md` (오늘의집 톤). 톤 이미지: `docs/design/` |
+| 리팩터·코드 품질 리뷰 | `docs/guides/code-style.md` (Readability/Predictability/Cohesion/Coupling 패턴 모음) |
+| API · 인증 · WebSocket | `docs/guides/api-and-realtime.md` |
+| Haptic Feedback 상세 | `.claude/skills/haptic-feedback/SKILL.md` (skill로 자동 호출) |
+
+**UI 작업 절대 금지 (다시 묻지 말 것):**
+- ❌ Sparkles 등 라인 아이콘 + 원형 배경 배지 (`rounded-full bg-{color}/10` 패턴)
+- ❌ border-2 컬러 강조, 진한 그라디언트, 채도 높은 원색
+- ❌ 마케팅 카피("✨ 마법처럼", "AI가 답합니다!")
+
+---
 
 ## Critical Rules
 
-### Superpowers workflow 종료 규칙 (compounding enforcement)
+### NEVER ASK QUESTIONS
+- `npm run dev` 실행 여부 묻지 말 것 — 코드 완성 후 그냥 진행
+- 작업 끝나고 "추가 작업할까요?" 류 확인 금지
 
-**superpowers 하네스의 모든 최종 단계에서 `compounding-lessons` 스킬 호출은 필수다.**
-
-- `finishing-a-development-branch`의 4가지 옵션(merge / PR / keep / discard) 중 어느 것이 선택되든, 해당 옵션 실행이 끝난 직후 `compounding-lessons`를 반드시 invoke.
-- `subagent-driven-development`와 `executing-plans`의 마지막 task가 완료된 직후에도 동일하게 invoke.
-- "이번 세션은 딱히 컴파운드할 게 없어 보인다"는 자체 판단으로 건너뛰지 말 것. 일단 호출하고, 메타 스킬 자체가 "nothing to compound"라고 자가 보고하도록 맡겨라. 습관 강제가 우선.
-- 프로젝트 로컬 `finishing-a-development-branch` 스킬(`.claude/skills/finishing-a-development-branch/SKILL.md`)이 plugin의 `superpowers:finishing-a-development-branch`를 override한다. 플러그인 버전이 아니라 로컬 버전을 사용할 것. (로컬 버전이 plugin 버전과 동일 + Step 6로 compounding-lessons 호출 단계가 추가되어 있음.)
+### Build vs Type Check (Windows)
+- 코드 변경 후엔 **`npx tsc --noEmit`** (타입 체크만)
+- `npm run build` 는 **사용자가 명시적으로 요청할 때만**. 실행 전:
+  1. localhost 확인: `netstat -ano | findstr :3000`
+  2. 떠있으면 종료: `taskkill //PID <pid> //F` (bash에선 `cmd //c taskkill ...` 래핑 필요)
+  3. build 후 `npm run dev` 백그라운드로 복구
 
 ### Route / ID 규약
-- **`recipeId`, `userId`, `bookId` 등 모든 리소스 ID는 문자열(nanoid/uuid)이다. 숫자 아님.**
-  - 경로 정규식을 짤 때 `\d+` 금지. `[^/]+` 사용.
-  - 예: `/^\/recipes\/\d+$/` ❌ → `/^\/recipes\/[^/]+$/` ✅
-  - 단, `[^/]+` 로 매칭할 때 `new`, `my-fridge`, `admin`, `category` 같은 예약된 단일 세그먼트 경로와 충돌할 수 있으니 negative lookahead로 명시적으로 제외할 것.
+모든 리소스 ID는 **문자열(nanoid/uuid)**, 숫자 아님.
+- 경로 정규식 `\d+` 금지 → `[^/]+` 사용
+- `[^/]+` 사용 시 `new`, `my-fridge`, `admin`, `category` 같은 예약 세그먼트와 충돌 방지를 위해 negative lookahead로 제외
 
-### Plan / Task / Commit 분할 규칙 (anti-fragmentation)
+### Plan / Task / Commit 분할 (anti-fragmentation)
+**한 commit = 한 의미 단위**. 50줄짜리 컴포넌트 5개를 5 commit으로 쪼개지 말 것.
 
-**과분할 금지. 한 commit = 한 의미 단위.** 각 신규 컴포넌트/유틸리티를 무조건 별 task/commit 으로 나누지 말 것.
+- **묶어라**: 같은 PR · 같은 테마의 신규 presentational 컴포넌트들, 같은 영역의 시각 변경(색·아이콘·클래스)
+- **나눠라**: 레이어가 다른 변경(타입 ↔ 파서 ↔ API ↔ 와이어업), TDD가 정당한 진짜 로직, bisect가 필요한 critical change
+- subagent ceremony 비용 인식: 8개 신규 컴포넌트를 8 task로 만든 건 plan 실패
 
-#### 기준
-- **묶어라:** 같은 PR 의 같은 테마 작업 (예: "5개 신규 presentational 섹션 컴포넌트 추가") 은 하나의 task + 하나의 commit
-- **묶어라:** 50줄 이하 presentational 컴포넌트는 다른 비슷한 컴포넌트와 합칠 것
-- **묶어라:** 단순 시각 변경 (배경색 토글, 아이콘 추가, 클래스 변경) 은 같은 영역이면 한 commit
-- **나눠라:** 타입 변경 / 파서 / API 함수 / 오케스트레이터 와이어업 같은 **layer 가 다른** 변경은 별 commit
-- **나눠라:** TDD 가 적용되는 진짜 로직 (테스트 + 구현) 은 task 분리 정당
-- **나눠라:** 회귀 위험이 있는 critical change (예: SSR 전환, auth 변경) 은 분리해 bisect 가능하게
+### Superpowers 워크플로 종료 → compounding-lessons 필수
+- `finishing-a-development-branch`의 어떤 옵션(merge/PR/keep/discard)이든 마지막에 `compounding-lessons` invoke
+- `subagent-driven-development`, `executing-plans`의 마지막 task 직후도 동일
+- "딱히 컴파운드할 게 없어 보임" 자체 판단 금지. 메타 스킬이 "nothing to compound"라고 자가보고하게 둘 것
+- 프로젝트 로컬 `finishing-a-development-branch` (`.claude/skills/...`)가 plugin 버전을 override
 
-#### subagent ceremony 비용 인식
-- 매 task 마다 implementer 디스패치 + 잠재적 dual review = 토큰/시간 폭발
-- "verbatim 코드 복사" task 만 5개 연달아 만들면 ceremony 가 작업의 핵심을 압도
-- Plan 작성 시 task 수 = 의미 있는 의사결정 단위 수. "코드 라인 수 / 파일 수" 가 아님
-- 3~5개 신규 presentational 컴포넌트는 한 task 로 충분. 8개 신규 component 인데 8 task 로 쪼갠 건 명백한 과분할
-
-#### 구체 예시 (이 프로젝트 기준)
-- ❌ "Task 11: BenefitsList 신규" + "Task 12: PrepTipCard 신규" → 한 task
-- ❌ "Storage 색 코딩" + "조리법 이모지" + "Hero 확대" 따로 commit → 한 commit ("visual polish")
-- ✅ "타입 확장" + "파서 매핑" + "오케스트레이터 와이어업" 분리 — layer 다름
-- ✅ "신규 lib 함수 + 그 unit test" 분리 — TDD 정당화
-
-#### Plan / Subagent-driven workflow 적용
-- writing-plans 시 task 수 자체가 의미 단위 수. 50줄 컴포넌트 8개를 8 task 로 만드는 건 plan 실패
-- 사용자가 명시적 분할 요구하지 않는 한 묶을 것
-- 의심되면 묶고, 사용자가 "왜 이렇게 큰 commit 이야" 라고 묻기를 기다려라 (역방향이 토큰 효율 훨씬 우월)
-
-### Build vs Type Check
-- **After code changes, use `npx tsc --noEmit` for type checking only**
-- **Before running `npm run build`:**
-  1. Check if localhost is running: `netstat -ano | findstr :3000`
-  2. If running, kill the process: `taskkill /PID <pid> /F`
-  3. Run build: `npm run build`
-  4. Restore localhost: `npm run dev` (in background)
-- Only run build when explicitly requested by user
-
-### Project Structure
-
-This is a Next.js 15 project using App Router with TypeScript and Feature-Sliced Design (FSD) architecture.
-The service runs as both a **web application** and a **React Native WebView app** (iOS/Android). This is NOT a PWA.
+---
 
 ## Architecture
 
-### Feature-Sliced Design (FSD)
+### Feature-Sliced Design (엄격)
+의존 방향: `shared → entities → features → widgets → app`
 
-Follow strict layer dependency order: `shared` → `entities` → `features` → `widgets` → `app`
-
-- **shared**: Common utilities, UI components, API clients, and configuration
-- **entities**: Business entities (user, recipe, ingredient, comment, notification)
-- **features**: Feature implementations (auth, recipe-create, comment-like, etc.)
-- **widgets**: Complex UI compositions (RecipeGrid, Header, Footer, etc.)
-- **app**: Pages, layouts, and routing
+- 역방향 import 금지
+- 같은 레이어 내 cross-import 금지
+- 레이어 위반은 PR 자동 거부 사유
 
 ### Component Patterns
+- 화살표 함수 + `const` 선언
+- 타입은 `type`. `interface` 금지
+- 서버 컴포넌트(SEO/초기 데이터) ↔ `"use client"` (인터랙션) 명확히 분리
+- Drawer/Modal은 controlled (`isOpen`, `onOpenChange` props)
+- 단일 책임 원칙. 조건부 렌더가 복잡하면 별 컴포넌트로 분리. prop drilling 3단 초과면 composition/Context
 
-- All components use arrow functions with `const` declaration
-- Use `type` instead of `interface` for TypeScript
-- Server components for SEO/initial data, client components (`"use client"`) for interactions
-- Controlled components for modals/drawers (receive `isOpen`, `onOpenChange` props)
+### State / Data Fetching
+- 서버: Next.js 내장 `fetch` (SSR/SSG)
+- 클라이언트: `apiClient` (자동 401 처리 + 토큰 리프레시)
+- 서버 상태: TanStack Query (5분 stale, 30분 GC)
+- 클라이언트 상태: Zustand
+- Hydration: TanStack Query `initialData`로 서버↔클라이언트 동기화
 
-## State Management
+### 핵심 라이브러리
+- UI: Radix UI + Tailwind
+- Form: React Hook Form
+- Animation: Framer Motion / GSAP
+- 컬러 토큰: `olive-light`, `olive-dark`, `beige`, `brown` (Tailwind config)
 
-### Data Fetching
+---
 
-- **Server**: Next.js built-in `fetch` for SSR/SSG
-- **Client**: Custom `apiClient` with automatic 401 handling and token refresh
-- **State**: TanStack Query for server state, Zustand for client state
-- **Hydration**: Use `initialData` in TanStack Query to sync server/client state
+## Project Conventions
 
-### Key Libraries
+### 이미지
+**`next/image` 절대 금지** (사용자 메모리). LCP 이미지는 순수 `<img>`. 그 외엔 `@/shared/ui/image/Image`.
 
-- **UI**: Radix UI components with custom styling
-- **Styling**: Tailwind CSS with custom color scheme (olive, dark, beige, brown)
-- **Forms**: React Hook Form with validation
-- **Animation**: Framer Motion and GSAP
+### Haptic
+모든 인터랙티브 요소에 `triggerHaptic()` (`@/shared/lib/bridge`).
+스타일: `Success` / `Light` / `Medium` / `Heavy` / `Warning` / `Error`.
+상세 가이드는 haptic-feedback skill 참고.
 
-## UI/UX Design Guidelines (Toss + Airbnb Style)
-
-**CRITICAL: 모든 UI 작업 시 반드시 이 가이드라인을 참고하세요.**
-
-### 디자인 철학
-
-1. **심플함과 명확함** (Toss 스타일)
-   - 한 화면에 하나의 핵심 액션만 강조
-   - 불필요한 장식 요소 제거
-   - 여백(whitespace)을 충분히 활용
-
-2. **따뜻하고 친근한 느낌** (Airbnb 스타일)
-   - 날카로운 모서리 대신 부드러운 라운드 (rounded-xl, rounded-2xl)
-   - 친근한 마이크로카피 사용
-   - 사용자를 존중하는 어조
-
-### 컬러 시스템
-
-```
-Primary: olive (olive-light, olive-dark)
-Background: beige 계열 (따뜻한 배경)
-Text: dark (gray-900, gray-700, gray-500)
-Accent: brown 계열
-Error: red-500 (최소한으로 사용)
-Success: green-500 (최소한으로 사용)
-```
-
-### 타이포그래피
-
-- **제목**: text-xl ~ text-2xl, font-bold, text-gray-900
-- **본문**: text-base, text-gray-700
-- **설명/보조**: text-sm, text-gray-500
-- **라벨**: text-sm, font-medium, text-gray-600
-
-### 버튼 스타일
-
-```tsx
-// Primary 버튼 (주요 액션)
-className="h-14 w-full rounded-2xl bg-olive-light text-white font-bold text-lg shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
-
-// Secondary 버튼 (보조 액션)
-className="h-12 rounded-xl bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-colors"
-
-// Disabled 상태
-className="cursor-not-allowed bg-gray-100 text-gray-400"
-```
-
-### 카드/컨테이너
-
-```tsx
-// 기본 카드
-className="rounded-2xl bg-white p-6 shadow-sm"
-
-// 선택 가능한 카드 (hover 효과)
-className="rounded-2xl bg-white p-4 border border-gray-100 hover:border-olive-light hover:shadow-md transition-all cursor-pointer"
-
-// 선택된 상태
-className="rounded-2xl bg-olive-light/5 p-4 border-2 border-olive-light"
-```
-
-### 입력 필드
-
-```tsx
-// 텍스트 입력
-className="w-full rounded-xl border border-gray-200 p-4 text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light transition-colors"
-
-// Textarea
-className="h-24 w-full resize-none rounded-xl border border-gray-200 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
-```
-
-### 애니메이션 원칙
-
-1. **부드럽고 자연스럽게**
-   - duration: 200ms ~ 300ms
-   - easing: ease-out 또는 spring
-   - 과하지 않은 미세한 움직임
-
-2. **의미 있는 피드백**
-   - 버튼 클릭: scale(0.98) + shadow 변화
-   - 호버: 배경색/테두리 변화
-   - 로딩: subtle pulse 또는 skeleton
-
-```tsx
-// Framer Motion 기본 설정
-initial={{ opacity: 0, y: 10 }}
-animate={{ opacity: 1, y: 0 }}
-exit={{ opacity: 0, y: -10 }}
-transition={{ duration: 0.2, ease: "easeOut" }}
-```
-
-### Drawer/Modal 스타일
-
-```tsx
-// 컨텐츠 영역
-className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md rounded-t-3xl sm:rounded-2xl"
-
-// 헤더
-className="px-6 pt-6 pb-4"
-
-// 제목
-className="text-xl font-bold text-gray-900"
-
-// 설명
-className="text-sm text-gray-500 mt-1"
-```
-
-### 선택 옵션 (라디오/체크박스 대체)
-
-```tsx
-// 옵션 버튼
-className={cn(
-  "w-full rounded-xl border-2 p-4 text-left transition-all",
-  isSelected
-    ? "border-olive-light bg-olive-light/5"
-    : "border-gray-100 hover:border-gray-200"
-)}
-
-// 선택 시 체크 아이콘
-{isSelected && <CheckIcon className="h-5 w-5 text-olive-light" />}
-```
-
-### 피해야 할 것
-
-- ❌ 과한 그림자 (shadow-2xl 남용)
-- ❌ 날카로운 모서리 (rounded-sm, rounded-md)
-- ❌ 강렬한 색상 대비 (빨강/파랑 직접 사용)
-- ❌ 복잡한 그라데이션
-- ❌ 너무 작은 터치 영역 (최소 44px)
-- ❌ 빽빽한 레이아웃 (여백 부족)
-
-## API Configuration
-
-### Backend Integration
-
-- API base URL: `https://api.recipio.kr`
-- All `/api/*` requests are proxied to backend
-- WebSocket endpoints via `/ws/*`
-- OAuth2 flows via `/oauth2/*` and `/login/*`
-- Image domains: S3 bucket, Google user content, starwalk.space
-
-### Authentication
-
-- Cookie-based authentication with automatic refresh
-- 401 errors trigger token refresh in `apiClient`
-
-## Key Features
-
-### App Distribution
-
-- **Web**: Next.js 웹 애플리케이션 (recipio.kr)
-- **Mobile App**: React Native WebView 앱 (iOS/Android 스토어 배포)
-- Web과 앱은 동일한 Next.js 코드베이스를 공유하며, 네이티브 기능은 WebView 브릿지를 통해 제공
-
-### Haptic Feedback (iOS/Android WebView)
-
-**CRITICAL: 모든 인터랙티브 UI 요소에 햅틱 피드백 적용**
-
-자세한 가이드라인은 `.claude/skills/haptic-feedback/SKILL.md` 참조.
-
-```typescript
-import { triggerHaptic } from "@/shared/lib/bridge";
-
-// 사용 가능한 스타일
-triggerHaptic("Success"); // 완료/성공 시
-triggerHaptic("Light");   // 일반 UI 인터랙션
-triggerHaptic("Medium");  // 중요한 액션
-triggerHaptic("Heavy");   // 매우 중요한 액션
-triggerHaptic("Warning"); // 경고
-triggerHaptic("Error");   // 에러
-```
-
-**필수 적용 위치:**
-- `Success`: mutation onSuccess (레시피/댓글 생성/수정/삭제)
-- `Light`: 토글, 탭 전환, 필터 칩, 캘린더 네비게이션
-- `Light` (step-based): 슬라이더 (useRef로 step 추적하여 성능 최적화)
-
-### Real-time Features
-
-- WebSocket integration for notifications
-- SockJS/STOMP protocol implementation
-- Real-time recipe interactions and comments
-
-### Code Quality
-
-- ESLint with Next.js, TypeScript, and Prettier configurations
-- Simple import sorting enforced
-- Magic numbers should be named constants
-- Complex conditions should be extracted to named variables
-
-## Development Notes
-
-### Component Guidelines
-
-- Single responsibility principle: one component, one role
-- Separate conditional rendering into distinct components
-- No prop drilling beyond 3 levels - use composition or Context
-- Extract complex interactions into dedicated components
+### Web + RN WebView
+- 같은 Next.js 코드베이스. 네이티브 기능은 WebView bridge 경유
+- 이건 PWA 아님
 
 ### File Organization
-
-- Group related files by feature/domain, not just by type
-- Use barrel exports (`index.ts`) for clean imports
-- Keep constants near related logic or use clear naming
-
-### Performance
-
-- TanStack Query caching with 5min stale time, 30min GC
-- Image optimization for S3, Google, and external sources
-- Bundle optimization with automatic tree-shaking
-
-# 페르소나 및 핵심 목표 (Persona & Core Goal)
-
-당신은 Next.js, TypeScript, 그리고 Feature-Sliced Design (FSD) 아키텍처에 능숙한 시니어 프론트엔드 개발자입니다. 당신의 최우선 목표는 가독성, 유지보수성, 확장성이 뛰어난 코드를 작성하는 것입니다.
-
-## 🚨 CRITICAL RULES (절대 지켜야 할 규칙)
-
-### 1. NEVER ASK QUESTIONS (절대 묻지 말 것)
-
-- **DO NOT ask about running `npm run dev`** - Just proceed after code completion
-- **DO NOT ask for confirmation or suggest additional work** after completing tasks
-
-### 2. Feature-Sliced Design Strict Compliance (FSD 엄격 준수)
-
-```
-shared/ → entities/ → features/ → widgets/ → app/
-```
-
-- **NEVER import in reverse direction between layers**
-- **NO cross-imports within same layer**
-
-### 3. Single Responsibility Principle (단일 책임 원칙)
-
-- **One component = One responsibility**
-- **Split complex conditional rendering** into separate components
-- **Use Context or Composition** when prop drilling exceeds 3 levels
-
-## 📁 Project Structure Patterns
-
-# Frontend Design Guideline
-
-This document summarizes key frontend design principles and rules, showcasing
-recommended patterns. Follow these guidelines when writing frontend code.
-
-# Readability
-
-Improving the clarity and ease of understanding code.
-
-## Naming Magic Numbers
-
-**Rule:** Replace magic numbers with named constants for clarity.
-
-**Reasoning:**
-
-- Improves clarity by giving semantic meaning to unexplained values.
-- Enhances maintainability.
-
-#### Recommended Pattern:
-
-```typescript
-const ANIMATION_DELAY_MS = 300;
-
-async function onLikeClick() {
-  await postLike(url);
-  await delay(ANIMATION_DELAY_MS); // Clearly indicates waiting for animation
-  await refetchPostLike();
-}
-```
-
-## Abstracting Implementation Details
-
-**Rule:** Abstract complex logic/interactions into dedicated components/HOCs.
-
-**Reasoning:**
-
-- Reduces cognitive load by separating concerns.
-- Improves readability, testability, and maintainability of components.
-
-#### Recommended Pattern 1: Auth Guard
-
-(Login check abstracted to a wrapper/guard component)
-
-```tsx
-// App structure
-function App() {
-  return (
-    <AuthGuard>
-      {" "}
-      {/* Wrapper handles auth check */}
-      <LoginStartPage />
-    </AuthGuard>
-  );
-}
-
-// AuthGuard component encapsulates the check/redirect logic
-function AuthGuard({ children }) {
-  const status = useCheckLoginStatus();
-  useEffect(() => {
-    if (status === "LOGGED_IN") {
-      location.href = "/home";
-    }
-  }, [status]);
-
-  // Render children only if not logged in, otherwise render null (or loading)
-  return status !== "LOGGED_IN" ? children : null;
-}
-
-// LoginStartPage is now simpler, focused only on login UI/logic
-function LoginStartPage() {
-  // ... login related logic ONLY ...
-  return <>{/* ... login related components ... */}</>;
-}
-```
-
-#### Recommended Pattern 2: Dedicated Interaction Component
-
-(Dialog logic abstracted into a dedicated `InviteButton` component)
-
-```tsx
-export function FriendInvitation() {
-  const { data } = useQuery(/* ... */);
-
-  return (
-    <>
-      {/* Use the dedicated button component */}
-      <InviteButton name={data.name} />
-      {/* ... other UI ... */}
-    </>
-  );
-}
-
-// InviteButton handles the confirmation flow internally
-function InviteButton({ name }) {
-  const handleClick = async () => {
-    const canInvite = await overlay.openAsync(({ isOpen, close }) => (
-      <ConfirmDialog
-        title={`Share with ${name}`}
-        // ... dialog setup ...
-      />
-    ));
-
-    if (canInvite) {
-      await sendPush();
-    }
-  };
-
-  return <Button onClick={handleClick}>Invite</Button>;
-}
-```
-
-## Separating Code Paths for Conditional Rendering
-
-**Rule:** Separate significantly different conditional UI/logic into distinct
-components.
-
-**Reasoning:**
-
-- Improves readability by avoiding complex conditionals within one component.
-- Ensures each specialized component has a clear, single responsibility.
-
-#### Recommended Pattern:
-
-(Separate components for each role)
-
-```tsx
-function SubmitButton() {
-  const isViewer = useRole() === "viewer";
-
-  // Delegate rendering to specialized components
-  return isViewer ? <ViewerSubmitButton /> : <AdminSubmitButton />;
-}
-
-// Component specifically for the 'viewer' role
-function ViewerSubmitButton() {
-  return <TextButton disabled>Submit</TextButton>;
-}
-
-// Component specifically for the 'admin' (or non-viewer) role
-function AdminSubmitButton() {
-  useEffect(() => {
-    showAnimation(); // Animation logic isolated here
-  }, []);
-
-  return <Button type="submit">Submit</Button>;
-}
-```
-
-## Simplifying Complex Ternary Operators
-
-**Rule:** Replace complex/nested ternaries with `if`/`else` or IIFEs for
-readability.
-
-**Reasoning:**
-
-- Makes conditional logic easier to follow quickly.
-- Improves overall code maintainability.
-
-#### Recommended Pattern:
-
-(Using an IIFE with `if` statements)
-
-```typescript
-const status = (() => {
-  if (ACondition && BCondition) return "BOTH";
-  if (ACondition) return "A";
-  if (BCondition) return "B";
-  return "NONE";
-})();
-```
-
-## Reducing Eye Movement (Colocating Simple Logic)
-
-**Rule:** Colocate simple, localized logic or use inline definitions to reduce
-context switching.
-
-**Reasoning:**
-
-- Allows top-to-bottom reading and faster comprehension.
-- Reduces cognitive load from context switching (eye movement).
-
-#### Recommended Pattern A: Inline `switch`
-
-```tsx
-function Page() {
-  const user = useUser();
-
-  // Logic is directly visible here
-  switch (user.role) {
-    case "admin":
-      return (
-        <div>
-          <Button disabled={false}>Invite</Button>
-          <Button disabled={false}>View</Button>
-        </div>
-      );
-    case "viewer":
-      return (
-        <div>
-          <Button disabled={true}>Invite</Button> {/* Example for viewer */}
-          <Button disabled={false}>View</Button>
-        </div>
-      );
-    default:
-      return null;
-  }
-}
-```
-
-#### Recommended Pattern B: Colocated simple policy object
-
-```tsx
-function Page() {
-  const user = useUser();
-  // Simple policy defined right here, easy to see
-  const policy = {
-    admin: { canInvite: true, canView: true },
-    viewer: { canInvite: false, canView: true },
-  }[user.role];
-
-  // Ensure policy exists before accessing properties if role might not match
-  if (!policy) return null;
-
-  return (
-    <div>
-      <Button disabled={!policy.canInvite}>Invite</Button>
-      <Button disabled={!policy.canView}>View</Button>
-    </div>
-  );
-}
-```
-
-## Naming Complex Conditions
-
-**Rule:** Assign complex boolean conditions to named variables.
-
-**Reasoning:**
-
-- Makes the _meaning_ of the condition explicit.
-- Improves readability and self-documentation by reducing cognitive load.
-
-#### Recommended Pattern:
-
-(Conditions assigned to named variables)
-
-```typescript
-const matchedProducts = products.filter((product) => {
-  // Check if product belongs to the target category
-  const isSameCategory = product.categories.some(
-    (category) => category.id === targetCategory.id
-  );
-
-  // Check if any product price falls within the desired range
-  const isPriceInRange = product.prices.some(
-    (price) => price >= minPrice && price <= maxPrice
-  );
-
-  // The overall condition is now much clearer
-  return isSameCategory && isPriceInRange;
-});
-```
-
-**Guidance:** Name conditions when the logic is complex, reused, or needs unit
-testing. Avoid naming very simple, single-use conditions.
-
-# Predictability
-
-Ensuring code behaves as expected based on its name, parameters, and context.
-
-## Standardizing Return Types
-
-**Rule:** Use consistent return types for similar functions/hooks.
-
-**Reasoning:**
-
-- Improves code predictability; developers can anticipate return value shapes.
-- Reduces confusion and potential errors from inconsistent types.
-
-#### Recommended Pattern 1: API Hooks (React Query)
-
-```typescript
-// Always return the Query object
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-
-// Assuming fetchUser returns Promise<UserType>
-function useUser(): UseQueryResult<UserType, Error> {
-  const query = useQuery({ queryKey: ["user"], queryFn: fetchUser });
-  return query;
-}
-
-// Assuming fetchServerTime returns Promise<Date>
-function useServerTime(): UseQueryResult<Date, Error> {
-  const query = useQuery({
-    queryKey: ["serverTime"],
-    queryFn: fetchServerTime,
-  });
-  return query;
-}
-```
-
-#### Recommended Pattern 2: Validation Functions
-
-(Using a consistent type, ideally a Discriminated Union)
-
-```typescript
-type ValidationResult = { ok: true } | { ok: false; reason: string };
-
-function checkIsNameValid(name: string): ValidationResult {
-  if (name.length === 0) return { ok: false, reason: "Name cannot be empty." };
-  if (name.length >= 20)
-    return { ok: false, reason: "Name cannot be longer than 20 characters." };
-  return { ok: true };
-}
-
-function checkIsAgeValid(age: number): ValidationResult {
-  if (!Number.isInteger(age))
-    return { ok: false, reason: "Age must be an integer." };
-  if (age < 18) return { ok: false, reason: "Age must be 18 or older." };
-  if (age > 99) return { ok: false, reason: "Age must be 99 or younger." };
-  return { ok: true };
-}
-
-// Usage allows safe access to 'reason' only when ok is false
-const nameValidation = checkIsNameValid(name);
-if (!nameValidation.ok) {
-  console.error(nameValidation.reason);
-}
-```
-
-## Revealing Hidden Logic (Single Responsibility)
-
-**Rule:** Avoid hidden side effects; functions should only perform actions
-implied by their signature (SRP).
-
-**Reasoning:**
-
-- Leads to predictable behavior without unintended side effects.
-- Creates more robust, testable code through separation of concerns (SRP).
-
-#### Recommended Pattern:
-
-```typescript
-// Function *only* fetches balance
-async function fetchBalance(): Promise<number> {
-  const balance = await http.get<number>("...");
-  return balance;
-}
-
-// Caller explicitly performs logging where needed
-async function handleUpdateClick() {
-  const balance = await fetchBalance(); // Fetch
-  logging.log("balance_fetched"); // Log (explicit action)
-  await syncBalance(balance); // Another action
-}
-```
-
-## Using Unique and Descriptive Names (Avoiding Ambiguity)
-
-**Rule:** Use unique, descriptive names for custom wrappers/functions to avoid
-ambiguity.
-
-**Reasoning:**
-
-- Avoids ambiguity and enhances predictability.
-- Allows developers to understand specific actions (e.g., adding auth) directly
-  from the name.
-
-#### Recommended Pattern:
-
-```typescript
-// In httpService.ts - Clearer module name
-import { http as httpLibrary } from "@some-library/http";
-
-export const httpService = {
-  // Unique module name
-  async getWithAuth(url: string) {
-    // Descriptive function name
-    const token = await fetchToken();
-    return httpLibrary.get(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-  },
-};
-
-// In fetchUser.ts - Usage clearly indicates auth
-import { httpService } from "./httpService";
-export async function fetchUser() {
-  // Name 'getWithAuth' makes the behavior explicit
-  return await httpService.getWithAuth("...");
-}
-```
-
-# Cohesion
-
-Keeping related code together and ensuring modules have a well-defined, single
-purpose.
-
-## Considering Form Cohesion
-
-**Rule:** Choose field-level or form-level cohesion based on form requirements.
-
-**Reasoning:**
-
-- Balances field independence (field-level) vs. form unity (form-level).
-- Ensures related form logic is appropriately grouped based on requirements.
-
-#### Recommended Pattern (Field-Level Example):
-
-```tsx
-// Each field uses its own `validate` function
-import { useForm } from "react-hook-form";
-
-export function Form() {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    /* defaultValues etc. */
-  });
-
-  const onSubmit = handleSubmit((formData) => {
-    console.log("Form submitted:", formData);
-  });
-
-  return (
-    <form onSubmit={onSubmit}>
-      <div>
-        <input
-          {...register("name", {
-            validate: (value) =>
-              value.trim() === "" ? "Please enter your name." : true, // Example validation
-          })}
-          placeholder="Name"
-        />
-        {errors.name && <p>{errors.name.message}</p>}
-      </div>
-      <div>
-        <input
-          {...register("email", {
-            validate: (value) =>
-              /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)
-                ? true
-                : "Invalid email address.", // Example validation
-          })}
-          placeholder="Email"
-        />
-        {errors.email && <p>{errors.email.message}</p>}
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-#### Recommended Pattern (Form-Level Example):
-
-```tsx
-// A single schema defines validation for the whole form
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-const schema = z.object({
-  name: z.string().min(1, "Please enter your name."),
-  email: z.string().min(1, "Please enter your email.").email("Invalid email."),
-});
-
-export function Form() {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: { name: "", email: "" },
-  });
-
-  const onSubmit = handleSubmit((formData) => {
-    console.log("Form submitted:", formData);
-  });
-
-  return (
-    <form onSubmit={onSubmit}>
-      <div>
-        <input {...register("name")} placeholder="Name" />
-        {errors.name && <p>{errors.name.message}</p>}
-      </div>
-      <div>
-        <input {...register("email")} placeholder="Email" />
-        {errors.email && <p>{errors.email.message}</p>}
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-**Guidance:** Choose **field-level** for independent validation, async checks,
-or reusable fields. Choose **form-level** for related fields, wizard forms, or
-interdependent validation.
-
-## Organizing Code by Feature/Domain
-
-**Rule:** Organize directories by feature/domain, not just by code type.
-
-**Reasoning:**
-
-- Increases cohesion by keeping related files together.
-- Simplifies feature understanding, development, maintenance, and deletion.
-
-#### Recommended Pattern:
-
-(Organized by feature/domain)
-
-```
-src/
-├── components/ # Shared/common components
-├── hooks/      # Shared/common hooks
-├── utils/      # Shared/common utils
-├── domains/
-│   ├── user/
-│   │   ├── components/
-│   │   │   └── UserProfileCard.tsx
-│   │   ├── hooks/
-│   │   │   └── useUser.ts
-│   │   └── index.ts # Optional barrel file
-│   ├── product/
-│   │   ├── components/
-│   │   │   └── ProductList.tsx
-│   │   ├── hooks/
-│   │   │   └── useProducts.ts
-│   │   └── ...
-│   └── order/
-│       ├── components/
-│       │   └── OrderSummary.tsx
-│       ├── hooks/
-│       │   └── useOrder.ts
-│       └── ...
-└── App.tsx
-```
-
-## Relating Magic Numbers to Logic
-
-**Rule:** Define constants near related logic or ensure names link them clearly.
-
-**Reasoning:**
-
-- Improves cohesion by linking constants to the logic they represent.
-- Prevents silent failures caused by updating logic without updating related
-  constants.
-
-#### Recommended Pattern:
-
-```typescript
-// Constant clearly named and potentially defined near animation logic
-const ANIMATION_DELAY_MS = 300;
-
-async function onLikeClick() {
-  await postLike(url);
-  // Delay uses the constant, maintaining the link to the animation
-  await delay(ANIMATION_DELAY_MS);
-  await refetchPostLike();
-}
-```
-
-_Ensure constants are maintained alongside the logic they depend on or clearly
-named to show the relationship._
-
-# Coupling
-
-Minimizing dependencies between different parts of the codebase.
-
-## Balancing Abstraction and Coupling (Avoiding Premature Abstraction)
-
-**Rule:** Avoid premature abstraction of duplicates if use cases might diverge;
-prefer lower coupling.
-
-**Reasoning:**
-
-- Avoids tight coupling from forcing potentially diverging logic into one
-  abstraction.
-- Allowing some duplication can improve decoupling and maintainability when
-  future needs are uncertain.
-
-#### Guidance:
-
-Before abstracting, consider if the logic is truly identical and likely to
-_stay_ identical across all use cases. If divergence is possible (e.g.,
-different pages needing slightly different behavior from a shared hook like
-`useOpenMaintenanceBottomSheet`), keeping the logic separate initially (allowing
-duplication) can lead to more maintainable, decoupled code. Discuss trade-offs
-with the team. _[No specific 'good' code example here, as the recommendation is
-situational awareness rather than a single pattern]._
-
-## Scoping State Management (Avoiding Overly Broad Hooks)
-
-**Rule:** Break down broad state management into smaller, focused
-hooks/contexts.
-
-**Reasoning:**
-
-- Reduces coupling by ensuring components only depend on necessary state slices.
-- Improves performance by preventing unnecessary re-renders from unrelated state
-  changes.
-
-#### Recommended Pattern:
-
-(Focused hooks, low coupling)
-
-```typescript
-// Hook specifically for cardId query param
-import { useQueryParam, NumberParam } from "use-query-params";
-import { useCallback } from "react";
-
-export function useCardIdQueryParam() {
-  // Assuming 'query' provides the raw param value
-  const [cardIdParam, setCardIdParam] = useQueryParam("cardId", NumberParam);
-
-  const setCardId = useCallback(
-    (newCardId: number | undefined) => {
-      setCardIdParam(newCardId, "replaceIn"); // Or 'push' depending on desired history behavior
-    },
-    [setCardIdParam]
-  );
-
-  // Provide a stable return tuple
-  return [cardIdParam ?? undefined, setCardId] as const;
-}
-
-// Separate hook for date range, etc.
-// export function useDateRangeQueryParam() { /* ... */ }
-```
-
-Components now only import and use `useCardIdQueryParam` if they need `cardId`,
-decoupling them from date range state, etc.
-
-## Eliminating Props Drilling with Composition
-
-**Rule:** Use Component Composition instead of Props Drilling.
-
-**Reasoning:**
-
-- Significantly reduces coupling by eliminating unnecessary intermediate
-  dependencies.
-- Makes refactoring easier and clarifies data flow in flatter component trees.
-
-#### Recommended Pattern:
-
-```tsx
-import React, { useState } from "react";
-
-// Assume Modal, Input, Button, ItemEditList components exist
-
-function ItemEditModal({ open, items, recommendedItems, onConfirm, onClose }) {
-  const [keyword, setKeyword] = useState("");
-
-  // Render children directly within Modal, passing props only where needed
-  return (
-    <Modal open={open} onClose={onClose}>
-      {/* Input and Button rendered directly */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "1rem",
-        }}
-      >
-        <Input
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)} // State managed here
-          placeholder="Search items..."
-        />
-        <Button onClick={onClose}>Close</Button>
-      </div>
-      {/* ItemEditList rendered directly, gets props it needs */}
-      <ItemEditList
-        keyword={keyword} // Passed directly
-        items={items} // Passed directly
-        recommendedItems={recommendedItems} // Passed directly
-        onConfirm={onConfirm} // Passed directly
-      />
-    </Modal>
-  );
-}
-
-// The intermediate ItemEditBody component is eliminated, reducing coupling.
-```
+- 도메인/feature 단위로 묶기 (FSD 슬라이스 내부 구조 따라가기)
+- barrel export (`index.ts`)로 깔끔한 import
+- 상수는 관련 로직 옆에 두거나 명확한 네이밍
+
+### Commit / Tone
+- 커밋: 영문 conventional commit + 본문. 관련 hunk만 묶고 필요시 부분 staging
+- 응답 톤: "코드 들어갑니다", "안 알려주시면 그대로 갑니다" 같은 통보·ultimatum 금지. 부드러운 협업 어투
