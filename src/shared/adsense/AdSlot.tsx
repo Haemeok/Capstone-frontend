@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 
 import { AdPlaceholder } from "./AdPlaceholder";
 import { ADSENSE_CLIENT_ID, IS_AD_TEST_MODE } from "./config";
@@ -13,25 +13,20 @@ declare global {
 }
 
 const ADBLOCK_DETECTION_TIMEOUT_MS = 3000;
+const DEFAULT_INS_STYLE: CSSProperties = { display: "block" };
 
 type AdSlotProps = {
   slotId: string | undefined;
-  format?: "auto" | "fluid";
-  layout?: "in-article";
-  layoutKey?: string;
-  fullWidthResponsive?: boolean;
   minHeight: number;
   className?: string;
+  insStyle?: CSSProperties;
 };
 
 export const AdSlot = ({
   slotId,
-  format = "auto",
-  layout,
-  layoutKey,
-  fullWidthResponsive = true,
   minHeight,
   className,
+  insStyle = DEFAULT_INS_STYLE,
 }: AdSlotProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const insRef = useRef<HTMLModElement>(null);
@@ -73,13 +68,9 @@ export const AdSlot = ({
       <ins
         ref={insRef}
         className="adsbygoogle"
-        style={{ display: "block" }}
+        style={insStyle}
         data-ad-client={ADSENSE_CLIENT_ID}
         data-ad-slot={slotId}
-        data-ad-format={format}
-        data-ad-layout={layout}
-        data-ad-layout-key={layoutKey}
-        data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
         data-adtest={IS_AD_TEST_MODE ? "on" : undefined}
       />
     </div>

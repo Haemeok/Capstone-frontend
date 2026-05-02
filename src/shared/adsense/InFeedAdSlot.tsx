@@ -10,9 +10,12 @@ type InFeedAdSlotProps = {
 export const InFeedAdSlot = ({ className }: InFeedAdSlotProps) => (
   <AdSlot
     slotId={AD_SLOT_IDS.searchInFeed || undefined}
-    format="fluid"
-    layoutKey="-6t+ed+2i-1n-4w"
     minHeight={AD_MIN_HEIGHT.inFeed}
     className={className}
+    insStyle={{
+      display: "block",
+      width: "100%",
+      height: AD_MIN_HEIGHT.inFeed,
+    }}
   />
 );

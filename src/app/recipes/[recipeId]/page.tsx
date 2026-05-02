@@ -159,7 +159,7 @@ export default async function RecipeDetailPage({
               videoUrl={staticRecipe.youtubeUrl ?? ""}
               youtubeMetadata={youtubeMetadata}
             >
-              <InArticleAdSlot className="my-6" />
+              <InArticleAdSlot />
 
               <ErrorBoundary
                 fallback={

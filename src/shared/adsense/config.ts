@@ -15,6 +15,6 @@ export const IS_AD_TEST_MODE = process.env.NODE_ENV !== "production";
 
 export const AD_MIN_HEIGHT = {
   inFeed: 280,
-  inArticle: 260,
+  inArticle: 250,
   bottomAnchor: 70,
 } as const;

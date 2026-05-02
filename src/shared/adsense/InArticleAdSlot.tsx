@@ -10,9 +10,14 @@ type InArticleAdSlotProps = {
 export const InArticleAdSlot = ({ className }: InArticleAdSlotProps) => (
   <AdSlot
     slotId={AD_SLOT_IDS.recipeInArticle || undefined}
-    format="fluid"
-    layout="in-article"
     minHeight={AD_MIN_HEIGHT.inArticle}
-    className={className}
+    className={`text-center ${className ?? ""}`.trim()}
+    insStyle={{
+      display: "block",
+      width: "100%",
+      maxWidth: 300,
+      height: 250,
+      margin: "0 auto",
+    }}
   />
 );
