@@ -1,5 +1,3 @@
-import { CurationError } from "@/entities/curation";
-
 import { validateMarkdown } from "@/app/admin/curation-test/lib/validate";
 
 jest.mock("ai", () => ({
@@ -151,7 +149,3 @@ describe("generateCuration", () => {
     ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
   });
 });
-
-// CurationError import only used to ensure module loads correctly during dev;
-// the rejects.toMatchObject({ code }) checks the public field, not instanceof.
-void CurationError;

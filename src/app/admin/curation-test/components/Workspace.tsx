@@ -4,7 +4,11 @@ import { useState } from "react";
 
 import { generateCuration } from "@/app/actions/curation";
 import { saveCurationLocal } from "@/app/actions/curationLocal";
-import { CurationError, type CurationProvider } from "@/entities/curation";
+import {
+  CurationError,
+  type CurationProvider,
+  type GenerateCurationOutput,
+} from "@/entities/curation";
 
 import { useCurationStore } from "../lib/store";
 import { MarkdownPreview } from "./MarkdownPreview";
@@ -12,23 +16,27 @@ import { StagePanel } from "./StagePanel";
 
 type ToneOption = "auto" | "friendly" | "editorial";
 
+type SaveStatus = "idle" | "saving" | "ok" | "error";
+
 export const Workspace = () => {
   const selected = useCurationStore((s) => s.selected);
   const [count, setCount] = useState(5);
   const [tone, setTone] = useState<ToneOption>("auto");
   const [provider, setProvider] = useState<CurationProvider>("grok");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<Awaited<
-    ReturnType<typeof generateCuration>
-  > | null>(null);
+  const [result, setResult] = useState<GenerateCurationOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [saveMsg, setSaveMsg] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [savePath, setSavePath] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const onGenerate = async () => {
     if (!selected) return;
     setLoading(true);
     setError(null);
-    setSaveMsg(null);
+    setSaveStatus("idle");
+    setSavePath(null);
+    setSaveError(null);
     setResult(null);
     try {
       const r = await generateCuration({
@@ -51,14 +59,15 @@ export const Workspace = () => {
 
   const onSaveLocal = async () => {
     if (!result) return;
-    setSaveMsg("저장 중...");
+    setSaveStatus("saving");
+    setSaveError(null);
     try {
       const r = await saveCurationLocal(result);
-      setSaveMsg(
-        `✓ 저장됨: ${r.relPath}  ·  미리보기: /curation/${result.slug}`,
-      );
+      setSavePath(r.relPath);
+      setSaveStatus("ok");
     } catch (e) {
-      setSaveMsg(`저장 실패: ${(e as Error).message}`);
+      setSaveError((e as Error).message);
+      setSaveStatus("error");
     }
   };
 
@@ -139,21 +148,27 @@ export const Workspace = () => {
             >
               로컬에 저장 (미리보기용)
             </button>
-            {saveMsg && (
+            {saveStatus === "saving" && (
+              <span className="text-xs text-gray-600">저장 중...</span>
+            )}
+            {saveStatus === "ok" && savePath && (
               <span className="text-xs text-gray-600 whitespace-pre-wrap">
-                {saveMsg}
+                ✓ 저장됨: {savePath}  ·  미리보기: /curation/{result.slug}
               </span>
             )}
-            {result.slug && (
-              <a
-                href={`/curation/${result.slug}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs underline text-gray-600"
-              >
-                /curation/{result.slug} 열기 →
-              </a>
+            {saveStatus === "error" && saveError && (
+              <span className="text-xs text-red-600">
+                저장 실패: {saveError}
+              </span>
             )}
+            <a
+              href={`/curation/${result.slug}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs underline text-gray-600"
+            >
+              /curation/{result.slug} 열기 →
+            </a>
           </div>
           <MarkdownPreview markdown={result.markdown} />
         </>
