@@ -1,5 +1,6 @@
 import type { SavedCurationRecord } from "@/entities/curation";
 
+import { CurationCategoryLabel } from "./CurationCategoryLabel";
 import { CurationMarkdown } from "./CurationMarkdown";
 
 const formatDate = (iso: string) => {
@@ -17,8 +18,9 @@ export const CurationArticle = ({ data }: CurationArticleProps) => {
 
   return (
     <article className="mx-auto w-full max-w-[720px] px-5 pt-10 pb-20 md:px-6 md:pt-20">
-      <header>
-        <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
+      <header className="text-center">
+        <CurationCategoryLabel />
+        <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
           {data.h1}
         </h1>
         {data.dek && (
@@ -26,7 +28,7 @@ export const CurationArticle = ({ data }: CurationArticleProps) => {
             {data.dek}
           </p>
         )}
-        <p className="mt-3 text-sm text-gray-500">
+        <p className="mt-4 text-sm text-gray-500">
           에디터{dateLabel ? ` · ${dateLabel}` : ""}
         </p>
       </header>
