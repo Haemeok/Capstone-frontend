@@ -134,10 +134,13 @@ export const generateCuration = async (
       break;
     }
     lastErrors = v.errors;
+    console.warn(
+      `[curation] body attempt ${attempt + 1} failed validation:\n${v.errors.map((e) => `  - ${e}`).join("\n")}\n  rawMarkdown(first 400): ${object.bodyMarkdown.slice(0, 400)}`,
+    );
     if (attempt === MAX_BODY_RETRIES) {
       throw new CurationError(
         "VALIDATION_FAILED",
-        "Body 검증 3회 실패",
+        `Body 검증 3회 실패\n${v.errors.map((e) => `- ${e}`).join("\n")}\n--- raw (first 600) ---\n${object.bodyMarkdown.slice(0, 600)}`,
         {
           errors: v.errors,
           rawMarkdown: object.bodyMarkdown,
