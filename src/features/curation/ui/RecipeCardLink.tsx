@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Bookmark, Clock, Star } from "lucide-react";
+import { Bookmark, Clock, Eye, Star } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatCount } from "@/shared/lib/format";
 import { Image } from "@/shared/ui/image";
 
-import type { Recipe } from "@/entities/recipe/model/types";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 type RecipeCardLinkProps = {
   href: string;
-  recipe: Recipe | null;
+  recipe: StaticRecipe | null;
   children: ReactNode;
 };
 
@@ -37,7 +37,8 @@ export const RecipeCardLink = ({
 
   const ratingAvg = recipe.ratingInfo?.avgRating;
   const ratingCount = recipe.ratingInfo?.ratingCount;
-  const likeCount = recipe.likeCount;
+  const favoriteCount = recipe.favoriteCount;
+  const viewCount = recipe.youtubeVideoViewCount;
   const cookingTime = recipe.cookingTime;
   const authorName = recipe.author?.nickname;
 
@@ -77,10 +78,16 @@ export const RecipeCardLink = ({
               )}
             </span>
           )}
-          {typeof likeCount === "number" && likeCount > 0 && (
+          {typeof viewCount === "number" && viewCount > 0 && (
+            <span className="inline-flex items-center gap-1">
+              <Eye className="h-3.5 w-3.5" />
+              {formatCount(viewCount)}
+            </span>
+          )}
+          {typeof favoriteCount === "number" && favoriteCount > 0 && (
             <span className="inline-flex items-center gap-1">
               <Bookmark className="h-3.5 w-3.5" />
-              {formatCount(likeCount)}
+              {formatCount(favoriteCount)}
             </span>
           )}
           {typeof cookingTime === "number" && cookingTime > 0 && (

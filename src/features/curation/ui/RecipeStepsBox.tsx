@@ -1,7 +1,7 @@
-import type { Recipe } from "@/entities/recipe/model/types";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 type RecipeStepsBoxProps = {
-  recipe: Recipe | null | undefined;
+  recipe: StaticRecipe | null | undefined;
 };
 
 export const RecipeStepsBox = ({ recipe }: RecipeStepsBoxProps) => {

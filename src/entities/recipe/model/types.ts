@@ -111,6 +111,8 @@ export type Recipe = {
   createdAt?: string;
   nutrition: Nutrition;
   cookingTips?: string;
+  favoriteCount?: number;
+  youtubeVideoViewCount?: number;
   fineDiningInfo?: {
     components: RecipeComponent[];
     plating: {

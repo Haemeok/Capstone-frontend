@@ -1,9 +1,9 @@
-import type { Recipe } from "@/entities/recipe/model/types";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 
-type RecipeIngredient = Recipe["ingredients"][number];
+type RecipeIngredient = StaticRecipe["ingredients"][number];
 
 type RecipeIngredientsBoxProps = {
-  recipe: Recipe | null | undefined;
+  recipe: StaticRecipe | null | undefined;
 };
 
 const formatQty = (ing: RecipeIngredient): string => {

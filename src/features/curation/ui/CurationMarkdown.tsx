@@ -6,7 +6,7 @@ import { InArticleAdSlot } from "@/shared/adsense";
 import { extractYouTubeVideoId } from "@/shared/lib/youtube/getYouTubeThumbnail";
 import { Image } from "@/shared/ui/image";
 
-import type { Recipe } from "@/entities/recipe/model/types";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { RecipeCardLink } from "./RecipeCardLink";
 import { RecipeIngredientsBox } from "./RecipeIngredientsBox";
@@ -58,7 +58,7 @@ const INTERNAL_RECIPE_RE = /^\/recipes\/([^/?#]+)$/;
 
 const isYouTubeUrl = (url: string) => extractYouTubeVideoId(url) !== null;
 
-const createComponents = (recipes: Array<Recipe | null>): Components => {
+const createComponents = (recipes: Array<StaticRecipe | null>): Components => {
   let h2Counter = 0;
   return {
     a: ({ href, children }) => {
@@ -137,7 +137,7 @@ const createComponents = (recipes: Array<Recipe | null>): Components => {
 
 type CurationMarkdownProps = {
   markdown: string;
-  recipes: Array<Recipe | null>;
+  recipes: Array<StaticRecipe | null>;
 };
 
 export const CurationMarkdown = ({

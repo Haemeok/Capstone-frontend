@@ -1,5 +1,5 @@
 import type { SavedCurationRecord } from "@/entities/curation";
-import type { Recipe } from "@/entities/recipe/model/types";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 import ArticleWithToc from "@/shared/ui/article/ArticleWithToc";
 import type { TocItem } from "@/shared/ui/article/types";
 
@@ -16,7 +16,7 @@ const formatDate = (iso: string) => {
 
 type CurationArticleProps = {
   data: SavedCurationRecord;
-  recipes: Array<Recipe | null>;
+  recipes: Array<StaticRecipe | null>;
 };
 
 export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {

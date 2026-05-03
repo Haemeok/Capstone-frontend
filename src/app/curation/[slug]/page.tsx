@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import { getCurationLocal } from "@/app/actions/curationLocal";
-import { getRecipe } from "@/entities/recipe/model/api";
+import { getStaticrecipionServer } from "@/entities/recipe/model/api.server";
 import { CurationArticle } from "@/features/curation/ui/CurationArticle";
 
 const cachedGet = cache(getCurationLocal);
@@ -35,27 +35,7 @@ const Page = async ({ params }: Props) => {
   if (!data) notFound();
 
   const recipes = await Promise.all(
-    data.recipeIds.map((id) =>
-      getRecipe(id).catch((e) => {
-        console.error(`[curation] getRecipe(${id}) 실패:`, e);
-        return null;
-      }),
-    ),
-  );
-
-  console.log(
-    `[curation/${slug}] recipes fetch 결과:`,
-    recipes.map((r, i) => ({
-      idx: i,
-      id: data.recipeIds[i],
-      ok: r !== null,
-      title: r?.title,
-      hasIngredients: r?.ingredients?.length ?? 0,
-      hasSteps: r?.steps?.length ?? 0,
-      likeCount: r?.likeCount,
-      ratingAvg: r?.ratingInfo?.avgRating,
-      cookingTime: r?.cookingTime,
-    })),
+    data.recipeIds.map((id) => getStaticrecipionServer(id)),
   );
 
   return <CurationArticle data={data} recipes={recipes} />;
