@@ -19,7 +19,7 @@ export const useRecipeHistoryQuery = ({
   year: number;
   month: number;
 }) => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isPending, error } = useQuery({
     queryKey: ["recipeHistory", year, month],
     queryFn: () => getRecipeHistory({ year, month }),
   });
@@ -28,6 +28,7 @@ export const useRecipeHistoryQuery = ({
     recipeHistorySummary: data?.dailySummaries,
     monthlyTotalSavings: data?.monthlyTotalSavings,
     isLoading,
+    isPending,
     error,
   };
 };

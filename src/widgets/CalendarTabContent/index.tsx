@@ -37,10 +37,11 @@ const CalendarTabContent = () => {
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth() + 1;
 
-  const { recipeHistorySummary, monthlyTotalSavings } = useRecipeHistoryQuery({
-    year,
-    month,
-  });
+  const { recipeHistorySummary, monthlyTotalSavings, isPending } =
+    useRecipeHistoryQuery({
+      year,
+      month,
+    });
 
   const getEventForDay = (day: Date): RecipeDailySummary | undefined => {
     return recipeHistorySummary?.find((summary) => {
@@ -64,6 +65,7 @@ const CalendarTabContent = () => {
         monthlyTotalSavings={monthlyTotalSavings}
         productName={product.name}
         productImage={product.image}
+        isPending={isPending}
       />
       <div className="mt-5 flex items-center justify-center px-5">
         <StreakModeToggle mode={calendarMode} onModeChange={setCalendarMode} />

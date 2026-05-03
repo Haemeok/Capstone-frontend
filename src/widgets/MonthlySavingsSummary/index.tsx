@@ -6,6 +6,7 @@ import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
 import { formatNumber } from "@/shared/lib/format";
 import SavingSection from "@/shared/ui/SavingSection";
 import CountUp from "@/shared/ui/shadcn/CountUp";
+import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { useUserStore } from "@/entities/user";
 
@@ -17,6 +18,7 @@ type MonthlySavingsSummaryProps = {
   monthlyTotalSavings: number | undefined;
   productName: string;
   productImage: string;
+  isPending?: boolean;
 };
 
 const MonthlySavingsSummary = ({
@@ -25,6 +27,7 @@ const MonthlySavingsSummary = ({
   monthlyTotalSavings,
   productName,
   productImage,
+  isPending = false,
 }: MonthlySavingsSummaryProps) => {
   const user = useUserStore((state) => state.user);
   const hasFirstRecord = user?.hasFirstRecord ?? false;
@@ -71,44 +74,71 @@ const MonthlySavingsSummary = ({
       <h3 className="text-xl font-bold">
         {year}년 {month}월 레시피오 서비스로
       </h3>
-      <div className="flex">
-        <CountUp
-          from={0}
-          to={currentSavings}
-          duration={0.1}
-          separator=","
-          direction="up"
-          className="text-olive-mint text-xl font-bold"
-        />
-        <span className="text-olive-mint text-xl font-bold">원</span>
-        <h3 className="ml-1 text-xl font-bold"> 절약했어요</h3>
-      </div>
-      <p className="mt-1.5 text-sm text-gray-500">{savingText}</p>
+      {isPending ? (
+        <Skeleton className="mt-1 h-7 w-48" />
+      ) : (
+        <div className="flex">
+          <CountUp
+            from={0}
+            to={currentSavings}
+            duration={0.1}
+            separator=","
+            direction="up"
+            className="text-olive-mint text-xl font-bold"
+          />
+          <span className="text-olive-mint text-xl font-bold">원</span>
+          <h3 className="ml-1 text-xl font-bold"> 절약했어요</h3>
+        </div>
+      )}
+      {isPending ? (
+        <Skeleton className="mt-1.5 h-4 w-40" />
+      ) : (
+        <p className="mt-1.5 text-sm text-gray-500">{savingText}</p>
+      )}
 
-      {!hasFirstRecord && <FirstSavingsQuestPanel />}
-      <SavingSection imageUrl={productImage} altText={productName} />
+      {!isPending && !hasFirstRecord && <FirstSavingsQuestPanel />}
+      {isPending ? (
+        <div className="mx-auto flex w-fit max-w-sm flex-col items-center justify-center p-5">
+          <Skeleton className="h-44 w-44 rounded-2xl" />
+        </div>
+      ) : (
+        <SavingSection imageUrl={productImage} altText={productName} />
+      )}
 
       <div className="w-full">
-        <div className="relative h-4 w-full overflow-hidden rounded-full bg-gray-200">
-          <div
-            className="bg-olive-mint absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
-            style={{ width: `${percentageToNext}%` }}
-          >
+        {isPending ? (
+          <Skeleton className="h-4 w-full rounded-full" />
+        ) : (
+          <div className="relative h-4 w-full overflow-hidden rounded-full bg-gray-200">
             <div
-              className="absolute inset-0 opacity-30"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(45deg, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) 8px, transparent 8px, transparent 16px)",
-              }}
-            />
+              className="bg-olive-mint absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
+              style={{ width: `${percentageToNext}%` }}
+            >
+              <div
+                className="absolute inset-0 opacity-30"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(45deg, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) 8px, transparent 8px, transparent 16px)",
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
         <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-          <span>현재 단계 {formatNumber(currentMin, "원")}</span>
-          {next ? (
-            <span>다음 단계 {formatNumber(next.min, "원")}</span>
+          {isPending ? (
+            <>
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-3 w-20" />
+            </>
           ) : (
-            <span>최고 단계 달성</span>
+            <>
+              <span>현재 단계 {formatNumber(currentMin, "원")}</span>
+              {next ? (
+                <span>다음 단계 {formatNumber(next.min, "원")}</span>
+              ) : (
+                <span>최고 단계 달성</span>
+              )}
+            </>
           )}
         </div>
       </div>
