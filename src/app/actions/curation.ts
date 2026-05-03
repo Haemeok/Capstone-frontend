@@ -45,6 +45,18 @@ const BodySchema = z.object({
 
 const MAX_BODY_RETRIES = 2;
 
+// Grok이 generateObject 출력에서 진짜 \n 대신 인라인 spaces로 단락을 끊어
+// 한 덩어리 텍스트로 내는 케이스가 잦음. 시스템 프롬프트로 강제해도 안 지켜짐.
+// 검증·hydrate 직전에 헤더 앞 spaces를 \n\n으로 바꿔 마크다운 구조를 복원한다.
+const normalizeMarkdown = (md: string): string =>
+  md
+    // 헤더(`# `, `## `, `### `)가 라인 중간에 박혀있으면 앞에 \n\n 삽입
+    .replace(/([^\n]) +(#{1,3} )/g, "$1\n\n$2")
+    // 슬롯 뒤 spaces로 다음 단락이 이어지는 패턴도 \n\n으로 끊기
+    .replace(/(\}\}) {2,}(?=\S)/g, "$1\n\n")
+    // 끝쪽 trailing 공백 정리
+    .trim();
+
 export const generateCuration = async (
   input: GenerateCurationInput,
 ): Promise<GenerateCurationOutput> => {
@@ -128,22 +140,23 @@ export const generateCuration = async (
       );
     }
 
-    const v = validateMarkdown(object.bodyMarkdown, recipes.length);
+    const normalized = normalizeMarkdown(object.bodyMarkdown);
+    const v = validateMarkdown(normalized, recipes.length);
     if (v.ok) {
-      bodyMarkdown = object.bodyMarkdown;
+      bodyMarkdown = normalized;
       break;
     }
     lastErrors = v.errors;
     console.warn(
-      `[curation] body attempt ${attempt + 1} failed validation:\n${v.errors.map((e) => `  - ${e}`).join("\n")}\n  rawMarkdown(first 400): ${object.bodyMarkdown.slice(0, 400)}`,
+      `[curation] body attempt ${attempt + 1} failed validation:\n${v.errors.map((e) => `  - ${e}`).join("\n")}\n  rawMarkdown(first 400): ${normalized.slice(0, 400)}`,
     );
     if (attempt === MAX_BODY_RETRIES) {
       throw new CurationError(
         "VALIDATION_FAILED",
-        `Body 검증 3회 실패\n${v.errors.map((e) => `- ${e}`).join("\n")}\n--- raw (first 600) ---\n${object.bodyMarkdown.slice(0, 600)}`,
+        `Body 검증 3회 실패\n${v.errors.map((e) => `- ${e}`).join("\n")}\n--- raw (first 600) ---\n${normalized.slice(0, 600)}`,
         {
           errors: v.errors,
-          rawMarkdown: object.bodyMarkdown,
+          rawMarkdown: normalized,
         },
       );
     }
