@@ -42,7 +42,7 @@ const openrouter = createOpenAI({
 });
 
 const MODEL_GROK = "grok-4-1-fast-reasoning";
-const MODEL_SOLAR = "upstage/solar-pro-3:free";
+const MODEL_SOLAR = "upstage/solar-pro-3";
 
 const resolveModel = (provider: CurationProvider) => {
   if (provider === "solar") {
