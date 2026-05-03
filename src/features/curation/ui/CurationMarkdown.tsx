@@ -8,7 +8,7 @@ import { YouTubeEmbed } from "./YouTubeEmbed";
 const isYouTubeUrl = (url: string) =>
   /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))[\w-]+/.test(url);
 
-const isInternalRecipeUrl = (url: string) => url.startsWith("/recipe/");
+const isInternalRecipeUrl = (url: string) => url.startsWith("/recipes/");
 
 type CurationMarkdownProps = {
   markdown: string;

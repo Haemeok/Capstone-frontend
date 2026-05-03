@@ -92,7 +92,7 @@ describe("generateCuration", () => {
     expect(result.h1).toBe("겨울 보양식 한 그릇");
     expect(result.recipeIds).toEqual(["a", "b", "c"]);
     expect(result.markdown).toContain("![요리-a](https://cdn/img/a.jpg)");
-    expect(result.markdown).toContain("[요리-b →](/recipe/b)");
+    expect(result.markdown).toContain("[요리-b →](/recipes/b)");
     expect(result.markdown).not.toMatch(/\{\{/);
   });
 
@@ -126,7 +126,7 @@ describe("generateCuration", () => {
     const result = await generateCuration({
       params: { dishType: "찌개" },
     });
-    expect(result.markdown).toContain("[요리-a →](/recipe/a)");
+    expect(result.markdown).toContain("[요리-a →](/recipes/a)");
     expect(mockGen).toHaveBeenCalledTimes(3);
   });
 

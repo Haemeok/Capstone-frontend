@@ -23,7 +23,7 @@ describe("hydrateMarkdown", () => {
 
   it("recipe 슬롯을 내부 라우트 링크로 치환", () => {
     const out = hydrateMarkdown("추천 {{recipe:1}}", recipes);
-    expect(out).toContain("[김치찌개 →](/recipe/def)");
+    expect(out).toContain("[김치찌개 →](/recipes/def)");
   });
 
   it("yt 슬롯을 평범한 마크다운 링크로 치환 (스코프 1단계)", () => {

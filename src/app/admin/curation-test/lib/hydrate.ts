@@ -17,7 +17,7 @@ export const hydrateMarkdown = (
     )
     .replace(
       /\{\{recipe:(\d+)\}\}/g,
-      (_, i) => `[${r(i).title} →](/recipe/${r(i).id})`,
+      (_, i) => `[${r(i).title} →](/recipes/${r(i).id})`,
     )
     .replace(
       /\{\{yt:(\d+)\}\}/g,
