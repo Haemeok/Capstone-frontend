@@ -4,15 +4,20 @@ import type { GenerateCurationOutput } from "@/entities/curation";
 
 export const StagePanel = ({ result }: { result: GenerateCurationOutput }) => (
   <section className="rounded border p-3 space-y-3">
+    <p className="text-xs text-gray-500">
+      <span className="font-mono inline-block px-2 py-0.5 rounded bg-gray-100">
+        {result.provider}
+      </span>{" "}
+      · tone <code>{result.toneSeed}</code>
+    </p>
     <details>
       <summary className="text-sm font-bold cursor-pointer">
-        slug · toneSeed · recipeIds
+        slug · recipeIds · thumbnail
       </summary>
       <pre className="text-xs mt-2">
         {JSON.stringify(
           {
             slug: result.slug,
-            toneSeed: result.toneSeed,
             recipeIds: result.recipeIds,
             thumbnailUrl: result.thumbnailUrl,
           },

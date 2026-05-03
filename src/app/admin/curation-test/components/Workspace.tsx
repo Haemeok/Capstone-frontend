@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { generateCuration } from "@/app/actions/curation";
-import { CurationError } from "@/entities/curation";
+import { CurationError, type CurationProvider } from "@/entities/curation";
 
 import { useCurationStore } from "../lib/store";
 import { MarkdownPreview } from "./MarkdownPreview";
@@ -15,6 +15,7 @@ export const Workspace = () => {
   const selected = useCurationStore((s) => s.selected);
   const [count, setCount] = useState(5);
   const [tone, setTone] = useState<ToneOption>("auto");
+  const [provider, setProvider] = useState<CurationProvider>("grok");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Awaited<
     ReturnType<typeof generateCuration>
@@ -31,6 +32,7 @@ export const Workspace = () => {
         params: selected,
         recipeCount: count,
         forceToneSeed: tone === "auto" ? undefined : tone,
+        provider,
       });
       setResult(r);
     } catch (e) {
@@ -77,6 +79,19 @@ export const Workspace = () => {
               <option value="auto">auto</option>
               <option value="friendly">friendly</option>
               <option value="editorial">editorial</option>
+            </select>
+          </label>
+          <label className="text-sm">
+            모델
+            <select
+              value={provider}
+              onChange={(e) =>
+                setProvider(e.target.value as CurationProvider)
+              }
+              className="ml-2 border rounded px-2 py-1"
+            >
+              <option value="grok">Grok 4.1 Fast</option>
+              <option value="solar">Solar Pro 3 (free)</option>
             </select>
           </label>
           <button

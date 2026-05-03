@@ -1,6 +1,7 @@
 export type {
   CurationParams,
   ToneSeed,
+  CurationProvider,
   CurationErrorCode,
   GenerateCurationInput,
   GenerateCurationOutput,

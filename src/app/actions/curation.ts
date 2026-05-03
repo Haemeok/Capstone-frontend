@@ -9,6 +9,7 @@ import {
   CurationError,
   type GenerateCurationInput,
   type GenerateCurationOutput,
+  type CurationProvider,
   type ToneSeed,
 } from "@/entities/curation";
 
@@ -33,7 +34,34 @@ const xai = createOpenAI({
   baseURL: "https://api.x.ai/v1",
   apiKey: process.env.XAI_API_KEY || "",
 });
-const MODEL_ID = "grok-4-1-fast-reasoning";
+
+const openrouter = createOpenAI({
+  name: "openrouter",
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY || "",
+});
+
+const MODEL_GROK = "grok-4-1-fast-reasoning";
+const MODEL_SOLAR = "upstage/solar-pro-3:free";
+
+const resolveModel = (provider: CurationProvider) => {
+  if (provider === "solar") {
+    if (!process.env.OPENROUTER_API_KEY) {
+      throw new CurationError(
+        "LLM_ERROR",
+        "OPENROUTER_API_KEY가 설정되지 않았습니다.",
+      );
+    }
+    return openrouter(MODEL_SOLAR);
+  }
+  if (!process.env.XAI_API_KEY) {
+    throw new CurationError(
+      "LLM_ERROR",
+      "XAI_API_KEY가 설정되지 않았습니다.",
+    );
+  }
+  return xai(MODEL_GROK);
+};
 
 const TitleSchema = z.object({
   h1: z.string().min(8).max(70),
@@ -60,12 +88,8 @@ const normalizeMarkdown = (md: string): string =>
 export const generateCuration = async (
   input: GenerateCurationInput,
 ): Promise<GenerateCurationOutput> => {
-  if (!process.env.XAI_API_KEY) {
-    throw new CurationError(
-      "LLM_ERROR",
-      "XAI_API_KEY가 설정되지 않았습니다.",
-    );
-  }
+  const provider: CurationProvider = input.provider ?? "grok";
+  const model = resolveModel(provider);
 
   const recipeCount = input.recipeCount ?? 5;
   const slug = slugify(input.params);
@@ -92,7 +116,7 @@ export const generateCuration = async (
   let titleObj: { h1: string; dek: string };
   try {
     const { object } = await generateObject({
-      model: xai(MODEL_ID),
+      model,
       schema: TitleSchema,
       system: buildTitleSystemPrompt({ fewShots }),
       prompt: buildTitleUserPrompt({
@@ -127,7 +151,7 @@ export const generateCuration = async (
     let object: { bodyMarkdown: string };
     try {
       const result = await generateObject({
-        model: xai(MODEL_ID),
+        model,
         schema: BodySchema,
         system: buildBodySystemPrompt({ toneSeed }),
         prompt: finalUserPrompt,
@@ -180,5 +204,6 @@ export const generateCuration = async (
     recipeIds: recipes.map((r) => r.id),
     toneSeed,
     thumbnailUrl: recipes[0]?.imageUrl ?? "",
+    provider,
   };
 };
