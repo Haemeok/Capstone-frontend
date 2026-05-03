@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
 import { getCurationLocal } from "@/app/actions/curationLocal";
 import { CurationArticle } from "@/features/curation/ui/CurationArticle";
+
+const cachedGet = cache(getCurationLocal);
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -12,8 +15,8 @@ export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
   const { slug } = await params;
-  const data = await getCurationLocal(slug);
-  if (!data) return { title: "큐레이션 없음" };
+  const data = await cachedGet(slug);
+  if (!data) return {};
   return {
     title: data.h1,
     description: data.dek,
@@ -27,7 +30,7 @@ export const generateMetadata = async ({
 
 const Page = async ({ params }: Props) => {
   const { slug } = await params;
-  const data = await getCurationLocal(slug);
+  const data = await cachedGet(slug);
   if (!data) notFound();
   return <CurationArticle data={data} />;
 };
