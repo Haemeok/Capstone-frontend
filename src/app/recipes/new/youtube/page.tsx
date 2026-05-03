@@ -1,4 +1,6 @@
+import { BottomAnchorAdSlot } from "@/shared/adsense";
 import { Container } from "@/shared/ui/Container";
+import PrevButton from "@/shared/ui/PrevButton";
 
 import { getTrendingYoutubeRecipesOnServer } from "@/entities/recipe/model/api.server";
 
@@ -17,14 +19,20 @@ const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
   ]);
 
   return (
-    <Container className="min-h-screen bg-white pb-20">
-      <YoutubeImportHero />
-      <YoutubeFeatureCards />
-      <YoutubeClientSection
-        trendingRecipes={trendingRecipes}
-        initialUrl={url ?? ""}
-      />
-    </Container>
+    <>
+      <Container className="min-h-screen bg-white pb-20">
+        <div className="pt-2">
+          <PrevButton className="text-gray-600" />
+        </div>
+        <YoutubeImportHero />
+        <YoutubeFeatureCards />
+        <YoutubeClientSection
+          trendingRecipes={trendingRecipes}
+          initialUrl={url ?? ""}
+        />
+      </Container>
+      <BottomAnchorAdSlot />
+    </>
   );
 };
 

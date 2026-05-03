@@ -1,4 +1,4 @@
-export const HIDDEN_NAVBAR_PATHS = ["/login"] as const;
+export const HIDDEN_NAVBAR_PATHS = ["/login", "/recipes/new/youtube"] as const;
 
 export const HIDDEN_NAVBAR_PATTERNS = [
   // NOTE: recipeId is a string (nanoid/uuid). Use [^/]+, not \d+.
