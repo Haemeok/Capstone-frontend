@@ -5,5 +5,6 @@ export type {
   CurationErrorCode,
   GenerateCurationInput,
   GenerateCurationOutput,
+  SavedCurationRecord,
 } from "./model/types";
 export { CurationError } from "./model/types";

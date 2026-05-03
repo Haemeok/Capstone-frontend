@@ -37,3 +37,7 @@ export type GenerateCurationOutput = {
   thumbnailUrl: string;
   provider: CurationProvider;
 };
+
+export type SavedCurationRecord = GenerateCurationOutput & {
+  savedAt: string;
+};

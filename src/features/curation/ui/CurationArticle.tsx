@@ -1,10 +1,6 @@
-import type { GenerateCurationOutput } from "@/entities/curation";
+import type { SavedCurationRecord } from "@/entities/curation";
 
 import { CurationMarkdown } from "./CurationMarkdown";
-
-type CurationArticleData = GenerateCurationOutput & {
-  savedAt: string;
-};
 
 const formatDate = (iso: string) => {
   try {
@@ -17,7 +13,7 @@ const formatDate = (iso: string) => {
 };
 
 type CurationArticleProps = {
-  data: CurationArticleData;
+  data: SavedCurationRecord;
 };
 
 export const CurationArticle = ({ data }: CurationArticleProps) => {

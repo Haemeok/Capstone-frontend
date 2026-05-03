@@ -3,16 +3,13 @@
 import { mkdir, readdir, readFile, writeFile } from "fs/promises";
 import { join } from "path";
 
-import type { GenerateCurationOutput } from "@/entities/curation";
+import type {
+  GenerateCurationOutput,
+  SavedCurationRecord,
+} from "@/entities/curation";
 
-// 로컬 dev 전용. /data/ 디렉토리가 .gitignore라 commit 안 됨.
-// 어드민에서 생성한 큐레이션을 임시 보관하고 아티클 페이지(`/curation/[slug]`)
-// 에서 fetch해 미리보기. DB/API 연결 전 단계의 미리보기 stub.
+// Local dev-only stub. /data/ is gitignored.
 const STORAGE_DIR = join(process.cwd(), "data", "curations-local");
-
-export type LocalCurationRecord = GenerateCurationOutput & {
-  savedAt: string;
-};
 
 export type LocalCurationListItem = {
   slug: string;
@@ -27,7 +24,7 @@ export const saveCurationLocal = async (
 ): Promise<{ ok: true; relPath: string }> => {
   await mkdir(STORAGE_DIR, { recursive: true });
   const path = join(STORAGE_DIR, `${data.slug}.json`);
-  const payload: LocalCurationRecord = {
+  const payload: SavedCurationRecord = {
     ...data,
     savedAt: new Date().toISOString(),
   };
@@ -37,10 +34,10 @@ export const saveCurationLocal = async (
 
 export const getCurationLocal = async (
   slug: string,
-): Promise<LocalCurationRecord | null> => {
+): Promise<SavedCurationRecord | null> => {
   try {
     const text = await readFile(join(STORAGE_DIR, `${slug}.json`), "utf-8");
-    return JSON.parse(text) as LocalCurationRecord;
+    return JSON.parse(text) as SavedCurationRecord;
   } catch {
     return null;
   }
@@ -54,7 +51,7 @@ export const listCurationLocal = async (): Promise<LocalCurationListItem[]> => {
         .filter((f) => f.endsWith(".json"))
         .map(async (f) => {
           const text = await readFile(join(STORAGE_DIR, f), "utf-8");
-          const data = JSON.parse(text) as LocalCurationRecord;
+          const data = JSON.parse(text) as SavedCurationRecord;
           return {
             slug: data.slug,
             h1: data.h1,
