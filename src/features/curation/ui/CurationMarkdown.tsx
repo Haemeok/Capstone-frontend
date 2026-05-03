@@ -67,7 +67,7 @@ const MARKDOWN_COMPONENTS: Components = {
   h3: ({ children }) => (
     <h3 className="mt-10 mb-3 text-xl font-bold tracking-tight">{children}</h3>
   ),
-  p: ({ children }) => <p className="my-6">{children}</p>,
+  p: ({ children }) => <div className="my-6">{children}</div>,
   blockquote: ({ children }) => (
     <blockquote className="my-8 border-l-4 border-gray-300 bg-gray-50 px-6 py-4 italic text-gray-700">
       {children}
