@@ -1,6 +1,8 @@
 import type { SavedCurationRecord } from "@/entities/curation";
 import type { Recipe } from "@/entities/recipe/model/types";
 
+import { enrichBodyMarkdown } from "../lib/enrichBody";
+
 import { CurationCategoryLabel } from "./CurationCategoryLabel";
 import { CurationMarkdown } from "./CurationMarkdown";
 
@@ -16,9 +18,8 @@ type CurationArticleProps = {
 };
 
 export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
-  // recipes는 다음 task에서 사용. 일단 props만 받음. eslint unused 경고 방지를 위해 void.
-  void recipes;
   const dateLabel = formatDate(data.savedAt);
+  const enriched = enrichBodyMarkdown(data.markdown);
 
   return (
     <article className="mx-auto w-full max-w-[720px] px-5 pt-10 pb-20 md:px-6 md:pt-20">
@@ -47,7 +48,7 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
       )}
 
       <div className="mt-10">
-        <CurationMarkdown markdown={data.markdown} />
+        <CurationMarkdown markdown={enriched} recipes={recipes} />
       </div>
     </article>
   );

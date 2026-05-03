@@ -2,10 +2,15 @@ import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 
+import { InArticleAdSlot } from "@/shared/adsense";
 import { extractYouTubeVideoId } from "@/shared/lib/youtube/getYouTubeThumbnail";
 import { Image } from "@/shared/ui/image";
 
+import type { Recipe } from "@/entities/recipe/model/types";
+
 import { RecipeButton } from "./RecipeButton";
+import { RecipeIngredientsBox } from "./RecipeIngredientsBox";
+import { RecipeStepsBox } from "./RecipeStepsBox";
 import { YouTubeEmbed } from "./YouTubeEmbed";
 
 const ALLOWED_TAGS = [
@@ -23,6 +28,8 @@ const ALLOWED_TAGS = [
   "a",
   "span",
   "iframe",
+  "aside",
+  "div",
 ];
 
 const SCHEMA = {
@@ -33,19 +40,38 @@ const SCHEMA = {
     iframe: ["src", "title", "loading", "allow", "allowfullscreen", "className"],
     a: ["href", "target", "rel", "className"],
     img: ["src", "alt", "className"],
+    aside: ["className"],
+    div: ["className"],
   },
 };
 
+const RECIPE_DATA_RE = /^recipe-data:(ingredients|steps)\/(\d+)$/;
+const INTERNAL_RECIPE_RE = /^\/recipes\/([^/?#]+)$/;
+
 const isYouTubeUrl = (url: string) => extractYouTubeVideoId(url) !== null;
 
-const isInternalRecipeUrl = (url: string) => url.startsWith("/recipes/");
-
-const MARKDOWN_COMPONENTS: Components = {
+const createComponents = (recipes: Array<Recipe | null>): Components => ({
   a: ({ href, children }) => {
     if (!href) return <>{children}</>;
+
+    if (href === "in-article-ad") return <InArticleAdSlot />;
+
+    const dataMatch = href.match(RECIPE_DATA_RE);
+    if (dataMatch) {
+      const [, kind, idxStr] = dataMatch;
+      const recipe = recipes[Number(idxStr)] ?? null;
+      if (kind === "ingredients") {
+        return <RecipeIngredientsBox recipe={recipe} />;
+      }
+      return <RecipeStepsBox recipe={recipe} />;
+    }
+
     if (isYouTubeUrl(href)) return <YouTubeEmbed url={href} />;
-    if (isInternalRecipeUrl(href))
+
+    if (INTERNAL_RECIPE_RE.test(href)) {
       return <RecipeButton href={href}>{children}</RecipeButton>;
+    }
+
     return (
       <a href={href} target="_blank" rel="noreferrer" className="underline">
         {children}
@@ -82,19 +108,26 @@ const MARKDOWN_COMPONENTS: Components = {
   strong: ({ children }) => (
     <strong className="font-semibold text-gray-900">{children}</strong>
   ),
-};
+});
 
 type CurationMarkdownProps = {
   markdown: string;
+  recipes: Array<Recipe | null>;
 };
 
-export const CurationMarkdown = ({ markdown }: CurationMarkdownProps) => (
-  <div className="curation-prose text-[17px] leading-[1.85] text-gray-800">
-    <ReactMarkdown
-      rehypePlugins={[[rehypeSanitize, SCHEMA]]}
-      components={MARKDOWN_COMPONENTS}
-    >
-      {markdown}
-    </ReactMarkdown>
-  </div>
-);
+export const CurationMarkdown = ({
+  markdown,
+  recipes,
+}: CurationMarkdownProps) => {
+  const components = createComponents(recipes);
+  return (
+    <div className="curation-prose text-[17px] leading-[1.85] text-gray-800">
+      <ReactMarkdown
+        rehypePlugins={[[rehypeSanitize, SCHEMA]]}
+        components={components}
+      >
+        {markdown}
+      </ReactMarkdown>
+    </div>
+  );
+};
