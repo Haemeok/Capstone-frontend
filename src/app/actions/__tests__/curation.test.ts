@@ -1,5 +1,7 @@
 import { CurationError } from "@/entities/curation";
 
+import { validateMarkdown } from "@/app/admin/curation-test/lib/validate";
+
 jest.mock("ai", () => ({
   generateObject: jest.fn(),
 }));
@@ -49,6 +51,17 @@ const fakeBody = (n: number) =>
     .join("\n\n") +
   "\n\n결말 한 문단입니다." +
   " ".repeat(400);
+
+beforeAll(() => {
+  // fakeBody가 validate 룰을 실제 통과하는지 sanity check.
+  // validate.ts 룰이 변하면 silent test rot 대신 여기서 즉시 실패한다.
+  const sanity = validateMarkdown(fakeBody(3), 3);
+  if (!sanity.ok) {
+    throw new Error(
+      `fakeBody(3) violates validateMarkdown: ${sanity.errors.join(", ")}`,
+    );
+  }
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
