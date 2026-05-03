@@ -1,5 +1,3 @@
-"use client";
-
 import { extractYouTubeVideoId } from "@/shared/lib/youtube/getYouTubeThumbnail";
 
 export const YouTubeEmbed = ({ url }: { url: string }) => {
