@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { generateCuration } from "@/app/actions/curation";
+import { saveCurationLocal } from "@/app/actions/curationLocal";
 import { CurationError, type CurationProvider } from "@/entities/curation";
 
 import { useCurationStore } from "../lib/store";
@@ -21,11 +22,13 @@ export const Workspace = () => {
     ReturnType<typeof generateCuration>
   > | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [saveMsg, setSaveMsg] = useState<string | null>(null);
 
   const onGenerate = async () => {
     if (!selected) return;
     setLoading(true);
     setError(null);
+    setSaveMsg(null);
     setResult(null);
     try {
       const r = await generateCuration({
@@ -43,6 +46,19 @@ export const Workspace = () => {
       setError(msg);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onSaveLocal = async () => {
+    if (!result) return;
+    setSaveMsg("저장 중...");
+    try {
+      const r = await saveCurationLocal(result);
+      setSaveMsg(
+        `✓ 저장됨: ${r.relPath}  ·  미리보기: /curation/${result.slug}`,
+      );
+    } catch (e) {
+      setSaveMsg(`저장 실패: ${(e as Error).message}`);
     }
   };
 
@@ -115,6 +131,30 @@ export const Workspace = () => {
       {result && (
         <>
           <StagePanel result={result} />
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onSaveLocal}
+              className="rounded border px-3 py-1.5 text-sm hover:bg-gray-50"
+            >
+              로컬에 저장 (미리보기용)
+            </button>
+            {saveMsg && (
+              <span className="text-xs text-gray-600 whitespace-pre-wrap">
+                {saveMsg}
+              </span>
+            )}
+            {result.slug && (
+              <a
+                href={`/curation/${result.slug}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs underline text-gray-600"
+              >
+                /curation/{result.slug} 열기 →
+              </a>
+            )}
+          </div>
           <MarkdownPreview markdown={result.markdown} />
         </>
       )}
