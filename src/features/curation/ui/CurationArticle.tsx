@@ -1,4 +1,5 @@
 import type { SavedCurationRecord } from "@/entities/curation";
+import type { Recipe } from "@/entities/recipe/model/types";
 
 import { CurationCategoryLabel } from "./CurationCategoryLabel";
 import { CurationMarkdown } from "./CurationMarkdown";
@@ -11,9 +12,12 @@ const formatDate = (iso: string) => {
 
 type CurationArticleProps = {
   data: SavedCurationRecord;
+  recipes: Array<Recipe | null>;
 };
 
-export const CurationArticle = ({ data }: CurationArticleProps) => {
+export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
+  // recipes는 다음 task에서 사용. 일단 props만 받음. eslint unused 경고 방지를 위해 void.
+  void recipes;
   const dateLabel = formatDate(data.savedAt);
 
   return (

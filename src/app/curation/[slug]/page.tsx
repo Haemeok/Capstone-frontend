@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import { getCurationLocal } from "@/app/actions/curationLocal";
+import { getRecipe } from "@/entities/recipe/model/api";
 import { CurationArticle } from "@/features/curation/ui/CurationArticle";
 
 const cachedGet = cache(getCurationLocal);
@@ -32,7 +33,12 @@ const Page = async ({ params }: Props) => {
   const { slug } = await params;
   const data = await cachedGet(slug);
   if (!data) notFound();
-  return <CurationArticle data={data} />;
+
+  const recipes = await Promise.all(
+    data.recipeIds.map((id) => getRecipe(id).catch(() => null)),
+  );
+
+  return <CurationArticle data={data} recipes={recipes} />;
 };
 
 export default Page;
