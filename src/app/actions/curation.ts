@@ -77,6 +77,13 @@ const BodySchema = z.object({
 
 const MAX_BODY_RETRIES = 2;
 
+// generateText 결과가 ```markdown ... ``` fence로 감싸 오는 경우 벗긴다.
+const stripCodeFence = (s: string): string => {
+  const trimmed = s.trim();
+  const m = trimmed.match(/^```(?:markdown|md)?\s*\n([\s\S]*?)\n```$/);
+  return m ? m[1].trim() : trimmed;
+};
+
 // Grok이 generateObject 출력에서 진짜 \n 대신 인라인 spaces로 단락을 끊어
 // 한 덩어리 텍스트로 내는 케이스가 잦음. 시스템 프롬프트로 강제해도 안 지켜짐.
 // 검증·hydrate 직전에 헤더 앞 spaces를 \n\n으로 바꿔 마크다운 구조를 복원한다.
@@ -180,15 +187,17 @@ export const generateCuration = async (
           ? `${userPrompt}\n\n## 이전 시도에서 다음이 잘못되었습니다 — 반드시 수정하세요\n${lastErrors.map((e) => `- ${e}`).join("\n")}`
           : userPrompt;
 
-      let object: { bodyMarkdown: string };
+      // generateText 사용 (schema X) — Solar 본문이 길거나 escape 어려운
+      // 문자가 섞이면 generateObject의 JSON parse가 자주 깨진다. validateMarkdown이
+      // 검증 책임이라 schema 중복.
+      let insertedMd: string;
       try {
-        const result = await generateObject({
+        const result = await generateText({
           model: bodyModel,
-          schema: BodySchema,
           system: buildSlotInserterSystemPrompt(),
           prompt: finalUserPrompt,
         });
-        object = result.object;
+        insertedMd = stripCodeFence(result.text);
       } catch (e) {
         throw new CurationError(
           "LLM_ERROR",
@@ -196,7 +205,7 @@ export const generateCuration = async (
         );
       }
 
-      const normalized = normalizeMarkdown(object.bodyMarkdown);
+      const normalized = normalizeMarkdown(insertedMd);
       const v = validateMarkdown(normalized, recipes.length);
       if (v.ok) {
         bodyMarkdown = normalized;

@@ -168,7 +168,7 @@ export const buildSlotInserterSystemPrompt = (): string => {
     "- 같은 (key, index) 슬롯 중복 등장.",
     "",
     "## 출력 형식",
-    "JSON: { bodyMarkdown: string }",
+    "**순수 마크다운만 출력**. JSON으로 감싸지 말고, ```markdown 코드 펜스도 쓰지 마라. 설명/사족 없이 결과 마크다운 텍스트 그 자체만.",
   ].join("\n");
 };
 
