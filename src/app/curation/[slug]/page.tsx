@@ -35,7 +35,27 @@ const Page = async ({ params }: Props) => {
   if (!data) notFound();
 
   const recipes = await Promise.all(
-    data.recipeIds.map((id) => getRecipe(id).catch(() => null)),
+    data.recipeIds.map((id) =>
+      getRecipe(id).catch((e) => {
+        console.error(`[curation] getRecipe(${id}) 실패:`, e);
+        return null;
+      }),
+    ),
+  );
+
+  console.log(
+    `[curation/${slug}] recipes fetch 결과:`,
+    recipes.map((r, i) => ({
+      idx: i,
+      id: data.recipeIds[i],
+      ok: r !== null,
+      title: r?.title,
+      hasIngredients: r?.ingredients?.length ?? 0,
+      hasSteps: r?.steps?.length ?? 0,
+      likeCount: r?.likeCount,
+      ratingAvg: r?.ratingInfo?.avgRating,
+      cookingTime: r?.cookingTime,
+    })),
   );
 
   return <CurationArticle data={data} recipes={recipes} />;

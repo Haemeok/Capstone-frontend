@@ -31,7 +31,7 @@ describe("enrichBodyMarkdown", () => {
 
   it("매 2개 H2마다 광고 슬롯 1개 (H2 셋이면 광고 1개)", () => {
     const out = enrichBodyMarkdown(baseBody);
-    const adMatches = out.match(/\[ad\]\(in-article-ad\)/g) ?? [];
+    const adMatches = out.match(/\[ad\]\(recipe-data:ad\)/g) ?? [];
     expect(adMatches.length).toBe(1);
   });
 
@@ -43,7 +43,7 @@ describe("enrichBodyMarkdown", () => {
   it("H2가 4개면 광고 2개", () => {
     const md = ["인트로.", "## A", "x", "## B", "x", "## C", "x", "## D", "x"].join("\n\n");
     const out = enrichBodyMarkdown(md);
-    const adMatches = out.match(/\[ad\]\(in-article-ad\)/g) ?? [];
+    const adMatches = out.match(/\[ad\]\(recipe-data:ad\)/g) ?? [];
     expect(adMatches.length).toBe(2);
   });
 });

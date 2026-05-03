@@ -44,9 +44,16 @@ const SCHEMA = {
     div: ["className"],
     h2: ["id", "className"],
   },
+  protocols: {
+    ...defaultSchema.protocols,
+    href: [
+      ...(defaultSchema.protocols?.href ?? []),
+      "recipe-data",
+    ],
+  },
 };
 
-const RECIPE_DATA_RE = /^recipe-data:(ingredients|steps)\/(\d+)$/;
+const RECIPE_DATA_RE = /^recipe-data:(ingredients|steps|ad)(?:\/(\d+))?$/;
 const INTERNAL_RECIPE_RE = /^\/recipes\/([^/?#]+)$/;
 
 const isYouTubeUrl = (url: string) => extractYouTubeVideoId(url) !== null;
@@ -57,11 +64,10 @@ const createComponents = (recipes: Array<Recipe | null>): Components => {
     a: ({ href, children }) => {
       if (!href) return <>{children}</>;
 
-      if (href === "in-article-ad") return <InArticleAdSlot />;
-
       const dataMatch = href.match(RECIPE_DATA_RE);
       if (dataMatch) {
         const [, kind, idxStr] = dataMatch;
+        if (kind === "ad") return <InArticleAdSlot />;
         const recipe = recipes[Number(idxStr)] ?? null;
         if (kind === "ingredients") {
           return <RecipeIngredientsBox recipe={recipe} />;
