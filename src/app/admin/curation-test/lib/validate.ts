@@ -41,10 +41,12 @@ export const validateMarkdown = (md: string, n: number): ValidationResult => {
     }
   }
 
-  // 3. H1/H2 카운트 (단순 라인 매칭)
-  const lines = md.split("\n");
-  const h1Count = lines.filter((l) => /^# (?!#)/.test(l)).length;
-  const h2Count = lines.filter((l) => /^## (?!#)/.test(l)).length;
+  // 3. H1/H2 카운트
+  // newline 또는 문서 시작 직후의 `# ` / `## `만 카운트.
+  // (Grok이 단락 간 진짜 newline 대신 double-space로 끊어 출력하는 경우가 있어
+  //  단순 line-split 매칭은 0개로 잡혀 false-positive를 만든다.)
+  const h1Count = (md.match(/(?:^|\n)# (?!#)/g) ?? []).length;
+  const h2Count = (md.match(/(?:^|\n)## (?!#)/g) ?? []).length;
   if (h1Count > 0) errors.push(`본문에 H1이 ${h1Count}회 등장 (h1은 별도 필드)`);
   if (h2Count !== n) errors.push(`H2 개수 ${h2Count}개 (예상 ${n}개)`);
 
