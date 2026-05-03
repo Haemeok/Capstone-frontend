@@ -2,13 +2,13 @@
 
 import ReactMarkdown from "react-markdown";
 
+import { extractYouTubeVideoId } from "@/shared/lib/youtube/getYouTubeThumbnail";
 import { Image } from "@/shared/ui/image";
 
 import { RecipeButton } from "./RecipeButton";
 import { YouTubeEmbed } from "./YouTubeEmbed";
 
-const isYouTubeUrl = (url: string) =>
-  /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))[\w-]+/.test(url);
+const isYouTubeUrl = (url: string) => extractYouTubeVideoId(url) !== null;
 
 const isInternalRecipeUrl = (url: string) => url.startsWith("/recipes/");
 

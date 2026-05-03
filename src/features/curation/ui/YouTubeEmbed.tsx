@@ -1,14 +1,9 @@
 "use client";
 
-const getYouTubeId = (url: string): string | null => {
-  const m = url.match(
-    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]+)/,
-  );
-  return m ? m[1] : null;
-};
+import { extractYouTubeVideoId } from "@/shared/lib/youtube/getYouTubeThumbnail";
 
 export const YouTubeEmbed = ({ url }: { url: string }) => {
-  const id = getYouTubeId(url);
+  const id = extractYouTubeVideoId(url);
   if (!id) {
     return (
       <a href={url} target="_blank" rel="noreferrer" className="underline">
