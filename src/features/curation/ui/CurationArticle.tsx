@@ -1,5 +1,7 @@
 import type { SavedCurationRecord } from "@/entities/curation";
 import type { Recipe } from "@/entities/recipe/model/types";
+import ArticleWithToc from "@/shared/ui/article/ArticleWithToc";
+import type { TocItem } from "@/shared/ui/article/types";
 
 import { enrichBodyMarkdown } from "../lib/enrichBody";
 
@@ -21,8 +23,12 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
   const dateLabel = formatDate(data.savedAt);
   const enriched = enrichBodyMarkdown(data.markdown);
 
+  const tocItems: TocItem[] = recipes
+    .map((r, i) => (r ? { id: `recipe-${i}`, title: r.title } : null))
+    .filter((x): x is TocItem => x !== null);
+
   return (
-    <article className="mx-auto w-full max-w-[720px] px-5 pt-10 pb-20 md:px-6 md:pt-20">
+    <article className="mx-auto w-full max-w-4xl px-5 pt-10 pb-20 md:px-6 md:pt-20">
       <header className="text-center">
         <CurationCategoryLabel />
         <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
@@ -48,7 +54,13 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
       )}
 
       <div className="mt-10">
-        <CurationMarkdown markdown={enriched} recipes={recipes} />
+        {tocItems.length > 0 ? (
+          <ArticleWithToc items={tocItems}>
+            <CurationMarkdown markdown={enriched} recipes={recipes} />
+          </ArticleWithToc>
+        ) : (
+          <CurationMarkdown markdown={enriched} recipes={recipes} />
+        )}
       </div>
     </article>
   );

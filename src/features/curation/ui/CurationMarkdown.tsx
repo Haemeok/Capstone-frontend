@@ -42,6 +42,7 @@ const SCHEMA = {
     img: ["src", "alt", "className"],
     aside: ["className"],
     div: ["className"],
+    h2: ["id", "className"],
   },
 };
 
@@ -50,72 +51,83 @@ const INTERNAL_RECIPE_RE = /^\/recipes\/([^/?#]+)$/;
 
 const isYouTubeUrl = (url: string) => extractYouTubeVideoId(url) !== null;
 
-const createComponents = (recipes: Array<Recipe | null>): Components => ({
-  a: ({ href, children }) => {
-    if (!href) return <>{children}</>;
+const createComponents = (recipes: Array<Recipe | null>): Components => {
+  let h2Counter = 0;
+  return {
+    a: ({ href, children }) => {
+      if (!href) return <>{children}</>;
 
-    if (href === "in-article-ad") return <InArticleAdSlot />;
+      if (href === "in-article-ad") return <InArticleAdSlot />;
 
-    const dataMatch = href.match(RECIPE_DATA_RE);
-    if (dataMatch) {
-      const [, kind, idxStr] = dataMatch;
-      const recipe = recipes[Number(idxStr)] ?? null;
-      if (kind === "ingredients") {
-        return <RecipeIngredientsBox recipe={recipe} />;
+      const dataMatch = href.match(RECIPE_DATA_RE);
+      if (dataMatch) {
+        const [, kind, idxStr] = dataMatch;
+        const recipe = recipes[Number(idxStr)] ?? null;
+        if (kind === "ingredients") {
+          return <RecipeIngredientsBox recipe={recipe} />;
+        }
+        return <RecipeStepsBox recipe={recipe} />;
       }
-      return <RecipeStepsBox recipe={recipe} />;
-    }
 
-    if (isYouTubeUrl(href)) return <YouTubeEmbed url={href} />;
+      if (isYouTubeUrl(href)) return <YouTubeEmbed url={href} />;
 
-    const internalMatch = href.match(INTERNAL_RECIPE_RE);
-    if (internalMatch) {
-      const id = internalMatch[1];
-      const recipe = recipes.find((r) => r?.id === id) ?? null;
+      const internalMatch = href.match(INTERNAL_RECIPE_RE);
+      if (internalMatch) {
+        const id = internalMatch[1];
+        const recipe = recipes.find((r) => r?.id === id) ?? null;
+        return (
+          <RecipeCardLink href={href} recipe={recipe}>
+            {children}
+          </RecipeCardLink>
+        );
+      }
+
       return (
-        <RecipeCardLink href={href} recipe={recipe}>
+        <a href={href} target="_blank" rel="noreferrer" className="underline">
           {children}
-        </RecipeCardLink>
+        </a>
       );
-    }
-
-    return (
-      <a href={href} target="_blank" rel="noreferrer" className="underline">
+    },
+    img: ({ src, alt }) => (
+      <Image
+        src={typeof src === "string" ? src : ""}
+        alt={alt ?? ""}
+        aspectRatio="4 / 3"
+        fit="cover"
+        wrapperClassName="my-8 w-full rounded-lg md:aspect-[16/10]"
+      />
+    ),
+    h2: ({ children }) => {
+      const id = `recipe-${h2Counter++}`;
+      return (
+        <h2
+          id={id}
+          className="mt-12 mb-4 scroll-mt-24 text-2xl font-bold tracking-tight"
+        >
+          {children}
+        </h2>
+      );
+    },
+    h3: ({ children }) => (
+      <h3 className="mt-10 mb-3 text-xl font-bold tracking-tight">{children}</h3>
+    ),
+    p: ({ children }) => <div className="my-6">{children}</div>,
+    blockquote: ({ children }) => (
+      <blockquote className="my-8 border-l-4 border-gray-300 bg-gray-50 px-6 py-4 italic text-gray-700">
         {children}
-      </a>
-    );
-  },
-  img: ({ src, alt }) => (
-    <Image
-      src={typeof src === "string" ? src : ""}
-      alt={alt ?? ""}
-      aspectRatio="4 / 3"
-      fit="cover"
-      wrapperClassName="my-8 w-full rounded-lg md:aspect-[16/10]"
-    />
-  ),
-  h2: ({ children }) => (
-    <h2 className="mt-12 mb-4 text-2xl font-bold tracking-tight">{children}</h2>
-  ),
-  h3: ({ children }) => (
-    <h3 className="mt-10 mb-3 text-xl font-bold tracking-tight">{children}</h3>
-  ),
-  p: ({ children }) => <div className="my-6">{children}</div>,
-  blockquote: ({ children }) => (
-    <blockquote className="my-8 border-l-4 border-gray-300 bg-gray-50 px-6 py-4 italic text-gray-700">
-      {children}
-    </blockquote>
-  ),
-  ul: ({ children }) => (
-    <ul className="my-6 list-disc space-y-2 pl-6">{children}</ul>
-  ),
-  ol: ({ children }) => (
-    <ol className="my-6 list-decimal space-y-2 pl-6">{children}</ol>
-  ),
-  strong: ({ children }) => (
-    <strong className="font-semibold text-gray-900">{children}</strong>
-  ),
-});
+      </blockquote>
+    ),
+    ul: ({ children }) => (
+      <ul className="my-6 list-disc space-y-2 pl-6">{children}</ul>
+    ),
+    ol: ({ children }) => (
+      <ol className="my-6 list-decimal space-y-2 pl-6">{children}</ol>
+    ),
+    strong: ({ children }) => (
+      <strong className="font-semibold text-gray-900">{children}</strong>
+    ),
+  };
+};
 
 type CurationMarkdownProps = {
   markdown: string;
