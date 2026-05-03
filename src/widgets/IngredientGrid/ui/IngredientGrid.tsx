@@ -12,6 +12,7 @@ type IngredientGridProps = {
   ingredients: IngredientItemType[];
   isDeleteMode: boolean;
   isFetchingNextPage: boolean;
+  isPending?: boolean;
   hasNextPage: boolean;
   error: Error | null;
   ref: (node?: Element | null | undefined) => void;
@@ -24,6 +25,7 @@ const IngredientGrid = ({
   ingredients,
   isDeleteMode,
   isFetchingNextPage,
+  isPending,
   error,
   ref,
   isLoggedIn,
@@ -31,7 +33,10 @@ const IngredientGrid = ({
   selectedIngredientIds,
 }: IngredientGridProps) => {
   const showEmptyState =
-    !isFetchingNextPage && ingredients && ingredients.length === 0;
+    !isPending &&
+    !isFetchingNextPage &&
+    ingredients &&
+    ingredients.length === 0;
 
   return isLoggedIn ? (
     <div className="flex grow flex-col gap-5">
@@ -45,7 +50,9 @@ const IngredientGrid = ({
             isSelected={selectedIngredientIds.includes(ingredient.id)}
           />
         ))}
-        {isFetchingNextPage && <IngredientGridSkeleton count={4} />}
+        {(isPending || isFetchingNextPage) && (
+          <IngredientGridSkeleton count={4} />
+        )}
         {showEmptyState && <IngredientEmptyState />}
       </div>
       {error && (

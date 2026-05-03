@@ -15,7 +15,7 @@ export const useInfiniteIngredients = ({
   category,
   sort,
 }: UseInfiniteIngredientsParams) => {
-  const { data, error, hasNextPage, isFetchingNextPage, ref } =
+  const { data, error, hasNextPage, isFetchingNextPage, isPending, ref } =
     useInfiniteScroll<
       IngredientsApiResponse,
       Error,
@@ -42,6 +42,7 @@ export const useInfiniteIngredients = ({
     error,
     hasNextPage,
     isFetchingNextPage,
+    isPending,
     ref,
     ingredients,
     totalCount: data?.pages[0]?.page.totalElements ?? 0,

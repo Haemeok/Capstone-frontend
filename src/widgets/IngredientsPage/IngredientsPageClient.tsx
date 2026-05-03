@@ -42,7 +42,7 @@ const IngredientsPageClient = () => {
     },
   });
 
-  const { error, hasNextPage, isFetchingNextPage, ref, ingredients } =
+  const { error, hasNextPage, isFetchingNextPage, isPending, ref, ingredients } =
     useInfiniteIngredients({
       category: selectedCategory,
       sort,
@@ -115,6 +115,7 @@ const IngredientsPageClient = () => {
           ingredients={ingredients ?? []}
           isDeleteMode={isDeleteMode}
           isFetchingNextPage={isFetchingNextPage}
+          isPending={isPending}
           hasNextPage={hasNextPage}
           error={error}
           ref={ref}

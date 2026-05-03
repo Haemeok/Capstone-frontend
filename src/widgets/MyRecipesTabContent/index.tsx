@@ -24,23 +24,24 @@ const MyRecipesTabContent = ({
 }: MyRecipesTabContentProps) => {
   const [sort] = useState<"ASC" | "DESC">("DESC");
 
-  const { data, error, hasNextPage, isFetching, ref } = useInfiniteScroll<
-    BaseRecipesApiResponse,
-    Error,
-    InfiniteData<BaseRecipesApiResponse>,
-    [string, string, "ASC" | "DESC"],
-    number
-  >({
-    queryKey: ["recipes", userId, sort],
-    queryFn: ({ pageParam }) =>
-      getMyRecipeItems({
-        userId,
-        sort,
-        pageParam,
-      }),
-    getNextPageParam: getNextPageParam,
-    initialPageParam: 0,
-  });
+  const { data, error, hasNextPage, isFetching, isPending, ref } =
+    useInfiniteScroll<
+      BaseRecipesApiResponse,
+      Error,
+      InfiniteData<BaseRecipesApiResponse>,
+      [string, string, "ASC" | "DESC"],
+      number
+    >({
+      queryKey: ["recipes", userId, sort],
+      queryFn: ({ pageParam }) =>
+        getMyRecipeItems({
+          userId,
+          sort,
+          pageParam,
+        }),
+      getNextPageParam: getNextPageParam,
+      initialPageParam: 0,
+    });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
 
@@ -50,7 +51,8 @@ const MyRecipesTabContent = ({
       isSimple
       hasNextPage={hasNextPage}
       isFetching={isFetching}
-      noResults={recipes.length === 0 && !isFetching}
+      isPending={isPending}
+      noResults={recipes.length === 0 && !isPending}
       noResultsMessage="작성한 레시피가 없습니다."
       observerRef={ref}
       error={error}

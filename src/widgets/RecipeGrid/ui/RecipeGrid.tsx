@@ -144,7 +144,7 @@ const RecipeGrid = ({
     );
   }
 
-  if (noResults || !recipes || recipes.length === 0) {
+  if (noResults) {
     if (showAIRecipeCTA) {
       return <EmptyRecipeCTA noResultsMessage={noResultsMessage} />;
     }
