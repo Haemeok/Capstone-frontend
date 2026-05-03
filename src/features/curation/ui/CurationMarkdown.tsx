@@ -8,7 +8,7 @@ import { Image } from "@/shared/ui/image";
 
 import type { Recipe } from "@/entities/recipe/model/types";
 
-import { RecipeButton } from "./RecipeButton";
+import { RecipeCardLink } from "./RecipeCardLink";
 import { RecipeIngredientsBox } from "./RecipeIngredientsBox";
 import { RecipeStepsBox } from "./RecipeStepsBox";
 import { YouTubeEmbed } from "./YouTubeEmbed";
@@ -68,8 +68,15 @@ const createComponents = (recipes: Array<Recipe | null>): Components => ({
 
     if (isYouTubeUrl(href)) return <YouTubeEmbed url={href} />;
 
-    if (INTERNAL_RECIPE_RE.test(href)) {
-      return <RecipeButton href={href}>{children}</RecipeButton>;
+    const internalMatch = href.match(INTERNAL_RECIPE_RE);
+    if (internalMatch) {
+      const id = internalMatch[1];
+      const recipe = recipes.find((r) => r?.id === id) ?? null;
+      return (
+        <RecipeCardLink href={href} recipe={recipe}>
+          {children}
+        </RecipeCardLink>
+      );
     }
 
     return (
