@@ -2,7 +2,7 @@ export type CurationParams = Record<string, string | number>;
 
 export type ToneSeed = "friendly" | "editorial";
 
-export type CurationProvider = "grok" | "solar";
+export type CurationProvider = "grok" | "solar" | "hybrid";
 
 export type CurationErrorCode =
   | "INSUFFICIENT_RECIPES"

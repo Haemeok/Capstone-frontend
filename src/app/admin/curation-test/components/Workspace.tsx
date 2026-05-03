@@ -91,7 +91,8 @@ export const Workspace = () => {
               className="ml-2 border rounded px-2 py-1"
             >
               <option value="grok">Grok 4.1 Fast</option>
-              <option value="solar">Solar Pro 3 (free)</option>
+              <option value="solar">Solar Pro 3</option>
+              <option value="hybrid">Hybrid (Solar 본문 + Grok 슬롯)</option>
             </select>
           </label>
           <button
