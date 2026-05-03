@@ -26,7 +26,7 @@ describe("hydrateMarkdown", () => {
     expect(out).toContain("[김치찌개 →](/recipes/def)");
   });
 
-  it("yt 슬롯을 평범한 마크다운 링크로 치환 (스코프 1단계)", () => {
+  it("yt 슬롯을 평범한 마크다운 링크로 치환", () => {
     const out = hydrateMarkdown("영상 {{yt:0}}", recipes);
     expect(out).toContain("[▶ 콩나물국 영상 보기](https://youtu.be/yyy)");
   });

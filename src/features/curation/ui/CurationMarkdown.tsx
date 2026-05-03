@@ -2,6 +2,8 @@
 
 import ReactMarkdown from "react-markdown";
 
+import { Image } from "@/shared/ui/image";
+
 import { RecipeButton } from "./RecipeButton";
 import { YouTubeEmbed } from "./YouTubeEmbed";
 
@@ -35,11 +37,12 @@ export const CurationMarkdown = ({ markdown }: CurationMarkdownProps) => (
           );
         },
         img: ({ src, alt }) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={typeof src === "string" ? src : ""}
             alt={alt ?? ""}
-            className="my-8 aspect-[4/3] w-full rounded-lg object-cover md:aspect-[16/10]"
+            aspectRatio="4 / 3"
+            fit="cover"
+            wrapperClassName="my-8 w-full rounded-lg md:aspect-[16/10]"
           />
         ),
         h2: ({ children }) => (
