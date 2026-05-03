@@ -4,7 +4,7 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
 import { useCurationStore } from "../lib/store";
 
-type AllowlistEntry = { params: Record<string, string | number> };
+type AllowlistEntry = Record<string, string | number>;
 
 const ALLOWLIST_URL =
   "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/seo/allowlist.json";
@@ -37,7 +37,7 @@ export const CandidatePanel = () => {
     const q = deferredFilter.toLowerCase();
     const out: AllowlistEntry[] = [];
     for (const e of entries) {
-      if (JSON.stringify(e.params).toLowerCase().includes(q)) {
+      if (JSON.stringify(e).toLowerCase().includes(q)) {
         out.push(e);
         if (out.length >= VISIBLE_LIMIT) break;
       }
@@ -71,9 +71,9 @@ export const CandidatePanel = () => {
             <button
               type="button"
               className="w-full text-left text-sm hover:bg-gray-100 rounded px-2 py-1"
-              onClick={() => setSelected(e.params)}
+              onClick={() => setSelected(e)}
             >
-              {JSON.stringify(e.params)}
+              {JSON.stringify(e)}
             </button>
           </li>
         ))}
