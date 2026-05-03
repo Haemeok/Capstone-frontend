@@ -30,14 +30,13 @@ export const AdSlot = ({
 }: AdSlotProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const insRef = useRef<HTMLModElement>(null);
-  const didPushRef = useRef(false);
 
   useEffect(() => {
-    if (didPushRef.current) return;
-    if (!insRef.current) return;
+    const ins = insRef.current;
+    if (!ins) return;
+    if (ins.getAttribute("data-adsbygoogle-status")) return;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-      didPushRef.current = true;
     } catch {
       // adblock / network failure — silent
     }
