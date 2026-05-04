@@ -44,16 +44,12 @@ const SCHEMA = {
     div: ["className"],
     h2: ["id", "className"],
   },
-  protocols: {
-    ...defaultSchema.protocols,
-    href: [
-      ...(defaultSchema.protocols?.href ?? []),
-      "recipe-data",
-    ],
-  },
 };
 
-const RECIPE_DATA_RE = /^recipe-data:(ingredients|steps|ad)(?:\/(\d+))?$/;
+// 슬롯 표식은 `#`-prefixed fragment URL로 박는다. 커스텀 URL 스킴(`recipe-data:`)
+// 은 rehype-sanitize의 attributes.a 오버라이드 + 커스텀 protocols 조합에서
+// 빈 문자열로 strip돼 박스 렌더가 안 됐던 사례가 있어서, fragment로 우회.
+const RECIPE_DATA_RE = /^#cur:(ingredients|steps|ad)(?:\/(\d+))?$/;
 const INTERNAL_RECIPE_RE = /^\/recipes\/([^/?#]+)$/;
 
 const isYouTubeUrl = (url: string) => extractYouTubeVideoId(url) !== null;
@@ -67,7 +63,10 @@ const createComponents = (recipes: Array<StaticRecipe | null>): Components => {
       const dataMatch = href.match(RECIPE_DATA_RE);
       if (dataMatch) {
         const [, kind, idxStr] = dataMatch;
-        if (kind === "ad") return <InArticleAdSlot />;
+        if (kind === "ad") {
+          const adIdx = idxStr ? Number(idxStr) : 0;
+          return <InArticleAdSlot index={adIdx} />;
+        }
         const recipe = recipes[Number(idxStr)] ?? null;
         if (kind === "ingredients") {
           return <RecipeIngredientsBox recipe={recipe} />;
@@ -118,11 +117,7 @@ const createComponents = (recipes: Array<StaticRecipe | null>): Components => {
       <h3 className="mt-10 mb-3 text-xl font-bold tracking-tight">{children}</h3>
     ),
     p: ({ children }) => <div className="my-6">{children}</div>,
-    blockquote: ({ children }) => (
-      <blockquote className="my-8 border-l-4 border-gray-300 bg-gray-50 px-6 py-4 italic text-gray-700">
-        {children}
-      </blockquote>
-    ),
+    blockquote: ({ children }) => <div className="my-6">{children}</div>,
     ul: ({ children }) => (
       <ul className="my-6 list-disc space-y-2 pl-6">{children}</ul>
     ),

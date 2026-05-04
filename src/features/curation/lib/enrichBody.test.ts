@@ -21,29 +21,126 @@ const baseBody = `인트로 한 단락.
 결말 단락.`;
 
 describe("enrichBodyMarkdown", () => {
-  it("각 H2 직후에 ingredients/steps 슬롯 라인 삽입 (인덱스 순서대로)", () => {
+  it("각 H2에 ingredients/steps 슬롯 라인이 인덱스 순서대로 들어간다", () => {
     const out = enrichBodyMarkdown(baseBody);
-    expect(out).toContain("[ingredients](recipe-data:ingredients/0)");
-    expect(out).toContain("[steps](recipe-data:steps/0)");
-    expect(out).toContain("[ingredients](recipe-data:ingredients/1)");
-    expect(out).toContain("[steps](recipe-data:steps/2)");
+    expect(out).toContain("[ingredients](#cur:ingredients/0)");
+    expect(out).toContain("[steps](#cur:steps/0)");
+    expect(out).toContain("[ingredients](#cur:ingredients/1)");
+    expect(out).toContain("[steps](#cur:steps/2)");
   });
 
-  it("매 2개 H2마다 광고 슬롯 1개 (H2 셋이면 광고 1개)", () => {
+  it("매 2번째 H2 직후마다 광고 1개 (H2 셋이면 광고 1개)", () => {
     const out = enrichBodyMarkdown(baseBody);
-    const adMatches = out.match(/\[ad\]\(recipe-data:ad\)/g) ?? [];
-    expect(adMatches.length).toBe(1);
+    const ads = out.match(/\[ad\]\(#cur:ad\/\d+\)/g) ?? [];
+    expect(ads.length).toBe(1);
   });
 
-  it("H2가 없으면 변경 없음", () => {
+  it("H2가 없으면 원문 그대로 반환", () => {
     const md = "단락 1.\n\n단락 2.";
     expect(enrichBodyMarkdown(md)).toBe(md);
   });
 
-  it("H2가 4개면 광고 2개", () => {
+  it("H2가 4개면 광고 2개, 각 광고는 0/1 인덱스로 unique", () => {
     const md = ["인트로.", "## A", "x", "## B", "x", "## C", "x", "## D", "x"].join("\n\n");
     const out = enrichBodyMarkdown(md);
-    const adMatches = out.match(/\[ad\]\(recipe-data:ad\)/g) ?? [];
-    expect(adMatches.length).toBe(2);
+    const ads = out.match(/\[ad\]\(#cur:ad\/\d+\)/g) ?? [];
+    expect(ads.length).toBe(2);
+    expect(ads).toEqual(["[ad](#cur:ad/0)", "[ad](#cur:ad/1)"]);
+  });
+
+  it("각 H2 섹션 안 슬롯 순서: yt → desc → ingredients → steps → recipe-link → img", () => {
+    const md = `## 한 레시피
+
+[▶ 영상](https://youtu.be/abc)
+
+본문 설명 단락 한 줄.
+
+[전체 레시피 →](/recipes/r1)
+
+![대표 이미지](https://example.com/x.jpg)`;
+
+    const out = enrichBodyMarkdown(md);
+    const yt = out.indexOf("[▶ 영상](https://youtu.be/abc)");
+    const desc = out.indexOf("본문 설명 단락 한 줄.");
+    const ing = out.indexOf("[ingredients](#cur:ingredients/0)");
+    const steps = out.indexOf("[steps](#cur:steps/0)");
+    const recipe = out.indexOf("[전체 레시피 →](/recipes/r1)");
+    const img = out.indexOf("![대표 이미지]");
+    expect(yt).toBeGreaterThan(-1);
+    expect(yt).toBeLessThan(desc);
+    expect(desc).toBeLessThan(ing);
+    expect(ing).toBeLessThan(steps);
+    expect(steps).toBeLessThan(recipe);
+    expect(recipe).toBeLessThan(img);
+  });
+
+  it("yt가 본문 마지막 단락에 박혀도 desc 위로 끌어 올린다", () => {
+    const md = `## 레시피
+
+본문 단락.
+
+[전체 레시피 →](/recipes/r1)
+
+![이미지](https://x.jpg)
+
+[▶ 영상 보기](https://youtu.be/zzz)`;
+
+    const out = enrichBodyMarkdown(md);
+    const yt = out.indexOf("[▶ 영상 보기]");
+    const desc = out.indexOf("본문 단락.");
+    const img = out.indexOf("![이미지]");
+    expect(yt).toBeLessThan(desc);
+    expect(desc).toBeLessThan(img);
+  });
+
+  it("recipe 링크가 인라인 단락에 박혀있으면 분리 추출하고 본문 텍스트는 보존", () => {
+    const md = `## 레시피
+
+본문 단락. 추천 [요리 →](/recipes/aaa) 해요.
+
+![이미지](https://x.jpg)`;
+    const out = enrichBodyMarkdown(md);
+    expect(out).toContain("[요리 →](/recipes/aaa)");
+    // 본문에서 링크 자국 없이 "본문 단락. 추천 해요." 같은 형태로 정리.
+    expect(out).toMatch(/본문 단락\. 추천 해요\./);
+    // 분리된 recipe 링크는 ingredients/steps 슬롯 다음에 위치.
+    const steps = out.indexOf("[steps](#cur:steps/0)");
+    const recipe = out.indexOf("[요리 →](/recipes/aaa)");
+    expect(recipe).toBeGreaterThan(steps);
+  });
+
+  it("recipe 링크가 standalone 단락이어도 정상 추출", () => {
+    const md = `## 레시피
+
+설명 단락.
+
+[전체 레시피 →](/recipes/abc)
+
+![이미지](https://x.jpg)`;
+    const out = enrichBodyMarkdown(md);
+    expect(out).toContain("[전체 레시피 →](/recipes/abc)");
+    const steps = out.indexOf("[steps](#cur:steps/0)");
+    const recipe = out.indexOf("[전체 레시피 →](/recipes/abc)");
+    const img = out.indexOf("![이미지]");
+    expect(recipe).toBeGreaterThan(steps);
+    expect(recipe).toBeLessThan(img);
+  });
+
+  it("AI가 슬롯을 누락해도 enrich은 ingredients/steps만 자동 채운다", () => {
+    const md = `## 레시피
+
+설명만 있고 슬롯 없음.`;
+    const out = enrichBodyMarkdown(md);
+    expect(out).toContain("[ingredients](#cur:ingredients/0)");
+    expect(out).toContain("[steps](#cur:steps/0)");
+    expect(out).toContain("설명만 있고 슬롯 없음.");
+  });
+
+  it("인트로 단락은 H2 위에 그대로 보존", () => {
+    const out = enrichBodyMarkdown(baseBody);
+    const intro = out.indexOf("인트로 한 단락.");
+    const firstH2 = out.indexOf("## 첫 레시피 제목");
+    expect(intro).toBeGreaterThan(-1);
+    expect(intro).toBeLessThan(firstH2);
   });
 });
