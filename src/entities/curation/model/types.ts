@@ -1,3 +1,5 @@
+import type { CurationCategory } from "./categories";
+
 export type CurationParams = Record<string, string | number>;
 
 export type ToneSeed = "friendly" | "editorial";
@@ -36,6 +38,8 @@ export type GenerateCurationOutput = {
   toneSeed: ToneSeed;
   thumbnailUrl: string;
   provider: CurationProvider;
+  category: CurationCategory;
+  coverImageKey: string | null;
 };
 
 export type SavedCurationRecord = GenerateCurationOutput & {

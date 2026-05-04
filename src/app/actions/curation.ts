@@ -301,5 +301,7 @@ export const generateCuration = async (
     toneSeed,
     thumbnailUrl: recipes[0]?.imageUrl ?? "",
     provider,
+    category: "FOOD & LIFE",
+    coverImageKey: recipes[0]?.imageKey ?? null,
   };
 };

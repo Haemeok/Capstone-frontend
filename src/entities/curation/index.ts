@@ -8,3 +8,4 @@ export type {
   SavedCurationRecord,
 } from "./model/types";
 export { CurationError } from "./model/types";
+export * from "./model/categories";
