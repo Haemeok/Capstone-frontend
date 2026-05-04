@@ -38,7 +38,7 @@ export const CurationListCard = ({
         ) : null}
       </div>
       {category && (
-        <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.18em] text-green-900">
+        <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.1em] text-green-900">
           {category}
         </p>
       )}

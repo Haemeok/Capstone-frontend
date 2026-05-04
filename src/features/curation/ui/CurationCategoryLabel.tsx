@@ -5,7 +5,7 @@ type CurationCategoryLabelProps = {
 export const CurationCategoryLabel = ({
   category,
 }: CurationCategoryLabelProps) => (
-  <p className="text-sm font-bold uppercase tracking-[0.2em] text-green-900">
+  <p className="text-sm font-bold uppercase tracking-[0.1em] text-green-900">
     {category}
   </p>
 );
