@@ -26,7 +26,6 @@ import {
 } from "@/app/admin/curation-test/lib/buildTitlePrompt";
 import { findCommonIngredientNames } from "@/app/admin/curation-test/lib/commonIngredients";
 import { hydrateMarkdown } from "@/app/admin/curation-test/lib/hydrate";
-import { postProcessSelection } from "@/app/admin/curation-test/lib/postProcessSelection";
 import { slugify } from "@/app/admin/curation-test/lib/slugify";
 import { pickToneBySlug } from "@/app/admin/curation-test/lib/toneSeed";
 import { validateMarkdown } from "@/app/admin/curation-test/lib/validate";
@@ -170,14 +169,10 @@ export const generateCuration = async (
     );
   }
 
-  // LLM이 고른 인덱스를 검증·정규화해서 정확히 recipeCount개 (또는 pool.length가
-  // 그보다 작으면 그 값) unique·valid 인덱스를 보장. 이후 Stage 3는 이 recipes만 사용.
-  const finalIndices = postProcessSelection(
-    titleObj.selectedIndices,
-    recipeCount,
-    pool.length,
-  );
-  const recipes = finalIndices.map((i) => pool[i]);
+  // selectedIndices 의 length/unique/in-range 는 buildTitleSchema 가 zod refinement
+  // 로 이미 보장. silent fixer 를 두면 모델이 약속을 어긴 사실이 뒤로 가려서
+  // 타이틀-본문 N 어긋남이 새는 사고가 났음 — 이제는 약속을 어기면 retry 또는 fail.
+  const recipes = titleObj.selectedIndices.map((i) => pool[i]);
 
   // Stage 3: Body — Hybrid 고정.
   //   3a: Solar로 자연어 한국어 본문 (슬롯 없음)
