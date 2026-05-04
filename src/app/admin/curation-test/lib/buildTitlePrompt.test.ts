@@ -55,11 +55,41 @@ describe("buildTitleSystemPrompt - selection block", () => {
   });
 });
 
+describe("buildTitleSystemPrompt - count enforcement", () => {
+  it("정확히 N 강제 문구가 들어간다", () => {
+    const sys = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    expect(sys).toMatch(/h1.*dek.*숫자.*정확히.*5/);
+  });
+
+  it("'몇 가지' 류 흐림 표현 금지가 명시된다", () => {
+    const sys = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    expect(sys).toMatch(/몇 가지/);
+    expect(sys.toLowerCase()).toMatch(/금지|쓰지 마|쓰지 말/);
+  });
+
+  it("'기계적 압축' 헷갈리는 옛 문구는 제거된다", () => {
+    const sys = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    expect(sys).not.toMatch(/기계적인 압축/);
+  });
+});
+
+describe("buildTitleUserPrompt - count enforcement", () => {
+  it("정확한 recipeCount 가 user prompt 에 명시된다", () => {
+    const user = buildTitleUserPrompt({
+      params: { q: "x" },
+      recipeTitles: ["a", "b", "c", "d", "e"],
+      recipeCount: 5,
+    });
+    expect(user).toMatch(/정확히 5/);
+  });
+});
+
 describe("buildTitleUserPrompt - pool block", () => {
   it("후보 풀을 인덱스 prefix로 listing한다", () => {
     const prompt = buildTitleUserPrompt({
       params: { q: "리조또" },
       recipeTitles: ["버섯 리조또", "신라면 리조또", "토마토 리조또"],
+      recipeCount: 3,
     });
     expect(prompt).toContain("0. 버섯 리조또");
     expect(prompt).toContain("1. 신라면 리조또");
@@ -72,6 +102,7 @@ describe("buildTitleUserPrompt", () => {
     const user = buildTitleUserPrompt({
       params: { dishType: "찌개", season: "겨울" },
       recipeTitles: ["콩나물국"],
+      recipeCount: 1,
     });
     expect(user).toContain("dishType");
     expect(user).toContain("찌개");
@@ -83,6 +114,7 @@ describe("buildTitleUserPrompt", () => {
       params: { ingredientIds: "NjeW51wD" },
       recipeTitles: ["A", "B"],
       commonIngredients: ["쪽파", "마늘"],
+      recipeCount: 2,
     });
     expect(user).toMatch(/공통 재료/);
     expect(user).toContain("쪽파");
@@ -94,6 +126,7 @@ describe("buildTitleUserPrompt", () => {
     const user = buildTitleUserPrompt({
       params: {},
       recipeTitles: ["A"],
+      recipeCount: 1,
     });
     expect(user).not.toMatch(/공통 재료/);
   });

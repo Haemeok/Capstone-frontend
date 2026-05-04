@@ -44,8 +44,9 @@ export const buildTitleSystemPrompt = ({
     "- params로 주어진 축은 모두 쑤셔넣지 말 것. 한두 개는 의도적으로 생략하고, 하나의 인상만 남겨라.",
     "- 이모지 금지. 굵은 글씨(`**...**`)도 금지.",
     "- 작은따옴표로 키워드 강조 OK ('맛잘알', '콜리플라워' 처럼) — 매번 쓸 필요 없고 정말 키워드일 때만.",
-    "- N은 정확한 레시피 개수(아래 user prompt에 명시됨). 임의 압축 금지 (\"3가지\", \"몇 가지\" 같이 흐리지 마라).",
-    "- 기계적인 압축 (예: \"새해, 떡국 4선\")은 피한다. 사람이 매거진에 쓸 법한 말맛으로.",
+    `- h1·dek 어디에서든 숫자(\"N선|N가지|N개|N편|N추천|N모음|TOP N|BEST N\")가 등장하면 정확히 ${count}. 다른 숫자는 출력 거부됨.`,
+    "- '몇 가지', '여러 가지' 같이 흐리는 표현 금지 — 본문 레시피 개수가 정해져 있으므로 흐릴 이유가 없다.",
+    `- N을 헤드라인에 박는 자체는 OK. 다만 박을 거면 정확히 ${count}, 매거진다운 말맛으로 (\"호텔 뺨치는 비주얼, 김치찜 ${count}선\" 처럼).`,
     "",
     "## 실제 푸드 에디터들의 제목 예시",
     fewShots.map((t) => `- ${t}`).join("\n"),
@@ -73,10 +74,12 @@ export const buildTitleUserPrompt = ({
   params,
   recipeTitles,
   commonIngredients,
+  recipeCount,
 }: {
   params: CurationParams;
   recipeTitles: string[];
   commonIngredients?: string[];
+  recipeCount: number;
 }): string => {
   // params의 ingredientIds 같은 키는 모델에게 의미 없는 opaque 토큰이다.
   // 실제 모든 레시피에 공통으로 들어간 재료 이름을 commonIngredients로 받아 명시한다.
@@ -95,6 +98,13 @@ export const buildTitleUserPrompt = ({
     recipeTitles.map((t, i) => `${i}. ${t}`).join("\n"),
   ].join("\n");
 
+  const countBlock = [
+    "## 정확한 레시피 개수",
+    `이 큐레이션의 본문은 정확히 ${recipeCount}개 레시피로 구성된다.`,
+    `- selectedIndices 는 정확히 ${recipeCount}개 (unique).`,
+    `- h1·dek 에 숫자(N선|N가지|N개|N편|N추천|N모음|TOP N|BEST N) 가 등장하면 ${recipeCount}.`,
+  ].join("\n");
+
   return [
     "## params",
     "```json",
@@ -104,6 +114,7 @@ export const buildTitleUserPrompt = ({
     poolBlock,
     "",
     commonBlock,
+    countBlock,
   ]
     .filter((s) => s !== "")
     .join("\n");

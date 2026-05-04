@@ -159,6 +159,7 @@ export const generateCuration = async (
         params: input.params,
         recipeTitles: pool.map((r) => r.title),
         commonIngredients,
+        recipeCount,
       }),
     });
     titleObj = object;
