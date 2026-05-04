@@ -1,3 +1,13 @@
 export { resolveCoverUrl, toSavedRecord } from "./model/adapter";
-export type { PublicCurationArticleDto } from "./model/api.server";
-export { fetchCurationArticle } from "./model/api.server";
+export type {
+  PublicCurationArticleDto,
+  PublicCurationArticleListItemDto,
+  CurationArticleListResponse,
+  CurationArticleListParams,
+} from "./model/api.server";
+export {
+  fetchCurationArticle,
+  fetchCurationArticleList,
+} from "./model/api.server";
+export { getCurationArticles } from "./model/api.client";
+export { coverImageUrlFromKey } from "./lib/coverImageUrl";
