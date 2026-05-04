@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { getRecipe } from "@/entities/recipe/model/api";
 import {
+  CURATION_CATEGORIES,
   CurationError,
   type GenerateCurationInput,
   type GenerateCurationOutput,
@@ -70,6 +71,7 @@ const resolveModel = (provider: CurationProvider) => {
 const TitleSchema = z.object({
   h1: z.string().min(8).max(70),
   dek: z.string().min(20).max(120),
+  category: z.enum(CURATION_CATEGORIES),
 });
 const BodySchema = z.object({
   bodyMarkdown: z.string().min(800).max(5000),
@@ -128,7 +130,7 @@ export const generateCuration = async (
 
   // Stage 2: Title
   const fewShots = sampleFewShotTitles(slug, 8);
-  let titleObj: { h1: string; dek: string };
+  let titleObj: z.infer<typeof TitleSchema>;
   try {
     const { object } = await generateObject({
       model: titleModel,
@@ -301,7 +303,7 @@ export const generateCuration = async (
     toneSeed,
     thumbnailUrl: recipes[0]?.imageUrl ?? "",
     provider,
-    category: "FOOD & LIFE",
+    category: titleObj.category,
     coverImageKey: recipes[0]?.imageKey ?? null,
   };
 };

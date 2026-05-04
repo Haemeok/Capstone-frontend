@@ -1,3 +1,5 @@
+import { CURATION_CATEGORIES } from "@/entities/curation";
+
 import {
   buildTitleSystemPrompt,
   buildTitleUserPrompt,
@@ -18,6 +20,21 @@ describe("buildTitleSystemPrompt", () => {
   it("축 1-2개 의도적 생략 지시가 들어간다", () => {
     const sys = buildTitleSystemPrompt({ fewShots: [] });
     expect(sys).toMatch(/생략|모두 넣지 마/);
+  });
+});
+
+describe("buildTitleSystemPrompt - categories block", () => {
+  it("CURATION_CATEGORIES 9개를 모두 포함한다", () => {
+    const prompt = buildTitleSystemPrompt({ fewShots: [] });
+    for (const cat of CURATION_CATEGORIES) {
+      expect(prompt).toContain(cat);
+    }
+  });
+
+  it("폴백 안내 문구를 포함한다", () => {
+    const prompt = buildTitleSystemPrompt({ fewShots: [] });
+    expect(prompt).toMatch(/FOOD & LIFE/i);
+    expect(prompt.toLowerCase()).toMatch(/doubt|애매|모호|불분명/);
   });
 });
 

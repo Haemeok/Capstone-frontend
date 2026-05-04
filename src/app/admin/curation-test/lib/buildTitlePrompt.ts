@@ -1,5 +1,5 @@
 import corpus from "@/shared/config/curation/elle-title-corpus.json";
-import type { CurationParams } from "@/entities/curation";
+import { CURATION_CATEGORIES, type CurationParams } from "@/entities/curation";
 
 type Title = { editor: string; role: string; title: string };
 
@@ -45,9 +45,15 @@ export const buildTitleSystemPrompt = ({
     "## 실제 푸드 에디터들의 제목 예시",
     fewShots.map((t) => `- ${t}`).join("\n"),
     "",
+    "## 카테고리",
+    "이 큐레이션의 톤·각도에 가장 맞는 카테고리 한 개를 아래 enum에서 고른다.",
+    CURATION_CATEGORIES.map((c) => `- ${c}`).join("\n"),
+    "맞는 카테고리가 모호하거나 불분명하면 'FOOD & LIFE'를 선택하라. (When in doubt, choose FOOD & LIFE.)",
+    "",
     "## 출력",
     "- h1: 8~70자.",
     "- dek: 20~120자, 한 줄 리드.",
+    "- category: 위 enum 중 하나.",
   ].join("\n");
 };
 
