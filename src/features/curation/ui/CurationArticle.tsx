@@ -14,6 +14,11 @@ const formatDate = (iso: string) => {
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
 };
 
+const formatTocTitle = (r: StaticRecipe): string => {
+  const channel = r.youtubeChannelName?.trim();
+  return channel ? `${channel} · ${r.title}` : r.title;
+};
+
 const TOC_ACCENT = "bg-green-900/10 font-semibold text-green-900";
 
 type CurationArticleProps = {
@@ -26,7 +31,7 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
   const enriched = enrichBodyMarkdown(data.markdown);
 
   const tocItems: TocItem[] = recipes
-    .map((r, i) => (r ? { id: `recipe-${i}`, title: r.title } : null))
+    .map((r, i) => (r ? { id: `recipe-${i}`, title: formatTocTitle(r) } : null))
     .filter((x): x is TocItem => x !== null);
 
   return (
