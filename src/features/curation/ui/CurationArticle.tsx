@@ -10,12 +10,6 @@ import { enrichBodyMarkdown } from "../lib/enrichBody";
 import { CurationCategoryLabel } from "./CurationCategoryLabel";
 import { CurationMarkdown } from "./CurationMarkdown";
 
-const formatDate = (iso: string) => {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
-};
-
 const formatTocTitle = (r: StaticRecipe): string => {
   const channel = r.youtubeChannelName?.trim();
   return channel ? `${channel} · ${r.title}` : r.title;
@@ -29,7 +23,6 @@ type CurationArticleProps = {
 };
 
 export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
-  const dateLabel = formatDate(data.savedAt);
   const enriched = enrichBodyMarkdown(data.markdown);
 
   const tocItems: TocItem[] = recipes
