@@ -21,6 +21,28 @@ describe("useBatchPublishStore", () => {
     expect(s.error).toBe("boom");
   });
 
+  it("setGenerated는 status=generated + result 저장하고 error를 비운다", () => {
+    const { setError, setGenerated } = useBatchPublishStore.getState();
+    setError("a", "prev");
+    const fakeResult = {
+      slug: "a",
+      h1: "h",
+      dek: "d",
+      markdown: "m",
+      recipeIds: [],
+      toneSeed: "friendly",
+      thumbnailUrl: "",
+      provider: "",
+      category: "기타",
+      coverImageKey: null,
+    } as never;
+    setGenerated("a", fakeResult);
+    const s = useBatchPublishStore.getState().items.a;
+    expect(s.status).toBe("generated");
+    expect(s.result).toBe(fakeResult);
+    expect(s.error).toBeUndefined();
+  });
+
   it("setDone은 status=done + articleId 저장", () => {
     const { setDone } = useBatchPublishStore.getState();
     setDone("a", 42);

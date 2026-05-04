@@ -4,8 +4,6 @@ export type CurationParams = Record<string, string | number>;
 
 export type ToneSeed = "friendly" | "editorial";
 
-export type CurationProvider = "grok" | "solar" | "hybrid";
-
 export type CurationErrorCode =
   | "INSUFFICIENT_RECIPES"
   | "VALIDATION_FAILED"
@@ -26,7 +24,6 @@ export type GenerateCurationInput = {
   params: CurationParams;
   recipeCount?: number;
   forceToneSeed?: ToneSeed;
-  provider?: CurationProvider;
 };
 
 export type GenerateCurationOutput = {
@@ -37,7 +34,7 @@ export type GenerateCurationOutput = {
   recipeIds: string[];
   toneSeed: ToneSeed;
   thumbnailUrl: string;
-  provider: CurationProvider;
+  provider: string;
   category: CurationCategory;
   coverImageKey: string | null;
 };

@@ -10,7 +10,7 @@ const baseResult: GenerateCurationOutput = {
   recipeIds: ["a1b2c3", "d4e5f6"],
   toneSeed: "editorial",
   thumbnailUrl: "https://cdn.example/recipes/x.webp",
-  provider: "grok",
+  provider: "solar-pro-3+grok-4-1-fast",
   category: "DIET & LIGHT",
   coverImageKey: "recipes/abc/img.webp",
 };
@@ -25,7 +25,7 @@ describe("mapResultToRequest", () => {
       coverImageKey: "recipes/abc/img.webp",
       contentMdx: "# 본문\n\n...",
       category: "DIET & LIGHT",
-      generatedBy: "grok",
+      generatedBy: "solar-pro-3+grok-4-1-fast",
       recipeIds: ["a1b2c3", "d4e5f6"],
     });
   });

@@ -1,8 +1,11 @@
 import { create } from "zustand";
 
+import type { GenerateCurationOutput } from "@/entities/curation";
+
 export type BatchItemStatus =
   | "idle"
   | "generating"
+  | "generated"
   | "publishing"
   | "done"
   | "error";
@@ -11,11 +14,13 @@ export type BatchItemState = {
   status: BatchItemStatus;
   error?: string;
   articleId?: number;
+  result?: GenerateCurationOutput;
 };
 
 type State = {
   items: Record<string, BatchItemState>;
   setStatus: (key: string, status: BatchItemStatus) => void;
+  setGenerated: (key: string, result: GenerateCurationOutput) => void;
   setError: (key: string, error: string) => void;
   setDone: (key: string, articleId: number) => void;
   reset: (key?: string) => void;
@@ -26,6 +31,13 @@ export const useBatchPublishStore = create<State>((set) => ({
   setStatus: (key, status) =>
     set((s) => ({
       items: { ...s.items, [key]: { ...s.items[key], status } },
+    })),
+  setGenerated: (key, result) =>
+    set((s) => ({
+      items: {
+        ...s.items,
+        [key]: { ...s.items[key], status: "generated", result, error: undefined },
+      },
     })),
   setError: (key, error) =>
     set((s) => ({

@@ -2,7 +2,6 @@ export * from "./model/categories";
 export type {
   CurationErrorCode,
   CurationParams,
-  CurationProvider,
   GenerateCurationInput,
   GenerateCurationOutput,
   SavedCurationRecord,

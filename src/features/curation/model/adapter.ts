@@ -23,7 +23,7 @@ export const toSavedRecord = (
   recipeIds: api.recipeIds,
   toneSeed: "editorial",
   thumbnailUrl: resolveCoverUrl(api.coverImageKey, recipes),
-  provider: "grok",
+  provider: "backend",
   category: isCurationCategory(api.category)
     ? api.category
     : DEFAULT_CURATION_CATEGORY,
