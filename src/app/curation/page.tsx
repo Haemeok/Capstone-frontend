@@ -3,16 +3,12 @@ import type { Metadata } from "next";
 import {
   dehydrate,
   HydrationBoundary,
-  type InfiniteData,
   QueryClient,
 } from "@tanstack/react-query";
 
 import { getNextPageParam } from "@/shared/lib/utils";
 
-import {
-  type CurationArticleListResponse,
-  fetchCurationArticleList,
-} from "@/features/curation";
+import { fetchCurationArticleList } from "@/features/curation";
 
 import { CurationListClient } from "@/widgets/CurationList";
 import {
@@ -56,8 +52,6 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
     getNextPageParam,
     pages: 1,
   });
-
-  void queryClient.getQueryData<InfiniteData<CurationArticleListResponse, number>>(queryKey);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

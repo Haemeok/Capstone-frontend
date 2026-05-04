@@ -4,8 +4,8 @@ import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import {
-  getCurationArticles,
   type CurationArticleListResponse,
+  getCurationArticles,
 } from "@/features/curation";
 
 export const CURATION_LIST_PAGE_SIZE = 20;

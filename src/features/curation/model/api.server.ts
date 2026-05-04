@@ -1,9 +1,8 @@
 "use server";
 
+import type { PageResponse } from "@/shared/api/types";
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 import { captureException } from "@/shared/lib/sentry";
-
-import type { PageResponse } from "@/shared/api/types";
 
 export type PublicCurationArticleDto = {
   id: string;
