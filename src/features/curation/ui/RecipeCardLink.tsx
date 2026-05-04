@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { Bookmark, ChevronRight, Clock, Star } from "lucide-react";
 import type { ReactNode } from "react";
+
+import { Bookmark, ChevronRight, Clock, Star } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatCount } from "@/shared/lib/format";
@@ -17,6 +17,9 @@ type RecipeCardLinkProps = {
   children: ReactNode;
 };
 
+// 큐레이션 본문에서 레시피 페이지로 이동할 때는 새 탭으로 연다 — 독자가 큐레이션
+// 흐름을 잃지 않고 레시피를 확인 후 돌아올 수 있게. next/link 대신 일반 a 태그
+// (target="_blank" + rel="noopener noreferrer") 를 쓰는 이유.
 export const RecipeCardLink = ({
   href,
   recipe,
@@ -26,13 +29,15 @@ export const RecipeCardLink = ({
 
   if (!recipe) {
     return (
-      <Link
+      <a
         href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         onClick={handleClick}
         className="text-green-900 underline"
       >
         {children}
-      </Link>
+      </a>
     );
   }
 
@@ -47,17 +52,21 @@ export const RecipeCardLink = ({
 
   return (
     <div className="my-6 space-y-2">
-      <Link
+      <a
         href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         onClick={handleClick}
         className="flex items-center justify-center gap-2 rounded-xl bg-beige px-4 py-3 text-sm font-semibold text-green-900 transition hover:bg-beige/70"
       >
         <span aria-hidden>👇</span>
         <span>더 자세한 조리방법과 요리 팁 확인하기</span>
-      </Link>
+      </a>
 
-      <Link
+      <a
         href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         onClick={handleClick}
         className="flex items-stretch gap-3 overflow-hidden rounded-2xl border border-gray-200 bg-white transition hover:border-olive-light/60 hover:shadow-sm"
       >
@@ -136,7 +145,7 @@ export const RecipeCardLink = ({
         <div className="flex shrink-0 items-center pr-4 text-gray-400">
           <ChevronRight className="h-5 w-5" />
         </div>
-      </Link>
+      </a>
     </div>
   );
 };
