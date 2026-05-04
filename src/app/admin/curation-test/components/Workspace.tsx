@@ -2,21 +2,23 @@
 
 import { useState } from "react";
 
-import { generateCuration } from "@/app/actions/curation";
-import { saveCurationLocal } from "@/app/actions/curationLocal";
+import { ApiError, getErrorData } from "@/shared/api/errors";
+
 import {
   CurationError,
   type CurationProvider,
   type GenerateCurationOutput,
 } from "@/entities/curation";
 
+import { usePostAndPublishArticle } from "@/features/curation-write";
+
+import { generateCuration } from "@/app/actions/curation";
+
 import { useCurationStore } from "../lib/store";
 import { MarkdownPreview } from "./MarkdownPreview";
 import { StagePanel } from "./StagePanel";
 
 type ToneOption = "auto" | "friendly" | "editorial";
-
-type SaveStatus = "idle" | "saving" | "ok" | "error";
 
 export const Workspace = () => {
   const selected = useCurationStore((s) => s.selected);
@@ -26,17 +28,13 @@ export const Workspace = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<GenerateCurationOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
-  const [savePath, setSavePath] = useState<string | null>(null);
-  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const publishMutation = usePostAndPublishArticle();
 
   const onGenerate = async () => {
     if (!selected) return;
     setLoading(true);
     setError(null);
-    setSaveStatus("idle");
-    setSavePath(null);
-    setSaveError(null);
     setResult(null);
     try {
       const r = await generateCuration({
@@ -54,20 +52,6 @@ export const Workspace = () => {
       setError(msg);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const onSaveLocal = async () => {
-    if (!result) return;
-    setSaveStatus("saving");
-    setSaveError(null);
-    try {
-      const r = await saveCurationLocal(result);
-      setSavePath(r.relPath);
-      setSaveStatus("ok");
-    } catch (e) {
-      setSaveError((e as Error).message);
-      setSaveStatus("error");
     }
   };
 
@@ -143,22 +127,20 @@ export const Workspace = () => {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={onSaveLocal}
-              className="rounded border px-3 py-1.5 text-sm hover:bg-gray-50"
+              onClick={() => publishMutation.mutate(result)}
+              disabled={publishMutation.isPending}
+              className="rounded bg-black text-white px-4 py-2 text-sm disabled:opacity-50"
             >
-              로컬에 저장 (미리보기용)
+              {publishMutation.isPending ? "발행 중..." : "백엔드에 발행"}
             </button>
-            {saveStatus === "saving" && (
-              <span className="text-xs text-gray-600">저장 중...</span>
-            )}
-            {saveStatus === "ok" && savePath && (
-              <span className="text-xs text-gray-600 whitespace-pre-wrap">
-                ✓ 저장됨: {savePath}  ·  미리보기: /curation/{result.slug}
+            {publishMutation.isSuccess && publishMutation.data && (
+              <span className="text-xs text-green-700">
+                ✓ 발행됨 (articleId: {publishMutation.data.articleId})
               </span>
             )}
-            {saveStatus === "error" && saveError && (
+            {publishMutation.isError && (
               <span className="text-xs text-red-600">
-                저장 실패: {saveError}
+                {formatPublishError(publishMutation.error)}
               </span>
             )}
             <a
@@ -175,4 +157,15 @@ export const Workspace = () => {
       )}
     </main>
   );
+};
+
+const formatPublishError = (err: unknown): string => {
+  if (err instanceof ApiError) {
+    const code = String(getErrorData(err)?.code ?? "");
+    if (code === "1202") return "이미 같은 slug의 글이 존재합니다.";
+    if (code === "1204") return "참조 레시피 중 일부가 존재하지 않습니다.";
+    if (code === "605") return "관리자 권한이 필요합니다.";
+    return `${err.status}: ${err.message}`;
+  }
+  return err instanceof Error ? err.message : String(err);
 };
