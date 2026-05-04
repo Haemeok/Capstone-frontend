@@ -7,7 +7,6 @@ import { z } from "zod";
 import {
   CURATION_CATEGORIES,
   CurationError,
-  type CurationProvider,
   type GenerateCurationInput,
   type GenerateCurationOutput,
   type ToneSeed,
@@ -15,8 +14,6 @@ import {
 import { getRecipe } from "@/entities/recipe/model/api";
 
 import {
-  buildBodySystemPrompt,
-  buildBodyUserPrompt,
   buildSlotInserterSystemPrompt,
   buildSlotInserterUserPrompt,
   buildSolarBodySystemPrompt,
@@ -50,17 +47,9 @@ const openrouter = createOpenAI({
 
 const MODEL_GROK = "grok-4-1-fast-reasoning";
 const MODEL_SOLAR = "upstage/solar-pro-3";
+const PROVIDER_LABEL = "solar-pro-3+grok-4-1-fast";
 
-const resolveModel = (provider: CurationProvider) => {
-  if (provider === "solar") {
-    if (!process.env.OPENROUTER_API_KEY) {
-      throw new CurationError(
-        "LLM_ERROR",
-        "OPENROUTER_API_KEY가 설정되지 않았습니다.",
-      );
-    }
-    return openrouter(MODEL_SOLAR);
-  }
+const requireGrok = () => {
   if (!process.env.XAI_API_KEY) {
     throw new CurationError(
       "LLM_ERROR",
@@ -70,16 +59,35 @@ const resolveModel = (provider: CurationProvider) => {
   return xai(MODEL_GROK);
 };
 
-const TitleSchema = z.object({
-  h1: z.string().min(8).max(70),
-  dek: z.string().min(20).max(120),
-  category: z.enum(CURATION_CATEGORIES),
-  selectedIndices: z.array(z.number().int().nonnegative()),
-});
-const BodySchema = z.object({
-  bodyMarkdown: z.string().min(800).max(5000),
-});
+const requireSolar = () => {
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new CurationError(
+      "LLM_ERROR",
+      "OPENROUTER_API_KEY가 설정되지 않았습니다.",
+    );
+  }
+  return openrouter(MODEL_SOLAR);
+};
 
+const buildTitleSchema = (recipeCount: number, poolSize: number) =>
+  z.object({
+    h1: z.string().min(8).max(70),
+    dek: z.string().min(20).max(120),
+    category: z.enum(CURATION_CATEGORIES),
+    selectedIndices: z
+      .array(z.number().int().nonnegative())
+      .length(recipeCount, {
+        message: `selectedIndices 길이는 정확히 ${recipeCount} 이어야 합니다.`,
+      })
+      .refine((arr) => new Set(arr).size === arr.length, {
+        message: "selectedIndices 는 중복 없는 unique 인덱스여야 합니다.",
+      })
+      .refine((arr) => arr.every((i) => i < poolSize), {
+        message: `selectedIndices 의 모든 값은 0 이상 ${poolSize} 미만이어야 합니다.`,
+      }),
+  });
+
+type TitleResult = z.infer<ReturnType<typeof buildTitleSchema>>;
 const MAX_BODY_RETRIES = 2;
 
 // generateText 결과가 ```markdown ... ``` fence로 감싸 오는 경우 벗긴다.
@@ -104,12 +112,9 @@ const normalizeMarkdown = (md: string): string =>
 export const generateCuration = async (
   input: GenerateCurationInput,
 ): Promise<GenerateCurationOutput> => {
-  const provider: CurationProvider = input.provider ?? "grok";
-  const isHybrid = provider === "hybrid";
-  // hybrid: title은 Solar(한국어 톤), body의 Stage 3a는 Solar(자연스러운 본문),
-  //         Stage 3b는 Grok(슬롯 인서터). 단일 provider면 둘 다 같은 모델.
-  const titleModel = resolveModel(isHybrid ? "solar" : provider);
-  const bodyModel = isHybrid ? resolveModel("grok") : titleModel;
+  // Hybrid 고정: title/body Stage 3a는 Solar(한국어 자연체), Stage 3b는 Grok(슬롯 인서터).
+  const solarModel = requireSolar();
+  const grokModel = requireGrok();
 
   const recipeCount = input.recipeCount ?? 5;
   const POOL_MULTIPLIER = 2;
@@ -141,11 +146,11 @@ export const generateCuration = async (
 
   // Stage 2: Title (+ 풀에서 N개 선별)
   const fewShots = sampleFewShotTitles(slug, 8);
-  let titleObj: z.infer<typeof TitleSchema>;
+  let titleObj: TitleResult;
   try {
     const { object } = await generateObject({
-      model: titleModel,
-      schema: TitleSchema,
+      model: solarModel,
+      schema: buildTitleSchema(recipeCount, pool.length),
       system: buildTitleSystemPrompt({
         fewShots,
         count: recipeCount,
@@ -174,140 +179,84 @@ export const generateCuration = async (
   );
   const recipes = finalIndices.map((i) => pool[i]);
 
-  // Stage 3: Body
-  // hybrid면 Stage 3a(Solar 자연어 본문) → Stage 3b(Grok 슬롯 인서터)
-  // 단일 provider면 한 번에 슬롯 포함 본문 생성 + retry.
+  // Stage 3: Body — Hybrid 고정.
+  //   3a: Solar로 자연어 한국어 본문 (슬롯 없음)
+  //   3b: Grok 슬롯 인서터 (단어/문장 보존, {{yt:N}}/{{recipe:N}}/{{img:N}}만 삽입)
   let bodyMarkdown = "";
 
-  if (isHybrid) {
-    // Stage 3a: Solar로 free-form 한국어 본문 생성 (슬롯 없음)
-    let solarRawMd: string;
-    try {
-      const result = await generateText({
-        model: titleModel, // = resolveModel("solar")
-        system: buildSolarBodySystemPrompt({ toneSeed }),
-        prompt: buildSolarBodyUserPrompt({
-          params: input.params,
-          h1: titleObj.h1,
-          dek: titleObj.dek,
-          recipes,
-          toneSeed,
-          commonIngredients,
-        }),
-      });
-      solarRawMd = result.text;
-    } catch (e) {
-      throw new CurationError(
-        "LLM_ERROR",
-        `Solar Body 호출 실패: ${(e as Error).message}`,
-      );
-    }
-
-    // Stage 3b: Grok 슬롯 인서터 + retry/validate
-    let lastErrors: string[] = [];
-    for (let attempt = 0; attempt <= MAX_BODY_RETRIES; attempt++) {
-      const userPrompt = buildSlotInserterUserPrompt({
-        rawMarkdown: solarRawMd,
-        recipes,
-      });
-      const finalUserPrompt =
-        lastErrors.length > 0
-          ? `${userPrompt}\n\n## 이전 시도에서 다음이 잘못되었습니다 — 반드시 수정하세요\n${lastErrors.map((e) => `- ${e}`).join("\n")}`
-          : userPrompt;
-
-      // generateText 사용 (schema X) — Solar 본문이 길거나 escape 어려운
-      // 문자가 섞이면 generateObject의 JSON parse가 자주 깨진다. validateMarkdown이
-      // 검증 책임이라 schema 중복.
-      let insertedMd: string;
-      try {
-        const result = await generateText({
-          model: bodyModel,
-          system: buildSlotInserterSystemPrompt(),
-          prompt: finalUserPrompt,
-        });
-        insertedMd = stripCodeFence(result.text);
-      } catch (e) {
-        throw new CurationError(
-          "LLM_ERROR",
-          `Slot inserter 호출 실패: ${(e as Error).message}`,
-        );
-      }
-
-      const normalized = normalizeMarkdown(insertedMd);
-      const v = validateMarkdown(normalized, recipes.length);
-      if (v.ok) {
-        bodyMarkdown = normalized;
-        break;
-      }
-      lastErrors = v.errors;
-      console.warn(
-        `[curation hybrid 3b] attempt ${attempt + 1} failed:\n${v.errors.map((e) => `  - ${e}`).join("\n")}\n  rawMarkdown(first 400): ${normalized.slice(0, 400)}`,
-      );
-      if (attempt === MAX_BODY_RETRIES) {
-        throw new CurationError(
-          "VALIDATION_FAILED",
-          `Hybrid Stage 3b 검증 3회 실패\n${v.errors.map((e) => `- ${e}`).join("\n")}\n--- Solar raw (first 400) ---\n${solarRawMd.slice(0, 400)}\n--- Grok inserted (first 600) ---\n${normalized.slice(0, 600)}`,
-          {
-            errors: v.errors,
-            solarRawMarkdown: solarRawMd,
-            insertedMarkdown: normalized,
-          },
-        );
-      }
-    }
-  } else {
-    // 단일 provider — 기존 흐름
-    let lastErrors: string[] = [];
-    for (let attempt = 0; attempt <= MAX_BODY_RETRIES; attempt++) {
-      const userPrompt = buildBodyUserPrompt({
+  // Stage 3a
+  let solarRawMd: string;
+  try {
+    const result = await generateText({
+      model: solarModel,
+      system: buildSolarBodySystemPrompt({ toneSeed }),
+      prompt: buildSolarBodyUserPrompt({
         params: input.params,
         h1: titleObj.h1,
         dek: titleObj.dek,
         recipes,
         toneSeed,
         commonIngredients,
+      }),
+    });
+    solarRawMd = result.text;
+  } catch (e) {
+    throw new CurationError(
+      "LLM_ERROR",
+      `Solar Body 호출 실패: ${(e as Error).message}`,
+    );
+  }
+
+  // Stage 3b: Grok 슬롯 인서터 + retry/validate
+  let lastErrors: string[] = [];
+  for (let attempt = 0; attempt <= MAX_BODY_RETRIES; attempt++) {
+    const userPrompt = buildSlotInserterUserPrompt({
+      rawMarkdown: solarRawMd,
+      recipes,
+    });
+    const finalUserPrompt =
+      lastErrors.length > 0
+        ? `${userPrompt}\n\n## 이전 시도에서 다음이 잘못되었습니다 — 반드시 수정하세요\n${lastErrors.map((e) => `- ${e}`).join("\n")}`
+        : userPrompt;
+
+    // generateText 사용 (schema X) — Solar 본문이 길거나 escape 어려운
+    // 문자가 섞이면 generateObject의 JSON parse가 자주 깨진다. validateMarkdown이
+    // 검증 책임이라 schema 중복.
+    let insertedMd: string;
+    try {
+      const result = await generateText({
+        model: grokModel,
+        system: buildSlotInserterSystemPrompt(),
+        prompt: finalUserPrompt,
       });
-      const finalUserPrompt =
-        lastErrors.length > 0
-          ? `${userPrompt}\n\n## 이전 시도에서 다음이 잘못되었습니다 — 반드시 수정하세요\n${lastErrors.map((e) => `- ${e}`).join("\n")}`
-          : userPrompt;
-
-      let object: { bodyMarkdown: string };
-      try {
-        const result = await generateObject({
-          model: bodyModel,
-          schema: BodySchema,
-          system: buildBodySystemPrompt({ toneSeed }),
-          prompt: finalUserPrompt,
-        });
-        object = result.object;
-      } catch (e) {
-        throw new CurationError(
-          "LLM_ERROR",
-          `Body 호출 실패: ${(e as Error).message}`,
-        );
-      }
-
-      const normalized = normalizeMarkdown(object.bodyMarkdown);
-      const v = validateMarkdown(normalized, recipes.length);
-      if (v.ok) {
-        bodyMarkdown = normalized;
-        break;
-      }
-      lastErrors = v.errors;
-      console.warn(
-        `[curation] body attempt ${attempt + 1} failed validation:\n${v.errors.map((e) => `  - ${e}`).join("\n")}\n  rawMarkdown(first 400): ${normalized.slice(0, 400)}`,
+      insertedMd = stripCodeFence(result.text);
+    } catch (e) {
+      throw new CurationError(
+        "LLM_ERROR",
+        `Slot inserter 호출 실패: ${(e as Error).message}`,
       );
-      if (attempt === MAX_BODY_RETRIES) {
-        throw new CurationError(
-          "VALIDATION_FAILED",
-          `Body 검증 3회 실패\n${v.errors.map((e) => `- ${e}`).join("\n")}\n--- raw (first 600) ---\n${normalized.slice(0, 600)}`,
-          {
-            errors: v.errors,
-            rawMarkdown: normalized,
-          },
-        );
-      }
+    }
+
+    const normalized = normalizeMarkdown(insertedMd);
+    const v = validateMarkdown(normalized, recipes.length);
+    if (v.ok) {
+      bodyMarkdown = normalized;
+      break;
+    }
+    lastErrors = v.errors;
+    console.warn(
+      `[curation hybrid 3b] attempt ${attempt + 1} failed:\n${v.errors.map((e) => `  - ${e}`).join("\n")}\n  rawMarkdown(first 400): ${normalized.slice(0, 400)}`,
+    );
+    if (attempt === MAX_BODY_RETRIES) {
+      throw new CurationError(
+        "VALIDATION_FAILED",
+        `Hybrid Stage 3b 검증 3회 실패\n${v.errors.map((e) => `- ${e}`).join("\n")}\n--- Solar raw (first 400) ---\n${solarRawMd.slice(0, 400)}\n--- Grok inserted (first 600) ---\n${normalized.slice(0, 600)}`,
+        {
+          errors: v.errors,
+          solarRawMarkdown: solarRawMd,
+          insertedMarkdown: normalized,
+        },
+      );
     }
   }
 
@@ -330,7 +279,7 @@ export const generateCuration = async (
     recipeIds: recipes.map((r) => r.id),
     toneSeed,
     thumbnailUrl: recipes[0]?.imageUrl ?? "",
-    provider,
+    provider: PROVIDER_LABEL,
     category: titleObj.category,
     coverImageKey: recipes[0]?.imageKey ?? null,
   };
