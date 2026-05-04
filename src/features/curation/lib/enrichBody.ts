@@ -18,6 +18,10 @@ const YT_LINE_RE =
 const IMG_LINE_RE = /^\s*!\[[^\]]*?\]\(https?:\/\//;
 const RECIPE_LINK_RE = /\[[^\]]+\]\(\/recipes\/[^)]+\)/g;
 const H2_RE = /^## (?!#)/;
+// 모델이 본문 구조를 잘못 박아 첫 H2를 "## 인트로"로 만들어버리는 케이스가 있음.
+// 그러면 진짜 인트로 단락이 첫 레시피 섹션으로 빨려 들어가 ingredients/steps 슬롯이
+// 엉뚱한 곳에 붙음. 헤더 라인만 통째로 떼면 아래 단락은 자연스럽게 인트로로 흡수됨.
+const INTRO_HEADER_RE = /^##\s+(?:인트로|도입|intro)\s*$/i;
 
 type ParsedSection = {
   headerLine: string;
@@ -93,7 +97,9 @@ export const enrichBodyMarkdown = (md: string): string => {
   // AI가 `** 굵게 **` 처럼 공백 섞어서 출력하면 markdown 파서가 bold로 못 잡고
   // 별표가 그대로 노출됨. 본문에서 `**` 한 쌍을 통째로 떼어 텍스트만 남긴다.
   const cleaned = md.replace(/\*\*/g, "");
-  const lines = cleaned.split("\n");
+  const lines = cleaned
+    .split("\n")
+    .filter((l) => !INTRO_HEADER_RE.test(l));
 
   // H2 헤더 라인 인덱스 모음.
   const headerIdxs: number[] = [];

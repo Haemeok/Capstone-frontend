@@ -143,4 +143,37 @@ describe("enrichBodyMarkdown", () => {
     expect(intro).toBeGreaterThan(-1);
     expect(intro).toBeLessThan(firstH2);
   });
+
+  it('"## 인트로" 헤더가 박혀 있으면 라인을 떼고 아래 단락은 인트로로 흡수', () => {
+    const md = `## 인트로
+
+진짜 도입 단락 한 줄.
+
+## 첫 레시피
+
+본문.`;
+    const out = enrichBodyMarkdown(md);
+    expect(out).not.toContain("## 인트로");
+    const intro = out.indexOf("진짜 도입 단락 한 줄.");
+    const firstH2 = out.indexOf("## 첫 레시피");
+    expect(intro).toBeGreaterThan(-1);
+    expect(intro).toBeLessThan(firstH2);
+    // 인트로 단락에는 ingredients 슬롯이 안 붙어야 함 (slot/0 은 첫 레시피 몫).
+    expect(out).not.toMatch(/진짜 도입 단락[\s\S]*\[ingredients\]\(#cur:ingredients\/0\)[\s\S]*## 첫 레시피/);
+  });
+
+  it('"## intro"/"## Intro"/"## 도입" 변형도 제거', () => {
+    for (const header of ["## intro", "## Intro", "## INTRO", "## 도입"]) {
+      const md = `${header}\n\n도입 단락.\n\n## 첫 레시피\n\n본문.`;
+      const out = enrichBodyMarkdown(md);
+      expect(out).not.toContain(header);
+      expect(out).toContain("도입 단락.");
+    }
+  });
+
+  it('"## 인트로 한 줄" 처럼 인트로 외 텍스트가 붙으면 제거하지 않음', () => {
+    const md = `## 인트로 한 줄\n\n본문.\n\n## 첫 레시피\n\n본문.`;
+    const out = enrichBodyMarkdown(md);
+    expect(out).toContain("## 인트로 한 줄");
+  });
 });
