@@ -1,10 +1,10 @@
-import type { SavedCurationRecord } from "@/entities/curation";
-import type { StaticRecipe } from "@/entities/recipe/model/types";
 import ArticleWithToc from "@/shared/ui/article/ArticleWithToc";
 import type { TocItem } from "@/shared/ui/article/types";
 
-import { enrichBodyMarkdown } from "../lib/enrichBody";
+import type { SavedCurationRecord } from "@/entities/curation";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 
+import { enrichBodyMarkdown } from "../lib/enrichBody";
 import { CurationCategoryLabel } from "./CurationCategoryLabel";
 import { CurationMarkdown } from "./CurationMarkdown";
 
@@ -30,7 +30,7 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
   return (
     <article className="mx-auto w-full max-w-4xl px-5 pt-10 pb-20 md:px-6 md:pt-20">
       <header className="text-center">
-        <CurationCategoryLabel />
+        <CurationCategoryLabel category={data.category} />
         <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
           {data.h1}
         </h1>

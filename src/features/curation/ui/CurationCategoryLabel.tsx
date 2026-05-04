@@ -1,11 +1,11 @@
 type CurationCategoryLabelProps = {
-  label?: string;
+  category: string;
 };
 
 export const CurationCategoryLabel = ({
-  label = "FOOD & LIFE",
+  category,
 }: CurationCategoryLabelProps) => (
-  <p className="text-xs font-bold uppercase tracking-[0.2em] text-olive-dark">
-    {label}
+  <p className="text-sm font-bold uppercase tracking-[0.2em] text-green-900">
+    {category}
   </p>
 );

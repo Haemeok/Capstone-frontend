@@ -1,12 +1,13 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache } from "react";
 
-import { getCurationLocal } from "@/app/actions/curationLocal";
 import { getStaticrecipionServer } from "@/entities/recipe/model/api.server";
+
+import { fetchCurationArticle, toSavedRecord } from "@/features/curation";
 import { CurationArticle } from "@/features/curation/ui/CurationArticle";
 
-const cachedGet = cache(getCurationLocal);
+const cachedGet = cache(fetchCurationArticle);
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -19,13 +20,8 @@ export const generateMetadata = async ({
   const data = await cachedGet(slug);
   if (!data) return {};
   return {
-    title: data.h1,
-    description: data.dek,
-    openGraph: {
-      title: data.h1,
-      description: data.dek,
-      images: data.thumbnailUrl ? [{ url: data.thumbnailUrl }] : [],
-    },
+    title: data.title,
+    description: data.description ?? undefined,
   };
 };
 
@@ -38,7 +34,8 @@ const Page = async ({ params }: Props) => {
     data.recipeIds.map((id) => getStaticrecipionServer(id)),
   );
 
-  return <CurationArticle data={data} recipes={recipes} />;
+  const record = toSavedRecord(data, recipes);
+  return <CurationArticle data={record} recipes={recipes} />;
 };
 
 export default Page;
