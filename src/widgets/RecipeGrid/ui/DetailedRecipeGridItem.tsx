@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { Bookmark, Clock, Crown, Eye, Flame } from "lucide-react";
+import { Bookmark, Clock } from "lucide-react";
 
 import {
   generateUserGradient,
@@ -11,21 +11,12 @@ import {
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { saveRecentlyViewedRecipe } from "@/shared/hooks/useRecentlyViewedRecipes";
 import { formatCount } from "@/shared/lib/format";
+import { getViewCountTier } from "@/shared/lib/recipe/getViewCountTier";
 import { cn } from "@/shared/lib/utils";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import { Image } from "@/shared/ui/image/Image";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
-
-const getViewCountTier = (count: number) => {
-  if (count >= 1000000) {
-    return { icon: Crown, iconColor: "text-amber-500", strokeWidth: 2.5 };
-  }
-  if (count >= 100000) {
-    return { icon: Flame, iconColor: "text-orange-500", strokeWidth: 2.5 };
-  }
-  return { icon: Eye, iconColor: "text-gray-400", strokeWidth: 2 };
-};
 
 const YoutubeGlyph = () => (
   <svg

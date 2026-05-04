@@ -2,11 +2,12 @@
 
 import { useRouter } from "next/navigation";
 
-import { Bookmark, Clock, Crown, Eye, Flame } from "lucide-react";
+import { Bookmark, Clock } from "lucide-react";
 import { motion } from "motion/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatCount } from "@/shared/lib/format";
+import { getViewCountTier } from "@/shared/lib/recipe/getViewCountTier";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
@@ -19,16 +20,6 @@ import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 import { RecipeSaveButton } from "@/features/recipe-save";
 
 import ExpandableIngredients from "./ExpandableIngredients";
-
-const getViewCountTier = (count: number) => {
-  if (count >= 1000000) {
-    return { icon: Crown, iconColor: "text-amber-500", strokeWidth: 2.5 };
-  }
-  if (count >= 100000) {
-    return { icon: Flame, iconColor: "text-orange-500", strokeWidth: 2.5 };
-  }
-  return { icon: Eye, iconColor: "text-gray-400", strokeWidth: 2 };
-};
 
 const getRightBadge = (recipe: MyFridgeRecipeItem) => {
   if (recipe.isYoutube && recipe.youtubeChannelName) {
