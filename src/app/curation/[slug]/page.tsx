@@ -2,6 +2,9 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { BottomAnchorAdSlot } from "@/shared/adsense";
+import PrevButton from "@/shared/ui/PrevButton";
+
 import {
   getRecipeStatusPublicOnServer,
   getStaticrecipionServer,
@@ -49,7 +52,15 @@ const Page = async ({ params }: Props) => {
   );
 
   const record = toSavedRecord(data, recipes);
-  return <CurationArticle data={record} recipes={recipes} />;
+  return (
+    <>
+      <div className="fixed left-3 top-3 z-40 md:hidden">
+        <PrevButton className="rounded-full bg-white/90 p-2 shadow-sm backdrop-blur" />
+      </div>
+      <CurationArticle data={record} recipes={recipes} />
+      <BottomAnchorAdSlot />
+    </>
+  );
 };
 
 export default Page;

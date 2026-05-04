@@ -6,4 +6,5 @@ export const HIDDEN_NAVBAR_PATTERNS = [
   /^\/recipes\/(?!new$|my-fridge$|admin$|category$)[^/]+$/,
   /^\/recipes\/[^/]+\/slide-show$/,
   /^\/recipe-books\/[^/]+$/,
+  /^\/curation\/(?!new$|admin$)[^/]+$/,
 ] as const;
