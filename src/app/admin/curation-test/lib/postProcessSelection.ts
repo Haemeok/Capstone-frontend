@@ -1,5 +1,5 @@
 export const postProcessSelection = (
-  raw: number[],
+  raw: number[] | undefined | null,
   count: number,
   poolSize: number,
 ): number[] => {
@@ -7,7 +7,7 @@ export const postProcessSelection = (
   const result: number[] = [];
   const seen = new Set<number>();
 
-  for (const i of raw) {
+  for (const i of raw ?? []) {
     if (result.length >= target) break;
     if (Number.isInteger(i) && i >= 0 && i < poolSize && !seen.has(i)) {
       seen.add(i);

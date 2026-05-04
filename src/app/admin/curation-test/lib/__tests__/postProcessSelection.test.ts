@@ -28,4 +28,12 @@ describe("postProcessSelection", () => {
   it("빈 배열이면 0..count-1로 폴백", () => {
     expect(postProcessSelection([], 3, 5)).toEqual([0, 1, 2]);
   });
+
+  it("undefined가 와도 0..count-1로 폴백", () => {
+    expect(postProcessSelection(undefined, 3, 5)).toEqual([0, 1, 2]);
+  });
+
+  it("null이 와도 0..count-1로 폴백", () => {
+    expect(postProcessSelection(null, 3, 5)).toEqual([0, 1, 2]);
+  });
 });

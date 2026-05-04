@@ -75,7 +75,12 @@ describe("generateCuration", () => {
     );
     mockGen
       .mockResolvedValueOnce({
-        object: { h1: "겨울 보양식 한 그릇", dek: "오늘 저녁 메뉴" },
+        object: {
+          h1: "겨울 보양식 한 그릇",
+          dek: "오늘 저녁 메뉴",
+          category: "FOOD & LIFE",
+          selectedIndices: [0, 1, 2],
+        },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any)
       .mockResolvedValueOnce({
@@ -109,7 +114,12 @@ describe("generateCuration", () => {
     );
     mockGen
       .mockResolvedValueOnce({
-        object: { h1: "x", dek: "y".repeat(25) },
+        object: {
+          h1: "x",
+          dek: "y".repeat(25),
+          category: "FOOD & LIFE",
+          selectedIndices: [0, 1, 2],
+        },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any)
       .mockResolvedValueOnce({
@@ -136,7 +146,12 @@ describe("generateCuration", () => {
     );
     mockGen
       .mockResolvedValueOnce({
-        object: { h1: "x", dek: "y".repeat(25) },
+        object: {
+          h1: "x",
+          dek: "y".repeat(25),
+          category: "FOOD & LIFE",
+          selectedIndices: [0, 1, 2],
+        },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any)
       .mockResolvedValue({
