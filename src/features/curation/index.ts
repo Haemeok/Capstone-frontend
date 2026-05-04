@@ -1,3 +1,3 @@
-export { fetchCurationArticle } from "./model/api.server";
+export { resolveCoverUrl, toSavedRecord } from "./model/adapter";
 export type { PublicCurationArticleDto } from "./model/api.server";
-export { toSavedRecord, resolveCoverUrl } from "./model/adapter";
+export { fetchCurationArticle } from "./model/api.server";

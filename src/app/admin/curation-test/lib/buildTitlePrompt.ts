@@ -1,4 +1,5 @@
 import corpus from "@/shared/config/curation/elle-title-corpus.json";
+
 import { CURATION_CATEGORIES, type CurationParams } from "@/entities/curation";
 
 type Title = { editor: string; role: string; title: string };

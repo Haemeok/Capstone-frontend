@@ -4,15 +4,15 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
 import { z } from "zod";
 
-import { getRecipe } from "@/entities/recipe/model/api";
 import {
   CURATION_CATEGORIES,
   CurationError,
+  type CurationProvider,
   type GenerateCurationInput,
   type GenerateCurationOutput,
-  type CurationProvider,
   type ToneSeed,
 } from "@/entities/curation";
+import { getRecipe } from "@/entities/recipe/model/api";
 
 import {
   buildBodySystemPrompt,
