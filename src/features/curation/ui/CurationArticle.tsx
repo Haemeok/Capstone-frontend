@@ -1,6 +1,7 @@
 import ArticleWithToc from "@/shared/ui/article/ArticleWithToc";
 import type { TocItem } from "@/shared/ui/article/types";
 
+import { alegreya } from "@/features/archetype/ui/fonts";
 import type { SavedCurationRecord } from "@/entities/curation";
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
@@ -46,8 +47,25 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
             {data.dek}
           </p>
         )}
-        <p className="mt-4 text-sm text-gray-500">
-          에디터{dateLabel ? ` · ${dateLabel}` : ""}
+        <p
+          className={`${alegreya.variable} mt-4 flex flex-wrap items-center justify-center gap-x-2 text-sm text-gray-500`}
+        >
+          <span
+            className="text-base tracking-tight text-gray-700"
+            style={{ fontFamily: "var(--font-alegreya), serif" }}
+          >
+            RECIPIO
+          </span>
+          <span aria-hidden>·</span>
+          <span>{data.category}</span>
+          <span aria-hidden>·</span>
+          <span>에디터</span>
+          {dateLabel && (
+            <>
+              <span aria-hidden>·</span>
+              <span>{dateLabel}</span>
+            </>
+          )}
         </p>
       </header>
 
