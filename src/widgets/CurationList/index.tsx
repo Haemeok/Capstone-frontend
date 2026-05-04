@@ -47,7 +47,9 @@ export const CurationListClient = ({
                 priority={i < 4}
               />
             ))}
-            {(isFetching || isPending) && <CurationListSkeleton count={4} />}
+            {(isFetching || isPending) && (
+              <CurationListSkeleton count={isPending ? 8 : 4} />
+            )}
           </div>
         )}
         {hasNextPage && <div ref={ref} className="h-16" aria-hidden />}
