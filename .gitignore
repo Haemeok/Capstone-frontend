@@ -64,7 +64,7 @@ job-polling.md
 *.zip
 .vercel
 
-article/
+/article/
 
 # Tistory auto-posting
 tistory/
