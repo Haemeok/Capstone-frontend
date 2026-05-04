@@ -1,82 +1,206 @@
 "use client";
 
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
+
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import type { CurationParams } from "@/entities/curation";
+
+import {
+  type AllowlistEntryWithSlug,
+  getUnpublishedAllowlistEntries,
+} from "@/app/actions/curation.allowlistFilter";
 
 import { useCurationStore } from "../lib/store";
+import { runBatchPublish } from "../model/batchPublishHandler";
+import {
+  type BatchItemState,
+  useBatchPublishStore,
+} from "../model/batchPublishStore";
 
-type AllowlistEntry = Record<string, string | number>;
+type AllowlistEntry = CurationParams;
 
 const ALLOWLIST_URL =
   "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/seo/allowlist.json";
 
 const VISIBLE_LIMIT = 200;
 
+const QUERY_KEY = ["curation-unpublished"] as const;
+
+const fetchAllowlist = async (): Promise<AllowlistEntry[]> => {
+  const res = await fetch(ALLOWLIST_URL);
+  if (!res.ok) throw new Error(`allowlist fetch ${res.status}`);
+  const j = await res.json();
+  return (j.pages ?? []) as AllowlistEntry[];
+};
+
+const STATUS_LABEL: Record<BatchItemState["status"], string> = {
+  idle: "",
+  generating: "생성 중",
+  publishing: "발행 중",
+  done: "완료",
+  error: "실패",
+};
+
+const STATUS_CLASS: Record<BatchItemState["status"], string> = {
+  idle: "",
+  generating: "text-blue-600",
+  publishing: "text-blue-700",
+  done: "text-green-700",
+  error: "text-red-600",
+};
+
 export const CandidatePanel = () => {
-  const [entries, setEntries] = useState<AllowlistEntry[]>([]);
+  const setSelected = useCurationStore((s) => s.setSelected);
   const [filter, setFilter] = useState("");
   const deferredFilter = useDeferredValue(filter);
-  const [loading, setLoading] = useState(true);
-  const [errored, setErrored] = useState(false);
-  const setSelected = useCurationStore((s) => s.setSelected);
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
+  const [running, setRunning] = useState(false);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetch(ALLOWLIST_URL)
-      .then((r) => r.json())
-      .then((j) => {
-        setEntries((j.pages ?? []) as AllowlistEntry[]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setErrored(true);
-        setLoading(false);
-      });
-  }, []);
+  const items = useBatchPublishStore((s) => s.items);
 
-  const filtered = useMemo(() => {
-    if (!deferredFilter) return entries;
+  const { data, isLoading, error } = useQuery({
+    queryKey: QUERY_KEY,
+    queryFn: async () => {
+      const entries = await fetchAllowlist();
+      return await getUnpublishedAllowlistEntries(entries);
+    },
+    staleTime: 60_000,
+  });
+
+  const filtered = useMemo<AllowlistEntryWithSlug[]>(() => {
+    if (!data) return [];
+    if (!deferredFilter) return data.slice(0, VISIBLE_LIMIT);
     const q = deferredFilter.toLowerCase();
-    const out: AllowlistEntry[] = [];
-    for (const e of entries) {
-      if (JSON.stringify(e).toLowerCase().includes(q)) {
+    const out: AllowlistEntryWithSlug[] = [];
+    for (const e of data) {
+      if (JSON.stringify(e.entry).toLowerCase().includes(q)) {
         out.push(e);
         if (out.length >= VISIBLE_LIMIT) break;
       }
     }
     return out;
-  }, [entries, deferredFilter]);
+  }, [data, deferredFilter]);
 
-  const visible = deferredFilter ? filtered : entries.slice(0, VISIBLE_LIMIT);
-  const total = entries.length;
+  const visibleSelected = useMemo(
+    () => filtered.filter((f) => selectedKeys.has(f.slug)).length,
+    [filtered, selectedKeys],
+  );
+
+  const toggleKey = (slug: string) => {
+    setSelectedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug);
+      else next.add(slug);
+      return next;
+    });
+  };
+
+  const toggleAllVisible = () => {
+    setSelectedKeys((prev) => {
+      const next = new Set(prev);
+      const allChecked = filtered.every((f) => next.has(f.slug));
+      if (allChecked) {
+        for (const f of filtered) next.delete(f.slug);
+      } else {
+        for (const f of filtered) next.add(f.slug);
+      }
+      return next;
+    });
+  };
+
+  const onBatchPublish = async () => {
+    if (selectedKeys.size === 0 || running) return;
+    const targets = (data ?? []).filter((d) => selectedKeys.has(d.slug));
+    if (targets.length === 0) return;
+    setRunning(true);
+    try {
+      await runBatchPublish(
+        targets.map((t) => ({ key: t.slug, params: t.entry })),
+        {
+          onItemDone: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+          },
+        },
+      );
+      setSelectedKeys(new Set());
+    } finally {
+      setRunning(false);
+    }
+  };
 
   return (
     <aside className="border-r overflow-y-auto p-3 space-y-2">
       <input
         className="w-full border rounded px-2 py-1 text-sm"
-        placeholder={`필터 (총 ${total.toLocaleString()}건)`}
+        placeholder={`필터 (총 ${data?.length ?? 0}건 — 미발행만)`}
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
       />
+
+      <div className="flex items-center gap-2 text-xs">
+        <button
+          type="button"
+          onClick={toggleAllVisible}
+          disabled={filtered.length === 0}
+          className="rounded border px-2 py-1 hover:bg-gray-100 disabled:opacity-50"
+        >
+          {filtered.every((f) => selectedKeys.has(f.slug)) &&
+          filtered.length > 0
+            ? "표시 항목 해제"
+            : "표시 항목 모두 선택"}
+        </button>
+        <button
+          type="button"
+          onClick={onBatchPublish}
+          disabled={selectedKeys.size === 0 || running}
+          className="rounded bg-black text-white px-3 py-1 disabled:opacity-50"
+        >
+          {running ? "발행 중..." : `선택 ${selectedKeys.size}개 발행`}
+        </button>
+      </div>
+
       <p className="text-xs text-gray-500">
-        {loading
+        {isLoading
           ? "로드 중..."
-          : errored
+          : error
             ? "allowlist 로드 실패"
             : deferredFilter
-              ? `매칭 ${visible.length}건 표시 (최대 ${VISIBLE_LIMIT}건)`
-              : `상위 ${visible.length}건 표시 / 전체 ${total.toLocaleString()}건. 필터로 좁혀 보세요`}
+              ? `매칭 ${filtered.length}건 표시 (최대 ${VISIBLE_LIMIT}건, 선택 ${visibleSelected}개)`
+              : `상위 ${filtered.length}건 표시 / 미발행 전체 ${data?.length ?? 0}건. 필터로 좁혀 보세요`}
       </p>
+
       <ul className="space-y-1">
-        {visible.map((e, i) => (
-          <li key={i}>
-            <button
-              type="button"
-              className="w-full text-left text-sm hover:bg-gray-100 rounded px-2 py-1"
-              onClick={() => setSelected(e)}
-            >
-              {JSON.stringify(e)}
-            </button>
-          </li>
-        ))}
+        {filtered.map((f) => {
+          const state = items[f.slug];
+          const status = state?.status ?? "idle";
+          const checked = selectedKeys.has(f.slug);
+          return (
+            <li key={f.slug} className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => toggleKey(f.slug)}
+                disabled={running && status !== "error" && status !== "idle"}
+                className="mt-1.5"
+              />
+              <button
+                type="button"
+                className="flex-1 text-left text-sm hover:bg-gray-100 rounded px-2 py-1"
+                onClick={() => setSelected(f.entry)}
+              >
+                <div>{JSON.stringify(f.entry)}</div>
+                {status !== "idle" && (
+                  <div className={`text-xs mt-0.5 ${STATUS_CLASS[status]}`}>
+                    {STATUS_LABEL[status]}
+                    {state?.error ? ` — ${state.error}` : ""}
+                  </div>
+                )}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </aside>
   );
