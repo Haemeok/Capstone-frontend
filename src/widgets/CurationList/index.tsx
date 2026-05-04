@@ -25,7 +25,13 @@ export const CurationListClient = ({
     useCurationArticles({ category, initialPage });
 
   return (
-    <Container>
+    <Container maxWidth="6xl">
+      <header className="pb-6 sm:pb-8">
+        <h1 className="text-2xl font-bold text-brown sm:text-3xl">큐레이션</h1>
+        <p className="mt-1 text-sm text-brown/60">
+          오늘의 테마로 고른 레시피 모음
+        </p>
+      </header>
       <ErrorBoundary
         fallback={
           <SectionErrorFallback message="큐레이션을 불러올 수 없어요" />

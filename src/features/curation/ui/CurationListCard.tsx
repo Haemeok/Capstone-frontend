@@ -34,7 +34,6 @@ export const CurationListCard = ({
             priority={priority}
             wrapperClassName="absolute inset-0"
             imgClassName="object-cover"
-            aspectRatio="1 / 1"
           />
         ) : null}
       </div>
