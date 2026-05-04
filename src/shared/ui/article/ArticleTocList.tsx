@@ -10,13 +10,17 @@ type ArticleTocListProps = {
   activeId: string | null;
   onScrollToSection: (id: string) => void;
   onItemClick?: () => void;
+  accentClassName?: string;
 };
+
+const DEFAULT_ACCENT = "bg-olive-light/10 font-semibold text-olive-light";
 
 const ArticleTocList = ({
   items,
   activeId,
   onScrollToSection,
   onItemClick,
+  accentClassName = DEFAULT_ACCENT,
 }: ArticleTocListProps) => {
   const handleClick = (id: string) => {
     triggerHaptic("Light");
@@ -36,7 +40,7 @@ const ArticleTocList = ({
                 className={cn(
                   "flex w-full min-h-[44px] cursor-pointer items-center rounded-lg px-3 py-2.5 text-left text-sm transition-all duration-200",
                   isActive
-                    ? "bg-olive-light/10 font-semibold text-olive-light"
+                    ? accentClassName
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                 )}
               >

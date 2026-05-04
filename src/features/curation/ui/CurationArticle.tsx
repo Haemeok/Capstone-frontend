@@ -14,6 +14,8 @@ const formatDate = (iso: string) => {
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
 };
 
+const TOC_ACCENT = "bg-green-900/10 font-semibold text-green-900";
+
 type CurationArticleProps = {
   data: SavedCurationRecord;
   recipes: Array<StaticRecipe | null>;
@@ -28,8 +30,8 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
     .filter((x): x is TocItem => x !== null);
 
   return (
-    <article className="mx-auto w-full max-w-4xl px-5 pt-10 pb-20 md:px-6 md:pt-20">
-      <header className="text-center">
+    <div className="px-5 pt-10 pb-20 md:px-6 md:pt-20">
+      <header className="mx-auto max-w-3xl text-center">
         <CurationCategoryLabel category={data.category} />
         <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
           {data.h1}
@@ -49,19 +51,25 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
         <img
           src={data.thumbnailUrl}
           alt={data.h1}
-          className="mt-8 aspect-[16/9] w-full rounded-lg object-cover"
+          className="mx-auto mt-8 aspect-[16/9] w-full max-w-4xl rounded-lg object-cover"
         />
       )}
 
       <div className="mt-10">
         {tocItems.length > 0 ? (
-          <ArticleWithToc items={tocItems}>
+          <ArticleWithToc
+            items={tocItems}
+            accentClassName={TOC_ACCENT}
+            layout="wide"
+          >
             <CurationMarkdown markdown={enriched} recipes={recipes} />
           </ArticleWithToc>
         ) : (
-          <CurationMarkdown markdown={enriched} recipes={recipes} />
+          <article className="mx-auto w-full max-w-4xl">
+            <CurationMarkdown markdown={enriched} recipes={recipes} />
+          </article>
         )}
       </div>
-    </article>
+    </div>
   );
 };

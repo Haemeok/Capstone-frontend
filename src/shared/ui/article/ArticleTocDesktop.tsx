@@ -7,12 +7,14 @@ type ArticleTocDesktopProps = {
   items: TocItem[];
   activeId: string | null;
   onScrollToSection: (id: string) => void;
+  accentClassName?: string;
 };
 
 const ArticleTocDesktop = ({
   items,
   activeId,
   onScrollToSection,
+  accentClassName,
 }: ArticleTocDesktopProps) => {
   return (
     <aside className="hidden md:block">
@@ -24,6 +26,7 @@ const ArticleTocDesktop = ({
           items={items}
           activeId={activeId}
           onScrollToSection={onScrollToSection}
+          accentClassName={accentClassName}
         />
       </div>
     </aside>

@@ -20,12 +20,16 @@ type ArticleTocMobileFabProps = {
   items: TocItem[];
   activeId: string | null;
   onScrollToSection: (id: string) => void;
+  accentClassName?: string;
+  visibilityClassName?: string;
 };
 
 const ArticleTocMobileFab = ({
   items,
   activeId,
   onScrollToSection,
+  accentClassName,
+  visibilityClassName = "md:hidden",
 }: ArticleTocMobileFabProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,7 +44,7 @@ const ArticleTocMobileFab = ({
 
   return (
     <>
-      <div className="fixed bottom-24 right-4 z-10 md:hidden">
+      <div className={`fixed bottom-24 right-4 z-10 ${visibilityClassName}`}>
         <AnimatePresence>
           <motion.button
             onClick={handleFabClick}
@@ -68,6 +72,7 @@ const ArticleTocMobileFab = ({
               activeId={activeId}
               onScrollToSection={onScrollToSection}
               onItemClick={handleItemClick}
+              accentClassName={accentClassName}
             />
           </div>
         </DrawerContent>
