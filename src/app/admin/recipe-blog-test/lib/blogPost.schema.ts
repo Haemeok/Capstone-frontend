@@ -105,34 +105,44 @@ export const BlogPostSchema = z.object({
     .describe(
       "8~10개. 메인 메뉴명 1 + 변주 2~3 + 카테고리 1~2 + 식문화 1~2 + 계절·식탁 위치 1~2."
     ),
-
-  jsonLd: z.object({
-    "@context": z.literal("https://schema.org"),
-    "@type": z.literal("Recipe"),
-    name: z.string(),
-    recipeYield: z.string(),
-    prepTime: z.string().optional(),
-    cookTime: z.string().optional(),
-    totalTime: z.string().optional(),
-    recipeIngredient: z.array(z.string()),
-    recipeInstructions: z.array(
-      z.object({
-        "@type": z.literal("HowToStep"),
-        text: z.string(),
-      })
-    ),
-    nutrition: z
-      .object({
-        "@type": z.literal("NutritionInformation"),
-        calories: z.string(),
-        proteinContent: z.string().optional(),
-        carbohydrateContent: z.string().optional(),
-        fatContent: z.string().optional(),
-        sugarContent: z.string().optional(),
-        sodiumContent: z.string().optional(),
-      })
-      .optional(),
-  }),
 });
 
-export type BlogPost = z.infer<typeof BlogPostSchema>;
+// LLM이 직접 출력하는 좁은 narrative (자연어 + 변주가 필요한 부분만).
+// nutritionBox / jsonLd 같은 결정론 필드는 서버 액션이 recipe로 후처리 합성해 BlogPost로 만든다.
+export type BlogPostNarrative = z.infer<typeof BlogPostSchema>;
+
+export type BlogPostNutritionBox = {
+  kcalPerServing: number;
+  proteinG: number;
+  carbohydrateG: number;
+  fatG: number;
+  sugarG: number;
+  sodiumMg: number;
+  costPerServingKrw: number;
+  marketPriceKrw: number;
+};
+
+export type BlogPostJsonLd = {
+  "@context": "https://schema.org";
+  "@type": "Recipe";
+  name: string;
+  recipeYield: string;
+  totalTime?: string;
+  recipeIngredient: string[];
+  recipeInstructions: { "@type": "HowToStep"; text: string }[];
+  nutrition?: {
+    "@type": "NutritionInformation";
+    calories: string;
+    proteinContent?: string;
+    carbohydrateContent?: string;
+    fatContent?: string;
+    sugarContent?: string;
+    sodiumContent?: string;
+  };
+};
+
+// 외부(미리보기·발행 큐)가 보는 최종 모양 — narrative + 결정론 합성 결과.
+export type BlogPost = BlogPostNarrative & {
+  nutritionBox: BlogPostNutritionBox;
+  jsonLd: BlogPostJsonLd;
+};

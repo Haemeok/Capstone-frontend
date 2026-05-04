@@ -19,14 +19,15 @@ import {
   buildBlogPostUserPrompt,
   computePerServingMetrics,
 } from "@/app/admin/recipe-blog-test/lib/buildBlogPostPrompt";
+import { buildJsonLd } from "@/app/admin/recipe-blog-test/lib/buildJsonLd";
 
-const xai = createOpenAI({
-  name: "xai",
-  baseURL: "https://api.x.ai/v1",
-  apiKey: process.env.XAI_API_KEY || "",
+const openrouter = createOpenAI({
+  name: "openrouter",
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY || "",
 });
 
-const MODEL_ID = "grok-4-1-fast-reasoning";
+const MODEL_ID = "upstage/solar-pro-3";
 
 export type GenerateRecipeBlogPostResult =
   | {
@@ -40,8 +41,11 @@ export const generateRecipeBlogPost = async (
   recipe: Recipe,
   opts?: { imageSlots?: string[] }
 ): Promise<GenerateRecipeBlogPostResult> => {
-  if (!process.env.XAI_API_KEY) {
-    return { success: false, error: "XAI_API_KEY가 설정되지 않았습니다." };
+  if (!process.env.OPENROUTER_API_KEY) {
+    return {
+      success: false,
+      error: "OPENROUTER_API_KEY가 설정되지 않았습니다.",
+    };
   }
   if (!recipe?.id) {
     return { success: false, error: "recipe.id가 없습니다." };
@@ -68,17 +72,23 @@ export const generateRecipeBlogPost = async (
   const prompt = buildBlogPostUserPrompt(recipe, slots, metrics);
 
   try {
-    const { object } = await generateObject({
-      model: xai(MODEL_ID),
+    const { object: narrative } = await generateObject({
+      model: openrouter(MODEL_ID),
       schema: BlogPostSchema,
       mode: "json",
       system,
       prompt,
     });
 
+    const post: BlogPost = {
+      ...narrative,
+      nutritionBox: metrics,
+      jsonLd: buildJsonLd(recipe, metrics),
+    };
+
     return {
       success: true,
-      post: object,
+      post,
       usedSeeds: { lead: leadSeed.id, closing: closingSeed.id },
     };
   } catch (error) {

@@ -160,7 +160,7 @@ export const buildBlogPostUserPrompt = (
 [레시피]
 ${recipeJson}
 
-[1인분 정량 — nutritionBox에 그대로 옮기고, lead 안에 한 줄로 자연스럽게 묻으라(원가/조리시간/kcal 중 하나 골라)]
+[1인분 정량 — 본문(lead·appliedKnowledge·closingNote 등)에 자연스럽게 녹여 쓸 수 있게 참고. lead의 정량 후크는 원가/조리시간/kcal 중 하나만 골라 한 줄로. 영양 박스 자체는 시스템이 자동으로 붙이므로 별도 출력 필드는 만들지 말라]
 - 칼로리: ${metrics.kcalPerServing} kcal
 - 단백질: ${metrics.proteinG} g
 - 탄수화물: ${metrics.carbohydrateG} g
@@ -179,7 +179,7 @@ ${imageSlots.map((s) => `- ${s}`).join("\n")}
 
 [중요]
 - 재료 박스(ingredients)는 이 글에 출력하지 않는다. 외부 시스템이 DB에서 직접 렌더링한다.
-- jsonLd.recipeIngredient에는 입력 레시피의 ingredients를 "이름 + 분량" 형식으로 그대로 옮기라.
+- 영양 박스(nutritionBox)와 schema.org JSON-LD(jsonLd)는 시스템이 레시피 데이터로부터 자동 합성하므로 출력 필드에 포함하지 말라.
 
 [출력]
 schema(BlogPost)에 정확히 맞춰 JSON으로만 답하라.`;

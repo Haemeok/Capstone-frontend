@@ -4,7 +4,7 @@
  * 사용:
  *   npx tsx scripts/test-blog-post.ts
  *
- * .env / .env.local 에 XAI_API_KEY가 있어야 함.
+ * .env / .env.local 에 OPENROUTER_API_KEY가 있어야 함.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -13,7 +13,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 
 import {
-  type BlogPost,
+  type BlogPostNarrative as BlogPost,
   BlogPostSchema,
 } from "../src/app/admin/recipe-blog-test/lib/blogPost.schema";
 import {
@@ -28,10 +28,10 @@ import {
 } from "../src/app/admin/recipe-blog-test/lib/buildBlogPostPrompt";
 import type { Recipe } from "../src/entities/recipe/model/types";
 
-const xai = createOpenAI({
-  name: "xai",
-  baseURL: "https://api.x.ai/v1",
-  apiKey: process.env.XAI_API_KEY ?? "",
+const openrouter = createOpenAI({
+  name: "openrouter",
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY ?? "",
 });
 
 const FAKE_RECIPE_GAJI: Recipe = {
@@ -86,7 +86,7 @@ const FAKE_RECIPE_GAJI: Recipe = {
   nutrition: { protein: 57, carbohydrate: 173, fat: 32, sugar: 53, sodium: 58140 },
 };
 
-const MODEL_ID = "grok-4-1-fast-reasoning";
+const MODEL_ID = "upstage/solar-pro-3";
 
 const countNarrative = (post: BlogPost): number => {
   return (
@@ -151,8 +151,8 @@ const autoScore = (post: BlogPost) => {
 };
 
 const main = async () => {
-  if (!process.env.XAI_API_KEY) {
-    console.error("XAI_API_KEY 누락");
+  if (!process.env.OPENROUTER_API_KEY) {
+    console.error("OPENROUTER_API_KEY 누락");
     process.exit(1);
   }
 
@@ -174,7 +174,7 @@ const main = async () => {
   let post: BlogPost;
   try {
     const { object } = await generateObject({
-      model: xai(MODEL_ID),
+      model: openrouter(MODEL_ID),
       schema: BlogPostSchema,
       mode: "json",
       system,
