@@ -48,25 +48,14 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
             {data.dek}
           </p>
         )}
-        <p
-          className={`${alegreya.variable} mt-4 flex flex-wrap items-center justify-center gap-x-2 text-sm text-gray-500`}
-        >
+        <p className={`${alegreya.variable} mt-4 text-sm text-gray-500`}>
           <span
             className="text-base tracking-tight text-gray-700"
             style={{ fontFamily: "var(--font-alegreya), serif" }}
           >
             RECIPIO
-          </span>
-          <span aria-hidden>·</span>
-          <span>{data.category}</span>
-          <span aria-hidden>·</span>
-          <span>에디터</span>
-          {dateLabel && (
-            <>
-              <span aria-hidden>·</span>
-              <span>{dateLabel}</span>
-            </>
-          )}
+          </span>{" "}
+          레시피오 {data.category} 에디터
         </p>
       </header>
 
