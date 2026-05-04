@@ -22,7 +22,7 @@ export const buildBodySystemPrompt = ({
 }): string => {
   return [
     "## 당신의 정체",
-    "당신은 한국의 라이프스타일 매거진 'Elle Korea(엘르 코리아)'의 **푸드 섹션 에디터**다. Elle Korea는 패션·뷰티·라이프스타일을 다루는 잡지/웹 매체이고, 그중 푸드 섹션은 식문화 트렌드와 레시피 추천을 담당한다. 본인의 일은 **여러 레시피를 골라 묶어 독자에게 소개하는 큐레이션(모음집) 아티클을 정기적으로 발행**하는 것이다.",
+    "당신은 한국 라이프스타일 매거진의 **푸드 섹션 에디터**다. 패션·뷰티·라이프스타일을 다루는 매체의 푸드 섹션에서 식문화 트렌드와 레시피 추천을 담당하며, **여러 레시피를 골라 묶어 독자에게 소개하는 큐레이션(모음집) 아티클을 정기적으로 발행**한다.",
     "",
     "## 이번 작업",
     "주어진 레시피 N개를 묶은 큐레이션 페이지 본문 마크다운을 작성한다. 단일 레시피 글이 아니라 **여러 레시피를 골라 묶은 큐레이션**이라는 점이 인트로/결말에 자연스럽게 묻어나야 한다 (\"이런 메뉴들을 한 자리에 모았다\"는 큐레이터 시점).",
@@ -44,17 +44,19 @@ export const buildBodySystemPrompt = ({
     "- 출력 문자열에 실제 개행(\\n) 문자를 사용. 한 덩어리로 이어붙이지 말 것.",
     "",
     "## 슬롯 규칙 (엄수)",
-    "각 레시피 인덱스 N (0-based)에 대해 본문 어딘가에 다음 슬롯이 정확히 1회씩 등장해야 한다.",
-    "  - {{yt:N}}    레시피 유튜브 영상 자리 — **H2 섹션의 첫 단락 직후** (영상이 본문 위쪽)",
-    "  - {{recipe:N}} 레시피 상세 페이지로 가는 링크 자리. 자연스러운 문장 끝에 \"추천 →\" 같은 표현",
-    "  - {{img:N}}    레시피 대표 이미지 자리 — **H2 섹션 마지막 단락 직후** (이미지가 영상보다 아래)",
+    "각 레시피 인덱스 N (0-based)에 대해 본문 어딘가에 다음 슬롯이 **이 순서대로** 정확히 1회씩 등장해야 한다.",
+    "  - {{yt:N}}    레시피 유튜브 영상 자리 — **H2 직후, 첫 줄**. 본문 설명단락 위쪽",
+    "  - {{recipe:N}} 레시피 상세 링크 자리 — 설명단락 **이후** 자기 줄로. 인라인 금지",
+    "  - {{img:N}}    레시피 대표 이미지 자리 — H2 섹션의 **맨 마지막 줄**",
     "",
-    "**순서: yt → recipe → img**. 영상이 항상 이미지보다 위에 와야 함.",
+    "**순서: yt → desc → recipe → img**. 영상이 본문 위, 이미지가 본문 아래. recipe 슬롯은 자기 줄로 분리해 박을 것 (후처리 단계가 ingredients/steps를 recipe 슬롯 바로 앞에 추가함).",
     "정의되지 않은 슬롯 키나 인덱스 사용 금지. URL을 직접 박지 말고 반드시 슬롯만 사용.",
     "",
     "## 금지",
     "- H1(`# `)을 본문에 박지 말 것 (h1은 별도 필드).",
     "- 마케팅 카피 / 이모지 남발 금지.",
+    "- 자기소개·인사말 금지 (\"안녕하세요\", \"~입니다\" 같은 자기 정체 선언 금지). 본문은 곧장 트렌드/맥락으로 시작.",
+    "- 매체명·지면명 언급 금지 (\"Elle\", \"엘르\", \"매거진\" 등 자기 매체를 부르는 어떤 이름도 본문에 등장 금지).",
     "- 다음 표현은 절대 쓰지 말 것: " +
       FORBIDDEN_PHRASES.map((p) => `"${p}"`).join(", "),
     "- 입력에 없는 재료/단계/수치 환각 금지.",
@@ -77,7 +79,7 @@ export const buildSolarBodySystemPrompt = ({
 }): string => {
   return [
     "## 당신의 정체",
-    "당신은 한국의 라이프스타일 매거진 'Elle Korea(엘르 코리아)'의 **푸드 섹션 에디터**다. Elle Korea는 패션·뷰티·라이프스타일을 다루는 잡지/웹 매체이고, 그중 푸드 섹션은 식문화 트렌드와 레시피 추천을 담당한다. 본인의 일은 **여러 레시피를 골라 묶어 독자에게 소개하는 큐레이션(모음집) 아티클을 정기적으로 발행**하는 것이다.",
+    "당신은 한국 라이프스타일 매거진의 **푸드 섹션 에디터**다. 패션·뷰티·라이프스타일을 다루는 매체의 푸드 섹션에서 식문화 트렌드와 레시피 추천을 담당하며, **여러 레시피를 골라 묶어 독자에게 소개하는 큐레이션(모음집) 아티클을 정기적으로 발행**한다.",
     "",
     "## 이번 작업",
     "주어진 레시피 N개를 묶은 큐레이션 페이지의 자연스러운 한국어 본문 마크다운을 작성한다. 단일 레시피 글이 아니라 **여러 레시피를 골라 묶은 큐레이션**이라는 점이 인트로/결말에 자연스럽게 묻어나야 한다 (\"이런 메뉴들을 한 자리에 모았다\"는 큐레이터 시점).",
@@ -99,6 +101,8 @@ export const buildSolarBodySystemPrompt = ({
     "",
     "## 금지",
     "- H1(`# `) 사용 금지 (h1은 별도 필드).",
+    "- 자기소개·인사말 금지 (\"안녕하세요\", \"~입니다\" 같은 자기 정체 선언 금지). 본문은 곧장 트렌드/맥락으로 시작.",
+    "- 매체명·지면명 언급 금지 (\"Elle\", \"엘르\", \"매거진\" 등 자기 매체를 부르는 어떤 이름도 본문에 등장 금지).",
     "- 입력에 없는 재료/단계/수치 환각 금지.",
     "- 다음 표현은 절대 쓰지 말 것: " +
       FORBIDDEN_PHRASES.map((p) => `"${p}"`).join(", "),
@@ -114,19 +118,34 @@ export const buildSolarBodyUserPrompt = ({
   dek,
   recipes,
   toneSeed,
+  commonIngredients,
 }: {
   params: CurationParams;
   h1: string;
   dek: string;
   recipes: BodyRecipeForPrompt[];
   toneSeed: ToneSeed;
+  commonIngredients?: string[];
 }): string => {
   const recipesBlock = recipes
     .map((r, i) => `[${i}] ${r.title}\n${JSON.stringify(stripUrls(r), null, 2)}`)
     .join("\n\n");
 
+  // params의 ingredientIds 같은 키는 모델에게 의미 없는 opaque 토큰. 실재
+  // 공통 재료를 commonIngredients로 받아 명시하면 모델이 제목으로부터의
+  // 임의 추론(2/5가 토마토면 토마토 큐레이션) 환각을 피한다.
+  const commonBlock =
+    commonIngredients && commonIngredients.length > 0
+      ? [
+          "## 이 큐레이션의 공통 재료 (모든 레시피에 들어 있음, 큐레이션의 실제 테마)",
+          commonIngredients.map((n) => `- ${n}`).join("\n"),
+          "params의 ingredientIds 같은 ID 토큰은 의미 없는 식별자다. 위 공통 재료가 큐레이션의 실재 테마이므로, 인트로/결말은 위 재료를 중심으로 작성하고 레시피 제목에서 임의로 다른 테마를 추론하지 마라.",
+        ].join("\n")
+      : "";
+
   return [
     `## params\n\`\`\`json\n${JSON.stringify(params, null, 2)}\n\`\`\``,
+    commonBlock,
     `## h1\n${h1}`,
     `## dek\n${dek}`,
     `## toneSeed\n${toneSeed}`,
@@ -138,7 +157,9 @@ export const buildSolarBodyUserPrompt = ({
     `- 정확히 ${recipes.length}개의 H2 섹션 (## 제목)을 만든다.`,
     `- 각 H2 섹션은 위 recipes 인덱스 순서로 한 개씩 대응.`,
     `- 본문 안에서 해당 레시피의 매력/재료/조리법 일부를 자연스럽게 묘사.`,
-  ].join("\n\n");
+  ]
+    .filter((s) => s !== "")
+    .join("\n\n");
 };
 
 // Stage 3b: Grok 슬롯 인서터 — Solar가 만든 마크다운에 슬롯만 박음.
@@ -150,14 +171,14 @@ export const buildSlotInserterSystemPrompt = (): string => {
     "",
     "## 슬롯 syntax",
     "각 레시피 인덱스 N (0-based, 사용자 prompt에 명시)에 대해 다음 슬롯이 본문에 정확히 1회씩 등장해야 한다:",
-    "  - {{img:N}}    레시피 대표 이미지 자리",
-    "  - {{recipe:N}} 레시피 상세 페이지 링크 자리",
     "  - {{yt:N}}    레시피 유튜브 영상 자리",
+    "  - {{recipe:N}} 레시피 상세 페이지 링크 자리",
+    "  - {{img:N}}    레시피 대표 이미지 자리",
     "",
-    "## 삽입 위치 가이드 — 순서: yt → recipe → img",
-    "- {{yt:N}}: 해당 레시피 H2 섹션의 **첫 단락 직후** (영상이 위쪽).",
-    "- {{recipe:N}}: 해당 H2 섹션 본문에서 레시피를 권유하는 자연스러운 문장 끝 (\"추천해요\", \"보러 가기\" 등).",
-    "- {{img:N}}: 해당 H2 섹션의 **마지막 단락 직후** (이미지가 영상보다 아래).",
+    "## 삽입 위치 가이드 — 순서: yt → desc → recipe → img (각 슬롯은 자기 줄로 분리)",
+    "- {{yt:N}}: 해당 레시피 H2 헤더 **바로 다음 줄** (자기 줄로 분리, 본문 설명단락보다 위).",
+    "- {{recipe:N}}: 본문 설명단락 **이후**, **자기 줄로** 박는다. 문장에 인라인하지 말 것 (후처리 단계가 recipe 슬롯 바로 앞에 ingredients/steps를 자동으로 추가함).",
+    "- {{img:N}}: 해당 H2 섹션의 **맨 마지막 줄** (이미지가 영상보다 아래).",
     "",
     "## H2 섹션 보충",
     "- 본문에 H2 섹션이 부족하거나 없으면 자연스러운 위치에 `## [짧은 한국어 제목]`만 추가. 본문 단락 자체는 건드리지 않는다.",
@@ -187,7 +208,7 @@ export const buildSlotInserterUserPrompt = ({
     .map((r, i) => `[${i}] ${r.title}`)
     .join("\n");
   const checklist = Array.from({ length: n }, (_, i) =>
-    `  - 인덱스 ${i} (${recipes[i].title}): \`{{img:${i}}}\`, \`{{recipe:${i}}}\`, \`{{yt:${i}}}\` 각 1회`,
+    `  - 인덱스 ${i} (${recipes[i].title}): \`{{yt:${i}}}\`, \`{{recipe:${i}}}\`, \`{{img:${i}}}\` 각 1회 (이 순서)`,
   ).join("\n");
 
   return [
@@ -223,34 +244,50 @@ export const buildBodyUserPrompt = ({
   dek,
   recipes,
   toneSeed,
+  commonIngredients,
 }: {
   params: CurationParams;
   h1: string;
   dek: string;
   recipes: BodyRecipeForPrompt[];
   toneSeed: ToneSeed;
+  commonIngredients?: string[];
 }): string => {
   const recipesBlock = recipes
     .map((r, i) => `[${i}]\n${JSON.stringify(stripUrls(r), null, 2)}`)
     .join("\n\n");
 
+  const commonBlock =
+    commonIngredients && commonIngredients.length > 0
+      ? [
+          "## 이 큐레이션의 공통 재료 (모든 레시피에 들어 있음, 큐레이션의 실제 테마)",
+          commonIngredients.map((n) => `- ${n}`).join("\n"),
+          "params의 ingredientIds 같은 ID 토큰은 의미 없는 식별자다. 위 공통 재료가 큐레이션의 실재 테마이므로, 인트로/결말은 위 재료를 중심으로 작성하고 레시피 제목에서 임의로 다른 테마를 추론하지 마라.",
+        ].join("\n")
+      : "";
+
   const n = recipes.length;
   const indexList = Array.from({ length: n }, (_, i) => i).join(", ");
   const slotChecklist = Array.from({ length: n }, (_, i) =>
-    `  - 인덱스 ${i}: \`{{img:${i}}}\`, \`{{recipe:${i}}}\`, \`{{yt:${i}}}\` 각 1회`,
+    `  - 인덱스 ${i}: \`{{yt:${i}}}\`, \`{{recipe:${i}}}\`, \`{{img:${i}}}\` 각 1회`,
   ).join("\n");
 
-  // 본문 구조 미니 예시 — 모델이 instruction보다 example-following에 강한 경우 효과적
+  // 본문 구조 미니 예시 — 모델이 instruction보다 example-following에 강한 경우 효과적.
+  // 슬롯 순서: yt(첫 단락 직후) → recipe(중간) → img(마지막). enrichBody가 추가로
+  // ingredients/steps를 desc와 recipe 사이에 박으므로 최종 렌더 순서는
+  // yt → desc → ingredients → steps → recipe-link → img.
   const skeletonExample = [
     "인트로 단락 (2-4문단, 슬롯 없음).",
     "",
     "## [레시피 0의 자연스러운 한국어 H2 제목]",
     "",
-    "본문 단락. {{img:0}}",
+    "{{yt:0}}",
     "",
-    "레시피 소개 단락. {{recipe:0}} 추천해요.",
+    "본문 설명 단락 (레시피 소개·매력·재료/조리법 일부).",
     "",
-    "마지막 문단. {{yt:0}}",
+    "{{recipe:0}}",
+    "",
+    "{{img:0}}",
     "",
     "## [레시피 1의 자연스러운 한국어 H2 제목]",
     "",
@@ -267,6 +304,7 @@ export const buildBodyUserPrompt = ({
 
   return [
     `## params\n\`\`\`json\n${JSON.stringify(params, null, 2)}\n\`\`\``,
+    commonBlock,
     `## h1\n${h1}`,
     `## dek\n${dek}`,
     `## toneSeed\n${toneSeed}`,
@@ -281,9 +319,11 @@ export const buildBodyUserPrompt = ({
     "",
     `## 출력 약속 — 반드시 지키세요 (총 ${n}개 레시피)`,
     `1. **H2 섹션 정확히 ${n}개**. 각 인덱스(${indexList})에 대해 한 개씩.`,
-    "2. 각 H2 섹션 안에 다음 슬롯이 정확히 1회씩 등장:",
+    "2. 각 H2 섹션 안에 다음 슬롯이 정확히 1회씩, **순서: yt → recipe → img**:",
     slotChecklist,
     "3. 슬롯을 인트로나 결말에 몰아 넣지 말 것. 해당 인덱스의 H2 섹션 내부에만.",
     "4. 누락 슬롯이 하나라도 있으면 출력은 거부됨.",
-  ].join("\n\n");
+  ]
+    .filter((s) => s !== "")
+    .join("\n\n");
 };

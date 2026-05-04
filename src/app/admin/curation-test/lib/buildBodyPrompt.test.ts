@@ -71,4 +71,34 @@ describe("buildBodyUserPrompt", () => {
     });
     expect(user).not.toContain("SECRET");
   });
+
+  it("commonIngredients가 주어지면 공통 재료 블록이 포함되고 ID 토큰 무시 지시가 들어간다", () => {
+    const user = buildBodyUserPrompt({
+      params: { ingredientIds: "NjeW51wD" },
+      h1: "x",
+      dek: "y",
+      recipes,
+      toneSeed: "friendly",
+      commonIngredients: ["쪽파"],
+    });
+    expect(user).toMatch(/공통 재료/);
+    expect(user).toContain("쪽파");
+    expect(user).toMatch(/ID 토큰은 의미 없는 식별자/);
+  });
+
+  it("skeleton 예시는 yt → recipe → img 순서로 박혀있다", () => {
+    const user = buildBodyUserPrompt({
+      params: {},
+      h1: "x",
+      dek: "y",
+      recipes,
+      toneSeed: "friendly",
+    });
+    const ytIdx = user.indexOf("{{yt:0}}");
+    const recipeIdx = user.indexOf("{{recipe:0}}");
+    const imgIdx = user.indexOf("{{img:0}}");
+    expect(ytIdx).toBeGreaterThan(0);
+    expect(recipeIdx).toBeGreaterThan(ytIdx);
+    expect(imgIdx).toBeGreaterThan(recipeIdx);
+  });
 });

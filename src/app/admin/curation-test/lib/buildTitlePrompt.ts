@@ -23,13 +23,13 @@ export const buildTitleSystemPrompt = ({
 }): string => {
   return [
     "## 당신의 정체",
-    "당신은 한국의 라이프스타일 매거진 'Elle Korea(엘르 코리아)'의 **푸드 섹션 에디터**다. Elle Korea는 패션·뷰티·라이프스타일을 다루는 잡지/웹 매체이고, 그중 푸드 섹션은 식문화 트렌드와 레시피 추천을 담당한다. 본인의 일은 **여러 레시피를 골라 묶어 독자에게 소개하는 큐레이션(모음집) 아티클을 정기적으로 발행**하는 것이다. 호흡이 짧고 사람의 입말이 살짝 묻어나는 매거진 톤으로 글을 쓴다.",
+    "당신은 한국의 라이프스타일 매거진의 **푸드 섹션 에디터**다. 패션·뷰티·라이프스타일을 다루는 잡지/웹 매체이고, 그중 푸드 섹션은 식문화 트렌드와 레시피 추천을 담당한다. 본인의 일은 **여러 레시피를 골라 묶어 독자에게 소개하는 큐레이션(모음집) 아티클을 정기적으로 발행**하는 것이다. 매거진 톤으로 글을 쓴다.",
     "",
     "## 이번 작업",
     "큐레이션 아티클 한 편의 H1 제목과 dek(부제 한 줄)을 만든다. 단일 레시피 글이 아니라는 점만 머리에 담아두라.",
     "",
     "## 매거진 헤드라인의 시그니처 구조",
-    "Elle Korea 푸드 헤드라인은 거의 항상 **앞에 '매력 포인트(꾸미는 구절)' + 쉼표나 느낌표 + 본문(카테고리·N)** 형태다. 예시 코퍼스의 흐름을 그대로 보고 흉내 내라.",
+    "한국 푸드 매거진 헤드라인은 거의 항상 **앞에 '매력 포인트(꾸미는 구절)' + 쉼표나 느낌표 + 본문(카테고리·N)** 형태다. 예시 코퍼스의 흐름을 그대로 보고 흉내 내라.",
     "- \"호텔 뺨치는 비주얼에 저렴한 가격까지, [카테고리] [N]\"",
     "- \"비주얼은 덤! 입에 넣으면 살살 녹는 [카테고리] [N]\"",
     "- \"맛도 케미도 끝내주는 [카테고리]\"",
@@ -61,19 +61,37 @@ export const buildTitleSystemPrompt = ({
 export const buildTitleUserPrompt = ({
   params,
   recipeTitles,
+  commonIngredients,
 }: {
   params: CurationParams;
   recipeTitles: string[];
+  commonIngredients?: string[];
 }): string => {
+  // params의 ingredientIds 같은 키는 모델에게 의미 없는 opaque 토큰이다.
+  // 실제 모든 레시피에 공통으로 들어간 재료 이름을 commonIngredients로 받아 명시한다.
+  // 이게 있으면 모델은 제목에서 임의 추론 대신 실재 공통 재료를 테마로 잡는다.
+  const commonBlock =
+    commonIngredients && commonIngredients.length > 0
+      ? [
+          "## 이 큐레이션의 공통 재료 (모든 레시피에 들어 있음)",
+          commonIngredients.map((n) => `- ${n}`).join("\n"),
+          "params의 ingredientIds 같은 ID 토큰은 무시하고, 위 공통 재료 이름이 큐레이션의 실제 테마다.",
+        ].join("\n")
+      : "";
+
   return [
     "## params",
     "```json",
     JSON.stringify(params, null, 2),
     "```",
     "",
+    commonBlock,
+    "",
     `## 이 큐레이션에 포함될 레시피 (총 ${recipeTitles.length}개)`,
     recipeTitles.map((t, i) => `${i}. ${t}`).join("\n"),
     "",
     `**제목에 개수를 명시할 거면 정확히 ${recipeTitles.length}로**. \"3가지\" 같이 임의로 줄이지 마라.`,
-  ].join("\n");
+  ]
+    .filter((s) => s !== "")
+    .join("\n");
 };

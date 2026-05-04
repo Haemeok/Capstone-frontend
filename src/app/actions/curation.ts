@@ -27,6 +27,7 @@ import {
   buildTitleUserPrompt,
   sampleFewShotTitles,
 } from "@/app/admin/curation-test/lib/buildTitlePrompt";
+import { findCommonIngredientNames } from "@/app/admin/curation-test/lib/commonIngredients";
 import { hydrateMarkdown } from "@/app/admin/curation-test/lib/hydrate";
 import { slugify } from "@/app/admin/curation-test/lib/slugify";
 import { pickToneBySlug } from "@/app/admin/curation-test/lib/toneSeed";
@@ -128,6 +129,10 @@ export const generateCuration = async (
   }
   const recipes = await Promise.all(recipeIds.map((id) => getRecipe(id)));
 
+  // 모든 레시피에 공통으로 들어 있는 재료 이름. ingredientIds 같은 opaque 토큰
+  // 대신 실재 공통 재료를 prompt에 박아 모델 환각(2/5 토마토→큐레이션이 토마토 테마)을 방지.
+  const commonIngredients = findCommonIngredientNames(recipes);
+
   // Stage 2: Title
   const fewShots = sampleFewShotTitles(slug, 8);
   let titleObj: z.infer<typeof TitleSchema>;
@@ -139,6 +144,7 @@ export const generateCuration = async (
       prompt: buildTitleUserPrompt({
         params: input.params,
         recipeTitles: recipes.map((r) => r.title),
+        commonIngredients,
       }),
     });
     titleObj = object;
@@ -167,6 +173,7 @@ export const generateCuration = async (
           dek: titleObj.dek,
           recipes,
           toneSeed,
+          commonIngredients,
         }),
       });
       solarRawMd = result.text;
@@ -239,6 +246,7 @@ export const generateCuration = async (
         dek: titleObj.dek,
         recipes,
         toneSeed,
+        commonIngredients,
       });
       const finalUserPrompt =
         lastErrors.length > 0

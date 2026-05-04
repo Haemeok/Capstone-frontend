@@ -30,10 +30,13 @@ export const searchRecipeIds = async (
   params: Record<string, string | number>,
   opts: { limit: number },
 ): Promise<string[]> => {
+  // sort 누락 시 백엔드 default가 ingredientIds 필터를 무시하고 인기순 fallback을
+  // 돌려주는 케이스가 있어, 항상 createdAt,desc로 결정적 정렬을 강제한다.
   const apiParams = {
     ...normalizeApiParams(params),
     size: opts.limit,
     types: ["YOUTUBE"],
+    sort: "createdAt,desc",
   };
   const res = await api.get<{
     content?: Array<{ id: string }>;

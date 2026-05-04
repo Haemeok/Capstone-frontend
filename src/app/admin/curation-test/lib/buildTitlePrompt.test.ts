@@ -48,6 +48,26 @@ describe("buildTitleUserPrompt", () => {
     expect(user).toContain("찌개");
     expect(user).toContain("콩나물국");
   });
+
+  it("commonIngredients가 주어지면 공통 재료 블록이 포함된다", () => {
+    const user = buildTitleUserPrompt({
+      params: { ingredientIds: "NjeW51wD" },
+      recipeTitles: ["A", "B"],
+      commonIngredients: ["쪽파", "마늘"],
+    });
+    expect(user).toMatch(/공통 재료/);
+    expect(user).toContain("쪽파");
+    expect(user).toContain("마늘");
+    expect(user).toMatch(/ID 토큰은 무시/);
+  });
+
+  it("commonIngredients가 없으면 공통 재료 블록은 빠진다", () => {
+    const user = buildTitleUserPrompt({
+      params: {},
+      recipeTitles: ["A"],
+    });
+    expect(user).not.toMatch(/공통 재료/);
+  });
 });
 
 describe("sampleFewShotTitles", () => {
