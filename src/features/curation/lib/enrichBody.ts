@@ -1,3 +1,5 @@
+import { normalizeEulReulInText } from "@/shared/lib/korean";
+
 // 본문 마크다운을 H2 섹션 단위로 재조립해 결정적 슬롯 순서를 강제한다.
 // AI 출력은 슬롯 위치가 자주 어긋나기 때문에, 코드 단계에서 ingredients/steps를
 // 자동으로 채우면서 동시에 yt/recipe/img 위치도 정규화한다.
@@ -132,5 +134,5 @@ export const enrichBodyMarkdown = (md: string): string => {
     }
   }
 
-  return out.join("\n\n");
+  return normalizeEulReulInText(out.join("\n\n"));
 };

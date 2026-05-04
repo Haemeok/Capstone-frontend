@@ -176,4 +176,19 @@ describe("enrichBodyMarkdown", () => {
     const out = enrichBodyMarkdown(md);
     expect(out).toContain("## 인트로 한 줄");
   });
+
+  it("'## 어떻게 고를까' 류 ref 단락의 조사 오류도 normalizer로 교정", () => {
+    const md = `## 첫 레시피
+
+본문.
+
+## 어떻게 고를까
+
+상큼한 메뉴는 폰즈을, 든든한 한 끼는 어리굴젓를 추천한다.`;
+    const out = enrichBodyMarkdown(md);
+    expect(out).toContain("폰즈를");
+    expect(out).toContain("어리굴젓을");
+    expect(out).not.toContain("폰즈을");
+    expect(out).not.toContain("어리굴젓를");
+  });
 });
