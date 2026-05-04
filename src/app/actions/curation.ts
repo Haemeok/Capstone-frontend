@@ -29,6 +29,7 @@ import { hydrateMarkdown } from "@/app/admin/curation-test/lib/hydrate";
 import { slugify } from "@/app/admin/curation-test/lib/slugify";
 import { pickToneBySlug } from "@/app/admin/curation-test/lib/toneSeed";
 import { validateMarkdown } from "@/app/admin/curation-test/lib/validate";
+import { validateTitleCount } from "@/app/admin/curation-test/lib/validateTitleCount";
 
 import { searchRecipeIds } from "./curation.search";
 
@@ -88,6 +89,7 @@ const buildTitleSchema = (recipeCount: number, poolSize: number) =>
 
 type TitleResult = z.infer<ReturnType<typeof buildTitleSchema>>;
 const MAX_BODY_RETRIES = 2;
+const MAX_TITLE_RETRIES = 2;
 
 // generateText 결과가 ```markdown ... ``` fence로 감싸 오는 경우 벗긴다.
 const stripCodeFence = (s: string): string => {
@@ -143,31 +145,79 @@ export const generateCuration = async (
   // 풀 전체 기준 — 선별 후가 아닌 풀 기준이 더 안정적인 테마 시그널.
   const commonIngredients = findCommonIngredientNames(pool);
 
-  // Stage 2: Title (+ 풀에서 N개 선별)
+  // Stage 2: Title (+ 풀에서 N개 선별) — schema 위반 또는 h1/dek 의 N 표기 불일치 시
+  // 직전 오류를 prompt 에 되돌려 재시도. silent fixer 를 없앤 만큼 모델이 약속을
+  // 정확히 지키도록 압박. 최종 실패는 큐레이션 1건 fail (다른 batch 항목엔 영향 없음).
   const fewShots = sampleFewShotTitles(slug, 8);
-  let titleObj: TitleResult;
-  try {
-    const { object } = await generateObject({
-      model: solarModel,
-      schema: buildTitleSchema(recipeCount, pool.length),
-      system: buildTitleSystemPrompt({
-        fewShots,
-        count: recipeCount,
-        poolSize: pool.length,
-      }),
-      prompt: buildTitleUserPrompt({
-        params: input.params,
-        recipeTitles: pool.map((r) => r.title),
-        commonIngredients,
-        recipeCount,
-      }),
+  const titleSystem = buildTitleSystemPrompt({
+    fewShots,
+    count: recipeCount,
+    poolSize: pool.length,
+  });
+  const titleUserBase = buildTitleUserPrompt({
+    params: input.params,
+    recipeTitles: pool.map((r) => r.title),
+    commonIngredients,
+    recipeCount,
+  });
+  const titleSchema = buildTitleSchema(recipeCount, pool.length);
+
+  let titleObj: TitleResult | null = null;
+  let titleLastErrors: string[] = [];
+  for (let attempt = 0; attempt <= MAX_TITLE_RETRIES; attempt++) {
+    const titleUser =
+      titleLastErrors.length > 0
+        ? `${titleUserBase}\n\n## 이전 시도에서 다음이 잘못되었습니다 — 반드시 수정하세요\n${titleLastErrors.map((e) => `- ${e}`).join("\n")}`
+        : titleUserBase;
+
+    let candidate: TitleResult;
+    try {
+      const { object } = await generateObject({
+        model: solarModel,
+        schema: titleSchema,
+        system: titleSystem,
+        prompt: titleUser,
+      });
+      candidate = object;
+    } catch (e) {
+      titleLastErrors = [`schema 위반: ${(e as Error).message}`];
+      console.warn(
+        `[curation title] attempt ${attempt + 1} schema fail: ${(e as Error).message}`,
+      );
+      if (attempt === MAX_TITLE_RETRIES) {
+        throw new CurationError(
+          "LLM_ERROR",
+          `Title 호출 실패 (${MAX_TITLE_RETRIES + 1}회 schema 위반): ${(e as Error).message}`,
+        );
+      }
+      continue;
+    }
+
+    const titleCheck = validateTitleCount({
+      h1: candidate.h1,
+      dek: candidate.dek,
+      expected: recipeCount,
     });
-    titleObj = object;
-  } catch (e) {
-    throw new CurationError(
-      "LLM_ERROR",
-      `Title 호출 실패: ${(e as Error).message}`,
+    if (titleCheck.ok) {
+      titleObj = candidate;
+      break;
+    }
+    titleLastErrors = titleCheck.errors;
+    console.warn(
+      `[curation title] attempt ${attempt + 1} count mismatch:\n${titleCheck.errors.map((e) => `  - ${e}`).join("\n")}\n  h1: ${candidate.h1}\n  dek: ${candidate.dek}`,
     );
+    if (attempt === MAX_TITLE_RETRIES) {
+      throw new CurationError(
+        "VALIDATION_FAILED",
+        `Title-Body N 일관성 검증 ${MAX_TITLE_RETRIES + 1}회 실패\n${titleCheck.errors.map((e) => `- ${e}`).join("\n")}`,
+        { errors: titleCheck.errors, h1: candidate.h1, dek: candidate.dek },
+      );
+    }
+  }
+
+  if (!titleObj) {
+    // 도달 불가 — 위 루프가 break/throw 둘 중 하나로 종료. TS narrowing 만족용.
+    throw new CurationError("LLM_ERROR", "Title 결과를 얻지 못했습니다.");
   }
 
   // selectedIndices 의 length/unique/in-range 는 buildTitleSchema 가 zod refinement
