@@ -12,7 +12,10 @@ import {
 } from "@/app/actions/curation.allowlistFilter";
 
 import { useCurationStore } from "../lib/store";
-import { runBatchPublish } from "../model/batchPublishHandler";
+import {
+  runBatchGenerate,
+  runBatchPublish,
+} from "../model/batchPublishHandler";
 import {
   type BatchItemState,
   useBatchPublishStore,
@@ -37,6 +40,7 @@ const fetchAllowlist = async (): Promise<AllowlistEntry[]> => {
 const STATUS_LABEL: Record<BatchItemState["status"], string> = {
   idle: "",
   generating: "생성 중",
+  generated: "생성됨",
   publishing: "발행 중",
   done: "완료",
   error: "실패",
@@ -45,6 +49,7 @@ const STATUS_LABEL: Record<BatchItemState["status"], string> = {
 const STATUS_CLASS: Record<BatchItemState["status"], string> = {
   idle: "",
   generating: "text-blue-600",
+  generated: "text-amber-700",
   publishing: "text-blue-700",
   done: "text-green-700",
   error: "text-red-600",
@@ -55,7 +60,8 @@ export const CandidatePanel = () => {
   const [filter, setFilter] = useState("");
   const deferredFilter = useDeferredValue(filter);
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
-  const [running, setRunning] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const queryClient = useQueryClient();
 
   const items = useBatchPublishStore((s) => s.items);
@@ -83,10 +89,32 @@ export const CandidatePanel = () => {
     return out;
   }, [data, deferredFilter]);
 
+  const selectedTargets = useMemo(
+    () => (data ?? []).filter((d) => selectedKeys.has(d.slug)),
+    [data, selectedKeys],
+  );
+
+  const generatableCount = useMemo(
+    () =>
+      selectedTargets.filter((t) => {
+        const status = items[t.slug]?.status;
+        return status !== "generating" && status !== "publishing";
+      }).length,
+    [selectedTargets, items],
+  );
+
+  const publishableCount = useMemo(
+    () =>
+      selectedTargets.filter((t) => items[t.slug]?.status === "generated").length,
+    [selectedTargets, items],
+  );
+
   const visibleSelected = useMemo(
     () => filtered.filter((f) => selectedKeys.has(f.slug)).length,
     [filtered, selectedKeys],
   );
+
+  const busy = generating || publishing;
 
   const toggleKey = (slug: string) => {
     setSelectedKeys((prev) => {
@@ -110,23 +138,46 @@ export const CandidatePanel = () => {
     });
   };
 
-  const onBatchPublish = async () => {
-    if (selectedKeys.size === 0 || running) return;
-    const targets = (data ?? []).filter((d) => selectedKeys.has(d.slug));
+  const onBatchGenerate = async () => {
+    if (busy) return;
+    const targets = selectedTargets.filter((t) => {
+      const status = items[t.slug]?.status;
+      return status !== "generating" && status !== "publishing";
+    });
     if (targets.length === 0) return;
-    setRunning(true);
+    setGenerating(true);
     try {
-      await runBatchPublish(
+      await runBatchGenerate(
         targets.map((t) => ({ key: t.slug, params: t.entry })),
-        {
-          onItemDone: () => {
-            queryClient.invalidateQueries({ queryKey: QUERY_KEY });
-          },
-        },
       );
-      setSelectedKeys(new Set());
     } finally {
-      setRunning(false);
+      setGenerating(false);
+    }
+  };
+
+  const onBatchPublish = async () => {
+    if (busy) return;
+    const snapshot = useBatchPublishStore.getState().items;
+    const targets = selectedTargets.flatMap((t) => {
+      const item = snapshot[t.slug];
+      if (item?.status !== "generated" || !item.result) return [];
+      return [{ key: t.slug, result: item.result }];
+    });
+    if (targets.length === 0) return;
+    setPublishing(true);
+    try {
+      await runBatchPublish(targets, {
+        onItemDone: () => {
+          queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+        },
+      });
+      setSelectedKeys((prev) => {
+        const next = new Set(prev);
+        for (const t of targets) next.delete(t.key);
+        return next;
+      });
+    } finally {
+      setPublishing(false);
     }
   };
 
@@ -139,7 +190,7 @@ export const CandidatePanel = () => {
         onChange={(e) => setFilter(e.target.value)}
       />
 
-      <div className="flex items-center gap-2 text-xs">
+      <div className="flex flex-wrap items-center gap-2 text-xs">
         <button
           type="button"
           onClick={toggleAllVisible}
@@ -153,11 +204,19 @@ export const CandidatePanel = () => {
         </button>
         <button
           type="button"
+          onClick={onBatchGenerate}
+          disabled={busy || generatableCount === 0}
+          className="rounded bg-amber-600 text-white px-3 py-1 disabled:opacity-50"
+        >
+          {generating ? "생성 중..." : `선택 ${generatableCount}개 생성`}
+        </button>
+        <button
+          type="button"
           onClick={onBatchPublish}
-          disabled={selectedKeys.size === 0 || running}
+          disabled={busy || publishableCount === 0}
           className="rounded bg-black text-white px-3 py-1 disabled:opacity-50"
         >
-          {running ? "발행 중..." : `선택 ${selectedKeys.size}개 발행`}
+          {publishing ? "발행 중..." : `생성된 ${publishableCount}개 발행`}
         </button>
       </div>
 
@@ -176,19 +235,21 @@ export const CandidatePanel = () => {
           const state = items[f.slug];
           const status = state?.status ?? "idle";
           const checked = selectedKeys.has(f.slug);
+          const checkboxLocked =
+            busy && (status === "generating" || status === "publishing");
           return (
             <li key={f.slug} className="flex items-start gap-2">
               <input
                 type="checkbox"
                 checked={checked}
                 onChange={() => toggleKey(f.slug)}
-                disabled={running && status !== "error" && status !== "idle"}
+                disabled={checkboxLocked}
                 className="mt-1.5"
               />
               <button
                 type="button"
                 className="flex-1 text-left text-sm hover:bg-gray-100 rounded px-2 py-1"
-                onClick={() => setSelected(f.entry)}
+                onClick={() => setSelected(f.entry, f.slug)}
               >
                 <div>{JSON.stringify(f.entry)}</div>
                 {status !== "idle" && (

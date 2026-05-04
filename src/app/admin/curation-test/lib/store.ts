@@ -1,11 +1,16 @@
 import { create } from "zustand";
 
+import type { CurationParams } from "@/entities/curation";
+
 type State = {
-  selected: Record<string, string | number> | null;
-  setSelected: (p: Record<string, string | number> | null) => void;
+  selected: CurationParams | null;
+  selectedSlug: string | null;
+  setSelected: (p: CurationParams | null, slug?: string | null) => void;
 };
 
 export const useCurationStore = create<State>((set) => ({
   selected: null,
-  setSelected: (selected) => set({ selected }),
+  selectedSlug: null,
+  setSelected: (selected, slug = null) =>
+    set({ selected, selectedSlug: selected ? slug : null }),
 }));

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ApiError, getErrorData } from "@/shared/api/errors";
 
 import {
   CurationError,
-  type CurationProvider,
   type GenerateCurationOutput,
 } from "@/entities/curation";
 
@@ -15,6 +14,7 @@ import { usePostAndPublishArticle } from "@/features/curation-write";
 import { generateCuration } from "@/app/actions/curation";
 
 import { useCurationStore } from "../lib/store";
+import { useBatchPublishStore } from "../model/batchPublishStore";
 import { MarkdownPreview } from "./MarkdownPreview";
 import { StagePanel } from "./StagePanel";
 
@@ -22,28 +22,44 @@ type ToneOption = "auto" | "friendly" | "editorial";
 
 export const Workspace = () => {
   const selected = useCurationStore((s) => s.selected);
+  const selectedSlug = useCurationStore((s) => s.selectedSlug);
+  const batchItem = useBatchPublishStore((s) =>
+    selectedSlug ? s.items[selectedSlug] : undefined,
+  );
+  const batchResult = batchItem?.result ?? null;
+
   const [count, setCount] = useState(5);
   const [tone, setTone] = useState<ToneOption>("auto");
-  const [provider, setProvider] = useState<CurationProvider>("grok");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<GenerateCurationOutput | null>(null);
+  const [localResult, setLocalResult] = useState<GenerateCurationOutput | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
 
   const publishMutation = usePostAndPublishArticle();
+
+  // 좌측에서 다른 후보로 바꾸면 단일 도구 결과는 비워서 batch 결과와 섞이지 않게
+  useEffect(() => {
+    setLocalResult(null);
+    setError(null);
+    publishMutation.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSlug]);
+
+  const result = localResult ?? batchResult;
 
   const onGenerate = async () => {
     if (!selected) return;
     setLoading(true);
     setError(null);
-    setResult(null);
+    setLocalResult(null);
     try {
       const r = await generateCuration({
         params: selected,
         recipeCount: count,
         forceToneSeed: tone === "auto" ? undefined : tone,
-        provider,
       });
-      setResult(r);
+      setLocalResult(r);
     } catch (e) {
       const msg =
         e instanceof CurationError
@@ -90,29 +106,21 @@ export const Workspace = () => {
               <option value="editorial">editorial</option>
             </select>
           </label>
-          <label className="text-sm">
-            모델
-            <select
-              value={provider}
-              onChange={(e) =>
-                setProvider(e.target.value as CurationProvider)
-              }
-              className="ml-2 border rounded px-2 py-1"
-            >
-              <option value="grok">Grok 4.1 Fast</option>
-              <option value="solar">Solar Pro 3</option>
-              <option value="hybrid">Hybrid (Solar 본문 + Grok 슬롯)</option>
-            </select>
-          </label>
           <button
             type="button"
             onClick={onGenerate}
             disabled={loading}
             className="ml-auto rounded bg-black text-white px-4 py-2 text-sm disabled:opacity-50"
           >
-            {loading ? "생성 중..." : "생성하기"}
+            {loading ? "생성 중..." : "단일 생성"}
           </button>
         </div>
+        {batchResult && !localResult && (
+          <p className="mt-2 text-xs text-amber-700">
+            좌측 일괄 생성으로 만든 결과를 표시 중입니다. 다시 생성하려면 위
+            버튼을 누르세요.
+          </p>
+        )}
       </section>
 
       {error && (
