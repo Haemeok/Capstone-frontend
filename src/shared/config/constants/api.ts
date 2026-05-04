@@ -72,6 +72,12 @@ export const END_POINTS = {
   APPLE_LOGIN: "/api/auth/login/apple",
   CHAT: (recipeId: string) => `/recipes/${recipeId}/chat`,
   CHAT_QUOTA: "/chat/quota",
+  // Curation Articles
+  CURATION_ARTICLES: "/curation-articles",
+  CURATION_ARTICLE: (slug: string) => `/curation-articles/${slug}`,
+  ADMIN_CURATION_ARTICLES: "/admin/curation-articles",
+  ADMIN_CURATION_ARTICLE_PUBLISH: (id: number) =>
+    `/admin/curation-articles/${id}/publish`,
 };
 
 export const USER_ERROR_MESSAGE = {
