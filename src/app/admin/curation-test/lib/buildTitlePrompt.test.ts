@@ -8,33 +8,62 @@ import {
 
 describe("buildTitleSystemPrompt", () => {
   it("Elle 푸드 에디터 페르소나를 명시한다", () => {
-    const sys = buildTitleSystemPrompt({ fewShots: ["예시 제목 A", "예시 제목 B"] });
+    const sys = buildTitleSystemPrompt({
+      fewShots: ["예시 제목 A", "예시 제목 B"],
+      count: 5,
+      poolSize: 10,
+    });
     expect(sys).toMatch(/푸드.*에디터/);
   });
 
   it("few-shot 예시들이 본문에 포함된다", () => {
-    const sys = buildTitleSystemPrompt({ fewShots: ["예시 제목 A"] });
+    const sys = buildTitleSystemPrompt({
+      fewShots: ["예시 제목 A"],
+      count: 5,
+      poolSize: 10,
+    });
     expect(sys).toContain("예시 제목 A");
   });
 
   it("축 1-2개 의도적 생략 지시가 들어간다", () => {
-    const sys = buildTitleSystemPrompt({ fewShots: [] });
+    const sys = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
     expect(sys).toMatch(/생략|모두 넣지 마/);
   });
 });
 
 describe("buildTitleSystemPrompt - categories block", () => {
   it("CURATION_CATEGORIES 9개를 모두 포함한다", () => {
-    const prompt = buildTitleSystemPrompt({ fewShots: [] });
+    const prompt = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
     for (const cat of CURATION_CATEGORIES) {
       expect(prompt).toContain(cat);
     }
   });
 
   it("폴백 안내 문구를 포함한다", () => {
-    const prompt = buildTitleSystemPrompt({ fewShots: [] });
+    const prompt = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
     expect(prompt).toMatch(/FOOD & LIFE/i);
     expect(prompt.toLowerCase()).toMatch(/doubt|애매|모호|불분명/);
+  });
+});
+
+describe("buildTitleSystemPrompt - selection block", () => {
+  it("후보 선별 블록과 selectedIndices 출력 라인을 포함한다", () => {
+    const prompt = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    expect(prompt).toContain("## 후보 선별");
+    expect(prompt).toContain("후보 10개 중 가장 결이 맞는 5개");
+    expect(prompt).toContain("selectedIndices");
+  });
+});
+
+describe("buildTitleUserPrompt - pool block", () => {
+  it("후보 풀을 인덱스 prefix로 listing한다", () => {
+    const prompt = buildTitleUserPrompt({
+      params: { q: "리조또" },
+      recipeTitles: ["버섯 리조또", "신라면 리조또", "토마토 리조또"],
+    });
+    expect(prompt).toContain("0. 버섯 리조또");
+    expect(prompt).toContain("1. 신라면 리조또");
+    expect(prompt).toContain("2. 토마토 리조또");
   });
 });
 

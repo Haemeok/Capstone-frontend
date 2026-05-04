@@ -18,8 +18,12 @@ export const sampleFewShotTitles = (slug: string, count: number): string[] => {
 
 export const buildTitleSystemPrompt = ({
   fewShots,
+  count,
+  poolSize,
 }: {
   fewShots: string[];
+  count: number;
+  poolSize: number;
 }): string => {
   return [
     "## 당신의 정체",
@@ -51,10 +55,17 @@ export const buildTitleSystemPrompt = ({
     CURATION_CATEGORIES.map((c) => `- ${c}`).join("\n"),
     "맞는 카테고리가 모호하거나 불분명하면 'FOOD & LIFE'를 선택하라. (When in doubt, choose FOOD & LIFE.)",
     "",
+    "## 후보 선별",
+    `주어진 후보 ${poolSize}개 중 가장 결이 맞는 ${count}개를 골라 그 인덱스를 selectedIndices로 반환한다.`,
+    "- 신라면·불닭 같은 변주가 섞인 풀이라면 정통 vs 변주 중 하나로 톤을 통일한다.",
+    "- 톤이 모호하면 풀의 다수파를 따른다.",
+    "- 인덱스는 0-based, 정확히 count개, unique, 범위 내(0..pool-1).",
+    "",
     "## 출력",
     "- h1: 8~70자.",
     "- dek: 20~120자, 한 줄 리드.",
     "- category: 위 enum 중 하나.",
+    "- selectedIndices: number[] (위 풀에서 고른 인덱스, 길이 정확히 count).",
   ].join("\n");
 };
 
@@ -79,18 +90,20 @@ export const buildTitleUserPrompt = ({
         ].join("\n")
       : "";
 
+  const poolBlock = [
+    "## 후보 풀 (각 항목 앞 숫자가 인덱스)",
+    recipeTitles.map((t, i) => `${i}. ${t}`).join("\n"),
+  ].join("\n");
+
   return [
     "## params",
     "```json",
     JSON.stringify(params, null, 2),
     "```",
     "",
+    poolBlock,
+    "",
     commonBlock,
-    "",
-    `## 이 큐레이션에 포함될 레시피 (총 ${recipeTitles.length}개)`,
-    recipeTitles.map((t, i) => `${i}. ${t}`).join("\n"),
-    "",
-    `**제목에 개수를 명시할 거면 정확히 ${recipeTitles.length}로**. \"3가지\" 같이 임의로 줄이지 마라.`,
   ]
     .filter((s) => s !== "")
     .join("\n");

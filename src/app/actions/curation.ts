@@ -73,6 +73,7 @@ const TitleSchema = z.object({
   h1: z.string().min(8).max(70),
   dek: z.string().min(20).max(120),
   category: z.enum(CURATION_CATEGORIES),
+  selectedIndices: z.array(z.number().int().nonnegative()),
 });
 const BodySchema = z.object({
   bodyMarkdown: z.string().min(800).max(5000),
@@ -140,7 +141,11 @@ export const generateCuration = async (
     const { object } = await generateObject({
       model: titleModel,
       schema: TitleSchema,
-      system: buildTitleSystemPrompt({ fewShots }),
+      system: buildTitleSystemPrompt({
+        fewShots,
+        count: recipeCount,
+        poolSize: recipes.length,
+      }),
       prompt: buildTitleUserPrompt({
         params: input.params,
         recipeTitles: recipes.map((r) => r.title),
