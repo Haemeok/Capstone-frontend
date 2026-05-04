@@ -153,7 +153,7 @@ export const CurationMarkdown = ({
 }: CurationMarkdownProps) => {
   const components = createComponents(recipes);
   return (
-    <div className="curation-prose text-[17px] leading-[1.85] text-gray-800">
+    <div className="curation-prose text-[17px] leading-[1.85] text-pretty break-keep text-gray-800">
       <ReactMarkdown
         rehypePlugins={[[rehypeSanitize, SCHEMA]]}
         components={components}

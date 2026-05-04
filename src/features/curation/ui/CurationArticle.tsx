@@ -38,11 +38,11 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
     <div className="px-5 pt-10 pb-20 md:px-6 md:pt-20">
       <header className="mx-auto max-w-3xl text-center">
         <CurationCategoryLabel category={data.category} />
-        <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
+        <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-pretty break-keep text-gray-900 md:text-4xl">
           {data.h1}
         </h1>
         {data.dek && (
-          <p className="mt-4 text-base leading-relaxed text-gray-600 md:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-pretty break-keep text-gray-600 md:text-lg">
             {data.dek}
           </p>
         )}
