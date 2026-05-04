@@ -1,5 +1,6 @@
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
+
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 
 import { InArticleAdSlot } from "@/shared/adsense";
@@ -72,6 +73,17 @@ const createComponents = (recipes: Array<StaticRecipe | null>): Components => {
           return <RecipeIngredientsBox recipe={recipe} />;
         }
         return <RecipeStepsBox recipe={recipe} />;
+      }
+
+      if (href.startsWith("#recipe-")) {
+        return (
+          <a
+            href={href}
+            className="inline-flex items-center gap-1 rounded-full bg-green-900/10 px-3 py-1 text-xs font-semibold text-green-900 no-underline hover:bg-green-900/15"
+          >
+            {children}
+          </a>
+        );
       }
 
       if (isYouTubeUrl(href)) return <YouTubeEmbed url={href} />;
