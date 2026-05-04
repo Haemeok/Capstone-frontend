@@ -1,9 +1,10 @@
 import ArticleWithToc from "@/shared/ui/article/ArticleWithToc";
 import type { TocItem } from "@/shared/ui/article/types";
 
-import { alegreya } from "@/features/archetype/ui/fonts";
 import type { SavedCurationRecord } from "@/entities/curation";
 import type { StaticRecipe } from "@/entities/recipe/model/types";
+
+import { alegreya } from "@/features/archetype/ui/fonts";
 
 import { enrichBodyMarkdown } from "../lib/enrichBody";
 import { CurationCategoryLabel } from "./CurationCategoryLabel";
