@@ -3,6 +3,7 @@ export type HydratableRecipe = {
   title: string;
   imageUrl: string;
   youtubeUrl: string;
+  youtubeChannelName?: string;
 };
 
 export const hydrateMarkdown = (
@@ -22,5 +23,13 @@ export const hydrateMarkdown = (
     .replace(
       /\{\{yt:(\d+)\}\}/g,
       (_, i) => `[▶ ${r(i).title} 영상 보기](${r(i).youtubeUrl})`,
-    );
+    )
+    .replace(/\{\{ref:(\d+)\}\}/g, (_, idxStr) => {
+      const idx = Number(idxStr);
+      const rr = recipes[idx];
+      if (!rr) return "";
+      const channel = (rr.youtubeChannelName ?? "").trim();
+      const label = channel ? `${channel} · ${rr.title}` : rr.title;
+      return `[${label}](#recipe-${idx})`;
+    });
 };
