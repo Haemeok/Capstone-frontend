@@ -29,6 +29,7 @@ import {
 } from "@/app/admin/curation-test/lib/buildTitlePrompt";
 import { findCommonIngredientNames } from "@/app/admin/curation-test/lib/commonIngredients";
 import { hydrateMarkdown } from "@/app/admin/curation-test/lib/hydrate";
+import { postProcessSelection } from "@/app/admin/curation-test/lib/postProcessSelection";
 import { slugify } from "@/app/admin/curation-test/lib/slugify";
 import { pickToneBySlug } from "@/app/admin/curation-test/lib/toneSeed";
 import { validateMarkdown } from "@/app/admin/curation-test/lib/validate";
@@ -111,30 +112,34 @@ export const generateCuration = async (
   const bodyModel = isHybrid ? resolveModel("grok") : titleModel;
 
   const recipeCount = input.recipeCount ?? 5;
+  const POOL_MULTIPLIER = 2;
+  const targetPoolSize = recipeCount * POOL_MULTIPLIER;
   const slug = slugify(input.params);
   const toneSeed: ToneSeed = input.forceToneSeed ?? pickToneBySlug(slug);
 
-  // Stage 1: Fetch
-  const recipeIds = await searchRecipeIds(input.params, {
-    limit: recipeCount,
+  // Stage 1: Fetch — recipeCount의 2배 풀을 가져와서 Title 단계가 가장 결속력 있는
+  // N개를 고르도록 한다. 풀이 작으면 (3 미만) 큐레이션 자체를 포기.
+  const poolIds = await searchRecipeIds(input.params, {
+    limit: targetPoolSize,
   });
-  if (recipeIds.length < 3) {
+  if (poolIds.length < 3) {
     throw new CurationError(
       "INSUFFICIENT_RECIPES",
       "레시피가 3개 미만입니다.",
       {
-        found: recipeIds.length,
+        found: poolIds.length,
         params: input.params,
       },
     );
   }
-  const recipes = await Promise.all(recipeIds.map((id) => getRecipe(id)));
+  const pool = await Promise.all(poolIds.map((id) => getRecipe(id)));
 
   // 모든 레시피에 공통으로 들어 있는 재료 이름. ingredientIds 같은 opaque 토큰
   // 대신 실재 공통 재료를 prompt에 박아 모델 환각(2/5 토마토→큐레이션이 토마토 테마)을 방지.
-  const commonIngredients = findCommonIngredientNames(recipes);
+  // 풀 전체 기준 — 선별 후가 아닌 풀 기준이 더 안정적인 테마 시그널.
+  const commonIngredients = findCommonIngredientNames(pool);
 
-  // Stage 2: Title
+  // Stage 2: Title (+ 풀에서 N개 선별)
   const fewShots = sampleFewShotTitles(slug, 8);
   let titleObj: z.infer<typeof TitleSchema>;
   try {
@@ -144,11 +149,11 @@ export const generateCuration = async (
       system: buildTitleSystemPrompt({
         fewShots,
         count: recipeCount,
-        poolSize: recipes.length,
+        poolSize: pool.length,
       }),
       prompt: buildTitleUserPrompt({
         params: input.params,
-        recipeTitles: recipes.map((r) => r.title),
+        recipeTitles: pool.map((r) => r.title),
         commonIngredients,
       }),
     });
@@ -159,6 +164,15 @@ export const generateCuration = async (
       `Title 호출 실패: ${(e as Error).message}`,
     );
   }
+
+  // LLM이 고른 인덱스를 검증·정규화해서 정확히 recipeCount개 (또는 pool.length가
+  // 그보다 작으면 그 값) unique·valid 인덱스를 보장. 이후 Stage 3는 이 recipes만 사용.
+  const finalIndices = postProcessSelection(
+    titleObj.selectedIndices,
+    recipeCount,
+    pool.length,
+  );
+  const recipes = finalIndices.map((i) => pool[i]);
 
   // Stage 3: Body
   // hybrid면 Stage 3a(Solar 자연어 본문) → Stage 3b(Grok 슬롯 인서터)
