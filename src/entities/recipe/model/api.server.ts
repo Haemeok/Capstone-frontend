@@ -19,6 +19,36 @@ const resolveSortParam = (sort: string | undefined, fallback: string): string =>
   return sort.includes(",") ? sort : `createdAt,${sort}`;
 };
 
+// 큐레이션 등 비로그인 SSR 컨텍스트에서 favoriteCount/likeCount만 노리고 부르는 버전.
+// cookies()를 안 쓰므로 라우트가 dynamic으로 떨어지지 않고, revalidate 캐시 적용.
+// 본인 좋아요/즐겨찾기 여부는 의미 없게 비어 오겠지만, 카운트만 필요하면 충분.
+export const getRecipeStatusPublicOnServer = async (
+  recipeId: string
+): Promise<RecipeStatus | null> => {
+  const API_URL = `${BASE_API_URL}/v2/recipes/${recipeId}/status`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: REVALIDATION_TIMES.RECIPE_DETAIL,
+        tags: [CACHE_TAGS.recipe(recipeId)],
+      },
+    });
+
+    if (!res.ok) {
+      if (res.status === 404 || res.status === 401) return null;
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+    return res.json();
+  } catch (error) {
+    console.error(
+      `[getRecipeStatusPublicOnServer] Failed to fetch status ${recipeId}:`,
+      error
+    );
+    return null;
+  }
+};
+
 export const getRecipeStatusOnServer = async (
   recipeId: string
 ): Promise<RecipeStatus | null> => {

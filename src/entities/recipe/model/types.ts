@@ -260,6 +260,7 @@ export type StaticRecipe = Omit<
 
 export type RecipeStatus = {
   likeCount: number;
+  favoriteCount?: number;
   likedByCurrentUser: boolean;
   favoriteByCurrentUser: boolean;
   myRating: number | null;
