@@ -4,6 +4,7 @@ import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
+import { alegreya } from "@/features/archetype/ui/fonts";
 import { CurationListCard } from "@/features/curation";
 
 import { useCurationArticles } from "./hooks/useCurationArticles";
@@ -26,11 +27,16 @@ export const CurationListClient = ({
 
   return (
     <Container maxWidth="6xl">
-      <header className="pb-6 sm:pb-8">
-        <h1 className="text-2xl font-bold text-brown sm:text-3xl">큐레이션</h1>
-        <p className="mt-1 text-sm text-brown/60">
-          오늘의 테마로 고른 레시피 모음
+      <header
+        className={`${alegreya.variable} pb-8 text-center sm:pb-12`}
+        style={{ fontFamily: "var(--font-alegreya), serif" }}
+      >
+        <p className="text-xs tracking-[0.4em] text-brown/60 sm:text-sm">
+          LIFESTYLE
         </p>
+        <h1 className="mt-1 text-6xl leading-none tracking-tight text-brown sm:text-7xl">
+          FOOD
+        </h1>
       </header>
       <ErrorBoundary
         fallback={
