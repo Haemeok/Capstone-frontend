@@ -91,7 +91,7 @@ const CommentInputForm = ({
         placeholder={placeholder}
         disabled={!user}
         aria-label={ariaLabel}
-        className={`flex-1 resize-none overflow-y-auto rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm leading-tight placeholder-gray-500 transition-all duration-300 ease-in-out focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light ${isFocused ? "ml-0" : ""} ${
+        className={`flex-1 resize-none overflow-y-auto rounded-xl border border-gray-200 bg-white px-3 py-2 text-base leading-tight placeholder-gray-500 transition-all duration-300 ease-in-out focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light ${isFocused ? "ml-0" : ""} ${
           comment ? "" : "truncate"
         }`}
         rows={1}

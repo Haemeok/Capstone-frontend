@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 
 import { Send } from "lucide-react";
 
@@ -29,15 +29,8 @@ const ChatInput = ({
   onSubmit,
 }: ChatInputProps) => {
   const [text, setText] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setInputFocused } = useInputFocusStore();
   const { openDrawer } = useLoginEncourageDrawerStore();
-
-  useEffect(() => {
-    if (!isPending && isAuthenticated && !isLocked) {
-      textareaRef.current?.focus();
-    }
-  }, [isPending, isAuthenticated, isLocked]);
 
   const isDisabled = isPending || isLocked || !isAuthenticated;
   const trimmed = text.trim();
@@ -96,7 +89,6 @@ const ChatInput = ({
         )}
       >
         <textarea
-          ref={textareaRef}
           value={text}
           onChange={(e) => setText(e.target.value.slice(0, MAX_LENGTH))}
           onKeyDown={handleKeyDown}
@@ -106,7 +98,7 @@ const ChatInput = ({
           placeholder={placeholder}
           rows={1}
           maxLength={MAX_LENGTH}
-          className="flex-1 resize-none bg-transparent py-1 text-sm leading-6 text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed"
+          className="flex-1 resize-none bg-transparent py-1 text-base leading-6 text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed"
         />
         <button
           type="submit"
