@@ -9,7 +9,6 @@ import type {
   DetailedRecipeGridItem,
   Recipe,
 } from "@/entities/recipe/model/types";
-import { useUserStore } from "@/entities/user/model/store";
 
 import { CostSummary } from "@/app/admin/image-quality-test/components/CostSummary";
 import { RecipeSearchPanel } from "@/app/admin/image-quality-test/components/RecipeSearchPanel";
@@ -28,15 +27,11 @@ import { PromptVariantCard } from "./components/PromptVariantCard";
 import { PROMPT_VARIANTS } from "./lib/promptVariants";
 import { usePromptCompare, type VariantRun } from "./lib/usePromptCompare";
 
-const ADMIN_USER_ID = "X1BoaJNZ";
 const FIXED_MODEL_ID = "gpt-image-2-low" as const;
 const EMPTY_HISTORY: CostHistory = { byModel: {}, totalCount: 0, totalCost: 0 };
 const FILE_NAME_UNSAFE = /[\\/:*?"<>|]/g;
 
 const ImagePromptTestPage = () => {
-  const user = useUserStore((s) => s.user);
-  const isAuthReady = useUserStore((s) => s.isAuthReady);
-
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [recipeLoading, setRecipeLoading] = useState(false);
   const [prompts, setPrompts] = useState<Record<string, string>>(
@@ -156,22 +151,6 @@ const ImagePromptTestPage = () => {
       );
     }
   }, [recipe, results, successCount]);
-
-  if (!isAuthReady) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-400">로딩 중...</p>
-      </div>
-    );
-  }
-
-  if (!user || user.id !== ADMIN_USER_ID) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-500">접근 권한이 없습니다.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="mx-auto min-h-screen max-w-7xl bg-beige-light/40 p-4 md:p-6">

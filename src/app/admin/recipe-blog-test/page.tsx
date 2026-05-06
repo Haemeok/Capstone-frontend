@@ -9,7 +9,6 @@ import type {
   DetailedRecipeGridItem,
   Recipe,
 } from "@/entities/recipe/model/types";
-import { useUserStore } from "@/entities/user/model/store";
 
 import { enqueueBlogPostForPublish } from "@/app/actions/blogPublishQueue";
 import { generateRecipeBlogPost } from "@/app/actions/recipeBlog";
@@ -30,16 +29,12 @@ import { type SaveItem,saveSequenceImages } from "./lib/saveSequenceImages";
 import { SEQUENCE_MODEL_IDS } from "./lib/types";
 import { useSequenceGenerate } from "./lib/useSequenceGenerate";
 
-const ADMIN_USER_ID = "X1BoaJNZ";
 const EMPTY_HISTORY: CostHistory = { byModel: {}, totalCount: 0, totalCost: 0 };
 const COST_CONFIRM_THRESHOLD_USD = 2;
 const PRIMARY_MODEL_ID = "gpt-image-2-low" as const;
 const FILE_NAME_UNSAFE = /[\\/:*?"<>|]/g;
 
 const RecipeBlogTestPage = () => {
-  const user = useUserStore((s) => s.user);
-  const isAuthReady = useUserStore((s) => s.isAuthReady);
-
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [recipeLoading, setRecipeLoading] = useState(false);
   const [history, setHistory] = useState<CostHistory>(() =>
@@ -206,22 +201,6 @@ const RecipeBlogTestPage = () => {
       );
     }
   }, [recipe, sequence, results, successCount]);
-
-  if (!isAuthReady) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-400">로딩 중...</p>
-      </div>
-    );
-  }
-
-  if (!user || user.id !== ADMIN_USER_ID) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-500">접근 권한이 없습니다.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="mx-auto min-h-screen max-w-7xl bg-beige-light/40 p-4 md:p-6">

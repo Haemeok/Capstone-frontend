@@ -6,7 +6,6 @@ import { Square } from "lucide-react";
 
 import { getRecipe } from "@/entities/recipe/model/api";
 import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
-import { useUserStore } from "@/entities/user/model/store";
 
 import { ComparisonGrid } from "./components/ComparisonGrid";
 import { CostSummary } from "./components/CostSummary";
@@ -18,13 +17,9 @@ import type { CostHistory } from "./lib/costStorage";
 import { loadCostHistory, resetCostHistory } from "./lib/costStorage";
 import { useImageTest } from "./lib/useImageTest";
 
-const ADMIN_USER_ID = "X1BoaJNZ";
 const EMPTY_HISTORY: CostHistory = { byModel: {}, totalCount: 0, totalCost: 0 };
 
 const ImageQualityTestPage = () => {
-  const user = useUserStore((state) => state.user);
-  const isAuthReady = useUserStore((state) => state.isAuthReady);
-
   const [recipe, setRecipe] = useState<DetailedRecipeGridItem | null>(null);
   const [prompt, setPrompt] = useState("");
   const [promptLoading, setPromptLoading] = useState(false);
@@ -81,22 +76,6 @@ const ImageQualityTestPage = () => {
     resetCostHistory();
     setHistory(EMPTY_HISTORY);
   }, []);
-
-  if (!isAuthReady) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-400">로딩 중...</p>
-      </div>
-    );
-  }
-
-  if (!user || user.id !== ADMIN_USER_ID) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-500">접근 권한이 없습니다.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="mx-auto min-h-screen max-w-7xl bg-beige-light/40 p-4 md:p-6">
