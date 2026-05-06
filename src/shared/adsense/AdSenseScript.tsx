@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import Script from "next/script";
 
-import { isAppWebView } from "@/shared/lib/bridge/client";
-
 import { ADSENSE_CLIENT_ID } from "./config";
 import { isAdsEnabled } from "./lib/isAdsEnabled";
 
@@ -13,7 +11,6 @@ export const AdSenseScript = () => {
 
   useEffect(() => {
     if (!isAdsEnabled()) return;
-    if (isAppWebView()) return;
     setShouldLoad(true);
   }, []);
 
