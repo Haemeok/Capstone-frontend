@@ -7,7 +7,7 @@ import {
   generateViaOpenAI,
 } from "@/app/admin/image-quality-test/lib/adapters/openaiAdapter";
 import { getModelById } from "@/app/admin/image-quality-test/lib/models";
-import { assertAdmin } from "@/app/api/admin/_lib/assertAdmin";
+import { assertAdminApi } from "@/shared/lib/admin-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -15,7 +15,7 @@ export const maxDuration = 300;
 type Body = { modelId: string; prompt: string; referenceImageUrl?: string };
 
 export async function POST(req: NextRequest) {
-  const guardResponse = await assertAdmin();
+  const guardResponse = await assertAdminApi();
   if (guardResponse) return guardResponse;
 
   let body: Body;

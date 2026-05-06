@@ -6,13 +6,13 @@ import {
 } from "@/entities/curation";
 
 import { generateCuration } from "@/app/actions/curation";
-import { assertAdmin } from "@/app/api/admin/_lib/assertAdmin";
+import { assertAdminApi } from "@/shared/lib/admin-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
-  const guard = await assertAdmin();
+  const guard = await assertAdminApi();
   if (guard) return guard;
 
   let body: GenerateCurationInput;
