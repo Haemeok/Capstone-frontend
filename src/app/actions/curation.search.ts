@@ -2,6 +2,7 @@
 
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
+import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 // 큐레이션 빌더 전용 thin wrapper. 별도 모듈인 이유는 jest.mock으로
 // search 표면을 격리하기 위함.
@@ -30,6 +31,8 @@ export const searchRecipeIds = async (
   params: Record<string, string | number>,
   opts: { limit: number },
 ): Promise<string[]> => {
+  await requireAdminAction();
+
   // sort 누락 시 백엔드 default가 ingredientIds 필터를 무시하고 인기순 fallback을
   // 돌려주는 케이스가 있어, 항상 createdAt,desc로 결정적 정렬을 강제한다.
   const apiParams = {

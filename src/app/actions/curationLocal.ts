@@ -7,6 +7,7 @@ import type {
   GenerateCurationOutput,
   SavedCurationRecord,
 } from "@/entities/curation";
+import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 // Local dev-only stub. /data/ is gitignored.
 const STORAGE_DIR = join(process.cwd(), "data", "curations-local");
@@ -22,6 +23,8 @@ export type LocalCurationListItem = {
 export const saveCurationLocal = async (
   data: GenerateCurationOutput,
 ): Promise<{ ok: true; relPath: string }> => {
+  await requireAdminAction();
+
   await mkdir(STORAGE_DIR, { recursive: true });
   const path = join(STORAGE_DIR, `${data.slug}.json`);
   const payload: SavedCurationRecord = {
@@ -35,6 +38,8 @@ export const saveCurationLocal = async (
 export const getCurationLocal = async (
   slug: string,
 ): Promise<SavedCurationRecord | null> => {
+  await requireAdminAction();
+
   try {
     const text = await readFile(join(STORAGE_DIR, `${slug}.json`), "utf-8");
     return JSON.parse(text) as SavedCurationRecord;
@@ -44,6 +49,8 @@ export const getCurationLocal = async (
 };
 
 export const listCurationLocal = async (): Promise<LocalCurationListItem[]> => {
+  await requireAdminAction();
+
   try {
     const files = await readdir(STORAGE_DIR);
     const items = await Promise.all(

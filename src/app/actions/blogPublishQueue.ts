@@ -4,6 +4,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
+import { requireAdminAction } from "@/shared/lib/admin-guard";
+
 import type { BlogPost } from "@/app/admin/recipe-blog-test/lib/blogPost.schema";
 
 const DEFAULT_QUEUE_DIR = path.join(
@@ -59,6 +61,8 @@ export type EnqueueBlogPostResult =
 export const enqueueBlogPostForPublish = async (
   input: EnqueueInput
 ): Promise<EnqueueBlogPostResult> => {
+  await requireAdminAction();
+
   try {
     const queueDir = process.env.BLOG_PUBLISH_QUEUE_DIR?.trim() || DEFAULT_QUEUE_DIR;
     const pendingDir = path.join(queueDir, "pending");

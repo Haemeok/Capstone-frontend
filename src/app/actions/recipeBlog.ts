@@ -4,6 +4,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 
 import type { Recipe } from "@/entities/recipe/model/types";
+import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 import {
   type BlogPost,
@@ -41,6 +42,8 @@ export const generateRecipeBlogPost = async (
   recipe: Recipe,
   opts?: { imageSlots?: string[] }
 ): Promise<GenerateRecipeBlogPostResult> => {
+  await requireAdminAction();
+
   if (!process.env.OPENROUTER_API_KEY) {
     return {
       success: false,

@@ -3,6 +3,8 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateText } from "ai";
 
+import { requireAdminAction } from "@/shared/lib/admin-guard";
+
 const xai = createOpenAI({
   name: "xai",
   baseURL: "https://api.x.ai/v1",
@@ -20,6 +22,8 @@ type AskGrokResult =
     };
 
 export async function askGrok(prompt: string): Promise<AskGrokResult> {
+  await requireAdminAction();
+
   if (!prompt || prompt.trim().length === 0) {
     return { success: false, error: "프롬프트를 입력해주세요." };
   }

@@ -12,6 +12,7 @@ import {
   type ToneSeed,
 } from "@/entities/curation";
 import { getRecipe } from "@/entities/recipe/model/api";
+import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 import {
   buildSlotInserterSystemPrompt,
@@ -113,6 +114,8 @@ const normalizeMarkdown = (md: string): string =>
 export const generateCuration = async (
   input: GenerateCurationInput,
 ): Promise<GenerateCurationOutput> => {
+  await requireAdminAction();
+
   // Hybrid 고정: title/body Stage 3a는 Solar(한국어 자연체), Stage 3b는 Grok(슬롯 인서터).
   const solarModel = requireSolar();
   const grokModel = requireGrok();

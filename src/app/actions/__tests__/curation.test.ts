@@ -12,6 +12,9 @@ jest.mock("@/entities/recipe/model/api", () => ({
 jest.mock("../curation.search", () => ({
   searchRecipeIds: jest.fn(),
 }));
+jest.mock("@/shared/lib/admin-guard", () => ({
+  requireAdminAction: jest.fn().mockResolvedValue(undefined),
+}));
 
 import { generateObject } from "ai";
 

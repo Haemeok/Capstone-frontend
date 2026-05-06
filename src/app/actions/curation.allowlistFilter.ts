@@ -1,6 +1,7 @@
 "use server";
 
 import type { CurationParams } from "@/entities/curation";
+import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 import { listCurationLocal } from "@/app/actions/curationLocal";
 import { slugify } from "@/app/admin/curation-test/lib/slugify";
@@ -15,6 +16,8 @@ export const getUnpublishedAllowlistEntries = async <
 >(
   entries: T[],
 ): Promise<AllowlistEntryWithSlug<T>[]> => {
+  await requireAdminAction();
+
   const published = await listCurationLocal();
   const publishedSlugs = new Set(published.map((p) => p.slug));
 
