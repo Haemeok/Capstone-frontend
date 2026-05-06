@@ -16,7 +16,6 @@ import RecipeSlide from "@/widgets/RecipeSlide/RecipeSlide";
 const LATEST_RECIPES_TYPES = ["USER", "YOUTUBE"] as const;
 const LATEST_RECIPES_HREF = buildSearchResultsUrl({
   sort: "createdAt,DESC",
-  types: [...LATEST_RECIPES_TYPES],
 });
 const LATEST_RECIPES_QUERY_KEY = ["recipes", "latest", ...LATEST_RECIPES_TYPES] as const;
 

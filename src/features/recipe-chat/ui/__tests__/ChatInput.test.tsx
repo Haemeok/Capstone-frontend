@@ -47,7 +47,7 @@ describe("ChatInput", () => {
         onSubmit={onSubmit}
       />
     );
-    const textarea = screen.getByPlaceholderText(/궁금한 걸 물어보세요/);
+    const textarea = screen.getByRole("textbox");
     fireEvent.change(textarea, { target: { value: "이거 매워요?" } });
     fireEvent.click(screen.getByLabelText("질문 전송"));
     expect(onSubmit).toHaveBeenCalledWith("이거 매워요?");

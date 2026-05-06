@@ -9,8 +9,8 @@ describe("toggleStorage", () => {
   });
 
   it("persists and reloads the enabled set", () => {
-    saveEnabledModels(["seedream-v4", "flux-2-schnell"]);
-    expect(loadEnabledModels()).toEqual(["seedream-v4", "flux-2-schnell"]);
+    saveEnabledModels(["seedream-v4", "flux-2-dev"]);
+    expect(loadEnabledModels()).toEqual(["seedream-v4", "flux-2-dev"]);
   });
 
   it("filters out unknown ids when loading (registry changed)", () => {

@@ -47,7 +47,7 @@ const fakeBody = (n: number) =>
   Array.from({ length: n })
     .map(
       (_, i) =>
-        `## 섹션 ${i}\n\n{{img:${i}}}\n\n맛있는 본문 {{recipe:${i}}} 그리고 {{yt:${i}}}.`,
+        `## 섹션 ${i}\n\n{{img:${i}}}\n\n맛있는 본문 {{recipe:${i}}} 그리고 {{yt:${i}}}. 한 번 더 짚자면 {{ref:${i}}}.`,
     )
     .join("\n\n") +
   "\n\n결말 한 문단입니다." +
