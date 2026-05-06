@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@/shared/lib/utils";
+
 import { AdSlot } from "./AdSlot";
 import { AD_MIN_HEIGHT, AD_SLOT_IDS } from "./config";
 
@@ -11,6 +13,10 @@ type InArticleAdSlotProps = {
   index?: number;
 };
 
+// 모바일(=대다수가 RN WebView 앱)에서는 AdSense가 채워지지 않아 wrapper가 3초 후
+// collapse되며 큰 CLS가 발생한다. 모바일 웹 사용자는 거의 없는 편이라 모바일을
+// 통째로 숨기고 데스크톱에서만 노출한다. JS 런타임 분기 없이 paint 전에 적용되어
+// 깜빡임이 없다.
 export const InArticleAdSlot = ({
   className,
   index = 0,
@@ -22,7 +28,7 @@ export const InArticleAdSlot = ({
     <AdSlot
       slotId={slotId}
       minHeight={AD_MIN_HEIGHT.inArticle}
-      className={className}
+      className={cn("hidden md:block", className)}
       insStyle={{ display: "block", textAlign: "center" }}
       adFormat="fluid"
       adLayout="in-article"

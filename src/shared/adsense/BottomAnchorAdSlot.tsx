@@ -1,63 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-import { AdPlaceholder } from "./AdPlaceholder";
-import { ADSENSE_CLIENT_ID, AD_SLOT_IDS, IS_AD_TEST_MODE } from "./config";
-import { isAdsEnabled } from "./lib/isAdsEnabled";
-
-declare global {
-  interface Window {
-    adsbygoogle?: unknown[];
-  }
-}
-
-const AD_HEIGHT = 70;
-
-export const BottomAnchorAdSlot = () => {
-  const [hydrated, setHydrated] = useState(false);
-  const insRef = useRef<HTMLModElement>(null);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    const ins = insRef.current;
-    if (!ins) return;
-    if (ins.getAttribute("data-adsbygoogle-status")) return;
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch {
-      // adblock / network failure — silent
-    }
-  }, [hydrated]);
-
-  if (!hydrated) return null;
-  if (!isAdsEnabled()) return null;
-
-  const slotId = AD_SLOT_IDS.recipeBottomAnchor || undefined;
-
-  return (
-    <div
-      className="fixed bottom-0 inset-x-0 z-dropdown md:hidden overflow-hidden border-t border-gray-200 bg-white"
-      style={{ height: AD_HEIGHT }}
-    >
-      {!slotId ? (
-        IS_AD_TEST_MODE ? (
-          <AdPlaceholder minHeight={AD_HEIGHT} className="h-full w-full" />
-        ) : null
-      ) : (
-        <ins
-          ref={insRef}
-          className="adsbygoogle"
-          style={{ display: "block", width: "100%", height: AD_HEIGHT }}
-          data-ad-client={ADSENSE_CLIENT_ID}
-          data-ad-slot={slotId}
-          data-adtest={IS_AD_TEST_MODE ? "on" : undefined}
-        />
-      )}
-    </div>
-  );
-};
+// 데스크톱에서는 sticky 하단 anchor 바가 의미 없고, 모바일 트래픽은 거의 RN
+// WebView 앱이라 광고가 채워지지 않아 흰 바가 영구적으로 남는다. 모바일 웹
+// 사용자도 거의 없어 컴포넌트를 비활성화 상태로 둔다. 재활성화가 필요하면
+// 이전 commit에서 구현체를 복구한다.
+export const BottomAnchorAdSlot = () => null;
