@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -212,6 +213,7 @@ const IngredientRecipePage = () => {
           />
         </div>
       </FormProvider>
+      <BottomAnchorAdSlot />
     </Container>
   );
 };

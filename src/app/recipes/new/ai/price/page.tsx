@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 
+import { BottomAnchorAdSlot } from "@/shared/adsense";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
@@ -13,13 +14,16 @@ export const metadata: Metadata = {
 
 const BudgetRecipePage = () => {
   return (
-    <ErrorBoundary
-      fallback={
-        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
-      }
-    >
-      <BudgetRecipe />
-    </ErrorBoundary>
+    <>
+      <ErrorBoundary
+        fallback={
+          <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
+        }
+      >
+        <BudgetRecipe />
+      </ErrorBoundary>
+      <BottomAnchorAdSlot />
+    </>
   );
 };
 
