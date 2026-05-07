@@ -16,6 +16,7 @@ type SimpleRecipeGridItemProps = {
   setIsDrawerOpen: (id: string) => void;
   priority?: boolean;
   prefetch?: boolean;
+  isPrivate?: boolean;
 };
 
 const SimpleRecipeGridItem = ({
@@ -23,6 +24,7 @@ const SimpleRecipeGridItem = ({
   setIsDrawerOpen,
   priority,
   prefetch = false,
+  isPrivate = false,
 }: SimpleRecipeGridItemProps) => {
   const params = useParams();
   const { user: loggedInUser } = useUserStore();
@@ -36,6 +38,10 @@ const SimpleRecipeGridItem = ({
     e.stopPropagation();
     setIsDrawerOpen(recipe.id);
   };
+
+  const href = isPrivate
+    ? `/recipes/private/${recipe.id}`
+    : `/recipes/${recipe.id}`;
 
   return (
     <div className="group relative block overflow-hidden">
@@ -55,7 +61,7 @@ const SimpleRecipeGridItem = ({
       </p>
 
       <Link
-        href={`/recipes/${recipe.id}`}
+        href={href}
         aria-label={recipe.title}
         prefetch={prefetch ? true : null}
         className="absolute inset-0"

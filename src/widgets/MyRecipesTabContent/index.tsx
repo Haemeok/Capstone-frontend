@@ -7,7 +7,7 @@ import { InfiniteData } from "@tanstack/react-query";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
-import { BaseRecipesApiResponse } from "@/entities/recipe";
+import { MyRecipesPageResponse } from "@/entities/recipe";
 
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
 
@@ -26,9 +26,9 @@ const MyRecipesTabContent = ({
 
   const { data, error, hasNextPage, isFetching, isPending, ref } =
     useInfiniteScroll<
-      BaseRecipesApiResponse,
+      MyRecipesPageResponse,
       Error,
-      InfiniteData<BaseRecipesApiResponse>,
+      InfiniteData<MyRecipesPageResponse>,
       [string, string, "ASC" | "DESC"],
       number
     >({

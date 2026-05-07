@@ -1,9 +1,6 @@
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 
-import {
-  DetailedRecipesApiResponse,
-  fetchPagedRecipes,
-} from "@/entities/recipe";
+import { fetchPagedRecipes, MyRecipesPageResponse } from "@/entities/recipe";
 
 export const getMyRecipeItems = ({
   userId,
@@ -14,7 +11,7 @@ export const getMyRecipeItems = ({
   sort: string;
   pageParam?: number;
 }) => {
-  return fetchPagedRecipes<DetailedRecipesApiResponse>(
+  return fetchPagedRecipes<MyRecipesPageResponse>(
     END_POINTS.USER_RECIPES(userId),
     {
       sort,
