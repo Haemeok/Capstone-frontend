@@ -21,6 +21,7 @@ import {
 import {
   BaseRecipeGridItem,
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
+  MyRecipeListItem,
 } from "@/entities/recipe/model/types";
 
 import useDeleteRecipeMutation from "@/features/recipe-delete/model/hooks";
@@ -32,7 +33,7 @@ import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 import SimpleRecipeGridItem from "@/widgets/RecipeGrid/ui/SimpleRecipeGridItem";
 
 type RecipeGridProps = {
-  recipes: BaseRecipeGridItem[] | DetailedRecipeGridItemType[];
+  recipes: BaseRecipeGridItem[] | DetailedRecipeGridItemType[] | MyRecipeListItem[];
   isSimple?: boolean;
   hasNextPage?: boolean;
   isFetching?: boolean;
@@ -175,7 +176,10 @@ const RecipeGrid = ({
     );
   }
 
-  type RecipeInput = BaseRecipeGridItem | DetailedRecipeGridItemType;
+  type RecipeInput =
+    | BaseRecipeGridItem
+    | DetailedRecipeGridItemType
+    | MyRecipeListItem;
 
   const feedItems: FeedItem<RecipeInput>[] = showInFeedAds
     ? insertAdsIntoFeed<RecipeInput>(
@@ -197,6 +201,7 @@ const RecipeGrid = ({
           const recipe = item.recipe;
 
           if (isSimple) {
+            const maybePrivate = (recipe as Partial<MyRecipeListItem>).private;
             return (
               <SimpleRecipeGridItem
                 key={recipe.id}
@@ -204,6 +209,7 @@ const RecipeGrid = ({
                 setIsDrawerOpen={handleOpenSheet}
                 priority={index === 0}
                 prefetch={prefetch}
+                isPrivate={maybePrivate === true}
               />
             );
           }
