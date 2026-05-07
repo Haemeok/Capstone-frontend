@@ -53,7 +53,7 @@ export async function generateMetadata({
 
   const staticRecipe = await getStaticrecipionServer(recipeId);
 
-  if (!staticRecipe) return generateNotFoundRecipeMetadata();
+  if (!staticRecipe || staticRecipe.private) return generateNotFoundRecipeMetadata();
 
   return generateRecipeMetadata(staticRecipe, recipeId);
 }
@@ -75,6 +75,10 @@ export default async function RecipeDetailPage({
   const staticRecipe = await getStaticrecipionServer(recipeId);
 
   if (!staticRecipe) {
+    notFound();
+  }
+
+  if (staticRecipe.private) {
     notFound();
   }
 
