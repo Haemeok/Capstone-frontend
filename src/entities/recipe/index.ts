@@ -14,6 +14,8 @@ export type {
   BaseRecipesApiResponse,
   DetailedRecipeGridItem,
   DetailedRecipesApiResponse,
+  MyRecipeListItem,
+  MyRecipesPageResponse,
   Recipe,
   RecipeItemsQueryParams,
   RecipePayload,
