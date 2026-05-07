@@ -280,3 +280,27 @@ export type RecipeListItemStatus = {
 };
 
 export type RecipesStatusResponse = Record<string, RecipeListItemStatus>;
+
+// 2026-05-08 신규: 실제 /me/recipes 응답에 맞춘 타입.
+// 레거시 DetailedRecipeGridItem과 점진 마이그레이션 중 — 신규 코드만 사용.
+export type MyRecipeListItem = {
+  id: string;
+  title: string;
+  imageUrl: string;
+  dishType: string;
+  type: "YOUTUBE" | "USER" | "AI" | string;
+  createdAt: string;
+  likedByCurrentUser: boolean;
+  aiGenerated: boolean;
+  private: boolean;
+};
+
+export type MyRecipesPageResponse = {
+  content: MyRecipeListItem[];
+  page: {
+    size: number;
+    number: number;
+    totalElements: number;
+    totalPages: number;
+  };
+};
