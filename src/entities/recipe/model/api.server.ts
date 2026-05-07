@@ -371,3 +371,40 @@ export const getTrendingYoutubeRecipesOnServer = async (): Promise<
     return [];
   }
 };
+
+// 2026-05-08 신규: 비공개 라우트(/recipes/private/[id]) 전용 SSR fetcher.
+// cookies()를 사용하므로 호출 페이지는 자동으로 dynamic 모드가 됨.
+// 백엔드가 비-owner에게 401/404를 반환하면 그대로 null로 흘려보내고 페이지에서 notFound() 처리.
+export const getPrivateRecipeOnServer = async (
+  id: string
+): Promise<Recipe | null> => {
+  const API_URL = `${BASE_API_URL}/v2/recipes/${id}`;
+
+  try {
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore
+      .getAll()
+      .map(({ name, value }) => `${name}=${value}`)
+      .join("; ");
+    const res = await fetch(API_URL, {
+      headers: {
+        Cookie: cookieHeader,
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      if (res.status === 404 || res.status === 401 || res.status === 403) {
+        return null;
+      }
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+    return res.json();
+  } catch (error) {
+    console.error(
+      `[getPrivateRecipeOnServer] Failed to fetch private recipe ${id}:`,
+      error
+    );
+    return null;
+  }
+};
