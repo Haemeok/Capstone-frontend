@@ -55,6 +55,8 @@ export class SockJSWebSocketManager {
       });
 
       this.stompClient = Stomp.over(this.socket);
+      // STOMP 프로토콜 frame 로그 (>>> CONNECT, <<< CONNECTED, >>> SUBSCRIBE 등) 무음화.
+      this.stompClient.debug = () => {};
 
       this.stompClient.connect(
         {},
@@ -142,13 +144,7 @@ export class SockJSWebSocketManager {
     });
   }
 
-  private onConnected(frame: any): void {
-    console.log(
-      "✅ STOMP 연결 성공:",
-      frame.headers["user-name"] || "인증 성공"
-    );
-    console.log("🔗 연결된 transport:", this.socket._transport?.transport);
-
+  private onConnected(_frame: any): void {
     this.onStatusChange("connected");
     this.reconnectAttempts = 0;
 
@@ -157,7 +153,6 @@ export class SockJSWebSocketManager {
       (message: any) => {
         try {
           const notification = JSON.parse(message.body);
-          console.log("🔔 알림 수신:", notification);
 
           const wsMessage = {
             type: "NOTIFICATION",

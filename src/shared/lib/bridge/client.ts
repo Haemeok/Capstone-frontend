@@ -8,19 +8,8 @@ export const postMessage = <T = unknown>(
   type: BridgeMessageType,
   payload?: T
 ): void => {
-  console.log("[Bridge] postMessage called:", type, payload);
-  console.log("[Bridge] isAppWebView:", isAppWebView());
-  console.log(
-    "[Bridge] ReactNativeWebView:",
-    typeof window !== "undefined" ? !!window.ReactNativeWebView : "SSR"
-  );
-
-  if (!isAppWebView()) {
-    console.log("[Bridge] Not in WebView, skipping");
-    return;
-  }
+  if (!isAppWebView()) return;
 
   const message = JSON.stringify({ type, payload });
-  console.log("[Bridge] Sending:", message);
   window.ReactNativeWebView!.postMessage(message);
 };
