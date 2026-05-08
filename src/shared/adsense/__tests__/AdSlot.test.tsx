@@ -9,28 +9,28 @@ jest.mock("../config", () => ({
   AD_MIN_HEIGHT: { inFeed: 280, inArticle: 260 },
 }));
 
-jest.mock("../lib/isAdsEnabled", () => ({
-  isAdsEnabled: jest.fn(() => true),
+jest.mock("../AdsGateContext", () => ({
+  useAdsGate: jest.fn(() => ({ enabled: true, isTestUser: false })),
 }));
 
 import { AdSlot } from "../AdSlot";
-import { isAdsEnabled } from "../lib/isAdsEnabled";
+import { useAdsGate } from "../AdsGateContext";
 
-const mockedIsAdsEnabled = jest.mocked(isAdsEnabled);
+const mockedUseAdsGate = jest.mocked(useAdsGate);
 
 describe("AdSlot", () => {
   beforeEach(() => {
     jest.useFakeTimers();
     delete (window as typeof window & { adsbygoogle?: unknown[] }).adsbygoogle;
-    mockedIsAdsEnabled.mockReturnValue(true);
+    mockedUseAdsGate.mockReturnValue({ enabled: true, isTestUser: false });
   });
 
   afterEach(() => {
     jest.useRealTimers();
   });
 
-  it("isAdsEnabled false 면 null 렌더", () => {
-    mockedIsAdsEnabled.mockReturnValue(false);
+  it("게이트 enabled false 면 null 렌더", () => {
+    mockedUseAdsGate.mockReturnValue({ enabled: false, isTestUser: false });
     const { container } = render(<AdSlot slotId="1234567890" minHeight={280} />);
     expect(container).toBeEmptyDOMElement();
   });
