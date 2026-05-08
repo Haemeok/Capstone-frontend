@@ -7,6 +7,7 @@ import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
+import { isPrivateRecipe } from "@/entities/recipe";
 import { getPrivateRecipeOnServer } from "@/entities/recipe/model/api.server";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
@@ -48,8 +49,8 @@ export default async function PrivateRecipePage({
 
   const recipe = await getPrivateRecipeOnServer(recipeId);
 
-  // 404 / 401 / 403 / 비공개 아님 / private 플래그 false → 모두 notFound()
-  if (!recipe || !recipe.private) {
+  // 404 / 401 / 403 / 비공개 아님 → 모두 notFound()
+  if (!recipe || !isPrivateRecipe(recipe)) {
     notFound();
   }
 

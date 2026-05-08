@@ -18,6 +18,7 @@ import {
   type FeedItem,
 } from "@/shared/adsense/lib/insertAdsIntoFeed";
 
+import { isPrivateRecipe } from "@/entities/recipe";
 import {
   BaseRecipeGridItem,
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
@@ -201,14 +202,6 @@ const RecipeGrid = ({
           const recipe = item.recipe;
 
           if (isSimple) {
-            const maybePrivate = (recipe as Partial<MyRecipeListItem>).private;
-            // [DEBUG_PRIVATE_ROUTE] temp — remove after diagnosing
-            console.log("[DEBUG_PRIVATE_ROUTE] RecipeGrid passing to Simple", {
-              id: recipe.id,
-              maybePrivate,
-              willPassIsPrivate: maybePrivate === true,
-              recipeKeys: Object.keys(recipe),
-            });
             return (
               <SimpleRecipeGridItem
                 key={recipe.id}
@@ -216,7 +209,7 @@ const RecipeGrid = ({
                 setIsDrawerOpen={handleOpenSheet}
                 priority={index === 0}
                 prefetch={prefetch}
-                isPrivate={maybePrivate === true}
+                isPrivate={isPrivateRecipe(recipe)}
               />
             );
           }

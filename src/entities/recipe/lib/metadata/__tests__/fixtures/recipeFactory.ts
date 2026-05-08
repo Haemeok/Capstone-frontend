@@ -34,7 +34,6 @@ export const makeBaseRecipe = (
       sugar: 5,
       sodium: 800,
     },
-    private: false,
     aiGenerated: false,
     isCloneable: false,
     cookingTools: ["냄비"],

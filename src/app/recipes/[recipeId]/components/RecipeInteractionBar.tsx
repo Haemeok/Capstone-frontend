@@ -1,5 +1,6 @@
 "use client";
 
+import { isPrivateRecipe } from "@/entities/recipe";
 import { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { useRecipeStatus } from "@/features/recipe-status";
@@ -19,7 +20,7 @@ export default function RecipeInteractionBar({
     <RecipeInteractionButtons
       recipeId={staticRecipe.id}
       initialIsFavorite={status?.favoriteByCurrentUser ?? false}
-      initialIsPrivate={staticRecipe.private}
+      initialIsPrivate={isPrivateRecipe(staticRecipe)}
       title={staticRecipe.title}
       authorId={staticRecipe.author.id}
       isCloneable={staticRecipe.isCloneable}
