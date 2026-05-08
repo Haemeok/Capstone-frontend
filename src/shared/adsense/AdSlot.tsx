@@ -128,12 +128,14 @@ export const AdSlot = ({
 
   // RN WebView 환경에서 AdSense iframe이 가끔 부모 폭보다 살짝 넓은 creative를
   // 끌어오면서 viewport를 넘기고, iOS 특유의 bounce-scroll 좌우 흔들림이 발생한다.
-  // wrapper에 overflow-x-hidden과 max-width를, <ins>에 maxWidth:100%를 박아
-  // 어떤 creative가 와도 시각적 bleed가 잘리도록 가드한다.
+  // wrapper에 overflow-x-clip과 max-width를, <ins>에 maxWidth:100%를 박아
+  // 어떤 creative가 와도 시각적 bleed가 잘리도록 가드한다. overflow-x-hidden을
+  // 쓰면 spec상 overflow-y가 visible→auto로 자동 승격돼 wrapper에 의도치 않은
+  // 세로 스크롤이 생기므로, 스크롤 컨테이너를 만들지 않는 clip으로 박아둔다.
   return (
     <div
       ref={wrapperRef}
-      className={cn("max-w-full overflow-x-hidden", className)}
+      className={cn("max-w-full overflow-x-clip", className)}
       style={{ minHeight }}
     >
       <ins

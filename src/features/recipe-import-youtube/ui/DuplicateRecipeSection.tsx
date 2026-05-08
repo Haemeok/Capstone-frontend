@@ -6,8 +6,6 @@ import Link from "next/link";
 import { Bookmark } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
-import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
-import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { useRecipeBooks } from "@/entities/recipe-book";
@@ -120,12 +118,6 @@ const DuplicateRecipeSection = ({
     youtubeChannelName: channelName,
   };
 
-  const infoBadge = channelName ? (
-    <YouTubeChannelBadge channelName={channelName} className="min-[390px]:max-w-[140px]" />
-  ) : (
-    <YouTubeIconBadge />
-  );
-
   return (
     <>
       <div className="mx-auto w-full max-w-md space-y-6 rounded-3xl bg-white p-8 shadow-lg">
@@ -147,11 +139,7 @@ const DuplicateRecipeSection = ({
 
         {/* Recipe Card */}
         <div className="mx-auto w-[180px]">
-          <DetailedRecipeGridItem
-            recipe={detailedRecipeItem}
-            infoBadge={infoBadge}
-            priority
-          />
+          <DetailedRecipeGridItem recipe={detailedRecipeItem} priority />
         </div>
 
         {/* Actions */}

@@ -4,6 +4,8 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
+import { AnimatePresence, motion } from "motion/react";
+
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
@@ -55,7 +57,7 @@ const PreviewLoadingSkeleton = () => (
 );
 
 const PreviewErrorMessage = () => (
-  <div className="animate-fade-in mx-auto w-full rounded-2xl bg-red-50/80 p-6 text-center text-red-600">
+  <div className="mx-auto w-full rounded-2xl bg-red-50/80 p-6 text-center text-red-600">
     <p className="font-medium">
       영상 정보를 불러올 수 없습니다.
       <br />
@@ -63,6 +65,19 @@ const PreviewErrorMessage = () => (
     </p>
   </div>
 );
+
+// 분기 간 swap 시 전·후 컴포넌트가 같은 키로 보이도록 wrapper에 부드러운 등장
+// 모션을 일관되게 적용한다. tw-animate-css의 fade-in-up이 너무 짧고 갑작스러워
+// "팝업이 화면을 미는" 느낌이 났던 부분을 spring 류 ease로 길게 풀어준다.
+const sectionVariants = {
+  initial: { opacity: 0, y: 18, scale: 0.97 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -8, scale: 0.98 },
+};
+const sectionTransition = {
+  duration: 0.42,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
 
 type YoutubePreviewSectionProps = {
   onLoginRequired: () => void;
@@ -173,35 +188,73 @@ export const YoutubePreviewSection = ({
 
   return (
     <div ref={previewSectionRef}>
-      {isLoading && <PreviewLoadingSkeleton />}
+      <AnimatePresence mode="wait" initial={false}>
+        {isLoading && (
+          <motion.div
+            key="loading"
+            variants={sectionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={sectionTransition}
+          >
+            <PreviewLoadingSkeleton />
+          </motion.div>
+        )}
 
-      {validatedUrl && !isLoadingMeta && !youtubeMeta && <PreviewErrorMessage />}
+        {!isLoading && validatedUrl && !youtubeMeta && (
+          <motion.div
+            key="error"
+            variants={sectionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={sectionTransition}
+          >
+            <PreviewErrorMessage />
+          </motion.div>
+        )}
 
-      {hasYoutubeData && isDuplicate && duplicateCheck?.recipeId && (
-        <div className="animate-fade-in-up">
-          <ErrorBoundary fallback={<DuplicateRecipeErrorFallback />}>
-            <DuplicateRecipeSection
-              recipeId={duplicateCheck.recipeId}
-              youtubeMeta={youtubeMeta}
-              urlSource={urlSource}
+        {hasYoutubeData && isDuplicate && duplicateCheck?.recipeId && (
+          <motion.div
+            key="duplicate"
+            variants={sectionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={sectionTransition}
+          >
+            <ErrorBoundary fallback={<DuplicateRecipeErrorFallback />}>
+              <DuplicateRecipeSection
+                recipeId={duplicateCheck.recipeId}
+                youtubeMeta={youtubeMeta}
+                urlSource={urlSource}
+              />
+            </ErrorBoundary>
+          </motion.div>
+        )}
+
+        {hasYoutubeData && !isDuplicate && (
+          <motion.div
+            key="preview"
+            variants={sectionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={sectionTransition}
+          >
+            {hasNoQuota && (
+              <UsageLimitBanner message="오늘 유튜브 레시피 추출 횟수를 모두 사용했어요." />
+            )}
+            <YoutubePreviewCard
+              meta={youtubeMeta}
+              onConfirm={handleConfirmImport}
+              isLoading={isImporting}
+              disabled={hasNoQuota}
             />
-          </ErrorBoundary>
-        </div>
-      )}
-
-      {hasYoutubeData && !isDuplicate && (
-        <div className="animate-fade-in-up">
-          {hasNoQuota && (
-            <UsageLimitBanner message="오늘 유튜브 레시피 추출 횟수를 모두 사용했어요." />
-          )}
-          <YoutubePreviewCard
-            meta={youtubeMeta}
-            onConfirm={handleConfirmImport}
-            isLoading={isImporting}
-            disabled={hasNoQuota}
-          />
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
