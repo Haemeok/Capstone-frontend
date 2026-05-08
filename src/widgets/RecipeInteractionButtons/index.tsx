@@ -59,7 +59,6 @@ const RecipeInteractionButtons = ({
         ? `/recipes/private/${recipeId}`
         : `/recipes/${recipeId}`;
     router.replace(target);
-    router.refresh();
   };
 
   return (
