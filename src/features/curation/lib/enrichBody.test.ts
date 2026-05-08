@@ -29,10 +29,14 @@ describe("enrichBodyMarkdown", () => {
     expect(out).toContain("[steps](#cur:steps/2)");
   });
 
-  it("매 2번째 H2 직후마다 광고 1개 (H2 셋이면 광고 1개)", () => {
+  it("각 H2 직후마다 광고 1개 (H2 셋이면 광고 3개)", () => {
     const out = enrichBodyMarkdown(baseBody);
     const ads = out.match(/\[ad\]\(#cur:ad\/\d+\)/g) ?? [];
-    expect(ads.length).toBe(1);
+    expect(ads).toEqual([
+      "[ad](#cur:ad/0)",
+      "[ad](#cur:ad/1)",
+      "[ad](#cur:ad/2)",
+    ]);
   });
 
   it("H2가 없으면 원문 그대로 반환", () => {
@@ -40,12 +44,16 @@ describe("enrichBodyMarkdown", () => {
     expect(enrichBodyMarkdown(md)).toBe(md);
   });
 
-  it("H2가 4개면 광고 2개, 각 광고는 0/1 인덱스로 unique", () => {
+  it("H2가 4개면 광고 4개, 각 광고는 0~3 인덱스로 unique", () => {
     const md = ["인트로.", "## A", "x", "## B", "x", "## C", "x", "## D", "x"].join("\n\n");
     const out = enrichBodyMarkdown(md);
     const ads = out.match(/\[ad\]\(#cur:ad\/\d+\)/g) ?? [];
-    expect(ads.length).toBe(2);
-    expect(ads).toEqual(["[ad](#cur:ad/0)", "[ad](#cur:ad/1)"]);
+    expect(ads).toEqual([
+      "[ad](#cur:ad/0)",
+      "[ad](#cur:ad/1)",
+      "[ad](#cur:ad/2)",
+      "[ad](#cur:ad/3)",
+    ]);
   });
 
   it("각 H2 섹션 안 슬롯 순서: yt → desc → ingredients → steps → recipe-link → img", () => {
