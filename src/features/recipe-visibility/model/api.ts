@@ -1,7 +1,14 @@
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
-export const postRecipeVisibility = async (recipeId: string) => {
-  const response = await api.post(END_POINTS.RECIPE_VISIBILITY(recipeId));
+import type { Visibility } from "@/entities/recipe/model/types";
+
+export const patchRecipeVisibility = async (
+  recipeId: string,
+  visibility: Visibility
+) => {
+  const response = await api.patch(END_POINTS.RECIPE_VISIBILITY(recipeId), {
+    visibility,
+  });
   return response;
 };
