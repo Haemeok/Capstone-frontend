@@ -23,7 +23,7 @@ export const triggerYoutubeImport = async (
 export const checkYoutubeDuplicate = async (
   url: string
 ): Promise<YoutubeDuplicateCheckResponse> => {
-  return api.get<YoutubeDuplicateCheckResponse>("/recipes/youtube/check", {
+  return api.get<YoutubeDuplicateCheckResponse>("/dev/recipes/youtube/check", {
     params: { url },
   });
 };
