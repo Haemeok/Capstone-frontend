@@ -4,6 +4,48 @@ import { Comment } from "@/entities/comment";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
 import { User } from "@/entities/user";
 
+// Dev V3 (2026-05-03 swagger reference) 신규 enum.
+// listingStatus / lifecycleStatus는 백엔드 실수로 응답에 들어오지만 프론트는 사용 안 함.
+export type Visibility = "PUBLIC" | "PRIVATE" | "RESTRICTED";
+export type RecipeSource = "USER" | "AI" | "YOUTUBE" | "REELS";
+export type ImageStatus = "PENDING" | "READY" | "FAILED";
+
+// R01 신규 객체. legacy youtube*/extractor* 필드보다 우선해서 표시.
+export type YoutubeInfo = {
+  videoId: string;
+  youtubeUrl: string;
+  channelName?: string;
+  videoTitle?: string;
+  thumbnailUrl?: string;
+  channelProfileUrl?: string;
+  subscriberCount?: number;
+  channelId?: string;
+  videoViewCount?: number;
+  extractorId?: string | null;
+};
+
+export type ExtractionEvidenceLevel = "HIGH" | "MEDIUM" | "LOW";
+
+export type ExtractionInfo = {
+  hasSubtitle: boolean;
+  hasDescriptionIngredient: boolean;
+  hasCommentIngredient: boolean;
+  usedGeminiAnalysis: boolean;
+  evidenceLevel: ExtractionEvidenceLevel | string;
+  tokenCost: number;
+};
+
+export type IngredientCalculationSummary = {
+  totalCalories: number;
+  totalIngredientCost: number;
+  mappedCount: number;
+  partialCount: number;
+  unresolvedCount: number;
+  customCount: number;
+  calculatedCount: number;
+  pendingCount: number;
+};
+
 export type BaseRecipesApiResponse = PageResponse<BaseRecipeGridItem>;
 export type DetailedRecipesApiResponse = PageResponse<DetailedRecipeGridItem>;
 export type StaticDetailedRecipesApiResponse =
@@ -32,6 +74,8 @@ export type BaseRecipeGridItem = {
   likeCount: number;
   likedByCurrentUser: boolean;
   favoriteByCurrentUser: boolean;
+  visibility?: Visibility;
+  source?: RecipeSource;
 };
 
 export type DetailedRecipeGridItem = BaseRecipeGridItem & {
@@ -105,7 +149,17 @@ export type Recipe = {
   likeCount: number;
   likedByCurrentUser: boolean;
   favoriteByCurrentUser: boolean;
+  /**
+   * @deprecated Dev V3에서 visibility로 대체 예정. 백엔드가 호환 동안 같이 보냄.
+   * 신규 코드는 `visibility` 또는 `isPrivateRecipe(recipe)` helper 사용.
+   */
   private: boolean;
+  visibility?: Visibility;
+  source?: RecipeSource;
+  imageGenerationModel?: string | null;
+  youtubeInfo?: YoutubeInfo | null;
+  extractionInfo?: ExtractionInfo | null;
+  ingredientCalculationSummary?: IngredientCalculationSummary;
   aiGenerated: boolean;
   totalCalories: number;
   createdAt?: string;
@@ -292,7 +346,13 @@ export type MyRecipeListItem = {
   createdAt: string;
   likedByCurrentUser: boolean;
   aiGenerated: boolean;
+  /**
+   * @deprecated Dev V3에서 visibility로 대체 예정. 신규 코드는 `visibility` 사용.
+   */
   private: boolean;
+  visibility?: Visibility;
+  source?: RecipeSource;
+  imageStatus?: ImageStatus;
 };
 
 export type MyRecipesPageResponse = {
