@@ -71,9 +71,13 @@ export default async function RootLayout({
           <GlobalLoginEncourageDrawer />
           <GlobalNotificationPermissionDrawer />
           <GlobalReviewGateDrawer />
+          {/* AdSenseScript는 AdsGateProvider 안에서 게이트를 받으므로
+              AppProviders 내부에 둔다. next/script 의 afterInteractive 전략은
+              컴포넌트의 DOM 위치와 무관하게 <head>로 주입되므로 위치 변경에
+              따른 로딩 타이밍 영향은 없다. */}
+          <AdSenseScript />
         </AppProviders>
         <GoogleAnalytics />
-        <AdSenseScript />
       </body>
     </html>
   );

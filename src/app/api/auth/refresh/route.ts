@@ -3,17 +3,20 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 import {
+  attachDxIdCookie,
   authDiagLog,
   fingerprint,
   fingerprintFromSetCookies,
   generateDiagId,
+  readOrGenerateDxId,
 } from "@/shared/lib/auth/diag";
 
 const DIAG_SOURCE = "next-refresh-route";
 
 export async function POST(request: NextRequest) {
   const diagId = generateDiagId();
-  authDiagLog({ phase: "refresh-start", source: DIAG_SOURCE, diagId });
+  const dxId = readOrGenerateDxId(request);
+  authDiagLog({ phase: "refresh-start", source: DIAG_SOURCE, diagId, dxId });
 
   try {
     const cookieStore = await cookies();
@@ -26,6 +29,7 @@ export async function POST(request: NextRequest) {
       phase: "refresh-cookie-read",
       source: DIAG_SOURCE,
       diagId,
+      dxId,
       accessFp,
       refreshFp,
     });
@@ -39,11 +43,14 @@ export async function POST(request: NextRequest) {
         phase: "refresh-no-token",
         source: DIAG_SOURCE,
         diagId,
+        dxId,
       });
-      return NextResponse.json(
+      const noTokenResponse = NextResponse.json(
         { error: "No refresh token available" },
         { status: 401 }
       );
+      attachDxIdCookie(noTokenResponse, dxId);
+      return noTokenResponse;
     }
 
     const baseUrl = BASE_API_URL;
@@ -52,6 +59,7 @@ export async function POST(request: NextRequest) {
       phase: "refresh-pre-backend",
       source: DIAG_SOURCE,
       diagId,
+      dxId,
       refreshFp,
     });
 
@@ -69,6 +77,7 @@ export async function POST(request: NextRequest) {
       phase: "refresh-backend-response",
       source: DIAG_SOURCE,
       diagId,
+      dxId,
       status: response.status,
     });
 
@@ -79,12 +88,15 @@ export async function POST(request: NextRequest) {
         phase: "refresh-backend-error",
         source: DIAG_SOURCE,
         diagId,
+        dxId,
         status: response.status,
       });
-      return NextResponse.json(
+      const errorResponse = NextResponse.json(
         { error: "Token refresh failed" },
         { status: response.status }
       );
+      attachDxIdCookie(errorResponse, dxId);
+      return errorResponse;
     }
 
     const data = await response.json();
@@ -105,6 +117,7 @@ export async function POST(request: NextRequest) {
       phase: "refresh-backend-setcookie",
       source: DIAG_SOURCE,
       diagId,
+      dxId,
       status: response.status,
       backendSetCookieAccessFp,
       backendSetCookieRefreshFp,
@@ -119,11 +132,13 @@ export async function POST(request: NextRequest) {
       phase: "refresh-response-append",
       source: DIAG_SOURCE,
       diagId,
+      dxId,
       backendSetCookieAccessFp,
       backendSetCookieRefreshFp,
       meta: { appendedCount: setCookieHeaders.length },
     });
 
+    attachDxIdCookie(nextResponse, dxId);
     return nextResponse;
   } catch (error) {
     console.error("Token refresh API error:", error);
@@ -131,13 +146,16 @@ export async function POST(request: NextRequest) {
       phase: "refresh-exception",
       source: DIAG_SOURCE,
       diagId,
+      dxId,
       meta: {
         error: error instanceof Error ? error.message : String(error),
       },
     });
-    return NextResponse.json(
+    const exceptionResponse = NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
     );
+    attachDxIdCookie(exceptionResponse, dxId);
+    return exceptionResponse;
   }
 }

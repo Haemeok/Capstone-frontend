@@ -2,9 +2,11 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 import {
+  attachDxIdCookie,
   authDiagLog,
   fingerprint,
   isAuthDiagEnabled,
+  readOrGenerateDxId,
 } from "@/shared/lib/auth/diag";
 
 const DIAG_SOURCE = "next-debug-cookie";
@@ -23,18 +25,23 @@ export async function GET(request: NextRequest) {
   const diagId = searchParams.get("diagId") ?? undefined;
   const callerSource = searchParams.get("source") ?? DIAG_SOURCE;
 
+  const dxId = readOrGenerateDxId(request);
+
   authDiagLog({
     phase,
     source: callerSource,
     diagId,
+    dxId,
     accessFp: fingerprint(accessToken),
     refreshFp: fingerprint(refreshToken),
   });
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     ok: true,
     timestamp: new Date().toISOString(),
     hasAccessToken: !!accessToken,
     hasRefreshToken: !!refreshToken,
   });
+  attachDxIdCookie(response, dxId);
+  return response;
 }
