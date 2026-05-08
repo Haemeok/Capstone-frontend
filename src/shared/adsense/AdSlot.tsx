@@ -3,8 +3,8 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 
 import { AdPlaceholder } from "./AdPlaceholder";
+import { useAdsGate } from "./AdsGateContext";
 import { ADSENSE_CLIENT_ID, IS_AD_TEST_MODE } from "./config";
-import { isAdsEnabled } from "./lib/isAdsEnabled";
 
 declare global {
   interface Window {
@@ -38,6 +38,7 @@ export const AdSlot = ({
   adFormat,
   adLayout,
 }: AdSlotProps) => {
+  const { enabled } = useAdsGate();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const insRef = useRef<HTMLModElement>(null);
   // StrictMode dev에서 effect가 두 번 실행되거나 동일 페이지에 다수 슬롯이
@@ -111,7 +112,7 @@ export const AdSlot = ({
     return () => window.clearTimeout(timer);
   }, []);
 
-  if (!isAdsEnabled()) return null;
+  if (!enabled) return null;
 
   if (!slotId) {
     return IS_AD_TEST_MODE ? (
