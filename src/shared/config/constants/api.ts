@@ -56,7 +56,7 @@ export const END_POINTS = {
   MY_INGREDIENTS_BY_ID: (id: string) => `/me/fridge/items/${id}`,
   MY_INGREDIENTS_BULK: "/me/fridge/items/bulk",
   MY_INGREDIENTS_IDS: "/me/fridge/items/ids",
-  USER_RECIPES: (id: string) => `/users/${id}/recipes`,
+  USER_RECIPES: (id: string) => `/dev/users/${id}/recipes`,
   USER_STREAK: "/me/streak",
   PRESIGNED_URLS: "/recipes/presigned-urls",
   USER_PRESIGNED_URLS: (userId: string) =>
