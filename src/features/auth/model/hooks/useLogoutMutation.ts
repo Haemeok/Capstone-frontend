@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
+import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
+
 import { queryClient } from "@/shared/lib/queryClient";
 
 import { useUserStore } from "@/entities/user";
@@ -30,6 +32,7 @@ const useLogoutMutation = () => {
     onSuccess: () => {
       useUserStore.setState({ isLoggingOut: false });
       logoutAction();
+      notifyAuthState('logout');
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
       if (typeof window !== "undefined") {

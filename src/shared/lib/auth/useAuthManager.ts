@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 
+import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
+
 import { useUserStore } from "@/entities/user/model/store";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
@@ -32,6 +34,7 @@ export const useAuthManager = () => {
   useEffect(() => {
     const handleTokenRefresh = () => {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+      notifyAuthState('refresh');
       pingDebugCookie(
         "after-token-refresh",
         generateClientDiagId(),

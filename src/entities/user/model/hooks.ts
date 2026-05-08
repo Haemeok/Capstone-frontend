@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
+
 import { getMyInfo, getUserInfo } from "./api";
 import { useUserStore } from "./store";
 
@@ -56,6 +58,7 @@ export const useMyInfoQuery = () => {
   useEffect(() => {
     if (userData) {
       setUser(userData);
+      notifyAuthState('login');
     } else if (isError) {
       setUser(null);
     }
