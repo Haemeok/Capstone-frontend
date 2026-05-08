@@ -8,6 +8,7 @@ declare global {
 
 // 웹 → 앱 메시지
 export type BridgeMessageType =
+  | "AUTH_STATE_CHANGED"
   | "HAPTIC"
   | "NAVIGATION"
   | "SHARE"
@@ -33,6 +34,11 @@ export type AuthDiagBridgePayload = {
 export type AppToWebMessage =
   | { type: "NOTIFICATION_STATUS"; payload: { status: NotificationStatus } }
   | { type: "AUTH_DIAG"; payload: AuthDiagBridgePayload };
+
+// auth state
+export type AuthStatePayload = {
+  event: "login" | "refresh" | "logout";
+};
 
 // haptic
 export type HapticStyle =

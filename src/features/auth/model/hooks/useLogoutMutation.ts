@@ -32,7 +32,7 @@ const useLogoutMutation = () => {
     onSuccess: () => {
       useUserStore.setState({ isLoggingOut: false });
       logoutAction();
-      notifyAuthState('logout');
+      notifyAuthState("logout");
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
       if (typeof window !== "undefined") {

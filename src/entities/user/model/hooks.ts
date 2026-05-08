@@ -58,7 +58,7 @@ export const useMyInfoQuery = () => {
   useEffect(() => {
     if (userData) {
       setUser(userData);
-      notifyAuthState('login');
+      notifyAuthState("login");
     } else if (isError) {
       setUser(null);
     }

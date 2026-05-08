@@ -34,7 +34,7 @@ export const useAuthManager = () => {
   useEffect(() => {
     const handleTokenRefresh = () => {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
-      notifyAuthState('refresh');
+      notifyAuthState("refresh");
       pingDebugCookie(
         "after-token-refresh",
         generateClientDiagId(),
