@@ -215,7 +215,7 @@ const RecipeGrid = ({
       <div className={gridClass}>
         {feedItems.map((item, index) => {
           if (item.__kind === "ad") {
-            return <InFeedAdSlot key={item.key} />;
+            return <InFeedAdSlot key={item.key} index={item.adIndex} />;
           }
           const recipe = item.recipe;
 

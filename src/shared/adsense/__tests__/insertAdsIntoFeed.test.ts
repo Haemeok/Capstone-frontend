@@ -16,15 +16,16 @@ describe("insertAdsIntoFeed", () => {
     const result = insertAdsIntoFeed(items, 10);
     expect(result).toHaveLength(11);
     expect(result[9].__kind).toBe("recipe");
-    expect(result[10]).toEqual({ __kind: "ad", key: "ad-9" });
+    expect(result[10]).toEqual({ __kind: "ad", key: "ad-9", adIndex: 0 });
   });
 
-  it("20개 레시피, N=10 → 광고 2개", () => {
+  it("20개 레시피, N=10 → 광고 2개, adIndex 0/1", () => {
     const items = makeRecipes(20);
     const result = insertAdsIntoFeed(items, 10);
     const ads = result.filter((x) => x.__kind === "ad");
     expect(ads).toHaveLength(2);
     expect(ads.map((a) => (a.__kind === "ad" ? a.key : ""))).toEqual(["ad-9", "ad-19"]);
+    expect(ads.map((a) => (a.__kind === "ad" ? a.adIndex : -1))).toEqual([0, 1]);
   });
 
   it("광고 key 는 절대 인덱스 기반 → 무한 스크롤에서도 안정", () => {

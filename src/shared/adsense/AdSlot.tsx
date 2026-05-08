@@ -28,6 +28,9 @@ type AdSlotProps = {
   // 않아 TagError가 발생한다 (특히 같은 페이지에 2번 이상 박을 때 가장 자주 터짐).
   adFormat?: string;
   adLayout?: string;
+  // Display 광고가 콘솔에서 "반응형(auto + full-width-responsive)"로 등록된
+  // 경우 이 플래그를 켜면 <ins>에 data-full-width-responsive="true"를 박는다.
+  fullWidthResponsive?: boolean;
 };
 
 export const AdSlot = ({
@@ -37,6 +40,7 @@ export const AdSlot = ({
   insStyle = DEFAULT_INS_STYLE,
   adFormat,
   adLayout,
+  fullWidthResponsive,
 }: AdSlotProps) => {
   const { enabled } = useAdsGate();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -130,6 +134,9 @@ export const AdSlot = ({
         data-ad-slot={slotId}
         data-ad-format={adFormat}
         data-ad-layout={adLayout}
+        data-full-width-responsive={
+          fullWidthResponsive ? "true" : undefined
+        }
         data-adtest={IS_AD_TEST_MODE ? "on" : undefined}
       />
     </div>
