@@ -10,10 +10,12 @@ import { Pencil, Wand2 } from "lucide-react";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import ShareButton from "@/shared/ui/ShareButton";
 
+import type { Visibility } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user";
 
 import { RecipeSaveButton } from "@/features/recipe-save";
 import { useRecipeStatus } from "@/features/recipe-status";
+import { LockButton } from "@/features/recipe-visibility";
 
 import {
   markRemixOnboarded,
@@ -23,7 +25,7 @@ import {
 type RecipeInteractionButtonsProps = {
   recipeId: string;
   initialIsFavorite: boolean;
-  initialIsPrivate: boolean;
+  visibility?: Visibility;
   title: string;
   authorId: string;
   isCloneable: boolean;
@@ -32,6 +34,7 @@ type RecipeInteractionButtonsProps = {
 const RecipeInteractionButtons = ({
   recipeId,
   initialIsFavorite,
+  visibility,
   title,
   authorId,
   isCloneable,
@@ -48,6 +51,15 @@ const RecipeInteractionButtons = ({
     triggerHaptic("Light");
     markRemixOnboarded();
     router.push(`/recipes/${recipeId}/remix`);
+  };
+
+  const handleVisibilityChange = (next: Visibility) => {
+    const target =
+      next === "PRIVATE"
+        ? `/recipes/private/${recipeId}`
+        : `/recipes/${recipeId}`;
+    router.replace(target);
+    router.refresh();
   };
 
   return (
@@ -71,6 +83,13 @@ const RecipeInteractionButtons = ({
           </Link>
           <p className="mt-1 text-sm font-bold">수정</p>
         </div>
+      )}
+      {isOwner && visibility && (
+        <LockButton
+          recipeId={recipeId}
+          visibility={visibility}
+          onToggleSuccess={handleVisibilityChange}
+        />
       )}
       {canRemix && (
         <RemixOnboardingTooltip
