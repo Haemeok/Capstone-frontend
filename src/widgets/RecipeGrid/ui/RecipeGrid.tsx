@@ -202,6 +202,13 @@ const RecipeGrid = ({
 
           if (isSimple) {
             const maybePrivate = (recipe as Partial<MyRecipeListItem>).private;
+            // [DEBUG_PRIVATE_ROUTE] temp — remove after diagnosing
+            console.log("[DEBUG_PRIVATE_ROUTE] RecipeGrid passing to Simple", {
+              id: recipe.id,
+              maybePrivate,
+              willPassIsPrivate: maybePrivate === true,
+              recipeKeys: Object.keys(recipe),
+            });
             return (
               <SimpleRecipeGridItem
                 key={recipe.id}
