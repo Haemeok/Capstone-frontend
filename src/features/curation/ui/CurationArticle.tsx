@@ -4,8 +4,6 @@ import type { TocItem } from "@/shared/ui/article/types";
 import type { SavedCurationRecord } from "@/entities/curation";
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
-import { alegreya } from "@/features/archetype/ui/fonts";
-
 import { enrichBodyMarkdown } from "../lib/enrichBody";
 import { CurationCategoryLabel } from "./CurationCategoryLabel";
 import { CurationMarkdown } from "./CurationMarkdown";
@@ -13,6 +11,22 @@ import { CurationMarkdown } from "./CurationMarkdown";
 const formatTocTitle = (r: StaticRecipe): string => {
   const channel = r.youtubeChannelName?.trim();
   return channel ? `${channel} · ${r.title}` : r.title;
+};
+
+const toCategoryInitials = (category: string): string =>
+  category
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word[0]?.toUpperCase() ?? "")
+    .join("");
+
+const formatPublishedDate = (iso: string): string => {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}.${mm}.${dd}`;
 };
 
 const TOC_ACCENT = "bg-green-900/10 font-semibold text-green-900";
@@ -41,14 +55,18 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
             {data.dek}
           </p>
         )}
-        <p className={`${alegreya.variable} mt-4 text-sm text-gray-500`}>
-          <span
-            className="text-base tracking-tight text-gray-700"
-            style={{ fontFamily: "var(--font-alegreya), serif" }}
-          >
-            RECIPIO
-          </span>{" "}
-          레시피오 {data.category} 에디터
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-sm text-gray-500">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/web-app-manifest-192x192.png"
+            alt=""
+            className="h-5 w-5 rounded"
+          />
+          <span className="text-gray-700">레시피오</span>
+          <span aria-hidden="true" className="text-gray-400">·</span>
+          <span>{toCategoryInitials(data.category)} 에디터</span>
+          <span aria-hidden="true" className="text-gray-400">·</span>
+          <time dateTime={data.savedAt}>{formatPublishedDate(data.savedAt)}</time>
         </p>
       </header>
 

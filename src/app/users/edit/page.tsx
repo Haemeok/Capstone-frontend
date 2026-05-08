@@ -94,6 +94,11 @@ const UserInfoChangePage = () => {
   const nickname = watch("nickname");
   const description = watch("description");
 
+  const hasChanges =
+    nickname !== initialData.nickname ||
+    description !== initialData.description ||
+    profileImageFile !== null;
+
   const onSubmit = (data: FormValues) => {
     const changedData: PutUserInfoVariables = {};
     let hasChanges = false;
@@ -128,7 +133,7 @@ const UserInfoChangePage = () => {
           <button
             type="button"
             onClick={handleCancel}
-            className="text-olive-mint cursor-pointer border-none bg-transparent text-base font-bold"
+            className="cursor-pointer border-none bg-transparent text-base text-gray-600"
           >
             취소
           </button>
@@ -136,10 +141,10 @@ const UserInfoChangePage = () => {
           <button
             type="button"
             onClick={handleSubmit(onSubmit)}
-            disabled={!isValid || isLoading}
-            className={`border-none bg-transparent text-base font-bold ${isValid && !isLoading
-                ? "text-olive-mint cursor-pointer"
-                : "cursor-default text-gray-400"
+            disabled={!isValid || !hasChanges || isLoading}
+            className={`border-none bg-transparent text-base font-semibold ${isValid && hasChanges && !isLoading
+                ? "cursor-pointer text-olive-light"
+                : "cursor-default text-gray-300"
               }`}
           >
             {isLoading ? "저장 중..." : "확인"}
@@ -153,9 +158,12 @@ const UserInfoChangePage = () => {
           className="flex flex-grow flex-col pt-20 md:pt-0"
         >
           <div className="relative z-[3] pl-4">
-            <label htmlFor="profileImageInput" className="cursor-pointer">
+            <label
+              htmlFor="profileImageInput"
+              className="block h-[100px] w-[100px] cursor-pointer"
+            >
               <div
-                className={`relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-[3px] bg-cover bg-center transition-colors ${imageError ? "border-red-400" : "border-white"} ${previewImageUrl ? "bg-transparent" : "bg-gray-300"
+                className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border-[3px] bg-cover bg-center transition-colors ${imageError ? "border-red-400" : "border-white"} ${previewImageUrl ? "bg-transparent" : "bg-gray-300"
                   }`}
                 style={
                   previewImageUrl
@@ -280,7 +288,7 @@ const UserInfoChangePage = () => {
                     {...field}
                     id="description"
                     placeholder="소개를 입력해주세요."
-                    rows={3}
+                    rows={5}
                     className={`w-full resize-none rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:border-olive-light focus:bg-white focus:outline-none focus:ring-1 focus:ring-olive-light/20 ${errors.description
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-gray-200"
