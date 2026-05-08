@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { Visibility } from "@/entities/recipe/model/types";
+import { useUserStore } from "@/entities/user";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 
@@ -20,7 +21,10 @@ const useRecipeVisibilityMutation = (
   return useMutation({
     mutationFn: (next: Visibility) => patchRecipeVisibility(recipeId, next),
     onSuccess: (_data, next) => {
-      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      const userId = useUserStore.getState().user?.id;
+      if (userId) {
+        queryClient.invalidateQueries({ queryKey: ["recipes", userId] });
+      }
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
       addToast({
         message:
