@@ -23,7 +23,6 @@ export const prepareRemixPayload = (
     favoriteByCurrentUser: _favoriteByCurrentUser,
     ratingInfo: _ratingInfo,
     comments: _comments,
-    private: _private,
     aiGenerated: _aiGenerated,
     totalCalories: _totalCalories,
     totalIngredientCost: _totalIngredientCost,

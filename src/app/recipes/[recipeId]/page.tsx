@@ -7,6 +7,7 @@ import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
+import { isPrivateRecipe } from "@/entities/recipe";
 import {
   generateNotFoundRecipeMetadata,
   generateRecipeJsonLd,
@@ -53,7 +54,7 @@ export async function generateMetadata({
 
   const staticRecipe = await getStaticrecipionServer(recipeId);
 
-  if (!staticRecipe || staticRecipe.private) return generateNotFoundRecipeMetadata();
+  if (!staticRecipe || isPrivateRecipe(staticRecipe)) return generateNotFoundRecipeMetadata();
 
   return generateRecipeMetadata(staticRecipe, recipeId);
 }
@@ -78,7 +79,7 @@ export default async function RecipeDetailPage({
     notFound();
   }
 
-  if (staticRecipe.private) {
+  if (isPrivateRecipe(staticRecipe)) {
     notFound();
   }
 

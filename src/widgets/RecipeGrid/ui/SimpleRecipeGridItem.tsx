@@ -43,16 +43,6 @@ const SimpleRecipeGridItem = ({
     ? `/recipes/private/${recipe.id}`
     : `/recipes/${recipe.id}`;
 
-  // [DEBUG_PRIVATE_ROUTE] temp — remove after diagnosing
-  console.log("[DEBUG_PRIVATE_ROUTE] SimpleRecipeGridItem render", {
-    id: recipe.id,
-    title: recipe.title,
-    isPrivate,
-    href,
-    rawPrivate: (recipe as { private?: unknown }).private,
-    rawKeys: Object.keys(recipe),
-  });
-
   return (
     <div className="group relative block overflow-hidden">
       <Image

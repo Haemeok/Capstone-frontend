@@ -56,7 +56,6 @@ const FAKE_RECIPE: Recipe = {
   likeCount: 0,
   likedByCurrentUser: false,
   favoriteByCurrentUser: false,
-  private: false,
   aiGenerated: false,
   isCloneable: false,
   totalCalories: 0,

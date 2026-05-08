@@ -79,7 +79,6 @@ const FAKE_RECIPE_GAJI: Recipe = {
   likeCount: 0,
   likedByCurrentUser: false,
   favoriteByCurrentUser: false,
-  private: false,
   aiGenerated: false,
   isCloneable: false,
   totalCalories: 996,

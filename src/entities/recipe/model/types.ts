@@ -149,11 +149,6 @@ export type Recipe = {
   likeCount: number;
   likedByCurrentUser: boolean;
   favoriteByCurrentUser: boolean;
-  /**
-   * @deprecated Dev V3에서 visibility로 대체 예정. 백엔드가 호환 동안 같이 보냄.
-   * 신규 코드는 `visibility` 또는 `isPrivateRecipe(recipe)` helper 사용.
-   */
-  private: boolean;
   visibility?: Visibility;
   source?: RecipeSource;
   imageGenerationModel?: string | null;
@@ -224,7 +219,6 @@ const defaultRecipeKeys = [
   "comments",
   "imageUrl",
   "imageKey",
-  "private",
   "aiGenerated",
   "totalCalories",
   "nutrition",
@@ -346,10 +340,6 @@ export type MyRecipeListItem = {
   createdAt: string;
   likedByCurrentUser: boolean;
   aiGenerated: boolean;
-  /**
-   * @deprecated Dev V3에서 visibility로 대체 예정. 신규 코드는 `visibility` 사용.
-   */
-  private: boolean;
   visibility?: Visibility;
   source?: RecipeSource;
   imageStatus?: ImageStatus;
