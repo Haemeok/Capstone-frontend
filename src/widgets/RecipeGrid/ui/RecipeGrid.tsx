@@ -4,7 +4,9 @@ import React, { useCallback, useState } from "react";
 import Link from "next/link";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { LockKeyhole, LockOpen } from "lucide-react";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import Circle from "@/shared/ui/Circle";
 import { PencilIcon, TrashIcon } from "@/shared/ui/icons";
@@ -27,6 +29,7 @@ import {
 
 import useDeleteRecipeMutation from "@/features/recipe-delete/model/hooks";
 import { RecipeSaveButton } from "@/features/recipe-save";
+import useRecipeVisibilityMutation from "@/features/recipe-visibility/model/useRecipeVisibilityMutation";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 import EmptyRecipeCTA from "@/widgets/RecipeGrid/ui/EmptyRecipeCTA";
@@ -119,6 +122,21 @@ const RecipeGrid = ({
   const { mutate: deleteRecipe } = useDeleteRecipeMutation(
     selectedItemId ?? ""
   );
+
+  const { mutate: toggleVisibility, isPending: isVisibilityPending } =
+    useRecipeVisibilityMutation(selectedItemId ?? "");
+
+  const selectedRecipe = recipes.find((r) => r.id === selectedItemId);
+  const isSelectedPrivate = selectedRecipe
+    ? isPrivateRecipe(selectedRecipe)
+    : false;
+
+  const handleToggleVisibility = () => {
+    if (!selectedRecipe || isVisibilityPending) return;
+    triggerHaptic("Light");
+    toggleVisibility(isSelectedPrivate ? "PUBLIC" : "PRIVATE");
+    setIsSheetOpen(false);
+  };
 
   const handleImageRetry = useCallback(() => {
     if (queryKeyToInvalidate) {
@@ -305,6 +323,37 @@ const RecipeGrid = ({
                 <p>수정</p>
                 {isMobile && <PencilIcon size={20} />}
               </Link>
+              <div
+                className={
+                  isMobile
+                    ? "h-px w-full bg-gray-300"
+                    : "h-px w-full bg-gray-200"
+                }
+              />
+              <button
+                type="button"
+                disabled={isVisibilityPending || !selectedRecipe}
+                className={
+                  isMobile
+                    ? "flex w-full cursor-pointer justify-between disabled:opacity-50"
+                    : "flex w-full cursor-pointer justify-center gap-2 px-6 py-4 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                }
+                onClick={handleToggleVisibility}
+              >
+                {!isMobile &&
+                  (isSelectedPrivate ? (
+                    <LockOpen size={20} />
+                  ) : (
+                    <LockKeyhole size={20} />
+                  ))}
+                <p>{isSelectedPrivate ? "공개로 전환" : "비공개로 전환"}</p>
+                {isMobile &&
+                  (isSelectedPrivate ? (
+                    <LockOpen size={20} />
+                  ) : (
+                    <LockKeyhole size={20} />
+                  ))}
+              </button>
               <div
                 className={
                   isMobile
