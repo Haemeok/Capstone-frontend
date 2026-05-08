@@ -4,7 +4,6 @@ type IngredientHeroProps = {
   name: string;
   categoryLabel: string | null;
   imageUrl: string | null;
-  shortDescription: string | null;
   caloriesPer100g: number | null;
 };
 
@@ -12,7 +11,6 @@ const IngredientHero = ({
   name,
   categoryLabel,
   imageUrl,
-  shortDescription,
   caloriesPer100g,
 }: IngredientHeroProps) => {
   const metaPieces: string[] = [];
@@ -37,14 +35,7 @@ const IngredientHero = ({
       </div>
       <div className="flex flex-col items-center gap-1">
         <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
-        {metaLine && (
-          <p className="text-sm text-gray-500">{metaLine}</p>
-        )}
-        {shortDescription && (
-          <p className="text-sm text-gray-600 text-center mt-1 leading-relaxed">
-            {shortDescription}
-          </p>
-        )}
+        {metaLine && <p className="text-sm text-gray-500">{metaLine}</p>}
       </div>
     </div>
   );

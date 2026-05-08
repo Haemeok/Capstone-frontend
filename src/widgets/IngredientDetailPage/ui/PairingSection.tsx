@@ -1,31 +1,68 @@
+import Link from "next/link";
+
+import { ChevronRight } from "lucide-react";
+
+import { Image } from "@/shared/ui/image/Image";
+
+import type { IngredientPairItem } from "@/entities/ingredient";
+
 type PairingSectionProps = {
-  good: string[];
-  bad: string[];
+  good: IngredientPairItem[];
+  bad: IngredientPairItem[];
 };
 
-const PairingChipRow = ({ items }: { items: string[] }) => (
-  <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 py-1">
-    {items.map((name) => (
-      <span
-        key={name}
-        className="inline-flex items-center rounded-full bg-gray-100 px-3 py-2 text-sm text-gray-700 flex-shrink-0"
-      >
-        {name}
-      </span>
-    ))}
-  </div>
-);
+type PairingChipRowProps = {
+  items: IngredientPairItem[];
+};
 
-const PairingSection = ({ good, bad }: PairingSectionProps) => {
-  const hasGood = good.length > 0;
-  const hasBad = bad.length > 0;
+const PairingChipRow = ({ items }: PairingChipRowProps) => {
+  const linkable = items.filter(
+    (item): item is IngredientPairItem & { id: string; imageUrl: string } =>
+      Boolean(item.id) && Boolean(item.imageUrl)
+  );
 
-  if (!hasGood && !hasBad) {
-    return null;
-  }
+  if (linkable.length === 0) return null;
 
   return (
-    <section className="bg-white rounded-2xl p-4">
+    <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 py-1">
+      {linkable.map((item) => (
+        <Link
+          key={item.id}
+          href={`/ingredients/${item.id}`}
+          className="inline-flex items-center gap-2 rounded-full bg-gray-100 pl-1.5 pr-3 py-1.5 text-sm text-gray-700 flex-shrink-0 hover:bg-gray-200 transition-colors"
+        >
+          <span className="w-10 h-10 rounded-full overflow-hidden bg-white flex-shrink-0">
+            <Image
+              src={item.imageUrl}
+              alt={item.name}
+              width={40}
+              height={40}
+              aspectRatio="1 / 1"
+              fit="cover"
+            />
+          </span>
+          <span>{item.name}</span>
+          <ChevronRight size={14} className="text-gray-400" />
+        </Link>
+      ))}
+    </div>
+  );
+};
+
+const PairingSection = ({ good, bad }: PairingSectionProps) => {
+  const goodLinkable = good.filter(
+    (item) => Boolean(item.id) && Boolean(item.imageUrl)
+  );
+  const badLinkable = bad.filter(
+    (item) => Boolean(item.id) && Boolean(item.imageUrl)
+  );
+  const hasGood = goodLinkable.length > 0;
+  const hasBad = badLinkable.length > 0;
+
+  if (!hasGood && !hasBad) return null;
+
+  return (
+    <section className="px-5 py-6 border-t border-gray-100">
       <h2 className="text-lg font-bold text-gray-900 mb-3">궁합 재료</h2>
 
       {hasGood && (

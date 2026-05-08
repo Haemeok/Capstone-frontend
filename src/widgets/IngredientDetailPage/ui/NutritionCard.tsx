@@ -4,22 +4,16 @@ type NutritionCardProps = {
   nutrition: IngredientNutrition | null;
 };
 
-type MacroBarProps = {
+type NutritionRowProps = {
   label: string;
   value: number;
   unit: string;
 };
 
-const MacroBar = ({ label, value, unit }: MacroBarProps) => (
-  <div className="flex items-center gap-3">
-    <span className="w-14 text-sm text-gray-700">{label}</span>
-    <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
-      <div
-        className="h-full bg-olive-light"
-        style={{ width: `${Math.min(value * 4, 100)}%` }}
-      />
-    </div>
-    <span className="w-16 text-right text-sm font-semibold text-gray-900">
+const NutritionRow = ({ label, value, unit }: NutritionRowProps) => (
+  <div className="flex items-baseline justify-between py-2 border-b border-gray-100 last:border-b-0">
+    <span className="text-sm text-gray-700">{label}</span>
+    <span className="text-sm font-semibold text-gray-900">
       {value}
       <span className="text-xs font-normal text-gray-500 ml-0.5">{unit}</span>
     </span>
@@ -35,29 +29,22 @@ const NutritionCard = ({ nutrition }: NutritionCardProps) => {
       <p className="text-sm text-gray-500 mb-4">100g 기준이에요</p>
 
       <div className="rounded-xl bg-gray-50 p-4">
-        <div className="flex items-baseline gap-2 mb-4">
+        <div className="flex items-baseline gap-2 mb-3">
           <span className="text-3xl font-bold text-gray-900">
-            {nutrition.calories}
+            {nutrition.kcal}
           </span>
           <span className="text-sm text-gray-500">kcal</span>
         </div>
 
-        <div className="flex flex-col gap-3">
-          <MacroBar label="단백질" value={nutrition.protein} unit="g" />
-          <MacroBar label="탄수화물" value={nutrition.carb} unit="g" />
-          <MacroBar label="지방" value={nutrition.fat} unit="g" />
-          {nutrition.fiber !== undefined && (
-            <MacroBar label="식이섬유" value={nutrition.fiber} unit="g" />
+        <div className="flex flex-col">
+          <NutritionRow label="단백질" value={nutrition.proteinG} unit="g" />
+          <NutritionRow label="탄수화물" value={nutrition.carbohydrateG} unit="g" />
+          <NutritionRow label="지방" value={nutrition.fatG} unit="g" />
+          {nutrition.sugarG !== undefined && (
+            <NutritionRow label="당류" value={nutrition.sugarG} unit="g" />
           )}
-          {nutrition.sugar !== undefined && (
-            <MacroBar label="당류" value={nutrition.sugar} unit="g" />
-          )}
-          {nutrition.sodium !== undefined && (
-            <MacroBar
-              label="나트륨"
-              value={nutrition.sodium / 100}
-              unit="mg"
-            />
+          {nutrition.sodiumMg !== undefined && (
+            <NutritionRow label="나트륨" value={nutrition.sodiumMg} unit="mg" />
           )}
         </div>
       </div>

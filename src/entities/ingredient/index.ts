@@ -10,6 +10,7 @@ export type {
   IngredientDetailView,
   IngredientItem,
   IngredientNutrition,
+  IngredientPairItem,
   IngredientPayload,
   IngredientsApiResponse,
   IngredientStorageView,
