@@ -188,7 +188,7 @@ export const YoutubePreviewSection = ({
 
   return (
     <div ref={previewSectionRef}>
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode="wait">
         {isLoading && (
           <motion.div
             key="loading"
@@ -216,8 +216,11 @@ export const YoutubePreviewSection = ({
         )}
 
         {hasYoutubeData && isDuplicate && duplicateCheck?.recipeId && (
+          // key에 recipeId를 묶어 두 다른 중복 레시피로 빠르게 갈아탈 때도 outer가
+          // 매번 remount되어 entrance 모션이 일관되게 발화하도록 한다. 같은 key를
+          // 쓰면 prop만 바뀌고 컴포넌트는 살아있어 motion이 안 뜀.
           <motion.div
-            key="duplicate"
+            key={`duplicate-${duplicateCheck.recipeId}`}
             variants={sectionVariants}
             initial="initial"
             animate="animate"

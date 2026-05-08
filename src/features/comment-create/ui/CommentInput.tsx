@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+
+import { cn } from "@/shared/lib/utils";
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
 
 import { User } from "@/entities/user";
@@ -20,6 +23,7 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
   const { createComment } = useCreateCommentMutation(recipeId);
   const { user } = useUserStore();
   const { setInputFocused } = useInputFocusStore();
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (comment: string) => {
     if (!recipeId || !user?.id) return;
@@ -32,15 +36,23 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
   };
 
   const handleFocus = () => {
+    setIsFocused(true);
     setInputFocused(true);
   };
 
   const handleBlur = () => {
+    setIsFocused(false);
     setInputFocused(false);
   };
 
   return (
-    <div className="fixed right-0 bottom-20 left-0 mx-4 rounded-2xl border-t bg-white px-2 py-1 shadow-md md:hidden">
+    <div
+      className={cn(
+        "fixed right-0 left-0 mx-4 rounded-2xl border-t bg-white px-2 py-1 shadow-md md:hidden",
+        !isFocused && "bottom-20"
+      )}
+      style={isFocused ? { bottom: "var(--keyboard-height, 0px)" } : undefined}
+    >
       <div className="mx-auto max-w-3xl">
         <CommentInputForm
           author={author}
