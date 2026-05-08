@@ -23,8 +23,8 @@ const buildDescription = (
   recipeCount: number
 ): string => {
   const { name, pairings, nutrition } = detail;
-  const firstBadPair = pairings.bad[0];
-  const kcal = nutrition?.calories ?? null;
+  const firstBadPair = pairings.bad[0]?.name;
+  const kcal = nutrition?.kcal ?? null;
 
   if (firstBadPair) {
     const recipeTail =
@@ -52,7 +52,7 @@ const buildOgDescription = (
   detail: IngredientDetailView,
   recipeCount: number
 ): string => {
-  const firstBadPair = detail.pairings.bad[0];
+  const firstBadPair = detail.pairings.bad[0]?.name;
   const recipeTail =
     recipeCount > 0
       ? `인기 레시피 ${recipeCount}개까지`

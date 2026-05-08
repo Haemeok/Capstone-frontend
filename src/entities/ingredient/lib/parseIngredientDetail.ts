@@ -17,10 +17,10 @@ const normalizeNutrition = (
 ): IngredientNutrition | null => {
   if (!raw) return null;
   const hasMacro =
-    Boolean(raw.calories) ||
-    Boolean(raw.protein) ||
-    Boolean(raw.carb) ||
-    Boolean(raw.fat);
+    Boolean(raw.kcal) ||
+    Boolean(raw.proteinG) ||
+    Boolean(raw.carbohydrateG) ||
+    Boolean(raw.fatG);
   return hasMacro ? raw : null;
 };
 
@@ -38,15 +38,12 @@ export const parseIngredientDetail = (
     notes: api.storageNotes,
   },
   pairings: {
-    good: parseSlashList(api.goodPairs),
-    bad: parseSlashList(api.badPairs),
+    good: api.goodPairItems ?? [],
+    bad: api.badPairItems ?? [],
   },
   cookingMethods: parseSlashList(api.recommendedCookingMethods),
-  shortDescription: api.shortDescription ?? null,
   coupangLink: api.coupangLink ?? null,
   nutrition: normalizeNutrition(api.nutritionPer100g),
   seasonMonths: api.seasonMonths ?? [],
-  benefits: api.benefits ?? [],
-  prepTip: api.prepTip ?? null,
-  substitutes: parseSlashList(api.substitutes),
+  benefits: api.benefits ?? null,
 });
