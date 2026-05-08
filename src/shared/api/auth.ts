@@ -24,6 +24,17 @@ let refreshPromise: Promise<RefreshResult> | null = null;
 let lastRefreshFailTime = 0;
 const REFRESH_COOLDOWN_MS = 5000;
 
+// forceLogout 토스트 dedup용 flag. dispatch에만 영향, refresh 시도 자체는 막지 않는다.
+// - 병렬 401: 같은 refreshPromise를 share한 caller들이 동시에 dispatch 호출하던 문제 해결
+// - cooldown 만료 후 또 expired: refresh는 다시 시도하되 dispatch는 스킵 → 토스트 1회로 한정
+// - refresh가 success로 회복되면 flag reset → 새로 만료되면 토스트 다시 뜰 수 있음 (다른 탭 로그인 등)
+let forceLogoutSent = false;
+
+export const resetAuthState = () => {
+  forceLogoutSent = false;
+  lastRefreshFailTime = 0;
+};
+
 // /api/auth/refresh route가 쿠키 없음을 감지해 내려주는 body error 메시지.
 // 이 시그널이 오면 "한 번도 로그인 안 한 사용자"로 간주해 forceLogout dispatch를 스킵한다.
 // 계약 정의: docs/auth-contract.md (Refresh response discrimination)
@@ -63,11 +74,19 @@ export const refreshToken = async (): Promise<boolean> => {
   try {
     const result = await ongoing;
     if (result === "success") {
+      // 회복 — 다른 탭 로그인 등으로 refresh가 통한 케이스. flag reset해서
+      // 다음에 또 만료되면 토스트가 정상적으로 한 번 뜰 수 있게 한다.
+      forceLogoutSent = false;
       return true;
     }
     lastRefreshFailTime = Date.now();
     if (result === "expired" || result === "network_error") {
-      dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
+      // 같은 ongoing promise를 share한 병렬 caller들이 동시에 여기 도달할 수 있다.
+      // JS는 single-thread라 if+assign 블록은 atomic — 첫 caller만 dispatch.
+      if (!forceLogoutSent) {
+        forceLogoutSent = true;
+        dispatchForceLogoutEvent("REFRESH_TOKEN_EXPIRED");
+      }
     }
     // "no_session"은 조용히 실패 — 쿠키가 애초에 없는 사용자라 "로그인 만료"는 거짓말.
     return false;
