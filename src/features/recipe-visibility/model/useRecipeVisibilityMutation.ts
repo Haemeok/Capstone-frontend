@@ -1,28 +1,39 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import type { Visibility } from "@/entities/recipe/model/types";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
-import { postRecipeVisibility } from "./api";
+import { patchRecipeVisibility } from "./api";
 
-const useRecipeVisibilityMutation = (recipeId: string) => {
+type Options = {
+  onSuccess?: (next: Visibility) => void;
+};
+
+const useRecipeVisibilityMutation = (
+  recipeId: string,
+  options?: Options
+) => {
   const queryClient = useQueryClient();
   const { addToast } = useToastStore();
-  const recipeVisibilityMutation = useMutation({
-    mutationFn: () => postRecipeVisibility(recipeId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["recipe", recipeId],
-      });
+
+  return useMutation({
+    mutationFn: (next: Visibility) => patchRecipeVisibility(recipeId, next),
+    onSuccess: (_data, next) => {
+      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
       addToast({
-        message: "레시피 공개 상태가 변경되었습니다.",
+        message:
+          next === "PRIVATE"
+            ? "비공개로 전환됐어요"
+            : "공개로 전환됐어요",
         variant: "default",
         size: "small",
         position: "bottom",
       });
+      options?.onSuccess?.(next);
     },
   });
-
-  return recipeVisibilityMutation;
 };
 
 export default useRecipeVisibilityMutation;
