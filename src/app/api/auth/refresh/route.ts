@@ -3,19 +3,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 import {
-  attachDxIdCookie,
   authDiagLog,
   fingerprint,
   fingerprintFromSetCookies,
   generateDiagId,
-  readOrGenerateDxId,
+  readDxIdFromHeader,
 } from "@/shared/lib/auth/diag";
 
 const DIAG_SOURCE = "next-refresh-route";
 
 export async function POST(request: NextRequest) {
   const diagId = generateDiagId();
-  const dxId = readOrGenerateDxId(request);
+  const dxId = readDxIdFromHeader(request);
   authDiagLog({ phase: "refresh-start", source: DIAG_SOURCE, diagId, dxId });
 
   try {
@@ -45,12 +44,10 @@ export async function POST(request: NextRequest) {
         diagId,
         dxId,
       });
-      const noTokenResponse = NextResponse.json(
+      return NextResponse.json(
         { error: "No refresh token available" },
         { status: 401 }
       );
-      attachDxIdCookie(noTokenResponse, dxId);
-      return noTokenResponse;
     }
 
     const baseUrl = BASE_API_URL;
@@ -91,12 +88,10 @@ export async function POST(request: NextRequest) {
         dxId,
         status: response.status,
       });
-      const errorResponse = NextResponse.json(
+      return NextResponse.json(
         { error: "Token refresh failed" },
         { status: response.status }
       );
-      attachDxIdCookie(errorResponse, dxId);
-      return errorResponse;
     }
 
     const data = await response.json();
@@ -138,7 +133,6 @@ export async function POST(request: NextRequest) {
       meta: { appendedCount: setCookieHeaders.length },
     });
 
-    attachDxIdCookie(nextResponse, dxId);
     return nextResponse;
   } catch (error) {
     console.error("Token refresh API error:", error);
@@ -151,11 +145,9 @@ export async function POST(request: NextRequest) {
         error: error instanceof Error ? error.message : String(error),
       },
     });
-    const exceptionResponse = NextResponse.json(
+    return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
     );
-    attachDxIdCookie(exceptionResponse, dxId);
-    return exceptionResponse;
   }
 }

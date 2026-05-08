@@ -1,4 +1,5 @@
 import { END_POINTS } from "../config/constants/api";
+import { getDxId } from "../lib/auth/dxId";
 import { isClient } from "./config";
 import { API_CONFIG } from "./config";
 import type { ForceLogoutEventDetail } from "./types";
@@ -105,6 +106,7 @@ const performTokenRefresh = async (): Promise<RefreshResult> => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Dx-Id": getDxId(),
       },
       credentials: "include",
     });

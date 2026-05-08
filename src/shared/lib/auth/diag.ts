@@ -1,36 +1,23 @@
 import crypto from "node:crypto";
-import type { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export const AUTH_DIAG_PREFIX = "[AUTH_DIAG]";
 
-const DX_ID_COOKIE_NAME = "dx_id";
 const DX_ID_PATTERN = /^[a-f0-9]{32}$/;
-const DX_ID_MAX_AGE_SECONDS = 60 * 60 * 24 * 365 * 2; // 2 years
+const DX_ID_HEADER_NAME = "x-dx-id";
 
-// Anonymous device-tracking id for diagnostics. Persists across token loss
-// (separate cookie). Lets us group same-device phase sequences when the
-// auth tokens themselves are missing (e.g. refresh-no-token incidents).
-export const readOrGenerateDxId = (request: NextRequest): string => {
-  const existing = request.cookies.get(DX_ID_COOKIE_NAME)?.value;
-  if (existing && DX_ID_PATTERN.test(existing)) {
-    return existing;
-  }
-  return crypto.randomBytes(16).toString("hex");
+// Client (LocalStorage)에서 보낸 dxId를 검증해서 그대로 반환.
+// 형식 깨졌거나 없으면 undefined — 서버는 발급하지 않는다.
+// (cookie 발급 시 clearAllCookies로 함께 사라지는 문제 회피.)
+export const sanitizeDxId = (raw: unknown): string | undefined => {
+  if (typeof raw !== "string") return undefined;
+  return DX_ID_PATTERN.test(raw) ? raw : undefined;
 };
 
-export const attachDxIdCookie = (
-  response: NextResponse,
-  dxId: string
-): void => {
-  response.cookies.set({
-    name: DX_ID_COOKIE_NAME,
-    value: dxId,
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: DX_ID_MAX_AGE_SECONDS,
-  });
+export const readDxIdFromHeader = (
+  request: NextRequest
+): string | undefined => {
+  return sanitizeDxId(request.headers.get(DX_ID_HEADER_NAME));
 };
 
 export const isAuthDiagEnabled = (): boolean =>

@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 
+import { cn } from "@/shared/lib/utils";
+
 import { AdPlaceholder } from "./AdPlaceholder";
 import { useAdsGate } from "./AdsGateContext";
 import { ADSENSE_CLIENT_ID, IS_AD_TEST_MODE } from "./config";
@@ -124,12 +126,20 @@ export const AdSlot = ({
     ) : null;
   }
 
+  // RN WebView 환경에서 AdSense iframe이 가끔 부모 폭보다 살짝 넓은 creative를
+  // 끌어오면서 viewport를 넘기고, iOS 특유의 bounce-scroll 좌우 흔들림이 발생한다.
+  // wrapper에 overflow-x-hidden과 max-width를, <ins>에 maxWidth:100%를 박아
+  // 어떤 creative가 와도 시각적 bleed가 잘리도록 가드한다.
   return (
-    <div ref={wrapperRef} className={className} style={{ minHeight }}>
+    <div
+      ref={wrapperRef}
+      className={cn("max-w-full overflow-x-hidden", className)}
+      style={{ minHeight }}
+    >
       <ins
         ref={insRef}
         className="adsbygoogle"
-        style={insStyle}
+        style={{ ...insStyle, maxWidth: "100%" }}
         data-ad-client={ADSENSE_CLIENT_ID}
         data-ad-slot={slotId}
         data-ad-format={adFormat}

@@ -33,7 +33,7 @@ export const InArticleAdSlot = ({
     <AdSlot
       slotId={slotId}
       minHeight={AD_MIN_HEIGHT.inArticle}
-      className={cn(!isTestUser && "hidden md:block", className)}
+      className={cn("px-2", !isTestUser && "hidden md:block", className)}
       insStyle={{ display: "block", textAlign: "center" }}
       adFormat="fluid"
       adLayout="in-article"

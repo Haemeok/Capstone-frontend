@@ -2,15 +2,19 @@
 
 import { useMemo } from "react";
 
+import { getDxId } from "../auth/dxId";
 import { useAppMessageListener } from "./useAppMessage";
 import type { AuthDiagBridgePayload } from "./types";
 
-const forwardRnPhase = async (payload: AuthDiagBridgePayload) => {
+const forwardRnPhase = async (
+  payload: AuthDiagBridgePayload,
+  dxId: string
+) => {
   try {
     await fetch("/api/auth/diag", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...payload, dxId }),
       credentials: "include",
       cache: "no-store",
     });
@@ -19,12 +23,16 @@ const forwardRnPhase = async (payload: AuthDiagBridgePayload) => {
   }
 };
 
-const probeWebViewCookie = async (payload: AuthDiagBridgePayload) => {
+const probeWebViewCookie = async (
+  payload: AuthDiagBridgePayload,
+  dxId: string
+) => {
   try {
     const params = new URLSearchParams({
       phase: payload.phase,
       diagId: payload.diagId,
       source: "webview-post-rn-event",
+      dxId,
     });
     await fetch(`/api/auth/debug-cookie?${params.toString()}`, {
       method: "GET",
@@ -40,8 +48,9 @@ export const useAuthDiagBridge = () => {
   const handlers = useMemo(
     () => ({
       AUTH_DIAG: (payload: AuthDiagBridgePayload) => {
-        void forwardRnPhase(payload);
-        void probeWebViewCookie(payload);
+        const dxId = getDxId();
+        void forwardRnPhase(payload, dxId);
+        void probeWebViewCookie(payload, dxId);
       },
     }),
     []

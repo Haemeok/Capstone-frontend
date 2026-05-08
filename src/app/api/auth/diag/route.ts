@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import {
-  attachDxIdCookie,
   authDiagLog,
   isAuthDiagEnabled,
-  readOrGenerateDxId,
+  sanitizeDxId,
 } from "@/shared/lib/auth/diag";
 
 type DiagBody = {
   phase?: unknown;
   source?: unknown;
   diagId?: unknown;
+  dxId?: unknown;
   meta?: unknown;
 };
 
@@ -32,15 +32,12 @@ export async function POST(request: NextRequest) {
   const phase = typeof body.phase === "string" ? body.phase : "unknown";
   const source = typeof body.source === "string" ? body.source : "unknown";
   const diagId = typeof body.diagId === "string" ? body.diagId : undefined;
+  const dxId = sanitizeDxId(body.dxId);
   const meta =
     body.meta && typeof body.meta === "object" && !Array.isArray(body.meta)
       ? (body.meta as Record<string, unknown>)
       : undefined;
 
-  const dxId = readOrGenerateDxId(request);
   authDiagLog({ phase, source, diagId, dxId, meta });
-
-  const response = NextResponse.json({ ok: true });
-  attachDxIdCookie(response, dxId);
-  return response;
+  return NextResponse.json({ ok: true });
 }
