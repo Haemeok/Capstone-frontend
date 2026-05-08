@@ -13,7 +13,7 @@ import { normalizeEulReulInText } from "@/shared/lib/korean";
 //   6) recipe 링크 ([... →](/recipes/...))
 //   7) img (![...](https://...))
 //
-// 또한 매 2번째 H2 섹션 직후마다 광고 슬롯 1개 삽입 (3 H2 → 1개, 4 H2 → 2개).
+// 또한 매 H2 섹션(레시피 1개) 직후마다 인아티클 광고 슬롯 1개 삽입.
 
 const YT_LINE_RE =
   /^\s*\[[^\]]*?\]\(https?:\/\/(?:www\.)?(?:youtu\.be|youtube\.com)[^\s)]*\)\s*$/;
@@ -127,11 +127,8 @@ export const enrichBodyMarkdown = (md: string): string => {
     const parsed = parseSection(headerLine, bodyText);
     out.push(renderSection(parsed, s));
 
-    // 매 2번째 H2 섹션 직후 광고 슬롯 1개 (1-based로 짝수번째 직후).
-    if ((s + 1) % 2 === 0) {
-      out.push(`[ad](#cur:ad/${adIndex})`);
-      adIndex += 1;
-    }
+    out.push(`[ad](#cur:ad/${adIndex})`);
+    adIndex += 1;
   }
 
   return normalizeEulReulInText(out.join("\n\n"));
