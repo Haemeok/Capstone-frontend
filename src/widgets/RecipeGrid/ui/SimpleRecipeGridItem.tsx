@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, LockKeyhole } from "lucide-react";
 
 import { Image } from "@/shared/ui/image/Image";
 
@@ -66,6 +66,15 @@ const SimpleRecipeGridItem = ({
         prefetch={prefetch ? true : null}
         className="absolute inset-0"
       />
+
+      {isPrivate && (
+        <div
+          className="pointer-events-none absolute top-1.5 left-1.5 flex h-6 w-6 items-center justify-center rounded-full text-white"
+          aria-label="비공개 레시피"
+        >
+          <LockKeyhole size={14} strokeWidth={2.25} />
+        </div>
+      )}
 
       {showActionButton && (
         <div className="absolute top-0 right-0 p-0.5">
