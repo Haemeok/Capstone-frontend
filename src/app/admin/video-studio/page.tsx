@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+
+import { getRecipe } from "@/entities/recipe/model/api";
+import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 
 import { RecipeSearchPanel } from "@/app/admin/image-quality-test/components/RecipeSearchPanel";
 import { buildPrompt } from "@/app/admin/image-quality-test/lib/buildPrompt";
-import { getRecipe } from "@/entities/recipe/model/api";
-import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 
 import { ImageGenerationPanel } from "./components/ImageGenerationPanel";
 import { ImageGrid } from "./components/ImageGrid";
@@ -30,7 +31,10 @@ const VideoStudioPage = () => {
   const [refImage, setRefImage] = useState<string | null>(null);
   const { state: imageState, run: runImage, cancel: cancelImage } =
     useImageGeneration();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  // null = no manual pick yet → fall back to first generated image
+  const [userSelectedImage, setUserSelectedImage] = useState<string | null>(
+    null
+  );
 
   // video stage
   const [videoPrompt, setVideoPrompt] = useState(() =>
@@ -68,15 +72,12 @@ const VideoStudioPage = () => {
     }
   }, []);
 
-  // auto-select first generated image whenever a fresh batch arrives
-  useEffect(() => {
-    if (imageState.status === "success" && !selectedImage) {
-      setSelectedImage(imageState.imageDataUrls[0] ?? null);
-    }
-  }, [imageState, selectedImage]);
+  const generatedImages =
+    imageState.status === "success" ? imageState.imageDataUrls : [];
+  const selectedImage = userSelectedImage ?? generatedImages[0] ?? null;
 
   const handleGenerateImages = useCallback(() => {
-    setSelectedImage(null);
+    setUserSelectedImage(null);
     runImage({
       prompt: imagePrompt,
       quality,
@@ -116,8 +117,6 @@ const VideoStudioPage = () => {
       : videoState.status === "submitting"
       ? "submit"
       : undefined;
-  const generatedImages =
-    imageState.status === "success" ? imageState.imageDataUrls : [];
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl bg-beige-light/40 p-4 md:p-6">
@@ -175,7 +174,7 @@ const VideoStudioPage = () => {
         <ImageGrid
           imageUrls={generatedImages}
           selectedUrl={selectedImage}
-          onSelect={setSelectedImage}
+          onSelect={setUserSelectedImage}
         />
         <VideoResultCard state={videoState} />
       </div>
