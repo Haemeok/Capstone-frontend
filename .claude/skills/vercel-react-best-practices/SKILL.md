@@ -66,6 +66,7 @@ Reference these guidelines when:
 - `client-scroll-container-listener` - Subscribe to the actual scroll container, not window, when the app uses a custom scroll wrapper
 - `client-tanstack-prefetch-key-match` - Keep TanStack Query queryKey byte-identical between SSR prefetch and client hook to avoid silent hydration cache miss
 - `client-confirm-response-shape-before-refactor` - Log Object.keys at the fetcher boundary to confirm backend response shape before updating TypeScript types; observed data over typed theory, single source of truth over dual fallback
+- `client-cancel-recheck-after-await` - In async polling/streaming loops, re-check the cancel flag after every await before any setState; loop-boundary checks alone let stale post-cancel responses overwrite cancelled state
 
 ### 5. Re-render Optimization (MEDIUM)
 
@@ -73,6 +74,7 @@ Reference these guidelines when:
 - `rerender-memo` - Extract expensive work into memoized components
 - `rerender-dependencies` - Use primitive dependencies in effects
 - `rerender-derived-state` - Subscribe to derived booleans, not raw values
+- `rerender-derive-instead-of-mirror` - Compute derived state at render; do not mirror it via useEffect+setState (avoids cascading-render anti-pattern flagged by react-hooks/set-state-in-effect)
 - `rerender-functional-setstate` - Use functional setState for stable callbacks
 - `rerender-lazy-state-init` - Pass function to useState for expensive values
 - `rerender-transitions` - Use startTransition for non-urgent updates
