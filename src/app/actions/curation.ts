@@ -27,6 +27,7 @@ import {
 } from "@/app/admin/curation-test/lib/buildTitlePrompt";
 import { findCommonIngredientNames } from "@/app/admin/curation-test/lib/commonIngredients";
 import { hydrateMarkdown } from "@/app/admin/curation-test/lib/hydrate";
+import { logLLMError } from "@/app/admin/curation-test/lib/llmErrorDiagnostics";
 import { slugify } from "@/app/admin/curation-test/lib/slugify";
 import { pickToneBySlug } from "@/app/admin/curation-test/lib/toneSeed";
 import { validateMarkdown } from "@/app/admin/curation-test/lib/validate";
@@ -183,6 +184,7 @@ export const generateCuration = async (
       });
       candidate = object;
     } catch (e) {
+      logLLMError(`title.attempt-${attempt + 1}`, e);
       titleLastErrors = [`schema 위반: ${(e as Error).message}`];
       console.warn(
         `[curation title] attempt ${attempt + 1} schema fail: ${(e as Error).message}`,
@@ -250,6 +252,7 @@ export const generateCuration = async (
     });
     solarRawMd = result.text;
   } catch (e) {
+    logLLMError("solar-body", e);
     throw new CurationError(
       "LLM_ERROR",
       `Solar Body 호출 실패: ${(e as Error).message}`,
@@ -280,6 +283,7 @@ export const generateCuration = async (
       });
       insertedMd = stripCodeFence(result.text);
     } catch (e) {
+      logLLMError(`slot-inserter.attempt-${attempt + 1}`, e);
       throw new CurationError(
         "LLM_ERROR",
         `Slot inserter 호출 실패: ${(e as Error).message}`,
