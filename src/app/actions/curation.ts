@@ -132,6 +132,9 @@ export const generateCuration = async (
   const poolIds = await searchRecipeIds(input.params, {
     limit: targetPoolSize,
   });
+  console.info(
+    `[curation pool] params=${JSON.stringify(input.params)} returnedIds=${JSON.stringify(poolIds)}`,
+  );
   if (poolIds.length < 3) {
     throw new CurationError(
       "INSUFFICIENT_RECIPES",
