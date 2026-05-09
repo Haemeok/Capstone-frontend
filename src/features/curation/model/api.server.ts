@@ -1,6 +1,7 @@
 "use server";
 
 import type { PageResponse } from "@/shared/api/types";
+import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 import { captureException } from "@/shared/lib/sentry";
 
@@ -61,6 +62,32 @@ const buildListUrl = (params: CurationArticleListParams): string => {
   if (params.size !== undefined) search.set("size", String(params.size));
   const qs = search.toString();
   return `${BASE_API_URL}${END_POINTS.CURATION_ARTICLES}${qs ? `?${qs}` : ""}`;
+};
+
+export type CurationArticleSitemapEntry = {
+  slug: string;
+  updatedAt: string;
+};
+
+export const fetchAllCurationArticlesForSitemap = async (): Promise<
+  CurationArticleSitemapEntry[]
+> => {
+  const url = `${BASE_API_URL}${END_POINTS.CURATION_ARTICLES}/sitemap`;
+  try {
+    const res = await fetch(url, {
+      next: {
+        revalidate: REVALIDATION_TIMES.CURATION_ARTICLES_SITEMAP,
+        tags: [CACHE_TAGS.curationArticlesSitemap],
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`fetchAllCurationArticlesForSitemap ${res.status}`);
+    }
+    return (await res.json()) as CurationArticleSitemapEntry[];
+  } catch (e) {
+    captureException(e);
+    return [];
+  }
 };
 
 export const fetchCurationArticleList = async (
