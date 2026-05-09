@@ -1,12 +1,8 @@
-// src/entities/curation/model/categoryMeta.ts
 import type { CurationCategory } from "./categories";
 
 export type CurationCategoryMeta = {
-  /** 사용자에게 보여줄 한글 라벨. 매거진 hero에선 영문을 쓰지만, SEO/breadcrumb엔 이걸 사용. */
   koLabel: string;
-  /** description/타이틀 보강 문구. 마침표 없이 한 줄로 끝나는 형태. */
   description: string;
-  /** keywords 배열에 합쳐질 카테고리별 long-tail 키워드. */
   keywords: readonly string[];
 };
 

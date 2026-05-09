@@ -1,4 +1,3 @@
-// src/features/curation/lib/curationMetadata.ts
 import type { Metadata } from "next";
 
 import { isCurationCategory } from "@/entities/curation";
@@ -19,8 +18,9 @@ export const generateCurationDetailMetadata = (
   const meta = isCurationCategory(data.category) ? CATEGORY_META[data.category] : null;
 
   const title = `${data.title} | ${SEO_CONSTANTS.SITE_NAME}`;
-  const description = data.description
-    ? `${data.description} 추천 레시피 ${recipeCount}가지를 한 페이지에 모았어요.`
+  const trimmedDescription = data.description?.trim() ?? "";
+  const description = trimmedDescription
+    ? `${trimmedDescription} 추천 레시피 ${recipeCount}가지를 한 페이지에 모았어요.`
     : `${meta?.koLabel ?? "레시피"} 큐레이션 — ${data.title}. 레시피 ${recipeCount}가지 모음.`;
 
   const ogImage = coverImageUrlFromKey(data.coverImageKey) ?? SEO_CONSTANTS.DEFAULT_IMAGE;

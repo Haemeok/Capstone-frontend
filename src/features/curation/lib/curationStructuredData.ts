@@ -1,4 +1,3 @@
-// src/features/curation/lib/curationStructuredData.ts
 import { isCurationCategory } from "@/entities/curation";
 import { CATEGORY_META } from "@/entities/curation/model/categoryMeta";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
@@ -19,7 +18,7 @@ const PUBLISHER = {
   url: SITE_URL,
   logo: {
     "@type": "ImageObject" as const,
-    url: SEO_CONSTANTS.DEFAULT_IMAGE,
+    url: `${SITE_URL}/og.png`,
   },
 };
 

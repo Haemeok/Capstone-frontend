@@ -47,6 +47,21 @@ describe("generateCurationDetailMetadata", () => {
     );
   });
 
+  it("description이 빈 문자열이거나 공백뿐이면 fallback 문구로 처리", () => {
+    const empty = generateCurationDetailMetadata(
+      { ...baseDto, description: "" },
+      3,
+    );
+    expect(empty.description).toContain("다이어트 & 가벼운 한 끼");
+
+    const whitespace = generateCurationDetailMetadata(
+      { ...baseDto, description: "   " },
+      2,
+    );
+    expect(whitespace.description).toContain("2가지");
+    expect(whitespace.description).not.toMatch(/^   /);
+  });
+
   it("coverImageKey가 있으면 OG image로 사용, 없으면 default og.png로 fallback", () => {
     const withCover = generateCurationDetailMetadata(baseDto, 3);
     const ogWith = withCover.openGraph;
