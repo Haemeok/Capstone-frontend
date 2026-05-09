@@ -120,3 +120,41 @@ export const createUserProfileBreadcrumb = (
 
   return createBreadcrumbListElement(items);
 };
+
+export const createCurationBreadcrumb = (
+  title: string,
+  slug: string,
+  categoryKoLabel?: string | null,
+): BreadcrumbListSchema => {
+  const items: BreadcrumbItem[] = [
+    { name: "홈", url: SEO_CONSTANTS.SITE_URL },
+    { name: "큐레이션", url: `${SEO_CONSTANTS.SITE_URL}/curation` },
+  ];
+  if (categoryKoLabel) {
+    items.push({
+      name: `${categoryKoLabel} 큐레이션`,
+      url: `${SEO_CONSTANTS.SITE_URL}/curation`,
+    });
+  }
+  items.push({
+    name: title,
+    url: `${SEO_CONSTANTS.SITE_URL}/curation/${slug}`,
+  });
+  return createBreadcrumbListElement(items);
+};
+
+export const createCurationListBreadcrumb = (
+  categoryKoLabel?: string | null,
+): BreadcrumbListSchema => {
+  const items: BreadcrumbItem[] = [
+    { name: "홈", url: SEO_CONSTANTS.SITE_URL },
+    { name: "큐레이션", url: `${SEO_CONSTANTS.SITE_URL}/curation` },
+  ];
+  if (categoryKoLabel) {
+    items.push({
+      name: `${categoryKoLabel} 큐레이션`,
+      url: `${SEO_CONSTANTS.SITE_URL}/curation`,
+    });
+  }
+  return createBreadcrumbListElement(items);
+};

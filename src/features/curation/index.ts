@@ -1,4 +1,12 @@
 export { coverImageUrlFromKey } from "./lib/coverImageUrl";
+export {
+  generateCurationDetailMetadata,
+  generateCurationListMetadata,
+} from "./lib/curationMetadata";
+export {
+  createCurationDetailJsonLd,
+  createCurationListJsonLd,
+} from "./lib/curationStructuredData";
 export { resolveCoverUrl, toSavedRecord } from "./model/adapter";
 export { getCurationArticles } from "./model/api.client";
 export type {
