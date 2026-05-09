@@ -4,7 +4,7 @@
  * 사용:
  *   npx tsx scripts/test-blog-post.ts
  *
- * .env / .env.local 에 OPENROUTER_API_KEY가 있어야 함.
+ * .env / .env.local 에 UPSTAGE_API_KEY가 있어야 함.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -28,10 +28,10 @@ import {
 } from "../src/app/admin/recipe-blog-test/lib/buildBlogPostPrompt";
 import type { Recipe } from "../src/entities/recipe/model/types";
 
-const openrouter = createOpenAI({
-  name: "openrouter",
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY ?? "",
+const upstage = createOpenAI({
+  name: "upstage",
+  baseURL: "https://api.upstage.ai/v1",
+  apiKey: process.env.UPSTAGE_API_KEY ?? "",
 });
 
 const FAKE_RECIPE_GAJI: Recipe = {
@@ -85,7 +85,7 @@ const FAKE_RECIPE_GAJI: Recipe = {
   nutrition: { protein: 57, carbohydrate: 173, fat: 32, sugar: 53, sodium: 58140 },
 };
 
-const MODEL_ID = "upstage/solar-pro-3";
+const MODEL_ID = "solar-pro3";
 
 const countNarrative = (post: BlogPost): number => {
   return (
@@ -150,8 +150,8 @@ const autoScore = (post: BlogPost) => {
 };
 
 const main = async () => {
-  if (!process.env.OPENROUTER_API_KEY) {
-    console.error("OPENROUTER_API_KEY 누락");
+  if (!process.env.UPSTAGE_API_KEY) {
+    console.error("UPSTAGE_API_KEY 누락");
     process.exit(1);
   }
 
@@ -173,7 +173,7 @@ const main = async () => {
   let post: BlogPost;
   try {
     const { object } = await generateObject({
-      model: openrouter(MODEL_ID),
+      model: upstage(MODEL_ID),
       schema: BlogPostSchema,
       mode: "json",
       system,

@@ -41,15 +41,15 @@ const xai = createOpenAI({
   apiKey: process.env.XAI_API_KEY || "",
 });
 
-const openrouter = createOpenAI({
-  name: "openrouter",
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY || "",
+const upstage = createOpenAI({
+  name: "upstage",
+  baseURL: "https://api.upstage.ai/v1",
+  apiKey: process.env.UPSTAGE_API_KEY || "",
 });
 
 const MODEL_GROK = "grok-4-1-fast-reasoning";
-const MODEL_SOLAR = "upstage/solar-pro-3";
-const PROVIDER_LABEL = "solar-pro-3+grok-4-1-fast";
+const MODEL_SOLAR = "solar-pro3";
+const PROVIDER_LABEL = "solar-pro3+grok-4-1-fast";
 
 const requireGrok = () => {
   if (!process.env.XAI_API_KEY) {
@@ -62,13 +62,13 @@ const requireGrok = () => {
 };
 
 const requireSolar = () => {
-  if (!process.env.OPENROUTER_API_KEY) {
+  if (!process.env.UPSTAGE_API_KEY) {
     throw new CurationError(
       "LLM_ERROR",
-      "OPENROUTER_API_KEY가 설정되지 않았습니다.",
+      "UPSTAGE_API_KEY가 설정되지 않았습니다.",
     );
   }
-  return openrouter(MODEL_SOLAR);
+  return upstage(MODEL_SOLAR);
 };
 
 const buildTitleSchema = (recipeCount: number, poolSize: number) =>

@@ -283,7 +283,7 @@ const RecipeBlogTestPage = () => {
                     블로그 글 생성
                   </p>
                   <p className="mt-1 text-xs text-gray-500">
-                    upstage/solar-pro-3 · 매거진 톤 · 위 이미지 시퀀스와 자동 매칭됩니다
+                    solar-pro3 · 매거진 톤 · 위 이미지 시퀀스와 자동 매칭됩니다
                   </p>
                 </div>
                 <button

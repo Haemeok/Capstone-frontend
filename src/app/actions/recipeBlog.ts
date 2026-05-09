@@ -22,13 +22,13 @@ import {
 } from "@/app/admin/recipe-blog-test/lib/buildBlogPostPrompt";
 import { buildJsonLd } from "@/app/admin/recipe-blog-test/lib/buildJsonLd";
 
-const openrouter = createOpenAI({
-  name: "openrouter",
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY || "",
+const upstage = createOpenAI({
+  name: "upstage",
+  baseURL: "https://api.upstage.ai/v1",
+  apiKey: process.env.UPSTAGE_API_KEY || "",
 });
 
-const MODEL_ID = "upstage/solar-pro-3";
+const MODEL_ID = "solar-pro3";
 
 export type GenerateRecipeBlogPostResult =
   | {
@@ -44,10 +44,10 @@ export const generateRecipeBlogPost = async (
 ): Promise<GenerateRecipeBlogPostResult> => {
   await requireAdminAction();
 
-  if (!process.env.OPENROUTER_API_KEY) {
+  if (!process.env.UPSTAGE_API_KEY) {
     return {
       success: false,
-      error: "OPENROUTER_API_KEY가 설정되지 않았습니다.",
+      error: "UPSTAGE_API_KEY가 설정되지 않았습니다.",
     };
   }
   if (!recipe?.id) {
@@ -76,7 +76,7 @@ export const generateRecipeBlogPost = async (
 
   try {
     const { object: narrative } = await generateObject({
-      model: openrouter(MODEL_ID),
+      model: upstage(MODEL_ID),
       schema: BlogPostSchema,
       mode: "json",
       system,
