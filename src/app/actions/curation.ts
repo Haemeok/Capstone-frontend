@@ -132,9 +132,6 @@ export const generateCuration = async (
   const poolIds = await searchRecipeIds(input.params, {
     limit: targetPoolSize,
   });
-  console.info(
-    `[curation pool] params=${JSON.stringify(input.params)} returnedIds=${JSON.stringify(poolIds)}`,
-  );
   if (poolIds.length < 3) {
     throw new CurationError(
       "INSUFFICIENT_RECIPES",
@@ -233,9 +230,6 @@ export const generateCuration = async (
   // 로 이미 보장. silent fixer 를 두면 모델이 약속을 어긴 사실이 뒤로 가려서
   // 타이틀-본문 N 어긋남이 새는 사고가 났음 — 이제는 약속을 어기면 retry 또는 fail.
   const recipes = titleObj.selectedIndices.map((i) => pool[i]);
-  console.info(
-    `[curation title] poolSize=${pool.length} selectedIndices=${JSON.stringify(titleObj.selectedIndices)} pickedTitles=${JSON.stringify(recipes.map((r) => r?.title))}`,
-  );
 
   // Stage 3: Body — Hybrid 고정.
   //   3a: Solar로 자연어 한국어 본문 (슬롯 없음)
