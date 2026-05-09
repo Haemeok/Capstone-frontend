@@ -179,6 +179,7 @@ export const generateCuration = async (
       const { object } = await generateObject({
         model: solarModel,
         schema: titleSchema,
+        mode: "json",
         system: titleSystem,
         prompt: titleUser,
       });
