@@ -34,19 +34,14 @@ export const useKeyboardHeight = (): UseKeyboardHeightReturn => {
     lastUpdateRef.current = now;
 
     const viewport = window.visualViewport;
-    const viewportHeight = viewport.height;
-
-    // iOS Safari에서는 offsetTop도 고려해야 함
     const offsetTop = viewport.offsetTop || 0;
-    const effectiveHeight = viewportHeight - offsetTop;
-
-    // 키보드 높이 계산
+    const visibleBottom = offsetTop + viewport.height;
     const calculatedKeyboardHeight = Math.max(
       0,
-      window.innerHeight - effectiveHeight
+      window.innerHeight - visibleBottom
     );
 
-    setVisualViewportHeight(effectiveHeight);
+    setVisualViewportHeight(viewport.height);
     setKeyboardHeight(calculatedKeyboardHeight);
   }, []);
 
