@@ -22,7 +22,10 @@ export type BridgeMessage<T = unknown> = {
 };
 
 // 앱 → 웹 메시지
-export type AppToWebMessageType = "NOTIFICATION_STATUS" | "AUTH_DIAG";
+export type AppToWebMessageType =
+  | "NOTIFICATION_STATUS"
+  | "AUTH_DIAG"
+  | "KEYBOARD_STATE";
 
 export type AuthDiagBridgePayload = {
   phase: string;
@@ -31,9 +34,23 @@ export type AuthDiagBridgePayload = {
   meta?: Record<string, unknown>;
 };
 
+export type KeyboardBridgeState =
+  | "will-show"
+  | "did-show"
+  | "will-hide"
+  | "did-hide";
+
+export type KeyboardStatePayload = {
+  v: 1;
+  state: KeyboardBridgeState;
+  height: number;
+  duration: number;
+};
+
 export type AppToWebMessage =
   | { type: "NOTIFICATION_STATUS"; payload: { status: NotificationStatus } }
-  | { type: "AUTH_DIAG"; payload: AuthDiagBridgePayload };
+  | { type: "AUTH_DIAG"; payload: AuthDiagBridgePayload }
+  | { type: "KEYBOARD_STATE"; payload: KeyboardStatePayload };
 
 // auth state
 export type AuthStatePayload = {
