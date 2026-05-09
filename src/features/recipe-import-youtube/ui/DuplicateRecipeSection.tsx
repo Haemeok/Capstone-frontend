@@ -21,10 +21,6 @@ import { YoutubeMeta } from "../model/types";
 
 type UrlSource = "direct" | "trending" | null;
 
-// 같은 컴포넌트 내부에서 skeleton → 실제 카드로 swap이 일어나는데, 부모(YoutubePreviewSection)
-// 에서 감싼 motion.div는 "duplicate" 키 하나라서 skeleton의 첫 등장에만 entrance가 걸리고
-// 본카드 swap은 무모션으로 슉 바뀌었다. 여기서 다시 한 번 AnimatePresence로 감싸 두 카드의
-// swap에도 부드러운 cross-fade + 살짝 위로 떠오르는 모션을 넣는다.
 const cardVariants = {
   initial: { opacity: 0, y: 14, scale: 0.97 },
   animate: { opacity: 1, y: 0, scale: 1 },
