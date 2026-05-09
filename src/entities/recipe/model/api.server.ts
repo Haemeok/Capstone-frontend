@@ -121,12 +121,12 @@ export const getRecipesOnServer = async (
   if (params.minSodium !== undefined) query.append("minSodium", params.minSodium.toString());
   if (params.maxSodium !== undefined) query.append("maxSodium", params.maxSodium.toString());
 
-  let endpoint = "/dev/recipes/search";
+  let endpoint = "/recipes/search";
 
   if (params.key === "budget-recipes") {
-    endpoint = "/dev/recipes/budget";
+    endpoint = "/recipes/budget";
   } else if (params.key === "popular-recipes") {
-    endpoint = "/dev/recipes/popular";
+    endpoint = "/recipes/popular";
   }
 
   const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
@@ -270,20 +270,20 @@ export const getStaticRecipesOnServer = async (
   if (params.maxCost) query.append("maxCost", params.maxCost.toString());
   if (params.period) query.append("period", params.period);
 
-  let endpoint = "/dev/recipes/search";
+  let endpoint = "/recipes/search";
   let cacheTags: string[] = [];
   let revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
 
   if (params.key === "budget-recipes") {
-    endpoint = "/dev/recipes/budget";
+    endpoint = "/recipes/budget";
     cacheTags = [CACHE_TAGS.recipesBudget];
     revalidateTime = REVALIDATION_TIMES.RECIPES_BUDGET;
   } else if (params.key === "popular-recipes") {
-    endpoint = "/dev/recipes/popular";
+    endpoint = "/recipes/popular";
     cacheTags = [CACHE_TAGS.recipesPopular];
     revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
   } else if (params.key === "recommended-recipes" && params.recipeId) {
-    endpoint = `/dev/recipes/${params.recipeId}/recommendations`;
+    endpoint = `/recipes/${params.recipeId}/recommendations`;
     cacheTags = [CACHE_TAGS.recipesRecommended(params.recipeId)];
     revalidateTime = REVALIDATION_TIMES.RECIPES_RECOMMENDED;
   }
@@ -320,7 +320,7 @@ export const getStaticRecipesOnServer = async (
 export const getRecommendedRecipesOnServer = async (
   recipeId: string
 ): Promise<StaticDetailedRecipeGridItem[]> => {
-  const endpoint = `/dev/recipes/${recipeId}/recommendations`;
+  const endpoint = `/recipes/${recipeId}/recommendations`;
   const cacheTags = [CACHE_TAGS.recipesRecommended(recipeId)];
 
   const API_URL = `${BASE_API_URL}${endpoint}`;
