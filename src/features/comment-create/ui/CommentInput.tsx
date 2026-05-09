@@ -49,9 +49,8 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
     <div
       className={cn(
         "fixed right-0 left-0 mx-4 rounded-2xl border-t bg-white px-2 py-1 shadow-md md:hidden",
-        !isFocused && "bottom-20"
+        isFocused ? "kb-bottom" : "bottom-20"
       )}
-      style={isFocused ? { bottom: "var(--keyboard-height, 0px)" } : undefined}
     >
       <div className="mx-auto max-w-3xl">
         <CommentInputForm
