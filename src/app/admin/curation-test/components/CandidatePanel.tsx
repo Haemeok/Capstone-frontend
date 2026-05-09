@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -26,7 +26,7 @@ type AllowlistEntry = CurationParams;
 const ALLOWLIST_URL =
   "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/seo/allowlist.json";
 
-const VISIBLE_LIMIT = 200;
+const PAGE_SIZE = 200;
 
 const QUERY_KEY = ["curation-unpublished"] as const;
 
@@ -57,12 +57,16 @@ const STATUS_CLASS: Record<BatchItemState["status"], string> = {
 
 export const CandidatePanel = () => {
   const setSelected = useCurationStore((s) => s.setSelected);
+  const selectedSlug = useCurationStore((s) => s.selectedSlug);
   const [filter, setFilter] = useState("");
   const deferredFilter = useDeferredValue(filter);
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [generating, setGenerating] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  const [visiblePages, setVisiblePages] = useState(1);
   const queryClient = useQueryClient();
+  const scrollRef = useRef<HTMLElement | null>(null);
+  const sentinelRef = useRef<HTMLLIElement | null>(null);
 
   const items = useBatchPublishStore((s) => s.items);
 
@@ -75,19 +79,50 @@ export const CandidatePanel = () => {
     staleTime: 60_000,
   });
 
-  const filtered = useMemo<AllowlistEntryWithSlug[]>(() => {
+  const pinned = useMemo<AllowlistEntryWithSlug | null>(
+    () => data?.find((d) => d.slug === selectedSlug) ?? null,
+    [data, selectedSlug],
+  );
+
+  const matched = useMemo<AllowlistEntryWithSlug[]>(() => {
     if (!data) return [];
-    if (!deferredFilter) return data.slice(0, VISIBLE_LIMIT);
     const q = deferredFilter.toLowerCase();
     const out: AllowlistEntryWithSlug[] = [];
     for (const e of data) {
-      if (JSON.stringify(e.entry).toLowerCase().includes(q)) {
-        out.push(e);
-        if (out.length >= VISIBLE_LIMIT) break;
-      }
+      if (e.slug === selectedSlug) continue;
+      if (deferredFilter && !JSON.stringify(e.entry).toLowerCase().includes(q))
+        continue;
+      out.push(e);
     }
     return out;
-  }, [data, deferredFilter]);
+  }, [data, deferredFilter, selectedSlug]);
+
+  const visibleLimit = visiblePages * PAGE_SIZE;
+  const filtered = useMemo(
+    () => matched.slice(0, visibleLimit),
+    [matched, visibleLimit],
+  );
+  const hasMore = filtered.length < matched.length;
+
+  useEffect(() => {
+    setVisiblePages(1);
+  }, [deferredFilter, selectedSlug]);
+
+  useEffect(() => {
+    if (!hasMore) return;
+    const node = sentinelRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisiblePages((p) => p + 1);
+        }
+      },
+      { root: scrollRef.current, rootMargin: "200px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMore, filtered.length]);
 
   const selectedTargets = useMemo(
     () => (data ?? []).filter((d) => selectedKeys.has(d.slug)),
@@ -109,10 +144,14 @@ export const CandidatePanel = () => {
     [selectedTargets, items],
   );
 
-  const visibleSelected = useMemo(
-    () => filtered.filter((f) => selectedKeys.has(f.slug)).length,
-    [filtered, selectedKeys],
-  );
+  const visibleSelected = useMemo(() => {
+    let count = filtered.reduce(
+      (acc, f) => (selectedKeys.has(f.slug) ? acc + 1 : acc),
+      0,
+    );
+    if (pinned && selectedKeys.has(pinned.slug)) count += 1;
+    return count;
+  }, [filtered, selectedKeys, pinned]);
 
   const busy = generating || publishing;
 
@@ -128,11 +167,13 @@ export const CandidatePanel = () => {
   const toggleAllVisible = () => {
     setSelectedKeys((prev) => {
       const next = new Set(prev);
-      const allChecked = filtered.every((f) => next.has(f.slug));
+      const visible = pinned ? [pinned, ...filtered] : filtered;
+      const allChecked =
+        visible.length > 0 && visible.every((f) => next.has(f.slug));
       if (allChecked) {
-        for (const f of filtered) next.delete(f.slug);
+        for (const f of visible) next.delete(f.slug);
       } else {
-        for (const f of filtered) next.add(f.slug);
+        for (const f of visible) next.add(f.slug);
       }
       return next;
     });
@@ -181,8 +222,47 @@ export const CandidatePanel = () => {
     }
   };
 
+  const renderRow = (f: AllowlistEntryWithSlug, isPinned = false) => {
+    const state = items[f.slug];
+    const status = state?.status ?? "idle";
+    const checked = selectedKeys.has(f.slug);
+    const checkboxLocked =
+      busy && (status === "generating" || status === "publishing");
+    return (
+      <li
+        key={f.slug}
+        className={`flex items-start gap-2 ${
+          isPinned ? "bg-amber-50 rounded px-1 py-1" : ""
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={() => toggleKey(f.slug)}
+          disabled={checkboxLocked}
+          className="mt-1.5"
+        />
+        <button
+          type="button"
+          className={`flex-1 text-left text-sm hover:bg-gray-100 rounded px-2 py-1 ${
+            isPinned ? "font-medium" : ""
+          }`}
+          onClick={() => (isPinned ? setSelected(null) : setSelected(f.entry, f.slug))}
+        >
+          <div>{JSON.stringify(f.entry)}</div>
+          {status !== "idle" && (
+            <div className={`text-xs mt-0.5 ${STATUS_CLASS[status]}`}>
+              {STATUS_LABEL[status]}
+              {state?.error ? ` — ${state.error}` : ""}
+            </div>
+          )}
+        </button>
+      </li>
+    );
+  };
+
   return (
-    <aside className="border-r overflow-y-auto p-3 space-y-2">
+    <aside ref={scrollRef} className="border-r overflow-y-auto p-3 space-y-2">
       <input
         className="w-full border rounded px-2 py-1 text-sm"
         placeholder={`필터 (총 ${data?.length ?? 0}건 — 미발행만)`}
@@ -194,13 +274,16 @@ export const CandidatePanel = () => {
         <button
           type="button"
           onClick={toggleAllVisible}
-          disabled={filtered.length === 0}
+          disabled={filtered.length === 0 && !pinned}
           className="rounded border px-2 py-1 hover:bg-gray-100 disabled:opacity-50"
         >
-          {filtered.every((f) => selectedKeys.has(f.slug)) &&
-          filtered.length > 0
-            ? "표시 항목 해제"
-            : "표시 항목 모두 선택"}
+          {(() => {
+            const visible = pinned ? [pinned, ...filtered] : filtered;
+            return visible.length > 0 &&
+              visible.every((f) => selectedKeys.has(f.slug))
+              ? "표시 항목 해제"
+              : "표시 항목 모두 선택";
+          })()}
         </button>
         <button
           type="button"
@@ -226,42 +309,34 @@ export const CandidatePanel = () => {
           : error
             ? "allowlist 로드 실패"
             : deferredFilter
-              ? `매칭 ${filtered.length}건 표시 (최대 ${VISIBLE_LIMIT}건, 선택 ${visibleSelected}개)`
-              : `상위 ${filtered.length}건 표시 / 미발행 전체 ${data?.length ?? 0}건. 필터로 좁혀 보세요`}
+              ? `매칭 ${matched.length}건 중 ${filtered.length}건 표시 (선택 ${visibleSelected}개)`
+              : `${filtered.length}/${matched.length}건 표시 (선택 ${visibleSelected}개) — 스크롤로 더 불러오기`}
       </p>
 
+      {pinned && (
+        <div className="space-y-1">
+          <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-amber-700">
+            <span>선택된 조건 (Workspace)</span>
+            <button
+              type="button"
+              onClick={() => setSelected(null)}
+              className="text-gray-500 hover:text-gray-800"
+            >
+              해제
+            </button>
+          </div>
+          <ul>{renderRow(pinned, true)}</ul>
+          <hr className="my-2 border-gray-200" />
+        </div>
+      )}
+
       <ul className="space-y-1">
-        {filtered.map((f) => {
-          const state = items[f.slug];
-          const status = state?.status ?? "idle";
-          const checked = selectedKeys.has(f.slug);
-          const checkboxLocked =
-            busy && (status === "generating" || status === "publishing");
-          return (
-            <li key={f.slug} className="flex items-start gap-2">
-              <input
-                type="checkbox"
-                checked={checked}
-                onChange={() => toggleKey(f.slug)}
-                disabled={checkboxLocked}
-                className="mt-1.5"
-              />
-              <button
-                type="button"
-                className="flex-1 text-left text-sm hover:bg-gray-100 rounded px-2 py-1"
-                onClick={() => setSelected(f.entry, f.slug)}
-              >
-                <div>{JSON.stringify(f.entry)}</div>
-                {status !== "idle" && (
-                  <div className={`text-xs mt-0.5 ${STATUS_CLASS[status]}`}>
-                    {STATUS_LABEL[status]}
-                    {state?.error ? ` — ${state.error}` : ""}
-                  </div>
-                )}
-              </button>
-            </li>
-          );
-        })}
+        {filtered.map((f) => renderRow(f))}
+        {hasMore && (
+          <li ref={sentinelRef} className="py-3 text-center text-xs text-gray-400">
+            더 불러오는 중...
+          </li>
+        )}
       </ul>
     </aside>
   );
