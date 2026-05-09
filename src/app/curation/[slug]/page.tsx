@@ -10,7 +10,12 @@ import {
   getStaticrecipionServer,
 } from "@/entities/recipe/model/api.server";
 
-import { fetchCurationArticle, toSavedRecord } from "@/features/curation";
+import {
+  createCurationDetailJsonLd,
+  fetchCurationArticle,
+  generateCurationDetailMetadata,
+  toSavedRecord,
+} from "@/features/curation";
 import { CurationArticle } from "@/features/curation/ui/CurationArticle";
 
 const cachedGet = cache(fetchCurationArticle);
@@ -24,11 +29,13 @@ export const generateMetadata = async ({
 }: Props): Promise<Metadata> => {
   const { slug } = await params;
   const data = await cachedGet(slug);
-  if (!data) return {};
-  return {
-    title: data.title,
-    description: data.description ?? undefined,
-  };
+  if (!data) {
+    return {
+      title: "큐레이션을 찾을 수 없습니다 | 레시피오",
+      description: "요청하신 큐레이션 글을 찾을 수 없습니다.",
+    };
+  }
+  return generateCurationDetailMetadata(data, data.recipeIds.length);
 };
 
 const Page = async ({ params }: Props) => {
@@ -52,6 +59,8 @@ const Page = async ({ params }: Props) => {
   );
 
   const record = toSavedRecord(data, recipes);
+  const jsonLd = createCurationDetailJsonLd(data);
+
   return (
     <>
       <div className="fixed left-3 top-3 z-40 md:hidden">
@@ -59,6 +68,12 @@ const Page = async ({ params }: Props) => {
       </div>
       <CurationArticle data={record} recipes={recipes} />
       <BottomAnchorAdSlot />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
     </>
   );
 };
