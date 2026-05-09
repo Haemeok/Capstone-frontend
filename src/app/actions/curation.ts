@@ -68,7 +68,7 @@ const requireSolar = () => {
       "UPSTAGE_API_KEY가 설정되지 않았습니다.",
     );
   }
-  return upstage(MODEL_SOLAR);
+  return upstage.chat(MODEL_SOLAR);
 };
 
 const buildTitleSchema = (recipeCount: number, poolSize: number) =>

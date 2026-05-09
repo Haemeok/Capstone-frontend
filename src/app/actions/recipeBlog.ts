@@ -76,7 +76,7 @@ export const generateRecipeBlogPost = async (
 
   try {
     const { object: narrative } = await generateObject({
-      model: upstage(MODEL_ID),
+      model: upstage.chat(MODEL_ID),
       schema: BlogPostSchema,
       mode: "json",
       system,

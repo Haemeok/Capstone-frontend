@@ -173,7 +173,7 @@ const main = async () => {
   let post: BlogPost;
   try {
     const { object } = await generateObject({
-      model: upstage(MODEL_ID),
+      model: upstage.chat(MODEL_ID),
       schema: BlogPostSchema,
       mode: "json",
       system,
