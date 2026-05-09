@@ -262,6 +262,16 @@
     transform: translateZ(0);
     backface-visibility: hidden;
   }
+
+  /* Keyboard-aware bottom (single source: --keyboard-height).
+     KeyboardAwareProvider injects the variable. All sticky bottom inputs/containers
+     should use these utilities; avoid inline styles referencing --keyboard-height. */
+  .kb-bottom {
+    bottom: var(--keyboard-height, 0px);
+  }
+  .kb-pb {
+    padding-bottom: var(--keyboard-height, 0px);
+  }
 }
 
 @layer utilities {
