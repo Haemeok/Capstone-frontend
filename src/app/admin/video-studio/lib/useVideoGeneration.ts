@@ -78,6 +78,9 @@ export const useVideoGeneration = () => {
           `/api/admin/video-studio/video/status/${encodeURIComponent(taskId)}`
         );
         const t = (await r.json()) as SeedanceTaskState & { error?: string };
+
+        if (stoppedRef.current) return;
+
         if (!r.ok || !t.status) {
           setState({ status: "error", message: t.error ?? `HTTP ${r.status}` });
           return;
@@ -99,6 +102,7 @@ export const useVideoGeneration = () => {
         }
         setState({ status: "polling", taskId, lastStatus: t.status });
       } catch (err) {
+        if (stoppedRef.current) return;
         setState({
           status: "error",
           message: err instanceof Error ? err.message : String(err),
