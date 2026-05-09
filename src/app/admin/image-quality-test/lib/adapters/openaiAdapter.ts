@@ -3,7 +3,7 @@ import "server-only";
 
 type Result = { imageDataUrl: string };
 
-type ExtraParams = { quality?: "low" | "medium" | "high" | "auto" };
+type ExtraParams = { quality?: "low" | "medium" | "high" | "auto"; n?: number };
 
 export const generateViaOpenAI = async (
   model: string,
@@ -91,4 +91,97 @@ export const editViaOpenAI = async (
 const dataUrlToBlob = async (dataUrl: string): Promise<Blob> => {
   const res = await fetch(dataUrl);
   return await res.blob();
+};
+
+type MultiResult = { imageDataUrls: string[] };
+
+export const generateMultiViaOpenAI = async (
+  model: string,
+  prompt: string,
+  extra: ExtraParams = {},
+  signal?: AbortSignal
+): Promise<MultiResult> => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  const n = extra.n ?? 1;
+
+  const res = await fetch("https://api.openai.com/v1/images/generations", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model,
+      prompt,
+      n,
+      size: "1024x1024",
+      ...(extra.quality ? { quality: extra.quality } : {}),
+    }),
+    signal,
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    throw new Error(`OpenAI ${res.status}: ${errText.slice(0, 300)}`);
+  }
+
+  const data = (await res.json()) as {
+    data?: Array<{ b64_json?: string; url?: string }>;
+  };
+  const items = data.data ?? [];
+  if (items.length === 0) throw new Error("OpenAI returned empty data array");
+  return {
+    imageDataUrls: items.map((it) => {
+      if (it.b64_json) return `data:image/png;base64,${it.b64_json}`;
+      if (it.url) return it.url;
+      throw new Error("OpenAI returned neither b64_json nor url");
+    }),
+  };
+};
+
+export const editMultiViaOpenAI = async (
+  model: string,
+  prompt: string,
+  referenceDataUrl: string,
+  extra: ExtraParams = {},
+  signal?: AbortSignal
+): Promise<MultiResult> => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  const n = extra.n ?? 1;
+
+  const referenceBlob = await dataUrlToBlob(referenceDataUrl);
+  const formData = new FormData();
+  formData.append("model", model);
+  formData.append("prompt", prompt);
+  formData.append("image", referenceBlob, "reference.png");
+  formData.append("size", "1024x1024");
+  formData.append("n", String(n));
+  if (extra.quality) formData.append("quality", extra.quality);
+
+  const res = await fetch("https://api.openai.com/v1/images/edits", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}` },
+    body: formData,
+    signal,
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    throw new Error(`OpenAI edit ${res.status}: ${errText.slice(0, 300)}`);
+  }
+
+  const data = (await res.json()) as {
+    data?: Array<{ b64_json?: string; url?: string }>;
+  };
+  const items = data.data ?? [];
+  if (items.length === 0) throw new Error("OpenAI edit returned empty data array");
+  return {
+    imageDataUrls: items.map((it) => {
+      if (it.b64_json) return `data:image/png;base64,${it.b64_json}`;
+      if (it.url) return it.url;
+      throw new Error("OpenAI edit returned neither b64_json nor url");
+    }),
+  };
 };
