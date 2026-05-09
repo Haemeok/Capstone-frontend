@@ -1,8 +1,9 @@
 // src/app/api/admin/video-studio/video/status/[taskId]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-import { fetchSeedanceTask } from "@/app/admin/video-studio/lib/adapters/seedanceAdapter";
 import { assertAdminApi } from "@/shared/lib/admin-guard";
+
+import { fetchSeedanceTask } from "@/app/admin/video-studio/lib/adapters/seedanceAdapter";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;

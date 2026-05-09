@@ -1,11 +1,12 @@
 // src/app/api/admin/video-studio/image/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
+import { assertAdminApi } from "@/shared/lib/admin-guard";
+
 import {
   editMultiViaOpenAI,
   generateMultiViaOpenAI,
 } from "@/app/admin/image-quality-test/lib/adapters/openaiAdapter";
-import { assertAdminApi } from "@/shared/lib/admin-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;

@@ -1,9 +1,10 @@
 // src/app/api/admin/video-studio/video/submit/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
+import { assertAdminApi } from "@/shared/lib/admin-guard";
+
 import { submitSeedanceTask } from "@/app/admin/video-studio/lib/adapters/seedanceAdapter";
 import type { SeedanceSubmitInput } from "@/app/admin/video-studio/lib/types";
-import { assertAdminApi } from "@/shared/lib/admin-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;

@@ -1,11 +1,11 @@
 // src/app/admin/video-studio/lib/adapters/seedanceAdapter.ts
-import "server-only";
-
 import type {
   SeedanceSubmitInput,
   SeedanceTaskState,
   SeedanceTaskStatus,
 } from "../types";
+
+import "server-only";
 
 const ARK_BASE = "https://ark.ap-southeast.bytepluses.com/api/v3";
 
