@@ -25,6 +25,7 @@ Reference these guidelines when:
 |---|---|
 | `lookup-` | Reuse existing lookup tables before authoring parallel ones |
 | `external-` | External-source-of-truth values (vendor IDs, prices, rates) |
+| `scope-` | Disambiguating user intent before committing to a plan |
 
 ## Quick Reference
 
@@ -35,6 +36,10 @@ Reference these guidelines when:
 ### External facts
 
 - `external-no-reasonable-defaults-for-billing` — When a value maps to real billing (per-image cost, per-second rate, model ID), never plug in a "reasonable default" without sourcing it from authoritative docs OR from an existing place in the codebase that already calls the same API. Cite the source in a comment.
+
+### Scope disambiguation
+
+- `scope-confirm-mode-vs-mechanism` — Vague feature requests often have two valid readings: a new mechanism on top of existing flow, OR a mode the underlying API already supports. Read the API surface first; if both readings are valid, ask one disambiguating question rather than committing to a multi-task plan for the bigger reading.
 
 ## How to Use
 
