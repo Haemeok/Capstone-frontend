@@ -17,9 +17,14 @@ import type { LevelUpData } from "../model/types";
 type Phase3AccumulateProps = {
   data: LevelUpData;
   onClose: () => void;
+  onLevelUpReveal?: () => void;
 };
 
-const Phase3Accumulate = ({ data, onClose }: Phase3AccumulateProps) => {
+const Phase3Accumulate = ({
+  data,
+  onClose,
+  onLevelUpReveal,
+}: Phase3AccumulateProps) => {
   const { user } = useUserStore();
   const progressBarRef = useRef<HTMLDivElement>(null);
   const confettiRef = useRef<ConfettiRef>(null);
@@ -41,6 +46,7 @@ const Phase3Accumulate = ({ data, onClose }: Phase3AccumulateProps) => {
           onComplete: () => {
             if (data.isLevelUp) {
               setShowLevelUp(true);
+              onLevelUpReveal?.();
             }
           },
         }
@@ -48,7 +54,7 @@ const Phase3Accumulate = ({ data, onClose }: Phase3AccumulateProps) => {
     });
 
     return () => ctx.revert();
-  }, [data.percentageToNext, data.isLevelUp]);
+  }, [data.percentageToNext, data.isLevelUp, onLevelUpReveal]);
 
   useEffect(() => {
     if (showLevelUp) {
@@ -103,12 +109,6 @@ const Phase3Accumulate = ({ data, onClose }: Phase3AccumulateProps) => {
 
         {/* 메인 콘텐츠 */}
         <div className="flex flex-col items-center">
-          {showLevelUp && (
-            <p className="text-olive-mint mb-4 text-center text-2xl font-extrabold">
-              {data.nextBracket ? "🎉 레벨 업!" : "👑 최고 단계 달성!"}
-            </p>
-          )}
-
           <SavingSection
             imageUrl={data.currentBracket.image}
             altText={data.currentBracket.name}

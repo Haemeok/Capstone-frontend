@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
-import { BASE_API_URL } from "@/shared/config/constants/api";
+import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 
 import { ensureSource } from "@/entities/recipe/lib/visibility";
 
@@ -123,12 +123,12 @@ export const getRecipesOnServer = async (
   if (params.minSodium !== undefined) query.append("minSodium", params.minSodium.toString());
   if (params.maxSodium !== undefined) query.append("maxSodium", params.maxSodium.toString());
 
-  let endpoint = "/dev/recipes/search";
+  let endpoint = END_POINTS.RECIPE_SEARCH;
 
   if (params.key === "budget-recipes") {
-    endpoint = "/dev/recipes/budget";
+    endpoint = END_POINTS.RECIPE_BUDGET;
   } else if (params.key === "popular-recipes") {
-    endpoint = "/dev/recipes/popular";
+    endpoint = END_POINTS.RECIPE_POPULAR;
   }
 
   const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
@@ -167,7 +167,7 @@ export const getRecipesOnServer = async (
 };
 
 export const getrecipionServer = async (id: string): Promise<Recipe | null> => {
-  const API_URL = `${BASE_API_URL}/dev/recipes/${id}`;
+  const API_URL = `${BASE_API_URL}${END_POINTS.RECIPE(id)}`;
 
   try {
     const cookieStore = await cookies();
@@ -198,7 +198,7 @@ export const getrecipionServer = async (id: string): Promise<Recipe | null> => {
 export const getStaticrecipionServer = async (
   id: string
 ): Promise<StaticRecipe | null> => {
-  const API_URL = `${BASE_API_URL}/dev/recipes/${id}`;
+  const API_URL = `${BASE_API_URL}${END_POINTS.RECIPE(id)}`;
 
   try {
     const res = await fetch(API_URL, {
@@ -272,20 +272,20 @@ export const getStaticRecipesOnServer = async (
   if (params.maxCost) query.append("maxCost", params.maxCost.toString());
   if (params.period) query.append("period", params.period);
 
-  let endpoint = "/dev/recipes/search";
+  let endpoint: string = END_POINTS.RECIPE_SEARCH;
   let cacheTags: string[] = [];
   let revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
 
   if (params.key === "budget-recipes") {
-    endpoint = "/dev/recipes/budget";
+    endpoint = END_POINTS.RECIPE_BUDGET;
     cacheTags = [CACHE_TAGS.recipesBudget];
     revalidateTime = REVALIDATION_TIMES.RECIPES_BUDGET;
   } else if (params.key === "popular-recipes") {
-    endpoint = "/dev/recipes/popular";
+    endpoint = END_POINTS.RECIPE_POPULAR;
     cacheTags = [CACHE_TAGS.recipesPopular];
     revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
   } else if (params.key === "recommended-recipes" && params.recipeId) {
-    endpoint = `/recipes/${params.recipeId}/recommendations`;
+    endpoint = END_POINTS.RECIPE_RECOMMENDATIONS(params.recipeId);
     cacheTags = [CACHE_TAGS.recipesRecommended(params.recipeId)];
     revalidateTime = REVALIDATION_TIMES.RECIPES_RECOMMENDED;
   }
@@ -322,7 +322,7 @@ export const getStaticRecipesOnServer = async (
 export const getRecommendedRecipesOnServer = async (
   recipeId: string
 ): Promise<StaticDetailedRecipeGridItem[]> => {
-  const endpoint = `/recipes/${recipeId}/recommendations`;
+  const endpoint = END_POINTS.RECIPE_RECOMMENDATIONS(recipeId);
   const cacheTags = [CACHE_TAGS.recipesRecommended(recipeId)];
 
   const API_URL = `${BASE_API_URL}${endpoint}`;
@@ -352,7 +352,7 @@ export const getRecommendedRecipesOnServer = async (
 export const getTrendingYoutubeRecipesOnServer = async (): Promise<
   TrendingYoutubeRecipe[]
 > => {
-  const API_URL = `${BASE_API_URL}/recipes/youtube/recommend`;
+  const API_URL = `${BASE_API_URL}${END_POINTS.RECIPE_YOUTUBE_RECOMMEND}`;
 
   try {
     const res = await fetch(API_URL, {

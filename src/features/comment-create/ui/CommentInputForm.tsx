@@ -99,8 +99,7 @@ const CommentInputForm = ({
       />
       <Button
         variant="ghost"
-        size="icon"
-        className={`flex-shrink-0 rounded-full transition-all ${
+        className={`h-10 w-14 flex-shrink-0 rounded-full transition-all ${
           comment.trim()
             ? "bg-olive-light text-white hover:bg-olive-dark"
             : "text-gray-300"
@@ -108,6 +107,7 @@ const CommentInputForm = ({
         disabled={!comment.trim()}
         aria-label="댓글 전송"
         type="submit"
+        onMouseDown={(e) => e.preventDefault()}
       >
         <ArrowUp size={20} />
       </Button>

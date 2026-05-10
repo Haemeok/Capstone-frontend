@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useMemo,useState } from "react";
+import { useCallback, useEffect, useMemo,useState } from "react";
+
+import { AnimatePresence, motion } from "motion/react";
 
 import { PRICE_BRACKETS } from "@/shared/config/constants/recipe";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
@@ -85,10 +87,12 @@ const LevelUpModal = ({
   }, [monthlyTotalSavings, acquiredAmount]);
 
   const [currentPhase, setCurrentPhase] = useState<LevelUpPhase>("acquired");
+  const [isLevelUpRevealed, setIsLevelUpRevealed] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setCurrentPhase("acquired");
+      setIsLevelUpRevealed(false);
     }
   }, [isOpen]);
 
@@ -102,6 +106,10 @@ const LevelUpModal = ({
     setCurrentPhase("accumulate");
   };
 
+  const handleLevelUpReveal = useCallback(() => {
+    setIsLevelUpRevealed(true);
+  }, []);
+
   const getPhaseTitle = () => {
     switch (currentPhase) {
       case "acquired":
@@ -109,17 +117,37 @@ const LevelUpModal = ({
       case "absorb":
         return "누적 중...";
       case "accumulate":
+        if (isLevelUpRevealed) {
+          return levelUpData.nextBracket
+            ? "🎉 레벨 업! 다음 단계도 도전해봐요"
+            : "👑 최고 단계까지 도달했어요";
+        }
         return "이번 달 레시피오 절약";
       default:
         return "";
     }
   };
 
+  const phaseTitle = getPhaseTitle();
+
   return (
     <Container open={isOpen} onOpenChange={onOpenChange}>
       <Content className="max-w-md">
-        <Header>
-          <Title className="text-center">{getPhaseTitle()}</Title>
+        <Header className="pb-2">
+          <Title className="text-center">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={phaseTitle}
+                initial={{ y: 16, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -16, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="block"
+              >
+                {phaseTitle}
+              </motion.span>
+            </AnimatePresence>
+          </Title>
         </Header>
 
         {currentPhase === "acquired" && (
@@ -140,6 +168,7 @@ const LevelUpModal = ({
           <Phase3Accumulate
             data={levelUpData}
             onClose={() => onOpenChange(false)}
+            onLevelUpReveal={handleLevelUpReveal}
           />
         )}
       </Content>
