@@ -13,6 +13,7 @@ import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
 
+import { isAiRecipe, isYoutubeRecipe } from "@/entities/recipe";
 import { MyFridgeRecipeItem } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
@@ -22,7 +23,7 @@ import { RecipeSaveButton } from "@/features/recipe-save";
 import ExpandableIngredients from "./ExpandableIngredients";
 
 const getRightBadge = (recipe: MyFridgeRecipeItem) => {
-  if (recipe.isYoutube && recipe.youtubeChannelName) {
+  if (isYoutubeRecipe(recipe) && recipe.youtubeChannelName) {
     return (
       <YouTubeChannelBadge
         channelName={recipe.youtubeChannelName}
@@ -30,10 +31,10 @@ const getRightBadge = (recipe: MyFridgeRecipeItem) => {
       />
     );
   }
-  if (recipe.isYoutube) {
+  if (isYoutubeRecipe(recipe)) {
     return <YouTubeIconBadge className="h-5 w-5 min-[400px]:h-7 min-[400px]:w-7" />;
   }
-  if (recipe.isAiGenerated) {
+  if (isAiRecipe(recipe)) {
     return <AIGeneratedBadge className="h-4 px-1.5 min-[400px]:h-5 min-[400px]:px-[10px]" />;
   }
   return null;
@@ -93,7 +94,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
 
         {/* 조회수 · 즐겨찾기 · 조리시간 */}
         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
-          {recipe.isYoutube && recipe.youtubeVideoViewCount != null && (() => {
+          {isYoutubeRecipe(recipe) && recipe.youtubeVideoViewCount != null && (() => {
             const tier = getViewCountTier(recipe.youtubeVideoViewCount);
             const IconComponent = tier.icon;
             return (

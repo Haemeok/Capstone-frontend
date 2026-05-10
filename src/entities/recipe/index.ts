@@ -27,4 +27,9 @@ export type {
   TrendingYoutubeRecipe,
 } from "./model/types";
 export { default as RecipeStepList } from "./ui/RecipeStepList";
-export { isPrivateRecipe, isRestrictedRecipe } from "./lib/visibility";
+export {
+  isAiRecipe,
+  isPrivateRecipe,
+  isRestrictedRecipe,
+  isYoutubeRecipe,
+} from "./lib/visibility";

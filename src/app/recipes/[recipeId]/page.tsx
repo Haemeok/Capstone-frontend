@@ -7,7 +7,7 @@ import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
-import { isPrivateRecipe } from "@/entities/recipe";
+import { isAiRecipe, isPrivateRecipe, isYoutubeRecipe } from "@/entities/recipe";
 import {
   generateNotFoundRecipeMetadata,
   generateRecipeJsonLd,
@@ -120,9 +120,9 @@ export default async function RecipeDetailPage({
         cookingTime={staticRecipe.cookingTime}
         avgRating={staticRecipe.ratingInfo.avgRating}
         ratingCount={staticRecipe.ratingInfo.ratingCount}
-        isYoutube={!!staticRecipe.youtubeUrl}
+        isYoutube={isYoutubeRecipe(staticRecipe)}
         youtubeChannelName={staticRecipe.youtubeChannelName}
-        isAiGenerated={staticRecipe.aiGenerated}
+        isAiGenerated={isAiRecipe(staticRecipe)}
       />
       <RecipeStatusProvider recipeId={recipeId}>
         <RecipeNavbar
@@ -141,7 +141,7 @@ export default async function RecipeDetailPage({
         <RecipeContainer>
           <RecipeInfoSection
             title={staticRecipe.title}
-            aiGenerated={staticRecipe.aiGenerated}
+            aiGenerated={isAiRecipe(staticRecipe)}
             author={staticRecipe.author}
             description={staticRecipe.description}
             extractorId={staticRecipe.extractorId}

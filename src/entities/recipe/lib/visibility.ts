@@ -1,7 +1,11 @@
-import type { Visibility } from "../model/types";
+import type { RecipeSource, Visibility } from "../model/types";
 
 type VisibilityShape = {
   visibility?: Visibility | null;
+};
+
+type SourceShape = {
+  source?: RecipeSource | null;
 };
 
 export const isPrivateRecipe = (recipe: VisibilityShape): boolean =>
@@ -9,3 +13,9 @@ export const isPrivateRecipe = (recipe: VisibilityShape): boolean =>
 
 export const isRestrictedRecipe = (recipe: VisibilityShape): boolean =>
   recipe.visibility === "RESTRICTED";
+
+export const isAiRecipe = (recipe: SourceShape): boolean =>
+  recipe.source === "AI";
+
+export const isYoutubeRecipe = (recipe: SourceShape): boolean =>
+  recipe.source === "YOUTUBE";

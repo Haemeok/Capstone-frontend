@@ -4,40 +4,21 @@ import { Comment } from "@/entities/comment";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
 import { User } from "@/entities/user";
 
-// Dev V3 (2026-05-03 swagger reference) 신규 enum.
-// listingStatus / lifecycleStatus는 백엔드 실수로 응답에 들어오지만 프론트는 사용 안 함.
+// Dev V3 (2026-05-03 swagger reference) 단일 신호 enum.
+// 모든 GET recipe 응답이 source/visibility로 통일되며, 기존 isAiGenerated/isYoutube/aiGenerated/private는
+// 백엔드가 제거할 예정인 legacy. listingStatus/lifecycleStatus는 백엔드 실수로 응답에 들어오지만 프론트는 안 씀.
 export type Visibility = "PUBLIC" | "PRIVATE" | "RESTRICTED";
 export type RecipeSource = "USER" | "AI" | "YOUTUBE" | "REELS";
 export type ImageStatus = "PENDING" | "READY" | "FAILED";
 
-// R01 신규 객체. legacy youtube*/extractor* 필드보다 우선해서 표시.
-export type YoutubeInfo = {
-  videoId: string;
-  youtubeUrl: string;
-  channelName?: string;
-  videoTitle?: string;
-  thumbnailUrl?: string;
-  channelProfileUrl?: string;
-  subscriberCount?: number;
-  channelId?: string;
-  videoViewCount?: number;
-  extractorId?: string | null;
-};
-
-export type ExtractionEvidenceLevel = "HIGH" | "MEDIUM" | "LOW";
-
-export type ExtractionInfo = {
-  hasSubtitle: boolean;
-  hasDescriptionIngredient: boolean;
-  hasCommentIngredient: boolean;
-  usedGeminiAnalysis: boolean;
-  evidenceLevel: ExtractionEvidenceLevel | string;
-  tokenCost: number;
-};
-
 export type IngredientCalculationSummary = {
   totalCalories: number;
   totalIngredientCost: number;
+  totalCarbohydrate?: number;
+  totalProtein?: number;
+  totalFat?: number;
+  totalSugar?: number;
+  totalSodium?: number;
   mappedCount: number;
   partialCount: number;
   unresolvedCount: number;
@@ -83,8 +64,6 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   ratingCount: number;
   marketPrice?: number;
   ingredientCost?: number;
-  isYoutube?: boolean;
-  isAiGenerated?: boolean;
   youtubeChannelName?: string;
   favoriteCount?: number;
   youtubeVideoViewCount?: number;
@@ -151,11 +130,7 @@ export type Recipe = {
   favoriteByCurrentUser: boolean;
   visibility?: Visibility;
   source?: RecipeSource;
-  imageGenerationModel?: string | null;
-  youtubeInfo?: YoutubeInfo | null;
-  extractionInfo?: ExtractionInfo | null;
   ingredientCalculationSummary?: IngredientCalculationSummary;
-  aiGenerated: boolean;
   totalCalories: number;
   createdAt?: string;
   nutrition: Nutrition;
@@ -219,7 +194,6 @@ const defaultRecipeKeys = [
   "comments",
   "imageUrl",
   "imageKey",
-  "aiGenerated",
   "totalCalories",
   "nutrition",
   "isCloneable",
@@ -339,7 +313,6 @@ export type MyRecipeListItem = {
   type: "YOUTUBE" | "USER" | "AI" | string;
   createdAt: string;
   likedByCurrentUser: boolean;
-  aiGenerated: boolean;
   visibility?: Visibility;
   source?: RecipeSource;
   imageStatus?: ImageStatus;

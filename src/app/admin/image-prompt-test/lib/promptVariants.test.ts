@@ -29,7 +29,6 @@ const fixtureRecipe = {
   likeCount: 0,
   likedByCurrentUser: false,
   favoriteByCurrentUser: false,
-  aiGenerated: false,
   totalCalories: 0,
   nutrition: {} as Recipe["nutrition"],
 } as unknown as Recipe;

@@ -16,6 +16,7 @@ import { cn } from "@/shared/lib/utils";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import { Image } from "@/shared/ui/image/Image";
 
+import { isAiRecipe, isYoutubeRecipe } from "@/entities/recipe";
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
 
 const YoutubeGlyph = () => (
@@ -64,16 +65,17 @@ const DetailedRecipeGridItem = ({
       cookingTime: recipe.cookingTime,
       avgRating: recipe.avgRating,
       ratingCount: recipe.ratingCount,
-      isYoutube: recipe.isYoutube,
+      isYoutube: isYoutubeRecipe(recipe),
       youtubeChannelName: recipe.youtubeChannelName,
       youtubeVideoViewCount: recipe.youtubeVideoViewCount,
       favoriteCount: recipe.favoriteCount,
-      isAiGenerated: recipe.isAiGenerated,
+      isAiGenerated: isAiRecipe(recipe),
     });
   };
 
-  const showYoutubeRow = recipe.isYoutube;
-  const showAiRow = !recipe.isYoutube && recipe.isAiGenerated;
+  const isYoutube = isYoutubeRecipe(recipe);
+  const showYoutubeRow = isYoutube;
+  const showAiRow = !isYoutube && isAiRecipe(recipe);
 
   return (
     <div
@@ -145,7 +147,7 @@ const DetailedRecipeGridItem = ({
           </p>
 
           <div className="flex items-center gap-2 overflow-hidden text-[13px] text-gray-500">
-            {recipe.isYoutube && recipe.youtubeVideoViewCount != null && (() => {
+            {isYoutube && recipe.youtubeVideoViewCount != null && (() => {
               const tier = getViewCountTier(recipe.youtubeVideoViewCount);
               const IconComponent = tier.icon;
               return (
@@ -169,7 +171,7 @@ const DetailedRecipeGridItem = ({
 
             {recipe.cookingTime != null && (() => {
               const hasViewCount =
-                recipe.isYoutube && recipe.youtubeVideoViewCount != null;
+                isYoutube && recipe.youtubeVideoViewCount != null;
               const compactHide = hideCookingTime && hasViewCount;
               return (
                 <div

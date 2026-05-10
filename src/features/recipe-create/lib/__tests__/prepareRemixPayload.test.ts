@@ -33,7 +33,6 @@ const baseRecipe = (): Recipe => ({
     sugar: 5,
     sodium: 800,
   },
-  aiGenerated: false,
   isCloneable: true,
   cookingTools: ["냄비"],
   comments: [],
