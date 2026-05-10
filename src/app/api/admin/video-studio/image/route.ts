@@ -1,19 +1,19 @@
 // src/app/api/admin/video-studio/image/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-import { assertAdminApi } from "@/shared/lib/admin-guard";
-
 import {
   editMultiViaOpenAI,
   generateMultiViaOpenAI,
 } from "@/app/admin/image-quality-test/lib/adapters/openaiAdapter";
+import { getModelById } from "@/app/admin/image-quality-test/lib/models";
+import { assertAdminApi } from "@/shared/lib/admin-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
 type Body = {
+  modelId: string;
   prompt: string;
-  quality: "low" | "medium" | "high";
   n: number;
   referenceImageUrl?: string;
 };
@@ -29,9 +29,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  if (!body.prompt || !body.quality || !body.n) {
+  if (!body.modelId) {
+    return NextResponse.json({ error: "modelId is required" }, { status: 400 });
+  }
+  if (!body.prompt || !body.n) {
     return NextResponse.json(
-      { error: "prompt, quality, n are required" },
+      { error: "prompt and n are required" },
       { status: 400 }
     );
   }
@@ -39,25 +42,48 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "n must be 1..4" }, { status: 400 });
   }
 
+  const model = getModelById(body.modelId);
+  if (!model) {
+    return NextResponse.json(
+      { error: `Unknown modelId: ${body.modelId}` },
+      { status: 400 }
+    );
+  }
+  if (model.provider !== "openai") {
+    return NextResponse.json(
+      { error: `Provider not supported here: ${model.provider}` },
+      { status: 400 }
+    );
+  }
+
+  const quality = (model.extra?.quality ?? undefined) as
+    | "low"
+    | "medium"
+    | "high"
+    | "auto"
+    | undefined;
+
   const startedAt = Date.now();
   try {
     const result = body.referenceImageUrl
       ? await editMultiViaOpenAI(
-          "gpt-image-1",
+          model.endpoint,
           body.prompt,
           body.referenceImageUrl,
-          { quality: body.quality, n: body.n },
+          { quality, n: body.n },
           req.signal
         )
       : await generateMultiViaOpenAI(
-          "gpt-image-1",
+          model.endpoint,
           body.prompt,
-          { quality: body.quality, n: body.n },
+          { quality, n: body.n },
           req.signal
         );
 
     return NextResponse.json({
       images: result.imageDataUrls,
+      modelId: body.modelId,
+      pricePerImage: model.pricePerImage,
       latencyMs: Date.now() - startedAt,
     });
   } catch (err) {
