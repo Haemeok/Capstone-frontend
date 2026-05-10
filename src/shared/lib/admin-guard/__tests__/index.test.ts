@@ -64,8 +64,41 @@ describe("checkAdminAccess", () => {
     expect(result).toEqual({ ok: true });
   });
 
+  it("returns ok=true when user.id matches any entry in comma-separated list", async () => {
+    process.env.ADMIN_USER_ID = "ADMIN1, ADMIN2 ,ADMIN3";
+    cookiesMock.mockResolvedValue(makeCookieStore("t"));
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: "ADMIN2" }),
+    } as Response);
+    const result = await checkAdminAccess();
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("returns 403 when user.id is not in comma-separated list", async () => {
+    process.env.ADMIN_USER_ID = "ADMIN1,ADMIN2";
+    cookiesMock.mockResolvedValue(makeCookieStore("t"));
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: "OUTSIDER" }),
+    } as Response);
+    const result = await checkAdminAccess();
+    expect(result).toEqual({ ok: false, status: 403, reason: "not-admin" });
+  });
+
   it("returns 500 when ADMIN_USER_ID env is missing", async () => {
     delete process.env.ADMIN_USER_ID;
+    cookiesMock.mockResolvedValue(makeCookieStore("t"));
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: "anyone" }),
+    } as Response);
+    const result = await checkAdminAccess();
+    expect(result).toEqual({ ok: false, status: 500, reason: "env-missing" });
+  });
+
+  it("returns 500 when ADMIN_USER_ID is empty/whitespace only", async () => {
+    process.env.ADMIN_USER_ID = " , , ";
     cookiesMock.mockResolvedValue(makeCookieStore("t"));
     fetchMock.mockResolvedValue({
       ok: true,

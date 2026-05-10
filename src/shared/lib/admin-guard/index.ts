@@ -9,12 +9,13 @@ export type AdminCheckResult =
   | { ok: true }
   | { ok: false; status: 401 | 403 | 500; reason: string };
 
-// Server-only. Reads cookies, forwards to backend /api/me, compares user.id to
-// process.env.ADMIN_USER_ID. Backend uses cookie-based auth (not Bearer), so
-// the incoming cookie jar is forwarded verbatim.
+// Server-only. Reads cookies, forwards to backend /api/me, compares user.id
+// against the allowlist parsed from ADMIN_USER_ID (comma-separated; single
+// value also accepted). Backend uses cookie-based auth (not Bearer), so the
+// incoming cookie jar is forwarded verbatim.
 export const checkAdminAccess = async (): Promise<AdminCheckResult> => {
-  const adminId = process.env.ADMIN_USER_ID;
-  if (!adminId) {
+  const adminIds = parseAdminIds(process.env.ADMIN_USER_ID);
+  if (adminIds.size === 0) {
     return { ok: false, status: 500, reason: "env-missing" };
   }
 
@@ -37,12 +38,20 @@ export const checkAdminAccess = async (): Promise<AdminCheckResult> => {
     return { ok: false, status: 401, reason: "fetch-failed" };
   }
 
-  if (user.id !== adminId) {
+  if (!user.id || !adminIds.has(user.id)) {
     return { ok: false, status: 403, reason: "not-admin" };
   }
 
   return { ok: true };
 };
+
+const parseAdminIds = (raw: string | undefined): Set<string> =>
+  new Set(
+    (raw ?? "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0)
+  );
 
 // For API routes: returns NextResponse on failure, null on success.
 // Caller pattern: const guard = await assertAdminApi(); if (guard) return guard;
