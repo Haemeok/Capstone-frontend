@@ -52,7 +52,7 @@ const VideoStudioPage = () => {
     buildDefaultVideoPrompt()
   );
   const [model, setModel] = useState<SeedanceModelId>(
-    "dreamina-seedance-2-0-fast-260128"
+    "dreamina-seedance-2-0-260128"
   );
   const [resolution, setResolution] = useState<SeedanceResolution>("720p");
   const [ratio, setRatio] = useState<SeedanceRatio>("16:9");

@@ -124,11 +124,11 @@ export const VideoGenerationPanel = ({
             onChange={(e) => onModelChange(e.target.value as SeedanceModelId)}
             className="rounded-lg border border-gray-200 px-2 py-1 text-sm"
           >
-            <option value="dreamina-seedance-2-0-fast-260128">
-              2.0 Fast (저렴/빠름)
-            </option>
             <option value="dreamina-seedance-2-0-260128">
               2.0 Standard (고품질)
+            </option>
+            <option value="dreamina-seedance-2-0-fast-260128">
+              2.0 Fast (저렴/빠름)
             </option>
           </select>
         </label>
