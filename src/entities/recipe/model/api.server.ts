@@ -123,7 +123,7 @@ export const getRecipesOnServer = async (
   if (params.minSodium !== undefined) query.append("minSodium", params.minSodium.toString());
   if (params.maxSodium !== undefined) query.append("maxSodium", params.maxSodium.toString());
 
-  let endpoint = "/recipes/search";
+  let endpoint = "/dev/recipes/search";
 
   if (params.key === "budget-recipes") {
     endpoint = "/recipes/budget";
@@ -272,7 +272,7 @@ export const getStaticRecipesOnServer = async (
   if (params.maxCost) query.append("maxCost", params.maxCost.toString());
   if (params.period) query.append("period", params.period);
 
-  let endpoint = "/recipes/search";
+  let endpoint = "/dev/recipes/search";
   let cacheTags: string[] = [];
   let revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
 

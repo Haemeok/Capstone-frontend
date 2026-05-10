@@ -11,7 +11,7 @@ export const END_POINTS = {
   RECIPES: "/recipes",
   RECIPE_AI: "/recipes/ai",
   RECIPES_SIMPLE: "/recipes/simple",
-  RECIPE_SEARCH: "/recipes/search",
+  RECIPE_SEARCH: "/dev/recipes/search",
   RECIPE_FILTER: "/recipes/filter",
   RECIPE_BUDGET: "/recipes/budget",
   RECIPE_POPULAR: "/recipes/popular",
