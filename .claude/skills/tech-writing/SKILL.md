@@ -4,7 +4,7 @@ description: Korean developer technical writing for blog posts, portfolio docs, 
 license: MIT
 metadata:
   author: recipio
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Tech Writing Skill — Human-Like Korean Developer Writing
@@ -22,7 +22,7 @@ Determine the mode from context:
 
 ## Banned AI Patterns (Both Modes)
 
-These 10 patterns make text immediately recognizable as AI-generated. **Never use them.**
+These 11 patterns make text immediately recognizable as AI-generated. **Never use them.**
 
 ### 1. Bold structural labels
 
@@ -133,6 +133,19 @@ AI connects every means with "~을 통해". Vary the connectors.
 ```
 
 Alternatives: ~로, ~해서, ~하여, ~덕분에, ~기 때문에
+
+### 11. 동의어 회전 (synonym cycling)
+
+**Banned:** 같은 대상을 매 문장 다른 표현으로 바꿔 부르며 돌리기.
+
+```
+❌ 주인공은 이내 결심한다. 핵심 인물은 곧 행동에 나섰다. 중심 인물의 선택은 결국...
+❌ 이 컴포넌트는 데이터를 받아온다. 해당 모듈은 상태를 갱신하고, 이 요소는 결과를 그린다.
+✅ 주인공은 이내 결심한다. 그는 곧 행동에 나섰고, 그 선택은 결국...
+✅ 이 컴포넌트는 데이터를 받아 상태를 갱신하고 결과를 그린다.
+```
+
+AI는 "표현이 단조로우면 안 된다"는 통계적 직관 때문에 동일 대상을 동의어로 회전시킨다. 사람은 가장 명확한 명사 하나를 골라 반복하고, 필요하면 대명사로 받는다. 같은 사물·기능·역할을 가리킬 때는 한 번 고른 표현을 끝까지 쓴다.
 
 ---
 
@@ -345,6 +358,22 @@ Blog posts are free-form but typically follow:
 7. **Tables for data comparisons**, paragraphs for narrative. Never mix.
 8. **Code blocks introduced casually:** "실제 설정은 간단해요." then the code.
 
+### Voice Calibration (선택 — 블로그 톤 개인화)
+
+블로그 모드의 고정 톤(`~거든요`, `~이에요`)은 출발선이지 정답이 아니다. 사용자가 과거에 작성한 글이 있으면, **해당 글의 2~3 문단을 톤 기준 샘플로 삼아** 모드 기본값보다 우선시한다.
+
+**작동 방식:**
+1. 사용자가 직접 쓴 블로그/노트/메모 2~3 문단을 받는다 (또는 파일 경로).
+2. 샘플에서 다음을 추출한다:
+   - 평균 문장 길이 (짧고 끊는 편 vs 길게 잇는 편)
+   - 자주 쓰는 종결 어미 (`~거든요`/`~죠`/`~네요`/`~더라고요`)
+   - 영문 토큰 빈도와 표기 습관 (`Next.js` vs `넥스트`)
+   - 반복적으로 나타나는 연결어·접속어 (`그래서`/`근데`/`아무튼`)
+   - 1인칭 사용 빈도 (`저는`/`제가` 등장 밀도)
+3. 새로 쓰는 글은 이 5개 축에서 **샘플과 같은 위치**에 자리잡도록 작성한다.
+
+샘플이 없으면 모드 기본값으로 진행한다. 샘플이 있는데 무시하고 일반론만 적용하면 결과가 "같은 사람이 쓴 글"로 보이지 않는다.
+
 ### Example (Good Blog Opening)
 ```
 안녕하세요. 카카오페이증권 DevOps 팀 Sean.baek (션), Lina.a (리나)에요.
@@ -555,7 +584,7 @@ Korean 자소서 mixes 과거 완결형 (~했습니다) and 현재/미래형 (~�
 
 When editing existing text to remove AI patterns:
 
-1. **Scan for banned patterns.** Check all 10 banned patterns. Mark every violation.
+1. **Scan for banned patterns.** Check all 11 banned patterns. Mark every violation.
 2. **Check Problem/Key Action separation** (portfolio mode). Does Problem contain solutions? Does Key Action repeat Problem?
 3. **Remove bold labels.** Convert labeled sections to flowing paragraphs.
 4. **Kill evaluative adjectives.** Replace with facts/numbers.
@@ -581,3 +610,31 @@ Run these **in addition** to the general checks when in Jasoseo mode:
 12. **Subtitle-body keyword grep.** For each `[subtitle]`, extract its anchor keyword(s) and confirm they appear in the opening sentence of the body, not buried in a tail line.
 13. **Number consistency sweep.** `grep -nE "MAU\|DAU\|[0-9]+만"` the whole document — all same-metric occurrences must match.
 14. **Tense continuity check.** Read each paragraph's last sentence and the next paragraph's first sentence as a pair. Past-definitive (~했습니다) should not immediately precede future-promise (~겠습니다) across paragraphs without a present-habitual (~합니다) bridge.
+
+---
+
+## Self-Audit Pass (마지막 의심 단계)
+
+체크리스트를 다 통과해도 글에는 **AI 냄새가 잔향처럼 남는다**. 마지막에 한 번 더, 룰이 아니라 의심으로 읽는다. 이 단계는 새 글을 쓴 직후에도, 기존 글을 교정한 직후에도 반드시 거친다.
+
+### 단일 자가질문
+
+> **"이 글을 처음 보는 한국 개발자에게 보여줬을 때, 어느 문장에서 'AI가 썼나?' 하는 생각이 들 것 같은가?"**
+
+이 질문 하나만 들고 글을 처음부터 끝까지 다시 읽는다. 룰북에는 없지만 이상하게 느껴지는 문장을 찾는 것이 목적이다.
+
+### 자주 걸리는 잔향
+
+체크리스트로 잡히지 않는 미묘한 패턴들:
+
+- **체크리스트는 통과했는데 정보 밀도가 균일한 문장.** 사람 글은 한 문단 안에서도 강약이 있다. 모든 문장이 같은 호흡·같은 정보량이면 AI 냄새가 난다.
+- **단어 선택은 자연스러운데 흐름이 너무 매끈한 단락.** 사람은 중간에 한 박자 끊거나 곁가지로 새었다 돌아오는 일이 잦다. 단락 전체가 한 호흡으로 매끄럽게 이어지면 인공적이다.
+- **모든 문단이 비슷한 길이.** 짧은 문단(1~2 문장)과 긴 문단(5~7 문장)이 섞여야 사람 글이다.
+- **결론이 "교과서적으로" 정확함.** 마지막 문단이 모범답안처럼 깔끔히 정리되면 사람이 아니다. 진짜 글은 한 톤 비스듬한 마무리·다음 과제 언급·미해결 부분 인정 중 하나로 끝난다.
+- **"우리는 ~을 배웠습니다" 류의 메타 마무리.** 학습한 내용을 정리하기보다 다음에 무엇을 시도할지 한 줄로 끝내는 편이 자연스럽다.
+
+### 처리
+
+잔향이 감지된 문장은 **고치는 게 아니라 잘라내거나 다시 쓴다**. 일부 단어 교체로는 사라지지 않는다. 한 문장을 두 문장으로 쪼개거나, 반대로 두 문장을 한 호흡으로 합치는 식으로 호흡을 바꾼다.
+
+이 단계가 끝나면 작업 종료. 추가 룰을 발견했다면 본 스킬에 새 패턴으로 등재할 후보로 적어둔다.

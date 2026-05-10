@@ -38,7 +38,7 @@ export const END_POINTS = {
   RECIPE_BOOK: (bookId: string) => `/me/recipe-books/${bookId}`,
   RECIPE_BOOK_RECIPES: (bookId: string) => `/me/recipe-books/${bookId}/recipes`,
   RECIPE_BOOK_ORDER: "/me/recipe-books/order",
-  RECIPE_VISIBILITY: (id: string) => `/dev/recipes/${id}/visibility`,
+  RECIPE_VISIBILITY: (id: string) => `/bff/recipes/${id}/visibility`,
   RECIPE_RECOMMENDATIONS: (id: string) => `/recipes/${id}/recommendations`,
   RECIPE_FINALIZE: (id: string) => `/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `/oauth2/authorization/google`,

@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
         { status: 422 },
       );
     }
+    console.error("[curation/generate] unhandled error", e);
     const msg = e instanceof Error ? e.message : String(e);
     return NextResponse.json({ error: msg }, { status: 500 });
   }

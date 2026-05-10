@@ -4,7 +4,7 @@ export const DEFAULT_BOOK_SORT = "createdAt,desc";
 
 export const BOOK_DETAIL_PAGE_SIZE = 5;
 
-export const MAX_RECIPE_BOOKS = 5;
+export const MAX_RECIPE_BOOKS = 20;
 
 export const RECIPE_BOOK_QUERY_KEYS = {
   all: ["recipe-books"] as const,

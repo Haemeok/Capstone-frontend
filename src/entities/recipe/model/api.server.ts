@@ -209,7 +209,7 @@ export const getStaticrecipionServer = async (
     });
 
     if (!res.ok) {
-      if (res.status === 404) {
+      if (res.status === 404 || res.status === 401 || res.status === 403) {
         return null;
       }
       throw new Error(`API Error: ${res.status} ${res.statusText}`);

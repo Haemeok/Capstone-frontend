@@ -37,7 +37,7 @@ const NotFound = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4">
+    <div className="flex min-h-[80dvh] flex-col items-center justify-center p-4">
       <div className="flex max-w-md flex-col items-center gap-6 text-center">
         <div className="text-6xl">{emoji}</div>
         <h1 className="text-2xl font-bold text-gray-900">{title}</h1>

@@ -201,7 +201,7 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
 
   return (
     <Container open={isOpen} onOpenChange={onOpenChange}>
-      <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md">
+      <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md [&>button]:hidden">
         <Title className="sr-only">레시피 챗봇</Title>
         <div className="flex h-[80dvh] max-h-[640px] flex-col sm:h-[70dvh] kb-pb">
           <ChatHeader quota={quota} onClose={() => onOpenChange(false)} />
