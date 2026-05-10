@@ -42,6 +42,9 @@ yarn-error.log*
 # seo pipeline data (분석 결과, 로컬용)
 /data/
 
+# IndexNow 푸시 상태 (로컬, scripts/push-indexnow-naver.ts)
+.indexnow-state.json
+
 # seo sitemap allowlist (S3에서 호스팅, 워크플로우에서 생성)
 /src/shared/config/seo/sitemap-allowlist.json
 
