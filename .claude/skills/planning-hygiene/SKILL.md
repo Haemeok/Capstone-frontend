@@ -26,6 +26,7 @@ Reference these guidelines when:
 | `lookup-` | Reuse existing lookup tables before authoring parallel ones |
 | `external-` | External-source-of-truth values (vendor IDs, prices, rates) |
 | `scope-` | Disambiguating user intent before committing to a plan |
+| `no-` | Anti-patterns to avoid emitting in plans or generated code |
 
 ## Quick Reference
 
@@ -40,6 +41,10 @@ Reference these guidelines when:
 ### Scope disambiguation
 
 - `scope-confirm-mode-vs-mechanism` — Vague feature requests often have two valid readings: a new mechanism on top of existing flow, OR a mode the underlying API already supports. Read the API surface first; if both readings are valid, ask one disambiguating question rather than committing to a multi-task plan for the bigger reading.
+
+### Anti-patterns
+
+- `no-file-path-header-comments` — Never write the file's own path as a header comment. It duplicates info the editor shows, lies the moment the file moves, and turns "rename one file" into "fix N comments." Don't bake this into plan templates either; implementers will copy it faithfully.
 
 ## How to Use
 
