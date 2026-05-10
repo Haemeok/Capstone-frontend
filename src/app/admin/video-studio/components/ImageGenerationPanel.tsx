@@ -2,11 +2,28 @@
 
 import { useRef } from "react";
 
+export type ImageModelId =
+  | "gpt-image-2-low"
+  | "gpt-image-2-medium"
+  | "gpt-image-2-high";
+
+const MODEL_LABELS: Record<ImageModelId, string> = {
+  "gpt-image-2-low": "GPT Image 2 (Low)",
+  "gpt-image-2-medium": "GPT Image 2 (Medium)",
+  "gpt-image-2-high": "GPT Image 2 (High)",
+};
+
+const MODEL_OPTIONS: ImageModelId[] = [
+  "gpt-image-2-low",
+  "gpt-image-2-medium",
+  "gpt-image-2-high",
+];
+
 type Props = {
   prompt: string;
   onPromptChange: (v: string) => void;
-  quality: "low" | "medium" | "high";
-  onQualityChange: (v: "low" | "medium" | "high") => void;
+  modelId: ImageModelId;
+  onModelChange: (v: ImageModelId) => void;
   count: number;
   onCountChange: (v: number) => void;
   referenceImageUrl: string | null;
@@ -19,8 +36,8 @@ type Props = {
 export const ImageGenerationPanel = ({
   prompt,
   onPromptChange,
-  quality,
-  onQualityChange,
+  modelId,
+  onModelChange,
   count,
   onCountChange,
   referenceImageUrl,
@@ -46,17 +63,17 @@ export const ImageGenerationPanel = ({
 
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-2 text-xs text-gray-600">
-          품질
+          모델
           <select
-            value={quality}
-            onChange={(e) =>
-              onQualityChange(e.target.value as "low" | "medium" | "high")
-            }
+            value={modelId}
+            onChange={(e) => onModelChange(e.target.value as ImageModelId)}
             className="rounded-lg border border-gray-200 px-2 py-1 text-sm"
           >
-            <option value="low">low</option>
-            <option value="medium">medium</option>
-            <option value="high">high</option>
+            {MODEL_OPTIONS.map((id) => (
+              <option key={id} value={id}>
+                {MODEL_LABELS[id]}
+              </option>
+            ))}
           </select>
         </label>
 

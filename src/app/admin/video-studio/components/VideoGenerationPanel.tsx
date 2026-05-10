@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+
 import type {
   SeedanceModelId,
   SeedanceRatio,
@@ -8,6 +10,7 @@ import type {
 
 type Props = {
   selectedImageUrl: string | null;
+  onImageUpload: (dataUrl: string | null) => void;
   prompt: string;
   onPromptChange: (v: string) => void;
   model: SeedanceModelId;
@@ -28,6 +31,7 @@ type Props = {
 
 export const VideoGenerationPanel = ({
   selectedImageUrl,
+  onImageUpload,
   prompt,
   onPromptChange,
   model,
@@ -45,9 +49,32 @@ export const VideoGenerationPanel = ({
   onSubmit,
   onCancel,
 }: Props) => {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const r = reader.result;
+      onImageUpload(typeof r === "string" ? r : null);
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="space-y-3 rounded-2xl border border-gray-200 bg-white p-4">
       <h2 className="text-sm font-bold text-gray-900">2단계 · 영상 생성</h2>
+
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) handleFile(f);
+          e.target.value = "";
+        }}
+      />
 
       {selectedImageUrl ? (
         <div className="flex items-center gap-3">
@@ -56,13 +83,36 @@ export const VideoGenerationPanel = ({
             alt="selected"
             className="h-20 w-20 rounded-lg object-cover"
           />
-          <span className="text-xs text-gray-500">
-            이미지 선택됨 (위 그리드에서 변경 가능)
-          </span>
+          <div className="flex flex-col gap-1 text-xs text-gray-500">
+            <span>이미지 선택됨</span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => imageInputRef.current?.click()}
+                className="text-olive-dark underline"
+              >
+                변경
+              </button>
+              <button
+                type="button"
+                onClick={() => onImageUpload(null)}
+                className="text-red-500 underline"
+              >
+                제거
+              </button>
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="rounded-lg bg-gray-50 p-3 text-xs text-gray-500">
-          위 1단계에서 이미지를 먼저 생성·선택해 주세요
+        <div className="space-y-2 rounded-lg bg-gray-50 p-3 text-xs text-gray-500">
+          <div>1단계에서 선택하거나 직접 업로드하세요</div>
+          <button
+            type="button"
+            onClick={() => imageInputRef.current?.click()}
+            className="rounded-lg border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700"
+          >
+            파일 선택
+          </button>
         </div>
       )}
 
