@@ -13,8 +13,8 @@ export const END_POINTS = {
   RECIPES_SIMPLE: "/recipes/simple",
   RECIPE_SEARCH: "/dev/recipes/search",
   RECIPE_FILTER: "/recipes/filter",
-  RECIPE_BUDGET: "/recipes/budget",
-  RECIPE_POPULAR: "/recipes/popular",
+  RECIPE_BUDGET: "/dev/recipes/budget",
+  RECIPE_POPULAR: "/dev/recipes/popular",
   RECIPES_BY_CATEGORY: (categorySlug: string) =>
     `/recipes/category/${categorySlug}`,
   RECIPE_EXTRACT: "/recipes/extract",

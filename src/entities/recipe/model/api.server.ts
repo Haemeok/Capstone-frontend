@@ -126,9 +126,9 @@ export const getRecipesOnServer = async (
   let endpoint = "/dev/recipes/search";
 
   if (params.key === "budget-recipes") {
-    endpoint = "/recipes/budget";
+    endpoint = "/dev/recipes/budget";
   } else if (params.key === "popular-recipes") {
-    endpoint = "/recipes/popular";
+    endpoint = "/dev/recipes/popular";
   }
 
   const API_URL = `${BASE_API_URL}${endpoint}?${query.toString()}`;
@@ -277,11 +277,11 @@ export const getStaticRecipesOnServer = async (
   let revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
 
   if (params.key === "budget-recipes") {
-    endpoint = "/recipes/budget";
+    endpoint = "/dev/recipes/budget";
     cacheTags = [CACHE_TAGS.recipesBudget];
     revalidateTime = REVALIDATION_TIMES.RECIPES_BUDGET;
   } else if (params.key === "popular-recipes") {
-    endpoint = "/recipes/popular";
+    endpoint = "/dev/recipes/popular";
     cacheTags = [CACHE_TAGS.recipesPopular];
     revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
   } else if (params.key === "recommended-recipes" && params.recipeId) {
