@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+import { useKeyboardStore } from "@/shared/store/useKeyboardStore";
+
 import type { ChatMessage } from "../model/types";
 
 import ChatEmptyState from "./ChatEmptyState";
@@ -17,10 +19,13 @@ const ChatMessageList = ({
   onQuickQuestion,
 }: ChatMessageListProps) => {
   const endRef = useRef<HTMLDivElement>(null);
+  // Android에서 키보드 높이 변할 때도 마지막 메시지로 스크롤 유지.
+  // iOS는 visualViewport 자동 보정이라 store 값 0 유지 → 영향 없음.
+  const keyboardHeight = useKeyboardStore((s) => s.keyboardHeight);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
-  }, [messages]);
+  }, [messages, keyboardHeight]);
 
   if (messages.length === 0)
     return <ChatEmptyState onQuickQuestion={onQuickQuestion} />;
