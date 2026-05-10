@@ -33,7 +33,7 @@ export const useImageGeneration = () => {
       setState({ status: "pending" });
 
       try {
-        const res = await fetch("/api/admin/video-studio/image", {
+        const res = await fetch("/api/bff/admin/video-studio/image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(input),

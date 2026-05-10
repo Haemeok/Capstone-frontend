@@ -1,10 +1,6 @@
-// src/app/admin/video-studio/lib/costStorage.ts
-//
 // Aggregated cost history for the video-studio admin page (image + video stages).
 // Persisted in localStorage; SSR-safe via the typeof-window guard.
-// Numbers are estimates fed by lib/videoPricing.ts and the catalog
-// in @/app/admin/image-quality-test/lib/models.ts — they are not authoritative
-// billing.
+// Numbers are estimates — not authoritative billing.
 
 export type StageCostEntry = { count: number; totalCost: number };
 

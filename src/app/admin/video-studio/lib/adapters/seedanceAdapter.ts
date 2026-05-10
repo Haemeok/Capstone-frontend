@@ -1,4 +1,3 @@
-// src/app/admin/video-studio/lib/adapters/seedanceAdapter.ts
 import type {
   SeedanceSubmitInput,
   SeedanceTaskState,

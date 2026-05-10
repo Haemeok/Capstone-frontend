@@ -1,4 +1,3 @@
-// src/app/api/admin/video-studio/video/submit/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
 import { assertAdminApi } from "@/shared/lib/admin-guard";

@@ -39,7 +39,7 @@ export const useVideoGeneration = () => {
 
     let taskId: string;
     try {
-      const submitRes = await fetch("/api/admin/video-studio/video/submit", {
+      const submitRes = await fetch("/api/bff/admin/video-studio/video/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(input),
@@ -75,7 +75,7 @@ export const useVideoGeneration = () => {
 
       try {
         const r = await fetch(
-          `/api/admin/video-studio/video/status/${encodeURIComponent(taskId)}`
+          `/api/bff/admin/video-studio/video/status/${encodeURIComponent(taskId)}`
         );
         const t = (await r.json()) as SeedanceTaskState & { error?: string };
 

@@ -1,5 +1,3 @@
-// src/app/admin/video-studio/lib/types.ts
-
 export type SeedanceModelId =
   | "dreamina-seedance-2-0-260128"
   | "dreamina-seedance-2-0-fast-260128";

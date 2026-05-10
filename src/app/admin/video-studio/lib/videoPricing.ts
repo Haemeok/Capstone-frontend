@@ -1,5 +1,3 @@
-// src/app/admin/video-studio/lib/videoPricing.ts
-//
 // Pricing constants for BytePlus ModelArk Seedance 2.0.
 //
 // Source notes (recorded 2026-05-10):

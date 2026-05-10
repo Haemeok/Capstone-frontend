@@ -1,4 +1,3 @@
-// src/app/admin/video-studio/lib/buildVideoPrompt.ts
 import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 
 export const buildDefaultVideoPrompt = (
