@@ -3,6 +3,7 @@ import { BaseQueryParams, PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 import { FileInfoRequest } from "@/shared/types";
 
+import { ensureSource } from "@/entities/recipe";
 import { RecipeHistoryResponse } from "@/entities/user/model/types";
 
 import { RecipeHistoryDetailResponse, RecordTimelineResponse } from "./record";
@@ -204,7 +205,9 @@ export const reportIngredient = async (
 export const getRecommendedRecipes = async (
   recipeId: string
 ): Promise<StaticDetailedRecipeGridItem[]> => {
-  return api.get<StaticDetailedRecipeGridItem[]>(
+  const rows = await api.get<StaticDetailedRecipeGridItem[]>(
     END_POINTS.RECIPE_RECOMMENDATIONS(recipeId)
   );
+  // R12 V2 shape — source가 누락돼서 helper들이 false로 떨어진다. 백엔드 dev 반영되면 ensureSource 제거.
+  return rows.map(ensureSource);
 };

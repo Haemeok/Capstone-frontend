@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL } from "@/shared/config/constants/api";
 
+import { ensureSource } from "@/entities/recipe/lib/visibility";
+
 import {
   DetailedRecipesApiResponse,
   Recipe,
@@ -337,7 +339,9 @@ export const getRecommendedRecipesOnServer = async (
       throw new Error(`API Error: ${res.status} ${res.statusText}`);
     }
 
-    return res.json();
+    const rows = (await res.json()) as StaticDetailedRecipeGridItem[];
+    // R12 V2 shape — source가 누락. 백엔드 dev 반영되면 ensureSource 제거.
+    return rows.map(ensureSource);
   } catch (error) {
     console.error(`[getStaticRecipesOnServer] Failed to fetch recipes:`, error);
 

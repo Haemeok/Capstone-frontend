@@ -28,6 +28,7 @@ export type {
 } from "./model/types";
 export { default as RecipeStepList } from "./ui/RecipeStepList";
 export {
+  ensureSource,
   isAiRecipe,
   isPrivateRecipe,
   isRestrictedRecipe,
