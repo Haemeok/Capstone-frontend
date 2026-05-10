@@ -171,8 +171,8 @@ export const SORT_CONFIGS = {
     별점순: { field: "avgRating", direction: "DESC" },
   },
   myFridge: {
+    저장순: { field: "favoriteCount", direction: "DESC" },
     최신순: { field: "createdAt", direction: "DESC" },
-    좋아요순: { field: "favoriteCount", direction: "DESC" },
     별점순: { field: "avgRating", direction: "DESC" },
   },
 } as const;
