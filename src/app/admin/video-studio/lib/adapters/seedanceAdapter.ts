@@ -16,16 +16,21 @@ export const submitSeedanceTask = async (
   const apiKey = process.env.ARK_API_KEY;
   if (!apiKey) throw new Error("ARK_API_KEY is not set");
 
+  // Text-to-video when no image; image-to-video (first-frame) when image present.
+  const content: Array<Record<string, unknown>> = [
+    { type: "text", text: input.prompt },
+  ];
+  if (input.imageDataUrlOrUrl) {
+    content.push({
+      type: "image_url",
+      image_url: { url: input.imageDataUrlOrUrl },
+      role: "first_frame",
+    });
+  }
+
   const body = {
     model: input.model,
-    content: [
-      { type: "text", text: input.prompt },
-      {
-        type: "image_url",
-        image_url: { url: input.imageDataUrlOrUrl },
-        role: "first_frame",
-      },
-    ],
+    content,
     ratio: input.ratio,
     resolution: input.resolution,
     duration: input.durationSec,

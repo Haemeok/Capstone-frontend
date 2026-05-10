@@ -22,7 +22,7 @@ export type VideoGenState =
 type RunInput = {
   model: SeedanceModelId;
   prompt: string;
-  imageDataUrlOrUrl: string;
+  imageDataUrlOrUrl?: string;
   resolution: SeedanceResolution;
   ratio: SeedanceRatio;
   durationSec: number;

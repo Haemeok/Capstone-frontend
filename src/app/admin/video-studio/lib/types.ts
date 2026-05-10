@@ -10,7 +10,7 @@ export type SeedanceRatio = "16:9" | "9:16" | "1:1" | "4:3" | "3:4";
 export type SeedanceSubmitInput = {
   model: SeedanceModelId;
   prompt: string;
-  imageDataUrlOrUrl: string; // base64 data URL or public https URL
+  imageDataUrlOrUrl?: string; // base64 data URL or public https URL; omit for text-to-video
   resolution: SeedanceResolution;
   ratio: SeedanceRatio;
   durationSec: number; // 4..15

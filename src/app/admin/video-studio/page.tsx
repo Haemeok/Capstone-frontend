@@ -103,12 +103,12 @@ const VideoStudioPage = () => {
   }, [imageModelId, imagePrompt, count, refImage, runImage]);
 
   const handleGenerateVideo = useCallback(async () => {
-    if (!videoInputImage) return;
     const cost = estimateVideoCost({ model, resolution, durationSec });
     const ok = await runVideo({
       model,
       prompt: videoPrompt,
-      imageDataUrlOrUrl: videoInputImage,
+      // omitted → text-to-video; present → first-frame image-to-video
+      imageDataUrlOrUrl: videoInputImage ?? undefined,
       resolution,
       ratio,
       durationSec,
