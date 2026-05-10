@@ -8,11 +8,21 @@ import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 import { RecipeSearchPanel } from "@/app/admin/image-quality-test/components/RecipeSearchPanel";
 import { buildPrompt } from "@/app/admin/image-quality-test/lib/buildPrompt";
 
-import { ImageGenerationPanel } from "./components/ImageGenerationPanel";
+import { CostSummary } from "./components/CostSummary";
+import {
+  ImageGenerationPanel,
+  type ImageModelId,
+} from "./components/ImageGenerationPanel";
 import { ImageGrid } from "./components/ImageGrid";
 import { VideoGenerationPanel } from "./components/VideoGenerationPanel";
 import { VideoResultCard } from "./components/VideoResultCard";
 import { buildDefaultVideoPrompt } from "./lib/buildVideoPrompt";
+import {
+  addImageGen,
+  addVideoGen,
+  loadCostHistory,
+  resetCostHistory,
+} from "./lib/costStorage";
 import type {
   SeedanceModelId,
   SeedanceRatio,
@@ -20,21 +30,22 @@ import type {
 } from "./lib/types";
 import { useImageGeneration } from "./lib/useImageGeneration";
 import { useVideoGeneration } from "./lib/useVideoGeneration";
+import { estimateVideoCost } from "./lib/videoPricing";
 
 const VideoStudioPage = () => {
   const [recipe, setRecipe] = useState<DetailedRecipeGridItem | null>(null);
 
   // image stage
   const [imagePrompt, setImagePrompt] = useState("");
-  const [quality, setQuality] = useState<"low" | "medium" | "high">("medium");
+  const [imageModelId, setImageModelId] =
+    useState<ImageModelId>("gpt-image-2-medium");
   const [count, setCount] = useState(2);
   const [refImage, setRefImage] = useState<string | null>(null);
   const { state: imageState, run: runImage, cancel: cancelImage } =
     useImageGeneration();
-  // null = no manual pick yet → fall back to first generated image
-  const [userSelectedImage, setUserSelectedImage] = useState<string | null>(
-    null
-  );
+
+  // unified video input image — set by Stage 1 grid select OR Stage 2 upload
+  const [videoInputImage, setVideoInputImage] = useState<string | null>(null);
 
   // video stage
   const [videoPrompt, setVideoPrompt] = useState(() =>
@@ -49,6 +60,9 @@ const VideoStudioPage = () => {
   const [generateAudio, setGenerateAudio] = useState(false);
   const { state: videoState, run: runVideo, cancel: cancelVideo } =
     useVideoGeneration();
+
+  // cost history (localStorage hydrated)
+  const [history, setHistory] = useState(() => loadCostHistory());
 
   const handleRecipeSelect = useCallback(async (r: DetailedRecipeGridItem) => {
     setRecipe(r);
@@ -72,33 +86,38 @@ const VideoStudioPage = () => {
     }
   }, []);
 
-  const generatedImages =
-    imageState.status === "success" ? imageState.imageDataUrls : [];
-  const selectedImage = userSelectedImage ?? generatedImages[0] ?? null;
-
-  const handleGenerateImages = useCallback(() => {
-    setUserSelectedImage(null);
-    runImage({
+  const handleGenerateImages = useCallback(async () => {
+    setVideoInputImage(null);
+    const result = await runImage({
+      modelId: imageModelId,
       prompt: imagePrompt,
-      quality,
       n: count,
       referenceImageUrl: refImage ?? undefined,
     });
-  }, [imagePrompt, quality, count, refImage, runImage]);
+    if (!result) return;
+    // auto-fill the video-stage input with the first generated image
+    setVideoInputImage(result.images[0] ?? null);
+    // log cost: we generated `count` images at pricePerImage each
+    const cost = result.images.length * result.pricePerImage;
+    setHistory(addImageGen(result.modelId, cost));
+  }, [imageModelId, imagePrompt, count, refImage, runImage]);
 
-  const handleGenerateVideo = useCallback(() => {
-    if (!selectedImage) return;
-    runVideo({
+  const handleGenerateVideo = useCallback(async () => {
+    if (!videoInputImage) return;
+    const cost = estimateVideoCost({ model, resolution, durationSec });
+    const ok = await runVideo({
       model,
       prompt: videoPrompt,
-      imageDataUrlOrUrl: selectedImage,
+      imageDataUrlOrUrl: videoInputImage,
       resolution,
       ratio,
       durationSec,
       generateAudio,
     });
+    if (!ok) return;
+    setHistory(addVideoGen(model, cost));
   }, [
-    selectedImage,
+    videoInputImage,
     model,
     videoPrompt,
     resolution,
@@ -107,6 +126,10 @@ const VideoStudioPage = () => {
     generateAudio,
     runVideo,
   ]);
+
+  const handleResetCost = useCallback(() => {
+    setHistory(resetCostHistory());
+  }, []);
 
   const imageRunning = imageState.status === "pending";
   const videoRunning =
@@ -117,6 +140,8 @@ const VideoStudioPage = () => {
       : videoState.status === "submitting"
       ? "submit"
       : undefined;
+  const generatedImages =
+    imageState.status === "success" ? imageState.imageDataUrls : [];
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl bg-beige-light/40 p-4 md:p-6">
@@ -129,12 +154,16 @@ const VideoStudioPage = () => {
         />
       </div>
 
+      <div className="mb-4">
+        <CostSummary history={history} onReset={handleResetCost} />
+      </div>
+
       <div className="grid gap-4 lg:grid-cols-2">
         <ImageGenerationPanel
           prompt={imagePrompt}
           onPromptChange={setImagePrompt}
-          quality={quality}
-          onQualityChange={setQuality}
+          modelId={imageModelId}
+          onModelChange={setImageModelId}
           count={count}
           onCountChange={setCount}
           referenceImageUrl={refImage}
@@ -145,7 +174,8 @@ const VideoStudioPage = () => {
         />
 
         <VideoGenerationPanel
-          selectedImageUrl={selectedImage}
+          selectedImageUrl={videoInputImage}
+          onImageUpload={setVideoInputImage}
           prompt={videoPrompt}
           onPromptChange={setVideoPrompt}
           model={model}
@@ -173,8 +203,8 @@ const VideoStudioPage = () => {
         )}
         <ImageGrid
           imageUrls={generatedImages}
-          selectedUrl={selectedImage}
-          onSelect={setUserSelectedImage}
+          selectedUrl={videoInputImage}
+          onSelect={setVideoInputImage}
         />
         <VideoResultCard state={videoState} />
       </div>

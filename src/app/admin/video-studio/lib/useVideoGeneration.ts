@@ -33,7 +33,7 @@ export const useVideoGeneration = () => {
   const [state, setState] = useState<VideoGenState>({ status: "idle" });
   const stoppedRef = useRef(false);
 
-  const run = useCallback(async (input: RunInput) => {
+  const run = useCallback(async (input: RunInput): Promise<boolean> => {
     stoppedRef.current = false;
     setState({ status: "submitting" });
 
@@ -53,7 +53,7 @@ export const useVideoGeneration = () => {
           status: "error",
           message: submitData.error ?? `HTTP ${submitRes.status}`,
         });
-        return;
+        return false;
       }
       taskId = submitData.taskId;
     } catch (err) {
@@ -61,7 +61,7 @@ export const useVideoGeneration = () => {
         status: "error",
         message: err instanceof Error ? err.message : String(err),
       });
-      return;
+      return false;
     }
 
     setState({ status: "polling", taskId, lastStatus: "queued" });
@@ -70,7 +70,7 @@ export const useVideoGeneration = () => {
     while (!stoppedRef.current) {
       if (Date.now() - startedAt > POLL_TIMEOUT_MS) {
         setState({ status: "error", message: "timeout (>10min)" });
-        return;
+        return false;
       }
 
       try {
@@ -79,15 +79,15 @@ export const useVideoGeneration = () => {
         );
         const t = (await r.json()) as SeedanceTaskState & { error?: string };
 
-        if (stoppedRef.current) return;
+        if (stoppedRef.current) return false;
 
         if (!r.ok || !t.status) {
           setState({ status: "error", message: t.error ?? `HTTP ${r.status}` });
-          return;
+          return false;
         }
         if (t.status === "succeeded" && t.videoUrl) {
           setState({ status: "success", taskId, videoUrl: t.videoUrl });
-          return;
+          return true;
         }
         if (
           t.status === "failed" ||
@@ -98,20 +98,21 @@ export const useVideoGeneration = () => {
             status: "error",
             message: t.errorMessage ?? `task ${t.status}`,
           });
-          return;
+          return false;
         }
         setState({ status: "polling", taskId, lastStatus: t.status });
       } catch (err) {
-        if (stoppedRef.current) return;
+        if (stoppedRef.current) return false;
         setState({
           status: "error",
           message: err instanceof Error ? err.message : String(err),
         });
-        return;
+        return false;
       }
 
       await new Promise((res) => setTimeout(res, POLL_INTERVAL_MS));
     }
+    return false;
   }, []);
 
   const cancel = useCallback(() => {
