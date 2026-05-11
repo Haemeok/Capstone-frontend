@@ -12,7 +12,7 @@ type RunInput = {
   modelId: string;
   prompt: string;
   n: number;
-  referenceImageUrl?: string;
+  referenceImageUrls?: readonly string[];
 };
 
 type RunResult = {

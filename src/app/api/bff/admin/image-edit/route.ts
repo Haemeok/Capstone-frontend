@@ -9,11 +9,12 @@ export const runtime = "nodejs";
 export const maxDuration = 300;
 
 const ALLOWED_QUALITIES = new Set(["low", "medium", "high"]);
+const MAX_REFERENCE_IMAGES = 16;
 
 type Body = {
   modelId?: string;
   prompt?: string;
-  referenceImageUrl?: string;
+  referenceImageUrls?: string[];
 };
 
 export async function POST(req: NextRequest) {
@@ -27,9 +28,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  if (!body.modelId || !body.prompt || !body.referenceImageUrl) {
+  const refs = body.referenceImageUrls;
+  if (
+    !body.modelId ||
+    !body.prompt ||
+    !Array.isArray(refs) ||
+    refs.length === 0
+  ) {
     return NextResponse.json(
-      { error: "modelId, prompt, and referenceImageUrl are required" },
+      {
+        error:
+          "modelId, prompt, and referenceImageUrls (non-empty array) are required",
+      },
+      { status: 400 }
+    );
+  }
+  if (refs.length > MAX_REFERENCE_IMAGES) {
+    return NextResponse.json(
+      { error: `referenceImageUrls exceeds max ${MAX_REFERENCE_IMAGES}` },
       { status: 400 }
     );
   }
@@ -61,7 +77,7 @@ export async function POST(req: NextRequest) {
     const result = await editViaOpenAI(
       model.endpoint,
       body.prompt,
-      body.referenceImageUrl,
+      refs,
       { quality: quality as "low" | "medium" | "high" },
       req.signal
     );

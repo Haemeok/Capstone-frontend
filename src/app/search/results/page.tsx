@@ -219,13 +219,11 @@ export async function generateMetadata({
   const ogImage = firstImage || SEO_CONSTANTS.DEFAULT_IMAGE;
   const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
 
-  const MIN_RESULTS_FOR_INDEX = 8;
-
   return {
     title,
     description,
     robots: {
-      index: totalElements >= MIN_RESULTS_FOR_INDEX,
+      index: false,
       follow: true,
     },
     openGraph: {

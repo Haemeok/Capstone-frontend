@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 
-import { generateSeoPages } from "@/shared/config/seo/seoPages";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
 /**
@@ -133,12 +132,7 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: [
-      // SEO 페이지 sitemaps (generateSitemaps chunk)
-      ...Array.from(
-        { length: Math.ceil((4 + generateSeoPages().length) / 10000) },
-        (_, i) => `${SITE_URL}/sitemap/${i}.xml`
-      ),
-      // Recipe sitemap (1만 이하이므로 단일 chunk)
+      `${SITE_URL}/sitemap/0.xml`,
       `${SITE_URL}/recipes/sitemap/0.xml`,
     ],
   };

@@ -29,13 +29,13 @@ export type Results = Partial<Record<ImageEditQuality, RunCell>>;
 type SubmitInput = {
   qualities: readonly ImageEditQuality[];
   prompt: string;
-  referenceImageUrl: string;
+  referenceImageUrls: readonly string[];
 };
 
 const runOne = async (
   quality: ImageEditQuality,
   prompt: string,
-  referenceImageUrl: string,
+  referenceImageUrls: readonly string[],
   signal: AbortSignal
 ): Promise<RunCell> => {
   try {
@@ -45,7 +45,7 @@ const runOne = async (
       body: JSON.stringify({
         modelId: QUALITY_TO_MODEL_ID[quality],
         prompt,
-        referenceImageUrl,
+        referenceImageUrls,
       }),
       signal,
     });
@@ -80,8 +80,9 @@ export const useImageEdit = () => {
   const abortRef = useRef<AbortController | null>(null);
 
   const submit = useCallback(
-    async ({ qualities, prompt, referenceImageUrl }: SubmitInput) => {
+    async ({ qualities, prompt, referenceImageUrls }: SubmitInput) => {
       if (qualities.length === 0) return;
+      if (referenceImageUrls.length === 0) return;
 
       abortRef.current?.abort();
       const controller = new AbortController();
@@ -99,7 +100,7 @@ export const useImageEdit = () => {
           const cell = await runOne(
             q,
             prompt,
-            referenceImageUrl,
+            referenceImageUrls,
             controller.signal
           );
           if (controller.signal.aborted) return;

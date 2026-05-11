@@ -40,7 +40,7 @@ const VideoStudioPage = () => {
   const [imageModelId, setImageModelId] =
     useState<ImageModelId>("gpt-image-2-medium");
   const [count, setCount] = useState(2);
-  const [refImage, setRefImage] = useState<string | null>(null);
+  const [refImages, setRefImages] = useState<string[]>([]);
   const { state: imageState, run: runImage, cancel: cancelImage } =
     useImageGeneration();
 
@@ -92,7 +92,7 @@ const VideoStudioPage = () => {
       modelId: imageModelId,
       prompt: imagePrompt,
       n: count,
-      referenceImageUrl: refImage ?? undefined,
+      referenceImageUrls: refImages.length > 0 ? refImages : undefined,
     });
     if (!result) return;
     // auto-fill the video-stage input with the first generated image
@@ -100,7 +100,7 @@ const VideoStudioPage = () => {
     // log cost: we generated `count` images at pricePerImage each
     const cost = result.images.length * result.pricePerImage;
     setHistory(addImageGen(result.modelId, cost));
-  }, [imageModelId, imagePrompt, count, refImage, runImage]);
+  }, [imageModelId, imagePrompt, count, refImages, runImage]);
 
   const handleGenerateVideo = useCallback(async () => {
     const cost = estimateVideoCost({ model, resolution, durationSec });
@@ -166,8 +166,8 @@ const VideoStudioPage = () => {
           onModelChange={setImageModelId}
           count={count}
           onCountChange={setCount}
-          referenceImageUrl={refImage}
-          onReferenceImageChange={setRefImage}
+          referenceImageUrls={refImages}
+          onReferenceImagesChange={setRefImages}
           running={imageRunning}
           onSubmit={handleGenerateImages}
           onCancel={cancelImage}

@@ -48,19 +48,25 @@ export const generateViaOpenAI = async (
 export const editViaOpenAI = async (
   model: string,
   prompt: string,
-  referenceDataUrl: string,
+  referenceDataUrls: readonly string[],
   extra: ExtraParams = {},
   signal?: AbortSignal
 ): Promise<Result> => {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  if (referenceDataUrls.length === 0) {
+    throw new Error("at least one reference image is required");
+  }
 
-  const referenceBlob = await dataUrlToBlob(referenceDataUrl);
+  const blobs = await Promise.all(referenceDataUrls.map(dataUrlToBlob));
+  const fieldName = blobs.length === 1 ? "image" : "image[]";
 
   const formData = new FormData();
   formData.append("model", model);
   formData.append("prompt", prompt);
-  formData.append("image", referenceBlob, "reference.png");
+  blobs.forEach((blob, i) => {
+    formData.append(fieldName, blob, `reference-${i}.png`);
+  });
   formData.append("size", "1024x1024");
   formData.append("n", "1");
   if (extra.quality) formData.append("quality", extra.quality);
@@ -143,19 +149,26 @@ export const generateMultiViaOpenAI = async (
 export const editMultiViaOpenAI = async (
   model: string,
   prompt: string,
-  referenceDataUrl: string,
+  referenceDataUrls: readonly string[],
   extra: ExtraParams = {},
   signal?: AbortSignal
 ): Promise<MultiResult> => {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  if (referenceDataUrls.length === 0) {
+    throw new Error("at least one reference image is required");
+  }
   const n = extra.n ?? 1;
 
-  const referenceBlob = await dataUrlToBlob(referenceDataUrl);
+  const blobs = await Promise.all(referenceDataUrls.map(dataUrlToBlob));
+  const fieldName = blobs.length === 1 ? "image" : "image[]";
+
   const formData = new FormData();
   formData.append("model", model);
   formData.append("prompt", prompt);
-  formData.append("image", referenceBlob, "reference.png");
+  blobs.forEach((blob, i) => {
+    formData.append(fieldName, blob, `reference-${i}.png`);
+  });
   formData.append("size", "1024x1024");
   formData.append("n", String(n));
   if (extra.quality) formData.append("quality", extra.quality);

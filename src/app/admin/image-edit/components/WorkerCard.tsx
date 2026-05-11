@@ -23,6 +23,7 @@ import {
 import { ResultCard } from "./ResultCard";
 
 const QUALITY_ORDER: ReadonlyArray<ImageEditQuality> = ["low", "medium", "high"];
+const MAX_REFERENCES = 16;
 
 type Props = {
   index: number;
@@ -31,8 +32,20 @@ type Props = {
   canDelete: boolean;
 };
 
+const readFileAsDataUrl = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const r = reader.result;
+      if (typeof r === "string") resolve(r);
+      else reject(new Error("FileReader returned non-string"));
+    };
+    reader.onerror = () => reject(reader.error ?? new Error("FileReader error"));
+    reader.readAsDataURL(file);
+  });
+
 export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) => {
-  const [referenceImageUrl, setReferenceImageUrl] = useState<string | null>(null);
+  const [referenceImageUrls, setReferenceImageUrls] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
   const [selected, setSelected] = useState<Set<ImageEditQuality>>(
     () => new Set(["low"])
@@ -41,47 +54,60 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
 
   const { results, running, submit, cancel, reset } = useImageEdit();
 
-  const readFileAsDataUrl = useCallback((file: File) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const r = reader.result;
-      if (typeof r === "string") {
-        setReferenceImageUrl(r);
-        triggerHaptic("Light");
-      }
-    };
-    reader.readAsDataURL(file);
+  const appendFiles = useCallback(async (files: readonly File[]) => {
+    const images = files.filter((f) => f.type.startsWith("image/"));
+    if (images.length === 0) return;
+    try {
+      const dataUrls = await Promise.all(images.map(readFileAsDataUrl));
+      setReferenceImageUrls((prev) => {
+        const next = [...prev, ...dataUrls].slice(0, MAX_REFERENCES);
+        if (next.length > prev.length) triggerHaptic("Light");
+        return next;
+      });
+    } catch (err) {
+      console.error("이미지 읽기 실패", err);
+    }
   }, []);
 
   const handleFileSelect = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) readFileAsDataUrl(file);
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        void appendFiles(Array.from(files));
+      }
+      e.target.value = "";
     },
-    [readFileAsDataUrl]
+    [appendFiles]
   );
 
   const handleDrop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault();
-      const file = e.dataTransfer.files?.[0];
-      if (file && file.type.startsWith("image/")) readFileAsDataUrl(file);
+      const files = Array.from(e.dataTransfer.files ?? []);
+      if (files.length > 0) void appendFiles(files);
     },
-    [readFileAsDataUrl]
+    [appendFiles]
   );
 
   const handlePromptPaste = useCallback(
     (e: ClipboardEvent<HTMLTextAreaElement>) => {
       const items = Array.from(e.clipboardData?.items ?? []);
-      const item = items.find((i) => i.type.startsWith("image/"));
-      const file = item?.getAsFile();
-      if (file) {
+      const files = items
+        .filter((i) => i.type.startsWith("image/"))
+        .map((i) => i.getAsFile())
+        .filter((f): f is File => f !== null);
+      if (files.length > 0) {
         e.preventDefault();
-        readFileAsDataUrl(file);
+        void appendFiles(files);
       }
     },
-    [readFileAsDataUrl]
+    [appendFiles]
   );
+
+  const handleRemoveOne = useCallback((idx: number) => {
+    triggerHaptic("Light");
+    setReferenceImageUrls((prev) => prev.filter((_, i) => i !== idx));
+  }, []);
 
   const toggleQuality = useCallback((q: ImageEditQuality) => {
     triggerHaptic("Light");
@@ -94,30 +120,30 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
   }, []);
 
   const canSubmit =
-    referenceImageUrl !== null &&
+    referenceImageUrls.length > 0 &&
     prompt.trim().length > 0 &&
     selected.size > 0 &&
     !running;
 
   const handleSubmit = useCallback(async () => {
-    if (!canSubmit || !referenceImageUrl) return;
+    if (!canSubmit) return;
     triggerHaptic("Medium");
     await submit({
       qualities: Array.from(selected),
       prompt: prompt.trim(),
-      referenceImageUrl,
+      referenceImageUrls,
     });
     onAfterRun();
-  }, [canSubmit, onAfterRun, prompt, referenceImageUrl, selected, submit]);
+  }, [canSubmit, onAfterRun, prompt, referenceImageUrls, selected, submit]);
 
   const handleCancel = useCallback(() => {
     triggerHaptic("Warning");
     cancel();
   }, [cancel]);
 
-  const handleClearImage = useCallback(() => {
+  const handleClearAll = useCallback(() => {
     triggerHaptic("Light");
-    setReferenceImageUrl(null);
+    setReferenceImageUrls([]);
     if (fileInputRef.current) fileInputRef.current.value = "";
     reset();
   }, [reset]);
@@ -149,34 +175,63 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
       </header>
 
       <div className="grid gap-3 md:grid-cols-[180px_1fr]">
-        <div>
-          <p className="mb-1 text-[11px] font-semibold text-gray-700">입력 이미지</p>
-          {referenceImageUrl ? (
-            <div className="relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={referenceImageUrl}
-                alt="reference"
-                className="aspect-square w-full rounded-xl object-cover"
-              />
+        <div
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+        >
+          <div className="mb-1 flex items-center justify-between">
+            <p className="text-[11px] font-semibold text-gray-700">
+              입력 이미지 ({referenceImageUrls.length}/{MAX_REFERENCES})
+            </p>
+            {referenceImageUrls.length > 0 && (
               <button
                 type="button"
-                onClick={handleClearImage}
-                className="absolute right-1.5 top-1.5 rounded-full bg-white/90 p-1 text-gray-600 shadow"
-                aria-label="이미지 제거"
+                onClick={handleClearAll}
+                className="text-[10px] text-gray-500 underline"
               >
-                <X className="h-3.5 w-3.5" />
+                전체 제거
               </button>
+            )}
+          </div>
+
+          {referenceImageUrls.length > 0 ? (
+            <div className="grid grid-cols-3 gap-1.5">
+              {referenceImageUrls.map((url, idx) => (
+                <div key={`${idx}-${url.slice(0, 32)}`} className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={url}
+                    alt={`reference ${idx + 1}`}
+                    className="aspect-square w-full rounded-lg object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveOne(idx)}
+                    className="absolute right-0.5 top-0.5 rounded-full bg-white/90 p-0.5 text-gray-600 shadow"
+                    aria-label={`${idx + 1}번 이미지 제거`}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+              {referenceImageUrls.length < MAX_REFERENCES && (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 text-gray-400 hover:bg-gray-100"
+                  aria-label="이미지 추가"
+                >
+                  <Upload className="h-4 w-4" />
+                </button>
+              )}
             </div>
           ) : (
             <div
-              onDrop={handleDrop}
-              onDragOver={(e) => e.preventDefault()}
               onClick={() => fileInputRef.current?.click()}
               className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-2 text-center text-[10px] text-gray-500 hover:bg-gray-100"
             >
               <Upload className="h-5 w-5 text-gray-400" />
-              <span>클릭 · 드래그</span>
+              <span>클릭 · 드래그 (여러 장)</span>
               <span>(텍스트박스에 Ctrl+V도 가능)</span>
             </div>
           )}
@@ -184,6 +239,7 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
             ref={fileInputRef}
             type="file"
             accept="image/*"
+            multiple
             onChange={handleFileSelect}
             className="hidden"
           />

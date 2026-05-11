@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       result = await editViaOpenAI(
         model.endpoint,
         prompt,
-        body.referenceImageUrl,
+        [body.referenceImageUrl],
         model.extra ?? {},
         req.signal
       );

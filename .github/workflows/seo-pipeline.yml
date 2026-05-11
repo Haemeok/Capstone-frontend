@@ -1,9 +1,6 @@
 name: SEO Growth Pipeline
 
 on:
-  schedule:
-    # 매주 월요일 새벽 3시 UTC (KST 12시)
-    - cron: "0 3 * * 1"
   workflow_dispatch:
     inputs:
       mode:
@@ -45,9 +42,9 @@ jobs:
             src/shared/config/seo/sitemap-allowlist.json \
             || echo "No existing allowlist on S3, starting fresh"
 
-      # 매주 자동: ACTIVE 확장 + IMMATURE 재검사
+      # ACTIVE 확장 + IMMATURE 재검사 (수동 실행)
       - name: SEO Discover (incremental)
-        if: ${{ github.event_name == 'schedule' || inputs.mode == 'discover' }}
+        if: ${{ inputs.mode == 'discover' }}
         run: npm run seo:discover
 
       # 초기 전수 탐색

@@ -11,11 +11,13 @@ import { getModelById } from "@/app/admin/image-quality-test/lib/models";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
+const MAX_REFERENCE_IMAGES = 16;
+
 type Body = {
   modelId: string;
   prompt: string;
   n: number;
-  referenceImageUrl?: string;
+  referenceImageUrls?: string[];
 };
 
 export async function POST(req: NextRequest) {
@@ -41,6 +43,21 @@ export async function POST(req: NextRequest) {
   if (body.n < 1 || body.n > 4) {
     return NextResponse.json({ error: "n must be 1..4" }, { status: 400 });
   }
+  const refs = body.referenceImageUrls;
+  if (refs !== undefined) {
+    if (!Array.isArray(refs)) {
+      return NextResponse.json(
+        { error: "referenceImageUrls must be an array" },
+        { status: 400 }
+      );
+    }
+    if (refs.length > MAX_REFERENCE_IMAGES) {
+      return NextResponse.json(
+        { error: `referenceImageUrls exceeds max ${MAX_REFERENCE_IMAGES}` },
+        { status: 400 }
+      );
+    }
+  }
 
   const model = getModelById(body.modelId);
   if (!model) {
@@ -65,11 +82,11 @@ export async function POST(req: NextRequest) {
 
   const startedAt = Date.now();
   try {
-    const result = body.referenceImageUrl
+    const result = refs && refs.length > 0
       ? await editMultiViaOpenAI(
           model.endpoint,
           body.prompt,
-          body.referenceImageUrl,
+          refs,
           { quality, n: body.n },
           req.signal
         )
