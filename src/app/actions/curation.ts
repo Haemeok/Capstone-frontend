@@ -25,6 +25,7 @@ import {
   buildTitleUserPrompt,
   sampleFewShotTitles,
 } from "@/app/admin/curation-test/lib/buildTitlePrompt";
+import { computeWarnings } from "@/app/admin/curation-test/lib/computeWarnings";
 import { findCommonIngredientNames } from "@/app/admin/curation-test/lib/commonIngredients";
 import { hydrateMarkdown } from "@/app/admin/curation-test/lib/hydrate";
 import { logLLMError } from "@/app/admin/curation-test/lib/llmErrorDiagnostics";
@@ -325,6 +326,13 @@ export const generateCuration = async (
     })),
   );
 
+  const warnings = computeWarnings({
+    markdown: hydrated,
+    params: input.params,
+    recipes,
+    expectedSectionCount: recipes.length,
+  });
+
   return {
     slug,
     h1: titleObj.h1,
@@ -336,5 +344,6 @@ export const generateCuration = async (
     provider: PROVIDER_LABEL,
     category: titleObj.category,
     coverImageKey: recipes[0]?.imageKey ?? null,
+    warnings,
   };
 };
