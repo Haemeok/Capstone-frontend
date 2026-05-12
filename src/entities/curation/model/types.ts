@@ -26,6 +26,13 @@ export type GenerateCurationInput = {
   forceToneSeed?: ToneSeed;
 };
 
+export type CurationWarning = {
+  kind: "missing-keyword";
+  source: "q" | "ingredientIds";
+  keyword: string;
+  missingSections: number[];
+};
+
 export type GenerateCurationOutput = {
   slug: string;
   h1: string;
@@ -37,6 +44,7 @@ export type GenerateCurationOutput = {
   provider: string;
   category: CurationCategory;
   coverImageKey: string | null;
+  warnings: CurationWarning[];
 };
 
 export type SavedCurationRecord = GenerateCurationOutput & {

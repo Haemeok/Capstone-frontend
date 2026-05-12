@@ -4,6 +4,7 @@ export { CATEGORY_META } from "./model/categoryMeta";
 export type {
   CurationErrorCode,
   CurationParams,
+  CurationWarning,
   GenerateCurationInput,
   GenerateCurationOutput,
   SavedCurationRecord,
