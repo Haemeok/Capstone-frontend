@@ -28,5 +28,6 @@ export const toSavedRecord = (
     ? api.category
     : DEFAULT_CURATION_CATEGORY,
   coverImageKey: api.coverImageKey,
+  warnings: [],
   savedAt: api.publishedAt,
 });

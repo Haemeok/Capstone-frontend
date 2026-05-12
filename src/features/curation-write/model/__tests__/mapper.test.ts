@@ -13,6 +13,7 @@ const baseResult: GenerateCurationOutput = {
   provider: "solar-pro-3+grok-4-1-fast",
   category: "DIET & LIGHT",
   coverImageKey: "recipes/abc/img.webp",
+  warnings: [],
 };
 
 describe("mapResultToRequest", () => {
