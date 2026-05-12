@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 
 import {
   extractYouTubeVideoId,
@@ -8,56 +8,14 @@ import {
 } from "@/shared/lib/youtube/getYouTubeThumbnail";
 import { Image } from "@/shared/ui/image/Image";
 
-import { calculateFakeProgress } from "../lib/progress";
+import {
+  SmoothProgressStatus,
+  useSmoothProgress,
+} from "../lib/useSmoothProgress";
 import { useYoutubeImportStoreV2 } from "../model/store";
 import { JobState } from "../model/types";
-import { ErrorState } from "./ErrorState";
-import { PendingState } from "./PendingState";
-import { SuccessState } from "./SuccessState";
 
-type ImportStatus = "pending" | "success" | "error";
-
-const SMOOTH_INCREMENT_INTERVAL_MS = 2000;
-const MAX_SMOOTH_PROGRESS = 95;
-
-const getIncrement = (currentProgress: number): number => {
-  if (currentProgress < 10) return 3;
-  if (currentProgress < 30) return 2;
-  if (currentProgress < 60) return 1;
-  return 0.5;
-};
-
-const useSmoothProgress = (
-  realProgress: number,
-  status: ImportStatus,
-  startTime: number
-) => {
-  const [displayed, setDisplayed] = useState(() =>
-    Math.max(realProgress, calculateFakeProgress(startTime))
-  );
-  const realRef = useRef(realProgress);
-  realRef.current = realProgress;
-
-  useEffect(() => {
-    if (status !== "pending") return;
-
-    const interval = setInterval(() => {
-      setDisplayed((prev) => {
-        const base = Math.max(prev, realRef.current);
-        return Math.min(
-          Math.round(base + getIncrement(base)),
-          MAX_SMOOTH_PROGRESS
-        );
-      });
-    }, SMOOTH_INCREMENT_INTERVAL_MS);
-
-    return () => clearInterval(interval);
-  }, [status]);
-
-  return status === "success" ? 100 : displayed;
-};
-
-const jobStateToImportStatus = (state: JobState): ImportStatus => {
+const jobStateToImportStatus = (state: JobState): SmoothProgressStatus => {
   switch (state) {
     case "completed":
       return "success";
@@ -67,6 +25,18 @@ const jobStateToImportStatus = (state: JobState): ImportStatus => {
       return "pending";
   }
 };
+
+const YoutubeGlyph = () => (
+  <svg
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    className="h-3.5 w-3.5 shrink-0 fill-red-500"
+  >
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    <path d="M9.545 8.432v7.136L15.818 12z" fill="white" />
+  </svg>
+);
 
 type PendingRecipeCardProps = {
   idempotencyKey: string;
@@ -93,37 +63,83 @@ export const PendingRecipeCard = ({
 
   const videoId = extractYouTubeVideoId(meta.url);
   const thumbnailUrl = videoId
-    ? getYouTubeThumbnailUrls(videoId)[0] ?? meta.thumbnailUrl
+    ? (getYouTubeThumbnailUrls(videoId)[0] ?? meta.thumbnailUrl)
     : meta.thumbnailUrl;
 
   return (
-    <div className="group relative block h-full overflow-hidden rounded-2xl bg-gray-100">
-      <div className="relative aspect-square">
+    <div className="relative flex shrink-0 flex-col">
+      <div className="relative overflow-hidden rounded-2xl">
         <Image
           src={thumbnailUrl}
           alt={meta.title}
           aspectRatio="1 / 1"
-          imgClassName={`transition-opacity w-full h-full ${
-            status === "pending" ? "opacity-50" : "opacity-70"
-          }`}
+          fit="cover"
         />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-          <div className="-mt-4 flex flex-col items-center justify-center px-4 text-center">
-            {status === "pending" && <PendingState progress={progress} />}
-            {status === "success" && <SuccessState />}
-            {status === "error" && (
-              <ErrorState
-                message={message}
-                onDismiss={() => removeJob(idempotencyKey)}
-              />
-            )}
+
+        {status === "pending" && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30">
+            <div className="flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1.5 backdrop-blur-sm">
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+              <span className="text-[12px] font-semibold text-white">
+                {Math.round(progress)}%
+              </span>
+            </div>
           </div>
+        )}
+
+        {status === "success" && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-emerald-500/25">
+            <CheckCircle2 className="h-10 w-10 text-white drop-shadow-md" />
+          </div>
+        )}
+
+        {status === "error" && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/45">
+            <XCircle className="h-10 w-10 text-red-300 drop-shadow-md" />
+          </div>
+        )}
+      </div>
+
+      {meta.channelName && (
+        <div className="flex items-center gap-1 overflow-hidden px-0.5 pt-1.5">
+          <YoutubeGlyph />
+          <span className="truncate text-[13px] text-gray-500">
+            {meta.channelName}
+          </span>
+        </div>
+      )}
+
+      <div className="flex grow flex-col gap-1 px-0.5 pt-1 pb-1">
+        <p className="line-clamp-2 text-[15px] leading-snug break-keep">
+          {meta.title}
+        </p>
+
+        <div className="flex items-center justify-between gap-2 text-[13px] text-gray-500">
+          {status === "pending" && (
+            <span className="truncate">
+              레시피 추출 중 · {Math.round(progress)}%
+            </span>
+          )}
+          {status === "success" && (
+            <span className="truncate text-emerald-600">추출 완료</span>
+          )}
+          {status === "error" && (
+            <>
+              <span className="line-clamp-1 text-red-500">
+                {message || "추출 실패"}
+              </span>
+              <button
+                type="button"
+                onClick={() => removeJob(idempotencyKey)}
+                aria-label="에러 닫기"
+                className="shrink-0 cursor-pointer text-[12px] text-gray-400 underline hover:text-gray-600"
+              >
+                닫기
+              </button>
+            </>
+          )}
         </div>
       </div>
-      <div className="absolute right-0 bottom-0 left-0 flex h-1/3 items-end rounded-2xl bg-gradient-to-t from-black/70 to-transparent" />
-      <p className="absolute right-4 bottom-2.5 left-4 line-clamp-2 text-[17px] font-bold leading-[1.15] text-white">
-        {meta.title}
-      </p>
     </div>
   );
 };

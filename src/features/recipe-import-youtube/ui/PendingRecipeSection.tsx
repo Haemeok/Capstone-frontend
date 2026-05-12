@@ -18,7 +18,7 @@ export const PendingRecipeSection = ({
   );
 
   return (
-    <div className="mb-6 rounded-2xl px-2 py-4">
+    <div className="mb-6 rounded-2xl p-4">
       <h3 className="text-olive-light mb-3 flex items-center gap-2 text-sm font-semibold">
         <span className="relative flex h-2 w-2">
           <span className="bg-olive-light absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />

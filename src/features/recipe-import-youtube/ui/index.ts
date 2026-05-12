@@ -1,4 +1,3 @@
-export * from "./CircularProgress";
 export * from "./CreationModeSelector";
 export { default as DuplicateRecipeSection } from "./DuplicateRecipeSection";
 export * from "./PendingRecipeCard";
