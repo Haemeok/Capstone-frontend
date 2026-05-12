@@ -54,6 +54,9 @@ const appConfig = {
   },
   experimental: {
     reactCompiler: true,
+    serverActions: {
+      bodySizeLimit: "4mb",
+    },
   },
   eslint: { ignoreDuringBuilds: true },
 } satisfies import("next").NextConfig;

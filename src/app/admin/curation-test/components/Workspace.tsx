@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 import { ApiError, getErrorData } from "@/shared/api/errors";
 
 import {
@@ -11,8 +13,10 @@ import {
 
 import { usePostAndPublishArticle } from "@/features/curation-write";
 
-import { generateCuration } from "@/app/actions/curation";
+import type { AllowlistEntryWithSlug } from "@/app/actions/curation.allowlistFilter";
 
+import { generateCurationViaApi } from "../lib/generateCurationClient";
+import { CURATION_UNPUBLISHED_KEY } from "../lib/queryKeys";
 import { useCurationStore } from "../lib/store";
 import { useBatchPublishStore } from "../model/batchPublishStore";
 import { MarkdownPreview } from "./MarkdownPreview";
@@ -36,6 +40,7 @@ export const Workspace = () => {
   );
   const [error, setError] = useState<string | null>(null);
 
+  const queryClient = useQueryClient();
   const publishMutation = usePostAndPublishArticle();
 
   // 좌측에서 다른 후보로 바꾸면 단일 도구 결과는 비워서 batch 결과와 섞이지 않게
@@ -54,7 +59,7 @@ export const Workspace = () => {
     setError(null);
     setLocalResult(null);
     try {
-      const r = await generateCuration({
+      const r = await generateCurationViaApi({
         params: selected,
         recipeCount: count,
         forceToneSeed: tone === "auto" ? undefined : tone,
@@ -135,7 +140,17 @@ export const Workspace = () => {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => publishMutation.mutate(result)}
+              onClick={() =>
+                publishMutation.mutate(result, {
+                  onSuccess: ({ slug }) => {
+                    // 발행 즉시 좌측 후보 리스트에서 사라지도록.
+                    queryClient.setQueryData<AllowlistEntryWithSlug[]>(
+                      CURATION_UNPUBLISHED_KEY,
+                      (old) => old?.filter((d) => d.slug !== slug),
+                    );
+                  },
+                })
+              }
               disabled={publishMutation.isPending}
               className="rounded bg-black text-white px-4 py-2 text-sm disabled:opacity-50"
             >

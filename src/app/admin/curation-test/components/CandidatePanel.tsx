@@ -11,6 +11,8 @@ import {
   getUnpublishedAllowlistEntries,
 } from "@/app/actions/curation.allowlistFilter";
 
+import { useDeadSlugStore } from "../lib/deadSlugStore";
+import { CURATION_UNPUBLISHED_KEY } from "../lib/queryKeys";
 import { useCurationStore } from "../lib/store";
 import {
   runBatchGenerate,
@@ -28,7 +30,7 @@ const ALLOWLIST_URL =
 
 const PAGE_SIZE = 200;
 
-const QUERY_KEY = ["curation-unpublished"] as const;
+const QUERY_KEY = CURATION_UNPUBLISHED_KEY;
 
 const fetchAllowlist = async (): Promise<AllowlistEntry[]> => {
   const res = await fetch(ALLOWLIST_URL);
@@ -76,8 +78,10 @@ export const CandidatePanel = () => {
   const sentinelRef = useRef<HTMLLIElement | null>(null);
 
   const items = useBatchPublishStore((s) => s.items);
+  const deadSlugs = useDeadSlugStore((s) => s.slugs);
+  const addDeadSlug = useDeadSlugStore((s) => s.add);
 
-  const { data, isLoading, error } = useQuery({
+  const { data: rawData, isLoading, error } = useQuery({
     queryKey: QUERY_KEY,
     queryFn: async () => {
       const entries = await fetchAllowlist();
@@ -85,6 +89,12 @@ export const CandidatePanel = () => {
     },
     staleTime: 60_000,
   });
+
+  // dead-slug (INSUFFICIENT_RECIPES 로 hide 처리된 항목) 는 모든 그룹에서 사라져야 함.
+  const data = useMemo<AllowlistEntryWithSlug[] | undefined>(
+    () => rawData?.filter((d) => !deadSlugs.has(d.slug)),
+    [rawData, deadSlugs],
+  );
 
   // pinned: workspace 에서 보고 있는 단일 후보. active 에 포함되면 active 그룹 안에서
   // 강조 표시하고, 별도 슬롯엔 띄우지 않는다.
@@ -214,6 +224,17 @@ export const CandidatePanel = () => {
     try {
       await runBatchGenerate(
         targets.map((t) => ({ key: t.slug, params: t.entry })),
+        {
+          onDeadSlug: (key) => {
+            addDeadSlug(key);
+            setSelectedKeys((prev) => {
+              if (!prev.has(key)) return prev;
+              const next = new Set(prev);
+              next.delete(key);
+              return next;
+            });
+          },
+        },
       );
     } finally {
       setGenerating(false);
@@ -232,7 +253,12 @@ export const CandidatePanel = () => {
     setPublishing(true);
     try {
       await runBatchPublish(targets, {
-        onItemDone: () => {
+        onItemDone: (key) => {
+          // optimistic 즉시 제거 — refetch 기다리지 않고 리스트에서 사라짐.
+          queryClient.setQueryData<AllowlistEntryWithSlug[]>(
+            QUERY_KEY,
+            (old) => old?.filter((d) => d.slug !== key),
+          );
           queryClient.invalidateQueries({ queryKey: QUERY_KEY });
         },
       });
