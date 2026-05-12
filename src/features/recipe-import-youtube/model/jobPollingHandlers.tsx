@@ -6,6 +6,8 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { trackReviewAction } from "@/shared/lib/review";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
+import { useUnseenImportStore } from "@/entities/recipe-book";
+
 import { scheduleReviewGate } from "@/features/review-gate";
 
 import type { useToastStore } from "@/widgets/Toast";
@@ -60,6 +62,8 @@ export const completePollingJob = (
     queryKey: ["recipe-status", recipeId],
   });
   deps.queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+
+  useUnseenImportStore.getState().markUnseen();
 
   const shouldShow = trackReviewAction("youtube_extract");
   if (shouldShow) scheduleReviewGate();
