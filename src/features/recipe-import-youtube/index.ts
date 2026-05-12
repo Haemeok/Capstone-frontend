@@ -16,10 +16,7 @@ export {
   generateIdempotencyKey,
   loadPersistedJobs,
 } from "./model/persistence";
-export {
-  useYoutubeImportStore,
-  useYoutubeImportStoreV2,
-} from "./model/store";
+export { useYoutubeImportStoreV2 } from "./model/store";
 export type {
   ActiveJob,
   ExtractionStatus,
