@@ -59,7 +59,10 @@ export const completePollingJob = (
   deps.storeActions.completeJob(idempotencyKey, recipeId);
 
   deps.queryClient.invalidateQueries({ queryKey: ["recipes"] });
-  deps.queryClient.invalidateQueries({ queryKey: ["recipes", "saved"] });
+  deps.queryClient.invalidateQueries({ queryKey: ["recipe-books"] });
+  deps.queryClient.invalidateQueries({
+    queryKey: ["recipe-status", recipeId],
+  });
   deps.queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
   const shouldShow = trackReviewAction("youtube_extract");

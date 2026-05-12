@@ -157,7 +157,6 @@ export const useToggleRecipeSave = (recipeId: string) => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: recipeStatusQueryKey });
       queryClient.invalidateQueries({ queryKey: ["recipes-status"] });
-      queryClient.invalidateQueries({ queryKey: ["recipes", "saved"] });
       queryClient.invalidateQueries({
         queryKey: RECIPE_BOOK_QUERY_KEYS.all,
       });

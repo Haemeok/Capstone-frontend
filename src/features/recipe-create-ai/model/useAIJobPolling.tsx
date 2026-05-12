@@ -55,7 +55,6 @@ export const useAIJobPolling = () => {
       completeJob(idempotencyKey, recipeId);
 
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
-      queryClient.invalidateQueries({ queryKey: ["recipes", "saved"] });
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
       triggerHaptic("Success");
