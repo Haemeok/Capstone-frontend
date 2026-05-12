@@ -57,26 +57,23 @@ const DuplicateRecipeSection = ({
   };
 
   useEffect(() => {
-    const isFromDirectInput = urlSource === "direct";
+    const ready = !isLoading && recipeStatus !== undefined;
     const shouldAutoSave =
-      recipeStatus &&
+      ready &&
+      urlSource === "direct" &&
       !isFavorited &&
-      !isLoading &&
-      !hasAutoSavedRef.current &&
-      isFromDirectInput;
+      !hasAutoSavedRef.current;
 
-    if (shouldAutoSave) {
-      hasAutoSavedRef.current = true;
-      toggleFavorite(undefined, {
-        onSuccess: handleSaveSuccess,
-      });
-    }
+    if (!shouldAutoSave) return;
+
+    hasAutoSavedRef.current = true;
+    toggleFavorite(undefined, { onSuccess: handleSaveSuccess });
   }, [
     isLoading,
     recipeStatus,
+    urlSource,
     isFavorited,
     toggleFavorite,
-    urlSource,
     handleSaveSuccess,
   ]);
 
