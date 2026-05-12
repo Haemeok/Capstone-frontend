@@ -18,6 +18,7 @@ import {
   useYoutubeMeta,
 } from "@/features/recipe-import-youtube/model/hooks";
 import { useYoutubeImportStoreV2 } from "@/features/recipe-import-youtube/model/store";
+import { jobByUrlSelector } from "@/features/recipe-import-youtube/model/storeSelectors";
 import { YoutubePreviewCard } from "@/features/recipe-import-youtube/ui/YoutubePreviewCard";
 
 const DuplicateRecipeSection = dynamic(
@@ -106,8 +107,8 @@ export const YoutubePreviewSection = ({
   const createJob = useYoutubeImportStoreV2((state) => state.createJob);
   const setJobId = useYoutubeImportStoreV2((state) => state.setJobId);
   const failJob = useYoutubeImportStoreV2((state) => state.failJob);
-  const existingJob = useYoutubeImportStoreV2((state) =>
-    validatedUrl ? state.getJobByUrl(validatedUrl) : undefined
+  const existingJob = useYoutubeImportStoreV2(
+    validatedUrl ? jobByUrlSelector(validatedUrl) : () => undefined
   );
 
   const isImporting =

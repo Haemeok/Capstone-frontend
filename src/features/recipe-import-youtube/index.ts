@@ -17,6 +17,10 @@ export {
   loadPersistedJobs,
 } from "./model/persistence";
 export { useYoutubeImportStoreV2 } from "./model/store";
+export {
+  jobByUrlSelector,
+  pendingJobsSelector,
+} from "./model/storeSelectors";
 export type {
   ActiveJob,
   ExtractionStatus,
