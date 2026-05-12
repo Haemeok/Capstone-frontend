@@ -55,6 +55,13 @@ const STATUS_CLASS: Record<BatchItemState["status"], string> = {
   error: "text-red-600",
 };
 
+const ACTIVE_STATUSES = new Set<BatchItemState["status"]>([
+  "generating",
+  "generated",
+  "publishing",
+  "error",
+]);
+
 export const CandidatePanel = () => {
   const setSelected = useCurationStore((s) => s.setSelected);
   const selectedSlug = useCurationStore((s) => s.selectedSlug);
@@ -79,30 +86,52 @@ export const CandidatePanel = () => {
     staleTime: 60_000,
   });
 
+  // pinned: workspace 에서 보고 있는 단일 후보. active 에 포함되면 active 그룹 안에서
+  // 강조 표시하고, 별도 슬롯엔 띄우지 않는다.
   const pinned = useMemo<AllowlistEntryWithSlug | null>(
     () => data?.find((d) => d.slug === selectedSlug) ?? null,
     [data, selectedSlug],
   );
 
-  const matched = useMemo<AllowlistEntryWithSlug[]>(() => {
+  // active 그룹: data 인덱스 순 안정 정렬, 필터 무관 (사용자가 의식적으로 굴리는 셋이라 항상 보여야 함).
+  const activeRows = useMemo<AllowlistEntryWithSlug[]>(() => {
+    if (!data) return [];
+    return data.filter((e) => {
+      if (selectedKeys.has(e.slug)) return true;
+      const status = items[e.slug]?.status;
+      return status !== undefined && ACTIVE_STATUSES.has(status);
+    });
+  }, [data, items, selectedKeys]);
+
+  const activeSlugSet = useMemo(
+    () => new Set(activeRows.map((r) => r.slug)),
+    [activeRows],
+  );
+
+  // 후보(=비-active) 풀 — 필터 + pinned 분리 후 페이지 컷
+  const candidatePool = useMemo<AllowlistEntryWithSlug[]>(() => {
     if (!data) return [];
     const q = deferredFilter.toLowerCase();
     const out: AllowlistEntryWithSlug[] = [];
     for (const e of data) {
-      if (e.slug === selectedSlug) continue;
+      if (activeSlugSet.has(e.slug)) continue;
+      if (pinned && e.slug === pinned.slug) continue;
       if (deferredFilter && !JSON.stringify(e.entry).toLowerCase().includes(q))
         continue;
       out.push(e);
     }
     return out;
-  }, [data, deferredFilter, selectedSlug]);
+  }, [data, deferredFilter, activeSlugSet, pinned]);
 
   const visibleLimit = visiblePages * PAGE_SIZE;
-  const filtered = useMemo(
-    () => matched.slice(0, visibleLimit),
-    [matched, visibleLimit],
+  const candidateRows = useMemo(
+    () => candidatePool.slice(0, visibleLimit),
+    [candidatePool, visibleLimit],
   );
-  const hasMore = filtered.length < matched.length;
+  const hasMore = candidateRows.length < candidatePool.length;
+
+  // pinned 가 active 에 포함되면 별도 슬롯 노출 안 함
+  const pinnedSeparate = pinned && !activeSlugSet.has(pinned.slug) ? pinned : null;
 
   useEffect(() => {
     setVisiblePages(1);
@@ -122,7 +151,7 @@ export const CandidatePanel = () => {
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [hasMore, filtered.length]);
+  }, [hasMore, candidateRows.length]);
 
   const selectedTargets = useMemo(
     () => (data ?? []).filter((d) => selectedKeys.has(d.slug)),
@@ -144,15 +173,6 @@ export const CandidatePanel = () => {
     [selectedTargets, items],
   );
 
-  const visibleSelected = useMemo(() => {
-    let count = filtered.reduce(
-      (acc, f) => (selectedKeys.has(f.slug) ? acc + 1 : acc),
-      0,
-    );
-    if (pinned && selectedKeys.has(pinned.slug)) count += 1;
-    return count;
-  }, [filtered, selectedKeys, pinned]);
-
   const busy = generating || publishing;
 
   const toggleKey = (slug: string) => {
@@ -167,7 +187,11 @@ export const CandidatePanel = () => {
   const toggleAllVisible = () => {
     setSelectedKeys((prev) => {
       const next = new Set(prev);
-      const visible = pinned ? [pinned, ...filtered] : filtered;
+      const visible = [
+        ...activeRows,
+        ...(pinnedSeparate ? [pinnedSeparate] : []),
+        ...candidateRows,
+      ];
       const allChecked =
         visible.length > 0 && visible.every((f) => next.has(f.slug));
       if (allChecked) {
@@ -222,38 +246,61 @@ export const CandidatePanel = () => {
     }
   };
 
-  const renderRow = (f: AllowlistEntryWithSlug, isPinned = false) => {
+  const renderRow = (
+    f: AllowlistEntryWithSlug,
+    opts: { highlightPinned?: boolean; pinnedBadge?: boolean } = {},
+  ) => {
     const state = items[f.slug];
     const status = state?.status ?? "idle";
     const checked = selectedKeys.has(f.slug);
     const checkboxLocked =
       busy && (status === "generating" || status === "publishing");
+    const warningCount = state?.result?.warnings?.length ?? 0;
     return (
-      <li
-        key={f.slug}
-        className={`flex items-start gap-2 ${
-          isPinned ? "bg-amber-50 rounded px-1 py-1" : ""
-        }`}
-      >
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={() => toggleKey(f.slug)}
-          disabled={checkboxLocked}
-          className="mt-1.5"
-        />
+      <li key={f.slug} className="flex items-stretch gap-1">
+        <label
+          className={`flex items-start pl-1 pr-2 pt-1.5 rounded-l ${
+            checkboxLocked ? "" : "cursor-pointer hover:bg-gray-100"
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={() => toggleKey(f.slug)}
+            disabled={checkboxLocked}
+            className="w-5 h-5"
+          />
+        </label>
         <button
           type="button"
           className={`flex-1 text-left text-sm hover:bg-gray-100 rounded px-2 py-1 ${
-            isPinned ? "font-medium" : ""
+            opts.highlightPinned ? "bg-amber-50 font-medium" : ""
           }`}
-          onClick={() => (isPinned ? setSelected(null) : setSelected(f.entry, f.slug))}
+          onClick={() =>
+            opts.highlightPinned && !opts.pinnedBadge
+              ? setSelected(null)
+              : setSelected(f.entry, f.slug)
+          }
         >
-          <div>{JSON.stringify(f.entry)}</div>
-          {status !== "idle" && (
-            <div className={`text-xs mt-0.5 ${STATUS_CLASS[status]}`}>
-              {STATUS_LABEL[status]}
-              {state?.error ? ` — ${state.error}` : ""}
+          <div className="flex items-center gap-2">
+            <span className="flex-1 break-all">{JSON.stringify(f.entry)}</span>
+            {opts.pinnedBadge && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-200 text-amber-900">
+                워크스페이스
+              </span>
+            )}
+          </div>
+          {(status !== "idle" || warningCount > 0) && (
+            <div className={`text-xs mt-0.5 flex items-center gap-2 ${STATUS_CLASS[status]}`}>
+              {status !== "idle" && (
+                <span>
+                  {STATUS_LABEL[status]}
+                  {state?.error ? ` — ${state.error}` : ""}
+                </span>
+              )}
+              {warningCount > 0 && (
+                <span className="text-amber-700">⚠ 검토필요({warningCount})</span>
+              )}
             </div>
           )}
         </button>
@@ -274,11 +321,17 @@ export const CandidatePanel = () => {
         <button
           type="button"
           onClick={toggleAllVisible}
-          disabled={filtered.length === 0 && !pinned}
+          disabled={
+            activeRows.length + candidateRows.length === 0 && !pinnedSeparate
+          }
           className="rounded border px-2 py-1 hover:bg-gray-100 disabled:opacity-50"
         >
           {(() => {
-            const visible = pinned ? [pinned, ...filtered] : filtered;
+            const visible = [
+              ...activeRows,
+              ...(pinnedSeparate ? [pinnedSeparate] : []),
+              ...candidateRows,
+            ];
             return visible.length > 0 &&
               visible.every((f) => selectedKeys.has(f.slug))
               ? "표시 항목 해제"
@@ -291,7 +344,9 @@ export const CandidatePanel = () => {
           disabled={busy || generatableCount === 0}
           className="rounded bg-amber-600 text-white px-3 py-1 disabled:opacity-50"
         >
-          {generating ? "생성 중..." : `선택 ${generatableCount}개 생성`}
+          {generating
+            ? "생성 중..."
+            : `선택 ${selectedTargets.length}개 생성 (가능 ${generatableCount})`}
         </button>
         <button
           type="button"
@@ -299,7 +354,9 @@ export const CandidatePanel = () => {
           disabled={busy || publishableCount === 0}
           className="rounded bg-black text-white px-3 py-1 disabled:opacity-50"
         >
-          {publishing ? "발행 중..." : `생성된 ${publishableCount}개 발행`}
+          {publishing
+            ? "발행 중..."
+            : `선택 ${selectedTargets.length}개 발행 (가능 ${publishableCount})`}
         </button>
       </div>
 
@@ -308,15 +365,31 @@ export const CandidatePanel = () => {
           ? "로드 중..."
           : error
             ? "allowlist 로드 실패"
-            : deferredFilter
-              ? `매칭 ${matched.length}건 중 ${filtered.length}건 표시 (선택 ${visibleSelected}개)`
-              : `${filtered.length}/${matched.length}건 표시 (선택 ${visibleSelected}개) — 스크롤로 더 불러오기`}
+            : `작업 중 ${activeRows.length} · 후보 ${candidateRows.length}/${candidatePool.length}건 표시`}
       </p>
 
-      {pinned && (
+      {activeRows.length > 0 && (
+        <div className="space-y-1">
+          <div className="text-[11px] uppercase tracking-wide text-amber-700">
+            작업 중 ({activeRows.length})
+          </div>
+          <ul className="space-y-1">
+            {activeRows.map((row) => {
+              const isPinned = pinned?.slug === row.slug;
+              return renderRow(row, {
+                highlightPinned: isPinned,
+                pinnedBadge: isPinned,
+              });
+            })}
+          </ul>
+          <hr className="my-2 border-gray-200" />
+        </div>
+      )}
+
+      {pinnedSeparate && (
         <div className="space-y-1">
           <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-amber-700">
-            <span>선택된 조건 (Workspace)</span>
+            <span>워크스페이스</span>
             <button
               type="button"
               onClick={() => setSelected(null)}
@@ -325,19 +398,29 @@ export const CandidatePanel = () => {
               해제
             </button>
           </div>
-          <ul>{renderRow(pinned, true)}</ul>
+          <ul>{renderRow(pinnedSeparate, { highlightPinned: true })}</ul>
           <hr className="my-2 border-gray-200" />
         </div>
       )}
 
-      <ul className="space-y-1">
-        {filtered.map((f) => renderRow(f))}
-        {hasMore && (
-          <li ref={sentinelRef} className="py-3 text-center text-xs text-gray-400">
-            더 불러오는 중...
-          </li>
+      <div className="space-y-1">
+        {(activeRows.length > 0 || pinnedSeparate) && (
+          <div className="text-[11px] uppercase tracking-wide text-gray-500">
+            후보
+          </div>
         )}
-      </ul>
+        <ul className="space-y-1">
+          {candidateRows.map((f) => renderRow(f))}
+          {hasMore && (
+            <li
+              ref={sentinelRef}
+              className="py-3 text-center text-xs text-gray-400"
+            >
+              더 불러오는 중...
+            </li>
+          )}
+        </ul>
+      </div>
     </aside>
   );
 };
