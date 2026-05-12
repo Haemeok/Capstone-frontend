@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 
@@ -43,7 +43,18 @@ const MyRecipesTabContent = ({
       initialPageParam: 0,
     });
 
-  const recipes = data?.pages.flatMap((page) => page.content) ?? [];
+  const recipes = useMemo(() => {
+    const seen = new Set<string>();
+    const out: MyRecipesPageResponse["content"][number][] = [];
+    for (const page of data?.pages ?? []) {
+      for (const item of page.content) {
+        if (seen.has(item.id)) continue;
+        seen.add(item.id);
+        out.push(item);
+      }
+    }
+    return out;
+  }, [data]);
 
   return (
     <RecipeGrid
