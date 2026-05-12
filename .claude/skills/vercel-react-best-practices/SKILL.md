@@ -77,6 +77,7 @@ Reference these guidelines when:
 - `rerender-dependencies` - Use primitive dependencies in effects
 - `rerender-derived-state` - Subscribe to derived booleans, not raw values
 - `rerender-derive-instead-of-mirror` - Compute derived state at render; do not mirror it via useEffect+setState (avoids cascading-render anti-pattern flagged by react-hooks/set-state-in-effect)
+- `rerender-zustand-shallow-for-derived-selectors` - Wrap Zustand selectors that build a new array/object (filter/map/Object.values) with useShallow; otherwise useSyncExternalStore's Object.is check loops forever
 - `rerender-functional-setstate` - Use functional setState for stable callbacks
 - `rerender-lazy-state-init` - Pass function to useState for expensive values
 - `rerender-transitions` - Use startTransition for non-urgent updates
