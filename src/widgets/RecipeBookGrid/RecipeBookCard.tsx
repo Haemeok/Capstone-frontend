@@ -53,7 +53,7 @@ export const RecipeBookCard = ({
             <p className="truncate text-[15px] font-bold text-gray-900">{name}</p>
             {showDot && (
               <span
-                aria-label="새로 추출된 레시피"
+                aria-hidden="true"
                 className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-red-500"
               />
             )}
