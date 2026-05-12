@@ -19,11 +19,7 @@ type YoutubeImportStoreV2 = {
 
   createJob: (url: string, meta: YoutubeMeta) => string;
   setJobId: (idempotencyKey: string, jobId: string) => void;
-  updateJobProgress: (
-    idempotencyKey: string,
-    progress: number,
-    resultRecipeId?: string
-  ) => void;
+  updateJobProgress: (idempotencyKey: string, progress: number) => void;
   completeJob: (idempotencyKey: string, recipeId: string) => void;
   failJob: (
     idempotencyKey: string,
@@ -111,7 +107,7 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
       });
     },
 
-    updateJobProgress: (idempotencyKey, progress, resultRecipeId) => {
+    updateJobProgress: (idempotencyKey, progress) => {
       const now = Date.now();
 
       updatePersistedJob(idempotencyKey, { lastPollTime: now });
@@ -127,7 +123,6 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
               ...job,
               progress,
               lastPollTime: now,
-              ...(resultRecipeId && { resultRecipeId }),
             },
           },
         };

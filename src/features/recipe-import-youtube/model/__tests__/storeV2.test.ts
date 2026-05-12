@@ -112,21 +112,6 @@ describe("useYoutubeImportStoreV2", () => {
       expect(result.current.jobs[key!].progress).toBe(50);
     });
 
-    it("IN_PROGRESS 중 resultRecipeId가 있으면 저장해야 함", () => {
-      const { result } = renderHook(() => useYoutubeImportStoreV2());
-
-      let key: string;
-      act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
-        result.current.setJobId(key!, "job-123");
-      });
-
-      act(() => {
-        result.current.updateJobProgress(key!, 80, "recipe-456");
-      });
-
-      expect(result.current.jobs[key!].resultRecipeId).toBe("recipe-456");
-    });
   });
 
   describe("completeJob", () => {

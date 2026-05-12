@@ -11,8 +11,8 @@ import { scheduleReviewGate } from "@/features/review-gate";
 import type { useToastStore } from "@/widgets/Toast";
 
 import { JOB_POLLING_CONFIG } from "../lib/constants";
-import { mapJobFailureMessage } from "../lib/errors";
 import { createExtractionJobV2, getYoutubeJobStatus } from "./api";
+import { fromJobStatusResponse } from "./jobStatusMapper";
 import { useYoutubeImportStoreV2 } from "./store";
 import { ActiveJob } from "./types";
 
@@ -29,11 +29,7 @@ type StoreActions = {
   removeJob: (idempotencyKey: string) => void;
   setJobId: (idempotencyKey: string, jobId: string) => void;
   updateLastPollTime: (idempotencyKey: string) => void;
-  updateJobProgress: (
-    idempotencyKey: string,
-    progress: number,
-    resultRecipeId?: string
-  ) => void;
+  updateJobProgress: (idempotencyKey: string, progress: number) => void;
   incrementRetryCount: (idempotencyKey: string) => void;
 };
 
@@ -159,35 +155,26 @@ export const pollSingleJob = async (
 
     deps.storeActions.updateLastPollTime(job.idempotencyKey);
 
-    if (status.resultRecipeId) {
-      completePollingJob(deps, job.idempotencyKey, status.resultRecipeId);
-      return;
-    }
+    const update = fromJobStatusResponse(status);
 
-    switch (status.status) {
-      case "COMPLETED":
-        if (status.resultRecipeId) {
-          completePollingJob(deps, job.idempotencyKey, status.resultRecipeId);
-        }
-        break;
-
-      case "FAILED":
+    switch (update.state) {
+      case "completed":
+        completePollingJob(deps, job.idempotencyKey, update.resultRecipeId);
+        return;
+      case "failed":
         failPollingJob(
           deps,
           job.idempotencyKey,
-          status.code,
-          mapJobFailureMessage(status)
+          update.code,
+          update.message
         );
-        break;
-
-      case "IN_PROGRESS":
-      case "PENDING":
+        return;
+      case "polling":
         deps.storeActions.updateJobProgress(
           job.idempotencyKey,
-          status.progress ?? 0,
-          status.resultRecipeId
+          update.progress
         );
-        break;
+        return;
     }
   } catch {
     const timeSinceLastPoll = Date.now() - job.lastPollTime;
