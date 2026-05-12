@@ -54,6 +54,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Storage keys](rules/policy-storage-keys.md) — constants module
 - [Z-index tokens](rules/policy-zindex.md) — semantic names, no magic numbers
 - [Dates and numbers](rules/policy-date-number.md) — single library, `Intl.NumberFormat`
+- [Nullish coalescing](rules/policy-nullish-coalescing.md) — `??` for defaults; `||` only for actual falsy semantics
 
 ### Next.js
 - [Cache and revalidation](rules/nextjs-cache-and-revalidation.md) — mutation → `revalidate*`; Request Memoization
@@ -67,6 +68,9 @@ specific `rules/<prefix>-<topic>.md` file.
 ### TypeScript
 - [`any` and `as`](rules/ts-any-and-as.md) — `any` banned; `as` justified with a comment
 - [Non-null and union](rules/ts-non-null-and-union.md) — no `!`; discriminated unions
+- [Discriminated unions at API boundary](rules/ts-discriminated-union-at-boundary.md) — translate correlated optionals into a union once at the seam
+- [Typed mapper extraction](rules/ts-typed-mapper-extraction.md) — inline literals hide dead fields; extract with explicit return type
+- [Type imports — avoid dist paths](rules/ts-type-imports-from-dist.md) — derive from public hook via `ReturnType`, don't reach into `pkg/dist/...`
 
 ### Naming
 - [Booleans, handlers, hooks](rules/naming-boolean-handler-hook.md) — `is/has/can/should`, `on*`/`handle*`, `use*`

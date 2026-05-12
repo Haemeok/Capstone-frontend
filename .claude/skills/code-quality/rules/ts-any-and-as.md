@@ -21,6 +21,11 @@ trigger: Writing `: any`, `as Something`, or `as unknown as Something`.
 
   // `as` permitted: third-party type definition is incomplete.
   (window as Window & { gtag?: GTag }).gtag?.('event', /* ... */);
+
+  // `as` permitted: union literal widens through Zustand/immer-style spread.
+  set((state) => ({
+    jobs: { ...state.jobs, [key]: { ...job, state: "completed" as JobState } },
+  }));
   ```
 - **`unknown`**: preferred over `any` for "I don't know yet." Narrow before use.
 
@@ -33,4 +38,4 @@ const y = result as unknown as RecipeDraft;       // double-cast — same issue,
 
 ## Heuristic
 - `grep ": any"` and `grep "as "` should both return zero unjustified hits.
-- Permitted `as` reasons in this project: `Object.keys` / `Object.entries` narrowing, `JSON.parse` + runtime validation, narrowing beyond TS reach, third-party type gaps.
+- Permitted `as` reasons in this project: `Object.keys` / `Object.entries` narrowing, `JSON.parse` + runtime validation, narrowing beyond TS reach, third-party type gaps, Zustand/immer-style spread widening union literals.
