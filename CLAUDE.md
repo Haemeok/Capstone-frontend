@@ -6,6 +6,57 @@
 
 ---
 
+## 코드 작성 자가체크 (always-on)
+
+매 코드 작성·수정 시 자가체크. 상세 룰은
+`.claude/skills/code-quality/rules/<prefix>-*.md`.
+
+### Size
+- Component: ≤100줄 권장 / >150줄 무조건 분리
+- Function: ≤30줄 권장 / 분기 4+ · nesting 3+ · 동사 두 개 · await 3+면 분리
+- SRP 신호 2+: hook 5+ / prop drilling 2단+ / 조건부 분기 3+
+
+### FSD 4단계 위치 판단
+- `shared/`: 비즈니스 모름, ≥2곳 재사용
+- `widget/`: feature·entity 조립, read query OK, mutation은 feature 위임
+- `app/(route)/_components/`: 그 라우트 1곳 전용, flat 유지
+- `app/(route)/page.tsx`: 조립만
+
+### Human error blockers
+- URL: `new URL(path, base)`. 문자열 concat ❌
+- Query string: `URLSearchParams`. `?a=${a}` 직접 ❌
+- TanStack Query key: `[domain, sub, ...ids]` tuple
+- env: `shared/config` 경유. `process.env` 직접 ❌
+- localStorage key: 상수 모듈
+
+### Next.js
+- Static default. Dynamic 단서 자각 (cookies/headers/searchParams/noStore/force-dynamic)
+- Mutation 후 `revalidatePath` / `revalidateTag` 필수
+- Server fetch → Client 두 번 fetch ❌ (`initialData`). 단 server 트리 내 같은
+  URL은 Request Memo로 dedupe됨, 보고만
+- `'use client'` 최하위에만
+
+### React (Compiler 시대)
+- `useCallback` / `useMemo`: 외부 콜백 등록 / `useEffect` deps / `forwardRef`
+  3경우만
+- Derived state ❌ (계산), 이벤트로 끝낼 일 effect ❌
+- Effect는 외부 시스템 동기화 전용
+
+### TS
+- `any` ❌, non-null `!` ❌
+- `as`는 1줄 코멘트로 이유 명시
+- Union은 discriminated union 우선
+
+### Naming
+- Boolean: `is/has/can/should` (부정형 ❌)
+- Handler: `on*` (props) / `handle*` (내부)
+- 함수 동사: `get` (메모리) / `fetch` (네트워크) / `load` (리소스)
+
+### A11y
+- `<div onClick>` ❌. `<button>` 또는 Radix
+- Interactive 요소엔 `cursor-pointer`
+- 아이콘 버튼엔 `aria-label`
+
 ## 작업별 가이드 (Lookup Table)
 
 매 세션마다 모든 가이드를 컨텍스트에 끌고 다니지 말 것. **해당 작업 시작 직전에 Read**.
