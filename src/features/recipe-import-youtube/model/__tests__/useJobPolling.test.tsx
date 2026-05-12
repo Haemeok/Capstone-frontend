@@ -107,7 +107,9 @@ describe("useJobPolling - 중복 처리 방지", () => {
 
       const jobAfterFirst = useYoutubeImportStoreV2.getState().jobs[key!];
       expect(jobAfterFirst?.state).toBe("completed");
-      expect(jobAfterFirst?.resultRecipeId).toBe("recipe-456");
+      if (jobAfterFirst?.state === "completed") {
+        expect(jobAfterFirst.resultRecipeId).toBe("recipe-456");
+      }
 
       // 두 번째 폴링 시도 (7초 후) - 이미 completed라 getPendingJobs에서 제외됨
       await act(async () => {
@@ -145,9 +147,11 @@ describe("useJobPolling - 중복 처리 방지", () => {
       // Job이 failed 상태인지 확인
       const job = useYoutubeImportStoreV2.getState().jobs[key!];
       expect(job?.state).toBe("failed");
-      expect(job?.code).toBe("907");
-      // code 907은 mapJobFailureMessage에 의해 매핑됨
-      expect(job?.message).toBe("유튜브 링크만 가능해요");
+      if (job?.state === "failed") {
+        expect(job.code).toBe("907");
+        // code 907은 mapJobFailureMessage에 의해 매핑됨
+        expect(job.message).toBe("유튜브 링크만 가능해요");
+      }
     });
 
     it("이미 completed 상태인 job에 fail 호출해도 무시해야 함", async () => {
@@ -171,10 +175,9 @@ describe("useJobPolling - 중복 처리 방지", () => {
         await Promise.resolve();
       });
 
-      // Job은 completed 상태 유지
+      // Job은 completed 상태 유지 (failed로 덮어쓰이지 않음)
       const job = useYoutubeImportStoreV2.getState().jobs[key!];
       expect(job?.state).toBe("completed");
-      expect(job?.message).toBeUndefined();
     });
   });
 

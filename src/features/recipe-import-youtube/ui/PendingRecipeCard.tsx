@@ -48,9 +48,16 @@ export const PendingRecipeCard = ({
   const job = useYoutubeImportStoreV2((state) => state.jobs[idempotencyKey]);
   const removeJob = useYoutubeImportStoreV2((state) => state.removeJob);
 
-  const status = job ? jobStateToImportStatus(job.state) : "pending";
-
-  const realProgress = job?.progress ?? 0;
+  const status: SmoothProgressStatus = job
+    ? jobStateToImportStatus(job.state)
+    : "pending";
+  const realProgress = !job
+    ? 0
+    : job.state === "completed"
+      ? 100
+      : job.state === "failed"
+        ? 0
+        : job.progress;
   const progress = useSmoothProgress(
     realProgress,
     status,
@@ -59,7 +66,8 @@ export const PendingRecipeCard = ({
 
   if (!job) return null;
 
-  const { meta, message } = job;
+  const { meta } = job;
+  const errorMessage = job.state === "failed" ? job.message : undefined;
 
   const videoId = extractYouTubeVideoId(meta.url);
   const thumbnailUrl = videoId
@@ -126,7 +134,7 @@ export const PendingRecipeCard = ({
           {status === "error" && (
             <>
               <span className="line-clamp-1 text-red-500">
-                {message || "추출 실패"}
+                {errorMessage ?? "추출 실패"}
               </span>
               <button
                 type="button"

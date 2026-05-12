@@ -12,7 +12,7 @@ import {
   selectJobByUrl,
   selectPendingJobs,
 } from "./storeSelectors";
-import { ActiveJob, JobState, PersistedJob, YoutubeMeta } from "./types";
+import { ActiveJob, PersistedJob, YoutubeMeta } from "./types";
 
 type YoutubeImportStoreV2 = {
   jobs: Record<string, ActiveJob>;
@@ -37,11 +37,10 @@ type YoutubeImportStoreV2 = {
   getActiveJobCount: () => number;
 };
 
-const toActiveJob = (persisted: PersistedJob): ActiveJob => ({
-  ...persisted,
-  state: persisted.jobId ? "polling" : "creating",
-  progress: 0,
-});
+const toActiveJob = (persisted: PersistedJob): ActiveJob =>
+  persisted.jobId
+    ? { ...persisted, state: "polling", progress: 0 }
+    : { ...persisted, state: "creating", progress: 0 };
 
 export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
   (set, get) => ({
@@ -99,8 +98,12 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
             [idempotencyKey]: {
               ...job,
               jobId,
-              state: "polling" as JobState,
               lastPollTime: now,
+              state: "polling",
+              progress:
+                job.state === "polling" || job.state === "creating"
+                  ? job.progress
+                  : 0,
             },
           },
         };
@@ -121,6 +124,7 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
             ...state.jobs,
             [idempotencyKey]: {
               ...job,
+              state: "polling",
               progress,
               lastPollTime: now,
             },
@@ -141,7 +145,7 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
             ...state.jobs,
             [idempotencyKey]: {
               ...job,
-              state: "completed" as JobState,
+              state: "completed",
               progress: 100,
               resultRecipeId: recipeId,
             },
@@ -162,7 +166,11 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
             ...state.jobs,
             [idempotencyKey]: {
               ...job,
-              state: "failed" as JobState,
+              state: "failed",
+              progress:
+                job.state === "polling" || job.state === "creating"
+                  ? job.progress
+                  : 0,
               code,
               message,
             },

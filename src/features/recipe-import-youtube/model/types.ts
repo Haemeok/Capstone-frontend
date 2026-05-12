@@ -53,11 +53,19 @@ export type PersistedJob = {
 
 export type JobState = "creating" | "polling" | "completed" | "failed";
 
-export type ActiveJob = PersistedJob & {
-  state: JobState;
-  progress: number;
-  resultRecipeId?: string;
-  code?: string;
-  message?: string;
+type ActiveJobBase = PersistedJob & {
   retryAfter?: number;
 };
+
+export type ActiveJob = ActiveJobBase &
+  (
+    | { state: "creating"; progress: number }
+    | { state: "polling"; progress: number }
+    | { state: "completed"; progress: 100; resultRecipeId: string }
+    | {
+        state: "failed";
+        progress: number;
+        code: string | undefined;
+        message: string;
+      }
+  );
