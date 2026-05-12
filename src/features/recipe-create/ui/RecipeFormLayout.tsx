@@ -4,7 +4,8 @@ import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
 
-import { FIELD_LABELS,RecipeFormValues } from "@/features/recipe-create";
+import type { RecipeFormValues } from "@/features/recipe-create/model/config";
+import { FIELD_LABELS } from "@/features/recipe-create/model/constants";
 import CookingToolsInput from "@/features/recipe-create/ui/CookingToolsInput";
 import Description from "@/features/recipe-create/ui/Description";
 import IngredientSection from "@/features/recipe-create/ui/IngredientSection";

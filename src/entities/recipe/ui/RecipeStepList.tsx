@@ -1,7 +1,7 @@
 "use client";
 
 import { IngredientItem } from "@/entities/ingredient";
-import { RecipeStep as RecipeStepType } from "@/entities/recipe";
+import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
 
 import RecipeStep from "./RecipeStep";
 

@@ -8,7 +8,8 @@ import {
 import { RecipeStatus } from "@/entities/recipe/model/types";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
-import { CommentsApiResponse, postCommentLike } from "@/features/comment-like";
+import { postCommentLike } from "@/features/comment-like/model/api";
+import type { CommentsApiResponse } from "@/features/comment-like/model/types";
 
 type LikeCommentMutationContext = {
   previousCommentsListData?: InfiniteData<CommentsApiResponse>;

@@ -3,7 +3,7 @@
 import { triggerHaptic } from "@/shared/lib/bridge";
 import HeartButton from "@/shared/ui/HeartButton";
 
-import { useLikeCommentMutation } from "@/features/comment-like";
+import { useLikeCommentMutation } from "@/features/comment-like/model/hooks";
 
 type CommentLikeButtonProps = {
   commentId: string;

@@ -16,7 +16,7 @@ import { Button } from "@/shared/ui/shadcn/button";
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
 
-import { useAddIngredientMutation } from "@/features/ingredient-add-fridge";
+import { useAddIngredientMutation } from "@/features/ingredient-add-fridge/model/hooks";
 import { useDeleteIngredientMutation } from "@/features/ingredient-delete-fridge";
 
 type IngredientSearchDrawerProps = {

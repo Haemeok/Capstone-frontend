@@ -3,7 +3,7 @@ import { BaseQueryParams, PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 import { FileInfoRequest } from "@/shared/types";
 
-import { ensureSource } from "@/entities/recipe";
+import { ensureSource } from "@/entities/recipe/lib/visibility";
 import { RecipeHistoryResponse } from "@/entities/user/model/types";
 
 import { RecipeHistoryDetailResponse, RecordTimelineResponse } from "./record";

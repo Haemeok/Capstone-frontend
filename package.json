@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:self-barrel": "node scripts/find-self-barrel.mjs",
     "test": "jest --runInBand",
     "test:ssr": "jest --config jest.ssr.config.js --runInBand",
     "lhci": "lhci autorun",
