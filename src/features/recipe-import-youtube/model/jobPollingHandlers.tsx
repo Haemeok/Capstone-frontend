@@ -184,7 +184,7 @@ export const pollSingleJob = async (
       case "PENDING":
         deps.storeActions.updateJobProgress(
           job.idempotencyKey,
-          status.progress || 0,
+          status.progress ?? 0,
           status.resultRecipeId
         );
         break;
