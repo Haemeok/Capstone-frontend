@@ -43,13 +43,14 @@ export const RecipeBookGrid = () => {
       fallback={<SectionErrorFallback message="레시피북을 불러올 수 없어요" />}
     >
       <div className={GRID_CLASS}>
-        {list.map((book) => (
+        {list.map((book, index) => (
           <RecipeBookCard
             key={book.id}
             bookId={book.id}
             name={book.name}
             recipeCount={book.recipeCount}
             isDefault={book.isDefault}
+            isFirstCard={index === 0}
           />
         ))}
         {showCreateCard && <CreateRecipeBookCard />}

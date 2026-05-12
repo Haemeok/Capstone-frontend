@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { useRecipeBookDetail } from "@/entities/recipe-book";
+import { useRecipeBookDetail, useUnseenImportStore } from "@/entities/recipe-book";
 
 import { RecipeBookCardMenu } from "./RecipeBookCardMenu";
 import { RecipeBookThumbnailGrid } from "./RecipeBookThumbnailGrid";
@@ -14,6 +14,7 @@ type Props = {
   name: string;
   recipeCount: number;
   isDefault: boolean;
+  isFirstCard?: boolean;
 };
 
 export const RecipeBookCard = ({
@@ -21,13 +22,19 @@ export const RecipeBookCard = ({
   name,
   recipeCount,
   isDefault,
+  isFirstCard = false,
 }: Props) => {
   const router = useRouter();
   const { data } = useRecipeBookDetail(bookId);
+  const hasUnseenImport = useUnseenImportStore((s) => s.hasUnseenImport);
+  const clearUnseen = useUnseenImportStore((s) => s.clearUnseen);
+
+  const showDot = isFirstCard && hasUnseenImport;
 
   const previewRecipes = data?.recipes.slice(0, PREVIEW_RECIPE_COUNT) ?? [];
 
   const handleClick = () => {
+    if (showDot) clearUnseen();
     router.push(`/recipe-books/${bookId}`);
   };
 
@@ -42,7 +49,15 @@ export const RecipeBookCard = ({
       </button>
       <div className="mt-2 flex items-center justify-between gap-2 px-1">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[15px] font-bold text-gray-900">{name}</p>
+          <div className="flex items-center gap-1.5">
+            <p className="truncate text-[15px] font-bold text-gray-900">{name}</p>
+            {showDot && (
+              <span
+                aria-label="새로 추출된 레시피"
+                className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-red-500"
+              />
+            )}
+          </div>
           <p className="text-[13px] text-gray-500">저장된 레시피 {recipeCount}개</p>
         </div>
         {!isDefault && (
