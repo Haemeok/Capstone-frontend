@@ -38,7 +38,42 @@ specific `rules/<prefix>-<topic>.md` file.
 
 ## Quick reference
 
-_(Populated in Task 9 once every rule file exists.)_
+### Size
+- [Component size limits](rules/size-component.md) — 100/150 hard, SRP signals
+- [Function complexity](rules/size-function.md) — 30 lines + branch / nesting / verb-pair / await flags
+
+### FSD
+- [4-layer placement](rules/fsd-layer-routing.md) — shared / widget / `_components/` / page
+- [Widget vs page-local](rules/fsd-widget-vs-page-local.md) — single-page → `_components/`, multi-page → `widget/`
+- [Entity vs feature boundary](rules/fsd-entity-feature-boundary.md) — mutations live in features
+
+### Policy (human-error blockers)
+- [URL and query strings](rules/policy-url-and-query.md) — `new URL` / `URLSearchParams`
+- [TanStack Query keys](rules/policy-query-key.md) — `[domain, sub, ...ids]` tuple
+- [Env via shared/config](rules/policy-env-config.md) — no direct `process.env`
+- [Storage keys](rules/policy-storage-keys.md) — constants module
+- [Z-index tokens](rules/policy-zindex.md) — semantic names, no magic numbers
+- [Dates and numbers](rules/policy-date-number.md) — single library, `Intl.NumberFormat`
+
+### Next.js
+- [Cache and revalidation](rules/nextjs-cache-and-revalidation.md) — mutation → `revalidate*`; Request Memoization
+- [Dynamic vs static](rules/nextjs-dynamic-vs-static.md) — static is default; recognize triggers
+- [Server vs client boundary](rules/nextjs-server-vs-client-boundary.md) — `'use client'` at the lowest point; `initialData`
+
+### React (Compiler era)
+- [Compiler memoization](rules/react-compiler-memoization.md) — three legitimate `useCallback` cases
+- [Effect / state diet](rules/react-effect-discipline.md) — derived computed, events handled, effects only for external sync
+
+### TypeScript
+- [`any` and `as`](rules/ts-any-and-as.md) — `any` banned; `as` justified with a comment
+- [Non-null and union](rules/ts-non-null-and-union.md) — no `!`; discriminated unions
+
+### Naming
+- [Booleans, handlers, hooks](rules/naming-boolean-handler-hook.md) — `is/has/can/should`, `on*`/`handle*`, `use*`
+- [Function verbs](rules/naming-function-verbs.md) — `get` / `fetch` / `load`
+
+### A11y
+- [Interactive elements](rules/a11y-interactive.md) — native button, `cursor-pointer`, `aria-label`
 
 ## File template
 
