@@ -5,7 +5,7 @@ import { notFound, useParams } from "next/navigation";
 
 import { Container } from "@/shared/ui/Container";
 
-import { useRecipeBooks } from "@/entities/recipe-book";
+import { useRecipeBooks, useUnseenImportStore } from "@/entities/recipe-book";
 
 import {
   EditModeBottomBar,
@@ -22,8 +22,12 @@ export default function RecipeBookDetailPage() {
   const bookId = params?.bookId ?? "";
   const { data: books, isLoading } = useRecipeBooks();
   const exit = useEditModeStore((s) => s.exit);
+  const clearUnseen = useUnseenImportStore((s) => s.clearUnseen);
 
-  // Page unmount → exit edit mode (so navigating between books resets state)
+  useEffect(() => {
+    clearUnseen();
+  }, [clearUnseen]);
+
   useEffect(() => {
     return () => exit();
   }, [exit]);
