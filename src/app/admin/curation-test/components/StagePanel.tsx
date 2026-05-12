@@ -1,6 +1,23 @@
 "use client";
 
-import type { GenerateCurationOutput } from "@/entities/curation";
+import type { CurationWarning, GenerateCurationOutput } from "@/entities/curation";
+
+const WarningBox = ({ warnings }: { warnings: CurationWarning[] }) => {
+  if (warnings.length === 0) return null;
+  return (
+    <div className="rounded border border-amber-300 bg-amber-50 p-2 text-xs text-amber-900 space-y-1">
+      <p className="font-bold">⚠ 검토 필요 {warnings.length}건</p>
+      <ul className="space-y-0.5">
+        {warnings.map((w, i) => (
+          <li key={`${w.source}-${w.keyword}-${i}`}>
+            {w.source === "q" ? `q="${w.keyword}"` : w.keyword} — 섹션{" "}
+            {w.missingSections.map((n) => n + 1).join(", ")}에 미등장
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 export const StagePanel = ({ result }: { result: GenerateCurationOutput }) => (
   <section className="rounded border p-3 space-y-3">
@@ -10,6 +27,7 @@ export const StagePanel = ({ result }: { result: GenerateCurationOutput }) => (
       </span>{" "}
       · tone <code>{result.toneSeed}</code>
     </p>
+    <WarningBox warnings={result.warnings ?? []} />
     <details>
       <summary className="text-sm font-bold cursor-pointer">
         slug · recipeIds · thumbnail
