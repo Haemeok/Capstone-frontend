@@ -7,6 +7,11 @@ import {
   removePersistedJob,
   updatePersistedJob,
 } from "./persistence";
+import {
+  selectActiveJobCount,
+  selectJobByUrl,
+  selectPendingJobs,
+} from "./storeSelectors";
 import { ActiveJob, JobState, PersistedJob, YoutubeMeta } from "./types";
 
 type YoutubeImportStoreV2 = {
@@ -234,20 +239,10 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
       });
     },
 
-    getJobByUrl: (url) => {
-      const jobs = get().jobs;
-      return Object.values(jobs).find((job) => job.url === url);
-    },
+    getJobByUrl: (url) => selectJobByUrl(get(), url),
 
-    getPendingJobs: () => {
-      const jobs = get().jobs;
-      return Object.values(jobs).filter(
-        (job) => job.state === "polling" || job.state === "creating"
-      );
-    },
+    getPendingJobs: () => selectPendingJobs(get()),
 
-    getActiveJobCount: () => {
-      return get().getPendingJobs().length;
-    },
+    getActiveJobCount: () => selectActiveJobCount(get()),
   })
 );
