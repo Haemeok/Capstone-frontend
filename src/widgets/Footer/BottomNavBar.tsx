@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
 
+import { useIsApp } from "@/shared/hooks/useIsApp";
 import { shouldHideNavbar } from "@/shared/lib/navigation";
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
@@ -27,11 +28,12 @@ const BottomNavBar = () => {
   const { user } = useUserStore();
   const pathname = usePathname();
   const router = useRouter();
+  const isApp = useIsApp();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const { isInputFocused } = useInputFocusStore();
 
-  if (shouldHideNavbar(pathname)) {
+  if (shouldHideNavbar(pathname, { isApp })) {
     return null;
   }
 
