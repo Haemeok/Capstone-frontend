@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { AdSenseScript } from "@/shared/adsense";
 import { AppWebViewDetector } from "@/shared/lib/bridge";
 
+import GlobalAppUpdateDrawer from "@/widgets/AppUpdateDrawer";
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
 import GlobalLoginEncourageDrawer from "@/widgets/LoginEncourageDrawer/GlobalLoginEncourageDrawer";
@@ -71,6 +72,7 @@ export default async function RootLayout({
           <GlobalLoginEncourageDrawer />
           <GlobalNotificationPermissionDrawer />
           <GlobalReviewGateDrawer />
+          <GlobalAppUpdateDrawer />
           {/* AdSenseScript는 AdsGateProvider 안에서 게이트를 받으므로
               AppProviders 내부에 둔다. next/script 의 afterInteractive 전략은
               컴포넌트의 DOM 위치와 무관하게 <head>로 주입되므로 위치 변경에
