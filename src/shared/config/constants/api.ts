@@ -9,7 +9,6 @@ const REDIRECT_URI =
 export const END_POINTS = {
   RECIPE: (id: string) => `/dev/recipes/${id}`,
   RECIPES: "/recipes",
-  RECIPE_AI: "/recipes/ai",
   RECIPES_SIMPLE: "/recipes/simple",
   RECIPE_SEARCH: "/dev/recipes/search",
   RECIPE_FILTER: "/recipes/filter",
