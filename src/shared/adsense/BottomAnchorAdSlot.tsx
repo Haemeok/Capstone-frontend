@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
+
 import { AdPlaceholder } from "./AdPlaceholder";
 import { useAdsGate } from "./AdsGateContext";
 import { ADSENSE_CLIENT_ID, AD_SLOT_IDS, IS_AD_TEST_MODE } from "./config";
@@ -13,12 +15,12 @@ declare global {
 }
 
 const AD_HEIGHT = 70;
+// BottomNavBar 점유 높이. nav 컴포넌트의 디자인 토큰이 나오면 한 곳으로 통합.
+const BOTTOM_NAV_HEIGHT = 77;
 
-// 모바일 하단(=BottomNavBar 자리) 위에 sticky 로 박히는 anchor 광고. 데스크톱에선
-// sticky 하단 바가 의미 없어 md:hidden 으로 가린다. 이전엔 흰 바 collapse 문제로
-// 통째로 비활성화돼 있었으나 AdsGateProvider 게이트가 들어오면서 복구.
 export const BottomAnchorAdSlot = () => {
   const { enabled } = useAdsGate();
+  const isNavVisible = useIsBottomNavVisible();
   const [hydrated, setHydrated] = useState(false);
   const insRef = useRef<HTMLModElement>(null);
 
@@ -42,11 +44,12 @@ export const BottomAnchorAdSlot = () => {
   if (!enabled) return null;
 
   const slotId = AD_SLOT_IDS.recipeBottomAnchor || undefined;
+  const bottomOffset = isNavVisible ? BOTTOM_NAV_HEIGHT : 0;
 
   return (
     <div
-      className="fixed bottom-0 inset-x-0 z-dropdown md:hidden overflow-hidden border-t border-gray-200 bg-white"
-      style={{ height: AD_HEIGHT }}
+      className="fixed inset-x-0 z-dropdown md:hidden overflow-hidden border-t border-gray-200 bg-white"
+      style={{ height: AD_HEIGHT, bottom: bottomOffset }}
     >
       {!slotId ? (
         IS_AD_TEST_MODE ? (
