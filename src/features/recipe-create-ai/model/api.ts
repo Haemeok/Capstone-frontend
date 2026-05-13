@@ -1,5 +1,8 @@
 import { api } from "@/shared/api/client";
-import type { ImageGenModel } from "@/shared/config/constants/aiImageModel";
+import {
+  DEFAULT_IMAGE_GEN_MODEL,
+  type ImageGenModel,
+} from "@/shared/config/constants/aiImageModel";
 import { AIModelId } from "@/shared/config/constants/aiModel";
 
 import {
@@ -12,16 +15,13 @@ export const createAIRecipeJobV2 = async (
   aiRequest: AIRecommendedRecipeRequest,
   concept: AIModelId,
   idempotencyKey: string,
-  imageGenModel?: ImageGenModel
+  imageGenModel: ImageGenModel = DEFAULT_IMAGE_GEN_MODEL
 ): Promise<AIJobCreationResponse> => {
-  const params: Record<string, string> = { concept };
-  if (imageGenModel) params.imageGenModel = imageGenModel;
-
   return api.post<AIJobCreationResponse>(
     "/dev/recipes/ai",
     { aiRequest },
     {
-      params,
+      params: { concept, imageGenModel },
       headers: { "Idempotency-Key": idempotencyKey },
     }
   );

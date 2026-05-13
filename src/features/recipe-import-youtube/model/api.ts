@@ -1,5 +1,8 @@
 import { api } from "@/shared/api/client";
-import type { ImageGenModel } from "@/shared/config/constants/aiImageModel";
+import {
+  DEFAULT_IMAGE_GEN_MODEL,
+  type ImageGenModel,
+} from "@/shared/config/constants/aiImageModel";
 
 import {
   JobCreationResponse,
@@ -20,13 +23,10 @@ export const checkYoutubeDuplicate = async (
 export const createExtractionJobV2 = async (
   url: string,
   idempotencyKey: string,
-  imageGenModel?: ImageGenModel
+  imageGenModel: ImageGenModel = DEFAULT_IMAGE_GEN_MODEL
 ): Promise<JobCreationResponse> => {
-  const params: Record<string, string> = { url };
-  if (imageGenModel) params.imageGenModel = imageGenModel;
-
   return api.post<JobCreationResponse>("/dev/recipes/youtube/extract", null, {
-    params,
+    params: { url, imageGenModel },
     headers: { "Idempotency-Key": idempotencyKey },
   });
 };
