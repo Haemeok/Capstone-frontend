@@ -6,7 +6,7 @@ import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
 
 import { AdPlaceholder } from "./AdPlaceholder";
 import { useAdsGate } from "./AdsGateContext";
-import { ADSENSE_CLIENT_ID, AD_SLOT_IDS, IS_AD_TEST_MODE } from "./config";
+import { AD_SLOT_IDS, ADSENSE_CLIENT_ID, IS_AD_TEST_MODE } from "./config";
 
 declare global {
   interface Window {

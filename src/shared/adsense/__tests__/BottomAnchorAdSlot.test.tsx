@@ -14,9 +14,10 @@ jest.mock("@/shared/hooks/useIsBottomNavVisible", () => ({
   useIsBottomNavVisible: jest.fn(() => false),
 }));
 
-import { BottomAnchorAdSlot } from "../BottomAnchorAdSlot";
-import { useAdsGate } from "../AdsGateContext";
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
+
+import { useAdsGate } from "../AdsGateContext";
+import { BottomAnchorAdSlot } from "../BottomAnchorAdSlot";
 
 const mockedUseAdsGate = jest.mocked(useAdsGate);
 const mockedUseIsBottomNavVisible = jest.mocked(useIsBottomNavVisible);
