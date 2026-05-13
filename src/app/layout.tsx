@@ -4,6 +4,7 @@ import { AdSenseScript } from "@/shared/adsense";
 import { AppWebViewDetector } from "@/shared/lib/bridge";
 
 import GlobalAppUpdateDrawer from "@/widgets/AppUpdateDrawer";
+import { BottomLayoutController } from "@/widgets/Footer/BottomLayoutController";
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
 import GlobalLoginEncourageDrawer from "@/widgets/LoginEncourageDrawer/GlobalLoginEncourageDrawer";
@@ -65,10 +66,11 @@ export default async function RootLayout({
         <AppWebViewDetector />
         <AppProviders>
           <DesktopHeader />
-          <main className="flex w-full flex-1 flex-col pb-[77px] md:pb-0">
+          <main className="flex w-full flex-1 flex-col pb-[var(--main-pb,77px)] md:pb-0">
             {children}
           </main>
           <BottomNavBar />
+          <BottomLayoutController />
           <GlobalLoginEncourageDrawer />
           <GlobalNotificationPermissionDrawer />
           <GlobalReviewGateDrawer />
