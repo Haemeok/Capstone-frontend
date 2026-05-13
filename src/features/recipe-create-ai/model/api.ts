@@ -1,4 +1,5 @@
 import { api } from "@/shared/api/client";
+import type { ImageGenModel } from "@/shared/config/constants/aiImageModel";
 import { AIModelId } from "@/shared/config/constants/aiModel";
 import { END_POINTS } from "@/shared/config/constants/api";
 
@@ -13,7 +14,6 @@ export const postAIRecommendedRecipe = async (
   aiRequest: AIRecommendedRecipeRequest,
   concept: AIModelId
 ): Promise<AIRecommendedRecipe> => {
-
   const response = await api.post<AIRecommendedRecipe>(
     END_POINTS.RECIPE_AI,
     {
@@ -30,18 +30,20 @@ export const postAIRecommendedRecipe = async (
   return response;
 };
 
-// ========== Job Polling API (V2) ==========
-
 export const createAIRecipeJobV2 = async (
   aiRequest: AIRecommendedRecipeRequest,
   concept: AIModelId,
-  idempotencyKey: string
+  idempotencyKey: string,
+  imageGenModel?: ImageGenModel
 ): Promise<AIJobCreationResponse> => {
+  const params: Record<string, string> = { concept };
+  if (imageGenModel) params.imageGenModel = imageGenModel;
+
   return api.post<AIJobCreationResponse>(
-    "/recipes/ai/v2",
+    "/dev/recipes/ai",
     { aiRequest },
     {
-      params: { concept },
+      params,
       headers: { "Idempotency-Key": idempotencyKey },
     }
   );
@@ -50,5 +52,5 @@ export const createAIRecipeJobV2 = async (
 export const getAIRecipeJobStatus = async (
   jobId: string
 ): Promise<AIJobStatusResponse> => {
-  return api.get<AIJobStatusResponse>(`/recipes/ai/status/${jobId}`);
+  return api.get<AIJobStatusResponse>(`/dev/recipes/ai/status/${jobId}`);
 };
