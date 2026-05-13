@@ -17,8 +17,6 @@ export const END_POINTS = {
   RECIPE_POPULAR: "/dev/recipes/popular",
   RECIPES_BY_CATEGORY: (categorySlug: string) =>
     `/recipes/category/${categorySlug}`,
-  RECIPE_EXTRACT: "/recipes/extract",
-  RECIPE_EXTRACT_STATUS: "/recipes/extract/status",
   RECIPE_YOUTUBE_META: "/recipes/youtube/meta",
   RECIPE_YOUTUBE_RECOMMEND: "/recipes/youtube/recommend",
   INGREDIENTS: "/ingredients",
