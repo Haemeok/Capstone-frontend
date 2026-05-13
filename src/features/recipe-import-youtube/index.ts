@@ -6,7 +6,6 @@ export {
   checkYoutubeDuplicate,
   createExtractionJobV2,
   getYoutubeJobStatus,
-  triggerYoutubeImport,
 } from "./model/api";
 export {
   useYoutubeDuplicateCheck,
@@ -30,7 +29,6 @@ export type {
   JobStatusResponse,
   PersistedJob,
   YoutubeDuplicateCheckResponse,
-  YoutubeImportResponse,
   YoutubeMeta,
 } from "./model/types";
 export { useJobPolling } from "./model/useJobPolling";
