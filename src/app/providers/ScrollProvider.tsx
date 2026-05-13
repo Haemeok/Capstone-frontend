@@ -3,7 +3,6 @@
 import { type ReactNode, useEffect, useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-import { shouldHideNavbar } from "@/shared/lib/navigation";
 import { ScrollContext } from "@/shared/lib/ScrollContext";
 
 const SCROLL_SAVE_DEBOUNCE_MS = 150;
@@ -15,9 +14,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
   const scrollLockRef = useRef<number | null>(null);
   const rafRef = useRef(0);
 
-  const scrollClass = shouldHideNavbar(pathname)
-    ? "h-[100dvh] md:h-[calc(100dvh-64px)] md:mt-16"
-    : "h-[100dvh] md:h-[calc(100dvh-64px)] md:mt-16";
+  const scrollClass = "h-[100dvh] md:h-[calc(100dvh-64px)] md:mt-16";
 
   // sticky 헤더 내 input 타이핑 시 브라우저 scrollIntoView 방지
   useEffect(() => {
