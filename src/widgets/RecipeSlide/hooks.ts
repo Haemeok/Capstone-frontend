@@ -4,6 +4,7 @@ import {
   getRecipeItems,
   getRecipesStatus,
   getRecommendedRecipes,
+  getRemixes,
   RecipeItemsQueryParams,
 } from "@/entities/recipe";
 
@@ -59,6 +60,17 @@ export const useRecommendedRecipesQuery = (
   return useQuery({
     queryKey: ["recipes-recommended", recipeId],
     queryFn: () => getRecommendedRecipes(recipeId),
+    enabled: options?.enabled ?? true,
+  });
+};
+
+export const useRemixesQuery = (
+  recipeId: string,
+  options?: { enabled?: boolean }
+) => {
+  return useQuery({
+    queryKey: ["recipes-remixes", recipeId],
+    queryFn: () => getRemixes(recipeId),
     enabled: options?.enabled ?? true,
   });
 };
