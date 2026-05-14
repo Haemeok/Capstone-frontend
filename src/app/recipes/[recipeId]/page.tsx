@@ -26,6 +26,7 @@ import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import { CoupangDisclosure } from "./components/CoupangDisclosure";
 import LazyRecommendedRecipeSlide from "./components/LazyRecommendedRecipeSlide";
+import LazyRemixesSlide from "./components/LazyRemixesSlide";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
 import RecipeCommentsSection from "./components/RecipeCommentsSection";
 import RecipeComponentsSection from "./components/RecipeComponentsSection";
@@ -223,6 +224,8 @@ export default async function RecipeDetailPage({
             recipeId={recipeId}
             tags={staticRecipe.tags}
           />
+
+          <LazyRemixesSlide recipeId={recipeId} />
         </RecipeContainer>
         <ChatLauncher recipeId={recipeId} />
       </RecipeStatusProvider>
