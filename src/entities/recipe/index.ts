@@ -4,6 +4,7 @@ export {
   getRecipeItems,
   getRecipesStatus,
   getRecommendedRecipes,
+  getRemixes,
 } from "./model/api";
 export {
   useRecipeDetailQuery,
