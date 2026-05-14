@@ -8,7 +8,7 @@ const REDIRECT_URI =
 
 export const END_POINTS = {
   RECIPE: (id: string) => `/dev/recipes/${id}`,
-  RECIPES: "/recipes",
+  RECIPES: "/dev/recipes",
   RECIPES_SIMPLE: "/recipes/simple",
   RECIPE_SEARCH: "/dev/recipes/search",
   RECIPE_FILTER: "/recipes/filter",
@@ -38,7 +38,7 @@ export const END_POINTS = {
   RECIPE_VISIBILITY: (id: string) => `/bff/recipes/${id}/visibility`,
   RECIPE_RECOMMENDATIONS: (id: string) => `/dev/recipes/${id}/recommendations`,
   RECIPE_REMIXES: (id: string) => `/dev/recipes/${id}/remixes`,
-  RECIPE_FINALIZE: (id: string) => `/recipes/${id}/finalize`,
+  RECIPE_FINALIZE: (id: string) => `/dev/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `/oauth2/authorization/google`,
   KAKAO_LOGIN: `/api/auth/login/kakao`,
   NAVER_LOGIN: `/api/auth/login/naver`,
@@ -56,7 +56,6 @@ export const END_POINTS = {
   MY_INGREDIENTS_IDS: "/me/fridge/items/ids",
   USER_RECIPES: (id: string) => `/dev/users/${id}/recipes`,
   USER_STREAK: "/me/streak",
-  PRESIGNED_URLS: "/recipes/presigned-urls",
   USER_PRESIGNED_URLS: (userId: string) =>
     `/users/${userId}/profile-image/presign`,
   RECIPE_HISTORY: "/me/calendar",

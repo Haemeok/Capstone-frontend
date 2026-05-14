@@ -30,7 +30,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     const body = await request.json();
     const cookieHeader = await getCookieHeader();
 
-    const backendRes = await fetch(`${BASE_API_URL}/recipes/${recipeId}`, {
+    const backendRes = await fetch(`${BASE_API_URL}/dev/recipes/${recipeId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     const { recipeId } = await context.params;
     const cookieHeader = await getCookieHeader();
 
-    const backendRes = await fetch(`${BASE_API_URL}/recipes/${recipeId}`, {
+    const backendRes = await fetch(`${BASE_API_URL}/dev/recipes/${recipeId}`, {
       method: "DELETE",
       headers: {
         Cookie: cookieHeader,
