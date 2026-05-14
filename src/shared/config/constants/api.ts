@@ -37,6 +37,7 @@ export const END_POINTS = {
   RECIPE_BOOK_ORDER: "/me/recipe-books/order",
   RECIPE_VISIBILITY: (id: string) => `/bff/recipes/${id}/visibility`,
   RECIPE_RECOMMENDATIONS: (id: string) => `/dev/recipes/${id}/recommendations`,
+  RECIPE_REMIXES: (id: string) => `/dev/recipes/${id}/remixes`,
   RECIPE_FINALIZE: (id: string) => `/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `/oauth2/authorization/google`,
   KAKAO_LOGIN: `/api/auth/login/kakao`,

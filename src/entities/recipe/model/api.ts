@@ -16,6 +16,7 @@ import {
   RecipesStatusResponse,
   RecipeStatus,
   StaticDetailedRecipeGridItem,
+  StaticDetailedRecipesApiResponse,
   TrendingYoutubeRecipe,
 } from "./types";
 import { RecipePayload } from "./types";
@@ -207,4 +208,13 @@ export const getRecommendedRecipes = async (
   return api.get<StaticDetailedRecipeGridItem[]>(
     END_POINTS.RECIPE_RECOMMENDATIONS(recipeId)
   );
+};
+
+export const getRemixes = async (
+  recipeId: string
+): Promise<StaticDetailedRecipeGridItem[]> => {
+  const page = await api.get<StaticDetailedRecipesApiResponse>(
+    END_POINTS.RECIPE_REMIXES(recipeId)
+  );
+  return page.content;
 };
