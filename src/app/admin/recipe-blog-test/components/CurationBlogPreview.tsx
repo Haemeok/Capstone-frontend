@@ -1,14 +1,31 @@
 "use client";
 
+import { useMemo } from "react";
+
+import dynamic from "next/dynamic";
+
+import type { StaticRecipe } from "@/entities/recipe/model/types";
+
+import { hydrateCurationBlogMarkdown } from "../lib/curationBlogBody";
 import type { CurationBlogPost } from "../lib/curationBlogPost.schema";
+
+const ChatMarkdown = dynamic(
+  () => import("@/features/recipe-chat/ui/ChatMarkdown"),
+  { ssr: false },
+);
 
 type Props = {
   post: CurationBlogPost;
   imageUrlsBySlot: Record<string, string>;
+  recipes: StaticRecipe[];
 };
 
-export const CurationBlogPreview = ({ post, imageUrlsBySlot }: Props) => {
+export const CurationBlogPreview = ({ post, imageUrlsBySlot, recipes }: Props) => {
   const coverUrl = imageUrlsBySlot.cover;
+  const hydrated = useMemo(
+    () => hydrateCurationBlogMarkdown(post.bodyMarkdown, recipes, post.alts),
+    [post.bodyMarkdown, post.alts, recipes],
+  );
 
   return (
     <article className="space-y-6 rounded-2xl border border-gray-100 bg-white p-6">
@@ -31,43 +48,9 @@ export const CurationBlogPreview = ({ post, imageUrlsBySlot }: Props) => {
         <p className="text-sm text-gray-500">{post.title.sub}</p>
       </header>
 
-      <p className="whitespace-pre-line text-sm leading-relaxed text-gray-800">
-        {post.lead}
-      </p>
-
-      <section className="space-y-6">
-        {post.sections.map((s) => {
-          const url = imageUrlsBySlot[s.imageSlot];
-          return (
-            <div key={s.recipeId} className="space-y-2">
-              <h2 className="text-lg font-semibold text-gray-900">{s.recipeTitle}</h2>
-              {url && (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={url}
-                  alt={post.alts[s.imageSlot] ?? s.recipeTitle}
-                  className="w-full rounded-xl object-cover"
-                />
-              )}
-              <p className="whitespace-pre-line text-sm leading-relaxed text-gray-800">
-                {s.blurb}
-              </p>
-              <a
-                href={s.recipeUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-block text-xs text-olive-light underline"
-              >
-                레시피 자세히 보기 →
-              </a>
-            </div>
-          );
-        })}
+      <section className="prose prose-sm max-w-none">
+        <ChatMarkdown text={hydrated} />
       </section>
-
-      <p className="whitespace-pre-line text-sm leading-relaxed text-gray-800">
-        {post.closingNote}
-      </p>
 
       <p className="text-xs text-gray-500">
         ⤳ <a href={post.curationUrl} className="underline">{post.curationUrl}</a>
