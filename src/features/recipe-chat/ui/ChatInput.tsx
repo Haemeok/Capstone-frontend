@@ -12,6 +12,7 @@ import { useLoginEncourageDrawerStore } from "@/widgets/LoginEncourageDrawer/mod
 
 const MAX_LENGTH = 500;
 const COUNTER_WARN_THRESHOLD = 450;
+const UNAUTH_DRAWER_MESSAGE = "레시피 챗봇에게 물어보세요!";
 
 type ChatInputProps = {
   isAuthenticated: boolean;
@@ -32,9 +33,14 @@ const ChatInput = ({
   const { setInputFocused } = useInputFocusStore();
   const { openDrawer } = useLoginEncourageDrawerStore();
 
-  const isDisabled = isPending || isLocked || !isAuthenticated;
+  const isInteractionDisabled = isPending || isLocked;
   const trimmed = text.trim();
-  const canSubmit = !isDisabled && trimmed.length > 0;
+  const canSubmit = isAuthenticated && !isInteractionDisabled && trimmed.length > 0;
+
+  const triggerUnauthDrawer = () => {
+    triggerHaptic("Light");
+    openDrawer({ message: UNAUTH_DRAWER_MESSAGE });
+  };
 
   const submit = () => {
     if (!canSubmit) return;
@@ -55,22 +61,34 @@ const ChatInput = ({
     }
   };
 
-  const handleUnauthClick = () => {
-    if (!isAuthenticated) {
-      openDrawer({ message: "레시피 챗봇에게 물어보세요!" });
-    }
+  const handleUnauthIntercept = (e: React.SyntheticEvent) => {
+    if (isAuthenticated) return;
+    e.preventDefault();
+    triggerUnauthDrawer();
   };
 
-  const placeholder = !isAuthenticated
-    ? "로그인하면 챗봇에게 물어볼 수 있어요"
-    : isLocked
-      ? (lockedReason ?? "지금은 사용할 수 없어요")
-      : isPending
-        ? "답변 작성 중..."
-        : "이 레시피에 대해서 어떤 게 궁금하신가요?";
+  const handleSendClick = () => {
+    if (!isAuthenticated) {
+      triggerUnauthDrawer();
+      return;
+    }
+    submit();
+  };
+
+  const placeholder = isLocked
+    ? (lockedReason ?? "지금은 사용할 수 없어요")
+    : isPending
+      ? "답변 작성 중..."
+      : "이 레시피에 대해서 어떤 게 궁금하신가요?";
 
   const counterColor =
     text.length >= COUNTER_WARN_THRESHOLD ? "text-red-500" : "text-gray-400";
+
+  const sendEnabledStyle = isAuthenticated
+    ? canSubmit
+      ? "cursor-pointer bg-olive-light text-white hover:bg-olive-dark"
+      : "cursor-not-allowed bg-gray-100 text-gray-300"
+    : "cursor-pointer bg-olive-light text-white hover:bg-olive-dark";
 
   return (
     <form
@@ -79,13 +97,10 @@ const ChatInput = ({
     >
       <div
         data-testid="chat-input-wrapper"
-        onClick={handleUnauthClick}
         className={cn(
           "flex items-end gap-2 rounded-xl border border-gray-200 bg-white px-3 py-1.5 transition-colors",
-          isAuthenticated &&
-            !isLocked &&
-            "focus-within:border-olive-light focus-within:ring-1 focus-within:ring-olive-light",
-          !isAuthenticated && "cursor-pointer"
+          !isInteractionDisabled &&
+            "focus-within:border-olive-light focus-within:ring-1 focus-within:ring-olive-light"
         )}
       >
         <textarea
@@ -94,21 +109,23 @@ const ChatInput = ({
           onKeyDown={handleKeyDown}
           onFocus={() => setInputFocused(true)}
           onBlur={() => setInputFocused(false)}
-          disabled={isDisabled}
+          onMouseDown={handleUnauthIntercept}
+          onTouchStart={handleUnauthIntercept}
+          readOnly={!isAuthenticated}
+          disabled={isInteractionDisabled}
           placeholder={placeholder}
           rows={1}
           maxLength={MAX_LENGTH}
           className="flex-1 resize-none bg-transparent py-1 text-base leading-6 text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed"
         />
         <button
-          type="submit"
-          disabled={!canSubmit}
+          type="button"
+          onClick={handleSendClick}
+          disabled={isAuthenticated && !canSubmit}
           aria-label="질문 전송"
           className={cn(
             "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors",
-            canSubmit
-              ? "cursor-pointer bg-olive-light text-white hover:bg-olive-dark"
-              : "cursor-not-allowed bg-gray-100 text-gray-300"
+            sendEnabledStyle
           )}
         >
           <Send className="h-4 w-4" />
