@@ -1,6 +1,7 @@
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 const TOKEN_RE = /\{\{recipe:([^}]+)\}\}/g;
+const LINK_TOKEN_RE = /\{\{link:([^}]+)\}\}/g;
 
 export type ValidateBodyInput = {
   expectedRecipeIds: string[];
@@ -17,22 +18,38 @@ export const validateCurationBlogMarkdown = (
 ): ValidateBodyResult => {
   const errors: string[] = [];
 
-  const found = new Map<string, number>();
+  const expectedSet = new Set(expectedRecipeIds);
+
+  // 이미지 슬롯 토큰 (`{{recipe:rN}}`) — 각 recipeId 정확히 1회
+  const imgFound = new Map<string, number>();
   for (const m of md.matchAll(TOKEN_RE)) {
     const id = m[1];
-    found.set(id, (found.get(id) ?? 0) + 1);
+    imgFound.set(id, (imgFound.get(id) ?? 0) + 1);
   }
-
   for (const id of expectedRecipeIds) {
-    const n = found.get(id) ?? 0;
-    if (n === 0) errors.push(`recipeId ${id} 의 {{recipe:${id}}} 토큰이 본문에 없습니다.`);
-    if (n > 1) errors.push(`recipeId ${id} 의 토큰이 ${n}회 등장 — 정확히 1회여야 합니다.`);
+    const n = imgFound.get(id) ?? 0;
+    if (n === 0) errors.push(`recipeId ${id} 의 {{recipe:${id}}} 이미지 토큰이 본문에 없습니다.`);
+    if (n > 1) errors.push(`recipeId ${id} 의 이미지 토큰이 ${n}회 등장 — 정확히 1회여야 합니다.`);
+  }
+  for (const id of imgFound.keys()) {
+    if (!expectedSet.has(id)) {
+      errors.push(`알 수 없는 recipeId 이미지 토큰: {{recipe:${id}}}.`);
+    }
   }
 
-  const expectedSet = new Set(expectedRecipeIds);
-  for (const id of found.keys()) {
+  // 레시피 상세 링크 토큰 (`{{link:rN}}`) — 각 recipeId 최소 1회
+  const linkFound = new Map<string, number>();
+  for (const m of md.matchAll(LINK_TOKEN_RE)) {
+    const id = m[1];
+    linkFound.set(id, (linkFound.get(id) ?? 0) + 1);
+  }
+  for (const id of expectedRecipeIds) {
+    const n = linkFound.get(id) ?? 0;
+    if (n === 0) errors.push(`recipeId ${id} 의 {{link:${id}}} 레시피 링크 토큰이 본문에 없습니다.`);
+  }
+  for (const id of linkFound.keys()) {
     if (!expectedSet.has(id)) {
-      errors.push(`알 수 없는 recipeId 토큰: {{recipe:${id}}} — 허용된 id 만 사용해야 합니다.`);
+      errors.push(`알 수 없는 recipeId 링크 토큰: {{link:${id}}}.`);
     }
   }
 
@@ -51,12 +68,18 @@ export const hydrateCurationBlogMarkdown = (
   alts: Record<string, string>,
 ): string => {
   const byId = new Map(recipes.map((r) => [r.id, r]));
-  return md.replace(TOKEN_RE, (_, id) => {
-    const r = byId.get(id);
-    if (!r || !r.imageUrl) return "";
-    const alt = alts[`recipe-${id}`] ?? r.title;
-    return `![${alt}](${r.imageUrl})`;
-  });
+  return md
+    .replace(TOKEN_RE, (_, id) => {
+      const r = byId.get(id);
+      if (!r || !r.imageUrl) return "";
+      const alt = alts[`recipe-${id}`] ?? r.title;
+      return `![${alt}](${r.imageUrl})`;
+    })
+    .replace(LINK_TOKEN_RE, (_, id) => {
+      const r = byId.get(id);
+      if (!r) return "";
+      return `[${r.title} 레시피 자세히 보기 →](https://recipio.kr/recipes/${id})`;
+    });
 };
 
 // LLM 출력에서 ```markdown ... ``` fence 를 벗긴다 (큐레이션 코드와 같은 방어).

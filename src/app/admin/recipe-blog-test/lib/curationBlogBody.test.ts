@@ -9,9 +9,19 @@ import {
 
 const URL = "https://recipio.kr/curation/spring-soups";
 
+const fullValidMd = (ids: string[]) =>
+  `리드 단락…\n\n` +
+  ids
+    .map(
+      (id) =>
+        `## 메뉴 ${id}\n본문... {{link:${id}}} 한 번 보세요.\n\n{{recipe:${id}}}\n`,
+    )
+    .join("\n") +
+  `\n닫는 단락에서 ${URL} 로 안내합니다.`;
+
 describe("validateCurationBlogMarkdown", () => {
-  it("모든 recipeId 토큰 1회 + curationUrl 있으면 ok", () => {
-    const md = `리드 단락…\n\n## 콩나물국\n{{recipe:r1}}\n\n## 된장찌개\n{{recipe:r2}}\n\n## 김치찌개\n{{recipe:r3}}\n\n닫는 단락에서 ${URL} 로 안내합니다.`;
+  it("모든 recipeId 의 이미지 + 링크 토큰 + curationUrl 있으면 ok", () => {
+    const md = fullValidMd(["r1", "r2", "r3"]);
     const r = validateCurationBlogMarkdown(md, {
       expectedRecipeIds: ["r1", "r2", "r3"],
       curationUrl: URL,
@@ -19,18 +29,28 @@ describe("validateCurationBlogMarkdown", () => {
     expect(r.ok).toBe(true);
   });
 
-  it("토큰 누락 → 에러", () => {
-    const md = `{{recipe:r1}} ${URL} {{recipe:r2}}`;
+  it("이미지 토큰 누락 → 에러", () => {
+    const md = `{{recipe:r1}} {{link:r1}} {{link:r2}} {{link:r3}} ${URL}`;
     const r = validateCurationBlogMarkdown(md, {
       expectedRecipeIds: ["r1", "r2", "r3"],
       curationUrl: URL,
     });
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.errors.some((e) => e.includes("r3"))).toBe(true);
+    if (!r.ok) expect(r.errors.some((e) => /r2.*이미지 토큰/.test(e))).toBe(true);
   });
 
-  it("토큰 중복 → 에러", () => {
-    const md = `{{recipe:r1}} {{recipe:r1}} {{recipe:r2}} ${URL}`;
+  it("링크 토큰 누락 → 에러", () => {
+    const md = `{{recipe:r1}} {{recipe:r2}} {{link:r1}} ${URL}`;
+    const r = validateCurationBlogMarkdown(md, {
+      expectedRecipeIds: ["r1", "r2"],
+      curationUrl: URL,
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.some((e) => /r2.*링크 토큰/.test(e))).toBe(true);
+  });
+
+  it("이미지 토큰 중복 → 에러", () => {
+    const md = `{{recipe:r1}} {{recipe:r1}} {{recipe:r2}} {{link:r1}} {{link:r2}} ${URL}`;
     const r = validateCurationBlogMarkdown(md, {
       expectedRecipeIds: ["r1", "r2"],
       curationUrl: URL,
@@ -39,7 +59,7 @@ describe("validateCurationBlogMarkdown", () => {
   });
 
   it("미허용 recipeId 토큰 → 에러", () => {
-    const md = `{{recipe:r1}} {{recipe:r2}} {{recipe:rZ}} ${URL}`;
+    const md = `{{recipe:r1}} {{recipe:r2}} {{recipe:rZ}} {{link:r1}} {{link:r2}} ${URL}`;
     const r = validateCurationBlogMarkdown(md, {
       expectedRecipeIds: ["r1", "r2"],
       curationUrl: URL,
@@ -49,7 +69,7 @@ describe("validateCurationBlogMarkdown", () => {
   });
 
   it("curationUrl 누락 → 에러", () => {
-    const md = `{{recipe:r1}} {{recipe:r2}}`;
+    const md = `{{recipe:r1}} {{recipe:r2}} {{link:r1}} {{link:r2}}`;
     const r = validateCurationBlogMarkdown(md, {
       expectedRecipeIds: ["r1", "r2"],
       curationUrl: URL,
@@ -64,13 +84,20 @@ describe("hydrateCurationBlogMarkdown", () => {
     { id: "r2", title: "된장찌개", imageUrl: "https://cdn/r2.jpg" } as StaticRecipe,
   ];
 
-  it("토큰을 markdown image 로 치환한다 (alt 매핑)", () => {
+  it("이미지 토큰을 markdown image 로 치환 (alt 매핑)", () => {
     const md = `{{recipe:r1}}\n\n{{recipe:r2}}`;
     const out = hydrateCurationBlogMarkdown(md, RECIPES, {
       "recipe-r1": "콩나물국 한 그릇",
     });
     expect(out).toContain("![콩나물국 한 그릇](https://cdn/r1.jpg)");
-    expect(out).toContain("![된장찌개](https://cdn/r2.jpg)"); // alt fallback = recipe.title
+    expect(out).toContain("![된장찌개](https://cdn/r2.jpg)");
+  });
+
+  it("link 토큰을 markdown link 로 치환", () => {
+    const md = `본문에서 {{link:r1}} 보세요.\n\n{{link:r2}} 도요.`;
+    const out = hydrateCurationBlogMarkdown(md, RECIPES, {});
+    expect(out).toContain("[콩나물국 레시피 자세히 보기 →](https://recipio.kr/recipes/r1)");
+    expect(out).toContain("[된장찌개 레시피 자세히 보기 →](https://recipio.kr/recipes/r2)");
   });
 
   it("imageUrl 없는 레시피 토큰은 빈 문자열로 제거", () => {
