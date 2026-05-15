@@ -78,6 +78,7 @@ __pycache__/
 
 # claude local state
 .claude/projects/
+.claude/state/
 
 # playwright MCP local state
 .playwright-mcp/
