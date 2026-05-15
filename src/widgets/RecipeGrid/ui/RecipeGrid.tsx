@@ -5,12 +5,6 @@ import React, { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { InFeedAdSlot } from "@/shared/adsense";
-import { SEARCH_AD_EVERY_N_CARDS } from "@/shared/adsense/config";
-import {
-  type FeedItem,
-  insertAdsIntoFeed,
-} from "@/shared/adsense/lib/insertAdsIntoFeed";
-import Circle from "@/shared/ui/Circle";
 
 import { isPrivateRecipe } from "@/entities/recipe";
 import {
@@ -19,10 +13,11 @@ import {
   MyRecipeListItem,
 } from "@/entities/recipe/model/types";
 
-import { RecipeSaveButton } from "@/features/recipe-save";
-
-import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
+import { buildFeedItems } from "@/widgets/RecipeGrid/lib/buildFeedItems";
+import DetailedFeedCell from "@/widgets/RecipeGrid/ui/DetailedFeedCell";
+import EmptyFilterState from "@/widgets/RecipeGrid/ui/EmptyFilterState";
 import EmptyRecipeCTA from "@/widgets/RecipeGrid/ui/EmptyRecipeCTA";
+import GridFooter from "@/widgets/RecipeGrid/ui/GridFooter";
 import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 import SimpleRecipeGridItem from "@/widgets/RecipeGrid/ui/SimpleRecipeGridItem";
 
@@ -46,15 +41,6 @@ type RecipeGridProps = {
   nextPageHref?: string;
   showInFeedAds?: boolean;
   onItemMoreClick?: (id: string) => void;
-};
-
-const calculateSavings = (
-  marketPrice?: number,
-  ingredientCost?: number,
-): number | null => {
-  if (!marketPrice || !ingredientCost) return null;
-  const savings = marketPrice - ingredientCost;
-  return savings > 0 ? savings : null;
 };
 
 const DETAILED_GRID_CLASS =
@@ -116,28 +102,10 @@ const RecipeGrid = ({
       return <EmptyRecipeCTA noResultsMessage={noResultsMessage} />;
     }
     return (
-      <section className="flex min-h-[400px] flex-col items-center justify-center gap-4 px-4">
-        <div className="text-center">
-          <p className="text-lg font-medium text-gray-700">
-            {onResetFilters
-              ? "설정하신 조건에 맞는 레시피가 없어요"
-              : noResultsMessage}
-          </p>
-          {onResetFilters && (
-            <p className="mt-1 text-sm text-gray-500">
-              다른 검색어나 필터로 변경해 보세요
-            </p>
-          )}
-        </div>
-        {onResetFilters && (
-          <button
-            onClick={onResetFilters}
-            className="rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 active:scale-[0.98]"
-          >
-            필터 초기화
-          </button>
-        )}
-      </section>
+      <EmptyFilterState
+        noResultsMessage={noResultsMessage}
+        onResetFilters={onResetFilters}
+      />
     );
   }
 
@@ -146,15 +114,7 @@ const RecipeGrid = ({
     | DetailedRecipeGridItemType
     | MyRecipeListItem;
 
-  const feedItems: FeedItem<RecipeInput>[] = showInFeedAds
-    ? insertAdsIntoFeed<RecipeInput>(
-        recipes as RecipeInput[],
-        SEARCH_AD_EVERY_N_CARDS,
-      )
-    : (recipes as RecipeInput[]).map((r) => ({
-        __kind: "recipe" as const,
-        recipe: r,
-      }));
+  const feedItems = buildFeedItems(recipes as RecipeInput[], showInFeedAds);
 
   return (
     <div className="flex flex-col">
@@ -178,69 +138,27 @@ const RecipeGrid = ({
             );
           }
 
-          const detailedRecipe = recipe as DetailedRecipeGridItemType;
-          const savings = calculateSavings(
-            detailedRecipe.marketPrice,
-            detailedRecipe.ingredientCost,
-          );
-
-          const saveBadge = (
-            <RecipeSaveButton
-              key="save"
-              recipeId={detailedRecipe.id}
-              initialIsFavorite={detailedRecipe.favoriteByCurrentUser}
-              buttonClassName="text-white"
-              iconClassName="fill-gray-300 opacity-80"
-            />
-          );
-
-          const infoBadge = savings ? (
-            <div
-              key="savings"
-              className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm"
-            >
-              <span className="text-xs font-bold text-white">
-                {savings.toLocaleString()}원 절약
-              </span>
-            </div>
-          ) : null;
-
           return (
-            <DetailedRecipeGridItem
+            <DetailedFeedCell
               key={recipe.id}
-              recipe={detailedRecipe}
+              recipe={recipe as DetailedRecipeGridItemType}
               priority={index === 0 && useLCP}
               prefetch={prefetch}
-              infoBadge={infoBadge}
-              saveBadge={saveBadge}
               onImageRetry={queryKeyToInvalidate ? handleImageRetry : undefined}
             />
           );
         })}
       </div>
-      <div
-        ref={observerRef}
-        className="relative mt-2 flex h-10 items-center justify-center"
-      >
-        {nextPageHref && hasNextPage && (
-          <a href={nextPageHref} className="sr-only" tabIndex={-1}>
-            다음 페이지
-          </a>
-        )}
-        {!isFetching &&
-          !hasNextPage &&
-          recipes &&
-          recipes.length > 0 &&
-          !error &&
-          !noResults && (
-            <p className="text-sm text-gray-500">{lastPageMessage}</p>
-          )}
-      </div>
-      {isFetching && (
-        <div className="flex items-center justify-center py-5">
-          <Circle className="text-olive-light h-10 w-10" />
-        </div>
-      )}
+      <GridFooter
+        observerRef={observerRef}
+        hasNextPage={hasNextPage}
+        isFetching={isFetching}
+        nextPageHref={nextPageHref}
+        showLastPageMessage={
+          !isFetching && !hasNextPage && recipes.length > 0 && !error && !noResults
+        }
+        lastPageMessage={lastPageMessage}
+      />
     </div>
   );
 };
