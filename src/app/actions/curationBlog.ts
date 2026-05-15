@@ -1,7 +1,7 @@
 "use server";
 
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateObject, generateText } from "ai";
 
 import { getStaticrecipionServer } from "@/entities/recipe/model/api.server";
 import type { StaticRecipe } from "@/entities/recipe/model/types";
@@ -13,14 +13,21 @@ import {
 } from "@/features/curation/model/api.server";
 
 import {
-  type CurationBlogPost,
-  CurationBlogPostSchema,
-} from "@/app/admin/recipe-blog-test/lib/curationBlogPost.schema";
-import {
-  buildCurationBlogSystemPrompt,
-  buildCurationBlogUserPrompt,
+  buildCurationBlogBodySystemPrompt,
+  buildCurationBlogBodyUserPrompt,
+  buildCurationBlogMetaSystemPrompt,
+  buildCurationBlogMetaUserPrompt,
 } from "@/app/admin/recipe-blog-test/lib/buildCurationBlogPrompt";
 import { buildCurationJsonLd } from "@/app/admin/recipe-blog-test/lib/buildCurationJsonLd";
+import {
+  type CurationBlogPost,
+  CurationBlogMetaSchema,
+} from "@/app/admin/recipe-blog-test/lib/curationBlogPost.schema";
+import {
+  normalizeMarkdown,
+  stripCodeFence,
+  validateCurationBlogMarkdown,
+} from "@/app/admin/recipe-blog-test/lib/curationBlogBody";
 
 const upstage = createOpenAI({
   name: "upstage",
@@ -29,6 +36,7 @@ const upstage = createOpenAI({
 });
 
 const MODEL_ID = "solar-pro3";
+const MAX_BODY_RETRIES = 2;
 
 export type FetchCurationArticleWithRecipesResult =
   | {
@@ -40,7 +48,7 @@ export type FetchCurationArticleWithRecipesResult =
   | { success: false; error: string };
 
 export const fetchCurationArticleWithRecipes = async (
-  slug: string
+  slug: string,
 ): Promise<FetchCurationArticleWithRecipesResult> => {
   await requireAdminAction();
 
@@ -50,7 +58,7 @@ export const fetchCurationArticleWithRecipes = async (
   }
 
   const settled = await Promise.all(
-    article.recipeIds.map((id) => getStaticrecipionServer(id))
+    article.recipeIds.map((id) => getStaticrecipionServer(id)),
   );
 
   const recipes: StaticRecipe[] = [];
@@ -69,7 +77,7 @@ export type GenerateCurationBlogPostResult =
 
 export const generateCurationBlogPost = async (
   article: PublicCurationArticleDto,
-  recipes: StaticRecipe[]
+  recipes: StaticRecipe[],
 ): Promise<GenerateCurationBlogPostResult> => {
   await requireAdminAction();
 
@@ -83,37 +91,89 @@ export const generateCurationBlogPost = async (
     };
   }
 
-  // 본문이 너무 길어지면 LLM 출력 품질이 떨어지므로 sections 상한을 8개로.
-  // 자르고 남은 레시피들은 closingNote 의 /curation/{slug} 권유 링크가 흡수.
   const usableRecipes = recipes.slice(0, 8);
+  const curationUrl = `https://recipio.kr/curation/${article.slug}`;
+  const solarModel = upstage.chat(MODEL_ID);
 
-  const system = buildCurationBlogSystemPrompt();
-  const prompt = buildCurationBlogUserPrompt(article, usableRecipes);
+  // Stage 1: 본문 (generateText) — schema X. Markdown 출력 + 우리 쪽 토큰 검증.
+  // generateObject 로 긴 본문 + 큰 schema 를 같이 강제하면 Upstage 500 이 자주 나서,
+  // 큐레이션 코드(curation.ts)와 동일한 패턴으로 분리한다.
+  let bodyMarkdown = "";
+  let lastErrors: string[] = [];
+  for (let attempt = 0; attempt <= MAX_BODY_RETRIES; attempt++) {
+    let raw: string;
+    try {
+      const { text } = await generateText({
+        model: solarModel,
+        system: buildCurationBlogBodySystemPrompt(),
+        prompt: buildCurationBlogBodyUserPrompt({
+          article,
+          recipes: usableRecipes,
+          lastErrors,
+        }),
+      });
+      raw = text;
+    } catch (error) {
+      console.error("[curationBlog] body generateText failed:", error);
+      return {
+        success: false,
+        error: `본문 생성 실패: ${error instanceof Error ? error.message : String(error)}`,
+      };
+    }
 
-  try {
-    const { object: narrative } = await generateObject({
-      model: upstage.chat(MODEL_ID),
-      schema: CurationBlogPostSchema,
-      mode: "json",
-      system,
-      prompt,
+    const normalized = normalizeMarkdown(stripCodeFence(raw));
+    const v = validateCurationBlogMarkdown(normalized, {
+      expectedRecipeIds: usableRecipes.map((r) => r.id),
+      curationUrl,
     });
+    if (v.ok) {
+      bodyMarkdown = normalized;
+      break;
+    }
+    lastErrors = v.errors;
+    console.warn(
+      `[curationBlog body] attempt ${attempt + 1} 검증 실패:\n${v.errors.map((e) => `  - ${e}`).join("\n")}`,
+    );
+    if (attempt === MAX_BODY_RETRIES) {
+      return {
+        success: false,
+        error: `본문 검증 ${MAX_BODY_RETRIES + 1}회 실패: ${v.errors.join("; ")}`,
+      };
+    }
+  }
 
-    const titleMap = new Map(recipes.map((r) => [r.id, r.title]));
-
-    const post: CurationBlogPost = {
-      ...narrative,
-      curationSlug: article.slug,
-      curationUrl: `https://recipio.kr/curation/${article.slug}`,
-      jsonLd: buildCurationJsonLd(article, titleMap),
-    };
-
-    return { success: true, post };
+  // Stage 2: 메타 (generateObject) — schema 작고 정형이라 안전.
+  let meta;
+  try {
+    const { object } = await generateObject({
+      model: solarModel,
+      schema: CurationBlogMetaSchema,
+      mode: "json",
+      system: buildCurationBlogMetaSystemPrompt(),
+      prompt: buildCurationBlogMetaUserPrompt({
+        article,
+        recipes: usableRecipes,
+        bodyMarkdown,
+      }),
+    });
+    meta = object;
   } catch (error) {
-    console.error("[curationBlog] generateObject failed:", error);
+    console.error("[curationBlog] meta generateObject failed:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.",
+      error: `메타 생성 실패: ${error instanceof Error ? error.message : String(error)}`,
     };
   }
+
+  const titleMap = new Map(recipes.map((r) => [r.id, r.title]));
+
+  const post: CurationBlogPost = {
+    ...meta,
+    bodyMarkdown,
+    curationSlug: article.slug,
+    curationUrl,
+    jsonLd: buildCurationJsonLd(article, titleMap),
+  };
+
+  return { success: true, post };
 };

@@ -2,8 +2,10 @@ import type { PublicCurationArticleDto } from "@/features/curation/model/api.ser
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import {
-  buildCurationBlogSystemPrompt,
-  buildCurationBlogUserPrompt,
+  buildCurationBlogBodySystemPrompt,
+  buildCurationBlogBodyUserPrompt,
+  buildCurationBlogMetaSystemPrompt,
+  buildCurationBlogMetaUserPrompt,
 } from "./buildCurationBlogPrompt";
 
 const FAKE_ARTICLE: PublicCurationArticleDto = {
@@ -19,45 +21,64 @@ const FAKE_ARTICLE: PublicCurationArticleDto = {
 };
 
 const FAKE_RECIPES: StaticRecipe[] = [
-  {
-    id: "r1",
-    title: "콩나물국",
-    description: "맑은 콩나물국",
-    imageUrl: "https://cdn.recipio.kr/r1.jpg",
-  } as StaticRecipe,
-  {
-    id: "r2",
-    title: "된장찌개",
-    description: "구수한 된장찌개",
-    imageUrl: "https://cdn.recipio.kr/r2.jpg",
-  } as StaticRecipe,
+  { id: "r1", title: "콩나물국", description: "맑은 콩나물국", imageUrl: "x" } as StaticRecipe,
+  { id: "r2", title: "된장찌개", description: "구수한 된장찌개", imageUrl: "x" } as StaticRecipe,
 ];
 
-describe("buildCurationBlogSystemPrompt", () => {
-  it("매거진 톤 가이드와 '복붙 금지' 지시를 포함한다", () => {
-    const sys = buildCurationBlogSystemPrompt();
-    expect(sys).toMatch(/매거진/);
+describe("buildCurationBlogBodySystemPrompt", () => {
+  const sys = buildCurationBlogBodySystemPrompt();
+  it("'그대로 복사 금지' 와 토큰 형식을 포함한다", () => {
     expect(sys).toMatch(/그대로 복사/);
-    expect(sys).toMatch(/recipe-\{recipeId\}/);
+    expect(sys).toMatch(/\{\{recipe:\{recipeId\}\}\}/);
+  });
+  it("JSON / 코드펜스 금지 지시를 포함한다", () => {
+    expect(sys).toMatch(/JSON/);
+    expect(sys).toMatch(/코드펜스/);
   });
 });
 
-describe("buildCurationBlogUserPrompt", () => {
-  const prompt = buildCurationBlogUserPrompt(FAKE_ARTICLE, FAKE_RECIPES);
-
-  it("큐레이션 markdown 본문을 포함한다", () => {
-    expect(prompt).toContain("환절기 식탁에 자주 올라가는");
+describe("buildCurationBlogBodyUserPrompt", () => {
+  it("큐레이션 markdown 과 레시피 id/title 을 포함한다", () => {
+    const p = buildCurationBlogBodyUserPrompt({
+      article: FAKE_ARTICLE,
+      recipes: FAKE_RECIPES,
+      lastErrors: [],
+    });
+    expect(p).toContain("환절기 식탁에 자주 올라가는");
+    expect(p).toContain("r1");
+    expect(p).toContain("콩나물국");
+    expect(p).toContain("recipio.kr/curation/spring-soups");
   });
 
-  it("각 레시피의 id, title 을 포함한다", () => {
-    expect(prompt).toContain("r1");
-    expect(prompt).toContain("콩나물국");
-    expect(prompt).toContain("r2");
-    expect(prompt).toContain("된장찌개");
+  it("lastErrors 가 있으면 되먹임 블록을 포함한다", () => {
+    const p = buildCurationBlogBodyUserPrompt({
+      article: FAKE_ARTICLE,
+      recipes: FAKE_RECIPES,
+      lastErrors: ["recipeId r2 토큰 누락"],
+    });
+    expect(p).toContain("이전 시도에서 다음이 잘못되었습니다");
+    expect(p).toContain("recipeId r2 토큰 누락");
   });
+});
 
-  it("큐레이션 slug 와 권유 URL 을 포함한다", () => {
-    expect(prompt).toContain("spring-soups");
-    expect(prompt).toContain("recipio.kr/curation/spring-soups");
+describe("buildCurationBlogMetaSystemPrompt", () => {
+  it("alts 키 형식과 schema 이름을 포함한다", () => {
+    const sys = buildCurationBlogMetaSystemPrompt();
+    expect(sys).toMatch(/recipe-\{recipeId\}/);
+    expect(sys).toMatch(/CurationBlogMetaSchema/);
+  });
+});
+
+describe("buildCurationBlogMetaUserPrompt", () => {
+  it("본문 markdown 과 alts 키 목록을 포함한다", () => {
+    const p = buildCurationBlogMetaUserPrompt({
+      article: FAKE_ARTICLE,
+      recipes: FAKE_RECIPES,
+      bodyMarkdown: "# 새 본문\n\n{{recipe:r1}}\n\n{{recipe:r2}}",
+    });
+    expect(p).toContain("새 본문");
+    expect(p).toContain("recipe-r1");
+    expect(p).toContain("recipe-r2");
+    expect(p).toContain("cover");
   });
 });

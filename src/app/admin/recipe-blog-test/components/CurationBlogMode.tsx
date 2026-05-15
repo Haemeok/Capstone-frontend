@@ -173,7 +173,11 @@ export const CurationBlogMode = () => {
 
             {post && (
               <>
-                <CurationBlogPreview post={post} imageUrlsBySlot={imageUrlsBySlot} />
+                <CurationBlogPreview
+                  post={post}
+                  imageUrlsBySlot={imageUrlsBySlot}
+                  recipes={articleData.recipes}
+                />
 
                 <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4">
                   <div className="flex-1">
