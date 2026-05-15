@@ -7,9 +7,10 @@ import { InfiniteData } from "@tanstack/react-query";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
-import { MyRecipesPageResponse } from "@/entities/recipe";
+import { isPrivateRecipe, MyRecipesPageResponse } from "@/entities/recipe";
 
 import RecipeGrid from "@/widgets/RecipeGrid/ui/RecipeGrid";
+import { RecipeMoreActionsSheet } from "@/widgets/RecipeMoreActionsSheet";
 
 import { getMyRecipeItems } from "./api";
 
@@ -23,6 +24,7 @@ const MyRecipesTabContent = ({
   isOwnProfile,
 }: MyRecipesTabContentProps) => {
   const [sort] = useState<"ASC" | "DESC">("DESC");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const { data, error, hasNextPage, isFetching, isPending, ref } =
     useInfiniteScroll<
@@ -56,19 +58,39 @@ const MyRecipesTabContent = ({
     return out;
   }, [data]);
 
+  const selectedRecipe = selectedId
+    ? recipes.find((r) => r.id === selectedId)
+    : undefined;
+  const target = selectedRecipe
+    ? { id: selectedRecipe.id, isPrivate: isPrivateRecipe(selectedRecipe) }
+    : null;
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) setSelectedId(null);
+  };
+
   return (
-    <RecipeGrid
-      recipes={recipes}
-      isSimple
-      hasNextPage={hasNextPage}
-      isFetching={isFetching}
-      isPending={isPending}
-      noResults={recipes.length === 0 && !isPending}
-      noResultsMessage="작성한 레시피가 없습니다."
-      observerRef={ref}
-      error={error}
-      showAIRecipeCTA={isOwnProfile}
-    />
+    <>
+      <RecipeGrid
+        recipes={recipes}
+        isSimple
+        hasNextPage={hasNextPage}
+        isFetching={isFetching}
+        isPending={isPending}
+        noResults={recipes.length === 0 && !isPending}
+        noResultsMessage="작성한 레시피가 없습니다."
+        observerRef={ref}
+        error={error}
+        showAIRecipeCTA={isOwnProfile}
+        onItemMoreClick={isOwnProfile ? setSelectedId : undefined}
+      />
+      {isOwnProfile && (
+        <RecipeMoreActionsSheet
+          target={target}
+          onOpenChange={handleOpenChange}
+        />
+      )}
+    </>
   );
 };
 

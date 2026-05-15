@@ -1,24 +1,16 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
-import Link from "next/link";
+import React, { useCallback } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { LockKeyhole, LockOpen } from "lucide-react";
-
-import { triggerHaptic } from "@/shared/lib/bridge";
-import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import Circle from "@/shared/ui/Circle";
-import { PencilIcon, TrashIcon } from "@/shared/ui/icons";
-import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
-import { DialogTitle } from "@/shared/ui/shadcn/dialog";
 
 import { InFeedAdSlot } from "@/shared/adsense";
 import { SEARCH_AD_EVERY_N_CARDS } from "@/shared/adsense/config";
 import {
-  insertAdsIntoFeed,
   type FeedItem,
+  insertAdsIntoFeed,
 } from "@/shared/adsense/lib/insertAdsIntoFeed";
+import Circle from "@/shared/ui/Circle";
 
 import { isPrivateRecipe } from "@/entities/recipe";
 import {
@@ -27,9 +19,7 @@ import {
   MyRecipeListItem,
 } from "@/entities/recipe/model/types";
 
-import useDeleteRecipeMutation from "@/features/recipe-delete/model/hooks";
 import { RecipeSaveButton } from "@/features/recipe-save";
-import useRecipeVisibilityMutation from "@/features/recipe-visibility/model/useRecipeVisibilityMutation";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 import EmptyRecipeCTA from "@/widgets/RecipeGrid/ui/EmptyRecipeCTA";
@@ -55,11 +45,12 @@ type RecipeGridProps = {
   onResetFilters?: () => void;
   nextPageHref?: string;
   showInFeedAds?: boolean;
+  onItemMoreClick?: (id: string) => void;
 };
 
 const calculateSavings = (
   marketPrice?: number,
-  ingredientCost?: number
+  ingredientCost?: number,
 ): number | null => {
   if (!marketPrice || !ingredientCost) return null;
   const savings = marketPrice - ingredientCost;
@@ -90,53 +81,9 @@ const RecipeGrid = ({
   onResetFilters,
   nextPageHref,
   showInFeedAds = false,
+  onItemMoreClick,
 }: RecipeGridProps) => {
   const queryClient = useQueryClient();
-  const { isMobile, Container, Content } = useResponsiveSheet();
-
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-
-  const handleOpenSheet = (itemId: string) => {
-    setSelectedItemId(itemId);
-    setIsSheetOpen(true);
-  };
-  const handleSheetState = (state: boolean) => {
-    setIsSheetOpen(state);
-    if (!state) {
-      setSelectedItemId(null);
-    }
-  };
-
-  const handleDeleteModalOpen = () => {
-    setIsSheetOpen(false);
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleDelete = () => {
-    setIsDeleteModalOpen(false);
-    deleteRecipe();
-  };
-
-  const { mutate: deleteRecipe } = useDeleteRecipeMutation(
-    selectedItemId ?? ""
-  );
-
-  const { mutate: toggleVisibility, isPending: isVisibilityPending } =
-    useRecipeVisibilityMutation(selectedItemId ?? "");
-
-  const selectedRecipe = recipes.find((r) => r.id === selectedItemId);
-  const isSelectedPrivate = selectedRecipe
-    ? isPrivateRecipe(selectedRecipe)
-    : false;
-
-  const handleToggleVisibility = () => {
-    if (!selectedRecipe || isVisibilityPending) return;
-    triggerHaptic("Light");
-    toggleVisibility(isSelectedPrivate ? "PUBLIC" : "PRIVATE");
-    setIsSheetOpen(false);
-  };
 
   const handleImageRetry = useCallback(() => {
     if (queryKeyToInvalidate) {
@@ -168,7 +115,6 @@ const RecipeGrid = ({
     if (showAIRecipeCTA) {
       return <EmptyRecipeCTA noResultsMessage={noResultsMessage} />;
     }
-
     return (
       <section className="flex min-h-[400px] flex-col items-center justify-center gap-4 px-4">
         <div className="text-center">
@@ -203,7 +149,7 @@ const RecipeGrid = ({
   const feedItems: FeedItem<RecipeInput>[] = showInFeedAds
     ? insertAdsIntoFeed<RecipeInput>(
         recipes as RecipeInput[],
-        SEARCH_AD_EVERY_N_CARDS
+        SEARCH_AD_EVERY_N_CARDS,
       )
     : (recipes as RecipeInput[]).map((r) => ({
         __kind: "recipe" as const,
@@ -224,7 +170,7 @@ const RecipeGrid = ({
               <SimpleRecipeGridItem
                 key={recipe.id}
                 recipe={recipe as BaseRecipeGridItem}
-                setIsDrawerOpen={handleOpenSheet}
+                setIsDrawerOpen={onItemMoreClick}
                 priority={index === 0}
                 prefetch={prefetch}
                 isPrivate={isPrivateRecipe(recipe)}
@@ -235,7 +181,7 @@ const RecipeGrid = ({
           const detailedRecipe = recipe as DetailedRecipeGridItemType;
           const savings = calculateSavings(
             detailedRecipe.marketPrice,
-            detailedRecipe.ingredientCost
+            detailedRecipe.ingredientCost,
           );
 
           const saveBadge = (
@@ -290,101 +236,10 @@ const RecipeGrid = ({
             <p className="text-sm text-gray-500">{lastPageMessage}</p>
           )}
       </div>
-
       {isFetching && (
         <div className="flex items-center justify-center py-5">
           <Circle className="text-olive-light h-10 w-10" />
         </div>
-      )}
-
-      {isSheetOpen && (
-        <Container open={isSheetOpen} onOpenChange={handleSheetState}>
-          <Content className={isMobile ? "p-4" : ""}>
-            <DialogTitle className="sr-only">레시피 옵션</DialogTitle>
-            {isMobile && (
-              <div className="absolute top-2 left-1/2 flex h-1 w-10 -translate-x-1/2 rounded-2xl bg-slate-400" />
-            )}
-            <div
-              className={
-                isMobile
-                  ? "flex flex-col gap-2 rounded-2xl bg-gray-100 p-4"
-                  : "flex flex-col gap-0"
-              }
-            >
-              <Link
-                href={`/recipes/${selectedItemId}/edit`}
-                className={
-                  isMobile
-                    ? "flex w-full cursor-pointer justify-between"
-                    : "flex w-full cursor-pointer justify-center gap-2 px-6 py-4 transition-colors hover:bg-gray-50"
-                }
-              >
-                {!isMobile && <PencilIcon size={20} />}
-                <p>수정</p>
-                {isMobile && <PencilIcon size={20} />}
-              </Link>
-              <div
-                className={
-                  isMobile
-                    ? "h-px w-full bg-gray-300"
-                    : "h-px w-full bg-gray-200"
-                }
-              />
-              <button
-                type="button"
-                disabled={isVisibilityPending || !selectedRecipe}
-                className={
-                  isMobile
-                    ? "flex w-full cursor-pointer justify-between disabled:opacity-50"
-                    : "flex w-full cursor-pointer justify-center gap-2 px-6 py-4 transition-colors hover:bg-gray-50 disabled:opacity-50"
-                }
-                onClick={handleToggleVisibility}
-              >
-                {!isMobile &&
-                  (isSelectedPrivate ? (
-                    <LockOpen size={20} />
-                  ) : (
-                    <LockKeyhole size={20} />
-                  ))}
-                <p>{isSelectedPrivate ? "공개로 전환" : "비공개로 전환"}</p>
-                {isMobile &&
-                  (isSelectedPrivate ? (
-                    <LockOpen size={20} />
-                  ) : (
-                    <LockKeyhole size={20} />
-                  ))}
-              </button>
-              <div
-                className={
-                  isMobile
-                    ? "h-px w-full bg-gray-300"
-                    : "h-px w-full bg-gray-200"
-                }
-              />
-              <button
-                className={
-                  isMobile
-                    ? "flex w-full cursor-pointer justify-between text-red-500"
-                    : "flex w-full cursor-pointer justify-center gap-2 px-6 py-4 text-red-500 transition-colors hover:bg-gray-50"
-                }
-                onClick={handleDeleteModalOpen}
-              >
-                {!isMobile && <TrashIcon size={20} />}
-                <p>삭제</p>
-                {isMobile && <TrashIcon size={20} />}
-              </button>
-            </div>
-          </Content>
-        </Container>
-      )}
-      {isDeleteModalOpen && (
-        <DeleteModal
-          open={isDeleteModalOpen}
-          onOpenChange={setIsDeleteModalOpen}
-          title="레시피를 삭제하시겠어요?"
-          onConfirm={handleDelete}
-          description="이 레시피를 삭제하면 복원할 수 없습니다."
-        />
       )}
     </div>
   );
