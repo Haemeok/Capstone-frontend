@@ -11,14 +11,9 @@ import useDeleteRecipeMutation from "../model/hooks";
 type DeleteRowActionProps = {
   recipeId: string;
   variant: "mobile" | "desktop";
-  onBeforeOpen?: () => void;
 };
 
-const DeleteRowAction = ({
-  recipeId,
-  variant,
-  onBeforeOpen,
-}: DeleteRowActionProps) => {
+const DeleteRowAction = ({ recipeId, variant }: DeleteRowActionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutate: deleteRecipe } = useDeleteRecipeMutation(recipeId);
 
@@ -26,7 +21,6 @@ const DeleteRowAction = ({
 
   const handleOpenModal = () => {
     triggerHaptic("Light");
-    onBeforeOpen?.();
     setIsModalOpen(true);
   };
 

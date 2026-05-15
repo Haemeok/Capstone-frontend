@@ -67,11 +67,7 @@ const RecipeMoreActionsSheet = ({
             onAfterToggle={() => onOpenChange(false)}
           />
           <div className={dividerClass} />
-          <DeleteRowAction
-            recipeId={target.id}
-            variant={variant}
-            onBeforeOpen={() => onOpenChange(false)}
-          />
+          <DeleteRowAction recipeId={target.id} variant={variant} />
         </div>
       </Content>
     </Container>
