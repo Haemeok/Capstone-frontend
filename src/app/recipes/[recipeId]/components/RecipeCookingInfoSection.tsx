@@ -13,45 +13,45 @@ export default function RecipeCookingInfoSection({
   servings,
 }: RecipeCookingInfoSectionProps) {
   return (
-    <section className="mb-2 rounded-xl border border-gray-200 p-4">
-      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-3 lg:gap-4">
-        <div className="flex items-center gap-3">
+    <section className="mb-2 rounded-xl border border-gray-200 p-3 sm:p-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <div className="flex min-w-0 items-center gap-2">
           <Image
             src={`${ICON_BASE_URL}cooking_time.webp`}
             alt="조리 시간"
-            wrapperClassName="w-8 h-8 flex-shrink-0"
+            wrapperClassName="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
           />
           <div className="flex min-w-0 flex-col">
-            <span className="text-xs text-gray-500">조리 시간</span>
-            <span className="text-dark font-semibold">
+            <span className="text-[11px] text-gray-500 sm:text-xs">조리 시간</span>
+            <span className="text-dark text-sm font-semibold sm:text-base">
               {cookingTime > 0 ? `${cookingTime}분` : "정보 없음"}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2">
           <Image
             src={`${ICON_BASE_URL}serving_size.webp`}
             alt="인분"
-            wrapperClassName="w-8 h-8 flex-shrink-0"
+            wrapperClassName="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
           />
           <div className="flex min-w-0 flex-col">
-            <span className="text-xs text-gray-500">인분</span>
-            <span className="text-dark font-semibold">
+            <span className="text-[11px] text-gray-500 sm:text-xs">인분</span>
+            <span className="text-dark text-sm font-semibold sm:text-base">
               {servings > 0 ? `${servings}인분` : "정보 없음"}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2">
           <Image
             src={`${ICON_BASE_URL}kitchen_tools.webp`}
             alt="조리 도구"
-            wrapperClassName="w-8 h-8 flex-shrink-0"
+            wrapperClassName="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
           />
           <div className="flex min-w-0 flex-col">
-            <span className="text-xs text-gray-500">조리 도구</span>
-            <span className="text-dark font-semibold break-words whitespace-normal">
+            <span className="text-[11px] text-gray-500 sm:text-xs">조리 도구</span>
+            <span className="text-dark line-clamp-2 break-keep text-sm font-semibold sm:text-base">
               {cookingTools.length > 0 ? cookingTools.join(", ") : "정보 없음"}
             </span>
           </div>
