@@ -55,6 +55,21 @@ describe("ChatOnboardingBubble", () => {
     expect(screen.queryByText(/궁금한 게 있으면 물어봐 주세요/)).toBeNull();
   });
 
+  it("hides immediately when isOpen flips to true after appearing", () => {
+    const { rerender } = render(
+      <ChatOnboardingBubble onClick={jest.fn()} isOpen={false} isAuthenticated={true} />
+    );
+    act(() => {
+      jest.advanceTimersByTime(800);
+    });
+    expect(screen.getByText(/궁금한 게 있으면 물어봐 주세요/)).toBeInTheDocument();
+
+    rerender(
+      <ChatOnboardingBubble onClick={jest.fn()} isOpen={true} isAuthenticated={true} />
+    );
+    expect(screen.queryByText(/궁금한 게 있으면 물어봐 주세요/)).toBeNull();
+  });
+
   it("clicking the bubble body fires onClick", () => {
     const onClick = jest.fn();
     render(<ChatOnboardingBubble onClick={onClick} isOpen={false} isAuthenticated={true} />);
