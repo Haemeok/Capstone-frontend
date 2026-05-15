@@ -23,7 +23,7 @@ import { RecipeSaveButton } from "@/features/recipe-save";
 
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
-const AD_EVERY_N = 4;
+const AD_EVERY_N = 3;
 
 type RecommendedRecipeGridProps = {
   title: string;
