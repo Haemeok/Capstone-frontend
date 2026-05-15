@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 
 import { InFeedAdSlot } from "@/shared/adsense";
+import { AdPlaceholder } from "@/shared/adsense/AdPlaceholder";
+import { AD_MIN_HEIGHT, AD_SLOT_IDS, IS_AD_TEST_MODE } from "@/shared/adsense/config";
 import {
   type FeedItem,
   insertAdsIntoFeed,
@@ -16,6 +18,9 @@ import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridIt
 
 const AD_EVERY_N = 4;
 
+const GRID_CLASS =
+  "grid gap-3 px-2 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
+
 type RecommendedRecipeGridProps = {
   title: string;
   recipes: DetailedRecipeGridItemType[];
@@ -30,8 +35,17 @@ const getInfoBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {
   return null;
 };
 
+const RecommendedAdCell = ({ adIndex }: { adIndex: number }) => {
+  const slotId = AD_SLOT_IDS.searchInFeed[adIndex];
+  if (slotId) return <InFeedAdSlot index={adIndex} />;
+  if (IS_AD_TEST_MODE) {
+    return <AdPlaceholder minHeight={AD_MIN_HEIGHT.inFeed} />;
+  }
+  return null;
+};
+
 const RecommendedGridLoading = () => (
-  <div className="grid grid-cols-2 gap-3 px-2">
+  <div className={GRID_CLASS}>
     {Array.from({ length: 4 }).map((_, index) => (
       <div key={index} className="flex flex-col gap-2">
         <Skeleton className="aspect-square w-full rounded-2xl" />
@@ -73,10 +87,10 @@ const RecommendedRecipeGrid = ({
     );
 
     return (
-      <div className="grid grid-cols-2 gap-3 px-2">
+      <div className={GRID_CLASS}>
         {feedItems.map((item) => {
           if (item.__kind === "ad") {
-            return <InFeedAdSlot key={item.key} index={item.adIndex} />;
+            return <RecommendedAdCell key={item.key} adIndex={item.adIndex} />;
           }
 
           const recipe = item.recipe;
