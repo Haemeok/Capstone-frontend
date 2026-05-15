@@ -19,7 +19,7 @@ import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridIt
 const AD_EVERY_N = 4;
 
 const GRID_CLASS =
-  "grid gap-3 px-2 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
+  "grid gap-3 px-2 grid-cols-2 sm:grid-cols-none sm:justify-center sm:[grid-template-columns:repeat(auto-fill,200px)]";
 
 type RecommendedRecipeGridProps = {
   title: string;
