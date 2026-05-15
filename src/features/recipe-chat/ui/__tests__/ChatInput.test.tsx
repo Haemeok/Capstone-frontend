@@ -60,6 +60,22 @@ describe("ChatInput", () => {
     expect(mockHaptic).toHaveBeenCalledWith("Light");
   });
 
+  it("when unauthenticated, touchStart on textarea opens login drawer + light haptic", () => {
+    render(
+      <ChatInput
+        isAuthenticated={false}
+        isPending={false}
+        isLocked={false}
+        lockedReason={null}
+        onSubmit={jest.fn()}
+      />
+    );
+    const textarea = screen.getByRole("textbox");
+    fireEvent.touchStart(textarea);
+    expect(mockOpenDrawer).toHaveBeenCalledTimes(1);
+    expect(mockHaptic).toHaveBeenCalledWith("Light");
+  });
+
   it("when unauthenticated, clicking send button opens drawer (does not submit form)", () => {
     const onSubmit = jest.fn();
     render(
