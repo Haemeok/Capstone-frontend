@@ -8,7 +8,7 @@ import {
 } from "@/entities/recipe";
 
 import { useRecipesStatusQuery, useRecommendedRecipesQuery } from "./hooks";
-import RecipeSlide from "./RecipeSlide";
+import RecommendedRecipeGrid from "./RecommendedRecipeGrid";
 
 type RecommendedRecipeSlideProps = {
   recipeId: string;
@@ -56,7 +56,7 @@ const RecommendedRecipeSlide = ({
 
   return (
     <div ref={ref}>
-      <RecipeSlide
+      <RecommendedRecipeGrid
         title={resolveTitle(tags)}
         recipes={recipesWithStatus}
         isLoading={isLoading}
