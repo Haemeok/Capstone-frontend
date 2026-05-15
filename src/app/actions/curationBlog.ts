@@ -167,8 +167,15 @@ export const generateCurationBlogPost = async (
 
   const titleMap = new Map(recipes.map((r) => [r.id, r.title]));
 
+  // alts 는 LLM 이 안 만들고 우리가 합성 — recipe.title 그대로 alt 로.
+  const alts: Record<string, string> = { cover: article.title };
+  for (const r of usableRecipes) {
+    alts[`recipe-${r.id}`] = r.title;
+  }
+
   const post: CurationBlogPost = {
     ...meta,
+    alts,
     bodyMarkdown,
     curationSlug: article.slug,
     curationUrl,

@@ -16,7 +16,6 @@ const validMeta = {
     "#집밥",
   ],
   captionForCover: "환절기 한 그릇, 세 가지.",
-  alts: { "recipe-r1": "콩나물국", "recipe-r2": "된장찌개", "recipe-r3": "김치찌개" },
 };
 
 describe("CurationBlogMetaSchema", () => {

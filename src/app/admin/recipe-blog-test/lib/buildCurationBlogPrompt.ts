@@ -79,7 +79,6 @@ export const buildCurationBlogMetaSystemPrompt = (): string => {
 - title.sub: 부제, 한 줄.
 - hashtags: 8~10개. 메인 주제 1 + 변주 2~3 + 카테고리 1~2 + 식문화 1~2 + 계절·식탁 위치 1~2.
 - captionForCover: 14~22자 명명형. 예: "환절기 한 그릇, 세 가지."
-- alts: 키는 "cover" 또는 "recipe-{recipeId}". 값은 "메뉴명 + 상태" 패턴 짧은 alt 텍스트.
 
 위 zod 스키마(CurationBlogMetaSchema)에 맞춘 JSON 만 출력하라.
 `;
@@ -91,7 +90,6 @@ export const buildCurationBlogMetaUserPrompt = (input: {
   bodyMarkdown: string;
 }): string => {
   const { article, recipes, bodyMarkdown } = input;
-  const recipeIdsList = recipes.map((r) => `recipe-${r.id}`).join(", ");
   const recipeBlock = recipes.map((r) => `- ${r.id}: ${r.title}`).join("\n");
 
   return `[큐레이션 원본]
@@ -105,9 +103,6 @@ ${recipeBlock}
 
 [방금 작성된 블로그 본문]
 ${bodyMarkdown}
-
-[alts 키 — 정확히 다음 키들에 대해 alt 를 만들어라]
-cover, ${recipeIdsList}
 
 위 정보를 바탕으로 CurationBlogMetaSchema 에 맞춘 JSON 을 출력하라.`;
 };
