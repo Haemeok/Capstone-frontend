@@ -37,7 +37,7 @@ const ChatInput = ({
   const trimmed = text.trim();
   const canSubmit = isAuthenticated && !isInteractionDisabled && trimmed.length > 0;
 
-  const triggerUnauthDrawer = () => {
+  const handleUnauthAccess = () => {
     triggerHaptic("Light");
     openDrawer({ message: UNAUTH_DRAWER_MESSAGE });
   };
@@ -55,6 +55,7 @@ const ChatInput = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (!isAuthenticated) return;
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       submit();
@@ -64,12 +65,12 @@ const ChatInput = ({
   const handleUnauthIntercept = (e: React.SyntheticEvent) => {
     if (isAuthenticated) return;
     e.preventDefault();
-    triggerUnauthDrawer();
+    handleUnauthAccess();
   };
 
   const handleSendClick = () => {
     if (!isAuthenticated) {
-      triggerUnauthDrawer();
+      handleUnauthAccess();
       return;
     }
     submit();
@@ -84,11 +85,10 @@ const ChatInput = ({
   const counterColor =
     text.length >= COUNTER_WARN_THRESHOLD ? "text-red-500" : "text-gray-400";
 
-  const sendEnabledStyle = isAuthenticated
-    ? canSubmit
-      ? "cursor-pointer bg-olive-light text-white hover:bg-olive-dark"
-      : "cursor-not-allowed bg-gray-100 text-gray-300"
-    : "cursor-pointer bg-olive-light text-white hover:bg-olive-dark";
+  const sendEnabledStyle =
+    isAuthenticated && !canSubmit
+      ? "cursor-not-allowed bg-gray-100 text-gray-300"
+      : "cursor-pointer bg-olive-light text-white hover:bg-olive-dark";
 
   return (
     <form
@@ -99,7 +99,7 @@ const ChatInput = ({
         data-testid="chat-input-wrapper"
         className={cn(
           "flex items-end gap-2 rounded-xl border border-gray-200 bg-white px-3 py-1.5 transition-colors",
-          !isInteractionDisabled &&
+          isAuthenticated && !isInteractionDisabled &&
             "focus-within:border-olive-light focus-within:ring-1 focus-within:ring-olive-light"
         )}
       >
@@ -107,8 +107,8 @@ const ChatInput = ({
           value={text}
           onChange={(e) => setText(e.target.value.slice(0, MAX_LENGTH))}
           onKeyDown={handleKeyDown}
-          onFocus={() => setInputFocused(true)}
-          onBlur={() => setInputFocused(false)}
+          onFocus={() => { if (isAuthenticated) setInputFocused(true); }}
+          onBlur={() => { if (isAuthenticated) setInputFocused(false); }}
           onMouseDown={handleUnauthIntercept}
           onTouchStart={handleUnauthIntercept}
           readOnly={!isAuthenticated}
