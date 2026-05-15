@@ -102,7 +102,6 @@ export default async function PrivateRecipePage({
             title={recipe.title}
             aiGenerated={isAiRecipe(recipe)}
             author={recipe.author}
-            description={recipe.description}
             extractorId={recipe.extractorId}
           >
             <RecipeInteractionBar staticRecipe={recipe} />
