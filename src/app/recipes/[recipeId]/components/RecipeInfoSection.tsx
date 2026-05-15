@@ -2,9 +2,8 @@ import { ReactNode } from "react";
 
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import BadgeButton from "@/shared/ui/BadgeButton";
-import CollapsibleP from "@/shared/ui/CollapsibleP";
 
-import { UserProfile } from "@/entities/user";
+import { UserName, UserProfileImage } from "@/entities/user";
 import { User } from "@/entities/user/model/types";
 
 import RecipeExtractorBadge from "./RecipeExtractorBadge";
@@ -13,7 +12,6 @@ type RecipeInfoSectionProps = {
   title: string;
   aiGenerated: boolean;
   author: User;
-  description: string;
   extractorId?: string | null;
   children: ReactNode;
 };
@@ -22,7 +20,6 @@ export default function RecipeInfoSection({
   title,
   aiGenerated,
   author,
-  description,
   extractorId,
   children,
 }: RecipeInfoSectionProps) {
@@ -52,9 +49,17 @@ export default function RecipeInfoSection({
         </div>
       )}
 
-      <section>
-        <UserProfile user={author} className="text-xl" />
-        <CollapsibleP content={description} />
+      <section className="flex items-center gap-2.5 py-2">
+        <UserProfileImage
+          profileImage={author.profileImage ?? ""}
+          userId={author.id}
+          className="h-10 w-10"
+        />
+        <UserName
+          username={author.nickname}
+          userId={author.id}
+          className="text-sm font-medium"
+        />
       </section>
     </>
   );
