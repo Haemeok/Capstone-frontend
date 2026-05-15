@@ -60,7 +60,7 @@ const ChatEmptyState = ({ onQuickQuestion }: ChatEmptyStateProps) => {
             type="button"
             disabled={!interactive}
             onClick={() => handleClick(label)}
-            className="flex w-full items-center justify-between rounded-2xl bg-gray-50 px-4 py-3.5 text-left transition-colors active:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex w-full items-center justify-between rounded-2xl bg-gray-50 px-4 py-3.5 text-left transition-colors active:bg-gray-100"
           >
             <div className="flex items-center gap-3">
               <Icon className={`h-5 w-5 shrink-0 ${iconColor}`} />
