@@ -86,7 +86,7 @@ const ChatOnboardingBubble = ({
           transition={{ duration: 0.2, ease: "easeOut" }}
           style={{ right: "max(1rem, calc((100vw - 550px) / 2 + 1rem))" }}
           className={cn(
-            "fixed bottom-[10.5rem] z-sticky max-w-[260px]",
+            "fixed bottom-[10.5rem] z-sticky max-w-[260px] relative",
             className
           )}
         >
