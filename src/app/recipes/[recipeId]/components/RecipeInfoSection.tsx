@@ -55,11 +55,18 @@ export default function RecipeInfoSection({
           userId={author.id}
           className="h-11 w-11 md:h-14 md:w-14"
         />
-        <UserName
-          username={author.nickname}
-          userId={author.id}
-          className="text-base font-bold md:text-lg"
-        />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <UserName
+            username={author.nickname}
+            userId={author.id}
+            className="text-base font-bold text-gray-900 md:text-lg"
+          />
+          {author.introduction && (
+            <p className="mt-0.5 truncate text-xs leading-5 text-gray-500 md:text-sm md:leading-6">
+              {author.introduction}
+            </p>
+          )}
+        </div>
       </section>
     </>
   );
