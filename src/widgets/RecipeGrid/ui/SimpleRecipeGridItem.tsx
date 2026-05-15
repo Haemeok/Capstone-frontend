@@ -2,18 +2,16 @@
 
 import React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
 import { EllipsisVertical, LockKeyhole } from "lucide-react";
 
 import { Image } from "@/shared/ui/image/Image";
 
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
-import { useUserStore } from "@/entities/user";
 
 type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
-  setIsDrawerOpen: (id: string) => void;
+  setIsDrawerOpen?: (id: string) => void;
   priority?: boolean;
   prefetch?: boolean;
   isPrivate?: boolean;
@@ -26,17 +24,12 @@ const SimpleRecipeGridItem = ({
   prefetch = false,
   isPrivate = false,
 }: SimpleRecipeGridItemProps) => {
-  const params = useParams();
-  const { user: loggedInUser } = useUserStore();
-
-  const profileUserId = params?.userId ? params.userId : null;
-  const isOnOwnProfile = loggedInUser?.id === profileUserId;
-  const showActionButton = isOnOwnProfile;
+  const showActionButton = !!setIsDrawerOpen;
 
   const handleMenuClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDrawerOpen(recipe.id);
+    setIsDrawerOpen?.(recipe.id);
   };
 
   const href = isPrivate
@@ -53,20 +46,17 @@ const SimpleRecipeGridItem = ({
         fit="cover"
         priority={priority}
       />
-
       <div className="pointer-events-none absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-black/40 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
       <p className="word-break absolute right-2 bottom-1.5 left-2 line-clamp-1 text-[13px] leading-tight text-pretty text-white">
         {recipe.title}
       </p>
-
       <Link
         href={href}
         aria-label={recipe.title}
         prefetch={prefetch ? true : null}
         className="absolute inset-0"
       />
-
       {isPrivate && (
         <div
           className="pointer-events-none absolute top-1.5 left-1.5 flex h-6 w-6 items-center justify-center rounded-full text-white"
@@ -75,7 +65,6 @@ const SimpleRecipeGridItem = ({
           <LockKeyhole size={14} strokeWidth={2.25} />
         </div>
       )}
-
       {showActionButton && (
         <div className="absolute top-0 right-0 p-0.5">
           <button
