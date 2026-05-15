@@ -1,16 +1,23 @@
 import React from "react";
+
 import { act, fireEvent, render, screen } from "@testing-library/react";
 
-jest.mock("motion/react", () => ({
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => (
-    <>{children}</>
-  ),
-  motion: {
-    div: React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-      (props, ref) => <div ref={ref} {...props} />
+jest.mock("motion/react", () => {
+  const MockMotionDiv = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
+  >((props, ref) => <div ref={ref} {...props} />);
+  MockMotionDiv.displayName = "MockMotionDiv";
+
+  return {
+    AnimatePresence: ({ children }: { children: React.ReactNode }) => (
+      <>{children}</>
     ),
-  },
-}));
+    motion: {
+      div: MockMotionDiv,
+    },
+  };
+});
 
 import ChatOnboardingBubble from "../ChatOnboardingBubble";
 
