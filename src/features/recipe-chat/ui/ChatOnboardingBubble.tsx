@@ -40,21 +40,22 @@ const ChatOnboardingBubble = ({
   isAuthenticated,
   className,
 }: ChatOnboardingBubbleProps) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [hasAppeared, setHasAppeared] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
+  const [seenInStorage] = useState<boolean>(() =>
+    typeof window !== "undefined" ? readSeen() : false
+  );
 
   useEffect(() => {
-    if (isOpen) {
-      setIsVisible(false);
-      return;
-    }
-    if (readSeen()) return;
+    if (isOpen) return;
+    if (seenInStorage) return;
 
     const appearTimer = window.setTimeout(() => {
-      setIsVisible(true);
+      setHasAppeared(true);
     }, APPEAR_DELAY_MS);
 
     const hideTimer = window.setTimeout(() => {
-      setIsVisible(false);
+      setIsDismissed(true);
       markSeen();
     }, APPEAR_DELAY_MS + AUTO_HIDE_MS);
 
@@ -62,19 +63,21 @@ const ChatOnboardingBubble = ({
       window.clearTimeout(appearTimer);
       window.clearTimeout(hideTimer);
     };
-  }, [isOpen]);
+  }, [isOpen, seenInStorage]);
 
   const handleBubbleClick = () => {
-    setIsVisible(false);
+    setIsDismissed(true);
     markSeen();
     onClick();
   };
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsVisible(false);
+    setIsDismissed(true);
     markSeen();
   };
+
+  const isVisible = hasAppeared && !isDismissed && !isOpen;
 
   return (
     <AnimatePresence>
