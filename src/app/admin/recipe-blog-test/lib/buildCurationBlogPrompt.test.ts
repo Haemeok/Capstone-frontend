@@ -62,23 +62,22 @@ describe("buildCurationBlogBodyUserPrompt", () => {
 });
 
 describe("buildCurationBlogMetaSystemPrompt", () => {
-  it("alts 키 형식과 schema 이름을 포함한다", () => {
+  it("schema 이름을 포함하고 JSON 출력을 지시한다", () => {
     const sys = buildCurationBlogMetaSystemPrompt();
-    expect(sys).toMatch(/recipe-\{recipeId\}/);
     expect(sys).toMatch(/CurationBlogMetaSchema/);
+    expect(sys).toMatch(/JSON/);
   });
 });
 
 describe("buildCurationBlogMetaUserPrompt", () => {
-  it("본문 markdown 과 alts 키 목록을 포함한다", () => {
+  it("본문 markdown 과 레시피 목록을 포함한다", () => {
     const p = buildCurationBlogMetaUserPrompt({
       article: FAKE_ARTICLE,
       recipes: FAKE_RECIPES,
       bodyMarkdown: "# 새 본문\n\n{{recipe:r1}}\n\n{{recipe:r2}}",
     });
     expect(p).toContain("새 본문");
-    expect(p).toContain("recipe-r1");
-    expect(p).toContain("recipe-r2");
-    expect(p).toContain("cover");
+    expect(p).toContain("콩나물국");
+    expect(p).toContain("된장찌개");
   });
 });
