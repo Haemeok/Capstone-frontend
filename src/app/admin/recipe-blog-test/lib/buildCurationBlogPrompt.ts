@@ -13,8 +13,11 @@ export const buildCurationBlogBodySystemPrompt = (): string => {
 
 [출력 형식]
 - 출력은 순수 markdown 본문만. JSON, 코드펜스, 설명 prefix/postfix 금지.
-- 구성: 리드 단락 1개 → 묶인 레시피 N개의 단락(각 ## 소제목 + 본문 + 이미지 토큰) → 닫는 단락
-- 각 레시피 단락 안에 정확히 1번 \`{{recipe:{recipeId}}}\` 토큰을 박는다. 토큰은 그 자리에 이미지가 들어갈 자리표시자다. recipeId 는 입력으로 받은 값을 그대로 사용 (변형 금지).
+- 구성: 리드 단락 1개 → 묶인 레시피 N개의 단락(각 ## 소제목 + 본문 + 이미지 토큰 + 링크 토큰) → 닫는 단락
+- 각 레시피 단락에 다음 두 토큰을 모두 박는다 (recipeId 는 입력값 그대로, 변형 금지):
+  · \`{{recipe:{recipeId}}}\` — 이 자리에 레시피 이미지가 들어간다. 단락당 정확히 1번.
+  · \`{{link:{recipeId}}}\` — 이 자리에 "레시피 자세히 보기 →" 링크가 들어간다. 단락당 최소 1번 (보통 본문 끝 또는 자연스러운 문장 안에).
+- 두 토큰은 markdown image/link 형식으로 직접 쓰지 말고 반드시 \`{{...}}\` 토큰 그대로 박는다. 우리가 후처리에서 풀어준다.
 - 닫는 단락에 반드시 \`https://recipio.kr/curation/{slug}\` 링크를 자연스러운 한 줄 권유로 박는다 (광고체 금지).
 
 [톤가이드]
@@ -62,7 +65,8 @@ ${article.contentMdx}
 ${recipeBlock}
 
 [필수]
-- 각 레시피 단락에 정확히 1번 \`{{recipe:{recipeId}}}\` 토큰.
+- 각 레시피 단락에 정확히 1번 \`{{recipe:{recipeId}}}\` 이미지 토큰.
+- 각 레시피 단락에 최소 1번 \`{{link:{recipeId}}}\` 레시피 링크 토큰.
 - 닫는 단락에 \`https://recipio.kr/curation/${article.slug}\` 자연 권유.
 
 위 입력으로 매거진 톤 markdown 본문을 출력하라.${errorBlock}`;
