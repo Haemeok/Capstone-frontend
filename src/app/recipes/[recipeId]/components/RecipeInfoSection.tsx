@@ -49,16 +49,16 @@ export default function RecipeInfoSection({
         </div>
       )}
 
-      <section className="flex items-center gap-2.5 py-2">
+      <section className="flex items-center gap-3 py-3 md:gap-4">
         <UserProfileImage
           profileImage={author.profileImage ?? ""}
           userId={author.id}
-          className="h-10 w-10"
+          className="h-11 w-11 md:h-14 md:w-14"
         />
         <UserName
           username={author.nickname}
           userId={author.id}
-          className="text-sm font-medium"
+          className="text-base font-bold md:text-lg"
         />
       </section>
     </>
