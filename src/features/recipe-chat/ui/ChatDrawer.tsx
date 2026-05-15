@@ -8,6 +8,7 @@ import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import { useUserStore } from "@/entities/user/model/store";
 
+import { useLoginEncourageDrawerStore } from "@/widgets/LoginEncourageDrawer/model/store";
 import { useToastStore } from "@/widgets/Toast";
 
 import {
@@ -55,6 +56,7 @@ type ChatDrawerProps = {
 const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
   const { Container, Content, Title } = useResponsiveSheet();
   const { isAuthenticated } = useUserStore();
+  const { openDrawer: openLoginDrawer } = useLoginEncourageDrawerStore();
   const { addToast } = useToastStore();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -220,7 +222,11 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
                 messages={messages}
                 onRetry={handleRetry}
                 onQuickQuestion={
-                  isAuthenticated && !isLocked ? sendQuestion : undefined
+                  !isAuthenticated
+                    ? () => openLoginDrawer({ message: "레시피 챗봇에게 물어보세요!" })
+                    : isLocked
+                      ? undefined
+                      : sendQuestion
                 }
               />
             </div>
