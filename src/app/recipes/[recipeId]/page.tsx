@@ -197,6 +197,8 @@ export default async function RecipeDetailPage({
                 headerExtra={<CookingUnitTooltip inline />}
               />
 
+              <InArticleAdSlot index={1} />
+
               <ErrorBoundary
                 fallback={
                   <SectionErrorFallback message="조리 순서를 불러올 수 없어요" />
