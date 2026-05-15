@@ -14,34 +14,13 @@ import {
 } from "@/entities/recipe/model/types";
 
 import { buildFeedItems } from "@/widgets/RecipeGrid/lib/buildFeedItems";
+import type { RecipeGridProps } from "@/widgets/RecipeGrid/model/types";
 import DetailedFeedCell from "@/widgets/RecipeGrid/ui/DetailedFeedCell";
 import EmptyFilterState from "@/widgets/RecipeGrid/ui/EmptyFilterState";
 import EmptyRecipeCTA from "@/widgets/RecipeGrid/ui/EmptyRecipeCTA";
 import GridFooter from "@/widgets/RecipeGrid/ui/GridFooter";
 import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 import SimpleRecipeGridItem from "@/widgets/RecipeGrid/ui/SimpleRecipeGridItem";
-
-type RecipeGridProps = {
-  recipes: BaseRecipeGridItem[] | DetailedRecipeGridItemType[] | MyRecipeListItem[];
-  isSimple?: boolean;
-  hasNextPage?: boolean;
-  isFetching?: boolean;
-  isPending?: boolean;
-  observerRef?: (node: Element | null) => void;
-  noResults?: boolean;
-  noResultsMessage?: string;
-  lastPageMessage?: string;
-  error?: Error | null;
-  queryKeyString?: string;
-  prefetch?: boolean;
-  showAIRecipeCTA?: boolean;
-  useLCP?: boolean;
-  queryKeyToInvalidate?: unknown[];
-  onResetFilters?: () => void;
-  nextPageHref?: string;
-  showInFeedAds?: boolean;
-  onItemMoreClick?: (id: string) => void;
-};
 
 const DETAILED_GRID_CLASS =
   "grid gap-4 px-2 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
