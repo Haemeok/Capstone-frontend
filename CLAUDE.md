@@ -100,6 +100,14 @@
 - **나눠라**: 레이어가 다른 변경(타입 ↔ 파서 ↔ API ↔ 와이어업), TDD가 정당한 진짜 로직, bisect가 필요한 critical change
 - subagent ceremony 비용 인식: 8개 신규 컴포넌트를 8 task로 만든 건 plan 실패
 
+### PR 본문 ↔ 활성 이슈 연결 (always-on)
+PR 본문을 작성할 때 `.claude/state/active-issue` 파일을 먼저 읽는다.
+- 파일이 존재하고 비어있지 않으면 각 줄의 이슈 번호를 PR 본문 끝에 `Closes #N` 줄들로 자동 삽입한다.
+- `gh pr create` 성공 후 해당 파일을 truncate한다 (`: > .claude/state/active-issue`).
+- 파일이 없거나 비어있으면 한 줄 경고(`"활성 이슈 없음 — Closes 없이 진행"`)만 출력하고 그대로 진행한다.
+
+이 규칙은 `/commit-push-pr` slash command / 자연어 "PR 만들자" / 그 외 모든 PR 생성 경로에 적용된다.
+
 ### Superpowers 워크플로 종료 → compounding-lessons 필수
 - `finishing-a-development-branch`의 어떤 옵션(merge/PR/keep/discard)이든 마지막에 `compounding-lessons` invoke
 - `subagent-driven-development`, `executing-plans`의 마지막 task 직후도 동일
