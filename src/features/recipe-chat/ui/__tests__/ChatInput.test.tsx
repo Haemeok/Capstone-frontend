@@ -22,7 +22,7 @@ describe("ChatInput", () => {
     mockHaptic.mockClear();
   });
 
-  it("when unauthenticated, clicking the disabled input opens login drawer", () => {
+  it("when unauthenticated, textarea is readOnly and looks enabled (no disabled attribute)", () => {
     render(
       <ChatInput
         isAuthenticated={false}
@@ -32,8 +32,48 @@ describe("ChatInput", () => {
         onSubmit={jest.fn()}
       />
     );
-    fireEvent.click(screen.getByTestId("chat-input-wrapper"));
+    const textarea = screen.getByRole("textbox");
+    expect(textarea).toHaveAttribute("readOnly");
+    expect(textarea).not.toBeDisabled();
+    expect(textarea).toHaveAttribute(
+      "placeholder",
+      "이 레시피에 대해서 어떤 게 궁금하신가요?"
+    );
+  });
+
+  it("when unauthenticated, mousedown on textarea opens login drawer + light haptic", () => {
+    render(
+      <ChatInput
+        isAuthenticated={false}
+        isPending={false}
+        isLocked={false}
+        lockedReason={null}
+        onSubmit={jest.fn()}
+      />
+    );
+    const textarea = screen.getByRole("textbox");
+    fireEvent.mouseDown(textarea);
     expect(mockOpenDrawer).toHaveBeenCalledTimes(1);
+    expect(mockOpenDrawer).toHaveBeenCalledWith({
+      message: "레시피 챗봇에게 물어보세요!",
+    });
+    expect(mockHaptic).toHaveBeenCalledWith("Light");
+  });
+
+  it("when unauthenticated, clicking send button opens drawer (does not submit form)", () => {
+    const onSubmit = jest.fn();
+    render(
+      <ChatInput
+        isAuthenticated={false}
+        isPending={false}
+        isLocked={false}
+        lockedReason={null}
+        onSubmit={onSubmit}
+      />
+    );
+    fireEvent.click(screen.getByLabelText("질문 전송"));
+    expect(mockOpenDrawer).toHaveBeenCalledTimes(1);
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 
   it("when authenticated, submitting calls onSubmit with text", () => {
