@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,14 +17,12 @@ import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 import { AIIngredientPayload } from "@/entities/ingredient";
 
 import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
-import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 import { buildIngredientFocusRequest } from "@/features/recipe-create-ai/model/adapters";
-import { createAIRecipeJobV2 } from "@/features/recipe-create-ai/model/api";
 import {
   aiRecipeFormSchema,
   AIRecipeFormValues,
 } from "@/features/recipe-create-ai/model/schema";
-import { useAIRecipeStoreV2, useJobByConcept } from "@/features/recipe-create-ai/model/store";
+import { useConceptJob } from "@/features/recipe-create-ai/model/useConceptJob";
 
 import AiCharacterSection from "@/widgets/AIRecipeForm/AiCharacterSection";
 import AIRecipeProgressButton from "@/widgets/AIRecipeForm/AIRecipeProgressButton";
@@ -33,34 +30,17 @@ import CookingTimeSection from "@/widgets/AIRecipeForm/CookingTimeSection";
 import DishTypeSection from "@/widgets/AIRecipeForm/DishTypeSection";
 import ServingsCounter from "@/widgets/AIRecipeForm/ServingsCounter";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
+import AIConceptShell from "@/widgets/AIConceptShell";
 import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
-
-const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
-  ssr: false,
-});
-const AIRecipeError = dynamic(() => import("@/widgets/AIRecipeError"), {
-  ssr: false,
-});
 
 const CONCEPT = "INGREDIENT_FOCUS" as const;
 
 const IngredientRecipePage = () => {
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // V2 Store
-  const createJob = useAIRecipeStoreV2((state) => state.createJob);
-  const setJobId = useAIRecipeStoreV2((state) => state.setJobId);
-  const failJob = useAIRecipeStoreV2((state) => state.failJob);
-  const removeJob = useAIRecipeStoreV2((state) => state.removeJob);
-
-  // Get current job for this concept (subscribes to state.jobs for re-renders)
-  const job = useJobByConcept(CONCEPT);
-
-  const isPending = job?.state === "creating" || job?.state === "polling";
-  const isSuccess = job?.state === "completed";
-  const isFailed = job?.state === "failed";
+  const { job, isPending, isFailed, progress, submit, retry } =
+    useConceptJob(CONCEPT);
 
   const methods = useForm<AIRecipeFormValues>({
     resolver: zodResolver(aiRecipeFormSchema),
@@ -89,10 +69,7 @@ const IngredientRecipePage = () => {
     }
   };
 
-  const onSubmit = async (data: AIRecipeFormValues) => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-
+  const onSubmit = (data: AIRecipeFormValues) => {
     const request = buildIngredientFocusRequest({
       ingredientIds: data.ingredients.map((ing) => ing.id),
       dishType: data.dishType,
@@ -100,121 +77,75 @@ const IngredientRecipePage = () => {
       servings: data.servings,
     });
 
-    const meta = {
-      concept: CONCEPT,
-      displayName: aiModels[CONCEPT].name,
-      requestSummary: `${data.ingredients.length}개 재료 / ${data.dishType}`,
-    };
-
-    const idempotencyKey = createJob(CONCEPT, request, meta);
-
-    try {
-      const response = await createAIRecipeJobV2(
-        request,
-        CONCEPT,
-        idempotencyKey
-      );
-      setJobId(idempotencyKey, response.jobId);
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "레시피 생성에 실패했습니다.";
-      failJob(idempotencyKey, undefined, errorMessage);
-    } finally {
-      setIsSubmitting(false);
-    }
+    submit(request, `${data.ingredients.length}개 재료 / ${data.dishType}`);
   };
-
-  const handleRetry = () => {
-    if (job) {
-      removeJob(job.idempotencyKey);
-    }
-  };
-
-  // Calculate progress
-  const fakeProgress = job ? calculateFakeProgress(job.startTime) : 0;
-  const realProgress = job?.progress ?? 0;
-  const progress = isSuccess ? 100 : Math.max(fakeProgress, realProgress);
-
-  if (isPending && job) {
-    return (
-      <Container padding={false}>
-        <AiLoading
-          aiModelId={CONCEPT}
-          progress={progress}
-          startTime={job.startTime}
-        />
-      </Container>
-    );
-  }
-
-  if (isFailed && job) {
-    return (
-      <Container padding={false}>
-        <AIRecipeError
-          error={job.message || "레시피 생성 중 오류가 발생했습니다."}
-          onRetry={handleRetry}
-        />
-      </Container>
-    );
-  }
 
   return (
-    <Container padding={false}>
-      <FormProvider {...methods}>
-        <div className="relative mx-auto p-4">
-          <div className="mb-4 flex items-center gap-2">
-            <PrevButton className="md:hidden" />
-            <button
-              onClick={() => router.back()}
-              className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
-            >
-              <ArrowLeftIcon size={20} />
-              <span className="text-sm font-medium">AI 다시 선택하기</span>
-            </button>
-          </div>
-
-          <AiCharacterSection selectedAI={aiModels[CONCEPT]} />
-
-          <form
-            onSubmit={methods.handleSubmit(onSubmit)}
-            className="pb-20 md:pb-0"
-          >
-            <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
-              <IngredientManager onOpenDrawer={() => setIsDrawerOpen(true)} />
-
-              <div className="space-y-6">
-                <DishTypeSection />
-                <CookingTimeSection />
-                <div className="h-1 w-full" />
-                <ServingsCounter />
-              </div>
+    <AIConceptShell
+      concept={CONCEPT}
+      job={job}
+      isPending={isPending}
+      isFailed={isFailed}
+      progress={progress}
+      onRetry={retry}
+    >
+      <Container padding={false}>
+        <FormProvider {...methods}>
+          <div className="relative mx-auto p-4">
+            <div className="mb-4 flex items-center gap-2">
+              <PrevButton className="md:hidden" />
+              <button
+                onClick={() => router.back()}
+                className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
+              >
+                <ArrowLeftIcon size={20} />
+                <span className="text-sm font-medium">AI 다시 선택하기</span>
+              </button>
             </div>
-            <UsageLimitSection>
-              {({ hasNoQuota }) => (
-                <AIRecipeProgressButton
-                  isLoading={isSubmitting}
-                  disabled={hasNoQuota}
-                />
-              )}
-            </UsageLimitSection>
-          </form>
 
-          <IngredientSelector
-            open={isDrawerOpen}
-            onOpenChange={setIsDrawerOpen}
-            onIngredientSelect={handleAddIngredient}
-            addedIngredientNames={
-              new Set((ingredients || []).map((ing) => ing.name))
-            }
-            mapIngredientToPayload={(ingredient) => ({
-              id: ingredient.id,
-              name: ingredient.name,
-            })}
-          />
-        </div>
-      </FormProvider>
-      <BottomAnchorAdSlot />
-    </Container>
+            <AiCharacterSection selectedAI={aiModels[CONCEPT]} />
+
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              className="pb-20 md:pb-0"
+            >
+              <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
+                <IngredientManager onOpenDrawer={() => setIsDrawerOpen(true)} />
+
+                <div className="space-y-6">
+                  <DishTypeSection />
+                  <CookingTimeSection />
+                  <div className="h-1 w-full" />
+                  <ServingsCounter />
+                </div>
+              </div>
+              <UsageLimitSection>
+                {({ hasNoQuota }) => (
+                  <AIRecipeProgressButton
+                    isLoading={isPending}
+                    disabled={hasNoQuota}
+                  />
+                )}
+              </UsageLimitSection>
+            </form>
+
+            <IngredientSelector
+              open={isDrawerOpen}
+              onOpenChange={setIsDrawerOpen}
+              onIngredientSelect={handleAddIngredient}
+              addedIngredientNames={
+                new Set((ingredients || []).map((ing) => ing.name))
+              }
+              mapIngredientToPayload={(ingredient) => ({
+                id: ingredient.id,
+                name: ingredient.name,
+              })}
+            />
+          </div>
+        </FormProvider>
+        <BottomAnchorAdSlot />
+      </Container>
+    </AIConceptShell>
   );
 };
 

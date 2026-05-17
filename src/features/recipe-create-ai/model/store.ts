@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { create } from "zustand";
 
-import { type AIModelId } from "@/shared/config/constants/aiModel";
+import type { AIModel, AIModelId } from "@/shared/config/constants/aiModel";
 
 import {
   addPersistedJob,
@@ -26,17 +26,7 @@ export type AIRecipeGenerationState =
   | "completed"
   | "error";
 
-export type AIModel = {
-  id: AIModelId;
-  name: string;
-  description: string;
-  image: string;
-  loadingAnimation: {
-    image: string;
-    frames: number;
-    duration: number;
-  };
-};
+export type { AIModel };
 
 type AIRecipeStore = {
   generationState: AIRecipeGenerationState;
