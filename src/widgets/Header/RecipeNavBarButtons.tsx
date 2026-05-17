@@ -1,6 +1,6 @@
-import ShareButton from "@/shared/ui/ShareButton";
-
 import { RecipeSaveButton } from "@/features/recipe-save";
+
+import ShareButton from "@/widgets/ShareButton";
 
 type RecipeNavBarButtonsProps = {
   recipeId: string;
