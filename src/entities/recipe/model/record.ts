@@ -1,4 +1,4 @@
-import { Nutrition } from "./types";
+import { Nutrition, Visibility } from "./types";
 
 export type RecipeRecordResponse = {
   message: string;
@@ -20,6 +20,8 @@ export type RecipeHistoryDetailResponse = {
   recipeTitle: string;
   imageUrl: string;
   calories: number;
+  visibility?: Visibility | null;
+  isRemix?: boolean;
 };
 
 export type RecordTimelineItem = {
@@ -31,6 +33,8 @@ export type RecordTimelineItem = {
   nutrition: Nutrition;
   calories: number;
   imageUrl: string;
+  visibility?: Visibility | null;
+  isRemix?: boolean;
 };
 
 export type RecordTimelineGroup = {
