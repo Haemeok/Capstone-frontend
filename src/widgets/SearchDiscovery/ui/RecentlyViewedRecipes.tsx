@@ -58,8 +58,6 @@ const RecentlyViewedRecipes = () => {
                   avgRating: recipe.avgRating ?? 0,
                   ratingCount: recipe.ratingCount ?? 0,
                   createdAt: "",
-                  likeCount: 0,
-                  likedByCurrentUser: false,
                   favoriteByCurrentUser: false,
                 }}
               />

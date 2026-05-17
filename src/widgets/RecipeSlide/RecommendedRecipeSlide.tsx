@@ -40,7 +40,6 @@ const RecommendedRecipeSlide = ({
   const recipesWithStatus: DetailedRecipeGridItemType[] = (recipes ?? []).map(
     (recipe: StaticDetailedRecipeGridItem) => ({
       ...recipe,
-      likedByCurrentUser: statusData?.[recipe.id]?.likedByCurrentUser ?? false,
       favoriteByCurrentUser:
         statusData?.[recipe.id]?.favoriteByCurrentUser ?? false,
     })

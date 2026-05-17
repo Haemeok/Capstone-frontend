@@ -7,8 +7,6 @@ import {
 
 import {
   DetailedRecipesApiResponse,
-  MyFridgePageResponse,
-  MyFridgeRecipeItem,
   RecipeStatus,
 } from "@/entities/recipe/model/types";
 
@@ -58,64 +56,6 @@ export const useLikeRecipeMutation = (recipeId: string) => {
             : undefined
         );
       }
-
-      const updateRecipe = <
-        T extends {
-          id: string;
-          likedByCurrentUser: boolean;
-          likeCount: number;
-        },
-      >(
-        recipe: T
-      ): T =>
-        recipe.id === recipeId
-          ? {
-              ...recipe,
-              likedByCurrentUser: !recipe.likedByCurrentUser,
-              likeCount: recipe.likedByCurrentUser
-                ? recipe.likeCount - 1
-                : recipe.likeCount + 1,
-            }
-          : recipe;
-
-      queryClient.setQueriesData<
-        InfiniteData<DetailedRecipesApiResponse> | DetailedRecipesApiResponse
-      >({ queryKey: recipesListRootKey }, (oldData) => {
-        if (!oldData) return oldData;
-
-        if ("pages" in oldData) {
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              content: page.content.map(updateRecipe),
-            })),
-          };
-        }
-
-        if ("content" in oldData) {
-          return {
-            ...oldData,
-            content: oldData.content.map(updateRecipe),
-          };
-        }
-
-        return oldData;
-      });
-
-      queryClient.setQueriesData<
-        InfiniteData<MyFridgePageResponse<MyFridgeRecipeItem>>
-      >({ queryKey: ["my-fridge-recipes-v2"] }, (oldData) => {
-        if (!oldData || !("pages" in oldData)) return oldData;
-
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page) => ({
-            ...page,
-            content: page.content.map(updateRecipe),
-          })),
-        };
-      });
 
       queryClient.setQueriesData(
         { queryKey: ["recipes-status"] },
