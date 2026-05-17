@@ -199,7 +199,7 @@ export const reportIngredient = async (
   recipeId: string,
   data: IngredientReportData
 ) => {
-  return api.post(`/recipes/${recipeId}/reports`, data);
+  return api.post(END_POINTS.RECIPE_REPORTS(recipeId), data);
 };
 
 export const getRecommendedRecipes = async (
