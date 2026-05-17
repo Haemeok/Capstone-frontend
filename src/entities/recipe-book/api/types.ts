@@ -14,6 +14,13 @@ export type BookRecipe = {
   imageUrl: string;
   dishType: string;
   addedAt: string;
+  authorId: string;
+  authorName: string;
+  profileImage: string;
+  createdAt: string;
+  favoriteCount?: number;
+  cookingTime?: number;
+  youtubeVideoViewCount?: number;
   visibility?: Visibility | null;
   source?: RecipeSource | null;
   isRemix?: boolean;
