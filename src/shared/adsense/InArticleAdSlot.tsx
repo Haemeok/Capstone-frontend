@@ -3,7 +3,6 @@
 import { cn } from "@/shared/lib/utils";
 
 import { AdSlot } from "./AdSlot";
-import { useAdsGate } from "./AdsGateContext";
 import { AD_MIN_HEIGHT, AD_SLOT_IDS } from "./config";
 
 type InArticleAdSlotProps = {
@@ -14,18 +13,10 @@ type InArticleAdSlotProps = {
   index?: number;
 };
 
-// 모바일(=대다수가 RN WebView 앱)에서는 AdSense가 채워지지 않아 wrapper가 3초 후
-// collapse되며 큰 CLS가 발생한다. 모바일 웹 사용자는 거의 없는 편이라 모바일을
-// 통째로 숨기고 데스크톱에서만 노출한다. JS 런타임 분기 없이 paint 전에 적용되어
-// 깜빡임이 없다.
-// 단, 테스트 유저(ADSENSE_TEST_USER_ID 일치) 본인은 모바일에서도 검수 가능해야
-// 하므로 hidden 클래스를 풀어준다 — 처음엔 SSR에서 hidden md:block으로 박혔다가
-// hydration 후 isTestUser 가 true 로 잡히면 클래스가 빠진다.
 export const InArticleAdSlot = ({
   className,
   index = 0,
 }: InArticleAdSlotProps) => {
-  const { isTestUser } = useAdsGate();
   const slotId = AD_SLOT_IDS.recipeInArticle[index];
   if (!slotId) return null;
 
@@ -33,7 +24,7 @@ export const InArticleAdSlot = ({
     <AdSlot
       slotId={slotId}
       minHeight={AD_MIN_HEIGHT.inArticle}
-      className={cn("px-2", !isTestUser && "hidden md:block", className)}
+      className={cn("px-2", className)}
       insStyle={{ display: "block", textAlign: "center" }}
       adFormat="fluid"
       adLayout="in-article"
