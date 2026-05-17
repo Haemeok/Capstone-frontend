@@ -1,6 +1,11 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
@@ -23,6 +28,11 @@ export const NOTIFICATION_QUERY_KEYS = {
     ["notifications", "list", params] as const,
   unreadCount: ["notifications", "unread-count"] as const,
 } as const;
+
+const invalidateNotificationCaches = (qc: QueryClient) => {
+  qc.invalidateQueries({ queryKey: NOTIFICATION_QUERY_KEYS.notifications });
+  qc.invalidateQueries({ queryKey: NOTIFICATION_QUERY_KEYS.unreadCount });
+};
 
 export const useInfiniteNotificationsQuery = (
   params: NotificationsParams = {}
@@ -73,12 +83,7 @@ export const useMarkNotificationAsRead = () => {
   return useMutation({
     mutationFn: markNotificationAsRead,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEYS.notifications,
-      });
-      queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEYS.unreadCount,
-      });
+      invalidateNotificationCaches(queryClient);
     },
     onError: (error: Error) => {
       console.error("Failed to mark notification as read:", error);
@@ -92,12 +97,7 @@ export const useMarkAllNotificationsAsRead = () => {
   return useMutation({
     mutationFn: markAllNotificationsAsRead,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEYS.notifications,
-      });
-      queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEYS.unreadCount,
-      });
+      invalidateNotificationCaches(queryClient);
     },
     onError: (error: Error) => {
       console.error("Failed to mark all notifications as read:", error);
@@ -145,12 +145,7 @@ export const useDeleteNotification = () => {
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEYS.notifications,
-      });
-      queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEYS.unreadCount,
-      });
+      invalidateNotificationCaches(queryClient);
     },
   });
 };
@@ -195,12 +190,7 @@ export const useDeleteAllNotifications = () => {
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEYS.notifications,
-      });
-      queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEYS.unreadCount,
-      });
+      invalidateNotificationCaches(queryClient);
     },
   });
 };
