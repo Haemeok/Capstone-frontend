@@ -82,7 +82,7 @@ export const useAIJobPolling = () => {
           message: "",
           variant: "rich-youtube",
           position: "bottom",
-          persistent: true,
+          duration: 8000,
           dismissible: "both",
           richContent: {
             thumbnail: recipe.imageUrl,
@@ -100,7 +100,7 @@ export const useAIJobPolling = () => {
           message: `${meta.displayName} 레시피가 완성되었어요!`,
           variant: "success",
           position: "bottom",
-          persistent: true,
+          duration: 8000,
           dismissible: "both",
           action: {
             onClick: () => router.push(`/recipes/${recipeId}`),
