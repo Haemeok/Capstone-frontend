@@ -26,7 +26,7 @@ const SearchDiscoveryFocused = () => {
           <div className="flex items-center gap-2">
             <PrevButton onClick={handleBack} size={24} className="shrink-0" />
             <div className="min-w-0 flex-1">
-              <SearchInput />
+              <SearchInput autoFocus />
             </div>
           </div>
         </div>
