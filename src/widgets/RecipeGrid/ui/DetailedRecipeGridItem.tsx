@@ -4,12 +4,12 @@ import Link from "next/link";
 
 import { Bookmark, Clock } from "lucide-react";
 
+import { NO_IMAGE_URL } from "@/shared/config/constants/user";
+import { saveRecentlyViewedRecipe } from "@/shared/hooks/useRecentlyViewedRecipes";
 import {
   generateUserGradient,
   isDefaultProfileImage,
 } from "@/shared/lib/colors";
-import { NO_IMAGE_URL } from "@/shared/config/constants/user";
-import { saveRecentlyViewedRecipe } from "@/shared/hooks/useRecentlyViewedRecipes";
 import { formatCount } from "@/shared/lib/format";
 import { getViewCountTier } from "@/shared/lib/recipe/getViewCountTier";
 import { cn } from "@/shared/lib/utils";
