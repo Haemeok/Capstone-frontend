@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 import { BookOpen, Lock, MessageCircle } from "lucide-react";
 
-import { ADSENSE_TEST_USER_ID } from "@/shared/adsense/config";
 import {
   APP_STORE_URL,
   PLAY_STORE_URL,
@@ -14,9 +13,10 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 import { Drawer, DrawerContent, DrawerTitle } from "@/shared/ui/shadcn/drawer";
 
-import { useUserStore } from "@/entities/user/model/store";
-
-import { APP_UPDATE_DISMISS_KEY } from "./model/constants";
+import {
+  APP_UPDATE_DISMISS_KEY,
+  EXISTING_USER_MARKER_KEYS,
+} from "./model/constants";
 import { useAppUpdateDrawerStore } from "./model/store";
 
 type MobileOS = "ios" | "android";
@@ -34,36 +34,28 @@ const UPDATE_HIGHLIGHTS = [
 
 const GlobalAppUpdateDrawer = () => {
   const isInApp = useIsApp();
-  const userId = useUserStore((state) => state.user?.id);
   const { isOpen, openDrawer, dismiss } = useAppUpdateDrawerStore();
-
-  // 검증용 임시 게이트: env(ADSENSE_TEST_USER_ID) 와 일치하는 유저에게만 노출.
-  // 전체 배포는 이 두 가드(env 비어있음 또는 id 불일치)만 제거하면 된다.
-  const isAllowedTester = Boolean(
-    ADSENSE_TEST_USER_ID && userId === ADSENSE_TEST_USER_ID,
-  );
 
   useEffect(() => {
     if (!isInApp) return;
-    if (!isAllowedTester) return;
     if (typeof window === "undefined") return;
     if (window.localStorage.getItem(APP_UPDATE_DISMISS_KEY)) return;
 
-    // 같은 origin storage 가 완전히 비어있으면 신규 설치(또는 재설치)로 간주.
-    // 한 번이라도 앱을 쓴 유저는 인증 쿠키나 localStorage 흔적이 남는다.
-    const hasExistingTraces =
-      document.cookie.length > 0 || window.localStorage.length > 0;
+    // 사용자 행동 marker 가 하나도 없으면 신규 설치로 간주하고 영구 dismiss.
+    // (storage 통째 길이 체크는 GA·dx_id 같은 부팅 부산물 때문에 신뢰 불가)
+    const isExistingUser = EXISTING_USER_MARKER_KEYS.some((key) =>
+      window.localStorage.getItem(key),
+    );
 
-    if (!hasExistingTraces) {
+    if (!isExistingUser) {
       dismiss();
       return;
     }
 
     openDrawer();
-  }, [isInApp, isAllowedTester, openDrawer, dismiss]);
+  }, [isInApp, openDrawer, dismiss]);
 
   if (!isInApp) return null;
-  if (!isAllowedTester) return null;
 
   const os = detectMobileOS();
   const storeUrl = os === "ios" ? APP_STORE_URL : PLAY_STORE_URL;
