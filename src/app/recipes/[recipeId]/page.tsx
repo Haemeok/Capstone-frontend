@@ -144,6 +144,7 @@ export default async function RecipeDetailPage({
             title={staticRecipe.title}
             aiGenerated={isAiRecipe(staticRecipe)}
             author={staticRecipe.author}
+            description={staticRecipe.description}
             extractorId={staticRecipe.extractorId}
           >
             <RecipeInteractionBar staticRecipe={staticRecipe} />
