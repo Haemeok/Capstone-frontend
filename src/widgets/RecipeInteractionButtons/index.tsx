@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { Pencil, Wand2 } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
-import ShareButton from "@/shared/ui/ShareButton";
 
 import type { Visibility } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user";
@@ -16,6 +15,8 @@ import { useUserStore } from "@/entities/user";
 import { RecipeSaveButton } from "@/features/recipe-save";
 import { useRecipeStatus } from "@/features/recipe-status";
 import { LockButton } from "@/features/recipe-visibility";
+
+import ShareButton from "@/widgets/ShareButton";
 
 import {
   markRemixOnboarded,
