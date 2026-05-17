@@ -18,8 +18,6 @@ export const toDetailedRecipeItem = (
     profileImage: recipeData.author.profileImage,
     cookingTime: recipeData.cookingTime,
     createdAt: recipeData.createdAt ?? "",
-    likeCount: recipeData.likeCount,
-    likedByCurrentUser: recipeData.likedByCurrentUser,
     favoriteByCurrentUser: recipeData.favoriteByCurrentUser,
     avgRating: recipeData.ratingInfo.avgRating,
     ratingCount: recipeData.ratingInfo.ratingCount,

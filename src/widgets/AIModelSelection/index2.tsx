@@ -183,7 +183,6 @@ const AIModelSelection = () => {
       createdAt: item.createdAt,
       avgRating: 0,
       ratingCount: 0,
-      likeCount: 0,
     }));
     setRecentRecipes(recipes);
   }, []);
