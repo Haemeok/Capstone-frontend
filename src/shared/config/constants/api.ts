@@ -19,8 +19,8 @@ export const END_POINTS = {
   RECIPE_YOUTUBE_META: "/recipes/youtube/meta",
   RECIPE_YOUTUBE_RECOMMEND: "/recipes/youtube/recommend",
   INGREDIENTS: "/ingredients",
-  SEARCH_INGREDIENTS: "/search/ingredients",
-  INGREDIENTS_BY_ID: (id: string) => `/ingredients/${id}`,
+  SEARCH_INGREDIENTS: "/dev/search/ingredients",
+  INGREDIENTS_BY_ID: (id: string) => `/dev/ingredients/${id}`,
   RECIPE_COMMENT: (id: string) => `/dev/recipes/${id}/comments`,
   RECIPE_COMMENT_BY_ID: (recipeId: string, commentId: string) =>
     `/dev/recipes/${recipeId}/comments/${commentId}`,
