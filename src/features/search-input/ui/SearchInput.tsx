@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -71,14 +71,16 @@ const getPlaceholdersForHour = (hour: number): string[] => {
 
 type SearchInputProps = {
   onFocus?: () => void;
+  autoFocus?: boolean;
 };
 
-export const SearchInput = ({ onFocus }: SearchInputProps) => {
+export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
   const { inputValue, setInputValue, submitSearch } = useSearchQuery();
   const [placeholders] = useState<string[]>(() =>
     getPlaceholdersForHour(new Date().getHours())
   );
   const [index, setIndex] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (placeholders.length <= 1) return;
@@ -87,6 +89,11 @@ export const SearchInput = ({ onFocus }: SearchInputProps) => {
     }, PLACEHOLDER_INTERVAL_MS);
     return () => window.clearInterval(id);
   }, [placeholders.length]);
+
+  useEffect(() => {
+    if (!autoFocus) return;
+    inputRef.current?.focus();
+  }, [autoFocus]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,6 +123,7 @@ export const SearchInput = ({ onFocus }: SearchInputProps) => {
         />
         <div className="relative flex min-w-0 flex-1 items-center">
           <input
+            ref={inputRef}
             type="text"
             placeholder=""
             aria-label="레시피 검색"
