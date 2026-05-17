@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import type { InfiniteData } from "@tanstack/react-query";
@@ -10,19 +9,20 @@ import { CheckIcon } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { cn } from "@/shared/lib/utils";
-import { Image } from "@/shared/ui/image/Image";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import {
   BOOK_DETAIL_PAGE_SIZE,
-  type BookRecipe,
   DEFAULT_BOOK_SORT,
   getRecipeBookDetail,
   RECIPE_BOOK_QUERY_KEYS,
   type RecipeBookDetail,
 } from "@/entities/recipe-book";
+import { toDetailedGridItem } from "@/entities/recipe-book/lib/toDetailedGridItem";
 
 import { useEditModeStore } from "@/features/recipe-book-edit-mode";
+
+import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 type Props = {
   bookId: string;
@@ -32,27 +32,6 @@ const SKELETON_COUNT = 8;
 
 const GRID_CLASS =
   "grid grid-cols-2 gap-3 py-3 sm:gap-4 sm:py-4 md:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
-
-const RecipeBookGridItem = ({ recipe }: { recipe: BookRecipe }) => (
-  <div className="group relative block overflow-hidden rounded-xl">
-    <Image
-      src={recipe.imageUrl}
-      alt={recipe.title}
-      wrapperClassName="overflow-hidden rounded-xl"
-      imgClassName="transition-all duration-300 ease-in-out group-hover:scale-110"
-      fit="cover"
-    />
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 rounded-b-xl bg-gradient-to-t from-black/70 to-transparent" />
-    <p className="word-break absolute right-3 bottom-2 left-3 line-clamp-2 text-[15px] leading-tight text-pretty text-white">
-      {recipe.title}
-    </p>
-    <Link
-      href={`/recipes/${recipe.recipeId}`}
-      aria-label={recipe.title}
-      className="absolute inset-0 rounded-xl"
-    />
-  </div>
-);
 
 const EmptyState = () => {
   const router = useRouter();
@@ -152,7 +131,10 @@ export const RecipeBookRecipeGrid = ({ bookId }: Props) => {
       <div className={GRID_CLASS}>
         {recipes.map((recipe) => (
           <div key={recipe.recipeId} className="relative">
-            <RecipeBookGridItem recipe={recipe} />
+            <DetailedRecipeGridItem
+              recipe={toDetailedGridItem(recipe)}
+              prefetch={false}
+            />
             {isEditMode && <SelectionOverlay recipeId={recipe.recipeId} />}
           </div>
         ))}
