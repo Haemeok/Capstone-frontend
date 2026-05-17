@@ -22,35 +22,45 @@ export type RecentRecipe = {
 const STORAGE_KEY = "recently-viewed-recipes";
 const MAX_ITEMS = 20;
 
-let cachedRecipes: RecentRecipe[] | null = null;
+const readRecents = (): RecentRecipe[] => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? (JSON.parse(stored) as RecentRecipe[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeRecents = (list: RecentRecipe[]): void => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch {
+    // localStorage 에러 무시
+  }
+};
+
+const mergeRecentRecipes = (
+  prev: RecentRecipe[],
+  incoming: RecentRecipe
+): RecentRecipe[] => {
+  const existing = prev.find((r) => r.id === incoming.id);
+  const merged: RecentRecipe = existing
+    ? {
+        ...existing,
+        ...Object.fromEntries(
+          Object.entries(incoming).filter(([, v]) => v !== undefined)
+        ),
+      }
+    : incoming;
+
+  const filtered = prev.filter((r) => r.id !== incoming.id);
+  return [merged, ...filtered].slice(0, MAX_ITEMS);
+};
 
 // 훅 외부에서 사용 가능한 저장 함수
 export const saveRecentlyViewedRecipe = (recipe: RecentRecipe) => {
   if (!recipe.id || !recipe.title) return;
-
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const recipes: RecentRecipe[] = stored ? JSON.parse(stored) : [];
-
-    // 기존 데이터와 merge
-    const existing = recipes.find((r) => r.id === recipe.id);
-    const merged: RecentRecipe = existing
-      ? {
-          ...existing,
-          ...Object.fromEntries(
-            Object.entries(recipe).filter(([, v]) => v !== undefined)
-          ),
-        }
-      : recipe;
-
-    const filtered = recipes.filter((r) => r.id !== recipe.id);
-    const newRecipes = [merged, ...filtered].slice(0, MAX_ITEMS);
-
-    cachedRecipes = newRecipes;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newRecipes));
-  } catch {
-    // localStorage 에러 무시
-  }
+  writeRecents(mergeRecentRecipes(readRecents(), recipe));
 };
 
 export const useRecentlyViewedRecipes = () => {
@@ -58,21 +68,7 @@ export const useRecentlyViewedRecipes = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (cachedRecipes !== null) {
-      setRecipes(cachedRecipes);
-      setIsLoaded(true);
-      return;
-    }
-
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      const parsed = stored ? JSON.parse(stored) : [];
-      cachedRecipes = parsed;
-      setRecipes(parsed);
-    } catch {
-      cachedRecipes = [];
-      setRecipes([]);
-    }
+    setRecipes(readRecents());
     setIsLoaded(true);
   }, []);
 
@@ -80,52 +76,22 @@ export const useRecentlyViewedRecipes = () => {
     if (!recipe.id || !recipe.title) return;
 
     setRecipes((prev) => {
-      const existing = prev.find((r) => r.id === recipe.id);
-      const merged: RecentRecipe = existing
-        ? {
-            ...existing,
-            ...Object.fromEntries(
-              Object.entries(recipe).filter(([, v]) => v !== undefined)
-            ),
-          }
-        : recipe;
-
-      const filtered = prev.filter((r) => r.id !== recipe.id);
-      const newRecipes = [merged, ...filtered].slice(0, MAX_ITEMS);
-
-      cachedRecipes = newRecipes;
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newRecipes));
-      } catch {
-        // ignore
-      }
-
-      return newRecipes;
+      const next = mergeRecentRecipes(prev, recipe);
+      writeRecents(next);
+      return next;
     });
   }, []);
 
   const removeRecipe = useCallback((recipeId: string) => {
     setRecipes((prev) => {
-      const newRecipes = prev.filter((r) => r.id !== recipeId);
-
-      cachedRecipes = newRecipes;
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newRecipes));
-      } catch {
-        // ignore
-      }
-
-      return newRecipes;
+      const next = prev.filter((r) => r.id !== recipeId);
+      writeRecents(next);
+      return next;
     });
   }, []);
 
   const clearAll = useCallback(() => {
-    cachedRecipes = [];
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
-    } catch {
-      // ignore
-    }
+    writeRecents([]);
     setRecipes([]);
   }, []);
 
