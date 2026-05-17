@@ -16,6 +16,7 @@ import { RecipeSaveButton } from "@/features/recipe-save";
 import { useRecipeStatus } from "@/features/recipe-status";
 import { LockButton } from "@/features/recipe-visibility";
 
+import { useLoginEncourageDrawerStore } from "@/widgets/LoginEncourageDrawer/model/store";
 import ShareButton from "@/widgets/ShareButton";
 
 import {
@@ -43,6 +44,7 @@ const RecipeInteractionButtons = ({
   const { user } = useUserStore();
   const { status } = useRecipeStatus();
   const router = useRouter();
+  const { openDrawer } = useLoginEncourageDrawerStore();
   const [onboardingDismissed, setOnboardingDismissed] = useState(false);
 
   const isOwner = user?.id === authorId;
@@ -50,6 +52,15 @@ const RecipeInteractionButtons = ({
 
   const handleRemixClick = () => {
     triggerHaptic("Light");
+
+    if (!user) {
+      openDrawer({
+        icon: <Wand2 size={24} className="text-olive-light" />,
+        message: "이 레시피를 내 스타일로 편집해보세요!",
+      });
+      return;
+    }
+
     markRemixOnboarded();
     router.push(`/recipes/${recipeId}/remix`);
   };
