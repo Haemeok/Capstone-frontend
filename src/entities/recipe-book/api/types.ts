@@ -6,12 +6,21 @@ export type RecipeBook = {
   recipeCount: number;
 };
 
+import { RecipeSource, Visibility } from "@/entities/recipe/model/types";
+
 export type BookRecipe = {
   recipeId: string;
   title: string;
   imageUrl: string;
   dishType: string;
   addedAt: string;
+  visibility?: Visibility | null;
+  source?: RecipeSource | null;
+  isRemix?: boolean;
+  youtubeUrl?: string | null;
+  youtubeChannelName?: string | null;
+  youtubeVideoTitle?: string | null;
+  youtubeThumbnailUrl?: string | null;
 };
 
 export type RecipeBookDetail = {
