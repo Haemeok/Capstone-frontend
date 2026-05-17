@@ -15,6 +15,7 @@
 - Component: ≤100줄 권장 / >150줄 무조건 분리
 - Function: ≤30줄 권장 / 분기 4+ · nesting 3+ · 동사 두 개 · await 3+면 분리
 - SRP 신호 2+: hook 5+ / prop drilling 2단+ / 조건부 분기 3+
+- 추출: 최소 3번 반복부터 (2번은 우연 — 성급한 추상화 금지). 예외는 `size-rule-of-three.md`
 
 ### FSD 4단계 위치 판단
 - `shared/`: 비즈니스 모름, ≥2곳 재사용

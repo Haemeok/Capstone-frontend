@@ -41,6 +41,7 @@ specific `rules/<prefix>-<topic>.md` file.
 ### Size
 - [Component size limits](rules/size-component.md) — 100/150 hard, SRP signals
 - [Function complexity](rules/size-function.md) — 30 lines + branch / nesting / verb-pair / await flags
+- [Rule of three](rules/size-rule-of-three.md) — extract on 3rd occurrence, not 2nd (premature abstraction prevention)
 
 ### FSD
 - [4-layer placement](rules/fsd-layer-routing.md) — shared / widget / `_components/` / page
