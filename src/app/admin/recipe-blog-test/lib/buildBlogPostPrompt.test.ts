@@ -118,17 +118,17 @@ describe("buildBlogPostSystemPrompt", () => {
     expect(sys).toContain("2~4인 가정");
   });
 
-  it("매거진 시그너처 5개를 모두 강제한다", () => {
+  it("BRAINSTORM 4축과 고유 디테일을 모두 강제한다", () => {
     expect(sys).toContain("계절");
-    expect(sys).toContain("재료 사는 법");
-    expect(sys).toContain("전통");
-    expect(sys).toContain("실패 지점");
+    expect(sys).toContain("재료 본성");
+    expect(sys).toContain("응용");
+    expect(sys).toContain("지식");
     expect(sys).toContain("고유 디테일");
   });
 
   it("핵심 금지어가 모두 OUT 리스트에 명시된다", () => {
     expect(sys).toContain("황금");
-    expect(sys).toContain("실패 없는");
+    expect(sys).toContain("실패없는");
     expect(sys).toContain("초보도 쉽게");
     expect(sys).toContain("드셔보세요");
     expect(sys).toContain("효능");
@@ -137,16 +137,16 @@ describe("buildBlogPostSystemPrompt", () => {
     expect(sys).toContain("푸하하");
   });
 
-  it("모바일 가독성과 SEO 룰을 모두 포함한다", () => {
+  it("모바일 가독성과 롱테일 SEO 룰을 모두 포함한다", () => {
     expect(sys).toContain("3~4문장");
     expect(sys).toContain("8~12회");
-    expect(sys).toContain("LSI");
-    expect(sys).toContain("8~10개");
+    expect(sys).toContain("60~90자");
   });
 
-  it("표기 통일 사전 항목을 포함한다", () => {
-    expect(sys).toContain("다진 마늘");
-    expect(sys).toContain("센 불");
+  it("표기 규칙(아라비아 숫자 + 단위 붙여쓰기)을 명시한다", () => {
+    expect(sys).toContain("5분");
+    expect(sys).toContain("200g");
+    expect(sys).toContain("1큰술");
   });
 
   it("주어진 시드의 hint를 그대로 주입한다", () => {
