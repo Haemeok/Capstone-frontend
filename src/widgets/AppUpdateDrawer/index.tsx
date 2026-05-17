@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 import { BookOpen, Lock, MessageCircle } from "lucide-react";
 
-import { useAdsGate } from "@/shared/adsense/AdsGateContext";
 import {
   APP_STORE_URL,
   PLAY_STORE_URL,
@@ -32,21 +31,16 @@ const UPDATE_HIGHLIGHTS = [
 
 const GlobalAppUpdateDrawer = () => {
   const isInApp = useIsApp();
-  // 검수용: NEXT_PUBLIC_ADSENSE_TEST_USER_ID 와 일치하는 관리자 계정에만 노출.
-  // 게이트 해제는 env 만 비우면 됨.
-  const { isTestUser } = useAdsGate();
   const { isOpen, openDrawer, dismiss } = useAppUpdateDrawerStore();
 
   useEffect(() => {
     if (!isInApp) return;
-    if (!isTestUser) return;
     if (typeof window === "undefined") return;
     if (window.localStorage.getItem(APP_UPDATE_DISMISS_KEY)) return;
     openDrawer();
-  }, [isInApp, isTestUser, openDrawer]);
+  }, [isInApp, openDrawer]);
 
   if (!isInApp) return null;
-  if (!isTestUser) return null;
 
   const os = detectMobileOS();
   const storeUrl = os === "ios" ? APP_STORE_URL : PLAY_STORE_URL;
