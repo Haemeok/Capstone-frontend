@@ -48,12 +48,12 @@ describe("AdSlot", () => {
     expect((window.adsbygoogle as unknown[]).length).toBe(1);
   });
 
-  it("3초 내에 <ins> 빈 상태면 wrapper display:none 처리 (애드블록 대비)", () => {
+  it("타임아웃 내에 <ins> 빈 상태면 wrapper display:none 처리 (애드블록 대비)", () => {
     const { container } = render(<AdSlot slotId="9999" minHeight={280} />);
     const wrapper = container.firstChild as HTMLElement | null;
     expect(wrapper?.style.display).not.toBe("none");
     act(() => {
-      jest.advanceTimersByTime(3100);
+      jest.advanceTimersByTime(7100);
     });
     expect(wrapper?.style.display).toBe("none");
   });

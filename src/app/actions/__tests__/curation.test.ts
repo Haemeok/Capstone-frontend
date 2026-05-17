@@ -4,7 +4,7 @@ jest.mock("ai", () => ({
   generateObject: jest.fn(),
 }));
 jest.mock("@ai-sdk/openai", () => ({
-  createOpenAI: () => () => ({}),
+  createOpenAI: () => Object.assign(() => ({}), { chat: () => ({}) }),
 }));
 jest.mock("@/entities/recipe/model/api", () => ({
   getRecipe: jest.fn(),
@@ -67,6 +67,7 @@ beforeAll(() => {
 beforeEach(() => {
   jest.clearAllMocks();
   process.env.XAI_API_KEY = "test";
+  process.env.UPSTAGE_API_KEY = "test";
 });
 
 describe("generateCuration", () => {
