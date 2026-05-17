@@ -26,6 +26,7 @@ const useRecipeVisibilityMutation = (
         queryClient.invalidateQueries({ queryKey: ["recipes", userId] });
       }
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
+      queryClient.invalidateQueries({ queryKey: ["recipe-status", recipeId] });
       addToast({
         message:
           next === "PRIVATE"
