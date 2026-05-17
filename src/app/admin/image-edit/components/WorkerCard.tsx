@@ -15,6 +15,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { getModelById } from "@/app/admin/image-quality-test/lib/models";
 
+import { FACE_SWAP_MAX_REFS, FACE_SWAP_PROMPT } from "../lib/faceSwapPrompt";
 import {
   type ImageEditQuality,
   QUALITY_TO_MODEL_ID,
@@ -24,6 +25,7 @@ import { ResultCard } from "./ResultCard";
 
 const QUALITY_ORDER: ReadonlyArray<ImageEditQuality> = ["low", "medium", "high"];
 const MAX_REFERENCES = 16;
+const FACE_SWAP_SLOT_LABELS = ["SCENE", "FACE"] as const;
 
 type Props = {
   index: number;
@@ -47,6 +49,7 @@ const readFileAsDataUrl = (file: File): Promise<string> =>
 export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) => {
   const [referenceImageUrls, setReferenceImageUrls] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
+  const [faceSwap, setFaceSwap] = useState(false);
   const [selected, setSelected] = useState<Set<ImageEditQuality>>(
     () => new Set(["low"])
   );
@@ -54,19 +57,36 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
 
   const { results, running, submit, cancel, reset } = useImageEdit();
 
-  const appendFiles = useCallback(async (files: readonly File[]) => {
-    const images = files.filter((f) => f.type.startsWith("image/"));
-    if (images.length === 0) return;
-    try {
-      const dataUrls = await Promise.all(images.map(readFileAsDataUrl));
-      setReferenceImageUrls((prev) => {
-        const next = [...prev, ...dataUrls].slice(0, MAX_REFERENCES);
-        if (next.length > prev.length) triggerHaptic("Light");
-        return next;
-      });
-    } catch (err) {
-      console.error("이미지 읽기 실패", err);
-    }
+  const effectiveMax = faceSwap ? FACE_SWAP_MAX_REFS : MAX_REFERENCES;
+
+  const appendFiles = useCallback(
+    async (files: readonly File[]) => {
+      const images = files.filter((f) => f.type.startsWith("image/"));
+      if (images.length === 0) return;
+      try {
+        const dataUrls = await Promise.all(images.map(readFileAsDataUrl));
+        setReferenceImageUrls((prev) => {
+          const next = [...prev, ...dataUrls].slice(0, effectiveMax);
+          if (next.length > prev.length) triggerHaptic("Light");
+          return next;
+        });
+      } catch (err) {
+        console.error("이미지 읽기 실패", err);
+      }
+    },
+    [effectiveMax]
+  );
+
+  const handleToggleFaceSwap = useCallback(() => {
+    triggerHaptic("Light");
+    setFaceSwap((prev) => {
+      const next = !prev;
+      if (next) {
+        setReferenceImageUrls((curr) => curr.slice(0, FACE_SWAP_MAX_REFS));
+        setPrompt(FACE_SWAP_PROMPT);
+      }
+      return next;
+    });
   }, []);
 
   const handleFileSelect = useCallback(
@@ -162,7 +182,23 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
       <header className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-bold text-gray-900">워커 #{index + 1}</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-sm font-bold text-gray-900">워커 #{index + 1}</h2>
+          <label className="flex cursor-pointer items-center gap-1.5 text-[11px] text-gray-600">
+            <input
+              type="checkbox"
+              checked={faceSwap}
+              onChange={handleToggleFaceSwap}
+              className="h-3.5 w-3.5 accent-olive-light"
+            />
+            얼굴 스왑 모드
+            {faceSwap && (
+              <span className="rounded bg-olive-light/15 px-1.5 py-0.5 text-[10px] font-medium text-olive-dark">
+                1=SCENE · 2=FACE
+              </span>
+            )}
+          </label>
+        </div>
         <button
           type="button"
           onClick={handleDelete}
@@ -181,7 +217,7 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
         >
           <div className="mb-1 flex items-center justify-between">
             <p className="text-[11px] font-semibold text-gray-700">
-              입력 이미지 ({referenceImageUrls.length}/{MAX_REFERENCES})
+              입력 이미지 ({referenceImageUrls.length}/{effectiveMax})
             </p>
             {referenceImageUrls.length > 0 && (
               <button
@@ -204,6 +240,11 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
                     alt={`reference ${idx + 1}`}
                     className="aspect-square w-full rounded-lg object-cover"
                   />
+                  {faceSwap && idx < FACE_SWAP_SLOT_LABELS.length && (
+                    <span className="absolute left-0.5 top-0.5 rounded bg-black/65 px-1 py-0.5 text-[9px] font-bold text-white">
+                      {FACE_SWAP_SLOT_LABELS[idx]}
+                    </span>
+                  )}
                   <button
                     type="button"
                     onClick={() => handleRemoveOne(idx)}
@@ -214,7 +255,7 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
                   </button>
                 </div>
               ))}
-              {referenceImageUrls.length < MAX_REFERENCES && (
+              {referenceImageUrls.length < effectiveMax && (
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -231,15 +272,24 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
               className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-2 text-center text-[10px] text-gray-500 hover:bg-gray-100"
             >
               <Upload className="h-5 w-5 text-gray-400" />
-              <span>클릭 · 드래그 (여러 장)</span>
-              <span>(텍스트박스에 Ctrl+V도 가능)</span>
+              {faceSwap ? (
+                <>
+                  <span>1번 = SCENE (상태 원본)</span>
+                  <span>2번 = FACE (신원 원본)</span>
+                </>
+              ) : (
+                <>
+                  <span>클릭 · 드래그 (여러 장)</span>
+                  <span>(텍스트박스에 Ctrl+V도 가능)</span>
+                </>
+              )}
             </div>
           )}
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            multiple
+            multiple={!faceSwap}
             onChange={handleFileSelect}
             className="hidden"
           />
