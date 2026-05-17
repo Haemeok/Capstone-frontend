@@ -259,9 +259,9 @@ export const CandidatePanel = () => {
             QUERY_KEY,
             (old) => old?.filter((d) => d.slug !== key),
           );
-          queryClient.invalidateQueries({ queryKey: QUERY_KEY });
         },
       });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY });
       setSelectedKeys((prev) => {
         const next = new Set(prev);
         for (const t of targets) next.delete(t.key);
