@@ -1,3 +1,7 @@
+import type { AIModelId } from "@/shared/config/constants/aiModel";
+
+export type { AIModelId };
+
 export type IngredientFocusRequest = {
   ingredientIds: string[];
   dishType: string;
@@ -28,12 +32,6 @@ export type AIRecommendedRecipeRequest =
   | CostEffectiveRequest
   | NutritionBalanceRequest
   | FineDiningRequest;
-
-export type AIModelId =
-  | "INGREDIENT_FOCUS"
-  | "COST_EFFECTIVE"
-  | "NUTRITION_BALANCE"
-  | "FINE_DINING";
 
 export type AIModelRequestMap = {
   INGREDIENT_FOCUS: IngredientFocusRequest;

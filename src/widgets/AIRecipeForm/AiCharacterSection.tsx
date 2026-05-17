@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AIModel } from "@/features/recipe-create-ai";
+import type { AIModel } from "@/shared/config/constants/aiModel";
 
 type AICharacterSectionProps = {
   selectedAI: AIModel;

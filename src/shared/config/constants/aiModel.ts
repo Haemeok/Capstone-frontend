@@ -1,5 +1,3 @@
-import type { AIModel } from "@/features/recipe-create-ai";
-
 import { IMAGE_BASE_URL } from "./recipe";
 
 export const LOADING_BASE_URL = `${IMAGE_BASE_URL}loadings/`;
@@ -10,6 +8,18 @@ export type AIModelId =
   | "COST_EFFECTIVE"
   | "NUTRITION_BALANCE"
   | "FINE_DINING";
+
+export type AIModel = {
+  id: AIModelId;
+  name: string;
+  description: string;
+  image: string;
+  loadingAnimation: {
+    image: string;
+    frames: number;
+    duration: number;
+  };
+};
 
 export const aiModels: Record<AIModelId, AIModel> = {
   INGREDIENT_FOCUS: {
