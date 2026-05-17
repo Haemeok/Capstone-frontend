@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import BadgeButton from "@/shared/ui/BadgeButton";
+import CollapsibleP from "@/shared/ui/CollapsibleP";
 
 import { UserName, UserProfileImage } from "@/entities/user";
 import { User } from "@/entities/user/model/types";
@@ -12,6 +13,7 @@ type RecipeInfoSectionProps = {
   title: string;
   aiGenerated: boolean;
   author: User;
+  description?: string;
   extractorId?: string | null;
   children: ReactNode;
 };
@@ -20,6 +22,7 @@ export default function RecipeInfoSection({
   title,
   aiGenerated,
   author,
+  description,
   extractorId,
   children,
 }: RecipeInfoSectionProps) {
@@ -68,6 +71,8 @@ export default function RecipeInfoSection({
           )}
         </div>
       </section>
+
+      {description && <CollapsibleP content={description} />}
     </>
   );
 }

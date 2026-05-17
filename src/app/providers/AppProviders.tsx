@@ -9,6 +9,7 @@ import { queryClient } from "@/shared/lib/queryClient";
 import { AdsGateProvider } from "./AdsGateProvider";
 import { AIRecipeProvider } from "./AIRecipeProvider";
 import { AppStateInitializer } from "./AppStateInitializer";
+import { InternalNavTracker } from "./InternalNavTracker";
 import { KeyboardAwareProvider } from "./KeyboardAwareProvider";
 import { PostHogPageView } from "./PostHogPageView";
 import { PostHogProvider } from "./PostHogProvider";
@@ -23,6 +24,7 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
     <PostHogProvider>
       <PostHogPageView />
+      <InternalNavTracker />
       <SentryUserSync />
       <QueryClientProvider client={queryClient}>
         <ScrollProvider>

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { useIsApp } from "@/shared/hooks/useIsApp";
+import { useIsExternalEntry } from "@/shared/hooks/useIsExternalEntry";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { useRecipeStatus } from "@/features/recipe-status";
@@ -24,11 +25,13 @@ export default function RecipeNavbar({
 }: RecipeNavbarProps) {
   const { status, recipeId } = useRecipeStatus();
   const isApp = useIsApp();
+  const isExternalEntry = useIsExternalEntry();
   const router = useRouter();
 
-  const handleBack = isApp
-    ? undefined
-    : () => router.push(SEARCH_RESULTS_POPULAR_HREF);
+  const shouldRedirectToSearch = !isApp && isExternalEntry;
+  const handleBack = shouldRedirectToSearch
+    ? () => router.push(SEARCH_RESULTS_POPULAR_HREF)
+    : undefined;
 
   return (
     <TransformingNavbar
