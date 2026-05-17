@@ -21,15 +21,15 @@ export const END_POINTS = {
   INGREDIENTS: "/ingredients",
   SEARCH_INGREDIENTS: "/search/ingredients",
   INGREDIENTS_BY_ID: (id: string) => `/ingredients/${id}`,
-  RECIPE_COMMENT: (id: string) => `/recipes/${id}/comments`,
+  RECIPE_COMMENT: (id: string) => `/dev/recipes/${id}/comments`,
   RECIPE_COMMENT_BY_ID: (recipeId: string, commentId: string) =>
-    `/recipes/${recipeId}/comments/${commentId}`,
+    `/dev/recipes/${recipeId}/comments/${commentId}`,
   RECIPE_REPLY: (recipeId: string, commentId: string) =>
-    `/recipes/${recipeId}/comments/${commentId}/replies`,
-  RECIPE_LIKE: (id: string) => `/recipes/${id}/like`,
-  COMMENT_LIKE: (id: string) => `/comments/${id}/like`,
-  RECIPE_FAVORITE: (id: string) => `/recipes/${id}/favorite`,
-  RECIPE_SAVE: (id: string) => `/recipes/${id}/favorite`, // 동일 endpoint, 마이그레이션용 alias
+    `/dev/recipes/${recipeId}/comments/${commentId}/replies`,
+  RECIPE_LIKE: (id: string) => `/dev/recipes/${id}/like`,
+  COMMENT_LIKE: (id: string) => `/dev/comments/${id}/like`,
+  RECIPE_FAVORITE: (id: string) => `/dev/recipes/${id}/favorite`,
+  RECIPE_SAVE: (id: string) => `/dev/recipes/${id}/favorite`, // 동일 endpoint, 마이그레이션용 alias
   RECIPE_SAVED_BOOKS: (recipeId: string) => `/dev/recipes/${recipeId}/saved-books`,
   RECIPE_BOOKS: "/me/recipe-books",
   RECIPE_BOOK: (bookId: string) => `/me/recipe-books/${bookId}`,
@@ -60,7 +60,8 @@ export const END_POINTS = {
     `/users/${userId}/profile-image/presign`,
   RECIPE_HISTORY: "/me/calendar",
   RECORDS_TIMELINE: "/me/records/timeline",
-  RATING: (recipeId: string) => `/ratings/recipe/${recipeId}`,
+  RATING: (recipeId: string) => `/dev/ratings/recipe/${recipeId}`,
+  RECIPE_REPORTS: (recipeId: string) => `/dev/recipes/${recipeId}/reports`,
   LOGOUT: "/token/logout",
   DELETE_ACCOUNT: "/me",
   RECIPES_BY_TAG: () => "/recipes/by-tag",
