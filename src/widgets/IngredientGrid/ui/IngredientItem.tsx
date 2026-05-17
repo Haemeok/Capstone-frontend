@@ -43,7 +43,7 @@ const IngredientItem = ({
     <motion.div
       onClick={isDeleteMode ? handleDeleteModeClick : undefined}
       className={cn(
-        "relative flex items-center gap-4 rounded-2xl bg-white px-3 py-3 border border-gray-100 transition-colors",
+        "relative flex items-center gap-2 rounded-2xl bg-white px-2 py-3 border border-gray-100 transition-colors",
         isDeleteMode && "cursor-pointer",
         isSelected && "bg-olive-light/10 border-olive-light",
         !isDeleteMode && "active:bg-gray-50"
@@ -55,8 +55,8 @@ const IngredientItem = ({
         alt={ingredient.name}
         wrapperClassName="rounded-xl"
         imgClassName="flex-shrink-0"
-        width={60}
-        height={60}
+        width={50}
+        height={50}
       />
       <div className="flex min-w-0 flex-1 flex-col">
         <span className="text-xs font-medium text-gray-500">
