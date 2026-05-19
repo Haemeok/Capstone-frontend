@@ -6,10 +6,12 @@ export type Comment = {
   id: string;
   content: string;
   createdAt: string;
+  updatedAt: string;
   author: User;
   likeCount: number;
   replyCount?: number;
   likedByCurrentUser: boolean;
+  imageUrls?: string[];
 };
 
 export type CommentsApiResponse = PageResponse<Comment>;
