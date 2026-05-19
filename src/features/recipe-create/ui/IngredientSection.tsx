@@ -49,6 +49,7 @@ const IngredientSection = ({
 
   const addIngredient = (ingredient: IngredientPayload) => {
     appendIngredient({
+      ingredientId: ingredient.id ?? "",
       name: ingredient.name,
       quantity: "",
       unit: ingredient.unit,
