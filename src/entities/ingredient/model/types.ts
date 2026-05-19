@@ -54,6 +54,17 @@ export type IngredientNutrition = {
   sodiumMg?: number;
 };
 
+export type IngredientUnitOption = {
+  unit: string;
+  gramsPerUnit: number;
+  isDefault: boolean;
+};
+
+export type IngredientUnitsResponse = {
+  ingredientId: string;
+  units: IngredientUnitOption[];
+};
+
 export type IngredientPairItem = {
   id: string;
   name: string;
