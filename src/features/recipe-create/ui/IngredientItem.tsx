@@ -8,10 +8,17 @@ import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 
+import { syncStepIngredientUnit } from "../lib/syncStepIngredientUnit";
 import { RecipeFormValues } from "../model/config";
+import UnitSelect from "./UnitSelect";
 
 type IngredientItemProps = {
-  field: { id: string; name: string; unit: string };
+  field: {
+    id: string;
+    ingredientId: string;
+    name: string;
+    unit: string;
+  };
   index: number;
   onRemove: (index: number) => void;
   register: UseFormRegister<RecipeFormValues>;
@@ -25,10 +32,14 @@ const IngredientItem = ({
   register,
   error,
 }: IngredientItemProps) => {
-  const { control, setValue } = useFormContext<RecipeFormValues>();
+  const { control, setValue, getValues } = useFormContext<RecipeFormValues>();
   const quantity = useWatch({
     control,
     name: `ingredients.${index}.quantity`,
+  });
+  const unit = useWatch({
+    control,
+    name: `ingredients.${index}.unit`,
   });
 
   const isApproximate = quantity === "약간";
@@ -41,6 +52,16 @@ const IngredientItem = ({
         shouldValidate: true,
       });
     }
+  };
+
+  const handleUnitChange = (nextUnit: string) => {
+    setValue(`ingredients.${index}.unit`, nextUnit, { shouldValidate: true });
+    const currentSteps = getValues("steps");
+    setValue(
+      "steps",
+      syncStepIngredientUnit(currentSteps, field.name, nextUnit),
+      { shouldDirty: true }
+    );
   };
 
   return (
@@ -81,7 +102,13 @@ const IngredientItem = ({
               required: "수량/단위를 입력해주세요.",
             })}
           />
-          <p className="w-8 text-sm text-gray-500">{field.unit}</p>
+          <UnitSelect
+            ingredientId={field.ingredientId}
+            value={unit}
+            onChange={handleUnitChange}
+            disabled={isApproximate}
+            ariaLabel={`${field.name} 단위`}
+          />
         </div>
         <div className="flex-shrink-0">
           <Button
