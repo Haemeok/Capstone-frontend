@@ -20,7 +20,7 @@ type CommentInputProps = {
 
 const CommentInput = ({ author, commentId }: CommentInputProps) => {
   const { recipeId } = useRecipeStatus();
-  const { createComment } = useCreateCommentMutation(recipeId);
+  const { createComment, isPending } = useCreateCommentMutation(recipeId);
   const { user } = useUserStore();
   const { setInputFocused } = useInputFocusStore();
   const [isFocused, setIsFocused] = useState(false);
@@ -59,6 +59,7 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
           user={user}
           commentId={commentId}
           enableImage={!commentId}
+          isSubmitting={isPending}
           onSubmit={handleSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
