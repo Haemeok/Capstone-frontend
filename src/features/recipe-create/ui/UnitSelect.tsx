@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { useIngredientUnits } from "@/entities/ingredient/model/hooks";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   Select,
@@ -11,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/shadcn/select";
+
+import { useIngredientUnits } from "@/entities/ingredient/model/hooks";
 
 type UnitSelectProps = {
   ingredientId: string;
