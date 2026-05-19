@@ -25,13 +25,14 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
   const { setInputFocused } = useInputFocusStore();
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleSubmit = (comment: string) => {
+  const handleSubmit = (comment: string, file: File | null) => {
     if (!recipeId || !user?.id) return;
 
     createComment({
       recipeId,
       comment,
       commentId,
+      file: file ?? undefined,
     });
   };
 
@@ -57,6 +58,7 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
           author={author}
           user={user}
           commentId={commentId}
+          enableImage={!commentId}
           onSubmit={handleSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}

@@ -32,7 +32,7 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
   const { createComment } = useCreateCommentMutation(recipeId);
   const { user } = useUserStore();
 
-  const handleSubmit = (comment: string) => {
+  const handleSubmit = (comment: string, file: File | null) => {
     if (!recipeId || !user?.id) return;
 
     createComment(
@@ -40,6 +40,7 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
         recipeId,
         comment,
         commentId,
+        file: file ?? undefined,
       },
       {
         onSuccess: () => {
@@ -72,6 +73,7 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
             author={author}
             user={user}
             commentId={commentId}
+            enableImage={!commentId}
             onSubmit={handleSubmit}
           />
         </div>
