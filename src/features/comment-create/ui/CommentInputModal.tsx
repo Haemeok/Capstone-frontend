@@ -29,7 +29,7 @@ type CommentInputModalProps = {
 const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { recipeId } = useRecipeStatus();
-  const { createComment } = useCreateCommentMutation(recipeId);
+  const { createComment, isPending } = useCreateCommentMutation(recipeId);
   const { user } = useUserStore();
 
   const handleSubmit = (comment: string, file: File | null) => {
@@ -74,6 +74,7 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
             user={user}
             commentId={commentId}
             enableImage={!commentId}
+            isSubmitting={isPending}
             onSubmit={handleSubmit}
           />
         </div>

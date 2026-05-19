@@ -44,7 +44,7 @@ const postCommentWithRetry = async (
 const useCreateCommentMutation = (recipeId: string) => {
   const queryClient = useQueryClient();
   const { addToast } = useToastStore();
-  const { mutate: createComment } = useMutation<
+  const { mutate: createComment, isPending } = useMutation<
     Comment,
     Error,
     CreateCommentMutationParams
@@ -75,7 +75,7 @@ const useCreateCommentMutation = (recipeId: string) => {
     },
   });
 
-  return { createComment };
+  return { createComment, isPending };
 };
 
 export default useCreateCommentMutation;
