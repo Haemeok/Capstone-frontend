@@ -15,6 +15,7 @@ import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { useDeleteCommentMutation } from "@/features/comment-delete";
 import CommentLikeButton from "@/features/comment-like/ui/CommentLikeButton";
+import CommentImage from "./CommentImage";
 import { useRecipeStatus } from "@/features/recipe-status";
 
 type CommentProps = {
@@ -67,6 +68,9 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
         </div>
       </div>
       <p className={`text-[#2a2229]`}>{comment.content}</p>
+      {comment.imageUrls && comment.imageUrls.length > 0 && (
+        <CommentImage urls={comment.imageUrls} />
+      )}
 
       <div className="mt-1 flex items-center gap-4">
         <CommentLikeButton
