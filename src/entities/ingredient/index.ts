@@ -1,9 +1,14 @@
 export {
+  fetchIngredientUnits,
   getIngredientDetail,
   getIngredientNames,
   getIngredients,
 } from "./model/api";
-export { useIngredientRecipesQuery, useMyIngredientIds } from "./model/hooks";
+export {
+  useIngredientRecipesQuery,
+  useIngredientUnits,
+  useMyIngredientIds,
+} from "./model/hooks";
 export type {
   AIIngredientPayload,
   IngredientDetailApiResponse,
@@ -14,4 +19,6 @@ export type {
   IngredientPayload,
   IngredientsApiResponse,
   IngredientStorageView,
+  IngredientUnitOption,
+  IngredientUnitsResponse,
 } from "./model/types";

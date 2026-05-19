@@ -10,6 +10,8 @@ import {
   IngredientNamesResponse,
   IngredientQueryParams,
   IngredientsApiResponse,
+  IngredientUnitOption,
+  IngredientUnitsResponse,
 } from "./types";
 
 export const getIngredients = async ({
@@ -84,4 +86,13 @@ export const getIngredientDetail = async (
     END_POINTS.INGREDIENTS_BY_ID(id)
   );
   return response;
+};
+
+export const fetchIngredientUnits = async (
+  ingredientId: string
+): Promise<IngredientUnitOption[]> => {
+  const response = await api.get<IngredientUnitsResponse>(
+    `/ingredients/${ingredientId}/units`
+  );
+  return response.units;
 };
