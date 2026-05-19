@@ -9,13 +9,14 @@ export const postComment = async ({
   recipeId,
   commentId,
   comment,
+  imageKeys,
 }: PostCommentParams): Promise<Comment> => {
-  const END_POINT = commentId
+  const endpoint = commentId
     ? END_POINTS.RECIPE_REPLY(recipeId, commentId)
     : END_POINTS.RECIPE_COMMENT(recipeId);
 
-  const response = await api.post<Comment>(END_POINT, {
-    content: comment,
-  });
-  return response;
+  const body: { content: string; imageKeys?: string[] } = { content: comment };
+  if (imageKeys && imageKeys.length > 0) body.imageKeys = imageKeys;
+
+  return api.post<Comment>(endpoint, body);
 };
