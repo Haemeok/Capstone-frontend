@@ -26,6 +26,8 @@ export const END_POINTS = {
     `/dev/recipes/${recipeId}/comments/${commentId}`,
   RECIPE_REPLY: (recipeId: string, commentId: string) =>
     `/dev/recipes/${recipeId}/comments/${commentId}/replies`,
+  COMMENT_IMAGE_UPLOAD_URLS: (recipeId: string) =>
+    `/dev/recipes/${recipeId}/comments/image-upload-urls`,
   RECIPE_LIKE: (id: string) => `/dev/recipes/${id}/like`,
   COMMENT_LIKE: (id: string) => `/dev/comments/${id}/like`,
   RECIPE_FAVORITE: (id: string) => `/dev/recipes/${id}/favorite`,
