@@ -57,13 +57,25 @@ export const prepareRecipeData = async (formData: RecipeFormValues) => {
     servings: Number(formData.servings) || 0,
     dishType: formData.dishType,
     imageKey: formData.imageKey,
-    ingredients: formData.ingredients.filter((i) => i.name?.trim()),
+    ingredients: formData.ingredients
+      .filter((i) => i.name?.trim())
+      .map((i) => ({
+        id: i.ingredientId,
+        name: i.name,
+        quantity: i.quantity,
+        unit: i.unit,
+      })),
     steps: formData.steps
       .filter((s) => s.instruction?.trim())
       .map((s) => ({
         stepNumber: s.stepNumber,
         instruction: s.instruction,
-        ingredients: s.ingredients || [],
+        ingredients: (s.ingredients ?? []).map((i) => ({
+          id: i.ingredientId,
+          name: i.name,
+          quantity: i.quantity,
+          unit: i.unit,
+        })),
         stepImageKey: undefined,
       })),
     cookingTools: formData.cookingTools || [],

@@ -8,11 +8,9 @@ import { ImageUploader } from "@/shared/ui/image/ImageUploader";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Label } from "@/shared/ui/shadcn/label";
 
-import { IngredientPayload } from "@/entities/ingredient";
-
 import { cn } from "@/lib/utils";
 
-import { RecipeFormValues } from "../model/config";
+import { IngredientPayload, RecipeFormValues } from "../model/config";
 
 type StepItemProps = {
   index: number;
@@ -60,6 +58,7 @@ const StepItem = ({
         updatedIngredients = [
           ...currentStepIngredients,
           {
+            ingredientId: ingredient.ingredientId ?? "",
             name: ingredient.name,
             quantity: ingredient.quantity ?? "",
             unit: ingredient.unit,
