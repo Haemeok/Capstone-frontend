@@ -1,11 +1,11 @@
 export const ADSENSE_CLIENT_ID =
   process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "";
 
-// 배포 환경에서 본인 계정으로만 광고를 노출시키기 위한 게이트.
-// 비어 있으면 게이트 비활성(앱 웹뷰면 모두 노출). 값이 있으면 앱 웹뷰 +
-// 현재 user.id === 이 값일 때만 광고가 뜬다 — 앱 코드 배포 전 본인 계정에서만
-// 검수하기 위한 임시 게이트. ADMIN_USER_ID는 server-only라서 client에 안 뚫고
-// 별도 NEXT_PUBLIC_* 로 같은 값을 한 번 더 넣는 구조.
+// 본인 계정에서는 광고를 완전히 막기 위한 blocklist 게이트.
+// 값이 비어 있으면 게이트 무효(모두 노출). 값이 있고 현재 user.id 와 일치하면
+// adsbygoogle.js 스크립트 로드 자체를 건너뛰고 모든 슬롯(인아티클 포함)이
+// 렌더되지 않는다. ADMIN_USER_ID 는 server-only 라서 client 에 안 뚫고 별도
+// NEXT_PUBLIC_* 로 같은 값을 한 번 더 넣는 구조.
 export const ADSENSE_TEST_USER_ID =
   process.env.NEXT_PUBLIC_ADSENSE_TEST_USER_ID || "";
 
