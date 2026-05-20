@@ -9,6 +9,7 @@
     "lint": "next lint",
     "lint:self-barrel": "node scripts/find-self-barrel.mjs",
     "test": "jest --runInBand",
+    "test:ci": "jest --runInBand --coverage --coverageReporters=text-summary --coverageReporters=lcov",
     "test:ssr": "jest --config jest.ssr.config.js --runInBand",
     "lhci": "lhci autorun",
     "analyze": "ANALYZE=true NEXT_TELEMETRY_DISABLED=1 next build",

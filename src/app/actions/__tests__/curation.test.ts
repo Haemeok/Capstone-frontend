@@ -2,6 +2,7 @@ import { validateMarkdown } from "@/app/admin/curation-test/lib/validate";
 
 jest.mock("ai", () => ({
   generateObject: jest.fn(),
+  generateText: jest.fn(),
 }));
 jest.mock("@ai-sdk/openai", () => ({
   createOpenAI: () => Object.assign(() => ({}), { chat: () => ({}) }),
@@ -16,14 +17,15 @@ jest.mock("@/shared/lib/admin-guard", () => ({
   requireAdminAction: jest.fn().mockResolvedValue(undefined),
 }));
 
-import { generateObject } from "ai";
+import { generateObject, generateText } from "ai";
 
 import { getRecipe } from "@/entities/recipe/model/api";
 
 import { generateCuration } from "../curation";
 import { searchRecipeIds } from "../curation.search";
 
-const mockGen = generateObject as jest.MockedFunction<typeof generateObject>;
+const mockGenObj = generateObject as jest.MockedFunction<typeof generateObject>;
+const mockGenText = generateText as jest.MockedFunction<typeof generateText>;
 const mockSearch = searchRecipeIds as jest.MockedFunction<
   typeof searchRecipeIds
 >;
@@ -77,20 +79,20 @@ describe("generateCuration", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       async (id: string) => fakeRecipe(id) as any,
     );
-    mockGen
-      .mockResolvedValueOnce({
-        object: {
-          h1: "겨울 보양식 한 그릇",
-          dek: "오늘 저녁 메뉴",
-          category: "FOOD & LIFE",
-          selectedIndices: [0, 1, 2],
-        },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any)
-      .mockResolvedValueOnce({
-        object: { bodyMarkdown: fakeBody(3) },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any);
+    mockGenObj.mockResolvedValueOnce({
+      object: {
+        h1: "겨울 보양식 한 그릇",
+        dek: "오늘 저녁 메뉴",
+        category: "FOOD & LIFE",
+        selectedIndices: [0, 1, 2],
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    mockGenText
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockResolvedValueOnce({ text: "솔라 raw 본문" } as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockResolvedValueOnce({ text: fakeBody(3) } as any);
 
     const result = await generateCuration({
       params: { dishType: "찌개", season: "겨울" },
@@ -116,30 +118,31 @@ describe("generateCuration", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       async (id: string) => fakeRecipe(id) as any,
     );
-    mockGen
+    mockGenObj.mockResolvedValueOnce({
+      object: {
+        h1: "x",
+        dek: "y".repeat(25),
+        category: "FOOD & LIFE",
+        selectedIndices: [0, 1, 2],
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    mockGenText
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockResolvedValueOnce({ text: "솔라 raw 본문" } as any)
       .mockResolvedValueOnce({
-        object: {
-          h1: "x",
-          dek: "y".repeat(25),
-          category: "FOOD & LIFE",
-          selectedIndices: [0, 1, 2],
-        },
+        text: fakeBody(3).replace("{{yt:1}}", ""),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any)
-      .mockResolvedValueOnce({
-        object: { bodyMarkdown: fakeBody(3).replace("{{yt:1}}", "") },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any)
-      .mockResolvedValueOnce({
-        object: { bodyMarkdown: fakeBody(3) },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockResolvedValueOnce({ text: fakeBody(3) } as any);
 
     const result = await generateCuration({
       params: { dishType: "찌개" },
     });
     expect(result.markdown).toContain("[요리-a →](/recipes/a)");
-    expect(mockGen).toHaveBeenCalledTimes(3);
+    // Solar 1번 + Grok 슬롯 인서터 2번(첫 실패 후 retry 성공)
+    expect(mockGenText).toHaveBeenCalledTimes(3);
   });
 
   it("validation 3회 실패 시 VALIDATION_FAILED throw", async () => {
@@ -148,20 +151,20 @@ describe("generateCuration", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       async (id: string) => fakeRecipe(id) as any,
     );
-    mockGen
-      .mockResolvedValueOnce({
-        object: {
-          h1: "x",
-          dek: "y".repeat(25),
-          category: "FOOD & LIFE",
-          selectedIndices: [0, 1, 2],
-        },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any)
-      .mockResolvedValue({
-        object: { bodyMarkdown: "너무 짧아" },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any);
+    mockGenObj.mockResolvedValueOnce({
+      object: {
+        h1: "x",
+        dek: "y".repeat(25),
+        category: "FOOD & LIFE",
+        selectedIndices: [0, 1, 2],
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    mockGenText
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockResolvedValueOnce({ text: "솔라 raw 본문" } as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockResolvedValue({ text: "너무 짧아" } as any);
 
     await expect(
       generateCuration({ params: { dishType: "찌개" } }),
