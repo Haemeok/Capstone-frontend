@@ -75,7 +75,7 @@ const FAKE_RECIPE_GAJI: Recipe = {
   ],
   tags: [],
   comments: [],
-  author: { id: "u", nickname: "u", profileImage: "", hasFirstRecord: false, remainingAiQuota: 0, remainingYoutubeQuota: 0 },
+  author: { id: "u", nickname: "u", profileImage: "", hasFirstRecord: false, remainingAiGenerationQuota: 0, remainingYoutubeExtractionCredits: 0, remainingAiQuota: 0, remainingYoutubeQuota: 0 },
   likeCount: 0,
   likedByCurrentUser: false,
   favoriteByCurrentUser: false,

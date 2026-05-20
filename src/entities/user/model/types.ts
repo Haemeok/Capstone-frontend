@@ -9,6 +9,8 @@ export type User = {
   likes?: number;
   surveyCompleted?: boolean;
   hasFirstRecord: boolean;
+  remainingAiGenerationQuota: number;
+  remainingYoutubeExtractionCredits: number;
   remainingAiQuota: number;
   remainingYoutubeQuota: number;
 };

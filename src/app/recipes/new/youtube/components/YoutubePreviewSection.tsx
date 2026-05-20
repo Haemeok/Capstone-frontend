@@ -90,7 +90,7 @@ export const YoutubePreviewSection = ({
   const { validatedUrl, videoId, urlSource } = useYoutubeUrl();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const hasNoQuota = user?.remainingYoutubeQuota === 0;
+  const hasNoQuota = (user?.remainingYoutubeQuota ?? 0) < 2;
 
   const {
     data: youtubeMeta,
