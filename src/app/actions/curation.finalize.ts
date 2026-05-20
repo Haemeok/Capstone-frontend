@@ -1,6 +1,7 @@
 "use server";
 
-import { mkdir, writeFile } from "fs/promises";
+import { randomUUID } from "crypto";
+import { mkdir, rename, unlink, writeFile } from "fs/promises";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { join } from "path";
 
@@ -12,6 +13,22 @@ import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 const STORAGE_DIR = join(process.cwd(), "data", "curations-local");
 
+// Atomic write — 같은 슬러그에 동시 발행이 떨어져도 partial write 로 깨지지
+// 않도록 tmp 파일에 먼저 쓰고 rename 으로 교체.
+const writeJsonAtomic = async (
+  filePath: string,
+  data: unknown,
+): Promise<void> => {
+  const tmpPath = `${filePath}.${randomUUID()}.tmp`;
+  try {
+    await writeFile(tmpPath, JSON.stringify(data, null, 2), "utf-8");
+    await rename(tmpPath, filePath);
+  } catch (e) {
+    await unlink(tmpPath).catch(() => {});
+    throw e;
+  }
+};
+
 export type FinalizeCurationBatchResult = {
   saved: number;
   saveErrors: { slug: string; message: string }[];
@@ -22,29 +39,32 @@ export const finalizeCurationBatch = async (
 ): Promise<FinalizeCurationBatchResult> => {
   await requireAdminAction();
 
-  for (const r of records) {
+  // 같은 batch 안에 같은 슬러그가 두 번 들어와도 한 번만 쓴다 (마지막 항목 우선).
+  // 보통은 caller 가 dedupe 하지만 안전망.
+  const uniqueRecords = Array.from(
+    new Map(records.map((r) => [r.slug, r])).values(),
+  );
+
+  for (const r of uniqueRecords) {
     revalidateTag(`curation:${r.slug}`);
     revalidatePath(`/curation/${r.slug}`);
   }
 
-  if (records.length === 0) return { saved: 0, saveErrors: [] };
+  if (uniqueRecords.length === 0) return { saved: 0, saveErrors: [] };
 
   await mkdir(STORAGE_DIR, { recursive: true });
 
   const saveErrors: { slug: string; message: string }[] = [];
   let saved = 0;
   await Promise.all(
-    records.map(async (r) => {
+    uniqueRecords.map(async (r) => {
+      const filePath = join(STORAGE_DIR, `${r.slug}.json`);
       try {
         const payload: SavedCurationRecord = {
           ...r,
           savedAt: new Date().toISOString(),
         };
-        await writeFile(
-          join(STORAGE_DIR, `${r.slug}.json`),
-          JSON.stringify(payload, null, 2),
-          "utf-8",
-        );
+        await writeJsonAtomic(filePath, payload);
         saved += 1;
       } catch (e) {
         saveErrors.push({
