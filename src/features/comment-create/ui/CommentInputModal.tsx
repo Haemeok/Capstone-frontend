@@ -73,7 +73,7 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
             author={author}
             user={user}
             commentId={commentId}
-            enableImage={!commentId}
+            enableImage={false}
             isSubmitting={isPending}
             onSubmit={handleSubmit}
           />

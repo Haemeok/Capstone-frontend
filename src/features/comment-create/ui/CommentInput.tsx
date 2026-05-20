@@ -58,7 +58,7 @@ const CommentInput = ({ author, commentId }: CommentInputProps) => {
           author={author}
           user={user}
           commentId={commentId}
-          enableImage={!commentId}
+          enableImage={false}
           isSubmitting={isPending}
           onSubmit={handleSubmit}
           onFocus={handleFocus}
