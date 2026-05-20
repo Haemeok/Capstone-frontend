@@ -15,6 +15,7 @@ import { getRecipe } from "@/entities/recipe/model/api";
 import { findCommonIngredientNames } from "@/app/admin/curation-test/lib/commonIngredients";
 import { computeWarnings } from "@/app/admin/curation-test/lib/computeWarnings";
 import { hydrateMarkdown } from "@/app/admin/curation-test/lib/hydrate";
+import { sanitizeQParam } from "@/app/admin/curation-test/lib/sanitizeQ";
 import { slugify } from "@/app/admin/curation-test/lib/slugify";
 import { pickToneBySlug } from "@/app/admin/curation-test/lib/toneSeed";
 
@@ -73,9 +74,13 @@ export const generateCuration = async (
   const slug = slugify(input.params);
   const toneSeed: ToneSeed = input.forceToneSeed ?? pickToneBySlug(slug);
 
+  // slug 계산 이후에만 적용 — 이미 raw q 로 발행된 기록과의 slug 매칭은 유지하면서
+  // 검색/LLM/warnings 단계로 흘러가는 q 에서 보조어("레시피", "요리", "만드는법" 등)는 제거.
+  const sanitizedParams = sanitizeQParam(input.params);
+
   // Stage 1: Fetch — recipeCount의 2배 풀을 가져와서 Title 단계가 가장 결속력 있는
   // N개를 고르도록 한다. 풀이 작으면 (3 미만) 큐레이션 자체를 포기.
-  const poolIds = await searchRecipeIds(input.params, {
+  const poolIds = await searchRecipeIds(sanitizedParams, {
     limit: targetPoolSize,
   });
   if (poolIds.length < 3) {
@@ -98,7 +103,7 @@ export const generateCuration = async (
   // Stage 2: Title (+ 풀에서 N개 선별)
   const titleObj = await generateCurationTitle({
     solarModel,
-    params: input.params,
+    params: sanitizedParams,
     pool,
     commonIngredients,
     recipeCount,
@@ -116,7 +121,7 @@ export const generateCuration = async (
   const bodyMarkdown = await generateCurationBody({
     solarModel,
     grokModel,
-    params: input.params,
+    params: sanitizedParams,
     h1: titleObj.h1,
     dek: titleObj.dek,
     recipes,
@@ -137,7 +142,7 @@ export const generateCuration = async (
 
   const warnings = computeWarnings({
     markdown: hydrated,
-    params: input.params,
+    params: sanitizedParams,
     recipes,
     expectedSectionCount: recipes.length,
   });
