@@ -1,13 +1,17 @@
 export const ADSENSE_CLIENT_ID =
   process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "";
 
-// 본인 계정에서는 광고를 완전히 막기 위한 blocklist 게이트.
-// 값이 비어 있으면 게이트 무효(모두 노출). 값이 있고 현재 user.id 와 일치하면
-// adsbygoogle.js 스크립트 로드 자체를 건너뛰고 모든 슬롯(인아티클 포함)이
-// 렌더되지 않는다. ADMIN_USER_ID 는 server-only 라서 client 에 안 뚫고 별도
-// NEXT_PUBLIC_* 로 같은 값을 한 번 더 넣는 구조.
-export const ADSENSE_TEST_USER_ID =
-  process.env.NEXT_PUBLIC_ADSENSE_TEST_USER_ID || "";
+// 본인 계정 등에서는 광고를 완전히 막기 위한 blocklist 게이트.
+// 콤마로 여러 user.id 를 나열할 수 있고, 매칭되면 adsbygoogle.js 스크립트
+// 로드 자체를 건너뛰고 모든 슬롯(인아티클 포함)이 렌더되지 않는다.
+// 값이 비어 있으면 게이트 무효(모두 노출). ADMIN_USER_ID 는 server-only 라
+// client 에 안 뚫고 별도 NEXT_PUBLIC_* 로 같은 값을 한 번 더 넣는 구조.
+export const ADSENSE_TEST_USER_IDS = new Set(
+  (process.env.NEXT_PUBLIC_ADSENSE_TEST_USER_ID ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0),
+);
 
 // AdSense 정책: 한 페이지에 동일한 data-ad-slot을 두 번 이상 박으면 TagError.
 // 검색/레시피처럼 같은 페이지에 광고 자리가 여러 번 나오는 경우 콘솔에서
