@@ -26,6 +26,7 @@ Reference these guidelines when:
 | `lookup-` | Reuse existing lookup tables before authoring parallel ones |
 | `external-` | External-source-of-truth values (vendor IDs, prices, rates) |
 | `scope-` | Disambiguating user intent before committing to a plan |
+| `dispatch-` | Subagent dispatch shape (parallel vs sequential) at plan time |
 | `no-` | Anti-patterns to avoid emitting in plans or generated code |
 
 ## Quick Reference
@@ -41,6 +42,10 @@ Reference these guidelines when:
 ### Scope disambiguation
 
 - `scope-confirm-mode-vs-mechanism` — Vague feature requests often have two valid readings: a new mechanism on top of existing flow, OR a mode the underlying API already supports. Read the API surface first; if both readings are valid, ask one disambiguating question rather than committing to a multi-task plan for the bigger reading.
+
+### Subagent dispatch
+
+- `dispatch-mcp-tools-force-sequential-subagents` — MCP servers (Playwright, Vercel, etc.) are session-scoped, not per-subagent. Parallel subagents sharing the same MCP tool will contend on one connection. At plan time, classify each subagent's tools — anything `mcp__*` forces sequential dispatch. Decide in the plan, not at runtime.
 
 ### Anti-patterns
 
