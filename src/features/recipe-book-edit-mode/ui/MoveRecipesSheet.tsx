@@ -64,7 +64,7 @@ export const MoveRecipesSheet = ({
   };
 
   const Body = (
-    <div className="px-2 pb-6">
+    <div className="flex-1 min-h-0 overflow-y-auto px-2 pb-6">
       {canCreateMore && (
         <button
           type="button"
@@ -106,7 +106,7 @@ export const MoveRecipesSheet = ({
   return (
     <>
       <Container open={open} onOpenChange={onOpenChange}>
-        <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
+        <Content className="flex flex-col overflow-hidden border-0 bg-white shadow-xl sm:max-h-[85vh] sm:max-w-md sm:rounded-2xl">
           <Header className="px-6 pt-6 pb-2 text-left">
             <Title className="text-xl font-bold text-gray-900">
               어느 레시피북으로 이동할까요?
