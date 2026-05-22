@@ -52,12 +52,12 @@ export const useAIJobPolling = () => {
 
       const meta = job.meta;
 
-      completeJob(idempotencyKey, recipeId);
-
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
       triggerHaptic("Success");
+
+      let toastId: number | undefined;
 
       try {
         const recipe = await queryClient.fetchQuery({
@@ -78,7 +78,7 @@ export const useAIJobPolling = () => {
           createdAt: recipe.createdAt || new Date().toISOString(),
         });
 
-        addToast({
+        toastId = addToast({
           message: "",
           variant: "rich-youtube",
           position: "bottom",
@@ -96,7 +96,7 @@ export const useAIJobPolling = () => {
           },
         });
       } catch {
-        addToast({
+        toastId = addToast({
           message: `${meta.displayName} 레시피가 완성되었어요!`,
           variant: "success",
           position: "bottom",
@@ -107,6 +107,8 @@ export const useAIJobPolling = () => {
           },
         });
       }
+
+      completeJob(idempotencyKey, recipeId, toastId);
 
       setTimeout(() => {
         removeJob(idempotencyKey);
