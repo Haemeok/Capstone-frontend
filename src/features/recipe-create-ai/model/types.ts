@@ -88,4 +88,5 @@ export type ActiveAIJob = PersistedAIJob & {
   code?: string;
   message?: string;
   retryAfter?: number;
+  successToastId?: number;
 };
