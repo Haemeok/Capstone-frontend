@@ -7,6 +7,7 @@ import {
   aiModels,
   aiModelSteps,
 } from "@/shared/config/constants/aiModel";
+import PrevButton from "@/shared/ui/PrevButton";
 
 import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
 
@@ -54,7 +55,9 @@ const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
   }, []);
 
   return (
-    <div className="flex min-h-[calc(100dvh-77px)] w-full flex-col items-center justify-center gap-6 p-4">
+    <div className="relative flex min-h-[calc(100dvh-77px)] w-full flex-col items-center justify-center gap-6 p-4">
+      <PrevButton className="absolute top-4 left-4 text-gray-600" />
+
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-dark text-2xl font-bold">
           {name} 레시피를 만들고 있어요
