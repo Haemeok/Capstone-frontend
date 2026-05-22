@@ -143,20 +143,22 @@ const IngredientRecipePage = () => {
             />
           </div>
         </FormProvider>
-        <BottomAnchorAdSlot />
       </Container>
     </AIConceptShell>
   );
 };
 
 const IngredientRecipePageWithErrorBoundary = () => (
-  <ErrorBoundary
-    fallback={
-      <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
-    }
-  >
-    <IngredientRecipePage />
-  </ErrorBoundary>
+  <>
+    <ErrorBoundary
+      fallback={
+        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
+      }
+    >
+      <IngredientRecipePage />
+    </ErrorBoundary>
+    <BottomAnchorAdSlot />
+  </>
 );
 
 export default IngredientRecipePageWithErrorBoundary;

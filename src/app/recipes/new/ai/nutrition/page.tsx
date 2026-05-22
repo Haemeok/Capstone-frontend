@@ -175,20 +175,22 @@ const NutritionRecipePage = () => {
             )}
           </UsageLimitSection>
         </div>
-        <BottomAnchorAdSlot />
       </Container>
     </AIConceptShell>
   );
 };
 
 const NutritionRecipePageWithErrorBoundary = () => (
-  <ErrorBoundary
-    fallback={
-      <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
-    }
-  >
-    <NutritionRecipePage />
-  </ErrorBoundary>
+  <>
+    <ErrorBoundary
+      fallback={
+        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
+      }
+    >
+      <NutritionRecipePage />
+    </ErrorBoundary>
+    <BottomAnchorAdSlot />
+  </>
 );
 
 export default NutritionRecipePageWithErrorBoundary;
