@@ -1,13 +1,12 @@
 "use client";
 
-import { type ReactNode, useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import type { AIModelId } from "@/shared/config/constants/aiModel";
 import { Container } from "@/shared/ui/Container";
 
-import { useAIRecipeFocusStore } from "@/features/recipe-create-ai/model/focusStore";
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
 
 import { useToastStore } from "@/widgets/Toast";
@@ -27,17 +26,6 @@ type AIConceptShellProps = {
   progress: number;
   onRetry: () => void;
   children: ReactNode;
-};
-
-const FormFocusGuard = ({ children }: { children: ReactNode }) => {
-  const setFocusFormPage = useAIRecipeFocusStore((s) => s.setFocusFormPage);
-
-  useEffect(() => {
-    setFocusFormPage(true);
-    return () => setFocusFormPage(false);
-  }, [setFocusFormPage]);
-
-  return <>{children}</>;
 };
 
 const AIConceptShell = ({
@@ -89,7 +77,7 @@ const AIConceptShell = ({
     return null;
   }
 
-  return <FormFocusGuard>{children}</FormFocusGuard>;
+  return <>{children}</>;
 };
 
 export default AIConceptShell;

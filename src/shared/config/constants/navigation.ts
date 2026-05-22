@@ -1,6 +1,10 @@
 export const HIDDEN_NAVBAR_PATHS = [
   "/login",
   "/recipes/new/youtube",
+  "/recipes/new/ai/price",
+  "/recipes/new/ai/finedining",
+  "/recipes/new/ai/ingredient",
+  "/recipes/new/ai/nutrition",
 ] as const;
 
 // 앱/웹 무관하게 항상 nav 가 숨겨져야 하는 fullscreen / focus-mode 패턴

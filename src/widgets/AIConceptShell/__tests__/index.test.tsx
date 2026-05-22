@@ -1,6 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
 
-import { useAIRecipeFocusStore } from "@/features/recipe-create-ai/model/focusStore";
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
 
 import { useToastStore } from "@/widgets/Toast";
@@ -41,13 +40,12 @@ const baseJob: ActiveAIJob = {
 beforeEach(() => {
   mockReplace.mockClear();
   act(() => {
-    useAIRecipeFocusStore.setState({ focusFormPage: false });
     useToastStore.setState({ toastList: [] });
   });
 });
 
 describe("AIConceptShell", () => {
-  it("idle 상태에서 children 을 렌더하고 focus mode 를 켠다", () => {
+  it("idle 상태에서 children 을 그대로 렌더한다", () => {
     render(
       <AIConceptShell
         concept="COST_EFFECTIVE"
@@ -62,31 +60,9 @@ describe("AIConceptShell", () => {
     );
 
     expect(screen.getByTestId("form")).toBeInTheDocument();
-    expect(useAIRecipeFocusStore.getState().focusFormPage).toBe(true);
   });
 
-  it("unmount 시 focus mode 를 끈다", () => {
-    const { unmount } = render(
-      <AIConceptShell
-        concept="COST_EFFECTIVE"
-        job={undefined}
-        isPending={false}
-        isFailed={false}
-        progress={0}
-        onRetry={jest.fn()}
-      >
-        <div>form</div>
-      </AIConceptShell>
-    );
-
-    expect(useAIRecipeFocusStore.getState().focusFormPage).toBe(true);
-
-    unmount();
-
-    expect(useAIRecipeFocusStore.getState().focusFormPage).toBe(false);
-  });
-
-  it("isPending 일 땐 AiLoading 으로 분기하고 focus mode 를 켜지 않는다", () => {
+  it("isPending 일 땐 AiLoading 분기로 children 을 가린다", () => {
     render(
       <AIConceptShell
         concept="COST_EFFECTIVE"
@@ -101,10 +77,9 @@ describe("AIConceptShell", () => {
     );
 
     expect(screen.queryByTestId("form")).not.toBeInTheDocument();
-    expect(useAIRecipeFocusStore.getState().focusFormPage).toBe(false);
   });
 
-  it("isFailed 일 땐 AIRecipeError 분기하고 focus mode 를 켜지 않는다", () => {
+  it("isFailed 일 땐 AIRecipeError 분기로 children 을 가린다", () => {
     render(
       <AIConceptShell
         concept="COST_EFFECTIVE"
@@ -119,7 +94,6 @@ describe("AIConceptShell", () => {
     );
 
     expect(screen.queryByTestId("form")).not.toBeInTheDocument();
-    expect(useAIRecipeFocusStore.getState().focusFormPage).toBe(false);
   });
 
   it("job.state === 'completed' 이면 router.replace 로 결과 페이지 이동", () => {
