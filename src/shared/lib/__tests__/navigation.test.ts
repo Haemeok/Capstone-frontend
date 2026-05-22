@@ -5,11 +5,22 @@ describe("shouldHideNavbar", () => {
     it.each([
       "/login",
       "/recipes/new/youtube",
-      "/recipes/new/ai/price",
       "/recipes/abc123/slide-show",
     ])("hides on %s", (path) => {
       expect(shouldHideNavbar(path, { isApp: true })).toBe(true);
       expect(shouldHideNavbar(path, { isApp: false })).toBe(true);
+    });
+  });
+
+  describe("ai recipe form pages — URL 만 보면 더 이상 숨기지 않는다 (focus store 가 결정)", () => {
+    it.each([
+      "/recipes/new/ai/price",
+      "/recipes/new/ai/ingredient",
+      "/recipes/new/ai/nutrition",
+      "/recipes/new/ai/finedining",
+    ])("shows on %s regardless of isApp", (path) => {
+      expect(shouldHideNavbar(path, { isApp: true })).toBe(false);
+      expect(shouldHideNavbar(path, { isApp: false })).toBe(false);
     });
   });
 
