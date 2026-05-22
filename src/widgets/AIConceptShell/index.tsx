@@ -1,8 +1,8 @@
 "use client";
 
+import { type ReactNode, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useEffect, type ReactNode } from "react";
 
 import type { AIModelId } from "@/shared/config/constants/aiModel";
 import { Container } from "@/shared/ui/Container";
