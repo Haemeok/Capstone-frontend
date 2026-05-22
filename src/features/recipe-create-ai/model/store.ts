@@ -107,7 +107,11 @@ type AIRecipeStoreV2 = {
     progress: number,
     resultRecipeId?: string
   ) => void;
-  completeJob: (idempotencyKey: string, recipeId: string) => void;
+  completeJob: (
+    idempotencyKey: string,
+    recipeId: string,
+    toastId?: number
+  ) => void;
   failJob: (
     idempotencyKey: string,
     code: string | undefined,
@@ -217,7 +221,7 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
     });
   },
 
-  completeJob: (idempotencyKey, recipeId) => {
+  completeJob: (idempotencyKey, recipeId, toastId) => {
     removePersistedJob(idempotencyKey);
 
     set((state) => {
@@ -232,6 +236,7 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
             state: "completed" as AIJobState,
             progress: 100,
             resultRecipeId: recipeId,
+            successToastId: toastId,
           },
         },
       };
