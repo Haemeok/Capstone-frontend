@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 import {
   type AIModelId,
@@ -14,25 +14,28 @@ import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress"
 type AiLoadingProps = {
   aiModelId: AIModelId;
   progress?: number;
-  startTime?: number;
+  startTime: number;
 };
 
 const UPDATE_INTERVAL_MS = 2000;
 
+const subscribeToInterval = (notify: () => void) => {
+  const id = setInterval(notify, UPDATE_INTERVAL_MS);
+  return () => clearInterval(id);
+};
+
 const useFakeProgress = (startTime: number) => {
-  const [progress, setProgress] = useState(() =>
-    calculateFakeProgress(startTime)
+  const getSnapshot = useCallback(
+    () => calculateFakeProgress(startTime),
+    [startTime]
   );
+  const getServerSnapshot = useCallback(() => 0, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(calculateFakeProgress(startTime));
-    }, UPDATE_INTERVAL_MS);
-
-    return () => clearInterval(interval);
-  }, [startTime]);
-
-  return progress;
+  return useSyncExternalStore(
+    subscribeToInterval,
+    getSnapshot,
+    getServerSnapshot
+  );
 };
 
 const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
@@ -41,7 +44,7 @@ const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
   const aiModel = aiModels[aiModelId];
   const { name } = aiModel;
 
-  const fakeProgress = useFakeProgress(startTime ?? Date.now());
+  const fakeProgress = useFakeProgress(startTime);
   const displayProgress = Math.max(progress, fakeProgress);
 
   useEffect(() => {
