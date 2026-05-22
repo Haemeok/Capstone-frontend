@@ -1,12 +1,16 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, type ReactNode } from "react";
 
 import type { AIModelId } from "@/shared/config/constants/aiModel";
 import { Container } from "@/shared/ui/Container";
 
+import { useAIRecipeFocusStore } from "@/features/recipe-create-ai/model/focusStore";
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
+
+import { useToastStore } from "@/widgets/Toast";
 
 const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
   ssr: false,
@@ -25,6 +29,17 @@ type AIConceptShellProps = {
   children: ReactNode;
 };
 
+const FormFocusGuard = ({ children }: { children: ReactNode }) => {
+  const setFocusFormPage = useAIRecipeFocusStore((s) => s.setFocusFormPage);
+
+  useEffect(() => {
+    setFocusFormPage(true);
+    return () => setFocusFormPage(false);
+  }, [setFocusFormPage]);
+
+  return <>{children}</>;
+};
+
 const AIConceptShell = ({
   concept,
   job,
@@ -34,6 +49,19 @@ const AIConceptShell = ({
   onRetry,
   children,
 }: AIConceptShellProps) => {
+  const router = useRouter();
+  const isCompleted = job?.state === "completed";
+  const resultRecipeId = job?.resultRecipeId;
+  const successToastId = job?.successToastId;
+
+  useEffect(() => {
+    if (!isCompleted || !resultRecipeId) return;
+    if (successToastId !== undefined) {
+      useToastStore.getState().removeToast(successToastId);
+    }
+    router.replace(`/recipes/${resultRecipeId}`);
+  }, [isCompleted, resultRecipeId, successToastId, router]);
+
   if (isPending && job) {
     return (
       <Container padding={false}>
@@ -57,7 +85,11 @@ const AIConceptShell = ({
     );
   }
 
-  return <>{children}</>;
+  if (isCompleted) {
+    return null;
+  }
+
+  return <FormFocusGuard>{children}</FormFocusGuard>;
 };
 
 export default AIConceptShell;
