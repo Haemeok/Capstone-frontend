@@ -90,6 +90,32 @@ export const fetchAllCurationArticlesForSitemap = async (): Promise<
   }
 };
 
+export const fetchRecentCurationForFeed = async (
+  size = 50,
+): Promise<PublicCurationArticleListItemDto[]> => {
+  const search = new URLSearchParams({
+    page: "0",
+    size: String(size),
+  });
+  const url = `${BASE_API_URL}${END_POINTS.CURATION_ARTICLES}?${search.toString()}`;
+  try {
+    const res = await fetch(url, {
+      next: {
+        revalidate: REVALIDATION_TIMES.CURATION_FEED,
+        tags: [CACHE_TAGS.curationFeed],
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`fetchRecentCurationForFeed ${res.status}`);
+    }
+    const data = (await res.json()) as CurationArticleListResponse;
+    return data.content;
+  } catch (e) {
+    captureException(e);
+    return [];
+  }
+};
+
 export const fetchCurationArticleList = async (
   params: CurationArticleListParams,
 ): Promise<CurationArticleListResponse> => {

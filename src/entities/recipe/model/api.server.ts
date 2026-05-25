@@ -222,6 +222,37 @@ export const getStaticrecipionServer = async (
   }
 };
 
+export const fetchRecentRecipesForFeed = async (
+  size = 100,
+): Promise<StaticDetailedRecipeGridItem[]> => {
+  const query = new URLSearchParams({
+    page: "0",
+    size: String(size),
+    sort: "createdAt,desc",
+  });
+  const API_URL = `${BASE_API_URL}${END_POINTS.RECIPE_SEARCH}?${query.toString()}`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: REVALIDATION_TIMES.RECIPES_FEED,
+        tags: [CACHE_TAGS.recipesFeed],
+      },
+    });
+    if (!res.ok) {
+      console.error(
+        `[fetchRecentRecipesForFeed] API Error: ${res.status} ${res.statusText}`,
+      );
+      return [];
+    }
+    const data = (await res.json()) as StaticDetailedRecipesApiResponse;
+    return data.content;
+  } catch (error) {
+    console.error("[fetchRecentRecipesForFeed] Failed:", error);
+    return [];
+  }
+};
+
 export const fetchAllRecipesForSitemap = async (): Promise<
   Array<{ id: string; updatedAt: string }>
 > => {

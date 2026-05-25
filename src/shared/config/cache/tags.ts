@@ -7,4 +7,6 @@ export const CACHE_TAGS = {
   recipesTrending: "recipes-trending",
   recipesSitemap: "recipes-sitemap",
   curationArticlesSitemap: "curation-articles-sitemap",
+  recipesFeed: "recipes-feed",
+  curationFeed: "curation-feed",
 } as const;

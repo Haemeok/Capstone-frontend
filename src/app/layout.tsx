@@ -61,6 +61,24 @@ export default async function RootLayout({
           rel="dns-prefetch"
           href="https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com"
         />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="레시피오 – 전체"
+          href="/feed.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="레시피오 – 레시피"
+          href="/feed/recipes.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="레시피오 – 큐레이션"
+          href="/feed/curation.xml"
+        />
       </head>
       <body className={`${pretendard.className} bg-white`}>
         <AppWebViewDetector />

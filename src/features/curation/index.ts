@@ -20,5 +20,6 @@ export {
   fetchAllCurationArticlesForSitemap,
   fetchCurationArticle,
   fetchCurationArticleList,
+  fetchRecentCurationForFeed,
 } from "./model/api.server";
 export { CurationListCard } from "./ui/CurationListCard";
