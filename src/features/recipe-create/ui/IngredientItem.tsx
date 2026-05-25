@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 
 import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
+import IngredientIcon from "@/shared/ui/IngredientIcon";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { syncStepIngredientUnit } from "../lib/syncStepIngredientUnit";
@@ -69,14 +70,21 @@ const IngredientItem = ({
       <div className="flex items-center justify-between gap-2">
         <div className="flex h-full flex-1 items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-            <Image
-              src={INGREDIENT_IMAGE_URL(field.name)}
-              alt={field.name}
-              wrapperClassName="h-full w-full rounded-lg"
-              fit="cover"
-              width={40}
-              height={40}
-            />
+            {field.ingredientId ? (
+              <Image
+                src={INGREDIENT_IMAGE_URL(field.name)}
+                alt={field.name}
+                wrapperClassName="h-full w-full rounded-lg"
+                fit="cover"
+                width={40}
+                height={40}
+                errorFallback={
+                  <IngredientIcon className="!mr-0 h-5 w-5 text-olive-light/60" />
+                }
+              />
+            ) : (
+              <IngredientIcon className="!mr-0 h-5 w-5 text-olive-light/60" />
+            )}
           </div>
           <p className="flex-1 font-medium text-gray-800">{field.name}</p>
 

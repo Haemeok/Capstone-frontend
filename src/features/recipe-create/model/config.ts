@@ -25,7 +25,7 @@ const mainImageSchema = z
   });
 
 const ingredientSchema = z.object({
-  ingredientId: z.string().min(1),
+  ingredientId: z.string(),
   name: z.string(),
   quantity: z.string().min(1, MSG.DESCRIPTION.QUANTITY),
   unit: z.string().min(1),
