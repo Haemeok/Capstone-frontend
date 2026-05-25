@@ -116,23 +116,34 @@ describe("parseAndValidateRecipeBlogBody", () => {
     }
   });
 
-  it("lead 길이가 min 미만이면 에러", () => {
+  it("lead 가 매우 짧아도 (구조만 맞으면) 통과한다 — 길이 bound 없음", () => {
     const tooShort = validBody.replace(/## lead\n[^#]+/, "## lead\n짧음.\n\n");
     const result = parseAndValidateRecipeBlogBody(tooShort, {
       expectedStepNumbers: [1, 2],
     });
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.errors.join("\n")).toContain("lead");
-    }
+    expect(result.ok).toBe(true);
   });
 
-  it("kitchenTips 개수가 1개면 에러", () => {
+  it("kitchenTips 가 1개여도 통과한다 — 개수 bound 없음", () => {
     const single = validBody.replace(
       /## kitchenTips\n[^#]+/,
       `## kitchenTips\n- ${longText(60)}\n\n`,
     );
     const result = parseAndValidateRecipeBlogBody(single, {
+      expectedStepNumbers: [1, 2],
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.parsed.kitchenTips).toHaveLength(1);
+    }
+  });
+
+  it("kitchenTips 섹션은 있는데 불릿이 하나도 없으면 에러 (포맷 힌트)", () => {
+    const noBullets = validBody.replace(
+      /## kitchenTips\n[^#]+/,
+      "## kitchenTips\n그냥 본문 한 줄.\n\n",
+    );
+    const result = parseAndValidateRecipeBlogBody(noBullets, {
       expectedStepNumbers: [1, 2],
     });
     expect(result.ok).toBe(false);

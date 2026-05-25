@@ -109,14 +109,16 @@ export const BlogPostSchema = z.object({
 
 // LLM 메타 출력만 검증한다 (Stage 2). regex/url/format/record 키워드는
 // Upstage solar-pro3 JSON mode 가 자주 500 으로 거부하므로 primitive 만 사용.
-// alts 는 서버 액션이 recipe.title + slot key 로 자동 합성한다 (큐레이션과 같은 패턴).
+// alts 는 서버 액션이 recipe.title + slot key 로 자동 합성한다.
+// 길이/개수 bound 는 일부러 두지 않는다 — prompt 가이드로 정성적 유도만 하고
+// 검증 실패로 retry 가 터지는 비용을 피한다.
 export const BlogPostMetaSchema = z.object({
   title: z.object({
-    main: z.string().min(20).max(110),
-    sub: z.string().min(8).max(70),
+    main: z.string(),
+    sub: z.string(),
   }),
-  captionForPlated: z.string().min(8).max(40),
-  hashtags: z.array(z.string()).min(8).max(10),
+  captionForPlated: z.string(),
+  hashtags: z.array(z.string()),
 });
 
 export type BlogPostMeta = z.infer<typeof BlogPostMetaSchema>;

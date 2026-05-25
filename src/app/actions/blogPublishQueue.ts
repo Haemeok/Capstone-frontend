@@ -5,6 +5,7 @@ import { requireAdminAction } from "@/shared/lib/admin-guard";
 import type { BlogPost } from "@/app/admin/recipe-blog-test/lib/blogPost.schema";
 import type { CurationBlogPost } from "@/app/admin/recipe-blog-test/lib/curationBlogPost.schema";
 import { saveQueuePackage } from "@/app/admin/recipe-blog-test/lib/saveQueuePackage";
+import type { BlogTone } from "@/app/admin/recipe-blog-test/lib/toneInserts";
 
 type RecipeMetaIngredient = {
   name: string;
@@ -64,6 +65,7 @@ type CurationMeta = {
 
 type EnqueueCurationInput = {
   post: CurationBlogPost;
+  tone: BlogTone;
   curationTitle: string;
   imageUrlsBySlot: Record<string, string>;
   curationMeta: CurationMeta;
@@ -76,11 +78,11 @@ export const enqueueCurationBlogPostForPublish = async (
 
   try {
     const { packagePath, savedSlots, skippedSlots } = await saveQueuePackage({
-      prefix: "curation",
+      prefix: `curation-${input.tone}`,
       title: input.curationTitle,
       jsonFiles: {
         "post.json": input.post,
-        "curation-meta.json": input.curationMeta,
+        "curation-meta.json": { ...input.curationMeta, tone: input.tone },
       },
       imageUrlsBySlot: input.imageUrlsBySlot,
     });

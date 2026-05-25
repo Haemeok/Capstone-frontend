@@ -90,27 +90,9 @@ const parseListItems = (body: string): string[] => {
   return items;
 };
 
-const RANGE = {
-  lead: { min: 280, max: 520 },
-  stepBody: { min: 80, max: 280 },
-  kitchenTip: { min: 40, max: 220 },
-  appliedKnowledge: { min: 250, max: 620 },
-  bonusVariation: { min: 80, max: 320 },
-  closingNote: { min: 220, max: 480 },
-  kitchenTipsCount: { min: 2, max: 4 },
-} as const;
-
-const lengthError = (
-  field: string,
-  text: string,
-  min: number,
-  max: number,
-): string | null => {
-  const len = text.length;
-  if (len < min) return `${field} 길이 ${len} < ${min} (최소 미달)`;
-  if (len > max) return `${field} 길이 ${len} > ${max} (최대 초과)`;
-  return null;
-};
+// 길이 제한은 일부러 두지 않는다 — 길이 미달/초과로 retry 가 자주 터져
+// 사용자 흐름이 망가지는 비용이 길이 일관성 가치보다 크다는 판단.
+// prompt 의 "○○~○○자" 가이드로 정성적 유도만 하고, 실제 검증은 구조만 본다.
 
 export const parseAndValidateRecipeBlogBody = (
   md: string,
@@ -153,69 +135,16 @@ export const parseAndValidateRecipeBlogBody = (
   }
 
   const kitchenTips = parseListItems(kitchenTipsRaw);
-  if (
-    kitchenTips.length < RANGE.kitchenTipsCount.min ||
-    kitchenTips.length > RANGE.kitchenTipsCount.max
-  ) {
-    errors.push(
-      `kitchenTips 항목 수 ${kitchenTips.length} (필요: ${RANGE.kitchenTipsCount.min}~${RANGE.kitchenTipsCount.max})`,
-    );
+  if (kitchenTips.length === 0 && kitchenTipsRaw) {
+    errors.push("kitchenTips 섹션을 `- 항목` 불릿으로 작성해 주세요.");
   }
 
-  if (lead) {
-    const e = lengthError("lead", lead, RANGE.lead.min, RANGE.lead.max);
-    if (e) errors.push(e);
-  }
-  for (const s of stepEntries) {
-    const e = lengthError(
-      `step-${s.stepNumber}`,
-      s.body,
-      RANGE.stepBody.min,
-      RANGE.stepBody.max,
-    );
-    if (e) errors.push(e);
-  }
-  for (let i = 0; i < kitchenTips.length; i++) {
-    const e = lengthError(
-      `kitchenTips[${i}]`,
-      kitchenTips[i],
-      RANGE.kitchenTip.min,
-      RANGE.kitchenTip.max,
-    );
-    if (e) errors.push(e);
-  }
-  if (appliedKnowledge) {
-    const e = lengthError(
-      "appliedKnowledge",
-      appliedKnowledge,
-      RANGE.appliedKnowledge.min,
-      RANGE.appliedKnowledge.max,
-    );
-    if (e) errors.push(e);
-  }
-  if (closingNote) {
-    const e = lengthError(
-      "closingNote",
-      closingNote,
-      RANGE.closingNote.min,
-      RANGE.closingNote.max,
-    );
-    if (e) errors.push(e);
-  }
-
-  // bonusVariation 은 "none" 또는 빈 섹션이면 null. 그 외엔 길이 검증.
+  // bonusVariation 은 "none" 또는 빈 섹션이면 null.
   let bonusVariation: string | null = null;
   if (bonusRaw !== null) {
     const trimmed = bonusRaw.trim();
     if (trimmed && trimmed.toLowerCase() !== "none") {
       bonusVariation = trimmed;
-      const e = lengthError(
-        "bonusVariation",
-        trimmed,
-        RANGE.bonusVariation.min,
-        RANGE.bonusVariation.max,
-      );
-      if (e) errors.push(e);
     }
   }
 

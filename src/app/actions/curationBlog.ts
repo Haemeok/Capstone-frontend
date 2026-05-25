@@ -3,31 +3,32 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
 
+import { requireAdminAction } from "@/shared/lib/admin-guard";
+
 import { getStaticrecipionServer } from "@/entities/recipe/model/api.server";
 import type { StaticRecipe } from "@/entities/recipe/model/types";
-import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 import {
   fetchCurationArticle,
   type PublicCurationArticleDto,
 } from "@/features/curation/model/api.server";
 
+import { assembleBlogBody } from "@/app/admin/recipe-blog-test/lib/assembleBlogBody";
 import {
-  buildCurationBlogBodySystemPrompt,
-  buildCurationBlogBodyUserPrompt,
-  buildCurationBlogMetaSystemPrompt,
-  buildCurationBlogMetaUserPrompt,
-} from "@/app/admin/recipe-blog-test/lib/buildCurationBlogPrompt";
+  buildToneSystemPrompt,
+  buildToneUserPrompt,
+} from "@/app/admin/recipe-blog-test/lib/blogTonePrompts";
 import { buildCurationJsonLd } from "@/app/admin/recipe-blog-test/lib/buildCurationJsonLd";
-import {
-  type CurationBlogPost,
-  CurationBlogMetaSchema,
-} from "@/app/admin/recipe-blog-test/lib/curationBlogPost.schema";
 import {
   normalizeMarkdown,
   stripCodeFence,
-  validateCurationBlogMarkdown,
 } from "@/app/admin/recipe-blog-test/lib/curationBlogBody";
+import {
+  CurationBlogMetaSchema,
+  type CurationBlogPost,
+} from "@/app/admin/recipe-blog-test/lib/curationBlogPost.schema";
+import { parseBlogBody } from "@/app/admin/recipe-blog-test/lib/parseBlogBody";
+import type { BlogTone } from "@/app/admin/recipe-blog-test/lib/toneInserts";
 
 const upstage = createOpenAI({
   name: "upstage",
@@ -36,7 +37,7 @@ const upstage = createOpenAI({
 });
 
 const MODEL_ID = "solar-pro3";
-const MAX_BODY_RETRIES = 2;
+const MAX_BODY_RETRIES = 1;
 
 export type FetchCurationArticleWithRecipesResult =
   | {
@@ -75,9 +76,45 @@ export type GenerateCurationBlogPostResult =
   | { success: true; post: CurationBlogPost }
   | { success: false; error: string };
 
+const buildMetaSystemPrompt = (): string => `당신은 한국 가정 식탁 블로그 글의 편집자다.
+이미 작성된 블로그 본문을 보고, 그 본문 톤·내용에 어울리는 메타데이터(제목·해시태그·커버 캡션)를 JSON 으로 출력한다.
+
+[출력 규칙]
+- title.main: 60~90자 권장. 메뉴 주제 + 검색 키워드 4~5개 띄어쓰기. 광고체·자랑어("황금/실패없는/꿀팁") 금지.
+- title.sub: 부제, 한 줄.
+- hashtags: 8~10개. 메인 주제 1 + 변주 2~3 + 카테고리 1~2 + 식문화 1~2 + 계절·식탁 위치 1~2.
+- captionForCover: 14~22자 명명형 (예: "환절기 한 그릇, 세 가지.").
+- 본문의 종결어미·말투 결을 title.sub 와 captionForCover 에 자연스럽게 흡수.
+
+위 zod 스키마(CurationBlogMetaSchema)에 맞춘 JSON 만 출력하라.`;
+
+const buildMetaUserPrompt = (input: {
+  article: PublicCurationArticleDto;
+  recipes: StaticRecipe[];
+  bodyMarkdown: string;
+}): string => {
+  const { article, recipes, bodyMarkdown } = input;
+  const recipeBlock = recipes.map((r) => `- ${r.id}: ${r.title}`).join("\n");
+
+  return `[큐레이션 원본]
+slug: ${article.slug}
+title(원본): ${article.title}
+description(원본): ${article.description ?? ""}
+category: ${article.category ?? ""}
+
+[묶인 레시피들]
+${recipeBlock}
+
+[방금 작성된 블로그 본문]
+${bodyMarkdown}
+
+위 정보를 바탕으로 CurationBlogMetaSchema 에 맞춘 JSON 을 출력하라.`;
+};
+
 export const generateCurationBlogPost = async (
   article: PublicCurationArticleDto,
   recipes: StaticRecipe[],
+  tone: BlogTone,
 ): Promise<GenerateCurationBlogPostResult> => {
   await requireAdminAction();
 
@@ -95,22 +132,31 @@ export const generateCurationBlogPost = async (
   const curationUrl = `https://recipio.kr/curation/${article.slug}`;
   const solarModel = upstage.chat(MODEL_ID);
 
-  // Stage 1: 본문 (generateText) — schema X. Markdown 출력 + 우리 쪽 토큰 검증.
-  // generateObject 로 긴 본문 + 큰 schema 를 같이 강제하면 Upstage 500 이 자주 나서,
-  // 큐레이션 코드(curation.ts)와 동일한 패턴으로 분리한다.
+  // Stage 1: 본문 (generateText) — schema X. Markdown 출력 + 우리 파서.
+  // generateObject 로 긴 본문 + 큰 schema 를 같이 강제하면 Upstage 500 이 자주
+  // 나서 분리. parseBlogBody 가 헤딩 카운트·outro 마커 검증, assembleBlogBody
+  // 가 톤별 이미지·링크·영양·outro URL 토큰을 결정론적으로 박는다.
+  const baseSystem = buildToneSystemPrompt(tone);
+  const baseUser = buildToneUserPrompt({ article, recipes: usableRecipes });
+
   let bodyMarkdown = "";
   let lastErrors: string[] = [];
   for (let attempt = 0; attempt <= MAX_BODY_RETRIES; attempt++) {
+    const userPrompt =
+      attempt === 0
+        ? baseUser
+        : `${baseUser}
+
+[이전 시도 실패 — 반드시 수정]
+${lastErrors.map((e) => `- ${e}`).join("\n")}
+- ## 헤딩은 정확히 ${usableRecipes.length}개. 마지막 ## 섹션 뒤에 \`---\` 한 줄 박을 것.`;
+
     let raw: string;
     try {
       const { text } = await generateText({
         model: solarModel,
-        system: buildCurationBlogBodySystemPrompt(),
-        prompt: buildCurationBlogBodyUserPrompt({
-          article,
-          recipes: usableRecipes,
-          lastErrors,
-        }),
+        system: baseSystem,
+        prompt: userPrompt,
       });
       raw = text;
     } catch (error) {
@@ -122,22 +168,24 @@ export const generateCurationBlogPost = async (
     }
 
     const normalized = normalizeMarkdown(stripCodeFence(raw));
-    const v = validateCurationBlogMarkdown(normalized, {
-      expectedRecipeIds: usableRecipes.map((r) => r.id),
-      curationUrl,
-    });
-    if (v.ok) {
-      bodyMarkdown = normalized;
+    const parsed = parseBlogBody(normalized, usableRecipes.length);
+    if (parsed.ok) {
+      bodyMarkdown = assembleBlogBody(
+        parsed.parsed,
+        usableRecipes,
+        tone,
+        article.slug,
+      );
       break;
     }
-    lastErrors = v.errors;
+    lastErrors = parsed.errors;
     console.warn(
-      `[curationBlog body] attempt ${attempt + 1} 검증 실패:\n${v.errors.map((e) => `  - ${e}`).join("\n")}`,
+      `[curationBlog body] attempt ${attempt + 1} 파싱 실패:\n${parsed.errors.map((e) => `  - ${e}`).join("\n")}`,
     );
     if (attempt === MAX_BODY_RETRIES) {
       return {
         success: false,
-        error: `본문 검증 ${MAX_BODY_RETRIES + 1}회 실패: ${v.errors.join("; ")}`,
+        error: `본문 파싱 ${MAX_BODY_RETRIES + 1}회 실패: ${parsed.errors.join("; ")}`,
       };
     }
   }
@@ -149,8 +197,8 @@ export const generateCurationBlogPost = async (
       model: solarModel,
       schema: CurationBlogMetaSchema,
       mode: "json",
-      system: buildCurationBlogMetaSystemPrompt(),
-      prompt: buildCurationBlogMetaUserPrompt({
+      system: buildMetaSystemPrompt(),
+      prompt: buildMetaUserPrompt({
         article,
         recipes: usableRecipes,
         bodyMarkdown,

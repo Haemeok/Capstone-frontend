@@ -4,79 +4,7 @@ import {
   hydrateCurationBlogMarkdown,
   normalizeMarkdown,
   stripCodeFence,
-  validateCurationBlogMarkdown,
 } from "./curationBlogBody";
-
-const URL = "https://recipio.kr/curation/spring-soups";
-
-const fullValidMd = (ids: string[]) =>
-  `리드 단락…\n\n` +
-  ids
-    .map(
-      (id) =>
-        `## 메뉴 ${id}\n본문... {{link:${id}}} 한 번 보세요.\n\n{{recipe:${id}}}\n`,
-    )
-    .join("\n") +
-  `\n닫는 단락에서 ${URL} 로 안내합니다.`;
-
-describe("validateCurationBlogMarkdown", () => {
-  it("모든 recipeId 의 이미지 + 링크 토큰 + curationUrl 있으면 ok", () => {
-    const md = fullValidMd(["r1", "r2", "r3"]);
-    const r = validateCurationBlogMarkdown(md, {
-      expectedRecipeIds: ["r1", "r2", "r3"],
-      curationUrl: URL,
-    });
-    expect(r.ok).toBe(true);
-  });
-
-  it("이미지 토큰 누락 → 에러", () => {
-    const md = `{{recipe:r1}} {{link:r1}} {{link:r2}} {{link:r3}} ${URL}`;
-    const r = validateCurationBlogMarkdown(md, {
-      expectedRecipeIds: ["r1", "r2", "r3"],
-      curationUrl: URL,
-    });
-    expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.errors.some((e) => /r2.*이미지 토큰/.test(e))).toBe(true);
-  });
-
-  it("링크 토큰 누락 → 에러", () => {
-    const md = `{{recipe:r1}} {{recipe:r2}} {{link:r1}} ${URL}`;
-    const r = validateCurationBlogMarkdown(md, {
-      expectedRecipeIds: ["r1", "r2"],
-      curationUrl: URL,
-    });
-    expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.errors.some((e) => /r2.*링크 토큰/.test(e))).toBe(true);
-  });
-
-  it("이미지 토큰 중복 → 에러", () => {
-    const md = `{{recipe:r1}} {{recipe:r1}} {{recipe:r2}} {{link:r1}} {{link:r2}} ${URL}`;
-    const r = validateCurationBlogMarkdown(md, {
-      expectedRecipeIds: ["r1", "r2"],
-      curationUrl: URL,
-    });
-    expect(r.ok).toBe(false);
-  });
-
-  it("미허용 recipeId 토큰 → 에러", () => {
-    const md = `{{recipe:r1}} {{recipe:r2}} {{recipe:rZ}} {{link:r1}} {{link:r2}} ${URL}`;
-    const r = validateCurationBlogMarkdown(md, {
-      expectedRecipeIds: ["r1", "r2"],
-      curationUrl: URL,
-    });
-    expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.errors.some((e) => e.includes("rZ"))).toBe(true);
-  });
-
-  it("curationUrl 누락 → 에러", () => {
-    const md = `{{recipe:r1}} {{recipe:r2}} {{link:r1}} {{link:r2}}`;
-    const r = validateCurationBlogMarkdown(md, {
-      expectedRecipeIds: ["r1", "r2"],
-      curationUrl: URL,
-    });
-    expect(r.ok).toBe(false);
-  });
-});
 
 describe("hydrateCurationBlogMarkdown", () => {
   const RECIPES: StaticRecipe[] = [
