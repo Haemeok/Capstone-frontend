@@ -107,6 +107,20 @@ export const BlogPostSchema = z.object({
     ),
 });
 
+// LLM 메타 출력만 검증한다 (Stage 2). regex/url/format/record 키워드는
+// Upstage solar-pro3 JSON mode 가 자주 500 으로 거부하므로 primitive 만 사용.
+// alts 는 서버 액션이 recipe.title + slot key 로 자동 합성한다 (큐레이션과 같은 패턴).
+export const BlogPostMetaSchema = z.object({
+  title: z.object({
+    main: z.string().min(20).max(110),
+    sub: z.string().min(8).max(70),
+  }),
+  captionForPlated: z.string().min(8).max(40),
+  hashtags: z.array(z.string()).min(8).max(10),
+});
+
+export type BlogPostMeta = z.infer<typeof BlogPostMetaSchema>;
+
 // LLM이 직접 출력하는 좁은 narrative (자연어 + 변주가 필요한 부분만).
 // nutritionBox / jsonLd 같은 결정론 필드는 서버 액션이 recipe로 후처리 합성해 BlogPost로 만든다.
 export type BlogPostNarrative = z.infer<typeof BlogPostSchema>;

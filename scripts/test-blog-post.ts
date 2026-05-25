@@ -10,11 +10,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateObject, generateText } from "ai";
 
 import {
   type BlogPostNarrative as BlogPost,
-  BlogPostSchema,
+  BlogPostMetaSchema,
 } from "../src/app/admin/recipe-blog-test/lib/blogPost.schema";
 import {
   CLOSING_SEEDS,
@@ -22,10 +22,18 @@ import {
   pickSeedByRecipeId,
 } from "../src/app/admin/recipe-blog-test/lib/blogPostStyle";
 import {
-  buildBlogPostSystemPrompt,
-  buildBlogPostUserPrompt,
+  buildBlogPostBodySystemPrompt,
+  buildBlogPostBodyUserPrompt,
+  buildBlogPostMetaSystemPrompt,
+  buildBlogPostMetaUserPrompt,
   computePerServingMetrics,
 } from "../src/app/admin/recipe-blog-test/lib/buildBlogPostPrompt";
+import {
+  normalizeMarkdown,
+  parseAndValidateRecipeBlogBody,
+  stripCodeFence,
+  synthesizeAlts,
+} from "../src/app/admin/recipe-blog-test/lib/recipeBlogBody";
 import type { Recipe } from "../src/entities/recipe/model/types";
 
 const upstage = createOpenAI({
@@ -156,33 +164,86 @@ const main = async () => {
 
   const recipe = FAKE_RECIPE_GAJI;
   const slots = [...recipe.steps.map((s) => `step-${s.stepNumber}`), "final-plated"];
+  const expectedStepNumbers = recipe.steps.map((s) => s.stepNumber);
   const metrics = computePerServingMetrics(recipe);
   const leadSeed = pickSeedByRecipeId(LEAD_SEEDS, recipe.id);
   const closingSeed = pickSeedByRecipeId(CLOSING_SEEDS, recipe.id);
-  const system = buildBlogPostSystemPrompt(leadSeed, closingSeed);
-  const prompt = buildBlogPostUserPrompt(recipe, slots, metrics);
+  const solarModel = upstage.chat(MODEL_ID);
+  const MAX_BODY_RETRIES = 2;
 
   console.log(`[recipe] ${recipe.title}`);
   console.log(`[seeds] lead=${leadSeed.id}, closing=${closingSeed.id}`);
-  console.log(`[system prompt] ${system.length} chars`);
-  console.log(`[user prompt] ${prompt.length} chars`);
   console.log();
 
   const startedAt = Date.now();
-  let post: BlogPost;
-  try {
-    const { object } = await generateObject({
-      model: upstage.chat(MODEL_ID),
-      schema: BlogPostSchema,
-      mode: "json",
-      system,
-      prompt,
-    });
-    post = object;
-  } catch (err) {
-    console.error("[generateObject] FAILED:", err);
+
+  // Stage 1: 본문 (generateText, retry 2회)
+  let bodyMarkdown = "";
+  let parsed: Extract<
+    ReturnType<typeof parseAndValidateRecipeBlogBody>,
+    { ok: true }
+  > | null = null;
+  let lastErrors: string[] = [];
+
+  for (let attempt = 0; attempt <= MAX_BODY_RETRIES; attempt++) {
+    try {
+      const { text } = await generateText({
+        model: solarModel,
+        system: buildBlogPostBodySystemPrompt(leadSeed, closingSeed),
+        prompt: buildBlogPostBodyUserPrompt({ recipe, metrics, lastErrors }),
+      });
+      const normalized = normalizeMarkdown(stripCodeFence(text));
+      const v = parseAndValidateRecipeBlogBody(normalized, {
+        expectedStepNumbers,
+      });
+      if (v.ok) {
+        bodyMarkdown = normalized;
+        parsed = v;
+        break;
+      }
+      lastErrors = v.errors;
+      console.warn(`[body attempt ${attempt + 1}] 검증 실패:`);
+      for (const e of v.errors) console.warn(`  - ${e}`);
+    } catch (err) {
+      console.error("[body generateText] FAILED:", err);
+      process.exit(1);
+    }
+  }
+
+  if (!parsed) {
+    console.error(`[body] ${MAX_BODY_RETRIES + 1}회 검증 실패`);
     process.exit(1);
   }
+
+  // Stage 2: 메타 (generateObject)
+  let meta;
+  try {
+    const { object } = await generateObject({
+      model: solarModel,
+      schema: BlogPostMetaSchema,
+      mode: "json",
+      system: buildBlogPostMetaSystemPrompt(),
+      prompt: buildBlogPostMetaUserPrompt({ recipe, metrics, bodyMarkdown }),
+    });
+    meta = object;
+  } catch (err) {
+    console.error("[meta generateObject] FAILED:", err);
+    process.exit(1);
+  }
+
+  const post: BlogPost = {
+    title: meta.title,
+    lead: parsed.parsed.lead,
+    steps: parsed.parsed.steps,
+    kitchenTips: parsed.parsed.kitchenTips,
+    appliedKnowledge: parsed.parsed.appliedKnowledge,
+    bonusVariation: parsed.parsed.bonusVariation,
+    closingNote: parsed.parsed.closingNote,
+    nutritionBox: metrics,
+    alts: synthesizeAlts(recipe.title, slots),
+    captionForPlated: meta.captionForPlated,
+    hashtags: meta.hashtags,
+  };
 
   const elapsed = Date.now() - startedAt;
   console.log(`[generated] in ${elapsed}ms`);

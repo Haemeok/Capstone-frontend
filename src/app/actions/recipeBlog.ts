@@ -1,14 +1,14 @@
 "use server";
 
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateObject, generateText } from "ai";
 
 import type { Recipe } from "@/entities/recipe/model/types";
 import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 import {
   type BlogPost,
-  BlogPostSchema,
+  BlogPostMetaSchema,
 } from "@/app/admin/recipe-blog-test/lib/blogPost.schema";
 import {
   CLOSING_SEEDS,
@@ -16,11 +16,19 @@ import {
   pickSeedByRecipeId,
 } from "@/app/admin/recipe-blog-test/lib/blogPostStyle";
 import {
-  buildBlogPostSystemPrompt,
-  buildBlogPostUserPrompt,
+  buildBlogPostBodySystemPrompt,
+  buildBlogPostBodyUserPrompt,
+  buildBlogPostMetaSystemPrompt,
+  buildBlogPostMetaUserPrompt,
   computePerServingMetrics,
 } from "@/app/admin/recipe-blog-test/lib/buildBlogPostPrompt";
 import { buildJsonLd } from "@/app/admin/recipe-blog-test/lib/buildJsonLd";
+import {
+  normalizeMarkdown,
+  parseAndValidateRecipeBlogBody,
+  stripCodeFence,
+  synthesizeAlts,
+} from "@/app/admin/recipe-blog-test/lib/recipeBlogBody";
 
 const upstage = createOpenAI({
   name: "upstage",
@@ -29,6 +37,7 @@ const upstage = createOpenAI({
 });
 
 const MODEL_ID = "solar-pro3";
+const MAX_BODY_RETRIES = 2;
 
 export type GenerateRecipeBlogPostResult =
   | {
@@ -40,15 +49,12 @@ export type GenerateRecipeBlogPostResult =
 
 export const generateRecipeBlogPost = async (
   recipe: Recipe,
-  opts?: { imageSlots?: string[] }
+  opts?: { imageSlots?: string[] },
 ): Promise<GenerateRecipeBlogPostResult> => {
   await requireAdminAction();
 
   if (!process.env.UPSTAGE_API_KEY) {
-    return {
-      success: false,
-      error: "UPSTAGE_API_KEY가 설정되지 않았습니다.",
-    };
+    return { success: false, error: "UPSTAGE_API_KEY가 설정되지 않았습니다." };
   }
   if (!recipe?.id) {
     return { success: false, error: "recipe.id가 없습니다." };
@@ -60,48 +66,117 @@ export const generateRecipeBlogPost = async (
   const leadSeed = pickSeedByRecipeId(LEAD_SEEDS, recipe.id);
   const closingSeed = pickSeedByRecipeId(CLOSING_SEEDS, recipe.id);
 
+  const sortedSteps = recipe.steps
+    .slice()
+    .sort((a, b) => a.stepNumber - b.stepNumber);
+  const expectedStepNumbers = sortedSteps.map((s) => s.stepNumber);
   const slots =
-    opts?.imageSlots ??
-    [
-      ...recipe.steps
-        .slice()
-        .sort((a, b) => a.stepNumber - b.stepNumber)
-        .map((s) => `step-${s.stepNumber}`),
+    opts?.imageSlots ?? [
+      ...sortedSteps.map((s) => `step-${s.stepNumber}`),
       "final-plated",
     ];
 
   const metrics = computePerServingMetrics(recipe);
-  const system = buildBlogPostSystemPrompt(leadSeed, closingSeed);
-  const prompt = buildBlogPostUserPrompt(recipe, slots, metrics);
+  const solarModel = upstage.chat(MODEL_ID);
 
-  try {
-    const { object: narrative } = await generateObject({
-      model: upstage.chat(MODEL_ID),
-      schema: BlogPostSchema,
-      mode: "json",
-      system,
-      prompt,
+  // Stage 1: 본문 (generateText) — schema X. markdown 출력 + 우리 파서·검증.
+  // generateObject 로 긴 본문 + 큰 schema 를 같이 강제하면 Upstage 500 이
+  // 자주 나서, 큐레이션 (curationBlog.ts) 와 같은 패턴으로 분리한다.
+  let bodyMarkdown = "";
+  let parsedBody: ReturnType<typeof parseAndValidateRecipeBlogBody> & {
+    ok: true;
+  } | null = null;
+  let lastErrors: string[] = [];
+
+  for (let attempt = 0; attempt <= MAX_BODY_RETRIES; attempt++) {
+    let raw: string;
+    try {
+      const { text } = await generateText({
+        model: solarModel,
+        system: buildBlogPostBodySystemPrompt(leadSeed, closingSeed),
+        prompt: buildBlogPostBodyUserPrompt({
+          recipe,
+          metrics,
+          lastErrors,
+        }),
+      });
+      raw = text;
+    } catch (error) {
+      console.error("[recipeBlog] body generateText failed:", error);
+      return {
+        success: false,
+        error: `본문 생성 실패: ${error instanceof Error ? error.message : String(error)}`,
+      };
+    }
+
+    const normalized = normalizeMarkdown(stripCodeFence(raw));
+    const v = parseAndValidateRecipeBlogBody(normalized, {
+      expectedStepNumbers,
     });
+    if (v.ok) {
+      bodyMarkdown = normalized;
+      parsedBody = v;
+      break;
+    }
+    lastErrors = v.errors;
+    console.warn(
+      `[recipeBlog body] attempt ${attempt + 1} 검증 실패:\n${v.errors.map((e) => `  - ${e}`).join("\n")}`,
+    );
+    if (attempt === MAX_BODY_RETRIES) {
+      return {
+        success: false,
+        error: `본문 검증 ${MAX_BODY_RETRIES + 1}회 실패: ${v.errors.join("; ")}`,
+      };
+    }
+  }
 
-    const post: BlogPost = {
-      ...narrative,
-      nutritionBox: metrics,
-      jsonLd: buildJsonLd(recipe, metrics),
-    };
+  if (!parsedBody) {
+    return { success: false, error: "본문 파서 내부 상태 이상" };
+  }
 
-    return {
-      success: true,
-      post,
-      usedSeeds: { lead: leadSeed.id, closing: closingSeed.id },
-    };
+  // Stage 2: 메타 (generateObject) — schema 작고 정형이라 안전.
+  let meta;
+  try {
+    const { object } = await generateObject({
+      model: solarModel,
+      schema: BlogPostMetaSchema,
+      mode: "json",
+      system: buildBlogPostMetaSystemPrompt(),
+      prompt: buildBlogPostMetaUserPrompt({
+        recipe,
+        metrics,
+        bodyMarkdown,
+      }),
+    });
+    meta = object;
   } catch (error) {
-    console.error("[recipeBlog] generateObject failed:", error);
+    console.error("[recipeBlog] meta generateObject failed:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "알 수 없는 오류가 발생했습니다.",
+      error: `메타 생성 실패: ${error instanceof Error ? error.message : String(error)}`,
     };
   }
+
+  const alts = synthesizeAlts(recipe.title, slots);
+
+  const post: BlogPost = {
+    title: meta.title,
+    lead: parsedBody.parsed.lead,
+    steps: parsedBody.parsed.steps,
+    kitchenTips: parsedBody.parsed.kitchenTips,
+    appliedKnowledge: parsedBody.parsed.appliedKnowledge,
+    bonusVariation: parsedBody.parsed.bonusVariation,
+    closingNote: parsedBody.parsed.closingNote,
+    nutritionBox: metrics,
+    alts,
+    captionForPlated: meta.captionForPlated,
+    hashtags: meta.hashtags,
+    jsonLd: buildJsonLd(recipe, metrics),
+  };
+
+  return {
+    success: true,
+    post,
+    usedSeeds: { lead: leadSeed.id, closing: closingSeed.id },
+  };
 };
