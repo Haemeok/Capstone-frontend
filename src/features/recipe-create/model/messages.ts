@@ -27,6 +27,7 @@ export const MSG = {
   DESCRIPTION: {
     MIN: `설명은 ${DESCRIPTION.MIN}자 이상 입력해주세요`,
     QUANTITY: "수량을 입력해주세요",
+    UNIT: "단위를 선택해주세요",
   },
   INGREDIENTS: {
     MIN: `최소 ${INGREDIENTS.MIN}개의 재료를 추가해주세요`,

@@ -20,8 +20,8 @@ export const useRecipeRemixForm = (recipeId: string) => {
       title: recipe.title,
       image: recipe.imageUrl,
       ingredients: recipe.ingredients.map((ingredient) => ({
-        ingredientId: ingredient.id,
-        name: ingredient.name,
+        ingredientId: ingredient.id ?? "",
+        name: ingredient.name ?? "",
         quantity: ingredient.quantity || "",
         unit: ingredient.unit || "",
       })),
@@ -35,10 +35,10 @@ export const useRecipeRemixForm = (recipeId: string) => {
         stepNumber: index,
         image: step.stepImageUrl,
         ingredients: (step.ingredients || []).map((ing) => ({
-          ingredientId: ing.id,
-          name: ing.name,
+          ingredientId: ing.id ?? "",
+          name: ing.name ?? "",
           quantity: ing.quantity || "",
-          unit: ing.unit,
+          unit: ing.unit ?? "",
         })),
         imageKey: step.stepImageKey,
       })),
@@ -56,8 +56,8 @@ export const useRecipeRemixForm = (recipeId: string) => {
   useEffect(() => {
     if (isRecipeLoaded && recipe) {
       const originalIngredients = recipe.ingredients.map((ingredient) => ({
-        ingredientId: ingredient.id,
-        name: ingredient.name,
+        ingredientId: ingredient.id ?? "",
+        name: ingredient.name ?? "",
         quantity: ingredient.quantity || "",
         unit: ingredient.unit || "",
       }));

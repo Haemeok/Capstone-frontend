@@ -2,11 +2,10 @@
 
 import { useFormContext, UseFormRegister, useWatch } from "react-hook-form";
 
-import { X } from "lucide-react";
+import { ChefHat, X } from "lucide-react";
 
 import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
-import IngredientIcon from "@/shared/ui/IngredientIcon";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { syncStepIngredientUnit } from "../lib/syncStepIngredientUnit";
@@ -79,11 +78,11 @@ const IngredientItem = ({
                 width={40}
                 height={40}
                 errorFallback={
-                  <IngredientIcon className="!mr-0 h-5 w-5 text-olive-light/60" />
+                  <ChefHat className="text-olive-light/60 h-5 w-5" aria-hidden />
                 }
               />
             ) : (
-              <IngredientIcon className="!mr-0 h-5 w-5 text-olive-light/60" />
+              <ChefHat className="text-olive-light/60 h-5 w-5" aria-hidden />
             )}
           </div>
           <p className="flex-1 font-medium text-gray-800">{field.name}</p>

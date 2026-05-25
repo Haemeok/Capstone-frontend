@@ -24,12 +24,22 @@ const mainImageSchema = z
     message: MSG.IMAGE.REQUIRED,
   });
 
-const ingredientSchema = z.object({
-  ingredientId: z.string(),
-  name: z.string(),
-  quantity: z.string().min(1, MSG.DESCRIPTION.QUANTITY),
-  unit: z.string().min(1),
-});
+const ingredientSchema = z
+  .object({
+    ingredientId: z.string(),
+    name: z.string(),
+    quantity: z.string().min(1, MSG.DESCRIPTION.QUANTITY),
+    unit: z.string(),
+  })
+  .superRefine((val, ctx) => {
+    if (val.quantity !== "약간" && val.unit.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["unit"],
+        message: MSG.DESCRIPTION.UNIT,
+      });
+    }
+  });
 
 const stepIngredientSchema = z.object({
   ingredientId: z.string(),
