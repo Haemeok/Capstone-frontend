@@ -34,6 +34,13 @@ const escapeXml = (s: string): string =>
 
 const cdata = (s: string): string => `<![CDATA[${s.replace(/]]>/g, "]]]]><![CDATA[>")}]]>`;
 
+const guessImageMime = (url: string): string => {
+  if (/\.webp(\?|#|$)/i.test(url)) return "image/webp";
+  if (/\.png(\?|#|$)/i.test(url)) return "image/png";
+  if (/\.gif(\?|#|$)/i.test(url)) return "image/gif";
+  return "image/jpeg";
+};
+
 const toRfc822 = (d: Date): string => d.toUTCString();
 
 export const tagUri = (type: "recipe" | "curation", id: string, year = 2026): string =>
@@ -54,7 +61,7 @@ const renderItem = (item: RssItem): string => {
   }
   if (item.imageUrl) {
     parts.push(
-      `      <enclosure url="${escapeXml(item.imageUrl)}" type="image/jpeg" />`,
+      `      <enclosure url="${escapeXml(item.imageUrl)}" length="0" type="${guessImageMime(item.imageUrl)}" />`,
     );
   }
   return `    <item>\n${parts.join("\n")}\n    </item>`;
