@@ -33,6 +33,27 @@ describe("hydrateCurationBlogMarkdown", () => {
     const out = hydrateCurationBlogMarkdown(md, RECIPES, {});
     expect(out).not.toContain("rX");
   });
+
+  it("`{{ingredients:id}}` 토큰을 placeholder blockquote 로 치환", () => {
+    const md = `{{ingredients:r1}}`;
+    const out = hydrateCurationBlogMarkdown(md, RECIPES, {});
+    expect(out).toContain("> 🥕 재료 (콩나물국)");
+    expect(out).toContain("발행 시 자동 삽입");
+  });
+
+  it("`{{nutrition:id}}` 토큰을 placeholder blockquote 로 치환", () => {
+    const md = `{{nutrition:r2}}`;
+    const out = hydrateCurationBlogMarkdown(md, RECIPES, {});
+    expect(out).toContain("> 📊 영양 (된장찌개)");
+    expect(out).toContain("발행 시 자동 삽입");
+  });
+
+  it("recipe 가 매칭 안 되는 ingredients/nutrition 토큰은 빈 문자열로 제거", () => {
+    const md = `{{ingredients:rX}}\n{{nutrition:rY}}`;
+    const out = hydrateCurationBlogMarkdown(md, RECIPES, {});
+    expect(out).not.toContain("rX");
+    expect(out).not.toContain("rY");
+  });
 });
 
 describe("stripCodeFence", () => {

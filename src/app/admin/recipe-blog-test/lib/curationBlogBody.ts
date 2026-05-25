@@ -2,9 +2,12 @@ import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 const TOKEN_RE = /\{\{recipe:([^}]+)\}\}/g;
 const LINK_TOKEN_RE = /\{\{link:([^}]+)\}\}/g;
+const INGREDIENTS_TOKEN_RE = /\{\{ingredients:([^}]+)\}\}/g;
+const NUTRITION_TOKEN_RE = /\{\{nutrition:([^}]+)\}\}/g;
 
-// 토큰 `{{recipe:rN}}` → 미리보기·발행 워커가 그대로 markdown image 로 보게
-// `![alt](imageUrl)` 로 치환. recipe 가 누락된 토큰은 빈 문자열로 제거.
+// 토큰 `{{recipe:rN}}` → markdown image, `{{link:rN}}` → markdown link.
+// `{{ingredients:rN}}` / `{{nutrition:rN}}` → 발행 단계에서 recipioReview 가
+// 네이버 말풍선·인용 박스로 채울 자리. 미리보기에선 placeholder blockquote 로 렌더.
 export const hydrateCurationBlogMarkdown = (
   md: string,
   recipes: StaticRecipe[],
@@ -22,6 +25,16 @@ export const hydrateCurationBlogMarkdown = (
       const r = byId.get(id);
       if (!r) return "";
       return `[${r.title} 레시피 자세히 보기 →](https://recipio.kr/recipes/${id})`;
+    })
+    .replace(INGREDIENTS_TOKEN_RE, (_, id) => {
+      const r = byId.get(id);
+      if (!r) return "";
+      return `> 🥕 재료 (${r.title}) — 발행 시 자동 삽입`;
+    })
+    .replace(NUTRITION_TOKEN_RE, (_, id) => {
+      const r = byId.get(id);
+      if (!r) return "";
+      return `> 📊 영양 (${r.title}) — 발행 시 자동 삽입`;
     });
 };
 
