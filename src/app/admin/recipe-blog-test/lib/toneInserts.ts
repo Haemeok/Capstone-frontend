@@ -68,7 +68,9 @@ export const buildSectionFragments = (
         "",
         `**👇 ${title} 👇**`,
         "",
-        `자세한 만드는 법은 {{link:${id}}} 에 정리해뒀어요~`,
+        `자세한 만드는 법은 아래에 정리해뒀어요~`,
+        "",
+        `{{link:${id}}}`,
       ].join("\n");
       return { beforeBody: "", afterBody };
     }
@@ -77,7 +79,9 @@ export const buildSectionFragments = (
       const afterBody = [
         `{{recipe:${id}}}`,
         "",
-        `자세한 만드는 법은 {{link:${id}}} 에 정리해두었어요 .`,
+        `자세한 만드는 법은 아래에 정리해두었어요 .`,
+        "",
+        `{{link:${id}}}`,
       ].join("\n");
       return { beforeBody, afterBody };
     }
@@ -88,7 +92,9 @@ export const buildSectionFragments = (
         "",
         nutLine,
         "",
-        `자세한 레시피는 {{link:${id}}} 에 따로 정리해뒀어요.`,
+        `자세한 레시피는 아래에 따로 정리해뒀어요.`,
+        "",
+        `{{link:${id}}}`,
       ].join("\n");
       return { beforeBody: "", afterBody };
     }
@@ -99,7 +105,9 @@ export const buildSectionFragments = (
         "",
         nutLine,
         "",
-        `자세한 만드는 법은 {{link:${id}}} 에서 확인해 보세요.`,
+        `자세한 만드는 법은 아래에서 확인해 보세요.`,
+        "",
+        `{{link:${id}}}`,
       ].join("\n");
       return { beforeBody: "", afterBody };
     }
