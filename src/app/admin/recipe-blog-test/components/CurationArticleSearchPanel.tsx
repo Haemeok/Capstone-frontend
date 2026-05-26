@@ -11,10 +11,18 @@ import {
 } from "@/features/curation/model/api.server";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-type Props = {
-  selectedSlug: string | null;
-  onSelect: (slug: string) => void;
-};
+type Props =
+  | {
+      mode: "single";
+      selectedSlug: string | null;
+      onSelect: (slug: string) => void;
+    }
+  | {
+      mode: "multi";
+      selectedSlugs: Set<string>;
+      onToggle: (slug: string, next: boolean) => void;
+      badges?: (slug: string) => string | null;
+    };
 
 const PAGE_SIZE = 20;
 
@@ -23,7 +31,7 @@ const CATEGORY_OPTIONS: Array<{ value: CurationCategory | "all"; label: string }
   ...CURATION_CATEGORIES.map((c) => ({ value: c, label: c })),
 ];
 
-export const CurationArticleSearchPanel = ({ selectedSlug, onSelect }: Props) => {
+export const CurationArticleSearchPanel = (props: Props) => {
   const [category, setCategory] = useState<CurationCategory | "all">("all");
   const sentinelRef = useRef<HTMLLIElement | null>(null);
 
@@ -63,9 +71,16 @@ export const CurationArticleSearchPanel = ({ selectedSlug, onSelect }: Props) =>
   const rows: PublicCurationArticleListItemDto[] =
     data?.pages.flatMap((p) => p.content) ?? [];
 
-  const handleSelect = (slug: string) => {
+  const isSlugSelected = (slug: string): boolean =>
+    props.mode === "single" ? props.selectedSlug === slug : props.selectedSlugs.has(slug);
+
+  const handleClick = (slug: string) => {
     triggerHaptic("Light");
-    onSelect(slug);
+    if (props.mode === "single") {
+      props.onSelect(slug);
+    } else {
+      props.onToggle(slug, !props.selectedSlugs.has(slug));
+    }
   };
 
   return (
@@ -82,6 +97,12 @@ export const CurationArticleSearchPanel = ({ selectedSlug, onSelect }: Props) =>
         ))}
       </select>
 
+      {props.mode === "multi" && (
+        <p className="px-1 text-[11px] text-gray-500">
+          선택 {props.selectedSlugs.size}개
+        </p>
+      )}
+
       {isLoading ? (
         <p className="text-xs text-gray-500">로드 중…</p>
       ) : rows.length === 0 ? (
@@ -89,23 +110,41 @@ export const CurationArticleSearchPanel = ({ selectedSlug, onSelect }: Props) =>
       ) : (
         <ul className="space-y-1">
           {rows.map((r) => {
-            const isSelected = r.slug === selectedSlug;
+            const isSelected = isSlugSelected(r.slug);
+            const badge = props.mode === "multi" ? props.badges?.(r.slug) ?? null : null;
             return (
               <li key={r.id}>
                 <button
                   type="button"
-                  onClick={() => handleSelect(r.slug)}
+                  onClick={() => handleClick(r.slug)}
                   className={`w-full cursor-pointer rounded px-2 py-2 text-left text-sm hover:bg-gray-100 ${
                     isSelected ? "bg-amber-50 font-medium" : ""
                   }`}
                 >
-                  <p className="font-semibold text-gray-900">{r.title}</p>
-                  {r.description && (
-                    <p className="line-clamp-2 text-xs text-gray-500">{r.description}</p>
-                  )}
-                  <p className="mt-1 text-[10px] text-gray-400">
-                    {r.category ?? "-"} · {r.publishedAt.slice(0, 10)}
-                  </p>
+                  <div className="flex items-start gap-2">
+                    {props.mode === "multi" && (
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        readOnly
+                        className="mt-1 size-4 cursor-pointer accent-gray-900"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">{r.title}</p>
+                      {r.description && (
+                        <p className="line-clamp-2 text-xs text-gray-500">{r.description}</p>
+                      )}
+                      <p className="mt-1 text-[10px] text-gray-400">
+                        {r.category ?? "-"} · {r.publishedAt.slice(0, 10)}
+                        {badge && (
+                          <span className="ml-2 rounded bg-gray-100 px-1 py-0.5 text-[10px] text-gray-600">
+                            {badge}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
                 </button>
               </li>
             );
