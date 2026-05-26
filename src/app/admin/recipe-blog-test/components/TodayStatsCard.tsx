@@ -1,70 +1,48 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
-const POLL_MS = 5_000;
-const DEFAULT_URL = "http://localhost:3002";
-
-type AccountStat = {
-  blogId: string;
-  postedToday: number;
-  remaining: number;
-};
-
-type StatsResponse = {
-  ok: true;
-  cap: number;
-  accounts: AccountStat[];
-};
-
-const fetchStats = async (): Promise<StatsResponse> => {
-  // BLOG_STATS_API_URL은 build-time env (NEXT_PUBLIC_*). 미설정 시 localhost:3002
-  // 기본값 (recipioReview의 `npm run dev` 가 3001 포트 사용).
-  const base = process.env.NEXT_PUBLIC_BLOG_STATS_API_URL?.trim() || DEFAULT_URL;
-  const res = await fetch(new URL("/api/blog-stats/today", base), {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`stats API ${res.status}`);
-  const data = (await res.json()) as StatsResponse | { ok: false; reason: string };
-  if ("ok" in data && data.ok) return data;
-  throw new Error("error" in data ? String((data as { reason: string }).reason) : "unknown");
-};
+import { BLOG_STATS_QUERY_KEY, useBlogStats } from "../lib/useBlogStats";
 
 export const TodayStatsCard = () => {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["admin", "blog-stats-today"],
-    queryFn: fetchStats,
-    refetchInterval: POLL_MS,
-    staleTime: POLL_MS,
-    retry: false,
-  });
+  const qc = useQueryClient();
+  const { data, isLoading, isError, error, isFetching } = useBlogStats();
 
-  if (isLoading) {
-    return (
-      <div className="rounded-2xl border border-gray-100 bg-white p-4 text-xs text-gray-500">
-        오늘 발행 통계 조회 중…
-      </div>
-    );
-  }
-
-  if (isError || !data) {
-    const msg = error instanceof Error ? error.message : "응답 없음";
-    return (
-      <div className="rounded-2xl border border-gray-100 bg-white p-4 text-xs text-red-600">
-        recipioReview 통계 서버 응답 없음 ({msg}). `npm run dev` (port 3001) 떠 있는지 확인.
-      </div>
-    );
-  }
+  const handleRefresh = () => qc.invalidateQueries({ queryKey: BLOG_STATS_QUERY_KEY });
 
   return (
     <section className="space-y-2 rounded-2xl border border-gray-100 bg-white p-4">
       <header className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-900">오늘 발행 / 남은 quota</h3>
-        <span className="text-[10px] text-gray-400">cap {data.cap}/계정 · 5s polling</span>
+        <button
+          type="button"
+          onClick={handleRefresh}
+          disabled={isFetching}
+          className="cursor-pointer text-[10px] text-gray-400 hover:text-gray-700 disabled:cursor-not-allowed"
+        >
+          {isFetching ? "갱신 중…" : "↻"}
+        </button>
       </header>
-      {data.accounts.length === 0 ? (
-        <p className="text-xs text-gray-500">등록된 네이버 계정이 없어요.</p>
-      ) : (
+
+      {isLoading && <p className="text-xs text-gray-500">조회 중…</p>}
+
+      {isError && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+          recipioReview 응답 실패: {error instanceof Error ? error.message : "unknown"}
+          <br />
+          <span className="text-[10px] text-red-500">
+            `cd recipioReview && npm run dev` (port 3002) 떠 있는지 확인.
+          </span>
+        </p>
+      )}
+
+      {data && data.accounts.length === 0 && (
+        <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
+          recipioReview 응답 OK인데 등록 계정 0개 — `.env`에 `NAVER_BLOG_IDS=acc1,acc2` 설정 후 재시작.
+        </p>
+      )}
+
+      {data && data.accounts.length > 0 && (
         <ul className="space-y-1">
           {data.accounts.map((acc) => {
             const exhausted = acc.remaining === 0;

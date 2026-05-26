@@ -1,29 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
-const DEFAULT_URL = "http://localhost:3002";
+import { BLOG_STATS_QUERY_KEY, blogStatsBaseUrl, useBlogStats } from "../lib/useBlogStats";
 
-type AccountStat = { blogId: string; postedToday: number; remaining: number };
-type StatsResp = { ok: true; cap: number; accounts: AccountStat[] };
 type ActionMsg = { kind: "success" | "error" | "info"; text: string };
 
-const baseUrl = (): string =>
-  process.env.NEXT_PUBLIC_BLOG_STATS_API_URL?.trim() || DEFAULT_URL;
-
-const fetchAccounts = async (): Promise<AccountStat[]> => {
-  const res = await fetch(new URL("/api/blog-stats/today", baseUrl()), {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`stats ${res.status}`);
-  const data = (await res.json()) as StatsResp | { ok: false };
-  if ("ok" in data && data.ok) return data.accounts;
-  return [];
-};
-
 const callLogin = async (blogId: string): Promise<{ ok: boolean; reason?: string }> => {
-  const res = await fetch(new URL("/api/login-naver", baseUrl()), {
+  const res = await fetch(new URL("/api/login-naver", blogStatsBaseUrl()), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ blogId }),
@@ -38,7 +23,7 @@ const callLogin = async (blogId: string): Promise<{ ok: boolean; reason?: string
 const triggerPublish = async (
   blogId: string | null
 ): Promise<{ ok: boolean; reason?: string; pid?: number; blogId?: string }> => {
-  const res = await fetch(new URL("/api/blog-publish/next", baseUrl()), {
+  const res = await fetch(new URL("/api/blog-publish/next", blogStatsBaseUrl()), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(blogId ? { blogId } : {}),
@@ -55,13 +40,9 @@ export const AccountActionsCard = () => {
   const [pendingLogin, setPendingLogin] = useState<string | null>(null);
   const [pendingPublish, setPendingPublish] = useState(false);
   const [msg, setMsg] = useState<ActionMsg | null>(null);
-  const { data: accounts = [] } = useQuery({
-    queryKey: ["admin", "blog-accounts-actions"],
-    queryFn: fetchAccounts,
-    refetchInterval: 5000,
-    staleTime: 5000,
-    retry: false,
-  });
+
+  const { data, isLoading, isError, error } = useBlogStats();
+  const accounts = data?.accounts ?? [];
 
   const handleLogin = async (blogId: string) => {
     setPendingLogin(blogId);
@@ -74,7 +55,7 @@ export const AccountActionsCard = () => {
       setMsg({ kind: "error", text: `로그인 호출 오류: ${e instanceof Error ? e.message : String(e)}` });
     } finally {
       setPendingLogin(null);
-      qc.invalidateQueries({ queryKey: ["admin", "blog-stats-today"] });
+      qc.invalidateQueries({ queryKey: BLOG_STATS_QUERY_KEY });
     }
   };
 
@@ -89,7 +70,7 @@ export const AccountActionsCard = () => {
           text: `${r.blogId} 발행 시작 (pid=${r.pid}). 약 5분 걸림. 큐 dashboard에서 확인.`,
         });
         qc.invalidateQueries({ queryKey: ["admin", "blog-queue-snapshot"] });
-        qc.invalidateQueries({ queryKey: ["admin", "blog-stats-today"] });
+        qc.invalidateQueries({ queryKey: BLOG_STATS_QUERY_KEY });
       } else {
         setMsg({ kind: "error", text: `발행 트리거 실패: ${r.reason ?? "unknown"}` });
       }
@@ -122,11 +103,26 @@ export const AccountActionsCard = () => {
           {pendingPublish ? "트리거 중…" : "다음 패키지 발행"}
         </button>
       </header>
-      {accounts.length === 0 ? (
-        <p className="text-xs text-gray-500">
-          recipioReview /api/blog-stats/today 응답 없음 — `npm run dev` (port 3002) 떠 있는지 확인.
+
+      {isLoading && <p className="text-xs text-gray-500">계정 목록 조회 중…</p>}
+
+      {isError && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+          recipioReview 응답 실패: {error instanceof Error ? error.message : "unknown"}
+          <br />
+          <span className="text-[10px] text-red-500">
+            `cd recipioReview && npm run dev` (port 3002) 떠 있는지 확인.
+          </span>
         </p>
-      ) : (
+      )}
+
+      {data && accounts.length === 0 && (
+        <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
+          recipioReview 응답 OK인데 등록 계정 0개 — `.env`에 `NAVER_BLOG_IDS=acc1,acc2` 설정 후 재시작.
+        </p>
+      )}
+
+      {accounts.length > 0 && (
         <ul className="space-y-1">
           {accounts.map((a) => (
             <li
@@ -146,6 +142,7 @@ export const AccountActionsCard = () => {
           ))}
         </ul>
       )}
+
       {msg && (
         <p className={`rounded-lg px-3 py-2 text-[11px] ${msgClass}`}>{msg.text}</p>
       )}
