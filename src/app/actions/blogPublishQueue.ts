@@ -2,6 +2,8 @@
 
 import { requireAdminAction } from "@/shared/lib/admin-guard";
 
+import type { StaticRecipe } from "@/entities/recipe/model/types";
+
 import type { BlogPost } from "@/app/admin/recipe-blog-test/lib/blogPost.schema";
 import type { CurationBlogPost } from "@/app/admin/recipe-blog-test/lib/curationBlogPost.schema";
 import { saveQueuePackage } from "@/app/admin/recipe-blog-test/lib/saveQueuePackage";
@@ -69,6 +71,53 @@ type EnqueueCurationInput = {
   curationTitle: string;
   imageUrlsBySlot: Record<string, string>;
   curationMeta: CurationMeta;
+  recipes: StaticRecipe[];
+};
+
+type CurationRecipeMeta = {
+  title: string;
+  url: string;
+  servings: number;
+  ingredients: RecipeMetaIngredient[];
+  nutritionTotal: {
+    calories: number;
+    protein: number;
+    carbohydrate: number;
+    fat: number;
+    sugar: number;
+    sodium: number;
+  };
+  totalIngredientCost: number;
+  marketPrice: number;
+};
+
+const toCurationRecipesMeta = (
+  recipes: StaticRecipe[]
+): Record<string, CurationRecipeMeta> => {
+  const map: Record<string, CurationRecipeMeta> = {};
+  for (const r of recipes) {
+    map[r.id] = {
+      title: r.title,
+      url: `https://recipio.kr/recipes/${r.id}`,
+      servings: r.servings,
+      ingredients: r.ingredients.map((i) => ({
+        name: i.name,
+        quantity: i.quantity ?? null,
+        unit: i.unit ?? null,
+      })),
+      nutritionTotal: {
+        calories: r.totalCalories,
+        protein: r.nutrition.protein,
+        carbohydrate: r.nutrition.carbohydrate,
+        fat: r.nutrition.fat,
+        sugar: r.nutrition.sugar,
+        sodium: r.nutrition.sodium,
+      },
+      totalIngredientCost: r.totalIngredientCost,
+      marketPrice: r.marketPrice,
+    };
+  }
+  return map;
 };
 
 export const enqueueCurationBlogPostForPublish = async (
@@ -83,6 +132,7 @@ export const enqueueCurationBlogPostForPublish = async (
       jsonFiles: {
         "post.json": input.post,
         "curation-meta.json": { ...input.curationMeta, tone: input.tone },
+        "recipes-meta.json": toCurationRecipesMeta(input.recipes),
       },
       imageUrlsBySlot: input.imageUrlsBySlot,
     });

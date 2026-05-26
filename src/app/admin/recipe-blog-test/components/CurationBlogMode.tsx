@@ -138,6 +138,7 @@ export const CurationBlogMode = () => {
             url: `https://recipio.kr/curation/${articleData.article.slug}`,
           },
         },
+        recipes: articleData.recipes,
       });
       if (!res.success) {
         setEnqueueMessage({ kind: "error", text: res.error });

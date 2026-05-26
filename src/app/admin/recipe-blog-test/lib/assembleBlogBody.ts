@@ -11,7 +11,7 @@ import {
 export const buildStepsBlock = (recipe: StaticRecipe): string =>
   recipe.steps
     .filter((s) => s.instruction.trim().length > 0)
-    .map((s) => `${s.stepNumber}. ${s.instruction.trim()}`)
+    .map((s, i) => `${i + 1}. ${s.instruction.trim()}`)
     .join("\n");
 
 export const assembleBlogBody = (

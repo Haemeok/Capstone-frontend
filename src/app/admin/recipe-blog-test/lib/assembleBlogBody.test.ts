@@ -32,7 +32,7 @@ describe("buildStepsBlock", () => {
     expect(out).toBe("");
   });
 
-  it("instruction 이 비어 있는 step 은 건너뜀", () => {
+  it("instruction 이 비어 있는 step 은 건너뛰고 1부터 연속 재번호", () => {
     const out = buildStepsBlock(
       makeRecipe({
         steps: [
@@ -42,7 +42,19 @@ describe("buildStepsBlock", () => {
         ],
       }),
     );
-    expect(out).toBe("1. 물을 끓인다\n3. 콩나물 투입");
+    expect(out).toBe("1. 물을 끓인다\n2. 콩나물 투입");
+  });
+
+  it("백엔드 stepNumber 가 0-based 여도 출력은 1부터 시작", () => {
+    const out = buildStepsBlock(
+      makeRecipe({
+        steps: [
+          { stepNumber: 0, instruction: "물을 끓인다" } as never,
+          { stepNumber: 1, instruction: "콩나물 투입" } as never,
+        ],
+      }),
+    );
+    expect(out).toBe("1. 물을 끓인다\n2. 콩나물 투입");
   });
 });
 
