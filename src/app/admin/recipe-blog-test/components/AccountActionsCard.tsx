@@ -1,11 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { BLOG_STATS_QUERY_KEY, blogStatsBaseUrl, useBlogStats } from "../lib/useBlogStats";
 
 type ActionMsg = { kind: "success" | "error" | "info"; text: string };
+
+const LOG_POLL_MS = 2000;
+const LOG_POLL_MAX_MS = 10 * 60_000;
+
+type TriggerResp = {
+  ok: boolean;
+  reason?: string;
+  pid?: number;
+  blogId?: string;
+  logFile?: string;
+  headless?: boolean;
+};
 
 const callLogin = async (blogId: string): Promise<{ ok: boolean; reason?: string }> => {
   const res = await fetch(new URL("/api/login-naver", blogStatsBaseUrl()), {
@@ -20,18 +32,30 @@ const callLogin = async (blogId: string): Promise<{ ok: boolean; reason?: string
   }
 };
 
-const triggerPublish = async (
-  blogId: string | null
-): Promise<{ ok: boolean; reason?: string; pid?: number; blogId?: string }> => {
+const triggerPublish = async (blogId: string | null): Promise<TriggerResp> => {
   const res = await fetch(new URL("/api/blog-publish/next", blogStatsBaseUrl()), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(blogId ? { blogId } : {}),
   });
   try {
-    return (await res.json()) as { ok: boolean; reason?: string; pid?: number; blogId?: string };
+    return (await res.json()) as TriggerResp;
   } catch {
     return { ok: false, reason: `HTTP ${res.status}` };
+  }
+};
+
+const fetchLogTail = async (file: string): Promise<string[] | null> => {
+  const url = new URL("/api/blog-publish/log", blogStatsBaseUrl());
+  url.searchParams.set("file", file);
+  url.searchParams.set("tail", "60");
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { ok: boolean; lines?: string[] };
+    return data.ok && data.lines ? data.lines : null;
+  } catch {
+    return null;
   }
 };
 
@@ -40,9 +64,41 @@ export const AccountActionsCard = () => {
   const [pendingLogin, setPendingLogin] = useState<string | null>(null);
   const [pendingPublish, setPendingPublish] = useState(false);
   const [msg, setMsg] = useState<ActionMsg | null>(null);
+  const [activeLogFile, setActiveLogFile] = useState<string | null>(null);
+  const [logLines, setLogLines] = useState<string[]>([]);
+  const pollStartedAtRef = useRef<number | null>(null);
 
   const { data, isLoading, isError, error } = useBlogStats();
   const accounts = data?.accounts ?? [];
+
+  // 발행 트리거 후 활성 logFile 의 tail 을 polling.
+  useEffect(() => {
+    if (!activeLogFile) return;
+    pollStartedAtRef.current = Date.now();
+    let cancelled = false;
+    const tick = async () => {
+      if (cancelled) return;
+      const lines = await fetchLogTail(activeLogFile);
+      if (!cancelled && lines) {
+        setLogLines(lines);
+        // 종료 시그널: "발행 ✓" 또는 "발행 실패" / "예상 못한 에러" / "exit 5" 등 마지막 줄에 자주 나옴.
+        const joined = lines.slice(-5).join("\n");
+        const done = /발행 ✓|발행 실패|예상 못한 에러|fatal|픽업할 패키지가 없어요|쿼터 마감/.test(joined);
+        if (done) {
+          qc.invalidateQueries({ queryKey: ["admin", "blog-queue-snapshot"] });
+          qc.invalidateQueries({ queryKey: BLOG_STATS_QUERY_KEY });
+        }
+      }
+      const elapsed = pollStartedAtRef.current ? Date.now() - pollStartedAtRef.current : 0;
+      if (elapsed < LOG_POLL_MAX_MS) {
+        setTimeout(tick, LOG_POLL_MS);
+      }
+    };
+    tick();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeLogFile, qc]);
 
   const handleLogin = async (blogId: string) => {
     setPendingLogin(blogId);
@@ -62,13 +118,17 @@ export const AccountActionsCard = () => {
   const handlePublishNext = async () => {
     setPendingPublish(true);
     setMsg({ kind: "info", text: "발행 트리거 중 (자동 계정 픽)…" });
+    setLogLines([]);
+    setActiveLogFile(null);
     try {
       const r = await triggerPublish(null);
       if (r.ok) {
+        const headlessNote = r.headless ? "(headless)" : "(브라우저 창 확인)";
         setMsg({
           kind: "success",
-          text: `${r.blogId} 발행 시작 (pid=${r.pid}). 약 5분 걸림. 큐 dashboard에서 확인.`,
+          text: `${r.blogId} 발행 시작 ${headlessNote}. pid=${r.pid}. 로그 polling 시작…`,
         });
+        if (r.logFile) setActiveLogFile(r.logFile);
         qc.invalidateQueries({ queryKey: ["admin", "blog-queue-snapshot"] });
         qc.invalidateQueries({ queryKey: BLOG_STATS_QUERY_KEY });
       } else {
@@ -143,8 +203,17 @@ export const AccountActionsCard = () => {
         </ul>
       )}
 
-      {msg && (
-        <p className={`rounded-lg px-3 py-2 text-[11px] ${msgClass}`}>{msg.text}</p>
+      {msg && <p className={`rounded-lg px-3 py-2 text-[11px] ${msgClass}`}>{msg.text}</p>}
+
+      {activeLogFile && (
+        <details open className="rounded-lg border border-gray-200">
+          <summary className="cursor-pointer px-3 py-2 text-[11px] font-medium text-gray-700">
+            📄 로그 tail — {activeLogFile} ({logLines.length} lines)
+          </summary>
+          <pre className="max-h-64 overflow-auto rounded-b-lg bg-gray-900 px-3 py-2 text-[10px] leading-snug text-gray-100">
+            {logLines.length === 0 ? "(아직 출력 없음…)" : logLines.join("\n")}
+          </pre>
+        </details>
       )}
     </section>
   );
