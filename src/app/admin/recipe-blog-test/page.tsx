@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
+import { AccountActionsCard } from "./components/AccountActionsCard";
 import { CurationBlogMode } from "./components/CurationBlogMode";
 import { QueueStatusCard } from "./components/QueueStatusCard";
 import { RecipeBlogMode } from "./components/RecipeBlogMode";
@@ -46,9 +47,10 @@ const BlogPublishPage = () => {
         </div>
       </header>
 
-      <div className="mb-4 grid gap-3 md:grid-cols-2">
+      <div className="mb-4 grid gap-3 md:grid-cols-3">
         <QueueStatusCard />
         <TodayStatsCard />
+        <AccountActionsCard />
       </div>
 
       {mode === "recipe" ? <RecipeBlogMode /> : <CurationBlogMode />}
