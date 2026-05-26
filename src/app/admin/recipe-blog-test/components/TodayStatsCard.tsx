@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 const POLL_MS = 5_000;
-const DEFAULT_URL = "http://localhost:3001";
+const DEFAULT_URL = "http://localhost:3002";
 
 type AccountStat = {
   blogId: string;
@@ -18,7 +18,7 @@ type StatsResponse = {
 };
 
 const fetchStats = async (): Promise<StatsResponse> => {
-  // BLOG_STATS_API_URL은 build-time env (NEXT_PUBLIC_*). 미설정 시 localhost:3001
+  // BLOG_STATS_API_URL은 build-time env (NEXT_PUBLIC_*). 미설정 시 localhost:3002
   // 기본값 (recipioReview의 `npm run dev` 가 3001 포트 사용).
   const base = process.env.NEXT_PUBLIC_BLOG_STATS_API_URL?.trim() || DEFAULT_URL;
   const res = await fetch(new URL("/api/blog-stats/today", base), {
