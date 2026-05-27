@@ -5,10 +5,17 @@ import { useQuery } from "@tanstack/react-query";
 const DEFAULT_URL = "http://localhost:3002";
 const POLL_MS = 30_000;
 
+export type LoginStatus = {
+  exists: boolean;
+  mtimeMs: number | null;
+  ageHours: number | null;
+};
+
 export type AccountStat = {
   blogId: string;
   postedToday: number;
   remaining: number;
+  loginStatus: LoginStatus;
 };
 
 type StatsResponseOk = { ok: true; cap: number; accounts: AccountStat[] };

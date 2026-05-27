@@ -1,11 +1,10 @@
-import { BottomAnchorAdSlot } from "@/shared/adsense";
+import { BottomAnchorAdSlot, InArticleAdSlot } from "@/shared/adsense";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { getTrendingYoutubeRecipesOnServer } from "@/entities/recipe/model/api.server";
 
 import { YoutubeClientSection } from "./components/YoutubeClientSection";
-import { YoutubeFeatureCards } from "./components/YoutubeFeatureCards";
 import { YoutubeImportHero } from "./components/YoutubeImportHero";
 
 type YoutubeImportPageProps = {
@@ -25,7 +24,7 @@ const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
           <PrevButton className="text-gray-600" />
         </div>
         <YoutubeImportHero />
-        <YoutubeFeatureCards />
+        <InArticleAdSlot className="my-4" />
         <YoutubeClientSection
           trendingRecipes={trendingRecipes}
           initialUrl={url ?? ""}

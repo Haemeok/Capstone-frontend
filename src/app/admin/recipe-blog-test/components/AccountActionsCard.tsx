@@ -45,6 +45,44 @@ const triggerPublish = async (blogId: string | null): Promise<TriggerResp> => {
   }
 };
 
+const callVerify = async (
+  blogId: string
+): Promise<{ ok: boolean; reason?: string; finalUrl?: string }> => {
+  const res = await fetch(new URL("/api/login-verify", blogStatsBaseUrl()), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ blogId }),
+  });
+  try {
+    return (await res.json()) as { ok: boolean; reason?: string; finalUrl?: string };
+  } catch {
+    return { ok: false, reason: `HTTP ${res.status}` };
+  }
+};
+
+// auth file age 표시. 24h 미만 emerald, 7d 미만 amber, 그 이상 red, 없음 gray.
+const ageBadge = (
+  ageHours: number | null,
+  exists: boolean
+): { text: string; cls: string } => {
+  if (!exists || ageHours == null) {
+    return { text: "auth 없음", cls: "bg-gray-100 text-gray-500" };
+  }
+  const cls =
+    ageHours <= 24
+      ? "bg-emerald-100 text-emerald-700"
+      : ageHours <= 24 * 7
+        ? "bg-amber-100 text-amber-700"
+        : "bg-red-100 text-red-700";
+  const text =
+    ageHours < 1
+      ? "방금"
+      : ageHours < 24
+        ? `${Math.floor(ageHours)}h 전`
+        : `${Math.floor(ageHours / 24)}d 전`;
+  return { text, cls };
+};
+
 const fetchLogTail = async (file: string): Promise<string[] | null> => {
   const url = new URL("/api/blog-publish/log", blogStatsBaseUrl());
   url.searchParams.set("file", file);
@@ -62,6 +100,10 @@ const fetchLogTail = async (file: string): Promise<string[] | null> => {
 export const AccountActionsCard = () => {
   const qc = useQueryClient();
   const [pendingLogin, setPendingLogin] = useState<string | null>(null);
+  const [pendingVerify, setPendingVerify] = useState<string | null>(null);
+  const [verifyResults, setVerifyResults] = useState<
+    Record<string, { ok: boolean; reason?: string } | undefined>
+  >({});
   const [pendingPublish, setPendingPublish] = useState(false);
   const [msg, setMsg] = useState<ActionMsg | null>(null);
   const [activeLogFile, setActiveLogFile] = useState<string | null>(null);
@@ -99,6 +141,20 @@ export const AccountActionsCard = () => {
       cancelled = true;
     };
   }, [activeLogFile, qc]);
+
+  const handleVerify = async (blogId: string) => {
+    setPendingVerify(blogId);
+    setVerifyResults((prev) => ({ ...prev, [blogId]: undefined }));
+    try {
+      const r = await callVerify(blogId);
+      setVerifyResults((prev) => ({ ...prev, [blogId]: { ok: r.ok, reason: r.reason } }));
+      // verify 가 페이지 로딩만 하지 mtime 안 갱신함 — invalidate 굳이 필요 없지만
+      // 사용자가 verify 직전에 로그인 갱신했을 가능성 대비 가볍게 refresh.
+      qc.invalidateQueries({ queryKey: BLOG_STATS_QUERY_KEY });
+    } finally {
+      setPendingVerify(null);
+    }
+  };
 
   const handleLogin = async (blogId: string) => {
     setPendingLogin(blogId);
@@ -184,22 +240,53 @@ export const AccountActionsCard = () => {
 
       {accounts.length > 0 && (
         <ul className="space-y-1">
-          {accounts.map((a) => (
-            <li
-              key={a.blogId}
-              className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-xs"
-            >
-              <span className="font-medium text-gray-900">{a.blogId}</span>
-              <button
-                type="button"
-                onClick={() => handleLogin(a.blogId)}
-                disabled={pendingLogin === a.blogId}
-                className="h-7 cursor-pointer rounded-lg border border-gray-300 bg-white px-3 text-[11px] hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400"
+          {accounts.map((a) => {
+            const badge = ageBadge(a.loginStatus.ageHours, a.loginStatus.exists);
+            const verify = verifyResults[a.blogId];
+            return (
+              <li
+                key={a.blogId}
+                className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-xs"
               >
-                {pendingLogin === a.blogId ? "대기 중…" : "🔑 로그인"}
-              </button>
-            </li>
-          ))}
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-gray-900">{a.blogId}</span>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] ${badge.cls}`}>
+                    {badge.text}
+                  </span>
+                  {verify?.ok === true && (
+                    <span className="text-[10px] text-emerald-600">✓ 활성</span>
+                  )}
+                  {verify?.ok === false && (
+                    <span
+                      className="text-[10px] text-red-600"
+                      title={verify.reason}
+                    >
+                      ✗ {verify.reason ?? "만료"}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => handleVerify(a.blogId)}
+                    disabled={pendingVerify === a.blogId}
+                    className="h-7 cursor-pointer rounded-lg border border-gray-300 bg-white px-2 text-[11px] hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400"
+                    title="실제 네이버 write 페이지로 redirect 검증 (5~10초)"
+                  >
+                    {pendingVerify === a.blogId ? "확인 중…" : "✓ 확인"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleLogin(a.blogId)}
+                    disabled={pendingLogin === a.blogId}
+                    className="h-7 cursor-pointer rounded-lg border border-gray-300 bg-white px-3 text-[11px] hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400"
+                  >
+                    {pendingLogin === a.blogId ? "대기 중…" : "🔑 로그인"}
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
 
