@@ -37,11 +37,11 @@ describe("assignTonesToAccounts", () => {
     expect(assignTonesToAccounts(tones, ["solo"])).toEqual({ solo: tones });
   });
 
-  it("실제 BlogTone 5개 / 3계정 → epigung·ellymom / elarpi·minnie46 / haetsal", () => {
+  it("실제 BlogTone 9개 / 3계정 → 3씩 균등 분배", () => {
     expect(assignTonesToAccounts(ALL_TONES, ["acc1", "acc2", "acc3"])).toEqual({
-      acc1: ["epigung", "ellymom"],
-      acc2: ["elarpi", "minnie46"],
-      acc3: ["haetsal"],
+      acc1: ["epigung", "ellymom", "elarpi"],
+      acc2: ["minnie46", "haetsal", "jjeon_su"],
+      acc3: ["chaihyoun", "woandos", "jaehee1213"],
     });
   });
 });

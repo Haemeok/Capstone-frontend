@@ -5,7 +5,11 @@ export type BlogTone =
   | "ellymom"
   | "elarpi"
   | "minnie46"
-  | "haetsal";
+  | "haetsal"
+  | "jjeon_su"
+  | "chaihyoun"
+  | "woandos"
+  | "jaehee1213";
 
 type PerServing = {
   cal: number;
@@ -37,6 +41,10 @@ export const toneHeading = (
     case "ellymom":
     case "minnie46":
     case "haetsal":
+    case "jjeon_su":
+    case "chaihyoun":
+    case "woandos":
+    case "jaehee1213":
       return `${index + 1}. ${title}`;
     case "elarpi":
       return `+ ${title}`;
@@ -126,6 +134,60 @@ export const buildSectionFragments = (
       ].join("\n");
       return { beforeBody: "", afterBody };
     }
+    case "jjeon_su": {
+      const nutLine = `1인분 ${ps.cal}kcal · 단백질 ${ps.pro}g · ${won(ps.cost)} (${servings}인분 ${totalCost})`;
+      const afterBody = [
+        `{{recipe:${id}}}`,
+        "",
+        nutLine,
+        "",
+        `자세한 레시피는 아래 참고해주세요~`,
+        "",
+        `🔽`,
+        "",
+        `{{link:${id}}}`,
+      ].join("\n");
+      return { beforeBody: "", afterBody };
+    }
+    case "chaihyoun": {
+      const nutLine = `📍 1인분 ${ps.cal}kcal · 단백질 ${ps.pro}g · ${won(ps.cost)} (${servings}인분 ${totalCost})`;
+      const afterBody = [
+        `{{recipe:${id}}}`,
+        "",
+        nutLine,
+        "",
+        `자세한 만드는 법은 아래에 정리해뒀어요 :)`,
+        "",
+        `{{link:${id}}}`,
+      ].join("\n");
+      return { beforeBody: "", afterBody };
+    }
+    case "woandos": {
+      const nutLine = `1인분 ${ps.cal}kcal · 단백질 ${ps.pro}g · ${won(ps.cost)} (${servings}인분 ${totalCost})`;
+      const afterBody = [
+        `{{recipe:${id}}}`,
+        "",
+        nutLine,
+        "",
+        `자세한 레시피는 아래에 정리해뒀어요 ♡`,
+        "",
+        `{{link:${id}}}`,
+      ].join("\n");
+      return { beforeBody: "", afterBody };
+    }
+    case "jaehee1213": {
+      const nutLine = `1인분 ${ps.cal}kcal · 단백질 ${ps.pro}g · ${won(ps.cost)} (${servings}인분 ${totalCost})`;
+      const afterBody = [
+        `{{recipe:${id}}}`,
+        "",
+        nutLine,
+        "",
+        `✔️ 자세한 레시피는 아래에서 확인해보세요`,
+        "",
+        `{{link:${id}}}`,
+      ].join("\n");
+      return { beforeBody: "", afterBody };
+    }
   }
 };
 
@@ -142,5 +204,13 @@ export const buildOutroSuffix = (tone: BlogTone, slug: string): string => {
       return `전체 모음은 ${url} 에서 한 번에 보실 수 있어요.`;
     case "haetsal":
       return `각 레시피도 함께 참고해 보세요. 전체 모음은 ${url} 에 정리해두었어요.`;
+    case "jjeon_su":
+      return `전체 모음은 ${url} 에 정리해뒀으니 참고해주세요~`;
+    case "chaihyoun":
+      return `전체 모음은 ${url} 에 정리해뒀어요. 천천히 둘러보시면 좋아요 :)`;
+    case "woandos":
+      return `전체 모음은 ${url} 에 정리해뒀어요 ♡ 맛있게 만들어드세요!`;
+    case "jaehee1213":
+      return `전체 모음은 ${url} 에 정리해뒀으니 한번 확인해보세요!`;
   }
 };

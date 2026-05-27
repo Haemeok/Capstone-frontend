@@ -10,6 +10,10 @@ export const TONE_OPTIONS: Array<{ tone: BlogTone; label: string }> = [
   { tone: "elarpi", label: "elarpi" },
   { tone: "minnie46", label: "여니쿡" },
   { tone: "haetsal", label: "햇살" },
+  { tone: "jjeon_su", label: "쩐수" },
+  { tone: "chaihyoun", label: "단디" },
+  { tone: "woandos", label: "쓰리맘마" },
+  { tone: "jaehee1213", label: "빵떡부부" },
 ];
 
 export const TONE_LABEL: Record<BlogTone, string> = TONE_OPTIONS.reduce(

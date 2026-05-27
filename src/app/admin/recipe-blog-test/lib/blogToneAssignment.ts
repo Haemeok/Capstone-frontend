@@ -7,6 +7,10 @@ export const ALL_TONES: BlogTone[] = [
   "elarpi",
   "minnie46",
   "haetsal",
+  "jjeon_su",
+  "chaihyoun",
+  "woandos",
+  "jaehee1213",
 ];
 
 // 발행 계정 (NAVER 블로그 ID) 목록. capstone 환경 변수 NAVER_BLOG_IDS=acc1,acc2,acc3.
