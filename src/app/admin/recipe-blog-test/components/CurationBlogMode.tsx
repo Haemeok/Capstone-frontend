@@ -49,6 +49,15 @@ export const CurationBlogMode = () => {
     return map;
   }, [titlesQuery.data]);
 
+  const effectiveSelected = useMemo(() => {
+    if (pendingSlugs.size === 0) return selectedSlugs;
+    const out = new Set<string>();
+    for (const s of selectedSlugs) {
+      if (!pendingSlugs.has(s)) out.add(s);
+    }
+    return out;
+  }, [selectedSlugs, pendingSlugs]);
+
   const handleToggle = useCallback((slug: string, next: boolean) => {
     setSelectedSlugs((prev) => {
       const out = new Set(prev);
@@ -71,10 +80,10 @@ export const CurationBlogMode = () => {
   );
 
   const handleStart = useCallback(() => {
-    if (selectedSlugs.size === 0) return;
+    if (effectiveSelected.size === 0) return;
     triggerHaptic("Medium");
-    void runRewrite([...selectedSlugs], tone, titlesBySlug);
-  }, [selectedSlugs, tone, titlesBySlug, runRewrite]);
+    void runRewrite([...effectiveSelected], tone, titlesBySlug);
+  }, [effectiveSelected, tone, titlesBySlug, runRewrite]);
 
   const handleEnqueueAll = useCallback(async () => {
     triggerHaptic("Medium");
@@ -98,7 +107,7 @@ export const CurationBlogMode = () => {
       <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
         <CurationArticleSearchPanel
           mode="multi"
-          selectedSlugs={selectedSlugs}
+          selectedSlugs={effectiveSelected}
           onToggle={handleToggle}
           badges={slugBadge}
           excludeSlugs={pendingSlugs}
@@ -108,7 +117,7 @@ export const CurationBlogMode = () => {
           <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-gray-900">
-                선택 {selectedSlugs.size}개 · 완료 {items.length}개 (성공 {enqueuedCount + readyCount} · 실패 {failedCount})
+                선택 {effectiveSelected.size}개 · 완료 {items.length}개 (성공 {enqueuedCount + readyCount} · 실패 {failedCount})
               </p>
               <p className="mt-1 text-xs text-gray-500">
                 톤 1개로 선택된 큐레이션 전부 리라이트 → "발행 큐 일괄 push".
@@ -117,7 +126,7 @@ export const CurationBlogMode = () => {
             <button
               type="button"
               onClick={handleStart}
-              disabled={isRunning || isEnqueueing || selectedSlugs.size === 0}
+              disabled={isRunning || isEnqueueing || effectiveSelected.size === 0}
               className="h-11 cursor-pointer rounded-2xl bg-gray-900 px-5 text-sm font-bold text-white active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
             >
               {isRunning ? "리라이트 중…" : "선택 리라이트"}
