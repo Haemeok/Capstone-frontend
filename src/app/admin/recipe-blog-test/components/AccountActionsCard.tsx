@@ -296,9 +296,7 @@ export const AccountActionsCard = () => {
                     className="h-7 cursor-pointer rounded-lg bg-gray-900 px-3 text-[11px] font-semibold text-white active:scale-[0.98] hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
                     title={a.remaining === 0 ? "오늘 quota 마감" : `${a.blogId} 로 다음 본인용 패키지 발행`}
                   >
-                    {pendingPublish === a.blogId
-                      ? "트리거 중…"
-                      : `📤 발행 (${a.remaining})`}
+                    {pendingPublish === a.blogId ? "트리거 중…" : "📤 발행"}
                   </button>
                 </div>
               </li>
