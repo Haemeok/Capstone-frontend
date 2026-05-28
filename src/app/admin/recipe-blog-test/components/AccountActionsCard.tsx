@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import { useQueryClient } from "@tanstack/react-query";
 
 import { BLOG_STATS_QUERY_KEY, blogStatsBaseUrl, useBlogStats } from "../lib/useBlogStats";
@@ -169,13 +170,17 @@ export const AccountActionsCard = () => {
     }
   };
 
-  const handlePublishNext = async () => {
-    setPendingPublish(true);
-    setMsg({ kind: "info", text: "발행 트리거 중 (자동 계정 픽)…" });
+  const runPublish = async (target: string | null) => {
+    const key = target ?? "auto";
+    setPendingPublish(key);
+    setMsg({
+      kind: "info",
+      text: target ? `${target} 발행 트리거 중…` : "발행 트리거 중 (자동 계정 픽)…",
+    });
     setLogLines([]);
     setActiveLogFile(null);
     try {
-      const r = await triggerPublish(null);
+      const r = await triggerPublish(target);
       if (r.ok) {
         const headlessNote = r.headless ? "(headless)" : "(브라우저 창 확인)";
         setMsg({
@@ -191,9 +196,12 @@ export const AccountActionsCard = () => {
     } catch (e) {
       setMsg({ kind: "error", text: `트리거 호출 오류: ${e instanceof Error ? e.message : String(e)}` });
     } finally {
-      setPendingPublish(false);
+      setPendingPublish(null);
     }
   };
+
+  const handlePublishNext = () => runPublish(null);
+  const handlePublishAccount = (blogId: string) => runPublish(blogId);
 
   const msgClass =
     msg?.kind === "success"
@@ -211,10 +219,10 @@ export const AccountActionsCard = () => {
         <button
           type="button"
           onClick={handlePublishNext}
-          disabled={pendingPublish || allMaxed || accounts.length === 0}
+          disabled={pendingPublish !== null || allMaxed || accounts.length === 0}
           className="h-9 cursor-pointer rounded-xl bg-gray-900 px-4 text-xs font-bold text-white active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
         >
-          {pendingPublish ? "트리거 중…" : "다음 패키지 발행"}
+          {pendingPublish === "auto" ? "트리거 중…" : "다음 패키지 발행 (자동)"}
         </button>
       </header>
 
@@ -280,6 +288,17 @@ export const AccountActionsCard = () => {
                     className="h-7 cursor-pointer rounded-lg border border-gray-300 bg-white px-3 text-[11px] hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400"
                   >
                     {pendingLogin === a.blogId ? "대기 중…" : "🔑 로그인"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePublishAccount(a.blogId)}
+                    disabled={pendingPublish !== null || a.remaining === 0}
+                    className="h-7 cursor-pointer rounded-lg bg-gray-900 px-3 text-[11px] font-semibold text-white active:scale-[0.98] hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                    title={a.remaining === 0 ? "오늘 quota 마감" : `${a.blogId} 로 다음 본인용 패키지 발행`}
+                  >
+                    {pendingPublish === a.blogId
+                      ? "트리거 중…"
+                      : `📤 발행 (${a.remaining})`}
                   </button>
                 </div>
               </li>
