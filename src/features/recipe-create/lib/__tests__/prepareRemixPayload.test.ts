@@ -64,9 +64,6 @@ describe("prepareRemixPayload", () => {
   });
 
   it("preserves youtube meta fields for round-trip", () => {
-    // All youtube meta fields must round-trip for remix cards/lists per backend spec.
-    // youtubeUrl is optional on RecipePayload (defaultRecipeKeys omits it from the
-    // base Omit, but it is re-added explicitly to support remix submission).
     const recipe = {
       ...baseRecipe(),
       youtubeUrl: "https://youtu.be/abc",

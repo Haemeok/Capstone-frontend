@@ -138,8 +138,6 @@ export const enqueueCurationBlogPostForPublish = async (
       };
     }
 
-    // tone → blogId 매핑 (NAVER_BLOG_IDS env 순서대로 ceil(N/M) 분배). 등록 0이면 null.
-    // 발행부는 targetBlogId 가 있으면 그 계정으로만 pick. null 이면 free pick (역호환).
     const targetBlogId = blogIdForTone(input.tone);
     const { packagePath, savedSlots, skippedSlots } = await saveQueuePackage({
       prefix: `curation-${input.tone}`,

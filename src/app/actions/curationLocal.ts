@@ -13,9 +13,6 @@ import { requireAdminAction } from "@/shared/lib/admin-guard";
 // Local dev-only stub. /data/ is gitignored.
 const STORAGE_DIR = join(process.cwd(), "data", "curations-local");
 
-// Atomic write — 같은 슬러그에 동시 발행이 떨어져도 partial write 로 깨지지
-// 않도록 tmp 파일에 먼저 쓰고 rename 으로 교체. Node 의 rename 은 NTFS/POSIX
-// 모두 atomic (Windows 도 MoveFileExW + REPLACE_EXISTING).
 const writeJsonAtomic = async (
   filePath: string,
   data: unknown,
@@ -80,8 +77,6 @@ export const listCurationLocal = async (): Promise<LocalCurationListItem[]> => {
 
   const jsonFiles = files.filter((f) => f.endsWith(".json"));
 
-  // per-file try/catch — 한 파일이 깨져도 나머지를 살린다. 이전엔 Promise.all 가
-  // 첫 reject 에서 빠져 전체 [] 가 되어 publishedSlugs=0 으로 잘못 인식되었음.
   const results = await Promise.all(
     jsonFiles.map(async (f) => {
       try {

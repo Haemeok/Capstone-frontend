@@ -2,16 +2,6 @@ import type { Metadata } from "next";
 
 import { SEO_CONSTANTS } from "./constants";
 
-/**
- * YouTube Recipe Extractor Metadata
- *
- * SEO Strategy: Single-purpose tool optimization (inspired by converter/extractor sites)
- * - Clear value proposition in title
- * - Feature-rich description emphasizing unique capabilities
- * - Tool-focused structured data (WebApplication + HowTo schemas)
- * - Long-tail keyword coverage for various search intents
- * - Free + Korean market focus targeting underserved niche
- */
 
 const YOUTUBE_EXTRACTOR_URL = `${SEO_CONSTANTS.SITE_URL}/recipes/new/youtube`;
 const YOUTUBE_EXTRACTOR_IMAGE = `${SEO_CONSTANTS.SITE_URL}/web-app-manifest-512x512.png`;
@@ -52,10 +42,6 @@ const YOUTUBE_EXTRACTOR_KEYWORDS = [
   ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
 ];
 
-/**
- * WebApplication structured data
- * Marks this page as a utility tool for better search visibility
- */
 const createWebApplicationStructuredData = () => ({
   "@context": "https://schema.org",
   "@type": "WebApplication",
@@ -85,10 +71,6 @@ const createWebApplicationStructuredData = () => ({
   browserRequirements: "Requires JavaScript. Requires HTML5.",
 });
 
-/**
- * HowTo structured data
- * Explains the extraction process for rich snippet display
- */
 const createHowToStructuredData = () => ({
   "@context": "https://schema.org",
   "@type": "HowTo",
@@ -138,10 +120,6 @@ const createHowToStructuredData = () => ({
   ],
 });
 
-/**
- * BreadcrumbList structured data
- * Provides navigation context for search engines
- */
 const createBreadcrumbStructuredData = () => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -167,10 +145,6 @@ const createBreadcrumbStructuredData = () => ({
   ],
 });
 
-/**
- * FAQPage structured data
- * Targets common questions for featured snippet opportunities
- */
 const createFAQStructuredData = () => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -222,15 +196,6 @@ const createYoutubeExtractorStructuredData = () => {
   return [webApp, howTo, breadcrumb, faq];
 };
 
-/**
- * YouTube Recipe Extractor Page Metadata
- *
- * Optimized for:
- * - Search queries: "유튜브 레시피 추출", "YouTube recipe extractor"
- * - Long-tail: "유튜브 요리 영상 레시피로 저장", "extract recipe from YouTube video"
- * - Tool discovery: Free utility tool positioning
- * - Rich snippets: Multiple structured data types
- */
 export const youtubeExtractorMetadata: Metadata = {
   // Primary title optimized for click-through rate
   title: "유튜브 레시피 추출 - 무료 AI 영상 분석 | recipio",

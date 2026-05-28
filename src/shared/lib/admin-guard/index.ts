@@ -9,10 +9,6 @@ export type AdminCheckResult =
   | { ok: true }
   | { ok: false; status: 401 | 403 | 500; reason: string };
 
-// Server-only. Reads cookies, forwards to backend /api/me, compares user.id
-// against the allowlist parsed from ADMIN_USER_ID (comma-separated; single
-// value also accepted). Backend uses cookie-based auth (not Bearer), so the
-// incoming cookie jar is forwarded verbatim.
 export const checkAdminAccess = async (): Promise<AdminCheckResult> => {
   const adminIds = parseAdminIds(process.env.ADMIN_USER_ID);
   if (adminIds.size === 0) {
@@ -53,10 +49,6 @@ const parseAdminIds = (raw: string | undefined): Set<string> =>
       .filter((s) => s.length > 0)
   );
 
-// For API routes: returns NextResponse on failure, null on success.
-// Caller pattern: const guard = await assertAdminApi(); if (guard) return guard;
-// On env-missing (status 500) we throw — same treatment as the other wrappers,
-// so a generic 500 surfaces and a misleading {error: "Unauthorized"} body never ships.
 export const assertAdminApi = async (): Promise<NextResponse | null> => {
   const result = await checkAdminAccess();
   if (result.ok) return null;
@@ -67,8 +59,6 @@ export const assertAdminApi = async (): Promise<NextResponse | null> => {
   return NextResponse.json({ error: message }, { status: result.status });
 };
 
-// For RSC layouts/pages: triggers Next.js notFound on failure (no info leak about
-// admin routes existing). Throws server-side error if env is missing.
 export const requireAdminPage = async (): Promise<void> => {
   const result = await checkAdminAccess();
   if (result.ok) return;
@@ -78,8 +68,6 @@ export const requireAdminPage = async (): Promise<void> => {
   notFound();
 };
 
-// For Server Actions: throws on failure. Server Actions don't render pages,
-// so notFound() is wrong here — we want the call to reject and surface to the client.
 export const requireAdminAction = async (): Promise<void> => {
   const result = await checkAdminAccess();
   if (result.ok) return;

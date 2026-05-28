@@ -1,12 +1,5 @@
 import { NextRequest } from "next/server";
 
-/**
- * 백엔드 API 요청 시 X-Env 헤더 값을 환경에 따라 결정합니다.
- *
- * - 로컬 개발: "local"
- * - Vercel Preview: 실제 요청된 origin URL (예: "https://xxx-git-feature-xxx.vercel.app")
- * - Production: "prod"
- */
 export const getEnvHeader = (request?: NextRequest): string => {
   // 1. 로컬 개발
   if (process.env.NODE_ENV === "development") {

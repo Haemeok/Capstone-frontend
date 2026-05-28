@@ -68,8 +68,6 @@ const RecipeManager = () => {
 
     updateRecipeStatus(id, "loading");
 
-    // 별도 파일이 없다면 아래 코드를 사용하세요:
-    // const prompt = `JSON 스키마에 맞춰 요약해줘: ${targetRecipe.originalText}`;
     const prompt = recipePrompt(targetRecipe.originalText);
 
     const result = await askGrok(prompt);

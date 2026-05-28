@@ -37,8 +37,6 @@ export type BatchGenerateOptions = {
   recipeCount?: number;
   forceToneSeed?: GenerateCurationInput["forceToneSeed"];
   onItemDone?: (key: string) => void;
-  // INSUFFICIENT_RECIPES 발생 시: 사용자에게 실패로 보이는 것보다 조용히 hide.
-  // store.setError 대신 이 콜백이 불려서 caller 가 dead-slug 영속/필터를 처리.
   onDeadSlug?: (key: string) => void;
 };
 
@@ -66,10 +64,6 @@ export const runBatchGenerate = async (
         useBatchPublishStore.getState().setGenerated(item.key, result);
         opts.onItemDone?.(item.key);
       } catch (e) {
-        // 이 슬러그로는 정상 큐레이션을 못 만든다는 신호 — 사용자에게 실패로 보이지 말고 hide.
-        // INSUFFICIENT_RECIPES: 후보 레시피 부족
-        // LLM_ERROR: title 호출 schema 위반 N회
-        // VALIDATION_FAILED: title-body N 일관성 N회 실패
         if (
           e instanceof CurationError &&
           DEAD_SLUG_CODES.has(e.code) &&

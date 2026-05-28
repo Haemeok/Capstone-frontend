@@ -1,8 +1,5 @@
 import { createHash } from "node:crypto";
 
-// RSS 2.0 빌더. 의존성 없이 직렬화한다.
-// GUID는 RFC 4151 Tag URI(`tag:recipio.kr,2026:<type>/<id>`)에 isPermaLink="false" 고정 —
-// 추후 URL 구조가 바뀌어도 리더 dedup이 깨지지 않게 한다.
 
 const SITE_HOST = "recipio.kr";
 

@@ -1,7 +1,3 @@
-// Stage 1 본문 markdown → 구조화된 BlogPost 섹션으로 파싱·검증한다.
-// 큐레이션은 markdown 그대로 발행하지만 레시피 블로그는 네이버 포스터가
-// steps[]/kitchenTips[]/appliedKnowledge/... 구조 필드를 직접 읽으므로,
-// LLM 으로부터는 markdown 으로 받아 파싱 책임을 우리가 진다.
 
 export type ParsedRecipeBlogBody = {
   lead: string;
@@ -32,9 +28,6 @@ export const normalizeMarkdown = (md: string): string =>
     .replace(/([^\n]) +(#{1,3} )/g, "$1\n\n$2")
     .trim();
 
-// `## section-name` H2 헤더 기준으로 본문을 잘라 섹션 dict 로 만든다.
-// 헤더 라인 자체는 빼고, 그 다음 빈 줄 + 본문만 모은다. 같은 이름이 두 번
-// 나오면 마지막 것만 채택 (LLM 이 retry 컨텍스트 흘리면 dup 가능성).
 const splitSections = (md: string): Record<string, string> => {
   const sections: Record<string, string> = {};
   const lines = md.split("\n");
@@ -90,9 +83,6 @@ const parseListItems = (body: string): string[] => {
   return items;
 };
 
-// 길이 제한은 일부러 두지 않는다 — 길이 미달/초과로 retry 가 자주 터져
-// 사용자 흐름이 망가지는 비용이 길이 일관성 가치보다 크다는 판단.
-// prompt 의 "○○~○○자" 가이드로 정성적 유도만 하고, 실제 검증은 구조만 본다.
 
 export const parseAndValidateRecipeBlogBody = (
   md: string,
@@ -163,8 +153,6 @@ export const parseAndValidateRecipeBlogBody = (
   };
 };
 
-// 이미지 슬롯별 alt 자동 합성. LLM 한테 record 출력시키지 않고 우리가 박는다
-// (Upstage JSON mode 가 record/regex 키워드에 약함).
 export const synthesizeAlts = (
   recipeTitle: string,
   slots: string[],

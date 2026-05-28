@@ -6,9 +6,6 @@ export const AUTH_DIAG_PREFIX = "[AUTH_DIAG]";
 const DX_ID_PATTERN = /^[a-f0-9]{32}$/;
 const DX_ID_HEADER_NAME = "x-dx-id";
 
-// Client (LocalStorage)에서 보낸 dxId를 검증해서 그대로 반환.
-// 형식 깨졌거나 없으면 undefined — 서버는 발급하지 않는다.
-// (cookie 발급 시 clearAllCookies로 함께 사라지는 문제 회피.)
 export const sanitizeDxId = (raw: unknown): string | undefined => {
   if (typeof raw !== "string") return undefined;
   return DX_ID_PATTERN.test(raw) ? raw : undefined;

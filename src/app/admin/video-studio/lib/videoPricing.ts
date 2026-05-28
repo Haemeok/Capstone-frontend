@@ -1,21 +1,3 @@
-// Pricing constants for BytePlus ModelArk Seedance 2.0.
-//
-// Source notes (recorded 2026-05-10):
-//   - Per-second base rates: BytePlus ModelArk international API.
-//     Reported by sora video art / blog.laozhang and consistent with the
-//     BytePlus activity page wording. The official pricing console
-//     (docs.byteplus.com/en/docs/ModelArk/1544106) was not externally
-//     fetchable at write time — verify against the live console once
-//     real videos are billed and update if it diverges by >20%.
-//   - Resolution multiplier: BytePlus's launch page documents
-//     "per-token pricing, up to ~1:1.8 across resolutions". The
-//     480p/720p/1080p factors below approximate that curve.
-//   - Audio surcharge for `generate_audio: true` is not documented
-//     anywhere we could find. Treated as $0 here. If a real invoice
-//     shows otherwise, add an audio multiplier or flat fee.
-//
-// These numbers feed an admin-only cost summary; they are estimates,
-// not authoritative billing.
 
 import type {
   SeedanceModelId,

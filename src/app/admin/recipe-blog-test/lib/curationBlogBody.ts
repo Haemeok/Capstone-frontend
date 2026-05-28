@@ -5,9 +5,6 @@ const LINK_TOKEN_RE = /\{\{link:([^}]+)\}\}/g;
 const INGREDIENTS_TOKEN_RE = /\{\{ingredients:([^}]+)\}\}/g;
 const NUTRITION_TOKEN_RE = /\{\{nutrition:([^}]+)\}\}/g;
 
-// 토큰 `{{recipe:rN}}` → markdown image, `{{link:rN}}` → markdown link.
-// `{{ingredients:rN}}` / `{{nutrition:rN}}` → 발행 단계에서 recipioReview 가
-// 네이버 말풍선·인용 박스로 채울 자리. 미리보기에선 placeholder blockquote 로 렌더.
 export const hydrateCurationBlogMarkdown = (
   md: string,
   recipes: StaticRecipe[],

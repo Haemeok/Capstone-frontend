@@ -129,8 +129,6 @@ describe("PROMPT_VARIANTS archetype slots (3–9)", () => {
       const variant = PROMPT_VARIANTS.find((v) => v.id === id)!;
       const out = variant.build(fixtureRecipe);
       expect(out).toMatch(/cropped at the wrist/);
-      // Regression guard: a future edit must not contradict the cropped-hand
-      // composition by adding "No hands." to extraExclusions.
       expect(out).not.toMatch(/No hands\.?/);
     }
   );

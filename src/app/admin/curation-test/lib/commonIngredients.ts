@@ -1,7 +1,3 @@
-// AI prompt에 "이 큐레이션의 공통 재료"를 명시적으로 박기 위한 헬퍼.
-// ingredientIds(예: "NjeW51wD")는 모델 입장에서 의미 없는 토큰이라,
-// 모델이 레시피 제목에서 임의로 테마를 추론(2/5가 토마토면 "토마토 큐레이션"으로 환각)한다.
-// 실제 recipe.ingredients를 교차해 모든 레시피에 등장하는 재료를 뽑아 그대로 prompt에 주입한다.
 
 type IngredientLite = {
   id?: string;

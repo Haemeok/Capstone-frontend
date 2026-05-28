@@ -132,10 +132,6 @@ export const generateCurationBlogPost = async (
   const curationUrl = `https://recipio.kr/curation/${article.slug}`;
   const solarModel = upstage.chat(MODEL_ID);
 
-  // Stage 1: 본문 (generateText) — schema X. Markdown 출력 + 우리 파서.
-  // generateObject 로 긴 본문 + 큰 schema 를 같이 강제하면 Upstage 500 이 자주
-  // 나서 분리. parseBlogBody 가 헤딩 카운트·outro 마커 검증, assembleBlogBody
-  // 가 톤별 이미지·링크·영양·outro URL 토큰을 결정론적으로 박는다.
   const baseSystem = buildToneSystemPrompt(tone);
   const baseUser = buildToneUserPrompt({ article, recipes: usableRecipes });
 

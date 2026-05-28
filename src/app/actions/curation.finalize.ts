@@ -13,8 +13,6 @@ import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 const STORAGE_DIR = join(process.cwd(), "data", "curations-local");
 
-// Atomic write — 같은 슬러그에 동시 발행이 떨어져도 partial write 로 깨지지
-// 않도록 tmp 파일에 먼저 쓰고 rename 으로 교체.
 const writeJsonAtomic = async (
   filePath: string,
   data: unknown,

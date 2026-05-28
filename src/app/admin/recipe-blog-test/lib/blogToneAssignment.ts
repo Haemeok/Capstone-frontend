@@ -13,20 +13,12 @@ export const ALL_TONES: BlogTone[] = [
   "jaehee1213",
 ];
 
-// 발행 계정 (NAVER 블로그 ID) 목록. capstone 환경 변수 NAVER_BLOG_IDS=acc1,acc2,acc3.
-// 등록 0개면 빈 배열 → tone → blogId 매핑 전체 null (발행부에서 free pick fallback).
 export const listAccountsFromEnv = (): string[] => {
   const raw = process.env.NAVER_BLOG_IDS?.trim();
   if (!raw) return [];
   return raw.split(",").map((s) => s.trim()).filter(Boolean);
 };
 
-// tones 를 accounts 순서대로 ceil(N/M) 단위 그룹 분배.
-//   6톤/3계정 → [2,2,2]
-//   9톤/3계정 → [3,3,3]
-//   5톤/3계정 → [2,2,1]
-//   7톤/3계정 → [3,3,1]
-// accounts 빈 배열이면 빈 map.
 export const assignTonesToAccounts = (
   tones: BlogTone[],
   accounts: string[]

@@ -34,8 +34,6 @@ if (typeof globalThis.Response === "undefined") {
   (globalThis as any).Response = MockResponse;
 }
 
-// auth.ts 모듈의 내부 상태(refreshPromise, lastRefreshFailTime)를 리셋하려면
-// 매 테스트마다 모듈을 새로 로드해야 함
 let refreshToken: typeof import("../auth").refreshToken;
 let performLogout: typeof import("../auth").performLogout;
 let dispatchForceLogoutEvent: typeof import("../auth").dispatchForceLogoutEvent;

@@ -67,11 +67,6 @@ export const useBatchUpdateReactions = () => {
           if (result.status === "fulfilled") {
             return result.value as unknown as BatchUpdateResult;
           } else {
-            // Should not happen because we catch inside map, but for safety of Promise.allSettled typing
-            // Actually, since we return objects in both try/catch above, result.status will always be "fulfilled" from Promise.allSettled's perspective
-            // unless the map function itself throws synchronously (unlikely).
-            // However, strictly speaking, Promise.allSettled returns { status: 'fulfilled', value: T } | { status: 'rejected', reason: any }
-            // Our map function ensures we return the object structure we want.
             return (
               (result as any).value || {
                 recipeId: recipeIds[index],

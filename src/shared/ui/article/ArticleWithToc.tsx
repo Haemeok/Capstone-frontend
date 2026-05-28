@@ -12,8 +12,6 @@ type ArticleWithTocProps = {
   items: TocItem[];
   children: ReactNode;
   accentClassName?: string;
-  // 'compact' (default): md:grid 안에서 본문과 사이드바가 한 column 분배 — 본문 폭 줄어듦.
-  // 'wide': flex로 본문(max-w-4xl)을 그대로 두고 사이드바를 그 우측 외부에 배치. xl: 이상에서만 사이드바 노출.
   layout?: "compact" | "wide";
 };
 

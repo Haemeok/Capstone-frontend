@@ -15,12 +15,7 @@ export type BodyRecipeForPrompt = {
   totalCalories?: number;
 };
 
-// =====================================================================
-// Hybrid 파이프라인 prompt builder (Solar 본문 + Grok 슬롯 인서터)
-// =====================================================================
 
-// Stage 3a: Solar 본문 — 슬롯 의무 없는 자연스러운 한국어. recipe.title을
-// 본문에 자연스럽게 녹여 인용한다. 그 다음 Stage 3b에서 Grok이 슬롯을 박음.
 export const buildSolarBodySystemPrompt = ({
   toneSeed,
 }: {
@@ -85,9 +80,6 @@ export const buildSolarBodyUserPrompt = ({
     .map((r, i) => `[${i}] ${r.title}\n${JSON.stringify(stripUrls(r), null, 2)}`)
     .join("\n\n");
 
-  // params의 ingredientIds 같은 키는 모델에게 의미 없는 opaque 토큰. 실재
-  // 공통 재료를 commonIngredients로 받아 명시하면 모델이 제목으로부터의
-  // 임의 추론(2/5가 토마토면 토마토 큐레이션) 환각을 피한다.
   const commonBlock =
     commonIngredients && commonIngredients.length > 0
       ? [
@@ -116,9 +108,6 @@ export const buildSolarBodyUserPrompt = ({
     .join("\n\n");
 };
 
-// Stage 3b: Grok 슬롯 인서터 — Solar가 만든 마크다운에 슬롯만 박음.
-// 톤·문장·내용은 절대 바꾸지 않는다. 누락된 H2 섹션이 있으면 자연스러운
-// 위치에 ## 헤더만 추가하는 것까지 허용.
 export const buildSlotInserterSystemPrompt = (): string => {
   return [
     "당신은 한국어 마크다운에 슬롯 토큰을 정확히 삽입하는 후처리 편집자다. 원본 본문의 톤·문장·단어 선택은 **절대 바꾸지 않는다**. 슬롯만 추가/위치 조정.",

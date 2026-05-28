@@ -20,17 +20,7 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   recipeId: string;
-  /**
-   * Override the source book. If omitted, falls back to the user's default book
-   * (or the first book by displayOrder if no isDefault flag is set).
-   * Pass this when chaining moves so the next move's "from" matches the previous "to".
-   */
   fromBookId?: string;
-  /**
-   * Called after a successful move. When provided, the sheet does NOT show its
-   * own success toast — the parent is expected to handle messaging
-   * (e.g. show another action toast for chained moves).
-   */
   onMoveComplete?: (toBookId: string, toBookName: string) => void;
 };
 
@@ -48,8 +38,6 @@ export const ChangeBookSheet = ({
   const [createOpen, setCreateOpen] = useState(false);
 
   const defaultBook = books?.find((b) => b.isDefault);
-  // Fallback: if no book has isDefault: true (backend data issue), use the first book
-  // ordered by displayOrder.
   const sortedBooks = [...(books ?? [])].sort(
     (a, b) => a.displayOrder - b.displayOrder
   );

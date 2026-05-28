@@ -19,9 +19,6 @@ const resolveSortParam = (sort: string | undefined, fallback: string): string =>
   return sort.includes(",") ? sort : `createdAt,${sort}`;
 };
 
-// 큐레이션 등 비로그인 SSR 컨텍스트에서 favoriteCount/likeCount만 노리고 부르는 버전.
-// cookies()를 안 쓰므로 라우트가 dynamic으로 떨어지지 않고, revalidate 캐시 적용.
-// 본인 좋아요/즐겨찾기 여부는 의미 없게 비어 오겠지만, 카운트만 필요하면 충분.
 export const getRecipeStatusPublicOnServer = async (
   recipeId: string
 ): Promise<RecipeStatus | null> => {
@@ -403,9 +400,6 @@ export const getTrendingYoutubeRecipesOnServer = async (): Promise<
   }
 };
 
-// 2026-05-08 신규: 비공개 라우트(/recipes/private/[id]) 전용 SSR fetcher.
-// cookies()를 사용하므로 호출 페이지는 자동으로 dynamic 모드가 됨.
-// 백엔드가 비-owner에게 401/404를 반환하면 그대로 null로 흘려보내고 페이지에서 notFound() 처리.
 export const getPrivateRecipeOnServer = async (
   id: string
 ): Promise<Recipe | null> => {

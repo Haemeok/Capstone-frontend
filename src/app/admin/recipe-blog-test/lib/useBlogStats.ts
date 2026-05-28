@@ -47,8 +47,6 @@ const fetchStats = async (): Promise<BlogStatsData> => {
   throw new Error(("reason" in data && data.reason) || "응답 형식 오류");
 };
 
-// 두 dashboard 카드가 같은 query key를 공유 — tanstack-query가 자동 dedup.
-// 30s 폴링 (5s는 spam). 수동 refresh는 queryClient.invalidateQueries로.
 export const useBlogStats = () =>
   useQuery({
     queryKey: ["admin", "blog-stats-today"] as const,

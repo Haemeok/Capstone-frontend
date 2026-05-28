@@ -29,9 +29,6 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-// ========================================================================
-// 계약 매트릭스 (docs/auth-contract.md 참조)
-// ========================================================================
 
 type ExpectedCell = {
   forceLogout: boolean;
@@ -147,9 +144,6 @@ describe("Auth Contract: State × Endpoint matrix", () => {
   );
 });
 
-// ========================================================================
-// Concurrency contract (C1-C3)
-// ========================================================================
 
 describe("Auth Contract: Concurrency / Timing", () => {
   it("C1: 두 요청이 동시에 401 → refresh는 1번만 호출된다 (dedup)", async () => {
@@ -230,9 +224,6 @@ describe("Auth Contract: Concurrency / Timing", () => {
   });
 });
 
-// ========================================================================
-// Edge cases (E1-E2)
-// ========================================================================
 
 describe("Auth Contract: Edge cases", () => {
   it("E1: refresh 200 성공 후 retry가 401이면 ApiError 반환하지만 forceLogout은 없다", async () => {
@@ -266,9 +257,6 @@ describe("Auth Contract: Edge cases", () => {
   });
 });
 
-// ========================================================================
-// getRecipeStatus end-to-end (익명 사용자에게 forceLogout 없음 검증)
-// ========================================================================
 
 describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () => {
   it("getRecipeStatus는 익명 사용자에게 forceLogout을 발행하지 않는다", async () => {
@@ -312,11 +300,6 @@ describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () 
   });
 });
 
-// ========================================================================
-// 라우트 무관 anonymous silent 검증
-// 계약의 핵심: 익명 사용자는 어떤 엔드포인트를 때리든 토스트 없음.
-// silentOn401 per-request 옵션 없이 refresh response body 시그널만으로 성립.
-// ========================================================================
 
 describe("Auth Contract: Route-agnostic anonymous silence", () => {
   const anonymousRefreshSetup = () => {

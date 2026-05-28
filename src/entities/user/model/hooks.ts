@@ -60,9 +60,6 @@ export const useMyInfoQuery = () => {
   useEffect(() => {
     if (userData) {
       setUser(userData);
-      // user transition (null → user 또는 다른 user)에만 발화.
-      // useMyInfoQuery는 여러 consumer에서 호출되므로 가드 없으면 페이지 진입마다
-      // consumer 수만큼 중복 fire되어 PHASE 2 telemetry 노이즈가 큼.
       if (lastUserIdRef.current !== userData.id) {
         notifyAuthState("login");
         lastUserIdRef.current = userData.id;

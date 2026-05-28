@@ -1,14 +1,6 @@
 import type { IngredientPayload } from "@/entities/ingredient";
 import type { Recipe, RecipePayload, RecipeStepPayload } from "@/entities/recipe/model/types";
 
-/**
- * 원본 레시피 detail을 리믹스용 RecipePayload로 변환한다.
- *
- * - originRecipeId 부착
- * - extractorId 제거 (백엔드 비대칭 이슈: 응답은 hashed string이지만 요청 DTO는 Long)
- * - ingredients/steps를 Payload 형태로 매핑
- * - 응답 전용 필드(author/ratingInfo/comments 등)는 RecipePayload 타입에서 이미 제외됨
- */
 export const prepareRemixPayload = (
   recipe: Recipe,
   originRecipeId: string,

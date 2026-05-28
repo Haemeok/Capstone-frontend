@@ -19,10 +19,6 @@ const buildProductionPrompt = (recipe: Recipe): string =>
     fineDiningInfo: recipe.fineDiningInfo,
   });
 
-// Standalone fork of buildFinalPlatedPrompt (recipe-blog-test) — strips the
-// "previous N images" / REFERENCE CONTINUITY wording that only makes sense
-// inside a multi-image cooking sequence. Kept here so we can tune the
-// comparison prompt without touching production blog generation.
 const buildMomPhoneStandalone = (recipe: Recipe): string => {
   const dishLabel = recipe.dishType
     ? `${recipe.title} (a ${recipe.dishType})`
@@ -51,21 +47,6 @@ No human face, no full body, no second person, no printed text or labels, no pro
 Render no printed text, captions, signs, labels, or logos anywhere in the image.`;
 };
 
-// =====================================================================
-// Archetype-based variants (slots 3–9)
-// =====================================================================
-//
-// Each archetype shares a uniform skeleton (NO_TEXT → CONTEXT → SCENE →
-// COMPOSITION → EXCLUSIONS → CLOSING). The archetype object only describes
-// the variable parts; `buildArchetypePrompt` stitches them in.
-//
-// `attribution` references real influencers/magazines so gpt-image-2 can
-// anchor to those visual libraries. Keep a single coherent reference per
-// archetype.
-//
-// Vessel material/finish is fixed by the archetype; vessel SHAPE is
-// inferred at render-time by the model from `recipe.dishType` via the
-// shared rule below — so a soup never lands on a flat plate.
 
 type Archetype = {
   id: string;

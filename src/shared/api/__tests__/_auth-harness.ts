@@ -1,8 +1,3 @@
-/**
- * Auth contract 테스트용 하네스. jsdom 환경에서 fetch mock 시퀀스를 기반으로
- * 세션 상태 × 엔드포인트 종류의 시나리오를 펼치고, post-condition을 검증한다.
- * 계약 정의: docs/auth-contract.md
- */
 
 export type SessionState = "ANONYMOUS" | "VALID" | "ACCESS_EXPIRED" | "BOTH_EXPIRED";
 export type EndpointKind = "public" | "optional-auth" | "required";
@@ -53,8 +48,6 @@ const makeResponse = (body: any, status: number) =>
     { status }
   );
 
-// Next /api/auth/refresh route가 쿠키 없는 사용자에게 내려주는 body.error 값.
-// auth.ts의 NO_SESSION_ERROR_MESSAGE와 동일해야 한다.
 export const NO_SESSION_REFRESH_BODY = { error: "No refresh token available" };
 // 진짜 만료된 사용자가 받는 body (Next route가 line 84-87에서 생성).
 export const EXPIRED_REFRESH_BODY = { error: "Token refresh failed" };
@@ -65,14 +58,6 @@ export type Scenario = {
   data?: any;
 };
 
-/**
- * 시나리오를 mockFetch에 펼친다.
- * - ANONYMOUS: 원요청 401 → refresh 401 (retry 없음)
- * - VALID: 원요청 200
- * - ACCESS_EXPIRED: 원요청 401 → refresh 200 → retry 200
- * - BOTH_EXPIRED: 원요청 401 → refresh 401
- * public 엔드포인트는 어떤 상태에서도 원요청 200 (쿠키 확인 안 함).
- */
 export const arrangeScenario = (
   mockFetch: jest.Mock,
   scenario: Scenario

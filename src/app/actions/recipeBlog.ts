@@ -79,9 +79,6 @@ export const generateRecipeBlogPost = async (
   const metrics = computePerServingMetrics(recipe);
   const solarModel = upstage.chat(MODEL_ID);
 
-  // Stage 1: 본문 (generateText) — schema X. markdown 출력 + 우리 파서·검증.
-  // generateObject 로 긴 본문 + 큰 schema 를 같이 강제하면 Upstage 500 이
-  // 자주 나서, 큐레이션 (curationBlog.ts) 와 같은 패턴으로 분리한다.
   let bodyMarkdown = "";
   let parsedBody: ReturnType<typeof parseAndValidateRecipeBlogBody> & {
     ok: true;

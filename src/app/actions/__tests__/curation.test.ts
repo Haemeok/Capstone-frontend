@@ -56,8 +56,6 @@ const fakeBody = (n: number) =>
   " ".repeat(400);
 
 beforeAll(() => {
-  // fakeBody가 validate 룰을 실제 통과하는지 sanity check.
-  // validate.ts 룰이 변하면 silent test rot 대신 여기서 즉시 실패한다.
   const sanity = validateMarkdown(fakeBody(3), 3);
   if (!sanity.ok) {
     throw new Error(

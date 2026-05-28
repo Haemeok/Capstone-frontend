@@ -10,8 +10,6 @@ export type ModelConfig = {
   extra?: Record<string, unknown>;
 };
 
-// NOTE: endpoint slugs are best-effort and must be verified against live catalogs
-// (see Task 1 preflight) before hitting real APIs. If any slug is wrong, update it here.
 export const MODELS: readonly ModelConfig[] = [
   {
     id: "gpt-image-1-mini-low",

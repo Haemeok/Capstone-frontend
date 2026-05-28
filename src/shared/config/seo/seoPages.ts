@@ -1,6 +1,3 @@
-// ============================================================
-// SEO 페이지 생성기 — 구조화된 쿼리 파라미터 기반 (~20K+ 페이지)
-// ============================================================
 
 import { MAIN_INGREDIENTS } from "./ingredients";
 import { generateSearchKeywords } from "./searchKeywords";

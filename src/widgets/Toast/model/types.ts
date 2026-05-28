@@ -21,10 +21,6 @@ type ToastBase = {
   action?: ToastAction;
 };
 
-/**
- * variant === "action" 일 때는 action prop 필수.
- * 다른 variant 에서도 action 을 optional 로 첨부 가능 (rich-youtube 의 "보기" 버튼 등).
- */
 export type ToastType =
   | (ToastBase & {
       variant:

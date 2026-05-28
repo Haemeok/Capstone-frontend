@@ -21,10 +21,6 @@ import {
 
 import { useMediaQuery } from "./useMediaQuery";
 
-// Dialog 패딩을 Drawer와 동일하게 맞춤
-// DialogContent: p-6 gap-4 → p-0 gap-0
-// DialogHeader: 없음 → p-4
-// DialogFooter: 없음 → p-4
 
 const SheetContent = ({
   className,

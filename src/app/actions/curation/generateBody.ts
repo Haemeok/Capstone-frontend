@@ -26,9 +26,6 @@ const stripCodeFence = (s: string): string => {
   return m ? m[1].trim() : trimmed;
 };
 
-// Grok이 generateObject 출력에서 진짜 \n 대신 인라인 spaces로 단락을 끊어
-// 한 덩어리 텍스트로 내는 케이스가 잦음. 시스템 프롬프트로 강제해도 안 지켜짐.
-// 검증·hydrate 직전에 헤더 앞 spaces를 \n\n으로 바꿔 마크다운 구조를 복원한다.
 const normalizeMarkdown = (md: string): string =>
   md
     // 헤더(`# `, `## `, `### `)가 라인 중간에 박혀있으면 앞에 \n\n 삽입
@@ -96,9 +93,6 @@ export const generateCurationBody = async ({
         ? `${userPrompt}\n\n## 이전 시도에서 다음이 잘못되었습니다 — 반드시 수정하세요\n${lastErrors.map((e) => `- ${e}`).join("\n")}`
         : userPrompt;
 
-    // generateText 사용 (schema X) — Solar 본문이 길거나 escape 어려운
-    // 문자가 섞이면 generateObject의 JSON parse가 자주 깨진다. validateMarkdown이
-    // 검증 책임이라 schema 중복.
     let insertedMd: string;
     try {
       const result = await generateText({

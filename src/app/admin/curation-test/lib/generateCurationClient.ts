@@ -13,11 +13,6 @@ const KNOWN_CODES: ReadonlySet<CurationErrorCode> = new Set<CurationErrorCode>([
   "LLM_ERROR",
 ]);
 
-// Route Handler 호출용 — server action 의 generateCuration 과 동일 시그니처를
-// 흉내내서 batch 호출자가 transparently 교체 가능하게 한다. 서버 액션은
-// 같은 router 인스턴스에서 큐잉되므로 batch fan-out 에는 부적합 — 그래서 별도
-// fetch endpoint 를 만든 것. CurationError 는 422 응답 body 의 code/meta 에서
-// 복원해 throw, 다른 에러는 일반 Error.
 export const generateCurationViaApi = async (
   input: GenerateCurationInput,
 ): Promise<GenerateCurationOutput> => {

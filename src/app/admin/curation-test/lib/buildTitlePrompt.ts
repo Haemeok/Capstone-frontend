@@ -130,9 +130,6 @@ export const buildTitleUserPrompt = ({
   commonIngredients?: string[];
   recipeCount: number;
 }): string => {
-  // params의 ingredientIds 같은 키는 모델에게 의미 없는 opaque 토큰이다.
-  // 실제 모든 레시피에 공통으로 들어간 재료 이름을 commonIngredients로 받아 명시한다.
-  // 이게 있으면 모델은 제목에서 임의 추론 대신 실재 공통 재료를 테마로 잡는다.
   const commonBlock =
     commonIngredients && commonIngredients.length > 0
       ? [

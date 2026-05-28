@@ -74,12 +74,8 @@ export const generateCuration = async (
   const slug = slugify(input.params);
   const toneSeed: ToneSeed = input.forceToneSeed ?? pickToneBySlug(slug);
 
-  // slug 계산 이후에만 적용 — 이미 raw q 로 발행된 기록과의 slug 매칭은 유지하면서
-  // 검색/LLM/warnings 단계로 흘러가는 q 에서 보조어("레시피", "요리", "만드는법" 등)는 제거.
   const sanitizedParams = sanitizeQParam(input.params);
 
-  // Stage 1: Fetch — recipeCount의 2배 풀을 가져와서 Title 단계가 가장 결속력 있는
-  // N개를 고르도록 한다. 풀이 작으면 (3 미만) 큐레이션 자체를 포기.
   const poolIds = await searchRecipeIds(sanitizedParams, {
     limit: targetPoolSize,
   });
@@ -95,9 +91,6 @@ export const generateCuration = async (
   }
   const pool = await Promise.all(poolIds.map((id) => getRecipe(id)));
 
-  // 모든 레시피에 공통으로 들어 있는 재료 이름. ingredientIds 같은 opaque 토큰
-  // 대신 실재 공통 재료를 prompt에 박아 모델 환각(2/5 토마토→큐레이션이 토마토 테마)을 방지.
-  // 풀 전체 기준 — 선별 후가 아닌 풀 기준이 더 안정적인 테마 시그널.
   const commonIngredients = findCommonIngredientNames(pool);
 
   // Stage 2: Title (+ 풀에서 N개 선별)
@@ -110,14 +103,8 @@ export const generateCuration = async (
     slug,
   });
 
-  // selectedIndices 의 length/unique/in-range 는 buildTitleSchema 가 zod refinement
-  // 로 이미 보장. silent fixer 를 두면 모델이 약속을 어긴 사실이 뒤로 가려서
-  // 타이틀-본문 N 어긋남이 새는 사고가 났음 — 이제는 약속을 어기면 retry 또는 fail.
   const recipes = titleObj.selectedIndices.map((i) => pool[i]);
 
-  // Stage 3: Body — Hybrid 고정.
-  //   3a: Solar로 자연어 한국어 본문 (슬롯 없음)
-  //   3b: Grok 슬롯 인서터 (단어/문장 보존, {{yt:N}}/{{recipe:N}}/{{img:N}}만 삽입)
   const bodyMarkdown = await generateCurationBody({
     solarModel,
     grokModel,

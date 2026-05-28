@@ -104,7 +104,7 @@ export const AccountActionsCard = () => {
   const [verifyResults, setVerifyResults] = useState<
     Record<string, { ok: boolean; reason?: string } | undefined>
   >({});
-  const [pendingPublish, setPendingPublish] = useState(false);
+  const [pendingPublish, setPendingPublish] = useState<string | "auto" | null>(null);
   const [msg, setMsg] = useState<ActionMsg | null>(null);
   const [activeLogFile, setActiveLogFile] = useState<string | null>(null);
   const [logLines, setLogLines] = useState<string[]>([]);
@@ -148,8 +148,6 @@ export const AccountActionsCard = () => {
     try {
       const r = await callVerify(blogId);
       setVerifyResults((prev) => ({ ...prev, [blogId]: { ok: r.ok, reason: r.reason } }));
-      // verify 가 페이지 로딩만 하지 mtime 안 갱신함 — invalidate 굳이 필요 없지만
-      // 사용자가 verify 직전에 로그인 갱신했을 가능성 대비 가볍게 refresh.
       qc.invalidateQueries({ queryKey: BLOG_STATS_QUERY_KEY });
     } finally {
       setPendingVerify(null);

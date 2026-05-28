@@ -24,8 +24,6 @@ export type SearchResultsParams = {
 
 const DEFAULT_TYPES = ["USER", "AI", "YOUTUBE"] as const;
 
-// Canonical insertion order. Mirrors CANONICAL_PARAM_ORDER in
-// app/search/results/page.tsx so links and canonical <link> agree.
 const PARAM_ORDER: ReadonlyArray<keyof SearchResultsParams> = [
   "q",
   "ingredientIds",

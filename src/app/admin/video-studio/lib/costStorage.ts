@@ -1,14 +1,9 @@
-// Aggregated cost history for the video-studio admin page (image + video stages).
-// Persisted in localStorage; SSR-safe via the typeof-window guard.
-// Numbers are estimates — not authoritative billing.
 
 export type StageCostEntry = { count: number; totalCost: number };
 
 export type CostHistory = {
   image: StageCostEntry;
   video: StageCostEntry;
-  // Per-model breakdown across both stages, keyed by an arbitrary model id
-  // (e.g. "gpt-image-2-medium" or "dreamina-seedance-2-0-fast-260128").
   byModel: Record<string, StageCostEntry>;
   totalCount: number;
   totalCost: number;

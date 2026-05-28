@@ -157,9 +157,6 @@ export const createRecipeStructuredData = (
   };
 };
 
-// ────────────────────────────────────────────
-// Landing page structured data
-// ────────────────────────────────────────────
 
 type LandingFAQEntry = {
   "@type": "Question";

@@ -96,8 +96,6 @@ export const CandidatePanel = () => {
     [rawData, deadSlugs],
   );
 
-  // pinned: workspace 에서 보고 있는 단일 후보. active 에 포함되면 active 그룹 안에서
-  // 강조 표시하고, 별도 슬롯엔 띄우지 않는다.
   const pinned = useMemo<AllowlistEntryWithSlug | null>(
     () => data?.find((d) => d.slug === selectedSlug) ?? null,
     [data, selectedSlug],

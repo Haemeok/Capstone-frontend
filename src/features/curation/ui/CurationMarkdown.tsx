@@ -47,9 +47,6 @@ const SCHEMA = {
   },
 };
 
-// 슬롯 표식은 `#`-prefixed fragment URL로 박는다. 커스텀 URL 스킴(`recipe-data:`)
-// 은 rehype-sanitize의 attributes.a 오버라이드 + 커스텀 protocols 조합에서
-// 빈 문자열로 strip돼 박스 렌더가 안 됐던 사례가 있어서, fragment로 우회.
 const RECIPE_DATA_RE = /^#cur:(ingredients|steps|ad)(?:\/(\d+))?$/;
 const INTERNAL_RECIPE_RE = /^\/recipes\/([^/?#]+)$/;
 

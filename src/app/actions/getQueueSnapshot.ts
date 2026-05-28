@@ -10,9 +10,9 @@ const DEFAULT_QUEUE_DIR = path.join(os.homedir(), "Desktop", "recipio-publish-qu
 
 export type QueueItemSnapshot = {
   name: string;
-  prefix: string; // "recipe" 또는 "curation-{tone}"
-  createdAt: string; // ISO
-  slug?: string; // curation-meta.json 의 slug. recipe-prefix 는 undefined.
+  prefix: string;
+  createdAt: string;
+  slug?: string;
 };
 
 export type QueueSnapshot = {
@@ -32,8 +32,6 @@ const safeReadDir = (dir: string): fs.Dirent[] => {
 };
 
 const parsePrefix = (name: string): string => {
-  // 패키지명 규칙: `{prefix}-{title}-{ISO timestamp}`. prefix는 "recipe" 또는
-  // "curation-{tone}". timestamp는 항상 끝에 붙음.
   const match = name.match(/^(recipe|curation-[a-z0-9]+)-/);
   return match?.[1] ?? "unknown";
 };

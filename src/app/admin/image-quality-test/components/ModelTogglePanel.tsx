@@ -14,7 +14,6 @@ export const ModelTogglePanel = ({ onChange }: Props) => {
 
   useEffect(() => {
     onChangeRef.current(enabled);
-    // Intentionally fires once on mount to notify parent of the localStorage-loaded initial set.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

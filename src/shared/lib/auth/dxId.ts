@@ -9,9 +9,6 @@ const generateDxIdHex = (): string => {
   return Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("");
 };
 
-// LocalStorage-backed device id. Cookie jar과 분리되어 있어 clearAllCookies에
-// 영향받지 않는다. 진짜 토큰 손실 사고에서도 보존 가능성이 높아 사고 전후의
-// phase 시퀀스를 같은 dxId로 묶을 수 있다.
 export const getDxId = (): string => {
   if (typeof window === "undefined") return "";
   try {

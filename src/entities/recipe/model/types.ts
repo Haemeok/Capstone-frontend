@@ -4,9 +4,6 @@ import { Comment } from "@/entities/comment";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
 import { User } from "@/entities/user";
 
-// Dev V3 (2026-05-03 swagger reference) 단일 신호 enum.
-// 모든 GET recipe 응답이 source/visibility로 통일되며, 기존 isAiGenerated/isYoutube/aiGenerated/private는
-// 백엔드가 제거할 예정인 legacy. listingStatus/lifecycleStatus는 백엔드 실수로 응답에 들어오지만 프론트는 안 씀.
 export type Visibility = "PUBLIC" | "PRIVATE" | "RESTRICTED";
 export type RecipeSource = "USER" | "AI" | "YOUTUBE" | "REELS";
 export type ImageStatus = "PENDING" | "READY" | "FAILED";
@@ -301,8 +298,6 @@ export type RecipeListItemStatus = {
 
 export type RecipesStatusResponse = Record<string, RecipeListItemStatus>;
 
-// 2026-05-08 신규: 실제 /me/recipes 응답에 맞춘 타입.
-// 레거시 DetailedRecipeGridItem과 점진 마이그레이션 중 — 신규 코드만 사용.
 export type MyRecipeListItem = {
   id: string;
   title: string;

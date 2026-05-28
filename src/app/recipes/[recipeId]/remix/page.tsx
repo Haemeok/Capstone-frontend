@@ -30,8 +30,6 @@ const RemixPage = async ({ params }: RemixPageProps) => {
     redirect(`/login?from=/recipes/${recipeId}/remix`);
   }
 
-  // (B) recipe detail + status 병렬 fetch
-  // isCloneable은 V2 detail static에만 포함되므로 V2 endpoint 사용
   const [recipe, recipeStatus] = await Promise.all([
     getStaticrecipionServer(recipeId),
     getRecipeStatusOnServer(recipeId),

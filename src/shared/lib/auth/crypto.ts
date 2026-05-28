@@ -17,11 +17,6 @@ const getEncryptionKey = (): Buffer => {
   return Buffer.from(key);
 };
 
-/**
- * Set-Cookie 헤더 배열을 암호화
- * - AES-256-CBC 사용
- * - IV를 앞에 붙여서 반환: "iv:encryptedData"
- */
 export const encryptTokenData = (cookies: string[]): string => {
   const key = getEncryptionKey();
   const iv = randomBytes(IV_LENGTH);

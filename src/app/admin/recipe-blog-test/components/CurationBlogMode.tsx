@@ -33,8 +33,6 @@ export const CurationBlogMode = () => {
   const queryClient = useQueryClient();
   const { slugs: pendingSlugs } = usePendingCurationSlugs();
 
-  // 선택된 slug → 제목 매핑 (panel에서 받은 list를 그대로 lookup용으로 보관).
-  // panel은 페이지네이션 되니 단순 query로 첫 페이지만 prefetch (선택은 보통 같은 카테고리).
   const titlesQuery = useInfiniteQuery({
     queryKey: ["admin", "curation-titles-prefetch"],
     initialPageParam: 0,

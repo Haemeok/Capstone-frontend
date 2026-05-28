@@ -2,11 +2,6 @@ import type { MetadataRoute } from "next";
 
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
-/**
- * AI 검색/인용 봇 — 완전 허용
- * 사용자가 질문하면 실시간으로 웹을 검색해서 답변에 출처 링크를 달아주는 봇들.
- * 이 봇들이 접근해야 AI 답변에 recipio.kr이 인용됨 → 무료 트래픽 유입.
- */
 const AI_SEARCH_BOTS = [
   // OpenAI — ChatGPT 실시간 웹 브라우징 & 라이브 검색
   "ChatGPT-User",
@@ -30,11 +25,6 @@ const AI_SEARCH_BOTS = [
   "cohere-ai",
 ];
 
-/**
- * AI 학습용 크롤러 — 완전 차단
- * 사이트를 대량 크롤링해서 모델 학습 데이터로 사용.
- * 인용도 안 해주고 트래픽도 안 보내줌. 서버 리소스만 소모.
- */
 const AI_TRAINING_BOTS = [
   // OpenAI — GPT 모델 학습 데이터 수집
   "GPTBot",

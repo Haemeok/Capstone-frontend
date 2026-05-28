@@ -41,8 +41,6 @@ const GlobalAppUpdateDrawer = () => {
     if (typeof window === "undefined") return;
     if (window.localStorage.getItem(APP_UPDATE_DISMISS_KEY)) return;
 
-    // 사용자 행동 marker 가 하나도 없으면 신규 설치로 간주하고 영구 dismiss.
-    // (storage 통째 길이 체크는 GA·dx_id 같은 부팅 부산물 때문에 신뢰 불가)
     const isExistingUser = EXISTING_USER_MARKER_KEYS.some((key) =>
       window.localStorage.getItem(key),
     );

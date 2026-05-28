@@ -15,9 +15,6 @@ const SLIDE_DURATION_S = 0.6;
 const SLIDE_Y_OFFSET = 8;
 const SLIDE_EASE = [0.22, 1, 0.36, 1] as const;
 
-// 모바일 입력창(≈280px, text-sm)에서 한 줄로 들어가는 총 글자 상한.
-// 이 이상은 하단 `overflow-hidden whitespace-nowrap` 가 잘라내므로
-// 핵심 키워드가 뒤로 밀리지 않도록 카피 단계에서 맞춰줄 것.
 const MAX_PLACEHOLDER_CHARS = 20;
 
 const BREAKFAST_PLACEHOLDERS = [

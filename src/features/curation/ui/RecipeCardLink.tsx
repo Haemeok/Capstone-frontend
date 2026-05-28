@@ -17,9 +17,6 @@ type RecipeCardLinkProps = {
   children: ReactNode;
 };
 
-// 큐레이션 본문에서 레시피 페이지로 이동할 때는 새 탭으로 연다 — 독자가 큐레이션
-// 흐름을 잃지 않고 레시피를 확인 후 돌아올 수 있게. next/link 대신 일반 a 태그
-// (target="_blank" + rel="noopener noreferrer") 를 쓰는 이유.
 export const RecipeCardLink = ({
   href,
   recipe,
