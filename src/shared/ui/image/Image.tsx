@@ -97,34 +97,39 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
           </div>
         ))}
 
-      {/* 이미지 */}
       {image.src && (
-        <img
-          key={`${image.src}-${image.retryCount ?? 0}`}
-          ref={(node) => {
-            image.imgRef(node);
-            if (typeof forwardedRef === "function") {
-              forwardedRef(node);
-            } else if (forwardedRef) {
-              forwardedRef.current = node;
-            }
-          }}
-          src={image.src}
-          alt={alt}
-          loading={priority ? "eager" : lazy ? "lazy" : undefined}
-          fetchPriority={priority ? "high" : undefined}
-          decoding="async"
-          onLoad={image.onLoad}
-          onError={image.onError}
+        <div
           className={cn(
-            "absolute inset-0 h-full w-full",
+            "absolute inset-0",
             priority ? "" : "transition-opacity duration-300",
-            image.status === "loaded" ? "opacity-100" : "opacity-0",
-            fitClass,
-            imgClassName
+            image.status === "loaded" ? "opacity-100" : "opacity-0"
           )}
-          {...imgProps}
-        />
+        >
+          <img
+            key={`${image.src}-${image.retryCount ?? 0}`}
+            ref={(node) => {
+              image.imgRef(node);
+              if (typeof forwardedRef === "function") {
+                forwardedRef(node);
+              } else if (forwardedRef) {
+                forwardedRef.current = node;
+              }
+            }}
+            src={image.src}
+            alt={alt}
+            loading={priority ? "eager" : lazy ? "lazy" : undefined}
+            fetchPriority={priority ? "high" : undefined}
+            decoding="async"
+            onLoad={image.onLoad}
+            onError={image.onError}
+            className={cn(
+              "absolute inset-0 h-full w-full",
+              fitClass,
+              imgClassName
+            )}
+            {...imgProps}
+          />
+        </div>
       )}
     </div>
   );
