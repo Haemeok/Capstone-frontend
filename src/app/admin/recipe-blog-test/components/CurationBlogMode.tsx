@@ -8,6 +8,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { fetchCurationArticleList } from "@/features/curation/model/api.server";
 
+import { prunePending } from "../lib/prunePending";
 import type { BlogTone } from "../lib/toneInserts";
 import { useBatchRewrite } from "../lib/useBatchRewrite";
 import {
@@ -49,14 +50,10 @@ export const CurationBlogMode = () => {
     return map;
   }, [titlesQuery.data]);
 
-  const effectiveSelected = useMemo(() => {
-    if (pendingSlugs.size === 0) return selectedSlugs;
-    const out = new Set<string>();
-    for (const s of selectedSlugs) {
-      if (!pendingSlugs.has(s)) out.add(s);
-    }
-    return out;
-  }, [selectedSlugs, pendingSlugs]);
+  const effectiveSelected = useMemo(
+    () => prunePending(selectedSlugs, pendingSlugs),
+    [selectedSlugs, pendingSlugs],
+  );
 
   const handleToggle = useCallback((slug: string, next: boolean) => {
     setSelectedSlugs((prev) => {

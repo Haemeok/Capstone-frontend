@@ -59,4 +59,29 @@ describe("enqueueCurationBlogPostForPublish — dup guard", () => {
     const after = fs.readdirSync(path.join(tmpDir, "pending"));
     expect(after).toHaveLength(1); // 기존 1개만
   });
+
+  it("dup 없으면 새 pending 패키지 생성 + success", async () => {
+    const res = await enqueueCurationBlogPostForPublish({
+      post: { intro: "", sections: [], outro: "" } as never,
+      tone: "epigung",
+      curationTitle: "신규 큐레이션",
+      imageUrlsBySlot: {},
+      curationMeta: {
+        slug: "fresh-slug",
+        recipeIds: [],
+        brandLink: { text: "", url: "" },
+      },
+      recipes: [],
+    });
+
+    expect(res.success).toBe(true);
+    const entries = fs.readdirSync(path.join(tmpDir, "pending"));
+    expect(entries).toHaveLength(1);
+    const created = entries[0];
+    expect(created.startsWith("curation-epigung-")).toBe(true);
+    const metaPath = path.join(tmpDir, "pending", created, "curation-meta.json");
+    const meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+    expect(meta.slug).toBe("fresh-slug");
+    expect(meta.tone).toBe("epigung");
+  });
 });
