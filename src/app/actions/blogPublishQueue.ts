@@ -5,10 +5,12 @@ import { requireAdminAction } from "@/shared/lib/admin-guard";
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import type { BlogPost } from "@/app/admin/recipe-blog-test/lib/blogPost.schema";
+import { blogIdForTone } from "@/app/admin/recipe-blog-test/lib/blogToneAssignment";
 import type { CurationBlogPost } from "@/app/admin/recipe-blog-test/lib/curationBlogPost.schema";
 import { saveQueuePackage } from "@/app/admin/recipe-blog-test/lib/saveQueuePackage";
-import { blogIdForTone } from "@/app/admin/recipe-blog-test/lib/blogToneAssignment";
 import type { BlogTone } from "@/app/admin/recipe-blog-test/lib/toneInserts";
+
+import { getQueueSnapshot } from "./getQueueSnapshot";
 
 type RecipeMetaIngredient = {
   name: string;
@@ -127,6 +129,15 @@ export const enqueueCurationBlogPostForPublish = async (
   await requireAdminAction();
 
   try {
+    const snapshot = await getQueueSnapshot();
+    const dup = snapshot.pending.find((p) => p.slug === input.curationMeta.slug);
+    if (dup) {
+      return {
+        success: false,
+        error: `이미 큐에 있어요 (slug=${input.curationMeta.slug}): ${dup.name}`,
+      };
+    }
+
     // tone → blogId 매핑 (NAVER_BLOG_IDS env 순서대로 ceil(N/M) 분배). 등록 0이면 null.
     // 발행부는 targetBlogId 가 있으면 그 계정으로만 pick. null 이면 free pick (역호환).
     const targetBlogId = blogIdForTone(input.tone);

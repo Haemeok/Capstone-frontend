@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from "react";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { CURATION_CATEGORIES, type CurationCategory } from "@/entities/curation";
+
 import {
   fetchCurationArticleList,
   type PublicCurationArticleListItemDto,
 } from "@/features/curation/model/api.server";
-import { triggerHaptic } from "@/shared/lib/bridge";
 
 type Props =
   | {
@@ -22,6 +24,7 @@ type Props =
       selectedSlugs: Set<string>;
       onToggle: (slug: string, next: boolean) => void;
       badges?: (slug: string) => string | null;
+      excludeSlugs?: Set<string>;
     };
 
 const PAGE_SIZE = 20;
@@ -68,8 +71,14 @@ export const CurationArticleSearchPanel = (props: Props) => {
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const rows: PublicCurationArticleListItemDto[] =
+  const allRows: PublicCurationArticleListItemDto[] =
     data?.pages.flatMap((p) => p.content) ?? [];
+
+  const excludeSlugs = props.mode === "multi" ? props.excludeSlugs : undefined;
+  const rows = excludeSlugs
+    ? allRows.filter((r) => !excludeSlugs.has(r.slug))
+    : allRows;
+  const hiddenByExclude = allRows.length - rows.length;
 
   const isSlugSelected = (slug: string): boolean =>
     props.mode === "single" ? props.selectedSlug === slug : props.selectedSlugs.has(slug);
@@ -100,6 +109,9 @@ export const CurationArticleSearchPanel = (props: Props) => {
       {props.mode === "multi" && (
         <p className="px-1 text-[11px] text-gray-500">
           선택 {props.selectedSlugs.size}개
+          {hiddenByExclude > 0 && (
+            <span className="ml-2 text-gray-400">· 큐 제외 {hiddenByExclude}개</span>
+          )}
         </p>
       )}
 

@@ -12,6 +12,7 @@ export type QueueItemSnapshot = {
   name: string;
   prefix: string; // "recipe" 또는 "curation-{tone}"
   createdAt: string; // ISO
+  slug?: string; // curation-meta.json 의 slug. recipe-prefix 는 undefined.
 };
 
 export type QueueSnapshot = {
@@ -37,6 +38,16 @@ const parsePrefix = (name: string): string => {
   return match?.[1] ?? "unknown";
 };
 
+const readSlug = (packageDir: string): string | undefined => {
+  try {
+    const raw = fs.readFileSync(path.join(packageDir, "curation-meta.json"), "utf8");
+    const parsed = JSON.parse(raw) as { slug?: unknown };
+    return typeof parsed.slug === "string" ? parsed.slug : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 const dirItem = (dir: string, ent: fs.Dirent): QueueItemSnapshot | null => {
   if (!ent.isDirectory()) return null;
   const full = path.join(dir, ent.name);
@@ -46,10 +57,12 @@ const dirItem = (dir: string, ent: fs.Dirent): QueueItemSnapshot | null => {
   } catch {
     return null;
   }
+  const slug = readSlug(full);
   return {
     name: ent.name,
     prefix: parsePrefix(ent.name),
     createdAt: new Date(mtimeMs).toISOString(),
+    slug,
   };
 };
 

@@ -2,13 +2,18 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { fetchCurationArticleList } from "@/features/curation/model/api.server";
-import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { BlogTone } from "../lib/toneInserts";
 import { useBatchRewrite } from "../lib/useBatchRewrite";
+import {
+  BLOG_QUEUE_SNAPSHOT_QUERY_KEY,
+  usePendingCurationSlugs,
+} from "../lib/usePendingCurationSlugs";
 import { BatchItemCard } from "./BatchItemCard";
 import { BatchToneSelector } from "./BatchToneSelector";
 import { CurationArticleSearchPanel } from "./CurationArticleSearchPanel";
@@ -24,6 +29,8 @@ export const CurationBlogMode = () => {
   const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(() => new Set());
   const { items, isRunning, isEnqueueing, runRewrite, enqueueAllReady, reset } =
     useBatchRewrite();
+  const queryClient = useQueryClient();
+  const { slugs: pendingSlugs } = usePendingCurationSlugs();
 
   // 선택된 slug → 제목 매핑 (panel에서 받은 list를 그대로 lookup용으로 보관).
   // panel은 페이지네이션 되니 단순 query로 첫 페이지만 prefetch (선택은 보통 같은 카테고리).
@@ -69,10 +76,11 @@ export const CurationBlogMode = () => {
     void runRewrite([...selectedSlugs], tone, titlesBySlug);
   }, [selectedSlugs, tone, titlesBySlug, runRewrite]);
 
-  const handleEnqueueAll = useCallback(() => {
+  const handleEnqueueAll = useCallback(async () => {
     triggerHaptic("Medium");
-    void enqueueAllReady();
-  }, [enqueueAllReady]);
+    await enqueueAllReady();
+    queryClient.invalidateQueries({ queryKey: BLOG_QUEUE_SNAPSHOT_QUERY_KEY });
+  }, [enqueueAllReady, queryClient]);
 
   const handleClear = useCallback(() => {
     reset();
@@ -93,6 +101,7 @@ export const CurationBlogMode = () => {
           selectedSlugs={selectedSlugs}
           onToggle={handleToggle}
           badges={slugBadge}
+          excludeSlugs={pendingSlugs}
         />
 
         <section className="space-y-3">

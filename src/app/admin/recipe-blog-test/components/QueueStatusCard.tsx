@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { deleteQueueItem } from "@/app/actions/deleteQueueItem";
 import { getQueueSnapshot } from "@/app/actions/getQueueSnapshot";
+
+import { BLOG_QUEUE_SNAPSHOT_QUERY_KEY } from "../lib/usePendingCurationSlugs";
 
 const POLL_MS = 5_000;
 const PREVIEW_N = 5;
@@ -16,7 +19,7 @@ export const QueueStatusCard = () => {
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["admin", "blog-queue-snapshot"],
+    queryKey: BLOG_QUEUE_SNAPSHOT_QUERY_KEY,
     queryFn: () => getQueueSnapshot(),
     refetchInterval: POLL_MS,
     staleTime: POLL_MS,
@@ -33,7 +36,7 @@ export const QueueStatusCard = () => {
       if (res && !res.ok) {
         setDeleteError(res.reason ?? "삭제 실패");
       } else {
-        qc.invalidateQueries({ queryKey: ["admin", "blog-queue-snapshot"] });
+        qc.invalidateQueries({ queryKey: BLOG_QUEUE_SNAPSHOT_QUERY_KEY });
       }
     },
     onError: (err) => {
