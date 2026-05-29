@@ -87,4 +87,10 @@ describe("POST card-news-grid/content", () => {
     await POST(makeReq({ stage: "topics", modelId: "openai/gpt-5.5" }));
     expect(typeof mockGenerate.mock.calls[0][0].model).not.toBe("string");
   });
+
+  it("google/ 모델은 Gemini Studio provider 인스턴스로 변환해 넘긴다 (string 아님)", async () => {
+    mockGenerate.mockResolvedValueOnce({ object: { topics: [] } });
+    await POST(makeReq({ stage: "topics", modelId: "google/gemini-2.5-flash" }));
+    expect(typeof mockGenerate.mock.calls[0][0].model).not.toBe("string");
+  });
 });
