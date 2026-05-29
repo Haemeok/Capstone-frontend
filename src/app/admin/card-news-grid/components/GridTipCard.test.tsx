@@ -7,6 +7,7 @@ import { GridTipCard } from "./GridTipCard";
 const items = Array.from({ length: 9 }, (_, i) => ({
   dishName: `음식${i}`,
   caption: `팁${i}`,
+  imagePrompt: `장면${i}`,
 }));
 
 describe("GridTipCard", () => {
