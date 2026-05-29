@@ -1,10 +1,10 @@
 // src/app/admin/card-news-grid/lib/schema.test.ts
 import {
   DEFAULT_MODEL_ID,
+  itemsSchema,
   MAX_CAPTION,
   MAX_DISH_NAME,
   MODEL_OPTIONS,
-  itemsSchema,
   topicsSchema,
   truncate,
 } from "./schema";

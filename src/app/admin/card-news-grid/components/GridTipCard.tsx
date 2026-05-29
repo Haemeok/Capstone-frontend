@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 
 import { gridCellPosition } from "../lib/gridLayout";
-import { MAX_CAPTION, truncate, type TipItem } from "../lib/schema";
+import { MAX_CAPTION, type TipItem,truncate } from "../lib/schema";
 
 type GridTipCardProps = {
   header: string;

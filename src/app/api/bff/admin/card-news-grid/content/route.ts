@@ -1,5 +1,6 @@
-import { generateObject } from "ai";
 import { NextRequest, NextResponse } from "next/server";
+
+import { generateObject } from "ai";
 
 import { assertAdminApi } from "@/shared/lib/admin-guard";
 
