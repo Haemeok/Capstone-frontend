@@ -76,6 +76,12 @@ describe("POST card-news-grid/content", () => {
     expect(res.status).toBe(502);
   });
 
+  it("tips 모드는 tips 프롬프트로 생성한다", async () => {
+    mockGenerate.mockResolvedValueOnce({ object: { topics: [] } });
+    await POST(makeReq({ stage: "topics", modelId: "x", mode: "tips", seedKeyword: "수박" }));
+    expect(mockGenerate.mock.calls[0][0].prompt).toContain("꿀팁");
+  });
+
   it("게이트웨이 모델은 model을 string 그대로 넘긴다", async () => {
     mockGenerate.mockResolvedValueOnce({ object: { topics: [] } });
     await POST(makeReq({ stage: "topics", modelId: "deepseek/deepseek-v4-flash" }));

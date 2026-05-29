@@ -6,7 +6,10 @@ import { GRID_COUNT } from "./gridLayout";
 export const MAX_DISH_NAME = 14;
 export const MAX_CAPTION = 40;
 export const MAX_HEADER = 30;
+export const MAX_IMAGE_PROMPT = 60;
 export const TOPIC_COUNT = 5;
+
+export type CardMode = "recipe" | "tips";
 
 export const DEFAULT_MODEL_ID = "openai/gpt-5.5";
 
@@ -43,6 +46,7 @@ export const itemsSchema = z.object({
       z.object({
         dishName: z.string().min(1).max(MAX_DISH_NAME),
         caption: z.string().min(1).max(MAX_CAPTION),
+        imagePrompt: z.string().min(1).max(MAX_IMAGE_PROMPT),
       }),
     )
     .length(GRID_COUNT),
