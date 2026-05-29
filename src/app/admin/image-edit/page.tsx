@@ -13,6 +13,7 @@ import {
 } from "@/app/admin/image-quality-test/lib/costStorage";
 
 import { CostPanel } from "./components/CostPanel";
+import { WatermarkSection } from "./components/WatermarkSection";
 import { WorkerCard } from "./components/WorkerCard";
 
 const EMPTY_HISTORY: CostHistory = { byModel: {}, totalCount: 0, totalCost: 0 };
@@ -25,6 +26,7 @@ const makeId = (): string => {
 };
 
 const ImageEditPage = () => {
+  const [mode, setMode] = useState<"generate" | "watermark">("generate");
   const [workers, setWorkers] = useState<{ id: string }[]>(() => [
     { id: makeId() },
   ]);
@@ -65,31 +67,55 @@ const ImageEditPage = () => {
         각자 독립적으로 돌아가요.
       </p>
 
-      <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
-        <aside className="lg:sticky lg:top-4 lg:self-start">
-          <CostPanel history={history} onReset={handleResetCost} />
-        </aside>
-
-        <main className="space-y-4">
-          {workers.map((w, idx) => (
-            <WorkerCard
-              key={w.id}
-              index={idx}
-              onAfterRun={refreshHistory}
-              onDelete={() => handleDeleteWorker(w.id)}
-              canDelete={workers.length > 1}
-            />
-          ))}
-
+      <div className="mb-4 inline-flex rounded-xl border border-gray-200 bg-white p-1">
+        {(["generate", "watermark"] as const).map((m) => (
           <button
+            key={m}
             type="button"
-            onClick={handleAddWorker}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-300 bg-white text-sm font-medium text-gray-600 transition hover:border-olive-light hover:bg-olive-light/5 hover:text-olive-light"
+            onClick={() => {
+              triggerHaptic("Light");
+              setMode(m);
+            }}
+            className={`cursor-pointer rounded-lg px-4 py-1.5 text-sm font-medium transition ${
+              mode === m
+                ? "bg-olive-light text-white"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
           >
-            <Plus className="h-4 w-4" /> 워커 추가
+            {m === "generate" ? "이미지 생성" : "워터마크"}
           </button>
-        </main>
+        ))}
       </div>
+
+      {mode === "generate" ? (
+        <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
+          <aside className="lg:sticky lg:top-4 lg:self-start">
+            <CostPanel history={history} onReset={handleResetCost} />
+          </aside>
+
+          <main className="space-y-4">
+            {workers.map((w, idx) => (
+              <WorkerCard
+                key={w.id}
+                index={idx}
+                onAfterRun={refreshHistory}
+                onDelete={() => handleDeleteWorker(w.id)}
+                canDelete={workers.length > 1}
+              />
+            ))}
+
+            <button
+              type="button"
+              onClick={handleAddWorker}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-300 bg-white text-sm font-medium text-gray-600 transition hover:border-olive-light hover:bg-olive-light/5 hover:text-olive-light"
+            >
+              <Plus className="h-4 w-4" /> 워커 추가
+            </button>
+          </main>
+        </div>
+      ) : (
+        <WatermarkSection />
+      )}
     </div>
   );
 };
