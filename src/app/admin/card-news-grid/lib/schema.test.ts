@@ -4,6 +4,7 @@ import {
   itemsSchema,
   MAX_CAPTION,
   MAX_DISH_NAME,
+  MAX_IMAGE_PROMPT,
   MODEL_OPTIONS,
   topicsSchema,
   truncate,
@@ -17,7 +18,11 @@ describe("MODEL_OPTIONS", () => {
 });
 
 describe("itemsSchema", () => {
-  const item = { dishName: "김치찌개", caption: "물 2:고춧가루 1 황금비율" };
+  const item = {
+    dishName: "김치찌개",
+    caption: "물 2:고춧가루 1 황금비율",
+    imagePrompt: "점토 김치찌개 한 그릇",
+  };
   const items = Array.from({ length: 9 }, () => item);
 
   it("items 9개 + header는 통과", () => {
@@ -30,14 +35,28 @@ describe("itemsSchema", () => {
 
   it("caption 길이 상한 초과 시 실패", () => {
     const longCaption = "가".repeat(MAX_CAPTION + 1);
-    const bad = [{ dishName: "김치찌개", caption: longCaption }, ...items.slice(1)];
+    const bad = [{ dishName: "김치찌개", caption: longCaption, imagePrompt: "ok" }, ...items.slice(1)];
     expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(false);
   });
 
   it("dishName 길이 상한 초과 시 실패", () => {
     const longName = "가".repeat(MAX_DISH_NAME + 1);
-    const bad = [{ dishName: longName, caption: "ok" }, ...items.slice(1)];
+    const bad = [{ dishName: longName, caption: "ok", imagePrompt: "ok" }, ...items.slice(1)];
     expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(false);
+  });
+
+  it("imagePrompt 누락 시 실패", () => {
+    const bad = Array.from({ length: 9 }, () => ({ dishName: "김치찌개", caption: "ok" }));
+    expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(false);
+  });
+
+  it("imagePrompt 빈 문자열 시 실패", () => {
+    const bad = Array.from({ length: 9 }, () => ({ dishName: "김치찌개", caption: "ok", imagePrompt: "" }));
+    expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(false);
+  });
+
+  it("MAX_IMAGE_PROMPT는 양수이다", () => {
+    expect(MAX_IMAGE_PROMPT).toBeGreaterThan(0);
   });
 });
 
