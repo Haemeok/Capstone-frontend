@@ -2,8 +2,6 @@
 import {
   DEFAULT_MODEL_ID,
   itemsSchema,
-  MAX_CAPTION,
-  MAX_DISH_NAME,
   MAX_IMAGE_PROMPT,
   MODEL_OPTIONS,
   topicsSchema,
@@ -17,7 +15,7 @@ describe("MODEL_OPTIONS", () => {
   });
 });
 
-describe("itemsSchema", () => {
+describe("itemsSchema (canonical)", () => {
   const item = {
     dishName: "김치찌개",
     caption: "물 2:고춧가루 1 황금비율",
@@ -31,18 +29,6 @@ describe("itemsSchema", () => {
 
   it("items가 9개가 아니면 실패", () => {
     expect(itemsSchema.safeParse({ header: "x", items: items.slice(0, 8) }).success).toBe(false);
-  });
-
-  it("caption 길이 상한 초과 시 실패", () => {
-    const longCaption = "가".repeat(MAX_CAPTION + 1);
-    const bad = [{ dishName: "김치찌개", caption: longCaption, imagePrompt: "ok" }, ...items.slice(1)];
-    expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(false);
-  });
-
-  it("dishName 길이 상한 초과 시 실패", () => {
-    const longName = "가".repeat(MAX_DISH_NAME + 1);
-    const bad = [{ dishName: longName, caption: "ok", imagePrompt: "ok" }, ...items.slice(1)];
-    expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(false);
   });
 
   it("imagePrompt 누락 시 실패", () => {
@@ -60,10 +46,14 @@ describe("itemsSchema", () => {
   });
 });
 
-describe("topicsSchema", () => {
-  it("topics 5개는 통과", () => {
+describe("topicsSchema (canonical)", () => {
+  it("topics 1개 이상이면 통과", () => {
     const topics = Array.from({ length: 5 }, () => ({ title: "주제", concept: "한 줄 설명" }));
     expect(topicsSchema.safeParse({ topics }).success).toBe(true);
+  });
+
+  it("topics가 비어 있으면 실패", () => {
+    expect(topicsSchema.safeParse({ topics: [] }).success).toBe(false);
   });
 });
 

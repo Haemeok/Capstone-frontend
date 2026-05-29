@@ -6,13 +6,17 @@ import { generateObject, type LanguageModel } from "ai";
 import { assertAdminApi } from "@/shared/lib/admin-guard";
 
 import {
+  normalizeItems,
+  normalizeTopics,
+} from "@/app/admin/card-news-grid/lib/normalize";
+import {
   type CardMode,
-  itemsSchema,
+  itemsGenSchema,
   MAX_CAPTION,
   MAX_DISH_NAME,
   MAX_HEADER,
   MAX_IMAGE_PROMPT,
-  topicsSchema,
+  topicsGenSchema,
 } from "@/app/admin/card-news-grid/lib/schema";
 
 export const runtime = "nodejs";
@@ -115,17 +119,17 @@ export async function POST(req: NextRequest) {
     if (body.stage === "topics") {
       const { object } = await generateObject({
         model,
-        schema: topicsSchema,
+        schema: topicsGenSchema,
         prompt: TOPICS_PROMPT(mode, body.seedKeyword),
       });
-      return NextResponse.json(object);
+      return NextResponse.json(normalizeTopics(object));
     }
     const { object } = await generateObject({
       model,
-      schema: itemsSchema,
+      schema: itemsGenSchema,
       prompt: ITEMS_PROMPT(mode, body.topicTitle as string),
     });
-    return NextResponse.json(object);
+    return NextResponse.json(normalizeItems(object));
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: message }, { status: 502 });

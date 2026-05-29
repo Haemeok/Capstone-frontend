@@ -6,6 +6,7 @@ import { GRID_COUNT } from "./gridLayout";
 export const MAX_DISH_NAME = 14;
 export const MAX_CAPTION = 40;
 export const MAX_HEADER = 30;
+export const MAX_CONCEPT = 60;
 export const MAX_IMAGE_PROMPT = 60;
 export const TOPIC_COUNT = 5;
 
@@ -26,27 +27,44 @@ export const MODEL_OPTIONS: ModelOption[] = [
   { id: "xai/grok-4.1-fast-reasoning", label: "Grok 4.1 Fast" },
 ];
 
+export const topicsGenSchema = z.object({
+  topics: z.array(z.object({ title: z.string(), concept: z.string() })),
+});
+export type TopicsGen = z.infer<typeof topicsGenSchema>;
+
+export const itemsGenSchema = z.object({
+  header: z.string(),
+  items: z.array(
+    z.object({
+      dishName: z.string(),
+      caption: z.string(),
+      imagePrompt: z.string(),
+    }),
+  ),
+});
+export type ItemsGen = z.infer<typeof itemsGenSchema>;
+
 export const topicsSchema = z.object({
   topics: z
     .array(
       z.object({
-        title: z.string().min(1).max(MAX_HEADER),
-        concept: z.string().min(1).max(60),
+        title: z.string().min(1),
+        concept: z.string().min(1),
       }),
     )
-    .length(TOPIC_COUNT),
+    .min(1),
 });
 export type TopicsResult = z.infer<typeof topicsSchema>;
 export type TopicCandidate = TopicsResult["topics"][number];
 
 export const itemsSchema = z.object({
-  header: z.string().min(1).max(MAX_HEADER),
+  header: z.string().min(1),
   items: z
     .array(
       z.object({
-        dishName: z.string().min(1).max(MAX_DISH_NAME),
-        caption: z.string().min(1).max(MAX_CAPTION),
-        imagePrompt: z.string().min(1).max(MAX_IMAGE_PROMPT),
+        dishName: z.string().min(1),
+        caption: z.string().min(1),
+        imagePrompt: z.string().min(1),
       }),
     )
     .length(GRID_COUNT),
