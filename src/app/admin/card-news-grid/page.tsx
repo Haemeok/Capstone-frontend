@@ -54,8 +54,8 @@ export default function CardNewsGridPage() {
 
         {topics.length > 0 && (
           <ul style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {topics.map((t) => (
-              <li key={t.title}>
+            {topics.map((t, i) => (
+              <li key={i}>
                 <button
                   type="button"
                   onClick={() => generateItems(t.title)}
