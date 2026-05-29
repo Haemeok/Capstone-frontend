@@ -12,11 +12,11 @@ export const DEFAULT_MODEL_ID = "openai/gpt-5.5";
 
 export type ModelOption = { id: string; label: string };
 
-// openai/* 는 OPENAI_API_KEY 직결, 나머지는 AI Gateway(AI_GATEWAY_API_KEY) 경유.
 export const MODEL_OPTIONS: ModelOption[] = [
   { id: "openai/gpt-5.5", label: "GPT-5.5 (OpenAI 직결)" },
+  { id: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash (Studio 직결)" },
+  { id: "google/gemini-3.5-flash", label: "Gemini 3.5 Flash (Studio 직결)" },
   { id: "deepseek/deepseek-v4-flash", label: "DeepSeek V4 Flash (최저가)" },
-  { id: "google/gemini-3-flash", label: "Gemini 3 Flash" },
   { id: "zai/glm-4.7-flash", label: "GLM 4.7 Flash" },
   { id: "alibaba/qwen3.5-flash", label: "Qwen 3.5 Flash" },
   { id: "moonshotai/kimi-k2.5", label: "Kimi K2.5" },

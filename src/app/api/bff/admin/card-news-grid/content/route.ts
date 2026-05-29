@@ -11,13 +11,24 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const OPENAI_PREFIX = "openai/";
-const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
+const GOOGLE_PREFIX = "google/";
 
-// openai/* 는 OPENAI_API_KEY로 OpenAI 직결, 나머지 string은 AI Gateway 경유.
-const resolveModel = (modelId: string): LanguageModel =>
-  modelId.startsWith(OPENAI_PREFIX)
-    ? openai(modelId.slice(OPENAI_PREFIX.length))
-    : modelId;
+const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
+const geminiStudio = createOpenAI({
+  name: "gemini-studio",
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+  apiKey: process.env.GEMINI_STUDIO_API_KEY || "",
+});
+
+const resolveModel = (modelId: string): LanguageModel => {
+  if (modelId.startsWith(OPENAI_PREFIX)) {
+    return openai(modelId.slice(OPENAI_PREFIX.length));
+  }
+  if (modelId.startsWith(GOOGLE_PREFIX)) {
+    return geminiStudio.chat(modelId.slice(GOOGLE_PREFIX.length));
+  }
+  return modelId;
+};
 
 type Body = {
   stage?: "topics" | "items";
