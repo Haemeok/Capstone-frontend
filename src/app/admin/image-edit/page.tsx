@@ -72,10 +72,7 @@ const ImageEditPage = () => {
           <button
             key={m}
             type="button"
-            onClick={() => {
-              triggerHaptic("Light");
-              setMode(m);
-            }}
+            onClick={() => setMode(m)}
             className={`cursor-pointer rounded-lg px-4 py-1.5 text-sm font-medium transition ${
               mode === m
                 ? "bg-olive-light text-white"

@@ -1,6 +1,6 @@
-import { toBlob } from "html-to-image";
-
 import type { CSSProperties } from "react";
+
+import { toBlob } from "html-to-image";
 
 export type WatermarkPosition =
   | "top-left"

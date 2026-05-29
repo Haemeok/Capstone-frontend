@@ -1,5 +1,3 @@
-import { triggerHaptic } from "@/shared/lib/bridge";
-
 import { WATERMARK_POSITIONS, type WatermarkPosition } from "../lib/watermark";
 
 const LABELS: Record<WatermarkPosition, string> = {
@@ -29,10 +27,7 @@ export const PositionGrid = ({ value, onChange }: Props) => (
           type="button"
           aria-label={LABELS[position]}
           aria-pressed={active}
-          onClick={() => {
-            triggerHaptic("Light");
-            onChange(position);
-          }}
+          onClick={() => onChange(position)}
           className={`flex aspect-square cursor-pointer items-center justify-center rounded-lg border text-[10px] font-medium transition ${
             active
               ? "border-olive-light bg-olive-light text-white"

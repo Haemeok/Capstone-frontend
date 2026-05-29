@@ -11,8 +11,6 @@ import {
 
 import { Download, ImageUp } from "lucide-react";
 
-import { triggerHaptic } from "@/shared/lib/bridge";
-
 import {
   DEFAULT_SETTINGS,
   exportWatermarked,
@@ -45,7 +43,6 @@ export const WatermarkSection = () => {
           `이미지가 매우 큽니다 (${loaded.width}×${loaded.height}). 일부 환경에서 내보내기가 실패할 수 있어요.`,
         );
       }
-      triggerHaptic("Light");
       setImage(loaded);
     } catch (err) {
       console.error("이미지 읽기 실패", err);
@@ -88,10 +85,8 @@ export const WatermarkSection = () => {
     setExporting(true);
     try {
       await exportWatermarked(canvasRef.current, `watermark-${Date.now()}.png`);
-      triggerHaptic("Success");
     } catch (err) {
       console.error("내보내기 실패", err);
-      triggerHaptic("Error");
     } finally {
       setExporting(false);
     }
