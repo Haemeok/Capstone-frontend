@@ -58,7 +58,7 @@ describe("POST card-news-grid/content", () => {
   });
 
   it("items 단계는 header+items를 반환한다", async () => {
-    const items = Array.from({ length: 9 }, () => ({ dishName: "d", caption: "c" }));
+    const items = Array.from({ length: 9 }, () => ({ dishName: "d", caption: "c", imagePrompt: "p" }));
     mockGenerate.mockResolvedValueOnce({ object: { header: "h", items } });
     const res = await POST(makeReq({ stage: "items", modelId: "deepseek/deepseek-v4-flash", topicTitle: "황금비율" }));
     expect(res.status).toBe(200);
