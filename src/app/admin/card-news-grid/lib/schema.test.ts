@@ -10,8 +10,8 @@ import {
 } from "./schema";
 
 describe("MODEL_OPTIONS", () => {
-  it("기본 모델은 deepseek-v4-flash이고 옵션에 포함된다", () => {
-    expect(DEFAULT_MODEL_ID).toBe("deepseek/deepseek-v4-flash");
+  it("기본 모델은 gpt-5.5이고 옵션에 포함된다", () => {
+    expect(DEFAULT_MODEL_ID).toBe("openai/gpt-5.5");
     expect(MODEL_OPTIONS.map((m) => m.id)).toContain(DEFAULT_MODEL_ID);
   });
 });
