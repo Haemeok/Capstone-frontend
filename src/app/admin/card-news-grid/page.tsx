@@ -15,6 +15,8 @@ export default function CardNewsGridPage() {
   const {
     modelId,
     setModelId,
+    mode,
+    setMode,
     status,
     error,
     topics,
@@ -47,6 +49,28 @@ export default function CardNewsGridPage() {
 
       <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
         <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
+          <div className="flex gap-1 rounded-2xl border border-gray-100 bg-white p-1">
+            {(
+              [
+                ["recipe", "레시피 비율"],
+                ["tips", "실생활 꿀팁"],
+              ] as const
+            ).map(([m, label]) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => setMode(m)}
+                className={`flex-1 cursor-pointer rounded-xl px-3 py-2 text-sm font-bold transition-colors ${
+                  mode === m
+                    ? "bg-olive-light text-white"
+                    : "text-gray-500 hover:bg-gray-50"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           <section className="space-y-3 rounded-2xl border border-gray-100 bg-white p-4">
             <label className="block">
               <span className="mb-1 block text-sm font-medium text-gray-700">
@@ -73,7 +97,7 @@ export default function CardNewsGridPage() {
                 <input
                   value={seed}
                   onChange={(e) => setSeed(e.target.value)}
-                  placeholder="예: 토마토 케찹"
+                  placeholder={mode === "tips" ? "예: 수박, 사과" : "예: 토마토 케찹"}
                   className={inputClass}
                 />
                 <button

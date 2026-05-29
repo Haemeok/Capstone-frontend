@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react";
 
 import { buildClayPrompt } from "./clayPrompt";
 import {
+  type CardMode,
   DEFAULT_MODEL_ID,
   type ItemsResult,
   type TipItem,
@@ -31,6 +32,7 @@ const postContent = async (body: Record<string, unknown>) => {
 
 export const useGridCardNews = () => {
   const [modelId, setModelId] = useState(DEFAULT_MODEL_ID);
+  const [mode, setMode] = useState<CardMode>("recipe");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -60,29 +62,29 @@ export const useGridCardNews = () => {
   const generateTopics = useCallback(
     (seedKeyword: string) =>
       run(async (isStale) => {
-        const data = await postContent({ stage: "topics", modelId, seedKeyword });
+        const data = await postContent({ stage: "topics", modelId, mode, seedKeyword });
         if (isStale()) return;
         setTopics(data.topics);
       }),
-    [modelId, run],
+    [modelId, mode, run],
   );
 
   const generateItems = useCallback(
     (topicTitle: string) =>
       run(async (isStale) => {
-        const data: ItemsResult = await postContent({ stage: "items", modelId, topicTitle });
+        const data: ItemsResult = await postContent({ stage: "items", modelId, mode, topicTitle });
         if (isStale()) return;
         setHeader(data.header);
         setItems(data.items);
         setImageUrl(null);
       }),
-    [modelId, run],
+    [modelId, mode, run],
   );
 
   const generateImage = useCallback(
     () =>
       run(async (isStale) => {
-        const prompt = buildClayPrompt(items.map((it) => it.dishName));
+        const prompt = buildClayPrompt(items.map((it) => it.imagePrompt), mode);
         const res = await fetch("/api/bff/admin/image-edit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -93,7 +95,7 @@ export const useGridCardNews = () => {
         if (isStale()) return;
         setImageUrl(data.imageUrl);
       }),
-    [items, run],
+    [items, mode, run],
   );
 
   const updateItem = useCallback((index: number, patch: Partial<TipItem>) => {
@@ -102,6 +104,7 @@ export const useGridCardNews = () => {
 
   return {
     modelId, setModelId,
+    mode, setMode,
     status, error,
     topics, header, setHeader, items, imageUrl,
     generateTopics, generateItems, generateImage, updateItem,
