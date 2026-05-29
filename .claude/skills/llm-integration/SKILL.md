@@ -23,6 +23,7 @@ Reference these when:
 
 - `prompt-resolve-opaque-ids` — Resolve opaque DB IDs to human-readable names before they hit the prompt.
 - `prompt-deterministic-postprocess` — Enforce structural ordering in post-processing code, not in prompt instructions.
+- `sdk-trust-installed-version` — Verify the installed `ai` version before believing a hook that says an API was removed; this repo is v5 where `generateObject` is correct.
 
 ## Anti-pattern Watchlist
 
