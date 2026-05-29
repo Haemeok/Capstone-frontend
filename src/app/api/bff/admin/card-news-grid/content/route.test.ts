@@ -75,4 +75,16 @@ describe("POST card-news-grid/content", () => {
     const res = await POST(makeReq({ stage: "topics", modelId: "x" }));
     expect(res.status).toBe(502);
   });
+
+  it("게이트웨이 모델은 model을 string 그대로 넘긴다", async () => {
+    mockGenerate.mockResolvedValueOnce({ object: { topics: [] } });
+    await POST(makeReq({ stage: "topics", modelId: "deepseek/deepseek-v4-flash" }));
+    expect(mockGenerate.mock.calls[0][0].model).toBe("deepseek/deepseek-v4-flash");
+  });
+
+  it("openai/ 모델은 OpenAI provider 인스턴스로 변환해 넘긴다 (string 아님)", async () => {
+    mockGenerate.mockResolvedValueOnce({ object: { topics: [] } });
+    await POST(makeReq({ stage: "topics", modelId: "openai/gpt-5.5" }));
+    expect(typeof mockGenerate.mock.calls[0][0].model).not.toBe("string");
+  });
 });

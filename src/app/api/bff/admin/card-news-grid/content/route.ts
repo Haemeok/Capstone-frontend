@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { generateObject } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { generateObject, type LanguageModel } from "ai";
 
 import { assertAdminApi } from "@/shared/lib/admin-guard";
 
@@ -8,6 +9,15 @@ import { itemsSchema, topicsSchema } from "@/app/admin/card-news-grid/lib/schema
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
+
+const OPENAI_PREFIX = "openai/";
+const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
+
+// openai/* 는 OPENAI_API_KEY로 OpenAI 직결, 나머지 string은 AI Gateway 경유.
+const resolveModel = (modelId: string): LanguageModel =>
+  modelId.startsWith(OPENAI_PREFIX)
+    ? openai(modelId.slice(OPENAI_PREFIX.length))
+    : modelId;
 
 type Body = {
   stage?: "topics" | "items";
@@ -48,16 +58,17 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const model = resolveModel(body.modelId);
     if (body.stage === "topics") {
       const { object } = await generateObject({
-        model: body.modelId,
+        model,
         schema: topicsSchema,
         prompt: TOPICS_PROMPT(body.seedKeyword),
       });
       return NextResponse.json(object);
     }
     const { object } = await generateObject({
-      model: body.modelId,
+      model,
       schema: itemsSchema,
       prompt: ITEMS_PROMPT(body.topicTitle as string),
     });
