@@ -26,7 +26,6 @@ export const WatermarkBadge = ({ logoPx, opacity }: Props) => (
       style={{
         fontFamily: "Jalnan2, sans-serif",
         fontSize: logoPx * 0.78,
-        lineHeight: 1,
         color: "#fff",
         textShadow: "0 1px 4px rgba(0,0,0,0.5)",
         whiteSpace: "nowrap",
