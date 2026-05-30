@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 
-import type { IngredientItem } from "@/entities/ingredient";
+import type { IngredientItem } from "@/entities/ingredient/model/types";
 
 import { useIngredientSelection } from "../useIngredientSelection";
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { IngredientItem } from "@/entities/ingredient";
+import type { IngredientItem } from "@/entities/ingredient/model/types";
 
 export const useIngredientSelection = () => {
   const [selected, setSelected] = useState<Map<string, IngredientItem>>(

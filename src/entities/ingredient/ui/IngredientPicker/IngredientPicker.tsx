@@ -15,11 +15,11 @@ import {
   DrawerTitle,
 } from "@/shared/ui/shadcn/drawer";
 
-import {
-  getIngredients,
+import { getIngredients } from "@/entities/ingredient/model/api";
+import type {
   IngredientItem,
   IngredientsApiResponse,
-} from "@/entities/ingredient";
+} from "@/entities/ingredient/model/types";
 
 import IngredientPickerCard from "./IngredientPickerCard";
 import IngredientSelectionTray from "./IngredientSelectionTray";
@@ -54,7 +54,7 @@ const IngredientPicker = ({
   onComplete,
 }: IngredientPickerProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    categories[0]
+    categories[0] ?? ""
   );
   const { selectedItems, isSelected, toggle, remove, clear } =
     useIngredientSelection();
@@ -172,7 +172,7 @@ const IngredientPicker = ({
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
                 <p className="py-10 text-center text-gray-500">
-                  "{searchQuery || selectedCategory}"에 해당하는 재료가
+                  &quot;{searchQuery || selectedCategory}&quot;에 해당하는 재료가
                   없습니다.
                 </p>
               )}

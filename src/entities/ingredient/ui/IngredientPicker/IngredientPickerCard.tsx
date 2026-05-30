@@ -6,7 +6,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
-import type { IngredientItem } from "@/entities/ingredient";
+import type { IngredientItem } from "@/entities/ingredient/model/types";
 
 type IngredientPickerCardProps = {
   ingredient: IngredientItem;
