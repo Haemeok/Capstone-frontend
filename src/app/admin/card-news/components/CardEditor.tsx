@@ -10,8 +10,8 @@ import { askGrok } from "@/app/actions/grok";
 
 import { saveAllCards } from "../lib/capture";
 import { buildCardNewsPrompt } from "../lib/prompt";
+import { OutroCard } from "./cards/OutroCard";
 import { RecipeCard } from "./cards/RecipeCard";
-import { RecipeSummaryCard } from "./cards/RecipeSummaryCard";
 import { type CardTheme,THEME_LIST } from "./cards/themes";
 import { ThumbnailCard } from "./cards/ThumbnailCard";
 
@@ -41,12 +41,11 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
 
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const recipeRefs = useRef<React.RefObject<HTMLDivElement | null>[]>([]);
-  const summaryRefs = useRef<React.RefObject<HTMLDivElement | null>[]>([]);
+  const outroRef = useRef<HTMLDivElement>(null);
 
   // 레시피별 ref 초기화
   useEffect(() => {
     recipeRefs.current = recipes.map(() => createRef<HTMLDivElement>());
-    summaryRefs.current = recipes.map(() => createRef<HTMLDivElement>());
     setBoxPositions(recipes.map(() => getRandomPosition()));
   }, [recipes]);
 
@@ -146,10 +145,11 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
     if (!texts) return;
     setSaving(true);
     try {
-      const allRefs = [thumbnailRef, ...recipeRefs.current];
+      const allRefs = [thumbnailRef, ...recipeRefs.current, outroRef];
       const allNames = [
         "thumbnail.png",
         ...recipes.map((r, i) => `recipe-${i + 1}-${r.title.replace(/[\\/:*?"<>|]/g, "_")}.png`),
+        "outro.png",
       ];
       await saveAllCards(allRefs, allNames, folderName);
       alert("저장 완료!");
@@ -194,20 +194,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
               theme={theme}
             />
           ))}
-          {recipes.map((recipe, i) => (
-            <RecipeSummaryCard
-              key={`capture-summary-${recipe.id}`}
-              ref={summaryRefs.current[i]}
-              recipeId={Number(recipe.id)}
-              imageUrl={recipe.imageUrl}
-              title={recipe.title}
-              description={texts.summaries[i + 1]?.summary ?? ""}
-              tags={recipe.tags ?? []}
-              ingredients={recipe.ingredients?.map(
-                (ing) => `${ing.name} ${ing.quantity ?? ""}${ing.unit ?? ""}`.trim()
-              ) ?? []}
-            />
-          ))}
+          <OutroCard ref={outroRef} imageUrl={thumbnail.imageUrl} />
         </div>
       )}
 
@@ -356,27 +343,16 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
               </div>
             ))}
 
-            {/* 요약 카드 미리보기 */}
-            <p className="mt-6 text-xs text-gray-400">요약 티켓 카드</p>
-            {recipes.map((recipe, i) => (
-              <div key={`summary-${recipe.id}`} style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
-                <div
-                  className="origin-top-left"
-                  style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
-                >
-                  <RecipeSummaryCard
-                    recipeId={Number(recipe.id)}
-                    imageUrl={recipe.imageUrl}
-                    title={recipe.title}
-                    description={texts.summaries[i + 1]?.summary ?? ""}
-                    tags={recipe.tags ?? []}
-                    ingredients={recipe.ingredients?.map(
-                      (ing) => `${ing.name} ${ing.quantity ?? ""}${ing.unit ?? ""}`.trim()
-                    ) ?? []}
-                  />
-                </div>
+            {/* 아웃트로(팔로우 유도) 카드 미리보기 */}
+            <p className="mt-6 text-xs text-gray-400">마지막 카드 (팔로우 유도)</p>
+            <div style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
+              <div
+                className="origin-top-left"
+                style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
+              >
+                <OutroCard imageUrl={thumbnail.imageUrl} />
               </div>
-            ))}
+            </div>
           </div>
         </div>
       )}
