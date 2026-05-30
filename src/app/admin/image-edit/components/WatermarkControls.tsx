@@ -76,5 +76,23 @@ export const WatermarkControls = ({ settings, onChange }: Props) => (
       format={(v) => `${Math.round(v * 100)}%`}
       onChange={(opacity) => onChange({ opacity })}
     />
+    <Slider
+      label="블러"
+      value={settings.blur}
+      min={0}
+      max={0.3}
+      step={0.01}
+      format={(v) => `${Math.round((v / 0.3) * 100)}%`}
+      onChange={(blur) => onChange({ blur })}
+    />
+    <Slider
+      label="배경 농도"
+      value={settings.tint}
+      min={0}
+      max={0.6}
+      step={0.05}
+      format={(v) => `${Math.round(v * 100)}%`}
+      onChange={(tint) => onChange({ tint })}
+    />
   </div>
 );

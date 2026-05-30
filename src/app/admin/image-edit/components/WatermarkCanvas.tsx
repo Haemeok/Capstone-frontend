@@ -13,12 +13,14 @@ type Props = {
   scale: number;
   paddingPct: number;
   opacity: number;
+  tint: number;
+  blur: number;
 };
 
 /** natural 픽셀 크기로 렌더되는 캡처 대상 노드 */
 export const WatermarkCanvas = forwardRef<HTMLDivElement, Props>(
   (
-    { imageUrl, naturalWidth, naturalHeight, position, scale, paddingPct, opacity },
+    { imageUrl, naturalWidth, naturalHeight, position, scale, paddingPct, opacity, tint, blur },
     ref,
   ) => {
     const logoPx = Math.round(naturalWidth * LOGO_RATIO * scale);
@@ -42,7 +44,17 @@ export const WatermarkCanvas = forwardRef<HTMLDivElement, Props>(
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
         />
         <div style={positionToStyle(position, paddingPx)}>
-          <WatermarkBadge logoPx={logoPx} opacity={opacity} />
+          <WatermarkBadge
+            imageUrl={imageUrl}
+            naturalWidth={naturalWidth}
+            naturalHeight={naturalHeight}
+            position={position}
+            paddingPx={paddingPx}
+            logoPx={logoPx}
+            opacity={opacity}
+            tint={tint}
+            blur={blur}
+          />
         </div>
       </div>
     );

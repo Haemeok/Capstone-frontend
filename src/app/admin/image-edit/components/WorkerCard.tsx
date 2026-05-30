@@ -140,10 +140,7 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
   }, []);
 
   const canSubmit =
-    referenceImageUrls.length > 0 &&
-    prompt.trim().length > 0 &&
-    selected.size > 0 &&
-    !running;
+    prompt.trim().length > 0 && selected.size > 0 && !running;
 
   const handleSubmit = useCallback(async () => {
     if (!canSubmit) return;

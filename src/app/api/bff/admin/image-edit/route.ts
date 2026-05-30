@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { assertAdminApi } from "@/shared/lib/admin-guard";
 
-import { editViaOpenAI } from "@/app/admin/image-quality-test/lib/adapters/openaiAdapter";
+import {
+  editViaOpenAI,
+  generateViaOpenAI,
+} from "@/app/admin/image-quality-test/lib/adapters/openaiAdapter";
 import { getModelById } from "@/app/admin/image-quality-test/lib/models";
 
 export const runtime = "nodejs";
@@ -28,18 +31,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const refs = body.referenceImageUrls;
-  if (
-    !body.modelId ||
-    !body.prompt ||
-    !Array.isArray(refs) ||
-    refs.length === 0
-  ) {
+  const refs = Array.isArray(body.referenceImageUrls)
+    ? body.referenceImageUrls
+    : [];
+  if (!body.modelId || !body.prompt) {
     return NextResponse.json(
-      {
-        error:
-          "modelId, prompt, and referenceImageUrls (non-empty array) are required",
-      },
+      { error: "modelId and prompt are required" },
       { status: 400 }
     );
   }
@@ -74,13 +71,21 @@ export async function POST(req: NextRequest) {
 
   const startedAt = Date.now();
   try {
-    const result = await editViaOpenAI(
-      model.endpoint,
-      body.prompt,
-      refs,
-      { quality: quality as "low" | "medium" | "high" },
-      req.signal
-    );
+    const result =
+      refs.length === 0
+        ? await generateViaOpenAI(
+            model.endpoint,
+            body.prompt,
+            { quality: quality as "low" | "medium" | "high" },
+            req.signal
+          )
+        : await editViaOpenAI(
+            model.endpoint,
+            body.prompt,
+            refs,
+            { quality: quality as "low" | "medium" | "high" },
+            req.signal
+          );
     return NextResponse.json({
       imageUrl: result.imageDataUrl,
       modelId: body.modelId,

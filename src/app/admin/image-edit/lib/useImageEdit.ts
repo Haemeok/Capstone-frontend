@@ -82,7 +82,6 @@ export const useImageEdit = () => {
   const submit = useCallback(
     async ({ qualities, prompt, referenceImageUrls }: SubmitInput) => {
       if (qualities.length === 0) return;
-      if (referenceImageUrls.length === 0) return;
 
       abortRef.current?.abort();
       const controller = new AbortController();
