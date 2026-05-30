@@ -139,6 +139,7 @@ const IngredientRecipePage = () => {
                 open={isDrawerOpen}
                 onOpenChange={setIsDrawerOpen}
                 categories={INGREDIENT_CATEGORIES_NEW_RECIPE}
+                initialCategory="전체"
                 queryConfig={{
                   keyBase: "drawerIngredients",
                   getParams: (category) => ({
