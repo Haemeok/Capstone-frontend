@@ -1,3 +1,4 @@
+import { TOTAL_RECIPE_COUNT_PHRASE } from "@/shared/config/constants/siteStats";
 import { createSearchBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 
 import type {
@@ -6,6 +7,7 @@ import type {
 } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
+import { toIso8601 } from "./dateTime";
 import { createEnhancedVideoObject, extractYoutubeMetadata } from "./youtube";
 
 export const createWebsiteStructuredData = () => ({
@@ -58,7 +60,7 @@ export const createRecipeStructuredData = (
           description: recipe.description,
           thumbnailUrl: recipe.imageUrl || "",
           contentUrl: recipe.youtubeUrl,
-          uploadDate: recipe.createdAt || new Date().toISOString(),
+          uploadDate: toIso8601(recipe.createdAt),
         }
       : undefined;
 
@@ -88,7 +90,7 @@ export const createRecipeStructuredData = (
     description: enhancedDescription,
     image: imageArray,
     author,
-    datePublished: recipe.createdAt || new Date().toISOString(),
+    datePublished: toIso8601(recipe.createdAt),
 
     prepTime: `PT${prepTimeMinutes}M`,
     ...(recipe.cookingTime && {
@@ -114,6 +116,7 @@ export const createRecipeStructuredData = (
         name: `Step ${index + 1}`,
         position: index + 1,
         text: step.instruction,
+        url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}#step-${index + 1}`,
         ...(step.stepImageUrl && { image: step.stepImageUrl }),
       })) || [],
 
@@ -153,7 +156,7 @@ export const createRecipeStructuredData = (
           url: recipe.youtubeUrl,
         },
       }),
-    url: `${SEO_CONSTANTS.SITE_URL}recipes/${recipeId}`,
+    url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}`,
   };
 };
 
@@ -174,7 +177,7 @@ export const createLandingFAQStructuredData = () => {
       name: "레시피오는 어떤 서비스인가요?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "레시피오는 30,000개 이상의 홈쿡 레시피를 제공하는 서비스입니다. YouTube 링크를 붙여넣기만 하면 레시피로 자동 추출되고, AI가 상황과 재료에 맞게 레시피를 추천해줍니다.",
+        text: `레시피오는 ${TOTAL_RECIPE_COUNT_PHRASE}의 홈쿡 레시피를 제공하는 서비스입니다. YouTube 링크를 붙여넣기만 하면 레시피로 자동 추출되고, AI가 상황과 재료에 맞게 레시피를 추천해줍니다.`,
       },
     },
     {

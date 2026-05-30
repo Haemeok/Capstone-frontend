@@ -1,6 +1,7 @@
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS, YOUTUBE_SEO } from "./constants";
+import { toIso8601 } from "./dateTime";
 
 export type YoutubeMetadata = {
   channelName: string;
@@ -56,7 +57,7 @@ export const createEnhancedVideoObject = (
     ].filter(Boolean),
     contentUrl: recipe.youtubeUrl,
     embedUrl: recipe.youtubeUrl,
-    uploadDate: recipe.createdAt || new Date().toISOString(),
+    uploadDate: toIso8601(recipe.createdAt),
     ...(recipe.cookingTime && { duration: `PT${recipe.cookingTime}M` }),
     publisher: {
       "@type": "Organization" as const,
