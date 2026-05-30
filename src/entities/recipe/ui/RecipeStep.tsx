@@ -59,7 +59,8 @@ const RecipeStep = ({
   return (
     <div
       key={stepIndex}
-      className="h-full w-full border-b border-slate-200 pb-4"
+      id={`step-${stepIndex + 1}`}
+      className="h-full w-full scroll-mt-20 border-b border-slate-200 pb-4"
     >
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
