@@ -55,6 +55,70 @@ const ClassicThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
   </>
 );
 
+/** Glass: 캡처-안전 글래스모피즘 (사진 사본 blur + sheen) */
+const GlassThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => {
+  const M = 56;
+
+  return (
+    <>
+      <img src={imageUrl} alt="" crossOrigin="anonymous" style={imgStyle} />
+      <div
+        style={{
+          position: "absolute",
+          left: M,
+          right: M,
+          bottom: M,
+          borderRadius: 40,
+          overflow: "hidden",
+          border: "1.5px solid rgba(255,255,255,0.45)",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.4)",
+        }}
+      >
+        {/* 뒤 사진의 blur 사본 — backdrop-filter 대체 (html-to-image 캡처 가능) */}
+        <img
+          src={imageUrl}
+          alt=""
+          crossOrigin="anonymous"
+          aria-hidden
+          style={{
+            position: "absolute",
+            width: CARD + 100,
+            height: CARD + 100,
+            objectFit: "cover",
+            left: -M - 50,
+            bottom: -M - 50,
+            filter: "blur(34px)",
+          }}
+        />
+        {/* 유리 sheen + 살짝 어두운 tint */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%), rgba(15,13,10,0.32)",
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
+            padding: "56px 60px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <p style={{ ...hookStyle, color: "#fff", textShadow: "0 2px 14px rgba(0,0,0,0.45)" }}>{hooking}</p>
+          <p style={{ ...subStyle, color: "rgba(255,255,255,0.9)", textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>{subject}</p>
+          <div style={{ marginTop: 28, display: "flex", justifyContent: "center" }}>
+            <BrandLogo />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 /** Bold: 후킹에 노란 하이라이트 박스 */
 const BoldThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
   <>
@@ -239,6 +303,7 @@ const DarkThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
 
 const THUMB_MAP: Record<CardTheme, React.FC<ThumbnailCardProps>> = {
   classic: ClassicThumb,
+  glass: GlassThumb,
   bold: BoldThumb,
   frame: FrameThumb,
   split: SplitThumb,

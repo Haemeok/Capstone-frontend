@@ -8,6 +8,8 @@ import { GridTipCard } from "./components/GridTipCard";
 import { MODEL_OPTIONS } from "./lib/schema";
 import { useGridCardNews } from "./lib/useGridCardNews";
 
+import "@/app/admin/card-news/components/cards/card-fonts.css";
+
 const inputClass =
   "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light";
 
