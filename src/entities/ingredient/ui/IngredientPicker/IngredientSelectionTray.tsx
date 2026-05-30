@@ -6,7 +6,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 
-import type { IngredientItem } from "@/entities/ingredient";
+import type { IngredientItem } from "@/entities/ingredient/model/types";
 
 type IngredientSelectionTrayProps = {
   items: IngredientItem[];
