@@ -23,6 +23,7 @@ export const AD_SLOT_IDS = {
   ),
   recipeBottomAnchor:
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_BOTTOM_ANCHOR || "",
+  homeAnchor: process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_ANCHOR || "",
 } as const;
 
 export const SEARCH_AD_EVERY_N_CARDS = 8;
@@ -33,4 +34,5 @@ export const AD_MIN_HEIGHT = {
   inFeed: 280,
   inArticle: 250,
   bottomAnchor: 70,
+  homeAnchor: 90,
 } as const;
