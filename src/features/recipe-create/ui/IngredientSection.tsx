@@ -6,7 +6,11 @@ import dynamic from "next/dynamic";
 
 import { Plus } from "lucide-react";
 
+import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
+import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
+
 import { IngredientPayload } from "@/entities/ingredient";
+import { IngredientPicker } from "@/entities/ingredient/ui/IngredientPicker";
 
 import { RecipeFormValues } from "../model/config";
 import IngredientItem from "./IngredientItem";
@@ -33,6 +37,8 @@ const IngredientSection = ({
   } = useFormContext<RecipeFormValues>();
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const {
     fields: ingredientFields,
@@ -98,18 +104,46 @@ const IngredientSection = ({
         </span>
       </button>
 
-      <IngredientSelector
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        onIngredientSelect={addIngredient}
-        addedIngredientNames={addedIngredientNames}
-        mapIngredientToPayload={(ingredient) => ({
-          id: ingredient.id,
-          name: ingredient.name,
-          quantity: "",
-          unit: ingredient.unit,
-        })}
-      />
+      {isMobile ? (
+        <IngredientPicker
+          open={isOpen}
+          onOpenChange={setIsOpen}
+          categories={INGREDIENT_CATEGORIES_NEW_RECIPE}
+          queryConfig={{
+            keyBase: "drawerIngredients",
+            getParams: (category) => ({
+              category,
+              isMine: category === "나의 재료",
+            }),
+          }}
+          isAlreadyAdded={(ingredient) =>
+            addedIngredientNames.has(ingredient.name)
+          }
+          onComplete={(items) =>
+            items.forEach((i) =>
+              addIngredient({
+                id: i.id,
+                name: i.name,
+                quantity: "",
+                unit: i.unit,
+              })
+            )
+          }
+        />
+      ) : (
+        <IngredientSelector
+          open={isOpen}
+          onOpenChange={setIsOpen}
+          onIngredientSelect={addIngredient}
+          addedIngredientNames={addedIngredientNames}
+          mapIngredientToPayload={(ingredient) => ({
+            id: ingredient.id,
+            name: ingredient.name,
+            quantity: "",
+            unit: ingredient.unit,
+          })}
+        />
+      )}
     </div>
   );
 };
