@@ -8,10 +8,13 @@ import {
   INGREDIENT_PACKS,
   type IngredientPack,
 } from "@/shared/config/constants/ingredientPacks";
+import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
+import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { useMyIngredientIds } from "@/entities/ingredient";
+import { IngredientPicker } from "@/entities/ingredient/ui/IngredientPicker";
 
 import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge";
 import IngredientPackDetailDrawer from "@/features/ingredient-add-fridge/ui/IngredientPackDetailDrawer";
@@ -24,6 +27,8 @@ const NewIngredientsPage = () => {
   const [isSearchDrawerOpen, setIsSearchDrawerOpen] = useState(false);
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
   const [selectedPack, setSelectedPack] = useState<IngredientPack | null>(null);
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const { ingredientIdsSet } = useMyIngredientIds();
   const { mutate: addIngredientBulk, isPending: isAdding } =
@@ -104,10 +109,28 @@ const NewIngredientsPage = () => {
         </div>
       </div>
 
-      <IngredientSearchDrawer
-        open={isSearchDrawerOpen}
-        onOpenChange={setIsSearchDrawerOpen}
-      />
+      {isMobile ? (
+        <IngredientPicker
+          open={isSearchDrawerOpen}
+          onOpenChange={setIsSearchDrawerOpen}
+          categories={INGREDIENT_CATEGORIES}
+          queryConfig={{
+            keyBase: "fridgeIngredients",
+            getParams: (category) => ({
+              category: category === "전체" ? null : category,
+              isMine: false,
+              isFridge: true,
+            }),
+          }}
+          isAlreadyAdded={(ingredient) => ingredient.inFridge}
+          onComplete={(items) => addIngredientBulk(items.map((i) => i.id))}
+        />
+      ) : (
+        <IngredientSearchDrawer
+          open={isSearchDrawerOpen}
+          onOpenChange={setIsSearchDrawerOpen}
+        />
+      )}
 
       <IngredientPackDetailDrawer
         pack={selectedPack}

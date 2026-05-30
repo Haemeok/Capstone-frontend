@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
+import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
+import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { ArrowLeftIcon } from "@/shared/ui/icons";
@@ -15,6 +17,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import { AIIngredientPayload } from "@/entities/ingredient";
+import { IngredientPicker } from "@/entities/ingredient/ui/IngredientPicker";
 
 import IngredientSelector from "@/features/recipe-create/ui/IngredientSelector";
 import { buildIngredientFocusRequest } from "@/features/recipe-create-ai/model/adapters";
@@ -24,13 +27,13 @@ import {
 } from "@/features/recipe-create-ai/model/schema";
 import { useConceptJob } from "@/features/recipe-create-ai/model/useConceptJob";
 
+import AIConceptShell from "@/widgets/AIConceptShell";
 import AiCharacterSection from "@/widgets/AIRecipeForm/AiCharacterSection";
 import AIRecipeProgressButton from "@/widgets/AIRecipeForm/AIRecipeProgressButton";
 import CookingTimeSection from "@/widgets/AIRecipeForm/CookingTimeSection";
 import DishTypeSection from "@/widgets/AIRecipeForm/DishTypeSection";
 import ServingsCounter from "@/widgets/AIRecipeForm/ServingsCounter";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";
-import AIConceptShell from "@/widgets/AIConceptShell";
 import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
 
 const CONCEPT = "INGREDIENT_FOCUS" as const;
@@ -38,6 +41,8 @@ const CONCEPT = "INGREDIENT_FOCUS" as const;
 const IngredientRecipePage = () => {
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const { job, isPending, isFailed, progress, submit, retry } =
     useConceptJob(CONCEPT);
@@ -129,18 +134,41 @@ const IngredientRecipePage = () => {
               </UsageLimitSection>
             </form>
 
-            <IngredientSelector
-              open={isDrawerOpen}
-              onOpenChange={setIsDrawerOpen}
-              onIngredientSelect={handleAddIngredient}
-              addedIngredientNames={
-                new Set((ingredients || []).map((ing) => ing.name))
-              }
-              mapIngredientToPayload={(ingredient) => ({
-                id: ingredient.id,
-                name: ingredient.name,
-              })}
-            />
+            {isMobile ? (
+              <IngredientPicker
+                open={isDrawerOpen}
+                onOpenChange={setIsDrawerOpen}
+                categories={INGREDIENT_CATEGORIES_NEW_RECIPE}
+                queryConfig={{
+                  keyBase: "drawerIngredients",
+                  getParams: (category) => ({
+                    category,
+                    isMine: category === "나의 재료",
+                  }),
+                }}
+                isAlreadyAdded={(ingredient) =>
+                  (ingredients || []).some((ing) => ing.name === ingredient.name)
+                }
+                onComplete={(items) =>
+                  items.forEach((i) =>
+                    handleAddIngredient({ id: i.id, name: i.name })
+                  )
+                }
+              />
+            ) : (
+              <IngredientSelector
+                open={isDrawerOpen}
+                onOpenChange={setIsDrawerOpen}
+                onIngredientSelect={handleAddIngredient}
+                addedIngredientNames={
+                  new Set((ingredients || []).map((ing) => ing.name))
+                }
+                mapIngredientToPayload={(ingredient) => ({
+                  id: ingredient.id,
+                  name: ingredient.name,
+                })}
+              />
+            )}
           </div>
         </FormProvider>
       </Container>
