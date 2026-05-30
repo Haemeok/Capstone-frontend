@@ -39,6 +39,7 @@ type IngredientPickerProps = {
   onOpenChange: (open: boolean) => void;
   title?: string;
   categories: string[];
+  initialCategory?: string;
   queryConfig: IngredientPickerQueryConfig;
   isAlreadyAdded: (ingredient: IngredientItem) => boolean;
   onComplete: (selected: IngredientItem[]) => void;
@@ -49,12 +50,13 @@ const IngredientPicker = ({
   onOpenChange,
   title = "재료 추가",
   categories,
+  initialCategory,
   queryConfig,
   isAlreadyAdded,
   onComplete,
 }: IngredientPickerProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    categories[0] ?? ""
+    initialCategory ?? categories[0] ?? ""
   );
   const { selectedItems, isSelected, toggle, remove, clear } =
     useIngredientSelection();

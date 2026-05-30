@@ -109,6 +109,7 @@ const IngredientSection = ({
           open={isOpen}
           onOpenChange={setIsOpen}
           categories={INGREDIENT_CATEGORIES_NEW_RECIPE}
+          initialCategory="전체"
           queryConfig={{
             keyBase: "drawerIngredients",
             getParams: (category) => ({
