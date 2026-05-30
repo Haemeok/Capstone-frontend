@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { motion } from "motion/react";
 
+import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
 import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
 
@@ -32,7 +33,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="border-olive-light/30 bg-olive-light/10 font-bold text-olive-medium mb-6 inline-block rounded-full border px-6 py-2 text-sm  backdrop-blur-sm"
         >
-          🍳 30,000+ 레시피 · YouTube 링크 추출 · AI 맞춤 추천
+          🍳 {TOTAL_RECIPE_COUNT_LABEL} 레시피 · YouTube 링크 추출 · AI 맞춤 추천
         </motion.div>
 
         <motion.h1
@@ -62,7 +63,7 @@ export const HeroSection = () => {
           </span>
           하고,
           <br className="hidden sm:block" />
-          30,000+ 레시피에서 AI가 맞춤 추천해드려요
+          {TOTAL_RECIPE_COUNT_LABEL} 레시피에서 AI가 맞춤 추천해드려요
         </motion.p>
 
         <motion.div

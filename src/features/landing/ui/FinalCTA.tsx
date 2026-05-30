@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { motion } from "motion/react";
 
+import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
 import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
 
@@ -39,7 +40,7 @@ export const FinalCTA = () => {
             </h2>
 
             <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl">
-              30,000+ 레시피와 AI 추천, YouTube 링크 추출까지
+              {TOTAL_RECIPE_COUNT_LABEL} 레시피와 AI 추천, YouTube 링크 추출까지
               <br className="hidden sm:block" />
               지금 바로 무료로 시작해보세요
             </p>
