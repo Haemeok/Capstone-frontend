@@ -2,6 +2,11 @@
 
 import { motion } from "motion/react";
 
+import {
+  TOTAL_RECIPE_COUNT_LABEL,
+  TOTAL_RECIPE_COUNT_PHRASE,
+} from "@/shared/config/constants/siteStats";
+
 type Feature = {
   badge: string;
   badgeColor: string;
@@ -25,11 +30,10 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    badge: "30,000+ 레시피",
+    badge: `${TOTAL_RECIPE_COUNT_LABEL} 레시피`,
     badgeColor: "bg-blue-50 text-blue-600",
     title: "국내 최대 규모의 큐레이션 레시피",
-    description:
-      "YouTube 기반 레시피부터 AI 생성, 유명 홈쿡 레시피까지 30,000개 이상을 한 곳에서 탐색할 수 있어요.",
+    description: `YouTube 기반 레시피부터 AI 생성, 유명 홈쿡 레시피까지 ${TOTAL_RECIPE_COUNT_PHRASE}을 한 곳에서 탐색할 수 있어요.`,
     benefits: [
       "유명 최신 레시피",
       "YouTube 기반 레시피 다수 보유",

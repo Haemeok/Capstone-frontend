@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 
+import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
+
 import { SEO_CONSTANTS } from "./constants";
 
-const HOME_DESCRIPTION =
-  "YouTube 링크 하나로 레시피 저장, 30,000+ 홈쿡 레시피 · AI 맞춤 추천 · 홈파티·기념일·다이어트 상황별 레시피까지 한번에.";
+const HOME_DESCRIPTION = `YouTube 링크 하나로 레시피 저장, ${TOTAL_RECIPE_COUNT_LABEL} 홈쿡 레시피 · AI 맞춤 추천 · 홈파티·기념일·다이어트 상황별 레시피까지 한번에.`;
 
 const HOME_EXTRA_KEYWORDS = [
   "YouTube 레시피",

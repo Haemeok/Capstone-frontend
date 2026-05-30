@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
 import { Image } from "@/shared/ui/image/Image";
 
 type StatCard = {
@@ -18,7 +19,7 @@ type StatCard = {
 const STATS: StatCard[] = [
   {
     image: `${ICON_BASE_URL}book.webp`,
-    metric: "30,000+",
+    metric: TOTAL_RECIPE_COUNT_LABEL,
     label: "큐레이션 레시피",
     description: "YouTube · 유명 레시피 · AI 생성까지",
     accent: "from-purple-500/10 to-pink-500/10",
