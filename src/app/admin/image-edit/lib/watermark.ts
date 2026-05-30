@@ -30,13 +30,19 @@ export type WatermarkSettings = {
   scale: number;
   paddingPct: number;
   opacity: number;
+  /** glass 백킹의 어두운 베이스 알파 (0 = 완전 투명, 블랙끼 없음) */
+  tint: number;
+  /** 블러 반경 = logoPx * blur (0 = 블러 없음, 유리 패널만) */
+  blur: number;
 };
 
 export const DEFAULT_SETTINGS: WatermarkSettings = {
   position: "bottom-center",
-  scale: 1,
-  paddingPct: 3,
+  scale: 0.85,
+  paddingPct: 2,
   opacity: 1,
+  tint: 0,
+  blur: 0.21,
 };
 
 export type LoadedImage = { url: string; width: number; height: number };
@@ -59,6 +65,40 @@ export const positionToStyle = (
 
   if (horizontal === "left") style.left = paddingPx;
   else if (horizontal === "right") style.right = paddingPx;
+  else {
+    style.left = "50%";
+    transforms.push("translateX(-50%)");
+  }
+
+  if (transforms.length > 0) style.transform = transforms.join(" ");
+  return style;
+};
+
+/** 풀캔버스 사진 사본을 positionToStyle 미러로 배치 — 측정 없이 뒤 사진과 픽셀 정렬 */
+export const backdropCopyStyle = (
+  position: WatermarkPosition,
+  paddingPx: number,
+  naturalWidth: number,
+  naturalHeight: number,
+): CSSProperties => {
+  const [vertical, horizontal] = position.split("-");
+  const style: CSSProperties = {
+    position: "absolute",
+    width: naturalWidth,
+    height: naturalHeight,
+    objectFit: "cover",
+  };
+  const transforms: string[] = [];
+
+  if (vertical === "top") style.top = -paddingPx;
+  else if (vertical === "bottom") style.bottom = -paddingPx;
+  else {
+    style.top = "50%";
+    transforms.push("translateY(-50%)");
+  }
+
+  if (horizontal === "left") style.left = -paddingPx;
+  else if (horizontal === "right") style.right = -paddingPx;
   else {
     style.left = "50%";
     transforms.push("translateX(-50%)");
