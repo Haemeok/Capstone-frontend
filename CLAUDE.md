@@ -58,6 +58,14 @@
 - Interactive 요소엔 `cursor-pointer`
 - 아이콘 버튼엔 `aria-label`
 
+### Comments (절대 금지)
+- **코드에 주석 달지 말 것.** WHAT은 식별자가 말한다. 설명·맥락 주석 전면 금지.
+- 변경 이유·과거 incident·시도한 대안·라이브러리 quirk → **전부 커밋 메세지 본문**으로.
+- 유일한 예외 2개 (다른 룰이 강제하는 기계적 표식만):
+  - `as` 사용 시 1줄 사유 코멘트 (`ts-any-and-as` 룰)
+  - `||` 기본값 fallthrough 의도 1줄 코멘트 (`policy-nullish-coalescing` 룰)
+- `CLAUDE.md`/`docs/`/`SKILL.md` 같은 공유 문서는 코드 아님 — 적용 대상 아님
+
 ## 작업별 가이드 (Lookup Table)
 
 매 세션마다 모든 가이드를 컨텍스트에 끌고 다니지 말 것. **해당 작업 시작 직전에 Read**.
