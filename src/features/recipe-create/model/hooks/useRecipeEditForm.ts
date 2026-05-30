@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { invalidateCache } from "@/shared/config/cache";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useRecipeDetailQuery } from "@/entities/recipe";
@@ -101,7 +102,7 @@ export const useRecipeEditForm = (recipeId: string) => {
     submitRecipe(
       { formData, recipeId, isIngredientsModified },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           triggerHaptic("Success");
           addToast({
             message: "레시피가 성공적으로 수정되었습니다!",
@@ -109,7 +110,7 @@ export const useRecipeEditForm = (recipeId: string) => {
             position: "bottom",
           });
           methods.reset();
-          router.refresh();
+          await invalidateCache({ type: "RECIPE_MUTATED", recipeId });
           router.push(`/recipes/${recipeId}`);
         },
         onError: (error) => {
