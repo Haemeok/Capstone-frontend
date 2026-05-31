@@ -3,8 +3,6 @@
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
-import NutritionToggle from "./NutritionToggle";
-
 type IngredientsSectionHeaderProps = {
   showNutrition: boolean;
   onNutritionToggle: (value: boolean) => void;
@@ -18,43 +16,71 @@ export const IngredientsSectionHeader = ({
   onCopyOpen,
   onReportOpen,
 }: IngredientsSectionHeaderProps) => {
-  const buttonClassName = cn(
-    "cursor-pointer rounded-lg px-2.5 py-1 text-xs font-medium transition-all",
+  const tabClassName = (active: boolean) =>
+    cn(
+      "cursor-pointer text-xl font-bold transition-colors",
+      active ? "text-gray-900" : "text-gray-300"
+    );
+
+  const chipClassName = cn(
+    "cursor-pointer rounded-sm px-2.5 py-1 text-xs font-medium transition-all",
     "bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-600"
   );
 
+  const handleSelectIngredients = () => {
+    triggerHaptic("Light");
+    onNutritionToggle(false);
+  };
+
+  const handleSelectNutrition = () => {
+    triggerHaptic("Light");
+    onNutritionToggle(true);
+  };
+
   return (
     <div className="mb-2 flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <h2 className="text-xl font-bold">
-          {showNutrition ? "영양성분" : "재료"}
-        </h2>
-        {!showNutrition && (
-          <>
-            <button
-              type="button"
-              onClick={() => {
-                triggerHaptic("Light");
-                onCopyOpen();
-              }}
-              className={buttonClassName}
-            >
-              📋 복사
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                triggerHaptic("Light");
-                onReportOpen();
-              }}
-              className={buttonClassName}
-            >
-              🏳️ 제보
-            </button>
-          </>
-        )}
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={handleSelectIngredients}
+          aria-pressed={!showNutrition}
+          className={tabClassName(!showNutrition)}
+        >
+          재료
+        </button>
+        <button
+          type="button"
+          onClick={handleSelectNutrition}
+          aria-pressed={showNutrition}
+          className={tabClassName(showNutrition)}
+        >
+          영양성분
+        </button>
       </div>
-      <NutritionToggle isNutrition={showNutrition} onToggle={onNutritionToggle} />
+      {!showNutrition && (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic("Light");
+              onCopyOpen();
+            }}
+            className={chipClassName}
+          >
+            📋 복사
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic("Light");
+              onReportOpen();
+            }}
+            className={chipClassName}
+          >
+            🏳️ 제보
+          </button>
+        </div>
+      )}
     </div>
   );
 };
