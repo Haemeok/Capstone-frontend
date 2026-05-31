@@ -4,7 +4,7 @@ import { Image } from "@/shared/ui/image/Image";
 
 export const YoutubeImportHero = () => {
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col items-center pt-8 md:pt-12">
+    <div className="mx-auto flex w-full max-w-xl flex-col items-center pt-2 md:pt-12">
       <Image
         src={`${ICON_BASE_URL}youtube.webp`}
         alt="YouTube Premium"
@@ -12,7 +12,7 @@ export const YoutubeImportHero = () => {
         imgClassName="drop-shadow-xl"
       />
 
-      <div className="mb-8 space-y-6 text-center">
+      <div className="mb-8 space-y-2 text-center">
         <div className="space-y-2">
           <div className="flex items-center justify-center gap-2">
             <h1 className="text-3xl font-extrabold text-gray-900 md:text-4xl">

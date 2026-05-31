@@ -1,4 +1,8 @@
-import { BottomAnchorAdSlot, InArticleAdSlot } from "@/shared/adsense";
+import {
+  BottomAnchorAdSlot,
+  InArticleAdSlot,
+  YoutubeAnchorAdSlot,
+} from "@/shared/adsense";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
@@ -23,6 +27,7 @@ const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
         <div className="pt-2">
           <PrevButton className="text-gray-600" />
         </div>
+        <YoutubeAnchorAdSlot />
         <YoutubeImportHero />
         <InArticleAdSlot className="my-4" />
         <YoutubeClientSection
