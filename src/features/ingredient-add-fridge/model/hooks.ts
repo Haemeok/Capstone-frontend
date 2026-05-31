@@ -106,6 +106,7 @@ export const useAddIngredientBulkMutation = () => {
       console.error("재료 벌크 추가 실패:", error);
     },
     onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["fridgeIngredients"] });
       queryClient.invalidateQueries({ queryKey: ["ingredients"] });
       queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
     },
