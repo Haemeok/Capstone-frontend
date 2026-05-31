@@ -54,7 +54,7 @@ export const ImageUploader = ({ fieldName, className }: ImageUploaderProps) => {
   return (
     <div
       className={cn(
-        "relative w-full aspect-square cursor-pointer bg-gray-200 text-gray-400 hover:bg-gray-300 rounded-lg overflow-hidden",
+        "relative w-full aspect-square cursor-pointer bg-gray-200 text-gray-400 hover:bg-gray-300 rounded-card overflow-hidden",
         className
       )}
     >

@@ -13,7 +13,7 @@ export default function RecipeCookingTipsSection({
   if (!tips) return null;
 
   return (
-    <section className="my-6 rounded-xl border border-olive-light/20 bg-olive-light/5 p-4">
+    <section className="my-6 rounded-card border border-olive-light/20 bg-olive-light/5 p-4">
       <div className="flex items-start gap-3">
         <Lightbulb className="h-6 w-6 flex-shrink-0 text-olive-dark" />
         <div className="flex flex-1 flex-col gap-1">

@@ -29,7 +29,7 @@ const RecipeCard = ({
   const imageUrl = `${IMAGE_BASE_URL}recipes/7/${id}/main.webp`;
 
   return (
-    <div className="group flex-shrink-0 overflow-hidden rounded-3xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+    <div className="group flex-shrink-0 overflow-hidden rounded-card bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
       <Image
         src={imageUrl}
         alt={`Recipe ${id}`}

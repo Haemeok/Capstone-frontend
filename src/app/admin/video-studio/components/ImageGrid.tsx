@@ -21,7 +21,7 @@ export const ImageGrid = ({ imageUrls, selectedUrl, onSelect }: Props) => {
               key={url}
               type="button"
               onClick={() => onSelect(url)}
-              className={`relative overflow-hidden rounded-xl border-2 ${
+              className={`relative overflow-hidden rounded-card border-2 ${
                 isSelected ? "border-olive-light" : "border-transparent"
               }`}
             >

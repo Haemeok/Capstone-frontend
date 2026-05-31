@@ -22,7 +22,7 @@ const IngredientHero = ({
 
   return (
     <div className="flex flex-col items-center pt-6 pb-6 gap-3 px-5">
-      <div className="w-40 h-40 rounded-3xl border border-gray-100 bg-white flex items-center justify-center overflow-hidden">
+      <div className="w-40 h-40 rounded-card border border-gray-100 bg-white flex items-center justify-center overflow-hidden">
         <Image
           src={imageUrl ?? ""}
           alt={name}
@@ -30,7 +30,7 @@ const IngredientHero = ({
           height={128}
           aspectRatio="1 / 1"
           fit="contain"
-          wrapperClassName="rounded-2xl"
+          wrapperClassName="rounded-card"
         />
       </div>
       <div className="flex flex-col items-center gap-1">

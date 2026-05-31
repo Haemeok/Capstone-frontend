@@ -19,7 +19,7 @@ export default function RecipePlatingSection({
 }: RecipePlatingSectionProps) {
   return (
     <section
-      className={`border-brown-light bg-beige my-6 rounded-xl border p-4 ${className}`}
+      className={`border-brown-light bg-beige my-6 rounded-card border p-4 ${className}`}
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-start gap-3">

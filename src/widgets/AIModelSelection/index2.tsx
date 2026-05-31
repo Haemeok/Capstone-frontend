@@ -139,7 +139,7 @@ const AIModelCard = ({ modelId, onClick }: AIModelCardProps) => {
   return (
     <button
       onClick={onClick}
-      className="flex flex-col overflow-hidden rounded-2xl shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+      className="flex flex-col overflow-hidden rounded-card shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
     >
       <div className="relative aspect-square w-full overflow-hidden">
         <Image

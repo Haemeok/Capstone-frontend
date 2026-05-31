@@ -75,7 +75,7 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
         <img
           src={data.thumbnailUrl}
           alt={data.h1}
-          className="mx-auto mt-8 aspect-[16/9] w-full max-w-4xl rounded-lg object-cover"
+          className="mx-auto mt-8 aspect-[16/9] w-full max-w-4xl rounded-card object-cover"
         />
       )}
 

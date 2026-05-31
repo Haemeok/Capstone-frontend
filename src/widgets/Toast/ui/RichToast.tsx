@@ -275,7 +275,7 @@ export const RichToast = ({
               alt="thumbnail"
               fit="cover"
               aspectRatio="1 / 1"
-              wrapperClassName="h-16 w-16 rounded-lg  md:h-28 md:w-28"
+              wrapperClassName="h-16 w-16 rounded-card  md:h-28 md:w-28"
             />
           </div>
         )}

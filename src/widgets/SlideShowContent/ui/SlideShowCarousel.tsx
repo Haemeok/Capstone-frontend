@@ -76,7 +76,7 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
             className="flex h-full flex-col justify-center px-6 pt-16"
           >
             <div className="mx-auto flex w-full max-w-sm flex-col items-center">
-              <div className="relative mb-4 h-80 w-80 overflow-hidden rounded-2xl">
+              <div className="relative mb-4 h-80 w-80 overflow-hidden rounded-card">
                 <Image
                   src={recipe.imageUrl}
                   alt={recipe.title}

@@ -107,7 +107,7 @@ export default function RecipeVideoSection({
           className={cn(
             "w-full transition-all",
             isSticky
-              ? "my-6 flex aspect-video items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50"
+              ? "my-6 flex aspect-video items-center justify-center rounded-card border-2 border-dashed border-gray-200 bg-gray-50"
               : "hidden h-0"
           )}
         >
@@ -134,7 +134,7 @@ export default function RecipeVideoSection({
             )}
           >
             {shouldShowYoutubeInfo ? (
-              <div className="bg-background/80 flex max-w-[70%] items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 shadow-md backdrop-blur-sm">
+              <div className="bg-background/80 flex max-w-[70%] items-center gap-2 rounded-card border border-gray-200 px-3 py-2 shadow-md backdrop-blur-sm">
                 <Image
                   src={youtubeMetadata.channelProfileUrl!}
                   alt={youtubeMetadata.channelName!}
@@ -176,7 +176,7 @@ export default function RecipeVideoSection({
                 "cursor-pointer shadow-md backdrop-blur-sm transition-all",
                 isSticky
                   ? "bg-primary/80 hover:bg-primary/90 text-primary-foreground border-primary h-10 w-10 rounded-full"
-                  : "bg-white hover:bg-olive-medium border-1 border-olive-light text-olive-light rounded-2xl px-3 py-2"
+                  : "bg-white hover:bg-olive-medium border-1 border-olive-light text-olive-light rounded-card px-3 py-2"
               )}
               aria-label={isSticky ? "영상 고정 해제" : "영상 고정"}
             >
@@ -198,16 +198,21 @@ export default function RecipeVideoSection({
 
           <div
             className={cn(
-              "bg-card relative overflow-hidden rounded-xl border shadow-sm transition-all",
+              "bg-card relative overflow-hidden rounded-card border shadow-sm transition-all",
               isSticky && "shadow-2xl"
             )}
           >
-            <YouTubeVideoPlayer ref={playerRef} videoUrl={videoUrl} />
+            <YouTubeVideoPlayer
+              ref={playerRef}
+              videoUrl={videoUrl}
+              containerClassName="rounded-card"
+              playerClassName="overflow-hidden rounded-card"
+            />
             <a
               href={videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute z-20 right-2 bottom-2 flex items-center gap-1 rounded-lg bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+              className="absolute z-20 right-2 bottom-2 flex items-center gap-1 rounded-card bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80"
             >
               <YouTubeIconBadge className="h-5 w-5" />
               <span>원본 영상</span>

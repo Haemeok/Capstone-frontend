@@ -52,7 +52,7 @@ export const PromptVariantCard = ({
       />
       <p className="text-right text-[10px] text-gray-400">{prompt.length} chars</p>
 
-      <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-50">
+      <div className="aspect-square w-full overflow-hidden rounded-card bg-gray-50">
         {result.status === "success" && (
           // eslint-disable-next-line @next/next/no-img-element
           <img

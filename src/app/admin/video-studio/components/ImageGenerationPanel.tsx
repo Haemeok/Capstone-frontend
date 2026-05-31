@@ -147,7 +147,7 @@ export const ImageGenerationPanel = ({
                 <img
                   src={url}
                   alt={`reference ${idx + 1}`}
-                  className="h-16 w-16 rounded-lg object-cover"
+                  className="h-16 w-16 rounded-card object-cover"
                 />
                 <button
                   type="button"

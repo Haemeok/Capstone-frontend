@@ -40,7 +40,7 @@ const RecipeSlideLoading = () => (
   <div className="flex w-full gap-3 overflow-x-auto">
     {Array.from({ length: 5 }).map((_, index) => (
       <div key={index} className="flex-shrink-0">
-        <Skeleton className="h-[200px] w-[200px] rounded-xl" />
+        <Skeleton className="h-[200px] w-[200px] rounded-card" />
         <div className="mt-2 space-y-2">
           <Skeleton className="h-4 w-[200px]" />
           <Skeleton className="h-4 w-[150px]" />

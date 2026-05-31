@@ -21,7 +21,7 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
       onClick={() => triggerHaptic("Light")}
       className="group block w-[210px] flex-shrink-0 cursor-pointer"
     >
-      <div className="relative aspect-[5/3] overflow-hidden rounded-2xl">
+      <div className="relative aspect-[5/3] overflow-hidden rounded-card">
         <Image
           src={page.imageUrl}
           alt={page.title}

@@ -32,5 +32,6 @@ export {
   isAiRecipe,
   isPrivateRecipe,
   isRestrictedRecipe,
+  isUserRecipe,
   isYoutubeRecipe,
 } from "./lib/visibility";

@@ -38,6 +38,9 @@ module.exports = {
       fontFamily: {
         "noto-sans-kr": ['"Noto Sans KR"', "sans-serif"],
       },
+      borderRadius: {
+        card: "6px",
+      },
       borderColor: (theme) => ({
         ...theme("colors"),
         DEFAULT: theme("colors.gray.200", "currentColor"),

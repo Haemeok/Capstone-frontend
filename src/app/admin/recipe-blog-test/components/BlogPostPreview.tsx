@@ -90,7 +90,7 @@ export const BlogPostPreview = ({
           <img
             src={finalImageUrl}
             alt={post.alts["final-plated"] ?? post.title.main}
-            className="w-full rounded-xl object-cover"
+            className="w-full rounded-card object-cover"
           />
           <figcaption className="mt-2 text-center text-xs text-gray-400">
             {post.captionForPlated}
@@ -135,7 +135,7 @@ export const BlogPostPreview = ({
                 <img
                   src={url}
                   alt={post.alts[step.imageSlot] ?? `step ${step.stepNumber}`}
-                  className="mt-4 w-full rounded-xl object-cover"
+                  className="mt-4 w-full rounded-card object-cover"
                 />
               )}
             </div>

@@ -7,7 +7,7 @@ const CommentImage = ({ urls }: Props) => {
   const url = urls[0];
 
   return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-black">
+    <div className="relative aspect-square w-full overflow-hidden rounded-card bg-black">
       <img
         src={url}
         alt="댓글 이미지"

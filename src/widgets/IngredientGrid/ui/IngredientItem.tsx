@@ -53,7 +53,7 @@ const IngredientItem = ({
       <Image
         src={ingredient.imageUrl ?? ""}
         alt={ingredient.name}
-        wrapperClassName="rounded-xl"
+        wrapperClassName="rounded-card"
         imgClassName="flex-shrink-0"
         width={50}
         height={50}

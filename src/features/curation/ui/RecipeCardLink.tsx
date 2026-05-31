@@ -65,7 +65,7 @@ export const RecipeCardLink = ({
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="flex items-stretch gap-3 overflow-hidden rounded-2xl border border-gray-200 bg-white transition hover:border-olive-light/60 hover:shadow-sm"
+        className="flex items-stretch gap-3 overflow-hidden rounded-card border border-gray-200 bg-white transition hover:border-olive-light/60 hover:shadow-sm"
       >
         <div className="w-32 shrink-0 sm:w-40">
           <Image

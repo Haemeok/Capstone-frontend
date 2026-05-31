@@ -41,7 +41,7 @@ export const ReviewGateDrawer = ({
             <Image
               src="/web-app-manifest-192x192.png"
               alt="Recipio"
-              wrapperClassName="h-16 w-16 rounded-2xl shadow-lg"
+              wrapperClassName="h-16 w-16 rounded-card shadow-lg"
               width={64}
               height={64}
               lazy={false}

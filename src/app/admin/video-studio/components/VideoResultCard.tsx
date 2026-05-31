@@ -30,7 +30,7 @@ export const VideoResultCard = ({ state }: Props) => {
   return (
     <div className="space-y-2 rounded-2xl border border-gray-200 bg-white p-4">
       <div className="text-xs text-gray-500">완료 (task {state.taskId})</div>
-      <video src={state.videoUrl} controls className="w-full rounded-xl" />
+      <video src={state.videoUrl} controls className="w-full rounded-card" />
       <a
         href={state.videoUrl}
         download

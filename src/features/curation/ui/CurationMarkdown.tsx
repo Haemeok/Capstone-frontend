@@ -108,7 +108,7 @@ const createComponents = (recipes: Array<StaticRecipe | null>): Components => {
         alt={alt ?? ""}
         aspectRatio="4 / 3"
         fit="cover"
-        wrapperClassName="my-8 w-full rounded-lg md:aspect-[16/10]"
+        wrapperClassName="my-8 w-full rounded-card md:aspect-[16/10]"
       />
     ),
     h2: ({ children }) => {

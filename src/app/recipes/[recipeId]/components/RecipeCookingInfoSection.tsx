@@ -13,7 +13,7 @@ export default function RecipeCookingInfoSection({
   servings,
 }: RecipeCookingInfoSectionProps) {
   return (
-    <section className="mb-2 rounded-xl border border-gray-200 p-3 sm:p-4">
+    <section className="mb-2 rounded-card border border-gray-200 p-3 sm:p-4">
       <div className="grid grid-cols-3 gap-2 sm:gap-4">
         <div className="flex min-w-0 items-center gap-2">
           <Image
