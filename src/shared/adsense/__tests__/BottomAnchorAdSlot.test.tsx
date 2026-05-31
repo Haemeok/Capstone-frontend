@@ -4,6 +4,7 @@ jest.mock("../config", () => ({
   ADSENSE_CLIENT_ID: "ca-pub-1",
   IS_AD_TEST_MODE: true,
   AD_SLOT_IDS: { recipeBottomAnchor: "1234567890" },
+  AD_HEIGHT: { homeAnchor: 90, bottomAnchor: 70 },
 }));
 
 jest.mock("../AdsGateContext", () => ({
@@ -14,19 +15,26 @@ jest.mock("@/shared/hooks/useIsBottomNavVisible", () => ({
   useIsBottomNavVisible: jest.fn(() => false),
 }));
 
+jest.mock("@/shared/lib/hooks/useMediaQuery", () => ({
+  useMediaQuery: jest.fn(() => true),
+}));
+
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
+import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 
 import { useAdsGate } from "../AdsGateContext";
 import { BottomAnchorAdSlot } from "../BottomAnchorAdSlot";
 
 const mockedUseAdsGate = jest.mocked(useAdsGate);
 const mockedUseIsBottomNavVisible = jest.mocked(useIsBottomNavVisible);
+const mockedUseMediaQuery = jest.mocked(useMediaQuery);
 
 describe("BottomAnchorAdSlot", () => {
   beforeEach(() => {
     delete (window as typeof window & { adsbygoogle?: unknown[] }).adsbygoogle;
     mockedUseAdsGate.mockReturnValue({ enabled: true, isTestUser: false });
     mockedUseIsBottomNavVisible.mockReturnValue(false);
+    mockedUseMediaQuery.mockReturnValue(true);
   });
 
   it("게이트 enabled false 면 null 렌더", () => {
