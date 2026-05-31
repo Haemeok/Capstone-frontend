@@ -110,23 +110,25 @@ const IngredientPicker = ({
           </DrawerTitle>
         </header>
 
-        <form onSubmit={handleSearchSubmit} className="relative px-4 pt-3">
-          <input
-            type="text"
-            placeholder="재료 이름을 검색하세요"
-            className="focus:border-olive-light focus:ring-olive-light w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:ring-1 focus:outline-none"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
-          <button type="submit" aria-label="검색">
-            <Search
-              size={18}
-              className="absolute top-1/2 left-7 -translate-y-1/2 text-gray-400"
+        <form onSubmit={handleSearchSubmit} className="px-4 pt-3">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="재료 이름을 검색하세요"
+              className="focus:border-olive-light focus:ring-olive-light w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:ring-1 focus:outline-none"
+              value={inputValue}
+              onChange={handleInputChange}
             />
-          </button>
+            <button type="submit" aria-label="검색">
+              <Search
+                size={18}
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
+              />
+            </button>
+          </div>
         </form>
 
-        <div className="scrollbar-hide mt-3 flex gap-2 overflow-x-auto px-4">
+        <div className="scrollbar-hide mt-3 flex gap-2 overflow-x-auto px-4 pb-3">
           {categories.map((category) => (
             <button
               key={category}
@@ -136,7 +138,7 @@ const IngredientPicker = ({
                 "flex-shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-sm transition-colors",
                 selectedCategory === category
                   ? "bg-gray-900 font-medium text-white"
-                  : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               )}
             >
               {category}

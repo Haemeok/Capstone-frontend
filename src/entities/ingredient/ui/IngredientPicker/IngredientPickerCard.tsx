@@ -46,12 +46,12 @@ const IngredientPickerCard = ({
           disabled={isAlreadyAdded}
           aria-label={`${ingredient.name} ${checked ? "선택 해제" : "선택"}`}
           className={cn(
-            "absolute right-1.5 bottom-1.5 flex h-7 w-7 items-center justify-center rounded-full shadow-md transition-colors",
+            "absolute right-1.5 bottom-1.5 flex h-6 w-6 items-center justify-center rounded-full shadow-md transition-colors",
             checked ? "bg-olive-light text-white" : "bg-white text-gray-500",
             isAlreadyAdded ? "cursor-not-allowed" : "cursor-pointer"
           )}
         >
-          {checked ? <Check size={16} /> : <Plus size={16} />}
+          {checked ? <Check size={14} /> : <Plus size={14} />}
         </button>
       </div>
       {ingredient.category && (
