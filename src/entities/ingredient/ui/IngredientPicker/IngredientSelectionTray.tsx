@@ -28,32 +28,40 @@ const IngredientSelectionTray = ({
     <div className="flex items-center gap-3 border-t border-gray-100 bg-white p-3">
       <div className="scrollbar-hide flex flex-1 gap-2 overflow-x-auto px-1 py-2">
         {items.map((item) => (
-          <div key={item.id} className="relative h-14 w-14 flex-shrink-0">
-            <div className="h-full w-full overflow-hidden rounded-lg bg-gray-100">
-              {item.imageUrl && (
-                <Image
-                  src={item.imageUrl}
-                  alt={item.name}
-                  wrapperClassName="h-full w-full"
-                  fit="cover"
-                />
-              )}
+          <div
+            key={item.id}
+            className="flex w-14 flex-shrink-0 flex-col items-center"
+          >
+            <div className="relative h-14 w-14">
+              <div className="h-full w-full overflow-hidden rounded-lg bg-gray-100">
+                {item.imageUrl && (
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.name}
+                    wrapperClassName="h-full w-full"
+                    fit="cover"
+                  />
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => onRemove(item.id)}
+                aria-label={`${item.name} 제거`}
+                className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-gray-600 shadow"
+              >
+                <X size={12} />
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => onRemove(item.id)}
-              aria-label={`${item.name} 제거`}
-              className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-900 text-white shadow ring-2 ring-white"
-            >
-              <X size={12} />
-            </button>
+            <span className="mt-1 w-full truncate text-center text-[11px] text-gray-600">
+              {item.name}
+            </span>
           </div>
         ))}
       </div>
       <Button
         onClick={handleComplete}
         disabled={items.length === 0}
-        className="bg-olive-light hover:bg-olive-dark h-12 flex-shrink-0 cursor-pointer px-6 text-base font-semibold text-white disabled:bg-gray-300"
+        className="bg-olive-vivid hover:bg-olive-vivid/90 h-12 flex-shrink-0 cursor-pointer px-6 text-base font-semibold text-white disabled:bg-gray-300"
       >
         완료
       </Button>
