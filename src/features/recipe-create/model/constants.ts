@@ -9,6 +9,11 @@ export const DESCRIPTION = { MIN: 10 };
 export const INGREDIENTS = { MIN: 1 };
 export const STEPS = { MIN: 1 };
 
+export const UNITLESS_QUANTITIES = ["약간", "적당량"] as const;
+
+export const isUnitlessQuantity = (quantity: string): boolean =>
+  (UNITLESS_QUANTITIES as readonly string[]).includes(quantity);
+
 export const FIELD_LABELS: Record<string, string> = {
   title: "레시피 제목",
   image: "대표 이미지",

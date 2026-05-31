@@ -102,6 +102,28 @@ describe("recipeFormSchema – '약간' quantity exempts unit", () => {
   });
 });
 
+describe("recipeFormSchema – '적당량' quantity exempts unit", () => {
+  it("accepts empty unit when quantity is '적당량'", () => {
+    expect(
+      getIngredientIssues({
+        ...baseIngredient,
+        quantity: "적당량",
+        unit: "",
+      })
+    ).toEqual([]);
+  });
+
+  it("accepts non-empty unit when quantity is '적당량'", () => {
+    expect(
+      getIngredientIssues({
+        ...baseIngredient,
+        quantity: "적당량",
+        unit: "g",
+      })
+    ).toEqual([]);
+  });
+});
+
 describe("recipeFormSchema – ingredients array", () => {
   it("rejects empty ingredients array", () => {
     const result = recipeFormSchema.safeParse({
