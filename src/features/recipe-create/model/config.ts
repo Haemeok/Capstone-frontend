@@ -4,6 +4,7 @@ import {
   COOKING_TIME,
   DESCRIPTION,
   INGREDIENTS,
+  isUnitlessQuantity,
   SERVINGS,
   TITLE,
 } from "./constants";
@@ -32,7 +33,7 @@ const ingredientSchema = z
     unit: z.string(),
   })
   .superRefine((val, ctx) => {
-    if (val.quantity !== "약간" && val.unit.length === 0) {
+    if (!isUnitlessQuantity(val.quantity) && val.unit.length === 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["unit"],
