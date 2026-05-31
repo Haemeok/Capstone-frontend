@@ -123,6 +123,13 @@ PR 본문을 작성할 때 `.claude/state/active-issue` 파일을 먼저 읽는�
 - "딱히 컴파운드할 게 없어 보임" 자체 판단 금지. 메타 스킬이 "nothing to compound"라고 자가보고하게 둘 것
 - 프로젝트 로컬 `finishing-a-development-branch` (`.claude/skills/...`)가 plugin 버전을 override
 
+### 요구사항→테스트 설계 단계 (always-on)
+brainstorming과 writing-plans 사이에 `designing-tests-from-requirements`(요구사항을 추적 가능한 테스트 매트릭스로 설계) 단계가 있다. 구현 유닛에 즉흥적으로 유닛테스트를 붙이는("무지성 유닛테스트") 대신, 요구사항에서 테스트를 위→아래로 설계하고 커버리지를 증명하기 위함.
+
+- 강제는 **구조로** 한다: `writing-plans`는 test-design 매트릭스 없이 task 분해를 거부한다(writing-plans Step 0). 어떤 경로로 진입하든 매트릭스가 없으면 멈추고 `designing-tests-from-requirements`부터 돌린다. "이미 대부분 구현됨"도 예외 아님 — 기존 코드는 검증된 요구사항이 아니다.
+- 프로젝트 로컬 `brainstorming` · `writing-plans`(`.claude/skills/...`)가 plugin 버전을 override (brainstorming 종착점을 새 단계로, writing-plans에 게이트 추가). plugin 업데이트 시 reroute/게이트만 유지하며 refresh.
+- 서브에이전트는 프로젝트 스킬을 안정적으로 상속 못 받으니, plan/test 설계를 위임할 때 prompt에 "writing-plans 전 `designing-tests-from-requirements` 매트릭스 필수, 모든 테스트는 T-ID 인용" 한 줄을 주입한다.
+
 ---
 
 ## Architecture
