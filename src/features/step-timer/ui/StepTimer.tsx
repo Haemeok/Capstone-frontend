@@ -49,7 +49,7 @@ const StepTimer = ({ targetSeconds }: StepTimerProps) => {
         variant={isOvertime ? "destructive" : "default"}
         size="md"
         loading={isRunning}
-        className={cn("gap-1", isOvertime && "animate-shake")}
+        className={cn("gap-1 rounded-card", isOvertime && "animate-shake")}
       >
         <TimerDisplay
           size="md"

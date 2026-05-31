@@ -24,7 +24,7 @@ export const CreationModeSelector = () => {
             className="group border-olive-light/30 hover:border-olive-mint block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:p-8"
           >
             <div className="flex flex-col items-center space-y-3 text-center md:space-y-6">
-              <div className="relative w-32 overflow-hidden rounded-lg md:h-64 md:w-48">
+              <div className="relative w-32 overflow-hidden rounded-card md:h-64 md:w-48">
                 <Image
                   src={`${ICON_BASE_URL}note.webp`}
                   alt="직접 입력하기"
@@ -49,7 +49,7 @@ export const CreationModeSelector = () => {
             className="group border-olive-light/30 hover:border-olive-mint block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:p-8"
           >
             <div className="flex flex-col items-center space-y-3 text-center md:space-y-6">
-              <div className="relative w-32 overflow-hidden rounded-lg md:h-64 md:w-48">
+              <div className="relative w-32 overflow-hidden rounded-card md:h-64 md:w-48">
                 <Image
                   src={`${ICON_BASE_URL}youtube.webp`}
                   alt="유튜브로 가져오기"

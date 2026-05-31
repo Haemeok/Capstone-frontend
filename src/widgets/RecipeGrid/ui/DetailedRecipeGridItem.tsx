@@ -16,7 +16,7 @@ import { cn } from "@/shared/lib/utils";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import { Image } from "@/shared/ui/image/Image";
 
-import { isAiRecipe, isYoutubeRecipe } from "@/entities/recipe";
+import { isAiRecipe, isUserRecipe, isYoutubeRecipe } from "@/entities/recipe";
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
 
 const YoutubeGlyph = () => (
@@ -30,6 +30,8 @@ const YoutubeGlyph = () => (
     <path d="M9.545 8.432v7.136L15.818 12z" fill="white" />
   </svg>
 );
+
+const toShortTagLabel = (tag: string) => tag.split("/")[0].trim();
 
 type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
@@ -83,18 +85,18 @@ const DetailedRecipeGridItem = ({
       key={recipe.id}
     >
       <div className="group relative">
-        <div className="relative overflow-hidden rounded-2xl">
+        <div className="relative overflow-hidden rounded-card">
           <Image
             src={imageUrl}
             alt={recipe.title}
-            wrapperClassName="rounded-2xl"
+            wrapperClassName="rounded-card"
             imgClassName="transition-all duration-300 ease-in-out group-hover:scale-110"
             fit="cover"
             priority={priority}
             onRetry={onImageRetry}
           />
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-16 rounded-t-2xl bg-gradient-to-b from-black/40 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 rounded-b-2xl bg-gradient-to-t from-black/55 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-16 rounded-t-card bg-gradient-to-b from-black/40 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 rounded-b-card bg-gradient-to-t from-black/55 to-transparent" />
 
           <div className="pointer-events-none absolute bottom-2 left-2.5 flex max-w-[calc(66%-0.625rem)] items-center gap-1.5">
             <div
@@ -186,11 +188,24 @@ const DetailedRecipeGridItem = ({
               );
             })()}
           </div>
+
+          {isUserRecipe(recipe) && recipe.tags && recipe.tags.length > 0 && (
+            <div className="flex items-center gap-1 overflow-hidden pt-0.5">
+              {recipe.tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="max-w-[96px] shrink-0 truncate rounded-sm bg-gray-100 px-1.5 py-[3px] text-[11px] leading-none text-dark"
+                >
+                  {toShortTagLabel(tag)}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <Link
           href={`/recipes/${recipe.id}`}
-          className="absolute inset-0 rounded-2xl"
+          className="absolute inset-0 rounded-card"
           aria-label={`${recipe.title} 레시피 보기`}
           prefetch={prefetch ? true : null}
           onClick={handleClick}

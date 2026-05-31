@@ -98,7 +98,7 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
           return (
             <div
               key={recipe.id}
-              className={`relative flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl border-2 transition-all ${
+              className={`relative flex-shrink-0 cursor-pointer overflow-hidden rounded-card border-2 transition-all ${
                 isThumbnail
                   ? "border-blue-500 shadow-lg"
                   : isCard

@@ -30,7 +30,7 @@ const DifficultyTierSelector = ({
             type="button"
             onClick={() => onSelect(option.value)}
             className={cn(
-              "group relative flex flex-col overflow-hidden rounded-2xl border-2 transition-all duration-300",
+              "group relative flex flex-col overflow-hidden rounded-card border-2 transition-all duration-300",
               selected === option.value
                 ? "border-gray-900 shadow-xl ring-gray-900/10"
                 : "border-gray-200 hover:border-gray-400 hover:shadow-lg"

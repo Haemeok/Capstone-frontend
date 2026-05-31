@@ -26,7 +26,7 @@ export const ResultCard = ({ quality, cell, included }: Props) => {
         )}
       </div>
 
-      <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-50">
+      <div className="aspect-square w-full overflow-hidden rounded-card bg-gray-50">
         {cell.status === "idle" && (
           <div className="flex h-full items-center justify-center text-[11px] text-gray-400">
             {included ? "대기" : "선택 안 됨"}

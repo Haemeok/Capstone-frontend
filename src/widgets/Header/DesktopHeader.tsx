@@ -44,7 +44,7 @@ const DesktopHeader = () => {
             <Image
               src="/web-app-manifest-192x192.png"
               alt="Recipio Logo"
-              wrapperClassName="rounded-lg"
+              wrapperClassName="rounded-card"
               width={32}
             />
             <span className="text-xl font-bold text-gray-900">Recipi'O</span>

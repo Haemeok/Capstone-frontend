@@ -37,8 +37,8 @@ export const RecipeRecordItem = ({
       <Image
         src={imageUrl}
         alt={recipeTitle}
-        className="h-24 w-24 flex-shrink-0 rounded-xl"
-        wrapperClassName="overflow-hidden rounded-xl"
+        className="h-24 w-24 flex-shrink-0 rounded-card"
+        wrapperClassName="overflow-hidden rounded-card"
         imgClassName="ease-in-out group-hover:scale-105"
       />
       <div className="flex flex-1 flex-col justify-between py-0.5">

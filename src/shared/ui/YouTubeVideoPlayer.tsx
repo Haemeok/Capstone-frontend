@@ -15,6 +15,8 @@ export type YouTubeVideoPlayerRef = {
 type YouTubeVideoPlayerProps = {
   videoUrl: string;
   onReady?: () => void;
+  containerClassName?: string;
+  playerClassName?: string;
 };
 
 const extractYouTubeVideoId = (url: string): string => {
@@ -40,7 +42,7 @@ const extractYouTubeVideoId = (url: string): string => {
 export const YouTubeVideoPlayer = forwardRef<
   YouTubeVideoPlayerRef,
   YouTubeVideoPlayerProps
->(({ videoUrl, onReady }, ref) => {
+>(({ videoUrl, onReady, containerClassName, playerClassName }, ref) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const internalPlayerRef = useRef<YouTubePlayerRef>(null);
   const pendingSeekRef = useRef<{
@@ -142,6 +144,8 @@ export const YouTubeVideoPlayer = forwardRef<
       videoId={videoId}
       defaultExpanded={false}
       expandButtonClassName="hidden"
+      containerClassName={containerClassName}
+      playerClassName={playerClassName}
     />
   );
 });

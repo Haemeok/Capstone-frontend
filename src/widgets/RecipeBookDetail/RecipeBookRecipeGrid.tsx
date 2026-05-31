@@ -57,7 +57,7 @@ const EmptyState = () => {
 const GridSkeleton = () => (
   <div className={GRID_CLASS}>
     {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-      <Skeleton key={i} className="aspect-[4/5] w-full rounded-xl" />
+      <Skeleton key={i} className="aspect-[4/5] w-full rounded-card" />
     ))}
   </div>
 );

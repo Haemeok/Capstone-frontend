@@ -19,3 +19,6 @@ export const isAiRecipe = (recipe: SourceShape): boolean =>
 
 export const isYoutubeRecipe = (recipe: SourceShape): boolean =>
   recipe.source === "YOUTUBE";
+
+export const isUserRecipe = (recipe: SourceShape): boolean =>
+  recipe.source === "USER";

@@ -41,7 +41,7 @@ const IngredientPackCard = ({
         {previewImages.map((ingredient) => (
           <div
             key={ingredient.id}
-            className="aspect-square overflow-hidden rounded-lg bg-gray-100"
+            className="aspect-square overflow-hidden rounded-card bg-gray-100"
           >
             <Image
               src={ingredient.imageUrl}

@@ -235,7 +235,7 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
                   <img
                     src={url}
                     alt={`reference ${idx + 1}`}
-                    className="aspect-square w-full rounded-lg object-cover"
+                    className="aspect-square w-full rounded-card object-cover"
                   />
                   {faceSwap && idx < FACE_SWAP_SLOT_LABELS.length && (
                     <span className="absolute left-0.5 top-0.5 rounded bg-black/65 px-1 py-0.5 text-[9px] font-bold text-white">

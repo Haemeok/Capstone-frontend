@@ -58,7 +58,7 @@ const AIModelSelection = () => {
                 <button
                   key={ai.id}
                   onClick={() => handleSelectAI(ai.id)}
-                  className="grid aspect-[3/4] max-h-[500px] w-full cursor-pointer overflow-hidden rounded-2xl bg-gray-100 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="grid aspect-[3/4] max-h-[500px] w-full cursor-pointer overflow-hidden rounded-card bg-gray-100 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <Image
                     src={ai.image}

@@ -60,7 +60,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
       onClick={handleCardClick}
     >
       {/* 이미지 */}
-      <div className="relative w-28 min-[390px]:w-32 min-[430px]:w-36 sm:w-[188px] flex-shrink-0 overflow-hidden rounded-xl">
+      <div className="relative w-28 min-[390px]:w-32 min-[430px]:w-36 sm:w-[188px] flex-shrink-0 overflow-hidden rounded-card">
         <Image
           src={recipe.imageUrl}
           alt={recipe.title}

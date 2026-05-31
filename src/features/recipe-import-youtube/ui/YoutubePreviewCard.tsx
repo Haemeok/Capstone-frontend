@@ -39,7 +39,7 @@ export const YoutubePreviewCard = ({
           width={160}
           height={90}
           aspectRatio="16 / 9"
-          wrapperClassName="rounded-lg"
+          wrapperClassName="rounded-card"
         />
 
         <div className="min-w-0 flex-1">

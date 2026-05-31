@@ -23,7 +23,7 @@ const CateGoryItem = ({
     <Link
       href={`/recipes/category/${TAG_CODES[name as keyof typeof TAG_CODES]}`}
       className={cn(
-        "relative block h-70 w-50 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg shadow-md",
+        "relative block h-70 w-50 flex-shrink-0 cursor-pointer overflow-hidden rounded-card shadow-md",
         className
       )}
     >

@@ -34,7 +34,7 @@ export const IngredientGridItem = ({
         </div>
       )}
 
-      <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
+      <div className="relative aspect-square w-full overflow-hidden rounded-card bg-gray-100">
         {imageUrl && (
           <Image
             src={imageUrl}
