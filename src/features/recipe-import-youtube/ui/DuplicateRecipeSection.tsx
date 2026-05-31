@@ -11,6 +11,7 @@ import {
   useRecipeDetailQuery,
   useRecipeStatusQuery,
 } from "@/entities/recipe/model/hooks";
+import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
 import { useToggleRecipeSave } from "@/features/recipe-save/model/hooks";
 import { useSaveToastWithChange } from "@/features/recipe-save/model/useSaveToastWithChange";
@@ -33,6 +34,7 @@ const DuplicateRecipeSection = ({
   youtubeMeta,
   urlSource,
 }: DuplicateRecipeSectionProps) => {
+  const { user } = useMyInfoQuery();
   const { recipeData, isLoading } = useRecipeDetailQuery(recipeId);
   const { data: recipeStatus } = useRecipeStatusQuery(recipeId);
 
@@ -60,6 +62,7 @@ const DuplicateRecipeSection = ({
     const ready = !isLoading && recipeStatus !== undefined;
     const shouldAutoSave =
       ready &&
+      !!user &&
       urlSource === "direct" &&
       !isFavorited &&
       !hasAutoSavedRef.current;
@@ -71,6 +74,7 @@ const DuplicateRecipeSection = ({
   }, [
     isLoading,
     recipeStatus,
+    user,
     urlSource,
     isFavorited,
     toggleFavorite,
