@@ -23,6 +23,7 @@ module.exports = {
           light: "#91c788",
           medium: "#609966",
           mint: "#43c278",
+          vivid: "#34c759",
         },
         dark: {
           DEFAULT: "#2a2229",

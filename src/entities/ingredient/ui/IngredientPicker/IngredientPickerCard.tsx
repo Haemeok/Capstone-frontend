@@ -30,8 +30,17 @@ const IngredientPickerCard = ({
   };
 
   return (
-    <div className={cn("flex flex-col", isAlreadyAdded && "opacity-50")}>
-      <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100">
+    <button
+      type="button"
+      onClick={handleToggle}
+      disabled={isAlreadyAdded}
+      aria-label={`${ingredient.name} ${checked ? "선택 해제" : "선택"}`}
+      className={cn(
+        "flex w-full flex-col text-left",
+        isAlreadyAdded ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+      )}
+    >
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-100">
         {ingredient.imageUrl && (
           <Image
             src={ingredient.imageUrl}
@@ -40,27 +49,25 @@ const IngredientPickerCard = ({
             fit="cover"
           />
         )}
-        <button
-          type="button"
-          onClick={handleToggle}
-          disabled={isAlreadyAdded}
-          aria-label={`${ingredient.name} ${checked ? "선택 해제" : "선택"}`}
+        <span
+          aria-hidden
           className={cn(
             "absolute right-1.5 bottom-1.5 flex h-6 w-6 items-center justify-center rounded-full shadow-md transition-colors",
-            checked ? "bg-olive-light text-white" : "bg-white text-gray-500",
-            isAlreadyAdded ? "cursor-not-allowed" : "cursor-pointer"
+            checked ? "bg-olive-vivid text-white" : "bg-white text-gray-500"
           )}
         >
           {checked ? <Check size={14} /> : <Plus size={14} />}
-        </button>
+        </span>
       </div>
       {ingredient.category && (
-        <p className="mt-2 text-xs text-gray-400">{ingredient.category}</p>
+        <span className="mt-2 block text-xs text-gray-400">
+          {ingredient.category}
+        </span>
       )}
-      <p className="mt-0.5 text-sm font-medium text-gray-800">
+      <span className="mt-0.5 block text-sm font-medium text-gray-800">
         {ingredient.name}
-      </p>
-    </div>
+      </span>
+    </button>
   );
 };
 
