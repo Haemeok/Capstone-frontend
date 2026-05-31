@@ -97,7 +97,7 @@ const IngredientPicker = ({
 
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
-      <DrawerContent className="h-[100dvh] max-h-[100dvh] rounded-none">
+      <DrawerContent variant="full">
         <header className="relative flex items-center justify-center border-b border-gray-100 px-4 py-3">
           <DrawerClose
             aria-label="닫기"
