@@ -2,7 +2,7 @@ import { fromJobStatusResponse } from "../jobStatusMapper";
 import type { JobStatusResponse } from "../types";
 
 describe("fromJobStatusResponse", () => {
-  it("returns completed when resultRecipeId is present, regardless of status", () => {
+  it("resultRecipeId가 있으면 status와 무관하게 completed를 반환한다", () => {
     const raw: JobStatusResponse = {
       jobId: "j1",
       status: "IN_PROGRESS",
@@ -14,7 +14,7 @@ describe("fromJobStatusResponse", () => {
     });
   });
 
-  it("returns completed when status is COMPLETED and resultRecipeId present", () => {
+  it("status가 COMPLETED이고 resultRecipeId가 있으면 completed를 반환한다", () => {
     const raw: JobStatusResponse = {
       jobId: "j1",
       status: "COMPLETED",
@@ -26,7 +26,7 @@ describe("fromJobStatusResponse", () => {
     });
   });
 
-  it("returns polling when status is COMPLETED but resultRecipeId missing", () => {
+  it("status가 COMPLETED여도 resultRecipeId가 없으면 polling을 반환한다", () => {
     const raw: JobStatusResponse = {
       jobId: "j1",
       status: "COMPLETED",
@@ -38,7 +38,7 @@ describe("fromJobStatusResponse", () => {
     });
   });
 
-  it("returns failed when status is FAILED", () => {
+  it("status가 FAILED면 failed를 반환한다", () => {
     const raw: JobStatusResponse = {
       jobId: "j1",
       status: "FAILED",
@@ -52,7 +52,7 @@ describe("fromJobStatusResponse", () => {
     });
   });
 
-  it("returns polling for IN_PROGRESS", () => {
+  it("IN_PROGRESS면 polling을 반환한다", () => {
     const raw: JobStatusResponse = {
       jobId: "j1",
       status: "IN_PROGRESS",
@@ -64,7 +64,7 @@ describe("fromJobStatusResponse", () => {
     });
   });
 
-  it("returns polling for PENDING with progress default 0", () => {
+  it("PENDING이면 progress 기본값 0으로 polling을 반환한다", () => {
     const raw: JobStatusResponse = { jobId: "j1", status: "PENDING" };
     expect(fromJobStatusResponse(raw)).toEqual({
       state: "polling",
@@ -72,7 +72,7 @@ describe("fromJobStatusResponse", () => {
     });
   });
 
-  it("preserves progress 0 (does not treat as nullish)", () => {
+  it("progress 0을 nullish로 취급하지 않고 보존한다", () => {
     const raw: JobStatusResponse = {
       jobId: "j1",
       status: "IN_PROGRESS",

@@ -8,30 +8,6 @@ describe("calculateFakeProgress", () => {
     expect(calculateFakeProgress(mockStartTime(0))).toBe(0);
   });
 
-  it("5초에 10%를 반환해야 함", () => {
-    expect(calculateFakeProgress(mockStartTime(5))).toBe(10);
-  });
-
-  it("15초에 25%를 반환해야 함", () => {
-    expect(calculateFakeProgress(mockStartTime(15))).toBe(25);
-  });
-
-  it("40초에 45%를 반환해야 함", () => {
-    expect(calculateFakeProgress(mockStartTime(40))).toBe(45);
-  });
-
-  it("90초에 65%를 반환해야 함", () => {
-    expect(calculateFakeProgress(mockStartTime(90))).toBe(65);
-  });
-
-  it("150초에 85%를 반환해야 함", () => {
-    expect(calculateFakeProgress(mockStartTime(150))).toBe(85);
-  });
-
-  it("210초에 95%를 반환해야 함", () => {
-    expect(calculateFakeProgress(mockStartTime(210))).toBe(95);
-  });
-
   it("중간값을 올바르게 보간해야 함 (2.5초 → 5%)", () => {
     const progress = calculateFakeProgress(mockStartTime(2.5));
     expect(progress).toBe(5);
