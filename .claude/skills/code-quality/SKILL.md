@@ -35,6 +35,7 @@ specific `rules/<prefix>-<topic>.md` file.
 | `ts-`      | TypeScript strictness                              |
 | `naming-`  | High-payoff naming conventions                     |
 | `a11y-`    | Accessibility minimum bar                          |
+| `test-`    | Test strategy — layer ownership, mocking boundary, value-vs-constants, pruning |
 
 ## Quick reference
 
@@ -79,6 +80,14 @@ specific `rules/<prefix>-<topic>.md` file.
 
 ### A11y
 - [Interactive elements](rules/a11y-interactive.md) — native button, `cursor-pointer`, `aria-label`
+
+### Testing
+- [Layer ownership](rules/test-layer-ownership.md) — one behavior owned by its lowest layer; non-owners justify or delete; store+side-effect = 2 truths + 1 wiring test
+- [Mock at system edge](rules/test-mock-at-system-edge.md) — mock only unowned edges (network/time/random/3rd-party); >3 mocks → extract a pure function; real `QueryClientProvider` over module mock
+- [Invariants, not constants](rules/test-invariants-not-constants.md) — tuning curves get invariants + one snapshot, never N keyframe equalities (change-detectors)
+- [Name is a spec](rules/test-name-is-spec.md) — strip "해야 함"; if no contract remains, the test restates a setter — cut
+- [Risk-weighted depth](rules/test-risk-weighted-depth.md) — depth by blast radius; security/billing adversarial, cosmetic invariants-only
+- [Prune and distrust](rules/test-prune-and-distrust.md) — deletion pass + false-confidence pass; mutation signal over line coverage; agents must be told to cut
 
 ## File template
 
