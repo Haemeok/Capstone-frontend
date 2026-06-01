@@ -64,16 +64,21 @@ Given / When / Then with **real values**, not placeholders. `email = ""` → `er
 
 A table. Every AC maps to ≥1 scenario; every scenario gets a test ID.
 
-| AC | Scenario | Test ID | Layer |
-|----|----------|---------|-------|
-| AC-2 | logged-out viewer opens public link → sees recipe title | T-05 | acceptance |
-| AC-5 | private recipe link → 404, no content leaked | T-06 | acceptance |
-| AC-2 | URL is absolute, joined with `new URL` | T-11 | unit |
+| AC | Scenario | Test ID | Owner layer | Risk |
+|----|----------|---------|-------------|------|
+| AC-2 | logged-out viewer opens public link → sees recipe title | T-05 | acceptance | security |
+| AC-5 | private recipe link → 404, no content leaked | T-06 | acceptance | security |
+| AC-2 | URL is absolute, joined with `new URL` | T-11 | unit | integrity |
+
+**Owner layer** = the lowest layer where that behavior actually originates (pure fn → unit; emergent loop/timing → hook; user journey → acceptance). A behavior is tested **once at its owner**; another layer earns a test only if it catches something the owner structurally can't. See `code-quality` rule `test-layer-ownership`.
+
+**Risk** tags drive depth: `security` / `billing` / `integrity` → adversarial coverage; `cosmetic` → invariants only. See `test-risk-weighted-depth`.
 
 **Coverage gate (mandatory):**
 - Every AC has ≥1 test ID. **An AC with zero test IDs is a missing test — add it, don't ship.**
 - Every AC has a happy-path test AND its relevant edge/error tests.
 - Every AC has at least one **acceptance-layer** test (see step 5).
+- No two test IDs cover the same behavior at different layers unless each cites what only it can catch (owner-layer rule).
 
 This gate is the thing that catches a silently-dropped requirement. Eyeballing "looks covered" is not the gate.
 
