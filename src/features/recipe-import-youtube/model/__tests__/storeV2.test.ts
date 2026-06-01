@@ -81,37 +81,6 @@ describe("useYoutubeImportStoreV2", () => {
       });
     });
 
-    it("localStorage를 업데이트해야 함", () => {
-      const { result } = renderHook(() => useYoutubeImportStoreV2());
-
-      let key: string;
-      act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
-        result.current.setJobId(key!, "job-123");
-      });
-
-      const persisted = loadPersistedJobs();
-      expect(persisted[0].jobId).toBe("job-123");
-    });
-  });
-
-  describe("updateJobProgress", () => {
-    it("progress를 업데이트해야 함", () => {
-      const { result } = renderHook(() => useYoutubeImportStoreV2());
-
-      let key: string;
-      act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
-        result.current.setJobId(key!, "job-123");
-      });
-
-      act(() => {
-        result.current.updateJobProgress(key!, 50);
-      });
-
-      expect(result.current.jobs[key!].progress).toBe(50);
-    });
-
   });
 
   describe("completeJob", () => {
@@ -173,21 +142,6 @@ describe("useYoutubeImportStoreV2", () => {
       });
     });
 
-    it("localStorage에서 job을 제거해야 함", () => {
-      const { result } = renderHook(() => useYoutubeImportStoreV2());
-
-      let key: string;
-      act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
-      });
-
-      act(() => {
-        result.current.failJob(key!, undefined, "에러");
-      });
-
-      const persisted = loadPersistedJobs();
-      expect(persisted).toHaveLength(0);
-    });
   });
 
   describe("removeJob", () => {

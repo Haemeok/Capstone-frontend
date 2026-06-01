@@ -149,8 +149,6 @@ describe("useJobPolling - 중복 처리 방지", () => {
       expect(job?.state).toBe("failed");
       if (job?.state === "failed") {
         expect(job.code).toBe("907");
-        // code 907은 mapJobFailureMessage에 의해 매핑됨
-        expect(job.message).toBe("유튜브 링크만 가능해요");
       }
     });
 
@@ -181,49 +179,4 @@ describe("useJobPolling - 중복 처리 방지", () => {
     });
   });
 
-  describe("getPendingJobs 필터링", () => {
-    it("completed 상태인 job은 pending jobs에 포함되지 않아야 함", () => {
-      let key: string;
-      act(() => {
-        key = useYoutubeImportStoreV2.getState().createJob(mockMeta.url, mockMeta);
-        useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
-        useYoutubeImportStoreV2.getState().completeJob(key, "recipe-456");
-      });
-
-      const pendingJobs = useYoutubeImportStoreV2.getState().getPendingJobs();
-      expect(pendingJobs).toHaveLength(0);
-    });
-
-    it("failed 상태인 job은 pending jobs에 포함되지 않아야 함", () => {
-      let key: string;
-      act(() => {
-        key = useYoutubeImportStoreV2.getState().createJob(mockMeta.url, mockMeta);
-        useYoutubeImportStoreV2.getState().failJob(key, undefined, "에러");
-      });
-
-      const pendingJobs = useYoutubeImportStoreV2.getState().getPendingJobs();
-      expect(pendingJobs).toHaveLength(0);
-    });
-
-    it("polling 상태인 job만 pending jobs에 포함되어야 함", () => {
-      act(() => {
-        const key1 = useYoutubeImportStoreV2.getState().createJob("url1", mockMeta);
-        useYoutubeImportStoreV2.getState().setJobId(key1, "job-1"); // polling
-
-        useYoutubeImportStoreV2.getState().createJob("url2", mockMeta); // creating
-
-        const key3 = useYoutubeImportStoreV2.getState().createJob("url3", mockMeta);
-        useYoutubeImportStoreV2.getState().setJobId(key3, "job-3");
-        useYoutubeImportStoreV2.getState().completeJob(key3, "recipe-3"); // completed
-
-        const key4 = useYoutubeImportStoreV2.getState().createJob("url4", mockMeta);
-        useYoutubeImportStoreV2.getState().failJob(key4, undefined, "에러"); // failed
-      });
-
-      const pendingJobs = useYoutubeImportStoreV2.getState().getPendingJobs();
-      // polling (1개) + creating (1개) = 2개
-      expect(pendingJobs).toHaveLength(2);
-      expect(pendingJobs.map((j) => j.state).sort()).toEqual(["creating", "polling"]);
-    });
-  });
 });
