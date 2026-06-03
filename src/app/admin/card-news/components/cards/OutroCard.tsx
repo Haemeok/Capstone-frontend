@@ -2,11 +2,31 @@ import { forwardRef } from "react";
 
 import "./card-fonts.css";
 
+type OutroVariant = "instagram" | "youtube";
+
 type OutroCardProps = {
   imageUrl: string;
+  variant?: OutroVariant;
 };
 
 const CARD = 1080;
+
+const HEADLINES: Record<OutroVariant, React.ReactNode> = {
+  instagram: (
+    <>
+      📢 <span style={{ color: "#91c788" }}>레시피오</span> 인스타 팔로우하고
+      <br />
+      매일 최신 <span style={{ color: "#91c788" }}>요리 팁</span> 받아보세요
+    </>
+  ),
+  youtube: (
+    <>
+      📢 <span style={{ color: "#91c788" }}>럭키맨</span> 유튜브 구독하고
+      <br />
+      매일 최신 <span style={{ color: "#91c788" }}>요리 팁</span> 받아보세요
+    </>
+  ),
+};
 
 const APPLE_PATH =
   "M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C73.6 141.6 24 184.5 24 273.5c0 26.3 4.8 53.5 14.4 81.5 12.8 36.9 59 127.4 107.2 125.9 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-83 102.6-120-65.2-30.7-61.7-90-61.7-91.6zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z";
@@ -42,7 +62,7 @@ const badgeMain: React.CSSProperties = {
 };
 
 export const OutroCard = forwardRef<HTMLDivElement, OutroCardProps>(
-  ({ imageUrl }, ref) => (
+  ({ imageUrl, variant = "instagram" }, ref) => (
     <div
       ref={ref}
       style={{
@@ -97,9 +117,7 @@ export const OutroCard = forwardRef<HTMLDivElement, OutroCardProps>(
               color: "#FFFFFF",
             }}
           >
-            📢 <span style={{ color: "#91c788" }}>레시피오</span> 인스타 팔로우하고
-            <br />
-            매일 최신 <span style={{ color: "#91c788" }}>요리 팁</span> 받아보세요
+            {HEADLINES[variant]}
           </div>
         </header>
 

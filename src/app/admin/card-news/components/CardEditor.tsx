@@ -42,6 +42,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const recipeRefs = useRef<React.RefObject<HTMLDivElement | null>[]>([]);
   const outroRef = useRef<HTMLDivElement>(null);
+  const outro2Ref = useRef<HTMLDivElement>(null);
 
   // 레시피별 ref 초기화
   useEffect(() => {
@@ -145,11 +146,12 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
     if (!texts) return;
     setSaving(true);
     try {
-      const allRefs = [thumbnailRef, ...recipeRefs.current, outroRef];
+      const allRefs = [thumbnailRef, ...recipeRefs.current, outroRef, outro2Ref];
       const allNames = [
         "thumbnail.png",
         ...recipes.map((r, i) => `recipe-${i + 1}-${r.title.replace(/[\\/:*?"<>|]/g, "_")}.png`),
         "outro.png",
+        "outro-2.png",
       ];
       await saveAllCards(allRefs, allNames, folderName);
       alert("저장 완료!");
@@ -194,7 +196,8 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
               theme={theme}
             />
           ))}
-          <OutroCard ref={outroRef} imageUrl={thumbnail.imageUrl} />
+          <OutroCard ref={outroRef} imageUrl={thumbnail.imageUrl} variant="instagram" />
+          <OutroCard ref={outro2Ref} imageUrl={thumbnail.imageUrl} variant="youtube" />
         </div>
       )}
 
@@ -343,14 +346,25 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
               </div>
             ))}
 
-            {/* 아웃트로(팔로우 유도) 카드 미리보기 */}
-            <p className="mt-6 text-xs text-gray-400">마지막 카드 (팔로우 유도)</p>
+            {/* 아웃트로(인스타 팔로우 유도) 카드 미리보기 */}
+            <p className="mt-6 text-xs text-gray-400">마지막 카드 (인스타 팔로우 유도)</p>
             <div style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
               <div
                 className="origin-top-left"
                 style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
               >
-                <OutroCard imageUrl={thumbnail.imageUrl} />
+                <OutroCard imageUrl={thumbnail.imageUrl} variant="instagram" />
+              </div>
+            </div>
+
+            {/* 아웃트로 2 (유튜브 구독 유도) 카드 미리보기 */}
+            <p className="mt-6 text-xs text-gray-400">마지막 카드 2 (유튜브 구독 유도)</p>
+            <div style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
+              <div
+                className="origin-top-left"
+                style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
+              >
+                <OutroCard imageUrl={thumbnail.imageUrl} variant="youtube" />
               </div>
             </div>
           </div>
