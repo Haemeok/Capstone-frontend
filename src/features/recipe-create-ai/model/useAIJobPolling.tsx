@@ -16,6 +16,7 @@ import { useToastStore } from "@/widgets/Toast";
 
 import { AI_JOB_POLLING_CONFIG } from "../lib/constants";
 import { createAIRecipeJobV2, getAIRecipeJobStatus } from "./api";
+import { fromAIJobStatusResponse } from "./jobStatusMapper";
 import { useAIRecipeStoreV2 } from "./store";
 import { ActiveAIJob } from "./types";
 
@@ -182,33 +183,19 @@ export const useAIJobPolling = () => {
 
         updateLastPollTime(job.idempotencyKey);
 
-        if (status.resultRecipeId) {
-          handleJobComplete(job.idempotencyKey, status.resultRecipeId);
-          return;
-        }
+        const update = fromAIJobStatusResponse(status);
 
-        switch (status.status) {
-          case "COMPLETED":
-            if (status.resultRecipeId) {
-              handleJobComplete(job.idempotencyKey, status.resultRecipeId);
-            }
+        switch (update.state) {
+          case "completed":
+            handleJobComplete(job.idempotencyKey, update.resultRecipeId);
             break;
 
-          case "FAILED":
-            handleJobFail(
-              job.idempotencyKey,
-              status.code,
-              status.message || "AI 레시피 생성에 실패했습니다."
-            );
+          case "failed":
+            handleJobFail(job.idempotencyKey, update.code, update.message);
             break;
 
-          case "IN_PROGRESS":
-          case "PENDING":
-            updateJobProgress(
-              job.idempotencyKey,
-              status.progress || 0,
-              status.resultRecipeId
-            );
+          case "polling":
+            updateJobProgress(job.idempotencyKey, update.progress);
             break;
         }
       } catch {
