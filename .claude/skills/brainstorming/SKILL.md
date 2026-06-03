@@ -5,7 +5,7 @@ description: "Project-local override. You MUST use this before any creative work
 
 # Brainstorming Ideas Into Designs
 
-> **Project-local override of `superpowers:brainstorming`.** Identical to the plugin version except: the terminal handoff is **designing-tests-from-requirements** (NOT writing-plans), and the spec must include an **Acceptance Criteria** section. If the plugin version updates and this drifts, refresh the rest from the plugin but always keep the reroute and the Acceptance Criteria requirement.
+> **Project-local override of `superpowers:brainstorming`.** Identical to the plugin version except: the terminal handoff is **vertical-slicing** (NOT writing-plans, and NOT designing-tests directly), and the spec must include an **Acceptance Criteria** section. vertical-slicing cuts the design into behavior threads (each with its own per-slice AC + non-goals + glossary) and then itself hands off to designing-tests-from-requirements. If the plugin version updates and this drifts, refresh the rest from the plugin but always keep the reroute and the Acceptance Criteria requirement.
 
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
 
@@ -31,7 +31,7 @@ You MUST create a task for each of these items and complete them in order:
 6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
 7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to test design** — invoke designing-tests-from-requirements skill (it turns the spec's Acceptance Criteria into a traceable test-design matrix, then itself hands off to writing-plans)
+9. **Transition to slicing** — invoke vertical-slicing skill (it cuts the design into vertical slices, each with its acceptance criteria + non-goals + glossary, then itself hands off to designing-tests-from-requirements)
 
 ## Process Flow
 
@@ -47,7 +47,7 @@ digraph brainstorming {
     "Write design doc" [shape=box];
     "Spec self-review\n(fix inline)" [shape=box];
     "User reviews spec?" [shape=diamond];
-    "Invoke designing-tests-from-requirements skill" [shape=doublecircle];
+    "Invoke vertical-slicing skill" [shape=doublecircle];
 
     "Explore project context" -> "Visual questions ahead?";
     "Visual questions ahead?" -> "Offer Visual Companion\n(own message, no other content)" [label="yes"];
@@ -61,11 +61,11 @@ digraph brainstorming {
     "Write design doc" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke designing-tests-from-requirements skill" [label="approved"];
+    "User reviews spec?" -> "Invoke vertical-slicing skill" [label="approved"];
 }
 ```
 
-**The terminal state is invoking designing-tests-from-requirements.** Do NOT invoke writing-plans, frontend-design, mcp-builder, or any other implementation skill directly. designing-tests-from-requirements is the next step — it builds the test-design matrix and then hands off to writing-plans itself.
+**The terminal state is invoking vertical-slicing.** Do NOT invoke designing-tests-from-requirements directly, and do NOT invoke writing-plans, frontend-design, mcp-builder, or any other implementation skill directly. vertical-slicing is the next step — it cuts the design into slices (each with AC + non-goals + glossary), then hands off to designing-tests-from-requirements, which builds the test matrix and hands off to writing-plans.
 
 ## The Process
 
@@ -133,10 +133,10 @@ After the spec review loop passes, ask the user to review the written spec befor
 
 Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
 
-**Test design (next step):**
+**Slicing (next step):**
 
-- Invoke the designing-tests-from-requirements skill. It turns the spec's Acceptance Criteria into a traceable test-design matrix, gets the user's sign-off on coverage, then hands off to writing-plans itself.
-- Do NOT invoke writing-plans or any implementation skill directly. designing-tests-from-requirements is the only skill you invoke after brainstorming.
+- Invoke the vertical-slicing skill. It cuts the design into vertical slices — each a demoable thread of user value with its own acceptance criteria — and emits the feature's non-goals and one glossary. It then hands off to designing-tests-from-requirements itself.
+- Do NOT invoke designing-tests-from-requirements, writing-plans, or any implementation skill directly. vertical-slicing is the only skill you invoke after brainstorming.
 
 ## Key Principles
 

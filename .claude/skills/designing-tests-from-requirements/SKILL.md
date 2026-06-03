@@ -20,11 +20,14 @@ Tests are **designed top-down from the user's observable requirements** — not 
 ## Where this sits
 
 ```
-brainstorming  ──▶  designing-tests-from-requirements  ──▶  writing-plans
-(requirements/spec)        (this skill: the test map)        (tasks w/ test code)
+brainstorming  ──▶  vertical-slicing  ──▶  designing-tests-from-requirements  ──▶  writing-plans
+(what success is)   (slices + AC +           (this skill: the test map)            (tasks w/ test code)
+                     non-goals + glossary)
 ```
 
-This is the bridge. brainstorming gives you *what success looks like*. This skill turns that into *a concrete, traceable set of test scenarios*. writing-plans then turns each scenario into a failing test inside a task. **Terminal state: invoke writing-plans.** Do not invoke any implementation skill from here.
+This is the bridge. **vertical-slicing** hands you slices — each a behavior thread with its own acceptance criteria — plus the feature's non-goals and one glossary. This skill turns those AC into *a concrete, traceable set of test scenarios*. writing-plans then turns each scenario into a failing test inside a task. **Terminal state: invoke writing-plans.** Do not invoke any implementation skill from here.
+
+If you arrived here without slices (no AC, no non-goals, no glossary), stop and run **vertical-slicing** first — extracting AC from an unsliced spec re-introduces the layer-shaped bias that slicing exists to remove.
 
 ## Compatibility with TDD (read this first)
 
@@ -37,13 +40,13 @@ The map is the territory you'll cross one step at a time. Do not batch-write all
 
 ## The Method (6 steps)
 
-### 1. Extract observable acceptance criteria from the requirement
+### 1. Take the acceptance criteria from the slices
 
-Restate each requirement as **"When `<actor/condition>`, the system `<observable outcome>`."** Number them (AC-1, AC-2, …).
+vertical-slicing already wrote each slice's AC as **"When `<actor/condition>`, the system `<observable outcome>`."** Carry them in verbatim and number them (AC-1, AC-2, …). Do not paraphrase — they are the user's words, and the glossary depends on them staying fixed.
 
-- Requirements are often **buried in a vague request.** "Share a recipe so a friend can view it without logging in" contains at least: AC-1 there's a share action that yields a link, AC-2 opening the link shows the recipe, AC-3 the viewer needs no login, AC-4 the viewer needs no app install (plain web), AC-5 a private recipe is never exposed via a shared link. Dig out the implicit ones.
+- **If you were handed an unsliced spec, go back to vertical-slicing.** Extracting AC from raw layers re-introduces the bias slicing removes. AC are *observable outcomes*, dug out of the vague request — "Share a recipe so a friend can view it without logging in" hides AC like "the viewer needs no app install (plain web)" and "a private recipe is never exposed via a shared link."
 - **Reject implementation statements.** "Uses a `buildShareTarget` helper" is not a criterion. "The shared link opens the recipe for a logged-out viewer" is.
-- An acceptance criterion is something **the user could observe and verify**, stated in their language.
+- Carry the slices' **non-goals** forward too — they are the AC that deliberately have no test.
 
 ### 2. Decompose each criterion into scenarios
 
@@ -74,11 +77,14 @@ A table. Every AC maps to ≥1 scenario; every scenario gets a test ID.
 
 **Risk** tags drive depth: `security` / `billing` / `integrity` → adversarial coverage; `cosmetic` → invariants only. See `test-risk-weighted-depth`.
 
+**Ubiquitous Language (traceability without tags):** the AC text, the test ID's description, and the code identifiers under test all use the **same glossary word** from the slices. The requirement↔test link is the shared word, not an ID tag — when the AC says "완료되면", the state is `completed`, and the test says "completed를 반환한다". Drift (a test calling it `slug` where the glossary says `shareToken`) breaks traceability silently. See `naming-ubiquitous-language`.
+
 **Coverage gate (mandatory):**
 - Every AC has ≥1 test ID. **An AC with zero test IDs is a missing test — add it, don't ship.**
 - Every AC has a happy-path test AND its relevant edge/error tests.
 - Every AC has at least one **acceptance-layer** test (see step 5).
 - No two test IDs cover the same behavior at different layers unless each cites what only it can catch (owner-layer rule).
+- **Every non-goal is listed with "no test" — not silently absent.** This is what separates "deliberately not built" from "requirement we forgot." An in-scope AC with no test is a bug; a non-goal with no test is correct.
 
 This gate is the thing that catches a silently-dropped requirement. Eyeballing "looks covered" is not the gate.
 

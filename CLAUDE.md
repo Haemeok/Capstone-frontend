@@ -131,12 +131,15 @@ PR 본문을 작성할 때 `.claude/state/active-issue` 파일을 먼저 읽는�
 - "딱히 컴파운드할 게 없어 보임" 자체 판단 금지. 메타 스킬이 "nothing to compound"라고 자가보고하게 둘 것
 - 프로젝트 로컬 `finishing-a-development-branch` (`.claude/skills/...`)가 plugin 버전을 override
 
-### 요구사항→테스트 설계 단계 (always-on)
-brainstorming과 writing-plans 사이에 `designing-tests-from-requirements`(요구사항을 추적 가능한 테스트 매트릭스로 설계) 단계가 있다. 구현 유닛에 즉흥적으로 유닛테스트를 붙이는("무지성 유닛테스트") 대신, 요구사항에서 테스트를 위→아래로 설계하고 커버리지를 증명하기 위함.
+### 요구사항 분해→테스트 설계 단계 (always-on)
+체인: `brainstorming` → `vertical-slicing` → `designing-tests-from-requirements` → `writing-plans`.
 
-- 강제는 **구조로** 한다: `writing-plans`는 test-design 매트릭스 없이 task 분해를 거부한다(writing-plans Step 0). 어떤 경로로 진입하든 매트릭스가 없으면 멈추고 `designing-tests-from-requirements`부터 돌린다. "이미 대부분 구현됨"도 예외 아님 — 기존 코드는 검증된 요구사항이 아니다.
-- 프로젝트 로컬 `brainstorming` · `writing-plans`(`.claude/skills/...`)가 plugin 버전을 override (brainstorming 종착점을 새 단계로, writing-plans에 게이트 추가). plugin 업데이트 시 reroute/게이트만 유지하며 refresh.
-- 서브에이전트는 프로젝트 스킬을 안정적으로 상속 못 받으니, plan/test 설계를 위임할 때 prompt에 "writing-plans 전 `designing-tests-from-requirements` 매트릭스 필수, 모든 테스트는 T-ID 인용" 한 줄을 주입한다.
+- **vertical-slicing이 상류이자 더 중요하다.** 기능을 레이어(타입→API→UI)로 수평 분해하면 각 task의 자연스러운 테스트가 그 유닛의 유닛테스트가 된다 — 이게 "무지성 유닛테스트" 폭발의 근원이다. 행동(수직 슬라이스)으로 잘라야 test=행동이 된다. 테스트가 요구사항에 의존하므로, 분해가 틀리면 하류 테스트 룰로 못 구한다.
+- 슬라이싱 산출 = 슬라이스 + 각 슬라이스 AC + non-goals + 글로서리. designing-tests는 그 AC를 매트릭스 왼쪽 칸으로 *받아서* 시나리오→테스트→레이어로 펼친다 (요구사항을 새로 짜내지 않는다).
+- **추적은 태그가 아니라 단어로 한다 (Ubiquitous Language):** AC·코드 식별자·테스트 이름이 한 글로서리 단어를 공유하면 요구사항↔테스트 링크가 *단어 그 자체*다. RTM/ID 태그 불필요. drift(같은 개념을 `slug`/`shareToken` 두 단어로)는 `naming-ubiquitous-language` 룰로 리뷰 때 잡는다.
+- 강제는 **구조로** 한다: `writing-plans`는 test-design 매트릭스 없이 task 분해를 거부한다(writing-plans Step 0). 슬라이스/매트릭스가 없으면 멈추고 위 체인을 앞단계부터 돌린다. "이미 대부분 구현됨"도 예외 아님 — 기존 코드는 검증된 요구사항이 아니다.
+- 프로젝트 로컬 `brainstorming` · `vertical-slicing` · `designing-tests-from-requirements` · `writing-plans`(`.claude/skills/...`)가 plugin 버전을 override (brainstorming 종착점을 vertical-slicing으로 reroute, writing-plans에 게이트 추가). plugin 업데이트 시 reroute/게이트만 유지하며 refresh.
+- 서브에이전트는 프로젝트 스킬을 안정적으로 상속 못 받으니, plan/분해/test 설계를 위임할 때 prompt에 "task는 수직 슬라이스(행동)로 분해, 각 슬라이스 AC 작성, AC→테스트는 글로서리 단어로 추적, writing-plans 전 매트릭스 필수" 한 줄을 주입한다.
 
 ---
 

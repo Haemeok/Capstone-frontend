@@ -77,6 +77,7 @@ specific `rules/<prefix>-<topic>.md` file.
 ### Naming
 - [Booleans, handlers, hooks](rules/naming-boolean-handler-hook.md) — `is/has/can/should`, `on*`/`handle*`, `use*`
 - [Function verbs](rules/naming-function-verbs.md) — `get` / `fetch` / `load`
+- [Ubiquitous language](rules/naming-ubiquitous-language.md) — one concept, one glossary word across AC / code / test; the shared word is the requirement→test trace (no ID tags)
 
 ### A11y
 - [Interactive elements](rules/a11y-interactive.md) — native button, `cursor-pointer`, `aria-label`
