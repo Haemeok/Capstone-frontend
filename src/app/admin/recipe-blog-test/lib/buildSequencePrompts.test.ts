@@ -72,7 +72,11 @@ describe("buildStepPrompt", () => {
       stepImageUrl: "",
       stepImageKey: null,
     };
-    const recipe = { ...FAKE_RECIPE, title: "딸기 두바이 케이크", dishType: "Dessert" };
+    const recipe = {
+      ...FAKE_RECIPE,
+      title: "딸기 두바이 케이크",
+      dishType: "Dessert",
+    };
     const p = buildStepPrompt(step, recipe, 1, 5);
     expect(p).toContain("딸기 두바이 케이크");
     expect(p).toContain("Dessert");
@@ -108,8 +112,22 @@ describe("buildStepPrompt", () => {
       stepImageUrl: "",
       stepImageKey: null,
       ingredients: [
-        { id: "a", name: "계란", quantity: "2", unit: "개", inFridge: false, calories: 0 },
-        { id: "b", name: "박력분", quantity: "200", unit: "g", inFridge: false, calories: 0 },
+        {
+          id: "a",
+          name: "계란",
+          quantity: "2",
+          unit: "개",
+          inFridge: false,
+          calories: 0,
+        },
+        {
+          id: "b",
+          name: "박력분",
+          quantity: "200",
+          unit: "g",
+          inFridge: false,
+          calories: 0,
+        },
       ],
     };
     const p = buildStepPrompt(step, FAKE_RECIPE, 1, 3);
@@ -201,13 +219,19 @@ describe("buildStepPrompt", () => {
       stepImageKey: null,
     };
     const p = buildStepPrompt(step, FAKE_RECIPE, 1, 3);
-    expect(p).toContain("any ingredient names mentioned there are the ones being added now");
+    expect(p).toContain(
+      "any ingredient names mentioned there are the ones being added now"
+    );
   });
 });
 
 describe("buildFinalPlatedPrompt", () => {
   it("renders mom phone snapshot with recipe context and dish title", () => {
-    const recipe = { ...FAKE_RECIPE, title: "딸기 두바이 케이크", dishType: "Dessert" };
+    const recipe = {
+      ...FAKE_RECIPE,
+      title: "딸기 두바이 케이크",
+      dishType: "Dessert",
+    };
     const p = buildFinalPlatedPrompt(recipe, 6, 6);
     expect(p).toContain("딸기 두바이 케이크");
     expect(p).toContain("smartphone photo");
@@ -227,14 +251,36 @@ describe("buildSequencePrompts (orchestrator)", () => {
     const recipe = {
       ...FAKE_RECIPE,
       steps: [
-        { stepNumber: 1, instruction: "재료 손질", action: "썰기", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 2, instruction: "팬에 볶기", action: "볶기", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 3, instruction: "끓이기", action: "끓이기", stepImageUrl: "", stepImageKey: null },
+        {
+          stepNumber: 1,
+          instruction: "재료 손질",
+          action: "썰기",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 2,
+          instruction: "팬에 볶기",
+          action: "볶기",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 3,
+          instruction: "끓이기",
+          action: "끓이기",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
       ],
     };
     const out = buildSequencePrompts(recipe);
     expect(out).toHaveLength(4);
-    expect(out.slice(0, 3).map((s) => s.category)).toEqual(["step", "step", "step"]);
+    expect(out.slice(0, 3).map((s) => s.category)).toEqual([
+      "step",
+      "step",
+      "step",
+    ]);
     expect(out[3].category).toBe("final");
     expect(out[3].subcategory).toBe("final_plated");
     expect(out[3].requiresReference).toBe(true);
@@ -245,15 +291,36 @@ describe("buildSequencePrompts (orchestrator)", () => {
     const recipe = {
       ...FAKE_RECIPE,
       steps: [
-        { stepNumber: 3, instruction: "C", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 1, instruction: "A", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 2, instruction: "B", stepImageUrl: "", stepImageKey: null },
+        {
+          stepNumber: 3,
+          instruction: "C",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 1,
+          instruction: "A",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 2,
+          instruction: "B",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
       ],
     };
     const out = buildSequencePrompts(recipe);
-    expect(out[0].prompt).toContain("Korean instruction (verbatim, treat this as the ground truth — render the literal moment described): A");
-    expect(out[1].prompt).toContain("instruction (verbatim, treat this as the ground truth — render the literal moment described): B");
-    expect(out[2].prompt).toContain("instruction (verbatim, treat this as the ground truth — render the literal moment described): C");
+    expect(out[0].prompt).toContain(
+      "Korean instruction (verbatim, treat this as the ground truth — render the literal moment described): A"
+    );
+    expect(out[1].prompt).toContain(
+      "instruction (verbatim, treat this as the ground truth — render the literal moment described): B"
+    );
+    expect(out[2].prompt).toContain(
+      "instruction (verbatim, treat this as the ground truth — render the literal moment described): C"
+    );
   });
 
   it("emits unique stable ids", () => {
@@ -278,9 +345,24 @@ describe("buildSequencePrompts (orchestrator)", () => {
     const recipe = {
       ...FAKE_RECIPE,
       steps: [
-        { stepNumber: 7, instruction: "C", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 2, instruction: "A", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 5, instruction: "B", stepImageUrl: "", stepImageKey: null },
+        {
+          stepNumber: 7,
+          instruction: "C",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 2,
+          instruction: "A",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 5,
+          instruction: "B",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
       ],
     };
     const out = buildSequencePrompts(recipe);
@@ -292,9 +374,24 @@ describe("buildSequencePrompts (orchestrator)", () => {
     const recipe = {
       ...FAKE_RECIPE,
       steps: [
-        { stepNumber: 1, instruction: "A", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 2, instruction: "B", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 3, instruction: "C", stepImageUrl: "", stepImageKey: null },
+        {
+          stepNumber: 1,
+          instruction: "A",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 2,
+          instruction: "B",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 3,
+          instruction: "C",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
       ],
     };
     const out = buildSequencePrompts(recipe);
@@ -309,9 +406,24 @@ describe("buildSequencePrompts (orchestrator)", () => {
     const recipe = {
       ...FAKE_RECIPE,
       steps: [
-        { stepNumber: 1, instruction: "고기를 볶는다", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 2, instruction: "물을 붓는다", stepImageUrl: "", stepImageKey: null },
-        { stepNumber: 3, instruction: "감자를 넣는다", stepImageUrl: "", stepImageKey: null },
+        {
+          stepNumber: 1,
+          instruction: "고기를 볶는다",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 2,
+          instruction: "물을 붓는다",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
+        {
+          stepNumber: 3,
+          instruction: "감자를 넣는다",
+          stepImageUrl: "",
+          stepImageKey: null,
+        },
       ],
     };
     const out = buildSequencePrompts(recipe);

@@ -66,8 +66,14 @@ export async function serverApiClient<T = any>(
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  console.log("🔑 SSR serverApiClient - accessToken:", accessToken ? `${accessToken.substring(0, 20)}...` : "NONE");
-  console.log("🔑 SSR serverApiClient - refreshToken:", refreshToken ? "EXISTS" : "NONE");
+  console.log(
+    "🔑 SSR serverApiClient - accessToken:",
+    accessToken ? `${accessToken.substring(0, 20)}...` : "NONE"
+  );
+  console.log(
+    "🔑 SSR serverApiClient - refreshToken:",
+    refreshToken ? "EXISTS" : "NONE"
+  );
 
   if (!accessToken) {
     console.log("⚠️ No accessToken, checking refreshToken...");

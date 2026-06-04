@@ -47,7 +47,7 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
     <div className="px-5 pt-10 pb-20 md:px-6 md:pt-20">
       <header className="mx-auto max-w-3xl text-center">
         <CurationCategoryLabel category={data.category} />
-        <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-pretty break-keep text-gray-900 md:text-4xl">
+        <h1 className="mt-4 text-3xl leading-tight font-bold tracking-tight text-pretty break-keep text-gray-900 md:text-4xl">
           {data.h1}
         </h1>
         {data.dek && (
@@ -63,10 +63,16 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
             className="h-5 w-5 rounded"
           />
           <span className="text-gray-700">레시피오</span>
-          <span aria-hidden="true" className="text-gray-400">·</span>
+          <span aria-hidden="true" className="text-gray-400">
+            ·
+          </span>
           <span>{toCategoryInitials(data.category)} 에디터</span>
-          <span aria-hidden="true" className="text-gray-400">·</span>
-          <time dateTime={data.savedAt}>{formatPublishedDate(data.savedAt)}</time>
+          <span aria-hidden="true" className="text-gray-400">
+            ·
+          </span>
+          <time dateTime={data.savedAt}>
+            {formatPublishedDate(data.savedAt)}
+          </time>
         </p>
       </header>
 
@@ -75,7 +81,7 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
         <img
           src={data.thumbnailUrl}
           alt={data.h1}
-          className="mx-auto mt-8 aspect-[16/9] w-full max-w-4xl rounded-card object-cover"
+          className="rounded-card mx-auto mt-8 aspect-[16/9] w-full max-w-4xl object-cover"
         />
       )}
 

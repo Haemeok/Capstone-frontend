@@ -43,7 +43,8 @@ const readFileAsDataUrl = (file: File): Promise<string> =>
       if (typeof r === "string") resolve(r);
       else reject(new Error("FileReader returned non-string"));
     };
-    reader.onerror = () => reject(reader.error ?? new Error("FileReader error"));
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("FileReader error"));
     reader.readAsDataURL(file);
   });
 
@@ -68,7 +69,10 @@ export const ImageGenerationPanel = ({
     if (images.length === 0) return;
     try {
       const dataUrls = await Promise.all(images.map(readFileAsDataUrl));
-      const next = [...referenceImageUrls, ...dataUrls].slice(0, MAX_REFERENCES);
+      const next = [...referenceImageUrls, ...dataUrls].slice(
+        0,
+        MAX_REFERENCES
+      );
       onReferenceImagesChange(next);
     } catch (err) {
       console.error("이미지 읽기 실패", err);
@@ -107,7 +111,9 @@ export const ImageGenerationPanel = ({
             max={4}
             value={count}
             onChange={(e) =>
-              onCountChange(Math.max(1, Math.min(4, Number(e.target.value) || 1)))
+              onCountChange(
+                Math.max(1, Math.min(4, Number(e.target.value) || 1))
+              )
             }
             className="w-16 rounded-lg border border-gray-200 px-2 py-1 text-sm"
           />
@@ -147,12 +153,12 @@ export const ImageGenerationPanel = ({
                 <img
                   src={url}
                   alt={`reference ${idx + 1}`}
-                  className="h-16 w-16 rounded-card object-cover"
+                  className="rounded-card h-16 w-16 object-cover"
                 />
                 <button
                   type="button"
                   onClick={() => handleRemove(idx)}
-                  className="absolute -right-1 -top-1 rounded-full bg-white text-[10px] text-gray-600 shadow"
+                  className="absolute -top-1 -right-1 rounded-full bg-white text-[10px] text-gray-600 shadow"
                   aria-label={`${idx + 1}번 제거`}
                 >
                   <span className="block h-4 w-4 leading-4">×</span>
@@ -192,7 +198,7 @@ export const ImageGenerationPanel = ({
         <button
           onClick={onSubmit}
           disabled={running || !prompt.trim()}
-          className="h-10 rounded-xl bg-olive-light px-4 text-sm font-bold text-white disabled:bg-gray-200 disabled:text-gray-400"
+          className="bg-olive-light h-10 rounded-xl px-4 text-sm font-bold text-white disabled:bg-gray-200 disabled:text-gray-400"
         >
           {running ? "생성 중…" : `이미지 ${count}장 생성`}
         </button>

@@ -21,12 +21,11 @@ import {
 
 import { useMediaQuery } from "./useMediaQuery";
 
-
 const SheetContent = ({
   className,
   ...props
 }: ComponentProps<typeof DialogContent>) => (
-  <DialogContent className={cn("p-0 gap-0", className)} {...props} />
+  <DialogContent className={cn("gap-0 p-0", className)} {...props} />
 );
 
 const SheetHeader = ({ className, ...props }: ComponentProps<"div">) => (

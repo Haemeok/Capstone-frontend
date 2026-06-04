@@ -22,7 +22,9 @@ const safeNumber = (v: unknown): number | undefined =>
 const safeBoolean = (v: unknown): boolean | undefined =>
   typeof v === "boolean" ? v : undefined;
 
-const summarizeCause = (cause: unknown): Record<string, unknown> | undefined => {
+const summarizeCause = (
+  cause: unknown
+): Record<string, unknown> | undefined => {
   if (!cause || typeof cause !== "object") return undefined;
   const c = cause as ErrorLike & { issues?: unknown };
   const out: Record<string, unknown> = {};

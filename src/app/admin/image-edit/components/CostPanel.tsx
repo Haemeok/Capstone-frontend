@@ -8,7 +8,11 @@ import {
   QUALITY_TO_MODEL_ID,
 } from "../lib/useImageEdit";
 
-const QUALITY_ORDER: ReadonlyArray<ImageEditQuality> = ["low", "medium", "high"];
+const QUALITY_ORDER: ReadonlyArray<ImageEditQuality> = [
+  "low",
+  "medium",
+  "high",
+];
 
 type Props = {
   history: CostHistory;
@@ -43,7 +47,7 @@ export const CostPanel = ({ history, onReset }: Props) => {
         </button>
       </div>
 
-      <div className="mb-3 rounded-xl bg-olive-light/5 p-3">
+      <div className="bg-olive-light/5 mb-3 rounded-xl p-3">
         <p className="text-xs text-gray-500">GPT Image 2 합계</p>
         <p className="text-xl font-bold text-gray-900">
           ${subtotal.toFixed(3)}
@@ -56,7 +60,7 @@ export const CostPanel = ({ history, onReset }: Props) => {
       <div className="space-y-1">
         {rows.map((row) => (
           <div key={row.quality} className="flex justify-between text-xs">
-            <span className="truncate capitalize text-gray-600">
+            <span className="truncate text-gray-600 capitalize">
               {row.quality}
             </span>
             <span className="shrink-0 text-gray-500">

@@ -49,17 +49,20 @@ export type FetchCurationArticleWithRecipesResult =
   | { success: false; error: string };
 
 export const fetchCurationArticleWithRecipes = async (
-  slug: string,
+  slug: string
 ): Promise<FetchCurationArticleWithRecipesResult> => {
   await requireAdminAction();
 
   const article = await fetchCurationArticle(slug);
   if (!article) {
-    return { success: false, error: `큐레이션 글을 찾지 못했어요 (slug=${slug})` };
+    return {
+      success: false,
+      error: `큐레이션 글을 찾지 못했어요 (slug=${slug})`,
+    };
   }
 
   const settled = await Promise.all(
-    article.recipeIds.map((id) => getStaticrecipionServer(id)),
+    article.recipeIds.map((id) => getStaticrecipionServer(id))
   );
 
   const recipes: StaticRecipe[] = [];
@@ -76,7 +79,8 @@ export type GenerateCurationBlogPostResult =
   | { success: true; post: CurationBlogPost }
   | { success: false; error: string };
 
-const buildMetaSystemPrompt = (): string => `당신은 한국 가정 식탁 블로그 글의 편집자다.
+const buildMetaSystemPrompt =
+  (): string => `당신은 한국 가정 식탁 블로그 글의 편집자다.
 이미 작성된 블로그 본문을 보고, 그 본문 톤·내용에 어울리는 메타데이터(제목·해시태그·커버 캡션)를 JSON 으로 출력한다.
 
 [출력 규칙]
@@ -114,7 +118,7 @@ ${bodyMarkdown}
 export const generateCurationBlogPost = async (
   article: PublicCurationArticleDto,
   recipes: StaticRecipe[],
-  tone: BlogTone,
+  tone: BlogTone
 ): Promise<GenerateCurationBlogPostResult> => {
   await requireAdminAction();
 
@@ -170,13 +174,13 @@ ${lastErrors.map((e) => `- ${e}`).join("\n")}
         parsed.parsed,
         usableRecipes,
         tone,
-        article.slug,
+        article.slug
       );
       break;
     }
     lastErrors = parsed.errors;
     console.warn(
-      `[curationBlog body] attempt ${attempt + 1} 파싱 실패:\n${parsed.errors.map((e) => `  - ${e}`).join("\n")}`,
+      `[curationBlog body] attempt ${attempt + 1} 파싱 실패:\n${parsed.errors.map((e) => `  - ${e}`).join("\n")}`
     );
     if (attempt === MAX_BODY_RETRIES) {
       return {

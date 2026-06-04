@@ -36,7 +36,7 @@ export const RecipeRecordItem = ({
       <Image
         src={imageUrl}
         alt={recipeTitle}
-        className="h-24 w-24 flex-shrink-0 rounded-card"
+        className="rounded-card h-24 w-24 flex-shrink-0"
         wrapperClassName="overflow-hidden rounded-card"
         imgClassName="ease-in-out group-hover:scale-105"
       />

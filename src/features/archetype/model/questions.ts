@@ -45,12 +45,14 @@ export const ARCHETYPE_QUESTIONS: ArchetypeQuestion[] = [
       {
         type: "N",
         label: "Noble (귀족)",
-        description: "소스 묻는 건 질색. 나이프와 포크로 우아하게 썰어서 먹는다.",
+        description:
+          "소스 묻는 건 질색. 나이프와 포크로 우아하게 썰어서 먹는다.",
       },
       {
         type: "W",
         label: "Wild (야생)",
-        description: "버거는 손맛이지. 꾹 눌러서 입 크게 벌리고 와앙 베어 문다.",
+        description:
+          "버거는 손맛이지. 꾹 눌러서 입 크게 벌리고 와앙 베어 문다.",
       },
     ],
   },
@@ -62,7 +64,8 @@ export const ARCHETYPE_QUESTIONS: ArchetypeQuestion[] = [
       {
         type: "D",
         label: "Dynamic (다이나믹)",
-        description: '"후루룩 챱챱!" 공기와 함께 면을 흡입하며 소리까지 즐긴다.',
+        description:
+          '"후루룩 챱챱!" 공기와 함께 면을 흡입하며 소리까지 즐긴다.',
       },
       {
         type: "Q",

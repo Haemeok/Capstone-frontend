@@ -20,7 +20,7 @@ const findMissingSections = (sections: string[], keyword: string): number[] => {
 
 const resolveIngredientName = (
   code: string,
-  recipes: RecipeForWarning[],
+  recipes: RecipeForWarning[]
 ): string | null => {
   for (const r of recipes) {
     const found = r.ingredients?.find((ing) => ing.id === code);
@@ -43,7 +43,7 @@ export const computeWarnings = ({
   const sections = splitSections(markdown);
   if (sections.length !== expectedSectionCount) {
     console.warn(
-      `[computeWarnings] section count mismatch: got ${sections.length}, expected ${expectedSectionCount}`,
+      `[computeWarnings] section count mismatch: got ${sections.length}, expected ${expectedSectionCount}`
     );
     return [];
   }
@@ -68,7 +68,7 @@ export const computeWarnings = ({
     const name = resolveIngredientName(ingredientId, recipes);
     if (!name) {
       console.warn(
-        `[computeWarnings] unresolved ingredientId: ${ingredientId}`,
+        `[computeWarnings] unresolved ingredientId: ${ingredientId}`
       );
     } else {
       const missing = findMissingSections(sections, name);

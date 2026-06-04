@@ -6,7 +6,7 @@ type ImageFallbackProps = {
 };
 
 const ImageFallback = ({ className }: ImageFallbackProps) => (
-  <Skeleton 
+  <Skeleton
     className={cn(
       "opacity-100 transition-opacity duration-300 ease-in-out",
       className

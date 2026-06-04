@@ -24,8 +24,13 @@ describe("insertAdsIntoFeed", () => {
     const result = insertAdsIntoFeed(items, 10);
     const ads = result.filter((x) => x.__kind === "ad");
     expect(ads).toHaveLength(2);
-    expect(ads.map((a) => (a.__kind === "ad" ? a.key : ""))).toEqual(["ad-9", "ad-19"]);
-    expect(ads.map((a) => (a.__kind === "ad" ? a.adIndex : -1))).toEqual([0, 1]);
+    expect(ads.map((a) => (a.__kind === "ad" ? a.key : ""))).toEqual([
+      "ad-9",
+      "ad-19",
+    ]);
+    expect(ads.map((a) => (a.__kind === "ad" ? a.adIndex : -1))).toEqual([
+      0, 1,
+    ]);
   });
 
   it("광고 key 는 절대 인덱스 기반 → 무한 스크롤에서도 안정", () => {
@@ -48,7 +53,12 @@ describe("insertAdsIntoFeed", () => {
     const result = insertAdsIntoFeed(items, 1);
     expect(result).toHaveLength(6);
     expect(result.map((x) => x.__kind)).toEqual([
-      "recipe", "ad", "recipe", "ad", "recipe", "ad",
+      "recipe",
+      "ad",
+      "recipe",
+      "ad",
+      "recipe",
+      "ad",
     ]);
   });
 });

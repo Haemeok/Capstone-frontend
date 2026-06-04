@@ -20,7 +20,10 @@ export const shouldHideNavbar = (
 ): boolean => {
   if (isHiddenNavbarPath(pathname)) return true;
   if (HIDDEN_NAVBAR_PATTERNS_ALWAYS.some((p) => p.test(pathname))) return true;
-  if (options.isApp && HIDDEN_NAVBAR_PATTERNS_APP_ONLY.some((p) => p.test(pathname))) {
+  if (
+    options.isApp &&
+    HIDDEN_NAVBAR_PATTERNS_APP_ONLY.some((p) => p.test(pathname))
+  ) {
     return true;
   }
   return false;

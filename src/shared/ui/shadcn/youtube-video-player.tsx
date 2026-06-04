@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle,useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 import { Maximize2, Minimize2, Play } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -124,7 +124,9 @@ export const YouTubePlayer = forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
 
     const getThumbnailUrl = (): string | undefined => {
       if (customThumbnail) return customThumbnail;
-      return actualVideoId ? getYouTubeThumbnailUrls(actualVideoId)[0] : undefined;
+      return actualVideoId
+        ? getYouTubeThumbnailUrls(actualVideoId)[0]
+        : undefined;
     };
 
     return (

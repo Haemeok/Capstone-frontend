@@ -34,7 +34,7 @@ const CommentImagePreview = ({ file, onRemove }: Props) => {
         type="button"
         onClick={handleRemove}
         aria-label="첨부 이미지 제거"
-        className="absolute -right-1 -top-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-800 text-white shadow"
+        className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-800 text-white shadow"
       >
         <X size={12} />
       </button>

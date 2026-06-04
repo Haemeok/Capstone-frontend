@@ -21,7 +21,7 @@ export const TONE_LABEL: Record<BlogTone, string> = TONE_OPTIONS.reduce(
     acc[tone] = label;
     return acc;
   },
-  {} as Record<BlogTone, string>,
+  {} as Record<BlogTone, string>
 );
 
 type Props = {
@@ -48,7 +48,9 @@ export const BatchToneSelector = ({ value, onChange, disabled }: Props) => {
             disabled={disabled}
             aria-pressed={active}
             className={`h-8 cursor-pointer rounded-full px-3 text-xs font-medium transition disabled:cursor-not-allowed ${
-              active ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              active
+                ? "bg-gray-900 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
             {opt.label}

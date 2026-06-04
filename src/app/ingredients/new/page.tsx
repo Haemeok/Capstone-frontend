@@ -69,11 +69,7 @@ const NewIngredientsPage = () => {
             aria-label="재료 검색해서 추가하기"
             className="flex w-full items-center gap-3 rounded-full bg-gray-100 px-4 py-3.5 text-left transition-colors active:bg-gray-200"
           >
-            <Search
-              size={18}
-              className="text-gray-500"
-              aria-hidden="true"
-            />
+            <Search size={18} className="text-gray-500" aria-hidden="true" />
             <span className="text-sm text-gray-500">
               재료를 검색해서 추가하세요
             </span>

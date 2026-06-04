@@ -36,7 +36,7 @@ export const sampleFewShotTitles = (slug: string, count: number): string[] => {
 
   const groupKeys = [...groups.keys()].sort();
   const shuffledGroups = new Map<string, Title[]>(
-    groupKeys.map((k) => [k, seededShuffle(groups.get(k) ?? [], seed)]),
+    groupKeys.map((k) => [k, seededShuffle(groups.get(k) ?? [], seed)])
   );
 
   const startG = groupKeys.length > 0 ? seed % groupKeys.length : 0;
@@ -95,7 +95,7 @@ export const buildTitleSystemPrompt = ({
     "- '몇 가지', '여러 가지' 같이 흐리는 표현 금지 — 본문 레시피 개수가 정해져 있으므로 흐릴 이유가 없다.",
     "- **숫자를 박지 않는 쪽이 매거진 톤에 더 가깝다.** N 마감은 강조가 정말 필요할 때만 — fewShots에서 숫자 종결이 차지하는 비율을 관찰하고 그 비율 이하로 쓴다.",
     "- 영어 대문자 토큰(SOLO·DIET·COMFORT·WELLNESS 등)은 한 헤드라인당 최대 1회. 일반 영단어는 반드시 정확한 철자로 (오타 'CONFORT'·'WELNESS' 금지).",
-    "- 한 헤드라인 안에서 같은 단어·구가 두 번 이상 반복되지 않게 (예: \"솔로의 정석 솔로의 정석\" 형태 금지).",
+    '- 한 헤드라인 안에서 같은 단어·구가 두 번 이상 반복되지 않게 (예: "솔로의 정석 솔로의 정석" 형태 금지).',
     "",
     "## 실제 푸드 에디터들의 제목 예시 (구조·톤 참고용 — 그대로 복사 금지)",
     fewShots.map((t) => `- ${t}`).join("\n"),

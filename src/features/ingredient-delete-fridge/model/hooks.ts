@@ -11,11 +11,11 @@ import {
   removeIdsFromFridge,
   setInFridgeForIds,
 } from "@/entities/ingredient/lib/updateIngredientListCache";
+import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 import {
   IngredientMutationContext,
   IngredientsApiResponse,
 } from "@/entities/ingredient/model/types";
-import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 
 import { deleteIngredient, deleteIngredientBulk } from "./api";
 
@@ -50,7 +50,10 @@ export const useDeleteIngredientMutation = ({
     },
     onError: (error, _variables, context) => {
       if (context?.previousIngredientsListData) {
-        queryClient.setQueryData(browseKey, context.previousIngredientsListData);
+        queryClient.setQueryData(
+          browseKey,
+          context.previousIngredientsListData
+        );
       }
       console.error("재료 삭제 실패:", error);
     },
@@ -87,14 +90,16 @@ export const useDeleteIngredientBulkMutation = (
       await queryClient.cancelQueries({
         queryKey: INGREDIENT_QUERY_KEYS.browseAll,
       });
-      const previousFridgeLists =
-        queryClient.getQueriesData<InfiniteData<IngredientsApiResponse>>({
-          queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll,
-        });
-      const previousBrowseLists =
-        queryClient.getQueriesData<InfiniteData<IngredientsApiResponse>>({
-          queryKey: INGREDIENT_QUERY_KEYS.browseAll,
-        });
+      const previousFridgeLists = queryClient.getQueriesData<
+        InfiniteData<IngredientsApiResponse>
+      >({
+        queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll,
+      });
+      const previousBrowseLists = queryClient.getQueriesData<
+        InfiniteData<IngredientsApiResponse>
+      >({
+        queryKey: INGREDIENT_QUERY_KEYS.browseAll,
+      });
       const idSet = new Set(ingredientIds);
       queryClient.setQueriesData<InfiniteData<IngredientsApiResponse>>(
         { queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll },

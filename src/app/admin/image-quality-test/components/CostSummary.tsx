@@ -26,7 +26,7 @@ export const CostSummary = ({ history, onReset }: Props) => {
         </button>
       </div>
 
-      <div className="mb-3 rounded-xl bg-olive-light/5 p-3">
+      <div className="bg-olive-light/5 mb-3 rounded-xl p-3">
         <p className="text-xs text-gray-500">합계</p>
         <p className="text-xl font-bold text-gray-900">
           ${history.totalCost.toFixed(3)}

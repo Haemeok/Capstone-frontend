@@ -51,7 +51,8 @@ describe("YouTube Recipe Metadata Generation", () => {
     it("YouTube 썸네일이 OpenGraph 보조 이미지로 포함된다", () => {
       const recipe = makeYoutubeFamousRecipe({
         imageUrl: "https://example.com/recipe-image.jpg",
-        youtubeThumbnailUrl: "https://img.youtube.com/vi/test/maxresdefault.jpg",
+        youtubeThumbnailUrl:
+          "https://img.youtube.com/vi/test/maxresdefault.jpg",
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
@@ -395,7 +396,8 @@ describe("YouTube Recipe Metadata Generation", () => {
     it("YouTube 썸네일과 레시피 이미지가 다르면 둘 다 포함된다", () => {
       const recipe = makeYoutubeFamousRecipe({
         imageUrl: "https://example.com/recipe-image.jpg",
-        youtubeThumbnailUrl: "https://img.youtube.com/vi/test/maxresdefault.jpg",
+        youtubeThumbnailUrl:
+          "https://img.youtube.com/vi/test/maxresdefault.jpg",
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 

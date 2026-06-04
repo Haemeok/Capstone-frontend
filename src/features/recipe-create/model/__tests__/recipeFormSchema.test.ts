@@ -29,7 +29,7 @@ const baseValues: RecipeFormValues = {
 };
 
 const getIngredientIssues = (
-  ingredient: (typeof baseIngredient) | Record<string, unknown>
+  ingredient: typeof baseIngredient | Record<string, unknown>
 ) => {
   const result = recipeFormSchema.safeParse({
     ...baseValues,

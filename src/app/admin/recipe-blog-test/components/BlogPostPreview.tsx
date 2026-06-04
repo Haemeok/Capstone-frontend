@@ -68,7 +68,8 @@ export const BlogPostPreview = ({
     <article className="rounded-2xl border border-gray-100 bg-white p-6">
       <div className="mb-6 flex items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3 text-xs text-gray-600">
         <p>
-          이 글은 자동 생성되었습니다. 매거진 시그너처(계절·산지·전통·실패 지점)의 사실 여부는 발행 전 검수가 필요합니다.
+          이 글은 자동 생성되었습니다. 매거진 시그너처(계절·산지·전통·실패
+          지점)의 사실 여부는 발행 전 검수가 필요합니다.
         </p>
         {usedSeeds && (
           <p className="shrink-0 text-gray-400">
@@ -78,7 +79,7 @@ export const BlogPostPreview = ({
       </div>
 
       <header className="mb-8">
-        <h1 className="text-2xl font-bold leading-snug text-gray-900">
+        <h1 className="text-2xl leading-snug font-bold text-gray-900">
           {post.title.main}
         </h1>
         <p className="mt-2 text-base text-gray-500">{post.title.sub}</p>
@@ -90,7 +91,7 @@ export const BlogPostPreview = ({
           <img
             src={finalImageUrl}
             alt={post.alts["final-plated"] ?? post.title.main}
-            className="w-full rounded-card object-cover"
+            className="rounded-card w-full object-cover"
           />
           <figcaption className="mt-2 text-center text-xs text-gray-400">
             {post.captionForPlated}
@@ -98,7 +99,7 @@ export const BlogPostPreview = ({
         </figure>
       )}
 
-      <p className="mb-10 whitespace-pre-line text-base leading-loose text-gray-700">
+      <p className="mb-10 text-base leading-loose whitespace-pre-line text-gray-700">
         {post.lead}
       </p>
 
@@ -127,7 +128,7 @@ export const BlogPostPreview = ({
                   {step.stepNumber})
                 </span>
               </div>
-              <p className="whitespace-pre-line text-base leading-loose text-gray-700">
+              <p className="text-base leading-loose whitespace-pre-line text-gray-700">
                 {step.body}
               </p>
               {url && (
@@ -135,7 +136,7 @@ export const BlogPostPreview = ({
                 <img
                   src={url}
                   alt={post.alts[step.imageSlot] ?? `step ${step.stepNumber}`}
-                  className="mt-4 w-full rounded-card object-cover"
+                  className="rounded-card mt-4 w-full object-cover"
                 />
               )}
             </div>
@@ -144,14 +145,16 @@ export const BlogPostPreview = ({
       </section>
 
       {post.kitchenTips.length > 0 && (
-        <section className="mb-10 rounded-xl bg-beige-light/40 px-5 py-5">
+        <section className="bg-beige-light/40 mb-10 rounded-xl px-5 py-5">
           <p className="mb-3 text-sm font-semibold text-gray-900">
             이런 부분 챙기시면 좋아요
           </p>
           <ol className="space-y-3 text-sm leading-relaxed text-gray-700">
             {post.kitchenTips.map((tip, i) => (
               <li key={i}>
-                <span className="mr-1 font-semibold text-gray-500">{i + 1})</span>
+                <span className="mr-1 font-semibold text-gray-500">
+                  {i + 1})
+                </span>
                 {tip}
               </li>
             ))}
@@ -159,32 +162,46 @@ export const BlogPostPreview = ({
         </section>
       )}
 
-      <p className="mb-10 whitespace-pre-line text-base leading-loose text-gray-700">
+      <p className="mb-10 text-base leading-loose whitespace-pre-line text-gray-700">
         {post.appliedKnowledge}
       </p>
 
       {post.bonusVariation && (
         <section className="mb-10">
-          <p className="mb-2 text-sm font-semibold text-gray-900">응용해 보기</p>
-          <p className="whitespace-pre-line text-base leading-loose text-gray-700">
+          <p className="mb-2 text-sm font-semibold text-gray-900">
+            응용해 보기
+          </p>
+          <p className="text-base leading-loose whitespace-pre-line text-gray-700">
             {post.bonusVariation}
           </p>
         </section>
       )}
 
-      <p className="mb-10 whitespace-pre-line text-base font-medium leading-loose text-gray-900">
+      <p className="mb-10 text-base leading-loose font-medium whitespace-pre-line text-gray-900">
         {post.closingNote}
       </p>
 
       <section className="mb-8 grid grid-cols-2 gap-x-6 gap-y-2 rounded-xl bg-gray-50 px-4 py-4 text-sm sm:grid-cols-4">
-        <Metric label="1인분 칼로리" value={`${post.nutritionBox.kcalPerServing} kcal`} />
+        <Metric
+          label="1인분 칼로리"
+          value={`${post.nutritionBox.kcalPerServing} kcal`}
+        />
         <Metric label="단백질" value={`${post.nutritionBox.proteinG} g`} />
-        <Metric label="탄수화물" value={`${post.nutritionBox.carbohydrateG} g`} />
+        <Metric
+          label="탄수화물"
+          value={`${post.nutritionBox.carbohydrateG} g`}
+        />
         <Metric label="지방" value={`${post.nutritionBox.fatG} g`} />
         <Metric label="당" value={`${post.nutritionBox.sugarG} g`} />
         <Metric label="나트륨" value={`${post.nutritionBox.sodiumMg} mg`} />
-        <Metric label="1인분 원가" value={`${post.nutritionBox.costPerServingKrw.toLocaleString()} 원`} />
-        <Metric label="시중가" value={`${post.nutritionBox.marketPriceKrw.toLocaleString()} 원`} />
+        <Metric
+          label="1인분 원가"
+          value={`${post.nutritionBox.costPerServingKrw.toLocaleString()} 원`}
+        />
+        <Metric
+          label="시중가"
+          value={`${post.nutritionBox.marketPriceKrw.toLocaleString()} 원`}
+        />
       </section>
 
       <p className="mb-8 text-sm text-gray-400">{post.hashtags.join(" ")}</p>
@@ -195,7 +212,8 @@ export const BlogPostPreview = ({
             서술 본문 {charCount.toLocaleString()}자
             {!inRange && (
               <span className="ml-2 text-amber-500">
-                (목표 {TARGET_MIN.toLocaleString()}~{TARGET_MAX.toLocaleString()}자 벗어남)
+                (목표 {TARGET_MIN.toLocaleString()}~
+                {TARGET_MAX.toLocaleString()}자 벗어남)
               </span>
             )}
           </span>
@@ -208,7 +226,7 @@ export const BlogPostPreview = ({
           </button>
         </div>
         {showJson && (
-          <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-50 p-3 text-[11px] text-gray-600">
+          <pre className="mt-3 max-h-96 overflow-auto rounded-lg bg-gray-50 p-3 text-[11px] whitespace-pre-wrap text-gray-600">
             {JSON.stringify(post, null, 2)}
           </pre>
         )}

@@ -41,10 +41,7 @@ const PROVIDER_LABEL = "solar-pro3+grok-4-1-fast";
 
 const requireGrok = () => {
   if (!process.env.XAI_API_KEY) {
-    throw new CurationError(
-      "LLM_ERROR",
-      "XAI_API_KEY가 설정되지 않았습니다.",
-    );
+    throw new CurationError("LLM_ERROR", "XAI_API_KEY가 설정되지 않았습니다.");
   }
   return xai(MODEL_GROK);
 };
@@ -53,14 +50,14 @@ const requireSolar = () => {
   if (!process.env.UPSTAGE_API_KEY) {
     throw new CurationError(
       "LLM_ERROR",
-      "UPSTAGE_API_KEY가 설정되지 않았습니다.",
+      "UPSTAGE_API_KEY가 설정되지 않았습니다."
     );
   }
   return upstage.chat(MODEL_SOLAR);
 };
 
 export const generateCuration = async (
-  input: GenerateCurationInput,
+  input: GenerateCurationInput
 ): Promise<GenerateCurationOutput> => {
   await requireAdminAction();
 
@@ -86,7 +83,7 @@ export const generateCuration = async (
       {
         found: poolIds.length,
         params: input.params,
-      },
+      }
     );
   }
   const pool = await Promise.all(poolIds.map((id) => getRecipe(id)));
@@ -124,7 +121,7 @@ export const generateCuration = async (
       imageUrl: r.imageUrl,
       youtubeUrl: r.youtubeUrl ?? "",
       youtubeChannelName: r.youtubeChannelName,
-    })),
+    }))
   );
 
   const warnings = computeWarnings({

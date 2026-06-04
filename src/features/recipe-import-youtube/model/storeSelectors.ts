@@ -15,10 +15,8 @@ export const selectPendingJobs = (state: JobsState) =>
 export const selectActiveJobCount = (state: JobsState) =>
   selectPendingJobs(state).length;
 
-export const jobByUrlSelector =
-  (url: string) =>
-  (state: StoreState) =>
-    selectJobByUrl(state, url);
+export const jobByUrlSelector = (url: string) => (state: StoreState) =>
+  selectJobByUrl(state, url);
 
 export const pendingJobsSelector = (state: StoreState) =>
   selectPendingJobs(state);

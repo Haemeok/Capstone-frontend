@@ -26,7 +26,7 @@ export const captureElement = async (element: HTMLElement): Promise<Blob> => {
 export const saveAllCards = async (
   cardRefs: React.RefObject<HTMLDivElement | null>[],
   fileNames: string[],
-  folderName: string,
+  folderName: string
 ) => {
   await document.fonts.ready;
 

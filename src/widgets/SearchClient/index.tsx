@@ -36,7 +36,9 @@ export const SearchClient = ({
         <SearchFilters />
 
         <ErrorBoundary
-          fallback={<SectionErrorFallback message="검색 결과를 표시할 수 없어요" />}
+          fallback={
+            <SectionErrorFallback message="검색 결과를 표시할 수 없어요" />
+          }
         >
           <RecipeGrid
             recipes={recipes}

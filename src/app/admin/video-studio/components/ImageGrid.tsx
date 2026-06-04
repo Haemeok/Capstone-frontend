@@ -21,7 +21,7 @@ export const ImageGrid = ({ imageUrls, selectedUrl, onSelect }: Props) => {
               key={url}
               type="button"
               onClick={() => onSelect(url)}
-              className={`relative overflow-hidden rounded-card border-2 ${
+              className={`rounded-card relative overflow-hidden border-2 ${
                 isSelected ? "border-olive-light" : "border-transparent"
               }`}
             >
@@ -31,7 +31,7 @@ export const ImageGrid = ({ imageUrls, selectedUrl, onSelect }: Props) => {
                 className="aspect-square w-full object-cover"
               />
               {isSelected && (
-                <span className="absolute right-2 top-2 rounded-full bg-olive-light px-2 py-0.5 text-[10px] font-bold text-white">
+                <span className="bg-olive-light absolute top-2 right-2 rounded-full px-2 py-0.5 text-[10px] font-bold text-white">
                   선택됨
                 </span>
               )}

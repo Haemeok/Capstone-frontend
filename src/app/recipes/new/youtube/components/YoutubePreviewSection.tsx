@@ -113,7 +113,8 @@ export const YoutubePreviewSection = ({
 
   const isImporting =
     isSubmitting ||
-    (existingJob?.state === "creating" || existingJob?.state === "polling");
+    existingJob?.state === "creating" ||
+    existingJob?.state === "polling";
   const isDuplicate = duplicateCheck?.recipeId !== undefined;
 
   const hasYoutubeData =

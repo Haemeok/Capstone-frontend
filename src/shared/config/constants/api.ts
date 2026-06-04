@@ -32,10 +32,12 @@ export const END_POINTS = {
   COMMENT_LIKE: (id: string) => `/dev/comments/${id}/like`,
   RECIPE_FAVORITE: (id: string) => `/dev/recipes/${id}/favorite`,
   RECIPE_SAVE: (id: string) => `/dev/recipes/${id}/favorite`, // 동일 endpoint, 마이그레이션용 alias
-  RECIPE_SAVED_BOOKS: (recipeId: string) => `/dev/recipes/${recipeId}/saved-books`,
+  RECIPE_SAVED_BOOKS: (recipeId: string) =>
+    `/dev/recipes/${recipeId}/saved-books`,
   RECIPE_BOOKS: "/dev/me/recipe-books",
   RECIPE_BOOK: (bookId: string) => `/dev/me/recipe-books/${bookId}`,
-  RECIPE_BOOK_RECIPES: (bookId: string) => `/dev/me/recipe-books/${bookId}/recipes`,
+  RECIPE_BOOK_RECIPES: (bookId: string) =>
+    `/dev/me/recipe-books/${bookId}/recipes`,
   RECIPE_BOOK_ORDER: "/dev/me/recipe-books/order",
   RECIPE_VISIBILITY: (id: string) => `/bff/recipes/${id}/visibility`,
   RECIPE_RECOMMENDATIONS: (id: string) => `/dev/recipes/${id}/recommendations`,

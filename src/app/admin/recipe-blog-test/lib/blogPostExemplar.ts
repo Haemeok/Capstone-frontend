@@ -88,11 +88,26 @@ export const BLOG_POST_EXEMPLAR = {
       "대파 약간",
     ],
     recipeInstructions: [
-      { "@type": "HowToStep" as const, text: "콩나물을 흐르는 물에 가볍게 헹군다." },
-      { "@type": "HowToStep" as const, text: "멸치와 다시마, 물 800ml로 10분간 육수를 우려낸다." },
-      { "@type": "HowToStep" as const, text: "콩나물을 넣고 뚜껑을 닫는다. 도중에 열지 않는다." },
-      { "@type": "HowToStep" as const, text: "5분간 끓인 뒤 불을 끄고 뚜껑을 연다." },
-      { "@type": "HowToStep" as const, text: "마늘과 국간장, 대파로 마무리한다." },
+      {
+        "@type": "HowToStep" as const,
+        text: "콩나물을 흐르는 물에 가볍게 헹군다.",
+      },
+      {
+        "@type": "HowToStep" as const,
+        text: "멸치와 다시마, 물 800ml로 10분간 육수를 우려낸다.",
+      },
+      {
+        "@type": "HowToStep" as const,
+        text: "콩나물을 넣고 뚜껑을 닫는다. 도중에 열지 않는다.",
+      },
+      {
+        "@type": "HowToStep" as const,
+        text: "5분간 끓인 뒤 불을 끄고 뚜껑을 연다.",
+      },
+      {
+        "@type": "HowToStep" as const,
+        text: "마늘과 국간장, 대파로 마무리한다.",
+      },
     ],
     nutrition: {
       "@type": "NutritionInformation" as const,

@@ -1,4 +1,3 @@
-
 export type ParsedRecipeBlogBody = {
   lead: string;
   steps: { stepNumber: number; body: string; imageSlot: string }[];
@@ -24,9 +23,7 @@ export const stripCodeFence = (s: string): string => {
 
 // 헤더가 인라인 spaces 로 뭉쳐 오는 패턴 복원 (큐레이션 normalizeMarkdown 차용).
 export const normalizeMarkdown = (md: string): string =>
-  md
-    .replace(/([^\n]) +(#{1,3} )/g, "$1\n\n$2")
-    .trim();
+  md.replace(/([^\n]) +(#{1,3} )/g, "$1\n\n$2").trim();
 
 const splitSections = (md: string): Record<string, string> => {
   const sections: Record<string, string> = {};
@@ -83,10 +80,9 @@ const parseListItems = (body: string): string[] => {
   return items;
 };
 
-
 export const parseAndValidateRecipeBlogBody = (
   md: string,
-  { expectedStepNumbers }: ValidateBodyInput,
+  { expectedStepNumbers }: ValidateBodyInput
 ): ValidateBodyResult => {
   const errors: string[] = [];
   const sections = splitSections(md);
@@ -155,7 +151,7 @@ export const parseAndValidateRecipeBlogBody = (
 
 export const synthesizeAlts = (
   recipeTitle: string,
-  slots: string[],
+  slots: string[]
 ): Record<string, string> => {
   const alts: Record<string, string> = {};
   for (const slot of slots) {

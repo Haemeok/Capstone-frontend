@@ -1,8 +1,8 @@
-import { useCallback,useState } from "react";
+import { useCallback, useState } from "react";
 
 import { postRecipeReactions } from "@/features/recipe-create/model/api";
 
-import { BatchUpdateResult,BatchUpdateState } from "./types";
+import { BatchUpdateResult, BatchUpdateState } from "./types";
 
 export const useBatchUpdateReactions = () => {
   const [state, setState] = useState<BatchUpdateState>({

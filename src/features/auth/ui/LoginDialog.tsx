@@ -4,11 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/shared/ui/shadcn/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/shared/ui/shadcn/dialog";
 
 import LoginContent from "@/app/login/components/LoginContent";
 
@@ -34,7 +30,7 @@ const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full h-full max-w-3xl max-h-[700px] p-0 overflow-hidden [&>button]:z-50">
+      <DialogContent className="h-full max-h-[700px] w-full max-w-3xl overflow-hidden p-0 [&>button]:z-50">
         <DialogTitle className="sr-only">로그인</DialogTitle>
         <LoginContent />
       </DialogContent>

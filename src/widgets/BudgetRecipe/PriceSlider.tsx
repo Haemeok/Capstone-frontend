@@ -21,7 +21,7 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
     <div className="space-y-6">
       <div className="space-y-3 text-center">
         <p className="text-sm font-medium text-gray-600">목표 예산</p>
-        <div className="text-5xl font-black text-olive-light transition-all duration-300">
+        <div className="text-olive-light text-5xl font-black transition-all duration-300">
           {value.toLocaleString()}원
         </div>
       </div>

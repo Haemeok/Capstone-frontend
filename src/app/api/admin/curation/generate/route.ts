@@ -1,12 +1,10 @@
-import { type NextRequest,NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import {
-  CurationError,
-  type GenerateCurationInput,
-} from "@/entities/curation";
+import { assertAdminApi } from "@/shared/lib/admin-guard";
+
+import { CurationError, type GenerateCurationInput } from "@/entities/curation";
 
 import { generateCuration } from "@/app/actions/curation";
-import { assertAdminApi } from "@/shared/lib/admin-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -23,10 +21,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!body || typeof body !== "object" || !body.params) {
-    return NextResponse.json(
-      { error: "params is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "params is required" }, { status: 400 });
   }
 
   try {
@@ -36,7 +31,7 @@ export async function POST(req: NextRequest) {
     if (e instanceof CurationError) {
       return NextResponse.json(
         { error: e.message, code: e.code, meta: e.meta ?? null },
-        { status: 422 },
+        { status: 422 }
       );
     }
     console.error("[curation/generate] unhandled error", e);

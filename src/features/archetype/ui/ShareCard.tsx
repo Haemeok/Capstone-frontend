@@ -7,7 +7,7 @@ import {
   getIndex,
   imageUrl,
 } from "../model/archeTypeResult";
-import { alegreya, notoSerifKR,robotoMono } from "./fonts";
+import { alegreya, notoSerifKR, robotoMono } from "./fonts";
 
 type ShareCardProps = {
   id: string;

@@ -51,7 +51,7 @@ export const NotificationTest = () => {
       <div className="fixed bottom-20 left-4 z-50">
         <button
           onClick={() => setIsVisible(true)}
-          className="px-3 py-2 bg-blue-500 text-white text-xs rounded shadow-lg hover:bg-blue-600"
+          className="rounded bg-blue-500 px-3 py-2 text-xs text-white shadow-lg hover:bg-blue-600"
         >
           WS 테스트
         </button>
@@ -60,9 +60,9 @@ export const NotificationTest = () => {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-80">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-bold text-sm">WebSocket 연결 테스트</h3>
+    <div className="fixed bottom-4 left-4 z-50 w-80 rounded-lg border border-gray-300 bg-white p-4 shadow-lg">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-bold">WebSocket 연결 테스트</h3>
         <button
           onClick={() => setIsVisible(false)}
           className="text-gray-500 hover:text-gray-700"
@@ -72,14 +72,14 @@ export const NotificationTest = () => {
       </div>
 
       <div className="mb-3">
-        <div className="flex items-center gap-2 mb-2">
-          <div className={`w-3 h-3 rounded-full ${getStatusColor()}`}></div>
+        <div className="mb-2 flex items-center gap-2">
+          <div className={`h-3 w-3 rounded-full ${getStatusColor()}`}></div>
           <span className="text-sm font-medium">{getStatusText()}</span>
         </div>
         <div className="text-xs text-gray-600">
           인증 상태: {isAuthenticated ? "✓ 로그인됨" : "✗ 로그인 안됨"}
           {user && (
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="mt-1 text-xs text-gray-500">
               사용자: {user.nickname}
             </div>
           )}
@@ -90,32 +90,32 @@ export const NotificationTest = () => {
         <button
           onClick={connect}
           disabled={connectionStatus === "connected"}
-          className="px-3 py-1 bg-green-500 text-white text-xs rounded disabled:bg-gray-300"
+          className="rounded bg-green-500 px-3 py-1 text-xs text-white disabled:bg-gray-300"
         >
           연결
         </button>
         <button
           onClick={disconnect}
           disabled={connectionStatus === "disconnected"}
-          className="px-3 py-1 bg-red-500 text-white text-xs rounded disabled:bg-gray-300"
+          className="rounded bg-red-500 px-3 py-1 text-xs text-white disabled:bg-gray-300"
         >
           해제
         </button>
       </div>
 
-      <div className="mb-3 p-2 bg-gray-50 rounded text-xs">
+      <div className="mb-3 rounded bg-gray-50 p-2 text-xs">
         <div>읽지 않은 알림: {unreadCount}개</div>
         <div>전체 알림: {notifications.length}개</div>
       </div>
 
       {notifications.length > 0 && (
         <div>
-          <h4 className="text-xs font-medium mb-2">최근 알림:</h4>
+          <h4 className="mb-2 text-xs font-medium">최근 알림:</h4>
           <div className="max-h-32 overflow-y-auto text-xs">
             {notifications.slice(0, 3).map((notification) => (
               <div
                 key={notification.id}
-                className={`p-2 mb-1 rounded ${
+                className={`mb-1 rounded p-2 ${
                   notification.read ? "bg-gray-100" : "bg-blue-50"
                 }`}
               >
@@ -136,10 +136,10 @@ export const NotificationTest = () => {
       )}
 
       <details className="mt-3">
-        <summary className="text-xs cursor-pointer text-gray-600">
+        <summary className="cursor-pointer text-xs text-gray-600">
           디버그 정보
         </summary>
-        <div className="mt-2 p-2 bg-gray-100 rounded text-xs font-mono">
+        <div className="mt-2 rounded bg-gray-100 p-2 font-mono text-xs">
           <div>URL: {BASE_API_URL}</div>
           <div>Mode: SockJS + STOMP</div>
           <div>환경: {process.env.NODE_ENV}</div>

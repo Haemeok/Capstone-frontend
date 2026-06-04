@@ -1,6 +1,12 @@
 import type { CurationParams } from "@/entities/curation";
 
-const Q_STRIP_TERMS = ["레시피", "만드는 법", "만드는법", "만들기", "요리"] as const;
+const Q_STRIP_TERMS = [
+  "레시피",
+  "만드는 법",
+  "만드는법",
+  "만들기",
+  "요리",
+] as const;
 
 const stripQ = (q: string): string => {
   let out = q;

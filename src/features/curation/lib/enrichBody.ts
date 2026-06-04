@@ -1,6 +1,5 @@
 import { normalizeEulReulInText } from "@/shared/lib/korean";
 
-
 const YT_LINE_RE =
   /^\s*\[[^\]]*?\]\(https?:\/\/(?:www\.)?(?:youtu\.be|youtube\.com)[^\s)]*\)\s*$/;
 const IMG_LINE_RE = /^\s*!\[[^\]]*?\]\(https?:\/\//;
@@ -23,7 +22,7 @@ const splitParagraphs = (text: string): string[] =>
     .filter((p) => p.length > 0);
 
 const extractRecipeLinksInline = (
-  paragraph: string,
+  paragraph: string
 ): { stripped: string; links: string[] } => {
   const links: string[] = [];
   RECIPE_LINK_RE.lastIndex = 0;
@@ -80,9 +79,7 @@ const renderSection = (section: ParsedSection, h2Index: number): string => {
 
 export const enrichBodyMarkdown = (md: string): string => {
   const cleaned = md.replace(/\*\*/g, "");
-  const lines = cleaned
-    .split("\n")
-    .filter((l) => !INTRO_HEADER_RE.test(l));
+  const lines = cleaned.split("\n").filter((l) => !INTRO_HEADER_RE.test(l));
 
   // H2 헤더 라인 인덱스 모음.
   const headerIdxs: number[] = [];

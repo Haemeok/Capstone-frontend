@@ -76,7 +76,7 @@ export const PendingRecipeCard = ({
 
   return (
     <div className="relative flex shrink-0 flex-col">
-      <div className="relative overflow-hidden rounded-card">
+      <div className="rounded-card relative overflow-hidden">
         <Image
           src={thumbnailUrl}
           alt={meta.title}

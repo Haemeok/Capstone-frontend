@@ -107,7 +107,7 @@ export default function RecipeVideoSection({
           className={cn(
             "w-full transition-all",
             isSticky
-              ? "my-6 flex aspect-video items-center justify-center rounded-card border-2 border-dashed border-gray-200 bg-gray-50"
+              ? "rounded-card my-6 flex aspect-video items-center justify-center border-2 border-dashed border-gray-200 bg-gray-50"
               : "hidden h-0"
           )}
         >
@@ -134,7 +134,7 @@ export default function RecipeVideoSection({
             )}
           >
             {shouldShowYoutubeInfo ? (
-              <div className="bg-background/80 flex max-w-[70%] items-center gap-2 rounded-card border border-gray-200 px-3 py-2 shadow-md backdrop-blur-sm">
+              <div className="bg-background/80 rounded-card flex max-w-[70%] items-center gap-2 border border-gray-200 px-3 py-2 shadow-md backdrop-blur-sm">
                 <Image
                   src={youtubeMetadata.channelProfileUrl!}
                   alt={youtubeMetadata.channelName!}
@@ -176,7 +176,7 @@ export default function RecipeVideoSection({
                 "cursor-pointer shadow-md backdrop-blur-sm transition-all",
                 isSticky
                   ? "bg-primary/80 hover:bg-primary/90 text-primary-foreground border-primary h-10 w-10 rounded-full"
-                  : "bg-white hover:bg-olive-medium border-1 border-olive-light text-olive-light rounded-card px-3 py-2"
+                  : "hover:bg-olive-medium border-olive-light text-olive-light rounded-card border-1 bg-white px-3 py-2"
               )}
               aria-label={isSticky ? "영상 고정 해제" : "영상 고정"}
             >
@@ -187,10 +187,12 @@ export default function RecipeVideoSection({
                 )}
               >
                 {!isSticky && (
-                  <span className="text-sm font-medium text-olive-light">영상 고정</span>
+                  <span className="text-olive-light text-sm font-medium">
+                    영상 고정
+                  </span>
                 )}
                 {isSticky && (
-                  <Pin className="h-5 w-5 fill-current transition-all text-red-400" />
+                  <Pin className="h-5 w-5 fill-current text-red-400 transition-all" />
                 )}
               </div>
             </Button>
@@ -198,7 +200,7 @@ export default function RecipeVideoSection({
 
           <div
             className={cn(
-              "bg-card relative overflow-hidden rounded-card border shadow-sm transition-all",
+              "bg-card rounded-card relative overflow-hidden border shadow-sm transition-all",
               isSticky && "shadow-2xl"
             )}
           >
@@ -212,7 +214,7 @@ export default function RecipeVideoSection({
               href={videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute z-20 right-2 bottom-2 flex items-center gap-1 rounded-card bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+              className="rounded-card absolute right-2 bottom-2 z-20 flex items-center gap-1 bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80"
             >
               <YouTubeIconBadge className="h-5 w-5" />
               <span>원본 영상</span>

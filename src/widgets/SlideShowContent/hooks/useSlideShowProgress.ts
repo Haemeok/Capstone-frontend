@@ -46,9 +46,7 @@ export const useSlideShowProgress = ({
     const stepStart = stepSize * stepIndex;
 
     const newScrollProgress =
-      stepIndex === totalSteps - 1
-        ? scrollProgress + stepSize
-        : scrollProgress;
+      stepIndex === totalSteps - 1 ? scrollProgress + stepSize : scrollProgress;
     const progressRaw = ((newScrollProgress - stepStart) / stepSize) * 100;
 
     return Math.max(0, Math.min(100, progressRaw));

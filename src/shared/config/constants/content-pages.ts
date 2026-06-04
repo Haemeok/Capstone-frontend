@@ -58,7 +58,7 @@ export const CONTENT_PAGES: ContentPage[] = [
     imageUrl: `${CATEGORY_BASE_URL}drink.webp`,
     searchParams: { tags: ["SOLO", "DRINK", "QUICK"] },
   },
-  
+
   {
     id: "budget-gourmet",
     title: "💰 5천원으로 오마카세 기분",
@@ -88,7 +88,7 @@ export const CONTENT_PAGES: ContentPage[] = [
     imageUrl: `${CATEGORY_BASE_URL}hangover.webp`,
     searchParams: { tags: ["HANGOVER"], dishType: "SOUP_STEW" },
   },
-  
+
   {
     id: "air-fryer-legend",
     title: "🔥 에어프라이어 레전드",

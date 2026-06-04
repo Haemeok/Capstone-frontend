@@ -1,4 +1,5 @@
 import React from "react";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 
@@ -19,11 +20,7 @@ jest.mock("@/features/review-gate", () => ({
 
 const createWrapper = (queryClient: QueryClient) => {
   const Wrapper = ({ children }: { children: React.ReactNode }) =>
-    React.createElement(
-      QueryClientProvider,
-      { client: queryClient },
-      children
-    );
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
   return Wrapper;
 };
 

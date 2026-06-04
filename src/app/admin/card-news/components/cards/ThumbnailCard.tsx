@@ -42,14 +42,42 @@ const ClassicThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
         ...abs,
         bottom: 0,
         height: "60%",
-        background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
+        background:
+          "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
       }}
     />
-    <div style={{ ...abs, bottom: 0, padding: "0 60px 140px", display: "flex", flexDirection: "column" }}>
-      <p style={{ ...hookStyle, color: "#fff", textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}>{hooking}</p>
-      <p style={{ ...subStyle, color: "#fff", textShadow: "0 2px 12px rgba(0,0,0,0.5)", opacity: 0.95 }}>{subject}</p>
+    <div
+      style={{
+        ...abs,
+        bottom: 0,
+        padding: "0 60px 140px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <p
+        style={{
+          ...hookStyle,
+          color: "#fff",
+          textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+        }}
+      >
+        {hooking}
+      </p>
+      <p
+        style={{
+          ...subStyle,
+          color: "#fff",
+          textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+          opacity: 0.95,
+        }}
+      >
+        {subject}
+      </p>
     </div>
-    <div style={{ ...abs, bottom: 40, display: "flex", justifyContent: "center" }}>
+    <div
+      style={{ ...abs, bottom: 40, display: "flex", justifyContent: "center" }}
+    >
       <BrandLogo />
     </div>
   </>
@@ -108,9 +136,27 @@ const GlassThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => {
             flexDirection: "column",
           }}
         >
-          <p style={{ ...hookStyle, color: "#fff", textShadow: "0 2px 14px rgba(0,0,0,0.45)" }}>{hooking}</p>
-          <p style={{ ...subStyle, color: "rgba(255,255,255,0.9)", textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>{subject}</p>
-          <div style={{ marginTop: 28, display: "flex", justifyContent: "center" }}>
+          <p
+            style={{
+              ...hookStyle,
+              color: "#fff",
+              textShadow: "0 2px 14px rgba(0,0,0,0.45)",
+            }}
+          >
+            {hooking}
+          </p>
+          <p
+            style={{
+              ...subStyle,
+              color: "rgba(255,255,255,0.9)",
+              textShadow: "0 2px 12px rgba(0,0,0,0.4)",
+            }}
+          >
+            {subject}
+          </p>
+          <div
+            style={{ marginTop: 28, display: "flex", justifyContent: "center" }}
+          >
             <BrandLogo />
           </div>
         </div>
@@ -128,10 +174,20 @@ const BoldThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
         ...abs,
         bottom: 0,
         height: "60%",
-        background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
+        background:
+          "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
       }}
     />
-    <div style={{ ...abs, bottom: 0, padding: "0 60px 140px", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+    <div
+      style={{
+        ...abs,
+        bottom: 0,
+        padding: "0 60px 140px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+      }}
+    >
       <span
         style={{
           fontFamily: "Jalnan2, sans-serif",
@@ -148,9 +204,20 @@ const BoldThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
       >
         {hooking}
       </span>
-      <p style={{ ...subStyle, color: "#fff", textShadow: "0 2px 12px rgba(0,0,0,0.6)", marginTop: 20 }}>{subject}</p>
+      <p
+        style={{
+          ...subStyle,
+          color: "#fff",
+          textShadow: "0 2px 12px rgba(0,0,0,0.6)",
+          marginTop: 20,
+        }}
+      >
+        {subject}
+      </p>
     </div>
-    <div style={{ ...abs, bottom: 40, display: "flex", justifyContent: "center" }}>
+    <div
+      style={{ ...abs, bottom: 40, display: "flex", justifyContent: "center" }}
+    >
       <BrandLogo />
     </div>
   </>
@@ -195,8 +262,27 @@ const FrameThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => {
           justifyContent: "center",
         }}
       >
-        <p style={{ ...hookStyle, color: "#1a1a1a", fontSize: 52, textShadow: "none" }}>{hooking}</p>
-        <p style={{ ...subStyle, color: "#666", fontSize: 38, textShadow: "none", marginTop: 12 }}>{subject}</p>
+        <p
+          style={{
+            ...hookStyle,
+            color: "#1a1a1a",
+            fontSize: 52,
+            textShadow: "none",
+          }}
+        >
+          {hooking}
+        </p>
+        <p
+          style={{
+            ...subStyle,
+            color: "#666",
+            fontSize: 38,
+            textShadow: "none",
+            marginTop: 12,
+          }}
+        >
+          {subject}
+        </p>
         <div style={{ marginTop: 20 }}>
           <BrandLogo color="#333" />
         </div>
@@ -216,7 +302,14 @@ const SplitThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => {
         src={imageUrl}
         alt=""
         crossOrigin="anonymous"
-        style={{ position: "absolute", top: 0, left: 0, width: CARD, height: splitAt, objectFit: "cover" }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: CARD,
+          height: splitAt,
+          objectFit: "cover",
+        }}
       />
       {/* 하단 솔리드 */}
       <div
@@ -230,7 +323,16 @@ const SplitThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => {
         }}
       />
       {/* 구분선 */}
-      <div style={{ position: "absolute", top: splitAt - 1, left: 60, right: 60, height: 3, backgroundColor: "#E8D5C0" }} />
+      <div
+        style={{
+          position: "absolute",
+          top: splitAt - 1,
+          left: 60,
+          right: 60,
+          height: 3,
+          backgroundColor: "#E8D5C0",
+        }}
+      />
       {/* 텍스트 */}
       <div
         style={{
@@ -245,8 +347,27 @@ const SplitThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => {
           justifyContent: "center",
         }}
       >
-        <p style={{ ...hookStyle, color: "#3E2712", fontSize: 54, textShadow: "none" }}>{hooking}</p>
-        <p style={{ ...subStyle, color: "#8B6D50", fontSize: 40, textShadow: "none", marginTop: 14 }}>{subject}</p>
+        <p
+          style={{
+            ...hookStyle,
+            color: "#3E2712",
+            fontSize: 54,
+            textShadow: "none",
+          }}
+        >
+          {hooking}
+        </p>
+        <p
+          style={{
+            ...subStyle,
+            color: "#8B6D50",
+            fontSize: 40,
+            textShadow: "none",
+            marginTop: 14,
+          }}
+        >
+          {subject}
+        </p>
         <div style={{ marginTop: 24 }}>
           <BrandLogo color="#6B4C30" />
         </div>
@@ -264,7 +385,8 @@ const DarkThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
       style={{
         ...abs,
         inset: 0,
-        background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%)",
+        background:
+          "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%)",
       }}
     />
     <div
@@ -272,15 +394,25 @@ const DarkThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
         ...abs,
         bottom: 0,
         height: "65%",
-        background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)",
+        background:
+          "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)",
       }}
     />
-    <div style={{ ...abs, bottom: 0, padding: "0 60px 140px", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        ...abs,
+        bottom: 0,
+        padding: "0 60px 140px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <p
         style={{
           ...hookStyle,
           color: "#fff",
-          textShadow: "0 0 40px rgba(255,255,255,0.12), 0 2px 12px rgba(0,0,0,0.8)",
+          textShadow:
+            "0 0 40px rgba(255,255,255,0.12), 0 2px 12px rgba(0,0,0,0.8)",
         }}
       >
         {hooking}
@@ -295,7 +427,9 @@ const DarkThumb = ({ imageUrl, hooking, subject }: ThumbnailCardProps) => (
         {subject}
       </p>
     </div>
-    <div style={{ ...abs, bottom: 40, display: "flex", justifyContent: "center" }}>
+    <div
+      style={{ ...abs, bottom: 40, display: "flex", justifyContent: "center" }}
+    >
       <BrandLogo color="#D4A853" />
     </div>
   </>
@@ -327,7 +461,7 @@ export const ThumbnailCard = forwardRef<HTMLDivElement, ThumbnailCardProps>(
         <Renderer {...props} />
       </div>
     );
-  },
+  }
 );
 
 ThumbnailCard.displayName = "ThumbnailCard";

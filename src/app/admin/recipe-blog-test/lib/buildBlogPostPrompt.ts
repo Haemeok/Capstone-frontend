@@ -65,7 +65,7 @@ ${e.closingNote}`;
 
 export const buildBlogPostBodySystemPrompt = (
   leadSeed: LeadSeed,
-  closingSeed: ClosingSeed,
+  closingSeed: ClosingSeed
 ): string => {
   return `당신은 한국 가정 식탁을 큐레이션하는 푸드 매거진의 시니어 에디터다. 디지털 매체이지만 인쇄 푸드 호의 정신을 그대로 가진다.
 
@@ -168,7 +168,7 @@ export const buildBlogPostBodyUserPrompt = (input: {
       tags: recipe.tags,
     },
     null,
-    2,
+    2
   );
 
   const stepNumbers = (recipe.steps ?? [])

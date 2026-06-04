@@ -46,9 +46,7 @@ export const useKeyboardSource = (): Result => {
       let parsed: unknown;
       try {
         parsed =
-          typeof event.data === "string"
-            ? JSON.parse(event.data)
-            : event.data;
+          typeof event.data === "string" ? JSON.parse(event.data) : event.data;
       } catch {
         return;
       }

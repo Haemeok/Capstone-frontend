@@ -37,7 +37,7 @@ const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
     <button
       type="button"
       onClick={handleOpen}
-      className="inline-flex cursor-pointer items-center gap-1 text-sm text-gray-500 transition-colors hover:text-gray-700 hover:underline underline-offset-4"
+      className="inline-flex cursor-pointer items-center gap-1 text-sm text-gray-500 underline-offset-4 transition-colors hover:text-gray-700 hover:underline"
     >
       요리 단위 변환표
       <ChevronRight size={14} />
@@ -68,9 +68,7 @@ const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
               {UNIT_CONVERSIONS.map((item) => (
                 <li key={item.unit} className="flex flex-col gap-0.5 p-4">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-bold text-gray-900">
-                      {item.unit}
-                    </span>
+                    <span className="font-bold text-gray-900">{item.unit}</span>
                     <span className="font-semibold text-gray-900 tabular-nums">
                       {item.value}
                     </span>

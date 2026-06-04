@@ -6,7 +6,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import { CURATION_CATEGORIES, type CurationCategory } from "@/entities/curation";
+import {
+  CURATION_CATEGORIES,
+  type CurationCategory,
+} from "@/entities/curation";
 
 import {
   fetchCurationArticleList,
@@ -29,7 +32,10 @@ type Props =
 
 const PAGE_SIZE = 20;
 
-const CATEGORY_OPTIONS: Array<{ value: CurationCategory | "all"; label: string }> = [
+const CATEGORY_OPTIONS: Array<{
+  value: CurationCategory | "all";
+  label: string;
+}> = [
   { value: "all", label: "전체" },
   ...CURATION_CATEGORIES.map((c) => ({ value: c, label: c })),
 ];
@@ -81,7 +87,9 @@ export const CurationArticleSearchPanel = (props: Props) => {
   const hiddenByExclude = allRows.length - rows.length;
 
   const isSlugSelected = (slug: string): boolean =>
-    props.mode === "single" ? props.selectedSlug === slug : props.selectedSlugs.has(slug);
+    props.mode === "single"
+      ? props.selectedSlug === slug
+      : props.selectedSlugs.has(slug);
 
   const handleClick = (slug: string) => {
     triggerHaptic("Light");
@@ -96,7 +104,9 @@ export const CurationArticleSearchPanel = (props: Props) => {
     <aside className="space-y-2 rounded-2xl border border-gray-100 bg-white p-3">
       <select
         value={category}
-        onChange={(e) => setCategory(e.target.value as CurationCategory | "all")}
+        onChange={(e) =>
+          setCategory(e.target.value as CurationCategory | "all")
+        }
         className="w-full rounded border px-2 py-1 text-sm"
       >
         {CATEGORY_OPTIONS.map((o) => (
@@ -110,7 +120,9 @@ export const CurationArticleSearchPanel = (props: Props) => {
         <p className="px-1 text-[11px] text-gray-500">
           선택 {props.selectedSlugs.size}개
           {hiddenByExclude > 0 && (
-            <span className="ml-2 text-gray-400">· 큐 제외 {hiddenByExclude}개</span>
+            <span className="ml-2 text-gray-400">
+              · 큐 제외 {hiddenByExclude}개
+            </span>
           )}
         </p>
       )}
@@ -123,7 +135,8 @@ export const CurationArticleSearchPanel = (props: Props) => {
         <ul className="space-y-1">
           {rows.map((r) => {
             const isSelected = isSlugSelected(r.slug);
-            const badge = props.mode === "multi" ? props.badges?.(r.slug) ?? null : null;
+            const badge =
+              props.mode === "multi" ? (props.badges?.(r.slug) ?? null) : null;
             return (
               <li key={r.id}>
                 <button
@@ -145,7 +158,9 @@ export const CurationArticleSearchPanel = (props: Props) => {
                     <div className="flex-1">
                       <p className="font-semibold text-gray-900">{r.title}</p>
                       {r.description && (
-                        <p className="line-clamp-2 text-xs text-gray-500">{r.description}</p>
+                        <p className="line-clamp-2 text-xs text-gray-500">
+                          {r.description}
+                        </p>
                       )}
                       <p className="mt-1 text-[10px] text-gray-400">
                         {r.category ?? "-"} · {r.publishedAt.slice(0, 10)}
@@ -162,7 +177,10 @@ export const CurationArticleSearchPanel = (props: Props) => {
             );
           })}
           {hasNextPage && (
-            <li ref={sentinelRef} className="py-3 text-center text-xs text-gray-400">
+            <li
+              ref={sentinelRef}
+              className="py-3 text-center text-xs text-gray-400"
+            >
               더 불러오는 중…
             </li>
           )}

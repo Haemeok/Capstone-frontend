@@ -152,9 +152,7 @@ const IngredientPackDetailDrawer = ({
                   onClick={() => isClickable && handleToggle(ingredient.id)}
                   className={cn(
                     "flex w-full items-center rounded-xl px-3.5 py-3 text-left transition-colors",
-                    isSelected
-                      ? "bg-gray-50"
-                      : "bg-white",
+                    isSelected ? "bg-gray-50" : "bg-white",
                     isClickable
                       ? "active:bg-gray-100"
                       : "cursor-not-allowed opacity-50"
@@ -200,7 +198,7 @@ const IngredientPackDetailDrawer = ({
               "h-12 w-full rounded-xl text-base font-bold transition-colors disabled:cursor-not-allowed disabled:border-0 disabled:bg-gray-100 disabled:text-gray-400",
               allOwned
                 ? "border border-gray-200 bg-white text-gray-900 active:bg-gray-50"
-                : "bg-olive-light text-white active:bg-olive-dark"
+                : "bg-olive-light active:bg-olive-dark text-white"
             )}
           >
             {isLoading

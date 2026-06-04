@@ -6,7 +6,7 @@ import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridIt
 
 const calculateSavings = (
   marketPrice?: number,
-  ingredientCost?: number,
+  ingredientCost?: number
 ): number | null => {
   if (!marketPrice || !ingredientCost) return null;
   const savings = marketPrice - ingredientCost;

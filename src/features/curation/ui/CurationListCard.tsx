@@ -26,7 +26,7 @@ export const CurationListCard = ({
       className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-green-900"
       aria-label={title}
     >
-      <div className="relative aspect-square w-full overflow-hidden bg-beige">
+      <div className="bg-beige relative aspect-square w-full overflow-hidden">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -38,11 +38,11 @@ export const CurationListCard = ({
         ) : null}
       </div>
       {category && (
-        <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.1em] text-green-900">
+        <p className="mt-2 text-[11px] font-bold tracking-[0.1em] text-green-900 uppercase">
           {category}
         </p>
       )}
-      <h3 className="mt-1 line-clamp-2 text-sm font-semibold text-brown underline-offset-4 group-hover:underline sm:text-[15px]">
+      <h3 className="text-brown mt-1 line-clamp-2 text-sm font-semibold underline-offset-4 group-hover:underline sm:text-[15px]">
         {title}
       </h3>
     </Link>

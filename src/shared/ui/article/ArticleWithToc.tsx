@@ -3,8 +3,8 @@
 import { type ReactNode, useMemo } from "react";
 
 import ArticleTocDesktop from "./ArticleTocDesktop";
-import ArticleTocMobileFab from "./ArticleTocMobileFab";
 import ArticleTocList from "./ArticleTocList";
+import ArticleTocMobileFab from "./ArticleTocMobileFab";
 import { useActiveSection } from "./hooks/useActiveSection";
 import type { TocItem } from "./types";
 
@@ -27,12 +27,12 @@ const ArticleWithToc = ({
   if (layout === "wide") {
     return (
       <div className="relative flex justify-center gap-8">
-        <article className="min-w-0 w-full max-w-4xl space-y-10">
+        <article className="w-full max-w-4xl min-w-0 space-y-10">
           {children}
         </article>
         <aside className="hidden xl:block">
           <div className="sticky top-24 w-52">
-            <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-gray-400 uppercase">
               목차
             </p>
             <ArticleTocList

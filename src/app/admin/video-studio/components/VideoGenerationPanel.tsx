@@ -201,7 +201,7 @@ export const VideoGenerationPanel = ({
         <button
           onClick={onSubmit}
           disabled={running || !prompt.trim()}
-          className="h-10 rounded-xl bg-olive-light px-4 text-sm font-bold text-white disabled:bg-gray-200 disabled:text-gray-400"
+          className="bg-olive-light h-10 rounded-xl px-4 text-sm font-bold text-white disabled:bg-gray-200 disabled:text-gray-400"
         >
           {running ? `진행 중 (${pollLabel ?? "..."})` : "영상 생성"}
         </button>

@@ -22,7 +22,11 @@ const DynamicRecipeSlide = ({
   maxCost,
   period,
 }: DynamicRecipeSlideProps) => {
-  const { data: recipes, isLoading, error } = useRecipeItemsQuery({
+  const {
+    data: recipes,
+    isLoading,
+    error,
+  } = useRecipeItemsQuery({
     key: queryKey,
     isAiGenerated,
     tags,

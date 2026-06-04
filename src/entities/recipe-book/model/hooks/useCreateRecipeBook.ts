@@ -17,7 +17,9 @@ export const useCreateRecipeBook = () => {
     mutationFn: createRecipeBook,
     onSuccess: () => {
       triggerHaptic("Success");
-      queryClient.invalidateQueries({ queryKey: RECIPE_BOOK_QUERY_KEYS.list() });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_BOOK_QUERY_KEYS.list(),
+      });
     },
   });
 };

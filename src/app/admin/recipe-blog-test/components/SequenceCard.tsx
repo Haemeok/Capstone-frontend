@@ -39,7 +39,7 @@ export const SequenceCard = ({ image, results, onRetry }: Props) => {
       </div>
 
       {showPrompt && (
-        <pre className="mb-2 max-h-40 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-50 p-2 text-xs text-gray-600">
+        <pre className="mb-2 max-h-40 overflow-auto rounded-lg bg-gray-50 p-2 text-xs whitespace-pre-wrap text-gray-600">
           {image.prompt}
         </pre>
       )}

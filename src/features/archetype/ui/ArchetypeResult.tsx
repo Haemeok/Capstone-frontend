@@ -13,7 +13,7 @@ import {
   getIndex,
   imageUrl,
 } from "../model/archeTypeResult";
-import { alegreya, notoSerifKR,robotoMono } from "./fonts";
+import { alegreya, notoSerifKR, robotoMono } from "./fonts";
 import { useShareImage } from "./hooks/useShareImage";
 import ShareCard from "./ShareCard";
 

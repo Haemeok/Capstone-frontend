@@ -15,7 +15,6 @@ import {
   truncate,
 } from "./schema";
 
-
 export const normalizeTopics = (raw: TopicsGen): TopicsResult => {
   const topics = raw.topics
     .map((t) => ({
@@ -39,7 +38,7 @@ export const normalizeItems = (raw: ItemsGen): ItemsResult => {
 
   if (items.length < GRID_COUNT) {
     throw new Error(
-      `항목이 ${GRID_COUNT}개 필요한데 ${items.length}개만 생성됐어요. 다시 시도해 주세요.`,
+      `항목이 ${GRID_COUNT}개 필요한데 ${items.length}개만 생성됐어요. 다시 시도해 주세요.`
     );
   }
 

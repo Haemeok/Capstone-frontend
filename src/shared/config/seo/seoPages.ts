@@ -1,4 +1,3 @@
-
 import { MAIN_INGREDIENTS } from "./ingredients";
 import { generateSearchKeywords } from "./searchKeywords";
 
@@ -52,144 +51,344 @@ type NutritionThemeConfig = {
 
 const NUTRITION_THEMES_FOR_SEO: NutritionThemeConfig[] = [
   // ── 식단러 특화 (params 많은 것 먼저 → buildEnhancedQuery 매칭 우선) ──
-  { key: "DIET_MEAL", label: "다이어트식단", seoLabel: "다이어트 식단용 저칼로리 고단백",
-    params: { minProtein: 25, maxCalories: 500, maxFat: 15 } },
-  { key: "BALANCED", label: "균형식", seoLabel: "영양 균형 잡힌",
-    params: { minCarb: 80, maxCarb: 150, minProtein: 40, maxProtein: 100 } },
-  { key: "HIGH_PROTEIN_LOW_FAT", label: "고단백저지방", seoLabel: "고단백 저지방",
-    params: { minProtein: 30, maxFat: 15, maxCalories: 600 } },
-  { key: "BULK_MEAL", label: "벌크업", seoLabel: "벌크업 고탄수 고단백",
-    params: { minProtein: 40, minCarb: 80 } },
+  {
+    key: "DIET_MEAL",
+    label: "다이어트식단",
+    seoLabel: "다이어트 식단용 저칼로리 고단백",
+    params: { minProtein: 25, maxCalories: 500, maxFat: 15 },
+  },
+  {
+    key: "BALANCED",
+    label: "균형식",
+    seoLabel: "영양 균형 잡힌",
+    params: { minCarb: 80, maxCarb: 150, minProtein: 40, maxProtein: 100 },
+  },
+  {
+    key: "HIGH_PROTEIN_LOW_FAT",
+    label: "고단백저지방",
+    seoLabel: "고단백 저지방",
+    params: { minProtein: 30, maxFat: 15, maxCalories: 600 },
+  },
+  {
+    key: "BULK_MEAL",
+    label: "벌크업",
+    seoLabel: "벌크업 고탄수 고단백",
+    params: { minProtein: 40, minCarb: 80 },
+  },
 
   // ── 단백질 3단계 (헬스인 세분화) ──
-  { key: "HIGH_PROTEIN", label: "고단백", seoLabel: "단백질 30g 이상 고단백",
-    params: { minProtein: 30, maxCalories: 800 } },
-  { key: "HIGH_PROTEIN_40", label: "고단백40", seoLabel: "한끼 단백질 40g 채우는",
-    params: { minProtein: 40 } },
-  { key: "HIGH_PROTEIN_50", label: "고단백50", seoLabel: "단백질 50g 폭탄",
-    params: { minProtein: 50 } },
+  {
+    key: "HIGH_PROTEIN",
+    label: "고단백",
+    seoLabel: "단백질 30g 이상 고단백",
+    params: { minProtein: 30, maxCalories: 800 },
+  },
+  {
+    key: "HIGH_PROTEIN_40",
+    label: "고단백40",
+    seoLabel: "한끼 단백질 40g 채우는",
+    params: { minProtein: 40 },
+  },
+  {
+    key: "HIGH_PROTEIN_50",
+    label: "고단백50",
+    seoLabel: "단백질 50g 폭탄",
+    params: { minProtein: 50 },
+  },
 
   // ── 다이어트 핵심 ──
-  { key: "LOW_CALORIE", label: "저칼로리", seoLabel: "500kcal 이하 저칼로리",
-    params: { maxCalories: 500, maxFat: 15 } },
-  { key: "ULTRA_LOW_CAL", label: "극저칼", seoLabel: "300kcal 이하 극저칼로리",
-    params: { maxCalories: 300 } },
+  {
+    key: "LOW_CALORIE",
+    label: "저칼로리",
+    seoLabel: "500kcal 이하 저칼로리",
+    params: { maxCalories: 500, maxFat: 15 },
+  },
+  {
+    key: "ULTRA_LOW_CAL",
+    label: "극저칼",
+    seoLabel: "300kcal 이하 극저칼로리",
+    params: { maxCalories: 300 },
+  },
 
   // ── 탄수/당류 제한 ──
-  { key: "KETO", label: "키토", seoLabel: "탄수화물 20g 이하 키토",
-    params: { maxCarb: 20, minFat: 30 } },
-  { key: "LOW_CARB", label: "저탄수", seoLabel: "저탄수화물",
-    params: { maxCarb: 50 } },
-  { key: "LOW_SUGAR", label: "저당", seoLabel: "당류 10g 이하 저당",
-    params: { maxSugar: 10, maxCarb: 80 } },
-  { key: "ZERO_SUGAR", label: "제로슈거", seoLabel: "당류 거의 제로",
-    params: { maxSugar: 3, maxCarb: 30 } },
+  {
+    key: "KETO",
+    label: "키토",
+    seoLabel: "탄수화물 20g 이하 키토",
+    params: { maxCarb: 20, minFat: 30 },
+  },
+  {
+    key: "LOW_CARB",
+    label: "저탄수",
+    seoLabel: "저탄수화물",
+    params: { maxCarb: 50 },
+  },
+  {
+    key: "LOW_SUGAR",
+    label: "저당",
+    seoLabel: "당류 10g 이하 저당",
+    params: { maxSugar: 10, maxCarb: 80 },
+  },
+  {
+    key: "ZERO_SUGAR",
+    label: "제로슈거",
+    seoLabel: "당류 거의 제로",
+    params: { maxSugar: 3, maxCarb: 30 },
+  },
 
   // ── 기타 건강 ──
-  { key: "LOW_SODIUM", label: "저염식", seoLabel: "나트륨 800mg 이하 저염",
-    params: { maxSodium: 800 } },
-  { key: "LOW_FAT", label: "저지방", seoLabel: "지방 20g 이하 저지방",
-    params: { maxFat: 20, maxCalories: 600 } },
+  {
+    key: "LOW_SODIUM",
+    label: "저염식",
+    seoLabel: "나트륨 800mg 이하 저염",
+    params: { maxSodium: 800 },
+  },
+  {
+    key: "LOW_FAT",
+    label: "저지방",
+    seoLabel: "지방 20g 이하 저지방",
+    params: { maxFat: 20, maxCalories: 600 },
+  },
 ];
 
 // ── 부자연스러운 조합 필터 ──
 
 const INVALID_INGREDIENT_DISH = new Set([
   // 과일/유제품 + 국물요리
-  "바나나:SOUP_STEW", "딸기:SOUP_STEW", "블루베리:SOUP_STEW", "망고:SOUP_STEW",
-  "사과:SOUP_STEW", "포도:SOUP_STEW", "수박:SOUP_STEW", "복숭아:SOUP_STEW",
-  "귤:SOUP_STEW", "키위:SOUP_STEW", "체리:SOUP_STEW", "파인애플:SOUP_STEW",
-  "우유:SOUP_STEW", "요거트:SOUP_STEW", "아이스크림:SOUP_STEW",
+  "바나나:SOUP_STEW",
+  "딸기:SOUP_STEW",
+  "블루베리:SOUP_STEW",
+  "망고:SOUP_STEW",
+  "사과:SOUP_STEW",
+  "포도:SOUP_STEW",
+  "수박:SOUP_STEW",
+  "복숭아:SOUP_STEW",
+  "귤:SOUP_STEW",
+  "키위:SOUP_STEW",
+  "체리:SOUP_STEW",
+  "파인애플:SOUP_STEW",
+  "우유:SOUP_STEW",
+  "요거트:SOUP_STEW",
+  "아이스크림:SOUP_STEW",
   // 과일/유제품 + 구이
-  "바나나:GRILL", "딸기:GRILL", "블루베리:GRILL", "우유:GRILL",
-  "요거트:GRILL", "생크림:GRILL", "아이스크림:GRILL",
-  "수박:GRILL", "포도:GRILL", "복숭아:GRILL", "귤:GRILL",
+  "바나나:GRILL",
+  "딸기:GRILL",
+  "블루베리:GRILL",
+  "우유:GRILL",
+  "요거트:GRILL",
+  "생크림:GRILL",
+  "아이스크림:GRILL",
+  "수박:GRILL",
+  "포도:GRILL",
+  "복숭아:GRILL",
+  "귤:GRILL",
   // 양식재료 + 한식국물
-  "아보카도:SOUP_STEW", "치즈:SOUP_STEW", "베이컨:SOUP_STEW",
-  "아보카도:STEAMED_BRAISED", "파스타면:SOUP_STEW",
+  "아보카도:SOUP_STEW",
+  "치즈:SOUP_STEW",
+  "베이컨:SOUP_STEW",
+  "아보카도:STEAMED_BRAISED",
+  "파스타면:SOUP_STEW",
   // 해산물 + 부자연 조합
-  "연어:STEAMED_BRAISED", "연어:PICKLE",
-  "랍스터:FRYING", "랍스터:PICKLE",
+  "연어:STEAMED_BRAISED",
+  "연어:PICKLE",
+  "랍스터:FRYING",
+  "랍스터:PICKLE",
   // 기타
-  "초콜릿:SOUP_STEW", "초콜릿:GRILL", "초콜릿:FRYING", "초콜릿:STEAMED_BRAISED",
-  "초콜릿:SALAD", "초콜릿:RAW", "초콜릿:PICKLE", "초콜릿:RICE_NOODLE",
-  "빵:SOUP_STEW", "빵:STEAMED_BRAISED", "빵:PICKLE",
-  "식빵:SOUP_STEW", "식빵:STEAMED_BRAISED", "식빵:PICKLE",
-  "케이크:SOUP_STEW", "케이크:GRILL", "케이크:FRYING",
+  "초콜릿:SOUP_STEW",
+  "초콜릿:GRILL",
+  "초콜릿:FRYING",
+  "초콜릿:STEAMED_BRAISED",
+  "초콜릿:SALAD",
+  "초콜릿:RAW",
+  "초콜릿:PICKLE",
+  "초콜릿:RICE_NOODLE",
+  "빵:SOUP_STEW",
+  "빵:STEAMED_BRAISED",
+  "빵:PICKLE",
+  "식빵:SOUP_STEW",
+  "식빵:STEAMED_BRAISED",
+  "식빵:PICKLE",
+  "케이크:SOUP_STEW",
+  "케이크:GRILL",
+  "케이크:FRYING",
   // 생식 부적합
-  "돼지고기:RAW", "닭고기:RAW", "닭가슴살:RAW", "닭다리:RAW", "닭날개:RAW",
-  "소시지:RAW", "햄:RAW", "스팸:RAW", "베이컨:RAW",
-  "돼지 앞다리살:RAW", "삼겹살:RAW", "목살:RAW", "항정살:RAW",
+  "돼지고기:RAW",
+  "닭고기:RAW",
+  "닭가슴살:RAW",
+  "닭다리:RAW",
+  "닭날개:RAW",
+  "소시지:RAW",
+  "햄:RAW",
+  "스팸:RAW",
+  "베이컨:RAW",
+  "돼지 앞다리살:RAW",
+  "삼겹살:RAW",
+  "목살:RAW",
+  "항정살:RAW",
   // 디저트 부적합
-  "삼겹살:DESSERT", "소고기:DESSERT", "돼지고기:DESSERT", "닭고기:DESSERT",
-  "오징어:DESSERT", "낙지:DESSERT", "문어:DESSERT", "조개:DESSERT",
-  "김치:DESSERT", "마늘:DESSERT", "양파:DESSERT", "대파:DESSERT",
-  "고추:DESSERT", "무:DESSERT", "배추:DESSERT", "콩나물:DESSERT",
-  "두부:DESSERT", "어묵:DESSERT", "스팸:DESSERT",
+  "삼겹살:DESSERT",
+  "소고기:DESSERT",
+  "돼지고기:DESSERT",
+  "닭고기:DESSERT",
+  "오징어:DESSERT",
+  "낙지:DESSERT",
+  "문어:DESSERT",
+  "조개:DESSERT",
+  "김치:DESSERT",
+  "마늘:DESSERT",
+  "양파:DESSERT",
+  "대파:DESSERT",
+  "고추:DESSERT",
+  "무:DESSERT",
+  "배추:DESSERT",
+  "콩나물:DESSERT",
+  "두부:DESSERT",
+  "어묵:DESSERT",
+  "스팸:DESSERT",
   // 절임 부적합
-  "소고기:PICKLE", "돼지고기:PICKLE", "닭고기:PICKLE", "닭가슴살:PICKLE",
-  "삼겹살:PICKLE", "새우:PICKLE", "오징어:PICKLE",
+  "소고기:PICKLE",
+  "돼지고기:PICKLE",
+  "닭고기:PICKLE",
+  "닭가슴살:PICKLE",
+  "삼겹살:PICKLE",
+  "새우:PICKLE",
+  "오징어:PICKLE",
 ]);
 
 const INVALID_INGREDIENT_TAG = new Set([
   // 고칼로리 + 건강식
-  "삼겹살:HEALTHY", "스팸:HEALTHY", "베이컨:HEALTHY", "소시지:HEALTHY",
-  "햄:HEALTHY", "라면:HEALTHY", "떡볶이떡:HEALTHY", "초콜릿:HEALTHY",
-  "아이스크림:HEALTHY", "케이크:HEALTHY", "쿠키:HEALTHY", "과자:HEALTHY",
-  "버터:HEALTHY", "마요네즈:HEALTHY", "치즈:HEALTHY",
-  "우삼겹:HEALTHY", "차돌박이:HEALTHY", "항정살:HEALTHY",
+  "삼겹살:HEALTHY",
+  "스팸:HEALTHY",
+  "베이컨:HEALTHY",
+  "소시지:HEALTHY",
+  "햄:HEALTHY",
+  "라면:HEALTHY",
+  "떡볶이떡:HEALTHY",
+  "초콜릿:HEALTHY",
+  "아이스크림:HEALTHY",
+  "케이크:HEALTHY",
+  "쿠키:HEALTHY",
+  "과자:HEALTHY",
+  "버터:HEALTHY",
+  "마요네즈:HEALTHY",
+  "치즈:HEALTHY",
+  "우삼겹:HEALTHY",
+  "차돌박이:HEALTHY",
+  "항정살:HEALTHY",
   // 해산물 + 캠핑 (보관 어려움)
-  "회:CAMPING", "생선회:CAMPING", "굴:CAMPING",
+  "회:CAMPING",
+  "생선회:CAMPING",
+  "굴:CAMPING",
   // 디저트재료 + 해장
-  "초콜릿:HANGOVER", "케이크:HANGOVER", "쿠키:HANGOVER", "아이스크림:HANGOVER",
-  "바나나:HANGOVER", "딸기:HANGOVER",
+  "초콜릿:HANGOVER",
+  "케이크:HANGOVER",
+  "쿠키:HANGOVER",
+  "아이스크림:HANGOVER",
+  "바나나:HANGOVER",
+  "딸기:HANGOVER",
   // 디저트재료 + 야식
-  "바나나:LATE_NIGHT", "딸기:LATE_NIGHT", "블루베리:LATE_NIGHT",
-  "키위:LATE_NIGHT", "체리:LATE_NIGHT",
+  "바나나:LATE_NIGHT",
+  "딸기:LATE_NIGHT",
+  "블루베리:LATE_NIGHT",
+  "키위:LATE_NIGHT",
+  "체리:LATE_NIGHT",
   // 디저트재료 + 도시락
   "아이스크림:LUNCHBOX",
   // 아이와 함께 부적합
-  "소주:KIDS", "맥주:KIDS", "와인:KIDS", "위스키:KIDS",
+  "소주:KIDS",
+  "맥주:KIDS",
+  "와인:KIDS",
+  "위스키:KIDS",
   // 술안주 부적합
-  "바나나:DRINK", "딸기:DRINK", "사과:DRINK", "우유:DRINK",
-  "요거트:DRINK", "아이스크림:DRINK", "시리얼:DRINK",
+  "바나나:DRINK",
+  "딸기:DRINK",
+  "사과:DRINK",
+  "우유:DRINK",
+  "요거트:DRINK",
+  "아이스크림:DRINK",
+  "시리얼:DRINK",
 ]);
 
 const INVALID_INGREDIENT_NUTRITION = new Set([
   // 고지방 재료 + 저칼로리/저지방
-  "삼겹살:LOW_CALORIE", "삼겹살:LOW_FAT", "삼겹살:KETO",
-  "차돌박이:LOW_CALORIE", "차돌박이:LOW_FAT",
-  "우삼겹:LOW_CALORIE", "우삼겹:LOW_FAT",
-  "항정살:LOW_CALORIE", "항정살:LOW_FAT",
-  "베이컨:LOW_CALORIE", "베이컨:LOW_FAT",
-  "스팸:LOW_CALORIE", "스팸:LOW_FAT",
-  "버터:LOW_CALORIE", "버터:LOW_FAT",
-  "크림치즈:LOW_CALORIE", "크림치즈:LOW_FAT",
+  "삼겹살:LOW_CALORIE",
+  "삼겹살:LOW_FAT",
+  "삼겹살:KETO",
+  "차돌박이:LOW_CALORIE",
+  "차돌박이:LOW_FAT",
+  "우삼겹:LOW_CALORIE",
+  "우삼겹:LOW_FAT",
+  "항정살:LOW_CALORIE",
+  "항정살:LOW_FAT",
+  "베이컨:LOW_CALORIE",
+  "베이컨:LOW_FAT",
+  "스팸:LOW_CALORIE",
+  "스팸:LOW_FAT",
+  "버터:LOW_CALORIE",
+  "버터:LOW_FAT",
+  "크림치즈:LOW_CALORIE",
+  "크림치즈:LOW_FAT",
   // 탄수화물 재료 + 키토
-  "밥:KETO", "즉석밥:KETO", "떡:KETO", "빵:KETO", "식빵:KETO",
-  "파스타면:KETO", "라면:KETO", "국수:KETO", "우동:KETO",
-  "감자:KETO", "고구마:KETO", "옥수수:KETO",
+  "밥:KETO",
+  "즉석밥:KETO",
+  "떡:KETO",
+  "빵:KETO",
+  "식빵:KETO",
+  "파스타면:KETO",
+  "라면:KETO",
+  "국수:KETO",
+  "우동:KETO",
+  "감자:KETO",
+  "고구마:KETO",
+  "옥수수:KETO",
   // 단 재료 + 저당
-  "초콜릿:LOW_SUGAR", "꿀:LOW_SUGAR", "사탕:LOW_SUGAR",
-  "아이스크림:LOW_SUGAR", "케이크:LOW_SUGAR",
+  "초콜릿:LOW_SUGAR",
+  "꿀:LOW_SUGAR",
+  "사탕:LOW_SUGAR",
+  "아이스크림:LOW_SUGAR",
+  "케이크:LOW_SUGAR",
   // 고지방 재료 + 고단백저지방/다이어트식단
-  "삼겹살:HIGH_PROTEIN_LOW_FAT", "베이컨:HIGH_PROTEIN_LOW_FAT",
-  "우삼겹:HIGH_PROTEIN_LOW_FAT", "항정살:HIGH_PROTEIN_LOW_FAT",
-  "버터:HIGH_PROTEIN_LOW_FAT", "크림치즈:HIGH_PROTEIN_LOW_FAT",
+  "삼겹살:HIGH_PROTEIN_LOW_FAT",
+  "베이컨:HIGH_PROTEIN_LOW_FAT",
+  "우삼겹:HIGH_PROTEIN_LOW_FAT",
+  "항정살:HIGH_PROTEIN_LOW_FAT",
+  "버터:HIGH_PROTEIN_LOW_FAT",
+  "크림치즈:HIGH_PROTEIN_LOW_FAT",
   "스팸:HIGH_PROTEIN_LOW_FAT",
-  "삼겹살:DIET_MEAL", "베이컨:DIET_MEAL", "스팸:DIET_MEAL",
-  "우삼겹:DIET_MEAL", "항정살:DIET_MEAL", "버터:DIET_MEAL",
+  "삼겹살:DIET_MEAL",
+  "베이컨:DIET_MEAL",
+  "스팸:DIET_MEAL",
+  "우삼겹:DIET_MEAL",
+  "항정살:DIET_MEAL",
+  "버터:DIET_MEAL",
   // 극저칼로리 부적합
-  "삼겹살:ULTRA_LOW_CAL", "차돌박이:ULTRA_LOW_CAL", "우삼겹:ULTRA_LOW_CAL",
-  "베이컨:ULTRA_LOW_CAL", "스팸:ULTRA_LOW_CAL", "버터:ULTRA_LOW_CAL",
-  "항정살:ULTRA_LOW_CAL", "크림치즈:ULTRA_LOW_CAL",
+  "삼겹살:ULTRA_LOW_CAL",
+  "차돌박이:ULTRA_LOW_CAL",
+  "우삼겹:ULTRA_LOW_CAL",
+  "베이컨:ULTRA_LOW_CAL",
+  "스팸:ULTRA_LOW_CAL",
+  "버터:ULTRA_LOW_CAL",
+  "항정살:ULTRA_LOW_CAL",
+  "크림치즈:ULTRA_LOW_CAL",
   // 제로슈거 부적합
-  "꿀:ZERO_SUGAR", "초콜릿:ZERO_SUGAR", "아이스크림:ZERO_SUGAR",
-  "케이크:ZERO_SUGAR", "사탕:ZERO_SUGAR",
+  "꿀:ZERO_SUGAR",
+  "초콜릿:ZERO_SUGAR",
+  "아이스크림:ZERO_SUGAR",
+  "케이크:ZERO_SUGAR",
+  "사탕:ZERO_SUGAR",
   // 저탄수 부적합
-  "밥:LOW_CARB", "즉석밥:LOW_CARB", "떡:LOW_CARB", "빵:LOW_CARB",
-  "식빵:LOW_CARB", "파스타면:LOW_CARB", "라면:LOW_CARB", "국수:LOW_CARB",
-  "우동:LOW_CARB", "감자:LOW_CARB", "고구마:LOW_CARB", "옥수수:LOW_CARB",
+  "밥:LOW_CARB",
+  "즉석밥:LOW_CARB",
+  "떡:LOW_CARB",
+  "빵:LOW_CARB",
+  "식빵:LOW_CARB",
+  "파스타면:LOW_CARB",
+  "라면:LOW_CARB",
+  "국수:LOW_CARB",
+  "우동:LOW_CARB",
+  "감자:LOW_CARB",
+  "고구마:LOW_CARB",
+  "옥수수:LOW_CARB",
 ]);
 
 // 인기 tags (3차원 조합용)
@@ -342,7 +541,8 @@ export const generateSeoPages = (): SeoPage[] => {
   // ── I. 재료 × 영양테마 ──
   for (const ing of mainIngredients) {
     for (const theme of NUTRITION_THEMES_FOR_SEO) {
-      if (INVALID_INGREDIENT_NUTRITION.has(`${ing.name}:${theme.key}`)) continue;
+      if (INVALID_INGREDIENT_NUTRITION.has(`${ing.name}:${theme.key}`))
+        continue;
       addPage({
         params: { ingredientIds: ing.id, ...theme.params },
         title: `${theme.seoLabel} ${ing.name} 레시피`,
@@ -354,7 +554,9 @@ export const generateSeoPages = (): SeoPage[] => {
   // ── J. 3차원 조합: 재료 × dishType × tags (상위 인기 재료만) ──
   // Tier 1 재료만 사용하여 조합 폭발 방지
   const tier1Ingredients = mainIngredients.filter((i) => i.tier === 1);
-  for (const ing of tier1Ingredients.length > 0 ? tier1Ingredients : mainIngredients.slice(0, 100)) {
+  for (const ing of tier1Ingredients.length > 0
+    ? tier1Ingredients
+    : mainIngredients.slice(0, 100)) {
     for (const dish of DISH_TYPE_ENTRIES) {
       if (INVALID_INGREDIENT_DISH.has(`${ing.name}:${dish.code}`)) continue;
       for (const tagCode of POPULAR_TAGS) {
@@ -372,8 +574,11 @@ export const generateSeoPages = (): SeoPage[] => {
 
   // ── K. 영양테마 × 가격 (가성비 식단) ──
   const FITNESS_THEME_KEYS = new Set([
-    "HIGH_PROTEIN", "HIGH_PROTEIN_40", "HIGH_PROTEIN_50",
-    "HIGH_PROTEIN_LOW_FAT", "DIET_MEAL",
+    "HIGH_PROTEIN",
+    "HIGH_PROTEIN_40",
+    "HIGH_PROTEIN_50",
+    "HIGH_PROTEIN_LOW_FAT",
+    "DIET_MEAL",
   ]);
   const FITNESS_COST_BRACKETS = [
     { value: 3000, label: "3천원" },
@@ -392,28 +597,57 @@ export const generateSeoPages = (): SeoPage[] => {
   }
 
   // ── L. 재료 쌍 조합 (자연스러운 궁합) ──
-  const INGREDIENT_PAIRS: Array<{ ids: [string, string]; names: [string, string] }> = [];
+  const INGREDIENT_PAIRS: Array<{
+    ids: [string, string];
+    names: [string, string];
+  }> = [];
   const ingById = new Map(mainIngredients.map((i) => [i.name, i.id]));
 
   const PAIR_NAMES: Array<[string, string]> = [
     // 한식 대표 궁합
-    ["두부", "김치"], ["삼겹살", "김치"], ["돼지고기", "김치"],
-    ["소고기", "무"], ["소고기", "대파"], ["닭고기", "감자"],
-    ["감자", "양파"], ["감자", "당근"], ["계란", "밥"],
-    ["계란", "김치"], ["계란", "양파"], ["계란", "대파"],
-    ["두부", "대파"], ["두부", "양파"], ["오징어", "양파"],
+    ["두부", "김치"],
+    ["삼겹살", "김치"],
+    ["돼지고기", "김치"],
+    ["소고기", "무"],
+    ["소고기", "대파"],
+    ["닭고기", "감자"],
+    ["감자", "양파"],
+    ["감자", "당근"],
+    ["계란", "밥"],
+    ["계란", "김치"],
+    ["계란", "양파"],
+    ["계란", "대파"],
+    ["두부", "대파"],
+    ["두부", "양파"],
+    ["오징어", "양파"],
     // 다이어트/헬스
-    ["닭가슴살", "고구마"], ["닭가슴살", "양배추"], ["닭가슴살", "브로콜리"],
-    ["닭가슴살", "계란"], ["두부", "양배추"], ["연어", "아보카도"],
+    ["닭가슴살", "고구마"],
+    ["닭가슴살", "양배추"],
+    ["닭가슴살", "브로콜리"],
+    ["닭가슴살", "계란"],
+    ["두부", "양배추"],
+    ["연어", "아보카도"],
     // 양식
-    ["파스타면", "양파"], ["파스타면", "베이컨"], ["파스타면", "새우"],
-    ["감자", "치즈"], ["빵", "계란"], ["아보카도", "계란"],
+    ["파스타면", "양파"],
+    ["파스타면", "베이컨"],
+    ["파스타면", "새우"],
+    ["감자", "치즈"],
+    ["빵", "계란"],
+    ["아보카도", "계란"],
     // 일식/중식
-    ["밥", "김"], ["참치", "밥"], ["새우", "양파"],
-    ["돼지고기", "양파"], ["소고기", "양파"], ["닭고기", "양파"],
+    ["밥", "김"],
+    ["참치", "밥"],
+    ["새우", "양파"],
+    ["돼지고기", "양파"],
+    ["소고기", "양파"],
+    ["닭고기", "양파"],
     // 가성비
-    ["라면", "계란"], ["라면", "김치"], ["떡볶이떡", "계란"],
-    ["어묵", "대파"], ["스팸", "계란"], ["스팸", "김치"],
+    ["라면", "계란"],
+    ["라면", "김치"],
+    ["떡볶이떡", "계란"],
+    ["어묵", "대파"],
+    ["스팸", "계란"],
+    ["스팸", "김치"],
   ];
 
   for (const [name1, name2] of PAIR_NAMES) {
@@ -433,7 +667,13 @@ export const generateSeoPages = (): SeoPage[] => {
   }
 
   // ── M. dishType × maxCost × tags (재료 없는 3D) ──
-  const POPULAR_TAGS_FOR_3D = ["SOLO", "QUICK", "HEALTHY", "LATE_NIGHT", "LUNCHBOX"];
+  const POPULAR_TAGS_FOR_3D = [
+    "SOLO",
+    "QUICK",
+    "HEALTHY",
+    "LATE_NIGHT",
+    "LUNCHBOX",
+  ];
   for (const dish of DISH_TYPE_ENTRIES) {
     for (const cost of COST_BRACKETS) {
       for (const tagCode of POPULAR_TAGS_FOR_3D) {
@@ -451,20 +691,53 @@ export const generateSeoPages = (): SeoPage[] => {
   // ── N. 시즌 키워드 (텍스트 기반) ──
   const SEASON_KEYWORDS: string[] = [
     // 봄 (3-5월)
-    "냉이 레시피", "달래 무침", "달래 요리", "두릅 튀김", "두릅 요리",
-    "봄나물 요리", "봄나물 비빔밥", "쑥 요리", "미나리 요리",
+    "냉이 레시피",
+    "달래 무침",
+    "달래 요리",
+    "두릅 튀김",
+    "두릅 요리",
+    "봄나물 요리",
+    "봄나물 비빔밥",
+    "쑥 요리",
+    "미나리 요리",
     // 여름 (6-8월)
-    "콩국수", "냉면 만들기", "냉채 레시피", "오이냉국", "냉파스타",
-    "수박화채", "팥빙수 만들기", "여름 보양식", "삼계탕 만들기",
+    "콩국수",
+    "냉면 만들기",
+    "냉채 레시피",
+    "오이냉국",
+    "냉파스타",
+    "수박화채",
+    "팥빙수 만들기",
+    "여름 보양식",
+    "삼계탕 만들기",
     // 가을 (9-11월)
-    "버섯전골", "꽃게탕", "대하구이", "전어구이", "가을 제철 요리",
-    "고구마 요리", "밤 요리", "단호박 요리", "무생채 만들기",
+    "버섯전골",
+    "꽃게탕",
+    "대하구이",
+    "전어구이",
+    "가을 제철 요리",
+    "고구마 요리",
+    "밤 요리",
+    "단호박 요리",
+    "무생채 만들기",
     // 겨울 (12-2월)
-    "어묵탕 만들기", "호빵 만들기", "군고구마", "붕어빵 만들기",
-    "김장김치 만들기", "겨울 찌개", "뜨끈한 국물 요리", "호떡 만들기",
+    "어묵탕 만들기",
+    "호빵 만들기",
+    "군고구마",
+    "붕어빵 만들기",
+    "김장김치 만들기",
+    "겨울 찌개",
+    "뜨끈한 국물 요리",
+    "호떡 만들기",
     // 명절/기념일
-    "설날 요리", "추석 요리", "명절 음식", "잡채 만들기", "전 만들기",
-    "크리스마스 요리", "발렌타인 디저트", "화이트데이 요리",
+    "설날 요리",
+    "추석 요리",
+    "명절 음식",
+    "잡채 만들기",
+    "전 만들기",
+    "크리스마스 요리",
+    "발렌타인 디저트",
+    "화이트데이 요리",
   ];
 
   for (const keyword of SEASON_KEYWORDS) {

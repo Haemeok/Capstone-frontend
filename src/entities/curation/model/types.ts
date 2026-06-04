@@ -13,7 +13,7 @@ export class CurationError extends Error {
   constructor(
     public readonly code: CurationErrorCode,
     message: string,
-    public readonly meta?: Record<string, unknown>,
+    public readonly meta?: Record<string, unknown>
   ) {
     super(message);
     this.name = "CurationError";

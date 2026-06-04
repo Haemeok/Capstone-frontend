@@ -9,12 +9,12 @@ import type { PublicCurationArticleDto } from "./api.server";
 
 export const resolveCoverUrl = (
   _coverImageKey: string | null,
-  recipes: Array<StaticRecipe | null>,
+  recipes: Array<StaticRecipe | null>
 ): string => recipes.find((r) => r?.imageUrl)?.imageUrl ?? "";
 
 export const toSavedRecord = (
   api: PublicCurationArticleDto,
-  recipes: Array<StaticRecipe | null>,
+  recipes: Array<StaticRecipe | null>
 ): SavedCurationRecord => ({
   slug: api.slug,
   h1: api.title,

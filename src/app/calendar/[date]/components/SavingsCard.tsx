@@ -53,8 +53,8 @@ const SavingsCard = ({ totalSavings, totalMarketPrice }: SavingsCardProps) => {
         </div>
 
         <p className="mt-1 text-center text-sm text-gray-400">
-          외식 대비 약{" "}
-          {formatNumber(totalMarketPrice - totalSavings, "원")} 추정
+          외식 대비 약 {formatNumber(totalMarketPrice - totalSavings, "원")}{" "}
+          추정
         </p>
       </div>
     </div>

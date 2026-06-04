@@ -43,70 +43,102 @@ export const useGridCardNews = () => {
 
   const reqIdRef = useRef(0);
 
-  const run = useCallback(async (fn: (isStale: () => boolean) => Promise<void>) => {
-    const myId = ++reqIdRef.current;
-    const isStale = () => myId !== reqIdRef.current;
-    setStatus("loading");
-    setError(null);
-    try {
-      await fn(isStale);
-      if (!isStale()) setStatus("idle");
-    } catch (e) {
-      if (!isStale()) {
-        setError(e instanceof Error ? e.message : String(e));
-        setStatus("error");
+  const run = useCallback(
+    async (fn: (isStale: () => boolean) => Promise<void>) => {
+      const myId = ++reqIdRef.current;
+      const isStale = () => myId !== reqIdRef.current;
+      setStatus("loading");
+      setError(null);
+      try {
+        await fn(isStale);
+        if (!isStale()) setStatus("idle");
+      } catch (e) {
+        if (!isStale()) {
+          setError(e instanceof Error ? e.message : String(e));
+          setStatus("error");
+        }
       }
-    }
-  }, []);
+    },
+    []
+  );
 
   const generateTopics = useCallback(
     (seedKeyword: string) =>
       run(async (isStale) => {
-        const data = await postContent({ stage: "topics", modelId, mode, seedKeyword });
+        const data = await postContent({
+          stage: "topics",
+          modelId,
+          mode,
+          seedKeyword,
+        });
         if (isStale()) return;
         setTopics(data.topics);
       }),
-    [modelId, mode, run],
+    [modelId, mode, run]
   );
 
   const generateItems = useCallback(
     (topicTitle: string) =>
       run(async (isStale) => {
-        const data: ItemsResult = await postContent({ stage: "items", modelId, mode, topicTitle });
+        const data: ItemsResult = await postContent({
+          stage: "items",
+          modelId,
+          mode,
+          topicTitle,
+        });
         if (isStale()) return;
         setHeader(data.header);
         setItems(data.items);
         setImageUrl(null);
       }),
-    [modelId, mode, run],
+    [modelId, mode, run]
   );
 
   const generateImage = useCallback(
     () =>
       run(async (isStale) => {
-        const prompt = buildClayPrompt(items.map((it) => it.imagePrompt), mode);
+        const prompt = buildClayPrompt(
+          items.map((it) => it.imagePrompt),
+          mode
+        );
         const res = await fetch("/api/bff/admin/image-edit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ modelId: IMAGE_MODEL_ID, prompt, referenceImageUrls: [] }),
+          body: JSON.stringify({
+            modelId: IMAGE_MODEL_ID,
+            prompt,
+            referenceImageUrls: [],
+          }),
         });
         if (!res.ok) throw new Error(await readError(res, "image error"));
         const data = await res.json();
         if (isStale()) return;
         setImageUrl(data.imageUrl);
       }),
-    [items, mode, run],
+    [items, mode, run]
   );
 
   const updateItem = useCallback((index: number, patch: Partial<TipItem>) => {
-    setItems((prev) => prev.map((it, i) => (i === index ? { ...it, ...patch } : it)));
+    setItems((prev) =>
+      prev.map((it, i) => (i === index ? { ...it, ...patch } : it))
+    );
   }, []);
 
   return {
-    modelId, setModelId,
-    mode, setMode,
-    status, error,
-    topics, header, setHeader, items, imageUrl,
-    generateTopics, generateItems, generateImage, updateItem,
+    modelId,
+    setModelId,
+    mode,
+    setMode,
+    status,
+    error,
+    topics,
+    header,
+    setHeader,
+    items,
+    imageUrl,
+    generateTopics,
+    generateItems,
+    generateImage,
+    updateItem,
   };
 };

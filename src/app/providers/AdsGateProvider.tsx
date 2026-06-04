@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
-import { AdsGateContext, type AdsGateValue } from "@/shared/adsense/AdsGateContext";
+import {
+  AdsGateContext,
+  type AdsGateValue,
+} from "@/shared/adsense/AdsGateContext";
 import { ADSENSE_TEST_USER_IDS } from "@/shared/adsense/config";
 import { isAdsEnabled } from "@/shared/adsense/lib/isAdsEnabled";
 
@@ -25,8 +28,6 @@ export const AdsGateProvider = ({ children }: { children: ReactNode }) => {
   }, [hydrated, userId]);
 
   return (
-    <AdsGateContext.Provider value={value}>
-      {children}
-    </AdsGateContext.Provider>
+    <AdsGateContext.Provider value={value}>{children}</AdsGateContext.Provider>
   );
 };

@@ -45,7 +45,17 @@ describe("enrichBodyMarkdown", () => {
   });
 
   it("H2가 4개면 광고 4개, 각 광고는 0~3 인덱스로 unique", () => {
-    const md = ["인트로.", "## A", "x", "## B", "x", "## C", "x", "## D", "x"].join("\n\n");
+    const md = [
+      "인트로.",
+      "## A",
+      "x",
+      "## B",
+      "x",
+      "## C",
+      "x",
+      "## D",
+      "x",
+    ].join("\n\n");
     const out = enrichBodyMarkdown(md);
     const ads = out.match(/\[ad\]\(#cur:ad\/\d+\)/g) ?? [];
     expect(ads).toEqual([
@@ -167,7 +177,9 @@ describe("enrichBodyMarkdown", () => {
     expect(intro).toBeGreaterThan(-1);
     expect(intro).toBeLessThan(firstH2);
     // 인트로 단락에는 ingredients 슬롯이 안 붙어야 함 (slot/0 은 첫 레시피 몫).
-    expect(out).not.toMatch(/진짜 도입 단락[\s\S]*\[ingredients\]\(#cur:ingredients\/0\)[\s\S]*## 첫 레시피/);
+    expect(out).not.toMatch(
+      /진짜 도입 단락[\s\S]*\[ingredients\]\(#cur:ingredients\/0\)[\s\S]*## 첫 레시피/
+    );
   });
 
   it('"## intro"/"## Intro"/"## 도입" 변형도 제거', () => {

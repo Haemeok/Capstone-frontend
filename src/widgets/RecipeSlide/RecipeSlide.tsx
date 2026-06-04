@@ -40,7 +40,7 @@ const RecipeSlideLoading = () => (
   <div className="flex w-full gap-3 overflow-x-auto">
     {Array.from({ length: 5 }).map((_, index) => (
       <div key={index} className="flex-shrink-0">
-        <Skeleton className="h-[200px] w-[200px] rounded-card" />
+        <Skeleton className="rounded-card h-[200px] w-[200px]" />
         <div className="mt-2 space-y-2">
           <Skeleton className="h-4 w-[200px]" />
           <Skeleton className="h-4 w-[150px]" />
@@ -87,7 +87,10 @@ const RecipeSlide = ({
       >
         <CarouselContent className="-ml-3">
           {recipes.map((item) => (
-            <CarouselItem key={item.id} className="basis-2/5 pl-3 sm:basis-[200px]">
+            <CarouselItem
+              key={item.id}
+              className="basis-2/5 pl-3 sm:basis-[200px]"
+            >
               <DetailedRecipeGridItem
                 recipe={item}
                 prefetch

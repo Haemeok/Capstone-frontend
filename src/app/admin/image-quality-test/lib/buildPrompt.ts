@@ -53,7 +53,8 @@ const CUTLERY_YES =
 const CUTLERY_NO =
   "**NO CUTLERY.** Do NOT place any spoon, fork, chopsticks, or knife. Keep the composition clean and minimal. Focus strictly on the food.";
 
-const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(Math.random() * arr.length)];
+const pick = <T>(arr: readonly T[]): T =>
+  arr[Math.floor(Math.random() * arr.length)];
 
 const translateIngredientName = (name: string): string => {
   if (name.includes("매생이")) return "fine silky green seaweed (Maesaengi)";

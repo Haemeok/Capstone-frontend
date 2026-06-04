@@ -27,7 +27,9 @@ const PHASE_BADGE = {
 
 export const CurationBlogMode = () => {
   const [tone, setTone] = useState<BlogTone>("epigung");
-  const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(() => new Set());
+  const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(
+    () => new Set()
+  );
   const { items, isRunning, isEnqueueing, runRewrite, enqueueAllReady, reset } =
     useBatchRewrite();
   const queryClient = useQueryClient();
@@ -36,7 +38,8 @@ export const CurationBlogMode = () => {
   const titlesQuery = useInfiniteQuery({
     queryKey: ["admin", "curation-titles-prefetch"],
     initialPageParam: 0,
-    queryFn: ({ pageParam }) => fetchCurationArticleList({ page: pageParam, size: 50 }),
+    queryFn: ({ pageParam }) =>
+      fetchCurationArticleList({ page: pageParam, size: 50 }),
     getNextPageParam: () => undefined,
     staleTime: 60_000,
   });
@@ -50,7 +53,7 @@ export const CurationBlogMode = () => {
 
   const effectiveSelected = useMemo(
     () => prunePending(selectedSlugs, pendingSlugs),
-    [selectedSlugs, pendingSlugs],
+    [selectedSlugs, pendingSlugs]
   );
 
   const handleToggle = useCallback((slug: string, next: boolean) => {
@@ -68,10 +71,11 @@ export const CurationBlogMode = () => {
       if (!item) return null;
       if (item.phase === "enqueued") return PHASE_BADGE.enqueued;
       if (item.phase === "ready") return PHASE_BADGE.ready;
-      if (item.phase === "failed" || item.phase === "enqueue-failed") return PHASE_BADGE.failed;
+      if (item.phase === "failed" || item.phase === "enqueue-failed")
+        return PHASE_BADGE.failed;
       return null;
     },
-    [items],
+    [items]
   );
 
   const handleStart = useCallback(() => {
@@ -93,11 +97,17 @@ export const CurationBlogMode = () => {
 
   const readyCount = items.filter((it) => it.phase === "ready").length;
   const enqueuedCount = items.filter((it) => it.phase === "enqueued").length;
-  const failedCount = items.filter((it) => it.phase === "failed" || it.phase === "enqueue-failed").length;
+  const failedCount = items.filter(
+    (it) => it.phase === "failed" || it.phase === "enqueue-failed"
+  ).length;
 
   return (
     <div className="space-y-4">
-      <BatchToneSelector value={tone} onChange={setTone} disabled={isRunning || isEnqueueing} />
+      <BatchToneSelector
+        value={tone}
+        onChange={setTone}
+        disabled={isRunning || isEnqueueing}
+      />
 
       <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
         <CurationArticleSearchPanel
@@ -112,7 +122,8 @@ export const CurationBlogMode = () => {
           <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-gray-900">
-                선택 {effectiveSelected.size}개 · 완료 {items.length}개 (성공 {enqueuedCount + readyCount} · 실패 {failedCount})
+                선택 {effectiveSelected.size}개 · 완료 {items.length}개 (성공{" "}
+                {enqueuedCount + readyCount} · 실패 {failedCount})
               </p>
               <p className="mt-1 text-xs text-gray-500">
                 톤 1개로 선택된 큐레이션 전부 리라이트 → "발행 큐 일괄 push".
@@ -121,7 +132,9 @@ export const CurationBlogMode = () => {
             <button
               type="button"
               onClick={handleStart}
-              disabled={isRunning || isEnqueueing || effectiveSelected.size === 0}
+              disabled={
+                isRunning || isEnqueueing || effectiveSelected.size === 0
+              }
               className="h-11 cursor-pointer rounded-2xl bg-gray-900 px-5 text-sm font-bold text-white active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
             >
               {isRunning ? "리라이트 중…" : "선택 리라이트"}
@@ -132,7 +145,9 @@ export const CurationBlogMode = () => {
               disabled={isRunning || isEnqueueing || readyCount === 0}
               className="h-11 cursor-pointer rounded-2xl border-2 border-gray-900 bg-white px-5 text-sm font-bold text-gray-900 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
             >
-              {isEnqueueing ? "큐로 보내는 중…" : `발행 큐 일괄 push (${readyCount})`}
+              {isEnqueueing
+                ? "큐로 보내는 중…"
+                : `발행 큐 일괄 push (${readyCount})`}
             </button>
             <button
               type="button"

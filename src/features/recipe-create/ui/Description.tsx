@@ -20,7 +20,11 @@ const Description = () => {
         {...register("description")}
       />
       {errors.description && (
-        <p id="description-error" className="mt-1 text-xs text-red-500" role="alert">
+        <p
+          id="description-error"
+          className="mt-1 text-xs text-red-500"
+          role="alert"
+        >
           {errors.description.message}
         </p>
       )}

@@ -1,14 +1,17 @@
-import { isCurationCategory } from "@/entities/curation";
-import { CATEGORY_META } from "@/entities/curation/model/categoryMeta";
-import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 import {
   createCurationBreadcrumb,
   createCurationListBreadcrumb,
 } from "@/shared/lib/metadata/breadcrumbSchema";
+import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
+import { isCurationCategory } from "@/entities/curation";
+import { CATEGORY_META } from "@/entities/curation/model/categoryMeta";
+
+import type {
+  PublicCurationArticleDto,
+  PublicCurationArticleListItemDto,
+} from "../model/api.server";
 import { coverImageUrlFromKey } from "./coverImageUrl";
-
-import type { PublicCurationArticleDto, PublicCurationArticleListItemDto } from "../model/api.server";
 
 const SITE_URL = SEO_CONSTANTS.SITE_URL;
 
@@ -24,8 +27,11 @@ const PUBLISHER = {
 
 export const createCurationDetailJsonLd = (data: PublicCurationArticleDto) => {
   const fullUrl = `${SITE_URL}/curation/${data.slug}`;
-  const meta = isCurationCategory(data.category) ? CATEGORY_META[data.category] : null;
-  const coverUrl = coverImageUrlFromKey(data.coverImageKey) ?? SEO_CONSTANTS.DEFAULT_IMAGE;
+  const meta = isCurationCategory(data.category)
+    ? CATEGORY_META[data.category]
+    : null;
+  const coverUrl =
+    coverImageUrlFromKey(data.coverImageKey) ?? SEO_CONSTANTS.DEFAULT_IMAGE;
 
   return {
     "@context": "https://schema.org",
@@ -52,7 +58,7 @@ export const createCurationDetailJsonLd = (data: PublicCurationArticleDto) => {
 
 export const createCurationListJsonLd = (
   category: string | null,
-  items: PublicCurationArticleListItemDto[],
+  items: PublicCurationArticleListItemDto[]
 ) => {
   const valid = category && isCurationCategory(category) ? category : null;
   const meta = valid ? CATEGORY_META[valid] : null;

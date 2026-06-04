@@ -31,7 +31,7 @@ const { __finalizeMock } = finalizeModule;
 
 import { handleS3Upload } from "@/shared/api/file";
 
-import { editRecipe,postRecipe } from "@/entities/recipe/model/api";
+import { editRecipe, postRecipe } from "@/entities/recipe/model/api";
 
 import { prepareRecipeData } from "@/features/recipe-create/lib/prepareRecipeData";
 import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";

@@ -73,7 +73,7 @@ const Phase3Accumulate = ({
         className="pointer-events-none fixed z-9999 h-full w-full"
         manualstart={true}
       />
-      <div className="flex flex-col px-5 pb-6 pt-2">
+      <div className="flex flex-col px-5 pt-2 pb-6">
         {/* 금액 표시 - 토스 스타일 큰 숫자 */}
         <div className="mb-5 text-center">
           <div className="flex items-baseline justify-center gap-1">

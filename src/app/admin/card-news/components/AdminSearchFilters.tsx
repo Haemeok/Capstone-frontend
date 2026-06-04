@@ -34,7 +34,7 @@ export const AdminSearchFilters = ({ onSearch }: AdminSearchFiltersProps) => {
   const [sort, setSort] = useState(DEFAULT_SORT);
   const [tags, setTags] = useState<string[]>([]);
   const [nutritionValues, setNutritionValues] = useState<NutritionFilterValues>(
-    {},
+    {}
   );
   const [types, setTypes] = useState<string[]>([]);
 
@@ -54,8 +54,7 @@ export const AdminSearchFilters = ({ onSearch }: AdminSearchFiltersProps) => {
 
     if (query.trim()) params.q = query.trim();
 
-    const dishCode =
-      DISH_TYPE_CODES[dishType as keyof typeof DISH_TYPE_CODES];
+    const dishCode = DISH_TYPE_CODES[dishType as keyof typeof DISH_TYPE_CODES];
     if (dishCode) params.dishType = dishCode;
 
     const tagCodes = tagsCodec.encode(tags);
@@ -75,14 +74,16 @@ export const AdminSearchFilters = ({ onSearch }: AdminSearchFiltersProps) => {
 
   const handleNutritionApply = (
     values: NutritionFilterValues,
-    appliedTypes: string[],
+    appliedTypes: string[]
   ) => {
     setNutritionValues(values);
     setTypes(appliedTypes);
   };
 
   const handleDishTypeChange = (value: string[] | string) => {
-    setDishType(typeof value === "string" ? value : value[0] || DEFAULT_DISH_TYPE);
+    setDishType(
+      typeof value === "string" ? value : value[0] || DEFAULT_DISH_TYPE
+    );
   };
 
   const handleSortChange = (value: string[] | string) => {
@@ -111,10 +112,10 @@ export const AdminSearchFilters = ({ onSearch }: AdminSearchFiltersProps) => {
             if (e.key === "Enter") handleSearch();
           }}
           placeholder="레시피 검색어 입력..."
-          className="w-full rounded-xl border border-gray-200 p-4 pr-12 text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light transition-colors"
+          className="focus:border-olive-light focus:ring-olive-light w-full rounded-xl border border-gray-200 p-4 pr-12 text-gray-900 transition-colors placeholder:text-gray-400 focus:ring-1 focus:outline-none"
         />
         <Search
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+          className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400"
           size={20}
         />
       </div>
@@ -165,11 +166,7 @@ export const AdminSearchFilters = ({ onSearch }: AdminSearchFiltersProps) => {
           description={BASE_DRAWER_CONFIGS.tags.description}
           trigger={
             <FilterChip
-              header={
-                isTagsDirty
-                  ? `태그 ${tags.length}개`
-                  : "태그"
-              }
+              header={isTagsDirty ? `태그 ${tags.length}개` : "태그"}
               isDirty={isTagsDirty}
             />
           }
@@ -234,7 +231,7 @@ export const AdminSearchFilters = ({ onSearch }: AdminSearchFiltersProps) => {
       {/* 검색 버튼 */}
       <button
         onClick={handleSearch}
-        className="h-14 w-full rounded-2xl bg-olive-light text-white font-bold text-lg shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
+        className="bg-olive-light h-14 w-full rounded-2xl text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
       >
         검색
       </button>

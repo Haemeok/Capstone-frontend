@@ -12,7 +12,7 @@ export const TitleField = () => {
   const title = useWatch({ control, name: "title" });
 
   return (
-    <div className="flex w-full flex-col gap-1 ">
+    <div className="flex w-full flex-col gap-1">
       <input
         type="text"
         maxLength={TITLE.MAX}

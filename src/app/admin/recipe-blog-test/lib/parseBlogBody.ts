@@ -16,7 +16,7 @@ const H2_RE = /^##\s+(.+)$/;
 
 export const parseBlogBody = (
   markdown: string,
-  expectedSectionCount: number,
+  expectedSectionCount: number
 ): ParseBlogBodyResult => {
   const lines = markdown.split(/\r?\n/);
   const headingIndices: number[] = [];

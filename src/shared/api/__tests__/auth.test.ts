@@ -23,11 +23,15 @@ if (typeof globalThis.Response === "undefined") {
     }
 
     async json() {
-      return typeof this._body === "string" ? JSON.parse(this._body) : this._body;
+      return typeof this._body === "string"
+        ? JSON.parse(this._body)
+        : this._body;
     }
 
     async text() {
-      return typeof this._body === "string" ? this._body : JSON.stringify(this._body);
+      return typeof this._body === "string"
+        ? this._body
+        : JSON.stringify(this._body);
     }
   }
 

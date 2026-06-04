@@ -40,7 +40,8 @@ export const generateViaGoogle = async (
 
   const data = (await res.json()) as PredictResponse;
   const first = data.predictions?.[0];
-  if (!first?.bytesBase64Encoded) throw new Error("Google returned no bytesBase64Encoded");
+  if (!first?.bytesBase64Encoded)
+    throw new Error("Google returned no bytesBase64Encoded");
   const mime = first.mimeType ?? "image/png";
   return { imageDataUrl: `data:${mime};base64,${first.bytesBase64Encoded}` };
 };

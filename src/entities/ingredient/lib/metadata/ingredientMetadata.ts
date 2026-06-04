@@ -14,7 +14,9 @@ const buildBaseUrl = () =>
 
 const buildTitle = (name: string, recipeCount: number): string => {
   const recipePart =
-    recipeCount > 0 ? `보관법·효능·인기 레시피 ${recipeCount}가지` : "보관법·효능·손질법";
+    recipeCount > 0
+      ? `보관법·효능·인기 레시피 ${recipeCount}가지`
+      : "보관법·효능·손질법";
   return `${name} 완벽 가이드: ${recipePart} | ${SEO_CONSTANTS.SITE_NAME}`;
 };
 
@@ -54,9 +56,7 @@ const buildOgDescription = (
 ): string => {
   const firstBadPair = detail.pairings.bad[0]?.name;
   const recipeTail =
-    recipeCount > 0
-      ? `인기 레시피 ${recipeCount}개까지`
-      : `손질법·궁합까지`;
+    recipeCount > 0 ? `인기 레시피 ${recipeCount}개까지` : `손질법·궁합까지`;
   if (firstBadPair) {
     return `${detail.name}+${firstBadPair}? 같이 안 먹는 걸 추천해요. 보관 꿀팁부터 ${recipeTail}.`;
   }

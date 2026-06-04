@@ -6,7 +6,11 @@ const formatFilter = (filter: Record<string, unknown>): string => {
     .join(", ");
 };
 
-export const buildCardNewsPrompt = (filter: Record<string, unknown>, thumbnail: Recipe, recipes: Recipe[]) => {
+export const buildCardNewsPrompt = (
+  filter: Record<string, unknown>,
+  thumbnail: Recipe,
+  recipes: Recipe[]
+) => {
   const recipeDetails = [thumbnail, ...recipes]
     .map((r, i) => {
       const ingredients = r.ingredients

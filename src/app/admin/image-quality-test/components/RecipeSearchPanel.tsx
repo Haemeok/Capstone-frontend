@@ -48,11 +48,11 @@ export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           placeholder={PLACEHOLDER}
-          className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
+          className="focus:border-olive-light focus:ring-olive-light flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring-1 focus:outline-none"
         />
         <button
           type="submit"
-          className="rounded-xl bg-olive-light px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+          className="bg-olive-light rounded-xl px-4 py-2 text-sm font-medium text-white hover:opacity-90"
         >
           검색
         </button>
@@ -67,9 +67,7 @@ export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
       {items.length > 0 && (
         <div className="mb-2 flex items-baseline justify-between">
           <p className="text-xs text-gray-500">검색 결과 {items.length}개</p>
-          {selectedId && (
-            <p className="text-xs text-olive-light">✓ 선택됨</p>
-          )}
+          {selectedId && <p className="text-olive-light text-xs">✓ 선택됨</p>}
         </div>
       )}
 

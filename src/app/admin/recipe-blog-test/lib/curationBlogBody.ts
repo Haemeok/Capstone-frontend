@@ -8,7 +8,7 @@ const NUTRITION_TOKEN_RE = /\{\{nutrition:([^}]+)\}\}/g;
 export const hydrateCurationBlogMarkdown = (
   md: string,
   recipes: StaticRecipe[],
-  alts: Record<string, string>,
+  alts: Record<string, string>
 ): string => {
   const byId = new Map(recipes.map((r) => [r.id, r]));
   return md

@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react";
 
-import { AlertCircle, Bookmark, CheckCircle2, Info, X, XCircle } from "lucide-react";
+import {
+  AlertCircle,
+  Bookmark,
+  CheckCircle2,
+  Info,
+  X,
+  XCircle,
+} from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -44,7 +51,7 @@ const ActionButton = ({ label, onClick, className }: ActionButtonProps) => (
     type="button"
     onClick={onClick}
     className={cn(
-      "shrink-0 text-sm font-bold text-olive-light underline underline-offset-2",
+      "text-olive-light shrink-0 text-sm font-bold underline underline-offset-2",
       className
     )}
   >
@@ -91,7 +98,7 @@ const Toast = (props: ToastProps) => {
       : undefined;
 
   const actionLabel =
-    props.variant === "action" ? props.action.label ?? "변경" : null;
+    props.variant === "action" ? (props.action.label ?? "변경") : null;
 
   return (
     <>
@@ -127,8 +134,8 @@ const Toast = (props: ToastProps) => {
           SURFACE_STYLE,
           "pointer-events-auto hidden w-80 items-center gap-3 rounded-lg px-4 py-4 shadow-lg transition-all duration-300 ease-out md:flex",
           isVisible
-            ? "translate-x-0 opacity-100 scale-100"
-            : "translate-x-12 opacity-0 scale-95"
+            ? "translate-x-0 scale-100 opacity-100"
+            : "translate-x-12 scale-95 opacity-0"
         )}
         role="status"
         aria-live="polite"

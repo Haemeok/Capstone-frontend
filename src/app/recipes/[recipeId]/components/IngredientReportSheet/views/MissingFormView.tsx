@@ -63,7 +63,7 @@ export const MissingFormView = ({
         value={missingName}
         onChange={(e) => onNameChange(e.target.value)}
         placeholder="빠진 재료 이름을 입력해주세요"
-        className="w-full rounded-xl border-2 border-gray-200 p-4 text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-0 transition-colors"
+        className="focus:border-olive-light w-full rounded-xl border-2 border-gray-200 p-4 text-gray-900 transition-colors placeholder:text-gray-400 focus:ring-0 focus:outline-none"
       />
 
       <div className="mt-3">
@@ -71,7 +71,7 @@ export const MissingFormView = ({
           value={memo}
           onChange={(e) => onMemoChange(e.target.value)}
           placeholder="추가 설명 (선택)"
-          className="h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
+          className="focus:border-olive-light focus:ring-olive-light h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-1 focus:outline-none"
         />
       </div>
     </div>

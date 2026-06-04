@@ -58,13 +58,13 @@ const ImageEditPage = () => {
   }, []);
 
   return (
-    <div className="mx-auto min-h-screen max-w-7xl bg-beige-light/40 p-4 md:p-6">
+    <div className="bg-beige-light/40 mx-auto min-h-screen max-w-7xl p-4 md:p-6">
       <h1 className="mb-1 text-2xl font-bold text-gray-900">
         이미지 편집 (image-to-image)
       </h1>
       <p className="mb-4 text-sm text-gray-500">
-        워커 단위로 (이미지 + 프롬프트 + 모델 N개 병렬). 워커는 자유롭게 추가·삭제하고
-        각자 독립적으로 돌아가요.
+        워커 단위로 (이미지 + 프롬프트 + 모델 N개 병렬). 워커는 자유롭게
+        추가·삭제하고 각자 독립적으로 돌아가요.
       </p>
 
       <div className="mb-4 inline-flex rounded-xl border border-gray-200 bg-white p-1">
@@ -104,7 +104,7 @@ const ImageEditPage = () => {
             <button
               type="button"
               onClick={handleAddWorker}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-300 bg-white text-sm font-medium text-gray-600 transition hover:border-olive-light hover:bg-olive-light/5 hover:text-olive-light"
+              className="hover:border-olive-light hover:bg-olive-light/5 hover:text-olive-light flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-300 bg-white text-sm font-medium text-gray-600 transition"
             >
               <Plus className="h-4 w-4" /> 워커 추가
             </button>

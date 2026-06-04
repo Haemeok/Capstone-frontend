@@ -1,11 +1,11 @@
 "use client";
 
 import {
+  type CSSProperties,
+  type ReactNode,
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
-  type ReactNode,
 } from "react";
 
 import { cn } from "@/shared/lib/utils";
@@ -17,8 +17,6 @@ import { ADSENSE_CLIENT_ID, IS_AD_TEST_MODE } from "./config";
 declare global {
   interface Window {
     adsbygoogle?: unknown[];
-    __adPushCount?: number;
-    __adInstanceSeq?: number;
   }
 }
 
@@ -51,56 +49,17 @@ export const AdSlot = ({
   const insRef = useRef<HTMLModElement>(null);
   const [isFilled, setIsFilled] = useState(false);
   const pushedRef = useRef(false);
-  const instanceIdRef = useRef<number | null>(null);
-  if (instanceIdRef.current === null && typeof window !== "undefined") {
-    window.__adInstanceSeq = (window.__adInstanceSeq ?? 0) + 1;
-    instanceIdRef.current = window.__adInstanceSeq;
-  }
 
   useEffect(() => {
     const ins = insRef.current;
-    if (!ins) {
-      console.log("[AdSlot effect]", {
-        instanceId: instanceIdRef.current,
-        slotId,
-        skip: "ins ref null",
-      });
-      return;
-    }
-    const totalIns = document.querySelectorAll("ins.adsbygoogle").length;
-    const unfilledIns = document.querySelectorAll(
-      "ins.adsbygoogle:not([data-adsbygoogle-status])",
-    ).length;
-    const insSlot = ins.getAttribute("data-ad-slot");
-    const insStatus = ins.getAttribute("data-adsbygoogle-status");
-    const baseInfo = {
-      instanceId: instanceIdRef.current,
-      slotIdProp: slotId,
-      insSlot,
-      insStatus,
-      pushedRef: pushedRef.current,
-      totalIns,
-      unfilledIns,
-      globalPushCount: window.__adPushCount ?? 0,
-    };
-    if (pushedRef.current) {
-      console.log("[AdSlot effect skip pushedRef]", baseInfo);
-      return;
-    }
-    if (insStatus) {
-      console.log("[AdSlot effect skip statusAttr]", baseInfo);
-      return;
-    }
+    if (!ins) return;
+    if (pushedRef.current) return;
+    if (ins.getAttribute("data-adsbygoogle-status")) return;
     pushedRef.current = true;
-    window.__adPushCount = (window.__adPushCount ?? 0) + 1;
-    console.log("[AdSlot effect pushing]", {
-      ...baseInfo,
-      globalPushCountAfter: window.__adPushCount,
-    });
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
-      console.log("[AdSlot push threw]", { ...baseInfo, error: String(e) });
+    } catch {
+      pushedRef.current = true;
     }
   }, [slotId]);
 
@@ -145,10 +104,7 @@ export const AdSlot = ({
       style={{ minHeight }}
     >
       {!isFilled && skeleton ? (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-        >
+        <div aria-hidden className="pointer-events-none absolute inset-0">
           {skeleton}
         </div>
       ) : null}
@@ -160,9 +116,7 @@ export const AdSlot = ({
         data-ad-slot={slotId}
         data-ad-format={adFormat}
         data-ad-layout={adLayout}
-        data-full-width-responsive={
-          fullWidthResponsive ? "true" : undefined
-        }
+        data-full-width-responsive={fullWidthResponsive ? "true" : undefined}
         data-adtest={IS_AD_TEST_MODE ? "on" : undefined}
       />
     </div>

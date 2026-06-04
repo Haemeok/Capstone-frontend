@@ -23,7 +23,7 @@ const SearchDiscoveryDefault = () => {
   return (
     <Container className="pt-0">
       <div className="space-y-6 pb-10">
-        <div className="sticky top-0 z-10 -mx-4 bg-white px-4 pb-2 pt-4 md:-mx-6 md:px-6">
+        <div className="sticky top-0 z-10 -mx-4 bg-white px-4 pt-4 pb-2 md:-mx-6 md:px-6">
           <div className="flex items-center gap-2">
             <div className="min-w-0 flex-1">
               <SearchInput onFocus={handleSearchFocus} />

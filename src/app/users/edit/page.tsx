@@ -128,7 +128,7 @@ const UserInfoChangePage = () => {
 
   return (
     <>
-      <div className="fixed top-0 right-0 left-0 z-header border-b border-gray-200 bg-white p-4 sticky-optimized md:relative md:z-auto">
+      <div className="z-header sticky-optimized fixed top-0 right-0 left-0 border-b border-gray-200 bg-white p-4 md:relative md:z-auto">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between">
           <button
             type="button"
@@ -142,10 +142,11 @@ const UserInfoChangePage = () => {
             type="button"
             onClick={handleSubmit(onSubmit)}
             disabled={!isValid || !hasChanges || isLoading}
-            className={`border-none bg-transparent text-base font-semibold ${isValid && hasChanges && !isLoading
-                ? "cursor-pointer text-olive-light"
+            className={`border-none bg-transparent text-base font-semibold ${
+              isValid && hasChanges && !isLoading
+                ? "text-olive-light cursor-pointer"
                 : "cursor-default text-gray-300"
-              }`}
+            }`}
           >
             {isLoading ? "저장 중..." : "확인"}
           </button>
@@ -163,8 +164,9 @@ const UserInfoChangePage = () => {
               className="block h-[100px] w-[100px] cursor-pointer"
             >
               <div
-                className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border-[3px] bg-cover bg-center transition-colors ${imageError ? "border-red-400" : "border-white"} ${previewImageUrl ? "bg-transparent" : "bg-gray-300"
-                  }`}
+                className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border-[3px] bg-cover bg-center transition-colors ${imageError ? "border-red-400" : "border-white"} ${
+                  previewImageUrl ? "bg-transparent" : "bg-gray-300"
+                }`}
                 style={
                   previewImageUrl
                     ? { backgroundImage: `url(${previewImageUrl})` }
@@ -248,10 +250,11 @@ const UserInfoChangePage = () => {
                         clearErrors("nickname");
                       }
                     }}
-                    className={`w-full rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:border-olive-light focus:bg-white focus:outline-none focus:ring-1 focus:ring-olive-light/20 ${errors.nickname
+                    className={`focus:border-olive-light focus:ring-olive-light/20 w-full rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:bg-white focus:ring-1 focus:outline-none ${
+                      errors.nickname
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-gray-200"
-                      }`}
+                    }`}
                   />
                 )}
               />
@@ -289,10 +292,11 @@ const UserInfoChangePage = () => {
                     id="description"
                     placeholder="소개를 입력해주세요."
                     rows={5}
-                    className={`w-full resize-none rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:border-olive-light focus:bg-white focus:outline-none focus:ring-1 focus:ring-olive-light/20 ${errors.description
+                    className={`focus:border-olive-light focus:ring-olive-light/20 w-full resize-none rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:bg-white focus:ring-1 focus:outline-none ${
+                      errors.description
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-gray-200"
-                      }`}
+                    }`}
                   />
                 )}
               />

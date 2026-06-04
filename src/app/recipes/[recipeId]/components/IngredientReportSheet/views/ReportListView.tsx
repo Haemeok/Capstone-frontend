@@ -43,7 +43,7 @@ export const ReportListView = ({
       <button
         type="button"
         onClick={onMissingSelect}
-        className="mb-3 flex w-full cursor-pointer items-center gap-2.5 rounded-xl border border-dashed border-gray-300 px-4 py-3 text-left transition-all hover:border-olive-light hover:bg-olive-light/5"
+        className="hover:border-olive-light hover:bg-olive-light/5 mb-3 flex w-full cursor-pointer items-center gap-2.5 rounded-xl border border-dashed border-gray-300 px-4 py-3 text-left transition-all"
       >
         <Plus className="h-4 w-4 text-gray-400" />
         <span className="text-sm font-medium text-gray-500">

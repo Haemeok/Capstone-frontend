@@ -139,7 +139,11 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
 
   createJob: (concept, request, meta) => {
     const existingJob = get().getJobByConcept(concept);
-    if (existingJob && existingJob.state !== "completed" && existingJob.state !== "failed") {
+    if (
+      existingJob &&
+      existingJob.state !== "completed" &&
+      existingJob.state !== "failed"
+    ) {
       return existingJob.idempotencyKey;
     }
 

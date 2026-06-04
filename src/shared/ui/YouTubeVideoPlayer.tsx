@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect,useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
 import {
   YouTubePlayer,
@@ -109,7 +109,7 @@ export const YouTubeVideoPlayer = forwardRef<
       if (iframe) {
         iframeRef.current = iframe;
 
-       if (pendingSeekRef.current) {
+        if (pendingSeekRef.current) {
           const { amount, type } = pendingSeekRef.current;
           pendingSeekRef.current = null;
 

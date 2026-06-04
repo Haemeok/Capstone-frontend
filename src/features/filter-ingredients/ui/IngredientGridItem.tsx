@@ -24,17 +24,17 @@ export const IngredientGridItem = ({
       className={cn(
         "relative flex cursor-pointer flex-col items-center rounded-xl p-2 transition-all",
         isSelected
-          ? "bg-olive-light/10 ring-2 ring-olive-light"
+          ? "bg-olive-light/10 ring-olive-light ring-2"
           : "hover:bg-gray-50"
       )}
     >
       {isSelected && (
-        <div className="absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-olive-light">
+        <div className="bg-olive-light absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-full">
           <Check size={12} className="text-white" strokeWidth={3} />
         </div>
       )}
 
-      <div className="relative aspect-square w-full overflow-hidden rounded-card bg-gray-100">
+      <div className="rounded-card relative aspect-square w-full overflow-hidden bg-gray-100">
         {imageUrl && (
           <Image
             src={imageUrl}
@@ -48,7 +48,7 @@ export const IngredientGridItem = ({
       <p
         className={cn(
           "mt-1.5 w-full truncate text-center text-xs",
-          isSelected ? "font-bold text-olive-light" : "text-gray-700"
+          isSelected ? "text-olive-light font-bold" : "text-gray-700"
         )}
       >
         {name}

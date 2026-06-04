@@ -1,5 +1,6 @@
-import crypto from "node:crypto";
 import type { NextRequest } from "next/server";
+
+import crypto from "node:crypto";
 
 export const AUTH_DIAG_PREFIX = "[AUTH_DIAG]";
 
@@ -24,11 +25,7 @@ export const fingerprint = (
   token: string | null | undefined
 ): string | null => {
   if (!token) return null;
-  return crypto
-    .createHash("sha256")
-    .update(token)
-    .digest("hex")
-    .slice(0, 8);
+  return crypto.createHash("sha256").update(token).digest("hex").slice(0, 8);
 };
 
 export const extractCookieValue = (

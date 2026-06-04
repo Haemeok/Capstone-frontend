@@ -1,5 +1,6 @@
-import { prepareRemixPayload } from "@/features/recipe-create/lib/prepareRemixPayload";
 import type { Recipe } from "@/entities/recipe/model/types";
+
+import { prepareRemixPayload } from "@/features/recipe-create/lib/prepareRemixPayload";
 
 const baseRecipe = (): Recipe => ({
   id: "test-recipe-1",
@@ -80,7 +81,7 @@ describe("prepareRemixPayload", () => {
     const recipe = baseRecipe();
     const result = prepareRemixPayload(
       { ...recipe, title: "내 버전", dishType: "찌개/국" },
-      "ORIGIN_ID",
+      "ORIGIN_ID"
     );
     expect(result.title).toBe("내 버전");
     expect(result.dishType).toBe("찌개/국");

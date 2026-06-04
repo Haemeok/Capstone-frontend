@@ -34,7 +34,10 @@ const parseQuantity = (str: string): Fraction | null => {
   if (mixed) {
     const d = parseInt(mixed[3], 10);
     if (d === 0) return null;
-    return reduce({ n: parseInt(mixed[1], 10) * d + parseInt(mixed[2], 10), d });
+    return reduce({
+      n: parseInt(mixed[1], 10) * d + parseInt(mixed[2], 10),
+      d,
+    });
   }
   const simple = str.match(/^(\d+)\/(\d+)$/);
   if (simple) {

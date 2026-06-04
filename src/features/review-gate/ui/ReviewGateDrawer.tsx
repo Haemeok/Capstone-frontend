@@ -36,7 +36,7 @@ export const ReviewGateDrawer = ({
       <Content className="overflow-hidden border-0 bg-white shadow-xl">
         <Title className="sr-only">앱 만족도 조사</Title>
 
-        <div className="flex flex-col items-center px-6 pb-8 pt-8">
+        <div className="flex flex-col items-center px-6 pt-8 pb-8">
           <div className="flex items-center gap-3">
             <Image
               src="/web-app-manifest-192x192.png"
@@ -51,7 +51,8 @@ export const ReviewGateDrawer = ({
 
           <div className="mt-6 text-center">
             <p className="text-xl font-bold text-gray-700">
-              <span className="text-olive-light">레시피오</span> 마음에 드셨나요?
+              <span className="text-olive-light">레시피오</span> 마음에
+              드셨나요?
             </p>
             <p className="mt-2 text-base text-gray-500">
               소중한 리뷰가 큰 힘이 됩니다
@@ -60,7 +61,7 @@ export const ReviewGateDrawer = ({
 
           <button
             onClick={handlePositive}
-            className="mt-8 h-14 w-full cursor-pointer rounded-2xl bg-olive-light text-lg font-bold text-white shadow-lg transition-colors hover:shadow-xl active:scale-[0.98]"
+            className="bg-olive-light mt-8 h-14 w-full cursor-pointer rounded-2xl text-lg font-bold text-white shadow-lg transition-colors hover:shadow-xl active:scale-[0.98]"
           >
             별점 남기러 가기
           </button>

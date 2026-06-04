@@ -1,9 +1,9 @@
-import { act,renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 
 import api from "@/shared/api/client";
 import { invalidateCache } from "@/shared/config/cache";
 
-import { IMAGE_CHECK_CONFIG,useRecipeImageCheck } from "./useRecipeImageCheck";
+import { IMAGE_CHECK_CONFIG, useRecipeImageCheck } from "./useRecipeImageCheck";
 
 // Mock dependencies
 jest.mock("@/shared/api/client", () => ({
@@ -18,8 +18,9 @@ jest.mock("@/shared/config/cache", () => ({
 }));
 
 const mockedApi = api as jest.Mocked<typeof api>;
-const mockedInvalidateCache =
-  invalidateCache as jest.MockedFunction<typeof invalidateCache>;
+const mockedInvalidateCache = invalidateCache as jest.MockedFunction<
+  typeof invalidateCache
+>;
 
 describe("useRecipeImageCheck", () => {
   beforeEach(() => {
@@ -70,9 +71,7 @@ describe("useRecipeImageCheck", () => {
     });
 
     await waitFor(() => {
-      expect(result.current.imageUrl).toBe(
-        "https://example.com/new-image.jpg"
-      );
+      expect(result.current.imageUrl).toBe("https://example.com/new-image.jpg");
     });
 
     expect(mockedApi.get).toHaveBeenCalledWith("/v2/recipes/123");

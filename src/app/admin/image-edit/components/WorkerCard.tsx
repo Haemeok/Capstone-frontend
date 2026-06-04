@@ -23,7 +23,11 @@ import {
 } from "../lib/useImageEdit";
 import { ResultCard } from "./ResultCard";
 
-const QUALITY_ORDER: ReadonlyArray<ImageEditQuality> = ["low", "medium", "high"];
+const QUALITY_ORDER: ReadonlyArray<ImageEditQuality> = [
+  "low",
+  "medium",
+  "high",
+];
 const MAX_REFERENCES = 16;
 const FACE_SWAP_SLOT_LABELS = ["SCENE", "FACE"] as const;
 
@@ -42,11 +46,17 @@ const readFileAsDataUrl = (file: File): Promise<string> =>
       if (typeof r === "string") resolve(r);
       else reject(new Error("FileReader returned non-string"));
     };
-    reader.onerror = () => reject(reader.error ?? new Error("FileReader error"));
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("FileReader error"));
     reader.readAsDataURL(file);
   });
 
-export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) => {
+export const WorkerCard = ({
+  index,
+  onAfterRun,
+  onDelete,
+  canDelete,
+}: Props) => {
   const [referenceImageUrls, setReferenceImageUrls] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
   const [faceSwap, setFaceSwap] = useState(false);
@@ -139,8 +149,7 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
     });
   }, []);
 
-  const canSubmit =
-    prompt.trim().length > 0 && selected.size > 0 && !running;
+  const canSubmit = prompt.trim().length > 0 && selected.size > 0 && !running;
 
   const handleSubmit = useCallback(async () => {
     if (!canSubmit) return;
@@ -186,11 +195,11 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
               type="checkbox"
               checked={faceSwap}
               onChange={handleToggleFaceSwap}
-              className="h-3.5 w-3.5 accent-olive-light"
+              className="accent-olive-light h-3.5 w-3.5"
             />
             얼굴 스왑 모드
             {faceSwap && (
-              <span className="rounded bg-olive-light/15 px-1.5 py-0.5 text-[10px] font-medium text-olive-dark">
+              <span className="bg-olive-light/15 text-olive-dark rounded px-1.5 py-0.5 text-[10px] font-medium">
                 1=SCENE · 2=FACE
               </span>
             )}
@@ -208,10 +217,7 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
       </header>
 
       <div className="grid gap-3 md:grid-cols-[180px_1fr]">
-        <div
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
-        >
+        <div onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
           <div className="mb-1 flex items-center justify-between">
             <p className="text-[11px] font-semibold text-gray-700">
               입력 이미지 ({referenceImageUrls.length}/{effectiveMax})
@@ -235,17 +241,17 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
                   <img
                     src={url}
                     alt={`reference ${idx + 1}`}
-                    className="aspect-square w-full rounded-card object-cover"
+                    className="rounded-card aspect-square w-full object-cover"
                   />
                   {faceSwap && idx < FACE_SWAP_SLOT_LABELS.length && (
-                    <span className="absolute left-0.5 top-0.5 rounded bg-black/65 px-1 py-0.5 text-[9px] font-bold text-white">
+                    <span className="absolute top-0.5 left-0.5 rounded bg-black/65 px-1 py-0.5 text-[9px] font-bold text-white">
                       {FACE_SWAP_SLOT_LABELS[idx]}
                     </span>
                   )}
                   <button
                     type="button"
                     onClick={() => handleRemoveOne(idx)}
-                    className="absolute right-0.5 top-0.5 rounded-full bg-white/90 p-0.5 text-gray-600 shadow"
+                    className="absolute top-0.5 right-0.5 rounded-full bg-white/90 p-0.5 text-gray-600 shadow"
                     aria-label={`${idx + 1}번 이미지 제거`}
                   >
                     <X className="h-3 w-3" />
@@ -293,14 +299,16 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
         </div>
 
         <div>
-          <p className="mb-1 text-[11px] font-semibold text-gray-700">프롬프트</p>
+          <p className="mb-1 text-[11px] font-semibold text-gray-700">
+            프롬프트
+          </p>
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             onPaste={handlePromptPaste}
             rows={6}
             placeholder="이미지를 어떻게 편집할지 작성하세요. 클립보드에 이미지가 있으면 여기서 Ctrl+V → 입력 이미지로 들어갑니다."
-            className="w-full resize-y rounded-xl border border-gray-200 p-3 text-sm focus:border-olive-light focus:outline-none"
+            className="focus:border-olive-light w-full resize-y rounded-xl border border-gray-200 p-3 text-sm focus:outline-none"
           />
         </div>
       </div>
@@ -343,7 +351,7 @@ export const WorkerCard = ({ index, onAfterRun, onDelete, canDelete }: Props) =>
             type="button"
             onClick={handleSubmit}
             disabled={!canSubmit}
-            className="h-10 rounded-xl bg-olive-light px-4 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+            className="bg-olive-light h-10 rounded-xl px-4 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
           >
             {running ? "생성 중…" : `생성 (${selected.size})`}
           </button>

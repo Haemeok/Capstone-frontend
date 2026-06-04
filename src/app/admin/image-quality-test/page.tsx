@@ -78,12 +78,17 @@ const ImageQualityTestPage = () => {
   }, []);
 
   return (
-    <div className="mx-auto min-h-screen max-w-7xl bg-beige-light/40 p-4 md:p-6">
-      <h1 className="mb-4 text-2xl font-bold text-gray-900">이미지 생성 모델 비교</h1>
+    <div className="bg-beige-light/40 mx-auto min-h-screen max-w-7xl p-4 md:p-6">
+      <h1 className="mb-4 text-2xl font-bold text-gray-900">
+        이미지 생성 모델 비교
+      </h1>
 
       {/* 검색: 전체 너비로 배치해 여러 결과를 한번에 볼 수 있게 */}
       <div className="mb-4">
-        <RecipeSearchPanel selectedId={recipe?.id ?? null} onSelect={handleRecipeSelect} />
+        <RecipeSearchPanel
+          selectedId={recipe?.id ?? null}
+          onSelect={handleRecipeSelect}
+        />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
@@ -99,8 +104,13 @@ const ImageQualityTestPage = () => {
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleGenerate}
-                  disabled={running || enabledIds.length === 0 || prompt.length === 0 || promptLoading}
-                  className="h-12 rounded-2xl bg-olive-light px-6 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                  disabled={
+                    running ||
+                    enabledIds.length === 0 ||
+                    prompt.length === 0 ||
+                    promptLoading
+                  }
+                  className="bg-olive-light h-12 rounded-2xl px-6 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
                 >
                   {running ? "생성 중…" : `생성 (${enabledIds.length}개 모델)`}
                 </button>

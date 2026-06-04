@@ -9,10 +9,10 @@ type RecipeSortButtonProps = {
   className?: string;
 };
 
-const RecipeSortButton = ({ 
-  currentSort, 
-  onClick, 
-  className 
+const RecipeSortButton = ({
+  currentSort,
+  onClick,
+  className,
 }: RecipeSortButtonProps) => {
   const isDirty = currentSort !== "최신순";
 

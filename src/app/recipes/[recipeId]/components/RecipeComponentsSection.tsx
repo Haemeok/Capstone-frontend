@@ -22,7 +22,7 @@ export default function RecipeComponentsSection({
 
   return (
     <section
-      className={`border-olive-light/30 bg-beige-light my-6 rounded-card border p-4 ${className}`}
+      className={`border-olive-light/30 bg-beige-light rounded-card my-6 border p-4 ${className}`}
     >
       <h2 className="text-dark mb-3 font-bold">디쉬 구성 요소</h2>
       <div className="flex flex-col gap-3">

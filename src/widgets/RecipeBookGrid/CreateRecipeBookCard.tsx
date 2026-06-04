@@ -15,7 +15,7 @@ export const CreateRecipeBookCard = () => {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 bg-white text-gray-400 transition-colors hover:border-olive-light hover:text-olive-light"
+          className="hover:border-olive-light hover:text-olive-light flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 bg-white text-gray-400 transition-colors"
           aria-label="레시피북 만들기"
         >
           <PlusIcon size={32} />

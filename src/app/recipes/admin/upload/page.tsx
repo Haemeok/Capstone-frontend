@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useId,useState } from "react";
+import React, { useId, useState } from "react";
 
 import { useImagePreview } from "@/shared/hooks/useImagePreview";
 import { ImagePickerView } from "@/shared/ui/image/ImagePickerView";

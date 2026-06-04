@@ -1,8 +1,4 @@
-
-import type {
-  SeedanceModelId,
-  SeedanceResolution,
-} from "./types";
+import type { SeedanceModelId, SeedanceResolution } from "./types";
 
 export const SEEDANCE_PRICES: Record<SeedanceModelId, number> = {
   "dreamina-seedance-2-0-fast-260128": 0.01,

@@ -134,7 +134,8 @@ const buildEnhancedQuery = (
 
   // tags → 한글명
   if (params.tags) {
-    const tagCodes = typeof params.tags === "string" ? params.tags.split(",") : params.tags;
+    const tagCodes =
+      typeof params.tags === "string" ? params.tags.split(",") : params.tags;
     for (const code of tagCodes) {
       const tag = SEO_TAG_ENTRIES.find((t) => t.code === code);
       if (tag) parts.push(tag.name);
@@ -166,7 +167,9 @@ const buildEnhancedQuery = (
   const matchedTheme = NUTRITION_THEMES_FOR_SEO.find((theme) =>
     Object.entries(theme.params).every(([key, value]) => {
       const paramValue = params[key as keyof SearchResultsSearchParams];
-      return paramValue !== undefined && parseInt(String(paramValue), 10) === value;
+      return (
+        paramValue !== undefined && parseInt(String(paramValue), 10) === value
+      );
     })
   );
   if (matchedTheme) {
@@ -177,15 +180,27 @@ const buildEnhancedQuery = (
 };
 
 const CANONICAL_PARAM_ORDER = [
-  "q", "ingredientIds", "dishType", "tags", "types",
-  "minCost", "maxCost",
-  "minCalories", "maxCalories",
-  "minCarb", "maxCarb",
-  "minProtein", "maxProtein",
-  "minFat", "maxFat",
-  "minSugar", "maxSugar",
-  "minSodium", "maxSodium",
-  "sort", "page",
+  "q",
+  "ingredientIds",
+  "dishType",
+  "tags",
+  "types",
+  "minCost",
+  "maxCost",
+  "minCalories",
+  "maxCalories",
+  "minCarb",
+  "maxCarb",
+  "minProtein",
+  "maxProtein",
+  "minFat",
+  "maxFat",
+  "minSugar",
+  "maxSugar",
+  "minSodium",
+  "maxSodium",
+  "sort",
+  "page",
 ] as const;
 
 const buildCanonicalUrl = (params: SearchResultsSearchParams): string => {
@@ -193,7 +208,10 @@ const buildCanonicalUrl = (params: SearchResultsSearchParams): string => {
   for (const key of CANONICAL_PARAM_ORDER) {
     const value = params[key as keyof SearchResultsSearchParams];
     if (value !== undefined) {
-      canonicalParams.set(key, Array.isArray(value) ? value.join(",") : String(value));
+      canonicalParams.set(
+        key,
+        Array.isArray(value) ? value.join(",") : String(value)
+      );
     }
   }
   const search = canonicalParams.toString();
@@ -204,7 +222,11 @@ export async function generateMetadata({
   searchParams,
 }: SearchResultsPageProps): Promise<Metadata> {
   const awaitedSearchParams = await searchParams;
-  const { query: queryParams, page, q } = parseSearchQueryParams(awaitedSearchParams);
+  const {
+    query: queryParams,
+    page,
+    q,
+  } = parseSearchQueryParams(awaitedSearchParams);
 
   const pageData = await getRecipesOnServer(queryParams);
   const totalElements = pageData.page.totalElements;

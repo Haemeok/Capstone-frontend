@@ -1,20 +1,20 @@
 "use server";
 
-import type { CurationParams } from "@/entities/curation";
 import { requireAdminAction } from "@/shared/lib/admin-guard";
+
+import type { CurationParams } from "@/entities/curation";
 
 import { listCurationLocal } from "@/app/actions/curationLocal";
 import { slugify } from "@/app/admin/curation-test/lib/slugify";
 
-export type AllowlistEntryWithSlug<T extends CurationParams = CurationParams> = {
-  entry: T;
-  slug: string;
-};
+export type AllowlistEntryWithSlug<T extends CurationParams = CurationParams> =
+  {
+    entry: T;
+    slug: string;
+  };
 
-export const getUnpublishedAllowlistEntries = async <
-  T extends CurationParams,
->(
-  entries: T[],
+export const getUnpublishedAllowlistEntries = async <T extends CurationParams>(
+  entries: T[]
 ): Promise<AllowlistEntryWithSlug<T>[]> => {
   await requireAdminAction();
 

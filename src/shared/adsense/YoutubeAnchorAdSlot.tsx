@@ -9,7 +9,9 @@ type YoutubeAnchorAdSlotProps = {
   className?: string;
 };
 
-export const YoutubeAnchorAdSlot = ({ className }: YoutubeAnchorAdSlotProps) => {
+export const YoutubeAnchorAdSlot = ({
+  className,
+}: YoutubeAnchorAdSlotProps) => {
   return (
     <AnchorAdSlot
       slotId={AD_SLOT_IDS.youtubeAnchor || undefined}

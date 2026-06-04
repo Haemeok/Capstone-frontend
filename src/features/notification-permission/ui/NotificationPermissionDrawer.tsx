@@ -110,10 +110,10 @@ export const NotificationPermissionDrawer = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center px-6 pb-8 pt-10"
+              className="flex flex-col items-center px-6 pt-10 pb-8"
             >
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-olive-light/10">
-                <Bell className="h-10 w-10 text-olive-light" />
+              <div className="bg-olive-light/10 flex h-20 w-20 items-center justify-center rounded-full">
+                <Bell className="text-olive-light h-10 w-10" />
               </div>
 
               <div className="mt-6 text-center">

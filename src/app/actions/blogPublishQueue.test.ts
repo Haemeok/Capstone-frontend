@@ -30,7 +30,11 @@ describe("enqueueCurationBlogPostForPublish — dup guard", () => {
 
   it("같은 slug 가 pending 에 이미 있으면 error 반환", async () => {
     // 기존 큐 아이템 (slug=spring-salads)
-    const existing = path.join(tmpDir, "pending", "curation-epigung-기존-2026-05-27");
+    const existing = path.join(
+      tmpDir,
+      "pending",
+      "curation-epigung-기존-2026-05-27"
+    );
     fs.mkdirSync(existing, { recursive: true });
     fs.writeFileSync(
       path.join(existing, "curation-meta.json"),
@@ -79,7 +83,12 @@ describe("enqueueCurationBlogPostForPublish — dup guard", () => {
     expect(entries).toHaveLength(1);
     const created = entries[0];
     expect(created.startsWith("curation-epigung-")).toBe(true);
-    const metaPath = path.join(tmpDir, "pending", created, "curation-meta.json");
+    const metaPath = path.join(
+      tmpDir,
+      "pending",
+      created,
+      "curation-meta.json"
+    );
     const meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
     expect(meta.slug).toBe("fresh-slug");
     expect(meta.tone).toBe("epigung");

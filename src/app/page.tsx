@@ -48,13 +48,14 @@ const HomePage = async () => {
           <HomeHeader />
         </Suspense>
         <div className="flex flex-col items-center justify-center bg-white text-gray-800">
-
           <HomeAnchorAdSlot className="mb-2" />
 
           <CategoryTabs title="카테고리" />
 
           <ErrorBoundary
-            fallback={<SectionErrorFallback message="배너를 불러올 수 없어요" />}
+            fallback={
+              <SectionErrorFallback message="배너를 불러올 수 없어요" />
+            }
           >
             <HomeBannerCarousel
               slides={[

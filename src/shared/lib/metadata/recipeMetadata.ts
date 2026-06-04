@@ -168,7 +168,10 @@ const selectOptimalImages = (
   recipe: StaticRecipe,
   youtubeMetadata?: YoutubeMetadata
 ): { primary: string; secondary?: string } => {
-  if (youtubeMetadata?.thumbnailUrl && recipe.imageUrl !== youtubeMetadata.thumbnailUrl) {
+  if (
+    youtubeMetadata?.thumbnailUrl &&
+    recipe.imageUrl !== youtubeMetadata.thumbnailUrl
+  ) {
     return {
       primary: recipe.imageUrl,
       secondary: youtubeMetadata.thumbnailUrl,

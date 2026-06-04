@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo,useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
@@ -9,7 +9,7 @@ import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import { useRecipeHistoryQuery } from "@/widgets/CalendarTabContent/hooks";
 
-import type { LevelUpData,LevelUpPhase } from "../model/types";
+import type { LevelUpData, LevelUpPhase } from "../model/types";
 import Phase1Acquired from "./Phase1Acquired";
 import Phase2Absorb from "./Phase2Absorb";
 import Phase3Accumulate from "./Phase3Accumulate";

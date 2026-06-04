@@ -22,7 +22,10 @@ export function generateStaticParams() {
   return [{ id: "CHEF_RECIPE" }];
 }
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const { id } = await params;
   const awaitedSearchParams = await searchParams;
   const tagCode = id as TagCode;
@@ -133,10 +136,7 @@ export default async function Page({ params, searchParams }: Props) {
   const { id: tagCode } = await params;
   const awaitedSearchParams = await searchParams;
 
-  const page = Math.max(
-    0,
-    parseInt(awaitedSearchParams.page || "0", 10) || 0
-  );
+  const page = Math.max(0, parseInt(awaitedSearchParams.page || "0", 10) || 0);
 
   const pageData = await getRecipesOnServer({
     key: "search",

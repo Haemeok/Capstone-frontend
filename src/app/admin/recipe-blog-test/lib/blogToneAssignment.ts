@@ -16,7 +16,10 @@ export const ALL_TONES: BlogTone[] = [
 export const listAccountsFromEnv = (): string[] => {
   const raw = process.env.NAVER_BLOG_IDS?.trim();
   if (!raw) return [];
-  return raw.split(",").map((s) => s.trim()).filter(Boolean);
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 };
 
 export const assignTonesToAccounts = (

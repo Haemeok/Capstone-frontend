@@ -38,7 +38,7 @@ const ArticleTocList = ({
               <button
                 onClick={() => handleClick(item.id)}
                 className={cn(
-                  "flex w-full min-h-[44px] cursor-pointer items-center rounded-lg px-3 py-2.5 text-left text-sm transition-all duration-200",
+                  "flex min-h-[44px] w-full cursor-pointer items-center rounded-lg px-3 py-2.5 text-left text-sm transition-all duration-200",
                   isActive
                     ? accentClassName
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"

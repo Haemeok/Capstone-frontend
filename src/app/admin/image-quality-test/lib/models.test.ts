@@ -1,4 +1,4 @@
-import { getModelById,MODELS } from "./models";
+import { getModelById, MODELS } from "./models";
 
 describe("MODELS registry", () => {
   it("has exactly 11 entries", () => {

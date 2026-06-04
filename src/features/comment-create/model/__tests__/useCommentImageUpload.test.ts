@@ -20,7 +20,9 @@ describe("validateCommentImage", () => {
 
   it("rejects unsupported MIME types", () => {
     expect(validateCommentImage(makeFile("image/gif", 1024))).toMatch(/JPG/);
-    expect(validateCommentImage(makeFile("application/pdf", 1024))).toMatch(/JPG/);
+    expect(validateCommentImage(makeFile("application/pdf", 1024))).toMatch(
+      /JPG/
+    );
   });
 
   it("rejects files larger than the cap", () => {
@@ -64,7 +66,9 @@ describe("uploadCommentImages", () => {
     ]);
     putS3.mockResolvedValue(undefined);
 
-    const file = new File([new Uint8Array(10)], "a.jpg", { type: "image/jpeg" });
+    const file = new File([new Uint8Array(10)], "a.jpg", {
+      type: "image/jpeg",
+    });
     const keys = await uploadCommentImages("r1", [file]);
 
     expect(apiPost).toHaveBeenCalledWith(

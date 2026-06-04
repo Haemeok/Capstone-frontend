@@ -36,9 +36,10 @@ type RunOutcome = { imageUrl?: string };
 const initialCells = (
   status: CellState["status"]
 ): Record<SequenceModelId, CellState> =>
-  Object.fromEntries(
-    SEQUENCE_MODEL_IDS.map((m) => [m, { status }])
-  ) as Record<SequenceModelId, CellState>;
+  Object.fromEntries(SEQUENCE_MODEL_IDS.map((m) => [m, { status }])) as Record<
+    SequenceModelId,
+    CellState
+  >;
 
 export const useSequenceGenerate = () => {
   const [results, setResults] = useState<SequenceResults>({});
@@ -80,7 +81,12 @@ export const useSequenceGenerate = () => {
           signal,
         });
         const data = (await res.json()) as RunResponse;
-        if (!res.ok || data.error || !data.imageUrl || data.cost === undefined) {
+        if (
+          !res.ok ||
+          data.error ||
+          !data.imageUrl ||
+          data.cost === undefined
+        ) {
           setCell(imageId, modelId, {
             status: "error",
             message: data.error ?? `HTTP ${res.status}`,
@@ -110,7 +116,7 @@ export const useSequenceGenerate = () => {
   );
 
   const runWithCap = useCallback(
-    async <T,>(items: T[], worker: (item: T) => Promise<void>) => {
+    async <T>(items: T[], worker: (item: T) => Promise<void>) => {
       const queue = items.slice();
       const workers: Promise<void>[] = [];
       for (let i = 0; i < CONCURRENCY; i++) {
@@ -198,12 +204,23 @@ export const useSequenceGenerate = () => {
               });
               continue;
             }
-            jobs.push({ id: s.id, modelId: m, prompt: s.prompt, refImageUrl: refUrl });
+            jobs.push({
+              id: s.id,
+              modelId: m,
+              prompt: s.prompt,
+              refImageUrl: refUrl,
+            });
           }
         }
 
         await runWithCap(jobs, async ({ id, modelId, prompt, refImageUrl }) => {
-          const out = await runOne(id, modelId, prompt, refImageUrl, controller.signal);
+          const out = await runOne(
+            id,
+            modelId,
+            prompt,
+            refImageUrl,
+            controller.signal
+          );
           if (out.imageUrl) doneUrls.set(cellKey(id, modelId), out.imageUrl);
         });
 
@@ -235,7 +252,13 @@ export const useSequenceGenerate = () => {
           return;
         }
       }
-      await runOne(image.id, modelId, image.prompt, referenceImageUrl, controller.signal);
+      await runOne(
+        image.id,
+        modelId,
+        image.prompt,
+        referenceImageUrl,
+        controller.signal
+      );
     },
     [runOne, setCell]
   );

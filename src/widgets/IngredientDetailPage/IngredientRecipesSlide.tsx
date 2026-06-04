@@ -1,7 +1,8 @@
 "use client";
 
-import { useIngredientRecipesQuery } from "@/entities/ingredient";
 import { getEuroParticle } from "@/shared/lib/korean";
+
+import { useIngredientRecipesQuery } from "@/entities/ingredient";
 
 import RecipeSlide from "@/widgets/RecipeSlide/RecipeSlide";
 

@@ -27,7 +27,7 @@ export type CurationBlogJsonLd = {
 };
 
 export type CurationBlogPost = CurationBlogMeta & {
-  alts: Record<string, string>;  // 서버 액션이 recipe.title 로 합성
+  alts: Record<string, string>; // 서버 액션이 recipe.title 로 합성
   bodyMarkdown: string;
   curationSlug: string;
   curationUrl: string;

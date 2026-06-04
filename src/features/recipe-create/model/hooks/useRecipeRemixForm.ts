@@ -7,7 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRecipeDetailQuery } from "@/entities/recipe";
 
-import { IngredientPayload, recipeFormSchema, RecipeFormValues } from "../config";
+import {
+  IngredientPayload,
+  recipeFormSchema,
+  RecipeFormValues,
+} from "../config";
 
 export const useRecipeRemixForm = (recipeId: string) => {
   const { recipeData: recipe, isSuccess: isRecipeLoaded } =

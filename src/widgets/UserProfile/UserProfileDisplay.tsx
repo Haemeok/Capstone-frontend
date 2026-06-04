@@ -37,13 +37,13 @@ const UserProfileDisplay = ({
         {user.profileImage ? (
           <Image src={user.profileImage} alt={user.nickname} />
         ) : (
-          <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-100 border-2 border-gray-200">
+          <div className="flex h-full w-full items-center justify-center rounded-full border-2 border-gray-200 bg-gray-100">
             <UserRound className="h-20 w-20 text-gray-300" />
           </div>
         )}
       </div>
-      <div className="grow flex flex-col">
-        <div className="flex items-center gap-2 mb-2">
+      <div className="flex grow flex-col">
+        <div className="mb-2 flex items-center gap-2">
           <h2 className="text-dark text-base font-bold">{user.nickname}</h2>
           {isOwnProfile && <UserInfoEditButton />}
         </div>
@@ -58,7 +58,7 @@ const UserProfileDisplay = ({
     </div>
     <CollapsibleP
       content={user.introduction}
-      className="px-0 pt-3 pb-2 text-mm"
+      className="text-mm px-0 pt-3 pb-2"
       height={52}
       gradientHeight={16}
     />

@@ -40,8 +40,7 @@ const ACTION_DESCRIPTIONS: Record<string, string> = {
     "dough being kneaded by hand in a plain bowl or on a lightly floured counter — pressing and folding motion",
   sieve:
     "powder being sifted through a fine mesh sieve held just above a bowl, a fine cloud of powder falling",
-  rest:
-    "dough or batter resting still in a covered bowl on the counter — no active motion, calm clean scene",
+  rest: "dough or batter resting still in a covered bowl on the counter — no active motion, calm clean scene",
 };
 
 const ACTIVE_HANDS_KEYS = new Set([

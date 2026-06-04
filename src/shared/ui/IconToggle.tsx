@@ -64,14 +64,16 @@ const IconToggle = <T extends string | boolean>({
           >
             {leftOption.icon}
           </div>
-          {leftOption.label && <span
-            className={cn(
-              "text-sm font-medium transition-colors duration-300",
-              !isRightSelected ? "text-gray-800" : "text-gray-500"
-            )}
-          >
-            {leftOption.label}
-          </span>}
+          {leftOption.label && (
+            <span
+              className={cn(
+                "text-sm font-medium transition-colors duration-300",
+                !isRightSelected ? "text-gray-800" : "text-gray-500"
+              )}
+            >
+              {leftOption.label}
+            </span>
+          )}
         </div>
 
         <div
@@ -88,14 +90,16 @@ const IconToggle = <T extends string | boolean>({
           >
             {rightOption.icon}
           </div>
-          {rightOption.label && <span
-            className={cn(
-              "text-sm font-medium transition-colors duration-300",
-              isRightSelected ? "text-gray-800" : "text-gray-500"
-            )}
-          >
-            {rightOption.label}
-          </span>}
+          {rightOption.label && (
+            <span
+              className={cn(
+                "text-sm font-medium transition-colors duration-300",
+                isRightSelected ? "text-gray-800" : "text-gray-500"
+              )}
+            >
+              {rightOption.label}
+            </span>
+          )}
         </div>
       </div>
     </button>

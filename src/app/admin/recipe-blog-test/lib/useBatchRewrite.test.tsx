@@ -1,8 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 
-import {
-  enqueueCurationBlogPostForPublish,
-} from "@/app/actions/blogPublishQueue";
+import { enqueueCurationBlogPostForPublish } from "@/app/actions/blogPublishQueue";
 import {
   fetchCurationArticleWithRecipes,
   generateCurationBlogPost,
@@ -51,12 +49,18 @@ beforeEach(() => {
 
 describe("useBatchRewrite — runRewrite", () => {
   it("2개 슬러그 happy path: queued → fetching → generating → ready 전이", async () => {
-    mockedFetch.mockImplementation(async (slug: string) => ({
+    mockedFetch.mockImplementation(
+      async (slug: string) =>
+        ({
+          success: true,
+          article: mockArticle(slug),
+          recipes: mockRecipes(slug),
+        }) as never
+    );
+    mockedGenerate.mockResolvedValue({
       success: true,
-      article: mockArticle(slug),
-      recipes: mockRecipes(slug),
-    }) as never);
-    mockedGenerate.mockResolvedValue({ success: true, post: mockPost() } as never);
+      post: mockPost(),
+    } as never);
 
     const { result } = renderHook(() => useBatchRewrite());
 
@@ -78,10 +82,18 @@ describe("useBatchRewrite — runRewrite", () => {
 
   it("fetch 실패 슬러그는 failed, 다음 슬러그는 계속 처리", async () => {
     mockedFetch.mockImplementation(async (slug: string) => {
-      if (slug === "slug-a") return { success: false, error: "fetch 실패" } as never;
-      return { success: true, article: mockArticle(slug), recipes: mockRecipes(slug) } as never;
+      if (slug === "slug-a")
+        return { success: false, error: "fetch 실패" } as never;
+      return {
+        success: true,
+        article: mockArticle(slug),
+        recipes: mockRecipes(slug),
+      } as never;
     });
-    mockedGenerate.mockResolvedValue({ success: true, post: mockPost() } as never);
+    mockedGenerate.mockResolvedValue({
+      success: true,
+      post: mockPost(),
+    } as never);
 
     const { result } = renderHook(() => useBatchRewrite());
 
@@ -98,11 +110,14 @@ describe("useBatchRewrite — runRewrite", () => {
   });
 
   it("generate 실패 슬러그는 failed, 다음 슬러그는 계속 처리", async () => {
-    mockedFetch.mockImplementation(async (slug: string) => ({
-      success: true,
-      article: mockArticle(slug),
-      recipes: mockRecipes(slug),
-    }) as never);
+    mockedFetch.mockImplementation(
+      async (slug: string) =>
+        ({
+          success: true,
+          article: mockArticle(slug),
+          recipes: mockRecipes(slug),
+        }) as never
+    );
     mockedGenerate.mockImplementation(async (article: { slug: string }) => {
       if (article.slug === "slug-a") {
         return { success: false, error: "LLM timeout" } as never;
@@ -122,11 +137,19 @@ describe("useBatchRewrite — runRewrite", () => {
   });
 
   it("isRunning 토글: 시작 시 true, 종료 후 false", async () => {
-    let resolveFetch: (v: Awaited<ReturnType<typeof fetchCurationArticleWithRecipes>>) => void = () => {};
+    let resolveFetch: (
+      v: Awaited<ReturnType<typeof fetchCurationArticleWithRecipes>>
+    ) => void = () => {};
     mockedFetch.mockImplementation(
-      () => new Promise((res) => { resolveFetch = res; }),
+      () =>
+        new Promise((res) => {
+          resolveFetch = res;
+        })
     );
-    mockedGenerate.mockResolvedValue({ success: true, post: mockPost() } as never);
+    mockedGenerate.mockResolvedValue({
+      success: true,
+      post: mockPost(),
+    } as never);
 
     const { result } = renderHook(() => useBatchRewrite());
 
@@ -151,23 +174,38 @@ describe("useBatchRewrite — runRewrite", () => {
   });
 
   it("cancel() 후 다음 슬러그로 가지 않음", async () => {
-    let resolveFirst: (v: Awaited<ReturnType<typeof fetchCurationArticleWithRecipes>>) => void = () => {};
+    let resolveFirst: (
+      v: Awaited<ReturnType<typeof fetchCurationArticleWithRecipes>>
+    ) => void = () => {};
     mockedFetch
       .mockImplementationOnce(
-        () => new Promise((res) => { resolveFirst = res; }),
+        () =>
+          new Promise((res) => {
+            resolveFirst = res;
+          })
       )
-      .mockImplementation(async (slug: string) => ({
-        success: true,
-        article: mockArticle(slug),
-        recipes: mockRecipes(slug),
-      }) as never);
-    mockedGenerate.mockResolvedValue({ success: true, post: mockPost() } as never);
+      .mockImplementation(
+        async (slug: string) =>
+          ({
+            success: true,
+            article: mockArticle(slug),
+            recipes: mockRecipes(slug),
+          }) as never
+      );
+    mockedGenerate.mockResolvedValue({
+      success: true,
+      post: mockPost(),
+    } as never);
 
     const { result } = renderHook(() => useBatchRewrite());
 
     let pending!: Promise<void>;
     act(() => {
-      pending = result.current.runRewrite(["slug-a", "slug-b"], "epigung", titles);
+      pending = result.current.runRewrite(
+        ["slug-a", "slug-b"],
+        "epigung",
+        titles
+      );
     });
 
     await waitFor(() => expect(mockedFetch).toHaveBeenCalledTimes(1));
@@ -194,12 +232,18 @@ describe("useBatchRewrite — runRewrite", () => {
 
 describe("useBatchRewrite — enqueueAllReady", () => {
   const prepareReady = async (slugs: string[]) => {
-    mockedFetch.mockImplementation(async (slug: string) => ({
+    mockedFetch.mockImplementation(
+      async (slug: string) =>
+        ({
+          success: true,
+          article: mockArticle(slug),
+          recipes: mockRecipes(slug),
+        }) as never
+    );
+    mockedGenerate.mockResolvedValue({
       success: true,
-      article: mockArticle(slug),
-      recipes: mockRecipes(slug),
-    }) as never);
-    mockedGenerate.mockResolvedValue({ success: true, post: mockPost() } as never);
+      post: mockPost(),
+    } as never);
 
     const hook = renderHook(() => useBatchRewrite());
     await act(async () => {
@@ -211,19 +255,24 @@ describe("useBatchRewrite — enqueueAllReady", () => {
   it("ready → enqueueing → enqueued 전이 + packagePath 보관", async () => {
     const { result } = await prepareReady(["slug-a", "slug-b"]);
 
-    mockedEnqueue.mockImplementation(async (input: { curationTitle: string }) => ({
-      success: true,
-      packagePath: `/queue/${input.curationTitle}`,
-      savedSlots: [],
-      skippedSlots: [],
-    }) as never);
+    mockedEnqueue.mockImplementation(
+      async (input: { curationTitle: string }) =>
+        ({
+          success: true,
+          packagePath: `/queue/${input.curationTitle}`,
+          savedSlots: [],
+          skippedSlots: [],
+        }) as never
+    );
 
     await act(async () => {
       await result.current.enqueueAllReady();
     });
 
     expect(result.current.items[0].phase).toBe("enqueued");
-    expect(result.current.items[0].enqueued?.packagePath).toContain("slug-a 제목");
+    expect(result.current.items[0].enqueued?.packagePath).toContain(
+      "slug-a 제목"
+    );
     expect(result.current.items[1].phase).toBe("enqueued");
     expect(result.current.isEnqueueing).toBe(false);
   });
@@ -247,9 +296,16 @@ describe("useBatchRewrite — enqueueAllReady", () => {
   it("ready 가 아닌 항목 (failed) 은 skip — enqueue 호출 안 됨", async () => {
     mockedFetch.mockImplementation(async (slug: string) => {
       if (slug === "slug-a") return { success: false, error: "fail" } as never;
-      return { success: true, article: mockArticle(slug), recipes: mockRecipes(slug) } as never;
+      return {
+        success: true,
+        article: mockArticle(slug),
+        recipes: mockRecipes(slug),
+      } as never;
     });
-    mockedGenerate.mockResolvedValue({ success: true, post: mockPost() } as never);
+    mockedGenerate.mockResolvedValue({
+      success: true,
+      post: mockPost(),
+    } as never);
 
     const { result } = renderHook(() => useBatchRewrite());
     await act(async () => {
@@ -275,12 +331,18 @@ describe("useBatchRewrite — enqueueAllReady", () => {
 
 describe("useBatchRewrite — reset", () => {
   it("reset() 호출 후 items 가 비워짐", async () => {
-    mockedFetch.mockImplementation(async (slug: string) => ({
+    mockedFetch.mockImplementation(
+      async (slug: string) =>
+        ({
+          success: true,
+          article: mockArticle(slug),
+          recipes: mockRecipes(slug),
+        }) as never
+    );
+    mockedGenerate.mockResolvedValue({
       success: true,
-      article: mockArticle(slug),
-      recipes: mockRecipes(slug),
-    }) as never);
-    mockedGenerate.mockResolvedValue({ success: true, post: mockPost() } as never);
+      post: mockPost(),
+    } as never);
 
     const { result } = renderHook(() => useBatchRewrite());
     await act(async () => {

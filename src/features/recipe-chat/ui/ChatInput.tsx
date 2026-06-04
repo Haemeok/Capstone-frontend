@@ -35,7 +35,8 @@ const ChatInput = ({
 
   const isInteractionDisabled = isPending || isLocked;
   const trimmed = text.trim();
-  const canSubmit = isAuthenticated && !isInteractionDisabled && trimmed.length > 0;
+  const canSubmit =
+    isAuthenticated && !isInteractionDisabled && trimmed.length > 0;
 
   const handleUnauthAccess = () => {
     triggerHaptic("Light");
@@ -99,16 +100,21 @@ const ChatInput = ({
         data-testid="chat-input-wrapper"
         className={cn(
           "flex items-end gap-2 rounded-xl border border-gray-200 bg-white px-3 py-1.5 transition-colors",
-          isAuthenticated && !isInteractionDisabled &&
-            "focus-within:border-olive-light focus-within:ring-1 focus-within:ring-olive-light"
+          isAuthenticated &&
+            !isInteractionDisabled &&
+            "focus-within:border-olive-light focus-within:ring-olive-light focus-within:ring-1"
         )}
       >
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value.slice(0, MAX_LENGTH))}
           onKeyDown={handleKeyDown}
-          onFocus={() => { if (isAuthenticated) setInputFocused(true); }}
-          onBlur={() => { if (isAuthenticated) setInputFocused(false); }}
+          onFocus={() => {
+            if (isAuthenticated) setInputFocused(true);
+          }}
+          onBlur={() => {
+            if (isAuthenticated) setInputFocused(false);
+          }}
           onMouseDown={handleUnauthIntercept}
           onTouchStart={handleUnauthIntercept}
           readOnly={!isAuthenticated}

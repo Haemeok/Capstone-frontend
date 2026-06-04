@@ -57,12 +57,7 @@ export const NotificationItem = ({
 
   return (
     <div
-      className={`
-        relative flex items-start gap-3 p-4 border-b border-gray-100
-        hover:bg-gray-50 cursor-pointer transition-colors
-        
-        ${className}
-      `}
+      className={`relative flex cursor-pointer items-start gap-3 border-b border-gray-100 p-4 transition-colors hover:bg-gray-50 ${className} `}
       onClick={handleClick}
       role="button"
       tabIndex={0}
@@ -73,24 +68,21 @@ export const NotificationItem = ({
         }
       }}
     >
-      <div className="flex-shrink-0 relative">
+      <div className="relative flex-shrink-0">
         <img
           src={notification.imageUrl}
           alt={`${notification.actorNickname} 프로필`}
           width={40}
           height={40}
-          className="w-10 h-10 rounded-full object-cover"
+          className="h-10 w-10 rounded-full object-cover"
         />
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between">
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <p
-              className={`
-              text-sm line-clamp-2
-              ${!notification.read ? "text-gray-900 font-medium" : "text-gray-700"}
-            `}
+              className={`line-clamp-2 text-sm ${!notification.read ? "font-medium text-gray-900" : "text-gray-700"} `}
             >
               {notification.type === "AI_RECIPE_DONE" ? (
                 NOTIFICATION_MESSAGES[notification.type]
@@ -103,14 +95,14 @@ export const NotificationItem = ({
                 </>
               )}
             </p>
-            <time className="text-xs text-gray-400 mt-1 block">{timeAgo}</time>
+            <time className="mt-1 block text-xs text-gray-400">{timeAgo}</time>
           </div>
 
           {showActions && (
-            <div className="flex items-center gap-1 ml-2">
+            <div className="ml-2 flex items-center gap-1">
               <button
                 onClick={handleDeleteClick}
-                className="p-2 -m-1 rounded-full hover:bg-gray-200 text-gray-400 hover:text-gray-600"
+                className="-m-1 rounded-full p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
                 aria-label="알림 삭제"
               >
                 <X size={16} />

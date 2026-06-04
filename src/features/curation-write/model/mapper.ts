@@ -3,7 +3,7 @@ import type { GenerateCurationOutput } from "@/entities/curation";
 import type { PostCurationArticleRequest } from "./types";
 
 export const mapResultToRequest = (
-  result: GenerateCurationOutput,
+  result: GenerateCurationOutput
 ): PostCurationArticleRequest => ({
   slug: result.slug,
   title: result.h1,

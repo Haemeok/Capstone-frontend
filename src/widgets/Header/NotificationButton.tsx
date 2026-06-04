@@ -23,14 +23,14 @@ const NotificationButton = () => {
           ? `알림 페이지로 이동 (${unreadCount}개 미읽음)`
           : "알림 페이지로 이동"
       }
-      className="relative p-1 rounded-full hover:bg-gray-100 transition-colors"
+      className="relative rounded-full p-1 transition-colors hover:bg-gray-100"
     >
-      <div className="h-fit w-fit relative p-1">
-        <Bell size={24} className="text-gray-600 " />
+      <div className="relative h-fit w-fit p-1">
+        <Bell size={24} className="text-gray-600" />
 
         {unreadCount > 0 && (
           <div
-            className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"
+            className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"
             role="status"
             aria-label={`${unreadCount}개의 읽지 않은 알림`}
           />

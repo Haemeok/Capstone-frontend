@@ -58,7 +58,7 @@ const NutritionThemeSection = () => {
                   lazy={false}
                 />
               </div>
-              <span className="whitespace-nowrap text-sm font-medium text-gray-900">
+              <span className="text-sm font-medium whitespace-nowrap text-gray-900">
                 {theme.label}
               </span>
             </Link>

@@ -186,7 +186,7 @@ export const OutroCard = forwardRef<HTMLDivElement, OutroCardProps>(
         </div>
       </div>
     </div>
-  ),
+  )
 );
 
 OutroCard.displayName = "OutroCard";

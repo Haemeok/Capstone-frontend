@@ -22,7 +22,10 @@ export const CHAT_ERROR_BEHAVIOR: Record<ChatErrorCode, ChatErrorBehavior> = {
     },
   },
   "707": {
-    toast: { message: "질문이 너무 길어요. 줄여서 보내주세요.", variant: "warning" },
+    toast: {
+      message: "질문이 너무 길어요. 줄여서 보내주세요.",
+      variant: "warning",
+    },
     haptic: "Warning",
   },
   "708": {
@@ -48,7 +51,9 @@ export const CHAT_ERROR_BEHAVIOR: Record<ChatErrorCode, ChatErrorBehavior> = {
   },
 };
 
-export const getChatErrorBehavior = (code: ChatErrorCode): ChatErrorBehavior => {
+export const getChatErrorBehavior = (
+  code: ChatErrorCode
+): ChatErrorBehavior => {
   return CHAT_ERROR_BEHAVIOR[code] ?? CHAT_ERROR_BEHAVIOR["710"];
 };
 

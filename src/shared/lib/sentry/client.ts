@@ -43,7 +43,11 @@ const initSentry = async () => {
       environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || "production",
       beforeSend(event) {
         if (isIgnoredError(event)) return null;
-        if (isOfflineError(event) && typeof navigator !== "undefined" && !navigator.onLine) {
+        if (
+          isOfflineError(event) &&
+          typeof navigator !== "undefined" &&
+          !navigator.onLine
+        ) {
           return null;
         }
         return event;
@@ -78,10 +82,7 @@ const scheduleInit = () => {
   }
 };
 
-const captureException = (
-  error: unknown,
-  tags?: Record<string, string>
-) => {
+const captureException = (error: unknown, tags?: Record<string, string>) => {
   if (!sentryModule) {
     if (errorQueue.length < MAX_ERROR_QUEUE_SIZE) {
       errorQueue.push({ error, tags });

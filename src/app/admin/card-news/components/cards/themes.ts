@@ -1,4 +1,10 @@
-export type CardTheme = "classic" | "glass" | "bold" | "frame" | "split" | "dark";
+export type CardTheme =
+  | "classic"
+  | "glass"
+  | "bold"
+  | "frame"
+  | "split"
+  | "dark";
 
 export const THEME_META: Record<CardTheme, { name: string; desc: string }> = {
   classic: { name: "Classic", desc: "깔끔한 기본" },

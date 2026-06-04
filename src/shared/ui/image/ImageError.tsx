@@ -6,18 +6,18 @@ type ImageErrorProps = {
 };
 
 const ImageError = ({ message, className }: ImageErrorProps) => (
-  <div 
+  <div
     className={cn(
-      "flex items-center justify-center bg-gray-100 text-gray-400 text-sm",
+      "flex items-center justify-center bg-gray-100 text-sm text-gray-400",
       className
     )}
     role="img"
     aria-label={message || "이미지 로드 실패"}
   >
-    <img 
-      src="/noImage.png" 
-      alt="이미지 로드 실패" 
-      className="w-full h-full object-cover"
+    <img
+      src="/noImage.png"
+      alt="이미지 로드 실패"
+      className="h-full w-full object-cover"
     />
   </div>
 );

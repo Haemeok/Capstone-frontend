@@ -23,7 +23,7 @@ const IngredientEmptyState = () => {
         </p>
       </div>
       <Link href="/ingredients/new">
-        <Button className="h-12 cursor-pointer rounded-xl bg-olive-light px-6 font-medium text-white transition-colors active:bg-olive-light/90">
+        <Button className="bg-olive-light active:bg-olive-light/90 h-12 cursor-pointer rounded-xl px-6 font-medium text-white transition-colors">
           재료 추가하기
         </Button>
       </Link>

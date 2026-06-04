@@ -48,13 +48,13 @@ const useScrollAnimate = <T extends HTMLElement>(
 
     if (targetRef.current && currentTriggerElement) {
       animation.current = gsap.timeline({
-          scrollTrigger: {
-            trigger: currentTriggerElement,
-            scroller: motionRef.current,
-            start: options?.start || "top 85%",
-            toggleActions: options?.toggleActions || "restart none none none",
-          },
-        });
+        scrollTrigger: {
+          trigger: currentTriggerElement,
+          scroller: motionRef.current,
+          start: options?.start || "top 85%",
+          toggleActions: options?.toggleActions || "restart none none none",
+        },
+      });
 
       animation.current.fromTo(
         targetRef.current,

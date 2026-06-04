@@ -1,5 +1,6 @@
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+
+import { ChevronRight } from "lucide-react";
 
 import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
 

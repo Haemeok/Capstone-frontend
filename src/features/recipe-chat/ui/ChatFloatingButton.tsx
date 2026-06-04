@@ -10,7 +10,10 @@ type ChatFloatingButtonProps = {
   className?: string;
 };
 
-const ChatFloatingButton = ({ onClick, className }: ChatFloatingButtonProps) => {
+const ChatFloatingButton = ({
+  onClick,
+  className,
+}: ChatFloatingButtonProps) => {
   const handleClick = () => {
     triggerHaptic("Light");
     onClick();
@@ -23,7 +26,7 @@ const ChatFloatingButton = ({ onClick, className }: ChatFloatingButtonProps) => 
       aria-label="레시피 챗봇 열기"
       style={{ right: "max(1rem, calc((100vw - 896px) / 2 - 4.5rem))" }}
       className={cn(
-        "fixed bottom-44 md:bottom-24 z-sticky flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-olive-light text-white shadow-xl transition-all hover:shadow-2xl active:scale-[0.95]",
+        "z-sticky bg-olive-light fixed bottom-44 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full text-white shadow-xl transition-all hover:shadow-2xl active:scale-[0.95] md:bottom-24",
         className
       )}
     >

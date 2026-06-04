@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect,useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -106,7 +106,7 @@ export const TrendingRecipes = ({
               onClick={() => onSelect(recipe.videoUrl)}
               className="group w-40 flex-shrink-0 text-left"
             >
-              <div className="group-hover:border-olive-light relative mb-2 aspect-video w-full overflow-hidden rounded-card border border-gray-200 bg-gray-100 transition-colors">
+              <div className="group-hover:border-olive-light rounded-card relative mb-2 aspect-video w-full overflow-hidden border border-gray-200 bg-gray-100 transition-colors">
                 <Image
                   src={recipe.thumbnailUrl}
                   alt={recipe.title}

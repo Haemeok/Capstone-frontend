@@ -6,6 +6,7 @@ import { Bookmark } from "lucide-react";
 import { motion } from "motion/react";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
+
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 type UrlSource = "direct" | "trending" | null;
@@ -66,7 +67,7 @@ export const DuplicateRecipeCard = ({
     <div className="space-y-3">
       <Link
         href={`/recipes/${recipeId}`}
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-olive-light text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
+        className="bg-olive-light flex h-14 w-full items-center justify-center gap-2 rounded-2xl text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
       >
         레시피 보러가기
       </Link>
@@ -76,14 +77,13 @@ export const DuplicateRecipeCard = ({
           onClick={onSaveClick}
           className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
-          <Bookmark size={18} />
-          내 레시피에 저장하기
+          <Bookmark size={18} />내 레시피에 저장하기
         </button>
       )}
     </div>
 
     {isFavorited && (
-      <p className="text-center text-sm text-olive-light">
+      <p className="text-olive-light text-center text-sm">
         이미 저장된 레시피예요
       </p>
     )}

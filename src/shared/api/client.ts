@@ -32,7 +32,10 @@ export async function apiClient<T = any>(
     if (paramsSerializer) {
       finalUrl = `${finalUrl}?${paramsSerializer(params)}`;
     } else {
-      const urlObj = new URL(fullUrl, isServer ? fullUrl : window.location.origin);
+      const urlObj = new URL(
+        fullUrl,
+        isServer ? fullUrl : window.location.origin
+      );
       Object.entries(params).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           if (Array.isArray(value)) {

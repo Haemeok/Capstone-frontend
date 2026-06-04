@@ -47,7 +47,6 @@ No human face, no full body, no second person, no printed text or labels, no pro
 Render no printed text, captions, signs, labels, or logos anywhere in the image.`;
 };
 
-
 type Archetype = {
   id: string;
   label: string;
@@ -60,10 +59,7 @@ type Archetype = {
 
 const VESSEL_SHAPE_RULE = `Vessel SHAPE is inferred from the dish type — deep bowl for soups, stews, and noodles in broth; shallow plate or platter for stir-fries, jeon, grilled, or roasted plated dishes; deep dish or pasta plate for saucy braises and pasta; wide flat platter for salads and finger foods; medium round bowl for rice or grain bowls. Use the recipe dishType above to choose the appropriate shape; the archetype only fixes the material and finish.`;
 
-const buildArchetypePrompt = (
-  recipe: Recipe,
-  archetype: Archetype
-): string => {
+const buildArchetypePrompt = (recipe: Recipe, archetype: Archetype): string => {
   const dishLabel = recipe.dishType
     ? `${recipe.title} (a ${recipe.dishType})`
     : recipe.title;

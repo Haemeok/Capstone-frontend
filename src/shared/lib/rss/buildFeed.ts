@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
 
-
 const SITE_HOST = "recipio.kr";
 
 export type RssChannelMeta = {
@@ -29,12 +28,16 @@ const escapeXml = (s: string): string =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
-const cdata = (s: string): string => `<![CDATA[${s.replace(/]]>/g, "]]]]><![CDATA[>")}]]>`;
+const cdata = (s: string): string =>
+  `<![CDATA[${s.replace(/]]>/g, "]]]]><![CDATA[>")}]]>`;
 
 const toRfc822 = (d: Date): string => d.toUTCString();
 
-export const tagUri = (type: "recipe" | "curation", id: string, year = 2026): string =>
-  `tag:${SITE_HOST},${year}:${type}/${id}`;
+export const tagUri = (
+  type: "recipe" | "curation",
+  id: string,
+  year = 2026
+): string => `tag:${SITE_HOST},${year}:${type}/${id}`;
 
 const renderItem = (item: RssItem): string => {
   const parts = [
@@ -54,7 +57,7 @@ const renderItem = (item: RssItem): string => {
 
 export const buildRssFeed = (
   channel: RssChannelMeta,
-  items: RssItem[],
+  items: RssItem[]
 ): string => {
   const lastBuildDate = items.length > 0 ? items[0].pubDate : new Date();
   const language = channel.language ?? "ko-kr";
@@ -84,7 +87,7 @@ ${items.map(renderItem).join("\n")}
 export const createRssResponse = (
   request: Request,
   xml: string,
-  lastModified: Date,
+  lastModified: Date
 ): Response => {
   const etag = `"${createHash("sha1").update(xml).digest("hex").slice(0, 16)}"`;
 
@@ -98,8 +101,7 @@ export const createRssResponse = (
   return new Response(xml, {
     headers: {
       "Content-Type": "application/rss+xml; charset=utf-8",
-      "Cache-Control":
-        "public, s-maxage=21600, stale-while-revalidate=86400",
+      "Cache-Control": "public, s-maxage=21600, stale-while-revalidate=86400",
       ETag: etag,
       "Last-Modified": lastModified.toUTCString(),
     },

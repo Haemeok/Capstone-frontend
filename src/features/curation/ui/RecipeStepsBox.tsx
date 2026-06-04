@@ -15,7 +15,7 @@ export const RecipeStepsBox = ({ recipe }: RecipeStepsBoxProps) => {
       <ol className="mt-3 space-y-3 text-[15px] leading-relaxed text-gray-800">
         {recipe.steps.map((step, i) => (
           <li key={step.stepNumber ?? i} className="flex gap-3">
-            <span className="mt-0.5 inline-block w-5 shrink-0 text-sm font-semibold text-olive-dark">
+            <span className="text-olive-dark mt-0.5 inline-block w-5 shrink-0 text-sm font-semibold">
               {step.stepNumber ?? i + 1}
             </span>
             <span>{step.instruction}</span>

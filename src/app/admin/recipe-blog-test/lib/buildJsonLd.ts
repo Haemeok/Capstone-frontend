@@ -2,9 +2,7 @@ import type { Recipe } from "@/entities/recipe/model/types";
 
 import type { BlogPostJsonLd, BlogPostNutritionBox } from "./blogPost.schema";
 
-const formatIngredient = (
-  i: Recipe["ingredients"][number]
-): string => {
+const formatIngredient = (i: Recipe["ingredients"][number]): string => {
   const qtyUnit = `${i.quantity ?? ""}${i.unit ?? ""}`.trim();
   return qtyUnit ? `${i.name} ${qtyUnit}` : i.name;
 };

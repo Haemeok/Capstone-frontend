@@ -21,7 +21,10 @@ export async function GET(request: NextRequest) {
     );
 
     console.log("🧪 [Test Login] 백엔드 응답 status:", backendRes.status);
-    console.log("🧪 [Test Login] 백엔드 응답 statusText:", backendRes.statusText);
+    console.log(
+      "🧪 [Test Login] 백엔드 응답 statusText:",
+      backendRes.statusText
+    );
 
     if (!backendRes.ok) {
       const errorBody = await backendRes.json().catch(() => undefined);

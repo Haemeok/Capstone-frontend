@@ -15,8 +15,9 @@ import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { useDeleteCommentMutation } from "@/features/comment-delete";
 import CommentLikeButton from "@/features/comment-like/ui/CommentLikeButton";
-import CommentImage from "./CommentImage";
 import { useRecipeStatus } from "@/features/recipe-status";
+
+import CommentImage from "./CommentImage";
 
 type CommentProps = {
   comment: Comment;

@@ -43,7 +43,7 @@ const IngredientActionButtons = ({
         </Button>
         <Button
           onClick={handleDeleteButtonClick}
-          className="h-10 cursor-pointer rounded-xl bg-olive-light px-4 font-medium text-white transition-colors active:bg-olive-light/90"
+          className="bg-olive-light active:bg-olive-light/90 h-10 cursor-pointer rounded-xl px-4 font-medium text-white transition-colors"
         >
           완료
         </Button>
@@ -57,7 +57,7 @@ const IngredientActionButtons = ({
         type="button"
         onClick={handleDeleteButtonClick}
         className={cn(
-          "flex items-center gap-1 cursor-pointer text-sm text-gray-500 transition-colors active:text-gray-700"
+          "flex cursor-pointer items-center gap-1 text-sm text-gray-500 transition-colors active:text-gray-700"
         )}
       >
         <Trash2 size={14} />
@@ -65,7 +65,7 @@ const IngredientActionButtons = ({
       </button>
       <Button
         asChild
-        className="h-10 cursor-pointer rounded-xl bg-olive-light px-4 font-medium text-white transition-colors active:bg-olive-light/90"
+        className="bg-olive-light active:bg-olive-light/90 h-10 cursor-pointer rounded-xl px-4 font-medium text-white transition-colors"
       >
         <Link href="/ingredients/new" prefetch={false}>
           재료 추가

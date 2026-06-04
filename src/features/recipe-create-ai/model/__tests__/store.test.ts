@@ -139,33 +139,63 @@ describe("useAIRecipeStoreV2", () => {
 
         store().createJob(
           "INGREDIENT_FOCUS",
-          { ingredientIds: ["1"], dishType: "한식", cookingTime: 30, servings: 2 },
-          { concept: "INGREDIENT_FOCUS", displayName: "냉장고 속 재료", requestSummary: "" }
+          {
+            ingredientIds: ["1"],
+            dishType: "한식",
+            cookingTime: 30,
+            servings: 2,
+          },
+          {
+            concept: "INGREDIENT_FOCUS",
+            displayName: "냉장고 속 재료",
+            requestSummary: "",
+          }
         );
 
         const k3 = store().createJob(
           "NUTRITION_BALANCE",
-          { targetStyle: "다이어트", targetCalories: "500", targetCarbs: "50", targetProtein: "30", targetFat: "20" },
-          { concept: "NUTRITION_BALANCE", displayName: "영양 밸런스", requestSummary: "" }
+          {
+            targetStyle: "다이어트",
+            targetCalories: "500",
+            targetCarbs: "50",
+            targetProtein: "30",
+            targetFat: "20",
+          },
+          {
+            concept: "NUTRITION_BALANCE",
+            displayName: "영양 밸런스",
+            requestSummary: "",
+          }
         );
         store().setJobId(k3, "job-3");
         store().completeJob(k3, "recipe-3");
       });
 
       const pending = store().getPendingJobs();
-      expect(pending.map((j) => j.state).sort()).toEqual(["creating", "polling"]);
+      expect(pending.map((j) => j.state).sort()).toEqual([
+        "creating",
+        "polling",
+      ]);
     });
 
     it("completed와 failed 상태는 제외한다", () => {
       act(() => {
-        const completed = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        const completed = store().createJob(
+          "COST_EFFECTIVE",
+          mockRequest,
+          mockMeta
+        );
         store().setJobId(completed, "job-1");
         store().completeJob(completed, "recipe-1");
 
         const failed = store().createJob(
           "FINE_DINING",
           { ingredientIds: ["1"], diningTier: "BLACK" },
-          { concept: "FINE_DINING", displayName: "파인 다이닝", requestSummary: "" }
+          {
+            concept: "FINE_DINING",
+            displayName: "파인 다이닝",
+            requestSummary: "",
+          }
         );
         store().failJob(failed, "700", "에러");
       });
@@ -180,7 +210,9 @@ describe("useAIRecipeStoreV2", () => {
         store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
       });
 
-      expect(store().getJobByConcept("COST_EFFECTIVE")?.concept).toBe("COST_EFFECTIVE");
+      expect(store().getJobByConcept("COST_EFFECTIVE")?.concept).toBe(
+        "COST_EFFECTIVE"
+      );
       expect(store().getJobByConcept("FINE_DINING")).toBeUndefined();
     });
   });

@@ -24,7 +24,7 @@ const GoogleLoginButton = ({
 };
 
 const RecentBadge = () => (
-  <span className="absolute right-3 rounded-full bg-olive-light/10 px-2 py-0.5 text-xs font-medium text-olive-dark">
+  <span className="bg-olive-light/10 text-olive-dark absolute right-3 rounded-full px-2 py-0.5 text-xs font-medium">
     최근 로그인
   </span>
 );

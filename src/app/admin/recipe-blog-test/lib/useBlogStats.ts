@@ -43,7 +43,8 @@ const fetchStats = async (): Promise<BlogStatsData> => {
     throw new Error(reason);
   }
   const data = (await res.json()) as StatsResponseOk | StatsResponseErr;
-  if ("ok" in data && data.ok) return { cap: data.cap, accounts: data.accounts };
+  if ("ok" in data && data.ok)
+    return { cap: data.cap, accounts: data.accounts };
   throw new Error(("reason" in data && data.reason) || "응답 형식 오류");
 };
 

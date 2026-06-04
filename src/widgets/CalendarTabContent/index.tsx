@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import Link from "next/link";
 
 import { format, parseISO } from "date-fns";
@@ -24,7 +23,10 @@ import { CalendarDayStreak } from "./components/CalendarDayStreak";
 import { StreakInfoBanner } from "./components/StreakInfoBanner";
 import { StreakModeToggle } from "./components/StreakModeToggle";
 import { useRecipeHistoryQuery, useUserStreakQuery } from "./hooks";
-import { findConsecutiveRanges, getRangeForDay } from "./lib/consecutiveDaysHelper";
+import {
+  findConsecutiveRanges,
+  getRangeForDay,
+} from "./lib/consecutiveDaysHelper";
 import { CalendarMode } from "./types";
 
 import "react-day-picker/style.css";
@@ -140,12 +142,16 @@ const CalendarTabContent = () => {
                   />
                 );
               }
-              return <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />;
+              return (
+                <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />
+              );
             } else {
               if (summary) {
                 return <CalendarDayPhoto date={date} summary={summary} />;
               }
-              return <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />;
+              return (
+                <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />
+              );
             }
           },
           PreviousMonthButton: ({ className, onClick, ...props }: any) => (

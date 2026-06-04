@@ -3,11 +3,11 @@ import PrevButton from "@/shared/ui/PrevButton";
 
 import type { IngredientDetailView } from "@/entities/ingredient";
 
+import IngredientRecipesSlide from "./IngredientRecipesSlide";
 import BenefitsList from "./ui/BenefitsList";
 import CookingMethodsSection from "./ui/CookingMethodsSection";
 import CoupangPurchaseCard from "./ui/CoupangPurchaseCard";
 import IngredientHero from "./ui/IngredientHero";
-import IngredientRecipesSlide from "./IngredientRecipesSlide";
 import NutritionCard from "./ui/NutritionCard";
 import PairingSection from "./ui/PairingSection";
 import SeasonStrip from "./ui/SeasonStrip";
@@ -47,7 +47,7 @@ const IngredientDetailPageClient = ({
 
       <CookingMethodsSection methods={detail.cookingMethods} />
 
-      <section className="px-5 py-6 border-t border-gray-100">
+      <section className="border-t border-gray-100 px-5 py-6">
         <IngredientRecipesSlide
           ingredientId={detail.id}
           ingredientName={detail.name}

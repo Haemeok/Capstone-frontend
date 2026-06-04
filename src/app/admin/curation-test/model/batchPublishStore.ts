@@ -36,7 +36,12 @@ export const useBatchPublishStore = create<State>((set) => ({
     set((s) => ({
       items: {
         ...s.items,
-        [key]: { ...s.items[key], status: "generated", result, error: undefined },
+        [key]: {
+          ...s.items[key],
+          status: "generated",
+          result,
+          error: undefined,
+        },
       },
     })),
   setError: (key, error) =>

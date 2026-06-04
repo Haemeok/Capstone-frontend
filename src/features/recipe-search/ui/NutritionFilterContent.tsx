@@ -104,10 +104,10 @@ export const NutritionFilterContent = ({
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>{trigger ?? <div />}</PopoverTrigger>
       <PopoverContent className="w-[680px]" align="start" sideOffset={24}>
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <div>
-            <h4 className="font-medium leading-none">필터</h4>
-            <p className="text-sm text-gray-500 mt-1">
+            <h4 className="leading-none font-medium">필터</h4>
+            <p className="mt-1 text-sm text-gray-500">
               원하는 필터를 설정하세요.
             </p>
           </div>

@@ -9,7 +9,12 @@ type FlameIconProps = {
 
 export const FlameIcon = ({ config, size = 32 }: FlameIconProps) => {
   return (
-    <div className={cn("inline-flex items-center justify-center", config.className)}>
+    <div
+      className={cn(
+        "inline-flex items-center justify-center",
+        config.className
+      )}
+    >
       <svg
         width={size}
         height={size}

@@ -80,7 +80,6 @@ describe("useYoutubeImportStoreV2", () => {
         state: "polling",
       });
     });
-
   });
 
   describe("completeJob", () => {
@@ -141,7 +140,6 @@ describe("useYoutubeImportStoreV2", () => {
         message: "추출 실패",
       });
     });
-
   });
 
   describe("removeJob", () => {

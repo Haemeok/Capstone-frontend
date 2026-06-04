@@ -112,4 +112,3 @@ export const FINE_DINING_TIERS: TierOption[] = [
     ],
   },
 ];
-

@@ -51,7 +51,9 @@ describe("useCreateCommentMutation", () => {
     uploadMock.mockResolvedValue(["k1"]);
     postMock.mockResolvedValue({ id: "c1" });
 
-    const { result } = renderHook(() => useCreateCommentMutation("r1"), { wrapper });
+    const { result } = renderHook(() => useCreateCommentMutation("r1"), {
+      wrapper,
+    });
     const file = new File([new Uint8Array(1)], "a.jpg", { type: "image/jpeg" });
 
     await act(async () => {
@@ -74,7 +76,9 @@ describe("useCreateCommentMutation", () => {
       .mockRejectedValueOnce(makeApi409NotReady())
       .mockResolvedValueOnce({ id: "c1" });
 
-    const { result } = renderHook(() => useCreateCommentMutation("r1"), { wrapper });
+    const { result } = renderHook(() => useCreateCommentMutation("r1"), {
+      wrapper,
+    });
     const file = new File([new Uint8Array(1)], "a.jpg", { type: "image/jpeg" });
 
     await act(async () => {
@@ -91,7 +95,9 @@ describe("useCreateCommentMutation", () => {
       new ApiError(403, "Forbidden", { code: 307, message: "forbidden" })
     );
 
-    const { result } = renderHook(() => useCreateCommentMutation("r1"), { wrapper });
+    const { result } = renderHook(() => useCreateCommentMutation("r1"), {
+      wrapper,
+    });
     const file = new File([new Uint8Array(1)], "a.jpg", { type: "image/jpeg" });
 
     await act(async () => {
@@ -104,7 +110,9 @@ describe("useCreateCommentMutation", () => {
   it("skips upload when no file provided", async () => {
     postMock.mockResolvedValue({ id: "c1" });
 
-    const { result } = renderHook(() => useCreateCommentMutation("r1"), { wrapper });
+    const { result } = renderHook(() => useCreateCommentMutation("r1"), {
+      wrapper,
+    });
 
     await act(async () => {
       result.current.createComment({ recipeId: "r1", comment: "hi" });
@@ -112,6 +120,10 @@ describe("useCreateCommentMutation", () => {
 
     await waitFor(() => expect(postMock).toHaveBeenCalled());
     expect(uploadMock).not.toHaveBeenCalled();
-    expect(postMock).toHaveBeenCalledWith({ recipeId: "r1", comment: "hi", imageKeys: undefined });
+    expect(postMock).toHaveBeenCalledWith({
+      recipeId: "r1",
+      comment: "hi",
+      imageKeys: undefined,
+    });
   });
 });

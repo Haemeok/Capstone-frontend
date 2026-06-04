@@ -18,7 +18,7 @@ const MyRecipesTabContent = dynamic(
   () => import("@/widgets/MyRecipesTabContent"),
   {
     loading: () => (
-      <div className="grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 p-4 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
         <RecipeGridSkeleton count={8} isSimple />
       </div>
     ),
@@ -32,7 +32,7 @@ const MySavedRecipesTabContent = dynamic(
     })),
   {
     loading: () => (
-      <div className="grid gap-4 p-4 [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
+      <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 p-4 sm:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
         <RecipeGridSkeleton count={8} isSimple={false} />
       </div>
     ),
@@ -76,7 +76,9 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
         return (
           <ErrorBoundary
             key="calendar-tab"
-            fallback={<SectionErrorFallback message="캘린더를 불러올 수 없어요" />}
+            fallback={
+              <SectionErrorFallback message="캘린더를 불러올 수 없어요" />
+            }
           >
             <CalendarTabContent />
           </ErrorBoundary>

@@ -69,14 +69,14 @@ export const DISH_TYPES = [
 ];
 
 export const DISH_TYPE_ICONS: Record<string, string> = {
-  "전체": "all.webp",
-  "볶음": "frying.webp",
+  전체: "all.webp",
+  볶음: "frying.webp",
   "국/찌개/탕": "soup_stew.webp",
-  "구이": "grill.webp",
+  구이: "grill.webp",
   "무침/샐러드": "salad.webp",
   "튀김/부침": "fried_pan.webp",
   "찜/조림": "steamed_braised.webp",
-  "오븐요리": "oven.webp",
+  오븐요리: "oven.webp",
   "생식/회": "raw.webp",
   "절임/피클류": "pickle.webp",
   "밥/면/파스타": "rice_noodle.webp",

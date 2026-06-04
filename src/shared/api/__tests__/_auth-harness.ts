@@ -1,5 +1,8 @@
-
-export type SessionState = "ANONYMOUS" | "VALID" | "ACCESS_EXPIRED" | "BOTH_EXPIRED";
+export type SessionState =
+  | "ANONYMOUS"
+  | "VALID"
+  | "ACCESS_EXPIRED"
+  | "BOTH_EXPIRED";
 export type EndpointKind = "public" | "optional-auth" | "required";
 
 // jsdom에 Response가 없을 수 있으므로 polyfill
@@ -31,11 +34,15 @@ export const ensureResponsePolyfill = () => {
     }
 
     async json() {
-      return typeof this._body === "string" ? JSON.parse(this._body) : this._body;
+      return typeof this._body === "string"
+        ? JSON.parse(this._body)
+        : this._body;
     }
 
     async text() {
-      return typeof this._body === "string" ? this._body : JSON.stringify(this._body);
+      return typeof this._body === "string"
+        ? this._body
+        : JSON.stringify(this._body);
     }
   }
 
@@ -77,7 +84,7 @@ export const arrangeScenario = (
     case "ACCESS_EXPIRED":
       mockFetch
         .mockReturnValueOnce(Promise.resolve(makeResponse(null, 401))) // 원요청
-        .mockReturnValueOnce(Promise.resolve(makeResponse({}, 200)))    // refresh 성공
+        .mockReturnValueOnce(Promise.resolve(makeResponse({}, 200))) // refresh 성공
         .mockReturnValueOnce(Promise.resolve(makeResponse(data, 200))); // retry 성공
       return { expectedRefreshCalls: 1, expectedRetry: true };
 
@@ -126,7 +133,9 @@ export const observeOutcome = (
     refreshIdx >= 0 &&
     mockFetch.mock.calls
       .slice(refreshIdx + 1)
-      .some(([url]) => typeof url === "string" && !url.includes("/api/auth/refresh"));
+      .some(
+        ([url]) => typeof url === "string" && !url.includes("/api/auth/refresh")
+      );
 
   let result: Outcome["result"];
   if (apiResult.success) {

@@ -14,7 +14,7 @@ export const IngredientCategoryTabs = ({ selected, onSelect }: Props) => {
   };
 
   return (
-    <div className="scrollbar-hide flex flex-nowrap gap-2 pb-2 overflow-x-auto sm:flex-wrap sm:overflow-x-visible">
+    <div className="scrollbar-hide flex flex-nowrap gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-x-visible">
       {INGREDIENT_CATEGORIES.map((category) => (
         <button
           key={category}

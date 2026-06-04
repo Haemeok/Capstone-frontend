@@ -42,7 +42,9 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
   });
 
   const handleToggleFavorite = () => {
-    const message = recipe.favoriteByCurrentUser ? "저장을 해제했습니다." : "저장했습니다.";
+    const message = recipe.favoriteByCurrentUser
+      ? "저장을 해제했습니다."
+      : "저장했습니다.";
 
     toggleRecipeFavorite(undefined, {
       onSuccess: () => {
@@ -76,7 +78,7 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
             className="flex h-full flex-col justify-center px-6 pt-16"
           >
             <div className="mx-auto flex w-full max-w-sm flex-col items-center">
-              <div className="relative mb-4 h-80 w-80 overflow-hidden rounded-card">
+              <div className="rounded-card relative mb-4 h-80 w-80 overflow-hidden">
                 <Image
                   src={recipe.imageUrl}
                   alt={recipe.title}

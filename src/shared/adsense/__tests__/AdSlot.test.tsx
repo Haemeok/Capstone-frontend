@@ -1,4 +1,5 @@
 import { act } from "react";
+
 import { render, screen } from "@testing-library/react";
 
 jest.mock("../config", () => ({
@@ -13,8 +14,8 @@ jest.mock("../AdsGateContext", () => ({
   useAdsGate: jest.fn(() => ({ enabled: true, isTestUser: false })),
 }));
 
-import { AdSlot } from "../AdSlot";
 import { useAdsGate } from "../AdsGateContext";
+import { AdSlot } from "../AdSlot";
 
 const mockedUseAdsGate = jest.mocked(useAdsGate);
 
@@ -31,7 +32,9 @@ describe("AdSlot", () => {
 
   it("게이트 enabled false 면 null 렌더", () => {
     mockedUseAdsGate.mockReturnValue({ enabled: false, isTestUser: false });
-    const { container } = render(<AdSlot slotId="1234567890" minHeight={280} />);
+    const { container } = render(
+      <AdSlot slotId="1234567890" minHeight={280} />
+    );
     expect(container).toBeEmptyDOMElement();
   });
 

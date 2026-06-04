@@ -11,10 +11,7 @@ type Options = {
   onSuccess?: (next: Visibility) => void;
 };
 
-const useRecipeVisibilityMutation = (
-  recipeId: string,
-  options?: Options
-) => {
+const useRecipeVisibilityMutation = (recipeId: string, options?: Options) => {
   const queryClient = useQueryClient();
   const { addToast } = useToastStore();
 
@@ -29,9 +26,7 @@ const useRecipeVisibilityMutation = (
       queryClient.invalidateQueries({ queryKey: ["recipe-status", recipeId] });
       addToast({
         message:
-          next === "PRIVATE"
-            ? "비공개로 전환됐어요"
-            : "공개로 전환됐어요",
+          next === "PRIVATE" ? "비공개로 전환됐어요" : "공개로 전환됐어요",
         variant: "default",
         size: "small",
         position: "bottom",

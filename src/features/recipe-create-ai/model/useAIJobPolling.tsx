@@ -229,8 +229,9 @@ export const useAIJobPolling = () => {
       isPollingRef.current = true;
 
       try {
-        const currentPendingJobs =
-          useAIRecipeStoreV2.getState().getPendingJobs();
+        const currentPendingJobs = useAIRecipeStoreV2
+          .getState()
+          .getPendingJobs();
         await Promise.all(currentPendingJobs.map(pollJob));
       } finally {
         isPollingRef.current = false;

@@ -52,7 +52,7 @@ const HomeBannerCarousel = ({
 
   return (
     <div
-      className="relative md:hidden w-full overflow-hidden rounded-card mb-4"
+      className="rounded-card relative mb-4 w-full overflow-hidden md:hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -91,7 +91,7 @@ const HomeBannerCarousel = ({
                     )}
                   </div>
 
-                  <div className="relative w-24 h-24 md:w-28 md:h-28 flex-none rotate-12">
+                  <div className="relative h-24 w-24 flex-none rotate-12 md:h-28 md:w-28">
                     {slide.backgroundImage && (
                       <div className="absolute inset-0 scale-[2]">
                         <Image

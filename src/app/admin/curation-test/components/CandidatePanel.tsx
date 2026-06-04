@@ -81,7 +81,11 @@ export const CandidatePanel = () => {
   const deadSlugs = useDeadSlugStore((s) => s.slugs);
   const addDeadSlug = useDeadSlugStore((s) => s.add);
 
-  const { data: rawData, isLoading, error } = useQuery({
+  const {
+    data: rawData,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: QUERY_KEY,
     queryFn: async () => {
       const entries = await fetchAllowlist();
@@ -93,12 +97,12 @@ export const CandidatePanel = () => {
   // dead-slug (INSUFFICIENT_RECIPES 로 hide 처리된 항목) 는 모든 그룹에서 사라져야 함.
   const data = useMemo<AllowlistEntryWithSlug[] | undefined>(
     () => rawData?.filter((d) => !deadSlugs.has(d.slug)),
-    [rawData, deadSlugs],
+    [rawData, deadSlugs]
   );
 
   const pinned = useMemo<AllowlistEntryWithSlug | null>(
     () => data?.find((d) => d.slug === selectedSlug) ?? null,
-    [data, selectedSlug],
+    [data, selectedSlug]
   );
 
   // active 그룹: data 인덱스 순 안정 정렬, 필터 무관 (사용자가 의식적으로 굴리는 셋이라 항상 보여야 함).
@@ -113,7 +117,7 @@ export const CandidatePanel = () => {
 
   const activeSlugSet = useMemo(
     () => new Set(activeRows.map((r) => r.slug)),
-    [activeRows],
+    [activeRows]
   );
 
   // 후보(=비-active) 풀 — 필터 + pinned 분리 후 페이지 컷
@@ -134,12 +138,13 @@ export const CandidatePanel = () => {
   const visibleLimit = visiblePages * PAGE_SIZE;
   const candidateRows = useMemo(
     () => candidatePool.slice(0, visibleLimit),
-    [candidatePool, visibleLimit],
+    [candidatePool, visibleLimit]
   );
   const hasMore = candidateRows.length < candidatePool.length;
 
   // pinned 가 active 에 포함되면 별도 슬롯 노출 안 함
-  const pinnedSeparate = pinned && !activeSlugSet.has(pinned.slug) ? pinned : null;
+  const pinnedSeparate =
+    pinned && !activeSlugSet.has(pinned.slug) ? pinned : null;
 
   useEffect(() => {
     setVisiblePages(1);
@@ -155,7 +160,7 @@ export const CandidatePanel = () => {
           setVisiblePages((p) => p + 1);
         }
       },
-      { root: scrollRef.current, rootMargin: "200px" },
+      { root: scrollRef.current, rootMargin: "200px" }
     );
     observer.observe(node);
     return () => observer.disconnect();
@@ -163,7 +168,7 @@ export const CandidatePanel = () => {
 
   const selectedTargets = useMemo(
     () => (data ?? []).filter((d) => selectedKeys.has(d.slug)),
-    [data, selectedKeys],
+    [data, selectedKeys]
   );
 
   const generatableCount = useMemo(
@@ -172,13 +177,14 @@ export const CandidatePanel = () => {
         const status = items[t.slug]?.status;
         return status !== "generating" && status !== "publishing";
       }).length,
-    [selectedTargets, items],
+    [selectedTargets, items]
   );
 
   const publishableCount = useMemo(
     () =>
-      selectedTargets.filter((t) => items[t.slug]?.status === "generated").length,
-    [selectedTargets, items],
+      selectedTargets.filter((t) => items[t.slug]?.status === "generated")
+        .length,
+    [selectedTargets, items]
   );
 
   const busy = generating || publishing;
@@ -232,7 +238,7 @@ export const CandidatePanel = () => {
               return next;
             });
           },
-        },
+        }
       );
     } finally {
       setGenerating(false);
@@ -253,9 +259,8 @@ export const CandidatePanel = () => {
       await runBatchPublish(targets, {
         onItemDone: (key) => {
           // optimistic 즉시 제거 — refetch 기다리지 않고 리스트에서 사라짐.
-          queryClient.setQueryData<AllowlistEntryWithSlug[]>(
-            QUERY_KEY,
-            (old) => old?.filter((d) => d.slug !== key),
+          queryClient.setQueryData<AllowlistEntryWithSlug[]>(QUERY_KEY, (old) =>
+            old?.filter((d) => d.slug !== key)
           );
         },
       });
@@ -272,7 +277,7 @@ export const CandidatePanel = () => {
 
   const renderRow = (
     f: AllowlistEntryWithSlug,
-    opts: { highlightPinned?: boolean; pinnedBadge?: boolean } = {},
+    opts: { highlightPinned?: boolean; pinnedBadge?: boolean } = {}
   ) => {
     const state = items[f.slug];
     const status = state?.status ?? "idle";
@@ -283,7 +288,7 @@ export const CandidatePanel = () => {
     return (
       <li key={f.slug} className="flex items-stretch gap-1">
         <label
-          className={`flex items-start pl-1 pr-2 pt-1.5 rounded-l ${
+          className={`flex items-start rounded-l pt-1.5 pr-2 pl-1 ${
             checkboxLocked ? "" : "cursor-pointer hover:bg-gray-100"
           }`}
         >
@@ -292,12 +297,12 @@ export const CandidatePanel = () => {
             checked={checked}
             onChange={() => toggleKey(f.slug)}
             disabled={checkboxLocked}
-            className="w-5 h-5"
+            className="h-5 w-5"
           />
         </label>
         <button
           type="button"
-          className={`flex-1 text-left text-sm hover:bg-gray-100 rounded px-2 py-1 ${
+          className={`flex-1 rounded px-2 py-1 text-left text-sm hover:bg-gray-100 ${
             opts.highlightPinned ? "bg-amber-50 font-medium" : ""
           }`}
           onClick={() =>
@@ -309,13 +314,15 @@ export const CandidatePanel = () => {
           <div className="flex items-center gap-2">
             <span className="flex-1 break-all">{JSON.stringify(f.entry)}</span>
             {opts.pinnedBadge && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-200 text-amber-900">
+              <span className="rounded bg-amber-200 px-1.5 py-0.5 text-[10px] text-amber-900">
                 워크스페이스
               </span>
             )}
           </div>
           {(status !== "idle" || warningCount > 0) && (
-            <div className={`text-xs mt-0.5 flex items-center gap-2 ${STATUS_CLASS[status]}`}>
+            <div
+              className={`mt-0.5 flex items-center gap-2 text-xs ${STATUS_CLASS[status]}`}
+            >
               {status !== "idle" && (
                 <span>
                   {STATUS_LABEL[status]}
@@ -323,7 +330,9 @@ export const CandidatePanel = () => {
                 </span>
               )}
               {warningCount > 0 && (
-                <span className="text-amber-700">⚠ 검토필요({warningCount})</span>
+                <span className="text-amber-700">
+                  ⚠ 검토필요({warningCount})
+                </span>
               )}
             </div>
           )}
@@ -333,9 +342,9 @@ export const CandidatePanel = () => {
   };
 
   return (
-    <aside ref={scrollRef} className="border-r overflow-y-auto p-3 space-y-2">
+    <aside ref={scrollRef} className="space-y-2 overflow-y-auto border-r p-3">
       <input
-        className="w-full border rounded px-2 py-1 text-sm"
+        className="w-full rounded border px-2 py-1 text-sm"
         placeholder={`필터 (총 ${data?.length ?? 0}건 — 미발행만)`}
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
@@ -366,7 +375,7 @@ export const CandidatePanel = () => {
           type="button"
           onClick={onBatchGenerate}
           disabled={busy || generatableCount === 0}
-          className="rounded bg-amber-600 text-white px-3 py-1 disabled:opacity-50"
+          className="rounded bg-amber-600 px-3 py-1 text-white disabled:opacity-50"
         >
           {generating
             ? "생성 중..."
@@ -376,7 +385,7 @@ export const CandidatePanel = () => {
           type="button"
           onClick={onBatchPublish}
           disabled={busy || publishableCount === 0}
-          className="rounded bg-black text-white px-3 py-1 disabled:opacity-50"
+          className="rounded bg-black px-3 py-1 text-white disabled:opacity-50"
         >
           {publishing
             ? "발행 중..."
@@ -394,7 +403,7 @@ export const CandidatePanel = () => {
 
       {activeRows.length > 0 && (
         <div className="space-y-1">
-          <div className="text-[11px] uppercase tracking-wide text-amber-700">
+          <div className="text-[11px] tracking-wide text-amber-700 uppercase">
             작업 중 ({activeRows.length})
           </div>
           <ul className="space-y-1">
@@ -412,7 +421,7 @@ export const CandidatePanel = () => {
 
       {pinnedSeparate && (
         <div className="space-y-1">
-          <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-amber-700">
+          <div className="flex items-center justify-between text-[11px] tracking-wide text-amber-700 uppercase">
             <span>워크스페이스</span>
             <button
               type="button"
@@ -429,7 +438,7 @@ export const CandidatePanel = () => {
 
       <div className="space-y-1">
         {(activeRows.length > 0 || pinnedSeparate) && (
-          <div className="text-[11px] uppercase tracking-wide text-gray-500">
+          <div className="text-[11px] tracking-wide text-gray-500 uppercase">
             후보
           </div>
         )}

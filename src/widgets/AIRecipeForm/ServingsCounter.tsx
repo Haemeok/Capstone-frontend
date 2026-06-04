@@ -43,7 +43,10 @@ const ServingsCounter = () => {
         >
           -
         </button>
-        <span className="w-20 text-center font-medium text-gray-800" aria-live="polite">
+        <span
+          className="w-20 text-center font-medium text-gray-800"
+          aria-live="polite"
+        >
           {servings}인분
         </span>
         <button

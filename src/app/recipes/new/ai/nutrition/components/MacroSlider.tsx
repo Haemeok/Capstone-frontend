@@ -44,7 +44,10 @@ const MacroSlider = ({
           const newValue = vals[0];
           const currentStep = Math.floor(newValue / step);
 
-          if (lastStepRef.current !== null && currentStep !== lastStepRef.current) {
+          if (
+            lastStepRef.current !== null &&
+            currentStep !== lastStepRef.current
+          ) {
             triggerHaptic("Light");
           }
           lastStepRef.current = currentStep;

@@ -1,4 +1,4 @@
-import { type HydratableRecipe,hydrateMarkdown } from "./hydrate";
+import { type HydratableRecipe, hydrateMarkdown } from "./hydrate";
 
 const recipes: HydratableRecipe[] = [
   {

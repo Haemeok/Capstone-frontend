@@ -54,7 +54,7 @@ export const ImageUploader = ({ fieldName, className }: ImageUploaderProps) => {
   return (
     <div
       className={cn(
-        "relative w-full aspect-square cursor-pointer bg-gray-200 text-gray-400 hover:bg-gray-300 rounded-card overflow-hidden",
+        "rounded-card relative aspect-square w-full cursor-pointer overflow-hidden bg-gray-200 text-gray-400 hover:bg-gray-300",
         className
       )}
     >
@@ -70,7 +70,7 @@ export const ImageUploader = ({ fieldName, className }: ImageUploaderProps) => {
 
       <label
         htmlFor={`${fieldName}-input`}
-        className="absolute inset-0 cursor-pointer z-10"
+        className="absolute inset-0 z-10 cursor-pointer"
       >
         {displayUrl ? (
           <Image

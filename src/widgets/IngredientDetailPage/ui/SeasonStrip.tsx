@@ -14,9 +14,9 @@ const SeasonStrip = ({ months }: SeasonStripProps) => {
   const isInSeasonNow = monthSet.has(currentMonth);
 
   return (
-    <section className="px-5 py-6 border-t border-gray-100">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">제철</h2>
-      <p className="text-sm text-gray-500 mb-3">가장 맛있는 시기예요</p>
+    <section className="border-t border-gray-100 px-5 py-6">
+      <h2 className="mb-1 text-lg font-bold text-gray-900">제철</h2>
+      <p className="mb-3 text-sm text-gray-500">가장 맛있는 시기예요</p>
 
       <div className="flex justify-between gap-1">
         {ALL_MONTHS.map((m) => {
@@ -25,7 +25,7 @@ const SeasonStrip = ({ months }: SeasonStripProps) => {
           return (
             <div
               key={m}
-              className={`flex-1 h-9 rounded-lg flex items-center justify-center text-xs font-medium transition-colors ${
+              className={`flex h-9 flex-1 items-center justify-center rounded-lg text-xs font-medium transition-colors ${
                 inSeason
                   ? isCurrent
                     ? "bg-olive-light text-white"
@@ -40,7 +40,7 @@ const SeasonStrip = ({ months }: SeasonStripProps) => {
       </div>
 
       {isInSeasonNow && (
-        <p className="mt-3 text-sm font-medium text-olive-dark flex items-center gap-1.5">
+        <p className="text-olive-dark mt-3 flex items-center gap-1.5 text-sm font-medium">
           <Sprout size={14} />
           <span>지금이 제철!</span>
         </p>

@@ -19,7 +19,7 @@ const ArticleTocDesktop = ({
   return (
     <aside className="hidden md:block">
       <div className="sticky top-24 w-52">
-        <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+        <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-gray-400 uppercase">
           목차
         </p>
         <ArticleTocList

@@ -6,7 +6,11 @@ import path from "node:path";
 
 import { requireAdminAction } from "@/shared/lib/admin-guard";
 
-const DEFAULT_QUEUE_DIR = path.join(os.homedir(), "Desktop", "recipio-publish-queue");
+const DEFAULT_QUEUE_DIR = path.join(
+  os.homedir(),
+  "Desktop",
+  "recipio-publish-queue"
+);
 
 export type QueueItemSnapshot = {
   name: string;
@@ -38,7 +42,10 @@ const parsePrefix = (name: string): string => {
 
 const readSlug = (packageDir: string): string | undefined => {
   try {
-    const raw = fs.readFileSync(path.join(packageDir, "curation-meta.json"), "utf8");
+    const raw = fs.readFileSync(
+      path.join(packageDir, "curation-meta.json"),
+      "utf8"
+    );
     const parsed = JSON.parse(raw) as { slug?: unknown };
     return typeof parsed.slug === "string" ? parsed.slug : undefined;
   } catch {
@@ -66,7 +73,8 @@ const dirItem = (dir: string, ent: fs.Dirent): QueueItemSnapshot | null => {
 
 export const getQueueSnapshot = async (): Promise<QueueSnapshot> => {
   await requireAdminAction();
-  const queueDir = process.env.BLOG_PUBLISH_QUEUE_DIR?.trim() || DEFAULT_QUEUE_DIR;
+  const queueDir =
+    process.env.BLOG_PUBLISH_QUEUE_DIR?.trim() || DEFAULT_QUEUE_DIR;
 
   const pendingDir = path.join(queueDir, "pending");
   const postedDir = path.join(queueDir, "posted");
@@ -77,8 +85,12 @@ export const getQueueSnapshot = async (): Promise<QueueSnapshot> => {
     .filter((x): x is QueueItemSnapshot => x !== null)
     .sort((a, b) => (a.createdAt < b.createdAt ? -1 : 1));
 
-  const postedCount = safeReadDir(postedDir).filter((e) => e.isDirectory()).length;
-  const failedCount = safeReadDir(failedDir).filter((e) => e.isDirectory()).length;
+  const postedCount = safeReadDir(postedDir).filter((e) =>
+    e.isDirectory()
+  ).length;
+  const failedCount = safeReadDir(failedDir).filter((e) =>
+    e.isDirectory()
+  ).length;
 
   return {
     pending,

@@ -18,7 +18,9 @@ const GlobalNotificationPermissionDrawer = () => {
   // 앱에서 오는 메시지 리스너
   const messageHandlers = useMemo(
     () => ({
-      NOTIFICATION_STATUS: (payload: { status: "granted" | "denied" | "not_determined" }) => {
+      NOTIFICATION_STATUS: (payload: {
+        status: "granted" | "denied" | "not_determined";
+      }) => {
         updateStatusFromApp(payload.status);
       },
     }),

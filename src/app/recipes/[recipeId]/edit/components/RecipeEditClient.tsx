@@ -10,13 +10,8 @@ type RecipeEditClientProps = {
 };
 
 const RecipeEditClient = ({ recipeId }: RecipeEditClientProps) => {
-  const {
-    methods,
-    onSubmit,
-    handleMainIngredientRemoved,
-    isLoading,
-    error,
-  } = useRecipeEditForm(recipeId);
+  const { methods, onSubmit, handleMainIngredientRemoved, isLoading, error } =
+    useRecipeEditForm(recipeId);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">

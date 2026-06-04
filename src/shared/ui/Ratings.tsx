@@ -150,7 +150,11 @@ const Ratings = ({
               onMouseMove={(e) => handleMouseMove(idx, e)}
               onMouseLeave={handleMouseLeave}
               onKeyDown={(e) => {
-                if (!readOnly && onChange && (e.key === "Enter" || e.key === " ")) {
+                if (
+                  !readOnly &&
+                  onChange &&
+                  (e.key === "Enter" || e.key === " ")
+                ) {
                   e.preventDefault();
                   onChange(roundToNearest(starValue));
                 }

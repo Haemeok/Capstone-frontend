@@ -29,7 +29,9 @@ describe("calculateFakeProgress", () => {
     });
 
     it("어떤 시점에서도 100%를 넘지 않아야 함", () => {
-      const timePoints = [0, 1, 5, 10, 15, 30, 40, 60, 90, 120, 150, 180, 210, 300, 600, 1800];
+      const timePoints = [
+        0, 1, 5, 10, 15, 30, 40, 60, 90, 120, 150, 180, 210, 300, 600, 1800,
+      ];
       for (const seconds of timePoints) {
         const progress = calculateFakeProgress(mockStartTime(seconds));
         expect(progress).toBeLessThanOrEqual(100);
@@ -55,7 +57,9 @@ describe("calculateFakeProgress", () => {
     });
 
     it("7초(첫 폴링 전)에 10% 이상이어야 함", () => {
-      expect(calculateFakeProgress(mockStartTime(7))).toBeGreaterThanOrEqual(10);
+      expect(calculateFakeProgress(mockStartTime(7))).toBeGreaterThanOrEqual(
+        10
+      );
     });
   });
 });

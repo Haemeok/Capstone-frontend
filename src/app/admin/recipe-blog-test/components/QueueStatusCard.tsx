@@ -46,7 +46,11 @@ export const QueueStatusCard = () => {
   });
 
   const onDeleteClick = (name: string) => {
-    if (!window.confirm(`pending 에서 삭제할까요?\n${name}\n→ trashed/ 로 이동 (복구 가능)`)) {
+    if (
+      !window.confirm(
+        `pending 에서 삭제할까요?\n${name}\n→ trashed/ 로 이동 (복구 가능)`
+      )
+    ) {
       return;
     }
     deleteMut.mutate(name);

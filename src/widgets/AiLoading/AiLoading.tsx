@@ -58,7 +58,7 @@ const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
   }, []);
 
   return (
-    <div className="relative flex min-h-[calc(100dvh-77px)] w-full flex-col items-center justify-center gap-6 p-4">
+    <div className="relative flex min-h-[calc(100dvh-var(--bottom-nav-h))] w-full flex-col items-center justify-center gap-6 p-4">
       <PrevButton className="absolute top-4 left-4 text-gray-600" />
 
       <div className="flex flex-col items-center gap-2">

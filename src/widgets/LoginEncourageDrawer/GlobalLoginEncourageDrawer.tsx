@@ -8,10 +8,9 @@ import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
 
-const LoginDialog = dynamic(
-  () => import("@/features/auth/ui/LoginDialog"),
-  { ssr: false }
-);
+const LoginDialog = dynamic(() => import("@/features/auth/ui/LoginDialog"), {
+  ssr: false,
+});
 
 import { useLoginEncourageDrawerStore } from "./model/store";
 
@@ -41,7 +40,7 @@ const GlobalLoginEncourageDrawer = () => {
         <Content className="overflow-hidden border-0 bg-white shadow-xl">
           <Title className="sr-only">로그인 필요</Title>
 
-          <div className="flex flex-col items-center px-6 pb-8 pt-8">
+          <div className="flex flex-col items-center px-6 pt-8 pb-8">
             <div className="flex items-center gap-3">
               <Image
                 src="/web-app-manifest-192x192.png"
@@ -51,9 +50,7 @@ const GlobalLoginEncourageDrawer = () => {
                 height={64}
                 lazy={false}
               />
-              <span className="text-3xl font-bold text-gray-900">
-                Recipi'O
-              </span>
+              <span className="text-3xl font-bold text-gray-900">Recipi'O</span>
             </div>
 
             <div className="mt-6 text-center">

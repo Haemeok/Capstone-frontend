@@ -67,9 +67,7 @@ const YoutubeExtractionDrawer = ({
               레시피를 자동으로 추출해보세요!
               <br />
             </p>
-              <p className="mt-3 font-bold text-red-500">
-                ⚠️ 기간 한정 무료!
-              </p>
+            <p className="mt-3 font-bold text-red-500">⚠️ 기간 한정 무료!</p>
           </div>
 
           <button

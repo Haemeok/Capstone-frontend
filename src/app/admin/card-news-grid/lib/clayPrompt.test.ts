@@ -1,7 +1,17 @@
 // src/app/admin/card-news-grid/lib/clayPrompt.test.ts
 import { buildClayPrompt } from "./clayPrompt";
 
-const NINE = ["김치찌개","된장찌개","제육볶음","계란말이","미역국","불고기","비빔밥","잡채","갈비찜"];
+const NINE = [
+  "김치찌개",
+  "된장찌개",
+  "제육볶음",
+  "계란말이",
+  "미역국",
+  "불고기",
+  "비빔밥",
+  "잡채",
+  "갈비찜",
+];
 
 describe("buildClayPrompt", () => {
   it("정확히 9개가 아니면 throw", () => {

@@ -8,9 +8,9 @@ export const CurationListSkeleton = ({
   <>
     {Array.from({ length: count }).map((_, i) => (
       <div key={i} className="animate-pulse">
-        <div className="aspect-square w-full bg-beige/70" />
-        <div className="mt-2 h-3 w-1/3 bg-beige" />
-        <div className="mt-2 h-4 w-4/5 bg-beige" />
+        <div className="bg-beige/70 aspect-square w-full" />
+        <div className="bg-beige mt-2 h-3 w-1/3" />
+        <div className="bg-beige mt-2 h-4 w-4/5" />
       </div>
     ))}
   </>

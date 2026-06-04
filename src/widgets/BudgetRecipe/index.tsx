@@ -8,8 +8,8 @@ import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
 
-import { useConceptJob } from "@/features/recipe-create-ai/model/useConceptJob";
 import type { CostEffectiveRequest } from "@/features/recipe-create-ai/model/types";
+import { useConceptJob } from "@/features/recipe-create-ai/model/useConceptJob";
 
 import AIConceptShell from "@/widgets/AIConceptShell";
 import UsageLimitSection from "@/widgets/AIRecipeForm/UsageLimitSection";

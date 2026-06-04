@@ -49,7 +49,7 @@ const fakeBody = (n: number) =>
   Array.from({ length: n })
     .map(
       (_, i) =>
-        `## 섹션 ${i}\n\n{{img:${i}}}\n\n맛있는 본문 {{recipe:${i}}} 그리고 {{yt:${i}}}. 한 번 더 짚자면 {{ref:${i}}}.`,
+        `## 섹션 ${i}\n\n{{img:${i}}}\n\n맛있는 본문 {{recipe:${i}}} 그리고 {{yt:${i}}}. 한 번 더 짚자면 {{ref:${i}}}.`
     )
     .join("\n\n") +
   "\n\n결말 한 문단입니다." +
@@ -59,7 +59,7 @@ beforeAll(() => {
   const sanity = validateMarkdown(fakeBody(3), 3);
   if (!sanity.ok) {
     throw new Error(
-      `fakeBody(3) violates validateMarkdown: ${sanity.errors.join(", ")}`,
+      `fakeBody(3) violates validateMarkdown: ${sanity.errors.join(", ")}`
     );
   }
 });
@@ -75,7 +75,7 @@ describe("generateCuration", () => {
     mockSearch.mockResolvedValue(["a", "b", "c"]);
     mockGetRecipe.mockImplementation(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async (id: string) => fakeRecipe(id) as any,
+      async (id: string) => fakeRecipe(id) as any
     );
     mockGenObj.mockResolvedValueOnce({
       object: {
@@ -106,7 +106,7 @@ describe("generateCuration", () => {
   it("레시피 부족(<3)면 INSUFFICIENT_RECIPES throw", async () => {
     mockSearch.mockResolvedValue(["a"]);
     await expect(
-      generateCuration({ params: { dishType: "찌개" } }),
+      generateCuration({ params: { dishType: "찌개" } })
     ).rejects.toMatchObject({ code: "INSUFFICIENT_RECIPES" });
   });
 
@@ -114,7 +114,7 @@ describe("generateCuration", () => {
     mockSearch.mockResolvedValue(["a", "b", "c"]);
     mockGetRecipe.mockImplementation(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async (id: string) => fakeRecipe(id) as any,
+      async (id: string) => fakeRecipe(id) as any
     );
     mockGenObj.mockResolvedValueOnce({
       object: {
@@ -147,7 +147,7 @@ describe("generateCuration", () => {
     mockSearch.mockResolvedValue(["a", "b", "c"]);
     mockGetRecipe.mockImplementation(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async (id: string) => fakeRecipe(id) as any,
+      async (id: string) => fakeRecipe(id) as any
     );
     mockGenObj.mockResolvedValueOnce({
       object: {
@@ -165,7 +165,7 @@ describe("generateCuration", () => {
       .mockResolvedValue({ text: "너무 짧아" } as any);
 
     await expect(
-      generateCuration({ params: { dishType: "찌개" } }),
+      generateCuration({ params: { dishType: "찌개" } })
     ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
   });
 });

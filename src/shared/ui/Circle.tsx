@@ -1,6 +1,6 @@
-import { LoaderCircleIcon } from 'lucide-react';
+import { LoaderCircleIcon } from "lucide-react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 type CircleProps = {
   className?: string;
@@ -10,7 +10,7 @@ type CircleProps = {
 
 const Circle = ({ className, size, ...props }: CircleProps) => (
   <LoaderCircleIcon
-    className={cn('animate-spin', className)}
+    className={cn("animate-spin", className)}
     {...props}
     size={size}
   />

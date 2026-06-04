@@ -12,7 +12,7 @@ export const IngredientSearchInput = ({ value, onChange, onSubmit }: Props) => {
       <input
         type="text"
         placeholder="재료 이름을 검색하세요"
-        className="w-full rounded-xl border border-gray-200 py-3 pr-4 pl-11 text-gray-900 placeholder:text-gray-400 transition-colors focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
+        className="focus:border-olive-light focus:ring-olive-light w-full rounded-xl border border-gray-200 py-3 pr-4 pl-11 text-gray-900 transition-colors placeholder:text-gray-400 focus:ring-1 focus:outline-none"
         value={value}
         onChange={onChange}
       />

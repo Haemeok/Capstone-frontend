@@ -39,7 +39,7 @@ export const CopyMode = ({
           {/* 미리보기 */}
           <div className="min-h-[100px] rounded-xl bg-gray-50 p-4">
             {copyText ? (
-              <pre className="whitespace-pre-wrap text-sm text-gray-700 font-sans">
+              <pre className="font-sans text-sm whitespace-pre-wrap text-gray-700">
                 {copyText}
               </pre>
             ) : (
@@ -83,7 +83,7 @@ export const CopyMode = ({
       </div>
 
       {/* 하단 액션 */}
-      <div className="shrink-0 px-6 pb-8 pt-3">
+      <div className="shrink-0 px-6 pt-3 pb-8">
         <motion.button
           type="button"
           onClick={onCopy}
@@ -93,7 +93,7 @@ export const CopyMode = ({
           className={cn(
             "flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-base font-bold transition-colors",
             selectedCount > 0
-              ? "cursor-pointer bg-olive-light text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
+              ? "bg-olive-light cursor-pointer text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
               : "cursor-not-allowed bg-gray-100 text-gray-400"
           )}
         >

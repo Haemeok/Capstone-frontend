@@ -125,7 +125,7 @@ export const IngredientCopySheet = ({
           </Header>
 
           {/* 모드 토글 + 인분 조절 */}
-          <div className="flex items-center gap-3 px-6 mb-4">
+          <div className="mb-4 flex items-center gap-3 px-6">
             <ModeToggle mode={mode} onChange={setMode} />
             <ServingsStepper
               currentServings={currentServings}

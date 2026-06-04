@@ -18,7 +18,7 @@ export type PublicCurationArticleDto = {
 };
 
 export const fetchCurationArticle = async (
-  slug: string,
+  slug: string
 ): Promise<PublicCurationArticleDto | null> => {
   const url = `${BASE_API_URL}${END_POINTS.CURATION_ARTICLE(slug)}`;
   try {
@@ -91,7 +91,7 @@ export const fetchAllCurationArticlesForSitemap = async (): Promise<
 };
 
 export const fetchRecentCurationForFeed = async (
-  size = 50,
+  size = 50
 ): Promise<PublicCurationArticleListItemDto[]> => {
   const search = new URLSearchParams({
     page: "0",
@@ -117,7 +117,7 @@ export const fetchRecentCurationForFeed = async (
 };
 
 export const fetchCurationArticleList = async (
-  params: CurationArticleListParams,
+  params: CurationArticleListParams
 ): Promise<CurationArticleListResponse> => {
   const url = buildListUrl(params);
   try {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { AnimatePresence,motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
 import { cn } from "@/shared/lib/utils";

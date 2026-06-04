@@ -7,9 +7,12 @@ const goodMd = (n: number) => {
   return `인트로 한 문단입니다.\n\n${Array.from({ length: n })
     .map(
       (_, i) =>
-        `## 레시피 ${i}\n\n{{img:${i}}}\n\n본문 한 문단. 이 레시피 추천 {{recipe:${i}}}\n\n{{yt:${i}}}`,
+        `## 레시피 ${i}\n\n{{img:${i}}}\n\n본문 한 문단. 이 레시피 추천 {{recipe:${i}}}\n\n{{yt:${i}}}`
     )
-    .join("\n\n")}\n\n## 어떻게 고를까\n${refs}\n\n결말입니다.`.padEnd(900, " ");
+    .join("\n\n")}\n\n## 어떻게 고를까\n${refs}\n\n결말입니다.`.padEnd(
+    900,
+    " "
+  );
 };
 
 describe("validateMarkdown", () => {

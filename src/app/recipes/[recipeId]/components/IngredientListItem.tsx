@@ -29,9 +29,7 @@ export const IngredientListItem = ({
         {ingredient.inFridge ? (
           <BadgeButton
             badgeText="내 냉장고에 있는 재료예요"
-            badgeIcon={
-              <Refrigerator size={18} className="text-gray-500" />
-            }
+            badgeIcon={<Refrigerator size={18} className="text-gray-500" />}
           />
         ) : reserveFridgeSpace ? (
           <span aria-hidden className="inline-block w-[18px] shrink-0" />
@@ -39,7 +37,7 @@ export const IngredientListItem = ({
         <p className="font-bold">{ingredient.name}</p>
       </div>
 
-      <p className="whitespace-nowrap text-left">
+      <p className="text-left whitespace-nowrap">
         {displayQuantity}
         {displayQuantity !== "약간" && displayUnit}
       </p>

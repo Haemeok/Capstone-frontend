@@ -9,8 +9,7 @@ export const NOTIFICATION_MESSAGES: Record<
   NEW_REPLY: (actorNickname: string) =>
     `${actorNickname}님이 답글을 남겼습니다.`,
   AI_RECIPE_DONE: () => `AI 레시피 생성이 완료되었습니다.`,
-  NEW_FAVORITE: (actorNickname: string) =>
-    `${actorNickname}님이 저장했습니다.`,
+  NEW_FAVORITE: (actorNickname: string) => `${actorNickname}님이 저장했습니다.`,
   NEW_RECIPE_LIKE: (actorNickname: string) =>
     `${actorNickname}님이 레시피를 좋아합니다.`,
   NEW_COMMENT_LIKE: (actorNickname: string) =>

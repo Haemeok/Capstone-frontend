@@ -1,7 +1,11 @@
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
-import type { BookRecipe, RecipeBookDetail, RecipeBookDetailParams } from "./types";
+import type {
+  BookRecipe,
+  RecipeBookDetail,
+  RecipeBookDetailParams,
+} from "./types";
 
 type RawRecipeBookDetail = {
   id: string;

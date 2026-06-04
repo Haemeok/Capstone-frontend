@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent,ClipboardEvent } from "react";
+import { ChangeEvent, ClipboardEvent } from "react";
 
 import { validateYoutubeUrl } from "../lib/urlValidation";
 

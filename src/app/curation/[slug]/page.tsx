@@ -55,7 +55,7 @@ const Page = async ({ params }: Props) => {
         ...recipe,
         favoriteCount: status?.favoriteCount ?? recipe.favoriteCount,
       };
-    }),
+    })
   );
 
   const record = toSavedRecord(data, recipes);
@@ -63,7 +63,7 @@ const Page = async ({ params }: Props) => {
 
   return (
     <>
-      <div className="fixed left-3 top-3 z-40 md:hidden">
+      <div className="fixed top-3 left-3 z-40 md:hidden">
         <PrevButton className="rounded-full bg-white/90 p-2 shadow-sm backdrop-blur" />
       </div>
       <CurationArticle data={record} recipes={recipes} />

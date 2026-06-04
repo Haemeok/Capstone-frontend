@@ -15,7 +15,17 @@ describe("assignTonesToAccounts", () => {
   });
 
   it("9톤/3계정 → 3씩 균등", () => {
-    const tones = ["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9"] as never[];
+    const tones = [
+      "t1",
+      "t2",
+      "t3",
+      "t4",
+      "t5",
+      "t6",
+      "t7",
+      "t8",
+      "t9",
+    ] as never[];
     expect(assignTonesToAccounts(tones, ["a1", "a2", "a3"])).toEqual({
       a1: ["t1", "t2", "t3"],
       a2: ["t4", "t5", "t6"],

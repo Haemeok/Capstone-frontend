@@ -2,9 +2,8 @@
 
 import { UtensilsCrossed } from "lucide-react";
 
-import { RecipeRecordItem } from "@/entities/recipe/ui/RecipeRecordItem";
-
 import { RecipeHistoryDetailResponse } from "@/entities/recipe/model/record";
+import { RecipeRecordItem } from "@/entities/recipe/ui/RecipeRecordItem";
 
 type RecipeListSectionProps = {
   data: RecipeHistoryDetailResponse[] | undefined;
@@ -13,9 +12,7 @@ type RecipeListSectionProps = {
 const RecipeListSection = ({ data }: RecipeListSectionProps) => {
   return (
     <div>
-      <h3 className="mb-3 text-lg font-bold text-gray-900">
-        오늘 먹은 레시피
-      </h3>
+      <h3 className="mb-3 text-lg font-bold text-gray-900">오늘 먹은 레시피</h3>
 
       {!data || data.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl bg-white py-14 shadow-sm">

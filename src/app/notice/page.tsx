@@ -5,8 +5,7 @@ import ArticleSection from "@/shared/ui/article/ArticleSection";
 
 export const metadata: Metadata = {
   title: "서비스 공지사항 | 레시피오",
-  description:
-    "레시피오 서비스 업데이트 및 주요 공지사항을 안내합니다.",
+  description: "레시피오 서비스 업데이트 및 주요 공지사항을 안내합니다.",
 };
 
 const NoticePage = () => {
@@ -23,8 +22,8 @@ const NoticePage = () => {
 
       <ArticleSection title="AI 레시피 추천 기능 강화">
         <p>
-          기존 AI 레시피 추천 알고리즘이 대폭 개선되었습니다. 이제 여러분의 냉장고
-          속 재료를 기반으로 더 정확하고 다양한 레시피를 추천해 드립니다.
+          기존 AI 레시피 추천 알고리즘이 대폭 개선되었습니다. 이제 여러분의
+          냉장고 속 재료를 기반으로 더 정확하고 다양한 레시피를 추천해 드립니다.
         </p>
         <ul className="list-disc space-y-1 pl-5">
           <li>냉장고 재료 기반 맞춤 레시피 추천 정확도 40% 향상</li>
@@ -59,9 +58,7 @@ const NoticePage = () => {
       </ArticleSection>
 
       <ArticleSection title="커뮤니티 기능 확대">
-        <p>
-          다른 요리사들과 소통할 수 있는 커뮤니티 기능이 확대되었습니다.
-        </p>
+        <p>다른 요리사들과 소통할 수 있는 커뮤니티 기능이 확대되었습니다.</p>
         <ul className="list-disc space-y-1 pl-5">
           <li>레시피 댓글 및 평점 시스템 개선</li>
           <li>레시피 공유 시 조리 팁 함께 공유 가능</li>

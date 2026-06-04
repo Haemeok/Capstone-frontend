@@ -3,7 +3,6 @@ import { X } from "lucide-react";
 import { Image } from "@/shared/ui/image/Image";
 
 import type { ChatQuota } from "../model/types";
-
 import ChatQuotaBadge from "./ChatQuotaBadge";
 
 type ChatHeaderProps = {

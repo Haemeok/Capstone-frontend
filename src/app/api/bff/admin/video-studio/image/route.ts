@@ -82,20 +82,21 @@ export async function POST(req: NextRequest) {
 
   const startedAt = Date.now();
   try {
-    const result = refs && refs.length > 0
-      ? await editMultiViaOpenAI(
-          model.endpoint,
-          body.prompt,
-          refs,
-          { quality, n: body.n },
-          req.signal
-        )
-      : await generateMultiViaOpenAI(
-          model.endpoint,
-          body.prompt,
-          { quality, n: body.n },
-          req.signal
-        );
+    const result =
+      refs && refs.length > 0
+        ? await editMultiViaOpenAI(
+            model.endpoint,
+            body.prompt,
+            refs,
+            { quality, n: body.n },
+            req.signal
+          )
+        : await generateMultiViaOpenAI(
+            model.endpoint,
+            body.prompt,
+            { quality, n: body.n },
+            req.signal
+          );
 
     return NextResponse.json({
       images: result.imageDataUrls,

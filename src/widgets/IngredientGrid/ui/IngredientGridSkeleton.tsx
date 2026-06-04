@@ -4,9 +4,7 @@ type IngredientGridSkeletonProps = {
   count?: number;
 };
 
-const IngredientGridSkeleton = ({
-  count = 4,
-}: IngredientGridSkeletonProps) => {
+const IngredientGridSkeleton = ({ count = 4 }: IngredientGridSkeletonProps) => {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (

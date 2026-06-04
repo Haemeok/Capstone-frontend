@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-
 import dynamic from "next/dynamic";
 
 import type { StaticRecipe } from "@/entities/recipe/model/types";
@@ -11,7 +10,7 @@ import type { CurationBlogPost } from "../lib/curationBlogPost.schema";
 
 const ChatMarkdown = dynamic(
   () => import("@/features/recipe-chat/ui/ChatMarkdown"),
-  { ssr: false },
+  { ssr: false }
 );
 
 type Props = {
@@ -20,11 +19,15 @@ type Props = {
   recipes: StaticRecipe[];
 };
 
-export const CurationBlogPreview = ({ post, imageUrlsBySlot, recipes }: Props) => {
+export const CurationBlogPreview = ({
+  post,
+  imageUrlsBySlot,
+  recipes,
+}: Props) => {
   const coverUrl = imageUrlsBySlot.cover;
   const hydrated = useMemo(
     () => hydrateCurationBlogMarkdown(post.bodyMarkdown, recipes, post.alts),
-    [post.bodyMarkdown, post.alts, recipes],
+    [post.bodyMarkdown, post.alts, recipes]
   );
 
   return (
@@ -53,12 +56,17 @@ export const CurationBlogPreview = ({ post, imageUrlsBySlot, recipes }: Props) =
       </section>
 
       <p className="text-xs text-gray-500">
-        ⤳ <a href={post.curationUrl} className="underline">{post.curationUrl}</a>
+        ⤳{" "}
+        <a href={post.curationUrl} className="underline">
+          {post.curationUrl}
+        </a>
       </p>
 
       <ul className="flex flex-wrap gap-2 text-xs text-gray-600">
         {post.hashtags.map((h) => (
-          <li key={h} className="rounded bg-gray-100 px-2 py-1">{h}</li>
+          <li key={h} className="rounded bg-gray-100 px-2 py-1">
+            {h}
+          </li>
         ))}
       </ul>
     </article>
