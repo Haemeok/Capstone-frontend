@@ -52,6 +52,7 @@ specific `rules/<prefix>-<topic>.md` file.
 ### Policy (human-error blockers)
 - [URL and query strings](rules/policy-url-and-query.md) — `new URL` / `URLSearchParams`
 - [TanStack Query keys](rules/policy-query-key.md) — `[domain, sub, ...ids]` tuple
+- [Query invalidation vs cache patch](rules/policy-query-invalidation.md) — invalidate refetches every loaded page (storm); patch via `setQueriesData` prefix + `refetchType:none`; refetch only for membership-changing lists
 - [Env via shared/config](rules/policy-env-config.md) — no direct `process.env`
 - [Storage keys](rules/policy-storage-keys.md) — constants module
 - [Z-index tokens](rules/policy-zindex.md) — semantic names, no magic numbers
@@ -89,6 +90,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Name is a spec](rules/test-name-is-spec.md) — strip "해야 함"; if no contract remains, the test restates a setter — cut
 - [Risk-weighted depth](rules/test-risk-weighted-depth.md) — depth by blast radius; security/billing adversarial, cosmetic invariants-only
 - [Prune and distrust](rules/test-prune-and-distrust.md) — deletion pass + false-confidence pass; mutation signal over line coverage; agents must be told to cut
+- [No production timing hacks](rules/test-no-production-timing-hacks.md) — never add a setTimeout/delay to production to win a test race; mock the reconciled (post-mutation) server response instead
 
 ## File template
 
