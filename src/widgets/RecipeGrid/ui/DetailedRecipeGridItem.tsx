@@ -17,6 +17,8 @@ import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import { Image } from "@/shared/ui/image/Image";
 
 import {
+  CreatorCountryFlag,
+  getCreatorCountryFlag,
   getGridItemAuthor,
   isAiRecipe,
   isUserRecipe,
@@ -82,6 +84,8 @@ const DetailedRecipeGridItem = ({
   };
 
   const isYoutube = isYoutubeRecipe(recipe);
+  const showCountryFlag =
+    !infoBadge && getCreatorCountryFlag(recipe.creatorCountryTag) !== null;
   const showYoutubeRow = isYoutube;
   const showAiRow = !isYoutube && isAiRecipe(recipe);
 
@@ -220,10 +224,14 @@ const DetailedRecipeGridItem = ({
           onClick={handleClick}
         />
 
-        {(infoBadge || saveBadge) && (
+        {(infoBadge || saveBadge || showCountryFlag) && (
           <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 flex items-start justify-between gap-2 p-2">
             {infoBadge ? (
               <div className="pointer-events-auto flex gap-2">{infoBadge}</div>
+            ) : showCountryFlag ? (
+              <div className="pointer-events-auto flex gap-2">
+                <CreatorCountryFlag tag={recipe.creatorCountryTag} />
+              </div>
             ) : (
               <div />
             )}
