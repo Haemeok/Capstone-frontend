@@ -3,7 +3,10 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import { setInFridgeForIds } from "@/entities/ingredient/lib/updateIngredientListCache";
+import {
+  removeIdsFromFridge,
+  setInFridgeForIds,
+} from "@/entities/ingredient/lib/updateIngredientListCache";
 import {
   IngredientMutationContext,
   IngredientsApiResponse,
@@ -64,51 +67,36 @@ export const useDeleteIngredientBulkMutation = (
   return useMutation<void, Error, string[], IngredientMutationContext>({
     mutationFn: deleteIngredientBulk,
     onMutate: async (ingredientIds) => {
-      await queryClient.cancelQueries({ queryKey: ["ingredients"] });
-      const previousIngredientsListData = queryClient.getQueryData<
-        InfiniteData<IngredientsApiResponse>
-      >(["ingredients"]);
-
-      if (previousIngredientsListData) {
-        queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
-          ["ingredients"],
-          (oldData) => {
-            if (!oldData) return undefined;
-            const idSet = new Set(ingredientIds);
-            return {
-              ...oldData,
-              pages: oldData.pages.map((page) => ({
-                ...page,
-                content: page.content.map((ingredient) =>
-                  idSet.has(ingredient.id)
-                    ? { ...ingredient, inFridge: false }
-                    : ingredient
-                ),
-              })),
-            };
-          }
-        );
-      }
-      return { previousIngredientsListData };
+      await queryClient.cancelQueries({
+        queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll,
+      });
+      const idSet = new Set(ingredientIds);
+      queryClient.setQueriesData<InfiniteData<IngredientsApiResponse>>(
+        { queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll },
+        removeIdsFromFridge(idSet)
+      );
+      queryClient.setQueriesData<InfiniteData<IngredientsApiResponse>>(
+        { queryKey: INGREDIENT_QUERY_KEYS.browseAll },
+        setInFridgeForIds(idSet, false)
+      );
+      return {};
     },
     onSuccess: () => {
       triggerHaptic("Success");
-      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
-      queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
       options?.onSuccess?.();
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
-      queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
-    },
-    onError: (error, variables, context) => {
-      if (context?.previousIngredientsListData) {
-        queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
-          ["ingredients"],
-          context.previousIngredientsListData
-        );
-      }
+    onError: (error) => {
       console.error("재료 벌크 삭제 실패:", error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll,
+      });
+      queryClient.invalidateQueries({
+        queryKey: INGREDIENT_QUERY_KEYS.browseAll,
+        refetchType: "none",
+      });
+      queryClient.invalidateQueries({ queryKey: INGREDIENT_QUERY_KEYS.myIds });
     },
   });
 };
