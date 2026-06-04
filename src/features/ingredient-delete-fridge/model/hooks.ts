@@ -3,62 +3,51 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
+import { setInFridgeForIds } from "@/entities/ingredient/lib/updateIngredientListCache";
 import {
   IngredientMutationContext,
   IngredientsApiResponse,
 } from "@/entities/ingredient/model/types";
+import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 
 import { deleteIngredient, deleteIngredientBulk } from "./api";
 
-export const useDeleteIngredientMutation = (queryKey?: (string | number)[]) => {
+export const useDeleteIngredientMutation = ({
+  category,
+  q,
+}: {
+  category: string;
+  q: string;
+}) => {
   const queryClient = useQueryClient();
+  const browseKey = INGREDIENT_QUERY_KEYS.browse(category, q);
 
   return useMutation<void, Error, string, IngredientMutationContext>({
     mutationFn: deleteIngredient,
     onMutate: async (ingredientId) => {
-      const targetQueryKey = queryKey || ["ingredients"];
-      await queryClient.cancelQueries({ queryKey: targetQueryKey });
+      await queryClient.cancelQueries({ queryKey: browseKey });
       const previousIngredientsListData =
         queryClient.getQueryData<InfiniteData<IngredientsApiResponse>>(
-          targetQueryKey
+          browseKey
         );
-
-      if (previousIngredientsListData) {
-        queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
-          targetQueryKey,
-          (oldData) => {
-            if (!oldData) return undefined;
-            return {
-              ...oldData,
-              pages: oldData.pages.map((page) => ({
-                ...page,
-
-                content: page.content.map((ingredient) =>
-                  ingredient.id === ingredientId
-                    ? { ...ingredient, inFridge: false }
-                    : ingredient
-                ),
-              })),
-            };
-          }
-        );
-      }
+      queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
+        browseKey,
+        setInFridgeForIds(new Set([ingredientId]), false)
+      );
       return { previousIngredientsListData };
     },
-    onError: (error, variables, context) => {
-      const targetQueryKey = queryKey || ["ingredients"];
+    onError: (error, _variables, context) => {
       if (context?.previousIngredientsListData) {
-        queryClient.setQueryData<InfiniteData<IngredientsApiResponse>>(
-          targetQueryKey,
-          context.previousIngredientsListData
-        );
+        queryClient.setQueryData(browseKey, context.previousIngredientsListData);
       }
       console.error("재료 삭제 실패:", error);
     },
     onSettled: () => {
-      const targetQueryKey = queryKey || ["ingredients"];
-      queryClient.invalidateQueries({ queryKey: targetQueryKey });
-      queryClient.invalidateQueries({ queryKey: ["my-ingredient-ids"] });
+      queryClient.invalidateQueries({
+        queryKey: browseKey,
+        refetchType: "none",
+      });
+      queryClient.invalidateQueries({ queryKey: INGREDIENT_QUERY_KEYS.myIds });
     },
   });
 };
