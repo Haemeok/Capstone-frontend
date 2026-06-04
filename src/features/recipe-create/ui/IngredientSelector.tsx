@@ -45,6 +45,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
 
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalAddedNames(new Set(addedIngredientNames));
     }
   }, [open, addedIngredientNames]);
@@ -164,8 +165,8 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
                 <p className="py-10 text-center text-gray-500">
-                  "{searchQuery || selectedCategory}"에 해당하는 재료가
-                  없습니다.
+                  &quot;{searchQuery || selectedCategory}&quot;에 해당하는
+                  재료가 없습니다.
                 </p>
               )}
             </div>

@@ -20,7 +20,7 @@ export default function RecipeCookingTipsSection({
         <div className="flex flex-1 flex-col gap-1">
           <div className="flex items-center justify-between gap-2">
             <span className="text-olive-dark text-sm font-bold">
-              Chef's Tips
+              Chef&apos;s Tips
             </span>
             {headerExtra}
           </div>

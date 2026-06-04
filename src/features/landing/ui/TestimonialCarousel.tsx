@@ -237,7 +237,7 @@ export const TestimonialCarousel = () => {
 
               <div className="relative overflow-hidden rounded-[2rem] border border-gray-200/50 bg-white p-10 shadow-2xl md:p-14">
                 <div className="text-olive-light/10 absolute top-8 right-8 text-8xl">
-                  "
+                  &quot;
                 </div>
 
                 <div className="relative mb-8 flex items-start justify-between">
@@ -264,7 +264,7 @@ export const TestimonialCarousel = () => {
                 </div>
 
                 <p className="relative text-xl leading-relaxed text-gray-700 md:text-2xl">
-                  "{currentTestimonial.content}"
+                  &quot;{currentTestimonial.content}&quot;
                 </p>
 
                 <div className="bg-olive-mint/10 mt-6 block rounded-xl px-4 py-2 md:hidden">

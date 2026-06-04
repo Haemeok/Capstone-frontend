@@ -11,10 +11,13 @@ if (typeof globalThis.Response === "undefined") {
     ok: boolean;
     status: number;
     statusText: string;
-    _body: any;
+    _body: unknown;
     headers: Map<string, string>;
 
-    constructor(body: any, init?: { status?: number; statusText?: string }) {
+    constructor(
+      body: unknown,
+      init?: { status?: number; statusText?: string }
+    ) {
       this.status = init?.status ?? 200;
       this.statusText = init?.statusText ?? "";
       this.ok = this.status >= 200 && this.status < 300;
@@ -35,7 +38,7 @@ if (typeof globalThis.Response === "undefined") {
     }
   }
 
-  (globalThis as any).Response = MockResponse;
+  (globalThis as Record<string, unknown>).Response = MockResponse;
 }
 
 let refreshToken: typeof import("../auth").refreshToken;
@@ -47,6 +50,7 @@ beforeEach(() => {
   mockFetch.mockReset();
   jest.useFakeTimers();
 
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest mock isolation needs runtime require
   const authModule = require("../auth");
   refreshToken = authModule.refreshToken;
   performLogout = authModule.performLogout;

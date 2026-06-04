@@ -24,8 +24,8 @@ const RecipeCard = ({
   index: number;
   direction: "left" | "right";
 }) => {
-  const module = direction === "left" ? 2 * index + 1 : 2 * index;
-  const id = RECIPE_CATEGORIES[module % RECIPE_CATEGORIES.length];
+  const categoryIndex = direction === "left" ? 2 * index + 1 : 2 * index;
+  const id = RECIPE_CATEGORIES[categoryIndex % RECIPE_CATEGORIES.length];
   const imageUrl = `${IMAGE_BASE_URL}recipes/7/${id}/main.webp`;
 
   return (

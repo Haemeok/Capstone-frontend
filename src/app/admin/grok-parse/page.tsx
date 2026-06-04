@@ -265,7 +265,7 @@ const RecipeManager = () => {
                     </div>
                   ) : (
                     <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-                      'Grok에게 보내기' 버튼을 눌러주세요.
+                      &apos;Grok에게 보내기&apos; 버튼을 눌러주세요.
                     </div>
                   )}
                 </div>

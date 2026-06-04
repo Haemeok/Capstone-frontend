@@ -22,6 +22,7 @@ beforeEach(() => {
   jest.resetModules();
   mockFetch.mockReset();
   jest.useFakeTimers();
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest mock isolation needs runtime require
   apiClient = require("../client").apiClient;
 });
 
@@ -184,8 +185,8 @@ describe("Auth Contract: State × Endpoint matrix", () => {
         const { handler, detach } = withForceLogoutHandler();
 
         let apiResult:
-          | { success: true; data: any }
-          | { success: false; error: any };
+          | { success: true; data: unknown }
+          | { success: false; error: unknown };
         try {
           const data = await apiClient(spec.url);
           apiResult = { success: true, data };
@@ -306,8 +307,10 @@ describe("Auth Contract: Edge cases", () => {
 
     const { handler, detach } = withForceLogoutHandler();
 
-    let caught: any;
-    await apiClient("/v2/users/me").catch((e) => (caught = e));
+    let caught: { status?: number } | undefined;
+    await apiClient("/v2/users/me").catch(
+      (e: { status?: number }) => (caught = e)
+    );
 
     expect(caught?.status).toBe(401);
     expect(handler).not.toHaveBeenCalled();
@@ -344,6 +347,7 @@ describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () 
       );
 
     const { handler, detach } = withForceLogoutHandler();
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest mock isolation needs runtime require
     const { getRecipeStatus } = require("@/entities/recipe/model/api");
 
     await getRecipeStatus("test-id").catch(() => undefined);
@@ -367,6 +371,7 @@ describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () 
       );
 
     const { handler, detach } = withForceLogoutHandler();
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest mock isolation needs runtime require
     const { getRecipesStatus } = require("@/entities/recipe/model/api");
 
     await getRecipesStatus(["a", "b"]).catch(() => undefined);
