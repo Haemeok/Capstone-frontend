@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { X } from "lucide-react";
@@ -46,7 +46,7 @@ export const RichToast = ({
   const remainingTimeRef = useRef(0);
   const timerStartRef = useRef(0);
 
-  const thumbnailUrl = useMemo(() => {
+  const resolveThumbnailUrl = (): string | undefined => {
     if (!richContent?.thumbnail) return undefined;
 
     const videoId = extractVideoIdFromThumbnail(richContent.thumbnail);
@@ -54,7 +54,9 @@ export const RichToast = ({
       return getYouTubeThumbnailUrls(videoId)[0] ?? richContent.thumbnail;
     }
     return richContent.thumbnail;
-  }, [richContent?.thumbnail]);
+  };
+
+  const thumbnailUrl = resolveThumbnailUrl();
 
   const effectiveDuration = Math.min(duration, MAX_TOAST_DURATION);
 

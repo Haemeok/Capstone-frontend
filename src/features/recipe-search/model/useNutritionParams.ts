@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import {
@@ -17,15 +17,9 @@ export const useNutritionParams = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const nutritionParams = useMemo(
-    () => parseNutritionParams(searchParams),
-    [searchParams.toString()]
-  );
+  const nutritionParams = parseNutritionParams(searchParams);
 
-  const types = useMemo(
-    () => parseTypes(searchParams),
-    [searchParams.toString()]
-  );
+  const types = parseTypes(searchParams);
 
   const isNutritionDirty = Object.keys(nutritionParams).length > 0;
 

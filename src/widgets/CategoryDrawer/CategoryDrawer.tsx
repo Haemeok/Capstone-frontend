@@ -36,6 +36,67 @@ type CategoryDrawerProps = {
   description: string;
 };
 
+type SelectionContentProps = {
+  isMultiple: boolean;
+  availableValues: string[];
+  internalSelection: string[] | string;
+  onCheckboxChange: (value: string) => void;
+  onRadioChange: (value: string) => void;
+};
+
+const SelectionContent = ({
+  isMultiple,
+  availableValues,
+  internalSelection,
+  onCheckboxChange,
+  onRadioChange,
+}: SelectionContentProps) => (
+  <>
+    {isMultiple ? (
+      <div className="space-y-3">
+        {availableValues.map((value) => (
+          <div key={value} className="flex items-center space-x-2">
+            <Checkbox
+              id={`checkbox-${value}`}
+              checked={(internalSelection as string[]).includes(value)}
+              onCheckedChange={() => onCheckboxChange(value)}
+              className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 rounded border-gray-300 data-[state=checked]:text-white"
+            />
+            <Label
+              htmlFor={`checkbox-${value}`}
+              className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {value}
+            </Label>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <RadioGroup
+        value={internalSelection as string}
+        onValueChange={onRadioChange}
+        className="gap-0"
+      >
+        {availableValues.map((value) => (
+          <div key={value} className="flex items-center space-x-2">
+            <RadioGroupItem
+              value={value}
+              id={`radio-${value}`}
+              className="text-dark-light focus:ring-dark-light h-5 w-5 border-gray-300"
+            />
+            <Label
+              htmlFor={`radio-${value}`}
+              className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {value}
+            </Label>
+          </div>
+        ))}
+      </RadioGroup>
+    )}
+  </>
+);
+
 const CategoryDrawer = ({
   open,
   onOpenChange,
@@ -53,6 +114,7 @@ const CategoryDrawer = ({
 
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- deferred to #124
       setInternalSelection(initialValue);
     }
   }, [open, initialValue]);
@@ -83,53 +145,6 @@ const CategoryDrawer = ({
     onOpenChange(false);
   };
 
-  const SelectionContent = () => (
-    <>
-      {isMultiple ? (
-        <div className="space-y-3">
-          {availableValues.map((value) => (
-            <div key={value} className="flex items-center space-x-2">
-              <Checkbox
-                id={`checkbox-${value}`}
-                checked={(internalSelection as string[]).includes(value)}
-                onCheckedChange={() => handleCheckboxChange(value)}
-                className="data-[state=checked]:bg-dark-light data-[state=checked]:border-dark-light h-5 w-5 rounded border-gray-300 data-[state=checked]:text-white"
-              />
-              <Label
-                htmlFor={`checkbox-${value}`}
-                className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {value}
-              </Label>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <RadioGroup
-          value={internalSelection as string}
-          onValueChange={handleRadioChange}
-          className="gap-0"
-        >
-          {availableValues.map((value) => (
-            <div key={value} className="flex items-center space-x-2">
-              <RadioGroupItem
-                value={value}
-                id={`radio-${value}`}
-                className="text-dark-light focus:ring-dark-light h-5 w-5 border-gray-300"
-              />
-              <Label
-                htmlFor={`radio-${value}`}
-                className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {value}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
-      )}
-    </>
-  );
-
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
@@ -143,7 +158,13 @@ const CategoryDrawer = ({
             )}
           </DrawerHeader>
           <div className="flex-1 overflow-y-auto p-4">
-            <SelectionContent />
+            <SelectionContent
+              isMultiple={isMultiple}
+              availableValues={availableValues}
+              internalSelection={internalSelection}
+              onCheckboxChange={handleCheckboxChange}
+              onRadioChange={handleRadioChange}
+            />
           </div>
 
           <DrawerFooter className="mt-auto flex-row gap-2 border-t border-gray-200 pt-4">
@@ -180,7 +201,13 @@ const CategoryDrawer = ({
           )}
         </DialogHeader>
         <div className="max-h-[60vh] overflow-y-auto p-4">
-          <SelectionContent />
+          <SelectionContent
+            isMultiple={isMultiple}
+            availableValues={availableValues}
+            internalSelection={internalSelection}
+            onCheckboxChange={handleCheckboxChange}
+            onRadioChange={handleRadioChange}
+          />
         </div>
         <DialogFooter className="flex-row gap-2">
           <Button

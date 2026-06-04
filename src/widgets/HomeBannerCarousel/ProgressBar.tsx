@@ -27,7 +27,7 @@ export const ProgressBar = ({
 }: ProgressBarProps) => {
   const progressRef = useRef<HTMLDivElement>(null);
 
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
   const elapsedRef = useRef<number>(0);
   const animationFrameRef = useRef<number | null>(null);
 

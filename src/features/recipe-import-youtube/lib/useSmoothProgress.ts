@@ -25,7 +25,10 @@ export const useSmoothProgress = (
     Math.max(realProgress, calculateFakeProgress(startTime))
   );
   const realRef = useRef(realProgress);
-  realRef.current = realProgress;
+
+  useEffect(() => {
+    realRef.current = realProgress;
+  }, [realProgress]);
 
   useEffect(() => {
     if (status !== "pending") return;
