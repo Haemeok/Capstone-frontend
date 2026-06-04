@@ -224,3 +224,77 @@ describe("useDeleteIngredientBulkMutation (fridge bulk delete — strategy A)", 
     );
   });
 });
+
+describe("delete error paths roll back the optimistic changes", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    (console.error as jest.Mock).mockRestore();
+  });
+
+  it("single delete reverts inFridge to true on failure", async () => {
+    (api.deleteIngredient as jest.Mock).mockRejectedValue(new Error("fail"));
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    queryClient.setQueryData(INGREDIENT_QUERY_KEYS.browse("전체", ""), {
+      pages: [makeBrowsePage()],
+      pageParams: [0],
+    });
+
+    const { result } = renderHook(
+      () => useDeleteIngredientMutation({ category: "전체", q: "" }),
+      { wrapper: createWrapper(queryClient) }
+    );
+
+    act(() => result.current.mutate("i1"));
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    const data = queryClient.getQueryData<{
+      pages: { content: { id: string; inFridge: boolean }[] }[];
+    }>(INGREDIENT_QUERY_KEYS.browse("전체", ""));
+    expect(data?.pages[0].content.find((i) => i.id === "i1")?.inFridge).toBe(
+      true
+    );
+  });
+
+  it("bulk delete restores removed fridge items and the browse flag on failure", async () => {
+    (api.deleteIngredientBulk as jest.Mock).mockRejectedValue(new Error("fail"));
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    queryClient.setQueryData(INGREDIENT_QUERY_KEYS.myFridge("전체", "asc"), {
+      pages: [makeFridgePage()],
+      pageParams: [0],
+    });
+    queryClient.setQueryData(INGREDIENT_QUERY_KEYS.browse("전체", ""), {
+      pages: [
+        {
+          content: [{ id: "f1", name: "당근", inFridge: true }],
+          page: { size: 10, number: 0, totalElements: 1, totalPages: 1 },
+        },
+      ],
+      pageParams: [0],
+    });
+
+    const { result } = renderHook(() => useDeleteIngredientBulkMutation(), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    act(() => result.current.mutate(["f1"]));
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    const fridge = queryClient.getQueryData<{
+      pages: { content: { id: string }[] }[];
+    }>(INGREDIENT_QUERY_KEYS.myFridge("전체", "asc"));
+    expect(fridge?.pages[0].content.map((i) => i.id)).toContain("f1");
+
+    const browse = queryClient.getQueryData<{
+      pages: { content: { id: string; inFridge: boolean }[] }[];
+    }>(INGREDIENT_QUERY_KEYS.browse("전체", ""));
+    expect(browse?.pages[0].content.find((i) => i.id === "f1")?.inFridge).toBe(
+      true
+    );
+  });
+});
