@@ -11,7 +11,10 @@ import {
 
 import { api } from "@/shared/api/client";
 import { BASE_WEBSOCKET_URL } from "@/shared/config/constants/api";
-import { SockJSWebSocketManager } from "@/shared/lib/sockjs-websocket";
+import {
+  SockJSWebSocketManager,
+  type StompConnectionError,
+} from "@/shared/lib/sockjs-websocket";
 
 import { NOTIFICATION_ENDPOINTS } from "@/entities/notification/model/api";
 import type {
@@ -114,7 +117,7 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     }
   };
 
-  const handleError = (error: Event) => {
+  const handleError = (error: StompConnectionError) => {
     console.error("WebSocket connection error:", error);
   };
 

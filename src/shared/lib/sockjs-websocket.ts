@@ -1,26 +1,37 @@
 import { WEBSOCKET_CONFIG } from "@/shared/config/constants/websocket";
+import type {
+  SockJSInstance,
+  StompClient,
+  StompFrame,
+  StompSubscription,
+} from "@/shared/types/sockjs-stomp";
 
-import type { WebSocketConnectionStatus } from "@/entities/notification/model/type";
+import type {
+  WebSocketConnectionStatus,
+  WebSocketMessage,
+} from "@/entities/notification/model/type";
+
+export type StompConnectionError = StompFrame | Event;
 
 export class SockJSWebSocketManager {
-  private socket: any = null;
-  private stompClient: any = null;
+  private socket: SockJSInstance | null = null;
+  private stompClient: StompClient | null = null;
   private reconnectAttempts = 0;
   private reconnectTimer: NodeJS.Timeout | null = null;
-  private subscription: any = null;
+  private subscription: StompSubscription | null = null;
 
   private url: string;
   private onStatusChange: (status: WebSocketConnectionStatus) => void;
-  private onMessage: (message: any) => void;
-  private onError: (error: any) => void;
+  private onMessage: (message: WebSocketMessage) => void;
+  private onError: (error: StompConnectionError) => void;
 
   constructor(
     url: string,
     _token: string,
     callbacks: {
       onStatusChange: (status: WebSocketConnectionStatus) => void;
-      onMessage: (message: any) => void;
-      onError: (error: any) => void;
+      onMessage: (message: WebSocketMessage) => void;
+      onError: (error: StompConnectionError) => void;
     }
   ) {
     this.url = url;
@@ -47,8 +58,8 @@ export class SockJSWebSocketManager {
     try {
       await this.loadLibraries();
 
-      const SockJS = (window as any).SockJS;
-      const Stomp = (window as any).StompJs.Stomp;
+      const SockJS = window.SockJS;
+      const Stomp = window.StompJs.Stomp;
 
       this.socket = new SockJS(this.url, null, {
         transports: ["websocket"],
@@ -94,7 +105,7 @@ export class SockJSWebSocketManager {
     this.onStatusChange("disconnected");
   }
 
-  send(destination: string, message: any): boolean {
+  send(destination: string, message: unknown): boolean {
     if (this.stompClient?.connected) {
       try {
         this.stompClient.send(destination, {}, JSON.stringify(message));
@@ -119,7 +130,7 @@ export class SockJSWebSocketManager {
   }
 
   private async loadLibraries(): Promise<void> {
-    if ((window as any).SockJS && (window as any).StompJs) {
+    if (window.SockJS && window.StompJs) {
       return;
     }
 
@@ -131,7 +142,7 @@ export class SockJSWebSocketManager {
 
   private loadScript(src: string, globalName: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      if ((window as any)[globalName]) {
+      if (window[globalName as "SockJS" | "StompJs"]) {
         resolve();
         return;
       }
@@ -144,17 +155,21 @@ export class SockJSWebSocketManager {
     });
   }
 
-  private onConnected(_frame: any): void {
+  private onConnected(): void {
     this.onStatusChange("connected");
     this.reconnectAttempts = 0;
 
+    if (!this.stompClient) {
+      return;
+    }
+
     this.subscription = this.stompClient.subscribe(
       "/user/queue/notifications",
-      (message: any) => {
+      (message) => {
         try {
           const notification = JSON.parse(message.body);
 
-          const wsMessage = {
+          const wsMessage: WebSocketMessage = {
             type: "NOTIFICATION",
             data: notification,
           };
@@ -167,7 +182,7 @@ export class SockJSWebSocketManager {
     );
   }
 
-  private onConnectionError(error: any): void {
+  private onConnectionError(error: StompConnectionError): void {
     console.error("❌ STOMP 연결 에러:", error);
     this.onError(error);
     this.handleConnectionError();
