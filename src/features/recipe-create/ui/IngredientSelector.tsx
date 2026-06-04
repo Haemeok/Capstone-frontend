@@ -45,7 +45,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
 
   useEffect(() => {
     if (open) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- deferred to #124
       setLocalAddedNames(new Set(addedIngredientNames));
     }
   }, [open, addedIngredientNames]);
