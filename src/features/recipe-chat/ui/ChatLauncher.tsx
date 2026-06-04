@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
-import ChatDrawer from "./ChatDrawer";
 import ChatFloatingButton from "./ChatFloatingButton";
+
+const ChatDrawer = dynamic(() => import("./ChatDrawer"), { ssr: false });
 
 type ChatLauncherProps = {
   recipeId: string;

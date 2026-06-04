@@ -6,7 +6,11 @@ import { useParams } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 
-import { TagCode, TAGS_BY_CODE } from "@/shared/config/constants/recipe";
+import {
+  type RecipeSortType,
+  TagCode,
+  TAGS_BY_CODE,
+} from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { useSort } from "@/shared/hooks/useSort";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -90,7 +94,10 @@ const CategoryDetailClient = ({
             onOpenChange={setIsDrawerOpen}
             currentSort={currentSort}
             availableSorts={availableSorts}
-            onSortChange={(newSort) => setSort(newSort as any)}
+            onSortChange={(newSort) =>
+              // SortPicker emits string; availableSorts are RecipeSortType
+              setSort(newSort as RecipeSortType)
+            }
           />
         </div>
         {recipes && recipes.length > 0 ? (

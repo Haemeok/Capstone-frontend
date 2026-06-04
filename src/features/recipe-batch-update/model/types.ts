@@ -1,8 +1,8 @@
 export type BatchUpdateResult = {
   recipeId: string;
   status: "fulfilled" | "rejected";
-  value?: any;
-  reason?: any;
+  value?: unknown;
+  reason?: unknown;
   likeCount?: number;
   ratingCount?: number;
 };

@@ -60,7 +60,8 @@ function renderUseSubmitRemix() {
 }
 
 const dummyRecipePayload = { title: "remix" } as unknown as RecipePayload;
-const makePresign = (recipeId = "new-abc", uploads: any[] = []) => ({
+type PresignUpload = { url: string; key: string };
+const makePresign = (recipeId = "new-abc", uploads: PresignUpload[] = []) => ({
   recipeId,
   uploads,
 });

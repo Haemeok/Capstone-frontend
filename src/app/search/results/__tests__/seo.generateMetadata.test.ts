@@ -50,7 +50,9 @@ describe("SearchResultsPage generateMetadata", () => {
     };
     const meta = await generateMetadata(params);
 
-    const ogImages = (meta.openGraph as any)?.images;
+    // narrow Next OpenGraph union to the image shape under test
+    const ogImages = (meta.openGraph as { images?: { url?: string }[] })
+      ?.images;
     expect(ogImages?.[0]?.url).toBe("https://example.com/image.jpg");
   });
 });

@@ -44,7 +44,8 @@ describe("YouTube Recipe Metadata Generation", () => {
       const recipe = makeYoutubeFamousRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      const ogImages = meta.openGraph?.images as any[];
+      // narrow Next OpenGraph image union to the url shape under test
+      const ogImages = meta.openGraph?.images as { url?: string }[];
       expect(ogImages[0].url).toBe(recipe.imageUrl);
     });
 
@@ -56,7 +57,8 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      const ogImages = meta.openGraph?.images as any[];
+      // narrow Next OpenGraph image union to the url shape under test
+      const ogImages = meta.openGraph?.images as { url?: string }[];
       expect(ogImages).toHaveLength(2);
       expect(ogImages[0].url).toBe(recipe.imageUrl);
       expect(ogImages[1].url).toBe(recipe.youtubeThumbnailUrl);
@@ -237,7 +239,8 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      const ogImages = meta.openGraph?.images as any[];
+      // narrow Next OpenGraph image union to the url shape under test
+      const ogImages = meta.openGraph?.images as { url?: string }[];
       expect(ogImages[0].url).toBe(recipe.imageUrl);
     });
 
@@ -259,7 +262,8 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      const ogImages = meta.openGraph?.images as any[];
+      // narrow Next OpenGraph image union to the url shape under test
+      const ogImages = meta.openGraph?.images as { url?: string }[];
       expect(ogImages).toHaveLength(1);
       expect(ogImages[0].url).toBe(sameImageUrl);
     });

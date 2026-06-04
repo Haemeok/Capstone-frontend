@@ -16,7 +16,11 @@ type SurveyContentProps = {
   handleValueChange: (value: SurveyAnswerValue) => void;
 };
 
-const SURVEY_COMPONENT_MAP: Record<string, ComponentType<any>> = {
+const SURVEY_COMPONENT_MAP: Record<
+  string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- registry of components with incompatible prop shapes
+  ComponentType<any>
+> = {
   radio: RadioGroupSurvey,
   checkbox: CheckboxGroupSurvey,
   textarea: TextareaSurvey,

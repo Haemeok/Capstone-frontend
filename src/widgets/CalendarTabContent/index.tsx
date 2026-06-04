@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import type {
+  DayProps,
+  NextMonthButtonProps,
+  PreviousMonthButtonProps,
+} from "react-day-picker";
 import Link from "next/link";
 
 import { format, parseISO } from "date-fns";
@@ -112,11 +117,11 @@ const CalendarTabContent = () => {
           hidden: "invisible",
         }}
         components={{
-          Day: ({ day }: any) => {
-            const date = day?.date;
-            const dateNumber = date?.getDate();
+          Day: ({ day }: DayProps) => {
+            const date = day.date;
+            const dateNumber = date.getDate();
 
-            if (date?.getMonth() !== day?.displayMonth.getMonth()) {
+            if (date.getMonth() !== day.displayMonth.getMonth()) {
               return (
                 <td className="flex h-full w-full items-center justify-center text-sm opacity-30">
                   {dateNumber}
@@ -154,7 +159,11 @@ const CalendarTabContent = () => {
               );
             }
           },
-          PreviousMonthButton: ({ className, onClick, ...props }: any) => (
+          PreviousMonthButton: ({
+            className,
+            onClick,
+            ...props
+          }: PreviousMonthButtonProps) => (
             <button
               className={cn(className, "flex items-center justify-center")}
               onClick={(e) => {
@@ -166,7 +175,11 @@ const CalendarTabContent = () => {
               <ChevronLeft className="size-6 text-gray-500" />
             </button>
           ),
-          NextMonthButton: ({ className, onClick, ...props }: any) => (
+          NextMonthButton: ({
+            className,
+            onClick,
+            ...props
+          }: NextMonthButtonProps) => (
             <button
               className={cn(className, "flex items-center justify-center")}
               onClick={(e) => {

@@ -2,12 +2,17 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { BottomAnchorAdSlot, InArticleAdSlot } from "@/shared/adsense";
+import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
+import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
-import { isAiRecipe, isPrivateRecipe, isYoutubeRecipe } from "@/entities/recipe";
+import {
+  isAiRecipe,
+  isPrivateRecipe,
+  isYoutubeRecipe,
+} from "@/entities/recipe";
 import {
   generateNotFoundRecipeMetadata,
   generateRecipeJsonLd,
@@ -55,7 +60,8 @@ export async function generateMetadata({
 
   const staticRecipe = await getStaticrecipionServer(recipeId);
 
-  if (!staticRecipe || isPrivateRecipe(staticRecipe)) return generateNotFoundRecipeMetadata();
+  if (!staticRecipe || isPrivateRecipe(staticRecipe))
+    return generateNotFoundRecipeMetadata();
 
   return generateRecipeMetadata(staticRecipe, recipeId);
 }

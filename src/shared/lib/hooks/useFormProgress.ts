@@ -9,7 +9,7 @@ type UseFormProgressOptions = {
 };
 
 export const useFormProgress = <T extends FieldValues>(
-  schema: z.ZodObject<any>,
+  schema: z.ZodObject,
   options?: UseFormProgressOptions
 ) => {
   const { control, getValues } = useFormContext<T>();

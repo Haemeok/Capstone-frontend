@@ -61,20 +61,17 @@ export const useBatchUpdateReactions = () => {
       // 2. id를 파싱해서 promiseallSettled로 진행상황도 추적할 것
       const results = await Promise.allSettled(promises);
 
-      // Process results to match our internal type
       const processedResults: BatchUpdateResult[] = results.map(
         (result, index) => {
           if (result.status === "fulfilled") {
-            return result.value as unknown as BatchUpdateResult;
-          } else {
-            return (
-              (result as any).value || {
-                recipeId: recipeIds[index],
-                status: "rejected",
-                reason: (result as any).reason,
-              }
-            );
+            return result.value;
           }
+
+          return {
+            recipeId: recipeIds[index],
+            status: "rejected",
+            reason: result.reason,
+          };
         }
       );
 

@@ -4,7 +4,8 @@ import React, { useCallback } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 
-import { InFeedAdSlot } from "@/shared/adsense";
+import { InFeedAdSlot, useFeedWithAds } from "@/shared/adsense";
+import { SEARCH_AD_EVERY_N_CARDS } from "@/shared/adsense/config";
 
 import { isPrivateRecipe } from "@/entities/recipe";
 import {
@@ -13,7 +14,6 @@ import {
   MyRecipeListItem,
 } from "@/entities/recipe/model/types";
 
-import { buildFeedItems } from "@/widgets/RecipeGrid/lib/buildFeedItems";
 import type { RecipeGridProps } from "@/widgets/RecipeGrid/model/types";
 import DetailedFeedCell from "@/widgets/RecipeGrid/ui/DetailedFeedCell";
 import EmptyFilterState from "@/widgets/RecipeGrid/ui/EmptyFilterState";
@@ -27,6 +27,11 @@ const DETAILED_GRID_CLASS =
 
 const SIMPLE_GRID_CLASS =
   "grid grid-cols-3 gap-px sm:gap-0.5 md:gap-1 md:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
+
+type RecipeInput =
+  | BaseRecipeGridItem
+  | DetailedRecipeGridItemType
+  | MyRecipeListItem;
 
 const RecipeGrid = ({
   recipes,
@@ -58,6 +63,12 @@ const RecipeGrid = ({
 
   const gridClass = isSimple ? SIMPLE_GRID_CLASS : DETAILED_GRID_CLASS;
 
+  const feedItems = useFeedWithAds(
+    recipes as RecipeInput[],
+    SEARCH_AD_EVERY_N_CARDS,
+    showInFeedAds
+  );
+
   if (isPending) {
     return (
       <div>
@@ -87,13 +98,6 @@ const RecipeGrid = ({
       />
     );
   }
-
-  type RecipeInput =
-    | BaseRecipeGridItem
-    | DetailedRecipeGridItemType
-    | MyRecipeListItem;
-
-  const feedItems = buildFeedItems(recipes as RecipeInput[], showInFeedAds);
 
   return (
     <div className="flex flex-col">
@@ -134,7 +138,11 @@ const RecipeGrid = ({
         isFetching={isFetching}
         nextPageHref={nextPageHref}
         showLastPageMessage={
-          !isFetching && !hasNextPage && recipes.length > 0 && !error && !noResults
+          !isFetching &&
+          !hasNextPage &&
+          recipes.length > 0 &&
+          !error &&
+          !noResults
         }
         lastPageMessage={lastPageMessage}
       />

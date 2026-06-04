@@ -34,6 +34,7 @@ import { handleS3Upload } from "@/shared/api/file";
 import { editRecipe, postRecipe } from "@/entities/recipe/model/api";
 
 import { prepareRecipeData } from "@/features/recipe-create/lib/prepareRecipeData";
+import { RecipeFormValues } from "@/features/recipe-create/model/config";
 import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
 
 function makeQC() {
@@ -52,8 +53,14 @@ function renderUseSubmitRecipe() {
   return { submit: result.current.submitRecipe, invalidateSpy };
 }
 
-const dummyForm = { title: "t", steps: [], images: [] } as any;
-const makePresign = (recipeId = 123, uploads: any[] = []) => ({
+type PresignUpload = { url: string; key: string };
+// partial fixture; only fields the hook forwards to prepareRecipeData
+const dummyForm = {
+  title: "t",
+  steps: [],
+  images: [],
+} as unknown as RecipeFormValues;
+const makePresign = (recipeId = 123, uploads: PresignUpload[] = []) => ({
   recipeId,
   uploads,
 });
