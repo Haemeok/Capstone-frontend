@@ -39,7 +39,19 @@ export default function RecipeRatingButton({
   };
 
   return (
-    <div onClick={handleRatingClick} className="mt-4 w-fit cursor-pointer p-2">
+    <div
+      onClick={handleRatingClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleRatingClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label="평가하기"
+      className="mt-4 w-fit cursor-pointer p-2"
+    >
       <Ratings
         precision={0.1}
         allowHalf

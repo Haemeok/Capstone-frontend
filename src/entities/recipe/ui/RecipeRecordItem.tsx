@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { formatNumber } from "@/shared/lib/format";
 import { Image } from "@/shared/ui/image/Image";
@@ -26,12 +26,11 @@ export const RecipeRecordItem = ({
   ingredientCost,
   marketPrice,
 }: RecipeRecordItemProps) => {
-  const router = useRouter();
   const savings = marketPrice - ingredientCost;
 
   return (
-    <div
-      onClick={() => router.push(`/recipes/${recipeId}`)}
+    <Link
+      href={`/recipes/${recipeId}`}
       className="group flex cursor-pointer gap-4 rounded-2xl bg-white p-4 shadow-sm transition-all hover:shadow-md"
     >
       <Image
@@ -60,6 +59,6 @@ export const RecipeRecordItem = ({
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
