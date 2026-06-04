@@ -8,6 +8,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -15,6 +17,20 @@ jobs:
           cache: "npm"
 
       - run: npm ci
+
+      - run: npm run typecheck
+
+      - name: Lint changed source files
+        run: |
+          BASE="origin/${{ github.base_ref }}"
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          FILES=$(git diff --name-only --diff-filter=ACMR "$BASE...HEAD" -- 'src/**/*.ts' 'src/**/*.tsx')
+          if [ -z "$FILES" ]; then
+            echo "No changed source files to lint."
+          else
+            echo "Linting:"; echo "$FILES"
+            echo "$FILES" | xargs npx eslint
+          fi
 
       - run: npm run build
 

@@ -185,6 +185,18 @@ const localPlugin = {
 };
 
 const eslintConfig = [
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "build/**",
+      "dist/**",
+      "coverage/**",
+      "public/**",
+      "next-env.d.ts",
+      "**/*.min.js",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
   {
