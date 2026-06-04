@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
@@ -62,6 +62,15 @@ const IngredientPicker = ({
     useIngredientSelection();
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 120);
+    return () => clearTimeout(timer);
+  }, [open]);
 
   const { data, error, hasNextPage, isFetching, status, isPending, ref } =
     useInfiniteScroll<
@@ -112,18 +121,21 @@ const IngredientPicker = ({
 
         <form onSubmit={handleSearchSubmit} className="px-4 pt-3">
           <div className="relative">
+            <Search
+              size={18}
+              className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-gray-500"
+              aria-hidden="true"
+            />
             <input
+              ref={inputRef}
               type="text"
-              placeholder="재료 이름을 검색하세요"
-              className="focus:border-olive-light focus:ring-olive-light w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:ring-1 focus:outline-none"
+              placeholder="재료를 검색해서 추가하세요"
+              className="w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none"
               value={inputValue}
               onChange={handleInputChange}
             />
-            <button type="submit" aria-label="검색">
-              <Search
-                size={18}
-                className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
-              />
+            <button type="submit" aria-label="검색" className="sr-only">
+              검색
             </button>
           </div>
         </form>

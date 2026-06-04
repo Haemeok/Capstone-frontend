@@ -31,6 +31,7 @@ const IngredientSearchDrawer = ({
 }: IngredientSearchDrawerProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
@@ -66,6 +67,14 @@ const IngredientSearchDrawer = ({
     }
   }, [selectedCategory, searchQuery]);
 
+  useEffect(() => {
+    if (!open) return;
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 120);
+    return () => clearTimeout(timer);
+  }, [open]);
+
   const { mutate: addIngredient } = useAddIngredientMutation({
     category: selectedCategory,
     q: searchQuery,
@@ -92,38 +101,43 @@ const IngredientSearchDrawer = ({
     <Container open={open} onOpenChange={onOpenChange}>
       <Content className="flex w-full flex-col md:max-w-2xl">
         <Header>
-          <Title className="text-xl">재료 검색 및 추가</Title>
-          <Description className="text-md">
-            냉장고에 추가할 재료를 검색하고 추가하세요.
+          <Title className="text-base font-bold text-gray-900">재료 추가</Title>
+          <Description className="text-sm text-gray-500">
+            냉장고에 추가할 재료를 검색하세요
           </Description>
         </Header>
 
         <div className="bg-white">
-          <form onSubmit={handleSearchSubmit} className="relative px-4">
-            <input
-              type="text"
-              placeholder="재료 이름을 검색하세요"
-              className="focus:border-olive-light focus:ring-olive-light w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:ring-1 focus:outline-none"
-              value={inputValue}
-              onChange={handleInputChange}
-            />
-            <button type="submit">
+          <form onSubmit={handleSearchSubmit} className="px-4 pt-3">
+            <div className="relative">
               <Search
                 size={18}
-                className="absolute top-1/2 left-7 -translate-y-1/2 text-gray-400"
+                className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-gray-500"
+                aria-hidden="true"
               />
-            </button>
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="재료를 검색해서 추가하세요"
+                className="w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none"
+                value={inputValue}
+                onChange={handleInputChange}
+              />
+              <button type="submit" aria-label="검색" className="sr-only">
+                검색
+              </button>
+            </div>
           </form>
-          <div className="scrollbar-hide mt-3 flex overflow-x-auto px-2">
+          <div className="scrollbar-hide mt-3 flex gap-2 overflow-x-auto px-4 pb-3">
             {INGREDIENT_CATEGORIES.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryClick(category)}
                 className={cn(
-                  "flex-shrink-0 rounded-full px-4 py-1.5 text-sm transition-colors",
+                  "flex-shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-sm transition-colors",
                   selectedCategory === category
-                    ? "bg-olive-light font-medium text-white"
-                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                    ? "bg-gray-900 font-medium text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 )}
               >
                 {category}
@@ -133,26 +147,28 @@ const IngredientSearchDrawer = ({
         </div>
         <div
           ref={scrollContainerRef}
-          className="flex h-120 flex-col justify-center overflow-y-auto p-4"
+          className="flex h-120 flex-col overflow-y-auto px-4 pt-1 pb-4"
         >
           {isPending ? (
-            <p className="text-center text-gray-500">재료 로딩 중...</p>
+            <p className="py-10 text-center text-sm text-gray-500">
+              재료 로딩 중...
+            </p>
           ) : status === "error" ? (
-            <p className="text-center text-red-500">
-              오류 발생:{" "}
-              {error instanceof Error ? error.message : "알 수 없는 오류"}
+            <p className="py-10 text-center text-sm text-gray-500">
+              오류가 발생했어요.{" "}
+              {error instanceof Error ? error.message : ""}
             </p>
           ) : (
-            <div className="h-full space-y-2">
+            <div className="space-y-1">
               {ingredientItems?.map((ingredient) => {
                 const isAdded = ingredient.inFridge;
 
                 return (
                   <div
                     key={ingredient.id}
-                    className="flex items-center rounded-lg border bg-white p-2 pr-3 shadow-sm"
+                    className="flex items-center rounded-xl bg-white px-2 py-2 transition-colors active:bg-gray-50"
                   >
-                    <div className="relative mr-3 h-16 w-16 flex-shrink-0 overflow-hidden rounded-card bg-gray-100">
+                    <div className="relative mr-3 h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl bg-gray-50">
                       {ingredient.imageUrl && (
                         <Image
                           src={ingredient.imageUrl}
@@ -162,53 +178,58 @@ const IngredientSearchDrawer = ({
                       )}
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium">{ingredient.name}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {ingredient.name}
+                      </p>
                     </div>
                     <Button
                       size="sm"
-                      variant={isAdded ? "outline" : "default"}
+                      variant="ghost"
                       className={cn(
-                        "rounded-full px-4 py-2 text-xs font-bold",
+                        "h-9 rounded-full px-4 text-xs font-semibold transition-colors",
                         isAdded
-                          ? "text-rose-600 hover:bg-red-50 hover:text-red-600"
-                          : "bg-olive-light hover:bg-olive-dark text-white"
+                          ? "bg-gray-100 text-gray-700 active:bg-gray-200"
+                          : "bg-olive-light text-white active:bg-olive-dark"
                       )}
                       onClick={() =>
                         handleAddRemoveClick(ingredient.id, isAdded)
                       }
                     >
-                      {isAdded ? "삭제" : "추가"}
+                      {isAdded ? "추가됨" : "추가"}
                     </Button>
                   </div>
                 );
               })}
               <div ref={ref} className="h-10 text-center">
                 {!hasNextPage && data?.pages[0]?.content?.length > 0 && (
-                  <p className="text-sm text-gray-400">
-                    모든 재료를 불러왔습니다.
+                  <p className="py-2 text-xs text-gray-400">
+                    모든 재료를 불러왔어요
                   </p>
                 )}
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
-                <p className="py-10 text-center text-gray-500">
-                  "{searchQuery || selectedCategory}"에 해당하는 재료가
-                  없습니다.
+                <p className="py-10 text-center text-sm text-gray-500">
+                  &quot;{searchQuery || selectedCategory}&quot;에 해당하는
+                  재료가 없어요
                 </p>
               )}
             </div>
           )}
         </div>
-        <Footer className="mt-auto p-4">
+        <Footer className="mt-auto border-t border-gray-100 p-4">
           {Close ? (
             <Close asChild>
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="ghost"
+                className="h-11 w-full rounded-xl bg-gray-100 text-sm font-semibold text-gray-900 active:bg-gray-200"
+              >
                 닫기
               </Button>
             </Close>
           ) : (
             <Button
-              variant="outline"
-              className="w-full"
+              variant="ghost"
+              className="h-11 w-full rounded-xl bg-gray-100 text-sm font-semibold text-gray-900 active:bg-gray-200"
               onClick={() => onOpenChange(false)}
             >
               닫기
