@@ -2,10 +2,6 @@
 
 import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
 import { Image } from "@/shared/ui/image/Image";
-import { Button } from "@/shared/ui/shadcn/button";
-
-import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge/model/hooks";
-import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fridge/model/hooks";
 
 type IngredientPackCardProps = {
   pack: IngredientPack;
@@ -18,30 +14,23 @@ const IngredientPackCard = ({
   onViewDetail,
   ownedIngredientIds,
 }: IngredientPackCardProps) => {
-  const { mutate: addIngredientBulk, isPending: isAdding } =
-    useAddIngredientBulkMutation();
-  const { mutate: deleteIngredientBulk, isPending: isDeleting } =
-    useDeleteIngredientBulkMutation();
-
-  const isLoading = isAdding || isDeleting;
   const previewImages = pack.ingredients.slice(0, 4);
-  const ingredientIds = pack.ingredients.map((ingredient) => ingredient.id);
   const allOwned = pack.ingredients.every((ingredient) =>
     ownedIngredientIds.has(ingredient.id)
   );
 
   return (
-    <div className="group flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md">
-      <div className="mb-3">
-        <h3 className="text-lg font-bold text-gray-800">{pack.name}</h3>
-        <p className="mt-1 text-sm text-gray-500">{pack.description}</p>
-      </div>
-
-      <div className="mb-4 grid grid-cols-4 gap-2">
+    <button
+      type="button"
+      onClick={() => onViewDetail(pack)}
+      aria-label={`${pack.name} 상세 보기`}
+      className="group flex w-full cursor-pointer flex-col text-left transition-opacity active:opacity-90"
+    >
+      <div className="grid grid-cols-2 gap-1.5">
         {previewImages.map((ingredient) => (
           <div
             key={ingredient.id}
-            className="aspect-square overflow-hidden rounded-card bg-gray-100"
+            className="aspect-square overflow-hidden rounded-lg bg-gray-50"
           >
             <Image
               src={ingredient.imageUrl}
@@ -53,38 +42,25 @@ const IngredientPackCard = ({
         ))}
       </div>
 
-      <p className="mb-3 text-center text-sm text-gray-600">
-        {pack.ingredients.length}개 재료 포함
-      </p>
-
-      <div className="mt-auto flex gap-2">
-        <Button
-          onClick={() => onViewDetail(pack)}
-          disabled={isLoading}
-          variant="outline"
-          className="border-olive-light text-olive-light hover:bg-olive-mint/10 flex-1 cursor-pointer disabled:cursor-not-allowed"
-        >
-          상세보기
-        </Button>
-        {allOwned ? (
-          <Button
-            onClick={() => deleteIngredientBulk(ingredientIds)}
-            disabled={isLoading}
-            className="flex-1 cursor-pointer bg-red-500 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-          >
-            {isLoading ? "삭제 중..." : "전체 삭제"}
-          </Button>
-        ) : (
-          <Button
-            onClick={() => addIngredientBulk(ingredientIds)}
-            disabled={isLoading}
-            className="bg-olive-light hover:bg-olive-dark flex-1 cursor-pointer text-white disabled:cursor-not-allowed disabled:bg-gray-300"
-          >
-            {isLoading ? "추가 중..." : "바로추가"}
-          </Button>
-        )}
+      <div className="mt-3 px-0.5">
+        <div className="flex items-start gap-2">
+          <h3 className="line-clamp-1 flex-1 text-sm font-semibold leading-snug text-gray-900">
+            {pack.name}
+          </h3>
+          {allOwned && (
+            <span className="flex-shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">
+              보유 중
+            </span>
+          )}
+        </div>
+        <p className="mt-1 line-clamp-1 text-xs leading-5 text-gray-500">
+          {pack.description}
+        </p>
+        <p className="mt-1.5 text-xs text-gray-400">
+          재료 {pack.ingredients.length}개
+        </p>
       </div>
-    </div>
+    </button>
   );
 };
 

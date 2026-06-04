@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Plus } from "lucide-react";
+import { Search } from "lucide-react";
 
 import {
   INGREDIENT_PACKS,
@@ -54,49 +54,43 @@ const NewIngredientsPage = () => {
   return (
     <Container padding={false}>
       <div className="bg-white pb-10">
-        <header className="z-sticky sticky-optimized sticky top-0 border-b border-gray-200 bg-white px-4 py-3 md:px-6">
-          <div className="flex items-center gap-2">
-            <PrevButton />
-            <h1 className="text-xl font-bold text-gray-900">재료 추가</h1>
-          </div>
+        <header className="z-sticky sticky-optimized sticky top-0 grid grid-cols-[auto_1fr_auto] items-center gap-2 border-b border-gray-100 bg-white px-4 py-3 md:px-6">
+          <PrevButton />
+          <h1 className="text-center text-base font-semibold text-gray-900">
+            재료 추가
+          </h1>
+          <span className="w-9" aria-hidden="true" />
         </header>
 
-        <div className="px-4 py-6 md:px-6">
+        <div className="px-4 pt-4 pb-2 md:px-6">
           <button
             type="button"
             onClick={() => setIsSearchDrawerOpen(true)}
-            aria-label="재료 직접 추가하기"
-            className="border-olive-light hover:bg-olive-light/10 flex w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed bg-[#f7f7f7] p-6 transition-all duration-300"
+            aria-label="재료 검색해서 추가하기"
+            className="flex w-full items-center gap-3 rounded-full bg-gray-100 px-4 py-3.5 text-left transition-colors active:bg-gray-200"
           >
-            <div className="flex flex-col items-center">
-              <div className="mb-2 rounded-full bg-white p-3 shadow-md">
-                <Plus
-                  size={24}
-                  className="text-olive-light"
-                  aria-hidden="true"
-                />
-              </div>
-              <span className="text-olive-light text-lg font-bold">
-                재료 직접 추가하기
-              </span>
-              <span className="mt-1 text-sm text-gray-500">
-                검색으로 원하는 재료를 추가하세요
-              </span>
-            </div>
+            <Search
+              size={18}
+              className="text-gray-500"
+              aria-hidden="true"
+            />
+            <span className="text-sm text-gray-500">
+              재료를 검색해서 추가하세요
+            </span>
           </button>
         </div>
 
-        <div className="px-4 md:px-6">
-          <div className="mb-5">
-            <h2 className="text-lg font-bold text-gray-800">
-              추천 재료 패키지
+        <div className="px-4 pt-6 md:px-6">
+          <div className="mb-3">
+            <h2 className="text-base font-bold text-gray-900">
+              추천 재료 모음
             </h2>
-            <p className="mt-1.5 text-sm text-gray-500">
-              한 번에 여러 재료를 냉장고에 추가해보세요
+            <p className="mt-1 text-sm text-gray-500">
+              필요한 묶음을 골라 한 번에 추가하세요
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-5 lg:grid-cols-3">
             {INGREDIENT_PACKS.map((pack) => (
               <IngredientPackCard
                 key={pack.name + pack.description}
