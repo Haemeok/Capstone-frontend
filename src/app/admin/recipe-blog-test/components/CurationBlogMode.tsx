@@ -126,7 +126,8 @@ export const CurationBlogMode = () => {
                 {enqueuedCount + readyCount} · 실패 {failedCount})
               </p>
               <p className="mt-1 text-xs text-gray-500">
-                톤 1개로 선택된 큐레이션 전부 리라이트 → "발행 큐 일괄 push".
+                톤 1개로 선택된 큐레이션 전부 리라이트 → &quot;발행 큐 일괄
+                push&quot;.
               </p>
             </div>
             <button
@@ -161,7 +162,7 @@ export const CurationBlogMode = () => {
 
           {items.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-8 text-center text-gray-400">
-              좌측에서 큐레이션을 체크하고 톤을 골라 "선택 리라이트"
+              좌측에서 큐레이션을 체크하고 톤을 골라 &quot;선택 리라이트&quot;
             </div>
           ) : (
             <ul className="space-y-3">

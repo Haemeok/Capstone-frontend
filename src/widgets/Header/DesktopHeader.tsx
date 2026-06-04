@@ -46,7 +46,9 @@ const DesktopHeader = () => {
               wrapperClassName="rounded-card"
               width={32}
             />
-            <span className="text-xl font-bold text-gray-900">Recipi'O</span>
+            <span className="text-xl font-bold text-gray-900">
+              Recipi&apos;O
+            </span>
           </Link>
 
           <div className="flex items-center gap-8">

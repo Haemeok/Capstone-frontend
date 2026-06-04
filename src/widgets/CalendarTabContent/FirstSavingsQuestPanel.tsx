@@ -17,7 +17,7 @@ const FirstSavingsQuestPanel = () => {
         첫 절약 퀘스트에 도전하세요!
       </h4>
       <p className="mb-6 text-sm leading-relaxed text-gray-600">
-        '요리 완료' 버튼을 누르면
+        &apos;요리 완료&apos; 버튼을 누르면
         <br />이 캘린더에 절약 금액이 쌓여요.
       </p>
       <button

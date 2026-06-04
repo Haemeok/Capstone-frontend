@@ -57,7 +57,9 @@ const LoginEncourageDrawer = ({
                 height={64}
                 lazy={false}
               />
-              <span className="text-3xl font-bold text-gray-900">Recipi'O</span>
+              <span className="text-3xl font-bold text-gray-900">
+                Recipi&apos;O
+              </span>
             </div>
 
             <div className="mt-6 text-center">

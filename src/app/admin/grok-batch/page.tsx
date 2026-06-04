@@ -6,7 +6,7 @@ import { api } from "@/shared/api/client";
 
 type ImageGenerationResponse = {
   imageKey: string;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 type RecipeStatus = "idle" | "loading" | "success" | "error";
@@ -122,12 +122,13 @@ const GrokBatchAnalyzer = () => {
           imageKey: result.imageKey,
           errorMessage: undefined,
         };
-      } catch (error: any) {
+      } catch (error) {
         return {
           id: recipe.id,
           status: "error" as RecipeStatus,
           imageKey: null,
-          errorMessage: error?.message || "이미지 생성 실패",
+          errorMessage:
+            error instanceof Error ? error.message : "이미지 생성 실패",
         };
       }
     });
@@ -295,7 +296,7 @@ const GrokBatchAnalyzer = () => {
                     </div>
                   ) : (
                     <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-                      '전체 이미지 생성' 버튼을 눌러주세요.
+                      &apos;전체 이미지 생성&apos; 버튼을 눌러주세요.
                     </div>
                   )}
                 </div>
