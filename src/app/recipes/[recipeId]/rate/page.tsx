@@ -39,7 +39,7 @@ const ReviewPage = () => {
         onSuccess: () => {
           router.replace(`/recipes/${recipeId}`);
           addToast({
-            message: "코멘트가 작성되었습니다.",
+            message: "평가가 등록되었어요.",
             variant: "default",
             position: "bottom",
             size: "medium",
@@ -51,19 +51,21 @@ const ReviewPage = () => {
     );
   };
 
-  const submitDisabled = reviewText.trim().length === 0 || rating === 0;
+  const submitDisabled = rating === 0;
 
   return (
     <div className="flex flex-col bg-white">
-      <header className="relative flex items-center justify-center border-b border-gray-200 p-4">
-        <button
-          onClick={() => router.back()}
-          type="button"
-          className="absolute left-4 text-gray-600 md:left-0"
-        >
-          취소
-        </button>
-        <h1 className="text-xl font-bold">평가하기</h1>
+      <header className="border-b border-gray-200">
+        <Container className="relative flex items-center justify-center py-4">
+          <button
+            onClick={() => router.back()}
+            type="button"
+            className="absolute left-4 text-gray-600 md:left-6"
+          >
+            취소
+          </button>
+          <h1 className="text-xl font-bold">평가하기</h1>
+        </Container>
       </header>
 
       <Container>
@@ -123,7 +125,7 @@ const ReviewPage = () => {
                 : "bg-olive-light hover:bg-opacity-90"
             )}
           >
-            {isPending ? <Circle size={20} /> : <p>코멘트 작성하기</p>}
+            {isPending ? <Circle size={20} /> : <p>평가 남기기</p>}
           </button>
         </main>
       </Container>
