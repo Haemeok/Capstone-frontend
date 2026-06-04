@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ApiError } from "@/shared/api/errors";
+import { ApiError, getErrorData } from "@/shared/api/errors";
 import { handleS3Upload } from "@/shared/api/file";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { FileInfoRequest, FileObject } from "@/shared/types";
@@ -65,7 +65,8 @@ export const useSubmitRemix = () => {
     },
     onError: (error: unknown, vars) => {
       if (ApiError.isApiError(error)) {
-        const code = String(error.data?.code ?? "");
+        const errorData = getErrorData(error);
+        const code = String(errorData?.code ?? "");
         if (code === REMIX_ALREADY_EXISTS_CODE) {
           addToast({ message: "이미 편집한 레시피예요", variant: "error" });
           router.replace(`/recipes/${vars.originRecipeId}`);

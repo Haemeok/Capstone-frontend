@@ -59,7 +59,11 @@ describe("useChatMutation", () => {
       }
     });
     await waitFor(() => expect(result.current.isError).toBe(true));
-    expect((result.current.error as ApiError).data.code).toBe("705");
+    // ApiError.data는 unknown 경계값 — 이 테스트가 넣은 code 픽스처로 좁힘
+    const errorData = (result.current.error as ApiError).data as {
+      code: string;
+    };
+    expect(errorData.code).toBe("705");
   });
 
   it("retry is disabled (retry: 0)", async () => {

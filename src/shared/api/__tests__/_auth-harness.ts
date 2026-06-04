@@ -7,16 +7,19 @@ export type EndpointKind = "public" | "optional-auth" | "required";
 
 // jsdom에 Response가 없을 수 있으므로 polyfill
 export const ensureResponsePolyfill = () => {
-  if (typeof (globalThis as any).Response !== "undefined") return;
+  if (typeof globalThis.Response !== "undefined") return;
 
   class MockResponse {
     ok: boolean;
     status: number;
     statusText: string;
-    _body: any;
+    _body: unknown;
     _headers: Map<string, string>;
 
-    constructor(body: any, init?: { status?: number; statusText?: string }) {
+    constructor(
+      body: unknown,
+      init?: { status?: number; statusText?: string }
+    ) {
       this.status = init?.status ?? 200;
       this.statusText = init?.statusText ?? "";
       this.ok = this.status >= 200 && this.status < 300;
@@ -46,11 +49,13 @@ export const ensureResponsePolyfill = () => {
     }
   }
 
-  (globalThis as any).Response = MockResponse;
+  // jsdom 폴리필: 최소 Response 형태만 만족하면 됨
+  (globalThis as { Response: unknown }).Response =
+    MockResponse as unknown as typeof Response;
 };
 
-const makeResponse = (body: any, status: number) =>
-  new (globalThis as any).Response(
+const makeResponse = (body: unknown, status: number) =>
+  new (globalThis.Response as typeof Response)(
     body !== null ? JSON.stringify(body) : null,
     { status }
   );
@@ -62,7 +67,7 @@ export const EXPIRED_REFRESH_BODY = { error: "Token refresh failed" };
 export type Scenario = {
   state: SessionState;
   endpoint: EndpointKind;
-  data?: any;
+  data?: unknown;
 };
 
 export const arrangeScenario = (
@@ -119,7 +124,9 @@ export type Outcome = {
 export const observeOutcome = (
   mockFetch: jest.Mock,
   forceLogoutHandler: jest.Mock,
-  apiResult: { success: true; data: any } | { success: false; error: any }
+  apiResult:
+    | { success: true; data: unknown }
+    | { success: false; error: unknown }
 ): Outcome => {
   const refreshCalls = mockFetch.mock.calls.filter(
     ([url]) => typeof url === "string" && url.includes("/api/auth/refresh")
@@ -137,10 +144,13 @@ export const observeOutcome = (
         ([url]) => typeof url === "string" && !url.includes("/api/auth/refresh")
       );
 
+  const hasStatus = (error: unknown): error is { status?: number } =>
+    typeof error === "object" && error !== null && "status" in error;
+
   let result: Outcome["result"];
   if (apiResult.success) {
     result = "data";
-  } else if (apiResult.error?.status === 401) {
+  } else if (hasStatus(apiResult.error) && apiResult.error.status === 401) {
     result = "apiError401";
   } else {
     result = "apiError_other";

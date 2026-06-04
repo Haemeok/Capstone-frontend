@@ -1,13 +1,15 @@
 import { PresignedUrlInfo } from "../types";
 
+export type QueryParams = Record<string, unknown>;
+
 export interface ApiRequestOptions extends RequestInit {
-  params?: Record<string, any>;
+  params?: QueryParams;
   timeout?: number;
   baseURL?: string;
-  paramsSerializer?: (params: Record<string, any>) => string;
+  paramsSerializer?: (params: QueryParams) => string;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T;
   status: number;
   statusText: string;
