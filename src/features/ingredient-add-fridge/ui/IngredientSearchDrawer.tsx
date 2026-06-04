@@ -71,11 +71,10 @@ const IngredientSearchDrawer = ({
     q: searchQuery,
   });
 
-  const { mutate: deleteIngredient } = useDeleteIngredientMutation([
-    "fridgeIngredients",
-    selectedCategory,
-    searchQuery,
-  ]);
+  const { mutate: deleteIngredient } = useDeleteIngredientMutation({
+    category: selectedCategory,
+    q: searchQuery,
+  });
 
   const handleAddRemoveClick = (id: string, isAdded: boolean) => {
     if (isAdded) {
