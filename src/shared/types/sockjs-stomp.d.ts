@@ -1,7 +1,7 @@
 declare global {
   interface Window {
-    SockJS: typeof SockJS;
-    Stomp: typeof Stomp;
+    SockJS: SockJSConstructor;
+    StompJs: StompJsNamespace;
     gapi?: {
       ytsubscribe?: {
         go: () => void;
@@ -15,20 +15,30 @@ export interface SockJSOptions {
   timeout?: number;
 }
 
-export interface SockJS {
+export interface SockJSConstructor {
   new (
     url: string,
-    protocols?: string[],
+    protocols?: string[] | null,
     options?: SockJSOptions
   ): SockJSInstance;
 }
 
+export interface SockJSCloseEvent {
+  code: number;
+  reason: string;
+  wasClean: boolean;
+}
+
+export interface SockJSMessageEvent {
+  data: string;
+}
+
 export interface SockJSInstance {
   readyState: number;
-  onopen: ((event?: any) => void) | null;
-  onmessage: ((event: { data: string }) => void) | null;
-  onclose: ((event?: any) => void) | null;
-  onerror: ((event?: any) => void) | null;
+  onopen: ((event?: Event) => void) | null;
+  onmessage: ((event: SockJSMessageEvent) => void) | null;
+  onclose: ((event?: SockJSCloseEvent) => void) | null;
+  onerror: ((event?: Event) => void) | null;
   send(data: string): void;
   close(): void;
 }
@@ -60,7 +70,7 @@ export interface StompClient {
   connect(
     headers: StompHeaders,
     connectCallback: (frame?: StompFrame) => void,
-    errorCallback?: (error: any) => void
+    errorCallback?: (error: StompFrame | Event) => void
   ): void;
   disconnect(disconnectCallback?: () => void): void;
   send(destination: string, headers?: StompHeaders, body?: string): void;
@@ -74,9 +84,13 @@ export interface StompClient {
   debug?: (message: string) => void;
 }
 
-export interface Stomp {
+export interface StompStatic {
   over(ws: SockJSInstance): StompClient;
   client(url: string): StompClient;
+}
+
+export interface StompJsNamespace {
+  Stomp: StompStatic;
 }
 
 export {};
