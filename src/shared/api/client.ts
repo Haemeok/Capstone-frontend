@@ -8,7 +8,7 @@ import { ApiError, createApiError, isErrorResponse } from "./errors";
 import { getErrorData } from "./errors";
 import type { ApiRequestOptions, BatchRequestFunction } from "./types";
 
-export async function apiClient<T = any>(
+export async function apiClient<T = unknown>(
   url: string,
   options: ApiRequestOptions = {}
 ): Promise<T> {
@@ -108,7 +108,8 @@ export async function apiClient<T = any>(
     if (contentType && contentType.includes("application/json")) {
       return response.json();
     }
-    return response.text() as any;
+    // 비 JSON 응답은 문자열이며 호출자가 선언한 T로 좁힐 수 없음
+    return response.text() as Promise<T>;
   } catch (error) {
     const method = (restOptions as RequestInit).method || "GET";
 
@@ -130,12 +131,14 @@ export async function apiClient<T = any>(
 }
 
 export const api = {
-  get: <T = any>(url: string, options?: Omit<ApiRequestOptions, "method">) =>
-    apiClient<T>(url, { ...options, method: "GET" }),
-
-  post: <T = any>(
+  get: <T = unknown>(
     url: string,
-    data?: any,
+    options?: Omit<ApiRequestOptions, "method">
+  ) => apiClient<T>(url, { ...options, method: "GET" }),
+
+  post: <T = unknown>(
+    url: string,
+    data?: unknown,
     options?: Omit<ApiRequestOptions, "method" | "body">
   ) =>
     apiClient<T>(url, {
@@ -148,9 +151,9 @@ export const api = {
       body: data ? JSON.stringify(data) : undefined,
     }),
 
-  put: <T = any>(
+  put: <T = unknown>(
     url: string,
-    data?: any,
+    data?: unknown,
     options?: Omit<ApiRequestOptions, "method" | "body">
   ) =>
     apiClient<T>(url, {
@@ -163,9 +166,9 @@ export const api = {
       body: data ? JSON.stringify(data) : undefined,
     }),
 
-  patch: <T = any>(
+  patch: <T = unknown>(
     url: string,
-    data?: any,
+    data?: unknown,
     options?: Omit<ApiRequestOptions, "method" | "body">
   ) =>
     apiClient<T>(url, {
@@ -178,8 +181,10 @@ export const api = {
       body: data ? JSON.stringify(data) : undefined,
     }),
 
-  delete: <T = any>(url: string, options?: Omit<ApiRequestOptions, "method">) =>
-    apiClient<T>(url, { ...options, method: "DELETE" }),
+  delete: <T = unknown>(
+    url: string,
+    options?: Omit<ApiRequestOptions, "method">
+  ) => apiClient<T>(url, { ...options, method: "DELETE" }),
 };
 
 export const batchRequests = async <T>(

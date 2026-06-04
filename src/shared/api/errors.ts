@@ -2,7 +2,7 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     public statusText: string,
-    public data?: any
+    public data?: unknown
   ) {
     super(`API Error: ${status} ${statusText}`);
     this.name = "ApiError";
@@ -64,7 +64,9 @@ export class ApiError extends Error {
   }
 }
 
-export const parseErrorResponse = async (response: Response): Promise<any> => {
+export const parseErrorResponse = async (
+  response: Response
+): Promise<unknown> => {
   try {
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {

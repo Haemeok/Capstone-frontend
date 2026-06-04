@@ -5,7 +5,16 @@ import type { ServerApiRequestOptions } from "./types";
 
 import "server-only";
 
-async function serverFetch<T = any>(
+class RefreshExpiredError extends Error {
+  readonly isRefreshExpired = true;
+
+  constructor() {
+    super("REFRESH_TOKEN_EXPIRED");
+    this.name = "RefreshExpiredError";
+  }
+}
+
+async function serverFetch<T = unknown>(
   url: string,
   options: ServerApiRequestOptions = {}
 ): Promise<T> {
@@ -55,10 +64,11 @@ async function serverFetch<T = any>(
   if (contentType && contentType.includes("application/json")) {
     return response.json();
   }
-  return response.text() as any;
+  // 비 JSON 응답은 문자열이며 호출자가 선언한 T로 좁힐 수 없음
+  return response.text() as Promise<T>;
 }
 
-export async function serverApiClient<T = any>(
+export async function serverApiClient<T = unknown>(
   url: string,
   options: Omit<ServerApiRequestOptions, "cookies"> = {}
 ): Promise<T> {
@@ -83,9 +93,7 @@ export async function serverApiClient<T = any>(
     }
 
     console.log("⚠️ No accessToken but refreshToken exists, returning EXPIRED");
-    const error = new Error("REFRESH_TOKEN_EXPIRED");
-    (error as any).isRefreshExpired = true;
-    throw error;
+    throw new RefreshExpiredError();
   }
 
   const { headers = {}, ...restOptions } = options;
@@ -105,9 +113,7 @@ export async function serverApiClient<T = any>(
       const errorMessage = (error as Error).message;
       if (errorMessage.includes("401")) {
         console.log("⚠️ Got 401 error, converting to EXPIRED");
-        const refreshError = new Error("REFRESH_TOKEN_EXPIRED");
-        (refreshError as any).isRefreshExpired = true;
-        throw refreshError;
+        throw new RefreshExpiredError();
       }
     }
 
@@ -116,7 +122,7 @@ export async function serverApiClient<T = any>(
 }
 
 export const serverApi = {
-  get: <T = any>(
+  get: <T = unknown>(
     url: string,
     options?: Omit<ServerApiRequestOptions, "method" | "cookies">
   ) => serverApiClient<T>(url, { ...options, method: "GET" }),
