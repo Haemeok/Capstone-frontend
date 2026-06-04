@@ -9,7 +9,7 @@ import { Image } from "@/shared/ui/image/Image";
 
 type ImageGenerationResponse = {
   imageKey: string;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 const AdminImageTestPage = () => {

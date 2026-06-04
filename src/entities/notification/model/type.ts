@@ -42,7 +42,7 @@ export type WebSocketConnectionStatus =
 
 export type WebSocketMessage = {
   type: "NOTIFICATION" | "HEARTBEAT" | "ERROR";
-  data?: any;
+  data?: unknown;
 };
 
 export type NotificationState = {

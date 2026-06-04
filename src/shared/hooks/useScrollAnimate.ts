@@ -19,7 +19,7 @@ const useScrollAnimate = <T extends HTMLElement>(
   options?: UseScrollAnimateOptions
 ) => {
   const targetRef = useRef<T>(null);
-  const animation = useRef<any>(null);
+  const animation = useRef<GSAPTimeline | null>(null);
   const { motionRef } = useScrollContext();
 
   const playAnimation = () => {

@@ -4,7 +4,7 @@ import { gsap } from "@/shared/lib/gsap";
 import { useScrollContext } from "@/shared/lib/ScrollContext";
 
 type UseGridAnimationProps = {
-  ingredients?: any[];
+  ingredients?: unknown[];
   error?: Error | null;
 };
 

@@ -9,10 +9,11 @@ type UseWakeLockReturn = {
 export const useWakeLock = (): UseWakeLockReturn => {
   const [isActive, setIsActive] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  const wakeLockRef = useRef<any>(null);
+  const wakeLockRef = useRef<WakeLockSentinel | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined" && "wakeLock" in navigator) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- deferred to #124
       setIsSupported(true);
     }
   }, []);
@@ -21,10 +22,8 @@ export const useWakeLock = (): UseWakeLockReturn => {
     if (!isSupported) return;
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const nav = navigator as any;
-      if (nav.wakeLock) {
-        wakeLockRef.current = await nav.wakeLock.request("screen");
+      if (navigator.wakeLock) {
+        wakeLockRef.current = await navigator.wakeLock.request("screen");
         setIsActive(true);
       }
     } catch (err) {

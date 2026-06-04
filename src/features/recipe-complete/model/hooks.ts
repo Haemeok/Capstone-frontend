@@ -62,7 +62,7 @@ export const useRecipeComplete = ({
       queryClient.invalidateQueries({ queryKey: ["userStreak"] });
       queryClient.invalidateQueries({ queryKey: ["recordsTimeline"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       const errorMessage =
         error?.message || "요리 완료 기록에 실패했습니다. 다시 시도해주세요.";
       addToast({

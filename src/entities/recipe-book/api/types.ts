@@ -6,26 +6,17 @@ export type RecipeBook = {
   recipeCount: number;
 };
 
-import { RecipeSource, Visibility } from "@/entities/recipe/model/types";
+import { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 
-export type BookRecipe = {
+export type BookRecipe = Omit<
+  DetailedRecipeGridItem,
+  "id" | "avgRating" | "ratingCount" | "favoriteByCurrentUser"
+> & {
   recipeId: string;
-  title: string;
-  imageUrl: string;
   dishType: string;
   addedAt: string;
-  authorId: string;
-  authorName: string;
-  profileImage: string;
-  createdAt: string;
-  favoriteCount?: number;
-  cookingTime?: number;
-  youtubeVideoViewCount?: number;
-  visibility?: Visibility | null;
-  source?: RecipeSource | null;
   isRemix?: boolean;
   youtubeUrl?: string | null;
-  youtubeChannelName?: string | null;
   youtubeVideoTitle?: string | null;
   youtubeThumbnailUrl?: string | null;
 };

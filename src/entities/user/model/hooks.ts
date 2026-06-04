@@ -45,8 +45,9 @@ export const useMyInfoQuery = () => {
     queryKey: ["myInfo"],
     queryFn: getMyInfo,
     staleTime: 10 * 60 * 1000,
-    retry: (failureCount, error: any) => {
-      if (error?.status === 401) {
+    retry: (failureCount, error) => {
+      // query error is unknown; read optional HTTP status off it
+      if ((error as { status?: number })?.status === 401) {
         return false;
       }
 

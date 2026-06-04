@@ -82,7 +82,8 @@ export const RECIPE_FORM_DEFAULT_VALUES: RecipeFormValues = {
   title: "",
   image: null,
   ingredients: [],
-  cookingTime: undefined as any,
+  // empty form starts with no cookingTime; RHF fills it before submit
+  cookingTime: undefined as unknown as number,
   servings: 1,
   dishType: "",
   description: "",

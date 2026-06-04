@@ -10,7 +10,7 @@ import ProgressButton from "@/shared/ui/ProgressButton";
 
 type FormProgressButtonProps = {
   isLoading: boolean;
-  schema: z.ZodObject<any>;
+  schema: z.ZodObject;
   onClick?: () => void;
   text: string;
   fieldLabels?: Record<string, string>;
