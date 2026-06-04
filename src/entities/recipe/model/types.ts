@@ -6,6 +6,7 @@ import { User } from "@/entities/user";
 
 export type Visibility = "PUBLIC" | "PRIVATE" | "RESTRICTED";
 export type RecipeSource = "USER" | "AI" | "YOUTUBE" | "REELS";
+export type CreatorCountryTag = "KR" | "JP" | "OTHER";
 export type ImageStatus = "PENDING" | "READY" | "FAILED";
 
 export type IngredientCalculationSummary = {
@@ -66,6 +67,7 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   youtubeExtractorId?: string;
   youtubeExtractorName?: string;
   youtubeExtractorProfileImage?: string;
+  creatorCountryTag?: CreatorCountryTag | null;
 };
 
 export type StaticDetailedRecipeGridItem = Omit<

@@ -1,3 +1,4 @@
+export { getCreatorCountryFlag } from "./lib/getCreatorCountryFlag";
 export { getGridItemAuthor } from "./lib/gridItemAuthor";
 export {
   isAiRecipe,
@@ -21,6 +22,7 @@ export {
 export type {
   BaseRecipeGridItem,
   BaseRecipesApiResponse,
+  CreatorCountryTag,
   DetailedRecipeGridItem,
   DetailedRecipesApiResponse,
   MyRecipeListItem,
