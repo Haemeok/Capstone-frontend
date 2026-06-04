@@ -214,3 +214,61 @@ describe("useAddIngredientBulkMutation (browse bulk add)", () => {
     );
   });
 });
+
+describe("add error paths roll back the optimistic inFridge change", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    (console.error as jest.Mock).mockRestore();
+  });
+
+  const seedBrowse = (queryClient: QueryClient) =>
+    queryClient.setQueryData(INGREDIENT_QUERY_KEYS.browse("전체", ""), {
+      pages: [makeListPage()],
+      pageParams: [0],
+    });
+
+  it("single add reverts inFridge to false on failure", async () => {
+    (api.addIngredient as jest.Mock).mockRejectedValue(new Error("fail"));
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    seedBrowse(queryClient);
+
+    const { result } = renderHook(
+      () => useAddIngredientMutation({ category: "전체", q: "" }),
+      { wrapper: createWrapper(queryClient) }
+    );
+
+    act(() => result.current.mutate("i1"));
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    const data = queryClient.getQueryData<{
+      pages: { content: { id: string; inFridge: boolean }[] }[];
+    }>(INGREDIENT_QUERY_KEYS.browse("전체", ""));
+    expect(data?.pages[0].content.find((i) => i.id === "i1")?.inFridge).toBe(
+      false
+    );
+  });
+
+  it("bulk add reverts inFridge to false on failure", async () => {
+    (api.addIngredientBulk as jest.Mock).mockRejectedValue(new Error("fail"));
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    seedBrowse(queryClient);
+
+    const { result } = renderHook(() => useAddIngredientBulkMutation(), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    act(() => result.current.mutate(["i1", "i2"]));
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    const data = queryClient.getQueryData<{
+      pages: { content: { inFridge: boolean }[] }[];
+    }>(INGREDIENT_QUERY_KEYS.browse("전체", ""));
+    expect(data?.pages[0].content.every((i) => i.inFridge === false)).toBe(true);
+  });
+});

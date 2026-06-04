@@ -1,5 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InfiniteData } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  QueryKey,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
@@ -14,6 +18,11 @@ import {
 import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 
 import { deleteIngredient, deleteIngredientBulk } from "./api";
+
+type ListSnapshot = [
+  QueryKey,
+  InfiniteData<IngredientsApiResponse> | undefined,
+][];
 
 export const useDeleteIngredientMutation = ({
   category,
@@ -64,12 +73,28 @@ export const useDeleteIngredientBulkMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, string[], IngredientMutationContext>({
+  return useMutation<
+    void,
+    Error,
+    string[],
+    { previousFridgeLists: ListSnapshot; previousBrowseLists: ListSnapshot }
+  >({
     mutationFn: deleteIngredientBulk,
     onMutate: async (ingredientIds) => {
       await queryClient.cancelQueries({
         queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll,
       });
+      await queryClient.cancelQueries({
+        queryKey: INGREDIENT_QUERY_KEYS.browseAll,
+      });
+      const previousFridgeLists =
+        queryClient.getQueriesData<InfiniteData<IngredientsApiResponse>>({
+          queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll,
+        });
+      const previousBrowseLists =
+        queryClient.getQueriesData<InfiniteData<IngredientsApiResponse>>({
+          queryKey: INGREDIENT_QUERY_KEYS.browseAll,
+        });
       const idSet = new Set(ingredientIds);
       queryClient.setQueriesData<InfiniteData<IngredientsApiResponse>>(
         { queryKey: INGREDIENT_QUERY_KEYS.myFridgeAll },
@@ -79,13 +104,19 @@ export const useDeleteIngredientBulkMutation = (
         { queryKey: INGREDIENT_QUERY_KEYS.browseAll },
         setInFridgeForIds(idSet, false)
       );
-      return {};
+      return { previousFridgeLists, previousBrowseLists };
     },
     onSuccess: () => {
       triggerHaptic("Success");
       options?.onSuccess?.();
     },
-    onError: (error) => {
+    onError: (error, _variables, context) => {
+      context?.previousFridgeLists.forEach(([key, data]) => {
+        queryClient.setQueryData(key, data);
+      });
+      context?.previousBrowseLists.forEach(([key, data]) => {
+        queryClient.setQueryData(key, data);
+      });
       console.error("재료 벌크 삭제 실패:", error);
     },
     onSettled: () => {
