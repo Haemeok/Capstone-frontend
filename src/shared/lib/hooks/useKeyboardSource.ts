@@ -38,8 +38,9 @@ export const useKeyboardSource = (): Result => {
 
   const [bridgeHeight, setBridgeHeight] = useState(0);
   const [bridgeOpen, setBridgeOpen] = useState(false);
-  const lastBridgeAtRef = useRef<number>(0);
-  const [, forceTick] = useState(0);
+  const [hasBridgeEverFired, setHasBridgeEverFired] = useState(false);
+  const [bridgeFresh, setBridgeFresh] = useState(false);
+  const staleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -52,7 +53,12 @@ export const useKeyboardSource = (): Result => {
       }
       if (!isKeyboardMessage(parsed)) return;
       const { state, height } = parsed.payload;
-      lastBridgeAtRef.current = Date.now();
+      setHasBridgeEverFired(true);
+      setBridgeFresh(true);
+      if (staleTimerRef.current) clearTimeout(staleTimerRef.current);
+      staleTimerRef.current = setTimeout(() => {
+        setBridgeFresh(false);
+      }, STALE_MS);
       if (state === "will-hide" || state === "did-hide") {
         setBridgeHeight(0);
         setBridgeOpen(false);
@@ -62,22 +68,11 @@ export const useKeyboardSource = (): Result => {
       }
     };
     window.addEventListener("message", onMessage);
-    return () => window.removeEventListener("message", onMessage);
+    return () => {
+      window.removeEventListener("message", onMessage);
+      if (staleTimerRef.current) clearTimeout(staleTimerRef.current);
+    };
   }, []);
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      if (lastBridgeAtRef.current === 0) return;
-      if (Date.now() - lastBridgeAtRef.current > STALE_MS) {
-        forceTick((n) => n + 1);
-      }
-    }, 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  const bridgeFresh =
-    lastBridgeAtRef.current > 0 &&
-    Date.now() - lastBridgeAtRef.current <= STALE_MS;
 
   if (bridgeFresh) {
     return { height: bridgeHeight, isOpen: bridgeOpen, source: "bridge" };
@@ -88,6 +83,6 @@ export const useKeyboardSource = (): Result => {
   return {
     height: 0,
     isOpen: false,
-    source: lastBridgeAtRef.current > 0 ? "viewport" : "none",
+    source: hasBridgeEverFired ? "viewport" : "none",
   };
 };

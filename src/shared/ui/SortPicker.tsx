@@ -29,6 +29,40 @@ type SortPickerProps = {
   triggerButton?: React.ReactNode;
 };
 
+type SelectionContentProps = {
+  currentSort: string;
+  availableSorts: readonly string[];
+  onValueChange: (value: string) => void;
+};
+
+const SelectionContent = ({
+  currentSort,
+  availableSorts,
+  onValueChange,
+}: SelectionContentProps) => (
+  <RadioGroup
+    value={currentSort}
+    onValueChange={onValueChange}
+    className="space-y-3"
+  >
+    {availableSorts.map((sortOption) => (
+      <div key={sortOption} className="flex items-center space-x-2">
+        <RadioGroupItem
+          value={sortOption}
+          id={`radio-${sortOption}`}
+          className="text-dark-light focus:ring-dark-light h-5 w-5 border-gray-300"
+        />
+        <Label
+          htmlFor={`radio-${sortOption}`}
+          className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          {sortOption}
+        </Label>
+      </div>
+    ))}
+  </RadioGroup>
+);
+
 const SortPicker = ({
   open,
   onOpenChange,
@@ -46,30 +80,6 @@ const SortPicker = ({
     onOpenChange(false);
   };
 
-  const SelectionContent = () => (
-    <RadioGroup
-      value={currentSort}
-      onValueChange={handleRadioChange}
-      className="space-y-3"
-    >
-      {availableSorts.map((sortOption) => (
-        <div key={sortOption} className="flex items-center space-x-2">
-          <RadioGroupItem
-            value={sortOption}
-            id={`radio-${sortOption}`}
-            className="text-dark-light focus:ring-dark-light h-5 w-5 border-gray-300"
-          />
-          <Label
-            htmlFor={`radio-${sortOption}`}
-            className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            {sortOption}
-          </Label>
-        </div>
-      ))}
-    </RadioGroup>
-  );
-
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
@@ -83,7 +93,11 @@ const SortPicker = ({
             )}
           </DrawerHeader>
           <div className="p-4 pb-6">
-            <SelectionContent />
+            <SelectionContent
+              currentSort={currentSort}
+              availableSorts={availableSorts}
+              onValueChange={handleRadioChange}
+            />
           </div>
         </DrawerContent>
       </Drawer>
@@ -97,7 +111,11 @@ const SortPicker = ({
       </PopoverTrigger>
 
       <PopoverContent className="w-48 p-4" align="end" sideOffset={20}>
-        <SelectionContent />
+        <SelectionContent
+          currentSort={currentSort}
+          availableSorts={availableSorts}
+          onValueChange={handleRadioChange}
+        />
       </PopoverContent>
     </Popover>
   );

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 
 import {
@@ -48,6 +50,8 @@ export const PendingRecipeCard = ({
   const job = useYoutubeImportStoreV2((state) => state.jobs[idempotencyKey]);
   const removeJob = useYoutubeImportStoreV2((state) => state.removeJob);
 
+  const [mountTime] = useState(() => Date.now());
+
   const status: SmoothProgressStatus = job
     ? jobStateToImportStatus(job.state)
     : "pending";
@@ -61,7 +65,7 @@ export const PendingRecipeCard = ({
   const progress = useSmoothProgress(
     realProgress,
     status,
-    job?.startTime ?? Date.now()
+    job?.startTime ?? mountTime
   );
 
   if (!job) return null;

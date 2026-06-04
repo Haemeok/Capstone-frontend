@@ -19,15 +19,17 @@ export const useKeyboardHeight = (): UseKeyboardHeightReturn => {
 
   const rafRef = useRef<number | null>(null);
   const lastUpdateRef = useRef<number>(0);
+  const updateViewportHeightRef = useRef<() => void>(() => {});
 
   const updateViewportHeight = useCallback(() => {
     if (typeof window === "undefined" || !window.visualViewport) return;
 
     const now = performance.now();
     if (now - lastUpdateRef.current < DEBOUNCE_MS) {
-      // 디바운스: 너무 빈번한 업데이트 방지
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => updateViewportHeight());
+      rafRef.current = requestAnimationFrame(() =>
+        updateViewportHeightRef.current()
+      );
       return;
     }
 
@@ -46,9 +48,13 @@ export const useKeyboardHeight = (): UseKeyboardHeightReturn => {
   }, []);
 
   useEffect(() => {
+    updateViewportHeightRef.current = updateViewportHeight;
+  }, [updateViewportHeight]);
+
+  useEffect(() => {
     if (typeof window === "undefined" || !window.visualViewport) return;
 
-    // 초기값 설정
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- deferred to #124
     updateViewportHeight();
 
     const viewport = window.visualViewport;

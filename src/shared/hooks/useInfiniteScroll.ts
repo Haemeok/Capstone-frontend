@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 
 import {
@@ -77,29 +77,41 @@ export const useInfiniteScroll = <
 
   const { ref, inView } = useInView({ threshold });
 
-  const throttledFetchNextPage = useRef(
-    throttle(() => {
-      fetchNextPage();
-    }, throttleMs)
-  ).current;
+  const fetchNextPageRef = useRef(fetchNextPage);
+  const throttledFetchNextPageRef = useRef<ReturnType<typeof throttle> | null>(
+    null
+  );
 
   useEffect(() => {
+    fetchNextPageRef.current = fetchNextPage;
+  }, [fetchNextPage]);
+
+  useEffect(() => {
+    const throttled = throttle(() => {
+      fetchNextPageRef.current();
+    }, throttleMs);
+    throttledFetchNextPageRef.current = throttled;
     return () => {
-      throttledFetchNextPage.cancel();
+      throttled.cancel();
+      throttledFetchNextPageRef.current = null;
     };
-  }, [throttledFetchNextPage]);
+  }, [throttleMs]);
+
+  const triggerFetchNextPage = useCallback(() => {
+    throttledFetchNextPageRef.current?.();
+  }, []);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      throttledFetchNextPage();
+      throttledFetchNextPageRef.current?.();
     }
-  }, [inView, hasNextPage, isFetchingNextPage, throttledFetchNextPage]);
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
   return {
     ref,
     data,
     error,
-    fetchNextPage: throttledFetchNextPage,
+    fetchNextPage: triggerFetchNextPage,
     hasNextPage,
     isFetching,
     isFetchingNextPage,
