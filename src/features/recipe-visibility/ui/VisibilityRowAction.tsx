@@ -19,9 +19,8 @@ const VisibilityRowAction = ({
   variant,
   onAfterToggle,
 }: VisibilityRowActionProps) => {
-  const { mutate: toggleVisibility, isPending } = useRecipeVisibilityMutation(
-    recipeId,
-  );
+  const { mutate: toggleVisibility, isPending } =
+    useRecipeVisibilityMutation(recipeId);
 
   const isMobile = variant === "mobile";
 

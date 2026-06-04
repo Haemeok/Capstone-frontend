@@ -24,14 +24,8 @@ const TimelineSkeletonItem = () => (
 );
 
 const TimelineRecordsPage = () => {
-  const {
-    groups,
-    ref,
-    isFetchingNextPage,
-    hasNextPage,
-    isPending,
-    noResults,
-  } = useRecordsTimelineInfiniteQuery();
+  const { groups, ref, isFetchingNextPage, hasNextPage, isPending, noResults } =
+    useRecordsTimelineInfiniteQuery();
 
   return (
     <Container>

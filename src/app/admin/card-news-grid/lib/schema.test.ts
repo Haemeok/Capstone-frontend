@@ -24,21 +24,36 @@ describe("itemsSchema (canonical)", () => {
   const items = Array.from({ length: 9 }, () => item);
 
   it("items 9개 + header는 통과", () => {
-    expect(itemsSchema.safeParse({ header: "토마토케찹 황금비율", items }).success).toBe(true);
+    expect(
+      itemsSchema.safeParse({ header: "토마토케찹 황금비율", items }).success
+    ).toBe(true);
   });
 
   it("items가 9개가 아니면 실패", () => {
-    expect(itemsSchema.safeParse({ header: "x", items: items.slice(0, 8) }).success).toBe(false);
+    expect(
+      itemsSchema.safeParse({ header: "x", items: items.slice(0, 8) }).success
+    ).toBe(false);
   });
 
   it("imagePrompt 누락 시 실패", () => {
-    const bad = Array.from({ length: 9 }, () => ({ dishName: "김치찌개", caption: "ok" }));
-    expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(false);
+    const bad = Array.from({ length: 9 }, () => ({
+      dishName: "김치찌개",
+      caption: "ok",
+    }));
+    expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(
+      false
+    );
   });
 
   it("imagePrompt 빈 문자열 시 실패", () => {
-    const bad = Array.from({ length: 9 }, () => ({ dishName: "김치찌개", caption: "ok", imagePrompt: "" }));
-    expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(false);
+    const bad = Array.from({ length: 9 }, () => ({
+      dishName: "김치찌개",
+      caption: "ok",
+      imagePrompt: "",
+    }));
+    expect(itemsSchema.safeParse({ header: "x", items: bad }).success).toBe(
+      false
+    );
   });
 
   it("MAX_IMAGE_PROMPT는 양수이다", () => {
@@ -48,7 +63,10 @@ describe("itemsSchema (canonical)", () => {
 
 describe("topicsSchema (canonical)", () => {
   it("topics 1개 이상이면 통과", () => {
-    const topics = Array.from({ length: 5 }, () => ({ title: "주제", concept: "한 줄 설명" }));
+    const topics = Array.from({ length: 5 }, () => ({
+      title: "주제",
+      concept: "한 줄 설명",
+    }));
     expect(topicsSchema.safeParse({ topics }).success).toBe(true);
   });
 

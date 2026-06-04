@@ -6,9 +6,8 @@ import { ChevronRight } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import { RecipeRecordItem } from "@/entities/recipe/ui/RecipeRecordItem";
-
 import { RecordTimelineGroup } from "@/entities/recipe/model/record";
+import { RecipeRecordItem } from "@/entities/recipe/ui/RecipeRecordItem";
 
 import { formatTimelineDateHeader } from "../lib/formatTimelineDateHeader";
 

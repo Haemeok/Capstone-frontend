@@ -17,7 +17,7 @@ const SavingsBadge = ({ budget }: SavingsBadgeProps) => {
 
   return (
     <div className="from-olive-light/20 to-olive-mint/20 relative overflow-hidden rounded-2xl bg-gradient-to-br p-6 shadow-md">
-      <div className="absolute right-4 top-4 opacity-10">
+      <div className="absolute top-4 right-4 opacity-10">
         <TrendingDownIcon className="h-16 w-16" />
       </div>
 
@@ -29,7 +29,7 @@ const SavingsBadge = ({ budget }: SavingsBadgeProps) => {
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-700">이번 달 절약 가능</p>
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-black text-olive">
+            <span className="text-olive text-3xl font-black">
               <CountUp
                 to={Math.floor(monthlySavings / 10000)}
                 from={0}

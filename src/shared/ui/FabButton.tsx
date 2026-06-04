@@ -29,9 +29,12 @@ export const FabButton = ({
 
   return (
     <>
-      <div className="fixed bottom-28 left-0 right-0 z-header flex justify-center sticky-optimized">
-        <div className="w-full max-w-4xl px-4 md:px-6 flex justify-center">
-          <Button asChild className="bg-olive-light rounded-full p-4 text-white shadow-lg">
+      <div className="z-header sticky-optimized fixed right-0 bottom-28 left-0 flex justify-center">
+        <div className="flex w-full max-w-4xl justify-center px-4 md:px-6">
+          <Button
+            asChild
+            className="bg-olive-light rounded-full p-4 text-white shadow-lg"
+          >
             <Link
               href={to}
               prefetch={false}

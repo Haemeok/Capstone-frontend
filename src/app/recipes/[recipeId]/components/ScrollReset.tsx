@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode,useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
 
 import { useScrollContext } from "@/shared/lib/ScrollContext";
 

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { assertAdminApi } from "@/shared/lib/admin-guard";
+
 import { generateViaFal } from "@/app/admin/image-quality-test/lib/adapters/falAdapter";
 import { generateViaGoogle } from "@/app/admin/image-quality-test/lib/adapters/googleAdapter";
 import {
@@ -7,7 +9,6 @@ import {
   generateViaOpenAI,
 } from "@/app/admin/image-quality-test/lib/adapters/openaiAdapter";
 import { getModelById } from "@/app/admin/image-quality-test/lib/models";
-import { assertAdminApi } from "@/shared/lib/admin-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;

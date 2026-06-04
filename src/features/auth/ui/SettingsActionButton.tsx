@@ -3,9 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { AlertTriangle, Bell,FileText, LogOut, Settings, UserX } from "lucide-react";
+import {
+  AlertTriangle,
+  Bell,
+  FileText,
+  LogOut,
+  Settings,
+  UserX,
+} from "lucide-react";
 
-import { isAppWebView, requestNotificationPermission } from "@/shared/lib/bridge";
+import {
+  isAppWebView,
+  requestNotificationPermission,
+} from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
@@ -24,8 +34,12 @@ const SettingsActionButton = () => {
     useResponsiveSheet();
 
   const isInApp = isAppWebView();
-  const notificationStatus = useNotificationPermissionStore((state) => state.status);
-  const [isNotificationOn, setIsNotificationOn] = useState(notificationStatus === "granted");
+  const notificationStatus = useNotificationPermissionStore(
+    (state) => state.status
+  );
+  const [isNotificationOn, setIsNotificationOn] = useState(
+    notificationStatus === "granted"
+  );
 
   const handleNotificationToggle = () => {
     if (!isNotificationOn) {
@@ -63,7 +77,9 @@ const SettingsActionButton = () => {
           <Content className="p-0 sm:p-6 md:max-w-sm">
             <Header>
               <Title className="text-lg">설정</Title>
-              <Description className="sr-only">앱 설정 및 계정 관리</Description>
+              <Description className="sr-only">
+                앱 설정 및 계정 관리
+              </Description>
             </Header>
 
             <div className="flex flex-col border-t border-gray-200 sm:border-none">

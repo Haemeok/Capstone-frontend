@@ -1,5 +1,4 @@
 import type { IngredientDetailApiResponse } from "../../model/types";
-
 import { parseIngredientDetail } from "../parseIngredientDetail";
 
 const baseApi: IngredientDetailApiResponse = {
@@ -56,7 +55,9 @@ describe("parseIngredientDetail", () => {
       sodiumMg: 10,
     });
     expect(view.seasonMonths).toEqual([3, 4, 5]);
-    expect(view.benefits).toBe("비타민 C가 풍부하고 면역력 강화에 도움이 된다.");
+    expect(view.benefits).toBe(
+      "비타민 C가 풍부하고 면역력 강화에 도움이 된다."
+    );
   });
 
   it("passes through pair items as objects with id/name/imageUrl", () => {

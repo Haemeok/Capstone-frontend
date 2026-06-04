@@ -82,17 +82,15 @@ const ImagePromptTestPage = () => {
     });
   }, [recipe]);
 
-  const handlePromptChange = useCallback(
-    (variantId: string, value: string) => {
-      setPrompts((prev) => ({ ...prev, [variantId]: value }));
-    },
-    []
-  );
+  const handlePromptChange = useCallback((variantId: string, value: string) => {
+    setPrompts((prev) => ({ ...prev, [variantId]: value }));
+  }, []);
 
   const handleGenerate = useCallback(async () => {
-    const runs: VariantRun[] = PROMPT_VARIANTS
-      .map((v) => ({ variantId: v.id, prompt: prompts[v.id] ?? "" }))
-      .filter((r) => r.prompt.trim().length > 0);
+    const runs: VariantRun[] = PROMPT_VARIANTS.map((v) => ({
+      variantId: v.id,
+      prompt: prompts[v.id] ?? "",
+    })).filter((r) => r.prompt.trim().length > 0);
     if (runs.length === 0) return;
 
     await runAll(runs);
@@ -153,12 +151,13 @@ const ImagePromptTestPage = () => {
   }, [recipe, results, successCount]);
 
   return (
-    <div className="mx-auto min-h-screen max-w-7xl bg-beige-light/40 p-4 md:p-6">
+    <div className="bg-beige-light/40 mx-auto min-h-screen max-w-7xl p-4 md:p-6">
       <h1 className="mb-1 text-2xl font-bold text-gray-900">
         프롬프트 비교 (gpt-image-2 low 고정)
       </h1>
       <p className="mb-4 text-sm text-gray-500">
-        같은 레시피를 N개의 프롬프트로 한 모델에 돌려서 결과를 나란히 비교합니다.
+        같은 레시피를 N개의 프롬프트로 한 모델에 돌려서 결과를 나란히
+        비교합니다.
       </p>
 
       <div className="mb-4">
@@ -204,7 +203,7 @@ const ImagePromptTestPage = () => {
                   type="button"
                   onClick={handleGenerate}
                   disabled={running || filledCount === 0}
-                  className="h-12 rounded-2xl bg-olive-light px-6 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                  className="bg-olive-light h-12 rounded-2xl px-6 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
                 >
                   {running
                     ? "생성 중…"
@@ -223,7 +222,7 @@ const ImagePromptTestPage = () => {
                   type="button"
                   onClick={handleSaveAll}
                   disabled={running || successCount === 0}
-                  className="h-12 rounded-2xl border-2 border-olive-light bg-white px-4 text-sm font-medium text-olive-light transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
+                  className="border-olive-light text-olive-light h-12 rounded-2xl border-2 bg-white px-4 text-sm font-medium transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
                 >
                   전부 저장 ({successCount})
                 </button>
@@ -231,7 +230,7 @@ const ImagePromptTestPage = () => {
 
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {recipe.imageUrl && (
-                  <div className="overflow-hidden rounded-2xl border-2 border-olive-light bg-white shadow-sm">
+                  <div className="border-olive-light overflow-hidden rounded-2xl border-2 bg-white shadow-sm">
                     <div className="aspect-square w-full bg-gray-50">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -241,7 +240,7 @@ const ImagePromptTestPage = () => {
                       />
                     </div>
                     <div className="px-3 py-2">
-                      <p className="truncate text-sm font-bold text-olive-light">
+                      <p className="text-olive-light truncate text-sm font-bold">
                         원본 레시피 이미지
                       </p>
                       <p className="truncate text-xs text-gray-500">

@@ -13,7 +13,7 @@ export default function RecipeCookingInfoSection({
   servings,
 }: RecipeCookingInfoSectionProps) {
   return (
-    <section className="mb-2 rounded-card border border-gray-200 p-3 sm:p-4">
+    <section className="rounded-card mb-2 border border-gray-200 p-3 sm:p-4">
       <div className="grid grid-cols-3 gap-2 sm:gap-4">
         <div className="flex min-w-0 items-center gap-2">
           <Image
@@ -22,7 +22,9 @@ export default function RecipeCookingInfoSection({
             wrapperClassName="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
           />
           <div className="flex min-w-0 flex-col">
-            <span className="text-[11px] text-gray-500 sm:text-xs">조리 시간</span>
+            <span className="text-[11px] text-gray-500 sm:text-xs">
+              조리 시간
+            </span>
             <span className="text-dark text-sm font-semibold sm:text-base">
               {cookingTime > 0 ? `${cookingTime}분` : "정보 없음"}
             </span>
@@ -50,8 +52,10 @@ export default function RecipeCookingInfoSection({
             wrapperClassName="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
           />
           <div className="flex min-w-0 flex-col">
-            <span className="text-[11px] text-gray-500 sm:text-xs">조리 도구</span>
-            <span className="text-dark line-clamp-2 break-keep text-sm font-semibold sm:text-base">
+            <span className="text-[11px] text-gray-500 sm:text-xs">
+              조리 도구
+            </span>
+            <span className="text-dark line-clamp-2 text-sm font-semibold break-keep sm:text-base">
               {cookingTools.length > 0 ? cookingTools.join(", ") : "정보 없음"}
             </span>
           </div>

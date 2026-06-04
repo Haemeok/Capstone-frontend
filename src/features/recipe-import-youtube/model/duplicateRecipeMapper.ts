@@ -1,4 +1,7 @@
-import type { DetailedRecipeGridItem as DetailedRecipeGridItemType, Recipe } from "@/entities/recipe/model/types";
+import type {
+  DetailedRecipeGridItem as DetailedRecipeGridItemType,
+  Recipe,
+} from "@/entities/recipe/model/types";
 
 import { YoutubeMeta } from "./types";
 
@@ -6,8 +9,7 @@ export const toDetailedRecipeItem = (
   recipeData: Recipe,
   youtubeMeta?: YoutubeMeta
 ): DetailedRecipeGridItemType => {
-  const channelName =
-    youtubeMeta?.channelName ?? recipeData.youtubeChannelName;
+  const channelName = youtubeMeta?.channelName ?? recipeData.youtubeChannelName;
 
   return {
     id: recipeData.id,

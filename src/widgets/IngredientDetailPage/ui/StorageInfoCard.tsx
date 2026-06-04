@@ -19,12 +19,12 @@ type StorageStatProps = {
 };
 
 const StorageStat = ({ Icon, label, value }: StorageStatProps) => (
-  <div className="flex-1 rounded-xl bg-gray-50 p-4 flex flex-col gap-1">
-    <span className="text-xs text-gray-500 flex items-center gap-1.5">
+  <div className="flex flex-1 flex-col gap-1 rounded-xl bg-gray-50 p-4">
+    <span className="flex items-center gap-1.5 text-xs text-gray-500">
       <Icon size={13} className="text-gray-400" />
       <span>{label}</span>
     </span>
-    <span className="text-base font-bold text-gray-900 leading-snug">
+    <span className="text-base leading-snug font-bold text-gray-900">
       {value}
     </span>
   </div>
@@ -55,8 +55,8 @@ const StorageInfoCard = ({ storage }: StorageInfoCardProps) => {
   }
 
   return (
-    <section className="px-5 py-6 border-t border-gray-100">
-      <h2 className="text-lg font-bold text-gray-900 mb-3">보관방법</h2>
+    <section className="border-t border-gray-100 px-5 py-6">
+      <h2 className="mb-3 text-lg font-bold text-gray-900">보관방법</h2>
 
       {hasStats && (
         <div className="grid grid-cols-2 gap-3">
@@ -68,11 +68,11 @@ const StorageInfoCard = ({ storage }: StorageInfoCardProps) => {
 
       {hasNotes && (
         <div
-          className={`rounded-xl bg-gray-50 p-4 text-sm text-gray-700 leading-relaxed ${
+          className={`rounded-xl bg-gray-50 p-4 text-sm leading-relaxed text-gray-700 ${
             hasStats ? "mt-3" : ""
           }`}
         >
-          <span className="text-xs text-gray-500 flex items-center gap-1.5 mb-1">
+          <span className="mb-1 flex items-center gap-1.5 text-xs text-gray-500">
             <StickyNote size={13} className="text-gray-400" />
             <span>보관 참고사항</span>
           </span>

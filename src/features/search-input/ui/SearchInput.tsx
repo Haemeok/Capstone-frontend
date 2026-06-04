@@ -107,17 +107,13 @@ export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
   };
 
   const showRollingPlaceholder = inputValue.length === 0;
-  const safeIndex =
-    placeholders.length > 0 ? index % placeholders.length : 0;
+  const safeIndex = placeholders.length > 0 ? index % placeholders.length : 0;
   const currentPlaceholder = placeholders[safeIndex];
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex items-center gap-2 rounded-full bg-gray-100 px-3.5 py-2">
-        <Search
-          className="h-4 w-4 shrink-0 text-gray-500"
-          aria-hidden="true"
-        />
+        <Search className="h-4 w-4 shrink-0 text-gray-500" aria-hidden="true" />
         <div className="relative flex min-w-0 flex-1 items-center">
           <input
             ref={inputRef}
@@ -137,7 +133,7 @@ export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -SLIDE_Y_OFFSET, opacity: 0 }}
                 transition={{ duration: SLIDE_DURATION_S, ease: SLIDE_EASE }}
-                className="pointer-events-none absolute inset-0 flex items-center overflow-hidden whitespace-nowrap text-sm text-gray-500"
+                className="pointer-events-none absolute inset-0 flex items-center overflow-hidden text-sm whitespace-nowrap text-gray-500"
               >
                 {currentPlaceholder}
               </motion.span>

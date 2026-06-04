@@ -1,6 +1,4 @@
-export type ValidationResult =
-  | { ok: true }
-  | { ok: false; errors: string[] };
+export type ValidationResult = { ok: true } | { ok: false; errors: string[] };
 
 const REQUIRED_ONCE_KEYS = ["img", "recipe", "yt"] as const;
 const REQUIRED_AT_LEAST_ONCE_KEYS = ["ref"] as const;
@@ -31,7 +29,9 @@ export const validateMarkdown = (md: string, n: number): ValidationResult => {
     }
     const idx = Number(idxStr);
     if (idx < 0 || idx >= n) {
-      errors.push(`정의되지 않은 인덱스: {{${key}:${idxStr}}} (유효 범위 0..${n - 1})`);
+      errors.push(
+        `정의되지 않은 인덱스: {{${key}:${idxStr}}} (유효 범위 0..${n - 1})`
+      );
       continue;
     }
     const k = `${key}:${idx}`;
@@ -43,7 +43,8 @@ export const validateMarkdown = (md: string, n: number): ValidationResult => {
     for (let i = 0; i < n; i++) {
       const c = counts.get(`${key}:${i}`) ?? 0;
       if (c === 0) errors.push(`{{${key}:${i}}} 슬롯이 누락됨`);
-      else if (c > 1) errors.push(`{{${key}:${i}}} 슬롯이 ${c}회 등장 (정확히 1회여야 함)`);
+      else if (c > 1)
+        errors.push(`{{${key}:${i}}} 슬롯이 ${c}회 등장 (정확히 1회여야 함)`);
     }
   }
 
@@ -57,7 +58,8 @@ export const validateMarkdown = (md: string, n: number): ValidationResult => {
 
   const h1Count = (md.match(/(?:^|\n)# (?!#)/g) ?? []).length;
   const h2Count = (md.match(/(?:^|\n)## (?!#)/g) ?? []).length;
-  if (h1Count > 0) errors.push(`본문에 H1이 ${h1Count}회 등장 (h1은 별도 필드)`);
+  if (h1Count > 0)
+    errors.push(`본문에 H1이 ${h1Count}회 등장 (h1은 별도 필드)`);
   if (h2Count < n) errors.push(`H2 개수 ${h2Count}개 (최소 ${n}개)`);
 
   return errors.length === 0 ? { ok: true } : { ok: false, errors };

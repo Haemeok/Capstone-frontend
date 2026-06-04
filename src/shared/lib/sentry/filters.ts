@@ -29,10 +29,7 @@ const isIgnoredError = (event: SentryEventLike): boolean => {
     return true;
   }
 
-  if (
-    value &&
-    IGNORED_ERRORS.some((ignored) => value.includes(ignored))
-  ) {
+  if (value && IGNORED_ERRORS.some((ignored) => value.includes(ignored))) {
     return true;
   }
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { ListIcon } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
@@ -44,7 +44,7 @@ const ArticleTocMobileFab = ({
 
   return (
     <>
-      <div className={`fixed bottom-24 right-4 z-10 ${visibilityClassName}`}>
+      <div className={`fixed right-4 bottom-24 z-10 ${visibilityClassName}`}>
         <AnimatePresence>
           <motion.button
             onClick={handleFabClick}
@@ -61,7 +61,7 @@ const ArticleTocMobileFab = ({
 
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent className="rounded-t-3xl border-0 bg-white shadow-xl">
-          <DrawerHeader className="px-6 pb-2 pt-6">
+          <DrawerHeader className="px-6 pt-6 pb-2">
             <DrawerTitle className="text-xl font-bold text-gray-900">
               목차
             </DrawerTitle>

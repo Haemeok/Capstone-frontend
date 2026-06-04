@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { encryptTokenData } from "@/shared/lib/auth/crypto";
 import {
   authDiagLog,
   fingerprintFromSetCookies,
   generateDiagId,
 } from "@/shared/lib/auth/diag";
-import { encryptTokenData } from "@/shared/lib/auth/crypto";
 import { parseOAuthState } from "@/shared/lib/auth/oauthState";
 import { storeTempToken } from "@/shared/lib/auth/tempToken";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
@@ -96,7 +96,10 @@ export async function GET(request: NextRequest) {
       if (process.env.USE_TEMP_TOKEN === "true") {
         const token = await storeTempToken(setCookieHeaders);
         const deepLinkUrl = `${DEEP_LINK_SCHEME}?code=${token}`;
-        console.log("[Kakao Callback] Deep link (temp token) URL length:", deepLinkUrl.length);
+        console.log(
+          "[Kakao Callback] Deep link (temp token) URL length:",
+          deepLinkUrl.length
+        );
         const response = NextResponse.redirect(deepLinkUrl);
         response.cookies.set("state", "", { maxAge: 0 });
         authDiagLog({
@@ -113,7 +116,10 @@ export async function GET(request: NextRequest) {
       const encryptedToken = encryptTokenData(setCookieHeaders);
       const deepLinkUrl = `${DEEP_LINK_SCHEME}?code=${encodeURIComponent(encryptedToken)}`;
       console.log("[Kakao Callback] Deep link URL length:", deepLinkUrl.length);
-      console.log("[Kakao Callback] Encrypted token length:", encryptedToken.length);
+      console.log(
+        "[Kakao Callback] Encrypted token length:",
+        encryptedToken.length
+      );
       const response = NextResponse.redirect(deepLinkUrl);
       response.cookies.set("state", "", { maxAge: 0 });
       authDiagLog({

@@ -1,9 +1,6 @@
 import { create } from "zustand";
 
-import {
-  APP_UPDATE_DISMISS_KEY,
-  APP_UPDATE_DISMISS_VALUE,
-} from "./constants";
+import { APP_UPDATE_DISMISS_KEY, APP_UPDATE_DISMISS_VALUE } from "./constants";
 
 type AppUpdateDrawerStore = {
   isOpen: boolean;

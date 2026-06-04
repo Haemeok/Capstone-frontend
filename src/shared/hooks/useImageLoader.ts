@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef,useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ImageStatus = "loading" | "loaded" | "error";
 
@@ -51,6 +51,6 @@ export const useImageLoader = (src: string) => {
     status,
     isLoading: status === "loading",
     isLoaded: status === "loaded",
-    hasError: status === "error"
+    hasError: status === "error",
   };
 };

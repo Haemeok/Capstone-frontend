@@ -79,7 +79,8 @@ const CommentInputForm = ({
     ? `${author?.nickname}님에게 답글 작성`
     : "댓글 작성";
 
-  const canSubmit = (comment.trim().length > 0 || file !== null) && !isSubmitting;
+  const canSubmit =
+    (comment.trim().length > 0 || file !== null) && !isSubmitting;
 
   return (
     <form
@@ -119,7 +120,7 @@ const CommentInputForm = ({
           placeholder={placeholder}
           disabled={!user || isSubmitting}
           aria-label={ariaLabel}
-          className={`flex-1 resize-none overflow-y-auto rounded-xl border border-gray-200 bg-white px-3 py-2 text-base leading-tight placeholder-gray-500 transition-all duration-300 ease-in-out focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light ${
+          className={`focus:border-olive-light focus:ring-olive-light flex-1 resize-none overflow-y-auto rounded-xl border border-gray-200 bg-white px-3 py-2 text-base leading-tight placeholder-gray-500 transition-all duration-300 ease-in-out focus:ring-1 focus:outline-none ${
             comment ? "" : "truncate"
           }`}
           rows={1}
@@ -129,7 +130,7 @@ const CommentInputForm = ({
           variant="ghost"
           className={`h-10 w-14 flex-shrink-0 rounded-full transition-all ${
             canSubmit
-              ? "bg-olive-light text-white hover:bg-olive-dark"
+              ? "bg-olive-light hover:bg-olive-dark text-white"
               : "text-gray-300"
           }`}
           disabled={!canSubmit}

@@ -3,8 +3,8 @@
 import { useState } from "react";
 
 import type { BatchItem } from "../lib/useBatchRewrite";
-import { CurationBlogPreview } from "./CurationBlogPreview";
 import { TONE_LABEL } from "./BatchToneSelector";
+import { CurationBlogPreview } from "./CurationBlogPreview";
 
 const PHASE_LABEL: Record<BatchItem["phase"], string> = {
   queued: "대기",
@@ -34,14 +34,20 @@ type Props = {
 
 export const BatchItemCard = ({ item }: Props) => {
   const [open, setOpen] = useState(false);
-  const canPreview = item.phase === "ready" || item.phase === "enqueueing" || item.phase === "enqueued" || item.phase === "enqueue-failed";
+  const canPreview =
+    item.phase === "ready" ||
+    item.phase === "enqueueing" ||
+    item.phase === "enqueued" ||
+    item.phase === "enqueue-failed";
   return (
     <article className="space-y-2 rounded-2xl border border-gray-100 bg-white p-4">
       <header className="flex items-center gap-3">
         <div className="flex-1">
           <p className="text-sm font-semibold text-gray-900">{item.title}</p>
           <p className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-            <span className={`rounded-full px-2 py-0.5 text-[11px] ${PHASE_BADGE_CLASS[item.phase]}`}>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[11px] ${PHASE_BADGE_CLASS[item.phase]}`}
+            >
               {PHASE_LABEL[item.phase]}
             </span>
             {item.tone && (
@@ -63,7 +69,9 @@ export const BatchItemCard = ({ item }: Props) => {
       </header>
 
       {item.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{item.error}</p>
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+          {item.error}
+        </p>
       )}
 
       {item.enqueued && (

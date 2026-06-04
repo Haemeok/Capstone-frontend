@@ -68,7 +68,7 @@ const SavingSection = ({
       ref={sectionContainerRef}
       className="mx-auto flex w-fit max-w-sm flex-col items-center justify-center p-5"
     >
-      <div 
+      <div
         ref={imageRef}
         className="flex h-44 w-44 items-center justify-center"
       >

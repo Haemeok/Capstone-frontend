@@ -1,12 +1,9 @@
-import { syncStepIngredientUnit } from "../syncStepIngredientUnit";
-
 import type { RecipeFormValues } from "../../model/config";
+import { syncStepIngredientUnit } from "../syncStepIngredientUnit";
 
 type Step = RecipeFormValues["steps"][number];
 
-const baseStep = (
-  ingredients: Step["ingredients"]
-): Step => ({
+const baseStep = (ingredients: Step["ingredients"]): Step => ({
   instruction: "",
   stepNumber: 0,
   image: null,
@@ -30,8 +27,12 @@ describe("syncStepIngredientUnit", () => {
 
   it("updates across multiple steps", () => {
     const steps: Step[] = [
-      baseStep([{ ingredientId: "i1", name: "당근", quantity: "1", unit: "개" }]),
-      baseStep([{ ingredientId: "i1", name: "당근", quantity: "2", unit: "개" }]),
+      baseStep([
+        { ingredientId: "i1", name: "당근", quantity: "1", unit: "개" },
+      ]),
+      baseStep([
+        { ingredientId: "i1", name: "당근", quantity: "2", unit: "개" },
+      ]),
     ];
 
     const next = syncStepIngredientUnit(steps, "당근", "g");
@@ -42,7 +43,9 @@ describe("syncStepIngredientUnit", () => {
 
   it("returns same shape when no match", () => {
     const steps: Step[] = [
-      baseStep([{ ingredientId: "i1", name: "당근", quantity: "1", unit: "개" }]),
+      baseStep([
+        { ingredientId: "i1", name: "당근", quantity: "1", unit: "개" },
+      ]),
     ];
 
     const next = syncStepIngredientUnit(steps, "감자", "g");

@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 
 import { UserRound } from "lucide-react";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   generateUserGradient,
   isDefaultProfileImage,
 } from "@/shared/lib/colors";
-import { triggerHaptic } from "@/shared/lib/bridge";
 import { Container } from "@/shared/ui/Container";
 import { Image } from "@/shared/ui/image/Image";
 import PrevButton from "@/shared/ui/PrevButton";

@@ -3,13 +3,10 @@
 import { useMemo } from "react";
 
 import { getDxId } from "../auth/dxId";
-import { useAppMessageListener } from "./useAppMessage";
 import type { AuthDiagBridgePayload } from "./types";
+import { useAppMessageListener } from "./useAppMessage";
 
-const forwardRnPhase = async (
-  payload: AuthDiagBridgePayload,
-  dxId: string
-) => {
+const forwardRnPhase = async (payload: AuthDiagBridgePayload, dxId: string) => {
   try {
     await fetch("/api/auth/diag", {
       method: "POST",

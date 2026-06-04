@@ -1,21 +1,23 @@
 import type { Metadata } from "next";
 
-import { isCurationCategory } from "@/entities/curation";
-import { CATEGORY_META } from "@/entities/curation/model/categoryMeta";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
-import { coverImageUrlFromKey } from "./coverImageUrl";
+import { isCurationCategory } from "@/entities/curation";
+import { CATEGORY_META } from "@/entities/curation/model/categoryMeta";
 
 import type { PublicCurationArticleDto } from "../model/api.server";
+import { coverImageUrlFromKey } from "./coverImageUrl";
 
 const SITE_URL = SEO_CONSTANTS.SITE_URL;
 
 export const generateCurationDetailMetadata = (
   data: PublicCurationArticleDto,
-  recipeCount: number,
+  recipeCount: number
 ): Metadata => {
   const fullUrl = `${SITE_URL}/curation/${data.slug}`;
-  const meta = isCurationCategory(data.category) ? CATEGORY_META[data.category] : null;
+  const meta = isCurationCategory(data.category)
+    ? CATEGORY_META[data.category]
+    : null;
 
   const title = `${data.title} | ${SEO_CONSTANTS.SITE_NAME}`;
   const trimmedDescription = data.description?.trim() ?? "";
@@ -23,7 +25,8 @@ export const generateCurationDetailMetadata = (
     ? `${trimmedDescription} 추천 레시피 ${recipeCount}가지를 한 페이지에 모았어요.`
     : `${meta?.koLabel ?? "레시피"} 큐레이션 — ${data.title}. 레시피 ${recipeCount}가지 모음.`;
 
-  const ogImage = coverImageUrlFromKey(data.coverImageKey) ?? SEO_CONSTANTS.DEFAULT_IMAGE;
+  const ogImage =
+    coverImageUrlFromKey(data.coverImageKey) ?? SEO_CONSTANTS.DEFAULT_IMAGE;
   const keywords = [
     ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
     data.title,
@@ -56,7 +59,9 @@ export const generateCurationDetailMetadata = (
   };
 };
 
-export const generateCurationListMetadata = (category: string | null): Metadata => {
+export const generateCurationListMetadata = (
+  category: string | null
+): Metadata => {
   const valid = category && isCurationCategory(category) ? category : null;
   const meta = valid ? CATEGORY_META[valid] : null;
 
@@ -94,7 +99,12 @@ export const generateCurationListMetadata = (category: string | null): Metadata 
       type: SEO_CONSTANTS.OG_TYPE.WEBSITE,
       locale: SEO_CONSTANTS.LOCALE,
       images: [
-        { url: SEO_CONSTANTS.DEFAULT_IMAGE, width: 1200, height: 630, alt: title },
+        {
+          url: SEO_CONSTANTS.DEFAULT_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
       ],
     },
     twitter: {

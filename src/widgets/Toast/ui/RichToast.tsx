@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback,useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 
 import { X } from "lucide-react";
@@ -203,7 +203,7 @@ export const RichToast = ({
   const toastContent = (
     <div
       className={cn(
-        "pointer-events-auto relative z-30 rounded-2xl bg-white text-gray-900 border border-gray-100",
+        "pointer-events-auto relative z-30 rounded-2xl border border-gray-100 bg-white text-gray-900",
         isPaused
           ? "shadow-[0_25px_60px_-12px_rgba(0,0,0,0.35)]"
           : "shadow-lg md:shadow-md",
@@ -284,7 +284,7 @@ export const RichToast = ({
           {richContent?.title && (
             <div className="flex items-start gap-2 text-base leading-snug font-bold text-gray-900">
               {richContent.badgeIcon}
-              <span className="min-w-0 line-clamp-2">{richContent.title}</span>
+              <span className="line-clamp-2 min-w-0">{richContent.title}</span>
             </div>
           )}
           {richContent?.subtitle && (
@@ -293,14 +293,13 @@ export const RichToast = ({
             </p>
           )}
         </div>
-
       </div>
 
       {/* Progress bar */}
       {!persistent && (
         <div className="absolute right-4 bottom-0 left-4 h-0.5 overflow-hidden rounded-full">
           <div
-            className="h-full w-full origin-left rounded-full bg-olive-light"
+            className="bg-olive-light h-full w-full origin-left rounded-full"
             style={{
               animation: `richToastProgress ${effectiveDuration}ms linear forwards`,
               animationPlayState: isPaused ? "paused" : "running",
@@ -312,11 +311,7 @@ export const RichToast = ({
   );
 
   return isClickable && recipeUrl ? (
-    <Link
-      href={recipeUrl}
-      className="w-full min-w-0"
-      onClick={handleLinkClick}
-    >
+    <Link href={recipeUrl} className="w-full min-w-0" onClick={handleLinkClick}>
       {toastContent}
     </Link>
   ) : (

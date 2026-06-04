@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 
 import type { ChatMessage } from "../model/types";
-
 import ChatEmptyState from "./ChatEmptyState";
 import ChatMessageBubble from "./ChatMessageBubble";
 

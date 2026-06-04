@@ -7,7 +7,11 @@ import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
-import { isAiRecipe, isPrivateRecipe, isYoutubeRecipe } from "@/entities/recipe";
+import {
+  isAiRecipe,
+  isPrivateRecipe,
+  isYoutubeRecipe,
+} from "@/entities/recipe";
 import { getPrivateRecipeOnServer } from "@/entities/recipe/model/api.server";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
@@ -84,10 +88,7 @@ export default async function PrivateRecipePage({
         isAiGenerated={isAiRecipe(recipe)}
       />
       <RecipeStatusProvider recipeId={recipeId}>
-        <RecipeNavbar
-          title={recipe.title}
-          heroImageId="recipe-hero-image"
-        />
+        <RecipeNavbar title={recipe.title} heroImageId="recipe-hero-image" />
 
         <RecipeHeroSection
           recipeId={recipeId}

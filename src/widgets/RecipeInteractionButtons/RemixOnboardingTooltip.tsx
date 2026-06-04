@@ -11,7 +11,11 @@ type Props = {
   onDismiss: () => void;
 };
 
-export const RemixOnboardingTooltip = ({ children, show, onDismiss }: Props) => {
+export const RemixOnboardingTooltip = ({
+  children,
+  show,
+  onDismiss,
+}: Props) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -41,20 +45,20 @@ export const RemixOnboardingTooltip = ({ children, show, onDismiss }: Props) => 
       {open && (
         <div
           role="status"
-          className="absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-medium text-white shadow-lg"
+          className="absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-medium whitespace-nowrap text-white shadow-lg"
         >
           이제 유튜브 레시피를 편집해서 저장할 수 있어요!
           <button
             type="button"
             onClick={handleClose}
             aria-label="안내 닫기"
-            className="ml-2 -mr-1 inline-flex h-5 w-5 items-center justify-center rounded-full hover:bg-white/10"
+            className="-mr-1 ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full hover:bg-white/10"
           >
             ✕
           </button>
           <div
             aria-hidden
-            className="absolute left-1/2 top-full -translate-x-1/2 border-x-[6px] border-t-[6px] border-x-transparent border-t-gray-900"
+            className="absolute top-full left-1/2 -translate-x-1/2 border-x-[6px] border-t-[6px] border-x-transparent border-t-gray-900"
           />
         </div>
       )}

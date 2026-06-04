@@ -62,10 +62,7 @@ export const findConsecutiveRanges = (
   return ranges;
 };
 
-export const isDateInRange = (
-  date: Date,
-  range: ConsecutiveRange
-): boolean => {
+export const isDateInRange = (date: Date, range: ConsecutiveRange): boolean => {
   const targetTime = toMidnight(date);
   const startTime = toMidnight(range.startDate);
   const endTime = toMidnight(range.endDate);
@@ -80,7 +77,10 @@ export const getRangeForDay = (
   return ranges.find((range) => isDateInRange(date, range));
 };
 
-export const isFirstInRange = (date: Date, range: ConsecutiveRange): boolean => {
+export const isFirstInRange = (
+  date: Date,
+  range: ConsecutiveRange
+): boolean => {
   return isSameDay(date, range.startDate);
 };
 

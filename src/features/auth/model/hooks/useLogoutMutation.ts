@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
-
 import { queryClient } from "@/shared/lib/queryClient";
 
 import { useUserStore } from "@/entities/user";

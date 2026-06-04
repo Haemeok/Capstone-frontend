@@ -39,7 +39,10 @@ export const OnboardingSurveyModal = () => {
   }
 
   const currentAnswer = answers[currentQuestionData.id];
-  const isAnswerValid = isCurrentAnswerValid(currentAnswer, currentQuestionData);
+  const isAnswerValid = isCurrentAnswerValid(
+    currentAnswer,
+    currentQuestionData
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

@@ -31,9 +31,10 @@ export const HeroSection = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="border-olive-light/30 bg-olive-light/10 font-bold text-olive-medium mb-6 inline-block rounded-full border px-6 py-2 text-sm  backdrop-blur-sm"
+          className="border-olive-light/30 bg-olive-light/10 text-olive-medium mb-6 inline-block rounded-full border px-6 py-2 text-sm font-bold backdrop-blur-sm"
         >
-          🍳 {TOTAL_RECIPE_COUNT_LABEL} 레시피 · YouTube 링크 추출 · AI 맞춤 추천
+          🍳 {TOTAL_RECIPE_COUNT_LABEL} 레시피 · YouTube 링크 추출 · AI 맞춤
+          추천
         </motion.div>
 
         <motion.h1

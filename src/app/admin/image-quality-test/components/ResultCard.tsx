@@ -30,16 +30,22 @@ export const ResultCard = ({ model, result, onRetry }: Props) => {
       <div className="aspect-square w-full bg-gray-50">
         {result.status === "success" && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={result.imageUrl} alt={model.label} className="h-full w-full object-cover" />
+          <img
+            src={result.imageUrl}
+            alt={model.label}
+            className="h-full w-full object-cover"
+          />
         )}
         {result.status === "pending" && (
           <div className="flex h-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-olive-light" />
+            <div className="border-t-olive-light h-8 w-8 animate-spin rounded-full border-2 border-gray-200" />
           </div>
         )}
         {result.status === "error" && (
           <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center">
-            <p className="line-clamp-4 text-xs text-red-500">{result.message}</p>
+            <p className="line-clamp-4 text-xs text-red-500">
+              {result.message}
+            </p>
             <button
               onClick={onRetry}
               className="flex items-center gap-1 rounded-lg bg-gray-100 px-3 py-1 text-xs text-gray-700 hover:bg-gray-200"
@@ -52,11 +58,15 @@ export const ResultCard = ({ model, result, onRetry }: Props) => {
       </div>
       <div className="flex items-center justify-between px-3 py-2">
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-gray-900">{model.label}</p>
+          <p className="truncate text-sm font-medium text-gray-900">
+            {model.label}
+          </p>
           <p className="text-xs text-gray-500">
             {model.vendor} · ${model.pricePerImage.toFixed(3)}
-            {result.status === "success" && ` · ${(result.latencyMs / 1000).toFixed(1)}s`}
-            {result.status === "error" && ` · ${(result.latencyMs / 1000).toFixed(1)}s`}
+            {result.status === "success" &&
+              ` · ${(result.latencyMs / 1000).toFixed(1)}s`}
+            {result.status === "error" &&
+              ` · ${(result.latencyMs / 1000).toFixed(1)}s`}
           </p>
         </div>
         {result.status === "success" && (

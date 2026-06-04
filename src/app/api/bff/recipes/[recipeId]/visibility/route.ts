@@ -18,10 +18,7 @@ const getCookieHeader = async () => {
 
 const handleBackendError = async (backendRes: Response) => {
   const errorBody = await backendRes.json().catch(() => ({}));
-  return NextResponse.json(
-    { error: errorBody },
-    { status: backendRes.status }
-  );
+  return NextResponse.json({ error: errorBody }, { status: backendRes.status });
 };
 
 export async function PATCH(request: NextRequest, context: RouteContext) {

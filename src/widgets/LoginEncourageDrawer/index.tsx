@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode,useState } from "react";
+import { ReactNode, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,10 +9,9 @@ import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
 
-const LoginDialog = dynamic(
-  () => import("@/features/auth/ui/LoginDialog"),
-  { ssr: false }
-);
+const LoginDialog = dynamic(() => import("@/features/auth/ui/LoginDialog"), {
+  ssr: false,
+});
 
 type LoginEncourageDrawerProps = {
   isOpen: boolean;
@@ -48,7 +47,7 @@ const LoginEncourageDrawer = ({
         <Content className="overflow-hidden border-0 bg-white shadow-xl">
           <Title className="sr-only">로그인 필요</Title>
 
-          <div className="flex flex-col items-center px-6 pb-8 pt-8">
+          <div className="flex flex-col items-center px-6 pt-8 pb-8">
             <div className="flex items-center gap-3">
               <Image
                 src="/web-app-manifest-192x192.png"
@@ -58,15 +57,12 @@ const LoginEncourageDrawer = ({
                 height={64}
                 lazy={false}
               />
-              <span className="text-3xl font-bold text-gray-900">
-                Recipi'O
-              </span>
+              <span className="text-3xl font-bold text-gray-900">Recipi'O</span>
             </div>
 
             <div className="mt-6 text-center">
               <p className="text-xl font-bold break-keep text-gray-700">
-                지금{" "}
-                <span className="text-olive-light">3초</span>만에 가입하고,
+                지금 <span className="text-olive-light">3초</span>만에 가입하고,
               </p>
               {icon ? (
                 <div className="mt-2 flex items-center justify-center gap-1">
@@ -74,7 +70,9 @@ const LoginEncourageDrawer = ({
                   <p className="text-xl font-bold text-gray-700">{message}</p>
                 </div>
               ) : (
-                <p className="mt-2 text-xl font-bold text-gray-700">{message}</p>
+                <p className="mt-2 text-xl font-bold text-gray-700">
+                  {message}
+                </p>
               )}
             </div>
 

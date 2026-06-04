@@ -1,9 +1,13 @@
 import type { IngredientPayload } from "@/entities/ingredient";
-import type { Recipe, RecipePayload, RecipeStepPayload } from "@/entities/recipe/model/types";
+import type {
+  Recipe,
+  RecipePayload,
+  RecipeStepPayload,
+} from "@/entities/recipe/model/types";
 
 export const prepareRemixPayload = (
   recipe: Recipe,
-  originRecipeId: string,
+  originRecipeId: string
 ): RecipePayload => {
   const {
     // response-only fields omitted by RecipePayload type — excluded for clarity

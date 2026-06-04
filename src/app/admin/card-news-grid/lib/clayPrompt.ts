@@ -20,10 +20,12 @@ const INTRO: Record<CardMode, string> = {
 
 export const buildClayPrompt = (
   subjects: readonly string[],
-  mode: CardMode,
+  mode: CardMode
 ): string => {
   if (subjects.length !== GRID_COUNT) {
-    throw new Error(`buildClayPrompt: expected ${GRID_COUNT} subjects, got ${subjects.length}`);
+    throw new Error(
+      `buildClayPrompt: expected ${GRID_COUNT} subjects, got ${subjects.length}`
+    );
   }
   const list = subjects.map((s, i) => `${i + 1}. ${s}`).join(" ");
   return `${INTRO[mode]}\n칸 목록 (왼→오, 위→아래 순): ${list}`;

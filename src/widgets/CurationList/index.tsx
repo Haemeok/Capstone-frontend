@@ -43,7 +43,7 @@ export const CurationListClient = ({
         }
       >
         {noResults ? (
-          <p className="py-16 text-center text-sm text-brown/60">
+          <p className="text-brown/60 py-16 text-center text-sm">
             아직 발행된 큐레이션이 없어요.
           </p>
         ) : (

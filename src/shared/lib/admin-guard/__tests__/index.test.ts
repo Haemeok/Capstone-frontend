@@ -11,7 +11,10 @@ jest.mock("next/headers", () => ({
 const fetchMock = jest.fn();
 global.fetch = fetchMock as unknown as typeof fetch;
 
-const makeCookieStore = (accessToken: string | null, jar = "accessToken=t") => ({
+const makeCookieStore = (
+  accessToken: string | null,
+  jar = "accessToken=t"
+) => ({
   get: (key: string) =>
     key === "accessToken" && accessToken ? { value: accessToken } : undefined,
   toString: () => jar,

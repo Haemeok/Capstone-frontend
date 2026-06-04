@@ -9,7 +9,7 @@ const SettingsActionButton = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-9 w-9 rounded-full animate-pulse bg-gray-200" />
+      <div className="h-9 w-9 animate-pulse rounded-full bg-gray-200" />
     ),
   }
 );

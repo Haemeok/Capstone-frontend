@@ -15,7 +15,7 @@ export const PromptEditor = ({ value, onChange }: Props) => {
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-32 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
+        className="focus:border-olive-light focus:ring-olive-light h-32 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-1 focus:outline-none"
         placeholder="레시피에서 자동 생성됩니다"
       />
     </div>

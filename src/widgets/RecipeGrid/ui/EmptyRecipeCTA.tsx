@@ -13,7 +13,9 @@ const EmptyRecipeCTA = ({ noResultsMessage }: EmptyRecipeCTAProps) => {
     <section className="flex min-h-[500px] items-center justify-center px-4">
       <div className="flex max-w-md flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
         <div className="space-y-2">
-          <h3 className="text-xl font-bold text-gray-800">{noResultsMessage}</h3>
+          <h3 className="text-xl font-bold text-gray-800">
+            {noResultsMessage}
+          </h3>
           <p className="text-sm text-gray-600">
             30초만에 AI에게 레시피 생성을 맡겨보세요
           </p>

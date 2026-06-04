@@ -30,7 +30,9 @@ export default function RecipeInfoSection({
     <>
       <section className="flex flex-col items-center justify-center gap-1">
         <div className="flex items-center gap-2">
-          <h1 className="text-center text-pretty break-keep text-2xl font-bold">{title}</h1>
+          <h1 className="text-center text-2xl font-bold text-pretty break-keep">
+            {title}
+          </h1>
           {aiGenerated && (
             <BadgeButton
               badgeText={

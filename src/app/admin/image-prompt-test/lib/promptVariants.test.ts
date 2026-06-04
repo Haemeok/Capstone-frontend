@@ -134,8 +134,8 @@ describe("PROMPT_VARIANTS archetype slots (3–9)", () => {
   );
 
   it("each archetype produces a distinct prompt (guards against copy-paste)", () => {
-    const builds = ARCHETYPES.map(
-      ({ id }) => PROMPT_VARIANTS.find((v) => v.id === id)!.build(fixtureRecipe)
+    const builds = ARCHETYPES.map(({ id }) =>
+      PROMPT_VARIANTS.find((v) => v.id === id)!.build(fixtureRecipe)
     );
     expect(new Set(builds).size).toBe(builds.length);
   });

@@ -17,7 +17,11 @@ const LATEST_RECIPES_TYPES = ["USER", "YOUTUBE"] as const;
 const LATEST_RECIPES_HREF = buildSearchResultsUrl({
   sort: "createdAt,DESC",
 });
-const LATEST_RECIPES_QUERY_KEY = ["recipes", "latest", ...LATEST_RECIPES_TYPES] as const;
+const LATEST_RECIPES_QUERY_KEY = [
+  "recipes",
+  "latest",
+  ...LATEST_RECIPES_TYPES,
+] as const;
 
 const LatestRecipesSlide = () => {
   const { data, isPending, error } = useInfiniteScroll<

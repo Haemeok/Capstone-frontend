@@ -24,7 +24,7 @@ export const ComparisonGrid = ({
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
       {originalImageUrl && (
-        <div className="overflow-hidden rounded-2xl border-2 border-olive-light bg-white shadow-sm">
+        <div className="border-olive-light overflow-hidden rounded-2xl border-2 bg-white shadow-sm">
           <div className="aspect-square w-full bg-gray-50">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -34,7 +34,9 @@ export const ComparisonGrid = ({
             />
           </div>
           <div className="px-3 py-2">
-            <p className="truncate text-sm font-bold text-olive-light">원본 레시피 이미지</p>
+            <p className="text-olive-light truncate text-sm font-bold">
+              원본 레시피 이미지
+            </p>
             <p className="truncate text-xs text-gray-500">
               {originalLabel ?? "Original"}
             </p>

@@ -5,9 +5,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import SaveButton from "@/shared/ui/SaveButton";
 
-import { RECIPE_BOOK_QUERY_KEYS, type RecipeBook } from "@/entities/recipe-book";
 import { getRecipeStatus } from "@/entities/recipe/model/api";
 import { RecipeStatus } from "@/entities/recipe/model/types";
+import {
+  RECIPE_BOOK_QUERY_KEYS,
+  type RecipeBook,
+} from "@/entities/recipe-book";
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 
@@ -46,8 +49,7 @@ const RecipeSaveButton = ({
     enabled: false,
   });
 
-  const isFavorite =
-    currentStatus?.favoriteByCurrentUser ?? initialIsFavorite;
+  const isFavorite = currentStatus?.favoriteByCurrentUser ?? initialIsFavorite;
 
   const { notifySaved, changeSheet } = useSaveToastWithChange(recipeId);
 

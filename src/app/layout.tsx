@@ -84,7 +84,7 @@ export default async function RootLayout({
         <AppWebViewDetector />
         <AppProviders>
           <DesktopHeader />
-          <main className="flex w-full flex-1 flex-col pb-[var(--main-pb,77px)] md:pb-0">
+          <main className="flex w-full flex-1 flex-col pb-[var(--main-pb,var(--bottom-nav-h))] md:pb-0">
             {children}
           </main>
           <BottomNavBar />

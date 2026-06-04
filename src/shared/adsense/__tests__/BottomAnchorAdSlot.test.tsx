@@ -15,26 +15,19 @@ jest.mock("@/shared/hooks/useIsBottomNavVisible", () => ({
   useIsBottomNavVisible: jest.fn(() => false),
 }));
 
-jest.mock("@/shared/lib/hooks/useMediaQuery", () => ({
-  useMediaQuery: jest.fn(() => true),
-}));
-
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
-import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 
 import { useAdsGate } from "../AdsGateContext";
 import { BottomAnchorAdSlot } from "../BottomAnchorAdSlot";
 
 const mockedUseAdsGate = jest.mocked(useAdsGate);
 const mockedUseIsBottomNavVisible = jest.mocked(useIsBottomNavVisible);
-const mockedUseMediaQuery = jest.mocked(useMediaQuery);
 
 describe("BottomAnchorAdSlot", () => {
   beforeEach(() => {
     delete (window as typeof window & { adsbygoogle?: unknown[] }).adsbygoogle;
     mockedUseAdsGate.mockReturnValue({ enabled: true, isTestUser: false });
     mockedUseIsBottomNavVisible.mockReturnValue(false);
-    mockedUseMediaQuery.mockReturnValue(true);
   });
 
   it("게이트 enabled false 면 null 렌더", () => {
@@ -50,17 +43,26 @@ describe("BottomAnchorAdSlot", () => {
     expect(ins?.getAttribute("data-ad-slot")).toBe("1234567890");
   });
 
-  it("nav 가 숨겨진 라우트에선 bottom 0 으로 렌더", () => {
+  it("nav 가 숨겨진 라우트에선 모바일에서 맨 아래에 붙는다", () => {
     mockedUseIsBottomNavVisible.mockReturnValue(false);
     const { container } = render(<BottomAnchorAdSlot />);
     const slot = container.querySelector("div");
-    expect(slot).toHaveStyle({ bottom: "0px" });
+    expect(slot?.className).not.toContain("bottom-[var(--bottom-nav-h)]");
   });
 
-  it("nav 가 보이는 라우트에선 nav 높이만큼 위로 offset", () => {
+  it("nav 가 보이는 라우트에선 모바일에서 nav 높이만큼 위로 올라간다", () => {
     mockedUseIsBottomNavVisible.mockReturnValue(true);
     const { container } = render(<BottomAnchorAdSlot />);
     const slot = container.querySelector("div");
-    expect(slot).toHaveStyle({ bottom: "77px" });
+    expect(slot?.className).toContain("bottom-[var(--bottom-nav-h)]");
+  });
+
+  it("데스크톱(md+)에선 컨테이너 폭으로 제한되고 맨 아래에 붙는다", () => {
+    mockedUseIsBottomNavVisible.mockReturnValue(true);
+    const { container } = render(<BottomAnchorAdSlot />);
+    const slot = container.querySelector("div");
+    expect(slot?.className).toContain("md:max-w-4xl");
+    expect(slot?.className).toContain("md:mx-auto");
+    expect(slot?.className).toContain("md:bottom-0");
   });
 });

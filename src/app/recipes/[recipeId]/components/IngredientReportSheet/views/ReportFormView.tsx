@@ -74,10 +74,7 @@ export const ReportFormView = ({
         </Description>
       </Header>
 
-      <div
-        ref={scrollRef}
-        className="min-h-0 flex-1 overflow-y-auto px-6 pb-2"
-      >
+      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto px-6 pb-2">
         <div className="space-y-2">
           {categories.map((category) => (
             <ReportCategoryButton
@@ -97,7 +94,7 @@ export const ReportFormView = ({
             value={memo}
             onChange={(e) => onMemoChange(e.target.value)}
             placeholder="예: 계란 3개 → 계란 4개"
-            className="h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
+            className="focus:border-olive-light focus:ring-olive-light h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-1 focus:outline-none"
           />
         </div>
       </div>

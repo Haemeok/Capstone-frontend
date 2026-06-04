@@ -2,8 +2,8 @@
 
 import { useCallback } from "react";
 
-import { aiModels } from "@/shared/config/constants/aiModel";
 import type { AIModelId } from "@/shared/config/constants/aiModel";
+import { aiModels } from "@/shared/config/constants/aiModel";
 
 import { calculateFakeProgress } from "../lib/progress";
 import { createAIRecipeJobV2 } from "./api";
@@ -16,7 +16,10 @@ type ConceptJobResult<C extends AIModelId> = {
   isSuccess: boolean;
   isFailed: boolean;
   progress: number;
-  submit: (request: AIModelRequestMap[C], requestSummary: string) => Promise<void>;
+  submit: (
+    request: AIModelRequestMap[C],
+    requestSummary: string
+  ) => Promise<void>;
   retry: () => void;
 };
 

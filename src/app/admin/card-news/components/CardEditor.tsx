@@ -12,7 +12,7 @@ import { saveAllCards } from "../lib/capture";
 import { buildCardNewsPrompt } from "../lib/prompt";
 import { OutroCard } from "./cards/OutroCard";
 import { RecipeCard } from "./cards/RecipeCard";
-import { type CardTheme,THEME_LIST } from "./cards/themes";
+import { type CardTheme, THEME_LIST } from "./cards/themes";
 import { ThumbnailCard } from "./cards/ThumbnailCard";
 
 type CardEditorProps = {
@@ -110,7 +110,9 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
       }
     };
     run();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -146,10 +148,18 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
     if (!texts) return;
     setSaving(true);
     try {
-      const allRefs = [thumbnailRef, ...recipeRefs.current, outroRef, outro2Ref];
+      const allRefs = [
+        thumbnailRef,
+        ...recipeRefs.current,
+        outroRef,
+        outro2Ref,
+      ];
       const allNames = [
         "thumbnail.png",
-        ...recipes.map((r, i) => `recipe-${i + 1}-${r.title.replace(/[\\/:*?"<>|]/g, "_")}.png`),
+        ...recipes.map(
+          (r, i) =>
+            `recipe-${i + 1}-${r.title.replace(/[\\/:*?"<>|]/g, "_")}.png`
+        ),
         "outro.png",
         "outro-2.png",
       ];
@@ -176,7 +186,15 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
     <div>
       {/* 캡처용 오프스크린 DOM (화면에 보이지 않음, refs 연결) */}
       {texts && (
-        <div style={{ position: "fixed", left: -9999, top: 0, pointerEvents: "none" }} aria-hidden>
+        <div
+          style={{
+            position: "fixed",
+            left: -9999,
+            top: 0,
+            pointerEvents: "none",
+          }}
+          aria-hidden
+        >
           <ThumbnailCard
             ref={thumbnailRef}
             imageUrl={thumbnail.imageUrl}
@@ -196,8 +214,16 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
               theme={theme}
             />
           ))}
-          <OutroCard ref={outroRef} imageUrl={thumbnail.imageUrl} variant="instagram" />
-          <OutroCard ref={outro2Ref} imageUrl={thumbnail.imageUrl} variant="youtube" />
+          <OutroCard
+            ref={outroRef}
+            imageUrl={thumbnail.imageUrl}
+            variant="instagram"
+          />
+          <OutroCard
+            ref={outro2Ref}
+            imageUrl={thumbnail.imageUrl}
+            variant="youtube"
+          />
         </div>
       )}
 
@@ -218,7 +244,11 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
             }`}
           >
             <span className="block text-sm font-bold">{name}</span>
-            <span className={`block text-xs ${theme === key ? "text-white/80" : "text-gray-400"}`}>{desc}</span>
+            <span
+              className={`block text-xs ${theme === key ? "text-white/80" : "text-gray-400"}`}
+            >
+              {desc}
+            </span>
           </button>
         ))}
       </div>
@@ -238,12 +268,12 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
           value={folderName}
           onChange={(e) => setFolderName(e.target.value)}
           placeholder="폴더명"
-          className="rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-olive-light focus:outline-none"
+          className="focus:border-olive-light rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:outline-none"
         />
         <button
           onClick={handleSave}
           disabled={saving || !texts}
-          className="rounded-xl bg-olive-light px-6 py-2 text-sm font-bold text-white disabled:bg-gray-200 disabled:text-gray-400"
+          className="bg-olive-light rounded-xl px-6 py-2 text-sm font-bold text-white disabled:bg-gray-200 disabled:text-gray-400"
         >
           {saving ? "저장 중..." : "💾 전체 저장"}
         </button>
@@ -263,7 +293,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                 value={texts.hooking}
                 onChange={(e) => updateHooking(e.target.value)}
                 rows={2}
-                className="mb-3 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:border-olive-light focus:outline-none"
+                className="focus:border-olive-light mb-3 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:outline-none"
               />
               <label className="mb-1 block text-xs text-gray-500">
                 주제 요약
@@ -272,7 +302,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                 value={texts.subject}
                 onChange={(e) => updateSubject(e.target.value)}
                 rows={2}
-                className="w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:border-olive-light focus:outline-none"
+                className="focus:border-olive-light w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:outline-none"
               />
             </div>
 
@@ -300,7 +330,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                   value={texts.summaries[i + 1]?.summary ?? ""}
                   onChange={(e) => updateSummary(i + 1, e.target.value)}
                   rows={5}
-                  className="w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:border-olive-light focus:outline-none"
+                  className="focus:border-olive-light w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:outline-none"
                 />
               </div>
             ))}
@@ -313,7 +343,13 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
             </p>
 
             {/* 썸네일 미리보기 */}
-            <div style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
+            <div
+              style={{
+                width: 1080 * 0.35,
+                height: 1080 * 0.35,
+                overflow: "hidden",
+              }}
+            >
               <div
                 className="origin-top-left"
                 style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
@@ -329,10 +365,21 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
 
             {/* 레시피 카드 미리보기 */}
             {recipes.map((recipe, i) => (
-              <div key={recipe.id} style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
+              <div
+                key={recipe.id}
+                style={{
+                  width: 1080 * 0.35,
+                  height: 1080 * 0.35,
+                  overflow: "hidden",
+                }}
+              >
                 <div
                   className="origin-top-left"
-                  style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
+                  style={{
+                    transform: "scale(0.35)",
+                    width: 1080,
+                    height: 1080,
+                  }}
                 >
                   <RecipeCard
                     imageUrl={recipe.imageUrl}
@@ -347,8 +394,16 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
             ))}
 
             {/* 아웃트로(인스타 팔로우 유도) 카드 미리보기 */}
-            <p className="mt-6 text-xs text-gray-400">마지막 카드 (인스타 팔로우 유도)</p>
-            <div style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
+            <p className="mt-6 text-xs text-gray-400">
+              마지막 카드 (인스타 팔로우 유도)
+            </p>
+            <div
+              style={{
+                width: 1080 * 0.35,
+                height: 1080 * 0.35,
+                overflow: "hidden",
+              }}
+            >
               <div
                 className="origin-top-left"
                 style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
@@ -358,8 +413,16 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
             </div>
 
             {/* 아웃트로 2 (유튜브 구독 유도) 카드 미리보기 */}
-            <p className="mt-6 text-xs text-gray-400">마지막 카드 2 (유튜브 구독 유도)</p>
-            <div style={{ width: 1080 * 0.35, height: 1080 * 0.35, overflow: "hidden" }}>
+            <p className="mt-6 text-xs text-gray-400">
+              마지막 카드 2 (유튜브 구독 유도)
+            </p>
+            <div
+              style={{
+                width: 1080 * 0.35,
+                height: 1080 * 0.35,
+                overflow: "hidden",
+              }}
+            >
               <div
                 className="origin-top-left"
                 style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}

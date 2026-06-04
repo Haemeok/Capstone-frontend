@@ -39,7 +39,7 @@ export default function GlobalError({
               </button>
               <button
                 onClick={() => (window.location.href = "/")}
-                className="rounded-lg bg-olive-light px-6 py-3 font-medium text-white transition-colors hover:bg-olive-dark"
+                className="bg-olive-light hover:bg-olive-dark rounded-lg px-6 py-3 font-medium text-white transition-colors"
               >
                 홈으로 가기
               </button>

@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
@@ -77,7 +77,7 @@ const FloatingCreateRecipeButton = () => {
       <div
         ref={ghostRef}
         aria-hidden
-        className="md:hidden pointer-events-none fixed left-0 top-0 flex h-14 items-center whitespace-nowrap pl-4 pr-5 font-bold opacity-0"
+        className="pointer-events-none fixed top-0 left-0 flex h-14 items-center pr-5 pl-4 font-bold whitespace-nowrap opacity-0 md:hidden"
       >
         <Plus size={20} />
         <span className="ml-1">레시피</span>
@@ -88,18 +88,20 @@ const FloatingCreateRecipeButton = () => {
           prefetch={false}
           aria-label="레시피 등록하기"
           onClick={() => triggerHaptic("Light")}
-          className="md:hidden z-header sticky-optimized fixed bottom-24 right-5 flex h-14 items-center justify-center overflow-hidden rounded-full bg-olive-light font-bold text-white shadow-lg active:scale-[0.98] transition-transform duration-150"
+          className="z-header sticky-optimized bg-olive-light fixed right-5 bottom-24 flex h-14 items-center justify-center overflow-hidden rounded-full font-bold text-white shadow-lg transition-transform duration-150 active:scale-[0.98] md:hidden"
           initial={false}
           animate={{
             width: collapsed ? COLLAPSED_WIDTH : expandedWidth,
             paddingLeft: collapsed ? COLLAPSED_PADDING : EXPANDED_PADDING_LEFT,
-            paddingRight: collapsed ? COLLAPSED_PADDING : EXPANDED_PADDING_RIGHT,
+            paddingRight: collapsed
+              ? COLLAPSED_PADDING
+              : EXPANDED_PADDING_RIGHT,
           }}
           transition={{ type: "spring", stiffness: 380, damping: 32 }}
         >
           <Plus size={20} className="shrink-0" />
           <motion.span
-            className="shrink-0 whitespace-nowrap overflow-hidden"
+            className="shrink-0 overflow-hidden whitespace-nowrap"
             animate={{
               opacity: collapsed ? 0 : 1,
               width: collapsed ? 0 : "auto",

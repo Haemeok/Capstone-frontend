@@ -4,7 +4,11 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getRecipe, getRecipeItems } from "@/entities/recipe/model/api";
-import { DetailedRecipeGridItem, Recipe, RecipeQueryParams } from "@/entities/recipe/model/types";
+import {
+  DetailedRecipeGridItem,
+  Recipe,
+  RecipeQueryParams,
+} from "@/entities/recipe/model/types";
 
 type RecipeSelectorProps = {
   filter: Record<string, unknown>;
@@ -22,7 +26,11 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
     const fetchRecipes = async () => {
       setLoading(true);
       try {
-        const res = await getRecipeItems({ ...filter, sort: "likeCount,desc", size: 30 } as RecipeQueryParams);
+        const res = await getRecipeItems({
+          ...filter,
+          sort: "likeCount,desc",
+          size: 30,
+        } as RecipeQueryParams);
         setRecipes(res.content);
       } catch (err) {
         console.error("레시피 검색 실패:", err);
@@ -46,7 +54,10 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
     if (!thumbnailId || cardIds.size === 0) return;
     setSubmitting(true);
     try {
-      const allIds = [thumbnailId, ...Array.from(cardIds).filter((id) => id !== thumbnailId)];
+      const allIds = [
+        thumbnailId,
+        ...Array.from(cardIds).filter((id) => id !== thumbnailId),
+      ];
       const fullRecipes = await Promise.all(allIds.map((id) => getRecipe(id)));
       const thumbnail = fullRecipes[0];
       const cards = fullRecipes.slice(1);
@@ -59,11 +70,17 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
   };
 
   if (loading) {
-    return <div className="py-12 text-center text-gray-400">레시피 검색 중...</div>;
+    return (
+      <div className="py-12 text-center text-gray-400">레시피 검색 중...</div>
+    );
   }
 
   if (recipes.length === 0) {
-    return <div className="py-12 text-center text-gray-400">검색 결과가 없습니다.</div>;
+    return (
+      <div className="py-12 text-center text-gray-400">
+        검색 결과가 없습니다.
+      </div>
+    );
   }
 
   return (
@@ -77,13 +94,11 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
         <span className="text-gray-600">
           썸네일: {thumbnailId ? "✓ 선택됨" : "미선택"}
         </span>
-        <span className="text-gray-600">
-          카드: {cardIds.size}개 선택
-        </span>
+        <span className="text-gray-600">카드: {cardIds.size}개 선택</span>
         <button
           onClick={handleComplete}
           disabled={!thumbnailId || cardIds.size === 0 || submitting}
-          className="ml-auto rounded-xl bg-olive-light px-4 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+          className="bg-olive-light ml-auto rounded-xl px-4 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
         >
           {submitting ? "로딩..." : "다음 단계 →"}
         </button>
@@ -98,7 +113,7 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
           return (
             <div
               key={recipe.id}
-              className={`relative flex-shrink-0 cursor-pointer overflow-hidden rounded-card border-2 transition-all ${
+              className={`rounded-card relative flex-shrink-0 cursor-pointer overflow-hidden border-2 transition-all ${
                 isThumbnail
                   ? "border-blue-500 shadow-lg"
                   : isCard
@@ -116,12 +131,12 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
                 />
                 {/* 배지 */}
                 {isThumbnail && (
-                  <div className="absolute left-2 top-2 rounded-lg bg-blue-500 px-2 py-1 text-xs font-bold text-white">
+                  <div className="absolute top-2 left-2 rounded-lg bg-blue-500 px-2 py-1 text-xs font-bold text-white">
                     썸네일
                   </div>
                 )}
                 {isCard && !isThumbnail && (
-                  <div className="absolute left-2 top-2 rounded-lg bg-olive-light px-2 py-1 text-xs font-bold text-white">
+                  <div className="bg-olive-light absolute top-2 left-2 rounded-lg px-2 py-1 text-xs font-bold text-white">
                     카드
                   </div>
                 )}
@@ -129,7 +144,9 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
 
               {/* 제목 */}
               <div className="p-2">
-                <p className="truncate text-sm font-medium text-gray-900">{recipe.title}</p>
+                <p className="truncate text-sm font-medium text-gray-900">
+                  {recipe.title}
+                </p>
               </div>
 
               {/* 선택 버튼 */}
@@ -140,7 +157,9 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
                     setThumbnailId(recipe.id);
                   }}
                   className={`flex-1 py-1.5 text-xs font-medium ${
-                    isThumbnail ? "bg-blue-50 text-blue-600" : "text-gray-500 hover:bg-gray-50"
+                    isThumbnail
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-gray-500 hover:bg-gray-50"
                   }`}
                 >
                   썸네일
@@ -151,7 +170,9 @@ export const RecipeSelector = ({ filter, onComplete }: RecipeSelectorProps) => {
                     toggleCard(recipe.id);
                   }}
                   className={`flex-1 border-l border-gray-100 py-1.5 text-xs font-medium ${
-                    isCard ? "bg-olive-light/10 text-olive-light" : "text-gray-500 hover:bg-gray-50"
+                    isCard
+                      ? "bg-olive-light/10 text-olive-light"
+                      : "text-gray-500 hover:bg-gray-50"
                   }`}
                 >
                   카드

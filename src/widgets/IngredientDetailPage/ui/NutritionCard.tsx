@@ -11,11 +11,11 @@ type NutritionRowProps = {
 };
 
 const NutritionRow = ({ label, value, unit }: NutritionRowProps) => (
-  <div className="flex items-baseline justify-between py-2 border-b border-gray-100 last:border-b-0">
+  <div className="flex items-baseline justify-between border-b border-gray-100 py-2 last:border-b-0">
     <span className="text-sm text-gray-700">{label}</span>
     <span className="text-sm font-semibold text-gray-900">
       {value}
-      <span className="text-xs font-normal text-gray-500 ml-0.5">{unit}</span>
+      <span className="ml-0.5 text-xs font-normal text-gray-500">{unit}</span>
     </span>
   </div>
 );
@@ -24,12 +24,12 @@ const NutritionCard = ({ nutrition }: NutritionCardProps) => {
   if (!nutrition) return null;
 
   return (
-    <section className="px-5 py-6 border-t border-gray-100">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">영양정보</h2>
-      <p className="text-sm text-gray-500 mb-4">100g 기준이에요</p>
+    <section className="border-t border-gray-100 px-5 py-6">
+      <h2 className="mb-1 text-lg font-bold text-gray-900">영양정보</h2>
+      <p className="mb-4 text-sm text-gray-500">100g 기준이에요</p>
 
       <div className="rounded-xl bg-gray-50 p-4">
-        <div className="flex items-baseline gap-2 mb-3">
+        <div className="mb-3 flex items-baseline gap-2">
           <span className="text-3xl font-bold text-gray-900">
             {nutrition.kcal}
           </span>
@@ -38,7 +38,11 @@ const NutritionCard = ({ nutrition }: NutritionCardProps) => {
 
         <div className="flex flex-col">
           <NutritionRow label="단백질" value={nutrition.proteinG} unit="g" />
-          <NutritionRow label="탄수화물" value={nutrition.carbohydrateG} unit="g" />
+          <NutritionRow
+            label="탄수화물"
+            value={nutrition.carbohydrateG}
+            unit="g"
+          />
           <NutritionRow label="지방" value={nutrition.fatG} unit="g" />
           {nutrition.sugarG !== undefined && (
             <NutritionRow label="당류" value={nutrition.sugarG} unit="g" />

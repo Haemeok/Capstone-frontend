@@ -63,7 +63,9 @@ describe("useJobPolling - 중복 처리 방지", () => {
       // Job 생성 및 polling 상태로 설정
       let key: string;
       act(() => {
-        key = useYoutubeImportStoreV2.getState().createJob(mockMeta.url, mockMeta);
+        key = useYoutubeImportStoreV2
+          .getState()
+          .createJob(mockMeta.url, mockMeta);
         useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -76,7 +78,9 @@ describe("useJobPolling - 중복 처리 방지", () => {
       });
 
       // Job이 completed 상태인지 확인
-      expect(useYoutubeImportStoreV2.getState().jobs[key!]?.state).toBe("completed");
+      expect(useYoutubeImportStoreV2.getState().jobs[key!]?.state).toBe(
+        "completed"
+      );
 
       // API는 1번만 호출되어야 함 (두 번째 폴링 시 이미 completed라 스킵)
       expect(mockGetStatus).toHaveBeenCalledTimes(1);
@@ -93,7 +97,9 @@ describe("useJobPolling - 중복 처리 방지", () => {
 
       let key: string;
       act(() => {
-        key = useYoutubeImportStoreV2.getState().createJob(mockMeta.url, mockMeta);
+        key = useYoutubeImportStoreV2
+          .getState()
+          .createJob(mockMeta.url, mockMeta);
         useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -133,7 +139,9 @@ describe("useJobPolling - 중복 처리 방지", () => {
 
       let key: string;
       act(() => {
-        key = useYoutubeImportStoreV2.getState().createJob(mockMeta.url, mockMeta);
+        key = useYoutubeImportStoreV2
+          .getState()
+          .createJob(mockMeta.url, mockMeta);
         useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -155,14 +163,16 @@ describe("useJobPolling - 중복 처리 방지", () => {
     it("이미 completed 상태인 job에 fail 호출해도 무시해야 함", async () => {
       // 먼저 complete 응답 후 fail 응답 시뮬레이션
       jest.spyOn(api, "getYoutubeJobStatus").mockResolvedValueOnce({
-          jobId: "job-123",
-          status: "COMPLETED",
-          resultRecipeId: "recipe-456",
-        });
+        jobId: "job-123",
+        status: "COMPLETED",
+        resultRecipeId: "recipe-456",
+      });
 
       let key: string;
       act(() => {
-        key = useYoutubeImportStoreV2.getState().createJob(mockMeta.url, mockMeta);
+        key = useYoutubeImportStoreV2
+          .getState()
+          .createJob(mockMeta.url, mockMeta);
         useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -178,5 +188,4 @@ describe("useJobPolling - 중복 처리 방지", () => {
       expect(job?.state).toBe("completed");
     });
   });
-
 });

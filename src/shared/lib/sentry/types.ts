@@ -9,4 +9,4 @@ type ApiErrorTag = {
   "page.path": string;
 };
 
-export type { ApiErrorTag,SentryUser };
+export type { ApiErrorTag, SentryUser };

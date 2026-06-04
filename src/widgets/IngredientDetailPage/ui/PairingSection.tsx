@@ -24,14 +24,14 @@ const PairingChipRow = ({ items }: PairingChipRowProps) => {
   if (linkable.length === 0) return null;
 
   return (
-    <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 py-1">
+    <div className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 py-1">
       {linkable.map((item) => (
         <Link
           key={item.id}
           href={`/ingredients/${item.id}`}
-          className="inline-flex items-center gap-2 rounded-full bg-gray-100 pl-1.5 pr-3 py-1.5 text-sm text-gray-700 flex-shrink-0 hover:bg-gray-200 transition-colors"
+          className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-gray-100 py-1.5 pr-3 pl-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200"
         >
-          <span className="w-10 h-10 rounded-full overflow-hidden bg-white flex-shrink-0">
+          <span className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-white">
             <Image
               src={item.imageUrl}
               alt={item.name}
@@ -62,12 +62,12 @@ const PairingSection = ({ good, bad }: PairingSectionProps) => {
   if (!hasGood && !hasBad) return null;
 
   return (
-    <section className="px-5 py-6 border-t border-gray-100">
-      <h2 className="text-lg font-bold text-gray-900 mb-3">궁합 재료</h2>
+    <section className="border-t border-gray-100 px-5 py-6">
+      <h2 className="mb-3 text-lg font-bold text-gray-900">궁합 재료</h2>
 
       {hasGood && (
         <>
-          <p className="text-sm font-medium text-gray-600 mb-2">
+          <p className="mb-2 text-sm font-medium text-gray-600">
             같이 먹으면 좋아요
           </p>
           <PairingChipRow items={good} />
@@ -77,7 +77,7 @@ const PairingSection = ({ good, bad }: PairingSectionProps) => {
       {hasBad && (
         <>
           <p
-            className={`text-sm font-medium text-gray-600 mb-2 ${
+            className={`mb-2 text-sm font-medium text-gray-600 ${
               hasGood ? "mt-4" : ""
             }`}
           >

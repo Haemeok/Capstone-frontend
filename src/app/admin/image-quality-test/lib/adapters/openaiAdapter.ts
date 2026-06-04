@@ -40,7 +40,8 @@ export const generateViaOpenAI = async (
   };
   const first = data.data?.[0];
   if (!first) throw new Error("OpenAI returned empty data array");
-  if (first.b64_json) return { imageDataUrl: `data:image/png;base64,${first.b64_json}` };
+  if (first.b64_json)
+    return { imageDataUrl: `data:image/png;base64,${first.b64_json}` };
   if (first.url) return { imageDataUrl: first.url };
   throw new Error("OpenAI returned neither b64_json nor url");
 };
@@ -189,7 +190,8 @@ export const editMultiViaOpenAI = async (
     data?: Array<{ b64_json?: string; url?: string }>;
   };
   const items = data.data ?? [];
-  if (items.length === 0) throw new Error("OpenAI edit returned empty data array");
+  if (items.length === 0)
+    throw new Error("OpenAI edit returned empty data array");
   return {
     imageDataUrls: items.map((it) => {
       if (it.b64_json) return `data:image/png;base64,${it.b64_json}`;

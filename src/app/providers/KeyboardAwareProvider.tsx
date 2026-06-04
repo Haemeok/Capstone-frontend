@@ -8,7 +8,11 @@ import { useKeyboardStore } from "@/shared/store/useKeyboardStore";
 const isAndroidWebView =
   typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent);
 
-export const KeyboardAwareProvider = ({ children }: { children: ReactNode }) => {
+export const KeyboardAwareProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const { height, isOpen, source } = useKeyboardSource();
   const setKeyboardState = useKeyboardStore((s) => s.setKeyboardState);
 

@@ -11,10 +11,7 @@ import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
 import { useToastStore } from "@/widgets/Toast";
 
 import { JOB_POLLING_CONFIG } from "../lib/constants";
-import {
-  JobPollingDeps,
-  pollSingleJob,
-} from "./jobPollingHandlers";
+import { JobPollingDeps, pollSingleJob } from "./jobPollingHandlers";
 import { useYoutubeImportStoreV2 } from "./store";
 import { pendingJobsSelector } from "./storeSelectors";
 

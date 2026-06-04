@@ -4,9 +4,10 @@ import Link from "next/link";
 
 import { LogIn, Plus } from "lucide-react";
 
-import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { Button } from "@/shared/ui/shadcn/button";
+
+import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 
 type ActionButtonProps = {
   isLoggedIn: boolean;
@@ -28,7 +29,7 @@ const ActionButton = ({
       <LoginPromotionBadge variant="desktop" popupClassName="md:hidden">
         <Button
           asChild
-          className="bg-white border border-olive-light hover:bg-olive-light/10 rounded-full px-6 text-olive-light"
+          className="border-olive-light hover:bg-olive-light/10 text-olive-light rounded-full border bg-white px-6"
         >
           <Link href="/login">
             <LogIn size={16} className="mr-1" /> 로그인
@@ -42,7 +43,7 @@ const ActionButton = ({
     <>
       <Button
         asChild
-        className="hidden md:inline-flex bg-white border border-olive-light hover:bg-olive-light/10 gap-0 rounded-full px-6 text-olive-light"
+        className="border-olive-light hover:bg-olive-light/10 text-olive-light hidden gap-0 rounded-full border bg-white px-6 md:inline-flex"
       >
         <Link href="/recipes/new" prefetch={false}>
           <Plus size={16} className="mr-1" /> 레시피 등록하기

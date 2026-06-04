@@ -7,9 +7,7 @@ jest.mock("@/widgets/SearchClient", () => ({
 
 jest.mock("@/entities/recipe/model/api.server", () => ({
   getRecipesOnServer: jest.fn().mockResolvedValue({
-    content: [
-      { imageUrl: "https://example.com/image.jpg", title: "김치찌개" },
-    ],
+    content: [{ imageUrl: "https://example.com/image.jpg", title: "김치찌개" }],
     page: { size: 10, number: 0, totalElements: 150, totalPages: 15 },
   }),
 }));

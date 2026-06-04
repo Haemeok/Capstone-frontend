@@ -5,7 +5,10 @@ import {
 } from "@/entities/recipe/model/types";
 
 export type RecipeGridProps = {
-  recipes: BaseRecipeGridItem[] | DetailedRecipeGridItemType[] | MyRecipeListItem[];
+  recipes:
+    | BaseRecipeGridItem[]
+    | DetailedRecipeGridItemType[]
+    | MyRecipeListItem[];
   isSimple?: boolean;
   hasNextPage?: boolean;
   isFetching?: boolean;

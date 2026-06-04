@@ -16,11 +16,11 @@ const AIRecipeNotificationBadge = ({
       {children}
 
       {generationState === "completed" && (
-        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 z-50">
-          <div className="bg-olive-light text-white px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap shadow-lg animate-bounce">
+        <div className="absolute -top-12 left-1/2 z-50 -translate-x-1/2 transform">
+          <div className="bg-olive-light animate-bounce rounded-lg px-3 py-2 text-xs font-bold whitespace-nowrap text-white shadow-lg">
             레시피 생성 완료 🎉
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2">
-              <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-olive-light"></div>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 transform">
+              <div className="border-t-olive-light h-0 w-0 border-t-4 border-r-4 border-l-4 border-transparent"></div>
             </div>
           </div>
         </div>

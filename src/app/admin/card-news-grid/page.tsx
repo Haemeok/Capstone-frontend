@@ -46,7 +46,8 @@ export default function CardNewsGridPage() {
         요리팁 9그리드 카드뉴스
       </h1>
       <p className="mb-6 text-sm text-gray-500">
-        주제와 9개 음식을 AI로 뽑고 → 점토 스타일 3×3 이미지를 생성해 → 카드뉴스 한 장으로 조합합니다.
+        주제와 9개 음식을 AI로 뽑고 → 점토 스타일 3×3 이미지를 생성해 → 카드뉴스
+        한 장으로 조합합니다.
       </p>
 
       <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
@@ -99,14 +100,16 @@ export default function CardNewsGridPage() {
                 <input
                   value={seed}
                   onChange={(e) => setSeed(e.target.value)}
-                  placeholder={mode === "tips" ? "예: 수박, 사과" : "예: 토마토 케찹"}
+                  placeholder={
+                    mode === "tips" ? "예: 수박, 사과" : "예: 토마토 케찹"
+                  }
                   className={inputClass}
                 />
                 <button
                   type="button"
                   onClick={() => generateTopics(seed)}
                   disabled={isLoading}
-                  className="shrink-0 cursor-pointer rounded-2xl bg-olive-light px-4 py-2 text-sm font-bold text-white transition-shadow hover:shadow-md disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                  className="bg-olive-light shrink-0 cursor-pointer rounded-2xl px-4 py-2 text-sm font-bold text-white transition-shadow hover:shadow-md disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
                 >
                   주제 후보
                 </button>
@@ -116,7 +119,9 @@ export default function CardNewsGridPage() {
 
           {topics.length > 0 && (
             <section className="rounded-2xl border border-gray-100 bg-white p-4">
-              <h2 className="mb-2 text-sm font-bold text-gray-900">주제 후보</h2>
+              <h2 className="mb-2 text-sm font-bold text-gray-900">
+                주제 후보
+              </h2>
               <ul className="space-y-2">
                 {topics.map((t, i) => (
                   <li key={i}>
@@ -124,7 +129,7 @@ export default function CardNewsGridPage() {
                       type="button"
                       onClick={() => generateItems(t.title)}
                       disabled={isLoading}
-                      className="w-full cursor-pointer rounded-xl border border-gray-200 p-3 text-left transition-colors hover:border-olive-light hover:bg-olive-light/5 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="hover:border-olive-light hover:bg-olive-light/5 w-full cursor-pointer rounded-xl border border-gray-200 p-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <div className="text-sm font-bold text-gray-900">
                         {t.title}
@@ -158,13 +163,17 @@ export default function CardNewsGridPage() {
                     </span>
                     <input
                       value={it.dishName}
-                      onChange={(e) => updateItem(i, { dishName: e.target.value })}
-                      className="w-28 shrink-0 rounded-xl border border-gray-200 px-2 py-2 text-sm text-gray-900 focus:border-olive-light focus:outline-none"
+                      onChange={(e) =>
+                        updateItem(i, { dishName: e.target.value })
+                      }
+                      className="focus:border-olive-light w-28 shrink-0 rounded-xl border border-gray-200 px-2 py-2 text-sm text-gray-900 focus:outline-none"
                     />
                     <input
                       value={it.caption}
-                      onChange={(e) => updateItem(i, { caption: e.target.value })}
-                      className="flex-1 rounded-xl border border-gray-200 px-2 py-2 text-sm text-gray-900 focus:border-olive-light focus:outline-none"
+                      onChange={(e) =>
+                        updateItem(i, { caption: e.target.value })
+                      }
+                      className="focus:border-olive-light flex-1 rounded-xl border border-gray-200 px-2 py-2 text-sm text-gray-900 focus:outline-none"
                     />
                   </div>
                 ))}
@@ -173,7 +182,7 @@ export default function CardNewsGridPage() {
                 type="button"
                 onClick={generateImage}
                 disabled={isLoading}
-                className="w-full cursor-pointer rounded-2xl bg-olive-light py-2.5 text-sm font-bold text-white transition-shadow hover:shadow-md disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                className="bg-olive-light w-full cursor-pointer rounded-2xl py-2.5 text-sm font-bold text-white transition-shadow hover:shadow-md disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
               >
                 {isLoading ? "생성 중…" : "이미지 생성"}
               </button>
@@ -184,20 +193,20 @@ export default function CardNewsGridPage() {
             <button
               type="button"
               onClick={handleCapture}
-              className="w-full cursor-pointer rounded-2xl border border-olive-light bg-white py-2.5 text-sm font-bold text-olive-light transition-colors hover:bg-olive-light/5"
+              className="border-olive-light text-olive-light hover:bg-olive-light/5 w-full cursor-pointer rounded-2xl border bg-white py-2.5 text-sm font-bold transition-colors"
             >
               카드 캡처 / 저장
             </button>
           )}
 
           {error && (
-            <pre className="whitespace-pre-wrap rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+            <pre className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs whitespace-pre-wrap text-red-700">
               {error}
             </pre>
           )}
         </aside>
 
-        <main className="overflow-auto rounded-2xl border border-gray-100 bg-beige p-6">
+        <main className="bg-beige overflow-auto rounded-2xl border border-gray-100 p-6">
           {imageUrl && items.length === 9 ? (
             <div className="origin-top-left scale-50">
               <GridTipCard

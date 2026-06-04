@@ -46,7 +46,7 @@ export type BatchPublishOptions = {
 
 export const runBatchGenerate = async (
   items: BatchGenerateItem[],
-  opts: BatchGenerateOptions = {},
+  opts: BatchGenerateOptions = {}
 ): Promise<void> => {
   const store = useBatchPublishStore.getState();
   for (const item of items) {
@@ -75,13 +75,13 @@ export const runBatchGenerate = async (
         const msg = e instanceof Error ? e.message : String(e);
         useBatchPublishStore.getState().setError(item.key, msg);
       }
-    }),
+    })
   );
 };
 
 export const runBatchPublish = async (
   items: BatchPublishItem[],
-  opts: BatchPublishOptions = {},
+  opts: BatchPublishOptions = {}
 ): Promise<void> => {
   const store = useBatchPublishStore.getState();
   for (const item of items) {
@@ -102,7 +102,7 @@ export const runBatchPublish = async (
         const msg = e instanceof Error ? e.message : String(e);
         useBatchPublishStore.getState().setError(item.key, msg);
       }
-    }),
+    })
   );
 
   if (succeeded.length === 0) return;

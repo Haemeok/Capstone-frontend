@@ -39,7 +39,7 @@ export const itemsGenSchema = z.object({
       dishName: z.string(),
       caption: z.string(),
       imagePrompt: z.string(),
-    }),
+    })
   ),
 });
 export type ItemsGen = z.infer<typeof itemsGenSchema>;
@@ -50,7 +50,7 @@ export const topicsSchema = z.object({
       z.object({
         title: z.string().min(1),
         concept: z.string().min(1),
-      }),
+      })
     )
     .min(1),
 });
@@ -65,7 +65,7 @@ export const itemsSchema = z.object({
         dishName: z.string().min(1),
         caption: z.string().min(1),
         imagePrompt: z.string().min(1),
-      }),
+      })
     )
     .length(GRID_COUNT),
 });

@@ -3,7 +3,11 @@ import { render, screen } from "@testing-library/react";
 import RecipeHeroSection from "../RecipeHeroSection";
 
 jest.mock("../../hooks/useRecipeImageCheck", () => ({
-  useRecipeImageCheck: ({ initialImageUrl }: { initialImageUrl: string | null }) => ({
+  useRecipeImageCheck: ({
+    initialImageUrl,
+  }: {
+    initialImageUrl: string | null;
+  }) => ({
     imageUrl: initialImageUrl,
     retryCount: 0,
     isChecking: false,

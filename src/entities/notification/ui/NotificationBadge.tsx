@@ -27,11 +27,7 @@ export const NotificationBadge = ({
 
   return (
     <span
-      className={`
-        inline-flex items-center justify-center
-        rounded-full bg-red-500 text-white font-medium
-        ${sizeClasses[size]} ${className}
-      `}
+      className={`inline-flex items-center justify-center rounded-full bg-red-500 font-medium text-white ${sizeClasses[size]} ${className} `}
       aria-label={`읽지 않은 알림 ${count}개`}
     >
       {displayCount}

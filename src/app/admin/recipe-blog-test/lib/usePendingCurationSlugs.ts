@@ -8,7 +8,10 @@ import { getQueueSnapshot } from "@/app/actions/getQueueSnapshot";
 
 const POLL_MS = 5_000;
 
-export const BLOG_QUEUE_SNAPSHOT_QUERY_KEY = ["admin", "blog-queue-snapshot"] as const;
+export const BLOG_QUEUE_SNAPSHOT_QUERY_KEY = [
+  "admin",
+  "blog-queue-snapshot",
+] as const;
 
 export const usePendingCurationSlugs = () => {
   const { data, isLoading } = useQuery({

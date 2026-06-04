@@ -86,10 +86,7 @@ const Phase2Absorb = ({ amount, onComplete }: Phase2AbsorbProps) => {
   }, [onComplete]);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative flex flex-col px-5 pb-4 pt-2"
-    >
+    <div ref={containerRef} className="relative flex flex-col px-5 pt-2 pb-4">
       {/* 금액 표시 */}
       <div className="mb-5 text-center">
         <div className="relative flex items-baseline justify-center gap-1">

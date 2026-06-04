@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { encryptTokenData } from "@/shared/lib/auth/crypto";
 import {
   authDiagLog,
   fingerprintFromSetCookies,
   generateDiagId,
 } from "@/shared/lib/auth/diag";
-import { encryptTokenData } from "@/shared/lib/auth/crypto";
 import { parseOAuthState } from "@/shared/lib/auth/oauthState";
 import { storeTempToken } from "@/shared/lib/auth/tempToken";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";

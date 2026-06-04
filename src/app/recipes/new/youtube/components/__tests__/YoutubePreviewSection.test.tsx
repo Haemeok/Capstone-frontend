@@ -63,10 +63,8 @@ jest.mock("motion/react", () => {
     motion: new Proxy(
       {},
       {
-        get:
-          () =>
-          (props: Record<string, unknown>) =>
-            React.createElement("div", cleanProps(props)),
+        get: () => (props: Record<string, unknown>) =>
+          React.createElement("div", cleanProps(props)),
       }
     ),
   };
@@ -77,7 +75,9 @@ jest.mock("@/shared/hooks/useAutoScrollOnMobile", () => ({
 }));
 
 jest.mock("@/shared/ui/ErrorBoundary", () => ({
-  ErrorBoundary: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  ErrorBoundary: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 
 jest.mock("@/shared/ui/shadcn/skeleton", () => ({

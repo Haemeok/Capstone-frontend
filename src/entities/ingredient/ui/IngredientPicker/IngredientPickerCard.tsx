@@ -40,7 +40,7 @@ const IngredientPickerCard = ({
         isAlreadyAdded ? "cursor-not-allowed opacity-50" : "cursor-pointer"
       )}
     >
-      <div className="relative aspect-square w-full overflow-hidden rounded-card bg-gray-100">
+      <div className="rounded-card relative aspect-square w-full overflow-hidden bg-gray-100">
         {ingredient.imageUrl && (
           <Image
             src={ingredient.imageUrl}

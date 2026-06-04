@@ -28,7 +28,7 @@ export const StreakModeToggle = ({
         type="button"
         onClick={() => handleModeChange("photo")}
         className={cn(
-          "flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap",
+          "flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors",
           mode === "photo"
             ? "bg-gray-200 text-gray-800"
             : "text-gray-500 hover:bg-gray-100"
@@ -47,7 +47,7 @@ export const StreakModeToggle = ({
         type="button"
         onClick={() => handleModeChange("streak")}
         className={cn(
-          "flex cursor-pointer items-center gap-1 rounded-xl px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap",
+          "flex cursor-pointer items-center gap-1 rounded-xl px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors",
           mode === "streak"
             ? "bg-gray-200 text-gray-800"
             : "text-gray-500 hover:bg-gray-100"

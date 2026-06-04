@@ -105,7 +105,7 @@ describe("parseAndValidateRecipeBlogBody", () => {
   it('bonusVariation 본문이 "none" 이면 null 로 파싱한다', () => {
     const noBonus = validBody.replace(
       /## bonusVariation\n[^#]+/,
-      "## bonusVariation\nnone\n\n",
+      "## bonusVariation\nnone\n\n"
     );
     const result = parseAndValidateRecipeBlogBody(noBonus, {
       expectedStepNumbers: [1, 2],
@@ -127,7 +127,7 @@ describe("parseAndValidateRecipeBlogBody", () => {
   it("kitchenTips 가 1개여도 통과한다 — 개수 bound 없음", () => {
     const single = validBody.replace(
       /## kitchenTips\n[^#]+/,
-      `## kitchenTips\n- ${longText(60)}\n\n`,
+      `## kitchenTips\n- ${longText(60)}\n\n`
     );
     const result = parseAndValidateRecipeBlogBody(single, {
       expectedStepNumbers: [1, 2],
@@ -141,7 +141,7 @@ describe("parseAndValidateRecipeBlogBody", () => {
   it("kitchenTips 섹션은 있는데 불릿이 하나도 없으면 에러 (포맷 힌트)", () => {
     const noBullets = validBody.replace(
       /## kitchenTips\n[^#]+/,
-      "## kitchenTips\n그냥 본문 한 줄.\n\n",
+      "## kitchenTips\n그냥 본문 한 줄.\n\n"
     );
     const result = parseAndValidateRecipeBlogBody(noBullets, {
       expectedStepNumbers: [1, 2],
@@ -155,7 +155,11 @@ describe("parseAndValidateRecipeBlogBody", () => {
 
 describe("synthesizeAlts", () => {
   it("step-N 슬롯은 '제목 단계 N' 패턴으로 합성", () => {
-    const alts = synthesizeAlts("콩나물국", ["step-1", "step-2", "final-plated"]);
+    const alts = synthesizeAlts("콩나물국", [
+      "step-1",
+      "step-2",
+      "final-plated",
+    ]);
     expect(alts["step-1"]).toBe("콩나물국 단계 1");
     expect(alts["step-2"]).toBe("콩나물국 단계 2");
     expect(alts["final-plated"]).toBe("콩나물국 완성");

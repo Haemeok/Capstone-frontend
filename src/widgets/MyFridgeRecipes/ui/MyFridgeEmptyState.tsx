@@ -18,12 +18,11 @@ const MyFridgeEmptyState = () => {
         </h3>
         <p className="text-sm text-gray-500">
           냉장고에 재료를 추가하면
-          <br />
-          더 많은 레시피를 찾을 수 있어요!
+          <br />더 많은 레시피를 찾을 수 있어요!
         </p>
       </div>
       <Link href="/ingredients/new">
-        <Button className="mt-2 h-12 cursor-pointer rounded-xl bg-olive-light px-6 font-medium text-white transition-colors active:bg-olive-light/90">
+        <Button className="bg-olive-light active:bg-olive-light/90 mt-2 h-12 cursor-pointer rounded-xl px-6 font-medium text-white transition-colors">
           재료 추가하러 가기
         </Button>
       </Link>

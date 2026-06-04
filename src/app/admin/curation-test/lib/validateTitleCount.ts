@@ -35,13 +35,13 @@ export const validateTitleCount = ({
   const h1Mismatches = findMismatchedNumbers(h1, expected);
   if (h1Mismatches.length > 0) {
     errors.push(
-      `h1 에 본문 레시피 개수와 다른 숫자가 등장: ${h1Mismatches.join(", ")} (expected ${expected})`,
+      `h1 에 본문 레시피 개수와 다른 숫자가 등장: ${h1Mismatches.join(", ")} (expected ${expected})`
     );
   }
   const dekMismatches = findMismatchedNumbers(dek, expected);
   if (dekMismatches.length > 0) {
     errors.push(
-      `dek 에 본문 레시피 개수와 다른 숫자가 등장: ${dekMismatches.join(", ")} (expected ${expected})`,
+      `dek 에 본문 레시피 개수와 다른 숫자가 등장: ${dekMismatches.join(", ")} (expected ${expected})`
     );
   }
   return errors.length === 0 ? { ok: true } : { ok: false, errors };

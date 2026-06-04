@@ -35,9 +35,7 @@ export const BlogPostSchema = z.object({
           .describe(
             "step 본문 2~4문장. (a) 동작·시간·온도·감각 디테일 + (b) 실패 지점이 있다면 *왜 그런지 근거와 함께* 한 문장. 평균치 묘사 금지. 재료 본성에서 오는 노트가 들어갈 수 있음."
           ),
-        imageSlot: z
-          .string()
-          .describe("이미지 슬롯 키. 예: 'step-1'."),
+        imageSlot: z.string().describe("이미지 슬롯 키. 예: 'step-1'."),
       })
     )
     .min(1),

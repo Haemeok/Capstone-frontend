@@ -1,7 +1,8 @@
 import { InfiniteData } from "@tanstack/react-query";
 
-import type { DetailedRecipeGridItem } from "@/entities/recipe";
 import { BaseQueryParams, PageResponse } from "@/shared/api/types";
+
+import type { DetailedRecipeGridItem } from "@/entities/recipe";
 
 export type IngredientItem = {
   id: string;

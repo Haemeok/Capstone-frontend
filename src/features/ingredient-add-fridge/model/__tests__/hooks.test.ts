@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   QueryClient,
   QueryClientProvider,
@@ -6,11 +7,15 @@ import {
 } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 
-import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 import { getNextPageParam } from "@/shared/lib/utils";
 
+import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
+
 import * as api from "../api";
-import { useAddIngredientBulkMutation, useAddIngredientMutation } from "../hooks";
+import {
+  useAddIngredientBulkMutation,
+  useAddIngredientMutation,
+} from "../hooks";
 
 jest.mock("../api");
 
@@ -232,7 +237,10 @@ describe("add error paths roll back the optimistic inFridge change", () => {
   it("single add reverts inFridge to false on failure", async () => {
     (api.addIngredient as jest.Mock).mockRejectedValue(new Error("fail"));
     const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
     });
     seedBrowse(queryClient);
 
@@ -255,7 +263,10 @@ describe("add error paths roll back the optimistic inFridge change", () => {
   it("bulk add reverts inFridge to false on failure", async () => {
     (api.addIngredientBulk as jest.Mock).mockRejectedValue(new Error("fail"));
     const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
     });
     seedBrowse(queryClient);
 
@@ -269,6 +280,8 @@ describe("add error paths roll back the optimistic inFridge change", () => {
     const data = queryClient.getQueryData<{
       pages: { content: { inFridge: boolean }[] }[];
     }>(INGREDIENT_QUERY_KEYS.browse("전체", ""));
-    expect(data?.pages[0].content.every((i) => i.inFridge === false)).toBe(true);
+    expect(data?.pages[0].content.every((i) => i.inFridge === false)).toBe(
+      true
+    );
   });
 });

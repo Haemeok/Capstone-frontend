@@ -12,6 +12,9 @@ export const YoutubeExtractionPrompter = () => {
   }
 
   return (
-    <YoutubeExtractionDrawer isOpen={shouldShowPrompt} onOpenChange={hidePrompt} />
+    <YoutubeExtractionDrawer
+      isOpen={shouldShowPrompt}
+      onOpenChange={hidePrompt}
+    />
   );
 };

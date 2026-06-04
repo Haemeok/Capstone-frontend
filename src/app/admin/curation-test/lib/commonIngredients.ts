@@ -1,4 +1,3 @@
-
 type IngredientLite = {
   id?: string;
   name: string;
@@ -8,9 +7,7 @@ type RecipeLite = {
   ingredients?: IngredientLite[];
 };
 
-export const findCommonIngredientNames = (
-  recipes: RecipeLite[],
-): string[] => {
+export const findCommonIngredientNames = (recipes: RecipeLite[]): string[] => {
   if (recipes.length === 0) return [];
 
   // id 기반 교차. id가 없으면 name으로 fallback.

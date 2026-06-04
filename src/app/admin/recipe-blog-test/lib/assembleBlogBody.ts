@@ -18,7 +18,7 @@ export const assembleBlogBody = (
   parsed: ParsedBlogBody,
   recipes: StaticRecipe[],
   tone: BlogTone,
-  slug: string,
+  slug: string
 ): string => {
   const blocks: string[] = [];
 

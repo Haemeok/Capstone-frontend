@@ -7,7 +7,7 @@ import type {
 } from "./api.server";
 
 export const getCurationArticles = async (
-  params: CurationArticleListParams,
+  params: CurationArticleListParams
 ): Promise<CurationArticleListResponse> => {
   return api.get<CurationArticleListResponse>(END_POINTS.CURATION_ARTICLES, {
     params: {

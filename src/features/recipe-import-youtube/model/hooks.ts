@@ -4,10 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getYoutubeMeta } from "./actions";
 import { checkYoutubeDuplicate } from "./api";
-import {
-  YoutubeDuplicateCheckResponse,
-  YoutubeMeta,
-} from "./types";
+import { YoutubeDuplicateCheckResponse, YoutubeMeta } from "./types";
 
 export const useYoutubeMeta = (url: string | null) => {
   return useQuery<YoutubeMeta | null>({

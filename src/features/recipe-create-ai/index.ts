@@ -1,8 +1,5 @@
-export {
-  createAIRecipeJobV2,
-  getAIRecipeJobStatus,
-} from "./model/api";
-export type { AIModel,AIRecipeGenerationState } from "./model/store";
+export { createAIRecipeJobV2, getAIRecipeJobStatus } from "./model/api";
+export type { AIModel, AIRecipeGenerationState } from "./model/store";
 export {
   useAIRecipeStore,
   useAIRecipeStoreV2,

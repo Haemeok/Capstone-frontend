@@ -1,4 +1,4 @@
-import { Alegreya, Noto_Serif_KR,Roboto_Mono } from "next/font/google";
+import { Alegreya, Noto_Serif_KR, Roboto_Mono } from "next/font/google";
 
 export const robotoMono = Roboto_Mono({
   subsets: ["latin"],

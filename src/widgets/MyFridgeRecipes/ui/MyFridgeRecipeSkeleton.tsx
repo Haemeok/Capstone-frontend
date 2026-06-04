@@ -4,9 +4,7 @@ type MyFridgeRecipeSkeletonProps = {
   count?: number;
 };
 
-const MyFridgeRecipeSkeleton = ({
-  count = 3,
-}: MyFridgeRecipeSkeletonProps) => {
+const MyFridgeRecipeSkeleton = ({ count = 3 }: MyFridgeRecipeSkeletonProps) => {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (

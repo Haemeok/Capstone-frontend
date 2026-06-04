@@ -31,7 +31,11 @@ describe("buildPrompt (default template)", () => {
   it("translates Korean staple ingredient names to English hints", () => {
     const prompt = buildPrompt({
       title: "떡순",
-      ingredients: [{ name: "매생이" }, { name: "순대" }, { name: "떡볶이 떡" }],
+      ingredients: [
+        { name: "매생이" },
+        { name: "순대" },
+        { name: "떡볶이 떡" },
+      ],
     });
     expect(prompt).toContain("fine silky green seaweed (Maesaengi)");
     expect(prompt).toContain("Korean blood sausage (Sundae)");
@@ -57,9 +61,15 @@ describe("buildPrompt (default template)", () => {
 
   it("picks one of the defined angle/lighting/background options", () => {
     const prompt = buildPrompt({ title: "x" });
-    expect(prompt).toMatch(/\*\*Angle:\*\* (High-angle POV|Casual top-down|Slightly tilted|Hand-held)/);
-    expect(prompt).toMatch(/\*\*Lighting:\*\* (Natural morning|Warm cozy|Slightly direct|Soft afternoon)/);
-    expect(prompt).toMatch(/\*\*Background:\*\* (Clean white marble|Warm light beige|Rustic dark|Bright white)/);
+    expect(prompt).toMatch(
+      /\*\*Angle:\*\* (High-angle POV|Casual top-down|Slightly tilted|Hand-held)/
+    );
+    expect(prompt).toMatch(
+      /\*\*Lighting:\*\* (Natural morning|Warm cozy|Slightly direct|Soft afternoon)/
+    );
+    expect(prompt).toMatch(
+      /\*\*Background:\*\* (Clean white marble|Warm light beige|Rustic dark|Bright white)/
+    );
   });
 
   it("does not leak template placeholders into the output", () => {
@@ -75,7 +85,10 @@ describe("buildPrompt (fine dining branch)", () => {
       title: "Truffle Risotto",
       description: "Umami-forward risotto with shaved truffle",
       fineDiningInfo: {
-        plating: { vessel: "Handmade ceramic bowl", guide: "Stack risotto, top with truffle" },
+        plating: {
+          vessel: "Handmade ceramic bowl",
+          guide: "Stack risotto, top with truffle",
+        },
         components: [
           { role: "Main", name: "Risotto", description: "Creamy" },
           { role: "Garnish", name: "Truffle", description: "Shaved" },
@@ -86,7 +99,9 @@ describe("buildPrompt (fine dining branch)", () => {
     expect(prompt).toContain("Michelin star style plating");
     expect(prompt).toContain("Title: Truffle Risotto");
     expect(prompt).toContain("Vessel Type: Handmade ceramic bowl");
-    expect(prompt).toContain("Plating Instructions: Stack risotto, top with truffle");
+    expect(prompt).toContain(
+      "Plating Instructions: Stack risotto, top with truffle"
+    );
     expect(prompt).toContain("Main: Risotto: Creamy");
     expect(prompt).toContain("Garnish: Truffle: Shaved");
     expect(prompt).not.toContain("ABSOLUTE NO-TEXT RULE"); // default template only

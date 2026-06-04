@@ -58,7 +58,7 @@ const NutritionTable = ({
                 type="button"
                 onClick={handleDecrement}
                 aria-label="인분 줄이기"
-                className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors hover:bg-gray-300"
               >
                 -
               </button>
@@ -71,7 +71,7 @@ const NutritionTable = ({
                 type="button"
                 onClick={handleIncrement}
                 aria-label="인분 늘리기"
-                className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors cursor-pointer hover:bg-gray-300"
+                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-sm text-gray-600 transition-colors hover:bg-gray-300"
               >
                 +
               </button>

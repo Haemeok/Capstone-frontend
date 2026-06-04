@@ -26,7 +26,8 @@ const StaticRecipeSlide = ({
   const recipesWithStatus: DetailedRecipeGridItemType[] = staticRecipes.map(
     (recipe: StaticDetailedRecipeGridItem) => ({
       ...recipe,
-      favoriteByCurrentUser: statusData?.[recipe.id]?.favoriteByCurrentUser ?? false,
+      favoriteByCurrentUser:
+        statusData?.[recipe.id]?.favoriteByCurrentUser ?? false,
     })
   );
 

@@ -1,6 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
 
-import { isAppWebView, requestNotificationPermission } from "@/shared/lib/bridge";
+import {
+  isAppWebView,
+  requestNotificationPermission,
+} from "@/shared/lib/bridge";
 import { storage } from "@/shared/lib/storage";
 
 import { DISMISS_DURATION_MS, NOTIFICATION_STORAGE_KEYS } from "../constants";
@@ -53,7 +56,9 @@ describe("useNotificationPermissionTrigger", () => {
       });
 
       expect(shouldProceed).toBe(true);
-      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(false);
+      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(
+        false
+      );
     });
 
     it("이미 권한이 granted면 true를 반환해야 함", () => {
@@ -68,7 +73,9 @@ describe("useNotificationPermissionTrigger", () => {
       });
 
       expect(shouldProceed).toBe(true);
-      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(false);
+      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(
+        false
+      );
     });
 
     it("30일 숨김 기간 내면 true를 반환해야 함", () => {
@@ -84,7 +91,9 @@ describe("useNotificationPermissionTrigger", () => {
       });
 
       expect(shouldProceed).toBe(true);
-      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(false);
+      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(
+        false
+      );
     });
 
     it("세션 내 이미 Drawer를 표시했으면 true를 반환해야 함", () => {
@@ -103,7 +112,9 @@ describe("useNotificationPermissionTrigger", () => {
       });
 
       expect(shouldProceed).toBe(true);
-      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(false);
+      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(
+        false
+      );
     });
 
     it("status가 unknown이면 true를 반환해야 함 (앱이 먼저 상태 보내야 함)", () => {
@@ -122,7 +133,9 @@ describe("useNotificationPermissionTrigger", () => {
       });
 
       expect(shouldProceed).toBe(true);
-      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(false);
+      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(
+        false
+      );
     });
 
     it("status가 not_determined이고 모든 조건 통과 시 false를 반환하고 Drawer를 열어야 함", () => {
@@ -196,7 +209,9 @@ describe("useNotificationPermissionActions", () => {
         result.current.handleAccept();
       });
 
-      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(false);
+      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(
+        false
+      );
     });
   });
 
@@ -232,7 +247,9 @@ describe("useNotificationPermissionActions", () => {
         result.current.handleDecline();
       });
 
-      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(false);
+      expect(useNotificationPermissionStore.getState().isDrawerOpen).toBe(
+        false
+      );
     });
   });
 });

@@ -118,7 +118,7 @@ const DiscussionPage = () => {
                     <div ref={ref} className="h-10">
                       {isFetching && (
                         <div className="flex items-center justify-center gap-2 p-4">
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-olive-light border-t-transparent" />
+                          <div className="border-olive-light h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
                           <p className="text-sm text-gray-500">
                             답글 불러오는 중
                           </p>
@@ -150,10 +150,7 @@ const DiscussionPage = () => {
 
         {parentComment && (
           <>
-            <CommentInput
-              author={parentComment.author}
-              commentId={commentId}
-            />
+            <CommentInput author={parentComment.author} commentId={commentId} />
             <CommentInputModal
               author={parentComment.author}
               commentId={commentId}

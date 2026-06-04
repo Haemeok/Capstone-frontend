@@ -76,7 +76,7 @@ export const generateCurationBody = async ({
     logLLMError("solar-body", e);
     throw new CurationError(
       "LLM_ERROR",
-      `Solar Body 호출 실패: ${(e as Error).message}`,
+      `Solar Body 호출 실패: ${(e as Error).message}`
     );
   }
 
@@ -105,7 +105,7 @@ export const generateCurationBody = async ({
       logLLMError(`slot-inserter.attempt-${attempt + 1}`, e);
       throw new CurationError(
         "LLM_ERROR",
-        `Slot inserter 호출 실패: ${(e as Error).message}`,
+        `Slot inserter 호출 실패: ${(e as Error).message}`
       );
     }
 
@@ -117,7 +117,7 @@ export const generateCurationBody = async ({
     }
     lastErrors = v.errors;
     console.warn(
-      `[curation hybrid 3b] attempt ${attempt + 1} failed:\n${v.errors.map((e) => `  - ${e}`).join("\n")}\n  rawMarkdown(first 400): ${normalized.slice(0, 400)}`,
+      `[curation hybrid 3b] attempt ${attempt + 1} failed:\n${v.errors.map((e) => `  - ${e}`).join("\n")}\n  rawMarkdown(first 400): ${normalized.slice(0, 400)}`
     );
     if (attempt === MAX_BODY_RETRIES) {
       throw new CurationError(
@@ -127,7 +127,7 @@ export const generateCurationBody = async ({
           errors: v.errors,
           solarRawMarkdown: solarRawMd,
           insertedMarkdown: normalized,
-        },
+        }
       );
     }
   }

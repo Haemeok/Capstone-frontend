@@ -10,16 +10,14 @@ describe("coverImageUrlFromKey", () => {
   });
 
   it("'images/articles/...' 키를 절대 URL로 변환", () => {
-    expect(
-      coverImageUrlFromKey("images/articles/7/abc.webp"),
-    ).toBe(
-      "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/articles/7/abc.webp",
+    expect(coverImageUrlFromKey("images/articles/7/abc.webp")).toBe(
+      "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/articles/7/abc.webp"
     );
   });
 
   it("'images/'로 시작하지 않는 키도 그대로 prepend", () => {
     expect(coverImageUrlFromKey("recipes/x.webp")).toBe(
-      "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/x.webp",
+      "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/recipes/x.webp"
     );
   });
 

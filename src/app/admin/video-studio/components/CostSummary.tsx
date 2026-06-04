@@ -24,26 +24,29 @@ export const CostSummary = ({ history, onReset }: Props) => {
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-sm">
-        <div className="rounded-lg bg-beige-light/40 p-2">
+        <div className="bg-beige-light/40 rounded-lg p-2">
           <div className="text-xs text-gray-500">이미지</div>
           <div className="font-medium text-gray-900">
             {history.image.count}건 · {fmt(history.image.totalCost)}
           </div>
         </div>
-        <div className="rounded-lg bg-beige-light/40 p-2">
+        <div className="bg-beige-light/40 rounded-lg p-2">
           <div className="text-xs text-gray-500">영상</div>
           <div className="font-medium text-gray-900">
             {history.video.count}건 · {fmt(history.video.totalCost)}
           </div>
         </div>
-        <div className="rounded-lg bg-olive-light/15 p-2">
+        <div className="bg-olive-light/15 rounded-lg p-2">
           <div className="text-xs text-gray-500">총합</div>
-          <div className="font-bold text-gray-900">{fmt(history.totalCost)}</div>
+          <div className="font-bold text-gray-900">
+            {fmt(history.totalCost)}
+          </div>
         </div>
       </div>
 
       <div className="mt-2 text-[10px] text-gray-400">
-        실제 청구액과 ±20% 정도 오차 가능. 정확한 금액은 OpenAI / BytePlus 콘솔 확인.
+        실제 청구액과 ±20% 정도 오차 가능. 정확한 금액은 OpenAI / BytePlus 콘솔
+        확인.
       </div>
     </div>
   );

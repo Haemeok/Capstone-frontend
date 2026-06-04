@@ -6,9 +6,17 @@ import path from "node:path";
 
 import { requireAdminAction } from "@/shared/lib/admin-guard";
 
-const DEFAULT_QUEUE_DIR = path.join(os.homedir(), "Desktop", "recipio-publish-queue");
+const DEFAULT_QUEUE_DIR = path.join(
+  os.homedir(),
+  "Desktop",
+  "recipio-publish-queue"
+);
 
-export type DeleteQueueItemResult = { ok: boolean; reason?: string; trashedPath?: string };
+export type DeleteQueueItemResult = {
+  ok: boolean;
+  reason?: string;
+  trashedPath?: string;
+};
 
 export const deleteQueueItem = async (input: {
   name: string;
@@ -16,10 +24,16 @@ export const deleteQueueItem = async (input: {
   await requireAdminAction();
   const { name } = input;
   // path traversal 차단 — basename 만 허용.
-  if (!name || name !== path.basename(name) || name.includes("..") || name.startsWith(".")) {
+  if (
+    !name ||
+    name !== path.basename(name) ||
+    name.includes("..") ||
+    name.startsWith(".")
+  ) {
     return { ok: false, reason: "invalid name" };
   }
-  const queueDir = process.env.BLOG_PUBLISH_QUEUE_DIR?.trim() || DEFAULT_QUEUE_DIR;
+  const queueDir =
+    process.env.BLOG_PUBLISH_QUEUE_DIR?.trim() || DEFAULT_QUEUE_DIR;
   const src = path.join(queueDir, "pending", name);
   try {
     if (!fs.statSync(src).isDirectory()) {

@@ -26,7 +26,7 @@ const recipe = (over: Partial<StaticRecipe> = {}) =>
 describe("resolveCoverUrl", () => {
   it("recipes 배열에 살아있는 imageUrl이 있으면 그것을 반환", () => {
     expect(resolveCoverUrl("recipes/abc/img.webp", [recipe()])).toBe(
-      "https://cdn.example/recipes/a1.webp",
+      "https://cdn.example/recipes/a1.webp"
     );
   });
 

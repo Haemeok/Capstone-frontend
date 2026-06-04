@@ -29,12 +29,11 @@ import { handleS3Upload } from "@/shared/api/file";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { postRecipe } from "@/entities/recipe/model/api";
-
-import { useToastStore } from "@/widgets/Toast/model/store";
-
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { useSubmitRemix } from "@/features/recipe-create/model/hooks/useSubmitRemix";
+
+import { useToastStore } from "@/widgets/Toast/model/store";
 
 function makeQC() {
   return new QueryClient({
@@ -48,7 +47,9 @@ function renderUseSubmitRemix() {
   (useRouter as jest.Mock).mockReturnValue(mockRouter);
 
   const mockAddToast = jest.fn();
-  (useToastStore as unknown as jest.Mock).mockReturnValue({ addToast: mockAddToast });
+  (useToastStore as unknown as jest.Mock).mockReturnValue({
+    addToast: mockAddToast,
+  });
 
   const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -85,7 +86,7 @@ describe("useSubmitRemix", () => {
           fileInfos: [],
           fileObjects: [],
         },
-        { onSuccess, onError },
+        { onSuccess, onError }
       );
     });
 
@@ -97,7 +98,7 @@ describe("useSubmitRemix", () => {
       expect(handleS3Upload).not.toHaveBeenCalled();
       expect(triggerHaptic).toHaveBeenCalledWith("Success");
       expect(mockAddToast).toHaveBeenCalledWith(
-        expect.objectContaining({ variant: "success" }),
+        expect.objectContaining({ variant: "success" })
       );
       expect(mockRouter.replace).toHaveBeenCalledWith("/recipes/new-abc");
       expect(onSuccess).toHaveBeenCalled();
@@ -107,11 +108,18 @@ describe("useSubmitRemix", () => {
 
   it("uploads to S3 when presigned uploads are returned", async () => {
     const uploads = [{ url: "https://s3.example.com/upload", key: "k1" }];
-    (postRecipe as jest.Mock).mockResolvedValue(makePresign("new-xyz", uploads));
+    (postRecipe as jest.Mock).mockResolvedValue(
+      makePresign("new-xyz", uploads)
+    );
     (handleS3Upload as jest.Mock).mockResolvedValue(undefined);
 
-    const mockFileObject = { file: new File(["data"], "img.png"), type: "main" as const };
-    const fileInfos = [{ contentType: "image/webp" as const, type: "main" as const }];
+    const mockFileObject = {
+      file: new File(["data"], "img.png"),
+      type: "main" as const,
+    };
+    const fileInfos = [
+      { contentType: "image/webp" as const, type: "main" as const },
+    ];
 
     const { submitRemix, mockRouter } = renderUseSubmitRemix();
 
@@ -123,7 +131,7 @@ describe("useSubmitRemix", () => {
           fileInfos,
           fileObjects: [mockFileObject],
         },
-        {},
+        {}
       );
     });
 
@@ -138,7 +146,10 @@ describe("useSubmitRemix", () => {
   });
 
   it("redirects to origin with error toast on 409 RECIPE_REMIX_ALREADY_EXISTS (code 211)", async () => {
-    const apiError = new ApiError(409, "Conflict", { code: 211, message: "already cloned" });
+    const apiError = new ApiError(409, "Conflict", {
+      code: 211,
+      message: "already cloned",
+    });
     (postRecipe as jest.Mock).mockRejectedValue(apiError);
 
     const { submitRemix, mockRouter, mockAddToast } = renderUseSubmitRemix();
@@ -152,13 +163,13 @@ describe("useSubmitRemix", () => {
           fileInfos: [],
           fileObjects: [],
         },
-        { onError },
+        { onError }
       );
     });
 
     await waitFor(() => {
       expect(mockAddToast).toHaveBeenCalledWith(
-        expect.objectContaining({ variant: "error" }),
+        expect.objectContaining({ variant: "error" })
       );
       expect(mockRouter.replace).toHaveBeenCalledWith("/recipes/ORIGIN_ID");
       expect(onError).toHaveBeenCalled();
@@ -166,7 +177,10 @@ describe("useSubmitRemix", () => {
   });
 
   it("redirects to origin with error toast on 403 RECIPE_REMIX_NOT_ALLOWED (code 212)", async () => {
-    const apiError = new ApiError(403, "Forbidden", { code: 212, message: "not allowed" });
+    const apiError = new ApiError(403, "Forbidden", {
+      code: 212,
+      message: "not allowed",
+    });
     (postRecipe as jest.Mock).mockRejectedValue(apiError);
 
     const { submitRemix, mockRouter, mockAddToast } = renderUseSubmitRemix();
@@ -180,13 +194,13 @@ describe("useSubmitRemix", () => {
           fileInfos: [],
           fileObjects: [],
         },
-        { onError },
+        { onError }
       );
     });
 
     await waitFor(() => {
       expect(mockAddToast).toHaveBeenCalledWith(
-        expect.objectContaining({ variant: "error" }),
+        expect.objectContaining({ variant: "error" })
       );
       expect(mockRouter.replace).toHaveBeenCalledWith("/recipes/ORIGIN_ID");
       expect(onError).toHaveBeenCalled();
@@ -206,13 +220,13 @@ describe("useSubmitRemix", () => {
           fileInfos: [],
           fileObjects: [],
         },
-        {},
+        {}
       );
     });
 
     await waitFor(() => {
       expect(mockAddToast).toHaveBeenCalledWith(
-        expect.objectContaining({ variant: "error" }),
+        expect.objectContaining({ variant: "error" })
       );
       expect(mockRouter.replace).not.toHaveBeenCalled();
     });

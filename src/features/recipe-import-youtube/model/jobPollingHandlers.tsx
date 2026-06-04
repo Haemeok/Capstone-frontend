@@ -132,20 +132,14 @@ export const recoverZombieJob = async (
   deps.storeActions.incrementRetryCount(job.idempotencyKey);
 
   try {
-    const response = await createExtractionJobV2(
-      job.url,
-      job.idempotencyKey
-    );
+    const response = await createExtractionJobV2(job.url, job.idempotencyKey);
     deps.storeActions.setJobId(job.idempotencyKey, response.jobId);
   } catch {
     // 재시도도 실패하면 다음 폴링 사이클에서 다시 시도
   }
 };
 
-export const pollSingleJob = async (
-  deps: JobPollingDeps,
-  job: ActiveJob
-) => {
+export const pollSingleJob = async (deps: JobPollingDeps, job: ActiveJob) => {
   if (!job.jobId) {
     const timeSinceStart = Date.now() - job.startTime;
     if (timeSinceStart > JOB_POLLING_CONFIG.ZOMBIE_THRESHOLD_MS) {
@@ -166,12 +160,7 @@ export const pollSingleJob = async (
         completePollingJob(deps, job.idempotencyKey, update.resultRecipeId);
         return;
       case "failed":
-        failPollingJob(
-          deps,
-          job.idempotencyKey,
-          update.code,
-          update.message
-        );
+        failPollingJob(deps, job.idempotencyKey, update.code, update.message);
         return;
       case "polling":
         deps.storeActions.updateJobProgress(

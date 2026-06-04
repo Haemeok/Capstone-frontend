@@ -1,5 +1,6 @@
-import { Lightbulb } from "lucide-react";
 import { ReactNode } from "react";
+
+import { Lightbulb } from "lucide-react";
 
 type RecipeCookingTipsSectionProps = {
   tips: string | undefined;
@@ -13,17 +14,17 @@ export default function RecipeCookingTipsSection({
   if (!tips) return null;
 
   return (
-    <section className="my-6 rounded-card border border-olive-light/20 bg-olive-light/5 p-4">
+    <section className="rounded-card border-olive-light/20 bg-olive-light/5 my-6 border p-4">
       <div className="flex items-start gap-3">
-        <Lightbulb className="h-6 w-6 flex-shrink-0 text-olive-dark" />
+        <Lightbulb className="text-olive-dark h-6 w-6 flex-shrink-0" />
         <div className="flex flex-1 flex-col gap-1">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-sm font-bold text-olive-dark">
+            <span className="text-olive-dark text-sm font-bold">
               Chef's Tips
             </span>
             {headerExtra}
           </div>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+          <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-700">
             {tips}
           </p>
         </div>

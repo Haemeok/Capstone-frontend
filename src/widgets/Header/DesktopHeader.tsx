@@ -13,10 +13,9 @@ import { Image } from "@/shared/ui/image/Image";
 
 import { useUserStore } from "@/entities/user";
 
-const LoginDialog = dynamic(
-  () => import("@/features/auth/ui/LoginDialog"),
-  { ssr: false }
-);
+const LoginDialog = dynamic(() => import("@/features/auth/ui/LoginDialog"), {
+  ssr: false,
+});
 
 import NotificationButton from "./NotificationButton";
 
@@ -25,7 +24,7 @@ const NAV_LINKS = [
   { href: "/search", label: "레시피 검색" },
   { href: "/ingredients", label: "냉장고" },
   { href: "/recipes/new/ai", label: "AI 레시피" },
-  {href: "/recipes/new/youtube", label: "유튜브 레시피"}
+  { href: "/recipes/new/youtube", label: "유튜브 레시피" },
 ] as const;
 
 const DesktopHeader = () => {

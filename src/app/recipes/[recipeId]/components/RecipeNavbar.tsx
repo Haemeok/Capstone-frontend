@@ -40,9 +40,7 @@ export default function RecipeNavbar({
       titleThreshold={0.7}
       textColorThreshold={0.5}
       shadowThreshold={0.8}
-      leftComponent={
-        <PrevButton showOnDesktop={true} onClick={handleBack} />
-      }
+      leftComponent={<PrevButton showOnDesktop={true} onClick={handleBack} />}
       rightComponent={
         <RecipeNavBarButtons
           recipeId={recipeId}

@@ -42,7 +42,7 @@ const GlobalAppUpdateDrawer = () => {
     if (window.localStorage.getItem(APP_UPDATE_DISMISS_KEY)) return;
 
     const isExistingUser = EXISTING_USER_MARKER_KEYS.some((key) =>
-      window.localStorage.getItem(key),
+      window.localStorage.getItem(key)
     );
 
     if (!isExistingUser) {
@@ -70,7 +70,7 @@ const GlobalAppUpdateDrawer = () => {
       <DrawerContent className="flex flex-col overflow-hidden border-0 bg-white shadow-xl [&>div:first-child]:hidden">
         <DrawerTitle className="sr-only">새 버전 안내</DrawerTitle>
 
-        <div className="flex-1 min-h-0 overflow-y-auto px-6 pt-10">
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 pt-10">
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-3">
               <Image
@@ -81,7 +81,9 @@ const GlobalAppUpdateDrawer = () => {
                 height={64}
                 lazy={false}
               />
-              <span className="text-3xl font-bold text-gray-900">Recipi&apos;O</span>
+              <span className="text-3xl font-bold text-gray-900">
+                Recipi&apos;O
+              </span>
             </div>
 
             <div className="mt-6 text-center">

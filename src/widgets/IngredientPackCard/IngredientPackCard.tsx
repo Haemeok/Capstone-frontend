@@ -44,7 +44,7 @@ const IngredientPackCard = ({
 
       <div className="mt-3 px-0.5">
         <div className="flex items-start gap-2">
-          <h3 className="line-clamp-1 flex-1 text-sm font-semibold leading-snug text-gray-900">
+          <h3 className="line-clamp-1 flex-1 text-sm leading-snug font-semibold text-gray-900">
             {pack.name}
           </h3>
           {allOwned && (

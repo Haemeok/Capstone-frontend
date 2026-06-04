@@ -9,14 +9,18 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 
 const PRICE_ICONS: Record<string, React.ReactNode> = {
-  "under-5000": <Coins size={32} strokeWidth={1.5} className="text-amber-600" />,
+  "under-5000": (
+    <Coins size={32} strokeWidth={1.5} className="text-amber-600" />
+  ),
   "under-10000": (
     <div className="flex -space-x-2">
       <Coins size={28} strokeWidth={1.5} className="text-slate-400" />
       <Coins size={28} strokeWidth={1.5} className="text-slate-500" />
     </div>
   ),
-  "under-20000": <Banknote size={36} strokeWidth={1.5} className="text-emerald-600" />,
+  "under-20000": (
+    <Banknote size={36} strokeWidth={1.5} className="text-emerald-600" />
+  ),
   premium: <Gem size={32} strokeWidth={1.5} className="text-violet-500" />,
 };
 

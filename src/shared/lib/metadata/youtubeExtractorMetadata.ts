@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { SEO_CONSTANTS } from "./constants";
 
-
 const YOUTUBE_EXTRACTOR_URL = `${SEO_CONSTANTS.SITE_URL}/recipes/new/youtube`;
 const YOUTUBE_EXTRACTOR_IMAGE = `${SEO_CONSTANTS.SITE_URL}/web-app-manifest-512x512.png`;
 
@@ -53,7 +52,8 @@ const createWebApplicationStructuredData = () => ({
     price: "0",
     priceCurrency: "KRW",
   },
-  description: "유튜브 요리 영상에서 AI가 자동으로 레시피를 추출하고 영양 성분과 재료 가격을 분석합니다. 무료로 사용하세요!",
+  description:
+    "유튜브 요리 영상에서 AI가 자동으로 레시피를 추출하고 영양 성분과 재료 가격을 분석합니다. 무료로 사용하세요!",
   url: YOUTUBE_EXTRACTOR_URL,
   provider: {
     "@type": "Organization",
@@ -75,7 +75,8 @@ const createHowToStructuredData = () => ({
   "@context": "https://schema.org",
   "@type": "HowTo",
   name: "유튜브 요리 영상을 레시피로 변환하는 방법",
-  description: "유튜브 요리 영상 링크만 있으면 AI가 자동으로 레시피를 추출하고 분석합니다.",
+  description:
+    "유튜브 요리 영상 링크만 있으면 AI가 자동으로 레시피를 추출하고 분석합니다.",
   totalTime: "PT2M",
   estimatedCost: {
     "@type": "MonetaryAmount",

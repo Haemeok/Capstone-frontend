@@ -121,9 +121,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/",
       },
     ],
-    sitemap: [
-      `${SITE_URL}/sitemap/0.xml`,
-      `${SITE_URL}/recipes/sitemap/0.xml`,
-    ],
+    sitemap: [`${SITE_URL}/sitemap/0.xml`, `${SITE_URL}/recipes/sitemap/0.xml`],
   };
 }

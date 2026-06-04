@@ -4,7 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
-import { AIModelId,aiModels } from "@/shared/config/constants/aiModel";
+import { AIModelId, aiModels } from "@/shared/config/constants/aiModel";
 import { Image } from "@/shared/ui/image/Image";
 
 import { useUserStore } from "@/entities/user/model/store";
@@ -58,7 +58,7 @@ const AIModelSelection = () => {
                 <button
                   key={ai.id}
                   onClick={() => handleSelectAI(ai.id)}
-                  className="grid aspect-[3/4] max-h-[500px] w-full cursor-pointer overflow-hidden rounded-card bg-gray-100 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="rounded-card grid aspect-[3/4] max-h-[500px] w-full cursor-pointer overflow-hidden bg-gray-100 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <Image
                     src={ai.image}

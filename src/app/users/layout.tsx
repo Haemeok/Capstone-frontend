@@ -19,8 +19,8 @@ const UsersLayout = ({ children }: UsersLayoutProps) => {
 
       <div
         className={cn(
-          "fixed inset-0 bg-black/20 backdrop-blur-xs z-50 transition-opacity duration-800 ease-in-out",
-          isLoggingOut ? "opacity-100" : "opacity-0 pointer-events-none"
+          "fixed inset-0 z-50 bg-black/20 backdrop-blur-xs transition-opacity duration-800 ease-in-out",
+          isLoggingOut ? "opacity-100" : "pointer-events-none opacity-0"
         )}
       />
     </div>

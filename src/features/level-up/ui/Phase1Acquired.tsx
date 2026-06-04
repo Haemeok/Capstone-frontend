@@ -24,9 +24,7 @@ const Phase1Acquired = ({ amount, onComplete }: Phase1AcquiredProps) => {
         />
         <span className="text-olive-mint text-2xl font-bold">원</span>
       </div>
-      <p className="mt-4 text-sm text-gray-500">
-        레시피오와 함께 절약했어요!
-      </p>
+      <p className="mt-4 text-sm text-gray-500">레시피오와 함께 절약했어요!</p>
     </div>
   );
 };

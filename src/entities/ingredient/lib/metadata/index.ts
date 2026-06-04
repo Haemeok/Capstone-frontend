@@ -1,5 +1,5 @@
 export {
-  generateIngredientMetadata,
   generateIngredientJsonLd,
+  generateIngredientMetadata,
   generateNotFoundIngredientMetadata,
 } from "./ingredientMetadata";

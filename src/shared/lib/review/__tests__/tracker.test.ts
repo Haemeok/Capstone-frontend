@@ -1,6 +1,6 @@
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
 
-import { checkAndTriggerReviewGate,trackReviewAction } from "../tracker";
+import { checkAndTriggerReviewGate, trackReviewAction } from "../tracker";
 
 describe("trackReviewAction", () => {
   beforeEach(() => {
@@ -19,9 +19,9 @@ describe("trackReviewAction", () => {
     trackReviewAction("ai_generation");
     trackReviewAction("ai_generation");
 
-    expect(
-      localStorage.getItem(STORAGE_KEYS.REVIEW_ACTION_AI_GENERATION)
-    ).toBe("2");
+    expect(localStorage.getItem(STORAGE_KEYS.REVIEW_ACTION_AI_GENERATION)).toBe(
+      "2"
+    );
   });
 
   it("임계값 미달이면 카운트만 증가해야 함", () => {
@@ -55,9 +55,9 @@ describe("trackReviewAction", () => {
     expect(
       localStorage.getItem(STORAGE_KEYS.REVIEW_ACTION_YOUTUBE_EXTRACT)
     ).toBe("1");
-    expect(
-      localStorage.getItem(STORAGE_KEYS.REVIEW_ACTION_AI_GENERATION)
-    ).toBe("1");
+    expect(localStorage.getItem(STORAGE_KEYS.REVIEW_ACTION_AI_GENERATION)).toBe(
+      "1"
+    );
     expect(
       localStorage.getItem(STORAGE_KEYS.REVIEW_ACTION_COOKING_COMPLETE)
     ).toBe("1");

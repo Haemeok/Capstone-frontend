@@ -86,12 +86,18 @@ export const ProgressBar = ({
   }, [isPaused, interval]);
 
   return (
-    <div className={cn("h-1 flex-1 translate-z-0 overflow-hidden rounded-full bg-gray-200", className)}>
+    <div
+      className={cn(
+        "h-1 flex-1 translate-z-0 overflow-hidden rounded-full bg-gray-200",
+        className
+      )}
+    >
       <div
         ref={progressRef}
         className={cn(
           "h-full transition-none will-change-[width]",
-          !indicatorClassName && (variant === "white" ? "bg-white" : "bg-black"),
+          !indicatorClassName &&
+            (variant === "white" ? "bg-white" : "bg-black"),
           indicatorClassName
         )}
         style={{ width: "0%" }}

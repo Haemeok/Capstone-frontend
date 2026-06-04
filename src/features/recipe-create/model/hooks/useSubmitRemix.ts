@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import { handleS3Upload } from "@/shared/api/file";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { ApiError } from "@/shared/api/errors";
+import { handleS3Upload } from "@/shared/api/file";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { FileInfoRequest, FileObject } from "@/shared/types";
 
@@ -10,6 +11,7 @@ import { postRecipe } from "@/entities/recipe/model/api";
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
+
 import { useFinalizeRecipe } from "./useFinalizeRecipe";
 
 const REMIX_ALREADY_EXISTS_CODE = "211";
@@ -30,7 +32,11 @@ export const useSubmitRemix = () => {
   const queryClient = useQueryClient();
   const finalizeRecipeMutation = useFinalizeRecipe();
 
-  const { mutate: submitRemix, isPending, error } = useMutation({
+  const {
+    mutate: submitRemix,
+    isPending,
+    error,
+  } = useMutation({
     mutationFn: async (vars: SubmitRemixVars) => {
       const { recipe, fileInfos, fileObjects, originRecipeId } = vars;
 
@@ -66,7 +72,10 @@ export const useSubmitRemix = () => {
           return;
         }
         if (code === REMIX_NOT_ALLOWED_CODE) {
-          addToast({ message: "이 레시피는 편집할 수 없어요", variant: "error" });
+          addToast({
+            message: "이 레시피는 편집할 수 없어요",
+            variant: "error",
+          });
           router.replace(`/recipes/${vars.originRecipeId}`);
           return;
         }

@@ -148,7 +148,9 @@ const IngredientRecipePage = () => {
                   }),
                 }}
                 isAlreadyAdded={(ingredient) =>
-                  (ingredients || []).some((ing) => ing.name === ingredient.name)
+                  (ingredients || []).some(
+                    (ing) => ing.name === ingredient.name
+                  )
                 }
                 onComplete={(items) =>
                   items.forEach((i) =>

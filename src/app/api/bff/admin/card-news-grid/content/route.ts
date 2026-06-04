@@ -69,8 +69,7 @@ const TOPICS_PROMPT = (mode: CardMode, seed?: string) => {
 };
 
 const ITEMS_PROMPT = (mode: CardMode, topic: string) => {
-  const common =
-    ` 정확히 9개, 서로 겹치지 않게 다양하게. 왼→오, 위→아래 순서로 정렬. 과장 광고체·이모지 남발 금지. 한국어.`;
+  const common = ` 정확히 9개, 서로 겹치지 않게 다양하게. 왼→오, 위→아래 순서로 정렬. 과장 광고체·이모지 남발 금지. 한국어.`;
   if (mode === "tips") {
     return (
       `주제 "${topic}"에 대한 실생활 꿀팁 카드뉴스 본문을 작성하라. header 1개와 항목 9개.` +
@@ -106,10 +105,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "modelId is required" }, { status: 400 });
   }
   if (body.stage !== "topics" && body.stage !== "items") {
-    return NextResponse.json({ error: "stage must be 'topics' or 'items'" }, { status: 400 });
+    return NextResponse.json(
+      { error: "stage must be 'topics' or 'items'" },
+      { status: 400 }
+    );
   }
   if (body.stage === "items" && !body.topicTitle) {
-    return NextResponse.json({ error: "topicTitle is required for items stage" }, { status: 400 });
+    return NextResponse.json(
+      { error: "topicTitle is required for items stage" },
+      { status: 400 }
+    );
   }
 
   const mode: CardMode = body.mode === "tips" ? "tips" : "recipe";

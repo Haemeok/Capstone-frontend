@@ -3,9 +3,7 @@ import type { StaticRecipe } from "@/entities/recipe/model/types";
 import { assembleBlogBody, buildStepsBlock } from "./assembleBlogBody";
 import type { ParsedBlogBody } from "./parseBlogBody";
 
-const makeRecipe = (
-  overrides: Partial<StaticRecipe> = {},
-): StaticRecipe =>
+const makeRecipe = (overrides: Partial<StaticRecipe> = {}): StaticRecipe =>
   ({
     id: "r1",
     title: "콩나물국",
@@ -19,7 +17,7 @@ const makeRecipe = (
     ],
     ingredients: [],
     ...overrides,
-  } as unknown as StaticRecipe);
+  }) as unknown as StaticRecipe;
 
 describe("buildStepsBlock", () => {
   it("steps 를 `N. ...` 라인으로 줄바꿈 결합", () => {
@@ -40,7 +38,7 @@ describe("buildStepsBlock", () => {
           { stepNumber: 2, instruction: "  " } as never,
           { stepNumber: 3, instruction: "콩나물 투입" } as never,
         ],
-      }),
+      })
     );
     expect(out).toBe("1. 물을 끓인다\n2. 콩나물 투입");
   });
@@ -52,7 +50,7 @@ describe("buildStepsBlock", () => {
           { stepNumber: 0, instruction: "물을 끓인다" } as never,
           { stepNumber: 1, instruction: "콩나물 투입" } as never,
         ],
-      }),
+      })
     );
     expect(out).toBe("1. 물을 끓인다\n2. 콩나물 투입");
   });
@@ -61,9 +59,7 @@ describe("buildStepsBlock", () => {
 describe("assembleBlogBody — 새 토큰 + 조리과정", () => {
   const parsed: ParsedBlogBody = {
     intro: "이번 모음 도입.",
-    sections: [
-      { headingText: "콩나물국", body: "산문 본문이에요." },
-    ],
+    sections: [{ headingText: "콩나물국", body: "산문 본문이에요." }],
     outro: "닫는 단락.",
   };
   const recipes = [makeRecipe()];
@@ -94,7 +90,7 @@ describe("assembleBlogBody — 새 토큰 + 조리과정", () => {
       parsed,
       [makeRecipe({ steps: [] })],
       "ellymom",
-      "test-slug",
+      "test-slug"
     );
     expect(out).not.toMatch(/^\d+\. /m);
     expect(out).toContain("{{ingredients:r1}}");
@@ -109,6 +105,8 @@ describe("assembleBlogBody — 새 토큰 + 조리과정", () => {
 
   it("outro 와 톤별 suffix 가 마지막에 붙는다", () => {
     const out = assembleBlogBody(parsed, recipes, "ellymom", "test-slug");
-    expect(out).toMatch(/닫는 단락\.[\s\S]*전체 모음은 https:\/\/recipio\.kr\/curation\/test-slug/);
+    expect(out).toMatch(
+      /닫는 단락\.[\s\S]*전체 모음은 https:\/\/recipio\.kr\/curation\/test-slug/
+    );
   });
 });

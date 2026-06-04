@@ -49,16 +49,15 @@ const CommentsPage = () => {
   return (
     <RecipeStatusProvider recipeId={recipeId}>
       <div className="relative h-full pb-10">
-          <header className="z-sticky sticky-optimized sticky top-0 border-b bg-white px-4 py-3">
-            <div className="flex max-w-3xl items-center">
-              <div className="flex items-center gap-2">
-                <PrevButton size={22} showOnDesktop={true} />
-                <h1 className="flex items-center text-xl font-bold">댓글</h1>
-              </div>
+        <header className="z-sticky sticky-optimized sticky top-0 border-b bg-white px-4 py-3">
+          <div className="flex max-w-3xl items-center">
+            <div className="flex items-center gap-2">
+              <PrevButton size={22} showOnDesktop={true} />
+              <h1 className="flex items-center text-xl font-bold">댓글</h1>
             </div>
-          </header>
+          </div>
+        </header>
         <Container className="pt-0">
-
           <main className="py-4">
             <div className="mb-4 flex items-center justify-between px-2">
               <span className="text-sm font-medium text-gray-500">
@@ -102,7 +101,7 @@ const CommentsPage = () => {
             <div ref={ref} className="h-10">
               {isFetchingNextPage && (
                 <div className="flex items-center justify-center gap-2 p-4">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-olive-light border-t-transparent" />
+                  <div className="border-olive-light h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
                   <p className="text-sm text-gray-500">댓글 불러오는 중</p>
                 </div>
               )}

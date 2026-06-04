@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 
-import { InFeedAdSlot } from "@/shared/adsense";
+import { InFeedAdSlot, useFeedWithAds } from "@/shared/adsense";
 import { AdPlaceholder } from "@/shared/adsense/AdPlaceholder";
-import { AD_MIN_HEIGHT, AD_SLOT_IDS, IS_AD_TEST_MODE } from "@/shared/adsense/config";
 import {
-  type FeedItem,
-  insertAdsIntoFeed,
-} from "@/shared/adsense/lib/insertAdsIntoFeed";
+  AD_MIN_HEIGHT,
+  AD_SLOT_IDS,
+  IS_AD_TEST_MODE,
+} from "@/shared/adsense/config";
 import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
 import {
   Carousel,
@@ -52,7 +52,7 @@ const RecommendedSlideLoading = () => (
   <div className="flex w-full gap-3 overflow-x-auto">
     {Array.from({ length: 5 }).map((_, index) => (
       <div key={index} className="flex-shrink-0">
-        <Skeleton className="h-[200px] w-[200px] rounded-card" />
+        <Skeleton className="rounded-card h-[200px] w-[200px]" />
         <div className="mt-2 space-y-2">
           <Skeleton className="h-4 w-[200px]" />
           <Skeleton className="h-4 w-[150px]" />
@@ -82,15 +82,12 @@ const RecommendedRecipeGrid = ({
   isLoading,
   error,
 }: RecommendedRecipeGridProps) => {
+  const feedItems = useFeedWithAds(recipes, AD_EVERY_N, true);
+
   const renderContent = () => {
     if (isLoading) return <RecommendedSlideLoading />;
     if (error) return <RecommendedSlideError />;
     if (recipes.length === 0) return <RecommendedSlideEmpty />;
-
-    const feedItems: FeedItem<DetailedRecipeGridItemType>[] = insertAdsIntoFeed(
-      recipes,
-      AD_EVERY_N
-    );
 
     return (
       <Carousel

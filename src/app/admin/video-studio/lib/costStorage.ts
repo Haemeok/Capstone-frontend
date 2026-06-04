@@ -1,4 +1,3 @@
-
 export type StageCostEntry = { count: number; totalCost: number };
 
 export type CostHistory = {

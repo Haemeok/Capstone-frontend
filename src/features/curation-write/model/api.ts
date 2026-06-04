@@ -7,11 +7,11 @@ import type {
 } from "./types";
 
 export const postCurationArticle = (
-  body: PostCurationArticleRequest,
+  body: PostCurationArticleRequest
 ): Promise<PostCurationArticleResponse> =>
   api.post<PostCurationArticleResponse>(
     END_POINTS.ADMIN_CURATION_ARTICLES,
-    body,
+    body
   );
 
 export const publishCurationArticle = (articleId: number): Promise<void> =>

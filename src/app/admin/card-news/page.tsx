@@ -24,8 +24,11 @@ const STEP_LABELS: Record<Step, string> = {
 
 const CardNewsPage = () => {
   const [step, setStep] = useState<Step>("filter");
-  const [selectedFilter, setSelectedFilter] = useState<Record<string, unknown>>({});
-  const [selectedRecipes, setSelectedRecipes] = useState<SelectedRecipes | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<Record<string, unknown>>(
+    {}
+  );
+  const [selectedRecipes, setSelectedRecipes] =
+    useState<SelectedRecipes | null>(null);
 
   const handleSearch = (params: Record<string, unknown>) => {
     setSelectedFilter(params);
@@ -53,18 +56,20 @@ const CardNewsPage = () => {
 
       {/* 스텝 인디케이터 */}
       <div className="mb-6 flex gap-4">
-        {(Object.entries(STEP_LABELS) as [Step, string][]).map(([key, label]) => (
-          <div
-            key={key}
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-              step === key
-                ? "bg-olive-light text-white"
-                : "bg-gray-100 text-gray-400"
-            }`}
-          >
-            {label}
-          </div>
-        ))}
+        {(Object.entries(STEP_LABELS) as [Step, string][]).map(
+          ([key, label]) => (
+            <div
+              key={key}
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                step === key
+                  ? "bg-olive-light text-white"
+                  : "bg-gray-100 text-gray-400"
+              }`}
+            >
+              {label}
+            </div>
+          )
+        )}
       </div>
 
       {step !== "filter" && (
@@ -78,7 +83,10 @@ const CardNewsPage = () => {
 
       {step === "filter" && <AdminSearchFilters onSearch={handleSearch} />}
       {step === "recipe" && (
-        <RecipeSelector filter={selectedFilter} onComplete={handleRecipesSelected} />
+        <RecipeSelector
+          filter={selectedFilter}
+          onComplete={handleRecipesSelected}
+        />
       )}
       {step === "editor" && selectedRecipes && (
         <CardEditor

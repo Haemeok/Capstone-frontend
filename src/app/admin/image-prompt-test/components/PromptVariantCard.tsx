@@ -41,18 +41,22 @@ export const PromptVariantCard = ({
         <p className="truncate text-sm font-bold text-gray-900">
           {variant.label}
         </p>
-        <p className="line-clamp-2 text-xs text-gray-500">{variant.description}</p>
+        <p className="line-clamp-2 text-xs text-gray-500">
+          {variant.description}
+        </p>
       </div>
 
       <textarea
         value={prompt}
         onChange={(e) => onPromptChange(e.target.value)}
         placeholder="레시피 선택 시 자동 생성됩니다"
-        className="h-40 w-full resize-none rounded-xl border border-gray-200 p-3 text-xs text-gray-900 placeholder:text-gray-400 focus:border-olive-light focus:outline-none focus:ring-1 focus:ring-olive-light"
+        className="focus:border-olive-light focus:ring-olive-light h-40 w-full resize-none rounded-xl border border-gray-200 p-3 text-xs text-gray-900 placeholder:text-gray-400 focus:ring-1 focus:outline-none"
       />
-      <p className="text-right text-[10px] text-gray-400">{prompt.length} chars</p>
+      <p className="text-right text-[10px] text-gray-400">
+        {prompt.length} chars
+      </p>
 
-      <div className="aspect-square w-full overflow-hidden rounded-card bg-gray-50">
+      <div className="rounded-card aspect-square w-full overflow-hidden bg-gray-50">
         {result.status === "success" && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -63,12 +67,14 @@ export const PromptVariantCard = ({
         )}
         {result.status === "pending" && (
           <div className="flex h-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-olive-light" />
+            <div className="border-t-olive-light h-8 w-8 animate-spin rounded-full border-2 border-gray-200" />
           </div>
         )}
         {result.status === "error" && (
           <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center">
-            <p className="line-clamp-4 text-xs text-red-500">{result.message}</p>
+            <p className="line-clamp-4 text-xs text-red-500">
+              {result.message}
+            </p>
             <button
               type="button"
               onClick={onRetry}

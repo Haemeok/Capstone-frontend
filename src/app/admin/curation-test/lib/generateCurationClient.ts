@@ -14,7 +14,7 @@ const KNOWN_CODES: ReadonlySet<CurationErrorCode> = new Set<CurationErrorCode>([
 ]);
 
 export const generateCurationViaApi = async (
-  input: GenerateCurationInput,
+  input: GenerateCurationInput
 ): Promise<GenerateCurationOutput> => {
   const res = await fetch(ENDPOINT, {
     method: "POST",
@@ -27,7 +27,11 @@ export const generateCurationViaApi = async (
     return (await res.json()) as GenerateCurationOutput;
   }
 
-  let payload: { error?: string; code?: string; meta?: Record<string, unknown> | null } = {};
+  let payload: {
+    error?: string;
+    code?: string;
+    meta?: Record<string, unknown> | null;
+  } = {};
   try {
     payload = (await res.json()) as typeof payload;
   } catch {
@@ -42,11 +46,11 @@ export const generateCurationViaApi = async (
     throw new CurationError(
       payload.code as CurationErrorCode,
       payload.error ?? "Curation generate failed",
-      payload.meta ?? undefined,
+      payload.meta ?? undefined
     );
   }
 
   throw new Error(
-    `generateCurationViaApi failed (${res.status}): ${payload.error ?? res.statusText}`,
+    `generateCurationViaApi failed (${res.status}): ${payload.error ?? res.statusText}`
   );
 };

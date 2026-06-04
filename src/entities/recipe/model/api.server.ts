@@ -14,7 +14,10 @@ import {
   TrendingYoutubeRecipe,
 } from "./types";
 
-const resolveSortParam = (sort: string | undefined, fallback: string): string => {
+const resolveSortParam = (
+  sort: string | undefined,
+  fallback: string
+): string => {
   if (!sort) return fallback;
   return sort.includes(",") ? sort : `createdAt,${sort}`;
 };
@@ -101,22 +104,36 @@ export const getRecipesOnServer = async (
   if (params.ingredientIds && params.ingredientIds.length > 0) {
     query.set("ingredientIds", params.ingredientIds.join(","));
   }
-  if (params.maxCost !== undefined) query.append("maxCost", params.maxCost.toString());
-  if (params.minCost !== undefined) query.append("minCost", params.minCost.toString());
+  if (params.maxCost !== undefined)
+    query.append("maxCost", params.maxCost.toString());
+  if (params.minCost !== undefined)
+    query.append("minCost", params.minCost.toString());
   if (params.period) query.append("period", params.period);
 
-  if (params.minCalories !== undefined) query.append("minCalories", params.minCalories.toString());
-  if (params.maxCalories !== undefined) query.append("maxCalories", params.maxCalories.toString());
-  if (params.minCarb !== undefined) query.append("minCarb", params.minCarb.toString());
-  if (params.maxCarb !== undefined) query.append("maxCarb", params.maxCarb.toString());
-  if (params.minProtein !== undefined) query.append("minProtein", params.minProtein.toString());
-  if (params.maxProtein !== undefined) query.append("maxProtein", params.maxProtein.toString());
-  if (params.minFat !== undefined) query.append("minFat", params.minFat.toString());
-  if (params.maxFat !== undefined) query.append("maxFat", params.maxFat.toString());
-  if (params.minSugar !== undefined) query.append("minSugar", params.minSugar.toString());
-  if (params.maxSugar !== undefined) query.append("maxSugar", params.maxSugar.toString());
-  if (params.minSodium !== undefined) query.append("minSodium", params.minSodium.toString());
-  if (params.maxSodium !== undefined) query.append("maxSodium", params.maxSodium.toString());
+  if (params.minCalories !== undefined)
+    query.append("minCalories", params.minCalories.toString());
+  if (params.maxCalories !== undefined)
+    query.append("maxCalories", params.maxCalories.toString());
+  if (params.minCarb !== undefined)
+    query.append("minCarb", params.minCarb.toString());
+  if (params.maxCarb !== undefined)
+    query.append("maxCarb", params.maxCarb.toString());
+  if (params.minProtein !== undefined)
+    query.append("minProtein", params.minProtein.toString());
+  if (params.maxProtein !== undefined)
+    query.append("maxProtein", params.maxProtein.toString());
+  if (params.minFat !== undefined)
+    query.append("minFat", params.minFat.toString());
+  if (params.maxFat !== undefined)
+    query.append("maxFat", params.maxFat.toString());
+  if (params.minSugar !== undefined)
+    query.append("minSugar", params.minSugar.toString());
+  if (params.maxSugar !== undefined)
+    query.append("maxSugar", params.maxSugar.toString());
+  if (params.minSodium !== undefined)
+    query.append("minSodium", params.minSodium.toString());
+  if (params.maxSodium !== undefined)
+    query.append("maxSodium", params.maxSodium.toString());
 
   let endpoint = END_POINTS.RECIPE_SEARCH;
 
@@ -220,7 +237,7 @@ export const getStaticrecipionServer = async (
 };
 
 export const fetchRecentRecipesForFeed = async (
-  size = 100,
+  size = 100
 ): Promise<StaticDetailedRecipeGridItem[]> => {
   const query = new URLSearchParams({
     page: "0",
@@ -238,7 +255,7 @@ export const fetchRecentRecipesForFeed = async (
     });
     if (!res.ok) {
       console.error(
-        `[fetchRecentRecipesForFeed] API Error: ${res.status} ${res.statusText}`,
+        `[fetchRecentRecipesForFeed] API Error: ${res.status} ${res.statusText}`
       );
       return [];
     }

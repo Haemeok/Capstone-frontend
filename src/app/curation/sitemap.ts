@@ -33,7 +33,10 @@ export default async function sitemap(props: {
       priority: 0.8,
     }));
   } catch (error) {
-    console.error("[curation/sitemap] Error fetching curation articles:", error);
+    console.error(
+      "[curation/sitemap] Error fetching curation articles:",
+      error
+    );
     return [];
   }
 }

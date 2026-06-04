@@ -22,7 +22,7 @@ export const ModeToggle = ({ mode, onChange }: ModeToggleProps) => {
   return (
     <div className="relative flex flex-1 gap-1 rounded-full bg-gray-100 p-1">
       <motion.div
-        className="absolute inset-y-1 w-[calc(50%-4px)] rounded-full bg-olive-light shadow-sm"
+        className="bg-olive-light absolute inset-y-1 w-[calc(50%-4px)] rounded-full shadow-sm"
         animate={{ left: mode === "copy" ? 4 : "50%" }}
         transition={{ type: "spring", stiffness: 500, damping: 35 }}
       />

@@ -92,12 +92,12 @@ export const generateCurationTitle = async ({
       logLLMError(`title.attempt-${attempt + 1}`, e);
       titleLastErrors = [`schema 위반: ${(e as Error).message}`];
       console.warn(
-        `[curation title] attempt ${attempt + 1} schema fail: ${(e as Error).message}`,
+        `[curation title] attempt ${attempt + 1} schema fail: ${(e as Error).message}`
       );
       if (attempt === MAX_TITLE_RETRIES) {
         throw new CurationError(
           "LLM_ERROR",
-          `Title 호출 실패 (${MAX_TITLE_RETRIES + 1}회 schema 위반): ${(e as Error).message}`,
+          `Title 호출 실패 (${MAX_TITLE_RETRIES + 1}회 schema 위반): ${(e as Error).message}`
         );
       }
       continue;
@@ -114,13 +114,13 @@ export const generateCurationTitle = async ({
     }
     titleLastErrors = titleCheck.errors;
     console.warn(
-      `[curation title] attempt ${attempt + 1} count mismatch:\n${titleCheck.errors.map((e) => `  - ${e}`).join("\n")}\n  h1: ${candidate.h1}\n  dek: ${candidate.dek}`,
+      `[curation title] attempt ${attempt + 1} count mismatch:\n${titleCheck.errors.map((e) => `  - ${e}`).join("\n")}\n  h1: ${candidate.h1}\n  dek: ${candidate.dek}`
     );
     if (attempt === MAX_TITLE_RETRIES) {
       throw new CurationError(
         "VALIDATION_FAILED",
         `Title-Body N 일관성 검증 ${MAX_TITLE_RETRIES + 1}회 실패\n${titleCheck.errors.map((e) => `- ${e}`).join("\n")}`,
-        { errors: titleCheck.errors, h1: candidate.h1, dek: candidate.dek },
+        { errors: titleCheck.errors, h1: candidate.h1, dek: candidate.dek }
       );
     }
   }

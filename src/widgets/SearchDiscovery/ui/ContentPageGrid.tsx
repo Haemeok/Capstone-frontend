@@ -1,5 +1,6 @@
 "use client";
 
+import { CONTENT_PAGES } from "@/shared/config/constants/content-pages";
 import {
   Carousel,
   CarouselContent,
@@ -8,14 +9,17 @@ import {
   CarouselPrevious,
 } from "@/shared/ui/shadcn/carousel";
 
-import { CONTENT_PAGES } from "@/shared/config/constants/content-pages";
-
 import ContentPageCard from "./ContentPageCard";
 
 const ContentPageGrid = () => {
   return (
     <Carousel
-      opts={{ align: "start", loop: false, dragFree: true, containScroll: "trimSnaps" }}
+      opts={{
+        align: "start",
+        loop: false,
+        dragFree: true,
+        containScroll: "trimSnaps",
+      }}
       className="-mx-4 px-4"
     >
       <CarouselContent className="-ml-3">

@@ -16,7 +16,7 @@ const ErrorFallback = ({
       <div className="flex gap-3">
         <button
           onClick={() => reset()}
-          className="h-12 rounded-xl bg-olive-light px-6 font-medium text-white transition-colors hover:bg-olive-dark"
+          className="bg-olive-light hover:bg-olive-dark h-12 rounded-xl px-6 font-medium text-white transition-colors"
         >
           다시 시도
         </button>

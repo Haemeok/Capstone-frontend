@@ -34,7 +34,7 @@ const won = (n: number) => `${n.toLocaleString()}원`;
 export const toneHeading = (
   tone: BlogTone,
   index: number,
-  title: string,
+  title: string
 ): string => {
   switch (tone) {
     case "epigung":
@@ -58,7 +58,7 @@ export type SectionFragments = {
 
 export const buildSectionFragments = (
   tone: BlogTone,
-  recipe: StaticRecipe,
+  recipe: StaticRecipe
 ): SectionFragments => {
   const ps = computePerServing(recipe);
   const servings = Math.max(recipe.servings || 1, 1);

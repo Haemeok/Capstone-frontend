@@ -27,14 +27,14 @@ describe("generateCurationDetailMetadata", () => {
   it("description이 있으면 그대로 살리고 추천 레시피 카운트를 덧붙임", () => {
     const meta = generateCurationDetailMetadata(baseDto, 7);
     expect(meta.description).toBe(
-      "수분 가득한 오이 모음 추천 레시피 7가지를 한 페이지에 모았어요.",
+      "수분 가득한 오이 모음 추천 레시피 7가지를 한 페이지에 모았어요."
     );
   });
 
   it("description이 없으면 카테고리 라벨 기반 fallback 문구 사용", () => {
     const meta = generateCurationDetailMetadata(
       { ...baseDto, description: null },
-      4,
+      4
     );
     expect(meta.description).toContain("다이어트 & 가벼운 한 끼");
     expect(meta.description).toContain("4가지");
@@ -43,20 +43,20 @@ describe("generateCurationDetailMetadata", () => {
   it("canonical이 슬러그 기반 절대경로", () => {
     const meta = generateCurationDetailMetadata(baseDto, 3);
     expect(meta.alternates?.canonical).toBe(
-      "https://www.recipio.kr/curation/summer-cucumber",
+      "https://www.recipio.kr/curation/summer-cucumber"
     );
   });
 
   it("description이 빈 문자열이거나 공백뿐이면 fallback 문구로 처리", () => {
     const empty = generateCurationDetailMetadata(
       { ...baseDto, description: "" },
-      3,
+      3
     );
     expect(empty.description).toContain("다이어트 & 가벼운 한 끼");
 
     const whitespace = generateCurationDetailMetadata(
       { ...baseDto, description: "   " },
-      2,
+      2
     );
     expect(whitespace.description).toContain("2가지");
     expect(whitespace.description).not.toMatch(/^   /);
@@ -65,16 +65,24 @@ describe("generateCurationDetailMetadata", () => {
   it("coverImageKey가 있으면 OG image로 사용, 없으면 default og.png로 fallback", () => {
     const withCover = generateCurationDetailMetadata(baseDto, 3);
     const ogWith = withCover.openGraph;
-    expect(ogWith && "images" in ogWith && Array.isArray(ogWith.images) ? ogWith.images[0] : undefined).toMatchObject({
+    expect(
+      ogWith && "images" in ogWith && Array.isArray(ogWith.images)
+        ? ogWith.images[0]
+        : undefined
+    ).toMatchObject({
       url: expect.stringContaining("curation/summer-cucumber/cover.webp"),
     });
 
     const without = generateCurationDetailMetadata(
       { ...baseDto, coverImageKey: null },
-      3,
+      3
     );
     const ogWithout = without.openGraph;
-    expect(ogWithout && "images" in ogWithout && Array.isArray(ogWithout.images) ? ogWithout.images[0] : undefined).toMatchObject({
+    expect(
+      ogWithout && "images" in ogWithout && Array.isArray(ogWithout.images)
+        ? ogWithout.images[0]
+        : undefined
+    ).toMatchObject({
       url: "https://www.recipio.kr/og.png",
     });
   });
@@ -97,7 +105,7 @@ describe("generateCurationListMetadata", () => {
     const meta = generateCurationListMetadata("DIET & LIGHT");
     expect(meta.title).toBe("다이어트 & 가벼운 한 끼 큐레이션 | 레시피오");
     expect(meta.alternates?.canonical).toBe(
-      `https://www.recipio.kr/curation?category=${encodeURIComponent("DIET & LIGHT")}`,
+      `https://www.recipio.kr/curation?category=${encodeURIComponent("DIET & LIGHT")}`
     );
     expect(meta.keywords).toEqual(expect.arrayContaining(["다이어트 레시피"]));
   });

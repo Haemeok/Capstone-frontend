@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 
 import type { StaticRecipe } from "@/entities/recipe/model/types";
+
 import { coverImageUrlFromKey } from "@/features/curation/lib/coverImageUrl";
 import type { PublicCurationArticleDto } from "@/features/curation/model/api.server";
 
@@ -45,7 +46,7 @@ export type BatchItem = {
 
 const buildImageUrlsBySlot = (
   coverUrl: string | null,
-  recipes: StaticRecipe[],
+  recipes: StaticRecipe[]
 ): Record<string, string> => {
   const map: Record<string, string> = {};
   if (coverUrl) map.cover = coverUrl;
@@ -62,7 +63,9 @@ export const useBatchRewrite = () => {
   const stoppedRef = useRef(false);
 
   const updateItem = useCallback((slug: string, patch: Partial<BatchItem>) => {
-    setItems((prev) => prev.map((it) => (it.slug === slug ? { ...it, ...patch } : it)));
+    setItems((prev) =>
+      prev.map((it) => (it.slug === slug ? { ...it, ...patch } : it))
+    );
   }, []);
 
   const reset = useCallback(() => {
@@ -70,7 +73,11 @@ export const useBatchRewrite = () => {
   }, []);
 
   const runRewrite = useCallback(
-    async (slugs: string[], tone: BlogTone, titlesBySlug: Record<string, string>) => {
+    async (
+      slugs: string[],
+      tone: BlogTone,
+      titlesBySlug: Record<string, string>
+    ) => {
       if (isRunning) return;
       stoppedRef.current = false;
       setIsRunning(true);
@@ -95,7 +102,7 @@ export const useBatchRewrite = () => {
           const generated = await generateCurationBlogPost(
             fetched.article,
             fetched.recipes,
-            tone,
+            tone
           );
           if (!generated.success) {
             updateItem(slug, { phase: "failed", error: generated.error });
@@ -116,7 +123,7 @@ export const useBatchRewrite = () => {
         setIsRunning(false);
       }
     },
-    [isRunning, updateItem],
+    [isRunning, updateItem]
   );
 
   const enqueueAllReady = useCallback(async () => {
@@ -147,7 +154,10 @@ export const useBatchRewrite = () => {
         }
         updateItem(it.slug, {
           phase: "enqueued",
-          enqueued: { packagePath: res.packagePath, skippedSlots: res.skippedSlots },
+          enqueued: {
+            packagePath: res.packagePath,
+            skippedSlots: res.skippedSlots,
+          },
         });
       }
     } finally {
@@ -159,5 +169,13 @@ export const useBatchRewrite = () => {
     stoppedRef.current = true;
   }, []);
 
-  return { items, isRunning, isEnqueueing, runRewrite, enqueueAllReady, reset, cancel };
+  return {
+    items,
+    isRunning,
+    isEnqueueing,
+    runRewrite,
+    enqueueAllReady,
+    reset,
+    cancel,
+  };
 };

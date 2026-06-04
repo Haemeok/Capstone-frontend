@@ -1,4 +1,8 @@
-import { addGeneration, loadCostHistory, resetCostHistory } from "./costStorage";
+import {
+  addGeneration,
+  loadCostHistory,
+  resetCostHistory,
+} from "./costStorage";
 
 beforeEach(() => {
   localStorage.clear();

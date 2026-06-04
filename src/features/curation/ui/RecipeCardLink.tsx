@@ -54,7 +54,7 @@ export const RecipeCardLink = ({
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="flex items-center justify-center gap-2 rounded-xl bg-beige px-4 py-3 text-sm font-semibold text-green-900 transition hover:bg-beige/70"
+        className="bg-beige hover:bg-beige/70 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-green-900 transition"
       >
         <span aria-hidden>👇</span>
         <span>더 자세한 조리방법과 요리 팁 확인하기</span>
@@ -65,7 +65,7 @@ export const RecipeCardLink = ({
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="flex items-stretch gap-3 overflow-hidden rounded-card border border-gray-200 bg-white transition hover:border-olive-light/60 hover:shadow-sm"
+        className="rounded-card hover:border-olive-light/60 flex items-stretch gap-3 overflow-hidden border border-gray-200 bg-white transition hover:shadow-sm"
       >
         <div className="w-32 shrink-0 sm:w-40">
           <Image
@@ -78,7 +78,7 @@ export const RecipeCardLink = ({
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-between py-4 pr-2 pl-0">
           <div className="min-w-0">
-            <h3 className="line-clamp-2 text-base font-semibold leading-snug text-gray-900">
+            <h3 className="line-clamp-2 text-base leading-snug font-semibold text-gray-900">
               {recipe.title}
             </h3>
             {authorName && (

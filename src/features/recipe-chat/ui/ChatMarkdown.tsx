@@ -1,4 +1,5 @@
 import ReactMarkdown from "react-markdown";
+
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 
 const ALLOWED_TAGS = [

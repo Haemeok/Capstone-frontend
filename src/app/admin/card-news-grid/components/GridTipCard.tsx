@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 
 import { gridCellPosition } from "../lib/gridLayout";
-import { MAX_CAPTION, type TipItem,truncate } from "../lib/schema";
+import { MAX_CAPTION, type TipItem, truncate } from "../lib/schema";
 
 type GridTipCardProps = {
   header: string;
@@ -67,7 +67,14 @@ export const GridTipCard = forwardRef<HTMLDivElement, GridTipCardProps>(
               }}
             />
             <div style={{ padding: "12px 14px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: 24, fontWeight: 700, color: "#3A2E22", marginBottom: 4 }}>
+              <div
+                style={{
+                  fontSize: 24,
+                  fontWeight: 700,
+                  color: "#3A2E22",
+                  marginBottom: 4,
+                }}
+              >
                 {item.dishName}
               </div>
               <div
@@ -99,8 +106,20 @@ export const GridTipCard = forwardRef<HTMLDivElement, GridTipCardProps>(
         <div style={{ flex: 1 }} />
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/favicon-96x96.png" alt="" style={{ width: 40, height: 40, borderRadius: "50%" }} />
-          <span style={{ fontFamily: "Jalnan2, sans-serif", fontSize: 30, color: "#3A2E22" }}>레시피오</span>
+          <img
+            src="/favicon-96x96.png"
+            alt=""
+            style={{ width: 40, height: 40, borderRadius: "50%" }}
+          />
+          <span
+            style={{
+              fontFamily: "Jalnan2, sans-serif",
+              fontSize: 30,
+              color: "#3A2E22",
+            }}
+          >
+            레시피오
+          </span>
         </div>
         <div
           style={{
@@ -114,7 +133,7 @@ export const GridTipCard = forwardRef<HTMLDivElement, GridTipCardProps>(
         </div>
       </footer>
     </div>
-  ),
+  )
 );
 
 GridTipCard.displayName = "GridTipCard";

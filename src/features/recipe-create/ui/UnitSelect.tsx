@@ -41,8 +41,7 @@ const UnitSelect = ({
     onChange(next);
   };
 
-  const showSavedValueFallback =
-    !units || !units.some((u) => u.unit === value);
+  const showSavedValueFallback = !units || !units.some((u) => u.unit === value);
 
   return (
     <Select
@@ -52,10 +51,7 @@ const UnitSelect = ({
       onOpenChange={handleOpenChange}
       disabled={disabled}
     >
-      <SelectTrigger
-        aria-label={ariaLabel}
-        className="h-8 w-20 px-2 text-sm"
-      >
+      <SelectTrigger aria-label={ariaLabel} className="h-8 w-20 px-2 text-sm">
         <SelectValue placeholder={value || "단위"} />
       </SelectTrigger>
       <SelectContent>

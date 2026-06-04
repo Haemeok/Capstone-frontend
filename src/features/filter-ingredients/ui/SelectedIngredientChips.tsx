@@ -18,12 +18,12 @@ export const SelectedIngredientChips = ({ items, onRemove }: Props) => {
       {items.map(({ id, name }) => (
         <div
           key={id}
-          className="flex flex-shrink-0 items-center gap-1 rounded-full bg-olive-light/10 px-3 py-1.5 text-sm font-medium text-olive-light"
+          className="bg-olive-light/10 text-olive-light flex flex-shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium"
         >
           <span>{name}</span>
           <button
             onClick={() => onRemove(id)}
-            className="cursor-pointer rounded-full p-0.5 hover:bg-olive-light/20"
+            className="hover:bg-olive-light/20 cursor-pointer rounded-full p-0.5"
           >
             <X size={14} strokeWidth={2.5} />
           </button>

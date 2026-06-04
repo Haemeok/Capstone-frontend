@@ -18,7 +18,9 @@ export const ModelTogglePanel = ({ onChange }: Props) => {
   }, []);
 
   const toggle = (id: string) => {
-    const next = enabled.includes(id) ? enabled.filter((x) => x !== id) : [...enabled, id];
+    const next = enabled.includes(id)
+      ? enabled.filter((x) => x !== id)
+      : [...enabled, id];
     setEnabled(next);
     saveEnabledModels(next);
     onChange(next);
@@ -35,7 +37,9 @@ export const ModelTogglePanel = ({ onChange }: Props) => {
         <h3 className="text-sm font-bold text-gray-900">
           모델 선택 ({enabled.length}/{MODELS.length})
         </h3>
-        <span className="text-xs text-gray-500">1회당 예상 ${totalCost.toFixed(3)}</span>
+        <span className="text-xs text-gray-500">
+          1회당 예상 ${totalCost.toFixed(3)}
+        </span>
       </div>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {MODELS.map((m) => {
@@ -55,7 +59,9 @@ export const ModelTogglePanel = ({ onChange }: Props) => {
                 <span className="font-medium">{m.label}</span>
                 <span className="ml-2 text-xs text-gray-400">{m.vendor}</span>
               </span>
-              <span className="shrink-0 text-xs text-gray-500">${m.pricePerImage.toFixed(3)}</span>
+              <span className="shrink-0 text-xs text-gray-500">
+                ${m.pricePerImage.toFixed(3)}
+              </span>
             </button>
           );
         })}

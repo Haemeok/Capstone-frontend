@@ -1,10 +1,6 @@
 import type { Recipe } from "@/entities/recipe/model/types";
 
-import {
-  CLOSING_SEEDS,
-  LEAD_SEEDS,
-  pickSeedByRecipeId,
-} from "./blogPostStyle";
+import { CLOSING_SEEDS, LEAD_SEEDS, pickSeedByRecipeId } from "./blogPostStyle";
 import {
   buildBlogPostBodySystemPrompt,
   buildBlogPostBodyUserPrompt,
@@ -72,14 +68,14 @@ describe("pickSeedByRecipeId", () => {
 
   it("닫는 말 시드도 결정적으로 동작한다", () => {
     expect(pickSeedByRecipeId(CLOSING_SEEDS, "xyz")).toBe(
-      pickSeedByRecipeId(CLOSING_SEEDS, "xyz"),
+      pickSeedByRecipeId(CLOSING_SEEDS, "xyz")
     );
   });
 
   it("다양한 recipeId는 시드 풀에서 분포한다 (모두 같은 시드만 픽되지 않음)", () => {
     const ids = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
     const picked = new Set(
-      ids.map((id) => pickSeedByRecipeId(LEAD_SEEDS, id).id),
+      ids.map((id) => pickSeedByRecipeId(LEAD_SEEDS, id).id)
     );
     expect(picked.size).toBeGreaterThan(1);
   });

@@ -5,7 +5,7 @@ export const ADSENSE_TEST_USER_IDS = new Set(
   (process.env.NEXT_PUBLIC_ADSENSE_TEST_USER_ID ?? "")
     .split(",")
     .map((s) => s.trim())
-    .filter((s) => s.length > 0),
+    .filter((s) => s.length > 0)
 );
 
 const parseSlotList = (raw: string | undefined): string[] =>
@@ -16,10 +16,10 @@ const parseSlotList = (raw: string | undefined): string[] =>
 
 export const AD_SLOT_IDS = {
   searchInFeed: parseSlotList(
-    process.env.NEXT_PUBLIC_ADSENSE_SLOT_SEARCH_INFEED,
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_SEARCH_INFEED
   ),
   recipeInArticle: parseSlotList(
-    process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_INARTICLE,
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_INARTICLE
   ),
   recipeBottomAnchor:
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_BOTTOM_ANCHOR || "",

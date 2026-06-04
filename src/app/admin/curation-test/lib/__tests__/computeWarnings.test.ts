@@ -133,6 +133,8 @@ describe("computeWarnings", () => {
     });
     expect(r).toHaveLength(2);
     expect(r.find((w) => w.source === "q")?.missingSections).toEqual([0, 1, 2]);
-    expect(r.find((w) => w.source === "ingredientIds")?.missingSections).toEqual([1]);
+    expect(
+      r.find((w) => w.source === "ingredientIds")?.missingSections
+    ).toEqual([1]);
   });
 });

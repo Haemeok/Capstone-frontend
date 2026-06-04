@@ -54,7 +54,7 @@ const ExpandableIngredients = ({
           {visibleMatched.map((ingredient, index) => (
             <span
               key={index}
-              className="rounded-full bg-olive-light/10 px-2.5 py-1 text-xs font-bold text-olive-light"
+              className="bg-olive-light/10 text-olive-light rounded-full px-2.5 py-1 text-xs font-bold"
             >
               {ingredient}
             </span>
@@ -62,7 +62,7 @@ const ExpandableIngredients = ({
           {!isExpanded && matchedHiddenCount > 0 && (
             <button
               onClick={handleExpandClick}
-              className="flex h-6 min-w-[32px] items-center justify-center rounded-full bg-olive-light/20 px-2 text-xs font-bold text-olive-light transition-colors hover:bg-olive-light/30"
+              className="bg-olive-light/20 text-olive-light hover:bg-olive-light/30 flex h-6 min-w-[32px] items-center justify-center rounded-full px-2 text-xs font-bold transition-colors"
             >
               +{matchedHiddenCount}
             </button>

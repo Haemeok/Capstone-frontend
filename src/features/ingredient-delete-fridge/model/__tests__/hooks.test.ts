@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   QueryClient,
   QueryClientProvider,
@@ -6,11 +7,15 @@ import {
 } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 
-import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 import { getNextPageParam } from "@/shared/lib/utils";
 
+import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
+
 import * as api from "../api";
-import { useDeleteIngredientBulkMutation, useDeleteIngredientMutation } from "../hooks";
+import {
+  useDeleteIngredientBulkMutation,
+  useDeleteIngredientMutation,
+} from "../hooks";
 
 jest.mock("../api");
 jest.mock("@/shared/lib/bridge", () => ({
@@ -236,7 +241,10 @@ describe("delete error paths roll back the optimistic changes", () => {
   it("single delete reverts inFridge to true on failure", async () => {
     (api.deleteIngredient as jest.Mock).mockRejectedValue(new Error("fail"));
     const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
     });
     queryClient.setQueryData(INGREDIENT_QUERY_KEYS.browse("전체", ""), {
       pages: [makeBrowsePage()],
@@ -260,9 +268,14 @@ describe("delete error paths roll back the optimistic changes", () => {
   });
 
   it("bulk delete restores removed fridge items and the browse flag on failure", async () => {
-    (api.deleteIngredientBulk as jest.Mock).mockRejectedValue(new Error("fail"));
+    (api.deleteIngredientBulk as jest.Mock).mockRejectedValue(
+      new Error("fail")
+    );
     const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
     });
     queryClient.setQueryData(INGREDIENT_QUERY_KEYS.myFridge("전체", "asc"), {
       pages: [makeFridgePage()],

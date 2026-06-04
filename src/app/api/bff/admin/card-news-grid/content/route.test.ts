@@ -50,17 +50,36 @@ describe("POST card-news-grid/content", () => {
   });
 
   it("topics 단계는 topics 객체를 반환한다", async () => {
-    const topics = Array.from({ length: 5 }, () => ({ title: "t", concept: "c" }));
+    const topics = Array.from({ length: 5 }, () => ({
+      title: "t",
+      concept: "c",
+    }));
     mockGenerate.mockResolvedValueOnce({ object: { topics } });
-    const res = await POST(makeReq({ stage: "topics", modelId: "deepseek/deepseek-v4-flash", seedKeyword: "케찹" }));
+    const res = await POST(
+      makeReq({
+        stage: "topics",
+        modelId: "deepseek/deepseek-v4-flash",
+        seedKeyword: "케찹",
+      })
+    );
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ topics });
   });
 
   it("items 단계는 header+items를 반환한다", async () => {
-    const items = Array.from({ length: 9 }, () => ({ dishName: "d", caption: "c", imagePrompt: "p" }));
+    const items = Array.from({ length: 9 }, () => ({
+      dishName: "d",
+      caption: "c",
+      imagePrompt: "p",
+    }));
     mockGenerate.mockResolvedValueOnce({ object: { header: "h", items } });
-    const res = await POST(makeReq({ stage: "items", modelId: "deepseek/deepseek-v4-flash", topicTitle: "황금비율" }));
+    const res = await POST(
+      makeReq({
+        stage: "items",
+        modelId: "deepseek/deepseek-v4-flash",
+        topicTitle: "황금비율",
+      })
+    );
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ header: "h", items });
   });
@@ -78,14 +97,25 @@ describe("POST card-news-grid/content", () => {
 
   it("tips 모드는 tips 프롬프트로 생성한다", async () => {
     mockGenerate.mockResolvedValueOnce({ object: { topics: [] } });
-    await POST(makeReq({ stage: "topics", modelId: "x", mode: "tips", seedKeyword: "수박" }));
+    await POST(
+      makeReq({
+        stage: "topics",
+        modelId: "x",
+        mode: "tips",
+        seedKeyword: "수박",
+      })
+    );
     expect(mockGenerate.mock.calls[0][0].prompt).toContain("꿀팁");
   });
 
   it("게이트웨이 모델은 model을 string 그대로 넘긴다", async () => {
     mockGenerate.mockResolvedValueOnce({ object: { topics: [] } });
-    await POST(makeReq({ stage: "topics", modelId: "deepseek/deepseek-v4-flash" }));
-    expect(mockGenerate.mock.calls[0][0].model).toBe("deepseek/deepseek-v4-flash");
+    await POST(
+      makeReq({ stage: "topics", modelId: "deepseek/deepseek-v4-flash" })
+    );
+    expect(mockGenerate.mock.calls[0][0].model).toBe(
+      "deepseek/deepseek-v4-flash"
+    );
   });
 
   it("openai/ 모델은 OpenAI provider 인스턴스로 변환해 넘긴다 (string 아님)", async () => {
@@ -96,7 +126,9 @@ describe("POST card-news-grid/content", () => {
 
   it("google/ 모델은 Gemini Studio provider 인스턴스로 변환해 넘긴다 (string 아님)", async () => {
     mockGenerate.mockResolvedValueOnce({ object: { topics: [] } });
-    await POST(makeReq({ stage: "topics", modelId: "google/gemini-2.5-flash" }));
+    await POST(
+      makeReq({ stage: "topics", modelId: "google/gemini-2.5-flash" })
+    );
     expect(typeof mockGenerate.mock.calls[0][0].model).not.toBe("string");
   });
 });

@@ -4,11 +4,7 @@ type AppleIconProps = {
   height?: number;
 };
 
-const AppleIcon = ({
-  className,
-  width = 24,
-  height = 24,
-}: AppleIconProps) => {
+const AppleIcon = ({ className, width = 24, height = 24 }: AppleIconProps) => {
   return (
     <svg
       width={width}

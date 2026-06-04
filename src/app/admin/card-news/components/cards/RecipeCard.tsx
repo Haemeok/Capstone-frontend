@@ -17,7 +17,15 @@ const CARD = 1080;
 
 /* ─── Badge components ─── */
 
-const SquareBadge = ({ index, bg, color }: { index: number; bg: string; color: string }) => (
+const SquareBadge = ({
+  index,
+  bg,
+  color,
+}: {
+  index: number;
+  bg: string;
+  color: string;
+}) => (
   <div
     style={{
       width: 48,
@@ -30,11 +38,28 @@ const SquareBadge = ({ index, bg, color }: { index: number; bg: string; color: s
       flexShrink: 0,
     }}
   >
-    <span style={{ fontFamily: "Jalnan2, sans-serif", fontSize: 26, color, lineHeight: 1 }}>{index}</span>
+    <span
+      style={{
+        fontFamily: "Jalnan2, sans-serif",
+        fontSize: 26,
+        color,
+        lineHeight: 1,
+      }}
+    >
+      {index}
+    </span>
   </div>
 );
 
-const CircleBadge = ({ index, bg, color }: { index: number; bg: string; color: string }) => (
+const CircleBadge = ({
+  index,
+  bg,
+  color,
+}: {
+  index: number;
+  bg: string;
+  color: string;
+}) => (
   <div
     style={{
       width: 52,
@@ -47,12 +72,27 @@ const CircleBadge = ({ index, bg, color }: { index: number; bg: string; color: s
       flexShrink: 0,
     }}
   >
-    <span style={{ fontFamily: "Jalnan2, sans-serif", fontSize: 26, color, lineHeight: 1 }}>{index}</span>
+    <span
+      style={{
+        fontFamily: "Jalnan2, sans-serif",
+        fontSize: 26,
+        color,
+        lineHeight: 1,
+      }}
+    >
+      {index}
+    </span>
   </div>
 );
 
 /* ─── Classic: 오늘의집 톤 솔리드 카드 ─── */
-const ClassicRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCardProps) => (
+const ClassicRecipe = ({
+  imageUrl,
+  title,
+  summary,
+  boxPosition,
+  index,
+}: RecipeCardProps) => (
   <>
     <img src={imageUrl} alt="" crossOrigin="anonymous" style={imgFull} />
     <div
@@ -60,14 +100,22 @@ const ClassicRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeC
         ...abs,
         [boxPosition === "top" ? "top" : "bottom"]: 0,
         height: "48%",
-        background: boxPosition === "top"
-          ? "linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, transparent 100%)"
-          : "linear-gradient(to top, rgba(0,0,0,0.32) 0%, transparent 100%)",
+        background:
+          boxPosition === "top"
+            ? "linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, transparent 100%)"
+            : "linear-gradient(to top, rgba(0,0,0,0.32) 0%, transparent 100%)",
       }}
     />
     <div style={{ ...abs, [boxPosition === "top" ? "top" : "bottom"]: 0 }}>
       <div style={classicBox}>
-        <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 22 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 18,
+            marginBottom: 22,
+          }}
+        >
           <span style={classicBadge}>{index}</span>
           <p style={classicTitle}>{title}</p>
         </div>
@@ -79,7 +127,13 @@ const ClassicRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeC
 );
 
 /* ─── Glass: 캡처-안전 글래스모피즘 (사진 사본 blur + sheen) ─── */
-const GlassRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCardProps) => {
+const GlassRecipe = ({
+  imageUrl,
+  title,
+  summary,
+  boxPosition,
+  index,
+}: RecipeCardProps) => {
   const M = 44;
   const anchor = boxPosition === "top" ? "top" : "bottom";
   return (
@@ -133,8 +187,17 @@ const GlassRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCar
               "linear-gradient(135deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.04) 100%), rgba(20,18,15,0.28)",
           }}
         />
-        <div style={{ position: "relative", zIndex: 1, padding: "38px 46px 44px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 22 }}>
+        <div
+          style={{ position: "relative", zIndex: 1, padding: "38px 46px 44px" }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 18,
+              marginBottom: 22,
+            }}
+          >
             <span style={glassBadge}>{index}</span>
             <p style={glassTitle}>{title}</p>
           </div>
@@ -146,7 +209,13 @@ const GlassRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCar
 };
 
 /* ─── Bold: 노란 하이라이트 제목 + 원형 뱃지 ─── */
-const BoldRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCardProps) => (
+const BoldRecipe = ({
+  imageUrl,
+  title,
+  summary,
+  boxPosition,
+  index,
+}: RecipeCardProps) => (
   <>
     <img src={imageUrl} alt="" crossOrigin="anonymous" style={imgFull} />
     <div
@@ -154,14 +223,22 @@ const BoldRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCard
         ...abs,
         [boxPosition === "top" ? "top" : "bottom"]: 0,
         height: "45%",
-        background: boxPosition === "top"
-          ? "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 100%)"
-          : "linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%)",
+        background:
+          boxPosition === "top"
+            ? "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 100%)"
+            : "linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%)",
       }}
     />
     <div style={{ ...abs, [boxPosition === "top" ? "top" : "bottom"]: 0 }}>
       <div style={{ ...whiteBox }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 16,
+          }}
+        >
           <CircleBadge index={index} bg="#58C16A" color="#fff" />
           <span
             style={{
@@ -213,11 +290,20 @@ const FrameRecipe = ({ imageUrl, title, summary, index }: RecipeCardProps) => {
           padding: `20px ${border + 8}px ${border}px`,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 14,
+          }}
+        >
           <SquareBadge index={index} bg="#58C16A" color="#fff" />
           <p style={{ ...titleStyle, color: "#1a1a1a" }}>{title}</p>
         </div>
-        <p style={{ ...summaryStyle, color: "#555", fontSize: 26 }}>{summary}</p>
+        <p style={{ ...summaryStyle, color: "#555", fontSize: 26 }}>
+          {summary}
+        </p>
       </div>
     </>
   );
@@ -232,12 +318,53 @@ const SplitRecipe = ({ imageUrl, title, summary, index }: RecipeCardProps) => {
         src={imageUrl}
         alt=""
         crossOrigin="anonymous"
-        style={{ position: "absolute", top: 0, left: 0, width: CARD, height: splitAt, objectFit: "cover" }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: CARD,
+          height: splitAt,
+          objectFit: "cover",
+        }}
       />
-      <div style={{ position: "absolute", top: splitAt, left: 0, right: 0, bottom: 0, backgroundColor: "#FFF8F0" }} />
-      <div style={{ position: "absolute", top: splitAt - 1, left: 50, right: 50, height: 3, backgroundColor: "#E8D5C0" }} />
-      <div style={{ position: "absolute", top: splitAt, left: 0, right: 0, bottom: 0, padding: "32px 56px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+      <div
+        style={{
+          position: "absolute",
+          top: splitAt,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "#FFF8F0",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: splitAt - 1,
+          left: 50,
+          right: 50,
+          height: 3,
+          backgroundColor: "#E8D5C0",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: splitAt,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          padding: "32px 56px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 16,
+          }}
+        >
           <SquareBadge index={index} bg="#C4813A" color="#fff" />
           <p style={{ ...titleStyle, color: "#3E2712" }}>{title}</p>
         </div>
@@ -248,7 +375,13 @@ const SplitRecipe = ({ imageUrl, title, summary, index }: RecipeCardProps) => {
 };
 
 /* ─── Dark: 어두운 박스 + 흰 텍스트 ─── */
-const DarkRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCardProps) => (
+const DarkRecipe = ({
+  imageUrl,
+  title,
+  summary,
+  boxPosition,
+  index,
+}: RecipeCardProps) => (
   <>
     <img src={imageUrl} alt="" crossOrigin="anonymous" style={imgFull} />
     <div
@@ -256,9 +389,10 @@ const DarkRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCard
         ...abs,
         [boxPosition === "top" ? "top" : "bottom"]: 0,
         height: "50%",
-        background: boxPosition === "top"
-          ? "linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%)"
-          : "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%)",
+        background:
+          boxPosition === "top"
+            ? "linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%)"
+            : "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%)",
       }}
     />
     <div style={{ ...abs, [boxPosition === "top" ? "top" : "bottom"]: 0 }}>
@@ -271,7 +405,14 @@ const DarkRecipe = ({ imageUrl, title, summary, boxPosition, index }: RecipeCard
           boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 16,
+          }}
+        >
           <SquareBadge index={index} bg="#fff" color="#111" />
           <p style={{ ...titleStyle, color: "#fff" }}>{title}</p>
         </div>
@@ -290,23 +431,25 @@ const RECIPE_MAP: Record<CardTheme, React.FC<RecipeCardProps>> = {
   dark: DarkRecipe,
 };
 
-export const RecipeCard = forwardRef<HTMLDivElement, RecipeCardProps>((props, ref) => {
-  const Renderer = RECIPE_MAP[props.theme ?? "classic"];
-  return (
-    <div
-      ref={ref}
-      style={{
-        width: CARD,
-        height: CARD,
-        position: "relative",
-        overflow: "hidden",
-        backgroundColor: "#000",
-      }}
-    >
-      <Renderer {...props} />
-    </div>
-  );
-});
+export const RecipeCard = forwardRef<HTMLDivElement, RecipeCardProps>(
+  (props, ref) => {
+    const Renderer = RECIPE_MAP[props.theme ?? "classic"];
+    return (
+      <div
+        ref={ref}
+        style={{
+          width: CARD,
+          height: CARD,
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: "#000",
+        }}
+      >
+        <Renderer {...props} />
+      </div>
+    );
+  }
+);
 
 RecipeCard.displayName = "RecipeCard";
 

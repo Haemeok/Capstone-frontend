@@ -11,6 +11,9 @@ export type PostCommentParams = {
   imageKeys?: string[];
 };
 
-export type CreateCommentMutationParams = Omit<PostCommentParams, "imageKeys"> & {
+export type CreateCommentMutationParams = Omit<
+  PostCommentParams,
+  "imageKeys"
+> & {
   file?: File;
 };

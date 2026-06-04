@@ -109,7 +109,7 @@ export const TrendingRecipesClient = ({
               onClick={() => selectTrendingRecipe(recipe.videoUrl)}
               className="group w-40 flex-shrink-0 text-left"
             >
-              <div className="group-hover:border-olive-light cursor-pointer relative mb-2 aspect-video w-full overflow-hidden rounded-card border border-gray-200 bg-gray-100 transition-colors">
+              <div className="group-hover:border-olive-light rounded-card relative mb-2 aspect-video w-full cursor-pointer overflow-hidden border border-gray-200 bg-gray-100 transition-colors">
                 <Image
                   src={recipe.thumbnailUrl}
                   alt={recipe.title}
@@ -122,7 +122,7 @@ export const TrendingRecipesClient = ({
                 <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
               </div>
               <div className="space-y-0.5">
-                <p className=" line-clamp-2 leading-tight font-medium text-gray-900">
+                <p className="line-clamp-2 leading-tight font-medium text-gray-900">
                   {recipe.title}
                 </p>
                 <p className="truncate text-sm text-gray-500">

@@ -17,14 +17,14 @@ export const TrendingRecipesSkeleton = ({
         <div className="flex gap-2">
           <button
             disabled
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 opacity-40 cursor-not-allowed"
+            className="flex h-8 w-8 cursor-not-allowed items-center justify-center rounded-full border border-gray-200 opacity-40"
             aria-label="이전"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
           <button
             disabled
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 opacity-40 cursor-not-allowed"
+            className="flex h-8 w-8 cursor-not-allowed items-center justify-center rounded-full border border-gray-200 opacity-40"
             aria-label="다음"
           >
             <ChevronRight className="h-5 w-5" />

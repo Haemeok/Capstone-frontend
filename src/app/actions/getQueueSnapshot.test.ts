@@ -28,12 +28,17 @@ describe("getQueueSnapshot — slug 추출", () => {
     const dir = path.join(tmpDir, "pending", name);
     fs.mkdirSync(dir, { recursive: true });
     if (meta !== undefined) {
-      fs.writeFileSync(path.join(dir, "curation-meta.json"), JSON.stringify(meta));
+      fs.writeFileSync(
+        path.join(dir, "curation-meta.json"),
+        JSON.stringify(meta)
+      );
     }
   };
 
   it("curation-meta.json 의 slug 가 QueueItemSnapshot.slug 에 들어감", async () => {
-    makePackage("curation-epigung-쌈채소-2026-05-27", { slug: "spring-salads" });
+    makePackage("curation-epigung-쌈채소-2026-05-27", {
+      slug: "spring-salads",
+    });
     const snap = await getQueueSnapshot();
     expect(snap.pending).toHaveLength(1);
     expect(snap.pending[0].slug).toBe("spring-salads");

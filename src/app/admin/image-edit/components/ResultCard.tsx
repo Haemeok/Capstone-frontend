@@ -18,7 +18,7 @@ export const ResultCard = ({ quality, cell, included }: Props) => {
       }`}
     >
       <div className="mb-2 flex items-baseline justify-between">
-        <p className="text-xs font-bold capitalize text-gray-900">{quality}</p>
+        <p className="text-xs font-bold text-gray-900 capitalize">{quality}</p>
         {cell.status === "success" && (
           <p className="text-[10px] text-gray-500">
             ${cell.cost.toFixed(3)} · {(cell.latencyMs / 1000).toFixed(1)}초
@@ -26,7 +26,7 @@ export const ResultCard = ({ quality, cell, included }: Props) => {
         )}
       </div>
 
-      <div className="aspect-square w-full overflow-hidden rounded-card bg-gray-50">
+      <div className="rounded-card aspect-square w-full overflow-hidden bg-gray-50">
         {cell.status === "idle" && (
           <div className="flex h-full items-center justify-center text-[11px] text-gray-400">
             {included ? "대기" : "선택 안 됨"}

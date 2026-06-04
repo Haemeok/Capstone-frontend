@@ -1,21 +1,23 @@
 "use server";
 
+import { revalidatePath, revalidateTag } from "next/cache";
+
 import { randomUUID } from "crypto";
 import { mkdir, rename, unlink, writeFile } from "fs/promises";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { join } from "path";
+
+import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 import {
   type GenerateCurationOutput,
   type SavedCurationRecord,
 } from "@/entities/curation";
-import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 const STORAGE_DIR = join(process.cwd(), "data", "curations-local");
 
 const writeJsonAtomic = async (
   filePath: string,
-  data: unknown,
+  data: unknown
 ): Promise<void> => {
   const tmpPath = `${filePath}.${randomUUID()}.tmp`;
   try {
@@ -33,14 +35,14 @@ export type FinalizeCurationBatchResult = {
 };
 
 export const finalizeCurationBatch = async (
-  records: GenerateCurationOutput[],
+  records: GenerateCurationOutput[]
 ): Promise<FinalizeCurationBatchResult> => {
   await requireAdminAction();
 
   // 같은 batch 안에 같은 슬러그가 두 번 들어와도 한 번만 쓴다 (마지막 항목 우선).
   // 보통은 caller 가 dedupe 하지만 안전망.
   const uniqueRecords = Array.from(
-    new Map(records.map((r) => [r.slug, r])).values(),
+    new Map(records.map((r) => [r.slug, r])).values()
   );
 
   for (const r of uniqueRecords) {
@@ -70,7 +72,7 @@ export const finalizeCurationBatch = async (
           message: e instanceof Error ? e.message : String(e),
         });
       }
-    }),
+    })
   );
 
   return { saved, saveErrors };

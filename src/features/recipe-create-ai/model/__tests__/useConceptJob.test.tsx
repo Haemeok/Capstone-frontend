@@ -182,9 +182,7 @@ describe("useConceptJob", () => {
         result.current.retry();
       });
 
-      expect(
-        Object.values(useAIRecipeStoreV2.getState().jobs)
-      ).toHaveLength(0);
+      expect(Object.values(useAIRecipeStoreV2.getState().jobs)).toHaveLength(0);
     });
 
     it("job 없을 때 retry 호출해도 안전 (no-op)", () => {
@@ -203,17 +201,20 @@ describe("useConceptJob", () => {
       const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
 
       act(() => {
-        useAIRecipeStoreV2
-          .getState()
-          .createJob(
-            "INGREDIENT_FOCUS",
-            { ingredientIds: ["1"], dishType: "한식", cookingTime: 30, servings: 2 },
-            {
-              concept: "INGREDIENT_FOCUS",
-              displayName: "냉장고 속 재료",
-              requestSummary: "",
-            }
-          );
+        useAIRecipeStoreV2.getState().createJob(
+          "INGREDIENT_FOCUS",
+          {
+            ingredientIds: ["1"],
+            dishType: "한식",
+            cookingTime: 30,
+            servings: 2,
+          },
+          {
+            concept: "INGREDIENT_FOCUS",
+            displayName: "냉장고 속 재료",
+            requestSummary: "",
+          }
+        );
       });
 
       expect(result.current.job).toBeUndefined();

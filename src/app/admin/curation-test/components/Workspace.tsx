@@ -28,7 +28,7 @@ export const Workspace = () => {
   const selected = useCurationStore((s) => s.selected);
   const selectedSlug = useCurationStore((s) => s.selectedSlug);
   const batchItem = useBatchPublishStore((s) =>
-    selectedSlug ? s.items[selectedSlug] : undefined,
+    selectedSlug ? s.items[selectedSlug] : undefined
   );
   const batchResult = batchItem?.result ?? null;
 
@@ -36,7 +36,7 @@ export const Workspace = () => {
   const [tone, setTone] = useState<ToneOption>("auto");
   const [loading, setLoading] = useState(false);
   const [localResult, setLocalResult] = useState<GenerateCurationOutput | null>(
-    null,
+    null
   );
   const [error, setError] = useState<string | null>(null);
 
@@ -83,11 +83,11 @@ export const Workspace = () => {
   }
 
   return (
-    <main className="overflow-y-auto p-6 space-y-4">
+    <main className="space-y-4 overflow-y-auto p-6">
       <section className="rounded border p-3">
-        <h2 className="text-sm font-bold mb-2">params</h2>
+        <h2 className="mb-2 text-sm font-bold">params</h2>
         <pre className="text-xs">{JSON.stringify(selected, null, 2)}</pre>
-        <div className="mt-3 flex gap-3 items-center">
+        <div className="mt-3 flex items-center gap-3">
           <label className="text-sm">
             개수
             <input
@@ -96,7 +96,7 @@ export const Workspace = () => {
               max={10}
               value={count}
               onChange={(e) => setCount(Number(e.target.value))}
-              className="ml-2 w-16 border rounded px-2 py-1"
+              className="ml-2 w-16 rounded border px-2 py-1"
             />
           </label>
           <label className="text-sm">
@@ -104,7 +104,7 @@ export const Workspace = () => {
             <select
               value={tone}
               onChange={(e) => setTone(e.target.value as ToneOption)}
-              className="ml-2 border rounded px-2 py-1"
+              className="ml-2 rounded border px-2 py-1"
             >
               <option value="auto">auto</option>
               <option value="friendly">friendly</option>
@@ -115,7 +115,7 @@ export const Workspace = () => {
             type="button"
             onClick={onGenerate}
             disabled={loading}
-            className="ml-auto rounded bg-black text-white px-4 py-2 text-sm disabled:opacity-50"
+            className="ml-auto rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
           >
             {loading ? "생성 중..." : "단일 생성"}
           </button>
@@ -146,13 +146,13 @@ export const Workspace = () => {
                     // 발행 즉시 좌측 후보 리스트에서 사라지도록.
                     queryClient.setQueryData<AllowlistEntryWithSlug[]>(
                       CURATION_UNPUBLISHED_KEY,
-                      (old) => old?.filter((d) => d.slug !== slug),
+                      (old) => old?.filter((d) => d.slug !== slug)
                     );
                   },
                 })
               }
               disabled={publishMutation.isPending}
-              className="rounded bg-black text-white px-4 py-2 text-sm disabled:opacity-50"
+              className="rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
             >
               {publishMutation.isPending ? "발행 중..." : "백엔드에 발행"}
             </button>
@@ -170,7 +170,7 @@ export const Workspace = () => {
               href={`/curation/${result.slug}`}
               target="_blank"
               rel="noreferrer"
-              className="text-xs underline text-gray-600"
+              className="text-xs text-gray-600 underline"
             >
               /curation/{result.slug} 열기 →
             </a>

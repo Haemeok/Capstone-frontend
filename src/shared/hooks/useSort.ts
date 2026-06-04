@@ -29,7 +29,9 @@ export const useSort = <T extends SortType>(
 ): UseSortReturn<T> => {
   const configs = SORT_CONFIGS[type];
 
-  const availableSorts = Object.keys(configs) as unknown as readonly SortOptions<T>[];
+  const availableSorts = Object.keys(
+    configs
+  ) as unknown as readonly SortOptions<T>[];
 
   const defaultSort = initialSort || availableSorts[0];
   const [currentSort, setCurrentSort] = useState<SortOptions<T>>(defaultSort);

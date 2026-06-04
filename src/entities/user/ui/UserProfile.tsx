@@ -23,7 +23,9 @@ const UserProfile = ({ user, className }: UserProfileProps) => {
             userId={user.id}
             className={className}
           />
-          <p className="text-left text-sm line-clamp-2 text-pretty break-keep">{user.introduction}</p>
+          <p className="line-clamp-2 text-left text-sm text-pretty break-keep">
+            {user.introduction}
+          </p>
         </div>
       </div>
     </div>

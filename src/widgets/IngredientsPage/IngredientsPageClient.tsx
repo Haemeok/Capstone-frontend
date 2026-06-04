@@ -42,11 +42,17 @@ const IngredientsPageClient = () => {
     },
   });
 
-  const { error, hasNextPage, isFetchingNextPage, isPending, ref, ingredients } =
-    useInfiniteIngredients({
-      category: selectedCategory,
-      sort,
-    });
+  const {
+    error,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending,
+    ref,
+    ingredients,
+  } = useInfiniteIngredients({
+    category: selectedCategory,
+    sort,
+  });
 
   const handleDeleteIngredientBulk = () => {
     deleteIngredientBulk(selectedIngredientIds);
@@ -82,7 +88,7 @@ const IngredientsPageClient = () => {
         <div ref={observerRef} className="w-full" />
         <div className="z-sticky sticky-optimized sticky top-0 bg-white">
           <div className="flex items-center justify-between gap-3 px-5 py-5">
-            <h1 className="text-2xl font-bold text-gray-900 break-keep leading-snug max-w-[55%]">
+            <h1 className="max-w-[55%] text-2xl leading-snug font-bold break-keep text-gray-900">
               {headerTitle}
             </h1>
             {!!user && (

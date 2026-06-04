@@ -26,9 +26,11 @@ const BlogPublishPage = () => {
   };
 
   return (
-    <div className="mx-auto min-h-screen max-w-7xl bg-beige-light/40 p-4 md:p-6">
+    <div className="bg-beige-light/40 mx-auto min-h-screen max-w-7xl p-4 md:p-6">
       <header className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">블로그 발행 (관리자)</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          블로그 발행 (관리자)
+        </h1>
         <div className="flex rounded-2xl border border-gray-200 bg-white p-1 text-sm">
           {(["recipe", "curation"] as const).map((m) => (
             <button

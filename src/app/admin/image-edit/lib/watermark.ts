@@ -50,7 +50,7 @@ export type LoadedImage = { url: string; width: number; height: number };
 /** 선택한 9방향 + 여백(px)을 배지 래퍼의 절대배치 스타일로 변환 */
 export const positionToStyle = (
   position: WatermarkPosition,
-  paddingPx: number,
+  paddingPx: number
 ): CSSProperties => {
   const [vertical, horizontal] = position.split("-");
   const style: CSSProperties = { position: "absolute" };
@@ -79,7 +79,7 @@ export const backdropCopyStyle = (
   position: WatermarkPosition,
   paddingPx: number,
   naturalWidth: number,
-  naturalHeight: number,
+  naturalHeight: number
 ): CSSProperties => {
   const [vertical, horizontal] = position.split("-");
   const style: CSSProperties = {
@@ -112,7 +112,8 @@ export const backdropCopyStyle = (
 export const readImage = (file: File): Promise<LoadedImage> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(reader.error ?? new Error("FileReader error"));
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("FileReader error"));
     reader.onload = () => {
       const url = reader.result;
       if (typeof url !== "string") {
@@ -131,7 +132,7 @@ export const readImage = (file: File): Promise<LoadedImage> =>
 /** 캡처 노드를 native 해상도 PNG로 다운로드 */
 export const exportWatermarked = async (
   node: HTMLElement,
-  fileName: string,
+  fileName: string
 ): Promise<void> => {
   await document.fonts.ready;
   const blob = await toBlob(node, {

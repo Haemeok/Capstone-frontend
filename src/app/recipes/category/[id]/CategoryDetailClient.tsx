@@ -25,13 +25,10 @@ const SortPicker = dynamic(() => import("@/shared/ui/SortPicker"), {
   ssr: false,
 });
 
-const RecipeGrid = dynamic(
-  () => import("@/widgets/RecipeGrid/ui/RecipeGrid"),
-  {
-    loading: () => <RecipeGridSkeleton count={6} />,
-    ssr: false,
-  }
-);
+const RecipeGrid = dynamic(() => import("@/widgets/RecipeGrid/ui/RecipeGrid"), {
+  loading: () => <RecipeGridSkeleton count={6} />,
+  ssr: false,
+});
 
 type CategoryDetailClientProps = {
   initialPage?: number;
@@ -129,4 +126,3 @@ const CategoryDetailClient = ({
 };
 
 export default CategoryDetailClient;
-

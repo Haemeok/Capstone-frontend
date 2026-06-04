@@ -1,12 +1,12 @@
-import { fetchRecentRecipesForFeed } from "@/entities/recipe/model/api.server";
-import { SEO_CONSTANTS } from "@/entities/recipe/lib/metadata/constants";
-
 import {
   buildRssFeed,
   createRssResponse,
   type RssItem,
   tagUri,
 } from "@/shared/lib/rss/buildFeed";
+
+import { SEO_CONSTANTS } from "@/entities/recipe/lib/metadata/constants";
+import { fetchRecentRecipesForFeed } from "@/entities/recipe/model/api.server";
 
 import {
   coverImageUrlFromKey,
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
       selfUrl: `${SITE_URL}/feed.xml`,
       copyright: `© ${new Date().getFullYear()} ${SEO_CONSTANTS.SITE_NAME}`,
     },
-    items,
+    items
   );
 
   const lastModified = items[0]?.pubDate ?? new Date();

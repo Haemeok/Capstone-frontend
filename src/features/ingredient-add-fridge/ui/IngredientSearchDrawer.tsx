@@ -155,8 +155,7 @@ const IngredientSearchDrawer = ({
             </p>
           ) : status === "error" ? (
             <p className="py-10 text-center text-sm text-gray-500">
-              오류가 발생했어요.{" "}
-              {error instanceof Error ? error.message : ""}
+              오류가 발생했어요. {error instanceof Error ? error.message : ""}
             </p>
           ) : (
             <div className="space-y-1">
@@ -189,7 +188,7 @@ const IngredientSearchDrawer = ({
                         "h-9 rounded-full px-4 text-xs font-semibold transition-colors",
                         isAdded
                           ? "bg-gray-100 text-gray-700 active:bg-gray-200"
-                          : "bg-olive-light text-white active:bg-olive-dark"
+                          : "bg-olive-light active:bg-olive-dark text-white"
                       )}
                       onClick={() =>
                         handleAddRemoveClick(ingredient.id, isAdded)

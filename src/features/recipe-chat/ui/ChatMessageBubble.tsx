@@ -5,7 +5,6 @@ import { Image } from "@/shared/ui/image/Image";
 
 import { SYSTEM_BUBBLE_LABEL } from "../model/errorMessages";
 import type { ChatMessage } from "../model/types";
-
 import ChatMarkdown from "./ChatMarkdown";
 
 type ChatMessageBubbleProps = {
@@ -26,14 +25,18 @@ const ChatMessageBubble = ({ message, onRetry }: ChatMessageBubbleProps) => {
   if (message.role === "user") {
     return (
       <div className="flex justify-end">
-        <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-olive-light px-4 py-2.5 text-white">
+        <div className="bg-olive-light max-w-[80%] rounded-2xl rounded-br-sm px-4 py-2.5 text-white">
           <p className="text-sm whitespace-pre-wrap">{message.text}</p>
         </div>
       </div>
     );
   }
 
-  if (message.role === "assistant" && "status" in message && message.status === "pending") {
+  if (
+    message.role === "assistant" &&
+    "status" in message &&
+    message.status === "pending"
+  ) {
     return (
       <div className="flex items-start justify-start gap-2">
         <BotAvatar />

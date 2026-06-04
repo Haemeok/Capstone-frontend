@@ -13,7 +13,11 @@ describe("pickToneBySlug", () => {
   it("대량 분포가 friendly 약 60%, editorial 약 40% 부근 (±10%p)", () => {
     let f = 0;
     for (let i = 0; i < 1000; i++) {
-      if (pickToneBySlug(`slug-${i.toString(16).padStart(12, "0")}`) === "friendly") f++;
+      if (
+        pickToneBySlug(`slug-${i.toString(16).padStart(12, "0")}`) ===
+        "friendly"
+      )
+        f++;
     }
     expect(f).toBeGreaterThan(500);
     expect(f).toBeLessThan(700);

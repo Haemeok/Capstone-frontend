@@ -70,7 +70,12 @@ export const WatermarkBadge = ({
         src="/favicon-96x96.png"
         alt=""
         crossOrigin="anonymous"
-        style={{ width: logoPx, height: logoPx, borderRadius: "50%", flex: "none" }}
+        style={{
+          width: logoPx,
+          height: logoPx,
+          borderRadius: "50%",
+          flex: "none",
+        }}
       />
       <span
         style={{

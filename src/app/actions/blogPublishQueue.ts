@@ -32,7 +32,12 @@ type EnqueueRecipeInput = {
 };
 
 export type EnqueueBlogPostResult =
-  | { success: true; packagePath: string; savedSlots: string[]; skippedSlots: string[] }
+  | {
+      success: true;
+      packagePath: string;
+      savedSlots: string[];
+      skippedSlots: string[];
+    }
   | { success: false; error: string };
 
 export const enqueueBlogPostForPublish = async (
@@ -130,7 +135,9 @@ export const enqueueCurationBlogPostForPublish = async (
 
   try {
     const snapshot = await getQueueSnapshot();
-    const dup = snapshot.pending.find((p) => p.slug === input.curationMeta.slug);
+    const dup = snapshot.pending.find(
+      (p) => p.slug === input.curationMeta.slug
+    );
     if (dup) {
       return {
         success: false,

@@ -40,7 +40,7 @@ export const WatermarkSection = () => {
         loaded.height > MAX_SAFE_DIMENSION
       ) {
         console.warn(
-          `이미지가 매우 큽니다 (${loaded.width}×${loaded.height}). 일부 환경에서 내보내기가 실패할 수 있어요.`,
+          `이미지가 매우 큽니다 (${loaded.width}×${loaded.height}). 일부 환경에서 내보내기가 실패할 수 있어요.`
         );
       }
       setImage(loaded);
@@ -97,13 +97,11 @@ export const WatermarkSection = () => {
     : 1;
 
   return (
-    <section
-      className="grid gap-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_280px]"
-    >
+    <section className="grid gap-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_280px]">
       <div
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
-        className="flex min-h-[320px] items-center justify-center rounded-xl bg-beige-light/30 p-4"
+        className="bg-beige-light/30 flex min-h-[320px] items-center justify-center rounded-xl p-4"
       >
         {image ? (
           <div
@@ -131,7 +129,7 @@ export const WatermarkSection = () => {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-gray-300 px-10 py-12 text-sm text-gray-500 transition hover:border-olive-light hover:bg-olive-light/5"
+            className="hover:border-olive-light hover:bg-olive-light/5 flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-gray-300 px-10 py-12 text-sm text-gray-500 transition"
           >
             <ImageUp className="h-7 w-7 text-gray-400" />
             <span>클릭 · 드래그 · Ctrl+V로 이미지 올리기</span>
@@ -140,7 +138,10 @@ export const WatermarkSection = () => {
       </div>
 
       <div className="space-y-4">
-        <WatermarkControls settings={settings} onChange={handleSettingsChange} />
+        <WatermarkControls
+          settings={settings}
+          onChange={handleSettingsChange}
+        />
 
         <div className="flex flex-col gap-2 border-t border-gray-100 pt-4">
           <button
@@ -154,7 +155,7 @@ export const WatermarkSection = () => {
             type="button"
             onClick={handleExport}
             disabled={!image || exporting}
-            className="flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-olive-light text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+            className="bg-olive-light flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
           >
             <Download className="h-4 w-4" />
             {exporting ? "내보내는 중…" : "PNG 저장"}

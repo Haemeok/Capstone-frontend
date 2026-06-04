@@ -29,9 +29,9 @@ const ArticleLayout = ({
         <PrevButton />
       </div>
 
-      <header className="pb-8 pt-4 md:pt-8">
+      <header className="pt-4 pb-8 md:pt-8">
         {subtitle && (
-          <span className="text-sm font-medium text-olive-light">
+          <span className="text-olive-light text-sm font-medium">
             {subtitle}
           </span>
         )}

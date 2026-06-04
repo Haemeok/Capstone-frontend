@@ -78,7 +78,10 @@ const IngredientItem = ({
                 width={40}
                 height={40}
                 errorFallback={
-                  <ChefHat className="text-olive-light/60 h-5 w-5" aria-hidden />
+                  <ChefHat
+                    className="text-olive-light/60 h-5 w-5"
+                    aria-hidden
+                  />
                 }
               />
             ) : (

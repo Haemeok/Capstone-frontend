@@ -35,14 +35,14 @@ const RecipeCompleteRewardMessage = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogOverlay className="bg-black/10" />
-      <DialogContent className="max-w-md animate-in zoom-in-95 duration-300 border-2 border-olive-mint p-4 [&>button]:hidden">
+      <DialogContent className="animate-in zoom-in-95 border-olive-mint max-w-md border-2 p-4 duration-300 [&>button]:hidden">
         <div className="flex flex-col items-center justify-center">
-          <DialogTitle className="mb-3 text-center text-4xl font-bold text-olive-mint animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <DialogTitle className="text-olive-mint animate-in fade-in slide-in-from-bottom-4 mb-3 text-center text-4xl font-bold duration-500">
             +{formatNumber(saveAmount, "원")} 절약!
           </DialogTitle>
-          <p className="text-center text-sm leading-relaxed text-gray-600 animate-in fade-in slide-in-from-bottom-2 duration-700">
+          <p className="animate-in fade-in slide-in-from-bottom-2 text-center text-sm leading-relaxed text-gray-600 duration-700">
             마이페이지 →{" "}
-            <span className="font-bold text-olive-mint">캘린더</span>
+            <span className="text-olive-mint font-bold">캘린더</span>
             에서
             <br />
             이번 달 절약 금액을 확인해보세요!

@@ -1,21 +1,29 @@
 "use server";
 
 import { randomUUID } from "crypto";
-import { mkdir, readdir, readFile, rename, unlink, writeFile } from "fs/promises";
+import {
+  mkdir,
+  readdir,
+  readFile,
+  rename,
+  unlink,
+  writeFile,
+} from "fs/promises";
 import { join } from "path";
+
+import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 import type {
   GenerateCurationOutput,
   SavedCurationRecord,
 } from "@/entities/curation";
-import { requireAdminAction } from "@/shared/lib/admin-guard";
 
 // Local dev-only stub. /data/ is gitignored.
 const STORAGE_DIR = join(process.cwd(), "data", "curations-local");
 
 const writeJsonAtomic = async (
   filePath: string,
-  data: unknown,
+  data: unknown
 ): Promise<void> => {
   const tmpPath = `${filePath}.${randomUUID()}.tmp`;
   try {
@@ -37,7 +45,7 @@ export type LocalCurationListItem = {
 };
 
 export const saveCurationLocal = async (
-  data: GenerateCurationOutput,
+  data: GenerateCurationOutput
 ): Promise<{ ok: true; relPath: string }> => {
   await requireAdminAction();
 
@@ -52,7 +60,7 @@ export const saveCurationLocal = async (
 };
 
 export const getCurationLocal = async (
-  slug: string,
+  slug: string
 ): Promise<SavedCurationRecord | null> => {
   await requireAdminAction();
 
@@ -93,11 +101,11 @@ export const listCurationLocal = async (): Promise<LocalCurationListItem[]> => {
         console.error(
           "[curation] listCurationLocal: skipping corrupted file",
           f,
-          e instanceof Error ? e.message : e,
+          e instanceof Error ? e.message : e
         );
         return null;
       }
-    }),
+    })
   );
 
   const items = results.filter((r): r is LocalCurationListItem => r !== null);

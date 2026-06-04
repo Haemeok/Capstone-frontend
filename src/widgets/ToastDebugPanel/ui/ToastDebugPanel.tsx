@@ -1,5 +1,6 @@
 "use client";
 
+import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import {
   Dialog,
   DialogContent,
@@ -12,8 +13,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/shared/ui/shadcn/drawer";
-
-import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 import type { ToastType } from "@/widgets/Toast/model/types";

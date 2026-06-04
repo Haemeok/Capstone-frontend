@@ -40,7 +40,7 @@ export const useFormProgress = <T extends FieldValues>(
     totalSteps > 0 ? Math.floor((completedSteps / totalSteps) * 100) : 0;
 
   const missingFieldLabels = invalidFields
-    .map((key) => (options?.fieldLabels?.[key] || key))
+    .map((key) => options?.fieldLabels?.[key] || key)
     .filter(Boolean);
 
   return {

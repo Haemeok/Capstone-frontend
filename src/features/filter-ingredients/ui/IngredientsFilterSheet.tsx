@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect,useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 
@@ -187,7 +187,7 @@ const IngredientsFilterSheetContent = ({
         )}
         <Button
           onClick={handleApply}
-          className="h-12 flex-1 cursor-pointer rounded-xl border-2 border-olive-light bg-white text-base font-bold text-olive-light hover:bg-olive-light/5"
+          className="border-olive-light text-olive-light hover:bg-olive-light/5 h-12 flex-1 cursor-pointer rounded-xl border-2 bg-white text-base font-bold"
         >
           {selection.selected.length}개로 탐색
         </Button>

@@ -21,7 +21,7 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
       onClick={() => triggerHaptic("Light")}
       className="group block w-[210px] flex-shrink-0 cursor-pointer"
     >
-      <div className="relative aspect-[5/3] overflow-hidden rounded-card">
+      <div className="rounded-card relative aspect-[5/3] overflow-hidden">
         <Image
           src={page.imageUrl}
           alt={page.title}
@@ -32,12 +32,12 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
         />
 
         {isYoutube && (
-          <YouTubeIconBadge className="absolute right-2 top-2 h-6 w-6 drop-shadow-lg" />
+          <YouTubeIconBadge className="absolute top-2 right-2 h-6 w-6 drop-shadow-lg" />
         )}
       </div>
 
       <div className="px-1 pt-2">
-        <p className="line-clamp-1 text-sm font-bold text-gray-900 break-keep">
+        <p className="line-clamp-1 text-sm font-bold break-keep text-gray-900">
           {page.title}
         </p>
         {page.subtitle && (

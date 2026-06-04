@@ -44,8 +44,7 @@ const RecipeStep = ({
 
   const timeInSeconds = extractTimeFromText(plainText);
 
-  const hasBackendIngredients =
-    step.ingredients && step.ingredients.length > 0;
+  const hasBackendIngredients = step.ingredients && step.ingredients.length > 0;
 
   const fallbackIngredients = useMemo(() => {
     if (hasBackendIngredients || !recipeIngredients) return [];
@@ -84,7 +83,7 @@ const RecipeStep = ({
         {displayIngredients.map((ingredient, index) => (
           <div
             key={`${index}-${ingredient.name}`}
-            className="flex gap-2 rounded-card border-1 border-slate-200 p-1 px-2"
+            className="rounded-card flex gap-2 border-1 border-slate-200 p-1 px-2"
           >
             <p className="text-mm text-left">{ingredient.name}</p>
             {ingredient.quantity && (
@@ -115,7 +114,7 @@ const RecipeStep = ({
           {step.timeline && videoPlayer && (
             <button
               onClick={() => videoPlayer.seekToTimeline(step.timeline!)}
-              className="border-olive-light text-olive-light hover:bg-olive-light/10 mt-2 inline-flex items-center rounded-card border px-3 py-1 text-sm font-medium transition-all"
+              className="border-olive-light text-olive-light hover:bg-olive-light/10 rounded-card mt-2 inline-flex items-center border px-3 py-1 text-sm font-medium transition-all"
             >
               {step.timeline}
             </button>
@@ -123,7 +122,10 @@ const RecipeStep = ({
           {cookingTerms.length > 0 && (
             <div className="mt-3 space-y-2">
               {cookingTerms.map((term, index) => (
-                <div key={index} className="rounded-card bg-gray-50 p-3 text-sm">
+                <div
+                  key={index}
+                  className="rounded-card bg-gray-50 p-3 text-sm"
+                >
                   <span className="font-semibold">📖 {term.term}</span>{" "}
                   <span className="text-gray-600">{term.description}</span>
                 </div>

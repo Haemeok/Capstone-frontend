@@ -3,8 +3,9 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
 
-import type { Recipe } from "@/entities/recipe/model/types";
 import { requireAdminAction } from "@/shared/lib/admin-guard";
+
+import type { Recipe } from "@/entities/recipe/model/types";
 
 import {
   type BlogPost,
@@ -49,7 +50,7 @@ export type GenerateRecipeBlogPostResult =
 
 export const generateRecipeBlogPost = async (
   recipe: Recipe,
-  opts?: { imageSlots?: string[] },
+  opts?: { imageSlots?: string[] }
 ): Promise<GenerateRecipeBlogPostResult> => {
   await requireAdminAction();
 
@@ -70,19 +71,20 @@ export const generateRecipeBlogPost = async (
     .slice()
     .sort((a, b) => a.stepNumber - b.stepNumber);
   const expectedStepNumbers = sortedSteps.map((s) => s.stepNumber);
-  const slots =
-    opts?.imageSlots ?? [
-      ...sortedSteps.map((s) => `step-${s.stepNumber}`),
-      "final-plated",
-    ];
+  const slots = opts?.imageSlots ?? [
+    ...sortedSteps.map((s) => `step-${s.stepNumber}`),
+    "final-plated",
+  ];
 
   const metrics = computePerServingMetrics(recipe);
   const solarModel = upstage.chat(MODEL_ID);
 
   let bodyMarkdown = "";
-  let parsedBody: ReturnType<typeof parseAndValidateRecipeBlogBody> & {
-    ok: true;
-  } | null = null;
+  let parsedBody:
+    | (ReturnType<typeof parseAndValidateRecipeBlogBody> & {
+        ok: true;
+      })
+    | null = null;
   let lastErrors: string[] = [];
 
   for (let attempt = 0; attempt <= MAX_BODY_RETRIES; attempt++) {
@@ -117,7 +119,7 @@ export const generateRecipeBlogPost = async (
     }
     lastErrors = v.errors;
     console.warn(
-      `[recipeBlog body] attempt ${attempt + 1} 검증 실패:\n${v.errors.map((e) => `  - ${e}`).join("\n")}`,
+      `[recipeBlog body] attempt ${attempt + 1} 검증 실패:\n${v.errors.map((e) => `  - ${e}`).join("\n")}`
     );
     if (attempt === MAX_BODY_RETRIES) {
       return {

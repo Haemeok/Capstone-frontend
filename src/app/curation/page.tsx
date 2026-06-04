@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 
+import type { InfiniteData } from "@tanstack/react-query";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import type { InfiniteData } from "@tanstack/react-query";
 
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import {
   createCurationListJsonLd,
+  type CurationArticleListResponse,
   fetchCurationArticleList,
   generateCurationListMetadata,
-  type CurationArticleListResponse,
 } from "@/features/curation";
 
 import { CurationListClient } from "@/widgets/CurationList";
@@ -64,9 +64,10 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
     pages: 1,
   });
 
-  const cached = queryClient.getQueryData<
-    InfiniteData<CurationArticleListResponse>
-  >(queryKey);
+  const cached =
+    queryClient.getQueryData<InfiniteData<CurationArticleListResponse>>(
+      queryKey
+    );
   const firstPageItems = cached?.pages[0]?.content ?? [];
   const jsonLd = createCurationListJsonLd(category, firstPageItems);
 

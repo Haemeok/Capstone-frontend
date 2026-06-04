@@ -27,7 +27,9 @@ const fetchUrlToBuffer = async (url: string): Promise<Buffer> => {
 };
 
 const imageUrlToBuffer = async (imageUrl: string): Promise<Buffer> =>
-  imageUrl.startsWith("data:") ? dataUrlToBuffer(imageUrl) : fetchUrlToBuffer(imageUrl);
+  imageUrl.startsWith("data:")
+    ? dataUrlToBuffer(imageUrl)
+    : fetchUrlToBuffer(imageUrl);
 
 export type SaveQueuePackageInput = {
   /** 폴더명 prefix. recipe / curation 모드별로 다르게 박는다. */
@@ -49,7 +51,8 @@ export type SaveQueuePackageResult = {
 export const saveQueuePackage = async (
   input: SaveQueuePackageInput
 ): Promise<SaveQueuePackageResult> => {
-  const queueDir = process.env.BLOG_PUBLISH_QUEUE_DIR?.trim() || DEFAULT_QUEUE_DIR;
+  const queueDir =
+    process.env.BLOG_PUBLISH_QUEUE_DIR?.trim() || DEFAULT_QUEUE_DIR;
   const pendingDir = path.join(queueDir, "pending");
   await fs.mkdir(pendingDir, { recursive: true });
 

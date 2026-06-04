@@ -39,7 +39,12 @@ export const usePromptCompare = (modelId: string) => {
         });
         const data = (await res.json()) as RunResponse;
 
-        if (!res.ok || data.error || !data.imageUrl || data.cost === undefined) {
+        if (
+          !res.ok ||
+          data.error ||
+          !data.imageUrl ||
+          data.cost === undefined
+        ) {
           setResults((prev) => ({
             ...prev,
             [variantId]: {

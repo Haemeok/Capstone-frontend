@@ -73,7 +73,7 @@ export const YoutubeUrlForm = () => {
             onChange: (e) => setCurrentUrl(e.target.value),
           })}
           placeholder="유튜브 링크를 붙여넣으세요"
-          className="w-full bg-transparent py-5 pl-4 pr-12 text-lg text-gray-900 placeholder:text-gray-400 focus:outline-none"
+          className="w-full bg-transparent py-5 pr-12 pl-4 text-lg text-gray-900 placeholder:text-gray-400 focus:outline-none"
           autoComplete="off"
         />
         {currentUrl && (

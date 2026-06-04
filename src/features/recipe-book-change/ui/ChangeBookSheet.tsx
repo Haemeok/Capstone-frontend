@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+
 import { PlusIcon } from "lucide-react";
+
+import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import {
   getRecipeBookErrorMessage,
@@ -11,8 +14,6 @@ import {
 } from "@/entities/recipe-book";
 
 import { CreateRecipeBookSheet } from "@/features/recipe-book-create";
-
-import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
 
@@ -77,14 +78,14 @@ export const ChangeBookSheet = ({
   };
 
   const Body = (
-    <div className="flex-1 min-h-0 overflow-y-auto px-2 pb-6">
+    <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-6">
       {canCreateMore && (
         <button
           type="button"
           className="flex w-full items-center gap-3 rounded-xl px-4 py-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100"
           onClick={() => setCreateOpen(true)}
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-olive-light/10 text-olive-light">
+          <span className="bg-olive-light/10 text-olive-light flex h-8 w-8 items-center justify-center rounded-full">
             <PlusIcon size={18} />
           </span>
           <span className="font-medium text-gray-900">새 레시피북 만들기</span>

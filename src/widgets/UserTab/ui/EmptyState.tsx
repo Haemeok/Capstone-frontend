@@ -4,8 +4,8 @@ export const EmptyState = () => {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-16">
       {/* 아이콘 원형 배경 */}
-      <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-olive-light/10">
-        <ChefHat className="h-10 w-10 text-olive-light" />
+      <div className="bg-olive-light/10 mb-6 flex h-20 w-20 items-center justify-center rounded-full">
+        <ChefHat className="text-olive-light h-10 w-10" />
       </div>
 
       {/* 제목 */}

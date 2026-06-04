@@ -15,7 +15,11 @@ const POLL_TIMEOUT_MS = 10 * 60 * 1000;
 export type VideoGenState =
   | { status: "idle" }
   | { status: "submitting" }
-  | { status: "polling"; taskId: string; lastStatus: SeedanceTaskState["status"] }
+  | {
+      status: "polling";
+      taskId: string;
+      lastStatus: SeedanceTaskState["status"];
+    }
   | { status: "success"; taskId: string; videoUrl: string }
   | { status: "error"; message: string };
 
@@ -39,11 +43,14 @@ export const useVideoGeneration = () => {
 
     let taskId: string;
     try {
-      const submitRes = await fetch("/api/bff/admin/video-studio/video/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(input),
-      });
+      const submitRes = await fetch(
+        "/api/bff/admin/video-studio/video/submit",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(input),
+        }
+      );
       const submitData = (await submitRes.json()) as {
         taskId?: string;
         error?: string;

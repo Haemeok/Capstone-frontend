@@ -29,7 +29,6 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-
 type ExpectedCell = {
   forceLogout: boolean;
   refreshCalls: 0 | 1;
@@ -48,65 +47,125 @@ const CONTRACT: ContractRow[] = [
   {
     state: "ANONYMOUS",
     endpoint: "public",
-    expected: { forceLogout: false, refreshCalls: 0, retry: false, result: "data" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 0,
+      retry: false,
+      result: "data",
+    },
   },
   {
     state: "ANONYMOUS",
     endpoint: "optional-auth",
-    expected: { forceLogout: false, refreshCalls: 1, retry: false, result: "apiError401" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 1,
+      retry: false,
+      result: "apiError401",
+    },
   },
   {
     state: "ANONYMOUS",
     endpoint: "required",
-    expected: { forceLogout: false, refreshCalls: 1, retry: false, result: "apiError401" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 1,
+      retry: false,
+      result: "apiError401",
+    },
   },
   // VALID row
   {
     state: "VALID",
     endpoint: "public",
-    expected: { forceLogout: false, refreshCalls: 0, retry: false, result: "data" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 0,
+      retry: false,
+      result: "data",
+    },
   },
   {
     state: "VALID",
     endpoint: "optional-auth",
-    expected: { forceLogout: false, refreshCalls: 0, retry: false, result: "data" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 0,
+      retry: false,
+      result: "data",
+    },
   },
   {
     state: "VALID",
     endpoint: "required",
-    expected: { forceLogout: false, refreshCalls: 0, retry: false, result: "data" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 0,
+      retry: false,
+      result: "data",
+    },
   },
   // ACCESS_EXPIRED row
   {
     state: "ACCESS_EXPIRED",
     endpoint: "public",
-    expected: { forceLogout: false, refreshCalls: 0, retry: false, result: "data" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 0,
+      retry: false,
+      result: "data",
+    },
   },
   {
     state: "ACCESS_EXPIRED",
     endpoint: "optional-auth",
-    expected: { forceLogout: false, refreshCalls: 1, retry: true, result: "data" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 1,
+      retry: true,
+      result: "data",
+    },
   },
   {
     state: "ACCESS_EXPIRED",
     endpoint: "required",
-    expected: { forceLogout: false, refreshCalls: 1, retry: true, result: "data" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 1,
+      retry: true,
+      result: "data",
+    },
   },
   // BOTH_EXPIRED row
   {
     state: "BOTH_EXPIRED",
     endpoint: "public",
-    expected: { forceLogout: false, refreshCalls: 0, retry: false, result: "data" },
+    expected: {
+      forceLogout: false,
+      refreshCalls: 0,
+      retry: false,
+      result: "data",
+    },
   },
   {
     state: "BOTH_EXPIRED",
     endpoint: "optional-auth",
-    expected: { forceLogout: true, refreshCalls: 1, retry: false, result: "apiError401" },
+    expected: {
+      forceLogout: true,
+      refreshCalls: 1,
+      retry: false,
+      result: "apiError401",
+    },
   },
   {
     state: "BOTH_EXPIRED",
     endpoint: "required",
-    expected: { forceLogout: true, refreshCalls: 1, retry: false, result: "apiError401" },
+    expected: {
+      forceLogout: true,
+      refreshCalls: 1,
+      retry: false,
+      result: "apiError401",
+    },
   },
 ];
 
@@ -124,7 +183,9 @@ describe("Auth Contract: State × Endpoint matrix", () => {
         arrangeScenario(mockFetch, { state, endpoint });
         const { handler, detach } = withForceLogoutHandler();
 
-        let apiResult: { success: true; data: any } | { success: false; error: any };
+        let apiResult:
+          | { success: true; data: any }
+          | { success: false; error: any };
         try {
           const data = await apiClient(spec.url);
           apiResult = { success: true, data };
@@ -143,7 +204,6 @@ describe("Auth Contract: State × Endpoint matrix", () => {
     }
   );
 });
-
 
 describe("Auth Contract: Concurrency / Timing", () => {
   it("C1: 두 요청이 동시에 401 → refresh는 1번만 호출된다 (dedup)", async () => {
@@ -179,7 +239,9 @@ describe("Auth Contract: Concurrency / Timing", () => {
     // 첫 요청: 원요청 401 → refresh 401 → forceLogout 1회
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
-      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })));
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(null, { status: 401 }))
+      );
 
     const { handler, detach } = withForceLogoutHandler();
 
@@ -189,7 +251,9 @@ describe("Auth Contract: Concurrency / Timing", () => {
     // 1초 후 재시도 → cooldown 범위(5초) 내이므로 refresh 차단, forceLogout 추가 발행 없음
     jest.advanceTimersByTime(1000);
     mockFetch.mockClear();
-    mockFetch.mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })));
+    mockFetch.mockReturnValueOnce(
+      Promise.resolve(new Response(null, { status: 401 }))
+    );
 
     await apiClient("/v2/users/me").catch(() => undefined);
 
@@ -204,7 +268,9 @@ describe("Auth Contract: Concurrency / Timing", () => {
   it("C3: cooldown 만료 후 재시도 → refresh 다시 호출된다", async () => {
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
-      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })));
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(null, { status: 401 }))
+      );
 
     await apiClient("/v2/users/me").catch(() => undefined);
 
@@ -213,7 +279,9 @@ describe("Auth Contract: Concurrency / Timing", () => {
     mockFetch.mockClear();
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
-      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })));
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(null, { status: 401 }))
+      );
 
     await apiClient("/v2/users/me").catch(() => undefined);
 
@@ -224,14 +292,17 @@ describe("Auth Contract: Concurrency / Timing", () => {
   });
 });
 
-
 describe("Auth Contract: Edge cases", () => {
   it("E1: refresh 200 성공 후 retry가 401이면 ApiError 반환하지만 forceLogout은 없다", async () => {
     // 원요청 401 → refresh 200 → retry 401
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
-      .mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify({}), { status: 200 })))
-      .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })));
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), { status: 200 }))
+      )
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(null, { status: 401 }))
+      );
 
     const { handler, detach } = withForceLogoutHandler();
 
@@ -257,16 +328,18 @@ describe("Auth Contract: Edge cases", () => {
   });
 });
 
-
 describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () => {
   it("getRecipeStatus는 익명 사용자에게 forceLogout을 발행하지 않는다", async () => {
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
       .mockReturnValueOnce(
         Promise.resolve(
-          new Response(JSON.stringify({ error: "No refresh token available" }), {
-            status: 401,
-          })
+          new Response(
+            JSON.stringify({ error: "No refresh token available" }),
+            {
+              status: 401,
+            }
+          )
         )
       );
 
@@ -284,9 +357,12 @@ describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () 
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
       .mockReturnValueOnce(
         Promise.resolve(
-          new Response(JSON.stringify({ error: "No refresh token available" }), {
-            status: 401,
-          })
+          new Response(
+            JSON.stringify({ error: "No refresh token available" }),
+            {
+              status: 401,
+            }
+          )
         )
       );
 
@@ -300,16 +376,18 @@ describe("Auth Contract: getRecipeStatus/getRecipesStatus 선언부 검증", () 
   });
 });
 
-
 describe("Auth Contract: Route-agnostic anonymous silence", () => {
   const anonymousRefreshSetup = () => {
     mockFetch
       .mockReturnValueOnce(Promise.resolve(new Response(null, { status: 401 })))
       .mockReturnValueOnce(
         Promise.resolve(
-          new Response(JSON.stringify({ error: "No refresh token available" }), {
-            status: 401,
-          })
+          new Response(
+            JSON.stringify({ error: "No refresh token available" }),
+            {
+              status: 401,
+            }
+          )
         )
       );
   };

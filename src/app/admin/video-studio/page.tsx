@@ -41,8 +41,11 @@ const VideoStudioPage = () => {
     useState<ImageModelId>("gpt-image-2-medium");
   const [count, setCount] = useState(2);
   const [refImages, setRefImages] = useState<string[]>([]);
-  const { state: imageState, run: runImage, cancel: cancelImage } =
-    useImageGeneration();
+  const {
+    state: imageState,
+    run: runImage,
+    cancel: cancelImage,
+  } = useImageGeneration();
 
   // unified video input image — set by Stage 1 grid select OR Stage 2 upload
   const [videoInputImage, setVideoInputImage] = useState<string | null>(null);
@@ -58,8 +61,11 @@ const VideoStudioPage = () => {
   const [ratio, setRatio] = useState<SeedanceRatio>("16:9");
   const [durationSec, setDurationSec] = useState(5);
   const [generateAudio, setGenerateAudio] = useState(false);
-  const { state: videoState, run: runVideo, cancel: cancelVideo } =
-    useVideoGeneration();
+  const {
+    state: videoState,
+    run: runVideo,
+    cancel: cancelVideo,
+  } = useVideoGeneration();
 
   // cost history (localStorage hydrated)
   const [history, setHistory] = useState(() => loadCostHistory());
@@ -138,13 +144,13 @@ const VideoStudioPage = () => {
     videoState.status === "polling"
       ? videoState.lastStatus
       : videoState.status === "submitting"
-      ? "submit"
-      : undefined;
+        ? "submit"
+        : undefined;
   const generatedImages =
     imageState.status === "success" ? imageState.imageDataUrls : [];
 
   return (
-    <div className="mx-auto min-h-screen max-w-6xl bg-beige-light/40 p-4 md:p-6">
+    <div className="bg-beige-light/40 mx-auto min-h-screen max-w-6xl p-4 md:p-6">
       <h1 className="mb-4 text-2xl font-bold text-gray-900">Video Studio</h1>
 
       <div className="mb-4">

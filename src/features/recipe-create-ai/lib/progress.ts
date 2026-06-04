@@ -22,7 +22,9 @@ export const calculateFakeProgress = (startTime: number): number => {
 
     if (elapsedSeconds <= curr.time) {
       const ratio = (elapsedSeconds - prev.time) / (curr.time - prev.time);
-      return Math.round(prev.progress + ratio * (curr.progress - prev.progress));
+      return Math.round(
+        prev.progress + ratio * (curr.progress - prev.progress)
+      );
     }
   }
 

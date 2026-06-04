@@ -15,34 +15,36 @@ type RecipeCompleteStore = {
   hydrateFromStorage: () => void;
 };
 
-export const useRecipeCompleteStore = create<RecipeCompleteStore>((set, get) => ({
-  completedRecipeIds: new Set<string>(),
-  isHydrated: false,
+export const useRecipeCompleteStore = create<RecipeCompleteStore>(
+  (set, get) => ({
+    completedRecipeIds: new Set<string>(),
+    isHydrated: false,
 
-  addCompletedRecipe: (recipeId) => {
-    // localStorage에 저장
-    addCompletedRecipeRecord(recipeId);
+    addCompletedRecipe: (recipeId) => {
+      // localStorage에 저장
+      addCompletedRecipeRecord(recipeId);
 
-    // 메모리 Set 업데이트
-    set((state) => {
-      const newSet = new Set(state.completedRecipeIds);
-      newSet.add(recipeId);
-      return { completedRecipeIds: newSet };
-    });
-  },
+      // 메모리 Set 업데이트
+      set((state) => {
+        const newSet = new Set(state.completedRecipeIds);
+        newSet.add(recipeId);
+        return { completedRecipeIds: newSet };
+      });
+    },
 
-  hasCompletedRecipe: (recipeId) => {
-    return get().completedRecipeIds.has(recipeId);
-  },
+    hasCompletedRecipe: (recipeId) => {
+      return get().completedRecipeIds.has(recipeId);
+    },
 
-  clearCompletedRecipes: () => {
-    clearPersistedRecipes();
-    set({ completedRecipeIds: new Set<string>() });
-  },
+    clearCompletedRecipes: () => {
+      clearPersistedRecipes();
+      set({ completedRecipeIds: new Set<string>() });
+    },
 
-  hydrateFromStorage: () => {
-    const records = loadCompletedRecipes();
-    const recipeIds = new Set(records.map((r) => r.recipeId));
-    set({ completedRecipeIds: recipeIds, isHydrated: true });
-  },
-}));
+    hydrateFromStorage: () => {
+      const records = loadCompletedRecipes();
+      const recipeIds = new Set(records.map((r) => r.recipeId));
+      set({ completedRecipeIds: recipeIds, isHydrated: true });
+    },
+  })
+);

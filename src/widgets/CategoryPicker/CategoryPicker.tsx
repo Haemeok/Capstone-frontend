@@ -166,7 +166,9 @@ const CategoryPicker = ({
             )}
           </div>
 
-          <div className="max-h-[400px] overflow-y-auto overflow-x-hidden">{selectionContent}</div>
+          <div className="max-h-[400px] overflow-x-hidden overflow-y-auto">
+            {selectionContent}
+          </div>
 
           <div className="flex gap-2 border-t pt-2">
             <Button

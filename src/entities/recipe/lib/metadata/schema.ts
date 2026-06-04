@@ -160,7 +160,6 @@ export const createRecipeStructuredData = (
   };
 };
 
-
 type LandingFAQEntry = {
   "@type": "Question";
   name: string;

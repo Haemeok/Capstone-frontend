@@ -5,12 +5,12 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import { setInFridgeForIds } from "@/entities/ingredient/lib/updateIngredientListCache";
 import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 import {
   IngredientMutationContext,
   IngredientsApiResponse,
 } from "@/entities/ingredient/model/types";
-import { setInFridgeForIds } from "@/entities/ingredient/lib/updateIngredientListCache";
 
 import { addIngredient, addIngredientBulk } from "./api";
 
@@ -45,7 +45,10 @@ export const useAddIngredientMutation = ({
     },
     onError: (error, _variables, context) => {
       if (context?.previousIngredientsListData) {
-        queryClient.setQueryData(browseKey, context.previousIngredientsListData);
+        queryClient.setQueryData(
+          browseKey,
+          context.previousIngredientsListData
+        );
       }
       console.error("재료 추가 실패:", error);
     },
@@ -77,10 +80,11 @@ export const useAddIngredientBulkMutation = () => {
       await queryClient.cancelQueries({
         queryKey: INGREDIENT_QUERY_KEYS.browseAll,
       });
-      const previousBrowseLists =
-        queryClient.getQueriesData<InfiniteData<IngredientsApiResponse>>({
-          queryKey: INGREDIENT_QUERY_KEYS.browseAll,
-        });
+      const previousBrowseLists = queryClient.getQueriesData<
+        InfiniteData<IngredientsApiResponse>
+      >({
+        queryKey: INGREDIENT_QUERY_KEYS.browseAll,
+      });
       const idSet = new Set(ingredientIds);
       queryClient.setQueriesData<InfiniteData<IngredientsApiResponse>>(
         { queryKey: INGREDIENT_QUERY_KEYS.browseAll },

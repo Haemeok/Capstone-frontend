@@ -25,7 +25,7 @@ const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-center gap-2 rounded-lg border-2 border-olive-light bg-olive-light/10 p-4">
+      <div className="border-olive-light bg-olive-light/10 flex items-center justify-center gap-2 rounded-lg border-2 p-4">
         <TrendingDownIcon className="text-olive-medium h-5 w-5" />
         <p className="text-sm font-medium text-gray-800">
           직장인 평균 한끼보다{" "}
@@ -36,11 +36,11 @@ const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
         </p>
       </div>
 
-      <div className="flex items-center justify-center gap-2 rounded-lg border-2 border-olive-mint bg-gradient-to-r from-olive-light to-olive-mint p-4 text-white shadow-md">
+      <div className="border-olive-mint from-olive-light to-olive-mint flex items-center justify-center gap-2 rounded-lg border-2 bg-gradient-to-r p-4 text-white shadow-md">
         <SparklesIcon className="h-5 w-5" />
         <p className="text-sm font-bold">
-          매일 이렇게 드시면 한 달에{" "}
-          {Math.floor(monthlySavings / 10000)}만 원 아껴요!
+          매일 이렇게 드시면 한 달에 {Math.floor(monthlySavings / 10000)}만 원
+          아껴요!
         </p>
       </div>
     </div>

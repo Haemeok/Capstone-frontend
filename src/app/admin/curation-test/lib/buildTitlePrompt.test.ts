@@ -26,21 +26,33 @@ describe("buildTitleSystemPrompt", () => {
   });
 
   it("축 1-2개 의도적 생략 지시가 들어간다", () => {
-    const sys = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    const sys = buildTitleSystemPrompt({
+      fewShots: [],
+      count: 5,
+      poolSize: 10,
+    });
     expect(sys).toMatch(/생략|모두 넣지 마/);
   });
 });
 
 describe("buildTitleSystemPrompt - categories block", () => {
   it("CURATION_CATEGORIES 9개를 모두 포함한다", () => {
-    const prompt = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    const prompt = buildTitleSystemPrompt({
+      fewShots: [],
+      count: 5,
+      poolSize: 10,
+    });
     for (const cat of CURATION_CATEGORIES) {
       expect(prompt).toContain(cat);
     }
   });
 
   it("폴백 안내 문구를 포함한다", () => {
-    const prompt = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    const prompt = buildTitleSystemPrompt({
+      fewShots: [],
+      count: 5,
+      poolSize: 10,
+    });
     expect(prompt).toMatch(/FOOD & LIFE/i);
     expect(prompt.toLowerCase()).toMatch(/doubt|애매|모호|불분명/);
   });
@@ -48,7 +60,11 @@ describe("buildTitleSystemPrompt - categories block", () => {
 
 describe("buildTitleSystemPrompt - selection block", () => {
   it("후보 선별 블록과 selectedIndices 출력 라인을 포함한다", () => {
-    const prompt = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    const prompt = buildTitleSystemPrompt({
+      fewShots: [],
+      count: 5,
+      poolSize: 10,
+    });
     expect(prompt).toContain("## 후보 선별");
     expect(prompt).toContain("후보 10개 중 가장 결이 맞는 5개");
     expect(prompt).toContain("selectedIndices");
@@ -57,18 +73,30 @@ describe("buildTitleSystemPrompt - selection block", () => {
 
 describe("buildTitleSystemPrompt - count enforcement", () => {
   it("정확히 N 강제 문구가 들어간다", () => {
-    const sys = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    const sys = buildTitleSystemPrompt({
+      fewShots: [],
+      count: 5,
+      poolSize: 10,
+    });
     expect(sys).toMatch(/h1.*dek.*숫자.*정확히.*5/);
   });
 
   it("'몇 가지' 류 흐림 표현 금지가 명시된다", () => {
-    const sys = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    const sys = buildTitleSystemPrompt({
+      fewShots: [],
+      count: 5,
+      poolSize: 10,
+    });
     expect(sys).toMatch(/몇 가지/);
     expect(sys.toLowerCase()).toMatch(/금지|쓰지 마|쓰지 말/);
   });
 
   it("'기계적 압축' 헷갈리는 옛 문구는 제거된다", () => {
-    const sys = buildTitleSystemPrompt({ fewShots: [], count: 5, poolSize: 10 });
+    const sys = buildTitleSystemPrompt({
+      fewShots: [],
+      count: 5,
+      poolSize: 10,
+    });
     expect(sys).not.toMatch(/기계적인 압축/);
   });
 });

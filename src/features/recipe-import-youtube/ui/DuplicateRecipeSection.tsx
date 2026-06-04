@@ -6,11 +6,11 @@ import { AnimatePresence } from "motion/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import { useRecipeBooks } from "@/entities/recipe-book";
 import {
   useRecipeDetailQuery,
   useRecipeStatusQuery,
 } from "@/entities/recipe/model/hooks";
+import { useRecipeBooks } from "@/entities/recipe-book";
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
 import { useToggleRecipeSave } from "@/features/recipe-save/model/hooks";

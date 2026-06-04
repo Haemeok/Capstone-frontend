@@ -52,8 +52,8 @@ export const CLOSING_SEEDS: ClosingSeed[] = [
 
 export const CANONICAL_TERMS: Record<string, string> = {
   "마늘 다진것": "다진 마늘",
-  "마늘다진것": "다진 마늘",
-  "다진마늘": "다진 마늘",
+  마늘다진것: "다진 마늘",
+  다진마늘: "다진 마늘",
   강불: "센 불",
   고불: "센 불",
   "강한 불": "센 불",
@@ -71,7 +71,10 @@ export const CANONICAL_TERMS: Record<string, string> = {
   밀리리터: "ml",
 };
 
-export const pickSeedByRecipeId = <T>(seeds: readonly T[], recipeId: string): T => {
+export const pickSeedByRecipeId = <T>(
+  seeds: readonly T[],
+  recipeId: string
+): T => {
   let h = 0;
   for (let i = 0; i < recipeId.length; i++) {
     h = (h * 31 + recipeId.charCodeAt(i)) >>> 0;

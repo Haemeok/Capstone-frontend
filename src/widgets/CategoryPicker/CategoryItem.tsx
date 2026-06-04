@@ -38,7 +38,7 @@ const CategoryItem = React.memo(
       return (
         <Label
           htmlFor={`checkbox-${value}`}
-          className="-mx-2 flex min-h-[44px] cursor-pointer select-none items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium transition-colors active:bg-gray-100"
+          className="-mx-2 flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium transition-colors select-none active:bg-gray-100"
         >
           <Checkbox
             id={`checkbox-${value}`}
@@ -54,7 +54,7 @@ const CategoryItem = React.memo(
     return (
       <Label
         htmlFor={`radio-${value}`}
-        className="-mx-2 flex min-h-[44px] cursor-pointer select-none items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium transition-colors active:bg-gray-100"
+        className="-mx-2 flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium transition-colors select-none active:bg-gray-100"
       >
         <RadioGroupItem
           value={value}

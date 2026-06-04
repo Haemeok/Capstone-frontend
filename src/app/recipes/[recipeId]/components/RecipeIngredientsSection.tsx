@@ -40,7 +40,8 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const [isReportSheetOpen, setIsReportSheetOpen] = useState(false);
   const [isCopySheetOpen, setIsCopySheetOpen] = useState(false);
 
-  const isValidServings = recipe.servings > 0 && Number.isFinite(recipe.servings);
+  const isValidServings =
+    recipe.servings > 0 && Number.isFinite(recipe.servings);
   const [currentServings, setCurrentServings] = useState(
     isValidServings ? recipe.servings : 1
   );
@@ -96,14 +97,17 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         },
         {
           prefix: "배달 물가 대비",
-          pointText: formatNumber(scaledMarketPrice - scaledIngredientCost, "원"),
+          pointText: formatNumber(
+            scaledMarketPrice - scaledIngredientCost,
+            "원"
+          ),
           suffix: "절약해요!",
           textClassName: "text-purple-500",
         },
       ];
 
   return (
-    <div className="flex flex-col gap-2 mt-2">
+    <div className="mt-2 flex flex-col gap-2">
       <IngredientsSectionHeader
         showNutrition={showNutrition}
         onNutritionToggle={setShowNutrition}
@@ -166,7 +170,10 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         )}
       </div>
 
-      <RollingPointBanner messages={rollingMessages} containerClassName="mt-2" />
+      <RollingPointBanner
+        messages={rollingMessages}
+        containerClassName="mt-2"
+      />
 
       <IngredientReportSheet
         isOpen={isReportSheetOpen}

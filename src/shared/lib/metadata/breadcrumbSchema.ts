@@ -124,7 +124,7 @@ export const createUserProfileBreadcrumb = (
 export const createCurationBreadcrumb = (
   title: string,
   slug: string,
-  categoryKoLabel?: string | null,
+  categoryKoLabel?: string | null
 ): BreadcrumbListSchema => {
   const items: BreadcrumbItem[] = [
     { name: "홈", url: SEO_CONSTANTS.SITE_URL },
@@ -144,7 +144,7 @@ export const createCurationBreadcrumb = (
 };
 
 export const createCurationListBreadcrumb = (
-  categoryKoLabel?: string | null,
+  categoryKoLabel?: string | null
 ): BreadcrumbListSchema => {
   const items: BreadcrumbItem[] = [
     { name: "홈", url: SEO_CONSTANTS.SITE_URL },

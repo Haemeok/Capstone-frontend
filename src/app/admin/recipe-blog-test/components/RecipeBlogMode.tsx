@@ -70,21 +70,18 @@ export const RecipeBlogMode = () => {
     return perPromptCost * sequence.length;
   }, [sequence.length]);
 
-  const handleSelectRecipe = useCallback(
-    async (r: DetailedRecipeGridItem) => {
-      setRecipeLoading(true);
-      try {
-        const full = await getRecipe(r.id);
-        setRecipe(full);
-      } catch (err) {
-        console.error("레시피 상세 조회 실패:", err);
-        setRecipe(null);
-      } finally {
-        setRecipeLoading(false);
-      }
-    },
-    []
-  );
+  const handleSelectRecipe = useCallback(async (r: DetailedRecipeGridItem) => {
+    setRecipeLoading(true);
+    try {
+      const full = await getRecipe(r.id);
+      setRecipe(full);
+    } catch (err) {
+      console.error("레시피 상세 조회 실패:", err);
+      setRecipe(null);
+    } finally {
+      setRecipeLoading(false);
+    }
+  }, []);
 
   const handleGenerate = useCallback(async () => {
     if (sequence.length === 0) return;
@@ -237,14 +234,15 @@ export const RecipeBlogMode = () => {
                     {recipe.title}
                   </p>
                   <p className="mt-1 text-xs text-gray-500">
-                    이미지 {sequence.length}장 · 예상 비용 ≈ ${estimatedCost.toFixed(2)}
+                    이미지 {sequence.length}장 · 예상 비용 ≈ $
+                    {estimatedCost.toFixed(2)}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={handleGenerate}
                   disabled={running || sequence.length === 0}
-                  className="h-12 rounded-2xl bg-olive-light px-6 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                  className="bg-olive-light h-12 rounded-2xl px-6 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
                 >
                   {running ? "생성 중…" : "생성하기"}
                 </button>
@@ -261,7 +259,7 @@ export const RecipeBlogMode = () => {
                   type="button"
                   onClick={handleSaveAll}
                   disabled={running || successCount === 0}
-                  className="h-12 rounded-2xl border-2 border-olive-light bg-white px-4 text-sm font-medium text-olive-light transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
+                  className="border-olive-light text-olive-light h-12 rounded-2xl border-2 bg-white px-4 text-sm font-medium transition active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
                 >
                   전부 저장 ({successCount})
                 </button>
@@ -288,7 +286,11 @@ export const RecipeBlogMode = () => {
                   disabled={blogPending}
                   className="h-12 rounded-2xl bg-gray-900 px-6 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
                 >
-                  {blogPending ? "생성 중…" : blogPost ? "다시 생성" : "글 생성"}
+                  {blogPending
+                    ? "생성 중…"
+                    : blogPost
+                      ? "다시 생성"
+                      : "글 생성"}
                 </button>
               </div>
 
@@ -314,7 +316,12 @@ export const RecipeBlogMode = () => {
                         네이버 블로그 발행 큐로 보내기
                       </p>
                       <p className="mt-1 text-xs text-gray-500">
-                        post.json + 생성된 이미지를 큐 폴더에 담아 둡니다. 발행은 recipioReview의 <code className="rounded bg-gray-100 px-1">npm run blog:publish</code>로요.
+                        post.json + 생성된 이미지를 큐 폴더에 담아 둡니다.
+                        발행은 recipioReview의{" "}
+                        <code className="rounded bg-gray-100 px-1">
+                          npm run blog:publish
+                        </code>
+                        로요.
                       </p>
                     </div>
                     <button

@@ -38,7 +38,14 @@ const SCHEMA = {
   tagNames: ALLOWED_TAGS,
   attributes: {
     ...defaultSchema.attributes,
-    iframe: ["src", "title", "loading", "allow", "allowfullscreen", "className"],
+    iframe: [
+      "src",
+      "title",
+      "loading",
+      "allow",
+      "allowfullscreen",
+      "className",
+    ],
     a: ["href", "target", "rel", "className"],
     img: ["src", "alt", "className"],
     aside: ["className"],
@@ -123,7 +130,9 @@ const createComponents = (recipes: Array<StaticRecipe | null>): Components => {
       );
     },
     h3: ({ children }) => (
-      <h3 className="mt-10 mb-3 text-xl font-bold tracking-tight">{children}</h3>
+      <h3 className="mt-10 mb-3 text-xl font-bold tracking-tight">
+        {children}
+      </h3>
     ),
     p: ({ children }) => <div className="my-6">{children}</div>,
     blockquote: ({ children }) => <div className="my-6">{children}</div>,

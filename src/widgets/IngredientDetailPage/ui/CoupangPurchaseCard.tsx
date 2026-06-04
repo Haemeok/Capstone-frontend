@@ -15,7 +15,7 @@ const CoupangPurchaseCard = ({ href }: CoupangPurchaseCardProps) => {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-between gap-3 w-full rounded-xl bg-gray-50 p-4 active:bg-gray-100 transition-colors"
+        className="flex w-full items-center justify-between gap-3 rounded-xl bg-gray-50 p-4 transition-colors active:bg-gray-100"
       >
         <div className="flex items-center gap-3">
           <ShoppingBasket size={20} className="text-gray-700" />
@@ -23,16 +23,16 @@ const CoupangPurchaseCard = ({ href }: CoupangPurchaseCardProps) => {
             <span className="text-sm font-semibold text-gray-900">
               쿠팡에서 신선하게 받아보세요
             </span>
-            <span className="text-xs text-gray-500 mt-0.5">
+            <span className="mt-0.5 text-xs text-gray-500">
               로켓배송으로 빠르게
             </span>
           </div>
         </div>
-        <ChevronRight size={18} className="text-gray-400 flex-shrink-0" />
+        <ChevronRight size={18} className="flex-shrink-0 text-gray-400" />
       </Link>
-      <p className="mt-3 text-[11px] text-gray-400 font-light leading-tight text-pretty break-keep text-center">
-        이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의
-        수수료를 제공받습니다.
+      <p className="mt-3 text-center text-[11px] leading-tight font-light text-pretty break-keep text-gray-400">
+        이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를
+        제공받습니다.
       </p>
     </section>
   );
