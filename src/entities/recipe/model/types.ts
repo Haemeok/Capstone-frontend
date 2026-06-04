@@ -131,6 +131,7 @@ export type Recipe = {
   favoriteByCurrentUser: boolean;
   visibility?: Visibility;
   source?: RecipeSource;
+  creatorCountryTag?: CreatorCountryTag | null;
   ingredientCalculationSummary?: IngredientCalculationSummary;
   totalCalories: number;
   createdAt?: string;

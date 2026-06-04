@@ -11,6 +11,9 @@ import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 import type { YouTubeVideoPlayerRef } from "@/shared/ui/YouTubeVideoPlayer";
 
+import type { CreatorCountryTag } from "@/entities/recipe";
+import { CreatorCountryFlag } from "@/entities/recipe";
+
 const YouTubeVideoPlayer = dynamic(
   () =>
     import("@/shared/ui/YouTubeVideoPlayer").then(
@@ -53,6 +56,7 @@ type YoutubeMetadata = {
   subscriberCount?: number;
   thumbnailUrl?: string;
   channelId?: string;
+  creatorCountryTag?: CreatorCountryTag | null;
 };
 
 type RecipeVideoSectionProps = {
@@ -143,8 +147,13 @@ export default function RecipeVideoSection({
                   fit="cover"
                 />
                 <div className="flex min-w-0 flex-1 flex-col">
-                  <span className="truncate text-sm font-medium">
-                    {youtubeMetadata.channelName}
+                  <span className="flex items-center gap-1 text-sm font-medium">
+                    <span className="truncate">
+                      {youtubeMetadata.channelName}
+                    </span>
+                    <CreatorCountryFlag
+                      tag={youtubeMetadata.creatorCountryTag}
+                    />
                   </span>
                   {youtubeMetadata.subscriberCount && (
                     <span className="text-xs text-gray-600">

@@ -101,6 +101,7 @@ export default async function RecipeDetailPage({
         subscriberCount: staticRecipe.youtubeSubscriberCount,
         thumbnailUrl: staticRecipe.youtubeThumbnailUrl,
         channelId: staticRecipe.youtubeChannelId,
+        creatorCountryTag: staticRecipe.creatorCountryTag,
       }
     : undefined;
 
