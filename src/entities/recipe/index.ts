@@ -1,3 +1,11 @@
+export { getGridItemAuthor } from "./lib/gridItemAuthor";
+export {
+  isAiRecipe,
+  isPrivateRecipe,
+  isRestrictedRecipe,
+  isUserRecipe,
+  isYoutubeRecipe,
+} from "./lib/visibility";
 export {
   fetchPagedRecipes,
   getRecipe,
@@ -28,10 +36,3 @@ export type {
   TrendingYoutubeRecipe,
 } from "./model/types";
 export { default as RecipeStepList } from "./ui/RecipeStepList";
-export {
-  isAiRecipe,
-  isPrivateRecipe,
-  isRestrictedRecipe,
-  isUserRecipe,
-  isYoutubeRecipe,
-} from "./lib/visibility";

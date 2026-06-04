@@ -63,6 +63,9 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   favoriteCount?: number;
   youtubeVideoViewCount?: number;
   tags?: string[];
+  youtubeExtractorId?: string;
+  youtubeExtractorName?: string;
+  youtubeExtractorProfileImage?: string;
 };
 
 export type StaticDetailedRecipeGridItem = Omit<

@@ -13,7 +13,11 @@ import YouTubeChannelBadge from "@/shared/ui/badge/YouTubeChannelBadge";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
 
-import { isAiRecipe, isYoutubeRecipe } from "@/entities/recipe";
+import {
+  getGridItemAuthor,
+  isAiRecipe,
+  isYoutubeRecipe,
+} from "@/entities/recipe";
 import { MyFridgeRecipeItem } from "@/entities/recipe/model/types";
 import UserName from "@/entities/user/ui/UserName";
 import UserProfileImage from "@/entities/user/ui/UserProfileImage";
@@ -27,15 +31,19 @@ const getRightBadge = (recipe: MyFridgeRecipeItem) => {
     return (
       <YouTubeChannelBadge
         channelName={recipe.youtubeChannelName}
-        className="max-w-[72px] min-[400px]:max-w-[100px] min-[400px]:px-2 min-[400px]:py-1 px-1.5 py-0.5"
+        className="max-w-[72px] px-1.5 py-0.5 min-[400px]:max-w-[100px] min-[400px]:px-2 min-[400px]:py-1"
       />
     );
   }
   if (isYoutubeRecipe(recipe)) {
-    return <YouTubeIconBadge className="h-5 w-5 min-[400px]:h-7 min-[400px]:w-7" />;
+    return (
+      <YouTubeIconBadge className="h-5 w-5 min-[400px]:h-7 min-[400px]:w-7" />
+    );
   }
   if (isAiRecipe(recipe)) {
-    return <AIGeneratedBadge className="h-4 px-1.5 min-[400px]:h-5 min-[400px]:px-[10px]" />;
+    return (
+      <AIGeneratedBadge className="h-4 px-1.5 min-[400px]:h-5 min-[400px]:px-[10px]" />
+    );
   }
   return null;
 };
@@ -53,14 +61,15 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
   };
 
   const rightBadge = getRightBadge(recipe);
+  const author = getGridItemAuthor(recipe);
 
   return (
     <motion.div
-      className="relative flex cursor-pointer items-start gap-4 rounded-2xl bg-white p-4 border border-gray-100 transition-colors active:bg-gray-50"
+      className="relative flex cursor-pointer items-start gap-4 rounded-2xl border border-gray-100 bg-white p-4 transition-colors active:bg-gray-50"
       onClick={handleCardClick}
     >
       {/* 이미지 */}
-      <div className="relative w-28 min-[390px]:w-32 min-[430px]:w-36 sm:w-[188px] flex-shrink-0 overflow-hidden rounded-card">
+      <div className="rounded-card relative w-28 flex-shrink-0 overflow-hidden min-[390px]:w-32 min-[430px]:w-36 sm:w-[188px]">
         <Image
           src={recipe.imageUrl}
           alt={recipe.title}
@@ -94,20 +103,22 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
 
         {/* 조회수 · 즐겨찾기 · 조리시간 */}
         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
-          {isYoutubeRecipe(recipe) && recipe.youtubeVideoViewCount != null && (() => {
-            const tier = getViewCountTier(recipe.youtubeVideoViewCount);
-            const IconComponent = tier.icon;
-            return (
-              <div className="flex items-center gap-0.5">
-                <IconComponent
-                  size={14}
-                  className={tier.iconColor}
-                  strokeWidth={tier.strokeWidth}
-                />
-                <span>{formatCount(recipe.youtubeVideoViewCount)}</span>
-              </div>
-            );
-          })()}
+          {isYoutubeRecipe(recipe) &&
+            recipe.youtubeVideoViewCount != null &&
+            (() => {
+              const tier = getViewCountTier(recipe.youtubeVideoViewCount);
+              const IconComponent = tier.icon;
+              return (
+                <div className="flex items-center gap-0.5">
+                  <IconComponent
+                    size={14}
+                    className={tier.iconColor}
+                    strokeWidth={tier.strokeWidth}
+                  />
+                  <span>{formatCount(recipe.youtubeVideoViewCount)}</span>
+                </div>
+              );
+            })()}
 
           {recipe.favoriteCount != null && recipe.favoriteCount > 0 && (
             <div className="flex items-center gap-0.5">
@@ -128,10 +139,10 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
           onClick={(e) => e.stopPropagation()}
         >
           <UserProfileImage
-            profileImage={recipe.profileImage}
-            userId={recipe.authorId}
+            profileImage={author.profileImage}
+            userId={author.authorId}
           />
-          <UserName username={recipe.authorName} userId={recipe.authorId} />
+          <UserName username={author.authorName} userId={author.authorId} />
         </div>
 
         {/* 재료 매칭 */}
