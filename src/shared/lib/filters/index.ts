@@ -1,4 +1,5 @@
 export {
+  countryCodec,
   dishTypeCodec,
   ingredientsCodec,
   queryCodec,

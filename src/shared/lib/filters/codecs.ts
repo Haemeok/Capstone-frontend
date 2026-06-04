@@ -1,4 +1,5 @@
 import {
+  COUNTRY_DEFINITIONS,
   DISH_TYPE_CODES,
   SORT_TYPE_CODES,
   TAG_DEFINITIONS,
@@ -71,5 +72,26 @@ export const ingredientsCodec = {
   decode: (param: string | null): string[] => {
     if (!param) return [];
     return param.split(",").filter(Boolean);
+  },
+};
+
+export const countryCodec = {
+  encode: (values: string[]): string | null => {
+    if (values.length === 0) return null;
+    const codes = values.map((label) => {
+      const matched = COUNTRY_DEFINITIONS.find((def) => def.label === label);
+      return matched ? matched.code : label;
+    });
+    return codes.join(",");
+  },
+  decode: (param: string | null): string[] => {
+    if (!param) return [];
+    return param
+      .split(",")
+      .filter(Boolean)
+      .map((code) => {
+        const matched = COUNTRY_DEFINITIONS.find((def) => def.code === code);
+        return matched ? matched.label : code;
+      });
   },
 };
