@@ -116,8 +116,10 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
 
       <div className="border-border bg-background flex h-12 border-t">
         {recipeSteps.map((_, index) => (
-          <div
+          <button
             key={index}
+            type="button"
+            aria-label={`${index + 1}단계로 이동`}
             className="border-border relative h-full flex-1 border-r"
             onClick={() => handleProgressClick(index)}
           >
@@ -130,9 +132,11 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
               className="bg-olive-light absolute bottom-0 left-0 h-full"
               style={{ width: `${getStepProgress(index - 1)}%` }}
             />
-          </div>
+          </button>
         ))}
-        <div
+        <button
+          type="button"
+          aria-label="마지막 단계로 이동"
           onClick={() => handleProgressClick(TOTAL_STEPS)}
           className="border-border relative h-full w-12 flex-1 items-center justify-center border-l"
         >
@@ -141,7 +145,7 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
             className="bg-olive-light absolute bottom-0 left-0 h-full"
             style={{ width: `${getStepProgress(recipeSteps.length)}%` }}
           />
-        </div>
+        </button>
       </div>
     </>
   );

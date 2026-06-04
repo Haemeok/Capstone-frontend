@@ -27,7 +27,8 @@ const IconToggle = <T extends string | boolean>({
   const isRightSelected = value === rightOption.value;
 
   return (
-    <div
+    <button
+      type="button"
       className={cn(
         "flex h-8 w-44 cursor-pointer overflow-hidden rounded-full border border-gray-200 bg-gray-100 transition-all duration-300",
         className
@@ -36,8 +37,7 @@ const IconToggle = <T extends string | boolean>({
         triggerHaptic("Light");
         onChange(isRightSelected ? leftOption.value : rightOption.value);
       }}
-      role="button"
-      tabIndex={0}
+      aria-pressed={isRightSelected}
       aria-label={`${isRightSelected ? leftOption.label : rightOption.label} 보기`}
     >
       <div className="relative flex w-full items-center justify-between overflow-hidden">
@@ -98,7 +98,7 @@ const IconToggle = <T extends string | boolean>({
           </span>}
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

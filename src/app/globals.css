@@ -123,6 +123,12 @@
     border-color: var(--color-gray-200, currentColor);
   }
 
+  /* Tailwind v4 Preflight가 제거한 button cursor 복원 (v3 동작 유지) */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
   /* 웹뷰 네이티브 앱 터치 UX - 터치 디바이스에서만 적용 */
   @media (pointer: coarse) {
     * {
