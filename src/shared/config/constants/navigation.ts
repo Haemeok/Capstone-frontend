@@ -9,10 +9,10 @@ export const HIDDEN_NAVBAR_PATHS = [
 
 export const HIDDEN_NAVBAR_PATTERNS_ALWAYS = [
   /^\/recipes\/[^/]+\/slide-show$/,
-  /^\/recipes\/(?!new$|my-fridge$|admin$|category$)[^/]+$/,
 ] as const;
 
 export const HIDDEN_NAVBAR_PATTERNS_APP_ONLY = [
+  /^\/recipes\/(?!new$|my-fridge$|admin$|category$)[^/]+$/,
   /^\/recipe-books\/[^/]+$/,
   /^\/curation\/(?!new$|admin$)[^/]+$/,
 ] as const;
