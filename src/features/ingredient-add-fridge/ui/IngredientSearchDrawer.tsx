@@ -15,6 +15,7 @@ import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 
 import { getIngredients, IngredientsApiResponse } from "@/entities/ingredient";
+import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 
 import { useAddIngredientMutation } from "@/features/ingredient-add-fridge/model/hooks";
 import { useDeleteIngredientMutation } from "@/features/ingredient-delete-fridge";
@@ -39,10 +40,10 @@ const IngredientSearchDrawer = ({
       IngredientsApiResponse,
       Error,
       InfiniteData<IngredientsApiResponse>,
-      [string, string, string],
+      readonly ["fridgeIngredients", string, string],
       number
     >({
-      queryKey: ["fridgeIngredients", selectedCategory, searchQuery],
+      queryKey: INGREDIENT_QUERY_KEYS.browse(selectedCategory, searchQuery),
       queryFn: ({ pageParam = 0 }) =>
         getIngredients({
           category: selectedCategory === "전체" ? null : selectedCategory,
@@ -65,11 +66,10 @@ const IngredientSearchDrawer = ({
     }
   }, [selectedCategory, searchQuery]);
 
-  const { mutate: addIngredient } = useAddIngredientMutation([
-    "fridgeIngredients",
-    selectedCategory,
-    searchQuery,
-  ]);
+  const { mutate: addIngredient } = useAddIngredientMutation({
+    category: selectedCategory,
+    q: searchQuery,
+  });
 
   const { mutate: deleteIngredient } = useDeleteIngredientMutation([
     "fridgeIngredients",
