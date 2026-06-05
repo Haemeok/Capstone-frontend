@@ -2,6 +2,7 @@
 
 import { notFound, useParams } from "next/navigation";
 
+import { HomeAnchorAdSlot } from "@/shared/adsense";
 import { guestUser } from "@/shared/config/constants/user";
 import { Container } from "@/shared/ui/Container";
 
@@ -39,6 +40,8 @@ const UserDetailClient = () => {
             isOwnProfile={isOwnProfile}
             loggedInUser={loggedInUser}
           />
+
+          <HomeAnchorAdSlot className="px-5 py-2" />
 
           <UserTab
             user={displayUser}
