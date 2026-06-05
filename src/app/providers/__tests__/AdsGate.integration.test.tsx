@@ -1,4 +1,4 @@
-import { act, render } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 
 import { AdSlot } from "@/shared/adsense/AdSlot";
 
@@ -27,7 +27,10 @@ describe("AdsGate × AdSlot (T-110)", () => {
 
   it("T-110: showAds=false면 AdSlot이 아무것도 렌더하지 않는다", () => {
     useUserStore.setState({
-      user: { ...baseUser, adStatus: { showAds: false, adFreeUntil: "2026-09-05T00:00:00Z" } },
+      user: {
+        ...baseUser,
+        adStatus: { showAds: false, adFreeUntil: "2026-09-05T00:00:00Z" },
+      },
     });
     const { container } = render(
       <AdsGateProvider>
@@ -35,5 +38,21 @@ describe("AdsGate × AdSlot (T-110)", () => {
       </AdsGateProvider>
     );
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it("T-A8: showAds=true면 AdSlot이 ins를 렌더한다", async () => {
+    act(() =>
+      useUserStore.setState({
+        user: { ...baseUser, adStatus: { showAds: true, adFreeUntil: null } },
+      })
+    );
+    const { container } = render(
+      <AdsGateProvider>
+        <AdSlot slotId="x" minHeight={250} />
+      </AdsGateProvider>
+    );
+    await waitFor(() =>
+      expect(container.querySelector("ins.adsbygoogle")).not.toBeNull()
+    );
   });
 });
