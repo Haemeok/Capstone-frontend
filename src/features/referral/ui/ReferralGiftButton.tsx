@@ -1,13 +1,32 @@
 "use client";
 
+import { useState } from "react";
+
 import { Gift } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import { useReferralSheetStore } from "@/entities/referral";
+import {
+  shouldShowNudge,
+  useReferralInfoQuery,
+  useReferralSheetStore,
+} from "@/entities/referral";
 
-export const ReferralGiftButton = () => {
+type ReferralGiftButtonProps = { enabled?: boolean };
+
+export const ReferralGiftButton = ({
+  enabled = true,
+}: ReferralGiftButtonProps) => {
   const open = useReferralSheetStore((s) => s.open);
+  const lastOpenedAt = useReferralSheetStore((s) => s.lastOpenedAt);
+  const { data } = useReferralInfoQuery(enabled);
+  const [mountedAt] = useState<number>(() => Date.now());
+
+  const showDot = shouldShowNudge({
+    campaignActive: Boolean(data?.campaign),
+    lastOpenedAt,
+    now: mountedAt,
+  });
 
   return (
     <button
@@ -20,6 +39,12 @@ export const ReferralGiftButton = () => {
       className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-900 transition-colors hover:bg-gray-50"
     >
       <Gift size={18} aria-hidden="true" />
+      {showDot && (
+        <span
+          data-testid="referral-nudge-dot"
+          className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500"
+        />
+      )}
     </button>
   );
 };
