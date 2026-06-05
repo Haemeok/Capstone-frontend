@@ -101,7 +101,6 @@ export default async function RecipeDetailPage({
         subscriberCount: staticRecipe.youtubeSubscriberCount,
         thumbnailUrl: staticRecipe.youtubeThumbnailUrl,
         channelId: staticRecipe.youtubeChannelId,
-        creatorCountryTag: staticRecipe.creatorCountryTag,
       }
     : undefined;
 
@@ -153,6 +152,7 @@ export default async function RecipeDetailPage({
             author={staticRecipe.author}
             description={staticRecipe.description}
             extractorId={staticRecipe.extractorId}
+            creatorCountryTag={staticRecipe.creatorCountryTag}
           >
             <RecipeInteractionBar staticRecipe={staticRecipe} />
           </RecipeInfoSection>
