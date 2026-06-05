@@ -17,8 +17,13 @@ const NutritionFilterContent = lazy(() =>
 
 export const NutritionFilterChipButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { nutritionParams, types, isNutritionDirty, updateNutritionAndTypes } =
-    useNutritionParams();
+  const {
+    nutritionParams,
+    types,
+    countries,
+    isNutritionDirty,
+    updateNutritionAndTypes,
+  } = useNutritionParams();
 
   const handleClick = () => {
     triggerHaptic("Light");
@@ -49,6 +54,7 @@ export const NutritionFilterChipButton = () => {
             initialValues={nutritionParams}
             onApply={updateNutritionAndTypes}
             initialTypes={types}
+            initialCountries={countries}
           />
         </Suspense>
       )}

@@ -9,8 +9,13 @@ import { NutritionFilterContent } from "./NutritionFilterContent";
 
 export const NutritionFilterTrigger = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { nutritionParams, types, isNutritionDirty, updateNutritionAndTypes } =
-    useNutritionParams();
+  const {
+    nutritionParams,
+    types,
+    countries,
+    isNutritionDirty,
+    updateNutritionAndTypes,
+  } = useNutritionParams();
 
   return (
     <NutritionFilterContent
@@ -18,6 +23,7 @@ export const NutritionFilterTrigger = () => {
       initialValues={nutritionParams}
       onApply={updateNutritionAndTypes}
       initialTypes={types}
+      initialCountries={countries}
       open={isOpen}
       onOpenChange={setIsOpen}
     />
