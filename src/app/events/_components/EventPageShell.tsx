@@ -19,7 +19,9 @@ const EventPageShell = ({
     <div className="mx-auto min-h-screen w-full max-w-[480px] bg-white md:border-x md:border-gray-100">
       <header className="sticky top-0 z-40 flex items-center gap-2 border-b border-gray-100 bg-white px-3 py-3">
         <PrevButton showOnDesktop />
-        <h1 className="text-brown truncate text-base font-semibold">{title}</h1>
+        <h1 className="truncate text-base font-semibold text-gray-900">
+          {title}
+        </h1>
       </header>
       <img src={heroSrc} alt={heroAlt} className="h-auto w-full" />
       <main>{children}</main>

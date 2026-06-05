@@ -11,7 +11,7 @@ type EventCtaButtonProps = {
 };
 
 const baseClass =
-  "block w-full rounded-xl bg-brown py-4 text-center text-base font-semibold text-white";
+  "block w-full rounded-xl bg-blue-500 py-4 text-center text-base font-semibold text-white";
 
 const EventCtaButton = ({ label, href, onClick }: EventCtaButtonProps) => {
   const handleClick = () => {
