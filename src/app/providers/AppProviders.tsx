@@ -6,6 +6,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/shared/lib/queryClient";
 
+import { ReferralSheetHost } from "@/features/referral";
+
 import { AdsGateProvider } from "./AdsGateProvider";
 import { AIRecipeProvider } from "./AIRecipeProvider";
 import { AppStateInitializer } from "./AppStateInitializer";
@@ -35,6 +37,7 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
                   <AdsGateProvider>
                     <KeyboardAwareProvider>{children}</KeyboardAwareProvider>
                   </AdsGateProvider>
+                  <ReferralSheetHost />
                 </AppStateInitializer>
               </AIRecipeProvider>
             </YoutubeImportProvider>
