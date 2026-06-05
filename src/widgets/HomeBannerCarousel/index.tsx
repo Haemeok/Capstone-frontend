@@ -4,17 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 
 import useEmblaCarousel from "embla-carousel-react";
-import { ChevronRight } from "lucide-react";
-
-import { cn } from "@/shared/lib/utils";
-
-import { notoSansKr } from "@/app/fonts/notoSansKr";
 
 import { BannerSlide } from "./types";
 import { useCarouselAutoplay } from "./useCarouselAutoplay";
 
 const DEFAULT_AUTOPLAY_INTERVAL = 5000;
-const DEFAULT_BACKGROUND_COLOR = "#f87171";
+const DEFAULT_BACKGROUND_COLOR = "#f1f5f9";
 
 export type HomeBannerCarouselProps = {
   slides: BannerSlide[];
@@ -77,43 +72,32 @@ const HomeBannerCarousel = ({
               <div key={slide.id} className="relative min-w-0 flex-[0_0_100%]">
                 <Link
                   href={slide.link}
-                  className="relative block aspect-[7/2] w-full overflow-hidden md:aspect-[5/1]"
+                  className="relative block aspect-[9/2] w-full overflow-hidden"
                   style={{ backgroundColor }}
                 >
                   <div className="absolute inset-0 overflow-hidden">
                     <img
                       src={slide.mainImage}
                       alt=""
-                      className="absolute inset-y-0 right-0 h-full w-3/5 object-cover"
-                    />
-                    <div
-                      className="absolute inset-0"
+                      className="absolute inset-y-0 right-0 h-full w-1/2 object-cover"
                       style={{
-                        background: `linear-gradient(to right, ${backgroundColor} 35%, transparent 100%)`,
+                        WebkitMaskImage:
+                          "linear-gradient(to right, transparent 0%, black 55%)",
+                        maskImage:
+                          "linear-gradient(to right, transparent 0%, black 55%)",
                       }}
                     />
                   </div>
 
-                  <div className="relative z-10 flex h-full flex-col justify-center gap-1 px-6 py-3 md:px-10">
+                  <div className="relative z-10 flex h-full flex-col justify-center gap-0.5 px-4">
                     {slide.chip && (
-                      <span className="w-fit rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-sm md:text-sm">
+                      <span className="text-xs font-semibold text-gray-500 md:text-sm">
                         {slide.chip}
                       </span>
                     )}
-                    <h2
-                      className={cn(
-                        notoSansKr.className,
-                        "text-xl leading-tight font-extrabold whitespace-pre-line text-white md:text-3xl md:leading-tight"
-                      )}
-                    >
+                    <h2 className="text-lg leading-tight font-extrabold text-gray-900 md:text-2xl">
                       {slide.title}
                     </h2>
-                    {slide.ctaText && (
-                      <span className="mt-0.5 inline-flex items-center gap-0.5 text-xs font-medium text-white/80 md:text-sm">
-                        {slide.ctaText}
-                        <ChevronRight className="h-3 w-3 md:h-4 md:w-4" />
-                      </span>
-                    )}
                   </div>
                 </Link>
               </div>
