@@ -16,6 +16,7 @@ export const NOTIFICATION_MESSAGES: Record<
     `${actorNickname}님이 댓글을 좋아합니다.`,
   NEW_RECIPE_RATING: (actorNickname: string) =>
     `${actorNickname}님이 레시피에 평점을 남겼습니다.`,
+  REFERRAL_REWARD_GRANTED: () => `추천 보상으로 광고 제거 혜택이 추가됐어요.`,
 };
 
 export const getNotificationMessage = (
