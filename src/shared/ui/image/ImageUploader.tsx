@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FieldPath, get, useFormContext, useWatch } from "react-hook-form";
 
 import { Trash2, UploadIcon } from "lucide-react";
 
+import { useImagePreview } from "@/shared/hooks/useImagePreview";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -25,17 +26,11 @@ export const ImageUploader = ({ fieldName, className }: ImageUploaderProps) => {
 
   const imageValue = useWatch({ control, name: fieldName });
 
-  const [objectUrl, setObjectUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (imageValue instanceof File) {
-      const newUrl = URL.createObjectURL(imageValue);
-      setObjectUrl(newUrl);
-      return () => URL.revokeObjectURL(newUrl);
-    }
-  }, [imageValue]);
-
-  const displayUrl = typeof imageValue === "string" ? imageValue : objectUrl;
+  const previewValue =
+    imageValue instanceof File || typeof imageValue === "string"
+      ? imageValue
+      : null;
+  const displayUrl = useImagePreview(previewValue);
 
   const error = get(errors, fieldName);
 
@@ -48,7 +43,6 @@ export const ImageUploader = ({ fieldName, className }: ImageUploaderProps) => {
       shouldDirty: true,
       shouldValidate: true,
     });
-    setObjectUrl(null);
   };
 
   return (

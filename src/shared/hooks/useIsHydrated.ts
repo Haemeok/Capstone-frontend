@@ -2,13 +2,11 @@
 
 import { useSyncExternalStore } from "react";
 
-import { isAppWebView } from "@/shared/lib/bridge";
-
 const emptySubscribe = () => () => {};
 
-export const useIsApp = (): boolean =>
+export const useIsHydrated = (): boolean =>
   useSyncExternalStore(
     emptySubscribe,
-    () => isAppWebView(),
+    () => true,
     () => false
   );

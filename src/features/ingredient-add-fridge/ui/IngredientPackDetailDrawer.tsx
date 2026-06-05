@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Check } from "lucide-react";
 
@@ -8,7 +8,6 @@ import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
-import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 
 type IngredientPackDetailDrawerProps = {
   pack: IngredientPack | null;
@@ -37,21 +36,31 @@ const IngredientPackDetailDrawer = ({
       )
     : false;
 
-  useEffect(() => {
+  const [prevSync, setPrevSync] = useState({
+    open,
+    pack,
+    ownedIngredientIds,
+    allOwned,
+  });
+
+  if (
+    prevSync.open !== open ||
+    prevSync.pack !== pack ||
+    prevSync.ownedIngredientIds !== ownedIngredientIds ||
+    prevSync.allOwned !== allOwned
+  ) {
+    setPrevSync({ open, pack, ownedIngredientIds, allOwned });
     if (open && pack) {
-      if (allOwned) {
-        const ownedIds = pack.ingredients
-          .filter((ingredient) => ownedIngredientIds.has(ingredient.id))
-          .map((ingredient) => ingredient.id);
-        setSelectedIds(new Set(ownedIds));
-      } else {
-        const availableIds = pack.ingredients
-          .filter((ingredient) => !ownedIngredientIds.has(ingredient.id))
-          .map((ingredient) => ingredient.id);
-        setSelectedIds(new Set(availableIds));
-      }
+      const nextIds = pack.ingredients
+        .filter((ingredient) =>
+          allOwned
+            ? ownedIngredientIds.has(ingredient.id)
+            : !ownedIngredientIds.has(ingredient.id)
+        )
+        .map((ingredient) => ingredient.id);
+      setSelectedIds(new Set(nextIds));
     }
-  }, [open, pack, ownedIngredientIds, allOwned]);
+  }
 
   const handleToggle = (id: string) => {
     setSelectedIds((prev) => {
@@ -149,6 +158,7 @@ const IngredientPackDetailDrawer = ({
                   type="button"
                   key={ingredient.id}
                   disabled={!isClickable}
+                  aria-pressed={isSelected}
                   onClick={() => isClickable && handleToggle(ingredient.id)}
                   className={cn(
                     "flex w-full items-center rounded-xl px-3.5 py-3 text-left transition-colors",
@@ -158,17 +168,17 @@ const IngredientPackDetailDrawer = ({
                       : "cursor-not-allowed opacity-50"
                   )}
                 >
-                  <Checkbox
-                    checked={isSelected}
-                    disabled={!isClickable}
-                    onCheckedChange={() => {
-                      if (isClickable) {
-                        handleToggle(ingredient.id);
-                      }
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="data-[state=checked]:bg-olive-light data-[state=checked]:border-olive-light h-5 w-5 rounded border-gray-300 disabled:cursor-not-allowed"
-                  />
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "flex h-5 w-5 shrink-0 items-center justify-center rounded border",
+                      isSelected
+                        ? "border-olive-light bg-olive-light text-white"
+                        : "border-gray-300 bg-white"
+                    )}
+                  >
+                    {isSelected && <Check size={14} strokeWidth={3} />}
+                  </span>
                   <span className="ml-3 flex-1 text-sm font-medium text-gray-900">
                     {ingredient.name}
                   </span>

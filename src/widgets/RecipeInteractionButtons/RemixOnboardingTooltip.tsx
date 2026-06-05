@@ -22,13 +22,16 @@ export const RemixOnboardingTooltip = ({
     if (!show) return;
     if (typeof window === "undefined") return;
     if (window.localStorage.getItem(STORAGE_KEY) === "true") return;
-    setOpen(true);
+    const raf = requestAnimationFrame(() => setOpen(true));
     const t = setTimeout(() => {
       setOpen(false);
       window.localStorage.setItem(STORAGE_KEY, "true");
       onDismiss();
     }, AUTO_DISMISS_MS);
-    return () => clearTimeout(t);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(t);
+    };
   }, [show, onDismiss]);
 
   const handleClose = () => {

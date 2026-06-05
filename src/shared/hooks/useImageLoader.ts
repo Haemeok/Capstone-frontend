@@ -4,16 +4,19 @@ import { useEffect, useRef, useState } from "react";
 type ImageStatus = "loading" | "loaded" | "error";
 
 export const useImageLoader = (src: string) => {
-  const [status, setStatus] = useState<ImageStatus>("loading");
+  const [status, setStatus] = useState<ImageStatus>(src ? "loading" : "error");
+  const [prevSrc, setPrevSrc] = useState(src);
   const imageRef = useRef<HTMLImageElement | null>(null);
+
+  if (src !== prevSrc) {
+    setPrevSrc(src);
+    setStatus(src ? "loading" : "error");
+  }
 
   useEffect(() => {
     if (!src) {
-      setStatus("error");
       return;
     }
-
-    setStatus("loading");
 
     const img = new Image();
     imageRef.current = img;
@@ -35,7 +38,7 @@ export const useImageLoader = (src: string) => {
     img.src = src;
 
     if (img.complete && img.naturalWidth !== 0) {
-      handleLoad();
+      queueMicrotask(handleLoad);
     }
 
     return () => {

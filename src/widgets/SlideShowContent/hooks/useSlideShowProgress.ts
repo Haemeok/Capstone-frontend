@@ -28,10 +28,13 @@ export const useSlideShowProgress = ({
     };
 
     api.on("scroll", onScroll);
-    setScrollProgress(api.scrollProgress());
+    const rafId = requestAnimationFrame(() => {
+      setScrollProgress(api.scrollProgress());
+    });
 
     return () => {
       api.off("scroll", onScroll);
+      cancelAnimationFrame(rafId);
     };
   }, [api, recipeStepsLength, totalSteps]);
 

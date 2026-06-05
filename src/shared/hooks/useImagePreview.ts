@@ -1,20 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 export const useImagePreview = (value: File | string | null | undefined) => {
-  const [url, setUrl] = useState<string | null>(null);
+  const url = useMemo(() => {
+    if (value instanceof File) return URL.createObjectURL(value);
+    return typeof value === "string" ? value : null;
+  }, [value]);
 
   useEffect(() => {
-    let created: string | null = null;
-    if (value instanceof File) {
-      created = URL.createObjectURL(value);
-      setUrl(created);
-    } else {
-      setUrl(typeof value === "string" ? value : null);
+    if (value instanceof File && url) {
+      return () => URL.revokeObjectURL(url);
     }
-    return () => {
-      if (created) URL.revokeObjectURL(created);
-    };
-  }, [value]);
+  }, [value, url]);
 
   return url;
 };

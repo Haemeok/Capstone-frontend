@@ -1,18 +1,18 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect } from "react";
 
 import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 
+import { useIsHydrated } from "@/shared/hooks/useIsHydrated";
+
 let isPostHogInitialized = false;
 
 export const PostHogProvider = ({ children }: { children: ReactNode }) => {
-  const [isClient, setIsClient] = useState(false);
+  const isClient = useIsHydrated();
 
   useEffect(() => {
-    setIsClient(true);
-
     if (
       typeof window !== "undefined" &&
       process.env.NODE_ENV === "production" &&
