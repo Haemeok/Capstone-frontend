@@ -1,5 +1,8 @@
 import { convertNutritionToQueryParams } from "@/shared/lib/nutrition/parseNutritionParams";
 
+import type { CreatorCountryTag } from "@/entities/recipe";
+
+import { useCountryCodes } from "@/features/filter-country";
 import { useDishTypeCode } from "@/features/filter-dish-type";
 import { useIngredientsFilter } from "@/features/filter-ingredients";
 import { useSortCode } from "@/features/filter-sort";
@@ -12,6 +15,7 @@ export type SearchFilterSnapshot = {
   sortCode: string | null;
   tagCodes: string[];
   ingredientIds: string[];
+  creatorCountryTags: CreatorCountryTag[];
   q: string;
   nutritionQueryParams: Record<string, number>;
   types: string[];
@@ -19,6 +23,7 @@ export type SearchFilterSnapshot = {
     "recipes",
     string | null,
     string | null,
+    string,
     string,
     string,
     string,
@@ -33,6 +38,7 @@ export const useSearchFilterSnapshot = (): SearchFilterSnapshot => {
   const sortCode = useSortCode();
   const tagCodes = useTagCodes();
   const [ingredientIds] = useIngredientsFilter();
+  const creatorCountryTags = useCountryCodes();
   const { nutritionParams, types } = useNutritionParams();
   const { q } = useSearchQuery();
 
@@ -41,6 +47,7 @@ export const useSearchFilterSnapshot = (): SearchFilterSnapshot => {
   const tagsString = tagCodes.join(",");
   const typesString = types.join(",");
   const ingredientsString = ingredientIds.join(",");
+  const countryString = creatorCountryTags.join(",");
 
   const queryKey = [
     "recipes",
@@ -51,6 +58,7 @@ export const useSearchFilterSnapshot = (): SearchFilterSnapshot => {
     nutritionKeyString,
     typesString,
     ingredientsString,
+    countryString,
   ] as const;
 
   const queryKeyString = JSON.stringify([
@@ -62,6 +70,7 @@ export const useSearchFilterSnapshot = (): SearchFilterSnapshot => {
     nutritionKeyString,
     typesString,
     ingredientsString,
+    creatorCountryTags,
   ]);
 
   return {
@@ -69,6 +78,7 @@ export const useSearchFilterSnapshot = (): SearchFilterSnapshot => {
     sortCode,
     tagCodes,
     ingredientIds,
+    creatorCountryTags,
     q,
     nutritionQueryParams,
     types,

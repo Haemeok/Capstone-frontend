@@ -15,6 +15,7 @@ export const useSearchResults = (initialPage: number = 0) => {
     sortCode,
     tagCodes,
     ingredientIds,
+    creatorCountryTags,
     q,
     nutritionQueryParams,
     types,
@@ -40,6 +41,8 @@ export const useSearchResults = (initialPage: number = 0) => {
         ...nutritionQueryParams,
         types,
         ingredientIds: ingredientIds.length > 0 ? ingredientIds : undefined,
+        creatorCountryTags:
+          creatorCountryTags.length > 0 ? creatorCountryTags : undefined,
       }),
     getNextPageParam,
     initialPageParam: initialPage,
