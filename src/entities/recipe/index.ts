@@ -37,5 +37,6 @@ export type {
   StaticDetailedRecipesApiResponse,
   TrendingYoutubeRecipe,
 } from "./model/types";
+export { CountryFlagGlyph } from "./ui/CountryFlagGlyph";
 export { CreatorCountryFlag } from "./ui/CreatorCountryFlag";
 export { default as RecipeStepList } from "./ui/RecipeStepList";

@@ -5,16 +5,16 @@ describe("getCreatorCountryFlag", () => {
     expect(getCreatorCountryFlag("KR")).toBeNull();
   });
 
-  it("JP는 일본 국기를 노출한다", () => {
+  it("JP는 일본 국기 variant를 반환한다", () => {
     expect(getCreatorCountryFlag("JP")).toEqual({
-      emoji: "🇯🇵",
+      variant: "jp",
       label: "일본 채널",
     });
   });
 
-  it("OTHER는 해외 국기를 노출한다", () => {
+  it("OTHER는 globe variant를 반환한다", () => {
     expect(getCreatorCountryFlag("OTHER")).toEqual({
-      emoji: "🌐",
+      variant: "globe",
       label: "해외 채널",
     });
   });

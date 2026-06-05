@@ -3,13 +3,13 @@ import { render, screen } from "@testing-library/react";
 import { CreatorCountryFlag } from "../CreatorCountryFlag";
 
 describe("CreatorCountryFlag", () => {
-  it("JP는 일본 국기와 스크린리더 라벨을 렌더한다", () => {
-    render(<CreatorCountryFlag tag="JP" />);
-    const flag = screen.getByRole("img", { name: "일본 채널" });
-    expect(flag).toHaveTextContent("🇯🇵");
+  it("JP는 일본 국기(SVG)와 스크린리더 라벨을 렌더한다", () => {
+    const { container } = render(<CreatorCountryFlag tag="JP" />);
+    expect(screen.getByRole("img", { name: "일본 채널" })).toBeInTheDocument();
+    expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
-  it("OTHER는 해외 국기와 라벨을 렌더한다", () => {
+  it("OTHER는 globe 이모지와 라벨을 렌더한다", () => {
     render(<CreatorCountryFlag tag="OTHER" />);
     const flag = screen.getByRole("img", { name: "해외 채널" });
     expect(flag).toHaveTextContent("🌐");

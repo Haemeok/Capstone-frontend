@@ -2,6 +2,7 @@ import { cn } from "@/shared/lib/utils";
 
 import { getCreatorCountryFlag } from "../lib/getCreatorCountryFlag";
 import type { CreatorCountryTag } from "../model/types";
+import { CountryFlagGlyph } from "./CountryFlagGlyph";
 
 type CreatorCountryFlagProps = {
   tag?: CreatorCountryTag | null;
@@ -20,11 +21,11 @@ export const CreatorCountryFlag = ({
       role="img"
       aria-label={flag.label}
       className={cn(
-        "inline-flex items-center rounded-full bg-black/45 px-1.5 py-0.5 text-[13px] leading-none backdrop-blur-sm",
+        "inline-flex items-center rounded-full bg-black/45 px-1.5 py-0.5 leading-none backdrop-blur-sm",
         className
       )}
     >
-      {flag.emoji}
+      <CountryFlagGlyph tag={tag} />
     </span>
   );
 };
