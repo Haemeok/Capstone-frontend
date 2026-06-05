@@ -1,13 +1,32 @@
 "use client";
 
+import { useState } from "react";
+
 import { Copy } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
-import { campaignMonthLabel, useReferralInfoQuery } from "@/entities/referral";
+import {
+  campaignMonthLabel,
+  canRedeem,
+  extractErrorCode,
+  normalizeCode,
+  redeemErrorMessage,
+  type RedeemStatus,
+  referrerRewardLimitReached,
+  useRedeemMutation,
+  useReferralInfoQuery,
+} from "@/entities/referral";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
+
+const STATUS_MESSAGE: Record<Exclude<RedeemStatus, "AVAILABLE">, string> = {
+  ALREADY_REDEEMED: "이미 추천인을 입력했어요.",
+  NOT_ELIGIBLE_OLD_USER: "이벤트 시작 이후 가입한 분만 입력할 수 있어요.",
+  REDEEM_WINDOW_EXPIRED: "추천인 입력 가능 기간이 지났어요.",
+  NO_ACTIVE_CAMPAIGN: "현재 진행 중인 추천 이벤트가 없어요.",
+};
 
 type ReferralSheetProps = {
   open: boolean;
@@ -19,6 +38,13 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
   const { addToast } = useToastStore();
   const { data, isLoading, isError, refetch } = useReferralInfoQuery(open);
 
+  const [code, setCode] = useState("");
+  const [errorText, setErrorText] = useState<string | null>(null);
+  const redeem = useRedeemMutation();
+
+  const status = data?.redeemStatus.status;
+  const inputEnabled = status ? canRedeem(status) : false;
+
   const monthLabel = campaignMonthLabel(data?.campaign ?? null);
   const headerText = monthLabel
     ? `${monthLabel}월 친구 초대 이벤트`
@@ -29,6 +55,20 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
     await navigator.clipboard.writeText(data.myReferralCode);
     triggerHaptic("Success");
     addToast({ message: "초대코드를 복사했어요.", variant: "success" });
+  };
+
+  const handleRedeem = () => {
+    setErrorText(null);
+    redeem.mutate(normalizeCode(code), {
+      onSuccess: (res) => {
+        const until = new Date(res.adFreeUntil).toLocaleDateString("ko-KR");
+        addToast({
+          message: `광고 제거가 ${until}까지 적용됐어요.`,
+          variant: "success",
+        });
+      },
+      onError: (e) => setErrorText(redeemErrorMessage(extractErrorCode(e))),
+    });
   };
 
   return (
@@ -83,6 +123,53 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
                   복사
                 </button>
               </div>
+
+              {inputEnabled ? (
+                <div className="mt-5">
+                  <p className="mb-1 text-xs font-semibold text-gray-400">
+                    친구 초대코드 입력
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      placeholder="초대코드"
+                      aria-label="친구 초대코드"
+                      maxLength={20}
+                      className="focus:border-olive-light w-full rounded-lg border border-gray-200 bg-gray-50 p-3 text-base focus:bg-white focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRedeem}
+                      disabled={redeem.isPending || code.trim() === ""}
+                      className="bg-olive-light shrink-0 rounded-lg px-4 text-sm font-semibold text-white disabled:opacity-50"
+                    >
+                      적용
+                    </button>
+                  </div>
+                  {errorText && (
+                    <p className="mt-2 text-sm text-red-500">{errorText}</p>
+                  )}
+                </div>
+              ) : (
+                status && (
+                  <p className="mt-5 text-sm text-gray-500">
+                    {status === "ALREADY_REDEEMED" && data.redeemStatus.referrer
+                      ? `${data.redeemStatus.referrer.nickname}님의 추천으로 가입했어요.`
+                      : // status is non-AVAILABLE here: inputEnabled (canRedeem) is false
+                        STATUS_MESSAGE[
+                          status as Exclude<RedeemStatus, "AVAILABLE">
+                        ]}
+                  </p>
+                )
+              )}
+
+              {referrerRewardLimitReached(data.campaign) && (
+                <p className="mt-3 text-xs text-gray-400">
+                  이번 이벤트 내 추가 보상은 모두 받았지만, 친구는 여전히 혜택을
+                  받을 수 있어요.
+                </p>
+              )}
             </div>
           )}
         </div>
