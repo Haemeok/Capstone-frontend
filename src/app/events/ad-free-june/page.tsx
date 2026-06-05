@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
 
+import { buildEventMetadata } from "@/shared/lib/metadata/eventMetadata";
+
 import EventFAQ from "../_components/EventFAQ";
 import EventPageShell from "../_components/EventPageShell";
 import EventSection from "../_components/EventSection";
 import AdFreeReferralCta from "./AdFreeReferralCta";
 
-export const metadata: Metadata = {
-  title: "친구 초대하고 광고 OFF | 레시피오",
+export const metadata: Metadata = buildEventMetadata({
+  path: "/events/ad-free-june",
+  title: "친구 초대하고 광고 OFF",
   description:
-    "친구를 초대하면 참여자와 친구 모두 광고가 사라져요. 6월 한 달, 최대 3개월까지 광고를 없애보세요.",
-  openGraph: {
-    title: "친구 초대하고 광고 OFF | 레시피오",
-    description: "친구 초대로 참여자와 친구 모두 광고를 제거하는 6월 이벤트.",
-  },
-};
+    "친구를 초대하면 참여자와 친구 모두 광고가 사라져요. 6월 한 달, 초대코드 한 번으로 최대 3개월까지 광고를 없애보세요.",
+  keywords: [
+    "광고 제거",
+    "광고 없는 레시피",
+    "친구 초대 이벤트",
+    "초대코드",
+    "6월 이벤트",
+    "레시피오 이벤트",
+  ],
+  ogImage: "/events/ad-free-june/hero.png",
+  ogImageAlt: "친구 초대하고 광고 OFF - 6월 광고제거 이벤트",
+});
 
 const AdFreeJuneEventPage = () => {
   return (
