@@ -61,12 +61,30 @@ const HomePage = async () => {
               slides={[
                 {
                   id: "youtube",
-                  title: "유튜브 링크만으로\n레시피를 등록하세요",
-                  ctaText: "유튜브 레시피 바로 추출하기",
+                  chip: "#유튜브 레시피",
+                  title: "링크만 붙여넣으면 레시피 완성",
+                  ctaText: "링크로 레시피 만들기",
                   link: "/recipes/new/youtube",
                   backgroundColor: "#f87171",
-                  backgroundImage: "/gold.png",
                   mainImage: `${ICON_BASE_URL}youtube.webp`,
+                },
+                {
+                  id: "world-recipes",
+                  chip: "#전 세계 레시피",
+                  title: "세계 각국 레시피 구경하기",
+                  ctaText: "나라별 레시피 보러 가기",
+                  link: "/events/world-recipes",
+                  backgroundColor: "#3b82f6",
+                  mainImage: "/events/world-recipes/hero.png",
+                },
+                {
+                  id: "ad-free-june",
+                  chip: "#광고 없는 6월",
+                  title: "친구 초대하면 광고가 사라져요",
+                  ctaText: "친구 초대하고 광고 끄기",
+                  link: "/events/ad-free-june",
+                  backgroundColor: "#8b5cf6",
+                  mainImage: "/events/ad-free-june/hero.png",
                 },
               ]}
             />
