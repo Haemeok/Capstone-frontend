@@ -80,7 +80,6 @@ export const SequenceCard = ({ image, results, onRetry }: Props) => {
                   </p>
                 )}
                 {cell.status === "success" && (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={cell.imageUrl}
                     alt={image.label}

@@ -56,7 +56,6 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
           </p>
         )}
         <p className="mt-4 flex items-center justify-center gap-1.5 text-sm text-gray-500">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/web-app-manifest-192x192.png"
             alt=""
@@ -77,7 +76,6 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
       </header>
 
       {data.thumbnailUrl && (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={data.thumbnailUrl}
           alt={data.h1}

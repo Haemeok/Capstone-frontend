@@ -87,7 +87,6 @@ export const BlogPostPreview = ({
 
       {finalImageUrl && (
         <figure className="mb-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={finalImageUrl}
             alt={post.alts["final-plated"] ?? post.title.main}
@@ -132,7 +131,6 @@ export const BlogPostPreview = ({
                 {step.body}
               </p>
               {url && (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={url}
                   alt={post.alts[step.imageSlot] ?? `step ${step.stepNumber}`}

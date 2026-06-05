@@ -237,7 +237,6 @@ export const WorkerCard = ({
             <div className="grid grid-cols-3 gap-1.5">
               {referenceImageUrls.map((url, idx) => (
                 <div key={`${idx}-${url.slice(0, 32)}`} className="relative">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={url}
                     alt={`reference ${idx + 1}`}
