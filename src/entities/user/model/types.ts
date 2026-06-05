@@ -13,6 +13,10 @@ export type User = {
   remainingYoutubeExtractionCredits: number;
   remainingAiQuota: number;
   remainingYoutubeQuota: number;
+  adStatus?: {
+    showAds: boolean;
+    adFreeUntil: string | null;
+  };
 };
 
 export type UserStreak = {
