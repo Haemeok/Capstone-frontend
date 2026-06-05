@@ -146,55 +146,12 @@ const createBreadcrumbStructuredData = () => ({
   ],
 });
 
-const createFAQStructuredData = () => ({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "유튜브 레시피 추출기는 무료인가요?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "네, 완전 무료입니다. 유튜브 링크만 있으면 누구나 무료로 AI 기반 레시피 추출, 영양 성분 분석, 재료 가격 계산 기능을 사용할 수 있습니다.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "어떤 유튜브 영상에서 레시피를 추출할 수 있나요?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "한국어로 진행되는 요리 영상이라면 대부분 추출 가능합니다. AI가 영상을 분석하여 재료, 조리 과정, 조리 시간 등을 자동으로 추출합니다.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "추출된 레시피의 정확도는 어떤가요?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "최신 AI 기술을 활용하여 높은 정확도로 레시피를 추출합니다. 영양 성분 계산과 재료 가격 분석도 실시간 데이터를 기반으로 제공됩니다.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "추출된 레시피를 어떻게 활용할 수 있나요?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "추출된 레시피는 바로 저장하여 요리할 때 사용할 수 있습니다. 요리 타이머 기능과 1인분 변환 기능도 함께 제공되어 실제 조리 시 편리하게 활용할 수 있습니다.",
-      },
-    },
-  ],
-});
-
-/**
- * Combined structured data for the YouTube extractor page
- */
-const createYoutubeExtractorStructuredData = () => {
+export const createYoutubeExtractorStructuredData = () => {
   const webApp = createWebApplicationStructuredData();
   const howTo = createHowToStructuredData();
   const breadcrumb = createBreadcrumbStructuredData();
-  const faq = createFAQStructuredData();
 
-  return [webApp, howTo, breadcrumb, faq];
+  return [webApp, howTo, breadcrumb];
 };
 
 export const youtubeExtractorMetadata: Metadata = {
@@ -252,12 +209,5 @@ export const youtubeExtractorMetadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-
-  // Multiple structured data types for rich snippets
-  other: {
-    "application/ld+json": JSON.stringify(
-      createYoutubeExtractorStructuredData()
-    ),
   },
 };
