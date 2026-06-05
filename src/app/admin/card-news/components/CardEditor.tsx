@@ -37,7 +37,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
   const [saving, setSaving] = useState(false);
   const [folderName, setFolderName] = useState("");
   const [boxPositions, setBoxPositions] = useState<("top" | "bottom")[]>([]);
-  const [theme, setTheme] = useState<CardTheme>("classic");
+  const [theme, setTheme] = useState<CardTheme>("glass");
 
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const recipeRefs = useRef<React.RefObject<HTMLDivElement | null>[]>([]);
