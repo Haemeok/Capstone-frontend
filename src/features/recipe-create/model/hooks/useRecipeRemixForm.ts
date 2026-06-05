@@ -68,7 +68,7 @@ export const useRecipeRemixForm = (recipeId: string) => {
       originalIngredientsRef.current = originalIngredients;
       methods.reset(defaultFormValues);
     }
-  }, [isRecipeLoaded, defaultFormValues, methods.reset, recipe]);
+  }, [isRecipeLoaded, defaultFormValues, methods, recipe]);
 
   const handleMainIngredientRemoved = (ingredientName: string) => {
     const currentSteps = methods.watch("steps");

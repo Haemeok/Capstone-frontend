@@ -75,25 +75,22 @@ export const useActiveSection = (
   }, [sectionIds, motionRef]);
 
   // 클릭 시 optimistic update + 트래킹 잠금
-  const scrollToSection = useCallback(
-    (id: string) => {
-      isProgrammaticScrollRef.current = true;
-      setActiveId(id);
+  const scrollToSection = useCallback((id: string) => {
+    isProgrammaticScrollRef.current = true;
+    setActiveId(id);
 
-      if (lockTimeoutRef.current) {
-        clearTimeout(lockTimeoutRef.current);
-      }
-      lockTimeoutRef.current = setTimeout(() => {
-        isProgrammaticScrollRef.current = false;
-      }, PROGRAMMATIC_SCROLL_LOCK_MS);
+    if (lockTimeoutRef.current) {
+      clearTimeout(lockTimeoutRef.current);
+    }
+    lockTimeoutRef.current = setTimeout(() => {
+      isProgrammaticScrollRef.current = false;
+    }, PROGRAMMATIC_SCROLL_LOCK_MS);
 
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    },
-    [sectionIds]
-  );
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
 
   // cleanup timeout on unmount
   useEffect(() => {

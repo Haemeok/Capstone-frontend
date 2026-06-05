@@ -79,7 +79,7 @@ export const useRecipeEditForm = (recipeId: string) => {
       originalIngredientsRef.current = originalIngredients;
       methods.reset(defaultFormValues);
     }
-  }, [isRecipeLoaded, defaultFormValues, methods.reset, recipe]);
+  }, [isRecipeLoaded, defaultFormValues, methods, recipe]);
 
   const checkIngredientsModified = (
     original: IngredientPayload[],

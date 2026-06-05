@@ -38,6 +38,7 @@ export const useAICreditPrompt = () => {
     }, AI_CREDIT_PROMPT_DELAY);
 
     return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once per user; checkShouldShowPrompt only reads user
   }, [user]);
 
   return {

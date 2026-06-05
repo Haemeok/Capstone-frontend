@@ -53,7 +53,7 @@ export const NotificationItem = ({
     if (notification.read && onRead) {
       onRead(notification.id);
     }
-  }, [notification.read, onRead]);
+  }, [notification.read, notification.id, onRead]);
 
   return (
     <div
