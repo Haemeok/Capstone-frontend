@@ -35,15 +35,13 @@ export const CountryFilterSection = ({
               onClick={() => handleToggle(label)}
               aria-pressed={isSelected}
               className={cn(
-                "flex cursor-pointer items-center gap-2 rounded-xl border-2 px-3 py-2 text-sm font-medium transition-all",
+                "flex cursor-pointer items-center gap-1.5 rounded-xl border-2 px-3 py-2 text-sm font-medium transition-all",
                 isSelected
                   ? "border-olive-light bg-olive-light/10 text-olive-dark"
                   : "border-transparent bg-gray-50 text-gray-600 hover:border-gray-300"
               )}
             >
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center">
-                <CountryFlagGlyph tag={code} className="h-auto w-7 text-2xl" />
-              </span>
+              <CountryFlagGlyph tag={code} />
               <span>{label}</span>
             </button>
           );
