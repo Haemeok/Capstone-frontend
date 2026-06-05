@@ -2,16 +2,12 @@
 
 import { Gift } from "lucide-react";
 
-import { useCountdown } from "@/shared/lib/hooks/useCountdown";
 import { formatRemaining } from "@/shared/lib/time/formatRemaining";
 
-import { useUserStore } from "@/entities/user/model/store";
+import { useAdFreeStatus } from "@/entities/user";
 
 export const AdRemovalRow = ({ onOpenSheet }: { onOpenSheet: () => void }) => {
-  const adFreeUntil = useUserStore((s) => s.user?.adStatus?.adFreeUntil);
-  const showAds = useUserStore((s) => s.user?.adStatus?.showAds);
-  const remaining = useCountdown(adFreeUntil ?? null);
-  const isActive = showAds === false && remaining > 0;
+  const { isActive, remaining } = useAdFreeStatus();
 
   return (
     <button
@@ -23,9 +19,17 @@ export const AdRemovalRow = ({ onOpenSheet }: { onOpenSheet: () => void }) => {
         <Gift size={16} />
         광고 제거
       </span>
-      <span className="text-sm text-gray-400">
-        {isActive ? formatRemaining(remaining) : "광고 없이 즐기기"}
-      </span>
+      {isActive ? (
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-blue-500">
+          <span
+            className="h-1.5 w-1.5 rounded-full bg-blue-500"
+            aria-hidden="true"
+          />
+          {formatRemaining(remaining)} 남음
+        </span>
+      ) : (
+        <span className="text-sm text-gray-400">광고 없이 즐기기</span>
+      )}
     </button>
   );
 };
