@@ -18,39 +18,28 @@ const JapanFlag = ({ className }: { className?: string }) => (
 
 const KoreaFlag = ({ className }: { className?: string }) => (
   <svg
-    viewBox="0 0 36 24"
+    viewBox="-72 -48 144 96"
     className={className}
     aria-hidden="true"
     preserveAspectRatio="xMidYMid meet"
   >
-    <rect width="36" height="24" fill="#ffffff" />
-    <path
-      d="M12 12 A6 6 0 0 1 24 12 A3 3 0 0 1 18 12 A3 3 0 0 0 12 12 Z"
-      fill="#cd2e3a"
-    />
-    <path
-      d="M24 12 A6 6 0 0 1 12 12 A3 3 0 0 1 18 12 A3 3 0 0 0 24 12 Z"
-      fill="#0047a0"
-    />
-    <g fill="#1a1a1a">
-      <rect x="5.5" y="4.75" width="5" height="0.7" />
-      <rect x="5.5" y="6.15" width="5" height="0.7" />
-      <rect x="5.5" y="7.55" width="5" height="0.7" />
-      <rect x="25.5" y="4.75" width="2" height="0.7" />
-      <rect x="28.5" y="4.75" width="2" height="0.7" />
-      <rect x="25.5" y="6.15" width="5" height="0.7" />
-      <rect x="25.5" y="7.55" width="2" height="0.7" />
-      <rect x="28.5" y="7.55" width="2" height="0.7" />
-      <rect x="5.5" y="15.75" width="5" height="0.7" />
-      <rect x="5.5" y="17.15" width="2" height="0.7" />
-      <rect x="8.5" y="17.15" width="2" height="0.7" />
-      <rect x="5.5" y="18.55" width="5" height="0.7" />
-      <rect x="25.5" y="15.75" width="2" height="0.7" />
-      <rect x="28.5" y="15.75" width="2" height="0.7" />
-      <rect x="25.5" y="17.15" width="2" height="0.7" />
-      <rect x="28.5" y="17.15" width="2" height="0.7" />
-      <rect x="25.5" y="18.55" width="2" height="0.7" />
-      <rect x="28.5" y="18.55" width="2" height="0.7" />
+    <path fill="#fff" d="M-72-48v96H72v-96z" />
+    <g stroke="#000" strokeWidth="4">
+      <path
+        transform="rotate(33.69006752598)"
+        d="M-50-12v24m6 0v-24m6 0v24m76 0V1m0-2v-11m6 0v11m0 2v11m6 0V1m0-2v-11"
+      />
+      <path
+        transform="rotate(-33.69006752598)"
+        d="M-50-12v24m6 0V1m0-2v-11m6 0v24m76 0V1m0-2v-11m6 0v24m6 0V1m0-2v-11"
+      />
+    </g>
+    <g transform="rotate(33.69006752598)">
+      <path fill="#cd2e3a" d="M12 0a18 18 0 11-36 0 24 24 0 1148 0" />
+      <path
+        fill="#0047a0"
+        d="M0 0a12 12 0 1124 0 24 24 0 11-48 0 12 12 0 1024 0"
+      />
     </g>
   </svg>
 );
