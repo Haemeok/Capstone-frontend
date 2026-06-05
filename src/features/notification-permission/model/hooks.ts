@@ -17,7 +17,6 @@ export const useNotificationPermissionTrigger = () => {
     useNotificationPermissionStore();
 
   const checkAndTrigger = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (_action: TriggerAction): boolean => {
       // WebView 아님 → 패스
       if (!isAppWebView()) {

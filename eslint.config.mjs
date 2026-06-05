@@ -226,7 +226,12 @@ const eslintConfig = [
       "simple-import-sort/exports": "error",
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        { ignoreRestSiblings: true },
+        {
+          ignoreRestSiblings: true,
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
       ],
       "@next/next/no-img-element": "off",
     },

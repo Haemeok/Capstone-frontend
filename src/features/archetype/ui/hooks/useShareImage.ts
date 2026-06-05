@@ -160,7 +160,7 @@ export const useShareImage = (elementId: string) => {
             message: "티켓이 저장되었습니다!",
             variant: "success",
           });
-        } catch (downloadError) {
+        } catch {
           addToast({
             message: "저장에 실패했습니다. 화면을 캡처해서 사용해주세요.",
             variant: "error",
