@@ -7,6 +7,7 @@ import {
   NUTRITION_RANGES,
   type NutritionFilterKey,
 } from "@/shared/config/constants/recipe";
+import { countryCodec } from "@/shared/lib/filters";
 import {
   type NutritionFilterValues,
   parseNutritionParams,
@@ -21,10 +22,16 @@ export const useNutritionParams = () => {
 
   const types = parseTypes(searchParams);
 
+  const countries = countryCodec.decode(searchParams.get("creatorCountryTags"));
+
   const isNutritionDirty = Object.keys(nutritionParams).length > 0;
 
   const updateNutritionAndTypes = useCallback(
-    (nutritionValues: Partial<NutritionFilterValues>, newTypes: string[]) => {
+    (
+      nutritionValues: Partial<NutritionFilterValues>,
+      newTypes: string[],
+      newCountries: string[] = []
+    ) => {
       const newParams = new URLSearchParams(searchParams.toString());
 
       Object.keys(NUTRITION_RANGES).forEach((key) => {
@@ -51,6 +58,13 @@ export const useNutritionParams = () => {
         newParams.delete("types");
       }
 
+      const countryParam = countryCodec.encode(newCountries);
+      if (countryParam) {
+        newParams.set("creatorCountryTags", countryParam);
+      } else {
+        newParams.delete("creatorCountryTags");
+      }
+
       router.replace(`/search/results?${newParams.toString()}`);
     },
     [router, searchParams]
@@ -59,6 +73,7 @@ export const useNutritionParams = () => {
   return {
     nutritionParams,
     types,
+    countries,
     isNutritionDirty,
     updateNutritionAndTypes,
   };

@@ -2,6 +2,8 @@
 
 import React, { useCallback } from "react";
 
+import { AnimatePresence, motion } from "motion/react";
+
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import type { NutritionFilterValues } from "@/shared/lib/nutrition/utils";
 import { filterModifiedNutritionValues } from "@/shared/lib/nutrition/utils";
@@ -19,6 +21,7 @@ import {
 } from "@/shared/ui/shadcn/popover";
 
 import { useNutritionFilter } from "../model/useNutritionFilter";
+import { CountryFilterSection } from "./CountryFilterSection";
 import { NutritionFilterActions } from "./NutritionFilterActions";
 import { NutritionSliders } from "./NutritionSliders";
 import { NutritionThemeSelector } from "./NutritionThemeSelector";
@@ -28,8 +31,13 @@ type NutritionFilterContentProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialValues: NutritionFilterValues;
-  onApply: (values: NutritionFilterValues, types: string[]) => void;
+  onApply: (
+    values: NutritionFilterValues,
+    types: string[],
+    countries: string[]
+  ) => void;
   initialTypes: string[];
+  initialCountries?: string[];
   trigger?: React.ReactNode;
 };
 
@@ -39,6 +47,7 @@ export const NutritionFilterContent = ({
   initialValues,
   onApply,
   initialTypes,
+  initialCountries = [],
   trigger,
 }: NutritionFilterContentProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -47,18 +56,20 @@ export const NutritionFilterContent = ({
     values,
     selectedTheme,
     types,
+    countries,
     isModified,
     handleThemeSelect,
     handleSliderChange,
     handleTypesChange,
+    handleCountriesChange,
     reset,
-  } = useNutritionFilter(open, initialValues, initialTypes);
+  } = useNutritionFilter(open, initialValues, initialTypes, initialCountries);
 
   const handleApply = useCallback(() => {
     const filtered = filterModifiedNutritionValues(values);
-    onApply(filtered, types);
+    onApply(filtered, types, countries);
     onOpenChange(false);
-  }, [values, types, onApply, onOpenChange]);
+  }, [values, types, countries, onApply, onOpenChange]);
 
   const content = (
     <div className="space-y-6">
@@ -66,6 +77,24 @@ export const NutritionFilterContent = ({
         selectedTypes={types}
         onTypesChange={handleTypesChange}
       />
+
+      <AnimatePresence initial={false}>
+        {types.includes("YOUTUBE") && (
+          <motion.div
+            key="country-filter"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <CountryFilterSection
+              selectedCountries={countries}
+              onCountriesChange={handleCountriesChange}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <NutritionThemeSelector
         selectedTheme={selectedTheme}

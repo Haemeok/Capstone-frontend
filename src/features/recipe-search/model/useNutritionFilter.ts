@@ -15,9 +15,11 @@ import {
 export const useNutritionFilter = (
   open: boolean,
   initialValues: NutritionFilterValues,
-  initialTypes: string[]
+  initialTypes: string[],
+  initialCountries: string[] = []
 ) => {
   const [types, setTypes] = useState<string[]>(initialTypes);
+  const [countries, setCountries] = useState<string[]>(initialCountries);
   const [values, setValues] = useState<NutritionFilterValues>(() => {
     const defaultValues = createDefaultNutritionValues();
     return { ...defaultValues, ...initialValues };
@@ -26,10 +28,12 @@ export const useNutritionFilter = (
   useEffect(() => {
     if (open) {
       const defaultValues = createDefaultNutritionValues();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset draft to URL state when the sheet opens (#124)
       setValues({ ...defaultValues, ...initialValues });
       setTypes(initialTypes);
+      setCountries(initialCountries);
     }
-  }, [open, initialValues, initialTypes]);
+  }, [open, initialValues, initialTypes, initialCountries]);
 
   const selectedTheme = useMemo<NutritionThemeKey | null>(
     () => deriveThemeFromValues(values),
@@ -59,6 +63,13 @@ export const useNutritionFilter = (
 
   const handleTypesChange = useCallback((newTypes: string[]) => {
     setTypes(newTypes);
+    if (!newTypes.includes("YOUTUBE")) {
+      setCountries([]);
+    }
+  }, []);
+
+  const handleCountriesChange = useCallback((newCountries: string[]) => {
+    setCountries(newCountries);
   }, []);
 
   const reset = useCallback(() => {
@@ -74,10 +85,12 @@ export const useNutritionFilter = (
     values,
     selectedTheme,
     types,
+    countries,
     isModified,
     handleThemeSelect,
     handleSliderChange,
     handleTypesChange,
+    handleCountriesChange,
     reset,
   };
 };
