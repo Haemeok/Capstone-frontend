@@ -24,7 +24,7 @@ const EventPageShell = ({
         </h1>
       </header>
       <img src={heroSrc} alt={heroAlt} className="h-auto w-full" />
-      <main>{children}</main>
+      <main className="text-pretty break-keep">{children}</main>
     </div>
   );
 };

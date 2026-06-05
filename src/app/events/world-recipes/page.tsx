@@ -4,6 +4,7 @@ import {
   COUNTRY_DEFINITIONS,
   SORT_TYPE_CODES,
 } from "@/shared/config/constants/recipe";
+import { buildEventMetadata } from "@/shared/lib/metadata/eventMetadata";
 
 import EventCtaButton from "../_components/EventCtaButton";
 import EventFAQ from "../_components/EventFAQ";
@@ -19,15 +20,23 @@ const popularWorldSearchHref = `/search/results?${new URLSearchParams({
     .join(","),
 }).toString()}`;
 
-export const metadata: Metadata = {
-  title: "레시피에 국경은 없으니까 | 레시피오",
+export const metadata: Metadata = buildEventMetadata({
+  path: "/events/world-recipes",
+  title: "레시피에 국경은 없으니까",
   description:
-    "국가 필터로 한국·일본은 물론 다른 나라 유튜브 레시피까지 자유롭게 둘러보세요.",
-  openGraph: {
-    title: "레시피에 국경은 없으니까 | 레시피오",
-    description: "국가 필터로 다른 나라 유튜브 레시피까지 자유롭게 둘러보세요.",
-  },
-};
+    "국가 필터로 한국·일본은 물론 다른 나라 유튜브 레시피까지 자유롭게 둘러보세요. 보고 싶은 나라만 골라 전 세계 홈쿡 레시피를 만나보세요.",
+  keywords: [
+    "세계 레시피",
+    "해외 레시피",
+    "유튜브 레시피",
+    "국가별 레시피",
+    "일본 레시피",
+    "글로벌 레시피",
+    "외국 요리",
+  ],
+  ogImage: "/events/world-recipes/hero.png",
+  ogImageAlt: "레시피에 국경은 없으니까 - 전 세계 유튜브 레시피 둘러보기",
+});
 
 const WorldRecipesEventPage = () => {
   return (
