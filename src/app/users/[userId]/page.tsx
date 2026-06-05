@@ -1,54 +1,43 @@
-"use client";
+import type { Metadata } from "next";
 
-import { notFound, useParams } from "next/navigation";
+import { BASE_URL } from "@/shared/config/constants/api";
+import { isDefaultProfileImage } from "@/shared/lib/colors";
 
-import { guestUser } from "@/shared/config/constants/user";
-import { Container } from "@/shared/ui/Container";
+import { getPublicUserForMetadata } from "@/entities/user/model/getPublicUserForMetadata";
 
-import { useUserQuery } from "@/entities/user";
-import { useUserStore } from "@/entities/user";
+import UserDetailClient from "./UserDetailClient";
 
-import Header from "@/widgets/Header/UserProfileHeader";
-import UserProfileDisplay from "@/widgets/UserProfile/UserProfileDisplay";
-import UserTab from "@/widgets/UserTab/UserTab";
+const FALLBACK_DESC = "레시피오에서 이 프로필을 확인해보세요.";
+const FALLBACK_IMAGE = `${BASE_URL}og-default.png`;
 
-const UserDetailPage = () => {
-  const { user: loggedInUser } = useUserStore();
-  const { userId: profileId } = useParams();
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ userId: string }>;
+}): Promise<Metadata> => {
+  const { userId } = await params;
+  const user = await getPublicUserForMetadata(userId);
 
-  const isOwnProfile =
-    loggedInUser !== null &&
-    (profileId === "guestUser" || profileId === loggedInUser.id);
-
-  if (typeof profileId !== "string") {
-    notFound();
+  if (!user) {
+    return { title: "레시피오", description: FALLBACK_DESC };
   }
 
-  const { user } = useUserQuery(profileId, profileId !== loggedInUser?.id);
+  const title = `${user.nickname} - 레시피오`;
+  const description = user.introduction || FALLBACK_DESC; // 빈 소개 → 폴백 (의도된 기본값)
+  const image =
+    user.profileImage && !isDefaultProfileImage(user.profileImage)
+      ? user.profileImage
+      : FALLBACK_IMAGE;
+  const url = `${BASE_URL}users/${userId}`;
 
-  const displayUser = isOwnProfile ? loggedInUser : (user ?? guestUser);
-
-  return (
-    <>
-      <Container padding={false}>
-        <div className="flex flex-col">
-          <Header isOwnProfile={isOwnProfile} />
-
-          <UserProfileDisplay
-            user={displayUser}
-            isOwnProfile={isOwnProfile}
-            loggedInUser={loggedInUser}
-          />
-
-          <UserTab
-            user={displayUser}
-            isOwnProfile={isOwnProfile}
-            isLoggedIn={!!loggedInUser}
-          />
-        </div>
-      </Container>
-    </>
-  );
+  return {
+    title,
+    description,
+    openGraph: { title, description, url, images: [{ url: image }] },
+    twitter: { card: "summary", title, description, images: [image] },
+  };
 };
 
-export default UserDetailPage;
+const Page = () => <UserDetailClient />;
+
+export default Page;
