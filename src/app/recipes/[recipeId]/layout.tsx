@@ -3,9 +3,6 @@ type RecipeLayoutProps = {
   params: Promise<{ recipeId: string }>;
 };
 
-export default async function RecipeLayout({
-  children,
-  params,
-}: RecipeLayoutProps) {
+export default async function RecipeLayout({ children }: RecipeLayoutProps) {
   return <>{children}</>;
 }

@@ -143,7 +143,7 @@ export const performLogout = async (): Promise<boolean> => {
     }
 
     throw new Error(`Logout failed: ${response.statusText}`);
-  } catch (error) {
+  } catch {
     return false;
   }
 };
@@ -169,7 +169,7 @@ export const handle401Error = async (
   if (refreshed) {
     try {
       return await originalRequest();
-    } catch (error) {
+    } catch {
       return null;
     }
   }

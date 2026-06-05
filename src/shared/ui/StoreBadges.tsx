@@ -14,10 +14,7 @@ type StoreBadgesProps = {
   className?: string;
 };
 
-export const StoreBadges = ({
-  showAndroidNote = false,
-  className,
-}: StoreBadgesProps) => {
+export const StoreBadges = ({ className }: StoreBadgesProps) => {
   const isInApp = useIsApp();
 
   if (isInApp) return null;

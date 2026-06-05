@@ -20,7 +20,7 @@ async function serverFetch<T = unknown>(
 ): Promise<T> {
   const {
     params,
-    timeout = API_CONFIG.timeout,
+    timeout: _timeout = API_CONFIG.timeout,
     baseURL,
     headers = {},
     ...restOptions

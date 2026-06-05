@@ -180,7 +180,7 @@ export type RecipeStep = {
   stepImageKey: string | null | undefined;
 };
 
-const defaultRecipeKeys = [
+export const defaultRecipeKeys = [
   "id",
   "ingredients",
   "steps",

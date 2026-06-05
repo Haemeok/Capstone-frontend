@@ -71,7 +71,6 @@ const SortPicker = ({
   onSortChange,
   header = "정렬 방식 선택",
   description,
-  triggerButton,
 }: SortPickerProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
