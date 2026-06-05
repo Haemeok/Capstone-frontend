@@ -7,9 +7,10 @@ export type NotificationType =
   | "NEW_FAVORITE"
   | "NEW_RECIPE_LIKE"
   | "NEW_COMMENT_LIKE"
-  | "NEW_RECIPE_RATING";
+  | "NEW_RECIPE_RATING"
+  | "REFERRAL_REWARD_GRANTED";
 
-export type RelatedType = "RECIPE" | "COMMENT" | "USER";
+export type RelatedType = "RECIPE" | "COMMENT" | "USER" | "REFERRAL_REDEMPTION";
 
 export type Notification = {
   id: number;
@@ -23,6 +24,7 @@ export type Notification = {
   relatedUrl: string;
   createdAt: string;
   read: boolean;
+  message?: string;
 };
 
 export type NotificationResponse = PageResponse<Notification>;

@@ -25,6 +25,7 @@ const NOTIFICATION_MESSAGES: Record<Notification["type"], string> = {
   NEW_RECIPE_LIKE: "님이 레시피를 좋아합니다.",
   NEW_COMMENT_LIKE: "님이 댓글을 좋아합니다.",
   NEW_RECIPE_RATING: "님이 레시피에 평점을 남겼습니다.",
+  REFERRAL_REWARD_GRANTED: "추천 보상으로 광고 제거 혜택이 추가됐어요.",
 };
 
 export const NotificationItem = ({
@@ -84,8 +85,10 @@ export const NotificationItem = ({
             <p
               className={`line-clamp-2 text-sm ${!notification.read ? "font-medium text-gray-900" : "text-gray-700"} `}
             >
-              {notification.type === "AI_RECIPE_DONE" ? (
-                NOTIFICATION_MESSAGES[notification.type]
+              {notification.type === "AI_RECIPE_DONE" ||
+              notification.type === "REFERRAL_REWARD_GRANTED" ? (
+                (notification.message ??
+                NOTIFICATION_MESSAGES[notification.type])
               ) : (
                 <>
                   <span className="font-bold text-black">
