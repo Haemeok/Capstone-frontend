@@ -19,9 +19,13 @@ import {
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
+import { useReferralSheetStore } from "@/entities/referral";
+
 import useDeleteAccountMutation from "@/features/auth/model/hooks/useDeleteAccountMutation";
 import useLogoutMutation from "@/features/auth/model/hooks/useLogoutMutation";
 import { useNotificationPermissionStore } from "@/features/notification-permission";
+
+import { AdRemovalRow } from "./AdRemovalRow";
 
 const SettingsActionButton = () => {
   const { mutate: logout } = useLogoutMutation();
@@ -83,6 +87,12 @@ const SettingsActionButton = () => {
             </Header>
 
             <div className="flex flex-col border-t border-gray-200 sm:border-none">
+              <AdRemovalRow
+                onOpenSheet={() => {
+                  setIsModalOpen(false);
+                  useReferralSheetStore.getState().open();
+                }}
+              />
               {isInApp && (
                 <div className="flex w-full items-center justify-between px-4 py-3">
                   <div className="flex items-center gap-2 text-gray-700">
