@@ -21,7 +21,7 @@ export const YoutubeImportHero = () => {
             <BetaBadge />
           </div>
           <p className="text-lg text-gray-500">
-            영상만 보고 따라하기 힘드셨나요?
+            링크만 붙여넣으면 유튜브 레시피 추출이 자동으로 끝나요.
             <br />
             <span className="text-olive-light font-bold">
               영상과 레시피를 한눈에

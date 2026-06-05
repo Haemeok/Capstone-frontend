@@ -73,7 +73,7 @@ export const TrendingRecipesClient = ({
   return (
     <div className={cn("mx-auto w-full max-w-2xl", className)}>
       <div className="mb-3 flex items-center justify-between px-1">
-        <span className="text-xl font-semibold">요즘 뜨는 레시피</span>
+        <h2 className="text-xl font-semibold">요즘 뜨는 레시피</h2>
         <div className="flex gap-2">
           <button
             onClick={handlePrev}
