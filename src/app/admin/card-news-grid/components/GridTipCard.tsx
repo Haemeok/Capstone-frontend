@@ -105,7 +105,6 @@ export const GridTipCard = forwardRef<HTMLDivElement, GridTipCardProps>(
       >
         <div style={{ flex: 1 }} />
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/favicon-96x96.png"
             alt=""

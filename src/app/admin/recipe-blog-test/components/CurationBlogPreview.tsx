@@ -34,7 +34,6 @@ export const CurationBlogPreview = ({
     <article className="space-y-6 rounded-2xl border border-gray-100 bg-white p-6">
       {coverUrl && (
         <figure className="space-y-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={coverUrl}
             alt={post.alts.cover ?? post.title.main}

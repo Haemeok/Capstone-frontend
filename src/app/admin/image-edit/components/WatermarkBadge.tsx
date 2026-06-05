@@ -38,7 +38,6 @@ export const WatermarkBadge = ({
       opacity,
     }}
   >
-    {/* eslint-disable-next-line @next/next/no-img-element */}
     <img
       src={imageUrl}
       alt=""
@@ -65,7 +64,6 @@ export const WatermarkBadge = ({
         padding: `${logoPx * 0.4}px ${logoPx * 0.62}px`,
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/favicon-96x96.png"
         alt=""

@@ -86,7 +86,6 @@ export const RecipeSearchPanel = ({ selectedId, onSelect }: Props) => {
             >
               <div className="aspect-square w-full bg-gray-100">
                 {r.imageUrl && (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={r.imageUrl}
                     alt=""

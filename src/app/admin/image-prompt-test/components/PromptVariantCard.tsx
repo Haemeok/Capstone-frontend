@@ -58,7 +58,6 @@ export const PromptVariantCard = ({
 
       <div className="rounded-card aspect-square w-full overflow-hidden bg-gray-50">
         {result.status === "success" && (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={result.imageUrl}
             alt={variant.label}

@@ -121,7 +121,6 @@ export const OutroCard = forwardRef<HTMLDivElement, OutroCardProps>(
           </div>
         </header>
 
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/web-app-manifest-512x512.png"
           alt="레시피오"

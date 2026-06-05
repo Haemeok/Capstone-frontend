@@ -43,7 +43,6 @@ export const ResultCard = ({ quality, cell, included }: Props) => {
           </div>
         )}
         {cell.status === "success" && (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={cell.imageUrl}
             alt={`결과 (${quality})`}

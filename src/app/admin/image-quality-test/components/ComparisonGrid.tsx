@@ -26,7 +26,6 @@ export const ComparisonGrid = ({
       {originalImageUrl && (
         <div className="border-olive-light overflow-hidden rounded-2xl border-2 bg-white shadow-sm">
           <div className="aspect-square w-full bg-gray-50">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={originalImageUrl}
               alt={originalLabel ?? "원본"}

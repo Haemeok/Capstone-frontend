@@ -29,7 +29,6 @@ export const ResultCard = ({ model, result, onRetry }: Props) => {
     <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white">
       <div className="aspect-square w-full bg-gray-50">
         {result.status === "success" && (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={result.imageUrl}
             alt={model.label}

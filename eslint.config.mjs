@@ -14,7 +14,6 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-
 const SRC_DIR = path.resolve(__dirname, "src");
 const collectSlices = (layer) => {
   const dir = path.join(SRC_DIR, layer);
@@ -40,7 +39,7 @@ const selfBarrelGuards = ["entities", "features", "widgets"].flatMap((layer) =>
         },
       ],
     },
-  })),
+  }))
 );
 
 const localPlugin = {
@@ -69,7 +68,7 @@ const localPlugin = {
         const maxLength = context.options[0]?.maxLength ?? 80;
         const isDirective = (v) =>
           /^[\s*]*(eslint-|@ts-|@type|prettier-|biome-|c8 |istanbul|<reference)/.test(
-            v,
+            v
           );
         return {
           "Program:exit"() {
@@ -125,20 +124,17 @@ const localPlugin = {
               }
 
               let lineStart = cStart;
-              while (lineStart > 0 && text[lineStart - 1] !== "\n")
-                lineStart--;
+              while (lineStart > 0 && text[lineStart - 1] !== "\n") lineStart--;
               const beforeOnLine = text.slice(lineStart, cStart);
               const beforeIsWS = /^[ \t]*$/.test(beforeOnLine);
 
               let lineEnd = cEnd;
-              while (lineEnd < text.length && text[lineEnd] !== "\n")
-                lineEnd++;
+              while (lineEnd < text.length && text[lineEnd] !== "\n") lineEnd++;
               const afterOnLine = text.slice(cEnd, lineEnd);
               const afterIsWS = /^[ \t\r]*$/.test(afterOnLine);
 
               if (beforeIsWS && afterIsWS) {
-                const removeEnd =
-                  lineEnd < text.length ? lineEnd + 1 : lineEnd;
+                const removeEnd = lineEnd < text.length ? lineEnd + 1 : lineEnd;
                 return [lineStart, removeEnd];
               }
               if (beforeIsWS) {
@@ -232,6 +228,7 @@ const eslintConfig = [
         "warn",
         { ignoreRestSiblings: true },
       ],
+      "@next/next/no-img-element": "off",
     },
   },
   ...selfBarrelGuards,
