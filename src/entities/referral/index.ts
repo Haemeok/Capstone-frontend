@@ -1,6 +1,7 @@
 export * from "./lib/derive";
 export * from "./lib/extractErrorCode";
 export * from "./lib/redeemErrorMessage";
+export * from "./lib/shouldShowNudge";
 export * from "./model/api";
 export * from "./model/hooks";
 export * from "./model/queryKeys";
