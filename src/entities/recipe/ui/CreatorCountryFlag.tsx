@@ -21,7 +21,7 @@ export const CreatorCountryFlag = ({
       role="img"
       aria-label={flag.label}
       className={cn(
-        "inline-flex items-center rounded-full bg-black/45 px-1.5 py-0.5 leading-none backdrop-blur-sm",
+        "inline-flex items-center leading-none drop-shadow-sm",
         className
       )}
     >
