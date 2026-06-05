@@ -1,18 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 
 import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
-import { Image } from "@/shared/ui/image/Image";
 
 import { notoSansKr } from "@/app/fonts/notoSansKr";
 
-import { ProgressBar } from "./ProgressBar";
 import { BannerSlide } from "./types";
+import { useCarouselAutoplay } from "./useCarouselAutoplay";
 
 const DEFAULT_AUTOPLAY_INTERVAL = 5000;
 const DEFAULT_BACKGROUND_COLOR = "#f87171";
@@ -33,43 +32,74 @@ const HomeBannerCarousel = ({
     watchDrag: !isSingleSlide,
   });
 
-  const [isHovered, setIsHovered] = useState(false);
-  const [progressKey, setProgressKey] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const scrollNext = () => {
-    if (emblaApi) {
-      emblaApi.scrollNext();
-      setProgressKey((prev) => prev + 1);
-    }
-  };
+  const scrollNext = useCallback(() => {
+    emblaApi?.scrollNext();
+  }, [emblaApi]);
 
-  const scrollPrev = () => {
-    if (emblaApi) {
-      emblaApi.scrollPrev();
-      setProgressKey((prev) => prev + 1);
-    }
-  };
+  const { pause, resume, reset } = useCarouselAutoplay({
+    onNext: scrollNext,
+    interval: autoPlayInterval,
+    isEnabled: !isSingleSlide,
+  });
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+      reset();
+    };
+
+    emblaApi.on("select", onSelect);
+
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, reset]);
 
   return (
     <div
       className="rounded-card relative mb-4 w-full overflow-hidden md:hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={pause}
+      onMouseLeave={resume}
+      onTouchStart={pause}
+      onTouchEnd={resume}
     >
       <div ref={emblaRef} className="overflow-hidden">
         <div className="flex">
-          {slides.map((slide) => (
-            <div key={slide.id} className="relative min-w-0 flex-[0_0_100%]">
-              <Link
-                href={slide.link}
-                className="relative block aspect-[7/2] w-full overflow-hidden md:aspect-[5/1]"
-                style={{
-                  backgroundColor:
-                    slide.backgroundColor || DEFAULT_BACKGROUND_COLOR,
-                }}
-              >
-                <div className="flex h-full w-full items-center justify-between px-6 py-3 md:px-10 md:py-4">
-                  <div className="z-10 flex min-w-0 flex-1 flex-col justify-center gap-0.5 pr-2 md:gap-1 md:pr-6">
+          {slides.map((slide) => {
+            const backgroundColor =
+              slide.backgroundColor || DEFAULT_BACKGROUND_COLOR;
+
+            return (
+              <div key={slide.id} className="relative min-w-0 flex-[0_0_100%]">
+                <Link
+                  href={slide.link}
+                  className="relative block aspect-[7/2] w-full overflow-hidden md:aspect-[5/1]"
+                  style={{ backgroundColor }}
+                >
+                  <div className="absolute inset-0 overflow-hidden">
+                    <img
+                      src={slide.mainImage}
+                      alt=""
+                      className="absolute inset-y-0 right-0 h-full w-3/5 object-cover"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: `linear-gradient(to right, ${backgroundColor} 35%, transparent 100%)`,
+                      }}
+                    />
+                  </div>
+
+                  <div className="relative z-10 flex h-full flex-col justify-center gap-1 px-6 py-3 md:px-10">
+                    {slide.chip && (
+                      <span className="w-fit rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-sm md:text-sm">
+                        {slide.chip}
+                      </span>
+                    )}
                     <h2
                       className={cn(
                         notoSansKr.className,
@@ -78,86 +108,28 @@ const HomeBannerCarousel = ({
                     >
                       {slide.title}
                     </h2>
-                    {slide.subtitle && (
-                      <p className="text-sm font-semibold text-white/90 md:text-lg">
-                        {slide.subtitle}
-                      </p>
-                    )}
                     {slide.ctaText && (
-                      <span className="mt-1 inline-flex items-center gap-0.5 text-xs font-medium text-white/80 md:text-sm">
+                      <span className="mt-0.5 inline-flex items-center gap-0.5 text-xs font-medium text-white/80 md:text-sm">
                         {slide.ctaText}
                         <ChevronRight className="h-3 w-3 md:h-4 md:w-4" />
                       </span>
                     )}
                   </div>
-
-                  <div className="relative h-24 w-24 flex-none rotate-12 md:h-28 md:w-28">
-                    {slide.backgroundImage && (
-                      <div className="absolute inset-0 scale-[2]">
-                        <Image
-                          src={slide.backgroundImage}
-                          alt=""
-                          fit="contain"
-                          aspectRatio="1 / 1"
-                          skeleton={null}
-                          errorFallback={null}
-                        />
-                      </div>
-                    )}
-                    <div className="absolute inset-0">
-                      <Image
-                        src={slide.mainImage}
-                        alt={slide.title}
-                        fit="contain"
-                        aspectRatio="1 / 1"
-                        skeleton={null}
-                        imgClassName="drop-shadow-xl transition-transform duration-300 hover:scale-110"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          ))}
+                </Link>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {!isSingleSlide && (
-        <div className="absolute right-4 bottom-4 left-4 flex items-center justify-between gap-2 md:justify-end">
-          <div className="flex-1 md:w-48 md:flex-none">
-            <ProgressBar
-              key={progressKey}
-              isPaused={isHovered}
-              interval={autoPlayInterval}
-              onComplete={scrollNext}
-              className="bg-white/30"
-              indicatorClassName="bg-white"
-            />
-          </div>
-
-          <div className="flex gap-1.5">
-            <button
-              onClick={scrollPrev}
-              className={cn(
-                "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-all hover:scale-110",
-                "bg-white/80 text-gray-800 shadow-sm backdrop-blur-sm"
-              )}
-              aria-label="이전 슬라이드"
-            >
-              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            </button>
-
-            <button
-              onClick={scrollNext}
-              className={cn(
-                "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-all hover:scale-110",
-                "bg-white/80 text-gray-800 shadow-sm backdrop-blur-sm"
-              )}
-              aria-label="다음 슬라이드"
-            >
-              <ChevronRight className="h-4 w-4" aria-hidden="true" />
-            </button>
-          </div>
+        <div
+          role="status"
+          aria-live="polite"
+          aria-label={`슬라이드 ${slides.length}개 중 ${selectedIndex + 1}번째`}
+          className="absolute right-3 bottom-3 z-10 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white tabular-nums backdrop-blur-sm"
+        >
+          {selectedIndex + 1}/{slides.length}
         </div>
       )}
     </div>
