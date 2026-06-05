@@ -4,6 +4,8 @@ import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import BadgeButton from "@/shared/ui/BadgeButton";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 
+import type { CreatorCountryTag } from "@/entities/recipe";
+import { CreatorCountryFlag } from "@/entities/recipe";
 import { UserName, UserProfileImage } from "@/entities/user";
 import { User } from "@/entities/user/model/types";
 
@@ -15,6 +17,7 @@ type RecipeInfoSectionProps = {
   author: User;
   description?: string;
   extractorId?: string | null;
+  creatorCountryTag?: CreatorCountryTag | null;
   children: ReactNode;
 };
 
@@ -24,6 +27,7 @@ export default function RecipeInfoSection({
   author,
   description,
   extractorId,
+  creatorCountryTag,
   children,
 }: RecipeInfoSectionProps) {
   return (
@@ -31,6 +35,10 @@ export default function RecipeInfoSection({
       <section className="flex flex-col items-center justify-center gap-1">
         <div className="flex items-center gap-2">
           <h1 className="text-center text-2xl font-bold text-pretty break-keep">
+            <CreatorCountryFlag
+              tag={creatorCountryTag}
+              className="mr-1.5 inline-flex align-middle"
+            />
             {title}
           </h1>
           {aiGenerated && (
