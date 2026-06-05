@@ -18,8 +18,11 @@ import {
   useRedeemMutation,
   useReferralInfoQuery,
 } from "@/entities/referral";
+import { useAdFreeStatus } from "@/entities/user";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
+
+import { AdFreeActiveNotice } from "./AdFreeActiveNotice";
 
 const STATUS_MESSAGE: Record<Exclude<RedeemStatus, "AVAILABLE">, string> = {
   ALREADY_REDEEMED: "이미 추천인을 입력했어요.",
@@ -37,6 +40,7 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
   const { Container, Content, Header, Title } = useResponsiveSheet();
   const { addToast } = useToastStore();
   const { data, isLoading, isError, refetch } = useReferralInfoQuery(open);
+  const { isActive, remaining, adFreeUntil } = useAdFreeStatus();
 
   const [code, setCode] = useState("");
   const [errorText, setErrorText] = useState<string | null>(null);
@@ -79,6 +83,13 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
         </Header>
 
         <div className="px-5 pb-6">
+          {isActive && (
+            <AdFreeActiveNotice
+              remaining={remaining}
+              adFreeUntil={adFreeUntil}
+            />
+          )}
+
           <p className="text-sm text-gray-500">
             친구를 초대하면 두 분 모두 한 달 동안 광고 없이 레시피오를 즐길 수
             있어요. 여러 친구를 초대할수록 혜택이 쌓여요.

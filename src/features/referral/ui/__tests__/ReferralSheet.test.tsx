@@ -47,6 +47,8 @@ import {
   getReferralInfo,
   redeemReferralCode,
 } from "@/entities/referral/model/api";
+import { useUserStore } from "@/entities/user/model/store";
+import { type User } from "@/entities/user/model/types";
 
 import { ReferralSheet } from "../ReferralSheet";
 
@@ -117,6 +119,36 @@ describe("ReferralSheet", () => {
     mockGetReferralInfo.mockRejectedValue(new Error("boom"));
     renderSheet();
     expect(await screen.findByText("다시 시도")).toBeInTheDocument();
+  });
+});
+
+describe("ReferralSheet — 광고 없이 이용 중 배너", () => {
+  beforeEach(() => jest.clearAllMocks());
+  afterEach(() => useUserStore.setState({ user: null }));
+
+  it("광고 제거 활성이면 상단 배너가 보이고 초대 입력도 함께 보인다", async () => {
+    useUserStore.setState({
+      // 테스트 픽스처 — 광고 제거 활성 상태
+      user: {
+        adStatus: {
+          showAds: false,
+          adFreeUntil: new Date(Date.now() + 90000000).toISOString(),
+        },
+      } as User,
+    });
+    mockGetReferralInfo.mockResolvedValue(info);
+    renderSheet();
+
+    expect(screen.getByText(/광고 없이 이용 중/)).toBeInTheDocument();
+    expect(await screen.findByPlaceholderText("초대코드")).not.toBeDisabled();
+  });
+
+  it("비활성이면 배너가 보이지 않는다", async () => {
+    mockGetReferralInfo.mockResolvedValue(info);
+    renderSheet();
+
+    await screen.findByText("AB12CD34");
+    expect(screen.queryByText(/광고 없이 이용 중/)).toBeNull();
   });
 });
 
