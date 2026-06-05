@@ -10,9 +10,29 @@ import { cn } from "@/lib/utils";
 
 type UserInfoEditButtonProps = {
   className?: string;
+  variant?: "icon" | "bar";
 };
 
-const UserInfoEditButton = ({ className = "" }: UserInfoEditButtonProps) => {
+const UserInfoEditButton = ({
+  className = "",
+  variant = "icon",
+}: UserInfoEditButtonProps) => {
+  if (variant === "bar") {
+    return (
+      <Link
+        href="/users/edit"
+        prefetch={false}
+        onClick={() => triggerHaptic("Light")}
+        className={cn(
+          "flex h-10 flex-1 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50",
+          className
+        )}
+      >
+        프로필 수정
+      </Link>
+    );
+  }
+
   return (
     <Link
       href="/users/edit"
