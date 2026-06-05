@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { MyTabs, OtherTabs, Tab } from "@/shared/config/constants/user";
@@ -34,6 +34,20 @@ export const useTabState = ({
 
   const [activeTab, setActiveTabState] = useState(getInitialTab);
 
+  const tabParam = searchParams.get("tab");
+  const [syncedFrom, setSyncedFrom] = useState({ tabParam, tabs });
+
+  if (syncedFrom.tabParam !== tabParam || syncedFrom.tabs !== tabs) {
+    setSyncedFrom({ tabParam, tabs });
+    if (
+      tabParam &&
+      tabs.some((t) => t.id === tabParam) &&
+      tabParam !== activeTab
+    ) {
+      setActiveTabState(tabParam);
+    }
+  }
+
   const activeTabIndex = useMemo(
     () => tabs.findIndex((t) => t.id === activeTab),
     [tabs, activeTab]
@@ -52,14 +66,6 @@ export const useTabState = ({
     },
     [activeTab]
   );
-
-  // URL 변경 시 동기화
-  useEffect(() => {
-    const param = searchParams.get("tab");
-    if (param && tabs.some((t) => t.id === param) && param !== activeTab) {
-      setActiveTabState(param);
-    }
-  }, [searchParams, tabs, activeTab]);
 
   return { tabs, activeTab, activeTabIndex, setActiveTab };
 };

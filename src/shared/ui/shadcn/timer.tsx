@@ -280,14 +280,21 @@ export function useTimer({
   }, [isRunning]);
 
   useEffect(() => {
-    if (loading) {
-      if (resetOnLoadingChange) {
-        reset();
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      if (loading) {
+        if (resetOnLoadingChange) {
+          reset();
+        }
+        start();
+      } else {
+        stop();
       }
-      start();
-    } else {
-      stop();
-    }
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [loading, resetOnLoadingChange, reset, start, stop]);
 
   useEffect(() => {

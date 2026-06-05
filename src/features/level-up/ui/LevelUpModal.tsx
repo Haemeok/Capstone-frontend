@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
@@ -88,13 +88,15 @@ const LevelUpModal = ({
 
   const [currentPhase, setCurrentPhase] = useState<LevelUpPhase>("acquired");
   const [isLevelUpRevealed, setIsLevelUpRevealed] = useState(false);
+  const [wasOpen, setWasOpen] = useState(isOpen);
 
-  useEffect(() => {
+  if (isOpen !== wasOpen) {
+    setWasOpen(isOpen);
     if (isOpen) {
       setCurrentPhase("acquired");
       setIsLevelUpRevealed(false);
     }
-  }, [isOpen]);
+  }
 
   const handlePhase1Complete = () => {
     setTimeout(() => {

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
+import { useIsApp } from "@/shared/hooks/useIsApp";
 import type { BridgeMessageType, HapticStyle } from "@/shared/lib/bridge";
 import {
-  isAppWebView,
   postMessage,
   triggerHaptic,
   triggerNativeShare,
@@ -27,18 +27,14 @@ const MESSAGE_TYPES: BridgeMessageType[] = [
 ];
 
 export const BridgeTest = () => {
+  const isWebView = useIsApp();
   const [isVisible, setIsVisible] = useState(false);
-  const [isWebView, setIsWebView] = useState(false);
   const [shareTitle, setShareTitle] = useState("테스트 제목");
   const [shareText, setShareText] = useState("테스트 내용입니다");
   const [shareUrl, setShareUrl] = useState("https://recipio.kr");
   const [rawType, setRawType] = useState<BridgeMessageType>("HAPTIC");
   const [rawPayload, setRawPayload] = useState('{"style": "Light"}');
   const [lastMessage, setLastMessage] = useState<string>("");
-
-  useEffect(() => {
-    setIsWebView(isAppWebView());
-  }, []);
 
   if (!isWebView) {
     return null;

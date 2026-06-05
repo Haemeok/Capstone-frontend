@@ -1,22 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 import { Sparkles, X } from "lucide-react";
 
 const STORAGE_KEY = "ai-extraction-notice-dismissed";
 
-export const AIExtractionNotice = () => {
-  const [isDismissed, setIsDismissed] = useState(true);
+const subscribe = (onChange: () => void) => {
+  window.addEventListener("storage", onChange);
+  return () => window.removeEventListener("storage", onChange);
+};
 
-  useEffect(() => {
-    const dismissed = localStorage.getItem(STORAGE_KEY);
-    setIsDismissed(dismissed === "true");
-  }, []);
+export const AIExtractionNotice = () => {
+  const isDismissed = useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem(STORAGE_KEY) === "true",
+    () => true
+  );
 
   const handleDismiss = () => {
-    setIsDismissed(true);
     localStorage.setItem(STORAGE_KEY, "true");
+    window.dispatchEvent(new StorageEvent("storage"));
   };
 
   if (isDismissed) return null;

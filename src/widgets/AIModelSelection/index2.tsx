@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 
 import { AIModelId, aiModels } from "@/shared/config/constants/aiModel";
@@ -15,6 +15,23 @@ import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticated
 import StaticRecipeSlide from "@/widgets/RecipeSlide/StaticRecipeSlide";
 
 const KEYWORDS = ["#자취생", "#다이어트", "#파인다이닝", "#가성비"];
+
+const EMPTY_RECENT: ReturnType<typeof getRecentAIRecipes> = [];
+let recentSnapshotCache: {
+  raw: string;
+  value: ReturnType<typeof getRecentAIRecipes>;
+} = { raw: "", value: EMPTY_RECENT };
+
+const subscribeRecent = () => () => {};
+const getRecentServerSnapshot = () => EMPTY_RECENT;
+const getRecentSnapshot = () => {
+  const value = getRecentAIRecipes();
+  const raw = JSON.stringify(value);
+  if (raw !== recentSnapshotCache.raw) {
+    recentSnapshotCache = { raw, value };
+  }
+  return recentSnapshotCache.value;
+};
 
 // Temporary toy images mapping (to be replaced with actual assets)
 const TEMP_TOY_IMAGES: Record<AIModelId, string> = {
@@ -166,26 +183,27 @@ const AIModelCard = ({ modelId, onClick }: AIModelCardProps) => {
 
 const AIModelSelection = () => {
   const router = useRouter();
-  const [recentRecipes, setRecentRecipes] = useState<
-    StaticDetailedRecipeGridItem[]
-  >([]);
-
-  useEffect(() => {
-    const recent = getRecentAIRecipes();
-    const recipes: StaticDetailedRecipeGridItem[] = recent.map((item) => ({
-      id: item.recipeId,
-      title: item.title,
-      imageUrl: item.imageUrl,
-      authorName: item.authorName,
-      authorId: item.authorId,
-      profileImage: item.profileImage,
-      cookingTime: item.cookingTime,
-      createdAt: item.createdAt,
-      avgRating: 0,
-      ratingCount: 0,
-    }));
-    setRecentRecipes(recipes);
-  }, []);
+  const recent = useSyncExternalStore(
+    subscribeRecent,
+    getRecentSnapshot,
+    getRecentServerSnapshot
+  );
+  const recentRecipes = useMemo<StaticDetailedRecipeGridItem[]>(
+    () =>
+      recent.map((item) => ({
+        id: item.recipeId,
+        title: item.title,
+        imageUrl: item.imageUrl,
+        authorName: item.authorName,
+        authorId: item.authorId,
+        profileImage: item.profileImage,
+        cookingTime: item.cookingTime,
+        createdAt: item.createdAt,
+        avgRating: 0,
+        ratingCount: 0,
+      })),
+    [recent]
+  );
 
   const navigateToModel = (modelId: AIModelId) => {
     switch (modelId) {

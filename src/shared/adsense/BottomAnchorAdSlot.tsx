@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
+import { useIsHydrated } from "@/shared/hooks/useIsHydrated";
 
 import { useAdsGate } from "./AdsGateContext";
 import { AnchorAdSlot } from "./AnchorAdSlot";
@@ -11,11 +10,7 @@ import { AD_HEIGHT, AD_SLOT_IDS } from "./config";
 export const BottomAnchorAdSlot = () => {
   const { enabled } = useAdsGate();
   const isNavVisible = useIsBottomNavVisible();
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
+  const hydrated = useIsHydrated();
 
   if (!hydrated) return null;
   if (!enabled) return null;

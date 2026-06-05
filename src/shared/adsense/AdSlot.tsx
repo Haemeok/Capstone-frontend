@@ -68,7 +68,7 @@ export const AdSlot = ({
     const ins = insRef.current;
     if (!wrapper || !ins) return;
     if (ins.firstChild) {
-      setIsFilled(true);
+      queueMicrotask(() => setIsFilled(true));
     }
     const observer = new MutationObserver(() => {
       if (ins.firstChild) {
