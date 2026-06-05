@@ -1,4 +1,4 @@
-import { ReferralCampaign } from "../model/types";
+import { RedeemStatus, ReferralCampaign } from "../model/types";
 
 export const campaignMonthLabel = (
   campaign: ReferralCampaign | null
@@ -10,3 +10,23 @@ export const campaignMonthLabel = (
 };
 
 export const normalizeCode = (raw: string): string => raw.trim().toUpperCase();
+
+export const canRedeem = (status: RedeemStatus): boolean =>
+  status === "AVAILABLE";
+
+export const remainingRewardCount = (
+  campaign: ReferralCampaign | null
+): number =>
+  campaign
+    ? Math.max(
+        0,
+        campaign.maxRewardsPerReferrer - campaign.referrerRewardedCount
+      )
+    : 0;
+
+export const referrerRewardLimitReached = (
+  campaign: ReferralCampaign | null
+): boolean =>
+  campaign
+    ? campaign.referrerRewardedCount >= campaign.maxRewardsPerReferrer
+    : false;
