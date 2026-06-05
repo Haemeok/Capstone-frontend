@@ -1,6 +1,6 @@
 ---
 name: planning-hygiene
-description: Planning-time discipline rules — what to do BEFORE touching code when authoring an implementation plan. Currently focuses on a single failure mode that has bitten this project: fabricating new lookup/config/pricing tables instead of reusing existing ones, and plugging in invented values for external-API-controlled facts (model IDs, prices). Reference when scoping any feature that depends on vendor pricing, model identifiers, or any catalog the project may already encode elsewhere.
+description: Planning-time discipline rules — what to do BEFORE touching code when authoring an implementation plan. Covers fabricating lookup/config/pricing tables instead of reusing existing ones, inventing external-API-controlled values (model IDs, prices), subagent dispatch shape and git staging in a shared worktree, and planning codebase-wide mechanical lint/refactor cleanups (linter-as-oracle, whole-file pre-commit leakage, deferral markers). Reference when scoping a feature that depends on vendor pricing or catalogs, dispatching subagents that commit, or planning a lint/cleanup sweep.
 license: MIT
 metadata:
   author: recipio
@@ -26,7 +26,8 @@ Reference these guidelines when:
 | `lookup-` | Reuse existing lookup tables before authoring parallel ones |
 | `external-` | External-source-of-truth values (vendor IDs, prices, rates) |
 | `scope-` | Disambiguating user intent before committing to a plan |
-| `dispatch-` | Subagent dispatch shape (parallel vs sequential) at plan time |
+| `dispatch-` | Subagent dispatch shape and git staging at plan time |
+| `cleanup-` | Planning a codebase-wide mechanical lint/refactor cleanup |
 | `no-` | Anti-patterns to avoid emitting in plans or generated code |
 
 ## Quick Reference
@@ -46,6 +47,12 @@ Reference these guidelines when:
 ### Subagent dispatch
 
 - `dispatch-mcp-tools-force-sequential-subagents` — MCP servers (Playwright, Vercel, etc.) are session-scoped, not per-subagent. Parallel subagents sharing the same MCP tool will contend on one connection. At plan time, classify each subagent's tools — anything `mcp__*` forces sequential dispatch. Decide in the plan, not at runtime.
+- `dispatch-explicit-staging-shared-worktree` — A subagent commits in the same working tree the user may be editing in parallel. `git add -A` sweeps their unrelated WIP into your commit. Stage only the exact paths the task touched, and tell the subagent to ignore `tsc`/test errors in files it didn't touch (those are the user's WIP).
+
+### Cleanup planning
+
+- `cleanup-whole-file-hook-leaks-rule-slices` — When a lint cleanup is sliced by rule but a pre-commit hook lints the whole touched file, a file with multiple rules' violations forces the first slice that touches it to silence the others' errors too. Defer out-of-scope rules with a grep-able `-- deferred to #N` marker (suppressed violations vanish from linter output, so the deferred issue's scope = lint errors ∪ grep of the marker).
+- `cleanup-linter-is-the-test-oracle` — For a no-behavior-change lint/refactor cleanup, the linter's rule count is the red→green oracle (red = N, green = 0); existing tests + `tsc` + `build` guard behavior. Don't invent new unit tests to satisfy a TDD gate. Attach a real behavior-preservation review only to behavior-adjacent slices.
 
 ### Anti-patterns
 
