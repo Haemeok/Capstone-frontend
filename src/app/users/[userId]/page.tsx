@@ -28,7 +28,7 @@ export const generateMetadata = async ({
     user.profileImage && !isDefaultProfileImage(user.profileImage)
       ? user.profileImage
       : FALLBACK_IMAGE;
-  const url = `${BASE_URL}users/${userId}`;
+  const url = new URL(`users/${userId}`, BASE_URL).toString();
 
   return {
     title,

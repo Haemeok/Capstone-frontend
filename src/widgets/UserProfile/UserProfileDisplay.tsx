@@ -37,7 +37,7 @@ const UserProfileDisplay = ({
     share({
       title: `${user.nickname}님의 프로필`,
       text: "레시피오에서 확인해보세요!",
-      url: `${BASE_URL}users/${user.id}`,
+      url: new URL(`users/${user.id}`, BASE_URL).toString(),
     });
   };
 
