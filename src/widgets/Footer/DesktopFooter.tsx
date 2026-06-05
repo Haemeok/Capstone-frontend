@@ -1,4 +1,9 @@
+"use client";
+
+import { useId, useState } from "react";
 import Link from "next/link";
+
+import { ChevronDown } from "lucide-react";
 
 import { Container } from "@/shared/ui/Container";
 
@@ -22,19 +27,58 @@ const FOOTER_LINKS = {
   ],
 } as const;
 
+const INFO_ROWS = [
+  { label: "대표", value: "도원진" },
+  { label: "고객센터", value: "recipio.cs@gmail.com" },
+  { label: "광고 문의", value: "recipio.kr@gmail.com" },
+] as const;
+
 const DesktopFooter = () => {
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const infoPanelId = useId();
+
   return (
     <footer className="mt-16 hidden w-full border-t border-gray-200 bg-gray-50 md:block">
       <Container className="py-12">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-bold text-gray-900">
-              Recipio (레시피오)
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold text-gray-900">
+                레시피오 (Recipio)
+              </h3>
+              <button
+                type="button"
+                aria-expanded={isInfoOpen}
+                aria-controls={infoPanelId}
+                aria-label="사업자 정보 펼치기"
+                onClick={() => setIsInfoOpen((prev) => !prev)}
+                className="text-gray-400 transition-colors hover:text-gray-700"
+              >
+                <ChevronDown
+                  className={`size-5 transition-transform ${isInfoOpen ? "rotate-180" : ""}`}
+                  aria-hidden
+                />
+              </button>
+            </div>
             <p className="max-w-xl text-sm text-gray-600">
               AI 기반 레시피 추천 서비스로, 냉장고 재료만으로 맛있는 요리를
               만들어보세요.
             </p>
+
+            {isInfoOpen && (
+              <div
+                id={infoPanelId}
+                className="mt-1 flex flex-col gap-2 text-xs text-gray-500"
+              >
+                {INFO_ROWS.map((row) => (
+                  <div key={row.label} className="flex items-center gap-2">
+                    <span>{row.label}</span>
+                    <span>|</span>
+                    <span>{row.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-12">
@@ -93,26 +137,8 @@ const DesktopFooter = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 border-t border-gray-200 pt-6 text-xs text-gray-500">
-            <div className="flex items-center gap-2">
-              <span>대표</span>
-              <span>|</span>
-              <span>도원진</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>고객센터</span>
-              <span>|</span>
-              <span>recipio.cs@gmail.com</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>광고 문의</span>
-              <span>|</span>
-              <span>recipio.kr@gmail.com</span>
-            </div>
-
-            <div className="mt-4 text-gray-400">
-              Copyright © 2026 Team Recipio. All rights reserved.
-            </div>
+          <div className="border-t border-gray-200 pt-6 text-xs text-gray-400">
+            Copyright © 2026 Team Recipio. All rights reserved.
           </div>
         </div>
       </Container>
