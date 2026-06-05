@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import PrevButton from "@/shared/ui/PrevButton";
 
+import { CountryFilter } from "@/features/filter-country";
 import { DishTypeFilter } from "@/features/filter-dish-type";
 import { IngredientsFilter } from "@/features/filter-ingredients";
 import { SortFilter } from "@/features/filter-sort";
@@ -39,6 +40,7 @@ export const SearchFilters = () => {
         <DishTypeFilter />
         <SortFilter />
         <TagsFilter />
+        <CountryFilter />
       </div>
     </div>
   );
