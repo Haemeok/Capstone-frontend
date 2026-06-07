@@ -1,12 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-import { DollarSign, Salad } from "lucide-react";
-
 import { Container } from "@/shared/ui/Container";
-import IconToggle from "@/shared/ui/IconToggle";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { useRecipeHistoryItemsQuery } from "@/entities/recipe/model/hooks";
@@ -16,8 +13,7 @@ import { useToastStore } from "@/widgets/Toast/model/store";
 import NutritionCard from "./components/NutritionCard";
 import RecipeListSection from "./components/RecipeListSection";
 import SavingsCard from "./components/SavingsCard";
-
-type TabType = "savings" | "nutrition";
+import { buildDaySummary } from "./lib/buildDaySummary";
 
 const DAY_NAMES = ["일", "월", "화", "수", "목", "금", "토"] as const;
 
@@ -34,7 +30,6 @@ const CalendarDetailPage = () => {
   const { date } = useParams<{ date: string }>();
   const router = useRouter();
   const { addToast } = useToastStore();
-  const [activeTab, setActiveTab] = useState<TabType>("savings");
 
   const { data } = useRecipeHistoryItemsQuery(date, !!date);
 
@@ -60,6 +55,7 @@ const CalendarDetailPage = () => {
     ) ?? 0;
   const totalMarketPrice =
     data?.reduce((sum, item) => sum + item.marketPrice, 0) ?? 0;
+  const recipeCount = data?.length ?? 0;
 
   return (
     <Container>
@@ -72,7 +68,9 @@ const CalendarDetailPage = () => {
                 {formattedDate.month}월 {formattedDate.day}일{" "}
                 {formattedDate.dayName}요일
               </h2>
-              <p className="mt-1 text-sm text-gray-500">오늘의 기록</p>
+              <p className="mt-1 text-sm text-gray-500">
+                {buildDaySummary(recipeCount, totalSavings)}
+              </p>
             </>
           ) : (
             <h2 className="text-2xl font-bold text-gray-900">{date} 기록</h2>
@@ -80,33 +78,12 @@ const CalendarDetailPage = () => {
         </div>
       </header>
 
-      <div className="flex justify-center py-4">
-        <IconToggle
-          leftOption={{
-            icon: <DollarSign size={16} />,
-            label: "절약",
-            value: "savings" as TabType,
-          }}
-          rightOption={{
-            icon: <Salad size={16} />,
-            label: "영양",
-            value: "nutrition" as TabType,
-          }}
-          value={activeTab}
-          onChange={setActiveTab}
+      <div className="pb-8">
+        <SavingsCard
+          totalSavings={totalSavings}
+          totalMarketPrice={totalMarketPrice}
         />
-      </div>
-
-      <div className="space-y-6 pb-8">
-        {activeTab === "savings" ? (
-          <SavingsCard
-            totalSavings={totalSavings}
-            totalMarketPrice={totalMarketPrice}
-          />
-        ) : (
-          <NutritionCard data={data} />
-        )}
-
+        <NutritionCard data={data} />
         <RecipeListSection data={data} />
       </div>
     </Container>
