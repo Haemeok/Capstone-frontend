@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { cn } from "@/shared/lib/utils";
-import { Image } from "@/shared/ui/image/Image";
 
 import { RecipeHistoryDetailResponse } from "@/entities/recipe/model/record";
+
+import { getSodiumStatus } from "../lib/getSodiumStatus";
 
 type NutrientBarProps = {
   label: string;
@@ -61,54 +61,21 @@ type SodiumStatusProps = {
   sodium: number;
 };
 
-const getSodiumStatus = (sodium: number) => {
-  if (sodium <= 3000) {
-    return {
-      label: "좋음",
-      description: "적정 섭취량이에요",
-      dotColor: "bg-green-500",
-      textColor: "text-green-600",
-    };
-  }
-  if (sodium <= 4000) {
-    return {
-      label: "보통",
-      description: "조금 많이 드셨어요",
-      dotColor: "bg-yellow-500",
-      textColor: "text-yellow-600",
-    };
-  }
-  return {
-    label: "주의",
-    description: "짜게 드셨네요",
-    dotColor: "bg-red-500",
-    textColor: "text-red-600",
-  };
-};
-
 const SodiumStatus = ({ sodium }: SodiumStatusProps) => {
   const status = getSodiumStatus(sodium);
 
   return (
-    <div className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3.5">
-      <div className="flex items-center gap-3">
-        <Image
-          src={`${ICON_BASE_URL}low_sodium.webp`}
-          alt="나트륨"
-          wrapperClassName="h-9 w-9"
-          imgClassName="object-contain"
-          fit="contain"
-          lazy={false}
-        />
-        <div>
-          <p className="text-base font-medium text-gray-700">나트륨</p>
-          <div className="flex items-center gap-1.5">
-            <span className={cn("h-2.5 w-2.5 rounded-full", status.dotColor)} />
-            <p className={cn("text-sm font-semibold", status.textColor)}>
-              {status.label} · {status.description}
-            </p>
-          </div>
-        </div>
+    <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+      <div>
+        <p className="text-base font-medium text-gray-700">나트륨</p>
+        <p
+          className={cn(
+            "mt-0.5 text-sm",
+            status.tone === "caution" ? "text-amber-700" : "text-gray-500"
+          )}
+        >
+          {status.label} · {status.description}
+        </p>
       </div>
       <span className="text-base font-medium text-gray-600">
         {Math.round(sodium)}mg
@@ -142,30 +109,20 @@ const NutritionCard = ({ data }: NutritionCardProps) => {
   );
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-sm">
-      <div className="mb-6 flex items-center gap-2.5">
-        <Image
-          src={`${ICON_BASE_URL}balanced.webp`}
-          alt="영양"
-          wrapperClassName="h-7 w-7"
-          imgClassName="object-contain"
-          fit="contain"
-          lazy={false}
-        />
-        <h3 className="text-lg font-bold text-gray-900">영양 리포트</h3>
-      </div>
+    <section className="border-t border-gray-100 py-6">
+      <h3 className="mb-5 text-lg font-bold text-gray-900">영양</h3>
 
-      <div className="mb-6 border-b border-gray-100 pb-6 text-center">
-        <p className="text-base text-gray-500">총 섭취 칼로리</p>
+      <div className="mb-6 text-center">
+        <p className="text-sm text-gray-500">총 섭취 칼로리</p>
         <div className="mt-1 flex items-baseline justify-center gap-1.5">
-          <span className="text-olive-mint text-5xl font-bold">
+          <span className="text-olive-dark text-5xl font-bold">
             {totalCalories.toLocaleString()}
           </span>
           <span className="text-xl font-medium text-gray-500">kcal</span>
         </div>
-        <p className="mt-2 text-base text-gray-500">
+        <p className="mt-2 text-sm text-gray-500">
           권장량의{" "}
-          <span className="font-bold text-violet-500">
+          <span className="text-olive-dark font-bold">
             {caloriePercentage}%
           </span>
         </p>
@@ -196,7 +153,7 @@ const NutritionCard = ({ data }: NutritionCardProps) => {
       </div>
 
       <SodiumStatus sodium={sodium} />
-    </div>
+    </section>
   );
 };
 
