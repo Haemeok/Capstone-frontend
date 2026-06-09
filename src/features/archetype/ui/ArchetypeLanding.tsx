@@ -60,7 +60,7 @@ const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
               src={`${LANDING_BASE_URL}landing1.pn  g`}
               alt="Archetype Landing 1"
               wrapperClassName="h-64 w-48"
-              className="h-full w-full object-cover blur-[1px]"
+              imgClassName="blur-[1px]"
             />
             <div className="absolute inset-0 bg-black/10" />
           </div>
@@ -69,7 +69,7 @@ const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
               src={`${LANDING_BASE_URL}landing2.webp`}
               alt="Archetype Landing 2"
               wrapperClassName="h-64 w-48"
-              className="h-full w-full object-cover blur-[1px]"
+              imgClassName="blur-[1px]"
             />
             <div className="absolute inset-0 bg-black/10" />
           </div>
@@ -78,7 +78,7 @@ const ArchetypeLanding = ({ onStart }: ArchetypeLandingProps) => {
               src={`${LANDING_BASE_URL}landing3.webp`}
               alt="Archetype Landing 3"
               wrapperClassName="h-64 w-48"
-              className="h-full w-full object-cover blur-[1px]"
+              imgClassName="blur-[1px]"
             />
             <div className="absolute inset-0 bg-black/10" />
           </div>

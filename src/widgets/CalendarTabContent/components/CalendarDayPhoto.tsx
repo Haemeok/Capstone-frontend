@@ -28,7 +28,7 @@ export const CalendarDayPhoto = ({ date, summary }: CalendarDayPhotoProps) => {
         src={summary.firstImageUrl}
         alt={`이벤트: ${format(date, "yyyy-MM-dd")}`}
         wrapperClassName="overflow-hidden rounded-card"
-        imgClassName="ease-in-out group-hover:scale-110"
+        imgClassName="transition-all duration-300 ease-in-out group-hover:scale-110"
         fit="cover"
         lazy={true}
       />

@@ -12,7 +12,7 @@ type Fit = "cover" | "contain";
 
 type ImageProps = Omit<
   React.ImgHTMLAttributes<HTMLImageElement>,
-  "onLoad" | "onError" | "loading" | "src"
+  "onLoad" | "onError" | "loading" | "src" | "className"
 > & {
   src: string;
   lazy?: boolean;

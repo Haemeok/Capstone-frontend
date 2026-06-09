@@ -22,11 +22,7 @@ const IngredientListItem = ({
     <div className="flex items-center rounded-lg border bg-white p-3 shadow-sm">
       <div className="rounded-card relative mr-3 h-16 w-16 flex-shrink-0 overflow-hidden bg-gray-100">
         {ingredient.imageUrl && (
-          <Image
-            src={ingredient.imageUrl}
-            alt={ingredient.name}
-            className="h-full w-full object-cover"
-          />
+          <Image src={ingredient.imageUrl} alt={ingredient.name} />
         )}
       </div>
       <div className="flex-1">
