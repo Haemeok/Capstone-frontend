@@ -108,7 +108,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 py-1">
-        <p className="line-clamp-2 text-base font-bold text-gray-900">
+        <p className="line-clamp-2 text-[15px] leading-snug text-gray-900">
           {recipe.title}
         </p>
 
