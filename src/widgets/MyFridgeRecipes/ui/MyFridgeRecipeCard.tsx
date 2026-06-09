@@ -24,7 +24,7 @@ import UserProfileImage from "@/entities/user/ui/UserProfileImage";
 
 import { RecipeSaveButton } from "@/features/recipe-save";
 
-import ExpandableIngredients from "./ExpandableIngredients";
+import FridgeMatchSummary from "./FridgeMatchSummary";
 
 const getRightBadge = (recipe: MyFridgeRecipeItem) => {
   if (isYoutubeRecipe(recipe) && recipe.youtubeChannelName) {
@@ -146,7 +146,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
         </div>
 
         {/* 재료 매칭 */}
-        <ExpandableIngredients
+        <FridgeMatchSummary
           matchedIngredients={recipe.matchedIngredients}
           missingIngredients={recipe.missingIngredients}
         />
