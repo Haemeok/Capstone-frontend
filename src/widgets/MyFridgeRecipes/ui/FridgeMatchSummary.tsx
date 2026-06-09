@@ -28,7 +28,7 @@ const FridgeMatchSummary = ({
 
   if (missingIngredients.length === 0) {
     return (
-      <div className="text-olive-light mt-2 flex items-center gap-1">
+      <div className="text-olive-light flex items-center gap-1">
         <Check size={14} strokeWidth={2.5} aria-hidden />
         <span className="text-xs font-bold">냉장고 재료로 바로 완성</span>
       </div>
@@ -42,7 +42,7 @@ const FridgeMatchSummary = ({
     : missingNames.slice(0, VISIBLE_COUNT);
 
   return (
-    <div className="mt-2 flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5">
       <div className="flex items-center gap-1 text-amber-500">
         <Triangle
           size={12}
@@ -50,7 +50,7 @@ const FridgeMatchSummary = ({
           className="fill-amber-500"
           aria-hidden
         />
-        <span className="text-xs font-bold">{missingNames.length}개만 더</span>
+        <span className="text-xs font-bold">{missingNames.length}개 필요</span>
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5">
