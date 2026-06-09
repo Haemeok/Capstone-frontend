@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-const DEFAULT_URL = "http://localhost:3002";
+const DEFAULT_URL = "http://localhost:3008";
 const POLL_MS = 30_000;
 
 export type LoginStatus = {
