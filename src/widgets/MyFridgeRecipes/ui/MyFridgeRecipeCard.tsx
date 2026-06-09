@@ -59,7 +59,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative flex cursor-pointer items-start gap-4 rounded-2xl border border-gray-100 bg-white p-4 transition-colors active:bg-gray-50"
+      className="relative flex cursor-pointer items-start gap-3 rounded-2xl bg-white p-3 transition-colors active:bg-gray-50"
       onClick={handleCardClick}
     >
       <div className="rounded-card relative w-28 flex-shrink-0 overflow-hidden min-[390px]:w-32 min-[430px]:w-36 sm:w-[188px]">
