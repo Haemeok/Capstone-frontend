@@ -278,7 +278,7 @@ export const AccountActionsCard = () => {
           {error instanceof Error ? error.message : "unknown"}
           <br />
           <span className="text-[10px] text-red-500">
-            `cd recipioReview && npm run dev` (port 3002) 떠 있는지 확인.
+            `cd recipioReview && npm run dev` (port 3008) 떠 있는지 확인.
           </span>
         </p>
       )}
