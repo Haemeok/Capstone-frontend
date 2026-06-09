@@ -1,7 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
-
 import {
   APP_STORE_URL,
   PLAY_STORE_URL,
@@ -26,36 +24,32 @@ export const StoreBadges = ({ className }: StoreBadgesProps) => {
   return (
     <div className={`flex flex-col items-center gap-3 ${className ?? ""}`}>
       <div className="flex flex-col items-center gap-3 sm:flex-row">
-        <motion.a
+        <a
           href={APP_STORE_URL}
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.2 }}
+          className="transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
         >
           <img
             src="/Download_on_the_App_Store_Badge_KR.svg"
             alt="App Store에서 다운로드"
             className="h-14"
           />
-        </motion.a>
-        <motion.a
+        </a>
+        <a
           href={PLAY_STORE_URL}
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.2 }}
+          className="transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
         >
           <img
             src="/googlePlay_Badge_Web_color_ko.png"
             alt="Google Play에서 다운로드"
             className="h-14"
           />
-        </motion.a>
+        </a>
       </div>
     </div>
   );
