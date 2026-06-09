@@ -3,14 +3,13 @@
 import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-import { usePostHog } from "posthog-js/react";
-
 import { shouldCapturePageview } from "./posthogPageviewGuard";
+import { usePostHogClient } from "./PostHogProvider";
 
 const PostHogPageViewInner = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const posthog = usePostHog();
+  const posthog = usePostHogClient();
 
   useEffect(() => {
     if (!pathname || !posthog) return;
