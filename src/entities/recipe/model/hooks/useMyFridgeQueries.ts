@@ -2,6 +2,7 @@ import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getMyFridgeRecipes, getMyIngredientRecipes } from "../api";
+import { RECIPE_QUERY_KEYS } from "../queryKeys";
 import { MyFridgePageResponse, MyFridgeRecipeItem } from "../types";
 
 export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
@@ -14,7 +15,7 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
     error,
     isPending,
   } = useInfiniteScroll({
-    queryKey: ["my-fridge-recipes", sort],
+    queryKey: RECIPE_QUERY_KEYS.myIngredient(sort),
     queryFn: ({ pageParam }) => getMyIngredientRecipes(sort, pageParam),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
@@ -59,7 +60,7 @@ export const useMyFridgeRecipesInfiniteQuery = (sort?: string) => {
     error,
     isPending,
   } = useInfiniteScroll({
-    queryKey: ["my-fridge-recipes-v2", sort],
+    queryKey: RECIPE_QUERY_KEYS.myFridge(sort),
     queryFn: ({ pageParam }) => getMyFridgeRecipes(sort, pageParam),
     getNextPageParam: getMyFridgeNextPageParam,
     initialPageParam: 0,

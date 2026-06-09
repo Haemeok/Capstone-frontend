@@ -11,6 +11,7 @@ import {
   IngredientMutationContext,
   IngredientsApiResponse,
 } from "@/entities/ingredient/model/types";
+import { RECIPE_QUERY_KEYS } from "@/entities/recipe/model/queryKeys";
 
 import { addIngredient, addIngredientBulk } from "./api";
 
@@ -62,6 +63,9 @@ export const useAddIngredientMutation = ({
         refetchType: "none",
       });
       queryClient.invalidateQueries({ queryKey: INGREDIENT_QUERY_KEYS.myIds });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_QUERY_KEYS.myFridgeAll,
+      });
     },
   });
 };
@@ -108,6 +112,9 @@ export const useAddIngredientBulkMutation = () => {
         refetchType: "none",
       });
       queryClient.invalidateQueries({ queryKey: INGREDIENT_QUERY_KEYS.myIds });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_QUERY_KEYS.myFridgeAll,
+      });
     },
   });
 };

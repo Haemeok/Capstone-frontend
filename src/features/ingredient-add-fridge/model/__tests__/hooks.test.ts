@@ -10,6 +10,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
+import { RECIPE_QUERY_KEYS } from "@/entities/recipe/model/queryKeys";
 
 import * as api from "../api";
 import {
@@ -216,6 +217,72 @@ describe("useAddIngredientBulkMutation (browse bulk add)", () => {
     await waitFor(() => expect(result.current.bulk.isSuccess).toBe(true));
     await waitFor(() =>
       expect(idsQueryFn.mock.calls.length).toBeGreaterThan(before)
+    );
+  });
+});
+
+describe("adding an ingredient re-queries the my-fridge recipe list", () => {
+  const makeEmptyRecipePage = () => ({ content: [], last: true, number: 0 });
+
+  const mountRecipeListWithAdd = <T>(
+    queryClient: QueryClient,
+    recipeQueryFn: jest.Mock,
+    add: () => T
+  ) =>
+    renderHook(
+      () => {
+        const recipes = useInfiniteQuery({
+          queryKey: RECIPE_QUERY_KEYS.myFridge(undefined),
+          queryFn: recipeQueryFn,
+          initialPageParam: 0,
+          getNextPageParam: () => null,
+          staleTime: Infinity,
+        });
+        const mutation = add();
+        return { recipes, mutation };
+      },
+      { wrapper: createWrapper(queryClient) }
+    );
+
+  it("invalidates the empty recipe list after a single add (regression: stale empty result)", async () => {
+    (api.addIngredient as jest.Mock).mockResolvedValue(undefined);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const recipeQueryFn = jest.fn(async () => makeEmptyRecipePage());
+
+    const { result } = mountRecipeListWithAdd(queryClient, recipeQueryFn, () =>
+      useAddIngredientMutation({ category: "전체", q: "" })
+    );
+
+    await waitFor(() => expect(result.current.recipes.isSuccess).toBe(true));
+    const before = recipeQueryFn.mock.calls.length;
+
+    act(() => result.current.mutation.mutate("i1"));
+    await waitFor(() => expect(result.current.mutation.isSuccess).toBe(true));
+    await waitFor(() =>
+      expect(recipeQueryFn.mock.calls.length).toBeGreaterThan(before)
+    );
+  });
+
+  it("invalidates the empty recipe list after a bulk add", async () => {
+    (api.addIngredientBulk as jest.Mock).mockResolvedValue(undefined);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const recipeQueryFn = jest.fn(async () => makeEmptyRecipePage());
+
+    const { result } = mountRecipeListWithAdd(queryClient, recipeQueryFn, () =>
+      useAddIngredientBulkMutation()
+    );
+
+    await waitFor(() => expect(result.current.recipes.isSuccess).toBe(true));
+    const before = recipeQueryFn.mock.calls.length;
+
+    act(() => result.current.mutation.mutate(["i1", "i2"]));
+    await waitFor(() => expect(result.current.mutation.isSuccess).toBe(true));
+    await waitFor(() =>
+      expect(recipeQueryFn.mock.calls.length).toBeGreaterThan(before)
     );
   });
 });

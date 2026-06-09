@@ -7,6 +7,7 @@ import {
 
 import { trackReviewAction } from "@/shared/lib/review";
 
+import { RECIPE_QUERY_KEYS } from "@/entities/recipe/model/queryKeys";
 import {
   DetailedRecipesApiResponse,
   MyFridgePageResponse,
@@ -42,7 +43,9 @@ export const useToggleRecipeSave = (recipeId: string) => {
       await queryClient.cancelQueries({ queryKey: recipeStatusQueryKey });
       await queryClient.cancelQueries({ queryKey: recipesListRootKey });
       await queryClient.cancelQueries({ queryKey: ["recipes-status"] });
-      await queryClient.cancelQueries({ queryKey: ["my-fridge-recipes-v2"] });
+      await queryClient.cancelQueries({
+        queryKey: RECIPE_QUERY_KEYS.myFridgeAll,
+      });
 
       const previousRecipeStatus =
         queryClient.getQueryData<RecipeStatus>(recipeStatusQueryKey);
@@ -91,7 +94,7 @@ export const useToggleRecipeSave = (recipeId: string) => {
 
       queryClient.setQueriesData<
         InfiniteData<MyFridgePageResponse<MyFridgeRecipeItem>>
-      >({ queryKey: ["my-fridge-recipes-v2"] }, (oldData) => {
+      >({ queryKey: RECIPE_QUERY_KEYS.myFridgeAll }, (oldData) => {
         if (!oldData || !("pages" in oldData)) return oldData;
 
         return {
@@ -151,7 +154,9 @@ export const useToggleRecipeSave = (recipeId: string) => {
         );
       }
       queryClient.invalidateQueries({ queryKey: recipesListRootKey });
-      queryClient.invalidateQueries({ queryKey: ["my-fridge-recipes-v2"] });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_QUERY_KEYS.myFridgeAll,
+      });
     },
 
     onSettled: () => {

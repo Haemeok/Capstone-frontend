@@ -16,6 +16,7 @@ import {
   IngredientMutationContext,
   IngredientsApiResponse,
 } from "@/entities/ingredient/model/types";
+import { RECIPE_QUERY_KEYS } from "@/entities/recipe/model/queryKeys";
 
 import { deleteIngredient, deleteIngredientBulk } from "./api";
 
@@ -63,6 +64,9 @@ export const useDeleteIngredientMutation = ({
         refetchType: "none",
       });
       queryClient.invalidateQueries({ queryKey: INGREDIENT_QUERY_KEYS.myIds });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_QUERY_KEYS.myFridgeAll,
+      });
     },
   });
 };
@@ -133,6 +137,9 @@ export const useDeleteIngredientBulkMutation = (
         refetchType: "none",
       });
       queryClient.invalidateQueries({ queryKey: INGREDIENT_QUERY_KEYS.myIds });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_QUERY_KEYS.myFridgeAll,
+      });
     },
   });
 };
