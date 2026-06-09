@@ -172,7 +172,6 @@ const IngredientSearchDrawer = ({
                         <Image
                           src={ingredient.imageUrl}
                           alt={ingredient.name}
-                          className="h-full w-full object-cover"
                         />
                       )}
                     </div>

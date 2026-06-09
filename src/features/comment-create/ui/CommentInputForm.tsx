@@ -104,11 +104,7 @@ const CommentInputForm = ({
           !isFocused &&
           user && (
             <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-white">
-              <Image
-                src={user.profileImage || ""}
-                alt="내 프로필"
-                className="object-cover"
-              />
+              <Image src={user.profileImage || ""} alt="내 프로필" />
             </div>
           )
         )}
