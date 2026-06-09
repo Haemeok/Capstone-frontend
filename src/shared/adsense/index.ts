@@ -1,4 +1,5 @@
 export { AdSenseScript } from "./AdSenseScript";
+export { AiFormInArticleAdSlot } from "./AiFormInArticleAdSlot";
 export { AnchorAdSlot } from "./AnchorAdSlot";
 export { BottomAnchorAdSlot } from "./BottomAnchorAdSlot";
 export { HomeAnchorAdSlot } from "./HomeAnchorAdSlot";
