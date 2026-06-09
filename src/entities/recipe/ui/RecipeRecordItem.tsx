@@ -31,33 +31,29 @@ export const RecipeRecordItem = ({
   return (
     <Link
       href={`/recipes/${recipeId}`}
-      className="group flex cursor-pointer gap-4 rounded-2xl bg-white p-4 shadow-sm transition-all hover:shadow-md"
+      className="flex cursor-pointer gap-3.5 rounded-2xl p-2 transition-colors active:bg-gray-50"
     >
       <Image
         src={imageUrl}
         alt={recipeTitle}
-        className="rounded-card h-24 w-24 flex-shrink-0"
-        wrapperClassName="overflow-hidden rounded-card"
-        imgClassName="ease-in-out group-hover:scale-105"
+        wrapperClassName="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl"
       />
-      <div className="flex flex-1 flex-col justify-between py-0.5">
-        <h4 className="text-lg leading-snug font-bold text-gray-900">
+      <div className="flex flex-1 flex-col justify-center gap-1 py-0.5">
+        <h4 className="line-clamp-1 text-base leading-snug font-semibold text-gray-900">
           {recipeTitle}
         </h4>
 
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <span className="font-semibold text-gray-700">{calories}kcal</span>
+        <div className="flex flex-wrap items-center gap-x-1.5 text-sm text-gray-500">
+          <span className="font-medium text-gray-700">{calories}kcal</span>
           <span className="text-gray-300">·</span>
           <span>탄 {Math.round(nutrition.carbohydrate)}g</span>
           <span>단 {Math.round(nutrition.protein)}g</span>
           <span>지 {Math.round(nutrition.fat)}g</span>
         </div>
 
-        <div className="flex items-center">
-          <span className="bg-olive-light/10 text-olive-dark rounded-full px-3 py-1 text-sm font-bold">
-            {formatNumber(savings, "원")} 절약
-          </span>
-        </div>
+        <p className="text-olive-dark text-sm font-semibold">
+          {formatNumber(savings, "원")} 절약
+        </p>
       </div>
     </Link>
   );
