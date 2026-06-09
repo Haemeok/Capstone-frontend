@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Check } from "lucide-react";
+import { Check, Triangle } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
@@ -10,14 +10,12 @@ import { cn } from "@/shared/lib/utils";
 import { MissingIngredient } from "@/entities/recipe/model/types";
 
 type FridgeMatchSummaryProps = {
-  matchedIngredients: string[];
   missingIngredients: MissingIngredient[];
 };
 
 const VISIBLE_COUNT = 3;
 
 const FridgeMatchSummary = ({
-  matchedIngredients,
   missingIngredients,
 }: FridgeMatchSummaryProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -45,19 +43,17 @@ const FridgeMatchSummary = ({
 
   return (
     <div className="mt-2 flex flex-col gap-1.5">
-      {matchedIngredients.length > 0 && (
-        <div className="text-olive-light flex items-center gap-1">
-          <Check size={14} strokeWidth={2.5} aria-hidden />
-          <span className="text-xs font-bold">
-            내 재료 {matchedIngredients.length}개로 가능
-          </span>
-        </div>
-      )}
+      <div className="flex items-center gap-1 text-amber-500">
+        <Triangle
+          size={12}
+          strokeWidth={2.5}
+          className="fill-amber-500"
+          aria-hidden
+        />
+        <span className="text-xs font-bold">{missingNames.length}개만 더</span>
+      </div>
 
       <div className="flex flex-wrap items-center gap-1.5">
-        <span className="text-xs font-medium text-gray-500">
-          {missingNames.length}개만 더
-        </span>
         {visibleMissing.map((name, index) => (
           <span
             key={index}
