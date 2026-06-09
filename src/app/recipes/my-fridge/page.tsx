@@ -48,16 +48,19 @@ const MyFridgePage = () => {
     <Container>
       <div className="flex flex-col gap-6">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <PrevButton />
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              요리 가능한 레시피
-            </h1>
-            <p className="text-sm text-gray-500">
-              내 냉장고 재료로 만들 수 있어요
-            </p>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <PrevButton />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                요리 가능한 레시피
+              </h1>
+              <p className="text-sm text-gray-500">
+                냉장고 재료로 만들 수 있는 레시피예요
+              </p>
+            </div>
           </div>
+          <div className="border-t border-gray-100" />
         </div>
 
         {/* Sort */}
