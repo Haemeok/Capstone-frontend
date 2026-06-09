@@ -59,7 +59,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative flex cursor-pointer items-start gap-3 rounded-2xl bg-white p-3 transition-colors active:bg-gray-50"
+      className="rounded-card relative flex cursor-pointer items-start gap-3 border border-gray-100 bg-white p-3 transition-colors active:bg-gray-50"
       onClick={handleCardClick}
     >
       <div className="rounded-card relative w-28 flex-shrink-0 overflow-hidden min-[390px]:w-32 min-[430px]:w-36 sm:w-[188px]">
@@ -165,10 +165,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
           </div>
         </div>
 
-        <FridgeMatchSummary
-          matchedIngredients={recipe.matchedIngredients}
-          missingIngredients={recipe.missingIngredients}
-        />
+        <FridgeMatchSummary missingIngredients={recipe.missingIngredients} />
       </div>
     </motion.div>
   );
