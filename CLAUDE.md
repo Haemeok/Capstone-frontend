@@ -32,6 +32,7 @@
 - TanStack Query key: `[domain, sub, ...ids]` tuple
 - env: `shared/config` 경유. `process.env` 직접 ❌
 - localStorage key: 상수 모듈
+- Container: full-bleed/hero 페이지는 `padding={false}`. 이중 px·`bg-white` 중복 ❌ (`policy-container-layout`)
 
 ### Next.js
 
@@ -205,14 +206,6 @@ PR 본문을 작성할 때 `.claude/state/active-issue` 파일을 먼저 읽는�
 ### 이미지
 
 **`next/image` 절대 금지** (사용자 메모리). LCP 이미지는 순수 `<img>`. 그 외엔 `@/shared/ui/image/Image`.
-
-### Container / 페이지 레이아웃
-
-`@/shared/ui/Container`가 이미 `bg-white` + `md:max-w-4xl` + (기본 `padding`) `px-4 pt-2 md:px-6`를 **자체 제공**한다. 그래서:
-
-- **히어로/풀블리드 이미지가 있는 상세·리스트 페이지는 `<Container padding={false}>`** 로 쓰고, 히어로는 px 없이 가장자리까지(풀블리드), 그 아래 텍스트 섹션들이 각자 `px-4`(또는 `px-5`)를 관리한다. 표준 예시: `widgets/IngredientDetailPage/IngredientDetailPageClient.tsx`.
-- Container 안에 `<div className="bg-white">` 로 **다시 감싸지 말 것**(중복). 배경은 Container가 이미 가짐.
-- **이중 패딩 금지**: 기본 `<Container>`(px-4)에 또 `px-4` 섹션을 넣으면 실효 px-8이 된다. 섹션이 자체 px를 가지면 Container는 `padding={false}`.
 
 ### Haptic
 

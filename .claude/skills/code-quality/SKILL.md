@@ -61,6 +61,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Z-index tokens](rules/policy-zindex.md) — semantic names, no magic numbers
 - [Dates and numbers](rules/policy-date-number.md) — single library, `Intl.NumberFormat`
 - [Nullish coalescing](rules/policy-nullish-coalescing.md) — `??` for defaults; `||` only for actual falsy semantics
+- [Container layout](rules/policy-container-layout.md) — Container owns bg/max-width/padding; full-bleed/hero pages use `padding={false}`; no double `px`, no nested `bg-white`
 
 ### Next.js
 
