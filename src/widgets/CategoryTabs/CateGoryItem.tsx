@@ -23,16 +23,16 @@ const CateGoryItem = ({
     <Link
       href={`/recipes/category/${TAG_CODES[name as keyof typeof TAG_CODES]}`}
       className={cn(
-        "rounded-card relative block h-70 w-50 flex-shrink-0 cursor-pointer overflow-hidden shadow-md",
+        "rounded-card relative block h-50 w-50 flex-shrink-0 cursor-pointer overflow-hidden shadow-md",
         className
       )}
     >
       <Image
         src={imageUrl}
         alt={name}
-        wrapperClassName="h-70 w-50"
+        wrapperClassName="h-50 w-50"
         width={200}
-        height={280}
+        height={200}
         priority={isLcpCandidate}
         fit="cover"
         fetchPriority={isLcpCandidate ? "high" : "auto"}

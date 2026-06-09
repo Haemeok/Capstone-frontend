@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { HomeAnchorAdSlot } from "@/shared/adsense";
+import { HomeAnchorAdSlot, HomeHeaderAnchorAdSlot } from "@/shared/adsense";
 import { homeMetadata } from "@/shared/lib/metadata";
 import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
 import { Container } from "@/shared/ui/Container";
@@ -48,6 +48,8 @@ const HomePage = async () => {
           <HomeHeader />
         </Suspense>
         <div className="flex flex-col items-center justify-center bg-white text-gray-800">
+          <HomeHeaderAnchorAdSlot className="my-2" />
+
           <CategoryTabs title="카테고리" />
 
           <ErrorBoundary
