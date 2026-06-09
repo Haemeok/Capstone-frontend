@@ -11,7 +11,7 @@ describe("FridgeMatchSummary", () => {
     render(<FridgeMatchSummary missingIngredients={[]} />);
 
     expect(screen.getByText("냉장고 재료로 바로 완성")).toBeInTheDocument();
-    expect(screen.queryByText(/개만 더/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/개 필요/)).not.toBeInTheDocument();
   });
 
   it("빠진 재료가 있으면 '바로 완성'/'가능' 없이 부족 개수와 빠진 재료 칩만 보인다 (T-02)", () => {
@@ -21,7 +21,7 @@ describe("FridgeMatchSummary", () => {
       />
     );
 
-    expect(screen.getByText("2개만 더")).toBeInTheDocument();
+    expect(screen.getByText("2개 필요")).toBeInTheDocument();
     expect(screen.getByText("고추가루")).toBeInTheDocument();
     expect(screen.getByText("대파")).toBeInTheDocument();
     expect(
