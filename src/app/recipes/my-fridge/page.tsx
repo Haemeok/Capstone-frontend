@@ -61,7 +61,8 @@ const MyFridgePage = () => {
         </div>
 
         {/* Sort */}
-        <div className="flex justify-end">
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500">정렬</span>
           <RecipeSortButton
             currentSort={currentSort}
             onClick={handleSortButtonClick}
