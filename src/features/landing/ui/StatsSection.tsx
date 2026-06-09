@@ -1,12 +1,7 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-
-import { motion } from "motion/react";
-
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
 import { Image } from "@/shared/ui/image/Image";
+import { Reveal } from "@/shared/ui/Reveal";
 
 type StatCard = {
   image: string;
@@ -46,36 +41,6 @@ const STATS: StatCard[] = [
     accent: "from-orange-500/10 to-amber-500/10",
   },
 ];
-const AnimatedCounter = ({ value }: { value: string }) => {
-  const [displayValue, setDisplayValue] = useState("0");
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setDisplayValue(value);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [value]);
-
-  return (
-    <div
-      ref={ref}
-      className="from-olive-light via-olive-mint to-olive-medium bg-gradient-to-br bg-clip-text text-3xl font-extrabold text-transparent md:text-4xl"
-    >
-      {displayValue}
-    </div>
-  );
-};
 
 export const StatsSection = () => {
   return (
@@ -83,13 +48,7 @@ export const StatsSection = () => {
       <div className="bg-olive-mint/5 absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
-        >
+        <Reveal className="mb-16 text-center">
           <h2 className="text-dark mb-4 text-4xl font-extrabold md:text-5xl">
             실제 사용자들의 결과
           </h2>
@@ -98,17 +57,14 @@ export const StatsSection = () => {
             <br className="hidden sm:block" />
             경험한 실제 변화를 확인하세요
           </p>
-        </motion.div>
+        </Reveal>
 
         <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
           {STATS.map((stat, index) => (
-            <motion.div
+            <Reveal
               key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group relative"
+              delayMs={index * 100}
             >
               <div
                 className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${stat.accent} opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100`}
@@ -121,7 +77,9 @@ export const StatsSection = () => {
                     wrapperClassName="h-28 w-28 md:h-32 md:w-32 lg:h-40 lg:w-40"
                   />
                 </div>
-                <AnimatedCounter value={stat.metric} />
+                <div className="from-olive-light via-olive-mint to-olive-medium bg-gradient-to-br bg-clip-text text-3xl font-extrabold text-transparent md:text-4xl">
+                  {stat.metric}
+                </div>
                 <h3 className="text-dark mt-3 mb-1 text-sm font-bold text-balance break-keep md:mt-4 md:mb-2 md:text-xl">
                   {stat.label}
                 </h3>
@@ -129,7 +87,7 @@ export const StatsSection = () => {
                   {stat.description}
                 </p>
               </div>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
       </div>

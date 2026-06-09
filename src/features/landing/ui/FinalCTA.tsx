@@ -1,32 +1,20 @@
-"use client";
-
 import Link from "next/link";
 
-import { motion } from "motion/react";
-
 import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
+import { Reveal } from "@/shared/ui/Reveal";
 import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
 
 import { markLandingVisited } from "@/app/landing/actions";
 
 export const FinalCTA = () => {
-  const handleStartClick = async () => {
-    await markLandingVisited();
-  };
   return (
     <section className="relative w-full overflow-hidden bg-white px-4 py-24 md:py-36">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(145,199,136,0.1),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(67,194,120,0.08),transparent_50%)]" />
 
       <div className="relative mx-auto max-w-5xl text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="space-y-10"
-        >
+        <Reveal className="space-y-10">
           <div className="space-y-6">
             <h2 className="text-dark text-5xl leading-[1.1] font-extrabold md:text-6xl lg:text-7xl">
               오늘부터 시작하는
@@ -47,14 +35,16 @@ export const FinalCTA = () => {
           </div>
 
           <div className="flex flex-col items-center gap-5 pt-6 sm:flex-row sm:justify-center">
-            <Button
-              onClick={handleStartClick}
-              size="lg"
-              className="group from-olive-medium to-olive-mint shadow-olive-medium/30 hover:shadow-olive-mint/40 relative h-14 overflow-hidden bg-gradient-to-r px-8 text-lg font-bold text-white shadow-2xl transition-all hover:shadow-2xl"
-            >
-              <span className="relative z-10">무료로 시작하기</span>
-              <span className="from-olive to-olive-medium absolute inset-0 -z-0 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100" />
-            </Button>
+            <form action={markLandingVisited}>
+              <Button
+                type="submit"
+                size="lg"
+                className="group from-olive-medium to-olive-mint shadow-olive-medium/30 hover:shadow-olive-mint/40 relative h-14 overflow-hidden bg-gradient-to-r px-8 text-lg font-bold text-white shadow-2xl transition-all hover:shadow-2xl"
+              >
+                <span className="relative z-10">무료로 시작하기</span>
+                <span className="from-olive to-olive-medium absolute inset-0 -z-0 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100" />
+              </Button>
+            </form>
 
             <Button
               asChild
@@ -66,16 +56,10 @@ export const FinalCTA = () => {
             </Button>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-10"
-          >
+          <div className="mt-10">
             <StoreBadges showAndroidNote />
-          </motion.div>
-        </motion.div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

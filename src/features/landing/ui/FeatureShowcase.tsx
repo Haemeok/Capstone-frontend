@@ -1,11 +1,8 @@
-"use client";
-
-import { motion } from "motion/react";
-
 import {
   TOTAL_RECIPE_COUNT_LABEL,
   TOTAL_RECIPE_COUNT_PHRASE,
 } from "@/shared/config/constants/siteStats";
+import { Reveal } from "@/shared/ui/Reveal";
 
 type Feature = {
   badge: string;
@@ -70,13 +67,7 @@ export const FeatureShowcase = () => {
       <div className="bg-olive-light/10 absolute right-0 bottom-1/4 h-96 w-96 rounded-full blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-20 text-center"
-        >
+        <Reveal className="mb-20 text-center">
           <div className="bg-olive-light/10 text-olive-medium mb-4 inline-block rounded-full px-4 py-1 text-sm font-semibold">
             핵심 기능
           </div>
@@ -86,19 +77,15 @@ export const FeatureShowcase = () => {
           <p className="mx-auto max-w-2xl text-lg text-gray-600">
             복잡한 요리 과정을 단순하게, 당신의 주방을 스마트하게
           </p>
-        </motion.div>
+        </Reveal>
 
         <div className="space-y-24">
           {FEATURES.map((feature, index) => {
             const isReversed = index % 2 === 1;
 
             return (
-              <motion.div
+              <Reveal
                 key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.7 }}
                 className={`flex flex-col items-center gap-12 lg:gap-16 ${
                   isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
                 }`}
@@ -120,15 +107,8 @@ export const FeatureShowcase = () => {
 
                   <ul className="space-y-3">
                     {feature.benefits.map((benefit, benefitIndex) => (
-                      <motion.li
+                      <li
                         key={benefitIndex}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{
-                          duration: 0.4,
-                          delay: benefitIndex * 0.1,
-                        }}
                         className="flex items-center gap-3"
                       >
                         <div className="bg-olive-mint/20 flex h-6 w-6 items-center justify-center rounded-full">
@@ -149,11 +129,11 @@ export const FeatureShowcase = () => {
                         <span className="text-base font-medium text-gray-700">
                           {benefit}
                         </span>
-                      </motion.li>
+                      </li>
                     ))}
                   </ul>
                 </div>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>

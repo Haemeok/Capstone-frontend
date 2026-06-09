@@ -1,16 +1,8 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-
-import { gsap } from "gsap";
-
 import { IMAGE_BASE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
 
 const CARD_COUNT = 8;
 const CARD_WIDTH = 340;
-const CARD_GAP = 20;
-const ANIMATION_DURATION = 50;
 
 const RECIPE_CATEGORIES = [
   1314, 1313, 1312, 1311, 1310, 1309, 1308, 1305, 1304, 1303, 1302, 1301, 1300,
@@ -29,7 +21,7 @@ const RecipeCard = ({
   const imageUrl = `${IMAGE_BASE_URL}recipes/7/${id}/main.webp`;
 
   return (
-    <div className="group rounded-card flex-shrink-0 overflow-hidden bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+    <div className="group rounded-card mr-5 flex-shrink-0 overflow-hidden bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
       <Image
         src={imageUrl}
         alt={`Recipe ${id}`}
@@ -45,39 +37,12 @@ export const CarouselRow = ({
 }: {
   direction?: "left" | "right";
 }) => {
-  const rowRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!rowRef.current) return;
-
-    const totalWidth = (CARD_WIDTH + CARD_GAP) * CARD_COUNT;
-    const isLeftDirection = direction === "left";
-
-    gsap.set(rowRef.current, {
-      x: isLeftDirection ? 0 : -totalWidth / 2,
-    });
-
-    const animation = gsap.to(rowRef.current, {
-      x: isLeftDirection ? -totalWidth / 2 : 0,
-      duration: ANIMATION_DURATION,
-      ease: "none",
-      repeat: -1,
-    });
-
-    return () => {
-      animation.kill();
-    };
-  }, [direction]);
-
   return (
     <div className="relative w-full overflow-hidden">
       <div
-        ref={rowRef}
-        className="flex"
-        style={{
-          width: (CARD_WIDTH + CARD_GAP) * CARD_COUNT * 2,
-          gap: CARD_GAP,
-        }}
+        className={`marquee-track flex ${
+          direction === "left" ? "marquee-left" : "marquee-right"
+        }`}
       >
         {Array.from({ length: CARD_COUNT * 2 }).map((_, index) => (
           <RecipeCard

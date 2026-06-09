@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { AnimatePresence, motion } from "motion/react";
+import { Reveal } from "@/shared/ui/Reveal";
 
 type Testimonial = {
   name: string;
@@ -205,13 +205,7 @@ export const TestimonialCarousel = () => {
       <div className="absolute top-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-purple-200/20 blur-3xl" />
 
       <div className="relative mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
-        >
+        <Reveal className="mb-16 text-center">
           <div className="mb-4 inline-block rounded-full bg-purple-50 px-4 py-1 text-sm font-semibold text-purple-600">
             사용자 후기
           </div>
@@ -221,60 +215,54 @@ export const TestimonialCarousel = () => {
           <p className="mx-auto max-w-2xl text-lg text-gray-600">
             실제 사용자들의 솔직한 이야기를 들어보세요
           </p>
-        </motion.div>
+        </Reveal>
 
         <div className="relative min-h-[320px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.4 }}
-              className="relative"
-            >
-              <div className="from-olive-light/20 via-olive-mint/20 to-olive-medium/20 absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r opacity-50 blur-2xl" />
+          <div
+            key={currentIndex}
+            className="animate-in fade-in zoom-in-95 relative duration-300"
+          >
+            <div className="from-olive-light/20 via-olive-mint/20 to-olive-medium/20 absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r opacity-50 blur-2xl" />
 
-              <div className="relative overflow-hidden rounded-[2rem] border border-gray-200/50 bg-white p-10 shadow-2xl md:p-14">
-                <div className="text-olive-light/10 absolute top-8 right-8 text-8xl">
-                  &quot;
-                </div>
+            <div className="relative overflow-hidden rounded-[2rem] border border-gray-200/50 bg-white p-10 shadow-2xl md:p-14">
+              <div className="text-olive-light/10 absolute top-8 right-8 text-8xl">
+                &quot;
+              </div>
 
-                <div className="relative mb-8 flex items-start justify-between">
-                  <div className="flex items-center gap-5">
-                    <div className="from-olive-light/20 to-olive-mint/20 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br text-4xl shadow-lg">
-                      {currentTestimonial.avatar}
-                    </div>
-                    <div>
-                      <h3 className="text-dark mb-1 text-2xl font-extrabold">
-                        {currentTestimonial.name}
-                      </h3>
-                      <p className="mb-2 text-sm text-gray-500">
-                        {currentTestimonial.role}
-                      </p>
-                      <StarRating rating={currentTestimonial.rating} />
-                    </div>
+              <div className="relative mb-8 flex items-start justify-between">
+                <div className="flex items-center gap-5">
+                  <div className="from-olive-light/20 to-olive-mint/20 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br text-4xl shadow-lg">
+                    {currentTestimonial.avatar}
                   </div>
-
-                  <div className="bg-olive-mint/10 hidden rounded-xl px-4 py-2 md:block">
-                    <p className="text-olive-medium text-sm font-bold">
-                      {currentTestimonial.highlight}
+                  <div>
+                    <h3 className="text-dark mb-1 text-2xl font-extrabold">
+                      {currentTestimonial.name}
+                    </h3>
+                    <p className="mb-2 text-sm text-gray-500">
+                      {currentTestimonial.role}
                     </p>
+                    <StarRating rating={currentTestimonial.rating} />
                   </div>
                 </div>
 
-                <p className="relative text-xl leading-relaxed text-gray-700 md:text-2xl">
-                  &quot;{currentTestimonial.content}&quot;
-                </p>
-
-                <div className="bg-olive-mint/10 mt-6 block rounded-xl px-4 py-2 md:hidden">
+                <div className="bg-olive-mint/10 hidden rounded-xl px-4 py-2 md:block">
                   <p className="text-olive-medium text-sm font-bold">
                     {currentTestimonial.highlight}
                   </p>
                 </div>
               </div>
-            </motion.div>
-          </AnimatePresence>
+
+              <p className="relative text-xl leading-relaxed text-gray-700 md:text-2xl">
+                &quot;{currentTestimonial.content}&quot;
+              </p>
+
+              <div className="bg-olive-mint/10 mt-6 block rounded-xl px-4 py-2 md:hidden">
+                <p className="text-olive-medium text-sm font-bold">
+                  {currentTestimonial.highlight}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="mt-12 flex items-center justify-center gap-3">

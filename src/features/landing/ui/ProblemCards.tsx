@@ -1,9 +1,6 @@
-"use client";
-
-import { motion } from "motion/react";
-
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
+import { Reveal } from "@/shared/ui/Reveal";
 
 type ProblemCard = {
   image: string;
@@ -48,13 +45,7 @@ export const ProblemCards = () => {
       <div className="bg-olive-light/5 absolute top-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
-        >
+        <Reveal className="mb-16 text-center">
           <div className="mb-4 inline-block rounded-full bg-red-50 px-4 py-1 text-sm font-semibold text-red-600">
             이런 경험 있으신가요?
           </div>
@@ -65,17 +56,14 @@ export const ProblemCards = () => {
             많은 분들이 겪고 있는 요리의 어려움,
             <br className="hidden sm:block" />더 이상 혼자 고민하지 마세요
           </p>
-        </motion.div>
+        </Reveal>
 
         <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
           {PROBLEMS.map((problem, index) => (
-            <motion.div
+            <Reveal
               key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group relative"
+              delayMs={index * 100}
             >
               <div
                 className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${problem.accent} opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100`}
@@ -96,7 +84,7 @@ export const ProblemCards = () => {
                   {problem.description}
                 </p>
               </div>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
       </div>
