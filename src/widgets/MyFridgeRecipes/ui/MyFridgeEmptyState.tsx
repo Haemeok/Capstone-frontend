@@ -6,7 +6,7 @@ import { Button } from "@/shared/ui/shadcn/button";
 
 const MyFridgeEmptyState = () => {
   return (
-    <div className="flex min-h-[400px] flex-col items-center justify-center gap-5 px-6 py-12">
+    <div className="flex flex-col items-center gap-5 px-6 pt-16 pb-12">
       <Refrigerator
         className="h-20 w-20 text-gray-300"
         strokeWidth={1.5}
