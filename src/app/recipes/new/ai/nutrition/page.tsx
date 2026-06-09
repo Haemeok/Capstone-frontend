@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-import { BottomAnchorAdSlot } from "@/shared/adsense";
+import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -82,7 +82,7 @@ const NutritionRecipePage = () => {
       onRetry={retry}
     >
       <Container padding={false}>
-        <div className="mx-auto bg-[#f7f7f7] p-4 pb-24 md:pb-4">
+        <div className="mx-auto bg-[#f7f7f7] p-4 pb-24 md:pb-24">
           <div className="mb-4 flex items-center gap-2">
             <PrevButton className="text-gray-600 md:hidden" />
             <button
@@ -108,7 +108,11 @@ const NutritionRecipePage = () => {
               value={watch("targetStyle")}
               onChange={(value) => setValue("targetStyle", value)}
             />
+          </div>
 
+          <AiFormInArticleAdSlot className="mb-8" />
+
+          <div className="mb-8 space-y-8 rounded-2xl bg-white p-6 shadow-lg">
             <ModeToggle mode={mode} onModeChange={handleModeChange} />
 
             {mode === "MACRO" ? (

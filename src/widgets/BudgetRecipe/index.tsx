@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { AiFormInArticleAdSlot } from "@/shared/adsense";
 import { BUDGET_DEFAULT } from "@/shared/config/constants/budget";
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
@@ -49,7 +50,7 @@ const BudgetRecipe = () => {
       onRetry={retry}
     >
       <Container padding={false}>
-        <div className="mx-auto max-w-2xl space-y-6 p-4 pb-24 md:pb-4">
+        <div className="mx-auto max-w-2xl space-y-6 p-4 pb-24 md:pb-24">
           <div className="mb-4 flex items-center gap-2">
             <PrevButton className="text-gray-600 md:hidden" />
             <button
@@ -65,6 +66,8 @@ const BudgetRecipe = () => {
           <div className="space-y-4 rounded-2xl bg-white p-6 shadow-lg">
             <PriceSlider value={budget} onChange={setBudget} />
           </div>
+
+          <AiFormInArticleAdSlot />
 
           <div className="space-y-6 rounded-2xl bg-white p-6 shadow-lg">
             <CategorySelector

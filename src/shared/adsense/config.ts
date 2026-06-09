@@ -25,6 +25,7 @@ export const AD_SLOT_IDS = {
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_BOTTOM_ANCHOR || "",
   recipeStepInArticle:
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_STEP_INARTICLE || "",
+  aiFormInArticle: process.env.NEXT_PUBLIC_ADSENSE_SLOT_AI_FORM_INARTICLE || "",
   homeAnchor: process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_ANCHOR || "",
   homeHeaderAnchor:
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_HEADER_ANCHOR || "",

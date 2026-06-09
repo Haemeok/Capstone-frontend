@@ -5,6 +5,7 @@ import { FormProvider, useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
+import { AiFormInArticleAdSlot } from "@/shared/adsense";
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
@@ -99,7 +100,7 @@ const FineDiningRecipe = () => {
     >
       <Container padding={false}>
         <FormProvider {...methods}>
-          <div className="mx-auto max-w-2xl space-y-8 p-4 pb-24 md:pb-4">
+          <div className="mx-auto max-w-2xl space-y-8 p-4 pb-24 md:pb-24">
             <div className="mb-4 flex items-center gap-2">
               <PrevButton className="text-gray-600 md:hidden" />
               <button
@@ -114,6 +115,8 @@ const FineDiningRecipe = () => {
             <FineDiningIngredientManager
               onOpenDrawer={() => setIsDrawerOpen(true)}
             />
+
+            <AiFormInArticleAdSlot />
 
             <DifficultyTierSelector
               selected={diningTier}

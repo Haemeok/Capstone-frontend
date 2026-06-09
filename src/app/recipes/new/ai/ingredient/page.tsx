@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { BottomAnchorAdSlot } from "@/shared/adsense";
+import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
@@ -112,11 +112,15 @@ const IngredientRecipePage = () => {
 
             <form
               onSubmit={methods.handleSubmit(onSubmit)}
-              className="pb-20 md:pb-0"
+              className="pb-20 md:pb-24"
             >
               <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
                 <IngredientManager onOpenDrawer={() => setIsDrawerOpen(true)} />
+              </div>
 
+              <AiFormInArticleAdSlot className="mb-8" />
+
+              <div className="mb-8 rounded-2xl bg-white p-6 shadow-lg">
                 <div className="space-y-6">
                   <DishTypeSection />
                   <CookingTimeSection />
