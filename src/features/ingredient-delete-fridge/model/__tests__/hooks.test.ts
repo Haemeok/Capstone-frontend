@@ -10,6 +10,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
+import { RECIPE_QUERY_KEYS } from "@/entities/recipe/model/queryKeys";
 
 import * as api from "../api";
 import {
@@ -226,6 +227,76 @@ describe("useDeleteIngredientBulkMutation (fridge bulk delete — strategy A)", 
     await waitFor(() => expect(result.current.bulk.isSuccess).toBe(true));
     await waitFor(() =>
       expect(idsQueryFn.mock.calls.length).toBeGreaterThan(before)
+    );
+  });
+});
+
+describe("deleting an ingredient re-queries the my-fridge recipe list", () => {
+  const makeEmptyRecipePage = () => ({ content: [], last: true, number: 0 });
+
+  const mountRecipeListWithDelete = <T>(
+    queryClient: QueryClient,
+    recipeQueryFn: jest.Mock,
+    del: () => T
+  ) =>
+    renderHook(
+      () => {
+        const recipes = useInfiniteQuery({
+          queryKey: RECIPE_QUERY_KEYS.myFridge(undefined),
+          queryFn: recipeQueryFn,
+          initialPageParam: 0,
+          getNextPageParam: () => null,
+          staleTime: Infinity,
+        });
+        const mutation = del();
+        return { recipes, mutation };
+      },
+      { wrapper: createWrapper(queryClient) }
+    );
+
+  it("invalidates the recipe list after a single delete (regression: stale result)", async () => {
+    (api.deleteIngredient as jest.Mock).mockResolvedValue(undefined);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const recipeQueryFn = jest.fn(async () => makeEmptyRecipePage());
+
+    const { result } = mountRecipeListWithDelete(
+      queryClient,
+      recipeQueryFn,
+      () => useDeleteIngredientMutation({ category: "전체", q: "" })
+    );
+
+    await waitFor(() => expect(result.current.recipes.isSuccess).toBe(true));
+    const before = recipeQueryFn.mock.calls.length;
+
+    act(() => result.current.mutation.mutate("i1"));
+    await waitFor(() => expect(result.current.mutation.isSuccess).toBe(true));
+    await waitFor(() =>
+      expect(recipeQueryFn.mock.calls.length).toBeGreaterThan(before)
+    );
+  });
+
+  it("invalidates the recipe list after a bulk delete", async () => {
+    (api.deleteIngredientBulk as jest.Mock).mockResolvedValue(undefined);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const recipeQueryFn = jest.fn(async () => makeEmptyRecipePage());
+
+    const { result } = mountRecipeListWithDelete(
+      queryClient,
+      recipeQueryFn,
+      () => useDeleteIngredientBulkMutation()
+    );
+
+    await waitFor(() => expect(result.current.recipes.isSuccess).toBe(true));
+    const before = recipeQueryFn.mock.calls.length;
+
+    act(() => result.current.mutation.mutate(["i1"]));
+    await waitFor(() => expect(result.current.mutation.isSuccess).toBe(true));
+    await waitFor(() =>
+      expect(recipeQueryFn.mock.calls.length).toBeGreaterThan(before)
     );
   });
 });

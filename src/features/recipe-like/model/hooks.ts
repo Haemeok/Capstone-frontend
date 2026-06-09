@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import { RECIPE_QUERY_KEYS } from "@/entities/recipe/model/queryKeys";
 import {
   DetailedRecipesApiResponse,
   RecipeStatus,
@@ -38,7 +39,9 @@ export const useLikeRecipeMutation = (recipeId: string) => {
       await queryClient.cancelQueries({ queryKey: recipeStatusQueryKey });
       await queryClient.cancelQueries({ queryKey: recipesListRootKey });
       await queryClient.cancelQueries({ queryKey: ["recipes-status"] });
-      await queryClient.cancelQueries({ queryKey: ["my-fridge-recipes-v2"] });
+      await queryClient.cancelQueries({
+        queryKey: RECIPE_QUERY_KEYS.myFridgeAll,
+      });
 
       const previousRecipeStatus =
         queryClient.getQueryData<RecipeStatus>(recipeStatusQueryKey);
@@ -93,7 +96,9 @@ export const useLikeRecipeMutation = (recipeId: string) => {
         );
       }
       queryClient.invalidateQueries({ queryKey: recipesListRootKey });
-      queryClient.invalidateQueries({ queryKey: ["my-fridge-recipes-v2"] });
+      queryClient.invalidateQueries({
+        queryKey: RECIPE_QUERY_KEYS.myFridgeAll,
+      });
       console.error("좋아요 처리 실패:", error);
     },
 
