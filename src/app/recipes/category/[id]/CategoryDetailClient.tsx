@@ -79,45 +79,43 @@ const CategoryDetailClient = ({
   const totalElements = data?.pages?.[0]?.page.totalElements;
 
   return (
-    <Container>
-      <div className="bg-white">
-        <CategoryHero tagCode={tagCode} />
-        <CategoryChips currentCode={tagCode} />
+    <Container padding={false}>
+      <CategoryHero tagCode={tagCode} />
+      <CategoryChips currentCode={tagCode} />
 
-        <div className="flex items-center justify-between px-4 py-3">
-          <CategoryCount total={totalElements} />
-          <div className="flex items-center">
-            <RecipeSortButton
-              currentSort={currentSort}
-              onClick={() => setIsDrawerOpen(true)}
-            />
-            <SortPicker
-              open={isDrawerOpen}
-              onOpenChange={setIsDrawerOpen}
-              currentSort={currentSort}
-              availableSorts={availableSorts}
-              onSortChange={(newSort) =>
-                // SortPicker emits string; availableSorts are RecipeSortType
-                setSort(newSort as RecipeSortType)
-              }
-            />
-          </div>
-        </div>
-
-        {recipes && recipes.length > 0 ? (
-          <RecipeGrid
-            recipes={recipes}
-            isFetching={isFetching}
-            hasNextPage={hasNextPage}
-            observerRef={ref}
-            nextPageHref={nextPageHref}
+      <div className="flex items-center justify-between px-4 py-3">
+        <CategoryCount total={totalElements} />
+        <div className="flex items-center">
+          <RecipeSortButton
+            currentSort={currentSort}
+            onClick={() => setIsDrawerOpen(true)}
           />
-        ) : isFetching ? (
-          <RecipeGridSkeleton count={6} />
-        ) : (
-          <CategoryEmptyState tagName={tagName} />
-        )}
+          <SortPicker
+            open={isDrawerOpen}
+            onOpenChange={setIsDrawerOpen}
+            currentSort={currentSort}
+            availableSorts={availableSorts}
+            onSortChange={(newSort) =>
+              // SortPicker emits string; availableSorts are RecipeSortType
+              setSort(newSort as RecipeSortType)
+            }
+          />
+        </div>
       </div>
+
+      {recipes && recipes.length > 0 ? (
+        <RecipeGrid
+          recipes={recipes}
+          isFetching={isFetching}
+          hasNextPage={hasNextPage}
+          observerRef={ref}
+          nextPageHref={nextPageHref}
+        />
+      ) : isFetching ? (
+        <RecipeGridSkeleton count={6} />
+      ) : (
+        <CategoryEmptyState tagName={tagName} />
+      )}
     </Container>
   );
 };
