@@ -42,6 +42,101 @@ const selfBarrelGuards = ["entities", "features", "widgets"].flatMap((layer) =>
   }))
 );
 
+const fsdImportRule = {
+  meta: {
+    type: "problem",
+    docs: {
+      description:
+        "Enforce FSD layer-direction and same-layer slice isolation.",
+    },
+    schema: [
+      {
+        type: "object",
+        properties: { selfBarrel: { type: "boolean" } },
+        additionalProperties: false,
+      },
+    ],
+    messages: {
+      direction:
+        "FSD layer-direction violation: '{{from}}' must not import from higher layer '{{to}}'. Imports may only point to lower layers (shared <- entities <- features <- widgets <- app).",
+      isolation:
+        "FSD slice-isolation violation: '{{layer}}/{{fromSlice}}' must not import sibling slice '{{layer}}/{{toSlice}}'. Same-layer slices are isolated -- lift shared code to 'shared/' or compose at a higher layer.",
+      selfBarrel:
+        "FSD self-barrel import ('@/{{layer}}/{{slice}}'). Use a direct path like '@/{{layer}}/{{slice}}/model/...' instead -- self-barrels create cycles that crash Turbopack route-handler graphs.",
+    },
+  },
+  create(context) {
+    const LAYERS = ["shared", "entities", "features", "widgets", "app"];
+    const SLICED = new Set(["entities", "features", "widgets"]);
+    const reportSelfBarrel = context.options[0]?.selfBarrel ?? false;
+
+    const parseFile = (p) => {
+      const m = p
+        .replace(/\\/g, "/")
+        .match(/(?:^|\/)src\/([^/]+)(?:\/([^/]+))?/);
+      if (!m || !LAYERS.includes(m[1])) return null;
+      return { layer: m[1], slice: SLICED.has(m[1]) ? (m[2] ?? null) : null };
+    };
+    const parseImport = (s) => {
+      const m = s.match(/^@\/([^/]+)(?:\/([^/]+))?/);
+      if (!m || !LAYERS.includes(m[1])) return null;
+      return {
+        layer: m[1],
+        slice: SLICED.has(m[1]) ? (m[2] ?? null) : null,
+        bareBarrel: /^@\/[^/]+\/[^/]+$/.test(s),
+      };
+    };
+
+    const from = parseFile(context.filename ?? context.getFilename());
+    if (!from) return {};
+    const fromIdx = LAYERS.indexOf(from.layer);
+
+    const check = (node, value) => {
+      if (typeof value !== "string") return;
+      const to = parseImport(value);
+      if (!to) return;
+      const toIdx = LAYERS.indexOf(to.layer);
+      if (toIdx > fromIdx) {
+        context.report({
+          node,
+          messageId: "direction",
+          data: { from: from.layer, to: to.layer },
+        });
+        return;
+      }
+      if (
+        toIdx !== fromIdx ||
+        !SLICED.has(from.layer) ||
+        !from.slice ||
+        !to.slice
+      ) {
+        return;
+      }
+      if (to.slice !== from.slice) {
+        context.report({
+          node,
+          messageId: "isolation",
+          data: { layer: from.layer, fromSlice: from.slice, toSlice: to.slice },
+        });
+      } else if (reportSelfBarrel && to.bareBarrel) {
+        context.report({
+          node,
+          messageId: "selfBarrel",
+          data: { layer: from.layer, slice: from.slice },
+        });
+      }
+    };
+
+    return {
+      ImportDeclaration: (n) => check(n, n.source && n.source.value),
+      ExportNamedDeclaration: (n) => n.source && check(n, n.source.value),
+      ExportAllDeclaration: (n) => n.source && check(n, n.source.value),
+      ImportExpression: (n) =>
+        n.source && n.source.type === "Literal" && check(n, n.source.value),
+    };
+  },
+};
+
 const localPlugin = {
   rules: {
     "no-policy-comments": {
@@ -180,6 +275,8 @@ const localPlugin = {
   },
 };
 
+localPlugin.rules["fsd-import"] = fsdImportRule;
+
 const eslintConfig = [
   {
     ignores: [
@@ -202,6 +299,7 @@ const eslintConfig = [
     },
     rules: {
       "local/no-policy-comments": "warn",
+      "local/fsd-import": ["warn", { selfBarrel: false }],
       "simple-import-sort/imports": [
         "error",
         {
