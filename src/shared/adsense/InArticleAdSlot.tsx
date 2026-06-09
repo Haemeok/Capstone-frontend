@@ -8,13 +8,15 @@ import { AD_MIN_HEIGHT, AD_SLOT_IDS } from "./config";
 type InArticleAdSlotProps = {
   className?: string;
   index?: number;
+  slotId?: string;
 };
 
 export const InArticleAdSlot = ({
   className,
   index = 0,
+  slotId: slotIdProp,
 }: InArticleAdSlotProps) => {
-  const slotId = AD_SLOT_IDS.recipeInArticle[index];
+  const slotId = slotIdProp ?? AD_SLOT_IDS.recipeInArticle[index];
   if (!slotId) return null;
 
   return (

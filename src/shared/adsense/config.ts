@@ -23,7 +23,11 @@ export const AD_SLOT_IDS = {
   ),
   recipeBottomAnchor:
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_BOTTOM_ANCHOR || "",
+  recipeStepInArticle:
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_STEP_INARTICLE || "",
   homeAnchor: process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_ANCHOR || "",
+  homeHeaderAnchor:
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_HEADER_ANCHOR || "",
   youtubeAnchor: process.env.NEXT_PUBLIC_ADSENSE_SLOT_YOUTUBE_ANCHOR || "",
 } as const;
 
@@ -33,6 +37,7 @@ export const IS_AD_TEST_MODE = process.env.NODE_ENV !== "production";
 
 export const AD_HEIGHT = {
   homeAnchor: 50,
+  homeHeaderAnchor: 50,
   youtubeAnchor: 50,
   bottomAnchor: 70,
 } as const;
