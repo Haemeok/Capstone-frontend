@@ -106,14 +106,18 @@ export const generateRecipeMetadata = (
   const timeInfo = recipe.cookingTime ? `${recipe.cookingTime}분 소요` : "";
   const additionalInfo = [costInfo, timeInfo].filter(Boolean).join(", ");
 
+  const youtubeNarrative =
+    youtubeMetadata && recipeType !== "chef-tv-show"
+      ? youtubeMetadata
+      : undefined;
+
   const baseDescription = recipe.description
-    ? `${recipe.description}${additionalInfo ? ` (${additionalInfo})` : ""}`
+    ? `${recipe.description}${!youtubeNarrative && additionalInfo ? ` (${additionalInfo})` : ""}`
     : `${recipe.title} 레시피! AI가 제안하는 ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원 가성비 요리법을 확인하세요.`;
 
-  const defaultDescription =
-    youtubeMetadata && recipeType !== "chef-tv-show"
-      ? generateYoutubeDescription(recipe, baseDescription, youtubeMetadata)
-      : baseDescription;
+  const defaultDescription = youtubeNarrative
+    ? generateYoutubeDescription(recipe, baseDescription, youtubeNarrative)
+    : baseDescription;
 
   const dynamicKeywords: string[] = [];
 

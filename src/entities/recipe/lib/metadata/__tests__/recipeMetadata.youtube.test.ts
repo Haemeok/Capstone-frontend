@@ -595,4 +595,28 @@ describe("YouTube Recipe Metadata Generation", () => {
       expect(twitterImages[1]).toBe(recipe.youtubeThumbnailUrl);
     });
   });
+
+  describe("Description Cost/Time De-duplication", () => {
+    it("youtube 설명에서 비용·시간이 괄호로 중복 표기되지 않는다", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        totalIngredientCost: 2685,
+        cookingTime: 15,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.description).not.toContain("예상비용:"); // T-16
+      expect(meta.description).not.toContain("분 소요");
+      expect(meta.description).toContain("💰 예상 재료비:");
+      expect(meta.description).toContain("⏱️ 조리 시간: 15분");
+    });
+
+    it("비-youtube 설명은 (예상비용: …, … 소요) 괄호를 유지한다", () => {
+      const recipe = makeBaseRecipe({
+        totalIngredientCost: 8000,
+        cookingTime: 30,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.description).toContain("예상비용: 8,000원"); // T-17
+      expect(meta.description).toContain("30분 소요");
+    });
+  });
 });
