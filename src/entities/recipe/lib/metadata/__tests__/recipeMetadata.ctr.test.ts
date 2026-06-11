@@ -179,3 +179,22 @@ describe("설명문 첫 80자 (Slice C)", () => {
     expect(meta.description).toContain("김치찌개");
   });
 });
+
+describe("og:title 사이트명 분리 (Slice D)", () => {
+  it("T-20: og:title과 twitter:title에 사이트명 접미사가 없다", () => {
+    const recipe = makeYoutubeMediumRecipe();
+    const meta = generateRecipeMetadata(recipe, "test-id");
+
+    expect(meta.openGraph?.title).not.toContain("| 레시피오");
+    // Metadata.twitter.title 유니언을 문자열 단언용으로 좁힘
+    const twitterTitle = (meta.twitter as { title?: string }).title;
+    expect(twitterTitle).not.toContain("| 레시피오");
+  });
+
+  it("T-21: 브라우저 <title>은 사이트명 접미사를 유지한다", () => {
+    const recipe = makeYoutubeMediumRecipe();
+    const meta = generateRecipeMetadata(recipe, "test-id");
+
+    expect(meta.title).toContain("| 레시피오");
+  });
+});

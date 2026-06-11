@@ -212,7 +212,7 @@ export const generateRecipeMetadata = (
       canonical: fullPageUrl,
     },
     openGraph: {
-      title: defaultTitle,
+      title: pageTitle,
       description: defaultDescription,
       url: fullPageUrl,
       siteName: SEO_CONSTANTS.SITE_NAME,
@@ -222,14 +222,15 @@ export const generateRecipeMetadata = (
     },
     twitter: {
       card: SEO_CONSTANTS.TWITTER_CARD,
-      title: defaultTitle,
+      title: pageTitle,
       description: defaultDescription,
       images: twitterImages,
     },
   };
 
   if (recipeType === "chef-tv-show" && !originBracket) {
-    const chefTitle = `[셰프레시피👨‍🍳] ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
+    const chefPageTitle = `[셰프레시피👨‍🍳] ${recipe.title}`;
+    const chefTitle = `${chefPageTitle} | ${SEO_CONSTANTS.SITE_NAME}`;
     const chefDescription = recipe.description
       ? `${recipe.description} ${recipe.title} 레시피를 레시피오에서 만나보세요!`
       : `${recipe.title} 셰프 레시피를 레시피오에서 만나보세요!`;
@@ -247,12 +248,12 @@ export const generateRecipeMetadata = (
       keywords: chefKeywords,
       openGraph: {
         ...baseMetadata.openGraph,
-        title: chefTitle,
+        title: chefPageTitle,
         description: chefDescription,
       },
       twitter: {
         ...baseMetadata.twitter,
-        title: chefTitle,
+        title: chefPageTitle,
         description: chefDescription,
       },
     };
