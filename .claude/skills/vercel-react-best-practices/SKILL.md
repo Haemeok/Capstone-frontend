@@ -14,6 +14,7 @@ Comprehensive performance optimization guide for React and Next.js applications,
 ## When to Apply
 
 Reference these guidelines when:
+
 - Writing new React components or Next.js pages
 - Implementing data fetching (client or server-side)
 - Reviewing code for performance issues
@@ -22,16 +23,16 @@ Reference these guidelines when:
 
 ## Rule Categories by Priority
 
-| Priority | Category | Impact | Prefix |
-|----------|----------|--------|--------|
-| 1 | Eliminating Waterfalls | CRITICAL | `async-` |
-| 2 | Bundle Size Optimization | CRITICAL | `bundle-` |
-| 3 | Server-Side Performance | HIGH | `server-` |
-| 4 | Client-Side Data Fetching | MEDIUM-HIGH | `client-` |
-| 5 | Re-render Optimization | MEDIUM | `rerender-` |
-| 6 | Rendering Performance | MEDIUM | `rendering-` |
-| 7 | JavaScript Performance | LOW-MEDIUM | `js-` |
-| 8 | Advanced Patterns | LOW | `advanced-` |
+| Priority | Category                  | Impact      | Prefix       |
+| -------- | ------------------------- | ----------- | ------------ |
+| 1        | Eliminating Waterfalls    | CRITICAL    | `async-`     |
+| 2        | Bundle Size Optimization  | CRITICAL    | `bundle-`    |
+| 3        | Server-Side Performance   | HIGH        | `server-`    |
+| 4        | Client-Side Data Fetching | MEDIUM-HIGH | `client-`    |
+| 5        | Re-render Optimization    | MEDIUM      | `rerender-`  |
+| 6        | Rendering Performance     | MEDIUM      | `rendering-` |
+| 7        | JavaScript Performance    | LOW-MEDIUM  | `js-`        |
+| 8        | Advanced Patterns         | LOW         | `advanced-`  |
 
 ## Quick Reference
 
@@ -92,6 +93,7 @@ Reference these guidelines when:
 - `rendering-activity` - Use Activity component for show/hide
 - `rendering-conditional-render` - Use ternary, not && for conditionals
 - `rendering-framer-motion-fixed-width` - Animate Framer Motion width between fixed pixel values, not to "auto" (prevents spring jitter and first-render flicker)
+- `rendering-radix-popover-trigger-anchor` - Anchor a controlled Radix Popover to its real trigger, never an empty placeholder (prevents detached popovers and skewed flex layouts)
 
 ### 7. JavaScript Performance (LOW-MEDIUM)
 
@@ -124,6 +126,7 @@ rules/_sections.md
 ```
 
 Each rule file contains:
+
 - Brief explanation of why it matters
 - Incorrect code example with explanation
 - Correct code example with explanation
