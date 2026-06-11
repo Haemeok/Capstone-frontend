@@ -82,7 +82,29 @@ export const makeYoutubeStandardRecipe = (
     youtubeVideoTitle: "김치찌개 레시피",
     youtubeThumbnailUrl: "https://img.youtube.com/vi/test3/maxresdefault.jpg",
     youtubeChannelProfileUrl: "https://yt3.ggpht.com/profile3.jpg",
-    youtubeSubscriberCount: 5000, // 5천
+    youtubeSubscriberCount: 5000,
+    ...overrides,
+  });
+};
+
+export const makeJpRecipe = (
+  overrides?: Partial<StaticRecipe>
+): StaticRecipe => {
+  return makeYoutubeMediumRecipe({
+    creatorCountryTag: "JP",
+    youtubeChannelName: "きょうの料理",
+    title: "오야코동",
+    ...overrides,
+  });
+};
+
+export const makeOtherRecipe = (
+  overrides?: Partial<StaticRecipe>
+): StaticRecipe => {
+  return makeYoutubeMediumRecipe({
+    creatorCountryTag: "OTHER",
+    youtubeChannelName: "Spain on a Fork",
+    title: "감바스",
     ...overrides,
   });
 };

@@ -43,14 +43,24 @@ export const generateRecipeMetadata = (
     비건: "[비건🌱]",
   };
 
-  // 키워드 우선순위: 태그 → 시간 → 비용 (1개만 선택)
-  let titleBracket = "";
+  const ORIGIN_BRACKET: Record<string, string> = {
+    JP: "[🇯🇵현지레시피]",
+    OTHER: "[🌍전세계레시피]",
+  };
+  const originBracket = recipe.creatorCountryTag
+    ? (ORIGIN_BRACKET[recipe.creatorCountryTag] ?? "")
+    : "";
 
-  for (const tag of recipe.tags) {
-    const keyword = tagKeywordMap[tag];
-    if (keyword) {
-      titleBracket = keyword;
-      break;
+  let titleBracket = originBracket;
+  const suppressTime = Boolean(originBracket);
+
+  if (!titleBracket) {
+    for (const tag of recipe.tags) {
+      const keyword = tagKeywordMap[tag];
+      if (keyword) {
+        titleBracket = keyword;
+        break;
+      }
     }
   }
 
@@ -71,7 +81,10 @@ export const generateRecipeMetadata = (
     }
   }
 
-  const timeText = recipe.cookingTime > 0 ? `${recipe.cookingTime}분 완성` : "";
+  const timeText =
+    !suppressTime && recipe.cookingTime > 0
+      ? `${recipe.cookingTime}분 완성`
+      : "";
   const youtubeSource =
     youtubeMetadata && recipeType !== "chef-tv-show"
       ? `(출처: ${youtubeMetadata.channelName} 유튜브)`
@@ -194,7 +207,7 @@ export const generateRecipeMetadata = (
     },
   };
 
-  if (recipeType === "chef-tv-show") {
+  if (recipeType === "chef-tv-show" && !originBracket) {
     const chefTitle = `[셰프레시피👨‍🍳] ${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`;
     const chefDescription = recipe.description
       ? `${recipe.description} ${recipe.title} 레시피를 레시피오에서 만나보세요!`

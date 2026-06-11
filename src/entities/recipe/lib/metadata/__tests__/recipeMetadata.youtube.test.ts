@@ -4,6 +4,8 @@
 import { generateRecipeMetadata } from "../recipeMetadata";
 import {
   makeBaseRecipe,
+  makeJpRecipe,
+  makeOtherRecipe,
   makeYoutubeFamousRecipe,
   makeYoutubeMediumRecipe,
   makeYoutubeStandardRecipe,
@@ -374,6 +376,73 @@ describe("YouTube Recipe Metadata Generation", () => {
 
       expect(meta.title).not.toContain("15분컷");
       expect(meta.title).not.toContain("초간단");
+    });
+  });
+
+  describe("Origin Country Bracket", () => {
+    it("국가 태그가 JP면 제목이 [🇯🇵현지레시피]로 시작한다", () => {
+      const recipe = makeJpRecipe();
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect((meta.title as string).startsWith("[🇯🇵현지레시피]")).toBe(true); // T-01
+    });
+
+    it("JP면 태그/시간/비용 브래킷보다 origin이 우선한다", () => {
+      const recipe = makeJpRecipe({
+        tags: ["다이어트"],
+        cookingTime: 10,
+        totalIngredientCost: 3000,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("[🇯🇵현지레시피]"); // T-02
+      expect(meta.title).not.toContain("[다이어트🥗]");
+      expect(meta.title).not.toContain("15분컷");
+    });
+
+    it("JP면 셰프 조건이어도 origin이 우선한다 (국가 > 셰프)", () => {
+      const recipe = makeJpRecipe({ tags: ["셰프 레시피"] });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("[🇯🇵현지레시피]"); // T-03
+      expect(meta.title).not.toContain("[셰프레시피👨‍🍳]");
+    });
+
+    it("JP 제목에는 N분 완성 시간 표기가 없다", () => {
+      const recipe = makeJpRecipe({ cookingTime: 25 });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).not.toContain("완성"); // T-04
+    });
+
+    it("JP 제목에 출처 슬롯이 유지된다", () => {
+      const recipe = makeJpRecipe();
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("(출처: きょうの料理 유튜브)"); // T-05
+    });
+
+    it("국가 태그가 OTHER면 제목이 [🌍전세계레시피]로 시작한다", () => {
+      const recipe = makeOtherRecipe();
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect((meta.title as string).startsWith("[🌍전세계레시피]")).toBe(true); // T-06
+    });
+
+    it("OTHER 제목에는 N분 완성 시간 표기가 없다", () => {
+      const recipe = makeOtherRecipe({ cookingTime: 20 });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).not.toContain("완성"); // T-07
+    });
+
+    it("OTHER면 셰프 조건이어도 origin이 우선한다", () => {
+      const recipe = makeOtherRecipe({ tags: ["셰프 레시피"] });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("[🌍전세계레시피]"); // T-08
+      expect(meta.title).not.toContain("[셰프레시피👨‍🍳]");
+    });
+
+    it("origin 레시피라도 keywords에 origin 검색어를 추가하지 않는다", () => {
+      const recipe = makeJpRecipe();
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      const keywords = meta.keywords as string[];
+      expect(keywords).not.toContain("일본 가정식"); // T-29
+      expect(keywords).not.toContain("전세계 레시피");
+      expect(keywords).not.toContain("해외 레시피");
     });
   });
 
