@@ -446,6 +446,63 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
   });
 
+  describe("Title Time De-duplication", () => {
+    it("15분컷 브래킷이면 N분 완성이 제거된다 (cookingTime=15)", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        tags: ["한식"],
+        cookingTime: 15,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("[15분컷⏱️]"); // T-09
+      expect(meta.title).not.toContain("완성");
+    });
+
+    it("15분컷 브래킷이면 N분 완성이 제거된다 (cookingTime<15)", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        tags: ["한식"],
+        cookingTime: 10,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("[15분컷⏱️]"); // T-10
+      expect(meta.title).not.toContain("완성");
+    });
+
+    it("초간단 브래킷이면 N분 완성이 유지된다", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        tags: ["한식"],
+        cookingTime: 25,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("[초간단⚡]"); // T-11
+      expect(meta.title).toContain("25분 완성");
+    });
+
+    it("비용 브래킷이면 N분 완성이 유지된다", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        tags: ["한식"],
+        cookingTime: 45,
+        totalIngredientCost: 3000,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("[3천원💰]"); // T-12
+      expect(meta.title).toContain("45분 완성");
+    });
+
+    it("KR/국가 없음이면 origin 브래킷이 나타나지 않는다", () => {
+      const recipe = makeYoutubeFamousRecipe({ tags: ["다이어트"] });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).not.toContain("[🇯🇵"); // T-27
+      expect(meta.title).not.toContain("[🌍");
+      expect(meta.title).toContain("[다이어트🥗]");
+    });
+
+    it("KR + 셰프 조건이면 셰프 타이틀이 유지된다", () => {
+      const recipe = makeYoutubeFamousRecipe({ tags: ["셰프 레시피"] });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.title).toContain("[셰프레시피👨‍🍳]"); // T-28
+    });
+  });
+
   describe("Canonical URL", () => {
     it("올바른 canonical URL이 생성된다", () => {
       const recipe = makeYoutubeFamousRecipe();

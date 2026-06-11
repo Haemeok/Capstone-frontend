@@ -52,7 +52,7 @@ export const generateRecipeMetadata = (
     : "";
 
   let titleBracket = originBracket;
-  const suppressTime = Boolean(originBracket);
+  let suppressTime = Boolean(originBracket);
 
   if (!titleBracket) {
     for (const tag of recipe.tags) {
@@ -67,6 +67,7 @@ export const generateRecipeMetadata = (
   if (!titleBracket) {
     if (recipe.cookingTime <= QUICK_RECIPE_TIME) {
       titleBracket = "[15분컷⏱️]";
+      suppressTime = true;
     } else if (recipe.cookingTime <= EASY_RECIPE_TIME) {
       titleBracket = "[초간단⚡]";
     }
