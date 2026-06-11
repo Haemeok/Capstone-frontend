@@ -29,6 +29,7 @@ export const generateRecipeMetadata = (
   const AFFORDABLE_THRESHOLD = 10000;
   const QUICK_RECIPE_TIME = 15;
   const EASY_RECIPE_TIME = 30;
+  const MIN_COST_BRACKET = 1000;
 
   const tagKeywordMap: Record<string, string> = {
     다이어트: "[다이어트🥗]",
@@ -51,8 +52,13 @@ export const generateRecipeMetadata = (
     ? (ORIGIN_BRACKET[recipe.creatorCountryTag] ?? "")
     : "";
 
+  const titleHasOwnTime = /\d+\s*분/.test(recipe.title);
+
   let titleBracket = originBracket;
-  let suppressTime = Boolean(originBracket);
+  let suppressTime =
+    Boolean(originBracket) ||
+    titleHasOwnTime ||
+    recipe.cookingTime > EASY_RECIPE_TIME;
 
   if (!titleBracket) {
     for (const tag of recipe.tags) {
@@ -64,7 +70,7 @@ export const generateRecipeMetadata = (
     }
   }
 
-  if (!titleBracket) {
+  if (!titleBracket && !titleHasOwnTime) {
     if (recipe.cookingTime <= QUICK_RECIPE_TIME) {
       titleBracket = "[15분컷⏱️]";
       suppressTime = true;
@@ -73,11 +79,11 @@ export const generateRecipeMetadata = (
     }
   }
 
-  if (!titleBracket && recipe.totalIngredientCost > 0) {
-    if (recipe.totalIngredientCost <= BUDGET_FRIENDLY_THRESHOLD) {
+  if (!titleBracket && recipe.totalIngredientCost >= MIN_COST_BRACKET) {
+    if (recipe.totalIngredientCost < AFFORDABLE_THRESHOLD) {
       const thousandWon = Math.floor(recipe.totalIngredientCost / 1000);
       titleBracket = `[${thousandWon}천원💰]`;
-    } else if (recipe.totalIngredientCost <= AFFORDABLE_THRESHOLD) {
+    } else if (recipe.totalIngredientCost === AFFORDABLE_THRESHOLD) {
       titleBracket = "[만원💰]";
     }
   }
@@ -86,19 +92,11 @@ export const generateRecipeMetadata = (
     !suppressTime && recipe.cookingTime > 0
       ? `${recipe.cookingTime}분 완성`
       : "";
-  const youtubeSource =
-    youtubeMetadata && recipeType !== "chef-tv-show"
-      ? `(출처: ${youtubeMetadata.channelName} 유튜브)`
-      : "";
 
-  const titleParts = [
-    titleBracket,
-    recipe.title,
-    timeText,
-    youtubeSource,
-  ].filter(Boolean);
-
-  const defaultTitle = `${titleParts.join(" ")} | ${SEO_CONSTANTS.SITE_NAME}`;
+  const pageTitle = [titleBracket, recipe.title, timeText]
+    .filter(Boolean)
+    .join(" ");
+  const defaultTitle = `${pageTitle} | ${SEO_CONSTANTS.SITE_NAME}`;
 
   const costInfo = recipe.totalIngredientCost
     ? `예상비용: ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원`

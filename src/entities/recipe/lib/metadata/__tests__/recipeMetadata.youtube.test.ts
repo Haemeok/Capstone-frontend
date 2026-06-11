@@ -13,13 +13,12 @@ import {
 
 describe("YouTube Recipe Metadata Generation", () => {
   describe("YouTube Famous (>10만 subscribers)", () => {
-    it("제목에 (출처: 채널명 유튜브) 형태로 포함된다", () => {
+    it("제목에 출처 괄호가 포함되지 않는다", () => {
       const recipe = makeYoutubeFamousRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.title).toContain("(출처: 백종원 유튜브)");
+      expect(meta.title).not.toContain("출처:");
       expect(meta.title).toContain("김치찌개");
-      expect(meta.title).not.toContain("[백종원");
     });
 
     it("설명에 구독자 수와 채널 정보가 포함된다", () => {
@@ -89,13 +88,12 @@ describe("YouTube Recipe Metadata Generation", () => {
   });
 
   describe("YouTube Medium (1만~10만 subscribers)", () => {
-    it("제목에 (출처: 채널명 유튜브) 형태로 포함된다", () => {
+    it("제목에 출처 괄호가 포함되지 않는다", () => {
       const recipe = makeYoutubeMediumRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.title).toContain("(출처: 요리왕비룡 유튜브)");
+      expect(meta.title).not.toContain("출처:");
       expect(meta.title).not.toContain("[요리왕비룡]");
-      expect(meta.title).not.toContain("[유튜브 레시피]");
     });
 
     it("설명에 채널 정보가 포함된다", () => {
@@ -129,13 +127,12 @@ describe("YouTube Recipe Metadata Generation", () => {
   });
 
   describe("YouTube Standard (<1만 subscribers)", () => {
-    it("제목에 (출처: 채널명 유튜브) 형태로 포함된다", () => {
+    it("제목에 출처 괄호가 포함되지 않는다", () => {
       const recipe = makeYoutubeStandardRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.title).toContain("(출처: 집밥요정 유튜브)");
+      expect(meta.title).not.toContain("출처:");
       expect(meta.title).toContain("김치찌개");
-      expect(meta.title).not.toContain("[집밥요정]");
     });
 
     it("설명에 채널 이름만 포함된다", () => {
@@ -330,15 +327,16 @@ describe("YouTube Recipe Metadata Generation", () => {
       expect(meta.title).toContain("[3천원💰]");
     });
 
-    it("태그/시간 키워드 없고 재료비 5천~1만원이면 만원 키워드가 제목에 포함된다", () => {
+    it("태그/시간 키워드 없고 재료비 5천~1만원 미만이면 실액 천원 단위가 제목에 포함된다", () => {
       const recipe = makeYoutubeFamousRecipe({
         tags: ["한식"],
         cookingTime: 45,
-        totalIngredientCost: 7000,
+        totalIngredientCost: 6800,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.title).toContain("[만원💰]");
+      expect(meta.title).toContain("[6천원💰]");
+      expect(meta.title).not.toContain("[만원💰]");
     });
 
     it("재료비 1만원 초과면 비용 키워드가 제목에 포함되지 않는다", () => {
@@ -420,10 +418,10 @@ describe("YouTube Recipe Metadata Generation", () => {
       expect(meta.title).not.toContain("완성");
     });
 
-    it("JP 제목에 출처 슬롯이 유지된다", () => {
+    it("JP 제목에도 출처 괄호가 없다", () => {
       const recipe = makeJpRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("(출처: きょうの料理 유튜브)");
+      expect(meta.title).not.toContain("출처:");
     });
 
     it("국가 태그가 OTHER면 제목이 [🌍전세계레시피]로 시작한다", () => {
@@ -486,7 +484,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       expect(meta.title).toContain("25분 완성");
     });
 
-    it("비용 브래킷이면 N분 완성이 유지된다", () => {
+    it("비용 브래킷이어도 30분 초과면 N분 완성이 붙지 않는다", () => {
       const recipe = makeYoutubeFamousRecipe({
         tags: ["한식"],
         cookingTime: 45,
@@ -494,7 +492,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
       expect(meta.title).toContain("[3천원💰]");
-      expect(meta.title).toContain("45분 완성");
+      expect(meta.title).not.toContain("45분 완성");
     });
 
     it("KR/국가 없음이면 origin 브래킷이 나타나지 않는다", () => {
