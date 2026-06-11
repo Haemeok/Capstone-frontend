@@ -125,7 +125,9 @@ export const generateRecipeMetadata = (
 
   const baseDescription = recipe.description
     ? `${recipe.description}${!youtubeNarrative && additionalInfo ? ` (${additionalInfo})` : ""}`
-    : `${recipe.title} 레시피! AI가 제안하는 ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원 가성비 요리법을 확인하세요.`;
+    : recipe.totalIngredientCost > 0
+      ? `${recipe.title} 레시피! AI가 제안하는 ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원 가성비 요리법을 확인하세요.`
+      : `${recipe.title} 레시피! 재료와 조리 순서를 한눈에 확인하세요.`;
 
   const defaultDescription = youtubeNarrative
     ? generateYoutubeDescription(recipe, baseDescription, youtubeNarrative)

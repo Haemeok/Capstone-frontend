@@ -59,15 +59,23 @@ export const generateYoutubeDescription = (
 
   let channelContext = "";
   if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MILLION) {
-    channelContext = `구독자 ${formatSubscriberCount(subscriberCount)}의 ${youtubeMetadata.channelName}이(가) 공개한 ${recipe.title} 레시피를 레시피오에서 만나보세요!`;
+    channelContext = `구독자 ${formatSubscriberCount(subscriberCount)} ${youtubeMetadata.channelName}의 ${recipe.title} 레시피`;
   } else if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.FAMOUS) {
-    channelContext = `인기 유튜버 ${youtubeMetadata.channelName}의 ${recipe.title} 레시피를 레시피오에서 만나보세요!`;
+    channelContext = `인기 유튜버 ${youtubeMetadata.channelName}의 ${recipe.title} 레시피`;
   } else {
-    channelContext = `${youtubeMetadata.channelName} 채널의 ${recipe.title} 레시피를 레시피오에서 만나보세요!`;
+    channelContext = `${youtubeMetadata.channelName} 채널의 ${recipe.title} 레시피`;
   }
 
-  const valueProposition =
-    "원본 영상의 핵심 내용을 정리하여 재료비용과 영양정보를 추가했습니다.";
+  const savings = recipe.marketPrice - recipe.totalIngredientCost;
+  let costHook = "";
+  if (recipe.totalIngredientCost > 0) {
+    costHook =
+      savings > 0
+        ? ` — 재료비 ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원, 시장가 대비 ${savings.toLocaleString("ko-KR")}원 절약`
+        : ` — 재료비 ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원`;
+  }
+
+  const lead = `${channelContext}${costHook}.`;
 
   const details: string[] = [];
 
@@ -82,7 +90,6 @@ export const generateYoutubeDescription = (
   }
 
   if (recipe.totalIngredientCost > 0) {
-    const savings = recipe.marketPrice - recipe.totalIngredientCost;
     if (savings > 0) {
       details.push(
         `💰 예상 재료비: ${recipe.totalIngredientCost.toLocaleString("ko-KR")}원 (시장가 대비 ${savings.toLocaleString("ko-KR")}원 절약)`
@@ -115,7 +122,7 @@ export const generateYoutubeDescription = (
 
   const detailsSection = details.length > 0 ? `\n\n${details.join("\n")}` : "";
 
-  return `${channelContext} ${valueProposition}\n\n${baseDescription}${detailsSection}`;
+  return `${lead}\n\n${baseDescription}${detailsSection}`;
 };
 
 export const generateYoutubeKeywords = (

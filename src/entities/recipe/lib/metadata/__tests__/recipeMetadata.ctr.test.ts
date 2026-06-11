@@ -128,3 +128,54 @@ describe("FAMOUS 채널명 제목 (Slice B)", () => {
     expect((meta.title as string).startsWith("[🇯🇵현지레시피]")).toBe(true);
   });
 });
+
+describe("설명문 첫 80자 (Slice C)", () => {
+  it("T-15: 첫 80자 안에 재료비·절약액 숫자가 등장한다", () => {
+    const recipe = makeYoutubeMediumRecipe({
+      youtubeChannelName: "오인스 saedek_oins",
+      title: "고기집 스타일 5분 완성 된장찌개",
+      totalIngredientCost: 4345,
+      marketPrice: 9000,
+    });
+    const meta = generateRecipeMetadata(recipe, "test-id");
+
+    const head = (meta.description as string).slice(0, 80);
+    expect(head).toContain("4,345원");
+    expect(head).toContain("4,655원 절약");
+  });
+
+  it("T-16: 레시피 원문 설명이 유지되고 서비스 보일러플레이트는 제거된다", () => {
+    const recipe = makeYoutubeMediumRecipe({
+      description: "고기집에서 먹던 그 맛 그대로 감칠맛을 극대화한 레시피",
+    });
+    const meta = generateRecipeMetadata(recipe, "test-id");
+
+    expect(meta.description).toContain(
+      "고기집에서 먹던 그 맛 그대로 감칠맛을 극대화한 레시피"
+    );
+    expect(meta.description).not.toContain("원본 영상의 핵심 내용을 정리");
+    expect(meta.description).not.toContain("만나보세요");
+  });
+
+  it("T-17: 어떤 구독자 구간에서도 이(가) 조사 병기가 노출되지 않는다", () => {
+    for (const subscriberCount of [1500000, 150000, 5000]) {
+      const recipe = makeYoutubeFamousRecipe({
+        youtubeSubscriberCount: subscriberCount,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.description).not.toContain("이(가)");
+    }
+  });
+
+  it("T-18: 설명 없음 + 재료비 0이면 0원 문구가 나가지 않는다", () => {
+    const recipe = makeBaseRecipe({
+      description: "",
+      totalIngredientCost: 0,
+      marketPrice: 0,
+    });
+    const meta = generateRecipeMetadata(recipe, "test-id");
+
+    expect(meta.description).not.toContain("0원");
+    expect(meta.description).toContain("김치찌개");
+  });
+});

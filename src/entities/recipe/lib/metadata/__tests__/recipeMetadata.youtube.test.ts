@@ -27,7 +27,7 @@ describe("YouTube Recipe Metadata Generation", () => {
 
       expect(meta.description).toContain("구독자 150만명");
       expect(meta.description).toContain("백종원");
-      expect(meta.description).toContain("원본 영상의 핵심 내용을 정리");
+      expect(meta.description).not.toContain("원본 영상의 핵심 내용을 정리");
     });
 
     it("YouTube 관련 키워드가 추가된다", () => {
