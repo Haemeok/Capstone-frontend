@@ -26,7 +26,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       const recipe = makeYoutubeFamousRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
 
-      expect(meta.description).toContain("구독자 1.5만명");
+      expect(meta.description).toContain("구독자 150만명");
       expect(meta.description).toContain("백종원");
       expect(meta.description).toContain("원본 영상의 핵심 내용을 정리");
     });
@@ -76,6 +76,15 @@ describe("YouTube Recipe Metadata Generation", () => {
       expect(keywords).toContain("유명 셰프");
       expect(keywords).toContain("인기 유튜버");
       expect(keywords).toContain("백만 유튜버");
+    });
+
+    it("구독자 100만 채널 설명에 100만명으로 표기된다", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        youtubeSubscriberCount: 1_000_000,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.description).toContain("구독자 100만명"); // T-26
+      expect(meta.description).not.toContain("구독자 1만명");
     });
   });
 

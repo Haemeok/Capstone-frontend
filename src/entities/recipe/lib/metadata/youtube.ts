@@ -1,6 +1,6 @@
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
-import { SEO_CONSTANTS, YOUTUBE_SEO } from "./constants";
+import { SEO_CONSTANTS } from "./constants";
 import { toIso8601 } from "./dateTime";
 
 export type YoutubeMetadata = {
@@ -28,10 +28,7 @@ export const extractYoutubeMetadata = (
 };
 
 export const formatSubscriberCount = (count: number): string => {
-  if (count >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MILLION) {
-    const millions = Math.floor(count / 10000) / 100;
-    return `${millions}만명`;
-  } else if (count >= 10000) {
+  if (count >= 10000) {
     const tenThousands = Math.floor(count / 10000);
     return `${tenThousands}만명`;
   } else if (count >= 1000) {
