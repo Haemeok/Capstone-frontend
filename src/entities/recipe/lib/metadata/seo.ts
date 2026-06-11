@@ -16,6 +16,13 @@ export type ImageSelection = {
   secondary?: string;
 };
 
+export const normalizeChannelName = (channelName: string): string | null => {
+  const koreanTokens = channelName
+    .split(/\s+/)
+    .filter((token) => /[가-힣]/.test(token));
+  return koreanTokens.length > 0 ? koreanTokens.join(" ") : null;
+};
+
 export const determineRecipeType = (
   recipe: StaticRecipe,
   youtubeMetadata?: YoutubeMetadata

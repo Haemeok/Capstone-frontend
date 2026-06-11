@@ -10,6 +10,7 @@ import {
   determineRecipeType,
   generateYoutubeDescription,
   generateYoutubeKeywords,
+  normalizeChannelName,
   selectOptimalImages,
 } from "./seo";
 import { extractYoutubeMetadata } from "./youtube";
@@ -93,9 +94,22 @@ export const generateRecipeMetadata = (
       ? `${recipe.cookingTime}분 완성`
       : "";
 
-  const pageTitle = [titleBracket, recipe.title, timeText]
-    .filter(Boolean)
-    .join(" ");
+  const TITLE_BUDGET = 25;
+  const normalizedChannel =
+    recipeType === "youtube-famous" && youtubeMetadata
+      ? normalizeChannelName(youtubeMetadata.channelName)
+      : null;
+  const channelPrefixedTitle = normalizedChannel
+    ? `${normalizedChannel} ${recipe.title}`
+    : null;
+  const useChannelTitle =
+    !originBracket &&
+    channelPrefixedTitle !== null &&
+    channelPrefixedTitle.length <= TITLE_BUDGET;
+
+  const pageTitle = useChannelTitle
+    ? channelPrefixedTitle
+    : [titleBracket, recipe.title, timeText].filter(Boolean).join(" ");
   const defaultTitle = `${pageTitle} | ${SEO_CONSTANTS.SITE_NAME}`;
 
   const costInfo = recipe.totalIngredientCost

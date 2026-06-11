@@ -155,7 +155,7 @@ describe("YouTube Recipe Metadata Generation", () => {
 
   describe("Title Format", () => {
     it("대괄호는 최대 1개만 포함된다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식", "찌개", "다이어트"],
         cookingTime: 10,
         totalIngredientCost: 3000,
@@ -168,7 +168,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("키워드 우선순위: 태그 > 시간 > 비용", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식", "찌개", "다이어트"],
         cookingTime: 10,
         totalIngredientCost: 3000,
@@ -181,7 +181,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("태그 없으면 시간 키워드가 사용된다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식", "찌개"],
         cookingTime: 10,
         totalIngredientCost: 3000,
@@ -192,20 +192,12 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("조리시간이 포함되면 N분 완성 텍스트가 표시된다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         cookingTime: 30,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
 
       expect(meta.title).toContain("30분 완성");
-    });
-
-    it("채널명이 대괄호로 감싸지지 않는다", () => {
-      const recipe = makeYoutubeFamousRecipe();
-      const meta = generateRecipeMetadata(recipe, "test-id");
-
-      expect(meta.title).not.toContain("[백종원");
-      expect(meta.title).not.toContain("백종원]");
     });
   });
 
@@ -317,7 +309,7 @@ describe("YouTube Recipe Metadata Generation", () => {
 
   describe("Cost-based Title Keywords", () => {
     it("태그/시간 키워드 없고 재료비 5천원 이하면 비용 키워드가 제목에 포함된다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 45,
         totalIngredientCost: 3000,
@@ -328,7 +320,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("태그/시간 키워드 없고 재료비 5천~1만원 미만이면 실액 천원 단위가 제목에 포함된다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 45,
         totalIngredientCost: 6800,
@@ -340,7 +332,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("재료비 1만원 초과면 비용 키워드가 제목에 포함되지 않는다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 45,
         totalIngredientCost: 15000,
@@ -354,7 +346,7 @@ describe("YouTube Recipe Metadata Generation", () => {
 
   describe("Time-based Title Keywords", () => {
     it("태그 없고 조리시간 15분 이하면 시간 키워드가 제목에 포함된다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 10,
       });
@@ -364,7 +356,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("태그 없고 조리시간 16~30분이면 초간단 키워드가 제목에 포함된다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 25,
       });
@@ -374,7 +366,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("조리시간 30분 초과면 시간 키워드가 제목에 포함되지 않는다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 45,
         totalIngredientCost: 15000,
@@ -455,7 +447,7 @@ describe("YouTube Recipe Metadata Generation", () => {
 
   describe("Title Time De-duplication", () => {
     it("15분컷 브래킷이면 N분 완성이 제거된다 (cookingTime=15)", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 15,
       });
@@ -465,7 +457,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("15분컷 브래킷이면 N분 완성이 제거된다 (cookingTime<15)", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 10,
       });
@@ -475,7 +467,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("초간단 브래킷이면 N분 완성이 유지된다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 25,
       });
@@ -485,7 +477,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("비용 브래킷이어도 30분 초과면 N분 완성이 붙지 않는다", () => {
-      const recipe = makeYoutubeFamousRecipe({
+      const recipe = makeYoutubeMediumRecipe({
         tags: ["한식"],
         cookingTime: 45,
         totalIngredientCost: 3000,
@@ -496,7 +488,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
 
     it("KR/국가 없음이면 origin 브래킷이 나타나지 않는다", () => {
-      const recipe = makeYoutubeFamousRecipe({ tags: ["다이어트"] });
+      const recipe = makeYoutubeMediumRecipe({ tags: ["다이어트"] });
       const meta = generateRecipeMetadata(recipe, "test-id");
       expect(meta.title).not.toContain("[🇯🇵");
       expect(meta.title).not.toContain("[🌍");
