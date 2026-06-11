@@ -71,6 +71,7 @@ const SortPicker = ({
   onSortChange,
   header = "정렬 방식 선택",
   description,
+  triggerButton,
 }: SortPickerProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -81,33 +82,34 @@ const SortPicker = ({
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="flex w-full flex-col">
-          <DrawerHeader className="text-left">
-            <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
-            {description && (
-              <DrawerDescription className="text-md text-gray-500">
-                {description}
-              </DrawerDescription>
-            )}
-          </DrawerHeader>
-          <div className="p-4 pb-6">
-            <SelectionContent
-              currentSort={currentSort}
-              availableSorts={availableSorts}
-              onValueChange={handleRadioChange}
-            />
-          </div>
-        </DrawerContent>
-      </Drawer>
+      <>
+        {triggerButton}
+        <Drawer open={open} onOpenChange={onOpenChange}>
+          <DrawerContent className="flex w-full flex-col">
+            <DrawerHeader className="text-left">
+              <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
+              {description && (
+                <DrawerDescription className="text-md text-gray-500">
+                  {description}
+                </DrawerDescription>
+              )}
+            </DrawerHeader>
+            <div className="p-4 pb-6">
+              <SelectionContent
+                currentSort={currentSort}
+                availableSorts={availableSorts}
+                onValueChange={handleRadioChange}
+              />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </>
     );
   }
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverTrigger asChild>
-        <div className=""></div>
-      </PopoverTrigger>
+      <PopoverTrigger asChild>{triggerButton ?? <div></div>}</PopoverTrigger>
 
       <PopoverContent className="w-48 p-4" align="end" sideOffset={20}>
         <SelectionContent
