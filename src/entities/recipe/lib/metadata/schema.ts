@@ -85,6 +85,14 @@ export const createRecipeStructuredData = (
         name: recipe.author?.nickname || SEO_CONSTANTS.SITE_NAME,
       };
 
+  const CUISINE_BY_COUNTRY: Record<string, string> = {
+    KR: "Korean",
+    JP: "Japanese",
+  };
+  const recipeCuisine = recipe.creatorCountryTag
+    ? CUISINE_BY_COUNTRY[recipe.creatorCountryTag]
+    : "Korean";
+
   return {
     "@type": "Recipe",
     name: recipe.title,
@@ -145,7 +153,7 @@ export const createRecipeStructuredData = (
       },
     }),
     recipeCategory: recipe.dishType,
-    recipeCuisine: "Korean",
+    ...(recipeCuisine && { recipeCuisine }),
     keywords: recipe.tags?.join(", ") || "",
     ...(videoObject && { video: videoObject }),
     ...(youtubeMetadata &&
