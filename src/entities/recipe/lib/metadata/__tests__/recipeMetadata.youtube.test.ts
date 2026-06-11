@@ -619,4 +619,26 @@ describe("YouTube Recipe Metadata Generation", () => {
       expect(meta.description).toContain("30분 소요");
     });
   });
+
+  describe("Cost Keyword Guard", () => {
+    it("재료비 0원이면 비용 키워드가 keywords에 없다", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        totalIngredientCost: 0,
+        tags: ["한식"],
+        cookingTime: 45,
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      const keywords = meta.keywords as string[];
+      expect(keywords).not.toContain("가성비요리"); // T-21
+      expect(keywords).not.toContain("3000원요리");
+      expect(keywords).not.toContain("만원요리");
+      expect(keywords).not.toContain("알뜰요리");
+    });
+
+    it("재료비 3000원이면 가성비 키워드가 포함된다", () => {
+      const recipe = makeYoutubeFamousRecipe({ totalIngredientCost: 3000 });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.keywords as string[]).toContain("가성비요리"); // T-22
+    });
+  });
 });

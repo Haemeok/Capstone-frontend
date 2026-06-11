@@ -121,10 +121,12 @@ export const generateRecipeMetadata = (
 
   const dynamicKeywords: string[] = [];
 
-  if (recipe.totalIngredientCost <= BUDGET_FRIENDLY_THRESHOLD) {
-    dynamicKeywords.push("가성비요리", "저렴한요리", "3000원요리");
-  } else if (recipe.totalIngredientCost <= AFFORDABLE_THRESHOLD) {
-    dynamicKeywords.push("만원요리", "알뜰요리");
+  if (recipe.totalIngredientCost > 0) {
+    if (recipe.totalIngredientCost <= BUDGET_FRIENDLY_THRESHOLD) {
+      dynamicKeywords.push("가성비요리", "저렴한요리", "3000원요리");
+    } else if (recipe.totalIngredientCost <= AFFORDABLE_THRESHOLD) {
+      dynamicKeywords.push("만원요리", "알뜰요리");
+    }
   }
 
   if (recipe.cookingTime <= QUICK_RECIPE_TIME) {
