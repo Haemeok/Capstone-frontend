@@ -92,7 +92,18 @@ export const generateYoutubeDescription = (
   }
 
   if (recipe.totalCalories) {
-    details.push(`🍽️ 1인분 기준: 칼로리 ${recipe.totalCalories}kcal`);
+    const nutritionParts = [`칼로리 ${recipe.totalCalories}kcal`];
+    const nutrition = recipe.nutrition;
+    if (nutrition?.carbohydrate) {
+      nutritionParts.push(`탄수화물 ${nutrition.carbohydrate}g`);
+    }
+    if (nutrition?.protein) {
+      nutritionParts.push(`단백질 ${nutrition.protein}g`);
+    }
+    if (nutrition?.fat) {
+      nutritionParts.push(`지방 ${nutrition.fat}g`);
+    }
+    details.push(`🍽️ 1인분 기준: ${nutritionParts.join(" · ")}`);
   }
 
   const detailsSection = details.length > 0 ? `\n\n${details.join("\n")}` : "";

@@ -512,6 +512,55 @@ describe("YouTube Recipe Metadata Generation", () => {
     });
   });
 
+  describe("Nutrition Line", () => {
+    it("youtube 설명에 칼로리와 매크로(탄·단·지)가 표시된다", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        totalCalories: 590,
+        nutrition: {
+          protein: 18,
+          carbohydrate: 62,
+          fat: 12,
+          sugar: 5,
+          sodium: 800,
+        },
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.description).toContain("칼로리 590kcal"); // T-13
+      expect(meta.description).toContain("탄수화물 62g");
+      expect(meta.description).toContain("단백질 18g");
+      expect(meta.description).toContain("지방 12g");
+    });
+
+    it("값이 0인 매크로는 라인에서 생략된다", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        totalCalories: 590,
+        nutrition: {
+          protein: 18,
+          carbohydrate: 0,
+          fat: 12,
+          sugar: 0,
+          sodium: 0,
+        },
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.description).not.toContain("탄수화물"); // T-14
+      expect(meta.description).toContain("단백질 18g");
+      expect(meta.description).toContain("지방 12g");
+    });
+
+    it("매크로가 모두 0이면 칼로리만 표시된다", () => {
+      const recipe = makeYoutubeFamousRecipe({
+        totalCalories: 590,
+        nutrition: { protein: 0, carbohydrate: 0, fat: 0, sugar: 0, sodium: 0 },
+      });
+      const meta = generateRecipeMetadata(recipe, "test-id");
+      expect(meta.description).toContain("칼로리 590kcal"); // T-15
+      expect(meta.description).not.toContain("탄수화물");
+      expect(meta.description).not.toContain("단백질");
+      expect(meta.description).not.toContain("지방");
+    });
+  });
+
   describe("Canonical URL", () => {
     it("올바른 canonical URL이 생성된다", () => {
       const recipe = makeYoutubeFamousRecipe();
