@@ -78,6 +78,7 @@ const RecipeInteractionButtons = ({
         recipeId={recipeId}
         initialIsFavorite={initialIsFavorite}
         buttonClassName="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
+        defaultColorClass="text-dark"
         selectedColorClass="fill-dark text-dark"
         label="저장"
       />
