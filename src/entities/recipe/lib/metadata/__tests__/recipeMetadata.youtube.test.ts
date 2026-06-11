@@ -83,7 +83,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         youtubeSubscriberCount: 1_000_000,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.description).toContain("구독자 100만명"); // T-26
+      expect(meta.description).toContain("구독자 100만명");
       expect(meta.description).not.toContain("구독자 1만명");
     });
   });
@@ -392,7 +392,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     it("국가 태그가 JP면 제목이 [🇯🇵현지레시피]로 시작한다", () => {
       const recipe = makeJpRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect((meta.title as string).startsWith("[🇯🇵현지레시피]")).toBe(true); // T-01
+      expect((meta.title as string).startsWith("[🇯🇵현지레시피]")).toBe(true);
     });
 
     it("JP면 태그/시간/비용 브래킷보다 origin이 우선한다", () => {
@@ -402,7 +402,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         totalIngredientCost: 3000,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("[🇯🇵현지레시피]"); // T-02
+      expect(meta.title).toContain("[🇯🇵현지레시피]");
       expect(meta.title).not.toContain("[다이어트🥗]");
       expect(meta.title).not.toContain("15분컷");
     });
@@ -410,38 +410,38 @@ describe("YouTube Recipe Metadata Generation", () => {
     it("JP면 셰프 조건이어도 origin이 우선한다 (국가 > 셰프)", () => {
       const recipe = makeJpRecipe({ tags: ["셰프 레시피"] });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("[🇯🇵현지레시피]"); // T-03
+      expect(meta.title).toContain("[🇯🇵현지레시피]");
       expect(meta.title).not.toContain("[셰프레시피👨‍🍳]");
     });
 
     it("JP 제목에는 N분 완성 시간 표기가 없다", () => {
       const recipe = makeJpRecipe({ cookingTime: 25 });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).not.toContain("완성"); // T-04
+      expect(meta.title).not.toContain("완성");
     });
 
     it("JP 제목에 출처 슬롯이 유지된다", () => {
       const recipe = makeJpRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("(출처: きょうの料理 유튜브)"); // T-05
+      expect(meta.title).toContain("(출처: きょうの料理 유튜브)");
     });
 
     it("국가 태그가 OTHER면 제목이 [🌍전세계레시피]로 시작한다", () => {
       const recipe = makeOtherRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect((meta.title as string).startsWith("[🌍전세계레시피]")).toBe(true); // T-06
+      expect((meta.title as string).startsWith("[🌍전세계레시피]")).toBe(true);
     });
 
     it("OTHER 제목에는 N분 완성 시간 표기가 없다", () => {
       const recipe = makeOtherRecipe({ cookingTime: 20 });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).not.toContain("완성"); // T-07
+      expect(meta.title).not.toContain("완성");
     });
 
     it("OTHER면 셰프 조건이어도 origin이 우선한다", () => {
       const recipe = makeOtherRecipe({ tags: ["셰프 레시피"] });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("[🌍전세계레시피]"); // T-08
+      expect(meta.title).toContain("[🌍전세계레시피]");
       expect(meta.title).not.toContain("[셰프레시피👨‍🍳]");
     });
 
@@ -449,7 +449,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       const recipe = makeJpRecipe();
       const meta = generateRecipeMetadata(recipe, "test-id");
       const keywords = meta.keywords as string[];
-      expect(keywords).not.toContain("일본 가정식"); // T-29
+      expect(keywords).not.toContain("일본 가정식");
       expect(keywords).not.toContain("전세계 레시피");
       expect(keywords).not.toContain("해외 레시피");
     });
@@ -462,7 +462,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         cookingTime: 15,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("[15분컷⏱️]"); // T-09
+      expect(meta.title).toContain("[15분컷⏱️]");
       expect(meta.title).not.toContain("완성");
     });
 
@@ -472,7 +472,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         cookingTime: 10,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("[15분컷⏱️]"); // T-10
+      expect(meta.title).toContain("[15분컷⏱️]");
       expect(meta.title).not.toContain("완성");
     });
 
@@ -482,7 +482,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         cookingTime: 25,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("[초간단⚡]"); // T-11
+      expect(meta.title).toContain("[초간단⚡]");
       expect(meta.title).toContain("25분 완성");
     });
 
@@ -493,14 +493,14 @@ describe("YouTube Recipe Metadata Generation", () => {
         totalIngredientCost: 3000,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("[3천원💰]"); // T-12
+      expect(meta.title).toContain("[3천원💰]");
       expect(meta.title).toContain("45분 완성");
     });
 
     it("KR/국가 없음이면 origin 브래킷이 나타나지 않는다", () => {
       const recipe = makeYoutubeFamousRecipe({ tags: ["다이어트"] });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).not.toContain("[🇯🇵"); // T-27
+      expect(meta.title).not.toContain("[🇯🇵");
       expect(meta.title).not.toContain("[🌍");
       expect(meta.title).toContain("[다이어트🥗]");
     });
@@ -508,7 +508,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     it("KR + 셰프 조건이면 셰프 타이틀이 유지된다", () => {
       const recipe = makeYoutubeFamousRecipe({ tags: ["셰프 레시피"] });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.title).toContain("[셰프레시피👨‍🍳]"); // T-28
+      expect(meta.title).toContain("[셰프레시피👨‍🍳]");
     });
   });
 
@@ -525,7 +525,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         },
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.description).toContain("칼로리 590kcal"); // T-13
+      expect(meta.description).toContain("칼로리 590kcal");
       expect(meta.description).toContain("탄수화물 62g");
       expect(meta.description).toContain("단백질 18g");
       expect(meta.description).toContain("지방 12g");
@@ -543,7 +543,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         },
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.description).not.toContain("탄수화물"); // T-14
+      expect(meta.description).not.toContain("탄수화물");
       expect(meta.description).toContain("단백질 18g");
       expect(meta.description).toContain("지방 12g");
     });
@@ -554,7 +554,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         nutrition: { protein: 0, carbohydrate: 0, fat: 0, sugar: 0, sodium: 0 },
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.description).toContain("칼로리 590kcal"); // T-15
+      expect(meta.description).toContain("칼로리 590kcal");
       expect(meta.description).not.toContain("탄수화물");
       expect(meta.description).not.toContain("단백질");
       expect(meta.description).not.toContain("지방");
@@ -603,7 +603,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         cookingTime: 15,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.description).not.toContain("예상비용:"); // T-16
+      expect(meta.description).not.toContain("예상비용:");
       expect(meta.description).not.toContain("분 소요");
       expect(meta.description).toContain("💰 예상 재료비:");
       expect(meta.description).toContain("⏱️ 조리 시간: 15분");
@@ -615,7 +615,7 @@ describe("YouTube Recipe Metadata Generation", () => {
         cookingTime: 30,
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.description).toContain("예상비용: 8,000원"); // T-17
+      expect(meta.description).toContain("예상비용: 8,000원");
       expect(meta.description).toContain("30분 소요");
     });
   });
@@ -629,7 +629,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       });
       const meta = generateRecipeMetadata(recipe, "test-id");
       const keywords = meta.keywords as string[];
-      expect(keywords).not.toContain("가성비요리"); // T-21
+      expect(keywords).not.toContain("가성비요리");
       expect(keywords).not.toContain("3000원요리");
       expect(keywords).not.toContain("만원요리");
       expect(keywords).not.toContain("알뜰요리");
@@ -638,7 +638,7 @@ describe("YouTube Recipe Metadata Generation", () => {
     it("재료비 3000원이면 가성비 키워드가 포함된다", () => {
       const recipe = makeYoutubeFamousRecipe({ totalIngredientCost: 3000 });
       const meta = generateRecipeMetadata(recipe, "test-id");
-      expect(meta.keywords as string[]).toContain("가성비요리"); // T-22
+      expect(meta.keywords as string[]).toContain("가성비요리");
     });
   });
 });
