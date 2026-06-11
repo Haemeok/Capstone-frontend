@@ -12,7 +12,9 @@ import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { IngredientPayload } from "@/entities/ingredient";
 import { IngredientPicker } from "@/entities/ingredient/ui/IngredientPicker";
 
+import { buildCustomIngredient } from "../lib/buildCustomIngredient";
 import { RecipeFormValues } from "../model/config";
+import CustomIngredientInput from "./CustomIngredientInput";
 import IngredientItem from "./IngredientItem";
 import type OriginalIngredientSelector from "./IngredientSelector";
 
@@ -62,6 +64,13 @@ const IngredientSection = ({
     });
   };
 
+  const handleAddCustom = (name: string) => {
+    const custom = buildCustomIngredient(name, addedIngredientNames);
+    if (!custom) return false;
+    addIngredient(custom);
+    return true;
+  };
+
   const handleRemoveIngredient = (index: number) => {
     const ingredientNameToRemove = ingredientFields[index]?.name;
     removeIngredient(index);
@@ -103,6 +112,8 @@ const IngredientSection = ({
           재료 추가하기
         </span>
       </button>
+
+      <CustomIngredientInput onAdd={handleAddCustom} />
 
       {isMobile ? (
         <IngredientPicker
