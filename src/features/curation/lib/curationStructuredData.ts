@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@/shared/config/constants/api";
 import {
   createCurationBreadcrumb,
   createCurationListBreadcrumb,
@@ -21,12 +22,12 @@ const PUBLISHER = {
   url: SITE_URL,
   logo: {
     "@type": "ImageObject" as const,
-    url: `${SITE_URL}/og.png`,
+    url: absoluteUrl("og.png"),
   },
 };
 
 export const createCurationDetailJsonLd = (data: PublicCurationArticleDto) => {
-  const fullUrl = `${SITE_URL}/curation/${data.slug}`;
+  const fullUrl = absoluteUrl(`curation/${data.slug}`);
   const meta = isCurationCategory(data.category)
     ? CATEGORY_META[data.category]
     : null;
@@ -63,8 +64,8 @@ export const createCurationListJsonLd = (
   const valid = category && isCurationCategory(category) ? category : null;
   const meta = valid ? CATEGORY_META[valid] : null;
   const canonical = valid
-    ? `${SITE_URL}/curation?category=${encodeURIComponent(valid)}`
-    : `${SITE_URL}/curation`;
+    ? absoluteUrl(`curation?category=${encodeURIComponent(valid)}`)
+    : absoluteUrl("curation");
   const title = meta
     ? `${meta.koLabel} 큐레이션 | ${SEO_CONSTANTS.SITE_NAME}`
     : `큐레이션 매거진 | ${SEO_CONSTANTS.SITE_NAME}`;
@@ -75,7 +76,7 @@ export const createCurationListJsonLd = (
   const itemList = items.slice(0, 12).map((it, i) => ({
     "@type": "ListItem" as const,
     position: i + 1,
-    url: `${SITE_URL}/curation/${it.slug}`,
+    url: absoluteUrl(`curation/${it.slug}`),
     name: it.title,
   }));
 

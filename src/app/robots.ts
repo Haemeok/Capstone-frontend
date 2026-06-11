@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import { absoluteUrl } from "@/shared/config/constants/api";
 
 const AI_SEARCH_BOTS = [
   // OpenAI — ChatGPT 실시간 웹 브라우징 & 라이브 검색
@@ -86,8 +86,6 @@ const PRIVATE_PATHS = [
 ];
 
 export default function robots(): MetadataRoute.Robots {
-  const SITE_URL = SEO_CONSTANTS.SITE_URL;
-
   return {
     rules: [
       // 1. 기본 규칙 — 알려지지 않은 봇 포함 전체 허용 (비공개 경로만 차단)
@@ -121,6 +119,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/",
       },
     ],
-    sitemap: [`${SITE_URL}/sitemap/0.xml`, `${SITE_URL}/recipes/sitemap/0.xml`],
+    sitemap: [
+      absoluteUrl("sitemap/0.xml"),
+      absoluteUrl("recipes/sitemap/0.xml"),
+    ],
   };
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { absoluteUrl } from "@/shared/config/constants/api";
 import { TagCode, TAGS_BY_CODE } from "@/shared/config/constants/recipe";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const emoji = tagDef.emoji;
   const title = `${emoji} ${categoryName} 레시피 모음 - ${SEO_CONSTANTS.SITE_NAME}`;
   const description = `${categoryName} 카테고리의 인기 레시피를 확인하세요. AI가 추천하는 맞춤형 ${categoryName} 요리법으로 집에서 맛있게 해먹어보세요!`;
-  const url = `${SEO_CONSTANTS.SITE_URL}recipes/category/${tagCode}`;
+  const url = absoluteUrl(`recipes/category/${tagCode}`);
   const imageUrl = SEO_CONSTANTS.DEFAULT_IMAGE;
 
   return {

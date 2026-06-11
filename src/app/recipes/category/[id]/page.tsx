@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 
+import { absoluteUrl } from "@/shared/config/constants/api";
 import {
   CATEGORY_BASE_URL,
   TagCode,
@@ -38,7 +39,7 @@ export async function generateMetadata({
   const title = `${tagName} 모음${pageLabel} | ${SEO_CONSTANTS.SITE_NAME}`;
   const description = `${tagName}를 ${SEO_CONSTANTS.SITE_NAME}에서 확인해보세요. 다양한 ${tagName} 관련 요리를 추천해드립니다.`;
   const canonicalSearch = page > 0 ? `?page=${page}` : "";
-  const url = `${SEO_CONSTANTS.SITE_URL}recipes/category/${id}${canonicalSearch}`;
+  const url = absoluteUrl(`recipes/category/${id}${canonicalSearch}`);
 
   const tagImageKey = TAGS_IMAGE_KEYS[tagCode];
   const imageUrl = tagImageKey

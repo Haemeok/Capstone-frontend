@@ -1,3 +1,5 @@
+import { absoluteUrl } from "@/shared/config/constants/api";
+
 import { SEO_CONSTANTS } from "./constants";
 
 type BreadcrumbItem = {
@@ -40,11 +42,11 @@ export const createRecipeBreadcrumb = (
     },
     {
       name: "레시피",
-      url: `${SEO_CONSTANTS.SITE_URL}/recipes`,
+      url: absoluteUrl("recipes"),
     },
     {
       name: recipeTitle,
-      url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}`,
+      url: absoluteUrl(`recipes/${recipeId}`),
     },
   ];
 
@@ -62,7 +64,7 @@ export const createCategoryBreadcrumb = (
     },
     {
       name: `${categoryName} 레시피`,
-      url: `${SEO_CONSTANTS.SITE_URL}/recipes/category/${categoryCode}`,
+      url: absoluteUrl(`recipes/category/${categoryCode}`),
     },
   ];
 
@@ -76,11 +78,13 @@ export const createSearchBreadcrumb = (
   const breadcrumbName = query ? `${query} 검색결과` : "검색결과";
   const breadcrumbUrl =
     canonicalUrl ||
-    `${SEO_CONSTANTS.SITE_URL}/search/results${query ? `?q=${encodeURIComponent(query)}` : ""}`;
+    absoluteUrl(
+      `search/results${query ? `?q=${encodeURIComponent(query)}` : ""}`
+    );
 
   const items: BreadcrumbItem[] = [
     { name: "홈", url: SEO_CONSTANTS.SITE_URL },
-    { name: "검색", url: `${SEO_CONSTANTS.SITE_URL}/search` },
+    { name: "검색", url: absoluteUrl("search") },
     { name: breadcrumbName, url: breadcrumbUrl },
   ];
 
@@ -93,10 +97,10 @@ export const createIngredientBreadcrumb = (
 ): BreadcrumbListSchema => {
   const items: BreadcrumbItem[] = [
     { name: "홈", url: SEO_CONSTANTS.SITE_URL },
-    { name: "재료", url: `${SEO_CONSTANTS.SITE_URL}/ingredients` },
+    { name: "재료", url: absoluteUrl("ingredients") },
     {
       name: ingredientName,
-      url: `${SEO_CONSTANTS.SITE_URL}/ingredients/${ingredientId}`,
+      url: absoluteUrl(`ingredients/${ingredientId}`),
     },
   ];
 
@@ -114,7 +118,7 @@ export const createUserProfileBreadcrumb = (
     },
     {
       name: `${userName}님의 프로필`,
-      url: `${SEO_CONSTANTS.SITE_URL}/users/${userId}`,
+      url: absoluteUrl(`users/${userId}`),
     },
   ];
 
@@ -128,17 +132,17 @@ export const createCurationBreadcrumb = (
 ): BreadcrumbListSchema => {
   const items: BreadcrumbItem[] = [
     { name: "홈", url: SEO_CONSTANTS.SITE_URL },
-    { name: "큐레이션", url: `${SEO_CONSTANTS.SITE_URL}/curation` },
+    { name: "큐레이션", url: absoluteUrl("curation") },
   ];
   if (categoryKoLabel) {
     items.push({
       name: `${categoryKoLabel} 큐레이션`,
-      url: `${SEO_CONSTANTS.SITE_URL}/curation`,
+      url: absoluteUrl("curation"),
     });
   }
   items.push({
     name: title,
-    url: `${SEO_CONSTANTS.SITE_URL}/curation/${slug}`,
+    url: absoluteUrl(`curation/${slug}`),
   });
   return createBreadcrumbListElement(items);
 };
@@ -148,12 +152,12 @@ export const createCurationListBreadcrumb = (
 ): BreadcrumbListSchema => {
   const items: BreadcrumbItem[] = [
     { name: "홈", url: SEO_CONSTANTS.SITE_URL },
-    { name: "큐레이션", url: `${SEO_CONSTANTS.SITE_URL}/curation` },
+    { name: "큐레이션", url: absoluteUrl("curation") },
   ];
   if (categoryKoLabel) {
     items.push({
       name: `${categoryKoLabel} 큐레이션`,
-      url: `${SEO_CONSTANTS.SITE_URL}/curation`,
+      url: absoluteUrl("curation"),
     });
   }
   return createBreadcrumbListElement(items);

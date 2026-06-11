@@ -38,7 +38,7 @@ const TransformingNavbar = ({
   shadowThreshold = DEFAULT_CONFIG.shadowThreshold,
 }: TransformingNavbarProps) => {
   const headerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
+  const titleRef = useRef<HTMLSpanElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
 
   const { motionRef } = useScrollContext();
@@ -162,13 +162,13 @@ const TransformingNavbar = ({
       <div className="flex max-w-full min-w-0 items-center gap-2">
         {leftComponent}
 
-        <h1
+        <span
           ref={titleRef}
           className="truncate text-lg font-bold"
           style={{ opacity: 0, transform: "translateY(-10px)" }}
         >
           {title}
-        </h1>
+        </span>
       </div>
 
       {rightComponent}

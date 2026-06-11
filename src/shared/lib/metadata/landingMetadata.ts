@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 
+import { absoluteUrl } from "@/shared/config/constants/api";
 import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
 
 import { SEO_CONSTANTS } from "./constants";
 
-const LANDING_URL = `${SEO_CONSTANTS.SITE_URL}/landing`;
+const LANDING_URL = absoluteUrl("landing");
 
 const LANDING_DESCRIPTION = `${TOTAL_RECIPE_COUNT_LABEL} 홈쿡 레시피, YouTube 링크 자동 추출, AI 맞춤 추천까지. 홈파티·기념일·다이어트 상황별 레시피를 한번에 찾아보세요.`;
 

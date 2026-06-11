@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 
+import { absoluteUrl } from "@/shared/config/constants/api";
+
 import { SEO_CONSTANTS } from "./constants";
 
-const YOUTUBE_EXTRACTOR_URL = `${SEO_CONSTANTS.SITE_URL}/recipes/new/youtube`;
-const YOUTUBE_EXTRACTOR_IMAGE = `${SEO_CONSTANTS.SITE_URL}/web-app-manifest-512x512.png`;
+const YOUTUBE_EXTRACTOR_URL = absoluteUrl("recipes/new/youtube");
+const YOUTUBE_EXTRACTOR_IMAGE = absoluteUrl("web-app-manifest-512x512.png");
 
 // Primary and long-tail keywords for SEO
 const YOUTUBE_EXTRACTOR_KEYWORDS = [
@@ -135,7 +137,7 @@ const createBreadcrumbStructuredData = () => ({
       "@type": "ListItem",
       position: 2,
       name: "레시피 생성",
-      item: `${SEO_CONSTANTS.SITE_URL}/recipes/new`,
+      item: absoluteUrl("recipes/new"),
     },
     {
       "@type": "ListItem",

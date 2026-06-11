@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next";
 
-import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import { absoluteUrl } from "@/shared/config/constants/api";
 
 import { fetchAllCurationArticlesForSitemap } from "@/features/curation";
 
-const SITE_URL = SEO_CONSTANTS.SITE_URL;
 const SITEMAP_CHUNK_SIZE = 10000;
 
 export async function generateSitemaps() {
@@ -27,7 +26,7 @@ export default async function sitemap(props: {
     const chunk = articles.slice(start, start + SITEMAP_CHUNK_SIZE);
 
     return chunk.map((article) => ({
-      url: `${SITE_URL}/curation/${article.slug}`,
+      url: absoluteUrl(`curation/${article.slug}`),
       lastModified: new Date(article.updatedAt),
       changeFrequency: "weekly",
       priority: 0.8,

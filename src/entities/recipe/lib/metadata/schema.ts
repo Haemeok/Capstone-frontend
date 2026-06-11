@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@/shared/config/constants/api";
 import { TOTAL_RECIPE_COUNT_PHRASE } from "@/shared/config/constants/siteStats";
 import { createSearchBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 
@@ -18,7 +19,7 @@ export const createWebsiteStructuredData = () => ({
   url: SEO_CONSTANTS.SITE_URL,
   potentialAction: {
     "@type": "SearchAction",
-    target: `${SEO_CONSTANTS.SITE_URL}/search?q={search_term_string}`,
+    target: absoluteUrl("search?q={search_term_string}"),
     "query-input": "required name=search_term_string",
   },
 });
@@ -116,7 +117,7 @@ export const createRecipeStructuredData = (
         name: `Step ${index + 1}`,
         position: index + 1,
         text: step.instruction,
-        url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}#step-${index + 1}`,
+        url: absoluteUrl(`recipes/${recipeId}#step-${index + 1}`),
         ...(step.stepImageUrl && { image: step.stepImageUrl }),
       })) || [],
 
@@ -156,7 +157,7 @@ export const createRecipeStructuredData = (
           url: recipe.youtubeUrl,
         },
       }),
-    url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipeId}`,
+    url: absoluteUrl(`recipes/${recipeId}`),
   };
 };
 
@@ -237,9 +238,7 @@ export const createTagItemListStructuredData = (
     "@type": "ListItem" as const,
     position: i + 1,
     name: tag.name,
-    url: `${SEO_CONSTANTS.SITE_URL}/search/results?tags=${encodeURIComponent(
-      tag.code
-    )}`,
+    url: absoluteUrl(`search/results?tags=${encodeURIComponent(tag.code)}`),
   })),
 });
 
@@ -262,7 +261,7 @@ export const createSearchResultsJsonLd = (
       itemListElement: recipes.slice(0, MAX_SEARCH_ITEMS).map((recipe, i) => ({
         "@type": "ListItem",
         position: i + 1,
-        url: `${SEO_CONSTANTS.SITE_URL}/recipes/${recipe.id}`,
+        url: absoluteUrl(`recipes/${recipe.id}`),
         name: recipe.title,
         image: recipe.imageUrl,
       })),

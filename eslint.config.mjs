@@ -332,7 +332,26 @@ const eslintConfig = [
         },
       ],
       "@next/next/no-img-element": "off",
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "TemplateLiteral > Identifier[name=/^(SITE_URL|SITE_ORIGIN|BASE_URL)$/]",
+          message:
+            "base-URL을 문자열 템플릿으로 직접 이어붙이지 마세요. @/shared/config/constants/api 의 absoluteUrl(path) 을 사용하세요 (slash 중복/누락 방지).",
+        },
+        {
+          selector:
+            "TemplateLiteral > MemberExpression[property.name='SITE_URL']",
+          message:
+            "base-URL을 문자열 템플릿으로 직접 이어붙이지 마세요. @/shared/config/constants/api 의 absoluteUrl(path) 을 사용하세요 (slash 중복/누락 방지).",
+        },
+      ],
     },
+  },
+  {
+    files: ["src/shared/config/constants/api.ts", "scripts/**/*.ts"],
+    rules: { "no-restricted-syntax": "off" },
   },
   ...selfBarrelGuards,
   prettierConfig,

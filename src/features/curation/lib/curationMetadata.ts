@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { absoluteUrl } from "@/shared/config/constants/api";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
 import { isCurationCategory } from "@/entities/curation";
@@ -8,13 +9,11 @@ import { CATEGORY_META } from "@/entities/curation/model/categoryMeta";
 import type { PublicCurationArticleDto } from "../model/api.server";
 import { coverImageUrlFromKey } from "./coverImageUrl";
 
-const SITE_URL = SEO_CONSTANTS.SITE_URL;
-
 export const generateCurationDetailMetadata = (
   data: PublicCurationArticleDto,
   recipeCount: number
 ): Metadata => {
-  const fullUrl = `${SITE_URL}/curation/${data.slug}`;
+  const fullUrl = absoluteUrl(`curation/${data.slug}`);
   const meta = isCurationCategory(data.category)
     ? CATEGORY_META[data.category]
     : null;
@@ -83,8 +82,8 @@ export const generateCurationListMetadata = (
       ];
 
   const canonical = valid
-    ? `${SITE_URL}/curation?category=${encodeURIComponent(valid)}`
-    : `${SITE_URL}/curation`;
+    ? absoluteUrl(`curation?category=${encodeURIComponent(valid)}`)
+    : absoluteUrl("curation");
 
   return {
     title,

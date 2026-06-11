@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next";
 
-import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import { absoluteUrl } from "@/shared/config/constants/api";
 
 import { fetchAllRecipesForSitemap } from "@/entities/recipe/model/api.server";
 
-const SITE_URL = SEO_CONSTANTS.SITE_URL;
 const SITEMAP_CHUNK_SIZE = 10000;
 
 export async function generateSitemaps() {
@@ -27,7 +26,7 @@ export default async function sitemap(props: {
     const chunk = recipes.slice(start, start + SITEMAP_CHUNK_SIZE);
 
     return chunk.map((recipe) => ({
-      url: `${SITE_URL}/recipes/${recipe.id}`,
+      url: absoluteUrl(`recipes/${recipe.id}`),
       lastModified: new Date(recipe.updatedAt),
       changeFrequency: "weekly",
       priority: 0.9,

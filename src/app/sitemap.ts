@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { absoluteUrl } from "@/shared/config/constants/api";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 
 const SITE_URL = SEO_CONSTANTS.SITE_URL;
@@ -12,13 +13,7 @@ const staticRoutes: MetadataRoute.Sitemap = [
     priority: 1.0,
   },
   {
-    url: `${SITE_URL}/recipes/my-fridge`,
-    lastModified: new Date(),
-    changeFrequency: "daily",
-    priority: 0.7,
-  },
-  {
-    url: `${SITE_URL}/ingredients`,
+    url: absoluteUrl("ingredients"),
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: 0.6,

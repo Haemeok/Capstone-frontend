@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { absoluteUrl } from "@/shared/config/constants/api";
+
 import { SEO_CONSTANTS } from "./constants";
 
 type EventMetadataParams = {
@@ -19,7 +21,7 @@ export const buildEventMetadata = ({
   ogImage,
   ogImageAlt,
 }: EventMetadataParams): Metadata => {
-  const url = `${SEO_CONSTANTS.SITE_URL}${path}`;
+  const url = absoluteUrl(path);
   const fullTitle = `${title} | ${SEO_CONSTANTS.SITE_NAME}`;
 
   return {

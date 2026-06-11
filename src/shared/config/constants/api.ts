@@ -1,10 +1,11 @@
-export const BASE_URL = "https://www.recipio.kr/";
+export const SITE_ORIGIN = "https://www.recipio.kr";
+
+export const absoluteUrl = (path: string): string =>
+  `${SITE_ORIGIN}/${path.replace(/^\/+/, "")}`;
+
+export const BASE_URL = `${SITE_ORIGIN}/`;
 export const BASE_API_URL = "https://api.recipio.kr/api";
 export const BASE_WEBSOCKET_URL = "https://api.recipio.kr";
-const REDIRECT_URI =
-  process.env.NODE_ENV === "production"
-    ? "https://www.recipio.kr/login/oauth2/code/google"
-    : "http://localhost:3000/login/oauth2/code/google";
 
 export const END_POINTS = {
   RECIPE: (id: string) => `/dev/recipes/${id}`,
@@ -46,9 +47,6 @@ export const END_POINTS = {
   GOOGLE_LOGIN: `/oauth2/authorization/google`,
   KAKAO_LOGIN: `/api/auth/login/kakao`,
   NAVER_LOGIN: `/api/auth/login/naver`,
-  GOOGLE_REDIRECT_URI: REDIRECT_URI,
-  KAKAO_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/kakao`,
-  NAVER_REDIRECT_URI: `${BASE_URL}/login/oauth2/code/naver`,
   TOKEN_REFRESH: "/token/refresh",
   USER_INFO: (userId: string) => `/users/${userId}`,
   MY_FAVORITES: "/dev/me/favorites",

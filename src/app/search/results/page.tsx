@@ -7,6 +7,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
+import { absoluteUrl } from "@/shared/config/constants/api";
 import {
   getIngredientNamesByIds,
   NUTRITION_THEMES_FOR_SEO,
@@ -215,7 +216,7 @@ const buildCanonicalUrl = (params: SearchResultsSearchParams): string => {
     }
   }
   const search = canonicalParams.toString();
-  return `${SEO_CONSTANTS.SITE_URL}/search/results${search ? `?${search}` : ""}`;
+  return absoluteUrl(`search/results${search ? `?${search}` : ""}`);
 };
 
 export async function generateMetadata({
