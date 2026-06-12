@@ -1,6 +1,6 @@
 "use client";
 
-import type { Locale } from "@/shared/i18n";
+import { format, getDictionary, type Locale } from "@/shared/i18n";
 import { getEuroParticle } from "@/shared/lib/korean";
 
 import { useIngredientRecipesQuery } from "@/entities/ingredient";
@@ -13,19 +13,31 @@ type IngredientRecipesSlideProps = {
   locale?: Locale;
 };
 
+const buildTitle = (name: string, locale: Locale): string =>
+  locale === "ko"
+    ? `${name}${getEuroParticle(name)} 만든 인기 레시피`
+    : format(getDictionary(locale).ingredientDetail.popularRecipesTitle, {
+        name,
+      });
+
 const IngredientRecipesSlide = ({
   ingredientId,
   ingredientName,
+  locale = "ko",
 }: IngredientRecipesSlideProps) => {
-  const { data, isLoading, error } = useIngredientRecipesQuery(ingredientId);
+  const { data, isLoading, error } = useIngredientRecipesQuery(
+    ingredientId,
+    locale
+  );
   const recipes = data?.content ?? [];
 
   return (
     <RecipeSlide
-      title={`${ingredientName}${getEuroParticle(ingredientName)} 만든 인기 레시피`}
+      title={buildTitle(ingredientName, locale)}
       recipes={recipes}
       isLoading={isLoading}
       error={error as Error | null}
+      locale={locale}
     />
   );
 };
