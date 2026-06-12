@@ -70,10 +70,21 @@ export type RecipeDetailDict = {
   remixesTitle: string;
 };
 
+export type YoutubeDict = {
+  heroTitle: string;
+  heroDescLead: string;
+  heroDescHighlight: string;
+  heroDescTail: string;
+  inputPlaceholder: string;
+  inputClearLabel: string;
+  invalidUrl: string;
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
   errors: ErrorsDict;
   notFound: NotFoundDict;
   recipeDetail: RecipeDetailDict;
+  youtube: YoutubeDict;
 };
