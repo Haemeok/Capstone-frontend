@@ -50,12 +50,14 @@ specific `rules/<prefix>-<topic>.md` file.
 - [4-layer placement](rules/fsd-layer-routing.md) — shared / widget / `_components/` / page
 - [Widget vs page-local](rules/fsd-widget-vs-page-local.md) — single-page → `_components/`, multi-page → `widget/`
 - [Entity vs feature boundary](rules/fsd-entity-feature-boundary.md) — mutations live in features
+- [Extraction surfaces sibling imports](rules/fsd-extract-surfaces-sibling-imports.md) — moving app composition into a widget turns legal `app→widget` imports into `widget→widget` violations; grep `@/widgets/` before the move
 
 ### Policy (human-error blockers)
 
 - [URL and query strings](rules/policy-url-and-query.md) — `new URL` / `URLSearchParams`
 - [TanStack Query keys](rules/policy-query-key.md) — `[domain, sub, ...ids]` tuple
 - [Query invalidation vs cache patch](rules/policy-query-invalidation.md) — invalidate refetches every loaded page (storm); patch via `setQueriesData` prefix + `refetchType:none`; refetch only for membership-changing lists
+- [SSR ↔ client query key parity](rules/policy-ssr-client-query-key-parity.md) — SSR prefetch key must byte-match the client hook's key incl. codec/parser defaults, or hydration silently CSR-refetches
 - [Env via shared/config](rules/policy-env-config.md) — no direct `process.env`
 - [Storage keys](rules/policy-storage-keys.md) — constants module
 - [Z-index tokens](rules/policy-zindex.md) — semantic names, no magic numbers
@@ -75,6 +77,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Compiler memoization](rules/react-compiler-memoization.md) — three legitimate `useCallback` cases
 - [Effect / state diet](rules/react-effect-discipline.md) — derived computed, events handled, effects only for external sync
 - [Render purity](rules/react-render-purity.md) — no `Date.now()`/random in render; seed time state via lazy `useState(() => …)`; no sync setState in effect body
+- [Optional prop threading](rules/react-optional-prop-threading.md) — an optional prop declared but not forwarded is a silent no-op; `tsc` won't catch it, a leaf behavior test will
 
 ### TypeScript
 
