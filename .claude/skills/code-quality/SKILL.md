@@ -58,6 +58,8 @@ specific `rules/<prefix>-<topic>.md` file.
 - [TanStack Query keys](rules/policy-query-key.md) — `[domain, sub, ...ids]` tuple
 - [Query invalidation vs cache patch](rules/policy-query-invalidation.md) — invalidate refetches every loaded page (storm); patch via `setQueriesData` prefix + `refetchType:none`; refetch only for membership-changing lists
 - [SSR ↔ client query key parity](rules/policy-ssr-client-query-key-parity.md) — SSR prefetch key must byte-match the client hook's key incl. codec/parser defaults, or hydration silently CSR-refetches
+- [i18n type gate misses unextracted literals](rules/policy-i18n-type-gate-misses-unextracted-strings.md) — a typed Dictionary gates missing keys, not unextracted inline strings; grep the localized files for source-language chars after wiring
+- [i18n chrome vs content axes](rules/policy-i18n-chrome-vs-content-axes.md) — localizing chrome doesn't localize the fetch; plumb the new locale through query key + fetch params + href, never a boundary remap-to-default (masked on SSR page 0)
 - [Env via shared/config](rules/policy-env-config.md) — no direct `process.env`
 - [Storage keys](rules/policy-storage-keys.md) — constants module
 - [Z-index tokens](rules/policy-zindex.md) — semantic names, no magic numbers
@@ -78,6 +80,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Effect / state diet](rules/react-effect-discipline.md) — derived computed, events handled, effects only for external sync
 - [Render purity](rules/react-render-purity.md) — no `Date.now()`/random in render; seed time state via lazy `useState(() => …)`; no sync setState in effect body
 - [Optional prop threading](rules/react-optional-prop-threading.md) — an optional prop declared but not forwarded is a silent no-op; `tsc` won't catch it, a leaf behavior test will
+- [Context hook provider coverage](rules/react-context-hook-provider-coverage.md) — converting a shared leaf from prop to a context hook (`useT`/`useContext`) requires a provider at every render site; missing one is a runtime throw `tsc` can't see — grep all render sites first
 
 ### TypeScript
 
