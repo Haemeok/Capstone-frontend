@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
+import { ScrollReset } from "@/shared/ui/ScrollReset";
 
 import { isPrivateRecipe } from "@/entities/recipe";
 import {
@@ -19,7 +20,6 @@ import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import { RecipeDetailView } from "@/widgets/RecipeDetailView";
 
-import { ScrollReset } from "./components/ScrollReset";
 import { RemixRedirectToast } from "./RemixRedirectToast";
 
 interface RecipeDetailPageProps {

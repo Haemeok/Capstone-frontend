@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { BottomAnchorAdSlot, InArticleAdSlot } from "@/shared/adsense";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import { ScrollReset } from "@/shared/ui/ScrollReset";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import {
@@ -36,8 +37,6 @@ import RecipeNavbar from "@/widgets/RecipeDetailView/ui/RecipeNavbar";
 import RecipePlatingSection from "@/widgets/RecipeDetailView/ui/RecipePlatingSection";
 import RecipeTagsSection from "@/widgets/RecipeDetailView/ui/RecipeTagsSection";
 import RecipeVideoSection from "@/widgets/RecipeDetailView/ui/RecipeVideoSection";
-
-import { ScrollReset } from "../../[recipeId]/components/ScrollReset";
 
 interface PrivateRecipePageProps {
   params: Promise<{ recipeId: string }>;
