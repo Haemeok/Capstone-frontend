@@ -246,7 +246,7 @@ export type RecipeQueryParams = {
   maxSodium?: number;
   ingredientIds?: string[];
   creatorCountryTags?: CreatorCountryTag[];
-  lang?: "ja";
+  lang?: "ja" | "en";
 };
 
 export type RecipeItemsQueryParams = {
@@ -275,7 +275,7 @@ export type RecipeItemsQueryParams = {
   minSodium?: number;
   maxSodium?: number;
   ingredientIds?: string[];
-  lang?: "ja";
+  lang?: "ja" | "en";
 };
 
 export type StaticRecipe = Omit<

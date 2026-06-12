@@ -36,7 +36,7 @@ jest.mock("../ui/SearchFilters", () => ({
 const makeClient = () =>
   new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-const renderAt = (locale: "ko" | "ja") =>
+const renderAt = (locale: "ko" | "ja" | "en") =>
   render(
     <QueryClientProvider client={makeClient()}>
       <SearchClient initialPage={0} locale={locale} />
@@ -66,5 +66,31 @@ describe("T-20: search chrome strings are locale-aware", () => {
 
     expect(jaText).not.toBe("");
     expect(jaText).not.toBe(koText);
+  });
+});
+
+describe("T-40: search chrome strings are locale-aware for en", () => {
+  it("en noResultsMessage differs from ko and is non-empty", () => {
+    const ko = renderAt("ko");
+    const koText = ko.getByTestId("prop-no-results").textContent ?? "";
+    ko.unmount();
+
+    const en = renderAt("en");
+    const enText = en.getByTestId("prop-no-results").textContent ?? "";
+
+    expect(enText).not.toBe("");
+    expect(enText).not.toBe(koText);
+  });
+
+  it("en lastPageMessage differs from ko and is non-empty", () => {
+    const ko = renderAt("ko");
+    const koText = ko.getByTestId("prop-last-page").textContent ?? "";
+    ko.unmount();
+
+    const en = renderAt("en");
+    const enText = en.getByTestId("prop-last-page").textContent ?? "";
+
+    expect(enText).not.toBe("");
+    expect(enText).not.toBe(koText);
   });
 });

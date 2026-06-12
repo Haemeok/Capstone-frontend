@@ -14,10 +14,10 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   return buildLocalizedSearchMetadata({
     searchParams: await searchParams,
-    locale: "ja",
+    locale: "en",
   });
 }
 
-export default async function JaSearchResultsPage({ searchParams }: Props) {
-  return <LocalizedSearchPage searchParams={await searchParams} locale="ja" />;
+export default async function EnSearchResultsPage({ searchParams }: Props) {
+  return <LocalizedSearchPage searchParams={await searchParams} locale="en" />;
 }
