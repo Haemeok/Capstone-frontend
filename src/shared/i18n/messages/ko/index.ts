@@ -1,4 +1,5 @@
 import type { Dictionary } from "../../types";
+import { aiRecipe } from "./aiRecipe";
 import { ingredientDetail } from "./ingredientDetail";
 import { recipeDetail } from "./recipeDetail";
 import { errors, meta, notFound, search } from "./search";
@@ -12,4 +13,5 @@ export const ko: Dictionary = {
   recipeDetail,
   youtube,
   ingredientDetail,
+  aiRecipe,
 };

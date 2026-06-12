@@ -105,6 +105,74 @@ export type IngredientDetailDict = {
   popularRecipesTitle: string;
 };
 
+import type { AIModelId, DiningTier } from "@/shared/config/constants/aiModel";
+
+export type AiRecipeDict = {
+  modelSelectHeading: string;
+  loginDrawerMessage: string;
+  backToModelSelect: string;
+  generateRecipe: string;
+  errorFallback: string;
+  models: Record<AIModelId, { name: string; description: string }>;
+  steps: string[];
+  diningTiers: Record<
+    DiningTier,
+    { label: string; description: string; features: string[] }
+  >;
+  price: {
+    pageTitle: string;
+    pageDescription: string;
+    headerTitle: string;
+    headerDescription: string;
+    budgetLabel: string;
+    foodPickHeading: string;
+    foodPickDescription: string;
+    averageMealInfo: string;
+    savingsMessage: string;
+    monthlySavingsMessage: string;
+    savingsBadgeLabel: string;
+    savingsBadgeSuffix: string;
+    dailyPracticeTip: string;
+  };
+  ingredient: {
+    pickerInitialCategory: string;
+    pickerMineCategory: string;
+  };
+  nutrition: {
+    pageHeading: string;
+    cookingStyleLabel: string;
+    macroModeLabel: string;
+    calorieModeLabel: string;
+    macroSliderSetLabel: string;
+    macroSliderAutoLabel: string;
+    unlimitedValue: string;
+    macroCarbs: string;
+    macroProtein: string;
+    macroFat: string;
+    macroCalories: string;
+    styles: Record<string, { label: string; description: string }>;
+    guidance: {
+      calories: { low: string; mid: string; high: string; max: string };
+      protein: { low: string; mid: string; high: string };
+      carbs: { low: string; mid: string; high: string };
+      fat: { low: string; mid: string; high: string };
+    };
+  };
+  fineDining: {
+    pageTitle: string;
+    pageDescription: string;
+    ingredientSectionHeading: string;
+    ingredientSectionDescription: string;
+    ingredientSearchPlaceholder: string;
+    ingredientSearchAriaLabel: string;
+    ingredientCountSuffix: string;
+    selectedIngredientsHeading: string;
+    removeAllLabel: string;
+    tierSectionHeading: string;
+    tierSectionDescription: string;
+  };
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -113,4 +181,5 @@ export type Dictionary = {
   recipeDetail: RecipeDetailDict;
   youtube: YoutubeDict;
   ingredientDetail: IngredientDetailDict;
+  aiRecipe: AiRecipeDict;
 };
