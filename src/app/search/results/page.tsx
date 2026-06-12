@@ -236,8 +236,8 @@ export async function generateMetadata({
   // 구조화된 파라미터에서 향상된 검색어 생성
   const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
 
-  const title = buildSearchTitle(enhancedQ, totalElements, page);
-  const description = buildSearchDescription(enhancedQ, totalElements);
+  const title = buildSearchTitle(enhancedQ, totalElements, page, "ko");
+  const description = buildSearchDescription(enhancedQ, totalElements, "ko");
 
   const ogImage = firstImage || SEO_CONSTANTS.DEFAULT_IMAGE;
   const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
@@ -322,7 +322,12 @@ export default async function SearchResultsPage({
     : undefined;
 
   const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
-  const title = buildSearchTitle(enhancedQ, firstPage.page.totalElements, page);
+  const title = buildSearchTitle(
+    enhancedQ,
+    firstPage.page.totalElements,
+    page,
+    "ko"
+  );
   const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
   const jsonLd = createSearchResultsJsonLd(
     enhancedQ,

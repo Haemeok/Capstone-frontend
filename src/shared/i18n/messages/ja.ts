@@ -1,6 +1,24 @@
 import type { Dictionary } from "../types";
 
 export const ja: Dictionary = {
+  meta: {
+    search: {
+      queryNoun: "レシピ",
+      pageSuffix: "（{page}ページ目）",
+      titleNoQuery: "レシピ検索結果{page} - レシピオ",
+      titleWithQuery: {
+        one: "{q} {count}件のレシピ{page} - レシピオ",
+        other: "{q} {count}件のレシピ{page} - レシピオ",
+      },
+      descNoQuery:
+        "フィルターでお好みのレシピを探せます。食材費・カロリー・調理時間をまとめて比較。",
+      descWithQuery: {
+        one: "{q} {count}件をまとめてチェック。食材費から栄養成分まで一目で比較できます。",
+        other:
+          "{q} {count}件をまとめてチェック。食材費から栄養成分まで一目で比較できます。",
+      },
+    },
+  },
   errors: {
     sectionGeneric: "このセクションを読み込めませんでした",
     video: "動画を読み込めませんでした",

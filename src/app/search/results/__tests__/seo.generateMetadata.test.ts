@@ -32,16 +32,18 @@ describe("SearchResultsPage generateMetadata", () => {
     };
     const meta = await generateMetadata(params);
 
-    expect(meta.title).toBe(buildSearchTitle("김치찌개", 150, 0));
-    expect(meta.description).toBe(buildSearchDescription("김치찌개", 150));
+    expect(meta.title).toBe(buildSearchTitle("김치찌개", 150, 0, "ko"));
+    expect(meta.description).toBe(
+      buildSearchDescription("김치찌개", 150, "ko")
+    );
   });
 
   it("쿼리가 없을 때: 필터 적용 기본 title/description을 반환한다", async () => {
     const params: Props = { searchParams: asProm({}) };
     const meta = await generateMetadata(params);
 
-    expect(meta.title).toBe(buildSearchTitle("", 150, 0));
-    expect(meta.description).toBe(buildSearchDescription("", 150));
+    expect(meta.title).toBe(buildSearchTitle("", 150, 0, "ko"));
+    expect(meta.description).toBe(buildSearchDescription("", 150, "ko"));
   });
 
   it("OG image로 첫 번째 검색 결과 이미지를 사용한다", async () => {

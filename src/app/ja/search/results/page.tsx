@@ -95,8 +95,8 @@ export async function generateMetadata({
   const totalElements = pageData.page.totalElements;
   const firstImage = pageData.content[0]?.imageUrl;
 
-  const title = buildSearchTitle(q, totalElements, page);
-  const description = buildSearchDescription(q, totalElements);
+  const title = buildSearchTitle(q, totalElements, page, "ja");
+  const description = buildSearchDescription(q, totalElements, "ja");
 
   const ogImage = firstImage || SEO_CONSTANTS.DEFAULT_IMAGE;
 

@@ -1,6 +1,24 @@
 import type { Dictionary } from "../types";
 
 export const ko: Dictionary = {
+  meta: {
+    search: {
+      queryNoun: "레시피",
+      pageSuffix: " ({page}페이지)",
+      titleNoQuery: "📌 레시피 검색 결과{page} - 레시피오",
+      titleWithQuery: {
+        one: "📌 {q} {count}선{page} - 레시피오",
+        other: "📌 {q} {count}선{page} - 레시피오",
+      },
+      descNoQuery:
+        "다양한 필터로 원하는 레시피를 찾아보세요. 재료비, 칼로리, 조리시간까지 한눈에 비교!",
+      descWithQuery: {
+        one: "{q} {count}개를 한눈에 비교하세요. 재료비부터 영양성분까지 다 나옵니다.",
+        other:
+          "{q} {count}개를 한눈에 비교하세요. 재료비부터 영양성분까지 다 나옵니다.",
+      },
+    },
+  },
   errors: {
     sectionGeneric: "이 영역을 불러올 수 없어요",
     video: "비디오를 불러올 수 없어요",

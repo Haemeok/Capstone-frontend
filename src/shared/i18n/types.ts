@@ -4,6 +4,16 @@ export type Locale = "ko" | "ja" | "en";
 export const LOCALES: readonly Locale[] = ["ko", "ja", "en"];
 
 export type Dictionary = {
+  meta: {
+    search: {
+      queryNoun: string;
+      pageSuffix: string;
+      titleNoQuery: string;
+      titleWithQuery: Plural;
+      descNoQuery: string;
+      descWithQuery: Plural;
+    };
+  };
   errors: {
     sectionGeneric: string;
     video: string;

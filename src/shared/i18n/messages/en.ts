@@ -1,6 +1,24 @@
 import type { Dictionary } from "../types";
 
 export const en: Dictionary = {
+  meta: {
+    search: {
+      queryNoun: "",
+      pageSuffix: " (page {page})",
+      titleNoQuery: "Recipe Search Results{page} - Recipio",
+      titleWithQuery: {
+        one: "{q} — {count} recipe{page} | Recipio",
+        other: "{q} — {count} recipes{page} | Recipio",
+      },
+      descNoQuery:
+        "Filter by ingredients, calories, cook time, and more. Find the recipe that fits your day.",
+      descWithQuery: {
+        one: "Browse {count} {q} recipe. Compare ingredients, nutrition, and cook time at a glance.",
+        other:
+          "Browse {count} {q} recipes. Compare ingredients, nutrition, and cook time at a glance.",
+      },
+    },
+  },
   errors: {
     sectionGeneric: "This section couldn't be loaded",
     video: "The video couldn't be loaded",
