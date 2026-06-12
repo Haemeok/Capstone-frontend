@@ -52,6 +52,7 @@ const RecipeGrid = ({
   nextPageHref,
   showInFeedAds = false,
   onItemMoreClick,
+  locale,
 }: RecipeGridProps) => {
   const queryClient = useQueryClient();
 
@@ -128,6 +129,7 @@ const RecipeGrid = ({
               priority={index === 0 && useLCP}
               prefetch={prefetch}
               onImageRetry={queryKeyToInvalidate ? handleImageRetry : undefined}
+              locale={locale}
             />
           );
         })}

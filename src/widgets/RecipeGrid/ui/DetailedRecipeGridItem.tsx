@@ -17,6 +17,7 @@ import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import { Image } from "@/shared/ui/image/Image";
 
 import {
+  buildLocalizedRecipeHref,
   CreatorCountryFlag,
   getCreatorCountryFlag,
   getGridItemAuthor,
@@ -49,6 +50,7 @@ type DetailedRecipeGridItemProps = {
   saveBadge?: React.ReactNode;
   onImageRetry?: () => void;
   hideCookingTime?: boolean;
+  locale?: "ko" | "ja";
 };
 
 const DetailedRecipeGridItem = ({
@@ -60,6 +62,7 @@ const DetailedRecipeGridItem = ({
   saveBadge,
   onImageRetry,
   hideCookingTime = false,
+  locale,
 }: DetailedRecipeGridItemProps) => {
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
   const author = getGridItemAuthor(recipe);
@@ -217,7 +220,7 @@ const DetailedRecipeGridItem = ({
         </div>
 
         <Link
-          href={`/recipes/${recipe.id}`}
+          href={buildLocalizedRecipeHref(recipe.id, locale)}
           className="rounded-card absolute inset-0"
           aria-label={`${recipe.title} 레시피 보기`}
           prefetch={prefetch ? true : null}

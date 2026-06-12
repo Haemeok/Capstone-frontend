@@ -18,6 +18,7 @@ type DetailedFeedCellProps = {
   priority: boolean;
   prefetch: boolean;
   onImageRetry?: () => void;
+  locale?: "ko" | "ja";
 };
 
 const DetailedFeedCell = ({
@@ -25,6 +26,7 @@ const DetailedFeedCell = ({
   priority,
   prefetch,
   onImageRetry,
+  locale,
 }: DetailedFeedCellProps) => {
   const savings = calculateSavings(recipe.marketPrice, recipe.ingredientCost);
 
@@ -57,6 +59,7 @@ const DetailedFeedCell = ({
       infoBadge={infoBadge}
       saveBadge={saveBadge}
       onImageRetry={onImageRetry}
+      locale={locale}
     />
   );
 };

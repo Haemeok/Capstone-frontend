@@ -27,4 +27,5 @@ export type RecipeGridProps = {
   nextPageHref?: string;
   showInFeedAds?: boolean;
   onItemMoreClick?: (id: string) => void;
+  locale?: "ko" | "ja";
 };
