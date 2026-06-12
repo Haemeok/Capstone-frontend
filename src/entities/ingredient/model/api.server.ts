@@ -2,6 +2,10 @@ import { cookies } from "next/headers";
 
 import { BASE_API_URL } from "@/shared/config/constants/api";
 
+import {
+  type LocalizedIngredientResult,
+  parseLocalizedIngredientResult,
+} from "./localizedIngredientResult";
 import type { IngredientDetailApiResponse } from "./types";
 
 export const getIngredientDetailOnServer = async (
@@ -37,5 +41,25 @@ export const getIngredientDetailOnServer = async (
       error
     );
     return null;
+  }
+};
+
+export const getLocalizedIngredientOnServer = async (
+  id: string,
+  locale: "ja" | "en"
+): Promise<LocalizedIngredientResult> => {
+  const url = new URL(`${BASE_API_URL}/ingredients/${encodeURIComponent(id)}`);
+  url.searchParams.set("lang", locale);
+
+  try {
+    const res = await fetch(url.toString(), { cache: "no-store" });
+    const body = await res.json().catch(() => null);
+    return parseLocalizedIngredientResult(res.status, body);
+  } catch (error) {
+    console.error(
+      `[getLocalizedIngredientOnServer] Failed to fetch ingredient ${id} (${locale}):`,
+      error
+    );
+    return { kind: "notFound" };
   }
 };
