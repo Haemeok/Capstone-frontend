@@ -111,6 +111,7 @@ export const getRecipesOnServer = async (
   if (params.minCost !== undefined)
     query.append("minCost", params.minCost.toString());
   if (params.period) query.append("period", params.period);
+  if (params.lang) query.append("lang", params.lang);
 
   if (params.minCalories !== undefined)
     query.append("minCalories", params.minCalories.toString());
