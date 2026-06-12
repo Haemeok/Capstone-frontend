@@ -3,7 +3,9 @@ import type { YoutubeDict } from "@/shared/i18n";
 import BetaBadge from "@/shared/ui/badge/BetaBadge";
 import { Image } from "@/shared/ui/image/Image";
 
-export const YoutubeImportHero = ({ dict }: { dict: YoutubeDict }) => {
+type YoutubeImportHeroProps = { dict: YoutubeDict };
+
+export const YoutubeImportHero = ({ dict }: YoutubeImportHeroProps) => {
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col items-center pt-2 md:pt-12">
       <Image

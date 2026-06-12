@@ -13,7 +13,18 @@ import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlVali
 
 import { useYoutubeUrl } from "./YoutubeUrlProvider";
 
-type YoutubeUrlFormValues = { url: string };
+const buildYoutubeUrlSchema = (invalidUrl: string) =>
+  z.object({
+    url: z.string().refine(
+      (url) => {
+        if (!url.trim()) return true;
+        return validateYoutubeUrl(url).valid;
+      },
+      { message: invalidUrl }
+    ),
+  });
+
+type YoutubeUrlFormValues = z.infer<ReturnType<typeof buildYoutubeUrlSchema>>;
 
 export const YoutubeUrlForm = ({ dict }: { dict: YoutubeDict }) => {
   const {
@@ -22,16 +33,7 @@ export const YoutubeUrlForm = ({ dict }: { dict: YoutubeDict }) => {
     currentUrl: providerInitialUrl,
   } = useYoutubeUrl();
 
-  const youtubeUrlSchema = z.object({
-    url: z.string().refine(
-      (url) => {
-        if (!url.trim()) return true;
-        const result = validateYoutubeUrl(url);
-        return result.valid;
-      },
-      { message: dict.invalidUrl }
-    ),
-  });
+  const youtubeUrlSchema = buildYoutubeUrlSchema(dict.invalidUrl);
 
   const {
     register,
