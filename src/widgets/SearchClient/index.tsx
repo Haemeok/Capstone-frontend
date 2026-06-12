@@ -1,5 +1,7 @@
 "use client";
 
+import type { Locale } from "@/shared/i18n";
+import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
@@ -13,14 +15,22 @@ import { SearchFilters } from "./ui/SearchFilters";
 type SearchClientProps = {
   initialPage?: number;
   nextPageHref?: string;
-  locale?: "ko" | "ja";
+  locale?: Locale;
 };
 
-export const SearchClient = ({
-  initialPage = 0,
+type SearchClientInnerProps = {
+  initialPage: number;
+  nextPageHref?: string;
+  locale: Locale;
+};
+
+const SearchClientInner = ({
+  initialPage,
   nextPageHref,
-  locale = "ko",
-}: SearchClientProps) => {
+  locale,
+}: SearchClientInnerProps) => {
+  const t = useT();
+  const searchLocale = locale === "en" ? "ko" : locale;
   const {
     recipes,
     hasNextPage,
@@ -29,7 +39,7 @@ export const SearchClient = ({
     ref,
     queryKeyString,
     noResults,
-  } = useSearchResults(initialPage, locale);
+  } = useSearchResults(initialPage, searchLocale);
   const resetFilters = useResetSearchFilters();
 
   return (
@@ -38,9 +48,7 @@ export const SearchClient = ({
         <SearchFilters />
 
         <ErrorBoundary
-          fallback={
-            <SectionErrorFallback message="검색 결과를 표시할 수 없어요" />
-          }
+          fallback={<SectionErrorFallback message={t.errors.searchResults} />}
         >
           <RecipeGrid
             recipes={recipes}
@@ -49,11 +57,12 @@ export const SearchClient = ({
             isPending={isPending}
             observerRef={ref}
             noResults={noResults}
+            noResultsMessage={t.search.noResults}
             onResetFilters={resetFilters}
-            lastPageMessage={"모든 레시피를 불러왔습니다."}
+            lastPageMessage={t.search.lastPage}
             queryKeyString={queryKeyString}
             nextPageHref={nextPageHref}
-            locale={locale}
+            locale={searchLocale}
             showInFeedAds
           />
         </ErrorBoundary>
@@ -61,3 +70,17 @@ export const SearchClient = ({
     </Container>
   );
 };
+
+export const SearchClient = ({
+  initialPage = 0,
+  nextPageHref,
+  locale = "ko",
+}: SearchClientProps) => (
+  <DictionaryProvider dict={getDictionary(locale)}>
+    <SearchClientInner
+      initialPage={initialPage}
+      nextPageHref={nextPageHref}
+      locale={locale}
+    />
+  </DictionaryProvider>
+);

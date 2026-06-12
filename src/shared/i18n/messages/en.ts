@@ -1,6 +1,10 @@
 import type { Dictionary } from "../types";
 
 export const en: Dictionary = {
+  search: {
+    lastPage: "You've reached the end.",
+    noResults: "No recipes to show.",
+  },
   meta: {
     search: {
       queryNoun: "",

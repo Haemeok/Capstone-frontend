@@ -1,6 +1,10 @@
 import type { Dictionary } from "../types";
 
 export const ko: Dictionary = {
+  search: {
+    lastPage: "모든 레시피를 불러왔습니다.",
+    noResults: "표시할 레시피가 없습니다.",
+  },
   meta: {
     search: {
       queryNoun: "레시피",

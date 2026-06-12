@@ -1,6 +1,10 @@
 import type { Dictionary } from "../types";
 
 export const ja: Dictionary = {
+  search: {
+    lastPage: "レシピをすべて見ました。",
+    noResults: "レシピが見つかりませんでした。",
+  },
   meta: {
     search: {
       queryNoun: "レシピ",

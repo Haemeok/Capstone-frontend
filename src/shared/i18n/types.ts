@@ -4,6 +4,10 @@ export type Locale = "ko" | "ja" | "en";
 export const LOCALES: readonly Locale[] = ["ko", "ja", "en"];
 
 export type Dictionary = {
+  search: {
+    lastPage: string;
+    noResults: string;
+  };
   meta: {
     search: {
       queryNoun: string;
