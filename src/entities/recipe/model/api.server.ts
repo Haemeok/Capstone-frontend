@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 
+import type { LocalizedRecipeResult } from "./localeResult";
+import { parseLocalizedRecipeResult } from "./localeResult";
 import {
   DetailedRecipesApiResponse,
   Recipe,
@@ -233,6 +235,31 @@ export const getStaticrecipionServer = async (
       error
     );
     return null;
+  }
+};
+
+export const getLocalizedRecipeOnServer = async (
+  id: string,
+  locale: "ja"
+): Promise<LocalizedRecipeResult> => {
+  const url = new URL(`${BASE_API_URL}${END_POINTS.RECIPE(id)}`);
+  url.searchParams.set("lang", locale);
+
+  try {
+    const res = await fetch(url.toString(), {
+      next: {
+        revalidate: REVALIDATION_TIMES.RECIPE_DETAIL,
+        tags: [CACHE_TAGS.recipe(id)],
+      },
+    });
+    const body = await res.json().catch(() => null);
+    return parseLocalizedRecipeResult(res.status, body);
+  } catch (error) {
+    console.error(
+      `[getLocalizedRecipeOnServer] Failed to fetch recipe ${id} (${locale}):`,
+      error
+    );
+    return { kind: "notFound" };
   }
 };
 
