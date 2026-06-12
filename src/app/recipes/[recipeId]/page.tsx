@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
-import { AD_SLOT_IDS } from "@/shared/adsense/config";
 import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -216,12 +215,6 @@ export default async function RecipeDetailPage({
                 <RecipeStepList
                   RecipeSteps={staticRecipe.steps}
                   recipeIngredients={staticRecipe.ingredients}
-                  midSlot={
-                    <InArticleAdSlot
-                      slotId={AD_SLOT_IDS.recipeStepInArticle}
-                      className="my-4"
-                    />
-                  }
                 />
               </ErrorBoundary>
             </RecipeVideoSection>
