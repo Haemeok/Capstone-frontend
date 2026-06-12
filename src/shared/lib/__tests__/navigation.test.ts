@@ -10,6 +10,7 @@ describe("shouldHideNavbar", () => {
       "/recipes/new/ai/nutrition",
       "/recipes/new/ai/finedining",
       "/recipes/abc123/slide-show",
+      "/recipes/abc123",
     ])("hides on %s", (path) => {
       expect(shouldHideNavbar(path, { isApp: true })).toBe(true);
       expect(shouldHideNavbar(path, { isApp: false })).toBe(true);
@@ -17,14 +18,13 @@ describe("shouldHideNavbar", () => {
   });
 
   describe("app-only hidden (콘텐츠 상세)", () => {
-    it.each([
-      "/recipes/abc123",
-      "/recipe-books/bookId01",
-      "/curation/some-slug",
-    ])("hides on %s in app, shows on web", (path) => {
-      expect(shouldHideNavbar(path, { isApp: true })).toBe(true);
-      expect(shouldHideNavbar(path, { isApp: false })).toBe(false);
-    });
+    it.each(["/recipe-books/bookId01", "/curation/some-slug"])(
+      "hides on %s in app, shows on web",
+      (path) => {
+        expect(shouldHideNavbar(path, { isApp: true })).toBe(true);
+        expect(shouldHideNavbar(path, { isApp: false })).toBe(false);
+      }
+    );
   });
 
   describe("reserved segments under /recipes are not detail", () => {
