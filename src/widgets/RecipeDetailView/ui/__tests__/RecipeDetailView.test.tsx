@@ -56,4 +56,15 @@ describe("RecipeDetailView — ko/ja 공유 본문", () => {
     );
     expect(screen.getAllByText("김치찌개")[0]).toBeInTheDocument();
   });
+
+  it("T-03: ja recipe + locale ja면 일본어 제목이 렌더된다", () => {
+    const recipe = makeBaseRecipe({
+      title: "親子丼",
+      description: "ふわとろ卵",
+    });
+    renderWithProviders(
+      <RecipeDetailView recipe={recipe} recipeId="r2" locale="ja" />
+    );
+    expect(screen.getAllByText("親子丼")[0]).toBeInTheDocument();
+  });
 });
