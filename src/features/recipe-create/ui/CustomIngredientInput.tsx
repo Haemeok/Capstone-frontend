@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Pencil } from "lucide-react";
+import { Pencil, X } from "lucide-react";
 
 type CustomIngredientInputProps = {
   onAdd: (name: string) => boolean;
@@ -11,6 +11,11 @@ type CustomIngredientInputProps = {
 const CustomIngredientInput = ({ onAdd }: CustomIngredientInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
+
+  const close = () => {
+    setIsOpen(false);
+    setName("");
+  };
 
   const handleAdd = () => {
     const added = onAdd(name);
@@ -21,6 +26,8 @@ const CustomIngredientInput = ({ onAdd }: CustomIngredientInputProps) => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleAdd();
+    } else if (e.key === "Escape") {
+      close();
     }
   };
 
@@ -28,11 +35,11 @@ const CustomIngredientInput = ({ onAdd }: CustomIngredientInputProps) => {
     return (
       <button
         type="button"
-        className="text-olive-medium hover:bg-olive-light/15 mt-2 flex w-full cursor-pointer items-center justify-center gap-1 rounded-lg py-2 text-sm transition-colors"
         onClick={() => setIsOpen(true)}
+        className="text-ink-muted active:text-ink-sub mt-2 flex w-full cursor-pointer items-center justify-center gap-1 py-1.5 text-sm transition-colors"
       >
-        <Pencil size={14} />
-        <span>직접 입력</span>
+        <Pencil className="h-3.5 w-3.5" />
+        직접 입력
       </button>
     );
   }
@@ -47,14 +54,22 @@ const CustomIngredientInput = ({ onAdd }: CustomIngredientInputProps) => {
         aria-label="재료명 직접 입력"
         placeholder="재료명을 입력하세요"
         autoFocus
-        className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
+        className="text-ink placeholder:text-ink-disabled focus:border-olive-light focus:ring-olive-light h-12 flex-1 rounded-xl border border-gray-200 px-4 text-base focus:ring-1 focus:outline-none"
       />
       <button
         type="button"
         onClick={handleAdd}
-        className="bg-olive-light rounded-lg px-4 py-2 text-sm font-medium text-white"
+        className="bg-olive-light active:bg-olive-dark h-12 shrink-0 cursor-pointer rounded-xl px-5 text-sm font-semibold text-white transition-colors"
       >
         추가
+      </button>
+      <button
+        type="button"
+        onClick={close}
+        aria-label="직접 입력 닫기"
+        className="text-ink-muted flex h-12 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl transition-colors active:bg-gray-100"
+      >
+        <X className="h-5 w-5" />
       </button>
     </div>
   );
