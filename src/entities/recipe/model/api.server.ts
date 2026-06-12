@@ -241,7 +241,7 @@ export const getStaticrecipionServer = async (
 
 export const getLocalizedRecipeOnServer = async (
   id: string,
-  locale: "ja"
+  locale: "ja" | "en"
 ): Promise<LocalizedRecipeResult> => {
   const url = new URL(`${BASE_API_URL}${END_POINTS.RECIPE(id)}`);
   url.searchParams.set("lang", locale);

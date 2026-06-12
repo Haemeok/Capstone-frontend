@@ -31,6 +31,10 @@ export const ko: Dictionary = {
     steps: "조리 순서를 불러올 수 없어요",
     searchResults: "검색 결과를 표시할 수 없어요",
   },
+  notFound: {
+    message: "레시피를 찾을 수 없습니다.",
+    searchCta: "레시피 찾아보기",
+  },
   recipeDetail: {
     ingredientsHeader: "재료",
     nutritionHeader: "영양성분",

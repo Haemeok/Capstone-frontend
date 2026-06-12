@@ -1,5 +1,5 @@
 import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
-import { DictionaryProvider, getDictionary } from "@/shared/i18n";
+import { DictionaryProvider, getDictionary, type Locale } from "@/shared/i18n";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
@@ -34,7 +34,7 @@ import RecipeVideoSection from "./RecipeVideoSection";
 type RecipeDetailViewProps = {
   recipe: StaticRecipe;
   recipeId: string;
-  locale: "ko" | "ja";
+  locale: Locale;
   notTranslatedMessage?: string;
 };
 

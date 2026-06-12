@@ -26,6 +26,10 @@ export type Dictionary = {
     steps: string;
     searchResults: string;
   };
+  notFound: {
+    message: string;
+    searchCta: string;
+  };
   recipeDetail: {
     ingredientsHeader: string;
     nutritionHeader: string;

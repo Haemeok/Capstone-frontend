@@ -31,6 +31,10 @@ export const ja: Dictionary = {
     steps: "調理手順を読み込めませんでした",
     searchResults: "検索結果を表示できませんでした",
   },
+  notFound: {
+    message: "レシピが見つかりませんでした。",
+    searchCta: "レシピを探す",
+  },
   recipeDetail: {
     ingredientsHeader: "材料",
     nutritionHeader: "栄養成分",

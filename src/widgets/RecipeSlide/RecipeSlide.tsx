@@ -25,7 +25,7 @@ type RecipeSlideProps = {
   recipes: DetailedRecipeGridItemType[];
   isLoading: boolean;
   error: Error | null;
-  locale?: "ko" | "ja";
+  locale?: "ko" | "ja" | "en";
 };
 
 const getRecipeRightBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {

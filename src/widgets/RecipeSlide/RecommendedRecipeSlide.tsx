@@ -14,7 +14,7 @@ import RecommendedRecipeGrid from "./RecommendedRecipeGrid";
 type RecommendedRecipeSlideProps = {
   recipeId: string;
   tags: string[];
-  locale?: "ko" | "ja";
+  locale?: "ko" | "ja" | "en";
 };
 
 const CHEF_TAG = "👨‍🍳 셰프 레시피";

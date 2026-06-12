@@ -50,7 +50,7 @@ type DetailedRecipeGridItemProps = {
   saveBadge?: React.ReactNode;
   onImageRetry?: () => void;
   hideCookingTime?: boolean;
-  locale?: "ko" | "ja";
+  locale?: "ko" | "ja" | "en";
 };
 
 const DetailedRecipeGridItem = ({

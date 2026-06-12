@@ -13,7 +13,7 @@ import RecipeSlide from "./RecipeSlide";
 
 type RemixesSlideProps = {
   recipeId: string;
-  locale?: "ko" | "ja";
+  locale?: "ko" | "ja" | "en";
 };
 
 const MIN_VISIBLE = 5;

@@ -31,6 +31,10 @@ export const en: Dictionary = {
     steps: "Cooking steps couldn't be loaded",
     searchResults: "Search results couldn't be displayed",
   },
+  notFound: {
+    message: "We couldn't find that recipe.",
+    searchCta: "Browse recipes",
+  },
   recipeDetail: {
     ingredientsHeader: "Ingredients",
     nutritionHeader: "Nutrition",

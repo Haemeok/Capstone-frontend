@@ -30,7 +30,7 @@ type RecommendedRecipeGridProps = {
   recipes: DetailedRecipeGridItemType[];
   isLoading: boolean;
   error: Error | null;
-  locale?: "ko" | "ja";
+  locale?: "ko" | "ja" | "en";
 };
 
 const getInfoBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {
