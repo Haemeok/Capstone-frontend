@@ -42,3 +42,14 @@ describe("generateJaRecipeMetadata — 번역된 ja 상세", () => {
     expect(recipeNode?.inLanguage).toBe("ja");
   });
 });
+
+describe("generateJaRecipeMetadata — 미번역 fallback", () => {
+  it("T-11: translated=false면 robots noindex,nofollow + canonical 미출력", () => {
+    const recipe = makeJpRecipe({ title: "親子丼" });
+    const meta = generateJaRecipeMetadata(recipe, "abc123", {
+      translated: false,
+    });
+    expect(meta.robots).toEqual({ index: false, follow: false });
+    expect(meta.alternates?.canonical).toBeUndefined();
+  });
+});
