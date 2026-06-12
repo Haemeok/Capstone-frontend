@@ -1,21 +1,28 @@
 import type { Metadata } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
+import type { Locale } from "@/shared/i18n";
 
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
 import { generateRecipeJsonLd } from "./recipeMetadata";
 
-export const generateJaRecipeMetadata = (
+type LocalizedLocale = Exclude<Locale, "ko">;
+
+const OG_LOCALE: Record<LocalizedLocale, string> = {
+  ja: "ja_JP",
+  en: "en_US",
+};
+
+export const generateLocalizedRecipeMetadata = (
   recipe: StaticRecipe,
   recipeId: string,
-  { translated }: { translated: boolean }
+  { locale, translated }: { locale: LocalizedLocale; translated: boolean }
 ): Metadata => {
-  const url = absoluteUrl(`ja/recipes/${recipeId}`);
+  const url = absoluteUrl(`${locale}/recipes/${recipeId}`);
   const description = recipe.description || recipe.title;
   const image = recipe.imageUrl || SEO_CONSTANTS.DEFAULT_IMAGE;
-
   return {
     title: `${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`,
     description,
@@ -29,7 +36,7 @@ export const generateJaRecipeMetadata = (
       url,
       siteName: SEO_CONSTANTS.SITE_NAME,
       type: SEO_CONSTANTS.OG_TYPE.ARTICLE,
-      locale: "ja_JP",
+      locale: OG_LOCALE[locale],
       images: [{ url: image, width: 1200, height: 630, alt: recipe.title }],
     },
     twitter: {
@@ -43,15 +50,16 @@ export const generateJaRecipeMetadata = (
 
 type GraphNode = { "@type"?: string } & Record<string, unknown>;
 
-export const generateJaRecipeJsonLd = (
+export const generateLocalizedRecipeJsonLd = (
   recipe: StaticRecipe,
-  recipeId: string
+  recipeId: string,
+  locale: LocalizedLocale
 ) => {
   const base = generateRecipeJsonLd(recipe, recipeId);
   return {
     ...base,
     "@graph": base["@graph"].map((node: GraphNode) =>
-      node["@type"] === "Recipe" ? { ...node, inLanguage: "ja" } : node
+      node["@type"] === "Recipe" ? { ...node, inLanguage: locale } : node
     ),
   };
 };

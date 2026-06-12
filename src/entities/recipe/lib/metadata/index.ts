@@ -1,8 +1,8 @@
 export * from "./constants";
 export {
-  generateJaRecipeJsonLd,
-  generateJaRecipeMetadata,
-} from "./jaRecipeMetadata";
+  generateLocalizedRecipeJsonLd,
+  generateLocalizedRecipeMetadata,
+} from "./localizedRecipeMetadata";
 export * from "./recipeMetadata";
 export * from "./schema";
 export * from "./searchMeta";

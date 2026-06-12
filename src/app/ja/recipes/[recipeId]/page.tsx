@@ -5,8 +5,8 @@ import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
 import { ScrollReset } from "@/shared/ui/ScrollReset";
 
 import {
-  generateJaRecipeJsonLd,
-  generateJaRecipeMetadata,
+  generateLocalizedRecipeJsonLd,
+  generateLocalizedRecipeMetadata,
   generateNotFoundRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
 import {
@@ -29,7 +29,8 @@ export async function generateMetadata({
   const result = await getLocalizedRecipeOnServer(recipeId, "ja");
 
   if (result.kind === "ok") {
-    return generateJaRecipeMetadata(result.recipe, recipeId, {
+    return generateLocalizedRecipeMetadata(result.recipe, recipeId, {
+      locale: "ja",
       translated: true,
     });
   }
@@ -37,7 +38,10 @@ export async function generateMetadata({
   if (result.kind === "notTranslated") {
     const ko = await getStaticrecipionServer(recipeId);
     if (!ko) return generateNotFoundRecipeMetadata();
-    return generateJaRecipeMetadata(ko, recipeId, { translated: false });
+    return generateLocalizedRecipeMetadata(ko, recipeId, {
+      locale: "ja",
+      translated: false,
+    });
   }
 
   return generateNotFoundRecipeMetadata();
@@ -66,7 +70,9 @@ export default async function JaRecipeDetailPage({
     result.kind === "notTranslated" ? result.message : undefined;
 
   const jsonLd =
-    result.kind === "ok" ? generateJaRecipeJsonLd(recipe, recipeId) : null;
+    result.kind === "ok"
+      ? generateLocalizedRecipeJsonLd(recipe, recipeId, "ja")
+      : null;
 
   return (
     <ScrollReset>
