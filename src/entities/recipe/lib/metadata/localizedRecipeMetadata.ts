@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
 import type { Locale } from "@/shared/i18n";
+import { buildHreflangAlternates } from "@/shared/i18n/hreflang";
 
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
@@ -29,7 +30,14 @@ export const generateLocalizedRecipeMetadata = (
     robots: translated
       ? { index: true, follow: true }
       : { index: false, follow: false },
-    ...(translated ? { alternates: { canonical: url } } : {}),
+    ...(translated
+      ? {
+          alternates: {
+            canonical: url,
+            languages: buildHreflangAlternates(`recipes/${recipeId}`),
+          },
+        }
+      : {}),
     openGraph: {
       title: recipe.title,
       description,

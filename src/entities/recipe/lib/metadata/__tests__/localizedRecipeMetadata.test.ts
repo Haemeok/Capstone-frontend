@@ -61,3 +61,25 @@ it("ja 미번역 회귀: translated=false → noindex,nofollow", () => {
   });
   expect(meta.robots).toEqual({ index: false, follow: false });
 });
+
+it("T-50: translated면 alternates.languages에 ko·ja·en·x-default", () => {
+  const meta = generateLocalizedRecipeMetadata(recipe, "abc123", {
+    locale: "en",
+    translated: true,
+  });
+  const langs = meta.alternates?.languages ?? {};
+  expect(Object.keys(langs)).toEqual(
+    expect.arrayContaining(["ko", "ja", "en", "x-default"])
+  );
+  expect(langs.en).toBe("https://www.recipio.kr/en/recipes/abc123");
+  expect(langs.ko).toBe("https://www.recipio.kr/recipes/abc123");
+  expect(langs.ja).toBe("https://www.recipio.kr/ja/recipes/abc123");
+});
+
+it("T-51: not translated(noindex)면 languages를 광고하지 않는다", () => {
+  const meta = generateLocalizedRecipeMetadata(recipe, "abc123", {
+    locale: "en",
+    translated: false,
+  });
+  expect(meta.alternates?.languages).toBeUndefined();
+});
