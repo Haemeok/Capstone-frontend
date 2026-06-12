@@ -1,0 +1,26 @@
+import type { IngredientDetailDict } from "../../types";
+
+export const ingredientDetail: IngredientDetailDict = {
+  nutritionHeader: "영양정보",
+  nutritionBasis: "100g 기준이에요",
+  nutritionProtein: "단백질",
+  nutritionCarbs: "탄수화물",
+  nutritionFat: "지방",
+  nutritionSugar: "당류",
+  nutritionSodium: "나트륨",
+  benefitsHeader: "효능",
+  benefitsSubtitle: "이런 점이 좋아요",
+  pairingHeader: "궁합 재료",
+  pairingGood: "같이 먹으면 좋아요",
+  pairingBad: "같이 안 먹는 걸 추천해요",
+  cookingHeader: "추천 조리법",
+  storageHeader: "보관방법",
+  storageLocation: "위치",
+  storageTemperature: "온도",
+  storageDuration: "기간",
+  storageNotes: "보관 참고사항",
+  seasonHeader: "제철",
+  seasonSubtitle: "가장 맛있는 시기예요",
+  seasonNow: "지금이 제철!",
+  popularRecipesTitle: "{name}",
+};

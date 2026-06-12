@@ -1,0 +1,26 @@
+import type { IngredientDetailDict } from "../../types";
+
+export const ingredientDetail: IngredientDetailDict = {
+  nutritionHeader: "栄養情報",
+  nutritionBasis: "100gあたり",
+  nutritionProtein: "たんぱく質",
+  nutritionCarbs: "炭水化物",
+  nutritionFat: "脂質",
+  nutritionSugar: "糖類",
+  nutritionSodium: "ナトリウム",
+  benefitsHeader: "効能",
+  benefitsSubtitle: "こんな効果があります",
+  pairingHeader: "相性のいい食材",
+  pairingGood: "一緒に食べると良い",
+  pairingBad: "一緒に食べないのがおすすめ",
+  cookingHeader: "おすすめの調理法",
+  storageHeader: "保存方法",
+  storageLocation: "場所",
+  storageTemperature: "温度",
+  storageDuration: "期間",
+  storageNotes: "保存の注意点",
+  seasonHeader: "旬",
+  seasonSubtitle: "一番おいしい時期です",
+  seasonNow: "今が旬!",
+  popularRecipesTitle: "{name}を使った人気レシピ",
+};

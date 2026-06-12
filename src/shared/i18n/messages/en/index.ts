@@ -1,4 +1,5 @@
 import type { Dictionary } from "../../types";
+import { ingredientDetail } from "./ingredientDetail";
 import { recipeDetail } from "./recipeDetail";
 import { errors, meta, notFound, search } from "./search";
 import { youtube } from "./youtube";
@@ -10,4 +11,5 @@ export const en: Dictionary = {
   notFound,
   recipeDetail,
   youtube,
+  ingredientDetail,
 };

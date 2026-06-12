@@ -1,0 +1,26 @@
+import type { IngredientDetailDict } from "../../types";
+
+export const ingredientDetail: IngredientDetailDict = {
+  nutritionHeader: "Nutrition",
+  nutritionBasis: "Per 100g",
+  nutritionProtein: "Protein",
+  nutritionCarbs: "Carbs",
+  nutritionFat: "Fat",
+  nutritionSugar: "Sugar",
+  nutritionSodium: "Sodium",
+  benefitsHeader: "Benefits",
+  benefitsSubtitle: "Why it's good for you",
+  pairingHeader: "Pairings",
+  pairingGood: "Goes well with",
+  pairingBad: "Best avoided together",
+  cookingHeader: "Recommended cooking methods",
+  storageHeader: "Storage",
+  storageLocation: "Location",
+  storageTemperature: "Temperature",
+  storageDuration: "Duration",
+  storageNotes: "Storage notes",
+  seasonHeader: "In season",
+  seasonSubtitle: "When it tastes best",
+  seasonNow: "In season now!",
+  popularRecipesTitle: "Popular recipes with {name}",
+};

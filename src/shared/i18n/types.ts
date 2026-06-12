@@ -80,6 +80,31 @@ export type YoutubeDict = {
   invalidUrl: string;
 };
 
+export type IngredientDetailDict = {
+  nutritionHeader: string;
+  nutritionBasis: string;
+  nutritionProtein: string;
+  nutritionCarbs: string;
+  nutritionFat: string;
+  nutritionSugar: string;
+  nutritionSodium: string;
+  benefitsHeader: string;
+  benefitsSubtitle: string;
+  pairingHeader: string;
+  pairingGood: string;
+  pairingBad: string;
+  cookingHeader: string;
+  storageHeader: string;
+  storageLocation: string;
+  storageTemperature: string;
+  storageDuration: string;
+  storageNotes: string;
+  seasonHeader: string;
+  seasonSubtitle: string;
+  seasonNow: string;
+  popularRecipesTitle: string;
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -87,4 +112,5 @@ export type Dictionary = {
   notFound: NotFoundDict;
   recipeDetail: RecipeDetailDict;
   youtube: YoutubeDict;
+  ingredientDetail: IngredientDetailDict;
 };
