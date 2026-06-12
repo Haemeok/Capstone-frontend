@@ -1,11 +1,11 @@
 import type { YoutubeDict } from "../../types";
 
 export const youtube: YoutubeDict = {
-  heroTitle: "유튜브 레시피 가져오기",
-  heroDescLead: "링크만 붙여넣으면 유튜브 레시피 추출이 자동으로 끝나요.",
-  heroDescHighlight: "영상과 레시피를 한눈에",
-  heroDescTail: " 보며 더 편하게 요리하세요.",
-  inputPlaceholder: "유튜브 링크를 붙여넣으세요",
-  inputClearLabel: "입력 지우기",
-  invalidUrl: "올바른 유튜브 링크를 입력해주세요",
+  heroTitle: "YouTubeレシピを取り込む",
+  heroDescLead: "リンクを貼るだけで、レシピの抽出が自動で完了します。",
+  heroDescHighlight: "動画とレシピをひと目で確認しながら",
+  heroDescTail: " もっとスムーズに料理できます。",
+  inputPlaceholder: "YouTubeのリンクを貼り付けてください",
+  inputClearLabel: "入力を消去",
+  invalidUrl: "有効なYouTubeリンクを入力してください",
 };
