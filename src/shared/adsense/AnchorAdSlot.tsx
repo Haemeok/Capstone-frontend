@@ -6,12 +6,14 @@ type AnchorAdSlotProps = {
   slotId: string | undefined;
   height: number;
   className?: string;
+  onFillChange?: (filled: boolean) => void;
 };
 
 export const AnchorAdSlot = ({
   slotId,
   height,
   className,
+  onFillChange,
 }: AnchorAdSlotProps) => {
   return (
     <AdSlot
@@ -19,6 +21,7 @@ export const AnchorAdSlot = ({
       minHeight={height}
       className={className}
       insStyle={{ display: "block", width: "100%", height }}
+      onFillChange={onFillChange}
     />
   );
 };

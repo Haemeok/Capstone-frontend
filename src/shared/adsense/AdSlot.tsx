@@ -32,6 +32,7 @@ type AdSlotProps = {
   adLayout?: string;
   fullWidthResponsive?: boolean;
   skeleton?: ReactNode;
+  onFillChange?: (filled: boolean) => void;
 };
 
 export const AdSlot = ({
@@ -43,12 +44,18 @@ export const AdSlot = ({
   adLayout,
   fullWidthResponsive,
   skeleton,
+  onFillChange,
 }: AdSlotProps) => {
   const { enabled } = useAdsGate();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const insRef = useRef<HTMLModElement>(null);
   const [isFilled, setIsFilled] = useState(false);
   const pushedRef = useRef(false);
+  const onFillChangeRef = useRef(onFillChange);
+
+  useEffect(() => {
+    onFillChangeRef.current = onFillChange;
+  }, [onFillChange]);
 
   useEffect(() => {
     const ins = insRef.current;
@@ -67,12 +74,16 @@ export const AdSlot = ({
     const wrapper = wrapperRef.current;
     const ins = insRef.current;
     if (!wrapper || !ins) return;
+    const markFilled = () => {
+      setIsFilled(true);
+      onFillChangeRef.current?.(true);
+    };
     if (ins.firstChild) {
-      queueMicrotask(() => setIsFilled(true));
+      queueMicrotask(markFilled);
     }
     const observer = new MutationObserver(() => {
       if (ins.firstChild) {
-        setIsFilled(true);
+        markFilled();
         observer.disconnect();
       }
     });
@@ -86,6 +97,7 @@ export const AdSlot = ({
     return () => {
       window.clearTimeout(timer);
       observer.disconnect();
+      onFillChangeRef.current?.(false);
     };
   }, []);
 

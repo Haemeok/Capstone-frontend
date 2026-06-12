@@ -18,6 +18,7 @@ jest.mock("@/shared/hooks/useIsBottomNavVisible", () => ({
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
 
 import { useAdsGate } from "../AdsGateContext";
+import { useBottomAdFillStore } from "../bottomAdFillStore";
 import { BottomAnchorAdSlot } from "../BottomAnchorAdSlot";
 
 const mockedUseAdsGate = jest.mocked(useAdsGate);
@@ -28,6 +29,11 @@ describe("BottomAnchorAdSlot", () => {
     delete (window as typeof window & { adsbygoogle?: unknown[] }).adsbygoogle;
     mockedUseAdsGate.mockReturnValue({ enabled: true, isTestUser: false });
     mockedUseIsBottomNavVisible.mockReturnValue(false);
+    useBottomAdFillStore.setState({ filled: false });
+  });
+
+  afterEach(() => {
+    useBottomAdFillStore.setState({ filled: false });
   });
 
   it("게이트 enabled false 면 null 렌더", () => {
@@ -64,5 +70,23 @@ describe("BottomAnchorAdSlot", () => {
     expect(slot?.className).toContain("md:max-w-4xl");
     expect(slot?.className).toContain("md:mx-auto");
     expect(slot?.className).toContain("md:bottom-0");
+  });
+
+  it("광고가 안 채워졌으면 흰 바 chrome 대신 탭 통과(pointer-events-none) 처리", () => {
+    useBottomAdFillStore.setState({ filled: false });
+    const { container } = render(<BottomAnchorAdSlot />);
+    const slot = container.querySelector("div");
+    expect(slot?.className).not.toContain("bg-white");
+    expect(slot?.className).not.toContain("border-t");
+    expect(slot?.className).toContain("pointer-events-none");
+  });
+
+  it("광고가 채워지면 흰 바 chrome(border-t/bg-white) 노출", () => {
+    useBottomAdFillStore.setState({ filled: true });
+    const { container } = render(<BottomAnchorAdSlot />);
+    const slot = container.querySelector("div");
+    expect(slot?.className).toContain("bg-white");
+    expect(slot?.className).toContain("border-t");
+    expect(slot?.className).not.toContain("pointer-events-none");
   });
 });
