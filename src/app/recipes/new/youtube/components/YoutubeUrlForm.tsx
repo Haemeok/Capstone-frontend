@@ -7,29 +7,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Search, X } from "lucide-react";
 import * as z from "zod";
 
+import type { YoutubeDict } from "@/shared/i18n";
+
 import { validateYoutubeUrl } from "@/features/recipe-import-youtube/lib/urlValidation";
 
 import { useYoutubeUrl } from "./YoutubeUrlProvider";
 
-const youtubeUrlSchema = z.object({
-  url: z.string().refine(
-    (url) => {
-      if (!url.trim()) return true;
-      const result = validateYoutubeUrl(url);
-      return result.valid;
-    },
-    { message: "올바른 유튜브 링크를 입력해주세요" }
-  ),
-});
+type YoutubeUrlFormValues = { url: string };
 
-type YoutubeUrlFormValues = z.infer<typeof youtubeUrlSchema>;
-
-export const YoutubeUrlForm = () => {
+export const YoutubeUrlForm = ({ dict }: { dict: YoutubeDict }) => {
   const {
     setCurrentUrl,
     registerFormSetter,
     currentUrl: providerInitialUrl,
   } = useYoutubeUrl();
+
+  const youtubeUrlSchema = z.object({
+    url: z.string().refine(
+      (url) => {
+        if (!url.trim()) return true;
+        const result = validateYoutubeUrl(url);
+        return result.valid;
+      },
+      { message: dict.invalidUrl }
+    ),
+  });
 
   const {
     register,
@@ -72,7 +74,7 @@ export const YoutubeUrlForm = () => {
           {...register("url", {
             onChange: (e) => setCurrentUrl(e.target.value),
           })}
-          placeholder="유튜브 링크를 붙여넣으세요"
+          placeholder={dict.inputPlaceholder}
           className="text-ink w-full bg-transparent py-5 pr-12 pl-4 text-lg placeholder:text-gray-400 focus:outline-none"
           autoComplete="off"
         />
@@ -81,7 +83,7 @@ export const YoutubeUrlForm = () => {
             type="button"
             onClick={handleClear}
             className="hover:text-ink-sub absolute right-4 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100"
-            aria-label="입력 지우기"
+            aria-label={dict.inputClearLabel}
           >
             <X className="h-5 w-5" />
           </button>

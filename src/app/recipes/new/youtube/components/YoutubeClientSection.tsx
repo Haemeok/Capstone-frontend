@@ -3,6 +3,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 
+import type { YoutubeDict } from "@/shared/i18n";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 import { TrendingYoutubeRecipe } from "@/entities/recipe/model/types";
@@ -20,11 +21,13 @@ import { YoutubeUrlProvider } from "./YoutubeUrlProvider";
 type YoutubeClientSectionProps = {
   trendingRecipes: TrendingYoutubeRecipe[];
   initialUrl: string;
+  dict: YoutubeDict;
 };
 
 export const YoutubeClientSection = ({
   trendingRecipes,
   initialUrl,
+  dict,
 }: YoutubeClientSectionProps) => {
   const [isLoginDrawerOpen, setIsLoginDrawerOpen] = useState(false);
 
@@ -36,7 +39,7 @@ export const YoutubeClientSection = ({
     <YoutubeUrlProvider initialUrl={initialUrl}>
       <div className="mx-auto flex w-full max-w-xl flex-col items-center">
         <section className="mt-4 flex w-full flex-col gap-4">
-          <YoutubeUrlForm />
+          <YoutubeUrlForm dict={dict} />
           <YoutubePreviewSection onLoginRequired={handleLoginRequired} />
         </section>
 

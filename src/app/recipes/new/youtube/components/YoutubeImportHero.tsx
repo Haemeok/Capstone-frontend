@@ -1,8 +1,9 @@
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import type { YoutubeDict } from "@/shared/i18n";
 import BetaBadge from "@/shared/ui/badge/BetaBadge";
 import { Image } from "@/shared/ui/image/Image";
 
-export const YoutubeImportHero = () => {
+export const YoutubeImportHero = ({ dict }: { dict: YoutubeDict }) => {
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col items-center pt-2 md:pt-12">
       <Image
@@ -11,22 +12,21 @@ export const YoutubeImportHero = () => {
         wrapperClassName="w-1/2"
         imgClassName="drop-shadow-xl"
       />
-
       <div className="mb-8 space-y-2 text-center">
         <div className="space-y-2">
           <div className="flex items-center justify-center gap-2">
             <h1 className="text-ink text-3xl font-extrabold md:text-4xl">
-              유튜브 레시피 가져오기
+              {dict.heroTitle}
             </h1>
             <BetaBadge />
           </div>
           <p className="text-ink-muted text-lg">
-            링크만 붙여넣으면 유튜브 레시피 추출이 자동으로 끝나요.
+            {dict.heroDescLead}
             <br />
             <span className="text-olive-light font-bold">
-              영상과 레시피를 한눈에
-            </span>{" "}
-            보며 더 편하게 요리하세요.
+              {dict.heroDescHighlight}
+            </span>
+            {dict.heroDescTail}
           </p>
         </div>
       </div>

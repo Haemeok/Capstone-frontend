@@ -3,6 +3,7 @@ import {
   InArticleAdSlot,
   YoutubeAnchorAdSlot,
 } from "@/shared/adsense";
+import { getDictionary } from "@/shared/i18n";
 import {
   createYoutubeExtractorStructuredData,
   youtubeExtractorMetadata,
@@ -27,6 +28,7 @@ const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
     getTrendingYoutubeRecipesOnServer(),
   ]);
 
+  const dict = getDictionary("ko");
   const jsonLd = createYoutubeExtractorStructuredData();
 
   return (
@@ -42,11 +44,12 @@ const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
           <PrevButton className="text-ink-sub" />
         </div>
         <YoutubeAnchorAdSlot />
-        <YoutubeImportHero />
+        <YoutubeImportHero dict={dict.youtube} />
         <InArticleAdSlot className="my-4" />
         <YoutubeClientSection
           trendingRecipes={trendingRecipes}
           initialUrl={url ?? ""}
+          dict={dict.youtube}
         />
       </Container>
       <BottomAnchorAdSlot />
