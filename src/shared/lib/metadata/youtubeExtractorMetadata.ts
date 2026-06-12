@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
+import type { Locale } from "@/shared/i18n";
+import { buildHreflangAlternates } from "@/shared/i18n";
 
 import { SEO_CONSTANTS } from "./constants";
 
@@ -212,4 +214,26 @@ export const youtubeExtractorMetadata: Metadata = {
       "max-snippet": -1,
     },
   },
+};
+
+const OG_LOCALE: Record<Locale, string> = {
+  ko: "ko_KR",
+  en: "en_US",
+  ja: "ja_JP",
+};
+
+export const buildYoutubeExtractorMetadata = (locale: Locale): Metadata => {
+  const pathByLocale =
+    locale === "ko" ? "recipes/new/youtube" : `${locale}/recipes/new/youtube`;
+  return {
+    ...youtubeExtractorMetadata,
+    alternates: {
+      canonical: absoluteUrl(pathByLocale),
+      languages: buildHreflangAlternates("recipes/new/youtube"),
+    },
+    openGraph: {
+      ...youtubeExtractorMetadata.openGraph,
+      locale: OG_LOCALE[locale],
+    },
+  };
 };
