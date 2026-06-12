@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { AIModelId, aiModels } from "@/shared/config/constants/aiModel";
+import { useT } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import { useUserStore } from "@/entities/user/model/store";
@@ -17,6 +18,7 @@ const LoginEncourageDrawer = dynamic(
 const AIModelSelection = () => {
   const router = useRouter();
   const { user } = useUserStore();
+  const t = useT();
   const [isLoginDrawerOpen, setIsLoginDrawerOpen] = useState(false);
 
   const navigateToModel = (modelId: AIModelId) => {
@@ -49,7 +51,7 @@ const AIModelSelection = () => {
       <div className="flex h-full w-full items-center justify-center p-4">
         <div className="flex h-full w-full flex-col items-center justify-center gap-6 md:gap-8">
           <p className="text-ink text-center text-xl font-semibold md:text-3xl">
-            어떤 AI와 함께 요리할까요?
+            {t.aiRecipe.modelSelectHeading}
           </p>
 
           <div className="grid w-full grid-cols-2 gap-3 py-4 md:gap-6">
@@ -71,10 +73,10 @@ const AIModelSelection = () => {
 
                   <div className="z-20 col-start-1 row-start-1 flex h-full flex-col justify-end p-4 text-left md:p-6">
                     <p className="text-lg font-bold text-white md:text-2xl">
-                      {ai.name}
+                      {t.aiRecipe.models[ai.id].name}
                     </p>
                     <p className="mt-1 text-xs font-light text-pretty break-keep text-white/90 md:mt-2 md:text-sm">
-                      {ai.description}
+                      {t.aiRecipe.models[ai.id].description}
                     </p>
                   </div>
                 </button>
@@ -87,7 +89,7 @@ const AIModelSelection = () => {
       <LoginEncourageDrawer
         isOpen={isLoginDrawerOpen}
         onOpenChange={setIsLoginDrawerOpen}
-        message="AI와 함께 레시피를 만들어보세요!"
+        message={t.aiRecipe.loginDrawerMessage}
       />
     </>
   );

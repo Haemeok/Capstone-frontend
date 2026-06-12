@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
@@ -40,10 +41,13 @@ const AIRecipePage = () => {
     return null;
   }
 
+  const dict = getDictionary("ko");
   return (
-    <Container padding={false} className="min-h-full">
-      <AIModelSelection />
-    </Container>
+    <DictionaryProvider dict={dict}>
+      <Container padding={false} className="min-h-full">
+        <AIModelSelection />
+      </Container>
+    </DictionaryProvider>
   );
 };
 
