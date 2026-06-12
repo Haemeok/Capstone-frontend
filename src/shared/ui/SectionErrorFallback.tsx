@@ -1,17 +1,13 @@
 "use client";
 
 type SectionErrorFallbackProps = {
-  message?: string;
+  message: string;
 };
 
-const SectionErrorFallback = ({
-  message = "이 영역을 불러올 수 없어요",
-}: SectionErrorFallbackProps) => {
-  return (
-    <div className="flex items-center justify-center rounded-2xl bg-gray-50 p-6">
-      <p className="text-ink-muted text-sm">{message}</p>
-    </div>
-  );
-};
+const SectionErrorFallback = ({ message }: SectionErrorFallbackProps) => (
+  <div className="flex items-center justify-center rounded-2xl bg-gray-50 p-6">
+    <p className="text-ink-muted text-sm">{message}</p>
+  </div>
+);
 
 export default SectionErrorFallback;

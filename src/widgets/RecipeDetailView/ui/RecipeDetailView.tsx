@@ -1,4 +1,5 @@
 import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
+import { getDictionary } from "@/shared/i18n";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
@@ -43,6 +44,7 @@ export const RecipeDetailView = ({
   locale,
   notTranslatedMessage,
 }: RecipeDetailViewProps) => {
+  const t = getDictionary(locale);
   const saveAmount = recipe.marketPrice - recipe.totalIngredientCost;
 
   const youtubeMetadata = recipe.youtubeChannelName
@@ -106,9 +108,7 @@ export const RecipeDetailView = ({
           />
 
           <ErrorBoundary
-            fallback={
-              <SectionErrorFallback message="비디오를 불러올 수 없어요" />
-            }
+            fallback={<SectionErrorFallback message={t.errors.video} />}
           >
             <RecipeVideoSection
               videoUrl={recipe.youtubeUrl ?? ""}
@@ -117,16 +117,14 @@ export const RecipeDetailView = ({
               <InArticleAdSlot />
 
               <ErrorBoundary
-                fallback={
-                  <SectionErrorFallback message="댓글을 불러올 수 없어요" />
-                }
+                fallback={<SectionErrorFallback message={t.errors.comments} />}
               >
                 <RecipeCommentsSection comments={recipe.comments} />
               </ErrorBoundary>
 
               <ErrorBoundary
                 fallback={
-                  <SectionErrorFallback message="재료 정보를 불러올 수 없어요" />
+                  <SectionErrorFallback message={t.errors.ingredients} />
                 }
               >
                 <RecipeIngredientsSection recipe={recipe} />
@@ -150,9 +148,7 @@ export const RecipeDetailView = ({
               <InArticleAdSlot index={1} />
 
               <ErrorBoundary
-                fallback={
-                  <SectionErrorFallback message="조리 순서를 불러올 수 없어요" />
-                }
+                fallback={<SectionErrorFallback message={t.errors.steps} />}
               >
                 <RecipeStepList
                   RecipeSteps={recipe.steps}
