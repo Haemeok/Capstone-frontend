@@ -276,4 +276,5 @@ export const generateRecipeJsonLd = (
 export const generateNotFoundRecipeMetadata = (): Metadata => ({
   title: `레시피를 찾을 수 없습니다 - ${SEO_CONSTANTS.SITE_NAME}`,
   description: "요청하신 레시피를 찾을 수 없습니다.",
+  robots: { index: false, follow: false },
 });
