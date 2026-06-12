@@ -25,6 +25,7 @@ type RecipeSlideProps = {
   recipes: DetailedRecipeGridItemType[];
   isLoading: boolean;
   error: Error | null;
+  locale?: "ko" | "ja";
 };
 
 const getRecipeRightBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {
@@ -70,6 +71,7 @@ const RecipeSlide = ({
   recipes,
   isLoading,
   error,
+  locale,
 }: RecipeSlideProps) => {
   const renderContent = () => {
     if (isLoading) return <RecipeSlideLoading />;
@@ -95,6 +97,7 @@ const RecipeSlide = ({
                 recipe={item}
                 prefetch
                 hideCookingTime
+                locale={locale}
                 infoBadge={getRecipeRightBadge(item)}
                 saveBadge={
                   <RecipeSaveButton

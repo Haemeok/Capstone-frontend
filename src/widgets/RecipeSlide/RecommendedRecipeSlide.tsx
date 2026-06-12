@@ -26,6 +26,7 @@ const resolveTitle = (tags: string[]) =>
 const RecommendedRecipeSlide = ({
   recipeId,
   tags,
+  locale,
 }: RecommendedRecipeSlideProps) => {
   const { ref, inView } = useInViewOnce({ rootMargin: "400px" });
 
@@ -61,6 +62,7 @@ const RecommendedRecipeSlide = ({
         recipes={recipesWithStatus}
         isLoading={isLoading}
         error={error as Error | null}
+        locale={locale}
       />
     </div>
   );

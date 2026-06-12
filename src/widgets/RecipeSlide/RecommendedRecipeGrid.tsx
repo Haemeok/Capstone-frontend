@@ -30,6 +30,7 @@ type RecommendedRecipeGridProps = {
   recipes: DetailedRecipeGridItemType[];
   isLoading: boolean;
   error: Error | null;
+  locale?: "ko" | "ja";
 };
 
 const getInfoBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {
@@ -81,6 +82,7 @@ const RecommendedRecipeGrid = ({
   recipes,
   isLoading,
   error,
+  locale,
 }: RecommendedRecipeGridProps) => {
   const feedItems = useFeedWithAds(recipes, AD_EVERY_N, true);
 
@@ -121,6 +123,7 @@ const RecommendedRecipeGrid = ({
                   recipe={recipe}
                   prefetch
                   hideCookingTime
+                  locale={locale}
                   infoBadge={getInfoBadge(recipe)}
                   saveBadge={
                     <RecipeSaveButton

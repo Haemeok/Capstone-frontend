@@ -17,7 +17,7 @@ type RemixesSlideProps = {
 
 const MIN_VISIBLE = 5;
 
-const RemixesSlide = ({ recipeId }: RemixesSlideProps) => {
+const RemixesSlide = ({ recipeId, locale }: RemixesSlideProps) => {
   const { ref, inView } = useInViewOnce({ rootMargin: "400px" });
 
   const {
@@ -55,6 +55,7 @@ const RemixesSlide = ({ recipeId }: RemixesSlideProps) => {
         recipes={recipesWithStatus}
         isLoading={isLoading}
         error={error as Error | null}
+        locale={locale}
       />
     </div>
   );
