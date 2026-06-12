@@ -1,64 +1,48 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-
-import { BottomAnchorAdSlot, InArticleAdSlot } from "@/shared/adsense";
+import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
-import {
-  isAiRecipe,
-  isPrivateRecipe,
-  isYoutubeRecipe,
-} from "@/entities/recipe";
-import { getPrivateRecipeOnServer } from "@/entities/recipe/model/api.server";
+import { isAiRecipe, isYoutubeRecipe } from "@/entities/recipe";
+import type { StaticRecipe } from "@/entities/recipe/model/types";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
 import { ChatLauncher } from "@/features/recipe-chat";
 import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { RecipeStatusProvider } from "@/features/recipe-status";
-import { SmartAppBanner } from "@/features/smart-app-banner";
 
-import { CoupangDisclosure } from "@/widgets/RecipeDetailView/ui/CoupangDisclosure";
-import LazyRecommendedRecipeSlide from "@/widgets/RecipeDetailView/ui/LazyRecommendedRecipeSlide";
-import RecentlyViewedTracker from "@/widgets/RecipeDetailView/ui/RecentlyViewedTracker";
-import RecipeCommentsSection from "@/widgets/RecipeDetailView/ui/RecipeCommentsSection";
-import RecipeComponentsSection from "@/widgets/RecipeDetailView/ui/RecipeComponentsSection";
-import { RecipeContainer } from "@/widgets/RecipeDetailView/ui/RecipeContainer";
-import RecipeCookingInfoSection from "@/widgets/RecipeDetailView/ui/RecipeCookingInfoSection";
-import RecipeCookingTipsSection from "@/widgets/RecipeDetailView/ui/RecipeCookingTipsSection";
-import RecipeHeroSection from "@/widgets/RecipeDetailView/ui/RecipeHeroSection";
-import RecipeInfoSection from "@/widgets/RecipeDetailView/ui/RecipeInfoSection";
-import RecipeIngredientsSection from "@/widgets/RecipeDetailView/ui/RecipeIngredientsSection";
-import RecipeInteractionBar from "@/widgets/RecipeDetailView/ui/RecipeInteractionBar";
-import RecipeNavbar from "@/widgets/RecipeDetailView/ui/RecipeNavbar";
-import RecipePlatingSection from "@/widgets/RecipeDetailView/ui/RecipePlatingSection";
-import RecipeTagsSection from "@/widgets/RecipeDetailView/ui/RecipeTagsSection";
-import RecipeVideoSection from "@/widgets/RecipeDetailView/ui/RecipeVideoSection";
+import { CoupangDisclosure } from "./CoupangDisclosure";
+import LazyRecommendedRecipeSlide from "./LazyRecommendedRecipeSlide";
+import LazyRemixesSlide from "./LazyRemixesSlide";
+import { NotTranslatedBanner } from "./NotTranslatedBanner";
+import RecentlyViewedTracker from "./RecentlyViewedTracker";
+import RecipeCommentsSection from "./RecipeCommentsSection";
+import RecipeComponentsSection from "./RecipeComponentsSection";
+import { RecipeContainer } from "./RecipeContainer";
+import RecipeCookingInfoSection from "./RecipeCookingInfoSection";
+import RecipeCookingTipsSection from "./RecipeCookingTipsSection";
+import RecipeHeroSection from "./RecipeHeroSection";
+import RecipeInfoSection from "./RecipeInfoSection";
+import RecipeIngredientsSection from "./RecipeIngredientsSection";
+import RecipeInteractionBar from "./RecipeInteractionBar";
+import RecipeNavbar from "./RecipeNavbar";
+import RecipePlatingSection from "./RecipePlatingSection";
+import RecipeTagsSection from "./RecipeTagsSection";
+import RecipeVideoSection from "./RecipeVideoSection";
 
-import { ScrollReset } from "../../[recipeId]/components/ScrollReset";
-
-interface PrivateRecipePageProps {
-  params: Promise<{ recipeId: string }>;
-}
-
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
+type RecipeDetailViewProps = {
+  recipe: StaticRecipe;
+  recipeId: string;
+  locale: "ko" | "ja";
+  notTranslatedMessage?: string;
 };
 
-export default async function PrivateRecipePage({
-  params,
-}: PrivateRecipePageProps) {
-  const { recipeId } = await params;
-
-  const recipe = await getPrivateRecipeOnServer(recipeId);
-
-  // 404 / 401 / 403 / 비공개 아님 → 모두 notFound()
-  if (!recipe || !isPrivateRecipe(recipe)) {
-    notFound();
-  }
-
+export const RecipeDetailView = ({
+  recipe,
+  recipeId,
+  locale,
+  notTranslatedMessage,
+}: RecipeDetailViewProps) => {
   const saveAmount = recipe.marketPrice - recipe.totalIngredientCost;
 
   const youtubeMetadata = recipe.youtubeChannelName
@@ -73,7 +57,7 @@ export default async function PrivateRecipePage({
     : undefined;
 
   return (
-    <ScrollReset>
+    <>
       <RecentlyViewedTracker
         recipeId={recipeId}
         title={recipe.title}
@@ -100,12 +84,17 @@ export default async function PrivateRecipePage({
         />
 
         <RecipeContainer>
+          {notTranslatedMessage && (
+            <NotTranslatedBanner message={notTranslatedMessage} />
+          )}
+
           <RecipeInfoSection
             title={recipe.title}
             aiGenerated={isAiRecipe(recipe)}
             author={recipe.author}
             description={recipe.description}
             extractorId={recipe.extractorId}
+            creatorCountryTag={recipe.creatorCountryTag}
           >
             <RecipeInteractionBar staticRecipe={recipe} />
           </RecipeInfoSection>
@@ -158,6 +147,8 @@ export default async function PrivateRecipePage({
                 headerExtra={<CookingUnitTooltip inline />}
               />
 
+              <InArticleAdSlot index={1} />
+
               <ErrorBoundary
                 fallback={
                   <SectionErrorFallback message="조리 순서를 불러올 수 없어요" />
@@ -180,17 +171,16 @@ export default async function PrivateRecipePage({
 
           <RecipeTagsSection tags={recipe.tags} />
 
-          <Suspense fallback={null}>
-            <LazyRecommendedRecipeSlide
-              recipeId={recipeId}
-              tags={recipe.tags}
-            />
-          </Suspense>
+          <LazyRecommendedRecipeSlide
+            recipeId={recipeId}
+            tags={recipe.tags}
+            locale={locale}
+          />
+
+          <LazyRemixesSlide recipeId={recipeId} locale={locale} />
         </RecipeContainer>
         <ChatLauncher recipeId={recipeId} />
       </RecipeStatusProvider>
-      <BottomAnchorAdSlot />
-      <SmartAppBanner />
-    </ScrollReset>
+    </>
   );
-}
+};

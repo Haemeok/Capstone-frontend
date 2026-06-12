@@ -1,6 +1,6 @@
 "use client";
 
-import { useRecipeImageCheck } from "../hooks/useRecipeImageCheck";
+import { useRecipeImageCheck } from "./hooks/useRecipeImageCheck";
 import RecipeRatingButton from "./RecipeRatingButton";
 
 type RecipeHeroSectionProps = {

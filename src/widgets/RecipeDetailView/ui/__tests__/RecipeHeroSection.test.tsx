@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 
 import RecipeHeroSection from "../RecipeHeroSection";
 
-jest.mock("../../hooks/useRecipeImageCheck", () => ({
+jest.mock("../hooks/useRecipeImageCheck", () => ({
   useRecipeImageCheck: ({
     initialImageUrl,
   }: {

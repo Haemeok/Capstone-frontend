@@ -13,6 +13,7 @@ import RecommendedRecipeGrid from "./RecommendedRecipeGrid";
 type RecommendedRecipeSlideProps = {
   recipeId: string;
   tags: string[];
+  locale?: "ko" | "ja";
 };
 
 const CHEF_TAG = "👨‍🍳 셰프 레시피";

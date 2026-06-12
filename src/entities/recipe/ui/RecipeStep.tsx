@@ -14,7 +14,7 @@ import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
 import { WakeLockButton } from "@/features/screen-wake-lock";
 import { StepTimer } from "@/features/step-timer";
 
-import { useVideoPlayer } from "@/app/recipes/[recipeId]/components/RecipeVideoSection";
+import { useVideoPlayer } from "@/widgets/RecipeDetailView/ui/RecipeVideoSection";
 
 type RecipeStepProps = {
   stepIndex: number;
