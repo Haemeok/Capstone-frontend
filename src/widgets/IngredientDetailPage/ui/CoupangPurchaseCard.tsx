@@ -10,7 +10,7 @@ const CoupangPurchaseCard = ({ href }: CoupangPurchaseCardProps) => {
   if (!href) return null;
 
   return (
-    <section className="px-5 pt-2 pb-4">
+    <section data-testid="coupang-card" className="px-5 pt-2 pb-4">
       <Link
         href={href}
         target="_blank"
