@@ -58,7 +58,7 @@ const IngredientDetailPage = async ({ params }: IngredientDetailPageProps) => {
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <IngredientDetailPageClient detail={detail} />
+      <IngredientDetailPageClient detail={detail} locale="ko" />
     </HydrationBoundary>
   );
 };

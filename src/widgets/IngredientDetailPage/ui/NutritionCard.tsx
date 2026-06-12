@@ -1,7 +1,10 @@
+import { getDictionary, type Locale } from "@/shared/i18n";
+
 import type { IngredientNutrition } from "@/entities/ingredient";
 
 type NutritionCardProps = {
   nutrition: IngredientNutrition | null;
+  locale?: Locale;
 };
 
 type NutritionRowProps = {
@@ -20,13 +23,15 @@ const NutritionRow = ({ label, value, unit }: NutritionRowProps) => (
   </div>
 );
 
-const NutritionCard = ({ nutrition }: NutritionCardProps) => {
+const NutritionCard = ({ nutrition, locale = "ko" }: NutritionCardProps) => {
   if (!nutrition) return null;
+
+  const t = getDictionary(locale).ingredientDetail;
 
   return (
     <section className="border-t border-gray-100 px-5 py-6">
-      <h2 className="text-ink mb-1 text-lg font-bold">영양정보</h2>
-      <p className="text-ink-muted mb-4 text-sm">100g 기준이에요</p>
+      <h2 className="text-ink mb-1 text-lg font-bold">{t.nutritionHeader}</h2>
+      <p className="text-ink-muted mb-4 text-sm">{t.nutritionBasis}</p>
 
       <div className="rounded-xl bg-gray-50 p-4">
         <div className="mb-3 flex items-baseline gap-2">
@@ -35,18 +40,34 @@ const NutritionCard = ({ nutrition }: NutritionCardProps) => {
         </div>
 
         <div className="flex flex-col">
-          <NutritionRow label="단백질" value={nutrition.proteinG} unit="g" />
           <NutritionRow
-            label="탄수화물"
+            label={t.nutritionProtein}
+            value={nutrition.proteinG}
+            unit="g"
+          />
+          <NutritionRow
+            label={t.nutritionCarbs}
             value={nutrition.carbohydrateG}
             unit="g"
           />
-          <NutritionRow label="지방" value={nutrition.fatG} unit="g" />
+          <NutritionRow
+            label={t.nutritionFat}
+            value={nutrition.fatG}
+            unit="g"
+          />
           {nutrition.sugarG !== undefined && (
-            <NutritionRow label="당류" value={nutrition.sugarG} unit="g" />
+            <NutritionRow
+              label={t.nutritionSugar}
+              value={nutrition.sugarG}
+              unit="g"
+            />
           )}
           {nutrition.sodiumMg !== undefined && (
-            <NutritionRow label="나트륨" value={nutrition.sodiumMg} unit="mg" />
+            <NutritionRow
+              label={t.nutritionSodium}
+              value={nutrition.sodiumMg}
+              unit="mg"
+            />
           )}
         </div>
       </div>

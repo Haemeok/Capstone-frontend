@@ -1,5 +1,6 @@
 "use client";
 
+import type { Locale } from "@/shared/i18n";
 import { getEuroParticle } from "@/shared/lib/korean";
 
 import { useIngredientRecipesQuery } from "@/entities/ingredient";
@@ -9,6 +10,7 @@ import RecipeSlide from "@/widgets/RecipeSlide/RecipeSlide";
 type IngredientRecipesSlideProps = {
   ingredientId: string;
   ingredientName: string;
+  locale?: Locale;
 };
 
 const IngredientRecipesSlide = ({

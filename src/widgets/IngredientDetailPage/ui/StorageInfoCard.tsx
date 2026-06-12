@@ -6,10 +6,13 @@ import {
   Thermometer,
 } from "lucide-react";
 
+import { getDictionary, type Locale } from "@/shared/i18n";
+
 import type { IngredientStorageView } from "@/entities/ingredient";
 
 type StorageInfoCardProps = {
   storage: IngredientStorageView;
+  locale?: Locale;
 };
 
 type StorageStatProps = {
@@ -28,21 +31,30 @@ const StorageStat = ({ Icon, label, value }: StorageStatProps) => (
   </div>
 );
 
-const StorageInfoCard = ({ storage }: StorageInfoCardProps) => {
+const StorageInfoCard = ({ storage, locale = "ko" }: StorageInfoCardProps) => {
+  const t = getDictionary(locale).ingredientDetail;
   const stats: StorageStatProps[] = [];
 
   if (storage.location) {
-    stats.push({ Icon: MapPin, label: "위치", value: storage.location });
+    stats.push({
+      Icon: MapPin,
+      label: t.storageLocation,
+      value: storage.location,
+    });
   }
   if (storage.temperature) {
     stats.push({
       Icon: Thermometer,
-      label: "온도",
+      label: t.storageTemperature,
       value: storage.temperature,
     });
   }
   if (storage.duration) {
-    stats.push({ Icon: Calendar, label: "기간", value: storage.duration });
+    stats.push({
+      Icon: Calendar,
+      label: t.storageDuration,
+      value: storage.duration,
+    });
   }
 
   const hasStats = stats.length > 0;
@@ -54,7 +66,7 @@ const StorageInfoCard = ({ storage }: StorageInfoCardProps) => {
 
   return (
     <section className="border-t border-gray-100 px-5 py-6">
-      <h2 className="text-ink mb-3 text-lg font-bold">보관방법</h2>
+      <h2 className="text-ink mb-3 text-lg font-bold">{t.storageHeader}</h2>
 
       {hasStats && (
         <div className="grid grid-cols-2 gap-3">
@@ -72,7 +84,7 @@ const StorageInfoCard = ({ storage }: StorageInfoCardProps) => {
         >
           <span className="text-ink-muted mb-1 flex items-center gap-1.5 text-xs">
             <StickyNote size={13} className="text-gray-400" />
-            <span>보관 참고사항</span>
+            <span>{t.storageNotes}</span>
           </span>
           <p>{storage.notes}</p>
         </div>

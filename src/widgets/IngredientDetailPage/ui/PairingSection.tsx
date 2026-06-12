@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
+import { getDictionary, type Locale } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import type { IngredientPairItem } from "@/entities/ingredient";
@@ -9,6 +10,7 @@ import type { IngredientPairItem } from "@/entities/ingredient";
 type PairingSectionProps = {
   good: IngredientPairItem[];
   bad: IngredientPairItem[];
+  locale?: Locale;
 };
 
 type PairingChipRowProps = {
@@ -49,7 +51,7 @@ const PairingChipRow = ({ items }: PairingChipRowProps) => {
   );
 };
 
-const PairingSection = ({ good, bad }: PairingSectionProps) => {
+const PairingSection = ({ good, bad, locale = "ko" }: PairingSectionProps) => {
   const goodLinkable = good.filter(
     (item) => Boolean(item.id) && Boolean(item.imageUrl)
   );
@@ -61,14 +63,16 @@ const PairingSection = ({ good, bad }: PairingSectionProps) => {
 
   if (!hasGood && !hasBad) return null;
 
+  const t = getDictionary(locale).ingredientDetail;
+
   return (
     <section className="border-t border-gray-100 px-5 py-6">
-      <h2 className="text-ink mb-3 text-lg font-bold">궁합 재료</h2>
+      <h2 className="text-ink mb-3 text-lg font-bold">{t.pairingHeader}</h2>
 
       {hasGood && (
         <>
           <p className="text-ink-sub mb-2 text-sm font-medium">
-            같이 먹으면 좋아요
+            {t.pairingGood}
           </p>
           <PairingChipRow items={good} />
         </>
@@ -81,7 +85,7 @@ const PairingSection = ({ good, bad }: PairingSectionProps) => {
               hasGood ? "mt-4" : ""
             }`}
           >
-            같이 안 먹는 걸 추천해요
+            {t.pairingBad}
           </p>
           <PairingChipRow items={bad} />
         </>

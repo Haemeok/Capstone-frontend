@@ -1,22 +1,26 @@
 import { Sprout } from "lucide-react";
 
+import { getDictionary, type Locale } from "@/shared/i18n";
+
 type SeasonStripProps = {
-  months: number[]; // 1~12
+  months: number[];
+  locale?: Locale;
 };
 
 const ALL_MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 
-const SeasonStrip = ({ months }: SeasonStripProps) => {
+const SeasonStrip = ({ months, locale = "ko" }: SeasonStripProps) => {
   if (months.length === 0) return null;
 
+  const t = getDictionary(locale).ingredientDetail;
   const monthSet = new Set(months);
   const currentMonth = new Date().getMonth() + 1;
   const isInSeasonNow = monthSet.has(currentMonth);
 
   return (
     <section className="border-t border-gray-100 px-5 py-6">
-      <h2 className="text-ink mb-1 text-lg font-bold">제철</h2>
-      <p className="text-ink-muted mb-3 text-sm">가장 맛있는 시기예요</p>
+      <h2 className="text-ink mb-1 text-lg font-bold">{t.seasonHeader}</h2>
+      <p className="text-ink-muted mb-3 text-sm">{t.seasonSubtitle}</p>
 
       <div className="flex justify-between gap-1">
         {ALL_MONTHS.map((m) => {
@@ -42,7 +46,7 @@ const SeasonStrip = ({ months }: SeasonStripProps) => {
       {isInSeasonNow && (
         <p className="text-olive-dark mt-3 flex items-center gap-1.5 text-sm font-medium">
           <Sprout size={14} />
-          <span>지금이 제철!</span>
+          <span>{t.seasonNow}</span>
         </p>
       )}
     </section>
