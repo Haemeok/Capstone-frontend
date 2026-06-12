@@ -116,7 +116,7 @@ export default function RecipeVideoSection({
           {isSticky && (
             <div className="flex flex-col items-center gap-1 text-gray-400">
               <Pin className="h-5 w-5" />
-              <span className="text-xs">영상이 상단에 고정되었습니다</span>
+              <span className="text-xs">{t.recipeDetail.videoPinned}</span>
             </div>
           )}
         </div>

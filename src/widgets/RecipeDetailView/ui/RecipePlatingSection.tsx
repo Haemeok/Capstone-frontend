@@ -32,7 +32,9 @@ export default function RecipePlatingSection({
         <div className="flex items-start gap-3">
           <UtensilsCrossed className="text-brown h-6 w-6 flex-shrink-0" />
           <div className="flex flex-col gap-1">
-            <span className="text-brown text-sm font-bold">추천 그릇</span>
+            <span className="text-brown text-sm font-bold">
+              {t.recipeDetail.platingVessel}
+            </span>
             <p className="text-ink-sub text-sm">{vessel}</p>
           </div>
         </div>

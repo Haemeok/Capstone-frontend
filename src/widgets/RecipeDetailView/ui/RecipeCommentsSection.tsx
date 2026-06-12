@@ -20,7 +20,7 @@ export default function RecipeCommentsSection({
   return (
     <section className="mb-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">코멘트</h2>
+        <h2 className="text-xl font-bold">{t.recipeDetail.commentsHeading}</h2>
         <CommentMoreButton
           text={
             comments.length > 0
@@ -34,7 +34,9 @@ export default function RecipeCommentsSection({
         <RecipeCommentCard comment={comments[0]} />
       ) : (
         <div className="flex flex-col items-center justify-center gap-1 py-4">
-          <p className="text-sm text-gray-400">첫번째 댓글을 작성해보세요!</p>
+          <p className="text-sm text-gray-400">
+            {t.recipeDetail.commentsEmpty}
+          </p>
         </div>
       )}
     </section>

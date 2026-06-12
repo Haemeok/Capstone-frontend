@@ -63,8 +63,12 @@ export const ko: Dictionary = {
       "이 영상은 유튜브 공식 플레이어로 재생되며, 조회수와 수익은 100% 원작자에게 돌아갑니다.",
     coupangDisclosure:
       "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+    commentsHeading: "코멘트",
+    commentsEmpty: "첫번째 댓글을 작성해보세요!",
     commentsReadMore: "더 읽기",
     commentsWrite: "작성하기",
+    platingVessel: "추천 그릇",
+    videoPinned: "영상이 상단에 고정되었습니다",
     recommendedTitle: "이런 레시피는 어떠신가요?",
     recommendedChefTitle: "더 다양한 셰프 레시피를 만나보세요",
     remixesTitle: "이 레시피를 변형한 리믹스",

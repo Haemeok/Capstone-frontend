@@ -56,8 +56,12 @@ export type Dictionary = {
     originalVideo: string;
     videoDisclosure: string;
     coupangDisclosure: string;
+    commentsHeading: string;
+    commentsEmpty: string;
     commentsReadMore: string;
     commentsWrite: string;
+    platingVessel: string;
+    videoPinned: string;
     recommendedTitle: string;
     recommendedChefTitle: string;
     remixesTitle: string;

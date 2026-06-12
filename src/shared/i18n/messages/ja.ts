@@ -63,8 +63,12 @@ export const ja: Dictionary = {
       "この動画はYouTube公式プレーヤーで再生されます。再生回数と収益は100%オリジナルクリエイターに還元されます。",
     coupangDisclosure:
       "本記事はCoupang Partnersの活動の一環として、所定の手数料を受け取る場合があります。",
+    commentsHeading: "コメント",
+    commentsEmpty: "最初のコメントを書いてみましょう！",
     commentsReadMore: "もっと見る",
     commentsWrite: "コメントを書く",
+    platingVessel: "おすすめの器",
+    videoPinned: "動画がトップに固定されています",
     recommendedTitle: "こんなレシピはいかがですか？",
     recommendedChefTitle: "シェフのレシピをもっと見る",
     remixesTitle: "このレシピのアレンジ",

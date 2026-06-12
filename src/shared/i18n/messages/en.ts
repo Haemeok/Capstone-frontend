@@ -63,8 +63,12 @@ export const en: Dictionary = {
       "This video plays via the official YouTube player. All views and revenue go 100% to the original creator.",
     coupangDisclosure:
       "This post is part of the Coupang Partners program, through which a commission may be earned.",
+    commentsHeading: "Comments",
+    commentsEmpty: "Be the first to comment!",
     commentsReadMore: "Read more",
     commentsWrite: "Write a comment",
+    platingVessel: "Recommended vessel",
+    videoPinned: "Video pinned to top",
     recommendedTitle: "You might also like",
     recommendedChefTitle: "More chef recipes",
     remixesTitle: "Remixes of this recipe",
