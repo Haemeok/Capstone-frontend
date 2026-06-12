@@ -8,13 +8,13 @@ export const CreationModeSelector = () => {
   return (
     <div className="relative flex h-full items-center justify-center p-6">
       <div className="absolute top-2 left-2 md:hidden">
-        <PrevButton size={24} className="p-2 text-gray-700" />
+        <PrevButton size={24} className="text-ink-sub p-2" />
       </div>
       <div className="w-full max-w-4xl">
-        <h1 className="text-dark mb-4 text-center text-3xl font-bold text-pretty break-keep">
+        <h1 className="text-ink mb-4 text-center text-3xl font-bold text-pretty break-keep">
           어떻게 레시피를 만드시겠어요?
         </h1>
-        <p className="mb-12 text-center text-pretty break-keep text-gray-500">
+        <p className="text-ink-muted mb-12 text-center text-pretty break-keep">
           직접 입력하거나 유튜브 영상에서 레시피를 가져올 수 있어요
         </p>
 
@@ -33,10 +33,10 @@ export const CreationModeSelector = () => {
                 />
               </div>
               <div className="flex flex-col items-center gap-4">
-                <h2 className="text-dark text-lg font-bold md:text-2xl">
+                <h2 className="text-ink text-lg font-bold md:text-2xl">
                   직접 입력하기
                 </h2>
-                <p className="text-pretty break-keep text-gray-500">
+                <p className="text-ink-muted text-pretty break-keep">
                   레시피를 직접 작성하고 <br />
                   나만의 요리를 공유해보세요
                 </p>
@@ -58,10 +58,10 @@ export const CreationModeSelector = () => {
                 />
               </div>
               <div className="flex flex-col items-center gap-4">
-                <h2 className="text-dark text-lg font-bold text-pretty break-keep md:text-2xl">
+                <h2 className="text-ink text-lg font-bold text-pretty break-keep md:text-2xl">
                   유튜브로 가져오기
                 </h2>
-                <p className="text-pretty break-keep text-gray-500">
+                <p className="text-ink-muted text-pretty break-keep">
                   유튜브 영상 링크만 있으면
                   <br />
                   자동으로 레시피를 만들어요

@@ -116,10 +116,8 @@ export const IngredientCopySheet = ({
       <Content className="border-0 bg-white shadow-xl">
         <div className="flex max-h-[80vh] flex-col">
           <Header>
-            <Title className="text-xl font-bold text-gray-900">
-              재료 복사하기
-            </Title>
-            <Description className="mt-1 text-sm text-gray-500">
+            <Title className="text-ink text-xl font-bold">재료 복사하기</Title>
+            <Description className="text-ink-muted mt-1 text-sm">
               필요한 재료를 골라 장볼 때 사용하세요!
             </Description>
           </Header>

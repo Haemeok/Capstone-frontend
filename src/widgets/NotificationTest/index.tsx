@@ -65,7 +65,7 @@ export const NotificationTest = () => {
         <h3 className="text-sm font-bold">WebSocket 연결 테스트</h3>
         <button
           onClick={() => setIsVisible(false)}
-          className="text-gray-500 hover:text-gray-700"
+          className="text-ink-muted hover:text-ink-sub"
         >
           ✕
         </button>
@@ -76,10 +76,10 @@ export const NotificationTest = () => {
           <div className={`h-3 w-3 rounded-full ${getStatusColor()}`}></div>
           <span className="text-sm font-medium">{getStatusText()}</span>
         </div>
-        <div className="text-xs text-gray-600">
+        <div className="text-ink-sub text-xs">
           인증 상태: {isAuthenticated ? "✓ 로그인됨" : "✗ 로그인 안됨"}
           {user && (
-            <div className="mt-1 text-xs text-gray-500">
+            <div className="text-ink-muted mt-1 text-xs">
               사용자: {user.nickname}
             </div>
           )}
@@ -125,7 +125,7 @@ export const NotificationTest = () => {
                     notification.actorNickname
                   )}
                 </div>
-                <div className="text-gray-500">
+                <div className="text-ink-muted">
                   {notification.type} •{" "}
                   {new Date(notification.createdAt).toLocaleTimeString()}
                 </div>
@@ -136,7 +136,7 @@ export const NotificationTest = () => {
       )}
 
       <details className="mt-3">
-        <summary className="cursor-pointer text-xs text-gray-600">
+        <summary className="text-ink-sub cursor-pointer text-xs">
           디버그 정보
         </summary>
         <div className="mt-2 rounded bg-gray-100 p-2 font-mono text-xs">

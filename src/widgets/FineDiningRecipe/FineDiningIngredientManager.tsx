@@ -38,8 +38,8 @@ const FineDiningIngredientManager = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="mb-2 text-2xl font-bold text-gray-900">재료 선택</h3>
-        <p className="text-sm text-gray-600">
+        <h3 className="text-ink mb-2 text-2xl font-bold">재료 선택</h3>
+        <p className="text-ink-sub text-sm">
           사용할 재료를 선택해주세요 (최소 3개)
         </p>
       </div>
@@ -53,14 +53,14 @@ const FineDiningIngredientManager = ({
         >
           <SearchIcon
             size={20}
-            className="mr-3 text-gray-400 transition-colors group-hover:text-gray-900"
+            className="group-hover:text-ink mr-3 text-gray-400 transition-colors"
           />
-          <span className="text-base text-gray-500 group-hover:text-gray-900">
+          <span className="text-ink-muted group-hover:text-ink text-base">
             재료를 검색하세요...
           </span>
         </button>
         {ingredients.length > 0 && (
-          <p className="text-sm text-gray-600">
+          <p className="text-ink-sub text-sm">
             {ingredients.length}개의 재료가 추가됨
           </p>
         )}
@@ -69,7 +69,7 @@ const FineDiningIngredientManager = ({
       {ingredients.length > 0 && (
         <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900">선택된 재료</h3>
+            <h3 className="text-ink text-sm font-semibold">선택된 재료</h3>
             {ingredients.length > 1 && (
               <button
                 type="button"
@@ -78,7 +78,7 @@ const FineDiningIngredientManager = ({
                   handleRemoveAllIngredients();
                 }}
                 aria-label="모든 재료 삭제"
-                className="cursor-pointer px-2 py-1 text-xs text-gray-500 hover:text-gray-900"
+                className="text-ink-muted hover:text-ink cursor-pointer px-2 py-1 text-xs"
               >
                 전체 삭제
               </button>
@@ -105,13 +105,13 @@ const FineDiningIngredientManager = ({
                       e.stopPropagation();
                       handleRemoveIngredient(index);
                     }}
-                    className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 shadow-sm transition-all hover:border-gray-900 hover:bg-gray-900 hover:text-white"
+                    className="text-ink-muted absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-900 hover:bg-gray-900 hover:text-white"
                     aria-label={`${ingredient.name} 삭제`}
                   >
                     <XIcon size={10} />
                   </button>
                 </div>
-                <span className="w-full truncate text-center text-xs font-medium text-gray-700">
+                <span className="text-ink-sub w-full truncate text-center text-xs font-medium">
                   {ingredient.name}
                 </span>
               </div>

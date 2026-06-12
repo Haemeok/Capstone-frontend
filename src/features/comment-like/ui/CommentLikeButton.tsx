@@ -34,7 +34,7 @@ const CommentLikeButton = ({
       likeCount={initialLikeCount}
       onClick={handleClick}
       containerClassName="flex-row"
-      buttonClassName="flex items-center gap-1 text-sm cursor-pointer group w-5 h-5 text-dark"
+      buttonClassName="flex items-center gap-1 text-sm cursor-pointer group w-5 h-5 text-ink"
       isCountShown
       width={16}
       height={16}

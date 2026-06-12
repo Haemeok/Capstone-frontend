@@ -67,7 +67,7 @@ const MacroSlider = ({
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-bold text-gray-700">{label}</label>
+              <label className="text-ink-sub text-sm font-bold">{label}</label>
               <div className="flex items-center gap-3">
                 {!isUnlimited && (
                   <span className="text-olive-light font-mono text-lg font-bold">
@@ -128,7 +128,7 @@ const MacroSlider = ({
 
               {guidance && (
                 <div className="animate-in fade-in slide-in-from-top-1 mt-3 flex justify-center">
-                  <span className="inline-block rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-bold text-gray-600">
+                  <span className="text-ink-sub inline-block rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-bold">
                     {guidance}
                   </span>
                 </div>

@@ -37,7 +37,7 @@ const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
     <button
       type="button"
       onClick={handleOpen}
-      className="inline-flex cursor-pointer items-center gap-1 text-sm text-gray-500 underline-offset-4 transition-colors hover:text-gray-700 hover:underline"
+      className="text-ink-muted hover:text-ink-sub inline-flex cursor-pointer items-center gap-1 text-sm underline-offset-4 transition-colors hover:underline"
     >
       요리 단위 변환표
       <ChevronRight size={14} />
@@ -55,10 +55,10 @@ const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
       <Container open={isOpen} onOpenChange={setIsOpen}>
         <Content className="sm:max-w-md">
           <Header>
-            <Title className="text-xl font-bold text-gray-900">
+            <Title className="text-ink text-xl font-bold">
               요리 단위 변환표
             </Title>
-            <Description className="text-sm text-gray-500">
+            <Description className="text-ink-muted text-sm">
               레시피에 자주 나오는 계량 단위를 확인해보세요
             </Description>
           </Header>
@@ -68,12 +68,12 @@ const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
               {UNIT_CONVERSIONS.map((item) => (
                 <li key={item.unit} className="flex flex-col gap-0.5 p-4">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-bold text-gray-900">{item.unit}</span>
-                    <span className="font-semibold text-gray-900 tabular-nums">
+                    <span className="text-ink font-bold">{item.unit}</span>
+                    <span className="text-ink font-semibold tabular-nums">
                       {item.value}
                     </span>
                   </div>
-                  <span className="text-xs text-gray-500">{item.tip}</span>
+                  <span className="text-ink-muted text-xs">{item.tip}</span>
                 </li>
               ))}
             </ul>

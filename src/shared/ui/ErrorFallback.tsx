@@ -11,8 +11,8 @@ const ErrorFallback = ({
 }: ErrorFallbackProps) => {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6">
-      <p className="text-lg font-bold text-gray-900">문제가 발생했어요</p>
-      <p className="text-sm text-gray-500">{message}</p>
+      <p className="text-ink text-lg font-bold">문제가 발생했어요</p>
+      <p className="text-ink-muted text-sm">{message}</p>
       <div className="flex gap-3">
         <button
           onClick={() => reset()}
@@ -22,7 +22,7 @@ const ErrorFallback = ({
         </button>
         <button
           onClick={() => (window.location.href = "/")}
-          className="h-12 rounded-xl bg-gray-100 px-6 font-medium text-gray-700 transition-colors hover:bg-gray-200"
+          className="text-ink-sub h-12 rounded-xl bg-gray-100 px-6 font-medium transition-colors hover:bg-gray-200"
         >
           홈으로 가기
         </button>

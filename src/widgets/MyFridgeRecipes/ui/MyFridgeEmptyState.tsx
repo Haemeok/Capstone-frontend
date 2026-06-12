@@ -13,10 +13,10 @@ const MyFridgeEmptyState = () => {
         aria-hidden
       />
       <div className="space-y-2 text-center">
-        <h3 className="text-xl font-bold text-gray-900">
+        <h3 className="text-ink text-xl font-bold">
           요리 가능한 레시피가 없어요
         </h3>
-        <p className="text-sm text-gray-500">
+        <p className="text-ink-muted text-sm">
           냉장고에 재료를 추가하면
           <br />더 많은 레시피를 찾을 수 있어요!
         </p>

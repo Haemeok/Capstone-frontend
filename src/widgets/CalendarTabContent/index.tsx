@@ -172,7 +172,7 @@ const CalendarTabContent = () => {
               }}
               {...props}
             >
-              <ChevronLeft className="size-6 text-gray-500" />
+              <ChevronLeft className="text-ink-muted size-6" />
             </button>
           ),
           NextMonthButton: ({
@@ -188,7 +188,7 @@ const CalendarTabContent = () => {
               }}
               {...props}
             >
-              <ChevronRight className="size-6 text-gray-500" />
+              <ChevronRight className="text-ink-muted size-6" />
             </button>
           ),
         }}
@@ -196,7 +196,7 @@ const CalendarTabContent = () => {
       <Link
         href="/calendar/timeline"
         onClick={() => triggerHaptic("Light")}
-        className="mt-2 flex w-full items-center justify-center gap-1 px-5 py-4 text-sm text-gray-600 transition-colors hover:text-gray-900"
+        className="text-ink-sub hover:text-ink mt-2 flex w-full items-center justify-center gap-1 px-5 py-4 text-sm transition-colors"
       >
         모든 요리 기록 보기
         <ChevronRight className="size-4" />

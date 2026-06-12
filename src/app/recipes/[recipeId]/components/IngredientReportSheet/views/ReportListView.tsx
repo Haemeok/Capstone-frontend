@@ -33,8 +33,8 @@ export const ReportListView = ({
     className="flex max-h-[70vh] flex-col"
   >
     <Header>
-      <Title className="text-xl font-bold text-gray-900">재료 오류 제보</Title>
-      <Description className="mt-1 text-sm text-gray-500">
+      <Title className="text-ink text-xl font-bold">재료 오류 제보</Title>
+      <Description className="text-ink-muted mt-1 text-sm">
         문제가 있는 재료를 선택해주세요
       </Description>
     </Header>
@@ -46,7 +46,7 @@ export const ReportListView = ({
         className="hover:border-olive-light hover:bg-olive-light/5 mb-3 flex w-full cursor-pointer items-center gap-2.5 rounded-xl border border-dashed border-gray-300 px-4 py-3 text-left transition-all"
       >
         <Plus className="h-4 w-4 text-gray-400" />
-        <span className="text-sm font-medium text-gray-500">
+        <span className="text-ink-muted text-sm font-medium">
           빠진 재료가 있나요?
         </span>
       </button>
@@ -71,9 +71,7 @@ export const ReportListView = ({
               className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-gray-100 px-4 py-3 text-left transition-all hover:border-gray-200 hover:bg-gray-50"
             >
               <div className="flex items-center gap-3">
-                <span className="font-medium text-gray-900">
-                  {ingredient.name}
-                </span>
+                <span className="text-ink font-medium">{ingredient.name}</span>
                 <span className="text-sm text-gray-400">{amount}</span>
               </div>
               <ChevronRight className="h-4 w-4 text-gray-300" />

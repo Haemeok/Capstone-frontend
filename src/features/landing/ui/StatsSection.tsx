@@ -49,10 +49,10 @@ export const StatsSection = () => {
 
       <div className="relative mx-auto max-w-7xl">
         <Reveal className="mb-16 text-center">
-          <h2 className="text-dark mb-4 text-4xl font-extrabold md:text-5xl">
+          <h2 className="text-ink mb-4 text-4xl font-extrabold md:text-5xl">
             실제 사용자들의 결과
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="text-ink-sub mx-auto max-w-2xl text-lg">
             레시피오에서 요리를 시작한 사용자들이
             <br className="hidden sm:block" />
             경험한 실제 변화를 확인하세요
@@ -80,10 +80,10 @@ export const StatsSection = () => {
                 <div className="from-olive-light via-olive-mint to-olive-medium bg-gradient-to-br bg-clip-text text-3xl font-extrabold text-transparent md:text-4xl">
                   {stat.metric}
                 </div>
-                <h3 className="text-dark mt-3 mb-1 text-sm font-bold text-balance break-keep md:mt-4 md:mb-2 md:text-xl">
+                <h3 className="text-ink mt-3 mb-1 text-sm font-bold text-balance break-keep md:mt-4 md:mb-2 md:text-xl">
                   {stat.label}
                 </h3>
-                <p className="text-xs text-pretty break-keep text-gray-500 md:text-sm">
+                <p className="text-ink-muted text-xs text-pretty break-keep md:text-sm">
                   {stat.description}
                 </p>
               </div>

@@ -29,7 +29,7 @@ const PairingChipRow = ({ items }: PairingChipRowProps) => {
         <Link
           key={item.id}
           href={`/ingredients/${item.id}`}
-          className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-gray-100 py-1.5 pr-3 pl-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200"
+          className="text-ink-sub inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-gray-100 py-1.5 pr-3 pl-1.5 text-sm transition-colors hover:bg-gray-200"
         >
           <span className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-white">
             <Image
@@ -63,11 +63,11 @@ const PairingSection = ({ good, bad }: PairingSectionProps) => {
 
   return (
     <section className="border-t border-gray-100 px-5 py-6">
-      <h2 className="mb-3 text-lg font-bold text-gray-900">궁합 재료</h2>
+      <h2 className="text-ink mb-3 text-lg font-bold">궁합 재료</h2>
 
       {hasGood && (
         <>
-          <p className="mb-2 text-sm font-medium text-gray-600">
+          <p className="text-ink-sub mb-2 text-sm font-medium">
             같이 먹으면 좋아요
           </p>
           <PairingChipRow items={good} />
@@ -77,7 +77,7 @@ const PairingSection = ({ good, bad }: PairingSectionProps) => {
       {hasBad && (
         <>
           <p
-            className={`mb-2 text-sm font-medium text-gray-600 ${
+            className={`text-ink-sub mb-2 text-sm font-medium ${
               hasGood ? "mt-4" : ""
             }`}
           >

@@ -71,11 +71,11 @@ export const MoveRecipesSheet = ({ open, onOpenChange, fromBookId }: Props) => {
           <span className="bg-olive-light/10 text-olive-light flex h-8 w-8 items-center justify-center rounded-full">
             <PlusIcon size={18} />
           </span>
-          <span className="font-medium text-gray-900">새 레시피북 만들기</span>
+          <span className="text-ink font-medium">새 레시피북 만들기</span>
         </button>
       )}
       {targets.length === 0 ? (
-        <p className="px-4 py-6 text-center text-sm text-gray-500">
+        <p className="text-ink-muted px-4 py-6 text-center text-sm">
           {canCreateMore
             ? "이동할 다른 레시피북이 없어요. 새로 만들어보세요."
             : "이동할 다른 레시피북이 없어요."}
@@ -90,8 +90,10 @@ export const MoveRecipesSheet = ({ open, onOpenChange, fromBookId }: Props) => {
                 onClick={() => handleSelect(b.id, b.name)}
                 disabled={moveMutation.isPending}
               >
-                <span className="font-medium text-gray-900">{b.name}</span>
-                <span className="text-sm text-gray-500">{b.recipeCount}개</span>
+                <span className="text-ink font-medium">{b.name}</span>
+                <span className="text-ink-muted text-sm">
+                  {b.recipeCount}개
+                </span>
               </button>
             </li>
           ))}
@@ -105,7 +107,7 @@ export const MoveRecipesSheet = ({ open, onOpenChange, fromBookId }: Props) => {
       <Container open={open} onOpenChange={onOpenChange}>
         <Content className="flex flex-col overflow-hidden border-0 bg-white shadow-xl sm:max-h-[85vh] sm:max-w-md sm:rounded-2xl">
           <Header className="px-6 pt-6 pb-2 text-left">
-            <Title className="text-xl font-bold text-gray-900">
+            <Title className="text-ink text-xl font-bold">
               어느 레시피북으로 이동할까요?
             </Title>
           </Header>

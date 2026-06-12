@@ -34,8 +34,8 @@ const IngredientHero = ({
         />
       </div>
       <div className="flex flex-col items-center gap-1">
-        <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
-        {metaLine && <p className="text-sm text-gray-500">{metaLine}</p>}
+        <h1 className="text-ink text-2xl font-bold">{name}</h1>
+        {metaLine && <p className="text-ink-muted text-sm">{metaLine}</p>}
       </div>
     </div>
   );

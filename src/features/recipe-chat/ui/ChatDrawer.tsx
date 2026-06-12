@@ -206,10 +206,8 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
           <ChatHeader quota={quota} onClose={() => onOpenChange(false)} />
           {fallbackView ? (
             <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-              <p className="text-lg font-bold text-gray-900">
-                {fallbackView.title}
-              </p>
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="text-ink text-lg font-bold">{fallbackView.title}</p>
+              <p className="text-ink-muted mt-2 text-sm">
                 {fallbackView.description}
               </p>
             </div>

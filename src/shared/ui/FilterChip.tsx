@@ -32,7 +32,7 @@ const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
         <p
           className={cn(
             "truncate text-[15px]",
-            isDirty ? "text-white" : "text-dark-light"
+            isDirty ? "text-white" : "text-ink-sub"
           )}
         >
           {header}
@@ -40,7 +40,7 @@ const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
         <ChevronDown
           className={cn(
             "flex-shrink-0",
-            isDirty ? "text-white" : "text-dark-light"
+            isDirty ? "text-white" : "text-ink-sub"
           )}
           size={20}
         />

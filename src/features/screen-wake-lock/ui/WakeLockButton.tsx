@@ -40,7 +40,7 @@ const WakeLockButton = () => {
         "flex h-10 w-10 items-center justify-center rounded-full shadow-lg transition-colors duration-300",
         isActive
           ? "bg-olive-light shadow-olive-light/30 text-white"
-          : "bg-gray-100 text-gray-600"
+          : "text-ink-sub bg-gray-100"
       )}
       aria-label={isActive ? "화면 보호기 끄기" : "화면 보호기 켜기"}
     >

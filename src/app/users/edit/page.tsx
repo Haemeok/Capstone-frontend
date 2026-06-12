@@ -133,7 +133,7 @@ const UserInfoChangePage = () => {
           <button
             type="button"
             onClick={handleCancel}
-            className="cursor-pointer border-none bg-transparent text-base text-gray-600"
+            className="text-ink-sub cursor-pointer border-none bg-transparent text-base"
           >
             취소
           </button>
@@ -174,7 +174,7 @@ const UserInfoChangePage = () => {
                 }
               >
                 {!previewImageUrl && (
-                  <Camera className="z-10 h-10 w-10 text-gray-500" />
+                  <Camera className="text-ink-muted z-10 h-10 w-10" />
                 )}
               </div>
             </label>
@@ -225,7 +225,7 @@ const UserInfoChangePage = () => {
             <div className="mb-6">
               <label
                 htmlFor="nickname"
-                className="mb-1 block text-sm text-gray-600"
+                className="text-ink-sub mb-1 block text-sm"
               >
                 이름
               </label>
@@ -264,7 +264,7 @@ const UserInfoChangePage = () => {
                     {errors.nickname.message}
                   </p>
                 )}
-                <p className="m-0 ml-auto text-xs text-gray-500">
+                <p className="text-ink-muted m-0 ml-auto text-xs">
                   {nickname?.length || 0}/{MAX_NICKNAME_LENGTH}
                 </p>
               </div>
@@ -273,7 +273,7 @@ const UserInfoChangePage = () => {
             <div className="mb-6">
               <label
                 htmlFor="description"
-                className="mb-1 block text-sm text-gray-600"
+                className="text-ink-sub mb-1 block text-sm"
               >
                 소개
               </label>
@@ -306,7 +306,7 @@ const UserInfoChangePage = () => {
                     {errors.description.message}
                   </p>
                 )}
-                <p className="m-0 ml-auto text-xs text-gray-500">
+                <p className="text-ink-muted m-0 ml-auto text-xs">
                   {description?.length || 0}/{MAX_DESCRIPTION_LENGTH}
                 </p>
               </div>

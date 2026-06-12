@@ -44,10 +44,10 @@ export const YoutubePreviewCard = ({
         />
 
         <div className="min-w-0 flex-1">
-          <h3 className="text-dark mb-1 line-clamp-2 text-lg font-semibold">
+          <h3 className="text-ink mb-1 line-clamp-2 text-lg font-semibold">
             {meta.title}
           </h3>
-          <p className="text-gray-600">{meta.channelName}</p>
+          <p className="text-ink-sub">{meta.channelName}</p>
         </div>
       </div>
       <p className="mb-3 flex items-center gap-1.5 text-xs text-gray-400">

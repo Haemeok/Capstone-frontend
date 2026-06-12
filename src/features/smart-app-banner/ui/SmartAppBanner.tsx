@@ -41,7 +41,7 @@ export const SmartAppBanner = () => {
                 height={40}
               />
 
-              <p className="min-w-0 flex-1 text-sm font-medium text-pretty break-keep text-gray-700">
+              <p className="text-ink-sub min-w-0 flex-1 text-sm font-medium text-pretty break-keep">
                 앱에서 더 편하게 사용해보세요
               </p>
 
@@ -54,7 +54,7 @@ export const SmartAppBanner = () => {
 
               <button
                 onClick={handleDismiss}
-                className="shrink-0 p-1 text-gray-400 transition-colors hover:text-gray-600"
+                className="hover:text-ink-sub shrink-0 p-1 text-gray-400 transition-colors"
                 aria-label="배너 닫기"
               >
                 <X className="h-4 w-4" />

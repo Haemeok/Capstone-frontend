@@ -60,7 +60,7 @@ const SuccessView = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="mt-6 text-lg font-bold text-gray-900"
+        className="text-ink mt-6 text-lg font-bold"
       >
         알림 설정이 완료되었어요
       </motion.p>
@@ -69,7 +69,7 @@ const SuccessView = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="mt-2 text-center text-sm text-gray-500"
+        className="text-ink-muted mt-2 text-center text-sm"
       >
         중요한 소식을 놓치지 않게 알려드릴게요
       </motion.p>
@@ -117,10 +117,10 @@ export const NotificationPermissionDrawer = ({
               </div>
 
               <div className="mt-6 text-center">
-                <h2 className="text-xl font-bold text-gray-900">
+                <h2 className="text-ink text-xl font-bold">
                   알림을 허용해 주세요
                 </h2>
-                <p className="mt-3 text-base leading-relaxed text-gray-600">
+                <p className="text-ink-sub mt-3 text-base leading-relaxed">
                   새로운 레시피 추천, 인기 급상승 레시피 등
                   <br />
                   놓치고 싶지 않은 소식을 알려드릴게요
@@ -136,7 +136,7 @@ export const NotificationPermissionDrawer = ({
                 </button>
                 <button
                   onClick={handleDecline}
-                  className="h-12 w-full cursor-pointer rounded-xl text-base font-medium text-gray-500 transition-colors hover:bg-gray-100 active:bg-gray-200"
+                  className="text-ink-muted h-12 w-full cursor-pointer rounded-xl text-base font-medium transition-colors hover:bg-gray-100 active:bg-gray-200"
                 >
                   나중에
                 </button>

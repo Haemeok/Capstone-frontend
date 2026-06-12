@@ -58,10 +58,10 @@ const YoutubeExtractionDrawer = ({
           />
 
           <div className="mt-6 text-center">
-            <h2 className="text-2xl font-bold break-keep text-gray-900">
+            <h2 className="text-ink text-2xl font-bold break-keep">
               유튜브 레시피 추출하기
             </h2>
-            <p className="mt-3 text-base leading-relaxed break-keep text-gray-600">
+            <p className="text-ink-sub mt-3 text-base leading-relaxed break-keep">
               좋아하는 유튜브 영상에서
               <br />
               레시피를 자동으로 추출해보세요!

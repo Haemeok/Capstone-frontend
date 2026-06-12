@@ -47,7 +47,7 @@ export const EditModeBottomBar = ({ bookId }: Props) => {
           <button
             type="button"
             onClick={handleSelectAllToggle}
-            className="rounded-xl px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
+            className="text-ink-sub rounded-xl px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100"
           >
             {isAllSelected ? "선택 해제" : "모두 선택"}
           </button>
@@ -59,7 +59,7 @@ export const EditModeBottomBar = ({ bookId }: Props) => {
               className={cn(
                 "h-12 rounded-xl border px-6 text-base font-bold transition-all active:scale-[0.98]",
                 hasSelection
-                  ? "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "text-ink-sub border-gray-200 hover:bg-gray-50"
                   : "cursor-not-allowed border-gray-100 text-gray-300"
               )}
             >

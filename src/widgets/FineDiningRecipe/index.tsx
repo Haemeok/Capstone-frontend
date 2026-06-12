@@ -102,10 +102,10 @@ const FineDiningRecipe = () => {
         <FormProvider {...methods}>
           <div className="mx-auto max-w-2xl space-y-8 p-4 pb-24 md:pb-24">
             <div className="mb-4 flex items-center gap-2">
-              <PrevButton className="text-gray-600 md:hidden" />
+              <PrevButton className="text-ink-sub md:hidden" />
               <button
                 onClick={() => router.back()}
-                className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
+                className="text-ink-sub hover:text-ink hidden items-center gap-2 transition-colors md:flex"
               >
                 <ArrowLeftIcon size={20} />
                 <span className="text-sm font-medium">AI 다시 선택하기</span>
@@ -128,7 +128,7 @@ const FineDiningRecipe = () => {
                 <button
                   onClick={handleGenerateRecipe}
                   disabled={hasNoQuota || !isFormValid || isPending}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:hover:shadow-lg"
+                  className="disabled:text-ink-muted flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:shadow-lg"
                 >
                   <ChefHatIcon className="h-6 w-6" />
                   <span>레시피 생성하기</span>

@@ -88,7 +88,7 @@ const IngredientItem = ({
               <ChefHat className="text-olive-light/60 h-5 w-5" aria-hidden />
             )}
           </div>
-          <p className="flex-1 font-medium text-gray-800">{field.name}</p>
+          <p className="text-ink flex-1 font-medium">{field.name}</p>
 
           <button
             type="button"
@@ -96,7 +96,7 @@ const IngredientItem = ({
             className={`rounded-md px-2 py-1 text-xs font-medium transition-colors ${
               isApproximate
                 ? "bg-olive-light text-white"
-                : "border border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
+                : "text-ink-sub border border-gray-300 bg-white hover:bg-gray-50"
             }`}
           >
             약간

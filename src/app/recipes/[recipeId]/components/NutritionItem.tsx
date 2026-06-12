@@ -11,8 +11,8 @@ type NutritionItemProps = {
 const NutritionItem = ({ label, value, unit }: NutritionItemProps) => {
   return (
     <div className="rounded-card flex flex-col gap-1 border border-gray-200 p-3">
-      <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-base font-bold text-gray-800">
+      <p className="text-ink-muted text-xs">{label}</p>
+      <p className="text-ink text-base font-bold">
         {formatNumber(value, unit)}
       </p>
     </div>

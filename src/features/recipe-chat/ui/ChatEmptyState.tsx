@@ -45,10 +45,10 @@ const ChatEmptyState = ({ onQuickQuestion }: ChatEmptyStateProps) => {
   return (
     <div className="flex flex-col gap-5 px-5 pt-8 pb-6">
       <div>
-        <p className="text-[15px] font-bold text-gray-900">
+        <p className="text-ink text-[15px] font-bold">
           레시피오 AI에게 무엇이든 물어보세요
         </p>
-        <p className="mt-1 text-sm leading-6 text-gray-500">
+        <p className="text-ink-muted mt-1 text-sm leading-6">
           재료부터 보관까지 친절하게 답해드려요
         </p>
       </div>
@@ -64,7 +64,7 @@ const ChatEmptyState = ({ onQuickQuestion }: ChatEmptyStateProps) => {
           >
             <div className="flex items-center gap-3">
               <Icon className={`h-5 w-5 shrink-0 ${iconColor}`} />
-              <p className="text-sm font-semibold text-gray-900">{label}</p>
+              <p className="text-ink text-sm font-semibold">{label}</p>
             </div>
             <ChevronRight className="h-4 w-4 shrink-0 text-gray-400" />
           </button>

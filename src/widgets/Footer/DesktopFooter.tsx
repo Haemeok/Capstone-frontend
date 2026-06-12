@@ -43,16 +43,14 @@ const DesktopFooter = () => {
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-bold text-gray-900">
-                레시피오 (Recipio)
-              </h3>
+              <h3 className="text-ink text-lg font-bold">레시피오 (Recipio)</h3>
               <button
                 type="button"
                 aria-expanded={isInfoOpen}
                 aria-controls={infoPanelId}
                 aria-label="사업자 정보 펼치기"
                 onClick={() => setIsInfoOpen((prev) => !prev)}
-                className="text-gray-400 transition-colors hover:text-gray-700"
+                className="hover:text-ink-sub text-gray-400 transition-colors"
               >
                 <ChevronDown
                   className={`size-5 transition-transform ${isInfoOpen ? "rotate-180" : ""}`}
@@ -60,7 +58,7 @@ const DesktopFooter = () => {
                 />
               </button>
             </div>
-            <p className="max-w-xl text-sm text-gray-600">
+            <p className="text-ink-sub max-w-xl text-sm">
               AI 기반 레시피 추천 서비스로, 냉장고 재료만으로 맛있는 요리를
               만들어보세요.
             </p>
@@ -68,7 +66,7 @@ const DesktopFooter = () => {
             {isInfoOpen && (
               <div
                 id={infoPanelId}
-                className="mt-1 flex flex-col gap-2 text-xs text-gray-500"
+                className="text-ink-muted mt-1 flex flex-col gap-2 text-xs"
               >
                 {INFO_ROWS.map((row) => (
                   <div key={row.label} className="flex items-center gap-2">
@@ -83,7 +81,7 @@ const DesktopFooter = () => {
 
           <div className="flex gap-12">
             <div className="flex flex-col gap-3">
-              <h4 className="text-sm font-semibold text-gray-900">서비스</h4>
+              <h4 className="text-ink text-sm font-semibold">서비스</h4>
               <div className="flex flex-col gap-2">
                 {FOOTER_LINKS.service.map((link) =>
                   "external" in link && link.external ? (
@@ -92,7 +90,7 @@ const DesktopFooter = () => {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-gray-600 transition-colors hover:text-gray-900"
+                      className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
                       {link.label}
                     </a>
@@ -100,7 +98,7 @@ const DesktopFooter = () => {
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="text-sm text-gray-600 transition-colors hover:text-gray-900"
+                      className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -110,7 +108,7 @@ const DesktopFooter = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <h4 className="text-sm font-semibold text-gray-900">고객지원</h4>
+              <h4 className="text-ink text-sm font-semibold">고객지원</h4>
               <div className="flex flex-col gap-2">
                 {FOOTER_LINKS.support.map((link) =>
                   "external" in link && link.external ? (
@@ -119,7 +117,7 @@ const DesktopFooter = () => {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-gray-600 transition-colors hover:text-gray-900"
+                      className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
                       {link.label}
                     </a>
@@ -127,7 +125,7 @@ const DesktopFooter = () => {
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="text-sm text-gray-600 transition-colors hover:text-gray-900"
+                      className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
                       {link.label}
                     </Link>

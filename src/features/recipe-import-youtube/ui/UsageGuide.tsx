@@ -21,7 +21,7 @@ export const UsageGuide = () => {
 
   return (
     <div className="mx-auto mt-12 mb-8 w-full max-w-2xl">
-      <h3 className="text-dark mb-6 text-center text-lg font-bold">
+      <h3 className="text-ink mb-6 text-center text-lg font-bold">
         어떻게 하는 건가요?
       </h3>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -34,7 +34,7 @@ export const UsageGuide = () => {
               <step.icon size={24} />
             </div>
             <div>
-              <p className="text-dark mb-1 font-semibold">{step.title}</p>
+              <p className="text-ink mb-1 font-semibold">{step.title}</p>
               <p className="text-olive-medium/80 text-sm">{step.desc}</p>
             </div>
           </div>

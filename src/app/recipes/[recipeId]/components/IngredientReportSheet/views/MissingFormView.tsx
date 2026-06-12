@@ -46,13 +46,11 @@ export const MissingFormView = ({
           className="cursor-pointer rounded-full p-1 transition-colors hover:bg-gray-100"
           aria-label="뒤로 가기"
         >
-          <ArrowLeft className="h-5 w-5 text-gray-600" />
+          <ArrowLeft className="text-ink-sub h-5 w-5" />
         </button>
-        <Title className="text-xl font-bold text-gray-900">
-          빠진 재료 제보하기
-        </Title>
+        <Title className="text-ink text-xl font-bold">빠진 재료 제보하기</Title>
       </div>
-      <Description className="mt-1 text-sm text-gray-500">
+      <Description className="text-ink-muted mt-1 text-sm">
         빠진 재료를 알려주세요
       </Description>
     </Header>
@@ -63,7 +61,7 @@ export const MissingFormView = ({
         value={missingName}
         onChange={(e) => onNameChange(e.target.value)}
         placeholder="빠진 재료 이름을 입력해주세요"
-        className="focus:border-olive-light w-full rounded-xl border-2 border-gray-200 p-4 text-gray-900 transition-colors placeholder:text-gray-400 focus:ring-0 focus:outline-none"
+        className="focus:border-olive-light text-ink w-full rounded-xl border-2 border-gray-200 p-4 transition-colors placeholder:text-gray-400 focus:ring-0 focus:outline-none"
       />
 
       <div className="mt-3">
@@ -71,7 +69,7 @@ export const MissingFormView = ({
           value={memo}
           onChange={(e) => onMemoChange(e.target.value)}
           placeholder="추가 설명 (선택)"
-          className="focus:border-olive-light focus:ring-olive-light h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-1 focus:outline-none"
+          className="focus:border-olive-light focus:ring-olive-light text-ink h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm placeholder:text-gray-400 focus:ring-1 focus:outline-none"
         />
       </div>
     </div>

@@ -39,12 +39,12 @@ export const RecipeRecordItem = ({
         wrapperClassName="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl"
       />
       <div className="flex flex-1 flex-col justify-center gap-1 py-0.5">
-        <h4 className="line-clamp-1 text-base leading-snug font-semibold text-gray-900">
+        <h4 className="text-ink line-clamp-1 text-base leading-snug font-semibold">
           {recipeTitle}
         </h4>
 
-        <div className="flex flex-wrap items-center gap-x-1.5 text-sm text-gray-500">
-          <span className="font-medium text-gray-700">{calories}kcal</span>
+        <div className="text-ink-muted flex flex-wrap items-center gap-x-1.5 text-sm">
+          <span className="text-ink-sub font-medium">{calories}kcal</span>
           <span className="text-gray-300">·</span>
           <span>탄 {Math.round(nutrition.carbohydrate)}g</span>
           <span>단 {Math.round(nutrition.protein)}g</span>

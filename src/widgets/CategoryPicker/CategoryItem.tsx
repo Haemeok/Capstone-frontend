@@ -59,7 +59,7 @@ const CategoryItem = React.memo(
         <RadioGroupItem
           value={value}
           id={`radio-${value}`}
-          className="text-dark-light focus:ring-dark-light h-5 w-5 shrink-0 cursor-pointer border-gray-300"
+          className="text-ink-sub focus:ring-dark-light h-5 w-5 shrink-0 cursor-pointer border-gray-300"
         />
         {labelContent}
       </Label>

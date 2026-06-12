@@ -20,7 +20,7 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
   return (
     <div className="space-y-6">
       <div className="space-y-3 text-center">
-        <p className="text-sm font-medium text-gray-600">목표 예산</p>
+        <p className="text-ink-sub text-sm font-medium">목표 예산</p>
         <div className="text-olive-light text-5xl font-black transition-all duration-300">
           {value.toLocaleString()}원
         </div>
@@ -34,7 +34,7 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
           value={[value]}
           onValueChange={handleValueChange}
         />
-        <div className="mt-3 flex justify-between text-xs font-medium text-gray-500">
+        <div className="text-ink-muted mt-3 flex justify-between text-xs font-medium">
           <span>{BUDGET_MIN.toLocaleString()}원</span>
           <span>{BUDGET_MAX.toLocaleString()}원</span>
         </div>

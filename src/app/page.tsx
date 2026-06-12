@@ -47,7 +47,7 @@ const HomePage = async () => {
         <Suspense fallback={<div className="h-14 md:hidden" />}>
           <HomeHeader />
         </Suspense>
-        <div className="flex flex-col items-center justify-center bg-white text-gray-800">
+        <div className="text-ink flex flex-col items-center justify-center bg-white">
           <HomeHeaderAnchorAdSlot className="my-2" />
 
           <CategoryTabs title="카테고리" />

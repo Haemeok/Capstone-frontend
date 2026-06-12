@@ -64,7 +64,7 @@ const RecommendedSlideLoading = () => (
 
 const RecommendedSlideError = () => (
   <div className="flex h-30 w-full items-center justify-center py-8">
-    <p className="text-sm text-gray-500">
+    <p className="text-ink-muted text-sm">
       잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.
     </p>
   </div>
@@ -72,7 +72,7 @@ const RecommendedSlideError = () => (
 
 const RecommendedSlideEmpty = () => (
   <div className="flex w-full items-center justify-center py-8">
-    <p className="text-sm text-gray-500">아직 레시피가 없어요.</p>
+    <p className="text-ink-muted text-sm">아직 레시피가 없어요.</p>
   </div>
 );
 
@@ -144,7 +144,7 @@ const RecommendedRecipeGrid = ({
   return (
     <div className="mt-2 w-full">
       <div className="mb-2 flex items-center justify-between px-2">
-        <h2 className="text-lg font-bold text-gray-800">{title}</h2>
+        <h2 className="text-ink text-lg font-bold">{title}</h2>
       </div>
       {renderContent()}
     </div>

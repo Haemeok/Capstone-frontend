@@ -14,8 +14,8 @@ const PRICE_ICONS: Record<string, React.ReactNode> = {
   ),
   "under-10000": (
     <div className="flex -space-x-2">
-      <Coins size={28} strokeWidth={1.5} className="text-slate-400" />
-      <Coins size={28} strokeWidth={1.5} className="text-slate-500" />
+      <Coins size={28} strokeWidth={1.5} className="text-gray-400" />
+      <Coins size={28} strokeWidth={1.5} className="text-ink-muted" />
     </div>
   ),
   "under-20000": (
@@ -27,7 +27,7 @@ const PRICE_ICONS: Record<string, React.ReactNode> = {
 const PriceRangeSection = () => {
   return (
     <section className="space-y-4">
-      <h3 className="text-lg font-bold text-gray-900">
+      <h3 className="text-ink text-lg font-bold">
         지갑은 가볍게, 식탁은 든든하게
       </h3>
 
@@ -42,12 +42,12 @@ const PriceRangeSection = () => {
             onClick={() => triggerHaptic("Light")}
             className="group flex aspect-[3/2] flex-col items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white transition-all hover:border-gray-300 hover:shadow-md active:scale-[0.98]"
           >
-            <div className="text-gray-700 transition-transform group-hover:scale-110">
+            <div className="text-ink-sub transition-transform group-hover:scale-110">
               {PRICE_ICONS[range.id]}
             </div>
             <div className="text-center">
-              <p className="text-base font-bold text-gray-900">{range.label}</p>
-              <p className="text-xs text-gray-500">{range.description}</p>
+              <p className="text-ink text-base font-bold">{range.label}</p>
+              <p className="text-ink-muted text-xs">{range.description}</p>
             </div>
           </Link>
         ))}

@@ -18,7 +18,7 @@ const CategoryTabs = ({ title }: CategoryTabsProps) => {
     <div className="mb-4 w-full">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-gray-800">{title}</h2>
+          <h2 className="text-ink text-xl font-bold">{title}</h2>
         </div>
       </div>
 

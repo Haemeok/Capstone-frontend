@@ -40,7 +40,7 @@ const EmptyState = () => {
       <div className="mb-4 text-5xl" aria-hidden>
         🍳
       </div>
-      <p className="mb-6 text-base text-gray-500">
+      <p className="text-ink-muted mb-6 text-base">
         아직 저장한 레시피가 없어요
       </p>
       <button

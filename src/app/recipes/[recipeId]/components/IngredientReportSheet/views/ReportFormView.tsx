@@ -63,13 +63,13 @@ export const ReportFormView = ({
             className="cursor-pointer rounded-full p-1 transition-colors hover:bg-gray-100"
             aria-label="뒤로 가기"
           >
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
+            <ArrowLeft className="text-ink-sub h-5 w-5" />
           </button>
-          <Title className="text-xl font-bold text-gray-900">
+          <Title className="text-ink text-xl font-bold">
             &apos;{ingredientName}&apos; 제보하기
           </Title>
         </div>
-        <Description className="mt-1 text-sm text-gray-500">
+        <Description className="text-ink-muted mt-1 text-sm">
           어떤 문제가 있나요?
         </Description>
       </Header>
@@ -94,7 +94,7 @@ export const ReportFormView = ({
             value={memo}
             onChange={(e) => onMemoChange(e.target.value)}
             placeholder="예: 계란 3개 → 계란 4개"
-            className="focus:border-olive-light focus:ring-olive-light h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-1 focus:outline-none"
+            className="focus:border-olive-light focus:ring-olive-light text-ink h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm placeholder:text-gray-400 focus:ring-1 focus:outline-none"
           />
         </div>
       </div>

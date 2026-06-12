@@ -15,12 +15,12 @@ export const YoutubeImportHero = () => {
       <div className="mb-8 space-y-2 text-center">
         <div className="space-y-2">
           <div className="flex items-center justify-center gap-2">
-            <h1 className="text-3xl font-extrabold text-gray-900 md:text-4xl">
+            <h1 className="text-ink text-3xl font-extrabold md:text-4xl">
               유튜브 레시피 가져오기
             </h1>
             <BetaBadge />
           </div>
-          <p className="text-lg text-gray-500">
+          <p className="text-ink-muted text-lg">
             링크만 붙여넣으면 유튜브 레시피 추출이 자동으로 끝나요.
             <br />
             <span className="text-olive-light font-bold">

@@ -91,7 +91,7 @@ const StepItem = ({
         />
 
         <div className="mt-4 border-t pt-4">
-          <h4 className="mb-2 text-sm font-medium text-gray-700">
+          <h4 className="text-ink-sub mb-2 text-sm font-medium">
             이 단계에서 사용할 재료:
           </h4>
           {mainIngredients.length > 0 ? (
@@ -120,7 +120,7 @@ const StepItem = ({
                     />
                     <Label
                       htmlFor={`step-${index}-ing-${ingredient.name}`}
-                      className={`text-sm ${isUsedElsewhere && !isUsedInThisStep ? "text-gray-400 line-through" : "cursor-pointer text-gray-800 hover:text-gray-900"}`}
+                      className={`text-sm ${isUsedElsewhere && !isUsedInThisStep ? "text-gray-400 line-through" : "text-ink hover:text-ink cursor-pointer"}`}
                     >
                       {ingredient.name}
                     </Label>
@@ -129,7 +129,7 @@ const StepItem = ({
               })}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">
+            <p className="text-ink-muted text-sm">
               먼저 메인 재료 목록에 재료를 추가해주세요.
             </p>
           )}
@@ -166,7 +166,7 @@ const StepItem = ({
         <button
           type="button"
           aria-label={`${index + 1}번째 단계 삭제`}
-          className="cursor-pointer text-gray-500 hover:bg-red-100 hover:text-red-600"
+          className="text-ink-muted cursor-pointer hover:bg-red-100 hover:text-red-600"
           onClick={() => removeStep(index)}
           disabled={!isDeletable}
         >

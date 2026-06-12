@@ -56,13 +56,13 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
         className={`flex items-center justify-center ${notoSerifKR.variable} ${robotoMono.variable} ${alegreya.variable} bg-white`}
       >
         <div
-          className="relative w-full max-w-xl bg-[#F4F1EA] p-8 text-gray-900"
+          className="text-ink relative w-full max-w-xl bg-[#F4F1EA] p-8"
           style={{
             fontFamily: "var(--font-alegreya), serif",
           }}
         >
           <div
-            className="mb-8 flex items-center justify-between font-medium tracking-wide text-gray-800"
+            className="text-ink mb-8 flex items-center justify-between font-medium tracking-wide"
             style={{ fontFamily: "var(--font-alegreya), monospace" }}
           >
             <span>ORDER TICKET</span>
@@ -73,13 +73,13 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
 
           <div className="mb-4 text-center">
             <div
-              className="text-6xl tracking-tight text-gray-900"
+              className="text-ink text-6xl tracking-tight"
               style={{ fontFamily: "var(--font-alegreya), serif" }}
             >
               RECIPIO
             </div>
             <div
-              className="mt-1 text-sm font-light tracking-widest text-gray-700 uppercase"
+              className="text-ink-sub mt-1 text-sm font-light tracking-widest uppercase"
               style={{ fontFamily: "var(--font-roboto-mono), monospace" }}
             >
               Fine Dining
@@ -87,13 +87,13 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
 
             <div className="mt-2 space-y-2">
               <h2
-                className="px-4 text-2xl font-bold text-gray-900"
+                className="text-ink px-4 text-2xl font-bold"
                 style={{ fontFamily: "var(--font-noto-serif-kr), serif" }}
               >
                 {resultData.header.title}
               </h2>
               <p
-                className="font-medium text-gray-700"
+                className="text-ink-sub font-medium"
                 style={{ fontFamily: "var(--font-alegreya), serif" }}
               >
                 {resultData.header.subtitle}
@@ -102,7 +102,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
           </div>
 
           <div className="mb-6 border-t border-gray-800 pt-3 text-center">
-            <span className="font-medium tracking-wide text-gray-800">
+            <span className="text-ink font-medium tracking-wide">
               DATE: {formatDateTime()}
             </span>
           </div>
@@ -172,7 +172,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
                     {String(index + 1)}.
                   </span>
                   <div className="flex flex-1 items-end justify-between">
-                    <span className="text-gray-800">{cleanText(item)}</span>
+                    <span className="text-ink">{cleanText(item)}</span>
                   </div>
                 </div>
               ))}
@@ -197,10 +197,10 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
                 >
                   {resultData.color.name}
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-ink-sub text-sm">
                   {resultData.color.hex}
                 </div>
-                <div className="mt-1 text-sm leading-tight text-gray-700">
+                <div className="text-ink-sub mt-1 text-sm leading-tight">
                   {resultData.color.description}
                 </div>
               </div>
@@ -213,12 +213,12 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
               style={{ fontFamily: "var(--font-pretendard), serif" }}
             >
               <div
-                className="text-2xl font-bold text-gray-900"
+                className="text-ink text-2xl font-bold"
                 style={{ fontFamily: "var(--font-alegreya), serif" }}
               >
                 History & Story
               </div>
-              <p className="text-gray-800">{resultData.history}</p>
+              <p className="text-ink">{resultData.history}</p>
             </div>
 
             <div className="border-t border-gray-800"></div>
@@ -233,7 +233,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
                   <p>MATCH</p>
                 </div>
                 <div
-                  className="flex grow flex-col text-gray-700"
+                  className="text-ink-sub flex grow flex-col"
                   style={{ fontFamily: "var(--font-pretendard), serif" }}
                 >
                   <p className="leading-snug">• {firstGood}</p>
@@ -250,7 +250,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
                   <p>MATCH</p>
                 </div>
                 <div
-                  className="flex grow flex-col text-gray-700"
+                  className="text-ink-sub flex grow flex-col"
                   style={{ fontFamily: "var(--font-pretendard), serif" }}
                 >
                   <p className="leading-snug">• {firstBad}</p>
@@ -262,7 +262,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
 
             <div className="mt-8 flex items-center justify-between px-4">
               <div
-                className="-mb-2 text-4xl text-gray-900"
+                className="text-ink -mb-2 text-4xl"
                 style={{ fontFamily: "var(--font-alegreya), serif" }}
               >
                 RECIPIO
@@ -287,7 +287,7 @@ const ArchetypeResult = ({ result }: ArchetypeResultProps) => {
             >
               <Link
                 href="/archetype"
-                className="flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="text-ink-sub flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
               >
                 <RotateCcw className="mr-2 h-4 w-4" />
                 다시하기

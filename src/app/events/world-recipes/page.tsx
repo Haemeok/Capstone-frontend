@@ -49,15 +49,15 @@ const WorldRecipesEventPage = () => {
         label="Beyond Borders"
         title="다른 나라 레시피, 이제 자유롭게"
       >
-        <p className="text-base leading-7 text-gray-700">
+        <p className="text-ink-sub text-base leading-7">
           국가 필터가 생겼어요. 한국과 일본은 물론, 그 외 나라의 유튜브 채널이
           올린 레시피까지 원하는 나라만 골라서 둘러볼 수 있어요.
         </p>
       </EventSection>
       <EventSection label="How to use" title="이렇게 골라보세요">
-        <p className="mb-5 text-base leading-7 text-gray-700">
-          검색 화면에서 <b className="font-semibold text-gray-900">필터</b>를
-          열고 <b className="font-semibold text-gray-900">크리에이터 국가</b>
+        <p className="text-ink-sub mb-5 text-base leading-7">
+          검색 화면에서 <b className="text-ink font-semibold">필터</b>를 열고{" "}
+          <b className="text-ink font-semibold">크리에이터 국가</b>
           에서 보고 싶은 나라를 선택하면, 그 나라 채널의 레시피만 모아서
           보여줘요.
         </p>

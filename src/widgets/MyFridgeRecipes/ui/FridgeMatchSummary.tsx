@@ -57,7 +57,7 @@ const FridgeMatchSummary = ({
         {visibleMissing.map((name, index) => (
           <span
             key={index}
-            className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600"
+            className="text-ink-sub rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium"
           >
             {name}
           </span>
@@ -65,7 +65,7 @@ const FridgeMatchSummary = ({
         {!isExpanded && hiddenCount > 0 && (
           <button
             onClick={handleExpandClick}
-            className="flex h-6 min-w-[32px] items-center justify-center rounded-full bg-gray-100 px-2 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-200"
+            className="text-ink-sub flex h-6 min-w-[32px] items-center justify-center rounded-full bg-gray-100 px-2 text-xs font-bold transition-colors hover:bg-gray-200"
           >
             +{hiddenCount}
           </button>
@@ -77,7 +77,7 @@ const FridgeMatchSummary = ({
           onClick={handleExpandClick}
           className={cn(
             "flex h-7 w-fit items-center justify-center rounded-full px-3",
-            "bg-gray-100 text-xs font-medium text-gray-500 transition-colors hover:bg-gray-200"
+            "text-ink-muted bg-gray-100 text-xs font-medium transition-colors hover:bg-gray-200"
           )}
         >
           접기

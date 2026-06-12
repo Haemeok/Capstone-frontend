@@ -13,7 +13,7 @@ export const AdRemovalRow = ({ onOpenSheet }: { onOpenSheet: () => void }) => {
     <button
       type="button"
       onClick={onOpenSheet}
-      className="flex w-full items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-50"
+      className="text-ink-sub flex w-full items-center justify-between px-4 py-3 hover:bg-gray-50"
     >
       <span className="flex items-center gap-2">
         <Gift size={16} />

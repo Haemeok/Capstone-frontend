@@ -36,7 +36,7 @@ const BottomNavButton = ({
       aria-current={isActive ? "page" : undefined}
     >
       {icon}
-      <span className="text-xs font-bold">{label}</span>
+      <span className="text-xs font-medium">{label}</span>
     </Link>
   );
 };

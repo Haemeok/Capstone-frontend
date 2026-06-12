@@ -124,7 +124,7 @@ const CategoryPicker = ({
           <DrawerHeader className="text-left">
             <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
             {description && (
-              <DrawerDescription className="text-md text-gray-500">
+              <DrawerDescription className="text-md text-ink-muted">
                 {description}
               </DrawerDescription>
             )}
@@ -162,7 +162,7 @@ const CategoryPicker = ({
           <div>
             <h4 className="text-base font-medium">{header}</h4>
             {description && (
-              <p className="mt-1 text-sm text-gray-500">{description}</p>
+              <p className="text-ink-muted mt-1 text-sm">{description}</p>
             )}
           </div>
 

@@ -20,19 +20,19 @@ const SavingsCard = ({ totalSavings, totalMarketPrice }: SavingsCardProps) => {
           fit="contain"
           lazy={false}
         />
-        <h3 className="text-lg font-bold text-gray-900">절약</h3>
+        <h3 className="text-ink text-lg font-bold">절약</h3>
       </div>
 
       <div className="flex flex-col items-center gap-3">
         <div className="text-center">
-          <p className="text-sm text-gray-500">배달/외식 했다면</p>
+          <p className="text-ink-muted text-sm">배달/외식 했다면</p>
           <p className="mt-1 text-lg font-semibold text-gray-400 line-through decoration-gray-300 decoration-2">
             {formatNumber(totalMarketPrice, "원")}
           </p>
         </div>
 
         <div className="text-center">
-          <p className="text-base text-gray-600">직접 만들어서</p>
+          <p className="text-ink-sub text-base">직접 만들어서</p>
           <div className="mt-1 flex items-baseline justify-center gap-0.5">
             <span className="text-olive-dark text-4xl font-bold">+</span>
             <CountUp

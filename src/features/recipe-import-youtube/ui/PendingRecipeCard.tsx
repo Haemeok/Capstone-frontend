@@ -115,7 +115,7 @@ export const PendingRecipeCard = ({
       {meta.channelName && (
         <div className="flex items-center gap-1 overflow-hidden px-0.5 pt-1.5">
           <YoutubeGlyph />
-          <span className="truncate text-[13px] text-gray-500">
+          <span className="text-ink-muted truncate text-[13px]">
             {meta.channelName}
           </span>
         </div>
@@ -126,7 +126,7 @@ export const PendingRecipeCard = ({
           {meta.title}
         </p>
 
-        <div className="flex items-center justify-between gap-2 text-[13px] text-gray-500">
+        <div className="text-ink-muted flex items-center justify-between gap-2 text-[13px]">
           {status === "pending" && (
             <span className="truncate">
               레시피 추출 중 · {Math.round(progress)}%
@@ -144,7 +144,7 @@ export const PendingRecipeCard = ({
                 type="button"
                 onClick={() => removeJob(idempotencyKey)}
                 aria-label="에러 닫기"
-                className="shrink-0 cursor-pointer text-[12px] text-gray-400 underline hover:text-gray-600"
+                className="hover:text-ink-sub shrink-0 cursor-pointer text-[12px] text-gray-400 underline"
               >
                 닫기
               </button>

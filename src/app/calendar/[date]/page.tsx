@@ -64,16 +64,16 @@ const CalendarDetailPage = () => {
         <div className="text-center">
           {formattedDate && typeof formattedDate === "object" ? (
             <>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-ink text-2xl font-bold">
                 {formattedDate.month}월 {formattedDate.day}일{" "}
                 {formattedDate.dayName}요일
               </h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="text-ink-muted mt-1 text-sm">
                 {buildDaySummary(recipeCount, totalSavings)}
               </p>
             </>
           ) : (
-            <h2 className="text-2xl font-bold text-gray-900">{date} 기록</h2>
+            <h2 className="text-ink text-2xl font-bold">{date} 기록</h2>
           )}
         </div>
       </header>

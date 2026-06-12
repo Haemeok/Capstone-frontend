@@ -40,12 +40,12 @@ const NotFound = ({
     <div className="flex min-h-[80dvh] flex-col items-center justify-center p-4">
       <div className="flex max-w-md flex-col items-center gap-6 text-center">
         <div className="text-6xl">{emoji}</div>
-        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-        <p className="text-gray-600">{description}</p>
+        <h1 className="text-ink text-2xl font-bold">{title}</h1>
+        <p className="text-ink-sub">{description}</p>
         <div className="flex gap-3">
           <button
             onClick={handleGoBack}
-            className="rounded-lg bg-gray-100 px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-200"
+            className="text-ink-sub rounded-lg bg-gray-100 px-6 py-3 font-medium transition-colors hover:bg-gray-200"
           >
             뒤로 가기
           </button>

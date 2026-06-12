@@ -45,13 +45,13 @@ const ArchetypeFunnel = () => {
     >
       <div className="mb-8 text-center">
         <div
-          className="text-6xl tracking-tight text-gray-900"
+          className="text-ink text-6xl tracking-tight"
           style={{ fontFamily: "var(--font-alegreya), serif" }}
         >
           RECIPIO
         </div>
         <div
-          className="mt-2 text-sm font-light tracking-widest text-gray-700"
+          className="text-ink-sub mt-2 text-sm font-light tracking-widest"
           style={{
             fontFamily: "var(--font-roboto-mono), monospace",
             letterSpacing: "0.3em",
@@ -79,13 +79,13 @@ const ArchetypeFunnel = () => {
         >
           <div className="space-y-4 p-4 text-center">
             <p
-              className="text-sm font-medium tracking-wider text-gray-600 uppercase"
+              className="text-ink-sub text-sm font-medium tracking-wider uppercase"
               style={{ fontFamily: "var(--font-roboto-mono), monospace" }}
             >
               Question {currentQuestion.id} of {ARCHETYPE_QUESTIONS.length}
             </p>
             <h2
-              className="text-3xl font-bold text-gray-900"
+              className="text-ink text-3xl font-bold"
               style={{ fontFamily: "var(--font-pretendard), serif" }}
             >
               {currentQuestion.question}
@@ -104,7 +104,7 @@ const ArchetypeFunnel = () => {
               >
                 <div className="mb-3 flex items-center gap-3">
                   <span
-                    className="text-lg font-bold text-gray-900"
+                    className="text-ink text-lg font-bold"
                     style={{
                       fontFamily: "var(--font-pretendard), serif",
                     }}
@@ -112,7 +112,7 @@ const ArchetypeFunnel = () => {
                     {answer.label}
                   </span>
                 </div>
-                <p className="text-dark-700 leading-relaxed">
+                <p className="text-ink-sub leading-relaxed">
                   {answer.description}
                 </p>
               </button>

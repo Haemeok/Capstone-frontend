@@ -83,7 +83,7 @@ export const BridgeTest = () => {
         <h3 className="text-sm font-bold">Bridge 테스트</h3>
         <button
           onClick={() => setIsVisible(false)}
-          className="text-gray-500 hover:text-gray-700"
+          className="text-ink-muted hover:text-ink-sub"
         >
           ✕
         </button>
@@ -95,7 +95,7 @@ export const BridgeTest = () => {
           <div className="h-2 w-2 rounded-full bg-green-500" />
           <span>WebView: 감지됨</span>
         </div>
-        <div className="mt-1 text-gray-500">환경: {process.env.NODE_ENV}</div>
+        <div className="text-ink-muted mt-1">환경: {process.env.NODE_ENV}</div>
       </div>
 
       {/* Haptic 테스트 */}
@@ -181,7 +181,7 @@ export const BridgeTest = () => {
       {/* 마지막 메시지 */}
       {lastMessage && (
         <div className="rounded bg-gray-100 p-2 font-mono text-xs break-all">
-          <div className="mb-1 text-gray-500">마지막 전송:</div>
+          <div className="text-ink-muted mb-1">마지막 전송:</div>
           {lastMessage}
         </div>
       )}

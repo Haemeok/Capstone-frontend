@@ -19,12 +19,12 @@ export const IngredientsSectionHeader = ({
   const tabClassName = (active: boolean) =>
     cn(
       "cursor-pointer text-xl font-bold transition-colors",
-      active ? "text-gray-900" : "text-gray-300"
+      active ? "text-ink" : "text-gray-300"
     );
 
   const chipClassName = cn(
     "cursor-pointer rounded-sm px-2.5 py-1 text-xs font-medium transition-all",
-    "bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-600"
+    "bg-gray-100 text-ink-muted hover:bg-gray-200 hover:text-ink-sub"
   );
 
   const handleSelectIngredients = () => {

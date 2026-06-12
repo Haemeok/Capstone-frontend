@@ -21,11 +21,11 @@ export const TimelineDateGroup = ({ group }: TimelineDateGroupProps) => {
   return (
     <section className="pt-6 first:pt-0">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">{label}</h2>
+        <h2 className="text-ink text-xl font-bold">{label}</h2>
         <Link
           href={`/calendar/${group.date}`}
           onClick={() => triggerHaptic("Light")}
-          className="flex items-center gap-0.5 rounded-lg px-2 py-1 text-sm font-medium text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+          className="text-ink-muted hover:text-ink-sub flex items-center gap-0.5 rounded-lg px-2 py-1 text-sm font-medium transition-colors hover:bg-gray-100"
         >
           자세히
           <ChevronRight className="size-4" />

@@ -11,7 +11,7 @@ const CookingMethodsSection = ({ methods }: CookingMethodsSectionProps) => {
 
   return (
     <section className="rounded-2xl bg-white p-4">
-      <h2 className="mb-3 text-lg font-bold text-gray-900">추천 조리법</h2>
+      <h2 className="text-ink mb-3 text-lg font-bold">추천 조리법</h2>
 
       <div className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 py-1">
         {methods.map((method) => {
@@ -19,9 +19,9 @@ const CookingMethodsSection = ({ methods }: CookingMethodsSectionProps) => {
           return (
             <span
               key={method}
-              className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-full bg-gray-100 px-3 py-2 text-sm text-gray-700"
+              className="text-ink-sub inline-flex flex-shrink-0 items-center gap-1.5 rounded-full bg-gray-100 px-3 py-2 text-sm"
             >
-              {Icon && <Icon size={14} className="text-gray-500" />}
+              {Icon && <Icon size={14} className="text-ink-muted" />}
               <span>{method}</span>
             </span>
           );

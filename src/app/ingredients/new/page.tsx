@@ -56,7 +56,7 @@ const NewIngredientsPage = () => {
       <div className="bg-white pb-10">
         <header className="z-sticky sticky-optimized sticky top-0 grid grid-cols-[auto_1fr_auto] items-center gap-2 border-b border-gray-100 bg-white px-4 py-3 md:px-6">
           <PrevButton />
-          <h1 className="text-center text-base font-semibold text-gray-900">
+          <h1 className="text-ink text-center text-base font-semibold">
             재료 추가
           </h1>
           <span className="w-9" aria-hidden="true" />
@@ -69,8 +69,8 @@ const NewIngredientsPage = () => {
             aria-label="재료 검색해서 추가하기"
             className="flex w-full items-center gap-3 rounded-full bg-gray-100 px-4 py-3.5 text-left transition-colors active:bg-gray-200"
           >
-            <Search size={18} className="text-gray-500" aria-hidden="true" />
-            <span className="text-sm text-gray-500">
+            <Search size={18} className="text-ink-muted" aria-hidden="true" />
+            <span className="text-ink-muted text-sm">
               재료를 검색해서 추가하세요
             </span>
           </button>
@@ -78,10 +78,8 @@ const NewIngredientsPage = () => {
 
         <div className="px-4 pt-6 md:px-6">
           <div className="mb-3">
-            <h2 className="text-base font-bold text-gray-900">
-              추천 재료 모음
-            </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <h2 className="text-ink text-base font-bold">추천 재료 모음</h2>
+            <p className="text-ink-muted mt-1 text-sm">
               필요한 묶음을 골라 한 번에 추가하세요
             </p>
           </div>

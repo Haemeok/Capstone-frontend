@@ -72,10 +72,10 @@ export default function RecipeInfoSection({
           <UserName
             username={author.nickname}
             userId={author.id}
-            className="text-base font-bold text-gray-900 md:text-lg"
+            className="text-ink text-base font-bold md:text-lg"
           />
           {author.introduction && (
-            <p className="mt-0.5 truncate text-xs leading-5 text-gray-500 md:text-sm md:leading-6">
+            <p className="text-ink-muted mt-0.5 truncate text-xs leading-5 md:text-sm md:leading-6">
               {author.introduction}
             </p>
           )}

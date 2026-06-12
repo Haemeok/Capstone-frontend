@@ -35,10 +35,10 @@ const RecentSearchChips = () => {
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-gray-500">최근 검색어</h3>
+        <h3 className="text-ink-muted text-sm font-medium">최근 검색어</h3>
         <button
           onClick={handleClearAll}
-          className="cursor-pointer text-sm text-gray-400 active:text-gray-600"
+          className="active:text-ink-sub cursor-pointer text-sm text-gray-400"
         >
           지우기
         </button>
@@ -49,7 +49,7 @@ const RecentSearchChips = () => {
           <button
             key={query}
             onClick={() => handleChipClick(query)}
-            className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-4 py-2.5 text-sm font-medium text-gray-700 active:bg-gray-200"
+            className="text-ink-sub flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-4 py-2.5 text-sm font-medium active:bg-gray-200"
           >
             <span className="whitespace-nowrap">{query}</span>
             <X

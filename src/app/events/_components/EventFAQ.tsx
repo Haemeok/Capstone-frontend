@@ -26,7 +26,7 @@ const EventFAQ = ({ items }: EventFAQProps) => {
 
   return (
     <section className="px-4 py-6">
-      <h2 className="mb-3 text-lg font-bold text-gray-900">자주 묻는 질문</h2>
+      <h2 className="text-ink mb-3 text-lg font-bold">자주 묻는 질문</h2>
       <ul className="divide-y divide-gray-200 border-y border-gray-200">
         {items.map((item, index) => {
           const isOpen = openIndex === index;
@@ -36,7 +36,7 @@ const EventFAQ = ({ items }: EventFAQProps) => {
                 type="button"
                 aria-expanded={isOpen}
                 onClick={() => handleToggle(index)}
-                className="flex w-full cursor-pointer items-center justify-between gap-3 py-4 text-left text-sm font-medium text-gray-900"
+                className="text-ink flex w-full cursor-pointer items-center justify-between gap-3 py-4 text-left text-sm font-medium"
               >
                 <span>{item.question}</span>
                 <ChevronDown
@@ -56,7 +56,7 @@ const EventFAQ = ({ items }: EventFAQProps) => {
                     transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
                     className="overflow-hidden"
                   >
-                    <p className="pb-4 text-sm leading-relaxed text-gray-600">
+                    <p className="text-ink-sub pb-4 text-sm leading-relaxed">
                       {item.answer}
                     </p>
                   </motion.div>

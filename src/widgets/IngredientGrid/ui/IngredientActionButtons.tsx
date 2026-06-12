@@ -37,7 +37,7 @@ const IngredientActionButtons = ({
       <div className="flex items-center gap-2">
         <Button
           onClick={handleToggleSelectAll}
-          className="h-10 cursor-pointer rounded-xl bg-gray-100 px-4 font-medium text-gray-700 transition-colors active:bg-gray-200"
+          className="text-ink-sub h-10 cursor-pointer rounded-xl bg-gray-100 px-4 font-medium transition-colors active:bg-gray-200"
         >
           {isAllSelected ? "취소" : "전체 선택"}
         </Button>
@@ -57,7 +57,7 @@ const IngredientActionButtons = ({
         type="button"
         onClick={handleDeleteButtonClick}
         className={cn(
-          "flex cursor-pointer items-center gap-1 text-sm text-gray-500 transition-colors active:text-gray-700"
+          "text-ink-muted active:text-ink-sub flex cursor-pointer items-center gap-1 text-sm transition-colors"
         )}
       >
         <Trash2 size={14} />

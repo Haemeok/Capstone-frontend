@@ -48,7 +48,7 @@ export const IngredientGridItem = ({
       <p
         className={cn(
           "mt-1.5 w-full truncate text-center text-xs",
-          isSelected ? "text-olive-light font-bold" : "text-gray-700"
+          isSelected ? "text-olive-light font-bold" : "text-ink-sub"
         )}
       >
         {name}

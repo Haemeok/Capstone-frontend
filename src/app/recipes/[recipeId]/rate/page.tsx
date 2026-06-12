@@ -60,7 +60,7 @@ const ReviewPage = () => {
           <button
             onClick={() => router.back()}
             type="button"
-            className="absolute left-4 text-gray-600 md:left-6"
+            className="text-ink-sub absolute left-4 md:left-6"
           >
             취소
           </button>
@@ -87,7 +87,7 @@ const ReviewPage = () => {
           </div>
 
           <div className="mt-2 flex flex-col gap-1">
-            <h3 className="mb-2 text-base font-medium text-gray-700">
+            <h3 className="text-ink-sub mb-2 text-base font-medium">
               커뮤니티를 위해 레시피에 대한 자세한 피드백이나 조언을
               공유해주세요. 여러분의 경험이 큰 도움이 될 거예요!
             </h3>
@@ -101,9 +101,9 @@ const ReviewPage = () => {
                   height={32}
                 />
                 <div className="flex-grow">
-                  <p className="font-bold text-gray-800">{user?.nickname}</p>
+                  <p className="text-ink font-bold">{user?.nickname}</p>
                   <textarea
-                    className="text-dark mt-1 min-h-20 w-full resize-none placeholder-gray-400 focus:outline-none"
+                    className="text-ink mt-1 min-h-20 w-full resize-none placeholder-gray-400 focus:outline-none"
                     rows={3}
                     placeholder="예) 정말 맛있었어요! 저는 여기에 꿀을 살짝 추가했더니 풍미가 더 좋더라고요."
                     value={reviewText}

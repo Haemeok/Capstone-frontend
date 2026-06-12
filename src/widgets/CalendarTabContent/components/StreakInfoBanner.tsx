@@ -49,7 +49,7 @@ export const StreakInfoBanner = ({ streakCount }: StreakInfoBannerProps) => {
           <p className="text-2xl font-bold">
             <span className={config.flameColor}>{streakCount}일</span>
           </p>
-          <p className="text-sm text-gray-600">{message}</p>
+          <p className="text-ink-sub text-sm">{message}</p>
         </div>
       </div>
     </div>

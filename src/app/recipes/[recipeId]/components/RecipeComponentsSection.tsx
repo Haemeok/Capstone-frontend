@@ -24,7 +24,7 @@ export default function RecipeComponentsSection({
     <section
       className={`border-olive-light/30 bg-beige-light rounded-card my-6 border p-4 ${className}`}
     >
-      <h2 className="text-dark mb-3 font-bold">디쉬 구성 요소</h2>
+      <h2 className="text-ink mb-3 font-bold">디쉬 구성 요소</h2>
       <div className="flex flex-col gap-3">
         {components.map((component, index) => (
           <div key={index} className="flex items-start gap-3">
@@ -37,13 +37,13 @@ export default function RecipeComponentsSection({
                   {component.role}
                 </span>
                 {component.name && (
-                  <span className="text-dark text-sm font-bold">
+                  <span className="text-ink text-sm font-bold">
                     {component.name}
                   </span>
                 )}
               </div>
               {component.description && (
-                <p className="text-sm leading-relaxed text-gray-700">
+                <p className="text-ink-sub text-sm leading-relaxed">
                   {component.description}
                 </p>
               )}

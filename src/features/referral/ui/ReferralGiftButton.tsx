@@ -36,7 +36,7 @@ export const ReferralGiftButton = ({
         triggerHaptic("Light");
         open();
       }}
-      className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-900 transition-colors hover:bg-gray-50"
+      className="text-ink relative flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white transition-colors hover:bg-gray-50"
     >
       <Gift size={18} aria-hidden="true" />
       {showDot && (

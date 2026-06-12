@@ -25,10 +25,10 @@ export const NutritionSliders = ({
         return (
           <div key={key} className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-ink-sub text-sm font-medium">
                 {config.label}
               </span>
-              <span className="text-sm text-gray-500">
+              <span className="text-ink-muted text-sm">
                 {currentValue[0].toLocaleString()} -{" "}
                 {currentValue[1].toLocaleString()} {config.unit}
               </span>

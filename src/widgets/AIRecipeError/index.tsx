@@ -19,10 +19,10 @@ const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
           </div>
 
           <div>
-            <h1 className="mb-2 text-2xl font-bold text-gray-800">
+            <h1 className="text-ink mb-2 text-2xl font-bold">
               레시피 생성 실패
             </h1>
-            <p className="mb-4 text-gray-600">
+            <p className="text-ink-sub mb-4">
               레시피 생성 중 문제가 발생했습니다.
             </p>
             <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
@@ -40,7 +40,7 @@ const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
             </Button>
           </div>
 
-          <div className="text-sm text-gray-500">
+          <div className="text-ink-muted text-sm">
             문제가 계속 발생하면 잠시 후 다시 시도해주세요.
           </div>
         </div>

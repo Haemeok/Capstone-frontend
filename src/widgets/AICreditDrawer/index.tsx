@@ -57,10 +57,10 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
           </div>
 
           <div className="mt-6 text-center">
-            <h2 className="text-2xl font-bold break-keep text-gray-900">
+            <h2 className="text-ink text-2xl font-bold break-keep">
               AI 무료 생성권 도착!
             </h2>
-            <p className="mt-3 text-base leading-relaxed break-keep text-gray-600">
+            <p className="text-ink-sub mt-3 text-base leading-relaxed break-keep">
               매일 1회 무료로 만들어 드려요!
               <br />
               <span className="font-bold text-red-500">

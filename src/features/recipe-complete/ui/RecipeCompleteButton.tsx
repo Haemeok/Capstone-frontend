@@ -57,7 +57,7 @@ const RecipeCompleteButton = ({
         className={cn(
           "group relative w-full rounded-lg py-3 font-semibold transition-all",
           isCompleted
-            ? "cursor-not-allowed bg-gray-200 text-gray-500"
+            ? "text-ink-muted cursor-not-allowed bg-gray-200"
             : "bg-olive-mint cursor-pointer text-white active:scale-95",
           isLoading && "opacity-70",
           className

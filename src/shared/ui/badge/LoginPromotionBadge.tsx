@@ -42,7 +42,7 @@ const LoginPromotionBadge = ({
         >
           <button
             onClick={() => setIsDesktopBadgeClosed(true)}
-            className="absolute top-2 right-2 cursor-pointer text-gray-400 transition-colors hover:text-gray-600"
+            className="hover:text-ink-sub absolute top-2 right-2 cursor-pointer text-gray-400 transition-colors"
             aria-label="닫기"
           >
             <X size={16} />
@@ -53,11 +53,11 @@ const LoginPromotionBadge = ({
               alt="재료만 골라주세요, 레시피는 맡기세요"
               wrapperClassName="w-16 h-16"
             />
-            <p className="pr-6 font-bold break-keep text-gray-800">
+            <p className="text-ink pr-6 font-bold break-keep">
               재료만 골라주세요, 레시피는 맡기세요
             </p>
           </div>
-          <p className="mt-1 text-sm break-keep text-gray-600">
+          <p className="text-ink-sub mt-1 text-sm break-keep">
             냉장고 속 재료부터 파인다이닝까지, 지금 가입하면{" "}
             <span className="text-olive-mint font-bold">매일 1회 무료</span>로
             만들어 드려요.
@@ -100,10 +100,10 @@ const LoginPromotionBadge = ({
               alt="재료만 골라주세요, 레시피는 맡기세요"
               wrapperClassName="w-4 h-4"
             />
-            <p className="text-sm font-bold break-keep text-gray-800">
+            <p className="text-ink text-sm font-bold break-keep">
               재료만 골라주세요, 레시피는 맡기세요
             </p>
-            <p className="mt-1 text-xs break-keep text-gray-600">
+            <p className="text-ink-sub mt-1 text-xs break-keep">
               냉장고 속 재료부터 파인다이닝까지, 가입하고{" "}
               <span className="text-olive-mint font-bold">매일 1회 무료</span>로
               받아보세요.

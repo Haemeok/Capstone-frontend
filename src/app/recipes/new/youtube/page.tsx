@@ -39,7 +39,7 @@ const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
       />
       <Container className="min-h-screen bg-white pb-20">
         <div className="pt-2">
-          <PrevButton className="text-gray-600" />
+          <PrevButton className="text-ink-sub" />
         </div>
         <YoutubeAnchorAdSlot />
         <YoutubeImportHero />

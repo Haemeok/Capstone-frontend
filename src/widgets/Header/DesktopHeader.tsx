@@ -46,9 +46,7 @@ const DesktopHeader = () => {
               wrapperClassName="rounded-card"
               width={32}
             />
-            <span className="text-xl font-bold text-gray-900">
-              Recipi&apos;O
-            </span>
+            <span className="text-ink text-xl font-bold">Recipi&apos;O</span>
           </Link>
 
           <div className="flex items-center gap-8">
@@ -57,10 +55,10 @@ const DesktopHeader = () => {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "font-medium transition-colors hover:text-gray-900",
+                  "hover:text-ink font-medium transition-colors",
                   pathname === link.href
-                    ? "font-semibold text-gray-900"
-                    : "text-gray-600"
+                    ? "text-ink font-semibold"
+                    : "text-ink-sub"
                 )}
               >
                 {link.label}
@@ -76,11 +74,11 @@ const DesktopHeader = () => {
             ) : user ? (
               <Link
                 href={`/users/${user.id}`}
-                className="font-sm rounded-full p-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                className="font-sm text-ink-sub hover:text-ink rounded-full p-1 transition-colors hover:bg-gray-100"
               >
                 <div className="flex flex-col items-center">
-                  <User size={24} className="text-gray-600" />
-                  <p className="text-xs text-gray-600 transition-colors hover:text-gray-900">
+                  <User size={24} className="text-ink-sub" />
+                  <p className="text-ink-sub hover:text-ink text-xs transition-colors">
                     My
                   </p>
                 </div>
@@ -89,7 +87,7 @@ const DesktopHeader = () => {
               <LoginPromotionBadge variant="desktop">
                 <button
                   onClick={() => setIsLoginDialogOpen(true)}
-                  className="cursor-pointer rounded-xl border-1 border-gray-200 px-4 py-2 transition-colors hover:text-gray-900"
+                  className="hover:text-ink cursor-pointer rounded-xl border-1 border-gray-200 px-4 py-2 transition-colors"
                 >
                   로그인
                 </button>

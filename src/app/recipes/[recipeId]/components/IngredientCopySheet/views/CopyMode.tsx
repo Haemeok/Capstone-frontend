@@ -39,7 +39,7 @@ export const CopyMode = ({
           {/* 미리보기 */}
           <div className="min-h-[100px] rounded-xl bg-gray-50 p-4">
             {copyText ? (
-              <pre className="font-sans text-sm whitespace-pre-wrap text-gray-700">
+              <pre className="text-ink-sub font-sans text-sm whitespace-pre-wrap">
                 {copyText}
               </pre>
             ) : (
@@ -52,7 +52,7 @@ export const CopyMode = ({
             <button
               type="button"
               onClick={allSelected ? onDeselectAll : onSelectAll}
-              className="cursor-pointer text-xs font-medium text-gray-400 transition-colors hover:text-gray-600"
+              className="hover:text-ink-sub cursor-pointer text-xs font-medium text-gray-400 transition-colors"
             >
               {allSelected ? "전체 해제" : "전체 선택"}
             </button>

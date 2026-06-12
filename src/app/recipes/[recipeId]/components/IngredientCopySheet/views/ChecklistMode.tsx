@@ -44,7 +44,7 @@ export const ChecklistMode = ({
                   "flex-1 text-sm transition-all",
                   isChecked
                     ? "text-gray-300 line-through"
-                    : "font-medium text-gray-900"
+                    : "text-ink font-medium"
                 )}
               >
                 {ing.name}
@@ -52,7 +52,7 @@ export const ChecklistMode = ({
               <span
                 className={cn(
                   "text-sm transition-all",
-                  isChecked ? "text-gray-300 line-through" : "text-gray-500"
+                  isChecked ? "text-gray-300 line-through" : "text-ink-muted"
                 )}
               >
                 {ing.amount}

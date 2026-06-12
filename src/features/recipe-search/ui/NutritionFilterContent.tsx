@@ -136,7 +136,7 @@ export const NutritionFilterContent = ({
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h4 className="leading-none font-medium">필터</h4>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="text-ink-muted mt-1 text-sm">
               원하는 필터를 설정하세요.
             </p>
           </div>

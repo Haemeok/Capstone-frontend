@@ -209,10 +209,10 @@ export const TestimonialCarousel = () => {
           <div className="mb-4 inline-block rounded-full bg-purple-50 px-4 py-1 text-sm font-semibold text-purple-600">
             사용자 후기
           </div>
-          <h2 className="text-dark mb-4 text-4xl font-extrabold md:text-5xl">
+          <h2 className="text-ink mb-4 text-4xl font-extrabold md:text-5xl">
             이미 많은 분들이 경험하고 있어요
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="text-ink-sub mx-auto max-w-2xl text-lg">
             실제 사용자들의 솔직한 이야기를 들어보세요
           </p>
         </Reveal>
@@ -235,10 +235,10 @@ export const TestimonialCarousel = () => {
                     {currentTestimonial.avatar}
                   </div>
                   <div>
-                    <h3 className="text-dark mb-1 text-2xl font-extrabold">
+                    <h3 className="text-ink mb-1 text-2xl font-extrabold">
                       {currentTestimonial.name}
                     </h3>
-                    <p className="mb-2 text-sm text-gray-500">
+                    <p className="text-ink-muted mb-2 text-sm">
                       {currentTestimonial.role}
                     </p>
                     <StarRating rating={currentTestimonial.rating} />
@@ -252,7 +252,7 @@ export const TestimonialCarousel = () => {
                 </div>
               </div>
 
-              <p className="relative text-xl leading-relaxed text-gray-700 md:text-2xl">
+              <p className="text-ink-sub relative text-xl leading-relaxed md:text-2xl">
                 &quot;{currentTestimonial.content}&quot;
               </p>
 

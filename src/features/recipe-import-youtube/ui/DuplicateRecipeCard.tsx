@@ -46,10 +46,8 @@ export const DuplicateRecipeCard = ({
     className="mx-auto w-full max-w-md space-y-6 rounded-3xl bg-white p-8 shadow-lg"
   >
     <div className="text-center">
-      <h3 className="text-xl font-bold text-gray-900">
-        레시피가 이미 존재해요!
-      </h3>
-      <p className="mt-2 text-sm text-gray-500">
+      <h3 className="text-ink text-xl font-bold">레시피가 이미 존재해요!</h3>
+      <p className="text-ink-muted mt-2 text-sm">
         크레딧이 차감되지 않았어요.
         {urlSource === "direct" && (
           <>
@@ -75,7 +73,7 @@ export const DuplicateRecipeCard = ({
       {!isFavorited && (
         <button
           onClick={onSaveClick}
-          className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white font-medium text-gray-700 transition-colors hover:bg-gray-50"
+          className="text-ink-sub flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white font-medium transition-colors hover:bg-gray-50"
         >
           <Bookmark size={18} />내 레시피에 저장하기
         </button>

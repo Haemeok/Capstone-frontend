@@ -27,7 +27,7 @@ const CategoryChips = ({ currentCode }: CategoryChipsProps) => {
               "shrink-0 rounded-full px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-transform active:scale-[0.97]",
               isSelected
                 ? "bg-olive-light text-white"
-                : "bg-gray-100 text-gray-700"
+                : "text-ink-sub bg-gray-100"
             )}
           >
             # {tag.name}

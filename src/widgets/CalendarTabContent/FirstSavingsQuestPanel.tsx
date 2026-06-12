@@ -13,10 +13,10 @@ const FirstSavingsQuestPanel = () => {
 
   return (
     <div className="from-olive-light/5 to-beige-light/5 mx-auto my-6 flex max-w-sm flex-col items-center justify-center rounded-2xl border border-gray-200 bg-gradient-to-br p-8 text-center">
-      <h4 className="mb-3 text-lg font-bold text-gray-800">
+      <h4 className="text-ink mb-3 text-lg font-bold">
         첫 절약 퀘스트에 도전하세요!
       </h4>
-      <p className="mb-6 text-sm leading-relaxed text-gray-600">
+      <p className="text-ink-sub mb-6 text-sm leading-relaxed">
         &apos;요리 완료&apos; 버튼을 누르면
         <br />이 캘린더에 절약 금액이 쌓여요.
       </p>

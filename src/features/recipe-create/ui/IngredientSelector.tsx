@@ -130,7 +130,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
                   "flex-shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-sm transition-colors",
                   selectedCategory === category
                     ? "bg-olive-light font-medium text-white"
-                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                    : "text-ink-muted hover:text-ink hover:bg-gray-100"
                 )}
               >
                 {category}
@@ -140,7 +140,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
         </div>
         <div className="flex h-120 flex-col justify-start overflow-y-auto p-4">
           {isPending ? (
-            <p className="text-center text-gray-500">재료 로딩 중...</p>
+            <p className="text-ink-muted text-center">재료 로딩 중...</p>
           ) : status === "error" ? (
             <p className="text-center text-red-500">
               오류 발생:{" "}
@@ -164,7 +164,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
                 )}
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
-                <p className="py-10 text-center text-gray-500">
+                <p className="text-ink-muted py-10 text-center">
                   &quot;{searchQuery || selectedCategory}&quot;에 해당하는
                   재료가 없습니다.
                 </p>

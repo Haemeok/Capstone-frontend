@@ -29,7 +29,7 @@ const FoodTrends2026Page = () => {
       date="2026. 2. 14"
       tocItems={TOC_ITEMS}
     >
-      <p className="text-[15px] leading-relaxed text-gray-700">
+      <p className="text-ink-sub text-[15px] leading-relaxed">
         홀푸즈 마켓(Whole Foods Market)이 매년 발표하는 트렌드 리포트는 전 세계
         식문화 흐름을 진단하고 예측합니다. 식자재 바이어, 셰프, 미식 칼럼니스트,
         유통 전문가들이 전 세계 재래시장과 푸드 박람회를 직접 탐방하며 정리한
@@ -141,17 +141,17 @@ const FoodTrends2026Page = () => {
       </ArticleSection>
 
       <div className="bg-olive-light/5 mt-12 rounded-2xl px-6 py-5">
-        <p className="text-[15px] font-medium text-gray-900">
+        <p className="text-ink text-[15px] font-medium">
           레시피오에서 트렌드를 직접 경험해 보세요
         </p>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="text-ink-muted mt-1 text-sm">
           2026년 트렌드 재료를 활용한 레시피를 AI가 추천해 드립니다. 냉장고 속
           재료를 입력하고 올해의 트렌드 레시피를 만나보세요.
         </p>
       </div>
 
       <div className="mt-6 rounded-2xl bg-gray-50 px-6 py-5">
-        <p className="text-xs text-gray-400">
+        <p className="text-ink-muted text-xs">
           본 기사는 홀푸즈 마켓 트렌드 리포트, SPC매거진, 하퍼스 바자 코리아,
           식품음료신문 등의 자료를 참고하여 재구성하였습니다.
         </p>

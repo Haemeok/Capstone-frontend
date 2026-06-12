@@ -7,10 +7,10 @@ type CategoryEmptyStateProps = {
 const CategoryEmptyState = ({ tagName }: CategoryEmptyStateProps) => {
   return (
     <div className="flex flex-col items-start gap-3 px-4 pt-16 pb-10">
-      <p className="text-base font-semibold text-gray-900">
+      <p className="text-ink text-base font-semibold">
         아직 {tagName} 레시피가 없어요
       </p>
-      <p className="text-sm text-gray-500">
+      <p className="text-ink-muted text-sm">
         첫 번째 레시피를 직접 만들어보세요.
       </p>
       <Link

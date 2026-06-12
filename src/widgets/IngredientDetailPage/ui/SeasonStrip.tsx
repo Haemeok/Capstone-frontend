@@ -15,8 +15,8 @@ const SeasonStrip = ({ months }: SeasonStripProps) => {
 
   return (
     <section className="border-t border-gray-100 px-5 py-6">
-      <h2 className="mb-1 text-lg font-bold text-gray-900">제철</h2>
-      <p className="mb-3 text-sm text-gray-500">가장 맛있는 시기예요</p>
+      <h2 className="text-ink mb-1 text-lg font-bold">제철</h2>
+      <p className="text-ink-muted mb-3 text-sm">가장 맛있는 시기예요</p>
 
       <div className="flex justify-between gap-1">
         {ALL_MONTHS.map((m) => {

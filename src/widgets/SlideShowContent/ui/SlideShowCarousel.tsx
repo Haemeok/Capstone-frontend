@@ -81,14 +81,14 @@ const SlideShowCarousel = ({ recipe, onRateClick }: SlideShowCarouselProps) => {
               <div className="rounded-card relative mb-4 h-80 w-80 overflow-hidden">
                 <Image src={recipe.imageUrl} alt={recipe.title} />
               </div>
-              <div className="text-dark mb-4 flex w-full items-center justify-center gap-1 text-lg">
+              <div className="text-ink mb-4 flex w-full items-center justify-center gap-1 text-lg">
                 <span className="font-bold">{recipe.author.nickname}</span>
                 <span>님의</span>
                 <span className="font-bold">{recipe.title}</span>
                 <span>어떠셨나요?</span>
               </div>
               <div className="mb-4 flex w-2/3 flex-col items-center justify-center">
-                <p className="line-clamp-2 text-center text-gray-500">
+                <p className="text-ink-muted line-clamp-2 text-center">
                   평가에 참여하면, 마이페이지에서 식비 절약 현황을 한눈에 볼 수
                   있어요!
                 </p>

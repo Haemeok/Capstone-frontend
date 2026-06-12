@@ -32,9 +32,9 @@ const RecipeSlideWithErrorBoundary = ({
     <ErrorBoundary
       fallback={
         <div className="mt-2 w-full">
-          <h2 className="mb-4 text-lg font-bold text-gray-800">{title}</h2>
+          <h2 className="text-ink mb-4 text-lg font-bold">{title}</h2>
           <div className="flex w-full items-center justify-center py-8">
-            <p className="text-sm text-gray-500">
+            <p className="text-ink-muted text-sm">
               {title}을 불러올 수 없어요. 새로고침해주세요.
             </p>
           </div>

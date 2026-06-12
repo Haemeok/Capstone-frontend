@@ -31,7 +31,7 @@ export const ModeToggle = ({ mode, onChange }: ModeToggleProps) => {
         onClick={() => handleSelect("copy")}
         className={cn(
           "relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full py-2 text-sm font-medium transition-colors",
-          mode === "copy" ? "text-white" : "text-gray-500"
+          mode === "copy" ? "text-white" : "text-ink-muted"
         )}
       >
         <Copy className="h-4 w-4" />
@@ -42,7 +42,7 @@ export const ModeToggle = ({ mode, onChange }: ModeToggleProps) => {
         onClick={() => handleSelect("checklist")}
         className={cn(
           "relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full py-2 text-sm font-medium transition-colors",
-          mode === "checklist" ? "text-white" : "text-gray-500"
+          mode === "checklist" ? "text-white" : "text-ink-muted"
         )}
       >
         <ClipboardList className="h-4 w-4" />

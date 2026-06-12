@@ -20,7 +20,7 @@ const EventSection = ({
           {label}
         </p>
       ) : null}
-      <h2 className="mb-3 text-2xl font-bold text-gray-900">{title}</h2>
+      <h2 className="text-ink mb-3 text-2xl font-bold">{title}</h2>
       {children}
     </section>
   );

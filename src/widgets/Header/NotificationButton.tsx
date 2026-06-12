@@ -26,7 +26,7 @@ const NotificationButton = () => {
       className="relative rounded-full p-1 transition-colors hover:bg-gray-100"
     >
       <div className="relative h-fit w-fit p-1">
-        <Bell size={24} className="text-gray-600" />
+        <Bell size={24} className="text-ink-sub" />
 
         {unreadCount > 0 && (
           <div

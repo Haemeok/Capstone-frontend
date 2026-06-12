@@ -84,10 +84,10 @@ const NutritionRecipePage = () => {
       <Container padding={false}>
         <div className="mx-auto bg-[#f7f7f7] p-4 pb-24 md:pb-24">
           <div className="mb-4 flex items-center gap-2">
-            <PrevButton className="text-gray-600 md:hidden" />
+            <PrevButton className="text-ink-sub md:hidden" />
             <button
               onClick={() => router.back()}
-              className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
+              className="text-ink-sub hover:text-ink hidden items-center gap-2 transition-colors md:flex"
             >
               <ArrowLeftIcon size={20} />
               <span className="text-sm font-medium">AI 다시 선택하기</span>
@@ -96,10 +96,10 @@ const NutritionRecipePage = () => {
 
           <div className="mb-8 space-y-8 rounded-2xl bg-white p-6 shadow-lg">
             <div className="text-center">
-              <h2 className="text-xl font-bold text-gray-800">
+              <h2 className="text-ink text-xl font-bold">
                 {aiModels[CONCEPT].name}
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-ink-muted text-sm">
                 {aiModels[CONCEPT].description}
               </p>
             </div>

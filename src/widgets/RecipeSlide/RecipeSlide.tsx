@@ -52,7 +52,7 @@ const RecipeSlideLoading = () => (
 
 const RecipeSlideError = () => (
   <div className="flex h-30 w-full items-center justify-center py-8">
-    <p className="text-sm text-gray-500">
+    <p className="text-ink-muted text-sm">
       잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.
     </p>
   </div>
@@ -60,7 +60,7 @@ const RecipeSlideError = () => (
 
 const RecipeSlideEmpty = () => (
   <div className="flex w-full items-center justify-center py-8">
-    <p className="text-sm text-gray-500">아직 레시피가 없어요.</p>
+    <p className="text-ink-muted text-sm">아직 레시피가 없어요.</p>
   </div>
 );
 
@@ -118,12 +118,12 @@ const RecipeSlide = ({
     <div className="mt-2 w-full">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h2 className="text-lg font-bold text-gray-800">{title}</h2>
+          <h2 className="text-ink text-lg font-bold">{title}</h2>
         </div>
         {to && (
           <Link
             href={to}
-            className="flex items-center text-sm text-gray-500 hover:text-gray-700"
+            className="text-ink-muted hover:text-ink-sub flex items-center text-sm"
           >
             더보기
             <ChevronRight size={16} />

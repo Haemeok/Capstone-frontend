@@ -60,7 +60,7 @@ const CommentsPage = () => {
         <Container className="pt-0">
           <main className="py-4">
             <div className="mb-4 flex items-center justify-between px-2">
-              <span className="text-sm font-medium text-gray-500">
+              <span className="text-ink-muted text-sm font-medium">
                 {data?.pages[0].page.totalElements}개의 댓글
               </span>
               <div className="flex items-center gap-1">
@@ -69,7 +69,7 @@ const CommentsPage = () => {
                     "rounded-full px-3 py-1 text-sm font-medium transition-colors",
                     sort === "최신순"
                       ? "bg-olive-light/10 text-olive-light"
-                      : "text-gray-400 hover:bg-gray-100"
+                      : "text-ink-muted hover:bg-gray-100"
                   )}
                   onClick={() => setSort("최신순")}
                 >
@@ -80,7 +80,7 @@ const CommentsPage = () => {
                     "rounded-full px-3 py-1 text-sm font-medium transition-colors",
                     sort === "인기순"
                       ? "bg-olive-light/10 text-olive-light"
-                      : "text-gray-400 hover:bg-gray-100"
+                      : "text-ink-muted hover:bg-gray-100"
                   )}
                   onClick={() => setSort("인기순")}
                 >
@@ -102,20 +102,20 @@ const CommentsPage = () => {
               {isFetchingNextPage && (
                 <div className="flex items-center justify-center gap-2 p-4">
                   <div className="border-olive-light h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
-                  <p className="text-sm text-gray-500">댓글 불러오는 중</p>
+                  <p className="text-ink-muted text-sm">댓글 불러오는 중</p>
                 </div>
               )}
 
               {!hasNextPage && comments && comments.length > 0 && (
                 <div className="flex justify-center p-4">
-                  <p className="text-sm text-gray-400">마지막 댓글입니다.</p>
+                  <p className="text-ink-muted text-sm">마지막 댓글입니다.</p>
                 </div>
               )}
               {comments?.length === 0 && (
                 <div className="flex flex-col items-center justify-center gap-2 py-12">
                   <MessageSquare size={40} className="text-gray-300" />
-                  <p className="text-sm text-gray-500">아직 댓글이 없어요</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-ink-muted text-sm">아직 댓글이 없어요</p>
+                  <p className="text-ink-muted text-xs">
                     첫 번째 댓글을 남겨보세요
                   </p>
                 </div>

@@ -73,14 +73,14 @@ export const YoutubeUrlForm = () => {
             onChange: (e) => setCurrentUrl(e.target.value),
           })}
           placeholder="유튜브 링크를 붙여넣으세요"
-          className="w-full bg-transparent py-5 pr-12 pl-4 text-lg text-gray-900 placeholder:text-gray-400 focus:outline-none"
+          className="text-ink w-full bg-transparent py-5 pr-12 pl-4 text-lg placeholder:text-gray-400 focus:outline-none"
           autoComplete="off"
         />
         {currentUrl && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-4 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            className="hover:text-ink-sub absolute right-4 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100"
             aria-label="입력 지우기"
           >
             <X className="h-5 w-5" />

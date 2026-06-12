@@ -35,12 +35,12 @@ export const ReportCategoryButton = ({
       <p
         className={cn(
           "font-medium",
-          isSelected ? "text-olive-light" : "text-gray-900"
+          isSelected ? "text-olive-light" : "text-ink"
         )}
       >
         {category.label}
       </p>
-      <p className="mt-0.5 text-sm text-gray-500">{category.description}</p>
+      <p className="text-ink-muted mt-0.5 text-sm">{category.description}</p>
     </button>
   );
 };

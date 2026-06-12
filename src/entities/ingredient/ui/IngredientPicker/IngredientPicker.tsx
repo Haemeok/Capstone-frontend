@@ -110,11 +110,11 @@ const IngredientPicker = ({
         <header className="relative flex items-center justify-center border-b border-gray-100 px-4 py-3">
           <DrawerClose
             aria-label="닫기"
-            className="absolute left-3 cursor-pointer text-gray-700"
+            className="text-ink-sub absolute left-3 cursor-pointer"
           >
             <X size={24} />
           </DrawerClose>
-          <DrawerTitle className="text-base font-bold text-gray-900">
+          <DrawerTitle className="text-ink text-base font-bold">
             {title}
           </DrawerTitle>
         </header>
@@ -123,14 +123,14 @@ const IngredientPicker = ({
           <div className="relative">
             <Search
               size={18}
-              className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-gray-500"
+              className="text-ink-muted pointer-events-none absolute top-1/2 left-4 -translate-y-1/2"
               aria-hidden="true"
             />
             <input
               ref={inputRef}
               type="text"
               placeholder="재료를 검색해서 추가하세요"
-              className="w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none"
+              className="text-ink placeholder:text-ink-muted w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus:outline-none"
               value={inputValue}
               onChange={handleInputChange}
             />
@@ -150,7 +150,7 @@ const IngredientPicker = ({
                 "flex-shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-sm transition-colors",
                 selectedCategory === category
                   ? "bg-gray-900 font-medium text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "text-ink-sub bg-gray-100 hover:bg-gray-200"
               )}
             >
               {category}
@@ -160,7 +160,7 @@ const IngredientPicker = ({
 
         <div className="flex-1 overflow-y-auto p-4">
           {isPending ? (
-            <p className="text-center text-gray-500">재료 로딩 중...</p>
+            <p className="text-ink-muted text-center">재료 로딩 중...</p>
           ) : status === "error" ? (
             <p className="text-center text-red-500">
               오류 발생:{" "}
@@ -187,7 +187,7 @@ const IngredientPicker = ({
                 )}
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
-                <p className="py-10 text-center text-gray-500">
+                <p className="text-ink-muted py-10 text-center">
                   &quot;{searchQuery || selectedCategory}&quot;에 해당하는
                   재료가 없습니다.
                 </p>

@@ -101,7 +101,7 @@ const IngredientRecipePage = () => {
               <PrevButton className="md:hidden" />
               <button
                 onClick={() => router.back()}
-                className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
+                className="text-ink-sub hover:text-ink hidden items-center gap-2 transition-colors md:flex"
               >
                 <ArrowLeftIcon size={20} />
                 <span className="text-sm font-medium">AI 다시 선택하기</span>

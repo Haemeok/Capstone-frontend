@@ -73,10 +73,10 @@ const NotificationsPage = () => {
       <div ref={ref} className="h-4" />
       {isFetchingNextPage && <div>Loading more...</div>}
       {!hasNextPage && !isFetching && notifications.length === 0 && (
-        <div className="py-4 text-center text-gray-500">알림이 없습니다.</div>
+        <div className="text-ink-muted py-4 text-center">알림이 없습니다.</div>
       )}
       {!hasNextPage && notifications.length > 0 && (
-        <div className="py-4 text-center text-gray-500">
+        <div className="text-ink-muted py-4 text-center">
           모든 알림을 불러왔습니다.
         </div>
       )}

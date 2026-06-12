@@ -101,8 +101,8 @@ const IngredientSearchDrawer = ({
     <Container open={open} onOpenChange={onOpenChange}>
       <Content className="flex w-full flex-col md:max-w-2xl">
         <Header>
-          <Title className="text-base font-bold text-gray-900">재료 추가</Title>
-          <Description className="text-sm text-gray-500">
+          <Title className="text-ink text-base font-bold">재료 추가</Title>
+          <Description className="text-ink-muted text-sm">
             냉장고에 추가할 재료를 검색하세요
           </Description>
         </Header>
@@ -112,14 +112,14 @@ const IngredientSearchDrawer = ({
             <div className="relative">
               <Search
                 size={18}
-                className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-gray-500"
+                className="text-ink-muted pointer-events-none absolute top-1/2 left-4 -translate-y-1/2"
                 aria-hidden="true"
               />
               <input
                 ref={inputRef}
                 type="text"
                 placeholder="재료를 검색해서 추가하세요"
-                className="w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none"
+                className="text-ink placeholder:text-ink-muted w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus:outline-none"
                 value={inputValue}
                 onChange={handleInputChange}
               />
@@ -137,7 +137,7 @@ const IngredientSearchDrawer = ({
                   "flex-shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-sm transition-colors",
                   selectedCategory === category
                     ? "bg-gray-900 font-medium text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "text-ink-sub bg-gray-100 hover:bg-gray-200"
                 )}
               >
                 {category}
@@ -150,11 +150,11 @@ const IngredientSearchDrawer = ({
           className="flex h-120 flex-col overflow-y-auto px-4 pt-1 pb-4"
         >
           {isPending ? (
-            <p className="py-10 text-center text-sm text-gray-500">
+            <p className="text-ink-muted py-10 text-center text-sm">
               재료 로딩 중...
             </p>
           ) : status === "error" ? (
-            <p className="py-10 text-center text-sm text-gray-500">
+            <p className="text-ink-muted py-10 text-center text-sm">
               오류가 발생했어요. {error instanceof Error ? error.message : ""}
             </p>
           ) : (
@@ -176,7 +176,7 @@ const IngredientSearchDrawer = ({
                       )}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-ink text-sm font-medium">
                         {ingredient.name}
                       </p>
                     </div>
@@ -186,7 +186,7 @@ const IngredientSearchDrawer = ({
                       className={cn(
                         "h-9 rounded-full px-4 text-xs font-semibold transition-colors",
                         isAdded
-                          ? "bg-gray-100 text-gray-700 active:bg-gray-200"
+                          ? "text-ink-sub bg-gray-100 active:bg-gray-200"
                           : "bg-olive-light active:bg-olive-dark text-white"
                       )}
                       onClick={() =>
@@ -206,7 +206,7 @@ const IngredientSearchDrawer = ({
                 )}
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
-                <p className="py-10 text-center text-sm text-gray-500">
+                <p className="text-ink-muted py-10 text-center text-sm">
                   &quot;{searchQuery || selectedCategory}&quot;에 해당하는
                   재료가 없어요
                 </p>
@@ -219,7 +219,7 @@ const IngredientSearchDrawer = ({
             <Close asChild>
               <Button
                 variant="ghost"
-                className="h-11 w-full rounded-xl bg-gray-100 text-sm font-semibold text-gray-900 active:bg-gray-200"
+                className="text-ink h-11 w-full rounded-xl bg-gray-100 text-sm font-semibold active:bg-gray-200"
               >
                 닫기
               </Button>
@@ -227,7 +227,7 @@ const IngredientSearchDrawer = ({
           ) : (
             <Button
               variant="ghost"
-              className="h-11 w-full rounded-xl bg-gray-100 text-sm font-semibold text-gray-900 active:bg-gray-200"
+              className="text-ink h-11 w-full rounded-xl bg-gray-100 text-sm font-semibold active:bg-gray-200"
               onClick={() => onOpenChange(false)}
             >
               닫기

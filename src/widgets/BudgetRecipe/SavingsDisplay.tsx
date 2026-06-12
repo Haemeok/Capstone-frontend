@@ -16,7 +16,7 @@ const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
   if (savings <= 0) {
     return (
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-ink-sub text-sm">
           직장인 평균 한끼 예산({AVERAGE_MEAL_PRICE.toLocaleString()}원)이에요
         </p>
       </div>
@@ -27,7 +27,7 @@ const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
     <div className="space-y-3">
       <div className="border-olive-light bg-olive-light/10 flex items-center justify-center gap-2 rounded-lg border-2 p-4">
         <TrendingDownIcon className="text-olive-medium h-5 w-5" />
-        <p className="text-sm font-medium text-gray-800">
+        <p className="text-ink text-sm font-medium">
           직장인 평균 한끼보다{" "}
           <span className="text-olive-medium font-bold">
             {savings.toLocaleString()}원

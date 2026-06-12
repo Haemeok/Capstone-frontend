@@ -35,7 +35,7 @@ const SavedRecipeBooksButton = () => {
       className="relative rounded-full p-1 transition-colors hover:bg-gray-100"
     >
       <div className="relative h-fit w-fit p-1">
-        <Bookmark size={24} className="text-gray-600" />
+        <Bookmark size={24} className="text-ink-sub" />
       </div>
     </Link>
   );

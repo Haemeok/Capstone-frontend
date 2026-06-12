@@ -47,12 +47,12 @@ const IngredientSelectionTray = ({
                 type="button"
                 onClick={() => onRemove(item.id)}
                 aria-label={`${item.name} 제거`}
-                className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-gray-600 shadow"
+                className="text-ink-sub absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-200 shadow"
               >
                 <X size={12} />
               </button>
             </div>
-            <span className="mt-1 w-full truncate text-center text-[11px] text-gray-600">
+            <span className="text-ink-sub mt-1 w-full truncate text-center text-[11px]">
               {item.name}
             </span>
           </div>

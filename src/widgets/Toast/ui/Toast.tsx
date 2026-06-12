@@ -18,16 +18,16 @@ import { ToastType } from "@/widgets/Toast/model/types";
 
 type ToastProps = ToastType;
 
-const SURFACE_STYLE = "bg-white text-gray-900 border border-gray-100 shadow-md";
+const SURFACE_STYLE = "bg-white text-ink border border-gray-100 shadow-md";
 
 const ICON_STYLE: Record<ToastType["variant"], string> = {
-  success: "text-gray-700",
+  success: "text-ink-sub",
   error: "text-rose-400",
-  warning: "text-gray-700",
-  info: "text-gray-700",
-  default: "text-gray-700",
-  "rich-youtube": "text-gray-700",
-  action: "text-gray-700",
+  warning: "text-ink-sub",
+  info: "text-ink-sub",
+  default: "text-ink-sub",
+  "rich-youtube": "text-ink-sub",
+  action: "text-ink-sub",
 };
 
 const TOAST_ICON: Record<ToastType["variant"], typeof CheckCircle2> = {
@@ -150,7 +150,7 @@ const Toast = (props: ToastProps) => {
             )}
           />
         </div>
-        <p className="flex-1 text-sm font-medium text-gray-800">{message}</p>
+        <p className="text-ink flex-1 text-sm font-medium">{message}</p>
         {handleAction && actionLabel && (
           <ActionButton
             label={actionLabel}
@@ -163,7 +163,7 @@ const Toast = (props: ToastProps) => {
           className="flex-shrink-0 rounded-full p-1 transition-colors hover:bg-black/5"
           aria-label="닫기"
         >
-          <X className="h-4 w-4 text-gray-600" />
+          <X className="text-ink-sub h-4 w-4" />
         </button>
       </div>
     </>

@@ -53,7 +53,7 @@ export const OnboardingSurveyModal = () => {
             <br />
             함께 맛있는 이야기 만들어가요!
           </DialogTitle>
-          <DialogDescription className="text-center text-sm text-gray-500">
+          <DialogDescription className="text-ink-muted text-center text-sm">
             자주 사용하는 재료나, 입맛을 알려주세요.
             <br />
             저희가 기억하고 딱 맞는 레시피만 골라드릴게요.

@@ -16,7 +16,7 @@ export const FinalCTA = () => {
       <div className="relative mx-auto max-w-5xl text-center">
         <Reveal className="space-y-10">
           <div className="space-y-6">
-            <h2 className="text-dark text-5xl leading-[1.1] font-extrabold md:text-6xl lg:text-7xl">
+            <h2 className="text-ink text-5xl leading-[1.1] font-extrabold md:text-6xl lg:text-7xl">
               오늘부터 시작하는
               <br />
               <span className="relative inline-block">
@@ -27,7 +27,7 @@ export const FinalCTA = () => {
               </span>
             </h2>
 
-            <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl">
+            <p className="text-ink-sub mx-auto max-w-3xl text-xl leading-relaxed md:text-2xl">
               {TOTAL_RECIPE_COUNT_LABEL} 레시피와 AI 추천, YouTube 링크 추출까지
               <br className="hidden sm:block" />
               지금 바로 무료로 시작해보세요
@@ -50,7 +50,7 @@ export const FinalCTA = () => {
               asChild
               variant="outline"
               size="lg"
-              className="text-dark hover:border-olive hover:bg-olive/10 h-16 border-2 border-gray-300 bg-white px-10 text-xl font-bold backdrop-blur-sm transition-all"
+              className="text-ink hover:border-olive hover:bg-olive/10 h-16 border-2 border-gray-300 bg-white px-10 text-xl font-bold backdrop-blur-sm transition-all"
             >
               <Link href="/search">인기 레시피 둘러보기</Link>
             </Button>

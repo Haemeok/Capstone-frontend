@@ -54,7 +54,7 @@ const ChatMessageBubble = ({ message, onRetry }: ChatMessageBubbleProps) => {
         <div
           className={cn(
             "max-w-[85%] rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-2.5",
-            message.fromLlm ? "text-gray-900" : "text-gray-700"
+            message.fromLlm ? "text-ink" : "text-ink-sub"
           )}
         >
           {message.fromLlm ? (

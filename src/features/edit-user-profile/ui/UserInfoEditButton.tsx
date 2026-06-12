@@ -24,7 +24,7 @@ const UserInfoEditButton = ({
         prefetch={false}
         onClick={() => triggerHaptic("Light")}
         className={cn(
-          "flex h-10 flex-1 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50",
+          "text-ink-sub flex h-10 flex-1 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm font-semibold transition-colors hover:bg-gray-50",
           className
         )}
       >
@@ -41,7 +41,7 @@ const UserInfoEditButton = ({
       title="프로필 편집"
       onClick={() => triggerHaptic("Light")}
       className={cn(
-        "inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700",
+        "text-ink-muted hover:text-ink-sub inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-200 bg-white transition-colors hover:bg-gray-50",
         className
       )}
     >

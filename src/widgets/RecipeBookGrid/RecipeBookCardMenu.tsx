@@ -30,7 +30,7 @@ export const RecipeBookCardMenu = ({ bookId, bookName }: Props) => {
           <button
             type="button"
             onClick={(e) => e.stopPropagation()}
-            className="shrink-0 rounded-full p-1 text-gray-500 transition-colors hover:bg-gray-100"
+            className="text-ink-muted shrink-0 rounded-full p-1 transition-colors hover:bg-gray-100"
             aria-label="레시피북 메뉴"
           >
             <MoreVerticalIcon size={18} />

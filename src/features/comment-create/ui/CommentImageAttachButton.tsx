@@ -45,7 +45,7 @@ const CommentImageAttachButton = ({ onFileSelected, disabled }: Props) => {
         onClick={handleClick}
         disabled={disabled}
         aria-label="사진 첨부"
-        className="flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
+        className="text-ink-muted flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
       >
         <ImagePlus size={20} />
       </button>

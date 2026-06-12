@@ -52,10 +52,10 @@ const BudgetRecipe = () => {
       <Container padding={false}>
         <div className="mx-auto max-w-2xl space-y-6 p-4 pb-24 md:pb-24">
           <div className="mb-4 flex items-center gap-2">
-            <PrevButton className="text-gray-600 md:hidden" />
+            <PrevButton className="text-ink-sub md:hidden" />
             <button
               onClick={() => router.back()}
-              className="hidden items-center gap-2 text-gray-600 transition-colors hover:text-gray-800 md:flex"
+              className="text-ink-sub hover:text-ink hidden items-center gap-2 transition-colors md:flex"
             >
               <ArrowLeftIcon size={20} />
               <span className="text-sm font-medium">AI 다시 선택하기</span>

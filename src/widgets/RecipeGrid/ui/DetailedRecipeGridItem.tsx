@@ -136,7 +136,7 @@ const DetailedRecipeGridItem = ({
               <>
                 <YoutubeGlyph />
                 {recipe.youtubeChannelName && (
-                  <span className="truncate text-[13px] text-gray-500">
+                  <span className="text-ink-muted truncate text-[13px]">
                     {recipe.youtubeChannelName}
                   </span>
                 )}
@@ -145,7 +145,7 @@ const DetailedRecipeGridItem = ({
             {showAiRow && (
               <>
                 <AIGeneratedBadge />
-                <span className="truncate text-[13px] text-gray-500">
+                <span className="text-ink-muted truncate text-[13px]">
                   AI 생성
                 </span>
               </>
@@ -154,11 +154,11 @@ const DetailedRecipeGridItem = ({
         )}
 
         <div className="flex grow flex-col gap-1 px-0.5 pt-1 pb-1">
-          <p className="line-clamp-2 text-[15px] leading-snug break-keep hover:underline">
+          <p className="line-clamp-2 text-[15px] leading-snug font-medium break-keep hover:underline">
             {recipe.title}
           </p>
 
-          <div className="flex items-center gap-2 overflow-hidden text-[13px] text-gray-500">
+          <div className="text-ink-muted flex items-center gap-2 overflow-hidden text-[13px]">
             {isYoutube &&
               recipe.youtubeVideoViewCount != null &&
               (() => {
@@ -207,7 +207,7 @@ const DetailedRecipeGridItem = ({
               {recipe.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-card text-dark max-w-[96px] shrink-0 truncate bg-gray-100 px-1.5 py-[3px] text-[11px] leading-none"
+                  className="rounded-card text-ink max-w-[96px] shrink-0 truncate bg-gray-100 px-1.5 py-[3px] text-[11px] leading-none"
                 >
                   {toShortTagLabel(tag)}
                 </span>

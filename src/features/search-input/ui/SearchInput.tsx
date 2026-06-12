@@ -113,14 +113,17 @@ export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex items-center gap-2 rounded-full bg-gray-100 px-3.5 py-2">
-        <Search className="h-4 w-4 shrink-0 text-gray-500" aria-hidden="true" />
+        <Search
+          className="text-ink-muted h-4 w-4 shrink-0"
+          aria-hidden="true"
+        />
         <div className="relative flex min-w-0 flex-1 items-center">
           <input
             ref={inputRef}
             type="text"
             placeholder=""
             aria-label="레시피 검색"
-            className="min-w-0 flex-1 bg-transparent text-base text-gray-700 focus:outline-none"
+            className="text-ink-sub min-w-0 flex-1 bg-transparent text-base focus:outline-none"
             value={inputValue}
             onChange={handleChange}
             onFocus={onFocus}
@@ -133,7 +136,7 @@ export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -SLIDE_Y_OFFSET, opacity: 0 }}
                 transition={{ duration: SLIDE_DURATION_S, ease: SLIDE_EASE }}
-                className="pointer-events-none absolute inset-0 flex items-center overflow-hidden text-sm whitespace-nowrap text-gray-500"
+                className="text-ink-muted pointer-events-none absolute inset-0 flex items-center overflow-hidden text-sm whitespace-nowrap"
               >
                 {currentPlaceholder}
               </motion.span>
@@ -144,7 +147,7 @@ export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
           type="button"
           onClick={handleClear}
           className={cn(
-            "rounded-full p-0.5 text-gray-500 transition-colors hover:bg-gray-300 hover:text-gray-700",
+            "text-ink-muted hover:text-ink-sub rounded-full p-0.5 transition-colors hover:bg-gray-300",
             !inputValue && "invisible"
           )}
           aria-label="입력 지우기"

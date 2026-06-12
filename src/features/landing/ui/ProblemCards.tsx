@@ -49,10 +49,10 @@ export const ProblemCards = () => {
           <div className="mb-4 inline-block rounded-full bg-red-50 px-4 py-1 text-sm font-semibold text-red-600">
             이런 경험 있으신가요?
           </div>
-          <h2 className="text-dark mb-4 text-4xl font-extrabold md:text-5xl">
+          <h2 className="text-ink mb-4 text-4xl font-extrabold md:text-5xl">
             요리, 왜 이렇게 어려울까요?
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="text-ink-sub mx-auto max-w-2xl text-lg">
             많은 분들이 겪고 있는 요리의 어려움,
             <br className="hidden sm:block" />더 이상 혼자 고민하지 마세요
           </p>
@@ -77,10 +77,10 @@ export const ProblemCards = () => {
                   />
                 </div>
 
-                <h3 className="text-dark mb-2 text-sm leading-tight font-bold text-balance break-keep md:mb-4 md:text-xl">
+                <h3 className="text-ink mb-2 text-sm leading-tight font-bold text-balance break-keep md:mb-4 md:text-xl">
                   {problem.title}
                 </h3>
-                <p className="text-xs leading-relaxed text-pretty break-keep text-gray-600 md:text-sm">
+                <p className="text-ink-sub text-xs leading-relaxed text-pretty break-keep md:text-sm">
                   {problem.description}
                 </p>
               </div>

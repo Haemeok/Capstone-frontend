@@ -95,7 +95,7 @@ export const ToastDebugPanel = ({ open, onOpenChange }: Props) => {
     <div className="space-y-6 px-4 pb-6">
       {POSITION_LIST.map((position) => (
         <section key={position}>
-          <h3 className="mb-2 text-sm font-bold text-gray-700">
+          <h3 className="text-ink-sub mb-2 text-sm font-bold">
             position: {position}
           </h3>
           <div className="grid grid-cols-2 gap-2">
@@ -104,7 +104,7 @@ export const ToastDebugPanel = ({ open, onOpenChange }: Props) => {
                 key={`${position}-${variant}`}
                 type="button"
                 onClick={() => fireToast(variant, position)}
-                className="rounded-xl border border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="text-ink-sub rounded-xl border border-gray-200 px-4 py-3 text-left text-sm font-medium hover:bg-gray-50"
               >
                 {variant}
               </button>
@@ -120,7 +120,7 @@ export const ToastDebugPanel = ({ open, onOpenChange }: Props) => {
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
           <DialogHeader className="px-6 pt-6 pb-2">
-            <DialogTitle className="text-xl font-bold text-gray-900">
+            <DialogTitle className="text-ink text-xl font-bold">
               🐛 Toast Debug
             </DialogTitle>
           </DialogHeader>
@@ -134,7 +134,7 @@ export const ToastDebugPanel = ({ open, onOpenChange }: Props) => {
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="rounded-t-3xl">
         <DrawerHeader className="px-6 pt-6 pb-2 text-left">
-          <DrawerTitle className="text-xl font-bold text-gray-900">
+          <DrawerTitle className="text-ink text-xl font-bold">
             🐛 Toast Debug
           </DrawerTitle>
         </DrawerHeader>

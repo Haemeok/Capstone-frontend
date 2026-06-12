@@ -28,7 +28,7 @@ const GridFooter = ({
         </a>
       )}
       {showLastPageMessage && (
-        <p className="text-sm text-gray-500">{lastPageMessage}</p>
+        <p className="text-ink-muted text-sm">{lastPageMessage}</p>
       )}
     </div>
     {isFetching && (

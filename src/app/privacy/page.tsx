@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const PrivacyPage = () => {
   return (
     <ArticleLayout title="개인정보 처리방침" subtitle="정책" date="2026. 1. 20">
-      <p className="text-[15px] leading-relaxed text-gray-700">
+      <p className="text-ink-sub text-[15px] leading-relaxed">
         &#39;팀 레시피오&#39;(이하 &#39;회사&#39;라 한다)는 개인정보 보호법
         제30조에 따라 정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고
         원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을
@@ -45,7 +45,7 @@ const PrivacyPage = () => {
         <p>
           회사는 회원가입 시 아래와 같이 최소한의 개인정보를 수집하고 있습니다.
         </p>
-        <h3 className="mt-4 font-semibold text-gray-900">
+        <h3 className="text-ink mt-4 font-semibold">
           1. 소셜 로그인을 통해 수집하는 항목
         </h3>
         <ul className="list-disc space-y-1 pl-5">
@@ -54,7 +54,7 @@ const PrivacyPage = () => {
           <li>Naver: 이름, 이메일 주소</li>
           <li>Apple: 이름, 이메일 주소</li>
         </ul>
-        <h3 className="mt-4 font-semibold text-gray-900">
+        <h3 className="text-ink mt-4 font-semibold">
           2. 서비스 이용 과정에서 자동 생성되어 수집되는 항목
         </h3>
         <ul className="list-disc space-y-1 pl-5">
@@ -72,7 +72,7 @@ const PrivacyPage = () => {
           개인정보를 처리·보유합니다.
         </p>
         <p>② 구체적인 개인정보 처리 및 보유 기간은 다음과 같습니다.</p>
-        <h3 className="mt-4 font-semibold text-gray-900">
+        <h3 className="text-ink mt-4 font-semibold">
           1. 회원 가입 및 관리: 회원 탈퇴 시까지
         </h3>
         <ul className="list-disc space-y-1 pl-5">
@@ -86,7 +86,7 @@ const PrivacyPage = () => {
             시까지
           </li>
         </ul>
-        <h3 className="mt-4 font-semibold text-gray-900">
+        <h3 className="text-ink mt-4 font-semibold">
           2. 관련 법령에 의한 정보 보유 사유
         </h3>
         <ul className="list-disc space-y-1 pl-5">
@@ -227,7 +227,7 @@ const PrivacyPage = () => {
       </ArticleSection>
 
       <div className="mt-12 rounded-2xl bg-gray-50 px-6 py-5">
-        <p className="text-sm text-gray-500">
+        <p className="text-ink-muted text-sm">
           이 개인정보 처리방침은 <strong>2026. 1. 20</strong>부터 적용됩니다.
         </p>
       </div>

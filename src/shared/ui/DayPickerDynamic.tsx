@@ -10,7 +10,7 @@ const DayPickerLazy = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex h-96 w-full items-center justify-center">
-        <div className="text-sm text-gray-500">달력 로딩 중...</div>
+        <div className="text-ink-muted text-sm">달력 로딩 중...</div>
       </div>
     ),
   }

@@ -50,7 +50,7 @@ const SelectionContent = ({
         <RadioGroupItem
           value={sortOption}
           id={`radio-${sortOption}`}
-          className="text-dark-light focus:ring-dark-light h-5 w-5 border-gray-300"
+          className="text-ink-sub focus:ring-dark-light h-5 w-5 border-gray-300"
         />
         <Label
           htmlFor={`radio-${sortOption}`}
@@ -89,7 +89,7 @@ const SortPicker = ({
             <DrawerHeader className="text-left">
               <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
               {description && (
-                <DrawerDescription className="text-md text-gray-500">
+                <DrawerDescription className="text-md text-ink-muted">
                   {description}
                 </DrawerDescription>
               )}

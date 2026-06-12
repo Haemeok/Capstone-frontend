@@ -20,10 +20,10 @@ const IngredientsLoginCTA = () => {
               />
             </div>
             <div>
-              <h3 className="mb-1 font-semibold text-gray-900">
+              <h3 className="text-ink mb-1 font-semibold">
                 AI가 레시피를 추천해드려요
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-ink-sub text-sm">
                 냉장고에 남은 재료로 맞춤 레시피를 AI와 함께 생성할 수 있어요
               </p>
             </div>
@@ -38,10 +38,10 @@ const IngredientsLoginCTA = () => {
               />
             </div>
             <div>
-              <h3 className="mb-1 font-semibold text-gray-900">
+              <h3 className="text-ink mb-1 font-semibold">
                 재료로 레시피 검색 가능
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-ink-sub text-sm">
                 냉장고 재료를 등록하면 내 재료로 만들 수 있는 레시피를 찾을 수
                 있어요
               </p>
@@ -56,7 +56,7 @@ const IngredientsLoginCTA = () => {
           </Button>
         </Link>
 
-        <p className="mt-4 text-center text-xs text-gray-500">
+        <p className="text-ink-muted mt-4 text-center text-xs">
           회원가입 후 매일 무료 AI 레시피 생성권을 받으세요
         </p>
       </div>

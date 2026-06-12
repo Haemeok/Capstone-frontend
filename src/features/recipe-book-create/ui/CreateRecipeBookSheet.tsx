@@ -71,7 +71,7 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
           {...form.register("name")}
           placeholder="레시피북 이름"
           maxLength={NAME_MAX_LENGTH}
-          className="focus:border-olive-light focus:ring-olive-light w-full rounded-xl border border-gray-200 p-4 text-gray-900 transition-colors placeholder:text-gray-400 focus:ring-1 focus:outline-none"
+          className="focus:border-olive-light focus:ring-olive-light text-ink w-full rounded-xl border border-gray-200 p-4 transition-colors placeholder:text-gray-400 focus:ring-1 focus:outline-none"
           autoFocus
         />
         <div className="mt-1 flex items-center justify-between">
@@ -84,7 +84,7 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
       <div className="flex gap-2">
         <button
           type="button"
-          className="h-12 flex-1 rounded-xl bg-gray-100 font-medium text-gray-700 transition-colors hover:bg-gray-200"
+          className="text-ink-sub h-12 flex-1 rounded-xl bg-gray-100 font-medium transition-colors hover:bg-gray-200"
           onClick={() => onOpenChange(false)}
         >
           취소
@@ -104,7 +104,7 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
     <Container open={open} onOpenChange={onOpenChange}>
       <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
         <Header className="px-6 pt-6 pb-4 text-left">
-          <Title className="text-xl font-bold text-gray-900">
+          <Title className="text-ink text-xl font-bold">
             새 레시피북 만들기
           </Title>
         </Header>

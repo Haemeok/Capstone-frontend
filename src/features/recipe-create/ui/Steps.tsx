@@ -51,7 +51,7 @@ const Steps = () => {
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-bold text-gray-800">{FIELD_LABELS.steps}</h2>
+      <h2 className="text-ink text-xl font-bold">{FIELD_LABELS.steps}</h2>
 
       <div className="space-y-6">
         {stepFields.map((step, index) => {

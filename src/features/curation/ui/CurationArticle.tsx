@@ -47,21 +47,21 @@ export const CurationArticle = ({ data, recipes }: CurationArticleProps) => {
     <div className="px-5 pt-10 pb-20 md:px-6 md:pt-20">
       <header className="mx-auto max-w-3xl text-center">
         <CurationCategoryLabel category={data.category} />
-        <h1 className="mt-4 text-3xl leading-tight font-bold tracking-tight text-pretty break-keep text-gray-900 md:text-4xl">
+        <h1 className="text-ink mt-4 text-3xl leading-tight font-bold tracking-tight text-pretty break-keep md:text-4xl">
           {data.h1}
         </h1>
         {data.dek && (
-          <p className="mt-4 text-base leading-relaxed text-pretty break-keep text-gray-600 md:text-lg">
+          <p className="text-ink-sub mt-4 text-base leading-relaxed text-pretty break-keep md:text-lg">
             {data.dek}
           </p>
         )}
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-sm text-gray-500">
+        <p className="text-ink-muted mt-4 flex items-center justify-center gap-1.5 text-sm">
           <img
             src="/web-app-manifest-192x192.png"
             alt=""
             className="h-5 w-5 rounded"
           />
-          <span className="text-gray-700">레시피오</span>
+          <span className="text-ink-sub">레시피오</span>
           <span aria-hidden="true" className="text-gray-400">
             ·
           </span>

@@ -83,7 +83,7 @@ export const NotificationItem = ({
         <div className="flex items-start justify-between">
           <div className="min-w-0 flex-1">
             <p
-              className={`line-clamp-2 text-sm ${!notification.read ? "font-medium text-gray-900" : "text-gray-700"} `}
+              className={`line-clamp-2 text-sm ${!notification.read ? "text-ink font-medium" : "text-ink-sub"} `}
             >
               {notification.type === "AI_RECIPE_DONE" ||
               notification.type === "REFERRAL_REWARD_GRANTED" ? (
@@ -91,21 +91,21 @@ export const NotificationItem = ({
                 NOTIFICATION_MESSAGES[notification.type])
               ) : (
                 <>
-                  <span className="font-bold text-black">
+                  <span className="text-ink font-bold">
                     {notification.actorNickname}
                   </span>
                   {NOTIFICATION_MESSAGES[notification.type]}
                 </>
               )}
             </p>
-            <time className="mt-1 block text-xs text-gray-400">{timeAgo}</time>
+            <time className="text-ink-muted mt-1 block text-xs">{timeAgo}</time>
           </div>
 
           {showActions && (
             <div className="ml-2 flex items-center gap-1">
               <button
                 onClick={handleDeleteClick}
-                className="-m-1 rounded-full p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+                className="hover:text-ink-sub -m-1 rounded-full p-2 text-gray-400 hover:bg-gray-200"
                 aria-label="알림 삭제"
               >
                 <X size={16} />

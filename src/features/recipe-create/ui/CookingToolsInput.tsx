@@ -44,7 +44,7 @@ const CookingToolsInput = () => {
 
   return (
     <div className="mb-6">
-      <h2 className="text-xl font-bold text-gray-700">
+      <h2 className="text-ink-sub text-xl font-bold">
         {FIELD_LABELS.cookingTools}
       </h2>
       <div className="rounded-xl bg-white p-4 shadow-sm">
@@ -53,7 +53,7 @@ const CookingToolsInput = () => {
             {cookingToolsValue.map((tool) => (
               <div
                 key={tool}
-                className="flex items-center gap-1 rounded-full border border-gray-300 bg-gray-100 px-3 py-1 text-sm text-gray-700"
+                className="text-ink-sub flex items-center gap-1 rounded-full border border-gray-300 bg-gray-100 px-3 py-1 text-sm"
               >
                 <span>{tool}</span>
                 <button

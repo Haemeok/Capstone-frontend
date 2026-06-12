@@ -22,7 +22,7 @@ const TagSection = () => {
 
   return (
     <div className="mt-6 mb-4">
-      <h2 className="text-xl font-bold text-gray-700">{FIELD_LABELS.tags}</h2>
+      <h2 className="text-ink-sub text-xl font-bold">{FIELD_LABELS.tags}</h2>
       <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-sm">
         {TAG_DEFINITIONS.map((tag) => {
           const tagName = `${tag.emoji} ${tag.name}`;
@@ -35,7 +35,7 @@ const TagSection = () => {
                 "cursor-pointer rounded-full border px-3 py-1 text-sm transition-colors",
                 tags?.includes(tagName)
                   ? "bg-olive-light text-white"
-                  : "border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100"
+                  : "text-ink-sub border-gray-300 bg-gray-50 hover:bg-gray-100"
               )}
             >
               {tagName}

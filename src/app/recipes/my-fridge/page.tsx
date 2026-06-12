@@ -52,10 +52,10 @@ const MyFridgePage = () => {
           <div className="flex items-center gap-3">
             <PrevButton />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-ink text-2xl font-bold">
                 요리 가능한 레시피
               </h1>
-              <p className="text-sm text-gray-500">
+              <p className="text-ink-muted text-sm">
                 냉장고 재료로 만들 수 있는 레시피예요
               </p>
             </div>
@@ -65,7 +65,7 @@ const MyFridgePage = () => {
 
         {/* Sort */}
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500">정렬</span>
+          <span className="text-ink-muted text-sm">정렬</span>
           <SortPicker
             open={isDrawerOpen}
             onOpenChange={setIsDrawerOpen}
@@ -101,7 +101,7 @@ const MyFridgePage = () => {
                 ) : (
                   !hasNextPage &&
                   recipes.length > 0 && (
-                    <p className="text-sm text-gray-500">{lastPageMessage}</p>
+                    <p className="text-ink-muted text-sm">{lastPageMessage}</p>
                   )
                 )}
               </div>

@@ -22,7 +22,7 @@ export const HeroSection = () => {
         </div>
 
         <h1
-          className="hero-rise text-dark mb-8 max-w-5xl text-5xl leading-[1.15] font-extrabold tracking-tight md:text-7xl lg:text-8xl"
+          className="hero-rise text-ink mb-8 max-w-5xl text-5xl leading-[1.15] font-extrabold tracking-tight md:text-7xl lg:text-8xl"
           style={{ animationDelay: "0.2s" }}
         >
           매일의 요리를
@@ -36,7 +36,7 @@ export const HeroSection = () => {
         </h1>
 
         <p
-          className="hero-rise mb-12 max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl"
+          className="hero-rise text-ink-sub mb-12 max-w-3xl text-xl leading-relaxed md:text-2xl"
           style={{ animationDelay: "0.4s" }}
         >
           <span className="text-olive-medium font-semibold">
@@ -67,7 +67,7 @@ export const HeroSection = () => {
         </div>
 
         <div
-          className="hero-rise mt-16 flex flex-wrap items-center justify-center gap-8 text-sm text-gray-500"
+          className="hero-rise text-ink-muted mt-16 flex flex-wrap items-center justify-center gap-8 text-sm"
           style={{ animationDelay: "1.2s" }}
         >
           <div className="flex items-center gap-2">

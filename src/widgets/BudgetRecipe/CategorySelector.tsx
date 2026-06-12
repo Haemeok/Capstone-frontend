@@ -21,10 +21,8 @@ const CategorySelector = ({
   return (
     <div className="space-y-5">
       <div className="text-center">
-        <h2 className="text-xl font-bold text-gray-900">
-          어떤 음식이 땡기시나요?
-        </h2>
-        <p className="mt-1 text-sm text-gray-600">
+        <h2 className="text-ink text-xl font-bold">어떤 음식이 땡기시나요?</h2>
+        <p className="text-ink-sub mt-1 text-sm">
           선호하는 음식 종류를 선택해주세요
         </p>
       </div>
@@ -56,7 +54,7 @@ const CategorySelector = ({
               />
               <span
                 className={`text-center text-sm font-semibold ${
-                  isSelected ? "text-olive-light" : "text-gray-700"
+                  isSelected ? "text-olive-light" : "text-ink-sub"
                 }`}
               >
                 {category.label}

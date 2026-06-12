@@ -36,7 +36,7 @@ export const DeleteModal = ({
         </DialogHeader>
         <DialogFooter className="flex-col-reverse gap-0 p-0 sm:flex-row sm:justify-end sm:gap-2">
           <DialogClose asChild>
-            <button className="w-full py-3 text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:px-4 sm:py-2 sm:hover:bg-gray-50">
+            <button className="text-ink w-full py-3 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:px-4 sm:py-2 sm:hover:bg-gray-50">
               {cancelLabel}
             </button>
           </DialogClose>

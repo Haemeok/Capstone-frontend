@@ -20,13 +20,11 @@ type StorageStatProps = {
 
 const StorageStat = ({ Icon, label, value }: StorageStatProps) => (
   <div className="flex flex-1 flex-col gap-1 rounded-xl bg-gray-50 p-4">
-    <span className="flex items-center gap-1.5 text-xs text-gray-500">
+    <span className="text-ink-muted flex items-center gap-1.5 text-xs">
       <Icon size={13} className="text-gray-400" />
       <span>{label}</span>
     </span>
-    <span className="text-base leading-snug font-bold text-gray-900">
-      {value}
-    </span>
+    <span className="text-ink text-base leading-snug font-bold">{value}</span>
   </div>
 );
 
@@ -56,7 +54,7 @@ const StorageInfoCard = ({ storage }: StorageInfoCardProps) => {
 
   return (
     <section className="border-t border-gray-100 px-5 py-6">
-      <h2 className="mb-3 text-lg font-bold text-gray-900">보관방법</h2>
+      <h2 className="text-ink mb-3 text-lg font-bold">보관방법</h2>
 
       {hasStats && (
         <div className="grid grid-cols-2 gap-3">
@@ -68,11 +66,11 @@ const StorageInfoCard = ({ storage }: StorageInfoCardProps) => {
 
       {hasNotes && (
         <div
-          className={`rounded-xl bg-gray-50 p-4 text-sm leading-relaxed text-gray-700 ${
+          className={`text-ink-sub rounded-xl bg-gray-50 p-4 text-sm leading-relaxed ${
             hasStats ? "mt-3" : ""
           }`}
         >
-          <span className="mb-1 flex items-center gap-1.5 text-xs text-gray-500">
+          <span className="text-ink-muted mb-1 flex items-center gap-1.5 text-xs">
             <StickyNote size={13} className="text-gray-400" />
             <span>보관 참고사항</span>
           </span>

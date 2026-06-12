@@ -48,7 +48,7 @@ const AIModelSelection = () => {
     <>
       <div className="flex h-full w-full items-center justify-center p-4">
         <div className="flex h-full w-full flex-col items-center justify-center gap-6 md:gap-8">
-          <p className="text-dark text-center text-xl font-bold md:text-3xl">
+          <p className="text-ink text-center text-xl font-semibold md:text-3xl">
             어떤 AI와 함께 요리할까요?
           </p>
 

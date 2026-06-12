@@ -31,7 +31,7 @@ export const CurationListClient = ({
       <header className={`${alegreya.variable} pb-8 text-center sm:pb-12`}>
         <CurationCategoryLabel category="LIFESTYLE" />
         <h1
-          className="mt-1 text-6xl leading-none tracking-tight text-black sm:text-7xl"
+          className="text-ink mt-1 text-6xl leading-none tracking-tight sm:text-7xl"
           style={{ fontFamily: "var(--font-alegreya), serif" }}
         >
           FOOD

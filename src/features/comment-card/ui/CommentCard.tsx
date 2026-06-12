@@ -59,7 +59,7 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           <p className="text-sm text-gray-400">{formattedDate}</p>
           {user?.id === comment.author.id && (
             <button
-              className="ml-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              className="hover:text-ink-sub ml-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100"
               onClick={() => setIsDeleteModalOpen(true)}
               aria-label="댓글 삭제"
             >
@@ -68,7 +68,7 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           )}
         </div>
       </div>
-      <p className={`text-[#2a2229]`}>{comment.content}</p>
+      <p className={`text-ink`}>{comment.content}</p>
       {comment.imageUrls && comment.imageUrls.length > 0 && (
         <CommentImage urls={comment.imageUrls} />
       )}
@@ -85,7 +85,7 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           <Link
             href={`comments/${comment.id}`}
             prefetch={false}
-            className="group flex cursor-pointer items-center gap-1 rounded-full px-2 py-1 text-sm text-gray-500 transition-colors hover:bg-gray-100"
+            className="group text-ink-muted flex cursor-pointer items-center gap-1 rounded-full px-2 py-1 text-sm transition-colors hover:bg-gray-100"
           >
             <MessageSquare
               size={16}

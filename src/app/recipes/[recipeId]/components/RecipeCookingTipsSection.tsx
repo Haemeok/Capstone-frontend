@@ -24,7 +24,7 @@ export default function RecipeCookingTipsSection({
             </span>
             {headerExtra}
           </div>
-          <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-700">
+          <p className="text-ink-sub text-sm leading-relaxed whitespace-pre-wrap">
             {tips}
           </p>
         </div>

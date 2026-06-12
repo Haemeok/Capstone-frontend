@@ -205,7 +205,7 @@ export const RichToast = ({
   const toastContent = (
     <div
       className={cn(
-        "pointer-events-auto relative z-30 rounded-2xl border border-gray-100 bg-white text-gray-900",
+        "text-ink pointer-events-auto relative z-30 rounded-2xl border border-gray-100 bg-white",
         isPaused
           ? "shadow-[0_25px_60px_-12px_rgba(0,0,0,0.35)]"
           : "shadow-lg md:shadow-md",
@@ -256,7 +256,7 @@ export const RichToast = ({
           handleDismiss("button");
         }}
         className={cn(
-          "absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/5 text-gray-400 transition-all hover:bg-black/10 hover:text-gray-600 md:top-3 md:right-3 md:h-auto md:w-auto md:bg-transparent",
+          "hover:text-ink-sub absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/5 text-gray-400 transition-all hover:bg-black/10 md:top-3 md:right-3 md:h-auto md:w-auto md:bg-transparent",
           showCloseButton
             ? "scale-100 opacity-100"
             : "pointer-events-none scale-80 opacity-0"
@@ -284,13 +284,13 @@ export const RichToast = ({
 
         <div className="min-w-0 flex-1 space-y-1 overflow-hidden">
           {richContent?.title && (
-            <div className="flex items-start gap-2 text-base leading-snug font-bold text-gray-900">
+            <div className="text-ink flex items-start gap-2 text-base leading-snug font-bold">
               {richContent.badgeIcon}
               <span className="line-clamp-2 min-w-0">{richContent.title}</span>
             </div>
           )}
           {richContent?.subtitle && (
-            <p className="truncate text-sm leading-snug text-gray-600">
+            <p className="text-ink-sub truncate text-sm leading-snug">
               {richContent.subtitle}
             </p>
           )}

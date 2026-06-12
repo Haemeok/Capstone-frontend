@@ -116,7 +116,7 @@ const Phase2Absorb = ({ amount, onComplete }: Phase2AbsorbProps) => {
         >
           <div className="bg-olive-mint/30 absolute inset-0 w-1/3 rounded-full" />
         </div>
-        <p className="mt-3 text-center text-sm text-gray-500">
+        <p className="text-ink-muted mt-3 text-center text-sm">
           이번 달 누적 바에 흡수 중...
         </p>
       </div>

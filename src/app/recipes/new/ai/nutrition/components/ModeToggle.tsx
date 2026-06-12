@@ -25,7 +25,7 @@ const ModeToggle = ({ mode, onModeChange }: ModeToggleProps) => {
         className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all ${
           mode === "MACRO"
             ? "text-olive-light bg-white shadow-sm"
-            : "text-gray-400 hover:text-gray-600"
+            : "hover:text-ink-sub text-gray-400"
         }`}
       >
         탄단지 집중
@@ -36,7 +36,7 @@ const ModeToggle = ({ mode, onModeChange }: ModeToggleProps) => {
         className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all ${
           mode === "CALORIE"
             ? "text-olive-light bg-white shadow-sm"
-            : "text-gray-400 hover:text-gray-600"
+            : "hover:text-ink-sub text-gray-400"
         }`}
       >
         칼로리 집중

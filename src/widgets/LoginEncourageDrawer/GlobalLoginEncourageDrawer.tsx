@@ -50,24 +50,22 @@ const GlobalLoginEncourageDrawer = () => {
                 height={64}
                 lazy={false}
               />
-              <span className="text-3xl font-bold text-gray-900">
-                Recipi&apos;O
-              </span>
+              <span className="text-ink text-3xl font-bold">Recipi&apos;O</span>
             </div>
 
             <div className="mt-6 text-center">
-              <p className="text-xl font-bold break-keep text-gray-700">
+              <p className="text-ink-sub text-xl font-bold break-keep">
                 지금 <span className="text-olive-light">3초</span>만에 가입하고,
               </p>
               {icon ? (
                 <div className="mt-2 flex items-center justify-center gap-1">
                   {icon}
-                  <p className="text-xl font-bold text-gray-700">
+                  <p className="text-ink-sub text-xl font-bold">
                     {message || DEFAULT_MESSAGE}
                   </p>
                 </div>
               ) : (
-                <p className="mt-2 text-xl font-bold text-gray-700">
+                <p className="text-ink-sub mt-2 text-xl font-bold">
                   {message || DEFAULT_MESSAGE}
                 </p>
               )}
@@ -87,7 +85,7 @@ const GlobalLoginEncourageDrawer = () => {
                 href="https://grizzly-taker-1ad.notion.site/2ecc8d1def7c8068ad97e3f6318b6d90?pvs=74"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-gray-600"
+                className="hover:text-ink-sub underline"
               >
                 개인정보처리방침
               </a>

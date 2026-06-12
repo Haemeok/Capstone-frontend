@@ -35,7 +35,7 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
       className={`flex min-h-0 w-full flex-col bg-[#F4F1EA] px-8 py-10 ${notoSerifKR.variable} ${robotoMono.variable} ${alegreya.variable}`}
     >
       <div
-        className="mb-8 flex items-center justify-between text-sm font-medium tracking-wide text-gray-800"
+        className="text-ink mb-8 flex items-center justify-between text-sm font-medium tracking-wide"
         style={{ fontFamily: "var(--font-alegreya), monospace" }}
       >
         <span>ORDER TICKET</span>
@@ -46,13 +46,13 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
 
       <div className="mb-4 text-center">
         <div
-          className="text-6xl tracking-tight text-gray-900"
+          className="text-ink text-6xl tracking-tight"
           style={{ fontFamily: "var(--font-alegreya), serif" }}
         >
           RECIPIO
         </div>
         <div
-          className="mt-1 text-sm font-light tracking-widest text-gray-700 uppercase"
+          className="text-ink-sub mt-1 text-sm font-light tracking-widest uppercase"
           style={{ fontFamily: "var(--font-roboto-mono), monospace" }}
         >
           Fine Dining
@@ -60,13 +60,13 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
 
         <div className="mt-4 space-y-2">
           <h2
-            className="px-4 text-2xl leading-tight font-bold tracking-wide text-gray-900"
+            className="text-ink px-4 text-2xl leading-tight font-bold tracking-wide"
             style={{ fontFamily: "var(--font-noto-serif-kr), serif" }}
           >
             {resultData.header.title}
           </h2>
           <p
-            className="font-medium text-gray-700"
+            className="text-ink-sub font-medium"
             style={{ fontFamily: "var(--font-alegreya), serif" }}
           >
             {resultData.header.subtitle}
@@ -76,7 +76,7 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
 
       <div className="mb-4 border-t border-gray-800 pt-3 text-center">
         <span
-          className="font-medium tracking-wide text-gray-800"
+          className="text-ink font-medium tracking-wide"
           style={{ fontFamily: "var(--font-alegreya), serif" }}
         >
           DATE: {formatDateTime()}
@@ -137,7 +137,7 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
 
       <div className="mb-4 px-3">
         <p
-          className="text-justify text-[15px] leading-7 break-keep text-gray-700"
+          className="text-ink-sub text-justify text-[15px] leading-7 break-keep"
           style={{
             fontFamily: "var(--font-pretendard), sans-serif",
             wordSpacing: "-0.05em",
@@ -166,8 +166,8 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
           >
             {resultData.color.name}
           </div>
-          <div className="text-sm text-gray-600">{resultData.color.hex}</div>
-          <div className="mt-1 text-sm leading-tight text-gray-700">
+          <div className="text-ink-sub text-sm">{resultData.color.hex}</div>
+          <div className="text-ink-sub mt-1 text-sm leading-tight">
             {resultData.color.description}
           </div>
         </div>
@@ -185,7 +185,7 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
             <p>MATCH</p>
           </div>
           <div
-            className="flex grow flex-col text-gray-700"
+            className="text-ink-sub flex grow flex-col"
             style={{ fontFamily: "var(--font-pretendard), serif" }}
           >
             <p className="leading-snug">• {firstGood}</p>
@@ -202,7 +202,7 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
             <p>MATCH</p>
           </div>
           <div
-            className="flex grow flex-col text-gray-700"
+            className="text-ink-sub flex grow flex-col"
             style={{ fontFamily: "var(--font-pretendard), serif" }}
           >
             <p className="leading-snug">• {firstBad}</p>
@@ -216,7 +216,7 @@ const ShareCard = ({ id, result }: ShareCardProps) => {
 
       <div className="mt-4 flex items-center justify-between px-4">
         <div
-          className="-mb-2 text-4xl text-gray-900"
+          className="text-ink -mb-2 text-4xl"
           style={{ fontFamily: "var(--font-alegreya), serif" }}
         >
           RECIPIO

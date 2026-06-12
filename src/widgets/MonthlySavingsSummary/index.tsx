@@ -93,7 +93,7 @@ const MonthlySavingsSummary = ({
       {isPending ? (
         <Skeleton className="mt-1.5 h-4 w-40" />
       ) : (
-        <p className="mt-1.5 text-sm text-gray-500">{savingText}</p>
+        <p className="text-ink-muted mt-1.5 text-sm">{savingText}</p>
       )}
 
       {!isPending && !hasFirstRecord && <FirstSavingsQuestPanel />}
@@ -124,7 +124,7 @@ const MonthlySavingsSummary = ({
             </div>
           </div>
         )}
-        <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
+        <div className="text-ink-muted mt-2 flex items-center justify-between text-xs">
           {isPending ? (
             <>
               <Skeleton className="h-3 w-20" />

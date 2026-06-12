@@ -31,7 +31,7 @@ export default function RecipeBooksPage() {
       {/* sticky header */}
       <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b border-gray-100 bg-white px-2">
         <PrevButton onClick={handleBack} size={24} className="shrink-0" />
-        <h1 className="text-base font-bold text-gray-900">레시피북</h1>
+        <h1 className="text-ink text-base font-bold">레시피북</h1>
       </header>
 
       {/* 프로필 row */}
@@ -53,7 +53,7 @@ export default function RecipeBooksPage() {
               </div>
             )}
           </div>
-          <span className="text-base font-semibold text-gray-900">
+          <span className="text-ink text-base font-semibold">
             {user.nickname}
           </span>
         </div>

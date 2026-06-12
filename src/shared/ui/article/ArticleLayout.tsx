@@ -35,7 +35,7 @@ const ArticleLayout = ({
             {subtitle}
           </span>
         )}
-        <h1 className="mt-1 text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
+        <h1 className="text-ink mt-1 text-2xl font-bold tracking-tight md:text-3xl">
           {title}
         </h1>
         {date && (

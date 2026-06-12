@@ -33,19 +33,19 @@ export const RecipeBookDetailHeader = ({ book }: Props) => {
             <PrevButton icon="back" showOnDesktop />
           )}
           {isEditMode ? (
-            <span className="text-lg font-bold text-gray-900">
+            <span className="text-ink text-lg font-bold">
               {selectedCount}개 선택
             </span>
           ) : (
             <div className="flex min-w-0 items-center gap-1">
-              <span className="truncate text-lg font-bold text-gray-900">
+              <span className="text-ink truncate text-lg font-bold">
                 {book.name}
               </span>
               {!book.isDefault && (
                 <button
                   type="button"
                   onClick={() => setRenameOpen(true)}
-                  className="shrink-0 rounded-full p-1 text-gray-500 hover:bg-gray-100"
+                  className="text-ink-muted shrink-0 rounded-full p-1 hover:bg-gray-100"
                   aria-label="이름 변경"
                 >
                   <PencilIcon size={16} />
@@ -58,7 +58,7 @@ export const RecipeBookDetailHeader = ({ book }: Props) => {
           <button
             type="button"
             onClick={enter}
-            className="rounded-xl px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            className="text-ink-sub rounded-xl px-3 py-1.5 text-sm font-medium hover:bg-gray-100"
           >
             편집
           </button>

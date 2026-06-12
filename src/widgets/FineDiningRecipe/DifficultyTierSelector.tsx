@@ -17,8 +17,8 @@ const DifficultyTierSelector = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="mb-2 text-2xl font-bold text-gray-900">스타일 선택</h3>
-        <p className="text-sm text-gray-600">
+        <h3 className="text-ink mb-2 text-2xl font-bold">스타일 선택</h3>
+        <p className="text-ink-sub text-sm">
           원하시는 파인다이닝 스타일을 선택해주세요
         </p>
       </div>
@@ -53,12 +53,12 @@ const DifficultyTierSelector = ({
               <h4
                 className={cn(
                   "mb-2 text-lg font-bold transition-colors md:text-xl",
-                  selected === option.value ? "text-gray-900" : "text-gray-700"
+                  selected === option.value ? "text-ink" : "text-ink-sub"
                 )}
               >
                 {option.label}
               </h4>
-              <p className="mb-3 text-xs text-gray-500 md:mb-4 md:text-sm">
+              <p className="text-ink-muted mb-3 text-xs md:mb-4 md:text-sm">
                 {option.description}
               </p>
 
@@ -66,7 +66,7 @@ const DifficultyTierSelector = ({
                 {option.features.map((feature, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-2 text-xs text-gray-600 md:text-sm"
+                    className="text-ink-sub flex items-start gap-2 text-xs md:text-sm"
                   >
                     <span className="mt-0.5 text-gray-400">•</span>
                     <span>{feature}</span>

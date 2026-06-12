@@ -28,13 +28,13 @@ export const ServingsStepper = ({
         className={cn(
           "flex h-7 w-7 items-center justify-center rounded-full transition-colors",
           currentServings > minServings
-            ? "cursor-pointer bg-gray-100 text-gray-600 hover:bg-gray-200"
+            ? "text-ink-sub cursor-pointer bg-gray-100 hover:bg-gray-200"
             : "cursor-not-allowed bg-gray-50 text-gray-300"
         )}
       >
         <Minus className="h-3.5 w-3.5" />
       </button>
-      <span className="w-12 text-center text-sm font-bold text-gray-800">
+      <span className="text-ink w-12 text-center text-sm font-bold">
         {currentServings}인분
       </span>
       <button
@@ -44,7 +44,7 @@ export const ServingsStepper = ({
         className={cn(
           "flex h-7 w-7 items-center justify-center rounded-full transition-colors",
           currentServings < maxServings
-            ? "cursor-pointer bg-gray-100 text-gray-600 hover:bg-gray-200"
+            ? "text-ink-sub cursor-pointer bg-gray-100 hover:bg-gray-200"
             : "cursor-not-allowed bg-gray-50 text-gray-300"
         )}
       >

@@ -20,7 +20,7 @@ export const NutritionThemeSelector = ({
 }: NutritionThemeSelectorProps) => {
   return (
     <div className="space-y-3">
-      <h5 className="text-sm font-semibold text-gray-700">식단 테마</h5>
+      <h5 className="text-ink-sub text-sm font-semibold">식단 테마</h5>
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {getTypedEntries(NUTRITION_THEMES).map(([themeKey, theme]) => {
           const isSelected = selectedTheme === themeKey;

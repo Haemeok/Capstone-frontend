@@ -36,7 +36,7 @@ const NutritionThemeSection = () => {
 
   return (
     <section className="space-y-4">
-      <h3 className="text-lg font-bold text-gray-900">
+      <h3 className="text-ink text-lg font-bold">
         오늘은 어떤 한 끼가 끌려요?
       </h3>
 
@@ -58,7 +58,7 @@ const NutritionThemeSection = () => {
                   lazy={false}
                 />
               </div>
-              <span className="text-sm font-medium whitespace-nowrap text-gray-900">
+              <span className="text-ink text-sm font-medium whitespace-nowrap">
                 {theme.label}
               </span>
             </Link>

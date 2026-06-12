@@ -48,7 +48,7 @@ export const ReportSuccessView = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="mt-6 text-lg font-bold text-gray-900"
+        className="text-ink mt-6 text-lg font-bold"
       >
         수정사항이 접수되었습니다
       </motion.p>
@@ -57,7 +57,7 @@ export const ReportSuccessView = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="mt-2 text-center text-sm text-gray-500"
+        className="text-ink-muted mt-2 text-center text-sm"
       >
         개발자가 빠르게 확인해서
         <br />

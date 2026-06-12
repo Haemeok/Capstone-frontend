@@ -37,11 +37,11 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
       </div>
 
       <div className="px-1 pt-2">
-        <p className="line-clamp-1 text-sm font-bold break-keep text-gray-900">
+        <p className="text-ink line-clamp-1 text-sm font-bold break-keep">
           {page.title}
         </p>
         {page.subtitle && (
-          <p className="mt-0.5 line-clamp-1 text-xs text-gray-500">
+          <p className="text-ink-muted mt-0.5 line-clamp-1 text-xs">
             {page.subtitle}
           </p>
         )}

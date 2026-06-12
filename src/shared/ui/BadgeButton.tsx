@@ -43,7 +43,7 @@ const BadgeButton = ({ badgeText, badgeIcon }: BadgeButtonProps) => {
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-fit py-2" role="tooltip">
-        <p className="text-sm text-gray-500">{badgeText}</p>
+        <p className="text-ink-muted text-sm">{badgeText}</p>
       </PopoverContent>
     </Popover>
   );

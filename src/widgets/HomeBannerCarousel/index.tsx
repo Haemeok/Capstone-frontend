@@ -91,11 +91,11 @@ const HomeBannerCarousel = ({
 
                   <div className="relative z-10 flex h-full flex-col justify-center gap-0.5 px-4">
                     {slide.chip && (
-                      <span className="text-xs font-semibold text-gray-500 md:text-sm">
+                      <span className="text-ink-muted text-xs font-semibold md:text-sm">
                         {slide.chip}
                       </span>
                     )}
-                    <h2 className="text-lg leading-tight font-extrabold text-gray-900 md:text-2xl">
+                    <h2 className="text-ink text-lg leading-tight font-extrabold md:text-2xl">
                       {slide.title}
                     </h2>
                   </div>

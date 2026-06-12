@@ -49,7 +49,7 @@ const SlideShowContent = ({ step }: SlideShowContentProps) => {
         )}
 
         {step.instruction && (
-          <p className="text-dark mb-4 text-base font-bold whitespace-pre-wrap">
+          <p className="text-ink mb-4 text-base font-bold whitespace-pre-wrap">
             {step.instruction}
           </p>
         )}

@@ -113,24 +113,22 @@ const IngredientPackDetailDrawer = ({
     <Container open={open} onOpenChange={onOpenChange}>
       <Content className="flex h-[80vh] max-h-[800px] w-full flex-col md:max-w-2xl">
         <Header>
-          <Title className="text-base font-bold text-gray-900">
-            {pack.name}
-          </Title>
-          <Description className="text-sm text-gray-500">
+          <Title className="text-ink text-base font-bold">{pack.name}</Title>
+          <Description className="text-ink-muted text-sm">
             {pack.description} · 총 {pack.ingredients.length}개
           </Description>
         </Header>
 
         <div className="flex-1 overflow-y-auto px-4 pt-3 pb-4">
           <div className="mb-3 flex items-center justify-between px-1">
-            <span className="text-xs text-gray-500">
+            <span className="text-ink-muted text-xs">
               {selectedIds.size}개 선택됨
             </span>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={handleSelectAll}
-                className="text-xs font-medium text-gray-600 transition-colors active:text-gray-900"
+                className="text-ink-sub active:text-ink text-xs font-medium transition-colors"
               >
                 전체 선택
               </button>
@@ -140,7 +138,7 @@ const IngredientPackDetailDrawer = ({
               <button
                 type="button"
                 onClick={handleDeselectAll}
-                className="text-xs font-medium text-gray-600 transition-colors active:text-gray-900"
+                className="text-ink-sub active:text-ink text-xs font-medium transition-colors"
               >
                 선택 해제
               </button>
@@ -179,11 +177,11 @@ const IngredientPackDetailDrawer = ({
                   >
                     {isSelected && <Check size={14} strokeWidth={3} />}
                   </span>
-                  <span className="ml-3 flex-1 text-sm font-medium text-gray-900">
+                  <span className="text-ink ml-3 flex-1 text-sm font-medium">
                     {ingredient.name}
                   </span>
                   {!allOwned && isOwned && (
-                    <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                    <span className="text-ink-sub rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium">
                       보유중
                     </span>
                   )}
@@ -207,7 +205,7 @@ const IngredientPackDetailDrawer = ({
             className={cn(
               "h-12 w-full rounded-xl text-base font-bold transition-colors disabled:cursor-not-allowed disabled:border-0 disabled:bg-gray-100 disabled:text-gray-400",
               allOwned
-                ? "border border-gray-200 bg-white text-gray-900 active:bg-gray-50"
+                ? "text-ink border border-gray-200 bg-white active:bg-gray-50"
                 : "bg-olive-light active:bg-olive-dark text-white"
             )}
           >

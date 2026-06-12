@@ -108,7 +108,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 py-1">
-        <p className="line-clamp-2 text-[15px] leading-snug text-gray-900">
+        <p className="text-ink line-clamp-2 text-[15px] leading-snug">
           {recipe.title}
         </p>
 
@@ -118,7 +118,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
               <>
                 <YoutubeGlyph />
                 {recipe.youtubeChannelName && (
-                  <span className="truncate text-[13px] text-gray-500">
+                  <span className="text-ink-muted truncate text-[13px]">
                     {recipe.youtubeChannelName}
                   </span>
                 )}
@@ -126,7 +126,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
             ) : (
               <>
                 <AIGeneratedBadge />
-                <span className="truncate text-[13px] text-gray-500">
+                <span className="text-ink-muted truncate text-[13px]">
                   AI 생성
                 </span>
               </>
@@ -134,7 +134,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
           </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+        <div className="text-ink-muted flex flex-wrap items-center gap-3 text-sm">
           {isYoutube &&
             recipe.youtubeVideoViewCount != null &&
             (() => {

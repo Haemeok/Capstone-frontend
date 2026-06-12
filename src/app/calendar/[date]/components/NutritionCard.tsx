@@ -29,11 +29,11 @@ const NutrientBar = ({ label, value, max, color, unit }: NutrientBarProps) => {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-base font-medium text-gray-700">{label}</span>
+        <span className="text-ink-sub text-base font-medium">{label}</span>
         <span
           className={cn(
             "text-sm",
-            isComplete ? "text-olive-dark font-bold" : "text-gray-500"
+            isComplete ? "text-olive-dark font-bold" : "text-ink-muted"
           )}
         >
           {Math.round(value)}
@@ -67,17 +67,17 @@ const SodiumStatus = ({ sodium }: SodiumStatusProps) => {
   return (
     <div className="flex items-center justify-between border-t border-gray-100 pt-4">
       <div>
-        <p className="text-base font-medium text-gray-700">나트륨</p>
+        <p className="text-ink-sub text-base font-medium">나트륨</p>
         <p
           className={cn(
             "mt-0.5 text-sm",
-            status.tone === "caution" ? "text-amber-700" : "text-gray-500"
+            status.tone === "caution" ? "text-amber-700" : "text-ink-muted"
           )}
         >
           {status.label} · {status.description}
         </p>
       </div>
-      <span className="text-base font-medium text-gray-600">
+      <span className="text-ink-sub text-base font-medium">
         {Math.round(sodium)}mg
       </span>
     </div>
@@ -110,17 +110,17 @@ const NutritionCard = ({ data }: NutritionCardProps) => {
 
   return (
     <section className="border-t border-gray-100 py-6">
-      <h3 className="mb-5 text-lg font-bold text-gray-900">영양</h3>
+      <h3 className="text-ink mb-5 text-lg font-bold">영양</h3>
 
       <div className="mb-6 text-center">
-        <p className="text-sm text-gray-500">총 섭취 칼로리</p>
+        <p className="text-ink-muted text-sm">총 섭취 칼로리</p>
         <div className="mt-1 flex items-baseline justify-center gap-1.5">
           <span className="text-olive-dark text-5xl font-bold">
             {totalCalories.toLocaleString()}
           </span>
-          <span className="text-xl font-medium text-gray-500">kcal</span>
+          <span className="text-ink-muted text-xl font-medium">kcal</span>
         </div>
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="text-ink-muted mt-2 text-sm">
           권장량의{" "}
           <span className="text-olive-dark font-bold">
             {caloriePercentage}%

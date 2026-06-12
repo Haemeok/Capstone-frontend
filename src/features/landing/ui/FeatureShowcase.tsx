@@ -71,10 +71,10 @@ export const FeatureShowcase = () => {
           <div className="bg-olive-light/10 text-olive-medium mb-4 inline-block rounded-full px-4 py-1 text-sm font-semibold">
             핵심 기능
           </div>
-          <h2 className="text-dark mb-4 text-4xl font-extrabold md:text-5xl">
+          <h2 className="text-ink mb-4 text-4xl font-extrabold md:text-5xl">
             요리를 더 쉽게 만드는 방법
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="text-ink-sub mx-auto max-w-2xl text-lg">
             복잡한 요리 과정을 단순하게, 당신의 주방을 스마트하게
           </p>
         </Reveal>
@@ -97,10 +97,10 @@ export const FeatureShowcase = () => {
                     >
                       {feature.badge}
                     </div>
-                    <h3 className="text-dark mb-4 text-3xl leading-tight font-extrabold md:text-4xl lg:text-5xl">
+                    <h3 className="text-ink mb-4 text-3xl leading-tight font-extrabold md:text-4xl lg:text-5xl">
                       {feature.title}
                     </h3>
-                    <p className="text-lg leading-relaxed text-gray-600">
+                    <p className="text-ink-sub text-lg leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
@@ -126,7 +126,7 @@ export const FeatureShowcase = () => {
                             />
                           </svg>
                         </div>
-                        <span className="text-base font-medium text-gray-700">
+                        <span className="text-ink-sub text-base font-medium">
                           {benefit}
                         </span>
                       </li>

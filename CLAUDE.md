@@ -198,6 +198,7 @@ PR 본문을 작성할 때 `.claude/state/active-issue` 파일을 먼저 읽는�
 - Form: React Hook Form
 - Animation: Framer Motion / GSAP
 - 컬러 토큰: `olive-light`, `olive-dark`, `beige`, `brown` (Tailwind config)
+- 텍스트 컬러: `ink`(#222) / `ink-sub`(#505050) / `ink-muted`(#767676, 4.5:1 마지노선) / `ink-disabled`(비활성 전용) 4단계만. `text-gray-*`·`text-dark`·`text-black` 신규 사용 금지
 
 ---
 

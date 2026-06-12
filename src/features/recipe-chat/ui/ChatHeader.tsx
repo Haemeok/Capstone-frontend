@@ -20,8 +20,8 @@ const ChatHeader = ({ quota, onClose }: ChatHeaderProps) => (
         wrapperClassName="shrink-0 rounded-lg"
       />
       <div className="flex items-center gap-1.5">
-        <h2 className="text-[17px] font-bold text-gray-900">레시피오 AI</h2>
-        <span className="inline-flex items-center rounded-md border border-gray-200 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-gray-500">
+        <h2 className="text-ink text-[17px] font-bold">레시피오 AI</h2>
+        <span className="text-ink-muted inline-flex items-center rounded-md border border-gray-200 px-1.5 py-0.5 text-[10px] font-bold tracking-wide">
           BETA
         </span>
       </div>
@@ -32,7 +32,7 @@ const ChatHeader = ({ quota, onClose }: ChatHeaderProps) => (
         type="button"
         onClick={onClose}
         aria-label="챗봇 닫기"
-        className="cursor-pointer rounded-full p-1.5 text-gray-500 transition-colors hover:bg-gray-100"
+        className="text-ink-muted cursor-pointer rounded-full p-1.5 transition-colors hover:bg-gray-100"
       >
         <X className="h-5 w-5" />
       </button>

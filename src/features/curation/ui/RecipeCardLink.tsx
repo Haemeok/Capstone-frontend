@@ -78,7 +78,7 @@ export const RecipeCardLink = ({
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-between py-4 pr-2 pl-0">
           <div className="min-w-0">
-            <h3 className="line-clamp-2 text-base leading-snug font-semibold text-gray-900">
+            <h3 className="text-ink line-clamp-2 text-base leading-snug font-semibold">
               {recipe.title}
             </h3>
             {authorName && (
@@ -92,13 +92,13 @@ export const RecipeCardLink = ({
                     wrapperClassName="h-5 w-5 shrink-0 rounded-full"
                   />
                 )}
-                <span className="truncate text-xs text-gray-500">
+                <span className="text-ink-muted truncate text-xs">
                   {authorName}
                 </span>
               </div>
             )}
           </div>
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+          <div className="text-ink-muted mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
             {typeof ratingAvg === "number" && ratingAvg > 0 && (
               <span className="inline-flex items-center gap-1">
                 <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />

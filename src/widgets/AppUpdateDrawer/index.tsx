@@ -81,16 +81,14 @@ const GlobalAppUpdateDrawer = () => {
                 height={64}
                 lazy={false}
               />
-              <span className="text-3xl font-bold text-gray-900">
-                Recipi&apos;O
-              </span>
+              <span className="text-ink text-3xl font-bold">Recipi&apos;O</span>
             </div>
 
             <div className="mt-6 text-center">
-              <p className="text-xl font-bold break-keep text-gray-700">
+              <p className="text-ink-sub text-xl font-bold break-keep">
                 <span className="text-olive-light">새 버전</span>이 나왔어요!
               </p>
-              <p className="mt-2 text-sm font-medium break-keep text-gray-500">
+              <p className="text-ink-muted mt-2 text-sm font-medium break-keep">
                 이번 업데이트로 이런 점들이 좋아졌어요
               </p>
             </div>
@@ -102,7 +100,7 @@ const GlobalAppUpdateDrawer = () => {
                   className="flex items-center gap-3 rounded-2xl bg-gray-50 px-4 py-3.5"
                 >
                   <Icon className="text-olive-light h-5 w-5 shrink-0" />
-                  <span className="text-base font-semibold break-keep text-gray-700">
+                  <span className="text-ink-sub text-base font-semibold break-keep">
                     {text}
                   </span>
                 </li>

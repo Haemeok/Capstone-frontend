@@ -127,7 +127,7 @@ const RecipeStep = ({
                   className="rounded-card bg-gray-50 p-3 text-sm"
                 >
                   <span className="font-semibold">📖 {term.term}</span>{" "}
-                  <span className="text-gray-600">{term.description}</span>
+                  <span className="text-ink-sub">{term.description}</span>
                 </div>
               ))}
             </div>

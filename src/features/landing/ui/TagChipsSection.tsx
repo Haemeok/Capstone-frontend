@@ -17,10 +17,10 @@ export const TagChipsSection = () => {
           <div className="bg-olive-light/10 text-olive-medium mb-4 inline-block rounded-full px-4 py-1 text-sm font-semibold">
             상황별 레시피
           </div>
-          <h2 className="text-dark mb-4 text-4xl font-extrabold md:text-5xl">
+          <h2 className="text-ink mb-4 text-4xl font-extrabold md:text-5xl">
             이런 날에도, 이런 상황에도
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="text-ink-sub mx-auto max-w-2xl text-lg">
             원하는 상황에 딱 맞는 레시피를 바로 찾아보세요
           </p>
         </Reveal>
@@ -33,7 +33,7 @@ export const TagChipsSection = () => {
             >
               <div className="flex items-center gap-2 md:w-52 md:shrink-0">
                 <span className="text-2xl">{group.emoji}</span>
-                <span className="text-dark text-base font-bold md:text-lg">
+                <span className="text-ink text-base font-bold md:text-lg">
                   {group.label}
                 </span>
               </div>
@@ -43,7 +43,7 @@ export const TagChipsSection = () => {
                   <Link
                     key={chip.code}
                     href={buildTagSearchUrl(chip.code)}
-                    className="hover:border-olive-light hover:bg-olive-light/10 hover:text-olive-medium inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all active:scale-[0.97] md:text-base"
+                    className="hover:border-olive-light hover:bg-olive-light/10 hover:text-olive-medium text-ink-sub inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition-all active:scale-[0.97] md:text-base"
                   >
                     # {chip.name}
                   </Link>

@@ -57,24 +57,20 @@ const LoginEncourageDrawer = ({
                 height={64}
                 lazy={false}
               />
-              <span className="text-3xl font-bold text-gray-900">
-                Recipi&apos;O
-              </span>
+              <span className="text-ink text-3xl font-bold">Recipi&apos;O</span>
             </div>
 
             <div className="mt-6 text-center">
-              <p className="text-xl font-bold break-keep text-gray-700">
+              <p className="text-ink-sub text-xl font-bold break-keep">
                 지금 <span className="text-olive-light">3초</span>만에 가입하고,
               </p>
               {icon ? (
                 <div className="mt-2 flex items-center justify-center gap-1">
                   {icon}
-                  <p className="text-xl font-bold text-gray-700">{message}</p>
+                  <p className="text-ink-sub text-xl font-bold">{message}</p>
                 </div>
               ) : (
-                <p className="mt-2 text-xl font-bold text-gray-700">
-                  {message}
-                </p>
+                <p className="text-ink-sub mt-2 text-xl font-bold">{message}</p>
               )}
             </div>
 
@@ -90,7 +86,7 @@ const LoginEncourageDrawer = ({
               <br />
               <Link
                 href="/privacy"
-                className="underline hover:text-gray-600"
+                className="hover:text-ink-sub underline"
                 prefetch={false}
               >
                 개인정보처리방침

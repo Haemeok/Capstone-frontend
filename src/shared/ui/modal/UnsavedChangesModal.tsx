@@ -43,7 +43,7 @@ export const UnsavedChangesModal = ({
         <DialogFooter className="gap-0 space-x-2">
           <DialogClose asChild>
             <button
-              className="my-2 rounded-md px-4 text-gray-800"
+              className="text-ink my-2 rounded-md px-4"
               onClick={handleCancel}
             >
               취소

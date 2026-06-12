@@ -88,7 +88,7 @@ const IngredientsPageClient = () => {
         <div ref={observerRef} className="w-full" />
         <div className="z-sticky sticky-optimized sticky top-0 bg-white">
           <div className="flex items-center justify-between gap-3 px-5 py-5">
-            <h1 className="max-w-[55%] text-2xl leading-snug font-bold break-keep text-gray-900">
+            <h1 className="text-ink max-w-[55%] text-2xl leading-snug font-bold break-keep">
               {headerTitle}
             </h1>
             {!!user && (
@@ -109,7 +109,7 @@ const IngredientsPageClient = () => {
                   "flex-shrink-0 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors",
                   selectedCategory === category
                     ? "bg-olive-light text-white"
-                    : "bg-gray-100 text-gray-600 active:bg-gray-200"
+                    : "text-ink-sub bg-gray-100 active:bg-gray-200"
                 )}
               >
                 {category}

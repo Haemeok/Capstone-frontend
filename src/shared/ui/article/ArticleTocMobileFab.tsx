@@ -54,7 +54,7 @@ const ArticleTocMobileFab = ({
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             aria-label="목차 열기"
           >
-            <ListIcon size={20} className="text-gray-700" />
+            <ListIcon size={20} className="text-ink-sub" />
           </motion.button>
         </AnimatePresence>
       </div>
@@ -62,7 +62,7 @@ const ArticleTocMobileFab = ({
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent className="rounded-t-3xl border-0 bg-white shadow-xl">
           <DrawerHeader className="px-6 pt-6 pb-2">
-            <DrawerTitle className="text-xl font-bold text-gray-900">
+            <DrawerTitle className="text-ink text-xl font-bold">
               목차
             </DrawerTitle>
           </DrawerHeader>

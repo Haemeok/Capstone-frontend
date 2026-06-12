@@ -122,7 +122,7 @@ const ChatInput = ({
           placeholder={placeholder}
           rows={1}
           maxLength={MAX_LENGTH}
-          className="flex-1 resize-none bg-transparent py-1 text-base leading-6 text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed"
+          className="text-ink flex-1 resize-none bg-transparent py-1 text-base leading-6 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed"
         />
         <button
           type="button"

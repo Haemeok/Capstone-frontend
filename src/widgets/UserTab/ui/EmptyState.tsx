@@ -9,12 +9,12 @@ export const EmptyState = () => {
       </div>
 
       {/* 제목 */}
-      <h3 className="mb-2 text-lg font-bold text-gray-900">
+      <h3 className="text-ink mb-2 text-lg font-bold">
         나만의 요리 기록을 시작해보세요
       </h3>
 
       {/* 설명 */}
-      <p className="text-center text-sm leading-relaxed text-gray-500">
+      <p className="text-ink-muted text-center text-sm leading-relaxed">
         레시피를 저장하고 요리 일정을 관리할 수 있어요
       </p>
     </div>

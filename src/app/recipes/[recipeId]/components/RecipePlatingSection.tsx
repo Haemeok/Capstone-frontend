@@ -26,7 +26,7 @@ export default function RecipePlatingSection({
           <UtensilsCrossed className="text-brown h-6 w-6 flex-shrink-0" />
           <div className="flex flex-col gap-1">
             <span className="text-brown text-sm font-bold">추천 그릇</span>
-            <p className="text-sm text-gray-700">{vessel}</p>
+            <p className="text-ink-sub text-sm">{vessel}</p>
           </div>
         </div>
         <div className="flex items-start gap-3">
@@ -35,7 +35,7 @@ export default function RecipePlatingSection({
             <span className="text-brown text-sm font-bold">
               플레이팅 가이드
             </span>
-            <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-700">
+            <p className="text-ink-sub text-sm leading-relaxed whitespace-pre-wrap">
               {formatGuide(guide)}
             </p>
           </div>

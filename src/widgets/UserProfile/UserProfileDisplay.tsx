@@ -62,7 +62,7 @@ const UserProfileDisplay = ({
         </div>
         <div className="flex grow flex-col">
           <div className="mb-2 flex items-center gap-2">
-            <h2 className="text-dark text-base font-bold">{user.nickname}</h2>
+            <h2 className="text-ink text-base font-bold">{user.nickname}</h2>
           </div>
           <div className="self-end">
             <ActionButton
@@ -87,7 +87,7 @@ const UserProfileDisplay = ({
             type="button"
             aria-label="프로필 공유"
             onClick={handleShareProfile}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-900 transition-colors hover:bg-gray-50"
+            className="text-ink flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white transition-colors hover:bg-gray-50"
           >
             <Share2 size={18} aria-hidden="true" />
           </button>

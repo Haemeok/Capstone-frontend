@@ -42,7 +42,7 @@ const IngredientManager = ({ onOpenDrawer }: IngredientManagerProps) => {
             <Plus size={24} className="text-olive-light" aria-hidden="true" />
           </div>
           <span className="text-olive-light font-medium">재료 추가하기</span>
-          <span className="mt-1 text-sm text-gray-500">
+          <span className="text-ink-muted mt-1 text-sm">
             {ingredients.length > 0
               ? `${ingredients.length}개의 재료가 추가됨`
               : "레시피 생성을 위해 재료를 추가해주세요"}
@@ -97,7 +97,7 @@ const IngredientManager = ({ onOpenDrawer }: IngredientManagerProps) => {
                     <X size={10} strokeWidth={3} aria-hidden="true" />
                   </button>
                 </div>
-                <span className="w-full truncate text-center text-xs font-medium text-gray-700">
+                <span className="text-ink-sub w-full truncate text-center text-xs font-medium">
                   {ingredient.name}
                 </span>
               </div>

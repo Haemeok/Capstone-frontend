@@ -81,7 +81,7 @@ const IngredientSection = ({
 
   return (
     <div className="mb-4">
-      <h2 className="text-xl font-bold text-gray-700">
+      <h2 className="text-ink-sub text-xl font-bold">
         {FIELD_LABELS.ingredients}
       </h2>
 

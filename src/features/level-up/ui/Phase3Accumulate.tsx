@@ -97,7 +97,7 @@ const Phase3Accumulate = ({
               className="bg-olive-mint absolute inset-y-0 left-0 rounded-full"
             />
           </div>
-          <div className="mt-3 flex items-center justify-between text-sm text-gray-500">
+          <div className="text-ink-muted mt-3 flex items-center justify-between text-sm">
             <span>{formatNumber(data.currentBracket.min, "원")}</span>
             {data.nextBracket ? (
               <span>{formatNumber(data.nextBracket.min, "원")}</span>
@@ -114,10 +114,10 @@ const Phase3Accumulate = ({
             altText={data.currentBracket.name}
           />
 
-          <p className="text-center text-lg font-semibold text-gray-900">
+          <p className="text-ink text-center text-lg font-semibold">
             {data.currentBracket.name}
           </p>
-          <p className="mt-0.5 text-center text-sm text-gray-500">
+          <p className="text-ink-muted mt-0.5 text-center text-sm">
             {showLevelUp
               ? `${formatNumber(data.currentBracket.min, "원")} 이상 달성!`
               : `${formatNumber(data.currentBracket.min, "원")} 절약 중`}

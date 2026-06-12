@@ -46,17 +46,15 @@ export const ReviewGateDrawer = ({
               height={64}
               lazy={false}
             />
-            <span className="text-3xl font-bold text-gray-900">
-              Recipi&apos;O
-            </span>
+            <span className="text-ink text-3xl font-bold">Recipi&apos;O</span>
           </div>
 
           <div className="mt-6 text-center">
-            <p className="text-xl font-bold text-gray-700">
+            <p className="text-ink-sub text-xl font-bold">
               <span className="text-olive-light">레시피오</span> 마음에
               드셨나요?
             </p>
-            <p className="mt-2 text-base text-gray-500">
+            <p className="text-ink-muted mt-2 text-base">
               소중한 리뷰가 큰 힘이 됩니다
             </p>
           </div>
@@ -70,7 +68,7 @@ export const ReviewGateDrawer = ({
 
           <button
             onClick={handleNegative}
-            className="mt-3 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-base font-medium text-gray-500 transition-colors hover:bg-gray-100 active:bg-gray-200"
+            className="text-ink-muted mt-3 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-base font-medium transition-colors hover:bg-gray-100 active:bg-gray-200"
           >
             <MessageCircle className="h-4 w-4" />
             아쉬운 점이 있어요

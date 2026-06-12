@@ -53,7 +53,7 @@ const IngredientPickerCard = ({
           aria-hidden
           className={cn(
             "absolute right-1.5 bottom-1.5 flex h-6 w-6 items-center justify-center rounded-full shadow-md transition-colors",
-            checked ? "bg-olive-vivid text-white" : "bg-white text-gray-500"
+            checked ? "bg-olive-vivid text-white" : "text-ink-muted bg-white"
           )}
         >
           {checked ? <Check size={14} /> : <Plus size={14} />}
@@ -64,7 +64,7 @@ const IngredientPickerCard = ({
           {ingredient.category}
         </span>
       )}
-      <span className="mt-0.5 block text-sm font-medium text-gray-800">
+      <span className="text-ink mt-0.5 block text-sm font-medium">
         {ingredient.name}
       </span>
     </button>

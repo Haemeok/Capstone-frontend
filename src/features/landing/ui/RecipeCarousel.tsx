@@ -65,10 +65,10 @@ export const RecipeCarousel = () => {
         <div className="bg-olive-light/10 text-olive-medium mb-4 inline-block rounded-full px-4 py-1 text-sm font-semibold">
           레시피 카테고리
         </div>
-        <h2 className="text-dark mb-4 text-4xl font-extrabold md:text-5xl">
+        <h2 className="text-ink mb-4 text-4xl font-extrabold md:text-5xl">
           다양한 레시피를 만나보세요
         </h2>
-        <p className="mx-auto max-w-2xl text-lg text-gray-600">
+        <p className="text-ink-sub mx-auto max-w-2xl text-lg">
           한식, 양식, 중식, 일식부터 디저트까지
           <br className="hidden sm:block" />
           모든 카테고리의 레시피가 한 곳에
@@ -81,7 +81,7 @@ export const RecipeCarousel = () => {
       </div>
 
       <div className="mt-16 text-center">
-        <p className="text-sm font-medium text-gray-500">
+        <p className="text-ink-muted text-sm font-medium">
           매주 새로운 레시피가 업데이트됩니다
         </p>
       </div>

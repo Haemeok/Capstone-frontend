@@ -147,7 +147,7 @@ export default function RecipeVideoSection({
                     {youtubeMetadata.channelName}
                   </span>
                   {youtubeMetadata.subscriberCount && (
-                    <span className="text-xs text-gray-600">
+                    <span className="text-ink-sub text-xs">
                       구독자{" "}
                       {formatSubscriberCount(youtubeMetadata.subscriberCount)}
                     </span>
@@ -222,10 +222,10 @@ export default function RecipeVideoSection({
           </div>
           {!isSticky && (
             <div className="flex flex-col items-center justify-center">
-              <p className="mt-2 text-center text-xs text-gray-500">
+              <p className="text-ink-muted mt-2 text-center text-xs">
                 이 영상은 유튜브 공식 플레이어로 재생되며,
               </p>
-              <p className="text-center text-xs text-gray-500">
+              <p className="text-ink-muted text-center text-xs">
                 조회수와 수익은 100% 원작자에게 돌아갑니다.
               </p>
             </div>

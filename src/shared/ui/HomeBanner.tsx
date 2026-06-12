@@ -28,11 +28,11 @@ const HomeBanner = ({ title, description, image, to }: HomeBannerProps) => {
       <Image src={image} alt={`${title} 배너 이미지`} width={60} height={60} />
       <div className="flex flex-col">
         <p className="text-lg font-bold">{title}</p>
-        <p className="text-sm text-slate-400">{description}</p>
+        <p className="text-sm text-gray-400">{description}</p>
       </div>
 
       <ChevronRight
-        className="absolute top-1/2 right-2 translate-y-[-50%] text-slate-500"
+        className="text-ink-muted absolute top-1/2 right-2 translate-y-[-50%]"
         aria-hidden="true"
       />
     </Link>

@@ -96,7 +96,7 @@ export const TrendingRecipes = ({
         className="scrollbar-hide flex items-start gap-4 overflow-x-auto px-1 pb-4 md:px-0"
       >
         {trendingRecipes.length === 0 ? (
-          <p className="w-full py-8 text-center text-sm text-gray-500">
+          <p className="text-ink-muted w-full py-8 text-center text-sm">
             추천 레시피가 없습니다.
           </p>
         ) : (
@@ -119,10 +119,10 @@ export const TrendingRecipes = ({
                 <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
               </div>
               <div className="space-y-0.5">
-                <p className="group-hover:text-olive line-clamp-2 leading-tight font-medium text-gray-900">
+                <p className="group-hover:text-olive text-ink line-clamp-2 leading-tight font-medium">
                   {recipe.title}
                 </p>
-                <p className="truncate text-sm text-gray-500">
+                <p className="text-ink-muted truncate text-sm">
                   {recipe.channelName}
                 </p>
                 <p className="text-sm text-gray-400">

@@ -68,7 +68,7 @@ const DiscussionPage = () => {
               <CommentCard comment={parentComment} hideReplyButton />
             ) : (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 p-4">
-                <p className="mb-4 text-lg text-gray-500">
+                <p className="text-ink-muted mb-4 text-lg">
                   해당 답글을 찾을 수 없습니다.
                 </p>
               </div>
@@ -78,7 +78,7 @@ const DiscussionPage = () => {
               {replies && replies.length > 0 ? (
                 <>
                   <div className="mb-4 flex items-center justify-between px-2">
-                    <span className="text-sm font-medium text-gray-500">
+                    <span className="text-ink-muted text-sm font-medium">
                       {data?.pages[0].replies.page.totalElements}개의 답글
                     </span>
                     <div className="flex items-center gap-1">
@@ -119,7 +119,7 @@ const DiscussionPage = () => {
                       {isFetching && (
                         <div className="flex items-center justify-center gap-2 p-4">
                           <div className="border-olive-light h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
-                          <p className="text-sm text-gray-500">
+                          <p className="text-ink-muted text-sm">
                             답글 불러오는 중
                           </p>
                         </div>
@@ -138,7 +138,7 @@ const DiscussionPage = () => {
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2 py-12">
                   <MessageSquare size={40} className="text-gray-300" />
-                  <p className="text-sm text-gray-500">아직 답글이 없어요</p>
+                  <p className="text-ink-muted text-sm">아직 답글이 없어요</p>
                   <p className="text-xs text-gray-400">
                     첫 번째 답글을 남겨보세요
                   </p>

@@ -23,7 +23,7 @@ export const CountryFilterSection = ({
 
   return (
     <div className="space-y-3">
-      <h5 className="text-sm font-semibold text-gray-700">크리에이터 국가</h5>
+      <h5 className="text-ink-sub text-sm font-semibold">크리에이터 국가</h5>
       <div className="flex flex-wrap gap-2">
         {COUNTRY_DEFINITIONS.map(({ code, label }) => {
           const isSelected = selectedCountries.includes(label);
@@ -38,7 +38,7 @@ export const CountryFilterSection = ({
                 "flex cursor-pointer items-center gap-1.5 rounded-xl border-2 px-3 py-2 text-sm font-medium transition-all",
                 isSelected
                   ? "border-olive-light bg-olive-light/10 text-olive-dark"
-                  : "border-transparent bg-gray-50 text-gray-600 hover:border-gray-300"
+                  : "text-ink-sub border-transparent bg-gray-50 hover:border-gray-300"
               )}
             >
               <CountryFlagGlyph tag={code} />

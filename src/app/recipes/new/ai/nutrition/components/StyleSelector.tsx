@@ -20,7 +20,7 @@ const StyleSelector = ({ value, onChange }: StyleSelectorProps) => {
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-bold text-gray-700">
+      <label className="text-ink-sub block text-sm font-bold">
         요리 스타일
       </label>
       <div className="grid grid-cols-3 gap-3">
@@ -45,12 +45,12 @@ const StyleSelector = ({ value, onChange }: StyleSelectorProps) => {
               />
               <span
                 className={`text-sm font-bold text-pretty break-keep ${
-                  isSelected ? "text-olive-light" : "text-gray-700"
+                  isSelected ? "text-olive-light" : "text-ink-sub"
                 }`}
               >
                 {style.label}
               </span>
-              <span className="text-xs text-pretty break-keep text-gray-500">
+              <span className="text-ink-muted text-xs text-pretty break-keep">
                 {style.description}
               </span>
             </button>

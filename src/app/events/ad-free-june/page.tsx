@@ -36,7 +36,7 @@ const AdFreeJuneEventPage = () => {
         title="참여자 전원, 광고 최대 3개월 제거"
         align="center"
       >
-        <p className="text-base leading-7 text-gray-700">
+        <p className="text-ink-sub text-base leading-7">
           친구를 초대하고 광고를 최대 3개월까지 없애보세요.
         </p>
       </EventSection>
@@ -45,7 +45,7 @@ const AdFreeJuneEventPage = () => {
         title="참여자 전원, 친구와 1+1 광고 제거"
         align="center"
       >
-        <p className="text-base leading-7 text-gray-700">
+        <p className="text-ink-sub text-base leading-7">
           친구가 초대코드를 입력하면 참여자와 친구 모두 광고가 1개월씩 제거돼요.
           단, 초대코드는 한 번만 입력할 수 있어요.
         </p>

@@ -169,10 +169,10 @@ const AIModelCard = ({ modelId, onClick }: AIModelCardProps) => {
       </div>
 
       <div className="flex flex-col gap-2 p-4 text-center">
-        <h3 className="text-base font-bold text-gray-900 md:text-lg">
+        <h3 className="text-ink text-base font-bold md:text-lg">
           {model.name}
         </h3>
-        <p className="text-xs leading-relaxed text-gray-600 md:text-sm">
+        <p className="text-ink-sub text-xs leading-relaxed md:text-sm">
           {modelInfo.features[0].description}{" "}
           {modelInfo.features[1].description}
         </p>
@@ -235,7 +235,7 @@ const AIModelSelection = () => {
         <div className="flex w-full max-w-5xl flex-col items-center gap-6">
           <div className="flex flex-col items-center gap-3 text-center">
             <p className="text-4xl">👨‍🍳</p>
-            <p className="text-dark text-xl font-bold md:text-3xl">
+            <p className="text-ink text-xl font-bold md:text-3xl">
               어떤 AI와 함께 요리할까요?
             </p>
           </div>
@@ -244,7 +244,7 @@ const AIModelSelection = () => {
             {KEYWORDS.map((keyword) => (
               <span
                 key={keyword}
-                className="rounded-full bg-gray-100 px-4 py-1.5 text-sm font-medium text-gray-700"
+                className="text-ink-sub rounded-full bg-gray-100 px-4 py-1.5 text-sm font-medium"
               >
                 {keyword}
               </span>

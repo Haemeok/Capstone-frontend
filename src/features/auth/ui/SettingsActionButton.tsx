@@ -95,7 +95,7 @@ const SettingsActionButton = () => {
               />
               {isInApp && (
                 <div className="flex w-full items-center justify-between px-4 py-3">
-                  <div className="flex items-center gap-2 text-gray-700">
+                  <div className="text-ink-sub flex items-center gap-2">
                     <Bell size={16} aria-hidden="true" />
                     <span>알림</span>
                   </div>
@@ -116,7 +116,7 @@ const SettingsActionButton = () => {
               )}
               <Link
                 href="/privacy"
-                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+                className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50"
               >
                 <FileText size={16} aria-hidden="true" />
                 <span>개인정보처리방침</span>
@@ -125,7 +125,7 @@ const SettingsActionButton = () => {
                 href="https://slashpage.com/recipio/n5w9812gwype424kpgze"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+                className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50"
               >
                 <span aria-hidden="true">💬</span>
                 <span>사용후기</span>
@@ -134,7 +134,7 @@ const SettingsActionButton = () => {
                 href="https://slashpage.com/recipio/943zqpmqxn63g2wnvy87"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+                className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50"
               >
                 <span aria-hidden="true">🐛</span>
                 <span>오류제보</span>
@@ -143,7 +143,7 @@ const SettingsActionButton = () => {
                 href="https://docs.google.com/forms/d/e/1FAIpQLSdVUjr7LsnvG-WVG46cBhQOOUJN82irzTaKVS2Uthl6qKZgVg/viewform?usp=publish-editor"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+                className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50"
               >
                 <AlertTriangle size={16} aria-hidden="true" />
                 <span>저작권 신고 및 게시 중단 요청</span>
@@ -151,7 +151,7 @@ const SettingsActionButton = () => {
               <button
                 onClick={handleWithdrawClick}
                 disabled={isDeleting}
-                className="flex w-full items-center gap-2 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <UserX size={16} aria-hidden="true" />
                 <span>회원탈퇴</span>
@@ -169,13 +169,13 @@ const SettingsActionButton = () => {
               </button>
               {Close ? (
                 <Close asChild>
-                  <button className="w-full cursor-pointer border-t border-gray-200 px-4 py-3 font-bold text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50">
+                  <button className="text-ink w-full cursor-pointer border-t border-gray-200 px-4 py-3 font-bold sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50">
                     닫기
                   </button>
                 </Close>
               ) : (
                 <button
-                  className="w-full cursor-pointer border-t border-gray-200 px-4 py-3 font-bold text-gray-800 sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50"
+                  className="text-ink w-full cursor-pointer border-t border-gray-200 px-4 py-3 font-bold sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50"
                   onClick={() => setIsModalOpen(false)}
                 >
                   닫기

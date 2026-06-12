@@ -32,10 +32,10 @@ const RecentlyViewedRecipes = () => {
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-gray-500">최근 본 레시피</h3>
+        <h3 className="text-ink-muted text-sm font-medium">최근 본 레시피</h3>
         <button
           onClick={handleClearAll}
-          className="cursor-pointer text-sm text-gray-400 active:text-gray-600"
+          className="active:text-ink-sub cursor-pointer text-sm text-gray-400"
         >
           지우기
         </button>

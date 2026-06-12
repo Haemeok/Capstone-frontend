@@ -15,7 +15,7 @@ const Username = ({ username, userId, className }: UsernameProps) => {
     <Link href={`/users/${userId}`} className="block w-fit max-w-full min-w-0">
       <p
         className={cn(
-          "truncate text-left text-sm font-bold text-gray-800 hover:underline",
+          "text-ink truncate text-left text-sm font-bold hover:underline",
           className
         )}
       >

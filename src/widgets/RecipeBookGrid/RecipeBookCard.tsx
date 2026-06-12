@@ -53,9 +53,7 @@ export const RecipeBookCard = ({
       <div className="mt-2 flex items-center justify-between gap-2 px-1">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <p className="truncate text-[15px] font-bold text-gray-900">
-              {name}
-            </p>
+            <p className="text-ink truncate text-[15px] font-bold">{name}</p>
             {showDot && (
               <span
                 aria-hidden="true"
@@ -63,7 +61,7 @@ export const RecipeBookCard = ({
               />
             )}
           </div>
-          <p className="text-[13px] text-gray-500">
+          <p className="text-ink-muted text-[13px]">
             저장된 레시피 {recipeCount}개
           </p>
         </div>

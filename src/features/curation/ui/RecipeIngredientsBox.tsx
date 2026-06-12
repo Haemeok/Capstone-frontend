@@ -20,14 +20,14 @@ export const RecipeIngredientsBox = ({ recipe }: RecipeIngredientsBoxProps) => {
 
   return (
     <aside className="my-8 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-5">
-      <h3 className="text-sm font-bold tracking-wide text-gray-700">재료</h3>
-      <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-[15px] text-gray-800">
+      <h3 className="text-ink-sub text-sm font-bold tracking-wide">재료</h3>
+      <ul className="text-ink mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-[15px]">
         {recipe.ingredients.map((ing, i) => {
           const qty = formatQty(ing);
           return (
             <li key={ing.id ?? i} className="leading-relaxed">
               <span>{ing.name}</span>
-              {qty && <span className="ml-1 text-gray-500">{qty}</span>}
+              {qty && <span className="text-ink-muted ml-1">{qty}</span>}
             </li>
           );
         })}

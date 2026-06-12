@@ -42,7 +42,7 @@ export const RecipeTypeSelector = ({
 
   return (
     <div className="space-y-3 border-b pb-4">
-      <h5 className="text-sm font-semibold text-gray-700">레시피 유형</h5>
+      <h5 className="text-ink-sub text-sm font-semibold">레시피 유형</h5>
       <div className="grid grid-cols-3 gap-3">
         {RECIPE_TYPES.map(({ value, label, badge }) => {
           const isSelected = selectedTypes.includes(value);
@@ -59,7 +59,7 @@ export const RecipeTypeSelector = ({
               )}
             >
               {badge}
-              <span className="text-center text-xs leading-tight font-medium text-gray-700">
+              <span className="text-ink-sub text-center text-xs leading-tight font-medium">
                 {label}
               </span>
             </button>

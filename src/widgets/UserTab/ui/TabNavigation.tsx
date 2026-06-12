@@ -31,7 +31,7 @@ export const TabNavigation = ({
               type="button"
               className={cn(
                 "relative flex-1 cursor-pointer py-4 text-sm transition-colors",
-                isActive ? "font-bold text-black" : "font-medium text-gray-400"
+                isActive ? "text-ink font-bold" : "text-ink-muted font-bold"
               )}
               onClick={() => onTabChange(tab.id)}
             >

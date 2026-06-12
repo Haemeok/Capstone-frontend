@@ -124,10 +124,8 @@ const IngredientsFilterSheetContent = ({
   return (
     <>
       <Header className="flex-shrink-0 px-4 pt-4 pb-4 sm:px-6 sm:pt-6">
-        <Title className="text-xl font-bold text-gray-900">
-          재료로 검색하기
-        </Title>
-        <Description className="mt-1 text-sm text-gray-500">
+        <Title className="text-ink text-xl font-bold">재료로 검색하기</Title>
+        <Description className="text-ink-muted mt-1 text-sm">
           원하는 재료를 선택하면 해당 재료가 포함된 레시피를 찾아드려요
         </Description>
       </Header>

@@ -44,16 +44,16 @@ const IngredientPackCard = ({
 
       <div className="mt-3 px-0.5">
         <div className="flex items-start gap-2">
-          <h3 className="line-clamp-1 flex-1 text-sm leading-snug font-semibold text-gray-900">
+          <h3 className="text-ink line-clamp-1 flex-1 text-sm leading-snug font-semibold">
             {pack.name}
           </h3>
           {allOwned && (
-            <span className="flex-shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">
+            <span className="text-ink-sub flex-shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium">
               보유 중
             </span>
           )}
         </div>
-        <p className="mt-1 line-clamp-1 text-xs leading-5 text-gray-500">
+        <p className="text-ink-muted mt-1 line-clamp-1 text-xs leading-5">
           {pack.description}
         </p>
         <p className="mt-1.5 text-xs text-gray-400">

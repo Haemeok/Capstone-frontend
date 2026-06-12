@@ -12,10 +12,10 @@ type NutritionRowProps = {
 
 const NutritionRow = ({ label, value, unit }: NutritionRowProps) => (
   <div className="flex items-baseline justify-between border-b border-gray-100 py-2 last:border-b-0">
-    <span className="text-sm text-gray-700">{label}</span>
-    <span className="text-sm font-semibold text-gray-900">
+    <span className="text-ink-sub text-sm">{label}</span>
+    <span className="text-ink text-sm font-semibold">
       {value}
-      <span className="ml-0.5 text-xs font-normal text-gray-500">{unit}</span>
+      <span className="text-ink-muted ml-0.5 text-xs font-normal">{unit}</span>
     </span>
   </div>
 );
@@ -25,15 +25,13 @@ const NutritionCard = ({ nutrition }: NutritionCardProps) => {
 
   return (
     <section className="border-t border-gray-100 px-5 py-6">
-      <h2 className="mb-1 text-lg font-bold text-gray-900">영양정보</h2>
-      <p className="mb-4 text-sm text-gray-500">100g 기준이에요</p>
+      <h2 className="text-ink mb-1 text-lg font-bold">영양정보</h2>
+      <p className="text-ink-muted mb-4 text-sm">100g 기준이에요</p>
 
       <div className="rounded-xl bg-gray-50 p-4">
         <div className="mb-3 flex items-baseline gap-2">
-          <span className="text-3xl font-bold text-gray-900">
-            {nutrition.kcal}
-          </span>
-          <span className="text-sm text-gray-500">kcal</span>
+          <span className="text-ink text-3xl font-bold">{nutrition.kcal}</span>
+          <span className="text-ink-muted text-sm">kcal</span>
         </div>
 
         <div className="flex flex-col">

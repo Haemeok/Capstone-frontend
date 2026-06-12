@@ -15,7 +15,7 @@ const NoticePage = () => {
       subtitle="공지사항"
       date="2026. 2. 14"
     >
-      <p className="text-[15px] leading-relaxed text-gray-700">
+      <p className="text-ink-sub text-[15px] leading-relaxed">
         안녕하세요, 레시피오 팀입니다. 더 나은 요리 경험을 위해 대규모
         업데이트를 진행했습니다. 주요 변경사항을 안내드립니다.
       </p>
@@ -79,7 +79,7 @@ const NoticePage = () => {
       </ArticleSection>
 
       <div className="mt-12 rounded-2xl bg-gray-50 px-6 py-5">
-        <p className="text-sm text-gray-500">
+        <p className="text-ink-muted text-sm">
           업데이트와 관련하여 문의사항이 있으시면{" "}
           <strong>1119wj@naver.com</strong>으로 연락해 주세요. 앞으로도 더 나은
           요리 경험을 위해 노력하겠습니다.

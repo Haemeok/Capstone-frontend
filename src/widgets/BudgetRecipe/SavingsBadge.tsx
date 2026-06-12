@@ -27,7 +27,7 @@ const SavingsBadge = ({ budget }: SavingsBadgeProps) => {
         </div>
 
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-700">이번 달 절약 가능</p>
+          <p className="text-ink-sub text-sm font-medium">이번 달 절약 가능</p>
           <div className="flex items-baseline gap-1">
             <span className="text-olive text-3xl font-black">
               <CountUp
@@ -38,12 +38,12 @@ const SavingsBadge = ({ budget }: SavingsBadgeProps) => {
               />
               만 원
             </span>
-            <span className="text-sm text-gray-600">절약 중!</span>
+            <span className="text-ink-sub text-sm">절약 중!</span>
           </div>
         </div>
       </div>
 
-      <div className="mt-3 text-xs text-gray-600">
+      <div className="text-ink-sub mt-3 text-xs">
         매일 한 끼씩 실천하면 달성할 수 있어요
       </div>
     </div>

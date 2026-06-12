@@ -13,10 +13,10 @@ const IngredientEmptyState = () => {
         aria-hidden
       />
       <div className="space-y-2 text-center">
-        <h3 className="text-lg font-bold text-gray-900">
+        <h3 className="text-ink text-lg font-bold">
           아직 등록된 재료가 없어요
         </h3>
-        <p className="text-sm text-gray-500">
+        <p className="text-ink-muted text-sm">
           냉장고에 재료를 추가하고
           <br />
           맞춤 레시피를 추천받아 보세요

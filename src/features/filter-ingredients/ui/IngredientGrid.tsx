@@ -36,7 +36,7 @@ export const IngredientGrid = ({
 
   if (items.length === 0) {
     return (
-      <p className="py-10 text-center text-gray-500">검색 결과가 없습니다</p>
+      <p className="text-ink-muted py-10 text-center">검색 결과가 없습니다</p>
     );
   }
 

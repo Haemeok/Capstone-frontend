@@ -30,7 +30,7 @@ type ChatMarkdownProps = {
 };
 
 const ChatMarkdown = ({ text }: ChatMarkdownProps) => (
-  <div className="prose prose-sm max-w-none text-gray-900 [&_code]:rounded [&_code]:bg-gray-200 [&_code]:px-1 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-gray-200 [&_pre]:p-3 [&_table]:overflow-x-auto">
+  <div className="prose prose-sm text-ink max-w-none [&_code]:rounded [&_code]:bg-gray-200 [&_code]:px-1 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-gray-200 [&_pre]:p-3 [&_table]:overflow-x-auto">
     <ReactMarkdown rehypePlugins={[[rehypeSanitize, SCHEMA]]}>
       {text}
     </ReactMarkdown>

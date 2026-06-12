@@ -59,10 +59,10 @@ const IngredientItem = ({
         height={50}
       />
       <div className="flex min-w-0 flex-1 flex-col">
-        <span className="text-xs font-medium text-gray-500">
+        <span className="text-ink-muted text-xs font-medium">
           {ingredient.category}
         </span>
-        <span className="text-sm font-bold break-words text-gray-900">
+        <span className="text-ink text-sm font-bold break-words">
           {ingredient.name}
         </span>
       </div>

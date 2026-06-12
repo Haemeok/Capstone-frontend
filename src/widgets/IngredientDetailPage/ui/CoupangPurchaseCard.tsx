@@ -18,12 +18,12 @@ const CoupangPurchaseCard = ({ href }: CoupangPurchaseCardProps) => {
         className="flex w-full items-center justify-between gap-3 rounded-xl bg-gray-50 p-4 transition-colors active:bg-gray-100"
       >
         <div className="flex items-center gap-3">
-          <ShoppingBasket size={20} className="text-gray-700" />
+          <ShoppingBasket size={20} className="text-ink-sub" />
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-ink text-sm font-semibold">
               쿠팡에서 신선하게 받아보세요
             </span>
-            <span className="mt-0.5 text-xs text-gray-500">
+            <span className="text-ink-muted mt-0.5 text-xs">
               로켓배송으로 빠르게
             </span>
           </div>

@@ -90,7 +90,7 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
             />
           )}
 
-          <p className="text-sm text-gray-500">
+          <p className="text-ink-muted text-sm">
             친구를 초대하면 두 분 모두 한 달 동안 광고 없이 레시피오를 즐길 수
             있어요. 여러 친구를 초대할수록 혜택이 쌓여요.
           </p>
@@ -104,11 +104,13 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
 
           {isError && (
             <div className="mt-5 flex flex-col items-center gap-2 py-6">
-              <p className="text-sm text-gray-500">정보를 불러오지 못했어요.</p>
+              <p className="text-ink-muted text-sm">
+                정보를 불러오지 못했어요.
+              </p>
               <button
                 type="button"
                 onClick={() => refetch()}
-                className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                className="text-ink-sub rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold hover:bg-gray-50"
               >
                 다시 시도
               </button>
@@ -121,14 +123,14 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
                 내 초대코드
               </p>
               <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
-                <span className="text-lg font-bold tracking-wide text-gray-900">
+                <span className="text-ink text-lg font-bold tracking-wide">
                   {data.myReferralCode}
                 </span>
                 <button
                   type="button"
                   onClick={handleCopy}
                   aria-label="초대코드 복사"
-                  className="flex items-center gap-1 rounded-md px-2 py-1 text-sm font-semibold text-gray-700 hover:bg-gray-100"
+                  className="text-ink-sub flex items-center gap-1 rounded-md px-2 py-1 text-sm font-semibold hover:bg-gray-100"
                 >
                   <Copy size={14} aria-hidden="true" />
                   복사
@@ -164,7 +166,7 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
                 </div>
               ) : (
                 status && (
-                  <p className="mt-5 text-sm text-gray-500">
+                  <p className="text-ink-muted mt-5 text-sm">
                     {status === "ALREADY_REDEEMED" && data.redeemStatus.referrer
                       ? `${data.redeemStatus.referrer.nickname}님의 추천으로 가입했어요.`
                       : // status is non-AVAILABLE here: inputEnabled (canRedeem) is false

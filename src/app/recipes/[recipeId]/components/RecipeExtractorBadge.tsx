@@ -13,7 +13,7 @@ type RecipeExtractorBadgeProps = {
 };
 
 const CreatedByBadge = () => (
-  <span className="flex items-center gap-1 text-sm font-medium text-gray-500">
+  <span className="text-ink-muted flex items-center gap-1 text-sm font-medium">
     🥇 Created by
   </span>
 );
@@ -34,7 +34,7 @@ const RecipeExtractorBadge = ({
       />
       <Link
         href={`/users/${extractor.id}`}
-        className="text-sm text-gray-500 hover:text-gray-800 hover:underline"
+        className="text-ink-muted hover:text-ink text-sm hover:underline"
       >
         @{extractor.nickname}
       </Link>

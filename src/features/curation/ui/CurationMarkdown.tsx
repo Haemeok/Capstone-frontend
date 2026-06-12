@@ -143,7 +143,7 @@ const createComponents = (recipes: Array<StaticRecipe | null>): Components => {
       <ol className="my-6 list-decimal space-y-2 pl-6">{children}</ol>
     ),
     strong: ({ children }) => (
-      <strong className="font-semibold text-gray-900">{children}</strong>
+      <strong className="text-ink font-semibold">{children}</strong>
     ),
   };
 };
@@ -159,7 +159,7 @@ export const CurationMarkdown = ({
 }: CurationMarkdownProps) => {
   const components = createComponents(recipes);
   return (
-    <div className="curation-prose text-[17px] leading-[1.85] text-pretty break-keep text-gray-800 [&>p:first-of-type]:indent-[1em]">
+    <div className="curation-prose text-ink text-[17px] leading-[1.85] text-pretty break-keep [&>p:first-of-type]:indent-[1em]">
       <ReactMarkdown
         rehypePlugins={[[rehypeSanitize, SCHEMA]]}
         components={components}

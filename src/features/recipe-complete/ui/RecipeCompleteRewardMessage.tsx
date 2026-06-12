@@ -40,7 +40,7 @@ const RecipeCompleteRewardMessage = ({
           <DialogTitle className="text-olive-mint animate-in fade-in slide-in-from-bottom-4 mb-3 text-center text-4xl font-bold duration-500">
             +{formatNumber(saveAmount, "원")} 절약!
           </DialogTitle>
-          <p className="animate-in fade-in slide-in-from-bottom-2 text-center text-sm leading-relaxed text-gray-600 duration-700">
+          <p className="animate-in fade-in slide-in-from-bottom-2 text-ink-sub text-center text-sm leading-relaxed duration-700">
             마이페이지 →{" "}
             <span className="text-olive-mint font-bold">캘린더</span>
             에서
