@@ -24,9 +24,9 @@ type SearchQueryKey = readonly [
 
 export const buildSearchQueryKey = (
   base: SearchQueryKey,
-  locale: "ko" | "ja"
-): SearchQueryKey | readonly [...SearchQueryKey, "ja"] =>
-  locale === "ja" ? ([...base, "ja"] as const) : base;
+  locale: "ko" | "ja" | "en"
+): SearchQueryKey | readonly [...SearchQueryKey, "ja" | "en"] =>
+  locale === "ko" ? base : ([...base, locale] as const);
 
 type SearchQueryParamsInput = {
   sortCode: string | null;
@@ -42,7 +42,7 @@ type SearchQueryParamsInput = {
 export const buildSearchQueryParams = (
   snapshot: SearchQueryParamsInput,
   pageParam: number,
-  locale: "ko" | "ja"
+  locale: "ko" | "ja" | "en"
 ) => ({
   sort: snapshot.sortCode || SORT_TYPE_CODES["인기순"],
   dishType: snapshot.dishTypeCode,
@@ -57,12 +57,12 @@ export const buildSearchQueryParams = (
     snapshot.creatorCountryTags.length > 0
       ? snapshot.creatorCountryTags
       : undefined,
-  ...(locale === "ja" ? { lang: "ja" as const } : {}),
+  ...(locale === "ko" ? {} : { lang: locale as "ja" | "en" }),
 });
 
 export const useSearchResults = (
   initialPage: number = 0,
-  locale: "ko" | "ja" = "ko"
+  locale: "ko" | "ja" | "en" = "ko"
 ) => {
   const {
     dishTypeCode,

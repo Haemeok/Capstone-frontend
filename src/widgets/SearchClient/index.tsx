@@ -30,7 +30,6 @@ const SearchClientInner = ({
   locale,
 }: SearchClientInnerProps) => {
   const t = useT();
-  const searchLocale = locale === "en" ? "ko" : locale;
   const {
     recipes,
     hasNextPage,
@@ -39,7 +38,7 @@ const SearchClientInner = ({
     ref,
     queryKeyString,
     noResults,
-  } = useSearchResults(initialPage, searchLocale);
+  } = useSearchResults(initialPage, locale);
   const resetFilters = useResetSearchFilters();
 
   return (
@@ -62,7 +61,7 @@ const SearchClientInner = ({
             lastPageMessage={t.search.lastPage}
             queryKeyString={queryKeyString}
             nextPageHref={nextPageHref}
-            locale={searchLocale}
+            locale={locale}
             showInFeedAds
           />
         </ErrorBoundary>

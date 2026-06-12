@@ -161,7 +161,7 @@ export const LocalizedSearchPage = async ({
     "",
   ] as const;
 
-  const queryKey = buildSearchQueryKey(base9, locale === "ja" ? "ja" : "ko");
+  const queryKey = buildSearchQueryKey(base9, locale);
 
   await queryClient.prefetchInfiniteQuery({
     queryKey,

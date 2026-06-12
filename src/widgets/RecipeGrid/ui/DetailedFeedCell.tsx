@@ -18,7 +18,7 @@ type DetailedFeedCellProps = {
   priority: boolean;
   prefetch: boolean;
   onImageRetry?: () => void;
-  locale?: "ko" | "ja";
+  locale?: "ko" | "ja" | "en";
 };
 
 const DetailedFeedCell = ({
