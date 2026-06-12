@@ -2,6 +2,8 @@ import { useMemo } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
+import type { Locale } from "@/shared/i18n";
+
 import type { DetailedRecipeGridItem } from "@/entities/recipe";
 
 import {
@@ -34,14 +36,19 @@ export type IngredientRecipesQueryData = {
   content: DetailedRecipeGridItem[];
 };
 
-export const ingredientRecipesQueryKey = (id: string) =>
-  ["recipes", "by-ingredient", id] as const;
+export const ingredientRecipesQueryKey = (id: string, locale: Locale = "ko") =>
+  locale === "ko"
+    ? (["recipes", "by-ingredient", id] as const)
+    : (["recipes", "by-ingredient", id, locale] as const);
 
-export const useIngredientRecipesQuery = (id: string) => {
+export const useIngredientRecipesQuery = (
+  id: string,
+  locale: Locale = "ko"
+) => {
   return useQuery<IngredientRecipesQueryData>({
-    queryKey: ingredientRecipesQueryKey(id),
+    queryKey: ingredientRecipesQueryKey(id, locale),
     queryFn: async () => {
-      const detail = await getIngredientDetail(id);
+      const detail = await getIngredientDetail(id, locale);
       return { content: detail.recipes };
     },
     staleTime: STALE_TIME,

@@ -3,6 +3,7 @@ import { BaseQueryParams } from "@/shared/api/types";
 import { PAGE_SIZE } from "@/shared/config/constants/api";
 import { END_POINTS } from "@/shared/config/constants/api";
 import { INGREDIENT_CATEGORY_CODES } from "@/shared/config/constants/recipe";
+import type { Locale } from "@/shared/i18n";
 import { buildParams } from "@/shared/lib/utils";
 
 import {
@@ -80,11 +81,16 @@ export const getIngredientNames = async (ids: string[]) => {
 };
 
 export const getIngredientDetail = async (
-  id: string
+  id: string,
+  locale: Locale = "ko"
 ): Promise<IngredientDetailApiResponse> => {
-  const response = await api.get<IngredientDetailApiResponse>(
-    END_POINTS.INGREDIENTS_BY_ID(id)
-  );
+  const endpoint = END_POINTS.INGREDIENTS_BY_ID(id);
+  const response =
+    locale === "ko"
+      ? await api.get<IngredientDetailApiResponse>(endpoint)
+      : await api.get<IngredientDetailApiResponse>(endpoint, {
+          params: { lang: locale },
+        });
   return response;
 };
 
