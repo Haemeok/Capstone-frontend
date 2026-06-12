@@ -66,6 +66,7 @@ export const DISH_TYPES = [
   "절임/피클류",
   "밥/면/파스타",
   "디저트/간식류",
+  "음료/주류",
 ];
 
 export const DISH_TYPE_ICONS: Record<string, string> = {
@@ -81,6 +82,7 @@ export const DISH_TYPE_ICONS: Record<string, string> = {
   "절임/피클류": "pickle.webp",
   "밥/면/파스타": "rice_noodle.webp",
   "디저트/간식류": "dessert.webp",
+  "음료/주류": "beverage.webp",
 } as const;
 
 export const DISH_TYPES_FOR_CREATE_RECIPE = DISH_TYPES.slice(1);
@@ -98,6 +100,7 @@ export const DISH_TYPE_CODES = {
   "절임/피클류": "PICKLE",
   "밥/면/파스타": "RICE_NOODLE",
   "디저트/간식류": "DESSERT",
+  "음료/주류": "BEVERAGE",
 };
 
 export const DISH_TYPE_CODES_TO_NAME = Object.fromEntries(
