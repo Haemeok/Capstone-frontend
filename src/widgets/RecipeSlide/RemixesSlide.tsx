@@ -1,6 +1,7 @@
 "use client";
 
 import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
+import { useT } from "@/shared/i18n";
 
 import {
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
@@ -18,6 +19,7 @@ type RemixesSlideProps = {
 const MIN_VISIBLE = 5;
 
 const RemixesSlide = ({ recipeId, locale }: RemixesSlideProps) => {
+  const t = useT();
   const { ref, inView } = useInViewOnce({ rootMargin: "400px" });
 
   const {
@@ -51,7 +53,7 @@ const RemixesSlide = ({ recipeId, locale }: RemixesSlideProps) => {
   return (
     <div ref={ref}>
       <RecipeSlide
-        title="이 레시피를 변형한 리믹스"
+        title={t.recipeDetail.remixesTitle}
         recipes={recipesWithStatus}
         isLoading={isLoading}
         error={error as Error | null}

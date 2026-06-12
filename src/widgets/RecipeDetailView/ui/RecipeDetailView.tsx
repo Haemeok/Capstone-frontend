@@ -1,5 +1,5 @@
 import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
-import { getDictionary } from "@/shared/i18n";
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
@@ -59,7 +59,7 @@ export const RecipeDetailView = ({
     : undefined;
 
   return (
-    <>
+    <DictionaryProvider dict={t}>
       <RecentlyViewedTracker
         recipeId={recipeId}
         title={recipe.title}
@@ -97,6 +97,7 @@ export const RecipeDetailView = ({
             description={recipe.description}
             extractorId={recipe.extractorId}
             creatorCountryTag={recipe.creatorCountryTag}
+            locale={locale}
           >
             <RecipeInteractionBar staticRecipe={recipe} />
           </RecipeInfoSection>
@@ -105,6 +106,7 @@ export const RecipeDetailView = ({
             cookingTime={recipe.cookingTime}
             cookingTools={recipe.cookingTools}
             servings={recipe.servings}
+            locale={locale}
           />
 
           <ErrorBoundary
@@ -119,7 +121,10 @@ export const RecipeDetailView = ({
               <ErrorBoundary
                 fallback={<SectionErrorFallback message={t.errors.comments} />}
               >
-                <RecipeCommentsSection comments={recipe.comments} />
+                <RecipeCommentsSection
+                  comments={recipe.comments}
+                  locale={locale}
+                />
               </ErrorBoundary>
 
               <ErrorBoundary
@@ -132,7 +137,7 @@ export const RecipeDetailView = ({
 
               <RecipeCompleteButton saveAmount={saveAmount} className="mt-4" />
 
-              <CoupangDisclosure />
+              <CoupangDisclosure locale={locale} />
 
               {recipe.fineDiningInfo?.components && (
                 <RecipeComponentsSection
@@ -162,6 +167,7 @@ export const RecipeDetailView = ({
             <RecipePlatingSection
               vessel={recipe.fineDiningInfo.plating.vessel}
               guide={recipe.fineDiningInfo.plating.guide}
+              locale={locale}
             />
           )}
 
@@ -177,6 +183,6 @@ export const RecipeDetailView = ({
         </RecipeContainer>
         <ChatLauncher recipeId={recipeId} />
       </RecipeStatusProvider>
-    </>
+    </DictionaryProvider>
   );
 };

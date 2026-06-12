@@ -1,6 +1,7 @@
 "use client";
 
 import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
+import { useT } from "@/shared/i18n";
 
 import {
   DetailedRecipeGridItem as DetailedRecipeGridItemType,
@@ -18,16 +19,12 @@ type RecommendedRecipeSlideProps = {
 
 const CHEF_TAG = "👨‍🍳 셰프 레시피";
 
-const resolveTitle = (tags: string[]) =>
-  tags.includes(CHEF_TAG)
-    ? "더 다양한 셰프 레시피를 만나보세요"
-    : "이런 레시피는 어떠신가요?";
-
 const RecommendedRecipeSlide = ({
   recipeId,
   tags,
   locale,
 }: RecommendedRecipeSlideProps) => {
+  const t = useT();
   const { ref, inView } = useInViewOnce({ rootMargin: "400px" });
 
   const {
@@ -58,7 +55,11 @@ const RecommendedRecipeSlide = ({
   return (
     <div ref={ref}>
       <RecommendedRecipeGrid
-        title={resolveTitle(tags)}
+        title={
+          tags.includes(CHEF_TAG)
+            ? t.recipeDetail.recommendedChefTitle
+            : t.recipeDetail.recommendedTitle
+        }
         recipes={recipesWithStatus}
         isLoading={isLoading}
         error={error as Error | null}

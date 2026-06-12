@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+import type { Locale } from "@/shared/i18n";
+import { getDictionary } from "@/shared/i18n";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import BadgeButton from "@/shared/ui/BadgeButton";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
@@ -18,6 +20,7 @@ type RecipeInfoSectionProps = {
   description?: string;
   extractorId?: string | null;
   creatorCountryTag?: CreatorCountryTag | null;
+  locale: Locale;
   children: ReactNode;
 };
 
@@ -28,8 +31,11 @@ export default function RecipeInfoSection({
   description,
   extractorId,
   creatorCountryTag,
+  locale,
   children,
 }: RecipeInfoSectionProps) {
+  const t = getDictionary(locale);
+
   return (
     <>
       <section className="flex flex-col items-center justify-center gap-1">
@@ -45,8 +51,8 @@ export default function RecipeInfoSection({
             <BadgeButton
               badgeText={
                 extractorId
-                  ? "유튜브 영상에서 AI가 추출한 레시피예요 (Beta)"
-                  : "AI의 도움을 받아 작성된 레시피예요"
+                  ? t.recipeDetail.aiYoutubeBadge
+                  : t.recipeDetail.aiAssistedBadge
               }
               badgeIcon={<AIGeneratedBadge />}
             />

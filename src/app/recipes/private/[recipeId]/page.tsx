@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BottomAnchorAdSlot, InArticleAdSlot } from "@/shared/adsense";
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { ScrollReset } from "@/shared/ui/ScrollReset";
@@ -58,6 +59,8 @@ export default async function PrivateRecipePage({
     notFound();
   }
 
+  const locale = "ko" as const;
+  const t = getDictionary(locale);
   const saveAmount = recipe.marketPrice - recipe.totalIngredientCost;
 
   const youtubeMetadata = recipe.youtubeChannelName
@@ -73,121 +76,132 @@ export default async function PrivateRecipePage({
 
   return (
     <ScrollReset>
-      <RecentlyViewedTracker
-        recipeId={recipeId}
-        title={recipe.title}
-        imageUrl={recipe.imageUrl}
-        authorName={recipe.author.nickname}
-        authorId={recipe.author.id}
-        profileImage={recipe.author.profileImage}
-        cookingTime={recipe.cookingTime}
-        avgRating={recipe.ratingInfo.avgRating}
-        ratingCount={recipe.ratingInfo.ratingCount}
-        isYoutube={isYoutubeRecipe(recipe)}
-        youtubeChannelName={recipe.youtubeChannelName}
-        isAiGenerated={isAiRecipe(recipe)}
-      />
-      <RecipeStatusProvider recipeId={recipeId}>
-        <RecipeNavbar title={recipe.title} heroImageId="recipe-hero-image" />
-
-        <RecipeHeroSection
+      <DictionaryProvider dict={t}>
+        <RecentlyViewedTracker
           recipeId={recipeId}
-          imageUrl={recipe.imageUrl}
           title={recipe.title}
+          imageUrl={recipe.imageUrl}
+          authorName={recipe.author.nickname}
+          authorId={recipe.author.id}
+          profileImage={recipe.author.profileImage}
+          cookingTime={recipe.cookingTime}
           avgRating={recipe.ratingInfo.avgRating}
           ratingCount={recipe.ratingInfo.ratingCount}
+          isYoutube={isYoutubeRecipe(recipe)}
+          youtubeChannelName={recipe.youtubeChannelName}
+          isAiGenerated={isAiRecipe(recipe)}
         />
+        <RecipeStatusProvider recipeId={recipeId}>
+          <RecipeNavbar title={recipe.title} heroImageId="recipe-hero-image" />
 
-        <RecipeContainer>
-          <RecipeInfoSection
+          <RecipeHeroSection
+            recipeId={recipeId}
+            imageUrl={recipe.imageUrl}
             title={recipe.title}
-            aiGenerated={isAiRecipe(recipe)}
-            author={recipe.author}
-            description={recipe.description}
-            extractorId={recipe.extractorId}
-          >
-            <RecipeInteractionBar staticRecipe={recipe} />
-          </RecipeInfoSection>
-
-          <RecipeCookingInfoSection
-            cookingTime={recipe.cookingTime}
-            cookingTools={recipe.cookingTools}
-            servings={recipe.servings}
+            avgRating={recipe.ratingInfo.avgRating}
+            ratingCount={recipe.ratingInfo.ratingCount}
           />
 
-          <ErrorBoundary
-            fallback={
-              <SectionErrorFallback message="비디오를 불러올 수 없어요" />
-            }
-          >
-            <RecipeVideoSection
-              videoUrl={recipe.youtubeUrl ?? ""}
-              youtubeMetadata={youtubeMetadata}
+          <RecipeContainer>
+            <RecipeInfoSection
+              title={recipe.title}
+              aiGenerated={isAiRecipe(recipe)}
+              author={recipe.author}
+              description={recipe.description}
+              extractorId={recipe.extractorId}
+              locale={locale}
             >
-              <InArticleAdSlot />
+              <RecipeInteractionBar staticRecipe={recipe} />
+            </RecipeInfoSection>
 
-              <ErrorBoundary
-                fallback={
-                  <SectionErrorFallback message="댓글을 불러올 수 없어요" />
-                }
+            <RecipeCookingInfoSection
+              cookingTime={recipe.cookingTime}
+              cookingTools={recipe.cookingTools}
+              servings={recipe.servings}
+              locale={locale}
+            />
+
+            <ErrorBoundary
+              fallback={
+                <SectionErrorFallback message="비디오를 불러올 수 없어요" />
+              }
+            >
+              <RecipeVideoSection
+                videoUrl={recipe.youtubeUrl ?? ""}
+                youtubeMetadata={youtubeMetadata}
               >
-                <RecipeCommentsSection comments={recipe.comments} />
-              </ErrorBoundary>
+                <InArticleAdSlot />
 
-              <ErrorBoundary
-                fallback={
-                  <SectionErrorFallback message="재료 정보를 불러올 수 없어요" />
-                }
-              >
-                <RecipeIngredientsSection recipe={recipe} />
-              </ErrorBoundary>
+                <ErrorBoundary
+                  fallback={
+                    <SectionErrorFallback message="댓글을 불러올 수 없어요" />
+                  }
+                >
+                  <RecipeCommentsSection
+                    comments={recipe.comments}
+                    locale={locale}
+                  />
+                </ErrorBoundary>
 
-              <RecipeCompleteButton saveAmount={saveAmount} className="mt-4" />
+                <ErrorBoundary
+                  fallback={
+                    <SectionErrorFallback message="재료 정보를 불러올 수 없어요" />
+                  }
+                >
+                  <RecipeIngredientsSection recipe={recipe} />
+                </ErrorBoundary>
 
-              <CoupangDisclosure />
-
-              {recipe.fineDiningInfo?.components && (
-                <RecipeComponentsSection
-                  components={recipe.fineDiningInfo.components}
+                <RecipeCompleteButton
+                  saveAmount={saveAmount}
+                  className="mt-4"
                 />
-              )}
 
-              <RecipeCookingTipsSection
-                tips={recipe.cookingTips}
-                headerExtra={<CookingUnitTooltip inline />}
+                <CoupangDisclosure locale={locale} />
+
+                {recipe.fineDiningInfo?.components && (
+                  <RecipeComponentsSection
+                    components={recipe.fineDiningInfo.components}
+                  />
+                )}
+
+                <RecipeCookingTipsSection
+                  tips={recipe.cookingTips}
+                  headerExtra={<CookingUnitTooltip inline />}
+                />
+
+                <ErrorBoundary
+                  fallback={
+                    <SectionErrorFallback message="조리 순서를 불러올 수 없어요" />
+                  }
+                >
+                  <RecipeStepList
+                    RecipeSteps={recipe.steps}
+                    recipeIngredients={recipe.ingredients}
+                  />
+                </ErrorBoundary>
+              </RecipeVideoSection>
+            </ErrorBoundary>
+
+            {recipe.fineDiningInfo?.plating && (
+              <RecipePlatingSection
+                vessel={recipe.fineDiningInfo.plating.vessel}
+                guide={recipe.fineDiningInfo.plating.guide}
+                locale={locale}
               />
+            )}
 
-              <ErrorBoundary
-                fallback={
-                  <SectionErrorFallback message="조리 순서를 불러올 수 없어요" />
-                }
-              >
-                <RecipeStepList
-                  RecipeSteps={recipe.steps}
-                  recipeIngredients={recipe.ingredients}
-                />
-              </ErrorBoundary>
-            </RecipeVideoSection>
-          </ErrorBoundary>
+            <RecipeTagsSection tags={recipe.tags} />
 
-          {recipe.fineDiningInfo?.plating && (
-            <RecipePlatingSection
-              vessel={recipe.fineDiningInfo.plating.vessel}
-              guide={recipe.fineDiningInfo.plating.guide}
-            />
-          )}
-
-          <RecipeTagsSection tags={recipe.tags} />
-
-          <Suspense fallback={null}>
-            <LazyRecommendedRecipeSlide
-              recipeId={recipeId}
-              tags={recipe.tags}
-            />
-          </Suspense>
-        </RecipeContainer>
-        <ChatLauncher recipeId={recipeId} />
-      </RecipeStatusProvider>
+            <Suspense fallback={null}>
+              <LazyRecommendedRecipeSlide
+                recipeId={recipeId}
+                tags={recipe.tags}
+              />
+            </Suspense>
+          </RecipeContainer>
+          <ChatLauncher recipeId={recipeId} />
+        </RecipeStatusProvider>
+      </DictionaryProvider>
       <BottomAnchorAdSlot />
       <SmartAppBanner />
     </ScrollReset>

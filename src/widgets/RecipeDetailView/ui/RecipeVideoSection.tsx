@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 import { Pin } from "lucide-react";
 
+import { useT } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
@@ -66,6 +67,7 @@ export default function RecipeVideoSection({
   youtubeMetadata,
   children,
 }: RecipeVideoSectionProps) {
+  const t = useT();
   const playerRef = useRef<YouTubeVideoPlayerRef>(null);
   const [isSticky, setIsSticky] = useState(false);
 
@@ -148,7 +150,7 @@ export default function RecipeVideoSection({
                   </span>
                   {youtubeMetadata.subscriberCount && (
                     <span className="text-ink-sub text-xs">
-                      구독자{" "}
+                      {t.recipeDetail.subscriberLabel}{" "}
                       {formatSubscriberCount(youtubeMetadata.subscriberCount)}
                     </span>
                   )}
@@ -160,7 +162,7 @@ export default function RecipeVideoSection({
                     rel="noopener noreferrer"
                     className="shrink-0 rounded-full bg-red-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-700"
                   >
-                    구독
+                    {t.recipeDetail.subscribeAction}
                   </a>
                 )}
               </div>
@@ -178,7 +180,9 @@ export default function RecipeVideoSection({
                   ? "bg-primary/80 hover:bg-primary/90 text-primary-foreground border-primary h-10 w-10 rounded-full"
                   : "hover:bg-olive-medium border-olive-light text-olive-light rounded-card border-1 bg-white px-3 py-2"
               )}
-              aria-label={isSticky ? "영상 고정 해제" : "영상 고정"}
+              aria-label={
+                isSticky ? t.recipeDetail.unpinVideo : t.recipeDetail.pinVideo
+              }
             >
               <div
                 className={cn(
@@ -188,7 +192,7 @@ export default function RecipeVideoSection({
               >
                 {!isSticky && (
                   <span className="text-olive-light text-sm font-medium">
-                    영상 고정
+                    {t.recipeDetail.pinVideo}
                   </span>
                 )}
                 {isSticky && (
@@ -217,16 +221,13 @@ export default function RecipeVideoSection({
               className="rounded-card absolute right-2 bottom-2 z-20 flex items-center gap-1 bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm transition-colors hover:bg-black/80"
             >
               <YouTubeIconBadge className="h-5 w-5" />
-              <span>원본 영상</span>
+              <span>{t.recipeDetail.originalVideo}</span>
             </a>
           </div>
           {!isSticky && (
             <div className="flex flex-col items-center justify-center">
               <p className="text-ink-muted mt-2 text-center text-xs">
-                이 영상은 유튜브 공식 플레이어로 재생되며,
-              </p>
-              <p className="text-ink-muted text-center text-xs">
-                조회수와 수익은 100% 원작자에게 돌아갑니다.
+                {t.recipeDetail.videoDisclosure}
               </p>
             </div>
           )}

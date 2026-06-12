@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/shared/i18n";
+
 type ServingsControlProps = {
   currentServings: number;
   minServings: number;
@@ -15,16 +17,20 @@ export const ServingsControl = ({
   onIncrement,
   onDecrement,
 }: ServingsControlProps) => {
+  const t = useT();
+
   return (
     <div className="mb-3 flex items-center justify-end gap-2">
       <div className="flex items-center gap-2">
-        <span className="text-ink-sub text-sm">인분</span>
+        <span className="text-ink-sub text-sm">
+          {t.recipeDetail.servingsLabel}
+        </span>
         <div className="flex items-center gap-1">
           {currentServings > minServings && (
             <button
               type="button"
               onClick={onDecrement}
-              aria-label="인분 줄이기"
+              aria-label={t.recipeDetail.servingsDecrease}
               className="text-ink-sub flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-sm transition-colors hover:bg-gray-300"
             >
               -
@@ -37,7 +43,7 @@ export const ServingsControl = ({
             <button
               type="button"
               onClick={onIncrement}
-              aria-label="인분 늘리기"
+              aria-label={t.recipeDetail.servingsIncrease}
               className="text-ink-sub flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-sm transition-colors hover:bg-gray-300"
             >
               +

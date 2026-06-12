@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
@@ -16,6 +17,8 @@ export const IngredientsSectionHeader = ({
   onCopyOpen,
   onReportOpen,
 }: IngredientsSectionHeaderProps) => {
+  const t = useT();
+
   const tabClassName = (active: boolean) =>
     cn(
       "cursor-pointer text-xl font-bold transition-colors",
@@ -45,8 +48,9 @@ export const IngredientsSectionHeader = ({
           onClick={handleSelectIngredients}
           aria-pressed={!showNutrition}
           className={tabClassName(!showNutrition)}
+          data-testid="ingredients-section-header"
         >
-          재료
+          {t.recipeDetail.ingredientsHeader}
         </button>
         <button
           type="button"
@@ -54,7 +58,7 @@ export const IngredientsSectionHeader = ({
           aria-pressed={showNutrition}
           className={tabClassName(showNutrition)}
         >
-          영양성분
+          {t.recipeDetail.nutritionHeader}
         </button>
       </div>
       {!showNutrition && (
@@ -67,7 +71,7 @@ export const IngredientsSectionHeader = ({
             }}
             className={chipClassName}
           >
-            📋 복사
+            📋 {t.recipeDetail.copyAction}
           </button>
           <button
             type="button"
@@ -77,7 +81,7 @@ export const IngredientsSectionHeader = ({
             }}
             className={chipClassName}
           >
-            🏳️ 제보
+            🏳️ {t.recipeDetail.reportAction}
           </button>
         </div>
       )}

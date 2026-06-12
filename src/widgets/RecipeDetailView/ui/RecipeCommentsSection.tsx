@@ -1,3 +1,6 @@
+import type { Locale } from "@/shared/i18n";
+import { getDictionary } from "@/shared/i18n";
+
 import { Comment } from "@/entities/comment";
 
 import CommentMoreButton from "./CommentMoreButton";
@@ -5,17 +8,25 @@ import RecipeCommentCard from "./RecipeCommentCard";
 
 type RecipeCommentsSectionProps = {
   comments: Omit<Comment, "likedByCurrentUser" | "likeCount">[];
+  locale: Locale;
 };
 
 export default function RecipeCommentsSection({
   comments,
+  locale,
 }: RecipeCommentsSectionProps) {
+  const t = getDictionary(locale);
+
   return (
     <section className="mb-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">코멘트</h2>
         <CommentMoreButton
-          text={comments.length > 0 ? "더 읽기" : "작성하기"}
+          text={
+            comments.length > 0
+              ? t.recipeDetail.commentsReadMore
+              : t.recipeDetail.commentsWrite
+          }
         />
       </div>
 
