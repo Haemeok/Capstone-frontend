@@ -13,11 +13,13 @@ import { SearchFilters } from "./ui/SearchFilters";
 type SearchClientProps = {
   initialPage?: number;
   nextPageHref?: string;
+  locale?: "ko" | "ja";
 };
 
 export const SearchClient = ({
   initialPage = 0,
   nextPageHref,
+  locale = "ko",
 }: SearchClientProps) => {
   const {
     recipes,
@@ -27,7 +29,7 @@ export const SearchClient = ({
     ref,
     queryKeyString,
     noResults,
-  } = useSearchResults(initialPage);
+  } = useSearchResults(initialPage, locale);
   const resetFilters = useResetSearchFilters();
 
   return (
@@ -51,6 +53,7 @@ export const SearchClient = ({
             lastPageMessage={"모든 레시피를 불러왔습니다."}
             queryKeyString={queryKeyString}
             nextPageHref={nextPageHref}
+            locale={locale}
             showInFeedAds
           />
         </ErrorBoundary>
