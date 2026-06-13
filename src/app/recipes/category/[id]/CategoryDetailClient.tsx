@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 
 import { type RecipeSortType, TagCode } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { useSort } from "@/shared/hooks/useSort";
+import { resolveChromeLocale } from "@/shared/i18n";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { getNextPageParam } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
@@ -43,6 +44,7 @@ const CategoryDetailClient = ({
   nextPageHref,
 }: CategoryDetailClientProps) => {
   const { id: tagCode } = useParams<{ id: TagCode }>();
+  const locale = resolveChromeLocale(usePathname() ?? "/");
   const { label } = useTaxonomy();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -55,16 +57,17 @@ const CategoryDetailClient = ({
     DetailedRecipesApiResponse,
     Error,
     InfiniteData<DetailedRecipesApiResponse>,
-    [string, string, string],
+    [string, string, string, string],
     number
   >({
-    queryKey: ["recipes", tagCode, sortParam],
+    queryKey: ["recipes", tagCode, sortParam, locale],
     queryFn: ({ pageParam }) =>
       getRecipeItems({
         tags: [tagCode],
         pageParam,
         sort: sortParam,
         types: ["USER", "AI", "YOUTUBE"],
+        ...(locale === "ko" ? {} : { lang: locale }),
       }),
     getNextPageParam: getNextPageParam,
     initialPageParam: initialPage,
