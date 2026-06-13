@@ -4,6 +4,7 @@ export { getDictionary } from "./getDictionary";
 export { buildHreflangAlternates } from "./hreflang";
 export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
+export { getStoredLocale, setStoredLocale } from "./preferredLocale";
 export { resolveChromeLocale } from "./resolveChromeLocale";
 export type { Dictionary, Locale, NavDict, Plural, YoutubeDict } from "./types";
 export { LOCALES } from "./types";
