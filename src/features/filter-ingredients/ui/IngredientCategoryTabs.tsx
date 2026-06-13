@@ -1,4 +1,7 @@
+"use client";
+
 import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
@@ -8,6 +11,8 @@ type Props = {
 };
 
 export const IngredientCategoryTabs = ({ selected, onSelect }: Props) => {
+  const { localize } = useTaxonomy();
+
   const handleClick = (category: string) => {
     triggerHaptic("Light");
     onSelect(category);
@@ -26,7 +31,7 @@ export const IngredientCategoryTabs = ({ selected, onSelect }: Props) => {
               : "text-ink-sub bg-gray-100 hover:bg-gray-200"
           )}
         >
-          {category}
+          {localize(category, "ingredientCategory")}
         </button>
       ))}
     </div>
