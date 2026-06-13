@@ -58,7 +58,7 @@
 | 검색 결과   | `/search/results`                         | H     | 🟢   | ja/en 완료                                                                                                                                                                                         |
 | 홈          | `/`                                       | H     | 🔴   | chrome(헤더/하단탭/푸터) 완료 → 잠금해제. 라우트(ja/en)·홈 하드카피("주간 인기"/"가성비"/CategoryTabs title)·배너 미착수                                                                           |
 | 검색 진입   | `/search`                                 | H     | 🟢   | ja/en 완료. 셸·시간대 placeholder(현지요리)·큐레이션카드 12장(현지 차분한 톤)·영양테마 label·focused. 가격대 섹션 ja/en 숨김(통화 후속). 카피 자연성 사용자 수동검증 대기                          |
-| 카테고리    | `/recipes/category/[id]`                  | H     | 🔴   |                                                                                                                                                                                                    |
+| 카테고리    | `/recipes/category/[id]`                  | H     | 🟢   | ja/en 완료. chrome 사전(`category`) + 태그 라벨(택소노미) + `?lang` fetch + queryKey locale + hreflang/canonical. **ja/en noindex**(availableLocales 대기). CHEF 셀럽 키워드 ko 전용               |
 | 재료 목록   | `/ingredients`                            | H     | 🔴   |                                                                                                                                                                                                    |
 | 재료 상세   | `/ingredients/[ingredientId]`             | H     | 🟢   | ja/en 완료. chrome locale-prop 사전(`getDictionary`), `?lang=` 서버fn, hreflang/inLanguage. 쿠팡 ko-only. EXCLUDE(비목표): 재료 데이터 번역(백엔드)·영양 단위·제철 월 등 데이터 필드               |
 | 큐레이션    | `/curation`, `/curation/[slug]`           | H     | 🔴   |                                                                                                                                                                                                    |
@@ -74,7 +74,7 @@
 | 페이지      | 라우트                                   | Scope | 상태 | 비고                                                                                                                                                                                                       |
 | ----------- | ---------------------------------------- | ----- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 로그인      | `/login`, `/login/error`                 | M     | 🔴   | chrome 번역 필요                                                                                                                                                                                           |
-| 프로필 편집 | `/users/edit`                            | M     | 🔴   |                                                                                                                                                                                                            |
+| 프로필 편집 | `/users/edit`                            | M     | 🟢   | ja/en 완료. `userPages.profile.edit` 사전 와이어 + 미러 라우트. validation/toast/placeholder 현지화. 자유텍스트(닉/소개) 미번역                                                                            |
 | 알림        | `/notifications`                         | M     | 🔴   | NotificationType별 문구 조립 — 비목표였음                                                                                                                                                                  |
 | 캘린더      | `/calendar/[date]`, `/calendar/timeline` | L     | 🔴   |                                                                                                                                                                                                            |
 | 냉장고      | `/recipes/my-fridge`                     | M     | 🟢   | ja/en 라우트 래퍼 + `fridge` 사전(자가판정 `useFridgeDict`). 페이지/빈상태/매치요약/AI배지 + 레시피 데이터 lang(`getMyFridgeRecipes`). 재료 fetch(`getIngredients`)도 lang 전파. DEFER: 조리시간 "분" 단위 |
@@ -84,19 +84,19 @@
 > ⚠️ youtube 추출·AI 생성 **기능**은 다른 에이전트가 작업중. 아래 i18n 상태는
 > 기능과 별개. 기능 구현 후 chrome 사전화 진행.
 
-| 페이지      | 라우트                                                    | Scope | 상태 | 비고                                         |
-| ----------- | --------------------------------------------------------- | ----- | ---- | -------------------------------------------- |
-| 생성 허브   | `/recipes/new`                                            | M     | 🔴   |                                              |
-| 유튜브 추출 | `/recipes/new/youtube`                                    | M     | 🔴   | 기능: 다른 에이전트                          |
-| AI 생성     | `/recipes/new/ai`(+ingredient/nutrition/price/finedining) | M     | 🔴   | 기능: 다른 에이전트                          |
-| 수동 작성   | `/recipes/new/manual`                                     | L     | 🔴   |                                              |
-| 편집        | `/recipes/[recipeId]/edit`                                | L     | 🔴   |                                              |
-| 리믹스      | `/recipes/[recipeId]/remix`                               | L     | 🔴   |                                              |
-| 슬라이드쇼  | `/recipes/[recipeId]/slide-show`                          | L     | 🔴   |                                              |
-| 평점        | `/recipes/[recipeId]/rate`                                | L     | 🔴   |                                              |
-| 댓글        | `/recipes/[recipeId]/comments`(+`/[commentId]`)           | M     | 🔴   | 댓글 번역 배지는 비목표였음                  |
-| 재료 등록   | `/ingredients/new`                                        | L     | 🔴   |                                              |
-| 비공개 상세 | `/recipes/private/[recipeId]`                             | L     | 🔵   | 비공개라 SEO 무관, 로케일 변형 필요한지 판단 |
+| 페이지      | 라우트                                                    | Scope | 상태 | 비고                                                                                           |
+| ----------- | --------------------------------------------------------- | ----- | ---- | ---------------------------------------------------------------------------------------------- |
+| 생성 허브   | `/recipes/new`                                            | M     | 🟢   | ja/en 완료. `recipeCreate` 사전 + 미러 라우트 + locale-sticky 카드. 모드 선택 허브만           |
+| 유튜브 추출 | `/recipes/new/youtube`                                    | M     | 🔴   | 기능: 다른 에이전트                                                                            |
+| AI 생성     | `/recipes/new/ai`(+ingredient/nutrition/price/finedining) | M     | 🔴   | 기능: 다른 에이전트                                                                            |
+| 수동 작성   | `/recipes/new/manual`                                     | L     | 🔴   | 라우트 래퍼만(404 방지). **폼 chrome DEFER**: RecipeFormLayout ~250문자열/17파일, 별도 큰 작업 |
+| 편집        | `/recipes/[recipeId]/edit`                                | L     | 🔴   |                                                                                                |
+| 리믹스      | `/recipes/[recipeId]/remix`                               | L     | 🔴   |                                                                                                |
+| 슬라이드쇼  | `/recipes/[recipeId]/slide-show`                          | L     | 🔴   |                                                                                                |
+| 평점        | `/recipes/[recipeId]/rate`                                | L     | 🔴   |                                                                                                |
+| 댓글        | `/recipes/[recipeId]/comments`(+`/[commentId]`)           | M     | 🔴   | 댓글 번역 배지는 비목표였음                                                                    |
+| 재료 등록   | `/ingredients/new`                                        | L     | 🔴   |                                                                                                |
+| 비공개 상세 | `/recipes/private/[recipeId]`                             | L     | 🔵   | 비공개라 SEO 무관, 로케일 변형 필요한지 판단                                                   |
 
 ### 관리자 (국제화 대상 아님)
 
@@ -213,6 +213,17 @@
   `useT`를 DictionaryProvider 없이 렌더해 11개 전부 fail(clean tree에서도 동일). 별도 fix 필요.
 - [2026-06-13][i18n] 📋 보드 stale: §3 홈(`/`)이 🔴이나 실제 ja/en 라우트·카피 완료됨(`734f3842`/`048beeb9`).
   AI 생성도 완료(`a4877f99`). 다음 정리 때 갱신.
+- [2026-06-13][i18n] ✅ **택소노미 라벨 + 생성허브/프로필편집/카테고리상세 완료**(11 task, TDD, 118 tests).
+  **접근법 A(표시 전용 오버레이)**: 기존 한글-키 상수(`recipe.ts`) 불변, 새 `taxonomy` 사전을 **코드 키**로 두고
+  렌더 지점 리졸버(`taxonomyLabel`/`localizeTaxonomy`/`useTaxonomy`)로 표시만 현지화 → ko 회귀 구조상 0(ko 사전이
+  한글 보유, 리졸버가 ko 입력 그대로). 적용: 검색필터 칩 전부(정렬·요리유형·태그·재료·영양 + 재료비(원) ja/en 숨김)·
+  CategoryTabs 칩(sticky 링크)·재료 카테고리 탭·RecipeTypeSelector. 페이지: `/users/edit`(사전 와이어, 컴포넌트/
+  라우트는 병렬작업 `2cf3415d`가 선행 — 테스트만 추가)·`/recipes/new` 허브(`recipeCreate` 사전)·`/recipes/category/[id]`
+  (`category` 사전+`?lang`+queryKey locale+hreflang, **ja/en noindex**). 설계/계획:
+  `docs/superpowers/{specs,plans}/2026-06-13-i18n-taxonomy-filters-create-profile-*`.
+  **DEFER/후속 2건:** ①`/recipes/new/manual` 폼 chrome(RecipeFormLayout ~250문자열/17파일, 라우트 래퍼만 둠 →
+  ja/en에서 한글 폼 렌더). ②태그 **드로어 항목**(CategoryPicker) 현지화 — availableValues가 `이모지+이름`이라
+  reverse-map 미스, 코덱 경로 위험 회피로 드로어 항목만 ko 유지(칩은 현지화됨).
 
 ---
 
