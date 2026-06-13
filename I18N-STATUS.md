@@ -84,19 +84,19 @@
 > ⚠️ youtube 추출·AI 생성 **기능**은 다른 에이전트가 작업중. 아래 i18n 상태는
 > 기능과 별개. 기능 구현 후 chrome 사전화 진행.
 
-| 페이지      | 라우트                                                    | Scope | 상태 | 비고                                                                                           |
-| ----------- | --------------------------------------------------------- | ----- | ---- | ---------------------------------------------------------------------------------------------- |
-| 생성 허브   | `/recipes/new`                                            | M     | 🟢   | ja/en 완료. `recipeCreate` 사전 + 미러 라우트 + locale-sticky 카드. 모드 선택 허브만           |
-| 유튜브 추출 | `/recipes/new/youtube`                                    | M     | 🔴   | 기능: 다른 에이전트                                                                            |
-| AI 생성     | `/recipes/new/ai`(+ingredient/nutrition/price/finedining) | M     | 🔴   | 기능: 다른 에이전트                                                                            |
-| 수동 작성   | `/recipes/new/manual`                                     | L     | 🔴   | 라우트 래퍼만(404 방지). **폼 chrome DEFER**: RecipeFormLayout ~250문자열/17파일, 별도 큰 작업 |
-| 편집        | `/recipes/[recipeId]/edit`                                | L     | 🔴   |                                                                                                |
-| 리믹스      | `/recipes/[recipeId]/remix`                               | L     | 🔴   |                                                                                                |
-| 슬라이드쇼  | `/recipes/[recipeId]/slide-show`                          | L     | 🔴   |                                                                                                |
-| 평점        | `/recipes/[recipeId]/rate`                                | L     | 🔴   |                                                                                                |
-| 댓글        | `/recipes/[recipeId]/comments`(+`/[commentId]`)           | M     | 🔴   | 댓글 번역 배지는 비목표였음                                                                    |
-| 재료 등록   | `/ingredients/new`                                        | L     | 🔴   |                                                                                                |
-| 비공개 상세 | `/recipes/private/[recipeId]`                             | L     | 🔵   | 비공개라 SEO 무관, 로케일 변형 필요한지 판단                                                   |
+| 페이지      | 라우트                                                    | Scope | 상태 | 비고                                                                                                                                                                                                     |
+| ----------- | --------------------------------------------------------- | ----- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 생성 허브   | `/recipes/new`                                            | M     | 🟢   | ja/en 완료. `recipeCreate` 사전 + 미러 라우트 + locale-sticky 카드. 모드 선택 허브만                                                                                                                     |
+| 유튜브 추출 | `/recipes/new/youtube`                                    | M     | 🔴   | 기능: 다른 에이전트                                                                                                                                                                                      |
+| AI 생성     | `/recipes/new/ai`(+ingredient/nutrition/price/finedining) | M     | 🔴   | 기능: 다른 에이전트                                                                                                                                                                                      |
+| 수동 작성   | `/recipes/new/manual`                                     | L     | 🟢   | ja/en 완료. `recipeForm` 사전(labels/validation/ui) + **zod 스키마 팩토리**(locale 주입) + 전 UI 인라인 + 재료 picker(데스크톱/모바일 `IngredientPicker` 엔티티). 단위·카테고리 코드값 ko canonical 유지 |
+| 편집        | `/recipes/[recipeId]/edit`                                | L     | 🔴   |                                                                                                                                                                                                          |
+| 리믹스      | `/recipes/[recipeId]/remix`                               | L     | 🔴   |                                                                                                                                                                                                          |
+| 슬라이드쇼  | `/recipes/[recipeId]/slide-show`                          | L     | 🔴   |                                                                                                                                                                                                          |
+| 평점        | `/recipes/[recipeId]/rate`                                | L     | 🔴   |                                                                                                                                                                                                          |
+| 댓글        | `/recipes/[recipeId]/comments`(+`/[commentId]`)           | M     | 🔴   | 댓글 번역 배지는 비목표였음                                                                                                                                                                              |
+| 재료 등록   | `/ingredients/new`                                        | L     | 🔴   |                                                                                                                                                                                                          |
+| 비공개 상세 | `/recipes/private/[recipeId]`                             | L     | 🔵   | 비공개라 SEO 무관, 로케일 변형 필요한지 판단                                                                                                                                                             |
 
 ### 관리자 (국제화 대상 아님)
 
@@ -221,9 +221,15 @@
   라우트는 병렬작업 `2cf3415d`가 선행 — 테스트만 추가)·`/recipes/new` 허브(`recipeCreate` 사전)·`/recipes/category/[id]`
   (`category` 사전+`?lang`+queryKey locale+hreflang, **ja/en noindex**). 설계/계획:
   `docs/superpowers/{specs,plans}/2026-06-13-i18n-taxonomy-filters-create-profile-*`.
-  **DEFER/후속 2건:** ①`/recipes/new/manual` 폼 chrome(RecipeFormLayout ~250문자열/17파일, 라우트 래퍼만 둠 →
-  ja/en에서 한글 폼 렌더). ②태그 **드로어 항목**(CategoryPicker) 현지화 — availableValues가 `이모지+이름`이라
+  **후속 1건:** 태그 **드로어 항목**(CategoryPicker) 현지화 — availableValues가 `이모지+이름`이라
   reverse-map 미스, 코덱 경로 위험 회피로 드로어 항목만 ko 유지(칩은 현지화됨).
+- [2026-06-13][i18n] ✅ **수동 작성 폼(`/recipes/new/manual`) 완료**(사용자 요청으로 후속 당겨 처리, Task 12~16, 5 task).
+  `recipeForm` 사전(labels/validation/ui ~50키) + **locale-aware zod 스키마 팩토리**(`buildRecipeFormSchema(validation)`,
+  3 훅 create/edit/remix에 `useMemo`로 resolver 안정화) + 전 UI 인라인 현지화(group A/B). 재료 picker는
+  데스크톱(`IngredientSelector`)·모바일 공유 엔티티(`entities/.../IngredientPicker` + Card + SelectionTray) 둘 다 —
+  새 `ingredientPicker` 사전(shared, FSD 역방향 금지 준수). 카테고리 칩은 `ingredientCategory` 택소노미 재사용,
+  UNITLESS(약간/적당량)·단위·카테고리 **코드/비교/폼값은 ko canonical 유지**(표시만 현지화). 미사용 `MSG`/`FIELD_LABELS`
+  상수 제거. tsc clean, 115 tests green.
 
 ---
 
