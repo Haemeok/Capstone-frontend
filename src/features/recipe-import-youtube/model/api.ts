@@ -3,6 +3,7 @@ import {
   DEFAULT_IMAGE_GEN_MODEL,
   type ImageGenModel,
 } from "@/shared/config/constants/aiImageModel";
+import type { Locale } from "@/shared/i18n";
 
 import {
   JobCreationResponse,
@@ -11,10 +12,11 @@ import {
 } from "./types";
 
 export const checkYoutubeDuplicate = async (
-  url: string
+  url: string,
+  lang: Locale = "ko"
 ): Promise<YoutubeDuplicateCheckResponse> => {
   return api.get<YoutubeDuplicateCheckResponse>("/dev/recipes/youtube/check", {
-    params: { url },
+    params: { url, ...(lang === "ko" ? {} : { lang }) },
   });
 };
 
@@ -23,10 +25,11 @@ export const checkYoutubeDuplicate = async (
 export const createExtractionJobV2 = async (
   url: string,
   idempotencyKey: string,
-  imageGenModel: ImageGenModel = DEFAULT_IMAGE_GEN_MODEL
+  imageGenModel: ImageGenModel = DEFAULT_IMAGE_GEN_MODEL,
+  lang: Locale = "ko"
 ): Promise<JobCreationResponse> => {
   return api.post<JobCreationResponse>("/dev/recipes/youtube/extract", null, {
-    params: { url, imageGenModel },
+    params: { url, imageGenModel, ...(lang === "ko" ? {} : { lang }) },
     headers: { "Idempotency-Key": idempotencyKey },
   });
 };
