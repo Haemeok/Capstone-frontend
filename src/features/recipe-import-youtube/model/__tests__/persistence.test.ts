@@ -30,6 +30,7 @@ const createMockPersistedJob = (
   startTime: Date.now(),
   lastPollTime: Date.now(),
   retryCount: 0,
+  locale: "ko",
   ...overrides,
 });
 

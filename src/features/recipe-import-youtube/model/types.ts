@@ -1,3 +1,5 @@
+import type { Locale } from "@/shared/i18n";
+
 export type YoutubeMeta = {
   url: string;
   title: string;
@@ -45,6 +47,7 @@ export type PersistedJob = {
   startTime: number;
   lastPollTime: number;
   retryCount: number;
+  locale: Locale;
 };
 
 export type JobState = "creating" | "polling" | "completed" | "failed";

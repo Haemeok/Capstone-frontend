@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
+import { useApiLocale } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
@@ -88,6 +89,7 @@ export const YoutubePreviewSection = ({
   const addToast = useToastStore((state) => state.addToast);
   const { user } = useMyInfoQuery();
   const { validatedUrl, videoId, urlSource } = useYoutubeUrl();
+  const locale = useApiLocale();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hasNoQuota = !!user && (user.remainingYoutubeQuota ?? 0) < 2;
@@ -158,7 +160,7 @@ export const YoutubePreviewSection = ({
 
     setIsSubmitting(true);
 
-    const idempotencyKey = createJob(validatedUrl, youtubeMeta);
+    const idempotencyKey = createJob(validatedUrl, youtubeMeta, locale);
 
     router.push(`/users/${user.id}?tab=saved`);
     addToast({
@@ -169,7 +171,9 @@ export const YoutubePreviewSection = ({
     try {
       const { jobId } = await createExtractionJobV2(
         validatedUrl,
-        idempotencyKey
+        idempotencyKey,
+        undefined,
+        locale
       );
       setJobId(idempotencyKey, jobId);
     } catch (error) {

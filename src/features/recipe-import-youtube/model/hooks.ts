@@ -2,6 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 
+import { useApiLocale } from "@/shared/i18n";
+
 import { getYoutubeMeta } from "./actions";
 import { checkYoutubeDuplicate } from "./api";
 import { YoutubeDuplicateCheckResponse, YoutubeMeta } from "./types";
@@ -20,11 +22,12 @@ export const useYoutubeMeta = (url: string | null) => {
 };
 
 export const useYoutubeDuplicateCheck = (url: string | null) => {
+  const locale = useApiLocale();
   return useQuery<YoutubeDuplicateCheckResponse>({
-    queryKey: ["youtube-duplicate-check", url],
+    queryKey: ["youtube-duplicate-check", url, locale],
     queryFn: () => {
       if (!url) return Promise.resolve({});
-      return checkYoutubeDuplicate(url);
+      return checkYoutubeDuplicate(url, locale);
     },
     enabled: !!url,
     staleTime: 1000 * 60 * 5,

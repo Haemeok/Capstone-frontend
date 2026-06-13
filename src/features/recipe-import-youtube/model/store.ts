@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+import type { Locale } from "@/shared/i18n";
+
 import {
   addPersistedJob,
   generateIdempotencyKey,
@@ -17,7 +19,7 @@ import { ActiveJob, PersistedJob, YoutubeMeta } from "./types";
 type YoutubeImportStoreV2 = {
   jobs: Record<string, ActiveJob>;
 
-  createJob: (url: string, meta: YoutubeMeta) => string;
+  createJob: (url: string, meta: YoutubeMeta, locale: Locale) => string;
   setJobId: (idempotencyKey: string, jobId: string) => void;
   updateJobProgress: (idempotencyKey: string, progress: number) => void;
   completeJob: (idempotencyKey: string, recipeId: string) => void;
@@ -46,7 +48,7 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
   (set, get) => ({
     jobs: {},
 
-    createJob: (url, meta) => {
+    createJob: (url, meta, locale) => {
       const existingJob = get().getJobByUrl(url);
       if (existingJob) {
         return existingJob.idempotencyKey;
@@ -63,6 +65,7 @@ export const useYoutubeImportStoreV2 = create<YoutubeImportStoreV2>(
         startTime: now,
         lastPollTime: now,
         retryCount: 0,
+        locale,
       };
 
       const activeJob: ActiveJob = {

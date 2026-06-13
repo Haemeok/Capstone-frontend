@@ -23,7 +23,7 @@ type Props = { searchParams: Promise<{ url?: string }> };
 const Page = async ({ searchParams }: Props) => {
   const [{ url }, trendingRecipes] = await Promise.all([
     searchParams,
-    getTrendingYoutubeRecipesOnServer(),
+    getTrendingYoutubeRecipesOnServer("en"),
   ]);
   const dict = getDictionary("en");
   const jsonLd = createYoutubeExtractorStructuredData();

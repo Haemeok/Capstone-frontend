@@ -24,7 +24,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       expect(result.current.jobs[key!]).toMatchObject({
@@ -41,7 +41,7 @@ describe("useYoutubeImportStoreV2", () => {
       const { result } = renderHook(() => useYoutubeImportStoreV2());
 
       act(() => {
-        result.current.createJob(mockMeta.url, mockMeta);
+        result.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       const persisted = loadPersistedJobs();
@@ -53,8 +53,8 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key1: string, key2: string;
       act(() => {
-        key1 = result.current.createJob(mockMeta.url, mockMeta);
-        key2 = result.current.createJob(mockMeta.url, mockMeta);
+        key1 = result.current.createJob(mockMeta.url, mockMeta, "ko");
+        key2 = result.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       expect(key1!).toBe(key2!);
@@ -68,7 +68,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       act(() => {
@@ -88,7 +88,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
         result.current.setJobId(key!, "job-123");
       });
 
@@ -108,7 +108,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
         result.current.setJobId(key!, "job-123");
       });
 
@@ -127,7 +127,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       act(() => {
@@ -148,7 +148,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       expect(result.current.jobs[key!]).toBeDefined();
@@ -167,7 +167,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result1.current.createJob(mockMeta.url, mockMeta);
+        key = result1.current.createJob(mockMeta.url, mockMeta, "ko");
         result1.current.setJobId(key!, "job-1");
       });
 
@@ -189,7 +189,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result1.current.createJob(mockMeta.url, mockMeta);
+        key = result1.current.createJob(mockMeta.url, mockMeta, "ko");
         result1.current.setJobId(key!, "job-1");
       });
 
@@ -211,7 +211,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result1.current.createJob(mockMeta.url, mockMeta);
+        key = result1.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       act(() => {
@@ -234,7 +234,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       expect(result.current.jobs[key!].retryCount).toBe(0);
@@ -252,7 +252,7 @@ describe("useYoutubeImportStoreV2", () => {
       const { result } = renderHook(() => useYoutubeImportStoreV2());
 
       act(() => {
-        result.current.createJob(mockMeta.url, mockMeta);
+        result.current.createJob(mockMeta.url, mockMeta, "ko");
       });
 
       const job = result.current.getJobByUrl(mockMeta.url);
@@ -272,12 +272,12 @@ describe("useYoutubeImportStoreV2", () => {
       const { result } = renderHook(() => useYoutubeImportStoreV2());
 
       act(() => {
-        const key1 = result.current.createJob("url1", mockMeta);
+        const key1 = result.current.createJob("url1", mockMeta, "ko");
         result.current.setJobId(key1, "job-1");
 
-        result.current.createJob("url2", mockMeta);
+        result.current.createJob("url2", mockMeta, "ko");
 
-        const key3 = result.current.createJob("url3", mockMeta);
+        const key3 = result.current.createJob("url3", mockMeta, "ko");
         result.current.setJobId(key3, "job-3");
         result.current.completeJob(key3, "recipe-3");
       });
@@ -291,7 +291,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
         result.current.setJobId(key!, "job-1");
         result.current.completeJob(key!, "recipe-1");
       });
@@ -305,7 +305,7 @@ describe("useYoutubeImportStoreV2", () => {
 
       let key: string;
       act(() => {
-        key = result.current.createJob(mockMeta.url, mockMeta);
+        key = result.current.createJob(mockMeta.url, mockMeta, "ko");
         result.current.failJob(key!, undefined, "에러");
       });
 
@@ -319,10 +319,10 @@ describe("useYoutubeImportStoreV2", () => {
       const { result } = renderHook(() => useYoutubeImportStoreV2());
 
       act(() => {
-        const key1 = result.current.createJob("url1", mockMeta);
+        const key1 = result.current.createJob("url1", mockMeta, "ko");
         result.current.setJobId(key1, "job-1");
 
-        result.current.createJob("url2", mockMeta);
+        result.current.createJob("url2", mockMeta, "ko");
       });
 
       expect(result.current.getActiveJobCount()).toBe(2);

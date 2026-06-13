@@ -65,7 +65,7 @@ describe("useJobPolling - 중복 처리 방지", () => {
       act(() => {
         key = useYoutubeImportStoreV2
           .getState()
-          .createJob(mockMeta.url, mockMeta);
+          .createJob(mockMeta.url, mockMeta, "ko");
         useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -99,7 +99,7 @@ describe("useJobPolling - 중복 처리 방지", () => {
       act(() => {
         key = useYoutubeImportStoreV2
           .getState()
-          .createJob(mockMeta.url, mockMeta);
+          .createJob(mockMeta.url, mockMeta, "ko");
         useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -141,7 +141,7 @@ describe("useJobPolling - 중복 처리 방지", () => {
       act(() => {
         key = useYoutubeImportStoreV2
           .getState()
-          .createJob(mockMeta.url, mockMeta);
+          .createJob(mockMeta.url, mockMeta, "ko");
         useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -172,7 +172,7 @@ describe("useJobPolling - 중복 처리 방지", () => {
       act(() => {
         key = useYoutubeImportStoreV2
           .getState()
-          .createJob(mockMeta.url, mockMeta);
+          .createJob(mockMeta.url, mockMeta, "ko");
         useYoutubeImportStoreV2.getState().setJobId(key, "job-123");
       });
 

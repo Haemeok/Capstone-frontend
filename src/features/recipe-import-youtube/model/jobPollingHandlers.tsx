@@ -132,7 +132,12 @@ export const recoverZombieJob = async (
   deps.storeActions.incrementRetryCount(job.idempotencyKey);
 
   try {
-    const response = await createExtractionJobV2(job.url, job.idempotencyKey);
+    const response = await createExtractionJobV2(
+      job.url,
+      job.idempotencyKey,
+      undefined,
+      job.locale
+    );
     deps.storeActions.setJobId(job.idempotencyKey, response.jobId);
   } catch {
     // 재시도도 실패하면 다음 폴링 사이클에서 다시 시도
