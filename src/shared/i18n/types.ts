@@ -400,6 +400,9 @@ export type TaxonomyDict = {
     tagsDescription: string;
     nutritionHeader: string;
     nutritionDescription: string;
+    tagsChipDefault: string;
+    reset: string;
+    apply: string;
   };
 };
 

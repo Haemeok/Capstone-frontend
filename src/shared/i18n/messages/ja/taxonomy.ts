@@ -88,7 +88,10 @@ export const taxonomy: TaxonomyDict = {
     dishTypeDescription: "料理の種類を選んでください。",
     tagsHeader: "タグを選択",
     tagsDescription: "タグをすべて選んでください。",
-    nutritionHeader: "栄養成分と価格",
+    nutritionHeader: "栄養成分",
     nutritionDescription: "範囲を設定してください。",
+    tagsChipDefault: "タグ",
+    reset: "リセット",
+    apply: "完了",
   },
 };

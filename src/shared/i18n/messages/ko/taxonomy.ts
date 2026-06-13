@@ -90,5 +90,8 @@ export const taxonomy: TaxonomyDict = {
     tagsDescription: "원하는 태그를 모두 선택하세요.",
     nutritionHeader: "영양성분 및 가격",
     nutritionDescription: "원하는 범위를 설정하세요.",
+    tagsChipDefault: "태그",
+    reset: "초기화",
+    apply: "완료",
   },
 };

@@ -88,7 +88,10 @@ export const taxonomy: TaxonomyDict = {
     dishTypeDescription: "Choose the dish type you want.",
     tagsHeader: "Choose tags",
     tagsDescription: "Select all the tags you want.",
-    nutritionHeader: "Nutrition & price",
+    nutritionHeader: "Nutrition",
     nutritionDescription: "Set the range you want.",
+    tagsChipDefault: "Tags",
+    reset: "Reset",
+    apply: "Done",
   },
 };
