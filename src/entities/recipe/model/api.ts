@@ -172,9 +172,11 @@ export const getRecipeHistoryItems = async (date: string) => {
 export const getRecordsTimeline = async ({
   page,
   size,
+  lang,
 }: {
   page: number;
   size: number;
+  lang: Locale;
 }) => {
   const response = await api.get<RecordTimelineResponse>(
     END_POINTS.RECORDS_TIMELINE,
@@ -183,6 +185,7 @@ export const getRecordsTimeline = async ({
         page,
         size,
         sort: "createdAt,desc",
+        lang,
       },
     }
   );

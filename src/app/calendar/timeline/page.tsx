@@ -2,6 +2,7 @@
 
 import { Loader2 } from "lucide-react";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
@@ -24,6 +25,7 @@ const TimelineSkeletonItem = () => (
 );
 
 const TimelineRecordsPage = () => {
+  const t = useUserPagesDict().calendar;
   const { groups, ref, isFetchingNextPage, hasNextPage, isPending, noResults } =
     useRecordsTimelineInfiniteQuery();
 
@@ -31,7 +33,7 @@ const TimelineRecordsPage = () => {
     <Container>
       <header className="sticky top-0 z-10 flex items-center justify-center bg-white pt-4 pb-2">
         <PrevButton className="absolute left-0" />
-        <h1 className="text-ink text-xl font-bold">요리 기록</h1>
+        <h1 className="text-ink text-xl font-bold">{t.timelineHeading}</h1>
       </header>
 
       <div className="pb-8">

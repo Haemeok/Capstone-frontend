@@ -1,4 +1,5 @@
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { useUserPagesLocale } from "@/shared/i18n";
 
 import { getRecordsTimeline } from "../api";
 import { RecordTimelineResponse } from "../record";
@@ -8,6 +9,8 @@ const TIMELINE_PAGE_SIZE = 20;
 export const useRecordsTimelineInfiniteQuery = (
   size: number = TIMELINE_PAGE_SIZE
 ) => {
+  const locale = useUserPagesLocale();
+
   const getTimelineNextPageParam = (
     lastPage: RecordTimelineResponse,
     _allPages: RecordTimelineResponse[],
@@ -23,8 +26,9 @@ export const useRecordsTimelineInfiniteQuery = (
     error,
     isPending,
   } = useInfiniteScroll({
-    queryKey: ["recordsTimeline", size],
-    queryFn: ({ pageParam }) => getRecordsTimeline({ page: pageParam, size }),
+    queryKey: ["recordsTimeline", size, locale],
+    queryFn: ({ pageParam }) =>
+      getRecordsTimeline({ page: pageParam, size, lang: locale }),
     getNextPageParam: getTimelineNextPageParam,
     initialPageParam: 0,
   });

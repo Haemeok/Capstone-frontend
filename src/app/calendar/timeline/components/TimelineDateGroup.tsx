@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
+import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { RecordTimelineGroup } from "@/entities/recipe/model/record";
@@ -16,7 +17,9 @@ type TimelineDateGroupProps = {
 };
 
 export const TimelineDateGroup = ({ group }: TimelineDateGroupProps) => {
-  const label = formatTimelineDateHeader(group.date);
+  const locale = useUserPagesLocale();
+  const t = useUserPagesDict().calendar;
+  const label = formatTimelineDateHeader(group.date, locale);
 
   return (
     <section className="pt-6 first:pt-0">
@@ -27,7 +30,7 @@ export const TimelineDateGroup = ({ group }: TimelineDateGroupProps) => {
           onClick={() => triggerHaptic("Light")}
           className="text-ink-muted hover:text-ink-sub flex items-center gap-0.5 rounded-lg px-2 py-1 text-sm font-medium transition-colors hover:bg-gray-100"
         >
-          자세히
+          {t.detailAction}
           <ChevronRight className="size-4" />
         </Link>
       </div>
