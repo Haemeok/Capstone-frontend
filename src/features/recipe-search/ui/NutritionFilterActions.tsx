@@ -1,5 +1,6 @@
 "use client";
 
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { Button } from "@/shared/ui/shadcn/button";
 
 type NutritionFilterActionsProps = {
@@ -15,6 +16,8 @@ export const NutritionFilterActions = ({
   isResetDisabled,
   isMobile = false,
 }: NutritionFilterActionsProps) => {
+  const { dict } = useTaxonomy();
+
   if (isMobile) {
     return (
       <div className="mt-4 flex gap-2 border-t pt-4">
@@ -24,13 +27,13 @@ export const NutritionFilterActions = ({
           disabled={isResetDisabled}
           className="flex-1 rounded-md border-gray-300"
         >
-          초기화
+          {dict.filters.reset}
         </Button>
         <Button
           onClick={onApply}
           className="bg-olive-light flex-1 rounded-md text-white"
         >
-          완료
+          {dict.filters.apply}
         </Button>
       </div>
     );
@@ -45,14 +48,14 @@ export const NutritionFilterActions = ({
         disabled={isResetDisabled}
         className="flex-1 cursor-pointer"
       >
-        초기화
+        {dict.filters.reset}
       </Button>
       <Button
         size="sm"
         onClick={onApply}
         className="bg-olive-light hover:bg-olive-light/90 flex-1 cursor-pointer text-white"
       >
-        완료
+        {dict.filters.apply}
       </Button>
     </div>
   );

@@ -2,6 +2,8 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 
+import type { TaxonomyDomain } from "@/shared/i18n/taxonomyLabel";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Button } from "@/shared/ui/shadcn/button";
 import {
@@ -33,6 +35,7 @@ type CategoryPickerProps = {
   header: string;
   description?: string;
   trigger?: React.ReactNode;
+  domain?: TaxonomyDomain;
 };
 
 const CategoryPicker = ({
@@ -45,8 +48,10 @@ const CategoryPicker = ({
   initialValue,
   availableValues,
   trigger,
+  domain,
 }: CategoryPickerProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { dict } = useTaxonomy();
   const [internalSelection, setInternalSelection] = useState<string[] | string>(
     initialValue
   );
@@ -95,6 +100,7 @@ const CategoryPicker = ({
           isSelected={(internalSelection as string[]).includes(value)}
           onToggle={handleCheckboxChange}
           isMultiple={true}
+          domain={domain}
         />
       ))}
     </div>
@@ -111,6 +117,7 @@ const CategoryPicker = ({
           isSelected={internalSelection === value}
           onToggle={handleRadioChange}
           isMultiple={false}
+          domain={domain}
         />
       ))}
     </RadioGroup>
@@ -137,14 +144,14 @@ const CategoryPicker = ({
               onClick={handleReset}
               className="flex-1 rounded-md border-gray-300"
             >
-              초기화
+              {dict.filters.reset}
             </Button>
             <DrawerClose asChild>
               <Button
                 onClick={handleApply}
                 className="bg-olive-light flex-1 rounded-md text-white"
               >
-                완료
+                {dict.filters.apply}
               </Button>
             </DrawerClose>
           </DrawerFooter>
@@ -177,14 +184,14 @@ const CategoryPicker = ({
               onClick={handleReset}
               className="flex-1 cursor-pointer"
             >
-              초기화
+              {dict.filters.reset}
             </Button>
             <Button
               size="sm"
               onClick={handleApply}
               className="bg-olive-light hover:bg-olive-light/90 flex-1 cursor-pointer text-white"
             >
-              완료
+              {dict.filters.apply}
             </Button>
           </div>
         </div>

@@ -4,6 +4,8 @@ import {
   DISH_TYPE_ICONS,
   ICON_BASE_URL,
 } from "@/shared/config/constants/recipe";
+import type { TaxonomyDomain } from "@/shared/i18n/taxonomyLabel";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { Image } from "@/shared/ui/image/Image";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Label } from "@/shared/ui/shadcn/label";
@@ -14,11 +16,14 @@ type CategoryItemProps = {
   isSelected: boolean;
   onToggle: (value: string) => void;
   isMultiple: boolean;
+  domain?: TaxonomyDomain;
 };
 
 const CategoryItem = React.memo(
-  ({ value, isSelected, onToggle, isMultiple }: CategoryItemProps) => {
+  ({ value, isSelected, onToggle, isMultiple, domain }: CategoryItemProps) => {
+    const { localize } = useTaxonomy();
     const handleChange = () => onToggle(value);
+    const displayValue = domain ? localize(value, domain) : value;
 
     const labelContent = (
       <>
@@ -30,7 +35,7 @@ const CategoryItem = React.memo(
             lazy={false}
           />
         )}
-        <span>{value}</span>
+        <span>{displayValue}</span>
       </>
     );
 

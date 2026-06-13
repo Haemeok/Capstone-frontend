@@ -4,6 +4,7 @@ import React, { useCallback } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import type { NutritionFilterValues } from "@/shared/lib/nutrition/utils";
 import { filterModifiedNutritionValues } from "@/shared/lib/nutrition/utils";
@@ -51,6 +52,7 @@ export const NutritionFilterContent = ({
   trigger,
 }: NutritionFilterContentProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { dict } = useTaxonomy();
 
   const {
     values,
@@ -113,7 +115,7 @@ export const NutritionFilterContent = ({
         <DrawerTrigger asChild>{trigger ?? <div />}</DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>필터</DrawerTitle>
+            <DrawerTitle>{dict.filters.drawerTitle}</DrawerTitle>
           </DrawerHeader>
           <div className="flex-1 overflow-y-auto px-4">{content}</div>
           <div className="px-4 pb-8">
@@ -135,9 +137,11 @@ export const NutritionFilterContent = ({
       <PopoverContent className="w-[680px]" align="start" sideOffset={24}>
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h4 className="leading-none font-medium">필터</h4>
+            <h4 className="leading-none font-medium">
+              {dict.filters.drawerTitle}
+            </h4>
             <p className="text-ink-muted mt-1 text-sm">
-              원하는 필터를 설정하세요.
+              {dict.filters.drawerDescription}
             </p>
           </div>
         </div>
