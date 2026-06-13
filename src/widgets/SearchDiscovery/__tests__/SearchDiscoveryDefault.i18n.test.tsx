@@ -50,6 +50,7 @@ describe("SearchDiscoveryDefault i18n", () => {
     setPath("/en/search");
     rerender(<SearchDiscoveryDefault />);
     expect(screen.getByText(en.contentSectionTitle)).toBeInTheDocument();
+    expect(screen.getByText(en.nutritionSectionTitle)).toBeInTheDocument();
   });
 
   it("T-02: 루트(ko)에서 ko 헤딩 + 가격대 섹션 존재(회귀)", () => {

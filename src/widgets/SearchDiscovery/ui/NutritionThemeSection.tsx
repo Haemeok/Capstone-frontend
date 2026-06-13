@@ -35,33 +35,31 @@ const NutritionThemeSection = () => {
   const themeKeys = Object.keys(NUTRITION_THEMES) as NutritionThemeKey[];
 
   return (
-    <section className="space-y-4">
-      <div className="scrollbar-hide -mx-4 flex gap-3 overflow-x-auto px-4">
-        {themeKeys.map((key) => {
-          const theme = NUTRITION_THEMES[key];
-          return (
-            <Link
-              key={key}
-              href={buildNutritionHref(key)}
-              onClick={() => triggerHaptic("Light")}
-              className="flex w-24 shrink-0 cursor-pointer flex-col items-center gap-2 rounded-2xl bg-gray-50 p-4 active:bg-gray-100"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
-                <Image
-                  src={`${ICON_BASE_URL}${theme.icon}`}
-                  alt={theme.label}
-                  wrapperClassName="w-8 h-8"
-                  lazy={false}
-                />
-              </div>
-              <span className="text-ink text-sm font-medium whitespace-nowrap">
-                {theme.label}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-    </section>
+    <div className="scrollbar-hide -mx-4 flex gap-3 overflow-x-auto px-4">
+      {themeKeys.map((key) => {
+        const theme = NUTRITION_THEMES[key];
+        return (
+          <Link
+            key={key}
+            href={buildNutritionHref(key)}
+            onClick={() => triggerHaptic("Light")}
+            className="flex w-24 shrink-0 cursor-pointer flex-col items-center gap-2 rounded-2xl bg-gray-50 p-4 active:bg-gray-100"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
+              <Image
+                src={`${ICON_BASE_URL}${theme.icon}`}
+                alt={theme.label}
+                wrapperClassName="w-8 h-8"
+                lazy={false}
+              />
+            </div>
+            <span className="text-ink text-sm font-medium whitespace-nowrap">
+              {theme.label}
+            </span>
+          </Link>
+        );
+      })}
+    </div>
   );
 };
 
