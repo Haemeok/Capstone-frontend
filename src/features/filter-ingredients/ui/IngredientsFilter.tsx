@@ -22,6 +22,8 @@ const INGREDIENTS_LABEL: Record<Locale, string> = {
   en: recipeDetailEn.ingredientsHeader,
 };
 
+const COUNT_SUFFIX: Record<Locale, string> = { ko: "개", ja: "", en: "" };
+
 const IngredientsFilterSheet = dynamic(
   () =>
     import("./IngredientsFilterSheet").then((m) => ({
@@ -47,7 +49,9 @@ export const IngredientsFilter = () => {
   const count = selectedIngredients.length;
   const ingredientsLabel = INGREDIENTS_LABEL[locale];
   const displayText =
-    count > 0 ? `${ingredientsLabel} ${count}` : ingredientsLabel;
+    count > 0
+      ? `${ingredientsLabel} ${count}${COUNT_SUFFIX[locale]}`
+      : ingredientsLabel;
 
   const handleApply = (selectedIds: string[]) => {
     setSavedIngredients(selectedIds);
