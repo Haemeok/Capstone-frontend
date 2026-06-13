@@ -5,7 +5,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
-import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
+import { searchDiscoveryMessages } from "@/shared/i18n/searchDiscoveryMessages";
+import type { Locale } from "@/shared/i18n/types";
+import {
+  useSearchDiscoveryDict,
+  useSearchDiscoveryLocale,
+} from "@/shared/i18n/useSearchDiscoveryDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
@@ -16,55 +21,21 @@ const SLIDE_DURATION_S = 0.6;
 const SLIDE_Y_OFFSET = 8;
 const SLIDE_EASE = [0.22, 1, 0.36, 1] as const;
 
-const MAX_PLACEHOLDER_CHARS = 20;
-
-const BREAKFAST_PLACEHOLDERS = [
-  '출근 전 든든한 "계란 레시피" 검색',
-  '5분 완성 "토스트 레시피" 검색',
-  '속 편한 "그릭요거트 레시피" 검색',
-  '해장엔 따뜻한 "북엇국 레시피" 검색',
-];
-
-const LUNCH_PLACEHOLDERS = [
-  '혼밥엔 든든 "김치찌개 레시피" 검색',
-  '매콤한 불맛 "제육덮밥 레시피" 검색',
-  '냉장고 털어 "비빔밥 레시피" 검색',
-  '오늘은 바삭한 "돈까스 레시피" 검색',
-];
-
-const DINNER_PLACEHOLDERS = [
-  '달콤한 양념 "불고기 레시피" 검색',
-  '퇴근 후 "된장찌개 레시피" 검색',
-  '불금엔 역시 "삼겹살 레시피" 검색',
-  '얼큰 매콤한 "닭볶음탕 레시피" 검색',
-];
-
-if (process.env.NODE_ENV !== "production") {
-  const overflow = [
-    ...BREAKFAST_PLACEHOLDERS,
-    ...LUNCH_PLACEHOLDERS,
-    ...DINNER_PLACEHOLDERS,
-  ].filter((s) => s.length > MAX_PLACEHOLDER_CHARS);
-  if (overflow.length > 0) {
-    console.warn(
-      `[SearchInput] placeholder exceeds ${MAX_PLACEHOLDER_CHARS} chars:`,
-      overflow
-    );
-  }
-}
+export const MAX_PLACEHOLDER_CHARS: Record<Locale, number> = {
+  ko: 20,
+  ja: 24,
+  en: 40,
+};
 
 const MORNING_HOUR_START = 5;
 const LUNCH_HOUR_START = 11;
 const DINNER_HOUR_START = 17;
 
-const getPlaceholdersForHour = (hour: number): string[] => {
-  if (hour >= MORNING_HOUR_START && hour < LUNCH_HOUR_START) {
-    return BREAKFAST_PLACEHOLDERS;
-  }
-  if (hour >= LUNCH_HOUR_START && hour < DINNER_HOUR_START) {
-    return LUNCH_PLACEHOLDERS;
-  }
-  return DINNER_PLACEHOLDERS;
+export const getPlaceholders = (locale: Locale, hour: number): string[] => {
+  const p = searchDiscoveryMessages[locale].placeholders;
+  if (hour >= MORNING_HOUR_START && hour < LUNCH_HOUR_START) return p.breakfast;
+  if (hour >= LUNCH_HOUR_START && hour < DINNER_HOUR_START) return p.lunch;
+  return p.dinner;
 };
 
 type SearchInputProps = {
@@ -74,9 +45,10 @@ type SearchInputProps = {
 
 export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
   const t = useSearchDiscoveryDict();
+  const locale = useSearchDiscoveryLocale();
   const { inputValue, setInputValue, submitSearch } = useSearchQuery();
   const [placeholders] = useState<string[]>(() =>
-    getPlaceholdersForHour(new Date().getHours())
+    getPlaceholders(locale, new Date().getHours())
   );
   const [index, setIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);

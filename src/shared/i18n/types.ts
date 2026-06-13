@@ -153,6 +153,11 @@ export type SearchDiscoveryDict = {
   latestRecipesTitle: string;
   contentSectionTitle: string;
   nutritionSectionTitle: string;
+  placeholders: {
+    breakfast: string[];
+    lunch: string[];
+    dinner: string[];
+  };
 };
 
 import type { AIModelId, DiningTier } from "@/shared/config/constants/aiModel";
