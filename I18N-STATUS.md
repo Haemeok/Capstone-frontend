@@ -71,13 +71,13 @@
 
 ### 인증 / 유저 플로우 (우선순위 중)
 
-| 페이지      | 라우트                                   | Scope | 상태 | 비고                                      |
-| ----------- | ---------------------------------------- | ----- | ---- | ----------------------------------------- |
-| 로그인      | `/login`, `/login/error`                 | M     | 🔴   | chrome 번역 필요                          |
-| 프로필 편집 | `/users/edit`                            | M     | 🔴   |                                           |
-| 알림        | `/notifications`                         | M     | 🔴   | NotificationType별 문구 조립 — 비목표였음 |
-| 캘린더      | `/calendar/[date]`, `/calendar/timeline` | L     | 🔴   |                                           |
-| 냉장고      | `/recipes/my-fridge`                     | M     | 🔴   |                                           |
+| 페이지      | 라우트                                   | Scope | 상태 | 비고                                                                                                                                                                                                       |
+| ----------- | ---------------------------------------- | ----- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 로그인      | `/login`, `/login/error`                 | M     | 🔴   | chrome 번역 필요                                                                                                                                                                                           |
+| 프로필 편집 | `/users/edit`                            | M     | 🔴   |                                                                                                                                                                                                            |
+| 알림        | `/notifications`                         | M     | 🔴   | NotificationType별 문구 조립 — 비목표였음                                                                                                                                                                  |
+| 캘린더      | `/calendar/[date]`, `/calendar/timeline` | L     | 🔴   |                                                                                                                                                                                                            |
+| 냉장고      | `/recipes/my-fridge`                     | M     | 🟢   | ja/en 라우트 래퍼 + `fridge` 사전(자가판정 `useFridgeDict`). 페이지/빈상태/매치요약/AI배지 + 레시피 데이터 lang(`getMyFridgeRecipes`). 재료 fetch(`getIngredients`)도 lang 전파. DEFER: 조리시간 "분" 단위 |
 
 ### 레시피 생성 플로우 (다른 에이전트 기능 작업중)
 
@@ -199,6 +199,21 @@
   ②`RecommendedRecipeGrid` inline 한글(레시피 상세 전용, /search 밖)·③ja/en `/search` metadata
   title/desc 아직 ko(noindex라 영향 작음). ④큐레이션카드·테마 href가 plain Link+buildSearchResultsUrl
   이라 locale-sticky 아님(언어스위처 "chrome 외 링크 일괄 전환" 비목표와 동일 건).
+- [2026-06-13][i18n] ✅ **냉장고 `/recipes/my-fridge` ja/en 완료**(설계: `docs/.../2026-06-13-fridge-i18n-and-ingredient-lang-design.md`).
+  `fridge` 네임스페이스 + 자가판정 `useFridgeDict`(searchDiscovery 패턴). /ja /en 라우트 래퍼 + 본문을
+  `MyFridgeView`로 추출(3 라우트 1 컴포넌트). lastPageMessage를 훅에서 dict로 이전. **레시피 데이터 lang**
+  (`getMyFridgeRecipes`)도 전파(카드 제목·부족재료명 ja). DEFER: 조리시간 "분" 단위.
+- [2026-06-13][i18n] ✅ **재료 fetch lang 전파**(`getIngredients` 5 호출부 전부): 신규 `useApiLocale`
+  (`resolveLocaleFromPath(pathname) ?? getStoredLocale() ?? "ko"`) + 순수 `resolveLocaleFromPath`(prefix만→null).
+  `getIngredients`/`getMyFridgeRecipes`에 `lang` 파라미터(ko면 생략 — `getIngredientDetail` 패턴). **결정:
+  queryKey locale 분리는 mutation 없고 /ja 변동 있는 selector/filter/picker만** — 냉장고추가 드로어·재료목록은
+  `browse`/`["ingredients",...]` 3-튜플 유지(optimistic add/remove가 정확 매칭하는 키라 locale 끼우면 깨짐 +
+  라우트 래퍼 없어 locale=저장값으로 세션 내 불변). 후속: 풀 캐시분리 원하면 `browse`/`myFridge` factory +
+  add/delete mutation에 locale default-ko 인자 추가.
+- [2026-06-13][i18n] 🐛 사전결함 발견(비차단, 내 변경과 무관): `recipe-create-ai/useConceptJob.test.tsx`가
+  `useT`를 DictionaryProvider 없이 렌더해 11개 전부 fail(clean tree에서도 동일). 별도 fix 필요.
+- [2026-06-13][i18n] 📋 보드 stale: §3 홈(`/`)이 🔴이나 실제 ja/en 라우트·카피 완료됨(`734f3842`/`048beeb9`).
+  AI 생성도 완료(`a4877f99`). 다음 정리 때 갱신.
 
 ---
 
