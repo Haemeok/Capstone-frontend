@@ -3,6 +3,7 @@
 import type { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 import { getNextPageParam } from "@/shared/lib/utils";
 
@@ -24,6 +25,7 @@ const LATEST_RECIPES_QUERY_KEY = [
 ] as const;
 
 const LatestRecipesSlide = () => {
+  const t = useSearchDiscoveryDict();
   const { data, isPending, error } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
@@ -46,7 +48,7 @@ const LatestRecipesSlide = () => {
 
   return (
     <RecipeSlide
-      title="따끈따끈한 최신 레시피"
+      title={t.latestRecipesTitle}
       to={LATEST_RECIPES_HREF}
       recipes={recipes}
       isLoading={isPending}

@@ -9,7 +9,7 @@ type SearchPageProps = {
   searchParams: Promise<{ focused?: string }>;
 };
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
+export default async function EnSearchPage({ searchParams }: SearchPageProps) {
   const { focused } = await searchParams;
   return <SearchDiscoveryPage focused={focused === "1"} />;
 }

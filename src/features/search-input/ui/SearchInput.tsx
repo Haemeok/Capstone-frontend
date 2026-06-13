@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
+import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
@@ -72,6 +73,7 @@ type SearchInputProps = {
 };
 
 export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
+  const t = useSearchDiscoveryDict();
   const { inputValue, setInputValue, submitSearch } = useSearchQuery();
   const [placeholders] = useState<string[]>(() =>
     getPlaceholdersForHour(new Date().getHours())
@@ -122,7 +124,7 @@ export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
             ref={inputRef}
             type="text"
             placeholder=""
-            aria-label="레시피 검색"
+            aria-label={t.searchInputAria}
             className="text-ink-sub min-w-0 flex-1 bg-transparent text-base focus:outline-none"
             value={inputValue}
             onChange={handleChange}
@@ -150,7 +152,7 @@ export const SearchInput = ({ onFocus, autoFocus }: SearchInputProps) => {
             "text-ink-muted hover:text-ink-sub rounded-full p-0.5 transition-colors hover:bg-gray-300",
             !inputValue && "invisible"
           )}
-          aria-label="입력 지우기"
+          aria-label={t.searchClearAria}
         >
           <X className="h-4 w-4" />
         </button>

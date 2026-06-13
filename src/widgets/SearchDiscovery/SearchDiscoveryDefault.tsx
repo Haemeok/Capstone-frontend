@@ -2,6 +2,10 @@
 
 import { useRouter } from "next/navigation";
 
+import {
+  useSearchDiscoveryDict,
+  useSearchDiscoveryLocale,
+} from "@/shared/i18n/useSearchDiscoveryDict";
 import { Container } from "@/shared/ui/Container";
 
 import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
@@ -15,6 +19,8 @@ import SaveButton from "./ui/SaveButton";
 
 const SearchDiscoveryDefault = () => {
   const router = useRouter();
+  const t = useSearchDiscoveryDict();
+  const locale = useSearchDiscoveryLocale();
 
   const handleSearchFocus = () => {
     router.push("/search?focused=1", { scroll: false });
@@ -35,13 +41,20 @@ const SearchDiscoveryDefault = () => {
         <LatestRecipesSlide />
 
         <section className="space-y-4">
-          <h3 className="text-ink text-lg font-bold">이런 레시피 어때요?</h3>
+          <h3 className="text-ink text-lg font-bold">
+            {t.contentSectionTitle}
+          </h3>
           <ContentPageGrid />
         </section>
 
-        <NutritionThemeSection />
+        <section className="space-y-4">
+          <h3 className="text-ink text-lg font-bold">
+            {t.nutritionSectionTitle}
+          </h3>
+          <NutritionThemeSection />
+        </section>
 
-        <PriceRangeSection />
+        {locale === "ko" && <PriceRangeSection />}
       </div>
       <FloatingCreateRecipeButton />
     </Container>

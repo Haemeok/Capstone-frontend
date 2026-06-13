@@ -147,6 +147,14 @@ export type HomeDict = {
   youtubeBannerTitle: string;
 };
 
+export type SearchDiscoveryDict = {
+  searchInputAria: string;
+  searchClearAria: string;
+  latestRecipesTitle: string;
+  contentSectionTitle: string;
+  nutritionSectionTitle: string;
+};
+
 import type { AIModelId, DiningTier } from "@/shared/config/constants/aiModel";
 
 export type AiRecipeDict = {
@@ -277,4 +285,5 @@ export type Dictionary = {
   aiRecipe: AiRecipeDict;
   nav: NavDict;
   home: HomeDict;
+  searchDiscovery: SearchDiscoveryDict;
 };

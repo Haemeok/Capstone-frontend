@@ -36,10 +36,6 @@ const NutritionThemeSection = () => {
 
   return (
     <section className="space-y-4">
-      <h3 className="text-ink text-lg font-bold">
-        오늘은 어떤 한 끼가 끌려요?
-      </h3>
-
       <div className="scrollbar-hide -mx-4 flex gap-3 overflow-x-auto px-4">
         {themeKeys.map((key) => {
           const theme = NUTRITION_THEMES[key];
