@@ -26,4 +26,54 @@ export const searchDiscovery: SearchDiscoveryDict = {
       "あったか「鍋」を検索",
     ],
   },
+  contentPages: {
+    "diet-healthy": {
+      title: "🥗 軽やかなヘルシーごはん",
+      subtitle: "低カロリー・高たんぱく",
+    },
+    "ai-creative": {
+      title: "🤖 AIが考えた新しい組み合わせ",
+      subtitle: "自分では思いつかないレシピ",
+    },
+    "chef-secret": {
+      title: "👨‍🍳 人気シェフの定番レシピ",
+      subtitle: "登録者100万人のレシピ",
+    },
+    "solo-drink": {
+      title: "🍶 おうちで楽しむ家飲み",
+      subtitle: "10分でできるおつまみ",
+    },
+    "budget-gourmet": {
+      title: "💰 ちょっと贅沢な節約ごはん",
+      subtitle: "コスパのいいレシピ",
+    },
+    "late-night-guilty": {
+      title: "🌙 夜食にうれしい一品",
+      subtitle: "低カロリーで安心",
+    },
+    "youtube-mukbang": {
+      title: "📺 動画で見たあの料理",
+      subtitle: "おうちで再現するレシピ",
+    },
+    "hangover-soup": {
+      title: "🍲 飲んだ翌日の一杯",
+      subtitle: "やさしいスープ・汁物",
+    },
+    "air-fryer-legend": {
+      title: "🔥 エアフライヤーの定番",
+      subtitle: "人気の簡単レシピ",
+    },
+    "kids-snack": {
+      title: "🧒 子どもが喜ぶおやつ",
+      subtitle: "家族で楽しむ手作り",
+    },
+    "home-party-flex": {
+      title: "🏠 おもてなしのホームパーティ",
+      subtitle: "見映えするメニュー",
+    },
+    "protein-bulk": {
+      title: "💪 高たんぱくの食事管理",
+      subtitle: "たんぱく質30g以上",
+    },
+  },
 };

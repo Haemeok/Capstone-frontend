@@ -10,9 +10,10 @@ import { Image } from "@/shared/ui/image/Image";
 
 type ContentPageCardProps = {
   page: ContentPage;
+  copy: { title: string; subtitle: string };
 };
 
-const ContentPageCard = ({ page }: ContentPageCardProps) => {
+const ContentPageCard = ({ page, copy }: ContentPageCardProps) => {
   const isYoutube = page.searchParams.types?.includes("YOUTUBE");
 
   return (
@@ -24,7 +25,7 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
       <div className="rounded-card relative aspect-[5/3] overflow-hidden">
         <Image
           src={page.imageUrl}
-          alt={page.title}
+          alt={copy.title}
           aspectRatio="5 / 3"
           wrapperClassName="absolute inset-0"
           imgClassName="transition-all duration-500 group-active:scale-105"
@@ -38,11 +39,11 @@ const ContentPageCard = ({ page }: ContentPageCardProps) => {
 
       <div className="px-1 pt-2">
         <p className="text-ink line-clamp-1 text-sm font-bold break-keep">
-          {page.title}
+          {copy.title}
         </p>
-        {page.subtitle && (
+        {copy.subtitle && (
           <p className="text-ink-muted mt-0.5 line-clamp-1 text-xs">
-            {page.subtitle}
+            {copy.subtitle}
           </p>
         )}
       </div>

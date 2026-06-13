@@ -1,6 +1,7 @@
 "use client";
 
 import { CONTENT_PAGES } from "@/shared/config/constants/content-pages";
+import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import {
   Carousel,
   CarouselContent,
@@ -12,6 +13,8 @@ import {
 import ContentPageCard from "./ContentPageCard";
 
 const ContentPageGrid = () => {
+  const t = useSearchDiscoveryDict();
+
   return (
     <Carousel
       opts={{
@@ -25,7 +28,7 @@ const ContentPageGrid = () => {
       <CarouselContent className="-ml-3">
         {CONTENT_PAGES.map((page) => (
           <CarouselItem key={page.id} className="basis-auto pl-3">
-            <ContentPageCard page={page} />
+            <ContentPageCard page={page} copy={t.contentPages[page.id]} />
           </CarouselItem>
         ))}
       </CarouselContent>

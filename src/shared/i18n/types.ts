@@ -147,6 +147,8 @@ export type HomeDict = {
   youtubeBannerTitle: string;
 };
 
+import type { ContentPageId } from "@/shared/config/constants/content-pages";
+
 export type SearchDiscoveryDict = {
   searchInputAria: string;
   searchClearAria: string;
@@ -158,6 +160,7 @@ export type SearchDiscoveryDict = {
     lunch: string[];
     dinner: string[];
   };
+  contentPages: Record<ContentPageId, { title: string; subtitle: string }>;
 };
 
 import type { AIModelId, DiningTier } from "@/shared/config/constants/aiModel";
