@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ back: jest.fn() }),
+  usePathname: () => "/",
 }));
 
 import CategoryHero from "../CategoryHero";

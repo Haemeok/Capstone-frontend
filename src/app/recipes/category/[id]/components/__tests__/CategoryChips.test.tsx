@@ -1,5 +1,9 @@
 import { render, screen } from "@testing-library/react";
 
+jest.mock("next/navigation", () => ({
+  usePathname: () => "/",
+}));
+
 jest.mock("next/link", () => ({
   __esModule: true,
   default: ({ children, ...props }: { children: React.ReactNode }) => (

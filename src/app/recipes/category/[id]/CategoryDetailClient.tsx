@@ -6,13 +6,10 @@ import { useParams } from "next/navigation";
 
 import { InfiniteData } from "@tanstack/react-query";
 
-import {
-  type RecipeSortType,
-  TagCode,
-  TAGS_BY_CODE,
-} from "@/shared/config/constants/recipe";
+import { type RecipeSortType, TagCode } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { useSort } from "@/shared/hooks/useSort";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { getNextPageParam } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
 import RecipeSortButton from "@/shared/ui/RecipeSortButton";
@@ -46,6 +43,7 @@ const CategoryDetailClient = ({
   nextPageHref,
 }: CategoryDetailClientProps) => {
   const { id: tagCode } = useParams<{ id: TagCode }>();
+  const { label } = useTaxonomy();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { currentSort, setSort, getSortParam, availableSorts } =
@@ -72,8 +70,7 @@ const CategoryDetailClient = ({
     initialPageParam: initialPage,
   });
 
-  const tagDef = TAGS_BY_CODE[tagCode as keyof typeof TAGS_BY_CODE];
-  const tagName = tagDef?.name ?? String(tagCode);
+  const tagName = label(tagCode, "tags");
 
   const recipes = data?.pages.flatMap((page) => page.content);
   const totalElements = data?.pages?.[0]?.page.totalElements;

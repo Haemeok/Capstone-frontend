@@ -1,9 +1,12 @@
+"use client";
+
 import {
   CATEGORY_BASE_URL,
   type TagCode,
   TAGS_BY_CODE,
   TAGS_IMAGE_KEYS,
 } from "@/shared/config/constants/recipe";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import PrevButton from "@/shared/ui/PrevButton";
 
 type CategoryHeroProps = {
@@ -11,8 +14,9 @@ type CategoryHeroProps = {
 };
 
 const CategoryHero = ({ tagCode }: CategoryHeroProps) => {
+  const { label } = useTaxonomy();
   const tagDef = TAGS_BY_CODE[tagCode];
-  const tagName = tagDef?.name ?? String(tagCode);
+  const tagName = label(tagCode, "tags");
   const imageKey = TAGS_IMAGE_KEYS[tagCode];
   const imageUrl = imageKey ? `${CATEGORY_BASE_URL}${imageKey}` : undefined;
 
