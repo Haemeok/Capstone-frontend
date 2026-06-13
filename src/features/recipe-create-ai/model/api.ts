@@ -4,6 +4,7 @@ import {
   type ImageGenModel,
 } from "@/shared/config/constants/aiImageModel";
 import { AIModelId } from "@/shared/config/constants/aiModel";
+import type { Locale } from "@/shared/i18n";
 
 import {
   AIJobCreationResponse,
@@ -15,13 +16,14 @@ export const createAIRecipeJobV2 = async (
   aiRequest: AIRecommendedRecipeRequest,
   concept: AIModelId,
   idempotencyKey: string,
-  imageGenModel: ImageGenModel = DEFAULT_IMAGE_GEN_MODEL
+  imageGenModel: ImageGenModel = DEFAULT_IMAGE_GEN_MODEL,
+  lang: Locale = "ko"
 ): Promise<AIJobCreationResponse> => {
   return api.post<AIJobCreationResponse>(
     "/dev/recipes/ai",
     { aiRequest },
     {
-      params: { concept, imageGenModel },
+      params: { concept, imageGenModel, ...(lang === "ko" ? {} : { lang }) },
       headers: { "Idempotency-Key": idempotencyKey },
     }
   );
