@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 
+import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
@@ -30,6 +31,8 @@ const CalendarDetailPage = () => {
   const { date } = useParams<{ date: string }>();
   const router = useRouter();
   const { addToast } = useToastStore();
+  const locale = useUserPagesLocale();
+  const t = useUserPagesDict().calendar;
 
   const { data } = useRecipeHistoryItemsQuery(date, !!date);
 
@@ -69,7 +72,7 @@ const CalendarDetailPage = () => {
                 {formattedDate.dayName}요일
               </h2>
               <p className="text-ink-muted mt-1 text-sm">
-                {buildDaySummary(recipeCount, totalSavings)}
+                {buildDaySummary(recipeCount, totalSavings, locale, t)}
               </p>
             </>
           ) : (
