@@ -507,6 +507,7 @@ export type RecipeFormDict = {
     customIngredientCloseLabel: string;
     unitPlaceholder: string;
     unitLoading: string;
+    myIngredients: string;
   };
 };
 

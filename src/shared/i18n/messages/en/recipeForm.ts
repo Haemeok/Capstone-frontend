@@ -83,5 +83,6 @@ export const recipeForm: RecipeFormDict = {
     customIngredientCloseLabel: "Close manual entry",
     unitPlaceholder: "Unit",
     unitLoading: "Loading…",
+    myIngredients: "My ingredients",
   },
 };

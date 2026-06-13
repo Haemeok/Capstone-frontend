@@ -9,6 +9,7 @@ import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/reci
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { format, useApiLocale, useRecipeFormDict } from "@/shared/i18n";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -55,6 +56,12 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
     useSearch();
   const locale = useApiLocale();
   const { ui } = useRecipeFormDict();
+  const { localize } = useTaxonomy();
+
+  const categoryLabel = (category: string) =>
+    category === "나의 재료"
+      ? ui.myIngredients
+      : localize(category, "ingredientCategory");
 
   const { data, error, hasNextPage, isFetching, status, isPending, ref } =
     useInfiniteScroll<
@@ -137,7 +144,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
                     : "text-ink-muted hover:text-ink hover:bg-gray-100"
                 )}
               >
-                {category}
+                {categoryLabel(category)}
               </button>
             ))}
           </div>

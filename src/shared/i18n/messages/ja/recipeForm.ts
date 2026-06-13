@@ -83,5 +83,6 @@ export const recipeForm: RecipeFormDict = {
     customIngredientCloseLabel: "入力を閉じる",
     unitPlaceholder: "単位",
     unitLoading: "読み込み中…",
+    myIngredients: "マイ食材",
   },
 };

@@ -82,5 +82,6 @@ export const recipeForm: RecipeFormDict = {
     customIngredientCloseLabel: "직접 입력 닫기",
     unitPlaceholder: "단위",
     unitLoading: "로딩…",
+    myIngredients: "나의 재료",
   },
 };
