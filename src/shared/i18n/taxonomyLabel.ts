@@ -31,7 +31,10 @@ export const localizeTaxonomy = (
   dict: TaxonomyDict
 ): string => {
   const reverse = KO_TO_CODE[domain as string];
-  const code = reverse ? String(reverse[koValue] ?? koValue) : koValue;
-  const table = dict[domain] as Record<string, string>; // as: same reason as taxonomyLabel
-  return table[code] ?? koValue;
+  let code = reverse ? reverse[koValue] : koValue; // as: TaxonomyDomain is assignable to string key but TS rejects the index
+  if (code === null || code === "" || code === undefined) {
+    code = koValue === "전체" ? "ALL" : koValue;
+  }
+  const table = dict[domain] as Record<string, string>; // as: keyof indexing widens to union
+  return table[String(code)] ?? koValue;
 };

@@ -165,7 +165,11 @@ export type FridgeDict = {
 };
 
 import type { ContentPageId } from "@/shared/config/constants/content-pages";
-import type { NutritionThemeKey } from "@/shared/config/constants/recipe";
+import type {
+  NutritionFilterKey,
+  NutritionThemeKey,
+  TagCode,
+} from "@/shared/config/constants/recipe";
 
 export type SearchDiscoveryDict = {
   searchInputAria: string;
@@ -376,6 +380,27 @@ export type UserPagesDict = {
 
 export type TaxonomyDict = {
   recipeType: Record<"USER" | "AI" | "YOUTUBE", string>;
+  sort: Record<
+    "popularityScore,DESC" | "createdAt,DESC" | "createdAt,ASC",
+    string
+  >;
+  dishType: Record<string, string>;
+  tags: Record<TagCode, string>;
+  ingredientCategory: Record<string, string>;
+  nutritionTheme: Record<NutritionThemeKey, string>;
+  nutritionLabel: Record<NutritionFilterKey, string>;
+  filters: {
+    sectionRecipeType: string;
+    drawerTitle: string;
+    drawerDescription: string;
+    sortHeader: string;
+    dishTypeHeader: string;
+    dishTypeDescription: string;
+    tagsHeader: string;
+    tagsDescription: string;
+    nutritionHeader: string;
+    nutritionDescription: string;
+  };
 };
 
 export type Dictionary = {

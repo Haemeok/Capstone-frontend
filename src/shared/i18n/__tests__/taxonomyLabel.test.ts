@@ -22,4 +22,22 @@ describe("localizeTaxonomy (ko canonical in hand)", () => {
       "사용자 레시피"
     );
   });
+  it("T-04: ko 라벨(태그) → ja 라벨", () => {
+    expect(localizeTaxonomy("야식", "tags", taxonomyMessages.ja)).toBe(
+      taxonomyMessages.ja.tags.LATE_NIGHT
+    );
+  });
+  it("T-04: ko locale 태그는 입력 그대로", () => {
+    expect(localizeTaxonomy("야식", "tags", taxonomyMessages.ko)).toBe("야식");
+  });
+  it("T-04: 전체는 ALL 코드로 매핑", () => {
+    expect(localizeTaxonomy("전체", "dishType", taxonomyMessages.ja)).toBe(
+      taxonomyMessages.ja.dishType.ALL
+    );
+  });
+  it("T-04: 미지원 ko 라벨은 입력 그대로 fallback", () => {
+    expect(localizeTaxonomy("없는라벨", "tags", taxonomyMessages.ja)).toBe(
+      "없는라벨"
+    );
+  });
 });
