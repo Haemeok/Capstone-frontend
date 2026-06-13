@@ -342,6 +342,7 @@ export const getStaticRecipesOnServer = async (
   }
   if (params.maxCost) query.append("maxCost", params.maxCost.toString());
   if (params.period) query.append("period", params.period);
+  if (params.lang) query.append("lang", params.lang);
 
   let endpoint: string = END_POINTS.RECIPE_SEARCH;
   let cacheTags: string[] = [];
