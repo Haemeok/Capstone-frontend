@@ -154,6 +154,8 @@ export const aiRecipe: AiRecipeDict = {
     ingredientCountSuffix: "개의 재료가 추가됨",
     selectedIngredientsHeading: "선택된 재료",
     removeAllLabel: "전체 삭제",
+    removeAllAriaLabel: "모든 재료 삭제",
+    removeIngredientAriaLabel: "{name} 삭제",
     tierSectionHeading: "스타일 선택",
     tierSectionDescription: "원하시는 파인다이닝 스타일을 선택해주세요",
   },

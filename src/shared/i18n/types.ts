@@ -216,6 +216,8 @@ export type AiRecipeDict = {
     ingredientCountSuffix: string;
     selectedIngredientsHeading: string;
     removeAllLabel: string;
+    removeAllAriaLabel: string;
+    removeIngredientAriaLabel: string;
     tierSectionHeading: string;
     tierSectionDescription: string;
   };

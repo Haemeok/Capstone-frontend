@@ -1,6 +1,7 @@
 import { useFormContext, useWatch } from "react-hook-form";
 
 import { INGREDIENT_BLACK_IMAGE_URL } from "@/shared/config/constants/recipe";
+import { format, useT } from "@/shared/i18n";
 import { SearchIcon, XIcon } from "@/shared/ui/icons";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -16,6 +17,7 @@ type IngredientItem = {
 const FineDiningIngredientManager = ({
   onOpenDrawer,
 }: FineDiningIngredientManagerProps) => {
+  const t = useT();
   const { control, setValue } = useFormContext<{
     ingredients: IngredientItem[];
   }>();
@@ -38,9 +40,11 @@ const FineDiningIngredientManager = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-ink mb-2 text-2xl font-bold">재료 선택</h3>
+        <h3 className="text-ink mb-2 text-2xl font-bold">
+          {t.aiRecipe.fineDining.ingredientSectionHeading}
+        </h3>
         <p className="text-ink-sub text-sm">
-          사용할 재료를 선택해주세요 (최소 3개)
+          {t.aiRecipe.fineDining.ingredientSectionDescription}
         </p>
       </div>
 
@@ -48,7 +52,7 @@ const FineDiningIngredientManager = ({
         <button
           type="button"
           onClick={onOpenDrawer}
-          aria-label="재료 검색하기"
+          aria-label={t.aiRecipe.fineDining.ingredientSearchAriaLabel}
           className="group relative flex w-full cursor-pointer items-center border-b-2 border-gray-300 pb-3 transition-colors hover:border-gray-900"
         >
           <SearchIcon
@@ -56,12 +60,13 @@ const FineDiningIngredientManager = ({
             className="group-hover:text-ink mr-3 text-gray-400 transition-colors"
           />
           <span className="text-ink-muted group-hover:text-ink text-base">
-            재료를 검색하세요...
+            {t.aiRecipe.fineDining.ingredientSearchPlaceholder}
           </span>
         </button>
         {ingredients.length > 0 && (
           <p className="text-ink-sub text-sm">
-            {ingredients.length}개의 재료가 추가됨
+            {ingredients.length}
+            {t.aiRecipe.fineDining.ingredientCountSuffix}
           </p>
         )}
       </div>
@@ -69,7 +74,9 @@ const FineDiningIngredientManager = ({
       {ingredients.length > 0 && (
         <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-ink text-sm font-semibold">선택된 재료</h3>
+            <h3 className="text-ink text-sm font-semibold">
+              {t.aiRecipe.fineDining.selectedIngredientsHeading}
+            </h3>
             {ingredients.length > 1 && (
               <button
                 type="button"
@@ -77,10 +84,10 @@ const FineDiningIngredientManager = ({
                   e.stopPropagation();
                   handleRemoveAllIngredients();
                 }}
-                aria-label="모든 재료 삭제"
+                aria-label={t.aiRecipe.fineDining.removeAllAriaLabel}
                 className="text-ink-muted hover:text-ink cursor-pointer px-2 py-1 text-xs"
               >
-                전체 삭제
+                {t.aiRecipe.fineDining.removeAllLabel}
               </button>
             )}
           </div>
@@ -106,7 +113,10 @@ const FineDiningIngredientManager = ({
                       handleRemoveIngredient(index);
                     }}
                     className="text-ink-muted absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-900 hover:bg-gray-900 hover:text-white"
-                    aria-label={`${ingredient.name} 삭제`}
+                    aria-label={format(
+                      t.aiRecipe.fineDining.removeIngredientAriaLabel,
+                      { name: ingredient.name }
+                    )}
                   >
                     <XIcon size={10} />
                   </button>

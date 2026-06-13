@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 import { AiFormInArticleAdSlot } from "@/shared/adsense";
+import { useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
@@ -32,6 +33,7 @@ type FineDiningFormValues = {
 
 const FineDiningRecipe = () => {
   const router = useRouter();
+  const t = useT();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const methods = useForm<FineDiningFormValues>({
@@ -108,7 +110,9 @@ const FineDiningRecipe = () => {
                 className="text-ink-sub hover:text-ink hidden items-center gap-2 transition-colors md:flex"
               >
                 <ArrowLeftIcon size={20} />
-                <span className="text-sm font-medium">AI 다시 선택하기</span>
+                <span className="text-sm font-medium">
+                  {t.aiRecipe.backToModelSelect}
+                </span>
               </button>
             </div>
 
@@ -131,7 +135,7 @@ const FineDiningRecipe = () => {
                   className="disabled:text-ink-muted flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:shadow-lg"
                 >
                   <ChefHatIcon className="h-6 w-6" />
-                  <span>레시피 생성하기</span>
+                  <span>{t.aiRecipe.generateRecipe}</span>
                 </button>
               )}
             </UsageLimitSection>
