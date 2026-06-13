@@ -38,7 +38,7 @@ const IngredientSection = ({
   } = useFormContext<RecipeFormValues>();
 
   const [isOpen, setIsOpen] = useState(false);
-  const { labels } = useRecipeFormDict();
+  const { labels, ui } = useRecipeFormDict();
 
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -107,7 +107,7 @@ const IngredientSection = ({
           className="transition-transform group-hover:scale-105"
         />
         <span className="transition-transform group-hover:scale-105">
-          재료 추가하기
+          {ui.addIngredient}
         </span>
       </button>
 

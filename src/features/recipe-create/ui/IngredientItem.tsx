@@ -5,6 +5,7 @@ import { useFormContext, UseFormRegister, useWatch } from "react-hook-form";
 import { ChefHat, X } from "lucide-react";
 
 import { INGREDIENT_IMAGE_URL } from "@/shared/config/constants/recipe";
+import { format, useRecipeFormDict } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 
@@ -33,6 +34,7 @@ const IngredientItem = ({
   error,
 }: IngredientItemProps) => {
   const { control, setValue, getValues } = useFormContext<RecipeFormValues>();
+  const { ui } = useRecipeFormDict();
   const quantity = useWatch({
     control,
     name: `ingredients.${index}.quantity`,
@@ -99,7 +101,7 @@ const IngredientItem = ({
                 : "text-ink-sub border border-gray-300 bg-white hover:bg-gray-50"
             }`}
           >
-            약간
+            {ui.unitlessSlight}
           </button>
 
           <input
@@ -109,7 +111,7 @@ const IngredientItem = ({
               error ? "border-red-500" : "border-gray-300"
             }`}
             {...register(`ingredients.${index}.quantity`, {
-              required: "수량/단위를 입력해주세요.",
+              required: ui.quantityUnitRequired,
             })}
           />
           <UnitSelect
@@ -117,7 +119,7 @@ const IngredientItem = ({
             value={unit}
             onChange={handleUnitChange}
             disabled={isApproximate}
-            ariaLabel={`${field.name} 단위`}
+            ariaLabel={format(ui.unitSelectAria, { name: field.name })}
           />
         </div>
         <div className="flex-shrink-0">

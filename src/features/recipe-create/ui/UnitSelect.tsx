@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   Select,
@@ -30,6 +31,7 @@ const UnitSelect = ({
 }: UnitSelectProps) => {
   const [open, setOpen] = useState(false);
   const { data: units, isLoading } = useIngredientUnits(ingredientId, open);
+  const { ui } = useRecipeFormDict();
 
   const handleOpenChange = (next: boolean) => {
     if (next && !disabled) triggerHaptic("Light");
@@ -52,12 +54,12 @@ const UnitSelect = ({
       disabled={disabled}
     >
       <SelectTrigger aria-label={ariaLabel} className="h-8 w-20 px-2 text-sm">
-        <SelectValue placeholder={value || "단위"} />
+        <SelectValue placeholder={value || ui.unitPlaceholder} />
       </SelectTrigger>
       <SelectContent>
         {isLoading && (
           <SelectItem value={value || "_loading"} disabled>
-            로딩…
+            {ui.unitLoading}
           </SelectItem>
         )}
         {showSavedValueFallback && value && !isLoading && (

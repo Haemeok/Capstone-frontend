@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 
 import { Check } from "lucide-react";
 
+import { useRecipeFormDict } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 
@@ -18,6 +21,7 @@ const IngredientListItem = ({
   isAdded,
   onAddClick,
 }: IngredientListItemProps) => {
+  const { ui } = useRecipeFormDict();
   return (
     <div className="flex items-center rounded-lg border bg-white p-3 shadow-sm">
       <div className="rounded-card relative mr-3 h-16 w-16 flex-shrink-0 overflow-hidden bg-gray-100">
@@ -36,7 +40,7 @@ const IngredientListItem = ({
           disabled
         >
           <Check size={16} />
-          추가됨
+          {ui.added}
         </Button>
       ) : (
         <Button
@@ -45,7 +49,7 @@ const IngredientListItem = ({
           className="border-olive-light text-olive-light hover:bg-olive-light cursor-pointer hover:text-white"
           onClick={() => onAddClick(ingredient)}
         >
-          추가
+          {ui.add}
         </Button>
       )}
     </div>

@@ -8,7 +8,7 @@ import { Search } from "lucide-react";
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { useApiLocale } from "@/shared/i18n";
+import { format, useApiLocale, useRecipeFormDict } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -54,6 +54,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
   const locale = useApiLocale();
+  const { ui } = useRecipeFormDict();
 
   const { data, error, hasNextPage, isFetching, status, isPending, ref } =
     useInfiniteScroll<
@@ -102,9 +103,9 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
     <Container open={open} onOpenChange={onOpenChange}>
       <Content className="flex w-full flex-col md:max-w-2xl">
         <Header>
-          <Title className="text-xl">재료 검색 및 추가</Title>
+          <Title className="text-xl">{ui.ingredientSearchTitle}</Title>
           <Description className="text-md">
-            레시피에 사용할 재료를 검색하고 추가하세요.
+            {ui.ingredientSearchDescription}
           </Description>
         </Header>
 
@@ -112,7 +113,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
           <form onSubmit={handleSearchSubmit} className="relative px-4">
             <input
               type="text"
-              placeholder="재료 이름을 검색하세요"
+              placeholder={ui.ingredientSearchPlaceholder}
               className="w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 focus:outline-none"
               value={inputValue}
               onChange={handleInputChange}
@@ -143,11 +144,13 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
         </div>
         <div className="flex h-120 flex-col justify-start overflow-y-auto p-4">
           {isPending ? (
-            <p className="text-ink-muted text-center">재료 로딩 중...</p>
+            <p className="text-ink-muted text-center">{ui.ingredientLoading}</p>
           ) : status === "error" ? (
             <p className="text-center text-red-500">
-              오류 발생:{" "}
-              {error instanceof Error ? error.message : "알 수 없는 오류"}
+              {format(ui.ingredientLoadError, {
+                message:
+                  error instanceof Error ? error.message : ui.unknownError,
+              })}
             </p>
           ) : (
             <div className="h-full space-y-2">
@@ -162,14 +165,15 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
               <div ref={ref} className="h-10 text-center">
                 {!hasNextPage && data?.pages[0]?.content?.length > 0 && (
                   <p className="text-sm text-gray-400">
-                    모든 재료를 불러왔습니다.
+                    {ui.allIngredientsLoaded}
                   </p>
                 )}
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
                 <p className="text-ink-muted py-10 text-center">
-                  &quot;{searchQuery || selectedCategory}&quot;에 해당하는
-                  재료가 없습니다.
+                  {format(ui.ingredientNoResults, {
+                    query: searchQuery || selectedCategory,
+                  })}
                 </p>
               )}
             </div>
@@ -179,7 +183,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
           {Close ? (
             <Close asChild>
               <Button variant="outline" className="w-full cursor-pointer">
-                닫기
+                {ui.close}
               </Button>
             </Close>
           ) : (
@@ -188,7 +192,7 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
               className="w-full cursor-pointer"
               onClick={() => onOpenChange(false)}
             >
-              닫기
+              {ui.close}
             </Button>
           )}
         </Footer>

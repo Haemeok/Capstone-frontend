@@ -485,6 +485,28 @@ export type RecipeFormDict = {
     submitEdit: string;
     floatingCreateLabel: string;
     floatingCreateText: string;
+    addIngredient: string;
+    ingredientSearchTitle: string;
+    ingredientSearchDescription: string;
+    ingredientSearchPlaceholder: string;
+    ingredientLoading: string;
+    ingredientLoadError: string;
+    unknownError: string;
+    allIngredientsLoaded: string;
+    ingredientNoResults: string;
+    close: string;
+    add: string;
+    added: string;
+    quantityUnitRequired: string;
+    unitSelectAria: string;
+    unitlessSlight: string;
+    unitlessSome: string;
+    customIngredientTrigger: string;
+    customIngredientInputLabel: string;
+    customIngredientPlaceholder: string;
+    customIngredientCloseLabel: string;
+    unitPlaceholder: string;
+    unitLoading: string;
   };
 };
 

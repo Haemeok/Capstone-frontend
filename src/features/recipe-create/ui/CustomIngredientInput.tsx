@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { Pencil, X } from "lucide-react";
 
+import { useRecipeFormDict } from "@/shared/i18n";
+
 type CustomIngredientInputProps = {
   onAdd: (name: string) => boolean;
 };
@@ -11,6 +13,7 @@ type CustomIngredientInputProps = {
 const CustomIngredientInput = ({ onAdd }: CustomIngredientInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
+  const { ui } = useRecipeFormDict();
 
   const close = () => {
     setIsOpen(false);
@@ -39,7 +42,7 @@ const CustomIngredientInput = ({ onAdd }: CustomIngredientInputProps) => {
         className="text-ink-muted active:text-ink-sub mt-2 flex w-full cursor-pointer items-center justify-center gap-1 py-1.5 text-sm transition-colors"
       >
         <Pencil className="h-3.5 w-3.5" />
-        직접 입력
+        {ui.customIngredientTrigger}
       </button>
     );
   }
@@ -51,8 +54,8 @@ const CustomIngredientInput = ({ onAdd }: CustomIngredientInputProps) => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         onKeyDown={handleKeyDown}
-        aria-label="재료명 직접 입력"
-        placeholder="재료명을 입력하세요"
+        aria-label={ui.customIngredientInputLabel}
+        placeholder={ui.customIngredientPlaceholder}
         autoFocus
         className="text-ink placeholder:text-ink-disabled focus:border-olive-light focus:ring-olive-light h-12 flex-1 rounded-xl border border-gray-200 px-4 text-base focus:ring-1 focus:outline-none"
       />
@@ -61,12 +64,12 @@ const CustomIngredientInput = ({ onAdd }: CustomIngredientInputProps) => {
         onClick={handleAdd}
         className="bg-olive-light active:bg-olive-dark h-12 shrink-0 cursor-pointer rounded-xl px-5 text-sm font-semibold text-white transition-colors"
       >
-        추가
+        {ui.add}
       </button>
       <button
         type="button"
         onClick={close}
-        aria-label="직접 입력 닫기"
+        aria-label={ui.customIngredientCloseLabel}
         className="text-ink-muted flex h-12 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl transition-colors active:bg-gray-100"
       >
         <X className="h-5 w-5" />
