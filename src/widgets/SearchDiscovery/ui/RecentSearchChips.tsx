@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 
 import { useRecentSearches } from "@/shared/hooks/useRecentSearches";
+import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 
 const RecentSearchChips = () => {
   const router = useRouter();
   const { searches, isLoaded, removeSearch, clearAll } = useRecentSearches();
+  const t = useSearchDiscoveryDict();
 
   if (!isLoaded || searches.length === 0) {
     return null;
@@ -35,12 +37,14 @@ const RecentSearchChips = () => {
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-ink-muted text-sm font-medium">최근 검색어</h3>
+        <h3 className="text-ink-muted text-sm font-medium">
+          {t.recentSearchTitle}
+        </h3>
         <button
           onClick={handleClearAll}
           className="active:text-ink-sub cursor-pointer text-sm text-gray-400"
         >
-          지우기
+          {t.clearAction}
         </button>
       </div>
 

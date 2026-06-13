@@ -3,6 +3,9 @@ import type { SearchDiscoveryDict } from "../../types";
 export const searchDiscovery: SearchDiscoveryDict = {
   searchInputAria: "レシピを検索",
   searchClearAria: "入力をクリア",
+  recentSearchTitle: "最近の検索",
+  recentViewedTitle: "最近見たレシピ",
+  clearAction: "クリア",
   latestRecipesTitle: "できたての新着レシピ",
   contentSectionTitle: "こんなレシピはいかが？",
   nutritionSectionTitle: "今日はどんな一品にする？",

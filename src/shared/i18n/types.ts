@@ -153,6 +153,9 @@ import type { NutritionThemeKey } from "@/shared/config/constants/recipe";
 export type SearchDiscoveryDict = {
   searchInputAria: string;
   searchClearAria: string;
+  recentSearchTitle: string;
+  recentViewedTitle: string;
+  clearAction: string;
   latestRecipesTitle: string;
   contentSectionTitle: string;
   nutritionSectionTitle: string;

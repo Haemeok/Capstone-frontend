@@ -4,9 +4,12 @@ import Link from "next/link";
 
 import { Bookmark } from "lucide-react";
 
+import { useChromeDict } from "@/shared/i18n/useChromeDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 const SaveButton = () => {
+  const nav = useChromeDict();
+
   const handleClick = () => {
     triggerHaptic("Light");
   };
@@ -15,7 +18,7 @@ const SaveButton = () => {
     <Link
       href="/recipe-books"
       onClick={handleClick}
-      aria-label="저장한 레시피북"
+      aria-label={nav.savedBooksAria}
       className="relative rounded-full p-1 transition-colors hover:bg-gray-100"
     >
       <div className="relative h-fit w-fit p-1">
