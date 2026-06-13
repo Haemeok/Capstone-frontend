@@ -36,7 +36,7 @@ browse: (category, q, locale: Locale = "ko") =>
 const browseKey = INGREDIENT_QUERY_KEYS.browse(category, q, locale); // same 4-tuple as the list
 ```
 
-- **Not worth threading locale through the mutation** (route has no locale prefix → locale is invariant within a session): leave that list's key bare and only pass `lang` to the fetch fn. Cross-locale cache sharing is acceptable when locale can't change without a remount.
+- **Not worth threading locale through the mutation:** leave the key bare and only pass `lang` to the fetch fn. Bare-key (cross-locale cache sharing) is acceptable when **either** locale can't change without a remount, **or** the only resulting glitch is cosmetic and self-healing. Weigh the actual failure: with a language switcher, the worst case is "switch language, revisit the same list within `staleTime` → old-language data shown briefly," which any later refetch/`invalidateQueries` (e.g. the next add/remove) corrects. Localized text going momentarily stale is not worth an asymmetric per-list rule plus wiring locale through every optimistic mutation — prefer one uniform rule (locale in the fetch param, never in the key) unless the stale data is correctness/security/billing-sensitive.
 
 ## Anti-pattern
 

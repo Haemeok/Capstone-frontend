@@ -7,7 +7,7 @@ import { Search, X } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { type Locale, useApiLocale } from "@/shared/i18n";
+import { useApiLocale } from "@/shared/i18n";
 import { cn, getNextPageParam } from "@/shared/lib/utils";
 import {
   Drawer,
@@ -79,10 +79,10 @@ const IngredientPicker = ({
       IngredientsApiResponse,
       Error,
       InfiniteData<IngredientsApiResponse>,
-      [string, string, string, Locale],
+      [string, string, string],
       number
     >({
-      queryKey: [queryConfig.keyBase, selectedCategory, searchQuery, locale],
+      queryKey: [queryConfig.keyBase, selectedCategory, searchQuery],
       queryFn: ({ pageParam = 0 }) =>
         getIngredients({
           ...queryConfig.getParams(selectedCategory),

@@ -8,7 +8,7 @@ import { Search } from "lucide-react";
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { type Locale, useApiLocale } from "@/shared/i18n";
+import { useApiLocale } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -60,10 +60,10 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
       IngredientsApiResponse,
       Error,
       InfiniteData<IngredientsApiResponse>,
-      [string, string, string, Locale],
+      [string, string, string],
       number
     >({
-      queryKey: ["drawerIngredients", selectedCategory, searchQuery, locale],
+      queryKey: ["drawerIngredients", selectedCategory, searchQuery],
       queryFn: ({ pageParam = 0 }) =>
         getIngredients({
           category: selectedCategory,

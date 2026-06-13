@@ -6,7 +6,7 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { type Locale, useApiLocale } from "@/shared/i18n";
+import { useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -95,10 +95,10 @@ const IngredientsFilterSheetContent = ({
     IngredientsApiResponse,
     Error,
     InfiniteData<IngredientsApiResponse>,
-    [string, string, string, Locale],
+    [string, string, string],
     number
   >({
-    queryKey: ["filterIngredients", category, searchQuery, locale],
+    queryKey: ["filterIngredients", category, searchQuery],
     queryFn: ({ pageParam = 0 }) =>
       getIngredients({
         category: category === "전체" ? null : category,

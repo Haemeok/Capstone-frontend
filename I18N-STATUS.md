@@ -205,11 +205,10 @@
   (`getMyFridgeRecipes`)도 전파(카드 제목·부족재료명 ja). DEFER: 조리시간 "분" 단위.
 - [2026-06-13][i18n] ✅ **재료 fetch lang 전파**(`getIngredients` 5 호출부 전부): 신규 `useApiLocale`
   (`resolveLocaleFromPath(pathname) ?? getStoredLocale() ?? "ko"`) + 순수 `resolveLocaleFromPath`(prefix만→null).
-  `getIngredients`/`getMyFridgeRecipes`에 `lang` 파라미터(ko면 생략 — `getIngredientDetail` 패턴). **결정:
-  queryKey locale 분리는 mutation 없고 /ja 변동 있는 selector/filter/picker만** — 냉장고추가 드로어·재료목록은
-  `browse`/`["ingredients",...]` 3-튜플 유지(optimistic add/remove가 정확 매칭하는 키라 locale 끼우면 깨짐 +
-  라우트 래퍼 없어 locale=저장값으로 세션 내 불변). 후속: 풀 캐시분리 원하면 `browse`/`myFridge` factory +
-  add/delete mutation에 locale default-ko 인자 추가.
+  `getIngredients`/`getMyFridgeRecipes`에 `lang` 파라미터(ko면 생략 — `getIngredientDetail` 패턴). **결정(확정):
+  locale은 queryKey에 안 넣고 요청 `lang`에만 둔다 — 5 호출부 전부 동일 규칙.** 키에 locale을 넣으면 얻는 건
+  "스위처로 언어 바꾼 직후 같은 리스트 5분 내 재방문 시 옛 언어 깜빡"을 막는 것뿐인데, 코스메틱+자가치유
+  (mutation invalidate/5분 stale로 교정)라 비대칭 규칙·mutation locale 배선 비용 대비 가치 없음. 일관 규칙 1개 선택.
 - [2026-06-13][i18n] 🐛 사전결함 발견(비차단, 내 변경과 무관): `recipe-create-ai/useConceptJob.test.tsx`가
   `useT`를 DictionaryProvider 없이 렌더해 11개 전부 fail(clean tree에서도 동일). 별도 fix 필요.
 - [2026-06-13][i18n] 📋 보드 stale: §3 홈(`/`)이 🔴이나 실제 ja/en 라우트·카피 완료됨(`734f3842`/`048beeb9`).
