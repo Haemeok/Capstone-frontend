@@ -77,6 +77,7 @@ specific `rules/<prefix>-<topic>.md` file.
 ### React (Compiler era)
 
 - [Compiler memoization](rules/react-compiler-memoization.md) — three legitimate `useCallback` cases
+- [Compiler context dep extraction](rules/react-compiler-context-dep-extraction.md) — adding a context value (`useT`/store) inside an existing `useCallback` trips `preserve-manual-memoization`; extract the primitive to the body + add to deps, don't wrap in `useMemo`
 - [Effect / state diet](rules/react-effect-discipline.md) — derived computed, events handled, effects only for external sync
 - [Render purity](rules/react-render-purity.md) — no `Date.now()`/random in render; seed time state via lazy `useState(() => …)`; no sync setState in effect body
 - [Optional prop threading](rules/react-optional-prop-threading.md) — an optional prop declared but not forwarded is a silent no-op; `tsc` won't catch it, a leaf behavior test will
