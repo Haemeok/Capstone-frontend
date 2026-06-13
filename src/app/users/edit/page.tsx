@@ -8,6 +8,7 @@ import { Camera } from "lucide-react";
 
 import { ApiError } from "@/shared/api/client";
 import { getErrorData } from "@/shared/api/errors";
+import { format, useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Container } from "@/shared/ui/Container";
 
@@ -30,6 +31,7 @@ const DUPLICATE_NICKNAME_CODE = "102";
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const UserInfoChangePage = () => {
+  const t = useUserPagesDict().profile.edit;
   const router = useRouter();
   const { user } = useUserStore();
   const { addToast } = useToastStore();
@@ -84,7 +86,7 @@ const UserInfoChangePage = () => {
         });
       } else {
         addToast({
-          message: "프로필 업데이트에 실패했습니다. 다시 시도해주세요.",
+          message: t.updateError,
           variant: "error",
         });
       }
@@ -135,9 +137,9 @@ const UserInfoChangePage = () => {
             onClick={handleCancel}
             className="text-ink-sub cursor-pointer border-none bg-transparent text-base"
           >
-            취소
+            {t.cancel}
           </button>
-          <h1 className="m-0 text-lg font-bold">프로필 변경</h1>
+          <h1 className="m-0 text-lg font-bold">{t.heading}</h1>
           <button
             type="button"
             onClick={handleSubmit(onSubmit)}
@@ -148,7 +150,7 @@ const UserInfoChangePage = () => {
                 : "cursor-default text-gray-300"
             }`}
           >
-            {isLoading ? "저장 중..." : "확인"}
+            {isLoading ? t.submitting : t.submit}
           </button>
         </div>
       </div>
@@ -191,9 +193,7 @@ const UserInfoChangePage = () => {
                     const file = e.target.files?.[0];
                     if (file) {
                       if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-                        setImageError(
-                          "JPG, PNG, WebP 형식만 업로드할 수 있어요."
-                        );
+                        setImageError(t.imageFormatError);
                         triggerHaptic("Error");
                         e.target.value = "";
                         return;
@@ -227,16 +227,18 @@ const UserInfoChangePage = () => {
                 htmlFor="nickname"
                 className="text-ink-sub mb-1 block text-sm"
               >
-                이름
+                {t.nameLabel}
               </label>
               <Controller
                 name="nickname"
                 control={control}
                 rules={{
-                  required: "닉네임을 입력해주세요.",
+                  required: t.nicknameRequired,
                   maxLength: {
                     value: MAX_NICKNAME_LENGTH,
-                    message: `닉네임은 ${MAX_NICKNAME_LENGTH}자 이하로 입력해주세요.`,
+                    message: format(t.nicknameTooLong, {
+                      max: MAX_NICKNAME_LENGTH,
+                    }),
                   },
                 }}
                 render={({ field }) => (
@@ -275,7 +277,7 @@ const UserInfoChangePage = () => {
                 htmlFor="description"
                 className="text-ink-sub mb-1 block text-sm"
               >
-                소개
+                {t.introLabel}
               </label>
               <Controller
                 name="description"
@@ -283,14 +285,16 @@ const UserInfoChangePage = () => {
                 rules={{
                   maxLength: {
                     value: MAX_DESCRIPTION_LENGTH,
-                    message: `소개는 ${MAX_DESCRIPTION_LENGTH}자 이하로 입력해주세요.`,
+                    message: format(t.introTooLong, {
+                      max: MAX_DESCRIPTION_LENGTH,
+                    }),
                   },
                 }}
                 render={({ field }) => (
                   <textarea
                     {...field}
                     id="description"
-                    placeholder="소개를 입력해주세요."
+                    placeholder={t.introPlaceholder}
                     rows={5}
                     className={`focus:border-olive-light focus:ring-olive-light/20 w-full resize-none rounded-lg border bg-gray-50 p-3 text-base transition-colors focus:bg-white focus:ring-1 focus:outline-none ${
                       errors.description
