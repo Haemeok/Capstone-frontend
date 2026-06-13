@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AIModelId, aiModels } from "@/shared/config/constants/aiModel";
 import { getRecentAIRecipes } from "@/shared/config/constants/localStorage";
 import { SAVINGS_BASE_URL } from "@/shared/config/constants/recipe";
+import { useT } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import type { StaticDetailedRecipeGridItem } from "@/entities/recipe";
@@ -150,8 +151,9 @@ type AIModelCardProps = {
 };
 
 const AIModelCard = ({ modelId, onClick }: AIModelCardProps) => {
-  const model = aiModels[modelId];
+  const t = useT();
   const modelInfo = AI_MODEL_DESCRIPTIONS[modelId];
+  const modelName = t.aiRecipe.models[modelId].name;
 
   return (
     <button
@@ -161,7 +163,7 @@ const AIModelCard = ({ modelId, onClick }: AIModelCardProps) => {
       <div className="relative aspect-square w-full overflow-hidden">
         <Image
           src={TEMP_TOY_IMAGES[modelId]}
-          alt={model.name}
+          alt={modelName}
           wrapperClassName="absolute inset-0"
           imgClassName="object-contain"
           fit="contain"
@@ -169,9 +171,7 @@ const AIModelCard = ({ modelId, onClick }: AIModelCardProps) => {
       </div>
 
       <div className="flex flex-col gap-2 p-4 text-center">
-        <h3 className="text-ink text-base font-bold md:text-lg">
-          {model.name}
-        </h3>
+        <h3 className="text-ink text-base font-bold md:text-lg">{modelName}</h3>
         <p className="text-ink-sub text-xs leading-relaxed md:text-sm">
           {modelInfo.features[0].description}{" "}
           {modelInfo.features[1].description}

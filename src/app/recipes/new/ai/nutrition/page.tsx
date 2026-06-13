@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
-import { aiModels } from "@/shared/config/constants/aiModel";
 import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -107,10 +106,10 @@ const NutritionRecipePage = () => {
           <div className="mb-8 space-y-8 rounded-2xl bg-white p-6 shadow-lg">
             <div className="text-center">
               <h2 className="text-ink text-xl font-bold">
-                {aiModels[CONCEPT].name}
+                {t.aiRecipe.models[CONCEPT].name}
               </h2>
               <p className="text-ink-muted text-sm">
-                {aiModels[CONCEPT].description}
+                {t.aiRecipe.models[CONCEPT].description}
               </p>
             </div>
 

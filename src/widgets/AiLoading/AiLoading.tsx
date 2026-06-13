@@ -2,11 +2,7 @@
 
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
-import {
-  type AIModelId,
-  aiModels,
-  aiModelSteps,
-} from "@/shared/config/constants/aiModel";
+import { type AIModelId } from "@/shared/config/constants/aiModel";
 import { useT } from "@/shared/i18n";
 import PrevButton from "@/shared/ui/PrevButton";
 
@@ -43,15 +39,12 @@ const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const t = useT();
 
-  const aiModel = aiModels[aiModelId];
-  const { name } = aiModel;
-
   const fakeProgress = useFakeProgress(startTime);
   const displayProgress = Math.max(progress, fakeProgress);
 
   useEffect(() => {
     const stepInterval = setInterval(() => {
-      setCurrentStep((prev) => (prev + 1) % aiModelSteps.length);
+      setCurrentStep((prev) => (prev + 1) % t.aiRecipe.steps.length);
     }, 3000);
 
     return () => {
@@ -65,10 +58,10 @@ const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
 
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-ink text-2xl font-bold">
-          {name} {t.aiRecipe.loading.titleSuffix}
+          {t.aiRecipe.models[aiModelId].name} {t.aiRecipe.loading.titleSuffix}
         </h1>
         <p className="text-ink-sub animate-pulse text-lg">
-          {aiModelSteps[currentStep]}
+          {t.aiRecipe.steps[currentStep]}
         </p>
       </div>
 

@@ -13,7 +13,7 @@ const AiCharacterSection = ({ selectedAI }: AICharacterSectionProps) => {
     <>
       <div className="text-center">
         <p className="text-ink text-xl font-bold">
-          {selectedAI.name}
+          {t.aiRecipe.models[selectedAI.id].name}
           {t.aiRecipe.form.aiCharacter.withSuffix}
         </p>
         <p className="text-ink text-xl font-bold">
@@ -22,7 +22,7 @@ const AiCharacterSection = ({ selectedAI }: AICharacterSectionProps) => {
       </div>
       <div className="flex flex-col items-center justify-center gap-2 py-4">
         <p className="text-ink-sub mt-2 text-center text-sm">
-          {selectedAI.description}
+          {t.aiRecipe.models[selectedAI.id].description}
         </p>
       </div>
     </>

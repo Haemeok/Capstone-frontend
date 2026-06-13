@@ -64,7 +64,7 @@ const AIModelSelection = () => {
                 >
                   <Image
                     src={ai.image}
-                    alt={ai.name}
+                    alt={t.aiRecipe.models[ai.id].name}
                     wrapperClassName="col-start-1 row-start-1 h-full w-full"
                     imgClassName="object-cover"
                     fit="cover"
