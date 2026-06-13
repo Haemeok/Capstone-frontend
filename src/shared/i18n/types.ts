@@ -311,6 +311,17 @@ export type AiRecipeDict = {
   };
 };
 
+export type RecipeCreateDict = {
+  hubTitle: string;
+  hubSubtitle: string;
+  manualCardTitle: string;
+  manualCardBody: string;
+  manualCardImageAlt: string;
+  youtubeCardTitle: string;
+  youtubeCardBody: string;
+  youtubeCardImageAlt: string;
+};
+
 export type UserPagesDict = {
   profile: {
     shareTitle: string;
@@ -420,5 +431,6 @@ export type Dictionary = {
   fridge: FridgeDict;
   searchDiscovery: SearchDiscoveryDict;
   userPages: UserPagesDict;
+  recipeCreate: RecipeCreateDict;
   taxonomy: TaxonomyDict;
 };

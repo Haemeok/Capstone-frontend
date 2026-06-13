@@ -13,6 +13,7 @@ export type {
   Locale,
   NavDict,
   Plural,
+  RecipeCreateDict,
   UserPagesDict,
   YoutubeDict,
 } from "./types";
@@ -20,4 +21,8 @@ export { LOCALES } from "./types";
 export { useApiLocale } from "./useApiLocale";
 export { useChromeDict, useChromeLocale } from "./useChromeDict";
 export { useFridgeDict } from "./useFridgeDict";
+export {
+  useRecipeCreateDict,
+  useRecipeCreateLocale,
+} from "./useRecipeCreateDict";
 export { useUserPagesDict, useUserPagesLocale } from "./useUserPagesDict";

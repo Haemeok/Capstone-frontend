@@ -4,6 +4,7 @@ import { fridge } from "./fridge";
 import { home } from "./home";
 import { ingredientDetail } from "./ingredientDetail";
 import { nav } from "./nav";
+import { recipeCreate } from "./recipeCreate";
 import { recipeDetail } from "./recipeDetail";
 import { errors, meta, notFound, search } from "./search";
 import { searchDiscovery } from "./searchDiscovery";
@@ -25,5 +26,6 @@ export const en: Dictionary = {
   fridge,
   searchDiscovery,
   userPages,
+  recipeCreate,
   taxonomy,
 };

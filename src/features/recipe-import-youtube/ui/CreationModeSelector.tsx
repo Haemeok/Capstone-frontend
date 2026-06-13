@@ -1,10 +1,13 @@
-import Link from "next/link";
+"use client";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { LocalizedLink, useRecipeCreateDict } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 import PrevButton from "@/shared/ui/PrevButton";
 
 export const CreationModeSelector = () => {
+  const t = useRecipeCreateDict();
+
   return (
     <div className="relative flex h-full items-center justify-center p-6">
       <div className="absolute top-2 left-2 md:hidden">
@@ -12,14 +15,14 @@ export const CreationModeSelector = () => {
       </div>
       <div className="w-full max-w-4xl">
         <h1 className="text-ink mb-4 text-center text-3xl font-bold text-pretty break-keep">
-          어떻게 레시피를 만드시겠어요?
+          {t.hubTitle}
         </h1>
         <p className="text-ink-muted mb-12 text-center text-pretty break-keep">
-          직접 입력하거나 유튜브 영상에서 레시피를 가져올 수 있어요
+          {t.hubSubtitle}
         </p>
 
         <div className="grid grid-cols-2 gap-4 md:gap-8">
-          <Link
+          <LocalizedLink
             href="/recipes/new/manual"
             className="group border-olive-light/30 hover:border-olive-mint block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:p-8"
           >
@@ -27,24 +30,23 @@ export const CreationModeSelector = () => {
               <div className="rounded-card relative w-32 overflow-hidden md:h-64 md:w-48">
                 <Image
                   src={`${ICON_BASE_URL}note.webp`}
-                  alt="직접 입력하기"
+                  alt={t.manualCardImageAlt}
                   fit="cover"
                   imgClassName="transition-transform duration-200 group-hover:scale-105"
                 />
               </div>
               <div className="flex flex-col items-center gap-4">
                 <h2 className="text-ink text-lg font-bold md:text-2xl">
-                  직접 입력하기
+                  {t.manualCardTitle}
                 </h2>
                 <p className="text-ink-muted text-pretty break-keep">
-                  레시피를 직접 작성하고 <br />
-                  나만의 요리를 공유해보세요
+                  {t.manualCardBody}
                 </p>
               </div>
             </div>
-          </Link>
+          </LocalizedLink>
 
-          <Link
+          <LocalizedLink
             href="/recipes/new/youtube"
             className="group border-olive-light/30 hover:border-olive-mint block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:p-8"
           >
@@ -52,23 +54,21 @@ export const CreationModeSelector = () => {
               <div className="rounded-card relative w-32 overflow-hidden md:h-64 md:w-48">
                 <Image
                   src={`${ICON_BASE_URL}youtube.webp`}
-                  alt="유튜브로 가져오기"
+                  alt={t.youtubeCardImageAlt}
                   fit="cover"
                   imgClassName="transition-transform duration-200 group-hover:scale-105"
                 />
               </div>
               <div className="flex flex-col items-center gap-4">
                 <h2 className="text-ink text-lg font-bold text-pretty break-keep md:text-2xl">
-                  유튜브로 가져오기
+                  {t.youtubeCardTitle}
                 </h2>
                 <p className="text-ink-muted text-pretty break-keep">
-                  유튜브 영상 링크만 있으면
-                  <br />
-                  자동으로 레시피를 만들어요
+                  {t.youtubeCardBody}
                 </p>
               </div>
             </div>
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     </div>
