@@ -108,14 +108,15 @@
 
 ## 4. 글로벌/공유 영역 (페이지 가로지름 — 별도 추적)
 
-| 항목                           | 상태 | 비고                                                                                                                                                                                            |
-| ------------------------------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 헤더/네비게이션 chrome         | 🟢   | `nav` 네임스페이스 + `useChromeDict`(client pathname 자가판단). 헤더 nav/로그인/알림(plural)/설치/저장북/프로필 + 푸터 라벨 ko/ja/en. 푸터 고유명사·이메일·Copyright·브랜드·법적 href는 ko 유지 |
-| 하단 탭바                      | 🟢   | BottomNavBar 홈/검색/냉장고/AI 레시피/My ko/ja/en (`nav` 사전)                                                                                                                                  |
-| Toast/공통 버튼 문구           | 🔴   | 저장북 toast만 `nav`에 포함. 일반 공통버튼/`common` 네임스페이스 미착수                                                                                                                         |
-| root layout `<html lang="ko">` | 🔴   | ja/en 페이지에도 ko로 박혀있음(Phase 1 수용). next-intl 전환 시 해결                                                                                                                            |
-| sitemap 로케일 분리            | 🔴   | 백엔드 `availableLocales`/locale sitemap 엔드포인트 대기                                                                                                                                        |
-| 가격/통화 기호 분기            | 🔴   | 円/원 — 가격 렌더가 여러 컴포넌트에 흩어짐. 전역 작업 필요                                                                                                                                      |
+| 항목                             | 상태 | 비고                                                                                                                                                                                                                                    |
+| -------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 헤더/네비게이션 chrome           | 🟢   | `nav` 네임스페이스 + `useChromeDict`(client pathname 자가판단). 헤더 nav/로그인/알림(plural)/설치/저장북/프로필 + 푸터 라벨 ko/ja/en. 푸터 고유명사·이메일·Copyright·브랜드는 비번역(법적 href는 언어 스위처 작업서 일률 prefix로 변경) |
+| 하단 탭바                        | 🟢   | BottomNavBar 홈/검색/냉장고/AI 레시피/My ko/ja/en (`nav` 사전)                                                                                                                                                                          |
+| 언어 스위처 / locale-sticky 링크 | 🟢   | 설정 시트 `LanguageSettingRow`(ko/ja/en) + `LocalizedLink`(현재 locale 일률 prefix) + `localizedHref`/`stripLocale` + localStorage `PREFERRED_LOCALE`. 자동 리다이렉트 없음. chrome 링크 전환 완료(전 앱 링크는 점진). **로컬 미확인**  |
+| Toast/공통 버튼 문구             | 🔴   | 저장북 toast만 `nav`에 포함. 일반 공통버튼/`common` 네임스페이스 미착수                                                                                                                                                                 |
+| root layout `<html lang="ko">`   | 🔴   | ja/en 페이지에도 ko로 박혀있음(Phase 1 수용). next-intl 전환 시 해결                                                                                                                                                                    |
+| sitemap 로케일 분리              | 🔴   | 백엔드 `availableLocales`/locale sitemap 엔드포인트 대기                                                                                                                                                                                |
+| 가격/통화 기호 분기              | 🔴   | 円/원 — 가격 렌더가 여러 컴포넌트에 흩어짐. 전역 작업 필요                                                                                                                                                                              |
 
 ---
 
@@ -176,6 +177,15 @@
   (레시피 상세 전용), 언어 스위처. 설계/계획: `docs/superpowers/{specs,plans}/2026-06-13-chrome-nav-i18n-*`.
 - [2026-06-13][i18n] 🔓 chrome 완료로 **홈 잠금해제**. 다음 우선순위(보드 §3): 홈 라우트화 →
   재료목록/카테고리/큐레이션(SEO). 단 백엔드 `availableLocales`/sitemap 미전달이라 발견 경로 0은 여전.
+- [2026-06-13][i18n] 언어 스위처 + locale-sticky 링크 완료(사용자 요청, 4 task TDD, 59 tests).
+  모델 A: 링크 stickiness + 설정 스위처, **자동 리다이렉트 없음**(localStorage client 전용). 순수
+  `localizedHref`/`stripLocale` + `LocalizedLink`(현재 locale 일률 prefix, 예외 레지스트리 없음) +
+  localStorage `PREFERRED_LOCALE`(`getStoredLocale`/`setStoredLocale`) + 설정 `LanguageSettingRow`.
+  chrome 링크(헤더/하단탭/푸터) 전환 완료, active 하이라이트 `stripLocale` 보정. **결정 변경**: 일률
+  prefix라 푸터 법적 링크 href가 이제 `/en/terms`로 prefix됨(이전 chrome 작업의 "ko 유지" 뒤집음) →
+  미로컬라이즈 목적지는 점진 커버 전까지 404(i18n 미배포라 수용). **비목표**: 자동 리다이렉트·404
+  레지스트리·쿠키/서버 리다이렉트·`<html lang>`·chrome 외 전 앱 링크 일괄 전환.
+  설계/계획: `docs/superpowers/{specs,plans}/2026-06-13-language-switcher-*`.
 
 ---
 
