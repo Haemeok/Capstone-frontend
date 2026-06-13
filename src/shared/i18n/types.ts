@@ -322,6 +322,14 @@ export type RecipeCreateDict = {
   youtubeCardImageAlt: string;
 };
 
+export type CategoryDict = {
+  navAriaLabel: string;
+  countAll: string;
+  emptyTitle: string;
+  emptySubtitle: string;
+  emptyCta: string;
+};
+
 export type UserPagesDict = {
   profile: {
     shareTitle: string;
@@ -433,4 +441,5 @@ export type Dictionary = {
   userPages: UserPagesDict;
   recipeCreate: RecipeCreateDict;
   taxonomy: TaxonomyDict;
+  category: CategoryDict;
 };

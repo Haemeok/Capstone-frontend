@@ -8,6 +8,7 @@ export { getStoredLocale, setStoredLocale } from "./preferredLocale";
 export { resolveChromeLocale } from "./resolveChromeLocale";
 export { resolveLocaleFromPath } from "./resolveLocaleFromPath";
 export type {
+  CategoryDict,
   Dictionary,
   FridgeDict,
   Locale,
@@ -19,6 +20,7 @@ export type {
 } from "./types";
 export { LOCALES } from "./types";
 export { useApiLocale } from "./useApiLocale";
+export { useCategoryDict, useCategoryLocale } from "./useCategoryDict";
 export { useChromeDict, useChromeLocale } from "./useChromeDict";
 export { useFridgeDict } from "./useFridgeDict";
 export {

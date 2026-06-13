@@ -1,5 +1,6 @@
 import type { Dictionary } from "../../types";
 import { aiRecipe } from "./aiRecipe";
+import { category } from "./category";
 import { fridge } from "./fridge";
 import { home } from "./home";
 import { ingredientDetail } from "./ingredientDetail";
@@ -28,4 +29,5 @@ export const ja: Dictionary = {
   userPages,
   recipeCreate,
   taxonomy,
+  category,
 };
