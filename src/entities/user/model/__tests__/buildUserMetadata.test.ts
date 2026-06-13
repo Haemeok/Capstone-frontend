@@ -28,7 +28,7 @@ describe("buildUserMetadata (T-04~07)", () => {
     const m = await buildUserMetadata("u1", "en");
     expect(m.title).toBe("유저 - Recipio");
     expect(m.description).toBe(
-      "See 유저's recipes and cooking activity on Recipio."
+      "Browse 유저's recipes and cooking log on Recipio."
     );
   });
 
@@ -37,7 +37,7 @@ describe("buildUserMetadata (T-04~07)", () => {
     const m = await buildUserMetadata("u1", "ja");
     expect(m.title).toBe("유저 - Recipio");
     expect(m.description).toBe(
-      "유저さんのレシピと料理の記録をRecipioでチェックしましょう。"
+      "유저さんのレシピと料理の記録を、Recipioでチェックしてみましょう。"
     );
   });
 
