@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
 import { RecipeHistoryDetailResponse } from "@/entities/recipe/model/record";
@@ -62,19 +63,21 @@ type SodiumStatusProps = {
 };
 
 const SodiumStatus = ({ sodium }: SodiumStatusProps) => {
+  const t = useUserPagesDict().calendar;
   const status = getSodiumStatus(sodium);
+  const statusLabel = t.sodiumStatus[status.key];
 
   return (
     <div className="flex items-center justify-between border-t border-gray-100 pt-4">
       <div>
-        <p className="text-ink-sub text-base font-medium">나트륨</p>
+        <p className="text-ink-sub text-base font-medium">{t.sodium}</p>
         <p
           className={cn(
             "mt-0.5 text-sm",
             status.tone === "caution" ? "text-amber-700" : "text-ink-muted"
           )}
         >
-          {status.label} · {status.description}
+          {statusLabel.label} · {statusLabel.description}
         </p>
       </div>
       <span className="text-ink-sub text-base font-medium">
@@ -94,6 +97,7 @@ const PROTEIN_MAX = 100;
 const FAT_MAX = 70;
 
 const NutritionCard = ({ data }: NutritionCardProps) => {
+  const t = useUserPagesDict().calendar;
   const totalCalories =
     data?.reduce((sum, item) => sum + item.calories, 0) ?? 0;
   const carbs =
@@ -110,10 +114,10 @@ const NutritionCard = ({ data }: NutritionCardProps) => {
 
   return (
     <section className="border-t border-gray-100 py-6">
-      <h3 className="text-ink mb-5 text-lg font-bold">영양</h3>
+      <h3 className="text-ink mb-5 text-lg font-bold">{t.nutritionHeading}</h3>
 
       <div className="mb-6 text-center">
-        <p className="text-ink-muted text-sm">총 섭취 칼로리</p>
+        <p className="text-ink-muted text-sm">{t.totalCaloriesLabel}</p>
         <div className="mt-1 flex items-baseline justify-center gap-1.5">
           <span className="text-olive-dark text-5xl font-bold">
             {totalCalories.toLocaleString()}
@@ -121,7 +125,7 @@ const NutritionCard = ({ data }: NutritionCardProps) => {
           <span className="text-ink-muted text-xl font-medium">kcal</span>
         </div>
         <p className="text-ink-muted mt-2 text-sm">
-          권장량의{" "}
+          {t.recommendedRatioPrefix}{" "}
           <span className="text-olive-dark font-bold">
             {caloriePercentage}%
           </span>
@@ -130,21 +134,21 @@ const NutritionCard = ({ data }: NutritionCardProps) => {
 
       <div className="mb-6 space-y-5">
         <NutrientBar
-          label="탄수화물"
+          label={t.carbs}
           value={carbs}
           max={CARBS_MAX}
           color="bg-olive"
           unit="g"
         />
         <NutrientBar
-          label="단백질"
+          label={t.protein}
           value={protein}
           max={PROTEIN_MAX}
           color="bg-olive-medium"
           unit="g"
         />
         <NutrientBar
-          label="지방"
+          label={t.fat}
           value={fat}
           max={FAT_MAX}
           color="bg-olive-light"

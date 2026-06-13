@@ -1,13 +1,13 @@
 import { getSodiumStatus } from "./getSodiumStatus";
 
-describe("getSodiumStatus (T-02)", () => {
+describe("getSodiumStatus key (T-13/14/15)", () => {
   it.each([
-    [0, "좋음"],
-    [3000, "좋음"],
-    [3001, "보통"],
-    [4000, "보통"],
-    [4001, "주의"],
-  ])("나트륨 %dmg이면 %s 라벨", (sodium, label) => {
-    expect(getSodiumStatus(sodium).label).toBe(label);
+    [0, "good"],
+    [3000, "good"],
+    [3001, "normal"],
+    [4000, "normal"],
+    [4001, "warning"],
+  ] as const)("나트륨 %dmg이면 %s 키", (sodium, key) => {
+    expect(getSodiumStatus(sodium).key).toBe(key);
   });
 });
