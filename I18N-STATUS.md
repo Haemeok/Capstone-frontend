@@ -57,7 +57,7 @@
 | 레시피 상세 | `/recipes/[recipeId]`                     | H     | 🟡   | 백엔드 연동·read-path chrome 완료(34키). 🔸DEFER: 숫자+단위 포맷(구독자수 만명·`분`·`인분`·절약액 `원`)·절약 마케팅 카피·RecipeCompleteButton. EXCLUDE(비목표): 재료 복사/신고 시트·평점·댓글폼·챗 |
 | 검색 결과   | `/search/results`                         | H     | 🟢   | ja/en 완료                                                                                                                                                                                         |
 | 홈          | `/`                                       | H     | 🔴   | chrome(헤더/하단탭/푸터) 완료 → 잠금해제. 라우트(ja/en)·홈 하드카피("주간 인기"/"가성비"/CategoryTabs title)·배너 미착수                                                                           |
-| 검색 진입   | `/search`                                 | H     | 🔴   | `/search/results`만 됨, 진입 페이지 별도                                                                                                                                                           |
+| 검색 진입   | `/search`                                 | H     | 🟢   | ja/en 완료. 셸·시간대 placeholder(현지요리)·큐레이션카드 12장(현지 차분한 톤)·영양테마 label·focused. 가격대 섹션 ja/en 숨김(통화 후속). 카피 자연성 사용자 수동검증 대기                          |
 | 카테고리    | `/recipes/category/[id]`                  | H     | 🔴   |                                                                                                                                                                                                    |
 | 재료 목록   | `/ingredients`                            | H     | 🔴   |                                                                                                                                                                                                    |
 | 재료 상세   | `/ingredients/[ingredientId]`             | H     | 🟢   | ja/en 완료. chrome locale-prop 사전(`getDictionary`), `?lang=` 서버fn, hreflang/inLanguage. 쿠팡 ko-only. EXCLUDE(비목표): 재료 데이터 번역(백엔드)·영양 단위·제철 월 등 데이터 필드               |
@@ -186,6 +186,19 @@
   미로컬라이즈 목적지는 점진 커버 전까지 404(i18n 미배포라 수용). **비목표**: 자동 리다이렉트·404
   레지스트리·쿠키/서버 리다이렉트·`<html lang>`·chrome 외 전 앱 링크 일괄 전환.
   설계/계획: `docs/superpowers/{specs,plans}/2026-06-13-language-switcher-*`.
+- [2026-06-13][i18n] ✅ **검색 진입 `/search` 디스커버리 ja/en 완료**(7 커밋, 16 tests, TDD).
+  `searchDiscovery` 네임스페이스 + client 자가판단 `useSearchDiscoveryDict`(usePathname→resolveChromeLocale,
+  nav 패턴 답습). 셸·시간대 placeholder(현지요리로 교체)·큐레이션카드 12장(밈→현지 차분한 톤)·영양테마
+  label 10개·focused(최근검색/본/지우기). **가격대 섹션 ja/en 숨김**(`locale==="ko"`만 렌더 — KRW 필터
+  mismatch, 통화 plumbing 후속). CONTENT_PAGES title/subtitle 상수→사전 이전(+`ContentPageId`),
+  NUTRITION_THEMES 상수 불변(공유 소비자 보호). **누락가드(no-Hangul 렌더 스캔)가 `RecipeSlide.tsx`
+  미추출 한글 3건("더보기"/빈상태/에러)을 잡아 사전화** — 타입게이트가 못 잡는 inline 문자열 사례 재확인.
+  설계/계획: `docs/superpowers/{specs,plans}/2026-06-13-search-discovery-i18n-*`.
+  **후속(코드리뷰 발견, 비차단):** ①`recipeSlide{ViewMore,Empty,Error}` 키가 `searchDiscovery`에
+  얹혀 있음 — 범용 위젯이라 `common`/`recipeSlide` 네임스페이스로 이전 권고(현재 `common` 없음).
+  ②`RecommendedRecipeGrid` inline 한글(레시피 상세 전용, /search 밖)·③ja/en `/search` metadata
+  title/desc 아직 ko(noindex라 영향 작음). ④큐레이션카드·테마 href가 plain Link+buildSearchResultsUrl
+  이라 locale-sticky 아님(언어스위처 "chrome 외 링크 일괄 전환" 비목표와 동일 건).
 
 ---
 
