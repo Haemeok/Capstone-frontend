@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { create } from "zustand";
 
 import type { AIModel, AIModelId } from "@/shared/config/constants/aiModel";
+import type { Locale } from "@/shared/i18n";
 
 import {
   addPersistedJob,
@@ -99,7 +100,8 @@ type AIRecipeStoreV2 = {
   createJob: (
     concept: AIModelId,
     request: AIRecommendedRecipeRequest,
-    meta: AIJobMeta
+    meta: AIJobMeta,
+    locale: Locale
   ) => string;
   setJobId: (idempotencyKey: string, jobId: string) => void;
   updateJobProgress: (
@@ -137,7 +139,7 @@ const toActiveJob = (persisted: PersistedAIJob): ActiveAIJob => ({
 export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
   jobs: {},
 
-  createJob: (concept, request, meta) => {
+  createJob: (concept, request, meta, locale) => {
     const existingJob = get().getJobByConcept(concept);
     if (
       existingJob &&
@@ -159,6 +161,7 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
       startTime: now,
       lastPollTime: now,
       retryCount: 0,
+      locale,
     };
 
     const activeJob: ActiveAIJob = {

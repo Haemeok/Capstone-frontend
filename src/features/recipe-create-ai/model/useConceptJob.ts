@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 
 import type { AIModelId } from "@/shared/config/constants/aiModel";
-import { useT } from "@/shared/i18n";
+import { useApiLocale, useT } from "@/shared/i18n";
 
 import { calculateFakeProgress } from "../lib/progress";
 import { createAIRecipeJobV2 } from "./api";
@@ -27,6 +27,7 @@ export const useConceptJob = <C extends AIModelId>(
   concept: C
 ): ConceptJobResult<C> => {
   const t = useT();
+  const locale = useApiLocale();
   const createJob = useAIRecipeStoreV2((s) => s.createJob);
   const setJobId = useAIRecipeStoreV2((s) => s.setJobId);
   const failJob = useAIRecipeStoreV2((s) => s.failJob);
@@ -50,12 +51,14 @@ export const useConceptJob = <C extends AIModelId>(
         displayName: modelName,
         requestSummary,
       };
-      const idempotencyKey = createJob(concept, request, meta);
+      const idempotencyKey = createJob(concept, request, meta, locale);
       try {
         const response = await createAIRecipeJobV2(
           request,
           concept,
-          idempotencyKey
+          idempotencyKey,
+          undefined,
+          locale
         );
         setJobId(idempotencyKey, response.jobId);
       } catch (error) {
@@ -66,7 +69,7 @@ export const useConceptJob = <C extends AIModelId>(
         failJob(idempotencyKey, undefined, message);
       }
     },
-    [concept, createJob, setJobId, failJob, modelName]
+    [concept, createJob, setJobId, failJob, modelName, locale]
   );
 
   const retry = useCallback(() => {

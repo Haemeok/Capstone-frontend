@@ -33,6 +33,7 @@ const baseJob: ActiveAIJob = {
   startTime: Date.now(),
   lastPollTime: Date.now(),
   retryCount: 0,
+  locale: "ko",
   state: "polling",
   progress: 30,
 };

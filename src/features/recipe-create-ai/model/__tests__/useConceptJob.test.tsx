@@ -111,11 +111,16 @@ describe("useConceptJob", () => {
       const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
 
       act(() => {
-        useAIRecipeStoreV2.getState().createJob("COST_EFFECTIVE", mockRequest, {
-          concept: "COST_EFFECTIVE",
-          displayName: "가성비 요리",
-          requestSummary: mockSummary,
-        });
+        useAIRecipeStoreV2.getState().createJob(
+          "COST_EFFECTIVE",
+          mockRequest,
+          {
+            concept: "COST_EFFECTIVE",
+            displayName: "가성비 요리",
+            requestSummary: mockSummary,
+          },
+          "ko"
+        );
       });
 
       expect(result.current.isPending).toBe(true);
@@ -127,13 +132,16 @@ describe("useConceptJob", () => {
       const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
 
       act(() => {
-        const key = useAIRecipeStoreV2
-          .getState()
-          .createJob("COST_EFFECTIVE", mockRequest, {
+        const key = useAIRecipeStoreV2.getState().createJob(
+          "COST_EFFECTIVE",
+          mockRequest,
+          {
             concept: "COST_EFFECTIVE",
             displayName: "가성비 요리",
             requestSummary: mockSummary,
-          });
+          },
+          "ko"
+        );
         useAIRecipeStoreV2.getState().completeJob(key, "recipe-1");
       });
 
@@ -146,13 +154,16 @@ describe("useConceptJob", () => {
       const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
 
       act(() => {
-        const key = useAIRecipeStoreV2
-          .getState()
-          .createJob("COST_EFFECTIVE", mockRequest, {
+        const key = useAIRecipeStoreV2.getState().createJob(
+          "COST_EFFECTIVE",
+          mockRequest,
+          {
             concept: "COST_EFFECTIVE",
             displayName: "가성비 요리",
             requestSummary: mockSummary,
-          });
+          },
+          "ko"
+        );
         useAIRecipeStoreV2.getState().failJob(key, "700", "에러");
       });
 
@@ -166,13 +177,16 @@ describe("useConceptJob", () => {
       const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
 
       act(() => {
-        const key = useAIRecipeStoreV2
-          .getState()
-          .createJob("COST_EFFECTIVE", mockRequest, {
+        const key = useAIRecipeStoreV2.getState().createJob(
+          "COST_EFFECTIVE",
+          mockRequest,
+          {
             concept: "COST_EFFECTIVE",
             displayName: "가성비 요리",
             requestSummary: mockSummary,
-          });
+          },
+          "ko"
+        );
         useAIRecipeStoreV2.getState().failJob(key, "700", "에러");
       });
 
@@ -213,7 +227,8 @@ describe("useConceptJob", () => {
             concept: "INGREDIENT_FOCUS",
             displayName: "냉장고 속 재료",
             requestSummary: "",
-          }
+          },
+          "ko"
         );
       });
 

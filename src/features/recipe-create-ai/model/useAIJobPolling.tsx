@@ -158,7 +158,9 @@ export const useAIJobPolling = () => {
         const response = await createAIRecipeJobV2(
           job.request,
           job.concept,
-          job.idempotencyKey
+          job.idempotencyKey,
+          undefined,
+          job.locale
         );
         setJobId(job.idempotencyKey, response.jobId);
       } catch {

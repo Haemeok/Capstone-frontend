@@ -29,7 +29,7 @@ describe("useAIRecipeStoreV2", () => {
     it("새 job을 creating 상태로 생성한다", () => {
       let key = "";
       act(() => {
-        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
       });
 
       expect(store().jobs[key]).toMatchObject({
@@ -43,7 +43,7 @@ describe("useAIRecipeStoreV2", () => {
 
     it("생성한 job을 localStorage에 저장한다", () => {
       act(() => {
-        store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
       });
 
       expect(loadPersistedJobs()).toHaveLength(1);
@@ -53,8 +53,8 @@ describe("useAIRecipeStoreV2", () => {
       let key1 = "";
       let key2 = "";
       act(() => {
-        key1 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
-        key2 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key1 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
+        key2 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
       });
 
       expect(key1).toBe(key2);
@@ -65,10 +65,10 @@ describe("useAIRecipeStoreV2", () => {
       let key1 = "";
       let key2 = "";
       act(() => {
-        key1 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key1 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         store().setJobId(key1, "job-1");
         store().completeJob(key1, "recipe-1");
-        key2 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key2 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
       });
 
       expect(key1).not.toBe(key2);
@@ -80,7 +80,7 @@ describe("useAIRecipeStoreV2", () => {
     it("setJobId는 jobId를 설정하고 polling으로 전이한다", () => {
       let key = "";
       act(() => {
-        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         store().setJobId(key, "job-1");
       });
 
@@ -93,7 +93,7 @@ describe("useAIRecipeStoreV2", () => {
     it("completeJob은 completed로 전이하고 progress 100과 resultRecipeId를 설정한다", () => {
       let key = "";
       act(() => {
-        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         store().setJobId(key, "job-1");
         store().completeJob(key, "recipe-1");
       });
@@ -108,7 +108,7 @@ describe("useAIRecipeStoreV2", () => {
     it("completeJob 시 localStorage에서 job을 제거한다", () => {
       let key = "";
       act(() => {
-        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         store().setJobId(key, "job-1");
         store().completeJob(key, "recipe-1");
       });
@@ -119,7 +119,7 @@ describe("useAIRecipeStoreV2", () => {
     it("failJob은 failed로 전이하고 code와 message를 설정한다", () => {
       let key = "";
       act(() => {
-        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         store().failJob(key, "701", "AI 생성 실패");
       });
 
@@ -134,7 +134,12 @@ describe("useAIRecipeStoreV2", () => {
   describe("getPendingJobs", () => {
     it("creating과 polling 상태만 포함한다", () => {
       act(() => {
-        const k1 = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        const k1 = store().createJob(
+          "COST_EFFECTIVE",
+          mockRequest,
+          mockMeta,
+          "ko"
+        );
         store().setJobId(k1, "job-1");
 
         store().createJob(
@@ -149,7 +154,8 @@ describe("useAIRecipeStoreV2", () => {
             concept: "INGREDIENT_FOCUS",
             displayName: "냉장고 속 재료",
             requestSummary: "",
-          }
+          },
+          "ko"
         );
 
         const k3 = store().createJob(
@@ -165,7 +171,8 @@ describe("useAIRecipeStoreV2", () => {
             concept: "NUTRITION_BALANCE",
             displayName: "영양 밸런스",
             requestSummary: "",
-          }
+          },
+          "ko"
         );
         store().setJobId(k3, "job-3");
         store().completeJob(k3, "recipe-3");
@@ -183,7 +190,8 @@ describe("useAIRecipeStoreV2", () => {
         const completed = store().createJob(
           "COST_EFFECTIVE",
           mockRequest,
-          mockMeta
+          mockMeta,
+          "ko"
         );
         store().setJobId(completed, "job-1");
         store().completeJob(completed, "recipe-1");
@@ -195,7 +203,8 @@ describe("useAIRecipeStoreV2", () => {
             concept: "FINE_DINING",
             displayName: "파인 다이닝",
             requestSummary: "",
-          }
+          },
+          "ko"
         );
         store().failJob(failed, "700", "에러");
       });
@@ -207,7 +216,7 @@ describe("useAIRecipeStoreV2", () => {
   describe("getJobByConcept", () => {
     it("concept으로 job을 찾고 다른 concept의 job은 노출하지 않는다", () => {
       act(() => {
-        store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
       });
 
       expect(store().getJobByConcept("COST_EFFECTIVE")?.concept).toBe(
@@ -221,7 +230,7 @@ describe("useAIRecipeStoreV2", () => {
     it("job을 store에서 제거한다", () => {
       let key = "";
       act(() => {
-        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+        key = store().createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         store().removeJob(key);
       });
 

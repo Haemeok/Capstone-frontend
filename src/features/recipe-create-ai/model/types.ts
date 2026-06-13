@@ -1,4 +1,5 @@
 import type { AIModelId } from "@/shared/config/constants/aiModel";
+import type { Locale } from "@/shared/i18n";
 
 export type { AIModelId };
 
@@ -77,6 +78,7 @@ export type PersistedAIJob = {
   startTime: number;
   lastPollTime: number;
   retryCount: number;
+  locale: Locale;
 };
 
 export type AIJobState = "creating" | "polling" | "completed" | "failed";

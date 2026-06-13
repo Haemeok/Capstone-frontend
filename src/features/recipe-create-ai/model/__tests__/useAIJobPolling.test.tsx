@@ -75,7 +75,7 @@ describe("useAIJobPolling - 중복 처리 방지", () => {
       act(() => {
         key = useAIRecipeStoreV2
           .getState()
-          .createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+          .createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         useAIRecipeStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -107,7 +107,7 @@ describe("useAIJobPolling - 중복 처리 방지", () => {
       act(() => {
         key = useAIRecipeStoreV2
           .getState()
-          .createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+          .createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         useAIRecipeStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -147,7 +147,7 @@ describe("useAIJobPolling - 중복 처리 방지", () => {
       act(() => {
         key = useAIRecipeStoreV2
           .getState()
-          .createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+          .createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         useAIRecipeStoreV2.getState().setJobId(key, "job-123");
       });
 
@@ -177,7 +177,7 @@ describe("useAIJobPolling - 중복 처리 방지", () => {
       act(() => {
         key = useAIRecipeStoreV2
           .getState()
-          .createJob("COST_EFFECTIVE", mockRequest, mockMeta);
+          .createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
         useAIRecipeStoreV2.getState().setJobId(key, "job-123");
       });
 
