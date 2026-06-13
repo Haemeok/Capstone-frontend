@@ -9,10 +9,12 @@ jest.mock("@/shared/api/client", () => ({
 
 const mockedApi = api as jest.Mocked<typeof api>;
 
-const request = {
-  type: "INGREDIENT_FOCUS",
-  ingredients: ["감자"],
-} as unknown as IngredientFocusRequest;
+const request: IngredientFocusRequest = {
+  ingredientIds: ["potato"],
+  dishType: "찌개",
+  cookingTime: 30,
+  servings: 2,
+};
 
 describe("AI recipe api lang (T-13/T-14/T-15)", () => {
   beforeEach(() => jest.clearAllMocks());
