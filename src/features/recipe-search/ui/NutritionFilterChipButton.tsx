@@ -4,6 +4,7 @@ import { lazy, Suspense, useState } from "react";
 
 import { SlidersHorizontal } from "lucide-react";
 
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
@@ -17,6 +18,7 @@ const NutritionFilterContent = lazy(() =>
 
 export const NutritionFilterChipButton = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { dict } = useTaxonomy();
   const {
     nutritionParams,
     types,
@@ -41,10 +43,10 @@ export const NutritionFilterChipButton = () => {
             ? "border-purple-400 text-purple-500"
             : "border-purple-300 bg-white text-purple-400 hover:bg-purple-50"
         )}
-        aria-label="상세 필터"
+        aria-label={dict.filters.drawerTitle}
       >
         <SlidersHorizontal className="h-4 w-4" strokeWidth={2.2} />
-        <span>필터</span>
+        <span>{dict.filters.drawerTitle}</span>
       </button>
       {isOpen && (
         <Suspense fallback={null}>

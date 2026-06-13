@@ -5,11 +5,22 @@ import dynamic from "next/dynamic";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { useChromeLocale } from "@/shared/i18n";
+import { recipeDetail as recipeDetailEn } from "@/shared/i18n/messages/en/recipeDetail";
+import { recipeDetail as recipeDetailJa } from "@/shared/i18n/messages/ja/recipeDetail";
+import { recipeDetail as recipeDetailKo } from "@/shared/i18n/messages/ko/recipeDetail";
+import type { Locale } from "@/shared/i18n/types";
 import FilterChip from "@/shared/ui/FilterChip";
 
 import { getIngredientNames } from "@/entities/ingredient";
 
 import { useIngredientsFilter } from "../model/useIngredientsFilter";
+
+const INGREDIENTS_LABEL: Record<Locale, string> = {
+  ko: recipeDetailKo.ingredientsHeader,
+  ja: recipeDetailJa.ingredientsHeader,
+  en: recipeDetailEn.ingredientsHeader,
+};
 
 const IngredientsFilterSheet = dynamic(
   () =>
@@ -22,6 +33,7 @@ const IngredientsFilterSheet = dynamic(
 export const IngredientsFilter = () => {
   const [selectedIngredients, setSavedIngredients] = useIngredientsFilter();
   const [isOpen, setIsOpen] = useState(false);
+  const locale = useChromeLocale();
 
   const { data: ingredientNames } = useQuery({
     queryKey: ["ingredientNames", selectedIngredients],
@@ -33,7 +45,9 @@ export const IngredientsFilter = () => {
   const initialIngredients = ingredientNames?.content ?? [];
 
   const count = selectedIngredients.length;
-  const displayText = count > 0 ? `재료 ${count}개` : "재료";
+  const ingredientsLabel = INGREDIENTS_LABEL[locale];
+  const displayText =
+    count > 0 ? `${ingredientsLabel} ${count}` : ingredientsLabel;
 
   const handleApply = (selectedIds: string[]) => {
     setSavedIngredients(selectedIds);

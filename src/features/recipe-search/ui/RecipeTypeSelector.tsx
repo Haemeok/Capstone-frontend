@@ -30,7 +30,7 @@ export const RecipeTypeSelector = ({
   selectedTypes,
   onTypesChange,
 }: RecipeTypeSelectorProps) => {
-  const { label } = useTaxonomy();
+  const { label, dict } = useTaxonomy();
 
   const handleTypeToggle = (type: string) => {
     const newTypes = selectedTypes.includes(type)
@@ -42,7 +42,9 @@ export const RecipeTypeSelector = ({
 
   return (
     <div className="space-y-3 border-b pb-4">
-      <h5 className="text-ink-sub text-sm font-semibold">레시피 유형</h5>
+      <h5 className="text-ink-sub text-sm font-semibold">
+        {dict.filters.sectionRecipeType}
+      </h5>
       <div className="grid grid-cols-3 gap-3">
         {RECIPE_TYPES.map(({ value, badge }) => {
           const isSelected = selectedTypes.includes(value);
