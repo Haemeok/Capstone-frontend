@@ -1,5 +1,6 @@
 import type { Dictionary } from "../../types";
 import { aiRecipe } from "./aiRecipe";
+import { home } from "./home";
 import { ingredientDetail } from "./ingredientDetail";
 import { nav } from "./nav";
 import { recipeDetail } from "./recipeDetail";
@@ -16,4 +17,5 @@ export const ja: Dictionary = {
   ingredientDetail,
   aiRecipe,
   nav,
+  home,
 };

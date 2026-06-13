@@ -138,6 +138,15 @@ export type IngredientDetailDict = {
   popularRecipesTitle: string;
 };
 
+export type HomeDict = {
+  categoryTitle: string;
+  bannerError: string;
+  popularSectionTitle: string;
+  budgetSectionTitle: string;
+  youtubeBannerChip: string;
+  youtubeBannerTitle: string;
+};
+
 import type { AIModelId, DiningTier } from "@/shared/config/constants/aiModel";
 
 export type AiRecipeDict = {
@@ -267,4 +276,5 @@ export type Dictionary = {
   ingredientDetail: IngredientDetailDict;
   aiRecipe: AiRecipeDict;
   nav: NavDict;
+  home: HomeDict;
 };
