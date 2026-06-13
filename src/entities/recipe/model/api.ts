@@ -1,6 +1,7 @@
 import { api } from "@/shared/api/client";
 import { BaseQueryParams, PresignedUrlResponse } from "@/shared/api/types";
 import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
+import type { Locale } from "@/shared/i18n";
 import { FileInfoRequest } from "@/shared/types";
 
 import { RecipeHistoryResponse } from "@/entities/user/model/types";
@@ -59,10 +60,16 @@ export const getMyIngredientRecipes = async (
 // my-fridge 전용 API (V2 - totalElements/totalPages 없는 응답)
 export const getMyFridgeRecipes = async (
   sort: string = "createdAt,desc",
-  pageParam: number = 0
+  pageParam: number = 0,
+  lang: Locale = "ko"
 ): Promise<MyFridgePageResponse<MyFridgeRecipeItem>> => {
   return api.get(END_POINTS.MY_INGREDIENT_RECIPES, {
-    params: { sort, page: pageParam, size: PAGE_SIZE },
+    params: {
+      sort,
+      page: pageParam,
+      size: PAGE_SIZE,
+      ...(lang === "ko" ? {} : { lang }),
+    },
   });
 };
 

@@ -22,6 +22,7 @@ export const getIngredients = async ({
   isMine = false,
   isFridge = false,
   size = PAGE_SIZE,
+  lang = "ko",
 }: {
   category: string | null;
   q?: string;
@@ -30,6 +31,7 @@ export const getIngredients = async ({
   isMine: boolean;
   isFridge?: boolean;
   size?: number;
+  lang?: Locale;
 }) => {
   const baseParams: Partial<BaseQueryParams> = {
     page: pageParam,
@@ -43,6 +45,7 @@ export const getIngredients = async ({
         ]
       : null,
     q,
+    ...(lang === "ko" ? {} : { lang }),
   };
 
   const apiParams = buildParams(baseParams, optionalParams);

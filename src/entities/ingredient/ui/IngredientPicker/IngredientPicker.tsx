@@ -7,6 +7,7 @@ import { Search, X } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
+import { type Locale, useApiLocale } from "@/shared/i18n";
 import { cn, getNextPageParam } from "@/shared/lib/utils";
 import {
   Drawer,
@@ -62,6 +63,7 @@ const IngredientPicker = ({
     useIngredientSelection();
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
+  const locale = useApiLocale();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -77,15 +79,16 @@ const IngredientPicker = ({
       IngredientsApiResponse,
       Error,
       InfiniteData<IngredientsApiResponse>,
-      [string, string, string],
+      [string, string, string, Locale],
       number
     >({
-      queryKey: [queryConfig.keyBase, selectedCategory, searchQuery],
+      queryKey: [queryConfig.keyBase, selectedCategory, searchQuery, locale],
       queryFn: ({ pageParam = 0 }) =>
         getIngredients({
           ...queryConfig.getParams(selectedCategory),
           q: searchQuery,
           pageParam,
+          lang: locale,
         }),
       getNextPageParam,
       initialPageParam: 0,

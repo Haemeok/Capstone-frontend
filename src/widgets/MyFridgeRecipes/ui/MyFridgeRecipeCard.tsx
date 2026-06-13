@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Bookmark, Clock } from "lucide-react";
 import { motion } from "motion/react";
 
+import { useFridgeDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   generateUserGradient,
@@ -44,6 +45,7 @@ type MyFridgeRecipeCardProps = {
 
 const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
   const router = useRouter();
+  const dict = useFridgeDict();
 
   const handleCardClick = () => {
     triggerHaptic("Light");
@@ -127,7 +129,7 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
               <>
                 <AIGeneratedBadge />
                 <span className="text-ink-muted truncate text-[13px]">
-                  AI 생성
+                  {dict.aiGenerated}
                 </span>
               </>
             )}

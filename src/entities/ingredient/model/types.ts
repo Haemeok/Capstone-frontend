@@ -37,6 +37,7 @@ export type IngredientsApiResponse = PageResponse<IngredientItem>;
 
 export type IngredientQueryParams = BaseQueryParams & {
   category?: string | null;
+  lang?: string;
 };
 
 export type IngredientMutationContext = {

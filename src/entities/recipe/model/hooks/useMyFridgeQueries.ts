@@ -1,4 +1,5 @@
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { useChromeLocale } from "@/shared/i18n";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getMyFridgeRecipes, getMyIngredientRecipes } from "../api";
@@ -44,6 +45,8 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
 
 // my-fridge V2 훅 (totalElements/totalPages 없는 응답)
 export const useMyFridgeRecipesInfiniteQuery = (sort?: string) => {
+  const locale = useChromeLocale();
+
   const getMyFridgeNextPageParam = (
     lastPage: MyFridgePageResponse<MyFridgeRecipeItem>
   ) => {
@@ -60,17 +63,13 @@ export const useMyFridgeRecipesInfiniteQuery = (sort?: string) => {
     error,
     isPending,
   } = useInfiniteScroll({
-    queryKey: RECIPE_QUERY_KEYS.myFridge(sort),
-    queryFn: ({ pageParam }) => getMyFridgeRecipes(sort, pageParam),
+    queryKey: [...RECIPE_QUERY_KEYS.myFridge(sort), locale],
+    queryFn: ({ pageParam }) => getMyFridgeRecipes(sort, pageParam, locale),
     getNextPageParam: getMyFridgeNextPageParam,
     initialPageParam: 0,
   });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
-  const lastPageMessage =
-    recipes.length === 0
-      ? "가능한 레시피가 없습니다."
-      : "더 많은 레시피를 찾아보세요.";
   const noResults = recipes.length === 0 && !isPending;
 
   return {
@@ -81,7 +80,6 @@ export const useMyFridgeRecipesInfiniteQuery = (sort?: string) => {
     fetchNextPage,
     error,
     noResults,
-    lastPageMessage,
     isPending,
   };
 };

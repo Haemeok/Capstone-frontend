@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Check, Triangle } from "lucide-react";
 
+import { format, plural, useFridgeDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
@@ -18,6 +19,7 @@ const VISIBLE_COUNT = 3;
 const FridgeMatchSummary = ({
   missingIngredients,
 }: FridgeMatchSummaryProps) => {
+  const dict = useFridgeDict();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleExpandClick = (e: React.MouseEvent) => {
@@ -30,7 +32,7 @@ const FridgeMatchSummary = ({
     return (
       <div className="text-olive-light flex items-center gap-1">
         <Check size={14} strokeWidth={2.5} aria-hidden />
-        <span className="text-xs font-bold">냉장고 재료로 바로 완성</span>
+        <span className="text-xs font-bold">{dict.matchReady}</span>
       </div>
     );
   }
@@ -50,7 +52,11 @@ const FridgeMatchSummary = ({
           className="fill-amber-500"
           aria-hidden
         />
-        <span className="text-xs font-bold">{missingNames.length}개 필요</span>
+        <span className="text-xs font-bold">
+          {format(plural(missingNames.length, dict.matchMissing), {
+            count: missingNames.length,
+          })}
+        </span>
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5">
@@ -80,7 +86,7 @@ const FridgeMatchSummary = ({
             "text-ink-muted bg-gray-100 text-xs font-medium transition-colors hover:bg-gray-200"
           )}
         >
-          접기
+          {dict.collapse}
         </button>
       )}
     </div>

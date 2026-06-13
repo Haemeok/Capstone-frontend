@@ -1,6 +1,7 @@
 import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { useApiLocale } from "@/shared/i18n";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getIngredients } from "@/entities/ingredient";
@@ -15,6 +16,7 @@ export const useInfiniteIngredients = ({
   category,
   sort,
 }: UseInfiniteIngredientsParams) => {
+  const locale = useApiLocale();
   const { data, error, hasNextPage, isFetchingNextPage, isPending, ref } =
     useInfiniteScroll<
       IngredientsApiResponse,
@@ -30,6 +32,7 @@ export const useInfiniteIngredients = ({
           pageParam,
           sort,
           isMine: true,
+          lang: locale,
         }),
       getNextPageParam: getNextPageParam,
       initialPageParam: 0,

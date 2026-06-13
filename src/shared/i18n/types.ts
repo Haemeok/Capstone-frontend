@@ -147,6 +147,23 @@ export type HomeDict = {
   youtubeBannerTitle: string;
 };
 
+export type FridgeDict = {
+  pageTitle: string;
+  pageSubtitle: string;
+  sortLabel: string;
+  lastPageEmpty: string;
+  lastPageMore: string;
+  emptyHeading: string;
+  emptyBodyLine1: string;
+  emptyBodyLine2: string;
+  emptyCta: string;
+  matchReady: string;
+  matchMissing: Plural;
+  collapse: string;
+  aiGenerated: string;
+  metaTitle: string;
+};
+
 import type { ContentPageId } from "@/shared/config/constants/content-pages";
 import type { NutritionThemeKey } from "@/shared/config/constants/recipe";
 
@@ -290,6 +307,73 @@ export type AiRecipeDict = {
   };
 };
 
+export type UserPagesDict = {
+  profile: {
+    shareTitle: string;
+    shareText: string;
+    shareAria: string;
+    loginAction: string;
+    createRecipeAction: string;
+    calendarLoadError: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    edit: {
+      heading: string;
+      cancel: string;
+      submit: string;
+      submitting: string;
+      nameLabel: string;
+      introLabel: string;
+      introPlaceholder: string;
+      nicknameRequired: string;
+      nicknameTooLong: string;
+      introTooLong: string;
+      imageFormatError: string;
+      updateError: string;
+    };
+    metadata: {
+      titleSuffix: string;
+      fallbackDescription: string;
+      introFallbackTemplate: string;
+    };
+  };
+  recipeBooks: {
+    heading: string;
+    listLoadError: string;
+    boundaryError: string;
+    cardMenuAria: string;
+    rename: string;
+    delete: string;
+    savedCount: string;
+    createAria: string;
+    createLabel: string;
+  };
+  calendar: {
+    timelineHeading: string;
+    timelineEmpty: string;
+    detailAction: string;
+    invalidAccess: string;
+    recordHeadingSuffix: string;
+    savingsHeading: string;
+    nutritionHeading: string;
+    totalCaloriesLabel: string;
+    recommendedRatioPrefix: string;
+    carbs: string;
+    protein: string;
+    fat: string;
+    sodium: string;
+    sodiumStatus: Record<
+      "good" | "normal" | "warning",
+      { label: string; description: string }
+    >;
+    recipeListHeading: string;
+    recipeListEmpty: string;
+    daySummaryEmpty: string;
+    daySummaryRecipeCount: string;
+    daySummarySavedSuffix: string;
+  };
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -301,5 +385,7 @@ export type Dictionary = {
   aiRecipe: AiRecipeDict;
   nav: NavDict;
   home: HomeDict;
+  fridge: FridgeDict;
   searchDiscovery: SearchDiscoveryDict;
+  userPages: UserPagesDict;
 };

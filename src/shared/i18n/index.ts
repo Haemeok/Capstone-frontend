@@ -6,6 +6,16 @@ export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
 export { getStoredLocale, setStoredLocale } from "./preferredLocale";
 export { resolveChromeLocale } from "./resolveChromeLocale";
-export type { Dictionary, Locale, NavDict, Plural, YoutubeDict } from "./types";
+export { resolveLocaleFromPath } from "./resolveLocaleFromPath";
+export type {
+  Dictionary,
+  FridgeDict,
+  Locale,
+  NavDict,
+  Plural,
+  YoutubeDict,
+} from "./types";
 export { LOCALES } from "./types";
+export { useApiLocale } from "./useApiLocale";
 export { useChromeDict, useChromeLocale } from "./useChromeDict";
+export { useFridgeDict } from "./useFridgeDict";
