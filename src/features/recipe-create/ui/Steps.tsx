@@ -5,12 +5,14 @@ import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 import { Plus } from "lucide-react";
 
+import { useRecipeFormDict } from "@/shared/i18n";
+
 import { RecipeFormValues } from "../model/config";
-import { FIELD_LABELS } from "../model/constants";
 import StepItem from "./StepItem";
 
 const Steps = () => {
   const { control } = useFormContext<RecipeFormValues>();
+  const { labels } = useRecipeFormDict();
 
   const {
     fields: stepFields,
@@ -51,7 +53,7 @@ const Steps = () => {
 
   return (
     <div className="mb-8">
-      <h2 className="text-ink text-xl font-bold">{FIELD_LABELS.steps}</h2>
+      <h2 className="text-ink text-xl font-bold">{labels.steps}</h2>
 
       <div className="space-y-6">
         {stepFields.map((step, index) => {

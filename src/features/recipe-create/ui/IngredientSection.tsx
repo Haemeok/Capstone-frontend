@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { Plus } from "lucide-react";
 
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
+import { useRecipeFormDict } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 
 import { IngredientPayload } from "@/entities/ingredient";
@@ -23,8 +24,6 @@ const IngredientSelector = dynamic(() => import("./IngredientSelector"), {
 }) as unknown as typeof OriginalIngredientSelector;
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 
-import { FIELD_LABELS } from "../model/constants";
-
 type IngredientSectionProps = {
   onRemoveIngredientCallback: (ingredientName: string) => void;
 };
@@ -39,6 +38,7 @@ const IngredientSection = ({
   } = useFormContext<RecipeFormValues>();
 
   const [isOpen, setIsOpen] = useState(false);
+  const { labels } = useRecipeFormDict();
 
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -81,9 +81,7 @@ const IngredientSection = ({
 
   return (
     <div className="mb-4">
-      <h2 className="text-ink-sub text-xl font-bold">
-        {FIELD_LABELS.ingredients}
-      </h2>
+      <h2 className="text-ink-sub text-xl font-bold">{labels.ingredients}</h2>
 
       <CookingUnitTooltip />
 

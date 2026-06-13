@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { invalidateCache } from "@/shared/config/cache";
+import { useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useRecipeDetailQuery } from "@/entities/recipe";
@@ -14,8 +15,8 @@ import { useRecipeDetailQuery } from "@/entities/recipe";
 import { useToastStore } from "@/widgets/Toast";
 
 import {
+  buildRecipeFormSchema,
   IngredientPayload,
-  recipeFormSchema,
   RecipeFormValues,
 } from "../config";
 import { useSubmitRecipe } from "./useSubmitRecipe";
@@ -24,6 +25,9 @@ export const useRecipeEditForm = (recipeId: string) => {
   const router = useRouter();
   const { addToast } = useToastStore();
   const { submitRecipe, isPending, error } = useSubmitRecipe();
+  const { validation } = useRecipeFormDict();
+
+  const schema = useMemo(() => buildRecipeFormSchema(validation), [validation]);
 
   const { recipeData: recipe, isSuccess: isRecipeLoaded } =
     useRecipeDetailQuery(recipeId);
@@ -64,7 +68,7 @@ export const useRecipeEditForm = (recipeId: string) => {
   );
 
   const methods = useForm({
-    resolver: zodResolver(recipeFormSchema),
+    resolver: zodResolver(schema),
     mode: "onChange",
   });
 

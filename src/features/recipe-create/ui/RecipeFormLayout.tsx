@@ -1,11 +1,13 @@
+"use client";
+
 import { useFormContext } from "react-hook-form";
 
 import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
+import { useRecipeFormDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
 
 import type { RecipeFormValues } from "@/features/recipe-create/model/config";
-import { FIELD_LABELS } from "@/features/recipe-create/model/constants";
 import CookingToolsInput from "@/features/recipe-create/ui/CookingToolsInput";
 import Description from "@/features/recipe-create/ui/Description";
 import IngredientSection from "@/features/recipe-create/ui/IngredientSection";
@@ -37,6 +39,7 @@ const RecipeFormLayout = ({
     register,
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
+  const { labels } = useRecipeFormDict();
 
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
@@ -53,7 +56,7 @@ const RecipeFormLayout = ({
           <div className="mb-4 flex items-center justify-center gap-6">
             <div className="flex flex-col items-center gap-2">
               <label htmlFor="dishType" className="text-ink-sub font-medium">
-                {FIELD_LABELS.dishType}
+                {labels.dishType}
               </label>
               <select
                 id="dishType"
@@ -86,7 +89,7 @@ const RecipeFormLayout = ({
 
             <div className="flex flex-col items-center gap-2">
               <label htmlFor="cookingTime" className="text-ink-sub font-medium">
-                {FIELD_LABELS.cookingTime} (분)
+                {labels.cookingTime} (분)
               </label>
               <input
                 id="cookingTime"

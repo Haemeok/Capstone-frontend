@@ -1,15 +1,18 @@
+"use client";
+
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
 import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
+import { useRecipeFormDict } from "@/shared/i18n";
 
 import { cn } from "@/lib/utils";
 
 import { RecipeFormValues } from "../model/config";
-import { FIELD_LABELS } from "../model/constants";
 
 const TagSection = () => {
   const { control, setValue } = useFormContext<RecipeFormValues>();
+  const { labels } = useRecipeFormDict();
 
   const tags = useWatch({ control, name: "tags", defaultValue: [] }) || [];
 
@@ -22,7 +25,7 @@ const TagSection = () => {
 
   return (
     <div className="mt-6 mb-4">
-      <h2 className="text-ink-sub text-xl font-bold">{FIELD_LABELS.tags}</h2>
+      <h2 className="text-ink-sub text-xl font-bold">{labels.tags}</h2>
       <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-sm">
         {TAG_DEFINITIONS.map((tag) => {
           const tagName = `${tag.emoji} ${tag.name}`;

@@ -1,9 +1,11 @@
-import React from "react";
+"use client";
 
+import React, { useMemo } from "react";
+
+import { useRecipeFormDict } from "@/shared/i18n";
 import { FormProgressButton } from "@/shared/ui/form/FormProgressButton";
 
-import { recipeFormSchema, RecipeFormValues } from "../model/config";
-import { FIELD_LABELS } from "../model/constants";
+import { buildRecipeFormSchema, RecipeFormValues } from "../model/config";
 
 type RecipeProgressButtonProps = {
   isLoading: boolean;
@@ -14,12 +16,16 @@ const RecipeProgressButton = ({
   isLoading,
   isEdit,
 }: RecipeProgressButtonProps) => {
+  const { labels, validation } = useRecipeFormDict();
+
+  const schema = useMemo(() => buildRecipeFormSchema(validation), [validation]);
+
   return (
     <FormProgressButton<RecipeFormValues>
-      schema={recipeFormSchema}
+      schema={schema}
       isLoading={isLoading}
       text={isEdit ? "레시피 수정하기" : "레시피 등록하기"}
-      fieldLabels={FIELD_LABELS}
+      fieldLabels={labels}
     />
   );
 };

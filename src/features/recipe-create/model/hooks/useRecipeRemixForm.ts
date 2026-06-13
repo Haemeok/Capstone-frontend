@@ -5,17 +5,22 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useRecipeFormDict } from "@/shared/i18n";
+
 import { useRecipeDetailQuery } from "@/entities/recipe";
 
 import {
+  buildRecipeFormSchema,
   IngredientPayload,
-  recipeFormSchema,
   RecipeFormValues,
 } from "../config";
 
 export const useRecipeRemixForm = (recipeId: string) => {
   const { recipeData: recipe, isSuccess: isRecipeLoaded } =
     useRecipeDetailQuery(recipeId);
+  const { validation } = useRecipeFormDict();
+
+  const schema = useMemo(() => buildRecipeFormSchema(validation), [validation]);
 
   const originalIngredientsRef = useRef<IngredientPayload[]>([]);
 
@@ -53,7 +58,7 @@ export const useRecipeRemixForm = (recipeId: string) => {
   );
 
   const methods = useForm({
-    resolver: zodResolver(recipeFormSchema),
+    resolver: zodResolver(schema),
     mode: "onChange",
   });
 

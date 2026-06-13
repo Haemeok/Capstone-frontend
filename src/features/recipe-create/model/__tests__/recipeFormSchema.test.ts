@@ -1,5 +1,11 @@
-import { recipeFormSchema, RecipeFormValues } from "../config";
-import { MSG } from "../messages";
+import { format } from "@/shared/i18n";
+import { recipeFormMessages } from "@/shared/i18n/recipeFormMessages";
+
+import { buildRecipeFormSchema, RecipeFormValues } from "../config";
+import { INGREDIENTS } from "../constants";
+
+const koValidation = recipeFormMessages.ko.validation;
+const recipeFormSchema = buildRecipeFormSchema(koValidation);
 
 const baseIngredient = {
   ingredientId: "i1",
@@ -65,9 +71,9 @@ describe("recipeFormSchema – ingredient row", () => {
 
   it("requires quantity", () => {
     const issues = getIngredientIssues({ ...baseIngredient, quantity: "" });
-    expect(issues.some((i) => i.message === MSG.DESCRIPTION.QUANTITY)).toBe(
-      true
-    );
+    expect(
+      issues.some((i) => i.message === koValidation.quantityRequired)
+    ).toBe(true);
   });
 });
 
@@ -98,7 +104,9 @@ describe("recipeFormSchema – '약간' quantity exempts unit", () => {
       quantity: "1",
       unit: "",
     });
-    expect(issues.some((i) => i.message === MSG.DESCRIPTION.UNIT)).toBe(true);
+    expect(issues.some((i) => i.message === koValidation.unitRequired)).toBe(
+      true
+    );
   });
 });
 
@@ -133,7 +141,11 @@ describe("recipeFormSchema – ingredients array", () => {
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(
-        result.error.issues.some((i) => i.message === MSG.INGREDIENTS.MIN)
+        result.error.issues.some(
+          (i) =>
+            i.message ===
+            format(koValidation.ingredientsMin, { min: INGREDIENTS.MIN })
+        )
       ).toBe(true);
     }
   });

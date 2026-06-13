@@ -1,10 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
@@ -12,8 +14,8 @@ import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitR
 import { useToastStore } from "@/widgets/Toast";
 
 import {
+  buildRecipeFormSchema,
   RECIPE_FORM_DEFAULT_VALUES,
-  recipeFormSchema,
   RecipeFormValues,
 } from "../config";
 
@@ -21,9 +23,12 @@ export const useRecipeCreationForm = () => {
   const router = useRouter();
   const { addToast } = useToastStore();
   const { submitRecipe, isPending, error } = useSubmitRecipe();
+  const { validation } = useRecipeFormDict();
+
+  const schema = useMemo(() => buildRecipeFormSchema(validation), [validation]);
 
   const methods = useForm({
-    resolver: zodResolver(recipeFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: RECIPE_FORM_DEFAULT_VALUES,
     mode: "onChange",
   });
