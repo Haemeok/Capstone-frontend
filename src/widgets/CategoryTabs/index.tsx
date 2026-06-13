@@ -34,8 +34,7 @@ const CategoryTabs = ({ title }: CategoryTabsProps) => {
           {TAG_ITEMS.map((item, index) => (
             <CarouselItem key={item.id} className="basis-[200px]">
               <CateGoryItem
-                id={item.id}
-                name={item.name}
+                code={item.code}
                 imageUrl={item.imageUrl}
                 isLcpCandidate={index === 0}
               />
