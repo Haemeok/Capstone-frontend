@@ -1,99 +1,102 @@
-// src/app/admin/card-news/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
+import { getRecipe } from "@/entities/recipe/model/api";
 import { Recipe } from "@/entities/recipe/model/types";
 
 import { AdminSearchFilters } from "./components/AdminSearchFilters";
 import { CardEditor } from "./components/CardEditor";
-import { RecipeSelector } from "./components/RecipeSelector";
-
-type Step = "filter" | "recipe" | "editor";
+import { RecipeResults } from "./components/RecipeResults";
 
 type SelectedRecipes = {
   thumbnail: Recipe;
   cards: Recipe[];
 };
 
-const STEP_LABELS: Record<Step, string> = {
-  filter: "1. 필터 조합 선택",
-  recipe: "2. 레시피 선택",
-  editor: "3. 카드 편집 & 저장",
-};
-
 const CardNewsPage = () => {
-  const [step, setStep] = useState<Step>("filter");
-  const [selectedFilter, setSelectedFilter] = useState<Record<string, unknown>>(
-    {}
-  );
-  const [selectedRecipes, setSelectedRecipes] =
-    useState<SelectedRecipes | null>(null);
+  const [filter, setFilter] = useState<Record<string, unknown>>({});
+  const [thumbnailId, setThumbnailId] = useState<string | null>(null);
+  const [cardIds, setCardIds] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState<SelectedRecipes | null>(null);
+  const [loadingSelection, setLoadingSelection] = useState(false);
 
-  const handleSearch = (params: Record<string, unknown>) => {
-    setSelectedFilter(params);
-    setStep("recipe");
-  };
+  const handleToggleCard = useCallback((id: string) => {
+    setCardIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
 
-  const handleRecipesSelected = (thumbnail: Recipe, cards: Recipe[]) => {
-    setSelectedRecipes({ thumbnail, cards });
-    setStep("editor");
-  };
-
-  const handleBack = () => {
-    if (step === "recipe") {
-      setStep("filter");
-      setSelectedFilter({});
-    } else if (step === "editor") {
-      setStep("recipe");
-      setSelectedRecipes(null);
+  const handleLoadEditor = async () => {
+    if (!thumbnailId || cardIds.size === 0) return;
+    setLoadingSelection(true);
+    try {
+      const allIds = [
+        thumbnailId,
+        ...Array.from(cardIds).filter((id) => id !== thumbnailId),
+      ];
+      const full = await Promise.all(allIds.map((id) => getRecipe(id)));
+      setSelected({ thumbnail: full[0], cards: full.slice(1) });
+    } catch (err) {
+      console.error("레시피 상세 조회 실패:", err);
+    } finally {
+      setLoadingSelection(false);
     }
   };
 
+  const canLoad = !!thumbnailId && cardIds.size > 0;
+
   return (
     <div className="mx-auto min-h-screen max-w-6xl bg-white p-6">
-      <h1 className="mb-2 text-2xl font-bold text-gray-900">카드뉴스 생성기</h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-900">카드뉴스 생성기</h1>
 
-      {/* 스텝 인디케이터 */}
-      <div className="mb-6 flex gap-4">
-        {(Object.entries(STEP_LABELS) as [Step, string][]).map(
-          ([key, label]) => (
-            <div
-              key={key}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-                step === key
-                  ? "bg-olive-light text-white"
-                  : "bg-gray-100 text-gray-400"
-              }`}
+      <section className="mb-8">
+        <AdminSearchFilters
+          onSearch={(params) => {
+            setFilter(params);
+            setThumbnailId(null);
+            setCardIds(new Set());
+            setSelected(null);
+          }}
+        />
+      </section>
+
+      {Object.keys(filter).length > 0 && (
+        <section className="mb-8">
+          <div className="mb-3 flex items-center gap-4 text-sm">
+            <span className="text-gray-600">
+              썸네일: {thumbnailId ? "✓ 선택됨" : "미선택"}
+            </span>
+            <span className="text-gray-600">카드: {cardIds.size}개 선택</span>
+            <button
+              onClick={handleLoadEditor}
+              disabled={!canLoad || loadingSelection}
+              className="bg-olive-light ml-auto cursor-pointer rounded-xl px-4 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
             >
-              {label}
-            </div>
-          )
-        )}
-      </div>
-
-      {step !== "filter" && (
-        <button
-          onClick={handleBack}
-          className="mb-4 text-sm text-gray-500 hover:text-gray-700"
-        >
-          ← 이전 단계
-        </button>
+              {loadingSelection ? "로딩..." : "선택 확정 → 에디터"}
+            </button>
+          </div>
+          <RecipeResults
+            filter={filter}
+            thumbnailId={thumbnailId}
+            cardIds={cardIds}
+            onSelectThumbnail={setThumbnailId}
+            onToggleCard={handleToggleCard}
+          />
+        </section>
       )}
 
-      {step === "filter" && <AdminSearchFilters onSearch={handleSearch} />}
-      {step === "recipe" && (
-        <RecipeSelector
-          filter={selectedFilter}
-          onComplete={handleRecipesSelected}
-        />
-      )}
-      {step === "editor" && selectedRecipes && (
-        <CardEditor
-          filter={selectedFilter}
-          thumbnail={selectedRecipes.thumbnail}
-          recipes={selectedRecipes.cards}
-        />
+      {selected && (
+        <section>
+          <CardEditor
+            filter={filter}
+            thumbnail={selected.thumbnail}
+            recipes={selected.cards}
+          />
+        </section>
       )}
     </div>
   );
