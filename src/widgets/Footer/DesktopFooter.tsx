@@ -5,22 +5,23 @@ import Link from "next/link";
 
 import { ChevronDown } from "lucide-react";
 
+import { useChromeDict } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 
 const FOOTER_LINKS = {
   service: [
-    { label: "서비스 이용약관", href: "/terms" },
-    { label: "개인정보 처리방침", href: "/privacy" },
+    { labelKey: "terms", href: "/terms" },
+    { labelKey: "privacy", href: "/privacy" },
   ],
   support: [
     {
-      label: "오류제보",
+      labelKey: "reportError",
       href: "https://slashpage.com/recipio/943zqpmqxn63g2wnvy87",
       external: true,
     },
-    { label: "광고/제휴 문의", href: "/contact" },
+    { labelKey: "adInquiry", href: "/contact" },
     {
-      label: "저작권 신고 및 게시 중단 요청",
+      labelKey: "copyrightReport",
       href: "https://docs.google.com/forms/d/e/1FAIpQLSdVUjr7LsnvG-WVG46cBhQOOUJN82irzTaKVS2Uthl6qKZgVg/viewform?usp=publish-editor",
       external: true,
     },
@@ -28,14 +29,15 @@ const FOOTER_LINKS = {
 } as const;
 
 const INFO_ROWS = [
-  { label: "대표", value: "도원진" },
-  { label: "고객센터", value: "recipio.cs@gmail.com" },
-  { label: "광고 문의", value: "recipio.kr@gmail.com" },
+  { labelKey: "ceoLabel", value: "도원진" },
+  { labelKey: "csLabel", value: "recipio.cs@gmail.com" },
+  { labelKey: "adLabel", value: "recipio.kr@gmail.com" },
 ] as const;
 
 const DesktopFooter = () => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const infoPanelId = useId();
+  const t = useChromeDict();
 
   return (
     <footer className="mt-16 hidden w-full border-t border-gray-200 bg-gray-50 md:block">
@@ -48,7 +50,7 @@ const DesktopFooter = () => {
                 type="button"
                 aria-expanded={isInfoOpen}
                 aria-controls={infoPanelId}
-                aria-label="사업자 정보 펼치기"
+                aria-label={t.footer.businessInfoToggleAria}
                 onClick={() => setIsInfoOpen((prev) => !prev)}
                 className="hover:text-ink-sub text-gray-400 transition-colors"
               >
@@ -58,10 +60,7 @@ const DesktopFooter = () => {
                 />
               </button>
             </div>
-            <p className="text-ink-sub max-w-xl text-sm">
-              AI 기반 레시피 추천 서비스로, 냉장고 재료만으로 맛있는 요리를
-              만들어보세요.
-            </p>
+            <p className="text-ink-sub max-w-xl text-sm">{t.footer.tagline}</p>
 
             {isInfoOpen && (
               <div
@@ -69,8 +68,8 @@ const DesktopFooter = () => {
                 className="text-ink-muted mt-1 flex flex-col gap-2 text-xs"
               >
                 {INFO_ROWS.map((row) => (
-                  <div key={row.label} className="flex items-center gap-2">
-                    <span>{row.label}</span>
+                  <div key={row.labelKey} className="flex items-center gap-2">
+                    <span>{t.footer[row.labelKey]}</span>
                     <span>|</span>
                     <span>{row.value}</span>
                   </div>
@@ -81,26 +80,28 @@ const DesktopFooter = () => {
 
           <div className="flex gap-12">
             <div className="flex flex-col gap-3">
-              <h4 className="text-ink text-sm font-semibold">서비스</h4>
+              <h4 className="text-ink text-sm font-semibold">
+                {t.footer.sectionService}
+              </h4>
               <div className="flex flex-col gap-2">
                 {FOOTER_LINKS.service.map((link) =>
                   "external" in link && link.external ? (
                     <a
-                      key={link.label}
+                      key={link.labelKey}
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
-                      {link.label}
+                      {t.footer[link.labelKey]}
                     </a>
                   ) : (
                     <Link
-                      key={link.label}
+                      key={link.labelKey}
                       href={link.href}
                       className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
-                      {link.label}
+                      {t.footer[link.labelKey]}
                     </Link>
                   )
                 )}
@@ -108,26 +109,28 @@ const DesktopFooter = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <h4 className="text-ink text-sm font-semibold">고객지원</h4>
+              <h4 className="text-ink text-sm font-semibold">
+                {t.footer.sectionSupport}
+              </h4>
               <div className="flex flex-col gap-2">
                 {FOOTER_LINKS.support.map((link) =>
                   "external" in link && link.external ? (
                     <a
-                      key={link.label}
+                      key={link.labelKey}
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
-                      {link.label}
+                      {t.footer[link.labelKey]}
                     </a>
                   ) : (
                     <Link
-                      key={link.label}
+                      key={link.labelKey}
                       href={link.href}
                       className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
-                      {link.label}
+                      {t.footer[link.labelKey]}
                     </Link>
                   )
                 )}
