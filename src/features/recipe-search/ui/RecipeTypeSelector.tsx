@@ -1,5 +1,6 @@
 "use client";
 
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { cn } from "@/shared/lib/utils";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 import UserRecipeBadge from "@/shared/ui/badge/UserRecipeBadge";
@@ -13,17 +14,14 @@ type RecipeTypeSelectorProps = {
 const RECIPE_TYPES = [
   {
     value: "USER",
-    label: "사용자 레시피",
     badge: <UserRecipeBadge className="bg-gray-200" />,
   },
   {
     value: "AI",
-    label: "AI 레시피",
     badge: <AIGeneratedBadge />,
   },
   {
     value: "YOUTUBE",
-    label: "유튜브 레시피",
     badge: <YouTubeIconBadge />,
   },
 ] as const;
@@ -32,6 +30,8 @@ export const RecipeTypeSelector = ({
   selectedTypes,
   onTypesChange,
 }: RecipeTypeSelectorProps) => {
+  const { label } = useTaxonomy();
+
   const handleTypeToggle = (type: string) => {
     const newTypes = selectedTypes.includes(type)
       ? selectedTypes.filter((t) => t !== type)
@@ -44,7 +44,7 @@ export const RecipeTypeSelector = ({
     <div className="space-y-3 border-b pb-4">
       <h5 className="text-ink-sub text-sm font-semibold">레시피 유형</h5>
       <div className="grid grid-cols-3 gap-3">
-        {RECIPE_TYPES.map(({ value, label, badge }) => {
+        {RECIPE_TYPES.map(({ value, badge }) => {
           const isSelected = selectedTypes.includes(value);
 
           return (
@@ -60,7 +60,7 @@ export const RecipeTypeSelector = ({
             >
               {badge}
               <span className="text-ink-sub text-center text-xs leading-tight font-medium">
-                {label}
+                {label(value, "recipeType")}
               </span>
             </button>
           );
