@@ -30,6 +30,7 @@ export const RecipeResults = ({
       queryFn: ({ pageParam }) =>
         getRecipeItems({
           ...filter,
+          sort: "likeCount,desc",
           page: pageParam,
           size: 20,
         } as RecipeQueryParams),
