@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
-import { DictionaryProvider, getDictionary } from "@/shared/i18n";
+import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -41,6 +41,7 @@ const CONCEPT = "INGREDIENT_FOCUS" as const;
 
 const IngredientRecipePage = () => {
   const router = useRouter();
+  const t = useT();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -83,7 +84,10 @@ const IngredientRecipePage = () => {
       servings: data.servings,
     });
 
-    submit(request, `${data.ingredients.length}개 재료 / ${data.dishType}`);
+    submit(
+      request,
+      `${data.ingredients.length}${t.aiRecipe.ingredient.submitToastSuffix} / ${data.dishType}`
+    );
   };
 
   return (
@@ -105,7 +109,9 @@ const IngredientRecipePage = () => {
                 className="text-ink-sub hover:text-ink hidden items-center gap-2 transition-colors md:flex"
               >
                 <ArrowLeftIcon size={20} />
-                <span className="text-sm font-medium">AI 다시 선택하기</span>
+                <span className="text-sm font-medium">
+                  {t.aiRecipe.backToModelSelect}
+                </span>
               </button>
             </div>
 
@@ -144,12 +150,13 @@ const IngredientRecipePage = () => {
                 open={isDrawerOpen}
                 onOpenChange={setIsDrawerOpen}
                 categories={INGREDIENT_CATEGORIES_NEW_RECIPE}
-                initialCategory="전체"
+                initialCategory={t.aiRecipe.ingredient.pickerInitialCategory}
                 queryConfig={{
                   keyBase: "drawerIngredients",
                   getParams: (category) => ({
                     category,
-                    isMine: category === "나의 재료",
+                    isMine:
+                      category === t.aiRecipe.ingredient.pickerMineCategory,
                   }),
                 }}
                 isAlreadyAdded={(ingredient) =>
@@ -184,11 +191,13 @@ const IngredientRecipePage = () => {
   );
 };
 
+const koDict = getDictionary("ko");
+
 const IngredientRecipePageWithErrorBoundary = () => (
-  <DictionaryProvider dict={getDictionary("ko")}>
+  <DictionaryProvider dict={koDict}>
     <ErrorBoundary
       fallback={
-        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
+        <SectionErrorFallback message={koDict.aiRecipe.errorFallback} />
       }
     >
       <IngredientRecipePage />

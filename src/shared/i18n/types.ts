@@ -184,6 +184,7 @@ export type AiRecipeDict = {
   ingredient: {
     pickerInitialCategory: string;
     pickerMineCategory: string;
+    submitToastSuffix: string;
   };
   nutrition: {
     pageHeading: string;

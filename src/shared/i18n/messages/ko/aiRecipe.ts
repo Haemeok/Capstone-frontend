@@ -91,6 +91,7 @@ export const aiRecipe: AiRecipeDict = {
   ingredient: {
     pickerInitialCategory: "전체",
     pickerMineCategory: "나의 재료",
+    submitToastSuffix: "개 재료",
   },
   nutrition: {
     pageHeading: "영양 밸런스",
