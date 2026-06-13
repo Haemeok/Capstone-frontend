@@ -7,6 +7,7 @@ import { ingredientDetail } from "./ingredientDetail";
 import { nav } from "./nav";
 import { recipeCreate } from "./recipeCreate";
 import { recipeDetail } from "./recipeDetail";
+import { recipeForm } from "./recipeForm";
 import { errors, meta, notFound, search } from "./search";
 import { searchDiscovery } from "./searchDiscovery";
 import { taxonomy } from "./taxonomy";
@@ -28,6 +29,7 @@ export const ko: Dictionary = {
   searchDiscovery,
   userPages,
   recipeCreate,
+  recipeForm,
   taxonomy,
   category,
 };

@@ -425,6 +425,38 @@ export type TaxonomyDict = {
   };
 };
 
+export type RecipeFormDict = {
+  labels: Record<
+    | "title"
+    | "image"
+    | "ingredients"
+    | "cookingTime"
+    | "servings"
+    | "dishType"
+    | "description"
+    | "steps"
+    | "cookingTools"
+    | "tags",
+    string
+  >;
+  validation: {
+    titleMin: string;
+    titleMax: string;
+    imageRequired: string;
+    imageType: string;
+    imageSize: string;
+    servingsMin: string;
+    cookingTimeMin: string;
+    descriptionMin: string;
+    quantityRequired: string;
+    unitRequired: string;
+    ingredientsMin: string;
+    stepsMin: string;
+    instructionRequired: string;
+    categoryRequired: string;
+  };
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -440,6 +472,7 @@ export type Dictionary = {
   searchDiscovery: SearchDiscoveryDict;
   userPages: UserPagesDict;
   recipeCreate: RecipeCreateDict;
+  recipeForm: RecipeFormDict;
   taxonomy: TaxonomyDict;
   category: CategoryDict;
 };
