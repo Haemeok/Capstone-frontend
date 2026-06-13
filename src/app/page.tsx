@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import { HomeAnchorAdSlot, HomeHeaderAnchorAdSlot } from "@/shared/adsense";
+import { getDictionary } from "@/shared/i18n";
 import { homeMetadata } from "@/shared/lib/metadata";
 import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
 import { Container } from "@/shared/ui/Container";
@@ -20,6 +21,8 @@ import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 export const metadata = homeMetadata;
 
 const HomePage = async () => {
+  const dict = getDictionary("ko");
+
   const [staticPopularRecipes, staticBudgetRecipes] = await Promise.all([
     getStaticRecipesOnServer({
       period: "weekly",
@@ -50,12 +53,10 @@ const HomePage = async () => {
         <div className="text-ink flex flex-col items-center justify-center bg-white">
           <HomeHeaderAnchorAdSlot className="my-2" />
 
-          <CategoryTabs title="카테고리" />
+          <CategoryTabs title={dict.home.categoryTitle} />
 
           <ErrorBoundary
-            fallback={
-              <SectionErrorFallback message="배너를 불러올 수 없어요" />
-            }
+            fallback={<SectionErrorFallback message={dict.home.bannerError} />}
           >
             <HomeBannerCarousel slides={HOME_BANNER_SLIDES} />
           </ErrorBoundary>
@@ -63,7 +64,7 @@ const HomePage = async () => {
           <HomeAnchorAdSlot className="my-2" />
 
           <RecipeSlideWithErrorBoundary
-            title="주간 인기 레시피"
+            title={dict.home.popularSectionTitle}
             queryKey="popular-recipes"
             period="weekly"
             isStatic
@@ -71,7 +72,7 @@ const HomePage = async () => {
           />
 
           <RecipeSlideWithErrorBoundary
-            title="만원 이하 가성비 레시피"
+            title={dict.home.budgetSectionTitle}
             queryKey="budget-recipes"
             maxCost={10000}
             isStatic
