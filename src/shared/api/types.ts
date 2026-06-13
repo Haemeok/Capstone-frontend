@@ -57,6 +57,7 @@ export type BaseQueryParams = {
   size: number;
   sort: string;
   q?: string;
+  lang?: string;
 };
 
 export type PageResponse<T> = {

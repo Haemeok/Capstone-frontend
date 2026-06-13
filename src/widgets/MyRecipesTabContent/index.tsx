@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import type { Locale } from "@/shared/i18n";
+import { useUserPagesLocale } from "@/shared/i18n";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { isPrivateRecipe, MyRecipesPageResponse } from "@/entities/recipe";
@@ -25,20 +27,22 @@ const MyRecipesTabContent = ({
 }: MyRecipesTabContentProps) => {
   const [sort] = useState<"ASC" | "DESC">("DESC");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const locale = useUserPagesLocale();
 
   const { data, error, hasNextPage, isFetching, isPending, ref } =
     useInfiniteScroll<
       MyRecipesPageResponse,
       Error,
       InfiniteData<MyRecipesPageResponse>,
-      [string, string, "ASC" | "DESC"],
+      [string, string, "ASC" | "DESC", Locale],
       number
     >({
-      queryKey: ["recipes", userId, sort],
+      queryKey: ["recipes", userId, sort, locale],
       queryFn: ({ pageParam }) =>
         getMyRecipeItems({
           userId,
           sort,
+          lang: locale,
           pageParam,
         }),
       getNextPageParam: getNextPageParam,
