@@ -26,6 +26,7 @@ import useLogoutMutation from "@/features/auth/model/hooks/useLogoutMutation";
 import { useNotificationPermissionStore } from "@/features/notification-permission";
 
 import { AdRemovalRow } from "./AdRemovalRow";
+import { LanguageSettingRow } from "./LanguageSettingRow";
 
 const SettingsActionButton = () => {
   const { mutate: logout } = useLogoutMutation();
@@ -93,6 +94,7 @@ const SettingsActionButton = () => {
                   useReferralSheetStore.getState().open();
                 }}
               />
+              <LanguageSettingRow />
               {isInApp && (
                 <div className="flex w-full items-center justify-between px-4 py-3">
                   <div className="text-ink-sub flex items-center gap-2">
