@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { NutritionMode } from "../constants";
@@ -10,6 +11,9 @@ type ModeToggleProps = {
 };
 
 const ModeToggle = ({ mode, onModeChange }: ModeToggleProps) => {
+  const t = useT();
+  const n = t.aiRecipe.nutrition;
+
   const handleModeChange = (newMode: NutritionMode) => {
     if (mode !== newMode) {
       triggerHaptic("Light");
@@ -28,7 +32,7 @@ const ModeToggle = ({ mode, onModeChange }: ModeToggleProps) => {
             : "hover:text-ink-sub text-gray-400"
         }`}
       >
-        탄단지 집중
+        {n.macroModeLabel}
       </button>
       <button
         type="button"
@@ -39,7 +43,7 @@ const ModeToggle = ({ mode, onModeChange }: ModeToggleProps) => {
             : "hover:text-ink-sub text-gray-400"
         }`}
       >
-        칼로리 집중
+        {n.calorieModeLabel}
       </button>
     </div>
   );

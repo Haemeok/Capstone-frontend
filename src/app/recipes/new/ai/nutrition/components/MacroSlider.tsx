@@ -3,10 +3,15 @@
 import { useRef } from "react";
 import { Control, Controller } from "react-hook-form";
 
+import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Slider } from "@/shared/ui/shadcn/slider";
 
-import { getGuidanceMessage, NutritionFormValues } from "../constants";
+import {
+  getGuidanceMessage,
+  NutritionFormValues,
+  UNLIMITED_SENTINEL,
+} from "../constants";
 
 type MacroSliderProps = {
   control: Control<NutritionFormValues>;
@@ -31,13 +36,15 @@ const MacroSlider = ({
   defaultValue,
 }: MacroSliderProps) => {
   const lastStepRef = useRef<number | null>(null);
+  const t = useT();
+  const n = t.aiRecipe.nutrition;
 
   return (
     <Controller
       control={control}
       name={name}
       render={({ field }) => {
-        const isUnlimited = field.value === "제한 없음";
+        const isUnlimited = field.value === UNLIMITED_SENTINEL;
         const sliderValue = isUnlimited ? 0 : Number(field.value) || 0;
 
         const handleSliderChange = (vals: number[]) => {
@@ -57,11 +64,11 @@ const MacroSlider = ({
 
         const handleToggle = () => {
           triggerHaptic("Light");
-          field.onChange(isUnlimited ? defaultValue : "제한 없음");
+          field.onChange(isUnlimited ? defaultValue : UNLIMITED_SENTINEL);
         };
 
         const guidance = !isUnlimited
-          ? getGuidanceMessage(name, sliderValue)
+          ? getGuidanceMessage(n.guidance, name, sliderValue)
           : "";
 
         return (
@@ -81,11 +88,16 @@ const MacroSlider = ({
                       isUnlimited ? "text-gray-400" : "text-olive-light"
                     }`}
                   >
-                    지정
+                    {n.macroSliderSetLabel}
                   </span>
                   <button
                     type="button"
                     onClick={handleToggle}
+                    aria-label={
+                      isUnlimited
+                        ? n.macroSliderSetLabel
+                        : n.macroSliderAutoLabel
+                    }
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                       isUnlimited ? "bg-olive-light" : "bg-gray-300"
                     }`}
@@ -101,7 +113,7 @@ const MacroSlider = ({
                       isUnlimited ? "text-olive-light" : "text-gray-400"
                     }`}
                   >
-                    자동
+                    {n.macroSliderAutoLabel}
                   </span>
                 </div>
               </div>

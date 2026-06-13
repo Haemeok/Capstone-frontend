@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
-import { DictionaryProvider, getDictionary } from "@/shared/i18n";
+import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
@@ -25,12 +25,15 @@ import {
   MODE_DEFAULTS,
   NutritionFormValues,
   NutritionMode,
+  UNLIMITED_SENTINEL,
 } from "./constants";
 
 const CONCEPT = "NUTRITION_BALANCE" as const;
 
 const NutritionRecipePage = () => {
   const router = useRouter();
+  const t = useT();
+  const n = t.aiRecipe.nutrition;
   const [mode, setMode] = useState<NutritionMode>("MACRO");
 
   const { job, isPending, isFailed, progress, submit, retry } =
@@ -41,15 +44,15 @@ const NutritionRecipePage = () => {
       defaultValues: MACRO_MODE_DEFAULTS,
     });
 
-  // 모드 변경 시 form을 먼저 reset한 후 mode 상태 변경 (애니메이션 깜빡임 방지)
   const handleModeChange = (newMode: NutritionMode) => {
     reset(MODE_DEFAULTS[newMode]);
     setMode(newMode);
   };
 
   const onSubmit = (data: NutritionFormValues) => {
+    const unlimitedDisplay = n.unlimitedValue;
     const formatValue = (val: string, unit: string) => {
-      if (val === "제한 없음") return val;
+      if (val === UNLIMITED_SENTINEL) return unlimitedDisplay;
       return `${val}${unit}`;
     };
 
@@ -57,19 +60,23 @@ const NutritionRecipePage = () => {
       targetStyle: data.targetStyle,
       targetCalories:
         mode === "MACRO"
-          ? "제한 없음"
+          ? unlimitedDisplay
           : formatValue(data.targetCalories, "kcal"),
       targetCarbs:
-        mode === "MACRO" ? formatValue(data.targetCarbs, "g") : "제한 없음",
+        mode === "MACRO"
+          ? formatValue(data.targetCarbs, "g")
+          : unlimitedDisplay,
       targetProtein:
-        mode === "MACRO" ? formatValue(data.targetProtein, "g") : "제한 없음",
+        mode === "MACRO"
+          ? formatValue(data.targetProtein, "g")
+          : unlimitedDisplay,
       targetFat:
-        mode === "MACRO" ? formatValue(data.targetFat, "g") : "제한 없음",
+        mode === "MACRO" ? formatValue(data.targetFat, "g") : unlimitedDisplay,
     };
 
     submit(
       request,
-      `${data.targetStyle} / ${mode === "MACRO" ? "탄단지" : "칼로리"}`
+      `${data.targetStyle} / ${mode === "MACRO" ? n.macroModeLabel : n.calorieModeLabel}`
     );
   };
 
@@ -91,7 +98,9 @@ const NutritionRecipePage = () => {
               className="text-ink-sub hover:text-ink hidden items-center gap-2 transition-colors md:flex"
             >
               <ArrowLeftIcon size={20} />
-              <span className="text-sm font-medium">AI 다시 선택하기</span>
+              <span className="text-sm font-medium">
+                {t.aiRecipe.backToModelSelect}
+              </span>
             </button>
           </div>
 
@@ -124,7 +133,7 @@ const NutritionRecipePage = () => {
                 <MacroSlider
                   control={control}
                   name="targetCarbs"
-                  label="탄수화물"
+                  label={n.macroCarbs}
                   unit="g"
                   max={150}
                   step={5}
@@ -133,7 +142,7 @@ const NutritionRecipePage = () => {
                 <MacroSlider
                   control={control}
                   name="targetProtein"
-                  label="단백질"
+                  label={n.macroProtein}
                   unit="g"
                   max={150}
                   step={5}
@@ -142,7 +151,7 @@ const NutritionRecipePage = () => {
                 <MacroSlider
                   control={control}
                   name="targetFat"
-                  label="지방"
+                  label={n.macroFat}
                   unit="g"
                   max={100}
                   step={5}
@@ -157,7 +166,7 @@ const NutritionRecipePage = () => {
                 <MacroSlider
                   control={control}
                   name="targetCalories"
-                  label="목표 칼로리"
+                  label={n.macroCalories}
                   unit="kcal"
                   max={2000}
                   step={50}
@@ -175,7 +184,7 @@ const NutritionRecipePage = () => {
                 className="bg-olive-light hover:bg-olive-medium flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-lg"
               >
                 <ChefHatIcon className="h-6 w-6" />
-                <span>레시피 생성하기</span>
+                <span>{t.aiRecipe.generateRecipe}</span>
               </button>
             )}
           </UsageLimitSection>
@@ -185,17 +194,20 @@ const NutritionRecipePage = () => {
   );
 };
 
-const NutritionRecipePageWithErrorBoundary = () => (
-  <DictionaryProvider dict={getDictionary("ko")}>
-    <ErrorBoundary
-      fallback={
-        <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
-      }
-    >
-      <NutritionRecipePage />
-    </ErrorBoundary>
-    <BottomAnchorAdSlot />
-  </DictionaryProvider>
-);
+const NutritionRecipePageWithErrorBoundary = () => {
+  const dict = getDictionary("ko");
+  return (
+    <DictionaryProvider dict={dict}>
+      <ErrorBoundary
+        fallback={
+          <SectionErrorFallback message={dict.aiRecipe.errorFallback} />
+        }
+      >
+        <NutritionRecipePage />
+      </ErrorBoundary>
+      <BottomAnchorAdSlot />
+    </DictionaryProvider>
+  );
+};
 
 export default NutritionRecipePageWithErrorBoundary;
