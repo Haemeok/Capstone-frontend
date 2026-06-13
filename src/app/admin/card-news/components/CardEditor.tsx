@@ -7,6 +7,7 @@ import { Recipe } from "@/entities/recipe/model/types";
 import { askGrok } from "@/app/actions/grok";
 
 import { saveAllCards } from "../lib/capture";
+import { buildHooking, type RankType } from "../lib/hooking";
 import { buildCardNewsPrompt } from "../lib/prompt";
 import { OutroCard } from "./cards/OutroCard";
 import { RecipeCard } from "./cards/RecipeCard";
@@ -31,6 +32,9 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [folderName, setFolderName] = useState("");
+  const [foodName, setFoodName] = useState("");
+  const [rankType, setRankType] = useState<RankType>("TOP");
+  const hooking = buildHooking(foodName, rankType, recipes.length);
   const [boxPositions, setBoxPositions] = useState<("top" | "bottom")[]>([]);
 
   const thumbnailRef = useRef<HTMLDivElement>(null);
@@ -145,7 +149,8 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
         "outro.png",
         "outro-2.png",
       ];
-      await saveAllCards(allRefs, allNames, folderName);
+      // folderName 미입력 시 음식이름으로 폴백
+      await saveAllCards(allRefs, allNames, folderName || foodName);
       alert("저장 완료!");
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
@@ -180,7 +185,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
           <ThumbnailCard
             ref={thumbnailRef}
             imageUrl={thumbnail.imageUrl}
-            hooking=""
+            hooking={hooking}
           />
           {recipes.map((recipe, i) => (
             <RecipeCard
@@ -236,6 +241,43 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
         <div className="flex gap-8">
           {/* 왼쪽: 편집 패널 */}
           <div className="w-[400px] flex-shrink-0 space-y-6">
+            <div className="rounded-2xl border border-gray-100 p-4">
+              <h3 className="mb-3 text-sm font-bold text-gray-900">
+                썸네일 후킹
+              </h3>
+              <label className="mb-1 block text-xs text-gray-500">
+                음식이름
+              </label>
+              <input
+                type="text"
+                value={foodName}
+                onChange={(e) => setFoodName(e.target.value)}
+                placeholder="예: 김치찌개"
+                className="focus:border-olive-light mb-3 w-full rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:outline-none"
+              />
+              <div className="mb-3 flex gap-2">
+                {(["TOP", "BEST"] as const).map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => setRankType(r)}
+                    className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-bold ${
+                      rankType === r
+                        ? "bg-olive-light text-white"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {r}
+                  </button>
+                ))}
+                <span className="ml-auto self-center text-xs text-gray-400">
+                  개수 {recipes.length} (자동)
+                </span>
+              </div>
+              <p className="rounded-lg bg-gray-50 p-2 text-xs text-gray-600">
+                {hooking}
+              </p>
+            </div>
+
             {/* 레시피 카드 텍스트 */}
             {recipes.map((recipe, i) => (
               <div
@@ -284,7 +326,10 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                 className="origin-top-left"
                 style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
               >
-                <ThumbnailCard imageUrl={thumbnail.imageUrl} hooking="" />
+                <ThumbnailCard
+                  imageUrl={thumbnail.imageUrl}
+                  hooking={hooking}
+                />
               </div>
             </div>
 
