@@ -156,4 +156,51 @@ export const aiRecipe: AiRecipeDict = {
     tierSectionHeading: "스타일 선택",
     tierSectionDescription: "원하시는 파인다이닝 스타일을 선택해주세요",
   },
+  form: {
+    dishType: {
+      sectionTitle: "요리 종류",
+      options: [
+        "🍽️ 전체",
+        "🍳 볶음",
+        "🍲 국/찌개/탕",
+        "🥩 구이",
+        "🥗 무침/샐러드",
+        "🍤 튀김/부침",
+        "🥘 찜/조림",
+        "🍕 오븐요리",
+        "🍣 생식/회",
+        "🥒 절임/피클류",
+        "🍝 밥/면/파스타",
+        "🍰 디저트/간식류",
+      ],
+    },
+    servings: {
+      sectionTitle: "인분",
+      decreaseLabel: "인분 줄이기",
+      increaseLabel: "인분 늘리기",
+      unit: "인분",
+    },
+    cookingTime: {
+      sectionTitle: "조리시간",
+    },
+    aiCharacter: {
+      withSuffix: "와 함께",
+      subtitle: "맞춤형 레시피를 생성해보세요",
+    },
+    progressButton: {
+      label: "레시피 생성하기",
+    },
+    usageLimitBanner: {
+      message: "오늘 AI 레시피 생성 횟수를 모두 사용했어요.",
+      subMessage: "내일 다시 시도해주세요!",
+    },
+    ingredientManager: {
+      addButtonLabel: "재료 추가하기",
+      addButtonAriaLabel: "재료 추가하기",
+      ingredientsAddedCount: "개의 재료가 추가됨",
+      addPrompt: "레시피 생성을 위해 재료를 추가해주세요",
+      selectedHeading: "선택된 재료",
+      removeAllLabel: "전체 삭제",
+    },
+  },
 };

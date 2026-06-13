@@ -8,11 +8,13 @@ import {
   COOKING_TIME_ITEMS_KEYS,
   COOKING_TIMES,
 } from "@/shared/config/constants/recipe";
+import { useT } from "@/shared/i18n";
 import SelectionSection from "@/shared/ui/SelectionSection";
 
 import { type AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 
 const CookingTimeSection = () => {
+  const t = useT();
   const { control, setValue } = useFormContext<AIRecipeFormValues>();
   const cookingTime = useWatch({ control, name: "cookingTime" });
 
@@ -25,7 +27,7 @@ const CookingTimeSection = () => {
 
   return (
     <SelectionSection
-      title="조리시간"
+      title={t.aiRecipe.form.cookingTime.sectionTitle}
       icon={<Clock size={18} />}
       items={COOKING_TIMES}
       selectedItems={COOKING_TIME_ITEMS_KEYS[cookingTime]}

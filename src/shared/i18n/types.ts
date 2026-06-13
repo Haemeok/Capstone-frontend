@@ -3,6 +3,39 @@ export type Plural = { one: string; other: string };
 export type Locale = "ko" | "ja" | "en";
 export const LOCALES: readonly Locale[] = ["ko", "ja", "en"];
 
+export type NavDict = {
+  home: string;
+  search: string;
+  fridge: string;
+  aiRecipe: string;
+  my: string;
+  recipeSearch: string;
+  youtubeRecipe: string;
+  login: string;
+  install: string;
+  installAria: string;
+  notificationsAria: string;
+  notificationsUnreadAria: Plural;
+  unreadBadgeAria: Plural;
+  savedBooksAria: string;
+  savedBooksToast: string;
+  profile: string;
+  footer: {
+    sectionService: string;
+    sectionSupport: string;
+    tagline: string;
+    businessInfoToggleAria: string;
+    terms: string;
+    privacy: string;
+    reportError: string;
+    adInquiry: string;
+    copyrightReport: string;
+    ceoLabel: string;
+    csLabel: string;
+    adLabel: string;
+  };
+};
+
 export type SearchDict = {
   lastPage: string;
   noResults: string;
@@ -185,6 +218,40 @@ export type AiRecipeDict = {
     tierSectionHeading: string;
     tierSectionDescription: string;
   };
+  form: {
+    dishType: {
+      sectionTitle: string;
+      options: string[];
+    };
+    servings: {
+      sectionTitle: string;
+      decreaseLabel: string;
+      increaseLabel: string;
+      unit: string;
+    };
+    cookingTime: {
+      sectionTitle: string;
+    };
+    aiCharacter: {
+      withSuffix: string;
+      subtitle: string;
+    };
+    progressButton: {
+      label: string;
+    };
+    usageLimitBanner: {
+      message: string;
+      subMessage: string;
+    };
+    ingredientManager: {
+      addButtonLabel: string;
+      addButtonAriaLabel: string;
+      ingredientsAddedCount: string;
+      addPrompt: string;
+      selectedHeading: string;
+      removeAllLabel: string;
+    };
+  };
 };
 
 export type Dictionary = {
@@ -196,4 +263,5 @@ export type Dictionary = {
   youtube: YoutubeDict;
   ingredientDetail: IngredientDetailDict;
   aiRecipe: AiRecipeDict;
+  nav: NavDict;
 };

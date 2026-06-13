@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { useT } from "@/shared/i18n";
 import { FormProgressButton } from "@/shared/ui/form/FormProgressButton";
 
 import {
@@ -21,13 +22,14 @@ const AIRecipeProgressButton = ({
   disabled,
   onClick,
 }: AIRecipeProgressButtonProps) => {
+  const t = useT();
   return (
     <FormProgressButton<AIRecipeFormValues>
       schema={aiRecipeFormSchema}
       isLoading={isLoading}
       disabled={disabled}
       onClick={onClick}
-      text="레시피 생성하기"
+      text={t.aiRecipe.form.progressButton.label}
       fieldLabels={AI_RECIPE_FIELD_LABELS}
     />
   );

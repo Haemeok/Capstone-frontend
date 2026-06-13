@@ -1,18 +1,23 @@
 import React from "react";
 
 import type { AIModel } from "@/shared/config/constants/aiModel";
+import { useT } from "@/shared/i18n";
 
 type AICharacterSectionProps = {
   selectedAI: AIModel;
 };
 
 const AiCharacterSection = ({ selectedAI }: AICharacterSectionProps) => {
+  const t = useT();
   return (
     <>
       <div className="text-center">
-        <p className="text-ink text-xl font-bold">{selectedAI.name}와 함께</p>
         <p className="text-ink text-xl font-bold">
-          맞춤형 레시피를 생성해보세요
+          {selectedAI.name}
+          {t.aiRecipe.form.aiCharacter.withSuffix}
+        </p>
+        <p className="text-ink text-xl font-bold">
+          {t.aiRecipe.form.aiCharacter.subtitle}
         </p>
       </div>
       <div className="flex flex-col items-center justify-center gap-2 py-4">

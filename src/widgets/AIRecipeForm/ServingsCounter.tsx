@@ -3,9 +3,12 @@ import { useFormContext, useWatch } from "react-hook-form";
 
 import { User } from "lucide-react";
 
+import { useT } from "@/shared/i18n";
+
 import { AIRecipeFormValues } from "@/features/recipe-create-ai/model/schema";
 
 const ServingsCounter = () => {
+  const t = useT();
   const { control, setValue } = useFormContext<AIRecipeFormValues>();
   const servings = useWatch({ control, name: "servings" });
 
@@ -31,13 +34,15 @@ const ServingsCounter = () => {
         <span className="text-olive-mint">
           <User size={18} />
         </span>
-        <h2 className="text-ink text-lg font-bold">인분</h2>
+        <h2 className="text-ink text-lg font-bold">
+          {t.aiRecipe.form.servings.sectionTitle}
+        </h2>
       </div>
       <div className="flex items-center justify-center gap-4">
         <button
           type="button"
           onClick={handleDecrementServings}
-          aria-label="인분 줄이기"
+          aria-label={t.aiRecipe.form.servings.decreaseLabel}
           className="text-ink-sub flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg transition-colors hover:bg-gray-300 disabled:opacity-50"
           disabled={servings <= 1}
         >
@@ -47,12 +52,13 @@ const ServingsCounter = () => {
           className="text-ink w-20 text-center font-medium"
           aria-live="polite"
         >
-          {servings}인분
+          {servings}
+          {t.aiRecipe.form.servings.unit}
         </span>
         <button
           type="button"
           onClick={handleIncrementServings}
-          aria-label="인분 늘리기"
+          aria-label={t.aiRecipe.form.servings.increaseLabel}
           className="text-ink-sub flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-lg transition-colors hover:bg-gray-300"
         >
           +
