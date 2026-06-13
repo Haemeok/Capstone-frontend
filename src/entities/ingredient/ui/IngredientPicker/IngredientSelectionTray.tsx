@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 
+import { format, useIngredientPickerDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -19,6 +20,7 @@ const IngredientSelectionTray = ({
   onRemove,
   onComplete,
 }: IngredientSelectionTrayProps) => {
+  const t = useIngredientPickerDict();
   const handleComplete = () => {
     triggerHaptic("Success");
     onComplete();
@@ -46,7 +48,7 @@ const IngredientSelectionTray = ({
               <button
                 type="button"
                 onClick={() => onRemove(item.id)}
-                aria-label={`${item.name} 제거`}
+                aria-label={format(t.removeAria, { name: item.name })}
                 className="text-ink-sub absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-200 shadow"
               >
                 <X size={12} />
@@ -63,7 +65,7 @@ const IngredientSelectionTray = ({
         disabled={items.length === 0}
         className="bg-olive-vivid hover:bg-olive-vivid/90 h-12 flex-shrink-0 cursor-pointer px-6 text-base font-semibold text-white disabled:bg-gray-300"
       >
-        완료
+        {t.complete}
       </Button>
     </div>
   );

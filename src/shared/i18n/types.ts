@@ -511,6 +511,24 @@ export type RecipeFormDict = {
   };
 };
 
+export type IngredientPickerDict = {
+  title: string;
+  closeAria: string;
+  searchAria: string;
+  searchAction: string;
+  searchPlaceholder: string;
+  loading: string;
+  errorPrefix: string;
+  unknownError: string;
+  allLoaded: string;
+  noResults: string;
+  myIngredients: string;
+  cardSelect: string;
+  cardDeselect: string;
+  complete: string;
+  removeAria: string;
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -529,4 +547,5 @@ export type Dictionary = {
   recipeForm: RecipeFormDict;
   taxonomy: TaxonomyDict;
   category: CategoryDict;
+  ingredientPicker: IngredientPickerDict;
 };

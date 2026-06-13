@@ -2,6 +2,7 @@
 
 import { Check, Plus } from "lucide-react";
 
+import { format, useIngredientPickerDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
@@ -21,6 +22,7 @@ const IngredientPickerCard = ({
   isAlreadyAdded,
   onToggle,
 }: IngredientPickerCardProps) => {
+  const t = useIngredientPickerDict();
   const checked = isSelected || isAlreadyAdded;
 
   const handleToggle = () => {
@@ -34,7 +36,9 @@ const IngredientPickerCard = ({
       type="button"
       onClick={handleToggle}
       disabled={isAlreadyAdded}
-      aria-label={`${ingredient.name} ${checked ? "선택 해제" : "선택"}`}
+      aria-label={format(checked ? t.cardDeselect : t.cardSelect, {
+        name: ingredient.name,
+      })}
       className={cn(
         "flex w-full flex-col text-left",
         isAlreadyAdded ? "cursor-not-allowed opacity-50" : "cursor-pointer"

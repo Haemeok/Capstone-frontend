@@ -7,7 +7,8 @@ import { Search, X } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { useApiLocale } from "@/shared/i18n";
+import { format, useApiLocale, useIngredientPickerDict } from "@/shared/i18n";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { cn, getNextPageParam } from "@/shared/lib/utils";
 import {
   Drawer,
@@ -49,13 +50,15 @@ type IngredientPickerProps = {
 const IngredientPicker = ({
   open,
   onOpenChange,
-  title = "재료 추가",
+  title,
   categories,
   initialCategory,
   queryConfig,
   isAlreadyAdded,
   onComplete,
 }: IngredientPickerProps) => {
+  const t = useIngredientPickerDict();
+  const { localize } = useTaxonomy();
   const [selectedCategory, setSelectedCategory] = useState<string>(
     initialCategory ?? categories[0] ?? ""
   );
@@ -112,13 +115,13 @@ const IngredientPicker = ({
       <DrawerContent variant="full">
         <header className="relative flex items-center justify-center border-b border-gray-100 px-4 py-3">
           <DrawerClose
-            aria-label="닫기"
+            aria-label={t.closeAria}
             className="text-ink-sub absolute left-3 cursor-pointer"
           >
             <X size={24} />
           </DrawerClose>
           <DrawerTitle className="text-ink text-base font-bold">
-            {title}
+            {title ?? t.title}
           </DrawerTitle>
         </header>
 
@@ -132,13 +135,13 @@ const IngredientPicker = ({
             <input
               ref={inputRef}
               type="text"
-              placeholder="재료를 검색해서 추가하세요"
+              placeholder={t.searchPlaceholder}
               className="text-ink placeholder:text-ink-muted w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus:outline-none"
               value={inputValue}
               onChange={handleInputChange}
             />
-            <button type="submit" aria-label="검색" className="sr-only">
-              검색
+            <button type="submit" aria-label={t.searchAria} className="sr-only">
+              {t.searchAction}
             </button>
           </div>
         </form>
@@ -156,18 +159,22 @@ const IngredientPicker = ({
                   : "text-ink-sub bg-gray-100 hover:bg-gray-200"
               )}
             >
-              {category}
+              {category === "나의 재료"
+                ? t.myIngredients
+                : localize(category, "ingredientCategory")}
             </button>
           ))}
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
           {isPending ? (
-            <p className="text-ink-muted text-center">재료 로딩 중...</p>
+            <p className="text-ink-muted text-center">{t.loading}</p>
           ) : status === "error" ? (
             <p className="text-center text-red-500">
-              오류 발생:{" "}
-              {error instanceof Error ? error.message : "알 수 없는 오류"}
+              {format(t.errorPrefix, {
+                message:
+                  error instanceof Error ? error.message : t.unknownError,
+              })}
             </p>
           ) : (
             <>
@@ -184,15 +191,18 @@ const IngredientPicker = ({
               </div>
               <div ref={ref} className="h-10 text-center">
                 {!hasNextPage && (data?.pages[0]?.content?.length ?? 0) > 0 && (
-                  <p className="text-sm text-gray-400">
-                    모든 재료를 불러왔습니다.
-                  </p>
+                  <p className="text-sm text-gray-400">{t.allLoaded}</p>
                 )}
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
                 <p className="text-ink-muted py-10 text-center">
-                  &quot;{searchQuery || selectedCategory}&quot;에 해당하는
-                  재료가 없습니다.
+                  {format(t.noResults, {
+                    query:
+                      searchQuery ||
+                      (selectedCategory === "나의 재료"
+                        ? t.myIngredients
+                        : localize(selectedCategory, "ingredientCategory")),
+                  })}
                 </p>
               )}
             </>

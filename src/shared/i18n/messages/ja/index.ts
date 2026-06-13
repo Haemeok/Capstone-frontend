@@ -4,6 +4,7 @@ import { category } from "./category";
 import { fridge } from "./fridge";
 import { home } from "./home";
 import { ingredientDetail } from "./ingredientDetail";
+import { ingredientPicker } from "./ingredientPicker";
 import { nav } from "./nav";
 import { recipeCreate } from "./recipeCreate";
 import { recipeDetail } from "./recipeDetail";
@@ -32,4 +33,5 @@ export const ja: Dictionary = {
   recipeForm,
   taxonomy,
   category,
+  ingredientPicker,
 };
