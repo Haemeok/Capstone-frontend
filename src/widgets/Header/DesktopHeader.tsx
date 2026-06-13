@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 
 import { User } from "lucide-react";
 
+import { useChromeDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { Image } from "@/shared/ui/image/Image";
@@ -20,15 +21,16 @@ const LoginDialog = dynamic(() => import("@/features/auth/ui/LoginDialog"), {
 import NotificationButton from "./NotificationButton";
 
 const NAV_LINKS = [
-  { href: "/", label: "홈" },
-  { href: "/search", label: "레시피 검색" },
-  { href: "/ingredients", label: "냉장고" },
-  { href: "/recipes/new/ai", label: "AI 레시피" },
-  { href: "/recipes/new/youtube", label: "유튜브 레시피" },
+  { href: "/", labelKey: "home" },
+  { href: "/search", labelKey: "recipeSearch" },
+  { href: "/ingredients", labelKey: "fridge" },
+  { href: "/recipes/new/ai", labelKey: "aiRecipe" },
+  { href: "/recipes/new/youtube", labelKey: "youtubeRecipe" },
 ] as const;
 
 const DesktopHeader = () => {
   const pathname = usePathname();
+  const t = useChromeDict();
   const { user, isAuthReady } = useUserStore();
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
@@ -61,7 +63,7 @@ const DesktopHeader = () => {
                     : "text-ink-sub"
                 )}
               >
-                {link.label}
+                {t[link.labelKey]}
               </Link>
             ))}
           </div>
@@ -79,7 +81,7 @@ const DesktopHeader = () => {
                 <div className="flex flex-col items-center">
                   <User size={24} className="text-ink-sub" />
                   <p className="text-ink-sub hover:text-ink text-xs transition-colors">
-                    My
+                    {t.my}
                   </p>
                 </div>
               </Link>
@@ -89,7 +91,7 @@ const DesktopHeader = () => {
                   onClick={() => setIsLoginDialogOpen(true)}
                   className="hover:text-ink cursor-pointer rounded-xl border-1 border-gray-200 px-4 py-2 transition-colors"
                 >
-                  로그인
+                  {t.login}
                 </button>
               </LoginPromotionBadge>
             )}
