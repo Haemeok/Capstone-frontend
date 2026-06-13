@@ -4,9 +4,12 @@ import { useState } from "react";
 
 import { PlusIcon } from "lucide-react";
 
+import { useUserPagesDict } from "@/shared/i18n";
+
 import { CreateRecipeBookSheet } from "@/features/recipe-book-create";
 
 export const CreateRecipeBookCard = () => {
+  const t = useUserPagesDict().recipeBooks;
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,12 +19,12 @@ export const CreateRecipeBookCard = () => {
           type="button"
           onClick={() => setOpen(true)}
           className="hover:border-olive-light hover:text-olive-light flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 bg-white text-gray-400 transition-colors"
-          aria-label="레시피북 만들기"
+          aria-label={t.createAria}
         >
           <PlusIcon size={32} />
         </button>
         <div className="mt-2 px-1">
-          <p className="text-base font-bold text-gray-400">레시피북 만들기</p>
+          <p className="text-base font-bold text-gray-400">{t.createLabel}</p>
         </div>
       </div>
       <CreateRecipeBookSheet open={open} onOpenChange={setOpen} />

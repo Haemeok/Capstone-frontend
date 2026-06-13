@@ -6,7 +6,12 @@ export const MAX_RECIPE_BOOKS = 20;
 
 export const RECIPE_BOOK_QUERY_KEYS = {
   all: ["recipe-books"] as const,
-  list: () => [...RECIPE_BOOK_QUERY_KEYS.all, "list"] as const,
+  list: (locale?: string) =>
+    [
+      ...RECIPE_BOOK_QUERY_KEYS.all,
+      "list",
+      ...(locale ? [locale] : []),
+    ] as const,
   detailPrefix: (bookId: string) =>
     [...RECIPE_BOOK_QUERY_KEYS.all, "detail", bookId] as const,
   detail: (bookId: string, sort: string = DEFAULT_BOOK_SORT) =>

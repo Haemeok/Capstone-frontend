@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { MoreVerticalIcon } from "lucide-react";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ type Props = {
 };
 
 export const RecipeBookCardMenu = ({ bookId, bookName }: Props) => {
+  const t = useUserPagesDict().recipeBooks;
   const [renameOpen, setRenameOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -31,20 +33,20 @@ export const RecipeBookCardMenu = ({ bookId, bookName }: Props) => {
             type="button"
             onClick={(e) => e.stopPropagation()}
             className="text-ink-muted shrink-0 rounded-full p-1 transition-colors hover:bg-gray-100"
-            aria-label="레시피북 메뉴"
+            aria-label={t.cardMenuAria}
           >
             <MoreVerticalIcon size={18} />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
           <DropdownMenuItem onSelect={() => setRenameOpen(true)}>
-            수정
+            {t.rename}
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => setDeleteOpen(true)}
             className="text-red-500 focus:text-red-500"
           >
-            삭제
+            {t.delete}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { UserRound } from "lucide-react";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   generateUserGradient,
@@ -20,6 +21,7 @@ import { RecipeBookGrid } from "@/widgets/RecipeBookGrid";
 export default function RecipeBooksPage() {
   const router = useRouter();
   const { user } = useUserStore();
+  const t = useUserPagesDict().recipeBooks;
 
   const handleBack = () => {
     triggerHaptic("Light");
@@ -31,7 +33,7 @@ export default function RecipeBooksPage() {
       {/* sticky header */}
       <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b border-gray-100 bg-white px-2">
         <PrevButton onClick={handleBack} size={24} className="shrink-0" />
-        <h1 className="text-ink text-base font-bold">레시피북</h1>
+        <h1 className="text-ink text-base font-bold">{t.heading}</h1>
       </header>
 
       {/* 프로필 row */}

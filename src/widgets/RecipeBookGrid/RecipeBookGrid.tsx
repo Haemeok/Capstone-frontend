@@ -1,5 +1,6 @@
 "use client";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
@@ -27,12 +28,13 @@ const GridSkeleton = () => (
 );
 
 export const RecipeBookGrid = () => {
+  const t = useUserPagesDict().recipeBooks;
   const { data: books, isLoading, error } = useRecipeBooks();
 
   if (isLoading) return <GridSkeleton />;
 
   if (error) {
-    return <SectionErrorFallback message="레시피북 목록을 불러올 수 없어요" />;
+    return <SectionErrorFallback message={t.listLoadError} />;
   }
 
   const list = books ?? [];
@@ -40,7 +42,7 @@ export const RecipeBookGrid = () => {
 
   return (
     <ErrorBoundary
-      fallback={<SectionErrorFallback message="레시피북을 불러올 수 없어요" />}
+      fallback={<SectionErrorFallback message={t.boundaryError} />}
     >
       <div className={GRID_CLASS}>
         {list.map((book, index) => (

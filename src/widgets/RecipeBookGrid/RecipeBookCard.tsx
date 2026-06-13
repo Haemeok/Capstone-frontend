@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 
+import { format, useUserPagesDict } from "@/shared/i18n";
+
 import {
   useRecipeBookDetail,
   useUnseenImportStore,
@@ -28,6 +30,7 @@ export const RecipeBookCard = ({
   isFirstCard = false,
 }: Props) => {
   const router = useRouter();
+  const t = useUserPagesDict().recipeBooks;
   const { data } = useRecipeBookDetail(bookId);
   const hasUnseenImport = useUnseenImportStore((s) => s.hasUnseenImport);
   const clearUnseen = useUnseenImportStore((s) => s.clearUnseen);
@@ -62,7 +65,7 @@ export const RecipeBookCard = ({
             )}
           </div>
           <p className="text-ink-muted text-[13px]">
-            저장된 레시피 {recipeCount}개
+            {format(t.savedCount, { count: recipeCount })}
           </p>
         </div>
         {!isDefault && <RecipeBookCardMenu bookId={bookId} bookName={name} />}
