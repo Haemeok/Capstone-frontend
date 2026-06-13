@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { LocalizedLink, stripLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 type BottomNavButtonProps = {
@@ -18,12 +18,11 @@ const BottomNavButton = ({
   path,
   onClick,
 }: BottomNavButtonProps) => {
-  const currentPath = usePathname();
-  const isActive =
-    path === "/" ? currentPath === "/" : currentPath.startsWith(path);
+  const { barePath } = stripLocale(usePathname());
+  const isActive = path === "/" ? barePath === "/" : barePath.startsWith(path);
 
   return (
-    <Link
+    <LocalizedLink
       href={path}
       onClick={(e) => {
         triggerHaptic("Light");
@@ -37,7 +36,7 @@ const BottomNavButton = ({
     >
       {icon}
       <span className="text-xs font-medium">{label}</span>
-    </Link>
+    </LocalizedLink>
   );
 };
 

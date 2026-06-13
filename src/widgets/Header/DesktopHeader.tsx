@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { User } from "lucide-react";
 
-import { useChromeDict } from "@/shared/i18n";
+import { LocalizedLink, stripLocale, useChromeDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { Image } from "@/shared/ui/image/Image";
@@ -30,6 +29,7 @@ const NAV_LINKS = [
 
 const DesktopHeader = () => {
   const pathname = usePathname();
+  const { barePath } = stripLocale(pathname);
   const t = useChromeDict();
   const { user, isAuthReady } = useUserStore();
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
@@ -38,7 +38,7 @@ const DesktopHeader = () => {
     <>
       <header className="z-dropdown sticky-optimized fixed top-0 right-0 left-0 hidden border-b border-gray-200 bg-white md:block">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <Link
+          <LocalizedLink
             href="/"
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
           >
@@ -49,22 +49,22 @@ const DesktopHeader = () => {
               width={32}
             />
             <span className="text-ink text-xl font-bold">Recipi&apos;O</span>
-          </Link>
+          </LocalizedLink>
 
           <div className="flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <Link
+              <LocalizedLink
                 key={link.href}
                 href={link.href}
                 className={cn(
                   "hover:text-ink font-medium transition-colors",
-                  pathname === link.href
+                  barePath === link.href
                     ? "text-ink font-semibold"
                     : "text-ink-sub"
                 )}
               >
                 {t[link.labelKey]}
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
 
@@ -74,7 +74,7 @@ const DesktopHeader = () => {
             {!isAuthReady ? (
               <div className="h-10 w-[72px] animate-pulse rounded-xl bg-gray-100" />
             ) : user ? (
-              <Link
+              <LocalizedLink
                 href={`/users/${user.id}`}
                 className="font-sm text-ink-sub hover:text-ink rounded-full p-1 transition-colors hover:bg-gray-100"
               >
@@ -84,7 +84,7 @@ const DesktopHeader = () => {
                     {t.my}
                   </p>
                 </div>
-              </Link>
+              </LocalizedLink>
             ) : (
               <LoginPromotionBadge variant="desktop">
                 <button

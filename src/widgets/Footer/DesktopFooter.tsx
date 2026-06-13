@@ -1,11 +1,10 @@
 "use client";
 
 import { useId, useState } from "react";
-import Link from "next/link";
 
 import { ChevronDown } from "lucide-react";
 
-import { useChromeDict } from "@/shared/i18n";
+import { LocalizedLink, useChromeDict } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 
 const FOOTER_LINKS = {
@@ -96,13 +95,13 @@ const DesktopFooter = () => {
                       {t.footer[link.labelKey]}
                     </a>
                   ) : (
-                    <Link
+                    <LocalizedLink
                       key={link.labelKey}
                       href={link.href}
                       className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
                       {t.footer[link.labelKey]}
-                    </Link>
+                    </LocalizedLink>
                   )
                 )}
               </div>
@@ -125,13 +124,13 @@ const DesktopFooter = () => {
                       {t.footer[link.labelKey]}
                     </a>
                   ) : (
-                    <Link
+                    <LocalizedLink
                       key={link.labelKey}
                       href={link.href}
                       className="text-ink-sub hover:text-ink text-sm transition-colors"
                     >
                       {t.footer[link.labelKey]}
-                    </Link>
+                    </LocalizedLink>
                   )
                 )}
               </div>

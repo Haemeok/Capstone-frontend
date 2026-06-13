@@ -33,16 +33,16 @@ describe("DesktopFooter i18n", () => {
     ).toBeInTheDocument();
   });
 
-  it("T-14: /en — 법적 링크 href는 ko 목적지 유지", () => {
+  it("T-14: /en — 법적 링크 href에 /en prefix", () => {
     setPath("/en");
     render(<DesktopFooter />);
     expect(screen.getByText("Terms of Service").closest("a")).toHaveAttribute(
       "href",
-      "/terms"
+      "/en/terms"
     );
     expect(screen.getByText("Privacy Policy").closest("a")).toHaveAttribute(
       "href",
-      "/privacy"
+      "/en/privacy"
     );
   });
 });
