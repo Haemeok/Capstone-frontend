@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
+import type { Locale } from "@/shared/i18n";
 
 import type { LocalizedRecipeResult } from "./localeResult";
 import { parseLocalizedRecipeResult } from "./localeResult";
@@ -419,13 +420,14 @@ export const getRecommendedRecipesOnServer = async (
   }
 };
 
-export const getTrendingYoutubeRecipesOnServer = async (): Promise<
-  TrendingYoutubeRecipe[]
-> => {
-  const API_URL = `${BASE_API_URL}${END_POINTS.RECIPE_YOUTUBE_RECOMMEND}`;
+export const getTrendingYoutubeRecipesOnServer = async (
+  lang?: Locale
+): Promise<TrendingYoutubeRecipe[]> => {
+  const url = new URL(`${BASE_API_URL}${END_POINTS.RECIPE_YOUTUBE_RECOMMEND}`);
+  if (lang && lang !== "ko") url.searchParams.set("lang", lang);
 
   try {
-    const res = await fetch(API_URL, {
+    const res = await fetch(url.toString(), {
       next: {
         revalidate: REVALIDATION_TIMES.RECIPES_TRENDING,
         tags: [CACHE_TAGS.recipesTrending],
