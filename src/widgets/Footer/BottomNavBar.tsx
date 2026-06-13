@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
 
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
+import { useChromeDict } from "@/shared/i18n";
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { UnsavedChangesModal } from "@/shared/ui/modal/UnsavedChangesModal";
@@ -31,6 +32,7 @@ const BottomNavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const { isInputFocused } = useInputFocusStore();
+  const t = useChromeDict();
 
   if (!isNavVisible) {
     return null;
@@ -61,19 +63,19 @@ const BottomNavBar = () => {
         <BottomNavButton
           path="/"
           icon={<Home size={24} className="mb-1" />}
-          label="홈"
+          label={t.home}
           onClick={handleNavClick("/")}
         />
         <BottomNavButton
           path="/search"
           icon={<Search size={24} className="mb-1" />}
-          label="검색"
+          label={t.search}
           onClick={handleNavClick("/search")}
         />
         <BottomNavButton
           path="/ingredients"
           icon={<Refrigerator size={24} className="mb-1" />}
-          label="냉장고"
+          label={t.fridge}
           onClick={handleNavClick("/ingredients")}
         />
 
@@ -81,7 +83,7 @@ const BottomNavBar = () => {
           <BottomNavButton
             path="/recipes/new/ai"
             icon={<Sparkles size={24} className="mb-1" />}
-            label="AI 레시피"
+            label={t.aiRecipe}
             onClick={handleNavClick("/recipes/new/ai")}
           />
         </AIRecipeNotificationBadge>
@@ -90,7 +92,7 @@ const BottomNavBar = () => {
           <BottomNavButton
             path={`/users/${user?.id ?? "guestUser"}`}
             icon={<ChefHat size={24} className="mb-1" />}
-            label="My"
+            label={t.my}
             onClick={handleNavClick(`/users/${user?.id ?? "guestUser"}`)}
           />
         </LoginPromotionBadge>
