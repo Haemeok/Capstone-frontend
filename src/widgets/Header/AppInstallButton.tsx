@@ -7,6 +7,7 @@ import {
   PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
 import { useIsApp } from "@/shared/hooks/useIsApp";
+import { useChromeDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 const getStoreUrl = () => {
@@ -18,6 +19,7 @@ const getStoreUrl = () => {
 
 const AppInstallButton = () => {
   const isInApp = useIsApp();
+  const t = useChromeDict();
 
   if (isInApp) return null;
 
@@ -30,10 +32,10 @@ const AppInstallButton = () => {
     <button
       onClick={handleClick}
       className="text-olive-light flex items-center gap-1 py-1 text-xs font-semibold transition-colors active:scale-[0.97]"
-      aria-label="앱 설치하기"
+      aria-label={t.installAria}
     >
       <Download className="h-3.5 w-3.5" />
-      <span>앱 설치</span>
+      <span>{t.install}</span>
     </button>
   );
 };
