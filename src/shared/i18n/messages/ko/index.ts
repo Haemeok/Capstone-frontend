@@ -7,6 +7,7 @@ import { nav } from "./nav";
 import { recipeDetail } from "./recipeDetail";
 import { errors, meta, notFound, search } from "./search";
 import { searchDiscovery } from "./searchDiscovery";
+import { userPages } from "./userPages";
 import { youtube } from "./youtube";
 
 export const ko: Dictionary = {
@@ -22,4 +23,5 @@ export const ko: Dictionary = {
   home,
   fridge,
   searchDiscovery,
+  userPages,
 };

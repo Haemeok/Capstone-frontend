@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
@@ -57,6 +58,7 @@ type UserTabProps = {
 };
 
 const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
+  const t = useUserPagesDict();
   const { tabs, activeTab, activeTabIndex, setActiveTab } = useTabState({
     isOwnProfile,
     hasFirstRecord: user?.hasFirstRecord ?? false,
@@ -77,7 +79,7 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
           <ErrorBoundary
             key="calendar-tab"
             fallback={
-              <SectionErrorFallback message="캘린더를 불러올 수 없어요" />
+              <SectionErrorFallback message={t.profile.calendarLoadError} />
             }
           >
             <CalendarTabContent />

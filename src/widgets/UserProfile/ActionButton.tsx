@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { LogIn, Plus } from "lucide-react";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { Button } from "@/shared/ui/shadcn/button";
 
@@ -20,6 +21,8 @@ const ActionButton = ({
   isOwnProfile,
   isGuest,
 }: ActionButtonProps) => {
+  const t = useUserPagesDict();
+
   if (!isOwnProfile && !isGuest) {
     return <></>;
   }
@@ -32,7 +35,7 @@ const ActionButton = ({
           className="border-olive-light hover:bg-olive-light/10 text-olive-light rounded-full border bg-white px-6"
         >
           <Link href="/login">
-            <LogIn size={16} className="mr-1" /> 로그인
+            <LogIn size={16} className="mr-1" /> {t.profile.loginAction}
           </Link>
         </Button>
       </LoginPromotionBadge>
@@ -46,7 +49,7 @@ const ActionButton = ({
         className="border-olive-light hover:bg-olive-light/10 text-olive-light hidden gap-0 rounded-full border bg-white px-6 md:inline-flex"
       >
         <Link href="/recipes/new" prefetch={false}>
-          <Plus size={16} className="mr-1" /> 레시피 등록하기
+          <Plus size={16} className="mr-1" /> {t.profile.createRecipeAction}
         </Link>
       </Button>
       <FloatingCreateRecipeButton />

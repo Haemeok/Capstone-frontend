@@ -5,6 +5,7 @@ import { Share2, UserRound } from "lucide-react";
 import { BASE_URL } from "@/shared/config/constants/api";
 import { guestUser } from "@/shared/config/constants/user";
 import { useShare } from "@/shared/hooks/useShare";
+import { format, useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   generateUserGradient,
@@ -31,12 +32,13 @@ const UserProfileDisplay = ({
   loggedInUser,
 }: UserProfileDisplayProps) => {
   const { share } = useShare();
+  const t = useUserPagesDict();
 
   const handleShareProfile = () => {
     triggerHaptic("Light");
     share({
-      title: `${user.nickname}님의 프로필`,
-      text: "레시피오에서 확인해보세요!",
+      title: format(t.profile.shareTitle, { nickname: user.nickname }),
+      text: t.profile.shareText,
       url: new URL(`users/${user.id}`, BASE_URL).toString(),
     });
   };
@@ -85,7 +87,7 @@ const UserProfileDisplay = ({
           <ReferralGiftButton />
           <button
             type="button"
-            aria-label="프로필 공유"
+            aria-label={t.profile.shareAria}
             onClick={handleShareProfile}
             className="text-ink flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white transition-colors hover:bg-gray-50"
           >

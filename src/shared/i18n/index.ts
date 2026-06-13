@@ -13,9 +13,11 @@ export type {
   Locale,
   NavDict,
   Plural,
+  UserPagesDict,
   YoutubeDict,
 } from "./types";
 export { LOCALES } from "./types";
 export { useApiLocale } from "./useApiLocale";
 export { useChromeDict, useChromeLocale } from "./useChromeDict";
 export { useFridgeDict } from "./useFridgeDict";
+export { useUserPagesDict, useUserPagesLocale } from "./useUserPagesDict";

@@ -1,6 +1,12 @@
+"use client";
+
 import { ChefHat } from "lucide-react";
 
+import { useUserPagesDict } from "@/shared/i18n";
+
 export const EmptyState = () => {
+  const t = useUserPagesDict();
+
   return (
     <div className="flex flex-col items-center justify-center px-6 py-16">
       {/* 아이콘 원형 배경 */}
@@ -10,12 +16,12 @@ export const EmptyState = () => {
 
       {/* 제목 */}
       <h3 className="text-ink mb-2 text-lg font-bold">
-        나만의 요리 기록을 시작해보세요
+        {t.profile.emptyTitle}
       </h3>
 
       {/* 설명 */}
       <p className="text-ink-muted text-center text-sm leading-relaxed">
-        레시피를 저장하고 요리 일정을 관리할 수 있어요
+        {t.profile.emptyDescription}
       </p>
     </div>
   );
