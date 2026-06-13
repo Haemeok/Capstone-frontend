@@ -2,8 +2,6 @@
 
 import { createRef, useEffect, useRef, useState } from "react";
 
-import { triggerHaptic } from "@/shared/lib/bridge";
-
 import { Recipe } from "@/entities/recipe/model/types";
 
 import { askGrok } from "@/app/actions/grok";
@@ -12,7 +10,6 @@ import { saveAllCards } from "../lib/capture";
 import { buildCardNewsPrompt } from "../lib/prompt";
 import { OutroCard } from "./cards/OutroCard";
 import { RecipeCard } from "./cards/RecipeCard";
-import { type CardTheme, THEME_LIST } from "./cards/themes";
 import { ThumbnailCard } from "./cards/ThumbnailCard";
 
 type CardEditorProps = {
@@ -37,7 +34,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
   const [saving, setSaving] = useState(false);
   const [folderName, setFolderName] = useState("");
   const [boxPositions, setBoxPositions] = useState<("top" | "bottom")[]>([]);
-  const [theme, setTheme] = useState<CardTheme>("glass");
 
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const recipeRefs = useRef<React.RefObject<HTMLDivElement | null>[]>([]);
@@ -199,8 +195,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
             ref={thumbnailRef}
             imageUrl={thumbnail.imageUrl}
             hooking={texts.hooking}
-            subject={texts.subject}
-            theme={theme}
           />
           {recipes.map((recipe, i) => (
             <RecipeCard
@@ -211,7 +205,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
               summary={texts.summaries[i + 1]?.summary ?? ""}
               boxPosition={boxPositions[i] ?? "bottom"}
               index={i + 1}
-              theme={theme}
             />
           ))}
           <OutroCard
@@ -226,32 +219,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
           />
         </div>
       )}
-
-      {/* 테마 선택 */}
-      <div className="mb-4 flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-500">테마</span>
-        {THEME_LIST.map(({ key, name, desc }) => (
-          <button
-            key={key}
-            onClick={() => {
-              setTheme(key);
-              triggerHaptic("Light");
-            }}
-            className={`rounded-xl px-3 py-2 text-left transition-all ${
-              theme === key
-                ? "bg-olive-light text-white shadow-md"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            <span className="block text-sm font-bold">{name}</span>
-            <span
-              className={`block text-xs ${theme === key ? "text-white/80" : "text-gray-400"}`}
-            >
-              {desc}
-            </span>
-          </button>
-        ))}
-      </div>
 
       {/* 상단 컨트롤 */}
       <div className="mb-6 flex items-center gap-3">
@@ -357,8 +324,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                 <ThumbnailCard
                   imageUrl={thumbnail.imageUrl}
                   hooking={texts.hooking}
-                  subject={texts.subject}
-                  theme={theme}
                 />
               </div>
             </div>
@@ -387,7 +352,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                     summary={texts.summaries[i + 1]?.summary ?? ""}
                     boxPosition={boxPositions[i] ?? "bottom"}
                     index={i + 1}
-                    theme={theme}
                   />
                 </div>
               </div>
