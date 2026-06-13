@@ -7,6 +7,7 @@ import {
   aiModels,
   aiModelSteps,
 } from "@/shared/config/constants/aiModel";
+import { useT } from "@/shared/i18n";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { calculateFakeProgress } from "@/features/recipe-create-ai/lib/progress";
@@ -40,6 +41,7 @@ const useFakeProgress = (startTime: number) => {
 
 const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const t = useT();
 
   const aiModel = aiModels[aiModelId];
   const { name } = aiModel;
@@ -63,17 +65,16 @@ const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
 
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-ink text-2xl font-bold">
-          {name} 레시피를 만들고 있어요
+          {name} {t.aiRecipe.loading.titleSuffix}
         </h1>
         <p className="text-ink-sub animate-pulse text-lg">
           {aiModelSteps[currentStep]}
         </p>
       </div>
 
-      {/* Progress Bar */}
       <div className="w-full max-w-xs">
         <div className="text-ink-muted mb-2 flex justify-between text-sm">
-          <span>진행률</span>
+          <span>{t.aiRecipe.loading.progressLabel}</span>
           <span>{displayProgress}%</span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
@@ -86,17 +87,20 @@ const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
 
       <div className="max-w-sm space-y-3 text-center">
         <div className="bg-olive-mint/10 rounded-2xl p-4">
-          <p className="text-olive-mint mb-2 font-bold">💡 잠깐!</p>
+          <p className="text-olive-mint mb-2 font-bold">
+            {t.aiRecipe.loading.tipHeading}
+          </p>
           <p className="text-ink-sub text-sm leading-relaxed">
-            다른 작업을 해도 괜찮아요!
-            <br />
-            다른 페이지를 둘러보시거나 냉장고를 확인해보세요.
-            <br />
-            레시피가 완성되면 알려드릴게요.
+            {t.aiRecipe.loading.tipBody.map((line, i) => (
+              <span key={i}>
+                {line}
+                {i < t.aiRecipe.loading.tipBody.length - 1 && <br />}
+              </span>
+            ))}
           </p>
         </div>
       </div>
-      <p className="text-ink-muted text-sm">보통 2~3분 정도 걸려요</p>
+      <p className="text-ink-muted text-sm">{t.aiRecipe.loading.eta}</p>
     </div>
   );
 };

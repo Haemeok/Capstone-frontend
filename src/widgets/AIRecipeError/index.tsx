@@ -2,6 +2,7 @@
 
 import { AlertCircle, RotateCcw } from "lucide-react";
 
+import { useT } from "@/shared/i18n";
 import { Button } from "@/shared/ui/shadcn/button";
 
 type AIRecipeErrorProps = {
@@ -10,6 +11,8 @@ type AIRecipeErrorProps = {
 };
 
 const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
+  const t = useT();
+
   return (
     <div className="flex h-full items-center justify-center bg-[#f7f7f7] p-4">
       <div className="w-full max-w-md">
@@ -20,11 +23,9 @@ const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
 
           <div>
             <h1 className="text-ink mb-2 text-2xl font-bold">
-              레시피 생성 실패
+              {t.aiRecipe.error.failureHeading}
             </h1>
-            <p className="text-ink-sub mb-4">
-              레시피 생성 중 문제가 발생했습니다.
-            </p>
+            <p className="text-ink-sub mb-4">{t.aiRecipe.error.failureBody}</p>
             <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
               {error}
             </p>
@@ -36,12 +37,12 @@ const AIRecipeError = ({ error, onRetry }: AIRecipeErrorProps) => {
               className="bg-olive-mint hover:bg-olive-mint/90 h-12 w-full rounded-xl text-lg font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl"
             >
               <RotateCcw className="mr-2 h-5 w-5" />
-              다시 시도하기
+              {t.aiRecipe.error.retryButton}
             </Button>
           </div>
 
           <div className="text-ink-muted text-sm">
-            문제가 계속 발생하면 잠시 후 다시 시도해주세요.
+            {t.aiRecipe.error.persistentTip}
           </div>
         </div>
       </div>

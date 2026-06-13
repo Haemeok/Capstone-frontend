@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import type { AIModelId } from "@/shared/config/constants/aiModel";
+import { useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
@@ -38,6 +39,7 @@ const AIConceptShell = ({
   children,
 }: AIConceptShellProps) => {
   const router = useRouter();
+  const t = useT();
   const isCompleted = job?.state === "completed";
   const resultRecipeId = job?.resultRecipeId;
   const successToastId = job?.successToastId;
@@ -66,7 +68,7 @@ const AIConceptShell = ({
     return (
       <Container padding={false}>
         <AIRecipeError
-          error={job.message || "레시피 생성 중 오류가 발생했습니다."}
+          error={job.message || t.aiRecipe.error.defaultMessage}
           onRetry={onRetry}
         />
       </Container>

@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -184,7 +185,7 @@ const IngredientRecipePage = () => {
 };
 
 const IngredientRecipePageWithErrorBoundary = () => (
-  <>
+  <DictionaryProvider dict={getDictionary("ko")}>
     <ErrorBoundary
       fallback={
         <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
@@ -193,7 +194,7 @@ const IngredientRecipePageWithErrorBoundary = () => (
       <IngredientRecipePage />
     </ErrorBoundary>
     <BottomAnchorAdSlot />
-  </>
+  </DictionaryProvider>
 );
 
 export default IngredientRecipePageWithErrorBoundary;

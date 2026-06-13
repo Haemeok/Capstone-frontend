@@ -113,6 +113,20 @@ export type AiRecipeDict = {
   backToModelSelect: string;
   generateRecipe: string;
   errorFallback: string;
+  loading: {
+    titleSuffix: string;
+    progressLabel: string;
+    tipHeading: string;
+    tipBody: string[];
+    eta: string;
+  };
+  error: {
+    defaultMessage: string;
+    failureHeading: string;
+    failureBody: string;
+    retryButton: string;
+    persistentTip: string;
+  };
   models: Record<AIModelId, { name: string; description: string }>;
   steps: string[];
   diningTiers: Record<

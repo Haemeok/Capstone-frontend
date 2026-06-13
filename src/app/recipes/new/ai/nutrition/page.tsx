@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
@@ -185,7 +186,7 @@ const NutritionRecipePage = () => {
 };
 
 const NutritionRecipePageWithErrorBoundary = () => (
-  <>
+  <DictionaryProvider dict={getDictionary("ko")}>
     <ErrorBoundary
       fallback={
         <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
@@ -194,7 +195,7 @@ const NutritionRecipePageWithErrorBoundary = () => (
       <NutritionRecipePage />
     </ErrorBoundary>
     <BottomAnchorAdSlot />
-  </>
+  </DictionaryProvider>
 );
 
 export default NutritionRecipePageWithErrorBoundary;

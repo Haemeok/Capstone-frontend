@@ -6,6 +6,24 @@ export const aiRecipe: AiRecipeDict = {
   backToModelSelect: "AI 다시 선택하기",
   generateRecipe: "레시피 생성하기",
   errorFallback: "AI 레시피 생성 중 문제가 발생했어요",
+  loading: {
+    titleSuffix: "레시피를 만들고 있어요",
+    progressLabel: "진행률",
+    tipHeading: "💡 잠깐!",
+    tipBody: [
+      "다른 작업을 해도 괜찮아요!",
+      "다른 페이지를 둘러보시거나 냉장고를 확인해보세요.",
+      "레시피가 완성되면 알려드릴게요.",
+    ],
+    eta: "보통 2~3분 정도 걸려요",
+  },
+  error: {
+    defaultMessage: "레시피 생성 중 오류가 발생했습니다.",
+    failureHeading: "레시피 생성 실패",
+    failureBody: "레시피 생성 중 문제가 발생했습니다.",
+    retryButton: "다시 시도하기",
+    persistentTip: "문제가 계속 발생하면 잠시 후 다시 시도해주세요.",
+  },
   models: {
     INGREDIENT_FOCUS: {
       name: "냉장고 속 재료",

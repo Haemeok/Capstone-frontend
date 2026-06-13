@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import { BottomAnchorAdSlot } from "@/shared/adsense";
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 
 const FineDiningPage = () => {
   return (
-    <>
+    <DictionaryProvider dict={getDictionary("ko")}>
       <ErrorBoundary
         fallback={
           <SectionErrorFallback message="AI 레시피 생성 중 문제가 발생했어요" />
@@ -23,7 +24,7 @@ const FineDiningPage = () => {
         <FineDiningRecipe />
       </ErrorBoundary>
       <BottomAnchorAdSlot />
-    </>
+    </DictionaryProvider>
   );
 };
 
