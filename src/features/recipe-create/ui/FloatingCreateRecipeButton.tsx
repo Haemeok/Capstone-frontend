@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 
+import { useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useScrollContext } from "@/shared/lib/ScrollContext";
 
@@ -19,6 +20,7 @@ const MotionLink = motion.create(Link);
 
 const FloatingCreateRecipeButton = () => {
   const { motionRef } = useScrollContext();
+  const { ui } = useRecipeFormDict();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedWidth, setExpandedWidth] = useState<number | null>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
@@ -80,13 +82,13 @@ const FloatingCreateRecipeButton = () => {
         className="pointer-events-none fixed top-0 left-0 flex h-14 items-center pr-5 pl-4 font-bold whitespace-nowrap opacity-0 md:hidden"
       >
         <Plus size={20} />
-        <span className="ml-1">레시피</span>
+        <span className="ml-1">{ui.floatingCreateText}</span>
       </div>
       {expandedWidth !== null && (
         <MotionLink
           href="/recipes/new"
           prefetch={false}
-          aria-label="레시피 등록하기"
+          aria-label={ui.floatingCreateLabel}
           onClick={() => triggerHaptic("Light")}
           className="z-header sticky-optimized bg-olive-light fixed right-5 bottom-24 flex h-14 items-center justify-center overflow-hidden rounded-full font-bold text-white shadow-lg transition-transform duration-150 active:scale-[0.98] md:hidden"
           initial={false}
@@ -109,7 +111,7 @@ const FloatingCreateRecipeButton = () => {
             }}
             transition={{ duration: 0.15, ease: "easeOut" }}
           >
-            레시피
+            {ui.floatingCreateText}
           </motion.span>
         </MotionLink>
       )}

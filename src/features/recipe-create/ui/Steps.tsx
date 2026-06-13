@@ -12,7 +12,7 @@ import StepItem from "./StepItem";
 
 const Steps = () => {
   const { control } = useFormContext<RecipeFormValues>();
-  const { labels } = useRecipeFormDict();
+  const { labels, ui } = useRecipeFormDict();
 
   const {
     fields: stepFields,
@@ -85,7 +85,7 @@ const Steps = () => {
             className="transition-transform group-hover:scale-105"
           />
           <span className="transition-transform group-hover:scale-105">
-            과정 추가
+            {ui.stepAdd}
           </span>
         </button>
       </div>

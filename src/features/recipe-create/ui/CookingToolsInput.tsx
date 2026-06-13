@@ -5,13 +5,13 @@ import { useFormContext, useWatch } from "react-hook-form";
 
 import { X } from "lucide-react";
 
-import { useRecipeFormDict } from "@/shared/i18n";
+import { format, useRecipeFormDict } from "@/shared/i18n";
 
 import { RecipeFormValues } from "../model/config";
 
 const CookingToolsInput = () => {
   const { control, setValue } = useFormContext<RecipeFormValues>();
-  const { labels } = useRecipeFormDict();
+  const { labels, ui } = useRecipeFormDict();
   const cookingToolsValue = useWatch({
     control,
     name: "cookingTools",
@@ -60,7 +60,7 @@ const CookingToolsInput = () => {
                   type="button"
                   onClick={() => removeCookingTool(tool)}
                   className="-mr-1 cursor-pointer rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-red-500"
-                  aria-label={`${tool} 삭제`}
+                  aria-label={format(ui.cookingToolRemove, { name: tool })}
                 >
                   <X size={14} aria-hidden="true" />
                 </button>
@@ -74,9 +74,9 @@ const CookingToolsInput = () => {
           value={currentToolInput}
           onChange={(e) => setCurrentToolInput(e.target.value)}
           onKeyDown={handleToolInputKeyDown}
-          aria-label="조리도구 입력"
+          aria-label={ui.cookingToolInputLabel}
           className="focus:border-olive-light focus:ring-olive-light w-full rounded border border-gray-300 p-2 focus:ring-1 focus:outline-none"
-          placeholder="조리도구 입력 후 스페이스바 (예: 냄비 프라이팬)"
+          placeholder={ui.cookingToolPlaceholder}
         />
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form";
 
 import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
-import { useRecipeFormDict } from "@/shared/i18n";
+import { format, useRecipeFormDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
 
@@ -39,7 +39,7 @@ const RecipeFormLayout = ({
     register,
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
-  const { labels } = useRecipeFormDict();
+  const { labels, ui } = useRecipeFormDict();
 
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
@@ -65,12 +65,12 @@ const RecipeFormLayout = ({
                   errors.dishType ? "border-red-500" : "border-olive-light"
                 )}
                 {...register("dishType", {
-                  required: "필수",
+                  required: ui.dishTypeRequired,
                 })}
                 defaultValue=""
               >
                 <option value="" disabled>
-                  선택
+                  {ui.dishTypePlaceholder}
                 </option>
                 {DISH_TYPES_FOR_CREATE_RECIPE.map((dishType) => (
                   <option key={dishType} value={dishType}>
@@ -89,7 +89,7 @@ const RecipeFormLayout = ({
 
             <div className="flex flex-col items-center gap-2">
               <label htmlFor="cookingTime" className="text-ink-sub font-medium">
-                {labels.cookingTime} (분)
+                {labels.cookingTime} {ui.cookingTimeUnitSuffix}
               </label>
               <input
                 id="cookingTime"
@@ -99,13 +99,13 @@ const RecipeFormLayout = ({
                   `focus:border-olive-light focus:ring-olive-light text-ink w-20 rounded-lg border bg-gray-50 px-3 py-1.5 text-center text-sm transition-colors duration-150 ease-in-out focus:ring-1 focus:outline-none`,
                   errors.cookingTime ? "border-red-500" : "border-gray-300"
                 )}
-                placeholder="숫자"
+                placeholder={ui.cookingTimePlaceholder}
                 {...register("cookingTime", {
                   validate: (value) => {
                     if (!value) return true;
                     const num = Number(value);
-                    if (isNaN(num)) return "숫자만 입력 가능합니다";
-                    if (num < 1) return "1분 이상 입력해주세요";
+                    if (isNaN(num)) return ui.cookingTimeNumberOnly;
+                    if (num < 1) return ui.cookingTimeMinValue;
                     return true;
                   },
                 })}
@@ -130,7 +130,7 @@ const RecipeFormLayout = ({
           <div className="mt-8 flex flex-col items-center justify-center gap-4 pb-20 md:pb-8">
             {submitError && (
               <p className="text-sm text-red-600">
-                오류: {submitError.message}
+                {format(ui.submitErrorPrefix, { message: submitError.message })}
               </p>
             )}
             <RecipeProgressButton isLoading={isLoading} isEdit={isEdit} />

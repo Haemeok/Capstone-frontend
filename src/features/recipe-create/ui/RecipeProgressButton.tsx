@@ -16,7 +16,7 @@ const RecipeProgressButton = ({
   isLoading,
   isEdit,
 }: RecipeProgressButtonProps) => {
-  const { labels, validation } = useRecipeFormDict();
+  const { labels, validation, ui } = useRecipeFormDict();
 
   const schema = useMemo(() => buildRecipeFormSchema(validation), [validation]);
 
@@ -24,7 +24,7 @@ const RecipeProgressButton = ({
     <FormProgressButton<RecipeFormValues>
       schema={schema}
       isLoading={isLoading}
-      text={isEdit ? "레시피 수정하기" : "레시피 등록하기"}
+      text={isEdit ? ui.submitEdit : ui.submitCreate}
       fieldLabels={labels}
     />
   );

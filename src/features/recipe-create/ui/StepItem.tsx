@@ -4,6 +4,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 
 import { X } from "lucide-react";
 
+import { format, useRecipeFormDict } from "@/shared/i18n";
 import { ImageUploader } from "@/shared/ui/image/ImageUploader";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Label } from "@/shared/ui/shadcn/label";
@@ -32,6 +33,7 @@ const StepItem = ({
     register,
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
+  const { ui } = useRecipeFormDict();
 
   const mainIngredients = useWatch({
     control,
@@ -92,7 +94,7 @@ const StepItem = ({
 
         <div className="mt-4 border-t pt-4">
           <h4 className="text-ink-sub mb-2 text-sm font-medium">
-            이 단계에서 사용할 재료:
+            {ui.stepIngredientsHeading}
           </h4>
           {mainIngredients.length > 0 ? (
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
@@ -129,14 +131,12 @@ const StepItem = ({
               })}
             </div>
           ) : (
-            <p className="text-ink-muted text-sm">
-              먼저 메인 재료 목록에 재료를 추가해주세요.
-            </p>
+            <p className="text-ink-muted text-sm">{ui.stepIngredientsEmpty}</p>
           )}
         </div>
         <textarea
           id={`step-instruction-${index}`}
-          aria-label={`${index + 1}번째 조리 과정`}
+          aria-label={format(ui.stepInstructionLabel, { n: index + 1 })}
           aria-required={index === 0}
           aria-invalid={!!errors.steps?.[index]?.instruction}
           aria-describedby={
@@ -147,9 +147,9 @@ const StepItem = ({
           className={`mt-2 w-full rounded-md border border-gray-300 p-3 ${
             errors.steps?.[index]?.instruction ? "border-red-500" : ""
           } focus:border-olive-light min-h-[100px] resize-none focus:border-2 focus:outline-none`}
-          placeholder={`${index + 1}번째 과정을 설명해주세요.`}
+          placeholder={format(ui.stepInstructionPlaceholder, { n: index + 1 })}
           {...register(`steps.${index}.instruction`, {
-            required: index === 0 ? "조리 과정 설명은 필수입니다" : false,
+            required: index === 0 ? ui.stepInstructionRequired : false,
           })}
         />
         {errors.steps?.[index]?.instruction && (
@@ -165,7 +165,7 @@ const StepItem = ({
       <div className="absolute top-2 right-2">
         <button
           type="button"
-          aria-label={`${index + 1}번째 단계 삭제`}
+          aria-label={format(ui.stepRemove, { n: index + 1 })}
           className="text-ink-muted cursor-pointer hover:bg-red-100 hover:text-red-600"
           onClick={() => removeStep(index)}
           disabled={!isDeletable}

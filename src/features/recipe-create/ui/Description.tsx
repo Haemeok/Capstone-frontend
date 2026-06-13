@@ -1,5 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
+import { useRecipeFormDict } from "@/shared/i18n";
+
 import { RecipeFormValues } from "../model/config";
 
 const Description = () => {
@@ -7,16 +9,17 @@ const Description = () => {
     register,
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
+  const { ui } = useRecipeFormDict();
 
   return (
     <div className="mb-4 rounded-xl bg-white p-4 shadow-sm">
       <textarea
         id="description"
-        aria-label="레시피 설명"
+        aria-label={ui.descriptionLabel}
         aria-invalid={!!errors.description}
         aria-describedby={errors.description ? "description-error" : undefined}
         className="text-ink placeholder:text-ink-muted h-24 w-full resize-none focus:outline-none"
-        placeholder="레시피에 대한 간단한 설명을 작성하세요.&#10;어떤 특징이 있는지, 어떤 상황에서 먹기 좋은지 등을 알려주세요."
+        placeholder={ui.descriptionPlaceholder}
         {...register("description")}
       />
       {errors.description && (

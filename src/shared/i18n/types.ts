@@ -455,6 +455,37 @@ export type RecipeFormDict = {
     instructionRequired: string;
     categoryRequired: string;
   };
+  ui: {
+    dishTypeRequired: string;
+    dishTypePlaceholder: string;
+    cookingTimeUnitSuffix: string;
+    cookingTimePlaceholder: string;
+    cookingTimeNumberOnly: string;
+    cookingTimeMinValue: string;
+    submitErrorPrefix: string;
+    titleLabel: string;
+    titlePlaceholder: string;
+    descriptionLabel: string;
+    descriptionPlaceholder: string;
+    servingsLabel: string;
+    servingsDecrease: string;
+    servingsIncrease: string;
+    servingsUnitSuffix: string;
+    cookingToolRemove: string;
+    cookingToolInputLabel: string;
+    cookingToolPlaceholder: string;
+    stepAdd: string;
+    stepIngredientsHeading: string;
+    stepIngredientsEmpty: string;
+    stepInstructionLabel: string;
+    stepInstructionPlaceholder: string;
+    stepInstructionRequired: string;
+    stepRemove: string;
+    submitCreate: string;
+    submitEdit: string;
+    floatingCreateLabel: string;
+    floatingCreateText: string;
+  };
 };
 
 export type Dictionary = {
