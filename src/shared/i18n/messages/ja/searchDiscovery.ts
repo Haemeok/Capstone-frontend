@@ -76,4 +76,16 @@ export const searchDiscovery: SearchDiscoveryDict = {
       subtitle: "たんぱく質30g以上",
     },
   },
+  nutritionThemes: {
+    KETO: { label: "ケト" },
+    LOW_SUGAR: { label: "低糖質" },
+    HIGH_PROTEIN: { label: "高たんぱく" },
+    WEGOVY_FRIENDLY: { label: "GLP-1向け" },
+    ANTI_AGING: { label: "エイジングケア" },
+    LOW_CALORIE: { label: "低カロリー" },
+    LOW_FAT: { label: "低脂質" },
+    LOW_SODIUM: { label: "減塩" },
+    BALANCED: { label: "バランス食" },
+    BUDGET: { label: "節約" },
+  },
 };

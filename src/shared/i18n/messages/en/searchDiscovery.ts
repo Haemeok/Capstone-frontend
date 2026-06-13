@@ -76,4 +76,16 @@ export const searchDiscovery: SearchDiscoveryDict = {
       subtitle: "30g+ protein",
     },
   },
+  nutritionThemes: {
+    KETO: { label: "Keto" },
+    LOW_SUGAR: { label: "Low-sugar" },
+    HIGH_PROTEIN: { label: "High-protein" },
+    WEGOVY_FRIENDLY: { label: "GLP-1 friendly" },
+    ANTI_AGING: { label: "Anti-aging" },
+    LOW_CALORIE: { label: "Low-calorie" },
+    LOW_FAT: { label: "Low-fat" },
+    LOW_SODIUM: { label: "Low-sodium" },
+    BALANCED: { label: "Balanced" },
+    BUDGET: { label: "Budget" },
+  },
 };

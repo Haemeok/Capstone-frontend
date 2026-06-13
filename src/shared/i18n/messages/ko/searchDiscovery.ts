@@ -76,4 +76,16 @@ export const searchDiscovery: SearchDiscoveryDict = {
       subtitle: "단백질 30g 이상 벌크업",
     },
   },
+  nutritionThemes: {
+    KETO: { label: "키토" },
+    LOW_SUGAR: { label: "저당" },
+    HIGH_PROTEIN: { label: "고단백" },
+    WEGOVY_FRIENDLY: { label: "위고비 친화" },
+    ANTI_AGING: { label: "항노화" },
+    LOW_CALORIE: { label: "저칼로리" },
+    LOW_FAT: { label: "저지방" },
+    LOW_SODIUM: { label: "저염식" },
+    BALANCED: { label: "균형식" },
+    BUDGET: { label: "저예산" },
+  },
 };

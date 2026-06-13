@@ -148,6 +148,7 @@ export type HomeDict = {
 };
 
 import type { ContentPageId } from "@/shared/config/constants/content-pages";
+import type { NutritionThemeKey } from "@/shared/config/constants/recipe";
 
 export type SearchDiscoveryDict = {
   searchInputAria: string;
@@ -161,6 +162,7 @@ export type SearchDiscoveryDict = {
     dinner: string[];
   };
   contentPages: Record<ContentPageId, { title: string; subtitle: string }>;
+  nutritionThemes: Record<NutritionThemeKey, { label: string }>;
 };
 
 import type { AIModelId, DiningTier } from "@/shared/config/constants/aiModel";

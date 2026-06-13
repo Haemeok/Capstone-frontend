@@ -7,6 +7,7 @@ import {
   NUTRITION_THEMES,
   NutritionThemeKey,
 } from "@/shared/config/constants/recipe";
+import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 import { Image } from "@/shared/ui/image/Image";
@@ -32,6 +33,7 @@ const buildNutritionHref = (themeKey: NutritionThemeKey) => {
 };
 
 const NutritionThemeSection = () => {
+  const t = useSearchDiscoveryDict();
   const themeKeys = Object.keys(NUTRITION_THEMES) as NutritionThemeKey[];
 
   return (
@@ -48,13 +50,13 @@ const NutritionThemeSection = () => {
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
               <Image
                 src={`${ICON_BASE_URL}${theme.icon}`}
-                alt={theme.label}
+                alt={t.nutritionThemes[key].label}
                 wrapperClassName="w-8 h-8"
                 lazy={false}
               />
             </div>
             <span className="text-ink text-sm font-medium whitespace-nowrap">
-              {theme.label}
+              {t.nutritionThemes[key].label}
             </span>
           </Link>
         );
