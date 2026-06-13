@@ -2,6 +2,8 @@
 
 import { UtensilsCrossed } from "lucide-react";
 
+import { useUserPagesDict } from "@/shared/i18n";
+
 import { RecipeHistoryDetailResponse } from "@/entities/recipe/model/record";
 import { RecipeRecordItem } from "@/entities/recipe/ui/RecipeRecordItem";
 
@@ -10,14 +12,16 @@ type RecipeListSectionProps = {
 };
 
 const RecipeListSection = ({ data }: RecipeListSectionProps) => {
+  const t = useUserPagesDict().calendar;
+
   return (
     <section className="border-t border-gray-100 py-6">
-      <h3 className="text-ink mb-4 text-lg font-bold">오늘 먹은 레시피</h3>
+      <h3 className="text-ink mb-4 text-lg font-bold">{t.recipeListHeading}</h3>
 
       {!data || data.length === 0 ? (
         <div className="flex flex-col items-center py-10">
           <UtensilsCrossed className="mb-3 h-10 w-10 text-gray-300" />
-          <p className="text-ink-muted text-sm">아직 기록된 레시피가 없어요</p>
+          <p className="text-ink-muted text-sm">{t.recipeListEmpty}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">

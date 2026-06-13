@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 
-import CalendarDetailPage from "./page";
+let mockPathname = "/calendar/2026-05-03";
 
 jest.mock("next/navigation", () => ({
   useParams: () => ({ date: "2026-05-03" }),
   useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => mockPathname,
 }));
 
 jest.mock("@/widgets/Toast/model/store", () => ({
@@ -36,13 +37,21 @@ jest.mock("@/entities/recipe/model/hooks", () => ({
   }),
 }));
 
-describe("CalendarDetailPage (T-01)", () => {
-  it("토글 없이 절약·영양·레시피가 한 화면에 모두 보인다", () => {
-    render(<CalendarDetailPage />);
+import CalendarDetailPage from "./page";
 
-    expect(screen.getByText("직접 만들어서")).toBeInTheDocument();
-    expect(screen.getByText("나트륨")).toBeInTheDocument();
+describe("CalendarDetailPage (T-19/20)", () => {
+  it("ko → 절약 카드 + 레시피 목록 표시", () => {
+    mockPathname = "/calendar/2026-05-03";
+    render(<CalendarDetailPage />);
+    expect(screen.getByText("절약")).toBeInTheDocument();
     expect(screen.getByText("김치볶음밥")).toBeInTheDocument();
     expect(screen.getByText("된장찌개")).toBeInTheDocument();
+  });
+
+  it("en → 절약 카드 부재 (T-20)", () => {
+    mockPathname = "/en/calendar/2026-05-03";
+    render(<CalendarDetailPage />);
+    expect(screen.queryByText("절약")).not.toBeInTheDocument();
+    expect(screen.queryByText("Savings")).not.toBeInTheDocument();
   });
 });

@@ -157,12 +157,13 @@ export const getRecipeHistory = async ({
   return response;
 };
 
-export const getRecipeHistoryItems = async (date: string) => {
+export const getRecipeHistoryItems = async (date: string, lang: Locale) => {
   const response = await api.get<RecipeHistoryDetailResponse[]>(
     END_POINTS.RECIPE_HISTORY,
     {
       params: {
         date,
+        lang,
       },
     }
   );
