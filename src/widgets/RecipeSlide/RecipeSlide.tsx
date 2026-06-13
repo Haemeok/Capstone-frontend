@@ -1,8 +1,11 @@
+"use client";
+
 import { ReactNode } from "react";
 import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
+import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
 import {
   Carousel,
@@ -51,17 +54,17 @@ const RecipeSlideLoading = () => (
   </div>
 );
 
-const RecipeSlideError = () => (
+type InlineProps = { message: string };
+
+const RecipeSlideError = ({ message }: InlineProps) => (
   <div className="flex h-30 w-full items-center justify-center py-8">
-    <p className="text-ink-muted text-sm">
-      잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.
-    </p>
+    <p className="text-ink-muted text-sm">{message}</p>
   </div>
 );
 
-const RecipeSlideEmpty = () => (
+const RecipeSlideEmpty = ({ message }: InlineProps) => (
   <div className="flex w-full items-center justify-center py-8">
-    <p className="text-ink-muted text-sm">아직 레시피가 없어요.</p>
+    <p className="text-ink-muted text-sm">{message}</p>
   </div>
 );
 
@@ -73,10 +76,13 @@ const RecipeSlide = ({
   error,
   locale,
 }: RecipeSlideProps) => {
+  const t = useSearchDiscoveryDict();
+
   const renderContent = () => {
     if (isLoading) return <RecipeSlideLoading />;
-    if (error) return <RecipeSlideError />;
-    if (recipes.length === 0) return <RecipeSlideEmpty />;
+    if (error) return <RecipeSlideError message={t.recipeSlideError} />;
+    if (recipes.length === 0)
+      return <RecipeSlideEmpty message={t.recipeSlideEmpty} />;
 
     return (
       <Carousel
@@ -128,7 +134,7 @@ const RecipeSlide = ({
             href={to}
             className="text-ink-muted hover:text-ink-sub flex items-center text-sm"
           >
-            더보기
+            {t.recipeSlideViewMore}
             <ChevronRight size={16} />
           </Link>
         )}

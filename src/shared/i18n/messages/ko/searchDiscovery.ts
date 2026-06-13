@@ -9,6 +9,9 @@ export const searchDiscovery: SearchDiscoveryDict = {
   latestRecipesTitle: "따끈따끈한 최신 레시피",
   contentSectionTitle: "이런 레시피 어때요?",
   nutritionSectionTitle: "오늘은 어떤 한 끼가 끌려요?",
+  recipeSlideViewMore: "더보기",
+  recipeSlideEmpty: "아직 레시피가 없어요.",
+  recipeSlideError: "잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.",
   placeholders: {
     breakfast: [
       '출근 전 든든한 "계란 레시피" 검색',

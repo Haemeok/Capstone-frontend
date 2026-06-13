@@ -9,6 +9,9 @@ export const searchDiscovery: SearchDiscoveryDict = {
   latestRecipesTitle: "Freshly added recipes",
   contentSectionTitle: "Recipes you might like",
   nutritionSectionTitle: "What are you in the mood for?",
+  recipeSlideViewMore: "View more",
+  recipeSlideEmpty: "No recipes yet.",
+  recipeSlideError: "Something went wrong. Please try again later.",
   placeholders: {
     breakfast: [
       'Easy "scrambled eggs" recipe',

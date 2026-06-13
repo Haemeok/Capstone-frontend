@@ -9,6 +9,10 @@ export const searchDiscovery: SearchDiscoveryDict = {
   latestRecipesTitle: "できたての新着レシピ",
   contentSectionTitle: "こんなレシピはいかが？",
   nutritionSectionTitle: "今日はどんな一品にする？",
+  recipeSlideViewMore: "もっと見る",
+  recipeSlideEmpty: "まだレシピがありません。",
+  recipeSlideError:
+    "サーバーに問題が発生しました。後でもう一度お試しください。",
   placeholders: {
     breakfast: [
       "朝にうれしい「卵焼き」を検索",

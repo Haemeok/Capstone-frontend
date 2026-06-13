@@ -159,6 +159,9 @@ export type SearchDiscoveryDict = {
   latestRecipesTitle: string;
   contentSectionTitle: string;
   nutritionSectionTitle: string;
+  recipeSlideViewMore: string;
+  recipeSlideEmpty: string;
+  recipeSlideError: string;
   placeholders: {
     breakfast: string[];
     lunch: string[];
