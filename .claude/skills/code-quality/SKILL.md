@@ -60,6 +60,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [SSR ↔ client query key parity](rules/policy-ssr-client-query-key-parity.md) — SSR prefetch key must byte-match the client hook's key incl. codec/parser defaults, or hydration silently CSR-refetches
 - [i18n type gate misses unextracted literals](rules/policy-i18n-type-gate-misses-unextracted-strings.md) — a typed Dictionary gates missing keys, not unextracted inline strings; grep the localized files for source-language chars after wiring
 - [i18n chrome vs content axes](rules/policy-i18n-chrome-vs-content-axes.md) — localizing chrome doesn't localize the fetch; plumb the new locale through query key + fetch params + href, never a boundary remap-to-default (masked on SSR page 0)
+- [i18n locale prefix breaks path equality](rules/policy-i18n-locale-prefix-breaks-path-equality.md) — locale-prefixing links breaks active-state/`aria-current` checks that compare raw `usePathname()` to a bare route; normalize via `stripLocale` first (only fails on `/en`·`/ja`, not default locale)
 - [Env via shared/config](rules/policy-env-config.md) — no direct `process.env`
 - [Storage keys](rules/policy-storage-keys.md) — constants module
 - [Z-index tokens](rules/policy-zindex.md) — semantic names, no magic numbers
