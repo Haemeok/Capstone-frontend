@@ -56,7 +56,7 @@
 | ----------- | ----------------------------------------- | ----- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 레시피 상세 | `/recipes/[recipeId]`                     | H     | 🟡   | 백엔드 연동·read-path chrome 완료(34키). 🔸DEFER: 숫자+단위 포맷(구독자수 만명·`분`·`인분`·절약액 `원`)·절약 마케팅 카피·RecipeCompleteButton. EXCLUDE(비목표): 재료 복사/신고 시트·평점·댓글폼·챗 |
 | 검색 결과   | `/search/results`                         | H     | 🟢   | ja/en 완료                                                                                                                                                                                         |
-| 홈          | `/`                                       | H     | 🔴   | 라우트·chrome 미착수                                                                                                                                                                               |
+| 홈          | `/`                                       | H     | 🔴   | chrome(헤더/하단탭/푸터) 완료 → 잠금해제. 라우트(ja/en)·홈 하드카피("주간 인기"/"가성비"/CategoryTabs title)·배너 미착수                                                                           |
 | 검색 진입   | `/search`                                 | H     | 🔴   | `/search/results`만 됨, 진입 페이지 별도                                                                                                                                                           |
 | 카테고리    | `/recipes/category/[id]`                  | H     | 🔴   |                                                                                                                                                                                                    |
 | 재료 목록   | `/ingredients`                            | H     | 🔴   |                                                                                                                                                                                                    |
@@ -108,14 +108,14 @@
 
 ## 4. 글로벌/공유 영역 (페이지 가로지름 — 별도 추적)
 
-| 항목                           | 상태 | 비고                                                                 |
-| ------------------------------ | ---- | -------------------------------------------------------------------- |
-| 헤더/네비게이션 chrome         | 🔴   | 전 페이지 공통. 사전 네임스페이스 신설 필요                          |
-| 하단 탭바                      | 🔴   |                                                                      |
-| Toast/공통 버튼 문구           | 🔴   |                                                                      |
-| root layout `<html lang="ko">` | 🔴   | ja/en 페이지에도 ko로 박혀있음(Phase 1 수용). next-intl 전환 시 해결 |
-| sitemap 로케일 분리            | 🔴   | 백엔드 `availableLocales`/locale sitemap 엔드포인트 대기             |
-| 가격/통화 기호 분기            | 🔴   | 円/원 — 가격 렌더가 여러 컴포넌트에 흩어짐. 전역 작업 필요           |
+| 항목                           | 상태 | 비고                                                                                                                                                                                            |
+| ------------------------------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 헤더/네비게이션 chrome         | 🟢   | `nav` 네임스페이스 + `useChromeDict`(client pathname 자가판단). 헤더 nav/로그인/알림(plural)/설치/저장북/프로필 + 푸터 라벨 ko/ja/en. 푸터 고유명사·이메일·Copyright·브랜드·법적 href는 ko 유지 |
+| 하단 탭바                      | 🟢   | BottomNavBar 홈/검색/냉장고/AI 레시피/My ko/ja/en (`nav` 사전)                                                                                                                                  |
+| Toast/공통 버튼 문구           | 🔴   | 저장북 toast만 `nav`에 포함. 일반 공통버튼/`common` 네임스페이스 미착수                                                                                                                         |
+| root layout `<html lang="ko">` | 🔴   | ja/en 페이지에도 ko로 박혀있음(Phase 1 수용). next-intl 전환 시 해결                                                                                                                            |
+| sitemap 로케일 분리            | 🔴   | 백엔드 `availableLocales`/locale sitemap 엔드포인트 대기                                                                                                                                        |
+| 가격/통화 기호 분기            | 🔴   | 円/원 — 가격 렌더가 여러 컴포넌트에 흩어짐. 전역 작업 필요                                                                                                                                      |
 
 ---
 
@@ -166,3 +166,13 @@
 - [2026-06-13][i18n] 이번 피처 설계·계획·머지전 검증 체크리스트 상세:
   `docs/superpowers/specs/2026-06-12-multilingual-ui-copy-*.md`(design/slices/test-design/
   plan/worklog).
+- [2026-06-13][i18n] 공유 nav chrome 완료(헤더·하단탭·푸터). **접근법 A**: chrome가 root
+  layout 단일 렌더라 locale prop 없음 → 순수 `resolveChromeLocale(pathname)` + client
+  `useChromeDict()`로 URL prefix 자가판단(신규 client 전환 0, `headers()` 미도입→정적 보존).
+  `nav` 네임스페이스 `messages/{ko,ja,en}/nav.ts`(번들 격리 위해 navMessages가 nav 슬라이스만
+  직접 import). 6 task TDD, chrome 스위트 35/35. ko 회귀를 위젯마다 앵커. 비번역: 푸터
+  고유명사·이메일·Copyright·브랜드, 법적 링크 href는 ko 목적지 유지. **DEFER/비목표**: `<html lang>`
+  per-locale(root 전용→next-intl 후속), CategoryTabs·Toast·`common` 버튼, RecipeNavBarButtons
+  (레시피 상세 전용), 언어 스위처. 설계/계획: `docs/superpowers/{specs,plans}/2026-06-13-chrome-nav-i18n-*`.
+- [2026-06-13][i18n] 🔓 chrome 완료로 **홈 잠금해제**. 다음 우선순위(보드 §3): 홈 라우트화 →
+  재료목록/카테고리/큐레이션(SEO). 단 백엔드 `availableLocales`/sitemap 미전달이라 발견 경로 0은 여전.
