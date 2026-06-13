@@ -19,8 +19,6 @@ type CardEditorProps = {
 };
 
 type CardTexts = {
-  hooking: string;
-  subject: string;
   summaries: { title: string; summary: string }[];
 };
 
@@ -50,7 +48,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
   const generateTexts = async () => {
     setGenerating(true);
     try {
-      const prompt = buildCardNewsPrompt(filter, thumbnail, recipes);
+      const prompt = buildCardNewsPrompt(filter, recipes);
       const result = await askGrok(prompt);
 
       if (!result.success) {
@@ -65,7 +63,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
 
       const parsed: CardTexts = JSON.parse(json);
       setTexts(parsed);
-      setFolderName(parsed.subject);
     } catch (err) {
       console.error("AI 텍스트 파싱 실패:", err);
       alert("AI 응답 파싱에 실패했습니다. 다시 시도해주세요.");
@@ -80,7 +77,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
     const run = async () => {
       setGenerating(true);
       try {
-        const prompt = buildCardNewsPrompt(filter, thumbnail, recipes);
+        const prompt = buildCardNewsPrompt(filter, recipes);
         const result = await askGrok(prompt);
         if (cancelled) return;
 
@@ -96,7 +93,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
 
         const parsed: CardTexts = JSON.parse(json);
         setTexts(parsed);
-        setFolderName(parsed.subject);
       } catch (err) {
         if (cancelled) return;
         console.error("AI 텍스트 파싱 실패:", err);
@@ -111,16 +107,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // 텍스트 업데이트 헬퍼
-  const updateHooking = (value: string) => {
-    setTexts((prev) => (prev ? { ...prev, hooking: value } : null));
-  };
-
-  const updateSubject = (value: string) => {
-    setTexts((prev) => (prev ? { ...prev, subject: value } : null));
-    setFolderName(value);
-  };
 
   const updateSummary = (index: number, value: string) => {
     setTexts((prev) => {
@@ -194,7 +180,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
           <ThumbnailCard
             ref={thumbnailRef}
             imageUrl={thumbnail.imageUrl}
-            hooking={texts.hooking}
+            hooking=""
           />
           {recipes.map((recipe, i) => (
             <RecipeCard
@@ -202,7 +188,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
               ref={recipeRefs.current[i]}
               imageUrl={recipe.imageUrl}
               title={recipe.title}
-              summary={texts.summaries[i + 1]?.summary ?? ""}
+              summary={texts.summaries[i]?.summary ?? ""}
               boxPosition={boxPositions[i] ?? "bottom"}
               index={i + 1}
             />
@@ -250,29 +236,6 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
         <div className="flex gap-8">
           {/* 왼쪽: 편집 패널 */}
           <div className="w-[400px] flex-shrink-0 space-y-6">
-            {/* 썸네일 텍스트 */}
-            <div className="rounded-2xl border border-gray-100 p-4">
-              <h3 className="mb-3 text-sm font-bold text-gray-900">썸네일</h3>
-              <label className="mb-1 block text-xs text-gray-500">
-                후킹 문구
-              </label>
-              <textarea
-                value={texts.hooking}
-                onChange={(e) => updateHooking(e.target.value)}
-                rows={2}
-                className="focus:border-olive-light mb-3 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:outline-none"
-              />
-              <label className="mb-1 block text-xs text-gray-500">
-                주제 요약
-              </label>
-              <textarea
-                value={texts.subject}
-                onChange={(e) => updateSubject(e.target.value)}
-                rows={2}
-                className="focus:border-olive-light w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:outline-none"
-              />
-            </div>
-
             {/* 레시피 카드 텍스트 */}
             {recipes.map((recipe, i) => (
               <div
@@ -291,12 +254,12 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                   </button>
                 </div>
                 <label className="mb-1 block text-xs text-gray-500">
-                  요약 (5줄)
+                  요약 (2줄)
                 </label>
                 <textarea
-                  value={texts.summaries[i + 1]?.summary ?? ""}
-                  onChange={(e) => updateSummary(i + 1, e.target.value)}
-                  rows={5}
+                  value={texts.summaries[i]?.summary ?? ""}
+                  onChange={(e) => updateSummary(i, e.target.value)}
+                  rows={2}
                   className="focus:border-olive-light w-full resize-none rounded-xl border border-gray-200 p-3 text-sm text-gray-900 focus:outline-none"
                 />
               </div>
@@ -321,10 +284,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                 className="origin-top-left"
                 style={{ transform: "scale(0.35)", width: 1080, height: 1080 }}
               >
-                <ThumbnailCard
-                  imageUrl={thumbnail.imageUrl}
-                  hooking={texts.hooking}
-                />
+                <ThumbnailCard imageUrl={thumbnail.imageUrl} hooking="" />
               </div>
             </div>
 
@@ -349,7 +309,7 @@ export const CardEditor = ({ filter, thumbnail, recipes }: CardEditorProps) => {
                   <RecipeCard
                     imageUrl={recipe.imageUrl}
                     title={recipe.title}
-                    summary={texts.summaries[i + 1]?.summary ?? ""}
+                    summary={texts.summaries[i]?.summary ?? ""}
                     boxPosition={boxPositions[i] ?? "bottom"}
                     index={i + 1}
                   />
