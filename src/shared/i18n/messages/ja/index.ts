@@ -7,6 +7,7 @@ import { nav } from "./nav";
 import { recipeDetail } from "./recipeDetail";
 import { errors, meta, notFound, search } from "./search";
 import { searchDiscovery } from "./searchDiscovery";
+import { taxonomy } from "./taxonomy";
 import { userPages } from "./userPages";
 import { youtube } from "./youtube";
 
@@ -24,4 +25,5 @@ export const ja: Dictionary = {
   fridge,
   searchDiscovery,
   userPages,
+  taxonomy,
 };

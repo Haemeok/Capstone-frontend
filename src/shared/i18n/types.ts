@@ -374,6 +374,10 @@ export type UserPagesDict = {
   };
 };
 
+export type TaxonomyDict = {
+  recipeType: Record<"USER" | "AI" | "YOUTUBE", string>;
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -388,4 +392,5 @@ export type Dictionary = {
   fridge: FridgeDict;
   searchDiscovery: SearchDiscoveryDict;
   userPages: UserPagesDict;
+  taxonomy: TaxonomyDict;
 };
