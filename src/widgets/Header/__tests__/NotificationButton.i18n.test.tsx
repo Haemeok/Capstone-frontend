@@ -1,0 +1,36 @@
+import { usePathname } from "next/navigation";
+
+import { render, screen } from "@testing-library/react";
+
+import NotificationButton from "../NotificationButton";
+
+jest.mock("next/navigation", () => ({ usePathname: jest.fn() }));
+jest.mock("@/entities/user", () => ({
+  useUserStore: () => ({ user: { id: "u1" } }),
+}));
+
+const mockUnread = jest.fn();
+jest.mock("@/entities/notification", () => ({
+  useInfiniteNotificationsQuery: () => ({ unreadCount: mockUnread() }),
+}));
+
+const setPath = (p: string) => (usePathname as jest.Mock).mockReturnValue(p);
+
+describe("NotificationButton i18n", () => {
+  it("T-07: /en, 미읽음 3 → 영어 plural aria + count", () => {
+    setPath("/en");
+    mockUnread.mockReturnValue(3);
+    render(<NotificationButton />);
+    expect(
+      screen.getByLabelText("Go to notifications (3 unread)")
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("3 unread notifications")).toBeInTheDocument();
+  });
+
+  it("T-08: /en, 미읽음 0 → 기본 aria(미읽음 절 없음)", () => {
+    setPath("/en");
+    mockUnread.mockReturnValue(0);
+    render(<NotificationButton />);
+    expect(screen.getByLabelText("Go to notifications")).toBeInTheDocument();
+  });
+});
