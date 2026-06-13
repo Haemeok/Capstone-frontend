@@ -2,6 +2,7 @@
 
 import { getCategoriesForBudget } from "@/shared/config/constants/budget";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { useT } from "@/shared/i18n";
 import { CheckIcon } from "@/shared/ui/icons";
 import { Image } from "@/shared/ui/image";
 
@@ -16,14 +17,17 @@ const CategorySelector = ({
   selectedCategory,
   onChange,
 }: CategorySelectorProps) => {
+  const t = useT();
   const categories = getCategoriesForBudget(budget);
 
   return (
     <div className="space-y-5">
       <div className="text-center">
-        <h2 className="text-ink text-xl font-bold">어떤 음식이 땡기시나요?</h2>
+        <h2 className="text-ink text-xl font-bold">
+          {t.aiRecipe.price.foodPickHeading}
+        </h2>
         <p className="text-ink-sub mt-1 text-sm">
-          선호하는 음식 종류를 선택해주세요
+          {t.aiRecipe.price.foodPickDescription}
         </p>
       </div>
 

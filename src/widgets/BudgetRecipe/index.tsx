@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { AiFormInArticleAdSlot } from "@/shared/adsense";
 import { BUDGET_DEFAULT } from "@/shared/config/constants/budget";
+import { useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
 import PrevButton from "@/shared/ui/PrevButton";
@@ -23,6 +24,7 @@ const CONCEPT = "COST_EFFECTIVE" as const;
 
 const BudgetRecipe = () => {
   const router = useRouter();
+  const t = useT();
   const [budget, setBudget] = useState(BUDGET_DEFAULT);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -58,7 +60,9 @@ const BudgetRecipe = () => {
               className="text-ink-sub hover:text-ink hidden items-center gap-2 transition-colors md:flex"
             >
               <ArrowLeftIcon size={20} />
-              <span className="text-sm font-medium">AI 다시 선택하기</span>
+              <span className="text-sm font-medium">
+                {t.aiRecipe.backToModelSelect}
+              </span>
             </button>
           </div>
           <BudgetHeader />
@@ -85,7 +89,7 @@ const BudgetRecipe = () => {
                 className="bg-olive-light hover:bg-olive-medium flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-lg"
               >
                 <ChefHatIcon className="h-6 w-6" />
-                <span>레시피 생성하기</span>
+                <span>{t.aiRecipe.generateRecipe}</span>
               </button>
             )}
           </UsageLimitSection>

@@ -5,6 +5,7 @@ import {
   BUDGET_MIN,
   BUDGET_STEP,
 } from "@/shared/config/constants/budget";
+import { useT } from "@/shared/i18n";
 import { Slider } from "@/shared/ui/shadcn/slider";
 
 type PriceSliderProps = {
@@ -13,6 +14,8 @@ type PriceSliderProps = {
 };
 
 const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
+  const t = useT();
+
   const handleValueChange = (values: number[]) => {
     onChange(values[0]);
   };
@@ -20,7 +23,9 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
   return (
     <div className="space-y-6">
       <div className="space-y-3 text-center">
-        <p className="text-ink-sub text-sm font-medium">목표 예산</p>
+        <p className="text-ink-sub text-sm font-medium">
+          {t.aiRecipe.price.budgetLabel}
+        </p>
         <div className="text-olive-light text-5xl font-black transition-all duration-300">
           {value.toLocaleString()}원
         </div>

@@ -1,4 +1,7 @@
+"use client";
+
 import { AVERAGE_MEAL_PRICE } from "@/shared/config/constants/budget";
+import { format, useT } from "@/shared/i18n";
 import {
   calculateMonthlySavings,
   calculateSavings,
@@ -10,6 +13,7 @@ type SavingsDisplayProps = {
 };
 
 const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
+  const t = useT();
   const savings = calculateSavings(budget);
   const monthlySavings = calculateMonthlySavings(budget);
 
@@ -17,7 +21,9 @@ const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
     return (
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
         <p className="text-ink-sub text-sm">
-          직장인 평균 한끼 예산({AVERAGE_MEAL_PRICE.toLocaleString()}원)이에요
+          {format(t.aiRecipe.price.averageMealInfo, {
+            price: AVERAGE_MEAL_PRICE.toLocaleString(),
+          })}
         </p>
       </div>
     );
@@ -28,19 +34,18 @@ const SavingsDisplay = ({ budget }: SavingsDisplayProps) => {
       <div className="border-olive-light bg-olive-light/10 flex items-center justify-center gap-2 rounded-lg border-2 p-4">
         <TrendingDownIcon className="text-olive-medium h-5 w-5" />
         <p className="text-ink text-sm font-medium">
-          직장인 평균 한끼보다{" "}
-          <span className="text-olive-medium font-bold">
-            {savings.toLocaleString()}원
-          </span>{" "}
-          절약해요!
+          {format(t.aiRecipe.price.savingsMessage, {
+            savings: savings.toLocaleString(),
+          })}
         </p>
       </div>
 
       <div className="border-olive-mint from-olive-light to-olive-mint flex items-center justify-center gap-2 rounded-lg border-2 bg-gradient-to-r p-4 text-white shadow-md">
         <SparklesIcon className="h-5 w-5" />
         <p className="text-sm font-bold">
-          매일 이렇게 드시면 한 달에 {Math.floor(monthlySavings / 10000)}만 원
-          아껴요!
+          {format(t.aiRecipe.price.monthlySavingsMessage, {
+            months: Math.floor(monthlySavings / 10000),
+          })}
         </p>
       </div>
     </div>
