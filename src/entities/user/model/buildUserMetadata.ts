@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { absoluteUrl, BASE_URL } from "@/shared/config/constants/api";
-import type { Locale } from "@/shared/i18n";
+import { format, type Locale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n/hreflang";
 import { userPagesMessages } from "@/shared/i18n/userPagesMessages";
 import { isDefaultProfileImage } from "@/shared/lib/colors";
@@ -22,7 +22,9 @@ export const buildUserMetadata = async (
   }
 
   const title = `${user.nickname} - ${meta.titleSuffix}`;
-  const description = user.introduction || meta.fallbackDescription;
+  const description =
+    user.introduction ||
+    format(meta.introFallbackTemplate, { nickname: user.nickname });
   const image =
     user.profileImage && !isDefaultProfileImage(user.profileImage)
       ? user.profileImage

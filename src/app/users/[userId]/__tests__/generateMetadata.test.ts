@@ -41,7 +41,9 @@ describe("generateMetadata (T-601~603)", () => {
   it("T-602: 소개 없으면 폴백 description", async () => {
     mk({ introduction: "" });
     const m = await generateMetadata({ params });
-    expect(m.description).toBe("레시피오에서 이 프로필을 확인해보세요.");
+    expect(m.description).toBe(
+      "유저님의 레시피와 요리 활동을 레시피오에서 확인해보세요."
+    );
   });
 
   it("T-603: 이미지 없으면 폴백 이미지", async () => {

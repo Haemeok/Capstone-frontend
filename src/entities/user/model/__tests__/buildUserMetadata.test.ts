@@ -27,7 +27,9 @@ describe("buildUserMetadata (T-04~07)", () => {
     mockGetUser.mockResolvedValue({ ...baseUser, introduction: "" });
     const m = await buildUserMetadata("u1", "en");
     expect(m.title).toBe("유저 - Recipio");
-    expect(m.description).toBe("Check out this profile on Recipio.");
+    expect(m.description).toBe(
+      "See 유저's recipes and cooking activity on Recipio."
+    );
   });
 
   it("ja 로케일 → 일본어 폴백 카피 (T-05)", async () => {
@@ -35,7 +37,7 @@ describe("buildUserMetadata (T-04~07)", () => {
     const m = await buildUserMetadata("u1", "ja");
     expect(m.title).toBe("유저 - Recipio");
     expect(m.description).toBe(
-      "Recipioでこのプロフィールをチェックしましょう。"
+      "유저さんのレシピと料理の記録をRecipioでチェックしましょう。"
     );
   });
 
