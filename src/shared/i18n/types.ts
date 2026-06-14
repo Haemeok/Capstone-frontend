@@ -660,6 +660,16 @@ export type AuthDict = {
   };
 };
 
+export type NotificationsDict = {
+  title: string;
+  deleteAll: string;
+  empty: string;
+  allLoaded: string;
+  loadingMore: string;
+  deleteAria: string;
+  profileAlt: string;
+};
+
 export type ReferralDict = {
   giftAria: string;
   adFreeLabel: string;
@@ -715,4 +725,5 @@ export type Dictionary = {
   settings: SettingsDict;
   ratings: RatingsDict;
   auth: AuthDict;
+  notifications: NotificationsDict;
 };

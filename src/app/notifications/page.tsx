@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Trash2 } from "lucide-react";
 
+import { useNotificationsDict } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -20,6 +21,7 @@ import {
 
 const NotificationsPage = () => {
   const router = useRouter();
+  const t = useNotificationsDict();
   const { notifications, hasNextPage, isFetching, isFetchingNextPage, ref } =
     useInfiniteNotificationsQuery();
 
@@ -44,7 +46,7 @@ const NotificationsPage = () => {
       <div className="relative flex h-10 items-center justify-between">
         <PrevButton />
         <h1 className="absolute left-1/2 -translate-x-1/2 text-2xl font-bold">
-          알림
+          {t.title}
         </h1>
         <Button
           variant="outline"
@@ -53,7 +55,7 @@ const NotificationsPage = () => {
           onClick={() => deleteAllNotifications()}
         >
           <Trash2 className="h-4 w-4" />
-          모두 삭제
+          {t.deleteAll}
         </Button>
       </div>
       <div className="space-y-2">
@@ -71,14 +73,12 @@ const NotificationsPage = () => {
         )}
       </div>
       <div ref={ref} className="h-4" />
-      {isFetchingNextPage && <div>Loading more...</div>}
+      {isFetchingNextPage && <div>{t.loadingMore}</div>}
       {!hasNextPage && !isFetching && notifications.length === 0 && (
-        <div className="text-ink-muted py-4 text-center">알림이 없습니다.</div>
+        <div className="text-ink-muted py-4 text-center">{t.empty}</div>
       )}
       {!hasNextPage && notifications.length > 0 && (
-        <div className="text-ink-muted py-4 text-center">
-          모든 알림을 불러왔습니다.
-        </div>
+        <div className="text-ink-muted py-4 text-center">{t.allLoaded}</div>
       )}
     </Container>
   );

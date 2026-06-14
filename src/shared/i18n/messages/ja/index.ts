@@ -8,6 +8,7 @@ import { home } from "./home";
 import { ingredientDetail } from "./ingredientDetail";
 import { ingredientPicker } from "./ingredientPicker";
 import { nav } from "./nav";
+import { notifications } from "./notifications";
 import { ratings } from "./ratings";
 import { recipeCreate } from "./recipeCreate";
 import { recipeDetail } from "./recipeDetail";
@@ -44,4 +45,5 @@ export const ja: Dictionary = {
   settings,
   ratings,
   auth,
+  notifications,
 };

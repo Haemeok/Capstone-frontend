@@ -10,6 +10,7 @@ export { ingredientPickerMessages } from "./ingredientPickerMessages";
 export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
 export { notFoundMessages } from "./notFoundMessages";
+export { notificationsMessages } from "./notificationsMessages";
 export { getStoredLocale, setStoredLocale } from "./preferredLocale";
 export { ratingsMessages } from "./ratingsMessages";
 export { recipeFormMessages } from "./recipeFormMessages";
@@ -26,6 +27,7 @@ export type {
   IngredientPickerDict,
   Locale,
   NavDict,
+  NotificationsDict,
   Plural,
   RatingsDict,
   RecipeCreateDict,
@@ -53,6 +55,7 @@ export {
 } from "./useIngredientPickerDict";
 export { useLocalizedRouter } from "./useLocalizedRouter";
 export { useNotFoundDict } from "./useNotFoundDict";
+export { useNotificationsDict } from "./useNotificationsDict";
 export { useRatingsDict } from "./useRatingsDict";
 export {
   useRecipeCreateDict,
