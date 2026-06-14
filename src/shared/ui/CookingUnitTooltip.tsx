@@ -4,20 +4,9 @@ import { useState } from "react";
 
 import { ChevronRight } from "lucide-react";
 
+import { useCookingUnitsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-
-type UnitConversion = {
-  unit: string;
-  value: string;
-  tip: string;
-};
-
-const UNIT_CONVERSIONS: UnitConversion[] = [
-  { unit: "1큰술 (1T)", value: "15ml", tip: "밥숟가락 약 2번" },
-  { unit: "1작은술 (1t)", value: "5ml", tip: "티스푼 1개" },
-  { unit: "1컵 (1C)", value: "200ml", tip: "종이컵 가득은 약 180ml" },
-];
 
 type CookingUnitTooltipProps = {
   inline?: boolean;
@@ -25,6 +14,7 @@ type CookingUnitTooltipProps = {
 
 const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dict = useCookingUnitsDict();
   const { Container, Content, Header, Title, Description } =
     useResponsiveSheet();
 
@@ -39,7 +29,7 @@ const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
       onClick={handleOpen}
       className="text-ink-muted hover:text-ink-sub inline-flex cursor-pointer items-center gap-1 text-sm underline-offset-4 transition-colors hover:underline"
     >
-      요리 단위 변환표
+      {dict.tableTrigger}
       <ChevronRight size={14} />
     </button>
   );
@@ -56,16 +46,16 @@ const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
         <Content className="sm:max-w-md">
           <Header>
             <Title className="text-ink text-xl font-bold">
-              요리 단위 변환표
+              {dict.tableTitle}
             </Title>
             <Description className="text-ink-muted text-sm">
-              레시피에 자주 나오는 계량 단위를 확인해보세요
+              {dict.tableDescription}
             </Description>
           </Header>
 
           <div className="px-4 pb-6">
             <ul className="divide-y divide-gray-100 overflow-hidden rounded-2xl border border-gray-100 bg-white">
-              {UNIT_CONVERSIONS.map((item) => (
+              {dict.conversions.map((item) => (
                 <li key={item.unit} className="flex flex-col gap-0.5 p-4">
                   <div className="flex items-baseline justify-between gap-2">
                     <span className="text-ink font-bold">{item.unit}</span>

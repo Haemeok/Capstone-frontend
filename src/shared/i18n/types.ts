@@ -515,8 +515,20 @@ export type RecipeFormDict = {
     myIngredients: string;
     imageUploadPlaceholder: string;
     imagePreviewAlt: string;
+    imageRequiredFallback: string;
     missingFieldsPrefix: string;
   };
+};
+
+export type CookingUnitsDict = {
+  tableTrigger: string;
+  tableTitle: string;
+  tableDescription: string;
+  conversions: {
+    unit: string;
+    value: string;
+    tip: string;
+  }[];
 };
 
 export type IngredientPickerDict = {

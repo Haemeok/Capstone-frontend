@@ -86,6 +86,7 @@ export const recipeForm: RecipeFormDict = {
     myIngredients: "マイ食材",
     imageUploadPlaceholder: "画像をアップロード",
     imagePreviewAlt: "画像プレビュー",
+    imageRequiredFallback: "画像は必須です",
     missingFieldsPrefix: "次の項目を入力してください:",
   },
 };

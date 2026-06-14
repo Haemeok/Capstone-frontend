@@ -86,6 +86,7 @@ export const recipeForm: RecipeFormDict = {
     myIngredients: "My ingredients",
     imageUploadPlaceholder: "Upload image",
     imagePreviewAlt: "Image preview",
+    imageRequiredFallback: "An image is required.",
     missingFieldsPrefix: "Please fill in:",
   },
 };

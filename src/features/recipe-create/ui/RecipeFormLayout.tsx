@@ -4,6 +4,7 @@ import { useFormContext } from "react-hook-form";
 
 import { DISH_TYPES_FOR_CREATE_RECIPE } from "@/shared/config/constants/recipe";
 import { format, useRecipeFormDict } from "@/shared/i18n";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
 
@@ -40,6 +41,7 @@ const RecipeFormLayout = ({
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
   const { labels, ui } = useRecipeFormDict();
+  const { localize } = useTaxonomy();
 
   return (
     <form id="recipe-form" onSubmit={onSubmit}>
@@ -74,7 +76,7 @@ const RecipeFormLayout = ({
                 </option>
                 {DISH_TYPES_FOR_CREATE_RECIPE.map((dishType) => (
                   <option key={dishType} value={dishType}>
-                    {dishType}
+                    {localize(dishType, "dishType")}
                   </option>
                 ))}
               </select>

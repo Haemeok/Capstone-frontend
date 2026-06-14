@@ -6,6 +6,7 @@ import { FieldPath, get, useFormContext, useWatch } from "react-hook-form";
 import { Trash2, UploadIcon } from "lucide-react";
 
 import { useImagePreview } from "@/shared/hooks/useImagePreview";
+import { useRecipeFormDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -23,6 +24,7 @@ export const ImageUploader = ({ fieldName, className }: ImageUploaderProps) => {
     setValue,
     formState: { errors },
   } = useFormContext<RecipeFormValues>();
+  const { ui } = useRecipeFormDict();
 
   const imageValue = useWatch({ control, name: fieldName });
 
@@ -69,18 +71,19 @@ export const ImageUploader = ({ fieldName, className }: ImageUploaderProps) => {
         {displayUrl ? (
           <Image
             src={displayUrl}
-            alt="Image preview"
+            alt={ui.imagePreviewAlt}
             wrapperClassName="h-full w-full"
             imgClassName="object-cover"
             fit="cover"
+            lazy={false}
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center text-center">
             <UploadIcon size={48} className="mb-3" />
-            <p>이미지 업로드</p>
+            <p>{ui.imageUploadPlaceholder}</p>
             {error && (
               <p className="mt-1 text-xs text-red-500">
-                {error.message || "이미지 파일은 필수입니다."}
+                {error.message || ui.imageRequiredFallback}
               </p>
             )}
           </div>

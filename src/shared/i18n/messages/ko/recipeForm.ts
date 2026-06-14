@@ -85,6 +85,7 @@ export const recipeForm: RecipeFormDict = {
     myIngredients: "나의 재료",
     imageUploadPlaceholder: "이미지 업로드",
     imagePreviewAlt: "이미지 미리보기",
+    imageRequiredFallback: "이미지 파일은 필수입니다.",
     missingFieldsPrefix: "다음 항목을 입력해주세요:",
   },
 };
