@@ -8,6 +8,7 @@ export { buildHreflangAlternates } from "./hreflang";
 export { ingredientPickerMessages } from "./ingredientPickerMessages";
 export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
+export { notFoundMessages } from "./notFoundMessages";
 export { getStoredLocale, setStoredLocale } from "./preferredLocale";
 export { recipeFormMessages } from "./recipeFormMessages";
 export { resolveChromeLocale } from "./resolveChromeLocale";
@@ -43,6 +44,7 @@ export {
   useIngredientPickerLocale,
 } from "./useIngredientPickerDict";
 export { useLocalizedRouter } from "./useLocalizedRouter";
+export { useNotFoundDict } from "./useNotFoundDict";
 export {
   useRecipeCreateDict,
   useRecipeCreateLocale,

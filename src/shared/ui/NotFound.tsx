@@ -3,19 +3,24 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { useNotFoundDict } from "@/shared/i18n/useNotFoundDict";
+
 import { useDeleteNotification } from "@/entities/notification";
 
-type NotFoundWithNotificationProps = {
-  title: string;
-  description: string;
+type NotFoundKey = "recipe" | "generic";
+
+type NotFoundProps = {
+  titleKey?: NotFoundKey;
+  descriptionKey?: NotFoundKey;
   emoji?: string;
 };
 
 const NotFound = ({
-  title,
-  description,
+  titleKey = "generic",
+  descriptionKey = "generic",
   emoji = "🚫",
-}: NotFoundWithNotificationProps) => {
+}: NotFoundProps) => {
+  const t = useNotFoundDict();
   const router = useRouter();
   const searchParams = useSearchParams();
   const notificationId = searchParams.get("notificationId");
@@ -40,20 +45,20 @@ const NotFound = ({
     <div className="flex min-h-[80dvh] flex-col items-center justify-center p-4">
       <div className="flex max-w-md flex-col items-center gap-6 text-center">
         <div className="text-6xl">{emoji}</div>
-        <h1 className="text-ink text-2xl font-bold">{title}</h1>
-        <p className="text-ink-sub">{description}</p>
+        <h1 className="text-ink text-2xl font-bold">{t[titleKey].title}</h1>
+        <p className="text-ink-sub">{t[descriptionKey].description}</p>
         <div className="flex gap-3">
           <button
             onClick={handleGoBack}
             className="text-ink-sub rounded-lg bg-gray-100 px-6 py-3 font-medium transition-colors hover:bg-gray-200"
           >
-            뒤로 가기
+            {t.goBack}
           </button>
           <button
             onClick={handleGoHome}
             className="bg-olive-light hover:bg-olive-dark rounded-lg px-6 py-3 font-medium text-white transition-colors"
           >
-            홈으로 가기
+            {t.goHome}
           </button>
         </div>
       </div>

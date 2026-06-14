@@ -54,4 +54,15 @@ export const errors: ErrorsDict = {
 export const notFound: NotFoundDict = {
   message: "We couldn't find that recipe.",
   searchCta: "Browse recipes",
+  goBack: "Go back",
+  goHome: "Go home",
+  recipe: {
+    title: "Recipe not found",
+    description:
+      "This recipe was deleted or doesn't exist. Want to find another?",
+  },
+  generic: {
+    title: "Page not found",
+    description: "The page you're looking for doesn't exist.",
+  },
 };

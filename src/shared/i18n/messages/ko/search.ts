@@ -54,4 +54,15 @@ export const errors: ErrorsDict = {
 export const notFound: NotFoundDict = {
   message: "레시피를 찾을 수 없습니다.",
   searchCta: "레시피 찾아보기",
+  goBack: "뒤로 가기",
+  goHome: "홈으로 가기",
+  recipe: {
+    title: "존재하지 않는 레시피입니다",
+    description:
+      "레시피가 삭제되었거나 존재하지 않습니다. 다른 레시피를 찾아보시겠어요?",
+  },
+  generic: {
+    title: "페이지를 찾을 수 없어요",
+    description: "요청하신 페이지가 존재하지 않습니다.",
+  },
 };

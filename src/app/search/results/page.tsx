@@ -133,7 +133,6 @@ const buildEnhancedQuery = (
 
   const parts: string[] = [];
 
-  // tags → 한글명
   if (params.tags) {
     const tagCodes =
       typeof params.tags === "string" ? params.tags.split(",") : params.tags;
@@ -143,14 +142,12 @@ const buildEnhancedQuery = (
     }
   }
 
-  // ingredientIds → 재료명
   if (params.ingredientIds) {
     const ids = params.ingredientIds.split(",").filter(Boolean);
     const names = getIngredientNamesByIds(ids);
     parts.push(...names);
   }
 
-  // dishType → 한글명
   if (params.dishType) {
     const dish = SEO_DISH_TYPE_ENTRIES.find((d) => d.code === params.dishType);
     if (dish) parts.push(dish.name);
@@ -164,7 +161,6 @@ const buildEnhancedQuery = (
     }
   }
 
-  // nutrition params → 테마 SEO 라벨 매칭
   const matchedTheme = NUTRITION_THEMES_FOR_SEO.find((theme) =>
     Object.entries(theme.params).every(([key, value]) => {
       const paramValue = params[key as keyof SearchResultsSearchParams];
@@ -233,7 +229,6 @@ export async function generateMetadata({
   const totalElements = pageData.page.totalElements;
   const firstImage = pageData.content[0]?.imageUrl;
 
-  // 구조화된 파라미터에서 향상된 검색어 생성
   const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
 
   const title = buildSearchTitle(enhancedQ, totalElements, page, "ko");
