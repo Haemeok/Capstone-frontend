@@ -668,6 +668,18 @@ export type NotificationsDict = {
   loadingMore: string;
   deleteAria: string;
   profileAlt: string;
+  templates: Record<
+    | "NEW_COMMENT"
+    | "NEW_REPLY"
+    | "AI_RECIPE_DONE"
+    | "NEW_FAVORITE"
+    | "NEW_RECIPE_LIKE"
+    | "NEW_COMMENT_LIKE"
+    | "NEW_RECIPE_RATING"
+    | "REFERRAL_REWARD_GRANTED",
+    string
+  >;
+  genericMessage: string;
 };
 
 export type ReferralDict = {
