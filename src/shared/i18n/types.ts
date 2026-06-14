@@ -408,6 +408,8 @@ export type TaxonomyDict = {
   ingredientCategory: Record<string, string>;
   nutritionTheme: Record<NutritionThemeKey, string>;
   nutritionLabel: Record<NutritionFilterKey, string>;
+  country: Record<string, string>;
+  recipeSort: Record<string, string>;
   filters: {
     sectionRecipeType: string;
     drawerTitle: string;
@@ -422,6 +424,9 @@ export type TaxonomyDict = {
     tagsChipDefault: string;
     reset: string;
     apply: string;
+    themeSection: string;
+    countrySection: string;
+    sortAria: string;
   };
 };
 

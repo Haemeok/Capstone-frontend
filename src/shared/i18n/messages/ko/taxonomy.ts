@@ -79,6 +79,19 @@ export const taxonomy: TaxonomyDict = {
     sugar: "당류",
     sodium: "나트륨",
   },
+  country: {
+    한국: "한국",
+    일본: "일본",
+    기타: "기타",
+  },
+  recipeSort: {
+    최신순: "최신순",
+    좋아요순: "좋아요순",
+    별점순: "별점순",
+    저장순: "저장순",
+    오래된순: "오래된순",
+    인기순: "인기순",
+  },
   filters: {
     sectionRecipeType: "레시피 유형",
     drawerTitle: "필터",
@@ -93,5 +106,8 @@ export const taxonomy: TaxonomyDict = {
     tagsChipDefault: "태그",
     reset: "초기화",
     apply: "완료",
+    themeSection: "식단 테마",
+    countrySection: "크리에이터 국가",
+    sortAria: "정렬 순서 변경: 현재 {sort}",
   },
 };

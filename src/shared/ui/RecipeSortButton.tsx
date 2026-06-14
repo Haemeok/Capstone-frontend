@@ -1,5 +1,9 @@
+"use client";
+
 import React from "react";
 
+import { format } from "@/shared/i18n";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { cn } from "@/shared/lib/utils";
 import { ChevronDownIcon } from "@/shared/ui/icons";
 
@@ -11,7 +15,9 @@ const RecipeSortButton = React.forwardRef<
   HTMLButtonElement,
   RecipeSortButtonProps
 >(({ currentSort, className, ...props }, ref) => {
+  const { dict, localize } = useTaxonomy();
   const isDirty = currentSort !== "최신순";
+  const sortLabel = localize(currentSort, "recipeSort");
 
   return (
     <button
@@ -22,11 +28,11 @@ const RecipeSortButton = React.forwardRef<
         isDirty ? "border-dark-light" : "border-gray-300",
         className
       )}
-      aria-label={`정렬 순서 변경: 현재 ${currentSort}`}
+      aria-label={format(dict.filters.sortAria, { sort: sortLabel })}
       {...props}
     >
       <p className={cn("text-[15px]", isDirty ? "text-white" : "text-ink-sub")}>
-        {currentSort}
+        {sortLabel}
       </p>
       <ChevronDownIcon
         className={cn(isDirty ? "text-white" : "text-ink-sub")}

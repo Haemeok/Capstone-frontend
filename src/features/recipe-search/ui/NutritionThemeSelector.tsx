@@ -5,6 +5,7 @@ import {
   NUTRITION_THEMES,
   NutritionThemeKey,
 } from "@/shared/config/constants/recipe";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { getTypedEntries } from "@/shared/lib/types/utils";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -18,12 +19,17 @@ export const NutritionThemeSelector = ({
   selectedTheme,
   onThemeSelect,
 }: NutritionThemeSelectorProps) => {
+  const { dict, label } = useTaxonomy();
+
   return (
     <div className="space-y-3">
-      <h5 className="text-ink-sub text-sm font-semibold">식단 테마</h5>
+      <h5 className="text-ink-sub text-sm font-semibold">
+        {dict.filters.themeSection}
+      </h5>
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-        {getTypedEntries(NUTRITION_THEMES).map(([themeKey, theme]) => {
+        {getTypedEntries(NUTRITION_THEMES).map(([themeKey]) => {
           const isSelected = selectedTheme === themeKey;
+          const themeLabel = label(themeKey, "nutritionTheme");
 
           return (
             <Button
@@ -39,12 +45,12 @@ export const NutritionThemeSelector = ({
             >
               <div className="flex items-center gap-2">
                 <Image
-                  src={`${ICON_BASE_URL}${theme.icon}`}
-                  alt={theme.label}
+                  src={`${ICON_BASE_URL}${NUTRITION_THEMES[themeKey].icon}`}
+                  alt={themeLabel}
                   wrapperClassName="w-4 h-4"
                   lazy={false}
                 />
-                <span>{theme.label}</span>
+                <span>{themeLabel}</span>
               </div>
             </Button>
           );

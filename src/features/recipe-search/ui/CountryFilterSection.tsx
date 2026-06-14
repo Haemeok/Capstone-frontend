@@ -1,6 +1,7 @@
 "use client";
 
 import { COUNTRY_DEFINITIONS } from "@/shared/config/constants/recipe";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { cn } from "@/shared/lib/utils";
 
 import { CountryFlagGlyph } from "@/entities/recipe";
@@ -14,6 +15,8 @@ export const CountryFilterSection = ({
   selectedCountries,
   onCountriesChange,
 }: CountryFilterSectionProps) => {
+  const { dict, localize } = useTaxonomy();
+
   const handleToggle = (label: string) => {
     const next = selectedCountries.includes(label)
       ? selectedCountries.filter((country) => country !== label)
@@ -23,7 +26,9 @@ export const CountryFilterSection = ({
 
   return (
     <div className="space-y-3">
-      <h5 className="text-ink-sub text-sm font-semibold">크리에이터 국가</h5>
+      <h5 className="text-ink-sub text-sm font-semibold">
+        {dict.filters.countrySection}
+      </h5>
       <div className="flex flex-wrap gap-2">
         {COUNTRY_DEFINITIONS.map(({ code, label }) => {
           const isSelected = selectedCountries.includes(label);
@@ -42,7 +47,7 @@ export const CountryFilterSection = ({
               )}
             >
               <CountryFlagGlyph tag={code} />
-              <span>{label}</span>
+              <span>{localize(label, "country")}</span>
             </button>
           );
         })}

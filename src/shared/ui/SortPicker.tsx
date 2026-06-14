@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import {
   Drawer,
@@ -39,29 +40,33 @@ const SelectionContent = ({
   currentSort,
   availableSorts,
   onValueChange,
-}: SelectionContentProps) => (
-  <RadioGroup
-    value={currentSort}
-    onValueChange={onValueChange}
-    className="space-y-3"
-  >
-    {availableSorts.map((sortOption) => (
-      <div key={sortOption} className="flex items-center space-x-2">
-        <RadioGroupItem
-          value={sortOption}
-          id={`radio-${sortOption}`}
-          className="text-ink-sub focus:ring-dark-light h-5 w-5 border-gray-300"
-        />
-        <Label
-          htmlFor={`radio-${sortOption}`}
-          className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          {sortOption}
-        </Label>
-      </div>
-    ))}
-  </RadioGroup>
-);
+}: SelectionContentProps) => {
+  const { localize } = useTaxonomy();
+
+  return (
+    <RadioGroup
+      value={currentSort}
+      onValueChange={onValueChange}
+      className="space-y-3"
+    >
+      {availableSorts.map((sortOption) => (
+        <div key={sortOption} className="flex items-center space-x-2">
+          <RadioGroupItem
+            value={sortOption}
+            id={`radio-${sortOption}`}
+            className="text-ink-sub focus:ring-dark-light h-5 w-5 border-gray-300"
+          />
+          <Label
+            htmlFor={`radio-${sortOption}`}
+            className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            {localize(sortOption, "recipeSort")}
+          </Label>
+        </div>
+      ))}
+    </RadioGroup>
+  );
+};
 
 const SortPicker = ({
   open,
@@ -69,11 +74,13 @@ const SortPicker = ({
   currentSort,
   availableSorts,
   onSortChange,
-  header = "정렬 방식 선택",
+  header,
   description,
   triggerButton,
 }: SortPickerProps) => {
+  const { dict } = useTaxonomy();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const resolvedHeader = header ?? dict.filters.sortHeader;
 
   const handleRadioChange = (value: string) => {
     onSortChange(value);
@@ -87,7 +94,9 @@ const SortPicker = ({
         <Drawer open={open} onOpenChange={onOpenChange}>
           <DrawerContent className="flex w-full flex-col">
             <DrawerHeader className="text-left">
-              <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
+              <DrawerTitle className="text-xl font-bold">
+                {resolvedHeader}
+              </DrawerTitle>
               {description && (
                 <DrawerDescription className="text-md text-ink-muted">
                   {description}

@@ -79,6 +79,19 @@ export const taxonomy: TaxonomyDict = {
     sugar: "Sugar",
     sodium: "Sodium",
   },
+  country: {
+    한국: "Korea",
+    일본: "Japan",
+    기타: "Other",
+  },
+  recipeSort: {
+    최신순: "Newest",
+    좋아요순: "Most liked",
+    별점순: "Top rated",
+    저장순: "Most saved",
+    오래된순: "Oldest",
+    인기순: "Most popular",
+  },
   filters: {
     sectionRecipeType: "Recipe type",
     drawerTitle: "Filters",
@@ -93,5 +106,8 @@ export const taxonomy: TaxonomyDict = {
     tagsChipDefault: "Tags",
     reset: "Reset",
     apply: "Done",
+    themeSection: "Diet themes",
+    countrySection: "Creator country",
+    sortAria: "Change sort order: currently {sort}",
   },
 };
