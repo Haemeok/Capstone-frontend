@@ -1,8 +1,6 @@
-import Link from "next/link";
-
 import { Refrigerator } from "lucide-react";
 
-import { useFridgeDict } from "@/shared/i18n";
+import { LocalizedLink, useFridgeDict } from "@/shared/i18n";
 import { Button } from "@/shared/ui/shadcn/button";
 
 const MyFridgeEmptyState = () => {
@@ -23,11 +21,11 @@ const MyFridgeEmptyState = () => {
           {dict.emptyBodyLine2}
         </p>
       </div>
-      <Link href="/ingredients/new">
+      <LocalizedLink href="/ingredients/new">
         <Button className="bg-olive-light active:bg-olive-light/90 mt-2 h-12 cursor-pointer rounded-xl px-6 font-medium text-white transition-colors">
           {dict.emptyCta}
         </Button>
-      </Link>
+      </LocalizedLink>
     </div>
   );
 };
