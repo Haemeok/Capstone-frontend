@@ -8,7 +8,8 @@ import { Search } from "lucide-react";
 import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { useApiLocale } from "@/shared/i18n";
+import { format, useApiLocale, useIngredientAddDict } from "@/shared/i18n";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -36,6 +37,8 @@ const IngredientSearchDrawer = ({
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
+  const dict = useIngredientAddDict();
+  const { localize } = useTaxonomy();
   const locale = useApiLocale();
 
   const { data, error, hasNextPage, isFetching, status, isPending, ref } =
@@ -104,9 +107,11 @@ const IngredientSearchDrawer = ({
     <Container open={open} onOpenChange={onOpenChange}>
       <Content className="flex w-full flex-col md:max-w-2xl">
         <Header>
-          <Title className="text-ink text-base font-bold">재료 추가</Title>
+          <Title className="text-ink text-base font-bold">
+            {dict.drawerTitle}
+          </Title>
           <Description className="text-ink-muted text-sm">
-            냉장고에 추가할 재료를 검색하세요
+            {dict.drawerDescription}
           </Description>
         </Header>
 
@@ -121,13 +126,17 @@ const IngredientSearchDrawer = ({
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="재료를 검색해서 추가하세요"
+                placeholder={dict.searchPlaceholder}
                 className="text-ink placeholder:text-ink-muted w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus:outline-none"
                 value={inputValue}
                 onChange={handleInputChange}
               />
-              <button type="submit" aria-label="검색" className="sr-only">
-                검색
+              <button
+                type="submit"
+                aria-label={dict.searchAria}
+                className="sr-only"
+              >
+                {dict.searchAction}
               </button>
             </div>
           </form>
@@ -143,7 +152,7 @@ const IngredientSearchDrawer = ({
                     : "text-ink-sub bg-gray-100 hover:bg-gray-200"
                 )}
               >
-                {category}
+                {localize(category, "ingredientCategory")}
               </button>
             ))}
           </div>
@@ -154,11 +163,13 @@ const IngredientSearchDrawer = ({
         >
           {isPending ? (
             <p className="text-ink-muted py-10 text-center text-sm">
-              재료 로딩 중...
+              {dict.loading}
             </p>
           ) : status === "error" ? (
             <p className="text-ink-muted py-10 text-center text-sm">
-              오류가 발생했어요. {error instanceof Error ? error.message : ""}
+              {format(dict.errorPrefix, {
+                message: error instanceof Error ? error.message : "",
+              })}
             </p>
           ) : (
             <div className="space-y-1">
@@ -196,22 +207,23 @@ const IngredientSearchDrawer = ({
                         handleAddRemoveClick(ingredient.id, isAdded)
                       }
                     >
-                      {isAdded ? "추가됨" : "추가"}
+                      {isAdded ? dict.added : dict.add}
                     </Button>
                   </div>
                 );
               })}
               <div ref={ref} className="h-10 text-center">
                 {!hasNextPage && data?.pages[0]?.content?.length > 0 && (
-                  <p className="py-2 text-xs text-gray-400">
-                    모든 재료를 불러왔어요
-                  </p>
+                  <p className="py-2 text-xs text-gray-400">{dict.allLoaded}</p>
                 )}
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (
                 <p className="text-ink-muted py-10 text-center text-sm">
-                  &quot;{searchQuery || selectedCategory}&quot;에 해당하는
-                  재료가 없어요
+                  {format(dict.noResults, {
+                    query:
+                      searchQuery ||
+                      localize(selectedCategory, "ingredientCategory"),
+                  })}
                 </p>
               )}
             </div>
@@ -224,7 +236,7 @@ const IngredientSearchDrawer = ({
                 variant="ghost"
                 className="text-ink h-11 w-full rounded-xl bg-gray-100 text-sm font-semibold active:bg-gray-200"
               >
-                닫기
+                {dict.close}
               </Button>
             </Close>
           ) : (
@@ -233,7 +245,7 @@ const IngredientSearchDrawer = ({
               className="text-ink h-11 w-full rounded-xl bg-gray-100 text-sm font-semibold active:bg-gray-200"
               onClick={() => onOpenChange(false)}
             >
-              닫기
+              {dict.close}
             </Button>
           )}
         </Footer>
