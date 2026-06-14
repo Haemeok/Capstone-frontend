@@ -1,6 +1,6 @@
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import type { Locale } from "@/shared/i18n";
-import { getDictionary } from "@/shared/i18n";
+import { format, getDictionary } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image";
 
 type RecipeCookingInfoSectionProps = {
@@ -32,7 +32,9 @@ export default function RecipeCookingInfoSection({
               {t.recipeDetail.cookingTimeLabel}
             </span>
             <span className="text-ink text-sm font-semibold sm:text-base">
-              {cookingTime > 0 ? `${cookingTime}분` : t.recipeDetail.noInfo}
+              {cookingTime > 0
+                ? format(t.recipeDetail.cookingTimeValue, { n: cookingTime })
+                : t.recipeDetail.noInfo}
             </span>
           </div>
         </div>
@@ -48,7 +50,9 @@ export default function RecipeCookingInfoSection({
               {t.recipeDetail.servingsLabel}
             </span>
             <span className="text-ink text-sm font-semibold sm:text-base">
-              {servings > 0 ? `${servings}인분` : t.recipeDetail.noInfo}
+              {servings > 0
+                ? format(t.recipeDetail.servingsValue, { n: servings })
+                : t.recipeDetail.noInfo}
             </span>
           </div>
         </div>

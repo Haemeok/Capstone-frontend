@@ -118,6 +118,16 @@ export type RecipeDetailDict = {
   recommendedTitle: string;
   recommendedChefTitle: string;
   remixesTitle: string;
+  cookingTimeValue: string;
+  servingsValue: string;
+  caloriePrefix: string;
+  calorieSuffix: string;
+  activityPrefix: string;
+  activitySuffix: string;
+  costPrefix: string;
+  costSuffix: string;
+  savingsPrefix: string;
+  savingsSuffix: string;
 };
 
 export type YoutubeDict = {
@@ -590,6 +600,36 @@ export type CommonDict = {
   collapseAria: string;
 };
 
+export type ReferralDict = {
+  giftAria: string;
+  adFreeLabel: string;
+  adFreeUntil: string;
+  daysLeft: Plural;
+  endsToday: string;
+  sheetTitle: string;
+  sheetTitleWithMonth: string;
+  description: string;
+  myCodeLabel: string;
+  copyAria: string;
+  copyAction: string;
+  copiedToast: string;
+  inputLabel: string;
+  inputPlaceholder: string;
+  inputAria: string;
+  applyAction: string;
+  loadError: string;
+  retry: string;
+  referredBy: string;
+  rewardLimit: string;
+  redeemSuccessToast: string;
+  status: {
+    ALREADY_REDEEMED: string;
+    NOT_ELIGIBLE_OLD_USER: string;
+    REDEEM_WINDOW_EXPIRED: string;
+    NO_ACTIVE_CAMPAIGN: string;
+  };
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -610,4 +650,5 @@ export type Dictionary = {
   category: CategoryDict;
   ingredientPicker: IngredientPickerDict;
   common: CommonDict;
+  referral: ReferralDict;
 };

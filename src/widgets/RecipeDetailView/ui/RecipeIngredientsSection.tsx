@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
+import { useT } from "@/shared/i18n";
 import { formatNumber } from "@/shared/lib/format";
 import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
@@ -62,6 +63,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
     return owned;
   }, [recipe.ingredients, fridgeIngredientIds]);
 
+  const t = useT();
   const randomActivity = useMemo(() => getRandomActivity(), []);
   const servingRatio = isValidServings ? currentServings / recipe.servings : 1;
 
@@ -78,30 +80,30 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
   const rollingMessages = showNutrition
     ? [
         {
-          prefix: "이 레시피는 약",
+          prefix: t.recipeDetail.caloriePrefix,
           pointText: formatNumber(scaledCalories, "kcal"),
-          suffix: "예요!",
+          suffix: t.recipeDetail.calorieSuffix,
         },
         {
-          prefix: "이 칼로리는",
+          prefix: t.recipeDetail.activityPrefix,
           pointText: `${randomActivity.name} ${formatNumber(scaledActivityTime, "분")}`,
-          suffix: "으로 소모 가능해요!",
+          suffix: t.recipeDetail.activitySuffix,
           textClassName: "text-purple-500",
         },
       ]
     : [
         {
-          prefix: "이 레시피에 약",
+          prefix: t.recipeDetail.costPrefix,
           pointText: formatNumber(scaledIngredientCost, "원"),
-          suffix: "필요해요!",
+          suffix: t.recipeDetail.costSuffix,
         },
         {
-          prefix: "배달 물가 대비",
+          prefix: t.recipeDetail.savingsPrefix,
           pointText: formatNumber(
             scaledMarketPrice - scaledIngredientCost,
             "원"
           ),
-          suffix: "절약해요!",
+          suffix: t.recipeDetail.savingsSuffix,
           textClassName: "text-purple-500",
         },
       ];
