@@ -647,6 +647,19 @@ export type RatingsDict = {
   summary: string;
 };
 
+export type AuthDict = {
+  browseWithoutLogin: string;
+  recentLogin: string;
+  loading: string;
+  kakaoLabel: string;
+  naverLabel: string;
+  error: {
+    title: string;
+    description: string;
+    retry: string;
+  };
+};
+
 export type ReferralDict = {
   giftAria: string;
   adFreeLabel: string;
@@ -701,4 +714,5 @@ export type Dictionary = {
   referral: ReferralDict;
   settings: SettingsDict;
   ratings: RatingsDict;
+  auth: AuthDict;
 };

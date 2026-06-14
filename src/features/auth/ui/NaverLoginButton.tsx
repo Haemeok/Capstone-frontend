@@ -3,12 +3,16 @@ import { END_POINTS } from "@/shared/config/constants/api";
 type NaverLoginButtonProps = {
   className?: string;
   isRecent?: boolean;
+  recentLabel?: string;
+  naverLabel?: string;
   onClickCapture?: () => void;
 };
 
 const NaverLoginButton = ({
   className,
   isRecent,
+  recentLabel,
+  naverLabel,
   onClickCapture,
 }: NaverLoginButtonProps) => {
   return (
@@ -24,15 +28,15 @@ const NaverLoginButton = ({
         width={48}
         height={48}
       />
-      <p>네이버로 시작하기</p>
-      {isRecent && <RecentBadge />}
+      <p>{naverLabel ?? "네이버로 시작하기"}</p>
+      {isRecent && <RecentBadge label={recentLabel ?? "최근 로그인"} />}
     </a>
   );
 };
 
-const RecentBadge = () => (
+const RecentBadge = ({ label }: { label: string }) => (
   <span className="absolute right-3 rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium text-white">
-    최근 로그인
+    {label}
   </span>
 );
 

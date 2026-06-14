@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { useAuthDict } from "@/shared/i18n";
 import { storage } from "@/shared/lib/storage";
 import { Image } from "@/shared/ui/image/Image";
 import TextAnimate from "@/shared/ui/shadcn/text-animate";
@@ -18,6 +19,7 @@ const LAST_LOGIN_PROVIDER_KEY = "last_login_provider";
 type SocialProvider = "google" | "kakao" | "naver" | "apple";
 
 const LoginContent = () => {
+  const t = useAuthDict();
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "/";
@@ -71,25 +73,31 @@ const LoginContent = () => {
         <div className="w-full max-w-md space-y-4">
           <GoogleLoginButton
             isRecent={lastProvider === "google"}
+            recentLabel={t.recentLogin}
             onClickCapture={() => saveProvider("google")}
           />
           <KakaoLoginButton
             isRecent={lastProvider === "kakao"}
+            recentLabel={t.recentLogin}
+            kakaoLabel={t.kakaoLabel}
             onClickCapture={() => saveProvider("kakao")}
           />
           <NaverLoginButton
             isRecent={lastProvider === "naver"}
+            recentLabel={t.recentLogin}
+            naverLabel={t.naverLabel}
             onClickCapture={() => saveProvider("naver")}
           />
           <AppleLoginButton
             isRecent={lastProvider === "apple"}
+            recentLabel={t.recentLogin}
             onClickCapture={() => saveProvider("apple")}
           />
           <button
             onClick={() => router.replace(from)}
             className="w-full cursor-pointer text-center text-sm text-white/90 underline underline-offset-4 transition-colors hover:text-white"
           >
-            로그인 없이 볼게요
+            {t.browseWithoutLogin}
           </button>
         </div>
       </div>

@@ -3,11 +3,13 @@ import GoogleIcon from "@/shared/ui/GoogleIcon";
 
 type GoogleLoginButtonProps = {
   isRecent?: boolean;
+  recentLabel?: string;
   onClickCapture?: () => void;
 };
 
 const GoogleLoginButton = ({
   isRecent,
+  recentLabel,
   onClickCapture,
 }: GoogleLoginButtonProps) => {
   return (
@@ -18,14 +20,14 @@ const GoogleLoginButton = ({
     >
       <GoogleIcon />
       <p className="font-bold">Sign in with Google</p>
-      {isRecent && <RecentBadge />}
+      {isRecent && <RecentBadge label={recentLabel ?? "최근 로그인"} />}
     </a>
   );
 };
 
-const RecentBadge = () => (
+const RecentBadge = ({ label }: { label: string }) => (
   <span className="bg-olive-light/10 text-olive-dark absolute right-3 rounded-full px-2 py-0.5 text-xs font-medium">
-    최근 로그인
+    {label}
   </span>
 );
 

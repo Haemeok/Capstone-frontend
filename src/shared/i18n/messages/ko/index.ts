@@ -1,5 +1,6 @@
 import type { Dictionary } from "../../types";
 import { aiRecipe } from "./aiRecipe";
+import { auth } from "./auth";
 import { category } from "./category";
 import { common } from "./common";
 import { fridge } from "./fridge";
@@ -42,4 +43,5 @@ export const ko: Dictionary = {
   referral,
   settings,
   ratings,
+  auth,
 };

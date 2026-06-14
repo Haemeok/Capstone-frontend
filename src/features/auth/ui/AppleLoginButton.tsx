@@ -3,11 +3,13 @@ import AppleIcon from "@/shared/ui/AppleIcon";
 
 type AppleLoginButtonProps = {
   isRecent?: boolean;
+  recentLabel?: string;
   onClickCapture?: () => void;
 };
 
 const AppleLoginButton = ({
   isRecent,
+  recentLabel,
   onClickCapture,
 }: AppleLoginButtonProps) => {
   return (
@@ -18,14 +20,14 @@ const AppleLoginButton = ({
     >
       <AppleIcon />
       <p className="font-bold">Sign in with Apple</p>
-      {isRecent && <RecentBadge />}
+      {isRecent && <RecentBadge label={recentLabel ?? "최근 로그인"} />}
     </a>
   );
 };
 
-const RecentBadge = () => (
+const RecentBadge = ({ label }: { label: string }) => (
   <span className="absolute right-3 rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium text-white">
-    최근 로그인
+    {label}
   </span>
 );
 

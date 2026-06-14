@@ -1,3 +1,4 @@
+export { authMessages } from "./authMessages";
 export { commonMessages } from "./commonMessages";
 export { cookingUnitsMessages } from "./cookingUnitsMessages";
 export { DictionaryProvider, useT } from "./DictionaryProvider";
@@ -16,6 +17,7 @@ export { resolveChromeLocale } from "./resolveChromeLocale";
 export { resolveDateFnsLocale } from "./resolveDateFnsLocale";
 export { resolveLocaleFromPath } from "./resolveLocaleFromPath";
 export type {
+  AuthDict,
   CategoryDict,
   CommonDict,
   CookingUnitsDict,
@@ -35,6 +37,7 @@ export type {
 } from "./types";
 export { LOCALES } from "./types";
 export { useApiLocale } from "./useApiLocale";
+export { useAuthDict } from "./useAuthDict";
 export { useCategoryDict, useCategoryLocale } from "./useCategoryDict";
 export { useChromeDict, useChromeLocale } from "./useChromeDict";
 export { useCommonDict } from "./useCommonDict";
