@@ -88,5 +88,6 @@ export const userPages: UserPagesDict = {
       onFire: "素晴らしい！{n}日連続でチャレンジ中です",
       incredible: "感動的です！{n}日間ずっと料理を続けています",
     },
+    viewAllRecords: "すべての料理記録を見る",
   },
 };

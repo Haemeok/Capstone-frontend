@@ -12,6 +12,7 @@ export { notFoundMessages } from "./notFoundMessages";
 export { getStoredLocale, setStoredLocale } from "./preferredLocale";
 export { recipeFormMessages } from "./recipeFormMessages";
 export { resolveChromeLocale } from "./resolveChromeLocale";
+export { resolveDateFnsLocale } from "./resolveDateFnsLocale";
 export { resolveLocaleFromPath } from "./resolveLocaleFromPath";
 export type {
   CategoryDict,

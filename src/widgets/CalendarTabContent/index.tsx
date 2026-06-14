@@ -10,10 +10,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { format, parseISO } from "date-fns";
-import { ko } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { resolveChromeLocale } from "@/shared/i18n/resolveChromeLocale";
+import {
+  resolveChromeLocale,
+  resolveDateFnsLocale,
+  useUserPagesDict,
+} from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { getProductByPrice } from "@/shared/lib/recipe";
 import { DayPickerDynamic } from "@/shared/ui/DayPickerDynamic";
@@ -45,6 +48,7 @@ const CalendarTabContent = () => {
   const pathname = usePathname();
   const locale = resolveChromeLocale(pathname ?? "/");
   const showSavings = locale === "ko";
+  const t = useUserPagesDict();
 
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth() + 1;
@@ -92,7 +96,7 @@ const CalendarTabContent = () => {
       <DayPickerDynamic
         mode="single"
         showOutsideDays
-        locale={ko}
+        locale={resolveDateFnsLocale(locale)}
         month={currentMonth}
         onMonthChange={setCurrentMonth}
         formatters={{
@@ -205,7 +209,7 @@ const CalendarTabContent = () => {
         onClick={() => triggerHaptic("Light")}
         className="text-ink-sub hover:text-ink mt-2 flex w-full items-center justify-center gap-1 px-5 py-4 text-sm transition-colors"
       >
-        모든 요리 기록 보기
+        {t.calendar.viewAllRecords}
         <ChevronRight className="size-4" />
       </Link>
     </div>

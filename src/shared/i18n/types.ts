@@ -452,6 +452,7 @@ export type UserPagesDict = {
       onFire: string;
       incredible: string;
     };
+    viewAllRecords: string;
   };
 };
 

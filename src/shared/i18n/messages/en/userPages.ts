@@ -88,5 +88,6 @@ export const userPages: UserPagesDict = {
       onFire: "You're on fire — a {n}-day streak!",
       incredible: "Incredible — {n} days of cooking and counting!",
     },
+    viewAllRecords: "View all cooking records",
   },
 };

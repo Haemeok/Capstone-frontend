@@ -48,11 +48,20 @@ test("T-11 ja: MonthlySavingsSummary not rendered, calendar still renders", () =
   (usePathname as jest.Mock).mockReturnValue("/ja/users/u1");
   const { queryByText, getByText } = render(<CalendarTabContent />);
   expect(queryByText(/레시피오 서비스로/)).toBeNull();
-  expect(getByText(/모든 요리 기록 보기/)).toBeInTheDocument();
+  expect(getByText("すべての料理記録を見る")).toBeInTheDocument();
 });
 
 test("T-12 ko: MonthlySavingsSummary present (over-hide guard)", () => {
   (usePathname as jest.Mock).mockReturnValue("/users/u1");
   const { getByText } = render(<CalendarTabContent />);
   expect(getByText(/레시피오 서비스로/)).toBeInTheDocument();
+});
+
+test("T-17 ja: view-all link localized; ko anchor", () => {
+  (usePathname as jest.Mock).mockReturnValue("/ja/users/u1");
+  const { getByText, rerender } = render(<CalendarTabContent />);
+  expect(getByText("すべての料理記録を見る")).toBeInTheDocument();
+  (usePathname as jest.Mock).mockReturnValue("/users/u1");
+  rerender(<CalendarTabContent />);
+  expect(getByText("모든 요리 기록 보기")).toBeInTheDocument();
 });
