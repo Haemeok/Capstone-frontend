@@ -642,6 +642,11 @@ export type SettingsDict = {
   withdrawDeleting: string;
 };
 
+export type RatingsDict = {
+  empty: string;
+  summary: string;
+};
+
 export type ReferralDict = {
   giftAria: string;
   adFreeLabel: string;
@@ -695,4 +700,5 @@ export type Dictionary = {
   common: CommonDict;
   referral: ReferralDict;
   settings: SettingsDict;
+  ratings: RatingsDict;
 };

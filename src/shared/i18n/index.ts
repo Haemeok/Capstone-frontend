@@ -10,6 +10,7 @@ export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
 export { notFoundMessages } from "./notFoundMessages";
 export { getStoredLocale, setStoredLocale } from "./preferredLocale";
+export { ratingsMessages } from "./ratingsMessages";
 export { recipeFormMessages } from "./recipeFormMessages";
 export { resolveChromeLocale } from "./resolveChromeLocale";
 export { resolveDateFnsLocale } from "./resolveDateFnsLocale";
@@ -24,6 +25,7 @@ export type {
   Locale,
   NavDict,
   Plural,
+  RatingsDict,
   RecipeCreateDict,
   RecipeFormDict,
   ReferralDict,
@@ -48,6 +50,7 @@ export {
 } from "./useIngredientPickerDict";
 export { useLocalizedRouter } from "./useLocalizedRouter";
 export { useNotFoundDict } from "./useNotFoundDict";
+export { useRatingsDict } from "./useRatingsDict";
 export {
   useRecipeCreateDict,
   useRecipeCreateLocale,

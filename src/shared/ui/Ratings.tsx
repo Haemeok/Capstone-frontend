@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
+import { format, useRatingsDict } from "@/shared/i18n";
 import { formatNumber } from "@/shared/lib/format";
 
 import StarIcon from "./StarIcon";
@@ -33,6 +34,7 @@ const Ratings = ({
   allowHalf = false,
   className = "",
 }: RatingProps) => {
+  const t = useRatingsDict();
   const [hoverValue, setHoverValue] = useState<number>(0);
   const starRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -104,21 +106,12 @@ const Ratings = ({
 
   const ratingMessage = (value: number, count: number) => {
     if (count < 1) {
-      return (
-        <p className="mt-1 text-sm text-gray-400">
-          아직 평가가 적어요. 평가를 남겨보세요 !
-        </p>
-      );
+      return <p className="mt-1 text-sm text-gray-400">{t.empty}</p>;
     }
     return (
-      <div className="mt-1 flex items-center">
-        <p className="text-olive-mint text-sm font-bold">
-          {formatNumber(count, "명")}
-        </p>
-        <p className="text-sm text-gray-400">의 사람들이 평균</p>
-        <p className="text-olive-mint ml-1 text-sm font-bold">{value}점</p>
-        <p className="text-sm text-gray-400">을 줬어요 !</p>
-      </div>
+      <p className="mt-1 text-sm text-gray-400">
+        {format(t.summary, { count: formatNumber(count, ""), value })}
+      </p>
     );
   };
 

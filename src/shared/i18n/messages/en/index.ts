@@ -7,6 +7,7 @@ import { home } from "./home";
 import { ingredientDetail } from "./ingredientDetail";
 import { ingredientPicker } from "./ingredientPicker";
 import { nav } from "./nav";
+import { ratings } from "./ratings";
 import { recipeCreate } from "./recipeCreate";
 import { recipeDetail } from "./recipeDetail";
 import { recipeForm } from "./recipeForm";
@@ -40,4 +41,5 @@ export const en: Dictionary = {
   common,
   referral,
   settings,
+  ratings,
 };
