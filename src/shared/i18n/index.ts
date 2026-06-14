@@ -7,6 +7,7 @@ export { format, plural } from "./format";
 export { getDictionary } from "./getDictionary";
 export { buildHreflangAlternates } from "./hreflang";
 export { ingredientAddMessages } from "./ingredientAddMessages";
+export { localizePack } from "./ingredientPackMeta";
 export { ingredientPickerMessages } from "./ingredientPickerMessages";
 export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
