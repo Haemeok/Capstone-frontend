@@ -7,11 +7,13 @@ import type {
   PreviousMonthButtonProps,
 } from "react-day-picker";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import { resolveChromeLocale } from "@/shared/i18n/resolveChromeLocale";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { getProductByPrice } from "@/shared/lib/recipe";
 import { DayPickerDynamic } from "@/shared/ui/DayPickerDynamic";
@@ -40,6 +42,9 @@ const CalendarTabContent = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [calendarMode, setCalendarMode] = useState<CalendarMode>("photo");
   const { data: userStreak } = useUserStreakQuery();
+  const pathname = usePathname();
+  const locale = resolveChromeLocale(pathname ?? "/");
+  const showSavings = locale === "ko";
 
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth() + 1;
@@ -66,14 +71,16 @@ const CalendarTabContent = () => {
 
   return (
     <div className="w-full pb-8 md:pb-12">
-      <MonthlySavingsSummary
-        year={year}
-        month={month}
-        monthlyTotalSavings={monthlyTotalSavings}
-        productName={product.name}
-        productImage={product.image}
-        isPending={isPending}
-      />
+      {showSavings && (
+        <MonthlySavingsSummary
+          year={year}
+          month={month}
+          monthlyTotalSavings={monthlyTotalSavings}
+          productName={product.name}
+          productImage={product.image}
+          isPending={isPending}
+        />
+      )}
       <div className="mt-5 flex items-center justify-center px-5">
         <StreakModeToggle mode={calendarMode} onModeChange={setCalendarMode} />
       </div>
