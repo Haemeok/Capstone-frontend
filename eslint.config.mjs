@@ -277,6 +277,35 @@ const localPlugin = {
 
 localPlugin.rules["fsd-import"] = fsdImportRule;
 
+localPlugin.rules["no-raw-router"] = {
+  meta: {
+    type: "suggestion",
+    docs: {
+      description:
+        "Disallow raw useRouter from next/navigation; use useLocalizedRouter so imperative navigation preserves the active locale prefix.",
+    },
+    messages: {
+      rawRouter:
+        "next/navigation의 raw useRouter 대신 '@/shared/i18n'의 useLocalizedRouter를 쓰세요. 명령형 push/replace가 active locale prefix를 떨궈 ja/en에서 ko로 새는 것을 막습니다. 정말 prefix가 필요 없는 경우(외부/절대 URL, 현지화 안 하는 admin 등)에만 사유와 함께 eslint-disable 하세요.",
+    },
+  },
+  create(context) {
+    return {
+      ImportDeclaration(node) {
+        if (node.source.value !== "next/navigation") return;
+        for (const spec of node.specifiers) {
+          if (
+            spec.type === "ImportSpecifier" &&
+            spec.imported.name === "useRouter"
+          ) {
+            context.report({ node: spec, messageId: "rawRouter" });
+          }
+        }
+      },
+    };
+  },
+};
+
 const eslintConfig = [
   {
     ignores: [
@@ -300,6 +329,7 @@ const eslintConfig = [
     rules: {
       "local/no-policy-comments": "warn",
       "local/fsd-import": ["warn", { selfBarrel: false }],
+      "local/no-raw-router": "warn",
       "simple-import-sort/imports": [
         "error",
         {
@@ -352,6 +382,10 @@ const eslintConfig = [
   {
     files: ["src/shared/config/constants/api.ts", "scripts/**/*.ts"],
     rules: { "no-restricted-syntax": "off" },
+  },
+  {
+    files: ["src/shared/i18n/useLocalizedRouter.ts"],
+    rules: { "local/no-raw-router": "off" },
   },
   ...selfBarrelGuards,
   prettierConfig,

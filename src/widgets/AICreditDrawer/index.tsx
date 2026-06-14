@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
 import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
@@ -14,7 +14,7 @@ type AICreditDrawerProps = {
 };
 
 const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { Container, Content, Title } = useResponsiveSheet();
   const confettiRef = useRef<ConfettiRef>(null);
 

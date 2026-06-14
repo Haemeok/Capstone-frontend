@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 
 import { AIModelId, aiModels } from "@/shared/config/constants/aiModel";
-import { useT } from "@/shared/i18n";
+import { useLocalizedRouter, useT } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import { useUserStore } from "@/entities/user/model/store";
@@ -16,7 +15,7 @@ const LoginEncourageDrawer = dynamic(
 );
 
 const AIModelSelection = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { user } = useUserStore();
   const t = useT();
   const [isLoginDrawerOpen, setIsLoginDrawerOpen] = useState(false);
