@@ -6,7 +6,11 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 
-import { useRecipeFormDict } from "@/shared/i18n";
+import {
+  localizedHref,
+  useChromeLocale,
+  useRecipeFormDict,
+} from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useScrollContext } from "@/shared/lib/ScrollContext";
 
@@ -21,6 +25,7 @@ const MotionLink = motion.create(Link);
 const FloatingCreateRecipeButton = () => {
   const { motionRef } = useScrollContext();
   const { ui } = useRecipeFormDict();
+  const locale = useChromeLocale();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedWidth, setExpandedWidth] = useState<number | null>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
@@ -86,7 +91,7 @@ const FloatingCreateRecipeButton = () => {
       </div>
       {expandedWidth !== null && (
         <MotionLink
-          href="/recipes/new"
+          href={localizedHref("/recipes/new", locale)}
           prefetch={false}
           aria-label={ui.floatingCreateLabel}
           onClick={() => triggerHaptic("Light")}
