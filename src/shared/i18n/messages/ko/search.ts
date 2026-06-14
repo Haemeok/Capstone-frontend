@@ -36,6 +36,19 @@ export const errors: ErrorsDict = {
   ingredients: "재료 정보를 불러올 수 없어요",
   steps: "조리 순서를 불러올 수 없어요",
   searchResults: "검색 결과를 표시할 수 없어요",
+  heading: "문제가 발생했어요",
+  retry: "다시 시도",
+  goHome: "홈으로 가기",
+  goBack: "뒤로 가기",
+  sectionMessage: "이 영역을 불러올 수 없어요",
+  sectionRetry: "재시도",
+  context: {
+    recipe: "레시피를 불러올 수 없어요",
+    search: "검색 결과를 불러올 수 없어요",
+    ingredients: "재료 정보를 불러올 수 없어요",
+    edit: "레시피 수정 페이지를 불러올 수 없어요",
+    generic: "잠시 후 다시 시도해주세요",
+  },
 };
 
 export const notFound: NotFoundDict = {

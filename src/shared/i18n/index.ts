@@ -1,5 +1,6 @@
 export { cookingUnitsMessages } from "./cookingUnitsMessages";
 export { DictionaryProvider, useT } from "./DictionaryProvider";
+export { errorsMessages } from "./errorsMessages";
 export { format, plural } from "./format";
 export { getDictionary } from "./getDictionary";
 export { buildHreflangAlternates } from "./hreflang";
@@ -32,6 +33,7 @@ export {
   useCookingUnitsDict,
   useCookingUnitsLocale,
 } from "./useCookingUnitsDict";
+export { useErrorsDict } from "./useErrorsDict";
 export { useFridgeDict } from "./useFridgeDict";
 export {
   useIngredientPickerDict,

@@ -36,6 +36,19 @@ export const errors: ErrorsDict = {
   ingredients: "材料情報を読み込めませんでした",
   steps: "調理手順を読み込めませんでした",
   searchResults: "検索結果を表示できませんでした",
+  heading: "問題が発生しました",
+  retry: "再試行",
+  goHome: "ホームへ",
+  goBack: "戻る",
+  sectionMessage: "この部分を読み込めませんでした",
+  sectionRetry: "再試行",
+  context: {
+    recipe: "レシピを読み込めませんでした",
+    search: "検索結果を読み込めませんでした",
+    ingredients: "食材情報を読み込めませんでした",
+    edit: "レシピ編集ページを読み込めませんでした",
+    generic: "しばらくしてからもう一度お試しください",
+  },
 };
 
 export const notFound: NotFoundDict = {

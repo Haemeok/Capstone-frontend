@@ -36,6 +36,19 @@ export const errors: ErrorsDict = {
   ingredients: "Ingredient info couldn't be loaded",
   steps: "Cooking steps couldn't be loaded",
   searchResults: "Search results couldn't be displayed",
+  heading: "Something went wrong",
+  retry: "Try again",
+  goHome: "Go home",
+  goBack: "Go back",
+  sectionMessage: "Couldn't load this section",
+  sectionRetry: "Retry",
+  context: {
+    recipe: "Couldn't load this recipe",
+    search: "Couldn't load search results",
+    ingredients: "Couldn't load ingredients",
+    edit: "Couldn't load the recipe editor",
+    generic: "Please try again in a moment",
+  },
 };
 
 export const notFound: NotFoundDict = {

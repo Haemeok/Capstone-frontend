@@ -59,6 +59,19 @@ export type ErrorsDict = {
   ingredients: string;
   steps: string;
   searchResults: string;
+  heading: string;
+  retry: string;
+  goHome: string;
+  goBack: string;
+  sectionMessage: string;
+  sectionRetry: string;
+  context: {
+    recipe: string;
+    search: string;
+    ingredients: string;
+    edit: string;
+    generic: string;
+  };
 };
 
 export type NotFoundDict = {
@@ -555,6 +568,13 @@ export type IngredientPickerDict = {
   removeAria: string;
 };
 
+export type CommonDict = {
+  readMore: string;
+  collapse: string;
+  readMoreAria: string;
+  collapseAria: string;
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -574,4 +594,5 @@ export type Dictionary = {
   taxonomy: TaxonomyDict;
   category: CategoryDict;
   ingredientPicker: IngredientPickerDict;
+  common: CommonDict;
 };
