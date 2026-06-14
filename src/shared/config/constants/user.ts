@@ -18,21 +18,15 @@ export const guestUser: User = {
   remainingYoutubeQuota: 0,
 };
 
-export type Tab = {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-};
+export type Tab = { id: string; icon: LucideIcon };
 
 export const MyTabs: Tab[] = [
-  { id: "recipes", label: "나의 레시피", icon: Award },
-  { id: "saved", label: "저장", icon: Bookmark },
-  { id: "calendar", label: "캘린더", icon: Calendar },
+  { id: "recipes", icon: Award },
+  { id: "saved", icon: Bookmark },
+  { id: "calendar", icon: Calendar },
 ];
 
-export const OtherTabs: Tab[] = [
-  { id: "recipes", label: "레시피", icon: Award },
-];
+export const OtherTabs: Tab[] = [{ id: "recipes", icon: Award }];
 
 type SurveyStepType = "radio" | "textarea" | "checkbox" | "range" | "slider";
 

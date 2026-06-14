@@ -24,6 +24,12 @@ export const userPages: UserPagesDict = {
       imageFormatError: "JPG, PNG, WebP 형식만 업로드할 수 있어요.",
       updateError: "프로필 업데이트에 실패했습니다. 다시 시도해주세요.",
     },
+    tabs: {
+      recipes: "나의 레시피",
+      saved: "저장",
+      calendar: "캘린더",
+      recipesOther: "레시피",
+    },
     metadata: {
       titleSuffix: "레시피오",
       fallbackDescription: "레시피오에서 이 프로필을 확인해보세요.",

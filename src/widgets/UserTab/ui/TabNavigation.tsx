@@ -5,8 +5,10 @@ import { motion } from "framer-motion";
 import { Tab } from "@/shared/config/constants/user";
 import { cn } from "@/shared/lib/utils";
 
+type TabWithLabel = Tab & { label: string };
+
 type TabNavigationProps = {
-  tabs: Tab[];
+  tabs: TabWithLabel[];
   activeTab: string;
   activeTabIndex: number;
   onTabChange: (tabId: string) => void;

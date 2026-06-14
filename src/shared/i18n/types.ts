@@ -354,6 +354,12 @@ export type UserPagesDict = {
       imageFormatError: string;
       updateError: string;
     };
+    tabs: {
+      recipes: string;
+      saved: string;
+      calendar: string;
+      recipesOther: string;
+    };
     metadata: {
       titleSuffix: string;
       fallbackDescription: string;

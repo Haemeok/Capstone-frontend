@@ -24,6 +24,12 @@ export const userPages: UserPagesDict = {
       imageFormatError: "You can upload JPG, PNG, and WebP files only.",
       updateError: "We couldn't save your changes. Please try again.",
     },
+    tabs: {
+      recipes: "My Recipes",
+      saved: "Saved",
+      calendar: "Calendar",
+      recipesOther: "Recipes",
+    },
     metadata: {
       titleSuffix: "Recipio",
       fallbackDescription: "Take a look at this cook's profile on Recipio.",

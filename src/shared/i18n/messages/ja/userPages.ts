@@ -24,6 +24,12 @@ export const userPages: UserPagesDict = {
       imageFormatError: "JPG・PNG・WebP形式の画像をご利用ください",
       updateError: "プロフィールを保存できませんでした。もう一度お試しください",
     },
+    tabs: {
+      recipes: "マイレシピ",
+      saved: "保存済み",
+      calendar: "カレンダー",
+      recipesOther: "レシピ",
+    },
     metadata: {
       titleSuffix: "Recipio",
       fallbackDescription: "Recipioでプロフィールをチェックしてみましょう。",
