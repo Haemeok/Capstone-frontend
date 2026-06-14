@@ -14,6 +14,7 @@ export type NavDict = {
   login: string;
   install: string;
   installAria: string;
+  shareAria: string;
   notificationsAria: string;
   notificationsUnreadAria: Plural;
   unreadBadgeAria: Plural;
@@ -88,6 +89,9 @@ export type RecipeDetailDict = {
   nutritionHeader: string;
   copyAction: string;
   reportAction: string;
+  completeRecording: string;
+  completeAlready: string;
+  completeCta: string;
   nutritionSodium: string;
   nutritionCarbs: string;
   nutritionProtein: string;

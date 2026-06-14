@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 
 import { Loader2 } from "lucide-react";
 
+import { format, useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatNumber } from "@/shared/lib/format";
 import { shouldShowReviewGate } from "@/shared/lib/review";
@@ -30,6 +31,7 @@ const RecipeCompleteButton = ({
   saveAmount,
   className,
 }: RecipeCompleteButtonProps) => {
+  const t = useT();
   const { recipeId } = useRecipeStatus();
   const { completeRecipe, isCompleted, isLoading, showReward, setShowReward } =
     useRecipeComplete({ recipeId, saveAmount });
@@ -66,12 +68,14 @@ const RecipeCompleteButton = ({
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
             <Loader2 className="h-5 w-5 animate-spin" />
-            기록 중...
+            {t.recipeDetail.completeRecording}
           </span>
         ) : isCompleted ? (
-          "이미 요리를 완료한 레시피예요"
+          t.recipeDetail.completeAlready
         ) : (
-          `✅ 요리 완료! (${formatNumber(saveAmount, "원")} 절약)`
+          format(t.recipeDetail.completeCta, {
+            amount: formatNumber(saveAmount, ""),
+          })
         )}
       </button>
 

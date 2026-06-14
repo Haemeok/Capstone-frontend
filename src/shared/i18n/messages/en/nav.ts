@@ -11,6 +11,7 @@ export const nav: NavDict = {
   login: "Login",
   install: "Install App",
   installAria: "Install the app",
+  shareAria: "Share",
   notificationsAria: "Go to notifications",
   notificationsUnreadAria: {
     one: "Go to notifications ({count} unread)",

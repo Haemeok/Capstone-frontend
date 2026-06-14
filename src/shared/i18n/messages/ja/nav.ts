@@ -11,6 +11,7 @@ export const nav: NavDict = {
   login: "ログイン",
   install: "アプリインストール",
   installAria: "アプリをインストール",
+  shareAria: "シェア",
   notificationsAria: "通知ページへ移動",
   notificationsUnreadAria: {
     one: "通知ページへ移動（未読{count}件）",

@@ -1,3 +1,7 @@
+"use client";
+
+import { useChromeDict } from "@/shared/i18n";
+
 import { RecipeSaveButton } from "@/features/recipe-save";
 
 import ShareButton from "@/widgets/ShareButton";
@@ -11,6 +15,8 @@ const RecipeNavBarButtons = ({
   recipeId,
   initialIsFavorite,
 }: RecipeNavBarButtonsProps) => {
+  const nav = useChromeDict();
+
   return (
     <div className="flex shrink-0">
       <RecipeSaveButton
@@ -22,7 +28,7 @@ const RecipeNavBarButtons = ({
       />
       <ShareButton
         className="flex-shrink-0 rounded-full p-2 transition-colors duration-300 hover:bg-gray-200/30"
-        aria-label="공유하기"
+        aria-label={nav.shareAria}
       />
     </div>
   );

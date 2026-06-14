@@ -11,6 +11,7 @@ export const nav: NavDict = {
   login: "로그인",
   install: "앱 설치",
   installAria: "앱 설치하기",
+  shareAria: "공유하기",
   notificationsAria: "알림 페이지로 이동",
   notificationsUnreadAria: {
     one: "알림 페이지로 이동 ({count}개 미읽음)",
