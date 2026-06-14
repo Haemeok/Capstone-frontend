@@ -74,10 +74,7 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
       },
       onError: (e) => {
         const code = extractErrorCode(e) ?? "";
-        setErrorText(
-          (t.redeemErrors as Record<string, string>)[code] ??
-            t.redeemErrors.default
-        );
+        setErrorText(t.redeemErrors[code] ?? t.redeemErrors.default);
       },
     });
   };
