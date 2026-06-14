@@ -1,11 +1,11 @@
 import type { Dictionary } from "../../types";
-import { ingredientAdd } from "../ko/ingredientAdd";
 import { aiRecipe } from "./aiRecipe";
 import { auth } from "./auth";
 import { category } from "./category";
 import { common } from "./common";
 import { fridge } from "./fridge";
 import { home } from "./home";
+import { ingredientAdd } from "./ingredientAdd";
 import { ingredientDetail } from "./ingredientDetail";
 import { ingredientPicker } from "./ingredientPicker";
 import { nav } from "./nav";

@@ -52,4 +52,23 @@ describe("IngredientAddView i18n", () => {
       screen.getByText(ingredientAddMessages.ko.packsSubtitle)
     ).toBeInTheDocument();
   });
+
+  it.each([
+    ["/ja/ingredients/new", "ja"] as const,
+    ["/en/ingredients/new", "en"] as const,
+  ])(
+    "%s 에서 페이지 chrome가 현지 언어로 표시된다 (T-01/T-02)",
+    (path, loc) => {
+      mockPathname.mockReturnValue(path);
+      const m = ingredientAddMessages[loc];
+      renderView();
+      expect(
+        screen.getByRole("heading", { name: m.pageTitle })
+      ).toBeInTheDocument();
+      expect(screen.getByText(m.packsHeading)).toBeInTheDocument();
+      expect(screen.getByText(m.packsSubtitle)).toBeInTheDocument();
+      expect(screen.getByLabelText(m.searchEntryAria)).toBeInTheDocument();
+      expect(screen.queryByText("추천 재료 모음")).not.toBeInTheDocument();
+    }
+  );
 });

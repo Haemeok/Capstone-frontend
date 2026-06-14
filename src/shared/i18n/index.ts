@@ -6,6 +6,7 @@ export { errorsMessages } from "./errorsMessages";
 export { format, plural } from "./format";
 export { getDictionary } from "./getDictionary";
 export { buildHreflangAlternates } from "./hreflang";
+export { ingredientAddMessages } from "./ingredientAddMessages";
 export { ingredientPickerMessages } from "./ingredientPickerMessages";
 export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
@@ -24,6 +25,7 @@ export type {
   CookingUnitsDict,
   Dictionary,
   FridgeDict,
+  IngredientAddDict,
   IngredientPickerDict,
   Locale,
   NavDict,
@@ -49,6 +51,7 @@ export {
 } from "./useCookingUnitsDict";
 export { useErrorsDict } from "./useErrorsDict";
 export { useFridgeDict } from "./useFridgeDict";
+export { useIngredientAddDict } from "./useIngredientAddDict";
 export {
   useIngredientPickerDict,
   useIngredientPickerLocale,

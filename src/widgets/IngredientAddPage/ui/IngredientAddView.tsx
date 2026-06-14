@@ -9,6 +9,7 @@ import {
   type IngredientPack,
 } from "@/shared/config/constants/ingredientPacks";
 import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
+import { useIngredientAddDict } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
@@ -24,6 +25,7 @@ import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fr
 import IngredientPackCard from "@/widgets/IngredientPackCard/IngredientPackCard";
 
 export const IngredientAddView = () => {
+  const dict = useIngredientAddDict();
   const [isSearchDrawerOpen, setIsSearchDrawerOpen] = useState(false);
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
   const [selectedPack, setSelectedPack] = useState<IngredientPack | null>(null);
@@ -57,7 +59,7 @@ export const IngredientAddView = () => {
         <header className="z-sticky sticky-optimized sticky top-0 grid grid-cols-[auto_1fr_auto] items-center gap-2 border-b border-gray-100 bg-white px-4 py-3 md:px-6">
           <PrevButton />
           <h1 className="text-ink text-center text-base font-semibold">
-            재료 추가
+            {dict.pageTitle}
           </h1>
           <span className="w-9" aria-hidden="true" />
         </header>
@@ -66,22 +68,20 @@ export const IngredientAddView = () => {
           <button
             type="button"
             onClick={() => setIsSearchDrawerOpen(true)}
-            aria-label="재료 검색해서 추가하기"
+            aria-label={dict.searchEntryAria}
             className="flex w-full items-center gap-3 rounded-full bg-gray-100 px-4 py-3.5 text-left transition-colors active:bg-gray-200"
           >
             <Search size={18} className="text-ink-muted" aria-hidden="true" />
-            <span className="text-ink-muted text-sm">
-              재료를 검색해서 추가하세요
-            </span>
+            <span className="text-ink-muted text-sm">{dict.searchEntry}</span>
           </button>
         </div>
 
         <div className="px-4 pt-6 md:px-6">
           <div className="mb-3">
-            <h2 className="text-ink text-base font-bold">추천 재료 모음</h2>
-            <p className="text-ink-muted mt-1 text-sm">
-              필요한 묶음을 골라 한 번에 추가하세요
-            </p>
+            <h2 className="text-ink text-base font-bold">
+              {dict.packsHeading}
+            </h2>
+            <p className="text-ink-muted mt-1 text-sm">{dict.packsSubtitle}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-x-3 gap-y-5 lg:grid-cols-3">
