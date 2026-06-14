@@ -1,0 +1,24 @@
+import type { SettingsDict } from "../../types";
+
+export const settings: SettingsDict = {
+  title: "設定",
+  srDescription: "アプリ設定とアカウント管理",
+  adRemoval: "広告を非表示",
+  adRemovalCta: "広告なしで楽しむ",
+  adRemovalRemaining: "残り{remaining}",
+  notifications: "通知",
+  notificationsOnAria: "通知をオフにする",
+  notificationsOffAria: "通知をオンにする",
+  privacy: "プライバシーポリシー",
+  reviews: "レビュー",
+  reportError: "不具合を報告",
+  copyrightReport: "著作権の申告・掲載停止のご依頼",
+  withdraw: "退会",
+  logout: "ログアウト",
+  close: "閉じる",
+  withdrawTitle: "本当に退会しますか？",
+  withdrawDescription: "退会後はアカウントを復元できません。",
+  cancel: "キャンセル",
+  withdrawConfirm: "退会する",
+  withdrawDeleting: "削除中...",
+};

@@ -1,13 +1,18 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import { Gift } from "lucide-react";
 
+import { format, resolveChromeLocale, useSettingsDict } from "@/shared/i18n";
 import { formatRemaining } from "@/shared/lib/time/formatRemaining";
 
 import { useAdFreeStatus } from "@/entities/user";
 
 export const AdRemovalRow = ({ onOpenSheet }: { onOpenSheet: () => void }) => {
+  const t = useSettingsDict();
   const { isActive, remaining } = useAdFreeStatus();
+  const locale = resolveChromeLocale(usePathname() ?? "/");
 
   return (
     <button
@@ -17,7 +22,7 @@ export const AdRemovalRow = ({ onOpenSheet }: { onOpenSheet: () => void }) => {
     >
       <span className="flex items-center gap-2">
         <Gift size={16} />
-        광고 제거
+        {t.adRemoval}
       </span>
       {isActive ? (
         <span className="flex items-center gap-1.5 text-sm font-semibold text-blue-500">
@@ -25,10 +30,12 @@ export const AdRemovalRow = ({ onOpenSheet }: { onOpenSheet: () => void }) => {
             className="h-1.5 w-1.5 rounded-full bg-blue-500"
             aria-hidden="true"
           />
-          {formatRemaining(remaining)} 남음
+          {format(t.adRemovalRemaining, {
+            remaining: formatRemaining(remaining, locale),
+          })}
         </span>
       ) : (
-        <span className="text-sm text-gray-400">광고 없이 즐기기</span>
+        <span className="text-sm text-gray-400">{t.adRemovalCta}</span>
       )}
     </button>
   );

@@ -1,0 +1,24 @@
+import type { SettingsDict } from "../../types";
+
+export const settings: SettingsDict = {
+  title: "Settings",
+  srDescription: "App settings and account",
+  adRemoval: "Remove ads",
+  adRemovalCta: "Go ad-free",
+  adRemovalRemaining: "{remaining} left",
+  notifications: "Notifications",
+  notificationsOnAria: "Turn off notifications",
+  notificationsOffAria: "Turn on notifications",
+  privacy: "Privacy Policy",
+  reviews: "Reviews",
+  reportError: "Report a bug",
+  copyrightReport: "Copyright / takedown request",
+  withdraw: "Delete account",
+  logout: "Log out",
+  close: "Close",
+  withdrawTitle: "Delete your account?",
+  withdrawDescription: "Once deleted, your account can't be recovered.",
+  cancel: "Cancel",
+  withdrawConfirm: "Delete account",
+  withdrawDeleting: "Deleting...",
+};

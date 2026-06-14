@@ -615,6 +615,29 @@ export type CommonDict = {
   collapseAria: string;
 };
 
+export type SettingsDict = {
+  title: string;
+  srDescription: string;
+  adRemoval: string;
+  adRemovalCta: string;
+  adRemovalRemaining: string;
+  notifications: string;
+  notificationsOnAria: string;
+  notificationsOffAria: string;
+  privacy: string;
+  reviews: string;
+  reportError: string;
+  copyrightReport: string;
+  withdraw: string;
+  logout: string;
+  close: string;
+  withdrawTitle: string;
+  withdrawDescription: string;
+  cancel: string;
+  withdrawConfirm: string;
+  withdrawDeleting: string;
+};
+
 export type ReferralDict = {
   giftAria: string;
   adFreeLabel: string;
@@ -667,4 +690,5 @@ export type Dictionary = {
   ingredientPicker: IngredientPickerDict;
   common: CommonDict;
   referral: ReferralDict;
+  settings: SettingsDict;
 };

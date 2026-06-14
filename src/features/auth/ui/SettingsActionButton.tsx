@@ -12,6 +12,7 @@ import {
   UserX,
 } from "lucide-react";
 
+import { useSettingsDict } from "@/shared/i18n";
 import {
   isAppWebView,
   requestNotificationPermission,
@@ -29,6 +30,7 @@ import { AdRemovalRow } from "./AdRemovalRow";
 import { LanguageSettingRow } from "./LanguageSettingRow";
 
 const SettingsActionButton = () => {
+  const t = useSettingsDict();
   const { mutate: logout } = useLogoutMutation();
   const { mutate: deleteAccount, isPending: isDeleting } =
     useDeleteAccountMutation();
@@ -72,7 +74,7 @@ const SettingsActionButton = () => {
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        aria-label="설정"
+        aria-label={t.title}
         className="cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-100"
       >
         <Settings size={20} aria-hidden="true" />
@@ -81,10 +83,8 @@ const SettingsActionButton = () => {
         <Container open={isModalOpen} onOpenChange={setIsModalOpen}>
           <Content className="p-0 sm:p-6 md:max-w-sm">
             <Header>
-              <Title className="text-lg">설정</Title>
-              <Description className="sr-only">
-                앱 설정 및 계정 관리
-              </Description>
+              <Title className="text-lg">{t.title}</Title>
+              <Description className="sr-only">{t.srDescription}</Description>
             </Header>
 
             <div className="flex flex-col border-t border-gray-200 sm:border-none">
@@ -99,14 +99,18 @@ const SettingsActionButton = () => {
                 <div className="flex w-full items-center justify-between px-4 py-3">
                   <div className="text-ink-sub flex items-center gap-2">
                     <Bell size={16} aria-hidden="true" />
-                    <span>알림</span>
+                    <span>{t.notifications}</span>
                   </div>
                   <button
                     onClick={handleNotificationToggle}
                     className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${
                       isNotificationOn ? "bg-green-500" : "bg-gray-300"
                     }`}
-                    aria-label={isNotificationOn ? "알림 끄기" : "알림 켜기"}
+                    aria-label={
+                      isNotificationOn
+                        ? t.notificationsOnAria
+                        : t.notificationsOffAria
+                    }
                   >
                     <span
                       className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
@@ -121,7 +125,7 @@ const SettingsActionButton = () => {
                 className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50"
               >
                 <FileText size={16} aria-hidden="true" />
-                <span>개인정보처리방침</span>
+                <span>{t.privacy}</span>
               </Link>
               <a
                 href="https://slashpage.com/recipio/n5w9812gwype424kpgze"
@@ -130,7 +134,7 @@ const SettingsActionButton = () => {
                 className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50"
               >
                 <span aria-hidden="true">💬</span>
-                <span>사용후기</span>
+                <span>{t.reviews}</span>
               </a>
               <a
                 href="https://slashpage.com/recipio/943zqpmqxn63g2wnvy87"
@@ -139,7 +143,7 @@ const SettingsActionButton = () => {
                 className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50"
               >
                 <span aria-hidden="true">🐛</span>
-                <span>오류제보</span>
+                <span>{t.reportError}</span>
               </a>
               <a
                 href="https://docs.google.com/forms/d/e/1FAIpQLSdVUjr7LsnvG-WVG46cBhQOOUJN82irzTaKVS2Uthl6qKZgVg/viewform?usp=publish-editor"
@@ -148,7 +152,7 @@ const SettingsActionButton = () => {
                 className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50"
               >
                 <AlertTriangle size={16} aria-hidden="true" />
-                <span>저작권 신고 및 게시 중단 요청</span>
+                <span>{t.copyrightReport}</span>
               </a>
               <button
                 onClick={handleWithdrawClick}
@@ -156,23 +160,23 @@ const SettingsActionButton = () => {
                 className="text-ink-sub flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <UserX size={16} aria-hidden="true" />
-                <span>회원탈퇴</span>
+                <span>{t.withdraw}</span>
               </button>
             </div>
 
             <Footer className="flex-col gap-0 p-0 sm:flex-row sm:justify-end sm:gap-2">
               <button
                 onClick={handleLogoutClick}
-                aria-label="로그아웃"
+                aria-label={t.logout}
                 className="flex w-full cursor-pointer items-center justify-center gap-1 border-t border-gray-200 px-4 py-3 font-bold text-red-500 sm:w-auto sm:rounded-md sm:border-none sm:bg-red-50 sm:py-2 sm:hover:bg-red-100"
               >
                 <LogOut size={16} aria-hidden="true" className="mr-1" />
-                <span>로그아웃</span>
+                <span>{t.logout}</span>
               </button>
               {Close ? (
                 <Close asChild>
                   <button className="text-ink w-full cursor-pointer border-t border-gray-200 px-4 py-3 font-bold sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50">
-                    닫기
+                    {t.close}
                   </button>
                 </Close>
               ) : (
@@ -180,7 +184,7 @@ const SettingsActionButton = () => {
                   className="text-ink w-full cursor-pointer border-t border-gray-200 px-4 py-3 font-bold sm:w-auto sm:rounded-md sm:border sm:border-gray-300 sm:py-2 sm:hover:bg-gray-50"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  닫기
+                  {t.close}
                 </button>
               )}
             </Footer>
@@ -191,11 +195,11 @@ const SettingsActionButton = () => {
       <DeleteModal
         open={isWithdrawDialogOpen}
         onOpenChange={setIsWithdrawDialogOpen}
-        title="정말 탈퇴하시겠어요?"
-        description="탈퇴 후에는 계정을 복구할 수 없습니다."
+        title={t.withdrawTitle}
+        description={t.withdrawDescription}
         onConfirm={handleWithdrawConfirm}
-        cancelLabel="취소"
-        confirmLabel={isDeleting ? "삭제 중..." : "탈퇴하기"}
+        cancelLabel={t.cancel}
+        confirmLabel={isDeleting ? t.withdrawDeleting : t.withdrawConfirm}
       />
     </>
   );

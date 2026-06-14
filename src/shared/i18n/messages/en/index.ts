@@ -13,6 +13,7 @@ import { recipeForm } from "./recipeForm";
 import { referral } from "./referral";
 import { errors, meta, notFound, search } from "./search";
 import { searchDiscovery } from "./searchDiscovery";
+import { settings } from "./settings";
 import { taxonomy } from "./taxonomy";
 import { userPages } from "./userPages";
 import { youtube } from "./youtube";
@@ -38,4 +39,5 @@ export const en: Dictionary = {
   ingredientPicker,
   common,
   referral,
+  settings,
 };

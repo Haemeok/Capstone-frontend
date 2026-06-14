@@ -27,6 +27,7 @@ export type {
   RecipeCreateDict,
   RecipeFormDict,
   ReferralDict,
+  SettingsDict,
   UserPagesDict,
   YoutubeDict,
 } from "./types";
@@ -53,4 +54,5 @@ export {
 } from "./useRecipeCreateDict";
 export { useRecipeFormDict, useRecipeFormLocale } from "./useRecipeFormDict";
 export { useReferralDict } from "./useReferralDict";
+export { useSettingsDict } from "./useSettingsDict";
 export { useUserPagesDict, useUserPagesLocale } from "./useUserPagesDict";
