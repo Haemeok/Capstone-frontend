@@ -119,15 +119,16 @@ EN/JA 카피는 **직역 금지**. 각 언어를 모국어로 쓰는 **현지 IT
 
 ## 4. 글로벌/공유 영역 (페이지 가로지름 — 별도 추적)
 
-| 항목                             | 상태 | 비고                                                                                                                                                                                                                                    |
-| -------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 헤더/네비게이션 chrome           | 🟢   | `nav` 네임스페이스 + `useChromeDict`(client pathname 자가판단). 헤더 nav/로그인/알림(plural)/설치/저장북/프로필 + 푸터 라벨 ko/ja/en. 푸터 고유명사·이메일·Copyright·브랜드는 비번역(법적 href는 언어 스위처 작업서 일률 prefix로 변경) |
-| 하단 탭바                        | 🟢   | BottomNavBar 홈/검색/냉장고/AI 레시피/My ko/ja/en (`nav` 사전)                                                                                                                                                                          |
-| 언어 스위처 / locale-sticky 링크 | 🟢   | 설정 시트 `LanguageSettingRow`(ko/ja/en) + `LocalizedLink`(현재 locale 일률 prefix) + `localizedHref`/`stripLocale` + localStorage `PREFERRED_LOCALE`. 자동 리다이렉트 없음. chrome 링크 전환 완료(전 앱 링크는 점진). **로컬 미확인**  |
-| Toast/공통 버튼 문구             | 🔴   | 저장북 toast만 `nav`에 포함. 일반 공통버튼/`common` 네임스페이스 미착수                                                                                                                                                                 |
-| root layout `<html lang="ko">`   | 🔴   | ja/en 페이지에도 ko로 박혀있음(Phase 1 수용). next-intl 전환 시 해결                                                                                                                                                                    |
-| sitemap 로케일 분리              | 🔴   | 백엔드 `availableLocales`/locale sitemap 엔드포인트 대기                                                                                                                                                                                |
-| 가격/통화 기호 분기              | 🔴   | 円/원 — 가격 렌더가 여러 컴포넌트에 흩어짐. 전역 작업 필요                                                                                                                                                                              |
+| 항목                             | 상태 | 비고                                                                                                                                                                                                                                                                                     |
+| -------------------------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 헤더/네비게이션 chrome           | 🟢   | `nav` 네임스페이스 + `useChromeDict`(client pathname 자가판단). 헤더 nav/로그인/알림(plural)/설치/저장북/프로필 + 푸터 라벨 ko/ja/en. 푸터 고유명사·이메일·Copyright·브랜드는 비번역(법적 href는 언어 스위처 작업서 일률 prefix로 변경)                                                  |
+| 하단 탭바                        | 🟢   | BottomNavBar 홈/검색/냉장고/AI 레시피/My ko/ja/en (`nav` 사전)                                                                                                                                                                                                                           |
+| 언어 스위처 / locale-sticky 링크 | 🟢   | 설정 시트 `LanguageSettingRow`(ko/ja/en) + `LocalizedLink`(현재 locale 일률 prefix) + `localizedHref`/`stripLocale` + localStorage `PREFERRED_LOCALE`. 자동 리다이렉트 없음. chrome 링크 전환 완료(전 앱 링크는 점진). **로컬 미확인**                                                   |
+| Toast/공통 버튼 문구             | 🔴   | 저장북 toast만 `nav`에 포함. 일반 공통버튼/`common` 네임스페이스 미착수                                                                                                                                                                                                                  |
+| root layout `<html lang="ko">`   | 🔴   | ja/en 페이지에도 ko로 박혀있음(Phase 1 수용). next-intl 전환 시 해결. **아래 word-break 자동화의 전제이기도 함**(`:lang()` CSS가 lang 속성에 의존)                                                                                                                                       |
+| locale별 word-break/text-pretty  | 🔴   | `break-keep`(word-break:keep-all)은 ko 어절 유지용인데 **공백 없는 ja에선 줄바꿈 전면차단** → line-clamp `-webkit-box`가 max-content로 넘쳐 1줄 잘림(AI 컨셉 카드서 실측·수정 `324bdffd`). `text-pretty`와 자주 페어(13/25). 25파일 사용. **TODO**: locale 자동 유틸(§6 참조, 설계 보류) |
+| sitemap 로케일 분리              | 🔴   | 백엔드 `availableLocales`/locale sitemap 엔드포인트 대기                                                                                                                                                                                                                                 |
+| 가격/통화 기호 분기              | 🔴   | 円/원 — 가격 렌더가 여러 컴포넌트에 흩어짐. 전역 작업 필요                                                                                                                                                                                                                               |
 
 ---
 
@@ -250,6 +251,28 @@ EN/JA 카피는 **직역 금지**. 각 언어를 모국어로 쓰는 **현지 IT
   새 `ingredientPicker` 사전(shared, FSD 역방향 금지 준수). 카테고리 칩은 `ingredientCategory` 택소노미 재사용,
   UNITLESS(약간/적당량)·단위·카테고리 **코드/비교/폼값은 ko canonical 유지**(표시만 현지화). 미사용 `MSG`/`FIELD_LABELS`
   상수 제거. tsc clean, 115 tests green.
+- [2026-06-14][i18n] 🐛 **AI 생성 컨셉 카드 설명 ja 잘림 수정**(브라우저 실측 `324bdffd`). 카드(버튼)는 4개 다
+  173px 동일인데 설명 `<p>`가 긴 ja 컨셉(영양밸런스·파인다이닝)에서 215/196px로 **카드 밖 가로 넘침→1줄 잘림**.
+  원인: `break-keep`(word-break:keep-all)이 공백 없는 ja 줄바꿈을 전면 차단 + line-clamp의 `-webkit-box`가
+  max-content로 부풂. `break-keep` 제거로 CJK 글자단위 wrap → 4개 다 141px/2줄(ja·ko 모두 Playwright 실측,
+  회귀 없음). `line-clamp-2`는 2줄 일관 클램프로 유지.
+- [2026-06-14][i18n] 📋 **TODO(설계 보류 — 사용자 지시로 투두만 등록)**: `break-keep`+`text-pretty`를 **locale에
+  따라 자동 적용**하는 유틸. 둘 다 프로젝트서 사실상 필수라 호출부마다 수동 분기 대신 자동화 원함. 후보 **A안**:
+  ① `app/{ja,en}/layout.tsx`에 `lang` 래퍼(현재 없음 — root `<html lang="ko">` 고정이라 ja/en도 ko로 태깅, §4) ②
+  globals에 `:lang(ko) .x{word-break:keep-all}` + 기본 `text-wrap:pretty; word-break:normal` 유틸 클래스(자동·무JS·
+  a11y/SEO 부수개선) ③ 25개 `break-keep` 사용처 점진 마이그레이션 + 신규 `break-keep` 억제 lint. **미해결 결정**:
+  유틸을 (pretty+break) 한 클래스로 묶을지 vs word-break만 분리할지. brainstorming 보류 상태.
+- [2026-06-14][i18n] ✅ **생성/추출 흐름 데이터 lang 전파**(youtube 추출·AI 생성·재료 fetch): 클라 mutation이 V3
+  `/dev/*` 위에 있으나 `?lang` 미전파라 ja/en 사용자가 ko 결과를 받던 갭. `createExtractionJobV2`/`checkYoutubeDuplicate`/
+  `createAIRecipeJobV2`에 `lang` 추가(ko 생략) + job persist에 locale 캡처(제출·재시도 동일 locale) + 유튜브 trending
+  서버 fetch lang + ja/en 페이지 전파. 설계/계획/테스트: `docs/superpowers/{specs,plans}/2026-06-13-i18n-create-flows-*`.
+- [2026-06-14][i18n] ✅ **명령형 라우팅 locale 누락 클래스 수정**: `router.push`/`replace`가 하드코딩 경로를 써서
+  ja에서 ko로 새던 버그(AI 컨셉 선택·플로팅 생성 버튼). `useLocalizedRouter`(LocalizedLink의 명령형 대칭짝, pathname
+  기반 prefix, ko no-op) 추가 + `local/no-raw-router` eslint(**warn** — 기존 ~62곳 CI 안 깸, 점진 sweep 유도).
+  AIModelSelection·AICreditDrawer·FloatingCreateRecipeButton 전환. 결정 기록(ADR): `docs/superpowers/specs/
+2026-06-14-i18n-routing-strategy-decision.md`(custom 유지 vs next-intl — SEO 우려는 as-needed로 무효, custom의
+  ko static-by-default가 실이점, 트리거 충족 시 재검토). **남은 sweep**: raw `router.push` ~62곳 + raw `next/link`
+  하드코딩 href(no-raw-router는 useRouter만 잡음).
 
 ---
 
