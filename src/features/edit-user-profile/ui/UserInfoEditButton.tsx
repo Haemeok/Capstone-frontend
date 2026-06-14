@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Pencil } from "lucide-react";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { cn } from "@/lib/utils";
@@ -17,6 +18,8 @@ const UserInfoEditButton = ({
   className = "",
   variant = "icon",
 }: UserInfoEditButtonProps) => {
+  const t = useUserPagesDict();
+
   if (variant === "bar") {
     return (
       <Link
@@ -28,7 +31,7 @@ const UserInfoEditButton = ({
           className
         )}
       >
-        프로필 수정
+        {t.profile.editAction}
       </Link>
     );
   }
@@ -37,8 +40,8 @@ const UserInfoEditButton = ({
     <Link
       href="/users/edit"
       prefetch={false}
-      aria-label="프로필 편집"
-      title="프로필 편집"
+      aria-label={t.profile.editAria}
+      title={t.profile.editAria}
       onClick={() => triggerHaptic("Light")}
       className={cn(
         "text-ink-muted hover:text-ink-sub inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-200 bg-white transition-colors hover:bg-gray-50",

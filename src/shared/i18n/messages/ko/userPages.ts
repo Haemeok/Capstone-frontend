@@ -10,6 +10,8 @@ export const userPages: UserPagesDict = {
     calendarLoadError: "캘린더를 불러올 수 없어요",
     emptyTitle: "나만의 요리 기록을 시작해보세요",
     emptyDescription: "레시피를 저장하고 요리 일정을 관리할 수 있어요",
+    editAction: "프로필 수정",
+    editAria: "프로필 편집",
     edit: {
       heading: "프로필 변경",
       cancel: "취소",

@@ -366,6 +366,8 @@ export type UserPagesDict = {
     calendarLoadError: string;
     emptyTitle: string;
     emptyDescription: string;
+    editAction: string;
+    editAria: string;
     edit: {
       heading: string;
       cancel: string;
