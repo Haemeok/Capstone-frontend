@@ -1,31 +1,27 @@
+"use client";
+
 import { useEffect } from "react";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import useScrollAnimate from "@/shared/hooks/useScrollAnimate";
+import { format, plural, useUserPagesDict } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
+import { motivationalMessage } from "../lib/motivationalMessage";
 import { getFlameLevel } from "../lib/streakCalculator";
 
 type StreakInfoBannerProps = {
   streakCount: number;
 };
 
-const getMotivationalMessage = (streakCount: number): string => {
-  if (streakCount === 0) return "오늘부터 직접 요리하며 식비를 절약해보세요!";
-  if (streakCount === 1) return "좋은 시작이에요! 계속 이어가봐요";
-  if (streakCount < 4) return `${streakCount}일 연속 식비를 절약중이에요`;
-  if (streakCount < 7)
-    return `${streakCount}일 연속 배달 시키지 않고 직접 해먹고 있어요`;
-  if (streakCount < 10) return `대단해요! ${streakCount}일째 요리하고 계시네요`;
-  if (streakCount < 20)
-    return `정말 멋져요! ${streakCount}일 연속 도전 중이에요`;
-  return `놀라워요! ${streakCount}일째 꾸준히 요리하고 계시네요`;
-};
-
 export const StreakInfoBanner = ({ streakCount }: StreakInfoBannerProps) => {
+  const t = useUserPagesDict();
   const { targetRef, playAnimation } = useScrollAnimate<HTMLDivElement>();
   const config = getFlameLevel(streakCount);
-  const message = getMotivationalMessage(streakCount);
+  const message = motivationalMessage(streakCount, t.calendar.streakMessages);
+  const dayLabel = format(plural(streakCount, t.calendar.streakDays), {
+    n: streakCount,
+  });
 
   useEffect(() => {
     playAnimation();
@@ -40,14 +36,14 @@ export const StreakInfoBanner = ({ streakCount }: StreakInfoBannerProps) => {
       <div className="flex w-full items-center gap-3">
         <Image
           src={`${ICON_BASE_URL}streak_fire.webp`}
-          alt="스트릭"
+          alt={t.calendar.streakAlt}
           wrapperClassName="w-12 h-12"
           lazy={false}
           imgClassName={config.flameColor}
         />
         <div className="flex w-full flex-col gap-1">
           <p className="text-2xl font-bold">
-            <span className={config.flameColor}>{streakCount}일</span>
+            <span className={config.flameColor}>{dayLabel}</span>
           </p>
           <p className="text-ink-sub text-sm">{message}</p>
         </div>

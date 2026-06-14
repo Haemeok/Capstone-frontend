@@ -1,4 +1,7 @@
+"use client";
+
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -15,6 +18,8 @@ export const StreakModeToggle = ({
   mode,
   onModeChange,
 }: StreakModeToggleProps) => {
+  const t = useUserPagesDict();
+
   const handleModeChange = (newMode: CalendarMode) => {
     if (mode !== newMode) {
       triggerHaptic("Light");
@@ -36,11 +41,11 @@ export const StreakModeToggle = ({
       >
         <Image
           src={`${ICON_BASE_URL}record_camera.webp`}
-          alt="기록"
+          alt={t.calendar.recordAlt}
           wrapperClassName="w-6 h-6"
           lazy={false}
         />
-        기록
+        {t.calendar.toggleRecord}
       </button>
 
       <button
@@ -55,11 +60,11 @@ export const StreakModeToggle = ({
       >
         <Image
           src={`${ICON_BASE_URL}streak_fire.webp`}
-          alt="스트릭"
+          alt={t.calendar.streakAlt}
           wrapperClassName="w-6 h-6"
           lazy={false}
         />
-        스트릭
+        {t.calendar.toggleStreak}
       </button>
     </div>
   );

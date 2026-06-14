@@ -438,6 +438,20 @@ export type UserPagesDict = {
     daySummaryEmpty: string;
     daySummaryRecipeCount: string;
     daySummarySavedSuffix: string;
+    toggleRecord: string;
+    toggleStreak: string;
+    recordAlt: string;
+    streakAlt: string;
+    streakDays: Plural;
+    streakMessages: {
+      start: string;
+      day1: string;
+      streak: string;
+      homeCooking: string;
+      great: string;
+      onFire: string;
+      incredible: string;
+    };
   };
 };
 
