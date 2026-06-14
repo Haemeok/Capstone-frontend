@@ -345,6 +345,15 @@ export type CategoryDict = {
   emptyTitle: string;
   emptySubtitle: string;
   emptyCta: string;
+  meta: {
+    fallbackTitle: string;
+    titleTemplate: string;
+    descriptionTemplate: string;
+    keywordRecipe: string;
+    keywordRecipeMethod: string;
+    keywordByCategory: string;
+    imageAltTemplate: string;
+  };
 };
 
 export type UserPagesDict = {

@@ -5,8 +5,8 @@ import { buildCategoryMetadata } from "@/entities/recipe/model/buildCategoryMeta
 type Props = { params: Promise<{ id: string }>; children: React.ReactNode };
 
 export const generateMetadata = ({ params }: Props): Promise<Metadata> =>
-  buildCategoryMetadata(params, "ko");
+  buildCategoryMetadata(params, "en");
 
-export default function CategoryLayout({ children }: Props) {
+export default function EnCategoryLayout({ children }: Props) {
   return <>{children}</>;
 }
