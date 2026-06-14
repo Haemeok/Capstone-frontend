@@ -178,6 +178,38 @@ export type HomeDict = {
   youtubeBannerTitle: string;
 };
 
+export type IngredientAddDict = {
+  pageTitle: string;
+  searchEntry: string;
+  searchEntryAria: string;
+  packsHeading: string;
+  packsSubtitle: string;
+  drawerTitle: string;
+  drawerDescription: string;
+  searchPlaceholder: string;
+  searchAria: string;
+  searchAction: string;
+  loading: string;
+  errorPrefix: string;
+  added: string;
+  add: string;
+  allLoaded: string;
+  noResults: string;
+  close: string;
+  packCountLabel: string;
+  selectedCount: string;
+  selectAll: string;
+  deselectAll: string;
+  owned: string;
+  deleting: string;
+  adding: string;
+  deleteCount: string;
+  addCount: string;
+  cardOwned: string;
+  cardCount: string;
+  cardDetailAria: string;
+};
+
 export type FridgeDict = {
   pageTitle: string;
   pageSubtitle: string;
@@ -725,6 +757,7 @@ export type Dictionary = {
   nav: NavDict;
   home: HomeDict;
   fridge: FridgeDict;
+  ingredientAdd: IngredientAddDict;
   searchDiscovery: SearchDiscoveryDict;
   userPages: UserPagesDict;
   recipeCreate: RecipeCreateDict;

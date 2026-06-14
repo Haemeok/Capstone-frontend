@@ -1,4 +1,5 @@
 import type { Dictionary } from "../../types";
+import { ingredientAdd } from "../ko/ingredientAdd";
 import { aiRecipe } from "./aiRecipe";
 import { auth } from "./auth";
 import { category } from "./category";
@@ -33,6 +34,7 @@ export const ja: Dictionary = {
   nav,
   home,
   fridge,
+  ingredientAdd,
   searchDiscovery,
   userPages,
   recipeCreate,

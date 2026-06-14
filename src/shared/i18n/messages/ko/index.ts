@@ -5,6 +5,7 @@ import { category } from "./category";
 import { common } from "./common";
 import { fridge } from "./fridge";
 import { home } from "./home";
+import { ingredientAdd } from "./ingredientAdd";
 import { ingredientDetail } from "./ingredientDetail";
 import { ingredientPicker } from "./ingredientPicker";
 import { nav } from "./nav";
@@ -33,6 +34,7 @@ export const ko: Dictionary = {
   nav,
   home,
   fridge,
+  ingredientAdd,
   searchDiscovery,
   userPages,
   recipeCreate,
