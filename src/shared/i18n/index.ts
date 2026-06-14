@@ -37,6 +37,7 @@ export {
   useIngredientPickerDict,
   useIngredientPickerLocale,
 } from "./useIngredientPickerDict";
+export { useLocalizedRouter } from "./useLocalizedRouter";
 export {
   useRecipeCreateDict,
   useRecipeCreateLocale,
