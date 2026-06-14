@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { Copy } from "lucide-react";
 
+import { format, useReferralDict } from "@/shared/i18n";
+import { resolveChromeLocale } from "@/shared/i18n/resolveChromeLocale";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
@@ -12,7 +15,6 @@ import {
   canRedeem,
   extractErrorCode,
   normalizeCode,
-  redeemErrorMessage,
   type RedeemStatus,
   referrerRewardLimitReached,
   useRedeemMutation,
@@ -24,12 +26,7 @@ import { useToastStore } from "@/widgets/Toast/model/store";
 
 import { AdFreeActiveNotice } from "./AdFreeActiveNotice";
 
-const STATUS_MESSAGE: Record<Exclude<RedeemStatus, "AVAILABLE">, string> = {
-  ALREADY_REDEEMED: "이미 추천인을 입력했어요.",
-  NOT_ELIGIBLE_OLD_USER: "이벤트 시작 이후 가입한 분만 입력할 수 있어요.",
-  REDEEM_WINDOW_EXPIRED: "추천인 입력 가능 기간이 지났어요.",
-  NO_ACTIVE_CAMPAIGN: "현재 진행 중인 추천 이벤트가 없어요.",
-};
+const LOCALE_TAG = { ko: "ko-KR", ja: "ja-JP", en: "en-US" } as const;
 
 type ReferralSheetProps = {
   open: boolean;
@@ -41,6 +38,8 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
   const { addToast } = useToastStore();
   const { data, isLoading, isError, refetch } = useReferralInfoQuery(open);
   const { isActive, remaining, adFreeUntil } = useAdFreeStatus();
+  const t = useReferralDict();
+  const locale = resolveChromeLocale(usePathname() ?? "/");
 
   const [code, setCode] = useState("");
   const [errorText, setErrorText] = useState<string | null>(null);
@@ -51,27 +50,35 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
 
   const monthLabel = campaignMonthLabel(data?.campaign ?? null);
   const headerText = monthLabel
-    ? `${monthLabel}월 친구 초대 이벤트`
-    : "친구 초대 이벤트";
+    ? format(t.sheetTitleWithMonth, { month: monthLabel })
+    : t.sheetTitle;
 
   const handleCopy = async () => {
     if (!data?.myReferralCode) return;
     await navigator.clipboard.writeText(data.myReferralCode);
     triggerHaptic("Success");
-    addToast({ message: "초대코드를 복사했어요.", variant: "success" });
+    addToast({ message: t.copiedToast, variant: "success" });
   };
 
   const handleRedeem = () => {
     setErrorText(null);
     redeem.mutate(normalizeCode(code), {
       onSuccess: (res) => {
-        const until = new Date(res.adFreeUntil).toLocaleDateString("ko-KR");
+        const until = new Date(res.adFreeUntil).toLocaleDateString(
+          LOCALE_TAG[locale]
+        );
         addToast({
-          message: `광고 제거가 ${until}까지 적용됐어요.`,
+          message: format(t.redeemSuccessToast, { date: until }),
           variant: "success",
         });
       },
-      onError: (e) => setErrorText(redeemErrorMessage(extractErrorCode(e))),
+      onError: (e) => {
+        const code = extractErrorCode(e) ?? "";
+        setErrorText(
+          (t.redeemErrors as Record<string, string>)[code] ??
+            t.redeemErrors.default
+        );
+      },
     });
   };
 
@@ -90,10 +97,7 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
             />
           )}
 
-          <p className="text-ink-muted text-sm">
-            친구를 초대하면 두 분 모두 한 달 동안 광고 없이 레시피오를 즐길 수
-            있어요. 여러 친구를 초대할수록 혜택이 쌓여요.
-          </p>
+          <p className="text-ink-muted text-sm">{t.description}</p>
 
           {isLoading && (
             <div
@@ -104,15 +108,13 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
 
           {isError && (
             <div className="mt-5 flex flex-col items-center gap-2 py-6">
-              <p className="text-ink-muted text-sm">
-                정보를 불러오지 못했어요.
-              </p>
+              <p className="text-ink-muted text-sm">{t.loadError}</p>
               <button
                 type="button"
                 onClick={() => refetch()}
                 className="text-ink-sub rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold hover:bg-gray-50"
               >
-                다시 시도
+                {t.retry}
               </button>
             </div>
           )}
@@ -120,7 +122,7 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
           {data && (
             <div className="mt-5">
               <p className="mb-1 text-xs font-semibold text-gray-400">
-                내 초대코드
+                {t.myCodeLabel}
               </p>
               <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
                 <span className="text-ink text-lg font-bold tracking-wide">
@@ -129,25 +131,25 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
                 <button
                   type="button"
                   onClick={handleCopy}
-                  aria-label="초대코드 복사"
+                  aria-label={t.copyAria}
                   className="text-ink-sub flex items-center gap-1 rounded-md px-2 py-1 text-sm font-semibold hover:bg-gray-100"
                 >
                   <Copy size={14} aria-hidden="true" />
-                  복사
+                  {t.copyAction}
                 </button>
               </div>
 
               {inputEnabled ? (
                 <div className="mt-5">
                   <p className="mb-1 text-xs font-semibold text-gray-400">
-                    친구 초대코드 입력
+                    {t.inputLabel}
                   </p>
                   <div className="flex gap-2">
                     <input
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
-                      placeholder="초대코드"
-                      aria-label="친구 초대코드"
+                      placeholder={t.inputPlaceholder}
+                      aria-label={t.inputAria}
                       maxLength={20}
                       className="focus:border-olive-light w-full rounded-lg border border-gray-200 bg-gray-50 p-3 text-base focus:bg-white focus:outline-none"
                     />
@@ -157,7 +159,7 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
                       disabled={redeem.isPending || code.trim() === ""}
                       className="bg-olive-light shrink-0 rounded-lg px-4 text-sm font-semibold text-white disabled:opacity-50"
                     >
-                      적용
+                      {t.applyAction}
                     </button>
                   </div>
                   {errorText && (
@@ -168,20 +170,16 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
                 status && (
                   <p className="text-ink-muted mt-5 text-sm">
                     {status === "ALREADY_REDEEMED" && data.redeemStatus.referrer
-                      ? `${data.redeemStatus.referrer.nickname}님의 추천으로 가입했어요.`
-                      : // status is non-AVAILABLE here: inputEnabled (canRedeem) is false
-                        STATUS_MESSAGE[
-                          status as Exclude<RedeemStatus, "AVAILABLE">
-                        ]}
+                      ? format(t.referredBy, {
+                          nickname: data.redeemStatus.referrer.nickname,
+                        })
+                      : t.status[status as Exclude<RedeemStatus, "AVAILABLE">]}
                   </p>
                 )
               )}
 
               {referrerRewardLimitReached(data.campaign) && (
-                <p className="mt-3 text-xs text-gray-400">
-                  이번 이벤트 내 추가 보상은 모두 받았지만, 친구는 여전히 혜택을
-                  받을 수 있어요.
-                </p>
+                <p className="mt-3 text-xs text-gray-400">{t.rewardLimit}</p>
               )}
             </div>
           )}

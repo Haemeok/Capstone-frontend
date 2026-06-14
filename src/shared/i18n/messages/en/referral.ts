@@ -31,4 +31,14 @@ export const referral: ReferralDict = {
     REDEEM_WINDOW_EXPIRED: "The referral entry period has ended.",
     NO_ACTIVE_CAMPAIGN: "There's no active invite event right now.",
   },
+  redeemErrors: {
+    "1301": "That invite code doesn't exist.",
+    "1302": "You can't use your own invite code.",
+    "1303": "You've already entered a referrer.",
+    "1304":
+      "Only accounts created after the event started can enter a referral code.",
+    "1305": "The referral entry period has ended.",
+    "1306": "There's no active invite event right now.",
+    default: "Something went wrong. Please try again in a moment.",
+  },
 };

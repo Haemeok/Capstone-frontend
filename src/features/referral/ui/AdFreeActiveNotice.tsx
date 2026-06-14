@@ -1,15 +1,11 @@
-const formatUntilDate = (iso: string | null): string => {
-  if (!iso) return "";
-  return new Date(iso).toLocaleDateString("ko-KR", {
-    month: "long",
-    day: "numeric",
-  });
-};
+"use client";
 
-const formatDaysLeft = (ms: number): string => {
-  const days = Math.floor(ms / 86400000);
-  return days > 0 ? `${days}일 남음` : "오늘까지";
-};
+import { usePathname } from "next/navigation";
+
+import { format, plural, useReferralDict } from "@/shared/i18n";
+import { resolveChromeLocale } from "@/shared/i18n/resolveChromeLocale";
+
+const LOCALE_TAG = { ko: "ko-KR", ja: "ja-JP", en: "en-US" } as const;
 
 type AdFreeActiveNoticeProps = {
   remaining: number;
@@ -20,7 +16,17 @@ export const AdFreeActiveNotice = ({
   remaining,
   adFreeUntil,
 }: AdFreeActiveNoticeProps) => {
-  const untilDate = formatUntilDate(adFreeUntil);
+  const locale = resolveChromeLocale(usePathname() ?? "/");
+  const t = useReferralDict();
+  const untilDate = adFreeUntil
+    ? new Date(adFreeUntil).toLocaleDateString(LOCALE_TAG[locale], {
+        month: "long",
+        day: "numeric",
+      })
+    : "";
+  const days = Math.floor(remaining / 86400000);
+  const daysText =
+    days > 0 ? format(plural(days, t.daysLeft), { n: days }) : t.endsToday;
 
   return (
     <p className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-blue-500">
@@ -28,7 +34,8 @@ export const AdFreeActiveNotice = ({
         className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500"
         aria-hidden="true"
       />
-      광고 없이 이용 중 · {untilDate}까지 · {formatDaysLeft(remaining)}
+      {t.adFreeLabel} · {format(t.adFreeUntil, { date: untilDate })} ·{" "}
+      {daysText}
     </p>
   );
 };

@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Gift } from "lucide-react";
 
+import { useReferralDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import {
@@ -21,6 +22,7 @@ export const ReferralGiftButton = ({
   const lastOpenedAt = useReferralSheetStore((s) => s.lastOpenedAt);
   const { data } = useReferralInfoQuery(enabled);
   const [mountedAt] = useState<number>(() => Date.now());
+  const t = useReferralDict();
 
   const showDot = shouldShowNudge({
     campaignActive: Boolean(data?.campaign),
@@ -31,7 +33,7 @@ export const ReferralGiftButton = ({
   return (
     <button
       type="button"
-      aria-label="친구 초대 이벤트"
+      aria-label={t.giftAria}
       onClick={() => {
         triggerHaptic("Light");
         open();

@@ -1,6 +1,14 @@
+import { usePathname } from "next/navigation";
+
 import { render, screen } from "@testing-library/react";
 
 import { AdFreeActiveNotice } from "../AdFreeActiveNotice";
+
+jest.mock("next/navigation", () => ({ usePathname: jest.fn() }));
+
+beforeEach(() => {
+  (usePathname as jest.Mock).mockReturnValue("/users/u1");
+});
 
 describe("AdFreeActiveNotice", () => {
   it("이용 중 문구와 남은 일수를 한 줄로 보여준다", () => {

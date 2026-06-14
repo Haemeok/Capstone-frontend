@@ -628,6 +628,15 @@ export type ReferralDict = {
     REDEEM_WINDOW_EXPIRED: string;
     NO_ACTIVE_CAMPAIGN: string;
   };
+  redeemErrors: {
+    "1301": string;
+    "1302": string;
+    "1303": string;
+    "1304": string;
+    "1305": string;
+    "1306": string;
+    default: string;
+  };
 };
 
 export type Dictionary = {
