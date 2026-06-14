@@ -5,6 +5,13 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 
 import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
+import {
+  format,
+  localizeIngredientName,
+  localizePack,
+  useChromeLocale,
+  useIngredientAddDict,
+} from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -28,6 +35,8 @@ const IngredientPackDetailDrawer = ({
   isLoading = false,
   ownedIngredientIds,
 }: IngredientPackDetailDrawerProps) => {
+  const dict = useIngredientAddDict();
+  const locale = useChromeLocale();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const allOwned = pack
@@ -109,20 +118,23 @@ const IngredientPackDetailDrawer = ({
 
   if (!pack) return null;
 
+  const meta = localizePack(pack, locale);
+
   return (
     <Container open={open} onOpenChange={onOpenChange}>
       <Content className="flex h-[80vh] max-h-[800px] w-full flex-col md:max-w-2xl">
         <Header>
-          <Title className="text-ink text-base font-bold">{pack.name}</Title>
+          <Title className="text-ink text-base font-bold">{meta.name}</Title>
           <Description className="text-ink-muted text-sm">
-            {pack.description} · 총 {pack.ingredients.length}개
+            {meta.description}{" "}
+            {format(dict.packCountLabel, { count: pack.ingredients.length })}
           </Description>
         </Header>
 
         <div className="flex-1 overflow-y-auto px-4 pt-3 pb-4">
           <div className="mb-3 flex items-center justify-between px-1">
             <span className="text-ink-muted text-xs">
-              {selectedIds.size}개 선택됨
+              {format(dict.selectedCount, { count: selectedIds.size })}
             </span>
             <div className="flex gap-3">
               <button
@@ -130,7 +142,7 @@ const IngredientPackDetailDrawer = ({
                 onClick={handleSelectAll}
                 className="text-ink-sub active:text-ink text-xs font-medium transition-colors"
               >
-                전체 선택
+                {dict.selectAll}
               </button>
               <span className="text-xs text-gray-300" aria-hidden="true">
                 |
@@ -140,7 +152,7 @@ const IngredientPackDetailDrawer = ({
                 onClick={handleDeselectAll}
                 className="text-ink-sub active:text-ink text-xs font-medium transition-colors"
               >
-                선택 해제
+                {dict.deselectAll}
               </button>
             </div>
           </div>
@@ -178,11 +190,15 @@ const IngredientPackDetailDrawer = ({
                     {isSelected && <Check size={14} strokeWidth={3} />}
                   </span>
                   <span className="text-ink ml-3 flex-1 text-sm font-medium">
-                    {ingredient.name}
+                    {localizeIngredientName(
+                      ingredient.id,
+                      ingredient.name,
+                      locale
+                    )}
                   </span>
                   {!allOwned && isOwned && (
                     <span className="text-ink-sub rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium">
-                      보유중
+                      {dict.owned}
                     </span>
                   )}
                   {isClickable && isSelected && (
@@ -211,11 +227,11 @@ const IngredientPackDetailDrawer = ({
           >
             {isLoading
               ? allOwned
-                ? "삭제 중..."
-                : "추가 중..."
+                ? dict.deleting
+                : dict.adding
               : allOwned
-                ? `${selectedIds.size}개 삭제하기`
-                : `${selectedIds.size}개 추가하기`}
+                ? format(dict.deleteCount, { count: selectedIds.size })
+                : format(dict.addCount, { count: selectedIds.size })}
           </Button>
         </Footer>
       </Content>
