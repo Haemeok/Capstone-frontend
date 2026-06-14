@@ -84,5 +84,8 @@ export const recipeForm: RecipeFormDict = {
     unitPlaceholder: "Unit",
     unitLoading: "Loading…",
     myIngredients: "My ingredients",
+    imageUploadPlaceholder: "Upload image",
+    imagePreviewAlt: "Image preview",
+    missingFieldsPrefix: "Please fill in:",
   },
 };

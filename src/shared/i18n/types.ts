@@ -508,6 +508,9 @@ export type RecipeFormDict = {
     unitPlaceholder: string;
     unitLoading: string;
     myIngredients: string;
+    imageUploadPlaceholder: string;
+    imagePreviewAlt: string;
+    missingFieldsPrefix: string;
   };
 };
 

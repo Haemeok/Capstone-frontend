@@ -77,6 +77,7 @@ const IngredientItem = ({
                 alt={field.name}
                 wrapperClassName="h-full w-full rounded-lg"
                 fit="cover"
+                lazy={false}
                 width={40}
                 height={40}
                 errorFallback={
@@ -104,16 +105,21 @@ const IngredientItem = ({
             {ui.unitlessSlight}
           </button>
 
-          <input
-            type="text"
-            disabled={isApproximate}
-            className={`w-12 rounded border px-2 py-1 text-right text-sm focus:border-green-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-400 ${
-              error ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register(`ingredients.${index}.quantity`, {
-              required: ui.quantityUnitRequired,
-            })}
-          />
+          {isApproximate ? (
+            <span className="w-12 rounded border border-gray-300 bg-gray-100 px-2 py-1 text-right text-sm text-gray-400">
+              {ui.unitlessSlight}
+            </span>
+          ) : (
+            <input
+              type="text"
+              className={`w-12 rounded border px-2 py-1 text-right text-sm focus:border-green-500 focus:outline-none ${
+                error ? "border-red-500" : "border-gray-300"
+              }`}
+              {...register(`ingredients.${index}.quantity`, {
+                required: ui.quantityUnitRequired,
+              })}
+            />
+          )}
           <UnitSelect
             ingredientId={field.ingredientId}
             value={unit}

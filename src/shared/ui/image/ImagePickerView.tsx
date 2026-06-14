@@ -13,6 +13,8 @@ type Props = {
   errorMessage?: string;
   inputProps: React.InputHTMLAttributes<HTMLInputElement>;
   inputRef?: React.Ref<HTMLInputElement>;
+  placeholderText?: string;
+  previewAlt?: string;
 };
 
 export function ImagePickerView({
@@ -22,6 +24,8 @@ export function ImagePickerView({
   errorMessage,
   inputRef,
   inputProps,
+  placeholderText = "이미지 업로드",
+  previewAlt = "이미지 미리보기",
 }: Props) {
   return (
     <div
@@ -38,14 +42,14 @@ export function ImagePickerView({
         {previewUrl ? (
           <Image
             src={previewUrl}
-            alt="이미지 미리보기"
+            alt={previewAlt}
             wrapperClassName="h-full w-full"
             fit="cover"
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center text-center">
             <UploadIcon size={48} className="mb-3" />
-            <p>이미지 업로드</p>
+            <p>{placeholderText}</p>
             {errorMessage && (
               <p className="mt-1 text-xs text-red-500">{errorMessage}</p>
             )}

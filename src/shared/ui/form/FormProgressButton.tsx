@@ -15,6 +15,7 @@ type FormProgressButtonProps = {
   text: string;
   fieldLabels?: Record<string, string>;
   disabled?: boolean;
+  missingPrefix?: string;
 };
 
 export const FormProgressButton = <T extends FieldValues>({
@@ -24,6 +25,7 @@ export const FormProgressButton = <T extends FieldValues>({
   text,
   fieldLabels,
   disabled,
+  missingPrefix = "다음 항목을 입력해주세요:",
 }: FormProgressButtonProps) => {
   const { progressPercentage, missingFieldLabels, isComplete } =
     useFormProgress<T>(schema, { fieldLabels });
@@ -32,7 +34,7 @@ export const FormProgressButton = <T extends FieldValues>({
     <div className="flex flex-col items-center justify-center gap-4">
       {missingFieldLabels.length > 0 && (
         <p className="rounded-md bg-amber-50 px-4 py-2 text-sm text-amber-600">
-          다음 항목을 입력해주세요:{" "}
+          {missingPrefix}{" "}
           <span className="font-semibold">{missingFieldLabels.join(", ")}</span>
         </p>
       )}

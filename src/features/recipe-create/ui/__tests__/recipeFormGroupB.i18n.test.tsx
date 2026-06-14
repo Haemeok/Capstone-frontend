@@ -69,7 +69,7 @@ describe("recipe form group B i18n", () => {
       </FormHarness>
     );
 
-    expect(screen.getByText(ui.unitlessSlight)).toBeInTheDocument();
+    expect(screen.getAllByText(ui.unitlessSlight).length).toBeGreaterThan(0);
     expect(HANGUL.test(container.textContent ?? "")).toBe(false);
   });
 
@@ -83,7 +83,7 @@ describe("recipe form group B i18n", () => {
       </FormHarness>
     );
 
-    expect(screen.getByText(ui.unitlessSlight)).toBeInTheDocument();
+    expect(screen.getAllByText(ui.unitlessSlight).length).toBeGreaterThan(0);
     expect(captured?.getValues("ingredients.0.quantity")).toBe("약간");
   });
 
@@ -96,6 +96,6 @@ describe("recipe form group B i18n", () => {
       </FormHarness>
     );
 
-    expect(screen.getByText(ui.unitlessSlight)).toBeInTheDocument();
+    expect(screen.getAllByText(ui.unitlessSlight).length).toBeGreaterThan(0);
   });
 });

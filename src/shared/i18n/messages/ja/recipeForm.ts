@@ -84,5 +84,8 @@ export const recipeForm: RecipeFormDict = {
     unitPlaceholder: "単位",
     unitLoading: "読み込み中…",
     myIngredients: "マイ食材",
+    imageUploadPlaceholder: "画像をアップロード",
+    imagePreviewAlt: "画像プレビュー",
+    missingFieldsPrefix: "次の項目を入力してください:",
   },
 };

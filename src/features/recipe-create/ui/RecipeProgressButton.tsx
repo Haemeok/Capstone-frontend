@@ -26,6 +26,7 @@ const RecipeProgressButton = ({
       isLoading={isLoading}
       text={isEdit ? ui.submitEdit : ui.submitCreate}
       fieldLabels={labels}
+      missingPrefix={ui.missingFieldsPrefix}
     />
   );
 };

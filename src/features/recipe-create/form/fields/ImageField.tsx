@@ -8,6 +8,7 @@ import {
 } from "react-hook-form";
 
 import { useImagePreview } from "@/shared/hooks/useImagePreview";
+import { useRecipeFormDict } from "@/shared/i18n";
 import { createImageChangeHandler } from "@/shared/lib/image";
 import { ImagePickerView } from "@/shared/ui/image/ImagePickerView";
 
@@ -28,6 +29,7 @@ export const ImageField = <TName extends ImageFieldName>({
   className,
 }: Props<TName>) => {
   const { control } = useFormContext<RecipeFormValues>();
+  const { ui } = useRecipeFormDict();
 
   const { field, fieldState } = useController<RecipeFormValues, TName>({
     name,
@@ -43,6 +45,8 @@ export const ImageField = <TName extends ImageFieldName>({
       className={className}
       inputId={inputId}
       previewUrl={previewUrl}
+      placeholderText={ui.imageUploadPlaceholder}
+      previewAlt={ui.imagePreviewAlt}
       errorMessage={fieldState.error && String(fieldState.error.message)}
       inputRef={field.ref}
       inputProps={{
