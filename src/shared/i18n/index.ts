@@ -1,3 +1,4 @@
+export { commonMessages } from "./commonMessages";
 export { cookingUnitsMessages } from "./cookingUnitsMessages";
 export { DictionaryProvider, useT } from "./DictionaryProvider";
 export { errorsMessages } from "./errorsMessages";
@@ -13,6 +14,7 @@ export { resolveChromeLocale } from "./resolveChromeLocale";
 export { resolveLocaleFromPath } from "./resolveLocaleFromPath";
 export type {
   CategoryDict,
+  CommonDict,
   CookingUnitsDict,
   Dictionary,
   FridgeDict,
@@ -29,6 +31,7 @@ export { LOCALES } from "./types";
 export { useApiLocale } from "./useApiLocale";
 export { useCategoryDict, useCategoryLocale } from "./useCategoryDict";
 export { useChromeDict, useChromeLocale } from "./useChromeDict";
+export { useCommonDict } from "./useCommonDict";
 export {
   useCookingUnitsDict,
   useCookingUnitsLocale,

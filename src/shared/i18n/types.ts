@@ -77,6 +77,10 @@ export type ErrorsDict = {
 export type NotFoundDict = {
   message: string;
   searchCta: string;
+  goBack: string;
+  goHome: string;
+  recipe: { title: string; description: string };
+  generic: { title: string; description: string };
 };
 
 export type RecipeDetailDict = {

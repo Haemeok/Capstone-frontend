@@ -4,6 +4,8 @@ import { useLayoutEffect, useRef, useState } from "react";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 
+import { useCommonDict } from "@/shared/i18n";
+
 import { cn } from "../lib/utils";
 import { Button } from "./shadcn/button";
 import { CardContent } from "./shadcn/card";
@@ -22,23 +24,18 @@ const CollapsibleP = ({
   gradientHeight = 64,
   className,
 }: CollapsiblePProps) => {
+  const t = useCommonDict();
   const [isOpen, setIsOpen] = useState(false);
-  const [showButton, setShowButton] = useState(false);
+  const [contentScrollHeight, setContentScrollHeight] = useState(0);
   const contentRef = useRef<HTMLParagraphElement>(null);
 
   useLayoutEffect(() => {
     if (contentRef.current) {
-      const currentContentHeight = contentRef.current.scrollHeight;
-
-      if (currentContentHeight > height) {
-        setShowButton(true);
-      } else {
-        setShowButton(false);
-        setIsOpen(true);
-      }
+      setContentScrollHeight(contentRef.current.scrollHeight);
     }
   }, [content, height]);
 
+  const showButton = contentScrollHeight > height;
   const showGradient = showButton && !isOpen;
 
   return (
@@ -82,11 +79,11 @@ const CollapsibleP = ({
               variant="ghost"
               size="sm"
               className="text-olive-light mt-2 font-bold"
-              aria-label={isOpen ? "텍스트 숨기기" : "텍스트 더 읽기"}
+              aria-label={isOpen ? t.collapseAria : t.readMoreAria}
             >
               {isOpen ? (
                 <>
-                  숨기기{" "}
+                  {t.collapse}{" "}
                   <ChevronUp
                     size={16}
                     className="ml-1 cursor-pointer"
@@ -95,7 +92,7 @@ const CollapsibleP = ({
                 </>
               ) : (
                 <>
-                  더 읽기{" "}
+                  {t.readMore}{" "}
                   <ChevronDown
                     size={16}
                     className="ml-1 cursor-pointer"
