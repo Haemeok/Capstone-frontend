@@ -10,6 +10,7 @@ import { nav } from "./nav";
 import { recipeCreate } from "./recipeCreate";
 import { recipeDetail } from "./recipeDetail";
 import { recipeForm } from "./recipeForm";
+import { referral } from "./referral";
 import { errors, meta, notFound, search } from "./search";
 import { searchDiscovery } from "./searchDiscovery";
 import { taxonomy } from "./taxonomy";
@@ -36,4 +37,5 @@ export const en: Dictionary = {
   category,
   ingredientPicker,
   common,
+  referral,
 };

@@ -25,6 +25,7 @@ export type {
   Plural,
   RecipeCreateDict,
   RecipeFormDict,
+  ReferralDict,
   UserPagesDict,
   YoutubeDict,
 } from "./types";
@@ -50,4 +51,5 @@ export {
   useRecipeCreateLocale,
 } from "./useRecipeCreateDict";
 export { useRecipeFormDict, useRecipeFormLocale } from "./useRecipeFormDict";
+export { useReferralDict } from "./useReferralDict";
 export { useUserPagesDict, useUserPagesLocale } from "./useUserPagesDict";
