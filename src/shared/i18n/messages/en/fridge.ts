@@ -15,4 +15,5 @@ export const fridge: FridgeDict = {
   collapse: "Collapse",
   aiGenerated: "AI generated",
   metaTitle: "Recipes You Can Make",
+  cookTimeMinutes: "{min} min",
 };

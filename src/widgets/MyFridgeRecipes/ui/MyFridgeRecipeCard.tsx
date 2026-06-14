@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Bookmark, Clock } from "lucide-react";
 import { motion } from "motion/react";
 
-import { useFridgeDict } from "@/shared/i18n";
+import { format, useFridgeDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   generateUserGradient,
@@ -163,7 +163,9 @@ const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
 
           <div className="flex items-center gap-0.5">
             <Clock size={14} className="text-gray-400" />
-            <span>{recipe.cookingTime}분</span>
+            <span>
+              {format(dict.cookTimeMinutes, { min: recipe.cookingTime ?? 0 })}
+            </span>
           </div>
         </div>
 

@@ -225,6 +225,7 @@ export type FridgeDict = {
   collapse: string;
   aiGenerated: string;
   metaTitle: string;
+  cookTimeMinutes: string;
 };
 
 import type { ContentPageId } from "@/shared/config/constants/content-pages";

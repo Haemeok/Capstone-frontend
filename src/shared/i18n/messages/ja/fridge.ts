@@ -15,4 +15,5 @@ export const fridge: FridgeDict = {
   collapse: "折りたたむ",
   aiGenerated: "AI生成",
   metaTitle: "作れるレシピ",
+  cookTimeMinutes: "{min}分",
 };

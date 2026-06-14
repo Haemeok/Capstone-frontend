@@ -15,4 +15,5 @@ export const fridge: FridgeDict = {
   collapse: "접기",
   aiGenerated: "AI 생성",
   metaTitle: "요리 가능한 레시피",
+  cookTimeMinutes: "{min}분",
 };
