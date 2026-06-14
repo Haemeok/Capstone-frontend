@@ -74,7 +74,7 @@ const AIModelSelection = () => {
                     <p className="text-lg font-bold text-white md:text-2xl">
                       {t.aiRecipe.models[ai.id].name}
                     </p>
-                    <p className="mt-1 line-clamp-2 text-xs font-light text-pretty break-keep text-white/90 md:mt-2 md:text-sm">
+                    <p className="mt-1 line-clamp-2 text-xs font-light text-pretty text-white/90 md:mt-2 md:text-sm">
                       {t.aiRecipe.models[ai.id].description}
                     </p>
                   </div>
