@@ -8,6 +8,7 @@ import { home } from "./home";
 import { ingredientAdd } from "./ingredientAdd";
 import { ingredientDetail } from "./ingredientDetail";
 import { ingredientPicker } from "./ingredientPicker";
+import { ingredients } from "./ingredients";
 import { nav } from "./nav";
 import { notifications } from "./notifications";
 import { ratings } from "./ratings";
@@ -35,6 +36,7 @@ export const ko: Dictionary = {
   home,
   fridge,
   ingredientAdd,
+  ingredients,
   searchDiscovery,
   userPages,
   recipeCreate,

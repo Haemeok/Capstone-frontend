@@ -10,6 +10,7 @@ export { ingredientAddMessages } from "./ingredientAddMessages";
 export { localizeIngredientName } from "./ingredientNameOverlay";
 export { localizePack } from "./ingredientPackMeta";
 export { ingredientPickerMessages } from "./ingredientPickerMessages";
+export { ingredientsMessages } from "./ingredientsMessages";
 export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
 export { notFoundMessages } from "./notFoundMessages";
@@ -58,6 +59,7 @@ export {
   useIngredientPickerDict,
   useIngredientPickerLocale,
 } from "./useIngredientPickerDict";
+export { useIngredientsDict } from "./useIngredientsDict";
 export { useLocalizedRouter } from "./useLocalizedRouter";
 export { useNotFoundDict } from "./useNotFoundDict";
 export { useNotificationsDict } from "./useNotificationsDict";

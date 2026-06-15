@@ -210,6 +210,37 @@ export type IngredientAddDict = {
   cardDetailAria: string;
 };
 
+export type IngredientsDict = {
+  headerLoggedIn: string;
+  headerLoggedOut: string;
+  fabFindRecipes: string;
+  actions: {
+    delete: string;
+    addIngredient: string;
+    selectAll: string;
+    cancel: string;
+    done: string;
+  };
+  deleteFab: Plural;
+  error: { prefix: string; unknown: string };
+  empty: {
+    heading: string;
+    bodyLine1: string;
+    bodyLine2: string;
+    cta: string;
+  };
+  loginCta: {
+    aiHeading: string;
+    aiBody: string;
+    searchHeading: string;
+    searchBody: string;
+    loginButton: string;
+    signupNote: string;
+    searchAlt: string;
+  };
+  itemAria: { select: string; detail: string };
+};
+
 export type FridgeDict = {
   pageTitle: string;
   pageSubtitle: string;
@@ -451,6 +482,15 @@ export type UserPagesDict = {
     savedCount: string;
     createAria: string;
     createLabel: string;
+    editButton: string;
+    selectedCount: string;
+    renameAria: string;
+    grid: {
+      emptyTitle: string;
+      emptyCta: string;
+      selectAria: string;
+      deselectAria: string;
+    };
   };
   calendar: {
     timelineHeading: string;
@@ -759,6 +799,7 @@ export type Dictionary = {
   home: HomeDict;
   fridge: FridgeDict;
   ingredientAdd: IngredientAddDict;
+  ingredients: IngredientsDict;
   searchDiscovery: SearchDiscoveryDict;
   userPages: UserPagesDict;
   recipeCreate: RecipeCreateDict;
