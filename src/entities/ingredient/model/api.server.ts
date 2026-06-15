@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 
+import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL } from "@/shared/config/constants/api";
 
 import {
@@ -61,5 +62,35 @@ export const getLocalizedIngredientOnServer = async (
       error
     );
     return { kind: "notFound" };
+  }
+};
+
+export const fetchAllIngredientsForSitemap = async (): Promise<
+  Array<{ id: string; updatedAt: string }>
+> => {
+  const API_URL = `${BASE_API_URL}/ingredients/sitemap`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: REVALIDATION_TIMES.INGREDIENTS_SITEMAP,
+        tags: [CACHE_TAGS.ingredientsSitemap],
+      },
+    });
+
+    if (!res.ok) {
+      console.error(
+        `[fetchAllIngredientsForSitemap] API Error: ${res.status} ${res.statusText}`
+      );
+      return [];
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(
+      "[fetchAllIngredientsForSitemap] Failed to fetch ingredients:",
+      error
+    );
+    return [];
   }
 };
