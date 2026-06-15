@@ -1,10 +1,13 @@
-import Link from "next/link";
+"use client";
 
 import { Refrigerator } from "lucide-react";
 
+import { LocalizedLink } from "@/shared/i18n/LocalizedLink";
+import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
 import { Button } from "@/shared/ui/shadcn/button";
 
 const IngredientEmptyState = () => {
+  const t = useIngredientsDict().empty;
   return (
     <div className="col-span-2 flex min-h-[300px] flex-col items-center justify-center gap-5 px-6 py-8">
       <Refrigerator
@@ -13,20 +16,18 @@ const IngredientEmptyState = () => {
         aria-hidden
       />
       <div className="space-y-2 text-center">
-        <h3 className="text-ink text-lg font-bold">
-          아직 등록된 재료가 없어요
-        </h3>
+        <h3 className="text-ink text-lg font-bold">{t.heading}</h3>
         <p className="text-ink-muted text-sm">
-          냉장고에 재료를 추가하고
+          {t.bodyLine1}
           <br />
-          맞춤 레시피를 추천받아 보세요
+          {t.bodyLine2}
         </p>
       </div>
-      <Link href="/ingredients/new">
+      <LocalizedLink href="/ingredients/new">
         <Button className="bg-olive-light active:bg-olive-light/90 h-12 cursor-pointer rounded-xl px-6 font-medium text-white transition-colors">
-          재료 추가하기
+          {t.cta}
         </Button>
-      </Link>
+      </LocalizedLink>
     </div>
   );
 };
