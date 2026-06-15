@@ -8,29 +8,6 @@ jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
-jest.mock("@/shared/i18n", () => {
-  const { recipeFormMessages: msgs } = jest.requireActual<
-    typeof import("@/shared/i18n/recipeFormMessages")
-  >("@/shared/i18n/recipeFormMessages");
-  const { resolveChromeLocale } = jest.requireActual<
-    typeof import("@/shared/i18n/resolveChromeLocale")
-  >("@/shared/i18n/resolveChromeLocale");
-  const { format } = jest.requireActual<typeof import("@/shared/i18n/format")>(
-    "@/shared/i18n/format"
-  );
-
-  return {
-    useRecipeFormDict: () => {
-      // usePathname is already mocked in the test scope via jest.mock("next/navigation")
-      const { usePathname } = jest.requireMock<{ usePathname: () => string }>(
-        "next/navigation"
-      );
-      return msgs[resolveChromeLocale(usePathname() ?? "/")];
-    },
-    format,
-  };
-});
-
 const addToast = jest.fn();
 jest.mock("@/widgets/Toast", () => ({
   useToastStore: () => ({ addToast }),
