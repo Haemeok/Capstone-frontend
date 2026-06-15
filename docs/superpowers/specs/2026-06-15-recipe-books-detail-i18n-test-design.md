@@ -27,7 +27,7 @@ no-Hangul 검사는 `baseElement.textContent`로 읽는다(`container.textConten
 | S1-AC3 | 빈 책(recipes=[]) `/ja`·`/en` → 빈상태 제목·CTA 한글 0 | T-03 | component(RecipeBookRecipeGrid) | cosmetic |
 | S1-AC5 | ko 상세 → 기존 `편집`·`N개 선택`·빈상태 문자열 그대로(앵커) | T-04 | component | cosmetic |
 | **S2**-AC1 | locale=ja → `getRecipeBookDetail(bookId,{...})` 요청에 `lang:"ja"` 포함 | T-05 | unit(getRecipeBookDetail) | integrity |
-| S2-AC2 | locale=ko → 요청에 `lang` 키 없음 | T-06 | unit | integrity |
+| S2-AC2 | locale=ko → 요청에 `lang:"ko"` 포함(형제 `getRecipeBooks`와 동일 — ko 생략 안 함) | T-06 | unit | integrity |
 | S2-AC3 | `RECIPE_BOOK_QUERY_KEYS.detail/detailInfinite` 시그니처에 locale 세그먼트 없음(불변) | T-07 | unit(queryKeys) | integrity |
 | S2-AC1 | 그리드가 `useUserPagesLocale()` 해석값을 queryFn `lang`으로 전달(ja면 lang=ja) | T-08 | component(RecipeBookRecipeGrid) | integrity |
 | **S3**-AC1 | `/ja`·`/en` 편집 바 → 한글 0 + `이동`/`삭제` ja/en 라벨 존재 | T-09 | component(EditModeBottomBar) | cosmetic |
