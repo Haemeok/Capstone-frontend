@@ -7,11 +7,16 @@ import { InfiniteData } from "@tanstack/react-query";
 import { MessageSquare } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { format, plural, useCommentsDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { getReplies, TotalRepliesApiResponse } from "@/entities/comment";
+import {
+  type CommentSortState,
+  resolveCommentSortLabel,
+} from "@/entities/comment/lib/commentSortLabel";
 
 import CommentCard from "@/features/comment-card/ui/CommentCard";
 import { CommentInput } from "@/features/comment-create";
@@ -21,7 +26,8 @@ import { RecipeStatusProvider } from "@/features/recipe-status";
 const DiscussionPage = () => {
   const { commentId } = useParams<{ commentId: string }>();
   const { recipeId } = useParams<{ recipeId: string }>();
-  const [sort, setSort] = useState<string>("최신순");
+  const [sort, setSort] = useState<CommentSortState>("최신순");
+  const t = useCommentsDict();
 
   const { data, hasNextPage, isFetching, ref } = useInfiniteScroll<
     TotalRepliesApiResponse,
@@ -58,7 +64,7 @@ const DiscussionPage = () => {
             <div className="flex max-w-3xl items-center">
               <div className="flex items-center gap-2">
                 <PrevButton size={22} showOnDesktop={true} />
-                <h1 className="text-xl font-bold">답글</h1>
+                <h1 className="text-xl font-bold">{t.repliesTitle}</h1>
               </div>
             </div>
           </header>
@@ -68,9 +74,7 @@ const DiscussionPage = () => {
               <CommentCard comment={parentComment} hideReplyButton />
             ) : (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 p-4">
-                <p className="text-ink-muted mb-4 text-lg">
-                  해당 답글을 찾을 수 없습니다.
-                </p>
+                <p className="text-ink-muted mb-4 text-lg">{t.replyNotFound}</p>
               </div>
             )}
 
@@ -79,7 +83,15 @@ const DiscussionPage = () => {
                 <>
                   <div className="mb-4 flex items-center justify-between px-2">
                     <span className="text-ink-muted text-sm font-medium">
-                      {data?.pages[0].replies.page.totalElements}개의 답글
+                      {format(
+                        plural(
+                          data?.pages[0].replies.page.totalElements ?? 0,
+                          t.replyCount
+                        ),
+                        {
+                          count: data?.pages[0].replies.page.totalElements ?? 0,
+                        }
+                      )}
                     </span>
                     <div className="flex items-center gap-1">
                       <button
@@ -91,7 +103,7 @@ const DiscussionPage = () => {
                         )}
                         onClick={() => setSort("최신순")}
                       >
-                        최신순
+                        {resolveCommentSortLabel("최신순", t.sort)}
                       </button>
                       <button
                         className={cn(
@@ -102,7 +114,7 @@ const DiscussionPage = () => {
                         )}
                         onClick={() => setSort("인기순")}
                       >
-                        인기순
+                        {resolveCommentSortLabel("인기순", t.sort)}
                       </button>
                     </div>
                   </div>
@@ -120,7 +132,7 @@ const DiscussionPage = () => {
                         <div className="flex items-center justify-center gap-2 p-4">
                           <div className="border-olive-light h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
                           <p className="text-ink-muted text-sm">
-                            답글 불러오는 중
+                            {t.repliesLoadingMore}
                           </p>
                         </div>
                       )}
@@ -128,7 +140,7 @@ const DiscussionPage = () => {
                       {!hasNextPage && replies.length > 0 && (
                         <div className="flex justify-center p-4">
                           <p className="text-sm text-gray-400">
-                            마지막 답글입니다.
+                            {t.repliesLastItem}
                           </p>
                         </div>
                       )}
@@ -138,10 +150,10 @@ const DiscussionPage = () => {
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2 py-12">
                   <MessageSquare size={40} className="text-gray-300" />
-                  <p className="text-ink-muted text-sm">아직 답글이 없어요</p>
-                  <p className="text-xs text-gray-400">
-                    첫 번째 답글을 남겨보세요
+                  <p className="text-ink-muted text-sm">
+                    {t.repliesEmptyTitle}
                   </p>
+                  <p className="text-xs text-gray-400">{t.repliesEmptyCta}</p>
                 </div>
               )}
             </div>
