@@ -781,6 +781,17 @@ export type SettingsDict = {
 export type RatingsDict = {
   empty: string;
   summary: string;
+  form: {
+    cancel: string;
+    title: string;
+    prompt: string;
+    promptCta: string;
+    feedbackHint: string;
+    placeholderExample: string;
+    submit: string;
+    successToast: string;
+    profileAlt: string;
+  };
 };
 
 export type AuthDict = {

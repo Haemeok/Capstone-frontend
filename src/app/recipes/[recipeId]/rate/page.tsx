@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
+import { format, useRatingsDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import Circle from "@/shared/ui/Circle";
 import { Container } from "@/shared/ui/Container";
@@ -22,6 +23,7 @@ const ReviewPage = () => {
   const { addToast } = useToastStore();
   const { recipeId } = useParams<{ recipeId: string }>();
   const router = useRouter();
+  const { form: t } = useRatingsDict();
   const { recipeData } = useRecipeDetailQuery(recipeId);
 
   const { mutate: postReview, isPending } = usePostReviewMutation(recipeId);
@@ -39,7 +41,7 @@ const ReviewPage = () => {
         onSuccess: () => {
           router.replace(`/recipes/${recipeId}`);
           addToast({
-            message: "평가가 등록되었어요.",
+            message: t.successToast,
             variant: "default",
             position: "bottom",
             size: "medium",
@@ -62,9 +64,9 @@ const ReviewPage = () => {
             type="button"
             className="text-ink-sub absolute left-4 md:left-6"
           >
-            취소
+            {t.cancel}
           </button>
-          <h1 className="text-xl font-bold">평가하기</h1>
+          <h1 className="text-xl font-bold">{t.title}</h1>
         </Container>
       </header>
 
@@ -72,9 +74,9 @@ const ReviewPage = () => {
         <main className="flex-grow py-6">
           <div className="flex flex-col gap-1 text-center">
             <h2 className="text-2xl font-bold">
-              {recipeData.title} 만들어 보셨나요?
+              {format(t.prompt, { recipeName: recipeData.title })}
             </h2>
-            <h2 className="text-2xl font-bold">평가해주세요!</h2>
+            <h2 className="text-2xl font-bold">{t.promptCta}</h2>
             <div className="flex justify-center">
               <Ratings
                 starCount={5}
@@ -88,14 +90,13 @@ const ReviewPage = () => {
 
           <div className="mt-2 flex flex-col gap-1">
             <h3 className="text-ink-sub mb-2 text-base font-medium">
-              커뮤니티를 위해 레시피에 대한 자세한 피드백이나 조언을
-              공유해주세요. 여러분의 경험이 큰 도움이 될 거예요!
+              {t.feedbackHint}
             </h3>
             <div className="rounded-lg border border-gray-300 p-4">
               <div className="mb-3 flex items-start">
                 <img
                   src={user?.profileImage || ""}
-                  alt="프로필 이미지"
+                  alt={t.profileAlt}
                   className="mr-3 h-8 w-8 flex-shrink-0 rounded-full"
                   width={32}
                   height={32}
@@ -105,7 +106,7 @@ const ReviewPage = () => {
                   <textarea
                     className="text-ink mt-1 min-h-20 w-full resize-none placeholder-gray-400 focus:outline-none"
                     rows={3}
-                    placeholder="예) 정말 맛있었어요! 저는 여기에 꿀을 살짝 추가했더니 풍미가 더 좋더라고요."
+                    placeholder={t.placeholderExample}
                     value={reviewText}
                     onChange={handleReviewTextChange}
                   />
@@ -125,7 +126,7 @@ const ReviewPage = () => {
                 : "bg-olive-light hover:bg-opacity-90"
             )}
           >
-            {isPending ? <Circle size={20} /> : <p>평가 남기기</p>}
+            {isPending ? <Circle size={20} /> : <p>{t.submit}</p>}
           </button>
         </main>
       </Container>
