@@ -2,6 +2,7 @@ import type { Dictionary } from "../../types";
 import { aiRecipe } from "./aiRecipe";
 import { auth } from "./auth";
 import { category } from "./category";
+import { comments } from "./comments";
 import { common } from "./common";
 import { fridge } from "./fridge";
 import { home } from "./home";
@@ -50,4 +51,5 @@ export const ko: Dictionary = {
   ratings,
   auth,
   notifications,
+  comments,
 };

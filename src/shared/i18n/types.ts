@@ -794,6 +794,39 @@ export type RatingsDict = {
   };
 };
 
+export type CommentsDict = {
+  title: string;
+  count: Plural;
+  repliesTitle: string;
+  replyCount: Plural;
+  sort: { latest: string; popular: string };
+  loadingMore: string;
+  lastItem: string;
+  emptyTitle: string;
+  emptyCta: string;
+  repliesLoadingMore: string;
+  repliesLastItem: string;
+  repliesEmptyTitle: string;
+  repliesEmptyCta: string;
+  replyNotFound: string;
+  commentPlaceholder: string;
+  replyPlaceholder: string;
+  loginRequired: string;
+  commentAria: string;
+  replyAria: string;
+  sendAria: string;
+  profileAlt: string;
+  modalCommentTitle: string;
+  modalReplyTitle: string;
+  modalTriggerAria: string;
+  deleteAria: string;
+  deleteModalTitle: string;
+  deleteModalDesc: string;
+  deleting: string;
+  deleteSuccess: string;
+  deleteError: string;
+};
+
 export type AuthDict = {
   browseWithoutLogin: string;
   recentLogin: string;
@@ -887,4 +920,5 @@ export type Dictionary = {
   ratings: RatingsDict;
   auth: AuthDict;
   notifications: NotificationsDict;
+  comments: CommentsDict;
 };
