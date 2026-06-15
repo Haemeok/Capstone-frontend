@@ -63,22 +63,22 @@ EN/JA 카피는 **직역 금지**. 각 언어를 모국어로 쓰는 **현지 IT
 
 ### 공개 / SEO 페이지 (우선순위 높음)
 
-| 페이지      | 라우트                                    | Scope | 상태 | 비고                                                                                                                                                                                                                |
-| ----------- | ----------------------------------------- | ----- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 레시피 상세 | `/recipes/[recipeId]`                     | H     | 🟡   | 백엔드 연동·read-path chrome 완료(34키). 🔸DEFER: 숫자+단위 포맷(구독자수 만명·`분`·`인분`·절약액 `원`)·절약 마케팅 카피·RecipeCompleteButton. EXCLUDE(비목표): 재료 복사/신고 시트·평점·댓글폼·챗                  |
-| 검색 결과   | `/search/results`                         | H     | 🟢   | ja/en 완료                                                                                                                                                                                                          |
-| 홈          | `/`                                       | H     | 🔴   | chrome(헤더/하단탭/푸터) 완료 → 잠금해제. 라우트(ja/en)·홈 하드카피("주간 인기"/"가성비"/CategoryTabs title)·배너 미착수                                                                                            |
-| 검색 진입   | `/search`                                 | H     | 🟢   | ja/en 완료. 셸·시간대 placeholder(현지요리)·큐레이션카드 12장(현지 차분한 톤)·영양테마 label·focused. 가격대 섹션 ja/en 숨김(통화 후속). 카피 자연성 사용자 수동검증 대기                                           |
-| 카테고리    | `/recipes/category/[id]`                  | H     | 🟢   | ja/en 완료. chrome 사전(`category`) + 태그 라벨(택소노미) + `?lang` fetch + queryKey locale + hreflang/canonical. **ja/en noindex**(availableLocales 대기). CHEF 셀럽 키워드 ko 전용                                |
-| 재료 목록   | `/ingredients`                            | H     | 🔴   |                                                                                                                                                                                                                     |
-| 재료 상세   | `/ingredients/[ingredientId]`             | H     | 🟢   | ja/en 완료. chrome locale-prop 사전(`getDictionary`), `?lang=` 서버fn, hreflang/inLanguage. 쿠팡 ko-only. EXCLUDE(비목표): 재료 데이터 번역(백엔드)·영양 단위·제철 월 등 데이터 필드                                |
-| 큐레이션    | `/curation`, `/curation/[slug]`           | H     | 🔴   |                                                                                                                                                                                                                     |
-| 유저 프로필 | `/users/[userId]`                         | M     | 🟢   | ja/en 완료. 탭 라벨·소개 더읽기(common)·프로필수정·광고이벤트(referral)·캘린더(절약 KRW 비ko 숨김 + 스트릭 식비색 제거 번역 + date-fns 로케일)·설정 시트. no-Hangul 가드 컴포넌트 테스트 분산. KRW 절약은 비ko 숨김 |
-| 레시피북    | `/recipe-books`, `/recipe-books/[bookId]` | M     | 🔴   |                                                                                                                                                                                                                     |
-| 랜딩        | `/landing`                                | H     | 🔵   | 마케팅 카피 — 번역 vs 로케일별 별도 카피 결정 필요                                                                                                                                                                  |
-| 매거진      | `/magazine/food-trends-2026`              | L     | 🔵   | 1회성 콘텐츠, 번역 가치 판단                                                                                                                                                                                        |
-| 이벤트      | `/events/*`                               | L     | ⚪   | 한국 한정 이벤트로 보임 — 확인 필요                                                                                                                                                                                 |
-| 공지/약관   | `/notice`, `/privacy`                     | M     | 🔵   | 법적 문구 — 번역 신중                                                                                                                                                                                               |
+| 페이지      | 라우트                                    | Scope | 상태 | 비고                                                                                                                                                                                                                       |
+| ----------- | ----------------------------------------- | ----- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 레시피 상세 | `/recipes/[recipeId]`                     | H     | 🟡   | 백엔드 연동·read-path chrome 완료(34키). 🔸DEFER: 숫자+단위 포맷(구독자수 만명·`분`·`인분`·절약액 `원`)·절약 마케팅 카피·RecipeCompleteButton. EXCLUDE(비목표): 재료 복사/신고 시트·평점·댓글폼·챗                         |
+| 검색 결과   | `/search/results`                         | H     | 🟢   | ja/en 완료                                                                                                                                                                                                                 |
+| 홈          | `/`                                       | H     | 🔴   | chrome(헤더/하단탭/푸터) 완료 → 잠금해제. 라우트(ja/en)·홈 하드카피("주간 인기"/"가성비"/CategoryTabs title)·배너 미착수                                                                                                   |
+| 검색 진입   | `/search`                                 | H     | 🟢   | ja/en 완료. 셸·시간대 placeholder(현지요리)·큐레이션카드 12장(현지 차분한 톤)·영양테마 label·focused. 가격대 섹션 ja/en 숨김(통화 후속). 카피 자연성 사용자 수동검증 대기                                                  |
+| 카테고리    | `/recipes/category/[id]`                  | H     | 🟢   | ja/en 완료. chrome 사전(`category`) + 태그 라벨(택소노미) + `?lang` fetch + queryKey locale + hreflang/canonical. **ja/en noindex**(availableLocales 대기). CHEF 셀럽 키워드 ko 전용                                       |
+| 재료 목록   | `/ingredients`                            | H     | 🔴   |                                                                                                                                                                                                                            |
+| 재료 상세   | `/ingredients/[ingredientId]`             | H     | 🟢   | ja/en 완료. chrome locale-prop 사전(`getDictionary`), `?lang=` 서버fn, hreflang/inLanguage. 쿠팡 ko-only. EXCLUDE(비목표): 재료 데이터 번역(백엔드)·영양 단위·제철 월 등 데이터 필드                                       |
+| 큐레이션    | `/curation`, `/curation/[slug]`           | H     | 🔴   |                                                                                                                                                                                                                            |
+| 유저 프로필 | `/users/[userId]`                         | M     | 🟢   | ja/en 완료. 탭 라벨·소개 더읽기(common)·프로필수정·광고이벤트(referral)·캘린더(절약 KRW 비ko 숨김 + 스트릭 식비색 제거 번역 + date-fns 로케일)·설정 시트. no-Hangul 가드 컴포넌트 테스트 분산. KRW 절약은 비ko 숨김        |
+| 레시피북    | `/recipe-books`, `/recipe-books/[bookId]` | M     | 🟡   | 목록(`/recipe-books`)·그리드/카드 chrome + 미러 라우트 완료(S4 `46766ef0`). **상세(`/[bookId]`)+편집/이동/삭제/이름변경/생성 시트+엔티티 에러/검증+책내 레시피 데이터 lang 진행중**. 데이터 lang은 요청에만(키 X, §6 결정) |
+| 랜딩        | `/landing`                                | H     | 🔵   | 마케팅 카피 — 번역 vs 로케일별 별도 카피 결정 필요                                                                                                                                                                         |
+| 매거진      | `/magazine/food-trends-2026`              | L     | 🔵   | 1회성 콘텐츠, 번역 가치 판단                                                                                                                                                                                               |
+| 이벤트      | `/events/*`                               | L     | ⚪   | 한국 한정 이벤트로 보임 — 확인 필요                                                                                                                                                                                        |
+| 공지/약관   | `/notice`, `/privacy`                     | M     | 🔵   | 법적 문구 — 번역 신중                                                                                                                                                                                                      |
 
 ### 인증 / 유저 플로우 (우선순위 중)
 
@@ -153,6 +153,18 @@ EN/JA 카피는 **직역 금지**. 각 언어를 모국어로 쓰는 **현지 IT
 ## 6. 참고사항 / 남은 Task (에이전트 append 영역)
 
 > 작업하며 발견한 것·결정·블로커를 여기에 추가. 형식: `- [날짜][담당] 내용`
+
+- [2026-06-15][i18n] 📐 **결정(레시피북 상세 데이터 lang)**: `getRecipeBookDetail`의 `lang`은
+  **요청 파라미터에만 넣고 queryKey엔 넣지 않는다.** 이유: 상세 그리드가 `initialData`(preview
+  seeding, `RECIPE_BOOK_QUERY_KEYS.detail`)에 의존 — 키에 locale을 넣으면 seeding 전 지점
+  (`useRecipeBookDetail`·`RecipeBookRecipeGrid` previewKey·외부 카드 seeding)에 동일 locale을
+  박아야 매칭되고, 한 곳만 누락해도 crash 없이 **조용히 preview 미적용→스켈레톤 깜빡(silent 버그)**.
+  키잉이 막아주는 건 "언어 스위치 직후 5분 내 같은 책 재방문 시 옛 언어 깜빡"(코스메틱·자가치유)뿐인데
+  **설치 시 언어 고정·변경 거의 없음**이라 실이득 ≈0. `getIngredients` 규칙(키 말고 lang)과 동일.
+  무효화는 prefix 기반(`detailPrefix`/`infinitePrefix`, locale 무관)이라 mutation이 전 locale 비움.
+  상세 페이지는 client 전용(서버 prefetch 없음)이라 hydration mismatch도 없음. **예외(기존, 의도적
+  유지)**: 레시피북 **목록** `list(locale?)`은 키에 locale 보유 — 목록은 initialData seeding이 없어
+  키잉 비용 0이라 그대로 둠(상세와 비대칭은 의도).
 
 - [2026-06-14][i18n] ✅ **유저페이지 `/users/[userId]` 마감(ja/en)**. 신규 네임스페이스
   `common`(CollapsibleP 더읽기)·`referral`(광고 제거 추천 이벤트: 기프트버튼·"광고 없이 이용 중"
