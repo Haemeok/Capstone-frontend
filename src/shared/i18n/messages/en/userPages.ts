@@ -58,6 +58,27 @@ export const userPages: UserPagesDict = {
       selectAria: "Select",
       deselectAria: "Deselect",
     },
+    editMode: {
+      selectAll: "Select all",
+      deselectAll: "Deselect all",
+      move: "Move",
+      remove: "Remove",
+    },
+    move: {
+      heading: "Move to which recipe book?",
+      createNew: "Create new recipe book",
+      empty: "No other recipe books to move to.",
+      emptyWithCreate: "No other recipe books to move to. Create one.",
+      countSuffix: "{count}",
+      toast: "Moved {count} to “{name}”",
+    },
+    bulkDelete: {
+      title: "Remove {count} selected recipes from this book?",
+      description: "If they're saved in other books, they'll stay there.",
+      confirm: "Remove from book",
+      cancel: "Cancel",
+      toast: "Removed {count} recipes from the book",
+    },
   },
   calendar: {
     timelineHeading: "Cooking log",

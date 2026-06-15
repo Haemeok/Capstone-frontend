@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
 import { useBookRecipeIds } from "@/entities/recipe-book";
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export const EditModeBottomBar = ({ bookId }: Props) => {
+  const t = useUserPagesDict().recipeBooks.editMode;
   const isEditMode = useEditModeStore((s) => s.isEditMode);
   const selectedIds = useEditModeStore((s) => s.selectedIds);
   const selectAll = useEditModeStore((s) => s.selectAll);
@@ -49,7 +51,7 @@ export const EditModeBottomBar = ({ bookId }: Props) => {
             onClick={handleSelectAllToggle}
             className="text-ink-sub rounded-xl px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100"
           >
-            {isAllSelected ? "선택 해제" : "모두 선택"}
+            {isAllSelected ? t.deselectAll : t.selectAll}
           </button>
           <div className="flex items-center gap-2">
             <button
@@ -63,7 +65,7 @@ export const EditModeBottomBar = ({ bookId }: Props) => {
                   : "cursor-not-allowed border-gray-100 text-gray-300"
               )}
             >
-              이동
+              {t.move}
             </button>
             <button
               type="button"
@@ -76,7 +78,7 @@ export const EditModeBottomBar = ({ bookId }: Props) => {
                   : "cursor-not-allowed border-gray-100 text-gray-300"
               )}
             >
-              삭제
+              {t.remove}
             </button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { format, useUserPagesDict } from "@/shared/i18n";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
 import {
@@ -22,6 +23,7 @@ export const BulkDeleteConfirmModal = ({
   onOpenChange,
   bookId,
 }: Props) => {
+  const t = useUserPagesDict().recipeBooks.bulkDelete;
   const selectedIds = useEditModeStore((s) => s.selectedIds);
   const exit = useEditModeStore((s) => s.exit);
   const removeMutation = useRemoveRecipesFromBook();
@@ -35,7 +37,7 @@ export const BulkDeleteConfirmModal = ({
         recipeIds: Array.from(selectedIds),
       });
       addToast({
-        message: `${count}개 레시피를 레시피북에서 뺐어요`,
+        message: format(t.toast, { count }),
         variant: "success",
       });
       onOpenChange(false);
@@ -52,10 +54,10 @@ export const BulkDeleteConfirmModal = ({
     <DeleteModal
       open={open}
       onOpenChange={onOpenChange}
-      title={`선택한 ${count}개 레시피를 레시피북에서 뺄까요?`}
-      description="다른 레시피북에 저장돼 있다면 그곳에는 그대로 남아있어요."
-      confirmLabel="레시피북에서 빼기"
-      cancelLabel="취소"
+      title={format(t.title, { count })}
+      description={t.description}
+      confirmLabel={t.confirm}
+      cancelLabel={t.cancel}
       onConfirm={handleConfirm}
     />
   );

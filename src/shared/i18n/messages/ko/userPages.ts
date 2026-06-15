@@ -58,6 +58,27 @@ export const userPages: UserPagesDict = {
       selectAria: "선택",
       deselectAria: "선택 해제",
     },
+    editMode: {
+      selectAll: "모두 선택",
+      deselectAll: "선택 해제",
+      move: "이동",
+      remove: "삭제",
+    },
+    move: {
+      heading: "어느 레시피북으로 이동할까요?",
+      createNew: "새 레시피북 만들기",
+      empty: "이동할 다른 레시피북이 없어요.",
+      emptyWithCreate: "이동할 다른 레시피북이 없어요. 새로 만들어보세요.",
+      countSuffix: "{count}개",
+      toast: "{count}개를 {name}으로 이동했어요",
+    },
+    bulkDelete: {
+      title: "선택한 {count}개 레시피를 레시피북에서 뺄까요?",
+      description: "다른 레시피북에 저장돼 있다면 그곳에는 그대로 남아있어요.",
+      confirm: "레시피북에서 빼기",
+      cancel: "취소",
+      toast: "{count}개 레시피를 레시피북에서 뺐어요",
+    },
   },
   calendar: {
     timelineHeading: "요리 기록",

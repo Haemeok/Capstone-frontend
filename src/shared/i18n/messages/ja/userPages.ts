@@ -58,6 +58,28 @@ export const userPages: UserPagesDict = {
       selectAria: "選択",
       deselectAria: "選択を解除",
     },
+    editMode: {
+      selectAll: "すべて選択",
+      deselectAll: "選択を解除",
+      move: "移動",
+      remove: "削除",
+    },
+    move: {
+      heading: "どのレシピブックに移動しますか？",
+      createNew: "新しいレシピブックを作成",
+      empty: "移動できる他のレシピブックがありません。",
+      emptyWithCreate:
+        "移動できる他のレシピブックがありません。新しく作成しましょう。",
+      countSuffix: "{count}件",
+      toast: "{count}件を「{name}」に移動しました",
+    },
+    bulkDelete: {
+      title: "選択した{count}件のレシピをレシピブックから外しますか？",
+      description: "他のレシピブックに保存されている場合は、そちらに残ります。",
+      confirm: "レシピブックから外す",
+      cancel: "キャンセル",
+      toast: "{count}件のレシピをレシピブックから外しました",
+    },
   },
   calendar: {
     timelineHeading: "料理の記録",

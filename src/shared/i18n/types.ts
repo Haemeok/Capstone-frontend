@@ -491,6 +491,27 @@ export type UserPagesDict = {
       selectAria: string;
       deselectAria: string;
     };
+    editMode: {
+      selectAll: string;
+      deselectAll: string;
+      move: string;
+      remove: string;
+    };
+    move: {
+      heading: string;
+      createNew: string;
+      empty: string;
+      emptyWithCreate: string;
+      countSuffix: string;
+      toast: string;
+    };
+    bulkDelete: {
+      title: string;
+      description: string;
+      confirm: string;
+      cancel: string;
+      toast: string;
+    };
   };
   calendar: {
     timelineHeading: string;
