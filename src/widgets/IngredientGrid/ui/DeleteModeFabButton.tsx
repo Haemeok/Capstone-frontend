@@ -2,6 +2,8 @@
 
 import { motion } from "motion/react";
 
+import { format, plural } from "@/shared/i18n/format";
+import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Button } from "@/shared/ui/shadcn/button";
 
@@ -14,6 +16,8 @@ const DeleteModeFabButton = ({
   selectedCount,
   onDelete,
 }: DeleteModeFabButtonProps) => {
+  const t = useIngredientsDict();
+
   if (selectedCount === 0) {
     return null;
   }
@@ -36,7 +40,7 @@ const DeleteModeFabButton = ({
           onClick={handleDelete}
           className="bg-olive-light hover:bg-olive-light/90 h-14 cursor-pointer rounded-full px-8 text-base font-bold text-white shadow-xl transition-all active:scale-[0.98]"
         >
-          {selectedCount}개 선택 · 재료 삭제
+          {format(plural(selectedCount, t.deleteFab), { count: selectedCount })}
         </Button>
       </div>
     </motion.div>
