@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { invalidateCache } from "@/shared/config/cache";
-import { useRecipeFormDict } from "@/shared/i18n";
+import { format, useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useRecipeDetailQuery } from "@/entities/recipe";
@@ -25,7 +25,7 @@ export const useRecipeEditForm = (recipeId: string) => {
   const router = useRouter();
   const { addToast } = useToastStore();
   const { submitRecipe, isPending, error } = useSubmitRecipe();
-  const { validation } = useRecipeFormDict();
+  const { validation, ui } = useRecipeFormDict();
 
   const schema = useMemo(() => buildRecipeFormSchema(validation), [validation]);
 
@@ -109,7 +109,7 @@ export const useRecipeEditForm = (recipeId: string) => {
         onSuccess: async () => {
           triggerHaptic("Success");
           addToast({
-            message: "레시피가 성공적으로 수정되었습니다!",
+            message: ui.editSuccess,
             variant: "success",
             position: "bottom",
           });
@@ -118,9 +118,8 @@ export const useRecipeEditForm = (recipeId: string) => {
           router.push(`/recipes/${recipeId}`);
         },
         onError: (error) => {
-          console.error("레시피 수정 실패:", error);
           addToast({
-            message: `레시피 등록 중 오류가 발생했습니다: ${error.message}`,
+            message: format(ui.editError, { message: error.message }),
             variant: "error",
             position: "bottom",
           });

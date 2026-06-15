@@ -505,6 +505,7 @@ export type UserPagesDict = {
       countSuffix: string;
       toast: string;
     };
+    change: { heading: string; toast: string; notFound: string };
     bulkDelete: {
       title: string;
       description: string;
@@ -679,6 +680,13 @@ export type RecipeFormDict = {
     stepRemove: string;
     submitCreate: string;
     submitEdit: string;
+    submitRemix: string;
+    editSuccess: string;
+    editError: string;
+    remixSuccess: string;
+    remixAlreadyCloned: string;
+    remixNotCloneable: string;
+    remixGeneric: string;
     floatingCreateLabel: string;
     floatingCreateText: string;
     addIngredient: string;
