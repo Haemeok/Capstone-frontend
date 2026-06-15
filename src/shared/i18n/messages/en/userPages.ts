@@ -72,6 +72,11 @@ export const userPages: UserPagesDict = {
       countSuffix: "{count}",
       toast: "Moved {count} to “{name}”",
     },
+    change: {
+      heading: "Move to which recipe book?",
+      toast: "Moved to “{name}”",
+      notFound: "Couldn't find the current recipe book. Please refresh.",
+    },
     bulkDelete: {
       title: "Remove {count} selected recipes from this book?",
       description: "If they're saved in other books, they'll stay there.",

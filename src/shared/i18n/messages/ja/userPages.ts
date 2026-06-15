@@ -73,6 +73,11 @@ export const userPages: UserPagesDict = {
       countSuffix: "{count}件",
       toast: "{count}件を「{name}」に移動しました",
     },
+    change: {
+      heading: "どのレシピブックに移動しますか？",
+      toast: "「{name}」に移動しました",
+      notFound: "現在のレシピブックが見つかりません。再読み込みしてください。",
+    },
     bulkDelete: {
       title: "選択した{count}件のレシピをレシピブックから外しますか？",
       description: "他のレシピブックに保存されている場合は、そちらに残ります。",

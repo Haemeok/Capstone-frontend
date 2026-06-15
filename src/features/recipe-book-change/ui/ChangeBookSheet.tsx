@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { PlusIcon } from "lucide-react";
 
-import { useUserPagesLocale } from "@/shared/i18n";
+import { format, useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import {
@@ -34,6 +34,7 @@ export const ChangeBookSheet = ({
   onMoveComplete,
 }: Props) => {
   const locale = useUserPagesLocale();
+  const t = useUserPagesDict().recipeBooks;
   const { Container, Content, Header, Title } = useResponsiveSheet();
   const { data: books } = useRecipeBooks();
   const moveMutation = useMoveRecipes();
@@ -51,7 +52,7 @@ export const ChangeBookSheet = ({
   const handleSelect = async (toBookId: string, toBookName: string) => {
     if (!fromBookId) {
       addToast({
-        message: "현재 레시피북을 찾을 수 없어요. 새로고침해주세요.",
+        message: t.change.notFound,
         variant: "error",
       });
       return;
@@ -67,7 +68,7 @@ export const ChangeBookSheet = ({
         onMoveComplete(toBookId, toBookName);
       } else {
         addToast({
-          message: `${toBookName}으로 이동했어요`,
+          message: format(t.change.toast, { name: toBookName }),
           variant: "success",
         });
       }
@@ -90,14 +91,12 @@ export const ChangeBookSheet = ({
           <span className="bg-olive-light/10 text-olive-light flex h-8 w-8 items-center justify-center rounded-full">
             <PlusIcon size={18} />
           </span>
-          <span className="text-ink font-medium">새 레시피북 만들기</span>
+          <span className="text-ink font-medium">{t.move.createNew}</span>
         </button>
       )}
       {targets.length === 0 ? (
         <p className="text-ink-muted px-4 py-6 text-center text-sm">
-          {canCreateMore
-            ? "이동할 다른 레시피북이 없어요. 새로 만들어보세요."
-            : "이동할 다른 레시피북이 없어요."}
+          {canCreateMore ? t.move.emptyWithCreate : t.move.empty}
         </p>
       ) : (
         <ul>
@@ -111,7 +110,7 @@ export const ChangeBookSheet = ({
               >
                 <span className="text-ink font-medium">{b.name}</span>
                 <span className="text-ink-muted text-sm">
-                  {b.recipeCount}개
+                  {format(t.move.countSuffix, { count: b.recipeCount })}
                 </span>
               </button>
             </li>
@@ -127,7 +126,7 @@ export const ChangeBookSheet = ({
         <Content className="flex flex-col overflow-hidden border-0 bg-white shadow-xl sm:max-h-[85vh] sm:max-w-md sm:rounded-2xl">
           <Header className="px-6 pt-6 pb-2 text-left">
             <Title className="text-ink text-xl font-bold">
-              어느 레시피북으로 옮길까요?
+              {t.change.heading}
             </Title>
           </Header>
           {Body}
