@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { ArrowUp } from "lucide-react";
 
+import { format, useCommentsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -34,6 +35,7 @@ const CommentInputForm = ({
   onFocus,
   onBlur,
 }: CommentInputFormProps) => {
+  const t = useCommentsDict();
   const [isFocused, setIsFocused] = useState(false);
   const [comment, setComment] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -71,13 +73,13 @@ const CommentInputForm = ({
 
   const placeholder = user
     ? commentId
-      ? `${author?.nickname}님에게 답글 남기기...`
-      : "댓글 남기기..."
-    : "로그인 후 이용해주세요.";
+      ? format(t.replyPlaceholder, { nickname: author?.nickname ?? "" })
+      : t.commentPlaceholder
+    : t.loginRequired;
 
   const ariaLabel = commentId
-    ? `${author?.nickname}님에게 답글 작성`
-    : "댓글 작성";
+    ? format(t.replyAria, { nickname: author?.nickname ?? "" })
+    : t.commentAria;
 
   const canSubmit =
     (comment.trim().length > 0 || file !== null) && !isSubmitting;
@@ -104,7 +106,7 @@ const CommentInputForm = ({
           !isFocused &&
           user && (
             <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-white">
-              <Image src={user.profileImage || ""} alt="내 프로필" />
+              <Image src={user.profileImage || ""} alt={t.profileAlt} />
             </div>
           )
         )}
@@ -130,7 +132,7 @@ const CommentInputForm = ({
               : "text-gray-300"
           }`}
           disabled={!canSubmit}
-          aria-label="댓글 전송"
+          aria-label={t.sendAria}
           type="submit"
           onMouseDown={(e) => e.preventDefault()}
         >

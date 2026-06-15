@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { MessageCircle } from "lucide-react";
 
+import { format, useCommentsDict } from "@/shared/i18n";
 import { Button } from "@/shared/ui/shadcn/button";
 import {
   Dialog,
@@ -27,6 +28,7 @@ type CommentInputModalProps = {
 };
 
 const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
+  const t = useCommentsDict();
   const [isOpen, setIsOpen] = useState(false);
   const { recipeId } = useRecipeStatus();
   const { createComment, isPending } = useCreateCommentMutation(recipeId);
@@ -57,7 +59,7 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
           size="icon"
           className="bg-olive-light hover:bg-olive-light/90 fixed bottom-24 hidden h-14 w-14 rounded-full text-white shadow-lg md:flex"
           style={{ right: "max(1.5rem, calc((100vw - 896px) / 2 - 5rem))" }}
-          aria-label="댓글 작성"
+          aria-label={t.modalTriggerAria}
         >
           <MessageCircle size={24} />
         </Button>
@@ -65,7 +67,9 @@ const CommentInputModal = ({ author, commentId }: CommentInputModalProps) => {
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
-            {commentId ? `${author?.nickname}님에게 답글 남기기` : "댓글 작성"}
+            {commentId
+              ? format(t.modalReplyTitle, { nickname: author?.nickname ?? "" })
+              : t.modalCommentTitle}
           </DialogTitle>
         </DialogHeader>
         <div className="py-4">
