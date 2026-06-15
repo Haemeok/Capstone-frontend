@@ -17,6 +17,7 @@ jest.mock("@/widgets/Toast/model/store", () => ({
 }));
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({ replace: jest.fn() })),
+  usePathname: jest.fn(() => "/recipes/r1/remix"),
 }));
 jest.mock("@/features/recipe-create/model/hooks/useFinalizeRecipe", () => ({
   useFinalizeRecipe: jest.fn(() => ({ mutate: jest.fn() })),
