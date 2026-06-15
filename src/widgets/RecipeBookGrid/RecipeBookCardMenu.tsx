@@ -40,7 +40,7 @@ export const RecipeBookCardMenu = ({ bookId, bookName }: Props) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
           <DropdownMenuItem onSelect={() => setRenameOpen(true)}>
-            {t.rename}
+            {t.renameAction}
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => setDeleteOpen(true)}

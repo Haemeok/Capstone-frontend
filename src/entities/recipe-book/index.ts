@@ -12,6 +12,7 @@ export {
   RECIPE_BOOK_QUERY_KEYS,
 } from "./model/queryKeys";
 export {
+  buildRecipeBookFormSchema,
   recipeBookFormSchema,
   type RecipeBookFormValues,
 } from "./model/schema";

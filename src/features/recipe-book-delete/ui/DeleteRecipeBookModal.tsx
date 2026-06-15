@@ -1,5 +1,6 @@
 "use client";
 
+import { format, useUserPagesDict } from "@/shared/i18n";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
 import {
@@ -24,6 +25,7 @@ export const DeleteRecipeBookModal = ({
   bookName,
   onDeleted,
 }: Props) => {
+  const t = useUserPagesDict().recipeBooks;
   const deleteMutation = useDeleteRecipeBook();
   const addToast = useToastStore((state) => state.addToast);
 
@@ -31,7 +33,7 @@ export const DeleteRecipeBookModal = ({
     try {
       await deleteMutation.mutateAsync(bookId);
       addToast({
-        message: `"${bookName}" 레시피북이 삭제되었어요`,
+        message: format(t.deleteBook.toast, { name: bookName }),
         variant: "success",
       });
       onOpenChange(false);
@@ -48,10 +50,10 @@ export const DeleteRecipeBookModal = ({
     <DeleteModal
       open={open}
       onOpenChange={onOpenChange}
-      title={`"${bookName}" 레시피북을 삭제할까요?`}
-      description="이 레시피북에만 저장된 레시피는 저장 목록에서도 사라져요."
-      confirmLabel="삭제"
-      cancelLabel="취소"
+      title={format(t.deleteBook.title, { name: bookName })}
+      description={t.deleteBook.description}
+      confirmLabel={t.deleteBook.confirm}
+      cancelLabel={t.deleteBook.cancel}
       onConfirm={handleConfirm}
     />
   );

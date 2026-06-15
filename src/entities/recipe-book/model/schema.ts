@@ -1,11 +1,17 @@
 import { z } from "zod";
 
-export const recipeBookFormSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "레시피북 이름을 입력해주세요")
-    .max(50, "50자 이내로 입력해주세요"),
-});
+import type { UserPagesDict } from "@/shared/i18n/types";
+import { userPagesMessages } from "@/shared/i18n/userPagesMessages";
+
+type Validation = UserPagesDict["recipeBooks"]["validation"];
+
+export const buildRecipeBookFormSchema = (v: Validation) =>
+  z.object({
+    name: z.string().trim().min(1, v.nameRequired).max(50, v.nameMax),
+  });
+
+export const recipeBookFormSchema = buildRecipeBookFormSchema(
+  userPagesMessages.ko.recipeBooks.validation
+);
 
 export type RecipeBookFormValues = z.infer<typeof recipeBookFormSchema>;

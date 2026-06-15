@@ -477,7 +477,7 @@ export type UserPagesDict = {
     listLoadError: string;
     boundaryError: string;
     cardMenuAria: string;
-    rename: string;
+    renameAction: string;
     delete: string;
     savedCount: string;
     createAria: string;
@@ -512,6 +512,30 @@ export type UserPagesDict = {
       cancel: string;
       toast: string;
     };
+    rename: {
+      title: string;
+      placeholder: string;
+      cancel: string;
+      submit: string;
+      submitting: string;
+      toast: string;
+    };
+    create: {
+      title: string;
+      placeholder: string;
+      cancel: string;
+      submit: string;
+      submitting: string;
+      toast: string;
+    };
+    deleteBook: {
+      title: string;
+      description: string;
+      confirm: string;
+      cancel: string;
+      toast: string;
+    };
+    validation: { nameRequired: string; nameMax: string };
   };
   calendar: {
     timelineHeading: string;

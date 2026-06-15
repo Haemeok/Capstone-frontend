@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useUserPagesDict } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import {
+  buildRecipeBookFormSchema,
   getRecipeBookErrorMessage,
-  recipeBookFormSchema,
   type RecipeBookFormValues,
   useRecipeBooks,
   useUpdateRecipeBookName,
@@ -34,13 +35,19 @@ export const RenameRecipeBookSheet = ({
   bookId,
   currentName,
 }: Props) => {
+  const t = useUserPagesDict().recipeBooks;
   const { Container, Content, Header, Title } = useResponsiveSheet();
   const { data: books } = useRecipeBooks();
   const updateMutation = useUpdateRecipeBookName(bookId);
   const addToast = useToastStore((state) => state.addToast);
 
+  const schema = useMemo(
+    () => buildRecipeBookFormSchema(t.validation),
+    [t.validation]
+  );
+
   const form = useForm<RecipeBookFormValues>({
-    resolver: zodResolver(recipeBookFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: { name: currentName },
   });
 
@@ -62,7 +69,7 @@ export const RenameRecipeBookSheet = ({
     }
     try {
       await updateMutation.mutateAsync({ name: trimmed });
-      addToast({ message: "레시피북 이름이 변경되었어요", variant: "success" });
+      addToast({ message: t.rename.toast, variant: "success" });
       onOpenChange(false);
     } catch (error) {
       const message = getRecipeBookErrorMessage(error);
@@ -85,7 +92,7 @@ export const RenameRecipeBookSheet = ({
       <div>
         <input
           {...form.register("name")}
-          placeholder="레시피북 이름"
+          placeholder={t.rename.placeholder}
           maxLength={NAME_MAX_LENGTH}
           className="focus:border-olive-light focus:ring-olive-light text-ink w-full rounded-xl border border-gray-200 p-4 transition-colors placeholder:text-gray-400 focus:ring-1 focus:outline-none"
           autoFocus
@@ -103,14 +110,14 @@ export const RenameRecipeBookSheet = ({
           className="text-ink-sub h-12 flex-1 rounded-xl bg-gray-100 font-medium transition-colors hover:bg-gray-200"
           onClick={() => onOpenChange(false)}
         >
-          취소
+          {t.rename.cancel}
         </button>
         <button
           type="submit"
           disabled={updateMutation.isPending}
           className="bg-olive-light h-12 flex-1 rounded-xl font-bold text-white transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
         >
-          {updateMutation.isPending ? "변경 중..." : "변경"}
+          {updateMutation.isPending ? t.rename.submitting : t.rename.submit}
         </button>
       </div>
     </form>
@@ -120,9 +127,7 @@ export const RenameRecipeBookSheet = ({
     <Container open={open} onOpenChange={onOpenChange}>
       <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md sm:rounded-2xl">
         <Header className="px-6 pt-6 pb-4 text-left">
-          <Title className="text-ink text-xl font-bold">
-            레시피북 이름 변경
-          </Title>
+          <Title className="text-ink text-xl font-bold">{t.rename.title}</Title>
         </Header>
         {Body}
       </Content>

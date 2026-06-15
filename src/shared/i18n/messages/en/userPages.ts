@@ -44,7 +44,7 @@ export const userPages: UserPagesDict = {
     listLoadError: "We couldn't load your recipe books.",
     boundaryError: "We couldn't load this recipe book.",
     cardMenuAria: "Recipe book options",
-    rename: "Rename",
+    renameAction: "Rename",
     delete: "Delete",
     savedCount: "{count} recipes saved",
     createAria: "Create a recipe book",
@@ -78,6 +78,34 @@ export const userPages: UserPagesDict = {
       confirm: "Remove from book",
       cancel: "Cancel",
       toast: "Removed {count} recipes from the book",
+    },
+    rename: {
+      title: "Rename recipe book",
+      placeholder: "Recipe book name",
+      cancel: "Cancel",
+      submit: "Save",
+      submitting: "Saving...",
+      toast: "Recipe book renamed",
+    },
+    create: {
+      title: "Create recipe book",
+      placeholder: "Recipe book name",
+      cancel: "Cancel",
+      submit: "Create",
+      submitting: "Creating...",
+      toast: "Recipe book created",
+    },
+    deleteBook: {
+      title: "Delete “{name}”?",
+      description:
+        "Recipes saved only in this book will disappear from your saved list.",
+      confirm: "Delete",
+      cancel: "Cancel",
+      toast: "Deleted “{name}”",
+    },
+    validation: {
+      nameRequired: "Enter a recipe book name",
+      nameMax: "Use 50 characters or fewer",
     },
   },
   calendar: {

@@ -44,7 +44,7 @@ export const userPages: UserPagesDict = {
     listLoadError: "レシピブックを読み込めませんでした",
     boundaryError: "レシピブックを読み込めませんでした",
     cardMenuAria: "レシピブックのメニュー",
-    rename: "名前を変更",
+    renameAction: "名前を変更",
     delete: "削除",
     savedCount: "{count}件を保存",
     createAria: "レシピブックを作成",
@@ -79,6 +79,34 @@ export const userPages: UserPagesDict = {
       confirm: "レシピブックから外す",
       cancel: "キャンセル",
       toast: "{count}件のレシピをレシピブックから外しました",
+    },
+    rename: {
+      title: "レシピブック名を変更",
+      placeholder: "レシピブック名",
+      cancel: "キャンセル",
+      submit: "変更",
+      submitting: "変更中...",
+      toast: "レシピブック名を変更しました",
+    },
+    create: {
+      title: "新しいレシピブックを作成",
+      placeholder: "レシピブック名",
+      cancel: "キャンセル",
+      submit: "作成",
+      submitting: "作成中...",
+      toast: "レシピブックを作成しました",
+    },
+    deleteBook: {
+      title: "「{name}」を削除しますか？",
+      description:
+        "このレシピブックにのみ保存されたレシピは、保存リストからもなくなります。",
+      confirm: "削除",
+      cancel: "キャンセル",
+      toast: "「{name}」を削除しました",
+    },
+    validation: {
+      nameRequired: "レシピブック名を入力してください",
+      nameMax: "50文字以内で入力してください",
     },
   },
   calendar: {
