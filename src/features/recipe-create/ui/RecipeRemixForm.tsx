@@ -45,7 +45,7 @@ export const RecipeRemixForm = ({ recipeId }: Props) => {
           isLoading={isPending}
           recipeCreationError={error instanceof Error ? error : null}
           onSubmit={onSubmit}
-          isEdit={false}
+          mode="remix"
         />
       </FormProvider>
     </div>

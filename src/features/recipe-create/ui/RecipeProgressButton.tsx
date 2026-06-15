@@ -7,24 +7,33 @@ import { FormProgressButton } from "@/shared/ui/form/FormProgressButton";
 
 import { buildRecipeFormSchema, RecipeFormValues } from "../model/config";
 
+export type RecipeFormMode = "create" | "edit" | "remix";
+
 type RecipeProgressButtonProps = {
   isLoading: boolean;
-  isEdit: boolean;
+  mode: RecipeFormMode;
 };
 
 const RecipeProgressButton = ({
   isLoading,
-  isEdit,
+  mode,
 }: RecipeProgressButtonProps) => {
   const { labels, validation, ui } = useRecipeFormDict();
 
   const schema = useMemo(() => buildRecipeFormSchema(validation), [validation]);
 
+  const text =
+    mode === "edit"
+      ? ui.submitEdit
+      : mode === "remix"
+        ? ui.submitRemix
+        : ui.submitCreate;
+
   return (
     <FormProgressButton<RecipeFormValues>
       schema={schema}
       isLoading={isLoading}
-      text={isEdit ? ui.submitEdit : ui.submitCreate}
+      text={text}
       fieldLabels={labels}
       missingPrefix={ui.missingFieldsPrefix}
     />

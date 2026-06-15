@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { useRecipeFormDict } from "@/shared/i18n";
+
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 import { REMIX_REDIRECT_ERRORS } from "./lib/remixRedirectErrors";
@@ -12,18 +14,19 @@ export const RemixRedirectToast = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { addToast } = useToastStore();
+  const { ui } = useRecipeFormDict();
 
   useEffect(() => {
     const err = searchParams.get("error");
 
     if (err === REMIX_REDIRECT_ERRORS.NOT_CLONEABLE) {
-      addToast({ message: "이 레시피는 편집할 수 없어요", variant: "error" });
+      addToast({ message: ui.remixNotCloneable, variant: "error" });
       router.replace(pathname);
     } else if (err === REMIX_REDIRECT_ERRORS.ALREADY_CLONED) {
-      addToast({ message: "이미 편집한 레시피예요", variant: "error" });
+      addToast({ message: ui.remixAlreadyCloned, variant: "error" });
       router.replace(pathname);
     }
-  }, [searchParams, router, pathname, addToast]);
+  }, [searchParams, router, pathname, addToast, ui]);
 
   return null;
 };

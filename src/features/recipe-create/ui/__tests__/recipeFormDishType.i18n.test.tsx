@@ -31,7 +31,7 @@ const renderLayout = () =>
         isLoading={false}
         recipeCreationError={null}
         onSubmit={async () => {}}
-        isEdit={false}
+        mode="create"
       />
     </FormHarness>
   );

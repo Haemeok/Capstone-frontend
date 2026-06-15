@@ -18,7 +18,9 @@ import TagSection from "@/features/recipe-create/ui/TagSection";
 
 import { MainImageField } from "../form/fields/MainImageField";
 import { TitleField } from "../form/fields/TitleField";
-import RecipeProgressButton from "./RecipeProgressButton";
+import RecipeProgressButton, {
+  type RecipeFormMode,
+} from "./RecipeProgressButton";
 import ServingCounter from "./ServingCounter";
 
 type RecipeFormLayoutProps = {
@@ -26,7 +28,7 @@ type RecipeFormLayoutProps = {
   isLoading: boolean;
   recipeCreationError: Error | null;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
-  isEdit: boolean;
+  mode: RecipeFormMode;
 };
 
 const RecipeFormLayout = ({
@@ -34,7 +36,7 @@ const RecipeFormLayout = ({
   isLoading,
   recipeCreationError: submitError,
   onSubmit,
-  isEdit,
+  mode,
 }: RecipeFormLayoutProps) => {
   const {
     register,
@@ -135,7 +137,7 @@ const RecipeFormLayout = ({
                 {format(ui.submitErrorPrefix, { message: submitError.message })}
               </p>
             )}
-            <RecipeProgressButton isLoading={isLoading} isEdit={isEdit} />
+            <RecipeProgressButton isLoading={isLoading} mode={mode} />
           </div>
         </Container>
       </div>

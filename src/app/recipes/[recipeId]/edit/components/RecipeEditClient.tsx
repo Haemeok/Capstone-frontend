@@ -21,7 +21,7 @@ const RecipeEditClient = ({ recipeId }: RecipeEditClientProps) => {
           isLoading={isLoading}
           recipeCreationError={error}
           onSubmit={onSubmit}
-          isEdit
+          mode="edit"
         />
       </FormProvider>
     </div>

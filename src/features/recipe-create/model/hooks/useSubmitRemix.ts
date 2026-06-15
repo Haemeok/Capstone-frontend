@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { ApiError, getErrorData } from "@/shared/api/errors";
 import { handleS3Upload } from "@/shared/api/file";
+import { useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { FileInfoRequest, FileObject } from "@/shared/types";
 
@@ -29,6 +30,7 @@ type SubmitRemixVars = {
 export const useSubmitRemix = () => {
   const router = useRouter();
   const { addToast } = useToastStore();
+  const { ui } = useRecipeFormDict();
   const queryClient = useQueryClient();
   const finalizeRecipeMutation = useFinalizeRecipe();
 
@@ -60,7 +62,7 @@ export const useSubmitRemix = () => {
     },
     onSuccess: (data) => {
       triggerHaptic("Success");
-      addToast({ message: "편집한 레시피가 저장되었어요", variant: "success" });
+      addToast({ message: ui.remixSuccess, variant: "success" });
       router.replace(`/recipes/${data.recipeId}`);
     },
     onError: (error: unknown, vars) => {
@@ -68,20 +70,17 @@ export const useSubmitRemix = () => {
         const errorData = getErrorData(error);
         const code = String(errorData?.code ?? "");
         if (code === REMIX_ALREADY_EXISTS_CODE) {
-          addToast({ message: "이미 편집한 레시피예요", variant: "error" });
+          addToast({ message: ui.remixAlreadyCloned, variant: "error" });
           router.replace(`/recipes/${vars.originRecipeId}`);
           return;
         }
         if (code === REMIX_NOT_ALLOWED_CODE) {
-          addToast({
-            message: "이 레시피는 편집할 수 없어요",
-            variant: "error",
-          });
+          addToast({ message: ui.remixNotCloneable, variant: "error" });
           router.replace(`/recipes/${vars.originRecipeId}`);
           return;
         }
       }
-      addToast({ message: "잠시 후 다시 시도해주세요", variant: "error" });
+      addToast({ message: ui.remixGeneric, variant: "error" });
     },
   });
 
