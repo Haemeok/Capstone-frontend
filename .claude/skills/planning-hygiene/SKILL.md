@@ -14,6 +14,7 @@ Plans look professional but ship bugs when they fabricate values that should hav
 ## When to Apply
 
 Reference these guidelines when:
+
 - Authoring an implementation plan that introduces pricing, cost estimation, or per-model configuration.
 - Naming a third-party model, endpoint, or product variant in a plan or code comment.
 - About to write a new `*Pricing.ts`, `*Config.ts`, `models.ts`, or any lookup-table-shaped module.
@@ -21,14 +22,14 @@ Reference these guidelines when:
 
 ## Rule Categories
 
-| Prefix | Topic |
-|---|---|
-| `lookup-` | Reuse existing lookup tables before authoring parallel ones |
+| Prefix      | Topic                                                       |
+| ----------- | ----------------------------------------------------------- |
+| `lookup-`   | Reuse existing lookup tables before authoring parallel ones |
 | `external-` | External-source-of-truth values (vendor IDs, prices, rates) |
-| `scope-` | Disambiguating user intent before committing to a plan |
-| `dispatch-` | Subagent dispatch shape and git staging at plan time |
-| `cleanup-` | Planning a codebase-wide mechanical lint/refactor cleanup |
-| `no-` | Anti-patterns to avoid emitting in plans or generated code |
+| `scope-`    | Disambiguating user intent before committing to a plan      |
+| `dispatch-` | Subagent dispatch shape and git staging at plan time        |
+| `cleanup-`  | Planning a codebase-wide mechanical lint/refactor cleanup   |
+| `no-`       | Anti-patterns to avoid emitting in plans or generated code  |
 
 ## Quick Reference
 
@@ -48,6 +49,7 @@ Reference these guidelines when:
 
 - `dispatch-mcp-tools-force-sequential-subagents` — MCP servers (Playwright, Vercel, etc.) are session-scoped, not per-subagent. Parallel subagents sharing the same MCP tool will contend on one connection. At plan time, classify each subagent's tools — anything `mcp__*` forces sequential dispatch. Decide in the plan, not at runtime.
 - `dispatch-explicit-staging-shared-worktree` — A subagent commits in the same working tree the user may be editing in parallel. `git add -A` sweeps their unrelated WIP into your commit. Stage only the exact paths the task touched, and tell the subagent to ignore `tsc`/test errors in files it didn't touch (those are the user's WIP).
+- `dispatch-pathspec-leaks-foreign-hunks-in-shared-file` — Even correct per-file staging leaks: `git add <file>` stages the file's whole blob, so a hot shared file (types/`index.ts`/barrel) co-edited in parallel carries the other workstream's hunks into your commit. Before committing a shared file, `git diff <file>` for foreign hunks, `git add -p` only yours, and confirm `git diff --cached <file>`.
 
 ### Cleanup planning
 
