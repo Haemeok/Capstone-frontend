@@ -1,10 +1,10 @@
 "use client";
 
-import { format, useUserPagesDict } from "@/shared/i18n";
+import { format, useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
 import {
-  getRecipeBookErrorMessage,
+  getRecipeBookError,
   useRemoveRecipesFromBook,
 } from "@/entities/recipe-book";
 
@@ -24,6 +24,7 @@ export const BulkDeleteConfirmModal = ({
   bookId,
 }: Props) => {
   const t = useUserPagesDict().recipeBooks.bulkDelete;
+  const locale = useUserPagesLocale();
   const selectedIds = useEditModeStore((s) => s.selectedIds);
   const exit = useEditModeStore((s) => s.exit);
   const removeMutation = useRemoveRecipesFromBook();
@@ -44,7 +45,7 @@ export const BulkDeleteConfirmModal = ({
       exit();
     } catch (error) {
       addToast({
-        message: getRecipeBookErrorMessage(error),
+        message: getRecipeBookError(error, locale).message,
         variant: "error",
       });
     }

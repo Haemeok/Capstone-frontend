@@ -1,25 +1,27 @@
 import { ApiError } from "@/shared/api/client";
 import { getErrorData } from "@/shared/api/errors";
+import type { Locale } from "@/shared/i18n";
+import { userPagesMessages } from "@/shared/i18n/userPagesMessages";
 
-export const RECIPE_BOOK_ERROR_MESSAGES: Record<number, string> = {
-  1101: "요청한 레시피북이 없어요.",
-  1102: "이 레시피북에 접근할 수 없어요.",
-  1103: "기본 레시피북은 삭제할 수 없어요.",
-  1104: "기본 레시피북은 이름을 변경할 수 없어요.",
-  1105: "이미 레시피북에 들어있는 레시피예요.",
-  1106: "레시피북은 최대 20개까지 만들 수 있어요.",
-  1107: "이미 같은 이름의 레시피북이 있어요.",
-};
+export type RecipeBookError = { code: number | null; message: string };
 
-export const FALLBACK_ERROR_MESSAGE = "잠시 후 다시 시도해주세요.";
+export const FIELD_ERROR_CODES = new Set<number>([1104, 1107]);
 
-export const getRecipeBookErrorMessage = (error: unknown): string => {
+export const getRecipeBookError = (
+  error: unknown,
+  locale: Locale
+): RecipeBookError => {
+  const errors = userPagesMessages[locale].recipeBooks.errors;
   if (error instanceof ApiError) {
-    const data = getErrorData(error);
-    const code = data?.code;
-    if (typeof code === "number" && RECIPE_BOOK_ERROR_MESSAGES[code]) {
-      return RECIPE_BOOK_ERROR_MESSAGES[code];
+    const code = getErrorData(error)?.code;
+    if (typeof code === "number") {
+      const message =
+        code in errors
+          ? // as: runtime numeric-literal key lookup on a typed dict object
+            (errors as Record<number, string>)[code]
+          : errors.fallback;
+      return { code, message };
     }
   }
-  return FALLBACK_ERROR_MESSAGE;
+  return { code: null, message: errors.fallback };
 };

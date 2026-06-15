@@ -1,10 +1,10 @@
 "use client";
 
-import { format, useUserPagesDict } from "@/shared/i18n";
+import { format, useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
 import {
-  getRecipeBookErrorMessage,
+  getRecipeBookError,
   useDeleteRecipeBook,
 } from "@/entities/recipe-book";
 
@@ -26,6 +26,7 @@ export const DeleteRecipeBookModal = ({
   onDeleted,
 }: Props) => {
   const t = useUserPagesDict().recipeBooks;
+  const locale = useUserPagesLocale();
   const deleteMutation = useDeleteRecipeBook();
   const addToast = useToastStore((state) => state.addToast);
 
@@ -40,7 +41,7 @@ export const DeleteRecipeBookModal = ({
       onDeleted?.();
     } catch (error) {
       addToast({
-        message: getRecipeBookErrorMessage(error),
+        message: getRecipeBookError(error, locale).message,
         variant: "error",
       });
     }

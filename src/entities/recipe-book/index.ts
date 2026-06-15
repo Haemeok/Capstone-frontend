@@ -1,8 +1,8 @@
 export * from "./api";
 export {
-  FALLBACK_ERROR_MESSAGE,
-  getRecipeBookErrorMessage,
-  RECIPE_BOOK_ERROR_MESSAGES,
+  FIELD_ERROR_CODES,
+  getRecipeBookError,
+  type RecipeBookError,
 } from "./model/errorMessages";
 export * from "./model/hooks";
 export {

@@ -22,7 +22,7 @@ jest.mock("@/entities/recipe-book", () => ({
     mutateAsync: mockMutateAsync,
     isPending: false,
   }),
-  getRecipeBookErrorMessage: (e: unknown) => String(e),
+  getRecipeBookError: () => ({ code: null, message: "" }),
 }));
 
 const HANGUL = /[가-힣]/;

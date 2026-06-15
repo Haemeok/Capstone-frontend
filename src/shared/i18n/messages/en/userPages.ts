@@ -107,6 +107,16 @@ export const userPages: UserPagesDict = {
       nameRequired: "Enter a recipe book name",
       nameMax: "Use 50 characters or fewer",
     },
+    errors: {
+      1101: "Recipe book not found.",
+      1102: "You can't access this recipe book.",
+      1103: "The default recipe book can't be deleted.",
+      1104: "The default recipe book can't be renamed.",
+      1105: "This recipe is already in the book.",
+      1106: "You can create up to 20 recipe books.",
+      1107: "A recipe book with this name already exists.",
+      fallback: "Please try again in a moment.",
+    },
   },
   calendar: {
     timelineHeading: "Cooking log",

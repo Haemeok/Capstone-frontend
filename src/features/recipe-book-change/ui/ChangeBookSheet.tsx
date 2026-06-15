@@ -4,10 +4,11 @@ import { useState } from "react";
 
 import { PlusIcon } from "lucide-react";
 
+import { useUserPagesLocale } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import {
-  getRecipeBookErrorMessage,
+  getRecipeBookError,
   MAX_RECIPE_BOOKS,
   useMoveRecipes,
   useRecipeBooks,
@@ -32,6 +33,7 @@ export const ChangeBookSheet = ({
   fromBookId: fromBookIdProp,
   onMoveComplete,
 }: Props) => {
+  const locale = useUserPagesLocale();
   const { Container, Content, Header, Title } = useResponsiveSheet();
   const { data: books } = useRecipeBooks();
   const moveMutation = useMoveRecipes();
@@ -71,7 +73,7 @@ export const ChangeBookSheet = ({
       }
     } catch (error) {
       addToast({
-        message: getRecipeBookErrorMessage(error),
+        message: getRecipeBookError(error, locale).message,
         variant: "error",
       });
     }

@@ -3,6 +3,9 @@ import { type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
+import { ApiError } from "@/shared/api/client";
+import { userPagesMessages } from "@/shared/i18n/userPagesMessages";
+
 const mockPathname = jest.fn();
 jest.mock("next/navigation", () => ({ usePathname: () => mockPathname() }));
 
@@ -28,17 +31,20 @@ jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
   }),
 }));
 
+const updateMock = jest.fn();
 jest.mock("@/entities/recipe-book", () => ({
   ...jest.requireActual("@/entities/recipe-book"),
   useRecipeBooks: () => ({ data: [] }),
   useUpdateRecipeBookName: () => ({
-    mutateAsync: jest.fn(),
+    mutateAsync: updateMock,
     isPending: false,
   }),
 }));
 
+const addToast = jest.fn();
 jest.mock("@/widgets/Toast/model/store", () => ({
-  useToastStore: () => ({ addToast: jest.fn() }),
+  useToastStore: (sel: (s: { addToast: jest.Mock }) => unknown) =>
+    sel({ addToast }),
 }));
 
 import { RenameRecipeBookSheet } from "../RenameRecipeBookSheet";
@@ -57,6 +63,10 @@ const renderJa = () =>
       />
     </QueryClientProvider>
   );
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("RenameRecipeBookSheet i18n — ja", () => {
   it("T-15: title과 placeholder가 일본어로 표시되고 한글 없음", () => {
@@ -77,6 +87,49 @@ describe("RenameRecipeBookSheet i18n — ja", () => {
       expect(
         screen.getByText("レシピブック名を入力してください")
       ).toBeInTheDocument()
+    );
+  });
+
+  it("1107 → 인라인 필드 에러(ja), 토스트 아님 (T-25)", async () => {
+    mockPathname.mockReturnValue("/ja/recipe-books/b1");
+    updateMock.mockRejectedValueOnce(
+      new ApiError(400, "Bad Request", { code: 1107 })
+    );
+    renderJa();
+    const input = screen.getByPlaceholderText(
+      userPagesMessages.ja.recipeBooks.rename.placeholder
+    );
+    fireEvent.change(input, { target: { value: "New" } });
+    fireEvent.click(
+      screen.getByText(userPagesMessages.ja.recipeBooks.rename.submit)
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByText(userPagesMessages.ja.recipeBooks.errors[1107])
+      ).toBeInTheDocument()
+    );
+    expect(addToast).not.toHaveBeenCalled();
+  });
+
+  it("1102 → 토스트(ja), 필드 에러 아님 (T-26)", async () => {
+    mockPathname.mockReturnValue("/ja/recipe-books/b1");
+    updateMock.mockRejectedValueOnce(
+      new ApiError(400, "Bad Request", { code: 1102 })
+    );
+    renderJa();
+    const input = screen.getByPlaceholderText(
+      userPagesMessages.ja.recipeBooks.rename.placeholder
+    );
+    fireEvent.change(input, { target: { value: "New" } });
+    fireEvent.click(
+      screen.getByText(userPagesMessages.ja.recipeBooks.rename.submit)
+    );
+    await waitFor(() =>
+      expect(addToast).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: userPagesMessages.ja.recipeBooks.errors[1102],
+        })
+      )
     );
   });
 });

@@ -5,12 +5,13 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useUserPagesDict } from "@/shared/i18n";
+import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import {
   buildRecipeBookFormSchema,
-  getRecipeBookErrorMessage,
+  FIELD_ERROR_CODES,
+  getRecipeBookError,
   type RecipeBookFormValues,
   useRecipeBooks,
   useUpdateRecipeBookName,
@@ -19,8 +20,6 @@ import {
 import { useToastStore } from "@/widgets/Toast/model/store";
 
 const NAME_MAX_LENGTH = 50;
-const DUPLICATE_ERROR_HINT = "같은 이름";
-const DEFAULT_BOOK_HINT = "기본 레시피북";
 
 type Props = {
   open: boolean;
@@ -36,6 +35,7 @@ export const RenameRecipeBookSheet = ({
   currentName,
 }: Props) => {
   const t = useUserPagesDict().recipeBooks;
+  const locale = useUserPagesLocale();
   const { Container, Content, Header, Title } = useResponsiveSheet();
   const { data: books } = useRecipeBooks();
   const updateMutation = useUpdateRecipeBookName(bookId);
@@ -64,7 +64,7 @@ export const RenameRecipeBookSheet = ({
     const isDuplicate =
       books?.some((b) => b.id !== bookId && b.name === trimmed) ?? false;
     if (isDuplicate) {
-      form.setError("name", { message: "이미 같은 이름의 레시피북이 있어요" });
+      form.setError("name", { message: t.errors[1107] });
       return;
     }
     try {
@@ -72,11 +72,8 @@ export const RenameRecipeBookSheet = ({
       addToast({ message: t.rename.toast, variant: "success" });
       onOpenChange(false);
     } catch (error) {
-      const message = getRecipeBookErrorMessage(error);
-      if (
-        message.includes(DUPLICATE_ERROR_HINT) ||
-        message.includes(DEFAULT_BOOK_HINT)
-      ) {
+      const { code, message } = getRecipeBookError(error, locale);
+      if (code !== null && FIELD_ERROR_CODES.has(code)) {
         form.setError("name", { message });
       } else {
         addToast({ message, variant: "error" });

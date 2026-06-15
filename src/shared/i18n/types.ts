@@ -536,6 +536,16 @@ export type UserPagesDict = {
       toast: string;
     };
     validation: { nameRequired: string; nameMax: string };
+    errors: {
+      1101: string;
+      1102: string;
+      1103: string;
+      1104: string;
+      1105: string;
+      1106: string;
+      1107: string;
+      fallback: string;
+    };
   };
   calendar: {
     timelineHeading: string;

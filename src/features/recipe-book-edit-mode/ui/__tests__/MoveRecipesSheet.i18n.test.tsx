@@ -43,7 +43,7 @@ jest.mock("@/entities/recipe-book", () => ({
   useRecipeBooks: jest.fn(),
   useMoveRecipes: () => ({ mutateAsync: mockMutateAsync, isPending: false }),
   MAX_RECIPE_BOOKS: 10,
-  getRecipeBookErrorMessage: (e: unknown) => String(e),
+  getRecipeBookError: () => ({ code: null, message: "" }),
 }));
 
 const { useRecipeBooks } = jest.requireMock("@/entities/recipe-book") as {
