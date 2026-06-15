@@ -20,10 +20,10 @@ export const getRecipeBookDetail = async (
   bookId: string,
   params: RecipeBookDetailParams = {}
 ): Promise<RecipeBookDetail> => {
-  const { page = 0, size = 20, sort = "addedAt,desc" } = params;
+  const { page = 0, size = 20, sort = "addedAt,desc", lang } = params;
   const { default: isDefault, ...rest } = await api.get<RawRecipeBookDetail>(
     END_POINTS.RECIPE_BOOK(bookId),
-    { params: { page, size, sort } }
+    { params: { page, size, sort, lang } }
   );
   return { ...rest, isDefault };
 };

@@ -30,10 +30,13 @@ export type RecipeBookDetail = {
   hasNext: boolean;
 };
 
+import type { Locale } from "@/shared/i18n";
+
 export type RecipeBookDetailParams = {
   page?: number;
   size?: number;
   sort?: string;
+  lang?: Locale;
 };
 
 export type CreateRecipeBookRequest = {

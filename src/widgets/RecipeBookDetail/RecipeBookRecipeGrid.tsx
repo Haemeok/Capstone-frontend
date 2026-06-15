@@ -8,6 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CheckIcon } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import { useUserPagesLocale } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
@@ -96,6 +97,7 @@ const SelectionOverlay = ({ recipeId }: { recipeId: string }) => {
 export const RecipeBookRecipeGrid = ({ bookId }: Props) => {
   const queryClient = useQueryClient();
   const isEditMode = useEditModeStore((s) => s.isEditMode);
+  const locale = useUserPagesLocale();
 
   const previewKey = RECIPE_BOOK_QUERY_KEYS.detail(bookId, DEFAULT_BOOK_SORT);
   const previewData = queryClient.getQueryData<RecipeBookDetail>(previewKey);
@@ -113,6 +115,7 @@ export const RecipeBookRecipeGrid = ({ bookId }: Props) => {
         page: pageParam,
         size: BOOK_DETAIL_PAGE_SIZE,
         sort: DEFAULT_BOOK_SORT,
+        lang: locale,
       }),
     getNextPageParam: (last, all) => (last.hasNext ? all.length : undefined),
     initialPageParam: 0,
