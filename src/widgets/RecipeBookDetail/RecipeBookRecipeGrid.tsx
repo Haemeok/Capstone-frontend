@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CheckIcon } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import { useUserPagesLocale } from "@/shared/i18n";
+import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
@@ -36,20 +36,19 @@ const GRID_CLASS =
 
 const EmptyState = () => {
   const router = useRouter();
+  const t = useUserPagesDict().recipeBooks.grid;
   return (
     <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
       <div className="mb-4 text-5xl" aria-hidden>
         🍳
       </div>
-      <p className="text-ink-muted mb-6 text-base">
-        아직 저장한 레시피가 없어요
-      </p>
+      <p className="text-ink-muted mb-6 text-base">{t.emptyTitle}</p>
       <button
         type="button"
         onClick={() => router.push("/search/results")}
         className="bg-olive-light rounded-xl px-5 py-3 text-sm font-bold text-white transition-all active:scale-[0.98]"
       >
-        레시피 둘러보기 →
+        {t.emptyCta}
       </button>
     </div>
   );
@@ -66,6 +65,7 @@ const GridSkeleton = () => (
 const SelectionOverlay = ({ recipeId }: { recipeId: string }) => {
   const isSelected = useEditModeStore((s) => s.selectedIds.has(recipeId));
   const toggle = useEditModeStore((s) => s.toggle);
+  const t = useUserPagesDict().recipeBooks.grid;
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -78,7 +78,7 @@ const SelectionOverlay = ({ recipeId }: { recipeId: string }) => {
       type="button"
       onClick={handleClick}
       className="absolute inset-0 z-10"
-      aria-label={isSelected ? "선택 해제" : "선택"}
+      aria-label={isSelected ? t.deselectAria : t.selectAria}
     >
       <span
         className={cn(

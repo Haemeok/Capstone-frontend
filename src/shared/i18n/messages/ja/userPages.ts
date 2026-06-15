@@ -49,6 +49,15 @@ export const userPages: UserPagesDict = {
     savedCount: "{count}件を保存",
     createAria: "レシピブックを作成",
     createLabel: "レシピブックを作成",
+    editButton: "編集",
+    selectedCount: "{count}件選択中",
+    renameAria: "名前を変更",
+    grid: {
+      emptyTitle: "保存したレシピはまだありません",
+      emptyCta: "レシピを見る →",
+      selectAria: "選択",
+      deselectAria: "選択を解除",
+    },
   },
   calendar: {
     timelineHeading: "料理の記録",

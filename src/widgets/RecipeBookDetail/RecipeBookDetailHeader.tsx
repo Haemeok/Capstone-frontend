@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { PencilIcon } from "lucide-react";
 
+import { format, useUserPagesDict } from "@/shared/i18n";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import type { RecipeBook } from "@/entities/recipe-book";
@@ -22,6 +23,7 @@ export const RecipeBookDetailHeader = ({ book }: Props) => {
   const exit = useEditModeStore((s) => s.exit);
 
   const [renameOpen, setRenameOpen] = useState(false);
+  const t = useUserPagesDict().recipeBooks;
 
   return (
     <>
@@ -34,7 +36,7 @@ export const RecipeBookDetailHeader = ({ book }: Props) => {
           )}
           {isEditMode ? (
             <span className="text-ink text-lg font-bold">
-              {selectedCount}개 선택
+              {format(t.selectedCount, { count: selectedCount })}
             </span>
           ) : (
             <div className="flex min-w-0 items-center gap-1">
@@ -46,7 +48,7 @@ export const RecipeBookDetailHeader = ({ book }: Props) => {
                   type="button"
                   onClick={() => setRenameOpen(true)}
                   className="text-ink-muted shrink-0 rounded-full p-1 hover:bg-gray-100"
-                  aria-label="이름 변경"
+                  aria-label={t.renameAria}
                 >
                   <PencilIcon size={16} />
                 </button>
@@ -60,7 +62,7 @@ export const RecipeBookDetailHeader = ({ book }: Props) => {
             onClick={enter}
             className="text-ink-sub rounded-xl px-3 py-1.5 text-sm font-medium hover:bg-gray-100"
           >
-            편집
+            {t.editButton}
           </button>
         )}
       </header>

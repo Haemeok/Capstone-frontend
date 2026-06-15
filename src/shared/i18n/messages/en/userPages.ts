@@ -49,6 +49,15 @@ export const userPages: UserPagesDict = {
     savedCount: "{count} recipes saved",
     createAria: "Create a recipe book",
     createLabel: "New recipe book",
+    editButton: "Edit",
+    selectedCount: "{count} selected",
+    renameAria: "Rename",
+    grid: {
+      emptyTitle: "No saved recipes yet",
+      emptyCta: "Browse recipes →",
+      selectAria: "Select",
+      deselectAria: "Deselect",
+    },
   },
   calendar: {
     timelineHeading: "Cooking log",

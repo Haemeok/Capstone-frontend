@@ -49,6 +49,15 @@ export const userPages: UserPagesDict = {
     savedCount: "저장된 레시피 {count}개",
     createAria: "레시피북 만들기",
     createLabel: "레시피북 만들기",
+    editButton: "편집",
+    selectedCount: "{count}개 선택",
+    renameAria: "이름 변경",
+    grid: {
+      emptyTitle: "아직 저장한 레시피가 없어요",
+      emptyCta: "레시피 둘러보기 →",
+      selectAria: "선택",
+      deselectAria: "선택 해제",
+    },
   },
   calendar: {
     timelineHeading: "요리 기록",
