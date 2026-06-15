@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
+import { format } from "@/shared/i18n/format";
+import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
@@ -24,6 +26,8 @@ const IngredientItem = ({
   setSelectedIngredientIds,
   isSelected,
 }: IngredientItemProps) => {
+  const aria = useIngredientsDict().itemAria;
+
   const handleDeleteModeClick = () => {
     triggerHaptic("Light");
     setSelectedIngredientIds((prev) => {
@@ -86,7 +90,7 @@ const IngredientItem = ({
           transition={{ duration: 0.2 }}
           role="checkbox"
           aria-checked={isSelected}
-          aria-label={`${ingredient.name} 선택`}
+          aria-label={format(aria.select, { name: ingredient.name })}
         >
           <AnimatePresence>
             {isSelected && (
@@ -125,7 +129,7 @@ const IngredientItem = ({
       href={`/ingredients/${ingredient.id}`}
       onClick={handleNavigateClick}
       className="block"
-      aria-label={`${ingredient.name} 상세 보기`}
+      aria-label={format(aria.detail, { name: ingredient.name })}
     >
       {tile}
     </Link>

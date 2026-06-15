@@ -1,4 +1,8 @@
+"use client";
+
 import React from "react";
+
+import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
 
 import { IngredientItem as IngredientItemType } from "@/entities/ingredient";
 
@@ -32,6 +36,7 @@ const IngredientGrid = ({
   setSelectedIngredientIds,
   selectedIngredientIds,
 }: IngredientGridProps) => {
+  const t = useIngredientsDict();
   const showEmptyState =
     !isPending &&
     !isFetchingNextPage &&
@@ -57,8 +62,8 @@ const IngredientGrid = ({
       </div>
       {error && (
         <p className="text-center text-red-500">
-          오류 발생:{" "}
-          {error instanceof Error ? error.message : "알 수 없는 오류"}
+          {t.error.prefix}:{" "}
+          {error instanceof Error ? error.message : t.error.unknown}
         </p>
       )}
       <div ref={ref} className="h-10" />
