@@ -122,6 +122,8 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: [
       absoluteUrl("sitemap/0.xml"),
       absoluteUrl("recipes/sitemap/0.xml"),
+      absoluteUrl("ja/recipes/sitemap/0.xml"),
+      absoluteUrl("ja/ingredients/sitemap/0.xml"),
     ],
   };
 }
