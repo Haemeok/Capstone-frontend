@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 
 import { Trash2 } from "lucide-react";
 
+import { LocalizedLink } from "@/shared/i18n/LocalizedLink";
+import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -22,6 +23,8 @@ const IngredientActionButtons = ({
   onToggleSelectAll,
   isAllSelected,
 }: IngredientActionButtonsProps) => {
+  const t = useIngredientsDict().actions;
+
   const handleDeleteButtonClick = () => {
     triggerHaptic("Light");
     setIsDeleteMode(!isDeleteMode);
@@ -39,13 +42,13 @@ const IngredientActionButtons = ({
           onClick={handleToggleSelectAll}
           className="text-ink-sub h-10 cursor-pointer rounded-xl bg-gray-100 px-4 font-medium transition-colors active:bg-gray-200"
         >
-          {isAllSelected ? "취소" : "전체 선택"}
+          {isAllSelected ? t.cancel : t.selectAll}
         </Button>
         <Button
           onClick={handleDeleteButtonClick}
           className="bg-olive-light active:bg-olive-light/90 h-10 cursor-pointer rounded-xl px-4 font-medium text-white transition-colors"
         >
-          완료
+          {t.done}
         </Button>
       </div>
     );
@@ -61,15 +64,15 @@ const IngredientActionButtons = ({
         )}
       >
         <Trash2 size={14} />
-        <span>삭제</span>
+        <span>{t.delete}</span>
       </button>
       <Button
         asChild
         className="bg-olive-light active:bg-olive-light/90 h-10 cursor-pointer rounded-xl px-4 font-medium text-white transition-colors"
       >
-        <Link href="/ingredients/new" prefetch={false}>
-          재료 추가
-        </Link>
+        <LocalizedLink href="/ingredients/new" prefetch={false}>
+          {t.addIngredient}
+        </LocalizedLink>
       </Button>
     </div>
   );
