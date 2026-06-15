@@ -326,6 +326,33 @@ export const fetchAllRecipesForSitemap = async (): Promise<
   }
 };
 
+export const fetchJaRecipesForSitemap = async (): Promise<
+  Array<{ id: string; updatedAt: string }>
+> => {
+  const API_URL = `${BASE_API_URL}/recipes/sitemap/ja`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
+        tags: [CACHE_TAGS.recipesSitemapJa],
+      },
+    });
+
+    if (!res.ok) {
+      console.error(
+        `[fetchJaRecipesForSitemap] API Error: ${res.status} ${res.statusText}`
+      );
+      return [];
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("[fetchJaRecipesForSitemap] Failed to fetch recipes:", error);
+    return [];
+  }
+};
+
 export const getStaticRecipesOnServer = async (
   params: RecipeItemsQueryParams
 ): Promise<StaticDetailedRecipesApiResponse> => {

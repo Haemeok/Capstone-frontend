@@ -6,6 +6,7 @@ export const CACHE_TAGS = {
   recipesRecommended: (recipeId: string) => `recipes-recommended-${recipeId}`,
   recipesTrending: "recipes-trending",
   recipesSitemap: "recipes-sitemap",
+  recipesSitemapJa: "recipes-sitemap-ja",
   curationArticlesSitemap: "curation-articles-sitemap",
   recipesFeed: "recipes-feed",
   curationFeed: "curation-feed",
