@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { MessageSquare, Trash } from "lucide-react";
 
+import { useCommentsDict } from "@/shared/i18n";
 import { formatTimeAgo } from "@/shared/lib/date";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
@@ -26,6 +27,7 @@ type CommentProps = {
 
 const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
   const { user } = useUserStore();
+  const t = useCommentsDict();
   const { recipeId } = useRecipeStatus();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -61,7 +63,7 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
             <button
               className="hover:text-ink-sub ml-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100"
               onClick={() => setIsDeleteModalOpen(true)}
-              aria-label="댓글 삭제"
+              aria-label={t.deleteAria}
             >
               <Trash size={16} />
             </button>
@@ -99,9 +101,9 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
         <DeleteModal
           open={isDeleteModalOpen}
           onOpenChange={setIsDeleteModalOpen}
-          title="댓글을 삭제하시겠어요?"
+          title={t.deleteModalTitle}
           onConfirm={handleDelete}
-          description="이 댓글을 삭제하면 복구할 수 없습니다."
+          description={t.deleteModalDesc}
         />
       )}
     </div>

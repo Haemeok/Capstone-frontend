@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { invalidateCache } from "@/shared/config/cache";
+import { format, useCommentsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
@@ -13,11 +14,12 @@ export const useDeleteCommentMutation = (
 ) => {
   const queryClient = useQueryClient();
   const { addToast, removeToast } = useToastStore();
+  const t = useCommentsDict();
   const deleteCommentMutation = useMutation({
     mutationFn: () => deleteComment({ commentId, recipeId }),
     onMutate: () => {
       const deletingToastId = addToast({
-        message: "삭제 중...",
+        message: t.deleting,
         variant: "default",
         size: "small",
         position: "middle",
@@ -33,20 +35,17 @@ export const useDeleteCommentMutation = (
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
       await invalidateCache({ type: "COMMENT_CHANGED", recipeId });
       addToast({
-        message: "댓글이 삭제되었습니다.",
+        message: t.deleteSuccess,
         variant: "default",
         size: "small",
         position: "bottom",
       });
     },
     onError: (error) => {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "알 수 없는 오류가 발생했습니다.";
+      const reason = error instanceof Error ? error.message : "";
 
       addToast({
-        message: `삭제에 실패했습니다: ${errorMessage}`,
+        message: format(t.deleteError, { message: reason }),
         variant: "error",
         position: "middle",
       });
