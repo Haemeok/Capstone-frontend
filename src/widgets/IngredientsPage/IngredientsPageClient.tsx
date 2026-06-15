@@ -5,6 +5,11 @@ import React, { useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
 
 import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
+import { format } from "@/shared/i18n/format";
+import { localizedHref } from "@/shared/i18n/localizedHref";
+import { useChromeLocale } from "@/shared/i18n/useChromeDict";
+import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
@@ -26,6 +31,10 @@ const IngredientsPageClient = () => {
   const [sort] = useState<"asc" | "desc">("asc");
 
   const { user } = useUserStore();
+
+  const t = useIngredientsDict();
+  const locale = useChromeLocale();
+  const { localize } = useTaxonomy();
 
   const {
     isDeleteMode,
@@ -79,8 +88,8 @@ const IngredientsPageClient = () => {
   };
 
   const headerTitle = !!user
-    ? `${user?.nickname}님의 냉장고`
-    : "로그인 후 냉장고를 관리해보세요";
+    ? format(t.headerLoggedIn, { nickname: user?.nickname ?? "" })
+    : t.headerLoggedOut;
 
   return (
     <Container padding={false}>
@@ -112,7 +121,7 @@ const IngredientsPageClient = () => {
                     : "text-ink-sub bg-gray-100 active:bg-gray-200"
                 )}
               >
-                {category}
+                {localize(category, "ingredientCategory")}
               </button>
             ))}
           </div>
@@ -132,8 +141,8 @@ const IngredientsPageClient = () => {
 
         {!!user && !isDeleteMode && (
           <FabButton
-            to="/recipes/my-fridge"
-            text="내 냉장고로 레시피 찾기"
+            to={localizedHref("/recipes/my-fridge", locale)}
+            text={t.fabFindRecipes}
             triggerRef={observerRef}
           />
         )}
