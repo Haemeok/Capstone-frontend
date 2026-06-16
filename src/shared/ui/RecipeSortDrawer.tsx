@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
+import { useCommonDict } from "@/shared/i18n";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { Button } from "@/shared/ui/shadcn/button";
 import {
   Drawer,
@@ -31,17 +33,19 @@ const RecipeSortDrawer = ({
   currentSort,
   availableSorts,
   onSortChange,
-  header = "정렬 방식 선택",
+  header,
   description,
 }: RecipeSortDrawerProps) => {
+  const t = useCommonDict();
+  const { localize } = useTaxonomy();
+  const resolvedHeader = header ?? t.sort.title;
   const [internalSelection, setInternalSelection] =
     useState<string>(currentSort);
 
-  useEffect(() => {
-    if (open) {
-      setInternalSelection(currentSort);
-    }
-  }, [open, currentSort]);
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) setInternalSelection(currentSort);
+    onOpenChange(nextOpen);
+  };
 
   const handleRadioChange = (value: string) => {
     setInternalSelection(value);
@@ -56,10 +60,12 @@ const RecipeSortDrawer = ({
   };
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={handleOpenChange}>
       <DrawerContent className="flex w-full flex-col">
         <DrawerHeader className="text-left">
-          <DrawerTitle className="text-xl font-bold">{header}</DrawerTitle>
+          <DrawerTitle className="text-xl font-bold">
+            {resolvedHeader}
+          </DrawerTitle>
           {description && (
             <DrawerDescription className="text-md text-ink-muted">
               {description}
@@ -83,7 +89,7 @@ const RecipeSortDrawer = ({
                   htmlFor={`radio-${sortOption}`}
                   className="cursor-pointer text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  {sortOption}
+                  {localize(sortOption, "recipeSort")}
                 </Label>
               </div>
             ))}
@@ -96,14 +102,14 @@ const RecipeSortDrawer = ({
             onClick={handleReset}
             className="flex-1 rounded-md border-gray-300"
           >
-            초기화
+            {t.sort.reset}
           </Button>
           <DrawerClose asChild>
             <Button
               onClick={handleApply}
               className="bg-olive-light flex-1 rounded-md text-white"
             >
-              완료
+              {t.sort.apply}
             </Button>
           </DrawerClose>
         </DrawerFooter>
