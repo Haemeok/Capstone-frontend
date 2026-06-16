@@ -13,10 +13,11 @@ type FaqItem = {
 };
 
 type EventFAQProps = {
+  heading: string;
   items: FaqItem[];
 };
 
-const EventFAQ = ({ items }: EventFAQProps) => {
+const EventFAQ = ({ heading, items }: EventFAQProps) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const handleToggle = (index: number) => {
@@ -26,7 +27,7 @@ const EventFAQ = ({ items }: EventFAQProps) => {
 
   return (
     <section className="px-4 py-6">
-      <h2 className="text-ink mb-3 text-lg font-bold">자주 묻는 질문</h2>
+      <h2 className="text-ink mb-3 text-lg font-bold">{heading}</h2>
       <ul className="divide-y divide-gray-200 border-y border-gray-200">
         {items.map((item, index) => {
           const isOpen = openIndex === index;

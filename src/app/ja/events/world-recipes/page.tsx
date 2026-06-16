@@ -7,11 +7,11 @@ import { WorldRecipesEventView } from "@/features/events";
 
 export const metadata: Metadata = buildEventMetadata({
   path: "/events/world-recipes",
-  locale: "ko",
+  locale: "ja",
   ogImage: "/events/world-recipes/hero.png",
-  ...getDictionary("ko").events.worldRecipes.meta,
+  ...getDictionary("ja").events.worldRecipes.meta,
 });
 
 export default function Page() {
-  return <WorldRecipesEventView locale="ko" />;
+  return <WorldRecipesEventView locale="ja" />;
 }

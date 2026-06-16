@@ -5,6 +5,7 @@ import EventSection from "../EventSection";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ back: jest.fn() }),
+  usePathname: () => "/",
 }));
 
 describe("EventPageShell", () => {

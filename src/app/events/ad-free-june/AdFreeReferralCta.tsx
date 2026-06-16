@@ -7,7 +7,7 @@ import {
 } from "@/entities/referral";
 import { useUserStore } from "@/entities/user";
 
-import EventCtaButton from "../_components/EventCtaButton";
+import EventCtaButton from "@/features/events/ui/EventCtaButton";
 
 export const getReferralCtaLabel = (status?: RedeemStatus) =>
   status === "AVAILABLE" ? "이벤트 참여하기" : "초대 코드 공유하기";

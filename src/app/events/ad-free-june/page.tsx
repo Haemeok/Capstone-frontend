@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 
 import { buildEventMetadata } from "@/shared/lib/metadata/eventMetadata";
 
-import EventFAQ from "../_components/EventFAQ";
-import EventPageShell from "../_components/EventPageShell";
-import EventSection from "../_components/EventSection";
+import EventFAQ from "@/features/events/ui/EventFAQ";
+import EventPageShell from "@/features/events/ui/EventPageShell";
+import EventSection from "@/features/events/ui/EventSection";
+
 import AdFreeReferralCta from "./AdFreeReferralCta";
 
 export const metadata: Metadata = buildEventMetadata({
   path: "/events/ad-free-june",
+  locale: "ko",
   title: "친구 초대하고 광고 OFF",
   description:
     "친구를 초대하면 참여자와 친구 모두 광고가 사라져요. 6월 한 달, 초대코드 한 번으로 최대 3개월까지 광고를 없애보세요.",
@@ -54,6 +56,7 @@ const AdFreeJuneEventPage = () => {
         <AdFreeReferralCta />
       </div>
       <EventFAQ
+        heading="자주 묻는 질문"
         items={[
           {
             question: "광고는 어떻게 없애나요?",
