@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { Pencil, Wand2 } from "lucide-react";
 
-import { useLocalizedRouter } from "@/shared/i18n";
+import { useCommonDict, useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { Visibility } from "@/entities/recipe/model/types";
@@ -40,6 +40,7 @@ const RecipeInteractionButtons = ({
   authorId,
   isCloneable,
 }: RecipeInteractionButtonsProps) => {
+  const t = useCommonDict();
   const { user } = useUserStore();
   const { status } = useRecipeStatus();
   const router = useLocalizedRouter();
@@ -80,19 +81,19 @@ const RecipeInteractionButtons = ({
         buttonClassName="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
         defaultColorClass="text-ink"
         selectedColorClass="fill-dark text-ink"
-        label="저장"
+        label={t.actions.save}
       />
       {isOwner && (
         <div className="flex flex-col items-center">
           <Link
             href={`/recipes/${recipeId}/edit`}
             className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
-            aria-label="레시피 수정"
+            aria-label={t.actions.editRecipeAria}
             onClick={() => triggerHaptic("Light")}
           >
             <Pencil width={24} height={24} />
           </Link>
-          <p className="mt-1 text-sm font-bold">수정</p>
+          <p className="mt-1 text-sm font-bold">{t.actions.edit}</p>
         </div>
       )}
       {isOwner && visibility && (
@@ -111,18 +112,18 @@ const RecipeInteractionButtons = ({
             <button
               type="button"
               onClick={handleRemixClick}
-              aria-label="레시피 편집"
+              aria-label={t.actions.remixRecipeAria}
               className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
             >
               <Wand2 width={24} height={24} />
             </button>
-            <p className="mt-1 text-sm font-bold">편집</p>
+            <p className="mt-1 text-sm font-bold">{t.actions.remix}</p>
           </div>
         </RemixOnboardingTooltip>
       )}
       <ShareButton
         className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
-        label="공유"
+        label={t.actions.shareLabel}
         title={`${title} - 레시피오`}
         text={`${title} 레시피를 확인해보세요!`}
       />

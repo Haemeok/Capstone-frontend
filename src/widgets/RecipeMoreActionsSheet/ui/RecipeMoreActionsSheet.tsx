@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { useCommonDict } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { PencilIcon } from "@/shared/ui/icons";
 import { DialogTitle } from "@/shared/ui/shadcn/dialog";
@@ -23,6 +24,7 @@ const RecipeMoreActionsSheet = ({
   target,
   onOpenChange,
 }: RecipeMoreActionsSheetProps) => {
+  const t = useCommonDict();
   const { isMobile, Container, Content } = useResponsiveSheet();
 
   if (!target) return null;
@@ -36,7 +38,7 @@ const RecipeMoreActionsSheet = ({
   return (
     <Container open onOpenChange={onOpenChange}>
       <Content className={isMobile ? "p-4" : ""}>
-        <DialogTitle className="sr-only">레시피 옵션</DialogTitle>
+        <DialogTitle className="sr-only">{t.actions.recipeOptions}</DialogTitle>
         {isMobile && (
           <div className="absolute top-2 left-1/2 flex h-1 w-10 -translate-x-1/2 rounded-2xl bg-slate-400" />
         )}
@@ -56,7 +58,7 @@ const RecipeMoreActionsSheet = ({
             }
           >
             {!isMobile && <PencilIcon size={20} />}
-            <p>수정</p>
+            <p>{t.actions.edit}</p>
             {isMobile && <PencilIcon size={20} />}
           </Link>
           <div className={dividerClass} />
