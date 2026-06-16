@@ -17,6 +17,7 @@ import { scheduleReviewGate } from "@/features/review-gate";
 import { cn } from "@/lib/utils";
 
 import { useRecipeComplete } from "../model/hooks";
+import RecipeCompleteCelebrationMessage from "./RecipeCompleteCelebrationMessage";
 
 const LevelUpModal = dynamic(
   () => import("@/features/level-up").then((mod) => mod.LevelUpModal),
@@ -86,7 +87,14 @@ const RecipeCompleteButton = ({
         )}
       </button>
 
-      {!isInternational && (
+      {isInternational ? (
+        <RecipeCompleteCelebrationMessage
+          title={t.recipeDetail.completeCelebrationTitle}
+          body={t.recipeDetail.completeCelebrationBody}
+          isOpen={showReward}
+          onClose={() => handleRewardClose(false)}
+        />
+      ) : (
         <LevelUpModal
           isOpen={showReward}
           onOpenChange={handleRewardClose}

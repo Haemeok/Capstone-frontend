@@ -12,6 +12,10 @@ const mockState = {
   setShowReward: jest.fn(),
 };
 
+jest.mock("next/dynamic", () => ({
+  __esModule: true,
+  default: () => jest.requireMock("@/features/level-up").LevelUpModal,
+}));
 jest.mock("../../model/hooks", () => ({
   useRecipeComplete: () => mockState,
 }));
@@ -95,5 +99,21 @@ describe("RecipeCompleteButton i18n", () => {
     renderWith("ja");
     fireEvent.click(screen.getByRole("button"));
     expect(mockState.completeRecipe).not.toHaveBeenCalled();
+  });
+});
+
+describe("RecipeCompleteButton reward branch", () => {
+  it("T-04: ja showReward -> 축하 모달, LevelUp 아님", () => {
+    mockState.showReward = true;
+    renderWith("ja");
+    expect(screen.getByText("おつかれさまでした！🎉")).toBeInTheDocument();
+    expect(screen.queryByTestId("level-up-modal")).toBeNull();
+  });
+
+  it("T-08: ko showReward -> LevelUp, 축하 모달 아님", () => {
+    mockState.showReward = true;
+    renderWith("ko");
+    expect(screen.getByTestId("level-up-modal")).toBeInTheDocument();
+    expect(screen.queryByText("요리 완료! 🎉")).toBeNull();
   });
 });
