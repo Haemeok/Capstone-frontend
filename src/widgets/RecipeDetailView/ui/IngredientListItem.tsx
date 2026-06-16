@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Refrigerator, ShoppingBasketIcon } from "lucide-react";
 
+import type { Locale } from "@/shared/i18n";
 import BadgeButton from "@/shared/ui/BadgeButton";
 
 import { IngredientItem } from "@/entities/ingredient";
@@ -14,6 +15,7 @@ type IngredientListItemProps = {
   displayUnit: string;
   displayPrice: string;
   reserveFridgeSpace: boolean;
+  locale: Locale;
 };
 
 export const IngredientListItem = ({
@@ -22,6 +24,7 @@ export const IngredientListItem = ({
   displayUnit,
   displayPrice,
   reserveFridgeSpace,
+  locale,
 }: IngredientListItemProps) => {
   return (
     <li className="grid grid-cols-[1.5fr_1.5fr_1fr_auto] items-center gap-3">
@@ -42,10 +45,12 @@ export const IngredientListItem = ({
         {displayQuantity !== "약간" && displayUnit}
       </p>
 
-      <p className="text-ink-muted text-right text-sm">{displayPrice}</p>
+      <p className="text-ink-muted text-right text-sm">
+        {locale === "ko" ? displayPrice : ""}
+      </p>
 
       <div className="flex items-center justify-center gap-1">
-        {ingredient.coupangLink ? (
+        {locale === "ko" && ingredient.coupangLink ? (
           <Link
             href={ingredient.coupangLink}
             target="_blank"

@@ -3,7 +3,9 @@
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
-import { useT } from "@/shared/i18n";
+import type { Locale } from "@/shared/i18n";
+import { format, useT } from "@/shared/i18n";
+import { localizeActivityName } from "@/shared/i18n/activityNameOverlay";
 import { formatNumber } from "@/shared/lib/format";
 import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
@@ -34,9 +36,13 @@ const MAX_SERVINGS = 20;
 
 type IngredientsSectionProps = {
   recipe: Recipe | StaticRecipe;
+  locale?: Locale;
 };
 
-const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
+const IngredientsSection = ({
+  recipe,
+  locale = "ko",
+}: IngredientsSectionProps) => {
   const [showNutrition, setShowNutrition] = useState(false);
   const [isReportSheetOpen, setIsReportSheetOpen] = useState(false);
   const [isCopySheetOpen, setIsCopySheetOpen] = useState(false);
@@ -86,27 +92,29 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         },
         {
           prefix: t.recipeDetail.activityPrefix,
-          pointText: `${randomActivity.name} ${formatNumber(scaledActivityTime, "분")}`,
+          pointText: `${localizeActivityName(randomActivity.name, locale)} ${format(t.recipeDetail.cookingTimeValue, { n: scaledActivityTime })}`,
           suffix: t.recipeDetail.activitySuffix,
           textClassName: "text-purple-500",
         },
       ]
-    : [
-        {
-          prefix: t.recipeDetail.costPrefix,
-          pointText: formatNumber(scaledIngredientCost, "원"),
-          suffix: t.recipeDetail.costSuffix,
-        },
-        {
-          prefix: t.recipeDetail.savingsPrefix,
-          pointText: formatNumber(
-            scaledMarketPrice - scaledIngredientCost,
-            "원"
-          ),
-          suffix: t.recipeDetail.savingsSuffix,
-          textClassName: "text-purple-500",
-        },
-      ];
+    : locale === "ko"
+      ? [
+          {
+            prefix: t.recipeDetail.costPrefix,
+            pointText: formatNumber(scaledIngredientCost, "원"),
+            suffix: t.recipeDetail.costSuffix,
+          },
+          {
+            prefix: t.recipeDetail.savingsPrefix,
+            pointText: formatNumber(
+              scaledMarketPrice - scaledIngredientCost,
+              "원"
+            ),
+            suffix: t.recipeDetail.savingsSuffix,
+            textClassName: "text-purple-500",
+          },
+        ]
+      : [];
 
   return (
     <div className="mt-2 flex flex-col gap-2">
@@ -164,6 +172,7 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
                       "원"
                     )}
                     reserveFridgeSpace={ownedIndices.size > 0}
+                    locale={locale}
                   />
                 );
               })}
@@ -172,10 +181,12 @@ const IngredientsSection = ({ recipe }: IngredientsSectionProps) => {
         )}
       </div>
 
-      <RollingPointBanner
-        messages={rollingMessages}
-        containerClassName="mt-2"
-      />
+      {rollingMessages.length > 0 && (
+        <RollingPointBanner
+          messages={rollingMessages}
+          containerClassName="mt-2"
+        />
+      )}
 
       <IngredientReportSheet
         isOpen={isReportSheetOpen}
