@@ -47,6 +47,7 @@ export const errors: ErrorsDict = {
     search: "Couldn't load search results",
     ingredients: "Couldn't load ingredients",
     edit: "Couldn't load the recipe editor",
+    calendar: "Couldn't load the calendar",
     generic: "Please try again in a moment",
   },
 };

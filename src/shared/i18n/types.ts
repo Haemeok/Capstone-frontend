@@ -71,6 +71,7 @@ export type ErrorsDict = {
     search: string;
     ingredients: string;
     edit: string;
+    calendar: string;
     generic: string;
   };
 };

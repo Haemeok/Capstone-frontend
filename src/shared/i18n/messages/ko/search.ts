@@ -47,6 +47,7 @@ export const errors: ErrorsDict = {
     search: "검색 결과를 불러올 수 없어요",
     ingredients: "재료 정보를 불러올 수 없어요",
     edit: "레시피 수정 페이지를 불러올 수 없어요",
+    calendar: "캘린더를 불러올 수 없어요",
     generic: "잠시 후 다시 시도해주세요",
   },
 };

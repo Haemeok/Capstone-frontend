@@ -47,6 +47,7 @@ export const errors: ErrorsDict = {
     search: "検索結果を読み込めませんでした",
     ingredients: "食材情報を読み込めませんでした",
     edit: "レシピ編集ページを読み込めませんでした",
+    calendar: "カレンダーを読み込めませんでした",
     generic: "しばらくしてからもう一度お試しください",
   },
 };
