@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import type { LandingDict, Locale } from "@/shared/i18n";
 import { Reveal } from "@/shared/ui/Reveal";
 
 import {
@@ -7,7 +8,7 @@ import {
   LANDING_TAG_GROUPS,
 } from "@/features/landing/config/landingTags";
 
-export const TagChipsSection = () => {
+export const TagChipsSection = (_props: { t: LandingDict; locale: Locale }) => {
   return (
     <section className="relative w-full overflow-hidden bg-white px-4 py-12 md:py-20">
       <div className="bg-olive-mint/5 absolute top-1/3 right-0 h-80 w-80 rounded-full blur-3xl" />

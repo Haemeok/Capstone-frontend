@@ -1,13 +1,14 @@
 import Link from "next/link";
 
 import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
+import type { LandingDict, Locale } from "@/shared/i18n";
 import { Reveal } from "@/shared/ui/Reveal";
 import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
 
 import { markLandingVisited } from "@/app/landing/actions";
 
-export const FinalCTA = () => {
+export const FinalCTA = (_props: { t: LandingDict; locale: Locale }) => {
   return (
     <section className="relative w-full overflow-hidden bg-white px-4 py-24 md:py-36">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(145,199,136,0.1),transparent_50%)]" />

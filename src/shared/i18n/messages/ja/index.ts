@@ -10,6 +10,7 @@ import { ingredientAdd } from "./ingredientAdd";
 import { ingredientDetail } from "./ingredientDetail";
 import { ingredientPicker } from "./ingredientPicker";
 import { ingredients } from "./ingredients";
+import { landing } from "./landing";
 import { nav } from "./nav";
 import { notifications } from "./notifications";
 import { ratings } from "./ratings";
@@ -52,4 +53,5 @@ export const ja: Dictionary = {
   auth,
   notifications,
   comments,
+  landing,
 };

@@ -1,5 +1,6 @@
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
+import type { LandingDict, Locale } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 import { Reveal } from "@/shared/ui/Reveal";
 
@@ -42,7 +43,7 @@ const STATS: StatCard[] = [
   },
 ];
 
-export const StatsSection = () => {
+export const StatsSection = (_props: { t: LandingDict; locale: Locale }) => {
   return (
     <section className="from-beige/30 relative w-full overflow-hidden bg-gradient-to-b to-white px-4 py-12 md:py-20">
       <div className="bg-olive-mint/5 absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />

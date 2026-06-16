@@ -893,6 +893,70 @@ export type ReferralDict = {
   redeemErrors: Record<string, string>;
 };
 
+export type LandingTestimonial = {
+  name: string;
+  role: string;
+  content: string;
+  avatar: string;
+  rating: number;
+  highlight: string;
+};
+
+export type LandingDict = {
+  recipeCount: { label: string; phrase: string };
+  hero: {
+    badge: string;
+    titleLine1: string;
+    titleHighlight: string;
+    subjectHighlight: string;
+    subjectRest: string;
+    cta: string;
+    checklist: [string, string, string];
+  };
+  problems: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    items: { title: string; description: string }[];
+  };
+  stats: {
+    title: string;
+    subtitle: string;
+    items: { metric: string; label: string; description: string }[];
+  };
+  tagChips: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    groupLabels: Record<"occasion" | "situation" | "speed", string>;
+    chipNames: Record<string, string>;
+  };
+  features: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    items: {
+      badge: string;
+      title: string;
+      description: string;
+      benefits: string[];
+    }[];
+  };
+  testimonials: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    items: LandingTestimonial[];
+  };
+  finalCta: {
+    titleLine1: string;
+    titleHighlight: string;
+    subtitle: string;
+    primaryCta: string;
+    secondaryCta: string;
+  };
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -921,4 +985,5 @@ export type Dictionary = {
   auth: AuthDict;
   notifications: NotificationsDict;
   comments: CommentsDict;
+  landing: LandingDict;
 };

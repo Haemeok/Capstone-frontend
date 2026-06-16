@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import type { LandingDict, Locale } from "@/shared/i18n";
 import { Reveal } from "@/shared/ui/Reveal";
 
 type Testimonial = {
@@ -187,7 +188,10 @@ const StarRating = ({ rating }: { rating: number }) => {
   );
 };
 
-export const TestimonialCarousel = () => {
+export const TestimonialCarousel = (_props: {
+  t: LandingDict;
+  locale: Locale;
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {

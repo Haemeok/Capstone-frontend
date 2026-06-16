@@ -32,6 +32,8 @@ export type {
   FridgeDict,
   IngredientAddDict,
   IngredientPickerDict,
+  LandingDict,
+  LandingTestimonial,
   Locale,
   NavDict,
   NotificationsDict,

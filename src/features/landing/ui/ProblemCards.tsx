@@ -1,4 +1,5 @@
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import type { LandingDict, Locale } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 import { Reveal } from "@/shared/ui/Reveal";
 
@@ -39,7 +40,7 @@ const PROBLEMS: ProblemCard[] = [
   },
 ];
 
-export const ProblemCards = () => {
+export const ProblemCards = (_props: { t: LandingDict; locale: Locale }) => {
   return (
     <section className="to-beige/30 relative w-full overflow-hidden bg-gradient-to-b from-white px-4 py-12 md:py-20">
       <div className="bg-olive-light/5 absolute top-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full blur-3xl" />

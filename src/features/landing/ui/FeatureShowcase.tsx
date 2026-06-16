@@ -2,6 +2,7 @@ import {
   TOTAL_RECIPE_COUNT_LABEL,
   TOTAL_RECIPE_COUNT_PHRASE,
 } from "@/shared/config/constants/siteStats";
+import type { LandingDict, Locale } from "@/shared/i18n";
 import { Reveal } from "@/shared/ui/Reveal";
 
 type Feature = {
@@ -60,7 +61,7 @@ const FEATURES: Feature[] = [
   },
 ];
 
-export const FeatureShowcase = () => {
+export const FeatureShowcase = (_props: { t: LandingDict; locale: Locale }) => {
   return (
     <section className="from-beige/30 to-beige/30 relative w-full overflow-hidden bg-gradient-to-b via-white px-4 py-12 md:py-20">
       <div className="bg-olive-mint/10 absolute top-1/4 left-0 h-96 w-96 rounded-full blur-3xl" />
