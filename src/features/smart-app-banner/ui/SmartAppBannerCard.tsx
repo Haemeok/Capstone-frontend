@@ -1,9 +1,10 @@
 "use client";
 
+import { sendGAEvent } from "@next/third-parties/google";
 import { X } from "lucide-react";
 
 import { APP_STORE_URL } from "@/shared/config/constants/appStore";
-import { useSmartAppBannerDict } from "@/shared/i18n";
+import { useSmartAppBannerDict, useSmartAppBannerLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 type SmartAppBannerCardProps = {
@@ -12,9 +13,11 @@ type SmartAppBannerCardProps = {
 
 export const SmartAppBannerCard = ({ onDismiss }: SmartAppBannerCardProps) => {
   const t = useSmartAppBannerDict();
+  const locale = useSmartAppBannerLocale();
 
   const handleCtaClick = () => {
     triggerHaptic("Light");
+    sendGAEvent("event", "app_open_click", { locale });
     window.open(APP_STORE_URL, "_blank", "noopener,noreferrer");
   };
 
