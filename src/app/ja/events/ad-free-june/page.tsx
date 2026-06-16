@@ -7,11 +7,11 @@ import { AdFreeJuneEventView } from "@/features/events";
 
 export const metadata: Metadata = buildEventMetadata({
   path: "/events/ad-free-june",
-  locale: "ko",
+  locale: "ja",
   ogImage: "/events/ad-free-june/hero.png",
-  ...getDictionary("ko").events.adFreeJune.meta,
+  ...getDictionary("ja").events.adFreeJune.meta,
 });
 
 export default function Page() {
-  return <AdFreeJuneEventView locale="ko" />;
+  return <AdFreeJuneEventView locale="ja" />;
 }
