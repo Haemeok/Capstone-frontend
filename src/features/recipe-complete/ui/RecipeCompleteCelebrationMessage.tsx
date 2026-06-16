@@ -6,6 +6,7 @@ import { COOKING_COMPLETION_MESSAGE_DURATION_MS } from "@/shared/config/constant
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogOverlay,
   DialogTitle,
 } from "@/shared/ui/shadcn/dialog";
@@ -41,9 +42,9 @@ const RecipeCompleteCelebrationMessage = ({
           <DialogTitle className="text-olive-mint animate-in fade-in slide-in-from-bottom-4 mb-2 text-center text-3xl font-bold duration-500">
             {title}
           </DialogTitle>
-          <p className="animate-in fade-in slide-in-from-bottom-2 text-ink-sub text-center text-sm leading-relaxed duration-700">
+          <DialogDescription className="animate-in fade-in slide-in-from-bottom-2 text-ink-sub text-center text-sm leading-relaxed duration-700">
             {body}
-          </p>
+          </DialogDescription>
         </div>
       </DialogContent>
     </Dialog>
