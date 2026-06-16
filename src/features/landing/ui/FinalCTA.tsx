@@ -7,7 +7,6 @@ import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
 
 import { markLandingVisited } from "@/app/landing/actions";
-import { resolveLocaleHome } from "@/app/landing/resolveLocaleHome";
 
 export const FinalCTA = ({ t, locale }: { t: LandingDict; locale: Locale }) => {
   const subtitle = t.finalCta.subtitle.replace("{count}", t.recipeCount.label);
@@ -41,7 +40,7 @@ export const FinalCTA = ({ t, locale }: { t: LandingDict; locale: Locale }) => {
               <input
                 type="hidden"
                 name="localeHome"
-                value={resolveLocaleHome(locale)}
+                value={localizedHref("/", locale)}
               />
               <Button
                 type="submit"

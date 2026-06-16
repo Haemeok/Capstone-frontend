@@ -1,9 +1,9 @@
 import type { LandingDict, Locale } from "@/shared/i18n";
+import { localizedHref } from "@/shared/i18n";
 import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
 
 import { markLandingVisited } from "@/app/landing/actions";
-import { resolveLocaleHome } from "@/app/landing/resolveLocaleHome";
 
 import { CarouselRow } from "./RecipeCarousel";
 
@@ -65,7 +65,7 @@ export const HeroSection = ({
           <input
             type="hidden"
             name="localeHome"
-            value={resolveLocaleHome(locale)}
+            value={localizedHref("/", locale)}
           />
           <Button
             type="submit"
