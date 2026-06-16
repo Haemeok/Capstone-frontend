@@ -88,6 +88,24 @@ describe("StaticSections i18n", () => {
     expect(container.textContent).toContain("ホームパーティー");
   });
 
+  it("ja FinalCTA 보조 CTA href === '/ja/search', ko === '/search' (T-32)", () => {
+    const ja = getDictionary("ja").landing;
+    const { container: jaC } = renderWithScroll(
+      <FinalCTA t={ja} locale="ja" />
+    );
+    const jaLink = jaC.querySelector<HTMLAnchorElement>('a[href$="/search"]');
+    expect(jaLink).not.toBeNull();
+    expect(jaLink?.getAttribute("href")).toBe("/ja/search");
+
+    const ko = getDictionary("ko").landing;
+    const { container: koC } = renderWithScroll(
+      <FinalCTA t={ko} locale="ko" />
+    );
+    const koLink = koC.querySelector<HTMLAnchorElement>('a[href$="/search"]');
+    expect(koLink).not.toBeNull();
+    expect(koLink?.getAttribute("href")).toBe("/search");
+  });
+
   it("HOME_PARTY 칩의 href는 /search/results?tags=HOME_PARTY (T-16)", () => {
     const t = getDictionary("ko").landing;
     const { container } = renderWithScroll(

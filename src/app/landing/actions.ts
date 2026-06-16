@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function markLandingVisited() {
+export async function markLandingVisited(formData: FormData) {
   const cookieStore = await cookies();
 
   cookieStore.set("landing_visited", "true", {
@@ -13,5 +13,6 @@ export async function markLandingVisited() {
     sameSite: "lax",
   });
 
-  redirect("/");
+  const target = formData.get("localeHome");
+  redirect(typeof target === "string" && target ? target : "/");
 }

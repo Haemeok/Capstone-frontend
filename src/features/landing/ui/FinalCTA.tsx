@@ -1,13 +1,15 @@
 import Link from "next/link";
 
 import type { LandingDict, Locale } from "@/shared/i18n";
+import { localizedHref } from "@/shared/i18n";
 import { Reveal } from "@/shared/ui/Reveal";
 import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
 
 import { markLandingVisited } from "@/app/landing/actions";
+import { resolveLocaleHome } from "@/app/landing/resolveLocaleHome";
 
-export const FinalCTA = ({ t }: { t: LandingDict; locale: Locale }) => {
+export const FinalCTA = ({ t, locale }: { t: LandingDict; locale: Locale }) => {
   const subtitle = t.finalCta.subtitle.replace("{count}", t.recipeCount.label);
 
   return (
@@ -36,6 +38,11 @@ export const FinalCTA = ({ t }: { t: LandingDict; locale: Locale }) => {
 
           <div className="flex flex-col items-center gap-5 pt-6 sm:flex-row sm:justify-center">
             <form action={markLandingVisited}>
+              <input
+                type="hidden"
+                name="localeHome"
+                value={resolveLocaleHome(locale)}
+              />
               <Button
                 type="submit"
                 size="lg"
@@ -52,7 +59,9 @@ export const FinalCTA = ({ t }: { t: LandingDict; locale: Locale }) => {
               size="lg"
               className="text-ink hover:border-olive hover:bg-olive/10 h-16 border-2 border-gray-300 bg-white px-10 text-xl font-bold backdrop-blur-sm transition-all"
             >
-              <Link href="/search">{t.finalCta.secondaryCta}</Link>
+              <Link href={localizedHref("/search", locale)}>
+                {t.finalCta.secondaryCta}
+              </Link>
             </Button>
           </div>
 

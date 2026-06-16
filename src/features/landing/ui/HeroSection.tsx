@@ -3,10 +3,17 @@ import { Button } from "@/shared/ui/shadcn/button";
 import { StoreBadges } from "@/shared/ui/StoreBadges";
 
 import { markLandingVisited } from "@/app/landing/actions";
+import { resolveLocaleHome } from "@/app/landing/resolveLocaleHome";
 
 import { CarouselRow } from "./RecipeCarousel";
 
-export const HeroSection = ({ t }: { t: LandingDict; locale: Locale }) => {
+export const HeroSection = ({
+  t,
+  locale,
+}: {
+  t: LandingDict;
+  locale: Locale;
+}) => {
   const badge = t.hero.badge.replace("{count}", t.recipeCount.label);
   const subjectRest = t.hero.subjectRest.replace(
     "{count}",
@@ -55,6 +62,11 @@ export const HeroSection = ({ t }: { t: LandingDict; locale: Locale }) => {
           className="hero-rise flex flex-col items-center gap-4 sm:flex-row"
           style={{ animationDelay: "0.6s" }}
         >
+          <input
+            type="hidden"
+            name="localeHome"
+            value={resolveLocaleHome(locale)}
+          />
           <Button
             type="submit"
             size="lg"

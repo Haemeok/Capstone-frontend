@@ -39,4 +39,14 @@ describe("HeroSection i18n", () => {
     const { container: enC } = render(<HeroSection t={en} locale="en" />);
     expect(enC.textContent).toContain("50,000+");
   });
+
+  it("ja Hero form에 localeHome hidden input value가 '/ja'다 (T-31)", () => {
+    const t = getDictionary("ja").landing;
+    const { container } = render(<HeroSection t={t} locale="ja" />);
+    const input = container.querySelector<HTMLInputElement>(
+      "input[name='localeHome']"
+    );
+    expect(input).not.toBeNull();
+    expect(input?.value).toBe("/ja");
+  });
 });
