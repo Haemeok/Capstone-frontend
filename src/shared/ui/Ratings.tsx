@@ -152,7 +152,7 @@ const Ratings = ({
                   onChange(roundToNearest(starValue));
                 }
               }}
-              aria-label={`${starValue}점 선택`}
+              aria-label={format(t.starSelect, { score: starValue })}
               tabIndex={readOnly ? -1 : 0}
               disabled={readOnly}
             >

@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 import clsx from "clsx";
 import { Heart } from "lucide-react";
 
+import { useCommonDict } from "@/shared/i18n";
+
 import { cn } from "@/lib/utils";
 
 const CountUp = dynamic(() => import("@/shared/ui/shadcn/CountUp"), {
@@ -68,7 +70,8 @@ const HeartButton = ({
     onClick();
   };
 
-  const ariaLabel = isLiked ? "좋아요 취소" : "좋아요";
+  const t = useCommonDict();
+  const ariaLabel = isLiked ? t.actions.unlike : t.actions.like;
 
   return (
     <div

@@ -812,6 +812,7 @@ export type SettingsDict = {
 export type RatingsDict = {
   empty: string;
   summary: string;
+  starSelect: string;
   form: {
     cancel: string;
     title: string;
@@ -988,6 +989,47 @@ export type LandingDict = {
   };
 };
 
+export type EventFaqItem = { question: string; answer: string };
+
+export type EventMeta = {
+  title: string;
+  description: string;
+  keywords: string[];
+  ogImageAlt: string;
+};
+
+export type EventsDict = {
+  faqHeading: string;
+  worldRecipes: {
+    headerTitle: string;
+    heroAlt: string;
+    intro: { label: string; title: string; body: string };
+    howTo: {
+      label: string;
+      title: string;
+      body: {
+        lead: string;
+        filter: string;
+        middle: string;
+        country: string;
+        tail: string;
+      };
+      cta: string;
+    };
+    faq: EventFaqItem[];
+    meta: EventMeta;
+  };
+  adFreeJune: {
+    headerTitle: string;
+    heroAlt: string;
+    event1: { label: string; title: string; body: string };
+    event2: { label: string; title: string; body: string };
+    referralCta: { participate: string; shareCode: string };
+    faq: EventFaqItem[];
+    meta: EventMeta;
+  };
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -1017,4 +1059,5 @@ export type Dictionary = {
   notifications: NotificationsDict;
   comments: CommentsDict;
   landing: LandingDict;
+  events: EventsDict;
 };
