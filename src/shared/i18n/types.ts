@@ -93,6 +93,9 @@ export type RecipeDetailDict = {
   completeRecording: string;
   completeAlready: string;
   completeCta: string;
+  completeCtaPlain: string;
+  completeCelebrationTitle: string;
+  completeCelebrationBody: string;
   nutritionSodium: string;
   nutritionCarbs: string;
   nutritionProtein: string;

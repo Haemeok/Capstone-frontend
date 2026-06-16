@@ -40,6 +40,8 @@ const RecipeCompleteButton = ({
     useRecipeComplete({ recipeId, saveAmount });
   const { checkAndTrigger } = useNotificationPermissionTrigger();
 
+  const isInternational = locale !== "ko";
+
   const handleClick = () => {
     if (isCompleted || isLoading) return;
     if (!checkAndTrigger("complete")) return;
@@ -53,8 +55,6 @@ const RecipeCompleteButton = ({
       scheduleReviewGate();
     }
   };
-
-  if (locale !== "ko") return null;
 
   return (
     <>
@@ -77,6 +77,8 @@ const RecipeCompleteButton = ({
           </span>
         ) : isCompleted ? (
           t.recipeDetail.completeAlready
+        ) : isInternational ? (
+          t.recipeDetail.completeCtaPlain
         ) : (
           format(t.recipeDetail.completeCta, {
             amount: formatNumber(saveAmount, ""),
@@ -84,11 +86,13 @@ const RecipeCompleteButton = ({
         )}
       </button>
 
-      <LevelUpModal
-        isOpen={showReward}
-        onOpenChange={handleRewardClose}
-        acquiredAmount={saveAmount}
-      />
+      {!isInternational && (
+        <LevelUpModal
+          isOpen={showReward}
+          onOpenChange={handleRewardClose}
+          acquiredAmount={saveAmount}
+        />
+      )}
     </>
   );
 };

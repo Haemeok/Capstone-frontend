@@ -1,17 +1,19 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 
 import RecipeCompleteButton from "../RecipeCompleteButton";
 
+const mockState = {
+  completeRecipe: jest.fn(),
+  isCompleted: false,
+  isLoading: false,
+  showReward: false,
+  setShowReward: jest.fn(),
+};
+
 jest.mock("../../model/hooks", () => ({
-  useRecipeComplete: () => ({
-    completeRecipe: jest.fn(),
-    isCompleted: false,
-    isLoading: false,
-    showReward: false,
-    setShowReward: jest.fn(),
-  }),
+  useRecipeComplete: () => mockState,
 }));
 jest.mock("@/features/recipe-status", () => ({
   useRecipeStatus: () => ({ recipeId: "x" }),
@@ -22,7 +24,8 @@ jest.mock("@/features/notification-permission", () => ({
   }),
 }));
 jest.mock("@/features/level-up", () => ({
-  LevelUpModal: () => null,
+  LevelUpModal: ({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? <div data-testid="level-up-modal" /> : null,
 }));
 jest.mock("@/shared/lib/bridge", () => ({
   triggerHaptic: jest.fn(),
@@ -41,20 +44,56 @@ const renderWith = (locale: "ja" | "en" | "ko") =>
     </DictionaryProvider>
   );
 
+beforeEach(() => {
+  mockState.completeRecipe = jest.fn();
+  mockState.setShowReward = jest.fn();
+  mockState.isCompleted = false;
+  mockState.isLoading = false;
+  mockState.showReward = false;
+});
+
 describe("RecipeCompleteButton i18n", () => {
-  it("T-06: ja -> 버튼 미렌더", () => {
+  it("T-01: ja -> plain CTA, 절약액 없음", () => {
     renderWith("ja");
-    expect(screen.queryByRole("button")).toBeNull();
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveTextContent("作りました");
+    expect(btn).not.toHaveTextContent("3,000");
+    expect(btn).not.toHaveTextContent("お得");
   });
 
-  it("T-06: en -> 버튼 미렌더", () => {
+  it("T-02: en -> plain CTA, 절약액 없음", () => {
     renderWith("en");
-    expect(screen.queryByRole("button")).toBeNull();
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveTextContent("I made this");
+    expect(btn).not.toHaveTextContent("3,000");
+    expect(btn).not.toHaveTextContent("saved");
   });
 
-  it("T-08(anchor): ko -> 버튼 + 절약액 렌더", () => {
+  it("T-07: ko -> 절약액 CTA (anchor)", () => {
     renderWith("ko");
-    expect(screen.getByRole("button")).toHaveTextContent("요리 완료");
-    expect(screen.getByRole("button")).toHaveTextContent("3,000");
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveTextContent("요리 완료");
+    expect(btn).toHaveTextContent("3,000");
+  });
+
+  it("T-03: ja 클릭 -> completeRecipe 1회 호출", () => {
+    renderWith("ja");
+    fireEvent.click(screen.getByRole("button"));
+    expect(mockState.completeRecipe).toHaveBeenCalledTimes(1);
+  });
+
+  it("T-09: ja 이미 완료 -> completeAlready 비활성", () => {
+    mockState.isCompleted = true;
+    renderWith("ja");
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveTextContent("すでに作った記録があります");
+    expect(btn).toBeDisabled();
+  });
+
+  it("T-10: ja 이미 완료 클릭 -> completeRecipe 미호출", () => {
+    mockState.isCompleted = true;
+    renderWith("ja");
+    fireEvent.click(screen.getByRole("button"));
+    expect(mockState.completeRecipe).not.toHaveBeenCalled();
   });
 });
