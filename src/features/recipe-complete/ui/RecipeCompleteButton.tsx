@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 
 import { Loader2 } from "lucide-react";
 
+import type { Locale } from "@/shared/i18n";
 import { format, useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatNumber } from "@/shared/lib/format";
@@ -25,11 +26,13 @@ const LevelUpModal = dynamic(
 type RecipeCompleteButtonProps = {
   saveAmount: number;
   className?: string;
+  locale?: Locale;
 };
 
 const RecipeCompleteButton = ({
   saveAmount,
   className,
+  locale = "ko",
 }: RecipeCompleteButtonProps) => {
   const t = useT();
   const { recipeId } = useRecipeStatus();
@@ -50,6 +53,8 @@ const RecipeCompleteButton = ({
       scheduleReviewGate();
     }
   };
+
+  if (locale !== "ko") return null;
 
   return (
     <>

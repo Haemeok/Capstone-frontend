@@ -4,8 +4,6 @@ import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 
 import RecipeCompleteButton from "../RecipeCompleteButton";
 
-const HANGUL = /[가-힣]/;
-
 jest.mock("../../model/hooks", () => ({
   useRecipeComplete: () => ({
     completeRecipe: jest.fn(),
@@ -36,25 +34,27 @@ jest.mock("@/features/review-gate", () => ({
   scheduleReviewGate: jest.fn(),
 }));
 
-const renderWith = (locale: "ja" | "ko") =>
+const renderWith = (locale: "ja" | "en" | "ko") =>
   render(
     <DictionaryProvider dict={getDictionary(locale)}>
-      <RecipeCompleteButton saveAmount={3000} />
+      <RecipeCompleteButton saveAmount={3000} locale={locale} />
     </DictionaryProvider>
   );
 
 describe("RecipeCompleteButton i18n", () => {
-  it("T-14: ja -> localized complete CTA, no Hangul", () => {
-    const t = getDictionary("ja");
-    const { container } = renderWith("ja");
-    expect(screen.getByRole("button")).toHaveTextContent(
-      t.recipeDetail.completeCta.split("{")[0].trim()
-    );
-    expect(HANGUL.test(container.textContent ?? "")).toBe(false);
+  it("T-06: ja -> 버튼 미렌더", () => {
+    renderWith("ja");
+    expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("T-15: ko preserved", () => {
+  it("T-06: en -> 버튼 미렌더", () => {
+    renderWith("en");
+    expect(screen.queryByRole("button")).toBeNull();
+  });
+
+  it("T-08(anchor): ko -> 버튼 + 절약액 렌더", () => {
     renderWith("ko");
     expect(screen.getByRole("button")).toHaveTextContent("요리 완료");
+    expect(screen.getByRole("button")).toHaveTextContent("3,000");
   });
 });
