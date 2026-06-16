@@ -115,6 +115,7 @@ export const RecipeDetailView = ({
             <RecipeVideoSection
               videoUrl={recipe.youtubeUrl ?? ""}
               youtubeMetadata={youtubeMetadata}
+              locale={locale}
             >
               <InArticleAdSlot />
 
@@ -132,10 +133,14 @@ export const RecipeDetailView = ({
                   <SectionErrorFallback message={t.errors.ingredients} />
                 }
               >
-                <RecipeIngredientsSection recipe={recipe} />
+                <RecipeIngredientsSection recipe={recipe} locale={locale} />
               </ErrorBoundary>
 
-              <RecipeCompleteButton saveAmount={saveAmount} className="mt-4" />
+              <RecipeCompleteButton
+                saveAmount={saveAmount}
+                locale={locale}
+                className="mt-4"
+              />
 
               <CoupangDisclosure locale={locale} />
 
