@@ -4,7 +4,7 @@ export { commonMessages } from "./commonMessages";
 export { cookingUnitsMessages } from "./cookingUnitsMessages";
 export { DictionaryProvider, useT } from "./DictionaryProvider";
 export { errorsMessages } from "./errorsMessages";
-export { format, plural } from "./format";
+export { format, formatCompactNumber, plural } from "./format";
 export { getDictionary } from "./getDictionary";
 export { buildHreflangAlternates } from "./hreflang";
 export { ingredientAddMessages } from "./ingredientAddMessages";

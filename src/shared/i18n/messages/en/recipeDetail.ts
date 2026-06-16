@@ -22,7 +22,7 @@ export const recipeDetail: RecipeDetailDict = {
   aiYoutubeBadge: "Recipe extracted by AI from a YouTube video (Beta)",
   aiAssistedBadge: "Created with AI assistance",
   platingGuide: "Plating guide",
-  subscriberLabel: "subscribers",
+  subscriberCount: "{count} subscribers",
   subscribeAction: "Subscribe",
   pinVideo: "Pin video",
   unpinVideo: "Unpin video",

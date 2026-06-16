@@ -22,7 +22,7 @@ export const recipeDetail: RecipeDetailDict = {
   aiYoutubeBadge: "유튜브 영상에서 AI가 추출한 레시피예요 (Beta)",
   aiAssistedBadge: "AI의 도움을 받아 작성된 레시피예요",
   platingGuide: "플레이팅 가이드",
-  subscriberLabel: "구독자",
+  subscriberCount: "구독자 {count}명",
   subscribeAction: "구독",
   pinVideo: "영상 고정",
   unpinVideo: "영상 고정 해제",

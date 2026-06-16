@@ -106,7 +106,7 @@ export type RecipeDetailDict = {
   aiYoutubeBadge: string;
   aiAssistedBadge: string;
   platingGuide: string;
-  subscriberLabel: string;
+  subscriberCount: string;
   subscribeAction: string;
   pinVideo: string;
   unpinVideo: string;

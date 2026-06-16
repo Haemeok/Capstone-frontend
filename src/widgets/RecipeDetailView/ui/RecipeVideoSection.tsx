@@ -5,7 +5,8 @@ import dynamic from "next/dynamic";
 
 import { Pin } from "lucide-react";
 
-import { useT } from "@/shared/i18n";
+import type { Locale } from "@/shared/i18n";
+import { format, formatCompactNumber, useT } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
@@ -59,12 +60,14 @@ type YoutubeMetadata = {
 type RecipeVideoSectionProps = {
   videoUrl: string;
   youtubeMetadata?: YoutubeMetadata;
+  locale?: Locale;
   children?: React.ReactNode;
 };
 
 export default function RecipeVideoSection({
   videoUrl,
   youtubeMetadata,
+  locale = "ko",
   children,
 }: RecipeVideoSectionProps) {
   const t = useT();
@@ -91,16 +94,6 @@ export default function RecipeVideoSection({
     !isSticky &&
     youtubeMetadata?.channelName &&
     youtubeMetadata?.channelProfileUrl;
-
-  const formatSubscriberCount = (count: number): string => {
-    if (count >= 10000) {
-      return `${(count / 10000).toFixed(1)}만명`;
-    }
-    if (count >= 1000) {
-      return `${(count / 1000).toFixed(1)}천명`;
-    }
-    return `${count}명`;
-  };
 
   return (
     <VideoPlayerContext.Provider value={{ seekToTimeline }}>
@@ -150,8 +143,12 @@ export default function RecipeVideoSection({
                   </span>
                   {youtubeMetadata.subscriberCount && (
                     <span className="text-ink-sub text-xs">
-                      {t.recipeDetail.subscriberLabel}{" "}
-                      {formatSubscriberCount(youtubeMetadata.subscriberCount)}
+                      {format(t.recipeDetail.subscriberCount, {
+                        count: formatCompactNumber(
+                          youtubeMetadata.subscriberCount,
+                          locale
+                        ),
+                      })}
                     </span>
                   )}
                 </div>
