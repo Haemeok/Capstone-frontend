@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
+import { useChromeLocale, useCommonDict } from "@/shared/i18n";
 import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
 import { queryClient } from "@/shared/lib/queryClient";
 
@@ -8,10 +9,13 @@ import { useUserStore } from "@/entities/user";
 import { useToastStore } from "@/widgets/Toast";
 
 import { postLogout } from "../api";
+import { composeFailureToast } from "../lib/composeFailureToast";
 
 const useLogoutMutation = () => {
   const { logoutAction } = useUserStore();
   const { addToast, removeToast } = useToastStore();
+  const locale = useChromeLocale();
+  const t = useCommonDict();
 
   const mutation = useMutation({
     mutationFn: postLogout,
@@ -19,7 +23,7 @@ const useLogoutMutation = () => {
       useUserStore.setState({ isLoggingOut: true });
 
       const deletingToastId = addToast({
-        message: "로그아웃 중...",
+        message: t.toast.logout.pending,
         variant: "default",
         size: "small",
         position: "middle",
@@ -44,13 +48,13 @@ const useLogoutMutation = () => {
       }
     },
     onError: (error) => {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "알 수 없는 오류가 발생했습니다.";
-
       addToast({
-        message: `로그아웃에 실패했습니다: ${errorMessage}`,
+        message: composeFailureToast({
+          template: t.toast.logout.error,
+          locale,
+          error,
+          unknownText: t.errors.unknown,
+        }),
         variant: "error",
         position: "middle",
       });
