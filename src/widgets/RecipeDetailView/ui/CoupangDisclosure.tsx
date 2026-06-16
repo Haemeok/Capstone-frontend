@@ -6,6 +6,8 @@ type CoupangDisclosureProps = {
 };
 
 export const CoupangDisclosure = ({ locale }: CoupangDisclosureProps) => {
+  if (locale !== "ko") return null;
+
   const t = getDictionary(locale);
 
   return (
