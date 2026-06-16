@@ -4,6 +4,7 @@ import { auth } from "./auth";
 import { category } from "./category";
 import { comments } from "./comments";
 import { common } from "./common";
+import { events } from "./events";
 import { fridge } from "./fridge";
 import { home } from "./home";
 import { ingredientAdd } from "./ingredientAdd";
@@ -54,4 +55,5 @@ export const en: Dictionary = {
   notifications,
   comments,
   landing,
+  events,
 };

@@ -4,6 +4,7 @@ export { commonMessages } from "./commonMessages";
 export { cookingUnitsMessages } from "./cookingUnitsMessages";
 export { DictionaryProvider, useT } from "./DictionaryProvider";
 export { errorsMessages } from "./errorsMessages";
+export { eventsMessages } from "./eventsMessages";
 export { format, formatCompactNumber, plural } from "./format";
 export { getDictionary } from "./getDictionary";
 export { buildHreflangAlternates } from "./hreflang";
@@ -29,6 +30,7 @@ export type {
   CommonDict,
   CookingUnitsDict,
   Dictionary,
+  EventsDict,
   FridgeDict,
   IngredientAddDict,
   IngredientPickerDict,
