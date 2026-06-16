@@ -1,67 +1,14 @@
-import {
-  TOTAL_RECIPE_COUNT_LABEL,
-  TOTAL_RECIPE_COUNT_PHRASE,
-} from "@/shared/config/constants/siteStats";
 import type { LandingDict, Locale } from "@/shared/i18n";
 import { Reveal } from "@/shared/ui/Reveal";
 
-type Feature = {
-  badge: string;
-  badgeColor: string;
-  title: string;
-  description: string;
-  benefits: string[];
-};
-
-const FEATURES: Feature[] = [
-  {
-    badge: "YouTube 추출",
-    badgeColor: "bg-red-50 text-red-600",
-    title: "YouTube 링크 하나로 레시피 완성",
-    description:
-      "영상을 멈추고 재료를 메모할 필요 없어요. 링크만 붙여넣으면 재료·조리순서·분량까지 자동 추출됩니다.",
-    benefits: [
-      "재료 자동 정리",
-      "조리 순서 단계별 정리",
-      "영상과 함께 보관",
-      "좋아하는 유튜버 레시피 그대로",
-    ],
-  },
-  {
-    badge: `${TOTAL_RECIPE_COUNT_LABEL} 레시피`,
-    badgeColor: "bg-blue-50 text-blue-600",
-    title: "국내 최대 규모의 큐레이션 레시피",
-    description: `YouTube 기반 레시피부터 AI 생성, 유명 홈쿡 레시피까지 ${TOTAL_RECIPE_COUNT_PHRASE}을 한 곳에서 탐색할 수 있어요.`,
-    benefits: [
-      "유명 최신 레시피",
-      "YouTube 기반 레시피 다수 보유",
-      "상황별·기념일별 태그 분류",
-    ],
-  },
-  {
-    badge: "AI 추천",
-    badgeColor: "bg-purple-50 text-purple-600",
-    title: "당신만을 위한 맞춤 레시피",
-    description:
-      "다양한 요소로 레시피를 생성해드려요. 국내 유일의 AI 레시피 생성 플랫폼",
-    benefits: [
-      "가성비 레시피 생성",
-      "특정 영양성분 조합 레시피 생성",
-      "파인다이닝 레시피 생성",
-      "냉장고 남은 재료로 레시피 생성",
-    ],
-  },
-  {
-    badge: "스마트 관리",
-    badgeColor: "bg-green-50 text-green-600",
-    title: "냉장고 재료로 레시피 자동 추천",
-    description:
-      "보유한 재료를 등록하면 AI가 만들 수 있는 레시피를 자동으로 찾아드려요. 재료 낭비 없이 효율적으로!",
-    benefits: ["남은 재료 활용 레시피"],
-  },
+const BADGE_COLORS = [
+  "bg-red-50 text-red-600",
+  "bg-blue-50 text-blue-600",
+  "bg-purple-50 text-purple-600",
+  "bg-green-50 text-green-600",
 ];
 
-export const FeatureShowcase = (_props: { t: LandingDict; locale: Locale }) => {
+export const FeatureShowcase = ({ t }: { t: LandingDict; locale: Locale }) => {
   return (
     <section className="from-beige/30 to-beige/30 relative w-full overflow-hidden bg-gradient-to-b via-white px-4 py-12 md:py-20">
       <div className="bg-olive-mint/10 absolute top-1/4 left-0 h-96 w-96 rounded-full blur-3xl" />
@@ -70,19 +17,24 @@ export const FeatureShowcase = (_props: { t: LandingDict; locale: Locale }) => {
       <div className="relative mx-auto max-w-7xl">
         <Reveal className="mb-20 text-center">
           <div className="bg-olive-light/10 text-olive-medium mb-4 inline-block rounded-full px-4 py-1 text-sm font-semibold">
-            핵심 기능
+            {t.features.eyebrow}
           </div>
           <h2 className="text-ink mb-4 text-4xl font-extrabold md:text-5xl">
-            요리를 더 쉽게 만드는 방법
+            {t.features.title}
           </h2>
           <p className="text-ink-sub mx-auto max-w-2xl text-lg">
-            복잡한 요리 과정을 단순하게, 당신의 주방을 스마트하게
+            {t.features.subtitle}
           </p>
         </Reveal>
 
         <div className="space-y-24">
-          {FEATURES.map((feature, index) => {
+          {t.features.items.map((feature, index) => {
             const isReversed = index % 2 === 1;
+            const badgeColor = BADGE_COLORS[index];
+            const badge = feature.badge.replace("{count}", t.recipeCount.label);
+            const description = feature.description
+              .replace("{count}", t.recipeCount.label)
+              .replace("{phrase}", t.recipeCount.phrase);
 
             return (
               <Reveal
@@ -94,15 +46,15 @@ export const FeatureShowcase = (_props: { t: LandingDict; locale: Locale }) => {
                 <div className="flex-1 space-y-6">
                   <div>
                     <div
-                      className={`mb-4 inline-block rounded-full px-4 py-1.5 text-sm font-bold ${feature.badgeColor}`}
+                      className={`mb-4 inline-block rounded-full px-4 py-1.5 text-sm font-bold ${badgeColor}`}
                     >
-                      {feature.badge}
+                      {badge}
                     </div>
                     <h3 className="text-ink mb-4 text-3xl leading-tight font-extrabold md:text-4xl lg:text-5xl">
                       {feature.title}
                     </h3>
                     <p className="text-ink-sub text-lg leading-relaxed">
-                      {feature.description}
+                      {description}
                     </p>
                   </div>
 
