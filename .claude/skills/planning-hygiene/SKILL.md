@@ -50,6 +50,7 @@ Reference these guidelines when:
 - `dispatch-mcp-tools-force-sequential-subagents` — MCP servers (Playwright, Vercel, etc.) are session-scoped, not per-subagent. Parallel subagents sharing the same MCP tool will contend on one connection. At plan time, classify each subagent's tools — anything `mcp__*` forces sequential dispatch. Decide in the plan, not at runtime.
 - `dispatch-explicit-staging-shared-worktree` — A subagent commits in the same working tree the user may be editing in parallel. `git add -A` sweeps their unrelated WIP into your commit. Stage only the exact paths the task touched, and tell the subagent to ignore `tsc`/test errors in files it didn't touch (those are the user's WIP).
 - `dispatch-pathspec-leaks-foreign-hunks-in-shared-file` — Even correct per-file staging leaks: `git add <file>` stages the file's whole blob, so a hot shared file (types/`index.ts`/barrel) co-edited in parallel carries the other workstream's hunks into your commit. Before committing a shared file, `git diff <file>` for foreign hunks, `git add -p` only yours, and confirm `git diff --cached <file>`.
+- `dispatch-lint-staged-defeats-partial-staging` — `git add -p` isolation dies under a `lint-staged`/`husky` pre-commit hook that re-`git add`s the whole formatted file (and is interactive, so it won't run in an agent harness anyway). Isolate via remove-commit-restore: edit the foreign hunks out of the working tree, commit your clean full-file delta, then restore them.
 
 ### Cleanup planning
 

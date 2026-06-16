@@ -38,6 +38,7 @@ git commit -m "feat: add Foo namespace" -- src/shared/i18n/types.ts
 Key points:
 
 - **File granularity ≠ hunk granularity.** Pathspec on `add`/`commit` is file-level. The only hunk-level tools are `git add -p` (interactive) and verifying with `git diff --cached <file>`.
+- **`git add -p` is defeated by a whole-file-restaging pre-commit hook** (`lint-staged`/`husky` runs `git add <file>` after formatting). When such a hook exists, partial staging doesn't survive the commit — use remove-commit-restore instead. See `dispatch-lint-staged-defeats-partial-staging`.
 - **Identify hot shared files up front:** type definition files, barrel/`index.ts` re-export hubs, dictionary aggregates, route manifests — anything multiple features touch. When your task must edit one in a parallel-edit window, switch from blind `git add <file>` to inspect-then-`add -p`.
 - **Tell subagents this explicitly.** "Stage only the paths you modified" is not enough; add: "before `git add` on a shared file (types/index/barrel), run `git diff <file>` — if it contains hunks you didn't write, `git add -p` only yours and confirm `git diff --cached <file>` before committing."
 - **The blast radius is permanent.** Once a parallel workstream commits on top of your contaminated commit, history is shared and you must not rewrite it — flag it to the user and move on; don't amend/rebase someone else's work to "clean up."
