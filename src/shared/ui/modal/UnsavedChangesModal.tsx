@@ -1,3 +1,6 @@
+"use client";
+
+import { useCommonDict } from "@/shared/i18n";
 import {
   Dialog,
   DialogClose,
@@ -21,6 +24,8 @@ export const UnsavedChangesModal = ({
   onConfirm,
   onCancel,
 }: UnsavedChangesModalProps) => {
+  const t = useCommonDict();
+
   const handleCancel = () => {
     onCancel?.();
     onOpenChange(false);
@@ -35,9 +40,9 @@ export const UnsavedChangesModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm pb-0">
         <DialogHeader>
-          <DialogTitle>저장하지 않고 나가시겠어요?</DialogTitle>
+          <DialogTitle>{t.modal.unsavedChanges.title}</DialogTitle>
           <DialogDescription>
-            작성 중인 내용이 저장되지 않습니다.
+            {t.modal.unsavedChanges.description}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-0 space-x-2">
@@ -46,7 +51,7 @@ export const UnsavedChangesModal = ({
               className="text-ink my-2 rounded-md px-4"
               onClick={handleCancel}
             >
-              취소
+              {t.modal.unsavedChanges.cancel}
             </button>
           </DialogClose>
           <div className="h-[1px] w-full bg-gray-200"></div>
@@ -54,7 +59,7 @@ export const UnsavedChangesModal = ({
             className="my-2 rounded-md px-4 font-bold text-red-600"
             onClick={handleConfirm}
           >
-            나가기
+            {t.modal.unsavedChanges.leave}
           </button>
           <div className="h-[1px] w-full bg-gray-200"></div>
         </DialogFooter>
