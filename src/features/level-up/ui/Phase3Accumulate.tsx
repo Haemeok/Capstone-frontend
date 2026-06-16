@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 
+import { LocalizedLink } from "@/shared/i18n";
 import { formatNumber } from "@/shared/lib/format";
 import { gsap } from "@/shared/lib/gsap";
 import SavingSection from "@/shared/ui/SavingSection";
@@ -126,14 +126,17 @@ const Phase3Accumulate = ({
 
         {/* CTA 버튼 - 에어비엔비 스타일 */}
         <div className="mt-6">
-          <Link href={`/users/${user?.id}?tab=calendar`} prefetch={false}>
+          <LocalizedLink
+            href={`/users/${user?.id}?tab=calendar`}
+            prefetch={false}
+          >
             <Button
               onClick={onClose}
               className="bg-olive-mint hover:bg-olive-dark h-14 w-full rounded-xl text-base font-semibold text-white"
             >
               이번 달 기록 확인하기
             </Button>
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     </>

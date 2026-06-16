@@ -1,8 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
-import { format, useUserPagesDict } from "@/shared/i18n";
+import { format, useLocalizedRouter, useUserPagesDict } from "@/shared/i18n";
 
 import {
   useRecipeBookDetail,
@@ -29,7 +27,7 @@ export const RecipeBookCard = ({
   isDefault,
   isFirstCard = false,
 }: Props) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const t = useUserPagesDict().recipeBooks;
   const { data } = useRecipeBookDetail(bookId);
   const hasUnseenImport = useUnseenImportStore((s) => s.hasUnseenImport);

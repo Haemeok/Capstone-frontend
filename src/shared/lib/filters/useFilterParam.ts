@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+
+import { useLocalizedRouter } from "@/shared/i18n";
 
 type Codec<T> = {
   encode: (value: T) => string | null;
@@ -9,7 +11,7 @@ type Codec<T> = {
 };
 
 export const useFilterParam = <T>(paramName: string, codec: Codec<T>) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const searchParams = useSearchParams();
 
   const value = useMemo(

@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
-
 import { LogIn, Plus } from "lucide-react";
 
-import { useUserPagesDict } from "@/shared/i18n";
+import { LocalizedLink, useUserPagesDict } from "@/shared/i18n";
 import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
 import { Button } from "@/shared/ui/shadcn/button";
 
@@ -34,9 +32,9 @@ const ActionButton = ({
           asChild
           className="border-olive-light hover:bg-olive-light/10 text-olive-light rounded-full border bg-white px-6"
         >
-          <Link href="/login">
+          <LocalizedLink href="/login">
             <LogIn size={16} className="mr-1" /> {t.profile.loginAction}
-          </Link>
+          </LocalizedLink>
         </Button>
       </LoginPromotionBadge>
     );
@@ -48,9 +46,9 @@ const ActionButton = ({
         asChild
         className="border-olive-light hover:bg-olive-light/10 text-olive-light hidden gap-0 rounded-full border bg-white px-6 md:inline-flex"
       >
-        <Link href="/recipes/new" prefetch={false}>
+        <LocalizedLink href="/recipes/new" prefetch={false}>
           <Plus size={16} className="mr-1" /> {t.profile.createRecipeAction}
-        </Link>
+        </LocalizedLink>
       </Button>
       <FloatingCreateRecipeButton />
     </>

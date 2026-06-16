@@ -1,14 +1,17 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 
 import type { InfiniteData } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { CheckIcon } from "lucide-react";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
+import {
+  useLocalizedRouter,
+  useUserPagesDict,
+  useUserPagesLocale,
+} from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
@@ -35,7 +38,7 @@ const GRID_CLASS =
   "grid grid-cols-2 gap-3 py-3 sm:gap-4 sm:py-4 md:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]";
 
 const EmptyState = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const t = useUserPagesDict().recipeBooks.grid;
   return (
     <div className="flex flex-col items-center justify-center px-6 py-20 text-center">

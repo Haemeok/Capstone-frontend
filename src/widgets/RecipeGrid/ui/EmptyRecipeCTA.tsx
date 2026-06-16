@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { LocalizedLink } from "@/shared/i18n";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -18,7 +17,7 @@ const EmptyRecipeCTA = ({ noResultsMessage }: EmptyRecipeCTAProps) => {
             30초만에 AI에게 레시피 생성을 맡겨보세요
           </p>
         </div>
-        <Link
+        <LocalizedLink
           href="/recipes/new/ai"
           className="border-olive-light text-olive-light hover:bg-olive-light/10 flex w-full cursor-pointer items-center justify-center gap-1 rounded-xl border bg-white px-4 py-2 font-semibold transition-colors"
         >
@@ -28,14 +27,14 @@ const EmptyRecipeCTA = ({ noResultsMessage }: EmptyRecipeCTAProps) => {
             wrapperClassName="w-8"
           />
           <span>AI 레시피 생성하기</span>
-        </Link>
-        <Link
+        </LocalizedLink>
+        <LocalizedLink
           href="/recipes/new/youtube"
           className="border-olive-light text-olive-light hover:bg-olive-light/10 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border bg-white px-6 py-3 font-semibold transition-colors"
         >
           <YouTubeIconBadge className="h-6 w-6" />
           <span>유튜브 레시피 추출하기</span>
-        </Link>
+        </LocalizedLink>
       </div>
     </section>
   );

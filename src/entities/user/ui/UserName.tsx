@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocalizedLink } from "@/shared/i18n";
 
 import { cn } from "@/lib/utils";
 
@@ -12,7 +12,10 @@ type UsernameProps = {
 
 const Username = ({ username, userId, className }: UsernameProps) => {
   return (
-    <Link href={`/users/${userId}`} className="block w-fit max-w-full min-w-0">
+    <LocalizedLink
+      href={`/users/${userId}`}
+      className="block w-fit max-w-full min-w-0"
+    >
       <p
         className={cn(
           "text-ink truncate text-left text-sm font-bold hover:underline",
@@ -21,7 +24,7 @@ const Username = ({ username, userId, className }: UsernameProps) => {
       >
         {username}
       </p>
-    </Link>
+    </LocalizedLink>
   );
 };
 

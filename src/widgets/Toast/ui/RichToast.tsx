@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 
 import { X } from "lucide-react";
 
+import { LocalizedLink } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
@@ -313,9 +313,13 @@ export const RichToast = ({
   );
 
   return isClickable && recipeUrl ? (
-    <Link href={recipeUrl} className="w-full min-w-0" onClick={handleLinkClick}>
+    <LocalizedLink
+      href={recipeUrl}
+      className="w-full min-w-0"
+      onClick={handleLinkClick}
+    >
       {toastContent}
-    </Link>
+    </LocalizedLink>
   ) : (
     toastContent
   );

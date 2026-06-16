@@ -1,11 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { Bookmark, Clock } from "lucide-react";
 import { motion } from "motion/react";
 
-import { format, useFridgeDict } from "@/shared/i18n";
+import { format, useFridgeDict, useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   generateUserGradient,
@@ -44,7 +42,7 @@ type MyFridgeRecipeCardProps = {
 };
 
 const MyFridgeRecipeCard = ({ recipe }: MyFridgeRecipeCardProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const dict = useFridgeDict();
 
   const handleCardClick = () => {

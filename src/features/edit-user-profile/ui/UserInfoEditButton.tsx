@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
-
 import { Pencil } from "lucide-react";
 
-import { useUserPagesDict } from "@/shared/i18n";
+import { LocalizedLink, useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { cn } from "@/lib/utils";
@@ -22,7 +20,7 @@ const UserInfoEditButton = ({
 
   if (variant === "bar") {
     return (
-      <Link
+      <LocalizedLink
         href="/users/edit"
         prefetch={false}
         onClick={() => triggerHaptic("Light")}
@@ -32,12 +30,12 @@ const UserInfoEditButton = ({
         )}
       >
         {t.profile.editAction}
-      </Link>
+      </LocalizedLink>
     );
   }
 
   return (
-    <Link
+    <LocalizedLink
       href="/users/edit"
       prefetch={false}
       aria-label={t.profile.editAria}
@@ -49,7 +47,7 @@ const UserInfoEditButton = ({
       )}
     >
       <Pencil size={12} aria-hidden="true" />
-    </Link>
+    </LocalizedLink>
   );
 };
 

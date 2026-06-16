@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-
+import { LocalizedLink } from "@/shared/i18n";
 import { formatNumber } from "@/shared/lib/format";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -29,7 +28,7 @@ export const RecipeRecordItem = ({
   const savings = marketPrice - ingredientCost;
 
   return (
-    <Link
+    <LocalizedLink
       href={`/recipes/${recipeId}`}
       className="flex cursor-pointer gap-3.5 rounded-2xl p-2 transition-colors active:bg-gray-50"
     >
@@ -55,6 +54,6 @@ export const RecipeRecordItem = ({
           {formatNumber(savings, "원")} 절약
         </p>
       </div>
-    </Link>
+    </LocalizedLink>
   );
 };

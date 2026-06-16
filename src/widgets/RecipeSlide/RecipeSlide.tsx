@@ -1,10 +1,10 @@
 "use client";
 
 import { ReactNode } from "react";
-import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
+import { LocalizedLink } from "@/shared/i18n";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
 import {
@@ -130,13 +130,13 @@ const RecipeSlide = ({
           <h2 className="text-ink text-lg font-bold">{title}</h2>
         </div>
         {to && (
-          <Link
+          <LocalizedLink
             href={to}
             className="text-ink-muted hover:text-ink-sub flex items-center text-sm"
           >
             {t.recipeSlideViewMore}
             <ChevronRight size={16} />
-          </Link>
+          </LocalizedLink>
         )}
       </div>
 

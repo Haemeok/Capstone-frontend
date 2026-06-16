@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 
+import { LocalizedLink } from "@/shared/i18n";
 import {
   generateUserGradient,
   isDefaultProfileImage,
@@ -26,7 +26,7 @@ const UserProfileImage = ({
   const gradientStyle = isDefault ? generateUserGradient(userId) : undefined;
 
   return (
-    <Link href={`/users/${userId}`}>
+    <LocalizedLink href={`/users/${userId}`}>
       <div
         className={cn(
           "h-8 w-8 flex-shrink-0 cursor-pointer overflow-hidden rounded-full",
@@ -41,7 +41,7 @@ const UserProfileImage = ({
           fit="cover"
         />
       </div>
-    </Link>
+    </LocalizedLink>
   );
 };
 

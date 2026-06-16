@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 
 import { EllipsisVertical, LockKeyhole } from "lucide-react";
 
+import { LocalizedLink } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
@@ -51,7 +51,7 @@ const SimpleRecipeGridItem = ({
       <p className="word-break absolute right-2 bottom-1.5 left-2 line-clamp-1 text-[13px] leading-tight text-pretty text-white">
         {recipe.title}
       </p>
-      <Link
+      <LocalizedLink
         href={href}
         aria-label={recipe.title}
         prefetch={prefetch ? true : null}
