@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { Pencil, Wand2 } from "lucide-react";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { Visibility } from "@/entities/recipe/model/types";
@@ -42,7 +42,7 @@ const RecipeInteractionButtons = ({
 }: RecipeInteractionButtonsProps) => {
   const { user } = useUserStore();
   const { status } = useRecipeStatus();
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { openDrawer } = useLoginEncourageDrawerStore();
   const [onboardingDismissed, setOnboardingDismissed] = useState(false);
 

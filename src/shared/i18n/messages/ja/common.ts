@@ -3,8 +3,8 @@ import type { CommonDict } from "../../types";
 export const common: CommonDict = {
   readMore: "続きを読む",
   collapse: "閉じる",
-  readMoreAria: "本文の続きを読む",
-  collapseAria: "本文を閉じる",
+  readMoreAria: "本文をすべて表示",
+  collapseAria: "本文を折りたたむ",
   actions: {
     save: "保存",
     unsave: "保存を解除",
