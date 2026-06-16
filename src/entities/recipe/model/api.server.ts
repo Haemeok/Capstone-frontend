@@ -476,9 +476,13 @@ export const getTrendingYoutubeRecipesOnServer = async (
 };
 
 export const getPrivateRecipeOnServer = async (
-  id: string
+  id: string,
+  locale?: Locale
 ): Promise<Recipe | null> => {
-  const API_URL = `${BASE_API_URL}/dev/recipes/${id}`;
+  const url = new URL(`${BASE_API_URL}/dev/recipes/${id}`);
+  if (locale && locale !== "ko") {
+    url.searchParams.set("lang", locale);
+  }
 
   try {
     const cookieStore = await cookies();
@@ -486,7 +490,7 @@ export const getPrivateRecipeOnServer = async (
       .getAll()
       .map(({ name, value }) => `${name}=${value}`)
       .join("; ");
-    const res = await fetch(API_URL, {
+    const res = await fetch(url.toString(), {
       headers: {
         Cookie: cookieHeader,
       },
