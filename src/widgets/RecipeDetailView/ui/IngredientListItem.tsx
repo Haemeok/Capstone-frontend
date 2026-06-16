@@ -26,31 +26,45 @@ export const IngredientListItem = ({
   reserveFridgeSpace,
   locale,
 }: IngredientListItemProps) => {
+  const nameCell = (
+    <div className="flex items-center gap-1.5 text-left">
+      {ingredient.inFridge ? (
+        <BadgeButton
+          badgeText="내 냉장고에 있는 재료예요"
+          badgeIcon={<Refrigerator size={18} className="text-ink-muted" />}
+        />
+      ) : reserveFridgeSpace ? (
+        <span aria-hidden className="inline-block w-[18px] shrink-0" />
+      ) : null}
+      <p className="font-semibold">{ingredient.name}</p>
+    </div>
+  );
+
+  const quantityCell = (
+    <p className="text-left whitespace-nowrap">
+      {displayQuantity}
+      {displayQuantity !== "약간" && displayUnit}
+    </p>
+  );
+
+  if (locale !== "ko") {
+    return (
+      <li className="flex items-center justify-between gap-3">
+        {nameCell}
+        {quantityCell}
+      </li>
+    );
+  }
+
   return (
     <li className="grid grid-cols-[1.5fr_1.5fr_1fr_auto] items-center gap-3">
-      <div className="flex items-center gap-1.5 text-left">
-        {ingredient.inFridge ? (
-          <BadgeButton
-            badgeText="내 냉장고에 있는 재료예요"
-            badgeIcon={<Refrigerator size={18} className="text-ink-muted" />}
-          />
-        ) : reserveFridgeSpace ? (
-          <span aria-hidden className="inline-block w-[18px] shrink-0" />
-        ) : null}
-        <p className="font-semibold">{ingredient.name}</p>
-      </div>
+      {nameCell}
+      {quantityCell}
 
-      <p className="text-left whitespace-nowrap">
-        {displayQuantity}
-        {displayQuantity !== "약간" && displayUnit}
-      </p>
-
-      <p className="text-ink-muted text-right text-sm">
-        {locale === "ko" ? displayPrice : ""}
-      </p>
+      <p className="text-ink-muted text-right text-sm">{displayPrice}</p>
 
       <div className="flex items-center justify-center gap-1">
-        {locale === "ko" && ingredient.coupangLink ? (
+        {ingredient.coupangLink ? (
           <Link
             href={ingredient.coupangLink}
             target="_blank"
