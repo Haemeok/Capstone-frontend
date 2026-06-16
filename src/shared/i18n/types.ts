@@ -829,6 +829,12 @@ export type RatingsDict = {
   };
 };
 
+export type SmartAppBannerDict = {
+  message: string;
+  cta: string;
+  dismissAria: string;
+};
+
 export type CommentsDict = {
   title: string;
   count: Plural;

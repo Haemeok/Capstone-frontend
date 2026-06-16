@@ -23,6 +23,7 @@ export { recipeFormMessages } from "./recipeFormMessages";
 export { resolveChromeLocale } from "./resolveChromeLocale";
 export { resolveDateFnsLocale } from "./resolveDateFnsLocale";
 export { resolveLocaleFromPath } from "./resolveLocaleFromPath";
+export { smartAppBannerMessages } from "./smartAppBannerMessages";
 export type {
   AuthDict,
   CategoryDict,
@@ -45,6 +46,7 @@ export type {
   RecipeFormDict,
   ReferralDict,
   SettingsDict,
+  SmartAppBannerDict,
   UserPagesDict,
   YoutubeDict,
 } from "./types";
@@ -78,4 +80,8 @@ export {
 export { useRecipeFormDict, useRecipeFormLocale } from "./useRecipeFormDict";
 export { useReferralDict } from "./useReferralDict";
 export { useSettingsDict } from "./useSettingsDict";
+export {
+  useSmartAppBannerDict,
+  useSmartAppBannerLocale,
+} from "./useSmartAppBannerDict";
 export { useUserPagesDict, useUserPagesLocale } from "./useUserPagesDict";
