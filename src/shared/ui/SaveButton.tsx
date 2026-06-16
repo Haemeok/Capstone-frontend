@@ -1,5 +1,8 @@
+"use client";
+
 import { Bookmark } from "lucide-react";
 
+import { useCommonDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
 type SaveButtonProps = {
@@ -21,6 +24,8 @@ const SaveButton = ({
   label,
   isFavorite,
 }: SaveButtonProps) => {
+  const t = useCommonDict();
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -32,7 +37,7 @@ const SaveButton = ({
       <button
         onClick={handleClick}
         className={className}
-        aria-label={isFavorite ? "저장 해제" : "저장"}
+        aria-label={isFavorite ? t.actions.unsave : t.actions.save}
         aria-pressed={isFavorite}
       >
         <Bookmark

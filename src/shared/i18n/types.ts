@@ -754,6 +754,36 @@ export type CommonDict = {
   collapse: string;
   readMoreAria: string;
   collapseAria: string;
+  actions: {
+    save: string;
+    unsave: string;
+    like: string;
+    unlike: string;
+    share: string;
+    shareLabel: string;
+    close: string;
+    back: string;
+    edit: string;
+    remix: string;
+    editRecipeAria: string;
+    remixRecipeAria: string;
+    recipeOptions: string;
+  };
+  modal: {
+    delete: { description: string; cancel: string; confirm: string };
+    unsavedChanges: {
+      title: string;
+      description: string;
+      cancel: string;
+      leave: string;
+    };
+  };
+  sort: { title: string; reset: string; apply: string };
+  toast: {
+    logout: { pending: string; error: string };
+    deleteAccount: { pending: string; success: string; error: string };
+  };
+  errors: { unknown: string };
 };
 
 export type SettingsDict = {
