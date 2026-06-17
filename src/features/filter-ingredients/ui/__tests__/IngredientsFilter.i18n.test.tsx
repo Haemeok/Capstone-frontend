@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
+import { recipeDetail as recipeDetailJa } from "@/shared/i18n/messages/ja/recipeDetail";
+import { recipeDetail as recipeDetailKo } from "@/shared/i18n/messages/ko/recipeDetail";
 import type { Locale } from "@/shared/i18n/types";
 
 import { IngredientsFilter } from "../IngredientsFilter";
@@ -29,6 +31,13 @@ describe("IngredientsFilter i18n counter", () => {
   it("ja 칩은 접미사 없이 카운트만 표시한다", () => {
     mockLocale.mockReturnValue("ja");
     render(<IngredientsFilter />);
-    expect(screen.getByText("材料 2")).toBeInTheDocument();
+    expect(
+      screen.getByText(`${recipeDetailJa.ingredientsHeader} 2`)
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        new RegExp(`${recipeDetailKo.ingredientsHeader} \\d+개`)
+      )
+    ).not.toBeInTheDocument();
   });
 });

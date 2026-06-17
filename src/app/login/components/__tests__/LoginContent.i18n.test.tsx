@@ -58,6 +58,8 @@ describe("LoginContent i18n", () => {
   it("T-21: ko preserved", () => {
     mockPath.mockReturnValue("/login");
     render(<LoginContent />);
-    expect(screen.getByText("로그인 없이 볼게요")).toBeInTheDocument();
+    expect(
+      screen.getByText(authMessages.ko.browseWithoutLogin)
+    ).toBeInTheDocument();
   });
 });

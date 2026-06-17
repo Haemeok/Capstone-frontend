@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
+import { format, getDictionary } from "@/shared/i18n";
+
 import type { IngredientItem as IngredientItemType } from "@/entities/ingredient/model/types";
 
 import IngredientItem from "../IngredientItem";
@@ -20,6 +22,8 @@ const ingredient: IngredientItemType = {
   calories: 0,
 };
 
+const jaAria = getDictionary("ja").ingredients.itemAria;
+
 describe("IngredientItem aria i18n", () => {
   it("T-10: /ja에서 상세 보기 aria-label이 일본어 + name 치환으로 표시된다", () => {
     mockPathname.mockReturnValue("/ja/ingredients");
@@ -31,7 +35,9 @@ describe("IngredientItem aria i18n", () => {
         isSelected={false}
       />
     );
-    expect(screen.getByLabelText("鶏肉の詳細を見る")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(format(jaAria.detail, { name: ingredient.name }))
+    ).toBeInTheDocument();
   });
 
   it("T-10: /ja 삭제 모드에서 선택 aria-label이 일본어로 표시된다", () => {
@@ -44,6 +50,8 @@ describe("IngredientItem aria i18n", () => {
         isSelected={false}
       />
     );
-    expect(screen.getByLabelText("鶏肉を選択")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(format(jaAria.select, { name: ingredient.name }))
+    ).toBeInTheDocument();
   });
 });

@@ -3,6 +3,7 @@ import { createRef } from "react";
 import { act, render, screen } from "@testing-library/react";
 
 import { DictionaryProvider, getDictionary } from "@/shared/i18n";
+import { localizeActivityName } from "@/shared/i18n/activityNameOverlay";
 import { ScrollContext } from "@/shared/lib/ScrollContext";
 
 import RecipeIngredientsSection from "../RecipeIngredientsSection";
@@ -60,14 +61,17 @@ describe("RecipeIngredientsSection i18n", () => {
 
   it("T-03b: ja & 영양 on -> 활동 배너 번역명 + 分, 한글 없음", () => {
     jest.useFakeTimers();
+    const ja = getDictionary("ja");
     const { baseElement } = renderSection("ja");
     act(() => {
-      screen.getByText("栄養成分").click();
+      screen.getByText(ja.recipeDetail.nutritionHeader).click();
     });
     act(() => {
       jest.advanceTimersByTime(4600);
     });
-    expect(baseElement.textContent).toContain("軽いジョギング");
+    expect(baseElement.textContent).toContain(
+      localizeActivityName("가볍게 달리기", "ja")
+    );
     expect(baseElement.textContent).toContain("分");
     expect(HANGUL.test(baseElement.textContent ?? "")).toBe(false);
     jest.useRealTimers();

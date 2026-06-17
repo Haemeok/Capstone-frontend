@@ -1,5 +1,7 @@
 import { render } from "@testing-library/react";
 
+import { commonMessages } from "@/shared/i18n/commonMessages";
+
 let mockPathname = "/";
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
@@ -7,6 +9,9 @@ jest.mock("next/navigation", () => ({
 
 import { DeleteModal } from "../DeleteModal";
 import { UnsavedChangesModal } from "../UnsavedChangesModal";
+
+const jaModal = commonMessages.ja.modal;
+const enModal = commonMessages.en.modal;
 
 describe("공통 모달 i18n", () => {
   beforeEach(() => {
@@ -24,8 +29,8 @@ describe("공통 모달 i18n", () => {
         onConfirm={() => {}}
       />
     );
-    expect(document.body.textContent).toContain("キャンセル");
-    expect(document.body.textContent).toContain("削除");
+    expect(document.body.textContent).toContain(jaModal.delete.cancel);
+    expect(document.body.textContent).toContain(jaModal.delete.confirm);
   });
 
   it("en DeleteModal description 기본값이 영어다 (T-08)", () => {
@@ -38,7 +43,7 @@ describe("공통 모달 i18n", () => {
         onConfirm={() => {}}
       />
     );
-    expect(document.body.textContent).toContain("This can't be undone.");
+    expect(document.body.textContent).toContain(enModal.delete.description);
   });
 
   it("명시적 confirmLabel prop이 현지 기본값을 덮는다 (T-09)", () => {
@@ -61,10 +66,10 @@ describe("공통 모달 i18n", () => {
       <UnsavedChangesModal open onOpenChange={() => {}} onConfirm={() => {}} />
     );
     const text = document.body.textContent ?? "";
-    expect(text).toContain("保存せずに移動しますか？");
-    expect(text).toContain("編集中の内容は保存されません。");
-    expect(text).toContain("キャンセル");
-    expect(text).toContain("移動する");
+    expect(text).toContain(jaModal.unsavedChanges.title);
+    expect(text).toContain(jaModal.unsavedChanges.description);
+    expect(text).toContain(jaModal.unsavedChanges.cancel);
+    expect(text).toContain(jaModal.unsavedChanges.leave);
   });
 
   it("ko 루트에서 두 모달이 기존 한국어로 불변이다 (T-11)", () => {

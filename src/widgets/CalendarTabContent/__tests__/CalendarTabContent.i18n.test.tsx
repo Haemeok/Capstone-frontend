@@ -2,7 +2,12 @@ import { usePathname } from "next/navigation";
 
 import { render } from "@testing-library/react";
 
+import { getDictionary } from "@/shared/i18n";
+
 import CalendarTabContent from "../index";
+
+const ja = getDictionary("ja").userPages.calendar;
+const ko = getDictionary("ko").userPages.calendar;
 
 jest.mock("next/navigation", () => ({
   usePathname: jest.fn(),
@@ -48,7 +53,7 @@ test("T-11 ja: MonthlySavingsSummary not rendered, calendar still renders", () =
   (usePathname as jest.Mock).mockReturnValue("/ja/users/u1");
   const { queryByText, getByText } = render(<CalendarTabContent />);
   expect(queryByText(/레시피오 서비스로/)).toBeNull();
-  expect(getByText("すべての料理記録を見る")).toBeInTheDocument();
+  expect(getByText(ja.viewAllRecords)).toBeInTheDocument();
 });
 
 test("T-12 ko: MonthlySavingsSummary present (over-hide guard)", () => {
@@ -59,9 +64,10 @@ test("T-12 ko: MonthlySavingsSummary present (over-hide guard)", () => {
 
 test("T-17 ja: view-all link localized; ko anchor", () => {
   (usePathname as jest.Mock).mockReturnValue("/ja/users/u1");
-  const { getByText, rerender } = render(<CalendarTabContent />);
-  expect(getByText("すべての料理記録を見る")).toBeInTheDocument();
+  const { getByText, queryByText, rerender } = render(<CalendarTabContent />);
+  expect(getByText(ja.viewAllRecords)).toBeInTheDocument();
+  expect(queryByText(ko.viewAllRecords)).toBeNull();
   (usePathname as jest.Mock).mockReturnValue("/users/u1");
   rerender(<CalendarTabContent />);
-  expect(getByText("모든 요리 기록 보기")).toBeInTheDocument();
+  expect(getByText(ko.viewAllRecords)).toBeInTheDocument();
 });

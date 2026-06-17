@@ -1,8 +1,12 @@
 import { render } from "@testing-library/react";
 
+import { errorsMessages } from "@/shared/i18n/errorsMessages";
+
 import CalendarError from "../error";
 
 const HANGUL = /[가-힣]/;
+const ja = errorsMessages.ja.context;
+const ko = errorsMessages.ko.context;
 
 const mockPath = jest.fn();
 jest.mock("next/navigation", () => ({
@@ -15,7 +19,7 @@ describe("CalendarError i18n", () => {
     const { baseElement } = render(
       <CalendarError error={new Error()} reset={() => {}} />
     );
-    expect(baseElement.textContent).toContain("カレンダー");
+    expect(baseElement.textContent).toContain(ja.calendar);
     expect(HANGUL.test(baseElement.textContent ?? "")).toBe(false);
   });
 
@@ -24,6 +28,6 @@ describe("CalendarError i18n", () => {
     const { baseElement } = render(
       <CalendarError error={new Error()} reset={() => {}} />
     );
-    expect(baseElement.textContent).toContain("캘린더를 불러올 수 없어요");
+    expect(baseElement.textContent).toContain(ko.calendar);
   });
 });

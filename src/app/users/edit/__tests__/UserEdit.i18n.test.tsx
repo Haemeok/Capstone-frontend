@@ -185,7 +185,6 @@ describe("UserEdit i18n (T-16~21)", () => {
     seedUser();
     renderPage();
 
-    expect(screen.getByText("프로필 변경")).toBeInTheDocument();
     expect(screen.getByText(ko.heading)).toBeInTheDocument();
     expect(screen.getByText(ko.nameLabel)).toBeInTheDocument();
   });

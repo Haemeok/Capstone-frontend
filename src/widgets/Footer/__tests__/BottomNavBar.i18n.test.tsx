@@ -2,6 +2,8 @@ import { usePathname } from "next/navigation";
 
 import { render, screen } from "@testing-library/react";
 
+import { getDictionary } from "@/shared/i18n";
+
 import BottomNavBar from "../BottomNavBar";
 
 jest.mock("next/navigation", () => ({
@@ -28,19 +30,25 @@ jest.mock("@/shared/ui/badge/LoginPromotionBadge", () => ({
 
 const setPath = (p: string) => (usePathname as jest.Mock).mockReturnValue(p);
 
+const en = getDictionary("en").nav;
+const ja = getDictionary("ja").nav;
+const ko = getDictionary("ko").nav;
+
 describe("BottomNavBar i18n", () => {
-  it("T-01: /en 경로에서 영어 라벨", () => {
+  it("T-01: /en 경로에서 영어 라벨 + ko 원본 미노출", () => {
     setPath("/en/recipes/1");
     render(<BottomNavBar />);
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Search")).toBeInTheDocument();
+    expect(screen.getByText(en.home)).toBeInTheDocument();
+    expect(screen.getByText(en.search)).toBeInTheDocument();
+    expect(screen.queryByText(ko.home)).not.toBeInTheDocument();
   });
 
-  it("T-02: /ja 경로에서 일본어 라벨", () => {
+  it("T-02: /ja 경로에서 일본어 라벨 + ko 원본 미노출", () => {
     setPath("/ja/recipes/1");
     render(<BottomNavBar />);
-    expect(screen.getByText("ホーム")).toBeInTheDocument();
-    expect(screen.getByText("検索")).toBeInTheDocument();
+    expect(screen.getByText(ja.home)).toBeInTheDocument();
+    expect(screen.getByText(ja.search)).toBeInTheDocument();
+    expect(screen.queryByText(ko.home)).not.toBeInTheDocument();
   });
 
   it("T-03: 루트(ko)에서 한국어 라벨 무회귀", () => {

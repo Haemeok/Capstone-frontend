@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 
+import { commonMessages } from "@/shared/i18n/commonMessages";
+
 const addToast = jest.fn();
 let mockPathname = "/";
 
@@ -55,7 +57,9 @@ describe("auth toast i18n", () => {
     result.current.mutate();
     await waitFor(() =>
       expect(addToast).toHaveBeenCalledWith(
-        expect.objectContaining({ message: "ログアウト中..." })
+        expect.objectContaining({
+          message: commonMessages.ja.toast.logout.pending,
+        })
       )
     );
   });

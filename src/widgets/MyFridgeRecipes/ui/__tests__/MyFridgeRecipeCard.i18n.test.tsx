@@ -1,8 +1,14 @@
 import { render, screen } from "@testing-library/react";
 
+import type { Locale } from "@/shared/i18n";
+import { format, getDictionary } from "@/shared/i18n";
+
 import type { MyFridgeRecipeItem } from "@/entities/recipe/model/types";
 
 import MyFridgeRecipeCard from "../MyFridgeRecipeCard";
+
+const cookTime = (locale: Locale) =>
+  format(getDictionary(locale).fridge.cookTimeMinutes, { min: 40 });
 
 const mockPathname = jest.fn();
 jest.mock("next/navigation", () => ({
@@ -38,9 +44,9 @@ const recipe = {
 
 describe("MyFridgeRecipeCard 조리시간 단위 i18n", () => {
   it.each([
-    ["/ja/recipes/my-fridge", "40分"],
-    ["/en/recipes/my-fridge", "40 min"],
-    ["/recipes/my-fridge", "40분"],
+    ["/ja/recipes/my-fridge", cookTime("ja")],
+    ["/en/recipes/my-fridge", cookTime("en")],
+    ["/recipes/my-fridge", cookTime("ko")],
   ])("%s → %s (T-21/T-22)", (path, expected) => {
     mockPathname.mockReturnValue(path);
     render(<MyFridgeRecipeCard recipe={recipe} />);

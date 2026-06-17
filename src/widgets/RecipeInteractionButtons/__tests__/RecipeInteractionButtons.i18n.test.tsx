@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
+import { getDictionary } from "@/shared/i18n";
+
 let mockPathname = "/";
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
@@ -42,6 +44,9 @@ const baseProps = {
   isCloneable: true,
 };
 
+const jaActions = getDictionary("ja").common.actions;
+const koActions = getDictionary("ko").common.actions;
+
 describe("RecipeInteractionButtons i18n", () => {
   beforeEach(() => {
     mockPathname = "/";
@@ -51,11 +56,12 @@ describe("RecipeInteractionButtons i18n", () => {
     mockPathname = "/ja/recipes/r1";
     render(<RecipeInteractionButtons {...baseProps} />);
     const text = document.body.textContent ?? "";
-    expect(text).toContain("保存");
-    expect(text).toContain("編集");
-    expect(text).toContain("シェア");
+    expect(text).toContain(jaActions.save);
+    expect(text).toContain(jaActions.edit);
+    expect(text).toContain(jaActions.shareLabel);
+    expect(text).not.toContain(koActions.save);
     expect(
-      screen.getByRole("link", { name: "レシピを編集" })
+      screen.getByRole("link", { name: jaActions.editRecipeAria })
     ).toBeInTheDocument();
   });
 

@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
+import { commonMessages } from "@/shared/i18n/commonMessages";
+
 let mockPathname = "/";
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
@@ -9,6 +11,7 @@ import RecipeSortButton from "../RecipeSortButton";
 import RecipeSortDrawer from "../RecipeSortDrawer";
 
 const SORTS = ["최신순", "인기순"] as const;
+const jaSort = commonMessages.ja.sort;
 
 describe("RecipeSortDrawer i18n", () => {
   beforeEach(() => {
@@ -27,8 +30,8 @@ describe("RecipeSortDrawer i18n", () => {
       />
     );
     const text = document.body.textContent ?? "";
-    expect(text).toContain("リセット");
-    expect(text).toContain("完了");
+    expect(text).toContain(jaSort.reset);
+    expect(text).toContain(jaSort.apply);
     expect(text).not.toContain("최신순");
   });
 

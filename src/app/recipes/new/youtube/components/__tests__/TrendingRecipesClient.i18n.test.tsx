@@ -5,6 +5,7 @@ jest.mock("@/shared/ui/image/Image", () => ({
   Image: ({ alt }: { alt?: string }) => <img alt={alt ?? ""} />,
 }));
 
+import { format } from "@/shared/i18n/format";
 import { youtube as ja } from "@/shared/i18n/messages/ja/youtube";
 import { youtube as ko } from "@/shared/i18n/messages/ko/youtube";
 
@@ -33,20 +34,20 @@ const renderClient = (
 
 it("T-10: ja 헤더가 현지어다", () => {
   renderClient([RECIPE], ja, "ja");
-  expect(screen.getByText("話題のレシピ")).toBeInTheDocument();
+  expect(screen.getByText(ja.trendingTitle)).toBeInTheDocument();
 });
 it("T-11: recipes=[]면 빈 상태 메시지가 ja로 보인다", () => {
   renderClient([], ja, "ja");
-  expect(
-    screen.getByText("おすすめのレシピがありません。")
-  ).toBeInTheDocument();
+  expect(screen.getByText(ja.trendingEmpty)).toBeInTheDocument();
 });
 it("T-12: 이전/다음 버튼 aria가 ja다", () => {
   renderClient([RECIPE], ja, "ja");
-  expect(screen.getByLabelText("前へ")).toBeInTheDocument();
-  expect(screen.getByLabelText("次へ")).toBeInTheDocument();
+  expect(screen.getByLabelText(ja.trendingPrevAria)).toBeInTheDocument();
+  expect(screen.getByLabelText(ja.trendingNextAria)).toBeInTheDocument();
 });
 it("T-13: ko 조회수 포맷이 기존(만/천)과 동일하다", () => {
   renderClient([RECIPE], ko, "ko");
-  expect(screen.getByText("조회수 2.3만회")).toBeInTheDocument();
+  expect(
+    screen.getByText(format(ko.viewCountLabel, { count: "2.3만" }))
+  ).toBeInTheDocument();
 });

@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 
+import { referralMessages } from "@/shared/i18n/referralMessages";
+
 import { AdFreeActiveNotice } from "@/features/referral/ui/AdFreeActiveNotice";
 import { ReferralGiftButton } from "@/features/referral/ui/ReferralGiftButton";
 import { ReferralSheet } from "@/features/referral/ui/ReferralSheet";
@@ -63,6 +65,9 @@ jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
 }));
 
 const HANGUL = /[가-힣]/;
+const ja = referralMessages.ja;
+const en = referralMessages.en;
+const ko = referralMessages.ko;
 
 const renderSheet = (pathname: string) => {
   (usePathname as jest.Mock).mockReturnValue(pathname);
@@ -77,9 +82,7 @@ const renderSheet = (pathname: string) => {
 test("T-08 ja: gift button aria localized", () => {
   (usePathname as jest.Mock).mockReturnValue("/ja/users/u1");
   render(<ReferralGiftButton />);
-  expect(
-    screen.getByRole("button", { name: "友だち招待キャンペーン" })
-  ).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: ja.giftAria })).toBeInTheDocument();
 });
 
 test("T-09 en: banner copy + en-US date + plural; today boundary", () => {
@@ -90,14 +93,14 @@ test("T-09 en: banner copy + en-US date + plural; today boundary", () => {
       adFreeUntil="2026-07-01T00:00:00Z"
     />
   );
-  expect(container.textContent).toContain("Ad-free active");
+  expect(container.textContent).toContain(en.adFreeLabel);
   expect(container.textContent).toContain("3 days left");
   expect(container.textContent).toMatch(/July|Jul/);
   expect(container.textContent ?? "").not.toMatch(HANGUL);
   rerender(
     <AdFreeActiveNotice remaining={0} adFreeUntil="2026-07-01T00:00:00Z" />
   );
-  expect(container.textContent).toContain("ends today");
+  expect(container.textContent).toContain(en.endsToday);
 });
 
 test("T-09b ko: Korean banner (regression)", () => {
@@ -108,17 +111,17 @@ test("T-09b ko: Korean banner (regression)", () => {
       adFreeUntil="2026-07-01T00:00:00Z"
     />
   );
-  expect(container.textContent).toContain("광고 없이 이용 중");
+  expect(container.textContent).toContain(ko.adFreeLabel);
 });
 
 test("T-10 ja: sheet body localized, no hangul", async () => {
   const { container } = renderSheet("/ja/users/u1");
-  expect(await screen.findByText("あなたの招待コード")).toBeInTheDocument();
-  expect(container.textContent).toContain("友だちを招待すると、お二人とも");
+  expect(await screen.findByText(ja.myCodeLabel)).toBeInTheDocument();
+  expect(container.textContent).toContain(ja.description);
   expect(container.textContent ?? "").not.toMatch(HANGUL);
 });
 
 test("T-10b ko: Korean sheet anchor (regression)", async () => {
   renderSheet("/users/u1");
-  expect(await screen.findByText("내 초대코드")).toBeInTheDocument();
+  expect(await screen.findByText(ko.myCodeLabel)).toBeInTheDocument();
 });

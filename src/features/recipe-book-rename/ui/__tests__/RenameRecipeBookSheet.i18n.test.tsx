@@ -72,20 +72,32 @@ describe("RenameRecipeBookSheet i18n — ja", () => {
   it("T-15: title과 placeholder가 일본어로 표시되고 한글 없음", () => {
     mockPathname.mockReturnValue("/ja/recipe-books/b1");
     const { baseElement } = renderJa();
-    expect(screen.getByText("レシピブック名を変更")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("レシピブック名")).toBeInTheDocument();
+    expect(
+      screen.getByText(userPagesMessages.ja.recipeBooks.rename.title)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(
+        userPagesMessages.ja.recipeBooks.rename.placeholder
+      )
+    ).toBeInTheDocument();
     expect(baseElement.textContent).not.toMatch(/[가-힣]/);
   });
 
   it("T-17: 공백 입력 후 submit 시 ja validation 메시지 표시", async () => {
     mockPathname.mockReturnValue("/ja/recipe-books/b1");
     renderJa();
-    const input = screen.getByPlaceholderText("レシピブック名");
+    const input = screen.getByPlaceholderText(
+      userPagesMessages.ja.recipeBooks.rename.placeholder
+    );
     fireEvent.change(input, { target: { value: "  " } });
-    fireEvent.click(screen.getByText("変更"));
+    fireEvent.click(
+      screen.getByText(userPagesMessages.ja.recipeBooks.rename.submit)
+    );
     await waitFor(() =>
       expect(
-        screen.getByText("レシピブック名を入力してください")
+        screen.getByText(
+          userPagesMessages.ja.recipeBooks.validation.nameRequired
+        )
       ).toBeInTheDocument()
     );
   });

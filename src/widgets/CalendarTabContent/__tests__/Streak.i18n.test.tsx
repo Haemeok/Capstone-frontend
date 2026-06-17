@@ -2,8 +2,12 @@ import { usePathname } from "next/navigation";
 
 import { render, screen } from "@testing-library/react";
 
+import { getDictionary } from "@/shared/i18n";
+
 import { StreakInfoBanner } from "@/widgets/CalendarTabContent/components/StreakInfoBanner";
 import { StreakModeToggle } from "@/widgets/CalendarTabContent/components/StreakModeToggle";
+
+const en = getDictionary("en").userPages.calendar;
 
 jest.mock("next/navigation", () => ({ usePathname: jest.fn() }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
@@ -25,8 +29,8 @@ test("T-14 en: toggle labels + alt localized", () => {
   const { container } = render(
     <StreakModeToggle mode="photo" onModeChange={jest.fn()} />
   );
-  expect(screen.getByText("Record")).toBeInTheDocument();
-  expect(screen.getByText("Streak")).toBeInTheDocument();
+  expect(screen.getByText(en.toggleRecord)).toBeInTheDocument();
+  expect(screen.getByText(en.toggleStreak)).toBeInTheDocument();
   expect(container.textContent ?? "").not.toMatch(HANGUL);
 });
 

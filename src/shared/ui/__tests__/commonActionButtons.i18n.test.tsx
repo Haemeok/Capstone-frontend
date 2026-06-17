@@ -1,5 +1,9 @@
 import { render, screen } from "@testing-library/react";
 
+import { format } from "@/shared/i18n";
+import { commonMessages } from "@/shared/i18n/commonMessages";
+import { ratingsMessages } from "@/shared/i18n/ratingsMessages";
+
 let mockPathname = "/";
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
@@ -18,6 +22,8 @@ import HeartButton from "../HeartButton";
 import PrevButton from "../PrevButton";
 import Ratings from "../Ratings";
 
+const jaActions = commonMessages.ja.actions;
+
 describe("공통 액션 버튼 i18n", () => {
   beforeEach(() => {
     mockPathname = "/";
@@ -28,23 +34,37 @@ describe("공통 액션 버튼 i18n", () => {
     const { rerender } = render(
       <HeartButton isLiked={false} likeCount={0} onClick={() => {}} />
     );
-    expect(screen.getByRole("button")).toHaveAttribute("aria-label", "いいね");
+    expect(screen.getByRole("button")).toHaveAttribute(
+      "aria-label",
+      jaActions.like
+    );
 
     rerender(<ShareButton />);
-    expect(screen.getByRole("button")).toHaveAttribute("aria-label", "シェア");
+    expect(screen.getByRole("button")).toHaveAttribute(
+      "aria-label",
+      jaActions.share
+    );
 
     rerender(<PrevButton />);
-    expect(screen.getByRole("button")).toHaveAttribute("aria-label", "戻る");
+    expect(screen.getByRole("button")).toHaveAttribute(
+      "aria-label",
+      jaActions.back
+    );
 
     rerender(<PrevButton icon="close" />);
-    expect(screen.getByRole("button")).toHaveAttribute("aria-label", "閉じる");
+    expect(screen.getByRole("button")).toHaveAttribute(
+      "aria-label",
+      jaActions.close
+    );
   });
 
   it("en에서 별점 aria가 영어이고 {score} 치환이 정확하다 (T-05)", () => {
     mockPathname = "/en";
     render(<Ratings value={0} onChange={() => {}} />);
     expect(
-      screen.getByRole("button", { name: "Select 3 stars" })
+      screen.getByRole("button", {
+        name: format(ratingsMessages.en.starSelect, { score: 3 }),
+      })
     ).toBeInTheDocument();
   });
 
@@ -52,7 +72,9 @@ describe("공통 액션 버튼 i18n", () => {
     mockPathname = "/ja";
     render(<Ratings value={0} onChange={() => {}} />);
     expect(
-      screen.getByRole("button", { name: "3つ星を選択" })
+      screen.getByRole("button", {
+        name: format(ratingsMessages.ja.starSelect, { score: 3 }),
+      })
     ).toBeInTheDocument();
   });
 

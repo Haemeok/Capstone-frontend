@@ -1,5 +1,7 @@
 import { render } from "@testing-library/react";
 
+import { getDictionary } from "@/shared/i18n";
+
 let mockPathname = "/";
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
@@ -39,6 +41,9 @@ jest.mock("@/shared/ui/shadcn/dialog", () => ({
 
 import RecipeMoreActionsSheet from "../RecipeMoreActionsSheet";
 
+const jaActions = getDictionary("ja").common.actions;
+const koActions = getDictionary("ko").common.actions;
+
 describe("RecipeMoreActionsSheet i18n", () => {
   beforeEach(() => {
     mockPathname = "/";
@@ -53,8 +58,9 @@ describe("RecipeMoreActionsSheet i18n", () => {
       />
     );
     const text = baseElement.textContent ?? "";
-    expect(text).toContain("レシピのオプション");
-    expect(text).toContain("編集");
+    expect(text).toContain(jaActions.recipeOptions);
+    expect(text).toContain(jaActions.edit);
+    expect(text).not.toContain(koActions.recipeOptions);
   });
 
   it("ko 루트에서 기존 한국어가 불변이다 (T-18)", () => {
