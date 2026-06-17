@@ -623,6 +623,10 @@ export type TaxonomyDict = {
     themeSection: string;
     countrySection: string;
     sortAria: string;
+    ingredientsTitle: string;
+    ingredientsDescription: string;
+    ingredientsSearchPlaceholder: string;
+    ingredientsApplyButton: string;
   };
 };
 

@@ -109,5 +109,10 @@ export const taxonomy: TaxonomyDict = {
     themeSection: "食事テーマ",
     countrySection: "クリエイターの国",
     sortAria: "並び替えを変更: 現在 {sort}",
+    ingredientsTitle: "材料から探す",
+    ingredientsDescription:
+      "材料を選ぶと、その材料を使ったレシピが見つかります",
+    ingredientsSearchPlaceholder: "材料名を検索",
+    ingredientsApplyButton: "{count}件で探す",
   },
 };

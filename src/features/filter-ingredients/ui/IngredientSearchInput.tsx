@@ -4,14 +4,20 @@ type Props = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  placeholder: string;
 };
 
-export const IngredientSearchInput = ({ value, onChange, onSubmit }: Props) => {
+export const IngredientSearchInput = ({
+  value,
+  onChange,
+  onSubmit,
+  placeholder,
+}: Props) => {
   return (
     <form onSubmit={onSubmit} className="relative">
       <input
         type="text"
-        placeholder="재료 이름을 검색하세요"
+        placeholder={placeholder}
         className="focus:border-olive-light focus:ring-olive-light text-ink w-full rounded-xl border border-gray-200 py-3 pr-4 pl-11 transition-colors placeholder:text-gray-400 focus:ring-1 focus:outline-none"
         value={value}
         onChange={onChange}

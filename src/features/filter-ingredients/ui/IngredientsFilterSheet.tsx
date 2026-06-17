@@ -6,7 +6,9 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { useApiLocale } from "@/shared/i18n";
+import { useApiLocale, useCommonDict } from "@/shared/i18n";
+import { format } from "@/shared/i18n/format";
+import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { getNextPageParam } from "@/shared/lib/utils";
@@ -83,6 +85,8 @@ const IngredientsFilterSheetContent = ({
   Footer,
   Close,
 }: ContentProps) => {
+  const { dict } = useTaxonomy();
+  const common = useCommonDict();
   const selection = useIngredientSelection(initialIngredients);
   const [category, setCategory] = useState("전체");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -127,9 +131,11 @@ const IngredientsFilterSheetContent = ({
   return (
     <>
       <Header className="flex-shrink-0 px-4 pt-4 pb-4 sm:px-6 sm:pt-6">
-        <Title className="text-ink text-xl font-bold">재료로 검색하기</Title>
+        <Title className="text-ink text-xl font-bold">
+          {dict.filters.ingredientsTitle}
+        </Title>
         <Description className="text-ink-muted mt-1 text-sm">
-          원하는 재료를 선택하면 해당 재료가 포함된 레시피를 찾아드려요
+          {dict.filters.ingredientsDescription}
         </Description>
       </Header>
 
@@ -138,6 +144,7 @@ const IngredientsFilterSheetContent = ({
           value={inputValue}
           onChange={handleInputChange}
           onSubmit={handleSearchSubmit}
+          placeholder={dict.filters.ingredientsSearchPlaceholder}
         />
         <IngredientCategoryTabs selected={category} onSelect={setCategory} />
         <SelectedIngredientChips
@@ -166,7 +173,7 @@ const IngredientsFilterSheetContent = ({
             onClick={selection.reset}
             className="h-12 flex-1 cursor-pointer rounded-xl text-base font-medium"
           >
-            초기화
+            {dict.filters.reset}
           </Button>
         ) : Close ? (
           <Close asChild>
@@ -174,7 +181,7 @@ const IngredientsFilterSheetContent = ({
               variant="outline"
               className="h-12 flex-1 cursor-pointer rounded-xl text-base font-medium"
             >
-              닫기
+              {common.actions.close}
             </Button>
           </Close>
         ) : (
@@ -183,14 +190,16 @@ const IngredientsFilterSheetContent = ({
             onClick={onClose}
             className="h-12 flex-1 cursor-pointer rounded-xl text-base font-medium"
           >
-            닫기
+            {common.actions.close}
           </Button>
         )}
         <Button
           onClick={handleApply}
           className="border-olive-light text-olive-light hover:bg-olive-light/5 h-12 flex-1 cursor-pointer rounded-xl border-2 bg-white text-base font-bold"
         >
-          {selection.selected.length}개로 탐색
+          {format(dict.filters.ingredientsApplyButton, {
+            count: selection.selected.length,
+          })}
         </Button>
       </Footer>
     </>

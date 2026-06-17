@@ -109,5 +109,9 @@ export const taxonomy: TaxonomyDict = {
     themeSection: "Diet themes",
     countrySection: "Creator country",
     sortAria: "Change sort order: currently {sort}",
+    ingredientsTitle: "Search by ingredient",
+    ingredientsDescription: "Pick ingredients to find recipes that use them",
+    ingredientsSearchPlaceholder: "Search ingredient names",
+    ingredientsApplyButton: "Search ({count})",
   },
 };
