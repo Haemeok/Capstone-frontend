@@ -1,5 +1,6 @@
 "use client";
 
+import { useYoutubeDict } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
@@ -11,6 +12,7 @@ import {
 import { RecipeBookGrid } from "@/widgets/RecipeBookGrid";
 
 const MySavedRecipesTabContent = () => {
+  const t = useYoutubeDict();
   const jobs = useYoutubeImportStoreV2((state) => state.jobs);
   const visibleJobKeys = Object.keys(jobs).filter((key) => {
     const job = jobs[key];
@@ -27,9 +29,7 @@ const MySavedRecipesTabContent = () => {
     <div>
       {hasVisibleJobs && (
         <ErrorBoundary
-          fallback={
-            <SectionErrorFallback message="추출 중인 레시피 상태를 불러올 수 없어요" />
-          }
+          fallback={<SectionErrorFallback message={t.pendingLoadError} />}
         >
           <PendingRecipeSection pendingJobKeys={visibleJobKeys} />
         </ErrorBoundary>
