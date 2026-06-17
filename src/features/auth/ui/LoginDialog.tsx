@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Dialog, DialogContent, DialogTitle } from "@/shared/ui/shadcn/dialog";
 
@@ -14,7 +14,7 @@ type LoginDialogProps = {
 };
 
 const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {

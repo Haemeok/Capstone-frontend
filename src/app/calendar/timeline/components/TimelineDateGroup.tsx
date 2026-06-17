@@ -1,10 +1,12 @@
 "use client";
 
-import Link from "next/link";
-
 import { ChevronRight } from "lucide-react";
 
-import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
+import {
+  LocalizedLink,
+  useUserPagesDict,
+  useUserPagesLocale,
+} from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { RecordTimelineGroup } from "@/entities/recipe/model/record";
@@ -25,14 +27,14 @@ export const TimelineDateGroup = ({ group }: TimelineDateGroupProps) => {
     <section className="pt-6 first:pt-0">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-ink text-xl font-bold">{label}</h2>
-        <Link
+        <LocalizedLink
           href={`/calendar/${group.date}`}
           onClick={() => triggerHaptic("Light")}
           className="text-ink-muted hover:text-ink-sub flex items-center gap-0.5 rounded-lg px-2 py-1 text-sm font-medium transition-colors hover:bg-gray-100"
         >
           {t.detailAction}
           <ChevronRight className="size-4" />
-        </Link>
+        </LocalizedLink>
       </div>
       <div className="flex flex-col gap-3">
         {group.records.map((record) => (

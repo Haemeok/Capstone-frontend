@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
@@ -17,7 +17,7 @@ import { useLoginEncourageDrawerStore } from "./model/store";
 const DEFAULT_MESSAGE = "로그인하고 더 많은 기능을 이용해보세요!";
 
 const GlobalLoginEncourageDrawer = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { Container, Content, Title } = useResponsiveSheet();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);

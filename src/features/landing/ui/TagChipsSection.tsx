@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import type { LandingDict, Locale } from "@/shared/i18n";
+import { LocalizedLink } from "@/shared/i18n";
 import { Reveal } from "@/shared/ui/Reveal";
 
 import {
@@ -41,13 +40,13 @@ export const TagChipsSection = ({ t }: { t: LandingDict; locale: Locale }) => {
 
               <div className="flex flex-wrap gap-2 md:gap-3">
                 {group.chips.map((chip) => (
-                  <Link
+                  <LocalizedLink
                     key={chip.code}
                     href={buildTagSearchUrl(chip.code)}
                     className="hover:border-olive-light hover:bg-olive-light/10 hover:text-olive-medium text-ink-sub inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition-all active:scale-[0.97] md:text-base"
                   >
                     # {t.tagChips.chipNames[chip.code] ?? chip.code}
-                  </Link>
+                  </LocalizedLink>
                 ))}
               </div>
             </Reveal>

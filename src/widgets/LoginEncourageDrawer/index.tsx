@@ -3,8 +3,8 @@
 import { ReactNode, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
@@ -26,7 +26,7 @@ const LoginEncourageDrawer = ({
   icon,
   message = "유튜브 레시피 편하게 요리하세요!",
 }: LoginEncourageDrawerProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { Container, Content, Title } = useResponsiveSheet();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);

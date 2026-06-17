@@ -1,8 +1,7 @@
-import { useRouter } from "next/navigation";
-
 import { format } from "date-fns";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import { cn } from "@/lib/utils";
@@ -22,7 +21,7 @@ export const CalendarDayStreak = ({
   dateNumber,
   range,
 }: CalendarDayStreakProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const yyyyMMdd = format(date, "yyyy-MM-dd");
 
   const handleClick = () => {

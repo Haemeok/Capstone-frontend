@@ -1,11 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { ONBOARDING_RECIPE_ID } from "@/shared/config/constants/recipe";
+import { useLocalizedRouter } from "@/shared/i18n";
 
 const FirstSavingsQuestPanel = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const handleQuestClick = () => {
     router.push(`/recipes/${ONBOARDING_RECIPE_ID}`);

@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 
 import useEmblaCarousel from "embla-carousel-react";
+
+import { LocalizedLink } from "@/shared/i18n";
 
 import { BannerSlide } from "./types";
 import { useCarouselAutoplay } from "./useCarouselAutoplay";
@@ -70,7 +71,7 @@ const HomeBannerCarousel = ({
 
             return (
               <div key={slide.id} className="relative min-w-0 flex-[0_0_100%]">
-                <Link
+                <LocalizedLink
                   href={slide.link}
                   className="relative block aspect-[9/2] w-full overflow-hidden"
                   style={{ backgroundColor }}
@@ -99,7 +100,7 @@ const HomeBannerCarousel = ({
                       {slide.title}
                     </h2>
                   </div>
-                </Link>
+                </LocalizedLink>
               </div>
             );
           })}

@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useNotFoundDict } from "@/shared/i18n/useNotFoundDict";
 
 import { useDeleteNotification } from "@/entities/notification";
@@ -21,7 +22,7 @@ const NotFound = ({
   emoji = "🚫",
 }: NotFoundProps) => {
   const t = useNotFoundDict();
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const searchParams = useSearchParams();
   const notificationId = searchParams.get("notificationId");
 

@@ -1,10 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { Trash2 } from "lucide-react";
 
-import { useNotificationsDict } from "@/shared/i18n";
+import { useLocalizedRouter, useNotificationsDict } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 import { Button } from "@/shared/ui/shadcn/button";
@@ -20,7 +18,7 @@ import {
 } from "@/entities/notification";
 
 const NotificationsPage = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const t = useNotificationsDict();
   const { notifications, hasNextPage, isFetching, isFetchingNextPage, ref } =
     useInfiniteNotificationsQuery();

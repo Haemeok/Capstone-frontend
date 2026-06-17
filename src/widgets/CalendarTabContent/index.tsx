@@ -6,13 +6,13 @@ import type {
   NextMonthButtonProps,
   PreviousMonthButtonProps,
 } from "react-day-picker";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { format, parseISO } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import {
+  LocalizedLink,
   resolveChromeLocale,
   resolveDateFnsLocale,
   useUserPagesDict,
@@ -204,14 +204,14 @@ const CalendarTabContent = () => {
           ),
         }}
       />
-      <Link
+      <LocalizedLink
         href="/calendar/timeline"
         onClick={() => triggerHaptic("Light")}
         className="text-ink-sub hover:text-ink mt-2 flex w-full items-center justify-center gap-1 px-5 py-4 text-sm transition-colors"
       >
         {t.calendar.viewAllRecords}
         <ChevronRight className="size-4" />
-      </Link>
+      </LocalizedLink>
     </div>
   );
 };

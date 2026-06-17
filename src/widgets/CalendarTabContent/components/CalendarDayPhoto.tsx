@@ -1,7 +1,6 @@
-import { useRouter } from "next/navigation";
-
 import { format } from "date-fns";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import { RecipeDailySummary } from "@/entities/user";
@@ -12,7 +11,7 @@ type CalendarDayPhotoProps = {
 };
 
 export const CalendarDayPhoto = ({ date, summary }: CalendarDayPhotoProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const yyyyMMdd = format(date, "yyyy-MM-dd");
 
   const handleNavigateToCalendarDetail = () => {

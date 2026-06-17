@@ -1,9 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
-import { format, useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
+import {
+  format,
+  useLocalizedRouter,
+  useUserPagesDict,
+  useUserPagesLocale,
+} from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
@@ -19,7 +24,7 @@ import { buildDaySummary } from "./lib/buildDaySummary";
 
 const CalendarDetailPage = () => {
   const { date } = useParams<{ date: string }>();
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { addToast } = useToastStore();
   const locale = useUserPagesLocale();
   const t = useUserPagesDict().calendar;

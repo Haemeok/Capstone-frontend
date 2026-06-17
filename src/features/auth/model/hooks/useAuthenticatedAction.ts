@@ -1,7 +1,8 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useRouter } from "next/navigation";
+
+import { useLocalizedRouter } from "@/shared/i18n";
 
 import { useUserStore } from "@/entities/user/model/store";
 
@@ -19,7 +20,7 @@ const useAuthenticatedAction = <TVariables, TOptions, TResult = void>(
 ) => {
   const { user } = useUserStore();
   const { openDrawer } = useLoginEncourageDrawerStore();
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   return (variables: TVariables, options?: TOptions): TResult | undefined => {
     if (!user) {
