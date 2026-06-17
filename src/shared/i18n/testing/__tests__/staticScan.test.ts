@@ -20,6 +20,14 @@ describe("findKoreanLeaks (가드 A 스캐너)", () => {
     expect(v[0].text).toContain("저장");
   });
 
+  it("T-01c: substitution 템플릿 tail part 한국어 -> 위반 1", () => {
+    const v = findKoreanLeaks(
+      withDict("const C = (x: string) => `${x} 완료`;")
+    );
+    expect(v).toHaveLength(1);
+    expect(v[0].text).toContain("완료");
+  });
+
   it("T-02: 사전 미import + 한국어 -> 위반 0", () => {
     const v = findKoreanLeaks(`const C = () => <button>저장</button>;`);
     expect(v).toHaveLength(0);
