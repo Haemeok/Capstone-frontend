@@ -1,5 +1,6 @@
 import { Info } from "lucide-react";
 
+import { useYoutubeDict } from "@/shared/i18n";
 import {
   extractYouTubeVideoId,
   getYouTubeThumbnailUrls,
@@ -21,6 +22,7 @@ export const YoutubePreviewCard = ({
   isLoading = false,
   disabled = false,
 }: YoutubePreviewCardProps) => {
+  const t = useYoutubeDict();
   const videoId = extractYouTubeVideoId(meta.url);
   const thumbnailUrl = videoId
     ? (getYouTubeThumbnailUrls(videoId)[0] ?? meta.thumbnailUrl)
@@ -52,8 +54,7 @@ export const YoutubePreviewCard = ({
       </div>
       <p className="mb-3 flex items-center gap-1.5 text-xs text-gray-400">
         <Info className="h-3.5 w-3.5 shrink-0" />
-        AI가 영상에서 재료를 추출해요. 실제와 다를 수 있으니 확인 후
-        사용해주세요.
+        {t.previewAiDisclaimer}
       </p>
       <button
         onClick={onConfirm}
@@ -86,11 +87,11 @@ export const YoutubePreviewCard = ({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            처리 중...
+            {t.previewImporting}
           </span>
         ) : (
           <p className={disabled ? "text-gray-400" : "text-olive-light"}>
-            이 영상으로 레시피 가져오기
+            {t.previewConfirmButton}
           </p>
         )}
       </button>
