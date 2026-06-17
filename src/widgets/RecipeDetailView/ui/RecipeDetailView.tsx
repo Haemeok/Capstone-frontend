@@ -186,7 +186,7 @@ export const RecipeDetailView = ({
 
           <LazyRemixesSlide recipeId={recipeId} locale={locale} />
         </RecipeContainer>
-        <ChatLauncher recipeId={recipeId} />
+        {locale === "ko" && <ChatLauncher recipeId={recipeId} />}
       </RecipeStatusProvider>
     </DictionaryProvider>
   );
