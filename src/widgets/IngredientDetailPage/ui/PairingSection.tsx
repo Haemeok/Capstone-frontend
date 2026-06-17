@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
-import { getDictionary, type Locale } from "@/shared/i18n";
+import { getDictionary, type Locale, localizedHref } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import type { IngredientPairItem } from "@/entities/ingredient";
@@ -15,9 +15,10 @@ type PairingSectionProps = {
 
 type PairingChipRowProps = {
   items: IngredientPairItem[];
+  locale: Locale;
 };
 
-const PairingChipRow = ({ items }: PairingChipRowProps) => {
+const PairingChipRow = ({ items, locale }: PairingChipRowProps) => {
   const linkable = items.filter(
     (item): item is IngredientPairItem & { id: string; imageUrl: string } =>
       Boolean(item.id) && Boolean(item.imageUrl)
@@ -30,7 +31,7 @@ const PairingChipRow = ({ items }: PairingChipRowProps) => {
       {linkable.map((item) => (
         <Link
           key={item.id}
-          href={`/ingredients/${item.id}`}
+          href={localizedHref(`/ingredients/${item.id}`, locale)}
           className="text-ink-sub inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-gray-100 py-1.5 pr-3 pl-1.5 text-sm transition-colors hover:bg-gray-200"
         >
           <span className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-white">
@@ -74,7 +75,7 @@ const PairingSection = ({ good, bad, locale = "ko" }: PairingSectionProps) => {
           <p className="text-ink-sub mb-2 text-sm font-medium">
             {t.pairingGood}
           </p>
-          <PairingChipRow items={good} />
+          <PairingChipRow items={good} locale={locale} />
         </>
       )}
 
@@ -87,7 +88,7 @@ const PairingSection = ({ good, bad, locale = "ko" }: PairingSectionProps) => {
           >
             {t.pairingBad}
           </p>
-          <PairingChipRow items={bad} />
+          <PairingChipRow items={bad} locale={locale} />
         </>
       )}
     </section>

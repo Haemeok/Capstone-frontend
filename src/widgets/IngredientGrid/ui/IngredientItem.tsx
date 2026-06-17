@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
-
 import { ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
+import { LocalizedLink } from "@/shared/i18n";
 import { format } from "@/shared/i18n/format";
 import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -125,14 +124,14 @@ const IngredientItem = ({
   }
 
   return (
-    <Link
+    <LocalizedLink
       href={`/ingredients/${ingredient.id}`}
       onClick={handleNavigateClick}
       className="block"
       aria-label={format(aria.detail, { name: ingredient.name })}
     >
       {tile}
-    </Link>
+    </LocalizedLink>
   );
 };
 

@@ -1,11 +1,10 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import Link from "next/link";
 
 import { Bookmark } from "lucide-react";
 
-import { useChromeDict } from "@/shared/i18n";
+import { LocalizedLink, useChromeDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useUserStore } from "@/entities/user/model/store";
@@ -30,7 +29,7 @@ const SavedRecipeBooksButton = () => {
   };
 
   return (
-    <Link
+    <LocalizedLink
       href="/recipe-books"
       onClick={handleClick}
       aria-label={t.savedBooksAria}
@@ -39,7 +38,7 @@ const SavedRecipeBooksButton = () => {
       <div className="relative h-fit w-fit p-1">
         <Bookmark size={24} className="text-ink-sub" />
       </div>
-    </Link>
+    </LocalizedLink>
   );
 };
 

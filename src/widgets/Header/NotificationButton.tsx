@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
-
 import { Bell } from "lucide-react";
 
-import { format, plural, useChromeDict } from "@/shared/i18n";
+import { format, LocalizedLink, plural, useChromeDict } from "@/shared/i18n";
 
 import { useInfiniteNotificationsQuery } from "@/entities/notification";
 import { useUserStore } from "@/entities/user";
@@ -19,7 +17,7 @@ const NotificationButton = () => {
   }
 
   return (
-    <Link
+    <LocalizedLink
       href="/notifications"
       aria-label={
         unreadCount > 0
@@ -43,7 +41,7 @@ const NotificationButton = () => {
           />
         )}
       </div>
-    </Link>
+    </LocalizedLink>
   );
 };
 
