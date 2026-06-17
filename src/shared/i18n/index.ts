@@ -85,3 +85,5 @@ export {
   useSmartAppBannerLocale,
 } from "./useSmartAppBannerDict";
 export { useUserPagesDict, useUserPagesLocale } from "./useUserPagesDict";
+export { useYoutubeDict, useYoutubeLocale } from "./useYoutubeDict";
+export { youtubeMessages } from "./youtubeMessages";

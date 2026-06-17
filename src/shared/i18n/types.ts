@@ -151,6 +151,24 @@ export type YoutubeDict = {
   trendingPrevAria: string;
   trendingNextAria: string;
   viewCountLabel: string;
+  duplicateTitle: string;
+  duplicateNoCredit: string;
+  duplicateAdded: string;
+  duplicateViewButton: string;
+  duplicateSaveButton: string;
+  duplicateAlreadySaved: string;
+  previewAiDisclaimer: string;
+  previewImporting: string;
+  previewConfirmButton: string;
+  extractionCompleteTitle: string;
+  maxRetryExceeded: string;
+  pendingSectionTitle: string;
+  extractingStatus: string;
+  extractionSuccessStatus: string;
+  extractionFailureDefault: string;
+  errorCloseLabel: string;
+  errorCloseButton: string;
+  pendingLoadError: string;
 };
 
 export type IngredientDetailDict = {
