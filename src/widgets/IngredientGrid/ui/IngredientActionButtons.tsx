@@ -37,7 +37,7 @@ const IngredientActionButtons = ({
 
   if (isDeleteMode) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-2">
         <Button
           onClick={handleToggleSelectAll}
           className="text-ink-sub h-10 cursor-pointer rounded-xl bg-gray-100 px-4 font-medium transition-colors active:bg-gray-200"
@@ -55,12 +55,12 @@ const IngredientActionButtons = ({
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex shrink-0 items-center gap-3">
       <button
         type="button"
         onClick={handleDeleteButtonClick}
         className={cn(
-          "text-ink-muted active:text-ink-sub flex cursor-pointer items-center gap-1 text-sm transition-colors"
+          "text-ink-muted active:text-ink-sub flex shrink-0 cursor-pointer items-center gap-1 text-sm whitespace-nowrap transition-colors"
         )}
       >
         <Trash2 size={14} />
@@ -68,7 +68,7 @@ const IngredientActionButtons = ({
       </button>
       <Button
         asChild
-        className="bg-olive-light active:bg-olive-light/90 h-10 cursor-pointer rounded-xl px-4 font-medium text-white transition-colors"
+        className="bg-olive-light active:bg-olive-light/90 h-10 shrink-0 cursor-pointer rounded-xl px-4 font-medium whitespace-nowrap text-white transition-colors"
       >
         <LocalizedLink href="/ingredients/new" prefetch={false}>
           {t.addIngredient}

@@ -97,7 +97,7 @@ const IngredientsPageClient = () => {
         <div ref={observerRef} className="w-full" />
         <div className="z-sticky sticky-optimized sticky top-0 bg-white">
           <div className="flex items-center justify-between gap-3 px-5 py-5">
-            <h1 className="text-ink max-w-[55%] text-2xl leading-snug font-bold break-keep">
+            <h1 className="text-ink min-w-0 text-xl leading-snug font-bold break-keep">
               {headerTitle}
             </h1>
             {!!user && (

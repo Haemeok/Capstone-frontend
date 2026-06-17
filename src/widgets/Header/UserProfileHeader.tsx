@@ -25,7 +25,7 @@ const Header = ({ isOwnProfile }: HeaderProps) => {
   if (isOwnProfile) {
     return (
       <div className="relative flex justify-between overflow-visible bg-white px-5 py-4">
-        <h2 className="text-2xl font-bold">{t.profile}</h2>
+        <h2 className="text-xl font-bold">{t.profile}</h2>
         <SettingsActionButton />
       </div>
     );
@@ -34,7 +34,7 @@ const Header = ({ isOwnProfile }: HeaderProps) => {
   return (
     <div className="flex gap-4 bg-white px-5 py-4">
       <PrevButton />
-      <h2 className="text-2xl font-bold">{t.profile}</h2>
+      <h2 className="text-xl font-bold">{t.profile}</h2>
     </div>
   );
 };
