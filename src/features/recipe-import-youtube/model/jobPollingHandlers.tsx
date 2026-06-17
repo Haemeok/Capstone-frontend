@@ -1,7 +1,6 @@
-import type { useRouter } from "next/navigation";
-
 import type { QueryClient } from "@tanstack/react-query";
 
+import type { useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { trackReviewAction } from "@/shared/lib/review";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
@@ -18,7 +17,7 @@ import { fromJobStatusResponse } from "./jobStatusMapper";
 import { useYoutubeImportStoreV2 } from "./store";
 import { ActiveJob } from "./types";
 
-type AppRouterInstance = ReturnType<typeof useRouter>;
+type AppRouterInstance = ReturnType<typeof useLocalizedRouter>;
 type AddToast = ReturnType<typeof useToastStore.getState>["addToast"];
 
 type StoreActions = {

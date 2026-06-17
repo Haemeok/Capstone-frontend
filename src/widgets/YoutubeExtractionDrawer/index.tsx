@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import SavingSection from "@/shared/ui/SavingSection";
 import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
@@ -19,7 +19,7 @@ const YoutubeExtractionDrawer = ({
   isOpen,
   onOpenChange,
 }: YoutubeExtractionDrawerProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { Container, Content, Title } = useResponsiveSheet();
   const confettiRef = useRef<ConfettiRef>(null);
 

@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
+import { useLocalizedRouter } from "@/shared/i18n";
 import Ratings from "@/shared/ui/Ratings";
 
 import { useUserStore } from "@/entities/user/model/store";
@@ -23,7 +22,7 @@ export default function RecipeRatingButton({
   const { addToast } = useToastStore();
   const { recipeId } = useRecipeStatus();
 
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const handleRatingClick = () => {
     if (!user) {

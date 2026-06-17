@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { useRouter } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useShallow } from "zustand/shallow";
 
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
+import { useLocalizedRouter } from "@/shared/i18n";
 
 import { useToastStore } from "@/widgets/Toast";
 
@@ -16,7 +16,7 @@ import { useYoutubeImportStoreV2 } from "./store";
 import { pendingJobsSelector } from "./storeSelectors";
 
 export const useJobPolling = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const queryClient = useQueryClient();
   const addToast = useToastStore((state) => state.addToast);
   const isVisible = useDocumentVisibility();

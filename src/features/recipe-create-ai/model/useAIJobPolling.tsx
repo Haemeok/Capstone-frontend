@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
 
 import { addRecentAIRecipe } from "@/shared/config/constants/localStorage";
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 
@@ -21,7 +21,7 @@ import { useAIRecipeStoreV2 } from "./store";
 import { ActiveAIJob } from "./types";
 
 export const useAIJobPolling = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const queryClient = useQueryClient();
   const addToast = useToastStore((state) => state.addToast);
   const isVisible = useDocumentVisibility();

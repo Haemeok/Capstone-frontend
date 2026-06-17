@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocalizedLink } from "@/shared/i18n";
 
 import { useRecipeStatus } from "@/features/recipe-status";
 
@@ -11,13 +11,13 @@ type CommentMoreButtonProps = {
 const CommentMoreButton = ({ text }: CommentMoreButtonProps) => {
   const { recipeId } = useRecipeStatus();
   return (
-    <Link
+    <LocalizedLink
       href={`/recipes/${recipeId}/comments`}
       prefetch={false}
       className="text-olive-light block cursor-pointer px-4 py-2 text-center"
     >
       <p className="text-sm font-bold">{text}</p>
-    </Link>
+    </LocalizedLink>
   );
 };
 

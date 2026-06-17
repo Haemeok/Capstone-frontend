@@ -2,12 +2,11 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { invalidateCache } from "@/shared/config/cache";
-import { format, useRecipeFormDict } from "@/shared/i18n";
+import { format, useLocalizedRouter, useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useRecipeDetailQuery } from "@/entities/recipe";
@@ -22,7 +21,7 @@ import {
 import { useSubmitRecipe } from "./useSubmitRecipe";
 
 export const useRecipeEditForm = (recipeId: string) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { addToast } = useToastStore();
   const { submitRecipe, isPending, error } = useSubmitRecipe();
   const { validation, ui } = useRecipeFormDict();

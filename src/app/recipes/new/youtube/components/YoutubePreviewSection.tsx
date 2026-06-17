@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 
 import { AnimatePresence, motion } from "motion/react";
 
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
-import { useApiLocale } from "@/shared/i18n";
+import { useApiLocale, useLocalizedRouter } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
@@ -85,7 +84,7 @@ type YoutubePreviewSectionProps = {
 export const YoutubePreviewSection = ({
   onLoginRequired,
 }: YoutubePreviewSectionProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const addToast = useToastStore((state) => state.addToast);
   const { user } = useMyInfoQuery();
   const { validatedUrl, videoId, urlSource } = useYoutubeUrl();

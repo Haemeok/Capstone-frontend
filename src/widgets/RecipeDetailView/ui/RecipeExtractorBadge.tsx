@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-
+import { LocalizedLink } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import BadgeButton from "@/shared/ui/BadgeButton";
 
@@ -32,12 +31,12 @@ const RecipeExtractorBadge = ({
         badgeText="해당 유튜브 레시피를 처음으로 추출한 분에게 드립니다."
         badgeIcon={<CreatedByBadge />}
       />
-      <Link
+      <LocalizedLink
         href={`/users/${extractor.id}`}
         className="text-ink-muted hover:text-ink text-sm hover:underline"
       >
         @{extractor.nickname}
-      </Link>
+      </LocalizedLink>
     </div>
   );
 };

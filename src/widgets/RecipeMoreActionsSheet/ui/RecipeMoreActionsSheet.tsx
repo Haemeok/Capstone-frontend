@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
-
-import { useCommonDict } from "@/shared/i18n";
+import { LocalizedLink, useCommonDict } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { PencilIcon } from "@/shared/ui/icons";
 import { DialogTitle } from "@/shared/ui/shadcn/dialog";
@@ -49,7 +47,7 @@ const RecipeMoreActionsSheet = ({
               : "flex flex-col gap-0"
           }
         >
-          <Link
+          <LocalizedLink
             href={`/recipes/${target.id}/edit`}
             className={
               isMobile
@@ -60,7 +58,7 @@ const RecipeMoreActionsSheet = ({
             {!isMobile && <PencilIcon size={20} />}
             <p>{t.actions.edit}</p>
             {isMobile && <PencilIcon size={20} />}
-          </Link>
+          </LocalizedLink>
           <div className={dividerClass} />
           <VisibilityRowAction
             recipeId={target.id}

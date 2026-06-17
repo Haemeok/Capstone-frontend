@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 import { Pencil, Wand2 } from "lucide-react";
 
-import { useCommonDict, useLocalizedRouter } from "@/shared/i18n";
+import {
+  LocalizedLink,
+  useCommonDict,
+  useLocalizedRouter,
+} from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { Visibility } from "@/entities/recipe/model/types";
@@ -85,14 +88,14 @@ const RecipeInteractionButtons = ({
       />
       {isOwner && (
         <div className="flex flex-col items-center">
-          <Link
+          <LocalizedLink
             href={`/recipes/${recipeId}/edit`}
             className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
             aria-label={t.actions.editRecipeAria}
             onClick={() => triggerHaptic("Light")}
           >
             <Pencil width={24} height={24} />
-          </Link>
+          </LocalizedLink>
           <p className="mt-1 text-sm font-bold">{t.actions.edit}</p>
         </div>
       )}

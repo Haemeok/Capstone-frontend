@@ -2,11 +2,10 @@
 
 import { useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useRecipeFormDict } from "@/shared/i18n";
+import { useLocalizedRouter, useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
@@ -20,7 +19,7 @@ import {
 } from "../config";
 
 export const useRecipeCreationForm = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { addToast } = useToastStore();
   const { submitRecipe, isPending, error } = useSubmitRecipe();
   const { validation } = useRecipeFormDict();

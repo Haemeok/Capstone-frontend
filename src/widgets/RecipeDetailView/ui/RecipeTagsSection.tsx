@@ -1,8 +1,7 @@
-import Link from "next/link";
-
 import { ChevronRight } from "lucide-react";
 
 import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
+import { LocalizedLink } from "@/shared/i18n";
 
 type RecipeTagsSectionProps = {
   tags: string[];
@@ -34,7 +33,7 @@ export default function RecipeTagsSection({ tags }: RecipeTagsSectionProps) {
           }
 
           return (
-            <Link
+            <LocalizedLink
               key={tag}
               href={`/recipes/category/${tagDef.code}`}
               className="border-olive-light/70 text-ink group inline-flex items-center gap-1.5 rounded-full border bg-white py-2 pr-2.5 pl-3.5 text-sm font-medium shadow-sm transition-all active:scale-[0.97] active:shadow-none"
@@ -44,7 +43,7 @@ export default function RecipeTagsSection({ tags }: RecipeTagsSectionProps) {
                 className="text-olive-light h-3.5 w-3.5 transition-transform group-active:translate-x-0.5"
                 strokeWidth={2.5}
               />
-            </Link>
+            </LocalizedLink>
           );
         })}
       </div>

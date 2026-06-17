@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
-import { format, useRatingsDict } from "@/shared/i18n";
+import { format, useLocalizedRouter, useRatingsDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import Circle from "@/shared/ui/Circle";
 import { Container } from "@/shared/ui/Container";
@@ -22,7 +22,7 @@ const ReviewPage = () => {
   const { user } = useUserStore();
   const { addToast } = useToastStore();
   const { recipeId } = useParams<{ recipeId: string }>();
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { form: t } = useRatingsDict();
   const { recipeData } = useRecipeDetailQuery(recipeId);
 

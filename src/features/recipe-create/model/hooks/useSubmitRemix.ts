@@ -1,10 +1,8 @@
-import { useRouter } from "next/navigation";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { ApiError, getErrorData } from "@/shared/api/errors";
 import { handleS3Upload } from "@/shared/api/file";
-import { useRecipeFormDict } from "@/shared/i18n";
+import { useLocalizedRouter, useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { FileInfoRequest, FileObject } from "@/shared/types";
 
@@ -28,7 +26,7 @@ type SubmitRemixVars = {
 };
 
 export const useSubmitRemix = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { addToast } = useToastStore();
   const { ui } = useRecipeFormDict();
   const queryClient = useQueryClient();

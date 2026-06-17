@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-
 import { Bookmark } from "lucide-react";
 import { motion } from "motion/react";
+
+import { LocalizedLink } from "@/shared/i18n";
 
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
 
@@ -63,12 +63,12 @@ export const DuplicateRecipeCard = ({
     </div>
 
     <div className="space-y-3">
-      <Link
+      <LocalizedLink
         href={`/recipes/${recipeId}`}
         className="bg-olive-light flex h-14 w-full items-center justify-center gap-2 rounded-2xl text-lg font-bold text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
       >
         레시피 보러가기
-      </Link>
+      </LocalizedLink>
 
       {!isFavorited && (
         <button

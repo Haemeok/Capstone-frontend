@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { useIsApp } from "@/shared/hooks/useIsApp";
 import { useIsExternalEntry } from "@/shared/hooks/useIsExternalEntry";
+import { useLocalizedRouter } from "@/shared/i18n";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { useRecipeStatus } from "@/features/recipe-status";
@@ -26,7 +25,7 @@ export default function RecipeNavbar({
   const { status, recipeId } = useRecipeStatus();
   const isApp = useIsApp();
   const isExternalEntry = useIsExternalEntry();
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const shouldRedirectToSearch = !isApp && isExternalEntry;
   const handleBack = shouldRedirectToSearch
