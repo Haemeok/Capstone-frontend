@@ -5,6 +5,7 @@ import IngredientRecipesSlide from "../IngredientRecipesSlide";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => "/",
 }));
 
 class ResizeObserverMock {
