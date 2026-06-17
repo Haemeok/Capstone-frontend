@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import {
   NUTRITION_RANGES,
   type NutritionFilterKey,
 } from "@/shared/config/constants/recipe";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { countryCodec } from "@/shared/lib/filters";
 import {
   type NutritionFilterValues,
@@ -15,7 +16,7 @@ import {
 } from "@/shared/lib/nutrition/parseNutritionParams";
 
 export const useNutritionParams = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const searchParams = useSearchParams();
 
   const nutritionParams = parseNutritionParams(searchParams);

@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
+import { useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
@@ -12,7 +11,7 @@ import RecentlyViewedRecipes from "./ui/RecentlyViewedRecipes";
 import RecentSearchChips from "./ui/RecentSearchChips";
 
 const SearchDiscoveryFocused = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const handleBack = () => {
     triggerHaptic("Light");

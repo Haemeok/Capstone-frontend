@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
-
 import { Bookmark } from "lucide-react";
 
+import { LocalizedLink } from "@/shared/i18n";
 import { useChromeDict } from "@/shared/i18n/useChromeDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
@@ -15,7 +14,7 @@ const SaveButton = () => {
   };
 
   return (
-    <Link
+    <LocalizedLink
       href="/recipe-books"
       onClick={handleClick}
       aria-label={nav.savedBooksAria}
@@ -24,7 +23,7 @@ const SaveButton = () => {
       <div className="relative h-fit w-fit p-1">
         <Bookmark size={24} className="text-ink-sub" />
       </div>
-    </Link>
+    </LocalizedLink>
   );
 };
 

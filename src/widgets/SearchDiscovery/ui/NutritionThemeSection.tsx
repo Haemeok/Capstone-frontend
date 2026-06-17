@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
-
 import {
   ICON_BASE_URL,
   NUTRITION_THEMES,
   NutritionThemeKey,
 } from "@/shared/config/constants/recipe";
+import { LocalizedLink } from "@/shared/i18n";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
@@ -41,7 +40,7 @@ const NutritionThemeSection = () => {
       {themeKeys.map((key) => {
         const theme = NUTRITION_THEMES[key];
         return (
-          <Link
+          <LocalizedLink
             key={key}
             href={buildNutritionHref(key)}
             onClick={() => triggerHaptic("Light")}
@@ -58,7 +57,7 @@ const NutritionThemeSection = () => {
             <span className="text-ink text-sm font-medium whitespace-nowrap">
               {t.nutritionThemes[key].label}
             </span>
-          </Link>
+          </LocalizedLink>
         );
       })}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useLocalizedRouter } from "@/shared/i18n";
 
 import { SearchInput } from "@/features/search-input";
 
@@ -8,7 +8,7 @@ import NotificationButton from "./NotificationButton";
 import SavedRecipeBooksButton from "./SavedRecipeBooksButton";
 
 const HomeHeader = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const handleSearchFocus = () => {
     router.push("/search?focused=1", { scroll: false });

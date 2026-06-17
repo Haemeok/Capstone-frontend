@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { useRecentSearches } from "@/shared/hooks/useRecentSearches";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { queryCodec } from "@/shared/lib/filters";
 
 export const useSearchQuery = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const searchParams = useSearchParams();
   const q = queryCodec.decode(searchParams.get("q"));
   const { addSearch } = useRecentSearches();

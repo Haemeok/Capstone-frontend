@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import PrevButton from "@/shared/ui/PrevButton";
 
@@ -14,7 +14,7 @@ import { NutritionFilterChipButton } from "@/features/recipe-search/ui/Nutrition
 import { SearchInput } from "@/features/search-input";
 
 export const SearchFilters = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const handleBack = () => {
     triggerHaptic("Light");

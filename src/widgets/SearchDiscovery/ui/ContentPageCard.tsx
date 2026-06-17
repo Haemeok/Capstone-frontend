@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
-
 import { ContentPage } from "@/shared/config/constants/content-pages";
+import { LocalizedLink } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
@@ -17,7 +16,7 @@ const ContentPageCard = ({ page, copy }: ContentPageCardProps) => {
   const isYoutube = page.searchParams.types?.includes("YOUTUBE");
 
   return (
-    <Link
+    <LocalizedLink
       href={buildSearchResultsUrl(page.searchParams)}
       onClick={() => triggerHaptic("Light")}
       className="group block w-[210px] flex-shrink-0 cursor-pointer"
@@ -47,7 +46,7 @@ const ContentPageCard = ({ page, copy }: ContentPageCardProps) => {
           </p>
         )}
       </div>
-    </Link>
+    </LocalizedLink>
   );
 };
 

@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { useRouter } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 export const useResetSearchFilters = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   return useCallback(() => {
     triggerHaptic("Light");

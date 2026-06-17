@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
+import { useLocalizedRouter } from "@/shared/i18n";
 import {
   useSearchDiscoveryDict,
   useSearchDiscoveryLocale,
@@ -18,7 +17,7 @@ import PriceRangeSection from "./ui/PriceRangeSection";
 import SaveButton from "./ui/SaveButton";
 
 const SearchDiscoveryDefault = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const t = useSearchDiscoveryDict();
   const locale = useSearchDiscoveryLocale();
 

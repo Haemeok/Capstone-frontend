@@ -1,16 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { X } from "lucide-react";
 
 import { useRecentSearches } from "@/shared/hooks/useRecentSearches";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 
 const RecentSearchChips = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { searches, isLoaded, removeSearch, clearAll } = useRecentSearches();
   const t = useSearchDiscoveryDict();
 
