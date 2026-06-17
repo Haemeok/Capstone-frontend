@@ -162,7 +162,7 @@ const localPlugin = {
       create(context) {
         const maxLength = context.options[0]?.maxLength ?? 80;
         const isDirective = (v) =>
-          /^[\s*]*(eslint-|@ts-|@type|prettier-|biome-|c8 |istanbul|<reference)/.test(
+          /^[\s*]*(eslint-|@ts-|@type|prettier-|biome-|c8 |istanbul|<reference|i18n-ignore)/.test(
             v
           );
         return {
