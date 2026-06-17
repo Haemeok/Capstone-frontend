@@ -41,6 +41,17 @@ const collectLiterals = (
         out.push({ file, line: line + 1, text: node.text.trim() });
       }
     }
+    if (ts.isTemplateExpression(node)) {
+      const parts = [node.head, ...node.templateSpans.map((s) => s.literal)];
+      for (const part of parts) {
+        if (re.test(part.text)) {
+          const { line } = sf.getLineAndCharacterOfPosition(part.getStart(sf));
+          if (!hasIgnore(lines, line)) {
+            out.push({ file, line: line + 1, text: part.text.trim() });
+          }
+        }
+      }
+    }
     ts.forEachChild(node, visit);
   };
   visit(sf);
