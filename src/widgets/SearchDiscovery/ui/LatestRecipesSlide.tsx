@@ -3,7 +3,10 @@
 import type { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
+import {
+  useSearchDiscoveryDict,
+  useSearchDiscoveryLocale,
+} from "@/shared/i18n/useSearchDiscoveryDict";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 import { getNextPageParam } from "@/shared/lib/utils";
 
@@ -26,6 +29,7 @@ const LATEST_RECIPES_QUERY_KEY = [
 
 const LatestRecipesSlide = () => {
   const t = useSearchDiscoveryDict();
+  const locale = useSearchDiscoveryLocale();
   const { data, isPending, error } = useInfiniteScroll<
     DetailedRecipesApiResponse,
     Error,
@@ -53,6 +57,7 @@ const LatestRecipesSlide = () => {
       recipes={recipes}
       isLoading={isPending}
       error={error}
+      locale={locale}
     />
   );
 };
