@@ -1,4 +1,4 @@
-import { smartAppBannerMessages } from "..";
+import { cookingUnitsMessages, smartAppBannerMessages } from "..";
 import { getDictionary } from "../getDictionary";
 import { findHangulInDict } from "../testing/staticScan";
 
@@ -13,4 +13,9 @@ it("T-09: en 사전 전 namespace에 한국어가 없다", () => {
 it("T-09: smartAppBanner ja/en에 한국어가 없다", () => {
   expect(findHangulInDict(smartAppBannerMessages.ja)).toEqual([]);
   expect(findHangulInDict(smartAppBannerMessages.en)).toEqual([]);
+});
+
+it("T-09: cookingUnits ja/en에 한국어가 없다", () => {
+  expect(findHangulInDict(cookingUnitsMessages.ja)).toEqual([]);
+  expect(findHangulInDict(cookingUnitsMessages.en)).toEqual([]);
 });
