@@ -8,4 +8,9 @@ export const youtube: YoutubeDict = {
   inputPlaceholder: "Paste a YouTube link",
   inputClearLabel: "Clear input",
   invalidUrl: "Please enter a valid YouTube URL",
+  trendingTitle: "Trending recipes",
+  trendingEmpty: "No trending recipes yet.",
+  trendingPrevAria: "Previous",
+  trendingNextAria: "Next",
+  viewCountLabel: "{count} views",
 };

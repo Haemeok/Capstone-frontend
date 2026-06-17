@@ -8,4 +8,9 @@ export const youtube: YoutubeDict = {
   inputPlaceholder: "유튜브 링크를 붙여넣으세요",
   inputClearLabel: "입력 지우기",
   invalidUrl: "올바른 유튜브 링크를 입력해주세요",
+  trendingTitle: "요즘 뜨는 레시피",
+  trendingEmpty: "추천 레시피가 없습니다.",
+  trendingPrevAria: "이전",
+  trendingNextAria: "다음",
+  viewCountLabel: "조회수 {count}회",
 };

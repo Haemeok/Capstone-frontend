@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import type { Locale, YoutubeDict } from "@/shared/i18n";
+import { format, formatCompactNumber } from "@/shared/i18n/format";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -28,14 +30,23 @@ const formatViewCount = (count: number): string => {
 
 type TrendingRecipesClientProps = {
   recipes: TrendingYoutubeRecipe[];
+  dict: YoutubeDict;
+  locale: Locale;
   className?: string;
 };
 
 export const TrendingRecipesClient = ({
   recipes,
+  dict,
+  locale,
   className,
 }: TrendingRecipesClientProps) => {
   const { selectTrendingRecipe } = useYoutubeUrl();
+
+  const formatViews = (count: number): string =>
+    locale === "ko"
+      ? formatViewCount(count)
+      : formatCompactNumber(count, locale);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -73,13 +84,13 @@ export const TrendingRecipesClient = ({
   return (
     <div className={cn("mx-auto w-full max-w-2xl", className)}>
       <div className="mb-3 flex items-center justify-between px-1">
-        <h2 className="text-xl font-semibold">요즘 뜨는 레시피</h2>
+        <h2 className="text-xl font-semibold">{dict.trendingTitle}</h2>
         <div className="flex gap-2">
           <button
             onClick={handlePrev}
             disabled={!canScrollLeft}
             className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-gray-200 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="이전"
+            aria-label={dict.trendingPrevAria}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -87,7 +98,7 @@ export const TrendingRecipesClient = ({
             onClick={handleNext}
             disabled={!canScrollRight}
             className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-gray-200 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="다음"
+            aria-label={dict.trendingNextAria}
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -100,7 +111,7 @@ export const TrendingRecipesClient = ({
       >
         {recipes.length === 0 ? (
           <p className="text-ink-muted w-full py-8 text-center text-sm">
-            추천 레시피가 없습니다.
+            {dict.trendingEmpty}
           </p>
         ) : (
           recipes.map((recipe) => (
@@ -129,7 +140,9 @@ export const TrendingRecipesClient = ({
                   {recipe.channelName}
                 </p>
                 <p className="text-ink-muted text-sm">
-                  조회수 {formatViewCount(recipe.viewCount)}회
+                  {format(dict.viewCountLabel, {
+                    count: formatViews(recipe.viewCount),
+                  })}
                 </p>
               </div>
             </button>

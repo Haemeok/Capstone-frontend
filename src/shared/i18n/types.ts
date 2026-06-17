@@ -146,6 +146,11 @@ export type YoutubeDict = {
   inputPlaceholder: string;
   inputClearLabel: string;
   invalidUrl: string;
+  trendingTitle: string;
+  trendingEmpty: string;
+  trendingPrevAria: string;
+  trendingNextAria: string;
+  viewCountLabel: string;
 };
 
 export type IngredientDetailDict = {

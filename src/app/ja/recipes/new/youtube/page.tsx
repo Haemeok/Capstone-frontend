@@ -46,6 +46,7 @@ const Page = async ({ searchParams }: Props) => {
           trendingRecipes={trendingRecipes}
           initialUrl={url ?? ""}
           dict={dict.youtube}
+          locale="ja"
         />
       </Container>
       <BottomAnchorAdSlot />

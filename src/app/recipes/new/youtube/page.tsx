@@ -50,6 +50,7 @@ const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
           trendingRecipes={trendingRecipes}
           initialUrl={url ?? ""}
           dict={dict.youtube}
+          locale="ko"
         />
       </Container>
       <BottomAnchorAdSlot />

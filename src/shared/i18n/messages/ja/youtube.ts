@@ -8,4 +8,9 @@ export const youtube: YoutubeDict = {
   inputPlaceholder: "YouTubeのリンクを貼り付けてください",
   inputClearLabel: "入力を消去",
   invalidUrl: "有効なYouTubeリンクを入力してください",
+  trendingTitle: "話題のレシピ",
+  trendingEmpty: "おすすめのレシピがありません。",
+  trendingPrevAria: "前へ",
+  trendingNextAria: "次へ",
+  viewCountLabel: "{count}回視聴",
 };

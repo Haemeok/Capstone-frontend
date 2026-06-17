@@ -12,6 +12,11 @@ const SENTINEL: YoutubeDict = {
   inputPlaceholder: "__PH__",
   inputClearLabel: "__CLEAR__",
   invalidUrl: "__INVALID__",
+  trendingTitle: "__TRENDING_TITLE__",
+  trendingEmpty: "__TRENDING_EMPTY__",
+  trendingPrevAria: "__PREV__",
+  trendingNextAria: "__NEXT__",
+  viewCountLabel: "__VIEWS__ {count}",
 };
 
 describe("YoutubeImportHero i18n (T-01)", () => {

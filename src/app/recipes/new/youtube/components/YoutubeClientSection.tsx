@@ -3,7 +3,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 
-import type { YoutubeDict } from "@/shared/i18n";
+import type { Locale, YoutubeDict } from "@/shared/i18n";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 import { TrendingYoutubeRecipe } from "@/entities/recipe/model/types";
@@ -22,12 +22,14 @@ type YoutubeClientSectionProps = {
   trendingRecipes: TrendingYoutubeRecipe[];
   initialUrl: string;
   dict: YoutubeDict;
+  locale: Locale;
 };
 
 export const YoutubeClientSection = ({
   trendingRecipes,
   initialUrl,
   dict,
+  locale,
 }: YoutubeClientSectionProps) => {
   const [isLoginDrawerOpen, setIsLoginDrawerOpen] = useState(false);
 
@@ -44,7 +46,12 @@ export const YoutubeClientSection = ({
         </section>
 
         <div className="mt-4 w-full overflow-hidden rounded-3xl bg-gray-50/50">
-          <TrendingRecipesClient recipes={trendingRecipes} className="w-full" />
+          <TrendingRecipesClient
+            recipes={trendingRecipes}
+            dict={dict}
+            locale={locale}
+            className="w-full"
+          />
         </div>
       </div>
 
