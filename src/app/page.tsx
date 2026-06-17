@@ -69,6 +69,7 @@ const HomePage = async () => {
             period="weekly"
             isStatic
             staticRecipes={staticPopularRecipes.content}
+            locale="ko"
           />
 
           <RecipeSlideWithErrorBoundary
@@ -77,6 +78,7 @@ const HomePage = async () => {
             maxCost={10000}
             isStatic
             staticRecipes={staticBudgetRecipes.content}
+            locale="ko"
           />
         </div>
       </Container>

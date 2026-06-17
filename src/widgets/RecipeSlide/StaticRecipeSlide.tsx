@@ -12,12 +12,14 @@ type StaticRecipeSlideProps = {
   title: string;
   to?: string;
   staticRecipes: StaticDetailedRecipeGridItem[];
+  locale?: "ko" | "ja" | "en";
 };
 
 const StaticRecipeSlide = ({
   title,
   to,
   staticRecipes,
+  locale,
 }: StaticRecipeSlideProps) => {
   const recipeIds = staticRecipes.map((recipe) => recipe.id);
 
@@ -38,6 +40,7 @@ const StaticRecipeSlide = ({
       recipes={recipesWithStatus}
       isLoading={isLoading}
       error={null}
+      locale={locale}
     />
   );
 };

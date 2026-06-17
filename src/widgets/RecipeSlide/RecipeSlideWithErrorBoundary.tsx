@@ -15,6 +15,7 @@ type RecipeSlideWithErrorBoundaryProps = {
   period?: "weekly" | "monthly";
   isStatic?: boolean;
   staticRecipes?: StaticDetailedRecipeGridItem[];
+  locale?: "ko" | "ja" | "en";
 };
 
 const RecipeSlideWithErrorBoundary = ({
@@ -27,6 +28,7 @@ const RecipeSlideWithErrorBoundary = ({
   period,
   isStatic = false,
   staticRecipes = [],
+  locale,
 }: RecipeSlideWithErrorBoundaryProps) => {
   return (
     <ErrorBoundary
@@ -46,6 +48,7 @@ const RecipeSlideWithErrorBoundary = ({
           title={title}
           to={to}
           staticRecipes={staticRecipes}
+          locale={locale}
         />
       ) : (
         <DynamicRecipeSlide
@@ -56,6 +59,7 @@ const RecipeSlideWithErrorBoundary = ({
           tags={tags}
           maxCost={maxCost}
           period={period}
+          locale={locale}
         />
       )}
     </ErrorBoundary>

@@ -11,6 +11,7 @@ type DynamicRecipeSlideProps = {
   tags?: string[];
   maxCost?: number;
   period?: "weekly" | "monthly";
+  locale?: "ko" | "ja" | "en";
 };
 
 const DynamicRecipeSlide = ({
@@ -21,6 +22,7 @@ const DynamicRecipeSlide = ({
   tags,
   maxCost,
   period,
+  locale,
 }: DynamicRecipeSlideProps) => {
   const {
     data: recipes,
@@ -41,6 +43,7 @@ const DynamicRecipeSlide = ({
       recipes={recipes}
       isLoading={isLoading}
       error={error}
+      locale={locale}
     />
   );
 };
