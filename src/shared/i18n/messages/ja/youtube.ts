@@ -32,4 +32,5 @@ export const youtube: YoutubeDict = {
   errorCloseLabel: "エラーを閉じる",
   errorCloseButton: "閉じる",
   pendingLoadError: "取り込み中のレシピの状態を読み込めませんでした。",
+  pendingPlaceholder: "レシピ待機中",
 };

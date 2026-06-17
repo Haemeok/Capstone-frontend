@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 
 import { youtubeMessages } from "@/shared/i18n";
 
+const HANGUL = /[가-힣]/;
+
 import { useYoutubeImportStoreV2 } from "../../model/store";
 import type { ActiveJob, YoutubeMeta } from "../../model/types";
 import { PendingRecipeCard } from "../PendingRecipeCard";
@@ -51,6 +53,18 @@ describe("PendingRecipe i18n", () => {
       screen.getByText(youtubeMessages[loc].pendingSectionTitle)
     ).toBeInTheDocument();
   });
+
+  it.each([["/ja/users/u1"] as const, ["/en/users/u1"] as const])(
+    "T-09: %s 섹션 렌더 트리에 한글이 없다(placeholder 포함)",
+    (path) => {
+      mockPathname.mockReturnValue(path);
+      seed({ ...baseJob, state: "polling", progress: 10 });
+      const { container } = render(
+        <PendingRecipeSection pendingJobKeys={["k1"]} />
+      );
+      expect(container.textContent ?? "").not.toMatch(HANGUL);
+    }
+  );
 
   it("T-10: pending 진행 라벨이 `<extractingStatus> · N%` 형식", () => {
     mockPathname.mockReturnValue("/en/users/u1");

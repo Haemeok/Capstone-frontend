@@ -32,4 +32,5 @@ export const youtube: YoutubeDict = {
   errorCloseLabel: "에러 닫기",
   errorCloseButton: "닫기",
   pendingLoadError: "추출 중인 레시피 상태를 불러올 수 없어요",
+  pendingPlaceholder: "레시피 대기중",
 };

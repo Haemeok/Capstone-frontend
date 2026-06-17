@@ -35,6 +35,7 @@ const SENTINEL: YoutubeDict = {
   errorCloseLabel: "__ERR_LABEL__",
   errorCloseButton: "__ERR_BTN__",
   pendingLoadError: "__PENDING_ERR__",
+  pendingPlaceholder: "__PENDING_PLACEHOLDER__",
 };
 
 describe("YoutubeImportHero i18n (T-01)", () => {

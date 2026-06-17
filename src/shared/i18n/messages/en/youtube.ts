@@ -32,4 +32,5 @@ export const youtube: YoutubeDict = {
   errorCloseLabel: "Dismiss error",
   errorCloseButton: "Dismiss",
   pendingLoadError: "We couldn't load your imports right now.",
+  pendingPlaceholder: "Waiting…",
 };

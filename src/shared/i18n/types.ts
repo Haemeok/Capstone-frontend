@@ -169,6 +169,7 @@ export type YoutubeDict = {
   errorCloseLabel: string;
   errorCloseButton: string;
   pendingLoadError: string;
+  pendingPlaceholder: string;
 };
 
 export type IngredientDetailDict = {
