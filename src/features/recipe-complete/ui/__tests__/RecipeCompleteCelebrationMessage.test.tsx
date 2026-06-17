@@ -5,18 +5,18 @@ import { COOKING_COMPLETION_MESSAGE_DURATION_MS } from "@/shared/config/constant
 import RecipeCompleteCelebrationMessage from "../RecipeCompleteCelebrationMessage";
 
 describe("RecipeCompleteCelebrationMessage", () => {
-  it("T-06: title/body 렌더, 절약액·캘린더 없음", () => {
+  it("T-06: title/body props 렌더, 절약액·캘린더 없음", () => {
     render(
       <RecipeCompleteCelebrationMessage
-        title="おつかれさまでした！🎉"
-        body="召し上がれ"
+        title="CELEBRATION_TITLE"
+        body="CELEBRATION_BODY"
         isOpen
         onClose={jest.fn()}
       />
     );
-    expect(screen.getByText("おつかれさまでした！🎉")).toBeInTheDocument();
-    expect(screen.getByText("召し上がれ")).toBeInTheDocument();
-    expect(screen.queryByText(/절약|캘린더/)).toBeNull();
+    expect(screen.getByText("CELEBRATION_TITLE")).toBeInTheDocument();
+    expect(screen.getByText("CELEBRATION_BODY")).toBeInTheDocument();
+    expect(screen.queryByText(/절약|캘린더|원/)).toBeNull();
   });
 
   it("T-05: duration 경과 후 onClose 1회 호출", () => {

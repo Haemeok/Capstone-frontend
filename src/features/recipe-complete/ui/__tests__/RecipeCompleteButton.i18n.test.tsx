@@ -4,6 +4,10 @@ import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 
 import RecipeCompleteButton from "../RecipeCompleteButton";
 
+const ko = getDictionary("ko").recipeDetail;
+const ja = getDictionary("ja").recipeDetail;
+const en = getDictionary("en").recipeDetail;
+
 const mockState = {
   completeRecipe: jest.fn(),
   isCompleted: false,
@@ -57,27 +61,27 @@ beforeEach(() => {
 });
 
 describe("RecipeCompleteButton i18n", () => {
-  it("T-01: ja -> plain CTA, 절약액 없음", () => {
+  it("T-01: ja -> plain CTA(사전값), 절약액 없음", () => {
     renderWith("ja");
     const btn = screen.getByRole("button");
-    expect(btn).toHaveTextContent("作りました");
+    expect(btn).toHaveTextContent(ja.completeCtaPlain);
     expect(btn).not.toHaveTextContent("3,000");
-    expect(btn).not.toHaveTextContent("お得");
+    expect(btn).not.toHaveTextContent(ko.completeCtaPlain);
   });
 
-  it("T-02: en -> plain CTA, 절약액 없음", () => {
+  it("T-02: en -> plain CTA(사전값), 절약액 없음", () => {
     renderWith("en");
     const btn = screen.getByRole("button");
-    expect(btn).toHaveTextContent("I made this");
+    expect(btn).toHaveTextContent(en.completeCtaPlain);
     expect(btn).not.toHaveTextContent("3,000");
-    expect(btn).not.toHaveTextContent("saved");
+    expect(btn).not.toHaveTextContent(ko.completeCtaPlain);
   });
 
-  it("T-07: ko -> 절약액 CTA (anchor)", () => {
+  it("T-07: ko -> 절약액 CTA, 절약액 노출 (anchor)", () => {
     renderWith("ko");
     const btn = screen.getByRole("button");
-    expect(btn).toHaveTextContent("요리 완료");
     expect(btn).toHaveTextContent("3,000");
+    expect(btn).not.toHaveTextContent(ja.completeCtaPlain);
   });
 
   it("T-03: ja 클릭 -> completeRecipe 1회 호출", () => {
@@ -90,7 +94,7 @@ describe("RecipeCompleteButton i18n", () => {
     mockState.isCompleted = true;
     renderWith("ja");
     const btn = screen.getByRole("button");
-    expect(btn).toHaveTextContent("すでに作った記録があります");
+    expect(btn).toHaveTextContent(ja.completeAlready);
     expect(btn).toBeDisabled();
   });
 
@@ -106,7 +110,7 @@ describe("RecipeCompleteButton reward branch", () => {
   it("T-04: ja showReward -> 축하 모달, LevelUp 아님", () => {
     mockState.showReward = true;
     renderWith("ja");
-    expect(screen.getByText("おつかれさまでした！🎉")).toBeInTheDocument();
+    expect(screen.getByText(ja.completeCelebrationTitle)).toBeInTheDocument();
     expect(screen.queryByTestId("level-up-modal")).toBeNull();
   });
 
@@ -114,6 +118,6 @@ describe("RecipeCompleteButton reward branch", () => {
     mockState.showReward = true;
     renderWith("ko");
     expect(screen.getByTestId("level-up-modal")).toBeInTheDocument();
-    expect(screen.queryByText("요리 완료! 🎉")).toBeNull();
+    expect(screen.queryByText(ko.completeCelebrationTitle)).toBeNull();
   });
 });
