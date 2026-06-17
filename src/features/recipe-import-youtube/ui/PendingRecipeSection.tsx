@@ -1,5 +1,7 @@
 "use client";
 
+import { useYoutubeDict } from "@/shared/i18n";
+
 import { PendingRecipeCard } from "./PendingRecipeCard";
 import { PlaceholderCard } from "./PlaceholderCard";
 
@@ -12,6 +14,7 @@ type PendingRecipeSectionProps = {
 export const PendingRecipeSection = ({
   pendingJobKeys,
 }: PendingRecipeSectionProps) => {
+  const t = useYoutubeDict();
   const placeholderCount = Math.max(
     0,
     MIN_ITEMS_PER_ROW - pendingJobKeys.length
@@ -24,7 +27,7 @@ export const PendingRecipeSection = ({
           <span className="bg-olive-light absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
           <span className="bg-olive-light relative inline-flex h-2 w-2 rounded-full" />
         </span>
-        처리 중인 레시피
+        {t.pendingSectionTitle}
       </h3>
       <div className="grid [grid-template-columns:repeat(auto-fill,minmax(160px,1fr))] gap-4 sm:[grid-template-columns:repeat(auto-fill,minmax(165px,1fr))] md:[grid-template-columns:repeat(auto-fill,minmax(170px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(180px,1fr))]">
         {pendingJobKeys.map((key) => (

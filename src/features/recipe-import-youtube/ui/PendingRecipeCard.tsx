@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 
+import { useYoutubeDict } from "@/shared/i18n";
 import {
   extractYouTubeVideoId,
   getYouTubeThumbnailUrls,
@@ -67,6 +68,7 @@ export const PendingRecipeCard = ({
     status,
     job?.startTime ?? mountTime
   );
+  const t = useYoutubeDict();
 
   if (!job) return null;
 
@@ -129,24 +131,27 @@ export const PendingRecipeCard = ({
         <div className="text-ink-muted flex items-center justify-between gap-2 text-[13px]">
           {status === "pending" && (
             <span className="truncate">
-              레시피 추출 중 · {Math.round(progress)}%
+              {t.extractingStatus} · {Math.round(progress)}%
             </span>
           )}
           {status === "success" && (
-            <span className="truncate text-emerald-600">추출 완료</span>
+            <span className="truncate text-emerald-600">
+              {t.extractionSuccessStatus}
+            </span>
           )}
           {status === "error" && (
             <>
               <span className="line-clamp-1 text-red-500">
-                {errorMessage ?? "추출 실패"}
+                {/* 빈 message 시 기본 라벨 노출 */}
+                {errorMessage || t.extractionFailureDefault}
               </span>
               <button
                 type="button"
                 onClick={() => removeJob(idempotencyKey)}
-                aria-label="에러 닫기"
+                aria-label={t.errorCloseLabel}
                 className="hover:text-ink-sub shrink-0 cursor-pointer text-[12px] text-gray-400 underline"
               >
-                닫기
+                {t.errorCloseButton}
               </button>
             </>
           )}
