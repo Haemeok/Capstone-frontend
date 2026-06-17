@@ -15,6 +15,7 @@ jest.mock("@/shared/hooks/useDocumentVisibility", () => ({
 }));
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => "/",
 }));
 jest.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({

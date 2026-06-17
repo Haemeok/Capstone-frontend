@@ -6,6 +6,7 @@ import AIModelSelection from "../index";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => "/",
 }));
 jest.mock("@/entities/user/model/store", () => ({
   useUserStore: () => ({ user: null }),

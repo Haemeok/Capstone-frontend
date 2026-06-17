@@ -40,6 +40,7 @@ jest.mock("next/dynamic", () => ({
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
+  usePathname: () => "/",
 }));
 
 jest.mock("motion/react", () => {
@@ -275,7 +276,7 @@ describe("YoutubePreviewSection — 로그인 사용자 기존 동작 보존", (
     expect(mockOnLoginRequired).not.toHaveBeenCalled();
     expect(mockCreateJob).toHaveBeenCalledTimes(1);
     expect(mockCreateExtractionJobV2).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith("/users/u1?tab=saved");
+    expect(mockPush).toHaveBeenCalledWith("/users/u1?tab=saved", undefined);
   });
 
   it("로그인 + 진행 중 기존 job + 클릭 → 본인 페이지로 이동, mutation 호출 없음", () => {
@@ -287,7 +288,7 @@ describe("YoutubePreviewSection — 로그인 사용자 기존 동작 보존", (
 
     fireEvent.click(screen.getByTestId("confirm-button"));
 
-    expect(mockPush).toHaveBeenCalledWith("/users/u1?tab=saved");
+    expect(mockPush).toHaveBeenCalledWith("/users/u1?tab=saved", undefined);
     expect(mockCreateJob).not.toHaveBeenCalled();
     expect(mockCreateExtractionJobV2).not.toHaveBeenCalled();
   });

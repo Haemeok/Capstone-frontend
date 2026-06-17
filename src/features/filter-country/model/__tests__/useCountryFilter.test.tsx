@@ -3,6 +3,7 @@ import { renderHook } from "@testing-library/react";
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({ replace: jest.fn() })),
   useSearchParams: jest.fn(),
+  usePathname: () => "/",
 }));
 
 import { useSearchParams } from "next/navigation";

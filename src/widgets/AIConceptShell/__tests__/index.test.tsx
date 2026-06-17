@@ -1,4 +1,8 @@
-import { act, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
+
+import { act, render as rtlRender, screen } from "@testing-library/react";
+
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
 
@@ -6,9 +10,14 @@ import { useToastStore } from "@/widgets/Toast";
 
 import AIConceptShell from "../index";
 
+const koDict = getDictionary("ko");
+const render = (ui: ReactNode) =>
+  rtlRender(<DictionaryProvider dict={koDict}>{ui}</DictionaryProvider>);
+
 const mockReplace = jest.fn();
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ replace: mockReplace, push: jest.fn(), back: jest.fn() }),
+  usePathname: () => "/",
 }));
 
 jest.mock("next/dynamic", () => () => {
@@ -116,7 +125,7 @@ describe("AIConceptShell", () => {
       </AIConceptShell>
     );
 
-    expect(mockReplace).toHaveBeenCalledWith("/recipes/recipe-xyz");
+    expect(mockReplace).toHaveBeenCalledWith("/recipes/recipe-xyz", undefined);
   });
 
   it("completed + successToastId 가 있으면 해당 toast 를 dismiss 한다", () => {

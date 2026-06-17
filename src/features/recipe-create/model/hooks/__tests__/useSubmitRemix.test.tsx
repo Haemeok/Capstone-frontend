@@ -102,7 +102,10 @@ describe("useSubmitRemix", () => {
       expect(mockAddToast).toHaveBeenCalledWith(
         expect.objectContaining({ variant: "success" })
       );
-      expect(mockRouter.replace).toHaveBeenCalledWith("/recipes/new-abc");
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        "/recipes/new-abc",
+        undefined
+      );
       expect(onSuccess).toHaveBeenCalled();
       expect(onError).not.toHaveBeenCalled();
     });
@@ -143,7 +146,10 @@ describe("useSubmitRemix", () => {
         files: fileInfos,
       });
       expect(handleS3Upload).toHaveBeenCalledWith(uploads, [mockFileObject]);
-      expect(mockRouter.replace).toHaveBeenCalledWith("/recipes/new-xyz");
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        "/recipes/new-xyz",
+        undefined
+      );
     });
   });
 
@@ -173,7 +179,10 @@ describe("useSubmitRemix", () => {
       expect(mockAddToast).toHaveBeenCalledWith(
         expect.objectContaining({ variant: "error" })
       );
-      expect(mockRouter.replace).toHaveBeenCalledWith("/recipes/ORIGIN_ID");
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        "/recipes/ORIGIN_ID",
+        undefined
+      );
       expect(onError).toHaveBeenCalled();
     });
   });
@@ -204,7 +213,10 @@ describe("useSubmitRemix", () => {
       expect(mockAddToast).toHaveBeenCalledWith(
         expect.objectContaining({ variant: "error" })
       );
-      expect(mockRouter.replace).toHaveBeenCalledWith("/recipes/ORIGIN_ID");
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        "/recipes/ORIGIN_ID",
+        undefined
+      );
       expect(onError).toHaveBeenCalled();
     });
   });

@@ -1,4 +1,8 @@
+import type { ReactNode } from "react";
+
 import { act, renderHook } from "@testing-library/react";
+
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 
 import * as api from "../api";
 import { clearAllPersistedJobs } from "../persistence";
@@ -6,6 +10,11 @@ import { useAIRecipeStoreV2 } from "../store";
 import type { CostEffectiveRequest } from "../types";
 
 jest.mock("../api");
+
+const koDict = getDictionary("ko");
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <DictionaryProvider dict={koDict}>{children}</DictionaryProvider>
+);
 
 const mockRequest: CostEffectiveRequest = {
   targetBudget: 10000,
@@ -31,7 +40,9 @@ describe("useConceptJob", () => {
         .spyOn(api, "createAIRecipeJobV2")
         .mockResolvedValue({ jobId: "job-xyz" });
 
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       await act(async () => {
         await result.current.submit(mockRequest, mockSummary);
@@ -51,7 +62,9 @@ describe("useConceptJob", () => {
         .spyOn(api, "createAIRecipeJobV2")
         .mockRejectedValue(new Error("서버 다운"));
 
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       await act(async () => {
         await result.current.submit(mockRequest, mockSummary);
@@ -65,7 +78,9 @@ describe("useConceptJob", () => {
     it("Error 인스턴스 아닌 throw도 기본 메시지로 처리해야 함", async () => {
       jest.spyOn(api, "createAIRecipeJobV2").mockRejectedValue("문자열 에러");
 
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       await act(async () => {
         await result.current.submit(mockRequest, mockSummary);
@@ -81,7 +96,9 @@ describe("useConceptJob", () => {
         .spyOn(api, "createAIRecipeJobV2")
         .mockResolvedValue({ jobId: "job-1" });
 
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       await act(async () => {
         await result.current.submit(mockRequest, mockSummary);
@@ -98,7 +115,9 @@ describe("useConceptJob", () => {
 
   describe("derived state", () => {
     it("job 없을 때 isPending/isSuccess/isFailed 모두 false", () => {
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       expect(result.current.job).toBeUndefined();
       expect(result.current.isPending).toBe(false);
@@ -108,7 +127,9 @@ describe("useConceptJob", () => {
     });
 
     it("creating 상태일 때 isPending=true", () => {
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       act(() => {
         useAIRecipeStoreV2.getState().createJob(
@@ -129,7 +150,9 @@ describe("useConceptJob", () => {
     });
 
     it("completed 상태일 때 isSuccess=true 그리고 progress=100", () => {
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       act(() => {
         const key = useAIRecipeStoreV2.getState().createJob(
@@ -151,7 +174,9 @@ describe("useConceptJob", () => {
     });
 
     it("failed 상태일 때 isFailed=true", () => {
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       act(() => {
         const key = useAIRecipeStoreV2.getState().createJob(
@@ -174,7 +199,9 @@ describe("useConceptJob", () => {
 
   describe("retry", () => {
     it("retry 호출 시 현재 job 제거", () => {
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       act(() => {
         const key = useAIRecipeStoreV2.getState().createJob(
@@ -200,7 +227,9 @@ describe("useConceptJob", () => {
     });
 
     it("job 없을 때 retry 호출해도 안전 (no-op)", () => {
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       expect(() => {
         act(() => {
@@ -212,7 +241,9 @@ describe("useConceptJob", () => {
 
   describe("concept 격리", () => {
     it("다른 concept의 job은 본 훅에 노출되지 않아야 함", () => {
-      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"));
+      const { result } = renderHook(() => useConceptJob("COST_EFFECTIVE"), {
+        wrapper,
+      });
 
       act(() => {
         useAIRecipeStoreV2.getState().createJob(

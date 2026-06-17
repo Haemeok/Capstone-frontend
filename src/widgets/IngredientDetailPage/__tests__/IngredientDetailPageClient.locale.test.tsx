@@ -7,6 +7,7 @@ import IngredientDetailPageClient from "../IngredientDetailPageClient";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
+  usePathname: () => "/",
 }));
 
 const detail: IngredientDetailView = {

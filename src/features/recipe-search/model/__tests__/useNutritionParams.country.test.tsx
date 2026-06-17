@@ -3,6 +3,7 @@ import { renderHook } from "@testing-library/react";
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useSearchParams: jest.fn(),
+  usePathname: () => "/",
 }));
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -24,7 +25,8 @@ describe("useNutritionParams 국가 적용", () => {
     result.current.updateNutritionAndTypes({}, ["YOUTUBE"], ["일본"]);
 
     expect(replace).toHaveBeenCalledWith(
-      expect.stringContaining("creatorCountryTags=JP")
+      expect.stringContaining("creatorCountryTags=JP"),
+      undefined
     );
   });
 
@@ -35,7 +37,8 @@ describe("useNutritionParams 국가 적용", () => {
     result.current.updateNutritionAndTypes({}, ["YOUTUBE"], []);
 
     expect(replace).toHaveBeenCalledWith(
-      expect.not.stringContaining("creatorCountryTags")
+      expect.not.stringContaining("creatorCountryTags"),
+      undefined
     );
   });
 

@@ -1,10 +1,19 @@
+import type { ReactNode } from "react";
+
 import { render, screen } from "@testing-library/react";
+
+import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 
 import UsageLimitBanner from "../UsageLimitBanner";
 
+const renderBanner = (ui: ReactNode) =>
+  render(
+    <DictionaryProvider dict={getDictionary("ko")}>{ui}</DictionaryProvider>
+  );
+
 describe("UsageLimitBanner", () => {
   it("기본 메시지와 서브 메시지를 렌더링해야 함", () => {
-    render(<UsageLimitBanner />);
+    renderBanner(<UsageLimitBanner />);
 
     expect(
       screen.getByText(/AI 레시피 생성 횟수를 모두 사용했어요/)
@@ -14,14 +23,14 @@ describe("UsageLimitBanner", () => {
 
   it("커스텀 메시지를 렌더링해야 함", () => {
     const customMessage = "유튜브 레시피 추출 횟수를 모두 사용했어요.";
-    render(<UsageLimitBanner message={customMessage} />);
+    renderBanner(<UsageLimitBanner message={customMessage} />);
 
     expect(screen.getByText(customMessage)).toBeInTheDocument();
   });
 
   it("커스텀 서브 메시지를 렌더링해야 함", () => {
     const customSubMessage = "잠시 후 다시 시도해주세요.";
-    render(<UsageLimitBanner subMessage={customSubMessage} />);
+    renderBanner(<UsageLimitBanner subMessage={customSubMessage} />);
 
     expect(screen.getByText(customSubMessage)).toBeInTheDocument();
   });
