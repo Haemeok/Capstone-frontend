@@ -47,6 +47,7 @@ export const TagsFilter = () => {
       availableValues={TAG_DEFINITIONS.map((tag) => `${tag.emoji} ${tag.name}`)}
       header={dict.filters.tagsHeader}
       description={dict.filters.tagsDescription}
+      domain="tags"
     />
   );
 };

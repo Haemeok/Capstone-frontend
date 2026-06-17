@@ -11,6 +11,8 @@ import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Label } from "@/shared/ui/shadcn/label";
 import { RadioGroupItem } from "@/shared/ui/shadcn/radio-group";
 
+import { localizeOptionValue } from "./localizeOptionValue";
+
 type CategoryItemProps = {
   value: string;
   isSelected: boolean;
@@ -23,7 +25,9 @@ const CategoryItem = React.memo(
   ({ value, isSelected, onToggle, isMultiple, domain }: CategoryItemProps) => {
     const { localize } = useTaxonomy();
     const handleChange = () => onToggle(value);
-    const displayValue = domain ? localize(value, domain) : value;
+    const displayValue = domain
+      ? localizeOptionValue(value, domain, localize)
+      : value;
 
     const labelContent = (
       <>
