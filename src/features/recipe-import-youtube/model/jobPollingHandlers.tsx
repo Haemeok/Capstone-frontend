@@ -1,6 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 
 import type { useLocalizedRouter } from "@/shared/i18n";
+import { youtubeMessages } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { trackReviewAction } from "@/shared/lib/review";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
@@ -76,7 +77,7 @@ export const completePollingJob = (
     dismissible: "both",
     richContent: {
       thumbnail: meta.thumbnailUrl,
-      title: "레시피 추출이 완료 되었어요!",
+      title: youtubeMessages[job.locale].extractionCompleteTitle,
       subtitle: meta.title,
       badgeIcon: <YouTubeIconBadge className="h-6 w-6" />,
       recipeId,
@@ -123,7 +124,7 @@ export const recoverZombieJob = async (
       deps,
       job.idempotencyKey,
       undefined,
-      "최대 재시도 횟수를 초과했습니다. 다시 시도해주세요."
+      youtubeMessages[job.locale].maxRetryExceeded
     );
     return;
   }
