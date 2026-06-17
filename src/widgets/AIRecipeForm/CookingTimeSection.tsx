@@ -22,6 +22,7 @@ const CookingTimeSection = () => {
     setValue(
       "cookingTime",
       COOKING_TIME_ITEMS[label as keyof typeof COOKING_TIME_ITEMS] ??
+        // i18n-ignore: label-as-key (policy-i18n-label-doubles-as-key)
         COOKING_TIME_ITEMS["10분이내"]
     );
 

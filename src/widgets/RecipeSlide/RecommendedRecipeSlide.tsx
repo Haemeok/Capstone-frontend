@@ -17,6 +17,7 @@ type RecommendedRecipeSlideProps = {
   locale?: "ko" | "ja" | "en";
 };
 
+// i18n-ignore: label-as-key (서버 태그 매칭값, policy-i18n-label-doubles-as-key)
 const CHEF_TAG = "👨‍🍳 셰프 레시피";
 
 const RecommendedRecipeSlide = ({

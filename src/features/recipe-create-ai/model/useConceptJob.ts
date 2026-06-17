@@ -65,11 +65,11 @@ export const useConceptJob = <C extends AIModelId>(
         const message =
           error instanceof Error
             ? error.message
-            : "레시피 생성에 실패했습니다.";
+            : t.aiRecipe.error.defaultMessage;
         failJob(idempotencyKey, undefined, message);
       }
     },
-    [concept, createJob, setJobId, failJob, modelName, locale]
+    [concept, createJob, setJobId, failJob, modelName, locale, t]
   );
 
   const retry = useCallback(() => {

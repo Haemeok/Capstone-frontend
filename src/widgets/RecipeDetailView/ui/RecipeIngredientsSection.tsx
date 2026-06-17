@@ -101,6 +101,7 @@ const IngredientsSection = ({
       ? [
           {
             prefix: t.recipeDetail.costPrefix,
+            // i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거
             pointText: formatNumber(scaledIngredientCost, "원"),
             suffix: t.recipeDetail.costSuffix,
           },
@@ -108,6 +109,7 @@ const IngredientsSection = ({
             prefix: t.recipeDetail.savingsPrefix,
             pointText: formatNumber(
               scaledMarketPrice - scaledIngredientCost,
+              // i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거
               "원"
             ),
             suffix: t.recipeDetail.savingsSuffix,
@@ -169,6 +171,7 @@ const IngredientsSection = ({
                     displayUnit={converted.unit}
                     displayPrice={formatNumber(
                       Math.round((ingredient.price || 0) * servingRatio),
+                      // i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거
                       "원"
                     )}
                     reserveFridgeSpace={ownedIndices.size > 0}

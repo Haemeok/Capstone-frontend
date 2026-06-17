@@ -83,6 +83,7 @@ const FineDiningRecipe = () => {
 
     submit(
       request,
+      // i18n-ignore: requestSummary 페이로드 (ko 전용), 표시 텍스트 아님
       `${formData.ingredients.length}개 재료 / ${formData.diningTier}`
     );
   };

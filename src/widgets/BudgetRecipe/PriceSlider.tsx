@@ -27,6 +27,7 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
           {t.aiRecipe.price.budgetLabel}
         </p>
         <div className="text-olive-light text-5xl font-black transition-all duration-300">
+          {/* i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거 */}
           {value.toLocaleString()}원
         </div>
       </div>
@@ -40,7 +41,9 @@ const PriceSlider = ({ value, onChange }: PriceSliderProps) => {
           onValueChange={handleValueChange}
         />
         <div className="text-ink-muted mt-3 flex justify-between text-xs font-medium">
+          {/* i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거 */}
           <span>{BUDGET_MIN.toLocaleString()}원</span>
+          {/* i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거 */}
           <span>{BUDGET_MAX.toLocaleString()}원</span>
         </div>
       </div>

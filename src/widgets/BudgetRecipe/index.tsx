@@ -39,6 +39,7 @@ const BudgetRecipe = () => {
       targetCategory: selectedCategory,
     };
 
+    // i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거
     submit(request, `${budget.toLocaleString()}원 / ${selectedCategory}`);
   };
 

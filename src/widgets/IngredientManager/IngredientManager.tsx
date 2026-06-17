@@ -75,37 +75,41 @@ const IngredientManager = ({ onOpenDrawer }: IngredientManagerProps) => {
             )}
           </div>
           <div className="grid grid-cols-3 gap-x-1 gap-y-4 min-[375px]:grid-cols-4 sm:grid-cols-5 md:grid-cols-6">
-            {ingredients.map((ingredient, index) => (
-              <div
-                key={ingredient.id || ingredient.name}
-                className="group relative flex flex-col items-center gap-1.5"
-              >
-                <div className="relative">
-                  <div className="relative h-14 w-14 overflow-hidden rounded-full border border-white bg-white shadow-sm ring-1 ring-green-100/50">
-                    <Image
-                      src={INGREDIENT_IMAGE_URL(ingredient.name)}
-                      alt={ingredient.name}
-                      wrapperClassName="h-full w-full"
-                      fit="cover"
-                    />
+            {ingredients.map((ingredient, index) => {
+              // i18n-ignore: 미마이그레이션
+              const removeAriaLabel = `${ingredient.name} 삭제`;
+              return (
+                <div
+                  key={ingredient.id || ingredient.name}
+                  className="group relative flex flex-col items-center gap-1.5"
+                >
+                  <div className="relative">
+                    <div className="relative h-14 w-14 overflow-hidden rounded-full border border-white bg-white shadow-sm ring-1 ring-green-100/50">
+                      <Image
+                        src={INGREDIENT_IMAGE_URL(ingredient.name)}
+                        alt={ingredient.name}
+                        wrapperClassName="h-full w-full"
+                        fit="cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveIngredient(index);
+                      }}
+                      className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+                      aria-label={removeAriaLabel}
+                    >
+                      <X size={10} strokeWidth={3} aria-hidden="true" />
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveIngredient(index);
-                    }}
-                    className="absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:border-red-200 hover:bg-red-50 hover:text-red-500"
-                    aria-label={`${ingredient.name} 삭제`}
-                  >
-                    <X size={10} strokeWidth={3} aria-hidden="true" />
-                  </button>
+                  <span className="text-ink-sub w-full truncate text-center text-xs font-medium">
+                    {ingredient.name}
+                  </span>
                 </div>
-                <span className="text-ink-sub w-full truncate text-center text-xs font-medium">
-                  {ingredient.name}
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

@@ -40,7 +40,7 @@ const SavingsBadge = ({ budget }: SavingsBadgeProps) => {
                 duration={0.8}
                 separator=","
               />
-              만 원
+              {/* i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거 */}만 원
             </span>
             <span className="text-ink-sub text-sm">
               {t.aiRecipe.price.savingsBadgeSuffix}
