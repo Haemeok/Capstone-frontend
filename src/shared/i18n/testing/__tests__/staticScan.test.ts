@@ -1,4 +1,4 @@
-import { findKoreanLeaks } from "../staticScan";
+import { findHangulInDict, findKoreanLeaks } from "../staticScan";
 
 const withDict = (body: string) =>
   `import { useT } from "@/shared/i18n";\n${body}`;
@@ -51,5 +51,17 @@ describe("findKoreanLeaks (가드 A 스캐너)", () => {
     );
     expect(v).toHaveLength(1);
     expect(v[0].text).toContain("이름");
+  });
+});
+
+describe("findHangulInDict (L2 사전 가드)", () => {
+  it("T-07: namespace에 한국어 -> 경로 반환", () => {
+    const r = findHangulInDict({ ja: { ns: { a: "한국어", b: "ok" } } });
+    expect(r).toEqual(["ja.ns.a"]);
+  });
+
+  it("T-08: 전부 비한국어 -> 빈 배열", () => {
+    const r = findHangulInDict({ ja: { ns: { a: "作りました", b: "OK" } } });
+    expect(r).toEqual([]);
   });
 });
