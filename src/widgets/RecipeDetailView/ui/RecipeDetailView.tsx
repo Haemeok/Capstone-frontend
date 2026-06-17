@@ -1,4 +1,5 @@
 import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
+import { RecipeStepAdSlot } from "@/shared/adsense/RecipeStepAdSlot";
 import { DictionaryProvider, getDictionary, type Locale } from "@/shared/i18n";
 import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -163,6 +164,7 @@ export const RecipeDetailView = ({
                 <RecipeStepList
                   RecipeSteps={recipe.steps}
                   recipeIngredients={recipe.ingredients}
+                  midSlot={<RecipeStepAdSlot />}
                 />
               </ErrorBoundary>
             </RecipeVideoSection>

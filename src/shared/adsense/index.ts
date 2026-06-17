@@ -8,4 +8,5 @@ export { InArticleAdSlot } from "./InArticleAdSlot";
 export { InFeedAdSlot } from "./InFeedAdSlot";
 export type { FeedItem } from "./lib/insertAdsIntoFeed";
 export { useFeedWithAds } from "./lib/useFeedWithAds";
+export { RecipeStepAdSlot } from "./RecipeStepAdSlot";
 export { YoutubeAnchorAdSlot } from "./YoutubeAnchorAdSlot";
