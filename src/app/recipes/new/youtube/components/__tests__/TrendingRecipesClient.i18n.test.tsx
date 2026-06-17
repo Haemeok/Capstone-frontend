@@ -14,7 +14,7 @@ import { YoutubeUrlProvider } from "../YoutubeUrlProvider";
 
 const RECIPE = {
   videoId: "v1",
-  title: "親子丼",
+  title: "recipe-title",
   channelName: "ch",
   thumbnailUrl: "https://example.com/t.jpg",
   viewCount: 23000,

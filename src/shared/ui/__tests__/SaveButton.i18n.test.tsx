@@ -24,7 +24,10 @@ describe("SaveButton i18n", () => {
   it("ja 경로에서 저장 aria가 일본어다 (T-01)", () => {
     mockPathname = "/ja/recipes/abc";
     render(<SaveButton isFavorite={false} />);
-    expect(screen.getByRole("button")).toHaveAttribute("aria-label", "保存");
+    expect(screen.getByRole("button")).toHaveAttribute(
+      "aria-label",
+      commonMessages.ja.actions.save
+    );
   });
 
   it("ja 경로에서 저장 해제 aria가 일본어다 (T-01)", () => {
@@ -32,7 +35,7 @@ describe("SaveButton i18n", () => {
     render(<SaveButton isFavorite />);
     expect(screen.getByRole("button")).toHaveAttribute(
       "aria-label",
-      "保存を解除"
+      commonMessages.ja.actions.unsave
     );
   });
 

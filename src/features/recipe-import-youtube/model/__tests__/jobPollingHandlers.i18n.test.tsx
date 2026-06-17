@@ -11,7 +11,7 @@ import type { YoutubeMeta } from "../types";
 
 const meta: YoutubeMeta = {
   url: "https://www.youtube.com/watch?v=abc123",
-  title: "元の動画タイトル",
+  title: "original-video-title",
   channelName: "Ch",
   thumbnailUrl: "https://img.youtube.com/vi/abc123/0.jpg",
   videoId: "abc123",

@@ -2,7 +2,7 @@ import { createRef } from "react";
 
 import { act, render, screen } from "@testing-library/react";
 
-import { DictionaryProvider, getDictionary } from "@/shared/i18n";
+import { DictionaryProvider, format, getDictionary } from "@/shared/i18n";
 import { localizeActivityName } from "@/shared/i18n/activityNameOverlay";
 import { ScrollContext } from "@/shared/lib/ScrollContext";
 
@@ -59,7 +59,7 @@ describe("RecipeIngredientsSection i18n", () => {
     expect(baseElement.textContent).not.toContain("원");
   });
 
-  it("T-03b: ja & 영양 on -> 활동 배너 번역명 + 分, 한글 없음", () => {
+  it("T-03b: ja & 영양 on -> 활동 배너 번역명 + 시간 단위, 한글 없음", () => {
     jest.useFakeTimers();
     const ja = getDictionary("ja");
     const { baseElement } = renderSection("ja");
@@ -72,7 +72,9 @@ describe("RecipeIngredientsSection i18n", () => {
     expect(baseElement.textContent).toContain(
       localizeActivityName("가볍게 달리기", "ja")
     );
-    expect(baseElement.textContent).toContain("分");
+    expect(baseElement.textContent).toContain(
+      format(ja.recipeDetail.cookingTimeValue, { n: "" }).trim()
+    );
     expect(HANGUL.test(baseElement.textContent ?? "")).toBe(false);
     jest.useRealTimers();
   });

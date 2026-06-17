@@ -14,7 +14,7 @@ jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 
 const ingredient: IngredientItemType = {
   id: "i1",
-  name: "鶏肉",
+  name: "ingredient-name",
   imageUrl: "",
   category: "고기",
   unit: "",

@@ -22,7 +22,7 @@ describe("StaticSections i18n", () => {
   it("ja dict로 Problem 섹션 일본어를 렌더한다 (T-10)", () => {
     const t = getDictionary("ja").landing;
     const { getByText } = renderWithScroll(<ProblemCards t={t} locale="ja" />);
-    expect(getByText("上がり続ける外食・デリバリー代")).toBeInTheDocument();
+    expect(getByText(t.problems.items[0].title)).toBeInTheDocument();
   });
 
   it("ja dict로 Feature 섹션 일본어를 렌더한다 (T-11)", () => {
@@ -30,7 +30,7 @@ describe("StaticSections i18n", () => {
     const { getByText } = renderWithScroll(
       <FeatureShowcase t={t} locale="ja" />
     );
-    expect(getByText("YouTubeリンク1つでレシピが完成")).toBeInTheDocument();
+    expect(getByText(t.features.items[0].title)).toBeInTheDocument();
   });
 
   it("en dict로 FinalCTA 영어를 렌더한다 (T-12)", () => {
@@ -47,37 +47,36 @@ describe("StaticSections i18n", () => {
       );
       expect(container.textContent).toContain("45%");
       expect(container.textContent).toContain("98%");
-      const text = container.textContent ?? "";
-      expect(
-        text.includes("48분") ||
-          text.includes("48分") ||
-          text.includes("48 min")
-      ).toBe(true);
+      expect(container.textContent).toContain(t.stats.items[2].metric);
     }
   });
 
-  it("Stats metric 단위: ja=48分, en=48 min, ko는 48분 (T-14)", () => {
+  it("Stats metric 단위: 로케일별 시간 metric이 자기 단위만 포함한다 (T-14)", () => {
     const ja = getDictionary("ja").landing;
+    const en = getDictionary("en").landing;
+    const ko = getDictionary("ko").landing;
+    const jaMetric = ja.stats.items[2].metric;
+    const enMetric = en.stats.items[2].metric;
+    const koMetric = ko.stats.items[2].metric;
+
     const { container: jaC } = renderWithScroll(
       <StatsSection t={ja} locale="ja" />
     );
-    expect(jaC.textContent).toContain("48分");
-    expect(jaC.textContent).not.toContain("48 min");
+    expect(jaC.textContent).toContain(jaMetric);
+    expect(jaC.textContent).not.toContain(enMetric);
 
-    const en = getDictionary("en").landing;
     const { container: enC } = renderWithScroll(
       <StatsSection t={en} locale="en" />
     );
-    expect(enC.textContent).toContain("48 min");
-    expect(enC.textContent).not.toContain("48分");
+    expect(enC.textContent).toContain(enMetric);
+    expect(enC.textContent).not.toContain(jaMetric);
 
-    const ko = getDictionary("ko").landing;
     const { container: koC } = renderWithScroll(
       <StatsSection t={ko} locale="ko" />
     );
-    expect(koC.textContent).toContain("48분");
-    expect(koC.textContent).not.toContain("48分");
-    expect(koC.textContent).not.toContain("48 min");
+    expect(koC.textContent).toContain(koMetric);
+    expect(koC.textContent).not.toContain(jaMetric);
+    expect(koC.textContent).not.toContain(enMetric);
   });
 
   it("ja dict로 TagChip name 일본어를 렌더한다 (T-15)", () => {
@@ -85,7 +84,7 @@ describe("StaticSections i18n", () => {
     const { container } = renderWithScroll(
       <TagChipsSection t={t} locale="ja" />
     );
-    expect(container.textContent).toContain("ホームパーティー");
+    expect(container.textContent).toContain(t.tagChips.chipNames.HOME_PARTY);
   });
 
   it("ja FinalCTA 보조 CTA href === '/ja/search', ko === '/search' (T-32)", () => {

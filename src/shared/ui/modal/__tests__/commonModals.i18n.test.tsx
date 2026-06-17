@@ -12,6 +12,7 @@ import { UnsavedChangesModal } from "../UnsavedChangesModal";
 
 const jaModal = commonMessages.ja.modal;
 const enModal = commonMessages.en.modal;
+const CUSTOM_CONFIRM_LABEL = "__CUSTOM_CONFIRM__";
 
 describe("공통 모달 i18n", () => {
   beforeEach(() => {
@@ -24,8 +25,8 @@ describe("공통 모달 i18n", () => {
       <DeleteModal
         open
         onOpenChange={() => {}}
-        title="削除"
-        description="削除すると元に戻せません。"
+        title={jaModal.delete.confirm}
+        description={jaModal.delete.description}
         onConfirm={() => {}}
       />
     );
@@ -52,12 +53,12 @@ describe("공통 모달 i18n", () => {
       <DeleteModal
         open
         onOpenChange={() => {}}
-        title="削除"
+        title={jaModal.delete.confirm}
         onConfirm={() => {}}
-        confirmLabel="完全に削除"
+        confirmLabel={CUSTOM_CONFIRM_LABEL}
       />
     );
-    expect(document.body.textContent).toContain("完全に削除");
+    expect(document.body.textContent).toContain(CUSTOM_CONFIRM_LABEL);
   });
 
   it("ja UnsavedChangesModal 4문구가 일본어다 (T-10)", () => {

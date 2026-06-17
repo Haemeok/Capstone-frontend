@@ -1,4 +1,8 @@
-import { findHangulInDict, findKoreanLeaks } from "../staticScan";
+import {
+  findHangulInDict,
+  findJapaneseLiterals,
+  findKoreanLeaks,
+} from "../staticScan";
 
 const withDict = (body: string) =>
   `import { useT } from "@/shared/i18n";\n${body}`;
@@ -63,5 +67,25 @@ describe("findHangulInDict (L2 사전 가드)", () => {
   it("T-08: 전부 비한국어 -> 빈 배열", () => {
     const r = findHangulInDict({ ja: { ns: { a: "作りました", b: "OK" } } });
     expect(r).toEqual([]);
+  });
+});
+
+describe("findJapaneseLiterals (가드 B 스캐너)", () => {
+  it("T-10: 일본어 스크립트 리터럴 -> 위반 1", () => {
+    const v = findJapaneseLiterals(
+      `expect(screen.getByText("作りました")).toBeInTheDocument();`
+    );
+    expect(v).toHaveLength(1);
+  });
+
+  it("T-11: 사전참조/ko/sentinel/format/ignore -> 위반 0", () => {
+    const src = [
+      `expect(screen.getByText(ja.completeCtaPlain)).toBeInTheDocument();`,
+      `expect(screen.getByText("인기순")).toBeInTheDocument();`,
+      `expect(screen.getByText("__HERO__")).toBeInTheDocument();`,
+      `expect(el).toHaveTextContent(format(ja.streak.days, { n: 5 }));`,
+      `expect(screen.getByText("5日")).toBeNull(); // i18n-ignore: 환원불가 복수형`,
+    ].join("\n");
+    expect(findJapaneseLiterals(src)).toHaveLength(0);
   });
 });

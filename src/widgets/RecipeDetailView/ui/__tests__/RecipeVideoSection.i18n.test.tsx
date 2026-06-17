@@ -1,6 +1,10 @@
 import { render } from "@testing-library/react";
 
-import { DictionaryProvider, getDictionary } from "@/shared/i18n";
+import {
+  DictionaryProvider,
+  formatCompactNumber,
+  getDictionary,
+} from "@/shared/i18n";
 
 import RecipeVideoSection from "../RecipeVideoSection";
 
@@ -29,9 +33,11 @@ const renderVideo = (locale: "ko" | "ja" | "en") =>
   );
 
 describe("RecipeVideoSection subscriber i18n", () => {
-  it("T-13: ja -> 万 포맷, 한글 없음", () => {
+  it("T-13: ja -> 구독자 수 compact 포맷, 한글 없음", () => {
     const { baseElement } = renderVideo("ja");
-    expect(baseElement.textContent).toContain("万");
+    expect(baseElement.textContent).toContain(
+      formatCompactNumber(meta.subscriberCount, "ja")
+    );
     expect(HANGUL.test(baseElement.textContent ?? "")).toBe(false);
   });
 

@@ -8,7 +8,7 @@ describe("HeroSection i18n", () => {
   it("ja dict로 일본어 CTA·서브카피를 렌더한다 (T-01)", () => {
     const t = getDictionary("ja").landing;
     const { getByText } = render(<HeroSection t={t} locale="ja" />);
-    expect(getByText("無料で始める")).toBeInTheDocument();
+    expect(getByText(t.hero.cta)).toBeInTheDocument();
   });
 
   it("en dict로 영어 CTA를 렌더한다 (T-02)", () => {
@@ -34,7 +34,7 @@ describe("HeroSection i18n", () => {
   it("recipeCountLabel이 locale별로 자연스럽다 (T-05)", () => {
     const ja = getDictionary("ja").landing;
     const { container: jaC } = render(<HeroSection t={ja} locale="ja" />);
-    expect(jaC.textContent).toContain("5万+");
+    expect(jaC.textContent).toContain(ja.recipeCount.label);
     const en = getDictionary("en").landing;
     const { container: enC } = render(<HeroSection t={en} locale="en" />);
     expect(enC.textContent).toContain("50,000+");

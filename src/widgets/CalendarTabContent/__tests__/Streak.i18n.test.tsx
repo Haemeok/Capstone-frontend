@@ -2,12 +2,13 @@ import { usePathname } from "next/navigation";
 
 import { render, screen } from "@testing-library/react";
 
-import { getDictionary } from "@/shared/i18n";
+import { format, getDictionary, plural } from "@/shared/i18n";
 
 import { StreakInfoBanner } from "@/widgets/CalendarTabContent/components/StreakInfoBanner";
 import { StreakModeToggle } from "@/widgets/CalendarTabContent/components/StreakModeToggle";
 
 const en = getDictionary("en").userPages.calendar;
+const ja = getDictionary("ja").userPages.calendar;
 
 jest.mock("next/navigation", () => ({ usePathname: jest.fn() }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
@@ -34,10 +35,12 @@ test("T-14 en: toggle labels + alt localized", () => {
   expect(container.textContent ?? "").not.toMatch(HANGUL);
 });
 
-test("T-16 ja: message localized, no 식비/배달, day unit 日", () => {
+test("T-16 ja: message localized, no Korean cost terms, day unit", () => {
   (usePathname as jest.Mock).mockReturnValue("/ja/users/u1");
   const { container } = render(<StreakInfoBanner streakCount={5} />);
-  expect(container.textContent).toContain("5日");
+  expect(container.textContent).toContain(
+    format(plural(5, ja.streakDays), { n: 5 })
+  );
   expect(container.textContent).not.toMatch(/식비|배달/);
   expect(container.textContent ?? "").not.toMatch(HANGUL);
 });

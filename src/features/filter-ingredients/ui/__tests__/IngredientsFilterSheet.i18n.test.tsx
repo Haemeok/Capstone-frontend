@@ -53,8 +53,8 @@ it("T-05: ja 경로에서 타이틀/placeholder가 ja로 렌더된다", async ()
 
 it("T-07: 선택 2개면 적용 버튼이 ja이고 {count}=2로 치환된다", async () => {
   renderSheet([
-    { id: "i1", name: "玉ねぎ" },
-    { id: "i2", name: "豆腐" },
+    { id: "i1", name: "ingredient-1" },
+    { id: "i2", name: "ingredient-2" },
   ]);
   expect(
     await screen.findByText(

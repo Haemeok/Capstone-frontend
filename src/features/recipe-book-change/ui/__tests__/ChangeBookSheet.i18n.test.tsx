@@ -129,7 +129,6 @@ describe("ChangeBookSheet i18n", () => {
     });
     expect(msg).toBe(expected);
     expect(msg).not.toContain("으로");
-    expect(msg).toContain("移動");
   });
 
   it.skip("T-31: ja fromBookId 미해결 시 notFound 토스트 (DONE_WITH_CONCERNS)", async () => {

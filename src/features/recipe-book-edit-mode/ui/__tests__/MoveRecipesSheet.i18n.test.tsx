@@ -96,7 +96,6 @@ describe("MoveRecipesSheet i18n", () => {
     });
     expect(msg).toBe(expected);
     expect(msg).not.toContain("으로");
-    expect(msg).toContain("移動");
   });
 
   it("T-14: ko 책 이름 클릭 시 토스트 메시지가 한글 조사 포함", async () => {

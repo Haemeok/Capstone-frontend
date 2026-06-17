@@ -67,7 +67,7 @@ describe("IngredientSearchDrawer i18n", () => {
     }
   );
 
-  it("ja 카테고리 칩이 택소노미로 현지화된다, 전체→すべて (T-06)", () => {
+  it("ja 카테고리 칩이 택소노미로 현지화된다, 전체 칩 라벨 (T-06)", () => {
     mockPathname.mockReturnValue("/ja/ingredients/new");
     getIngredientsMock.mockResolvedValue(page([]));
     renderDrawer();
@@ -86,9 +86,10 @@ describe("IngredientSearchDrawer i18n", () => {
     const input = screen.getByPlaceholderText(
       ingredientAddMessages.ja.searchPlaceholder
     );
-    fireEvent.change(input, { target: { value: "存在しない食材xyz" } });
+    const query = "no-such-ingredient-xyz";
+    fireEvent.change(input, { target: { value: query } });
     fireEvent.submit(input.closest("form")!);
-    expect(await screen.findByText(/存在しない食材xyz/)).toBeInTheDocument();
+    expect(await screen.findByText(new RegExp(query))).toBeInTheDocument();
   });
 
   it("ja 페치 에러 시 에러 문구가 현지어(한글 0) (T-08)", async () => {

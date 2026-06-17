@@ -57,7 +57,7 @@ describe("CategoryTabs i18n (T-10/11/12)", () => {
     };
     usePathname.mockReturnValue("/ja");
 
-    render(<CategoryTabs title="カテゴリー" />);
+    render(<CategoryTabs title="Category" />);
 
     const expectedLabel = taxonomyMessages.ja.tags.CHEF_RECIPE;
     const chip = screen.getByText(expectedLabel).closest("a");
