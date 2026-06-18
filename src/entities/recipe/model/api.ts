@@ -214,18 +214,26 @@ export const reportIngredient = async (
 };
 
 export const getRecommendedRecipes = async (
-  recipeId: string
+  recipeId: string,
+  lang: Locale = "ko"
 ): Promise<StaticDetailedRecipeGridItem[]> => {
   return api.get<StaticDetailedRecipeGridItem[]>(
-    END_POINTS.RECIPE_RECOMMENDATIONS(recipeId)
+    END_POINTS.RECIPE_RECOMMENDATIONS(recipeId),
+    {
+      params: lang === "ko" ? {} : { lang },
+    }
   );
 };
 
 export const getRemixes = async (
-  recipeId: string
+  recipeId: string,
+  lang: Locale = "ko"
 ): Promise<StaticDetailedRecipeGridItem[]> => {
   const page = await api.get<StaticDetailedRecipesApiResponse>(
-    END_POINTS.RECIPE_REMIXES(recipeId)
+    END_POINTS.RECIPE_REMIXES(recipeId),
+    {
+      params: lang === "ko" ? {} : { lang },
+    }
   );
   return page.content;
 };

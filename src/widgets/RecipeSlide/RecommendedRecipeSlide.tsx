@@ -32,7 +32,7 @@ const RecommendedRecipeSlide = ({
     data: recipes,
     isLoading,
     error,
-  } = useRecommendedRecipesQuery(recipeId, { enabled: inView });
+  } = useRecommendedRecipesQuery(recipeId, { enabled: inView, locale });
 
   const recipeIds = (recipes ?? []).map((recipe) => recipe.id);
   const { data: statusData } = useRecipesStatusQuery(recipeIds);

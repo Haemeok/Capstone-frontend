@@ -26,7 +26,7 @@ const RemixesSlide = ({ recipeId, locale }: RemixesSlideProps) => {
     data: recipes,
     isLoading,
     error,
-  } = useRemixesQuery(recipeId, { enabled: inView });
+  } = useRemixesQuery(recipeId, { enabled: inView, locale });
 
   const items = recipes ?? [];
   const hasEnough = items.length >= MIN_VISIBLE;
