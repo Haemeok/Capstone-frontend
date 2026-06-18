@@ -81,6 +81,8 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Cache and revalidation](rules/nextjs-cache-and-revalidation.md) — mutation → `revalidate*`; Request Memoization
 - [Dynamic vs static](rules/nextjs-dynamic-vs-static.md) — static is default; recognize triggers
 - [Server vs client boundary](rules/nextjs-server-vs-client-boundary.md) — `'use client'` at the lowest point; `initialData`
+- [Error boundary needs use client](rules/nextjs-error-boundary-use-client.md) — `error.tsx`/`global-error.tsx` must carry `"use client"` on their own file; a bare re-export stub doesn't inherit it and fails `next build` (tsc won't catch)
+- [Build-time sitemap/metadata data](rules/nextjs-sitemap-build-data.md) — paginate per-chunk; one unbounded list fetch crosses the 60s static-gen timeout as data grows; caught-error-`[]` ships a silently empty sitemap
 
 ### React (Compiler era)
 
