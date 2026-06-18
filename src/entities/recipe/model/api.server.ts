@@ -296,10 +296,15 @@ export const fetchRecentRecipesForFeed = async (
   }
 };
 
-export const fetchAllRecipesForSitemap = async (): Promise<
-  Array<{ id: string; updatedAt: string }>
-> => {
-  const API_URL = `${BASE_API_URL}/recipes/sitemap`;
+export const fetchRecipeSitemapPage = async (
+  pageIndex: number,
+  size: number
+): Promise<Array<{ id: string; updatedAt: string }>> => {
+  const query = new URLSearchParams({
+    page: String(pageIndex),
+    size: String(size),
+  });
+  const API_URL = `${BASE_API_URL}/recipes/sitemap?${query}`;
 
   try {
     const res = await fetch(API_URL, {
@@ -311,25 +316,27 @@ export const fetchAllRecipesForSitemap = async (): Promise<
 
     if (!res.ok) {
       console.error(
-        `[fetchAllRecipesForSitemap] API Error: ${res.status} ${res.statusText}`
+        `[fetchRecipeSitemapPage] API Error: ${res.status} ${res.statusText}`
       );
       return [];
     }
 
     return res.json();
   } catch (error) {
-    console.error(
-      "[fetchAllRecipesForSitemap] Failed to fetch recipes:",
-      error
-    );
+    console.error("[fetchRecipeSitemapPage] Failed to fetch recipes:", error);
     return [];
   }
 };
 
-export const fetchJaRecipesForSitemap = async (): Promise<
-  Array<{ id: string; updatedAt: string }>
-> => {
-  const API_URL = `${BASE_API_URL}/recipes/sitemap/ja`;
+export const fetchJaRecipeSitemapPage = async (
+  pageIndex: number,
+  size: number
+): Promise<Array<{ id: string; updatedAt: string }>> => {
+  const query = new URLSearchParams({
+    page: String(pageIndex),
+    size: String(size),
+  });
+  const API_URL = `${BASE_API_URL}/recipes/sitemap/ja?${query}`;
 
   try {
     const res = await fetch(API_URL, {
@@ -341,14 +348,14 @@ export const fetchJaRecipesForSitemap = async (): Promise<
 
     if (!res.ok) {
       console.error(
-        `[fetchJaRecipesForSitemap] API Error: ${res.status} ${res.statusText}`
+        `[fetchJaRecipeSitemapPage] API Error: ${res.status} ${res.statusText}`
       );
       return [];
     }
 
     return res.json();
   } catch (error) {
-    console.error("[fetchJaRecipesForSitemap] Failed to fetch recipes:", error);
+    console.error("[fetchJaRecipeSitemapPage] Failed to fetch recipes:", error);
     return [];
   }
 };

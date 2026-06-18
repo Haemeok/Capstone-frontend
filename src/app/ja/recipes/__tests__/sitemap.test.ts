@@ -1,15 +1,22 @@
 /**
  * @jest-environment node
  */
-import { fetchJaRecipesForSitemap } from "@/entities/recipe/model/api.server";
+import { fetchJaRecipeSitemapPage } from "@/entities/recipe/model/api.server";
 
-import sitemap from "../sitemap";
+import sitemap, { generateSitemaps } from "../sitemap";
 
 jest.mock("@/entities/recipe/model/api.server", () => ({
-  fetchJaRecipesForSitemap: jest.fn(),
+  fetchJaRecipeSitemapPage: jest.fn(),
 }));
 
-const fetchMock = fetchJaRecipesForSitemap as jest.Mock;
+const fetchMock = fetchJaRecipeSitemapPage as jest.Mock;
+
+const CHUNK_SIZE = 10000;
+const fullPage = () =>
+  Array.from({ length: CHUNK_SIZE }, () => ({
+    id: "x",
+    updatedAt: "2026-06-11T20:27:14",
+  }));
 
 describe("ja/recipes/sitemap", () => {
   beforeEach(() => fetchMock.mockReset());
@@ -29,5 +36,26 @@ describe("ja/recipes/sitemap", () => {
         priority: 0.9,
       },
     ]);
+  });
+
+  it("T-02: 부분 페이지가 나올 때까지 청크 수를 센다", async () => {
+    fetchMock.mockImplementation((page: number) => {
+      if (page < 2) return Promise.resolve(fullPage());
+      if (page === 2)
+        return Promise.resolve([{ id: "x", updatedAt: "2026-06-11T20:27:14" }]);
+      return Promise.resolve([]);
+    });
+
+    const chunks = await generateSitemaps();
+
+    expect(chunks).toEqual([{ id: 0 }, { id: 1 }, { id: 2 }]);
+  });
+
+  it("T-03: 첫 페이지가 비어도 최소 1개 청크를 보장한다", async () => {
+    fetchMock.mockResolvedValue([]);
+
+    const chunks = await generateSitemaps();
+
+    expect(chunks).toEqual([{ id: 0 }]);
   });
 });

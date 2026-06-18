@@ -1,26 +1,26 @@
 /**
  * @jest-environment node
  */
-import { fetchJaRecipesForSitemap } from "../api.server";
+import { fetchJaRecipeSitemapPage } from "../api.server";
 
-describe("fetchJaRecipesForSitemap", () => {
+describe("fetchJaRecipeSitemapPage", () => {
   const originalFetch = global.fetch;
   afterEach(() => {
     global.fetch = originalFetch;
     jest.restoreAllMocks();
   });
 
-  it("T-03: ja 전용 엔드포인트 /recipes/sitemap/ja를 호출한다", async () => {
+  it("T-03: ja 전용 엔드포인트를 page/size 쿼리로 호출한다", async () => {
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,
       json: async () => [{ id: "7Kel6awa", updatedAt: "2026-06-11T20:27:14" }],
     });
     global.fetch = fetchMock as unknown as typeof fetch;
 
-    await fetchJaRecipesForSitemap();
+    await fetchJaRecipeSitemapPage(2, 10000);
 
     expect(String(fetchMock.mock.calls[0][0])).toMatch(
-      /\/recipes\/sitemap\/ja$/
+      /\/recipes\/sitemap\/ja\?page=2&size=10000$/
     );
   });
 
@@ -33,6 +33,6 @@ describe("fetchJaRecipesForSitemap", () => {
     });
     global.fetch = fetchMock as unknown as typeof fetch;
 
-    await expect(fetchJaRecipesForSitemap()).resolves.toEqual([]);
+    await expect(fetchJaRecipeSitemapPage(0, 10000)).resolves.toEqual([]);
   });
 });
