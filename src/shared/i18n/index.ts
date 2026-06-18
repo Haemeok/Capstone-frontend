@@ -38,6 +38,7 @@ export type {
   LandingDict,
   LandingTestimonial,
   Locale,
+  LoginPromotionDict,
   NavDict,
   NotificationsDict,
   Plural,
@@ -70,6 +71,10 @@ export {
 } from "./useIngredientPickerDict";
 export { useIngredientsDict } from "./useIngredientsDict";
 export { useLocalizedRouter } from "./useLocalizedRouter";
+export {
+  useLoginPromotionDict,
+  useLoginPromotionLocale,
+} from "./useLoginPromotionDict";
 export { useNotFoundDict } from "./useNotFoundDict";
 export { useNotificationsDict } from "./useNotificationsDict";
 export { useRatingsDict } from "./useRatingsDict";

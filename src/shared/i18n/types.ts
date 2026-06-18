@@ -445,6 +445,17 @@ export type RecipeCreateDict = {
   youtubeCardImageAlt: string;
 };
 
+export type LoginPromotionDict = {
+  mobileBadge: string;
+  headline: string;
+  body: string;
+  bodyDetailed: string;
+  highlight: string;
+  newUserBadge: string;
+  closeAria: string;
+  imageAlt: string;
+};
+
 export type CategoryDict = {
   navAriaLabel: string;
   countAll: string;
