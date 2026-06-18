@@ -464,6 +464,7 @@ export type CategoryDict = {
 
 export type UserPagesDict = {
   profile: {
+    guestNickname: string;
     shareTitle: string;
     shareText: string;
     shareAria: string;

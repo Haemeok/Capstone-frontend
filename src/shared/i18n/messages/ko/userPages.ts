@@ -2,6 +2,7 @@ import type { UserPagesDict } from "../../types";
 
 export const userPages: UserPagesDict = {
   profile: {
+    guestNickname: "게스트",
     shareTitle: "{nickname}님의 프로필",
     shareText: "레시피오에서 확인해보세요!",
     shareAria: "프로필 공유",

@@ -34,10 +34,13 @@ const UserProfileDisplay = ({
   const { share } = useShare();
   const t = useUserPagesDict();
 
+  const displayNickname =
+    user.id === guestUser.id ? t.profile.guestNickname : user.nickname;
+
   const handleShareProfile = () => {
     triggerHaptic("Light");
     share({
-      title: format(t.profile.shareTitle, { nickname: user.nickname }),
+      title: format(t.profile.shareTitle, { nickname: displayNickname }),
       text: t.profile.shareText,
       url: new URL(`users/${user.id}`, BASE_URL).toString(),
     });
@@ -55,7 +58,7 @@ const UserProfileDisplay = ({
           }
         >
           {user.profileImage ? (
-            <Image src={user.profileImage} alt={user.nickname} />
+            <Image src={user.profileImage} alt={displayNickname} />
           ) : (
             <div className="flex h-full w-full items-center justify-center rounded-full border-2 border-gray-200 bg-gray-100">
               <UserRound className="h-20 w-20 text-gray-300" />
@@ -64,7 +67,7 @@ const UserProfileDisplay = ({
         </div>
         <div className="flex grow flex-col">
           <div className="mb-2 flex items-center gap-2">
-            <h2 className="text-ink text-base font-bold">{user.nickname}</h2>
+            <h2 className="text-ink text-base font-bold">{displayNickname}</h2>
           </div>
           <div className="self-end">
             <ActionButton
