@@ -88,7 +88,7 @@ describe("useConceptJob", () => {
 
       const job = Object.values(useAIRecipeStoreV2.getState().jobs)[0];
       expect(job.state).toBe("failed");
-      expect(job.message).toBe("레시피 생성에 실패했습니다.");
+      expect(job.message).toBe(koDict.aiRecipe.error.defaultMessage);
     });
 
     it("같은 concept 진행 중인 job이 있으면 새 job을 만들지 않아야 함", async () => {
