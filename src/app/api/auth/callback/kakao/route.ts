@@ -143,7 +143,10 @@ export async function GET(request: NextRequest) {
     const finalResponse = NextResponse.redirect(redirectUrl);
 
     finalResponse.cookies.set("state", "", { maxAge: 0 });
-    finalResponse.cookies.set("post_login_locale", "", { maxAge: 0 });
+    finalResponse.cookies.set("post_login_locale", "", {
+      maxAge: 0,
+      path: "/",
+    });
 
     setCookieHeaders.forEach((cookie) => {
       finalResponse.headers.append("Set-Cookie", cookie);
