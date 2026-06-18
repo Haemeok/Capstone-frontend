@@ -6,6 +6,7 @@ import {
   fingerprintFromSetCookies,
   generateDiagId,
 } from "@/shared/lib/auth/diag";
+import { localePrefixPath } from "@/shared/lib/auth/oauthLocale";
 import { parseOAuthState } from "@/shared/lib/auth/oauthState";
 import { storeTempToken } from "@/shared/lib/auth/tempToken";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
@@ -146,10 +147,16 @@ export async function POST(request: NextRequest) {
       return response;
     }
 
-    const redirectUrl = new URL(baseUrl);
+    const postLoginLocale = request.cookies.get("post_login_locale")?.value;
+    const redirectPath =
+      postLoginLocale === "ja" || postLoginLocale === "en"
+        ? localePrefixPath(postLoginLocale)
+        : "/";
+    const redirectUrl = new URL(redirectPath, baseUrl);
     const finalResponse = NextResponse.redirect(redirectUrl, 303);
 
     finalResponse.cookies.set("state", "", { maxAge: 0 });
+    finalResponse.cookies.set("post_login_locale", "", { maxAge: 0 });
 
     setCookieHeaders.forEach((cookie) => {
       finalResponse.headers.append("Set-Cookie", cookie);

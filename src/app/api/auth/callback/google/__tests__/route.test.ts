@@ -126,6 +126,26 @@ describe("GET /api/auth/callback/google", () => {
       expect(stateCookie).toContain("Max-Age=0");
     });
 
+    it("T-06: post_login_locale=ja면 /ja로 리다이렉트", async () => {
+      mockFetch.mockResolvedValue(createSuccessfulBackendResponse());
+      const request = createMockRequest(
+        `/api/auth/callback/google?code=auth-code&state=${CSRF_TOKEN}`,
+        { state: CSRF_TOKEN, post_login_locale: "ja" }
+      );
+      const response = await GET(request);
+      expect(response.headers.get("Location")).toBe("http://localhost:3000/ja");
+    });
+
+    it("T-07: post_login_locale 쿠키 없으면 루트로 리다이렉트", async () => {
+      mockFetch.mockResolvedValue(createSuccessfulBackendResponse());
+      const request = createMockRequest(
+        `/api/auth/callback/google?code=auth-code&state=${CSRF_TOKEN}`,
+        { state: CSRF_TOKEN }
+      );
+      const response = await GET(request);
+      expect(response.headers.get("Location")).toBe("http://localhost:3000/");
+    });
+
     it("CSRF 실패(state 불일치) 시 /login/error로 리다이렉트해야 함", async () => {
       mockedParseOAuthState.mockReturnValue({
         csrfToken: "different-token",
