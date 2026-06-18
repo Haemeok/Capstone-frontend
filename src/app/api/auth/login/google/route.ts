@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { localeFromReferer } from "@/shared/lib/auth/oauthLocale";
 import { createOAuthState } from "@/shared/lib/auth/oauthState";
 import { getBaseUrlFromRequest } from "@/shared/lib/env/getBaseUrl";
 
@@ -36,6 +37,14 @@ export async function GET(request: NextRequest) {
     const response = NextResponse.redirect(googleAuthUrl);
 
     response.cookies.set("state", csrfToken, {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 10,
+    });
+
+    const postLoginLocale = localeFromReferer(request.headers.get("referer"));
+    response.cookies.set("post_login_locale", postLoginLocale, {
       path: "/",
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
