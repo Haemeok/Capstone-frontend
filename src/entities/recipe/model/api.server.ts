@@ -360,6 +360,38 @@ export const fetchJaRecipeSitemapPage = async (
   }
 };
 
+export const fetchEnRecipeSitemapPage = async (
+  pageIndex: number,
+  size: number
+): Promise<Array<{ id: string; updatedAt: string }>> => {
+  const query = new URLSearchParams({
+    page: String(pageIndex),
+    size: String(size),
+  });
+  const API_URL = `${BASE_API_URL}/recipes/sitemap/en?${query}`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
+        tags: [CACHE_TAGS.recipesSitemapEn],
+      },
+    });
+
+    if (!res.ok) {
+      console.error(
+        `[fetchEnRecipeSitemapPage] API Error: ${res.status} ${res.statusText}`
+      );
+      return [];
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("[fetchEnRecipeSitemapPage] Failed to fetch recipes:", error);
+    return [];
+  }
+};
+
 export const getStaticRecipesOnServer = async (
   params: RecipeItemsQueryParams
 ): Promise<StaticDetailedRecipesApiResponse> => {

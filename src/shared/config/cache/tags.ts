@@ -7,6 +7,7 @@ export const CACHE_TAGS = {
   recipesTrending: "recipes-trending",
   recipesSitemap: "recipes-sitemap",
   recipesSitemapJa: "recipes-sitemap-ja",
+  recipesSitemapEn: "recipes-sitemap-en",
   ingredientsSitemap: "ingredients-sitemap",
   curationArticlesSitemap: "curation-articles-sitemap",
   recipesFeed: "recipes-feed",
