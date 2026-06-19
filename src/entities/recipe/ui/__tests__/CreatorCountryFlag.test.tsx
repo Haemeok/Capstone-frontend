@@ -24,4 +24,10 @@ describe("CreatorCountryFlag", () => {
     const { container } = render(<CreatorCountryFlag tag={undefined} />);
     expect(container).toBeEmptyDOMElement();
   });
+
+  it("US는 미국 국기(SVG)와 스크린리더 라벨을 렌더한다 (T-A2)", () => {
+    const { container } = render(<CreatorCountryFlag tag="US" />);
+    expect(screen.getByRole("img", { name: "미국 채널" })).toBeInTheDocument();
+    expect(container.querySelector("svg")).toBeInTheDocument();
+  });
 });

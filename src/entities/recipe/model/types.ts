@@ -6,7 +6,7 @@ import { User } from "@/entities/user";
 
 export type Visibility = "PUBLIC" | "PRIVATE" | "RESTRICTED";
 export type RecipeSource = "USER" | "AI" | "YOUTUBE" | "REELS";
-export type CreatorCountryTag = "KR" | "JP" | "OTHER";
+export type CreatorCountryTag = "KR" | "JP" | "US" | "OTHER";
 export type ImageStatus = "PENDING" | "READY" | "FAILED";
 
 export type IngredientCalculationSummary = {

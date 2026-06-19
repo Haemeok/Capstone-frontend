@@ -23,4 +23,11 @@ describe("getCreatorCountryFlag", () => {
     expect(getCreatorCountryFlag(null)).toBeNull();
     expect(getCreatorCountryFlag(undefined)).toBeNull();
   });
+
+  it("US는 미국 채널 variant를 반환한다 (T-A1)", () => {
+    expect(getCreatorCountryFlag("US")).toEqual({
+      variant: "us",
+      label: "미국 채널",
+    });
+  });
 });

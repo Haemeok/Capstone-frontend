@@ -44,6 +44,26 @@ const KoreaFlag = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const UsaFlag = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 36 24"
+    className={className}
+    aria-hidden="true"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <rect width="36" height="24" fill="#b22234" />
+    <g fill="#fff">
+      <rect y="2" width="36" height="2" />
+      <rect y="6" width="36" height="2" />
+      <rect y="10" width="36" height="2" />
+      <rect y="14" width="36" height="2" />
+      <rect y="18" width="36" height="2" />
+      <rect y="22" width="36" height="2" />
+    </g>
+    <rect width="15" height="13" fill="#3c3b6e" />
+  </svg>
+);
+
 type CountryFlagGlyphProps = {
   tag?: CreatorCountryTag | null;
   className?: string;
@@ -52,6 +72,7 @@ type CountryFlagGlyphProps = {
 export const CountryFlagGlyph = ({ tag, className }: CountryFlagGlyphProps) => {
   if (tag === "JP") return <JapanFlag className={cn(FLAG_CLASS, className)} />;
   if (tag === "KR") return <KoreaFlag className={cn(FLAG_CLASS, className)} />;
+  if (tag === "US") return <UsaFlag className={cn(FLAG_CLASS, className)} />;
   if (tag === "OTHER") {
     return <span className={cn("text-base leading-none", className)}>🌐</span>;
   }
