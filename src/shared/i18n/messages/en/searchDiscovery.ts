@@ -12,6 +12,9 @@ export const searchDiscovery: SearchDiscoveryDict = {
   recipeSlideViewMore: "View more",
   recipeSlideEmpty: "No recipes yet.",
   recipeSlideError: "Something went wrong. Please try again later.",
+  cookedPopularTitle: "Recipes Recipio users cook the most",
+  fridgeIngredientTitle: "Recipes using {ingredientName} from your fridge",
+  cookedAgainTitle: "Cook something you've made before?",
   placeholders: {
     breakfast: [
       'Easy "scrambled eggs" recipe',

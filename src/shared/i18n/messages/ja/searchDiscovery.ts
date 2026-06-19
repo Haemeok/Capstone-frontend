@@ -13,6 +13,9 @@ export const searchDiscovery: SearchDiscoveryDict = {
   recipeSlideEmpty: "まだレシピがありません。",
   recipeSlideError:
     "サーバーに問題が発生しました。後でもう一度お試しください。",
+  cookedPopularTitle: "レシピオユーザーがよく作っているレシピ",
+  fridgeIngredientTitle: "冷蔵庫の{ingredientName}を使ったレシピ",
+  cookedAgainTitle: "前に作った料理、もう一度作ってみませんか？",
   placeholders: {
     breakfast: [
       "朝にうれしい「卵焼き」を検索",

@@ -12,6 +12,9 @@ export const searchDiscovery: SearchDiscoveryDict = {
   recipeSlideViewMore: "더보기",
   recipeSlideEmpty: "아직 레시피가 없어요.",
   recipeSlideError: "잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.",
+  cookedPopularTitle: "레시피오 유저들이 많이 요리한 레시피",
+  fridgeIngredientTitle: "고객님 냉장고에 있는 {ingredientName} 활용 레시피",
+  cookedAgainTitle: "전에 했던 요리, 다시 만들어볼까요?",
   placeholders: {
     breakfast: [
       '출근 전 든든한 "계란 레시피" 검색',

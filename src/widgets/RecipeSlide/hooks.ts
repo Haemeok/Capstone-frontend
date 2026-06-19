@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Locale } from "@/shared/i18n";
 
 import {
+  getCookedPopularRecipes,
   getRecipeItems,
   getRecipesStatus,
   getRecommendedRecipes,
@@ -64,6 +65,20 @@ export const useRecommendedRecipesQuery = (
     queryKey: ["recipes-recommended", recipeId, locale],
     queryFn: () => getRecommendedRecipes(recipeId, locale),
     enabled: options?.enabled ?? true,
+  });
+};
+
+export const useCookedPopularQuery = (options?: {
+  enabled?: boolean;
+  locale?: Locale;
+}) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "cooked-popular", locale],
+    queryFn: () => getCookedPopularRecipes(locale),
+    select: (data) => data.content,
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
   });
 };
 

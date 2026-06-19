@@ -306,6 +306,9 @@ export type SearchDiscoveryDict = {
   recipeSlideViewMore: string;
   recipeSlideEmpty: string;
   recipeSlideError: string;
+  cookedPopularTitle: string;
+  fridgeIngredientTitle: string;
+  cookedAgainTitle: string;
   placeholders: {
     breakfast: string[];
     lunch: string[];

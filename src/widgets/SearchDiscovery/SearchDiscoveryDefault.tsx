@@ -10,6 +10,8 @@ import { Container } from "@/shared/ui/Container";
 import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 import { SearchInput } from "@/features/search-input";
 
+import CookedPopularSlide from "@/widgets/RecipeSlide/CookedPopularSlide";
+
 import ContentPageGrid from "./ui/ContentPageGrid";
 import LatestRecipesSlide from "./ui/LatestRecipesSlide";
 import NutritionThemeSection from "./ui/NutritionThemeSection";
@@ -38,6 +40,8 @@ const SearchDiscoveryDefault = () => {
         </div>
 
         <LatestRecipesSlide />
+
+        <CookedPopularSlide locale={locale} />
 
         <section className="space-y-4">
           <h3 className="text-ink text-lg font-bold">

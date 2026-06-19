@@ -308,6 +308,8 @@ export type RecipeListItemStatus = {
 
 export type RecipesStatusResponse = Record<string, RecipeListItemStatus>;
 
+export type CookedPopularResponse = { content: StaticDetailedRecipeGridItem[] };
+
 export type MyRecipeListItem = {
   id: string;
   title: string;

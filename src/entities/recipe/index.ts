@@ -10,6 +10,7 @@ export {
 } from "./lib/visibility";
 export {
   fetchPagedRecipes,
+  getCookedPopularRecipes,
   getRecipe,
   getRecipeItems,
   getRecipesStatus,
@@ -23,6 +24,7 @@ export {
 export type {
   BaseRecipeGridItem,
   BaseRecipesApiResponse,
+  CookedPopularResponse,
   CreatorCountryTag,
   DetailedRecipeGridItem,
   DetailedRecipesApiResponse,
