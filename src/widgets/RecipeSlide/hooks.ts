@@ -10,6 +10,7 @@ import {
   getRecipesStatus,
   getRecommendedRecipes,
   getRemixes,
+  getSameIngredientRecipes,
   RecipeItemsQueryParams,
 } from "@/entities/recipe";
 
@@ -120,5 +121,18 @@ export const useRemixesQuery = (
     queryKey: ["recipes-remixes", recipeId, locale],
     queryFn: () => getRemixes(recipeId, locale),
     enabled: options?.enabled ?? true,
+  });
+};
+
+export const useSameIngredientQuery = (
+  recipeId: string,
+  options?: { enabled?: boolean; locale?: Locale }
+) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "same-ingredient", recipeId, locale],
+    queryFn: () => getSameIngredientRecipes(recipeId, locale),
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
   });
 };

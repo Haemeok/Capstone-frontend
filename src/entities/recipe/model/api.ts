@@ -19,6 +19,7 @@ import {
   RecipeQueryParams,
   RecipesStatusResponse,
   RecipeStatus,
+  SameIngredientResponse,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   TrendingYoutubeRecipe,
@@ -232,6 +233,16 @@ export const getCookedAgainRecipes = async (
   return api.get<CookedAgainResponse>(END_POINTS.MY_RECIPES_COOKED_AGAIN, {
     params: lang === "ko" ? {} : { lang },
   });
+};
+
+export const getSameIngredientRecipes = async (
+  recipeId: string,
+  lang: Locale = "ko"
+): Promise<SameIngredientResponse> => {
+  return api.get<SameIngredientResponse>(
+    END_POINTS.RECIPE_SAME_INGREDIENT(recipeId),
+    { params: lang === "ko" ? {} : { lang } }
+  );
 };
 
 export const reportIngredient = async (

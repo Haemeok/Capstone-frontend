@@ -18,6 +18,7 @@ export {
   getRecipesStatus,
   getRecommendedRecipes,
   getRemixes,
+  getSameIngredientRecipes,
 } from "./model/api";
 export {
   useRecipeDetailQuery,
@@ -40,6 +41,7 @@ export type {
   RecipeQueryParams,
   RecipeStep,
   RecipeStepPayload,
+  SameIngredientResponse,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   TrendingYoutubeRecipe,

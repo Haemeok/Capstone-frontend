@@ -313,6 +313,11 @@ export type CookedPopularResponse = { content: StaticDetailedRecipeGridItem[] };
 
 export type CookedAgainResponse = { content: StaticDetailedRecipeGridItem[] };
 
+export type SameIngredientResponse = {
+  ingredientName: string | null;
+  content: StaticDetailedRecipeGridItem[];
+};
+
 export type FridgeIngredientPopularResponse = {
   ingredientName: string | null;
   content: StaticDetailedRecipeGridItem[];
