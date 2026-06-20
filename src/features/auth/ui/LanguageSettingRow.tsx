@@ -13,6 +13,9 @@ import {
   useSettingsDict,
 } from "@/shared/i18n";
 
+import { useUserStore } from "@/entities/user/model/store";
+import { updatePreferredLocale } from "@/entities/user/model/updatePreferredLocale";
+
 const LOCALE_LABELS: Record<Locale, string> = {
   ko: "한국어",
   ja: "日本語",
@@ -24,9 +27,13 @@ export const LanguageSettingRow = () => {
   const router = useRouter();
   const { locale: current, barePath } = stripLocale(pathname);
   const t = useSettingsDict();
+  const isAuthenticated = useUserStore((s) => s.isAuthenticated);
 
   const handleSelect = (next: Locale) => {
     setStoredLocale(next);
+    if (isAuthenticated) {
+      void updatePreferredLocale(next).catch(() => {});
+    }
     router.push(localizedHref(barePath, next));
   };
 

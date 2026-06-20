@@ -53,6 +53,7 @@ export const END_POINTS = {
   MY_INGREDIENT_RECIPES: "/dev/me/fridge/recipes",
   MY_INFO: "/me",
   MY_INFO_DEV: "/dev/me",
+  PREFERRED_LOCALE: "/me/preferred-locale",
   REFERRAL_INFO: "/me/referral",
   REFERRAL_REDEEM: "/me/referral/redemptions",
   MY_INGREDIENTS: "/me/fridge/items",
