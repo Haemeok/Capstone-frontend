@@ -121,6 +121,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Prune and distrust](rules/test-prune-and-distrust.md) — deletion pass + false-confidence pass; mutation signal over line coverage; agents must be told to cut
 - [No production timing hacks](rules/test-no-production-timing-hacks.md) — never add a setTimeout/delay to production to win a test race; mock the reconciled (post-mutation) server response instead
 - [Hoisted tags → query document](rules/test-react-hoisted-tags.md) — React 19 hoists `<script src>`/`<title>`/`<meta>`/stylesheet to `<head>`; assert on `document`, not RTL `container`
+- [window-gated code → node env](rules/test-window-branch-node-env.md) — `delete global.window` is a no-op in jsdom; test `typeof window` guards under `@jest-environment node` and inject `global.window` for the client case
 
 ## File template
 
