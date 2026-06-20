@@ -22,6 +22,7 @@ import {
   SameIngredientResponse,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
+  TitleKeywordResponse,
   TrendingYoutubeRecipe,
 } from "./types";
 import { RecipePayload } from "./types";
@@ -241,6 +242,16 @@ export const getSameIngredientRecipes = async (
 ): Promise<SameIngredientResponse> => {
   return api.get<SameIngredientResponse>(
     END_POINTS.RECIPE_SAME_INGREDIENT(recipeId),
+    { params: lang === "ko" ? {} : { lang } }
+  );
+};
+
+export const getTitleKeywordRecipes = async (
+  recipeId: string,
+  lang: Locale = "ko"
+): Promise<TitleKeywordResponse> => {
+  return api.get<TitleKeywordResponse>(
+    END_POINTS.RECIPE_TITLE_KEYWORD(recipeId),
     { params: lang === "ko" ? {} : { lang } }
   );
 };

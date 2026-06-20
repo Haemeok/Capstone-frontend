@@ -11,6 +11,7 @@ import {
   getRecommendedRecipes,
   getRemixes,
   getSameIngredientRecipes,
+  getTitleKeywordRecipes,
   RecipeItemsQueryParams,
 } from "@/entities/recipe";
 
@@ -132,6 +133,19 @@ export const useSameIngredientQuery = (
   return useQuery({
     queryKey: ["recipes", "same-ingredient", recipeId, locale],
     queryFn: () => getSameIngredientRecipes(recipeId, locale),
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
+  });
+};
+
+export const useTitleKeywordQuery = (
+  recipeId: string,
+  options?: { enabled?: boolean; locale?: Locale }
+) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "title-keyword", recipeId, locale],
+    queryFn: () => getTitleKeywordRecipes(recipeId, locale),
     enabled: options?.enabled ?? true,
     staleTime: 0,
   });

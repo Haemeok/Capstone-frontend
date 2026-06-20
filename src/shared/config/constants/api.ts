@@ -44,6 +44,7 @@ export const END_POINTS = {
   RECIPE_RECOMMENDATIONS: (id: string) => `/dev/recipes/${id}/recommendations`,
   RECIPE_REMIXES: (id: string) => `/dev/recipes/${id}/remixes`,
   RECIPE_SAME_INGREDIENT: (id: string) => `/dev/recipes/${id}/same-ingredient`,
+  RECIPE_TITLE_KEYWORD: (id: string) => `/dev/recipes/${id}/title-keyword`,
   RECIPE_FINALIZE: (id: string) => `/dev/recipes/${id}/finalize`,
   GOOGLE_LOGIN: `/oauth2/authorization/google`,
   KAKAO_LOGIN: `/api/auth/login/kakao`,

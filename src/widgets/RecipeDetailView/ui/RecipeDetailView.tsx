@@ -14,9 +14,6 @@ import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { RecipeStatusProvider } from "@/features/recipe-status";
 
 import { CoupangDisclosure } from "./CoupangDisclosure";
-import LazyRecommendedRecipeSlide from "./LazyRecommendedRecipeSlide";
-import LazyRemixesSlide from "./LazyRemixesSlide";
-import LazySameIngredientSlide from "./LazySameIngredientSlide";
 import { NotTranslatedBanner } from "./NotTranslatedBanner";
 import RecentlyViewedTracker from "./RecentlyViewedTracker";
 import RecipeCommentsSection from "./RecipeCommentsSection";
@@ -24,6 +21,7 @@ import RecipeComponentsSection from "./RecipeComponentsSection";
 import { RecipeContainer } from "./RecipeContainer";
 import RecipeCookingInfoSection from "./RecipeCookingInfoSection";
 import RecipeCookingTipsSection from "./RecipeCookingTipsSection";
+import { RecipeDetailBottomSlides } from "./RecipeDetailBottomSlides";
 import RecipeHeroSection from "./RecipeHeroSection";
 import RecipeInfoSection from "./RecipeInfoSection";
 import RecipeIngredientsSection from "./RecipeIngredientsSection";
@@ -181,15 +179,11 @@ export const RecipeDetailView = ({
 
           <RecipeTagsSection tags={recipe.tags} />
 
-          <LazyRecommendedRecipeSlide
+          <RecipeDetailBottomSlides
             recipeId={recipeId}
             tags={recipe.tags}
             locale={locale}
           />
-
-          <LazySameIngredientSlide recipeId={recipeId} locale={locale} />
-
-          <LazyRemixesSlide recipeId={recipeId} locale={locale} />
         </RecipeContainer>
         {locale === "ko" && <ChatLauncher recipeId={recipeId} />}
       </RecipeStatusProvider>

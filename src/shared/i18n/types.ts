@@ -127,6 +127,7 @@ export type RecipeDetailDict = {
   recommendedChefTitle: string;
   remixesTitle: string;
   sameIngredientTitle: string;
+  titleKeywordTitle: string;
   cookingTimeValue: string;
   servingsValue: string;
   caloriePrefix: string;

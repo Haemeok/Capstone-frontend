@@ -54,4 +54,5 @@ export const recipeDetail: RecipeDetailDict = {
   savingsPrefix: "デリバリー相場と比べて",
   savingsSuffix: "お得！",
   sameIngredientTitle: "{ingredientName}を使った他のレシピをお探しですか？",
+  titleKeywordTitle: "{keyword}のレシピをお探しですか？",
 };

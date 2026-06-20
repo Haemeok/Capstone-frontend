@@ -318,6 +318,11 @@ export type SameIngredientResponse = {
   content: StaticDetailedRecipeGridItem[];
 };
 
+export type TitleKeywordResponse = {
+  keyword: string | null;
+  content: StaticDetailedRecipeGridItem[];
+};
+
 export type FridgeIngredientPopularResponse = {
   ingredientName: string | null;
   content: StaticDetailedRecipeGridItem[];

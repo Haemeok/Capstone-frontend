@@ -19,6 +19,7 @@ export {
   getRecommendedRecipes,
   getRemixes,
   getSameIngredientRecipes,
+  getTitleKeywordRecipes,
 } from "./model/api";
 export {
   useRecipeDetailQuery,
@@ -44,6 +45,7 @@ export type {
   SameIngredientResponse,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
+  TitleKeywordResponse,
   TrendingYoutubeRecipe,
 } from "./model/types";
 export { CountryFlagGlyph } from "./ui/CountryFlagGlyph";

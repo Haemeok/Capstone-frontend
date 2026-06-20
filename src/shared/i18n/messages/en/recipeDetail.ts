@@ -54,4 +54,5 @@ export const recipeDetail: RecipeDetailDict = {
   savingsPrefix: "Versus delivery prices,",
   savingsSuffix: "saved",
   sameIngredientTitle: "Looking for other recipes with {ingredientName}?",
+  titleKeywordTitle: "Looking for {keyword} recipes?",
 };
