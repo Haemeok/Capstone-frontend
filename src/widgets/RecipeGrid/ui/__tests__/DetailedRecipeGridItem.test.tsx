@@ -30,6 +30,21 @@ const baseRecipe: DetailedRecipeGridItemType = {
   creatorCountryTag: "JP",
 };
 
+const usRecipe: DetailedRecipeGridItemType = {
+  id: "r-us",
+  title: "버섯 치킨",
+  imageUrl: "https://example.com/a.jpg",
+  authorId: "a1",
+  authorName: "달빛고래나무",
+  profileImage: "https://example.com/p.jpg",
+  createdAt: "2026-06-01T00:00:00",
+  avgRating: 4.5,
+  ratingCount: 10,
+  favoriteByCurrentUser: false,
+  source: "YOUTUBE",
+  creatorCountryTag: "US",
+};
+
 describe("DetailedRecipeGridItem 국가 국기", () => {
   it("절약 배지가 없으면 JP 국기를 노출한다", () => {
     render(<DetailedRecipeGridItem recipe={baseRecipe} />);
@@ -47,5 +62,22 @@ describe("DetailedRecipeGridItem 국가 국기", () => {
     expect(
       screen.queryByRole("img", { name: "일본 채널" })
     ).not.toBeInTheDocument();
+  });
+
+  it("US 태그라도 infoBadge가 있으면 성조기를 숨긴다", () => {
+    render(
+      <DetailedRecipeGridItem
+        recipe={usRecipe}
+        infoBadge={<span>badge</span>}
+      />
+    );
+    expect(
+      screen.queryByRole("img", { name: "미국 채널" })
+    ).not.toBeInTheDocument();
+  });
+
+  it("US 태그에 infoBadge가 없으면 성조기를 노출한다", () => {
+    render(<DetailedRecipeGridItem recipe={usRecipe} />);
+    expect(screen.getByRole("img", { name: "미국 채널" })).toBeInTheDocument();
   });
 });
