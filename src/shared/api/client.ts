@@ -6,6 +6,7 @@ import { handle401Error } from "./auth";
 import { API_CONFIG, isClient, isServer } from "./config";
 import { ApiError, createApiError, isErrorResponse } from "./errors";
 import { getErrorData } from "./errors";
+import { getClientTimeZone } from "./timezone";
 import type { ApiRequestOptions, BatchRequestFunction } from "./types";
 
 export async function apiClient<T = unknown>(
@@ -52,10 +53,17 @@ export async function apiClient<T = unknown>(
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
+  const timeZone = getClientTimeZone();
+  const mergedHeaders: Record<string, string> = {
+    ...(timeZone ? { "X-Timezone": timeZone } : {}),
+    // 코드베이스 호출부는 전부 plain object 헤더
+    ...(headers as Record<string, string>),
+  };
+
   const requestOptions: RequestInit = {
     credentials: "include",
     signal: controller.signal,
-    headers,
+    headers: mergedHeaders,
     ...restOptions,
   };
 
