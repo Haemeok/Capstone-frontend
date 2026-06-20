@@ -44,6 +44,9 @@ const KoreaFlag = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const US_STAR_X = [2, 4.6, 7.2, 9.8, 12.4];
+const US_STAR_Y = [2.2, 5, 7.8, 10.6];
+
 const UsaFlag = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 36 24"
@@ -61,6 +64,13 @@ const UsaFlag = ({ className }: { className?: string }) => (
       <rect y="22" width="36" height="2" />
     </g>
     <rect width="15" height="13" fill="#3c3b6e" />
+    <g fill="#fff">
+      {US_STAR_Y.flatMap((cy) =>
+        US_STAR_X.map((cx) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="0.7" />
+        ))
+      )}
+    </g>
   </svg>
 );
 
