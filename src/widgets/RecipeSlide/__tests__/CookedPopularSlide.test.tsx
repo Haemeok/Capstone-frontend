@@ -81,11 +81,12 @@ describe("CookedPopularSlide", () => {
 
   it("content가 비면 렌더하지 않는다 (T-B2 wiring)", async () => {
     mockGet.mockResolvedValue({ content: [] });
-    renderWithClient(<CookedPopularSlide locale="ko" />);
+    const { container } = renderWithClient(<CookedPopularSlide locale="ko" />);
     await waitFor(() =>
       expect(
         screen.queryByText("레시피오 유저들이 많이 요리한 레시피")
       ).not.toBeInTheDocument()
     );
+    expect(container.querySelector("[aria-hidden]")).not.toBeInTheDocument();
   });
 });
