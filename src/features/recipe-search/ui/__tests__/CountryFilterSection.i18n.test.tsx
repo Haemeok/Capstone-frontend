@@ -54,4 +54,28 @@ describe("CountryFilterSection i18n", () => {
     expect(screen.getByText("크리에이터 국가")).toBeInTheDocument();
     expect(screen.getByText("한국")).toBeInTheDocument();
   });
+
+  it("ko에서 미국 옵션을 노출한다", () => {
+    mockPathname.mockReturnValue("/search/results");
+    render(
+      <CountryFilterSection
+        selectedCountries={EMPTY}
+        onCountriesChange={NOOP}
+      />
+    );
+    expect(screen.getByText("미국")).toBeInTheDocument();
+  });
+
+  it("/ja에서 미국 라벨이 ja 사전값", () => {
+    mockPathname.mockReturnValue("/ja/search/results");
+    render(
+      <CountryFilterSection
+        selectedCountries={EMPTY}
+        onCountriesChange={NOOP}
+      />
+    );
+    expect(
+      screen.getByText(taxonomyMessages.ja.country["미국"])
+    ).toBeInTheDocument();
+  });
 });

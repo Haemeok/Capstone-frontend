@@ -82,6 +82,7 @@ export const taxonomy: TaxonomyDict = {
   country: {
     한국: "韓国",
     일본: "日本",
+    미국: "アメリカ",
     기타: "その他",
   },
   recipeSort: {

@@ -533,5 +533,6 @@ export type NutritionThemeKey = keyof typeof NUTRITION_THEMES;
 export const COUNTRY_DEFINITIONS = [
   { code: "KR", label: "한국" },
   { code: "JP", label: "일본" },
+  { code: "US", label: "미국" },
   { code: "OTHER", label: "기타" },
 ] as const;
