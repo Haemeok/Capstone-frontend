@@ -7,6 +7,7 @@ import { ChevronRight } from "lucide-react";
 import { LocalizedLink } from "@/shared/i18n";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
+import RemixBadge from "@/shared/ui/badge/RemixBadge";
 import {
   Carousel,
   CarouselContent,
@@ -31,11 +32,15 @@ type RecipeSlideProps = {
   locale?: "ko" | "ja" | "en";
 };
 
-const getRecipeRightBadge = (recipe: DetailedRecipeGridItemType): ReactNode => {
+const getRecipeRightBadge = (
+  recipe: DetailedRecipeGridItemType,
+  remixLabel: string
+): ReactNode => {
+  if (recipe.isRemix) {
+    return <RemixBadge label={remixLabel} />;
+  }
   if (recipe.ingredientCost) {
-    return (
-      <BudgetTierBadge key="budget" ingredientCost={recipe.ingredientCost} />
-    );
+    return <BudgetTierBadge ingredientCost={recipe.ingredientCost} />;
   }
   return null;
 };
@@ -104,7 +109,7 @@ const RecipeSlide = ({
                 prefetch
                 hideCookingTime
                 locale={locale}
-                infoBadge={getRecipeRightBadge(item)}
+                infoBadge={getRecipeRightBadge(item, t.remixBadge)}
                 saveBadge={
                   <RecipeSaveButton
                     recipeId={item.id}

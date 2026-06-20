@@ -68,6 +68,7 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   youtubeExtractorName?: string;
   youtubeExtractorProfileImage?: string;
   creatorCountryTag?: CreatorCountryTag | null;
+  isRemix?: boolean;
 };
 
 export type StaticDetailedRecipeGridItem = Omit<
@@ -309,6 +310,8 @@ export type RecipeListItemStatus = {
 export type RecipesStatusResponse = Record<string, RecipeListItemStatus>;
 
 export type CookedPopularResponse = { content: StaticDetailedRecipeGridItem[] };
+
+export type CookedAgainResponse = { content: StaticDetailedRecipeGridItem[] };
 
 export type FridgeIngredientPopularResponse = {
   ingredientName: string | null;

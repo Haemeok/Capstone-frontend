@@ -309,6 +309,7 @@ export type SearchDiscoveryDict = {
   cookedPopularTitle: string;
   fridgeIngredientTitle: string;
   cookedAgainTitle: string;
+  remixBadge: string;
   placeholders: {
     breakfast: string[];
     lunch: string[];

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Locale } from "@/shared/i18n";
 
 import {
+  getCookedAgainRecipes,
   getCookedPopularRecipes,
   getFridgeIngredientPopularRecipes,
   getRecipeItems,
@@ -91,6 +92,20 @@ export const useFridgeIngredientQuery = (options?: {
   return useQuery({
     queryKey: ["recipes", "fridge-ingredient", locale],
     queryFn: () => getFridgeIngredientPopularRecipes(locale),
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
+  });
+};
+
+export const useCookedAgainQuery = (options?: {
+  enabled?: boolean;
+  locale?: Locale;
+}) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "cooked-again", locale],
+    queryFn: () => getCookedAgainRecipes(locale),
+    select: (data) => data.content,
     enabled: options?.enabled ?? true,
     staleTime: 0,
   });

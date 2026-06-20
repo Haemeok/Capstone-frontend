@@ -15,6 +15,7 @@ export const searchDiscovery: SearchDiscoveryDict = {
   cookedPopularTitle: "Recipes Recipio users cook the most",
   fridgeIngredientTitle: "Recipes using {ingredientName} from your fridge",
   cookedAgainTitle: "Cook something you've made before?",
+  remixBadge: "Remix",
   placeholders: {
     breakfast: [
       'Easy "scrambled eggs" recipe',

@@ -10,6 +10,7 @@ import { Container } from "@/shared/ui/Container";
 import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 import { SearchInput } from "@/features/search-input";
 
+import CookedAgainSlide from "@/widgets/RecipeSlide/CookedAgainSlide";
 import CookedPopularSlide from "@/widgets/RecipeSlide/CookedPopularSlide";
 import FridgeIngredientSlide from "@/widgets/RecipeSlide/FridgeIngredientSlide";
 
@@ -43,6 +44,7 @@ const SearchDiscoveryDefault = () => {
         <LatestRecipesSlide />
 
         <FridgeIngredientSlide locale={locale} />
+        <CookedAgainSlide locale={locale} />
         <CookedPopularSlide locale={locale} />
 
         <section className="space-y-4">

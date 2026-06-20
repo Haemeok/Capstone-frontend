@@ -8,6 +8,7 @@ import { RecipeHistoryResponse } from "@/entities/user/model/types";
 
 import { RecipeHistoryDetailResponse, RecordTimelineResponse } from "./record";
 import {
+  CookedAgainResponse,
   CookedPopularResponse,
   DetailedRecipesApiResponse,
   FridgeIngredientPopularResponse,
@@ -223,6 +224,14 @@ export const getFridgeIngredientPopularRecipes = async (
     END_POINTS.MY_FRIDGE_INGREDIENT_POPULAR,
     { params: lang === "ko" ? {} : { lang } }
   );
+};
+
+export const getCookedAgainRecipes = async (
+  lang: Locale = "ko"
+): Promise<CookedAgainResponse> => {
+  return api.get<CookedAgainResponse>(END_POINTS.MY_RECIPES_COOKED_AGAIN, {
+    params: lang === "ko" ? {} : { lang },
+  });
 };
 
 export const reportIngredient = async (

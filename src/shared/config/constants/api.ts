@@ -86,6 +86,7 @@ export const END_POINTS = {
     `/admin/curation-articles/${id}/publish`,
   RECIPE_COOKED_POPULAR: "/recipes/cooked-popular",
   MY_FRIDGE_INGREDIENT_POPULAR: "/me/fridge/recipes/ingredient-popular",
+  MY_RECIPES_COOKED_AGAIN: "/me/recipes/cooked-again",
 };
 
 export const USER_ERROR_MESSAGE = {

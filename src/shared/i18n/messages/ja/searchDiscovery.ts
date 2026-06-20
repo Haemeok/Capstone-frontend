@@ -16,6 +16,7 @@ export const searchDiscovery: SearchDiscoveryDict = {
   cookedPopularTitle: "レシピオユーザーがよく作っているレシピ",
   fridgeIngredientTitle: "冷蔵庫の{ingredientName}を使ったレシピ",
   cookedAgainTitle: "前に作った料理、もう一度作ってみませんか？",
+  remixBadge: "リミックス",
   placeholders: {
     breakfast: [
       "朝にうれしい「卵焼き」を検索",
