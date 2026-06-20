@@ -11,6 +11,7 @@ export {
 export {
   fetchPagedRecipes,
   getCookedPopularRecipes,
+  getFridgeIngredientPopularRecipes,
   getRecipe,
   getRecipeItems,
   getRecipesStatus,
@@ -28,6 +29,7 @@ export type {
   CreatorCountryTag,
   DetailedRecipeGridItem,
   DetailedRecipesApiResponse,
+  FridgeIngredientPopularResponse,
   MyRecipeListItem,
   MyRecipesPageResponse,
   Recipe,

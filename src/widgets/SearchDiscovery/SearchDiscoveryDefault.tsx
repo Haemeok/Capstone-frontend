@@ -11,6 +11,7 @@ import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCrea
 import { SearchInput } from "@/features/search-input";
 
 import CookedPopularSlide from "@/widgets/RecipeSlide/CookedPopularSlide";
+import FridgeIngredientSlide from "@/widgets/RecipeSlide/FridgeIngredientSlide";
 
 import ContentPageGrid from "./ui/ContentPageGrid";
 import LatestRecipesSlide from "./ui/LatestRecipesSlide";
@@ -41,6 +42,7 @@ const SearchDiscoveryDefault = () => {
 
         <LatestRecipesSlide />
 
+        <FridgeIngredientSlide locale={locale} />
         <CookedPopularSlide locale={locale} />
 
         <section className="space-y-4">
