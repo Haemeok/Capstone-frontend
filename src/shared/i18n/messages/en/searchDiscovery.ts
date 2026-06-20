@@ -13,6 +13,8 @@ export const searchDiscovery: SearchDiscoveryDict = {
   recipeSlideEmpty: "No recipes yet.",
   recipeSlideError: "Something went wrong. Please try again later.",
   cookedPopularTitle: "Recipes Recipio users cook the most",
+  countryPopularTitle: "Discover popular recipes from {country}",
+  countryPopularNames: { US: "the US", JP: "Japan" },
   fridgeIngredientTitle: "Recipes using {ingredientName} from your fridge",
   cookedAgainTitle: "Cook something you've made before?",
   remixBadge: "Remix",

@@ -5,6 +5,7 @@ import type { Locale } from "@/shared/i18n";
 import {
   getCookedAgainRecipes,
   getCookedPopularRecipes,
+  getCountryPopularRecipes,
   getFridgeIngredientPopularRecipes,
   getRecipeItems,
   getRecipesStatus,
@@ -81,6 +82,19 @@ export const useCookedPopularQuery = (options?: {
     queryKey: ["recipes", "cooked-popular", locale],
     queryFn: () => getCookedPopularRecipes(locale),
     select: (data) => data.content,
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
+  });
+};
+
+export const useCountryPopularQuery = (options?: {
+  enabled?: boolean;
+  locale?: Locale;
+}) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "country-popular", locale],
+    queryFn: () => getCountryPopularRecipes(locale),
     enabled: options?.enabled ?? true,
     staleTime: 0,
   });

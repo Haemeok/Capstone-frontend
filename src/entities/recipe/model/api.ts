@@ -10,6 +10,7 @@ import { RecipeHistoryDetailResponse, RecordTimelineResponse } from "./record";
 import {
   CookedAgainResponse,
   CookedPopularResponse,
+  CountryPopularResponse,
   DetailedRecipesApiResponse,
   FridgeIngredientPopularResponse,
   IngredientRecipesApiResponse,
@@ -215,6 +216,14 @@ export const getCookedPopularRecipes = async (
   lang: Locale = "ko"
 ): Promise<CookedPopularResponse> => {
   return api.get<CookedPopularResponse>(END_POINTS.RECIPE_COOKED_POPULAR, {
+    params: lang === "ko" ? {} : { lang },
+  });
+};
+
+export const getCountryPopularRecipes = async (
+  lang: Locale = "ko"
+): Promise<CountryPopularResponse> => {
+  return api.get<CountryPopularResponse>(END_POINTS.RECIPE_COUNTRY_POPULAR, {
     params: lang === "ko" ? {} : { lang },
   });
 };

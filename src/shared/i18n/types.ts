@@ -309,6 +309,8 @@ export type SearchDiscoveryDict = {
   recipeSlideEmpty: string;
   recipeSlideError: string;
   cookedPopularTitle: string;
+  countryPopularTitle: string;
+  countryPopularNames: { US: string; JP: string };
   fridgeIngredientTitle: string;
   cookedAgainTitle: string;
   remixBadge: string;

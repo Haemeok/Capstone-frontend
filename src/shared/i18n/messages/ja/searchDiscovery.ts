@@ -14,6 +14,8 @@ export const searchDiscovery: SearchDiscoveryDict = {
   recipeSlideError:
     "サーバーに問題が発生しました。後でもう一度お試しください。",
   cookedPopularTitle: "レシピオユーザーがよく作っているレシピ",
+  countryPopularTitle: "{country}の人気レシピをチェック",
+  countryPopularNames: { US: "アメリカ", JP: "日本" },
   fridgeIngredientTitle: "冷蔵庫の{ingredientName}を使ったレシピ",
   cookedAgainTitle: "前に作った料理、もう一度作ってみませんか？",
   remixBadge: "リミックス",

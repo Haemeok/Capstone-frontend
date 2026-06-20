@@ -15,6 +15,7 @@ import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 import { HOME_BANNER_SLIDES } from "@/widgets/HomeBannerCarousel/slides";
+import CountryPopularSlide from "@/widgets/RecipeSlide/CountryPopularSlide";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
@@ -80,6 +81,8 @@ const HomePage = async () => {
             staticRecipes={staticBudgetRecipes.content}
             locale="ko"
           />
+
+          <CountryPopularSlide locale="ko" />
         </div>
       </Container>
       <DesktopFooter />

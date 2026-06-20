@@ -328,6 +328,14 @@ export type FridgeIngredientPopularResponse = {
   content: StaticDetailedRecipeGridItem[];
 };
 
+export type CountryPopularCode = "US" | "JP";
+
+export type CountryPopularResponse = {
+  countryCode: CountryPopularCode;
+  countryName: string;
+  content: StaticDetailedRecipeGridItem[];
+};
+
 export type MyRecipeListItem = {
   id: string;
   title: string;

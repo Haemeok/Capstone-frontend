@@ -87,6 +87,7 @@ export const END_POINTS = {
   ADMIN_CURATION_ARTICLE_PUBLISH: (id: number) =>
     `/admin/curation-articles/${id}/publish`,
   RECIPE_COOKED_POPULAR: "/recipes/cooked-popular",
+  RECIPE_COUNTRY_POPULAR: "/recipes/country-popular",
   MY_FRIDGE_INGREDIENT_POPULAR: "/me/fridge/recipes/ingredient-popular",
   MY_RECIPES_COOKED_AGAIN: "/me/recipes/cooked-again",
 };
