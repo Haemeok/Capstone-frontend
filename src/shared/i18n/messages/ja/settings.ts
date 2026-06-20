@@ -2,6 +2,8 @@ import type { SettingsDict } from "../../types";
 
 export const settings: SettingsDict = {
   title: "設定",
+  language: "言語",
+  languageSelectAria: "言語を選択",
   srDescription: "アプリ設定とアカウント管理",
   adRemoval: "広告を非表示",
   adRemovalCta: "広告なしで楽しむ",

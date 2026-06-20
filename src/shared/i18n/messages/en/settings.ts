@@ -2,6 +2,8 @@ import type { SettingsDict } from "../../types";
 
 export const settings: SettingsDict = {
   title: "Settings",
+  language: "Language",
+  languageSelectAria: "Select language",
   srDescription: "App settings and account",
   adRemoval: "Remove ads",
   adRemovalCta: "Go ad-free",

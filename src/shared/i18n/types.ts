@@ -834,6 +834,8 @@ export type CommonDict = {
 
 export type SettingsDict = {
   title: string;
+  language: string;
+  languageSelectAria: string;
   srDescription: string;
   adRemoval: string;
   adRemovalCta: string;

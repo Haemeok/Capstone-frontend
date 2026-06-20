@@ -10,6 +10,7 @@ import {
   localizedHref,
   setStoredLocale,
   stripLocale,
+  useSettingsDict,
 } from "@/shared/i18n";
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -22,6 +23,7 @@ export const LanguageSettingRow = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { locale: current, barePath } = stripLocale(pathname);
+  const t = useSettingsDict();
 
   const handleSelect = (next: Locale) => {
     setStoredLocale(next);
@@ -32,9 +34,13 @@ export const LanguageSettingRow = () => {
     <div className="flex w-full items-center justify-between px-4 py-3">
       <div className="text-ink-sub flex items-center gap-2">
         <Languages size={16} aria-hidden="true" />
-        <span>언어</span>
+        <span>{t.language}</span>
       </div>
-      <div role="group" aria-label="언어 선택" className="flex gap-1">
+      <div
+        role="group"
+        aria-label={t.languageSelectAria}
+        className="flex gap-1"
+      >
         {LOCALES.map((loc) => (
           <button
             key={loc}
