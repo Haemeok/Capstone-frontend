@@ -8,6 +8,7 @@ import { RecipeHistoryResponse } from "@/entities/user/model/types";
 
 import { RecipeHistoryDetailResponse, RecordTimelineResponse } from "./record";
 import {
+  CategoryPopularResponse,
   CookedAgainResponse,
   CookedPopularResponse,
   CountryPopularResponse,
@@ -16,15 +17,18 @@ import {
   IngredientRecipesApiResponse,
   MyFridgePageResponse,
   MyFridgeRecipeItem,
+  QuickPopularResponse,
   Recipe,
   RecipeQueryParams,
   RecipesStatusResponse,
   RecipeStatus,
   SameIngredientResponse,
+  SeasonalPopularResponse,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   TitleKeywordResponse,
   TrendingYoutubeRecipe,
+  YoutubeVerifiedResponse,
 } from "./types";
 import { RecipePayload } from "./types";
 
@@ -224,6 +228,38 @@ export const getCountryPopularRecipes = async (
   lang: Locale = "ko"
 ): Promise<CountryPopularResponse> => {
   return api.get<CountryPopularResponse>(END_POINTS.RECIPE_COUNTRY_POPULAR, {
+    params: lang === "ko" ? {} : { lang },
+  });
+};
+
+export const getSeasonalPopularRecipes = async (
+  lang: Locale = "ko"
+): Promise<SeasonalPopularResponse> => {
+  return api.get<SeasonalPopularResponse>(END_POINTS.RECIPE_SEASONAL_POPULAR, {
+    params: lang === "ko" ? {} : { lang },
+  });
+};
+
+export const getQuickPopularRecipes = async (
+  lang: Locale = "ko"
+): Promise<QuickPopularResponse> => {
+  return api.get<QuickPopularResponse>(END_POINTS.RECIPE_QUICK_POPULAR, {
+    params: lang === "ko" ? {} : { lang },
+  });
+};
+
+export const getCategoryPopularRecipes = async (
+  lang: Locale = "ko"
+): Promise<CategoryPopularResponse> => {
+  return api.get<CategoryPopularResponse>(END_POINTS.RECIPE_CATEGORY_POPULAR, {
+    params: lang === "ko" ? {} : { lang },
+  });
+};
+
+export const getYoutubeVerifiedRecipes = async (
+  lang: Locale = "ko"
+): Promise<YoutubeVerifiedResponse> => {
+  return api.get<YoutubeVerifiedResponse>(END_POINTS.RECIPE_YOUTUBE_VERIFIED, {
     params: lang === "ko" ? {} : { lang },
   });
 };

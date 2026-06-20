@@ -10,17 +10,21 @@ export {
 } from "./lib/visibility";
 export {
   fetchPagedRecipes,
+  getCategoryPopularRecipes,
   getCookedAgainRecipes,
   getCookedPopularRecipes,
   getCountryPopularRecipes,
   getFridgeIngredientPopularRecipes,
+  getQuickPopularRecipes,
   getRecipe,
   getRecipeItems,
   getRecipesStatus,
   getRecommendedRecipes,
   getRemixes,
   getSameIngredientRecipes,
+  getSeasonalPopularRecipes,
   getTitleKeywordRecipes,
+  getYoutubeVerifiedRecipes,
 } from "./model/api";
 export {
   useRecipeDetailQuery,
@@ -29,6 +33,8 @@ export {
 export type {
   BaseRecipeGridItem,
   BaseRecipesApiResponse,
+  CategoryCode,
+  CategoryPopularResponse,
   CookedAgainResponse,
   CookedPopularResponse,
   CountryPopularCode,
@@ -39,6 +45,7 @@ export type {
   FridgeIngredientPopularResponse,
   MyRecipeListItem,
   MyRecipesPageResponse,
+  QuickPopularResponse,
   Recipe,
   RecipeItemsQueryParams,
   RecipePayload,
@@ -46,10 +53,12 @@ export type {
   RecipeStep,
   RecipeStepPayload,
   SameIngredientResponse,
+  SeasonalPopularResponse,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   TitleKeywordResponse,
   TrendingYoutubeRecipe,
+  YoutubeVerifiedResponse,
 } from "./model/types";
 export { CountryFlagGlyph } from "./ui/CountryFlagGlyph";
 export { CreatorCountryFlag } from "./ui/CreatorCountryFlag";

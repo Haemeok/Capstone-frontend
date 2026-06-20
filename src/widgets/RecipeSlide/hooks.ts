@@ -3,16 +3,20 @@ import { useQuery } from "@tanstack/react-query";
 import type { Locale } from "@/shared/i18n";
 
 import {
+  getCategoryPopularRecipes,
   getCookedAgainRecipes,
   getCookedPopularRecipes,
   getCountryPopularRecipes,
   getFridgeIngredientPopularRecipes,
+  getQuickPopularRecipes,
   getRecipeItems,
   getRecipesStatus,
   getRecommendedRecipes,
   getRemixes,
   getSameIngredientRecipes,
+  getSeasonalPopularRecipes,
   getTitleKeywordRecipes,
+  getYoutubeVerifiedRecipes,
   RecipeItemsQueryParams,
 } from "@/entities/recipe";
 
@@ -95,6 +99,58 @@ export const useCountryPopularQuery = (options?: {
   return useQuery({
     queryKey: ["recipes", "country-popular", locale],
     queryFn: () => getCountryPopularRecipes(locale),
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
+  });
+};
+
+export const useSeasonalPopularQuery = (options?: {
+  enabled?: boolean;
+  locale?: Locale;
+}) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "seasonal-popular", locale],
+    queryFn: () => getSeasonalPopularRecipes(locale),
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
+  });
+};
+
+export const useQuickPopularQuery = (options?: {
+  enabled?: boolean;
+  locale?: Locale;
+}) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "quick-popular", locale],
+    queryFn: () => getQuickPopularRecipes(locale),
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
+  });
+};
+
+export const useCategoryPopularQuery = (options?: {
+  enabled?: boolean;
+  locale?: Locale;
+}) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "category-popular", locale],
+    queryFn: () => getCategoryPopularRecipes(locale),
+    enabled: options?.enabled ?? true,
+    staleTime: 0,
+  });
+};
+
+export const useYoutubeVerifiedQuery = (options?: {
+  enabled?: boolean;
+  locale?: Locale;
+}) => {
+  const locale = options?.locale ?? "ko";
+  return useQuery({
+    queryKey: ["recipes", "youtube-verified", locale],
+    queryFn: () => getYoutubeVerifiedRecipes(locale),
     enabled: options?.enabled ?? true,
     staleTime: 0,
   });

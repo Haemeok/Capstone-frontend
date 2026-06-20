@@ -88,6 +88,10 @@ export const END_POINTS = {
     `/admin/curation-articles/${id}/publish`,
   RECIPE_COOKED_POPULAR: "/recipes/cooked-popular",
   RECIPE_COUNTRY_POPULAR: "/recipes/country-popular",
+  RECIPE_SEASONAL_POPULAR: "/recipes/seasonal-popular",
+  RECIPE_QUICK_POPULAR: "/recipes/quick-popular",
+  RECIPE_CATEGORY_POPULAR: "/recipes/category-popular",
+  RECIPE_YOUTUBE_VERIFIED: "/recipes/youtube-verified",
   MY_FRIDGE_INGREDIENT_POPULAR: "/me/fridge/recipes/ingredient-popular",
   MY_RECIPES_COOKED_AGAIN: "/me/recipes/cooked-again",
 };

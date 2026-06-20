@@ -311,6 +311,18 @@ export type SearchDiscoveryDict = {
   cookedPopularTitle: string;
   countryPopularTitle: string;
   countryPopularNames: { US: string; JP: string };
+  seasonalPopularTitle: string;
+  quickPopularTitle: string;
+  categoryPopularTitle: string;
+  categoryPopularNames: {
+    RICE: string;
+    NOODLE: string;
+    MEAT: string;
+    SEAFOOD: string;
+    SOUP: string;
+    DESSERT: string;
+  };
+  youtubeVerifiedTitle: string;
   fridgeIngredientTitle: string;
   cookedAgainTitle: string;
   remixBadge: string;

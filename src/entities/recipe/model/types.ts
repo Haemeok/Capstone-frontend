@@ -336,6 +336,33 @@ export type CountryPopularResponse = {
   content: StaticDetailedRecipeGridItem[];
 };
 
+export type SeasonalPopularResponse = {
+  seasonalIngredientName: string | null;
+  content: StaticDetailedRecipeGridItem[];
+};
+
+export type QuickPopularResponse = {
+  maxCookingTime: number;
+  content: StaticDetailedRecipeGridItem[];
+};
+
+export type CategoryCode =
+  | "RICE"
+  | "NOODLE"
+  | "MEAT"
+  | "SEAFOOD"
+  | "SOUP"
+  | "DESSERT";
+
+export type CategoryPopularResponse = {
+  categoryCode: CategoryCode;
+  content: StaticDetailedRecipeGridItem[];
+};
+
+export type YoutubeVerifiedResponse = {
+  content: StaticDetailedRecipeGridItem[];
+};
+
 export type MyRecipeListItem = {
   id: string;
   title: string;
