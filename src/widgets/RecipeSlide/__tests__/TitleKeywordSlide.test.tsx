@@ -84,7 +84,10 @@ describe("TitleKeywordSlide", () => {
   });
 
   it("keyword null이면 숨긴다 (T-F3)", async () => {
-    mockGet.mockResolvedValue({ keyword: null, content: [] });
+    mockGet.mockResolvedValue({
+      keyword: null,
+      content: [card("r1", "참치샌드위치")],
+    });
     renderWithClient(<TitleKeywordSlide recipeId="base1" locale="ko" />);
     await waitFor(() => expect(mockGet).toHaveBeenCalled());
     expect(screen.queryByText(/찾고 있으세요/)).not.toBeInTheDocument();

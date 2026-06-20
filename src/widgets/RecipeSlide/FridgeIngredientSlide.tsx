@@ -33,6 +33,8 @@ const FridgeIngredientSlide = ({ locale }: FridgeIngredientSlideProps) => {
     return <div ref={ref} className="h-[260px] w-full" aria-hidden />;
   }
 
+  if (isLoading) return null;
+
   if (
     shouldHideRecipeSlide({
       isLoading,

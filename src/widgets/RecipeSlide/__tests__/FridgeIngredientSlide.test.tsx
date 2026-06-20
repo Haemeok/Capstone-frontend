@@ -101,6 +101,21 @@ describe("FridgeIngredientSlide", () => {
     );
   });
 
+  it("로딩 중에는 빈 ingredientName 타이틀을 노출하지 않는다", async () => {
+    let resolve: (v: unknown) => void = () => {};
+    mockGet.mockReturnValue(
+      new Promise((r) => {
+        resolve = r;
+      })
+    );
+    renderWithClient(<FridgeIngredientSlide locale="ko" />);
+    expect(screen.queryByText(/활용 레시피/)).not.toBeInTheDocument();
+    resolve({ ingredientName: "양파", content: [card("r1", "양파볶음")] });
+    expect(
+      await screen.findByText("고객님 냉장고에 있는 양파 활용 레시피")
+    ).toBeInTheDocument();
+  });
+
   it("401 에러면 조용히 숨긴다 (T-C5)", async () => {
     mockGet.mockRejectedValue(new Error("401"));
     renderWithClient(<FridgeIngredientSlide locale="ko" />);
