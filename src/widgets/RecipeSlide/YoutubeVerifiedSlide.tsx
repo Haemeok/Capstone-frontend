@@ -39,7 +39,7 @@ const YoutubeVerifiedSlide = ({ locale }: YoutubeVerifiedSlideProps) => {
   }
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="w-full">
       <RecipeSlideSection
         title={t.youtubeVerifiedTitle}
         recipes={items}

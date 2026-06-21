@@ -43,7 +43,7 @@ const SeasonalPopularSlide = ({ locale }: SeasonalPopularSlideProps) => {
   }
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="w-full">
       <RecipeSlideSection
         title={format(t.seasonalPopularTitle, {
           ingredient: ingredientName ?? "",

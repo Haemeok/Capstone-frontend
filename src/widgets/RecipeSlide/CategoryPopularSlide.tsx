@@ -43,7 +43,7 @@ const CategoryPopularSlide = ({ locale }: CategoryPopularSlideProps) => {
   }
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="w-full">
       <RecipeSlideSection
         title={format(t.categoryPopularTitle, {
           category: categoryCode ? t.categoryPopularNames[categoryCode] : "",

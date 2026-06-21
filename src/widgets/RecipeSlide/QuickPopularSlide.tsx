@@ -41,7 +41,7 @@ const QuickPopularSlide = ({ locale }: QuickPopularSlideProps) => {
   }
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="w-full">
       <RecipeSlideSection
         title={format(t.quickPopularTitle, {
           minutes: String(maxCookingTime ?? ""),
