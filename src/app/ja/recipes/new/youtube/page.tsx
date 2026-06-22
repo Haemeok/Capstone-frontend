@@ -26,7 +26,7 @@ const Page = async ({ searchParams }: Props) => {
     getTrendingYoutubeRecipesOnServer("ja"),
   ]);
   const dict = getDictionary("ja");
-  const jsonLd = createYoutubeExtractorStructuredData();
+  const jsonLd = createYoutubeExtractorStructuredData("ja");
   return (
     <>
       <script

@@ -29,7 +29,7 @@ const YoutubeImportPage = async ({ searchParams }: YoutubeImportPageProps) => {
   ]);
 
   const dict = getDictionary("ko");
-  const jsonLd = createYoutubeExtractorStructuredData();
+  const jsonLd = createYoutubeExtractorStructuredData("ko");
 
   return (
     <>
