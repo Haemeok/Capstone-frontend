@@ -8,7 +8,7 @@ import { Search } from "lucide-react";
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { format, useApiLocale, useRecipeFormDict } from "@/shared/i18n";
+import { format, useRecipeFormDict } from "@/shared/i18n";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
@@ -54,7 +54,6 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
-  const locale = useApiLocale();
   const { ui } = useRecipeFormDict();
   const { localize } = useTaxonomy();
 
@@ -78,7 +77,6 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
           q: searchQuery,
           pageParam,
           isMine: selectedCategory === "나의 재료" ? true : false,
-          lang: locale,
         }),
       getNextPageParam: getNextPageParam,
       initialPageParam: 0,

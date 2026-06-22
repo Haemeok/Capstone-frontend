@@ -23,7 +23,6 @@ type GetIngredientsParams = {
   isMine: boolean;
   q: string;
   pageParam: number;
-  lang: string;
 };
 
 const emptyPage: IngredientsApiResponse = {

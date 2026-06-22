@@ -6,7 +6,7 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { useApiLocale, useCommonDict } from "@/shared/i18n";
+import { useCommonDict } from "@/shared/i18n";
 import { format } from "@/shared/i18n/format";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -93,7 +93,6 @@ const IngredientsFilterSheetContent = ({
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =
     useSearch();
-  const locale = useApiLocale();
 
   const { data, isPending, ref } = useInfiniteScroll<
     IngredientsApiResponse,
@@ -110,7 +109,6 @@ const IngredientsFilterSheetContent = ({
         pageParam,
         isMine: false,
         isFridge: false,
-        lang: locale,
       }),
     getNextPageParam,
     initialPageParam: 0,

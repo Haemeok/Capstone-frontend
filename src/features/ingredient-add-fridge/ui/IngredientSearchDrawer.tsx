@@ -8,7 +8,7 @@ import { Search } from "lucide-react";
 import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { format, useApiLocale, useIngredientAddDict } from "@/shared/i18n";
+import { format, useIngredientAddDict } from "@/shared/i18n";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { cn } from "@/shared/lib/utils";
@@ -39,7 +39,6 @@ const IngredientSearchDrawer = ({
     useSearch();
   const dict = useIngredientAddDict();
   const { localize } = useTaxonomy();
-  const locale = useApiLocale();
 
   const { data, error, hasNextPage, isFetching, status, isPending, ref } =
     useInfiniteScroll<
@@ -57,7 +56,6 @@ const IngredientSearchDrawer = ({
           pageParam,
           isMine: false,
           isFridge: true,
-          lang: locale,
         }),
       getNextPageParam: getNextPageParam,
       initialPageParam: 0,
