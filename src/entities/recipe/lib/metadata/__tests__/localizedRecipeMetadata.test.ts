@@ -5,7 +5,8 @@ import {
   generateLocalizedRecipeJsonLd,
   generateLocalizedRecipeMetadata,
 } from "../localizedRecipeMetadata";
-import { makeJpRecipe } from "./fixtures/recipeFactory";
+import { generateRecipeJsonLd } from "../recipeMetadata";
+import { makeBaseRecipe, makeJpRecipe } from "./fixtures/recipeFactory";
 
 const recipe = makeJpRecipe({
   title: "Oyakodon",
@@ -113,4 +114,69 @@ it("T-51: not translated(noindex)면 languages를 광고하지 않는다", () =>
     translated: false,
   });
   expect(meta.alternates?.languages).toBeUndefined();
+});
+
+const recipeNode = (jsonLd: ReturnType<typeof generateLocalizedRecipeJsonLd>) =>
+  jsonLd["@graph"].find(
+    (n: { "@type"?: string }) => n["@type"] === "Recipe"
+  ) as Record<string, unknown> | undefined;
+
+it("T-08/09 en: 모든 url에 /en/recipes, step url #step-1", () => {
+  const r = makeBaseRecipe({
+    steps: [
+      {
+        stepNumber: 1,
+        instruction: "s1",
+        stepImageUrl: "",
+        stepImageKey: null,
+      },
+    ],
+  });
+  const jl = generateLocalizedRecipeJsonLd(r, "abc", "en");
+  expect(JSON.stringify(jl)).not.toMatch(/recipio\.kr\/recipes\//);
+  const node = recipeNode(jl);
+  expect((node?.recipeInstructions as Array<{ url: string }>)[0].url).toMatch(
+    /\/en\/recipes\/abc#step-1$/
+  );
+  expect(node?.url).toMatch(/\/en\/recipes\/abc$/);
+});
+
+it("T-10 ko 회귀: url에 /en|/ja 없음", () => {
+  const jl = generateRecipeJsonLd(makeBaseRecipe({}), "abc");
+  expect(JSON.stringify(jl)).not.toMatch(/\/(en|ja)\/recipes/);
+});
+
+it("T-11 en, savings>0: description에 cost prefix 없음", () => {
+  const r = makeBaseRecipe({
+    marketPrice: 5000,
+    totalIngredientCost: 4000,
+    description: "Tasty pickles.",
+  });
+  const node = recipeNode(generateLocalizedRecipeJsonLd(r, "abc", "en"));
+  expect(node?.description).toBe("Tasty pickles.");
+  expect(node?.description as string).not.toMatch(/절약/);
+});
+
+it("T-12 ko, savings>0: cost prefix 유지", () => {
+  const r = makeBaseRecipe({
+    marketPrice: 5000,
+    totalIngredientCost: 4000,
+    description: "맛있는 피클.",
+  });
+  const node = (
+    generateRecipeJsonLd(r, "abc")["@graph"] as Array<Record<string, unknown>>
+  ).find((n) => n["@type"] === "Recipe");
+  expect(node?.description as string).toMatch(/^\[1,000원 절약 레시피\] /);
+});
+
+it("T-13 en, youtubeUrl 有: VideoObject.name에 만들기 없음", () => {
+  const r = makeBaseRecipe({
+    youtubeUrl: "https://youtu.be/x",
+    title: "Pickles",
+    youtubeChannelName: undefined as unknown as string,
+    youtubeVideoTitle: undefined as unknown as string,
+    youtubeThumbnailUrl: undefined as unknown as string,
+  });
+  const node = recipeNode(generateLocalizedRecipeJsonLd(r, "abc", "en"));
+  expect(JSON.stringify(node?.video)).not.toMatch(/만들기/);
 });

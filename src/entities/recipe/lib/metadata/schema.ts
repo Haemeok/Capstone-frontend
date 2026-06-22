@@ -1,6 +1,8 @@
 import { absoluteUrl } from "@/shared/config/constants/api";
 import { TOTAL_RECIPE_COUNT_PHRASE } from "@/shared/config/constants/siteStats";
+import type { Locale } from "@/shared/i18n";
 import { createSearchBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
+import { localizedPath } from "@/shared/lib/metadata/localized";
 
 import type {
   DetailedRecipeGridItem,
@@ -26,7 +28,8 @@ export const createWebsiteStructuredData = () => ({
 
 export const createRecipeStructuredData = (
   recipe: StaticRecipe,
-  recipeId: string
+  recipeId: string,
+  locale: Locale = "ko"
 ) => {
   const youtubeMetadata = extractYoutubeMetadata(recipe);
 
@@ -46,7 +49,7 @@ export const createRecipeStructuredData = (
   const savings = recipe.marketPrice - recipe.totalIngredientCost;
   const MINIMUM_SAVINGS_THRESHOLD = 0;
   const costDescription =
-    savings > MINIMUM_SAVINGS_THRESHOLD
+    locale === "ko" && savings > MINIMUM_SAVINGS_THRESHOLD
       ? `[${savings.toLocaleString("ko-KR")}원 절약 레시피] `
       : "";
 
@@ -57,7 +60,7 @@ export const createRecipeStructuredData = (
     : recipe.youtubeUrl
       ? {
           "@type": "VideoObject" as const,
-          name: `${recipe.title} 만들기`,
+          name: locale === "ko" ? `${recipe.title} 만들기` : recipe.title,
           description: recipe.description,
           thumbnailUrl: recipe.imageUrl || "",
           contentUrl: recipe.youtubeUrl,
@@ -125,7 +128,9 @@ export const createRecipeStructuredData = (
         name: `Step ${index + 1}`,
         position: index + 1,
         text: step.instruction,
-        url: absoluteUrl(`recipes/${recipeId}#step-${index + 1}`),
+        url: absoluteUrl(
+          localizedPath(locale, `recipes/${recipeId}#step-${index + 1}`)
+        ),
         ...(step.stepImageUrl && { image: step.stepImageUrl }),
       })) || [],
 
@@ -161,11 +166,13 @@ export const createRecipeStructuredData = (
         isBasedOn: {
           "@type": "VideoObject" as const,
           "@id": recipe.youtubeUrl,
-          name: youtubeMetadata.videoTitle || `${recipe.title} 만들기`,
+          name:
+            youtubeMetadata.videoTitle ||
+            (locale === "ko" ? `${recipe.title} 만들기` : recipe.title),
           url: recipe.youtubeUrl,
         },
       }),
-    url: absoluteUrl(`recipes/${recipeId}`),
+    url: absoluteUrl(localizedPath(locale, `recipes/${recipeId}`)),
   };
 };
 

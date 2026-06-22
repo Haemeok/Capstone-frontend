@@ -65,7 +65,7 @@ export const generateLocalizedRecipeJsonLd = (
   recipeId: string,
   locale: LocalizedLocale
 ) => {
-  const base = generateRecipeJsonLd(recipe, recipeId);
+  const base = generateRecipeJsonLd(recipe, recipeId, locale);
   return {
     ...base,
     "@graph": base["@graph"].map((node: GraphNode) =>

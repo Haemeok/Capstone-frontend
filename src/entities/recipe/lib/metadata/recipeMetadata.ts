@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import type { Locale } from "@/shared/i18n";
 import { createRecipeBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 
 import type { StaticRecipe } from "@/entities/recipe/model/types";
@@ -264,12 +265,13 @@ export const generateRecipeMetadata = (
 
 export const generateRecipeJsonLd = (
   recipe: StaticRecipe,
-  recipeId: string
+  recipeId: string,
+  locale: Locale = "ko"
 ) => ({
   "@context": "https://schema.org",
   "@graph": [
-    createRecipeBreadcrumb(recipe.title, recipeId),
-    createRecipeStructuredData(recipe, recipeId),
+    createRecipeBreadcrumb(recipe.title, recipeId, locale),
+    createRecipeStructuredData(recipe, recipeId, locale),
   ],
 });
 
