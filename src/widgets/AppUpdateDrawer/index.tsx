@@ -9,6 +9,7 @@ import {
   PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
 import { useIsApp } from "@/shared/hooks/useIsApp";
+import { format, getDictionary, useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 import { Drawer, DrawerContent, DrawerTitle } from "@/shared/ui/shadcn/drawer";
@@ -26,15 +27,16 @@ const detectMobileOS = (): MobileOS => {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) ? "ios" : "android";
 };
 
-const UPDATE_HIGHLIGHTS = [
-  { icon: Lock, text: "로그인이 한결 매끄러워졌어요" },
-  { icon: BookOpen, text: "레시피북을 더 많이 만들 수 있어요" },
-  { icon: MessageCircle, text: "레시피 챗봇이 새로 들어왔어요" },
-] as const;
-
 const GlobalAppUpdateDrawer = () => {
   const isInApp = useIsApp();
   const { isOpen, openDrawer, dismiss } = useAppUpdateDrawerStore();
+  const t = getDictionary(useApiLocale()).appGlobal.appUpdate;
+
+  const highlights = [
+    { icon: Lock, text: t.highlightLogin },
+    { icon: BookOpen, text: t.highlightRecipeBook },
+    { icon: MessageCircle, text: t.highlightChatbot },
+  ];
 
   useEffect(() => {
     if (!isInApp) return;
@@ -57,7 +59,7 @@ const GlobalAppUpdateDrawer = () => {
 
   const os = detectMobileOS();
   const storeUrl = os === "ios" ? APP_STORE_URL : PLAY_STORE_URL;
-  const storeLabel = os === "ios" ? "App Store" : "Play 스토어";
+  const store = os === "ios" ? "App Store" : t.storePlay;
 
   const handleUpdateClick = () => {
     triggerHaptic("Light");
@@ -68,7 +70,7 @@ const GlobalAppUpdateDrawer = () => {
   return (
     <Drawer open={isOpen} dismissible={false}>
       <DrawerContent className="flex flex-col overflow-hidden border-0 bg-white shadow-xl [&>div:first-child]:hidden">
-        <DrawerTitle className="sr-only">새 버전 안내</DrawerTitle>
+        <DrawerTitle className="sr-only">{t.srTitle}</DrawerTitle>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-6 pt-10">
           <div className="flex flex-col items-center">
@@ -86,15 +88,16 @@ const GlobalAppUpdateDrawer = () => {
 
             <div className="mt-6 text-center">
               <p className="text-ink-sub text-xl font-bold break-keep">
-                <span className="text-olive-light">새 버전</span>이 나왔어요!
+                <span className="text-olive-light">{t.headlineHighlight}</span>
+                {t.headlineTail}
               </p>
               <p className="text-ink-muted mt-2 text-sm font-medium break-keep">
-                이번 업데이트로 이런 점들이 좋아졌어요
+                {t.subtitle}
               </p>
             </div>
 
             <ul className="mt-6 w-full space-y-2.5 pb-4">
-              {UPDATE_HIGHLIGHTS.map(({ icon: Icon, text }) => (
+              {highlights.map(({ icon: Icon, text }) => (
                 <li
                   key={text}
                   className="flex items-center gap-3 rounded-2xl bg-gray-50 px-4 py-3.5"
@@ -114,11 +117,11 @@ const GlobalAppUpdateDrawer = () => {
             onClick={handleUpdateClick}
             className="bg-olive-light h-14 w-full cursor-pointer rounded-2xl text-lg font-bold text-white shadow-lg transition-colors hover:shadow-xl active:scale-[0.98]"
           >
-            {storeLabel}에서 업데이트하기
+            {format(t.cta, { store })}
           </button>
 
           <p className="mt-3 text-center text-xs break-keep text-gray-400">
-            업데이트하시면 이 안내가 다시 뜨지 않아요
+            {t.dismissNote}
           </p>
         </div>
       </DrawerContent>

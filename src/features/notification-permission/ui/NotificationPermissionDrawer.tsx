@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Bell } from "lucide-react";
 
+import { getDictionary, useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
@@ -15,6 +16,8 @@ type NotificationPermissionDrawerProps = {
 };
 
 const SuccessView = () => {
+  const t = getDictionary(useApiLocale()).appGlobal.notification;
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -62,7 +65,7 @@ const SuccessView = () => {
         transition={{ delay: 0.5 }}
         className="text-ink mt-6 text-lg font-bold"
       >
-        알림 설정이 완료되었어요
+        {t.successTitle}
       </motion.p>
 
       <motion.p
@@ -71,7 +74,7 @@ const SuccessView = () => {
         transition={{ delay: 0.6 }}
         className="text-ink-muted mt-2 text-center text-sm"
       >
-        중요한 소식을 놓치지 않게 알려드릴게요
+        {t.successBody}
       </motion.p>
     </motion.div>
   );
@@ -85,6 +88,7 @@ export const NotificationPermissionDrawer = ({
   showSuccess = false,
 }: NotificationPermissionDrawerProps) => {
   const { Container, Content, Title } = useResponsiveSheet();
+  const t = getDictionary(useApiLocale()).appGlobal.notification;
 
   const handleAccept = () => {
     triggerHaptic("Light");
@@ -99,7 +103,7 @@ export const NotificationPermissionDrawer = ({
   return (
     <Container open={isOpen} onOpenChange={onOpenChange}>
       <Content className="overflow-hidden border-0 bg-white shadow-xl">
-        <Title className="sr-only">알림 권한 요청</Title>
+        <Title className="sr-only">{t.srTitle}</Title>
 
         <AnimatePresence mode="wait">
           {showSuccess ? (
@@ -117,13 +121,9 @@ export const NotificationPermissionDrawer = ({
               </div>
 
               <div className="mt-6 text-center">
-                <h2 className="text-ink text-xl font-bold">
-                  알림을 허용해 주세요
-                </h2>
+                <h2 className="text-ink text-xl font-bold">{t.title}</h2>
                 <p className="text-ink-sub mt-3 text-base leading-relaxed">
-                  새로운 레시피 추천, 인기 급상승 레시피 등
-                  <br />
-                  놓치고 싶지 않은 소식을 알려드릴게요
+                  {t.body}
                 </p>
               </div>
 
@@ -132,13 +132,13 @@ export const NotificationPermissionDrawer = ({
                   onClick={handleAccept}
                   className="bg-olive-light h-14 w-full cursor-pointer rounded-2xl text-base font-bold text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
                 >
-                  알림 허용하기
+                  {t.allow}
                 </button>
                 <button
                   onClick={handleDecline}
                   className="text-ink-muted h-12 w-full cursor-pointer rounded-xl text-base font-medium transition-colors hover:bg-gray-100 active:bg-gray-200"
                 >
-                  나중에
+                  {t.later}
                 </button>
               </div>
 

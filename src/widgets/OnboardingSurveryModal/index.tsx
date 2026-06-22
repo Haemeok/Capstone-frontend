@@ -1,4 +1,5 @@
 "use client";
+// i18n-ignore-file: 미마운트 dead code
 
 import React from "react";
 

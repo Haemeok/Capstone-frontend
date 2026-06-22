@@ -1,3 +1,4 @@
+// i18n-ignore-file: 미마운트 dead code
 import { SurveyStep } from "@/shared/config/constants/user";
 
 type TextareaSurveyProps = {

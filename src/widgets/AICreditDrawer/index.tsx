@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
-import { useLocalizedRouter } from "@/shared/i18n";
+import { getDictionary, useApiLocale, useLocalizedRouter } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
 import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
@@ -17,6 +17,7 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
   const router = useLocalizedRouter();
   const { Container, Content, Title } = useResponsiveSheet();
   const confettiRef = useRef<ConfettiRef>(null);
+  const t = getDictionary(useApiLocale()).appGlobal.aiCredit;
 
   useEffect(() => {
     if (isOpen) {
@@ -44,13 +45,13 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
           className="pointer-events-none absolute inset-0 z-50 h-full w-full"
           manualstart={true}
         />
-        <Title className="sr-only">AI 무료 이용권</Title>
+        <Title className="sr-only">{t.srTitle}</Title>
 
         <div className="flex flex-col items-center px-6 pb-8">
           <div className="mt-8 flex justify-center">
             <Image
               src={`${ICON_BASE_URL}gift.webp`}
-              alt="AI 무료 이용권"
+              alt={t.imageAlt}
               wrapperClassName="relative h-48 w-48 animate-bounce-soft"
               priority
             />
@@ -58,14 +59,12 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
 
           <div className="mt-6 text-center">
             <h2 className="text-ink text-2xl font-bold break-keep">
-              AI 무료 생성권 도착!
+              {t.title}
             </h2>
             <p className="text-ink-sub mt-3 text-base leading-relaxed break-keep">
-              매일 1회 무료로 만들어 드려요!
+              {t.bodyLead}
               <br />
-              <span className="font-bold text-red-500">
-                ⚠️ 오늘 다 써야 내일 또 충전돼요!
-              </span>
+              <span className="font-bold text-red-500">{t.bodyWarning}</span>
             </p>
           </div>
 
@@ -73,7 +72,7 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
             onClick={handleCTAClick}
             className="bg-olive-light mt-8 h-14 w-full cursor-pointer rounded-2xl text-lg font-bold text-white shadow-lg transition-colors hover:shadow-xl active:scale-[0.98]"
           >
-            지금 바로 만들기
+            {t.cta}
           </button>
 
           <div className="mx-auto mt-6 h-1 w-32 rounded-full bg-gray-200 sm:hidden" />

@@ -1,3 +1,4 @@
+// i18n-ignore-file: 미마운트 dead code
 import { useRef } from "react";
 
 import { SurveyStep } from "@/shared/config/constants/user";
