@@ -1,0 +1,50 @@
+import type { IngredientSheetDict } from "../../types";
+
+export const ingredientSheet: IngredientSheetDict = {
+  copyTitle: "재료 복사하기",
+  copyDescription: "필요한 재료를 골라 장볼 때 사용하세요!",
+  modeShopping: "장보기 복사",
+  modeChecklist: "체크리스트",
+  servingsValue: "{n}인분",
+  copyPreviewEmpty: "재료를 선택해주세요",
+  selectAll: "전체 선택",
+  deselectAll: "전체 해제",
+  copyHeader: "📋 {title} ({servings}인분)",
+  copied: "복사 완료!",
+  copyButton: "{n}개 재료 복사하기",
+  copyButtonEmpty: "재료를 선택해주세요",
+  copyFailed: "복사에 실패했습니다.",
+  reportListTitle: "재료 오류 제보",
+  reportListDescription: "문제가 있는 재료를 선택해주세요",
+  reportMissingPrompt: "빠진 재료가 있나요?",
+  reportFormTitle: "'{name}' 제보하기",
+  reportFormDescription: "어떤 문제가 있나요?",
+  reportMemoPlaceholder: "예: 계란 3개 → 계란 4개",
+  missingTitle: "빠진 재료 제보하기",
+  missingDescription: "빠진 재료를 알려주세요",
+  missingNamePlaceholder: "빠진 재료 이름을 입력해주세요",
+  missingMemoPlaceholder: "추가 설명 (선택)",
+  submit: "신고하기",
+  submitting: "신고 중...",
+  successTitle: "수정사항이 접수되었습니다",
+  successBodyLine1: "개발자가 빠르게 확인해서",
+  successBodyLine2: "수정조치를 취하겠습니다",
+  reasons: {
+    WRONG_QUANTITY: {
+      label: "⚖️ 양이 틀려요",
+      description: "재료의 양이나 단위가 잘못됐어요",
+    },
+    WRONG_NAME: {
+      label: "✏️ 이름이 틀려요",
+      description: "재료 이름이 잘못됐어요",
+    },
+    NOT_EXIST: {
+      label: "🚫 필요 없는 재료예요",
+      description: "레시피에 없어도 되는 재료예요",
+    },
+    ETC: {
+      label: "💬 기타 문제가 있어요",
+      description: "품절, 링크 오류 등 다른 문제가 있어요",
+    },
+  },
+};

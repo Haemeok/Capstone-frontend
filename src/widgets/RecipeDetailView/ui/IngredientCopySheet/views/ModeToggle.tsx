@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ClipboardList, Copy } from "lucide-react";
 
+import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
@@ -14,6 +15,7 @@ type ModeToggleProps = {
 };
 
 export const ModeToggle = ({ mode, onChange }: ModeToggleProps) => {
+  const t = useT();
   const handleSelect = (next: CopyMode) => {
     triggerHaptic("Light");
     onChange(next);
@@ -35,7 +37,7 @@ export const ModeToggle = ({ mode, onChange }: ModeToggleProps) => {
         )}
       >
         <Copy className="h-4 w-4" />
-        장보기 복사
+        {t.ingredientSheet.modeShopping}
       </button>
       <button
         type="button"
@@ -46,7 +48,7 @@ export const ModeToggle = ({ mode, onChange }: ModeToggleProps) => {
         )}
       >
         <ClipboardList className="h-4 w-4" />
-        체크리스트
+        {t.ingredientSheet.modeChecklist}
       </button>
     </div>
   );

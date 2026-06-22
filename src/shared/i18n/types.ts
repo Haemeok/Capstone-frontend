@@ -1128,6 +1128,41 @@ export type RecipeGridDict = {
   slideLoadError: string;
 };
 
+export type IngredientSheetDict = {
+  copyTitle: string;
+  copyDescription: string;
+  modeShopping: string;
+  modeChecklist: string;
+  servingsValue: string;
+  copyPreviewEmpty: string;
+  selectAll: string;
+  deselectAll: string;
+  copyHeader: string;
+  copied: string;
+  copyButton: string;
+  copyButtonEmpty: string;
+  copyFailed: string;
+  reportListTitle: string;
+  reportListDescription: string;
+  reportMissingPrompt: string;
+  reportFormTitle: string;
+  reportFormDescription: string;
+  reportMemoPlaceholder: string;
+  missingTitle: string;
+  missingDescription: string;
+  missingNamePlaceholder: string;
+  missingMemoPlaceholder: string;
+  submit: string;
+  submitting: string;
+  successTitle: string;
+  successBodyLine1: string;
+  successBodyLine2: string;
+  reasons: Record<
+    "WRONG_QUANTITY" | "WRONG_NAME" | "NOT_EXIST" | "ETC",
+    { label: string; description: string }
+  >;
+};
+
 export type UiCommonDict = {
   badge: {
     aiGenerated: string;
@@ -1167,6 +1202,7 @@ export type Dictionary = {
   settings: SettingsDict;
   ratings: RatingsDict;
   recipeGrid: RecipeGridDict;
+  ingredientSheet: IngredientSheetDict;
   uiCommon: UiCommonDict;
   auth: AuthDict;
   notifications: NotificationsDict;

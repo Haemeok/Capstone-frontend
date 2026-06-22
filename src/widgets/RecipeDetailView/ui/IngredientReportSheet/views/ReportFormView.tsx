@@ -5,20 +5,19 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 
+import { format, useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { IngredientReportReason } from "@/entities/recipe/model/api";
 
-import {
-  type ReportCategory,
-  ReportCategoryButton,
-} from "../../ReportCategoryButton";
+import { ReportCategoryButton } from "../../ReportCategoryButton";
+import type { ReportReasonValue } from "../constants";
 import type { SheetComponents } from "./sheet-components";
 import { SubmitButton } from "./SubmitButton";
 
 type ReportFormViewProps = SheetComponents & {
   ingredientName: string;
-  categories: ReportCategory[];
+  categories: { value: ReportReasonValue }[];
   selectedReason: IngredientReportReason | null;
   memo: string;
   isSubmitting: boolean;
@@ -45,6 +44,7 @@ export const ReportFormView = ({
   Description,
 }: ReportFormViewProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const t = useT();
 
   return (
     <motion.div
@@ -61,16 +61,18 @@ export const ReportFormView = ({
             type="button"
             onClick={onBack}
             className="cursor-pointer rounded-full p-1 transition-colors hover:bg-gray-100"
-            aria-label="뒤로 가기"
+            aria-label={t.common.actions.back}
           >
             <ArrowLeft className="text-ink-sub h-5 w-5" />
           </button>
           <Title className="text-ink text-xl font-bold">
-            &apos;{ingredientName}&apos; 제보하기
+            {format(t.ingredientSheet.reportFormTitle, {
+              name: ingredientName,
+            })}
           </Title>
         </div>
         <Description className="text-ink-muted mt-1 text-sm">
-          어떤 문제가 있나요?
+          {t.ingredientSheet.reportFormDescription}
         </Description>
       </Header>
 
@@ -79,7 +81,12 @@ export const ReportFormView = ({
           {categories.map((category) => (
             <ReportCategoryButton
               key={category.value}
-              category={category}
+              category={{
+                value: category.value,
+                label: t.ingredientSheet.reasons[category.value].label,
+                description:
+                  t.ingredientSheet.reasons[category.value].description,
+              }}
               isSelected={selectedReason === category.value}
               onSelect={() => {
                 triggerHaptic("Light");
@@ -93,7 +100,7 @@ export const ReportFormView = ({
           <textarea
             value={memo}
             onChange={(e) => onMemoChange(e.target.value)}
-            placeholder="예: 계란 3개 → 계란 4개"
+            placeholder={t.ingredientSheet.reportMemoPlaceholder}
             className="focus:border-olive-light focus:ring-olive-light text-ink h-20 w-full resize-none rounded-xl border border-gray-200 p-3 text-sm placeholder:text-gray-400 focus:ring-1 focus:outline-none"
           />
         </div>

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 
+import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useToastStore } from "@/widgets/Toast";
@@ -10,6 +11,7 @@ const COPIED_FEEDBACK_DURATION_MS = 1500;
 
 export const useCopyFeedback = () => {
   const { addToast } = useToastStore();
+  const t = useT();
   const [isCopied, setIsCopied] = useState(false);
   const copiedTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -26,7 +28,7 @@ export const useCopyFeedback = () => {
         COPIED_FEEDBACK_DURATION_MS
       );
     } catch {
-      addToast({ message: "복사에 실패했습니다.", variant: "error" });
+      addToast({ message: t.ingredientSheet.copyFailed, variant: "error" });
     }
   };
 

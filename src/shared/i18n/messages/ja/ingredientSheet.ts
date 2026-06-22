@@ -1,0 +1,50 @@
+import type { IngredientSheetDict } from "../../types";
+
+export const ingredientSheet: IngredientSheetDict = {
+  copyTitle: "材料をコピー",
+  copyDescription: "必要な材料を選んで買い物に使いましょう。",
+  modeShopping: "買い物リスト",
+  modeChecklist: "チェックリスト",
+  servingsValue: "{n}人前",
+  copyPreviewEmpty: "材料を選んでください",
+  selectAll: "すべて選択",
+  deselectAll: "すべて解除",
+  copyHeader: "📋 {title}（{servings}人前）",
+  copied: "コピーしました！",
+  copyButton: "{n}個の材料をコピー",
+  copyButtonEmpty: "材料を選んでください",
+  copyFailed: "コピーに失敗しました。",
+  reportListTitle: "材料の誤りを報告",
+  reportListDescription: "問題のある材料を選んでください。",
+  reportMissingPrompt: "足りない材料はありますか？",
+  reportFormTitle: "「{name}」を報告",
+  reportFormDescription: "どんな問題がありますか？",
+  reportMemoPlaceholder: "例：卵3個 → 卵4個",
+  missingTitle: "足りない材料を報告",
+  missingDescription: "足りない材料を教えてください。",
+  missingNamePlaceholder: "足りない材料名を入力してください",
+  missingMemoPlaceholder: "補足説明（任意）",
+  submit: "報告する",
+  submitting: "報告中…",
+  successTitle: "修正のご報告を受け付けました",
+  successBodyLine1: "担当者が確認のうえ",
+  successBodyLine2: "速やかに修正します",
+  reasons: {
+    WRONG_QUANTITY: {
+      label: "⚖️ 分量が違う",
+      description: "材料の量や単位が間違っています。",
+    },
+    WRONG_NAME: {
+      label: "✏️ 名前が違う",
+      description: "材料名が間違っています。",
+    },
+    NOT_EXIST: {
+      label: "🚫 不要な材料",
+      description: "レシピに含めなくてよい材料です。",
+    },
+    ETC: {
+      label: "💬 その他の問題",
+      description: "在庫切れ・リンク不具合など、その他の問題。",
+    },
+  },
+};

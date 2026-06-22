@@ -2,7 +2,10 @@
 
 import { motion } from "framer-motion";
 
+import { useT } from "@/shared/i18n";
+
 export const ReportSuccessView = () => {
+  const t = useT();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -50,7 +53,7 @@ export const ReportSuccessView = () => {
         transition={{ delay: 0.5 }}
         className="text-ink mt-6 text-lg font-bold"
       >
-        수정사항이 접수되었습니다
+        {t.ingredientSheet.successTitle}
       </motion.p>
 
       <motion.p
@@ -59,9 +62,9 @@ export const ReportSuccessView = () => {
         transition={{ delay: 0.6 }}
         className="text-ink-muted mt-2 text-center text-sm"
       >
-        개발자가 빠르게 확인해서
+        {t.ingredientSheet.successBodyLine1}
         <br />
-        수정조치를 취하겠습니다
+        {t.ingredientSheet.successBodyLine2}
       </motion.p>
     </motion.div>
   );

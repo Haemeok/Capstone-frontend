@@ -2,6 +2,7 @@
 
 import { Minus, Plus } from "lucide-react";
 
+import { format, useT } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
 type ServingsStepperProps = {
@@ -19,6 +20,7 @@ export const ServingsStepper = ({
   onIncrement,
   onDecrement,
 }: ServingsStepperProps) => {
+  const t = useT();
   return (
     <div className="flex shrink-0 items-center gap-1.5">
       <button
@@ -35,7 +37,7 @@ export const ServingsStepper = ({
         <Minus className="h-3.5 w-3.5" />
       </button>
       <span className="text-ink w-12 text-center text-sm font-bold">
-        {currentServings}인분
+        {format(t.ingredientSheet.servingsValue, { n: currentServings })}
       </span>
       <button
         type="button"

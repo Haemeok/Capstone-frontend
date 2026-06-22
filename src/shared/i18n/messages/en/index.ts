@@ -11,6 +11,7 @@ import { ingredientAdd } from "./ingredientAdd";
 import { ingredientDetail } from "./ingredientDetail";
 import { ingredientPicker } from "./ingredientPicker";
 import { ingredients } from "./ingredients";
+import { ingredientSheet } from "./ingredientSheet";
 import { landing } from "./landing";
 import { nav } from "./nav";
 import { notifications } from "./notifications";
@@ -55,6 +56,7 @@ export const en: Dictionary = {
   ratings,
   recipeGrid,
   uiCommon,
+  ingredientSheet,
   auth,
   notifications,
   comments,

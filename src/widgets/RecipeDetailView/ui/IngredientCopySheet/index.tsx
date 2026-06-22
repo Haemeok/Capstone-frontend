@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { format, useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
@@ -40,6 +41,7 @@ export const IngredientCopySheet = ({
 }: IngredientCopySheetProps) => {
   const { Container, Content, Header, Title, Description } =
     useResponsiveSheet();
+  const t = useT();
 
   const [mode, setMode] = useState<CopyModeType>("copy");
   const [checkedIndices, setCheckedIndices] = useState<Set<number>>(new Set());
@@ -88,7 +90,10 @@ export const IngredientCopySheet = ({
 
   const copyText = (() => {
     if (selectedIngredients.length === 0) return "";
-    const header = `📋 ${recipe.title} (${currentServings}인분)`;
+    const header = format(t.ingredientSheet.copyHeader, {
+      title: recipe.title,
+      servings: currentServings,
+    });
     const separator = "ㅡ".repeat(8);
     const list = selectedIngredients
       .map((ing) => `• ${ing.name} ${ing.amount}`)
@@ -116,9 +121,11 @@ export const IngredientCopySheet = ({
       <Content className="border-0 bg-white shadow-xl">
         <div className="flex max-h-[80vh] flex-col">
           <Header>
-            <Title className="text-ink text-xl font-bold">재료 복사하기</Title>
+            <Title className="text-ink text-xl font-bold">
+              {t.ingredientSheet.copyTitle}
+            </Title>
             <Description className="text-ink-muted mt-1 text-sm">
-              필요한 재료를 골라 장볼 때 사용하세요!
+              {t.ingredientSheet.copyDescription}
             </Description>
           </Header>
 

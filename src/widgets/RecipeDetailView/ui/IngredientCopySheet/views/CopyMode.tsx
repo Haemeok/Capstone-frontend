@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 
+import { format, useT } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
 import type { Ingredient } from "../types";
@@ -31,6 +32,7 @@ export const CopyMode = ({
   onCopy,
 }: CopyModeProps) => {
   const allSelected = selectedIndices.size === ingredients.length;
+  const t = useT();
 
   return (
     <>
@@ -43,7 +45,9 @@ export const CopyMode = ({
                 {copyText}
               </pre>
             ) : (
-              <p className="text-sm text-gray-400">재료를 선택해주세요</p>
+              <p className="text-sm text-gray-400">
+                {t.ingredientSheet.copyPreviewEmpty}
+              </p>
             )}
           </div>
 
@@ -54,7 +58,9 @@ export const CopyMode = ({
               onClick={allSelected ? onDeselectAll : onSelectAll}
               className="hover:text-ink-sub cursor-pointer text-xs font-medium text-gray-400 transition-colors"
             >
-              {allSelected ? "전체 해제" : "전체 선택"}
+              {allSelected
+                ? t.ingredientSheet.deselectAll
+                : t.ingredientSheet.selectAll}
             </button>
           </div>
 
@@ -105,12 +111,12 @@ export const CopyMode = ({
               transition={{ duration: 0.2 }}
             >
               <Check className="h-5 w-5" />
-              복사 완료!
+              {t.ingredientSheet.copied}
             </motion.span>
           ) : selectedCount > 0 ? (
-            `${selectedCount}개 재료 복사하기`
+            format(t.ingredientSheet.copyButton, { n: selectedCount })
           ) : (
-            "재료를 선택해주세요"
+            t.ingredientSheet.copyButtonEmpty
           )}
         </motion.button>
       </div>

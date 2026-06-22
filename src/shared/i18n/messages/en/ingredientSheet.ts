@@ -1,0 +1,50 @@
+import type { IngredientSheetDict } from "../../types";
+
+export const ingredientSheet: IngredientSheetDict = {
+  copyTitle: "Copy ingredients",
+  copyDescription: "Pick what you need and take it to the store.",
+  modeShopping: "Shopping list",
+  modeChecklist: "Checklist",
+  servingsValue: "Serves {n}",
+  copyPreviewEmpty: "Select ingredients to copy",
+  selectAll: "Select all",
+  deselectAll: "Clear all",
+  copyHeader: "📋 {title} (serves {servings})",
+  copied: "Copied!",
+  copyButton: "Copy {n} ingredients",
+  copyButtonEmpty: "Select ingredients",
+  copyFailed: "Couldn't copy. Please try again.",
+  reportListTitle: "Report an ingredient issue",
+  reportListDescription: "Choose the ingredient with an issue.",
+  reportMissingPrompt: "Is an ingredient missing?",
+  reportFormTitle: 'Report "{name}"',
+  reportFormDescription: "What's wrong with it?",
+  reportMemoPlaceholder: "e.g. 3 eggs → 4 eggs",
+  missingTitle: "Report a missing ingredient",
+  missingDescription: "Tell us what's missing.",
+  missingNamePlaceholder: "Enter the missing ingredient",
+  missingMemoPlaceholder: "Add a note (optional)",
+  submit: "Submit",
+  submitting: "Submitting…",
+  successTitle: "Thanks — your report was received",
+  successBodyLine1: "We'll review it shortly",
+  successBodyLine2: "and make the fix.",
+  reasons: {
+    WRONG_QUANTITY: {
+      label: "⚖️ Wrong amount",
+      description: "The quantity or unit is off.",
+    },
+    WRONG_NAME: {
+      label: "✏️ Wrong name",
+      description: "The ingredient name is incorrect.",
+    },
+    NOT_EXIST: {
+      label: "🚫 Not needed",
+      description: "This ingredient isn't part of the recipe.",
+    },
+    ETC: {
+      label: "💬 Something else",
+      description: "Out of stock, broken link, or another issue.",
+    },
+  },
+};
