@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 
+import { useLocalePreferenceSync } from "@/shared/i18n";
 import { useAuthManager } from "@/shared/lib/auth/useAuthManager";
 import { useAuthDiagBridge } from "@/shared/lib/bridge";
 
@@ -15,7 +16,8 @@ export const AppStateInitializer = ({ children }: AppStateInitializerProps) => {
   useAuthManager();
   useAuthDiagBridge();
 
-  useMyInfoQuery();
+  const { user } = useMyInfoQuery();
+  useLocalePreferenceSync(user?.preferredLocale ?? null);
 
   return <>{children}</>;
 };

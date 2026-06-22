@@ -71,6 +71,7 @@ export {
   useIngredientPickerLocale,
 } from "./useIngredientPickerDict";
 export { useIngredientsDict } from "./useIngredientsDict";
+export { useLocalePreferenceSync } from "./useLocalePreferenceSync";
 export { useLocalizedRouter } from "./useLocalizedRouter";
 export {
   useLoginPromotionDict,
