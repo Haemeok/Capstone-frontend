@@ -70,5 +70,6 @@ export const appGlobal: AppGlobalDict = {
     completeTitle: "AIレシピが完成しました！",
     completeFallback: "{name}レシピが完成しました！",
     maxRetryExceeded: "最大再試行回数を超えました。もう一度お試しください。",
+    badgeComplete: "レシピ作成完了 🎉",
   },
 };

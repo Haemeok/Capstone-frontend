@@ -71,5 +71,6 @@ export const appGlobal: AppGlobalDict = {
     completeFallback: "Your {name} recipe is ready!",
     maxRetryExceeded:
       "The maximum number of retries was exceeded. Please try again.",
+    badgeComplete: "Recipe ready 🎉",
   },
 };

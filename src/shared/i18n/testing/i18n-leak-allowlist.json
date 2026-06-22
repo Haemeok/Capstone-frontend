@@ -7,7 +7,6 @@
   "src/features/recipe-import-youtube/ui/UsageGuide.tsx",
   "src/features/recipe-import-youtube/ui/YoutubeUrlInput.tsx",
   "src/features/step-timer/ui/StepTimer.tsx",
-  "src/widgets/AIRecipeNotificationBadge/index.tsx",
   "src/widgets/CalendarTabContent/FirstSavingsQuestPanel.tsx",
   "src/widgets/CalendarTabContent/components/CalendarDayStreak.tsx",
   "src/widgets/CategoryDrawer/CategoryDrawer.tsx",

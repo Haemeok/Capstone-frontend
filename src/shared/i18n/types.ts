@@ -1245,6 +1245,7 @@ export type AppGlobalDict = {
     completeTitle: string;
     completeFallback: string;
     maxRetryExceeded: string;
+    badgeComplete: string;
   };
 };
 
