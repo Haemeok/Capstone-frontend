@@ -62,6 +62,37 @@ it("ja 미번역 회귀: translated=false → noindex,nofollow", () => {
   expect(meta.robots).toEqual({ index: false, follow: false });
 });
 
+it("T-01 en: og:site_name=Recipio, title 접미사 Recipio", () => {
+  const meta = generateLocalizedRecipeMetadata(recipe, "abc", {
+    locale: "en",
+    translated: true,
+  });
+  expect(meta.openGraph?.siteName).toBe("Recipio");
+  expect(meta.title).toBe("Oyakodon | Recipio");
+});
+
+it("T-02 ja: og:site_name=レシピオ", () => {
+  const meta = generateLocalizedRecipeMetadata(recipe, "abc", {
+    locale: "ja",
+    translated: true,
+  });
+  expect(meta.openGraph?.siteName).toBe("レシピオ");
+});
+
+it("T-05 en: openGraph.locale=en_US + alternateLocale ko/ja", () => {
+  const meta = generateLocalizedRecipeMetadata(recipe, "abc", {
+    locale: "en",
+    translated: true,
+  });
+  expect(meta.openGraph?.locale).toBe("en_US");
+  const openGraphWithAlternates = meta.openGraph as {
+    alternateLocale?: string[];
+  };
+  expect(openGraphWithAlternates?.alternateLocale).toEqual(
+    expect.arrayContaining(["ko_KR", "ja_JP"])
+  );
+});
+
 it("T-50: translated면 alternates.languages에 ko·ja·en·x-default", () => {
   const meta = generateLocalizedRecipeMetadata(recipe, "abc123", {
     locale: "en",

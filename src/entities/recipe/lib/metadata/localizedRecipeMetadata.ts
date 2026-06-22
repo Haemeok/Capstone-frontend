@@ -3,6 +3,11 @@ import type { Metadata } from "next";
 import { absoluteUrl } from "@/shared/config/constants/api";
 import type { Locale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n/hreflang";
+import {
+  alternateLocales,
+  localizedSiteName,
+  OG_LOCALE,
+} from "@/shared/lib/metadata/localized";
 
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
@@ -10,11 +15,6 @@ import { SEO_CONSTANTS } from "./constants";
 import { generateRecipeJsonLd } from "./recipeMetadata";
 
 type LocalizedLocale = Exclude<Locale, "ko">;
-
-const OG_LOCALE: Record<LocalizedLocale, string> = {
-  ja: "ja_JP",
-  en: "en_US",
-};
 
 export const generateLocalizedRecipeMetadata = (
   recipe: StaticRecipe,
@@ -24,8 +24,9 @@ export const generateLocalizedRecipeMetadata = (
   const url = absoluteUrl(`${locale}/recipes/${recipeId}`);
   const description = recipe.description || recipe.title;
   const image = recipe.imageUrl || SEO_CONSTANTS.DEFAULT_IMAGE;
+  const siteName = localizedSiteName(locale);
   return {
-    title: `${recipe.title} | ${SEO_CONSTANTS.SITE_NAME}`,
+    title: `${recipe.title} | ${siteName}`,
     description,
     robots: translated
       ? { index: true, follow: true }
@@ -42,9 +43,10 @@ export const generateLocalizedRecipeMetadata = (
       title: recipe.title,
       description,
       url,
-      siteName: SEO_CONSTANTS.SITE_NAME,
+      siteName,
       type: SEO_CONSTANTS.OG_TYPE.ARTICLE,
       locale: OG_LOCALE[locale],
+      alternateLocale: alternateLocales(locale),
       images: [{ url: image, width: 1200, height: 630, alt: recipe.title }],
     },
     twitter: {
