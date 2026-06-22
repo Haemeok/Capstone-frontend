@@ -44,33 +44,28 @@ const KoreaFlag = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const US_STAR_X = [2, 4.6, 7.2, 9.8, 12.4];
-const US_STAR_Y = [2.2, 5, 7.8, 10.6];
-
 const UsaFlag = ({ className }: { className?: string }) => (
   <svg
-    viewBox="0 0 36 24"
+    viewBox="0 0 640 480"
     className={className}
     aria-hidden="true"
-    preserveAspectRatio="xMidYMid meet"
+    preserveAspectRatio="xMidYMid slice"
   >
-    <rect width="36" height="24" fill="#b22234" />
-    <g fill="#fff">
-      <rect y="2" width="36" height="2" />
-      <rect y="6" width="36" height="2" />
-      <rect y="10" width="36" height="2" />
-      <rect y="14" width="36" height="2" />
-      <rect y="18" width="36" height="2" />
-      <rect y="22" width="36" height="2" />
-    </g>
-    <rect width="15" height="13" fill="#3c3b6e" />
-    <g fill="#fff">
-      {US_STAR_Y.flatMap((cy) =>
-        US_STAR_X.map((cx) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="0.7" />
-        ))
-      )}
-    </g>
+    <path fill="#bd3d44" d="M0 0h640v480H0" />
+    <path
+      stroke="#fff"
+      strokeWidth="37"
+      d="M0 55.3h640M0 129h640M0 203h640M0 277h640M0 351h640M0 425h640"
+    />
+    <path fill="#192f5d" d="M0 0h364.8v258.5H0" />
+    <marker id="us-star" markerHeight="30" markerWidth="30">
+      <path fill="#fff" d="m14 0 9 27L0 10h28L5 27z" />
+    </marker>
+    <path
+      fill="none"
+      markerMid="url(#us-star)"
+      d="m0 0 16 11h61 61 61 61 60L47 37h61 61 60 61L16 63h61 61 61 61 60L47 89h61 61 60 61L16 115h61 61 61 61 60L47 141h61 61 60 61L16 166h61 61 61 61 60L47 192h61 61 60 61L16 218h61 61 61 61 60z"
+    />
   </svg>
 );
 
