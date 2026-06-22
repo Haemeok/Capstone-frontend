@@ -2,6 +2,7 @@ import type { AuthDict } from "../../types";
 
 export const auth: AuthDict = {
   browseWithoutLogin: "로그인 없이 볼게요",
+  dialogTitle: "로그인",
   recentLogin: "최근 로그인",
   loading: "로딩 중...",
   kakaoLabel: "카카오로 시작하기",

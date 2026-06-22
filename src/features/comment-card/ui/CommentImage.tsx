@@ -1,8 +1,13 @@
+"use client";
+
+import { useCommentsDict } from "@/shared/i18n";
+
 type Props = {
   urls: string[];
 };
 
 const CommentImage = ({ urls }: Props) => {
+  const t = useCommentsDict();
   if (!urls.length) return null;
   const url = urls[0];
 
@@ -10,7 +15,7 @@ const CommentImage = ({ urls }: Props) => {
     <div className="rounded-card relative aspect-square w-full overflow-hidden bg-black">
       <img
         src={url}
-        alt="댓글 이미지"
+        alt={t.imageAlt}
         loading="lazy"
         className="absolute inset-0 h-full w-full object-contain"
       />

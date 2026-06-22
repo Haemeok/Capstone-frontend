@@ -1,3 +1,7 @@
+"use client";
+
+import { useCommonDict } from "@/shared/i18n";
+
 import { IngredientGridItem } from "./IngredientGridItem";
 
 type Ingredient = {
@@ -21,6 +25,7 @@ export const IngredientGrid = ({
   loadMoreRef,
   isPending,
 }: Props) => {
+  const t = useCommonDict();
   if (isPending) {
     return (
       <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6">
@@ -36,7 +41,7 @@ export const IngredientGrid = ({
 
   if (items.length === 0) {
     return (
-      <p className="text-ink-muted py-10 text-center">검색 결과가 없습니다</p>
+      <p className="text-ink-muted py-10 text-center">{t.search.noResults}</p>
     );
   }
 

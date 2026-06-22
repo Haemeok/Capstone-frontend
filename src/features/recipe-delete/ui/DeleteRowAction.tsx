@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { useCommonDict, useRecipeActionsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { TrashIcon } from "@/shared/ui/icons";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
@@ -16,6 +17,8 @@ type DeleteRowActionProps = {
 const DeleteRowAction = ({ recipeId, variant }: DeleteRowActionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutate: deleteRecipe } = useDeleteRecipeMutation(recipeId);
+  const tc = useCommonDict();
+  const t = useRecipeActionsDict();
 
   const isMobile = variant === "mobile";
 
@@ -41,15 +44,15 @@ const DeleteRowAction = ({ recipeId, variant }: DeleteRowActionProps) => {
         onClick={handleOpenModal}
       >
         {!isMobile && <TrashIcon size={20} />}
-        <p>삭제</p>
+        <p>{tc.modal.delete.confirm}</p>
         {isMobile && <TrashIcon size={20} />}
       </button>
       <DeleteModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        title="레시피를 삭제하시겠어요?"
+        title={t.deleteModalTitle}
         onConfirm={handleConfirm}
-        description="이 레시피를 삭제하면 복원할 수 없습니다."
+        description={tc.modal.delete.description}
       />
     </>
   );

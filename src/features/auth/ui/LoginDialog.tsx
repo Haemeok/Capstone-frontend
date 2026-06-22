@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { useLocalizedRouter } from "@/shared/i18n";
+import { useAuthDict, useLocalizedRouter } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Dialog, DialogContent, DialogTitle } from "@/shared/ui/shadcn/dialog";
 
@@ -15,6 +15,7 @@ type LoginDialogProps = {
 
 const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
   const router = useLocalizedRouter();
+  const t = useAuthDict();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="h-full max-h-[700px] w-full max-w-3xl overflow-hidden p-0 [&>button]:z-50">
-        <DialogTitle className="sr-only">로그인</DialogTitle>
+        <DialogTitle className="sr-only">{t.dialogTitle}</DialogTitle>
         <LoginContent />
       </DialogContent>
     </Dialog>

@@ -855,6 +855,7 @@ export type CommonDict = {
     deleteAccount: { pending: string; success: string; error: string };
   };
   errors: { unknown: string };
+  search: { noResults: string };
 };
 
 export type SettingsDict = {
@@ -930,6 +931,10 @@ export type CommentsDict = {
   modalCommentTitle: string;
   modalReplyTitle: string;
   modalTriggerAria: string;
+  imageAlt: string;
+  imagePreviewAlt: string;
+  imageRemoveAria: string;
+  imageAttachAria: string;
   deleteAria: string;
   deleteModalTitle: string;
   deleteModalDesc: string;
@@ -940,6 +945,7 @@ export type CommentsDict = {
 
 export type AuthDict = {
   browseWithoutLogin: string;
+  dialogTitle: string;
   recentLogin: string;
   loading: string;
   kakaoLabel: string;
@@ -1163,6 +1169,18 @@ export type IngredientSheetDict = {
   >;
 };
 
+export type RecipeActionsDict = {
+  deleteModalTitle: string;
+  deleteSuccess: string;
+  deleting: string;
+  deleteError: string;
+  remixOnboarding: string;
+  onboardingCloseAria: string;
+  remixEncourage: string;
+  shareTitle: string;
+  shareText: string;
+};
+
 export type UiCommonDict = {
   badge: {
     aiGenerated: string;
@@ -1203,6 +1221,7 @@ export type Dictionary = {
   ratings: RatingsDict;
   recipeGrid: RecipeGridDict;
   ingredientSheet: IngredientSheetDict;
+  recipeActions: RecipeActionsDict;
   uiCommon: UiCommonDict;
   auth: AuthDict;
   notifications: NotificationsDict;

@@ -47,4 +47,5 @@ export const common: CommonDict = {
     },
   },
   errors: { unknown: "알 수 없는 오류가 발생했습니다." },
+  search: { noResults: "검색 결과가 없습니다" },
 };

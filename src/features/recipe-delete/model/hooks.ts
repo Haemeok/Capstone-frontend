@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { format, useCommonDict, useRecipeActionsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useToastStore } from "@/widgets/Toast";
@@ -10,11 +11,13 @@ import { deleteRecipe } from "./api";
 const useDeleteRecipeMutation = (recipeId: string) => {
   const queryClient = useQueryClient();
   const { addToast, removeToast } = useToastStore();
+  const tc = useCommonDict();
+  const t = useRecipeActionsDict();
   const deleteRecipeMutation = useMutation({
     mutationFn: () => deleteRecipe(recipeId),
     onMutate: () => {
       const deletingToastId = addToast({
-        message: "삭제 중...",
+        message: t.deleting,
         variant: "default",
         size: "small",
         position: "middle",
@@ -28,7 +31,7 @@ const useDeleteRecipeMutation = (recipeId: string) => {
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
       queryClient.invalidateQueries({ queryKey: ["recipe", recipeId] });
       addToast({
-        message: "레시피가 삭제되었습니다.",
+        message: t.deleteSuccess,
         variant: "default",
         size: "small",
         position: "bottom",
@@ -36,12 +39,10 @@ const useDeleteRecipeMutation = (recipeId: string) => {
     },
     onError: (error) => {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "알 수 없는 오류가 발생했습니다.";
+        error instanceof Error ? error.message : tc.errors.unknown;
 
       addToast({
-        message: `삭제에 실패했습니다: ${errorMessage}`,
+        message: format(t.deleteError, { message: errorMessage }),
         variant: "error",
         position: "middle",
       });

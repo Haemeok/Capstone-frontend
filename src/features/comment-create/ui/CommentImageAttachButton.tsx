@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import { ImagePlus } from "lucide-react";
 
+import { useCommentsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
@@ -18,6 +19,7 @@ type Props = {
 const CommentImageAttachButton = ({ onFileSelected, disabled }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { addToast } = useToastStore();
+  const t = useCommentsDict();
 
   const handleClick = () => {
     if (disabled) return;
@@ -44,7 +46,7 @@ const CommentImageAttachButton = ({ onFileSelected, disabled }: Props) => {
         type="button"
         onClick={handleClick}
         disabled={disabled}
-        aria-label="사진 첨부"
+        aria-label={t.imageAttachAria}
         className="text-ink-muted flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
       >
         <ImagePlus size={20} />

@@ -47,4 +47,5 @@ export const common: CommonDict = {
     },
   },
   errors: { unknown: "An unknown error occurred." },
+  search: { noResults: "No results found" },
 };

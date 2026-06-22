@@ -5,9 +5,11 @@ import { useState } from "react";
 import { Pencil, Wand2 } from "lucide-react";
 
 import {
+  format,
   LocalizedLink,
   useCommonDict,
   useLocalizedRouter,
+  useRecipeActionsDict,
 } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
@@ -44,6 +46,7 @@ const RecipeInteractionButtons = ({
   isCloneable,
 }: RecipeInteractionButtonsProps) => {
   const t = useCommonDict();
+  const tr = useRecipeActionsDict();
   const { user } = useUserStore();
   const { status } = useRecipeStatus();
   const router = useLocalizedRouter();
@@ -59,7 +62,7 @@ const RecipeInteractionButtons = ({
     if (!user) {
       openDrawer({
         icon: <Wand2 size={24} className="text-olive-light" />,
-        message: "이 레시피를 내 스타일로 편집해보세요!",
+        message: tr.remixEncourage,
       });
       return;
     }
@@ -127,8 +130,8 @@ const RecipeInteractionButtons = ({
       <ShareButton
         className="flex h-14 w-14 items-center justify-center rounded-full border-2 p-2"
         label={t.actions.shareLabel}
-        title={`${title} - 레시피오`}
-        text={`${title} 레시피를 확인해보세요!`}
+        title={format(tr.shareTitle, { title })}
+        text={format(tr.shareText, { title })}
       />
     </div>
   );
