@@ -11,6 +11,15 @@ const flatten = (value: unknown): string => {
 };
 
 describe("buildCategoryMetadata — localized (T-29~32)", () => {
+  it("T-04 en 카테고리: title 접미사 Recipio + og:locale alternate", () => {
+    const m = buildCategoryMetadata({ id: "DIET", page: 0, locale: "en" });
+    expect(m.title).toMatch(/\| Recipio$/);
+    expect(m.openGraph?.siteName).toBe("Recipio");
+    expect(m.openGraph?.alternateLocale).toEqual(
+      expect.arrayContaining(["ko_KR", "ja_JP"])
+    );
+  });
+
   it("ja CHEF_RECIPE: ja 템플릿 title + hreflang + noindex (T-29)", () => {
     const meta = buildCategoryMetadata({
       id: "CHEF_RECIPE",

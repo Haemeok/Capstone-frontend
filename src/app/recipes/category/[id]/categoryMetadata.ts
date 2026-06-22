@@ -11,17 +11,16 @@ import type { Locale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n";
 import { taxonomyMessages } from "@/shared/i18n/taxonomyMessages";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import {
+  alternateLocales,
+  localizedSiteName,
+  OG_LOCALE,
+} from "@/shared/lib/metadata/localized";
 
 type BuildCategoryMetadataArgs = {
   id: string;
   page: number;
   locale: Locale;
-};
-
-const OG_LOCALE: Record<Locale, string> = {
-  ko: "ko_KR",
-  ja: "ja_JP",
-  en: "en_US",
 };
 
 const COLLECTION_TITLE: Record<
@@ -34,12 +33,11 @@ const COLLECTION_TITLE: Record<
 
 const COLLECTION_DESCRIPTION: Record<
   Exclude<Locale, "ko">,
-  (name: string) => string
+  (name: string, siteName: string) => string
 > = {
-  ja: (name) =>
-    `${name}のレシピを${SEO_CONSTANTS.SITE_NAME}でチェックしましょう。`,
-  en: (name) =>
-    `Browse ${name} recipes on ${SEO_CONSTANTS.SITE_NAME} and find your next dish.`,
+  ja: (name, siteName) => `${name}のレシピを${siteName}でチェックしましょう。`,
+  en: (name, siteName) =>
+    `Browse ${name} recipes on ${siteName} and find your next dish.`,
 };
 
 const PAGE_LABEL: Record<Locale, (page: number) => string> = {
@@ -154,8 +152,9 @@ const buildLocalizedMetadata = (
   imageUrl: string
 ): Metadata => {
   const pageLabel = PAGE_LABEL[locale](page);
-  const title = `${COLLECTION_TITLE[locale](tagName)}${pageLabel} | ${SEO_CONSTANTS.SITE_NAME}`;
-  const description = COLLECTION_DESCRIPTION[locale](tagName);
+  const siteName = localizedSiteName(locale);
+  const title = `${COLLECTION_TITLE[locale](tagName)}${pageLabel} | ${siteName}`;
+  const description = COLLECTION_DESCRIPTION[locale](tagName, siteName);
   const canonicalSearch = page > 0 ? `?page=${page}` : "";
   const url = absoluteUrl(`${locale}/recipes/category/${id}${canonicalSearch}`);
 
@@ -170,8 +169,9 @@ const buildLocalizedMetadata = (
       title,
       description,
       url,
-      siteName: SEO_CONSTANTS.SITE_NAME,
+      siteName,
       locale: OG_LOCALE[locale],
+      alternateLocale: alternateLocales(locale),
       type: SEO_CONSTANTS.OG_TYPE.WEBSITE,
       images: [
         {
