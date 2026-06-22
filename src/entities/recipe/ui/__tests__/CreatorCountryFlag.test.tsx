@@ -30,4 +30,9 @@ describe("CreatorCountryFlag", () => {
     expect(screen.getByRole("img", { name: "미국 채널" })).toBeInTheDocument();
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
+
+  it("US는 앱 WebView용 이모지 폴백도 함께 렌더한다", () => {
+    render(<CreatorCountryFlag tag="US" />);
+    expect(screen.getByText("🇺🇸")).toBeInTheDocument();
+  });
 });

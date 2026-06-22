@@ -383,6 +383,21 @@
   }
 }
 
+/* 국기: 웹은 SVG, 앱 WebView는 OS 네이티브 이모지 (작은 크기에서 더 또렷) */
+.country-flag-svg {
+  display: inline-flex;
+}
+.country-flag-emoji {
+  display: none;
+}
+html.is-app-webview .country-flag-svg {
+  display: none;
+}
+html.is-app-webview .country-flag-emoji {
+  display: inline-flex;
+  align-items: center;
+}
+
 @keyframes richToastIn {
   0% {
     transform: translateY(100%);

@@ -74,12 +74,42 @@ type CountryFlagGlyphProps = {
   className?: string;
 };
 
-export const CountryFlagGlyph = ({ tag, className }: CountryFlagGlyphProps) => {
+const FLAG_EMOJI = {
+  KR: "🇰🇷",
+  JP: "🇯🇵",
+  US: "🇺🇸",
+} as const;
+
+const FlagSvg = ({
+  tag,
+  className,
+}: {
+  tag: "KR" | "JP" | "US";
+  className?: string;
+}) => {
   if (tag === "JP") return <JapanFlag className={cn(FLAG_CLASS, className)} />;
   if (tag === "KR") return <KoreaFlag className={cn(FLAG_CLASS, className)} />;
-  if (tag === "US") return <UsaFlag className={cn(FLAG_CLASS, className)} />;
+  return <UsaFlag className={cn(FLAG_CLASS, className)} />;
+};
+
+export const CountryFlagGlyph = ({ tag, className }: CountryFlagGlyphProps) => {
   if (tag === "OTHER") {
     return <span className={cn("text-base leading-none", className)}>🌐</span>;
+  }
+  if (tag === "KR" || tag === "JP" || tag === "US") {
+    return (
+      <>
+        <span className="country-flag-svg">
+          <FlagSvg tag={tag} className={className} />
+        </span>
+        <span
+          aria-hidden="true"
+          className={cn("country-flag-emoji text-base leading-none", className)}
+        >
+          {FLAG_EMOJI[tag]}
+        </span>
+      </>
+    );
   }
   return null;
 };
