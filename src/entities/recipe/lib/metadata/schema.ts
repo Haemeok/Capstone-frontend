@@ -56,7 +56,7 @@ export const createRecipeStructuredData = (
   const enhancedDescription = `${costDescription}${recipe.description}`;
 
   const videoObject = youtubeMetadata
-    ? createEnhancedVideoObject(recipe, youtubeMetadata)
+    ? createEnhancedVideoObject(recipe, youtubeMetadata, locale)
     : recipe.youtubeUrl
       ? {
           "@type": "VideoObject" as const,

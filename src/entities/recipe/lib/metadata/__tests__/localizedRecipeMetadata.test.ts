@@ -180,3 +180,17 @@ it("T-13 en, youtubeUrl 有: VideoObject.name에 만들기 없음", () => {
   const node = recipeNode(generateLocalizedRecipeJsonLd(r, "abc", "en"));
   expect(JSON.stringify(node?.video)).not.toMatch(/만들기/);
 });
+
+it("T-13b en, youtube 풀메타: video 노드 한국어 없음", () => {
+  const r = makeBaseRecipe({
+    youtubeUrl: "https://youtu.be/x",
+    youtubeChannelName: "SomeChef",
+    youtubeSubscriberCount: 1200000,
+    title: "Pickles",
+    description: "Tasty.",
+    tags: ["salad", "quick"],
+  });
+  const jsonLd = generateLocalizedRecipeJsonLd(r, "abc", "en");
+  const node = recipeNode(jsonLd);
+  expect(JSON.stringify(node?.video)).not.toMatch(/[가-힣]/);
+});

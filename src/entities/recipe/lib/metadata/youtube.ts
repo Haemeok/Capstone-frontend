@@ -1,6 +1,8 @@
+import type { Locale } from "@/shared/i18n";
+import { localizedSiteName } from "@/shared/lib/metadata/localized";
+
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
-import { SEO_CONSTANTS } from "./constants";
 import { toIso8601 } from "./dateTime";
 
 export type YoutubeMetadata = {
@@ -27,7 +29,28 @@ export const extractYoutubeMetadata = (
   };
 };
 
-export const formatSubscriberCount = (count: number): string => {
+export const formatSubscriberCount = (
+  count: number,
+  locale: Locale = "ko"
+): string => {
+  if (locale === "en") {
+    if (count >= 1_000_000) {
+      return `${(count / 1_000_000).toFixed(1)}M`;
+    }
+    if (count >= 1_000) {
+      return `${Math.floor(count / 1_000)}K`;
+    }
+    return `${count}`;
+  }
+  if (locale === "ja") {
+    if (count >= 10_000) {
+      return `${Math.floor(count / 10_000)}万人`;
+    }
+    if (count >= 1_000) {
+      return `${Math.floor(count / 1_000)}千人`;
+    }
+    return `${count}人`;
+  }
   if (count >= 10000) {
     const tenThousands = Math.floor(count / 10000);
     return `${tenThousands}만명`;
@@ -38,16 +61,38 @@ export const formatSubscriberCount = (count: number): string => {
   return `${count}명`;
 };
 
+const VIDEO_KEYWORDS: Record<Locale, [string, string]> = {
+  ko: ["유튜브 레시피", "요리 영상"],
+  en: ["YouTube recipe", "cooking video"],
+  ja: ["YouTubeレシピ", "料理動画"],
+};
+
+const videoDescription = (
+  ch: string,
+  title: string,
+  desc: string,
+  locale: Locale
+): string => {
+  if (locale === "en") return `${title} recipe video by ${ch}. ${desc}`;
+  if (locale === "ja") return `${ch}さんによる${title}のレシピ動画。${desc}`;
+  return `${ch}의 ${title} 레시피 영상. ${desc}`;
+};
+
 export const createEnhancedVideoObject = (
   recipe: StaticRecipe,
-  youtubeMetadata: YoutubeMetadata
+  youtubeMetadata: YoutubeMetadata,
+  locale: Locale = "ko"
 ) => {
   const subscriberCount = youtubeMetadata.subscriberCount || 0;
+  const ch = youtubeMetadata.channelName;
+  const [kw1, kw2] = VIDEO_KEYWORDS[locale];
 
   return {
     "@type": "VideoObject" as const,
-    name: youtubeMetadata.videoTitle || `${recipe.title} 만들기`,
-    description: `${youtubeMetadata.channelName}의 ${recipe.title} 레시피 영상. ${recipe.description}`,
+    name:
+      youtubeMetadata.videoTitle ||
+      (locale === "ko" ? `${recipe.title} 만들기` : recipe.title),
+    description: videoDescription(ch, recipe.title, recipe.description, locale),
     thumbnailUrl: [
       youtubeMetadata.thumbnailUrl || recipe.imageUrl,
       recipe.imageUrl,
@@ -58,15 +103,15 @@ export const createEnhancedVideoObject = (
     ...(recipe.cookingTime && { duration: `PT${recipe.cookingTime}M` }),
     publisher: {
       "@type": "Organization" as const,
-      name: SEO_CONSTANTS.SITE_NAME,
+      name: localizedSiteName(locale),
       logo: {
         "@type": "ImageObject" as const,
-        url: SEO_CONSTANTS.DEFAULT_IMAGE,
+        url: "https://www.recipio.kr/og.png",
       },
     },
     creator: {
       "@type": "Person" as const,
-      name: youtubeMetadata.channelName,
+      name: ch,
       ...(youtubeMetadata.channelProfileUrl && {
         image: youtubeMetadata.channelProfileUrl,
       }),
@@ -78,17 +123,28 @@ export const createEnhancedVideoObject = (
         userInteractionCount: subscriberCount,
       },
     }),
-    keywords: [
-      recipe.title,
-      youtubeMetadata.channelName,
-      "유튜브 레시피",
-      "요리 영상",
-      ...recipe.tags,
-    ].join(", "),
+    keywords: [recipe.title, ch, kw1, kw2, ...recipe.tags].join(", "),
   };
 };
 
-export const createCreatorPersonSchema = (youtubeMetadata: YoutubeMetadata) => {
+const JOB_TITLE: Record<Locale, string> = {
+  ko: "요리 크리에이터",
+  en: "Cooking creator",
+  ja: "料理クリエイター",
+};
+
+const creatorDescription = (n: number, locale: Locale): string => {
+  if (locale === "en")
+    return `Popular cooking creator with ${formatSubscriberCount(n, "en")} subscribers`;
+  if (locale === "ja")
+    return `登録者${formatSubscriberCount(n, "ja")}の人気料理クリエイター`;
+  return `구독자 ${formatSubscriberCount(n, "ko")}의 인기 요리 유튜버`;
+};
+
+export const createCreatorPersonSchema = (
+  youtubeMetadata: YoutubeMetadata,
+  locale: Locale = "ko"
+) => {
   const subscriberCount = youtubeMetadata.subscriberCount || 0;
 
   return {
@@ -98,9 +154,9 @@ export const createCreatorPersonSchema = (youtubeMetadata: YoutubeMetadata) => {
     ...(youtubeMetadata.channelProfileUrl && {
       image: youtubeMetadata.channelProfileUrl,
     }),
-    jobTitle: "요리 크리에이터",
+    jobTitle: JOB_TITLE[locale],
     ...(subscriberCount > 0 && {
-      description: `구독자 ${formatSubscriberCount(subscriberCount)}의 인기 요리 유튜버`,
+      description: creatorDescription(subscriberCount, locale),
     }),
   };
 };
