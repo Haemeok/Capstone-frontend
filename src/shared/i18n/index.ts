@@ -13,6 +13,7 @@ export { localizeIngredientName } from "./ingredientNameOverlay";
 export { localizePack } from "./ingredientPackMeta";
 export { ingredientPickerMessages } from "./ingredientPickerMessages";
 export { ingredientsMessages } from "./ingredientsMessages";
+export { getLocaleCookie, setLocaleCookie } from "./localeCookie";
 export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
 export { notFoundMessages } from "./notFoundMessages";
