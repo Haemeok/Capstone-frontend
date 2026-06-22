@@ -1,6 +1,14 @@
 import { absoluteUrl } from "@/shared/config/constants/api";
+import type { Locale } from "@/shared/i18n";
 
 import { SEO_CONSTANTS } from "./constants";
+import { localizedPath, localizedSiteName } from "./localized";
+
+const BREADCRUMB_RECIPES_LABEL: Record<Locale, string> = {
+  ko: "레시피",
+  en: "Recipes",
+  ja: "レシピ",
+};
 
 type BreadcrumbItem = {
   name: string;
@@ -33,20 +41,21 @@ const createBreadcrumbListElement = (
 
 export const createRecipeBreadcrumb = (
   recipeTitle: string,
-  recipeId: string
+  recipeId: string,
+  locale: Locale = "ko"
 ) => {
   const items: BreadcrumbItem[] = [
     {
-      name: SEO_CONSTANTS.SITE_NAME,
+      name: localizedSiteName(locale),
       url: SEO_CONSTANTS.SITE_URL,
     },
     {
-      name: "레시피",
-      url: absoluteUrl("recipes"),
+      name: BREADCRUMB_RECIPES_LABEL[locale],
+      url: absoluteUrl(localizedPath(locale, "recipes")),
     },
     {
       name: recipeTitle,
-      url: absoluteUrl(`recipes/${recipeId}`),
+      url: absoluteUrl(localizedPath(locale, `recipes/${recipeId}`)),
     },
   ];
 
