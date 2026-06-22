@@ -1,4 +1,5 @@
 const fetchMock = jest.fn();
+// jest 환경의 global.fetch는 fetch 오버로드 시그니처를 강제하므로 double-cast
 global.fetch = fetchMock as unknown as typeof fetch;
 
 import { LOCALE_COOKIE } from "@/shared/i18n/localeCookie";
