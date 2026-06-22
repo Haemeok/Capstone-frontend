@@ -86,6 +86,63 @@ export const findKoreanLeaks = (
   return collectLiterals(sf, source.split(/\r?\n/), HANGUL, file);
 };
 
+const hasFileIgnore = (lines: string[]): boolean =>
+  lines.slice(0, 3).some((l) => /i18n-ignore-file/.test(l));
+
+const DISPLAY_SINK = /addToast|(?<![A-Za-z])toast|Error|alert|confirm/;
+
+const collectDisplayLiterals = (
+  sf: ts.SourceFile,
+  lines: string[],
+  file: string
+): Violation[] => {
+  const out: Violation[] = [];
+  const flag = (node: ts.Node, text: string): void => {
+    if (!HANGUL.test(text)) return;
+    const { line } = sf.getLineAndCharacterOfPosition(node.getStart(sf));
+    if (hasIgnore(lines, line)) return;
+    out.push({ file, line: line + 1, text: text.trim() });
+  };
+  const visit = (node: ts.Node): void => {
+    if (ts.isJsxText(node)) {
+      flag(node, node.text);
+    } else if (ts.isJsxAttribute(node) && node.initializer) {
+      const init = node.initializer;
+      const lit = ts.isJsxExpression(init) ? init.expression : init;
+      if (
+        lit &&
+        (ts.isStringLiteral(lit) || ts.isNoSubstitutionTemplateLiteral(lit))
+      ) {
+        flag(lit, lit.text);
+      }
+    } else if (
+      ts.isCallExpression(node) &&
+      DISPLAY_SINK.test(node.expression.getText(sf))
+    ) {
+      for (const arg of node.arguments) {
+        if (
+          ts.isStringLiteral(arg) ||
+          ts.isNoSubstitutionTemplateLiteral(arg)
+        ) {
+          flag(arg, arg.text);
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sf);
+  return out;
+};
+
+export const findKoreanDisplayLeaks = (
+  source: string,
+  file = "x.tsx"
+): Violation[] => {
+  const lines = source.split(/\r?\n/);
+  if (hasFileIgnore(lines)) return [];
+  return collectDisplayLiterals(parse(source, file), lines, file);
+};
+
 const SKIP_DIR = new Set(["node_modules", ".next", "messages", "testing"]);
 
 const walk = (dir: string, predicate: (full: string) => boolean): string[] => {

@@ -1,3 +1,4 @@
+// i18n-ignore-file: dead code (consumer 없음) — 삭제 후보
 "use client";
 
 import { useState } from "react";

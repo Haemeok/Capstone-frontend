@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "lint:self-barrel": "node scripts/find-self-barrel.mjs",
+    "i18n:baseline": "tsx scripts/i18n-leak-baseline.ts",
     "test": "jest --runInBand",
     "test:ci": "jest --runInBand --coverage --coverageReporters=text-summary --coverageReporters=lcov",
     "test:ssr": "jest --config jest.ssr.config.js --runInBand",

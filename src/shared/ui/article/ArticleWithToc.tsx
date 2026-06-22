@@ -1,3 +1,4 @@
+// i18n-ignore-file: ko 전용 라우트 전용 렌더
 "use client";
 
 import { type ReactNode, useMemo } from "react";

@@ -1,3 +1,4 @@
+// i18n-ignore-file: dead code (RecipeCarousel consumer 없음, CarouselRow만 사용) — 삭제 후보
 import { IMAGE_BASE_URL } from "@/shared/config/constants/recipe";
 import { Image } from "@/shared/ui/image/Image";
 

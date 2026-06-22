@@ -1,3 +1,4 @@
+// i18n-ignore-file: ko 전용 라우트(privacy/notice/magazine/curation)에서만 렌더
 import { type ReactNode } from "react";
 
 import { Container } from "@/shared/ui/Container";
