@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Refrigerator, ShoppingBasketIcon } from "lucide-react";
 
 import type { Locale } from "@/shared/i18n";
+import { getDictionary } from "@/shared/i18n";
 import BadgeButton from "@/shared/ui/BadgeButton";
 
 import { IngredientItem } from "@/entities/ingredient";
@@ -26,11 +27,12 @@ export const IngredientListItem = ({
   reserveFridgeSpace,
   locale,
 }: IngredientListItemProps) => {
+  const t = getDictionary(locale);
   const nameCell = (
     <div className="flex items-center gap-1.5 text-left">
       {ingredient.inFridge ? (
         <BadgeButton
-          badgeText="내 냉장고에 있는 재료예요"
+          badgeText={t.recipeDetail.inFridgeBadge}
           badgeIcon={<Refrigerator size={18} className="text-ink-muted" />}
         />
       ) : reserveFridgeSpace ? (

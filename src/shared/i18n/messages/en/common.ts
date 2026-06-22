@@ -5,6 +5,7 @@ export const common: CommonDict = {
   collapse: "Show less",
   readMoreAria: "Show full text",
   collapseAria: "Collapse text",
+  loginRequired: "Please log in first.",
   actions: {
     save: "Save",
     unsave: "Unsave",

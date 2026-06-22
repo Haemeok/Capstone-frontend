@@ -5,6 +5,7 @@ export const common: CommonDict = {
   collapse: "閉じる",
   readMoreAria: "本文をすべて表示",
   collapseAria: "本文を折りたたむ",
+  loginRequired: "ログインが必要です。",
   actions: {
     save: "保存",
     unsave: "保存を解除",

@@ -1,3 +1,4 @@
+import { format, recipeGridMessages } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 
 import { StaticDetailedRecipeGridItem } from "@/entities/recipe";
@@ -37,7 +38,9 @@ const RecipeSlideWithErrorBoundary = ({
           <h2 className="text-ink mb-4 text-lg font-bold">{title}</h2>
           <div className="flex w-full items-center justify-center py-8">
             <p className="text-ink-muted text-sm">
-              {title}을 불러올 수 없어요. 새로고침해주세요.
+              {format(recipeGridMessages[locale ?? "ko"].slideLoadError, {
+                title,
+              })}
             </p>
           </div>
         </div>

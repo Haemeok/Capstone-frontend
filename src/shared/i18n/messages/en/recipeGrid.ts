@@ -16,4 +16,5 @@ export const recipeGrid: RecipeGridDict = {
   itemPrivate: "Private recipe",
   itemMenuAria: "Recipe options",
   itemViewAria: "View {title}",
+  slideLoadError: "Couldn't load {title}. Please refresh.",
 };

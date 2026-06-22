@@ -1,3 +1,7 @@
+"use client";
+
+import { useT } from "@/shared/i18n";
+
 import type { RecipeComponent } from "@/entities/recipe/model/types";
 
 type RecipeComponentsSectionProps = {
@@ -18,13 +22,16 @@ export default function RecipeComponentsSection({
   components,
   className = "",
 }: RecipeComponentsSectionProps) {
+  const t = useT();
   if (!components || components.length === 0) return null;
 
   return (
     <section
       className={`border-olive-light/30 bg-beige-light rounded-card my-6 border p-4 ${className}`}
     >
-      <h2 className="text-ink mb-3 font-bold">디쉬 구성 요소</h2>
+      <h2 className="text-ink mb-3 font-bold">
+        {t.recipeDetail.componentsHeading}
+      </h2>
       <div className="flex flex-col gap-3">
         {components.map((component, index) => (
           <div key={index} className="flex items-start gap-3">

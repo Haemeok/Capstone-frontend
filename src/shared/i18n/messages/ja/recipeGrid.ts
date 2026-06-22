@@ -16,4 +16,5 @@ export const recipeGrid: RecipeGridDict = {
   itemPrivate: "非公開レシピ",
   itemMenuAria: "レシピのオプション",
   itemViewAria: "{title}のレシピを見る",
+  slideLoadError: "{title}を読み込めませんでした。更新してください。",
 };

@@ -7,6 +7,7 @@ import {
   AD_SLOT_IDS,
   IS_AD_TEST_MODE,
 } from "@/shared/adsense/config";
+import { useRecipeGridDict } from "@/shared/i18n";
 import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
 import {
   Carousel,
@@ -63,19 +64,23 @@ const RecommendedSlideLoading = () => (
   </div>
 );
 
-const RecommendedSlideError = () => (
-  <div className="flex h-30 w-full items-center justify-center py-8">
-    <p className="text-ink-muted text-sm">
-      잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.
-    </p>
-  </div>
-);
+const RecommendedSlideError = () => {
+  const t = useRecipeGridDict();
+  return (
+    <div className="flex h-30 w-full items-center justify-center py-8">
+      <p className="text-ink-muted text-sm">{t.error}</p>
+    </div>
+  );
+};
 
-const RecommendedSlideEmpty = () => (
-  <div className="flex w-full items-center justify-center py-8">
-    <p className="text-ink-muted text-sm">아직 레시피가 없어요.</p>
-  </div>
-);
+const RecommendedSlideEmpty = () => {
+  const t = useRecipeGridDict();
+  return (
+    <div className="flex w-full items-center justify-center py-8">
+      <p className="text-ink-muted text-sm">{t.empty}</p>
+    </div>
+  );
+};
 
 const RecommendedRecipeGrid = ({
   title,

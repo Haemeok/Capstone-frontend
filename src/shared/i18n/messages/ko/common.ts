@@ -5,6 +5,7 @@ export const common: CommonDict = {
   collapse: "숨기기",
   readMoreAria: "본문 더 읽기",
   collapseAria: "본문 숨기기",
+  loginRequired: "로그인이 필요합니다.",
   actions: {
     save: "저장",
     unsave: "저장 해제",

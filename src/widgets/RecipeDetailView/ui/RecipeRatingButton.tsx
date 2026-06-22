@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocalizedRouter } from "@/shared/i18n";
+import { useLocalizedRouter, useT } from "@/shared/i18n";
 import Ratings from "@/shared/ui/Ratings";
 
 import { useUserStore } from "@/entities/user/model/store";
@@ -21,13 +21,14 @@ export default function RecipeRatingButton({
   const { user } = useUserStore();
   const { addToast } = useToastStore();
   const { recipeId } = useRecipeStatus();
+  const t = useT();
 
   const router = useLocalizedRouter();
 
   const handleRatingClick = () => {
     if (!user) {
       addToast({
-        message: "로그인이 필요합니다.",
+        message: t.common.loginRequired,
         variant: "default",
         position: "bottom",
       });
@@ -48,7 +49,7 @@ export default function RecipeRatingButton({
       }}
       role="button"
       tabIndex={0}
-      aria-label="평가하기"
+      aria-label={t.recipeDetail.rateAria}
       className="mt-4 w-fit cursor-pointer p-2"
     >
       <Ratings

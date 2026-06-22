@@ -1,20 +1,26 @@
+"use client";
+
 import { ChevronRight } from "lucide-react";
 
 import { TAG_DEFINITIONS } from "@/shared/config/constants/recipe";
-import { LocalizedLink } from "@/shared/i18n";
+import { LocalizedLink, useT } from "@/shared/i18n";
 
 type RecipeTagsSectionProps = {
   tags: string[];
 };
 
 export default function RecipeTagsSection({ tags }: RecipeTagsSectionProps) {
+  const t = useT();
+
   if (!tags || tags.length === 0) {
     return null;
   }
 
   return (
     <section className="mt-6 mb-6">
-      <h2 className="text-ink mb-3 text-lg font-bold">태그</h2>
+      <h2 className="text-ink mb-3 text-lg font-bold">
+        {t.recipeDetail.tagsHeading}
+      </h2>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => {
           const tagDef = TAG_DEFINITIONS.find(

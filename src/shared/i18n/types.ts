@@ -90,6 +90,11 @@ export type RecipeDetailDict = {
   nutritionHeader: string;
   copyAction: string;
   reportAction: string;
+  tagsHeading: string;
+  componentsHeading: string;
+  extractorBadge: string;
+  inFridgeBadge: string;
+  rateAria: string;
   completeRecording: string;
   completeAlready: string;
   completeCta: string;
@@ -819,6 +824,7 @@ export type CommonDict = {
   collapse: string;
   readMoreAria: string;
   collapseAria: string;
+  loginRequired: string;
   actions: {
     save: string;
     unsave: string;
@@ -1119,6 +1125,7 @@ export type RecipeGridDict = {
   itemPrivate: string;
   itemMenuAria: string;
   itemViewAria: string;
+  slideLoadError: string;
 };
 
 export type Dictionary = {
