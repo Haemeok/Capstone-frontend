@@ -1,3 +1,5 @@
+import type { Locale } from "@/shared/i18n/types";
+
 export type User = {
   id: string;
   nickname: string;
@@ -13,6 +15,7 @@ export type User = {
   remainingYoutubeExtractionCredits: number;
   remainingAiQuota: number;
   remainingYoutubeQuota: number;
+  preferredLocale?: Locale;
   adStatus?: {
     showAds: boolean;
     adFreeUntil: string | null;
