@@ -68,11 +68,11 @@ const AI_TRAINING_BOTS = [
   "Deepseekbot",
 ];
 
-/** 비공개 경로 — 모든 크롤러 차단 */
-const PRIVATE_PATHS = [
-  "/api/",
-  "/_next/",
-  "/static/",
+/** 로케일 프리픽스 없이 항상 차단 */
+const ALWAYS_PRIVATE = ["/api/", "/_next/", "/static/"];
+
+/** 로케일 프리픽스 대상 비공개 경로 */
+const PRIVATE_PATH_SUFFIXES = [
   "/login",
   "/login/error",
   "/users/edit",
@@ -83,6 +83,17 @@ const PRIVATE_PATHS = [
   "/notifications",
   "/calendar/*",
   "/ingredients/new",
+];
+
+/** 지원 로케일 */
+const LOCALE_PREFIXES = ["", "/en", "/ja"];
+
+/** 비공개 경로 — 모든 크롤러 차단 */
+const PRIVATE_PATHS = [
+  ...ALWAYS_PRIVATE,
+  ...LOCALE_PREFIXES.flatMap((prefix) =>
+    PRIVATE_PATH_SUFFIXES.map((suffix) => `${prefix}${suffix}`)
+  ),
 ];
 
 export default function robots(): MetadataRoute.Robots {

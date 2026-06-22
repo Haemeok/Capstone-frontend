@@ -21,3 +21,70 @@ describe("robots ja 사이트맵 등록", () => {
     );
   });
 });
+
+describe("robots 로케일 미러 disallow 규칙", () => {
+  it("T-19: 로케일 미러(en, ja) disallow 경로 자동 생성", () => {
+    const result = robots();
+    const base = (result.rules as unknown[]).find(
+      (r: unknown) => (r as Record<string, unknown>).userAgent === "*"
+    ) as Record<string, unknown>;
+    const disallow = (base?.disallow ?? []) as string[];
+    expect(disallow).toEqual(
+      expect.arrayContaining([
+        "/en/login",
+        "/ja/login",
+        "/en/login/error",
+        "/ja/login/error",
+        "/en/users/edit",
+        "/ja/users/edit",
+        "/en/recipes/new",
+        "/ja/recipes/new",
+        "/en/recipes/*/edit",
+        "/ja/recipes/*/edit",
+        "/en/recipes/*/rate",
+        "/ja/recipes/*/rate",
+        "/en/recipes/*/comments",
+        "/ja/recipes/*/comments",
+        "/en/notifications",
+        "/ja/notifications",
+        "/en/calendar/*",
+        "/ja/calendar/*",
+        "/en/ingredients/new",
+        "/ja/ingredients/new",
+      ])
+    );
+  });
+
+  it("T-20: ko PRIVATE_PATHS 회귀 유지", () => {
+    const result = robots();
+    const base = (result.rules as unknown[]).find(
+      (r: unknown) => (r as Record<string, unknown>).userAgent === "*"
+    ) as Record<string, unknown>;
+    const disallow = (base?.disallow ?? []) as string[];
+    expect(disallow).toEqual(
+      expect.arrayContaining([
+        "/login",
+        "/login/error",
+        "/users/edit",
+        "/recipes/new",
+        "/recipes/*/edit",
+        "/recipes/*/rate",
+        "/recipes/*/comments",
+        "/notifications",
+        "/calendar/*",
+        "/ingredients/new",
+      ])
+    );
+  });
+
+  it("T-21: ALWAYS_PRIVATE(/api, /_next, /static) 회귀 유지", () => {
+    const result = robots();
+    const base = (result.rules as unknown[]).find(
+      (r: unknown) => (r as Record<string, unknown>).userAgent === "*"
+    ) as Record<string, unknown>;
+    const disallow = (base?.disallow ?? []) as string[];
+    expect(disallow).toEqual(
+      expect.arrayContaining(["/api/", "/_next/", "/static/"])
+    );
+  });
+});
