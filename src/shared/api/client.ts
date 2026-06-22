@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "@/shared/config/constants/api";
+import { getLocaleCookie } from "@/shared/i18n/localeCookie";
 import { captureException as sentryCaptureException } from "@/shared/lib/sentry";
 import { createApiErrorTags } from "@/shared/lib/sentry";
 
@@ -27,17 +28,26 @@ export async function apiClient<T = unknown>(
     ? url
     : `${baseURL || defaultBaseURL}${url}`;
 
+  let effectiveParams = params;
+  const isExternal = url.startsWith("http") || Boolean(baseURL);
+  if (isClient && !isExternal && effectiveParams?.lang === undefined) {
+    const locale = getLocaleCookie();
+    if (locale && locale !== "ko") {
+      effectiveParams = { ...(effectiveParams ?? {}), lang: locale };
+    }
+  }
+
   let finalUrl = fullUrl;
 
-  if (params) {
+  if (effectiveParams) {
     if (paramsSerializer) {
-      finalUrl = `${finalUrl}?${paramsSerializer(params)}`;
+      finalUrl = `${finalUrl}?${paramsSerializer(effectiveParams)}`;
     } else {
       const urlObj = new URL(
         fullUrl,
         isServer ? fullUrl : window.location.origin
       );
-      Object.entries(params).forEach(([key, value]) => {
+      Object.entries(effectiveParams).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           if (Array.isArray(value)) {
             value.forEach((v) => urlObj.searchParams.append(key, String(v)));
