@@ -1,10 +1,8 @@
 import { Suspense } from "react";
-import { Metadata } from "next";
 
 import { HomeAnchorAdSlot, HomeHeaderAnchorAdSlot } from "@/shared/adsense";
-import { absoluteUrl } from "@/shared/config/constants/api";
-import { buildHreflangAlternates, getDictionary } from "@/shared/i18n";
-import { homeMetadata } from "@/shared/lib/metadata";
+import { getDictionary } from "@/shared/i18n";
+import { buildHomeMetadata } from "@/shared/lib/metadata";
 import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -20,14 +18,7 @@ import { selectHomeBannerSlides } from "@/widgets/HomeBannerCarousel/selectSlide
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
-export const metadata: Metadata = {
-  ...homeMetadata,
-  alternates: {
-    canonical: absoluteUrl("en"),
-    languages: buildHreflangAlternates(""),
-  },
-  openGraph: { ...homeMetadata.openGraph, locale: "en_US" },
-};
+export const metadata = buildHomeMetadata("en");
 
 const HomePage = async () => {
   const dict = getDictionary("en");

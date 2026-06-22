@@ -1,5 +1,5 @@
 export * from "./breadcrumbSchema";
-export { homeMetadata } from "./homeMetadata";
+export { buildHomeMetadata } from "./homeMetadata";
 export { buildLandingMetadata, landingMetadata } from "./landingMetadata";
 export {
   createRecipeStructuredData,

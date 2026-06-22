@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { HomeAnchorAdSlot, HomeHeaderAnchorAdSlot } from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
-import { homeMetadata } from "@/shared/lib/metadata";
+import { buildHomeMetadata } from "@/shared/lib/metadata";
 import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -23,7 +23,7 @@ import SeasonalPopularSlide from "@/widgets/RecipeSlide/SeasonalPopularSlide";
 import YoutubeVerifiedSlide from "@/widgets/RecipeSlide/YoutubeVerifiedSlide";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
-export const metadata = homeMetadata;
+export const metadata = buildHomeMetadata("ko");
 
 const HomePage = async () => {
   const dict = getDictionary("ko");

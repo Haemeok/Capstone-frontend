@@ -206,6 +206,7 @@ export type HomeDict = {
   budgetSectionTitle: string;
   youtubeBannerChip: string;
   youtubeBannerTitle: string;
+  meta: { title: string; description: string; ogImageAlt: string };
 };
 
 export type IngredientAddDict = {
