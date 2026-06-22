@@ -21,3 +21,13 @@ it("ko 기본값 회귀: 레시피 라벨 유지 + ko URL", () => {
   expect(b.itemListElement[1].name).toBe("레시피");
   expect(b.itemListElement[2].item).not.toMatch(/\/(en|ja)\//);
 });
+
+it("en: breadcrumb 첫 item url이 /en으로 끝남", () => {
+  const b = createRecipeBreadcrumb("Kimchi Stew", "abc", "en");
+  expect(b.itemListElement[0].item).toMatch(/\/en$/);
+});
+
+it("ja: breadcrumb 첫 item url이 /ja로 끝남", () => {
+  const b = createRecipeBreadcrumb("キムチ鍋", "abc", "ja");
+  expect(b.itemListElement[0].item).toMatch(/\/ja$/);
+});

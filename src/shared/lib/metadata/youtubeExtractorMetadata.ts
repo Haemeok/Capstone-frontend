@@ -5,7 +5,12 @@ import type { Locale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n";
 
 import { SEO_CONSTANTS } from "./constants";
-import { localizedPath, localizedSiteName, OG_LOCALE } from "./localized";
+import {
+  alternateLocales,
+  localizedPath,
+  localizedSiteName,
+  OG_LOCALE,
+} from "./localized";
 
 const YOUTUBE_EXTRACTOR_IMAGE = absoluteUrl("web-app-manifest-512x512.png");
 
@@ -366,6 +371,7 @@ export const buildYoutubeExtractorMetadata = (locale: Locale): Metadata => {
         },
       ],
       locale: OG_LOCALE[locale],
+      alternateLocale: alternateLocales(locale),
     },
     twitter: {
       card: SEO_CONSTANTS.TWITTER_CARD,

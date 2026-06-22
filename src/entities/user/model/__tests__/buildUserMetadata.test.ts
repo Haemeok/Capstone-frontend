@@ -57,4 +57,16 @@ describe("buildUserMetadata (T-04~07)", () => {
       expect.arrayContaining(["ko", "ja", "en"])
     );
   });
+
+  it("T-22 en 유저: self canonical + og:locale", async () => {
+    mockGetUser.mockResolvedValue({
+      ...baseUser,
+      nickname: "Jay",
+      introduction: "hi",
+      profileImage: null as unknown as string,
+    });
+    const m = await buildUserMetadata("u1", "en");
+    expect(m.alternates?.canonical).toMatch(/\/en\/users\/u1$/);
+    expect(m.openGraph?.locale).toBe("en_US");
+  });
 });

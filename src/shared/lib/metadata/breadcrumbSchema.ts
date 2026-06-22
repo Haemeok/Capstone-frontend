@@ -47,7 +47,7 @@ export const createRecipeBreadcrumb = (
   const items: BreadcrumbItem[] = [
     {
       name: localizedSiteName(locale),
-      url: SEO_CONSTANTS.SITE_URL,
+      url: locale === "ko" ? SEO_CONSTANTS.SITE_URL : absoluteUrl(locale),
     },
     {
       name: BREADCRUMB_RECIPES_LABEL[locale],

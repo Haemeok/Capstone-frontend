@@ -20,3 +20,17 @@ it("ko 회귀: title 한국어 유지", () => {
   const m = buildYoutubeExtractorMetadata("ko");
   expect(JSON.stringify(m.title)).toMatch(/[가-힣]/);
 });
+
+it("en: openGraph.alternateLocale이 ko_KR, ja_JP 포함", () => {
+  const m = buildYoutubeExtractorMetadata("en");
+  expect(m.openGraph?.alternateLocale).toEqual(
+    expect.arrayContaining(["ko_KR", "ja_JP"])
+  );
+});
+
+it("ja: openGraph.alternateLocale이 ko_KR, en_US 포함", () => {
+  const m = buildYoutubeExtractorMetadata("ja");
+  expect(m.openGraph?.alternateLocale).toEqual(
+    expect.arrayContaining(["ko_KR", "en_US"])
+  );
+});

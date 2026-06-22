@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 
-import { absoluteUrl, BASE_URL } from "@/shared/config/constants/api";
+import { absoluteUrl } from "@/shared/config/constants/api";
 import { format, type Locale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n/hreflang";
 import { userPagesMessages } from "@/shared/i18n/userPagesMessages";
 import { isDefaultProfileImage } from "@/shared/lib/colors";
+import { localizedPath, OG_LOCALE } from "@/shared/lib/metadata/localized";
 
 import { getPublicUserForMetadata } from "./getPublicUserForMetadata";
 
@@ -29,13 +30,22 @@ export const buildUserMetadata = async (
     user.profileImage && !isDefaultProfileImage(user.profileImage)
       ? user.profileImage
       : FALLBACK_IMAGE;
-  const url = new URL(`users/${userId}`, BASE_URL).toString();
+  const url = absoluteUrl(localizedPath(locale, `users/${userId}`));
 
   return {
     title,
     description,
-    alternates: { languages: buildHreflangAlternates(`users/${userId}`) },
-    openGraph: { title, description, url, images: [{ url: image }] },
+    alternates: {
+      canonical: url,
+      languages: buildHreflangAlternates(`users/${userId}`),
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      locale: OG_LOCALE[locale],
+      images: [{ url: image }],
+    },
     twitter: { card: "summary", title, description, images: [image] },
   };
 };
