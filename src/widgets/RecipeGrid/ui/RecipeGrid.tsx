@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { InFeedAdSlot, useFeedWithAds } from "@/shared/adsense";
 import { SEARCH_AD_EVERY_N_CARDS } from "@/shared/adsense/config";
+import { useRecipeGridDict } from "@/shared/i18n";
 
 import { isPrivateRecipe } from "@/entities/recipe";
 import {
@@ -41,8 +42,8 @@ const RecipeGrid = ({
   isPending,
   observerRef,
   noResults,
-  noResultsMessage = "표시할 레시피가 없습니다.",
-  lastPageMessage = "모든 레시피를 다 봤어요!",
+  noResultsMessage,
+  lastPageMessage,
   error,
   prefetch = false,
   showAIRecipeCTA = false,
@@ -55,6 +56,9 @@ const RecipeGrid = ({
   locale,
 }: RecipeGridProps) => {
   const queryClient = useQueryClient();
+  const t = useRecipeGridDict();
+  const resolvedNoResults = noResultsMessage ?? t.empty;
+  const resolvedLastPage = lastPageMessage ?? t.lastPage;
 
   const handleImageRetry = useCallback(() => {
     if (queryKeyToInvalidate) {
@@ -83,18 +87,18 @@ const RecipeGrid = ({
   if (error) {
     return (
       <p className="py-10 text-center text-base text-red-500">
-        {error.message || "오류가 발생했습니다. 다시 시도해주세요."}
+        {error.message || t.error}
       </p>
     );
   }
 
   if (noResults) {
     if (showAIRecipeCTA) {
-      return <EmptyRecipeCTA noResultsMessage={noResultsMessage} />;
+      return <EmptyRecipeCTA noResultsMessage={resolvedNoResults} />;
     }
     return (
       <EmptyFilterState
-        noResultsMessage={noResultsMessage}
+        noResultsMessage={resolvedNoResults}
         onResetFilters={onResetFilters}
       />
     );
@@ -146,7 +150,7 @@ const RecipeGrid = ({
           !error &&
           !noResults
         }
-        lastPageMessage={lastPageMessage}
+        lastPageMessage={resolvedLastPage}
       />
     </div>
   );

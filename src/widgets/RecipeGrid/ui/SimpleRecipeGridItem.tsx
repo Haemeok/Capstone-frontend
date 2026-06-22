@@ -4,7 +4,7 @@ import React from "react";
 
 import { EllipsisVertical, LockKeyhole } from "lucide-react";
 
-import { LocalizedLink } from "@/shared/i18n";
+import { LocalizedLink, useRecipeGridDict } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
@@ -24,6 +24,7 @@ const SimpleRecipeGridItem = ({
   prefetch = false,
   isPrivate = false,
 }: SimpleRecipeGridItemProps) => {
+  const t = useRecipeGridDict();
   const showActionButton = !!setIsDrawerOpen;
 
   const handleMenuClick = (e: React.MouseEvent) => {
@@ -60,7 +61,7 @@ const SimpleRecipeGridItem = ({
       {isPrivate && (
         <div
           className="pointer-events-none absolute top-1.5 left-1.5 flex h-6 w-6 items-center justify-center rounded-full text-white"
-          aria-label="비공개 레시피"
+          aria-label={t.itemPrivate}
         >
           <LockKeyhole size={14} strokeWidth={2.25} />
         </div>
@@ -70,7 +71,7 @@ const SimpleRecipeGridItem = ({
           <button
             className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-white"
             onClick={handleMenuClick}
-            aria-label="레시피 옵션 메뉴"
+            aria-label={t.itemMenuAria}
           >
             <EllipsisVertical size={18} />
           </button>

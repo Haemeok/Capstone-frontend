@@ -11,6 +11,7 @@ export const userPages: UserPagesDict = {
     calendarLoadError: "カレンダーを読み込めませんでした",
     emptyTitle: "あなたの料理の記録を残しましょう",
     emptyDescription: "気になるレシピを保存して、料理の予定を管理できます",
+    recipesEmpty: "投稿したレシピがありません。",
     editAction: "プロフィールを編集",
     editAria: "プロフィール編集",
     edit: {

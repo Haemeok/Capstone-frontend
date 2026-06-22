@@ -6,6 +6,7 @@ import { Bookmark, Clock } from "lucide-react";
 
 import { NO_IMAGE_URL } from "@/shared/config/constants/user";
 import { saveRecentlyViewedRecipe } from "@/shared/hooks/useRecentlyViewedRecipes";
+import { format, useRecipeGridDict } from "@/shared/i18n";
 import {
   generateUserGradient,
   isDefaultProfileImage,
@@ -64,6 +65,7 @@ const DetailedRecipeGridItem = ({
   hideCookingTime = false,
   locale,
 }: DetailedRecipeGridItemProps) => {
+  const t = useRecipeGridDict();
   const imageUrl = recipe.imageUrl || NO_IMAGE_URL;
   const author = getGridItemAuthor(recipe);
 
@@ -149,7 +151,7 @@ const DetailedRecipeGridItem = ({
               <>
                 <AIGeneratedBadge />
                 <span className="text-ink-muted truncate text-[13px]">
-                  AI 생성
+                  {t.aiGenerated}
                 </span>
               </>
             )}
@@ -199,7 +201,9 @@ const DetailedRecipeGridItem = ({
                     )}
                   >
                     <Clock size={13} className="text-gray-400" />
-                    <span>{recipe.cookingTime}분</span>
+                    <span>
+                      {format(t.cookingTime, { n: recipe.cookingTime })}
+                    </span>
                   </div>
                 );
               })()}
@@ -222,7 +226,7 @@ const DetailedRecipeGridItem = ({
         <Link
           href={buildLocalizedRecipeHref(recipe.id, locale)}
           className="rounded-card absolute inset-0"
-          aria-label={`${recipe.title} 레시피 보기`}
+          aria-label={format(t.itemViewAria, { title: recipe.title })}
           prefetch={prefetch ? true : null}
           onClick={handleClick}
         />

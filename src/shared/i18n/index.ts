@@ -21,6 +21,7 @@ export { notificationsMessages } from "./notificationsMessages";
 export { getStoredLocale, setStoredLocale } from "./preferredLocale";
 export { ratingsMessages } from "./ratingsMessages";
 export { recipeFormMessages } from "./recipeFormMessages";
+export { recipeGridMessages } from "./recipeGridMessages";
 export { resolveChromeLocale } from "./resolveChromeLocale";
 export { resolveDateFnsLocale } from "./resolveDateFnsLocale";
 export { resolveLocaleFromPath } from "./resolveLocaleFromPath";
@@ -46,6 +47,7 @@ export type {
   RatingsDict,
   RecipeCreateDict,
   RecipeFormDict,
+  RecipeGridDict,
   ReferralDict,
   SettingsDict,
   SmartAppBannerDict,
@@ -85,6 +87,7 @@ export {
   useRecipeCreateLocale,
 } from "./useRecipeCreateDict";
 export { useRecipeFormDict, useRecipeFormLocale } from "./useRecipeFormDict";
+export { useRecipeGridDict } from "./useRecipeGridDict";
 export { useReferralDict } from "./useReferralDict";
 export { useSettingsDict } from "./useSettingsDict";
 export {

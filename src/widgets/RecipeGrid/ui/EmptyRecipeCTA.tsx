@@ -1,5 +1,5 @@
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
-import { LocalizedLink } from "@/shared/i18n";
+import { LocalizedLink, useRecipeGridDict } from "@/shared/i18n";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -8,14 +8,13 @@ type EmptyRecipeCTAProps = {
 };
 
 const EmptyRecipeCTA = ({ noResultsMessage }: EmptyRecipeCTAProps) => {
+  const t = useRecipeGridDict();
   return (
     <section className="flex min-h-[500px] items-center justify-center px-4">
       <div className="flex max-w-md flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
         <div className="space-y-2">
           <h3 className="text-ink text-xl font-bold">{noResultsMessage}</h3>
-          <p className="text-ink-sub text-sm">
-            30초만에 AI에게 레시피 생성을 맡겨보세요
-          </p>
+          <p className="text-ink-sub text-sm">{t.ctaDesc}</p>
         </div>
         <LocalizedLink
           href="/recipes/new/ai"
@@ -26,14 +25,14 @@ const EmptyRecipeCTA = ({ noResultsMessage }: EmptyRecipeCTAProps) => {
             alt="AI"
             wrapperClassName="w-8"
           />
-          <span>AI 레시피 생성하기</span>
+          <span>{t.ctaAi}</span>
         </LocalizedLink>
         <LocalizedLink
           href="/recipes/new/youtube"
           className="border-olive-light text-olive-light hover:bg-olive-light/10 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border bg-white px-6 py-3 font-semibold transition-colors"
         >
           <YouTubeIconBadge className="h-6 w-6" />
-          <span>유튜브 레시피 추출하기</span>
+          <span>{t.ctaYoutube}</span>
         </LocalizedLink>
       </div>
     </section>

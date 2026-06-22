@@ -6,7 +6,7 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import type { Locale } from "@/shared/i18n";
-import { useUserPagesLocale } from "@/shared/i18n";
+import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { isPrivateRecipe, MyRecipesPageResponse } from "@/entities/recipe";
@@ -28,6 +28,7 @@ const MyRecipesTabContent = ({
   const [sort] = useState<"ASC" | "DESC">("DESC");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const locale = useUserPagesLocale();
+  const t = useUserPagesDict();
 
   const { data, error, hasNextPage, isFetching, isPending, ref } =
     useInfiniteScroll<
@@ -82,7 +83,7 @@ const MyRecipesTabContent = ({
         isFetching={isFetching}
         isPending={isPending}
         noResults={recipes.length === 0 && !isPending}
-        noResultsMessage="작성한 레시피가 없습니다."
+        noResultsMessage={t.profile.recipesEmpty}
         observerRef={ref}
         error={error}
         showAIRecipeCTA={isOwnProfile}

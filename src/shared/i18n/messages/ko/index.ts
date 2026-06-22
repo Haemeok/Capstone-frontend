@@ -18,6 +18,7 @@ import { ratings } from "./ratings";
 import { recipeCreate } from "./recipeCreate";
 import { recipeDetail } from "./recipeDetail";
 import { recipeForm } from "./recipeForm";
+import { recipeGrid } from "./recipeGrid";
 import { referral } from "./referral";
 import { errors, meta, notFound, search } from "./search";
 import { searchDiscovery } from "./searchDiscovery";
@@ -51,6 +52,7 @@ export const ko: Dictionary = {
   referral,
   settings,
   ratings,
+  recipeGrid,
   auth,
   notifications,
   comments,

@@ -11,6 +11,7 @@ export const userPages: UserPagesDict = {
     calendarLoadError: "We couldn't load the calendar.",
     emptyTitle: "Start your cooking journal",
     emptyDescription: "Save recipes and keep track of what you cook.",
+    recipesEmpty: "No recipes yet.",
     editAction: "Edit profile",
     editAria: "Edit profile",
     edit: {

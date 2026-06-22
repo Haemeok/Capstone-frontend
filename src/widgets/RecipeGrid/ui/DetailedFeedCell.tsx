@@ -46,6 +46,7 @@ const DetailedFeedCell = ({
       className="from-olive-light to-olive-medium inline-flex items-center gap-1 rounded-full bg-gradient-to-r px-2 py-0.5 shadow-sm"
     >
       <span className="text-xs font-bold text-white">
+        {/* i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거 */}
         {savings.toLocaleString()}원 절약
       </span>
     </div>

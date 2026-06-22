@@ -505,6 +505,7 @@ export type UserPagesDict = {
     calendarLoadError: string;
     emptyTitle: string;
     emptyDescription: string;
+    recipesEmpty: string;
     editAction: string;
     editAria: string;
     edit: {
@@ -1102,6 +1103,24 @@ export type EventsDict = {
   };
 };
 
+export type RecipeGridDict = {
+  empty: string;
+  lastPage: string;
+  error: string;
+  nextPage: string;
+  filterEmptyTitle: string;
+  filterEmptyDesc: string;
+  filterReset: string;
+  ctaDesc: string;
+  ctaAi: string;
+  ctaYoutube: string;
+  aiGenerated: string;
+  cookingTime: string;
+  itemPrivate: string;
+  itemMenuAria: string;
+  itemViewAria: string;
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -1127,6 +1146,7 @@ export type Dictionary = {
   referral: ReferralDict;
   settings: SettingsDict;
   ratings: RatingsDict;
+  recipeGrid: RecipeGridDict;
   auth: AuthDict;
   notifications: NotificationsDict;
   comments: CommentsDict;
