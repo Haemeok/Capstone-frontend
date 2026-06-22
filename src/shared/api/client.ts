@@ -1,5 +1,6 @@
 import { BASE_API_URL } from "@/shared/config/constants/api";
 import { getLocaleCookie } from "@/shared/i18n/localeCookie";
+import { resolveLocaleFromPath } from "@/shared/i18n/resolveLocaleFromPath";
 import { captureException as sentryCaptureException } from "@/shared/lib/sentry";
 import { createApiErrorTags } from "@/shared/lib/sentry";
 
@@ -31,7 +32,8 @@ export async function apiClient<T = unknown>(
   let effectiveParams = params;
   const isExternal = url.startsWith("http") || Boolean(baseURL);
   if (isClient && !isExternal && effectiveParams?.lang === undefined) {
-    const locale = getLocaleCookie();
+    const locale =
+      getLocaleCookie() ?? resolveLocaleFromPath(window.location.pathname);
     if (locale && locale !== "ko") {
       effectiveParams = { ...(effectiveParams ?? {}), lang: locale };
     }

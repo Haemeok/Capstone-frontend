@@ -20,6 +20,7 @@ describe("apiClient locale 중앙 주입", () => {
     fetchMock.mockReset();
     fetchMock.mockResolvedValue(okJson());
     document.cookie = `${LOCALE_COOKIE}=; path=/; max-age=0`;
+    window.history.replaceState({}, "", "/");
   });
 
   const setCookie = (v: string) => {
@@ -62,5 +63,31 @@ describe("apiClient locale 중앙 주입", () => {
   it("T-A6: 쿠키 없음 → lang 없음", async () => {
     await api.get("/x");
     expect(calledUrl()).not.toContain("lang=");
+  });
+
+  it("T-A8: 쿠키 없음 + 경로 /ja/x → lang=ja", async () => {
+    window.history.replaceState({}, "", "/ja/x");
+    await api.get("/x");
+    expect(calledUrl()).toContain("lang=ja");
+  });
+
+  it("T-A9: 쿠키 없음 + 경로 /en/x → lang=en", async () => {
+    window.history.replaceState({}, "", "/en/x");
+    await api.get("/x");
+    expect(calledUrl()).toContain("lang=en");
+  });
+
+  it("T-A10: 쿠키 없음 + 경로 /(ko 루트) → lang 없음", async () => {
+    await api.get("/x");
+    expect(calledUrl()).not.toContain("lang=");
+  });
+
+  it("T-A11: 쿠키=ja + 경로 /en/x → lang=ja (쿠키 우선)", async () => {
+    setCookie("ja");
+    window.history.replaceState({}, "", "/en/x");
+    await api.get("/x");
+    const url = calledUrl();
+    expect(url).toContain("lang=ja");
+    expect(url).not.toContain("lang=en");
   });
 });
