@@ -1,9 +1,13 @@
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
 
+import { LOCALE_COOKIE } from "../localeCookie";
 import { getStoredLocale, setStoredLocale } from "../preferredLocale";
 
 describe("preferredLocale (T-06)", () => {
   beforeEach(() => localStorage.clear());
+  afterEach(() => {
+    document.cookie = `${LOCALE_COOKIE}=; path=/; max-age=0`;
+  });
 
   it("미설정 → null", () => {
     expect(getStoredLocale()).toBeNull();
@@ -24,5 +28,10 @@ describe("preferredLocale (T-06)", () => {
   it("setStoredLocale 왕복", () => {
     setStoredLocale("en");
     expect(getStoredLocale()).toBe("en");
+  });
+
+  it("setStoredLocale also writes the preferred_locale cookie", () => {
+    setStoredLocale("en");
+    expect(document.cookie).toContain(`${LOCALE_COOKIE}=en`);
   });
 });
