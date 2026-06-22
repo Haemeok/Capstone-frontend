@@ -124,6 +124,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [No production timing hacks](rules/test-no-production-timing-hacks.md) — never add a setTimeout/delay to production to win a test race; mock the reconciled (post-mutation) server response instead
 - [Hoisted tags → query document](rules/test-react-hoisted-tags.md) — React 19 hoists `<script src>`/`<title>`/`<meta>`/stylesheet to `<head>`; assert on `document`, not RTL `container`
 - [window-gated code → node env](rules/test-window-branch-node-env.md) — `delete global.window` is a no-op in jsdom; test `typeof window` guards under `@jest-environment node` and inject `global.window` for the client case
+- [type-gate needs red-state](rules/test-type-gate-red-state.md) — `@ts-expect-error` type tests are verified by tsc, not jest; name the file `*.type-test.ts` (outside jest glob, inside tsconfig), wrap in a never-called fn, and confirm tsc FAILs with "unused directive" before the type is tightened — that red state is the only proof the gate isn't empty
 
 ## File template
 
