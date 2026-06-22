@@ -5,7 +5,7 @@ export const settings: SettingsDict = {
   language: "言語",
   languageSelectAria: "言語を選択",
   srDescription: "アプリ設定とアカウント管理",
-  adRemoval: "広告を非表示",
+  adRemoval: "広告を非表示にする",
   adRemovalCta: "広告なしで楽しむ",
   adRemovalRemaining: "残り{remaining}",
   notifications: "通知",

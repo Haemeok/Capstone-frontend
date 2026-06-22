@@ -10,6 +10,6 @@ export const auth: AuthDict = {
     title: "ログインに失敗しました",
     description:
       "ソーシャルログインの認証中に問題が発生しました。しばらくしてからもう一度お試しください。",
-    retry: "もう一度ログイン",
+    retry: "もう一度ログインする",
   },
 };

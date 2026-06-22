@@ -1,13 +1,13 @@
 import type { RatingsDict } from "../../types";
 
 export const ratings: RatingsDict = {
-  empty: "まだ評価が少なめです。評価を残してみませんか？",
-  summary: "{count}人が平均 {value} 点をつけました！",
+  empty: "評価はまだ少なめです。最初の感想を投稿してみませんか？",
+  summary: "{count}人が平均{value}点をつけました！",
   starSelect: "{score}つ星を選択",
   form: {
     cancel: "キャンセル",
     title: "評価する",
-    prompt: "{recipeName}を作ってみましたか？",
+    prompt: "{recipeName}はもう作りましたか？",
     promptCta: "評価をお願いします！",
     feedbackHint:
       "コミュニティのために、レシピの感想やコツをぜひ共有してください。あなたの経験がきっと誰かの役に立ちます！",

@@ -3,14 +3,14 @@ import type { LandingDict } from "../../types";
 export const landing: LandingDict = {
   recipeCount: {
     label: "5万+",
-    phrase: "5万件以上",
+    phrase: "5万品以上",
   },
   hero: {
     badge: "{count} レシピ・YouTubeリンク抽出・AIおすすめ",
     titleLine1: "毎日の料理を",
     titleHighlight: "もっと手軽に、楽しく",
     subjectHighlight: "YouTubeリンク1つでレシピを保存",
-    subjectRest: "。{count} のレシピからAIがぴったりをおすすめします",
+    subjectRest: "。{count} のレシピからAIがぴったりの一品をおすすめします",
     cta: "無料で始める",
     checklist: ["登録不要", "全機能を無料で", "1分で開始"],
   },
@@ -20,7 +20,7 @@ export const landing: LandingDict = {
     subtitle: "多くの人が抱える料理の悩み、もう一人で抱えなくて大丈夫",
     items: [
       {
-        title: "上がり続ける外食・デリバリー代",
+        title: "上がり続ける外食・フードデリバリー費",
         description: "外食コストが上がる今、家で作るほうが経済的です",
       },
       {
@@ -49,7 +49,7 @@ export const landing: LandingDict = {
       {
         metric: "45%",
         label: "月平均の食費削減",
-        description: "デリバリー・外食と比べた節約効果",
+        description: "フードデリバリー・外食と比べた節約効果",
       },
       {
         metric: "48分",
@@ -121,7 +121,7 @@ export const landing: LandingDict = {
         badge: "AIおすすめ",
         title: "あなただけの最適レシピ",
         description:
-          "さまざまな条件からレシピを生成します。AIレシピ生成プラットフォーム",
+          "さまざまな条件からレシピを生成。あなただけのAIレシピ生成プラットフォーム。",
         benefits: [
           "コスパ重視のレシピ生成",
           "栄養バランス重視のレシピ生成",
@@ -192,7 +192,7 @@ export const landing: LandingDict = {
         name: "中村 さやか",
         role: "ワーキングマザー・札幌",
         content:
-          "退職後に買い物の時間がない時、冷蔵庫の卵と豆腐だけで立派な一品ができました。献立の悩みが減ったのが一番大きい。",
+          "仕事帰りで買い物の時間がない時、冷蔵庫の卵と豆腐だけで立派な一品ができました。献立の悩みが減ったのが一番大きい。",
         avatar: "👩‍👧‍👦",
         rating: 5,
         highlight: "献立の悩みを解決",

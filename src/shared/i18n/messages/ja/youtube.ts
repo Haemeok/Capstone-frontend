@@ -21,7 +21,7 @@ export const youtube: YoutubeDict = {
   duplicateAlreadySaved: "すでに保存済みです",
   previewAiDisclaimer:
     "AIが動画から材料を抽出します。実際と異なる場合があるので、確認のうえご利用ください。",
-  previewImporting: "取り込み中...",
+  previewImporting: "処理中...",
   previewConfirmButton: "この動画からレシピを取り込む",
   extractionCompleteTitle: "レシピが完成しました！",
   maxRetryExceeded: "再試行の上限に達しました。もう一度お試しください。",

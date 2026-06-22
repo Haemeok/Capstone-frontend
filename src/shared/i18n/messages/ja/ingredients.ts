@@ -12,8 +12,8 @@ export const ingredients: IngredientsDict = {
     done: "完了",
   },
   deleteFab: {
-    one: "{count}件選択 · 食材を削除",
-    other: "{count}件選択 · 食材を削除",
+    one: "{count}品選択 · 食材を削除",
+    other: "{count}品選択 · 食材を削除",
   },
   error: { prefix: "エラーが発生しました", unknown: "不明なエラー" },
   empty: {
@@ -29,7 +29,7 @@ export const ingredients: IngredientsDict = {
     searchBody:
       "冷蔵庫の食材を登録すると、手持ちの食材で作れるレシピが見つかります",
     loginButton: "ログインして始める",
-    signupNote: "登録すると毎日無料のAIレシピ作成チケットがもらえます",
+    signupNote: "登録すると毎日無料のAIレシピ生成チケットがもらえます",
     searchAlt: "レシピ検索",
   },
   itemAria: { select: "{name}を選択", detail: "{name}の詳細を見る" },

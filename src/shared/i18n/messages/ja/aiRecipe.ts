@@ -5,7 +5,7 @@ export const aiRecipe: AiRecipeDict = {
   loginDrawerMessage: "AIと一緒にレシピを作ってみましょう",
   backToModelSelect: "AIを選び直す",
   generateRecipe: "レシピを生成する",
-  errorFallback: "AIレシピの生成中に問題が発生しました",
+  errorFallback: "AIレシピの生成中にエラーが発生しました。",
   loading: {
     titleSuffix: "レシピを作っています",
     progressLabel: "進捗",
@@ -91,7 +91,7 @@ export const aiRecipe: AiRecipeDict = {
   ingredient: {
     pickerInitialCategory: "すべて",
     pickerMineCategory: "マイ食材",
-    submitToastSuffix: "種類の食材",
+    submitToastSuffix: "品の食材",
   },
   nutrition: {
     pageHeading: "栄養バランス",
@@ -151,7 +151,7 @@ export const aiRecipe: AiRecipeDict = {
     ingredientSectionDescription: "使用する食材を選んでください（最低3つ）",
     ingredientSearchPlaceholder: "食材を検索...",
     ingredientSearchAriaLabel: "食材を検索する",
-    ingredientCountSuffix: "種類の食材が追加されました",
+    ingredientCountSuffix: "品の食材を追加しました",
     selectedIngredientsHeading: "選択中の食材",
     removeAllLabel: "すべて削除",
     removeAllAriaLabel: "すべての食材を削除",
@@ -182,7 +182,7 @@ export const aiRecipe: AiRecipeDict = {
       sectionTitle: "人数",
       decreaseLabel: "人数を減らす",
       increaseLabel: "人数を増やす",
-      unit: "人前",
+      unit: "人分",
     },
     cookingTime: {
       sectionTitle: "調理時間",
@@ -201,7 +201,7 @@ export const aiRecipe: AiRecipeDict = {
     ingredientManager: {
       addButtonLabel: "食材を追加する",
       addButtonAriaLabel: "食材を追加する",
-      ingredientsAddedCount: "種類の食材が追加されました",
+      ingredientsAddedCount: "品の食材を追加しました",
       addPrompt: "レシピ生成のために食材を追加してください",
       selectedHeading: "選択中の食材",
       removeAllLabel: "すべて削除",

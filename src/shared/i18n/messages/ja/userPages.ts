@@ -4,7 +4,7 @@ export const userPages: UserPagesDict = {
   profile: {
     guestNickname: "ゲスト",
     shareTitle: "{nickname}さんのプロフィール",
-    shareText: "Recipioで{nickname}さんのレシピをのぞいてみませんか？",
+    shareText: "{nickname}さんのレシピをRecipioでチェック！",
     shareAria: "プロフィールを共有",
     loginAction: "ログイン",
     createRecipeAction: "レシピを投稿",
@@ -17,7 +17,7 @@ export const userPages: UserPagesDict = {
       heading: "プロフィールを編集",
       cancel: "キャンセル",
       submit: "保存",
-      submitting: "保存中…",
+      submitting: "保存中...",
       nameLabel: "名前",
       introLabel: "自己紹介",
       introPlaceholder: "自己紹介を入力",
@@ -55,7 +55,7 @@ export const userPages: UserPagesDict = {
     renameAria: "名前を変更",
     grid: {
       emptyTitle: "保存したレシピはまだありません",
-      emptyCta: "レシピを見る →",
+      emptyCta: "レシピを探す →",
       selectAria: "選択",
       deselectAria: "選択を解除",
     },
@@ -142,7 +142,7 @@ export const userPages: UserPagesDict = {
     sodiumStatus: {
       good: { label: "良好", description: "ちょうどよい量です" },
       normal: { label: "普通", description: "やや多めです" },
-      warning: { label: "注意", description: "塩分をとりすぎています" },
+      warning: { label: "注意", description: "少し塩分が多めです" },
     },
     recipeListHeading: "この日のレシピ",
     recipeListEmpty: "まだ記録がありません",
@@ -155,9 +155,9 @@ export const userPages: UserPagesDict = {
     streakAlt: "ストリーク",
     streakDays: { one: "{n}日", other: "{n}日" },
     streakMessages: {
-      start: "今日から料理を始めて、記録を増やしていきましょう！",
+      start: "今日から自炊を始めて、食費を節約しましょう！",
       day1: "いいスタートです！この調子で続けましょう",
-      streak: "{n}日連続で料理中です",
+      streak: "{n}日連続で自炊中です",
       homeCooking: "{n}日連続で自炊を続けています",
       great: "すごい！{n}日目の料理です",
       onFire: "素晴らしい！{n}日連続でチャレンジ中です",

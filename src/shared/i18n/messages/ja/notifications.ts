@@ -5,7 +5,7 @@ export const notifications: NotificationsDict = {
   deleteAll: "すべて削除",
   empty: "お知らせはありません。",
   allLoaded: "すべてのお知らせを読み込みました。",
-  loadingMore: "Loading more...",
+  loadingMore: "読み込み中...",
   deleteAria: "お知らせを削除",
   profileAlt: "{name} のプロフィール",
   templates: {
@@ -16,7 +16,8 @@ export const notifications: NotificationsDict = {
     NEW_RECIPE_LIKE: "{actor}さんがレシピにいいねしました。",
     NEW_COMMENT_LIKE: "{actor}さんがコメントにいいねしました。",
     NEW_RECIPE_RATING: "{actor}さんがレシピを評価しました。",
-    REFERRAL_REWARD_GRANTED: "紹介特典として広告非表示が追加されました。",
+    REFERRAL_REWARD_GRANTED:
+      "ご紹介特典として、広告なしでご利用いただけるようになりました。",
   },
   genericMessage: "新しいお知らせがあります。",
 };

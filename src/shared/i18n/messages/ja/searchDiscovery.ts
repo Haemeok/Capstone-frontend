@@ -16,7 +16,7 @@ export const searchDiscovery: SearchDiscoveryDict = {
   cookedPopularTitle: "レシピオユーザーがよく作っているレシピ",
   countryPopularTitle: "{country}の人気レシピをチェック",
   countryPopularNames: { US: "アメリカ", JP: "日本" },
-  seasonalPopularTitle: "旬の{ingredient}を使った人気レシピ",
+  seasonalPopularTitle: "旬の{ingredient}で作る人気レシピ",
   quickPopularTitle: "{minutes}分で完成する人気レシピ",
   categoryPopularTitle: "今日は{category}はいかが？",
   categoryPopularNames: {
@@ -65,8 +65,8 @@ export const searchDiscovery: SearchDiscoveryDict = {
       subtitle: "登録者100万人のレシピ",
     },
     "solo-drink": {
-      title: "🍶 おうちで楽しむ家飲み",
-      subtitle: "10分でできるおつまみ",
+      title: "🍶 ひとりで楽しむ家飲み",
+      subtitle: "10分でできるひとり晩酌のおつまみ",
     },
     "budget-gourmet": {
       title: "💰 ちょっと贅沢な節約ごはん",

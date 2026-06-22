@@ -9,7 +9,7 @@ export const referral: ReferralDict = {
   sheetTitle: "友だち招待キャンペーン",
   sheetTitleWithMonth: "{month}月 友だち招待キャンペーン",
   description:
-    "友だちを招待すると、お二人とも1か月間広告なしでRecipioをお使いいただけます。招待した友だちが多いほど特典が増えていきます。",
+    "友だちを招待すると、お二人とも1か月間広告なしでRecipioをお使いいただけます。招待した友だちが多いほど、特典も増えていきます。",
   myCodeLabel: "あなたの招待コード",
   copyAria: "招待コードをコピー",
   copyAction: "コピー",

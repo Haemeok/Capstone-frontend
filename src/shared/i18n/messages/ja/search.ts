@@ -6,7 +6,7 @@ import type {
 } from "../../types";
 
 export const search: SearchDict = {
-  lastPage: "レシピをすべて見ました。",
+  lastPage: "すべてのレシピを表示しました",
   noResults: "レシピが見つかりませんでした。",
 };
 
@@ -16,8 +16,8 @@ export const meta: MetaDict = {
     pageSuffix: "（{page}ページ目）",
     titleNoQuery: "レシピ検索結果{page} - レシピオ",
     titleWithQuery: {
-      one: "{q} {count}件のレシピ{page} - レシピオ",
-      other: "{q} {count}件のレシピ{page} - レシピオ",
+      one: "{q}のおすすめレシピ{count}選{page} - レシピオ",
+      other: "{q}のおすすめレシピ{count}選{page} - レシピオ",
     },
     descNoQuery:
       "フィルターでお好みのレシピを探せます。食材費・カロリー・調理時間をまとめて比較。",
