@@ -11,4 +11,11 @@ export const uiCommon: UiCommonDict = {
     appStoreAlt: "Download on the App Store",
     playStoreAlt: "Get it on Google Play",
   },
+  image: {
+    alt: "Image",
+    loadError: "Couldn't load image",
+  },
+  calendar: {
+    loading: "Loading calendar…",
+  },
 };

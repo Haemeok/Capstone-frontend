@@ -4,6 +4,7 @@ import React, { forwardRef } from "react";
 
 import { useImageWithFallback } from "@/shared/hooks/useImageWithFallback";
 import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
+import { useUiCommonDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
 import { Skeleton } from "../shadcn/skeleton";
@@ -34,7 +35,7 @@ type ImageProps = Omit<
 export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   {
     src,
-    alt = "이미지",
+    alt,
     lazy = true,
     priority = false,
     aspectRatio = "1 / 1",
@@ -53,6 +54,9 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   },
   forwardedRef
 ) {
+  const t = useUiCommonDict();
+  const resolvedAlt = alt ?? t.image.alt;
+
   // 1. Viewport 감지 (priority 시 skip)
   const { ref: viewportRef, inView } = useInViewOnce({
     threshold: inViewThreshold,
@@ -93,7 +97,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
       {image.status === "error" &&
         (errorFallback ?? (
           <div className="absolute inset-0 grid place-items-center bg-gray-100 text-gray-400">
-            이미지 로드 실패
+            {t.image.loadError}
           </div>
         ))}
 
@@ -116,7 +120,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
               }
             }}
             src={image.src}
-            alt={alt}
+            alt={resolvedAlt}
             loading={priority ? "eager" : lazy ? "lazy" : undefined}
             fetchPriority={priority ? "high" : undefined}
             decoding="async"

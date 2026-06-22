@@ -1259,6 +1259,13 @@ export type UiCommonDict = {
     appStoreAlt: string;
     playStoreAlt: string;
   };
+  image: {
+    alt: string;
+    loadError: string;
+  };
+  calendar: {
+    loading: string;
+  };
 };
 
 export type Dictionary = {

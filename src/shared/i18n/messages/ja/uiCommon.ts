@@ -11,4 +11,11 @@ export const uiCommon: UiCommonDict = {
     appStoreAlt: "App Store でダウンロード",
     playStoreAlt: "Google Play で手に入れよう",
   },
+  image: {
+    alt: "画像",
+    loadError: "画像を読み込めませんでした",
+  },
+  calendar: {
+    loading: "カレンダーを読み込み中…",
+  },
 };

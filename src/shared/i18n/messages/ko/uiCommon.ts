@@ -11,4 +11,11 @@ export const uiCommon: UiCommonDict = {
     appStoreAlt: "App Store에서 다운로드",
     playStoreAlt: "Google Play에서 다운로드",
   },
+  image: {
+    alt: "이미지",
+    loadError: "이미지 로드 실패",
+  },
+  calendar: {
+    loading: "달력 로딩 중...",
+  },
 };
