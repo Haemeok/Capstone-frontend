@@ -1,3 +1,6 @@
+"use client";
+
+import { useRecipeGridDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
 import { getCreatorCountryFlag } from "../lib/getCreatorCountryFlag";
@@ -13,13 +16,14 @@ export const CreatorCountryFlag = ({
   tag,
   className,
 }: CreatorCountryFlagProps) => {
+  const t = useRecipeGridDict();
   const flag = getCreatorCountryFlag(tag);
   if (!flag) return null;
 
   return (
     <span
       role="img"
-      aria-label={flag.label}
+      aria-label={t.creatorCountry[flag.labelKey]}
       className={cn(
         "inline-flex items-center leading-none drop-shadow-sm",
         className

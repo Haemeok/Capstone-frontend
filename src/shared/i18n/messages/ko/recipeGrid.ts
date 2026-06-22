@@ -17,4 +17,9 @@ export const recipeGrid: RecipeGridDict = {
   itemMenuAria: "레시피 옵션 메뉴",
   itemViewAria: "{title} 레시피 보기",
   slideLoadError: "{title}을 불러올 수 없어요. 새로고침해주세요.",
+  creatorCountry: {
+    jp: "일본 채널",
+    us: "미국 채널",
+    other: "해외 채널",
+  },
 };

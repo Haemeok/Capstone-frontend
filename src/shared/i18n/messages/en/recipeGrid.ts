@@ -17,4 +17,9 @@ export const recipeGrid: RecipeGridDict = {
   itemMenuAria: "Recipe options",
   itemViewAria: "View {title}",
   slideLoadError: "Couldn't load {title}. Please refresh.",
+  creatorCountry: {
+    jp: "Japanese channel",
+    us: "U.S. channel",
+    other: "International channel",
+  },
 };

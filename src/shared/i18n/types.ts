@@ -1132,6 +1132,11 @@ export type RecipeGridDict = {
   itemMenuAria: string;
   itemViewAria: string;
   slideLoadError: string;
+  creatorCountry: {
+    jp: string;
+    us: string;
+    other: string;
+  };
 };
 
 export type IngredientSheetDict = {

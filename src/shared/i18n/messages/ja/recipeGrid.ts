@@ -17,4 +17,9 @@ export const recipeGrid: RecipeGridDict = {
   itemMenuAria: "レシピのオプション",
   itemViewAria: "{title}のレシピを見る",
   slideLoadError: "{title}を読み込めませんでした。更新してください。",
+  creatorCountry: {
+    jp: "日本のチャンネル",
+    us: "アメリカのチャンネル",
+    other: "海外チャンネル",
+  },
 };
