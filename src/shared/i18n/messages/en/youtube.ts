@@ -33,4 +33,13 @@ export const youtube: YoutubeDict = {
   errorCloseButton: "Dismiss",
   pendingLoadError: "We couldn't load your imports right now.",
   pendingPlaceholder: "Waiting…",
+  sectionMetaErrorTitle: "We couldn't load this video's info.",
+  sectionMetaErrorHint:
+    "Check that the link is correct and the video is public.",
+  sectionDuplicateErrorTitle: "We couldn't load the recipe.",
+  sectionDuplicateErrorHint: "It may have been deleted or set to private.",
+  sectionQuotaExhausted: "You've used up today's YouTube imports.",
+  sectionAnalyzingToast:
+    "We're analyzing the video — this'll just take a moment.",
+  sectionExtractionFailed: "Import failed.",
 };

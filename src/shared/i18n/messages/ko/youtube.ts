@@ -33,4 +33,12 @@ export const youtube: YoutubeDict = {
   errorCloseButton: "닫기",
   pendingLoadError: "추출 중인 레시피 상태를 불러올 수 없어요",
   pendingPlaceholder: "레시피 대기중",
+  sectionMetaErrorTitle: "영상 정보를 불러올 수 없습니다.",
+  sectionMetaErrorHint: "올바른 링크인지, 공개된 영상인지 확인해주세요.",
+  sectionDuplicateErrorTitle: "레시피 정보를 불러올 수 없습니다.",
+  sectionDuplicateErrorHint:
+    "해당 레시피가 삭제되었거나 비공개 상태일 수 있습니다.",
+  sectionQuotaExhausted: "오늘 유튜브 레시피 추출 횟수를 모두 사용했어요.",
+  sectionAnalyzingToast: "영상을 분석 중입니다. 잠시만 기다려주세요.",
+  sectionExtractionFailed: "추출에 실패했습니다.",
 };

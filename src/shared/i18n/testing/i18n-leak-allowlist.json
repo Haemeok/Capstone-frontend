@@ -1,5 +1,4 @@
 [
-  "src/app/recipes/new/youtube/components/YoutubePreviewSection.tsx",
   "src/entities/recipe/ui/RecipeRecordItem.tsx",
   "src/features/recipe-create/ui/IngredientSection.tsx",
   "src/features/recipe-import-youtube/ui/AIExtractionNotice.tsx",

@@ -33,4 +33,14 @@ export const youtube: YoutubeDict = {
   errorCloseButton: "閉じる",
   pendingLoadError: "取り込み中のレシピの状態を読み込めませんでした。",
   pendingPlaceholder: "レシピ待機中",
+  sectionMetaErrorTitle: "動画の情報を読み込めませんでした。",
+  sectionMetaErrorHint:
+    "リンクが正しいか、公開されている動画かをご確認ください。",
+  sectionDuplicateErrorTitle: "レシピの情報を読み込めませんでした。",
+  sectionDuplicateErrorHint:
+    "削除されたか、非公開になっている可能性があります。",
+  sectionQuotaExhausted:
+    "本日のYouTubeレシピ抽出の回数をすべて使い切りました。",
+  sectionAnalyzingToast: "動画を解析しています。少々お待ちください。",
+  sectionExtractionFailed: "抽出に失敗しました。",
 };

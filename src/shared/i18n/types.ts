@@ -177,6 +177,13 @@ export type YoutubeDict = {
   errorCloseButton: string;
   pendingLoadError: string;
   pendingPlaceholder: string;
+  sectionMetaErrorTitle: string;
+  sectionMetaErrorHint: string;
+  sectionDuplicateErrorTitle: string;
+  sectionDuplicateErrorHint: string;
+  sectionQuotaExhausted: string;
+  sectionAnalyzingToast: string;
+  sectionExtractionFailed: string;
 };
 
 export type IngredientDetailDict = {

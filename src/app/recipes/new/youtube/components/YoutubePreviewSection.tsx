@@ -6,7 +6,11 @@ import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "motion/react";
 
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
-import { useApiLocale, useLocalizedRouter } from "@/shared/i18n";
+import {
+  useApiLocale,
+  useLocalizedRouter,
+  useYoutubeDict,
+} from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
@@ -33,16 +37,20 @@ import { useYoutubeUrl } from "./YoutubeUrlProvider";
 
 const SCROLL_DELAY_MS = 500;
 
-const DuplicateRecipeErrorFallback = () => (
-  <div className="mx-auto w-full max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-6 text-center">
-    <p className="font-medium text-amber-800">
-      레시피 정보를 불러올 수 없습니다.
-    </p>
-    <p className="mt-1 text-sm text-amber-600">
-      해당 레시피가 삭제되었거나 비공개 상태일 수 있습니다.
-    </p>
-  </div>
-);
+const DuplicateRecipeErrorFallback = () => {
+  const t = useYoutubeDict();
+
+  return (
+    <div className="mx-auto w-full max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-6 text-center">
+      <p className="font-medium text-amber-800">
+        {t.sectionDuplicateErrorTitle}
+      </p>
+      <p className="mt-1 text-sm text-amber-600">
+        {t.sectionDuplicateErrorHint}
+      </p>
+    </div>
+  );
+};
 
 const PreviewLoadingSkeleton = () => (
   <div className="mx-auto w-full animate-pulse rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
@@ -57,15 +65,19 @@ const PreviewLoadingSkeleton = () => (
   </div>
 );
 
-const PreviewErrorMessage = () => (
-  <div className="mx-auto w-full rounded-2xl bg-red-50/80 p-6 text-center text-red-600">
-    <p className="font-medium">
-      영상 정보를 불러올 수 없습니다.
-      <br />
-      올바른 링크인지, 공개된 영상인지 확인해주세요.
-    </p>
-  </div>
-);
+const PreviewErrorMessage = () => {
+  const t = useYoutubeDict();
+
+  return (
+    <div className="mx-auto w-full rounded-2xl bg-red-50/80 p-6 text-center text-red-600">
+      <p className="font-medium">
+        {t.sectionMetaErrorTitle}
+        <br />
+        {t.sectionMetaErrorHint}
+      </p>
+    </div>
+  );
+};
 
 const sectionVariants = {
   initial: { opacity: 0, y: 18, scale: 0.97 },
@@ -89,6 +101,7 @@ export const YoutubePreviewSection = ({
   const { user } = useMyInfoQuery();
   const { validatedUrl, videoId, urlSource } = useYoutubeUrl();
   const locale = useApiLocale();
+  const t = useYoutubeDict();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hasNoQuota = !!user && (user.remainingYoutubeQuota ?? 0) < 2;
@@ -163,7 +176,7 @@ export const YoutubePreviewSection = ({
 
     router.push(`/users/${user.id}?tab=saved`);
     addToast({
-      message: "영상을 분석 중입니다. 잠시만 기다려주세요.",
+      message: t.sectionAnalyzingToast,
       variant: "info",
     });
 
@@ -177,7 +190,7 @@ export const YoutubePreviewSection = ({
       setJobId(idempotencyKey, jobId);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "추출에 실패했습니다.";
+        error instanceof Error ? error.message : t.sectionExtractionFailed;
       failJob(idempotencyKey, undefined, errorMessage);
       addToast({
         message: errorMessage,
@@ -246,7 +259,7 @@ export const YoutubePreviewSection = ({
             transition={sectionTransition}
           >
             {hasNoQuota && (
-              <UsageLimitBanner message="오늘 유튜브 레시피 추출 횟수를 모두 사용했어요." />
+              <UsageLimitBanner message={t.sectionQuotaExhausted} />
             )}
             <YoutubePreviewCard
               meta={youtubeMeta}
