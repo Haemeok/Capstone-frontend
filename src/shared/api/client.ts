@@ -16,6 +16,7 @@ export async function apiClient<T = unknown>(
 ): Promise<T> {
   const {
     params,
+    lang,
     timeout = API_CONFIG.timeout,
     baseURL,
     headers = {},
@@ -28,7 +29,8 @@ export async function apiClient<T = unknown>(
     ? url
     : `${baseURL || defaultBaseURL}${url}`;
 
-  let effectiveParams = params;
+  let effectiveParams =
+    lang !== undefined ? { ...(params ?? {}), lang } : params;
   const isExternal = url.startsWith("http") || Boolean(baseURL);
   if (isClient && !isExternal && effectiveParams?.lang === undefined) {
     const locale = resolveClientRequestLocale();

@@ -1,9 +1,12 @@
+import type { Locale } from "@/shared/i18n/types";
+
 import { PresignedUrlInfo } from "../types";
 
 export type QueryParams = Record<string, unknown>;
 
 export interface ApiRequestOptions extends RequestInit {
   params?: QueryParams;
+  lang?: Locale;
   timeout?: number;
   baseURL?: string;
   paramsSerializer?: (params: QueryParams) => string;
@@ -57,7 +60,7 @@ export type BaseQueryParams = {
   size: number;
   sort: string;
   q?: string;
-  lang?: string;
+  lang?: Locale;
 };
 
 export type PageResponse<T> = {

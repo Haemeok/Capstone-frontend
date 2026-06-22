@@ -90,4 +90,9 @@ describe("apiClient locale 중앙 주입", () => {
     expect(url).toContain("lang=ja");
     expect(url).not.toContain("lang=en");
   });
+
+  it("T-P0-3: caller-set lang via options is sent (typed channel)", async () => {
+    await api.get("/x", { lang: "ja" });
+    expect(calledUrl()).toContain("lang=ja");
+  });
 });
