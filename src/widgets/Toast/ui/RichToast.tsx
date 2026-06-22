@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { X } from "lucide-react";
 
-import { LocalizedLink } from "@/shared/i18n";
+import { getDictionary, LocalizedLink, useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { getYouTubeThumbnailUrls } from "@/shared/lib/youtube/getYouTubeThumbnail";
@@ -33,6 +33,7 @@ export const RichToast = ({
   duration = 5000,
 }: RichToastProps) => {
   const removeToast = useToastStore((state) => state.removeToast);
+  const t = getDictionary(useApiLocale());
   const [isVisible, setIsVisible] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
@@ -264,7 +265,7 @@ export const RichToast = ({
         style={{
           transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
         }}
-        aria-label="닫기"
+        aria-label={t.common.actions.close}
       >
         <X className="h-4 w-4 md:h-5 md:w-5" />
       </button>
@@ -274,7 +275,7 @@ export const RichToast = ({
           <div className="flex-shrink-0">
             <Image
               src={thumbnailUrl}
-              alt="thumbnail"
+              alt={t.appGlobal.toast.thumbnailAlt}
               fit="cover"
               aspectRatio="1 / 1"
               wrapperClassName="h-16 w-16 rounded-card  md:h-28 md:w-28"

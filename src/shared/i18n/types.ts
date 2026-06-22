@@ -1169,6 +1169,73 @@ export type IngredientSheetDict = {
   >;
 };
 
+export type AppGlobalDict = {
+  toast: { changeAction: string; thumbnailAlt: string };
+  error: { title: string; description: string; retry: string; goHome: string };
+  notification: {
+    srTitle: string;
+    successTitle: string;
+    successBody: string;
+    title: string;
+    body: string;
+    allow: string;
+    later: string;
+  };
+  reviewGate: {
+    srTitle: string;
+    questionPrefix: string;
+    brand: string;
+    questionSuffix: string;
+    subtitle: string;
+    positive: string;
+    negative: string;
+  };
+  appUpdate: {
+    srTitle: string;
+    headlineHighlight: string;
+    headlineTail: string;
+    subtitle: string;
+    highlightLogin: string;
+    highlightRecipeBook: string;
+    highlightChatbot: string;
+    cta: string;
+    dismissNote: string;
+    storePlay: string;
+  };
+  login: {
+    srTitle: string;
+    leadPrefix: string;
+    seconds: string;
+    leadSuffix: string;
+    defaultMessage: string;
+    youtubeMessage: string;
+    cta: string;
+    policyNote: string;
+    privacyLink: string;
+  };
+  aiCredit: {
+    srTitle: string;
+    imageAlt: string;
+    title: string;
+    bodyLead: string;
+    bodyWarning: string;
+    cta: string;
+  };
+  youtubeExtract: {
+    srTitle: string;
+    imageAlt: string;
+    title: string;
+    body: string;
+    bodyWarning: string;
+    cta: string;
+  };
+  aiJob: {
+    completeTitle: string;
+    completeFallback: string;
+    maxRetryExceeded: string;
+  };
+};
+
 export type RecipeActionsDict = {
   deleteModalTitle: string;
   deleteSuccess: string;
@@ -1222,6 +1289,7 @@ export type Dictionary = {
   recipeGrid: RecipeGridDict;
   ingredientSheet: IngredientSheetDict;
   recipeActions: RecipeActionsDict;
+  appGlobal: AppGlobalDict;
   uiCommon: UiCommonDict;
   auth: AuthDict;
   notifications: NotificationsDict;

@@ -1,5 +1,6 @@
 import type { Dictionary } from "../../types";
 import { aiRecipe } from "./aiRecipe";
+import { appGlobal } from "./appGlobal";
 import { auth } from "./auth";
 import { category } from "./category";
 import { comments } from "./comments";
@@ -59,6 +60,7 @@ export const ja: Dictionary = {
   uiCommon,
   ingredientSheet,
   recipeActions,
+  appGlobal,
   auth,
   notifications,
   comments,

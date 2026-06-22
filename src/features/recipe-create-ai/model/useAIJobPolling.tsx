@@ -6,7 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { addRecentAIRecipe } from "@/shared/config/constants/localStorage";
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
-import { useLocalizedRouter } from "@/shared/i18n";
+import { format, getDictionary, useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 
@@ -52,6 +52,7 @@ export const useAIJobPolling = () => {
       if (!job || job.state === "completed") return;
 
       const meta = job.meta;
+      const t = getDictionary(job.locale);
 
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
@@ -87,7 +88,7 @@ export const useAIJobPolling = () => {
           dismissible: "both",
           richContent: {
             thumbnail: recipe.imageUrl,
-            title: "AI 레시피가 완성되었어요!",
+            title: t.appGlobal.aiJob.completeTitle,
             subtitle: recipe.title,
             badgeIcon: <AIGeneratedBadge className="flex-shrink-0" />,
             recipeId,
@@ -98,7 +99,9 @@ export const useAIJobPolling = () => {
         });
       } catch {
         toastId = addToast({
-          message: `${meta.displayName} 레시피가 완성되었어요!`,
+          message: format(t.appGlobal.aiJob.completeFallback, {
+            name: meta.displayName,
+          }),
           variant: "success",
           position: "bottom",
           duration: 8000,
@@ -147,7 +150,7 @@ export const useAIJobPolling = () => {
         handleJobFail(
           job.idempotencyKey,
           undefined,
-          "최대 재시도 횟수를 초과했습니다. 다시 시도해주세요."
+          getDictionary(job.locale).appGlobal.aiJob.maxRetryExceeded
         );
         return;
       }

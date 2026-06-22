@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import { getDictionary, resolveChromeLocale } from "@/shared/i18n";
 import { captureException, scheduleInit } from "@/shared/lib/sentry";
 
 export default function GlobalError({
@@ -16,30 +17,34 @@ export default function GlobalError({
     captureException(error);
   }, [error]);
 
+  const locale =
+    typeof window !== "undefined"
+      ? resolveChromeLocale(window.location.pathname)
+      : "ko";
+  const t = getDictionary(locale);
+
   return (
-    <html lang="ko">
+    <html lang={locale}>
       <body>
         <div className="flex min-h-screen flex-col items-center justify-center p-4">
           <div className="flex max-w-md flex-col items-center gap-6 text-center">
             <div className="text-6xl">⚠️</div>
-            <h1 className="text-ink text-2xl font-bold">문제가 발생했어요</h1>
-            <p className="text-ink-sub">
-              일시적인 오류가 발생했습니다.
-              <br />
-              페이지를 새로고침하거나 잠시 후 다시 시도해주세요.
-            </p>
+            <h1 className="text-ink text-2xl font-bold">
+              {t.appGlobal.error.title}
+            </h1>
+            <p className="text-ink-sub">{t.appGlobal.error.description}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => reset()}
                 className="text-ink-sub rounded-lg bg-gray-100 px-6 py-3 font-medium transition-colors hover:bg-gray-200"
               >
-                다시 시도
+                {t.appGlobal.error.retry}
               </button>
               <button
                 onClick={() => (window.location.href = "/")}
                 className="bg-olive-light hover:bg-olive-dark rounded-lg px-6 py-3 font-medium text-white transition-colors"
               >
-                홈으로 가기
+                {t.appGlobal.error.goHome}
               </button>
             </div>
           </div>

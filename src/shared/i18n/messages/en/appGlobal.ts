@@ -1,0 +1,75 @@
+import type { AppGlobalDict } from "../../types";
+
+export const appGlobal: AppGlobalDict = {
+  toast: { changeAction: "Change", thumbnailAlt: "Thumbnail" },
+  error: {
+    title: "Something went wrong",
+    description:
+      "A temporary error occurred. Please refresh the page or try again in a moment.",
+    retry: "Try again",
+    goHome: "Go home",
+  },
+  notification: {
+    srTitle: "Notification permission request",
+    successTitle: "Notifications are all set",
+    successBody: "We'll keep you posted on what matters",
+    title: "Turn on notifications",
+    body: "Get notified about new recipe picks, trending recipes, and more you won't want to miss",
+    allow: "Allow notifications",
+    later: "Maybe later",
+  },
+  reviewGate: {
+    srTitle: "App satisfaction survey",
+    questionPrefix: "Enjoying ",
+    brand: "Recipio",
+    questionSuffix: "?",
+    subtitle: "Your review means a lot to us",
+    positive: "Leave a rating",
+    negative: "Something could be better",
+  },
+  appUpdate: {
+    srTitle: "New version available",
+    headlineHighlight: "A new version",
+    headlineTail: " is here!",
+    subtitle: "Here's what's better in this update",
+    highlightLogin: "Signing in is smoother than ever",
+    highlightRecipeBook: "You can create even more recipe books",
+    highlightChatbot: "A new recipe chatbot has arrived",
+    cta: "Update on {store}",
+    dismissNote: "Once you update, this won't show again",
+    storePlay: "Play Store",
+  },
+  login: {
+    srTitle: "Sign in required",
+    leadPrefix: "Sign up in just ",
+    seconds: "3",
+    leadSuffix: " seconds, and",
+    defaultMessage: "Sign in to unlock more features!",
+    youtubeMessage: "Cook along with YouTube recipes, hassle-free!",
+    cta: "Sign in",
+    policyNote: "By signing in, you agree to the policy below.",
+    privacyLink: "Privacy Policy",
+  },
+  aiCredit: {
+    srTitle: "Free AI credit",
+    imageAlt: "Free AI credit",
+    title: "Your free AI credit is here!",
+    bodyLead: "One free creation every day!",
+    bodyWarning: "⚠️ Use it today to get a refill tomorrow!",
+    cta: "Create now",
+  },
+  youtubeExtract: {
+    srTitle: "Extract YouTube recipe",
+    imageAlt: "Import from YouTube",
+    title: "Extract a YouTube recipe",
+    body: "Automatically pull recipes from your favorite YouTube videos!",
+    bodyWarning: "⚠️ Free for a limited time!",
+    cta: "Try it now",
+  },
+  aiJob: {
+    completeTitle: "Your AI recipe is ready!",
+    completeFallback: "Your {name} recipe is ready!",
+    maxRetryExceeded:
+      "The maximum number of retries was exceeded. Please try again.",
+  },
+};
