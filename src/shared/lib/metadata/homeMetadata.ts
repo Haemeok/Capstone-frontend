@@ -1,18 +1,36 @@
 import type { Metadata } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
+import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
 import { getDictionary, type Locale } from "@/shared/i18n";
 
 import { SEO_CONSTANTS } from "./constants";
 import { alternateLocales, localizedSiteName, OG_LOCALE } from "./localized";
 
+const HOME_DESCRIPTION = `YouTube 링크 하나로 레시피 저장, ${TOTAL_RECIPE_COUNT_LABEL} 홈쿡 레시피 · AI 맞춤 추천 · 홈파티·기념일·다이어트 상황별 레시피까지 한번에.`;
+
+const HOME_EXTRA_KEYWORDS = [
+  "YouTube 레시피",
+  "유튜브 레시피 추출",
+  "유튜브 레시피 저장",
+  "홈파티",
+  "기념일 요리",
+  "집들이 음식",
+  "자취 요리",
+  "다이어트 레시피",
+  "냉장고 재료 레시피",
+  "AI 레시피 추천",
+];
+
 export const buildHomeMetadata = (locale: Locale): Metadata => {
   const m = getDictionary(locale).home.meta;
   const url = locale === "ko" ? SEO_CONSTANTS.SITE_URL : absoluteUrl(locale);
+  const description = locale === "ko" ? HOME_DESCRIPTION : m.description;
   return {
     title: m.title,
-    description: m.description,
+    description,
     ...(locale === "ko" && {
+      keywords: [...SEO_CONSTANTS.DEFAULT_KEYWORDS, ...HOME_EXTRA_KEYWORDS],
       verification: {
         other: {
           "naver-site-verification": "7c2a4d7a2d320196a11bcf8e31524a1827f41b99",
@@ -21,10 +39,11 @@ export const buildHomeMetadata = (locale: Locale): Metadata => {
     }),
     alternates: { canonical: url },
     openGraph: {
-      title: localizedSiteName(locale),
-      description: m.description,
+      title: locale === "ko" ? "레시피오" : localizedSiteName(locale),
+      description,
       url,
-      siteName: localizedSiteName(locale),
+      siteName:
+        locale === "ko" ? "레시피오 - recipio" : localizedSiteName(locale),
       images: [
         {
           url: SEO_CONSTANTS.DEFAULT_IMAGE,
@@ -40,7 +59,7 @@ export const buildHomeMetadata = (locale: Locale): Metadata => {
     twitter: {
       card: SEO_CONSTANTS.TWITTER_CARD,
       title: m.title,
-      description: m.description,
+      description,
       images: [SEO_CONSTANTS.DEFAULT_IMAGE],
     },
   };
