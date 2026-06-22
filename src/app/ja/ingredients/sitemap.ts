@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
+import { buildHreflangAlternates } from "@/shared/i18n";
+import { localizedPath } from "@/shared/lib/metadata/localized";
 
 import { fetchAllIngredientsForSitemap } from "@/entities/ingredient/model/api.server";
 
@@ -26,10 +28,13 @@ export default async function sitemap(props: {
     const chunk = ingredients.slice(start, start + SITEMAP_CHUNK_SIZE);
 
     return chunk.map((ingredient) => ({
-      url: absoluteUrl(`ja/ingredients/${ingredient.id}`),
+      url: absoluteUrl(localizedPath("ja", `ingredients/${ingredient.id}`)),
       lastModified: new Date(ingredient.updatedAt),
       changeFrequency: "weekly",
       priority: 0.7,
+      alternates: {
+        languages: buildHreflangAlternates(`ingredients/${ingredient.id}`),
+      },
     }));
   } catch (error) {
     console.error(

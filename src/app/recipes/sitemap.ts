@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
+import { buildHreflangAlternates } from "@/shared/i18n";
+import { localizedPath } from "@/shared/lib/metadata/localized";
 
 import { fetchRecipeSitemapPage } from "@/entities/recipe/model/api.server";
 
@@ -28,9 +30,10 @@ export default async function sitemap(props: {
   const recipes = await fetchRecipeSitemapPage(id, SITEMAP_CHUNK_SIZE);
 
   return recipes.map((recipe) => ({
-    url: absoluteUrl(`recipes/${recipe.id}`),
+    url: absoluteUrl(localizedPath("ko", `recipes/${recipe.id}`)),
     lastModified: new Date(recipe.updatedAt),
     changeFrequency: "weekly",
     priority: 0.9,
+    alternates: { languages: buildHreflangAlternates(`recipes/${recipe.id}`) },
   }));
 }

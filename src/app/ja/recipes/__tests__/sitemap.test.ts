@@ -1,6 +1,8 @@
 /**
  * @jest-environment node
  */
+import { buildHreflangAlternates } from "@/shared/i18n";
+
 import { fetchJaRecipeSitemapPage } from "@/entities/recipe/model/api.server";
 
 import sitemap, { generateSitemaps } from "../sitemap";
@@ -34,6 +36,9 @@ describe("ja/recipes/sitemap", () => {
         lastModified: new Date("2026-06-11T20:27:14"),
         changeFrequency: "weekly",
         priority: 0.9,
+        alternates: {
+          languages: buildHreflangAlternates("recipes/7Kel6awa"),
+        },
       },
     ]);
   });

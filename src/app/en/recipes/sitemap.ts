@@ -1,11 +1,24 @@
 import type { MetadataRoute } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
+import { buildHreflangAlternates } from "@/shared/i18n";
+import { localizedPath } from "@/shared/lib/metadata/localized";
 
 import { fetchEnRecipeSitemapPage } from "@/entities/recipe/model/api.server";
 
 const SITEMAP_CHUNK_SIZE = 10000;
 const MAX_SITEMAP_CHUNKS = 50;
+
+export const buildRecipeSitemapEntry = (
+  recipe: { id: string; updatedAt: string },
+  locale: "ko" | "en" | "ja"
+): MetadataRoute.Sitemap[number] => ({
+  url: absoluteUrl(localizedPath(locale, `recipes/${recipe.id}`)),
+  lastModified: new Date(recipe.updatedAt),
+  changeFrequency: "weekly",
+  priority: 0.9,
+  alternates: { languages: buildHreflangAlternates(`recipes/${recipe.id}`) },
+});
 
 export async function generateSitemaps() {
   let count = 0;
@@ -27,10 +40,5 @@ export default async function sitemap(props: {
   const id = Number(await props.id);
   const recipes = await fetchEnRecipeSitemapPage(id, SITEMAP_CHUNK_SIZE);
 
-  return recipes.map((recipe) => ({
-    url: absoluteUrl(`en/recipes/${recipe.id}`),
-    lastModified: new Date(recipe.updatedAt),
-    changeFrequency: "weekly",
-    priority: 0.9,
-  }));
+  return recipes.map((r) => buildRecipeSitemapEntry(r, "en"));
 }
