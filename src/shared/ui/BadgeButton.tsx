@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useUiCommonDict } from "@/shared/i18n";
 import {
   Popover,
   PopoverContent,
@@ -15,6 +16,7 @@ type BadgeButtonProps = {
 
 const BadgeButton = ({ badgeText, badgeIcon }: BadgeButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useUiCommonDict();
 
   useEffect(() => {
     if (isOpen) {
@@ -38,7 +40,7 @@ const BadgeButton = ({ badgeText, badgeIcon }: BadgeButtonProps) => {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <button aria-label="배지 정보 표시" className="cursor-pointer">
+        <button aria-label={t.badge.infoToggleAria} className="cursor-pointer">
           {badgeIcon}
         </button>
       </PopoverTrigger>

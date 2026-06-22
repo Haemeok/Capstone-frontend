@@ -24,6 +24,7 @@ import { errors, meta, notFound, search } from "./search";
 import { searchDiscovery } from "./searchDiscovery";
 import { settings } from "./settings";
 import { taxonomy } from "./taxonomy";
+import { uiCommon } from "./uiCommon";
 import { userPages } from "./userPages";
 import { youtube } from "./youtube";
 
@@ -53,6 +54,7 @@ export const ko: Dictionary = {
   settings,
   ratings,
   recipeGrid,
+  uiCommon,
   auth,
   notifications,
   comments,

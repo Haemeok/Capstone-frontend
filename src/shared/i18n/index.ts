@@ -51,10 +51,12 @@ export type {
   ReferralDict,
   SettingsDict,
   SmartAppBannerDict,
+  UiCommonDict,
   UserPagesDict,
   YoutubeDict,
 } from "./types";
 export { LOCALES } from "./types";
+export { uiCommonMessages } from "./uiCommonMessages";
 export { useApiLocale } from "./useApiLocale";
 export { useAuthDict } from "./useAuthDict";
 export { useCategoryDict, useCategoryLocale } from "./useCategoryDict";
@@ -94,6 +96,7 @@ export {
   useSmartAppBannerDict,
   useSmartAppBannerLocale,
 } from "./useSmartAppBannerDict";
+export { useUiCommonDict } from "./useUiCommonDict";
 export { useUserPagesDict, useUserPagesLocale } from "./useUserPagesDict";
 export { useYoutubeDict, useYoutubeLocale } from "./useYoutubeDict";
 export { youtubeMessages } from "./youtubeMessages";

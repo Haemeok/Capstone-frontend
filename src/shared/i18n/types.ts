@@ -1128,6 +1128,19 @@ export type RecipeGridDict = {
   slideLoadError: string;
 };
 
+export type UiCommonDict = {
+  badge: {
+    aiGenerated: string;
+    beta: string;
+    userRecipe: string;
+    infoToggleAria: string;
+  };
+  store: {
+    appStoreAlt: string;
+    playStoreAlt: string;
+  };
+};
+
 export type Dictionary = {
   search: SearchDict;
   meta: MetaDict;
@@ -1154,6 +1167,7 @@ export type Dictionary = {
   settings: SettingsDict;
   ratings: RatingsDict;
   recipeGrid: RecipeGridDict;
+  uiCommon: UiCommonDict;
   auth: AuthDict;
   notifications: NotificationsDict;
   comments: CommentsDict;

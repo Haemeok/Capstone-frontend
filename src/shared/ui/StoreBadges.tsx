@@ -5,6 +5,7 @@ import {
   PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
 import { useIsApp } from "@/shared/hooks/useIsApp";
+import { useUiCommonDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 type StoreBadgesProps = {
@@ -14,6 +15,7 @@ type StoreBadgesProps = {
 
 export const StoreBadges = ({ className }: StoreBadgesProps) => {
   const isInApp = useIsApp();
+  const t = useUiCommonDict();
 
   if (isInApp) return null;
 
@@ -33,7 +35,7 @@ export const StoreBadges = ({ className }: StoreBadgesProps) => {
         >
           <img
             src="/Download_on_the_App_Store_Badge_KR.svg"
-            alt="App Store에서 다운로드"
+            alt={t.store.appStoreAlt}
             className="h-14"
           />
         </a>
@@ -46,7 +48,7 @@ export const StoreBadges = ({ className }: StoreBadgesProps) => {
         >
           <img
             src="/googlePlay_Badge_Web_color_ko.png"
-            alt="Google Play에서 다운로드"
+            alt={t.store.playStoreAlt}
             className="h-14"
           />
         </a>
