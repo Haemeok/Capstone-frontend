@@ -6,6 +6,7 @@ const BADGE_COLORS = [
   "bg-blue-50 text-blue-600",
   "bg-purple-50 text-purple-600",
   "bg-green-50 text-green-600",
+  "bg-amber-50 text-amber-600",
 ];
 
 export const FeatureShowcase = ({ t }: { t: LandingDict; locale: Locale }) => {

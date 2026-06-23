@@ -14,8 +14,8 @@ const STAT_STATICS: StatStatic[] = [
     accent: "from-purple-500/10 to-pink-500/10",
   },
   {
-    image: `${ICON_BASE_URL}money.webp`,
-    accent: "from-green-500/10 to-emerald-500/10",
+    image: `${ICON_BASE_URL}search.webp`,
+    accent: "from-blue-500/10 to-cyan-500/10",
   },
   {
     image: `${ICON_BASE_URL}clock.webp`,

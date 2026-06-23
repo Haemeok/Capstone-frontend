@@ -39,13 +39,13 @@ describe("StaticSections i18n", () => {
     expect(container.textContent).toContain("Start free");
   });
 
-  it("Stats metric: 3 locale 모두 45%·48·98%를 포함한다 (T-13)", () => {
+  it("Stats metric: 3 locale 모두 현지레시피·시간·98%를 포함한다 (T-13)", () => {
     for (const locale of ["ko", "ja", "en"] as const) {
       const t = getDictionary(locale).landing;
       const { container } = renderWithScroll(
         <StatsSection t={t} locale={locale} />
       );
-      expect(container.textContent).toContain("45%");
+      expect(container.textContent).toContain(t.stats.items[1].metric);
       expect(container.textContent).toContain("98%");
       expect(container.textContent).toContain(t.stats.items[2].metric);
     }

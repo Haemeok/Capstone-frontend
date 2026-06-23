@@ -2,11 +2,11 @@ import type { LandingDict } from "../../types";
 
 export const landing: LandingDict = {
   recipeCount: {
-    label: "50,000+",
-    phrase: "50,000+ recipes",
+    label: "100,000+",
+    phrase: "100,000+ recipes",
   },
   hero: {
-    badge: "{count} recipes · YouTube link import · AI picks",
+    badge: "{count} recipes · YouTube import · Local recipes · AI picks",
     titleLine1: "Everyday cooking,",
     titleHighlight: "simpler and more fun",
     subjectHighlight: "Save any recipe from a YouTube link",
@@ -20,22 +20,23 @@ export const landing: LandingDict = {
     subtitle: "The cooking struggles many people share — you're not alone",
     items: [
       {
-        title: "Rising dining-out and delivery costs",
+        title: "So many recipe videos, so hard to follow",
         description:
-          "With prices climbing, cooking at home is the smarter choice",
+          "Too many to choose from, and pausing to jot down ingredients is a pain",
       },
       {
-        title: "Recipe videos are hard to follow",
-        description: "No more pausing videos to jot down every ingredient",
+        title: "Curious what locals abroad actually cook",
+        description:
+          "You want real home cooking, but foreign videos and comments are hard to follow",
       },
       {
         title: "Stuck with leftover ingredients?",
         description: "Not sure what to do with what's left after cooking?",
       },
       {
-        title: "Cooking takes too long",
+        title: "Want to see tips from real chefs",
         description:
-          "You need recipes that are quick and easy on a busy schedule",
+          "Real know-how from trusted chefs and popular creators — scattered across videos and hard to find",
       },
     ],
   },
@@ -44,14 +45,14 @@ export const landing: LandingDict = {
     subtitle: "See the change people experienced after starting with recipio",
     items: [
       {
-        metric: "50,000+",
+        metric: "100,000+",
         label: "Curated recipes",
         description: "From YouTube, popular recipes, to AI",
       },
       {
-        metric: "45%",
-        label: "Avg. monthly food savings",
-        description: "Versus delivery and dining out",
+        metric: "20,000+",
+        label: "Local recipes per country",
+        description: "20,000+ each from Korea & Japan",
       },
       {
         metric: "48 min",
@@ -109,6 +110,18 @@ export const landing: LandingDict = {
         ],
       },
       {
+        badge: "Local recipes",
+        title: "What locals actually cook at home",
+        description:
+          "Browse authentic Korean and Japanese home cooking with local ratings and translated comments — 20,000+ local recipes each.",
+        benefits: [
+          "20,000+ local recipes each from Korea & Japan",
+          "See what's truly popular by local ratings",
+          "Local comments & reviews auto-translated (free)",
+          "Filter by country (Korea, Japan & more)",
+        ],
+      },
+      {
         badge: "{count} recipes",
         title: "One of the largest curated recipe libraries",
         description:
@@ -146,6 +159,15 @@ export const landing: LandingDict = {
     subtitle: "Hear honest stories from real users",
     items: [
       {
+        name: "Hannah Kim",
+        role: "Korean-food curious · Los Angeles",
+        content:
+          "I'd always wanted to cook real Korean food. Here I can actually see what locals rate highly, with their comments translated — way more legit than the watered-down Asian recipes you find everywhere else.",
+        avatar: "🍲",
+        rating: 5,
+        highlight: "Authentic Asian recipes",
+      },
+      {
         name: "Daniel Carter",
         role: "Cooking on my own, 3 yrs · Seattle",
         content:
@@ -173,15 +195,6 @@ export const landing: LandingDict = {
         highlight: "Cooked 20 min faster",
       },
       {
-        name: "Sophie Turner",
-        role: "Budget-minded home cook · Portland",
-        content:
-          "Knowing the rough cost per recipe is a game changer. Seeing that tonight's dinner beat delivery makes cooking worth it.",
-        avatar: "📝",
-        rating: 5,
-        highlight: "Cheaper than delivery",
-      },
-      {
         name: "Ethan Walker",
         role: "New to cooking · Denver",
         content:
@@ -205,7 +218,7 @@ export const landing: LandingDict = {
     titleLine1: "Start today —",
     titleHighlight: "an easier cooking life",
     subtitle:
-      "{count} recipes, AI picks, and YouTube import — start free right now",
+      "From YouTube import to local recipes and AI picks — start free with {count} recipes today",
     primaryCta: "Start free",
     secondaryCta: "Browse popular recipes",
   },

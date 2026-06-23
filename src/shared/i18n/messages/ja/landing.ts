@@ -2,11 +2,11 @@ import type { LandingDict } from "../../types";
 
 export const landing: LandingDict = {
   recipeCount: {
-    label: "5万+",
-    phrase: "5万品以上",
+    label: "10万+",
+    phrase: "10万品以上",
   },
   hero: {
-    badge: "{count} レシピ・YouTubeリンク抽出・AIおすすめ",
+    badge: "{count} レシピ・YouTube抽出・現地のレシピ・AIおすすめ",
     titleLine1: "毎日の料理を",
     titleHighlight: "もっと手軽に、楽しく",
     subjectHighlight: "YouTubeリンク1つでレシピを保存",
@@ -20,20 +20,24 @@ export const landing: LandingDict = {
     subtitle: "多くの人が抱える料理の悩み、もう一人で抱えなくて大丈夫",
     items: [
       {
-        title: "上がり続ける外食・フードデリバリー費",
-        description: "外食コストが上がる今、家で作るほうが経済的です",
+        title: "レシピ動画は多いのに、再現が難しい",
+        description:
+          "あふれる動画からどれを選ぶか、止めて材料をメモするのも手間です",
       },
       {
-        title: "材料メモが面倒な料理動画",
-        description: "動画を止めて材料を書き写す手間はもう不要です",
+        title: "海外の現地の人が何を作るのか気になる",
+        description:
+          "本場の家庭料理を知りたいのに、外国語の動画もコメントも分かりにくい",
       },
       {
-        title: "余った材料、どうする?",
-        description: "作った後に余る材料の使い道に悩んでいませんか",
+        title: "余った材料、どう使う?",
+        description:
+          "作った後に余る材料、捨てるのはもったいないけど使い道が分からない",
       },
       {
-        title: "料理に時間がかかりすぎる",
-        description: "忙しい毎日でも手早く作れるレシピが必要です",
+        title: "プロのシェフのコツも見たい",
+        description:
+          "信頼できるシェフや人気クリエイターの本物のコツ、散らばった動画から探すのは大変",
       },
     ],
   },
@@ -42,14 +46,14 @@ export const landing: LandingDict = {
     subtitle: "レシピオで料理を始めた人たちのリアルな変化をご覧ください",
     items: [
       {
-        metric: "5万+",
+        metric: "10万+",
         label: "キュレーションレシピ",
         description: "YouTube・人気レシピ・AI生成まで",
       },
       {
-        metric: "45%",
-        label: "月平均の食費削減",
-        description: "フードデリバリー・外食と比べた節約効果",
+        metric: "2万+",
+        label: "国別の現地レシピ",
+        description: "韓国・日本それぞれ2万件以上",
       },
       {
         metric: "48分",
@@ -107,6 +111,18 @@ export const landing: LandingDict = {
         ],
       },
       {
+        badge: "現地のレシピ",
+        title: "現地の人が本当に作る家庭料理を、そのまま",
+        description:
+          "韓国・海外の家庭料理を、現地の評価と翻訳されたコメントごと見られます。韓国・日本の現地人気レシピだけで各2万件以上。",
+        benefits: [
+          "韓国・日本の現地人気レシピ 各2万+",
+          "現地の評価で本当の人気メニューを確認",
+          "現地のコメント・レビューを自動翻訳(無料)",
+          "国別に選んで見る(韓国・日本・その他)",
+        ],
+      },
+      {
         badge: "{count} レシピ",
         title: "国内最大級のキュレーションレシピ",
         description:
@@ -144,6 +160,15 @@ export const landing: LandingDict = {
     subtitle: "実際のユーザーの率直な声をご覧ください",
     items: [
       {
+        name: "森田 あかり",
+        role: "韓国料理好き・東京",
+        content:
+          "韓国の家庭料理がずっと気になってて。現地の人が高く評価してるレシピを、ハングルのコメントまで翻訳付きで見られるのが本当にありがたい。同じ料理でも本場はやっぱり一味違いますね。",
+        avatar: "🍲",
+        rating: 5,
+        highlight: "本場は一味違う",
+      },
+      {
         name: "田中 健太",
         role: "一人暮らし3年・東京",
         content:
@@ -171,15 +196,6 @@ export const landing: LandingDict = {
         highlight: "調理時間を短縮",
       },
       {
-        name: "高橋 由香",
-        role: "家計簿をつける主婦・名古屋",
-        content:
-          "レシピごとにおおよその原価がわかるのが助かります。デリバリーより安く済んだのが目で見えて、作る気になります。",
-        avatar: "📝",
-        rating: 5,
-        highlight: "デリバリーより節約",
-      },
-      {
         name: "山本 翔",
         role: "料理初心者・福岡",
         content:
@@ -203,7 +219,7 @@ export const landing: LandingDict = {
     titleLine1: "今日から始める",
     titleHighlight: "もっと手軽な料理生活",
     subtitle:
-      "{count} のレシピとAIおすすめ、YouTubeリンク抽出まで。今すぐ無料で。",
+      "YouTube抽出から現地のレシピ、AIおすすめまで。{count} のレシピを今すぐ無料で。",
     primaryCta: "無料で始める",
     secondaryCta: "人気レシピを見る",
   },

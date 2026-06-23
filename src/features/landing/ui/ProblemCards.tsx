@@ -10,19 +10,19 @@ type ProblemCardStatic = {
 
 const PROBLEM_STATICS: ProblemCardStatic[] = [
   {
-    image: `${ICON_BASE_URL}graph.webp`,
-    accent: "from-red-500/10 to-orange-500/10",
-  },
-  {
     image: `${ICON_BASE_URL}note.webp`,
-    accent: "from-yellow-500/10 to-amber-500/10",
+    accent: "from-red-500/10 to-orange-500/10",
   },
   {
     image: `${ICON_BASE_URL}search.webp`,
     accent: "from-blue-500/10 to-cyan-500/10",
   },
   {
-    image: `${ICON_BASE_URL}sleep.webp`,
+    image: `${ICON_BASE_URL}food.webp`,
+    accent: "from-green-500/10 to-emerald-500/10",
+  },
+  {
+    image: `${ICON_BASE_URL}book.webp`,
     accent: "from-purple-500/10 to-violet-500/10",
   },
 ];
