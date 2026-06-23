@@ -45,9 +45,10 @@ const renderWithClient = (ui: React.ReactElement) => {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return render(
-    <QueryClientProvider client={client}>{ui}</QueryClientProvider>
-  );
+  return {
+    client,
+    ...render(<QueryClientProvider client={client}>{ui}</QueryClientProvider>),
+  };
 };
 
 beforeEach(() => {
@@ -77,5 +78,21 @@ describe("QuickPopularSlide", () => {
         screen.queryByText("20분 완성 인기 레시피")
       ).not.toBeInTheDocument()
     );
+  });
+
+  it("maxCookingTime이 null이면 빈 분 라벨 없이 숨긴다 (T-S5-2)", async () => {
+    mockGet.mockResolvedValue({
+      maxCookingTime: null,
+      content: [card("r1", "된장찌개")],
+    });
+    const { client } = renderWithClient(<QuickPopularSlide locale="ko" />);
+    await waitFor(() =>
+      expect(
+        client.getQueryData(["recipes", "quick-popular", "ko"])
+      ).toBeDefined()
+    );
+
+    expect(screen.queryByText("된장찌개")).not.toBeInTheDocument();
+    expect(screen.queryByText("분 완성 인기 레시피")).not.toBeInTheDocument();
   });
 });

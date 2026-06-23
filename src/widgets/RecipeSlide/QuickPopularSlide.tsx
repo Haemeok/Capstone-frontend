@@ -1,58 +1,30 @@
 "use client";
 
-import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
 import { format } from "@/shared/i18n";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 
+import { createRecipeSlide } from "./createRecipeSlide";
 import { useQuickPopularQuery } from "./hooks";
-import RecipeSlideSection from "./RecipeSlideSection";
-import { shouldHideRecipeSlide } from "./recipeSlideVisibility";
 
-type QuickPopularSlideProps = {
-  locale?: "ko" | "ja" | "en";
-};
+const QuickPopularSlide = createRecipeSlide<{ locale?: "ko" | "ja" | "en" }>(
+  ({ inView, props }) => {
+    const t = useSearchDiscoveryDict();
+    const { data, isLoading, error } = useQuickPopularQuery({
+      enabled: inView,
+      locale: props.locale,
+    });
+    const maxCookingTime = data?.maxCookingTime ?? null;
+    const minutes = maxCookingTime != null ? String(maxCookingTime) : "";
 
-const QuickPopularSlide = ({ locale }: QuickPopularSlideProps) => {
-  const t = useSearchDiscoveryDict();
-  const { ref, inView } = useInViewOnce({ rootMargin: "400px" });
-
-  const { data, isLoading, error } = useQuickPopularQuery({
-    enabled: inView,
-    locale,
-  });
-
-  const maxCookingTime = data?.maxCookingTime ?? null;
-  const items = data?.content ?? [];
-
-  if (!inView) {
-    return <div ref={ref} className="h-[260px] w-full" aria-hidden />;
-  }
-
-  if (isLoading) return null;
-
-  if (
-    shouldHideRecipeSlide({
+    return {
+      title: format(t.quickPopularTitle, { minutes }),
+      items: data?.content ?? [],
       isLoading,
-      hasError: !!error,
-      recipeCount: items.length,
-    })
-  ) {
-    return null;
+      error,
+      requiresMeta: true,
+      metaName: minutes === "" ? null : minutes,
+    };
   }
-
-  return (
-    <div ref={ref} className="w-full">
-      <RecipeSlideSection
-        title={format(t.quickPopularTitle, {
-          minutes: String(maxCookingTime ?? ""),
-        })}
-        recipes={items}
-        isLoading={isLoading}
-        error={error as Error | null}
-        locale={locale}
-      />
-    </div>
-  );
-};
+);
 
 export default QuickPopularSlide;
