@@ -94,6 +94,8 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Render purity](rules/react-render-purity.md) — no `Date.now()`/random in render; seed time state via lazy `useState(() => …)`; no sync setState in effect body
 - [Optional prop threading](rules/react-optional-prop-threading.md) — an optional prop declared but not forwarded is a silent no-op; `tsc` won't catch it, a leaf behavior test will
 - [Context hook provider coverage](rules/react-context-hook-provider-coverage.md) — converting a shared leaf from prop to a context hook (`useT`/`useContext`) requires a provider at every render site; missing one is a runtime throw `tsc` can't see — grep all render sites first
+- [Static content not gated on enrichment query](rules/react-static-content-not-gated-on-enrichment-query.md) — content you already have (props/SSR) must render with `isLoading={false}`; a secondary enrichment query's `isLoading` (favorite/badge) must not gate it or you flash a skeleton
+- [Reserve height through lazy load](rules/react-reserve-height-through-lazy-load.md) — an in-view section's reserved placeholder height must persist through loading; `if (isLoading) return null` collapses it to 0 → double layout shift; collapse only post-load when empty
 
 ### TypeScript
 
