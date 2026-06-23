@@ -87,6 +87,8 @@ describe("CookedPopularSlide", () => {
         screen.queryByText("레시피오 유저들이 많이 요리한 레시피")
       ).not.toBeInTheDocument()
     );
-    expect(container.querySelector("[aria-hidden]")).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(container.querySelector("[aria-hidden]")).not.toBeInTheDocument()
+    );
   });
 });

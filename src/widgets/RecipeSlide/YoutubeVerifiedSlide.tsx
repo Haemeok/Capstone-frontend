@@ -1,54 +1,24 @@
 "use client";
 
-import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 
+import { createRecipeSlide } from "./createRecipeSlide";
 import { useYoutubeVerifiedQuery } from "./hooks";
-import RecipeSlideSection from "./RecipeSlideSection";
-import { shouldHideRecipeSlide } from "./recipeSlideVisibility";
 
-type YoutubeVerifiedSlideProps = {
-  locale?: "ko" | "ja" | "en";
-};
-
-const YoutubeVerifiedSlide = ({ locale }: YoutubeVerifiedSlideProps) => {
-  const t = useSearchDiscoveryDict();
-  const { ref, inView } = useInViewOnce({ rootMargin: "400px" });
-
-  const { data, isLoading, error } = useYoutubeVerifiedQuery({
-    enabled: inView,
-    locale,
-  });
-
-  const items = data?.content ?? [];
-
-  if (!inView) {
-    return <div ref={ref} className="h-[260px] w-full" aria-hidden />;
-  }
-
-  if (isLoading) return null;
-
-  if (
-    shouldHideRecipeSlide({
+const YoutubeVerifiedSlide = createRecipeSlide<{ locale?: "ko" | "ja" | "en" }>(
+  ({ inView, props }) => {
+    const t = useSearchDiscoveryDict();
+    const { data, isLoading, error } = useYoutubeVerifiedQuery({
+      enabled: inView,
+      locale: props.locale,
+    });
+    return {
+      title: t.youtubeVerifiedTitle,
+      items: data?.content ?? [],
       isLoading,
-      hasError: !!error,
-      recipeCount: items.length,
-    })
-  ) {
-    return null;
+      error,
+    };
   }
-
-  return (
-    <div ref={ref} className="w-full">
-      <RecipeSlideSection
-        title={t.youtubeVerifiedTitle}
-        recipes={items}
-        isLoading={isLoading}
-        error={error as Error | null}
-        locale={locale}
-      />
-    </div>
-  );
-};
+);
 
 export default YoutubeVerifiedSlide;
