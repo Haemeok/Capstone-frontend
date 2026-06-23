@@ -103,7 +103,7 @@ const LoginPromotionBadge = ({
         <div className="z-modal absolute -top-10 -right-2">
           <div className="bg-olive-mint flex animate-bounce items-center gap-1 rounded-lg p-2 text-xs font-bold text-white shadow-lg">
             {YouTubeIcon}
-            <p className={`${wrapClass} max-w-[70vw]`}>{t.mobileBadge}</p>
+            <p className="whitespace-nowrap">{t.mobileBadge}</p>
           </div>
         </div>
       )}

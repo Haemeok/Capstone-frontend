@@ -1,7 +1,7 @@
 import type { LoginPromotionDict } from "../../types";
 
 export const loginPromotion: LoginPromotionDict = {
-  mobileBadge: "Free YouTube recipe extraction!",
+  mobileBadge: "Free recipe extraction!",
   headline: "Just pick the ingredients — leave the recipe to us",
   body: "From fridge leftovers to fine dining, sign up now and get 1 free recipe a day.",
   bodyDetailed:
