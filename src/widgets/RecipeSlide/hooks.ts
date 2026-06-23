@@ -35,6 +35,7 @@ export const useRecommendedRecipesQuery = (
     queryKey: ["recipes-recommended", recipeId, locale],
     queryFn: () => getRecommendedRecipes(recipeId, locale),
     enabled: options?.enabled ?? true,
+    staleTime: Infinity,
   });
 };
 
@@ -48,7 +49,7 @@ export const useCookedPopularQuery = (options?: {
     queryFn: () => getCookedPopularRecipes(locale),
     select: (data) => data.content,
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -61,7 +62,7 @@ export const useCountryPopularQuery = (options?: {
     queryKey: ["recipes", "country-popular", locale],
     queryFn: () => getCountryPopularRecipes(locale),
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -74,7 +75,7 @@ export const useSeasonalPopularQuery = (options?: {
     queryKey: ["recipes", "seasonal-popular", locale],
     queryFn: () => getSeasonalPopularRecipes(locale),
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -87,7 +88,7 @@ export const useQuickPopularQuery = (options?: {
     queryKey: ["recipes", "quick-popular", locale],
     queryFn: () => getQuickPopularRecipes(locale),
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -100,7 +101,7 @@ export const useCategoryPopularQuery = (options?: {
     queryKey: ["recipes", "category-popular", locale],
     queryFn: () => getCategoryPopularRecipes(locale),
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -113,7 +114,7 @@ export const useYoutubeVerifiedQuery = (options?: {
     queryKey: ["recipes", "youtube-verified", locale],
     queryFn: () => getYoutubeVerifiedRecipes(locale),
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -126,7 +127,7 @@ export const useFridgeIngredientQuery = (options?: {
     queryKey: ["recipes", "fridge-ingredient", locale],
     queryFn: () => getFridgeIngredientPopularRecipes(locale),
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -140,7 +141,7 @@ export const useCookedAgainQuery = (options?: {
     queryFn: () => getCookedAgainRecipes(locale),
     select: (data) => data.content,
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -153,6 +154,7 @@ export const useRemixesQuery = (
     queryKey: ["recipes-remixes", recipeId, locale],
     queryFn: () => getRemixes(recipeId, locale),
     enabled: options?.enabled ?? true,
+    staleTime: Infinity,
   });
 };
 
@@ -165,7 +167,7 @@ export const useSameIngredientQuery = (
     queryKey: ["recipes", "same-ingredient", recipeId, locale],
     queryFn: () => getSameIngredientRecipes(recipeId, locale),
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
 
@@ -178,6 +180,6 @@ export const useTitleKeywordQuery = (
     queryKey: ["recipes", "title-keyword", recipeId, locale],
     queryFn: () => getTitleKeywordRecipes(recipeId, locale),
     enabled: options?.enabled ?? true,
-    staleTime: 0,
+    staleTime: Infinity,
   });
 };
