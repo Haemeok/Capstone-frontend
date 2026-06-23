@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/shared/lib/utils";
+import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { AdSlot } from "./AdSlot";
 import { AD_MIN_HEIGHT, AD_SLOT_IDS } from "./config";
@@ -10,6 +11,10 @@ type InArticleAdSlotProps = {
   index?: number;
   slotId?: string;
 };
+
+const InArticleAdSkeleton = () => (
+  <Skeleton className="h-full w-full rounded-xl" />
+);
 
 export const InArticleAdSlot = ({
   className,
@@ -27,6 +32,7 @@ export const InArticleAdSlot = ({
       insStyle={{ display: "block", textAlign: "center" }}
       adFormat="fluid"
       adLayout="in-article"
+      skeleton={<InArticleAdSkeleton />}
     />
   );
 };

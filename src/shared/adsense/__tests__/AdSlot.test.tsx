@@ -19,11 +19,35 @@ import { AdSlot } from "../AdSlot";
 
 const mockedUseAdsGate = jest.mocked(useAdsGate);
 
+type IntersectionCallback = (entries: { isIntersecting: boolean }[]) => void;
+
+let intersectionCallbacks: IntersectionCallback[] = [];
+
+const enterViewport = () => {
+  act(() => {
+    intersectionCallbacks.forEach((cb) => cb([{ isIntersecting: true }]));
+  });
+};
+
 describe("AdSlot", () => {
   beforeEach(() => {
     jest.useFakeTimers();
     delete (window as typeof window & { adsbygoogle?: unknown[] }).adsbygoogle;
     mockedUseAdsGate.mockReturnValue({ enabled: true, isTestUser: false });
+    intersectionCallbacks = [];
+    class IntersectionObserverMock {
+      constructor(cb: IntersectionCallback) {
+        intersectionCallbacks.push(cb);
+      }
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+    Object.defineProperty(globalThis, "IntersectionObserver", {
+      writable: true,
+      configurable: true,
+      value: IntersectionObserverMock,
+    });
   });
 
   afterEach(() => {
@@ -51,13 +75,23 @@ describe("AdSlot", () => {
     expect((window.adsbygoogle as unknown[]).length).toBe(1);
   });
 
-  it("타임아웃 내에 <ins> 빈 상태면 wrapper display:none 처리 (애드블록 대비)", () => {
+  it("뷰포트 진입 후 타임아웃까지 <ins> 빈 상태면 wrapper display:none 처리 (애드블록 대비)", () => {
     const { container } = render(<AdSlot slotId="9999" minHeight={280} />);
     const wrapper = container.firstChild as HTMLElement | null;
     expect(wrapper?.style.display).not.toBe("none");
+    enterViewport();
     act(() => {
       jest.advanceTimersByTime(7100);
     });
     expect(wrapper?.style.display).toBe("none");
+  });
+
+  it("뷰포트 진입 전이면 타임아웃이 지나도 wrapper 숨기지 않음 (lazy-load 슬롯 보호)", () => {
+    const { container } = render(<AdSlot slotId="9999" minHeight={280} />);
+    const wrapper = container.firstChild as HTMLElement | null;
+    act(() => {
+      jest.advanceTimersByTime(7100);
+    });
+    expect(wrapper?.style.display).not.toBe("none");
   });
 });

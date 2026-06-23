@@ -88,15 +88,37 @@ export const AdSlot = ({
       }
     });
     observer.observe(ins, { childList: true });
-    const timer = window.setTimeout(() => {
-      if (!ins.firstChild) {
-        wrapper.style.display = "none";
-      }
-      observer.disconnect();
-    }, ADBLOCK_DETECTION_TIMEOUT_MS);
+
+    let timer: number | undefined;
+    const startAdblockTimer = () => {
+      if (timer !== undefined) return;
+      timer = window.setTimeout(() => {
+        if (!ins.firstChild) {
+          wrapper.style.display = "none";
+        }
+        observer.disconnect();
+      }, ADBLOCK_DETECTION_TIMEOUT_MS);
+    };
+
+    let viewportObserver: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver === "function") {
+      viewportObserver = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          viewportObserver?.disconnect();
+          startAdblockTimer();
+        },
+        { rootMargin: "200px" }
+      );
+      viewportObserver.observe(wrapper);
+    } else {
+      startAdblockTimer();
+    }
+
     return () => {
-      window.clearTimeout(timer);
+      if (timer !== undefined) window.clearTimeout(timer);
       observer.disconnect();
+      viewportObserver?.disconnect();
       onFillChangeRef.current?.(false);
     };
   }, []);
