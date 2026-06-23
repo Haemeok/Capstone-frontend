@@ -22,9 +22,21 @@ jest.mock("../ui/LatestRecipesSlide", () => ({
   __esModule: true,
   default: () => null,
 }));
-jest.mock("../ui/ContentPageGrid", () => ({
+jest.mock("@/widgets/RecipeSlide/FridgeIngredientSlide", () => ({
   __esModule: true,
   default: () => null,
+}));
+jest.mock("@/widgets/RecipeSlide/CookedAgainSlide", () => ({
+  __esModule: true,
+  default: () => null,
+}));
+jest.mock("@/widgets/RecipeSlide/CookedPopularSlide", () => ({
+  __esModule: true,
+  default: () => null,
+}));
+jest.mock("@/features/content-pages", () => ({
+  __esModule: true,
+  ContentPageGrid: () => null,
 }));
 jest.mock("../ui/NutritionThemeSection", () => ({
   __esModule: true,
