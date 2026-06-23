@@ -87,18 +87,12 @@ const HomePage = async () => {
 
           <RecipeSlideWithErrorBoundary
             title={dict.home.popularSectionTitle}
-            queryKey="popular-recipes"
-            period="weekly"
-            isStatic
             staticRecipes={staticPopularRecipes.content}
             locale="en"
           />
 
           <RecipeSlideWithErrorBoundary
             title={dict.home.budgetSectionTitle}
-            queryKey="budget-recipes"
-            maxCost={10000}
-            isStatic
             staticRecipes={staticBudgetRecipes.content}
             locale="en"
           />

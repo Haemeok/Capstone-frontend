@@ -10,6 +10,7 @@ import RecipeSlide from "./RecipeSlide";
 
 type RecipeSlideSectionProps = {
   title: string;
+  to?: string;
   recipes: StaticDetailedRecipeGridItem[];
   isLoading: boolean;
   error: Error | null;
@@ -18,6 +19,7 @@ type RecipeSlideSectionProps = {
 
 const RecipeSlideSection = ({
   title,
+  to,
   recipes,
   isLoading,
   error,
@@ -37,6 +39,7 @@ const RecipeSlideSection = ({
   return (
     <RecipeSlide
       title={title}
+      to={to}
       recipes={recipesWithStatus}
       isLoading={isLoading}
       error={error}
