@@ -11,7 +11,7 @@ import {
   XCircle,
 } from "lucide-react";
 
-import { getDictionary, useApiLocale } from "@/shared/i18n";
+import { useAppGlobalDict, useCommonDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
 import { useToastStore } from "@/widgets/Toast/model/store";
@@ -63,7 +63,8 @@ const ActionButton = ({ label, onClick, className }: ActionButtonProps) => (
 const Toast = (props: ToastProps) => {
   const { id, message, duration = 1000 * 3, variant } = props;
   const removeToast = useToastStore((state) => state.removeToast);
-  const t = getDictionary(useApiLocale());
+  const appGlobal = useAppGlobalDict();
+  const common = useCommonDict();
 
   const [isVisible, setIsVisible] = useState(true);
 
@@ -101,7 +102,7 @@ const Toast = (props: ToastProps) => {
 
   const actionLabel =
     props.variant === "action"
-      ? (props.action.label ?? t.appGlobal.toast.changeAction)
+      ? (props.action.label ?? appGlobal.toast.changeAction)
       : null;
 
   return (
@@ -165,7 +166,7 @@ const Toast = (props: ToastProps) => {
         <button
           onClick={handleClose}
           className="flex-shrink-0 rounded-full p-1 transition-colors hover:bg-black/5"
-          aria-label={t.common.actions.close}
+          aria-label={common.actions.close}
         >
           <X className="text-ink-sub h-4 w-4" />
         </button>

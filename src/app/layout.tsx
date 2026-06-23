@@ -5,15 +5,12 @@ import { AdSenseScript } from "@/shared/adsense";
 import { AppContextBridge } from "@/shared/lib/analytics";
 import { AppWebViewDetector } from "@/shared/lib/bridge";
 
-import GlobalAppUpdateDrawer from "@/widgets/AppUpdateDrawer";
 import { BottomLayoutController } from "@/widgets/Footer/BottomLayoutController";
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
-import GlobalLoginEncourageDrawer from "@/widgets/LoginEncourageDrawer/GlobalLoginEncourageDrawer";
-import GlobalNotificationPermissionDrawer from "@/widgets/NotificationPermissionDrawer";
-import GlobalReviewGateDrawer from "@/widgets/ReviewGateDrawer";
 
 import { pretendard } from "./fonts";
+import GlobalDrawers from "./GlobalDrawers";
 import GoogleAnalytics from "./GoogleAnalytics";
 import { AppProviders } from "./providers/AppProviders";
 
@@ -91,10 +88,7 @@ export default async function RootLayout({
           </main>
           <BottomNavBar />
           <BottomLayoutController />
-          <GlobalLoginEncourageDrawer />
-          <GlobalNotificationPermissionDrawer />
-          <GlobalReviewGateDrawer />
-          <GlobalAppUpdateDrawer />
+          <GlobalDrawers />
           <AdSenseScript />
         </AppProviders>
         <GoogleAnalytics />

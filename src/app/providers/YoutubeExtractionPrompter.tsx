@@ -1,8 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { useYoutubeExtractionPrompt } from "@/shared/hooks/useYoutubeExtractionPrompt";
 
-import YoutubeExtractionDrawer from "@/widgets/YoutubeExtractionDrawer";
+const YoutubeExtractionDrawer = dynamic(
+  () => import("@/widgets/YoutubeExtractionDrawer"),
+  { ssr: false }
+);
 
 export const YoutubeExtractionPrompter = () => {
   const { shouldShowPrompt, hidePrompt } = useYoutubeExtractionPrompt();

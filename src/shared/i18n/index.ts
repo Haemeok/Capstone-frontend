@@ -1,3 +1,4 @@
+export { appGlobalMessages } from "./appGlobalMessages";
 export { authMessages } from "./authMessages";
 export { commentsMessages } from "./commentsMessages";
 export { commonMessages } from "./commonMessages";
@@ -64,6 +65,7 @@ export type {
 export { LOCALES } from "./types";
 export { uiCommonMessages } from "./uiCommonMessages";
 export { useApiLocale } from "./useApiLocale";
+export { useAppGlobalDict } from "./useAppGlobalDict";
 export { useAuthDict } from "./useAuthDict";
 export { useCategoryDict, useCategoryLocale } from "./useCategoryDict";
 export { useChromeDict, useChromeLocale } from "./useChromeDict";

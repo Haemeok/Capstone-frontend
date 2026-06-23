@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
-import { getDictionary, useApiLocale, useLocalizedRouter } from "@/shared/i18n";
+import { useAppGlobalDict, useLocalizedRouter } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
 import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
@@ -17,7 +17,7 @@ const AICreditDrawer = ({ isOpen, onOpenChange }: AICreditDrawerProps) => {
   const router = useLocalizedRouter();
   const { Container, Content, Title } = useResponsiveSheet();
   const confettiRef = useRef<ConfettiRef>(null);
-  const t = getDictionary(useApiLocale()).appGlobal.aiCredit;
+  const t = useAppGlobalDict().aiCredit;
 
   useEffect(() => {
     if (isOpen) {

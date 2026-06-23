@@ -6,7 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { addRecentAIRecipe } from "@/shared/config/constants/localStorage";
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
-import { format, getDictionary, useLocalizedRouter } from "@/shared/i18n";
+import { appGlobalMessages, format, useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
 
@@ -52,7 +52,7 @@ export const useAIJobPolling = () => {
       if (!job || job.state === "completed") return;
 
       const meta = job.meta;
-      const t = getDictionary(job.locale);
+      const t = appGlobalMessages[job.locale];
 
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
@@ -88,7 +88,7 @@ export const useAIJobPolling = () => {
           dismissible: "both",
           richContent: {
             thumbnail: recipe.imageUrl,
-            title: t.appGlobal.aiJob.completeTitle,
+            title: t.aiJob.completeTitle,
             subtitle: recipe.title,
             badgeIcon: <AIGeneratedBadge className="flex-shrink-0" />,
             recipeId,
@@ -99,7 +99,7 @@ export const useAIJobPolling = () => {
         });
       } catch {
         toastId = addToast({
-          message: format(t.appGlobal.aiJob.completeFallback, {
+          message: format(t.aiJob.completeFallback, {
             name: meta.displayName,
           }),
           variant: "success",
@@ -150,7 +150,7 @@ export const useAIJobPolling = () => {
         handleJobFail(
           job.idempotencyKey,
           undefined,
-          getDictionary(job.locale).appGlobal.aiJob.maxRetryExceeded
+          appGlobalMessages[job.locale].aiJob.maxRetryExceeded
         );
         return;
       }

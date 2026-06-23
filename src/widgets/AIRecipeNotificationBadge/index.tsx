@@ -1,6 +1,6 @@
 "use client";
 
-import { getDictionary, useApiLocale } from "@/shared/i18n";
+import { useAppGlobalDict } from "@/shared/i18n";
 
 import { useAIRecipeStore } from "@/features/recipe-create-ai";
 
@@ -12,7 +12,7 @@ const AIRecipeNotificationBadge = ({
   children,
 }: AIRecipeNotificationBadgeProps) => {
   const { generationState } = useAIRecipeStore();
-  const t = getDictionary(useApiLocale()).appGlobal.aiJob;
+  const t = useAppGlobalDict().aiJob;
 
   return (
     <div className="relative">
