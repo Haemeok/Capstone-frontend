@@ -3,7 +3,10 @@ import { Suspense } from "react";
 import { HomeAnchorAdSlot, HomeHeaderAnchorAdSlot } from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
 import { buildHomeMetadata } from "@/shared/lib/metadata";
-import { createWebsiteStructuredData } from "@/shared/lib/metadata/structuredData";
+import {
+  createOrganizationStructuredData,
+  createWebsiteStructuredData,
+} from "@/shared/lib/metadata/structuredData";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
@@ -42,6 +45,7 @@ const HomePage = async () => {
   ]);
 
   const jsonLd = createWebsiteStructuredData();
+  const orgJsonLd = createOrganizationStructuredData("ko");
 
   return (
     <>
@@ -49,6 +53,12 @@ const HomePage = async () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c"),
         }}
       />
       <Container className="pt-0">

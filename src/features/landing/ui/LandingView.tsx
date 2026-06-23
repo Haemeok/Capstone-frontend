@@ -17,7 +17,7 @@ import { TestimonialCarousel } from "./TestimonialCarousel";
 
 export const LandingView = ({ locale }: { locale: Locale }) => {
   const t = getDictionary(locale).landing;
-  const faqJsonLd = createLandingFAQStructuredData();
+  const faqJsonLd = createLandingFAQStructuredData(locale);
   const tagItemListJsonLd = createTagItemListStructuredData(
     LANDING_TAG_GROUPS.flatMap((group) => group.chips)
   );
