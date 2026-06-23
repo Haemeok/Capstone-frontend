@@ -150,7 +150,7 @@ const RecommendedRecipeGrid = ({
   };
 
   return (
-    <div className="mt-2 w-full">
+    <div className="mt-6 w-full">
       <div className="mb-2 flex items-center justify-between px-2">
         <h2 className="text-ink text-lg font-bold">{title}</h2>
       </div>

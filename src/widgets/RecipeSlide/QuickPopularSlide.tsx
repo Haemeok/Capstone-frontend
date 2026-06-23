@@ -23,6 +23,7 @@ const QuickPopularSlide = createRecipeSlide<{ locale?: "ko" | "ja" | "en" }>(
       error,
       requiresMeta: true,
       metaName: minutes === "" ? null : minutes,
+      emphasizeTime: true,
     };
   }
 );

@@ -15,6 +15,7 @@ type RecipeSlideSectionProps = {
   isLoading: boolean;
   error: Error | null;
   locale?: "ko" | "ja" | "en";
+  emphasizeTime?: boolean;
 };
 
 const RecipeSlideSection = ({
@@ -24,6 +25,7 @@ const RecipeSlideSection = ({
   isLoading,
   error,
   locale,
+  emphasizeTime,
 }: RecipeSlideSectionProps) => {
   const recipeIds = recipes.map((recipe) => recipe.id);
   const { data: statusData } = useRecipesStatusQuery(recipeIds);
@@ -44,6 +46,7 @@ const RecipeSlideSection = ({
       isLoading={isLoading}
       error={error}
       locale={locale}
+      emphasizeTime={emphasizeTime}
     />
   );
 };

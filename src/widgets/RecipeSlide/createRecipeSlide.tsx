@@ -17,6 +17,7 @@ export type SlideData = {
   requiresMeta?: boolean;
   metaName?: string | null;
   disabled?: boolean;
+  emphasizeTime?: boolean;
 };
 
 type BaseSlideProps = { locale?: Locale };
@@ -31,8 +32,16 @@ export const createRecipeSlide = <P extends BaseSlideProps>(
 ) => {
   const Slide = (props: P) => {
     const { ref, inView } = useInViewOnce({ rootMargin: "400px" });
-    const { title, items, isLoading, error, requiresMeta, metaName, disabled } =
-      useSlideData({ inView, props });
+    const {
+      title,
+      items,
+      isLoading,
+      error,
+      requiresMeta,
+      metaName,
+      disabled,
+      emphasizeTime,
+    } = useSlideData({ inView, props });
 
     if (disabled) return null;
 
@@ -68,6 +77,7 @@ export const createRecipeSlide = <P extends BaseSlideProps>(
           isLoading={false}
           error={error}
           locale={props.locale}
+          emphasizeTime={emphasizeTime}
         />
       </div>
     );

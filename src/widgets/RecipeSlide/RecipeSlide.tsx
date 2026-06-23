@@ -8,6 +8,7 @@ import { LocalizedLink } from "@/shared/i18n";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import BudgetTierBadge from "@/shared/ui/badge/BudgetTierBadge";
 import RemixBadge from "@/shared/ui/badge/RemixBadge";
+import TimeBadge from "@/shared/ui/badge/TimeBadge";
 import {
   Carousel,
   CarouselContent,
@@ -30,6 +31,7 @@ type RecipeSlideProps = {
   isLoading: boolean;
   error: Error | null;
   locale?: "ko" | "ja" | "en";
+  emphasizeTime?: boolean;
 };
 
 const getRecipeRightBadge = (
@@ -80,6 +82,7 @@ const RecipeSlide = ({
   isLoading,
   error,
   locale,
+  emphasizeTime,
 }: RecipeSlideProps) => {
   const t = useSearchDiscoveryDict();
 
@@ -109,7 +112,13 @@ const RecipeSlide = ({
                 prefetch
                 hideCookingTime
                 locale={locale}
-                infoBadge={getRecipeRightBadge(item, t.remixBadge)}
+                infoBadge={
+                  emphasizeTime && item.cookingTime != null ? (
+                    <TimeBadge minutes={item.cookingTime} />
+                  ) : (
+                    getRecipeRightBadge(item, t.remixBadge)
+                  )
+                }
                 saveBadge={
                   <RecipeSaveButton
                     recipeId={item.id}
@@ -129,7 +138,7 @@ const RecipeSlide = ({
   };
 
   return (
-    <div className="mt-2 w-full">
+    <div className="mt-6 w-full">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-ink text-lg font-bold">{title}</h2>
