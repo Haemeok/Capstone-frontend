@@ -2,6 +2,7 @@
 import type { Metadata, Viewport } from "next";
 
 import { AdSenseScript } from "@/shared/adsense";
+import { AppContextBridge } from "@/shared/lib/analytics";
 import { AppWebViewDetector } from "@/shared/lib/bridge";
 
 import GlobalAppUpdateDrawer from "@/widgets/AppUpdateDrawer";
@@ -97,6 +98,7 @@ export default async function RootLayout({
           <AdSenseScript />
         </AppProviders>
         <GoogleAnalytics />
+        <AppContextBridge />
       </body>
     </html>
   );
