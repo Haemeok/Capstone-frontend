@@ -5,24 +5,41 @@ description: "Project-local override. You MUST use this before any creative work
 
 # Brainstorming Ideas Into Designs
 
-> **Project-local override of `superpowers:brainstorming`.** Identical to the plugin version except: the terminal handoff is **vertical-slicing** (NOT writing-plans, and NOT designing-tests directly), and the spec must include an **Acceptance Criteria** section. vertical-slicing cuts the design into behavior threads (each with its own per-slice AC + non-goals + glossary) and then itself hands off to designing-tests-from-requirements. If the plugin version updates and this drifts, refresh the rest from the plugin but always keep the reroute and the Acceptance Criteria requirement.
+> **Project-local override of `superpowers:brainstorming`.** Differs from the plugin version in three project-local additions: (1) a **Step 0 triage** that routes data/content-only changes to a fast-path skipping the slice/test/plan chain; (2) the full-process terminal handoff is **vertical-slicing** (NOT writing-plans, and NOT designing-tests directly); (3) the full-process spec must include an **Acceptance Criteria** section. vertical-slicing cuts the design into behavior threads (each with its own per-slice AC + non-goals + glossary) and then itself hands off to designing-tests-from-requirements. If the plugin version updates and this drifts, refresh the rest from the plugin but always keep the triage fast-path, the reroute, and the Acceptance Criteria requirement.
 
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
 
 Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
 
 <HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY change regardless of perceived simplicity. (The design can be one sentence for a trivial change — but present it and get approval. What scales with complexity is the machinery *after* approval, governed by Step 0 below.)
 </HARD-GATE>
 
-## Anti-Pattern: "This Is Too Simple To Need A Design"
+## Step 0: Triage — full process or fast-path?
 
-Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+Not every change needs slicing and a test-design matrix. Before anything else, classify the change.
+
+**Fast-path (data/content-only change).** ALL of these must hold:
+
+- The change is _only_ values, not behavior: UI/marketing copy, i18n message strings, metadata text, static asset references (image/badge swaps), styling tokens, or pure-data constants.
+- No new or changed control flow, data flow, component logic, API/DTO contract, route, or persisted state.
+- Correctness is fully covered by `tsc` + the existing test suite — there is no new behavior a test would need to guard.
+
+If ALL hold: confirm intent, present a short design (a few sentences), get the user's approval (the HARD-GATE still applies), then **go straight to implementation**. Skip vertical-slicing, designing-tests, writing-plans, and the spec doc. Verify with `tsc` + the existing tests. Do NOT author new tests for a data-only change.
+
+**Full process (everything else).** Any new behavior, logic, contract, route, or state change — or any genuine doubt, or a "data-only" change that turns out to touch logic partway through — takes the full flow below (design → spec → vertical-slicing → test-design → plan). When unsure, choose the full process.
+
+Examples — fast-path: "change 5만+ to 10만+", "swap the download badge per locale", "reword this CTA", "add a localized testimonial". Full process: "add a country filter", "gate this behind a flag", "change what the API returns".
+
+## Anti-Pattern: "This Is Too Simple To Even Confirm"
+
+Every change still gets a design and your approval — even a fast-path one. The design can be a single sentence for a copy tweak, but presenting it catches the misread requirement before code, which is where unexamined assumptions cause the most wasted work. What scales with complexity is everything _after_ approval (slicing, test-design, a written plan): a data-only change skips those via Step 0; a behavior change does not. The trap is skipping the confirmation, not skipping the chain — confirm first, then pick the path.
 
 ## Checklist
 
-You MUST create a task for each of these items and complete them in order:
+You MUST create a task for each of these items and complete them in order. **Steps 6–9 are full-process only** — a fast-path change (Step 0) does 1–5, then goes straight to implementation.
 
+0. **Triage** — fast-path or full process? (see Step 0 above)
 1. **Explore project context** — check files, docs, recent commits
 2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
 3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
@@ -37,6 +54,13 @@ You MUST create a task for each of these items and complete them in order:
 
 ```dot
 digraph brainstorming {
+    "Triage: data-only change?" [shape=diamond];
+    "Present short design + approval" [shape=box];
+    "Implement directly\n(tsc + existing tests)" [shape=doublecircle];
+    "Triage: data-only change?" -> "Present short design + approval" [label="fast-path"];
+    "Present short design + approval" -> "Implement directly\n(tsc + existing tests)";
+    "Triage: data-only change?" -> "Explore project context" [label="full process"];
+
     "Explore project context" [shape=box];
     "Visual questions ahead?" [shape=diamond];
     "Offer Visual Companion\n(own message, no other content)" [shape=box];
@@ -65,7 +89,9 @@ digraph brainstorming {
 }
 ```
 
-**The terminal state is invoking vertical-slicing.** Do NOT invoke designing-tests-from-requirements directly, and do NOT invoke writing-plans, frontend-design, mcp-builder, or any other implementation skill directly. vertical-slicing is the next step — it cuts the design into slices (each with AC + non-goals + glossary), then hands off to designing-tests-from-requirements, which builds the test matrix and hands off to writing-plans.
+**For a full-process change, the terminal state is invoking vertical-slicing.** Do NOT invoke designing-tests-from-requirements directly, and do NOT invoke writing-plans, frontend-design, mcp-builder, or any other implementation skill directly. vertical-slicing is the next step — it cuts the design into slices (each with AC + non-goals + glossary), then hands off to designing-tests-from-requirements, which builds the test matrix and hands off to writing-plans.
+
+**For a fast-path change (Step 0), the terminal state is implementation.** After the user approves the short design, implement directly and verify with `tsc` + existing tests. Do not invoke vertical-slicing or any planning skill.
 
 ## The Process
 
@@ -152,6 +178,7 @@ Wait for the user's response. If they request changes, make them and re-run the 
 A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
 
 **Offering the companion:** When you anticipate that upcoming questions will involve visual content (mockups, layouts, diagrams), offer it once for consent:
+
 > "Some of what we're working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? (Requires opening a local URL)"
 
 **This offer MUST be its own message.** Do not combine it with clarifying questions, context summaries, or any other content. The message should contain ONLY the offer above and nothing else. Wait for the user's response before continuing. If they decline, proceed with text-only brainstorming.
