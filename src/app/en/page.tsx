@@ -18,7 +18,12 @@ import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 import { selectHomeBannerSlides } from "@/widgets/HomeBannerCarousel/selectSlides";
+import CategoryPopularSlide from "@/widgets/RecipeSlide/CategoryPopularSlide";
+import CountryPopularSlide from "@/widgets/RecipeSlide/CountryPopularSlide";
+import QuickPopularSlide from "@/widgets/RecipeSlide/QuickPopularSlide";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
+import SeasonalPopularSlide from "@/widgets/RecipeSlide/SeasonalPopularSlide";
+import YoutubeVerifiedSlide from "@/widgets/RecipeSlide/YoutubeVerifiedSlide";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
 export const metadata = buildHomeMetadata("en");
@@ -96,6 +101,16 @@ const HomePage = async () => {
             staticRecipes={staticBudgetRecipes.content}
             locale="en"
           />
+
+          <SeasonalPopularSlide locale="en" />
+
+          <CountryPopularSlide locale="en" />
+
+          <QuickPopularSlide locale="en" />
+
+          <CategoryPopularSlide locale="en" />
+
+          <YoutubeVerifiedSlide locale="en" />
         </div>
       </Container>
       <DesktopFooter />

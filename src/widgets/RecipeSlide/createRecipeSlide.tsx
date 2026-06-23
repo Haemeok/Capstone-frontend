@@ -5,6 +5,7 @@ import type { Locale } from "@/shared/i18n";
 
 import { StaticDetailedRecipeGridItem } from "@/entities/recipe";
 
+import { RecipeSlideLoading } from "./RecipeSlide";
 import RecipeSlideSection from "./RecipeSlideSection";
 import { shouldHideRecipeSlide } from "./recipeSlideVisibility";
 
@@ -35,8 +36,16 @@ export const createRecipeSlide = <P extends BaseSlideProps>(
 
     if (disabled) return null;
 
-    if (!inView || isLoading) {
+    if (!inView) {
       return <div ref={ref} className="h-[260px] w-full" aria-hidden />;
+    }
+
+    if (isLoading) {
+      return (
+        <div ref={ref} className="h-[260px] w-full overflow-hidden pt-6">
+          <RecipeSlideLoading />
+        </div>
+      );
     }
 
     if (

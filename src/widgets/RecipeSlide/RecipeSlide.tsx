@@ -45,7 +45,7 @@ const getRecipeRightBadge = (
   return null;
 };
 
-const RecipeSlideLoading = () => (
+export const RecipeSlideLoading = () => (
   <div className="flex w-full gap-3 overflow-x-auto">
     {Array.from({ length: 5 }).map((_, index) => (
       <div key={index} className="flex-shrink-0">
