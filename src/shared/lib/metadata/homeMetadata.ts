@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
 import { TOTAL_RECIPE_COUNT_LABEL } from "@/shared/config/constants/siteStats";
-import { getDictionary, type Locale } from "@/shared/i18n";
+import {
+  buildHreflangAlternates,
+  getDictionary,
+  type Locale,
+} from "@/shared/i18n";
 
 import { SEO_CONSTANTS } from "./constants";
 import { alternateLocales, localizedSiteName, OG_LOCALE } from "./localized";
@@ -37,7 +41,10 @@ export const buildHomeMetadata = (locale: Locale): Metadata => {
         },
       },
     }),
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: buildHreflangAlternates(""),
+    },
     openGraph: {
       title: locale === "ko" ? "레시피오" : localizedSiteName(locale),
       description,
