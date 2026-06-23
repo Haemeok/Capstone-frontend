@@ -4,6 +4,8 @@
 
 라이브러리/API 문서가 필요하면 **Context7 MCP**를 먼저 쓸 것 (사용자가 묻지 않아도).
 
+**백엔드 API 계약**(엔드포인트·DTO 필드명·enum·에러코드)은 추정 금지, OpenAPI로 검증: `https://api.recipio.kr/v3/api-docs` (JSON, 에이전트가 직접 fetch/grep) · swagger-ui `https://api.recipio.kr/swagger-ui/index.html`. 상세·조회 스니펫은 `docs/guides/api-and-realtime.md`.
+
 ---
 
 ## 코드 작성 자가체크 (always-on)
