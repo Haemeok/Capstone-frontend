@@ -1,60 +1,30 @@
 "use client";
 
-import { useInViewOnce } from "@/shared/hooks/useInViewOnce";
 import { format } from "@/shared/i18n";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 
+import { createRecipeSlide } from "./createRecipeSlide";
 import { useSeasonalPopularQuery } from "./hooks";
-import RecipeSlideSection from "./RecipeSlideSection";
-import { shouldHideRecipeSlide } from "./recipeSlideVisibility";
 
-type SeasonalPopularSlideProps = {
-  locale?: "ko" | "ja" | "en";
-};
-
-const SeasonalPopularSlide = ({ locale }: SeasonalPopularSlideProps) => {
-  const t = useSearchDiscoveryDict();
-  const { ref, inView } = useInViewOnce({ rootMargin: "400px" });
-
-  const { data, isLoading, error } = useSeasonalPopularQuery({
-    enabled: inView,
-    locale,
-  });
-
-  const ingredientName = data?.seasonalIngredientName ?? null;
-  const items = data?.content ?? [];
-
-  if (!inView) {
-    return <div ref={ref} className="h-[260px] w-full" aria-hidden />;
-  }
-
-  if (isLoading) return null;
-
-  if (
-    shouldHideRecipeSlide({
+const SeasonalPopularSlide = createRecipeSlide<{ locale?: "ko" | "ja" | "en" }>(
+  ({ inView, props }) => {
+    const t = useSearchDiscoveryDict();
+    const { data, isLoading, error } = useSeasonalPopularQuery({
+      enabled: inView,
+      locale: props.locale,
+    });
+    const ingredientName = data?.seasonalIngredientName ?? null;
+    return {
+      title: format(t.seasonalPopularTitle, {
+        ingredient: ingredientName ?? "",
+      }),
+      items: data?.content ?? [],
       isLoading,
-      hasError: !!error,
-      recipeCount: items.length,
+      error,
       requiresMeta: true,
       metaName: ingredientName,
-    })
-  ) {
-    return null;
+    };
   }
-
-  return (
-    <div ref={ref} className="w-full">
-      <RecipeSlideSection
-        title={format(t.seasonalPopularTitle, {
-          ingredient: ingredientName ?? "",
-        })}
-        recipes={items}
-        isLoading={isLoading}
-        error={error as Error | null}
-        locale={locale}
-      />
-    </div>
-  );
-};
+);
 
 export default SeasonalPopularSlide;
