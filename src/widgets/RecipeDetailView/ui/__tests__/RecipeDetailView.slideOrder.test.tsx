@@ -16,11 +16,19 @@ jest.mock("../LazyRemixesSlide", () => ({
   __esModule: true,
   default: () => <div data-testid="slide-remixes" />,
 }));
+jest.mock("../LazyCookedPopularSlide", () => ({
+  __esModule: true,
+  default: () => <div data-testid="slide-cooked-popular" />,
+}));
+jest.mock("../LazyRecipeDetailContentSection", () => ({
+  __esModule: true,
+  default: () => <div data-testid="slide-content-section" />,
+}));
 
 import { RecipeDetailBottomSlides } from "../RecipeDetailBottomSlides";
 
 describe("상세 하단 슬라이드 순서 (T-F1)", () => {
-  it("추천 → 같은재료 → 제목키워드 → 리믹스 순으로 렌더한다", () => {
+  it("추천 → 같은재료 → 제목키워드 → 리믹스 → 유저인기 → 콘텐츠 순으로 렌더한다", () => {
     render(<RecipeDetailBottomSlides recipeId="base1" tags={[]} locale="ko" />);
     const order = screen
       .getAllByTestId(/^slide-/)
@@ -30,6 +38,8 @@ describe("상세 하단 슬라이드 순서 (T-F1)", () => {
       "slide-same-ingredient",
       "slide-title-keyword",
       "slide-remixes",
+      "slide-cooked-popular",
+      "slide-content-section",
     ]);
   });
 });
