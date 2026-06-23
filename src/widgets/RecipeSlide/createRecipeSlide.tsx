@@ -12,7 +12,7 @@ export type SlideData = {
   title: string;
   items: StaticDetailedRecipeGridItem[];
   isLoading: boolean;
-  error: unknown;
+  error: Error | null;
   requiresMeta?: boolean;
   metaName?: string | null;
   disabled?: boolean;
@@ -57,7 +57,7 @@ export const createRecipeSlide = <P extends BaseSlideProps>(
           title={title}
           recipes={items}
           isLoading={false}
-          error={error as Error | null}
+          error={error}
           locale={props.locale}
         />
       </div>
