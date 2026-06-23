@@ -1265,6 +1265,9 @@ export type RecipeActionsDict = {
   remixEncourage: string;
   shareTitle: string;
   shareText: string;
+  savedToBook: string;
+  savedToDefault: string;
+  changeBookAction: string;
 };
 
 export type UiCommonDict = {

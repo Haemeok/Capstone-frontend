@@ -10,4 +10,7 @@ export const recipeActions: RecipeActionsDict = {
   remixEncourage: "이 레시피를 내 스타일로 편집해보세요!",
   shareTitle: "{title} - 레시피오",
   shareText: "{title} 레시피를 확인해보세요!",
+  savedToBook: "{bookName}에 저장되었습니다.",
+  savedToDefault: '"저장된 레시피"에 보관되었습니다.',
+  changeBookAction: "변경",
 };

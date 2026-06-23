@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { format, useRecipeActionsDict } from "@/shared/i18n";
+
 import { ChangeBookSheet } from "@/features/recipe-book-change";
 
 import { useToastStore } from "@/widgets/Toast";
@@ -10,18 +12,19 @@ type NotifyTarget = { id: string; name: string } | undefined;
 
 export const useSaveToastWithChange = (recipeId: string) => {
   const { addToast } = useToastStore();
+  const t = useRecipeActionsDict();
   const [changeOpen, setChangeOpen] = useState(false);
   const [currentBookId, setCurrentBookId] = useState<string | undefined>();
 
   const showSaveToast = (bookName: string | undefined) => {
     addToast({
       message: bookName
-        ? `${bookName}에 저장되었습니다.`
-        : `"저장된 레시피"에 보관되었습니다.`,
+        ? format(t.savedToBook, { bookName })
+        : t.savedToDefault,
       variant: "action",
       position: "bottom",
       action: {
-        label: "변경",
+        label: t.changeBookAction,
         onClick: () => setChangeOpen(true),
       },
     });
