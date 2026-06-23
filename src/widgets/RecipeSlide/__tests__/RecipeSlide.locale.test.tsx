@@ -8,13 +8,10 @@ const SAMPLE = {
   authorId: "u1",
   profileImage: "https://example.com/p.jpg",
   createdAt: "2026-01-01T00:00:00Z",
-  favoriteByCurrentUser: false,
-  source: "USER",
-  creatorCountryTag: "JP",
-  cookingTime: 10,
   avgRating: 4.5,
   ratingCount: 3,
-} as never;
+  tags: [],
+};
 
 jest.mock("next/link", () => ({
   __esModule: true,
