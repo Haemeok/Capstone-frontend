@@ -65,9 +65,9 @@ export const ReportListView = ({
               servingRatio
             );
             const amount =
-              converted.quantity !== "약간"
+              converted.quantity !== "약간" // i18n-ignore
                 ? `${converted.quantity}${converted.unit}`
-                : "약간";
+                : "약간"; // i18n-ignore
 
             return (
               <button

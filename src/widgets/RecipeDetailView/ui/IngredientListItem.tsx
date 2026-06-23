@@ -45,6 +45,7 @@ export const IngredientListItem = ({
   const quantityCell = (
     <p className="text-left whitespace-nowrap">
       {displayQuantity}
+      {/* i18n-ignore */}
       {displayQuantity !== "약간" && displayUnit}
     </p>
   );
