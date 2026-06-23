@@ -4,6 +4,7 @@ export { AnchorAdSlot } from "./AnchorAdSlot";
 export { BottomAnchorAdSlot } from "./BottomAnchorAdSlot";
 export { HomeAnchorAdSlot } from "./HomeAnchorAdSlot";
 export { HomeHeaderAnchorAdSlot } from "./HomeHeaderAnchorAdSlot";
+export { HomeSlideFeedAdSlot } from "./HomeSlideFeedAdSlot";
 export { InArticleAdSlot } from "./InArticleAdSlot";
 export { InFeedAdSlot } from "./InFeedAdSlot";
 export type { FeedItem } from "./lib/insertAdsIntoFeed";

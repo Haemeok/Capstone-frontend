@@ -1,6 +1,10 @@
 import { Suspense } from "react";
 
-import { HomeAnchorAdSlot, HomeHeaderAnchorAdSlot } from "@/shared/adsense";
+import {
+  HomeAnchorAdSlot,
+  HomeHeaderAnchorAdSlot,
+  HomeSlideFeedAdSlot,
+} from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
 import { buildHomeMetadata } from "@/shared/lib/metadata";
 import {
@@ -84,21 +88,27 @@ const HomePage = async () => {
             locale="ko"
           />
 
+          <YoutubeVerifiedSlide locale="ko" />
+
+          <HomeSlideFeedAdSlot className="my-2" index={0} />
+
+          <SeasonalPopularSlide locale="ko" />
+
+          <CountryPopularSlide locale="ko" />
+
+          <HomeSlideFeedAdSlot className="my-2" index={1} />
+
+          <QuickPopularSlide locale="ko" />
+
           <RecipeSlideWithErrorBoundary
             title={dict.home.budgetSectionTitle}
             staticRecipes={staticBudgetRecipes.content}
             locale="ko"
           />
 
-          <SeasonalPopularSlide locale="ko" />
-
-          <CountryPopularSlide locale="ko" />
-
-          <QuickPopularSlide locale="ko" />
+          <HomeSlideFeedAdSlot className="my-2" index={2} />
 
           <CategoryPopularSlide locale="ko" />
-
-          <YoutubeVerifiedSlide locale="ko" />
         </div>
       </Container>
       <DesktopFooter />

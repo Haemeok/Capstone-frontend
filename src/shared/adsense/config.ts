@@ -29,6 +29,9 @@ export const AD_SLOT_IDS = {
   homeAnchor: process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_ANCHOR || "",
   homeHeaderAnchor:
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_HEADER_ANCHOR || "",
+  homeSlideFeed: parseSlotList(
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_SLIDE_FEED
+  ),
   youtubeAnchor: process.env.NEXT_PUBLIC_ADSENSE_SLOT_YOUTUBE_ANCHOR || "",
 } as const;
 
@@ -41,6 +44,7 @@ export const AD_HEIGHT = {
   homeHeaderAnchor: 50,
   youtubeAnchor: 50,
   bottomAnchor: 70,
+  homeSlideFeed: 80,
 } as const;
 
 export const AD_MIN_HEIGHT = {
