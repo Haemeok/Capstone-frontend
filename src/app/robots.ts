@@ -75,11 +75,14 @@ const ALWAYS_PRIVATE = ["/api/", "/_next/", "/static/"];
 const PRIVATE_PATH_SUFFIXES = [
   "/login",
   "/login/error",
-  "/users/edit",
+  "/users/",
   "/recipes/new",
   "/recipes/*/edit",
   "/recipes/*/rate",
   "/recipes/*/comments",
+  "/recipes/*/remix",
+  "/recipes/my-fridge",
+  "/recipe-books",
   "/notifications",
   "/calendar/*",
   "/ingredients/new",
@@ -96,35 +99,34 @@ const PRIVATE_PATHS = [
   ),
 ];
 
+/** 비공개 prefix 하위지만 크롤 허용해야 하는 공개 경로 (longest-match로 disallow보다 우선) */
+const PUBLIC_PATH_SUFFIXES = ["/recipes/new/youtube"];
+
+const PUBLIC_ALLOW = [
+  "/",
+  ...LOCALE_PREFIXES.flatMap((prefix) =>
+    PUBLIC_PATH_SUFFIXES.map((suffix) => `${prefix}${suffix}`)
+  ),
+];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      // 1. 기본 규칙 — 알려지지 않은 봇 포함 전체 허용 (비공개 경로만 차단)
       {
         userAgent: "*",
-        allow: "/",
+        allow: PUBLIC_ALLOW,
         disallow: PRIVATE_PATHS,
       },
-      // 2. 검색엔진 크롤러 — 최우선 허용 (딜레이 없음)
       {
-        userAgent: "Googlebot",
-        allow: "/",
+        userAgent: ["Googlebot", "Yeti", "Bingbot"],
+        allow: PUBLIC_ALLOW,
+        disallow: PRIVATE_PATHS,
       },
-      {
-        userAgent: "Yeti",
-        allow: "/",
-      },
-      {
-        userAgent: "Bingbot",
-        allow: "/",
-      },
-      // 3. AI 검색/인용 봇 — 허용 (AI 답변에 recipio.kr 인용 유도)
       {
         userAgent: AI_SEARCH_BOTS,
-        allow: "/",
+        allow: PUBLIC_ALLOW,
         disallow: PRIVATE_PATHS,
       },
-      // 4. AI 학습 크롤러 — 완전 차단 (콘텐츠 가져가기만 하고 트래픽 안 보내줌)
       {
         userAgent: AI_TRAINING_BOTS,
         disallow: "/",
@@ -133,6 +135,8 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: [
       absoluteUrl("sitemap/0.xml"),
       absoluteUrl("recipes/sitemap/0.xml"),
+      absoluteUrl("ingredients/sitemap/0.xml"),
+      absoluteUrl("curation/sitemap/0.xml"),
       absoluteUrl("ja/recipes/sitemap/0.xml"),
       absoluteUrl("ja/ingredients/sitemap/0.xml"),
       absoluteUrl("en/recipes/sitemap/0.xml"),
