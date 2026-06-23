@@ -3,6 +3,7 @@ declare global {
     ReactNativeWebView?: {
       postMessage: (message: string) => void;
     };
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -25,7 +26,8 @@ export type BridgeMessage<T = unknown> = {
 export type AppToWebMessageType =
   | "NOTIFICATION_STATUS"
   | "AUTH_DIAG"
-  | "KEYBOARD_STATE";
+  | "KEYBOARD_STATE"
+  | "APP_CONTEXT";
 
 export type AuthDiagBridgePayload = {
   phase: string;
@@ -47,10 +49,22 @@ export type KeyboardStatePayload = {
   duration: number;
 };
 
+export type AppContextPayload = {
+  v: 1;
+  isNativeApp: true;
+  appVersion: string;
+  platform: "ios" | "android";
+  osVersion: string;
+  deviceModel: string;
+  pushPermission: "granted" | "denied" | "not_determined";
+  locale: string;
+};
+
 export type AppToWebMessage =
   | { type: "NOTIFICATION_STATUS"; payload: { status: NotificationStatus } }
   | { type: "AUTH_DIAG"; payload: AuthDiagBridgePayload }
-  | { type: "KEYBOARD_STATE"; payload: KeyboardStatePayload };
+  | { type: "KEYBOARD_STATE"; payload: KeyboardStatePayload }
+  | { type: "APP_CONTEXT"; payload: AppContextPayload };
 
 // auth state
 export type AuthStatePayload = {

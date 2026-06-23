@@ -22,6 +22,7 @@ export { requestAppReview } from "./review";
 // types
 export type { SharePayload } from "./share";
 export type {
+  AppContextPayload,
   AppToWebMessage,
   AuthDiagBridgePayload,
   BridgeMessage,
