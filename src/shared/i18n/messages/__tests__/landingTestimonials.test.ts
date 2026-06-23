@@ -9,9 +9,9 @@ describe("landing testimonials dict data", () => {
     }
   });
 
-  it("ko items 길이는 정확히 15다 (T-21)", () => {
+  it("ko items 길이는 정확히 13다 (T-21)", () => {
     const items = getDictionary("ko").landing.testimonials.items;
-    expect(items.length).toBe(15);
+    expect(items.length).toBe(13);
   });
 
   it("ja/en items에 한글·원·성시경이 없다 (T-22)", () => {
