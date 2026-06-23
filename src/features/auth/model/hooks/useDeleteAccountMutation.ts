@@ -1,6 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { useChromeLocale, useCommonDict } from "@/shared/i18n";
+import {
+  clearStoredLocale,
+  useChromeLocale,
+  useCommonDict,
+} from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { queryClient } from "@/shared/lib/queryClient";
 
@@ -35,6 +39,7 @@ const useDeleteAccountMutation = () => {
       queryClient.cancelQueries();
       queryClient.clear();
       logoutAction();
+      clearStoredLocale();
 
       addToast({
         message: t.toast.deleteAccount.success,

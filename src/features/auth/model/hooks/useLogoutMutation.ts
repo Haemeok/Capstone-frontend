@@ -1,6 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { useChromeLocale, useCommonDict } from "@/shared/i18n";
+import {
+  clearStoredLocale,
+  useChromeLocale,
+  useCommonDict,
+} from "@/shared/i18n";
 import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
 import { queryClient } from "@/shared/lib/queryClient";
 
@@ -35,6 +39,7 @@ const useLogoutMutation = () => {
     onSuccess: () => {
       useUserStore.setState({ isLoggingOut: false });
       logoutAction();
+      clearStoredLocale();
       notifyAuthState("logout");
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 

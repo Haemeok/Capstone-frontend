@@ -25,6 +25,11 @@ export const setLocaleCookie = (locale: Locale): void => {
   );
 };
 
+export const clearLocaleCookie = (): void => {
+  if (typeof document === "undefined") return;
+  document.cookie = `${LOCALE_COOKIE}=; path=/; max-age=0; samesite=lax`;
+};
+
 export const getLocaleCookie = (): Locale | null => {
   if (typeof document === "undefined") return null;
   const match = document.cookie

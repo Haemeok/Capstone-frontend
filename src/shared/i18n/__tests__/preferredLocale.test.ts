@@ -1,7 +1,11 @@
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
 
-import { LOCALE_COOKIE } from "../localeCookie";
-import { getStoredLocale, setStoredLocale } from "../preferredLocale";
+import { getLocaleCookie, LOCALE_COOKIE } from "../localeCookie";
+import {
+  clearStoredLocale,
+  getStoredLocale,
+  setStoredLocale,
+} from "../preferredLocale";
 
 describe("preferredLocale (T-06)", () => {
   beforeEach(() => localStorage.clear());
@@ -33,5 +37,14 @@ describe("preferredLocale (T-06)", () => {
   it("setStoredLocale also writes the preferred_locale cookie", () => {
     setStoredLocale("en");
     expect(document.cookie).toContain(`${LOCALE_COOKIE}=en`);
+  });
+
+  it("clearStoredLocale wipes both localStorage and the cookie so the preference cannot resurrect", () => {
+    setStoredLocale("ja");
+
+    clearStoredLocale();
+
+    expect(getStoredLocale()).toBeNull();
+    expect(getLocaleCookie()).toBeNull();
   });
 });

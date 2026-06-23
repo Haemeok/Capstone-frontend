@@ -1,6 +1,6 @@
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
 
-import { setLocaleCookie } from "./localeCookie";
+import { clearLocaleCookie, setLocaleCookie } from "./localeCookie";
 import { type Locale, LOCALES } from "./types";
 
 const isLocale = (value: string | null): value is Locale =>
@@ -23,5 +23,14 @@ export const setStoredLocale = (locale: Locale): void => {
     setLocaleCookie(locale);
   } catch {
     return;
+  }
+};
+
+export const clearStoredLocale = (): void => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(STORAGE_KEYS.PREFERRED_LOCALE);
+  } finally {
+    clearLocaleCookie();
   }
 };

@@ -18,7 +18,11 @@ export { localizedHref, stripLocale } from "./localizedHref";
 export { LocalizedLink } from "./LocalizedLink";
 export { notFoundMessages } from "./notFoundMessages";
 export { notificationsMessages } from "./notificationsMessages";
-export { getStoredLocale, setStoredLocale } from "./preferredLocale";
+export {
+  clearStoredLocale,
+  getStoredLocale,
+  setStoredLocale,
+} from "./preferredLocale";
 export { ratingsMessages } from "./ratingsMessages";
 export { recipeActionsMessages } from "./recipeActionsMessages";
 export { recipeFormMessages } from "./recipeFormMessages";
