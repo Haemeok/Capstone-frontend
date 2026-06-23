@@ -1,12 +1,18 @@
 "use client";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
-import { LocalizedLink, useRecipeCreateDict } from "@/shared/i18n";
+import {
+  LocalizedLink,
+  useRecipeCreateDict,
+  useRecipeCreateLocale,
+} from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 import PrevButton from "@/shared/ui/PrevButton";
 
 export const CreationModeSelector = () => {
   const t = useRecipeCreateDict();
+  const locale = useRecipeCreateLocale();
+  const wrapClass = locale === "ko" ? "break-keep" : "break-words";
 
   return (
     <div className="relative flex h-full items-center justify-center p-6">
@@ -14,10 +20,14 @@ export const CreationModeSelector = () => {
         <PrevButton size={24} className="text-ink-sub p-2" />
       </div>
       <div className="w-full max-w-4xl">
-        <h1 className="text-ink mb-4 text-center text-3xl font-bold text-pretty break-keep">
+        <h1
+          className={`text-ink mb-4 text-center text-3xl font-bold text-pretty ${wrapClass}`}
+        >
           {t.hubTitle}
         </h1>
-        <p className="text-ink-muted mb-12 text-center text-pretty break-keep">
+        <p
+          className={`text-ink-muted mb-12 text-center text-pretty ${wrapClass}`}
+        >
           {t.hubSubtitle}
         </p>
 
@@ -36,10 +46,12 @@ export const CreationModeSelector = () => {
                 />
               </div>
               <div className="flex flex-col items-center gap-4">
-                <h2 className="text-ink text-lg font-bold md:text-2xl">
+                <h2
+                  className={`text-ink text-lg font-bold text-pretty md:text-2xl ${wrapClass}`}
+                >
                   {t.manualCardTitle}
                 </h2>
-                <p className="text-ink-muted text-pretty break-keep">
+                <p className={`text-ink-muted text-pretty ${wrapClass}`}>
                   {t.manualCardBody}
                 </p>
               </div>
@@ -60,10 +72,12 @@ export const CreationModeSelector = () => {
                 />
               </div>
               <div className="flex flex-col items-center gap-4">
-                <h2 className="text-ink text-lg font-bold text-pretty break-keep md:text-2xl">
+                <h2
+                  className={`text-ink text-lg font-bold text-pretty md:text-2xl ${wrapClass}`}
+                >
                   {t.youtubeCardTitle}
                 </h2>
-                <p className="text-ink-muted text-pretty break-keep">
+                <p className={`text-ink-muted text-pretty ${wrapClass}`}>
                   {t.youtubeCardBody}
                 </p>
               </div>

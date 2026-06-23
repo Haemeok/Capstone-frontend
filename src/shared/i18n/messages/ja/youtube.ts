@@ -43,4 +43,11 @@ export const youtube: YoutubeDict = {
     "本日のYouTubeレシピ抽出の回数をすべて使い切りました。",
   sectionAnalyzingToast: "動画を解析しています。少々お待ちください。",
   sectionExtractionFailed: "抽出に失敗しました。",
+  errorUnsupportedUrl: "YouTubeのリンクのみ取り込めます。",
+  errorRateLimitSoon: "しばらくしてからもう一度お試しください。",
+  errorRateLimitHours: "{hours}時間後にもう一度お試しください。",
+  errorRateLimitTomorrow: "明日もう一度お試しください。",
+  errorAiGenerationFailed:
+    "一時的なエラーが発生しました。しばらくしてからもう一度お試しください。",
+  errorUnknown: "エラーが発生しました。",
 };

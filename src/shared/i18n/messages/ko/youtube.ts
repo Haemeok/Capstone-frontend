@@ -41,4 +41,10 @@ export const youtube: YoutubeDict = {
   sectionQuotaExhausted: "오늘 유튜브 레시피 추출 횟수를 모두 사용했어요.",
   sectionAnalyzingToast: "영상을 분석 중입니다. 잠시만 기다려주세요.",
   sectionExtractionFailed: "추출에 실패했습니다.",
+  errorUnsupportedUrl: "유튜브 링크만 가능해요",
+  errorRateLimitSoon: "잠시 후 다시 시도해주세요",
+  errorRateLimitHours: "{hours}시간 후 다시 시도해주세요",
+  errorRateLimitTomorrow: "내일 다시 시도해주세요",
+  errorAiGenerationFailed: "일시적 오류입니다. 잠시 후 다시 시도해 주세요",
+  errorUnknown: "알 수 없는 오류가 발생했습니다",
 };

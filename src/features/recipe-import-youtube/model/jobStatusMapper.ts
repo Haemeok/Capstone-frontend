@@ -1,3 +1,5 @@
+import type { YoutubeDict } from "@/shared/i18n";
+
 import { mapJobFailureMessage } from "../lib/errors";
 import type { JobStatusResponse } from "./types";
 
@@ -7,7 +9,8 @@ export type JobStateUpdate =
   | { state: "polling"; progress: number };
 
 export const fromJobStatusResponse = (
-  raw: JobStatusResponse
+  raw: JobStatusResponse,
+  dict: YoutubeDict
 ): JobStateUpdate => {
   if (raw.resultRecipeId) {
     return { state: "completed", resultRecipeId: raw.resultRecipeId };
@@ -21,7 +24,7 @@ export const fromJobStatusResponse = (
       return {
         state: "failed",
         code: raw.code,
-        message: mapJobFailureMessage(raw),
+        message: mapJobFailureMessage(raw, dict),
       };
 
     case "PENDING":

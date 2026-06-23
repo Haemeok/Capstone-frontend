@@ -1,4 +1,5 @@
-import { ApiError, ApiErrorResponse, getErrorData } from "@/shared/api/errors";
+import type { YoutubeDict } from "@/shared/i18n";
+import { format } from "@/shared/i18n/format";
 
 export const YOUTUBE_IMPORT_ERROR_CODES = {
   UNSUPPORTED_URL: 907,
@@ -7,77 +8,40 @@ export const YOUTUBE_IMPORT_ERROR_CODES = {
   AI_GENERATION_FAILED: 701,
 } as const;
 
-type MessageMapper = string | ((data: ApiErrorResponse) => string);
+const HOUR_MS = 1000 * 60 * 60;
 
-const ERROR_MESSAGES: Record<number, MessageMapper> = {
-  [YOUTUBE_IMPORT_ERROR_CODES.UNSUPPORTED_URL]: "유튜브 링크만 가능해요",
-  [YOUTUBE_IMPORT_ERROR_CODES.NOT_RECIPE_VIDEO]: (data) => data.message,
-  [YOUTUBE_IMPORT_ERROR_CODES.RATE_LIMIT_EXCEEDED]: (data) => {
-    if (data.retryAfter) {
-      const hours = Math.ceil(data.retryAfter / (1000 * 60 * 60));
-      if (hours <= 1) return "잠시 후 다시 시도해주세요";
-      if (hours < 24) return `${hours}시간 후 다시 시도해주세요`;
-    }
-    return "내일 다시 시도해주세요";
-  },
-  [YOUTUBE_IMPORT_ERROR_CODES.AI_GENERATION_FAILED]:
-    "일시적 오류입니다. 잠시 후 다시 시도해 주세요",
-};
-
-const DEFAULT_ERROR_MESSAGE = "알 수 없는 오류가 발생했습니다";
-
-export type YoutubeImportError = {
-  message: string;
-  code?: number;
-  retryAfter?: number;
-};
-
-export const toYoutubeImportError = (error: unknown): YoutubeImportError => {
-  // Case 1: ApiError with structured data
-  if (ApiError.isApiError(error)) {
-    const errorData = getErrorData(error);
-
-    if (errorData) {
-      const code =
-        typeof errorData.code === "string"
-          ? parseInt(errorData.code, 10)
-          : errorData.code;
-
-      const mapper = ERROR_MESSAGES[code];
-      const message = mapper
-        ? typeof mapper === "function"
-          ? mapper(errorData)
-          : mapper
-        : errorData.message || DEFAULT_ERROR_MESSAGE;
-
-      return { message, code, retryAfter: errorData.retryAfter };
-    }
-
-    // Fallback to HTTP status message
-    return { message: error.toUserMessage(), code: error.status };
-  }
-
-  // Case 2: Regular Error / Unknown
-  return { message: DEFAULT_ERROR_MESSAGE };
-};
-
-export const mapJobFailureMessage = (status: {
+export type JobFailureStatus = {
   code?: string;
   message?: string;
   retryAfter?: number;
-}): string => {
-  if (status.code) {
-    const numericCode = parseInt(status.code, 10);
-    const mapper = ERROR_MESSAGES[numericCode];
-    if (mapper) {
-      return typeof mapper === "function"
-        ? mapper({
-            code: numericCode,
-            message: status.message || "",
-            retryAfter: status.retryAfter,
-          })
-        : mapper;
-    }
+};
+
+const resolveRateLimitMessage = (
+  retryAfter: number | undefined,
+  dict: YoutubeDict
+): string => {
+  if (retryAfter) {
+    const hours = Math.ceil(retryAfter / HOUR_MS);
+    if (hours <= 1) return dict.errorRateLimitSoon;
+    if (hours < 24) return format(dict.errorRateLimitHours, { hours });
   }
-  return status.message || DEFAULT_ERROR_MESSAGE;
+  return dict.errorRateLimitTomorrow;
+};
+
+export const mapJobFailureMessage = (
+  status: JobFailureStatus,
+  dict: YoutubeDict
+): string => {
+  const numericCode = status.code ? parseInt(status.code, 10) : undefined;
+
+  switch (numericCode) {
+    case YOUTUBE_IMPORT_ERROR_CODES.UNSUPPORTED_URL:
+      return dict.errorUnsupportedUrl;
+    case YOUTUBE_IMPORT_ERROR_CODES.AI_GENERATION_FAILED:
+      return dict.errorAiGenerationFailed;
+    case YOUTUBE_IMPORT_ERROR_CODES.RATE_LIMIT_EXCEEDED:
+      return resolveRateLimitMessage(status.retryAfter, dict);
+    default:
+      return status.message || dict.errorUnknown;
+  }
 };

@@ -42,4 +42,11 @@ export const youtube: YoutubeDict = {
   sectionAnalyzingToast:
     "We're analyzing the video — this'll just take a moment.",
   sectionExtractionFailed: "Import failed.",
+  errorUnsupportedUrl: "Only YouTube links can be imported.",
+  errorRateLimitSoon: "Please try again in a moment.",
+  errorRateLimitHours: "Please try again in {hours} hours.",
+  errorRateLimitTomorrow: "Please try again tomorrow.",
+  errorAiGenerationFailed:
+    "Something went wrong on our end. Please try again in a bit.",
+  errorUnknown: "Something went wrong.",
 };

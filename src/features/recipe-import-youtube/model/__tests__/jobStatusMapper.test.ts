@@ -1,5 +1,9 @@
+import { youtubeMessages } from "@/shared/i18n";
+
 import { fromJobStatusResponse } from "../jobStatusMapper";
 import type { JobStatusResponse } from "../types";
+
+const ko = youtubeMessages.ko;
 
 describe("fromJobStatusResponse", () => {
   it("resultRecipeId가 있으면 status와 무관하게 completed를 반환한다", () => {
@@ -8,7 +12,7 @@ describe("fromJobStatusResponse", () => {
       status: "IN_PROGRESS",
       resultRecipeId: "recipe-1",
     };
-    expect(fromJobStatusResponse(raw)).toEqual({
+    expect(fromJobStatusResponse(raw, ko)).toEqual({
       state: "completed",
       resultRecipeId: "recipe-1",
     });
@@ -20,7 +24,7 @@ describe("fromJobStatusResponse", () => {
       status: "COMPLETED",
       resultRecipeId: "recipe-1",
     };
-    expect(fromJobStatusResponse(raw)).toEqual({
+    expect(fromJobStatusResponse(raw, ko)).toEqual({
       state: "completed",
       resultRecipeId: "recipe-1",
     });
@@ -32,25 +36,27 @@ describe("fromJobStatusResponse", () => {
       status: "COMPLETED",
       progress: 90,
     };
-    expect(fromJobStatusResponse(raw)).toEqual({
+    expect(fromJobStatusResponse(raw, ko)).toEqual({
       state: "polling",
       progress: 90,
     });
   });
 
-  it("status가 FAILED면 failed를 반환한다", () => {
-    const raw: JobStatusResponse = {
-      jobId: "j1",
-      status: "FAILED",
-      code: "907",
-      message: "유튜브 링크만 가능해요",
-    };
-    expect(fromJobStatusResponse(raw)).toEqual({
-      state: "failed",
-      code: "907",
-      message: "유튜브 링크만 가능해요",
-    });
-  });
+  it.each(["ko", "en", "ja"] as const)(
+    "status가 FAILED면 dict[%s]로 로컬라이즈된 failed를 반환한다",
+    (loc) => {
+      const raw: JobStatusResponse = {
+        jobId: "j1",
+        status: "FAILED",
+        code: "907",
+      };
+      expect(fromJobStatusResponse(raw, youtubeMessages[loc])).toEqual({
+        state: "failed",
+        code: "907",
+        message: youtubeMessages[loc].errorUnsupportedUrl,
+      });
+    }
+  );
 
   it("IN_PROGRESS면 polling을 반환한다", () => {
     const raw: JobStatusResponse = {
@@ -58,7 +64,7 @@ describe("fromJobStatusResponse", () => {
       status: "IN_PROGRESS",
       progress: 42,
     };
-    expect(fromJobStatusResponse(raw)).toEqual({
+    expect(fromJobStatusResponse(raw, ko)).toEqual({
       state: "polling",
       progress: 42,
     });
@@ -66,7 +72,7 @@ describe("fromJobStatusResponse", () => {
 
   it("PENDING이면 progress 기본값 0으로 polling을 반환한다", () => {
     const raw: JobStatusResponse = { jobId: "j1", status: "PENDING" };
-    expect(fromJobStatusResponse(raw)).toEqual({
+    expect(fromJobStatusResponse(raw, ko)).toEqual({
       state: "polling",
       progress: 0,
     });
@@ -78,7 +84,7 @@ describe("fromJobStatusResponse", () => {
       status: "IN_PROGRESS",
       progress: 0,
     };
-    expect(fromJobStatusResponse(raw)).toEqual({
+    expect(fromJobStatusResponse(raw, ko)).toEqual({
       state: "polling",
       progress: 0,
     });

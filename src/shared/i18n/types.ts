@@ -184,6 +184,12 @@ export type YoutubeDict = {
   sectionQuotaExhausted: string;
   sectionAnalyzingToast: string;
   sectionExtractionFailed: string;
+  errorUnsupportedUrl: string;
+  errorRateLimitSoon: string;
+  errorRateLimitHours: string;
+  errorRateLimitTomorrow: string;
+  errorAiGenerationFailed: string;
+  errorUnknown: string;
 };
 
 export type IngredientDetailDict = {

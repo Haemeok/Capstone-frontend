@@ -158,7 +158,7 @@ export const pollSingleJob = async (deps: JobPollingDeps, job: ActiveJob) => {
 
     deps.storeActions.updateLastPollTime(job.idempotencyKey);
 
-    const update = fromJobStatusResponse(status);
+    const update = fromJobStatusResponse(status, youtubeMessages[job.locale]);
 
     switch (update.state) {
       case "completed":

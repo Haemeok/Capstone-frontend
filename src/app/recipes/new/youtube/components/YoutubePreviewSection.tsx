@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 import { AnimatePresence, motion } from "motion/react";
 
+import { ApiError, getErrorData } from "@/shared/api/errors";
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
 import {
   useApiLocale,
@@ -16,6 +17,7 @@ import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
+import { mapJobFailureMessage } from "@/features/recipe-import-youtube/lib/errors";
 import { createExtractionJobV2 } from "@/features/recipe-import-youtube/model/api";
 import {
   useYoutubeDuplicateCheck,
@@ -189,8 +191,17 @@ export const YoutubePreviewSection = ({
       );
       setJobId(idempotencyKey, jobId);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : t.sectionExtractionFailed;
+      const errorData = ApiError.isApiError(error) ? getErrorData(error) : null;
+      const errorMessage = errorData
+        ? mapJobFailureMessage(
+            {
+              code: String(errorData.code),
+              message: errorData.message,
+              retryAfter: errorData.retryAfter,
+            },
+            t
+          )
+        : t.sectionExtractionFailed;
       failJob(idempotencyKey, undefined, errorMessage);
       addToast({
         message: errorMessage,
