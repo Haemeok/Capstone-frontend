@@ -77,6 +77,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Nullish coalescing](rules/policy-nullish-coalescing.md) — `??` for defaults; `||` only for actual falsy semantics
 - [Container layout](rules/policy-container-layout.md) — Container owns bg/max-width/padding; full-bleed/hero pages use `padding={false}`; no double `px`, no nested `bg-white`
 - [Tailwind v4 theme tokens](rules/policy-tailwind-v4-theme-tokens.md) — palette overrides in `@theme` (CSS), not the JS config; @config overrides drop `--color-*` vars and silently break `var()` consumers
+- [No code comments](rules/policy-no-comments.md) — WHAT is the identifier's job; WHY/incident/quirk goes in the commit body. Only `as` and `||`-default markers allowed; shared docs exempt
 
 ### Next.js
 

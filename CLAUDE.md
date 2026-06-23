@@ -10,82 +10,10 @@
 
 ## 코드 작성 자가체크 (always-on)
 
-매 코드 작성·수정 시 자가체크. 상세 룰은
-`.claude/skills/code-quality/rules/<prefix>-*.md`.
-
-### Size
-
-- Component: ≤100줄 권장 / >150줄 무조건 분리
-- Function: ≤30줄 권장 / 분기 4+ · nesting 3+ · 동사 두 개 · await 3+면 분리
-- SRP 신호 2+: hook 5+ / prop drilling 2단+ / 조건부 분기 3+
-- 추출: 최소 3번 반복부터 (2번은 우연 — 성급한 추상화 금지). 예외는 `size-rule-of-three.md`
-
-### FSD 4단계 위치 판단
-
-- `shared/`: 비즈니스 모름, ≥2곳 재사용
-- `widget/`: feature·entity 조립, read query OK, mutation은 feature 위임
-- `app/(route)/_components/`: 그 라우트 1곳 전용, flat 유지
-- `app/(route)/page.tsx`: 조립만
-
-### Human error blockers
-
-- URL: `new URL(path, base)`. 문자열 concat ❌
-- Query string: `URLSearchParams`. `?a=${a}` 직접 ❌
-- TanStack Query key: `[domain, sub, ...ids]` tuple
-- env: `shared/config` 경유. `process.env` 직접 ❌
-- localStorage key: 상수 모듈
-- Container: full-bleed/hero 페이지는 `padding={false}`. 이중 px·`bg-white` 중복 ❌ (`policy-container-layout`)
-
-### Next.js
-
-- Static default. Dynamic 단서 자각 (cookies/headers/searchParams/noStore/force-dynamic)
-- Mutation 후 `revalidatePath` / `revalidateTag` 필수
-- Server fetch → Client 두 번 fetch ❌ (`initialData`). 단 server 트리 내 같은
-  URL은 Request Memo로 dedupe됨, 보고만
-- `'use client'` 최하위에만
-
-### React (Compiler 시대)
-
-- `useCallback` / `useMemo`: 외부 콜백 등록 / `useEffect` deps / `forwardRef`
-  3경우만
-- Derived state ❌ (계산), 이벤트로 끝낼 일 effect ❌
-- Effect는 외부 시스템 동기화 전용
-
-### TS
-
-- `any` ❌, non-null `!` ❌
-- `as`는 1줄 코멘트로 이유 명시
-- Union은 discriminated union 우선
-
-### Naming
-
-- Boolean: `is/has/can/should` (부정형 ❌)
-- Handler: `on*` (props) / `handle*` (내부)
-- 함수 동사: `get` (메모리) / `fetch` (네트워크) / `load` (리소스)
-
-### A11y
-
-- `<div onClick>` ❌. `<button>` 또는 Radix
-- Interactive 요소엔 `cursor-pointer`
-- 아이콘 버튼엔 `aria-label`
-
-### Testing (상세는 `test-*` 룰)
-
-- 한 행동은 가장 낮은 한 층이 소유. 상위 층 재검증은 "주인이 못 잡는 것"일 때만
-- 모킹은 내가 소유 안 한 경계(network/time/random/3rd-party)만. 자기 모듈 모킹 ❌, 모킹 4+면 순수 함수로 추출 먼저
-- 튜닝 상수(곡선·타이밍)는 불변식 + 스냅샷 1개. 키프레임 등식 N개 ❌ (change-detector)
-- 테스트 이름에서 "해야 함" 떼고 계약이 안 남으면 세터 재진술 → 컷
-- 깊이는 blast radius로: 보안·과금은 적대적, 코스메틱은 불변식만
-- 테스트는 부채. 작성 후 삭제 패스(중복·change-detector) + 거짓안심 패스(아무도 못 잡는 버그) 1회씩
-
-### Comments (절대 금지)
-
-- **코드에 주석 달지 말 것.** WHAT은 식별자가 말한다. 설명·맥락 주석 전면 금지.
-- 변경 이유·과거 incident·시도한 대안·라이브러리 quirk → **전부 커밋 메세지 본문**으로.
-- 유일한 예외 2개 (다른 룰이 강제하는 기계적 표식만):
-  - `as` 사용 시 1줄 사유 코멘트 (`ts-any-and-as` 룰)
-  - `||` 기본값 fallthrough 의도 1줄 코멘트 (`policy-nullish-coalescing` 룰)
-- `CLAUDE.md`/`docs/`/`SKILL.md` 같은 공유 문서는 코드 아님 — 적용 대상 아님
+매 코드 작성·수정·리뷰 시 **`code-quality` 스킬**의 자가체크가 always-on으로 적용된다
+(Size / FSD 위치 / human-error blocker / Next.js 캐시 / React Compiler / TS / Naming /
+A11y / Testing / 주석금지). 룰 위반·불확실·위반 직전이면 해당
+`.claude/skills/code-quality/rules/<prefix>-*.md`를 Read.
 
 ## 작업별 가이드 (Lookup Table)
 
@@ -157,14 +85,16 @@ PR 본문을 작성할 때 `.claude/state/active-issue` 파일을 먼저 읽는�
 
 ### 요구사항 분해→테스트 설계 단계 (always-on)
 
-체인: `brainstorming` → `vertical-slicing` → `designing-tests-from-requirements` → `writing-plans`.
+체인: `brainstorming` → `vertical-slicing` → `designing-tests-from-requirements` →
+`writing-plans` (각 단계 상세·트리거는 해당 스킬 description). 핵심: 기능을 레이어가
+아닌 **행동(수직 슬라이스)**으로 잘라야 test=행동이 된다.
 
-- **vertical-slicing이 상류이자 더 중요하다.** 기능을 레이어(타입→API→UI)로 수평 분해하면 각 task의 자연스러운 테스트가 그 유닛의 유닛테스트가 된다 — 이게 "무지성 유닛테스트" 폭발의 근원이다. 행동(수직 슬라이스)으로 잘라야 test=행동이 된다. 테스트가 요구사항에 의존하므로, 분해가 틀리면 하류 테스트 룰로 못 구한다.
-- 슬라이싱 산출 = 슬라이스 + 각 슬라이스 AC + non-goals + 글로서리. designing-tests는 그 AC를 매트릭스 왼쪽 칸으로 _받아서_ 시나리오→테스트→레이어로 펼친다 (요구사항을 새로 짜내지 않는다).
-- **추적은 태그가 아니라 단어로 한다 (Ubiquitous Language):** AC·코드 식별자·테스트 이름이 한 글로서리 단어를 공유하면 요구사항↔테스트 링크가 *단어 그 자체*다. RTM/ID 태그 불필요. drift(같은 개념을 `slug`/`shareToken` 두 단어로)는 `naming-ubiquitous-language` 룰로 리뷰 때 잡는다.
-- 강제는 **구조로** 한다: `writing-plans`는 test-design 매트릭스 없이 task 분해를 거부한다(writing-plans Step 0). 슬라이스/매트릭스가 없으면 멈추고 위 체인을 앞단계부터 돌린다. "이미 대부분 구현됨"도 예외 아님 — 기존 코드는 검증된 요구사항이 아니다.
-- 프로젝트 로컬 `brainstorming` · `vertical-slicing` · `designing-tests-from-requirements` · `writing-plans`(`.claude/skills/...`)가 plugin 버전을 override (brainstorming 종착점을 vertical-slicing으로 reroute, writing-plans에 게이트 추가). plugin 업데이트 시 reroute/게이트만 유지하며 refresh.
-- 서브에이전트는 프로젝트 스킬을 안정적으로 상속 못 받으니, plan/분해/test 설계를 위임할 때 prompt에 "task는 수직 슬라이스(행동)로 분해, 각 슬라이스 AC 작성, AC→테스트는 글로서리 단어로 추적, writing-plans 전 매트릭스 필수" 한 줄을 주입한다.
+- 프로젝트 로컬 4개 스킬(`.claude/skills/...`)이 plugin 버전을 override (brainstorming
+  종착점을 vertical-slicing으로 reroute, writing-plans에 매트릭스 게이트 추가). plugin
+  업데이트 시 reroute/게이트만 유지하며 refresh.
+- 서브에이전트는 프로젝트 스킬을 안정 상속 못 받으니, plan/분해/test 위임 시 prompt에
+  "task는 수직 슬라이스로 분해, 각 슬라이스 AC 작성, AC→테스트는 글로서리 단어로 추적,
+  writing-plans 전 매트릭스 필수" 한 줄 주입.
 
 ---
 
@@ -212,9 +142,8 @@ PR 본문을 작성할 때 `.claude/state/active-issue` 파일을 먼저 읽는�
 
 ### Haptic
 
-모든 인터랙티브 요소에 `triggerHaptic()` (`@/shared/lib/bridge`).
-스타일: `Success` / `Light` / `Medium` / `Heavy` / `Warning` / `Error`.
-상세 가이드는 haptic-feedback skill 참고.
+모든 인터랙티브 요소에 `triggerHaptic()` (`@/shared/lib/bridge`). 스타일 선택·상세는
+`haptic-feedback` skill (자동 호출).
 
 ### Web + RN WebView
 
