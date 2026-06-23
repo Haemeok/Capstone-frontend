@@ -14,7 +14,14 @@ jest.mock("@/shared/hooks/useInViewOnce", () => ({
 }));
 jest.mock("@/shared/i18n/useSearchDiscoveryDict", () => ({
   useSearchDiscoveryDict: () => ({
-    seasonalPopularTitle: "제철 재료 {ingredient}을 활용한 인기 레시피",
+    seasonalPopularTitle:
+      "{adjective} {month}월엔 {ingredient} 활용 레시피 어떠세요?",
+    seasonalAdjectives: {
+      spring: "따뜻한",
+      summer: "무더운",
+      autumn: "선선한",
+      winter: "추운",
+    },
     recipeSlideViewMore: "더보기",
     recipeSlideError: "에러",
     recipeSlideEmpty: "비어있음",
@@ -26,7 +33,14 @@ jest.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import SeasonalPopularSlide from "../SeasonalPopularSlide";
+import SeasonalPopularSlide, { monthToSeason } from "../SeasonalPopularSlide";
+
+const SEASON_ADJECTIVE: Record<string, string> = {
+  spring: "따뜻한",
+  summer: "무더운",
+  autumn: "선선한",
+  winter: "추운",
+};
 
 const card = (id: string, title: string) => ({
   id,
@@ -63,10 +77,28 @@ describe("SeasonalPopularSlide", () => {
       content: [card("r1", "열무비빔밥")],
     });
     renderWithClient(<SeasonalPopularSlide locale="ko" />);
+    const month = new Date().getMonth() + 1;
+    const adjective = SEASON_ADJECTIVE[monthToSeason(month)];
     expect(
-      await screen.findByText("제철 재료 열무을 활용한 인기 레시피")
+      await screen.findByText(
+        `${adjective} ${month}월엔 열무 활용 레시피 어떠세요?`
+      )
     ).toBeInTheDocument();
     expect(await screen.findByText("열무비빔밥")).toBeInTheDocument();
+  });
+
+  it.each([
+    [3, "spring"],
+    [5, "spring"],
+    [6, "summer"],
+    [8, "summer"],
+    [9, "autumn"],
+    [11, "autumn"],
+    [12, "winter"],
+    [1, "winter"],
+    [2, "winter"],
+  ])("월 %i는 %s 계절로 매핑된다", (month, season) => {
+    expect(monthToSeason(month)).toBe(season);
   });
 
   it("seasonalIngredientName이 null이면 렌더하지 않는다", async () => {

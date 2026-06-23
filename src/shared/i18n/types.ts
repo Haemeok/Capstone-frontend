@@ -331,6 +331,12 @@ export type SearchDiscoveryDict = {
   countryPopularTitle: string;
   countryPopularNames: { US: string; JP: string };
   seasonalPopularTitle: string;
+  seasonalAdjectives?: {
+    spring: string;
+    summer: string;
+    autumn: string;
+    winter: string;
+  };
   quickPopularTitle: string;
   categoryPopularTitle: string;
   categoryPopularNames: {

@@ -14,7 +14,7 @@ jest.mock("@/shared/hooks/useInViewOnce", () => ({
 }));
 jest.mock("@/shared/i18n/useSearchDiscoveryDict", () => ({
   useSearchDiscoveryDict: () => ({
-    countryPopularTitle: "{country}의 인기 레시피를 만나보세요",
+    countryPopularTitle: "{country} 100% 현지인이 뽑은 Best 레시피 모음",
     countryPopularNames: { US: "미국", JP: "일본" },
     recipeSlideViewMore: "더보기",
     recipeSlideError: "에러",
@@ -66,7 +66,7 @@ describe("CountryPopularSlide", () => {
     });
     renderWithClient(<CountryPopularSlide locale="ko" />);
     expect(
-      await screen.findByText("미국의 인기 레시피를 만나보세요")
+      await screen.findByText("미국 100% 현지인이 뽑은 Best 레시피 모음")
     ).toBeInTheDocument();
     expect(await screen.findByText("버섯 치킨")).toBeInTheDocument();
   });
@@ -80,7 +80,7 @@ describe("CountryPopularSlide", () => {
     renderWithClient(<CountryPopularSlide locale="ko" />);
     await waitFor(() =>
       expect(
-        screen.queryByText("미국의 인기 레시피를 만나보세요")
+        screen.queryByText("미국 100% 현지인이 뽑은 Best 레시피 모음")
       ).not.toBeInTheDocument()
     );
   });

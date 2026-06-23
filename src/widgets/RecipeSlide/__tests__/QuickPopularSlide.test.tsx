@@ -14,7 +14,7 @@ jest.mock("@/shared/hooks/useInViewOnce", () => ({
 }));
 jest.mock("@/shared/i18n/useSearchDiscoveryDict", () => ({
   useSearchDiscoveryDict: () => ({
-    quickPopularTitle: "{minutes}분 완성 인기 레시피",
+    quickPopularTitle: "시간이 부족해요. 빠른 {minutes}분 완성 레시피",
     recipeSlideViewMore: "더보기",
     recipeSlideError: "에러",
     recipeSlideEmpty: "비어있음",
@@ -65,7 +65,7 @@ describe("QuickPopularSlide", () => {
     });
     renderWithClient(<QuickPopularSlide locale="ko" />);
     expect(
-      await screen.findByText("20분 완성 인기 레시피")
+      await screen.findByText("시간이 부족해요. 빠른 20분 완성 레시피")
     ).toBeInTheDocument();
     expect(await screen.findByText("20분 파스타")).toBeInTheDocument();
   });
@@ -75,7 +75,7 @@ describe("QuickPopularSlide", () => {
     renderWithClient(<QuickPopularSlide locale="ko" />);
     await waitFor(() =>
       expect(
-        screen.queryByText("20분 완성 인기 레시피")
+        screen.queryByText("시간이 부족해요. 빠른 20분 완성 레시피")
       ).not.toBeInTheDocument()
     );
   });
@@ -93,6 +93,8 @@ describe("QuickPopularSlide", () => {
     );
 
     expect(screen.queryByText("된장찌개")).not.toBeInTheDocument();
-    expect(screen.queryByText("분 완성 인기 레시피")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("시간이 부족해요. 빠른 분 완성 레시피")
+    ).not.toBeInTheDocument();
   });
 });

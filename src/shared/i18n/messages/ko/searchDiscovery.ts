@@ -13,10 +13,17 @@ export const searchDiscovery: SearchDiscoveryDict = {
   recipeSlideEmpty: "아직 레시피가 없어요.",
   recipeSlideError: "잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.",
   cookedPopularTitle: "레시피오 유저들이 많이 요리한 레시피",
-  countryPopularTitle: "{country}의 인기 레시피를 만나보세요",
+  countryPopularTitle: "{country} 100% 현지인이 뽑은 Best 레시피 모음",
   countryPopularNames: { US: "미국", JP: "일본" },
-  seasonalPopularTitle: "제철 재료 {ingredient}을 활용한 인기 레시피",
-  quickPopularTitle: "{minutes}분 완성 인기 레시피",
+  seasonalPopularTitle:
+    "{adjective} {month}월엔 {ingredient} 활용 레시피 어떠세요?",
+  seasonalAdjectives: {
+    spring: "따뜻한",
+    summer: "무더운",
+    autumn: "선선한",
+    winter: "추운",
+  },
+  quickPopularTitle: "시간이 부족해요. 빠른 {minutes}분 완성 레시피",
   categoryPopularTitle: "오늘은 {category} 어때요?",
   categoryPopularNames: {
     RICE: "밥 요리",
