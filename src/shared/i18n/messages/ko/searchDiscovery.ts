@@ -13,7 +13,7 @@ export const searchDiscovery: SearchDiscoveryDict = {
   recipeSlideEmpty: "아직 레시피가 없어요.",
   recipeSlideError: "잠시 서버에 문제가 있어요. 나중에 다시 시도해주세요.",
   cookedPopularTitle: "레시피오 유저들이 많이 요리한 레시피",
-  countryPopularTitle: "{country} 100% 현지인이 뽑은 Best 레시피 모음",
+  countryPopularTitle: "{country} 현지인이 뽑은 Best 레시피 모음",
   countryPopularNames: { US: "미국", JP: "일본" },
   seasonalPopularTitle:
     "{adjective} {month}월엔 {ingredient} 활용 레시피 어떠세요?",
