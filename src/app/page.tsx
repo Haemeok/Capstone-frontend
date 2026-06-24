@@ -4,6 +4,7 @@ import {
   HomeAnchorAdSlot,
   HomeHeaderAnchorAdSlot,
   HomeSlideFeedAdSlot,
+  WebOnlyAdSlot,
 } from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
 import { buildHomeMetadata } from "@/shared/lib/metadata";
@@ -80,7 +81,9 @@ const HomePage = async () => {
             <HomeBannerCarousel slides={HOME_BANNER_SLIDES} />
           </ErrorBoundary>
 
-          <HomeAnchorAdSlot className="my-2" />
+          <WebOnlyAdSlot>
+            <HomeAnchorAdSlot className="my-2" />
+          </WebOnlyAdSlot>
 
           <RecipeSlideWithErrorBoundary
             title={dict.home.popularSectionTitle}
@@ -90,13 +93,17 @@ const HomePage = async () => {
 
           <YoutubeVerifiedSlide locale="ko" />
 
-          <HomeSlideFeedAdSlot className="my-2" index={0} />
+          <WebOnlyAdSlot>
+            <HomeSlideFeedAdSlot className="my-2" index={0} />
+          </WebOnlyAdSlot>
 
           <SeasonalPopularSlide locale="ko" />
 
           <CountryPopularSlide locale="ko" />
 
-          <HomeSlideFeedAdSlot className="my-2" index={1} />
+          <WebOnlyAdSlot>
+            <HomeSlideFeedAdSlot className="my-2" index={1} />
+          </WebOnlyAdSlot>
 
           <QuickPopularSlide locale="ko" />
 
@@ -106,7 +113,9 @@ const HomePage = async () => {
             locale="ko"
           />
 
-          <HomeSlideFeedAdSlot className="my-2" index={2} />
+          <WebOnlyAdSlot>
+            <HomeSlideFeedAdSlot className="my-2" index={2} />
+          </WebOnlyAdSlot>
 
           <CategoryPopularSlide locale="ko" />
         </div>

@@ -1,6 +1,10 @@
 import { Suspense } from "react";
 
-import { HomeAnchorAdSlot, HomeHeaderAnchorAdSlot } from "@/shared/adsense";
+import {
+  HomeAnchorAdSlot,
+  HomeHeaderAnchorAdSlot,
+  WebOnlyAdSlot,
+} from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
 import { buildHomeMetadata } from "@/shared/lib/metadata";
 import {
@@ -88,7 +92,9 @@ const HomePage = async () => {
             <HomeBannerCarousel slides={slides} />
           </ErrorBoundary>
 
-          <HomeAnchorAdSlot className="my-2" />
+          <WebOnlyAdSlot>
+            <HomeAnchorAdSlot className="my-2" />
+          </WebOnlyAdSlot>
 
           <RecipeSlideWithErrorBoundary
             title={dict.home.popularSectionTitle}
