@@ -11,10 +11,6 @@ import { ContentPageGrid } from "@/features/content-pages";
 import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 import { SearchInput } from "@/features/search-input";
 
-import CookedAgainSlide from "@/widgets/RecipeSlide/CookedAgainSlide";
-import CookedPopularSlide from "@/widgets/RecipeSlide/CookedPopularSlide";
-import FridgeIngredientSlide from "@/widgets/RecipeSlide/FridgeIngredientSlide";
-
 import LatestRecipesSlide from "./ui/LatestRecipesSlide";
 import NutritionThemeSection from "./ui/NutritionThemeSection";
 import PriceRangeSection from "./ui/PriceRangeSection";
@@ -42,10 +38,6 @@ const SearchDiscoveryDefault = () => {
         </div>
 
         <LatestRecipesSlide />
-
-        <FridgeIngredientSlide locale={locale} />
-        <CookedAgainSlide locale={locale} />
-        <CookedPopularSlide locale={locale} />
 
         <section className="space-y-4">
           <h3 className="text-ink text-lg font-bold">

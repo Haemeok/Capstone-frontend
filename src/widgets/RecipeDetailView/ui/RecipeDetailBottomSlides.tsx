@@ -1,11 +1,7 @@
 "use client";
 
-import LazyCookedPopularSlide from "./LazyCookedPopularSlide";
 import LazyRecipeDetailContentSection from "./LazyRecipeDetailContentSection";
 import LazyRecommendedRecipeSlide from "./LazyRecommendedRecipeSlide";
-import LazyRemixesSlide from "./LazyRemixesSlide";
-import LazySameIngredientSlide from "./LazySameIngredientSlide";
-import LazyTitleKeywordSlide from "./LazyTitleKeywordSlide";
 
 type RecipeDetailBottomSlidesProps = {
   recipeId: string;
@@ -24,10 +20,6 @@ export const RecipeDetailBottomSlides = ({
       tags={tags}
       locale={locale}
     />
-    <LazySameIngredientSlide recipeId={recipeId} locale={locale} />
-    <LazyTitleKeywordSlide recipeId={recipeId} locale={locale} />
-    <LazyRemixesSlide recipeId={recipeId} locale={locale} />
-    <LazyCookedPopularSlide locale={locale} />
     <LazyRecipeDetailContentSection />
   </>
 );

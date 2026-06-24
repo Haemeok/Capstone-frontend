@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import {
   HomeAnchorAdSlot,
   HomeHeaderAnchorAdSlot,
-  HomeSlideFeedAdSlot,
   WebOnlyAdSlot,
 } from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
@@ -23,12 +22,7 @@ import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 import { HOME_BANNER_SLIDES } from "@/widgets/HomeBannerCarousel/slides";
-import CategoryPopularSlide from "@/widgets/RecipeSlide/CategoryPopularSlide";
-import CountryPopularSlide from "@/widgets/RecipeSlide/CountryPopularSlide";
-import QuickPopularSlide from "@/widgets/RecipeSlide/QuickPopularSlide";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
-import SeasonalPopularSlide from "@/widgets/RecipeSlide/SeasonalPopularSlide";
-import YoutubeVerifiedSlide from "@/widgets/RecipeSlide/YoutubeVerifiedSlide";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
 export const metadata = buildHomeMetadata("ko");
@@ -91,33 +85,11 @@ const HomePage = async () => {
             locale="ko"
           />
 
-          <YoutubeVerifiedSlide locale="ko" />
-
-          <WebOnlyAdSlot>
-            <HomeSlideFeedAdSlot className="my-2" index={0} />
-          </WebOnlyAdSlot>
-
-          <SeasonalPopularSlide locale="ko" />
-
-          <CountryPopularSlide locale="ko" />
-
-          <WebOnlyAdSlot>
-            <HomeSlideFeedAdSlot className="my-2" index={1} />
-          </WebOnlyAdSlot>
-
-          <QuickPopularSlide locale="ko" />
-
           <RecipeSlideWithErrorBoundary
             title={dict.home.budgetSectionTitle}
             staticRecipes={staticBudgetRecipes.content}
             locale="ko"
           />
-
-          <WebOnlyAdSlot>
-            <HomeSlideFeedAdSlot className="my-2" index={2} />
-          </WebOnlyAdSlot>
-
-          <CategoryPopularSlide locale="ko" />
         </div>
       </Container>
       <DesktopFooter />
