@@ -308,7 +308,6 @@ export const fetchRecipeSitemapPage = async (
 
   try {
     const res = await fetch(API_URL, {
-      signal: AbortSignal.timeout(20000),
       next: {
         revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
         tags: [CACHE_TAGS.recipesSitemap],
@@ -341,7 +340,6 @@ export const fetchJaRecipeSitemapPage = async (
 
   try {
     const res = await fetch(API_URL, {
-      signal: AbortSignal.timeout(20000),
       next: {
         revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
         tags: [CACHE_TAGS.recipesSitemapJa],
@@ -374,7 +372,6 @@ export const fetchEnRecipeSitemapPage = async (
 
   try {
     const res = await fetch(API_URL, {
-      signal: AbortSignal.timeout(20000),
       next: {
         revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
         tags: [CACHE_TAGS.recipesSitemapEn],
