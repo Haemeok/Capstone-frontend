@@ -72,12 +72,6 @@ export default async function RootLayout({
           title="레시피오 – 레시피"
           href="/feed/recipes.xml"
         />
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          title="레시피오 – 큐레이션"
-          href="/feed/curation.xml"
-        />
       </head>
       <body className={`${pretendard.className} bg-white`}>
         <AppWebViewDetector />

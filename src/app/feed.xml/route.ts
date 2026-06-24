@@ -9,40 +9,22 @@ import {
 import { SEO_CONSTANTS } from "@/entities/recipe/lib/metadata/constants";
 import { fetchRecentRecipesForFeed } from "@/entities/recipe/model/api.server";
 
-import {
-  coverImageUrlFromKey,
-  fetchRecentCurationForFeed,
-} from "@/features/curation";
-
 export const revalidate = 21600;
 
 const SITE_URL = SEO_CONSTANTS.SITE_URL;
 
 export async function GET(request: Request) {
-  const [recipes, curations] = await Promise.all([
-    fetchRecentRecipesForFeed(30),
-    fetchRecentCurationForFeed(20),
-  ]);
+  const recipes = await fetchRecentRecipesForFeed(50);
 
-  const recipeItems: RssItem[] = recipes.map((r) => ({
-    guid: tagUri("recipe", r.id),
-    title: r.title,
-    link: absoluteUrl(`recipes/${r.id}`),
-    description: r.title,
-    pubDate: new Date(r.createdAt),
-    imageUrl: r.imageUrl || undefined,
-  }));
-
-  const curationItems: RssItem[] = curations.map((c) => ({
-    guid: tagUri("curation", c.slug),
-    title: c.title,
-    link: absoluteUrl(`curation/${c.slug}`),
-    description: c.description ?? c.title,
-    pubDate: new Date(c.publishedAt),
-    imageUrl: coverImageUrlFromKey(c.coverImageKey) ?? undefined,
-  }));
-
-  const items = [...recipeItems, ...curationItems]
+  const items: RssItem[] = recipes
+    .map((r) => ({
+      guid: tagUri("recipe", r.id),
+      title: r.title,
+      link: absoluteUrl(`recipes/${r.id}`),
+      description: r.title,
+      pubDate: new Date(r.createdAt),
+      imageUrl: r.imageUrl || undefined,
+    }))
     .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
     .slice(0, 50);
 
