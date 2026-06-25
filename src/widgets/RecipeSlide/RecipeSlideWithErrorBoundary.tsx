@@ -4,12 +4,16 @@ import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { StaticDetailedRecipeGridItem } from "@/entities/recipe";
 
 import RecipeSlideSection from "./RecipeSlideSection";
+import { shouldHideRecipeSlide } from "./recipeSlideVisibility";
 
 type RecipeSlideWithErrorBoundaryProps = {
   title: string;
   to?: string;
   staticRecipes?: StaticDetailedRecipeGridItem[];
   locale?: "ko" | "ja" | "en";
+  requiresMeta?: boolean;
+  metaName?: string | null;
+  emphasizeTime?: boolean;
 };
 
 const RecipeSlideWithErrorBoundary = ({
@@ -17,7 +21,22 @@ const RecipeSlideWithErrorBoundary = ({
   to,
   staticRecipes = [],
   locale,
+  requiresMeta,
+  metaName,
+  emphasizeTime,
 }: RecipeSlideWithErrorBoundaryProps) => {
+  if (
+    shouldHideRecipeSlide({
+      isLoading: false,
+      hasError: false,
+      recipeCount: staticRecipes.length,
+      requiresMeta,
+      metaName,
+    })
+  ) {
+    return null;
+  }
+
   return (
     <ErrorBoundary
       fallback={
@@ -40,6 +59,7 @@ const RecipeSlideWithErrorBoundary = ({
         isLoading={false}
         error={null}
         locale={locale}
+        emphasizeTime={emphasizeTime}
       />
     </ErrorBoundary>
   );

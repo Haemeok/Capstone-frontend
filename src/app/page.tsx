@@ -23,6 +23,7 @@ import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 import { HOME_BANNER_SLIDES } from "@/widgets/HomeBannerCarousel/slides";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
+import { YoutubeVerifiedServerSlide } from "@/widgets/RecipeSlide/server";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
 export const metadata = buildHomeMetadata("ko");
@@ -90,6 +91,8 @@ const HomePage = async () => {
             staticRecipes={staticBudgetRecipes.content}
             locale="ko"
           />
+
+          <YoutubeVerifiedServerSlide locale="ko" />
         </div>
       </Container>
       <DesktopFooter />

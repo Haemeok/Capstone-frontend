@@ -6,6 +6,7 @@ import type { Locale } from "@/shared/i18n";
 
 import type { LocalizedRecipeResult } from "./localeResult";
 import { parseLocalizedRecipeResult } from "./localeResult";
+import { safeFetchJson } from "./safeFetchJson";
 import {
   DetailedRecipesApiResponse,
   Recipe,
@@ -15,6 +16,7 @@ import {
   StaticDetailedRecipesApiResponse,
   StaticRecipe,
   TrendingYoutubeRecipe,
+  YoutubeVerifiedResponse,
 } from "./types";
 
 const resolveSortParam = (
@@ -513,6 +515,21 @@ export const getTrendingYoutubeRecipesOnServer = async (
     return [];
   }
 };
+
+const withLang = (base: string, locale: Locale) => {
+  const url = new URL(`${BASE_API_URL}${base}`);
+  if (locale !== "ko") url.searchParams.set("lang", locale);
+  return url.toString();
+};
+
+export const getYoutubeVerifiedOnServer = (
+  locale: Locale
+): Promise<YoutubeVerifiedResponse> =>
+  safeFetchJson(withLang(END_POINTS.RECIPE_YOUTUBE_VERIFIED, locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    tags: [CACHE_TAGS.recipesDiscovery("youtube-verified")],
+    fallback: { content: [] },
+  });
 
 export const getPrivateRecipeOnServer = async (
   id: string,
