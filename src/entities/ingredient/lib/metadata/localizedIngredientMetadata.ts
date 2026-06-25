@@ -16,15 +16,49 @@ const OG_LOCALE: Record<LocalizedLocale, string> = {
   en: "en_US",
 };
 
+const buildLocalizedTitle: Record<
+  LocalizedLocale,
+  (name: string, recipeCount: number) => string
+> = {
+  en: (name, recipeCount) =>
+    recipeCount > 0
+      ? `${name}: Storage, Benefits & ${recipeCount} Recipes`
+      : `${name}: Storage, Benefits & Nutrition`,
+  ja: (name, recipeCount) =>
+    recipeCount > 0
+      ? `${name}の保存方法・効能・人気レシピ${recipeCount}選`
+      : `${name}の保存方法・効能・栄養`,
+};
+
+const buildLocalizedDescription: Record<
+  LocalizedLocale,
+  (name: string, recipeCount: number) => string
+> = {
+  en: (name, recipeCount) => {
+    const recipeTail =
+      recipeCount > 0 ? ` and ${recipeCount} popular ${name} recipes` : "";
+    return `Storage tips, health benefits and nutrition${recipeTail} — everything about ${name} in one place. Recipio.`;
+  },
+  ja: (name, recipeCount) => {
+    const recipeTail =
+      recipeCount > 0 ? `から人気レシピ${recipeCount}選まで` : "・栄養まで";
+    return `${name}の保存方法・効能${recipeTail}、まとめてチェック。レシピオ。`;
+  },
+};
+
 export const generateLocalizedIngredientMetadata = (
   detail: IngredientDetailView,
   recipeCount: number,
   { locale, translated }: { locale: LocalizedLocale; translated: boolean }
 ): Metadata => {
   const url = absoluteUrl(`${locale}/ingredients/${detail.id}`);
-  const description = detail.benefits || `${detail.name} (${recipeCount})`;
+  const title = buildLocalizedTitle[locale](detail.name, recipeCount);
+  const description = buildLocalizedDescription[locale](
+    detail.name,
+    recipeCount
+  );
   return {
-    title: detail.name,
+    title,
     description,
     robots: translated
       ? { index: true, follow: true }
@@ -38,7 +72,7 @@ export const generateLocalizedIngredientMetadata = (
         }
       : {}),
     openGraph: {
-      title: detail.name,
+      title,
       description,
       url,
       type: "article",
@@ -47,18 +81,8 @@ export const generateLocalizedIngredientMetadata = (
   };
 };
 
-type GraphNode = { "@type"?: string } & Record<string, unknown>;
-
 export const generateLocalizedIngredientJsonLd = (
   detail: IngredientDetailView,
   recipes: DetailedRecipeGridItem[],
   locale: LocalizedLocale
-) => {
-  const base = generateIngredientJsonLd(detail, recipes);
-  return {
-    ...base,
-    "@graph": base["@graph"].map((node: GraphNode) =>
-      node["@type"] === "ItemList" ? { ...node, inLanguage: locale } : node
-    ),
-  };
-};
+) => generateIngredientJsonLd(detail, recipes, locale);
