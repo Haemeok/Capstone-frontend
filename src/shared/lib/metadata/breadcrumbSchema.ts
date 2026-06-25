@@ -10,6 +10,12 @@ const BREADCRUMB_RECIPES_LABEL: Record<Locale, string> = {
   ja: "レシピ",
 };
 
+const BREADCRUMB_INGREDIENTS_LABEL: Record<Locale, string> = {
+  ko: "재료",
+  en: "Ingredients",
+  ja: "食材",
+};
+
 type BreadcrumbItem = {
   name: string;
   url: string;
@@ -102,14 +108,21 @@ export const createSearchBreadcrumb = (
 
 export const createIngredientBreadcrumb = (
   ingredientName: string,
-  ingredientId: string
+  ingredientId: string,
+  locale: Locale = "ko"
 ): BreadcrumbListSchema => {
   const items: BreadcrumbItem[] = [
-    { name: "홈", url: SEO_CONSTANTS.SITE_URL },
-    { name: "재료", url: absoluteUrl("ingredients") },
+    {
+      name: localizedSiteName(locale),
+      url: locale === "ko" ? SEO_CONSTANTS.SITE_URL : absoluteUrl(locale),
+    },
+    {
+      name: BREADCRUMB_INGREDIENTS_LABEL[locale],
+      url: absoluteUrl(localizedPath(locale, "ingredients")),
+    },
     {
       name: ingredientName,
-      url: absoluteUrl(`ingredients/${ingredientId}`),
+      url: absoluteUrl(localizedPath(locale, `ingredients/${ingredientId}`)),
     },
   ];
 

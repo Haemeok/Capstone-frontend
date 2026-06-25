@@ -41,8 +41,17 @@ it("T-21: 미번역이면 robots noindex", () => {
 
 it("T-22: JSON-LD ItemList 노드에 inLanguage=locale", () => {
   const jsonLd = generateLocalizedIngredientJsonLd(detail, [], "ja");
-  const node = jsonLd["@graph"].find(
-    (n: Record<string, unknown>) => n["inLanguage"]
-  );
+  const graph = jsonLd["@graph"] as Array<Record<string, unknown>>;
+  const node = graph.find((n) => n["@type"] === "ItemList");
   expect(node?.["inLanguage"]).toBe("ja");
+});
+
+it("T-23: JSON-LD에 WebPage 노드(about=Thing)가 locale로 포함된다", () => {
+  const jsonLd = generateLocalizedIngredientJsonLd(detail, [], "ja");
+  const graph = jsonLd["@graph"] as Array<Record<string, unknown>>;
+  const webPage = graph.find((n) => n["@type"] === "WebPage");
+  expect(webPage?.["inLanguage"]).toBe("ja");
+  expect((webPage?.["about"] as Record<string, unknown>)?.["@type"]).toBe(
+    "Thing"
+  );
 });

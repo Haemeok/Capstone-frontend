@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 
+import type { Locale } from "@/shared/i18n";
 import { createIngredientBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import { localizedPath } from "@/shared/lib/metadata/localized";
 
 import type { DetailedRecipeGridItem } from "@/entities/recipe";
 
-import type { IngredientDetailView } from "../../model/types";
+import type {
+  IngredientDetailView,
+  IngredientNutrition,
+} from "../../model/types";
 
 const buildBaseUrl = () =>
   SEO_CONSTANTS.SITE_URL.endsWith("/")
@@ -13,67 +18,43 @@ const buildBaseUrl = () =>
     : SEO_CONSTANTS.SITE_URL;
 
 const buildTitle = (name: string, recipeCount: number): string => {
-  const recipePart =
+  const head =
     recipeCount > 0
-      ? `보관법·효능·인기 레시피 ${recipeCount}가지`
-      : "보관법·효능·손질법";
-  return `${name} 완벽 가이드: ${recipePart} | ${SEO_CONSTANTS.SITE_NAME}`;
+      ? `${name} 보관법·효능·레시피 ${recipeCount}가지`
+      : `${name} 보관법·효능·손질법`;
+  return `${head} | ${SEO_CONSTANTS.SITE_NAME}`;
 };
 
 const buildDescription = (
   detail: IngredientDetailView,
   recipeCount: number
 ): string => {
-  const { name, pairings, nutrition } = detail;
-  const firstBadPair = pairings.bad[0]?.name;
+  const { name, nutrition } = detail;
   const kcal = nutrition?.kcal ?? null;
 
-  if (firstBadPair) {
-    const recipeTail =
-      recipeCount > 0
-        ? `진짜 사람들의 인기 레시피 ${recipeCount}개까지`
-        : `손질법·효능·궁합까지`;
-    return `${name}, 절대 이렇게 보관하지 마세요!! ${name}+${firstBadPair}? 같이 안 먹는 걸 추천해요. 효능·칼로리·손질법부터 ${recipeTail} — ${SEO_CONSTANTS.SITE_NAME}.`;
-  }
+  const bits: string[] = [];
+  if (kcal !== null) bits.push(`100g ${kcal}kcal 영양정보`);
+  if (recipeCount > 0) bits.push(`인기 ${name} 레시피 ${recipeCount}가지`);
 
-  const kcalPart = kcal !== null ? `100g ${kcal}kcal 영양정보, ` : "";
-  const recipeTail =
-    recipeCount > 0
-      ? `진짜 사람들의 인기 ${name} 레시피 ${recipeCount}개까지`
-      : `손질법·궁합까지`;
-  return `${name}, 절대 이렇게 보관하지 마세요!! 효능을 200% 살리는 손질법, ${kcalPart}그리고 ${recipeTail} — ${SEO_CONSTANTS.SITE_NAME}.`;
+  const tail = bits.length ? ` ${bits.join(", ")}까지 정리했어요.` : "";
+  return `${name} 보관법·효능·손질법·궁합을 한눈에.${tail} ${SEO_CONSTANTS.SITE_NAME}`;
 };
 
 const buildOgTitle = (name: string, recipeCount: number): string => {
-  const tail =
-    recipeCount > 0 ? `인기 레시피 ${recipeCount}가지` : `보관법·효능·손질법`;
-  return `🧅 ${name}, 진짜 이렇게 쓰는 거였어? — 보관·궁합·${tail}`;
+  const tail = recipeCount > 0 ? `인기 레시피 ${recipeCount}가지` : `손질법`;
+  return `${name} 보관법·효능·궁합, ${tail}까지`;
 };
 
 const buildOgDescription = (
   detail: IngredientDetailView,
   recipeCount: number
 ): string => {
-  const firstBadPair = detail.pairings.bad[0]?.name;
   const recipeTail =
-    recipeCount > 0 ? `인기 레시피 ${recipeCount}개까지` : `손질법·궁합까지`;
-  if (firstBadPair) {
-    return `${detail.name}+${firstBadPair}? 같이 안 먹는 걸 추천해요. 보관 꿀팁부터 ${recipeTail}.`;
-  }
-  return `${detail.name}, 이렇게 쓰면 다 달라져요. 보관 꿀팁부터 ${recipeTail}.`;
+    recipeCount > 0
+      ? `인기 ${detail.name} 레시피 ${recipeCount}가지까지`
+      : `손질법·궁합까지`;
+  return `${detail.name} 제대로 쓰는 법 — 보관 꿀팁부터 ${recipeTail} 한눈에.`;
 };
-
-const buildKeywords = (name: string): string[] => [
-  ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
-  name,
-  `${name} 보관법`,
-  `${name} 효능`,
-  `${name} 레시피`,
-  `${name} 칼로리`,
-  `${name} 손질법`,
-  `${name} 영양성분`,
-  `${name} 궁합`,
-];
 
 export const generateIngredientMetadata = (
   detail: IngredientDetailView,
@@ -86,7 +67,6 @@ export const generateIngredientMetadata = (
   const description = buildDescription(detail, recipeCount);
   const ogTitle = buildOgTitle(detail.name, recipeCount);
   const ogDescription = buildOgDescription(detail, recipeCount);
-  const keywords = buildKeywords(detail.name);
 
   const imageUrl = detail.imageUrl ?? SEO_CONSTANTS.DEFAULT_IMAGE;
   const ogImages = [
@@ -101,7 +81,6 @@ export const generateIngredientMetadata = (
   return {
     title,
     description,
-    keywords,
     alternates: {
       canonical: fullPageUrl,
     },
@@ -123,18 +102,67 @@ export const generateIngredientMetadata = (
   };
 };
 
+const buildNutritionProperties = (nutrition: IngredientNutrition) => {
+  const props: Array<{ name: string; value: number; unitText: string }> = [
+    { name: "Calories", value: nutrition.kcal, unitText: "kcal" },
+    { name: "Protein", value: nutrition.proteinG, unitText: "g" },
+    { name: "Carbohydrates", value: nutrition.carbohydrateG, unitText: "g" },
+    { name: "Fat", value: nutrition.fatG, unitText: "g" },
+  ];
+  if (nutrition.sugarG != null)
+    props.push({ name: "Sugars", value: nutrition.sugarG, unitText: "g" });
+  if (nutrition.sodiumMg != null)
+    props.push({ name: "Sodium", value: nutrition.sodiumMg, unitText: "mg" });
+  return props.map((p) => ({
+    "@type": "PropertyValue",
+    name: p.name,
+    value: p.value,
+    unitText: p.unitText,
+  }));
+};
+
+const createIngredientWebPage = (
+  detail: IngredientDetailView,
+  locale: Locale
+) => {
+  const baseUrl = buildBaseUrl();
+  const url = `${baseUrl}/${localizedPath(locale, `ingredients/${detail.id}`)}`;
+  return {
+    "@type": "WebPage",
+    name: detail.name,
+    url,
+    inLanguage: locale,
+    ...(detail.imageUrl ? { primaryImageOfPage: detail.imageUrl } : {}),
+    about: {
+      "@type": "Thing",
+      name: detail.name,
+      ...(detail.nutrition
+        ? { additionalProperty: buildNutritionProperties(detail.nutrition) }
+        : {}),
+    },
+  };
+};
+
+const POPULAR_RECIPES_NAME: Record<Locale, (name: string) => string> = {
+  ko: (name) => `${name} 인기 레시피`,
+  en: (name) => `Popular recipes with ${name}`,
+  ja: (name) => `${name}を使った人気レシピ`,
+};
+
 const createIngredientItemListStructuredData = (
   detail: IngredientDetailView,
-  recipes: DetailedRecipeGridItem[]
+  recipes: DetailedRecipeGridItem[],
+  locale: Locale
 ) => {
   const baseUrl = buildBaseUrl();
   return {
     "@type": "ItemList",
-    name: `${detail.name} 인기 레시피`,
+    name: POPULAR_RECIPES_NAME[locale](detail.name),
+    inLanguage: locale,
     itemListElement: recipes.map((recipe, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `${baseUrl}/recipes/${recipe.id}`,
+      url: `${baseUrl}/${localizedPath(locale, `recipes/${recipe.id}`)}`,
       name: recipe.title,
       image: recipe.imageUrl ?? undefined,
     })),
@@ -143,12 +171,14 @@ const createIngredientItemListStructuredData = (
 
 export const generateIngredientJsonLd = (
   detail: IngredientDetailView,
-  recipes: DetailedRecipeGridItem[]
+  recipes: DetailedRecipeGridItem[],
+  locale: Locale = "ko"
 ) => ({
   "@context": "https://schema.org",
   "@graph": [
-    createIngredientBreadcrumb(detail.name, detail.id),
-    createIngredientItemListStructuredData(detail, recipes),
+    createIngredientWebPage(detail, locale),
+    createIngredientBreadcrumb(detail.name, detail.id, locale),
+    createIngredientItemListStructuredData(detail, recipes, locale),
   ],
 });
 
