@@ -63,6 +63,16 @@ export default async function RootLayout({
           href="https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com"
         />
         <link
+          rel="preconnect"
+          href="https://pagead2.googlesyndication.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://googleads.g.doubleclick.net"
+          crossOrigin="anonymous"
+        />
+        <link
           rel="alternate"
           type="application/rss+xml"
           title="레시피오 – 전체"
