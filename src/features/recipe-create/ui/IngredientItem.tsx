@@ -120,13 +120,25 @@ const IngredientItem = ({
               })}
             />
           )}
-          <UnitSelect
-            ingredientId={field.ingredientId}
-            value={unit}
-            onChange={handleUnitChange}
-            disabled={isApproximate}
-            ariaLabel={format(ui.unitSelectAria, { name: field.name })}
-          />
+          {field.ingredientId ? (
+            <UnitSelect
+              ingredientId={field.ingredientId}
+              value={unit}
+              onChange={handleUnitChange}
+              disabled={isApproximate}
+              ariaLabel={format(ui.unitSelectAria, { name: field.name })}
+            />
+          ) : (
+            <input
+              type="text"
+              value={unit}
+              onChange={(e) => handleUnitChange(e.target.value)}
+              disabled={isApproximate}
+              placeholder={ui.unitPlaceholder}
+              aria-label={format(ui.unitSelectAria, { name: field.name })}
+              className="text-ink h-8 w-20 rounded border border-gray-300 px-2 text-sm focus:border-green-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+            />
+          )}
         </div>
         <div className="flex-shrink-0">
           <Button
