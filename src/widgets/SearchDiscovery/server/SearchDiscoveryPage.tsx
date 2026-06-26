@@ -6,10 +6,12 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
+import type { Locale } from "@/shared/i18n";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
+import CookedPopularServerSlide from "@/widgets/RecipeSlide/server/CookedPopularServerSlide";
 import SearchDiscoveryClient from "@/widgets/SearchDiscovery/SearchDiscoveryClient";
 
 export const searchDiscoveryMetadata = {
@@ -18,9 +20,12 @@ export const searchDiscoveryMetadata = {
   robots: { index: false, follow: true },
 };
 
-type Props = { focused: boolean };
+type Props = { focused: boolean; locale?: Locale };
 
-export const SearchDiscoveryPage = async ({ focused }: Props) => {
+export const SearchDiscoveryPage = async ({
+  focused,
+  locale = "ko",
+}: Props) => {
   const queryClient = new QueryClient();
 
   if (!focused) {
@@ -37,7 +42,10 @@ export const SearchDiscoveryPage = async ({ focused }: Props) => {
   return (
     <Suspense>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <SearchDiscoveryClient focused={focused} />
+        <SearchDiscoveryClient
+          focused={focused}
+          cookedPopularSlot={<CookedPopularServerSlide locale={locale} />}
+        />
       </HydrationBoundary>
     </Suspense>
   );

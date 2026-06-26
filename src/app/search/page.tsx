@@ -11,5 +11,5 @@ type SearchPageProps = {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { focused } = await searchParams;
-  return <SearchDiscoveryPage focused={focused === "1"} />;
+  return <SearchDiscoveryPage focused={focused === "1"} locale="ko" />;
 }
