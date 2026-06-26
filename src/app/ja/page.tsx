@@ -15,17 +15,42 @@ import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
+import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
+
 import CategoryTabs from "@/widgets/CategoryTabs";
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 import { selectHomeBannerSlides } from "@/widgets/HomeBannerCarousel/selectSlides";
+import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
+import {
+  CategoryPopularServerSlide,
+  CountryPopularServerSlide,
+  QuickPopularServerSlide,
+  SeasonalPopularServerSlide,
+  YoutubeVerifiedServerSlide,
+} from "@/widgets/RecipeSlide/server";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
 export const metadata = buildHomeMetadata("ja");
 
-const HomePage = () => {
+const HomePage = async () => {
   const dict = getDictionary("ja");
+
+  const [staticPopularRecipes, staticBudgetRecipes] = await Promise.all([
+    getStaticRecipesOnServer({
+      period: "weekly",
+      sort: "desc",
+      key: "popular-recipes",
+      lang: "ja",
+    }),
+    getStaticRecipesOnServer({
+      maxCost: 10000,
+      sort: "desc",
+      key: "budget-recipes",
+      lang: "ja",
+    }),
+  ]);
 
   const slides = selectHomeBannerSlides("ja").map((s) =>
     s.id === "youtube"
@@ -72,6 +97,28 @@ const HomePage = () => {
           <WebOnlyAdSlot>
             <HomeAnchorAdSlot className="my-2" />
           </WebOnlyAdSlot>
+
+          <RecipeSlideWithErrorBoundary
+            title={dict.home.popularSectionTitle}
+            staticRecipes={staticPopularRecipes.content}
+            locale="ja"
+          />
+
+          <YoutubeVerifiedServerSlide locale="ja" />
+
+          <SeasonalPopularServerSlide locale="ja" />
+
+          <CountryPopularServerSlide locale="ja" />
+
+          <QuickPopularServerSlide locale="ja" />
+
+          <RecipeSlideWithErrorBoundary
+            title={dict.home.budgetSectionTitle}
+            staticRecipes={staticBudgetRecipes.content}
+            locale="ja"
+          />
+
+          <CategoryPopularServerSlide locale="ja" />
         </div>
       </Container>
       <DesktopFooter />
