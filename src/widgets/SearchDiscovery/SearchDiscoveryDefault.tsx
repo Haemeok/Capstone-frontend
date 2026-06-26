@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { useLocalizedRouter } from "@/shared/i18n";
 import {
   useSearchDiscoveryDict,
@@ -11,12 +13,19 @@ import { ContentPageGrid } from "@/features/content-pages";
 import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 import { SearchInput } from "@/features/search-input";
 
+import CookedAgainSlide from "@/widgets/RecipeSlide/CookedAgainSlide";
+import FridgeIngredientSlide from "@/widgets/RecipeSlide/FridgeIngredientSlide";
+
 import LatestRecipesSlide from "./ui/LatestRecipesSlide";
 import NutritionThemeSection from "./ui/NutritionThemeSection";
 import PriceRangeSection from "./ui/PriceRangeSection";
 import SaveButton from "./ui/SaveButton";
 
-const SearchDiscoveryDefault = () => {
+const SearchDiscoveryDefault = ({
+  cookedPopularSlot,
+}: {
+  cookedPopularSlot?: ReactNode;
+}) => {
   const router = useLocalizedRouter();
   const t = useSearchDiscoveryDict();
   const locale = useSearchDiscoveryLocale();
@@ -38,6 +47,10 @@ const SearchDiscoveryDefault = () => {
         </div>
 
         <LatestRecipesSlide />
+
+        <FridgeIngredientSlide locale={locale} />
+        <CookedAgainSlide locale={locale} />
+        {cookedPopularSlot}
 
         <section className="space-y-4">
           <h3 className="text-ink text-lg font-bold">
