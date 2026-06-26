@@ -16,7 +16,7 @@ jest.mock("@/shared/lib/bridge", () => ({
   triggerHaptic: jest.fn(),
   isAppWebView: () => false,
 }));
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: () => ({ addToast: mockAddToast }),
 }));
 jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAICreditPrompt } from "@/shared/hooks/useAICreditPrompt";
+import { useAICreditPrompt } from "@/entities/user/model/useAICreditPrompt";
 
 import AICreditDrawer from "@/widgets/AICreditDrawer";
 

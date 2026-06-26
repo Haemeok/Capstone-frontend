@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import NotFound from "@/shared/ui/NotFound";
+import NotFound from "@/widgets/NotFound";
 
 const PrivateRecipeNotFound = () => {
   return (

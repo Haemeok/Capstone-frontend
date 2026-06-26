@@ -19,7 +19,7 @@ jest.mock("@/shared/config/cache", () => ({
 jest.mock("@/shared/lib/bridge", () => ({
   triggerHaptic: jest.fn(),
 }));
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: () => ({ addToast: jest.fn() }),
 }));
 

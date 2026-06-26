@@ -11,7 +11,7 @@ import { buildHomeMetadata } from "@/shared/lib/metadata";
 import {
   createOrganizationStructuredData,
   createWebsiteStructuredData,
-} from "@/shared/lib/metadata/structuredData";
+} from "@/entities/recipe/lib/metadata/schema";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";

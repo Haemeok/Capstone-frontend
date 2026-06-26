@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
 import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
-import { matchIngredientsFromText } from "@/shared/lib/matchIngredientsFromText";
+import { matchIngredientsFromText } from "@/entities/ingredient/lib/matchIngredientsFromText";
 import { Image } from "@/shared/ui/image/Image";
 import IngredientIcon from "@/shared/ui/IngredientIcon";
 

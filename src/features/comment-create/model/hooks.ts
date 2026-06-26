@@ -6,7 +6,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { Comment } from "@/entities/comment";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { postComment } from "./api";
 import { CreateCommentMutationParams } from "./types";

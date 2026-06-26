@@ -17,7 +17,7 @@ import {
   useUpdateRecipeBookName,
 } from "@/entities/recipe-book";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 const NAME_MAX_LENGTH = 50;
 

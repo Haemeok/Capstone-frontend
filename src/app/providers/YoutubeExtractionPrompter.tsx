@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-import { useYoutubeExtractionPrompt } from "@/shared/hooks/useYoutubeExtractionPrompt";
+import { useYoutubeExtractionPrompt } from "@/entities/user/model/useYoutubeExtractionPrompt";
 
 const YoutubeExtractionDrawer = dynamic(
   () => import("@/widgets/YoutubeExtractionDrawer"),

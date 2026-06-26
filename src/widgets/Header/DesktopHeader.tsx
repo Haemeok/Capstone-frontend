@@ -8,7 +8,7 @@ import { User } from "lucide-react";
 
 import { LocalizedLink, stripLocale, useChromeDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
-import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
+import LoginPromotionBadge from "@/entities/user/ui/LoginPromotionBadge";
 import { Image } from "@/shared/ui/image/Image";
 
 import { useUserStore } from "@/entities/user";

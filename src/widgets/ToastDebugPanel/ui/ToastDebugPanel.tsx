@@ -14,8 +14,8 @@ import {
   DrawerTitle,
 } from "@/shared/ui/shadcn/drawer";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
-import type { ToastType } from "@/widgets/Toast/model/types";
+import { useToastStore } from "@/shared/ui/toast/model/store";
+import type { ToastType } from "@/shared/ui/toast/model/types";
 
 type Variant = ToastType["variant"];
 type Position = NonNullable<ToastType["position"]>;

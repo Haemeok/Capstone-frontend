@@ -14,7 +14,7 @@ import {
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useToggleRecipeSave } from "../model/hooks";
 import { useSaveToastWithChange } from "../model/useSaveToastWithChange";

@@ -8,7 +8,7 @@ import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
 import { useChromeDict } from "@/shared/i18n";
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
-import LoginPromotionBadge from "@/shared/ui/badge/LoginPromotionBadge";
+import LoginPromotionBadge from "@/entities/user/ui/LoginPromotionBadge";
 import { UnsavedChangesModal } from "@/shared/ui/modal/UnsavedChangesModal";
 
 import { useUserStore } from "@/entities/user";

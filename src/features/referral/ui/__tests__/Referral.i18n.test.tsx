@@ -45,7 +45,7 @@ jest.mock("@/entities/referral", () => ({
 jest.mock("@/entities/user", () => ({
   useAdFreeStatus: () => ({ isActive: false, remaining: 0, adFreeUntil: null }),
 }));
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: () => ({ addToast: jest.fn() }),
 }));
 jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({

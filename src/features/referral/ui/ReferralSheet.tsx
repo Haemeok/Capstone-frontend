@@ -22,7 +22,7 @@ import {
 } from "@/entities/referral";
 import { useAdFreeStatus } from "@/entities/user";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { AdFreeActiveNotice } from "./AdFreeActiveNotice";
 

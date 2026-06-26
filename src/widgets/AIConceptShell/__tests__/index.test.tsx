@@ -6,7 +6,7 @@ import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 import AIConceptShell from "../index";
 

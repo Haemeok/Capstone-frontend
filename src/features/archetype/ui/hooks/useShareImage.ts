@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 
 import { toPng } from "html-to-image";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 export const useShareImage = (elementId: string) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);

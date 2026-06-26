@@ -1,8 +1,8 @@
 "use client";
 
-import { useToastStore } from "@/widgets/Toast";
-import { RichToast } from "@/widgets/Toast/ui/RichToast";
-import Toast from "@/widgets/Toast/ui/Toast";
+import { useToastStore } from "@/shared/ui/toast";
+import { RichToast } from "@/shared/ui/toast/ui/RichToast";
+import Toast from "@/shared/ui/toast/ui/Toast";
 
 type ToastPosition = "top" | "middle" | "bottom";
 

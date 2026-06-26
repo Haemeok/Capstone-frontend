@@ -8,7 +8,7 @@ jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
 }));
 
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: () => ({ addToast: jest.fn() }),
 }));
 

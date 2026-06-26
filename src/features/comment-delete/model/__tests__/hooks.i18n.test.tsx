@@ -17,7 +17,7 @@ jest.mock("@/shared/config/cache", () => ({
 
 const addToast = jest.fn(() => "toast-id");
 const removeToast = jest.fn();
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: () => ({ addToast, removeToast }),
 }));
 

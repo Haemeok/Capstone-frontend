@@ -10,7 +10,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 import {
   buildRecipeFormSchema,

@@ -11,7 +11,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useRecipeDetailQuery } from "@/entities/recipe";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 import {
   buildRecipeFormSchema,

@@ -33,7 +33,7 @@ const DuplicateRecipeSection = dynamic(
 );
 
 import UsageLimitBanner from "@/widgets/AIRecipeForm/UsageLimitBanner";
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useYoutubeUrl } from "./YoutubeUrlProvider";
 

@@ -8,7 +8,7 @@ import { trackReviewAction } from "@/shared/lib/review";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { createRecipeRecord } from "./api";
 import { useRecipeCompleteStore } from "./store";

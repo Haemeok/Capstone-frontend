@@ -14,7 +14,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 
 import { useRecipeHistoryItemsQuery } from "@/entities/recipe/model/hooks";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { formatTimelineDateHeader } from "../timeline/lib/formatTimelineDateHeader";
 import NutritionCard from "./components/NutritionCard";

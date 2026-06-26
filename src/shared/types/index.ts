@@ -49,6 +49,3 @@ export type NextErrorProps = {
   error: Error & { digest?: string };
   reset: () => void;
 };
-
-export type { AuthStatus, ServerAuthResult } from "./auth";
-export { isAuthenticated, isTokenExpired, isUnauthenticated } from "./auth";

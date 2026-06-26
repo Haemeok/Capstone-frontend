@@ -14,7 +14,7 @@ import { useUserStore } from "@/entities/user";
 
 import usePostReviewMutation from "@/features/recipe-review/model/hooks";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 const ReviewPage = () => {
   const [rating, setRating] = useState<number>(0);

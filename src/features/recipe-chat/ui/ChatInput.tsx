@@ -8,7 +8,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
 
-import { useLoginEncourageDrawerStore } from "@/widgets/LoginEncourageDrawer/model/store";
+import { useLoginEncourageDrawerStore } from "@/features/auth/ui/LoginEncourageDrawer/model/store";
 
 const MAX_LENGTH = 500;
 const COUNTER_WARN_THRESHOLD = 450;

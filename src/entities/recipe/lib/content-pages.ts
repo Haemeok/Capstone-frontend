@@ -1,6 +1,7 @@
-import { RecipeQueryParams } from "@/entities/recipe";
+import type { ContentPageId } from "@/shared/config/constants/recipe";
+import { CATEGORY_BASE_URL } from "@/shared/config/constants/recipe";
 
-import { CATEGORY_BASE_URL } from "./recipe";
+import { RecipeQueryParams } from "@/entities/recipe";
 
 export type ContentPageSearchParams = Pick<
   RecipeQueryParams,
@@ -20,20 +21,6 @@ export type ContentPageSearchParams = Pick<
   | "maxFat"
   | "types"
 >;
-
-export type ContentPageId =
-  | "diet-healthy"
-  | "ai-creative"
-  | "chef-secret"
-  | "solo-drink"
-  | "budget-gourmet"
-  | "late-night-guilty"
-  | "youtube-mukbang"
-  | "hangover-soup"
-  | "air-fryer-legend"
-  | "kids-snack"
-  | "home-party-flex"
-  | "protein-bulk";
 
 export type ContentPage = {
   id: ContentPageId;

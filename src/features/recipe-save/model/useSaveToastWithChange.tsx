@@ -6,7 +6,7 @@ import { format, useRecipeActionsDict } from "@/shared/i18n";
 
 import { ChangeBookSheet } from "@/features/recipe-book-change";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 type NotifyTarget = { id: string; name: string } | undefined;
 

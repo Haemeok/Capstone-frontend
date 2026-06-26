@@ -15,7 +15,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 const addToast = jest.fn();
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: () => ({ addToast }),
 }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
