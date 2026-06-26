@@ -8,10 +8,14 @@ import type { LocalizedRecipeResult } from "./localeResult";
 import { parseLocalizedRecipeResult } from "./localeResult";
 import { safeFetchJson } from "./safeFetchJson";
 import {
+  CategoryPopularResponse,
+  CountryPopularResponse,
   DetailedRecipesApiResponse,
+  QuickPopularResponse,
   Recipe,
   RecipeItemsQueryParams,
   RecipeStatus,
+  SeasonalPopularResponse,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   StaticRecipe,
@@ -529,6 +533,42 @@ export const getYoutubeVerifiedOnServer = (
     revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
     tags: [CACHE_TAGS.recipesDiscovery("youtube-verified")],
     fallback: { content: [] },
+  });
+
+export const getQuickPopularOnServer = (
+  locale: Locale
+): Promise<QuickPopularResponse> =>
+  safeFetchJson(withLang(END_POINTS.RECIPE_QUICK_POPULAR, locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    tags: [CACHE_TAGS.recipesDiscovery("quick-popular")],
+    fallback: { maxCookingTime: 0, content: [] },
+  });
+
+export const getCountryPopularOnServer = (
+  locale: Locale
+): Promise<CountryPopularResponse> =>
+  safeFetchJson(withLang(END_POINTS.RECIPE_COUNTRY_POPULAR, locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    tags: [CACHE_TAGS.recipesDiscovery("country-popular")],
+    fallback: { countryCode: "US", countryName: "", content: [] },
+  });
+
+export const getSeasonalPopularOnServer = (
+  locale: Locale
+): Promise<SeasonalPopularResponse> =>
+  safeFetchJson(withLang(END_POINTS.RECIPE_SEASONAL_POPULAR, locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    tags: [CACHE_TAGS.recipesDiscovery("seasonal-popular")],
+    fallback: { seasonalIngredientName: null, content: [] },
+  });
+
+export const getCategoryPopularOnServer = (
+  locale: Locale
+): Promise<CategoryPopularResponse> =>
+  safeFetchJson(withLang(END_POINTS.RECIPE_CATEGORY_POPULAR, locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    tags: [CACHE_TAGS.recipesDiscovery("category-popular")],
+    fallback: { categoryCode: "RICE", content: [] },
   });
 
 export const getPrivateRecipeOnServer = async (

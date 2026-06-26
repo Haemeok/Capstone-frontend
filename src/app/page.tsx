@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import {
   HomeAnchorAdSlot,
   HomeHeaderAnchorAdSlot,
+  HomeSlideFeedAdSlot,
   WebOnlyAdSlot,
 } from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
@@ -23,7 +24,13 @@ import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 import { HOME_BANNER_SLIDES } from "@/widgets/HomeBannerCarousel/slides";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
-import { YoutubeVerifiedServerSlide } from "@/widgets/RecipeSlide/server";
+import {
+  CategoryPopularServerSlide,
+  CountryPopularServerSlide,
+  QuickPopularServerSlide,
+  SeasonalPopularServerSlide,
+  YoutubeVerifiedServerSlide,
+} from "@/widgets/RecipeSlide/server";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
 
 export const metadata = buildHomeMetadata("ko");
@@ -86,13 +93,33 @@ const HomePage = async () => {
             locale="ko"
           />
 
+          <YoutubeVerifiedServerSlide locale="ko" />
+
+          <WebOnlyAdSlot>
+            <HomeSlideFeedAdSlot className="my-2" index={0} />
+          </WebOnlyAdSlot>
+
+          <SeasonalPopularServerSlide locale="ko" />
+
+          <CountryPopularServerSlide locale="ko" />
+
+          <WebOnlyAdSlot>
+            <HomeSlideFeedAdSlot className="my-2" index={1} />
+          </WebOnlyAdSlot>
+
+          <QuickPopularServerSlide locale="ko" />
+
           <RecipeSlideWithErrorBoundary
             title={dict.home.budgetSectionTitle}
             staticRecipes={staticBudgetRecipes.content}
             locale="ko"
           />
 
-          <YoutubeVerifiedServerSlide locale="ko" />
+          <WebOnlyAdSlot>
+            <HomeSlideFeedAdSlot className="my-2" index={2} />
+          </WebOnlyAdSlot>
+
+          <CategoryPopularServerSlide locale="ko" />
         </div>
       </Container>
       <DesktopFooter />
