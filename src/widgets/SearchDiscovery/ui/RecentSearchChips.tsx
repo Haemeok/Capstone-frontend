@@ -10,10 +10,10 @@ import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl
 
 const RecentSearchChips = () => {
   const router = useLocalizedRouter();
-  const { searches, isLoaded, removeSearch, clearAll } = useRecentSearches();
+  const { searches, removeSearch, clearAll } = useRecentSearches();
   const t = useSearchDiscoveryDict();
 
-  if (!isLoaded || searches.length === 0) {
+  if (searches.length === 0) {
     return null;
   }
 

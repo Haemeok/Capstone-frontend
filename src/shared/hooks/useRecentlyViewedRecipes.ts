@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 export type RecentRecipe = {
   id: string;
@@ -21,6 +21,10 @@ export type RecentRecipe = {
 
 const STORAGE_KEY = "recently-viewed-recipes";
 const MAX_ITEMS = 20;
+const EMPTY: RecentRecipe[] = [];
+
+let cached: RecentRecipe[] | null = null;
+const listeners = new Set<() => void>();
 
 const readRecents = (): RecentRecipe[] => {
   try {
@@ -57,47 +61,51 @@ const mergeRecentRecipes = (
   return [merged, ...filtered].slice(0, MAX_ITEMS);
 };
 
-// 훅 외부에서 사용 가능한 저장 함수
+const emit = () => {
+  for (const listener of listeners) listener();
+};
+
+const setRecents = (next: RecentRecipe[]) => {
+  cached = next;
+  writeRecents(next);
+  emit();
+};
+
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+};
+
+const getSnapshot = (): RecentRecipe[] => {
+  if (cached === null) cached = readRecents();
+  return cached;
+};
+
 export const saveRecentlyViewedRecipe = (recipe: RecentRecipe) => {
   if (!recipe.id || !recipe.title) return;
-  writeRecents(mergeRecentRecipes(readRecents(), recipe));
+  setRecents(mergeRecentRecipes(getSnapshot(), recipe));
 };
 
 export const useRecentlyViewedRecipes = () => {
-  const [recipes, setRecipes] = useState<RecentRecipe[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    setRecipes(readRecents());
-    setIsLoaded(true);
-  }, []);
+  const recipes = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY);
 
   const addRecipe = useCallback((recipe: RecentRecipe) => {
     if (!recipe.id || !recipe.title) return;
-
-    setRecipes((prev) => {
-      const next = mergeRecentRecipes(prev, recipe);
-      writeRecents(next);
-      return next;
-    });
+    setRecents(mergeRecentRecipes(getSnapshot(), recipe));
   }, []);
 
   const removeRecipe = useCallback((recipeId: string) => {
-    setRecipes((prev) => {
-      const next = prev.filter((r) => r.id !== recipeId);
-      writeRecents(next);
-      return next;
-    });
+    setRecents(getSnapshot().filter((r) => r.id !== recipeId));
   }, []);
 
   const clearAll = useCallback(() => {
-    writeRecents([]);
-    setRecipes([]);
+    setRecents([]);
   }, []);
 
   return {
     recipes,
-    isLoaded,
     addRecipe,
     removeRecipe,
     clearAll,
