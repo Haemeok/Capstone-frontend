@@ -574,12 +574,6 @@ export const getCategoryPopularOnServer = (
     fallback: { categoryCode: "RICE", content: [] },
   });
 
-const withLangPath = (path: string, locale: Locale) => {
-  const url = new URL(`${BASE_API_URL}${path}`);
-  if (locale !== "ko") url.searchParams.set("lang", locale);
-  return url.toString();
-};
-
 export const getCookedPopularOnServer = (
   locale: Locale
 ): Promise<CookedPopularResponse> =>
@@ -593,33 +587,27 @@ export const getSameIngredientOnServer = (
   recipeId: string,
   locale: Locale
 ): Promise<SameIngredientResponse> =>
-  safeFetchJson(
-    withLangPath(END_POINTS.RECIPE_SAME_INGREDIENT(recipeId), locale),
-    {
-      revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
-      tags: [CACHE_TAGS.recipesDetailSlide("same-ingredient", recipeId)],
-      fallback: { ingredientName: null, content: [] },
-    }
-  );
+  safeFetchJson(withLang(END_POINTS.RECIPE_SAME_INGREDIENT(recipeId), locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
+    tags: [CACHE_TAGS.recipesDetailSlide("same-ingredient", recipeId)],
+    fallback: { ingredientName: null, content: [] },
+  });
 
 export const getTitleKeywordOnServer = (
   recipeId: string,
   locale: Locale
 ): Promise<TitleKeywordResponse> =>
-  safeFetchJson(
-    withLangPath(END_POINTS.RECIPE_TITLE_KEYWORD(recipeId), locale),
-    {
-      revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
-      tags: [CACHE_TAGS.recipesDetailSlide("title-keyword", recipeId)],
-      fallback: { keyword: null, content: [] },
-    }
-  );
+  safeFetchJson(withLang(END_POINTS.RECIPE_TITLE_KEYWORD(recipeId), locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
+    tags: [CACHE_TAGS.recipesDetailSlide("title-keyword", recipeId)],
+    fallback: { keyword: null, content: [] },
+  });
 
 export const getRemixesOnServer = (
   recipeId: string,
   locale: Locale
 ): Promise<StaticDetailedRecipesApiResponse> =>
-  safeFetchJson(withLangPath(END_POINTS.RECIPE_REMIXES(recipeId), locale), {
+  safeFetchJson(withLang(END_POINTS.RECIPE_REMIXES(recipeId), locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
     tags: [CACHE_TAGS.recipesDetailSlide("remixes", recipeId)],
     fallback: {
