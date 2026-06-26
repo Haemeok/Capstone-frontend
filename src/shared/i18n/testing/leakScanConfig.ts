@@ -23,7 +23,6 @@ export const KO_ONLY_DIRS = [
   "src/features/curation",
   "src/features/recipe-chat",
   "src/features/level-up",
-  "src/features/user-survey",
   "src/entities/curation",
   "src/widgets/BridgeTest",
   "src/widgets/NotificationTest",
