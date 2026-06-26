@@ -86,6 +86,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Server vs client boundary](rules/nextjs-server-vs-client-boundary.md) — `'use client'` at the lowest point; `initialData`
 - [Error boundary needs use client](rules/nextjs-error-boundary-use-client.md) — `error.tsx`/`global-error.tsx` must carry `"use client"` on their own file; a bare re-export stub doesn't inherit it and fails `next build` (tsc won't catch)
 - [Build-time sitemap/metadata data](rules/nextjs-sitemap-build-data.md) — paginate per-chunk; one unbounded list fetch crosses the 60s static-gen timeout as data grows; caught-error-`[]` ships a silently empty sitemap
+- [Static-prerender fetch timeout](rules/nextjs-static-prerender-fetch-timeout.md) — wrap build-time page fetches in an `AbortController` timeout + error-safe fallback; `<Suspense>` does NOT let static generation skip a slow fetch (streaming is on-demand only)
 
 ### React (Compiler era)
 
