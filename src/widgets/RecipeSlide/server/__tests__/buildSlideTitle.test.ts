@@ -2,7 +2,9 @@ import {
   buildCategoryTitle,
   buildCountryTitle,
   buildQuickTitle,
+  buildSameIngredientTitle,
   buildSeasonalTitle,
+  buildTitleKeywordTitle,
 } from "../buildSlideTitle";
 
 describe("buildSlideTitle (T-TITLE1)", () => {
@@ -23,5 +25,15 @@ describe("buildSlideTitle (T-TITLE1)", () => {
   });
   it("category: 카테고리명을 채운다", () => {
     expect(buildCategoryTitle("ko", "MEAT")).toBe("오늘은 고기 요리 어때요?");
+  });
+  it("sameIngredient: 재료명을 채운다", () => {
+    expect(buildSameIngredientTitle("ko", "감자")).toBe(
+      "감자으로 만든 다른 레시피를 찾고 있으세요?"
+    );
+  });
+  it("titleKeyword: 키워드를 채운다", () => {
+    expect(buildTitleKeywordTitle("ko", "김치")).toBe(
+      "김치 레시피를 찾고 있으세요?"
+    );
   });
 });

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -51,9 +52,11 @@ export const buildLocalizedRecipeMetadata = async ({
 export const LocalizedRecipePage = async ({
   recipeId,
   locale,
+  bottomSlides,
 }: {
   recipeId: string;
   locale: LocalizedLocale;
+  bottomSlides?: ReactNode;
 }) => {
   const result = await getLocalizedRecipeOnServer(recipeId, locale);
 
@@ -94,6 +97,7 @@ export const LocalizedRecipePage = async ({
         locale={locale}
         notTranslatedMessage={notTranslatedMessage}
       />
+      {bottomSlides}
       <BottomAnchorAdSlot />
       <SmartAppBanner />
     </ScrollReset>

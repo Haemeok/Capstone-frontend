@@ -19,6 +19,7 @@ import {
 import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import { RecipeDetailView } from "@/widgets/RecipeDetailView";
+import { RecipeDetailServerSlides } from "@/widgets/RecipeSlide/server";
 
 import { RemixRedirectToast } from "./RemixRedirectToast";
 
@@ -77,6 +78,7 @@ export default async function RecipeDetailPage({
         }}
       />
       <RecipeDetailView recipe={staticRecipe} recipeId={recipeId} locale="ko" />
+      <RecipeDetailServerSlides recipeId={recipeId} locale="ko" />
       <BottomAnchorAdSlot />
       <SmartAppBanner />
     </ScrollReset>

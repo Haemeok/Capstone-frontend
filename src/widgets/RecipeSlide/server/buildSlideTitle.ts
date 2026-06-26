@@ -1,5 +1,8 @@
 import type { Locale } from "@/shared/i18n";
 import { format } from "@/shared/i18n";
+import { recipeDetail as enDetail } from "@/shared/i18n/messages/en/recipeDetail";
+import { recipeDetail as jaDetail } from "@/shared/i18n/messages/ja/recipeDetail";
+import { recipeDetail as koDetail } from "@/shared/i18n/messages/ko/recipeDetail";
 import { searchDiscoveryMessages } from "@/shared/i18n/searchDiscoveryMessages";
 
 import type {
@@ -8,6 +11,12 @@ import type {
 } from "@/entities/recipe/model/types";
 
 import { monthToSeason } from "../SeasonalPopularSlide";
+
+export const recipeDetailMessages = {
+  ko: koDetail,
+  ja: jaDetail,
+  en: enDetail,
+} as const;
 
 export const buildSeasonalTitle = (
   locale: Locale,
@@ -44,3 +53,15 @@ export const buildCategoryTitle = (
     category: t.categoryPopularNames[code],
   });
 };
+
+export const buildSameIngredientTitle = (
+  locale: Locale,
+  ingredientName: string
+): string =>
+  format(recipeDetailMessages[locale].sameIngredientTitle, { ingredientName });
+
+export const buildTitleKeywordTitle = (
+  locale: Locale,
+  keyword: string
+): string =>
+  format(recipeDetailMessages[locale].titleKeywordTitle, { keyword });
