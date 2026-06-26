@@ -11,7 +11,7 @@ const mockPathname = jest.fn();
 jest.mock("next/navigation", () => ({ usePathname: () => mockPathname() }));
 
 const addToast = jest.fn();
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: (sel: (s: { addToast: jest.Mock }) => unknown) =>
     sel({ addToast }),
 }));

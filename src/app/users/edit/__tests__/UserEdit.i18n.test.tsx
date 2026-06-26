@@ -10,7 +10,7 @@ import { userPagesMessages } from "@/shared/i18n/userPagesMessages";
 import type { User } from "@/entities/user";
 import { useUserStore } from "@/entities/user";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 const mockBack = jest.fn();
 let mockPathname = "/users/edit";

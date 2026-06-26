@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 const COPIED_FEEDBACK_DURATION_MS = 1500;
 

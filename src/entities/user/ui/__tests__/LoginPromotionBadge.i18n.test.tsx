@@ -6,10 +6,10 @@ import LoginPromotionBadge from "../LoginPromotionBadge";
 
 const mockPathname = jest.fn();
 jest.mock("next/navigation", () => ({ usePathname: () => mockPathname() }));
-jest.mock("@/entities/user", () => ({
+jest.mock("@/entities/user/model/store", () => ({
   useUserStore: () => ({ user: null, isAuthReady: true }),
 }));
-jest.mock("../../image", () => ({
+jest.mock("@/shared/ui/image", () => ({
   Image: ({ alt }: { alt: string }) => <img alt={alt} />,
 }));
 

@@ -20,7 +20,7 @@ import { RecipeSaveButton } from "@/features/recipe-save";
 import { useRecipeStatus } from "@/features/recipe-status";
 import { LockButton } from "@/features/recipe-visibility";
 
-import { useLoginEncourageDrawerStore } from "@/widgets/LoginEncourageDrawer/model/store";
+import { useLoginEncourageDrawerStore } from "@/features/auth/ui/LoginEncourageDrawer/model/store";
 import ShareButton from "@/widgets/ShareButton";
 
 import {

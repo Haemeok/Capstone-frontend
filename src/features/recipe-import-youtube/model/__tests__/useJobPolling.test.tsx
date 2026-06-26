@@ -22,7 +22,7 @@ jest.mock("@tanstack/react-query", () => ({
     invalidateQueries: jest.fn(),
   }),
 }));
-jest.mock("@/widgets/Toast", () => ({
+jest.mock("@/shared/ui/toast", () => ({
   useToastStore: () => jest.fn(),
 }));
 

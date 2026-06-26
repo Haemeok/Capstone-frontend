@@ -12,7 +12,7 @@ jest.mock("@/shared/api/file", () => ({
 jest.mock("@/shared/lib/bridge", () => ({
   triggerHaptic: jest.fn(),
 }));
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: jest.fn(() => ({ addToast: jest.fn() })),
 }));
 jest.mock("next/navigation", () => ({
@@ -34,7 +34,7 @@ import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { useSubmitRemix } from "@/features/recipe-create/model/hooks/useSubmitRemix";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 function makeQC() {
   return new QueryClient({

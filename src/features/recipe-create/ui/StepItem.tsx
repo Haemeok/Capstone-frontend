@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { X } from "lucide-react";
 
 import { format, useRecipeFormDict } from "@/shared/i18n";
-import { ImageUploader } from "@/shared/ui/image/ImageUploader";
+import { ImageUploader } from "@/features/recipe-create/ui/ImageUploader";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Label } from "@/shared/ui/shadcn/label";
 

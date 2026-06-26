@@ -144,7 +144,7 @@ jest.mock("@/widgets/AIRecipeForm/UsageLimitBanner", () => ({
   ),
 }));
 
-jest.mock("@/widgets/Toast", () => ({
+jest.mock("@/shared/ui/toast", () => ({
   useToastStore: (selector: (state: { addToast: jest.Mock }) => unknown) =>
     selector({ addToast: mockAddToast }),
 }));

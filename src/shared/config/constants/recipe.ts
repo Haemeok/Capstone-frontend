@@ -536,3 +536,17 @@ export const COUNTRY_DEFINITIONS = [
   { code: "US", label: "미국" },
   { code: "OTHER", label: "기타" },
 ] as const;
+
+export type ContentPageId =
+  | "diet-healthy"
+  | "ai-creative"
+  | "chef-secret"
+  | "solo-drink"
+  | "budget-gourmet"
+  | "late-night-guilty"
+  | "youtube-mukbang"
+  | "hangover-soup"
+  | "air-fryer-legend"
+  | "kids-snack"
+  | "home-party-flex"
+  | "protein-bulk";

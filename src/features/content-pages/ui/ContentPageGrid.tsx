@@ -1,6 +1,6 @@
 "use client";
 
-import { CONTENT_PAGES } from "@/shared/config/constants/content-pages";
+import { CONTENT_PAGES } from "@/entities/recipe/lib/content-pages";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import {
   Carousel,

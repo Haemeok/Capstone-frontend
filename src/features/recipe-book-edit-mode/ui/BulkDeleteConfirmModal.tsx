@@ -8,7 +8,7 @@ import {
   useRemoveRecipesFromBook,
 } from "@/entities/recipe-book";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useEditModeStore } from "../model/useEditModeStore";
 

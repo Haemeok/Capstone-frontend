@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 
 const mockOpenDrawer = jest.fn();
 
-jest.mock("@/widgets/LoginEncourageDrawer/model/store", () => ({
+jest.mock("@/features/auth/ui/LoginEncourageDrawer/model/store", () => ({
   useLoginEncourageDrawerStore: () => ({ openDrawer: mockOpenDrawer }),
 }));
 jest.mock("@/shared/store/useInputFocusStore", () => ({

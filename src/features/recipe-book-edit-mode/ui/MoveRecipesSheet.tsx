@@ -16,7 +16,7 @@ import {
 
 import { CreateRecipeBookSheet } from "@/features/recipe-book-create";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useEditModeStore } from "../model/useEditModeStore";
 

@@ -9,7 +9,7 @@ import { Container } from "@/shared/ui/Container";
 
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
   ssr: false,

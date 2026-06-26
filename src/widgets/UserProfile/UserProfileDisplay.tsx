@@ -3,7 +3,7 @@
 import { Share2, UserRound } from "lucide-react";
 
 import { BASE_URL } from "@/shared/config/constants/api";
-import { guestUser } from "@/shared/config/constants/user";
+import { guestUser } from "@/entities/user/model/guestUser";
 import { useShare } from "@/shared/hooks/useShare";
 import { format, useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";

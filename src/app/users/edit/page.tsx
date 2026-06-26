@@ -17,7 +17,7 @@ import { useUserStore } from "@/entities/user";
 import { usePutUserInfoMutation } from "@/features/user-edit/model/hooks";
 import { PutUserInfoVariables } from "@/features/user-edit/model/types";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 interface FormValues {
   nickname: string;

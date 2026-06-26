@@ -9,7 +9,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useUserStore } from "@/entities/user/model/store";
 
-import { useLoginEncourageDrawerStore } from "@/widgets/LoginEncourageDrawer/model/store";
+import { useLoginEncourageDrawerStore } from "@/features/auth/ui/LoginEncourageDrawer/model/store";
 
 const SavedRecipeBooksButton = () => {
   const t = useChromeDict();

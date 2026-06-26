@@ -29,7 +29,7 @@ jest.mock("@tanstack/react-query", () => ({
 jest.mock("@/entities/recipe", () => ({
   getRecipe: jest.fn(),
 }));
-jest.mock("@/widgets/Toast", () => ({
+jest.mock("@/shared/ui/toast", () => ({
   useToastStore: () => jest.fn(),
 }));
 

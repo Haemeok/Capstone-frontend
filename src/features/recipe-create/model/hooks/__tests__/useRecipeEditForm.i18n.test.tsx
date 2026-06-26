@@ -9,7 +9,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 const addToast = jest.fn();
-jest.mock("@/widgets/Toast", () => ({
+jest.mock("@/shared/ui/toast", () => ({
   useToastStore: () => ({ addToast }),
 }));
 

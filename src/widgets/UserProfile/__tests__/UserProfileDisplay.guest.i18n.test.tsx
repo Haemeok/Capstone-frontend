@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import { guestUser } from "@/shared/config/constants/user";
+import { guestUser } from "@/entities/user/model/guestUser";
 import { userPagesMessages } from "@/shared/i18n/userPagesMessages";
 
 import UserProfileDisplay from "../UserProfileDisplay";

@@ -8,7 +8,7 @@ import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
 
 import { useUserStore } from "@/entities/user/model/store";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 const generateClientDiagId = (): string => {
   const rand = Math.floor(Math.random() * 0xffffffff).toString(16);

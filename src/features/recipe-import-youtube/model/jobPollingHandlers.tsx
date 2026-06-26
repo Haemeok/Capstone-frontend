@@ -10,7 +10,7 @@ import { useUnseenImportStore } from "@/entities/recipe-book";
 
 import { scheduleReviewGate } from "@/features/review-gate";
 
-import type { useToastStore } from "@/widgets/Toast";
+import type { useToastStore } from "@/shared/ui/toast";
 
 import { JOB_POLLING_CONFIG } from "../lib/constants";
 import { createExtractionJobV2, getYoutubeJobStatus } from "./api";

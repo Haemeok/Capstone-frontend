@@ -9,7 +9,7 @@ import { FileInfoRequest, FileObject } from "@/shared/types";
 import { postRecipe } from "@/entities/recipe/model/api";
 import { RecipePayload } from "@/entities/recipe/model/types";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useFinalizeRecipe } from "./useFinalizeRecipe";
 

@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 
 import { useLocalePreferenceSync } from "@/shared/i18n";
-import { useAuthManager } from "@/shared/lib/auth/useAuthManager";
+import { useAuthManager } from "@/features/auth/model/useAuthManager";
 import { useAuthDiagBridge } from "@/shared/lib/bridge";
 
 import { useMyInfoQuery } from "@/entities/user/model/hooks";

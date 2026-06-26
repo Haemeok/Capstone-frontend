@@ -42,7 +42,7 @@ jest.mock("@/entities/recipe-book", () => ({
 }));
 
 const addToast = jest.fn();
-jest.mock("@/widgets/Toast/model/store", () => ({
+jest.mock("@/shared/ui/toast/model/store", () => ({
   useToastStore: (sel: (s: { addToast: jest.Mock }) => unknown) =>
     sel({ addToast }),
 }));

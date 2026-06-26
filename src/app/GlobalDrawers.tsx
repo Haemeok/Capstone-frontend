@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 
 const GlobalLoginEncourageDrawer = dynamic(
-  () => import("@/widgets/LoginEncourageDrawer/GlobalLoginEncourageDrawer"),
+  () => import("@/features/auth/ui/LoginEncourageDrawer/GlobalLoginEncourageDrawer"),
   { ssr: false }
 );
 const GlobalNotificationPermissionDrawer = dynamic(

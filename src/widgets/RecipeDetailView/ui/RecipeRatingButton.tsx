@@ -7,7 +7,7 @@ import { useUserStore } from "@/entities/user/model/store";
 
 import { useRecipeStatus } from "@/features/recipe-status";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 type RecipeRatingButtonProps = {
   avgRating: number;

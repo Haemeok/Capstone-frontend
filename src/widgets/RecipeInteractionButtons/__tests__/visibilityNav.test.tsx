@@ -45,7 +45,7 @@ jest.mock(
       return <div />;
     }
 );
-jest.mock("@/widgets/LoginEncourageDrawer/model/store", () => ({
+jest.mock("@/features/auth/ui/LoginEncourageDrawer/model/store", () => ({
   useLoginEncourageDrawerStore: () => ({ openDrawer: jest.fn() }),
 }));
 

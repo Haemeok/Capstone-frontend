@@ -10,7 +10,7 @@ import { Image } from "@/shared/ui/image/Image";
 import { useUserStore } from "@/entities/user/model/store";
 
 const LoginEncourageDrawer = dynamic(
-  () => import("@/widgets/LoginEncourageDrawer"),
+  () => import("@/features/auth/ui/LoginEncourageDrawer"),
   { ssr: false }
 );
 

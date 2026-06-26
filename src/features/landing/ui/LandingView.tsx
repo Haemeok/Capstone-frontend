@@ -3,7 +3,7 @@ import { getDictionary } from "@/shared/i18n";
 import {
   createLandingFAQStructuredData,
   createTagItemListStructuredData,
-} from "@/shared/lib/metadata/structuredData";
+} from "@/entities/recipe/lib/metadata/schema";
 
 import { LANDING_TAG_GROUPS } from "@/features/landing/config/landingTags";
 

@@ -7,10 +7,9 @@ import { X } from "lucide-react";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import { useLoginPromotionDict, useLoginPromotionLocale } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
+import { Image } from "@/shared/ui/image";
 
-import { useUserStore } from "@/entities/user";
-
-import { Image } from "../image";
+import { useUserStore } from "@/entities/user/model/store";
 
 const YouTubeIcon = (
   <svg

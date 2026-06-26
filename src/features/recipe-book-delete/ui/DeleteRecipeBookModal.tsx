@@ -8,7 +8,7 @@ import {
   useDeleteRecipeBook,
 } from "@/entities/recipe-book";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 type Props = {
   open: boolean;

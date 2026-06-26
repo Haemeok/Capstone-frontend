@@ -9,7 +9,7 @@ let mockPathname = "/";
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
 }));
-jest.mock("@/widgets/Toast", () => ({
+jest.mock("@/shared/ui/toast", () => ({
   useToastStore: () => ({ addToast, removeToast: jest.fn() }),
 }));
 jest.mock("@/entities/user", () => ({

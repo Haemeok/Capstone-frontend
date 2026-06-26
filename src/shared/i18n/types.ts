@@ -308,8 +308,8 @@ export type FridgeDict = {
   cookTimeMinutes: string;
 };
 
-import type { ContentPageId } from "@/shared/config/constants/content-pages";
 import type {
+  ContentPageId,
   NutritionFilterKey,
   NutritionThemeKey,
   TagCode,

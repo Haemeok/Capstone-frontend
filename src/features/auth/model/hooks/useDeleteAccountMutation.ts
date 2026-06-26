@@ -10,7 +10,7 @@ import { queryClient } from "@/shared/lib/queryClient";
 
 import { useUserStore } from "@/entities/user";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { deleteAccount } from "../api";
 import { composeFailureToast } from "../lib/composeFailureToast";

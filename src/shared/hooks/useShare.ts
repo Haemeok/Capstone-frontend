@@ -2,7 +2,7 @@
 
 import { isAppWebView, triggerNativeShare } from "@/shared/lib/bridge";
 
-import { useToastStore } from "@/widgets/Toast/model/store";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 type UseShareProps = {
   title?: string;

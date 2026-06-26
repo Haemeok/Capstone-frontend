@@ -16,7 +16,7 @@ import { type Recipe } from "@/entities/recipe";
 
 import { useToggleRecipeSave } from "@/features/recipe-save";
 
-import { useToastStore } from "@/widgets/Toast";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useSlideShowProgress } from "../hooks/useSlideShowProgress";
 import SlideShowContent from "../SlideShowContent";

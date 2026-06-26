@@ -20,7 +20,7 @@ jest.mock("@/entities/user", () => ({
   useUserStore: () => ({ user: { nickname: "민수", profileImage: "" } }),
 }));
 const addToast = jest.fn();
-jest.mock("@/widgets/Toast", () => ({ useToastStore: () => ({ addToast }) }));
+jest.mock("@/shared/ui/toast", () => ({ useToastStore: () => ({ addToast }) }));
 
 let postSuccess: () => void;
 const postReview = jest.fn((_v, h) => {

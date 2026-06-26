@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentPage } from "@/shared/config/constants/content-pages";
+import { ContentPage } from "@/entities/recipe/lib/content-pages";
 import { LocalizedLink } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";

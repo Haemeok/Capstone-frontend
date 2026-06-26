@@ -1,22 +1,7 @@
 import { Bookmark, Calendar, LucideIcon } from "lucide-react";
 import { Award } from "lucide-react";
 
-import { User } from "@/entities/user/model/types";
-
 import { UI_BASE_URL } from "./recipe";
-
-export const guestUser: User = {
-  id: "0",
-  nickname: "게스트",
-  profileImage: "",
-  username: "@guest",
-  introduction: "",
-  hasFirstRecord: false,
-  remainingAiGenerationQuota: 0,
-  remainingYoutubeExtractionCredits: 0,
-  remainingAiQuota: 0,
-  remainingYoutubeQuota: 0,
-};
 
 export type Tab = { id: string; icon: LucideIcon };
 

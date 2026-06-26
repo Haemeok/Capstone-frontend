@@ -14,7 +14,7 @@ import { BASE_WEBSOCKET_URL } from "@/shared/config/constants/api";
 import {
   SockJSWebSocketManager,
   type StompConnectionError,
-} from "@/shared/lib/sockjs-websocket";
+} from "@/entities/notification/model/sockjs-websocket";
 
 import { NOTIFICATION_ENDPOINTS } from "@/entities/notification/model/api";
 import type {

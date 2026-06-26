@@ -9,7 +9,7 @@ import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { TrendingYoutubeRecipe } from "@/entities/recipe/model/types";
 
 const LoginEncourageDrawer = dynamic(
-  () => import("@/widgets/LoginEncourageDrawer"),
+  () => import("@/features/auth/ui/LoginEncourageDrawer"),
   { ssr: false }
 );
 
