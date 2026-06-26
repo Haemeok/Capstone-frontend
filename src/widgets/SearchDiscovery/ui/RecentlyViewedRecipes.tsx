@@ -14,14 +14,14 @@ import {
 import DetailedRecipeGridItem from "@/widgets/RecipeGrid/ui/DetailedRecipeGridItem";
 
 const RecentlyViewedRecipes = () => {
-  const { recipes, isLoaded, clearAll } = useRecentlyViewedRecipes();
+  const { recipes, clearAll } = useRecentlyViewedRecipes();
   const t = useSearchDiscoveryDict();
 
   const validRecipes = recipes.filter(
     (recipe) => recipe.authorId && recipe.profileImage
   );
 
-  if (!isLoaded || validRecipes.length === 0) {
+  if (validRecipes.length === 0) {
     return null;
   }
 

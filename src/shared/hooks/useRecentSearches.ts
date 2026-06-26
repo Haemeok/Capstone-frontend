@@ -1,84 +1,71 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "recent-searches";
 const MAX_ITEMS = 10;
+const EMPTY: string[] = [];
 
 let cachedSearches: string[] | null = null;
+const listeners = new Set<() => void>();
 
-export const useRecentSearches = () => {
-  const [searches, setSearches] = useState<string[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+const emit = () => {
+  for (const listener of listeners) listener();
+};
 
-  useEffect(() => {
-    if (cachedSearches !== null) {
-      setSearches(cachedSearches);
-      setIsLoaded(true);
-      return;
-    }
+const setSearches = (next: string[]) => {
+  cachedSearches = next;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  } catch {
+    // ignore
+  }
+  emit();
+};
 
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+};
+
+const getSnapshot = (): string[] => {
+  if (cachedSearches === null) {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      const parsed = stored ? JSON.parse(stored) : [];
-      cachedSearches = parsed;
-      setSearches(parsed);
+      cachedSearches = stored ? JSON.parse(stored) : [];
     } catch {
       cachedSearches = [];
-      setSearches([]);
     }
-    setIsLoaded(true);
-  }, []);
+  }
+  return cachedSearches as string[];
+};
+
+export const useRecentSearches = () => {
+  const searches = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY);
 
   const addSearch = useCallback((query: string) => {
     const trimmed = query.trim();
     if (!trimmed) return;
 
-    setSearches((prev) => {
-      const filtered = prev.filter(
-        (s) => s.toLowerCase() !== trimmed.toLowerCase()
-      );
-      const newSearches = [trimmed, ...filtered].slice(0, MAX_ITEMS);
-
-      cachedSearches = newSearches;
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newSearches));
-      } catch {
-        // ignore
-      }
-
-      return newSearches;
-    });
+    const prev = getSnapshot();
+    const filtered = prev.filter(
+      (s) => s.toLowerCase() !== trimmed.toLowerCase()
+    );
+    setSearches([trimmed, ...filtered].slice(0, MAX_ITEMS));
   }, []);
 
   const removeSearch = useCallback((query: string) => {
-    setSearches((prev) => {
-      const newSearches = prev.filter((s) => s !== query);
-
-      cachedSearches = newSearches;
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newSearches));
-      } catch {
-        // ignore
-      }
-
-      return newSearches;
-    });
+    setSearches(getSnapshot().filter((s) => s !== query));
   }, []);
 
   const clearAll = useCallback(() => {
-    cachedSearches = [];
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
-    } catch {
-      // ignore
-    }
     setSearches([]);
   }, []);
 
   return {
     searches,
-    isLoaded,
     addSearch,
     removeSearch,
     clearAll,
