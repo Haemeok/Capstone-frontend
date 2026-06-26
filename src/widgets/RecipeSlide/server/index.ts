@@ -1,5 +1,10 @@
 export { default as CategoryPopularServerSlide } from "./CategoryPopularServerSlide";
+export { default as CookedPopularServerSlide } from "./CookedPopularServerSlide";
 export { default as CountryPopularServerSlide } from "./CountryPopularServerSlide";
 export { default as QuickPopularServerSlide } from "./QuickPopularServerSlide";
+export { default as RecipeDetailServerSlides } from "./RecipeDetailServerSlides";
+export { default as RemixesServerSlide } from "./RemixesServerSlide";
+export { default as SameIngredientServerSlide } from "./SameIngredientServerSlide";
 export { default as SeasonalPopularServerSlide } from "./SeasonalPopularServerSlide";
+export { default as TitleKeywordServerSlide } from "./TitleKeywordServerSlide";
 export { default as YoutubeVerifiedServerSlide } from "./YoutubeVerifiedServerSlide";

@@ -9,16 +9,19 @@ import { parseLocalizedRecipeResult } from "./localeResult";
 import { safeFetchJson } from "./safeFetchJson";
 import {
   CategoryPopularResponse,
+  CookedPopularResponse,
   CountryPopularResponse,
   DetailedRecipesApiResponse,
   QuickPopularResponse,
   Recipe,
   RecipeItemsQueryParams,
   RecipeStatus,
+  SameIngredientResponse,
   SeasonalPopularResponse,
   StaticDetailedRecipeGridItem,
   StaticDetailedRecipesApiResponse,
   StaticRecipe,
+  TitleKeywordResponse,
   TrendingYoutubeRecipe,
   YoutubeVerifiedResponse,
 } from "./types";
@@ -569,6 +572,60 @@ export const getCategoryPopularOnServer = (
     revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
     tags: [CACHE_TAGS.recipesDiscovery("category-popular")],
     fallback: { categoryCode: "RICE", content: [] },
+  });
+
+const withLangPath = (path: string, locale: Locale) => {
+  const url = new URL(`${BASE_API_URL}${path}`);
+  if (locale !== "ko") url.searchParams.set("lang", locale);
+  return url.toString();
+};
+
+export const getCookedPopularOnServer = (
+  locale: Locale
+): Promise<CookedPopularResponse> =>
+  safeFetchJson(withLang(END_POINTS.RECIPE_COOKED_POPULAR, locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    tags: [CACHE_TAGS.recipesDiscovery("cooked-popular")],
+    fallback: { content: [] },
+  });
+
+export const getSameIngredientOnServer = (
+  recipeId: string,
+  locale: Locale
+): Promise<SameIngredientResponse> =>
+  safeFetchJson(
+    withLangPath(END_POINTS.RECIPE_SAME_INGREDIENT(recipeId), locale),
+    {
+      revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
+      tags: [CACHE_TAGS.recipesDetailSlide("same-ingredient", recipeId)],
+      fallback: { ingredientName: null, content: [] },
+    }
+  );
+
+export const getTitleKeywordOnServer = (
+  recipeId: string,
+  locale: Locale
+): Promise<TitleKeywordResponse> =>
+  safeFetchJson(
+    withLangPath(END_POINTS.RECIPE_TITLE_KEYWORD(recipeId), locale),
+    {
+      revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
+      tags: [CACHE_TAGS.recipesDetailSlide("title-keyword", recipeId)],
+      fallback: { keyword: null, content: [] },
+    }
+  );
+
+export const getRemixesOnServer = (
+  recipeId: string,
+  locale: Locale
+): Promise<StaticDetailedRecipesApiResponse> =>
+  safeFetchJson(withLangPath(END_POINTS.RECIPE_REMIXES(recipeId), locale), {
+    revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
+    tags: [CACHE_TAGS.recipesDetailSlide("remixes", recipeId)],
+    fallback: {
+      content: [],
+      page: { size: 0, number: 0, totalElements: 0, totalPages: 0 },
+    },
   });
 
 export const getPrivateRecipeOnServer = async (
