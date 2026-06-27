@@ -37,7 +37,7 @@ describe("HeroSection i18n", () => {
     expect(jaC.textContent).toContain(ja.recipeCount.label);
     const en = getDictionary("en").landing;
     const { container: enC } = render(<HeroSection t={en} locale="en" />);
-    expect(enC.textContent).toContain("100,000+");
+    expect(enC.textContent).toContain(en.recipeCount.label);
   });
 
   it("ja Hero form에 localeHome hidden input value가 '/ja'다 (T-31)", () => {

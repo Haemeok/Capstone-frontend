@@ -3,7 +3,10 @@ import {
   APP_STORE_URL,
   PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
-import { TOTAL_RECIPE_COUNT_PHRASE } from "@/shared/config/constants/siteStats";
+import {
+  TOTAL_RECIPE_COUNT_LABEL,
+  TOTAL_RECIPE_COUNT_PHRASE,
+} from "@/shared/config/constants/siteStats";
 import type { Locale } from "@/shared/i18n";
 import { createSearchBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 import { localizedPath } from "@/shared/lib/metadata/localized";
@@ -196,7 +199,7 @@ const LANDING_FAQ_BY_LOCALE: Record<Locale, LandingFAQEntry[]> = {
       name: "레시피오는 어떤 서비스인가요?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: `레시피오는 한국어·일본어·영어로 ${TOTAL_RECIPE_COUNT_PHRASE}의 홈쿡 레시피를 제공하는 글로벌 레시피 플랫폼입니다. YouTube 링크를 붙여넣기만 하면 레시피로 자동 추출되고, AI가 상황과 재료에 맞게 레시피를 추천해줍니다.`,
+        text: `레시피오는 한국어·일본어·영어로 ${TOTAL_RECIPE_COUNT_PHRASE.ko}의 홈쿡 레시피를 제공하는 글로벌 레시피 플랫폼입니다. YouTube 링크를 붙여넣기만 하면 레시피로 자동 추출되고, AI가 상황과 재료에 맞게 레시피를 추천해줍니다.`,
       },
     },
     {
@@ -254,7 +257,7 @@ const LANDING_FAQ_BY_LOCALE: Record<Locale, LandingFAQEntry[]> = {
       name: "レシピオとはどんなサービスですか?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "レシピオは、韓国語・日本語・英語で10万品以上の家庭料理レシピを提供するグローバルなレシピプラットフォームです。YouTube動画のリンクを貼るだけでレシピが自動で抽出され、手持ちの食材やシーンに合わせてAIがレシピを提案します。",
+        text: `レシピオは、韓国語・日本語・英語で${TOTAL_RECIPE_COUNT_PHRASE.ja}の家庭料理レシピを提供するグローバルなレシピプラットフォームです。YouTube動画のリンクを貼るだけでレシピが自動で抽出され、手持ちの食材やシーンに合わせてAIがレシピを提案します。`,
       },
     },
     {
@@ -312,7 +315,7 @@ const LANDING_FAQ_BY_LOCALE: Record<Locale, LandingFAQEntry[]> = {
       name: "What is Recipio?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Recipio is a global recipe platform offering 100,000+ home-cooking recipes in Korean, Japanese, and English. Paste a YouTube link to turn the video into a recipe automatically, and let AI recommend dishes based on your ingredients and the occasion.",
+        text: `Recipio is a global recipe platform offering ${TOTAL_RECIPE_COUNT_LABEL.en} home-cooking recipes in Korean, Japanese, and English. Paste a YouTube link to turn the video into a recipe automatically, and let AI recommend dishes based on your ingredients and the occasion.`,
       },
     },
     {
@@ -374,9 +377,9 @@ export const createLandingFAQStructuredData = (locale: Locale = "ko") =>
   }) as const;
 
 const ORGANIZATION_DESCRIPTION_BY_LOCALE: Record<Locale, string> = {
-  ko: "레시피오는 한국어·일본어·영어로 10만개 이상의 홈쿡 레시피를 제공하는 글로벌 레시피 플랫폼입니다. 한국·일본·미국 현지 가정식 레시피를 다루며, YouTube 영상에서 레시피를 자동 추출하고 AI가 재료와 상황에 맞는 레시피를 추천합니다.",
-  ja: "レシピオは、韓国語・日本語・英語で10万品以上の家庭料理レシピを提供するグローバルなレシピプラットフォームです。韓国・日本・アメリカの家庭料理レシピを扱い、YouTube動画からレシピを自動抽出し、食材やシーンに合わせてAIがレシピを提案します。",
-  en: "Recipio is a global recipe platform offering 100,000+ home-cooking recipes in Korean, Japanese, and English. It features authentic home cooking from Korea, Japan, and the United States, automatically extracts recipes from YouTube videos, and uses AI to recommend dishes based on your ingredients and occasion.",
+  ko: `레시피오는 한국어·일본어·영어로 ${TOTAL_RECIPE_COUNT_PHRASE.ko}의 홈쿡 레시피를 제공하는 글로벌 레시피 플랫폼입니다. 한국·일본·미국 현지 가정식 레시피를 다루며, YouTube 영상에서 레시피를 자동 추출하고 AI가 재료와 상황에 맞는 레시피를 추천합니다.`,
+  ja: `レシピオは、韓国語・日本語・英語で${TOTAL_RECIPE_COUNT_PHRASE.ja}の家庭料理レシピを提供するグローバルなレシピプラットフォームです。韓国・日本・アメリカの家庭料理レシピを扱い、YouTube動画からレシピを自動抽出し、食材やシーンに合わせてAIがレシピを提案します。`,
+  en: `Recipio is a global recipe platform offering ${TOTAL_RECIPE_COUNT_LABEL.en} home-cooking recipes in Korean, Japanese, and English. It features authentic home cooking from Korea, Japan, and the United States, automatically extracts recipes from YouTube videos, and uses AI to recommend dishes based on your ingredients and occasion.`,
 };
 
 export const createOrganizationStructuredData = (locale: Locale = "ko") =>
