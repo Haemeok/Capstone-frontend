@@ -1,5 +1,6 @@
-export const ADSENSE_CLIENT_ID =
-  process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "";
+export const ADSENSE_CLIENT_ID = (
+  process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || ""
+).trim();
 
 export const ADSENSE_TEST_USER_IDS = new Set(
   (process.env.NEXT_PUBLIC_ADSENSE_TEST_USER_ID ?? "")
@@ -7,6 +8,8 @@ export const ADSENSE_TEST_USER_IDS = new Set(
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
 );
+
+const parseSlot = (raw: string | undefined): string => (raw ?? "").trim();
 
 const parseSlotList = (raw: string | undefined): string[] =>
   (raw ?? "")
@@ -21,18 +24,23 @@ export const AD_SLOT_IDS = {
   recipeInArticle: parseSlotList(
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_INARTICLE
   ),
-  recipeBottomAnchor:
-    process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_BOTTOM_ANCHOR || "",
-  recipeStepInArticle:
-    process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_STEP_INARTICLE || "",
-  aiFormInArticle: process.env.NEXT_PUBLIC_ADSENSE_SLOT_AI_FORM_INARTICLE || "",
-  homeAnchor: process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_ANCHOR || "",
-  homeHeaderAnchor:
-    process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_HEADER_ANCHOR || "",
+  recipeBottomAnchor: parseSlot(
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_BOTTOM_ANCHOR
+  ),
+  recipeStepInArticle: parseSlot(
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_STEP_INARTICLE
+  ),
+  aiFormInArticle: parseSlot(
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_AI_FORM_INARTICLE
+  ),
+  homeAnchor: parseSlot(process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_ANCHOR),
+  homeHeaderAnchor: parseSlot(
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_HEADER_ANCHOR
+  ),
   homeSlideFeed: parseSlotList(
     process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_SLIDE_FEED
   ),
-  youtubeAnchor: process.env.NEXT_PUBLIC_ADSENSE_SLOT_YOUTUBE_ANCHOR || "",
+  youtubeAnchor: parseSlot(process.env.NEXT_PUBLIC_ADSENSE_SLOT_YOUTUBE_ANCHOR),
 } as const;
 
 export const SEARCH_AD_EVERY_N_CARDS = 8;
