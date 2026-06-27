@@ -129,7 +129,7 @@ const DetailedRecipeGridItem = ({
                 fit="cover"
               />
             </div>
-            <span className="truncate text-[12px] leading-none font-medium text-white drop-shadow-sm">
+            <span className="truncate text-[12px] leading-5 text-white drop-shadow-sm">
               {author.authorName}
             </span>
           </div>
