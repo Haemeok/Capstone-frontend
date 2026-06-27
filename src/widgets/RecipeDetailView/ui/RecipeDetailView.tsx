@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
 import { RecipeStepAdSlot } from "@/shared/adsense/RecipeStepAdSlot";
 import { DictionaryProvider, getDictionary, type Locale } from "@/shared/i18n";
@@ -36,6 +38,7 @@ type RecipeDetailViewProps = {
   recipeId: string;
   locale: Locale;
   notTranslatedMessage?: string;
+  bottomSlides?: ReactNode;
 };
 
 export const RecipeDetailView = ({
@@ -43,6 +46,7 @@ export const RecipeDetailView = ({
   recipeId,
   locale,
   notTranslatedMessage,
+  bottomSlides,
 }: RecipeDetailViewProps) => {
   const t = getDictionary(locale);
   const saveAmount = recipe.marketPrice - recipe.totalIngredientCost;
@@ -184,6 +188,7 @@ export const RecipeDetailView = ({
             tags={recipe.tags}
             locale={locale}
           />
+          {bottomSlides}
         </RecipeContainer>
         {locale === "ko" && <ChatLauncher recipeId={recipeId} />}
       </RecipeStatusProvider>

@@ -1,6 +1,5 @@
 "use client";
 
-import LazyRecipeDetailContentSection from "./LazyRecipeDetailContentSection";
 import LazyRecommendedRecipeSlide from "./LazyRecommendedRecipeSlide";
 
 type RecipeDetailBottomSlidesProps = {
@@ -14,12 +13,5 @@ export const RecipeDetailBottomSlides = ({
   tags,
   locale,
 }: RecipeDetailBottomSlidesProps) => (
-  <>
-    <LazyRecommendedRecipeSlide
-      recipeId={recipeId}
-      tags={tags}
-      locale={locale}
-    />
-    <LazyRecipeDetailContentSection />
-  </>
+  <LazyRecommendedRecipeSlide recipeId={recipeId} tags={tags} locale={locale} />
 );
