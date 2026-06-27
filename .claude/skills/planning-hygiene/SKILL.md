@@ -59,6 +59,7 @@ Reference these guidelines when:
 
 - `cleanup-whole-file-hook-leaks-rule-slices` — When a lint cleanup is sliced by rule but a pre-commit hook lints the whole touched file, a file with multiple rules' violations forces the first slice that touches it to silence the others' errors too. Defer out-of-scope rules with a grep-able `-- deferred to #N` marker (suppressed violations vanish from linter output, so the deferred issue's scope = lint errors ∪ grep of the marker).
 - `cleanup-linter-is-the-test-oracle` — For a no-behavior-change lint/refactor cleanup, the linter's rule count is the red→green oracle (red = N, green = 0); existing tests + `tsc` + `build` guard behavior. Don't invent new unit tests to satisfy a TDD gate. Attach a real behavior-preservation review only to behavior-adjacent slices.
+- `cleanup-baseline-freeze-keeps-existing-at-warn` — To freeze remaining violations (block new, tolerate old), set the rule to `error` by default but pin the existing-violation files to `warn` via a generated baseline list — not global `error` (blocks unrelated edits to legacy files) or `off` (hides the debt). Relies on pre-commit/CI failing only on `error`; confirm that asymmetry first.
 
 ### Anti-patterns
 
