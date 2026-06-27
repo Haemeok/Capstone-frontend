@@ -23,6 +23,11 @@ const collectSlices = (layer) => {
     .filter((d) => d.isDirectory())
     .map((d) => d.name);
 };
+const fsdBaselinePath = path.join(__dirname, "eslint-fsd-baseline.json");
+const fsdBaseline = fs.existsSync(fsdBaselinePath)
+  ? JSON.parse(fs.readFileSync(fsdBaselinePath, "utf8"))
+  : [];
+
 const selfBarrelGuards = ["entities", "features", "widgets"].flatMap((layer) =>
   collectSlices(layer).map((slice) => ({
     files: [`src/${layer}/${slice}/**/*.{ts,tsx}`],
@@ -328,7 +333,7 @@ const eslintConfig = [
     },
     rules: {
       "local/no-policy-comments": "warn",
-      "local/fsd-import": ["warn", { selfBarrel: false }],
+      "local/fsd-import": ["error", { selfBarrel: false }],
       "local/no-raw-router": "warn",
       "simple-import-sort/imports": [
         "error",
@@ -388,6 +393,10 @@ const eslintConfig = [
     rules: { "local/no-raw-router": "off" },
   },
   ...selfBarrelGuards,
+  {
+    files: fsdBaseline.length ? fsdBaseline : ["__no_fsd_baseline__"],
+    rules: { "local/fsd-import": ["warn", { selfBarrel: false }] },
+  },
   prettierConfig,
   reactHooks.configs.flat.recommended,
 ];
