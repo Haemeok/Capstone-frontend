@@ -33,7 +33,8 @@ jest.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import SeasonalPopularSlide, { monthToSeason } from "../SeasonalPopularSlide";
+import { monthToSeason } from "../season";
+import SeasonalPopularSlide from "../SeasonalPopularSlide";
 
 const SEASON_ADJECTIVE: Record<string, string> = {
   spring: "따뜻한",
