@@ -1,9 +1,14 @@
+import {
+  TOTAL_RECIPE_COUNT_LABEL,
+  TOTAL_RECIPE_COUNT_PHRASE,
+} from "@/shared/config/constants/siteStats";
+
 import type { LandingDict } from "../../types";
 
 export const landing: LandingDict = {
   recipeCount: {
-    label: "100,000+",
-    phrase: "100,000+ recipes",
+    label: TOTAL_RECIPE_COUNT_LABEL.en,
+    phrase: TOTAL_RECIPE_COUNT_PHRASE.en,
   },
   hero: {
     badge: "{count} recipes · YouTube import · Local recipes · AI picks",
@@ -45,7 +50,7 @@ export const landing: LandingDict = {
     subtitle: "See the change people experienced after starting with recipio",
     items: [
       {
-        metric: "100,000+",
+        metric: TOTAL_RECIPE_COUNT_LABEL.en,
         label: "Curated recipes",
         description: "From YouTube, popular recipes, to AI",
       },

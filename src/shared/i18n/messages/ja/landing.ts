@@ -1,9 +1,14 @@
+import {
+  TOTAL_RECIPE_COUNT_LABEL,
+  TOTAL_RECIPE_COUNT_PHRASE,
+} from "@/shared/config/constants/siteStats";
+
 import type { LandingDict } from "../../types";
 
 export const landing: LandingDict = {
   recipeCount: {
-    label: "10万+",
-    phrase: "10万品以上",
+    label: TOTAL_RECIPE_COUNT_LABEL.ja,
+    phrase: TOTAL_RECIPE_COUNT_PHRASE.ja,
   },
   hero: {
     badge: "{count} レシピ・YouTube抽出・現地のレシピ・AIおすすめ",
@@ -46,7 +51,7 @@ export const landing: LandingDict = {
     subtitle: "レシピオで料理を始めた人たちのリアルな変化をご覧ください",
     items: [
       {
-        metric: "10万+",
+        metric: TOTAL_RECIPE_COUNT_LABEL.ja,
         label: "キュレーションレシピ",
         description: "YouTube・人気レシピ・AI生成まで",
       },

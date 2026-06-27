@@ -1,9 +1,14 @@
+import {
+  TOTAL_RECIPE_COUNT_LABEL,
+  TOTAL_RECIPE_COUNT_PHRASE,
+} from "@/shared/config/constants/siteStats";
+
 import type { LandingDict } from "../../types";
 
 export const landing: LandingDict = {
   recipeCount: {
-    label: "10만+",
-    phrase: "10만개 이상",
+    label: TOTAL_RECIPE_COUNT_LABEL.ko,
+    phrase: TOTAL_RECIPE_COUNT_PHRASE.ko,
   },
   hero: {
     badge: "{count} 레시피 · YouTube 추출 · 현지인 레시피 · AI 맞춤 추천",
@@ -48,7 +53,7 @@ export const landing: LandingDict = {
       "레시피오에서 요리를 시작한 사용자들이 경험한 실제 변화를 확인하세요",
     items: [
       {
-        metric: "10만+",
+        metric: TOTAL_RECIPE_COUNT_LABEL.ko,
         label: "큐레이션 레시피",
         description: "YouTube · 유명 레시피 · AI 생성까지",
       },
