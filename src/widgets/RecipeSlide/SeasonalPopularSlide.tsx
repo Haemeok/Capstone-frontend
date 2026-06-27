@@ -5,15 +5,7 @@ import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 
 import { createRecipeSlide } from "./createRecipeSlide";
 import { useSeasonalPopularQuery } from "./hooks";
-
-export type Season = "spring" | "summer" | "autumn" | "winter";
-
-export const monthToSeason = (month: number): Season => {
-  if (month >= 3 && month <= 5) return "spring";
-  if (month >= 6 && month <= 8) return "summer";
-  if (month >= 9 && month <= 11) return "autumn";
-  return "winter";
-};
+import { monthToSeason } from "./season";
 
 const SeasonalPopularSlide = createRecipeSlide<{ locale?: "ko" | "ja" | "en" }>(
   ({ inView, props }) => {

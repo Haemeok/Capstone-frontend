@@ -10,7 +10,7 @@ import type {
   CountryPopularCode,
 } from "@/entities/recipe/model/types";
 
-import { monthToSeason } from "../SeasonalPopularSlide";
+import { monthToSeason } from "../season";
 
 export const recipeDetailMessages = {
   ko: koDetail,
