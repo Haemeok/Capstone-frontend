@@ -138,7 +138,7 @@ const RecipeSlide = ({
   };
 
   return (
-    <div className="mt-6 w-full">
+    <div className="mt-6 w-full md:mt-10">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-ink text-lg font-bold">{title}</h2>
