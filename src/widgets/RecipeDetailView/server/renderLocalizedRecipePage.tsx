@@ -96,8 +96,8 @@ export const LocalizedRecipePage = async ({
         recipeId={recipeId}
         locale={locale}
         notTranslatedMessage={notTranslatedMessage}
+        bottomSlides={bottomSlides}
       />
-      {bottomSlides}
       <BottomAnchorAdSlot />
       <SmartAppBanner />
     </ScrollReset>

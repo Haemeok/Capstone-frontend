@@ -77,8 +77,14 @@ export default async function RecipeDetailPage({
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <RecipeDetailView recipe={staticRecipe} recipeId={recipeId} locale="ko" />
-      <RecipeDetailServerSlides recipeId={recipeId} locale="ko" />
+      <RecipeDetailView
+        recipe={staticRecipe}
+        recipeId={recipeId}
+        locale="ko"
+        bottomSlides={
+          <RecipeDetailServerSlides recipeId={recipeId} locale="ko" />
+        }
+      />
       <BottomAnchorAdSlot />
       <SmartAppBanner />
     </ScrollReset>
