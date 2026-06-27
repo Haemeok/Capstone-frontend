@@ -221,7 +221,7 @@ const createWebApplicationStructuredData = (locale: Locale) => {
     url,
     provider: {
       "@type": "Organization",
-      name: SEO_CONSTANTS.SITE_NAME,
+      name: localizedSiteName(locale),
       url: SEO_CONSTANTS.SITE_URL,
     },
     featureList: c.featureList,

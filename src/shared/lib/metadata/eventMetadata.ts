@@ -5,6 +5,7 @@ import type { Locale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n";
 
 import { SEO_CONSTANTS } from "./constants";
+import { localizedSiteName } from "./localized";
 
 type EventMetadataParams = {
   path: string;
@@ -36,7 +37,7 @@ export const buildEventMetadata = ({
     locale === "ko"
       ? absoluteUrl(pathWithoutLocale)
       : absoluteUrl(`${locale}/${pathWithoutLocale}`);
-  const fullTitle = `${title} | ${SEO_CONSTANTS.SITE_NAME}`;
+  const fullTitle = `${title} | ${localizedSiteName(locale)}`;
 
   return {
     title: fullTitle,
@@ -53,7 +54,7 @@ export const buildEventMetadata = ({
       title: fullTitle,
       description,
       url: canonical,
-      siteName: SEO_CONSTANTS.SITE_NAME,
+      siteName: localizedSiteName(locale),
       type: SEO_CONSTANTS.OG_TYPE.WEBSITE,
       locale: OG_LOCALE[locale],
       images: [{ url: ogImage, width: 1024, height: 1024, alt: ogImageAlt }],

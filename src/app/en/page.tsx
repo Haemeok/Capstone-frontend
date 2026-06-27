@@ -7,14 +7,14 @@ import {
 } from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
 import { buildHomeMetadata } from "@/shared/lib/metadata";
-import {
-  createOrganizationStructuredData,
-  createWebsiteStructuredData,
-} from "@/entities/recipe/lib/metadata/schema";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
+import {
+  createOrganizationStructuredData,
+  createWebsiteStructuredData,
+} from "@/entities/recipe/lib/metadata/schema";
 import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
 
 import CategoryTabs from "@/widgets/CategoryTabs";
@@ -62,7 +62,7 @@ const HomePage = async () => {
       : s
   );
 
-  const jsonLd = createWebsiteStructuredData();
+  const jsonLd = createWebsiteStructuredData("en");
   const orgJsonLd = createOrganizationStructuredData("en");
 
   return (

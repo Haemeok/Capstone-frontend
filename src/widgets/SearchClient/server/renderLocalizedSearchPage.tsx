@@ -10,6 +10,7 @@ import {
 import { absoluteUrl } from "@/shared/config/constants/api";
 import { sortCodec } from "@/shared/lib/filters";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
+import { localizedSiteName } from "@/shared/lib/metadata/localized";
 import {
   convertNutritionToQueryParams,
   parseNutritionParams,
@@ -118,7 +119,7 @@ export const buildLocalizedSearchMetadata = async ({
       title,
       description,
       images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
-      siteName: SEO_CONSTANTS.SITE_NAME,
+      siteName: localizedSiteName(locale),
       locale: OG_LOCALE[locale],
     },
     twitter: {

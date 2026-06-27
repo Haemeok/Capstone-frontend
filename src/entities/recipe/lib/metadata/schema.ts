@@ -9,7 +9,10 @@ import {
 } from "@/shared/config/constants/siteStats";
 import type { Locale } from "@/shared/i18n";
 import { createSearchBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
-import { localizedPath } from "@/shared/lib/metadata/localized";
+import {
+  localizedPath,
+  localizedSiteName,
+} from "@/shared/lib/metadata/localized";
 
 import type {
   DetailedRecipeGridItem,
@@ -20,10 +23,10 @@ import { SEO_CONSTANTS } from "./constants";
 import { toIso8601 } from "./dateTime";
 import { createEnhancedVideoObject, extractYoutubeMetadata } from "./youtube";
 
-export const createWebsiteStructuredData = () => ({
+export const createWebsiteStructuredData = (locale: Locale = "ko") => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: SEO_CONSTANTS.SITE_NAME,
+  name: localizedSiteName(locale),
   description: SEO_CONSTANTS.SITE_DESCRIPTION,
   url: SEO_CONSTANTS.SITE_URL,
   potentialAction: {
@@ -92,7 +95,7 @@ export const createRecipeStructuredData = (
       }
     : {
         "@type": "Person" as const,
-        name: recipe.author?.nickname || SEO_CONSTANTS.SITE_NAME,
+        name: recipe.author?.nickname || localizedSiteName(locale),
       };
 
   const CUISINE_BY_COUNTRY: Record<string, string> = {
@@ -168,17 +171,6 @@ export const createRecipeStructuredData = (
     ...(recipeCuisine && { recipeCuisine }),
     keywords: recipe.tags?.join(", ") || "",
     ...(videoObject && { video: videoObject }),
-    ...(youtubeMetadata &&
-      recipe.youtubeUrl && {
-        isBasedOn: {
-          "@type": "VideoObject" as const,
-          "@id": recipe.youtubeUrl,
-          name:
-            youtubeMetadata.videoTitle ||
-            (locale === "ko" ? `${recipe.title} 만들기` : recipe.title),
-          url: recipe.youtubeUrl,
-        },
-      }),
     url: absoluteUrl(localizedPath(locale, `recipes/${recipeId}`)),
   };
 };
@@ -386,7 +378,7 @@ export const createOrganizationStructuredData = (locale: Locale = "ko") =>
   ({
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: SEO_CONSTANTS.SITE_NAME,
+    name: localizedSiteName(locale),
     alternateName: "Recipio",
     url: SEO_CONSTANTS.SITE_URL,
     logo: SEO_CONSTANTS.DEFAULT_IMAGE,
