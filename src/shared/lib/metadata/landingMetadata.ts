@@ -8,6 +8,7 @@ import {
 import { buildHreflangAlternates, type Locale } from "@/shared/i18n";
 
 import { SEO_CONSTANTS } from "./constants";
+import { localizedSiteName } from "./localized";
 
 const LANDING_EXTRA_KEYWORDS = [
   "YouTube 레시피",
@@ -68,7 +69,10 @@ export const buildLandingMetadata = (locale: Locale): Metadata => {
       title,
       description,
       url: canonical,
-      siteName: "레시피오 - recipio",
+      siteName:
+        locale === "ko"
+          ? `${SEO_CONSTANTS.SITE_NAME} - recipio`
+          : localizedSiteName(locale),
       images: [
         {
           url: SEO_CONSTANTS.DEFAULT_IMAGE,
