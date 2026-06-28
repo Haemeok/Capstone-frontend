@@ -320,6 +320,7 @@ const eslintConfig = [
       "dist/**",
       "coverage/**",
       "public/**",
+      ".claude/**",
       "next-env.d.ts",
       "**/*.min.js",
     ],
@@ -391,6 +392,10 @@ const eslintConfig = [
   {
     files: ["src/shared/i18n/useLocalizedRouter.ts"],
     rules: { "local/no-raw-router": "off" },
+  },
+  {
+    files: ["**/*.cjs", "*.config.js"],
+    rules: { "@typescript-eslint/no-require-imports": "off" },
   },
   ...selfBarrelGuards,
   {
