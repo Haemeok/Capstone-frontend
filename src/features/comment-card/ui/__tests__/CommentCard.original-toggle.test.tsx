@@ -70,4 +70,36 @@ describe("CommentCard original-toggle", () => {
       screen.getByRole("button", { name: t.showOriginal })
     ).toBeInTheDocument();
   });
+
+  it("T-02: 원문 보기 클릭 → 본문 원문 교체 + 버튼 번역 보기", () => {
+    mockPathname.mockReturnValue("/recipes/r1/comments");
+    const t = commentsMessages.ko;
+    render(<CommentCard comment={translated} hideReplyButton />);
+
+    fireEvent.click(screen.getByRole("button", { name: t.showOriginal }));
+
+    expect(screen.getByText("美味しいです")).toBeInTheDocument();
+    expect(screen.queryByText("맛있어요")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: t.showTranslation })
+    ).toBeInTheDocument();
+  });
+
+  it("T-03: 번역 보기 클릭 → 번역본 복귀", () => {
+    mockPathname.mockReturnValue("/recipes/r1/comments");
+    const t = commentsMessages.ko;
+    render(<CommentCard comment={translated} hideReplyButton />);
+
+    fireEvent.click(screen.getByRole("button", { name: t.showOriginal }));
+    fireEvent.click(screen.getByRole("button", { name: t.showTranslation }));
+
+    expect(screen.getByText("맛있어요")).toBeInTheDocument();
+    expect(screen.queryByText("美味しいです")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: t.showOriginal })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(fmt(t.translatedFrom, t.languageNames.ja))
+    ).toBeInTheDocument();
+  });
 });
