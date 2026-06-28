@@ -57,6 +57,9 @@ const appConfig = {
     serverActions: {
       bodySizeLimit: "4mb",
     },
+    staleTimes: {
+      dynamic: 180,
+    },
   },
   eslint: { ignoreDuringBuilds: true },
 } satisfies import("next").NextConfig;
