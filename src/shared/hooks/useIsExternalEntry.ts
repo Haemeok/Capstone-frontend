@@ -29,12 +29,14 @@ export const useIsExternalEntry = () => {
 
     const cached = sessionStorage.getItem(INITIAL_ENTRY_EXTERNAL_KEY);
     if (cached !== null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- mount 후 sessionStorage/referrer 1회 동기화(외부 시스템)
       if (cached === "1") setIsExternal(true);
       return;
     }
 
     const external = detectExternalEntry();
     sessionStorage.setItem(INITIAL_ENTRY_EXTERNAL_KEY, external ? "1" : "0");
+
     if (external) setIsExternal(true);
   }, []);
 
