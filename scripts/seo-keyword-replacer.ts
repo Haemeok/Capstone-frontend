@@ -1,9 +1,4 @@
-/**
- * SEO 키워드 교체 제안 — 실패한 텍스트 키워드의 대체 키워드를 제안
- *
- * 실행: npx tsx scripts/seo-keyword-replacer.ts
- * 선행: npx tsx scripts/seo-classify.ts
- */
+// 실패한 텍스트 키워드의 대체 키워드 제안 (선행: seo-classify.ts)
 
 import * as fs from "fs";
 import * as path from "path";
@@ -26,7 +21,9 @@ type Report = {
 };
 
 // 성공 키워드에서 자주 등장하는 토큰 추출
-const extractPopularTokens = (keywords: FailedKeyword[]): Map<string, number> => {
+const extractPopularTokens = (
+  keywords: FailedKeyword[]
+): Map<string, number> => {
   const tokenCounts = new Map<string, number>();
   for (const kw of keywords) {
     const tokens = kw.keyword.split(/\s+/);
@@ -40,7 +37,9 @@ const extractPopularTokens = (keywords: FailedKeyword[]): Map<string, number> =>
 
 const main = () => {
   if (!fs.existsSync(REPORT_PATH)) {
-    console.error("분석 리포트가 없습니다. 먼저 `npm run seo:classify`를 실행하세요.");
+    console.error(
+      "분석 리포트가 없습니다. 먼저 `npm run seo:classify`를 실행하세요."
+    );
     process.exit(1);
   }
 
@@ -54,9 +53,9 @@ const main = () => {
     .slice(0, 50);
 
   console.log("=== 성공 키워드 인기 토큰 (상위 20) ===");
-  sortedTokens.slice(0, 20).forEach(([token, score]) =>
-    console.log(`  ${token}: ${score}`)
-  );
+  sortedTokens
+    .slice(0, 20)
+    .forEach(([token, score]) => console.log(`  ${token}: ${score}`));
 
   // 실패 키워드 분석 + 제안
   const suggestions: Array<{
@@ -72,9 +71,9 @@ const main = () => {
 
   console.log(`\n=== NEAR_ACTIVE 키워드 (5-7건, ${nearActive.length}개) ===`);
   console.log("  → 레시피 추가 시 자동 ACTIVE 승격, 교체 불필요");
-  nearActive.slice(0, 10).forEach((k) =>
-    console.log(`  "${k.keyword}": ${k.resultCount}건`)
-  );
+  nearActive
+    .slice(0, 10)
+    .forEach((k) => console.log(`  "${k.keyword}": ${k.resultCount}건`));
 
   console.log(`\n=== 교체 대상 키워드 (0-4건, ${trulyFailed.length}개) ===`);
 
@@ -134,9 +133,14 @@ const main = () => {
       nearActive: nearActive.length,
       trulyFailed: trulyFailed.length,
     },
-    nearActive: nearActive.map((k) => ({ keyword: k.keyword, resultCount: k.resultCount })),
+    nearActive: nearActive.map((k) => ({
+      keyword: k.keyword,
+      resultCount: k.resultCount,
+    })),
     suggestions,
-    popularTokens: sortedTokens.slice(0, 30).map(([token, score]) => ({ token, score })),
+    popularTokens: sortedTokens
+      .slice(0, 30)
+      .map(([token, score]) => ({ token, score })),
   };
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), "utf-8");

@@ -66,6 +66,7 @@ const GrokBatchAnalyzer = () => {
       try {
         data = JSON.parse(rawInput);
       } catch {
+        // eslint-disable-next-line react-hooks/unsupported-syntax -- admin 전용 batch 도구: 붙여넣은 JSON 관용 평가
         data = eval(`(${rawInput})`);
       }
 

@@ -1,9 +1,4 @@
-/**
- * 감사 결과에서 ACTIVE 페이지만 추출하여 사이트맵 allowlist 생성
- *
- * 실행: npx tsx scripts/generate-sitemap-allowlist.ts
- * 선행: npx tsx scripts/seo-audit.ts (감사 먼저 실행)
- */
+// SEO 감사 결과 → 사이트맵 allowlist 생성 (선행: seo-audit.ts)
 
 import * as fs from "fs";
 import * as path from "path";
@@ -47,7 +42,9 @@ const main = () => {
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(allowlist, null, 2), "utf-8");
   console.log(`Allowlist 생성: ${OUTPUT_PATH}`);
-  console.log(`ACTIVE 페이지: ${activePages.length}개 (전체 ${pages.length}개 중)`);
+  console.log(
+    `ACTIVE 페이지: ${activePages.length}개 (전체 ${pages.length}개 중)`
+  );
 
   // IMMATURE/EMPTY 아카이브
   const immatureNearActive = pages.filter(

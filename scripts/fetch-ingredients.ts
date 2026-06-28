@@ -1,7 +1,4 @@
-/**
- * 재료 API에서 전체 재료 목록을 가져와 SEO용 상수 파일로 생성
- * 실행: npx tsx scripts/fetch-ingredients.ts
- */
+// 재료 API → SEO용 상수 파일(ingredients.ts) 생성
 
 const API_BASE = "https://api.recipio.kr";
 const PAGE_SIZE = 50;
@@ -9,26 +6,121 @@ const OUTPUT_PATH = "src/shared/config/seo/ingredients.ts";
 
 // 양념/조미료류 — SEO 단독 페이지로 부적합한 재료
 const SEASONING_KEYWORDS = new Set([
-  "소금", "설탕", "간장", "된장", "고추장", "쌈장", "식초", "맛술", "미림",
-  "참기름", "들기름", "올리브오일", "식용유", "포도씨유", "카놀라유", "버터",
-  "마요네즈", "케첩", "머스타드", "굴소스", "피쉬소스", "액젓", "멸치액젓",
-  "까나리액젓", "새우젓", "청주", "맛술", "소주", "후추", "통후추",
-  "고춧가루", "카레가루", "파프리카파우더", "시나몬", "큐민", "강황",
-  "전분", "감자전분", "옥수수전분", "밀가루", "박력분", "중력분", "강력분",
-  "베이킹파우더", "베이킹소다", "드라이이스트", "이스트", "젤라틴",
-  "바닐라에센스", "바닐라익스트랙", "럼", "브랜디",
-  "물엿", "올리고당", "조청", "꿀", "메이플시럽", "아가베시럽",
-  "연유", "생크림", "휘핑크림", "코코넛밀크", "코코넛크림",
-  "통깨", "깨소금", "들깨가루", "참깨", "검은깨",
-  "다시마", "멸치", "건새우", "국물팩", "다시팩", "치킨스톡", "비프스톡",
-  "춘장", "두반장", "XO소스", "칠리소스", "스리라차", "타바스코",
-  "허브", "바질", "로즈마리", "타임", "오레가노", "파슬리", "딜", "민트",
-  "월계수잎", "팔각", "정향", "생강가루", "마늘가루", "양파가루",
-  "코코아파우더", "녹차가루", "말차가루", "흑설탕", "황설탕",
-  "슈가파우더", "아이싱슈가", "콘시럽",
-  "레몬즙", "라임즙", "유자청", "매실청",
-  "치즈가루", "파마산가루", "빵가루", "튀김가루", "부침가루",
-  "마가린", "쇼트닝", "라드",
+  "소금",
+  "설탕",
+  "간장",
+  "된장",
+  "고추장",
+  "쌈장",
+  "식초",
+  "맛술",
+  "미림",
+  "참기름",
+  "들기름",
+  "올리브오일",
+  "식용유",
+  "포도씨유",
+  "카놀라유",
+  "버터",
+  "마요네즈",
+  "케첩",
+  "머스타드",
+  "굴소스",
+  "피쉬소스",
+  "액젓",
+  "멸치액젓",
+  "까나리액젓",
+  "새우젓",
+  "청주",
+  "맛술",
+  "소주",
+  "후추",
+  "통후추",
+  "고춧가루",
+  "카레가루",
+  "파프리카파우더",
+  "시나몬",
+  "큐민",
+  "강황",
+  "전분",
+  "감자전분",
+  "옥수수전분",
+  "밀가루",
+  "박력분",
+  "중력분",
+  "강력분",
+  "베이킹파우더",
+  "베이킹소다",
+  "드라이이스트",
+  "이스트",
+  "젤라틴",
+  "바닐라에센스",
+  "바닐라익스트랙",
+  "럼",
+  "브랜디",
+  "물엿",
+  "올리고당",
+  "조청",
+  "꿀",
+  "메이플시럽",
+  "아가베시럽",
+  "연유",
+  "생크림",
+  "휘핑크림",
+  "코코넛밀크",
+  "코코넛크림",
+  "통깨",
+  "깨소금",
+  "들깨가루",
+  "참깨",
+  "검은깨",
+  "다시마",
+  "멸치",
+  "건새우",
+  "국물팩",
+  "다시팩",
+  "치킨스톡",
+  "비프스톡",
+  "춘장",
+  "두반장",
+  "XO소스",
+  "칠리소스",
+  "스리라차",
+  "타바스코",
+  "허브",
+  "바질",
+  "로즈마리",
+  "타임",
+  "오레가노",
+  "파슬리",
+  "딜",
+  "민트",
+  "월계수잎",
+  "팔각",
+  "정향",
+  "생강가루",
+  "마늘가루",
+  "양파가루",
+  "코코아파우더",
+  "녹차가루",
+  "말차가루",
+  "흑설탕",
+  "황설탕",
+  "슈가파우더",
+  "아이싱슈가",
+  "콘시럽",
+  "레몬즙",
+  "라임즙",
+  "유자청",
+  "매실청",
+  "치즈가루",
+  "파마산가루",
+  "빵가루",
+  "튀김가루",
+  "부침가루",
+  "마가린",
+  "쇼트닝",
+  "라드",
 ]);
 
 type IngredientResponse = {
@@ -47,7 +139,9 @@ const fetchAllIngredients = async () => {
   allIngredients.push(...firstData.content);
 
   const totalPages = firstData.page.totalPages;
-  console.log(`Total pages: ${totalPages}, Total elements: ${firstData.page.totalElements}`);
+  console.log(
+    `Total pages: ${totalPages}, Total elements: ${firstData.page.totalElements}`
+  );
 
   // Fetch remaining pages
   for (let page = 1; page < totalPages; page++) {
@@ -56,7 +150,9 @@ const fetchAllIngredients = async () => {
     );
     const data: IngredientResponse = await res.json();
     allIngredients.push(...data.content);
-    console.log(`Fetched page ${page}/${totalPages - 1} (${data.content.length} items)`);
+    console.log(
+      `Fetched page ${page}/${totalPages - 1} (${data.content.length} items)`
+    );
   }
 
   return allIngredients;
@@ -71,8 +167,12 @@ const main = async () => {
   const ingredients = await fetchAllIngredients();
   console.log(`\nTotal fetched: ${ingredients.length} ingredients`);
 
-  const mainCount = ingredients.filter((i) => !isSeasoningIngredient(i.name)).length;
-  const seasoningCount = ingredients.filter((i) => isSeasoningIngredient(i.name)).length;
+  const mainCount = ingredients.filter(
+    (i) => !isSeasoningIngredient(i.name)
+  ).length;
+  const seasoningCount = ingredients.filter((i) =>
+    isSeasoningIngredient(i.name)
+  ).length;
   console.log(`Main ingredients: ${mainCount}, Seasonings: ${seasoningCount}`);
 
   // Generate TypeScript file
