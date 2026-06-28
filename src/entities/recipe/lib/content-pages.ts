@@ -1,7 +1,7 @@
 import type { ContentPageId } from "@/shared/config/constants/recipe";
 import { CATEGORY_BASE_URL } from "@/shared/config/constants/recipe";
 
-import { RecipeQueryParams } from "@/entities/recipe";
+import { RecipeQueryParams } from "@/entities/recipe/model/types";
 
 export type ContentPageSearchParams = Pick<
   RecipeQueryParams,

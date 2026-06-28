@@ -1,4 +1,4 @@
-import { IngredientItem } from "@/entities/ingredient";
+import { IngredientItem } from "@/entities/ingredient/model/types";
 
 const KOREAN_PARTICLES =
   /^(?:을|를|에|과|와|도|만|이|의|은|는|으로|로|에서|까지|부터|이랑|랑|하고|에다|다가)/;
