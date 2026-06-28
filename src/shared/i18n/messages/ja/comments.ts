@@ -35,4 +35,8 @@ export const comments: CommentsDict = {
   deleting: "削除中...",
   deleteSuccess: "コメントを削除しました。",
   deleteError: "削除に失敗しました: {message}",
+  translatedFrom: "{language}から翻訳",
+  showOriginal: "原文を表示",
+  showTranslation: "翻訳を表示",
+  languageNames: { ko: "韓国語", ja: "日本語", en: "英語" },
 };

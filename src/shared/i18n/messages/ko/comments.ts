@@ -35,4 +35,8 @@ export const comments: CommentsDict = {
   deleting: "삭제 중...",
   deleteSuccess: "댓글이 삭제되었습니다.",
   deleteError: "삭제에 실패했습니다: {message}",
+  translatedFrom: "{language}에서 번역됨",
+  showOriginal: "원문 보기",
+  showTranslation: "번역 보기",
+  languageNames: { ko: "한국어", ja: "일본어", en: "영어" },
 };

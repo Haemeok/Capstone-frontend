@@ -6,6 +6,7 @@ import Link from "next/link";
 import { MessageSquare, Trash } from "lucide-react";
 
 import { useCommentsDict } from "@/shared/i18n";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { formatTimeAgo } from "@/shared/lib/date";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
@@ -43,6 +44,23 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
 
   const formattedDate = formatTimeAgo(comment.createdAt);
 
+  const [showOriginal, setShowOriginal] = useState(false);
+  const canToggleOriginal = Boolean(
+    comment.translated && comment.originalContent
+  );
+  const displayedContent =
+    showOriginal && comment.originalContent
+      ? comment.originalContent
+      : comment.content;
+  const languageName = comment.sourceLocale
+    ? t.languageNames[comment.sourceLocale]
+    : undefined;
+
+  const handleToggleOriginal = () => {
+    triggerHaptic("Light");
+    setShowOriginal((prev) => !prev);
+  };
+
   return (
     <div className="flex w-full flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between">
@@ -70,7 +88,26 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           )}
         </div>
       </div>
-      <p className={`text-ink`}>{comment.content}</p>
+      <p className="text-ink">{displayedContent}</p>
+      {canToggleOriginal && (
+        <div className="text-ink-muted flex items-center gap-1.5 text-xs">
+          {!showOriginal && languageName && (
+            <>
+              <span>
+                {t.translatedFrom.replace("{language}", languageName)}
+              </span>
+              <span aria-hidden>·</span>
+            </>
+          )}
+          <button
+            type="button"
+            onClick={handleToggleOriginal}
+            className="cursor-pointer font-medium hover:underline"
+          >
+            {showOriginal ? t.showTranslation : t.showOriginal}
+          </button>
+        </div>
+      )}
       {comment.imageUrls && comment.imageUrls.length > 0 && (
         <CommentImage urls={comment.imageUrls} />
       )}
