@@ -13,7 +13,7 @@ export type BatchItemStatus =
 export type BatchItemState = {
   status: BatchItemStatus;
   error?: string;
-  articleId?: number;
+  articleId?: string;
   result?: GenerateCurationOutput;
 };
 
@@ -22,7 +22,7 @@ type State = {
   setStatus: (key: string, status: BatchItemStatus) => void;
   setGenerated: (key: string, result: GenerateCurationOutput) => void;
   setError: (key: string, error: string) => void;
-  setDone: (key: string, articleId: number) => void;
+  setDone: (key: string, articleId: string) => void;
   reset: (key?: string) => void;
 };
 

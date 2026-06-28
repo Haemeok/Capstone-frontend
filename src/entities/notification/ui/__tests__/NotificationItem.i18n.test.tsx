@@ -9,13 +9,13 @@ const mockPath = jest.fn();
 jest.mock("next/navigation", () => ({ usePathname: () => mockPath() }));
 
 const base = {
-  id: 1,
-  userId: 1,
-  actorId: 2,
+  id: "1",
+  userId: "1",
+  actorId: "2",
   actorNickname: "Yuki",
   imageUrl: "",
   relatedType: "RECIPE" as const,
-  relatedId: 1,
+  relatedId: "1",
   relatedUrl: "/",
   createdAt: new Date().toISOString(),
   read: true,

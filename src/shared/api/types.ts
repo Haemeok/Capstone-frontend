@@ -4,25 +4,25 @@ import { PresignedUrlInfo } from "../types";
 
 export type QueryParams = Record<string, unknown>;
 
-export interface ApiRequestOptions extends RequestInit {
+export type ApiRequestOptions = RequestInit & {
   params?: QueryParams;
   lang?: Locale;
   timeout?: number;
   baseURL?: string;
   paramsSerializer?: (params: QueryParams) => string;
-}
+};
 
-export interface ApiResponse<T = unknown> {
+export type ApiResponse<T = unknown> = {
   data: T;
   status: number;
   statusText: string;
   headers: Headers;
-}
+};
 
-export interface ForceLogoutEventDetail {
+export type ForceLogoutEventDetail = {
   message: string;
   reason: string;
-}
+};
 
 declare global {
   interface WindowEventMap {
@@ -33,27 +33,27 @@ declare global {
 
 export type BatchRequestFunction<T> = () => Promise<T>;
 
-export interface ServerApiRequestOptions extends ApiRequestOptions {
+export type ServerApiRequestOptions = ApiRequestOptions & {
   cookies?: string;
-}
+};
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export interface ApiConfig {
+export type ApiConfig = {
   readonly baseURL: string;
   readonly timeout: number;
-}
+};
 
 export type Environment = "development" | "production" | "test";
 
-export interface CookieOptions {
+export type CookieOptions = {
   httpOnly?: boolean;
   secure?: boolean;
   sameSite?: "strict" | "lax" | "none";
   maxAge?: number;
   path?: string;
   domain?: string;
-}
+};
 
 export type BaseQueryParams = {
   page: number;

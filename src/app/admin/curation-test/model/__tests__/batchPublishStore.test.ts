@@ -45,10 +45,10 @@ describe("useBatchPublishStore", () => {
 
   it("setDone은 status=done + articleId 저장", () => {
     const { setDone } = useBatchPublishStore.getState();
-    setDone("a", 42);
+    setDone("a", "42");
     const s = useBatchPublishStore.getState().items.a;
     expect(s.status).toBe("done");
-    expect(s.articleId).toBe(42);
+    expect(s.articleId).toBe("42");
   });
 
   it("reset(key) 단일 키 제거", () => {

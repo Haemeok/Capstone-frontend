@@ -9,7 +9,7 @@ import { postCurationArticle, publishCurationArticle } from "./api";
 import { mapResultToRequest } from "./mapper";
 
 export type PostAndPublishOutcome = {
-  articleId: number;
+  articleId: string;
   slug: string;
 };
 

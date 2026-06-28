@@ -10,5 +10,5 @@ export type PostCurationArticleRequest = {
 };
 
 export type PostCurationArticleResponse = {
-  articleId: number;
+  articleId: string;
 };

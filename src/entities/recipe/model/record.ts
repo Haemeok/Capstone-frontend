@@ -2,12 +2,12 @@ import { Nutrition, Visibility } from "./types";
 
 export type RecipeRecordResponse = {
   message: string;
-  recordId: number;
+  recordId: string;
 };
 
 export type RecipeCompletionState = {
   recipeId: string;
-  recordId: number;
+  recordId: string;
   savedAmount: number;
   completedAt: string;
 };

@@ -13,14 +13,14 @@ export type NotificationType =
 export type RelatedType = "RECIPE" | "COMMENT" | "USER" | "REFERRAL_REDEMPTION";
 
 export type Notification = {
-  id: number;
-  userId: number;
-  actorId: number;
+  id: string;
+  userId: string;
+  actorId: string;
   actorNickname: string;
   imageUrl: string;
   type: NotificationType;
   relatedType: RelatedType;
-  relatedId: number;
+  relatedId: string;
   relatedUrl: string;
   createdAt: string;
   read: boolean;
@@ -30,9 +30,9 @@ export type Notification = {
 export type NotificationResponse = PageResponse<Notification>;
 
 export type NotificationData = {
-  recipeId?: number;
-  commentId?: number;
-  userId?: number;
+  recipeId?: string;
+  commentId?: string;
+  userId?: string;
   url?: string;
 };
 

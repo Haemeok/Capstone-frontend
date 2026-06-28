@@ -120,7 +120,7 @@ export type Recipe = {
   servings: number;
   totalIngredientCost: number;
   marketPrice: number;
-  imageKey: string | null | undefined;
+  imageKey?: string | null;
   ratingInfo: RatingInfo;
   ingredients: Omit<IngredientItem, "inFridge">[];
   steps: RecipeStep[];
@@ -178,7 +178,7 @@ export type RecipeStep = {
   action?: string;
   timeline?: string;
   ingredients?: IngredientItem[];
-  stepImageKey: string | null | undefined;
+  stepImageKey?: string | null;
 };
 
 export const defaultRecipeKeys = [
@@ -188,7 +188,6 @@ export const defaultRecipeKeys = [
   "totalIngredientCost",
   "marketPrice",
   "youtubeUrl",
-  "imageURL",
   "author",
   "likeCount",
   "likedByCurrentUser",
@@ -220,7 +219,22 @@ export type RecipeStepPayload = Omit<
   imageKey?: string;
 };
 
-export type RecipeQueryParams = {
+export type NutritionRangeParams = {
+  minCalories?: number;
+  maxCalories?: number;
+  minCarb?: number;
+  maxCarb?: number;
+  minProtein?: number;
+  maxProtein?: number;
+  minFat?: number;
+  maxFat?: number;
+  minSugar?: number;
+  maxSugar?: number;
+  minSodium?: number;
+  maxSodium?: number;
+};
+
+export type RecipeQueryParams = NutritionRangeParams & {
   page?: number;
   size?: number;
   sort: string;
@@ -233,24 +247,12 @@ export type RecipeQueryParams = {
   minCost?: number;
   period?: "weekly" | "monthly";
   pageParam?: number;
-  minCalories?: number;
-  maxCalories?: number;
-  minCarb?: number;
-  maxCarb?: number;
-  minProtein?: number;
-  maxProtein?: number;
-  minFat?: number;
-  maxFat?: number;
-  minSugar?: number;
-  maxSugar?: number;
-  minSodium?: number;
-  maxSodium?: number;
   ingredientIds?: string[];
   creatorCountryTags?: CreatorCountryTag[];
   lang?: "ja" | "en";
 };
 
-export type RecipeItemsQueryParams = {
+export type RecipeItemsQueryParams = NutritionRangeParams & {
   key: string;
   page?: number;
   sort?: string;
@@ -263,18 +265,6 @@ export type RecipeItemsQueryParams = {
   period?: "weekly" | "monthly";
   recipeId?: string;
   types?: string[];
-  minCalories?: number;
-  maxCalories?: number;
-  minCarb?: number;
-  maxCarb?: number;
-  minProtein?: number;
-  maxProtein?: number;
-  minFat?: number;
-  maxFat?: number;
-  minSugar?: number;
-  maxSugar?: number;
-  minSodium?: number;
-  maxSodium?: number;
   ingredientIds?: string[];
   lang?: "ja" | "en";
 };
@@ -309,9 +299,13 @@ export type RecipeListItemStatus = {
 
 export type RecipesStatusResponse = Record<string, RecipeListItemStatus>;
 
-export type CookedPopularResponse = { content: StaticDetailedRecipeGridItem[] };
+export type StaticRecipeListResponse = {
+  content: StaticDetailedRecipeGridItem[];
+};
 
-export type CookedAgainResponse = { content: StaticDetailedRecipeGridItem[] };
+export type CookedPopularResponse = StaticRecipeListResponse;
+
+export type CookedAgainResponse = StaticRecipeListResponse;
 
 export type SameIngredientResponse = {
   ingredientName: string | null;
@@ -359,16 +353,14 @@ export type CategoryPopularResponse = {
   content: StaticDetailedRecipeGridItem[];
 };
 
-export type YoutubeVerifiedResponse = {
-  content: StaticDetailedRecipeGridItem[];
-};
+export type YoutubeVerifiedResponse = StaticRecipeListResponse;
 
 export type MyRecipeListItem = {
   id: string;
   title: string;
   imageUrl: string;
   dishType: string;
-  type: "YOUTUBE" | "USER" | "AI" | string;
+  type: RecipeSource;
   createdAt: string;
   likedByCurrentUser: boolean;
   visibility?: Visibility;
