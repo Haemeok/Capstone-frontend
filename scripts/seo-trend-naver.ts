@@ -1,20 +1,8 @@
-/**
- * 네이버 DataLab API 연동 — 키워드 검색 트렌드 수집
- *
- * 실행: npx tsx scripts/seo-trend-naver.ts
- *
- * 환경변수 필요:
- *   NAVER_CLIENT_ID — 네이버 개발자센터 애플리케이션 Client ID
- *   NAVER_CLIENT_SECRET — 네이버 개발자센터 애플리케이션 Client Secret
- *
- * API 문서: https://developers.naver.com/docs/serviceapi/datalab/search/search.md
- * 제한: 일 1,000회, 요청당 최대 5개 키워드 그룹
- */
-
 import * as fs from "fs";
 import * as path from "path";
-import { sleep } from "./lib/seo-utils";
+
 import { DATA_DIR, today } from "./lib/seo-constants";
+import { sleep } from "./lib/seo-utils";
 
 const AUDIT_PATH = path.join(DATA_DIR, "seo-audit-latest.json");
 const OUTPUT_PATH = path.join(DATA_DIR, `seo-trend-naver-${today()}.json`);
@@ -136,21 +124,45 @@ const main = async () => {
   let keywords: string[] = [];
 
   if (fs.existsSync(AUDIT_PATH)) {
-    const audit = JSON.parse(fs.readFileSync(AUDIT_PATH, "utf-8"));
+    type AuditPage = {
+      category: string;
+      status: string;
+      resultCount: number;
+      params: { q: string };
+    };
+    const audit = JSON.parse(fs.readFileSync(AUDIT_PATH, "utf-8")) as {
+      pages: AuditPage[];
+    };
     // ACTIVE 텍스트 키워드 중 상위 결과 수 기준 100개
     const textPages = audit.pages
-      .filter((p: any) => p.category === "A_TEXT_KEYWORD" && p.status === "ACTIVE")
-      .sort((a: any, b: any) => b.resultCount - a.resultCount)
+      .filter((p) => p.category === "A_TEXT_KEYWORD" && p.status === "ACTIVE")
+      .sort((a, b) => b.resultCount - a.resultCount)
       .slice(0, 100);
 
-    keywords = textPages.map((p: any) => String(p.params.q));
+    keywords = textPages.map((p) => String(p.params.q));
   } else {
     // 감사 데이터 없으면 기본 키워드
     keywords = [
-      "김치찌개", "된장찌개", "볶음밥", "파스타", "닭가슴살",
-      "다이어트 레시피", "에어프라이어", "혼밥", "야식", "도시락",
-      "삼겹살 구이", "불고기", "잡채", "떡볶이", "라면",
-      "샐러드", "스테이크", "카레", "냉면", "비빔밥",
+      "김치찌개",
+      "된장찌개",
+      "볶음밥",
+      "파스타",
+      "닭가슴살",
+      "다이어트 레시피",
+      "에어프라이어",
+      "혼밥",
+      "야식",
+      "도시락",
+      "삼겹살 구이",
+      "불고기",
+      "잡채",
+      "떡볶이",
+      "라면",
+      "샐러드",
+      "스테이크",
+      "카레",
+      "냉면",
+      "비빔밥",
     ];
   }
 
@@ -199,12 +211,20 @@ const main = async () => {
     }
   }
 
-  console.log(`\n\n완료: ${results.length}개 키워드 트렌드 수집 (API ${apiCalls}회)`);
+  console.log(
+    `\n\n완료: ${results.length}개 키워드 트렌드 수집 (API ${apiCalls}회)`
+  );
 
   // 분류
-  const rising = results.filter((r) => r.trend === "rising").sort((a, b) => b.relativeVolume - a.relativeVolume);
-  const declining = results.filter((r) => r.trend === "declining").sort((a, b) => b.relativeVolume - a.relativeVolume);
-  const topVolume = [...results].sort((a, b) => b.relativeVolume - a.relativeVolume).slice(0, 20);
+  const rising = results
+    .filter((r) => r.trend === "rising")
+    .sort((a, b) => b.relativeVolume - a.relativeVolume);
+  const declining = results
+    .filter((r) => r.trend === "declining")
+    .sort((a, b) => b.relativeVolume - a.relativeVolume);
+  const topVolume = [...results]
+    .sort((a, b) => b.relativeVolume - a.relativeVolume)
+    .slice(0, 20);
 
   // 저장
   const output = {
@@ -215,7 +235,10 @@ const main = async () => {
     keywords: results.sort((a, b) => b.trendScore - a.trendScore),
     rising: rising.map((r) => r.keyword),
     declining: declining.map((r) => r.keyword),
-    topVolume: topVolume.map((r) => ({ keyword: r.keyword, volume: r.relativeVolume })),
+    topVolume: topVolume.map((r) => ({
+      keyword: r.keyword,
+      volume: r.relativeVolume,
+    })),
   };
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), "utf-8");
@@ -223,19 +246,27 @@ const main = async () => {
 
   // 요약
   console.log("\n=== 상승 트렌드 키워드 ===");
-  rising.slice(0, 10).forEach((r) =>
-    console.log(`  ↑ ${r.keyword}: ${r.relativeVolume} (score: ${r.trendScore})`)
-  );
+  rising
+    .slice(0, 10)
+    .forEach((r) =>
+      console.log(
+        `  ↑ ${r.keyword}: ${r.relativeVolume} (score: ${r.trendScore})`
+      )
+    );
 
   console.log("\n=== 하락 트렌드 키워드 ===");
-  declining.slice(0, 10).forEach((r) =>
-    console.log(`  ↓ ${r.keyword}: ${r.relativeVolume} (score: ${r.trendScore})`)
-  );
+  declining
+    .slice(0, 10)
+    .forEach((r) =>
+      console.log(
+        `  ↓ ${r.keyword}: ${r.relativeVolume} (score: ${r.trendScore})`
+      )
+    );
 
   console.log("\n=== 검색량 상위 ===");
-  topVolume.slice(0, 10).forEach((r) =>
-    console.log(`  ${r.keyword}: ${r.relativeVolume}`)
-  );
+  topVolume
+    .slice(0, 10)
+    .forEach((r) => console.log(`  ${r.keyword}: ${r.relativeVolume}`));
 };
 
 main().catch((err) => {
