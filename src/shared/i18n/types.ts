@@ -960,6 +960,10 @@ export type CommentsDict = {
   deleting: string;
   deleteSuccess: string;
   deleteError: string;
+  translatedFrom: string;
+  showOriginal: string;
+  showTranslation: string;
+  languageNames: { ko: string; ja: string; en: string };
 };
 
 export type AuthDict = {

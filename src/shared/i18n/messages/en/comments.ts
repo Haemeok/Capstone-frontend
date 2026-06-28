@@ -35,4 +35,8 @@ export const comments: CommentsDict = {
   deleting: "Deleting...",
   deleteSuccess: "Comment deleted.",
   deleteError: "Failed to delete: {message}",
+  translatedFrom: "Translated from {language}",
+  showOriginal: "Show original",
+  showTranslation: "Show translation",
+  languageNames: { ko: "Korean", ja: "Japanese", en: "English" },
 };

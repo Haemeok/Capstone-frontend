@@ -1,4 +1,5 @@
 import { PageResponse } from "@/shared/api/types";
+import type { Locale } from "@/shared/i18n/types";
 
 import { User } from "@/entities/user";
 
@@ -12,6 +13,9 @@ export type Comment = {
   replyCount?: number;
   likedByCurrentUser: boolean;
   imageUrls?: string[];
+  originalContent?: string;
+  sourceLocale?: Locale;
+  translated?: boolean;
 };
 
 export type CommentsApiResponse = PageResponse<Comment>;
