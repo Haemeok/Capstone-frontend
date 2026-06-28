@@ -20,7 +20,7 @@ export const createAIRecipeJobV2 = async (
   lang: Locale = "ko"
 ): Promise<AIJobCreationResponse> => {
   return api.post<AIJobCreationResponse>(
-    "/dev/recipes/ai",
+    "/recipes/ai",
     { aiRequest },
     {
       params: { concept, imageGenModel, ...(lang === "ko" ? {} : { lang }) },
@@ -32,5 +32,5 @@ export const createAIRecipeJobV2 = async (
 export const getAIRecipeJobStatus = async (
   jobId: string
 ): Promise<AIJobStatusResponse> => {
-  return api.get<AIJobStatusResponse>(`/dev/recipes/ai/status/${jobId}`);
+  return api.get<AIJobStatusResponse>(`/recipes/ai/status/${jobId}`);
 };

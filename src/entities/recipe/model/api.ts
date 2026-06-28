@@ -123,19 +123,16 @@ export const editRecipe = async ({
 };
 
 export const getRecipeStatus = async (id: string): Promise<RecipeStatus> => {
-  const response = await api.get<RecipeStatus>(`/dev/recipes/${id}/status`);
+  const response = await api.get<RecipeStatus>(`/recipes/${id}/status`);
   return response;
 };
 
 export const getRecipesStatus = async (
   recipeIds: string[]
 ): Promise<RecipesStatusResponse> => {
-  const response = await api.post<RecipesStatusResponse>(
-    `/dev/recipes/status`,
-    {
-      recipeIds,
-    }
-  );
+  const response = await api.post<RecipesStatusResponse>(`/recipes/status`, {
+    recipeIds,
+  });
   return response;
 };
 

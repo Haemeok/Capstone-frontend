@@ -12,7 +12,7 @@ describe("getSameIngredientOnServer (T-FETCH-recipeId)", () => {
     }) as unknown as typeof fetch;
     const out = await getSameIngredientOnServer("rec-123", "ko");
     expect(String((global.fetch as jest.Mock).mock.calls[0][0])).toContain(
-      "/dev/recipes/rec-123/same-ingredient"
+      "/recipes/rec-123/same-ingredient"
     );
     expect(out.ingredientName).toBe("감자");
   });

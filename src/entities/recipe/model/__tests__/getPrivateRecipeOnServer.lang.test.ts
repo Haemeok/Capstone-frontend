@@ -28,7 +28,7 @@ describe("getPrivateRecipeOnServer — lang 전파", () => {
     const fetchMock = mockOk();
     await getPrivateRecipeOnServer("abc123");
     const urlKo = String(fetchMock.mock.calls[0][0]);
-    expect(urlKo).toContain("/dev/recipes/abc123");
+    expect(urlKo).toContain("/recipes/abc123");
     expect(urlKo).not.toContain("lang=");
 
     await getPrivateRecipeOnServer("abc123", "ko");

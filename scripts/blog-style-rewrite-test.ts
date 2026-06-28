@@ -86,7 +86,7 @@ const loadRecipes = async (ids: string[]): Promise<StaticRecipe[]> => {
   const recipes: StaticRecipe[] = [];
   for (const id of ids.slice(0, 8)) {
     try {
-      const r = await fetchJson<StaticRecipe>(`${BASE_API}/dev/recipes/${id}`);
+      const r = await fetchJson<StaticRecipe>(`${BASE_API}/recipes/${id}`);
       recipes.push(r);
     } catch (e) {
       console.warn(`  recipe ${id} skip:`, (e as Error).message);
