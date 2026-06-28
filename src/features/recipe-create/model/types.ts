@@ -1,5 +1,5 @@
 export type FinalizeRecipeResponse = {
-  recipeId: number;
+  recipeId: string;
   activeImages: string[];
   missingImages: string[];
 };

@@ -34,11 +34,9 @@ export const getNotifications = async ({
 };
 
 export const markNotificationAsRead = async (
-  notificationId: number
+  notificationId: string
 ): Promise<void> => {
-  await api.patch(
-    NOTIFICATION_ENDPOINTS.MARK_AS_READ(notificationId.toString())
-  );
+  await api.patch(NOTIFICATION_ENDPOINTS.MARK_AS_READ(notificationId));
 };
 
 export const markAllNotificationsAsRead = async (): Promise<void> => {
@@ -46,9 +44,9 @@ export const markAllNotificationsAsRead = async (): Promise<void> => {
 };
 
 export const deleteNotification = async (
-  notificationId: number
+  notificationId: string
 ): Promise<void> => {
-  await api.delete(NOTIFICATION_ENDPOINTS.DELETE(notificationId.toString()));
+  await api.delete(NOTIFICATION_ENDPOINTS.DELETE(notificationId));
 };
 
 export const deleteAllNotifications = async (): Promise<void> => {

@@ -110,7 +110,7 @@ export const useDeleteNotification = () => {
 
   return useMutation({
     mutationFn: deleteNotification,
-    onMutate: async (notificationId: number) => {
+    onMutate: async (notificationId: string) => {
       await queryClient.cancelQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });

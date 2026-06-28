@@ -14,5 +14,5 @@ export const postCurationArticle = (
     body
   );
 
-export const publishCurationArticle = (articleId: number): Promise<void> =>
+export const publishCurationArticle = (articleId: string): Promise<void> =>
   api.post<void>(END_POINTS.ADMIN_CURATION_ARTICLE_PUBLISH(articleId));

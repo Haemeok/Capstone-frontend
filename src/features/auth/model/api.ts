@@ -1,9 +1,9 @@
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
-import { TokenRefrechResponse } from "./types";
+import { TokenRefreshResponse } from "./types";
 
-export const postTokenRefresh = async (): Promise<TokenRefrechResponse> => {
+export const postTokenRefresh = async (): Promise<TokenRefreshResponse> => {
   const response = await fetch("/api/auth/refresh", {
     method: "POST",
     headers: {

@@ -5,14 +5,14 @@ import { type Notification } from "@/entities/notification/model/type";
 import { NotificationItem } from "../NotificationItem";
 
 const base: Notification = {
-  id: 1,
-  userId: 1,
-  actorId: 2,
+  id: "1",
+  userId: "1",
+  actorId: "2",
   actorNickname: "친구",
   imageUrl: "",
   type: "REFERRAL_REWARD_GRANTED",
   relatedType: "REFERRAL_REDEMPTION",
-  relatedId: 1,
+  relatedId: "1",
   relatedUrl: "",
   createdAt: new Date().toISOString(),
   read: false,

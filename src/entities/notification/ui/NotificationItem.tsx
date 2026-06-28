@@ -16,8 +16,8 @@ import type { Notification } from "@/entities/notification/model/type";
 
 type NotificationItemProps = {
   notification: Notification;
-  onRead?: (notificationId: number) => void;
-  onDelete?: (notificationId: number) => void;
+  onRead?: (notificationId: string) => void;
+  onDelete?: (notificationId: string) => void;
   onClick?: (notification: Notification) => void;
   showActions?: boolean;
   className?: string;

@@ -30,7 +30,7 @@ const NotFound = ({
 
   useEffect(() => {
     if (notificationId) {
-      deleteNotification(Number(notificationId));
+      deleteNotification(notificationId);
     }
   }, [notificationId, deleteNotification]);
 

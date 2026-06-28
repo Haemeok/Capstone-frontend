@@ -28,7 +28,7 @@ export type UserStreak = {
 };
 
 export type RecipeHistoryItem = {
-  recipeId: number;
+  recipeId: string;
   recipeTitle: string;
   savings: number;
   imageUrl: string;
