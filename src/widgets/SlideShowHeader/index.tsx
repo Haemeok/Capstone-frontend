@@ -1,10 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { Share, X } from "lucide-react";
 
 import { useShare } from "@/shared/hooks/useShare";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { Button } from "@/shared/ui/shadcn/button";
 
 type SlideShowHeaderProps = {
@@ -13,7 +12,7 @@ type SlideShowHeaderProps = {
 };
 
 const SlideShowHeader = ({ title, text }: SlideShowHeaderProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { share } = useShare();
 
   const handleShare = () => {

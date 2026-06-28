@@ -1,3 +1,4 @@
+// eslint-disable-next-line local/no-raw-router -- 테스트: next/navigation 모킹용 import
 import { usePathname, useRouter } from "next/navigation";
 
 import { render, screen } from "@testing-library/react";

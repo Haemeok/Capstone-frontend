@@ -23,6 +23,7 @@ jest.mock("@/features/recipe-create/model/hooks/useFinalizeRecipe", () => ({
   useFinalizeRecipe: jest.fn(() => ({ mutate: jest.fn() })),
 }));
 
+// eslint-disable-next-line local/no-raw-router -- 테스트: next/navigation 모킹용 import
 import { useRouter } from "next/navigation";
 
 import { ApiError } from "@/shared/api/errors";

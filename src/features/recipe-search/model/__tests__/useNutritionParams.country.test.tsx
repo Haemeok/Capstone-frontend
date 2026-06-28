@@ -6,6 +6,7 @@ jest.mock("next/navigation", () => ({
   usePathname: () => "/",
 }));
 
+// eslint-disable-next-line local/no-raw-router -- 테스트: next/navigation 모킹용 import
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { useNutritionParams } from "../useNutritionParams";

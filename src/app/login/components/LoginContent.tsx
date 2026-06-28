@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useAuthDict } from "@/shared/i18n";
 import { storage } from "@/shared/lib/storage";
 import { Image } from "@/shared/ui/image/Image";
@@ -20,7 +21,7 @@ type SocialProvider = "google" | "kakao" | "naver" | "apple";
 
 const LoginContent = () => {
   const t = useAuthDict();
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "/";
   const [clickCount, setClickCount] = useState(0);

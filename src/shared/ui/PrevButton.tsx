@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { ArrowLeftIcon, XIcon } from "lucide-react";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useCommonDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
@@ -22,7 +21,7 @@ const PrevButton = ({
   showOnDesktop = false,
   icon = "back",
 }: PrevButtonProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const t = useCommonDict();
   const handleClick = onClick ?? (() => router.back());
