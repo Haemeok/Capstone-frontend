@@ -143,4 +143,33 @@ describe("CommentCard original-toggle", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText(/번역됨/)).not.toBeInTheDocument();
   });
+
+  it("T-06: translated=false → 태그/토글 미노출", () => {
+    mockPathname.mockReturnValue("/recipes/r1/comments");
+    const t = commentsMessages.ko;
+    const notTranslated: Comment = {
+      ...translated,
+      translated: false,
+    };
+    render(<CommentCard comment={notTranslated} hideReplyButton />);
+
+    expect(
+      screen.queryByRole("button", { name: t.showOriginal })
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/번역됨/)).not.toBeInTheDocument();
+  });
+
+  it("T-07: originalContent 빈 값 → 토글 미노출", () => {
+    mockPathname.mockReturnValue("/recipes/r1/comments");
+    const t = commentsMessages.ko;
+    const empty: Comment = {
+      ...translated,
+      originalContent: "",
+    };
+    render(<CommentCard comment={empty} hideReplyButton />);
+
+    expect(
+      screen.queryByRole("button", { name: t.showOriginal })
+    ).not.toBeInTheDocument();
+  });
 });
