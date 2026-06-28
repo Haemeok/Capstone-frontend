@@ -1,3 +1,7 @@
+export {
+  getOfficialProfileOverride,
+  OFFICIAL_ACCOUNT_ID,
+} from "./lib/officialAccount";
 export { useUserQuery } from "./model/hooks";
 export { useUserStore } from "./model/store";
 export type {
