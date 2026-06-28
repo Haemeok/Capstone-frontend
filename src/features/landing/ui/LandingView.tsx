@@ -20,7 +20,12 @@ export const LandingView = ({ locale }: { locale: Locale }) => {
   const t = getDictionary(locale).landing;
   const faqJsonLd = createLandingFAQStructuredData(locale);
   const tagItemListJsonLd = createTagItemListStructuredData(
-    LANDING_TAG_GROUPS.flatMap((group) => group.chips)
+    LANDING_TAG_GROUPS.flatMap((group) =>
+      group.chips.map((chip) => ({
+        code: chip.code,
+        name: t.tagChips.chipNames[chip.code] ?? chip.name,
+      }))
+    )
   );
 
   return (
