@@ -37,7 +37,7 @@ const resolveSortParam = (
 export const getRecipeStatusPublicOnServer = async (
   recipeId: string
 ): Promise<RecipeStatus | null> => {
-  const API_URL = `${BASE_API_URL}/dev/recipes/${recipeId}/status`;
+  const API_URL = `${BASE_API_URL}/recipes/${recipeId}/status`;
 
   try {
     const res = await fetch(API_URL, {
@@ -64,7 +64,7 @@ export const getRecipeStatusPublicOnServer = async (
 export const getRecipeStatusOnServer = async (
   recipeId: string
 ): Promise<RecipeStatus | null> => {
-  const API_URL = `${BASE_API_URL}/dev/recipes/${recipeId}/status`;
+  const API_URL = `${BASE_API_URL}/recipes/${recipeId}/status`;
 
   try {
     const cookieStore = await cookies();
@@ -620,7 +620,7 @@ export const getPrivateRecipeOnServer = async (
   id: string,
   locale?: Locale
 ): Promise<Recipe | null> => {
-  const url = new URL(`${BASE_API_URL}/dev/recipes/${id}`);
+  const url = new URL(`${BASE_API_URL}/recipes/${id}`);
   if (locale && locale !== "ko") {
     url.searchParams.set("lang", locale);
   }

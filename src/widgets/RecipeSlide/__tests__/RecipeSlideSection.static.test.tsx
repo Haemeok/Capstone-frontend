@@ -73,7 +73,7 @@ describe("RecipeSlideSection (정적 즉시 렌더)", () => {
     );
     expect(screen.getByText("된장찌개")).toBeInTheDocument();
     await waitFor(() =>
-      expect(mockPost).toHaveBeenCalledWith("/dev/recipes/status", {
+      expect(mockPost).toHaveBeenCalledWith("/recipes/status", {
         recipeIds: ["r1"],
       })
     );

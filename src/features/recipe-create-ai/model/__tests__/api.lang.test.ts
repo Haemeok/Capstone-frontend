@@ -28,7 +28,7 @@ describe("AI recipe api lang (T-13/T-14/T-15)", () => {
       "ja"
     );
     expect(mockedApi.post).toHaveBeenCalledWith(
-      "/dev/recipes/ai",
+      "/recipes/ai",
       { aiRequest: request },
       expect.objectContaining({
         params: expect.objectContaining({
@@ -48,7 +48,7 @@ describe("AI recipe api lang (T-13/T-14/T-15)", () => {
       "en"
     );
     expect(mockedApi.post).toHaveBeenCalledWith(
-      "/dev/recipes/ai",
+      "/recipes/ai",
       { aiRequest: request },
       expect.objectContaining({
         params: expect.objectContaining({ lang: "en" }),
@@ -59,7 +59,7 @@ describe("AI recipe api lang (T-13/T-14/T-15)", () => {
   it("T-14: concept가 FINE_DINING이어도 lang=ja 그대로 부착", async () => {
     await createAIRecipeJobV2(request, "FINE_DINING", "key-1", undefined, "ja");
     expect(mockedApi.post).toHaveBeenCalledWith(
-      "/dev/recipes/ai",
+      "/recipes/ai",
       { aiRequest: request },
       expect.objectContaining({
         params: expect.objectContaining({ lang: "ja", concept: "FINE_DINING" }),
@@ -76,7 +76,7 @@ describe("AI recipe api lang (T-13/T-14/T-15)", () => {
       "ko"
     );
     expect(mockedApi.post).toHaveBeenCalledWith(
-      "/dev/recipes/ai",
+      "/recipes/ai",
       { aiRequest: request },
       expect.objectContaining({
         params: expect.not.objectContaining({ lang: expect.anything() }),

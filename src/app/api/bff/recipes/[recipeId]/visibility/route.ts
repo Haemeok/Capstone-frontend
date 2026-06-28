@@ -28,7 +28,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const cookieHeader = await getCookieHeader();
 
     const backendRes = await fetch(
-      `${BASE_API_URL}/dev/recipes/${recipeId}/visibility`,
+      `${BASE_API_URL}/recipes/${recipeId}/visibility`,
       {
         method: "PATCH",
         headers: {

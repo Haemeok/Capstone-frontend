@@ -1,6 +1,6 @@
 import * as path from "path";
 
-export const API_BASE = "https://api.recipio.kr/api/dev/recipes/search";
+export const API_BASE = "https://api.recipio.kr/api/recipes/search";
 export const CONCURRENCY = 20;
 export const DELAY_MS = 100;
 export const MAX_RETRIES = 3;

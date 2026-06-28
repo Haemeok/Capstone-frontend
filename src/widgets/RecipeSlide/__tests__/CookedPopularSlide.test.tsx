@@ -73,7 +73,7 @@ describe("CookedPopularSlide", () => {
     renderWithClient(<CookedPopularSlide locale="ko" />);
     await screen.findByText("된장찌개");
     await waitFor(() =>
-      expect(mockPost).toHaveBeenCalledWith("/dev/recipes/status", {
+      expect(mockPost).toHaveBeenCalledWith("/recipes/status", {
         recipeIds: ["r1"],
       })
     );

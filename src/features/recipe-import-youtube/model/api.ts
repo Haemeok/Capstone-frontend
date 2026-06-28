@@ -15,7 +15,7 @@ export const checkYoutubeDuplicate = async (
   url: string,
   lang: Locale = "ko"
 ): Promise<YoutubeDuplicateCheckResponse> => {
-  return api.get<YoutubeDuplicateCheckResponse>("/dev/recipes/youtube/check", {
+  return api.get<YoutubeDuplicateCheckResponse>("/recipes/youtube/check", {
     params: { url, ...(lang === "ko" ? {} : { lang }) },
   });
 };
@@ -28,7 +28,7 @@ export const createExtractionJobV2 = async (
   imageGenModel: ImageGenModel = DEFAULT_IMAGE_GEN_MODEL,
   lang: Locale = "ko"
 ): Promise<JobCreationResponse> => {
-  return api.post<JobCreationResponse>("/dev/recipes/youtube/extract", null, {
+  return api.post<JobCreationResponse>("/recipes/youtube/extract", null, {
     params: { url, imageGenModel, ...(lang === "ko" ? {} : { lang }) },
     headers: { "Idempotency-Key": idempotencyKey },
   });
@@ -37,5 +37,5 @@ export const createExtractionJobV2 = async (
 export const getYoutubeJobStatus = async (
   jobId: string
 ): Promise<JobStatusResponse> => {
-  return api.get<JobStatusResponse>(`/dev/recipes/youtube/status/${jobId}`);
+  return api.get<JobStatusResponse>(`/recipes/youtube/status/${jobId}`);
 };
