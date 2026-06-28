@@ -102,4 +102,45 @@ describe("CommentCard original-toggle", () => {
       screen.getByText(fmt(t.translatedFrom, t.languageNames.ja))
     ).toBeInTheDocument();
   });
+
+  it("T-04: 언어 태그가 표시 locale 언어로 (ja/en)", () => {
+    const koSource: Comment = {
+      ...translated,
+      content: "美味しいです",
+      originalContent: "맛있어요",
+      sourceLocale: "ko",
+    };
+
+    mockPathname.mockReturnValue("/ja/recipes/r1/comments");
+    const { unmount } = render(
+      <CommentCard comment={koSource} hideReplyButton />
+    );
+    const ja = commentsMessages.ja;
+    expect(
+      screen.getByText(fmt(ja.translatedFrom, ja.languageNames.ko))
+    ).toBeInTheDocument();
+    unmount();
+
+    mockPathname.mockReturnValue("/en/recipes/r1/comments");
+    render(<CommentCard comment={koSource} hideReplyButton />);
+    const en = commentsMessages.en;
+    expect(
+      screen.getByText(fmt(en.translatedFrom, en.languageNames.ko))
+    ).toBeInTheDocument();
+  });
+
+  it("T-05: 미매핑 sourceLocale → 언어 태그 생략, 버튼만", () => {
+    mockPathname.mockReturnValue("/recipes/r1/comments");
+    const t = commentsMessages.ko;
+    const unknown = {
+      ...translated,
+      sourceLocale: "de",
+    } as unknown as Comment;
+    render(<CommentCard comment={unknown} hideReplyButton />);
+
+    expect(
+      screen.getByRole("button", { name: t.showOriginal })
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/번역됨/)).not.toBeInTheDocument();
+  });
 });
