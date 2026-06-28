@@ -1,4 +1,4 @@
-import type { ToneSeed } from "@/entities/curation";
+import type { ToneSeed } from "@/entities/curation/model/types";
 
 export const TONE_DESCRIPTORS: Record<ToneSeed, string> = {
   friendly: [
