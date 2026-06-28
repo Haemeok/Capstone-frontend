@@ -4,9 +4,10 @@ import Link from "next/link";
 
 import { Banknote, Coins, Gem } from "lucide-react";
 
-import { PRICE_RANGES } from "@/entities/recipe/lib/content-pages";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
+
+import { PRICE_RANGES } from "@/entities/recipe/lib/content-pages";
 
 const PRICE_ICONS: Record<string, React.ReactNode> = {
   "under-5000": (

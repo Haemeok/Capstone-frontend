@@ -3,11 +3,11 @@
 import { notFound, useParams } from "next/navigation";
 
 import { HomeAnchorAdSlot } from "@/shared/adsense";
-import { guestUser } from "@/entities/user/model/guestUser";
 import { Container } from "@/shared/ui/Container";
 
 import { useUserQuery } from "@/entities/user";
 import { useUserStore } from "@/entities/user";
+import { guestUser } from "@/entities/user/model/guestUser";
 
 import Header from "@/widgets/Header/UserProfileHeader";
 import UserProfileDisplay from "@/widgets/UserProfile/UserProfileDisplay";

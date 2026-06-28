@@ -5,11 +5,11 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { ApiError, getErrorData } from "@/shared/api/errors";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useUserStore } from "@/entities/user/model/store";
 
 import { useLoginEncourageDrawerStore } from "@/features/auth/ui/LoginEncourageDrawer/model/store";
-import { useToastStore } from "@/shared/ui/toast";
 
 import {
   CHAT_ERROR_BEHAVIOR,

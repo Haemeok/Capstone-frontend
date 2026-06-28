@@ -1,10 +1,9 @@
+import type { CurationParams, ToneSeed } from "@/entities/curation";
 import {
   COMMON_TONE_RULES,
   FORBIDDEN_PHRASES,
   TONE_DESCRIPTORS,
 } from "@/entities/curation/model/tone-guide";
-
-import type { CurationParams, ToneSeed } from "@/entities/curation";
 
 export type BodyRecipeForPrompt = {
   id: string;

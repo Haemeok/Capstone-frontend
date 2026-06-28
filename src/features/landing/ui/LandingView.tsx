@@ -1,5 +1,6 @@
 import type { Locale } from "@/shared/i18n";
 import { getDictionary } from "@/shared/i18n";
+
 import {
   createLandingFAQStructuredData,
   createTagItemListStructuredData,

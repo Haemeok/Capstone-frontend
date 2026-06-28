@@ -1,15 +1,15 @@
+import { checkCanonical } from "./checks/canonical.js";
+import { checkJsonLd } from "./checks/jsonLd.js";
+import { checkLighthouseSeo } from "./checks/lighthouse.js";
+import { checkOgTags } from "./checks/ogTags.js";
+import { checkRecipeMeta } from "./checks/recipeMeta.js";
 import { checkRobots } from "./checks/robots.js";
 import {
   checkSitemaps,
   checkSitemapUrlCountDrop,
-  pickRecipeSampleUrls,
   pickRandomSampleUrls,
+  pickRecipeSampleUrls,
 } from "./checks/sitemap.js";
-import { checkOgTags } from "./checks/ogTags.js";
-import { checkJsonLd } from "./checks/jsonLd.js";
-import { checkCanonical } from "./checks/canonical.js";
-import { checkLighthouseSeo } from "./checks/lighthouse.js";
-import { checkRecipeMeta } from "./checks/recipeMeta.js";
 import { config } from "./config.js";
 import { reportAndExit } from "./reporter.js";
 import type { CheckResult, Tier } from "./types.js";
@@ -56,7 +56,12 @@ const main = async () => {
       checkOgTags(randomUrls),
     ]);
 
-  allResults.push(...ogResults, ...jsonLdResults, ...canonicalResults, ...randomResults);
+  allResults.push(
+    ...ogResults,
+    ...jsonLdResults,
+    ...canonicalResults,
+    ...randomResults
+  );
 
   // Deep-only checks
   if (tier === "deep") {

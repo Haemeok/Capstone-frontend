@@ -6,11 +6,10 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ApiError } from "@/shared/api/errors";
 import { format } from "@/shared/i18n";
 import { userPagesMessages } from "@/shared/i18n/userPagesMessages";
+import { useToastStore } from "@/shared/ui/toast";
 
 import type { User } from "@/entities/user";
 import { useUserStore } from "@/entities/user";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 const mockBack = jest.fn();
 let mockPathname = "/users/edit";

@@ -1,11 +1,12 @@
 "use client";
 
-import { ContentPage } from "@/entities/recipe/lib/content-pages";
 import { LocalizedLink } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 import { Image } from "@/shared/ui/image/Image";
+
+import { ContentPage } from "@/entities/recipe/lib/content-pages";
 
 type ContentPageCardProps = {
   page: ContentPage;

@@ -5,10 +5,9 @@ import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { trackReviewAction } from "@/shared/lib/review";
+import { useToastStore } from "@/shared/ui/toast";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 import { createRecipeRecord } from "./api";
 import { useRecipeCompleteStore } from "./store";

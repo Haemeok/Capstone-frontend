@@ -3,10 +3,9 @@ import type { ReactNode } from "react";
 import { act, render as rtlRender, screen } from "@testing-library/react";
 
 import { DictionaryProvider, getDictionary } from "@/shared/i18n";
+import { useToastStore } from "@/shared/ui/toast";
 
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 import AIConceptShell from "../index";
 

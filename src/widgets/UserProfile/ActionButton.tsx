@@ -3,8 +3,9 @@
 import { LogIn, Plus } from "lucide-react";
 
 import { LocalizedLink, useUserPagesDict } from "@/shared/i18n";
-import LoginPromotionBadge from "@/entities/user/ui/LoginPromotionBadge";
 import { Button } from "@/shared/ui/shadcn/button";
+
+import LoginPromotionBadge from "@/entities/user/ui/LoginPromotionBadge";
 
 import FloatingCreateRecipeButton from "@/features/recipe-create/ui/FloatingCreateRecipeButton";
 

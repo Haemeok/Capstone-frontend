@@ -7,10 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useLocalizedRouter, useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useSubmitRecipe } from "@/features/recipe-create/model/hooks/useSubmitRecipe";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 import {
   buildRecipeFormSchema,

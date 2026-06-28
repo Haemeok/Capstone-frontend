@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useToastStore } from "@/shared/ui/toast/model/store";
+
 import type { Visibility } from "@/entities/recipe/model/types";
 import { useUserStore } from "@/entities/user";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { patchRecipeVisibility } from "./api";
 

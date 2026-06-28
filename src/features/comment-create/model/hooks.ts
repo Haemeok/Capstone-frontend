@@ -3,10 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ApiError, getErrorData } from "@/shared/api/errors";
 import { invalidateCache } from "@/shared/config/cache";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { Comment } from "@/entities/comment";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { postComment } from "./api";
 import { CreateCommentMutationParams } from "./types";

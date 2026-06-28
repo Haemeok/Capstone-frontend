@@ -32,8 +32,9 @@ const DuplicateRecipeSection = dynamic(
   { ssr: false }
 );
 
-import UsageLimitBanner from "@/widgets/AIRecipeForm/UsageLimitBanner";
 import { useToastStore } from "@/shared/ui/toast";
+
+import UsageLimitBanner from "@/widgets/AIRecipeForm/UsageLimitBanner";
 
 import { useYoutubeUrl } from "./YoutubeUrlProvider";
 

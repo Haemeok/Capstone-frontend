@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { useRecipeFormDict } from "@/shared/i18n";
-
 import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { REMIX_REDIRECT_ERRORS } from "./lib/remixRedirectErrors";

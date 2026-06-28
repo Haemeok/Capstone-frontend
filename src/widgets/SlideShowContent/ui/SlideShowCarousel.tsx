@@ -11,12 +11,11 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/shared/ui/shadcn/carousel";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { type Recipe } from "@/entities/recipe";
 
 import { useToggleRecipeSave } from "@/features/recipe-save";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 import { useSlideShowProgress } from "../hooks/useSlideShowProgress";
 import SlideShowContent from "../SlideShowContent";

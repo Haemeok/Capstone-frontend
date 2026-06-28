@@ -1,6 +1,6 @@
 import { config } from "../config.js";
 import type { CheckResult } from "../types.js";
-import { fetchWithRetry, fetchPage } from "../utils/fetcher.js";
+import { fetchPage, fetchWithRetry } from "../utils/fetcher.js";
 import { parseSeoData } from "../utils/htmlParser.js";
 
 type ApiRecipe = {

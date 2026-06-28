@@ -3,7 +3,6 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { format, useCommonDict, useRecipeActionsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
-
 import { useToastStore } from "@/shared/ui/toast";
 
 import { deleteRecipe } from "./api";

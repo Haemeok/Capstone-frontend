@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import {
   buildRecipeBookFormSchema,
@@ -16,8 +17,6 @@ import {
   useRecipeBooks,
   useUpdateRecipeBookName,
 } from "@/entities/recipe-book";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 const NAME_MAX_LENGTH = 50;
 

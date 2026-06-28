@@ -1,4 +1,5 @@
 import * as fs from "fs";
+
 import {
   API_BASE,
   MAX_RETRIES,
@@ -44,7 +45,10 @@ export const fetchResultCount = async (
       clearTimeout(timeout);
 
       if (!res.ok) {
-        if (res.status === 429 || (res.status >= 500 && attempt < MAX_RETRIES)) {
+        if (
+          res.status === 429 ||
+          (res.status >= 500 && attempt < MAX_RETRIES)
+        ) {
           await sleep(RETRY_BACKOFF[attempt]);
           continue;
         }

@@ -2,12 +2,11 @@
 
 import { useLocalizedRouter, useT } from "@/shared/i18n";
 import Ratings from "@/shared/ui/Ratings";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useUserStore } from "@/entities/user/model/store";
 
 import { useRecipeStatus } from "@/features/recipe-status";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 type RecipeRatingButtonProps = {
   avgRating: number;

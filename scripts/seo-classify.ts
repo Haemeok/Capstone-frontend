@@ -1,12 +1,6 @@
-/**
- * SEO 분류 스크립트 — 감사 결과를 분석하여 재료 Tier 분류 + 분석 리포트 생성
- *
- * 실행: npx tsx scripts/seo-classify.ts
- * 선행: npx tsx scripts/seo-audit.ts
- */
-
 import * as fs from "fs";
 import * as path from "path";
+
 import { loadIngredientMap } from "./lib/load-ingredients";
 import { DATA_DIR } from "./lib/seo-constants";
 
@@ -32,7 +26,10 @@ type AuditResult = {
     empty: number;
     error: number;
   };
-  byCategory: Record<string, { total: number; active: number; failRate: number; avgResultCount: number }>;
+  byCategory: Record<
+    string,
+    { total: number; active: number; failRate: number; avgResultCount: number }
+  >;
   pages: AuditedPage[];
 };
 
@@ -48,7 +45,10 @@ type IngredientReport = {
 
 // ── Tier 분류 ──
 
-const classifyTier = (successRate: number, avgResultCount: number): 1 | 2 | 3 => {
+const classifyTier = (
+  successRate: number,
+  avgResultCount: number
+): 1 | 2 | 3 => {
   if (successRate >= 0.7 && avgResultCount >= 30) return 1;
   if (successRate >= 0.4 && avgResultCount >= 10) return 2;
   return 3;
@@ -58,7 +58,9 @@ const classifyTier = (successRate: number, avgResultCount: number): 1 | 2 | 3 =>
 
 const main = () => {
   if (!fs.existsSync(AUDIT_PATH)) {
-    console.error("감사 결과가 없습니다. 먼저 `npm run seo:audit`를 실행하세요.");
+    console.error(
+      "감사 결과가 없습니다. 먼저 `npm run seo:audit`를 실행하세요."
+    );
     process.exit(1);
   }
 
@@ -66,7 +68,10 @@ const main = () => {
   const ingredientNames = loadIngredientMap();
 
   // ── 1. 재료별 성적표 ──
-  const ingredientStats = new Map<string, { total: number; active: number; results: number[] }>();
+  const ingredientStats = new Map<
+    string,
+    { total: number; active: number; results: number[] }
+  >();
 
   for (const page of audit.pages) {
     const ingId = page.params.ingredientIds as string | undefined;
@@ -89,9 +94,10 @@ const main = () => {
   const ingredientReports: IngredientReport[] = [];
   for (const [id, stats] of ingredientStats) {
     const name = ingredientNames.get(id) || id;
-    const avgResult = stats.results.length > 0
-      ? stats.results.reduce((a, b) => a + b, 0) / stats.results.length
-      : 0;
+    const avgResult =
+      stats.results.length > 0
+        ? stats.results.reduce((a, b) => a + b, 0) / stats.results.length
+        : 0;
     const successRate = stats.total > 0 ? stats.active / stats.total : 0;
     const tier = classifyTier(successRate, avgResult);
 
@@ -107,9 +113,15 @@ const main = () => {
   }
 
   // Tier별 그룹핑
-  const tier1 = ingredientReports.filter((r) => r.tier === 1).sort((a, b) => b.successRate - a.successRate);
-  const tier2 = ingredientReports.filter((r) => r.tier === 2).sort((a, b) => b.successRate - a.successRate);
-  const tier3 = ingredientReports.filter((r) => r.tier === 3).sort((a, b) => b.avgResultCount - a.avgResultCount);
+  const tier1 = ingredientReports
+    .filter((r) => r.tier === 1)
+    .sort((a, b) => b.successRate - a.successRate);
+  const tier2 = ingredientReports
+    .filter((r) => r.tier === 2)
+    .sort((a, b) => b.successRate - a.successRate);
+  const tier3 = ingredientReports
+    .filter((r) => r.tier === 3)
+    .sort((a, b) => b.avgResultCount - a.avgResultCount);
 
   // ── 2. 카테고리별 권장사항 ──
   const recommendations: string[] = [];
@@ -123,12 +135,20 @@ const main = () => {
   }
 
   recommendations.push(`Tier 1 재료 ${tier1.length}개 → 모든 조합 유형 유지`);
-  recommendations.push(`Tier 2 재료 ${tier2.length}개 → 2D 조합까지만 유지 권장`);
-  recommendations.push(`Tier 3 재료 ${tier3.length}개 → 단독 페이지만 유지 또는 제거 검토`);
+  recommendations.push(
+    `Tier 2 재료 ${tier2.length}개 → 2D 조합까지만 유지 권장`
+  );
+  recommendations.push(
+    `Tier 3 재료 ${tier3.length}개 → 단독 페이지만 유지 또는 제거 검토`
+  );
 
   // NEAR_ACTIVE 통계
-  const nearActive = audit.pages.filter((p) => p.resultCount >= 5 && p.resultCount < 8);
-  recommendations.push(`NEAR_ACTIVE (5-7건) ${nearActive.length}개 → 레시피 추가 시 ACTIVE 승격 가능`);
+  const nearActive = audit.pages.filter(
+    (p) => p.resultCount >= 5 && p.resultCount < 8
+  );
+  recommendations.push(
+    `NEAR_ACTIVE (5-7건) ${nearActive.length}개 → 레시피 추가 시 ACTIVE 승격 가능`
+  );
 
   // ── 3. 텍스트 키워드 분석 ──
   const textKeywordsFailed = audit.pages
@@ -143,7 +163,10 @@ const main = () => {
     .filter((p) => p.category === "A_TEXT_KEYWORD" && p.status === "ACTIVE")
     .sort((a, b) => b.resultCount - a.resultCount)
     .slice(0, 20)
-    .map((p) => ({ keyword: p.params.q as string, resultCount: p.resultCount }));
+    .map((p) => ({
+      keyword: p.params.q as string,
+      resultCount: p.resultCount,
+    }));
 
   // ── 4. 리포트 저장 ──
   const report = {
@@ -151,9 +174,27 @@ const main = () => {
     auditDate: audit.generatedAt,
     summary: audit.summary,
     ingredientTiers: {
-      tier1: tier1.map((r) => ({ name: r.name, id: r.id, successRate: r.successRate, avgResult: r.avgResultCount, combinations: r.totalCombinations })),
-      tier2: tier2.map((r) => ({ name: r.name, id: r.id, successRate: r.successRate, avgResult: r.avgResultCount, combinations: r.totalCombinations })),
-      tier3: tier3.map((r) => ({ name: r.name, id: r.id, successRate: r.successRate, avgResult: r.avgResultCount, combinations: r.totalCombinations })),
+      tier1: tier1.map((r) => ({
+        name: r.name,
+        id: r.id,
+        successRate: r.successRate,
+        avgResult: r.avgResultCount,
+        combinations: r.totalCombinations,
+      })),
+      tier2: tier2.map((r) => ({
+        name: r.name,
+        id: r.id,
+        successRate: r.successRate,
+        avgResult: r.avgResultCount,
+        combinations: r.totalCombinations,
+      })),
+      tier3: tier3.map((r) => ({
+        name: r.name,
+        id: r.id,
+        successRate: r.successRate,
+        avgResult: r.avgResultCount,
+        combinations: r.totalCombinations,
+      })),
     },
     tierSummary: {
       tier1Count: tier1.length,
@@ -175,32 +216,48 @@ const main = () => {
   console.log("=== SEO 분석 리포트 ===\n");
 
   console.log(`총 페이지: ${audit.summary.totalChecked}`);
-  console.log(`ACTIVE: ${audit.summary.active} (${((audit.summary.active / audit.summary.totalChecked) * 100).toFixed(1)}%)`);
-  console.log(`IMMATURE + EMPTY: ${audit.summary.immature + audit.summary.empty} (${(((audit.summary.immature + audit.summary.empty) / audit.summary.totalChecked) * 100).toFixed(1)}%)`);
+  console.log(
+    `ACTIVE: ${audit.summary.active} (${((audit.summary.active / audit.summary.totalChecked) * 100).toFixed(1)}%)`
+  );
+  console.log(
+    `IMMATURE + EMPTY: ${audit.summary.immature + audit.summary.empty} (${(((audit.summary.immature + audit.summary.empty) / audit.summary.totalChecked) * 100).toFixed(1)}%)`
+  );
 
   console.log("\n=== 재료 Tier 분류 ===");
   console.log(`Tier 1 (Strong): ${tier1.length}개 — 모든 조합 OK`);
-  tier1.slice(0, 10).forEach((r) =>
-    console.log(`  ${r.name}: 성공률 ${(r.successRate * 100).toFixed(0)}%, 평균 ${r.avgResultCount}건`)
-  );
+  tier1
+    .slice(0, 10)
+    .forEach((r) =>
+      console.log(
+        `  ${r.name}: 성공률 ${(r.successRate * 100).toFixed(0)}%, 평균 ${r.avgResultCount}건`
+      )
+    );
   if (tier1.length > 10) console.log(`  ... 외 ${tier1.length - 10}개`);
 
   console.log(`\nTier 2 (Medium): ${tier2.length}개 — 2D 조합까지`);
-  tier2.slice(0, 10).forEach((r) =>
-    console.log(`  ${r.name}: 성공률 ${(r.successRate * 100).toFixed(0)}%, 평균 ${r.avgResultCount}건`)
-  );
+  tier2
+    .slice(0, 10)
+    .forEach((r) =>
+      console.log(
+        `  ${r.name}: 성공률 ${(r.successRate * 100).toFixed(0)}%, 평균 ${r.avgResultCount}건`
+      )
+    );
   if (tier2.length > 10) console.log(`  ... 외 ${tier2.length - 10}개`);
 
   console.log(`\nTier 3 (Weak): ${tier3.length}개 — 단독만 or 제거`);
-  tier3.slice(0, 10).forEach((r) =>
-    console.log(`  ${r.name}: 성공률 ${(r.successRate * 100).toFixed(0)}%, 평균 ${r.avgResultCount}건`)
-  );
+  tier3
+    .slice(0, 10)
+    .forEach((r) =>
+      console.log(
+        `  ${r.name}: 성공률 ${(r.successRate * 100).toFixed(0)}%, 평균 ${r.avgResultCount}건`
+      )
+    );
   if (tier3.length > 10) console.log(`  ... 외 ${tier3.length - 10}개`);
 
   console.log("\n=== 실패 텍스트 키워드 (상위 10) ===");
-  textKeywordsFailed.slice(0, 10).forEach((k) =>
-    console.log(`  "${k.keyword}": ${k.resultCount}건`)
-  );
+  textKeywordsFailed
+    .slice(0, 10)
+    .forEach((k) => console.log(`  "${k.keyword}": ${k.resultCount}건`));
 
   console.log("\n=== 권장사항 ===");
   recommendations.forEach((r) => console.log(`  • ${r}`));

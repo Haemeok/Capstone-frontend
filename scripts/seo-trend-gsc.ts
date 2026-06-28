@@ -1,20 +1,6 @@
-/**
- * Google Search Console API 연동 — 실제 검색 성과 데이터 수집
- *
- * 실행: npx tsx scripts/seo-trend-gsc.ts
- *
- * 환경변수 필요:
- *   GOOGLE_SERVICE_ACCOUNT_KEY_PATH — 서비스 계정 JSON 키 파일 경로
- *
- * 설정 방법:
- *   1. Google Cloud Console → API 라이브러리 → Search Console API 활성화
- *   2. 서비스 계정 생성 → JSON 키 다운로드
- *   3. Search Console → 설정 → 사용자 → 서비스 계정 이메일 추가 (전체 권한)
- *   4. GOOGLE_SERVICE_ACCOUNT_KEY_PATH=./gsc-key.json npx tsx scripts/seo-trend-gsc.ts
- */
-
 import * as fs from "fs";
 import * as path from "path";
+
 import { DATA_DIR, today } from "./lib/seo-constants";
 import { classifyCategory } from "./lib/seo-utils";
 
@@ -26,9 +12,10 @@ const GSC_API = "https://searchconsole.googleapis.com/webmasters/v3";
 
 // ── Google Auth (서비스 계정 JWT) ──
 
-const createJwt = async (
-  serviceAccount: { client_email: string; private_key: string }
-): Promise<string> => {
+const createJwt = async (serviceAccount: {
+  client_email: string;
+  private_key: string;
+}): Promise<string> => {
   // JWT 수동 생성 (외부 라이브러리 없이)
   const header = Buffer.from(
     JSON.stringify({ alg: "RS256", typ: "JWT" })
@@ -53,9 +40,10 @@ const createJwt = async (
   return `${header}.${payload}.${signature}`;
 };
 
-const getAccessToken = async (
-  serviceAccount: { client_email: string; private_key: string }
-): Promise<string> => {
+const getAccessToken = async (serviceAccount: {
+  client_email: string;
+  private_key: string;
+}): Promise<string> => {
   const jwt = await createJwt(serviceAccount);
 
   const res = await fetch("https://oauth2.googleapis.com/token", {
@@ -217,17 +205,29 @@ const main = async () => {
   // ── 3. 카테고리별 ROI (URL 패턴 기반) ──
   const categoryROI: Record<
     string,
-    { totalClicks: number; totalImpressions: number; avgCTR: number; pageCount: number }
+    {
+      totalClicks: number;
+      totalImpressions: number;
+      avgCTR: number;
+      pageCount: number;
+    }
   > = {};
 
   for (const row of pageRows) {
     const url = row.keys[0];
     const queryString = url.includes("?") ? url.split("?")[1] : "";
-    const urlParams = Object.fromEntries(new URLSearchParams(queryString).entries());
+    const urlParams = Object.fromEntries(
+      new URLSearchParams(queryString).entries()
+    );
     const cat = classifyCategory(urlParams);
 
     if (!categoryROI[cat]) {
-      categoryROI[cat] = { totalClicks: 0, totalImpressions: 0, avgCTR: 0, pageCount: 0 };
+      categoryROI[cat] = {
+        totalClicks: 0,
+        totalImpressions: 0,
+        avgCTR: 0,
+        pageCount: 0,
+      };
     }
     categoryROI[cat].totalClicks += row.clicks;
     categoryROI[cat].totalImpressions += row.impressions;
@@ -274,9 +274,13 @@ const main = async () => {
   console.log(`  평균 CTR: ${output.overall.avgCTR}%`);
 
   console.log("\n=== 기회 키워드 (상위 10) ===");
-  opportunityKeywords.slice(0, 10).forEach((k) =>
-    console.log(`  "${k.query}": 노출 ${k.impressions}, 클릭 ${k.clicks}, 순위 ${k.position}`)
-  );
+  opportunityKeywords
+    .slice(0, 10)
+    .forEach((k) =>
+      console.log(
+        `  "${k.query}": 노출 ${k.impressions}, 클릭 ${k.clicks}, 순위 ${k.position}`
+      )
+    );
 
   console.log("\n=== 카테고리별 ROI ===");
   for (const [cat, roi] of Object.entries(categoryROI).sort(

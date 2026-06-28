@@ -11,10 +11,9 @@ import {
 } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useRecipeHistoryItemsQuery } from "@/entities/recipe/model/hooks";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { formatTimelineDateHeader } from "../timeline/lib/formatTimelineDateHeader";
 import NutritionCard from "./components/NutritionCard";

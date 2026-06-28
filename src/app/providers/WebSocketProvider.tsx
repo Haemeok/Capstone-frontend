@@ -11,12 +11,12 @@ import {
 
 import { api } from "@/shared/api/client";
 import { BASE_WEBSOCKET_URL } from "@/shared/config/constants/api";
+
+import { NOTIFICATION_ENDPOINTS } from "@/entities/notification/model/api";
 import {
   SockJSWebSocketManager,
   type StompConnectionError,
 } from "@/entities/notification/model/sockjs-websocket";
-
-import { NOTIFICATION_ENDPOINTS } from "@/entities/notification/model/api";
 import type {
   WebSocketConnectionStatus,
   WebSocketMessage,

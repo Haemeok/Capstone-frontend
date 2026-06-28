@@ -13,7 +13,6 @@ import {
 
 import { useAppGlobalDict, useCommonDict } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
-
 import { useToastStore } from "@/shared/ui/toast/model/store";
 import { ToastType } from "@/shared/ui/toast/model/types";
 

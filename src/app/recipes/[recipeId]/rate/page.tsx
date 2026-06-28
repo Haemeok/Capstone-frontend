@@ -8,13 +8,12 @@ import { cn } from "@/shared/lib/utils";
 import Circle from "@/shared/ui/Circle";
 import { Container } from "@/shared/ui/Container";
 import Ratings from "@/shared/ui/Ratings";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useRecipeDetailQuery } from "@/entities/recipe/model/hooks";
 import { useUserStore } from "@/entities/user";
 
 import usePostReviewMutation from "@/features/recipe-review/model/hooks";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 const ReviewPage = () => {
   const [rating, setRating] = useState<number>(0);

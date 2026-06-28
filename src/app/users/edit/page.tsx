@@ -11,13 +11,12 @@ import { getErrorData } from "@/shared/api/errors";
 import { format, useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Container } from "@/shared/ui/Container";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useUserStore } from "@/entities/user";
 
 import { usePutUserInfoMutation } from "@/features/user-edit/model/hooks";
 import { PutUserInfoVariables } from "@/features/user-edit/model/types";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 interface FormValues {
   nickname: string;

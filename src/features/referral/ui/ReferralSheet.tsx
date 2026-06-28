@@ -9,6 +9,7 @@ import { format, useReferralDict } from "@/shared/i18n";
 import { resolveChromeLocale } from "@/shared/i18n/resolveChromeLocale";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import {
   campaignMonthLabel,
@@ -21,8 +22,6 @@ import {
   useReferralInfoQuery,
 } from "@/entities/referral";
 import { useAdFreeStatus } from "@/entities/user";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { AdFreeActiveNotice } from "./AdFreeActiveNotice";
 

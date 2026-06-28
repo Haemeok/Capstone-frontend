@@ -1,14 +1,8 @@
-/**
- * SEO 최적화 스크립트 — 분석 리포트의 재료 Tier를 ingredients.json에 반영
- *
- * 실행: npx tsx scripts/seo-optimize.ts
- * 선행: npx tsx scripts/seo-classify.ts
- */
-
 import * as fs from "fs";
 import * as path from "path";
-import { DATA_DIR, INGREDIENTS_JSON_PATH } from "./lib/seo-constants";
+
 import { loadIngredients } from "./lib/load-ingredients";
+import { DATA_DIR, INGREDIENTS_JSON_PATH } from "./lib/seo-constants";
 
 const REPORT_PATH = path.join(DATA_DIR, "seo-analysis-report.json");
 

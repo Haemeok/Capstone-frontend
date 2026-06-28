@@ -1,6 +1,5 @@
 "use client";
 
-import { CONTENT_PAGES } from "@/entities/recipe/lib/content-pages";
 import { useSearchDiscoveryDict } from "@/shared/i18n/useSearchDiscoveryDict";
 import {
   Carousel,
@@ -9,6 +8,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/shared/ui/shadcn/carousel";
+
+import { CONTENT_PAGES } from "@/entities/recipe/lib/content-pages";
 
 import ContentPageCard from "./ContentPageCard";
 

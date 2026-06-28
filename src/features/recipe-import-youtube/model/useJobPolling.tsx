@@ -7,7 +7,6 @@ import { useShallow } from "zustand/shallow";
 
 import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
 import { useLocalizedRouter } from "@/shared/i18n";
-
 import { useToastStore } from "@/shared/ui/toast";
 
 import { JOB_POLLING_CONFIG } from "../lib/constants";

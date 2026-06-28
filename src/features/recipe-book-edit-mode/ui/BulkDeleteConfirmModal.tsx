@@ -2,13 +2,12 @@
 
 import { format, useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import {
   getRecipeBookError,
   useRemoveRecipesFromBook,
 } from "@/entities/recipe-book";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useEditModeStore } from "../model/useEditModeStore";
 
