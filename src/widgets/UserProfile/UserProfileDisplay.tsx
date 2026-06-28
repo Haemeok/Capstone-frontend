@@ -3,9 +3,8 @@
 import { Share2, UserRound } from "lucide-react";
 
 import { BASE_URL } from "@/shared/config/constants/api";
-import { guestUser } from "@/entities/user/model/guestUser";
 import { useShare } from "@/shared/hooks/useShare";
-import { format, useUserPagesDict } from "@/shared/i18n";
+import { format, useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
   generateUserGradient,
@@ -13,6 +12,9 @@ import {
 } from "@/shared/lib/colors";
 import CollapsibleP from "@/shared/ui/CollapsibleP";
 import { Image } from "@/shared/ui/image/Image";
+
+import { getOfficialProfileOverride } from "@/entities/user";
+import { guestUser } from "@/entities/user/model/guestUser";
 
 import UserInfoEditButton from "@/features/edit-user-profile/ui/UserInfoEditButton";
 import { ReferralGiftButton } from "@/features/referral";
@@ -33,9 +35,15 @@ const UserProfileDisplay = ({
 }: UserProfileDisplayProps) => {
   const { share } = useShare();
   const t = useUserPagesDict();
+  const locale = useUserPagesLocale();
 
+  const officialProfile = getOfficialProfileOverride(user.id, locale);
   const displayNickname =
-    user.id === guestUser.id ? t.profile.guestNickname : user.nickname;
+    user.id === guestUser.id
+      ? t.profile.guestNickname
+      : (officialProfile?.nickname ?? user.nickname);
+  const displayIntroduction =
+    officialProfile?.introduction ?? user.introduction;
 
   const handleShareProfile = () => {
     triggerHaptic("Light");
@@ -79,7 +87,7 @@ const UserProfileDisplay = ({
         </div>
       </div>
       <CollapsibleP
-        content={user.introduction}
+        content={displayIntroduction}
         className="text-mm px-0 pt-3 pb-2"
         height={52}
         gradientHeight={16}

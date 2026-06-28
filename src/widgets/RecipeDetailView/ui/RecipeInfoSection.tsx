@@ -8,7 +8,11 @@ import CollapsibleP from "@/shared/ui/CollapsibleP";
 
 import type { CreatorCountryTag } from "@/entities/recipe";
 import { CreatorCountryFlag } from "@/entities/recipe";
-import { UserName, UserProfileImage } from "@/entities/user";
+import {
+  getOfficialProfileOverride,
+  UserName,
+  UserProfileImage,
+} from "@/entities/user";
 import { User } from "@/entities/user/model/types";
 
 import RecipeExtractorBadge from "./RecipeExtractorBadge";
@@ -35,6 +39,11 @@ export default function RecipeInfoSection({
   children,
 }: RecipeInfoSectionProps) {
   const t = getDictionary(locale);
+
+  const officialProfile = getOfficialProfileOverride(author.id, locale);
+  const authorNickname = officialProfile?.nickname ?? author.nickname;
+  const authorIntroduction =
+    officialProfile?.introduction ?? author.introduction;
 
   return (
     <>
@@ -76,13 +85,13 @@ export default function RecipeInfoSection({
         />
         <div className="flex min-w-0 flex-1 flex-col">
           <UserName
-            username={author.nickname}
+            username={authorNickname}
             userId={author.id}
             className="text-ink text-base font-bold md:text-lg"
           />
-          {author.introduction && (
+          {authorIntroduction && (
             <p className="text-ink-muted mt-0.5 truncate text-xs leading-5 md:text-sm md:leading-6">
-              {author.introduction}
+              {authorIntroduction}
             </p>
           )}
         </div>
