@@ -1,6 +1,4 @@
-// Find self-barrel imports: a file at src/<layer>/<slice>/... that imports
-// from "@/<layer>/<slice>" (its own slice's barrel).
-// Run: node scripts/find-self-barrel.mjs
+// Detect self-barrel imports (a slice importing its own barrel).
 
 import fs from "node:fs";
 import path from "node:path";
@@ -13,7 +11,11 @@ const walk = (dir, cb) => {
   for (const d of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, d.name);
     if (d.isDirectory()) walk(p, cb);
-    else if (/\.(ts|tsx)$/.test(d.name) && !p.includes("__tests__") && !/\.test\.tsx?$/.test(d.name)) {
+    else if (
+      /\.(ts|tsx)$/.test(d.name) &&
+      !p.includes("__tests__") &&
+      !/\.test\.tsx?$/.test(d.name)
+    ) {
       cb(p);
     }
   }
@@ -32,7 +34,7 @@ for (const layer of LAYERS) {
       String.raw`from\s+["']` +
         barrel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") +
         String.raw`["']`,
-      "g",
+      "g"
     );
     walk(sliceDir, (file) => {
       const src = fs.readFileSync(file, "utf8");
@@ -44,7 +46,12 @@ for (const layer of LAYERS) {
           re.lastIndex = 0;
         }
       }
-      if (matched.length) hits.push({ file: path.relative(".", file).replaceAll("\\", "/"), barrel, matched });
+      if (matched.length)
+        hits.push({
+          file: path.relative(".", file).replaceAll("\\", "/"),
+          barrel,
+          matched,
+        });
     });
   }
 }

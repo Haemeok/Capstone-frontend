@@ -50,7 +50,7 @@ const AiLoading = ({ aiModelId, progress = 0, startTime }: AiLoadingProps) => {
     return () => {
       clearInterval(stepInterval);
     };
-  }, []);
+  }, [t.aiRecipe.steps.length]);
 
   return (
     <div className="relative flex min-h-[calc(100dvh-var(--bottom-nav-h))] w-full flex-col items-center justify-center gap-6 p-4">
