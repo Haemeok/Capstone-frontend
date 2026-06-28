@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -34,7 +34,7 @@ import {
 const CONCEPT = "NUTRITION_BALANCE" as const;
 
 const NutritionRecipePage = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const t = useT();
   const n = t.aiRecipe.nutrition;
   const [mode, setMode] = useState<NutritionMode>("MACRO");

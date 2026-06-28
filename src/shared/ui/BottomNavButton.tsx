@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 type BottomNavButtonProps = {
   icon: React.ReactNode;
   label: string;
@@ -10,7 +11,7 @@ type BottomNavButtonProps = {
 };
 
 const BottomNavButton = ({ icon, label, path }: BottomNavButtonProps) => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const pathname = usePathname();
   return (
     <button

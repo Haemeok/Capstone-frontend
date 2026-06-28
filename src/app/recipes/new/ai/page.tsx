@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 
@@ -11,7 +11,7 @@ import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
 import AIModelSelection from "@/widgets/AIModelSelection";
 
 const AIRecipePage = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { generationState, selectedAI } = useAIRecipeStore();
 
   const shouldRedirect =

@@ -1,6 +1,8 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+
+import { useLocalizedRouter } from "@/shared/i18n";
 
 import { useRecipeDetailQuery } from "@/entities/recipe";
 
@@ -8,7 +10,7 @@ import { SlideShowCarousel } from "@/widgets/SlideShowContent";
 import SlideShowHeader from "@/widgets/SlideShowHeader";
 
 const RecipeSlideShowPage = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { recipeId } = useParams<{ recipeId: string }>();
   const { recipeData: recipe } = useRecipeDetailQuery(recipeId);
 

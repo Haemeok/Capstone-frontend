@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { UserRound } from "lucide-react";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import {
@@ -19,7 +18,7 @@ import { useUserStore } from "@/entities/user";
 import { RecipeBookGrid } from "@/widgets/RecipeBookGrid";
 
 export default function RecipeBooksPage() {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { user } = useUserStore();
   const t = useUserPagesDict().recipeBooks;
 

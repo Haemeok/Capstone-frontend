@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useRecipeFormDict } from "@/shared/i18n";
 import { useToastStore } from "@/shared/ui/toast/model/store";
 
@@ -10,7 +11,7 @@ import { REMIX_REDIRECT_ERRORS } from "./lib/remixRedirectErrors";
 
 export const RemixRedirectToast = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const pathname = usePathname();
   const { addToast } = useToastStore();
   const { ui } = useRecipeFormDict();

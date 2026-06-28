@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
 
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useChromeDict } from "@/shared/i18n";
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
 import { UnsavedChangesModal } from "@/shared/ui/modal/UnsavedChangesModal";
@@ -27,7 +28,7 @@ const isRecipeEditPage = (pathname: string) => {
 const BottomNavBar = () => {
   const { user } = useUserStore();
   const pathname = usePathname();
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const isNavVisible = useIsBottomNavVisible();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);

@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { AiFormInArticleAdSlot } from "@/shared/adsense";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
@@ -32,7 +32,7 @@ type FineDiningFormValues = {
 };
 
 const FineDiningRecipe = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const t = useT();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

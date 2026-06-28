@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { AiFormInArticleAdSlot } from "@/shared/adsense";
 import { BUDGET_DEFAULT } from "@/shared/config/constants/budget";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
@@ -23,7 +23,7 @@ import PriceSlider from "./PriceSlider";
 const CONCEPT = "COST_EFFECTIVE" as const;
 
 const BudgetRecipe = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const t = useT();
   const [budget, setBudget] = useState(BUDGET_DEFAULT);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

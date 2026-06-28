@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { AnimatePresence, motion } from "framer-motion";
+
+import { useLocalizedRouter } from "@/shared/i18n";
 
 import { ARCHETYPE_RESULTS } from "../model/archeTypeResult";
 import { ARCHETYPE_QUESTIONS } from "../model/questions";
@@ -13,7 +14,7 @@ import ProgressBar from "./ProgressBar";
 const ArchetypeFunnel = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<string>("");
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const currentQuestion = ARCHETYPE_QUESTIONS[currentStep];
 

@@ -1,5 +1,6 @@
 "use client";
 
+// eslint-disable-next-line local/no-raw-router -- 언어 전환기: 현재가 아닌 타깃 locale의 full path로 의도적으로 이동
 import { usePathname, useRouter } from "next/navigation";
 
 import { Languages } from "lucide-react";

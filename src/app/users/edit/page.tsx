@@ -2,12 +2,12 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { Camera } from "lucide-react";
 
 import { ApiError } from "@/shared/api/client";
 import { getErrorData } from "@/shared/api/errors";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { format, useUserPagesDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Container } from "@/shared/ui/Container";
@@ -31,7 +31,7 @@ const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const UserInfoChangePage = () => {
   const t = useUserPagesDict().profile.edit;
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const { user } = useUserStore();
   const { addToast } = useToastStore();
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);

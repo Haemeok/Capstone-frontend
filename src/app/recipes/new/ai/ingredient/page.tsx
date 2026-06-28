@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
 import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
+import { useLocalizedRouter } from "@/shared/i18n";
 import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Container } from "@/shared/ui/Container";
@@ -40,7 +40,7 @@ import IngredientManager from "@/widgets/IngredientManager/IngredientManager";
 const CONCEPT = "INGREDIENT_FOCUS" as const;
 
 const IngredientRecipePage = () => {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const t = useT();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
