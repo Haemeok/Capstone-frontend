@@ -1,19 +1,23 @@
-/**
- * SEO 감사 스크립트 — 모든 SEO 페이지의 실제 검색 결과 수를 수집
- *
- * 실행: npx tsx scripts/seo-audit.ts
- * IMMATURE 재검사: npx tsx scripts/seo-audit.ts --recheck-immature
- */
-
 import * as fs from "fs";
 import * as path from "path";
-import { generateSeoPages, type SeoPage } from "../src/shared/config/seo/seoPages";
+
 import {
-  CONCURRENCY, DELAY_MS, MAX_ERROR_RATE, MIN_RESULTS,
-  DATA_DIR, today,
+  generateSeoPages,
+  type SeoPage,
+} from "../src/shared/config/seo/seoPages";
+import {
+  CONCURRENCY,
+  DATA_DIR,
+  DELAY_MS,
+  MAX_ERROR_RATE,
+  MIN_RESULTS,
+  today,
 } from "./lib/seo-constants";
 import {
-  sleep, fetchResultCount, classifyCategory, paramsToKey,
+  classifyCategory,
+  fetchResultCount,
+  paramsToKey,
+  sleep,
 } from "./lib/seo-utils";
 
 // ── 타입 ──
@@ -156,7 +160,9 @@ const main = async () => {
     const checked = Math.min(i + CONCURRENCY, pagesToCheck.length);
     const pct = ((checked / pagesToCheck.length) * 100).toFixed(1);
     const elapsed = Date.now() - startTime;
-    const eta = Math.round((elapsed / checked) * (pagesToCheck.length - checked) / 1000);
+    const eta = Math.round(
+      ((elapsed / checked) * (pagesToCheck.length - checked)) / 1000
+    );
     process.stdout.write(
       `\r[${checked}/${pagesToCheck.length}] ${pct}% | ACTIVE: ${activeCount} | IMMATURE: ${immatureCount} | EMPTY: ${emptyCount} | ERROR: ${errorCount} | ETA: ${eta}s`
     );
@@ -193,9 +199,15 @@ const main = async () => {
     const counts = pages.map((p) => p.resultCount).filter((c) => c >= 0);
     const statusCounts = { ACTIVE: 0, IMMATURE: 0, EMPTY: 0, ERROR: 0 };
     for (const p of pages) {
-      if (p.status in statusCounts) statusCounts[p.status as keyof typeof statusCounts]++;
+      if (p.status in statusCounts)
+        statusCounts[p.status as keyof typeof statusCounts]++;
     }
-    const { ACTIVE: active, IMMATURE: immature, EMPTY: empty, ERROR: error } = statusCounts;
+    const {
+      ACTIVE: active,
+      IMMATURE: immature,
+      EMPTY: empty,
+      ERROR: error,
+    } = statusCounts;
     const failed = immature + empty;
 
     byCategory[cat] = {
@@ -207,7 +219,9 @@ const main = async () => {
       failRate: pages.length > 0 ? failed / pages.length : 0,
       avgResultCount:
         counts.length > 0
-          ? Math.round((counts.reduce((a, b) => a + b, 0) / counts.length) * 10) / 10
+          ? Math.round(
+              (counts.reduce((a, b) => a + b, 0) / counts.length) * 10
+            ) / 10
           : 0,
       medianResultCount: median(counts),
     };
@@ -241,13 +255,21 @@ const main = async () => {
   // 요약 출력
   console.log("\n=== 감사 요약 ===");
   console.log(`총 검사: ${results.length}`);
-  console.log(`ACTIVE (8+): ${activeCount} (${((activeCount / results.length) * 100).toFixed(1)}%)`);
-  console.log(`IMMATURE (1-7): ${immatureCount} (${((immatureCount / results.length) * 100).toFixed(1)}%)`);
-  console.log(`EMPTY (0): ${emptyCount} (${((emptyCount / results.length) * 100).toFixed(1)}%)`);
+  console.log(
+    `ACTIVE (8+): ${activeCount} (${((activeCount / results.length) * 100).toFixed(1)}%)`
+  );
+  console.log(
+    `IMMATURE (1-7): ${immatureCount} (${((immatureCount / results.length) * 100).toFixed(1)}%)`
+  );
+  console.log(
+    `EMPTY (0): ${emptyCount} (${((emptyCount / results.length) * 100).toFixed(1)}%)`
+  );
   console.log(`ERROR: ${errorCount}`);
 
   console.log("\n=== 카테고리별 ===");
-  for (const [cat, stats] of Object.entries(byCategory).sort(([a], [b]) => a.localeCompare(b))) {
+  for (const [cat, stats] of Object.entries(byCategory).sort(([a], [b]) =>
+    a.localeCompare(b)
+  )) {
     console.log(
       `${cat}: ${stats.total}개 | ACTIVE ${stats.active} | 실패율 ${(stats.failRate * 100).toFixed(0)}% | 평균 ${stats.avgResultCount}`
     );
@@ -256,14 +278,21 @@ const main = async () => {
   // 이전 감사와 diff
   const prevFiles = fs
     .readdirSync(DATA_DIR)
-    .filter((f) => f.startsWith("seo-audit-") && f !== `seo-audit-${today()}.json` && f !== "seo-audit-latest.json")
+    .filter(
+      (f) =>
+        f.startsWith("seo-audit-") &&
+        f !== `seo-audit-${today()}.json` &&
+        f !== "seo-audit-latest.json"
+    )
     .sort()
     .reverse();
 
   if (prevFiles.length > 0) {
     const prevPath = path.join(DATA_DIR, prevFiles[0]);
     const prev: AuditResult = JSON.parse(fs.readFileSync(prevPath, "utf-8"));
-    const prevMap = new Map(prev.pages.map((p) => [paramsToKey(p.params), p.status]));
+    const prevMap = new Map(
+      prev.pages.map((p) => [paramsToKey(p.params), p.status])
+    );
 
     let promoted = 0;
     let demoted = 0;

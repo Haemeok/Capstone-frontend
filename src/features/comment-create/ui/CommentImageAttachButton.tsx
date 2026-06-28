@@ -6,7 +6,6 @@ import { ImagePlus } from "lucide-react";
 
 import { useCommentsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
-
 import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { validateCommentImage } from "../model/useCommentImageUpload";

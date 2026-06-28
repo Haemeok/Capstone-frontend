@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { invalidateCache } from "@/shared/config/cache";
 import { format, useCommentsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
-
 import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { deleteComment } from "./api";

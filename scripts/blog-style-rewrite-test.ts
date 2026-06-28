@@ -1,20 +1,7 @@
-/**
- * 3 블로거 톤(에궁이궁 / 엘리맘 / elarpi)으로 같은 큐레이션 1개를 리라이트.
- *
- * 파이프라인:
- *   AI generateText (slim text only)
- *     → parseBlogBody (헤딩 카운트 검증, intro/sections/outro 분리)
- *     → assembleBlogBody (이미지·링크·영양·URL 결정론적 삽입)
- *     → 최종 마크다운 .md
- *
- * 사용:  npx tsx scripts/blog-style-rewrite-test.ts [slug?]
- * 출력:  docs/blog-styles/style-{a,b,c}-*.md  (+ _input.md, _raw-*.md)
- */
-import fs from "node:fs";
-import path from "node:path";
-
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateText } from "ai";
+import fs from "node:fs";
+import path from "node:path";
 
 import { assembleBlogBody } from "../src/app/admin/recipe-blog-test/lib/assembleBlogBody";
 import {
@@ -22,8 +9,8 @@ import {
   buildToneUserPrompt,
 } from "../src/app/admin/recipe-blog-test/lib/blogTonePrompts";
 import {
-  type ParsedBlogBody,
   parseBlogBody,
+  type ParsedBlogBody,
 } from "../src/app/admin/recipe-blog-test/lib/parseBlogBody";
 import type { BlogTone } from "../src/app/admin/recipe-blog-test/lib/toneInserts";
 import type { StaticRecipe } from "../src/entities/recipe/model/types";
@@ -53,8 +40,10 @@ const BASE_API = "https://api.recipio.kr/api";
 const MODEL_ID = "solar-pro3";
 
 const kstNow = () => new Date(Date.now() + 9 * 60 * 60 * 1000);
-const kstStamp = () => kstNow().toISOString().slice(0, 16).replace("T", "_").replace(":", "");
-const kstReadable = () => kstNow().toISOString().slice(0, 16).replace("T", " ") + " KST";
+const kstStamp = () =>
+  kstNow().toISOString().slice(0, 16).replace("T", "_").replace(":", "");
+const kstReadable = () =>
+  kstNow().toISOString().slice(0, 16).replace("T", " ") + " KST";
 
 const RUN_STAMP = kstStamp();
 const RUN_TIME = kstReadable();
@@ -74,11 +63,11 @@ const fetchJson = async <T>(url: string): Promise<T> => {
 };
 
 const pickCuration = async (
-  slugArg: string | undefined,
+  slugArg: string | undefined
 ): Promise<PublicCurationArticleDto> => {
   if (slugArg) {
     return await fetchJson<PublicCurationArticleDto>(
-      `${BASE_API}/curation-articles/${slugArg}`,
+      `${BASE_API}/curation-articles/${slugArg}`
     );
   }
   const list = await fetchJson<{
@@ -86,7 +75,7 @@ const pickCuration = async (
   }>(`${BASE_API}/curation-articles?page=0&size=20`);
   for (const item of list.content) {
     const a = await fetchJson<PublicCurationArticleDto>(
-      `${BASE_API}/curation-articles/${item.slug}`,
+      `${BASE_API}/curation-articles/${item.slug}`
     );
     if (a.recipeIds.length >= 3) return a;
   }
@@ -120,7 +109,7 @@ type RunResult = {
 const generateOneTone = async (
   tone: BlogTone,
   article: PublicCurationArticleDto,
-  recipes: StaticRecipe[],
+  recipes: StaticRecipe[]
 ): Promise<RunResult> => {
   const model = upstage.chat(MODEL_ID);
   const system = buildToneSystemPrompt(tone);
@@ -196,7 +185,7 @@ const main = async () => {
   console.log("[1/4] 큐레이션 선정 ...");
   const article = await pickCuration(slugArg);
   console.log(
-    `       "${article.title}" (slug=${article.slug}, recipes=${article.recipeIds.length})`,
+    `       "${article.title}" (slug=${article.slug}, recipes=${article.recipeIds.length})`
   );
 
   console.log("[2/4] 레시피 detail fetch ...");
@@ -225,7 +214,7 @@ const main = async () => {
         return `- **${r.title}** (${s}인분, ${r.cookingTime ?? 0}분) — 1인분 ${Math.round((r.totalCalories || 0) / s)}kcal / ${Math.round((r.totalIngredientCost || 0) / s).toLocaleString()}원 / 단백 ${Math.round((r.nutrition?.protein || 0) / s)}g / 나트륨 ${Math.round((r.nutrition?.sodium || 0) / s)}mg`;
       }),
     ].join("\n"),
-    "utf8",
+    "utf8"
   );
 
   const tones: Array<{ key: string; label: string; tone: BlogTone }> = [
@@ -245,15 +234,15 @@ const main = async () => {
         fs.writeFileSync(
           path.join(OUT_DIR, `style-${key}.md`),
           head + r.assembled,
-          "utf8",
+          "utf8"
         );
         fs.writeFileSync(
           path.join(OUT_DIR, `_raw-${key}.md`),
           head + r.raw,
-          "utf8",
+          "utf8"
         );
         console.log(
-          `  ✓ ${label} → style-${key}.md (parseOk=${r.parseOk}, ${r.ms}ms, in=${r.inTokens} out=${r.outTokens})`,
+          `  ✓ ${label} → style-${key}.md (parseOk=${r.parseOk}, ${r.ms}ms, in=${r.inTokens} out=${r.outTokens})`
         );
         if (!r.parseOk) {
           console.warn(`    ⚠ parse 실패: ${r.parseErrors.join("; ")}`);
@@ -265,17 +254,19 @@ const main = async () => {
         fs.writeFileSync(
           path.join(OUT_DIR, `style-${key}.md`),
           `# 생성 실패\n\n${msg}`,
-          "utf8",
+          "utf8"
         );
         return { key, label, ok: false };
       }
-    }),
+    })
   );
 
   console.log(`\n[4/4] 완료 — ${RUN_TIME}`);
   console.log(`  스냅샷: ${OUT_DIR}/`);
   results.forEach((r) => {
-    console.log(`  ${r.ok ? "✓" : "✗"} ${r.label} → ${OUT_DIR}/style-${r.key}.md`);
+    console.log(
+      `  ${r.ok ? "✓" : "✗"} ${r.label} → ${OUT_DIR}/style-${r.key}.md`
+    );
   });
 };
 

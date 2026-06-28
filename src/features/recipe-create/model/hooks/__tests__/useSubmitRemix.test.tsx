@@ -28,13 +28,12 @@ import { useRouter } from "next/navigation";
 import { ApiError } from "@/shared/api/errors";
 import { handleS3Upload } from "@/shared/api/file";
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { postRecipe } from "@/entities/recipe/model/api";
 import { RecipePayload } from "@/entities/recipe/model/types";
 
 import { useSubmitRemix } from "@/features/recipe-create/model/hooks/useSubmitRemix";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 function makeQC() {
   return new QueryClient({

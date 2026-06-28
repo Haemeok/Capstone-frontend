@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import SaveButton from "@/shared/ui/SaveButton";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { getRecipeStatus } from "@/entities/recipe/model/api";
 import { RecipeStatus } from "@/entities/recipe/model/types";
@@ -13,8 +14,6 @@ import {
 } from "@/entities/recipe-book";
 
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 import { useToggleRecipeSave } from "../model/hooks";
 import { useSaveToastWithChange } from "../model/useSaveToastWithChange";

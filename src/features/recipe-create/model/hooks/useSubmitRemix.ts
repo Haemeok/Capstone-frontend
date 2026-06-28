@@ -5,11 +5,10 @@ import { handleS3Upload } from "@/shared/api/file";
 import { useLocalizedRouter, useRecipeFormDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { FileInfoRequest, FileObject } from "@/shared/types";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { postRecipe } from "@/entities/recipe/model/api";
 import { RecipePayload } from "@/entities/recipe/model/types";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useFinalizeRecipe } from "./useFinalizeRecipe";
 

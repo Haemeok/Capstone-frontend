@@ -2,13 +2,12 @@
 
 import { format, useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import {
   getRecipeBookError,
   useDeleteRecipeBook,
 } from "@/entities/recipe-book";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 type Props = {
   open: boolean;

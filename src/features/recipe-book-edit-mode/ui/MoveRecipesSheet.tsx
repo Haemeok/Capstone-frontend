@@ -6,6 +6,7 @@ import { PlusIcon } from "lucide-react";
 
 import { format, useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import {
   getRecipeBookError,
@@ -15,8 +16,6 @@ import {
 } from "@/entities/recipe-book";
 
 import { CreateRecipeBookSheet } from "@/features/recipe-book-create";
-
-import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useEditModeStore } from "../model/useEditModeStore";
 

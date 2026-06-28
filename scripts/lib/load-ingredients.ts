@@ -1,4 +1,5 @@
 import * as fs from "fs";
+
 import { INGREDIENTS_JSON_PATH } from "./seo-constants";
 
 export type IngredientEntry = {

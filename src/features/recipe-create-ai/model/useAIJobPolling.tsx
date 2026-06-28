@@ -9,10 +9,9 @@ import { useDocumentVisibility } from "@/shared/hooks/useDocumentVisibility";
 import { appGlobalMessages, format, useLocalizedRouter } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import AIGeneratedBadge from "@/shared/ui/badge/AIGeneratedBadge";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { getRecipe } from "@/entities/recipe";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 import { AI_JOB_POLLING_CONFIG } from "../lib/constants";
 import { createAIRecipeJobV2, getAIRecipeJobStatus } from "./api";

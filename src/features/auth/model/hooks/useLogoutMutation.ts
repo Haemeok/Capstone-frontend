@@ -7,10 +7,9 @@ import {
 } from "@/shared/i18n";
 import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
 import { queryClient } from "@/shared/lib/queryClient";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useUserStore } from "@/entities/user";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 import { postLogout } from "../api";
 import { composeFailureToast } from "../lib/composeFailureToast";

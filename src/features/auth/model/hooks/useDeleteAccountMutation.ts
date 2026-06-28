@@ -7,10 +7,9 @@ import {
 } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { queryClient } from "@/shared/lib/queryClient";
+import { useToastStore } from "@/shared/ui/toast";
 
 import { useUserStore } from "@/entities/user";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 import { deleteAccount } from "../api";
 import { composeFailureToast } from "../lib/composeFailureToast";

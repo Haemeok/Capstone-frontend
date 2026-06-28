@@ -1,20 +1,20 @@
-/**
- * SEO 성장 리포트 — 사이트맵 성장 추이 + 카테고리별 통계
- *
- * 실행: npx tsx scripts/seo-report.ts
- */
-
 import * as fs from "fs";
 import * as path from "path";
+
+import { ALLOWLIST_PATH, ARCHIVE_PATH, DATA_DIR } from "./lib/seo-constants";
 import {
-  DATA_DIR, ALLOWLIST_PATH, ARCHIVE_PATH,
-} from "./lib/seo-constants";
-import {
-  type ParamSet, classifyCategory, CATEGORY_LABELS, safeReadJson,
+  CATEGORY_LABELS,
+  classifyCategory,
+  type ParamSet,
+  safeReadJson,
 } from "./lib/seo-utils";
 
 const main = () => {
-  const allowlist = safeReadJson<{ generatedAt: string; stats?: { addedThisCycle: number; promotedFromImmature: number }; pages: ParamSet[] }>(ALLOWLIST_PATH);
+  const allowlist = safeReadJson<{
+    generatedAt: string;
+    stats?: { addedThisCycle: number; promotedFromImmature: number };
+    pages: ParamSet[];
+  }>(ALLOWLIST_PATH);
   if (!allowlist) {
     console.error("allowlist가 없습니다. 먼저 seo:discover를 실행하세요.");
     process.exit(1);
@@ -32,7 +32,9 @@ const main = () => {
   // 아카이브 통계
   let immatureCount = 0;
   let emptyCount = 0;
-  const archive = safeReadJson<{ immature: unknown[]; empty: unknown[] }>(ARCHIVE_PATH);
+  const archive = safeReadJson<{ immature: unknown[]; empty: unknown[] }>(
+    ARCHIVE_PATH
+  );
   if (archive) {
     immatureCount = archive.immature?.length || 0;
     emptyCount = archive.empty?.length || 0;
@@ -40,7 +42,8 @@ const main = () => {
 
   // 히스토리 (discover-log 파일들)
   const logFiles = fs.existsSync(DATA_DIR)
-    ? fs.readdirSync(DATA_DIR)
+    ? fs
+        .readdirSync(DATA_DIR)
         .filter((f) => f.startsWith("discover-log-"))
         .sort()
     : [];
@@ -53,7 +56,9 @@ const main = () => {
   console.log(`  ACTIVE (사이트맵 등록): ${pages.length}개`);
   console.log(`  IMMATURE (대기 중):     ${immatureCount}개`);
   console.log(`  EMPTY (결과 없음):      ${emptyCount}개`);
-  console.log(`  합계:                   ${pages.length + immatureCount + emptyCount}개`);
+  console.log(
+    `  합계:                   ${pages.length + immatureCount + emptyCount}개`
+  );
 
   if (allowlist.stats) {
     console.log(`\n=== 최근 사이클 ===`);
@@ -73,11 +78,18 @@ const main = () => {
   if (logFiles.length > 0) {
     console.log(`\n=== 성장 히스토리 ===`);
     for (const file of logFiles.slice(-10)) {
-      const log = safeReadJson<{ date: string; mode: string; newActive: number; prevActive: number }>(path.join(DATA_DIR, file));
+      const log = safeReadJson<{
+        date: string;
+        mode: string;
+        newActive: number;
+        prevActive: number;
+      }>(path.join(DATA_DIR, file));
       if (!log) continue;
       const growth = log.newActive - log.prevActive;
       const arrow = growth > 0 ? `+${growth}` : String(growth);
-      console.log(`  ${log.date} [${log.mode}]: ${log.prevActive} → ${log.newActive} (${arrow})`);
+      console.log(
+        `  ${log.date} [${log.mode}]: ${log.prevActive} → ${log.newActive} (${arrow})`
+      );
     }
   }
 };

@@ -1,20 +1,24 @@
-/**
- * SEO 사이트맵 성장 엔진 — ACTIVE 조합을 자동 탐색하여 allowlist에 추가
- *
- * 실행:
- *   npx tsx scripts/seo-discover.ts --full     # 초기 전수 탐색 (~1시간)
- *   npx tsx scripts/seo-discover.ts            # 매주: ACTIVE 확장 + IMMATURE 재검사
- */
-
 import * as fs from "fs";
 import * as path from "path";
+
 import { MAIN_INGREDIENTS } from "../src/shared/config/seo/ingredients";
 import {
-  CONCURRENCY, DELAY_MS, MAX_ERROR_RATE, MIN_RESULTS,
-  DATA_DIR, ALLOWLIST_PATH, ARCHIVE_PATH, SEEN_PATH, today,
+  ALLOWLIST_PATH,
+  ARCHIVE_PATH,
+  CONCURRENCY,
+  DATA_DIR,
+  DELAY_MS,
+  MAX_ERROR_RATE,
+  MIN_RESULTS,
+  SEEN_PATH,
+  today,
 } from "./lib/seo-constants";
 import {
-  type ParamSet, sleep, paramsToKey, fetchResultCount, safeReadJson,
+  fetchResultCount,
+  type ParamSet,
+  paramsToKey,
+  safeReadJson,
+  sleep,
 } from "./lib/seo-utils";
 
 const LOG_PATH = path.join(DATA_DIR, `discover-log-${today()}.json`);
@@ -48,7 +52,13 @@ type Archive = {
 
 const loadAllowlist = (): Allowlist => {
   const data = safeReadJson<Allowlist>(ALLOWLIST_PATH);
-  return data ?? { generatedAt: "", stats: { totalActive: 0, addedThisCycle: 0, promotedFromImmature: 0 }, pages: [] };
+  return (
+    data ?? {
+      generatedAt: "",
+      stats: { totalActive: 0, addedThisCycle: 0, promotedFromImmature: 0 },
+      pages: [],
+    }
+  );
 };
 
 const loadArchive = (): Archive => {
@@ -67,8 +77,36 @@ const saveSeen = (seen: Set<string>) => {
 
 // ── 조합 생성 ──
 
-const DISH_TYPES = ["FRYING", "SOUP_STEW", "GRILL", "SALAD", "FRIED_PAN", "STEAMED_BRAISED", "OVEN", "RAW", "PICKLE", "RICE_NOODLE", "DESSERT"];
-const TAGS = ["CHEF_RECIPE", "HOME_PARTY", "BRUNCH", "QUICK", "LATE_NIGHT", "LUNCHBOX", "PICNIC", "CAMPING", "HEALTHY", "KIDS", "SOLO", "HOLIDAY", "DRINK", "AIR_FRYER", "HANGOVER"];
+const DISH_TYPES = [
+  "FRYING",
+  "SOUP_STEW",
+  "GRILL",
+  "SALAD",
+  "FRIED_PAN",
+  "STEAMED_BRAISED",
+  "OVEN",
+  "RAW",
+  "PICKLE",
+  "RICE_NOODLE",
+  "DESSERT",
+];
+const TAGS = [
+  "CHEF_RECIPE",
+  "HOME_PARTY",
+  "BRUNCH",
+  "QUICK",
+  "LATE_NIGHT",
+  "LUNCHBOX",
+  "PICNIC",
+  "CAMPING",
+  "HEALTHY",
+  "KIDS",
+  "SOLO",
+  "HOLIDAY",
+  "DRINK",
+  "AIR_FRYER",
+  "HANGOVER",
+];
 const COSTS = [3000, 5000, 10000, 15000];
 
 const generateFullCombinations = (): ParamSet[] => {
@@ -191,7 +229,12 @@ const discoverBatch = async (
   candidates: ParamSet[],
   seen: Set<string>,
   label: string
-): Promise<{ active: ParamSet[]; immature: ArchiveEntry[]; empty: ArchiveEntry[]; errors: number }> => {
+): Promise<{
+  active: ParamSet[];
+  immature: ArchiveEntry[];
+  empty: ArchiveEntry[];
+  errors: number;
+}> => {
   // 이미 탐색한 것 제외
   const unseen = candidates.filter((c) => !seen.has(paramsToKey(c)));
   if (unseen.length === 0) {
@@ -224,16 +267,26 @@ const discoverBatch = async (
       } else if (count >= MIN_RESULTS) {
         active.push(params);
       } else if (count > 0) {
-        immature.push({ params, resultCount: count, lastChecked: new Date().toISOString() });
+        immature.push({
+          params,
+          resultCount: count,
+          lastChecked: new Date().toISOString(),
+        });
       } else {
-        empty.push({ params, resultCount: 0, lastChecked: new Date().toISOString() });
+        empty.push({
+          params,
+          resultCount: 0,
+          lastChecked: new Date().toISOString(),
+        });
       }
     }
 
     const checked = Math.min(i + CONCURRENCY, unseen.length);
     const pct = ((checked / unseen.length) * 100).toFixed(1);
     const elapsed = Date.now() - startTime;
-    const eta = Math.round((elapsed / checked) * (unseen.length - checked) / 1000);
+    const eta = Math.round(
+      ((elapsed / checked) * (unseen.length - checked)) / 1000
+    );
     process.stdout.write(
       `\r  [${checked}/${unseen.length}] ${pct}% | +ACTIVE: ${active.length} | IMMATURE: ${immature.length} | ETA: ${eta}s`
     );
@@ -249,7 +302,9 @@ const discoverBatch = async (
     }
   }
 
-  console.log(`\n  완료: +${active.length} ACTIVE, ${immature.length} IMMATURE, ${empty.length} EMPTY`);
+  console.log(
+    `\n  완료: +${active.length} ACTIVE, ${immature.length} IMMATURE, ${empty.length} EMPTY`
+  );
   return { active, immature, empty, errors };
 };
 
@@ -363,7 +418,11 @@ const main = async () => {
     immature: [...immatureMap.values()],
     empty: [...emptyMap.values()],
   };
-  fs.writeFileSync(ARCHIVE_PATH, JSON.stringify(updatedArchive, null, 2), "utf-8");
+  fs.writeFileSync(
+    ARCHIVE_PATH,
+    JSON.stringify(updatedArchive, null, 2),
+    "utf-8"
+  );
 
   // seen 저장
   saveSeen(seen);
@@ -384,7 +443,9 @@ const main = async () => {
 
   // ── 결과 출력 ──
   console.log("\n=== 결과 ===");
-  console.log(`사이트맵 ACTIVE: ${prevTotal} → ${allowlist.pages.length} (+${addedThisCycle})`);
+  console.log(
+    `사이트맵 ACTIVE: ${prevTotal} → ${allowlist.pages.length} (+${addedThisCycle})`
+  );
   console.log(`IMMATURE 승격: ${promotedFromImmature}건`);
   console.log(`IMMATURE 보관: ${updatedArchive.immature.length}건`);
   console.log(`EMPTY 보관: ${updatedArchive.empty.length}건`);

@@ -4,7 +4,6 @@ import { Lightbulb, LightbulbOff } from "lucide-react";
 
 import { useWakeLock } from "@/shared/hooks/useWakeLock";
 import { cn } from "@/shared/lib/utils";
-
 import { useToastStore } from "@/shared/ui/toast";
 
 const WakeLockButton = () => {

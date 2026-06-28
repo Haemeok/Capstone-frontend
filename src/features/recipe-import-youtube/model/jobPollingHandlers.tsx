@@ -5,12 +5,11 @@ import { youtubeMessages } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { trackReviewAction } from "@/shared/lib/review";
 import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
+import type { useToastStore } from "@/shared/ui/toast";
 
 import { useUnseenImportStore } from "@/entities/recipe-book";
 
 import { scheduleReviewGate } from "@/features/review-gate";
-
-import type { useToastStore } from "@/shared/ui/toast";
 
 import { JOB_POLLING_CONFIG } from "../lib/constants";
 import { createExtractionJobV2, getYoutubeJobStatus } from "./api";

@@ -6,10 +6,9 @@ import dynamic from "next/dynamic";
 import type { AIModelId } from "@/shared/config/constants/aiModel";
 import { useLocalizedRouter, useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
+import { useToastStore } from "@/shared/ui/toast";
 
 import type { ActiveAIJob } from "@/features/recipe-create-ai/model/types";
-
-import { useToastStore } from "@/shared/ui/toast";
 
 const AiLoading = dynamic(() => import("@/widgets/AiLoading/AiLoading"), {
   ssr: false,
