@@ -23,8 +23,6 @@ const baseRecipe = (): Recipe => ({
     email: "test@test.com",
     profileImage: "https://example.com/profile.jpg",
     hasFirstRecord: false,
-    remainingAiGenerationQuota: 10,
-    remainingYoutubeExtractionCredits: 10,
     remainingAiQuota: 10,
     remainingYoutubeQuota: 10,
   },

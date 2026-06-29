@@ -16,8 +16,6 @@ const baseUser: User = {
   introduction: "안녕",
   profileImage: "https://img/x.png",
   hasFirstRecord: false,
-  remainingAiGenerationQuota: 0,
-  remainingYoutubeExtractionCredits: 0,
   remainingAiQuota: 0,
   remainingYoutubeQuota: 0,
 };

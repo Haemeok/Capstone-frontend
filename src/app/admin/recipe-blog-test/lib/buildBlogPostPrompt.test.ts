@@ -46,8 +46,6 @@ const FAKE_RECIPE: Recipe = {
     nickname: "u",
     profileImage: "",
     hasFirstRecord: false,
-    remainingAiGenerationQuota: 0,
-    remainingYoutubeExtractionCredits: 0,
     remainingAiQuota: 0,
     remainingYoutubeQuota: 0,
   },

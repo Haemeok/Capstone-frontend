@@ -45,8 +45,6 @@ const SEEDED_USER: User = {
   introduction: "안녕하세요",
   profileImage: "",
   hasFirstRecord: false,
-  remainingAiGenerationQuota: 0,
-  remainingYoutubeExtractionCredits: 0,
   remainingAiQuota: 0,
   remainingYoutubeQuota: 0,
 };

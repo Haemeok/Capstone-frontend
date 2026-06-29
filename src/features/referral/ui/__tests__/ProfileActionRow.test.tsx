@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
-import { type ReferralInfo,useReferralSheetStore } from "@/entities/referral";
+import { type ReferralInfo, useReferralSheetStore } from "@/entities/referral";
 import { type User } from "@/entities/user/model/types";
 
 import UserProfileDisplay from "@/widgets/UserProfile/UserProfileDisplay";
@@ -58,8 +58,6 @@ const user: User = {
   profileImage: "",
   introduction: "안녕",
   hasFirstRecord: false,
-  remainingAiGenerationQuota: 0,
-  remainingYoutubeExtractionCredits: 0,
   remainingAiQuota: 0,
   remainingYoutubeQuota: 0,
 };

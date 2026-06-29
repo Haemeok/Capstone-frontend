@@ -35,8 +35,6 @@ const base: Comment = {
     nickname: "지수",
     profileImage: "",
     hasFirstRecord: false,
-    remainingAiGenerationQuota: 0,
-    remainingYoutubeExtractionCredits: 0,
     remainingAiQuota: 0,
     remainingYoutubeQuota: 0,
   },
