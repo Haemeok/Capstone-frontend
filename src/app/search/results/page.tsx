@@ -21,7 +21,7 @@ import {
   parseTypes,
 } from "@/shared/lib/nutrition/parseNutritionParams";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
-import { getNextPageParam } from "@/shared/lib/utils";
+import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import { createSearchResultsJsonLd } from "@/entities/recipe/lib/metadata/schema";
 import {
@@ -226,13 +226,12 @@ export async function generateMetadata({
   } = parseSearchQueryParams(awaitedSearchParams);
 
   const pageData = await getRecipesOnServer(queryParams);
-  const totalElements = pageData.page.totalElements;
   const firstImage = pageData.content[0]?.imageUrl;
 
   const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
 
-  const title = buildSearchTitle(enhancedQ, totalElements, page, "ko");
-  const description = buildSearchDescription(enhancedQ, totalElements, "ko");
+  const title = buildSearchTitle(enhancedQ, page, "ko");
+  const description = buildSearchDescription(enhancedQ, "ko");
 
   const ogImage = firstImage || SEO_CONSTANTS.DEFAULT_IMAGE;
   const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
@@ -296,7 +295,7 @@ export default async function SearchResultsPage({
     queryKey,
     queryFn: () => getRecipesOnServer(queryParams),
     initialPageParam: page,
-    getNextPageParam,
+    getNextPageParam: getNextSlicePageParam,
     pages: 1,
   });
 
@@ -306,28 +305,21 @@ export default async function SearchResultsPage({
     );
   const firstPage: DetailedRecipesApiResponse = cached?.pages[0] ?? {
     content: [],
-    page: { size: 0, number: page, totalElements: 0, totalPages: 0 },
+    slice: { size: 0, number: page, numberOfElements: 0, hasNext: false },
   };
 
-  const totalPages = firstPage.page.totalPages;
-  const hasNextPage = page < totalPages - 1;
+  const hasNextPage = firstPage.slice.hasNext;
 
   const nextPageHref = hasNextPage
     ? buildNextPageUrl(awaitedSearchParams, page + 1)
     : undefined;
 
   const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
-  const title = buildSearchTitle(
-    enhancedQ,
-    firstPage.page.totalElements,
-    page,
-    "ko"
-  );
+  const title = buildSearchTitle(enhancedQ, page, "ko");
   const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
   const jsonLd = createSearchResultsJsonLd(
     enhancedQ,
     firstPage.content,
-    firstPage.page.totalElements,
     title,
     canonicalUrl
   );
