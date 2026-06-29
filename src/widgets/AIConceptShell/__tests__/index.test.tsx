@@ -92,7 +92,7 @@ describe("AIConceptShell", () => {
     render(
       <AIConceptShell
         concept="COST_EFFECTIVE"
-        job={{ ...baseJob, state: "failed", message: "에러" }}
+        job={{ ...baseJob, state: "failed", code: undefined, message: "에러" }}
         isPending={false}
         isFailed
         progress={0}

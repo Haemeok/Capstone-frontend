@@ -83,12 +83,20 @@ export type PersistedAIJob = {
 
 export type AIJobState = "creating" | "polling" | "completed" | "failed";
 
-export type ActiveAIJob = PersistedAIJob & {
-  state: AIJobState;
-  progress: number;
-  resultRecipeId?: string;
-  code?: string;
-  message?: string;
+type ActiveAIJobBase = PersistedAIJob & {
   retryAfter?: number;
   successToastId?: number;
 };
+
+export type ActiveAIJob = ActiveAIJobBase &
+  (
+    | { state: "creating"; progress: number }
+    | { state: "polling"; progress: number }
+    | { state: "completed"; progress: 100; resultRecipeId: string }
+    | {
+        state: "failed";
+        progress: number;
+        code: string | undefined;
+        message: string;
+      }
+  );

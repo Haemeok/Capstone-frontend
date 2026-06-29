@@ -72,7 +72,9 @@ describe("useConceptJob", () => {
 
       const job = Object.values(useAIRecipeStoreV2.getState().jobs)[0];
       expect(job.state).toBe("failed");
-      expect(job.message).toBe("서버 다운");
+      if (job.state === "failed") {
+        expect(job.message).toBe("서버 다운");
+      }
     });
 
     it("Error 인스턴스 아닌 throw도 기본 메시지로 처리해야 함", async () => {
@@ -88,7 +90,9 @@ describe("useConceptJob", () => {
 
       const job = Object.values(useAIRecipeStoreV2.getState().jobs)[0];
       expect(job.state).toBe("failed");
-      expect(job.message).toBe(koDict.aiRecipe.error.defaultMessage);
+      if (job.state === "failed") {
+        expect(job.message).toBe(koDict.aiRecipe.error.defaultMessage);
+      }
     });
 
     it("같은 concept 진행 중인 job이 있으면 새 job을 만들지 않아야 함", async () => {
