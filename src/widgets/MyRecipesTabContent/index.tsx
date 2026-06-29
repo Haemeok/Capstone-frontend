@@ -7,7 +7,7 @@ import { InfiniteData } from "@tanstack/react-query";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import type { Locale } from "@/shared/i18n";
 import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
-import { getNextPageParam } from "@/shared/lib/utils";
+import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import { isPrivateRecipe, MyRecipesPageResponse } from "@/entities/recipe";
 
@@ -46,7 +46,7 @@ const MyRecipesTabContent = ({
           lang: locale,
           pageParam,
         }),
-      getNextPageParam: getNextPageParam,
+      getNextPageParam: getNextSlicePageParam,
       initialPageParam: 0,
     });
 
