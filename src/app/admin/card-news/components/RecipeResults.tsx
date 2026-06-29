@@ -4,10 +4,10 @@ import { useEffect, useRef } from "react";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+import { getNextSlicePageParam } from "@/shared/lib/utils";
+
 import { getRecipeItems } from "@/entities/recipe/model/api";
 import { RecipeQueryParams } from "@/entities/recipe/model/types";
-
-import { getNextCardNewsPageParam } from "../lib/pagination";
 
 type RecipeResultsProps = {
   filter: Record<string, unknown>;
@@ -35,7 +35,7 @@ export const RecipeResults = ({
           size: 20,
         } as RecipeQueryParams),
       initialPageParam: 0,
-      getNextPageParam: (lastPage) => getNextCardNewsPageParam(lastPage.page),
+      getNextPageParam: getNextSlicePageParam,
     });
 
   const sentinelRef = useRef<HTMLDivElement>(null);
