@@ -31,8 +31,6 @@ const user: User = {
   nickname: "tester",
   profileImage: "",
   hasFirstRecord: true,
-  remainingAiGenerationQuota: 0,
-  remainingYoutubeExtractionCredits: 0,
   remainingAiQuota: 0,
   remainingYoutubeQuota: 0,
 };
