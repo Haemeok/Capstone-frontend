@@ -1,3 +1,5 @@
+import { getDictionary } from "@/shared/i18n";
+
 import { buildSearchDescription, buildSearchTitle } from "../searchMeta";
 
 describe("검색 메타 — 개수 제거 (T-10, T-11)", () => {
@@ -13,8 +15,6 @@ describe("검색 메타 — 개수 제거 (T-10, T-11)", () => {
     expect(desc).not.toMatch(/\d/);
   });
 });
-
-import { getDictionary } from "@/shared/i18n";
 
 describe("검색 메타 사전 — count 플레이스홀더 부재 (T-14)", () => {
   it.each(["ko", "ja", "en"] as const)("%s에 {count}가 없다", (locale) => {
