@@ -7,7 +7,7 @@ import type { Locale } from "@/shared/i18n";
 import { format, useT } from "@/shared/i18n";
 import { localizeActivityName } from "@/shared/i18n/activityNameOverlay";
 import { formatNumber } from "@/shared/lib/format";
-import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
+import { formatIngredientAmount } from "@/shared/lib/ingredientConversion";
 import { calculateActivityTime, getRandomActivity } from "@/shared/lib/recipe";
 import RollingPointBanner from "@/shared/ui/RollingPointBanner";
 
@@ -148,10 +148,11 @@ const IngredientsSection = ({
             )}
             <ul className="flex flex-col gap-1">
               {recipe.ingredients.map((ingredient, index) => {
-                const converted = convertIngredientQuantity(
+                const displayAmount = formatIngredientAmount(
                   ingredient.quantity,
                   ingredient.unit,
-                  servingRatio
+                  servingRatio,
+                  locale
                 );
                 const ingredientId = ingredient.id ?? `ingredient-${index}`;
                 const inFridge = ingredient.id
@@ -167,8 +168,7 @@ const IngredientsSection = ({
                       inFridge,
                       calories: 0,
                     }}
-                    displayQuantity={converted.quantity}
-                    displayUnit={converted.unit}
+                    displayAmount={displayAmount}
                     displayPrice={formatNumber(
                       Math.round((ingredient.price || 0) * servingRatio),
                       // i18n-ignore: 가격 미국제화(ko 전용), 국제화 시 제거

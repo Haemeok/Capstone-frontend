@@ -36,11 +36,18 @@ const baseRecipe = {
   ],
 } as never;
 
-const renderSection = (locale: "ko" | "ja" | "en") =>
+const tbspRecipe = {
+  ...(baseRecipe as object),
+  ingredients: [
+    { id: "a", name: "Olive oil", quantity: "3", unit: "tablespoon", price: 0 },
+  ],
+} as never;
+
+const renderSection = (locale: "ko" | "ja" | "en", recipe = baseRecipe) =>
   render(
     <ScrollContext.Provider value={{ motionRef: createRef() }}>
       <DictionaryProvider dict={getDictionary(locale)}>
-        <RecipeIngredientsSection recipe={baseRecipe} locale={locale} />
+        <RecipeIngredientsSection recipe={recipe} locale={locale} />
       </DictionaryProvider>
     </ScrollContext.Provider>
   );
@@ -85,5 +92,16 @@ describe("RecipeIngredientsSection i18n", () => {
     expect(baseElement.textContent).toContain(
       getDictionary("ko").recipeDetail.costPrefix
     );
+  });
+});
+
+describe("RecipeIngredientsSection amount formatting", () => {
+  it("T-C3: en tablespoon 3 -> '3 tbsp' 렌더", () => {
+    const { baseElement } = renderSection("en", tbspRecipe);
+    expect(baseElement.textContent).toContain("3 tbsp");
+  });
+  it("T-C4: ko 개 1 -> '1개' 렌더", () => {
+    const { baseElement } = renderSection("ko");
+    expect(baseElement.textContent).toContain("1개");
   });
 });

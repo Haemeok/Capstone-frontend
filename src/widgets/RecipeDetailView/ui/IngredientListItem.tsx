@@ -12,8 +12,7 @@ import { IngredientItem } from "@/entities/ingredient";
 
 type IngredientListItemProps = {
   ingredient: IngredientItem;
-  displayQuantity: string;
-  displayUnit: string;
+  displayAmount: string;
   displayPrice: string;
   reserveFridgeSpace: boolean;
   locale: Locale;
@@ -21,8 +20,7 @@ type IngredientListItemProps = {
 
 export const IngredientListItem = ({
   ingredient,
-  displayQuantity,
-  displayUnit,
+  displayAmount,
   displayPrice,
   reserveFridgeSpace,
   locale,
@@ -43,11 +41,7 @@ export const IngredientListItem = ({
   );
 
   const quantityCell = (
-    <p className="text-left whitespace-nowrap">
-      {displayQuantity}
-      {/* i18n-ignore */}
-      {displayQuantity !== "약간" && displayUnit}
-    </p>
+    <p className="text-left whitespace-nowrap">{displayAmount}</p>
   );
 
   if (locale !== "ko") {

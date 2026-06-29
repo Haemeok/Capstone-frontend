@@ -22,15 +22,15 @@ const ingredient = {
 
 const baseProps = {
   ingredient,
-  displayQuantity: "1",
-  displayUnit: "개",
+  displayAmount: "1개",
   displayPrice: "800원",
   reserveFridgeSpace: false,
 };
 
 describe("IngredientListItem i18n layout", () => {
-  it("T-A1: ko -> 가격·쿠팡 링크 렌더 (4컬럼 유지)", () => {
+  it("T-C2: ko -> displayAmount + 가격·쿠팡 링크 (4컬럼)", () => {
     render(<IngredientListItem {...baseProps} locale="ko" />);
+    expect(screen.getByText("1개")).toBeInTheDocument();
     expect(screen.getByText("800원")).toBeInTheDocument();
     expect(screen.getByRole("link")).toHaveAttribute(
       "href",
@@ -38,11 +38,13 @@ describe("IngredientListItem i18n layout", () => {
     );
   });
 
-  it("T-A2: en -> 가격·쿠팡 미렌더, 이름만, justify-between", () => {
-    render(<IngredientListItem {...baseProps} locale="en" />);
+  it("T-C1: en -> displayAmount 렌더, 가격·쿠팡 미렌더, justify-between", () => {
+    render(
+      <IngredientListItem {...baseProps} displayAmount="3 tbsp" locale="en" />
+    );
+    expect(screen.getByText("3 tbsp")).toBeInTheDocument();
     expect(screen.queryByText("800원")).not.toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
-    expect(screen.getByText("양파")).toBeInTheDocument();
     expect(screen.getByText("양파").closest("li")).toHaveClass(
       "justify-between"
     );
