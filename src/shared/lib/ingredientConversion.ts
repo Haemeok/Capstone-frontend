@@ -1,3 +1,5 @@
+import type { Locale } from "@/shared/i18n";
+
 const SMALL_SPOON_TO_BIG_SPOON_THRESHOLD = 3;
 const BIG_SPOON_TO_ML_THRESHOLD = 10;
 const BIG_SPOON_TO_ML_RATIO = 15;
@@ -144,4 +146,75 @@ export const convertIngredientQuantity = (
       : formatDecimal(fractionToNumber(value)),
     unit: convertedUnit,
   };
+};
+
+const EN_ABBREVIATION: Record<string, string> = {
+  tablespoon: "tbsp",
+  tablespoons: "tbsp",
+  teaspoon: "tsp",
+  teaspoons: "tsp",
+};
+
+const EN_COUNTABLE: Record<string, { one: string; many: string }> = {
+  piece: { one: "piece", many: "pieces" },
+  pieces: { one: "piece", many: "pieces" },
+  stalk: { one: "stalk", many: "stalks" },
+  stalks: { one: "stalk", many: "stalks" },
+  sheet: { one: "sheet", many: "sheets" },
+  sheets: { one: "sheet", many: "sheets" },
+  block: { one: "block", many: "blocks" },
+  blocks: { one: "block", many: "blocks" },
+  bowl: { one: "bowl", many: "bowls" },
+  bowls: { one: "bowl", many: "bowls" },
+  head: { one: "head", many: "heads" },
+  heads: { one: "head", many: "heads" },
+  bag: { one: "bag", many: "bags" },
+  bags: { one: "bag", many: "bags" },
+  serving: { one: "serving", many: "servings" },
+  servings: { one: "serving", many: "servings" },
+  packet: { one: "packet", many: "packets" },
+  packets: { one: "packet", many: "packets" },
+  pack: { one: "pack", many: "packs" },
+  packs: { one: "pack", many: "packs" },
+  cup: { one: "cup", many: "cups" },
+  cups: { one: "cup", many: "cups" },
+};
+
+const isSingularQuantity = (quantityStr: string): boolean => {
+  const parsed = parseQuantity(quantityStr);
+  return parsed !== null && parsed.n === parsed.d;
+};
+
+const normalizeEnUnit = (unit: string, quantityStr: string): string => {
+  if (!unit) return "";
+  const key = unit.toLowerCase();
+  const abbr = EN_ABBREVIATION[key];
+  if (abbr) return abbr;
+  const countable = EN_COUNTABLE[key];
+  if (countable) {
+    return isSingularQuantity(quantityStr) ? countable.one : countable.many;
+  }
+  return unit;
+};
+
+export const formatIngredientAmount = (
+  quantity: string | undefined,
+  unit: string,
+  servingRatio: number,
+  locale: Locale
+): string => {
+  const { quantity: q, unit: u } = convertIngredientQuantity(
+    quantity,
+    unit,
+    servingRatio
+  );
+
+  if (locale !== "en") {
+    return `${q}${u}`;
+  }
+
+  if (q === "" || q === "약간") return q; // i18n-ignore: 무단위 sentinel
+
+  const enUnit = normalizeEnUnit(u, q);
+  return enUnit ? `${q} ${enUnit}` : q;
 };
