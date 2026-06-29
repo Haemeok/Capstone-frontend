@@ -9,7 +9,8 @@ export const toDetailedRecipeItem = (
   recipeData: Recipe,
   youtubeMeta?: YoutubeMeta
 ): DetailedRecipeGridItemType => {
-  const channelName = youtubeMeta?.channelName ?? recipeData.youtubeChannelName;
+  const channelName =
+    youtubeMeta?.channelName ?? recipeData.youtube?.channelName;
 
   return {
     id: recipeData.id,

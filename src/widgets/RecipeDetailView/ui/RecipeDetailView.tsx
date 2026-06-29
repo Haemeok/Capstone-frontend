@@ -51,14 +51,14 @@ export const RecipeDetailView = ({
   const t = getDictionary(locale);
   const saveAmount = recipe.marketPrice - recipe.totalIngredientCost;
 
-  const youtubeMetadata = recipe.youtubeChannelName
+  const youtubeMetadata = recipe.youtube?.channelName
     ? {
-        channelName: recipe.youtubeChannelName,
-        videoTitle: recipe.youtubeVideoTitle,
-        channelProfileUrl: recipe.youtubeChannelProfileUrl,
-        subscriberCount: recipe.youtubeSubscriberCount,
-        thumbnailUrl: recipe.youtubeThumbnailUrl,
-        channelId: recipe.youtubeChannelId,
+        channelName: recipe.youtube.channelName,
+        videoTitle: recipe.youtube.videoTitle,
+        channelProfileUrl: recipe.youtube.channelProfileUrl,
+        subscriberCount: recipe.youtube.subscriberCount,
+        thumbnailUrl: recipe.youtube.thumbnailUrl,
+        channelId: recipe.youtube.channelId,
       }
     : undefined;
 
@@ -75,7 +75,7 @@ export const RecipeDetailView = ({
         avgRating={recipe.ratingInfo.avgRating}
         ratingCount={recipe.ratingInfo.ratingCount}
         isYoutube={isYoutubeRecipe(recipe)}
-        youtubeChannelName={recipe.youtubeChannelName}
+        youtubeChannelName={recipe.youtube?.channelName}
         isAiGenerated={isAiRecipe(recipe)}
       />
       <RecipeStatusProvider recipeId={recipeId}>
@@ -117,7 +117,7 @@ export const RecipeDetailView = ({
             fallback={<SectionErrorFallback message={t.errors.video} />}
           >
             <RecipeVideoSection
-              videoUrl={recipe.youtubeUrl ?? ""}
+              videoUrl={recipe.youtube?.url ?? ""}
               youtubeMetadata={youtubeMetadata}
               locale={locale}
             >

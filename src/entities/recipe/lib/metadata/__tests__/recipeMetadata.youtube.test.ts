@@ -62,7 +62,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       const ogImages = meta.openGraph?.images as { url?: string }[];
       expect(ogImages).toHaveLength(2);
       expect(ogImages[0].url).toBe(recipe.imageUrl);
-      expect(ogImages[1].url).toBe(recipe.youtubeThumbnailUrl);
+      expect(ogImages[1].url).toBe(recipe.youtube?.thumbnailUrl);
     });
 
     it("구독자 100만 이상일 때 '유명 셰프' 키워드가 포함된다", () => {
@@ -582,7 +582,7 @@ describe("YouTube Recipe Metadata Generation", () => {
       const twitterImages = meta.twitter?.images as string[];
       expect(twitterImages).toHaveLength(2);
       expect(twitterImages[0]).toBe(recipe.imageUrl);
-      expect(twitterImages[1]).toBe(recipe.youtubeThumbnailUrl);
+      expect(twitterImages[1]).toBe(recipe.youtube?.thumbnailUrl);
     });
   });
 

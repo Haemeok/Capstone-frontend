@@ -37,6 +37,7 @@ const FAKE_RECIPE_GAJI: Recipe = {
   id: "test-gaji-muchim",
   title: "꼬들꼬들 가지무침 (김치 스타일)",
   dishType: "반찬",
+  source: "USER",
   description: "",
   cookingTime: 30,
   imageUrl: "",

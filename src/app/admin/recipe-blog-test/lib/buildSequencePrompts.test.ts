@@ -10,6 +10,7 @@ const FAKE_RECIPE: Recipe = {
   id: "r1",
   title: "김치찌개",
   dishType: "Soup",
+  source: "USER",
   description: "",
   cookingTime: 30,
   imageUrl: "",

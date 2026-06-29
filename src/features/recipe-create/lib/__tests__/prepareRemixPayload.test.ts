@@ -37,6 +37,7 @@ const baseRecipe = (): Recipe => ({
   isCloneable: true,
   cookingTools: ["냄비"],
   comments: [],
+  source: "USER",
   likeCount: 0,
   likedByCurrentUser: false,
   favoriteByCurrentUser: false,
@@ -62,17 +63,17 @@ describe("prepareRemixPayload", () => {
     expect(result).not.toHaveProperty("extractorId");
   });
 
-  it("preserves youtube meta fields for round-trip", () => {
-    const recipe = {
+  it("maps nested youtube url into the flat payload field", () => {
+    const recipe: Recipe = {
       ...baseRecipe(),
-      youtubeUrl: "https://youtu.be/abc",
-      youtubeChannelName: "ch",
-      youtubeVideoTitle: "비빔밥 만들기",
-    } as Recipe;
+      youtube: {
+        url: "https://youtu.be/abc",
+        channelName: "ch",
+        videoTitle: "비빔밥 만들기",
+      },
+    };
     const result = prepareRemixPayload(recipe, "ORIGIN_ID");
     expect(result.youtubeUrl).toBe("https://youtu.be/abc");
-    expect(result.youtubeChannelName).toBe("ch");
-    expect(result.youtubeVideoTitle).toBe("비빔밥 만들기");
   });
 
   it("preserves user edits to title and dishType", () => {

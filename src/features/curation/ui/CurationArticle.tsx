@@ -9,7 +9,7 @@ import { CurationCategoryLabel } from "./CurationCategoryLabel";
 import { CurationMarkdown } from "./CurationMarkdown";
 
 const formatTocTitle = (r: StaticRecipe): string => {
-  const channel = r.youtubeChannelName?.trim();
+  const channel = r.youtube?.channelName?.trim();
   return channel ? `${channel} · ${r.title}` : r.title;
 };
 

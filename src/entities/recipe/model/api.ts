@@ -18,6 +18,7 @@ import {
   MyFridgePageResponse,
   MyFridgeRecipeItem,
   QuickPopularResponse,
+  RawRecipeResponse,
   Recipe,
   RecipeQueryParams,
   RecipesStatusResponse,
@@ -32,9 +33,35 @@ import {
 } from "./types";
 import { RecipePayload } from "./types";
 
+export const toRecipe = (raw: RawRecipeResponse): Recipe => {
+  const {
+    youtubeUrl,
+    youtubeChannelName,
+    youtubeVideoTitle,
+    youtubeThumbnailUrl,
+    youtubeChannelProfileUrl,
+    youtubeSubscriberCount,
+    youtubeChannelId,
+    source,
+    ...rest
+  } = raw;
+  const youtube = youtubeUrl
+    ? {
+        url: youtubeUrl,
+        channelName: youtubeChannelName,
+        videoTitle: youtubeVideoTitle,
+        thumbnailUrl: youtubeThumbnailUrl,
+        channelProfileUrl: youtubeChannelProfileUrl,
+        subscriberCount: youtubeSubscriberCount,
+        channelId: youtubeChannelId,
+      }
+    : undefined;
+  return { ...rest, source: source ?? "USER", ...(youtube ? { youtube } : {}) };
+};
+
 export const getRecipe = async (id: string) => {
-  const response = await api.get<Recipe>(END_POINTS.RECIPE(id));
-  return response;
+  const raw = await api.get<RawRecipeResponse>(END_POINTS.RECIPE(id));
+  return toRecipe(raw);
 };
 
 export const getRecipeItems = async (params: RecipeQueryParams) => {
