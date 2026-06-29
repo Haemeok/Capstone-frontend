@@ -11,7 +11,7 @@ import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { useSort } from "@/shared/hooks/useSort";
 import { resolveChromeLocale } from "@/shared/i18n";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
-import { getNextPageParam } from "@/shared/lib/utils";
+import { getNextSlicePageParam } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
 import RecipeSortButton from "@/shared/ui/RecipeSortButton";
 
@@ -21,7 +21,6 @@ import { DetailedRecipesApiResponse } from "@/entities/recipe";
 import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 
 import CategoryChips from "./components/CategoryChips";
-import CategoryCount from "./components/CategoryCount";
 import CategoryEmptyState from "./components/CategoryEmptyState";
 import CategoryHero from "./components/CategoryHero";
 
@@ -69,22 +68,20 @@ const CategoryDetailClient = ({
         types: ["USER", "AI", "YOUTUBE"],
         ...(locale === "ko" ? {} : { lang: locale }),
       }),
-    getNextPageParam: getNextPageParam,
+    getNextPageParam: getNextSlicePageParam,
     initialPageParam: initialPage,
   });
 
   const tagName = label(tagCode, "tags");
 
   const recipes = data?.pages.flatMap((page) => page.content);
-  const totalElements = data?.pages?.[0]?.page.totalElements;
 
   return (
     <Container padding={false}>
       <CategoryHero tagCode={tagCode} />
       <CategoryChips currentCode={tagCode} />
 
-      <div className="flex items-center justify-between px-4 py-3">
-        <CategoryCount total={totalElements} />
+      <div className="flex items-center justify-end px-4 py-3">
         <div className="flex items-center">
           <RecipeSortButton
             currentSort={currentSort}

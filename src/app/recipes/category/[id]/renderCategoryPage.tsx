@@ -26,8 +26,7 @@ export const renderCategoryPage = async ({
     ...(locale === "ko" ? {} : { lang: locale }),
   });
 
-  const totalPages = pageData.page.totalPages;
-  const hasNextPage = page < totalPages - 1;
+  const hasNextPage = pageData.slice.hasNext;
 
   const nextPageHref = hasNextPage
     ? buildNextPageUrl(searchParams, page + 1, `/recipes/category/${tagCode}`)

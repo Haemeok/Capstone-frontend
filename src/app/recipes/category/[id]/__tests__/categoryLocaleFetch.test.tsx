@@ -31,7 +31,12 @@ jest.mock("@/shared/hooks/useInfiniteScroll", () => ({
 }));
 
 jest.mock("@/entities/recipe", () => ({
-  getRecipeItems: jest.fn().mockResolvedValue({ content: [], page: {} }),
+  getRecipeItems: jest
+    .fn()
+    .mockResolvedValue({
+      content: [],
+      slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
+    }),
 }));
 
 jest.mock("@/shared/ui/SortPicker", () => ({
