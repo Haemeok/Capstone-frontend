@@ -1,8 +1,85 @@
-import type { StaticRecipe } from "@/entities/recipe/model/types";
+import type {
+  RecipeYoutubeMeta,
+  StaticRecipe,
+} from "@/entities/recipe/model/types";
+
+type FlatYoutubeOverrides = {
+  youtubeUrl?: string;
+  youtubeChannelName?: string;
+  youtubeVideoTitle?: string;
+  youtubeThumbnailUrl?: string;
+  youtubeChannelProfileUrl?: string;
+  youtubeSubscriberCount?: number;
+  youtubeChannelId?: string;
+};
+
+type RecipeOverrides = Partial<Omit<StaticRecipe, "youtube">> &
+  FlatYoutubeOverrides & { youtube?: RecipeYoutubeMeta };
+
+const FLAT_YT_KEYS: (keyof FlatYoutubeOverrides)[] = [
+  "youtubeUrl",
+  "youtubeChannelName",
+  "youtubeVideoTitle",
+  "youtubeThumbnailUrl",
+  "youtubeChannelProfileUrl",
+  "youtubeSubscriberCount",
+  "youtubeChannelId",
+];
+
+const foldYoutubeOverrides = (
+  overrides: RecipeOverrides
+): {
+  youtube?: RecipeYoutubeMeta;
+  rest: Partial<Omit<StaticRecipe, "youtube">>;
+} => {
+  const {
+    youtubeUrl,
+    youtubeChannelName,
+    youtubeVideoTitle,
+    youtubeThumbnailUrl,
+    youtubeChannelProfileUrl,
+    youtubeSubscriberCount,
+    youtubeChannelId,
+    youtube,
+    ...rest
+  } = overrides;
+
+  const hasFlat = FLAT_YT_KEYS.some((key) => key in overrides);
+  if (!hasFlat) {
+    return { youtube, rest };
+  }
+
+  const seed = youtube;
+  const merged: RecipeYoutubeMeta = {
+    url: ("youtubeUrl" in overrides ? youtubeUrl : seed?.url) ?? "",
+    channelName:
+      "youtubeChannelName" in overrides
+        ? youtubeChannelName
+        : seed?.channelName,
+    videoTitle:
+      "youtubeVideoTitle" in overrides ? youtubeVideoTitle : seed?.videoTitle,
+    thumbnailUrl:
+      "youtubeThumbnailUrl" in overrides
+        ? youtubeThumbnailUrl
+        : seed?.thumbnailUrl,
+    channelProfileUrl:
+      "youtubeChannelProfileUrl" in overrides
+        ? youtubeChannelProfileUrl
+        : seed?.channelProfileUrl,
+    subscriberCount:
+      "youtubeSubscriberCount" in overrides
+        ? youtubeSubscriberCount
+        : seed?.subscriberCount,
+    channelId:
+      "youtubeChannelId" in overrides ? youtubeChannelId : seed?.channelId,
+  };
+  return { youtube: merged, rest };
+};
 
 export const makeBaseRecipe = (
-  overrides?: Partial<StaticRecipe>
+  overrides: RecipeOverrides = {}
 ): StaticRecipe => {
+  const { youtube, rest } = foldYoutubeOverrides(overrides);
   return {
     id: "test-recipe-1",
     title: "김치찌개",
@@ -39,14 +116,17 @@ export const makeBaseRecipe = (
     imageKey: null,
     createdAt: "2024-01-01T00:00:00Z",
     comments: [],
-    ...overrides,
+    source: "USER",
+    ...rest,
+    ...(youtube ? { youtube } : {}),
   };
 };
 
 export const makeYoutubeFamousRecipe = (
-  overrides?: Partial<StaticRecipe>
+  overrides: RecipeOverrides = {}
 ): StaticRecipe => {
   return makeBaseRecipe({
+    source: "YOUTUBE",
     youtubeUrl: "https://youtube.com/watch?v=test",
     youtubeChannelName: "백종원",
     youtubeVideoTitle: "김치찌개 맛있게 끓이는 법",
@@ -58,9 +138,10 @@ export const makeYoutubeFamousRecipe = (
 };
 
 export const makeYoutubeMediumRecipe = (
-  overrides?: Partial<StaticRecipe>
+  overrides: RecipeOverrides = {}
 ): StaticRecipe => {
   return makeBaseRecipe({
+    source: "YOUTUBE",
     youtubeUrl: "https://youtube.com/watch?v=test2",
     youtubeChannelName: "요리왕비룡",
     youtubeVideoTitle: "집에서 쉽게 만드는 김치찌개",
@@ -72,9 +153,10 @@ export const makeYoutubeMediumRecipe = (
 };
 
 export const makeYoutubeStandardRecipe = (
-  overrides?: Partial<StaticRecipe>
+  overrides: RecipeOverrides = {}
 ): StaticRecipe => {
   return makeBaseRecipe({
+    source: "YOUTUBE",
     youtubeUrl: "https://youtube.com/watch?v=test3",
     youtubeChannelName: "집밥요정",
     youtubeVideoTitle: "김치찌개 레시피",
@@ -85,9 +167,7 @@ export const makeYoutubeStandardRecipe = (
   });
 };
 
-export const makeJpRecipe = (
-  overrides?: Partial<StaticRecipe>
-): StaticRecipe => {
+export const makeJpRecipe = (overrides: RecipeOverrides = {}): StaticRecipe => {
   return makeYoutubeMediumRecipe({
     creatorCountryTag: "JP",
     youtubeChannelName: "きょうの料理",
@@ -97,7 +177,7 @@ export const makeJpRecipe = (
 };
 
 export const makeOtherRecipe = (
-  overrides?: Partial<StaticRecipe>
+  overrides: RecipeOverrides = {}
 ): StaticRecipe => {
   return makeYoutubeMediumRecipe({
     creatorCountryTag: "OTHER",

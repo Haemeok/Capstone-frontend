@@ -29,7 +29,7 @@ export const prepareRemixPayload = (
     // fields that need payload-specific mapping
     ingredients,
     steps,
-    youtubeUrl,
+    youtube,
     ...rest
   } = recipe;
 
@@ -54,7 +54,7 @@ export const prepareRemixPayload = (
 
   return {
     ...rest,
-    youtubeUrl,
+    youtubeUrl: youtube?.url,
     ingredients: ingredientPayloads,
     steps: stepPayloads,
     originRecipeId,

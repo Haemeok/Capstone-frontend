@@ -16,16 +16,16 @@ export type YoutubeMetadata = {
 export const extractYoutubeMetadata = (
   recipe: StaticRecipe
 ): YoutubeMetadata | undefined => {
-  if (!recipe.youtubeUrl || !recipe.youtubeChannelName) {
+  if (!recipe.youtube?.url || !recipe.youtube.channelName) {
     return undefined;
   }
 
   return {
-    channelName: recipe.youtubeChannelName,
-    videoTitle: recipe.youtubeVideoTitle,
-    thumbnailUrl: recipe.youtubeThumbnailUrl,
-    channelProfileUrl: recipe.youtubeChannelProfileUrl,
-    subscriberCount: recipe.youtubeSubscriberCount,
+    channelName: recipe.youtube.channelName,
+    videoTitle: recipe.youtube.videoTitle,
+    thumbnailUrl: recipe.youtube.thumbnailUrl,
+    channelProfileUrl: recipe.youtube.channelProfileUrl,
+    subscriberCount: recipe.youtube.subscriberCount,
   };
 };
 
@@ -97,8 +97,8 @@ export const createEnhancedVideoObject = (
       youtubeMetadata.thumbnailUrl || recipe.imageUrl,
       recipe.imageUrl,
     ].filter(Boolean),
-    contentUrl: recipe.youtubeUrl,
-    embedUrl: recipe.youtubeUrl,
+    contentUrl: recipe.youtube?.url,
+    embedUrl: recipe.youtube?.url,
     uploadDate: toIso8601(recipe.createdAt),
     ...(recipe.cookingTime && { duration: `PT${recipe.cookingTime}M` }),
     publisher: {

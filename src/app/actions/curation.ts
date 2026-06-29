@@ -119,8 +119,8 @@ export const generateCuration = async (
       id: r.id,
       title: r.title,
       imageUrl: r.imageUrl,
-      youtubeUrl: r.youtubeUrl ?? "",
-      youtubeChannelName: r.youtubeChannelName,
+      youtubeUrl: r.youtube?.url ?? "",
+      youtubeChannelName: r.youtube?.channelName,
     }))
   );
 

@@ -6,6 +6,16 @@ import { User } from "@/entities/user";
 
 export type Visibility = "PUBLIC" | "PRIVATE" | "RESTRICTED";
 export type RecipeSource = "USER" | "AI" | "YOUTUBE" | "REELS";
+
+export type RecipeYoutubeMeta = {
+  url: string;
+  channelName?: string;
+  videoTitle?: string;
+  thumbnailUrl?: string;
+  channelProfileUrl?: string;
+  subscriberCount?: number;
+  channelId?: string;
+};
 export type CreatorCountryTag = "KR" | "JP" | "US" | "OTHER";
 export type ImageStatus = "PENDING" | "READY" | "FAILED";
 
@@ -108,13 +118,7 @@ export type Recipe = {
   description: string;
   cookingTime: number;
   imageUrl: string;
-  youtubeUrl?: string;
-  youtubeChannelName?: string;
-  youtubeVideoTitle?: string;
-  youtubeThumbnailUrl?: string;
-  youtubeChannelProfileUrl?: string;
-  youtubeSubscriberCount?: number;
-  youtubeChannelId?: string;
+  youtube?: RecipeYoutubeMeta;
   extractorId?: string | null;
   cookingTools: string[];
   servings: number;
@@ -131,7 +135,7 @@ export type Recipe = {
   likedByCurrentUser: boolean;
   favoriteByCurrentUser: boolean;
   visibility?: Visibility;
-  source?: RecipeSource;
+  source: RecipeSource;
   creatorCountryTag?: CreatorCountryTag | null;
   ingredientCalculationSummary?: IngredientCalculationSummary;
   totalCalories: number;
@@ -148,6 +152,17 @@ export type Recipe = {
     };
   };
   isCloneable: boolean;
+};
+
+export type RawRecipeResponse = Omit<Recipe, "source" | "youtube"> & {
+  source?: RecipeSource;
+  youtubeUrl?: string;
+  youtubeChannelName?: string;
+  youtubeVideoTitle?: string;
+  youtubeThumbnailUrl?: string;
+  youtubeChannelProfileUrl?: string;
+  youtubeSubscriberCount?: number;
+  youtubeChannelId?: string;
 };
 
 export type RecipeComponent = {
@@ -200,7 +215,10 @@ export const defaultRecipeKeys = [
   "isCloneable",
 ] as const;
 
-export type RecipePayload = Omit<Recipe, (typeof defaultRecipeKeys)[number]> & {
+export type RecipePayload = Omit<
+  Recipe,
+  (typeof defaultRecipeKeys)[number] | "youtube" | "source"
+> & {
   ingredients: IngredientPayload[];
   steps: RecipeStepPayload[];
   cookingTime: number;
@@ -208,6 +226,7 @@ export type RecipePayload = Omit<Recipe, (typeof defaultRecipeKeys)[number]> & {
   imageKey?: string | null;
   originRecipeId?: string;
   youtubeUrl?: string;
+  source?: RecipeSource;
 };
 
 export type RecipeStepPayload = Omit<

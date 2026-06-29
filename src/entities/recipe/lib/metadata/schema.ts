@@ -67,13 +67,13 @@ export const createRecipeStructuredData = (
 
   const videoObject = youtubeMetadata
     ? createEnhancedVideoObject(recipe, youtubeMetadata, locale)
-    : recipe.youtubeUrl
+    : recipe.youtube?.url
       ? {
           "@type": "VideoObject" as const,
           name: locale === "ko" ? `${recipe.title} 만들기` : recipe.title,
           description: recipe.description,
           thumbnailUrl: recipe.imageUrl || "",
-          contentUrl: recipe.youtubeUrl,
+          contentUrl: recipe.youtube.url,
           uploadDate: toIso8601(recipe.createdAt),
         }
       : undefined;

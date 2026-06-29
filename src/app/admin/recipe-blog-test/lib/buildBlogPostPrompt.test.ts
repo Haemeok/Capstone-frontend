@@ -13,6 +13,7 @@ const FAKE_RECIPE: Recipe = {
   id: "r1",
   title: "콩나물국",
   dishType: "국/찌개/탕",
+  source: "USER",
   description: "",
   cookingTime: 20,
   imageUrl: "",

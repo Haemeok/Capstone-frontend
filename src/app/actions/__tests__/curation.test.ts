@@ -35,7 +35,7 @@ const fakeRecipe = (id: string) => ({
   id,
   title: `요리-${id}`,
   imageUrl: `https://cdn/img/${id}.jpg`,
-  youtubeUrl: `https://youtu.be/${id}`,
+  youtube: { url: `https://youtu.be/${id}` },
   description: "맛있어요",
   ingredients: [{ name: "재료", amount: "1" }],
   cookingTime: 20,
