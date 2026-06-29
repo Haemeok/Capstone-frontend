@@ -503,7 +503,6 @@ export type LoginPromotionDict = {
 
 export type CategoryDict = {
   navAriaLabel: string;
-  countAll: string;
   emptyTitle: string;
   emptySubtitle: string;
   emptyCta: string;

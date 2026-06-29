@@ -4,7 +4,6 @@ import { categoryMessages } from "@/shared/i18n/categoryMessages";
 import { taxonomyMessages } from "@/shared/i18n/taxonomyMessages";
 
 import CategoryChips from "../CategoryChips";
-import CategoryCount from "../CategoryCount";
 import CategoryEmptyState from "../CategoryEmptyState";
 import CategoryHero from "../CategoryHero";
 
@@ -27,13 +26,6 @@ describe("category chrome localized (ja) — T-26", () => {
       screen.getByRole("navigation", { name: jaDict.navAriaLabel })
     ).toBeInTheDocument();
     expect(screen.getByText(`# ${jaTags.CHEF_RECIPE}`)).toBeInTheDocument();
-    expect(HANGUL.test(container.textContent ?? "")).toBe(false);
-  });
-
-  it("CategoryCount: ja countAll label", () => {
-    const { container } = render(<CategoryCount total={12} />);
-
-    expect(screen.getByText(`${jaDict.countAll} 12`)).toBeInTheDocument();
     expect(HANGUL.test(container.textContent ?? "")).toBe(false);
   });
 
