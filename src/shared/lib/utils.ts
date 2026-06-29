@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import { PageResponse } from "../api/types";
+import { PageResponse, SliceResponse } from "../api/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,6 +14,11 @@ export const getNextPageParam = <T>(lastPage: PageResponse<T>) => {
     ? null
     : lastPage.page.number + 1;
 };
+
+export const getNextSlicePageParam = <T>(
+  lastPage: SliceResponse<T>
+): number | undefined =>
+  lastPage?.slice?.hasNext ? lastPage.slice.number + 1 : undefined;
 
 export const buildParams = <T extends object>(
   base: T,
