@@ -39,7 +39,8 @@ const AIConceptShell = ({
   const router = useLocalizedRouter();
   const t = useT();
   const isCompleted = job?.state === "completed";
-  const resultRecipeId = job?.resultRecipeId;
+  const resultRecipeId =
+    job?.state === "completed" ? job.resultRecipeId : undefined;
   const successToastId = job?.successToastId;
 
   useEffect(() => {
@@ -66,7 +67,10 @@ const AIConceptShell = ({
     return (
       <Container padding={false}>
         <AIRecipeError
-          error={job.message || t.aiRecipe.error.defaultMessage}
+          error={
+            (job.state === "failed" && job.message) ||
+            t.aiRecipe.error.defaultMessage
+          }
           onRetry={onRetry}
         />
       </Container>

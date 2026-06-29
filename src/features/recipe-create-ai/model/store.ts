@@ -15,7 +15,6 @@ import {
 import type {
   ActiveAIJob,
   AIJobMeta,
-  AIJobState,
   AIRecommendedRecipe,
   AIRecommendedRecipeRequest,
   PersistedAIJob,
@@ -104,11 +103,7 @@ type AIRecipeStoreV2 = {
     locale: Locale
   ) => string;
   setJobId: (idempotencyKey: string, jobId: string) => void;
-  updateJobProgress: (
-    idempotencyKey: string,
-    progress: number,
-    resultRecipeId?: string
-  ) => void;
+  updateJobProgress: (idempotencyKey: string, progress: number) => void;
   completeJob: (
     idempotencyKey: string,
     recipeId: string,
@@ -197,15 +192,19 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
           [idempotencyKey]: {
             ...job,
             jobId,
-            state: "polling" as AIJobState,
+            state: "polling",
             lastPollTime: now,
+            progress:
+              job.state === "polling" || job.state === "creating"
+                ? job.progress
+                : 0,
           },
         },
       };
     });
   },
 
-  updateJobProgress: (idempotencyKey, progress, resultRecipeId) => {
+  updateJobProgress: (idempotencyKey, progress) => {
     const now = Date.now();
 
     updatePersistedJob(idempotencyKey, { lastPollTime: now });
@@ -219,9 +218,9 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
           ...state.jobs,
           [idempotencyKey]: {
             ...job,
+            state: "polling",
             progress,
             lastPollTime: now,
-            ...(resultRecipeId && { resultRecipeId }),
           },
         },
       };
@@ -240,7 +239,7 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
           ...state.jobs,
           [idempotencyKey]: {
             ...job,
-            state: "completed" as AIJobState,
+            state: "completed",
             progress: 100,
             resultRecipeId: recipeId,
             successToastId: toastId,
@@ -262,7 +261,11 @@ export const useAIRecipeStoreV2 = create<AIRecipeStoreV2>((set, get) => ({
           ...state.jobs,
           [idempotencyKey]: {
             ...job,
-            state: "failed" as AIJobState,
+            state: "failed",
+            progress:
+              job.state === "polling" || job.state === "creating"
+                ? job.progress
+                : 0,
             code,
             message,
           },

@@ -122,7 +122,11 @@ describe("useAIJobPolling - 중복 처리 방지", () => {
 
       const jobAfterFirst = useAIRecipeStoreV2.getState().jobs[key!];
       expect(jobAfterFirst?.state).toBe("completed");
-      expect(jobAfterFirst?.resultRecipeId).toBe("recipe-456");
+      expect(
+        jobAfterFirst?.state === "completed"
+          ? jobAfterFirst.resultRecipeId
+          : undefined
+      ).toBe("recipe-456");
 
       // 두 번째 폴링 시도 (7초 후) - 이미 completed라 getPendingJobs에서 제외됨
       await act(async () => {
@@ -162,8 +166,10 @@ describe("useAIJobPolling - 중복 처리 방지", () => {
       // Job이 failed 상태인지 확인
       const job = useAIRecipeStoreV2.getState().jobs[key!];
       expect(job?.state).toBe("failed");
-      expect(job?.code).toBe("701");
-      expect(job?.message).toBe("AI 생성 실패");
+      if (job?.state === "failed") {
+        expect(job.code).toBe("701");
+        expect(job.message).toBe("AI 생성 실패");
+      }
     });
 
     it("이미 completed 상태인 job에 fail 호출해도 무시해야 함", async () => {
@@ -192,7 +198,7 @@ describe("useAIJobPolling - 중복 처리 방지", () => {
       // Job은 completed 상태 유지
       const job = useAIRecipeStoreV2.getState().jobs[key!];
       expect(job?.state).toBe("completed");
-      expect(job?.message).toBeUndefined();
+      expect(job && "message" in job ? job.message : undefined).toBeUndefined();
     });
   });
 });
