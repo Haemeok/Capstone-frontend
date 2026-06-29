@@ -11,7 +11,7 @@ export const useConfirmDelete = () => {
   const deleteNotificationMutation = useDeleteNotification();
 
   const confirmAndDelete = (
-    notificationId: number,
+    notificationId: string,
     confirmMessage?: string
   ) => {
     const message = confirmMessage || "이 알림을 삭제하시겠습니까?";
