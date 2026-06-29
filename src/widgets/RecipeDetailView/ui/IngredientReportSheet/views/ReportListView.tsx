@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { ChevronRight, Plus } from "lucide-react";
 
+import type { Locale } from "@/shared/i18n";
 import { useT } from "@/shared/i18n";
-import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
+import { formatIngredientAmount } from "@/shared/lib/ingredientConversion";
 
 import type { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
 
@@ -13,6 +14,7 @@ import type { SheetComponents } from "./sheet-components";
 type ReportListViewProps = SheetComponents & {
   recipe: Recipe | StaticRecipe;
   servingRatio: number;
+  locale: Locale;
   onIngredientSelect: (name: string) => void;
   onMissingSelect: () => void;
 };
@@ -20,6 +22,7 @@ type ReportListViewProps = SheetComponents & {
 export const ReportListView = ({
   recipe,
   servingRatio,
+  locale,
   onIngredientSelect,
   onMissingSelect,
   Header,
@@ -59,15 +62,12 @@ export const ReportListView = ({
 
         <div className="space-y-1.5">
           {recipe.ingredients.map((ingredient, index) => {
-            const converted = convertIngredientQuantity(
+            const amount = formatIngredientAmount(
               ingredient.quantity,
               ingredient.unit,
-              servingRatio
+              servingRatio,
+              locale
             );
-            const amount =
-              converted.quantity !== "약간" // i18n-ignore
-                ? `${converted.quantity}${converted.unit}`
-                : "약간"; // i18n-ignore
 
             return (
               <button
