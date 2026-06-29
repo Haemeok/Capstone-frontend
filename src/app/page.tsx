@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import {
   HomeAnchorAdSlot,
   HomeHeaderAnchorAdSlot,
-  HomeSlideFeedAdSlot,
   WebOnlyAdSlot,
 } from "@/shared/adsense";
 import { getDictionary } from "@/shared/i18n";
@@ -91,21 +90,14 @@ const HomePage = async () => {
             title={dict.home.popularSectionTitle}
             staticRecipes={staticPopularRecipes.content}
             locale="ko"
+            fetchFailed={staticPopularRecipes.fetchFailed}
           />
 
           <YoutubeVerifiedServerSlide locale="ko" />
 
-          <WebOnlyAdSlot>
-            <HomeSlideFeedAdSlot className="my-2" index={0} />
-          </WebOnlyAdSlot>
-
           <SeasonalPopularServerSlide locale="ko" />
 
           <CountryPopularServerSlide locale="ko" />
-
-          <WebOnlyAdSlot>
-            <HomeSlideFeedAdSlot className="my-2" index={1} />
-          </WebOnlyAdSlot>
 
           <QuickPopularServerSlide locale="ko" />
 
@@ -113,11 +105,8 @@ const HomePage = async () => {
             title={dict.home.budgetSectionTitle}
             staticRecipes={staticBudgetRecipes.content}
             locale="ko"
+            fetchFailed={staticBudgetRecipes.fetchFailed}
           />
-
-          <WebOnlyAdSlot>
-            <HomeSlideFeedAdSlot className="my-2" index={2} />
-          </WebOnlyAdSlot>
 
           <CategoryPopularServerSlide locale="ko" />
         </div>
