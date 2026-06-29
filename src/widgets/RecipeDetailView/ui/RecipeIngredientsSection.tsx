@@ -206,6 +206,7 @@ const IngredientsSection = ({
         servingRatio={servingRatio}
         onServingsChange={setCurrentServings}
         ownedIndices={ownedIndices}
+        locale={locale}
       />
     </div>
   );
