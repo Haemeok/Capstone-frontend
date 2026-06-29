@@ -9,7 +9,7 @@ describe("getStaticRecipesOnServer lang (T-06)", () => {
       new Response(
         JSON.stringify({
           content: [],
-          page: { size: 0, number: 0, totalElements: 0, totalPages: 0 },
+          slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
         }),
         { status: 200 }
       )

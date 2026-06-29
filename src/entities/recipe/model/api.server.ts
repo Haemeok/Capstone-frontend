@@ -181,12 +181,7 @@ export const getRecipesOnServer = async (
 
     return {
       content: [],
-      page: {
-        size: 0,
-        number: 0,
-        totalElements: 0,
-        totalPages: 0,
-      },
+      slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
     };
   }
 };
@@ -463,12 +458,7 @@ export const getStaticRecipesOnServer = async (
 
     return {
       content: [],
-      page: {
-        size: 0,
-        number: 0,
-        totalElements: 0,
-        totalPages: 0,
-      },
+      slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
     };
   }
 };
@@ -617,7 +607,7 @@ export const getRemixesOnServer = (
     tags: [CACHE_TAGS.recipesDetailSlide("remixes", recipeId)],
     fallback: {
       content: [],
-      page: { size: 0, number: 0, totalElements: 0, totalPages: 0 },
+      slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
     },
   });
 

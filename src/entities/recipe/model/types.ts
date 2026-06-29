@@ -1,4 +1,4 @@
-import { PageResponse } from "@/shared/api/types";
+import { PageResponse, SliceResponse } from "@/shared/api/types";
 
 import { Comment } from "@/entities/comment";
 import { IngredientItem, IngredientPayload } from "@/entities/ingredient";
@@ -25,10 +25,10 @@ export type IngredientCalculationSummary = {
   pendingCount: number;
 };
 
-export type BaseRecipesApiResponse = PageResponse<BaseRecipeGridItem>;
-export type DetailedRecipesApiResponse = PageResponse<DetailedRecipeGridItem>;
+export type BaseRecipesApiResponse = SliceResponse<BaseRecipeGridItem>;
+export type DetailedRecipesApiResponse = SliceResponse<DetailedRecipeGridItem>;
 export type StaticDetailedRecipesApiResponse =
-  PageResponse<StaticDetailedRecipeGridItem>;
+  SliceResponse<StaticDetailedRecipeGridItem>;
 export type IngredientRecipesApiResponse =
   PageResponse<IngredientRecipeGridItem>;
 
@@ -368,12 +368,4 @@ export type MyRecipeListItem = {
   imageStatus?: ImageStatus;
 };
 
-export type MyRecipesPageResponse = {
-  content: MyRecipeListItem[];
-  page: {
-    size: number;
-    number: number;
-    totalElements: number;
-    totalPages: number;
-  };
-};
+export type MyRecipesPageResponse = SliceResponse<MyRecipeListItem>;

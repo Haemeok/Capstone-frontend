@@ -16,7 +16,10 @@ describe("getRecipesOnServer — lang", () => {
   it("T-16: lang=ja면 검색 fetch URL에 lang=ja가 붙는다", async () => {
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ content: [], page: {} }),
+      json: async () => ({
+        content: [],
+        slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
+      }),
     });
     global.fetch = fetchMock as unknown as typeof fetch;
 
