@@ -196,6 +196,7 @@ const IngredientsSection = ({
         onOpenChange={setIsReportSheetOpen}
         recipe={recipe}
         servingRatio={servingRatio}
+        locale={locale}
       />
 
       <IngredientCopySheet

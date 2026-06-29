@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 
+import type { Locale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
@@ -21,6 +22,7 @@ type IngredientReportSheetProps = {
   onOpenChange: (open: boolean) => void;
   recipe: Recipe | StaticRecipe;
   servingRatio: number;
+  locale: Locale;
 };
 
 export const IngredientReportSheet = ({
@@ -28,6 +30,7 @@ export const IngredientReportSheet = ({
   onOpenChange,
   recipe,
   servingRatio,
+  locale,
 }: IngredientReportSheetProps) => {
   const { Container, Content, Header, Title, Description } =
     useResponsiveSheet();
@@ -84,6 +87,7 @@ export const IngredientReportSheet = ({
             <ReportListView
               recipe={recipe}
               servingRatio={servingRatio}
+              locale={locale}
               onIngredientSelect={phaseManager.goToReport}
               onMissingSelect={phaseManager.goToMissing}
               Header={Header}
