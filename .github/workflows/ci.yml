@@ -46,5 +46,3 @@ jobs:
           name: coverage-report
           path: coverage/
           retention-days: 14
-
-      - run: npx @lhci/cli autorun
