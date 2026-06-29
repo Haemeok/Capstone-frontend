@@ -1,33 +1,27 @@
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
-import { PutUserInfoPayload, User, UserStreak } from "./types";
+import { PutUserInfoPayload, RawUserResponse, User, UserStreak } from "./types";
 
-const aliasQuotaFields = (user: User): User => ({
-  ...user,
-  remainingAiQuota: user.remainingAiGenerationQuota ?? user.remainingAiQuota,
-  remainingYoutubeQuota:
-    user.remainingYoutubeExtractionCredits ?? user.remainingYoutubeQuota,
-});
-
-export const getUserInfo = async (userId: string) => {
-  const data = await api.get<User>(END_POINTS.USER_INFO(userId));
-
-  return aliasQuotaFields(data);
+export const toUser = (raw: RawUserResponse): User => {
+  const {
+    remainingAiGenerationQuota,
+    remainingYoutubeExtractionCredits,
+    ...rest
+  } = raw;
+  return {
+    ...rest,
+    remainingAiQuota: remainingAiGenerationQuota ?? raw.remainingAiQuota ?? 0,
+    remainingYoutubeQuota:
+      remainingYoutubeExtractionCredits ?? raw.remainingYoutubeQuota ?? 0,
+  };
 };
 
-export const putUserInfo = async (payload: PutUserInfoPayload) => {
-  const data = await api.patch<User>(END_POINTS.MY_INFO, payload);
-  return aliasQuotaFields(data);
-};
-
-export const getUserStreak = async () => {
-  const data = await api.get<UserStreak>(END_POINTS.USER_STREAK);
-  return data;
-};
-
-export const getMyInfo = async () => {
-  const data = await api.get<User>(END_POINTS.MY_INFO);
-
-  return aliasQuotaFields(data);
-};
+export const getUserInfo = async (userId: string) =>
+  toUser(await api.get<RawUserResponse>(END_POINTS.USER_INFO(userId)));
+export const putUserInfo = async (payload: PutUserInfoPayload) =>
+  toUser(await api.patch<RawUserResponse>(END_POINTS.MY_INFO, payload));
+export const getUserStreak = async () =>
+  api.get<UserStreak>(END_POINTS.USER_STREAK);
+export const getMyInfo = async () =>
+  toUser(await api.get<RawUserResponse>(END_POINTS.MY_INFO));

@@ -11,8 +11,6 @@ export type User = {
   likes?: number;
   surveyCompleted?: boolean;
   hasFirstRecord: boolean;
-  remainingAiGenerationQuota: number;
-  remainingYoutubeExtractionCredits: number;
   remainingAiQuota: number;
   remainingYoutubeQuota: number;
   preferredLocale?: Locale;
@@ -20,6 +18,16 @@ export type User = {
     showAds: boolean;
     adFreeUntil: string | null;
   };
+};
+
+export type RawUserResponse = Omit<
+  User,
+  "remainingAiQuota" | "remainingYoutubeQuota"
+> & {
+  remainingAiQuota?: number;
+  remainingAiGenerationQuota?: number;
+  remainingYoutubeQuota?: number;
+  remainingYoutubeExtractionCredits?: number;
 };
 
 export type UserStreak = {
