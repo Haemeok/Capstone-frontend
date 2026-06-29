@@ -5,9 +5,11 @@ type SafeFetchOptions<T> = {
   timeoutMs?: number;
 };
 
+export type WithFetchStatus<T> = T & { fetchFailed: boolean };
+
 const DEFAULT_TIMEOUT_MS = 8000;
 
-export const safeFetchJson = async <T>(
+export const safeFetchJson = async <T extends object>(
   url: string,
   {
     revalidate,
@@ -15,7 +17,7 @@ export const safeFetchJson = async <T>(
     fallback,
     timeoutMs = DEFAULT_TIMEOUT_MS,
   }: SafeFetchOptions<T>
-): Promise<T> => {
+): Promise<WithFetchStatus<T>> => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -23,10 +25,10 @@ export const safeFetchJson = async <T>(
       signal: controller.signal,
       next: { revalidate, tags },
     });
-    if (!res.ok) return fallback;
-    return (await res.json()) as T;
+    if (!res.ok) return { ...fallback, fetchFailed: true };
+    return { ...((await res.json()) as T), fetchFailed: false };
   } catch {
-    return fallback;
+    return { ...fallback, fetchFailed: true };
   } finally {
     clearTimeout(timer);
   }

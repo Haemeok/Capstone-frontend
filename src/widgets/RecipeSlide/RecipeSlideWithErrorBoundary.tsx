@@ -14,6 +14,7 @@ type RecipeSlideWithErrorBoundaryProps = {
   requiresMeta?: boolean;
   metaName?: string | null;
   emphasizeTime?: boolean;
+  fetchFailed?: boolean;
 };
 
 const RecipeSlideWithErrorBoundary = ({
@@ -24,8 +25,10 @@ const RecipeSlideWithErrorBoundary = ({
   requiresMeta,
   metaName,
   emphasizeTime,
+  fetchFailed = false,
 }: RecipeSlideWithErrorBoundaryProps) => {
   if (
+    !fetchFailed &&
     shouldHideRecipeSlide({
       isLoading: false,
       hasError: false,
@@ -57,7 +60,7 @@ const RecipeSlideWithErrorBoundary = ({
         to={to}
         recipes={staticRecipes}
         isLoading={false}
-        error={null}
+        error={fetchFailed ? new Error("slide fetch failed") : null}
         locale={locale}
         emphasizeTime={emphasizeTime}
       />

@@ -12,7 +12,10 @@ const TitleKeywordServerSlide = async ({
   recipeId: string;
   locale: Locale;
 }) => {
-  const { keyword, content } = await getTitleKeywordOnServer(recipeId, locale);
+  const { keyword, content, fetchFailed } = await getTitleKeywordOnServer(
+    recipeId,
+    locale
+  );
   return (
     <RecipeSlideWithErrorBoundary
       title={buildTitleKeywordTitle(locale, keyword ?? "")}
@@ -20,6 +23,7 @@ const TitleKeywordServerSlide = async ({
       locale={locale}
       requiresMeta
       metaName={keyword}
+      fetchFailed={fetchFailed}
     />
   );
 };

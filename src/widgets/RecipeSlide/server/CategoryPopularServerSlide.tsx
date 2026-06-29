@@ -6,7 +6,8 @@ import RecipeSlideWithErrorBoundary from "../RecipeSlideWithErrorBoundary";
 import { buildCategoryTitle } from "./buildSlideTitle";
 
 const CategoryPopularServerSlide = async ({ locale }: { locale: Locale }) => {
-  const { categoryCode, content } = await getCategoryPopularOnServer(locale);
+  const { categoryCode, content, fetchFailed } =
+    await getCategoryPopularOnServer(locale);
   const metaName = content.length > 0 ? categoryCode : null;
   return (
     <RecipeSlideWithErrorBoundary
@@ -15,6 +16,7 @@ const CategoryPopularServerSlide = async ({ locale }: { locale: Locale }) => {
       locale={locale}
       requiresMeta
       metaName={metaName}
+      fetchFailed={fetchFailed}
     />
   );
 };

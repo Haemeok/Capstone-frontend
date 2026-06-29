@@ -6,7 +6,7 @@ import RecipeSlideWithErrorBoundary from "../RecipeSlideWithErrorBoundary";
 import { buildSeasonalTitle } from "./buildSlideTitle";
 
 const SeasonalPopularServerSlide = async ({ locale }: { locale: Locale }) => {
-  const { seasonalIngredientName, content } =
+  const { seasonalIngredientName, content, fetchFailed } =
     await getSeasonalPopularOnServer(locale);
   const month = new Date().getMonth() + 1;
   return (
@@ -16,6 +16,7 @@ const SeasonalPopularServerSlide = async ({ locale }: { locale: Locale }) => {
       locale={locale}
       requiresMeta
       metaName={seasonalIngredientName}
+      fetchFailed={fetchFailed}
     />
   );
 };

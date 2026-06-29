@@ -6,7 +6,7 @@ import type { Locale } from "@/shared/i18n";
 
 import type { LocalizedRecipeResult } from "./localeResult";
 import { parseLocalizedRecipeResult } from "./localeResult";
-import { safeFetchJson } from "./safeFetchJson";
+import { safeFetchJson, type WithFetchStatus } from "./safeFetchJson";
 import {
   CategoryPopularResponse,
   CookedPopularResponse,
@@ -403,7 +403,7 @@ export const fetchEnRecipeSitemapPage = async (
 
 export const getStaticRecipesOnServer = async (
   params: RecipeItemsQueryParams
-): Promise<StaticDetailedRecipesApiResponse> => {
+): Promise<WithFetchStatus<StaticDetailedRecipesApiResponse>> => {
   const query = new URLSearchParams({
     page: "0",
     size: "10",
@@ -452,13 +452,14 @@ export const getStaticRecipesOnServer = async (
       throw new Error(`API Error: ${res.status} ${res.statusText}`);
     }
 
-    return res.json();
+    return { ...(await res.json()), fetchFailed: false };
   } catch (error) {
     console.error(`[getStaticRecipesOnServer] Failed to fetch recipes:`, error);
 
     return {
       content: [],
       slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
+      fetchFailed: true,
     };
   }
 };
@@ -526,7 +527,7 @@ const withLang = (base: string, locale: Locale) => {
 
 export const getYoutubeVerifiedOnServer = (
   locale: Locale
-): Promise<YoutubeVerifiedResponse> =>
+): Promise<WithFetchStatus<YoutubeVerifiedResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_YOUTUBE_VERIFIED, locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
     tags: [CACHE_TAGS.recipesDiscovery("youtube-verified")],
@@ -535,7 +536,7 @@ export const getYoutubeVerifiedOnServer = (
 
 export const getQuickPopularOnServer = (
   locale: Locale
-): Promise<QuickPopularResponse> =>
+): Promise<WithFetchStatus<QuickPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_QUICK_POPULAR, locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
     tags: [CACHE_TAGS.recipesDiscovery("quick-popular")],
@@ -544,7 +545,7 @@ export const getQuickPopularOnServer = (
 
 export const getCountryPopularOnServer = (
   locale: Locale
-): Promise<CountryPopularResponse> =>
+): Promise<WithFetchStatus<CountryPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_COUNTRY_POPULAR, locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
     tags: [CACHE_TAGS.recipesDiscovery("country-popular")],
@@ -553,7 +554,7 @@ export const getCountryPopularOnServer = (
 
 export const getSeasonalPopularOnServer = (
   locale: Locale
-): Promise<SeasonalPopularResponse> =>
+): Promise<WithFetchStatus<SeasonalPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_SEASONAL_POPULAR, locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
     tags: [CACHE_TAGS.recipesDiscovery("seasonal-popular")],
@@ -562,7 +563,7 @@ export const getSeasonalPopularOnServer = (
 
 export const getCategoryPopularOnServer = (
   locale: Locale
-): Promise<CategoryPopularResponse> =>
+): Promise<WithFetchStatus<CategoryPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_CATEGORY_POPULAR, locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
     tags: [CACHE_TAGS.recipesDiscovery("category-popular")],
@@ -571,7 +572,7 @@ export const getCategoryPopularOnServer = (
 
 export const getCookedPopularOnServer = (
   locale: Locale
-): Promise<CookedPopularResponse> =>
+): Promise<WithFetchStatus<CookedPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_COOKED_POPULAR, locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
     tags: [CACHE_TAGS.recipesDiscovery("cooked-popular")],
@@ -581,7 +582,7 @@ export const getCookedPopularOnServer = (
 export const getSameIngredientOnServer = (
   recipeId: string,
   locale: Locale
-): Promise<SameIngredientResponse> =>
+): Promise<WithFetchStatus<SameIngredientResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_SAME_INGREDIENT(recipeId), locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
     tags: [CACHE_TAGS.recipesDetailSlide("same-ingredient", recipeId)],
@@ -591,7 +592,7 @@ export const getSameIngredientOnServer = (
 export const getTitleKeywordOnServer = (
   recipeId: string,
   locale: Locale
-): Promise<TitleKeywordResponse> =>
+): Promise<WithFetchStatus<TitleKeywordResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_TITLE_KEYWORD(recipeId), locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
     tags: [CACHE_TAGS.recipesDetailSlide("title-keyword", recipeId)],
@@ -601,7 +602,7 @@ export const getTitleKeywordOnServer = (
 export const getRemixesOnServer = (
   recipeId: string,
   locale: Locale
-): Promise<StaticDetailedRecipesApiResponse> =>
+): Promise<WithFetchStatus<StaticDetailedRecipesApiResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_REMIXES(recipeId), locale), {
     revalidate: REVALIDATION_TIMES.RECIPES_DETAIL_SLIDES,
     tags: [CACHE_TAGS.recipesDetailSlide("remixes", recipeId)],

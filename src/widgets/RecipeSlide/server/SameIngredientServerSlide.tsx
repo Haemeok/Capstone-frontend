@@ -12,10 +12,8 @@ const SameIngredientServerSlide = async ({
   recipeId: string;
   locale: Locale;
 }) => {
-  const { ingredientName, content } = await getSameIngredientOnServer(
-    recipeId,
-    locale
-  );
+  const { ingredientName, content, fetchFailed } =
+    await getSameIngredientOnServer(recipeId, locale);
   return (
     <RecipeSlideWithErrorBoundary
       title={buildSameIngredientTitle(locale, ingredientName ?? "")}
@@ -23,6 +21,7 @@ const SameIngredientServerSlide = async ({
       locale={locale}
       requiresMeta
       metaName={ingredientName}
+      fetchFailed={fetchFailed}
     />
   );
 };
