@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL } from "@/shared/config/constants/api";
 
@@ -15,17 +13,11 @@ export const getIngredientDetailOnServer = async (
   const API_URL = `${BASE_API_URL}/ingredients/${encodeURIComponent(id)}`;
 
   try {
-    const cookieStore = await cookies();
-    const cookieHeader = cookieStore
-      .getAll()
-      .map(({ name, value }) => `${name}=${value}`)
-      .join("; ");
-
     const res = await fetch(API_URL, {
-      headers: {
-        Cookie: cookieHeader,
+      next: {
+        revalidate: REVALIDATION_TIMES.INGREDIENT_DETAIL,
+        tags: [CACHE_TAGS.ingredientDetail(id)],
       },
-      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -53,7 +45,12 @@ export const getLocalizedIngredientOnServer = async (
   url.searchParams.set("lang", locale);
 
   try {
-    const res = await fetch(url.toString(), { cache: "no-store" });
+    const res = await fetch(url.toString(), {
+      next: {
+        revalidate: REVALIDATION_TIMES.INGREDIENT_DETAIL,
+        tags: [CACHE_TAGS.ingredientDetail(id)],
+      },
+    });
     const body = await res.json().catch(() => null);
     return parseLocalizedIngredientResult(res.status, body);
   } catch (error) {
