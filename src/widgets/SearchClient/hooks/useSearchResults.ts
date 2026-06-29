@@ -2,7 +2,7 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { SORT_TYPE_CODES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
-import { getNextPageParam } from "@/shared/lib/utils";
+import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import type { CreatorCountryTag } from "@/entities/recipe";
 import { getRecipeItems } from "@/entities/recipe";
@@ -104,7 +104,7 @@ export const useSearchResults = (
           locale
         )
       ),
-    getNextPageParam,
+    getNextPageParam: getNextSlicePageParam,
     initialPageParam: initialPage,
   });
 
