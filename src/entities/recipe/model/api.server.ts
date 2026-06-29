@@ -305,6 +305,8 @@ export const fetchRecentRecipesForFeed = async (
   }
 };
 
+const SITEMAP_FETCH_TIMEOUT_MS = 15000;
+
 export const fetchRecipeSitemapPage = async (
   pageIndex: number,
   size: number
@@ -321,6 +323,7 @@ export const fetchRecipeSitemapPage = async (
         revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
         tags: [CACHE_TAGS.recipesSitemap],
       },
+      signal: AbortSignal.timeout(SITEMAP_FETCH_TIMEOUT_MS),
     });
 
     if (!res.ok) {
@@ -353,6 +356,7 @@ export const fetchJaRecipeSitemapPage = async (
         revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
         tags: [CACHE_TAGS.recipesSitemapJa],
       },
+      signal: AbortSignal.timeout(SITEMAP_FETCH_TIMEOUT_MS),
     });
 
     if (!res.ok) {
@@ -385,6 +389,7 @@ export const fetchEnRecipeSitemapPage = async (
         revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
         tags: [CACHE_TAGS.recipesSitemapEn],
       },
+      signal: AbortSignal.timeout(SITEMAP_FETCH_TIMEOUT_MS),
     });
 
     if (!res.ok) {

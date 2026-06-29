@@ -65,6 +65,8 @@ export const getLocalizedIngredientOnServer = async (
   }
 };
 
+const SITEMAP_FETCH_TIMEOUT_MS = 15000;
+
 export const fetchAllIngredientsForSitemap = async (): Promise<
   Array<{ id: string; updatedAt: string }>
 > => {
@@ -76,6 +78,7 @@ export const fetchAllIngredientsForSitemap = async (): Promise<
         revalidate: REVALIDATION_TIMES.INGREDIENTS_SITEMAP,
         tags: [CACHE_TAGS.ingredientsSitemap],
       },
+      signal: AbortSignal.timeout(SITEMAP_FETCH_TIMEOUT_MS),
     });
 
     if (!res.ok) {
