@@ -15,17 +15,11 @@ export const meta: MetaDict = {
     queryNoun: "",
     pageSuffix: " (page {page})",
     titleNoQuery: "Recipe Search Results{page} - Recipio",
-    titleWithQuery: {
-      one: "{q} — {count} recipe{page} | Recipio",
-      other: "{q} — {count} recipes{page} | Recipio",
-    },
+    titleWithQuery: "{q} recipes{page} | Recipio",
     descNoQuery:
       "Filter by ingredients, calories, cook time, and more. Find the recipe that fits your day.",
-    descWithQuery: {
-      one: "Browse {count} {q} recipe. Compare ingredients, nutrition, and cook time at a glance.",
-      other:
-        "Browse {count} {q} recipes. Compare ingredients, nutrition, and cook time at a glance.",
-    },
+    descWithQuery:
+      "Browse {q} recipes. Compare ingredients, nutrition, and cook time at a glance.",
   },
 };
 
