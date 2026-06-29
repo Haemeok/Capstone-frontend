@@ -11,7 +11,7 @@ jest.mock("@/widgets/SearchClient", () => ({
 jest.mock("@/entities/recipe/model/api.server", () => ({
   getRecipesOnServer: async () => ({
     content: [],
-    page: { size: 0, number: 0, totalElements: 0, totalPages: 0 },
+    slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
   }),
 }));
 

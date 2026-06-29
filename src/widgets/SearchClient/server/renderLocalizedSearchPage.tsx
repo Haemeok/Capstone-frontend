@@ -17,7 +17,7 @@ import {
   parseTypes,
 } from "@/shared/lib/nutrition/parseNutritionParams";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
-import { getNextPageParam } from "@/shared/lib/utils";
+import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import {
   buildSearchDescription,
@@ -100,11 +100,10 @@ export const buildLocalizedSearchMetadata = async ({
   const { query, page, q } = parseLocalizedSearchParams(searchParams, locale);
 
   const pageData = await getRecipesOnServer(query);
-  const totalElements = pageData.page.totalElements;
   const firstImage = pageData.content[0]?.imageUrl;
 
-  const title = buildSearchTitle(q, totalElements, page, locale);
-  const description = buildSearchDescription(q, totalElements, locale);
+  const title = buildSearchTitle(q, page, locale);
+  const description = buildSearchDescription(q, locale);
 
   const ogImage = firstImage || SEO_CONSTANTS.DEFAULT_IMAGE;
 
@@ -168,7 +167,7 @@ export const LocalizedSearchPage = async ({
     queryKey,
     queryFn: () => getRecipesOnServer(query),
     initialPageParam: page,
-    getNextPageParam,
+    getNextPageParam: getNextSlicePageParam,
     pages: 1,
   });
 
@@ -178,11 +177,10 @@ export const LocalizedSearchPage = async ({
     );
   const firstPage: DetailedRecipesApiResponse = cached?.pages[0] ?? {
     content: [],
-    page: { size: 0, number: page, totalElements: 0, totalPages: 0 },
+    slice: { size: 0, number: page, numberOfElements: 0, hasNext: false },
   };
 
-  const totalPages = firstPage.page.totalPages;
-  const hasNextPage = page < totalPages - 1;
+  const hasNextPage = firstPage.slice.hasNext;
 
   const nextPageHref = hasNextPage
     ? buildNextPageUrl(searchParams, page + 1, basePath)
