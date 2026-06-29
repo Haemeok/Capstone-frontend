@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 
 import type { Locale } from "@/shared/i18n";
-import { getNextPageParam } from "@/shared/lib/utils";
+import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
@@ -34,7 +34,7 @@ export const SearchDiscoveryPage = async ({
       queryFn: () =>
         getRecipesOnServer({ key: "search", page: 0, sort: "createdAt,desc" }),
       initialPageParam: 0,
-      getNextPageParam,
+      getNextPageParam: getNextSlicePageParam,
       pages: 1,
     });
   }

@@ -8,7 +8,7 @@ import {
   useSearchDiscoveryLocale,
 } from "@/shared/i18n/useSearchDiscoveryDict";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
-import { getNextPageParam } from "@/shared/lib/utils";
+import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import {
   type DetailedRecipesApiResponse,
@@ -45,7 +45,7 @@ const LatestRecipesSlide = () => {
         types: [...LATEST_RECIPES_TYPES],
       }),
     initialPageParam: 0,
-    getNextPageParam,
+    getNextPageParam: getNextSlicePageParam,
   });
 
   const recipes = data?.pages.flatMap((p) => p.content) ?? [];
