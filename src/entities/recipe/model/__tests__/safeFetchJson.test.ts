@@ -17,7 +17,7 @@ describe("safeFetchJson (빌드 세이프)", () => {
       tags: ["t"],
       fallback,
     });
-    expect(out).toEqual({ content: [{ id: "r1" }] });
+    expect(out).toEqual({ content: [{ id: "r1" }], fetchFailed: false });
   });
 
   it("T-BS5: fetch에 next:{revalidate,tags} 전달", async () => {
@@ -36,25 +36,25 @@ describe("safeFetchJson (빌드 세이프)", () => {
     });
   });
 
-  it("T-BS1: 5xx면 throw 없이 fallback 반환", async () => {
+  it("T-BS1: 5xx면 throw 없이 fallback + fetchFailed 반환", async () => {
     global.fetch = jest
       .fn()
       .mockResolvedValue({ ok: false, status: 503 }) as unknown as typeof fetch;
     expect(
       await safeFetchJson("http://x/y", { revalidate: 10, tags: [], fallback })
-    ).toBe(fallback);
+    ).toEqual({ ...fallback, fetchFailed: true });
   });
 
-  it("T-BS2: 네트워크 reject면 fallback 반환", async () => {
+  it("T-BS2: 네트워크 reject면 fallback + fetchFailed 반환", async () => {
     global.fetch = jest
       .fn()
       .mockRejectedValue(new Error("ECONNREFUSED")) as unknown as typeof fetch;
     expect(
       await safeFetchJson("http://x/y", { revalidate: 10, tags: [], fallback })
-    ).toBe(fallback);
+    ).toEqual({ ...fallback, fetchFailed: true });
   });
 
-  it("T-BS3: 타임아웃 초과면 fallback 반환", async () => {
+  it("T-BS3: 타임아웃 초과면 fallback + fetchFailed 반환", async () => {
     global.fetch = jest.fn(
       (_url, opts: { signal: AbortSignal }) =>
         new Promise((_resolve, reject) => {
@@ -70,6 +70,6 @@ describe("safeFetchJson (빌드 세이프)", () => {
         fallback,
         timeoutMs: 20,
       })
-    ).toBe(fallback);
+    ).toEqual({ ...fallback, fetchFailed: true });
   });
 });

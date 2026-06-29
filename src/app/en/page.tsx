@@ -102,6 +102,7 @@ const HomePage = async () => {
             title={dict.home.popularSectionTitle}
             staticRecipes={staticPopularRecipes.content}
             locale="en"
+            fetchFailed={staticPopularRecipes.fetchFailed}
           />
 
           <YoutubeVerifiedServerSlide locale="en" />
@@ -116,6 +117,7 @@ const HomePage = async () => {
             title={dict.home.budgetSectionTitle}
             staticRecipes={staticBudgetRecipes.content}
             locale="en"
+            fetchFailed={staticBudgetRecipes.fetchFailed}
           />
 
           <CategoryPopularServerSlide locale="en" />

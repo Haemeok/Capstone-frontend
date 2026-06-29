@@ -6,7 +6,8 @@ import RecipeSlideWithErrorBoundary from "../RecipeSlideWithErrorBoundary";
 import { buildQuickTitle } from "./buildSlideTitle";
 
 const QuickPopularServerSlide = async ({ locale }: { locale: Locale }) => {
-  const { maxCookingTime, content } = await getQuickPopularOnServer(locale);
+  const { maxCookingTime, content, fetchFailed } =
+    await getQuickPopularOnServer(locale);
   const metaName =
     content.length > 0 && maxCookingTime > 0 ? String(maxCookingTime) : null;
   return (
@@ -17,6 +18,7 @@ const QuickPopularServerSlide = async ({ locale }: { locale: Locale }) => {
       requiresMeta
       metaName={metaName}
       emphasizeTime
+      fetchFailed={fetchFailed}
     />
   );
 };

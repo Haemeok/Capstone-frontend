@@ -12,12 +12,13 @@ const RemixesServerSlide = async ({
   recipeId: string;
   locale: Locale;
 }) => {
-  const { content } = await getRemixesOnServer(recipeId, locale);
+  const { content, fetchFailed } = await getRemixesOnServer(recipeId, locale);
   return (
     <RecipeSlideWithErrorBoundary
       title={recipeDetailMessages[locale].remixesTitle}
       staticRecipes={content}
       locale={locale}
+      fetchFailed={fetchFailed}
     />
   );
 };
