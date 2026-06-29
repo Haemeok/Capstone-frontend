@@ -73,6 +73,18 @@ export type PageResponse<T> = {
   };
 };
 
+export type SliceInfo = {
+  size: number;
+  number: number;
+  numberOfElements: number;
+  hasNext: boolean;
+};
+
+export type SliceResponse<T> = {
+  content: T[];
+  slice: SliceInfo;
+};
+
 export type PresignedUrlResponse = {
   uploads: PresignedUrlInfo[];
   recipeId: string;
