@@ -404,7 +404,6 @@ const MAX_SEARCH_ITEMS = 10;
 export const createSearchResultsJsonLd = (
   query: string,
   recipes: DetailedRecipeGridItem[],
-  totalElements: number,
   title: string,
   canonicalUrl?: string
 ) => ({
@@ -414,7 +413,7 @@ export const createSearchResultsJsonLd = (
     {
       "@type": "ItemList",
       name: title,
-      numberOfItems: totalElements,
+      numberOfItems: recipes.length,
       itemListElement: recipes.slice(0, MAX_SEARCH_ITEMS).map((recipe, i) => ({
         "@type": "ListItem",
         position: i + 1,

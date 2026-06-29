@@ -47,9 +47,9 @@ export type MetaDict = {
     queryNoun: string;
     pageSuffix: string;
     titleNoQuery: string;
-    titleWithQuery: Plural;
+    titleWithQuery: string;
     descNoQuery: string;
-    descWithQuery: Plural;
+    descWithQuery: string;
   };
 };
 

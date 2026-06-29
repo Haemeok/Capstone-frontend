@@ -15,17 +15,11 @@ export const meta: MetaDict = {
     queryNoun: "レシピ",
     pageSuffix: "（{page}ページ目）",
     titleNoQuery: "レシピ検索結果{page} - レシピオ",
-    titleWithQuery: {
-      one: "{q}のおすすめレシピ{count}選{page} - レシピオ",
-      other: "{q}のおすすめレシピ{count}選{page} - レシピオ",
-    },
+    titleWithQuery: "{q}の検索結果{page} - レシピオ",
     descNoQuery:
       "フィルターでお好みのレシピを探せます。食材費・カロリー・調理時間をまとめて比較。",
-    descWithQuery: {
-      one: "{q} {count}件をまとめてチェック。食材費から栄養成分まで一目で比較できます。",
-      other:
-        "{q} {count}件をまとめてチェック。食材費から栄養成分まで一目で比較できます。",
-    },
+    descWithQuery:
+      "{q}をまとめてチェック。食材費から栄養成分まで一目で比較できます。",
   },
 };
 
