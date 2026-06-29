@@ -147,7 +147,6 @@ export type Recipe = {
       guide: string;
     };
   };
-  components?: RecipeComponent[];
   isCloneable: boolean;
 };
 
