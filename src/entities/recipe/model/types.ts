@@ -363,7 +363,6 @@ export type MyRecipeListItem = {
   createdAt: string;
   likedByCurrentUser: boolean;
   visibility?: Visibility;
-  source?: RecipeSource;
   imageStatus?: ImageStatus;
 };
 
