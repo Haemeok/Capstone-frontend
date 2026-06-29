@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 
+import type { Locale } from "@/shared/i18n";
 import { format, useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
-import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
+import { formatIngredientAmount } from "@/shared/lib/ingredientConversion";
 
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
 
@@ -28,6 +29,7 @@ type IngredientCopySheetProps = {
   servingRatio: number;
   onServingsChange: (servings: number) => void;
   ownedIndices: Set<number>;
+  locale: Locale;
 };
 
 export const IngredientCopySheet = ({
@@ -38,6 +40,7 @@ export const IngredientCopySheet = ({
   servingRatio,
   onServingsChange,
   ownedIndices,
+  locale,
 }: IngredientCopySheetProps) => {
   const { Container, Content, Header, Title, Description } =
     useResponsiveSheet();
@@ -58,16 +61,12 @@ export const IngredientCopySheet = ({
   });
 
   const ingredients = recipe.ingredients.map((ingredient, index) => {
-    const converted = convertIngredientQuantity(
+    const amount = formatIngredientAmount(
       ingredient.quantity,
       ingredient.unit,
-      servingRatio
+      servingRatio,
+      locale
     );
-    const amount =
-      converted.quantity !== "약간" // i18n-ignore
-        ? `${converted.quantity}${converted.unit}`
-        : "약간"; // i18n-ignore
-
     return { index, name: ingredient.name, amount };
   });
 
