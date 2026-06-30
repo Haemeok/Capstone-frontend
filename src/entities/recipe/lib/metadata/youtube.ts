@@ -1,17 +1,18 @@
 import type { Locale } from "@/shared/i18n";
 import { localizedSiteName } from "@/shared/lib/metadata/localized";
 
-import type { StaticRecipe } from "@/entities/recipe/model/types";
+import type {
+  RecipeYoutubeMeta,
+  StaticRecipe,
+} from "@/entities/recipe/model/types";
 
 import { toIso8601 } from "./dateTime";
 
-export type YoutubeMetadata = {
-  channelName: string;
-  videoTitle?: string;
-  thumbnailUrl?: string;
-  channelProfileUrl?: string;
-  subscriberCount?: number;
-};
+export type YoutubeMetadata = Required<Pick<RecipeYoutubeMeta, "channelName">> &
+  Pick<
+    RecipeYoutubeMeta,
+    "videoTitle" | "thumbnailUrl" | "channelProfileUrl" | "subscriberCount"
+  >;
 
 export const extractYoutubeMetadata = (
   recipe: StaticRecipe

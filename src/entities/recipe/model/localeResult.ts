@@ -1,14 +1,13 @@
+import {
+  isErrorBody,
+  type LocalizedResultMiss,
+} from "@/shared/api/localizedResult";
+
 import type { StaticRecipe } from "./types";
 
 export type LocalizedRecipeResult =
   | { kind: "ok"; recipe: StaticRecipe }
-  | { kind: "notTranslated"; message: string }
-  | { kind: "notFound" };
-
-type ErrorBody = { code?: string; message?: string };
-
-const isErrorBody = (body: unknown): body is ErrorBody =>
-  typeof body === "object" && body !== null;
+  | LocalizedResultMiss;
 
 export const parseLocalizedRecipeResult = (
   status: number,
