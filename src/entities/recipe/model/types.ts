@@ -325,37 +325,29 @@ export type CookedPopularResponse = StaticRecipeListResponse;
 
 export type CookedAgainResponse = StaticRecipeListResponse;
 
-export type SameIngredientResponse = {
+export type SameIngredientResponse = StaticRecipeListResponse & {
   ingredientName: string | null;
-  content: StaticDetailedRecipeGridItem[];
 };
 
-export type TitleKeywordResponse = {
+export type TitleKeywordResponse = StaticRecipeListResponse & {
   keyword: string | null;
-  content: StaticDetailedRecipeGridItem[];
 };
 
-export type FridgeIngredientPopularResponse = {
-  ingredientName: string | null;
-  content: StaticDetailedRecipeGridItem[];
-};
+export type FridgeIngredientPopularResponse = SameIngredientResponse;
 
 export type CountryPopularCode = "US" | "JP";
 
-export type CountryPopularResponse = {
+export type CountryPopularResponse = StaticRecipeListResponse & {
   countryCode: CountryPopularCode;
   countryName: string;
-  content: StaticDetailedRecipeGridItem[];
 };
 
-export type SeasonalPopularResponse = {
+export type SeasonalPopularResponse = StaticRecipeListResponse & {
   seasonalIngredientName: string | null;
-  content: StaticDetailedRecipeGridItem[];
 };
 
-export type QuickPopularResponse = {
+export type QuickPopularResponse = StaticRecipeListResponse & {
   maxCookingTime: number;
-  content: StaticDetailedRecipeGridItem[];
 };
 
 export type CategoryCode =
@@ -366,9 +358,8 @@ export type CategoryCode =
   | "SOUP"
   | "DESSERT";
 
-export type CategoryPopularResponse = {
+export type CategoryPopularResponse = StaticRecipeListResponse & {
   categoryCode: CategoryCode;
-  content: StaticDetailedRecipeGridItem[];
 };
 
 export type YoutubeVerifiedResponse = StaticRecipeListResponse;
