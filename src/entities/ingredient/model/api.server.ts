@@ -4,7 +4,7 @@ import { BASE_API_URL } from "@/shared/config/constants/api";
 import {
   type LocalizedIngredientResult,
   parseLocalizedIngredientResult,
-} from "./localizedIngredientResult";
+} from "./localeResult";
 import type { IngredientDetailApiResponse } from "./types";
 
 export const getIngredientDetailOnServer = async (
