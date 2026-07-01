@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import { parseAppToWebMessage } from "./appMessageGuard";
 import type { AppToWebMessage, AppToWebMessageType } from "./types";
 
 type MessageHandler<T extends AppToWebMessageType> = (
@@ -10,21 +11,6 @@ type MessageHandler<T extends AppToWebMessageType> = (
 
 type MessageHandlers = {
   [K in AppToWebMessageType]?: MessageHandler<K>;
-};
-
-const APP_TO_WEB_MESSAGE_TYPES = {
-  NOTIFICATION_STATUS: true,
-  AUTH_DIAG: true,
-  KEYBOARD_STATE: true,
-  APP_CONTEXT: true,
-} satisfies Record<AppToWebMessageType, true>;
-
-const isAppToWebMessage = (data: unknown): data is AppToWebMessage => {
-  if (typeof data !== "object" || data === null) return false;
-  const { type } = data as { type?: unknown };
-  return (
-    typeof type === "string" && Object.hasOwn(APP_TO_WEB_MESSAGE_TYPES, type)
-  );
 };
 
 export const useAppMessageListener = (handlers: MessageHandlers) => {
@@ -39,11 +25,12 @@ export const useAppMessageListener = (handlers: MessageHandlers) => {
         return;
       }
 
-      if (!isAppToWebMessage(data)) return;
+      const message = parseAppToWebMessage(data);
+      if (!message) return;
 
-      const handler = handlers[data.type];
+      const handler = handlers[message.type];
       if (handler) {
-        (handler as (payload: unknown) => void)(data.payload);
+        (handler as (payload: unknown) => void)(message.payload);
       }
     };
 

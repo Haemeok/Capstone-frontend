@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useLocalizedRouter } from "@/shared/i18n";
 import { useAuthDict } from "@/shared/i18n";
 import { storage } from "@/shared/lib/storage";
+import { safeInternalPath } from "@/shared/lib/url";
 import { Image } from "@/shared/ui/image/Image";
 import TextAnimate from "@/shared/ui/shadcn/text-animate";
 
@@ -23,7 +24,7 @@ const LoginContent = () => {
   const t = useAuthDict();
   const router = useLocalizedRouter();
   const searchParams = useSearchParams();
-  const from = searchParams.get("from") || "/";
+  const from = safeInternalPath(searchParams.get("from"));
   const [clickCount, setClickCount] = useState(0);
 
   const lastProvider = storage.getItem(
