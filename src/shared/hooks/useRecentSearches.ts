@@ -2,6 +2,10 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
+import { parseStoredArray } from "@/shared/lib/json/parseStoredArray";
+
+const isString = (v: unknown): v is string => typeof v === "string";
+
 const STORAGE_KEY = "recent-searches";
 const MAX_ITEMS = 10;
 const EMPTY: string[] = [];
@@ -33,13 +37,15 @@ const subscribe = (listener: () => void) => {
 const getSnapshot = (): string[] => {
   if (cachedSearches === null) {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      cachedSearches = stored ? JSON.parse(stored) : [];
+      cachedSearches = parseStoredArray(
+        localStorage.getItem(STORAGE_KEY),
+        isString
+      );
     } catch {
       cachedSearches = [];
     }
   }
-  return cachedSearches as string[];
+  return cachedSearches;
 };
 
 export const useRecentSearches = () => {

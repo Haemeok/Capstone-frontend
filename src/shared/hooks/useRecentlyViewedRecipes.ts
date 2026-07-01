@@ -2,6 +2,8 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
+import { parseStoredArray } from "@/shared/lib/json/parseStoredArray";
+
 export type RecentRecipe = {
   id: string;
   title: string;
@@ -26,10 +28,15 @@ const EMPTY: RecentRecipe[] = [];
 let cached: RecentRecipe[] | null = null;
 const listeners = new Set<() => void>();
 
+const isRecentRecipe = (v: unknown): v is RecentRecipe =>
+  typeof v === "object" &&
+  v !== null &&
+  typeof (v as Record<string, unknown>).id === "string" &&
+  typeof (v as Record<string, unknown>).title === "string";
+
 const readRecents = (): RecentRecipe[] => {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? (JSON.parse(stored) as RecentRecipe[]) : [];
+    return parseStoredArray(localStorage.getItem(STORAGE_KEY), isRecentRecipe);
   } catch {
     return [];
   }
