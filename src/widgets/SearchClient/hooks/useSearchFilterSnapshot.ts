@@ -1,4 +1,8 @@
 import { convertNutritionToQueryParams } from "@/shared/lib/nutrition/parseNutritionParams";
+import {
+  buildRecipeSearchBaseKey,
+  type RecipeSearchBaseKey,
+} from "@/shared/lib/search/recipeSearchQueryKey";
 
 import type { CreatorCountryTag } from "@/entities/recipe";
 
@@ -19,17 +23,7 @@ export type SearchFilterSnapshot = {
   q: string;
   nutritionQueryParams: Record<string, number>;
   types: string[];
-  queryKey: readonly [
-    "recipes",
-    string | null,
-    string | null,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-  ];
+  queryKey: RecipeSearchBaseKey;
   queryKeyString: string;
 };
 
@@ -44,22 +38,19 @@ export const useSearchFilterSnapshot = (): SearchFilterSnapshot => {
 
   const nutritionQueryParams = convertNutritionToQueryParams(nutritionParams);
   const nutritionKeyString = JSON.stringify(nutritionQueryParams);
-  const tagsString = tagCodes.join(",");
   const typesString = types.join(",");
   const ingredientsString = ingredientIds.join(",");
-  const countryString = creatorCountryTags.join(",");
 
-  const queryKey = [
-    "recipes",
+  const queryKey = buildRecipeSearchBaseKey({
     dishTypeCode,
     sortCode,
-    tagsString,
+    tagCodes,
     q,
-    nutritionKeyString,
-    typesString,
-    ingredientsString,
-    countryString,
-  ] as const;
+    nutritionQueryParams,
+    types,
+    ingredientIds,
+    creatorCountryTags,
+  });
 
   const queryKeyString = JSON.stringify([
     "recipes",
