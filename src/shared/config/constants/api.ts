@@ -39,6 +39,7 @@ export const END_POINTS = {
   RECIPE_BOOK_RECIPES: (bookId: string) => `/me/recipe-books/${bookId}/recipes`,
   RECIPE_BOOK_ORDER: "/me/recipe-books/order",
   RECIPE_VISIBILITY: (id: string) => `/bff/recipes/${id}/visibility`,
+  RECIPE_COUPANG_PRODUCTS: (id: string) => `/recipes/${id}/coupang-products`,
   RECIPE_RECOMMENDATIONS: (id: string) => `/recipes/${id}/recommendations`,
   RECIPE_REMIXES: (id: string) => `/recipes/${id}/remixes`,
   RECIPE_SAME_INGREDIENT: (id: string) => `/recipes/${id}/same-ingredient`,
