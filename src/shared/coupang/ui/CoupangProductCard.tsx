@@ -6,13 +6,9 @@ import { DeliveryEstimate } from "./DeliveryEstimate";
 
 type CoupangProductCardProps = {
   product: CoupangProduct;
-  caption?: string;
 };
 
-export const CoupangProductCard = ({
-  product,
-  caption,
-}: CoupangProductCardProps) => {
+export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
   const unit = computeUnitPrice(product.name, product.price);
 
   return (
@@ -22,13 +18,10 @@ export const CoupangProductCard = ({
       rel="noopener noreferrer"
       className="flex w-[132px] shrink-0 flex-col gap-1"
     >
-      {caption && (
-        <span className="text-ink-muted truncate text-sm">{caption}</span>
-      )}
       <img
         src={product.imageUrl}
         alt={product.name}
-        className="h-[132px] w-full rounded-lg object-cover"
+        className="rounded-card h-[132px] w-full object-cover"
         loading="lazy"
       />
       <p className="text-ink mt-1 line-clamp-2 text-sm leading-snug">
