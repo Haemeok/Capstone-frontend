@@ -2,7 +2,10 @@ import { api } from "@/shared/api/client";
 import { BaseQueryParams } from "@/shared/api/types";
 import { PAGE_SIZE } from "@/shared/config/constants/api";
 import { END_POINTS } from "@/shared/config/constants/api";
-import { INGREDIENT_CATEGORY_CODES } from "@/shared/config/constants/recipe";
+import {
+  INGREDIENT_CATEGORY_CODES,
+  type IngredientCategoryName,
+} from "@/shared/config/constants/recipe";
 import type { Locale } from "@/shared/i18n";
 import { buildParams } from "@/shared/lib/utils";
 
@@ -24,7 +27,7 @@ export const getIngredients = async ({
   size = PAGE_SIZE,
   lang = "ko",
 }: {
-  category: string | null;
+  category: IngredientCategoryName | null;
   q?: string;
   sort?: string;
   pageParam: number;
@@ -39,11 +42,7 @@ export const getIngredients = async ({
   };
 
   const optionalParams: Partial<IngredientQueryParams> = {
-    category: category
-      ? INGREDIENT_CATEGORY_CODES[
-          category as keyof typeof INGREDIENT_CATEGORY_CODES
-        ]
-      : null,
+    category: category ? INGREDIENT_CATEGORY_CODES[category] : null,
     q,
     ...(lang === "ko" ? {} : { lang }),
   };

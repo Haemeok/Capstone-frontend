@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { DISH_TYPES } from "@/shared/config/constants/recipe";
+import { DISH_TYPES, type DishType } from "@/shared/config/constants/recipe";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import FilterChip from "@/shared/ui/FilterChip";
 
@@ -16,7 +16,7 @@ export const DishTypeFilter = () => {
   const { localize, dict } = useTaxonomy();
 
   const handleValueChange = (value: string | string[]) => {
-    setDishType(value as string);
+    setDishType(value as DishType);
     setIsOpen(false);
   };
 

@@ -29,15 +29,22 @@ export const INGREDIENT_CATEGORIES_BASE = [
   "기타",
 ] as const;
 
-export const INGREDIENT_CATEGORIES = ["전체", ...INGREDIENT_CATEGORIES_BASE];
+export const INGREDIENT_CATEGORIES = [
+  "전체",
+  ...INGREDIENT_CATEGORIES_BASE,
+] as const;
+
+export type IngredientCategoryName = (typeof INGREDIENT_CATEGORIES)[number];
 
 export const INGREDIENT_CATEGORIES_NEW_RECIPE = [
   "나의 재료",
-  "전체",
-  ...INGREDIENT_CATEGORIES_BASE,
-];
+  ...INGREDIENT_CATEGORIES,
+] as const;
 
-export const INGREDIENT_CATEGORY_CODES: Record<string, string> = {
+export type RecipeCreateCategoryTab =
+  (typeof INGREDIENT_CATEGORIES_NEW_RECIPE)[number];
+
+export const INGREDIENT_CATEGORY_CODES = {
   전체: "",
   고기: "meat",
   채소: "vegetable",
@@ -51,7 +58,7 @@ export const INGREDIENT_CATEGORY_CODES: Record<string, string> = {
   "빵/떡": "bread",
   면: "noodle",
   기타: "other",
-};
+} satisfies Record<IngredientCategoryName, string>;
 
 export const DISH_TYPES = [
   "전체",
@@ -68,6 +75,8 @@ export const DISH_TYPES = [
   "디저트/간식류",
   "음료/주류",
 ];
+
+export type DishType = keyof typeof DISH_TYPE_CODES;
 
 export const DISH_TYPE_ICONS: Record<string, string> = {
   전체: "all.webp",
@@ -101,7 +110,7 @@ export const DISH_TYPE_CODES = {
   "밥/면/파스타": "RICE_NOODLE",
   "디저트/간식류": "DESSERT",
   "음료/주류": "BEVERAGE",
-};
+} as const;
 
 export const DISH_TYPE_CODES_TO_NAME = Object.fromEntries(
   Object.entries(DISH_TYPE_CODES).map(([key, value]) => [value, key])
@@ -157,11 +166,15 @@ export type TagCode = ValueOf<typeof TAG_CODES>;
 
 export const SORT_TYPES = ["인기순", "최신순", "오래된순"];
 
+export type SortType = keyof typeof SORT_TYPE_CODES;
+
 export const SORT_TYPE_CODES = {
   인기순: "popularityScore,DESC",
   최신순: "createdAt,DESC",
   오래된순: "createdAt,ASC",
-};
+} as const;
+
+export type SortCode = ValueOf<typeof SORT_TYPE_CODES>;
 
 export const SORT_CONFIGS = {
   comment: {
@@ -185,9 +198,11 @@ export type RecipeSortType = keyof typeof SORT_CONFIGS.recipe;
 export type MyFridgeSortType = keyof typeof SORT_CONFIGS.myFridge;
 
 export type SortConfig = {
-  field: string;
-  direction: string;
+  field: "createdAt" | "likeCount" | "avgRating";
+  direction: "DESC" | "ASC";
 };
+
+export type SortDirection = SortConfig["direction"];
 
 export const DRAWER_HEADERS = {
   dishType: "요리 유형 선택",
@@ -209,7 +224,7 @@ export type BaseDrawerConfig = {
   header: string;
   description?: string;
   isMultiple: boolean;
-  availableValues: string[];
+  availableValues: readonly string[];
 };
 
 export const BASE_DRAWER_CONFIGS: Record<BaseDrawerType, BaseDrawerConfig> = {

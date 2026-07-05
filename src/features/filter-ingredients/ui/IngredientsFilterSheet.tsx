@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 
+import type { IngredientCategoryName } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { useCommonDict } from "@/shared/i18n";
@@ -88,7 +89,7 @@ const IngredientsFilterSheetContent = ({
   const { dict } = useTaxonomy();
   const common = useCommonDict();
   const selection = useIngredientSelection(initialIngredients);
-  const [category, setCategory] = useState("전체");
+  const [category, setCategory] = useState<IngredientCategoryName>("전체");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =

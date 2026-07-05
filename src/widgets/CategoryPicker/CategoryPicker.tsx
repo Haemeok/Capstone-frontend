@@ -31,7 +31,7 @@ type CategoryPickerProps = {
   isMultiple: boolean;
   setValue: (value: string[] | string) => void;
   initialValue: string[] | string;
-  availableValues: string[];
+  availableValues: readonly string[];
   header: string;
   description?: string;
   trigger?: React.ReactNode;

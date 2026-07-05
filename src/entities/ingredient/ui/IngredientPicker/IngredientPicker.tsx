@@ -5,6 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { InfiniteData } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
 
+import {
+  type IngredientCategoryName,
+  type RecipeCreateCategoryTab,
+} from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { format, useIngredientPickerDict } from "@/shared/i18n";
@@ -29,8 +33,8 @@ import { useIngredientSelection } from "./useIngredientSelection";
 
 export type IngredientPickerQueryConfig = {
   keyBase: string;
-  getParams: (category: string) => {
-    category: string | null;
+  getParams: (category: RecipeCreateCategoryTab) => {
+    category: IngredientCategoryName | null;
     isMine: boolean;
     isFridge?: boolean;
   };
@@ -40,8 +44,8 @@ type IngredientPickerProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title?: string;
-  categories: string[];
-  initialCategory?: string;
+  categories: readonly RecipeCreateCategoryTab[];
+  initialCategory?: RecipeCreateCategoryTab;
   queryConfig: IngredientPickerQueryConfig;
   isAlreadyAdded: (ingredient: IngredientItem) => boolean;
   onComplete: (selected: IngredientItem[]) => void;
@@ -59,9 +63,8 @@ const IngredientPicker = ({
 }: IngredientPickerProps) => {
   const t = useIngredientPickerDict();
   const { localize } = useTaxonomy();
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    initialCategory ?? categories[0] ?? ""
-  );
+  const [selectedCategory, setSelectedCategory] =
+    useState<RecipeCreateCategoryTab>(initialCategory ?? categories[0]);
   const { selectedItems, isSelected, toggle, remove, clear } =
     useIngredientSelection();
   const { searchQuery, inputValue, handleSearchSubmit, handleInputChange } =

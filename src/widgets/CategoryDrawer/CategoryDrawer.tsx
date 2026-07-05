@@ -31,14 +31,14 @@ type CategoryDrawerProps = {
   isMultiple: boolean;
   setValue: (value: string[] | string) => void;
   initialValue: string[] | string;
-  availableValues: string[];
+  availableValues: readonly string[];
   header: string;
   description: string;
 };
 
 type SelectionContentProps = {
   isMultiple: boolean;
-  availableValues: string[];
+  availableValues: readonly string[];
   internalSelection: string[] | string;
   onCheckboxChange: (value: string) => void;
   onRadioChange: (value: string) => void;

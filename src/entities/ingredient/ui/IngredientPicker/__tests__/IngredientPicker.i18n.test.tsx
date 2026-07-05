@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 
+import type { RecipeCreateCategoryTab } from "@/shared/config/constants/recipe";
 import { ingredientPickerMessages } from "@/shared/i18n/ingredientPickerMessages";
 import { taxonomyMessages } from "@/shared/i18n/taxonomyMessages";
 
@@ -44,12 +45,16 @@ jest.mock("@/entities/ingredient/model/api", () => ({
   getIngredients: (params: GetIngredientsParams) => getIngredientsMock(params),
 }));
 
-const CATEGORIES = ["전체", "고기", "나의 재료"];
+const CATEGORIES: readonly RecipeCreateCategoryTab[] = [
+  "전체",
+  "고기",
+  "나의 재료",
+];
 
 const queryConfig: IngredientPickerQueryConfig = {
   keyBase: "pickerIngredients",
   getParams: (category) => ({
-    category,
+    category: category === "나의 재료" || category === "전체" ? null : category,
     isMine: category === "나의 재료",
   }),
 };
