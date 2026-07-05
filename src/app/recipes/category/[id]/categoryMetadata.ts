@@ -7,7 +7,7 @@ import {
   TAGS_BY_CODE,
   TAGS_IMAGE_KEYS,
 } from "@/shared/config/constants/recipe";
-import type { Locale } from "@/shared/i18n";
+import type { Locale, TranslatedLocale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n";
 import { taxonomyMessages } from "@/shared/i18n/taxonomyMessages";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
@@ -23,16 +23,13 @@ type BuildCategoryMetadataArgs = {
   locale: Locale;
 };
 
-const COLLECTION_TITLE: Record<
-  Exclude<Locale, "ko">,
-  (name: string) => string
-> = {
+const COLLECTION_TITLE: Record<TranslatedLocale, (name: string) => string> = {
   ja: (name) => `${name}のレシピ集`,
   en: (name) => `${name} recipes`,
 };
 
 const COLLECTION_DESCRIPTION: Record<
-  Exclude<Locale, "ko">,
+  TranslatedLocale,
   (name: string, siteName: string) => string
 > = {
   ja: (name, siteName) => `${name}のレシピを${siteName}でチェックしましょう。`,
@@ -146,7 +143,7 @@ const buildKoMetadata = (
 
 const buildLocalizedMetadata = (
   id: string,
-  locale: Exclude<Locale, "ko">,
+  locale: TranslatedLocale,
   tagName: string,
   page: number,
   imageUrl: string
