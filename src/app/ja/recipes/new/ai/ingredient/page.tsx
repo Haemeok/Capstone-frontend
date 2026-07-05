@@ -150,13 +150,15 @@ const IngredientRecipePage = () => {
                 open={isDrawerOpen}
                 onOpenChange={setIsDrawerOpen}
                 categories={INGREDIENT_CATEGORIES_NEW_RECIPE}
-                initialCategory={t.aiRecipe.ingredient.pickerInitialCategory}
+                initialCategory="전체"
                 queryConfig={{
                   keyBase: "drawerIngredients",
                   getParams: (category) => ({
-                    category,
-                    isMine:
-                      category === t.aiRecipe.ingredient.pickerMineCategory,
+                    category:
+                      category === "나의 재료" || category === "전체"
+                        ? null
+                        : category,
+                    isMine: category === "나의 재료",
                   }),
                 }}
                 isAlreadyAdded={(ingredient) =>
