@@ -118,6 +118,15 @@ const IngredientsSection = ({
         ]
       : [];
 
+  const rollingBanner =
+    rollingMessages.length > 0 ? (
+      <RollingPointBanner
+        messages={rollingMessages}
+        align="start"
+        containerClassName="min-w-0 flex-1 !opacity-100"
+      />
+    ) : null;
+
   return (
     <div className="mt-2 flex flex-col gap-2">
       <IngredientsSectionHeader
@@ -134,18 +143,22 @@ const IngredientsSection = ({
             currentServings={currentServings}
             onServingsChange={setCurrentServings}
             nutrition={recipe.nutrition}
+            banner={rollingBanner}
           />
         ) : (
           <>
-            {isValidServings && (
-              <ServingsControl
-                currentServings={currentServings}
-                minServings={MIN_SERVINGS}
-                maxServings={MAX_SERVINGS}
-                onIncrement={() => setCurrentServings((prev) => prev + 1)}
-                onDecrement={() => setCurrentServings((prev) => prev - 1)}
-              />
-            )}
+            <div className="mb-3 flex items-center justify-between gap-2">
+              {rollingBanner ?? <span aria-hidden className="flex-1" />}
+              {isValidServings && (
+                <ServingsControl
+                  currentServings={currentServings}
+                  minServings={MIN_SERVINGS}
+                  maxServings={MAX_SERVINGS}
+                  onIncrement={() => setCurrentServings((prev) => prev + 1)}
+                  onDecrement={() => setCurrentServings((prev) => prev - 1)}
+                />
+              )}
+            </div>
             <ul className="flex flex-col gap-1">
               {recipe.ingredients.map((ingredient, index) => {
                 const displayAmount = formatIngredientAmount(
@@ -183,13 +196,6 @@ const IngredientsSection = ({
           </>
         )}
       </div>
-
-      {rollingMessages.length > 0 && (
-        <RollingPointBanner
-          messages={rollingMessages}
-          containerClassName="mt-2"
-        />
-      )}
 
       <IngredientReportSheet
         isOpen={isReportSheetOpen}
