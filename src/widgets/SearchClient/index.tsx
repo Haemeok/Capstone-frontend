@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import type { Locale } from "@/shared/i18n";
 import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
@@ -12,23 +14,36 @@ import { useResetSearchFilters } from "./hooks/useResetSearchFilters";
 import { useSearchResults } from "./hooks/useSearchResults";
 import { SearchFilters } from "./ui/SearchFilters";
 
-type SearchClientProps = {
+type SearchClientShellProps = {
+  locale?: Locale;
+  children: ReactNode;
+};
+
+export const SearchClientShell = ({
+  locale = "ko",
+  children,
+}: SearchClientShellProps) => (
+  <DictionaryProvider dict={getDictionary(locale)}>
+    <Container padding={false}>
+      <div className="flex flex-col bg-[#ffffff]">
+        <SearchFilters />
+        {children}
+      </div>
+    </Container>
+  </DictionaryProvider>
+);
+
+type SearchResultsGridProps = {
   initialPage?: number;
   nextPageHref?: string;
   locale?: Locale;
 };
 
-type SearchClientInnerProps = {
-  initialPage: number;
-  nextPageHref?: string;
-  locale: Locale;
-};
-
-const SearchClientInner = ({
-  initialPage,
+export const SearchResultsGrid = ({
+  initialPage = 0,
   nextPageHref,
-  locale,
-}: SearchClientInnerProps) => {
+  locale = "ko",
+}: SearchResultsGridProps) => {
   const t = useT();
   const {
     recipes,
@@ -42,32 +57,32 @@ const SearchClientInner = ({
   const resetFilters = useResetSearchFilters();
 
   return (
-    <Container padding={false}>
-      <div className="flex flex-col bg-[#ffffff]">
-        <SearchFilters />
-
-        <ErrorBoundary
-          fallback={<SectionErrorFallback message={t.errors.searchResults} />}
-        >
-          <RecipeGrid
-            recipes={recipes}
-            hasNextPage={hasNextPage}
-            isFetching={isFetching}
-            isPending={isPending}
-            observerRef={ref}
-            noResults={noResults}
-            noResultsMessage={t.search.noResults}
-            onResetFilters={resetFilters}
-            lastPageMessage={t.search.lastPage}
-            queryKeyString={queryKeyString}
-            nextPageHref={nextPageHref}
-            locale={locale}
-            showInFeedAds
-          />
-        </ErrorBoundary>
-      </div>
-    </Container>
+    <ErrorBoundary
+      fallback={<SectionErrorFallback message={t.errors.searchResults} />}
+    >
+      <RecipeGrid
+        recipes={recipes}
+        hasNextPage={hasNextPage}
+        isFetching={isFetching}
+        isPending={isPending}
+        observerRef={ref}
+        noResults={noResults}
+        noResultsMessage={t.search.noResults}
+        onResetFilters={resetFilters}
+        lastPageMessage={t.search.lastPage}
+        queryKeyString={queryKeyString}
+        nextPageHref={nextPageHref}
+        locale={locale}
+        showInFeedAds
+      />
+    </ErrorBoundary>
   );
+};
+
+type SearchClientProps = {
+  initialPage?: number;
+  nextPageHref?: string;
+  locale?: Locale;
 };
 
 export const SearchClient = ({
@@ -75,11 +90,11 @@ export const SearchClient = ({
   nextPageHref,
   locale = "ko",
 }: SearchClientProps) => (
-  <DictionaryProvider dict={getDictionary(locale)}>
-    <SearchClientInner
+  <SearchClientShell locale={locale}>
+    <SearchResultsGrid
       initialPage={initialPage}
       nextPageHref={nextPageHref}
       locale={locale}
     />
-  </DictionaryProvider>
+  </SearchClientShell>
 );

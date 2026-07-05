@@ -1,11 +1,5 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-
-import {
-  dehydrate,
-  HydrationBoundary,
-  type InfiniteData,
-  QueryClient,
-} from "@tanstack/react-query";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
 import {
@@ -17,7 +11,6 @@ import {
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
 import { buildRecipeSearchBaseKey } from "@/shared/lib/search/recipeSearchQueryKey";
-import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import { createSearchResultsJsonLd } from "@/entities/recipe/lib/metadata/schema";
 import {
@@ -27,7 +20,9 @@ import {
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 import type { DetailedRecipesApiResponse } from "@/entities/recipe/model/types";
 
-import { SearchClient } from "@/widgets/SearchClient";
+import { SearchClientShell } from "@/widgets/SearchClient";
+import { SearchResultsData } from "@/widgets/SearchClient/server/SearchResultsData";
+import { SearchGridSkeleton } from "@/widgets/SearchClient/ui/SearchResultsSkeleton";
 
 import {
   parseSearchQueryParams,
@@ -192,8 +187,6 @@ export default async function SearchResultsPage({
     nutritionQueryParams,
   } = parseSearchQueryParams(awaitedSearchParams);
 
-  const queryClient = new QueryClient();
-
   const queryKey = buildRecipeSearchBaseKey({
     dishTypeCode,
     sortCode,
@@ -205,48 +198,34 @@ export default async function SearchResultsPage({
     creatorCountryTags,
   });
 
-  await queryClient.prefetchInfiniteQuery({
-    queryKey,
-    queryFn: () => getRecipesOnServer(queryParams),
-    initialPageParam: page,
-    getNextPageParam: getNextSlicePageParam,
-    pages: 1,
-  });
-
-  const cached =
-    queryClient.getQueryData<InfiniteData<DetailedRecipesApiResponse, number>>(
-      queryKey
-    );
-  const firstPage: DetailedRecipesApiResponse = cached?.pages[0] ?? {
-    content: [],
-    slice: { size: 0, number: page, numberOfElements: 0, hasNext: false },
-  };
-
-  const hasNextPage = firstPage.slice.hasNext;
-
-  const nextPageHref = hasNextPage
-    ? buildNextPageUrl(awaitedSearchParams, page + 1)
-    : undefined;
-
   const enhancedQ = buildEnhancedQuery(awaitedSearchParams, q);
   const title = buildSearchTitle(enhancedQ, page, "ko");
   const canonicalUrl = buildCanonicalUrl(awaitedSearchParams);
-  const jsonLd = createSearchResultsJsonLd(
-    enhancedQ,
-    firstPage.content,
-    title,
-    canonicalUrl
-  );
+
+  const buildNextHref = (firstPage: DetailedRecipesApiResponse) =>
+    firstPage.slice.hasNext
+      ? buildNextPageUrl(awaitedSearchParams, page + 1)
+      : undefined;
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-        }}
-      />
-      <SearchClient initialPage={page} nextPageHref={nextPageHref} />
-    </HydrationBoundary>
+    <SearchClientShell locale="ko">
+      <Suspense fallback={<SearchGridSkeleton />}>
+        <SearchResultsData
+          queryKey={queryKey}
+          queryFn={() => getRecipesOnServer(queryParams)}
+          page={page}
+          locale="ko"
+          buildNextHref={buildNextHref}
+          buildJsonLd={(firstPage) =>
+            createSearchResultsJsonLd(
+              enhancedQ,
+              firstPage.content,
+              title,
+              canonicalUrl
+            )
+          }
+        />
+      </Suspense>
+    </SearchClientShell>
   );
 }

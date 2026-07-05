@@ -2,6 +2,17 @@
 jest.mock("@/widgets/SearchClient", () => ({
   __esModule: true,
   SearchClient: () => null,
+  SearchClientShell: ({ children }: { children?: unknown }) => children ?? null,
+  SearchResultsGrid: () => null,
+}));
+jest.mock("@/widgets/SearchClient/server/SearchResultsData", () => ({
+  __esModule: true,
+  SearchResultsData: () => null,
+}));
+jest.mock("@/widgets/SearchClient/ui/SearchResultsSkeleton", () => ({
+  __esModule: true,
+  SearchGridSkeleton: () => null,
+  SearchResultsSkeleton: () => null,
 }));
 jest.mock("@/entities/recipe/model/api.server", () => ({
   getRecipesOnServer: jest.fn().mockResolvedValue({
