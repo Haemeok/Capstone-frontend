@@ -15,5 +15,5 @@ export const DeliveryEstimate = () => {
 
   if (!label) return null;
 
-  return <p className="text-[11px] font-medium text-green-600">{label}</p>;
+  return <p className="text-sm font-medium text-green-600">{label}</p>;
 };
