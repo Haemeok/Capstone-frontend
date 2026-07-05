@@ -1,6 +1,7 @@
 export { getCreatorCountryFlag } from "./lib/getCreatorCountryFlag";
 export { getGridItemAuthor } from "./lib/gridItemAuthor";
 export { buildLocalizedRecipeHref } from "./lib/recipeHref";
+export { applyIndexedRenderPolicy, renderDynamic } from "./lib/renderPolicy";
 export {
   isAiRecipe,
   isPrivateRecipe,
