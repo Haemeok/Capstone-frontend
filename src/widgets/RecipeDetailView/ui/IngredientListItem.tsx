@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
-
-import { Refrigerator, ShoppingBasketIcon } from "lucide-react";
+import { Refrigerator } from "lucide-react";
 
 import type { Locale } from "@/shared/i18n";
 import { getDictionary } from "@/shared/i18n";
@@ -54,27 +52,10 @@ export const IngredientListItem = ({
   }
 
   return (
-    <li className="grid grid-cols-[1.5fr_1.5fr_1fr_auto] items-center gap-3">
+    <li className="grid grid-cols-[1.5fr_1.5fr_1fr] items-center gap-3">
       {nameCell}
       {quantityCell}
-
       <p className="text-ink-muted text-right text-sm">{displayPrice}</p>
-
-      <div className="flex items-center justify-center gap-1">
-        {ingredient.coupangLink ? (
-          <Link
-            href={ingredient.coupangLink}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div className="rounded-md border border-gray-400 p-[2px]">
-              <ShoppingBasketIcon className="text-gray-400" size={20} />
-            </div>
-          </Link>
-        ) : (
-          <div className="w-6" />
-        )}
-      </div>
     </li>
   );
 };

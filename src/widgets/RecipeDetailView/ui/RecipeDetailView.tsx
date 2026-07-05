@@ -39,6 +39,7 @@ type RecipeDetailViewProps = {
   locale: Locale;
   notTranslatedMessage?: string;
   bottomSlides?: ReactNode;
+  ingredientShopping?: ReactNode;
 };
 
 export const RecipeDetailView = ({
@@ -47,6 +48,7 @@ export const RecipeDetailView = ({
   locale,
   notTranslatedMessage,
   bottomSlides,
+  ingredientShopping,
 }: RecipeDetailViewProps) => {
   const t = getDictionary(locale);
   const saveAmount = recipe.marketPrice - recipe.totalIngredientCost;
@@ -139,6 +141,8 @@ export const RecipeDetailView = ({
               >
                 <RecipeIngredientsSection recipe={recipe} locale={locale} />
               </ErrorBoundary>
+
+              {ingredientShopping}
 
               <RecipeCompleteButton
                 saveAmount={saveAmount}
