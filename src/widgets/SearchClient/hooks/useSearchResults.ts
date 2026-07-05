@@ -2,6 +2,8 @@ import { InfiniteData } from "@tanstack/react-query";
 
 import { SORT_TYPE_CODES } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import type { TranslatedLocale } from "@/shared/i18n";
+import { buildSearchQueryKey } from "@/shared/lib/search/recipeSearchQueryKey";
 import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import type { CreatorCountryTag } from "@/entities/recipe";
@@ -10,23 +12,7 @@ import { DetailedRecipesApiResponse } from "@/entities/recipe";
 
 import { useSearchFilterSnapshot } from "./useSearchFilterSnapshot";
 
-type SearchQueryKey = readonly [
-  "recipes",
-  string | null,
-  string | null,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-];
-
-export const buildSearchQueryKey = (
-  base: SearchQueryKey,
-  locale: "ko" | "ja" | "en"
-): SearchQueryKey | readonly [...SearchQueryKey, "ja" | "en"] =>
-  locale === "ko" ? base : ([...base, locale] as const);
+export { buildSearchQueryKey };
 
 type SearchQueryParamsInput = {
   sortCode: string | null;
@@ -57,7 +43,7 @@ export const buildSearchQueryParams = (
     snapshot.creatorCountryTags.length > 0
       ? snapshot.creatorCountryTags
       : undefined,
-  ...(locale === "ko" ? {} : { lang: locale as "ja" | "en" }),
+  ...(locale === "ko" ? {} : { lang: locale as TranslatedLocale }),
 });
 
 export const useSearchResults = (

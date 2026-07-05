@@ -15,12 +15,8 @@ import {
   SEO_TAG_ENTRIES,
 } from "@/shared/config/seo/seoPages";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
-import {
-  convertNutritionToQueryParams,
-  parseNutritionParams,
-  parseTypes,
-} from "@/shared/lib/nutrition/parseNutritionParams";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
+import { buildRecipeSearchBaseKey } from "@/shared/lib/search/recipeSearchQueryKey";
 import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import { createSearchResultsJsonLd } from "@/entities/recipe/lib/metadata/schema";
@@ -29,100 +25,17 @@ import {
   buildSearchTitle,
 } from "@/entities/recipe/lib/metadata/searchMeta";
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
-import type {
-  DetailedRecipesApiResponse,
-  RecipeItemsQueryParams,
-} from "@/entities/recipe/model/types";
+import type { DetailedRecipesApiResponse } from "@/entities/recipe/model/types";
 
 import { SearchClient } from "@/widgets/SearchClient";
 
-type SearchResultsSearchParams = {
-  page?: string;
-  q?: string;
-  sort?: string;
-  dishType?: string;
-  tags?: string | string[];
-  types?: string;
-  minCost?: string;
-  maxCost?: string;
-  minCalories?: string;
-  maxCalories?: string;
-  minCarb?: string;
-  maxCarb?: string;
-  minProtein?: string;
-  maxProtein?: string;
-  minFat?: string;
-  maxFat?: string;
-  minSugar?: string;
-  maxSugar?: string;
-  minSodium?: string;
-  maxSodium?: string;
-  ingredientIds?: string;
-};
+import {
+  parseSearchQueryParams,
+  type SearchResultsSearchParams,
+} from "./parseSearchParams";
 
 type SearchResultsPageProps = {
   searchParams: Promise<SearchResultsSearchParams>;
-};
-
-type ParsedSearchParams = {
-  query: RecipeItemsQueryParams;
-  page: number;
-  q: string;
-  dishTypeCode: string | null;
-  sortCode: string;
-  tags: string[];
-  types: string[];
-  ingredientIds: string[];
-  nutritionQueryParams: Record<string, number>;
-};
-
-const parseSearchQueryParams = (
-  params: SearchResultsSearchParams
-): ParsedSearchParams => {
-  const page = Math.max(0, parseInt(params.page || "0", 10) || 0);
-  const q = params.q || "";
-
-  const tags = params.tags
-    ? typeof params.tags === "string"
-      ? params.tags.split(",").filter(Boolean)
-      : params.tags
-    : [];
-
-  const rawSort = params.sort?.trim() || "popularityScore,DESC";
-  const sortCode = rawSort.includes(",")
-    ? rawSort
-    : `createdAt,${rawSort.toUpperCase() === "ASC" ? "ASC" : "DESC"}`;
-  const dishTypeCode = params.dishType || null;
-
-  const nutritionParams = parseNutritionParams(params);
-  const nutritionQueryParams = convertNutritionToQueryParams(nutritionParams);
-  const types = parseTypes(params);
-
-  const ingredientIds = params.ingredientIds
-    ? params.ingredientIds.split(",").filter(Boolean)
-    : [];
-
-  return {
-    query: {
-      key: "search",
-      page,
-      q,
-      sort: sortCode,
-      dishType: dishTypeCode || undefined,
-      tags,
-      types,
-      ingredientIds: ingredientIds.length > 0 ? ingredientIds : undefined,
-      ...nutritionQueryParams,
-    },
-    page,
-    q,
-    dishTypeCode,
-    sortCode,
-    tags,
-    types,
-    ingredientIds,
-    nutritionQueryParams,
-  };
 };
 
 const buildEnhancedQuery = (
@@ -275,21 +188,22 @@ export default async function SearchResultsPage({
     tags,
     types,
     ingredientIds,
+    creatorCountryTags,
     nutritionQueryParams,
   } = parseSearchQueryParams(awaitedSearchParams);
 
   const queryClient = new QueryClient();
 
-  const queryKey = [
-    "recipes",
+  const queryKey = buildRecipeSearchBaseKey({
     dishTypeCode,
     sortCode,
-    tags.join(","),
+    tagCodes: tags,
     q,
-    JSON.stringify(nutritionQueryParams),
-    types.join(","),
-    ingredientIds.join(","),
-  ] as const;
+    nutritionQueryParams,
+    types,
+    ingredientIds,
+    creatorCountryTags,
+  });
 
   await queryClient.prefetchInfiniteQuery({
     queryKey,

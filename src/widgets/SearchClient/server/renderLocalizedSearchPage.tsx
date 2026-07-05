@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
+import type { TranslatedLocale } from "@/shared/i18n";
 import { sortCodec } from "@/shared/lib/filters";
 import { SEO_CONSTANTS } from "@/shared/lib/metadata/constants";
 import { localizedSiteName } from "@/shared/lib/metadata/localized";
@@ -17,6 +18,10 @@ import {
   parseTypes,
 } from "@/shared/lib/nutrition/parseNutritionParams";
 import { buildNextPageUrl } from "@/shared/lib/pagination/buildPaginationUrl";
+import {
+  buildRecipeSearchBaseKey,
+  buildSearchQueryKey,
+} from "@/shared/lib/search/recipeSearchQueryKey";
 import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import {
@@ -29,12 +34,9 @@ import type {
   RecipeItemsQueryParams,
 } from "@/entities/recipe/model/types";
 
-import { buildSearchQueryKey } from "@/widgets/SearchClient/hooks/useSearchResults";
 import { SearchClient } from "@/widgets/SearchClient/index";
 
-export type LocalizedLocale = "ja" | "en";
-
-const OG_LOCALE: Record<LocalizedLocale, string> = {
+const OG_LOCALE: Record<TranslatedLocale, string> = {
   ja: "ja_JP",
   en: "en_US",
 };
@@ -56,7 +58,7 @@ type ParsedLocalizedSearchParams = {
 
 export const parseLocalizedSearchParams = (
   params: LocalizedSearchRawParams,
-  locale: LocalizedLocale
+  locale: TranslatedLocale
 ): ParsedLocalizedSearchParams => {
   const page = Math.max(0, parseInt(params.page || "0", 10) || 0);
   const q = params.q || "";
@@ -90,7 +92,7 @@ export const parseLocalizedSearchParams = (
 
 type BuildLocalizedSearchMetadataArgs = {
   searchParams: LocalizedSearchRawParams;
-  locale: LocalizedLocale;
+  locale: TranslatedLocale;
 };
 
 export const buildLocalizedSearchMetadata = async ({
@@ -135,7 +137,7 @@ export const buildLocalizedSearchMetadata = async ({
 
 type LocalizedSearchPageProps = {
   searchParams: LocalizedSearchRawParams;
-  locale: LocalizedLocale;
+  locale: TranslatedLocale;
 };
 
 export const LocalizedSearchPage = async ({
@@ -149,19 +151,18 @@ export const LocalizedSearchPage = async ({
 
   const basePath = `/${locale}/search/results`;
 
-  const base9 = [
-    "recipes",
-    null,
+  const base = buildRecipeSearchBaseKey({
+    dishTypeCode: null,
     sortCode,
-    "",
-    searchParams.q || "",
-    JSON.stringify(nutritionQueryParams),
-    types.join(","),
-    "",
-    "",
-  ] as const;
+    tagCodes: [],
+    q: searchParams.q || "",
+    nutritionQueryParams,
+    types,
+    ingredientIds: [],
+    creatorCountryTags: [],
+  });
 
-  const queryKey = buildSearchQueryKey(base9, locale);
+  const queryKey = buildSearchQueryKey(base, locale);
 
   await queryClient.prefetchInfiniteQuery({
     queryKey,
