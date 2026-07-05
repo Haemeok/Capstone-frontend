@@ -99,4 +99,16 @@ describe("parseIngredientDetail", () => {
     });
     expect(view.nutrition).toBeNull();
   });
+
+  it("coupang 필드를 매핑한다", () => {
+    const view = parseIngredientDetail({
+      ...baseApi,
+      coupang: {
+        landingUrl: "https://land",
+        lastCollectedAt: "2026-07-04T12:30:00+09:00",
+        products: [],
+      },
+    });
+    expect(view.coupang?.landingUrl).toBe("https://land");
+  });
 });

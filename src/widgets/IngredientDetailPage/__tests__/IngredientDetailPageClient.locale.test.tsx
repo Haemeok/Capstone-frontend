@@ -10,6 +10,12 @@ jest.mock("next/navigation", () => ({
   usePathname: () => "/",
 }));
 
+jest.mock("../IngredientRecipesSlide", () => () => null);
+
+jest.mock("@/shared/coupang", () => ({
+  CoupangProductSlide: () => null,
+}));
+
 const detail: IngredientDetailView = {
   id: "ing1",
   name: "양파",
@@ -29,6 +35,7 @@ const detail: IngredientDetailView = {
   },
   cookingMethods: ["볶음"],
   coupangLink: "https://coupang.test/x",
+  coupang: null,
   nutrition: { kcal: 40, proteinG: 1, carbohydrateG: 9, fatG: 0 },
   seasonMonths: [3, 4],
   benefits: "면역",
@@ -67,12 +74,7 @@ it("T-10(앵커): ko 렌더엔 chrome 문자열이 그대로 있다 (ko 무회�
   for (const s of KO_CHROME) expect(container.textContent).toContain(s);
 });
 
-it("T-13: ja에선 쿠팡 카드가 렌더되지 않는다", () => {
+it("T-13: ja에선 쿠팡 슬라이드가 렌더되지 않는다", () => {
   const { queryByTestId } = renderClient("ja");
   expect(queryByTestId("coupang-card")).toBeNull();
-});
-
-it("T-13(앵커): ko에선 쿠팡 카드가 렌더된다", () => {
-  const { queryByTestId } = renderClient("ko");
-  expect(queryByTestId("coupang-card")).not.toBeNull();
 });

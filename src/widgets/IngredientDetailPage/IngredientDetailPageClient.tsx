@@ -1,3 +1,4 @@
+import { CoupangProductSlide } from "@/shared/coupang";
 import type { Locale } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
@@ -7,7 +8,6 @@ import type { IngredientDetailView } from "@/entities/ingredient";
 import IngredientRecipesSlide from "./IngredientRecipesSlide";
 import BenefitsList from "./ui/BenefitsList";
 import CookingMethodsSection from "./ui/CookingMethodsSection";
-import CoupangPurchaseCard from "./ui/CoupangPurchaseCard";
 import IngredientHero from "./ui/IngredientHero";
 import NutritionCard from "./ui/NutritionCard";
 import PairingSection from "./ui/PairingSection";
@@ -38,7 +38,19 @@ const IngredientDetailPageClient = ({
 
       <StorageInfoCard storage={detail.storage} locale={locale} />
 
-      {locale === "ko" && <CoupangPurchaseCard href={detail.coupangLink} />}
+      {locale === "ko" &&
+        detail.coupang &&
+        detail.coupang.products.length > 0 && (
+          <section className="px-5 pt-2 pb-4">
+            <CoupangProductSlide
+              cards={detail.coupang.products.map((product) => ({ product }))}
+            />
+            <p className="text-ink-muted mt-3 text-center text-[11px] leading-tight font-light text-pretty break-keep">
+              이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의
+              수수료를 제공받습니다.
+            </p>
+          </section>
+        )}
 
       <SeasonStrip months={detail.seasonMonths} locale={locale} />
 
