@@ -34,12 +34,14 @@ export const IngredientListItem = ({
       ) : reserveFridgeSpace ? (
         <span aria-hidden className="inline-block w-[18px] shrink-0" />
       ) : null}
-      <p className="font-semibold">{ingredient.name}</p>
+      <p className="text-sm font-semibold md:text-base">{ingredient.name}</p>
     </div>
   );
 
   const quantityCell = (
-    <p className="text-left whitespace-nowrap">{displayAmount}</p>
+    <p className="text-left text-sm whitespace-nowrap md:text-base">
+      {displayAmount}
+    </p>
   );
 
   if (locale !== "ko") {
@@ -52,10 +54,11 @@ export const IngredientListItem = ({
   }
 
   return (
-    <li className="grid grid-cols-[1.5fr_1.5fr_1fr] items-center gap-3">
+    <li className="grid grid-cols-[1.5fr_1.5fr_1fr_auto] items-center gap-3">
       {nameCell}
       {quantityCell}
       <p className="text-ink-muted text-right text-sm">{displayPrice}</p>
+      <div className="w-6" />
     </li>
   );
 };
