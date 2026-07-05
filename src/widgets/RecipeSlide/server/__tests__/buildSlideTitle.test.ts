@@ -28,7 +28,7 @@ describe("buildSlideTitle (T-TITLE1)", () => {
   });
   it("sameIngredient: 재료명을 채운다", () => {
     expect(buildSameIngredientTitle("ko", "감자")).toBe(
-      "감자으로 만든 다른 레시피를 찾고 있으세요?"
+      "감자로 만든 다른 레시피를 찾고 있으세요?"
     );
   });
   it("titleKeyword: 키워드를 채운다", () => {

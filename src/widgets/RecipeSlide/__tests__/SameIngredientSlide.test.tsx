@@ -18,7 +18,7 @@ jest.mock("@/shared/i18n", () => ({
   useT: () => ({
     recipeDetail: {
       sameIngredientTitle:
-        "{ingredientName}으로 만든 다른 레시피를 찾고 있으세요?",
+        "{ingredientName}{particle} 만든 다른 레시피를 찾고 있으세요?",
       remixBadge: "리믹스",
     },
   }),
@@ -80,7 +80,7 @@ describe("SameIngredientSlide", () => {
     });
     renderWithClient(<SameIngredientSlide recipeId="base1" locale="ko" />);
     expect(
-      await screen.findByText("새우으로 만든 다른 레시피를 찾고 있으세요?")
+      await screen.findByText("새우로 만든 다른 레시피를 찾고 있으세요?")
     ).toBeInTheDocument();
   });
 
