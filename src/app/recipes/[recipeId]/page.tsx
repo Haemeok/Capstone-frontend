@@ -5,12 +5,13 @@ import { notFound } from "next/navigation";
 import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
 import { ScrollReset } from "@/shared/ui/ScrollReset";
 
-import { applyIndexedRenderPolicy, isPrivateRecipe } from "@/entities/recipe";
+import { isPrivateRecipe } from "@/entities/recipe";
 import {
   generateNotFoundRecipeMetadata,
   generateRecipeJsonLd,
   generateRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
+import { applyIndexedRenderPolicy } from "@/entities/recipe/lib/renderPolicy";
 import {
   getStaticRecipesOnServer,
   getStaticrecipionServer,

@@ -6,12 +6,15 @@ import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
 import type { TranslatedLocale } from "@/shared/i18n";
 import { ScrollReset } from "@/shared/ui/ScrollReset";
 
-import { applyIndexedRenderPolicy, renderDynamic } from "@/entities/recipe";
 import {
   generateLocalizedRecipeJsonLd,
   generateLocalizedRecipeMetadata,
   generateNotFoundRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
+import {
+  applyIndexedRenderPolicy,
+  renderDynamic,
+} from "@/entities/recipe/lib/renderPolicy";
 import {
   getLocalizedRecipeOnServer,
   getStaticrecipionServer,
