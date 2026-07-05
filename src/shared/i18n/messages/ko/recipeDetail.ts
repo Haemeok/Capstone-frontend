@@ -58,6 +58,7 @@ export const recipeDetail: RecipeDetailDict = {
   costSuffix: "필요해요!",
   savingsPrefix: "배달 물가 대비",
   savingsSuffix: "절약해요!",
-  sameIngredientTitle: "{ingredientName}으로 만든 다른 레시피를 찾고 있으세요?",
+  sameIngredientTitle:
+    "{ingredientName}{particle} 만든 다른 레시피를 찾고 있으세요?",
   titleKeywordTitle: "{keyword} 레시피를 찾고 있으세요?",
 };

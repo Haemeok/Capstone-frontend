@@ -1,6 +1,7 @@
 "use client";
 
 import { format, useT } from "@/shared/i18n";
+import { getEuroParticle } from "@/shared/lib/korean";
 
 import { createRecipeSlide } from "./createRecipeSlide";
 import { useSameIngredientQuery } from "./hooks";
@@ -18,6 +19,7 @@ const SameIngredientSlide = createRecipeSlide<{
   return {
     title: format(t.recipeDetail.sameIngredientTitle, {
       ingredientName: ingredientName ?? "",
+      particle: ingredientName ? getEuroParticle(ingredientName) : "",
     }),
     items: data?.content ?? [],
     isLoading,

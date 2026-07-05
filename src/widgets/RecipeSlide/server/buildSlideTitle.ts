@@ -4,6 +4,7 @@ import { recipeDetail as enDetail } from "@/shared/i18n/messages/en/recipeDetail
 import { recipeDetail as jaDetail } from "@/shared/i18n/messages/ja/recipeDetail";
 import { recipeDetail as koDetail } from "@/shared/i18n/messages/ko/recipeDetail";
 import { searchDiscoveryMessages } from "@/shared/i18n/searchDiscoveryMessages";
+import { getEuroParticle } from "@/shared/lib/korean";
 
 import type {
   CategoryCode,
@@ -58,7 +59,10 @@ export const buildSameIngredientTitle = (
   locale: Locale,
   ingredientName: string
 ): string =>
-  format(recipeDetailMessages[locale].sameIngredientTitle, { ingredientName });
+  format(recipeDetailMessages[locale].sameIngredientTitle, {
+    ingredientName,
+    particle: locale === "ko" ? getEuroParticle(ingredientName) : "",
+  });
 
 export const buildTitleKeywordTitle = (
   locale: Locale,
