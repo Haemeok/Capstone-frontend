@@ -28,14 +28,10 @@ const baseProps = {
 };
 
 describe("IngredientListItem i18n layout", () => {
-  it("T-C2: ko -> displayAmount + 가격·쿠팡 링크 (4컬럼)", () => {
+  it("T-C2: ko -> displayAmount + 가격 렌더 (3컬럼)", () => {
     render(<IngredientListItem {...baseProps} locale="ko" />);
     expect(screen.getByText("1개")).toBeInTheDocument();
     expect(screen.getByText("800원")).toBeInTheDocument();
-    expect(screen.getByRole("link")).toHaveAttribute(
-      "href",
-      "https://link.coupang.com/x"
-    );
   });
 
   it("T-C1: en -> displayAmount 렌더, 가격·쿠팡 미렌더, justify-between", () => {
@@ -48,5 +44,25 @@ describe("IngredientListItem i18n layout", () => {
     expect(screen.getByText("양파").closest("li")).toHaveClass(
       "justify-between"
     );
+  });
+
+  it("ko 재료 줄에 장바구니 링크가 없다 (T-04)", () => {
+    render(
+      <IngredientListItem
+        ingredient={{
+          id: "i1",
+          name: "대파",
+          unit: "g",
+          inFridge: false,
+          calories: 0,
+          coupangLink: "https://link.coupang.com/a/x",
+        }}
+        displayAmount="100g"
+        displayPrice="1,000원"
+        reserveFridgeSpace={false}
+        locale="ko"
+      />
+    );
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 });
