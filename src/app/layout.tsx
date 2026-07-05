@@ -1,4 +1,4 @@
-// i18n-ignore-file: 루트 레이아웃 — ko 브랜드/RSS 피드 메타, 사용자 본문 카피 없음
+// i18n-ignore-file: 루트 레이아웃 — ko 홈 기본 OG 메타(페이지별 override), 사용자 본문 카피 없음
 import type { Metadata, Viewport } from "next";
 
 import { AdSenseScript } from "@/shared/adsense";
@@ -75,13 +75,13 @@ export default async function RootLayout({
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="레시피오 – 전체"
+          title="Recipio – All"
           href="/feed.xml"
         />
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="레시피오 – 레시피"
+          title="Recipio – Recipes"
           href="/feed/recipes.xml"
         />
       </head>
