@@ -112,26 +112,28 @@ const convertUnitIfNeeded = (
 
 export const convertIngredientQuantity = (
   quantity: string | undefined,
-  unit: string,
+  unit: string | null | undefined,
   servingRatio: number
 ): ConvertedIngredient => {
+  const safeUnit = unit ?? "";
+
   if (!quantity || quantity.trim() === "") {
-    return { quantity: "", unit };
+    return { quantity: "", unit: safeUnit };
   }
 
   const trimmed = quantity.trim();
   if (trimmed === "약간") {
-    return { quantity: "약간", unit };
+    return { quantity: "약간", unit: safeUnit };
   }
 
   const parsed = parseQuantity(trimmed);
   if (!parsed) {
-    return { quantity, unit };
+    return { quantity, unit: safeUnit };
   }
 
   const isFractionInput = trimmed.includes("/");
   const scaled = multiplyFraction(parsed, numberToFraction(servingRatio));
-  const { value, unit: convertedUnit } = convertUnitIfNeeded(scaled, unit);
+  const { value, unit: convertedUnit } = convertUnitIfNeeded(scaled, safeUnit);
 
   if (convertedUnit === "ml") {
     return {
@@ -199,7 +201,7 @@ const normalizeEnUnit = (unit: string, quantityStr: string): string => {
 
 export const formatIngredientAmount = (
   quantity: string | undefined,
-  unit: string,
+  unit: string | null | undefined,
   servingRatio: number,
   locale: Locale
 ): string => {

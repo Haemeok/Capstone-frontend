@@ -88,3 +88,17 @@ describe("formatIngredientAmount - en passthrough / decimal / unitless", () => {
     expect(formatIngredientAmount("", "g", 1, "en")).toBe("");
   });
 });
+
+describe("formatIngredientAmount - unit null/undefined", () => {
+  it("T-U15: unit null이면 'null'을 붙이지 않는다 (적당량)", () => {
+    expect(formatIngredientAmount("적당량", null, 1, "ko")).toBe("적당량");
+    expect(formatIngredientAmount("약간", null, 1, "ko")).toBe("약간");
+  });
+  it("T-U16: unit null + 수치 수량도 단위 없이 렌더", () => {
+    expect(formatIngredientAmount("2", null, 1, "ko")).toBe("2");
+    expect(formatIngredientAmount("2", undefined, 1, "en")).toBe("2");
+  });
+  it("T-U17: convertIngredientQuantity는 null unit을 빈 문자열로 정규화", () => {
+    expect(convertIngredientQuantity("적당량", null, 1).unit).toBe("");
+  });
+});
