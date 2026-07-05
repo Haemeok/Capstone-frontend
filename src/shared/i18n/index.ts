@@ -58,6 +58,7 @@ export type {
   ReferralDict,
   SettingsDict,
   SmartAppBannerDict,
+  TranslatedLocale,
   UiCommonDict,
   UserPagesDict,
   YoutubeDict,

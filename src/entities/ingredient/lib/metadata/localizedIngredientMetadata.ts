@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
-import type { Locale } from "@/shared/i18n";
+import type { TranslatedLocale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n/hreflang";
 
 import type { DetailedRecipeGridItem } from "@/entities/recipe";
@@ -9,15 +9,13 @@ import type { DetailedRecipeGridItem } from "@/entities/recipe";
 import type { IngredientDetailView } from "../../model/types";
 import { generateIngredientJsonLd } from "./ingredientMetadata";
 
-type LocalizedLocale = Exclude<Locale, "ko">;
-
-const OG_LOCALE: Record<LocalizedLocale, string> = {
+const OG_LOCALE: Record<TranslatedLocale, string> = {
   ja: "ja_JP",
   en: "en_US",
 };
 
 const buildLocalizedTitle: Record<
-  LocalizedLocale,
+  TranslatedLocale,
   (name: string, recipeCount: number) => string
 > = {
   en: (name, recipeCount) =>
@@ -31,7 +29,7 @@ const buildLocalizedTitle: Record<
 };
 
 const buildLocalizedDescription: Record<
-  LocalizedLocale,
+  TranslatedLocale,
   (name: string, recipeCount: number) => string
 > = {
   en: (name, recipeCount) => {
@@ -49,7 +47,7 @@ const buildLocalizedDescription: Record<
 export const generateLocalizedIngredientMetadata = (
   detail: IngredientDetailView,
   recipeCount: number,
-  { locale, translated }: { locale: LocalizedLocale; translated: boolean }
+  { locale, translated }: { locale: TranslatedLocale; translated: boolean }
 ): Metadata => {
   const url = absoluteUrl(`${locale}/ingredients/${detail.id}`);
   const title = buildLocalizedTitle[locale](detail.name, recipeCount);
@@ -84,5 +82,5 @@ export const generateLocalizedIngredientMetadata = (
 export const generateLocalizedIngredientJsonLd = (
   detail: IngredientDetailView,
   recipes: DetailedRecipeGridItem[],
-  locale: LocalizedLocale
+  locale: TranslatedLocale
 ) => generateIngredientJsonLd(detail, recipes, locale);

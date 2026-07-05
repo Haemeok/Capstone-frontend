@@ -1,5 +1,6 @@
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL } from "@/shared/config/constants/api";
+import type { TranslatedLocale } from "@/shared/i18n";
 
 import {
   type LocalizedIngredientResult,
@@ -39,7 +40,7 @@ export const getIngredientDetailOnServer = async (
 
 export const getLocalizedIngredientOnServer = async (
   id: string,
-  locale: "ja" | "en"
+  locale: TranslatedLocale
 ): Promise<LocalizedIngredientResult> => {
   const url = new URL(`${BASE_API_URL}/ingredients/${encodeURIComponent(id)}`);
   url.searchParams.set("lang", locale);

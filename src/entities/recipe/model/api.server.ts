@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
-import type { Locale } from "@/shared/i18n";
+import type { Locale, TranslatedLocale } from "@/shared/i18n";
 
 import type { LocalizedRecipeResult } from "./localeResult";
 import { parseLocalizedRecipeResult } from "./localeResult";
@@ -115,6 +115,11 @@ export const getRecipesOnServer = async (
   }
   if (params.ingredientIds && params.ingredientIds.length > 0) {
     query.set("ingredientIds", params.ingredientIds.join(","));
+  }
+  if (params.creatorCountryTags && params.creatorCountryTags.length > 0) {
+    params.creatorCountryTags.forEach((tag) =>
+      query.append("creatorCountryTags", tag)
+    );
   }
   if (params.maxCost !== undefined)
     query.append("maxCost", params.maxCost.toString());
@@ -246,7 +251,7 @@ export const getStaticrecipionServer = async (
 
 export const getLocalizedRecipeOnServer = async (
   id: string,
-  locale: "ja" | "en"
+  locale: TranslatedLocale
 ): Promise<LocalizedRecipeResult> => {
   const url = new URL(`${BASE_API_URL}${END_POINTS.RECIPE(id)}`);
   url.searchParams.set("lang", locale);

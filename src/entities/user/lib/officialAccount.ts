@@ -1,5 +1,5 @@
 import { TOTAL_RECIPE_COUNT } from "@/shared/config/constants/siteStats";
-import type { Locale } from "@/shared/i18n/types";
+import type { Locale, TranslatedLocale } from "@/shared/i18n/types";
 
 export const OFFICIAL_ACCOUNT_ID = "Kelb9q6w";
 
@@ -7,8 +7,6 @@ type OfficialProfile = {
   nickname: string;
   introduction: string;
 };
-
-type TranslatedLocale = Exclude<Locale, "ko">;
 
 const buildOfficialProfile = (locale: TranslatedLocale): OfficialProfile => {
   const count = TOTAL_RECIPE_COUNT[locale];

@@ -2,6 +2,7 @@ export type Plural = { one: string; other: string };
 
 export type Locale = "ko" | "ja" | "en";
 export const LOCALES: readonly Locale[] = ["ko", "ja", "en"];
+export type TranslatedLocale = Exclude<Locale, "ko">;
 
 export type NavDict = {
   home: string;
@@ -312,6 +313,7 @@ import type {
   ContentPageId,
   NutritionFilterKey,
   NutritionThemeKey,
+  SortCode,
   TagCode,
 } from "@/shared/config/constants/recipe";
 
@@ -676,10 +678,7 @@ export type UserPagesDict = {
 
 export type TaxonomyDict = {
   recipeType: Record<"USER" | "AI" | "YOUTUBE", string>;
-  sort: Record<
-    "popularityScore,DESC" | "createdAt,DESC" | "createdAt,ASC",
-    string
-  >;
+  sort: Record<SortCode, string>;
   dishType: Record<string, string>;
   tags: Record<TagCode, string>;
   ingredientCategory: Record<string, string>;

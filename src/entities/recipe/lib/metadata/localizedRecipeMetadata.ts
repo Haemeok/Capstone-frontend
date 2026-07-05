@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
-import type { Locale } from "@/shared/i18n";
+import type { TranslatedLocale } from "@/shared/i18n";
 import { buildHreflangAlternates } from "@/shared/i18n/hreflang";
 import {
   alternateLocales,
@@ -14,12 +14,10 @@ import type { StaticRecipe } from "@/entities/recipe/model/types";
 import { SEO_CONSTANTS } from "./constants";
 import { generateRecipeJsonLd } from "./recipeMetadata";
 
-type LocalizedLocale = Exclude<Locale, "ko">;
-
 export const generateLocalizedRecipeMetadata = (
   recipe: StaticRecipe,
   recipeId: string,
-  { locale, translated }: { locale: LocalizedLocale; translated: boolean }
+  { locale, translated }: { locale: TranslatedLocale; translated: boolean }
 ): Metadata => {
   const url = absoluteUrl(`${locale}/recipes/${recipeId}`);
   const description = recipe.description || recipe.title;
@@ -63,7 +61,7 @@ type GraphNode = { "@type"?: string } & Record<string, unknown>;
 export const generateLocalizedRecipeJsonLd = (
   recipe: StaticRecipe,
   recipeId: string,
-  locale: LocalizedLocale
+  locale: TranslatedLocale
 ) => {
   const base = generateRecipeJsonLd(recipe, recipeId, locale);
   return {

@@ -7,6 +7,8 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
+import type { TranslatedLocale } from "@/shared/i18n";
+
 import {
   generateLocalizedIngredientJsonLd,
   generateLocalizedIngredientMetadata,
@@ -21,14 +23,12 @@ import { ingredientRecipesQueryKey } from "@/entities/ingredient/model/hooks";
 
 import IngredientDetailPageClient from "@/widgets/IngredientDetailPage/IngredientDetailPageClient";
 
-type LocalizedLocale = "ja" | "en";
-
 export const buildLocalizedIngredientMetadata = async ({
   ingredientId,
   locale,
 }: {
   ingredientId: string;
-  locale: LocalizedLocale;
+  locale: TranslatedLocale;
 }): Promise<Metadata> => {
   const result = await getLocalizedIngredientOnServer(ingredientId, locale);
 
@@ -59,7 +59,7 @@ export const LocalizedIngredientPage = async ({
   locale,
 }: {
   ingredientId: string;
-  locale: LocalizedLocale;
+  locale: TranslatedLocale;
 }) => {
   const result = await getLocalizedIngredientOnServer(ingredientId, locale);
 
