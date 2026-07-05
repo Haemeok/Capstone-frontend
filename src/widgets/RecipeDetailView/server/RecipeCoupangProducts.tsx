@@ -15,18 +15,23 @@ const RecipeCoupangProducts = async ({
 }: RecipeCoupangProductsProps) => {
   const { items } = await fetchRecipeCoupangProducts(recipeId, { isIndexed });
 
-  const cards: CoupangSlideCard[] = items
-    .filter((item) => item.products.length > 0)
-    .map((item) => ({
-      product: item.products[0],
-      caption: item.coupangName,
-    }));
+  const withProducts = items.filter((item) => item.products.length > 0);
+  const cards: CoupangSlideCard[] = withProducts.map((item) => ({
+    product: item.products[0],
+  }));
 
   if (cards.length === 0) return null;
 
+  // ISO-8601(동일 오프셋)은 사전식 정렬이 곧 시간순 → 최신 수집 시각
+  const lastCollectedAt = withProducts
+    .map((item) => item.lastCollectedAt)
+    .filter(Boolean)
+    .sort()
+    .at(-1);
+
   return (
     <section className="mt-3">
-      <CoupangProductSlide cards={cards} />
+      <CoupangProductSlide cards={cards} lastCollectedAt={lastCollectedAt} />
     </section>
   );
 };

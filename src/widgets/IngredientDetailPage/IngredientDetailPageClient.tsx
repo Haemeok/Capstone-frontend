@@ -44,6 +44,7 @@ const IngredientDetailPageClient = ({
           <section className="px-5 pt-2 pb-4">
             <CoupangProductSlide
               cards={detail.coupang.products.map((product) => ({ product }))}
+              lastCollectedAt={detail.coupang.lastCollectedAt}
             />
             <p className="text-ink-muted mt-3 text-center text-[11px] leading-tight font-light text-pretty break-keep">
               이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의
