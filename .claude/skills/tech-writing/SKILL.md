@@ -14,6 +14,7 @@ This skill ensures all Korean technical writing (blog posts, portfolio docs, pos
 ## Three Modes
 
 Determine the mode from context:
+
 - **Portfolio mode**: Files in `docs/**/portfolio*`, `docs/**/specs/*`, or when user mentions 포트폴리오
 - **Blog mode**: Files matching `*article*`, `*blog*`, or when user mentions 블로그/기술블로그
 - **Jasoseo mode** (자소서): Files matching `*자소서*`, `*이력서*`, `*채용*`, or when user mentions 자소서/자기소개서/지원서/채용지원. Korean conglomerate cover letter conventions differ sharply from portfolio writing.
@@ -147,6 +148,21 @@ Alternatives: ~로, ~해서, ~하여, ~덕분에, ~기 때문에
 
 AI는 "표현이 단조로우면 안 된다"는 통계적 직관 때문에 동일 대상을 동의어로 회전시킨다. 사람은 가장 명확한 명사 하나를 골라 반복하고, 필요하면 대명사로 받는다. 같은 사물·기능·역할을 가리킬 때는 한 번 고른 표현을 끝까지 쓴다.
 
+### 12. 자기비하·성과 축소 (Self-deprecation / value-deflation)
+
+**Banned:** 글이 X를 해낸 이야기인데, 본문에서 "사실 별거 아니다 / 안 한 것도 있다 / 초라하다"로 자기 성과를 깎는 곁가지.
+
+```
+❌ 안 쓰는 코드라 손대지 않고 뒀습니다        (글 주제와 무관한 "미적용" 자백)
+❌ 결국 값어치 있는 건 한 곳뿐이었던 셈입니다   (성과 축소)
+❌ 100곳을 뒤진 것치고는 초라해 보이지만        (자기 작업 폄하)
+✅ (한 일과 그 결과만 서술. 안 한 것·주제 밖은 본문에 자백하지 말고 그냥 뺀다)
+```
+
+**Human Writing #3(Admit failures honestly)과 혼동 금지.** #3은 _여정의 일부인 실패_(시도 → 실패 → 다음 시도)를 공유해 최종 해법을 값지게 만드는 것이다. #12는 *최종 성과 자체*를 깎는 자백 — "이거 사실 별거 아님", "저건 안 했음(주제 밖인데도)", "초라함". 전자는 서사의 연료, 후자는 독자 신뢰를 스스로 무너뜨린다.
+
+규칙: 일부러 안 다루기로 한 것(non-goal)은 **outline의 cut list로 조용히 빼는 것**이지, 본문에서 "이건 안 했습니다"라고 사과·자백하는 게 아니다. thesis가 "X를 했다 / X가 답이다"이면 본문 어디에도 X를 스스로 축소·폄하하는 문장을 두지 않는다. 리팩토링·개선 과정을 다루는 글일수록 이 자백이 서사를 정면으로 깎으니 특히 경계.
+
 ---
 
 ## Human Writing Patterns (Both Modes)
@@ -154,57 +170,74 @@ AI는 "표현이 단조로우면 안 된다"는 통계적 직관 때문에 동�
 These 12 patterns are extracted from real Korean tech blog posts (당근, 카카오페이증권, 무신사). Apply them to make writing feel natural.
 
 ### 1. Paragraph flow over labels
+
 Write in flowing paragraphs. Never label analysis steps with bold text within a paragraph.
 
 ### 2. Concrete example → abstraction
+
 Show the specific case first, then generalize.
+
 ```
 ✅ "노스페이스 화이트라벨 미니백" 같은 게시글이 있다면, 이를 핵심 표현으로 요약한 뒤 임베딩을 만드는 거예요.
 ❌ 임베딩 기반 요약 기법을 적용했습니다. 예를 들어 "노스페이스 화이트라벨 미니백"...
 ```
 
 ### 3. Admit failures honestly
+
 Include what didn't work. Real developers share failures.
+
 ```
 ✅ "시도했으나 채택하지 않은 전략"
 ✅ "직관적으로는 좋아질 것 같았는데, 실제로는 성능 변화가 미미했어요"
 ```
 
 ### 4. Rhetorical questions
+
 Use questions to introduce sections or transitions.
+
 ```
-✅ 왜 교과서는 한계가 있을까?
+✅ 왜 규칙을 알려줘도 안 지켜질까?
 ✅ 왜 파티션과 컨슈머 수를 다르게 했을까요?
 ```
 
 ### 5. Results upfront (blog mode especially)
+
 State the outcome early, then explain how.
+
 ```
 ✅ 결과부터 말하면: 로그 지연 수분~수시간 → 20초 이내, 비용 85.6% 절감
 ```
 
 ### 6. Journey narrative
+
 Tell the story chronologically: first attempt → problem → next attempt → final solution.
 
 ### 7. Metaphors and analogies
+
 Use relatable comparisons to explain technical concepts.
+
 ```
 ✅ Lint는 맞춤법 검사기입니다. 아키텍처 검증은 글 전체의 구조적 일관성을 보는 일입니다.
-✅ "교과서 vs 시험지" — 규칙을 알려주는 것과 어기면 안 되게 만드는 것의 차이
+✅ 캐시 무효화는 도서관 색인 갱신과 같습니다 — 책은 그대로인데 색인이 옛 위치를 가리키면 아무도 못 찾습니다
 ```
 
 ### 8. Direct quotes
+
 Use actual user feedback, team conversations, or error messages.
+
 ```
 ✅ "로그 조회가 너무 느려요. 5분 넘게 걸릴 때도 있어요."
 ✅ Claude: "레이어 의존성 위반이 있습니다. Service를 통해 접근하도록 수정하겠습니다."
 ```
 
 ### 9. Tables for data only
+
 Use tables exclusively for: Before/After comparisons, tech comparisons, performance metrics. Never for narrative structure.
 
 ### 10. Code blocks flow naturally
+
 Introduce code with a simple sentence, not a label.
+
 ```
 ✅ 실제 설정은 간단해요.
    [code block]
@@ -213,18 +246,21 @@ Introduce code with a simple sentence, not a label.
 ```
 
 ### 11. First-person plural
+
 Write from the team's perspective: 우리는, 저희는, 저희 팀이.
 
 ### 12. Casual causal explanations (blog mode)
+
 Use conversational connectors for explaining reasons: ~거든요, ~기도 하고, ~기 때문이에요.
 
 ---
 
 ## Structural Patterns (Article Architecture)
 
-Beyond avoiding AI patterns and applying human voice, these structural patterns determine whether an article is *compelling* or merely *correct*. Extracted from analyzing the narrative architecture of 3 published Korean tech articles.
+Beyond avoiding AI patterns and applying human voice, these structural patterns determine whether an article is _compelling_ or merely _correct_. Extracted from analyzing the narrative architecture of 3 published Korean tech articles.
 
 ### 1. Destination First
+
 Reveal the key outcome early — in the introduction or within the first 3 paragraphs. Don't save the "big reveal" for the end. Readers stay engaged when they know the destination and want to learn the route.
 
 ```
@@ -233,22 +269,25 @@ Reveal the key outcome early — in the introduction or within the first 3 parag
 ```
 
 ### 2. Failed Approaches as Narrative Fuel
-Before presenting the final solution, describe 2-3 approaches that were tried and fell short. This isn't filler — it's what makes the chosen solution feel *earned*. Each failed approach should explain WHY it failed, building the constraints that shaped the final answer.
+
+Before presenting the final solution, describe 2-3 approaches that were tried and fell short. This isn't filler — it's what makes the chosen solution feel _earned_. Each failed approach should explain WHY it failed, building the constraints that shaped the final answer.
 
 ```
 ✅ 첫 번째 시도 — 코드 리뷰에서 잡자. (...) 문제는 리뷰어의 부담이 비례해서 커진다는 점이었습니다.
-   두 번째 시도 — AI에게 교과서를 읽어주자. (...) 대부분은 따랐지만, "대부분"이 문제였습니다.
+   두 번째 시도 — AI에게 규칙 문서를 읽어주자. (...) 대부분은 따랐지만, "대부분"이 문제였습니다.
 ```
 
 ### 3. The Mid-Article Pivot (Problem Reframing)
-The strongest articles have a moment where the *problem itself is reframed*, not just the solution. This is the emotional peak — the insight that changes the direction.
+
+The strongest articles have a moment where the _problem itself is reframed_, not just the solution. This is the emotional peak — the insight that changes the direction.
 
 ```
 ✅ "그래서 시선을 바꿨어요. 어떻게 LLM이 최적을 뽑게 할지가 아니라, 애초에 어떤 카테고리를 LLM에게 쥐어줄지를 설계하는 방향으로."
-✅ "필요한 것은 더 좋은 교과서가 아니라 시험지였습니다."
+✅ "문제는 쿼리가 느린 게 아니라, 한 화면이 쿼리를 30번 던지는 구조였습니다."
 ```
 
 ### 4. Decision Justification with "Why Not" Table
+
 When presenting a technology choice, show ALL candidates with specific reasons each was rejected. Don't just list the winner's features — explain why losers lost.
 
 ```
@@ -259,6 +298,7 @@ When presenting a technology choice, show ALL candidates with specific reasons e
 ```
 
 ### 5. Metrics Always in Pairs
+
 Never present a number alone. Every metric needs a baseline, comparison, or competing dimension.
 
 ```
@@ -269,6 +309,7 @@ Never present a number alone. Every metric needs a baseline, comparison, or comp
 ```
 
 ### 6. Natural Language Rule → Implementation
+
 For each technical decision, first state it as a one-sentence human-readable principle, then show the implementation. This makes code meaningful instead of just present.
 
 ```
@@ -280,14 +321,16 @@ For each technical decision, first state it as a one-sentence human-readable pri
 ```
 
 ### 7. Extended Metaphor as Structural Glue
+
 Choose one central metaphor and thread it through section headers and transitions. This creates narrative cohesion for long technical articles.
 
 ```
-✅ 무신사: "교과서 vs 시험지" → 섹션 제목: "교과서의 한계", "시험지의 가능성", "선생님 세팅하기", "선생님의 훈련 과목"
+✅ 마이그레이션을 "이사"로 → 섹션 제목: "짐 싸기", "트럭 부르기", "새 집에 배치하기", "빈 집 청소"
 ✅ 카카오: "호그와트 도서관" → 프로젝트 이름 자체가 메타포
 ```
 
 ### 8. Anchor Abstractions with Concrete Scenes
+
 Start abstract concepts with a specific, visualizable moment — a code review scene, an error message, a user complaint, a Slack message.
 
 ```
@@ -302,17 +345,21 @@ Start abstract concepts with a specific, visualizable moment — a code review s
 Use when writing portfolio documents, project descriptions for job applications, or technical accomplishment summaries.
 
 ### Tone
+
 - **Sentence ending:** ~했습니다, ~이었습니다 (formal declarative)
 - **Voice:** Confident, factual, concise
 - **No conversational fillers:** Don't use ~거든요, ~해요, ~이에요
 
 ### Structure
+
 Portfolio docs follow a fixed structure. Keep it but make it read naturally:
+
 - **Problem & Analysis**: What was broken and why (facts only, no solutions here)
 - **Key Actions**: What you did and how (the solution, with enough technical detail)
 - **Result**: Measurable outcome
 
 ### Rules
+
 1. **One sentence = one piece of information.** No compound sentences with 3+ clauses.
 2. **No parenthetical enumeration.** Don't list items in parentheses: (`jobId`, `status`, `progress`). Use Korean descriptions instead: "작업 상태, 진행률, 결과 ID를 포함한"
 3. **Problem section contains ONLY problems.** No solutions, no "we designed X" — that goes in Key Actions.
@@ -322,6 +369,7 @@ Portfolio docs follow a fixed structure. Keep it but make it read naturally:
 7. **[해결] [결과] tags are OK** as section markers within Key Actions — they provide scannable structure without the AI-label problem (they're not bolded inline labels).
 
 ### Example (Good Portfolio Problem)
+
 ```
 레시피오는 20,000개 이상의 레시피 페이지를 서빙합니다. 초기 CSR 구조에서
 FCP 개선과 캐시 이점을 위해 ISR로 전환했지만, FCP는 6.9초로 여전히 느렸습니다.
@@ -336,12 +384,15 @@ Chrome DevTools Network Waterfall 분석 결과, 폰트와 이미지가 동시�
 Use when writing tech blog posts, engineering blog articles, or team retrospectives.
 
 ### Tone
+
 - **Sentence ending:** ~해요, ~이에요, ~거든요, ~었어요 (casual conversational)
 - **Voice:** Friendly, narrative, sharing-a-story
 - **Conversational fillers OK:** ~거든요, ~기도 하고, ~인 거죠
 
 ### Structure
+
 Blog posts are free-form but typically follow:
+
 1. Team/author intro + context
 2. Problem setup (often with user quotes or data)
 3. Solution journey (chronological, including failed attempts)
@@ -349,10 +400,11 @@ Blog posts are free-form but typically follow:
 5. Future plans
 
 ### Rules
+
 1. **Tell the journey, not just the conclusion.** Include what you tried first, what failed, what you learned.
 2. **Use rhetorical questions** to introduce sections: "그래서 어떻게 해결했을까요?"
 3. **Admit failures explicitly.** "직관적으로는 좋아질 것 같았는데, 실제로는 미미했어요."
-4. **Metaphors welcome.** "호그와트 도서관", "교과서 vs 시험지" — make complex ideas relatable.
+4. **Metaphors welcome.** "호그와트 도서관", "마이그레이션은 이사" — make complex ideas relatable.
 5. **Direct quotes from users/team** add authenticity.
 6. **"결과부터 말하면:"** is a great pattern for hooking the reader early.
 7. **Tables for data comparisons**, paragraphs for narrative. Never mix.
@@ -363,6 +415,7 @@ Blog posts are free-form but typically follow:
 블로그 모드의 고정 톤(`~거든요`, `~이에요`)은 출발선이지 정답이 아니다. 사용자가 과거에 작성한 글이 있으면, **해당 글의 2~3 문단을 톤 기준 샘플로 삼아** 모드 기본값보다 우선시한다.
 
 **작동 방식:**
+
 1. 사용자가 직접 쓴 블로그/노트/메모 2~3 문단을 받는다 (또는 파일 경로).
 2. 샘플에서 다음을 추출한다:
    - 평균 문장 길이 (짧고 끊는 편 vs 길게 잇는 편)
@@ -375,6 +428,7 @@ Blog posts are free-form but typically follow:
 샘플이 없으면 모드 기본값으로 진행한다. 샘플이 있는데 무시하고 일반론만 적용하면 결과가 "같은 사람이 쓴 글"로 보이지 않는다.
 
 ### Example (Good Blog Opening)
+
 ```
 안녕하세요. 카카오페이증권 DevOps 팀 Sean.baek (션), Lina.a (리나)에요.
 
@@ -390,35 +444,44 @@ Blog posts are free-form but typically follow:
 Use when writing Korean conglomerate cover letters (자기소개서). This mode combines portfolio's factual tone with conventions that Korean HR readers expect — and filters for AI-generated patterns that 2026 ATS systems penalize.
 
 ### Tone
+
 - **Sentence ending:** ~했습니다, ~입니다 (formal declarative, same as portfolio)
 - **Voice:** Confident but humble. Korean HR prizes "겸손하지만 열정적인" — self-assessment with room to grow beats chest-thumping.
 - **1인칭 주어 최소화.** Korean readers find repeated "저는/제가/저의" amateurish. Drop the subject when context makes it obvious.
 
 ### Structure (two-level: section → bracketed subtitle)
+
 Each response follows the **두괄식 3단 구조**:
+
 1. **Core message** in the first sentence or bracketed subtitle
 2. **Evidence from experience** (STAR: Situation/Task short, Action/Result specific with numbers)
 3. **Connect to the company** (인재상, 핵심가치, 직무 키워드)
 
 ### Bracketed Subtitles (소제목)
+
 Mandatory convention in Korean cover letters. Every 200~400자 block gets a `[소제목]`. Rules:
+
 - **How + Result format:** `[측정으로 70% 단축, 협업으로 정합성 0건]` beats `[측정과 협업]`
 - **Forbidden:** Slogans, movie titles, proverbs, advertising copy, 유행어. Readers read hundreds of these — clichés stand out badly.
 - **Max 30자.** If longer, split into `[주제 | 서브]` format: `[레시피오 | 요구분석에서 배포까지]`
 - **Job Description keyword matching:** Pack JD terms into subtitles (e.g., if JD says "요구분석/설계/개발/테스트/론칭", match subtitle sequence to those words). 2026 ATS prescreens weigh keyword density.
 
 ### Banned Words (진부어 8대악)
+
 Korean HR surveys consistently rate these as the most overused — using them signals you don't know the job:
+
 - 성실한 · 노력하는 · 책임감 있는 · 솔선수범 · 창의적 · 도전적 · 열정 · 꼼꼼
 
 Also avoid: 완벽주의 · 법 없이도 살 사람 · 타고난 · 행운아 · 솔직히 말씀드리면 · 비록 지금은 부족하지만
 
 Replacement strategy: replace adjectives with **actions** or **numbers**.
+
 - ❌ 성실하게 임했습니다 → ✅ 3년간 꾸준히 풀어 백준 플래티넘에 도달했습니다
 - ❌ 도전적으로 해결했습니다 → ✅ 라이브러리를 교체하는 대신 원인을 추적했습니다
 - ❌ 열정적으로 공부했습니다 → ✅ 점수 지표로는 원인을 특정할 수 없어 워터폴 분석법을 별도로 학습했습니다
 
 ### Forbidden Phrasing
+
 1. **Ambiguous company references.** Use the company name directly — `샘표`, `현대오토에버` — never `당사/귀사/이 회사`. Even if the prompt uses `당사`, the answer names the company. This signals research.
 2. **Hedging adverbs.** `아마도`, `~할 수도`, `~일 것 같습니다` undercut authority. Use declarative.
 3. **Casual abbreviations.** `알바`, `과대`, `총학` → `아르바이트`, `과대표`, `총학생회`.
@@ -426,24 +489,28 @@ Replacement strategy: replace adjectives with **actions** or **numbers**.
 5. **Family backstory / school rankings.** `부모님께서~`, `수석 졸업` — invisible signal of weak direct evidence.
 
 ### Modal Expressions to Delete
+
 - 노력하겠습니다 → 하겠습니다 (delete the hedge)
 - ~하려고 했습니다 → ~했습니다
 - ~할 수 있습니다 → ~합니다
 - 기여하고 싶습니다 → 기여하겠습니다 (when appropriate)
 
 ### Vague-Word Swap Table
-| Before (모호어) | After (구체) |
-|---|---|
-| 다양한 | 숫자/고유명사 ("20,000여 레시피", "3인 팀") |
-| 많은 | 수치 ("MAU 2만", "1,000개 마커") |
-| 열심히 | 기간·횟수 ("3년간 꾸준히", "PR 3회") |
-| 최선을 다해 | 구체 행동 ("워터폴을 직접 레코딩해") |
-| 큰 성과 | 측정값 ("FCP 70% 단축", "20배 단축") |
+
+| Before (모호어) | After (구체)                                |
+| --------------- | ------------------------------------------- |
+| 다양한          | 숫자/고유명사 ("20,000여 레시피", "3인 팀") |
+| 많은            | 수치 ("MAU 2만", "1,000개 마커")            |
+| 열심히          | 기간·횟수 ("3년간 꾸준히", "PR 3회")        |
+| 최선을 다해     | 구체 행동 ("워터폴을 직접 레코딩해")        |
+| 큰 성과         | 측정값 ("FCP 70% 단축", "20배 단축")        |
 
 ### Reduce English Density
+
 Korean HR readers and ATS alike penalize answers that feel like English tech manuals translated on-the-fly. English tokens also **eat character budget** — the 1,000자 limit is tight.
 
 **Rules:**
+
 - First occurrence of a critical brand/tool: keep English (`Next.js`, `FCP`, `ISR`, `BFF`, `DevTools`). Subsequent mentions: drop the English or use Korean.
   - `Chrome DevTools Performance 워터폴` → 다음 문단부터는 `워터폴`
   - `Lighthouse CI` → `라이트하우스 CI` 또는 `CI`
@@ -453,7 +520,9 @@ Korean HR readers and ATS alike penalize answers that feel like English tech man
 - Version numbers: drop unless load-bearing. `Next.js 15 App Router` → `Next.js`.
 
 ### Score-Based Self-Assessment (점수화 문항 대응)
+
 Some companies ask to rate yourself on 100. **Never pick 100.** Korean HR prefers **65~85점** with a specific gap explanation.
+
 - Below 60: reads as low confidence / low qualification
 - 90+ : reads as arrogant / self-unaware
 - **Sweet spot: 70~80.** State what the remaining points represent (a concrete gap) and how you'll close them at the company.
@@ -461,7 +530,9 @@ Some companies ask to rate yourself on 100. **Never pick 100.** Korean HR prefer
 Example: `75점. 프론트·네트워크 병목은 자신 있게 찾지만, 자바·파이썬 서버 튜닝이나 DB 쿼리 분석은 실무 경험이 부족해 학습 중입니다. 남은 25점은 샘표 현장에서 채우겠습니다.`
 
 ### 입사 후 포부 (when applicable)
+
 If the prompt asks about aspirations/career plan, use **3-phase roadmap** (단기/중기/장기):
+
 - **단기 (1~3년차):** 도메인 학습, 기존 시스템 안정화 기여
 - **중기 (3~5년차):** 구축 프로젝트 주도, 공통 기능/방법론 제안
 - **장기 (5년차+):** 기업 비전에 맞춘 전문가 포지션
@@ -469,18 +540,22 @@ If the prompt asks about aspirations/career plan, use **3-phase roadmap** (단�
 Tie each phase to the company's actual initiatives (read 채용공고, 인재상, 최근 IR).
 
 ### Company Research Hooks
+
 Before writing, extract 3 things from the company:
+
 1. **Vision/tagline** (e.g., 샘표 "우리맛의 가치를 알리고 세계인을 즐겁게") — quote once in 지원동기.
 2. **인재상 keyword** (e.g., 샘표 "겸손하지만 열정이 넘치는") — let self-assessment tone echo it (humble score + specific effort).
 3. **직무 description 키워드** (e.g., "요구분석·설계·개발·테스트·론칭") — use these exact words as subtitle or paragraph anchors.
 
 ### STAR Skeleton for Each Answer
+
 - **S (Situation):** 1~2 sentences. What was broken, what the scale was.
 - **T (Task):** 1 sentence. What you owned.
 - **A (Action):** 2~4 sentences. **Specific** actions, tool names, decisions — including the path not taken and why ("라이브러리를 교체하는 대신 원인을 추적했습니다").
 - **R (Result):** 1~2 sentences. **Measured** — numbers, timeframe, external validation (PR merge, 수상, 사용자 피드백).
 
 ### Example (Good Jasoseo Opening)
+
 ```
 [레시피 플랫폼에서 샘표의 과제를 봤습니다]
 
@@ -495,25 +570,31 @@ MAU 2만의 레시피 플랫폼 레시피오에서 프론트엔드 1인으로 1�
 ```
 
 ### Character Count Workflow
+
 Korean online forms count **with spaces**. Always verify before submitting:
+
 ```bash
 python -c "import re; text=open('file.md', encoding='utf-8').read(); print(f'with-space: {len(text)} / no-space: {len(re.sub(r\"\s\", \"\", text))}')"
 ```
+
 Target each answer to land at **90~98%** of the cap. Leaving more than 10% empty signals the writer ran out of material.
 
 ### Multi-Question Diversification (다문항 각도 분리)
+
 When a 자소서 has 3+ questions, each must show a **different face** of the applicant. Reusing the same episode three times in three different wordings reads thin and signals a shallow experience pool — even if each answer is individually well-written.
 
 **Template (3-question conglomerate pattern):**
-- **Q1 (지원동기 / 선택이유):** *direction & motivation* — philosophy, domain connection, "why you, why here, why now"
-- **Q2 (대표 경험):** *technical/project depth* — one project's design decisions (decision → rationale → outcome), not a resume-list
-- **Q3 (핵심 역량 + 점수 + 노력):** *growth method* — how you became good at this, which habits and learning loops built the capability
+
+- **Q1 (지원동기 / 선택이유):** _direction & motivation_ — philosophy, domain connection, "why you, why here, why now"
+- **Q2 (대표 경험):** _technical/project depth_ — one project's design decisions (decision → rationale → outcome), not a resume-list
+- **Q3 (핵심 역량 + 점수 + 노력):** _growth method_ — how you became good at this, which habits and learning loops built the capability
 
 Each question answers a different reader question. Don't answer "what I achieved" three times.
 
 **Symptom of failure:** overlap matrix. Lay out your core episodes (e.g., FCP optimization, open-source PR, algorithm years) as rows and the 3 questions as columns. If 3+ episodes show ✓ in 2+ columns, redistribute.
 
 ### Episode Role Separation (에피소드 역할 분리)
+
 If the same episode must appear in multiple questions (often unavoidable when one flagship project covers most of your story), assign it **different narrative roles**:
 
 - **Example role (한 줄 예시):** one sentence, used as evidence for a broader claim
@@ -522,23 +603,28 @@ If the same episode must appear in multiple questions (often unavoidable when on
 **Rule:** each episode gets exactly **one deep-dive slot**. All other appearances must stay at the example-role level.
 
 **Good:**
-- Q1: "외부 라이브러리에 문제가 있을 때 교체하지 않고 원인을 추적해 오픈소스 공식 레포에 PR로 제출합니다." *(한 줄 예시)*
-- Q3 [1]: 마커 클러스터 PR의 원인 분석 → 알고리즘 전환 → 20배 단축 → 메인테이너 리뷰까지 풀 전개 *(본론)*
+
+- Q1: "외부 라이브러리에 문제가 있을 때 교체하지 않고 원인을 추적해 오픈소스 공식 레포에 PR로 제출합니다." _(한 줄 예시)_
+- Q3 [1]: 마커 클러스터 PR의 원인 분석 → 알고리즘 전환 → 20배 단축 → 메인테이너 리뷰까지 풀 전개 _(본론)_
 
 **Bad:**
-- Q1: 마커 클러스터 24.68ms→1.23ms, 20배 단축, 메인테이너 리뷰 *(본론 수준)*
-- Q3: 마커 클러스터 24.68ms→1.23ms, 20배 단축, 메인테이너 리뷰 *(또 본론 수준)*
+
+- Q1: 마커 클러스터 24.68ms→1.23ms, 20배 단축, 메인테이너 리뷰 _(본론 수준)_
+- Q3: 마커 클러스터 24.68ms→1.23ms, 20배 단축, 메인테이너 리뷰 _(또 본론 수준)_
 
 ### Abstract-Term Redefinition (추상 키워드 재정의)
+
 Corporate 인재상 keywords (겸손, 열정, 도전, 혁신, 소통) are worn out by millions of 자소서. Quoting them verbatim signals laziness. **Redefine them in your own words** at the opening of the paragraph that uses them.
 
 **Worn out:**
+
 ```
 [겸손한 자세로 임하겠습니다]
 겸손합니다. 저는 항상 배우는 자세로...
 ```
 
 **Redefined:**
+
 ```
 [겸손하지만 물러서지 않는 방식]
 겸손은 "내가 안다"를 먼저 의심하는 일이라 배웠습니다.
@@ -548,9 +634,11 @@ Corporate 인재상 keywords (겸손, 열정, 도전, 혁신, 소통) are worn o
 Pattern: `[키워드]은(는) ~[본인의 구체 정의]~라 배웠습니다.` as the paragraph opener, followed by an episode that enacts the definition. The redefinition converts a cliché into your thesis.
 
 ### Subtitle-Body Coherence Audit (소제목-본문 매칭)
+
 A subtitle is a promise. The body must deliver on the subtitle's exact keywords.
 
 **Audit procedure:**
+
 1. Extract the 1~2 anchor keywords from each subtitle (e.g., "겸손", "물러서지 않음").
 2. Search the body for those keywords. They should appear in the **opening sentence** of the paragraph, not buried in a tailing line.
 3. If a keyword appears only in the subtitle and never (or only weakly) in the body, the promise is broken — the paragraph is about something else than what the subtitle advertises.
@@ -560,15 +648,19 @@ A subtitle is a promise. The body must deliver on the subtitle's exact keywords.
 **Two-keyword subtitles (e.g., "겸손하지만 물러서지 않음")** require two paragraphs — one per keyword — each opened by its own keyword. Never collapse them into one paragraph.
 
 ### Number Consistency Across Questions (수치 정합성)
+
 When editing a scale metric (MAU, DAU, page count, 수상 이력, 팀 규모) in any one question, grep the entire document and update **every** occurrence. A single mismatch — "MAU 3만" in Q1 vs "MAU 2만" in Q2 — signals sloppiness and undermines every other number on the page.
 
 Pre-submission check:
+
 ```bash
 grep -nE "MAU|DAU|[0-9]+만|[0-9]+,[0-9]+" file.md
 ```
+
 All scale numbers referring to the same thing should be identical across every question.
 
 ### Tense Alignment (시제 정합성)
+
 Korean 자소서 mixes 과거 완결형 (~했습니다) and 현재/미래형 (~합니다, ~하겠습니다). These must **flow into each other** within a paragraph and between paragraphs.
 
 - **Narrative (과거 완결):** `분석했습니다 → 설계했습니다 → 달성했습니다` ✓ internally consistent
