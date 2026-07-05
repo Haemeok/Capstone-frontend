@@ -92,6 +92,26 @@ GROUP BY os, device ORDER BY pageviews DESC
 
 같은 쿼리를 `timestamp BETWEEN` 두 구간으로 두 번 돌려 diff를 표로 보고. 변화율 ±20% 넘는 항목만 하이라이트.
 
+### 로케일별 페이지뷰 (ja/en은 프리픽스, ko는 나머지)
+
+ja·en은 `/ja`·`/en` 라우터 프리픽스가 있지만 **ko는 프리픽스 없는 기본**이라, ko = 전체에서 ja·en 빼야 한다. 예약 단일세그먼트(`new`·`my-fridge`)는 상세로 오인되니 제외. 카테고리·생성 하위경로는 `[^/]+$` 가 알아서 거른다(세그먼트 더 있음).
+
+```sql
+-- 레시피 상세 페이지뷰, 로케일별, 최근 3일(오늘 포함, KST 기준)
+SELECT toDate(timestamp) AS day,
+  countIf(match(properties.$pathname,'^/ja/recipes/[^/]+$') AND properties.$pathname NOT IN ('/ja/recipes/new','/ja/recipes/my-fridge')) AS ja,
+  countIf(match(properties.$pathname,'^/en/recipes/[^/]+$') AND properties.$pathname NOT IN ('/en/recipes/new','/en/recipes/my-fridge')) AS en,
+  countIf(match(properties.$pathname,'^/recipes/[^/]+$')    AND properties.$pathname NOT IN ('/recipes/new','/recipes/my-fridge'))       AS ko
+FROM events
+WHERE event='$pageview' AND timestamp >= toStartOfDay(now()) - interval 2 day
+  AND NOT (properties.$ip LIKE '211.249.46.%' OR properties.$ip LIKE '110.93.150.%' OR properties.$ip LIKE '114.111.32.%')
+GROUP BY day ORDER BY day
+```
+
+- `match()` = ClickHouse re2 정규식(룩어헤드 불가 → 예약경로는 `NOT IN`으로 명시 제외).
+- 날짜 경계: PostHog 프로젝트 TZ가 KST라 `toDate`/`toStartOfDay`가 KST 기준. `toStartOfDay(now()) - interval 2 day` = 오늘 포함 3 캘린더일.
+- 패턴 의심되면 `properties.$pathname LIKE '%/recipes/%'` 로 실제 경로 샘플 먼저 확인.
+
 ### 봇/이상 트래픽 헌팅
 
 봇 시그니처 3종을 순서대로 본다:
@@ -118,6 +138,16 @@ GROUP BY w, os ORDER BY events DESC LIMIT 20
 4. 검색엔진/메신저 프리뷰 등 verified crawler 대역이면 **차단 제안 금지** — PostHog internal-user 필터로 지표만 정화
 
 **알려진 무해 대역 (2026-06 실사고, [[naver-yeti-crawl-burst]]):** 네이버 Yeti 렌더링 크롤러 = `211.249.46.x` / `110.93.150.x` / `114.111.32.x`, AS23576 NAVER Cloud, 역DNS `crawl.*.web.naver.com`. 시그니처: width 800 / Windows / `$direct` / events=people / 레시피 ID 전수 순회. 일반 Chrome UA로 JS를 실행해서 PostHog 기본 봇필터를 통과한다.
+
+## 메타 규칙 — 새 데이터 폼은 명령어를 새로 추가한다 (always-on)
+
+사용자가 **위 "정형 분석 레시피"에 없는 새로운 형태**의 데이터를 요청하면:
+
+1. 그 요청에 맞는 HogQL을 작성해 답을 뽑고,
+2. **검증된 그 쿼리를 이 파일의 레시피 절에 새 항목으로 바로 추가**한다. 다음엔 그대로 재사용.
+3. 새로 알게 된 속성·함정도 한 줄 추가.
+
+즉 이 스킬은 쓸수록 레시피 카탈로그가 자라야 한다. GA4 원시 이벤트 교차검증이 필요하면 [[ga4-bigquery]] (별개 소스 대조로 "수집 문제 vs 진짜 트래픽 변화" 판별).
 
 ## 보안·운영 수칙
 
