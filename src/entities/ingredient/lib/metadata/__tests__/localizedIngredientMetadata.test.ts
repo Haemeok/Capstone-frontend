@@ -13,6 +13,7 @@ const detail: IngredientDetailView = {
   pairings: { good: [], bad: [] },
   cookingMethods: [],
   coupangLink: null,
+  coupang: null,
   nutrition: null,
   seasonMonths: [],
   benefits: null,

@@ -2,10 +2,11 @@
   "src/entities/recipe/ui/RecipeRecordItem.tsx",
   "src/features/recipe-create/ui/IngredientSection.tsx",
   "src/features/step-timer/ui/StepTimer.tsx",
+  "src/shared/coupang/ui/CoupangProductCard.tsx",
   "src/widgets/CalendarTabContent/FirstSavingsQuestPanel.tsx",
   "src/widgets/CalendarTabContent/components/CalendarDayStreak.tsx",
   "src/widgets/CategoryDrawer/CategoryDrawer.tsx",
   "src/widgets/Footer/DesktopFooter.tsx",
-  "src/widgets/IngredientDetailPage/ui/CoupangPurchaseCard.tsx",
+  "src/widgets/IngredientDetailPage/IngredientDetailPageClient.tsx",
   "src/widgets/SearchDiscovery/ui/PriceRangeSection.tsx"
 ]

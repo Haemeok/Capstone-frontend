@@ -1,6 +1,7 @@
 import { InfiniteData } from "@tanstack/react-query";
 
 import { BaseQueryParams, PageResponse } from "@/shared/api/types";
+import type { IngredientCoupang } from "@/shared/coupang";
 
 import type { DetailedRecipeGridItem } from "@/entities/recipe";
 
@@ -87,6 +88,7 @@ export type IngredientDetailApiResponse = {
   recommendedCookingMethods: string | null;
   recipes: DetailedRecipeGridItem[];
   coupangLink?: string | null;
+  coupang?: IngredientCoupang | null;
   nutritionPer100g?: IngredientNutrition | null;
   seasonMonths?: number[] | null;
   benefits?: string | null;
@@ -111,6 +113,7 @@ export type IngredientDetailView = {
   };
   cookingMethods: string[];
   coupangLink: string | null;
+  coupang: IngredientCoupang | null;
   nutrition: IngredientNutrition | null;
   seasonMonths: number[];
   benefits: string | null;

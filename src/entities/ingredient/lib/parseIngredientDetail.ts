@@ -43,6 +43,7 @@ export const parseIngredientDetail = (
   },
   cookingMethods: parseSlashList(api.recommendedCookingMethods),
   coupangLink: api.coupangLink ?? null,
+  coupang: api.coupang ?? null,
   nutrition: normalizeNutrition(api.nutritionPer100g),
   seasonMonths: api.seasonMonths ?? [],
   benefits: api.benefits ?? null,
