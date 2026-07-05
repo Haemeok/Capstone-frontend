@@ -3,8 +3,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
+import type { TranslatedLocale } from "@/shared/i18n";
 import { ScrollReset } from "@/shared/ui/ScrollReset";
 
+import { applyIndexedRenderPolicy, renderDynamic } from "@/entities/recipe";
 import {
   generateLocalizedRecipeJsonLd,
   generateLocalizedRecipeMetadata,
@@ -19,14 +21,12 @@ import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import { RecipeDetailView } from "@/widgets/RecipeDetailView/ui/RecipeDetailView";
 
-type LocalizedLocale = "ja" | "en";
-
 export const buildLocalizedRecipeMetadata = async ({
   recipeId,
   locale,
 }: {
   recipeId: string;
-  locale: LocalizedLocale;
+  locale: TranslatedLocale;
 }): Promise<Metadata> => {
   const result = await getLocalizedRecipeOnServer(recipeId, locale);
 
@@ -55,7 +55,7 @@ export const LocalizedRecipePage = async ({
   bottomSlides,
 }: {
   recipeId: string;
-  locale: LocalizedLocale;
+  locale: TranslatedLocale;
   bottomSlides?: ReactNode;
 }) => {
   const result = await getLocalizedRecipeOnServer(recipeId, locale);
@@ -71,6 +71,12 @@ export const LocalizedRecipePage = async ({
 
   if (!recipe) {
     notFound();
+  }
+
+  if (result.kind === "ok") {
+    await applyIndexedRenderPolicy(recipe.isIndexed);
+  } else {
+    await renderDynamic();
   }
 
   const notTranslatedMessage =

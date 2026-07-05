@@ -152,6 +152,7 @@ export type Recipe = {
     };
   };
   isCloneable: boolean;
+  isIndexed?: boolean;
 };
 
 export type RawRecipeResponse = Omit<Recipe, "source" | "youtube"> & {
@@ -284,6 +285,7 @@ export type RecipeItemsQueryParams = NutritionRangeParams & {
   recipeId?: string;
   types?: string[];
   ingredientIds?: string[];
+  creatorCountryTags?: CreatorCountryTag[];
   lang?: "ja" | "en";
 };
 
