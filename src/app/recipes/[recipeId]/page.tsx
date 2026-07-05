@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
 import { ScrollReset } from "@/shared/ui/ScrollReset";
 
-import { isPrivateRecipe } from "@/entities/recipe";
+import { applyIndexedRenderPolicy, isPrivateRecipe } from "@/entities/recipe";
 import {
   generateNotFoundRecipeMetadata,
   generateRecipeJsonLd,
@@ -19,6 +19,7 @@ import {
 import { SmartAppBanner } from "@/features/smart-app-banner";
 
 import { RecipeDetailView } from "@/widgets/RecipeDetailView";
+import RecipeCoupangProducts from "@/widgets/RecipeDetailView/server/RecipeCoupangProducts";
 import { RecipeDetailServerSlides } from "@/widgets/RecipeSlide/server";
 
 import { RemixRedirectToast } from "./RemixRedirectToast";
@@ -64,6 +65,8 @@ export default async function RecipeDetailPage({
     notFound();
   }
 
+  await applyIndexedRenderPolicy(staticRecipe.isIndexed);
+
   const jsonLd = generateRecipeJsonLd(staticRecipe, recipeId);
 
   return (
@@ -83,6 +86,14 @@ export default async function RecipeDetailPage({
         locale="ko"
         bottomSlides={
           <RecipeDetailServerSlides recipeId={recipeId} locale="ko" />
+        }
+        ingredientShopping={
+          <Suspense fallback={null}>
+            <RecipeCoupangProducts
+              recipeId={recipeId}
+              isIndexed={staticRecipe.isIndexed}
+            />
+          </Suspense>
         }
       />
       <BottomAnchorAdSlot />
