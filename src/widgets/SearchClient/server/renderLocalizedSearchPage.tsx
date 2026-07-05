@@ -1,11 +1,5 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-
-import {
-  dehydrate,
-  HydrationBoundary,
-  type InfiniteData,
-  QueryClient,
-} from "@tanstack/react-query";
 
 import { absoluteUrl } from "@/shared/config/constants/api";
 import type { TranslatedLocale } from "@/shared/i18n";
@@ -22,7 +16,6 @@ import {
   buildRecipeSearchBaseKey,
   buildSearchQueryKey,
 } from "@/shared/lib/search/recipeSearchQueryKey";
-import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import {
   buildSearchDescription,
@@ -34,7 +27,9 @@ import type {
   RecipeItemsQueryParams,
 } from "@/entities/recipe/model/types";
 
-import { SearchClient } from "@/widgets/SearchClient/index";
+import { SearchClientShell } from "../index";
+import { SearchGridSkeleton } from "../ui/SearchResultsSkeleton";
+import { SearchResultsData } from "./SearchResultsData";
 
 const OG_LOCALE: Record<TranslatedLocale, string> = {
   ja: "ja_JP",
@@ -140,14 +135,12 @@ type LocalizedSearchPageProps = {
   locale: TranslatedLocale;
 };
 
-export const LocalizedSearchPage = async ({
+export const LocalizedSearchPage = ({
   searchParams,
   locale,
 }: LocalizedSearchPageProps) => {
   const { query, page, sortCode, types, nutritionQueryParams } =
     parseLocalizedSearchParams(searchParams, locale);
-
-  const queryClient = new QueryClient();
 
   const basePath = `/${locale}/search/results`;
 
@@ -164,36 +157,22 @@ export const LocalizedSearchPage = async ({
 
   const queryKey = buildSearchQueryKey(base, locale);
 
-  await queryClient.prefetchInfiniteQuery({
-    queryKey,
-    queryFn: () => getRecipesOnServer(query),
-    initialPageParam: page,
-    getNextPageParam: getNextSlicePageParam,
-    pages: 1,
-  });
-
-  const cached =
-    queryClient.getQueryData<InfiniteData<DetailedRecipesApiResponse, number>>(
-      queryKey
-    );
-  const firstPage: DetailedRecipesApiResponse = cached?.pages[0] ?? {
-    content: [],
-    slice: { size: 0, number: page, numberOfElements: 0, hasNext: false },
-  };
-
-  const hasNextPage = firstPage.slice.hasNext;
-
-  const nextPageHref = hasNextPage
-    ? buildNextPageUrl(searchParams, page + 1, basePath)
-    : undefined;
+  const buildNextHref = (firstPage: DetailedRecipesApiResponse) =>
+    firstPage.slice.hasNext
+      ? buildNextPageUrl(searchParams, page + 1, basePath)
+      : undefined;
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <SearchClient
-        initialPage={page}
-        nextPageHref={nextPageHref}
-        locale={locale}
-      />
-    </HydrationBoundary>
+    <SearchClientShell locale={locale}>
+      <Suspense fallback={<SearchGridSkeleton />}>
+        <SearchResultsData
+          queryKey={queryKey}
+          queryFn={() => getRecipesOnServer(query)}
+          page={page}
+          locale={locale}
+          buildNextHref={buildNextHref}
+        />
+      </Suspense>
+    </SearchClientShell>
   );
 };

@@ -13,6 +13,7 @@ import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
 
 import CookedPopularServerSlide from "@/widgets/RecipeSlide/server/CookedPopularServerSlide";
 import SearchDiscoveryClient from "@/widgets/SearchDiscovery/SearchDiscoveryClient";
+import { SearchDiscoverySkeleton } from "@/widgets/SearchDiscovery/ui/SearchDiscoverySkeleton";
 
 export const searchDiscoveryMetadata = {
   title: "레시피 탐색 - 레시피오",
@@ -22,31 +23,36 @@ export const searchDiscoveryMetadata = {
 
 type Props = { focused: boolean; locale?: Locale };
 
-export const SearchDiscoveryPage = async ({
-  focused,
-  locale = "ko",
-}: Props) => {
+const SearchDiscoveryData = async ({ locale }: { locale: Locale }) => {
   const queryClient = new QueryClient();
 
-  if (!focused) {
-    await queryClient.prefetchInfiniteQuery({
-      queryKey: ["recipes", "latest"],
-      queryFn: () =>
-        getRecipesOnServer({ key: "search", page: 0, sort: "createdAt,desc" }),
-      initialPageParam: 0,
-      getNextPageParam: getNextSlicePageParam,
-      pages: 1,
-    });
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: ["recipes", "latest"],
+    queryFn: () =>
+      getRecipesOnServer({ key: "search", page: 0, sort: "createdAt,desc" }),
+    initialPageParam: 0,
+    getNextPageParam: getNextSlicePageParam,
+    pages: 1,
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <SearchDiscoveryClient
+        focused={false}
+        cookedPopularSlot={<CookedPopularServerSlide locale={locale} />}
+      />
+    </HydrationBoundary>
+  );
+};
+
+export const SearchDiscoveryPage = ({ focused, locale = "ko" }: Props) => {
+  if (focused) {
+    return <SearchDiscoveryClient focused />;
   }
 
   return (
-    <Suspense>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <SearchDiscoveryClient
-          focused={focused}
-          cookedPopularSlot={<CookedPopularServerSlide locale={locale} />}
-        />
-      </HydrationBoundary>
+    <Suspense fallback={<SearchDiscoverySkeleton />}>
+      <SearchDiscoveryData locale={locale} />
     </Suspense>
   );
 };
