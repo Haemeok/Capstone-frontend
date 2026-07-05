@@ -404,6 +404,15 @@ const eslintConfig = [
   },
   prettierConfig,
   reactHooks.configs.flat.recommended,
+  {
+    files: ["docs/learning/**/*.{ts,tsx}"],
+    rules: {
+      "local/no-policy-comments": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "react-hooks/rules-of-hooks": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

@@ -24,6 +24,12 @@ import { StagePanel } from "./StagePanel";
 
 type ToneOption = "auto" | "friendly" | "editorial";
 
+type GenerationState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; result: GenerateCurationOutput }
+  | { status: "error"; message: string };
+
 export const Workspace = () => {
   const selected = useCurationStore((s) => s.selected);
   const selectedSlug = useCurationStore((s) => s.selectedSlug);
@@ -34,45 +40,40 @@ export const Workspace = () => {
 
   const [count, setCount] = useState(5);
   const [tone, setTone] = useState<ToneOption>("auto");
-  const [loading, setLoading] = useState(false);
-  const [localResult, setLocalResult] = useState<GenerateCurationOutput | null>(
-    null
-  );
-  const [error, setError] = useState<string | null>(null);
+  const [generation, setGeneration] = useState<GenerationState>({
+    status: "idle",
+  });
 
   const queryClient = useQueryClient();
   const publishMutation = usePostAndPublishArticle();
 
   // 좌측에서 다른 후보로 바꾸면 단일 도구 결과는 비워서 batch 결과와 섞이지 않게
   useEffect(() => {
-    setLocalResult(null);
-    setError(null);
+    setGeneration({ status: "idle" });
     publishMutation.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSlug]);
 
+  const localResult =
+    generation.status === "success" ? generation.result : null;
   const result = localResult ?? batchResult;
 
   const onGenerate = async () => {
     if (!selected) return;
-    setLoading(true);
-    setError(null);
-    setLocalResult(null);
+    setGeneration({ status: "loading" });
     try {
       const r = await generateCurationViaApi({
         params: selected,
         recipeCount: count,
         forceToneSeed: tone === "auto" ? undefined : tone,
       });
-      setLocalResult(r);
+      setGeneration({ status: "success", result: r });
     } catch (e) {
-      const msg =
+      const message =
         e instanceof CurationError
           ? `[${e.code}] ${e.message}\n${JSON.stringify(e.meta ?? {}, null, 2)}`
           : String(e);
-      setError(msg);
-    } finally {
-      setLoading(false);
+      setGeneration({ status: "error", message });
     }
   };
 
@@ -114,10 +115,10 @@ export const Workspace = () => {
           <button
             type="button"
             onClick={onGenerate}
-            disabled={loading}
+            disabled={generation.status === "loading"}
             className="ml-auto rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
           >
-            {loading ? "생성 중..." : "단일 생성"}
+            {generation.status === "loading" ? "생성 중..." : "단일 생성"}
           </button>
         </div>
         {batchResult && !localResult && (
@@ -128,9 +129,9 @@ export const Workspace = () => {
         )}
       </section>
 
-      {error && (
+      {generation.status === "error" && (
         <pre className="rounded border border-red-300 bg-red-50 p-3 text-xs whitespace-pre-wrap">
-          {error}
+          {generation.message}
         </pre>
       )}
 
