@@ -23,19 +23,19 @@ export const CoupangProductCard = ({
       className="flex w-[132px] shrink-0 flex-col gap-1"
     >
       {caption && (
-        <span className="text-ink-muted truncate text-xs">{caption}</span>
+        <span className="text-ink-muted truncate text-sm">{caption}</span>
       )}
       <img
         src={product.imageUrl}
         alt={product.name}
-        className="aspect-square w-full rounded-lg object-cover"
+        className="h-[132px] w-full rounded-lg object-cover"
         loading="lazy"
       />
-      <p className="text-ink mt-1 line-clamp-2 text-xs leading-snug">
+      <p className="text-ink mt-1 line-clamp-2 text-sm leading-snug">
         {product.name}
       </p>
       <div className="flex items-center gap-1">
-        <span className="text-sm font-bold text-red-600">
+        <span className="text-base font-bold text-red-600 md:text-lg">
           {formatNumber(product.price, "원")}
         </span>
         {product.rocket && (
@@ -48,7 +48,7 @@ export const CoupangProductCard = ({
         )}
       </div>
       {unit && (
-        <span className="text-ink-muted text-[11px]">
+        <span className="text-ink-muted text-xs">
           {unit.base}당 {formatNumber(unit.unitPrice, "원")}
         </span>
       )}
