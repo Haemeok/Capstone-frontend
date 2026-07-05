@@ -19,6 +19,7 @@ type RollingPointBannerProps = {
   messages: RollingMessage[];
   intervalMs?: number;
   containerClassName?: string;
+  align?: "center" | "start";
 };
 
 const DEFAULT_INTERVAL_MS = 4500;
@@ -30,6 +31,7 @@ const RollingPointBanner = ({
   messages,
   intervalMs = DEFAULT_INTERVAL_MS,
   containerClassName,
+  align = "center",
 }: RollingPointBannerProps) => {
   const { targetRef } = useScrollAnimate<HTMLDivElement>();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -50,7 +52,8 @@ const RollingPointBanner = ({
     <div
       ref={targetRef}
       className={cn(
-        "relative flex h-6 justify-center overflow-hidden text-sm font-bold text-gray-400 opacity-0",
+        "relative flex h-6 overflow-hidden text-sm font-bold text-gray-400 opacity-0",
+        align === "start" ? "justify-start" : "justify-center",
         containerClassName
       )}
     >
@@ -61,7 +64,10 @@ const RollingPointBanner = ({
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -SLIDE_Y_OFFSET, opacity: 0 }}
           transition={{ duration: SLIDE_DURATION_S, ease: SLIDE_EASE }}
-          className="absolute inset-0 flex items-center justify-center gap-1"
+          className={cn(
+            "absolute inset-0 flex items-center gap-1",
+            align === "start" ? "justify-start" : "justify-center"
+          )}
         >
           <span>{currentMessage.prefix}</span>
           <span

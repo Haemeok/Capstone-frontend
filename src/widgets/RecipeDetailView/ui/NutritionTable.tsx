@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { useT } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 
@@ -12,6 +14,7 @@ type NutritionTableProps = {
   totalServings: number;
   currentServings: number;
   onServingsChange: (servings: number) => void;
+  banner?: ReactNode;
   className?: string;
 };
 
@@ -20,6 +23,7 @@ const NutritionTable = ({
   totalServings,
   currentServings,
   onServingsChange,
+  banner,
   className,
 }: NutritionTableProps) => {
   const t = useT();
@@ -51,36 +55,41 @@ const NutritionTable = ({
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      {isValidServings && (
-        <div className="flex items-center justify-end gap-2">
-          <span className="text-ink-sub text-sm">
-            {t.recipeDetail.servingsLabel}
-          </span>
-          <div className="flex items-center gap-1">
-            {currentServings > MIN_SERVINGS && (
-              <button
-                type="button"
-                onClick={handleDecrement}
-                aria-label={t.recipeDetail.servingsDecrease}
-                className="text-ink-sub flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-sm transition-colors hover:bg-gray-300"
-              >
-                -
-              </button>
-            )}
-            <span className="text-ink w-10 text-center text-sm font-medium">
-              {currentServings}
-            </span>
-            {currentServings < MAX_SERVINGS && (
-              <button
-                type="button"
-                onClick={handleIncrement}
-                aria-label={t.recipeDetail.servingsIncrease}
-                className="text-ink-sub flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-sm transition-colors hover:bg-gray-300"
-              >
-                +
-              </button>
-            )}
-          </div>
+      {(banner || isValidServings) && (
+        <div className="flex items-center justify-between gap-2">
+          {banner ?? <span aria-hidden className="flex-1" />}
+          {isValidServings && (
+            <div className="flex shrink-0 items-center gap-2">
+              <span className="text-ink-sub text-sm">
+                {t.recipeDetail.servingsLabel}
+              </span>
+              <div className="flex items-center gap-1">
+                {currentServings > MIN_SERVINGS && (
+                  <button
+                    type="button"
+                    onClick={handleDecrement}
+                    aria-label={t.recipeDetail.servingsDecrease}
+                    className="text-ink-sub flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-sm transition-colors hover:bg-gray-300"
+                  >
+                    -
+                  </button>
+                )}
+                <span className="text-ink w-10 text-center text-sm font-medium">
+                  {currentServings}
+                </span>
+                {currentServings < MAX_SERVINGS && (
+                  <button
+                    type="button"
+                    onClick={handleIncrement}
+                    aria-label={t.recipeDetail.servingsIncrease}
+                    className="text-ink-sub flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-sm transition-colors hover:bg-gray-300"
+                  >
+                    +
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

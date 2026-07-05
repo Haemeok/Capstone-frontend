@@ -34,14 +34,12 @@ export const IngredientListItem = ({
       ) : reserveFridgeSpace ? (
         <span aria-hidden className="inline-block w-[18px] shrink-0" />
       ) : null}
-      <p className="text-sm font-semibold md:text-base">{ingredient.name}</p>
+      <p className="text-base font-semibold">{ingredient.name}</p>
     </div>
   );
 
   const quantityCell = (
-    <p className="text-left text-sm whitespace-nowrap md:text-base">
-      {displayAmount}
-    </p>
+    <p className="text-left text-base whitespace-nowrap">{displayAmount}</p>
   );
 
   if (locale !== "ko") {
