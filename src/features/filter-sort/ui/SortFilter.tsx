@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { SORT_TYPES } from "@/shared/config/constants/recipe";
+import { SORT_TYPES, type SortType } from "@/shared/config/constants/recipe";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import FilterChip from "@/shared/ui/FilterChip";
 
@@ -16,7 +16,7 @@ export const SortFilter = () => {
   const { localize, dict } = useTaxonomy();
 
   const handleValueChange = (value: string | string[]) => {
-    setSort(value as string);
+    setSort(value as SortType);
     setIsOpen(false);
   };
 

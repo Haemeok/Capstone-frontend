@@ -5,7 +5,10 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { InfiniteData } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 
-import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
+import {
+  INGREDIENT_CATEGORIES_NEW_RECIPE,
+  type RecipeCreateCategoryTab,
+} from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { format, useRecipeFormDict } from "@/shared/i18n";
@@ -40,7 +43,8 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
   addedIngredientNames,
   mapIngredientToPayload,
 }: IngredientSelectorProps<T>) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("전체");
+  const [selectedCategory, setSelectedCategory] =
+    useState<RecipeCreateCategoryTab>("전체");
   const [localAddedNames, setLocalAddedNames] = useState<Set<string>>(
     new Set(addedIngredientNames)
   );
@@ -73,16 +77,16 @@ const IngredientSelector = <T extends BaseIngredientPayload>({
       queryKey: ["drawerIngredients", selectedCategory, searchQuery],
       queryFn: ({ pageParam = 0 }) =>
         getIngredients({
-          category: selectedCategory,
+          category: selectedCategory === "나의 재료" ? null : selectedCategory,
           q: searchQuery,
           pageParam,
-          isMine: selectedCategory === "나의 재료" ? true : false,
+          isMine: selectedCategory === "나의 재료",
         }),
       getNextPageParam: getNextPageParam,
       initialPageParam: 0,
     });
 
-  const handleCategoryClick = (category: string) => {
+  const handleCategoryClick = (category: RecipeCreateCategoryTab) => {
     setSelectedCategory(category);
   };
 

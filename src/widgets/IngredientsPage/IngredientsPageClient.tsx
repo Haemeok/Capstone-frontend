@@ -4,7 +4,10 @@ import React, { useRef, useState } from "react";
 
 import { AnimatePresence } from "motion/react";
 
-import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
+import {
+  INGREDIENT_CATEGORIES,
+  type IngredientCategoryName,
+} from "@/shared/config/constants/recipe";
 import { format } from "@/shared/i18n/format";
 import { localizedHref } from "@/shared/i18n/localizedHref";
 import { useChromeLocale } from "@/shared/i18n/useChromeDict";
@@ -80,7 +83,7 @@ const IngredientsPageClient = () => {
     }
   };
 
-  const handleCategoryChange = (category: string) => {
+  const handleCategoryChange = (category: IngredientCategoryName) => {
     if (selectedCategory !== category) {
       triggerHaptic("Light");
       setSelectedCategory(category);

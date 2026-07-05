@@ -105,7 +105,10 @@ export const IngredientAddView = () => {
           queryConfig={{
             keyBase: "fridgeIngredients",
             getParams: (category) => ({
-              category: category === "전체" ? null : category,
+              category:
+                category === "전체" || category === "나의 재료"
+                  ? null
+                  : category,
               isMine: false,
               isFridge: true,
             }),

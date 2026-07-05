@@ -1,19 +1,22 @@
 "use client";
 
-import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
+import {
+  INGREDIENT_CATEGORIES,
+  type IngredientCategoryName,
+} from "@/shared/config/constants/recipe";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
 type Props = {
-  selected: string;
-  onSelect: (category: string) => void;
+  selected: IngredientCategoryName;
+  onSelect: (category: IngredientCategoryName) => void;
 };
 
 export const IngredientCategoryTabs = ({ selected, onSelect }: Props) => {
   const { localize } = useTaxonomy();
 
-  const handleClick = (category: string) => {
+  const handleClick = (category: IngredientCategoryName) => {
     triggerHaptic("Light");
     onSelect(category);
   };

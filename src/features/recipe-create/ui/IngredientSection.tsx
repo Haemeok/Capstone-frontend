@@ -122,7 +122,10 @@ const IngredientSection = ({
           queryConfig={{
             keyBase: "drawerIngredients",
             getParams: (category) => ({
-              category,
+              category:
+                category === "나의 재료" || category === "전체"
+                  ? null
+                  : category,
               isMine: category === "나의 재료",
             }),
           }}

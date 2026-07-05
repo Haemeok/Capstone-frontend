@@ -1,34 +1,37 @@
 import {
   COUNTRY_DEFINITIONS,
   DISH_TYPE_CODES,
+  type DishType,
   SORT_TYPE_CODES,
+  type SortType,
   TAG_DEFINITIONS,
   TAGS_BY_CODE,
 } from "@/shared/config/constants/recipe";
+import { getTypedKeys } from "@/shared/lib/types/utils";
 
 export const dishTypeCodec = {
-  encode: (value: string): string | null => {
-    return DISH_TYPE_CODES[value as keyof typeof DISH_TYPE_CODES] || null;
+  encode: (value: DishType): string | null => {
+    return DISH_TYPE_CODES[value] || null;
   },
-  decode: (code: string | null): string => {
+  decode: (code: string | null): DishType => {
     if (!code) return "전체";
-    const key = Object.keys(DISH_TYPE_CODES).find(
-      (k) => DISH_TYPE_CODES[k as keyof typeof DISH_TYPE_CODES] === code
+    const key = getTypedKeys(DISH_TYPE_CODES).find(
+      (k) => DISH_TYPE_CODES[k] === code
     );
-    return key || "전체";
+    return key ?? "전체";
   },
 };
 
 export const sortCodec = {
-  encode: (value: string): string | null => {
-    return SORT_TYPE_CODES[value as keyof typeof SORT_TYPE_CODES] || null;
+  encode: (value: SortType): string | null => {
+    return SORT_TYPE_CODES[value] || null;
   },
-  decode: (code: string | null): string => {
+  decode: (code: string | null): SortType => {
     if (!code) return "인기순";
-    const key = Object.keys(SORT_TYPE_CODES).find(
-      (k) => SORT_TYPE_CODES[k as keyof typeof SORT_TYPE_CODES] === code
+    const key = getTypedKeys(SORT_TYPE_CODES).find(
+      (k) => SORT_TYPE_CODES[k] === code
     );
-    return key || "인기순";
+    return key ?? "인기순";
   },
 };
 

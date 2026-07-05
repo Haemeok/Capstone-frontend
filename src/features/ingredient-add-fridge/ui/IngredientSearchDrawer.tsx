@@ -5,7 +5,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { InfiniteData } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 
-import { INGREDIENT_CATEGORIES } from "@/shared/config/constants/recipe";
+import {
+  INGREDIENT_CATEGORIES,
+  type IngredientCategoryName,
+} from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
 import { format, useIngredientAddDict } from "@/shared/i18n";
@@ -31,7 +34,8 @@ const IngredientSearchDrawer = ({
   open,
   onOpenChange,
 }: IngredientSearchDrawerProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("전체");
+  const [selectedCategory, setSelectedCategory] =
+    useState<IngredientCategoryName>("전체");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -61,7 +65,7 @@ const IngredientSearchDrawer = ({
       initialPageParam: 0,
     });
 
-  const handleCategoryClick = (category: string) => {
+  const handleCategoryClick = (category: IngredientCategoryName) => {
     setSelectedCategory(category);
   };
 

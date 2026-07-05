@@ -1,5 +1,6 @@
 import { InfiniteData } from "@tanstack/react-query";
 
+import type { IngredientCategoryName } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { getNextPageParam } from "@/shared/lib/utils";
 
@@ -7,7 +8,7 @@ import { getIngredients } from "@/entities/ingredient";
 import { IngredientsApiResponse } from "@/entities/ingredient";
 
 type UseInfiniteIngredientsParams = {
-  category: string;
+  category: IngredientCategoryName;
   sort: "asc" | "desc";
 };
 
