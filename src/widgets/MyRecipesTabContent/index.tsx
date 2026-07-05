@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
 
+import type { SortDirection } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import type { Locale } from "@/shared/i18n";
 import { useUserPagesDict, useUserPagesLocale } from "@/shared/i18n";
@@ -25,7 +26,7 @@ const MyRecipesTabContent = ({
   userId,
   isOwnProfile,
 }: MyRecipesTabContentProps) => {
-  const [sort] = useState<"ASC" | "DESC">("DESC");
+  const [sort] = useState<SortDirection>("DESC");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const locale = useUserPagesLocale();
   const t = useUserPagesDict();
@@ -35,7 +36,7 @@ const MyRecipesTabContent = ({
       MyRecipesPageResponse,
       Error,
       InfiniteData<MyRecipesPageResponse>,
-      [string, string, "ASC" | "DESC", Locale],
+      [string, string, SortDirection, Locale],
       number
     >({
       queryKey: ["recipes", userId, sort, locale],

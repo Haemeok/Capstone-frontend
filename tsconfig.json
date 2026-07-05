@@ -31,5 +31,5 @@
     ".next/types/**/*.ts",
     "src/widgets/AiLoading"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "docs"]
 }
