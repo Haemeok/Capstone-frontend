@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
 import { RecipeStepAdSlot } from "@/shared/adsense/RecipeStepAdSlot";
 import { DictionaryProvider, getDictionary, type Locale } from "@/shared/i18n";
-import CookingUnitTooltip from "@/shared/ui/CookingUnitTooltip";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
@@ -21,8 +20,8 @@ import RecentlyViewedTracker from "./RecentlyViewedTracker";
 import RecipeCommentsSection from "./RecipeCommentsSection";
 import RecipeComponentsSection from "./RecipeComponentsSection";
 import { RecipeContainer } from "./RecipeContainer";
+import RecipeCookingHelpButton from "./RecipeCookingHelpButton";
 import RecipeCookingInfoSection from "./RecipeCookingInfoSection";
-import RecipeCookingTipsSection from "./RecipeCookingTipsSection";
 import { RecipeDetailBottomSlides } from "./RecipeDetailBottomSlides";
 import RecipeHeroSection from "./RecipeHeroSection";
 import RecipeInfoSection from "./RecipeInfoSection";
@@ -158,10 +157,7 @@ export const RecipeDetailView = ({
                 />
               )}
 
-              <RecipeCookingTipsSection
-                tips={recipe.cookingTips}
-                headerExtra={<CookingUnitTooltip inline />}
-              />
+              <RecipeCookingHelpButton tips={recipe.cookingTips} />
 
               <InArticleAdSlot index={1} />
 
