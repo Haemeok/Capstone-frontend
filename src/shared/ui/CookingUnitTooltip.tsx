@@ -7,6 +7,7 @@ import { ChevronRight } from "lucide-react";
 import { useCookingUnitsDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
+import CookingUnitConversionList from "@/shared/ui/CookingUnitConversionList";
 
 type CookingUnitTooltipProps = {
   inline?: boolean;
@@ -54,19 +55,7 @@ const CookingUnitTooltip = ({ inline = false }: CookingUnitTooltipProps) => {
           </Header>
 
           <div className="px-4 pb-6">
-            <ul className="divide-y divide-gray-100 overflow-hidden rounded-2xl border border-gray-100 bg-white">
-              {dict.conversions.map((item) => (
-                <li key={item.unit} className="flex flex-col gap-0.5 p-4">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="text-ink font-bold">{item.unit}</span>
-                    <span className="text-ink font-semibold tabular-nums">
-                      {item.value}
-                    </span>
-                  </div>
-                  <span className="text-ink-muted text-xs">{item.tip}</span>
-                </li>
-              ))}
-            </ul>
+            <CookingUnitConversionList />
           </div>
         </Content>
       </Container>
