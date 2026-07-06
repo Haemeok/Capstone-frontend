@@ -818,6 +818,13 @@ export type CookingUnitsDict = {
   }[];
 };
 
+export type CookingHelpDict = {
+  buttonLabel: string;
+  sheetTitle: string;
+  tipsTab: string;
+  tableTab: string;
+};
+
 export type IngredientPickerDict = {
   title: string;
   closeAria: string;

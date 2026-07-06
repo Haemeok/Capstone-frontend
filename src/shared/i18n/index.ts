@@ -2,6 +2,7 @@ export { appGlobalMessages } from "./appGlobalMessages";
 export { authMessages } from "./authMessages";
 export { commentsMessages } from "./commentsMessages";
 export { commonMessages } from "./commonMessages";
+export { cookingHelpMessages } from "./cookingHelpMessages";
 export { cookingUnitsMessages } from "./cookingUnitsMessages";
 export { DictionaryProvider, useT } from "./DictionaryProvider";
 export { errorsMessages } from "./errorsMessages";
@@ -37,6 +38,7 @@ export type {
   CategoryDict,
   CommentsDict,
   CommonDict,
+  CookingHelpDict,
   CookingUnitsDict,
   Dictionary,
   EventsDict,
@@ -72,6 +74,7 @@ export { useCategoryDict, useCategoryLocale } from "./useCategoryDict";
 export { useChromeDict, useChromeLocale } from "./useChromeDict";
 export { useCommentsDict } from "./useCommentsDict";
 export { useCommonDict } from "./useCommonDict";
+export { useCookingHelpDict, useCookingHelpLocale } from "./useCookingHelpDict";
 export {
   useCookingUnitsDict,
   useCookingUnitsLocale,
