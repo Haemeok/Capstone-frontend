@@ -44,6 +44,11 @@ export const INGREDIENT_CATEGORIES_NEW_RECIPE = [
 export type RecipeCreateCategoryTab =
   (typeof INGREDIENT_CATEGORIES_NEW_RECIPE)[number];
 
+export const RECIPE_CREATE_CATEGORY_ALL =
+  "전체" satisfies RecipeCreateCategoryTab;
+export const RECIPE_CREATE_CATEGORY_MINE =
+  "나의 재료" satisfies RecipeCreateCategoryTab;
+
 export const INGREDIENT_CATEGORY_CODES = {
   전체: "",
   고기: "meat",

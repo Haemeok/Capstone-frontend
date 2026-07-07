@@ -44,6 +44,7 @@ export const CoupangCollectedInfo = ({
       {/* i18n-ignore: 쿠팡 슬라이드 ko 전용 */}
       표시된 가격은 실제와 다를 수 있어요.
       <br />
+      {/* i18n-ignore: 쿠팡 슬라이드 ko 전용 */}
       마지막 수집: {formatCollectedLabel(lastCollectedAt)}
     </PopoverContent>
   </Popover>
