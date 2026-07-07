@@ -13,6 +13,7 @@ import { AIRecipeProvider } from "./AIRecipeProvider";
 import { AppStateInitializer } from "./AppStateInitializer";
 import { InternalNavTracker } from "./InternalNavTracker";
 import { KeyboardAwareProvider } from "./KeyboardAwareProvider";
+import { PostHogAppContext } from "./PostHogAppContext";
 import { PostHogPageView } from "./PostHogPageView";
 import { PostHogProvider } from "./PostHogProvider";
 import { ScrollProvider } from "./ScrollProvider";
@@ -25,6 +26,7 @@ import { YoutubeImportProvider } from "./YoutubeImportProvider";
 export const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
     <PostHogProvider>
+      <PostHogAppContext />
       <PostHogPageView />
       <InternalNavTracker />
       <SentryUserSync />
