@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { ChevronRight, Lightbulb } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import { useCookingHelpDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -28,9 +28,8 @@ const RecipeCookingHelpButton = ({ tips }: RecipeCookingHelpButtonProps) => {
       <button
         type="button"
         onClick={handleOpen}
-        className="text-olive my-6 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white py-4 text-sm font-semibold transition-colors active:bg-gray-50"
+        className="text-olive-light mt-4 mb-6 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-sm border border-gray-200 bg-white py-4 text-sm font-semibold transition-colors active:bg-gray-50"
       >
-        <Lightbulb size={16} />
         {dict.buttonLabel}
         <ChevronRight size={16} className="text-gray-400" />
       </button>

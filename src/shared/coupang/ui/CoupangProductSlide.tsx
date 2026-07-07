@@ -27,11 +27,15 @@ export const CoupangProductSlide = ({
 
   return (
     <div>
-      {lastCollectedAt && (
-        <div className="mb-1 flex justify-end">
+      <div className="mb-1.5 flex items-center gap-1.5">
+        {/* i18n-ignore: 쿠팡 슬라이드 ko 전용 */}
+        <h3 className="text-ink text-lg font-bold">
+          쿠팡에서 잘 팔리는 상품으로 골라왔어요
+        </h3>
+        {lastCollectedAt && (
           <CoupangCollectedInfo lastCollectedAt={lastCollectedAt} />
-        </div>
-      )}
+        )}
+      </div>
       <Carousel
         opts={{ align: "start", loop: false, dragFree: true }}
         className="w-full"

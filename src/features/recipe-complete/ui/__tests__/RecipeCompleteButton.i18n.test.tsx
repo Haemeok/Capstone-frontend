@@ -77,11 +77,11 @@ describe("RecipeCompleteButton i18n", () => {
     expect(btn).not.toHaveTextContent(ko.completeCtaPlain);
   });
 
-  it("T-07: ko -> 절약액 CTA, 절약액 노출 (anchor)", () => {
+  it("T-07: ko -> completeCta 노출, 절약액 없음", () => {
     renderWith("ko");
     const btn = screen.getByRole("button");
-    expect(btn).toHaveTextContent("3,000");
-    expect(btn).not.toHaveTextContent(ja.completeCtaPlain);
+    expect(btn).toHaveTextContent(ko.completeCta);
+    expect(btn).not.toHaveTextContent("3,000");
   });
 
   it("T-03: ja 클릭 -> completeRecipe 1회 호출", () => {

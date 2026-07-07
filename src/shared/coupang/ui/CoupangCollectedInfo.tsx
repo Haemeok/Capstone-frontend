@@ -39,7 +39,7 @@ export const CoupangCollectedInfo = ({
     </PopoverTrigger>
     <PopoverContent
       align="end"
-      className="text-ink-sub w-56 text-xs leading-relaxed"
+      className="text-ink-sub w-56 p-3 text-xs leading-relaxed"
     >
       {/* i18n-ignore: 쿠팡 슬라이드 ko 전용 */}
       표시된 가격은 실제와 다를 수 있어요.

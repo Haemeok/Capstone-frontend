@@ -30,7 +30,7 @@ const RecipeCoupangProducts = async ({
     .at(-1);
 
   return (
-    <section className="mt-3">
+    <section className="mt-6">
       <CoupangProductSlide cards={cards} lastCollectedAt={lastCollectedAt} />
     </section>
   );
