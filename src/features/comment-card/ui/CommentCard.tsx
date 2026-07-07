@@ -88,7 +88,6 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           )}
         </div>
       </div>
-      <p className="text-ink">{displayedContent}</p>
       {canToggleOriginal && (
         <div className="text-ink-muted flex items-center gap-1.5 text-xs">
           {!showOriginal && languageName && (
@@ -108,6 +107,7 @@ const CommentCard = ({ comment, hideReplyButton = false }: CommentProps) => {
           </button>
         </div>
       )}
+      <p className="text-ink">{displayedContent}</p>
       {comment.imageUrls && comment.imageUrls.length > 0 && (
         <CommentImage urls={comment.imageUrls} />
       )}
