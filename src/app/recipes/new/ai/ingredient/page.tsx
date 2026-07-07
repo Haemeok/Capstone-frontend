@@ -7,7 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { aiModels } from "@/shared/config/constants/aiModel";
-import { INGREDIENT_CATEGORIES_NEW_RECIPE } from "@/shared/config/constants/recipe";
+import {
+  INGREDIENT_CATEGORIES_NEW_RECIPE,
+  RECIPE_CREATE_CATEGORY_ALL,
+  RECIPE_CREATE_CATEGORY_MINE,
+} from "@/shared/config/constants/recipe";
 import { useLocalizedRouter } from "@/shared/i18n";
 import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
@@ -150,15 +154,16 @@ const IngredientRecipePage = () => {
                 open={isDrawerOpen}
                 onOpenChange={setIsDrawerOpen}
                 categories={INGREDIENT_CATEGORIES_NEW_RECIPE}
-                initialCategory="전체"
+                initialCategory={RECIPE_CREATE_CATEGORY_ALL}
                 queryConfig={{
                   keyBase: "drawerIngredients",
                   getParams: (category) => ({
                     category:
-                      category === "나의 재료" || category === "전체"
+                      category === RECIPE_CREATE_CATEGORY_MINE ||
+                      category === RECIPE_CREATE_CATEGORY_ALL
                         ? null
                         : category,
-                    isMine: category === "나의 재료",
+                    isMine: category === RECIPE_CREATE_CATEGORY_MINE,
                   }),
                 }}
                 isAlreadyAdded={(ingredient) =>

@@ -14,7 +14,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 type GetIngredientsParams = {
-  category: string;
+  category: string | null;
   isMine: boolean;
 };
 
@@ -91,7 +91,7 @@ describe("IngredientSelector category chips i18n", () => {
     ).toBe(true);
   });
 
-  it("ja에서 마이 식재료 칩의 쿼리는 ko canonical과 isMine을 유지한다", () => {
+  it("ja에서 마이 식재료 칩의 쿼리는 category 없이 isMine만 전달한다", () => {
     mockPathname.mockReturnValue("/ja/recipes/new");
     renderSelector();
 
@@ -103,7 +103,7 @@ describe("IngredientSelector category chips i18n", () => {
 
     expect(
       getIngredientsMock.mock.calls.some(
-        ([params]) => params.category === "나의 재료" && params.isMine === true
+        ([params]) => params.category === null && params.isMine === true
       )
     ).toBe(true);
   });

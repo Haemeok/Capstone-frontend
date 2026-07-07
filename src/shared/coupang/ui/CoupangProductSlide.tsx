@@ -28,8 +28,8 @@ export const CoupangProductSlide = ({
   return (
     <div>
       <div className="mb-1.5 flex items-center gap-1.5">
-        {/* i18n-ignore: 쿠팡 슬라이드 ko 전용 */}
         <h3 className="text-ink text-lg font-bold">
+          {/* i18n-ignore: 쿠팡 슬라이드 ko 전용 */}
           쿠팡에서 잘 팔리는 상품으로 골라왔어요
         </h3>
         {lastCollectedAt && (
