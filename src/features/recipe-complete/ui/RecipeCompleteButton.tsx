@@ -63,7 +63,7 @@ const RecipeCompleteButton = ({
         onClick={handleClick}
         disabled={isCompleted || isLoading}
         className={cn(
-          "group relative w-full rounded-lg py-3 font-semibold transition-all",
+          "group relative w-full rounded-sm py-4 text-sm font-semibold transition-all",
           isCompleted
             ? "text-ink-muted cursor-not-allowed bg-gray-200"
             : "bg-olive-mint cursor-pointer text-white active:scale-95",

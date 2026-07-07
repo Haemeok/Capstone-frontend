@@ -11,7 +11,7 @@ export const CoupangDisclosure = ({ locale }: CoupangDisclosureProps) => {
   const t = getDictionary(locale);
 
   return (
-    <div className="mt-2 mb-4 text-center">
+    <div className="mt-6 mb-4 text-center">
       <p className="text-[11px] leading-tight font-light text-pretty break-keep text-gray-400">
         {t.recipeDetail.coupangDisclosure}
       </p>

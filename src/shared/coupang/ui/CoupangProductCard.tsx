@@ -28,7 +28,7 @@ export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
         {product.name}
       </p>
       <div className="flex items-center gap-1">
-        <span className="text-base font-bold text-red-600 md:text-lg">
+        <span className="text-base font-bold text-red-700 md:text-lg">
           {formatNumber(product.price, "원")}
         </span>
         {product.rocket && (

@@ -143,13 +143,9 @@ export const RecipeDetailView = ({
 
               {ingredientShopping}
 
-              <RecipeCompleteButton
-                saveAmount={saveAmount}
-                locale={locale}
-                className="mt-4"
-              />
-
               <CoupangDisclosure locale={locale} />
+
+              <RecipeCompleteButton saveAmount={saveAmount} locale={locale} />
 
               {recipe.fineDiningInfo?.components && (
                 <RecipeComponentsSection
