@@ -18,11 +18,11 @@ describe("fetchRecipeCoupangProducts", () => {
 
   afterEach(() => jest.restoreAllMocks());
 
-  it("indexed면 7일 revalidate + 태그로 나간다 (T-05)", async () => {
+  it("7일 revalidate + 태그로 나간다 (T-05)", async () => {
     const fetchSpy = mockFetch(okBody);
     global.fetch = fetchSpy as unknown as typeof fetch;
 
-    await fetchRecipeCoupangProducts("r1", { isIndexed: true });
+    await fetchRecipeCoupangProducts("r1");
 
     const opts = fetchSpy.mock.calls[0][1];
     expect(opts.next.revalidate).toBe(REVALIDATION_TIMES.INGREDIENT_DETAIL);
@@ -30,21 +30,10 @@ describe("fetchRecipeCoupangProducts", () => {
     expect(opts.cache).toBeUndefined();
   });
 
-  it("non-indexed면 no-store로 나간다 (T-06)", async () => {
-    const fetchSpy = mockFetch(okBody);
-    global.fetch = fetchSpy as unknown as typeof fetch;
-
-    await fetchRecipeCoupangProducts("r1", { isIndexed: false });
-
-    const opts = fetchSpy.mock.calls[0][1];
-    expect(opts.cache).toBe("no-store");
-    expect(opts.next).toBeUndefined();
-  });
-
   it("응답 !ok면 빈 items를 반환한다 (T-07)", async () => {
     global.fetch = mockFetch(null, false) as unknown as typeof fetch;
 
-    const result = await fetchRecipeCoupangProducts("r1", { isIndexed: true });
+    const result = await fetchRecipeCoupangProducts("r1");
 
     expect(result).toEqual({ recipeId: "r1", items: [] });
   });

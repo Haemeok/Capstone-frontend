@@ -12,10 +12,6 @@ import {
   generateNotFoundRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
 import {
-  applyIndexedRenderPolicy,
-  renderDynamic,
-} from "@/entities/recipe/lib/renderPolicy";
-import {
   getLocalizedRecipeOnServer,
   getStaticrecipionServer,
 } from "@/entities/recipe/model/api.server";
@@ -74,12 +70,6 @@ export const LocalizedRecipePage = async ({
 
   if (!recipe) {
     notFound();
-  }
-
-  if (result.kind === "ok") {
-    await applyIndexedRenderPolicy(recipe.isIndexed);
-  } else {
-    await renderDynamic();
   }
 
   const notTranslatedMessage =
