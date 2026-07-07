@@ -11,7 +11,6 @@ import {
   generateRecipeJsonLd,
   generateRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
-import { applyIndexedRenderPolicy } from "@/entities/recipe/lib/renderPolicy";
 import { getStaticrecipionServer } from "@/entities/recipe/model/api.server";
 
 import { SmartAppBanner } from "@/features/smart-app-banner";
@@ -54,8 +53,6 @@ export default async function RecipeDetailPage({
     notFound();
   }
 
-  await applyIndexedRenderPolicy(staticRecipe.isIndexed);
-
   const jsonLd = generateRecipeJsonLd(staticRecipe, recipeId);
 
   return (
@@ -78,10 +75,7 @@ export default async function RecipeDetailPage({
         }
         ingredientShopping={
           <Suspense fallback={null}>
-            <RecipeCoupangProducts
-              recipeId={recipeId}
-              isIndexed={staticRecipe.isIndexed}
-            />
+            <RecipeCoupangProducts recipeId={recipeId} />
           </Suspense>
         }
       />
