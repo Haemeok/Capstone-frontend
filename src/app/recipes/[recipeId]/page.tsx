@@ -12,10 +12,7 @@ import {
   generateRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
 import { applyIndexedRenderPolicy } from "@/entities/recipe/lib/renderPolicy";
-import {
-  getStaticRecipesOnServer,
-  getStaticrecipionServer,
-} from "@/entities/recipe/model/api.server";
+import { getStaticrecipionServer } from "@/entities/recipe/model/api.server";
 
 import { SmartAppBanner } from "@/features/smart-app-banner";
 
@@ -40,15 +37,6 @@ export async function generateMetadata({
     return generateNotFoundRecipeMetadata();
 
   return generateRecipeMetadata(staticRecipe, recipeId);
-}
-
-export async function generateStaticParams() {
-  const recipes = await getStaticRecipesOnServer({
-    period: "weekly",
-    sort: "desc",
-    key: "popular-recipes",
-  });
-  return recipes.content.filter((recipe) => recipe.imageUrl !== null);
 }
 
 export default async function RecipeDetailPage({
