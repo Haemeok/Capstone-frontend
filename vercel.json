@@ -1,5 +1,8 @@
 {
   "regions": ["icn1"],
+  "crons": [
+    { "path": "/api/bff/cron/sync-index-bloom", "schedule": "0 0 * * *" }
+  ],
   "rewrites": [
     {
       "source": "/login/:path*",
