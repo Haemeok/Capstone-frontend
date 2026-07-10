@@ -11,6 +11,10 @@ import {
   generateRecipeJsonLd,
   generateRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
+import {
+  applyIndexedRenderPolicy,
+  renderDynamic,
+} from "@/entities/recipe/lib/renderPolicy";
 import { getStaticrecipionServer } from "@/entities/recipe/model/api.server";
 
 import { SmartAppBanner } from "@/features/smart-app-banner";
@@ -45,13 +49,12 @@ export default async function RecipeDetailPage({
 
   const staticRecipe = await getStaticrecipionServer(recipeId);
 
-  if (!staticRecipe) {
+  if (!staticRecipe || isPrivateRecipe(staticRecipe)) {
+    await renderDynamic();
     notFound();
   }
 
-  if (isPrivateRecipe(staticRecipe)) {
-    notFound();
-  }
+  await applyIndexedRenderPolicy(staticRecipe.isIndexed);
 
   const jsonLd = generateRecipeJsonLd(staticRecipe, recipeId);
 
@@ -75,7 +78,10 @@ export default async function RecipeDetailPage({
         }
         ingredientShopping={
           <Suspense fallback={null}>
-            <RecipeCoupangProducts recipeId={recipeId} />
+            <RecipeCoupangProducts
+              recipeId={recipeId}
+              isIndexed={staticRecipe.isIndexed}
+            />
           </Suspense>
         }
       />
