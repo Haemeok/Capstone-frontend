@@ -209,6 +209,10 @@ export const generateRecipeMetadata = (
       ...dynamicKeywords,
       ...youtubeKeywords,
     ],
+    robots: {
+      index: recipe.isIndexed === true,
+      follow: true,
+    },
     alternates: {
       canonical: fullPageUrl,
     },
