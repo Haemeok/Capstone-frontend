@@ -12,6 +12,10 @@ import {
   generateNotFoundRecipeMetadata,
 } from "@/entities/recipe/lib/metadata";
 import {
+  applyIndexedRenderPolicy,
+  renderDynamic,
+} from "@/entities/recipe/lib/renderPolicy";
+import {
   getLocalizedRecipeOnServer,
   getStaticrecipionServer,
 } from "@/entities/recipe/model/api.server";
@@ -60,6 +64,7 @@ export const LocalizedRecipePage = async ({
   const result = await getLocalizedRecipeOnServer(recipeId, locale);
 
   if (result.kind === "notFound") {
+    await renderDynamic();
     notFound();
   }
 
@@ -69,7 +74,14 @@ export const LocalizedRecipePage = async ({
       : await getStaticrecipionServer(recipeId);
 
   if (!recipe) {
+    await renderDynamic();
     notFound();
+  }
+
+  if (result.kind === "ok") {
+    await applyIndexedRenderPolicy(recipe.isIndexed);
+  } else {
+    await renderDynamic();
   }
 
   const notTranslatedMessage =

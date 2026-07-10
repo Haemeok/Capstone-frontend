@@ -6,12 +6,14 @@ import {
 
 type RecipeCoupangProductsProps = {
   recipeId: string;
+  isIndexed: boolean | undefined;
 };
 
 const RecipeCoupangProducts = async ({
   recipeId,
+  isIndexed,
 }: RecipeCoupangProductsProps) => {
-  const { items } = await fetchRecipeCoupangProducts(recipeId);
+  const { items } = await fetchRecipeCoupangProducts(recipeId, { isIndexed });
 
   const withProducts = items.filter((item) => item.products.length > 0);
   const cards: CoupangSlideCard[] = withProducts.map((item) => ({

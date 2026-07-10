@@ -3,19 +3,27 @@ import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 
 import type { RecipeCoupangProductsResponse } from "./types";
 
+type CacheModeOptions = { isIndexed: boolean | undefined };
+
 export const fetchRecipeCoupangProducts = async (
-  recipeId: string
+  recipeId: string,
+  { isIndexed }: CacheModeOptions
 ): Promise<RecipeCoupangProductsResponse> => {
   const url = `${BASE_API_URL}${END_POINTS.RECIPE_COUPANG_PRODUCTS(recipeId)}`;
   const empty: RecipeCoupangProductsResponse = { recipeId, items: [] };
 
+  const init: RequestInit & { next?: { revalidate: number; tags: string[] } } =
+    isIndexed === true
+      ? {
+          next: {
+            revalidate: REVALIDATION_TIMES.INGREDIENT_DETAIL,
+            tags: [CACHE_TAGS.recipe(recipeId)],
+          },
+        }
+      : { cache: "no-store" };
+
   try {
-    const res = await fetch(url, {
-      next: {
-        revalidate: REVALIDATION_TIMES.INGREDIENT_DETAIL,
-        tags: [CACHE_TAGS.recipe(recipeId)],
-      },
-    });
+    const res = await fetch(url, init);
     if (!res.ok) return empty;
     return (await res.json()) as RecipeCoupangProductsResponse;
   } catch (error) {
