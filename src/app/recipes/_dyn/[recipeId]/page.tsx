@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import {
   buildRecipeMetadata,
   RecipeDetailPageView,
-} from "./RecipeDetailPageView";
+} from "../../[recipeId]/RecipeDetailPageView";
+
+export const dynamic = "force-dynamic";
 
 interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
@@ -16,7 +18,7 @@ export async function generateMetadata({
   return buildRecipeMetadata(recipeId);
 }
 
-export default async function RecipeDetailPage({
+export default async function RecipeDetailDynamicPage({
   params,
 }: RecipeDetailPageProps) {
   const { recipeId } = await params;
