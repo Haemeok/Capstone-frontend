@@ -11,6 +11,7 @@ import { makeBaseRecipe, makeJpRecipe } from "./fixtures/recipeFactory";
 const recipe = makeJpRecipe({
   title: "Oyakodon",
   description: "egg rice bowl",
+  isIndexed: true,
 });
 
 it("T-30: en translated → og:locale en_US, inLanguage en, indexable, canonical en URL", () => {
@@ -37,6 +38,21 @@ it("T-31: en not translated → noindex,nofollow + canonical 미출력", () => {
   });
   expect(meta.robots).toEqual({ index: false, follow: false });
   expect(meta.alternates?.canonical).toBeUndefined();
+});
+
+it("T-32: en translated지만 isIndexed 아님 → noindex,follow + canonical/languages 미출력", () => {
+  const notIndexed = makeJpRecipe({
+    title: "Oyakodon",
+    description: "egg rice bowl",
+    isIndexed: false,
+  });
+  const meta = generateLocalizedRecipeMetadata(notIndexed, "abc123", {
+    locale: "en",
+    translated: true,
+  });
+  expect(meta.robots).toEqual({ index: false, follow: true });
+  expect(meta.alternates?.canonical).toBeUndefined();
+  expect(meta.alternates?.languages).toBeUndefined();
 });
 
 it("T-30(ja 회귀): ja translated → og:locale ja_JP, inLanguage ja, canonical ja URL", () => {

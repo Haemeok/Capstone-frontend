@@ -23,13 +23,12 @@ export const generateLocalizedRecipeMetadata = (
   const description = recipe.description || recipe.title;
   const image = recipe.imageUrl || SEO_CONSTANTS.DEFAULT_IMAGE;
   const siteName = localizedSiteName(locale);
+  const canIndex = translated && recipe.isIndexed === true;
   return {
     title: `${recipe.title} | ${siteName}`,
     description,
-    robots: translated
-      ? { index: true, follow: true }
-      : { index: false, follow: false },
-    ...(translated
+    robots: { index: canIndex, follow: translated },
+    ...(canIndex
       ? {
           alternates: {
             canonical: url,

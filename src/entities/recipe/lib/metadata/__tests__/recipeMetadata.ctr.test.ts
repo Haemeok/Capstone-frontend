@@ -198,3 +198,26 @@ describe("og:title 사이트명 분리 (Slice D)", () => {
     expect(meta.title).toContain("| 레시피오");
   });
 });
+
+describe("색인 정책 (Slice E)", () => {
+  it("T-40: isIndexed=true면 index,follow", () => {
+    const recipe = makeBaseRecipe({ isIndexed: true });
+    const meta = generateRecipeMetadata(recipe, "test-id");
+
+    expect(meta.robots).toEqual({ index: true, follow: true });
+  });
+
+  it("T-41: isIndexed=false면 noindex,follow", () => {
+    const recipe = makeBaseRecipe({ isIndexed: false });
+    const meta = generateRecipeMetadata(recipe, "test-id");
+
+    expect(meta.robots).toEqual({ index: false, follow: true });
+  });
+
+  it("T-42: isIndexed 미지정이면 noindex,follow", () => {
+    const recipe = makeBaseRecipe();
+    const meta = generateRecipeMetadata(recipe, "test-id");
+
+    expect(meta.robots).toEqual({ index: false, follow: true });
+  });
+});
