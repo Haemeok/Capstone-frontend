@@ -1,14 +1,15 @@
 "use client";
 
-import { useCartItemCount } from "@/entities/cart";
+import { useCartItemCount, useGuestCartStore } from "@/entities/cart";
 import { useUserStore } from "@/entities/user";
 
 type CartCountBadgeProps = { children: React.ReactNode };
 
 export const CartCountBadge = ({ children }: CartCountBadgeProps) => {
   const { user, isAuthReady } = useUserStore();
-  const count = useCartItemCount({ enabled: isAuthReady && !!user });
-  // 게스트 로컬 개수는 후속 태스크에서 분기 추가
+  const serverCount = useCartItemCount({ enabled: isAuthReady && !!user });
+  const guestCount = useGuestCartStore((s) => s.items.length);
+  const count = user ? serverCount : guestCount;
 
   return (
     <div className="relative">

@@ -1,4 +1,8 @@
 export * from "./api";
+export {
+  buildGuestCartView,
+  type GuestCoupangSource,
+} from "./model/buildGuestCartView";
 export { filterCartByRecipe } from "./model/filterCartByRecipe";
 export {
   type GuestAddResult,
