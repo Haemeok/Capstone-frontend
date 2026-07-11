@@ -18,6 +18,8 @@ import { Image } from "@/shared/ui/image/Image";
 import { useUserStore } from "@/entities/user";
 import LoginPromotionBadge from "@/entities/user/ui/LoginPromotionBadge";
 
+import { CartCountBadge } from "@/features/cart-badge";
+
 const LoginDialog = dynamic(() => import("@/features/auth/ui/LoginDialog"), {
   ssr: false,
 });
@@ -76,13 +78,15 @@ const DesktopHeader = () => {
 
           <div className="flex items-center gap-4">
             {locale === "ko" && (
-              <LocalizedLink
-                href="/cart"
-                aria-label={t.cart}
-                className="text-ink-sub hover:text-ink p-1 transition-colors"
-              >
-                <ShoppingCart size={22} />
-              </LocalizedLink>
+              <CartCountBadge>
+                <LocalizedLink
+                  href="/cart"
+                  aria-label={t.cart}
+                  className="text-ink-sub hover:text-ink p-1 transition-colors"
+                >
+                  <ShoppingCart size={22} />
+                </LocalizedLink>
+              </CartCountBadge>
             )}
 
             <NotificationButton />

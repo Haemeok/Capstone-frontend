@@ -24,6 +24,8 @@ import { UnsavedChangesModal } from "@/shared/ui/modal/UnsavedChangesModal";
 import { useUserStore } from "@/entities/user";
 import LoginPromotionBadge from "@/entities/user/ui/LoginPromotionBadge";
 
+import { CartCountBadge } from "@/features/cart-badge";
+
 import AIRecipeNotificationBadge from "@/widgets/AIRecipeNotificationBadge";
 
 import BottomNavButton from "./BottomNavButton";
@@ -92,12 +94,14 @@ const BottomNavBar = () => {
         />
 
         {locale === "ko" ? (
-          <BottomNavButton
-            path="/cart"
-            icon={<ShoppingCart size={24} className="mb-1" />}
-            label={t.cart}
-            onClick={handleNavClick("/cart")}
-          />
+          <CartCountBadge>
+            <BottomNavButton
+              path="/cart"
+              icon={<ShoppingCart size={24} className="mb-1" />}
+              label={t.cart}
+              onClick={handleNavClick("/cart")}
+            />
+          </CartCountBadge>
         ) : (
           <AIRecipeNotificationBadge>
             <BottomNavButton

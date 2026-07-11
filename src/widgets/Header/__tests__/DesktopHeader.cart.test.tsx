@@ -17,6 +17,11 @@ jest.mock("../NotificationButton", () => ({
   __esModule: true,
   default: () => null,
 }));
+jest.mock("@/features/cart-badge", () => ({
+  CartCountBadge: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+}));
 
 import { useUserStore } from "@/entities/user";
 
