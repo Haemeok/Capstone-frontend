@@ -79,14 +79,14 @@ describe("middleware recipe render track", () => {
     expect(res.headers.get("x-middleware-rewrite")).toBeNull();
   });
 
-  it("bloom miss → /recipes/_dyn 로 rewrite", async () => {
+  it("bloom miss → /recipes/dyn 로 rewrite", async () => {
     const bloom = buildBloom(["indexedId"], { fp: 0.001, version: 1 });
     mockGet.mockResolvedValue(bloom);
 
     const res = await middleware(req("/recipes/unknownId"));
 
     expect(res.headers.get("x-middleware-rewrite")).toBe(
-      "http://localhost:3000/recipes/_dyn/unknownId"
+      "http://localhost:3000/recipes/dyn/unknownId"
     );
   });
 
@@ -96,7 +96,7 @@ describe("middleware recipe render track", () => {
     const res = await middleware(req("/recipes/anyId"));
 
     expect(res.headers.get("x-middleware-rewrite")).toBe(
-      "http://localhost:3000/recipes/_dyn/anyId"
+      "http://localhost:3000/recipes/dyn/anyId"
     );
   });
 

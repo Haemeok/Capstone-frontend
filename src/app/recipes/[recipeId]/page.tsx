@@ -9,6 +9,8 @@ interface RecipeDetailPageProps {
   params: Promise<{ recipeId: string }>;
 }
 
+export const generateStaticParams = () => [];
+
 export async function generateMetadata({
   params,
 }: RecipeDetailPageProps): Promise<Metadata> {
