@@ -8,6 +8,8 @@ jest.mock("@/entities/cart/api", () => ({
   ...jest.requireActual("@/entities/cart/api"),
   getCart: jest.fn(),
   updateCartItem: jest.fn(),
+  deleteCartItem: jest.fn(),
+  deleteCartItemsBulk: jest.fn(),
 }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 jest.mock("@/shared/ui/shadcn/drawer", () => ({
@@ -26,7 +28,12 @@ jest.mock("next/cache", () => ({
   unstable_cache: (fn: unknown) => fn,
 }));
 
-import { getCart, updateCartItem } from "@/entities/cart/api";
+import {
+  deleteCartItem,
+  deleteCartItemsBulk,
+  getCart,
+  updateCartItem,
+} from "@/entities/cart/api";
 import {
   cartFixture,
   emptyCartFixture,
@@ -37,6 +44,8 @@ import CartView from "../index";
 
 const getCartMock = getCart as jest.Mock;
 const updateMock = updateCartItem as jest.Mock;
+const deleteOneMock = deleteCartItem as jest.Mock;
+const deleteBulkMock = deleteCartItemsBulk as jest.Mock;
 
 const renderCartView = () => {
   const qc = new QueryClient({
@@ -52,6 +61,8 @@ const renderCartView = () => {
 beforeEach(() => {
   getCartMock.mockReset();
   updateMock.mockReset();
+  deleteOneMock.mockReset();
+  deleteBulkMock.mockReset();
   // 테스트 픽스처 — CartView는 로그인 여부만 보므로 부분 User로 캐스트
   useUserStore.setState({ user: { id: "u1" } as User, isAuthReady: true });
 });
@@ -169,5 +180,51 @@ it("T-14: 수량 영역 탭 → 바텀시트에서 수정 → PATCH + 새 값 �
 
   await act(async () => {
     resolveUpdate?.();
+  });
+});
+
+it("T-16: 행 삭제 버튼 → 단건 DELETE + 즉시 제거", async () => {
+  getCartMock.mockResolvedValue(cartFixture);
+  // 해소 전 단언 — invalidate 후 refetch가 픽스처로 되돌리는 것 방지 (T-14와 동일 패턴)
+  let resolveDelete: (() => void) | undefined;
+  deleteOneMock.mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        resolveDelete = resolve;
+      })
+  );
+  renderCartView();
+  await screen.findByText("배추김치");
+
+  await userEvent.click(screen.getByRole("button", { name: "배추김치 삭제" }));
+
+  await waitFor(() => {
+    expect(deleteOneMock).toHaveBeenCalledWith("c8Ab7XyZ");
+    expect(screen.queryByText("배추김치")).not.toBeInTheDocument();
+  });
+
+  await act(async () => {
+    resolveDelete?.();
+  });
+});
+
+it("T-17: 선택 모드에서 2개 선택 삭제 → bulk 1회", async () => {
+  getCartMock.mockResolvedValue(cartFixture);
+  deleteBulkMock.mockResolvedValue(undefined);
+  renderCartView();
+  await screen.findByText("배추김치");
+
+  await userEvent.click(screen.getByRole("button", { name: "선택" }));
+  await userEvent.click(
+    screen.getByRole("checkbox", { name: "배추김치 선택" })
+  );
+  await userEvent.click(
+    screen.getByRole("checkbox", { name: "돼지고기 선택" })
+  );
+  await userEvent.click(screen.getByRole("button", { name: "2개 삭제" }));
+
+  await waitFor(() => {
+    expect(deleteBulkMock).toHaveBeenCalledTimes(1);
+    expect(deleteBulkMock).toHaveBeenCalledWith(["c8Ab7XyZ", "c6Rt4MnB"]);
   });
 });
