@@ -13,24 +13,33 @@ jest.mock("@/shared/lib/bridge", () => ({
 jest.mock("@/shared/hooks/useDocumentVisibility", () => ({
   useDocumentVisibility: () => true,
 }));
+const mockRouterPush = jest.fn();
 jest.mock("next/navigation", () => ({
-  useRouter: () => ({ push: jest.fn() }),
+  useRouter: () => ({ push: mockRouterPush }),
   usePathname: () => "/",
 }));
 jest.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({
     invalidateQueries: jest.fn(),
     fetchQuery: jest.fn().mockResolvedValue({
+      id: "recipe-456",
       imageUrl: "https://example.com/image.jpg",
       title: "테스트 레시피",
+      author: { id: "author-1", nickname: "셰프", profileImage: "" },
+      cookingTime: 30,
+      createdAt: "2026-01-01T00:00:00.000Z",
     }),
   }),
 }));
 jest.mock("@/entities/recipe", () => ({
   getRecipe: jest.fn(),
 }));
+const mockAddToast = jest.fn();
 jest.mock("@/shared/ui/toast", () => ({
-  useToastStore: () => jest.fn(),
+  useToastStore: (selector?: (state: { addToast: unknown }) => unknown) =>
+    selector
+      ? selector({ addToast: mockAddToast })
+      : { addToast: mockAddToast },
 }));
 
 const mockMeta: AIJobMeta = {
@@ -136,6 +145,50 @@ describe("useAIJobPolling - 중복 처리 방지", () => {
 
       // API는 여전히 1번만 호출되어야 함
       expect(mockGetStatus).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("완료 토스트", () => {
+    it("T-23: job 완료 시 완료 토스트가 뜬다", async () => {
+      jest.spyOn(api, "getAIRecipeJobStatus").mockResolvedValue({
+        jobId: "job-123",
+        status: "COMPLETED",
+        resultRecipeId: "recipe-456",
+      });
+
+      act(() => {
+        const key = useAIRecipeStoreV2
+          .getState()
+          .createJob("COST_EFFECTIVE", mockRequest, mockMeta, "ko");
+        useAIRecipeStoreV2.getState().setJobId(key, "job-123");
+      });
+
+      renderHook(() => useAIJobPolling());
+
+      await act(async () => {
+        jest.advanceTimersByTime(0);
+        await Promise.resolve();
+      });
+
+      expect(mockAddToast).toHaveBeenCalledTimes(1);
+      const toast = mockAddToast.mock.calls[0][0];
+
+      if (toast.variant === "rich-youtube") {
+        expect(toast.richContent).toMatchObject({
+          recipeId: "recipe-456",
+          subtitle: "테스트 레시피",
+          thumbnail: "https://example.com/image.jpg",
+        });
+      } else {
+        expect(toast.variant).toBe("success");
+        expect(toast.message).toContain(mockMeta.displayName);
+      }
+
+      toast.action.onClick();
+      expect(mockRouterPush).toHaveBeenCalledWith(
+        expect.stringContaining("/recipes/recipe-456"),
+        undefined
+      );
     });
   });
 

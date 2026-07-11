@@ -1,5 +1,6 @@
 "use client";
 
+import { aiModels } from "@/shared/config/constants/aiModel";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import {
   LocalizedLink,
@@ -31,7 +32,7 @@ export const CreationModeSelector = () => {
           {t.hubSubtitle}
         </p>
 
-        <div className="grid grid-cols-2 gap-4 md:gap-8">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8">
           <LocalizedLink
             href="/recipes/new/manual"
             className="group border-olive-light/30 hover:border-olive-mint block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:p-8"
@@ -79,6 +80,32 @@ export const CreationModeSelector = () => {
                 </h2>
                 <p className={`text-ink-muted text-pretty ${wrapClass}`}>
                   {t.youtubeCardBody}
+                </p>
+              </div>
+            </div>
+          </LocalizedLink>
+
+          <LocalizedLink
+            href="/recipes/new/ai"
+            className="group border-olive-light/30 hover:border-olive-mint col-span-2 block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:col-span-1 md:p-8"
+          >
+            <div className="flex flex-col items-center space-y-3 text-center md:space-y-6">
+              <div className="rounded-card relative w-32 overflow-hidden md:h-64 md:w-48">
+                <Image
+                  src={aiModels.INGREDIENT_FOCUS.image}
+                  alt={t.aiCardImageAlt}
+                  fit="cover"
+                  imgClassName="transition-transform duration-200 group-hover:scale-105"
+                />
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <h2
+                  className={`text-ink text-lg font-bold text-pretty md:text-2xl ${wrapClass}`}
+                >
+                  {t.aiCardTitle}
+                </h2>
+                <p className={`text-ink-muted text-pretty ${wrapClass}`}>
+                  {t.aiCardBody}
                 </p>
               </div>
             </div>

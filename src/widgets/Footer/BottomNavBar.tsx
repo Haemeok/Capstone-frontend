@@ -3,11 +3,21 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
-import { ChefHat, Home, Refrigerator, Search, Sparkles } from "lucide-react";
+import {
+  ChefHat,
+  Home,
+  Refrigerator,
+  Search,
+  ShoppingCart,
+  Sparkles,
+} from "lucide-react";
 
 import { useIsBottomNavVisible } from "@/shared/hooks/useIsBottomNavVisible";
-import { useLocalizedRouter } from "@/shared/i18n";
-import { useChromeDict } from "@/shared/i18n";
+import {
+  useChromeDict,
+  useChromeLocale,
+  useLocalizedRouter,
+} from "@/shared/i18n";
 import { useInputFocusStore } from "@/shared/store/useInputFocusStore";
 import { UnsavedChangesModal } from "@/shared/ui/modal/UnsavedChangesModal";
 
@@ -34,6 +44,7 @@ const BottomNavBar = () => {
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const { isInputFocused } = useInputFocusStore();
   const t = useChromeDict();
+  const locale = useChromeLocale();
 
   if (!isNavVisible) {
     return null;
@@ -80,14 +91,23 @@ const BottomNavBar = () => {
           onClick={handleNavClick("/ingredients")}
         />
 
-        <AIRecipeNotificationBadge>
+        {locale === "ko" ? (
           <BottomNavButton
-            path="/recipes/new/ai"
-            icon={<Sparkles size={24} className="mb-1" />}
-            label={t.aiRecipe}
-            onClick={handleNavClick("/recipes/new/ai")}
+            path="/cart"
+            icon={<ShoppingCart size={24} className="mb-1" />}
+            label={t.cart}
+            onClick={handleNavClick("/cart")}
           />
-        </AIRecipeNotificationBadge>
+        ) : (
+          <AIRecipeNotificationBadge>
+            <BottomNavButton
+              path="/recipes/new/ai"
+              icon={<Sparkles size={24} className="mb-1" />}
+              label={t.aiRecipe}
+              onClick={handleNavClick("/recipes/new/ai")}
+            />
+          </AIRecipeNotificationBadge>
+        )}
 
         <LoginPromotionBadge variant="mobile">
           <BottomNavButton

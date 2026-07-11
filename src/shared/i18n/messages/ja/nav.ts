@@ -5,6 +5,7 @@ export const nav: NavDict = {
   search: "検索",
   fridge: "冷蔵庫",
   aiRecipe: "AIレシピ",
+  cart: "カート",
   my: "マイページ",
   recipeSearch: "レシピ検索",
   youtubeRecipe: "YouTubeレシピ",

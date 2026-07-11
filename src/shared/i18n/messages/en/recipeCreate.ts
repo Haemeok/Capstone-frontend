@@ -10,4 +10,8 @@ export const recipeCreate: RecipeCreateDict = {
   youtubeCardBody:
     "Just paste a YouTube link and we'll build the recipe for you",
   youtubeCardImageAlt: "Import from YouTube",
+  aiCardTitle: "AI Recipe",
+  aiCardBody:
+    "Pick your ingredients, budget, or nutrition goals and let AI build the recipe",
+  aiCardImageAlt: "Create a recipe with AI",
 };
