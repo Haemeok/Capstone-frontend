@@ -19,7 +19,7 @@ const Thumb = ({ imageUrl }: { imageUrl?: string | null }) =>
       src={imageUrl}
       alt=""
       loading="lazy"
-      className="size-8 shrink-0 rounded-md object-cover"
+      className="size-10 shrink-0 rounded-md object-cover"
     />
   ) : null;
 

@@ -53,17 +53,20 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
 
   if (cart.totalItemCount === 0) {
     return (
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 pt-4 pb-24">
-        <h1 className="text-ink text-xl font-bold">장바구니</h1>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 pb-24">
+        <div className="-mx-4 bg-white px-4 py-3">
+          <h1 className="text-ink text-2xl font-bold">장바구니</h1>
+        </div>
         <CartEmptyState />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 pt-4 pb-24">
-      <div className="mb-1 flex items-center justify-between">
-        <h1 className="text-ink text-xl font-bold">장바구니</h1>
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 pb-24">
+      {/* 스크롤 컨테이너(RootLayout)가 데스크톱 고정 헤더 아래에서 시작하므로 top-0 */}
+      <div className="sticky top-0 z-30 -mx-4 flex items-center justify-between bg-white px-4 py-3">
+        <h1 className="text-ink text-2xl font-bold">장바구니</h1>
         <button
           type="button"
           onClick={() => {
@@ -81,6 +84,10 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
         selectedRecipeId={validRecipeId}
         onSelect={setSelectedRecipeId}
       />
+      <p className="text-ink-muted text-[11px] leading-tight font-light break-keep">
+        이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를
+        제공받습니다.
+      </p>
       {filtered.groups.map((group) => (
         <CartGroupSection
           key={group.coupangInfo.coupangName}

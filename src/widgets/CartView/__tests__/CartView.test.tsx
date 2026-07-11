@@ -79,6 +79,7 @@ it("T-06: /cart 진입 시 담긴 항목의 이름·수량·단위·출처 레�
   expect(screen.getByText("수제 고추기름")).toBeInTheDocument();
   // 쿠팡 그룹명 헤더 제거 — 재료 라벨은 항목당 1번만
   expect(screen.getAllByText("김치")).toHaveLength(1);
+  expect(screen.getByText(/쿠팡 파트너스 활동의 일환/)).toBeInTheDocument();
 });
 
 it("같은 재료를 두 레시피에서 담으면 라벨 1번 + 레시피별 양 + 총량이 보인다", async () => {
