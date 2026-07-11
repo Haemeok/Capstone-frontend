@@ -28,6 +28,7 @@ export const useImageWithFallback = ({
   inView,
   onRetry,
 }: UseImageWithFallbackParams) => {
+  const [wasPreloaded, setWasPreloaded] = useState(() => hasImageLoaded(src));
   const [status, setStatus] = useState<ImageStatus>(() =>
     hasImageLoaded(src) ? "loaded" : "idle"
   );
@@ -40,9 +41,11 @@ export const useImageWithFallback = ({
   const effectiveSrc = shouldLoad ? src : undefined;
 
   useEffect(() => {
+    const preloaded = hasImageLoaded(src);
+    setWasPreloaded(preloaded);
     setRetryCount(0);
 
-    if (hasImageLoaded(src)) {
+    if (preloaded) {
       setStatus("loaded");
     } else if (shouldLoad) {
       setStatus("loading");
@@ -99,6 +102,7 @@ export const useImageWithFallback = ({
     src: effectiveSrc,
     status,
     retryCount,
+    wasPreloaded,
     imgRef,
     onLoad: handleLoad,
     onError: handleError,
