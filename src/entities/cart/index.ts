@@ -5,6 +5,10 @@ export {
 } from "./model/buildGuestCartView";
 export { filterCartByRecipe } from "./model/filterCartByRecipe";
 export {
+  type CartItemNameGroup,
+  groupCartItemsByName,
+} from "./model/groupCartItemsByName";
+export {
   type GuestAddResult,
   type GuestCartItem,
   useGuestCartStore,

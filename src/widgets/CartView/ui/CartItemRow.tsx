@@ -37,20 +37,23 @@ export const CartItemRow = ({
         />
       )}
       <div className="min-w-0 flex-1">
-        <p className="text-ink truncate font-semibold">{item.name}</p>
+        <div className="flex items-baseline gap-2">
+          <p className="text-ink truncate font-semibold">{item.name}</p>
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic("Light");
+              onEdit?.(item);
+            }}
+            aria-label={`${item.name} 수량 수정`}
+            className="text-ink-sub shrink-0 text-sm"
+          >
+            {item.quantity}
+            {item.unit}
+          </button>
+        </div>
         <p className="text-ink-muted text-xs">{item.recipe.title}</p>
       </div>
-      <button
-        type="button"
-        onClick={() => {
-          triggerHaptic("Light");
-          onEdit?.(item);
-        }}
-        aria-label={`${item.name} 수량 수정`}
-        className="text-ink-sub rounded-md border border-gray-200 px-2 py-1 text-sm"
-      >
-        {item.quantity} {item.unit}
-      </button>
       {!selectable && (
         <button
           type="button"

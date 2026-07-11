@@ -12,7 +12,7 @@ import { CartItemEditSheet } from "@/features/cart-item-edit";
 
 import { CartEmptyState } from "./CartEmptyState";
 import { CartGroupSection } from "./CartGroupSection";
-import { CartItemRow } from "./CartItemRow";
+import { CartItemList } from "./CartItemList";
 import { RecipeTabBar } from "./RecipeTabBar";
 
 export type CartHandlers = {
@@ -60,16 +60,18 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
   };
 
   if (cart.totalItemCount === 0) {
-    return <CartEmptyState />;
+    return (
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 pt-4 pb-24">
+        <h1 className="text-ink text-xl font-bold">장바구니</h1>
+        <CartEmptyState />
+      </div>
+    );
   }
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-3 px-4 pt-4 pb-24">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 pt-4 pb-24">
       <div className="mb-1 flex items-center justify-between">
-        <h1 className="text-ink text-xl font-bold">
-          장바구니{" "}
-          <span className="text-olive-dark">{cart.totalItemCount}</span>
-        </h1>
+        <h1 className="text-ink text-xl font-bold">장바구니</h1>
         <button
           type="button"
           onClick={() => {
@@ -100,23 +102,15 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
         />
       ))}
       {filtered.unmatchedItems.length > 0 && (
-        <section
-          data-testid="cart-unmatched-section"
-          className="rounded-card border border-gray-100 bg-white p-3"
-        >
-          <ul className="flex flex-col divide-y divide-gray-50">
-            {filtered.unmatchedItems.map((item) => (
-              <CartItemRow
-                key={item.cartItemId}
-                item={item}
-                onEdit={setEditingItem}
-                onDelete={(id) => handlers.onDeleteItems([id])}
-                selectable={isSelectMode}
-                selected={selectedIds.has(item.cartItemId)}
-                onToggleSelect={toggleSelect}
-              />
-            ))}
-          </ul>
+        <section data-testid="cart-unmatched-section">
+          <CartItemList
+            items={filtered.unmatchedItems}
+            onEdit={setEditingItem}
+            onDelete={(id) => handlers.onDeleteItems([id])}
+            selectable={isSelectMode}
+            selectedIds={selectedIds}
+            onToggleSelect={toggleSelect}
+          />
         </section>
       )}
       {isSelectMode && selectedIds.size > 0 && (

@@ -6,7 +6,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { CartGroup, CartItem } from "@/entities/cart";
 
-import { CartItemRow } from "./CartItemRow";
+import { CartItemList } from "./CartItemList";
 
 type CartGroupSectionProps = {
   group: CartGroup;
@@ -29,13 +29,17 @@ export const CartGroupSection = ({
   const hasProducts = coupangInfo.products.length > 0;
 
   return (
-    <section
-      data-testid={`cart-group-${coupangInfo.coupangName}`}
-      className="rounded-card border border-gray-100 bg-white p-3"
-    >
-      <div className="mb-1 flex items-center justify-between gap-2">
-        <h2 className="text-ink font-bold">{coupangInfo.coupangName}</h2>
-        {!hasProducts && coupangInfo.landingUrl && (
+    <section data-testid={`cart-group-${coupangInfo.coupangName}`}>
+      <CartItemList
+        items={items}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        selectable={selectable}
+        selectedIds={selectedIds}
+        onToggleSelect={onToggleSelect}
+      />
+      {!hasProducts && coupangInfo.landingUrl && (
+        <div className="flex justify-end">
           <a
             href={coupangInfo.landingUrl}
             target="_blank"
@@ -45,23 +49,10 @@ export const CartGroupSection = ({
           >
             쿠팡에서 보기
           </a>
-        )}
-      </div>
-      <ul className="flex flex-col divide-y divide-gray-50">
-        {items.map((item) => (
-          <CartItemRow
-            key={item.cartItemId}
-            item={item}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            selectable={selectable}
-            selected={selectedIds.has(item.cartItemId)}
-            onToggleSelect={onToggleSelect}
-          />
-        ))}
-      </ul>
+        </div>
+      )}
       {hasProducts && (
-        <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+        <div className="scrollbar-hide -mx-4 mt-1 flex gap-2 overflow-x-auto px-4 pb-1">
           {coupangInfo.products.map((product) => (
             <CoupangProductCard key={product.rank} product={product} />
           ))}

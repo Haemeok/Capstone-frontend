@@ -78,7 +78,7 @@ const DesktopHeader = () => {
 
           <div className="flex items-center gap-4">
             {locale === "ko" && (
-              <CartCountBadge>
+              <CartCountBadge variant="header">
                 <LocalizedLink
                   href="/cart"
                   aria-label={t.cart}
