@@ -10,7 +10,7 @@ import { CartItemRow } from "./CartItemRow";
 
 type ItemHandlers = {
   onEdit: (item: CartItem) => void;
-  onDelete: (cartItemId: string) => void;
+  onDelete: (cartItemIds: string[]) => void;
   selectable: boolean;
   selectedIds: Set<string>;
   onToggleSelect: (cartItemId: string) => void;
@@ -24,7 +24,7 @@ type MultiRecipeGroupProps = ItemHandlers & {
   group: CartItemNameGroup;
 };
 
-// 같은 재료를 여러 레시피에서 담은 경우 — 라벨 1번 + 레시피별 양 + 총량
+// 같은 재료를 여러 레시피에서 담은 경우 — 하나의 항목 블록: 라벨·총량·삭제 1개 + 레시피별 양
 const MultiRecipeGroup = ({
   group,
   onEdit,
@@ -32,63 +32,70 @@ const MultiRecipeGroup = ({
   selectable,
   selectedIds,
   onToggleSelect,
-}: MultiRecipeGroupProps) => (
-  <li className="py-2">
-    <div className="flex items-baseline gap-2">
-      <p className="text-ink truncate font-semibold">{group.name}</p>
-      {group.totalAmount && (
-        <span className="text-olive-dark shrink-0 text-sm font-semibold">
-          총 {group.totalAmount}
-        </span>
+}: MultiRecipeGroupProps) => {
+  const ids = group.items.map((item) => item.cartItemId);
+  const allSelected = ids.every((id) => selectedIds.has(id));
+
+  return (
+    <li className="flex gap-3 py-2">
+      {selectable && (
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={() => {
+            triggerHaptic("Light");
+            ids.forEach(onToggleSelect);
+          }}
+          aria-label={`${group.name} 선택`}
+          className="accent-olive-light size-5 self-center"
+        />
       )}
-    </div>
-    <ul className="mt-1 flex flex-col gap-1.5">
-      {group.items.map((item) => (
-        <li key={item.cartItemId} className="flex items-center gap-3">
-          {selectable && (
-            <input
-              type="checkbox"
-              checked={selectedIds.has(item.cartItemId)}
-              onChange={() => {
-                triggerHaptic("Light");
-                onToggleSelect(item.cartItemId);
-              }}
-              aria-label={`${item.recipe.title} ${item.name} 선택`}
-              className="accent-olive-light size-5"
-            />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline gap-2">
+          <p className="text-ink truncate font-semibold">{group.name}</p>
+          {group.totalAmount && (
+            <span className="text-olive-dark shrink-0 text-sm font-semibold">
+              총 {group.totalAmount}
+            </span>
           )}
-          <p className="text-ink-muted min-w-0 flex-1 truncate text-sm">
-            {item.recipe.title}
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              triggerHaptic("Light");
-              onEdit(item);
-            }}
-            aria-label={`${item.recipe.title} ${item.name} 수량 수정`}
-            className="text-ink-sub shrink-0 text-sm"
-          >
-            {`${item.quantity}${item.unit}`.trim() || "수량 입력"}
-          </button>
-          {!selectable && (
-            <button
-              type="button"
-              onClick={() => {
-                triggerHaptic("Light");
-                onDelete(item.cartItemId);
-              }}
-              aria-label={`${item.recipe.title} ${item.name} 삭제`}
-              className="text-ink-muted p-1"
-            >
-              ✕
-            </button>
-          )}
-        </li>
-      ))}
-    </ul>
-  </li>
-);
+        </div>
+        <ul className="mt-0.5 flex flex-col">
+          {group.items.map((item) => (
+            <li key={item.cartItemId} className="flex items-center gap-2">
+              <p className="text-ink-muted truncate text-sm">
+                {item.recipe.title}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic("Light");
+                  onEdit(item);
+                }}
+                aria-label={`${item.recipe.title} ${item.name} 수량 수정`}
+                className="text-ink-sub shrink-0 py-0.5 text-sm"
+              >
+                {`${item.quantity}${item.unit}`.trim() || "수량 입력"}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {!selectable && (
+        <button
+          type="button"
+          onClick={() => {
+            triggerHaptic("Light");
+            onDelete(ids);
+          }}
+          aria-label={`${group.name} 삭제`}
+          className="text-ink-muted self-start p-1"
+        >
+          ✕
+        </button>
+      )}
+    </li>
+  );
+};
 
 export const CartItemList = ({ items, ...handlers }: CartItemListProps) => {
   const nameGroups = groupCartItemsByName(items);
@@ -101,7 +108,7 @@ export const CartItemList = ({ items, ...handlers }: CartItemListProps) => {
             key={group.items[0].cartItemId}
             item={group.items[0]}
             onEdit={handlers.onEdit}
-            onDelete={handlers.onDelete}
+            onDelete={(id) => handlers.onDelete([id])}
             selectable={handlers.selectable}
             selected={handlers.selectedIds.has(group.items[0].cartItemId)}
             onToggleSelect={handlers.onToggleSelect}

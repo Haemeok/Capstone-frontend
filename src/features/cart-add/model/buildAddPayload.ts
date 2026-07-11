@@ -9,16 +9,13 @@ type BuildAddPayloadArgs = {
   servingRatio: number;
 };
 
-// 기본 인분이면 서버 저장값을 쓰도록 필드 생략, 인분수 변경 시에만 환산값 캡처
+// 서버는 quantity 생략 시 원본 수량 fallback 없이 null로 저장하므로 항상 환산값을 보냄
 export const buildAddPayload = ({
   recipeIngredientId,
   quantity,
   unit,
   servingRatio,
 }: BuildAddPayloadArgs): AddCartItemInput => {
-  if (servingRatio === 1) {
-    return { recipeIngredientId };
-  }
   const converted = convertIngredientQuantity(quantity, unit, servingRatio);
   if (converted.quantity === "") {
     return { recipeIngredientId };

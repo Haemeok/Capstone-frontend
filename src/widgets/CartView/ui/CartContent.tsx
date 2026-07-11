@@ -95,7 +95,7 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
           key={group.coupangInfo.coupangName}
           group={group}
           onEdit={setEditingItem}
-          onDelete={(id) => handlers.onDeleteItems([id])}
+          onDelete={handlers.onDeleteItems}
           selectable={isSelectMode}
           selectedIds={selectedIds}
           onToggleSelect={toggleSelect}
@@ -106,7 +106,7 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
           <CartItemList
             items={filtered.unmatchedItems}
             onEdit={setEditingItem}
-            onDelete={(id) => handlers.onDeleteItems([id])}
+            onDelete={handlers.onDeleteItems}
             selectable={isSelectMode}
             selectedIds={selectedIds}
             onToggleSelect={toggleSelect}

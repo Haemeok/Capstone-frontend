@@ -50,7 +50,7 @@ export const RecipeTabBar = ({
     <div
       role="tablist"
       aria-label="레시피별 필터"
-      className="flex gap-2 overflow-x-auto pb-1"
+      className="scrollbar-hide flex gap-2 overflow-x-auto pb-1"
     >
       <button
         type="button"
