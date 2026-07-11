@@ -18,7 +18,7 @@ const RESERVED_RECIPE_SEGMENTS = new Set([
   "category",
   "private",
   "sitemap",
-  "_dyn",
+  "dyn",
 ]);
 
 const resolveRecipeTrack = async (id: string): Promise<"isr" | "dynamic"> => {
@@ -59,7 +59,7 @@ export async function middleware(request: NextRequest) {
     const id = segments[2];
     if ((await resolveRecipeTrack(id)) === "dynamic") {
       const url = request.nextUrl.clone();
-      url.pathname = `/recipes/_dyn/${id}`;
+      url.pathname = `/recipes/dyn/${id}`;
       return NextResponse.rewrite(url);
     }
   }
