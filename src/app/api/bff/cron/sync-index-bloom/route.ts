@@ -61,7 +61,21 @@ export async function GET(request: Request) {
     );
   }
 
-  await patchEdgeConfig("indexedBloom", fitted.bloom);
+  try {
+    await patchEdgeConfig("indexedBloom", fitted.bloom);
+  } catch (error) {
+    return Response.json(
+      {
+        ok: false,
+        reason: "edge config write failed",
+        detail: error instanceof Error ? error.message : String(error),
+        n: ids.length,
+        fp: fitted.fp,
+        bytes: fitted.bytes,
+      },
+      { status: 500 }
+    );
+  }
 
   return Response.json({
     ok: true,
