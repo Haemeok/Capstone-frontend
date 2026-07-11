@@ -8,18 +8,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CoupangProductCard } from "@/shared/coupang";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import type { CartGroup, CartItem } from "@/entities/cart";
+import type { CartGroup } from "@/entities/cart";
 
 import { CartItemList } from "./CartItemList";
 
 type CartGroupSectionProps = {
   group: CartGroup;
   recipeImages: Map<string, string | null>;
-  onEdit: (item: CartItem) => void;
   onDelete: (cartItemIds: string[]) => void;
-  selectable: boolean;
-  selectedIds: Set<string>;
-  onToggleSelect: (cartItemId: string) => void;
 };
 
 const SCROLL_STEP = 280;
@@ -27,11 +23,7 @@ const SCROLL_STEP = 280;
 export const CartGroupSection = ({
   group,
   recipeImages,
-  onEdit,
   onDelete,
-  selectable,
-  selectedIds,
-  onToggleSelect,
 }: CartGroupSectionProps) => {
   const { coupangInfo, items } = group;
   const hasProducts = coupangInfo.products.length > 0;
@@ -49,11 +41,7 @@ export const CartGroupSection = ({
       <CartItemList
         items={items}
         recipeImages={recipeImages}
-        onEdit={onEdit}
         onDelete={onDelete}
-        selectable={selectable}
-        selectedIds={selectedIds}
-        onToggleSelect={onToggleSelect}
       />
       {!hasProducts && coupangInfo.landingUrl && (
         <div className="flex justify-end">

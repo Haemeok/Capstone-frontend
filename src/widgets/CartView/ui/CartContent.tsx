@@ -4,11 +4,10 @@
 import { useMemo, useState } from "react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
+import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
-import type { CartItem, CartResponse } from "@/entities/cart";
+import type { CartResponse } from "@/entities/cart";
 import { filterCartByRecipe } from "@/entities/cart";
-
-import { CartItemEditSheet } from "@/features/cart-item-edit";
 
 import { CartEmptyState } from "./CartEmptyState";
 import { CartGroupSection } from "./CartGroupSection";
@@ -16,10 +15,6 @@ import { CartItemList } from "./CartItemList";
 import { RecipeTabBar } from "./RecipeTabBar";
 
 export type CartHandlers = {
-  onEditItem: (
-    item: CartItem,
-    next: { quantity: string; unit: string }
-  ) => void;
   onDeleteItems: (cartItemIds: string[]) => void;
 };
 
@@ -28,13 +23,9 @@ type CartContentProps = {
   handlers: CartHandlers;
 };
 
-const EMPTY_SET = new Set<string>();
-
 export const CartContent = ({ cart, handlers }: CartContentProps) => {
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
-  const [editingItem, setEditingItem] = useState<CartItem | null>(null);
-  const [isSelectMode, setIsSelectMode] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(EMPTY_SET);
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   // 필터 중 해당 레시피가 전량 삭제되면 탭이 사라지므로 "전체"로 강등
   const validRecipeId =
     selectedRecipeId &&
@@ -51,17 +42,13 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
     [cart.recipes]
   );
 
-  const toggleSelect = (cartItemId: string) =>
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(cartItemId)) next.delete(cartItemId);
-      else next.add(cartItemId);
-      return next;
-    });
-
-  const exitSelectMode = () => {
-    setIsSelectMode(false);
-    setSelectedIds(EMPTY_SET);
+  const clearAll = () => {
+    const allIds = [
+      ...cart.groups.flatMap((group) => group.items),
+      ...cart.unmatchedItems,
+    ].map((item) => item.cartItemId);
+    handlers.onDeleteItems(allIds);
+    setIsClearConfirmOpen(false);
   };
 
   if (cart.totalItemCount === 0) {
@@ -81,12 +68,11 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
           type="button"
           onClick={() => {
             triggerHaptic("Light");
-            if (isSelectMode) exitSelectMode();
-            else setIsSelectMode(true);
+            setIsClearConfirmOpen(true);
           }}
-          className="text-ink-sub text-sm font-semibold"
+          className="text-ink-muted text-sm"
         >
-          {isSelectMode ? "취소" : "선택"}
+          전체 비우기
         </button>
       </div>
       <RecipeTabBar
@@ -100,11 +86,7 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
           key={group.coupangInfo.coupangName}
           group={group}
           recipeImages={recipeImages}
-          onEdit={setEditingItem}
           onDelete={handlers.onDeleteItems}
-          selectable={isSelectMode}
-          selectedIds={selectedIds}
-          onToggleSelect={toggleSelect}
         />
       ))}
       {filtered.unmatchedItems.length > 0 && (
@@ -112,35 +94,18 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
           <CartItemList
             items={filtered.unmatchedItems}
             recipeImages={recipeImages}
-            onEdit={setEditingItem}
             onDelete={handlers.onDeleteItems}
-            selectable={isSelectMode}
-            selectedIds={selectedIds}
-            onToggleSelect={toggleSelect}
           />
         </section>
       )}
-      {isSelectMode && selectedIds.size > 0 && (
-        <button
-          type="button"
-          onClick={() => {
-            triggerHaptic("Medium");
-            handlers.onDeleteItems([...selectedIds]);
-            exitSelectMode();
-          }}
-          className="bg-olive-light fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 rounded-full px-6 py-3 font-semibold text-white shadow-lg"
-        >
-          {selectedIds.size}개 삭제
-        </button>
-      )}
-      <CartItemEditSheet
-        item={editingItem}
-        onOpenChange={(open) => {
-          if (!open) setEditingItem(null);
-        }}
-        onSubmit={(_cartItemId, next) => {
-          if (editingItem) handlers.onEditItem(editingItem, next);
-        }}
+      <DeleteModal
+        open={isClearConfirmOpen}
+        onOpenChange={setIsClearConfirmOpen}
+        title="장바구니를 모두 비울까요?"
+        description="담아둔 재료가 모두 삭제돼요."
+        confirmLabel="비우기"
+        cancelLabel="취소"
+        onConfirm={clearAll}
       />
     </div>
   );
