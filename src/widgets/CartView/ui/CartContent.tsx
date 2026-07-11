@@ -45,6 +45,11 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
     () => filterCartByRecipe(cart, validRecipeId),
     [cart, validRecipeId]
   );
+  const recipeImages = useMemo(
+    () =>
+      new Map(cart.recipes.map((recipe) => [recipe.recipeId, recipe.imageUrl])),
+    [cart.recipes]
+  );
 
   const toggleSelect = (cartItemId: string) =>
     setSelectedIds((prev) => {
@@ -94,6 +99,7 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
         <CartGroupSection
           key={group.coupangInfo.coupangName}
           group={group}
+          recipeImages={recipeImages}
           onEdit={setEditingItem}
           onDelete={handlers.onDeleteItems}
           selectable={isSelectMode}
@@ -105,6 +111,7 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
         <section data-testid="cart-unmatched-section">
           <CartItemList
             items={filtered.unmatchedItems}
+            recipeImages={recipeImages}
             onEdit={setEditingItem}
             onDelete={handlers.onDeleteItems}
             selectable={isSelectMode}

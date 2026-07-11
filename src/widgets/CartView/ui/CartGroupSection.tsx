@@ -14,6 +14,7 @@ import { CartItemList } from "./CartItemList";
 
 type CartGroupSectionProps = {
   group: CartGroup;
+  recipeImages: Map<string, string | null>;
   onEdit: (item: CartItem) => void;
   onDelete: (cartItemIds: string[]) => void;
   selectable: boolean;
@@ -25,6 +26,7 @@ const SCROLL_STEP = 280;
 
 export const CartGroupSection = ({
   group,
+  recipeImages,
   onEdit,
   onDelete,
   selectable,
@@ -46,6 +48,7 @@ export const CartGroupSection = ({
     <section data-testid={`cart-group-${coupangInfo.coupangName}`}>
       <CartItemList
         items={items}
+        recipeImages={recipeImages}
         onEdit={onEdit}
         onDelete={onDelete}
         selectable={selectable}

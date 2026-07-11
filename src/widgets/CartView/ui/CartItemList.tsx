@@ -9,6 +9,7 @@ import { groupCartItemsByName } from "@/entities/cart";
 import { CartItemRow } from "./CartItemRow";
 
 type ItemHandlers = {
+  recipeImages: Map<string, string | null>;
   onEdit: (item: CartItem) => void;
   onDelete: (cartItemIds: string[]) => void;
   selectable: boolean;
@@ -27,6 +28,7 @@ type MultiRecipeGroupProps = ItemHandlers & {
 // 같은 재료를 여러 레시피에서 담은 경우 — 하나의 항목 블록: 라벨·총량·삭제 1개 + 레시피별 양
 const MultiRecipeGroup = ({
   group,
+  recipeImages,
   onEdit,
   onDelete,
   selectable,
@@ -52,32 +54,45 @@ const MultiRecipeGroup = ({
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <p className="text-ink truncate font-semibold">{group.name}</p>
+          <p className="text-ink truncate text-lg font-semibold">
+            {group.name}
+          </p>
           {group.totalAmount && (
-            <span className="text-olive-dark shrink-0 text-sm font-semibold">
+            <span className="text-olive-dark shrink-0 text-base font-semibold">
               총 {group.totalAmount}
             </span>
           )}
         </div>
-        <ul className="mt-0.5 flex flex-col">
-          {group.items.map((item) => (
-            <li key={item.cartItemId} className="flex items-center gap-2">
-              <p className="text-ink-muted truncate text-sm">
-                {item.recipe.title}
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  triggerHaptic("Light");
-                  onEdit(item);
-                }}
-                aria-label={`${item.recipe.title} ${item.name} 수량 수정`}
-                className="text-ink-sub shrink-0 py-0.5 text-sm"
-              >
-                {`${item.quantity}${item.unit}`.trim() || "수량 입력"}
-              </button>
-            </li>
-          ))}
+        <ul className="mt-1 flex flex-col gap-1">
+          {group.items.map((item) => {
+            const imageUrl = recipeImages.get(item.recipe.recipeId);
+            return (
+              <li key={item.cartItemId} className="flex items-center gap-1.5">
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt=""
+                    loading="lazy"
+                    className="size-5 rounded object-cover"
+                  />
+                )}
+                <p className="text-ink-muted truncate text-sm">
+                  {item.recipe.title}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerHaptic("Light");
+                    onEdit(item);
+                  }}
+                  aria-label={`${item.recipe.title} ${item.name} 수량 수정`}
+                  className="text-ink-sub shrink-0 text-base"
+                >
+                  {`${item.quantity}${item.unit}`.trim() || "수량 입력"}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
       {!selectable && (
@@ -107,6 +122,9 @@ export const CartItemList = ({ items, ...handlers }: CartItemListProps) => {
           <CartItemRow
             key={group.items[0].cartItemId}
             item={group.items[0]}
+            recipeImageUrl={handlers.recipeImages.get(
+              group.items[0].recipe.recipeId
+            )}
             onEdit={handlers.onEdit}
             onDelete={(id) => handlers.onDelete([id])}
             selectable={handlers.selectable}
