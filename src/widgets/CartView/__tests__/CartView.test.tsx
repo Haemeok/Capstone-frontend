@@ -48,6 +48,7 @@ import {
 import {
   cartFixture,
   emptyCartFixture,
+  sameIngredientCartFixture,
 } from "@/entities/cart/model/__tests__/fixtures";
 import { type User, useUserStore } from "@/entities/user";
 
@@ -81,7 +82,7 @@ beforeEach(() => {
   useGuestCartStore.setState({ items: [], isHydrated: true });
 });
 
-it("T-06: /cart 진입 시 담긴 항목의 이름·수량·단위·출처 레시피·개수가 보인다", async () => {
+it("T-06: /cart 진입 시 담긴 항목의 이름·수량·단위·출처 레시피가 보인다", async () => {
   getCartMock.mockResolvedValue(cartFixture);
   renderCartView();
 
@@ -90,10 +91,25 @@ it("T-06: /cart 진입 시 담긴 항목의 이름·수량·단위·출처 레�
     screen.getByRole("button", { name: "배추김치 수량 수정" })
   ).toHaveTextContent(/100\s*g/);
   expect(screen.getAllByText(/김치찌개/).length).toBeGreaterThan(0);
-  expect(
-    screen.getByRole("heading", { name: /장바구니\s*5/ })
-  ).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "장바구니" })).toBeInTheDocument();
   expect(screen.getByText("수제 고추기름")).toBeInTheDocument();
+  // 쿠팡 그룹명 헤더 제거 — 재료 라벨은 항목당 1번만
+  expect(screen.getAllByText("김치")).toHaveLength(1);
+});
+
+it("같은 재료를 두 레시피에서 담으면 라벨 1번 + 레시피별 양 + 총량이 보인다", async () => {
+  getCartMock.mockResolvedValue(sameIngredientCartFixture);
+  renderCartView();
+
+  expect(await screen.findByText("신김치")).toBeInTheDocument();
+  expect(screen.getAllByText("신김치")).toHaveLength(1);
+  expect(screen.getByText("총 300g")).toBeInTheDocument();
+  expect(
+    screen.getByRole("button", { name: "김치찌개 신김치 수량 수정" })
+  ).toHaveTextContent(/200\s*g/);
+  expect(
+    screen.getByRole("button", { name: "김치전 신김치 수량 수정" })
+  ).toHaveTextContent(/100\s*g/);
 });
 
 it("T-08: 레시피 탭 클릭 시 해당 항목만 보이고 getCart 재호출이 없다", async () => {
@@ -149,16 +165,17 @@ it("T-12: 미매칭 항목에는 구매 요소가 없다", async () => {
   expect(within(unmatched).queryByRole("link")).not.toBeInTheDocument();
 });
 
-it("T-13: 빈 장바구니면 빈 상태 안내와 탐색 CTA가 보인다", async () => {
+it("T-13: 빈 장바구니면 헤더는 유지되고 인기 레시피 CTA가 보인다", async () => {
   getCartMock.mockResolvedValue(emptyCartFixture);
   renderCartView();
 
   expect(
     await screen.findByText(/레시피에서 재료를 담아보세요/)
   ).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "장바구니" })).toBeInTheDocument();
   expect(
-    screen.getByRole("link", { name: /레시피 구경하기/ })
-  ).toBeInTheDocument();
+    screen.getByRole("link", { name: /지금 바로 재료 담으러 가기/ })
+  ).toHaveAttribute("href", "/search/results");
 });
 
 it("T-14: 수량 영역 탭 → 바텀시트에서 수정 → PATCH + 새 값 표시", async () => {

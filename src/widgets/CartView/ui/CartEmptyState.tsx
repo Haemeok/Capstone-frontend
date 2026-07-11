@@ -15,11 +15,11 @@ export const CartEmptyState = () => (
       레시피에서 재료를 담아보세요.
     </p>
     <LocalizedLink
-      href="/search"
+      href="/search/results"
       onClick={() => triggerHaptic("Light")}
       className="bg-olive-light rounded-full px-5 py-2.5 font-semibold text-white"
     >
-      레시피 구경하기
+      지금 바로 재료 담으러 가기
     </LocalizedLink>
   </div>
 );

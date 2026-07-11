@@ -129,6 +129,54 @@ export const cartFixture: CartResponse = {
   ],
 };
 
+// 같은 재료(신김치)를 두 레시피에서 담은 케이스 — 이름 그룹핑 + 총량 합산 검증용
+export const sameIngredientCartFixture: CartResponse = {
+  totalItemCount: 2,
+  recipes: [
+    {
+      recipeId: "r7KpQ2mA",
+      title: "김치찌개",
+      imageUrl: null,
+      itemCount: 1,
+      deleted: false,
+    },
+    {
+      recipeId: "z2Cd5TeF",
+      title: "김치전",
+      imageUrl: null,
+      itemCount: 1,
+      deleted: false,
+    },
+  ],
+  groups: [
+    {
+      coupangInfo: {
+        coupangName: "신김치",
+        landingUrl: "https://link.coupang.com/kimchi",
+        lastCollectedAt: "2026-07-09T03:20:15+09:00",
+        products: [],
+      },
+      items: [
+        {
+          cartItemId: "c2Fg6JkL",
+          name: "신김치",
+          quantity: "200",
+          unit: "g",
+          recipe: { recipeId: "r7KpQ2mA", title: "김치찌개", deleted: false },
+        },
+        {
+          cartItemId: "c3Hj8PqS",
+          name: "신김치",
+          quantity: "100",
+          unit: "g",
+          recipe: { recipeId: "z2Cd5TeF", title: "김치전", deleted: false },
+        },
+      ],
+    },
+  ],
+  unmatchedItems: [],
+};
+
 export const emptyCartFixture: CartResponse = {
   totalItemCount: 0,
   recipes: [],
