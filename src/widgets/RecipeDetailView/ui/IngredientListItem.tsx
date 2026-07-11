@@ -14,6 +14,7 @@ type IngredientListItemProps = {
   displayPrice: string;
   reserveFridgeSpace: boolean;
   locale: Locale;
+  cartAction?: React.ReactNode;
 };
 
 export const IngredientListItem = ({
@@ -22,6 +23,7 @@ export const IngredientListItem = ({
   displayPrice,
   reserveFridgeSpace,
   locale,
+  cartAction,
 }: IngredientListItemProps) => {
   const t = getDictionary(locale);
   const nameCell = (
@@ -56,7 +58,7 @@ export const IngredientListItem = ({
       {nameCell}
       {quantityCell}
       <p className="text-ink-muted text-right text-sm">{displayPrice}</p>
-      <div className="w-6" />
+      <div className="flex w-6 items-center justify-center">{cartAction}</div>
     </li>
   );
 };

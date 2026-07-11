@@ -13,6 +13,7 @@ import RollingPointBanner from "@/shared/ui/RollingPointBanner";
 
 import { Recipe, StaticRecipe } from "@/entities/recipe/model/types";
 
+import { AddToCartButton } from "@/features/cart-add";
 import { useRecipeStatus } from "@/features/recipe-status";
 
 import { IngredientListItem } from "./IngredientListItem";
@@ -189,6 +190,22 @@ const IngredientsSection = ({
                     )}
                     reserveFridgeSpace={ownedIndices.size > 0}
                     locale={locale}
+                    cartAction={
+                      locale === "ko" && ingredient.recipeIngredientId ? (
+                        <AddToCartButton
+                          recipeIngredientId={ingredient.recipeIngredientId}
+                          name={ingredient.name}
+                          quantity={ingredient.quantity}
+                          unit={ingredient.unit}
+                          servingRatio={servingRatio}
+                          recipe={{
+                            recipeId: recipe.id,
+                            title: recipe.title,
+                            imageUrl: recipe.imageUrl ?? null,
+                          }}
+                        />
+                      ) : undefined
+                    }
                   />
                 );
               })}
