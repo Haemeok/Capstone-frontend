@@ -9,6 +9,11 @@ jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 jest.mock("@/shared/hooks/useIsBottomNavVisible", () => ({
   useIsBottomNavVisible: () => true,
 }));
+jest.mock("@/features/cart-badge", () => ({
+  CartCountBadge: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+}));
 
 import { useUserStore } from "@/entities/user";
 
