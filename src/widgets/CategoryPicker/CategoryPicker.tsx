@@ -24,6 +24,10 @@ import {
 import { RadioGroup } from "@/shared/ui/shadcn/radio-group";
 
 import CategoryItem from "./CategoryItem";
+import DishTypeGrid from "./DishTypeGrid";
+import TagChipList from "./TagChipList";
+
+type CategoryPickerVariant = "list" | "dishGrid" | "tagChips";
 
 type CategoryPickerProps = {
   open: boolean;
@@ -36,6 +40,7 @@ type CategoryPickerProps = {
   description?: string;
   trigger?: React.ReactNode;
   domain?: TaxonomyDomain;
+  variant?: CategoryPickerVariant;
 };
 
 const CategoryPicker = ({
@@ -49,6 +54,7 @@ const CategoryPicker = ({
   availableValues,
   trigger,
   domain,
+  variant = "list",
 }: CategoryPickerProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { dict } = useTaxonomy();
@@ -91,37 +97,62 @@ const CategoryPicker = ({
     onOpenChange(false);
   };
 
-  const selectionContent = isMultiple ? (
-    <div className="space-y-1">
-      {availableValues.map((value) => (
-        <CategoryItem
-          key={value}
-          value={value}
-          isSelected={(internalSelection as string[]).includes(value)}
-          onToggle={handleCheckboxChange}
-          isMultiple={true}
-          domain={domain}
-        />
-      ))}
-    </div>
-  ) : (
-    <RadioGroup
-      value={internalSelection as string}
-      onValueChange={handleRadioChange}
-      className="gap-0"
-    >
-      {availableValues.map((value) => (
-        <CategoryItem
-          key={value}
-          value={value}
-          isSelected={internalSelection === value}
-          onToggle={handleRadioChange}
-          isMultiple={false}
-          domain={domain}
-        />
-      ))}
-    </RadioGroup>
+  const handleGridSelect = useCallback(
+    (value: string) => {
+      setValue(value);
+      onOpenChange(false);
+    },
+    [setValue, onOpenChange]
   );
+
+  const hasFooter = variant !== "dishGrid";
+
+  const selectionContent =
+    variant === "dishGrid" ? (
+      <DishTypeGrid
+        values={availableValues}
+        selected={internalSelection as string}
+        onSelect={handleGridSelect}
+        domain={domain}
+      />
+    ) : variant === "tagChips" ? (
+      <TagChipList
+        values={availableValues}
+        selected={internalSelection as string[]}
+        onToggle={handleCheckboxChange}
+        domain={domain}
+      />
+    ) : isMultiple ? (
+      <div className="space-y-1">
+        {availableValues.map((value) => (
+          <CategoryItem
+            key={value}
+            value={value}
+            isSelected={(internalSelection as string[]).includes(value)}
+            onToggle={handleCheckboxChange}
+            isMultiple={true}
+            domain={domain}
+          />
+        ))}
+      </div>
+    ) : (
+      <RadioGroup
+        value={internalSelection as string}
+        onValueChange={handleRadioChange}
+        className="gap-0"
+      >
+        {availableValues.map((value) => (
+          <CategoryItem
+            key={value}
+            value={value}
+            isSelected={internalSelection === value}
+            onToggle={handleRadioChange}
+            isMultiple={false}
+            domain={domain}
+          />
+        ))}
+      </RadioGroup>
+    );
 
   if (isMobile) {
     return (
@@ -138,23 +169,25 @@ const CategoryPicker = ({
           </DrawerHeader>
           <div className="flex-1 overflow-y-auto p-4">{selectionContent}</div>
 
-          <DrawerFooter className="mt-auto flex-row gap-2 border-t border-gray-200 pt-4">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              className="flex-1 rounded-md border-gray-300"
-            >
-              {dict.filters.reset}
-            </Button>
-            <DrawerClose asChild>
+          {hasFooter && (
+            <DrawerFooter className="mt-auto flex-row gap-2 border-t border-gray-200 pt-4">
               <Button
-                onClick={handleApply}
-                className="bg-olive-light flex-1 rounded-md text-white"
+                variant="outline"
+                onClick={handleReset}
+                className="flex-1 rounded-md border-gray-300"
               >
-                {dict.filters.apply}
+                {dict.filters.reset}
               </Button>
-            </DrawerClose>
-          </DrawerFooter>
+              <DrawerClose asChild>
+                <Button
+                  onClick={handleApply}
+                  className="bg-olive-light flex-1 rounded-md text-white"
+                >
+                  {dict.filters.apply}
+                </Button>
+              </DrawerClose>
+            </DrawerFooter>
+          )}
         </DrawerContent>
       </Drawer>
     );
@@ -177,23 +210,25 @@ const CategoryPicker = ({
             {selectionContent}
           </div>
 
-          <div className="flex gap-2 border-t pt-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleReset}
-              className="flex-1 cursor-pointer"
-            >
-              {dict.filters.reset}
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleApply}
-              className="bg-olive-light hover:bg-olive-light/90 flex-1 cursor-pointer text-white"
-            >
-              {dict.filters.apply}
-            </Button>
-          </div>
+          {hasFooter && (
+            <div className="flex gap-2 border-t pt-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleReset}
+                className="flex-1 cursor-pointer"
+              >
+                {dict.filters.reset}
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleApply}
+                className="bg-olive-light hover:bg-olive-light/90 flex-1 cursor-pointer text-white"
+              >
+                {dict.filters.apply}
+              </Button>
+            </div>
+          )}
         </div>
       </PopoverContent>
     </Popover>

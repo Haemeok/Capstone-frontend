@@ -48,6 +48,7 @@ export const TagsFilter = () => {
       header={dict.filters.tagsHeader}
       description={dict.filters.tagsDescription}
       domain="tags"
+      variant="tagChips"
     />
   );
 };

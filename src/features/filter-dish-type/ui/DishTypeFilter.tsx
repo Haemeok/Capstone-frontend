@@ -37,6 +37,7 @@ export const DishTypeFilter = () => {
       header={dict.filters.dishTypeHeader}
       description={dict.filters.dishTypeDescription}
       domain="dishType"
+      variant="dishGrid"
     />
   );
 };
