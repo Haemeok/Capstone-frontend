@@ -7,6 +7,7 @@ import type { DetailedRecipeGridItem } from "@/entities/recipe";
 
 export type IngredientItem = {
   id: string;
+  recipeIngredientId?: string;
   name: string;
   imageUrl?: string;
   category?: string;
