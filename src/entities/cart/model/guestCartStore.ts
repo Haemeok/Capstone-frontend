@@ -39,6 +39,10 @@ export const useGuestCartStore = create<GuestCartStore>((set, get) => ({
   },
 
   addItems: (newItems) => {
+    // hydrate 전에 담으면 빈 상태 기준으로 저장분을 덮어쓰므로 선복원
+    if (!get().isHydrated) {
+      get().hydrateFromStorage();
+    }
     const existing = new Set(get().items.map((i) => i.recipeIngredientId));
     let addedCount = 0;
     let skippedCount = 0;
