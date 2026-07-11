@@ -1,5 +1,7 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
+
 import { aiModels } from "@/shared/config/constants/aiModel";
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 import {
@@ -15,6 +17,30 @@ export const CreationModeSelector = () => {
   const locale = useRecipeCreateLocale();
   const wrapClass = locale === "ko" ? "break-keep" : "break-words";
 
+  const modeCards = [
+    {
+      href: "/recipes/new/youtube",
+      image: `${ICON_BASE_URL}youtube.webp`,
+      alt: t.youtubeCardImageAlt,
+      title: t.youtubeCardTitle,
+      body: t.youtubeCardBody,
+    },
+    {
+      href: "/recipes/new/ai",
+      image: aiModels.INGREDIENT_FOCUS.image,
+      alt: t.aiCardImageAlt,
+      title: t.aiCardTitle,
+      body: t.aiCardBody,
+    },
+    {
+      href: "/recipes/new/manual",
+      image: `${ICON_BASE_URL}note.webp`,
+      alt: t.manualCardImageAlt,
+      title: t.manualCardTitle,
+      body: t.manualCardBody,
+    },
+  ];
+
   return (
     <div className="relative flex h-full items-center justify-center p-6">
       <div className="absolute top-2 left-2 md:hidden">
@@ -22,94 +48,46 @@ export const CreationModeSelector = () => {
       </div>
       <div className="w-full max-w-4xl">
         <h1
-          className={`text-ink mb-4 text-center text-3xl font-bold text-pretty ${wrapClass}`}
+          className={`text-ink mb-4 text-center text-2xl font-bold text-pretty md:text-3xl ${wrapClass}`}
         >
           {t.hubTitle}
         </h1>
         <p
-          className={`text-ink-muted mb-12 text-center text-pretty ${wrapClass}`}
+          className={`text-ink-muted mb-8 text-center text-pretty md:mb-12 ${wrapClass}`}
         >
           {t.hubSubtitle}
         </p>
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8">
-          <LocalizedLink
-            href="/recipes/new/manual"
-            className="group border-olive-light/30 hover:border-olive-mint block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:p-8"
-          >
-            <div className="flex flex-col items-center space-y-3 text-center md:space-y-6">
-              <div className="rounded-card relative w-32 overflow-hidden md:h-64 md:w-48">
+        <div className="flex flex-col gap-3 md:grid md:grid-cols-3 md:gap-8">
+          {modeCards.map((card) => (
+            <LocalizedLink
+              key={card.href}
+              href={card.href}
+              className="group md:hover:border-olive-mint flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 transition-colors active:bg-gray-50 md:flex-col md:gap-6 md:p-8 md:hover:shadow-sm"
+            >
+              <div className="rounded-card relative w-20 shrink-0 overflow-hidden md:h-64 md:w-48">
                 <Image
-                  src={`${ICON_BASE_URL}note.webp`}
-                  alt={t.manualCardImageAlt}
+                  src={card.image}
+                  alt={card.alt}
                   fit="cover"
                   imgClassName="transition-transform duration-200 group-hover:scale-105"
                 />
               </div>
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex min-w-0 flex-1 flex-col gap-1 md:flex-none md:items-center md:gap-4 md:text-center">
                 <h2
-                  className={`text-ink text-lg font-bold text-pretty md:text-2xl ${wrapClass}`}
+                  className={`text-ink text-base font-semibold text-pretty md:text-2xl md:font-bold ${wrapClass}`}
                 >
-                  {t.manualCardTitle}
+                  {card.title}
                 </h2>
-                <p className={`text-ink-muted text-pretty ${wrapClass}`}>
-                  {t.manualCardBody}
+                <p
+                  className={`text-ink-muted text-sm text-pretty md:text-base ${wrapClass}`}
+                >
+                  {card.body}
                 </p>
               </div>
-            </div>
-          </LocalizedLink>
-
-          <LocalizedLink
-            href="/recipes/new/youtube"
-            className="group border-olive-light/30 hover:border-olive-mint block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:p-8"
-          >
-            <div className="flex flex-col items-center space-y-3 text-center md:space-y-6">
-              <div className="rounded-card relative w-32 overflow-hidden md:h-64 md:w-48">
-                <Image
-                  src={`${ICON_BASE_URL}youtube.webp`}
-                  alt={t.youtubeCardImageAlt}
-                  fit="cover"
-                  imgClassName="transition-transform duration-200 group-hover:scale-105"
-                />
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <h2
-                  className={`text-ink text-lg font-bold text-pretty md:text-2xl ${wrapClass}`}
-                >
-                  {t.youtubeCardTitle}
-                </h2>
-                <p className={`text-ink-muted text-pretty ${wrapClass}`}>
-                  {t.youtubeCardBody}
-                </p>
-              </div>
-            </div>
-          </LocalizedLink>
-
-          <LocalizedLink
-            href="/recipes/new/ai"
-            className="group border-olive-light/30 hover:border-olive-mint col-span-2 block rounded-2xl border-2 bg-white p-4 transition-all duration-200 hover:shadow-lg md:col-span-1 md:p-8"
-          >
-            <div className="flex flex-col items-center space-y-3 text-center md:space-y-6">
-              <div className="rounded-card relative w-32 overflow-hidden md:h-64 md:w-48">
-                <Image
-                  src={aiModels.INGREDIENT_FOCUS.image}
-                  alt={t.aiCardImageAlt}
-                  fit="cover"
-                  imgClassName="transition-transform duration-200 group-hover:scale-105"
-                />
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <h2
-                  className={`text-ink text-lg font-bold text-pretty md:text-2xl ${wrapClass}`}
-                >
-                  {t.aiCardTitle}
-                </h2>
-                <p className={`text-ink-muted text-pretty ${wrapClass}`}>
-                  {t.aiCardBody}
-                </p>
-              </div>
-            </div>
-          </LocalizedLink>
+              <ChevronRight className="h-5 w-5 shrink-0 text-gray-400 md:hidden" />
+            </LocalizedLink>
+          ))}
         </div>
       </div>
     </div>
