@@ -106,4 +106,41 @@ describe("Image 로드 기억", () => {
     fireEvent.load(img);
     await waitFor(() => expect(skeletonOf(container)).not.toBeInTheDocument());
   });
+
+  test("T-07: 기억된 이미지는 remount 시 페이드(transition) 없이 표시된다", () => {
+    const src = "https://cdn.recipio.kr/no-fade.jpg";
+    markImageLoaded(src);
+
+    render(<Image src={src} lazy={false} alt="페이드 없음" />);
+
+    const wrapper = screen.getByAltText("페이드 없음").parentElement;
+    expect(wrapper).not.toHaveClass("transition-opacity");
+    expect(wrapper).toHaveClass("opacity-100");
+  });
+
+  test("T-08: 최초 로드 이미지는 기존 300ms 페이드인을 유지한다", async () => {
+    const src = "https://cdn.recipio.kr/fade.jpg";
+
+    render(<Image src={src} lazy={false} alt="페이드 유지" />);
+
+    const img = screen.getByAltText("페이드 유지");
+    const wrapper = img.parentElement;
+    expect(wrapper).toHaveClass("transition-opacity");
+    expect(wrapper).toHaveClass("duration-300");
+
+    fireEvent.load(img);
+
+    await waitFor(() => expect(wrapper).toHaveClass("opacity-100"));
+    expect(wrapper).toHaveClass("transition-opacity");
+  });
+
+  test("T-09: priority 이미지는 기존 동작(즉시 로드·페이드 없음)을 유지한다", () => {
+    const src = "https://cdn.recipio.kr/priority.jpg";
+
+    render(<Image src={src} priority alt="우선 이미지" />);
+
+    const img = screen.getByAltText("우선 이미지");
+    expect(img).toHaveAttribute("src", src);
+    expect(img.parentElement).not.toHaveClass("transition-opacity");
+  });
 });

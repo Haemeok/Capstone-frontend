@@ -105,7 +105,9 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
         <div
           className={cn(
             "absolute inset-0",
-            priority ? "" : "transition-opacity duration-300",
+            priority || image.wasPreloaded
+              ? ""
+              : "transition-opacity duration-300",
             image.status === "loaded" ? "opacity-100" : "opacity-0"
           )}
         >
