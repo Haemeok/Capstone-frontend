@@ -210,8 +210,12 @@ export const generateRecipeMetadata = (
       ...youtubeKeywords,
     ],
     robots: {
-      index: recipe.isIndexed === true,
+      index: true,
       follow: true,
+      googleBot: {
+        index: recipe.isIndexed === true,
+        follow: true,
+      },
     },
     alternates: {
       canonical: fullPageUrl,
