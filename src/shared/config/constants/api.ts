@@ -60,6 +60,10 @@ export const END_POINTS = {
   MY_INGREDIENTS_BY_ID: (id: string) => `/me/fridge/items/${id}`,
   MY_INGREDIENTS_BULK: "/me/fridge/items/bulk",
   MY_INGREDIENTS_IDS: "/me/fridge/items/ids",
+  MY_CART: "/me/cart",
+  MY_CART_ITEMS: "/me/cart/items",
+  MY_CART_ITEM: (cartItemId: string) => `/me/cart/items/${cartItemId}`,
+  MY_CART_ITEMS_BULK: "/me/cart/items/bulk",
   USER_RECIPES: (id: string) => `/users/${id}/recipes`,
   USER_STREAK: "/me/streak",
   USER_PRESIGNED_URLS: (userId: string) =>
