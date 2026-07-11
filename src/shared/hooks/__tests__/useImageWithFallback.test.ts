@@ -169,7 +169,7 @@ describe("useImageWithFallback", () => {
     it("decode()가 pending 상태여도 타임아웃 후 loaded 상태로 전환", async () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
-          src: "test.jpg",
+          src: "decode-pending.jpg",
           priority: true,
           lazy: false,
           inView: true,
@@ -195,7 +195,7 @@ describe("useImageWithFallback", () => {
     it("decode()가 정상 resolve되면 loaded 상태로 전환", async () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
-          src: "test.jpg",
+          src: "decode-resolve.jpg",
           priority: true,
           lazy: false,
           inView: true,
@@ -220,7 +220,7 @@ describe("useImageWithFallback", () => {
     it("decode()가 없는 경우에도 loaded 상태로 전환", async () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
-          src: "test.jpg",
+          src: "decode-missing.jpg",
           priority: true,
           lazy: false,
           inView: true,
@@ -245,7 +245,7 @@ describe("useImageWithFallback", () => {
     it("이미 로드 완료된 이미지(complete=true)면 즉시 loaded 상태로 전환", () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
-          src: "test.jpg",
+          src: "imgref-complete.jpg",
           priority: true,
           lazy: false,
           inView: true,
@@ -267,7 +267,7 @@ describe("useImageWithFallback", () => {
     it("아직 로드 중인 이미지(complete=false)면 loading 상태 유지", () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
-          src: "test.jpg",
+          src: "imgref-loading.jpg",
           priority: true,
           lazy: false,
           inView: true,
@@ -289,7 +289,7 @@ describe("useImageWithFallback", () => {
     it("null이 전달되면 상태 변경 없음", () => {
       const { result } = renderHook(() =>
         useImageWithFallback({
-          src: "test.jpg",
+          src: "imgref-null.jpg",
           priority: true,
           lazy: false,
           inView: true,
