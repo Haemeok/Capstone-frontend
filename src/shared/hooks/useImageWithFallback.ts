@@ -2,6 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import {
+  hasImageLoaded,
+  markImageLoaded,
+} from "@/shared/lib/loadedImageRegistry";
+
 export type ImageStatus = "idle" | "loading" | "loaded" | "error";
 
 type UseImageWithFallbackParams = {
@@ -23,10 +28,12 @@ export const useImageWithFallback = ({
   inView,
   onRetry,
 }: UseImageWithFallbackParams) => {
-  const [status, setStatus] = useState<ImageStatus>("idle");
+  const [status, setStatus] = useState<ImageStatus>(() =>
+    hasImageLoaded(src) ? "loaded" : "idle"
+  );
   const [retryCount, setRetryCount] = useState(0);
 
-  const shouldLoadImmediately = priority;
+  const shouldLoadImmediately = priority || hasImageLoaded(src);
   const shouldWaitForViewport = lazy && !inView;
   const shouldLoad = shouldLoadImmediately || !shouldWaitForViewport;
 
@@ -35,7 +42,9 @@ export const useImageWithFallback = ({
   useEffect(() => {
     setRetryCount(0);
 
-    if (shouldLoad) {
+    if (hasImageLoaded(src)) {
+      setStatus("loaded");
+    } else if (shouldLoad) {
       setStatus("loading");
     } else {
       setStatus("idle");
@@ -57,10 +66,11 @@ export const useImageWithFallback = ({
       } catch {
         // decode 실패는 무시
       } finally {
+        markImageLoaded(src);
         setStatus("loaded");
       }
     },
-    []
+    [src]
   );
 
   const handleError = useCallback(() => {
@@ -78,10 +88,11 @@ export const useImageWithFallback = ({
   const imgRef = useCallback(
     (img: HTMLImageElement | null) => {
       if (img && img.complete && img.naturalWidth > 0 && status === "loading") {
+        markImageLoaded(src);
         setStatus("loaded");
       }
     },
-    [status]
+    [status, src]
   );
 
   return {
