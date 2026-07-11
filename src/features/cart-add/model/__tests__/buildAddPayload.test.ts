@@ -1,16 +1,18 @@
 import { buildAddPayload } from "../buildAddPayload";
 
 describe("buildAddPayload", () => {
-  it("T-02: 기본 인분(servingRatio 1)이면 quantity/unit을 생략한다", () => {
+  it("T-02: 기본 인분(servingRatio 1)이어도 원본 quantity/unit을 보낸다", () => {
     const payload = buildAddPayload({
       recipeIngredientId: "ri8AbKcQ",
       quantity: "100",
       unit: "g",
       servingRatio: 1,
     });
-    expect(payload).toEqual({ recipeIngredientId: "ri8AbKcQ" });
-    expect("quantity" in payload).toBe(false);
-    expect("unit" in payload).toBe(false);
+    expect(payload).toEqual({
+      recipeIngredientId: "ri8AbKcQ",
+      quantity: "100",
+      unit: "g",
+    });
   });
 
   it("T-03: 인분수 2배면 환산된 quantity/unit을 포함한다 (대파 1/2대 → 1대)", () => {

@@ -72,7 +72,7 @@ it("T-01: 로그인 유저가 담기 버튼을 누르면 POST + 토스트 + 체�
   await waitFor(() => {
     expect(addMock).toHaveBeenCalledTimes(1);
     expect(addMock).toHaveBeenCalledWith({
-      items: [{ recipeIngredientId: "ri8AbKcQ" }],
+      items: [{ recipeIngredientId: "ri8AbKcQ", quantity: "100", unit: "g" }],
     });
     expect(useToastStore.getState().toastList.map((t) => t.message)).toContain(
       "장바구니에 담았어요"

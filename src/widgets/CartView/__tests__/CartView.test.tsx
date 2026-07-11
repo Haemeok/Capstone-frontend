@@ -112,6 +112,22 @@ it("같은 재료를 두 레시피에서 담으면 라벨 1번 + 레시피별 �
   ).toHaveTextContent(/100\s*g/);
 });
 
+it("병합된 재료 블록의 삭제 버튼은 하나이고 전체를 지운다", async () => {
+  getCartMock.mockResolvedValue(sameIngredientCartFixture);
+  deleteBulkMock.mockResolvedValue(undefined);
+  renderCartView();
+  await screen.findByText("신김치");
+
+  const deleteButtons = screen.getAllByRole("button", { name: /삭제$/ });
+  expect(deleteButtons).toHaveLength(1);
+
+  await userEvent.click(screen.getByRole("button", { name: "신김치 삭제" }));
+
+  await waitFor(() => {
+    expect(deleteBulkMock).toHaveBeenCalledWith(["c2Fg6JkL", "c3Hj8PqS"]);
+  });
+});
+
 it("T-08: 레시피 탭 클릭 시 해당 항목만 보이고 getCart 재호출이 없다", async () => {
   getCartMock.mockResolvedValue(cartFixture);
   renderCartView();

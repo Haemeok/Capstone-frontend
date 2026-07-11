@@ -25,7 +25,8 @@ export const CartCountBadge = ({
   const count = user ? serverCount : guestCount;
 
   return (
-    <div className="relative">
+    // header: 인라인 링크가 만드는 라인박스 여백 없이 아이콘 크기에 딱 맞게
+    <div className={cn("relative", variant === "header" && "flex")}>
       {children}
       {count > 0 && (
         <span
