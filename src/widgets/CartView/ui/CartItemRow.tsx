@@ -7,6 +7,7 @@ import type { CartItem } from "@/entities/cart";
 
 type CartItemRowProps = {
   item: CartItem;
+  recipeImageUrl?: string | null;
   onEdit?: (item: CartItem) => void;
   onDelete?: (cartItemId: string) => void;
   selectable?: boolean;
@@ -16,6 +17,7 @@ type CartItemRowProps = {
 
 export const CartItemRow = ({
   item,
+  recipeImageUrl,
   onEdit,
   onDelete,
   selectable = false,
@@ -40,7 +42,7 @@ export const CartItemRow = ({
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <p className="text-ink truncate font-semibold">{item.name}</p>
+          <p className="text-ink truncate text-lg font-semibold">{item.name}</p>
           <button
             type="button"
             onClick={() => {
@@ -48,12 +50,22 @@ export const CartItemRow = ({
               onEdit?.(item);
             }}
             aria-label={`${item.name} 수량 수정`}
-            className="text-ink-sub shrink-0 text-sm"
+            className="text-ink-sub shrink-0 text-base"
           >
             {amountLabel}
           </button>
         </div>
-        <p className="text-ink-muted text-xs">{item.recipe.title}</p>
+        <div className="mt-0.5 flex items-center gap-1.5">
+          {recipeImageUrl && (
+            <img
+              src={recipeImageUrl}
+              alt=""
+              loading="lazy"
+              className="size-5 rounded object-cover"
+            />
+          )}
+          <p className="text-ink-muted truncate text-sm">{item.recipe.title}</p>
+        </div>
       </div>
       {!selectable && (
         <button
