@@ -288,3 +288,42 @@ it("T-33: 게스트 /cart 상단에 로그인 배너가 보인다", async () => 
     await screen.findByText(/로그인하면 계정에 저장돼요/)
   ).toBeInTheDocument();
 });
+
+it("T-35: 게스트 수량 수정은 API 호출 없이 반영된다", async () => {
+  useUserStore.setState({ user: null, isAuthReady: true });
+  useGuestCartStore.setState({ items: [guestItem], isHydrated: true });
+  coupangMock.mockResolvedValue({ recipeId: "r7KpQ2mA", items: [] });
+
+  renderCartView();
+  await screen.findByText("배추김치");
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "배추김치 수량 수정" })
+  );
+  const quantityInput = await screen.findByLabelText("수량");
+  await userEvent.clear(quantityInput);
+  await userEvent.type(quantityInput, "300");
+  await userEvent.click(screen.getByRole("button", { name: "저장" }));
+
+  expect(updateMock).not.toHaveBeenCalled();
+  expect(
+    useGuestCartStore
+      .getState()
+      .items.find((i) => i.recipeIngredientId === "ri8AbKcQ")?.quantity
+  ).toBe("300");
+});
+
+it("T-36: 게스트 삭제는 API 호출 없이 로컬에서 동작한다", async () => {
+  useUserStore.setState({ user: null, isAuthReady: true });
+  useGuestCartStore.setState({ items: [guestItem], isHydrated: true });
+  coupangMock.mockResolvedValue({ recipeId: "r7KpQ2mA", items: [] });
+
+  renderCartView();
+  await screen.findByText("배추김치");
+
+  await userEvent.click(screen.getByRole("button", { name: "배추김치 삭제" }));
+
+  expect(deleteOneMock).not.toHaveBeenCalled();
+  expect(deleteBulkMock).not.toHaveBeenCalled();
+  expect(useGuestCartStore.getState().items).toHaveLength(0);
+});

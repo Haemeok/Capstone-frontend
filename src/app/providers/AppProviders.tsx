@@ -11,6 +11,7 @@ import { ReferralSheetHost } from "@/features/referral";
 import { AdsGateProvider } from "./AdsGateProvider";
 import { AIRecipeProvider } from "./AIRecipeProvider";
 import { AppStateInitializer } from "./AppStateInitializer";
+import { GuestCartMigrator } from "./GuestCartMigrator";
 import { InternalNavTracker } from "./InternalNavTracker";
 import { KeyboardAwareProvider } from "./KeyboardAwareProvider";
 import { PostHogAppContext } from "./PostHogAppContext";
@@ -45,6 +46,7 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
             </YoutubeImportProvider>
             <ToastProvider />
             <YoutubeExtractionPrompter />
+            <GuestCartMigrator />
           </WebSocketProvider>
         </ScrollProvider>
       </QueryClientProvider>
