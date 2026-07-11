@@ -1,21 +1,32 @@
 import React from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 jest.mock("@/entities/cart/api", () => ({
   ...jest.requireActual("@/entities/cart/api"),
   getCart: jest.fn(),
+  updateCartItem: jest.fn(),
 }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
+jest.mock("@/shared/ui/shadcn/drawer", () => ({
+  Drawer: ({ children, open }: { children: React.ReactNode; open: boolean }) =>
+    open ? <div>{children}</div> : null,
+  DrawerContent: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DrawerTitle: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
 jest.mock("next/cache", () => ({
   revalidateTag: jest.fn(),
   revalidatePath: jest.fn(),
   unstable_cache: (fn: unknown) => fn,
 }));
 
-import { getCart } from "@/entities/cart/api";
+import { getCart, updateCartItem } from "@/entities/cart/api";
 import {
   cartFixture,
   emptyCartFixture,
@@ -25,6 +36,7 @@ import { type User, useUserStore } from "@/entities/user";
 import CartView from "../index";
 
 const getCartMock = getCart as jest.Mock;
+const updateMock = updateCartItem as jest.Mock;
 
 const renderCartView = () => {
   const qc = new QueryClient({
@@ -39,6 +51,7 @@ const renderCartView = () => {
 
 beforeEach(() => {
   getCartMock.mockReset();
+  updateMock.mockReset();
   // 테스트 픽스처 — CartView는 로그인 여부만 보므로 부분 User로 캐스트
   useUserStore.setState({ user: { id: "u1" } as User, isAuthReady: true });
 });
@@ -121,4 +134,40 @@ it("T-13: 빈 장바구니면 빈 상태 안내와 탐색 CTA가 보인다", asy
   expect(
     screen.getByRole("link", { name: /레시피 구경하기/ })
   ).toBeInTheDocument();
+});
+
+it("T-14: 수량 영역 탭 → 바텀시트에서 수정 → PATCH + 새 값 표시", async () => {
+  getCartMock.mockResolvedValue(cartFixture);
+  // updateMock 해소 전에 단언 — invalidate 후 refetch가 픽스처(100 g)로 되돌리는 것 방지
+  let resolveUpdate: (() => void) | undefined;
+  updateMock.mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        resolveUpdate = resolve;
+      })
+  );
+  renderCartView();
+  await screen.findByText("배추김치");
+
+  await userEvent.click(
+    screen.getByRole("button", { name: "배추김치 수량 수정" })
+  );
+  const quantityInput = await screen.findByLabelText("수량");
+  await userEvent.clear(quantityInput);
+  await userEvent.type(quantityInput, "300");
+  await userEvent.click(screen.getByRole("button", { name: "저장" }));
+
+  await waitFor(() => {
+    expect(updateMock).toHaveBeenCalledWith("c8Ab7XyZ", {
+      quantity: "300",
+      unit: "g",
+    });
+    expect(
+      screen.getByRole("button", { name: "배추김치 수량 수정" })
+    ).toHaveTextContent(/300\s*g/);
+  });
+
+  await act(async () => {
+    resolveUpdate?.();
+  });
 });

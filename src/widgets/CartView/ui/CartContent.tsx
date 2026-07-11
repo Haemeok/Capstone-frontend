@@ -6,6 +6,8 @@ import { useMemo, useState } from "react";
 import type { CartItem, CartResponse } from "@/entities/cart";
 import { filterCartByRecipe } from "@/entities/cart";
 
+import { CartItemEditSheet } from "@/features/cart-item-edit";
+
 import { CartEmptyState } from "./CartEmptyState";
 import { CartGroupSection } from "./CartGroupSection";
 import { CartItemRow } from "./CartItemRow";
@@ -27,8 +29,8 @@ type CartContentProps = {
 const EMPTY_SET = new Set<string>();
 
 export const CartContent = ({ cart, handlers }: CartContentProps) => {
-  void handlers;
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
+  const [editingItem, setEditingItem] = useState<CartItem | null>(null);
   const filtered = useMemo(
     () => filterCartByRecipe(cart, selectedRecipeId),
     [cart, selectedRecipeId]
@@ -53,7 +55,7 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
         <CartGroupSection
           key={group.coupangInfo.coupangName}
           group={group}
-          onEdit={() => {}}
+          onEdit={setEditingItem}
           onDelete={() => {}}
           selectable={false}
           selectedIds={EMPTY_SET}
@@ -67,11 +69,24 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
         >
           <ul className="flex flex-col divide-y divide-gray-50">
             {filtered.unmatchedItems.map((item) => (
-              <CartItemRow key={item.cartItemId} item={item} />
+              <CartItemRow
+                key={item.cartItemId}
+                item={item}
+                onEdit={setEditingItem}
+              />
             ))}
           </ul>
         </section>
       )}
+      <CartItemEditSheet
+        item={editingItem}
+        onOpenChange={(open) => {
+          if (!open) setEditingItem(null);
+        }}
+        onSubmit={(_cartItemId, next) => {
+          if (editingItem) handlers.onEditItem(editingItem, next);
+        }}
+      />
     </div>
   );
 };
