@@ -9,6 +9,7 @@ import { CoupangProductCard } from "@/shared/coupang";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { CartGroup } from "@/entities/cart";
+import { sortCoupangProducts } from "@/entities/cart";
 
 import { CartItemList } from "./CartItemList";
 
@@ -26,7 +27,8 @@ export const CartGroupSection = ({
   onDelete,
 }: CartGroupSectionProps) => {
   const { coupangInfo, items } = group;
-  const hasProducts = coupangInfo.products.length > 0;
+  const products = sortCoupangProducts(coupangInfo.products);
+  const hasProducts = products.length > 0;
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const scrollProducts = (direction: -1 | 1) => {
@@ -62,11 +64,11 @@ export const CartGroupSection = ({
             ref={sliderRef}
             className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 pb-1"
           >
-            {coupangInfo.products.map((product) => (
+            {products.map((product) => (
               <CoupangProductCard key={product.rank} product={product} />
             ))}
           </div>
-          {coupangInfo.products.length > 4 && (
+          {products.length > 4 && (
             <>
               <button
                 type="button"
