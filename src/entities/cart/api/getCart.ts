@@ -23,7 +23,7 @@ const normalizeItem = (item: RawCartItem): CartItem => ({
 });
 
 export const getCart = async (): Promise<CartResponse> => {
-  const raw = await api.get<RawCartResponse>(END_POINTS.MY_CART);
+  const raw = await api.get<RawCartResponse>(`${END_POINTS.MY_CART}?lang=ko`);
   return {
     ...raw,
     groups: raw.groups.map((group) => ({
