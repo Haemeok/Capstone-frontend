@@ -6,5 +6,6 @@ export const CART_MESSAGES = {
   addFailed: "담기에 실패했어요. 잠시 후 다시 시도해 주세요",
   updateFailed: "수정에 실패했어요",
   deleteFailed: "삭제에 실패했어요",
+  missingAmount: "양 정보가 없어요 · 다시 담아주세요",
   migrated: (count: number) => `장바구니 ${count}개를 계정으로 옮겼어요`,
 } as const;

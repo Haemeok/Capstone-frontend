@@ -4,6 +4,9 @@
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { CartItem } from "@/entities/cart";
+import { CART_MESSAGES } from "@/entities/cart";
+
+import { CartRecipeLink } from "./CartRecipeLink";
 
 type CartItemRowProps = {
   item: CartItem;
@@ -24,7 +27,7 @@ export const CartItemRow = ({
   selected = false,
   onToggleSelect,
 }: CartItemRowProps) => {
-  const amountLabel = `${item.quantity}${item.unit}`.trim() || "수량 입력";
+  const amount = `${item.quantity}${item.unit}`.trim();
 
   return (
     <li className="flex items-center gap-3 py-2">
@@ -42,7 +45,7 @@ export const CartItemRow = ({
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <p className="text-ink truncate text-lg font-semibold">{item.name}</p>
+          <p className="text-ink truncate text-xl font-semibold">{item.name}</p>
           <button
             type="button"
             onClick={() => {
@@ -50,21 +53,17 @@ export const CartItemRow = ({
               onEdit?.(item);
             }}
             aria-label={`${item.name} 수량 수정`}
-            className="text-ink-sub shrink-0 text-base"
+            className={
+              amount
+                ? "text-ink-sub shrink-0 text-lg"
+                : "text-ink-muted shrink-0 truncate text-sm"
+            }
           >
-            {amountLabel}
+            {amount || CART_MESSAGES.missingAmount}
           </button>
         </div>
-        <div className="mt-0.5 flex items-center gap-1.5">
-          {recipeImageUrl && (
-            <img
-              src={recipeImageUrl}
-              alt=""
-              loading="lazy"
-              className="size-5 rounded object-cover"
-            />
-          )}
-          <p className="text-ink-muted truncate text-sm">{item.recipe.title}</p>
+        <div className="mt-0.5 flex items-center">
+          <CartRecipeLink recipe={item.recipe} imageUrl={recipeImageUrl} />
         </div>
       </div>
       {!selectable && (

@@ -178,7 +178,22 @@ it("T-12: 미매칭 항목에는 구매 요소가 없다", async () => {
   await screen.findByText("수제 고추기름");
 
   const unmatched = screen.getByTestId("cart-unmatched-section");
-  expect(within(unmatched).queryByRole("link")).not.toBeInTheDocument();
+  expect(
+    within(unmatched).queryByRole("link", { name: /쿠팡/ })
+  ).not.toBeInTheDocument();
+});
+
+it("레시피 이름을 누르면 해당 레시피 상세로 이동하고, 삭제된 레시피는 링크가 아니다", async () => {
+  getCartMock.mockResolvedValue(cartFixture);
+  renderCartView();
+  await screen.findByText("배추김치");
+
+  expect(
+    screen.getAllByRole("link", { name: "김치찌개 레시피 보기" })[0]
+  ).toHaveAttribute("href", "/recipes/r7KpQ2mA");
+  expect(
+    screen.queryByRole("link", { name: "김치볶음밥 레시피 보기" })
+  ).not.toBeInTheDocument();
 });
 
 it("T-13: 빈 장바구니면 헤더는 유지되고 인기 레시피 CTA가 보인다", async () => {
