@@ -54,6 +54,14 @@ describe("CreationModeSelector i18n (T-22/23/25)", () => {
     );
   });
 
+  it("T-22: AI 레시피 카드가 보이고 /recipes/new/ai로 연결된다", () => {
+    mockPathname.mockReturnValue("/recipes/new");
+    render(<CreationModeSelector />);
+
+    const aiCard = getLink(/AI 레시피/);
+    expect(aiCard.getAttribute("href")).toMatch(/\/recipes\/new\/ai$/);
+  });
+
   it("T-25: ko에서 한글 유지 + href에 prefix 없음", () => {
     mockPathname.mockReturnValue("/recipes/new");
     const ko = recipeCreateMessages.ko;

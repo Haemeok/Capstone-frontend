@@ -9,6 +9,7 @@ export type NavDict = {
   search: string;
   fridge: string;
   aiRecipe: string;
+  cart: string;
   my: string;
   recipeSearch: string;
   youtubeRecipe: string;
@@ -490,6 +491,9 @@ export type RecipeCreateDict = {
   youtubeCardTitle: string;
   youtubeCardBody: string;
   youtubeCardImageAlt: string;
+  aiCardTitle: string;
+  aiCardBody: string;
+  aiCardImageAlt: string;
 };
 
 export type LoginPromotionDict = {

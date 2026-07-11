@@ -9,4 +9,7 @@ export const recipeCreate: RecipeCreateDict = {
   youtubeCardTitle: "유튜브로 가져오기",
   youtubeCardBody: "유튜브 영상 링크만 있으면 자동으로 레시피를 만들어요",
   youtubeCardImageAlt: "유튜브로 가져오기",
+  aiCardTitle: "AI 레시피",
+  aiCardBody: "재료·가성비·영양 목표를 고르면 AI가 레시피를 만들어줘요",
+  aiCardImageAlt: "AI 레시피 생성",
 };

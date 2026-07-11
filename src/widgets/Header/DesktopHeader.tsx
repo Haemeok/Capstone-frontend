@@ -4,9 +4,14 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
-import { User } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
 
-import { LocalizedLink, stripLocale, useChromeDict } from "@/shared/i18n";
+import {
+  LocalizedLink,
+  stripLocale,
+  useChromeDict,
+  useChromeLocale,
+} from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -31,6 +36,7 @@ const DesktopHeader = () => {
   const pathname = usePathname();
   const { barePath } = stripLocale(pathname);
   const t = useChromeDict();
+  const locale = useChromeLocale();
   const { user, isAuthReady } = useUserStore();
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
@@ -69,6 +75,16 @@ const DesktopHeader = () => {
           </div>
 
           <div className="flex items-center gap-4">
+            {locale === "ko" && (
+              <LocalizedLink
+                href="/cart"
+                aria-label={t.cart}
+                className="text-ink-sub hover:text-ink p-1 transition-colors"
+              >
+                <ShoppingCart size={22} />
+              </LocalizedLink>
+            )}
+
             <NotificationButton />
 
             {!isAuthReady ? (

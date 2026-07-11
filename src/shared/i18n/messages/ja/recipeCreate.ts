@@ -9,4 +9,8 @@ export const recipeCreate: RecipeCreateDict = {
   youtubeCardTitle: "YouTubeから取り込む",
   youtubeCardBody: "YouTube動画のリンクだけで、自動でレシピを作成します",
   youtubeCardImageAlt: "YouTubeから取り込む",
+  aiCardTitle: "AIレシピ",
+  aiCardBody:
+    "材料やコスパ、栄養の目標を選ぶだけで、AIがレシピを作ってくれます",
+  aiCardImageAlt: "AIでレシピを作成",
 };
