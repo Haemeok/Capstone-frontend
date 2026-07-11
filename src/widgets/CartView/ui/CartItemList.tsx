@@ -4,9 +4,10 @@
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { CartItem, CartItemNameGroup } from "@/entities/cart";
-import { groupCartItemsByName } from "@/entities/cart";
+import { CART_MESSAGES, groupCartItemsByName } from "@/entities/cart";
 
 import { CartItemRow } from "./CartItemRow";
+import { CartRecipeLink } from "./CartRecipeLink";
 
 type ItemHandlers = {
   recipeImages: Map<string, string | null>;
@@ -54,31 +55,24 @@ const MultiRecipeGroup = ({
       )}
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <p className="text-ink truncate text-lg font-semibold">
+          <p className="text-ink truncate text-xl font-semibold">
             {group.name}
           </p>
           {group.totalAmount && (
-            <span className="text-olive-dark shrink-0 text-base font-semibold">
+            <span className="text-olive-dark shrink-0 text-lg font-semibold">
               총 {group.totalAmount}
             </span>
           )}
         </div>
         <ul className="mt-1 flex flex-col gap-1">
           {group.items.map((item) => {
-            const imageUrl = recipeImages.get(item.recipe.recipeId);
+            const amount = `${item.quantity}${item.unit}`.trim();
             return (
-              <li key={item.cartItemId} className="flex items-center gap-1.5">
-                {imageUrl && (
-                  <img
-                    src={imageUrl}
-                    alt=""
-                    loading="lazy"
-                    className="size-5 rounded object-cover"
-                  />
-                )}
-                <p className="text-ink-muted truncate text-sm">
-                  {item.recipe.title}
-                </p>
+              <li key={item.cartItemId} className="flex items-center gap-2">
+                <CartRecipeLink
+                  recipe={item.recipe}
+                  imageUrl={recipeImages.get(item.recipe.recipeId)}
+                />
                 <button
                   type="button"
                   onClick={() => {
@@ -86,9 +80,13 @@ const MultiRecipeGroup = ({
                     onEdit(item);
                   }}
                   aria-label={`${item.recipe.title} ${item.name} 수량 수정`}
-                  className="text-ink-sub shrink-0 text-base"
+                  className={
+                    amount
+                      ? "text-ink-sub shrink-0 text-lg"
+                      : "text-ink-muted shrink-0 truncate text-sm"
+                  }
                 >
-                  {`${item.quantity}${item.unit}`.trim() || "수량 입력"}
+                  {amount || CART_MESSAGES.missingAmount}
                 </button>
               </li>
             );
