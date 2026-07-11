@@ -22,6 +22,8 @@ export const CartItemRow = ({
   selected = false,
   onToggleSelect,
 }: CartItemRowProps) => {
+  const amountLabel = `${item.quantity}${item.unit}`.trim() || "수량 입력";
+
   return (
     <li className="flex items-center gap-3 py-2">
       {selectable && (
@@ -48,8 +50,7 @@ export const CartItemRow = ({
             aria-label={`${item.name} 수량 수정`}
             className="text-ink-sub shrink-0 text-sm"
           >
-            {item.quantity}
-            {item.unit}
+            {amountLabel}
           </button>
         </div>
         <p className="text-ink-muted text-xs">{item.recipe.title}</p>

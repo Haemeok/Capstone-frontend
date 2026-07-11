@@ -69,8 +69,7 @@ const MultiRecipeGroup = ({
             aria-label={`${item.recipe.title} ${item.name} 수량 수정`}
             className="text-ink-sub shrink-0 text-sm"
           >
-            {item.quantity}
-            {item.unit}
+            {`${item.quantity}${item.unit}`.trim() || "수량 입력"}
           </button>
           {!selectable && (
             <button
