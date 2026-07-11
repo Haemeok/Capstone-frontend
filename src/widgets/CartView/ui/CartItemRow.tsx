@@ -1,6 +1,8 @@
 // i18n-ignore-file: 장바구니 ko 전용
 "use client";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import type { CartItem } from "@/entities/cart";
 
 type CartItemRowProps = {
@@ -26,7 +28,10 @@ export const CartItemRow = ({
         <input
           type="checkbox"
           checked={selected}
-          onChange={() => onToggleSelect?.(item.cartItemId)}
+          onChange={() => {
+            triggerHaptic("Light");
+            onToggleSelect?.(item.cartItemId);
+          }}
           aria-label={`${item.name} 선택`}
           className="accent-olive-light size-5"
         />
@@ -37,7 +42,10 @@ export const CartItemRow = ({
       </div>
       <button
         type="button"
-        onClick={() => onEdit?.(item)}
+        onClick={() => {
+          triggerHaptic("Light");
+          onEdit?.(item);
+        }}
         aria-label={`${item.name} 수량 수정`}
         className="text-ink-sub rounded-md border border-gray-200 px-2 py-1 text-sm"
       >
@@ -46,7 +54,10 @@ export const CartItemRow = ({
       {!selectable && (
         <button
           type="button"
-          onClick={() => onDelete?.(item.cartItemId)}
+          onClick={() => {
+            triggerHaptic("Light");
+            onDelete?.(item.cartItemId);
+          }}
           aria-label={`${item.name} 삭제`}
           className="text-ink-muted p-1"
         >
