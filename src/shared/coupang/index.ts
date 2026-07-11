@@ -1,3 +1,4 @@
+export { getRecipeCoupangProducts } from "./model/api.client";
 export { fetchRecipeCoupangProducts } from "./model/api.server";
 export type {
   CoupangProduct,

@@ -27,7 +27,18 @@ jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
   unstable_cache: (fn: unknown) => fn,
 }));
+jest.mock("@/shared/coupang", () => ({
+  ...jest.requireActual("@/shared/coupang"),
+  getRecipeCoupangProducts: jest.fn(),
+}));
+jest.mock("@/features/auth/ui/LoginDialog", () => ({
+  __esModule: true,
+  default: () => null,
+}));
 
+import { getRecipeCoupangProducts } from "@/shared/coupang";
+
+import { useGuestCartStore } from "@/entities/cart";
 import {
   deleteCartItem,
   deleteCartItemsBulk,
@@ -46,6 +57,7 @@ const getCartMock = getCart as jest.Mock;
 const updateMock = updateCartItem as jest.Mock;
 const deleteOneMock = deleteCartItem as jest.Mock;
 const deleteBulkMock = deleteCartItemsBulk as jest.Mock;
+const coupangMock = getRecipeCoupangProducts as jest.Mock;
 
 const renderCartView = () => {
   const qc = new QueryClient({
@@ -63,8 +75,10 @@ beforeEach(() => {
   updateMock.mockReset();
   deleteOneMock.mockReset();
   deleteBulkMock.mockReset();
+  coupangMock.mockReset();
   // 테스트 픽스처 — CartView는 로그인 여부만 보므로 부분 User로 캐스트
   useUserStore.setState({ user: { id: "u1" } as User, isAuthReady: true });
+  useGuestCartStore.setState({ items: [], isHydrated: true });
 });
 
 it("T-06: /cart 진입 시 담긴 항목의 이름·수량·단위·출처 레시피·개수가 보인다", async () => {
@@ -227,4 +241,50 @@ it("T-17: 선택 모드에서 2개 선택 삭제 → bulk 1회", async () => {
     expect(deleteBulkMock).toHaveBeenCalledTimes(1);
     expect(deleteBulkMock).toHaveBeenCalledWith(["c8Ab7XyZ", "c6Rt4MnB"]);
   });
+});
+
+const guestItem = {
+  recipeIngredientId: "ri8AbKcQ",
+  name: "배추김치",
+  quantity: "100",
+  unit: "g",
+  recipe: { recipeId: "r7KpQ2mA", title: "김치찌개", imageUrl: null },
+};
+
+it("T-31: 게스트 /cart는 쿠팡 재조회로 로그인과 동일한 그룹 규칙을 보여준다", async () => {
+  useUserStore.setState({ user: null, isAuthReady: true });
+  useGuestCartStore.setState({ items: [guestItem], isHydrated: true });
+  coupangMock.mockResolvedValue({
+    recipeId: "r7KpQ2mA",
+    items: [
+      {
+        recipeIngredientId: "ri8AbKcQ",
+        coupangName: "김치",
+        landingUrl: "https://link.coupang.com/kimchi",
+        lastCollectedAt: "2026-07-09T03:20:15+09:00",
+        products: [],
+      },
+    ],
+  });
+
+  renderCartView();
+
+  expect(await screen.findByText("배추김치")).toBeInTheDocument();
+  expect(screen.getByTestId("cart-group-김치")).toBeInTheDocument();
+  expect(
+    screen.getByRole("link", { name: /쿠팡에서 보기/ })
+  ).toBeInTheDocument();
+  expect(getCartMock).not.toHaveBeenCalled();
+});
+
+it("T-33: 게스트 /cart 상단에 로그인 배너가 보인다", async () => {
+  useUserStore.setState({ user: null, isAuthReady: true });
+  useGuestCartStore.setState({ items: [guestItem], isHydrated: true });
+  coupangMock.mockResolvedValue({ recipeId: "r7KpQ2mA", items: [] });
+
+  renderCartView();
+
+  expect(
+    await screen.findByText(/로그인하면 계정에 저장돼요/)
+  ).toBeInTheDocument();
 });
