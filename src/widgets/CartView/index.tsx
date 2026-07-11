@@ -6,7 +6,6 @@ import {
   useDeleteCartItems,
   useGuestCartStore,
   useGuestCartView,
-  useUpdateCartItem,
 } from "@/entities/cart";
 import { useUserStore } from "@/entities/user";
 
@@ -19,20 +18,13 @@ const CartView = () => {
   const serverCart = useCart({ enabled: isAuthReady && !!user });
   const guestCart = useGuestCartView({ enabled: isAuthReady && !user });
 
-  const { mutate: updateItem } = useUpdateCartItem();
   const { mutate: deleteItems } = useDeleteCartItems();
-  const updateGuestItem = useGuestCartStore((s) => s.updateItem);
   const removeGuestItems = useGuestCartStore((s) => s.removeItems);
 
   const handlers: CartHandlers = user
-    ? {
-        onEditItem: (item, next) =>
-          updateItem({ cartItemId: item.cartItemId, ...next }),
-        onDeleteItems: (cartItemIds) => deleteItems({ cartItemIds }),
-      }
+    ? { onDeleteItems: (cartItemIds) => deleteItems({ cartItemIds }) }
     : {
         // 게스트 cartItemId === recipeIngredientId
-        onEditItem: (item, next) => updateGuestItem(item.cartItemId, next),
         onDeleteItems: (cartItemIds) => removeGuestItems(cartItemIds),
       };
 

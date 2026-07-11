@@ -19,14 +19,14 @@ const Thumb = ({ imageUrl }: { imageUrl?: string | null }) =>
       src={imageUrl}
       alt=""
       loading="lazy"
-      className="size-6 shrink-0 rounded object-cover"
+      className="size-8 shrink-0 rounded-md object-cover"
     />
   ) : null;
 
 export const CartRecipeLink = ({ recipe, imageUrl }: CartRecipeLinkProps) => {
   if (recipe.deleted) {
     return (
-      <span className="text-ink-muted flex min-w-0 items-center gap-1.5 text-base">
+      <span className="text-ink-muted flex min-w-0 items-center gap-2 text-base font-medium">
         <Thumb imageUrl={imageUrl} />
         <span className="truncate">{recipe.title}</span>
       </span>
@@ -38,7 +38,7 @@ export const CartRecipeLink = ({ recipe, imageUrl }: CartRecipeLinkProps) => {
       href={`/recipes/${recipe.recipeId}`}
       onClick={() => triggerHaptic("Light")}
       aria-label={`${recipe.title} 레시피 보기`}
-      className="text-ink-sub flex min-w-0 items-center gap-1.5 text-base underline-offset-2 hover:underline"
+      className="text-ink-sub flex min-w-0 items-center gap-2 text-base font-medium underline-offset-2 hover:underline"
     >
       <Thumb imageUrl={imageUrl} />
       <span className="truncate">{recipe.title}</span>
