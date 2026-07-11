@@ -78,6 +78,8 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Container layout](rules/policy-container-layout.md) — Container owns bg/max-width/padding; full-bleed/hero pages use `padding={false}`; no double `px`, no nested `bg-white`
 - [Tailwind v4 theme tokens](rules/policy-tailwind-v4-theme-tokens.md) — palette overrides in `@theme` (CSS), not the JS config; @config overrides drop `--color-*` vars and silently break `var()` consumers
 - [No code comments](rules/policy-no-comments.md) — WHAT is the identifier's job; WHY/incident/quirk goes in the commit body. Only `as` and `||`-default markers allowed; shared docs exempt
+- [Absolute badge on inline wrapper](rules/policy-absolute-anchor-inline-wrapper.md) — a `relative` wrapper around an inline child inflates to the line box (70px for a 22px icon), so absolute offsets anchor to the wrong box; make the wrapper `flex` per placement and verify with `getBoundingClientRect`
+- [Sticky vs nearest scroll container](rules/policy-sticky-nearest-scroll-container.md) — sticky `top` resolves against the nearest scrollable ancestor; an inner scroll container that starts below fixed chrome needs `top-0`, not `top-16`; dead `window.scrollTo`/`scrollY:0` is the tell
 
 ### Next.js
 
@@ -87,6 +89,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Error boundary needs use client](rules/nextjs-error-boundary-use-client.md) — `error.tsx`/`global-error.tsx` must carry `"use client"` on their own file; a bare re-export stub doesn't inherit it and fails `next build` (tsc won't catch)
 - [Build-time sitemap/metadata data](rules/nextjs-sitemap-build-data.md) — paginate per-chunk; one unbounded list fetch crosses the 60s static-gen timeout as data grows; caught-error-`[]` ships a silently empty sitemap
 - [Static-prerender fetch timeout](rules/nextjs-static-prerender-fetch-timeout.md) — wrap build-time page fetches in an `AbortController` timeout + error-safe fallback; `<Suspense>` does NOT let static generation skip a slow fetch (streaming is on-demand only)
+- [Server deps leak via barrels](rules/nextjs-server-deps-leak-via-barrels.md) — a client test failing "Request is not defined" means a barrel chain pulled `next/cache`/api.server into jsdom; mock next/cache now, stop re-exporting server modules from client-consumed barrels for good
 
 ### React (Compiler era)
 
@@ -98,6 +101,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Context hook provider coverage](rules/react-context-hook-provider-coverage.md) — converting a shared leaf from prop to a context hook (`useT`/`useContext`) requires a provider at every render site; missing one is a runtime throw `tsc` can't see — grep all render sites first
 - [Static content not gated on enrichment query](rules/react-static-content-not-gated-on-enrichment-query.md) — content you already have (props/SSR) must render with `isLoading={false}`; a secondary enrichment query's `isLoading` (favorite/badge) must not gate it or you flash a skeleton
 - [Reserve height through lazy load](rules/react-reserve-height-through-lazy-load.md) — an in-view section's reserved placeholder height must persist through loading; `if (isLoading) return null` collapses it to 0 → double layout shift; collapse only post-load when empty
+- [Store signal needs production writers](rules/react-store-signal-needs-production-writers.md) — before subscribing new UI to a store field, grep its mutators for non-test call-sites; zero writers = dead signal that state-injection unit tests green-light, and the live pipeline may already surface the event
 
 ### TypeScript
 
@@ -106,6 +110,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Discriminated unions at API boundary](rules/ts-discriminated-union-at-boundary.md) — translate correlated optionals into a union once at the seam
 - [Typed mapper extraction](rules/ts-typed-mapper-extraction.md) — inline literals hide dead fields; extract with explicit return type
 - [Type imports — avoid dist paths](rules/ts-type-imports-from-dist.md) — derive from public hook via `ReturnType`, don't reach into `pkg/dist/...`
+- [Nullable fields at fetch boundary](rules/ts-nullable-fields-at-fetch-boundary.md) — write-optional ⇒ read-nullable: doc sample payloads aren't a nullability contract; type the raw wire shape with `| null` and normalize once in the fetch fn, not in consumers
 
 ### Naming
 
@@ -129,6 +134,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Hoisted tags → query document](rules/test-react-hoisted-tags.md) — React 19 hoists `<script src>`/`<title>`/`<meta>`/stylesheet to `<head>`; assert on `document`, not RTL `container`
 - [window-gated code → node env](rules/test-window-branch-node-env.md) — `delete global.window` is a no-op in jsdom; test `typeof window` guards under `@jest-environment node` and inject `global.window` for the client case
 - [type-gate needs red-state](rules/test-type-gate-red-state.md) — `@ts-expect-error` type tests are verified by tsc, not jest; name the file `*.type-test.ts` (outside jest glob, inside tsconfig), wrap in a never-called fn, and confirm tsc FAILs with "unused directive" before the type is tightened — that red state is the only proof the gate isn't empty
+- [Optimistic UI needs a deferred mutation](rules/test-optimistic-ui-deferred-mutation.md) — a resolved mutation mock lets onSettled invalidate→refetch restore the fixture before the assertion; keep the mutation pending (deferred promise), assert the optimistic DOM, then resolve in `act()`
 
 ## File template
 
