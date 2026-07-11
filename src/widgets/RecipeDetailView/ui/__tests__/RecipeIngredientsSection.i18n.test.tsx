@@ -10,6 +10,12 @@ import RecipeIngredientsSection from "../RecipeIngredientsSection";
 
 const HANGUL = /[가-힣]/;
 
+// cart-add → entities/cart 배럴 → shared/coupang(api.server) 체인이 next/cache를 끌고 옴
+jest.mock("next/cache", () => ({
+  revalidateTag: jest.fn(),
+  revalidatePath: jest.fn(),
+  unstable_cache: (fn: unknown) => fn,
+}));
 jest.mock("@/shared/lib/gsap", () => ({
   gsap: {
     registerPlugin: jest.fn(),

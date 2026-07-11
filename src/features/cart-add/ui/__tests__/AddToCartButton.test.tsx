@@ -4,6 +4,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+jest.mock("next/cache", () => ({
+  revalidateTag: jest.fn(),
+  revalidatePath: jest.fn(),
+  unstable_cache: (fn: unknown) => fn,
+}));
 jest.mock("@/entities/cart/api", () => ({
   ...jest.requireActual("@/entities/cart/api"),
   addCartItems: jest.fn(),
