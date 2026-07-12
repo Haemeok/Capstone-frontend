@@ -10,6 +10,7 @@ jest.mock("@/entities/cart/api", () => ({
   deleteCartItemsBulk: jest.fn(),
 }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
+jest.mock("next/navigation", () => ({ usePathname: () => "/cart" }));
 
 import { ApiError } from "@/shared/api/client";
 import { useToastStore } from "@/shared/ui/toast";
@@ -45,7 +46,7 @@ describe("useDeleteCartItems", () => {
         mutations: { retry: false },
       },
     });
-    qc.setQueryData(CART_QUERY_KEYS.all, cartFixture);
+    qc.setQueryData(CART_QUERY_KEYS.byLang("ko"), cartFixture);
     const wrapper = ({ children }: React.PropsWithChildren) => (
       <QueryClientProvider client={qc}>{children}</QueryClientProvider>
     );
@@ -57,7 +58,9 @@ describe("useDeleteCartItems", () => {
     });
 
     await waitFor(() => {
-      expect(qc.getQueryData(CART_QUERY_KEYS.all)).toEqual(cartFixture);
+      expect(qc.getQueryData(CART_QUERY_KEYS.byLang("ko"))).toEqual(
+        cartFixture
+      );
       expect(
         useToastStore.getState().toastList.map((t) => t.message)
       ).toContain("삭제에 실패했어요");

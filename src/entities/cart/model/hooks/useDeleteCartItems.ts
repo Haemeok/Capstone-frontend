@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useToastStore } from "@/shared/ui/toast";
 
@@ -19,6 +20,7 @@ type Context = { previous?: CartResponse };
 export const useDeleteCartItems = () => {
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
+  const lang = useApiLocale();
 
   return useMutation<void, Error, Variables, Context>({
     mutationFn: ({ cartItemIds }) =>
@@ -28,11 +30,11 @@ export const useDeleteCartItems = () => {
     onMutate: async ({ cartItemIds }) => {
       await queryClient.cancelQueries({ queryKey: CART_QUERY_KEYS.all });
       const previous = queryClient.getQueryData<CartResponse>(
-        CART_QUERY_KEYS.all
+        CART_QUERY_KEYS.byLang(lang)
       );
       if (previous) {
         queryClient.setQueryData(
-          CART_QUERY_KEYS.all,
+          CART_QUERY_KEYS.byLang(lang),
           removeItemsFromCart(previous, cartItemIds)
         );
       }
@@ -41,7 +43,10 @@ export const useDeleteCartItems = () => {
     onSuccess: () => triggerHaptic("Success"),
     onError: (_error, _variables, context) => {
       if (context?.previous) {
-        queryClient.setQueryData(CART_QUERY_KEYS.all, context.previous);
+        queryClient.setQueryData(
+          CART_QUERY_KEYS.byLang(lang),
+          context.previous
+        );
       }
       addToast({ message: CART_MESSAGES.deleteFailed, variant: "error" });
     },

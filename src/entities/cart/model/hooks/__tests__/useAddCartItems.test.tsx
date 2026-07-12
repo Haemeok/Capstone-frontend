@@ -10,6 +10,7 @@ jest.mock("@/entities/cart/api", () => ({
   addCartItems: jest.fn(),
 }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
+jest.mock("next/navigation", () => ({ usePathname: () => "/cart" }));
 
 import { useToastStore } from "@/shared/ui/toast";
 

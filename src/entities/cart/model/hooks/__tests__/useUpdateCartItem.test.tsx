@@ -3,6 +3,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 
+jest.mock("next/navigation", () => ({ usePathname: () => "/cart" }));
 jest.mock("@/entities/cart/api", () => ({
   ...jest.requireActual("@/entities/cart/api"),
   updateCartItem: jest.fn(),

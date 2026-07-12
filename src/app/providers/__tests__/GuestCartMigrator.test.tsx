@@ -12,6 +12,8 @@ jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
   unstable_cache: (fn: unknown) => fn,
 }));
+const mockPathname = jest.fn(() => "/");
+jest.mock("next/navigation", () => ({ usePathname: () => mockPathname() }));
 
 import { useToastStore } from "@/shared/ui/toast";
 
@@ -45,6 +47,7 @@ const renderMigrator = () => {
 
 beforeEach(() => {
   addMock.mockReset();
+  mockPathname.mockReturnValue("/");
   window.localStorage.clear();
   useToastStore.setState({ toastList: [] });
 });
@@ -66,13 +69,16 @@ it("T-37: 게스트 항목이 있는 로그인 상태에서 마운트되면 이�
 
   await waitFor(() => {
     expect(addMock).toHaveBeenCalledTimes(1);
-    expect(addMock).toHaveBeenCalledWith({
-      items: [
-        { recipeIngredientId: "ri1", quantity: "100", unit: "g" },
-        { recipeIngredientId: "ri2", quantity: "100", unit: "g" },
-        { recipeIngredientId: "ri3", quantity: "100", unit: "g" },
-      ],
-    });
+    expect(addMock).toHaveBeenCalledWith(
+      {
+        items: [
+          { recipeIngredientId: "ri1", quantity: "100", unit: "g" },
+          { recipeIngredientId: "ri2", quantity: "100", unit: "g" },
+          { recipeIngredientId: "ri3", quantity: "100", unit: "g" },
+        ],
+      },
+      "ko"
+    );
     expect(useGuestCartStore.getState().items).toHaveLength(0);
     expect(useToastStore.getState().toastList.map((t) => t.message)).toContain(
       "장바구니 3개를 계정으로 옮겼어요"
@@ -80,6 +86,23 @@ it("T-37: 게스트 항목이 있는 로그인 상태에서 마운트되면 이�
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: CART_QUERY_KEYS.all,
     });
+  });
+});
+
+it("T-11: /ja 경로에서 이관하면 현재 언어 ja로 추가한다", async () => {
+  mockPathname.mockReturnValue("/ja/recipes/r7KpQ2mA");
+  useGuestCartStore.setState({ items: [guestItem("ri1")], isHydrated: true });
+  useUserStore.setState({ user: { id: "u1" } as User, isAuthReady: true });
+  addMock.mockResolvedValue({
+    addedCount: 1,
+    skippedCount: 0,
+    cartItemIds: [],
+  });
+
+  renderMigrator();
+
+  await waitFor(() => {
+    expect(addMock).toHaveBeenCalledWith(expect.anything(), "ja");
   });
 });
 

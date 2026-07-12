@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 
+import { useApiLocale } from "@/shared/i18n";
 import { useToastStore } from "@/shared/ui/toast";
 
 import {
@@ -21,6 +22,7 @@ export const GuestCartMigrator = () => {
   const hydrateFromStorage = useGuestCartStore((s) => s.hydrateFromStorage);
   const removeItems = useGuestCartStore((s) => s.removeItems);
   const queryClient = useQueryClient();
+  const lang = useApiLocale();
   const inFlightRef = useRef(false);
 
   useEffect(() => {
@@ -35,13 +37,16 @@ export const GuestCartMigrator = () => {
     const count = items.length;
     // 스냅샷 id만 지운다 — 이관 중 새로 담긴 항목이 clear로 유실되지 않게
     const migratedIds = items.map((item) => item.recipeIngredientId);
-    addCartItems({
-      items: items.map(({ recipeIngredientId, quantity, unit }) => ({
-        recipeIngredientId,
-        quantity,
-        unit,
-      })),
-    })
+    addCartItems(
+      {
+        items: items.map(({ recipeIngredientId, quantity, unit }) => ({
+          recipeIngredientId,
+          quantity,
+          unit,
+        })),
+      },
+      lang
+    )
       .then(() => {
         removeItems(migratedIds);
         useToastStore.getState().addToast({
@@ -56,7 +61,7 @@ export const GuestCartMigrator = () => {
       .finally(() => {
         inFlightRef.current = false;
       });
-  }, [isAuthReady, user, isHydrated, items, removeItems, queryClient]);
+  }, [isAuthReady, user, isHydrated, items, removeItems, queryClient, lang]);
 
   return null;
 };

@@ -40,8 +40,21 @@ it("서버가 quantity/unit에 null을 내려주면 빈 문자열로 정규화�
     ],
   });
 
-  const cart = await getCart();
+  const cart = await getCart("ko");
 
   expect(cart.groups[0].items[0]).toMatchObject({ quantity: "", unit: "" });
   expect(cart.unmatchedItems[0]).toMatchObject({ quantity: "2", unit: "" });
+});
+
+it("조회 URL에 현재 앱 언어를 lang으로 붙인다 (T-09)", async () => {
+  getMock.mockResolvedValue({
+    totalItemCount: 0,
+    recipes: [],
+    groups: [],
+    unmatchedItems: [],
+  });
+
+  await getCart("ja");
+
+  expect(getMock).toHaveBeenCalledWith("/me/cart?lang=ja");
 });

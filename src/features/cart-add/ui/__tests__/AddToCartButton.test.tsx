@@ -14,6 +14,7 @@ jest.mock("@/entities/cart/api", () => ({
   addCartItems: jest.fn(),
 }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
+jest.mock("next/navigation", () => ({ usePathname: () => "/cart" }));
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useToastStore } from "@/shared/ui/toast";
@@ -71,9 +72,12 @@ it("T-01: 로그인 유저가 담기 버튼을 누르면 POST + 토스트 + 체�
 
   await waitFor(() => {
     expect(addMock).toHaveBeenCalledTimes(1);
-    expect(addMock).toHaveBeenCalledWith({
-      items: [{ recipeIngredientId: "ri8AbKcQ", quantity: "100", unit: "g" }],
-    });
+    expect(addMock).toHaveBeenCalledWith(
+      {
+        items: [{ recipeIngredientId: "ri8AbKcQ", quantity: "100", unit: "g" }],
+      },
+      "ko"
+    );
     expect(useToastStore.getState().toastList.map((t) => t.message)).toContain(
       "장바구니에 담았어요"
     );
