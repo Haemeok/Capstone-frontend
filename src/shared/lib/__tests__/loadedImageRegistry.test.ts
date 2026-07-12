@@ -15,8 +15,8 @@ describe("loadedImageRegistry", () => {
     markImageLoaded("https://cdn.recipio.kr/a.jpg");
 
     jest.isolateModules(() => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const fresh =
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         require("@/shared/lib/loadedImageRegistry") as typeof import("@/shared/lib/loadedImageRegistry");
       expect(fresh.hasImageLoaded("https://cdn.recipio.kr/a.jpg")).toBe(false);
     });
