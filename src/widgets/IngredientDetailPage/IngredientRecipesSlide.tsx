@@ -1,6 +1,6 @@
 "use client";
 
-import { format, getDictionary, type Locale } from "@/shared/i18n";
+import { format, ingredientDetailMessages, type Locale } from "@/shared/i18n";
 import { getEuroParticle } from "@/shared/lib/korean";
 
 import { useIngredientRecipesQuery } from "@/entities/ingredient";
@@ -17,7 +17,7 @@ const buildTitle = (name: string, locale: Locale): string =>
   locale === "ko"
     ? // i18n-ignore: ko 전용 조사 분기 (을/를), en/ja는 dict format 사용
       `${name}${getEuroParticle(name)} 만든 인기 레시피`
-    : format(getDictionary(locale).ingredientDetail.popularRecipesTitle, {
+    : format(ingredientDetailMessages[locale].popularRecipesTitle, {
         name,
       });
 

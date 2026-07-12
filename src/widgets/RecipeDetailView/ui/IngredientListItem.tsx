@@ -3,7 +3,7 @@
 import { Refrigerator } from "lucide-react";
 
 import type { Locale } from "@/shared/i18n";
-import { getDictionary } from "@/shared/i18n";
+import { useT } from "@/shared/i18n";
 import BadgeButton from "@/shared/ui/BadgeButton";
 
 import { IngredientItem } from "@/entities/ingredient";
@@ -25,7 +25,7 @@ export const IngredientListItem = ({
   locale,
   cartAction,
 }: IngredientListItemProps) => {
-  const t = getDictionary(locale);
+  const t = useT();
   const nameCell = (
     <div className="flex items-center gap-1.5 text-left">
       {ingredient.inFridge ? (

@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 
 import { AiFormInArticleAdSlot, BottomAnchorAdSlot } from "@/shared/adsense";
 import { useLocalizedRouter } from "@/shared/i18n";
-import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
+import { DictionaryProvider, useT } from "@/shared/i18n";
+import { ko as dict } from "@/shared/i18n/messages/ko";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { ArrowLeftIcon, ChefHatIcon } from "@/shared/ui/icons";
@@ -194,7 +195,6 @@ const NutritionRecipePage = () => {
 };
 
 const NutritionRecipePageWithErrorBoundary = () => {
-  const dict = getDictionary("ko");
   return (
     <DictionaryProvider dict={dict}>
       <ErrorBoundary

@@ -163,7 +163,7 @@ export const LocalizedSearchPage = ({
       : undefined;
 
   return (
-    <SearchClientShell locale={locale}>
+    <SearchClientShell>
       <Suspense fallback={<SearchGridSkeleton />}>
         <SearchResultsData
           queryKey={queryKey}

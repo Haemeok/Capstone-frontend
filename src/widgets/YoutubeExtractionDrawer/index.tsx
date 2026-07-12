@@ -3,7 +3,11 @@
 import { useEffect, useRef } from "react";
 
 import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
-import { getDictionary, useApiLocale, useLocalizedRouter } from "@/shared/i18n";
+import {
+  appGlobalMessages,
+  useApiLocale,
+  useLocalizedRouter,
+} from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import SavingSection from "@/shared/ui/SavingSection";
 import { Confetti, type ConfettiRef } from "@/shared/ui/shadcn/confetti";
@@ -22,7 +26,7 @@ const YoutubeExtractionDrawer = ({
   const router = useLocalizedRouter();
   const { Container, Content, Title } = useResponsiveSheet();
   const confettiRef = useRef<ConfettiRef>(null);
-  const t = getDictionary(useApiLocale()).appGlobal.youtubeExtract;
+  const t = appGlobalMessages[useApiLocale()].youtubeExtract;
 
   useEffect(() => {
     if (isOpen) {

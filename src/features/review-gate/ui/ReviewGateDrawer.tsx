@@ -2,7 +2,7 @@
 
 import { MessageCircle } from "lucide-react";
 
-import { getDictionary, useApiLocale } from "@/shared/i18n";
+import { appGlobalMessages, useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
@@ -21,7 +21,7 @@ export const ReviewGateDrawer = ({
   onNegative,
 }: ReviewGateDrawerProps) => {
   const { Container, Content, Title } = useResponsiveSheet();
-  const t = getDictionary(useApiLocale()).appGlobal.reviewGate;
+  const t = appGlobalMessages[useApiLocale()].reviewGate;
 
   const handlePositive = () => {
     triggerHaptic("Light");

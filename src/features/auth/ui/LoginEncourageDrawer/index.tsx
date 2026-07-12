@@ -4,7 +4,11 @@ import { ReactNode, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-import { getDictionary, useApiLocale, useLocalizedRouter } from "@/shared/i18n";
+import {
+  appGlobalMessages,
+  useApiLocale,
+  useLocalizedRouter,
+} from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
@@ -30,7 +34,7 @@ const LoginEncourageDrawer = ({
   const { Container, Content, Title } = useResponsiveSheet();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
-  const t = getDictionary(useApiLocale()).appGlobal.login;
+  const t = appGlobalMessages[useApiLocale()].login;
   const resolvedMessage = message ?? t.youtubeMessage;
 
   const handleCTAClick = () => {
