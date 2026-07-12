@@ -9,9 +9,18 @@ type CoupangProductCardProps = {
   product: CoupangProduct;
 };
 
+const ROCKET_BADGE = {
+  ROCKET_FRESH: { src: "/rocket-fresh.webp", alt: "로켓프레시" },
+  ROCKET: { src: "/rocket-delivery.webp", alt: "로켓배송" },
+} as const;
+
 export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
   const unit = computeUnitPrice(product.name, product.price);
   const isRocket = isRocketDelivery(product.deliveryType);
+  const badge =
+    product.deliveryType === "STANDARD"
+      ? null
+      : ROCKET_BADGE[product.deliveryType];
 
   return (
     <a
@@ -29,15 +38,15 @@ export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
       <p className="text-ink mt-1 line-clamp-2 text-sm leading-snug">
         {product.name}
       </p>
-      <div className="flex items-center gap-1">
-        <span className="text-base font-bold text-red-700 md:text-lg">
+      <div className="flex flex-wrap items-center gap-1">
+        <span className="text-base font-bold whitespace-nowrap text-red-700 md:text-lg">
           {formatNumber(product.price, "원")}
         </span>
-        {isRocket && (
+        {badge && (
           <img
             data-testid="rocket-badge"
-            src="/rocket-delivery.webp"
-            alt="로켓배송"
+            src={badge.src}
+            alt={badge.alt}
             className="h-3.5 w-auto"
           />
         )}

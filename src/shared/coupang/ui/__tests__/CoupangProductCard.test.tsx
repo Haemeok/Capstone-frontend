@@ -19,7 +19,10 @@ describe("CoupangProductCard", () => {
 
     expect(screen.getByText("한돈 앞다리살 전지 1kg")).toBeInTheDocument();
     expect(screen.getByText("12,900원")).toBeInTheDocument();
-    expect(screen.getByTestId("rocket-badge")).toBeInTheDocument();
+    expect(screen.getByAltText("로켓배송")).toHaveAttribute(
+      "src",
+      "/rocket-delivery.webp"
+    );
     expect(screen.getByText("100g당 1,290원")).toBeInTheDocument();
     expect(await screen.findByText(/도착 예정/)).toHaveClass("text-green-600");
   });
@@ -32,9 +35,13 @@ describe("CoupangProductCard", () => {
     expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
   });
 
-  it("로켓프레시도 동일한 로켓 배지·도착 문구 (T-02)", async () => {
+  it("로켓프레시는 프레시 전용 배지 + 도착 문구 (T-02)", async () => {
     render(
       <CoupangProductCard product={{ ...base, deliveryType: "ROCKET_FRESH" }} />
+    );
+    expect(screen.getByAltText("로켓프레시")).toHaveAttribute(
+      "src",
+      "/rocket-fresh.webp"
     );
     expect(screen.getByTestId("rocket-badge")).toBeInTheDocument();
     expect(await screen.findByText(/도착 예정/)).toBeInTheDocument();
