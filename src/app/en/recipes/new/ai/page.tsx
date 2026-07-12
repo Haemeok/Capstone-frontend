@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 
 import { useLocalizedRouter } from "@/shared/i18n";
-import { DictionaryProvider, getDictionary } from "@/shared/i18n";
+import { DictionaryProvider } from "@/shared/i18n";
+import { en as dict } from "@/shared/i18n/messages/en";
 import { Container } from "@/shared/ui/Container";
 
 import { useAIRecipeStore } from "@/features/recipe-create-ai/model/store";
@@ -41,7 +42,6 @@ const AIRecipePage = () => {
     return null;
   }
 
-  const dict = getDictionary("en");
   return (
     <DictionaryProvider dict={dict}>
       <Container padding={false} className="min-h-full">

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Bell } from "lucide-react";
 
-import { getDictionary, useApiLocale } from "@/shared/i18n";
+import { appGlobalMessages, useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
@@ -16,7 +16,7 @@ type NotificationPermissionDrawerProps = {
 };
 
 const SuccessView = () => {
-  const t = getDictionary(useApiLocale()).appGlobal.notification;
+  const t = appGlobalMessages[useApiLocale()].notification;
 
   return (
     <motion.div
@@ -88,7 +88,7 @@ export const NotificationPermissionDrawer = ({
   showSuccess = false,
 }: NotificationPermissionDrawerProps) => {
   const { Container, Content, Title } = useResponsiveSheet();
-  const t = getDictionary(useApiLocale()).appGlobal.notification;
+  const t = appGlobalMessages[useApiLocale()].notification;
 
   const handleAccept = () => {
     triggerHaptic("Light");

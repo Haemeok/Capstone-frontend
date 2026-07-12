@@ -20,8 +20,8 @@ export const FabButton = ({
 }: FabButtonProps) => {
   const { targetRef } = useScrollAnimate<HTMLAnchorElement>({
     triggerRef: animated ? triggerRef : undefined,
-    start: "top bottom-=100px",
-    toggleActions: "play none none reset",
+    margin: "0px 0px -100px 0px",
+    resetOnLeaveBack: true,
     yOffset: 10,
     duration: 0.2,
     delay: 0,

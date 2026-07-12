@@ -7,9 +7,21 @@ jest.mock("next/link", () => ({
   ),
 }));
 
+import type { Locale } from "@/shared/i18n";
+import { DictionaryProvider } from "@/shared/i18n";
+import { getDictionary } from "@/shared/i18n/getDictionary";
+
 import type { IngredientItem } from "@/entities/ingredient";
 
 import { IngredientListItem } from "../IngredientListItem";
+
+const renderWithDict = (
+  ui: React.ReactElement,
+  locale: Locale = "ko"
+): ReturnType<typeof render> =>
+  render(
+    <DictionaryProvider dict={getDictionary(locale)}>{ui}</DictionaryProvider>
+  );
 
 // `as` permitted: 테스트 픽스처는 컴포넌트가 읽는 필드(name/inFridge/coupangLink)만 채운다
 const ingredient = {
@@ -29,14 +41,15 @@ const baseProps = {
 
 describe("IngredientListItem i18n layout", () => {
   it("T-C2: ko -> displayAmount + 가격 렌더 (3컬럼)", () => {
-    render(<IngredientListItem {...baseProps} locale="ko" />);
+    renderWithDict(<IngredientListItem {...baseProps} locale="ko" />);
     expect(screen.getByText("1개")).toBeInTheDocument();
     expect(screen.getByText("800원")).toBeInTheDocument();
   });
 
   it("T-C1: en -> displayAmount 렌더, 가격·쿠팡 미렌더, justify-between", () => {
-    render(
-      <IngredientListItem {...baseProps} displayAmount="3 tbsp" locale="en" />
+    renderWithDict(
+      <IngredientListItem {...baseProps} displayAmount="3 tbsp" locale="en" />,
+      "en"
     );
     expect(screen.getByText("3 tbsp")).toBeInTheDocument();
     expect(screen.queryByText("800원")).not.toBeInTheDocument();
@@ -47,7 +60,7 @@ describe("IngredientListItem i18n layout", () => {
   });
 
   it("ko 재료 줄에 장바구니 링크가 없다 (T-04)", () => {
-    render(
+    renderWithDict(
       <IngredientListItem
         ingredient={{
           id: "i1",

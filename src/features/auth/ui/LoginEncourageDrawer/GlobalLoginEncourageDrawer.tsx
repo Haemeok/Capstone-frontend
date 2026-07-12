@@ -3,7 +3,11 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 
-import { getDictionary, useApiLocale, useLocalizedRouter } from "@/shared/i18n";
+import {
+  appGlobalMessages,
+  useApiLocale,
+  useLocalizedRouter,
+} from "@/shared/i18n";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 import { Image } from "@/shared/ui/image/Image";
@@ -19,7 +23,7 @@ const GlobalLoginEncourageDrawer = () => {
   const { Container, Content, Title } = useResponsiveSheet();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
-  const t = getDictionary(useApiLocale()).appGlobal.login;
+  const t = appGlobalMessages[useApiLocale()].login;
 
   const { isOpen, icon, message, closeDrawer } = useLoginEncourageDrawerStore();
   // 빈 문자열 message도 기본 문구로 대체 (|| 의도)

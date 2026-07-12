@@ -1,6 +1,6 @@
 "use client";
 
-import { getDictionary, type Locale } from "@/shared/i18n";
+import { eventsMessages, type Locale } from "@/shared/i18n";
 
 import {
   type RedeemStatus,
@@ -21,7 +21,7 @@ const AdFreeReferralCta = ({ locale }: { locale: Locale }) => {
   const openReferralSheet = useReferralSheetStore((state) => state.open);
   const { data } = useReferralInfoQuery(isAuthenticated);
 
-  const labels = getDictionary(locale).events.adFreeJune.referralCta;
+  const labels = eventsMessages[locale].adFreeJune.referralCta;
   const label = getReferralCtaLabel(data?.redeemStatus.status, labels);
 
   return <EventCtaButton label={label} onClick={openReferralSheet} />;

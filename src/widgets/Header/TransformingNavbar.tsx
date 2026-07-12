@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 
-import { gsap } from "@/shared/lib/gsap";
+import { motion, useScroll, useTransform } from "motion/react";
+
 import { useScrollContext } from "@/shared/lib/ScrollContext";
 import PrevButton from "@/shared/ui/PrevButton";
 
@@ -37,142 +38,66 @@ const TransformingNavbar = ({
   textColorThreshold = DEFAULT_CONFIG.textColorThreshold,
   shadowThreshold = DEFAULT_CONFIG.shadowThreshold,
 }: TransformingNavbarProps) => {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLSpanElement>(null);
-  const backdropRef = useRef<HTMLDivElement>(null);
-
   const { motionRef } = useScrollContext();
+  // 히어로 높이 측정 전에는 진행도가 0에 머물도록 사실상 무한 범위 사용
+  const [scrollEnd, setScrollEnd] = useState<number | null>(null);
 
   useEffect(() => {
     const targetElement = document.getElementById(heroImageId);
+    if (!targetElement) return;
+    setScrollEnd(targetElement.offsetHeight * 0.8);
+  }, [heroImageId]);
 
-    if (
-      !targetElement ||
-      !headerRef.current ||
-      !titleRef.current ||
-      !backdropRef.current ||
-      !motionRef.current
-    ) {
-      return;
-    }
+  const { scrollY } = useScroll({ container: motionRef });
+  const progress = useTransform(
+    scrollY,
+    [0, scrollEnd ?? Number.MAX_SAFE_INTEGER],
+    [0, 1]
+  );
 
-    const headerElement = headerRef.current;
-    const titleElement = titleRef.current;
-    const backdropElement = backdropRef.current;
-    const endTrigger = targetElement.offsetHeight * 0.8;
-
-    const animationConfig = {
-      title: {
-        threshold: titleThreshold,
-        from: { opacity: 0, y: -10 },
-        to: { opacity: 1, y: 0 },
-      },
-      background: {
-        from: { backgroundColor: "rgba(255, 255, 255, 0)" },
-        to: { backgroundColor: "rgba(255, 255, 255, 1)" },
-      },
-      shadow: {
-        threshold: shadowThreshold,
-        from: { boxShadow: "none" },
-        to: { boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" },
-      },
-      textColor: {
-        threshold: textColorThreshold,
-        from: { color: "white" },
-        to: { color: "black" },
-      },
-      backdrop: {
-        from: { opacity: 1 },
-        to: { opacity: 0 },
-      },
-    } as const;
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: targetElement,
-        scroller: motionRef.current,
-        start: "top top",
-        end: `+=${endTrigger}`,
-        scrub: true,
-      },
-    });
-
-    tl.fromTo(
-      backdropElement,
-      animationConfig.backdrop.from,
-      animationConfig.backdrop.to,
-      "0%"
-    );
-
-    tl.fromTo(
-      headerElement,
-      animationConfig.background.from,
-      animationConfig.background.to,
-      "10%"
-    );
-
-    tl.fromTo(
-      headerElement,
-      animationConfig.shadow.from,
-      animationConfig.shadow.to,
-      `${animationConfig.shadow.threshold * 100}%`
-    );
-
-    tl.fromTo(
-      titleElement,
-      animationConfig.title.from,
-      animationConfig.title.to,
-      `${animationConfig.title.threshold * 100}%`
-    );
-
-    tl.fromTo(
-      headerElement,
-      animationConfig.textColor.from,
-      animationConfig.textColor.to,
-      `${animationConfig.textColor.threshold * 100}%`
-    );
-
-    return () => {
-      tl.kill();
-    };
-  }, [
-    heroImageId,
-    titleThreshold,
-    textColorThreshold,
-    shadowThreshold,
-    motionRef,
-  ]);
+  const backdropOpacity = useTransform(progress, [0, 0.4], [1, 0]);
+  const backgroundColor = useTransform(
+    progress,
+    [0.1, 0.6],
+    ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 1)"]
+  );
+  const color = useTransform(
+    progress,
+    [textColorThreshold, Math.min(textColorThreshold + 0.4, 1)],
+    ["rgb(255, 255, 255)", "rgb(0, 0, 0)"]
+  );
+  const boxShadow = useTransform(
+    progress,
+    [shadowThreshold, 1],
+    ["0 2px 4px rgba(0, 0, 0, 0)", "0 2px 4px rgba(0, 0, 0, 0.1)"]
+  );
+  const titleOpacity = useTransform(progress, [titleThreshold, 1], [0, 1]);
+  const titleY = useTransform(progress, [titleThreshold, 1], [-10, 0]);
 
   return (
-    <div
-      ref={headerRef}
+    <motion.div
       className="z-header sticky-optimized fixed top-0 right-0 left-0 flex h-16 items-center justify-between px-4 md:pointer-events-none md:opacity-0"
-      style={{
-        backgroundColor: "rgba(255, 255, 255, 0)",
-        color: "black",
-        boxShadow: "none",
-      }}
+      style={{ backgroundColor, color, boxShadow }}
     >
-      <div
+      <motion.div
         aria-hidden
-        ref={backdropRef}
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-black/60 to-transparent md:hidden"
+        style={{ opacity: backdropOpacity }}
       />
 
       <div className="flex max-w-full min-w-0 items-center gap-2">
         {leftComponent}
 
-        <span
-          ref={titleRef}
+        <motion.span
           className="truncate text-lg font-bold"
-          style={{ opacity: 0, transform: "translateY(-10px)" }}
+          style={{ opacity: titleOpacity, y: titleY }}
         >
           {title}
-        </span>
+        </motion.span>
       </div>
 
       {rightComponent}
-    </div>
+    </motion.div>
   );
 };
 

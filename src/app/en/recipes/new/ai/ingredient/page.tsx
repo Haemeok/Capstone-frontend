@@ -13,7 +13,8 @@ import {
   RECIPE_CREATE_CATEGORY_MINE,
 } from "@/shared/config/constants/recipe";
 import { useLocalizedRouter } from "@/shared/i18n";
-import { DictionaryProvider, getDictionary, useT } from "@/shared/i18n";
+import { DictionaryProvider, useT } from "@/shared/i18n";
+import { en as enDict } from "@/shared/i18n/messages/en";
 import { useMediaQuery } from "@/shared/lib/hooks/useMediaQuery";
 import { Container } from "@/shared/ui/Container";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
@@ -197,8 +198,6 @@ const IngredientRecipePage = () => {
     </AIConceptShell>
   );
 };
-
-const enDict = getDictionary("en");
 
 const IngredientRecipePageWithErrorBoundary = () => (
   <DictionaryProvider dict={enDict}>

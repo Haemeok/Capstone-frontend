@@ -208,7 +208,7 @@ export default async function SearchResultsPage({
       : undefined;
 
   return (
-    <SearchClientShell locale="ko">
+    <SearchClientShell>
       <Suspense fallback={<SearchGridSkeleton />}>
         <SearchResultsData
           queryKey={queryKey}

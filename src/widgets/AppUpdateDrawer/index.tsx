@@ -9,7 +9,7 @@ import {
   PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
 import { useIsApp } from "@/shared/hooks/useIsApp";
-import { format, getDictionary, useApiLocale } from "@/shared/i18n";
+import { appGlobalMessages, format, useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 import { Drawer, DrawerContent, DrawerTitle } from "@/shared/ui/shadcn/drawer";
@@ -30,7 +30,7 @@ const detectMobileOS = (): MobileOS => {
 const GlobalAppUpdateDrawer = () => {
   const isInApp = useIsApp();
   const { isOpen, openDrawer, dismiss } = useAppUpdateDrawerStore();
-  const t = getDictionary(useApiLocale()).appGlobal.appUpdate;
+  const t = appGlobalMessages[useApiLocale()].appUpdate;
 
   const highlights = [
     { icon: Lock, text: t.highlightLogin },

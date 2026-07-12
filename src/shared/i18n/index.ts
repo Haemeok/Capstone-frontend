@@ -11,6 +11,7 @@ export { format, formatCompactNumber, plural } from "./format";
 export { getDictionary } from "./getDictionary";
 export { buildHreflangAlternates } from "./hreflang";
 export { ingredientAddMessages } from "./ingredientAddMessages";
+export { ingredientDetailMessages } from "./ingredientDetailMessages";
 export { localizeIngredientName } from "./ingredientNameOverlay";
 export { localizePack } from "./ingredientPackMeta";
 export { ingredientPickerMessages } from "./ingredientPickerMessages";
@@ -32,6 +33,7 @@ export { recipeGridMessages } from "./recipeGridMessages";
 export { resolveChromeLocale } from "./resolveChromeLocale";
 export { resolveDateFnsLocale } from "./resolveDateFnsLocale";
 export { resolveLocaleFromPath } from "./resolveLocaleFromPath";
+export { searchMessages } from "./searchMessages";
 export { smartAppBannerMessages } from "./smartAppBannerMessages";
 export type {
   AuthDict,

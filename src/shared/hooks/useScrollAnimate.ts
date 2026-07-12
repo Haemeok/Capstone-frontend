@@ -1,87 +1,98 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
-import { gsap } from "@/shared/lib/gsap";
+import { animate, inView } from "motion";
+
 import { useScrollContext } from "@/shared/lib/ScrollContext";
+
+// gsap power3.out 대응 베지어
+const EASE_OUT_CUBIC = [0.215, 0.61, 0.355, 1] as const;
+
+type MarginValue = `${number}${"px" | "%"}`;
+type Margin =
+  | MarginValue
+  | `${MarginValue} ${MarginValue}`
+  | `${MarginValue} ${MarginValue} ${MarginValue}`
+  | `${MarginValue} ${MarginValue} ${MarginValue} ${MarginValue}`;
 
 type UseScrollAnimateOptions = {
   triggerRef?: React.RefObject<HTMLElement | null>;
-  start?: string;
-  toggleActions?: string;
+  /** IntersectionObserver rootMargin. 기본값은 gsap "top 85%" 대응 */
+  margin?: Margin;
+  /** 트리거가 뷰포트 아래로 다시 벗어나면 숨김 상태로 리셋 (gsap toggleActions reset 대응) */
+  resetOnLeaveBack?: boolean;
   delay?: number;
   yOffset?: number;
   duration?: number;
-  ease?: string;
 };
 
 const useScrollAnimate = <T extends HTMLElement>(
   options?: UseScrollAnimateOptions
 ) => {
   const targetRef = useRef<T>(null);
-  const animation = useRef<GSAPTimeline | null>(null);
   const { motionRef } = useScrollContext();
 
-  const playAnimation = () => {
+  const {
+    triggerRef,
+    margin = "0px 0px -15% 0px",
+    resetOnLeaveBack = false,
+    delay = 0.3,
+    yOffset = 5,
+    duration = 0.7,
+  } = options ?? {};
+
+  const playAnimation = useCallback(() => {
     if (!targetRef.current) return;
 
-    gsap.fromTo(
+    animate(
       targetRef.current,
-      { opacity: 0, y: options?.yOffset ?? 5 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: options?.duration ?? 0.7,
-        ease: options?.ease ?? "power3.out",
-        delay: options?.delay ?? 0.3,
-      }
+      { opacity: 1, y: 0 },
+      { duration, delay, ease: EASE_OUT_CUBIC }
     );
-  };
+  }, [duration, delay]);
 
   useEffect(() => {
-    if (!motionRef.current || !targetRef.current) {
-      return;
-    }
+    const targetElement = targetRef.current;
+    const scroller = motionRef.current;
+    if (!targetElement || !scroller) return;
 
-    const currentTriggerElement =
-      options?.triggerRef?.current || targetRef.current;
+    const triggerElement = triggerRef?.current || targetElement;
 
-    if (targetRef.current && currentTriggerElement) {
-      animation.current = gsap.timeline({
-        scrollTrigger: {
-          trigger: currentTriggerElement,
-          scroller: motionRef.current,
-          start: options?.start || "top 85%",
-          toggleActions: options?.toggleActions || "restart none none none",
-        },
-      });
-
-      animation.current.fromTo(
-        targetRef.current,
-        { opacity: 0, y: options?.yOffset ?? 5 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: options?.duration ?? 0.7,
-          ease: options?.ease ?? "power3.out",
-          delay: options?.delay ?? 0.3,
-        }
-      );
-    }
-
-    return () => {
-      if (animation.current) {
-        animation.current.kill();
-      }
+    const hide = () => {
+      targetElement.style.opacity = "0";
+      targetElement.style.transform = `translateY(${yOffset}px)`;
     };
+
+    hide();
+
+    const stop = inView(
+      triggerElement,
+      () => {
+        animate(
+          targetElement,
+          { opacity: 1, y: 0 },
+          { duration, delay, ease: EASE_OUT_CUBIC }
+        );
+
+        return (leaveEntry) => {
+          if (!resetOnLeaveBack) return;
+          const rootBottom =
+            leaveEntry.rootBounds?.bottom ?? window.innerHeight;
+          if (leaveEntry.boundingClientRect.top >= rootBottom) hide();
+        };
+      },
+      { root: scroller, margin }
+    );
+
+    return () => stop();
   }, [
-    options?.triggerRef,
-    options?.start,
-    options?.toggleActions,
-    options?.delay,
-    options?.yOffset,
-    options?.duration,
-    options?.ease,
+    triggerRef,
+    margin,
+    resetOnLeaveBack,
+    delay,
+    yOffset,
+    duration,
     motionRef,
   ]);
 
