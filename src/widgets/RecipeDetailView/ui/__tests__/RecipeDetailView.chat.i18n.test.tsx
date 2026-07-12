@@ -1,4 +1,4 @@
-import { createRef } from "react";
+import { type ReactNode, useRef } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render } from "@testing-library/react";
@@ -35,19 +35,29 @@ jest.mock("next/navigation", () => ({
 
 const CHAT_LABEL = "레시피 챗봇 열기";
 
+// useScroll({ container })는 effect 시점에 ref가 실제 DOM에 붙어 있어야 한다
+const ScrollRoot = ({ children }: { children: ReactNode }) => {
+  const motionRef = useRef<HTMLDivElement>(null);
+  return (
+    <ScrollContext.Provider value={{ motionRef }}>
+      <div ref={motionRef}>{children}</div>
+    </ScrollContext.Provider>
+  );
+};
+
 const renderRDV = (locale: "ko" | "ja" | "en") => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
   return render(
     <QueryClientProvider client={queryClient}>
-      <ScrollContext.Provider value={{ motionRef: createRef() }}>
+      <ScrollRoot>
         <RecipeDetailView
           recipe={makeBaseRecipe({ title: "김치찌개" })}
           recipeId="r1"
           locale={locale}
         />
-      </ScrollContext.Provider>
+      </ScrollRoot>
     </QueryClientProvider>
   );
 };
