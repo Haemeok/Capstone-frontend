@@ -48,6 +48,11 @@ export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
         </span>
       )}
       {isRocket && <DeliveryEstimate />}
+      {product.freeShipping && (
+        <span className="rounded-card text-ink self-start bg-gray-100 px-1.5 py-[3px] text-[11px] leading-none">
+          무료배송
+        </span>
+      )}
     </a>
   );
 };
