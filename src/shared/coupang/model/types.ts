@@ -1,11 +1,12 @@
+export type CoupangDeliveryType = "ROCKET_FRESH" | "ROCKET" | "STANDARD";
+
 export type CoupangProduct = {
   rank: number;
   name: string;
   price: number;
   imageUrl: string;
   url: string;
-  categoryName: string;
-  rocket: boolean;
+  deliveryType: CoupangDeliveryType;
   freeShipping: boolean;
 };
 

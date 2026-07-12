@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 
+import type { CoupangProduct } from "@/shared/coupang";
+
 import type { IngredientDetailView } from "@/entities/ingredient";
 
 import IngredientDetailPageClient from "../IngredientDetailPageClient";
@@ -26,14 +28,13 @@ jest.mock("@/shared/coupang", () => ({
   ),
 }));
 
-const makeProduct = (name: string) => ({
+const makeProduct = (name: string): CoupangProduct => ({
   rank: 1,
   name,
   price: 1000,
   imageUrl: "https://img",
   url: "https://link",
-  categoryName: "식품",
-  rocket: false,
+  deliveryType: "STANDARD",
   freeShipping: false,
 });
 
