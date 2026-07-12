@@ -14,6 +14,7 @@ import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 import { useTabState } from "./model/useTabState";
 import { EmptyState } from "./ui/EmptyState";
 import { TabNavigation } from "./ui/TabNavigation";
+import { TabPanels } from "./ui/TabPanels";
 
 const MyRecipesTabContent = dynamic(
   () => import("@/widgets/MyRecipesTabContent"),
@@ -64,8 +65,8 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
     hasFirstRecord: user?.hasFirstRecord ?? false,
   });
 
-  const renderTabContent = () => {
-    switch (activeTab) {
+  const renderTabContent = (tabId: string) => {
+    switch (tabId) {
       case "recipes":
         return (
           user && (
@@ -90,6 +91,16 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
     }
   };
 
+  const panels = tabs.map((tab) => ({
+    id: tab.id,
+    content: renderTabContent(tab.id),
+  }));
+
+  const handleActiveIndexChange = (index: number) => {
+    const tab = tabs[index];
+    if (tab) setActiveTab(tab.id);
+  };
+
   const needsLogin = !isLoggedIn && user?.id === "0";
 
   return (
@@ -101,7 +112,15 @@ const UserTab = ({ user, isOwnProfile, isLoggedIn }: UserTabProps) => {
         onTabChange={setActiveTab}
       />
 
-      {needsLogin ? <EmptyState /> : renderTabContent()}
+      {needsLogin ? (
+        <EmptyState />
+      ) : (
+        <TabPanels
+          panels={panels}
+          activeIndex={activeTabIndex}
+          onActiveIndexChange={handleActiveIndexChange}
+        />
+      )}
     </>
   );
 };
