@@ -1,5 +1,6 @@
 import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
+import type { Locale } from "@/shared/i18n";
 
 import type { CartGroup, CartItem, CartResponse } from "./types";
 
@@ -22,8 +23,10 @@ const normalizeItem = (item: RawCartItem): CartItem => ({
   unit: item.unit ?? "",
 });
 
-export const getCart = async (): Promise<CartResponse> => {
-  const raw = await api.get<RawCartResponse>(`${END_POINTS.MY_CART}?lang=ko`);
+export const getCart = async (lang: Locale): Promise<CartResponse> => {
+  const raw = await api.get<RawCartResponse>(
+    `${END_POINTS.MY_CART}?lang=${lang}`
+  );
   return {
     ...raw,
     groups: raw.groups.map((group) => ({

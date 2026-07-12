@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { ApiError, getErrorData } from "@/shared/api/errors";
+import { useApiLocale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useToastStore } from "@/shared/ui/toast";
 
@@ -21,9 +22,10 @@ const isCartLimitError = (error: unknown): boolean =>
 export const useAddCartItems = () => {
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
+  const lang = useApiLocale();
 
   return useMutation<AddCartItemsResponse, Error, AddCartItemsRequest>({
-    mutationFn: addCartItems,
+    mutationFn: (body: AddCartItemsRequest) => addCartItems(body, lang),
     onSuccess: (data) => {
       triggerHaptic("Success");
       if (data.addedCount === 0 && data.skippedCount > 0) {

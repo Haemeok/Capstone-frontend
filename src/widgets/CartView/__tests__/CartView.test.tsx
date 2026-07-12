@@ -11,6 +11,7 @@ jest.mock("@/entities/cart/api", () => ({
   deleteCartItemsBulk: jest.fn(),
 }));
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
+jest.mock("next/navigation", () => ({ usePathname: () => "/cart" }));
 jest.mock("next/cache", () => ({
   revalidateTag: jest.fn(),
   revalidatePath: jest.fn(),

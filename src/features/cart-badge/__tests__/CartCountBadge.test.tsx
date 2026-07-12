@@ -11,6 +11,7 @@ jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
   unstable_cache: (fn: unknown) => fn,
 }));
+jest.mock("next/navigation", () => ({ usePathname: () => "/cart" }));
 
 import {
   CART_QUERY_KEYS,
@@ -81,7 +82,10 @@ it("T-25: 캐시가 갱신되면 배지 숫자가 바뀐다", async () => {
   await screen.findByTestId("cart-count-badge");
 
   act(() => {
-    qc.setQueryData(CART_QUERY_KEYS.all, { ...cartFixture, totalItemCount: 6 });
+    qc.setQueryData(CART_QUERY_KEYS.byLang("ko"), {
+      ...cartFixture,
+      totalItemCount: 6,
+    });
   });
 
   await waitFor(() =>
