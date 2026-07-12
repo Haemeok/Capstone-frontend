@@ -47,7 +47,7 @@ export default function RecipeInfoSection({
 
   return (
     <>
-      <section className="flex flex-col items-center justify-center gap-1">
+      <section className="rise-in flex flex-col items-center justify-center gap-1">
         <div className="flex items-center gap-2">
           <h1 className="text-center text-2xl font-bold text-pretty break-keep">
             <CreatorCountryFlag
@@ -72,12 +72,12 @@ export default function RecipeInfoSection({
       </section>
 
       {extractorId && (
-        <div className="flex justify-center py-2">
+        <div className="rise-in rise-d1 flex justify-center py-2">
           <RecipeExtractorBadge extractorId={extractorId} />
         </div>
       )}
 
-      <section className="flex items-center gap-3 py-3 md:gap-4">
+      <section className="rise-in rise-d1 flex items-center gap-3 py-3 md:gap-4">
         <UserProfileImage
           profileImage={author.profileImage ?? ""}
           userId={author.id}
@@ -97,7 +97,11 @@ export default function RecipeInfoSection({
         </div>
       </section>
 
-      {description && <CollapsibleP content={description} />}
+      {description && (
+        <div className="rise-in rise-d2">
+          <CollapsibleP content={description} />
+        </div>
+      )}
     </>
   );
 }

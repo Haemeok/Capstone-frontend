@@ -4,6 +4,7 @@ import { InArticleAdSlot } from "@/shared/adsense/InArticleAdSlot";
 import { RecipeStepAdSlot } from "@/shared/adsense/RecipeStepAdSlot";
 import { DictionaryProvider, getDictionary, type Locale } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import { Reveal } from "@/shared/ui/Reveal";
 import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 
 import { isAiRecipe, isYoutubeRecipe } from "@/entities/recipe";
@@ -107,12 +108,14 @@ export const RecipeDetailView = ({
             <RecipeInteractionBar staticRecipe={recipe} />
           </RecipeInfoSection>
 
-          <RecipeCookingInfoSection
-            cookingTime={recipe.cookingTime}
-            cookingTools={recipe.cookingTools}
-            servings={recipe.servings}
-            locale={locale}
-          />
+          <div className="rise-in rise-d3">
+            <RecipeCookingInfoSection
+              cookingTime={recipe.cookingTime}
+              cookingTools={recipe.cookingTools}
+              servings={recipe.servings}
+              locale={locale}
+            />
+          </div>
 
           <ErrorBoundary
             fallback={<SectionErrorFallback message={t.errors.video} />}
@@ -124,66 +127,86 @@ export const RecipeDetailView = ({
             >
               <InArticleAdSlot />
 
-              <ErrorBoundary
-                fallback={<SectionErrorFallback message={t.errors.comments} />}
-              >
-                <RecipeCommentsSection
-                  comments={recipe.comments}
-                  locale={locale}
-                />
-              </ErrorBoundary>
+              <Reveal className="reveal-subtle">
+                <ErrorBoundary
+                  fallback={
+                    <SectionErrorFallback message={t.errors.comments} />
+                  }
+                >
+                  <RecipeCommentsSection
+                    comments={recipe.comments}
+                    locale={locale}
+                  />
+                </ErrorBoundary>
+              </Reveal>
 
-              <ErrorBoundary
-                fallback={
-                  <SectionErrorFallback message={t.errors.ingredients} />
-                }
-              >
-                <RecipeIngredientsSection recipe={recipe} locale={locale} />
-              </ErrorBoundary>
+              <Reveal className="reveal-subtle">
+                <ErrorBoundary
+                  fallback={
+                    <SectionErrorFallback message={t.errors.ingredients} />
+                  }
+                >
+                  <RecipeIngredientsSection recipe={recipe} locale={locale} />
+                </ErrorBoundary>
+              </Reveal>
 
               {ingredientShopping}
 
               <CoupangDisclosure locale={locale} />
 
-              <RecipeCompleteButton saveAmount={saveAmount} locale={locale} />
+              <Reveal className="reveal-subtle">
+                <RecipeCompleteButton saveAmount={saveAmount} locale={locale} />
+              </Reveal>
 
               {recipe.fineDiningInfo?.components && (
-                <RecipeComponentsSection
-                  components={recipe.fineDiningInfo.components}
-                />
+                <Reveal className="reveal-subtle">
+                  <RecipeComponentsSection
+                    components={recipe.fineDiningInfo.components}
+                  />
+                </Reveal>
               )}
 
-              <RecipeCookingHelpButton tips={recipe.cookingTips} />
+              <Reveal className="reveal-subtle">
+                <RecipeCookingHelpButton tips={recipe.cookingTips} />
+              </Reveal>
 
               <InArticleAdSlot index={1} />
 
-              <ErrorBoundary
-                fallback={<SectionErrorFallback message={t.errors.steps} />}
-              >
-                <RecipeStepList
-                  RecipeSteps={recipe.steps}
-                  recipeIngredients={recipe.ingredients}
-                  midSlot={<RecipeStepAdSlot />}
-                />
-              </ErrorBoundary>
+              <Reveal className="reveal-subtle">
+                <ErrorBoundary
+                  fallback={<SectionErrorFallback message={t.errors.steps} />}
+                >
+                  <RecipeStepList
+                    RecipeSteps={recipe.steps}
+                    recipeIngredients={recipe.ingredients}
+                    midSlot={<RecipeStepAdSlot />}
+                  />
+                </ErrorBoundary>
+              </Reveal>
             </RecipeVideoSection>
           </ErrorBoundary>
 
           {recipe.fineDiningInfo?.plating && (
-            <RecipePlatingSection
-              vessel={recipe.fineDiningInfo.plating.vessel}
-              guide={recipe.fineDiningInfo.plating.guide}
-              locale={locale}
-            />
+            <Reveal className="reveal-subtle">
+              <RecipePlatingSection
+                vessel={recipe.fineDiningInfo.plating.vessel}
+                guide={recipe.fineDiningInfo.plating.guide}
+                locale={locale}
+              />
+            </Reveal>
           )}
 
-          <RecipeTagsSection tags={recipe.tags} />
+          <Reveal className="reveal-subtle">
+            <RecipeTagsSection tags={recipe.tags} />
+          </Reveal>
 
-          <RecipeDetailBottomSlides
-            recipeId={recipeId}
-            tags={recipe.tags}
-            locale={locale}
-          />
+          <Reveal className="reveal-subtle">
+            <RecipeDetailBottomSlides
+              recipeId={recipeId}
+              tags={recipe.tags}
+              locale={locale}
+            />
+          </Reveal>
           {bottomSlides}
         </RecipeContainer>
         {locale === "ko" && <ChatLauncher recipeId={recipeId} />}
