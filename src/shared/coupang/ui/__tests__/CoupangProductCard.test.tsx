@@ -52,4 +52,14 @@ describe("CoupangProductCard", () => {
     render(<CoupangProductCard product={{ ...base, name: "국내산 대파" }} />);
     expect(screen.queryByText(/당 /)).not.toBeInTheDocument();
   });
+
+  it("무료배송 상품은 카드에 무료배송 칩이 보인다 (T-07)", () => {
+    render(<CoupangProductCard product={{ ...base, freeShipping: true }} />);
+    expect(screen.getByText("무료배송")).toBeInTheDocument();
+  });
+
+  it("무료배송 아니면 칩 없음 (T-08)", () => {
+    render(<CoupangProductCard product={base} />);
+    expect(screen.queryByText("무료배송")).not.toBeInTheDocument();
+  });
 });
