@@ -9,8 +9,7 @@ const product = (name: string): CoupangProduct => ({
   price: 1000,
   imageUrl: "https://img",
   url: "https://link",
-  categoryName: "식품",
-  rocket: false,
+  deliveryType: "STANDARD",
   freeShipping: false,
 });
 

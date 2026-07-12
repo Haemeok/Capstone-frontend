@@ -1,6 +1,7 @@
 import { formatNumber } from "@/shared/lib/format";
 
 import { computeUnitPrice } from "../lib/computeUnitPrice";
+import { isRocketDelivery } from "../lib/isRocketDelivery";
 import type { CoupangProduct } from "../model/types";
 import { DeliveryEstimate } from "./DeliveryEstimate";
 
@@ -10,6 +11,7 @@ type CoupangProductCardProps = {
 
 export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
   const unit = computeUnitPrice(product.name, product.price);
+  const isRocket = isRocketDelivery(product.deliveryType);
 
   return (
     <a
@@ -31,7 +33,7 @@ export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
         <span className="text-base font-bold text-red-700 md:text-lg">
           {formatNumber(product.price, "원")}
         </span>
-        {product.rocket && (
+        {isRocket && (
           <img
             data-testid="rocket-badge"
             src="/rocket-delivery.webp"
@@ -45,7 +47,7 @@ export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
           {unit.base}당 {formatNumber(unit.unitPrice, "원")}
         </span>
       )}
-      {product.rocket && <DeliveryEstimate />}
+      {isRocket && <DeliveryEstimate />}
     </a>
   );
 };

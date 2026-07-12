@@ -9,13 +9,12 @@ const base: CoupangProduct = {
   price: 12900,
   imageUrl: "https://img/1.jpg",
   url: "https://link.coupang.com/re/x",
-  categoryName: "식품",
-  rocket: true,
+  deliveryType: "ROCKET",
   freeShipping: false,
 };
 
 describe("CoupangProductCard", () => {
-  it("로켓 상품: 이미지·상품명·가격·로켓 라벨·도착예정·단위가격 (T-08/T-11/T-13)", async () => {
+  it("로켓 상품: 이미지·상품명·가격·로켓 라벨·도착예정·단위가격 (T-01)", async () => {
     render(<CoupangProductCard product={base} />);
 
     expect(screen.getByText("한돈 앞다리살 전지 1kg")).toBeInTheDocument();
@@ -33,8 +32,18 @@ describe("CoupangProductCard", () => {
     expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
   });
 
-  it("비로켓: 라벨·도착예정 없음 (T-12)", () => {
-    render(<CoupangProductCard product={{ ...base, rocket: false }} />);
+  it("로켓프레시도 동일한 로켓 배지·도착 문구 (T-02)", async () => {
+    render(
+      <CoupangProductCard product={{ ...base, deliveryType: "ROCKET_FRESH" }} />
+    );
+    expect(screen.getByTestId("rocket-badge")).toBeInTheDocument();
+    expect(await screen.findByText(/도착 예정/)).toBeInTheDocument();
+  });
+
+  it("일반배송: 로켓 배지·도착 문구 없음 (T-03)", () => {
+    render(
+      <CoupangProductCard product={{ ...base, deliveryType: "STANDARD" }} />
+    );
     expect(screen.queryByTestId("rocket-badge")).not.toBeInTheDocument();
     expect(screen.queryByText(/도착 예정/)).not.toBeInTheDocument();
   });
