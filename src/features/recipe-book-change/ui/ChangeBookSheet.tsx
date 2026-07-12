@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
 import { PlusIcon } from "lucide-react";
 
@@ -15,7 +16,13 @@ import {
   useRecipeBooks,
 } from "@/entities/recipe-book";
 
-import { CreateRecipeBookSheet } from "@/features/recipe-book-create";
+const CreateRecipeBookSheet = dynamic(
+  () =>
+    import("@/features/recipe-book-create").then(
+      (mod) => mod.CreateRecipeBookSheet
+    ),
+  { ssr: false }
+);
 
 type Props = {
   open: boolean;
