@@ -3,7 +3,8 @@ import {
   type LocalizedResultMiss,
 } from "@/shared/api/localizedResult";
 
-import type { StaticRecipe } from "./types";
+import { toRecipe } from "./toRecipe";
+import type { RawRecipeResponse, StaticRecipe } from "./types";
 
 export type LocalizedRecipeResult =
   | { kind: "ok"; recipe: StaticRecipe }
@@ -14,8 +15,11 @@ export const parseLocalizedRecipeResult = (
   body: unknown
 ): LocalizedRecipeResult => {
   if (status >= 200 && status < 300) {
-    // 200 본문은 StaticRecipe 그대로 — 검증은 호출부 책임
-    return { kind: "ok", recipe: body as StaticRecipe };
+    // 200 본문은 평탄 raw — 클라이언트 경로와 동일하게 중첩 youtube로 정규화
+    return {
+      kind: "ok",
+      recipe: toRecipe(body as RawRecipeResponse) as StaticRecipe,
+    };
   }
 
   if (status === 404 && isErrorBody(body) && body.code === "213") {

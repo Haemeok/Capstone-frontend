@@ -7,12 +7,14 @@ import type { Locale, TranslatedLocale } from "@/shared/i18n";
 import type { LocalizedRecipeResult } from "./localeResult";
 import { parseLocalizedRecipeResult } from "./localeResult";
 import { safeFetchJson, type WithFetchStatus } from "./safeFetchJson";
+import { toRecipe } from "./toRecipe";
 import {
   CategoryPopularResponse,
   CookedPopularResponse,
   CountryPopularResponse,
   DetailedRecipesApiResponse,
   QuickPopularResponse,
+  RawRecipeResponse,
   Recipe,
   RecipeItemsQueryParams,
   RecipeStatus,
@@ -213,7 +215,7 @@ export const getrecipionServer = async (id: string): Promise<Recipe | null> => {
       }
       throw new Error(`API Error: ${res.status} ${res.statusText}`);
     }
-    return res.json();
+    return toRecipe((await res.json()) as RawRecipeResponse);
   } catch (error) {
     console.error(`[getrecipionServer] Failed to fetch recipe ${id}:`, error);
     return null;
@@ -239,7 +241,7 @@ export const getStaticrecipionServer = async (
       }
       throw new Error(`API Error: ${res.status} ${res.statusText}`);
     }
-    return res.json();
+    return toRecipe((await res.json()) as RawRecipeResponse) as StaticRecipe;
   } catch (error) {
     console.error(
       `[getStaticrecipionServer] Failed to fetch recipe ${id}:`,
@@ -645,7 +647,7 @@ export const getPrivateRecipeOnServer = async (
       }
       throw new Error(`API Error: ${res.status} ${res.statusText}`);
     }
-    return res.json();
+    return toRecipe((await res.json()) as RawRecipeResponse);
   } catch (error) {
     console.error(
       `[getPrivateRecipeOnServer] Failed to fetch private recipe ${id}:`,

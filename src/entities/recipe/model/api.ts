@@ -7,6 +7,7 @@ import { FileInfoRequest } from "@/shared/types";
 import { RecipeHistoryResponse } from "@/entities/user/model/types";
 
 import { RecipeHistoryDetailResponse, RecordTimelineResponse } from "./record";
+import { toRecipe } from "./toRecipe";
 import {
   CategoryPopularResponse,
   CookedAgainResponse,
@@ -19,7 +20,6 @@ import {
   MyFridgeRecipeItem,
   QuickPopularResponse,
   RawRecipeResponse,
-  Recipe,
   RecipeQueryParams,
   RecipesStatusResponse,
   RecipeStatus,
@@ -33,31 +33,7 @@ import {
 } from "./types";
 import { RecipePayload } from "./types";
 
-export const toRecipe = (raw: RawRecipeResponse): Recipe => {
-  const {
-    youtubeUrl,
-    youtubeChannelName,
-    youtubeVideoTitle,
-    youtubeThumbnailUrl,
-    youtubeChannelProfileUrl,
-    youtubeSubscriberCount,
-    youtubeChannelId,
-    source,
-    ...rest
-  } = raw;
-  const youtube = youtubeUrl
-    ? {
-        url: youtubeUrl,
-        channelName: youtubeChannelName,
-        videoTitle: youtubeVideoTitle,
-        thumbnailUrl: youtubeThumbnailUrl,
-        channelProfileUrl: youtubeChannelProfileUrl,
-        subscriberCount: youtubeSubscriberCount,
-        channelId: youtubeChannelId,
-      }
-    : undefined;
-  return { ...rest, source: source ?? "USER", ...(youtube ? { youtube } : {}) };
-};
+export { toRecipe };
 
 export const getRecipe = async (id: string) => {
   const raw = await api.get<RawRecipeResponse>(END_POINTS.RECIPE(id));
