@@ -4,9 +4,15 @@ import { Refrigerator } from "lucide-react";
 
 import type { Locale } from "@/shared/i18n";
 import { useT } from "@/shared/i18n";
+import { cn } from "@/shared/lib/utils";
 import BadgeButton from "@/shared/ui/BadgeButton";
 
 import { IngredientItem } from "@/entities/ingredient";
+
+import {
+  INGREDIENT_FONT_CLASS,
+  useStepFontSizeStore,
+} from "@/features/recipe-step-font-size";
 
 type IngredientListItemProps = {
   ingredient: IngredientItem;
@@ -26,6 +32,8 @@ export const IngredientListItem = ({
   cartAction,
 }: IngredientListItemProps) => {
   const t = useT();
+  const fontLevel = useStepFontSizeStore((state) => state.level);
+  const fontClass = INGREDIENT_FONT_CLASS[fontLevel];
   const nameCell = (
     <div className="flex items-center gap-1.5 text-left">
       {ingredient.inFridge ? (
@@ -36,12 +44,14 @@ export const IngredientListItem = ({
       ) : reserveFridgeSpace ? (
         <span aria-hidden className="inline-block w-[18px] shrink-0" />
       ) : null}
-      <p className="text-base font-semibold">{ingredient.name}</p>
+      <p className={cn(fontClass, "font-semibold")}>{ingredient.name}</p>
     </div>
   );
 
   const quantityCell = (
-    <p className="text-left text-base whitespace-nowrap">{displayAmount}</p>
+    <p className={cn(fontClass, "text-left whitespace-nowrap")}>
+      {displayAmount}
+    </p>
   );
 
   if (locale !== "ko") {

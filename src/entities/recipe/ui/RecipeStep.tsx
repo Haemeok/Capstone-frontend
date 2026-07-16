@@ -13,6 +13,7 @@ import { matchIngredientsFromText } from "@/entities/ingredient/lib/matchIngredi
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
 
 import {
+  STEP_CHIP_FONT_CLASS,
   STEP_FONT_CLASS,
   StepFontSizeButton,
   useStepFontSizeStore,
@@ -95,9 +96,16 @@ const RecipeStep = ({
             key={`${index}-${ingredient.name}`}
             className="rounded-card flex gap-2 border-1 border-slate-200 p-1 px-2"
           >
-            <p className="text-mm text-left">{ingredient.name}</p>
+            <p className={cn(STEP_CHIP_FONT_CLASS[fontLevel], "text-left")}>
+              {ingredient.name}
+            </p>
             {ingredient.quantity && (
-              <p className="text-mm text-olive-light text-left font-bold">
+              <p
+                className={cn(
+                  STEP_CHIP_FONT_CLASS[fontLevel],
+                  "text-olive-light text-left font-bold"
+                )}
+              >
                 {ingredient.quantity}
                 {ingredient.quantity === "약간" ? "" : ingredient.unit}
               </p>

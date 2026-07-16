@@ -9,6 +9,16 @@ export const STEP_FONT_CLASS = [
   "text-2xl leading-relaxed",
 ] as const;
 
+// Ingredient chips shown inside a step (base 15px).
+export const STEP_CHIP_FONT_CLASS = ["text-mm", "text-lg", "text-xl"] as const;
+
+// Ingredient name/amount rows in the main ingredients section (base 16px).
+export const INGREDIENT_FONT_CLASS = [
+  "text-base",
+  "text-lg",
+  "text-xl",
+] as const;
+
 type StepFontSizeState = {
   level: number;
   cycle: () => void;
