@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import { extractCookingTerms } from "@/shared/lib/extractCookingTerms";
 import { extractTimeFromText } from "@/shared/lib/extractTimeFromText";
+import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 import IngredientIcon from "@/shared/ui/IngredientIcon";
 
@@ -11,6 +12,10 @@ import { IngredientItem } from "@/entities/ingredient";
 import { matchIngredientsFromText } from "@/entities/ingredient/lib/matchIngredientsFromText";
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
 
+import {
+  StepFontSizeButton,
+  useStepFontSizeStore,
+} from "@/features/recipe-step-font-size";
 import { WakeLockButton } from "@/features/screen-wake-lock";
 import { StepTimer } from "@/features/step-timer";
 
@@ -32,6 +37,7 @@ const RecipeStep = ({
   recipeIngredients,
 }: RecipeStepProps) => {
   const videoPlayer = useVideoPlayer();
+  const isLargeFont = useStepFontSizeStore((state) => state.isLarge);
   const { segments, allTerms: cookingTerms } = useMemo(
     () => extractCookingTerms(step.instruction),
     [step.instruction]
@@ -67,8 +73,11 @@ const RecipeStep = ({
             Step {stepIndex + 1}/{length}
           </h3>
           {isFirstStep && (
-            <div className="md:hidden">
-              <WakeLockButton />
+            <div className="flex items-center gap-2">
+              <div className="md:hidden">
+                <WakeLockButton />
+              </div>
+              <StepFontSizeButton />
             </div>
           )}
         </div>
@@ -97,7 +106,12 @@ const RecipeStep = ({
       </div>
       <div className="mt-2 flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
         <div className="md:flex-1">
-          <p className="text-left whitespace-pre-wrap">
+          <p
+            className={cn(
+              "text-left whitespace-pre-wrap transition-all duration-200",
+              isLargeFont && "text-xl leading-relaxed"
+            )}
+          >
             {segments.map((segment, index) =>
               segment.isTerm ? (
                 <span
