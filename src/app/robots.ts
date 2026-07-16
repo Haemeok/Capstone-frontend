@@ -71,15 +71,14 @@ const AI_TRAINING_BOTS = [
 /** 로케일 프리픽스 없이 항상 차단 */
 const ALWAYS_PRIVATE = ["/api/", "/_next/", "/static/"];
 
-/** 로케일 프리픽스 대상 비공개 경로 */
+/** 로케일 프리픽스 대상 비공개 경로 (공개+noindex 경로는 여기서 빼고 메타로 처리) */
 const PRIVATE_PATH_SUFFIXES = [
   "/login",
   "/login/error",
-  "/users/",
+  "/users/edit",
   "/recipes/new",
   "/recipes/*/edit",
   "/recipes/*/rate",
-  "/recipes/*/comments",
   "/recipes/*/remix",
   "/recipes/my-fridge",
   "/recipe-books",

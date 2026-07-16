@@ -56,6 +56,16 @@ describe("buildUserMetadata (T-04~07)", () => {
     );
   });
 
+  it("유저 프로필은 noindex,follow (색인 제외, 링크는 따라감)", async () => {
+    mockGetUser.mockResolvedValue(baseUser);
+    const found = await buildUserMetadata("u1", "ko");
+    expect(found.robots).toEqual({ index: false, follow: true });
+
+    mockGetUser.mockResolvedValue(null);
+    const notFound = await buildUserMetadata("u1", "ko");
+    expect(notFound.robots).toEqual({ index: false, follow: true });
+  });
+
   it("T-22 en 유저: self canonical + og:locale", async () => {
     mockGetUser.mockResolvedValue({
       ...baseUser,

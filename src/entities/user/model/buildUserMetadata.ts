@@ -18,8 +18,14 @@ export const buildUserMetadata = async (
   const meta = userPagesMessages[locale].profile.metadata;
   const user = await getPublicUserForMetadata(userId);
 
+  const robots = { index: false, follow: true } as const;
+
   if (!user) {
-    return { title: meta.titleSuffix, description: meta.fallbackDescription };
+    return {
+      title: meta.titleSuffix,
+      description: meta.fallbackDescription,
+      robots,
+    };
   }
 
   const title = `${user.nickname} - ${meta.titleSuffix}`;
@@ -35,6 +41,7 @@ export const buildUserMetadata = async (
   return {
     title,
     description,
+    robots,
     alternates: {
       canonical: url,
       languages: buildHreflangAlternates(`users/${userId}`),
