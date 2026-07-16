@@ -13,6 +13,7 @@ import { matchIngredientsFromText } from "@/entities/ingredient/lib/matchIngredi
 import { RecipeStep as RecipeStepType } from "@/entities/recipe/model/types";
 
 import {
+  STEP_FONT_CLASS,
   StepFontSizeButton,
   useStepFontSizeStore,
 } from "@/features/recipe-step-font-size";
@@ -37,7 +38,7 @@ const RecipeStep = ({
   recipeIngredients,
 }: RecipeStepProps) => {
   const videoPlayer = useVideoPlayer();
-  const isLargeFont = useStepFontSizeStore((state) => state.isLarge);
+  const fontLevel = useStepFontSizeStore((state) => state.level);
   const { segments, allTerms: cookingTerms } = useMemo(
     () => extractCookingTerms(step.instruction),
     [step.instruction]
@@ -109,7 +110,7 @@ const RecipeStep = ({
           <p
             className={cn(
               "text-left whitespace-pre-wrap transition-all duration-200",
-              isLargeFont && "text-xl leading-relaxed"
+              STEP_FONT_CLASS[fontLevel]
             )}
           >
             {segments.map((segment, index) =>
