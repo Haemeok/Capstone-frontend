@@ -17,6 +17,7 @@ import {
   useCreateRecipeBook,
   useRecipeBooks,
 } from "@/entities/recipe-book";
+import { useAuthGate } from "@/entities/user";
 
 const NAME_MAX_LENGTH = 50;
 
@@ -29,7 +30,8 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
   const t = useUserPagesDict().recipeBooks;
   const locale = useUserPagesLocale();
   const { Container, Content, Header, Title } = useResponsiveSheet();
-  const { data: books } = useRecipeBooks();
+  const authGate = useAuthGate();
+  const { data: books } = useRecipeBooks({ enabled: authGate });
   const createMutation = useCreateRecipeBook();
   const addToast = useToastStore((state) => state.addToast);
 

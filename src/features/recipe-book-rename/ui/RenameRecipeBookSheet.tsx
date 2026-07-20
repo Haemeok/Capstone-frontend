@@ -17,6 +17,7 @@ import {
   useRecipeBooks,
   useUpdateRecipeBookName,
 } from "@/entities/recipe-book";
+import { useAuthGate } from "@/entities/user";
 
 const NAME_MAX_LENGTH = 50;
 
@@ -36,7 +37,8 @@ export const RenameRecipeBookSheet = ({
   const t = useUserPagesDict().recipeBooks;
   const locale = useUserPagesLocale();
   const { Container, Content, Header, Title } = useResponsiveSheet();
-  const { data: books } = useRecipeBooks();
+  const authGate = useAuthGate();
+  const { data: books } = useRecipeBooks({ enabled: authGate });
   const updateMutation = useUpdateRecipeBookName(bookId);
   const addToast = useToastStore((state) => state.addToast);
 

@@ -11,6 +11,7 @@ import {
   useRecipeStatusQuery,
 } from "@/entities/recipe/model/hooks";
 import { useRecipeBooks } from "@/entities/recipe-book";
+import { useAuthGate } from "@/entities/user";
 import { useMyInfoQuery } from "@/entities/user/model/hooks";
 
 import { useToggleRecipeSave } from "@/features/recipe-save/model/hooks";
@@ -39,7 +40,8 @@ const DuplicateRecipeSection = ({
   const { data: recipeStatus } = useRecipeStatusQuery(recipeId);
 
   const { mutate: toggleFavorite } = useToggleRecipeSave(recipeId);
-  const { data: books } = useRecipeBooks();
+  const authGate = useAuthGate();
+  const { data: books } = useRecipeBooks({ enabled: authGate });
   const defaultBook = books?.find((b) => b.isDefault);
 
   const { notifySaved, changeSheet } = useSaveToastWithChange(recipeId);

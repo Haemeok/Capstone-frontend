@@ -6,6 +6,7 @@ import SectionErrorFallback from "@/shared/ui/SectionErrorFallback";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
 import { MAX_RECIPE_BOOKS, useRecipeBooks } from "@/entities/recipe-book";
+import { useAuthGate } from "@/entities/user";
 
 import { CreateRecipeBookCard } from "./CreateRecipeBookCard";
 import { RecipeBookCard } from "./RecipeBookCard";
@@ -29,7 +30,12 @@ const GridSkeleton = () => (
 
 export const RecipeBookGrid = () => {
   const t = useUserPagesDict().recipeBooks;
-  const { data: books, isLoading, error } = useRecipeBooks();
+  const authGate = useAuthGate();
+  const {
+    data: books,
+    isLoading,
+    error,
+  } = useRecipeBooks({ enabled: authGate });
 
   if (isLoading) return <GridSkeleton />;
 

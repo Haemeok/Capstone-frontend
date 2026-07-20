@@ -6,6 +6,7 @@ import {
   useRecipeBookDetail,
   useUnseenImportStore,
 } from "@/entities/recipe-book";
+import { useAuthGate } from "@/entities/user";
 
 import { RecipeBookCardMenu } from "./RecipeBookCardMenu";
 import { RecipeBookThumbnailGrid } from "./RecipeBookThumbnailGrid";
@@ -29,7 +30,10 @@ export const RecipeBookCard = ({
 }: Props) => {
   const router = useLocalizedRouter();
   const t = useUserPagesDict().recipeBooks;
-  const { data } = useRecipeBookDetail(bookId);
+  const authGate = useAuthGate();
+  const { data } = useRecipeBookDetail(bookId, undefined, {
+    enabled: authGate,
+  });
   const hasUnseenImport = useUnseenImportStore((s) => s.hasUnseenImport);
   const clearUnseen = useUnseenImportStore((s) => s.clearUnseen);
 

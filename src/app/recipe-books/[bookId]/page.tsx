@@ -6,6 +6,7 @@ import { notFound, useParams } from "next/navigation";
 import { Container } from "@/shared/ui/Container";
 
 import { useRecipeBooks, useUnseenImportStore } from "@/entities/recipe-book";
+import { useAuthGate } from "@/entities/user";
 
 import {
   EditModeBottomBar,
@@ -20,7 +21,8 @@ import {
 export default function RecipeBookDetailPage() {
   const params = useParams<{ bookId: string }>();
   const bookId = params?.bookId ?? "";
-  const { data: books, isLoading } = useRecipeBooks();
+  const authGate = useAuthGate();
+  const { data: books, isLoading } = useRecipeBooks({ enabled: authGate });
   const exit = useEditModeStore((s) => s.exit);
   const clearUnseen = useUnseenImportStore((s) => s.clearUnseen);
 

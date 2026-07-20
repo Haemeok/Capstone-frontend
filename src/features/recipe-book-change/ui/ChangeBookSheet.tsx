@@ -15,6 +15,7 @@ import {
   useMoveRecipes,
   useRecipeBooks,
 } from "@/entities/recipe-book";
+import { useAuthGate } from "@/entities/user";
 
 const CreateRecipeBookSheet = dynamic(
   () =>
@@ -42,7 +43,8 @@ export const ChangeBookSheet = ({
   const locale = useUserPagesLocale();
   const t = useUserPagesDict().recipeBooks;
   const { Container, Content, Header, Title } = useResponsiveSheet();
-  const { data: books } = useRecipeBooks();
+  const authGate = useAuthGate();
+  const { data: books } = useRecipeBooks({ enabled: authGate });
   const moveMutation = useMoveRecipes();
   const addToast = useToastStore((s) => s.addToast);
   const [createOpen, setCreateOpen] = useState(false);
