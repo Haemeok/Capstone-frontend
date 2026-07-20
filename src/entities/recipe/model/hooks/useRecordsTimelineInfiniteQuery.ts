@@ -6,9 +6,13 @@ import { RecordTimelineResponse } from "../record";
 
 const TIMELINE_PAGE_SIZE = 20;
 
-export const useRecordsTimelineInfiniteQuery = (
-  size: number = TIMELINE_PAGE_SIZE
-) => {
+export const useRecordsTimelineInfiniteQuery = ({
+  enabled,
+  size = TIMELINE_PAGE_SIZE,
+}: {
+  enabled: boolean;
+  size?: number;
+}) => {
   const locale = useUserPagesLocale();
 
   const getTimelineNextPageParam = (
@@ -31,6 +35,7 @@ export const useRecordsTimelineInfiniteQuery = (
       getRecordsTimeline({ page: pageParam, size, lang: locale }),
     getNextPageParam: getTimelineNextPageParam,
     initialPageParam: 0,
+    enabled,
   });
 
   const groups = data?.pages.flatMap((page) => page.groups) ?? [];

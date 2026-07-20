@@ -16,6 +16,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 
 import { useMyIngredientIds } from "@/entities/ingredient";
 import { IngredientPicker } from "@/entities/ingredient/ui/IngredientPicker";
+import { useAuthGate } from "@/entities/user";
 
 import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge";
 import IngredientPackDetailDrawer from "@/features/ingredient-add-fridge/ui/IngredientPackDetailDrawer";
@@ -32,7 +33,8 @@ export const IngredientAddView = () => {
 
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  const { ingredientIdsSet } = useMyIngredientIds();
+  const authGate = useAuthGate();
+  const { ingredientIdsSet } = useMyIngredientIds({ enabled: authGate });
   const { mutate: addIngredientBulk, isPending: isAdding } =
     useAddIngredientBulkMutation();
   const { mutate: deleteIngredientBulk, isPending: isDeleting } =

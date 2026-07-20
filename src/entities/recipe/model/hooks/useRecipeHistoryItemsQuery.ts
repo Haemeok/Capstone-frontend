@@ -4,7 +4,7 @@ import { useUserPagesLocale } from "@/shared/i18n";
 
 import { getRecipeHistoryItems } from "../api";
 
-export const useRecipeHistoryItemsQuery = (date: string, enabled?: boolean) => {
+export const useRecipeHistoryItemsQuery = (date: string, enabled: boolean) => {
   const locale = useUserPagesLocale();
 
   const { data, isLoading, error } = useQuery({

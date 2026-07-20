@@ -6,6 +6,7 @@ import { getNextPageParam } from "@/shared/lib/utils";
 
 import { getIngredients } from "@/entities/ingredient";
 import { IngredientsApiResponse } from "@/entities/ingredient";
+import { useAuthGate } from "@/entities/user";
 
 type UseInfiniteIngredientsParams = {
   category: IngredientCategoryName;
@@ -16,6 +17,7 @@ export const useInfiniteIngredients = ({
   category,
   sort,
 }: UseInfiniteIngredientsParams) => {
+  const authGate = useAuthGate();
   const { data, error, hasNextPage, isFetchingNextPage, isPending, ref } =
     useInfiniteScroll<
       IngredientsApiResponse,
@@ -34,6 +36,7 @@ export const useInfiniteIngredients = ({
         }),
       getNextPageParam: getNextPageParam,
       initialPageParam: 0,
+      enabled: authGate,
     });
 
   const ingredients = data?.pages.flatMap((page) => page.content);

@@ -11,6 +11,7 @@ import RecipeSortButton from "@/shared/ui/RecipeSortButton";
 import SortPicker from "@/shared/ui/SortPicker";
 
 import { useMyFridgeRecipesInfiniteQuery } from "@/entities/recipe/model/hooks";
+import { useAuthGate } from "@/entities/user";
 
 import MyFridgeEmptyState from "./MyFridgeEmptyState";
 import MyFridgeRecipeCard from "./MyFridgeRecipeCard";
@@ -23,6 +24,7 @@ const MyFridgeView = () => {
   const { currentSort, setSort, getSortParam, availableSorts } =
     useSort("myFridge");
 
+  const authGate = useAuthGate();
   const {
     recipes,
     ref,
@@ -30,7 +32,7 @@ const MyFridgeView = () => {
     hasNextPage,
     noResults,
     isPending,
-  } = useMyFridgeRecipesInfiniteQuery(getSortParam());
+  } = useMyFridgeRecipesInfiniteQuery(getSortParam(), { enabled: authGate });
 
   const handleSortChange = (newSort: string) => {
     triggerHaptic("Light");

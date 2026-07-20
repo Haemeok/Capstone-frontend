@@ -6,7 +6,10 @@ import { getMyFridgeRecipes, getMyIngredientRecipes } from "../api";
 import { RECIPE_QUERY_KEYS } from "../queryKeys";
 import { MyFridgePageResponse, MyFridgeRecipeItem } from "../types";
 
-export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
+export const useMyIngredientRecipesInfiniteQuery = (
+  sort: string | undefined,
+  { enabled }: { enabled: boolean }
+) => {
   const {
     ref,
     isFetchingNextPage,
@@ -20,6 +23,7 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
     queryFn: ({ pageParam }) => getMyIngredientRecipes(sort, pageParam),
     getNextPageParam: getNextPageParam,
     initialPageParam: 0,
+    enabled,
   });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];
@@ -44,7 +48,10 @@ export const useMyIngredientRecipesInfiniteQuery = (sort?: string) => {
 };
 
 // my-fridge V2 훅 (totalElements/totalPages 없는 응답)
-export const useMyFridgeRecipesInfiniteQuery = (sort?: string) => {
+export const useMyFridgeRecipesInfiniteQuery = (
+  sort: string | undefined,
+  { enabled }: { enabled: boolean }
+) => {
   const locale = useChromeLocale();
 
   const getMyFridgeNextPageParam = (
@@ -67,6 +74,7 @@ export const useMyFridgeRecipesInfiniteQuery = (sort?: string) => {
     queryFn: ({ pageParam }) => getMyFridgeRecipes(sort, pageParam, locale),
     getNextPageParam: getMyFridgeNextPageParam,
     initialPageParam: 0,
+    enabled,
   });
 
   const recipes = data?.pages.flatMap((page) => page.content) ?? [];

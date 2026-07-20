@@ -15,11 +15,12 @@ import type { IngredientUnitOption } from "./types";
 
 const STALE_TIME = 5 * 60 * 1000;
 
-export const useMyIngredientIds = () => {
+export const useMyIngredientIds = ({ enabled }: { enabled: boolean }) => {
   const query = useQuery({
     queryKey: ["my-ingredient-ids"],
     queryFn: getMyIngredientIds,
     staleTime: STALE_TIME,
+    enabled,
   });
 
   const ingredientIdsSet = useMemo(() => {

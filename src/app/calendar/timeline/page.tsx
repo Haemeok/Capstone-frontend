@@ -7,6 +7,7 @@ import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { useRecordsTimelineInfiniteQuery } from "@/entities/recipe/model/hooks";
+import { useAuthGate } from "@/entities/user";
 
 import { TimelineDateGroup } from "./components/TimelineDateGroup";
 import { TimelineEmpty } from "./components/TimelineEmpty";
@@ -26,8 +27,9 @@ const TimelineSkeletonItem = () => (
 
 const TimelineRecordsPage = () => {
   const t = useUserPagesDict().calendar;
+  const authGate = useAuthGate();
   const { groups, ref, isFetchingNextPage, hasNextPage, isPending, noResults } =
-    useRecordsTimelineInfiniteQuery();
+    useRecordsTimelineInfiniteQuery({ enabled: authGate });
 
   return (
     <Container>

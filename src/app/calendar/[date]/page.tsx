@@ -14,6 +14,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 import { useToastStore } from "@/shared/ui/toast/model/store";
 
 import { useRecipeHistoryItemsQuery } from "@/entities/recipe/model/hooks";
+import { useAuthGate } from "@/entities/user";
 
 import { formatTimelineDateHeader } from "../timeline/lib/formatTimelineDateHeader";
 import NutritionCard from "./components/NutritionCard";
@@ -28,7 +29,8 @@ const CalendarDetailPage = () => {
   const locale = useUserPagesLocale();
   const t = useUserPagesDict().calendar;
 
-  const { data } = useRecipeHistoryItemsQuery(date, !!date);
+  const authGate = useAuthGate();
+  const { data } = useRecipeHistoryItemsQuery(date, authGate && !!date);
 
   const heading = useMemo(() => {
     if (!date) return null;
