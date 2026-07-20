@@ -1,0 +1,22 @@
+```typescript
+const RECIPE_DETAIL_PATH_REGEX = /^\/recipes\/([^/]+)\/?$/;
+
+/**
+ * Tests whether a pathname is a recipe detail path like `/recipes/<id>`.
+ *
+ * Matches:  `/recipes/123`, `/recipes/abc-def`, `/recipes/123/` (trailing slash)
+ * Rejects:  `/recipes`, `/recipes/`, `/recipes/123/edit`, `/other/123`
+ */
+export function isRecipeDetailPath(pathname: string): boolean {
+  return RECIPE_DETAIL_PATH_REGEX.test(pathname);
+}
+
+/**
+ * Extracts the recipe id from a recipe detail path.
+ * Returns `null` when the pathname is not a recipe detail path.
+ */
+export function getRecipeIdFromPath(pathname: string): string | null {
+  const match = RECIPE_DETAIL_PATH_REGEX.exec(pathname);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+```

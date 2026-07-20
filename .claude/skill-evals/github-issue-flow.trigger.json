@@ -1,0 +1,14 @@
+[
+  {"query": "아까 그 검색 페이지 hydration 어긋나는 거 이슈로 파줘", "should_trigger": true},
+  {"query": "this ingredient filter param mismatch is out of scope for this PR — can you track it as a separate issue?", "should_trigger": true},
+  {"query": "이건 지금 PR 범위 밖이네. 별도로 빼자", "should_trigger": true},
+  {"query": "기록 페이지 무한스크롤이 두 번 불리는 버그 있는데 지금 말고 나중에 봐야겠다", "should_trigger": true},
+  {"query": "/issue 레시피 상세 en 로케일에서 슬라이드 증발하는 문제", "should_trigger": true},
+  {"query": "냉장고 페이지 진입할 때 콘솔에 key warning 뜨는 거 발견했어. 일단 기록만 해두고 넘어가자", "should_trigger": true},
+  {"query": "지금 열려있는 이슈 목록 좀 보여줘", "should_trigger": false},
+  {"query": "이슈 #130 내용 요약해줘", "should_trigger": false},
+  {"query": "이 버그 지금 바로 고쳐줘. 재현은 검색에서 재료 두 개 고르면 돼", "should_trigger": false},
+  {"query": "커밋하고 PR까지 만들어줘", "should_trigger": false},
+  {"query": ".claude/state/active-issue 파일이 왜 비어있는지 설명해줘", "should_trigger": false},
+  {"query": "issue 라벨 체계가 어떻게 되어있는지 정리해서 알려줘", "should_trigger": false}
+]

@@ -1,0 +1,13 @@
+[
+  {"query": "레시피 상세 generateMetadata에서 title 템플릿에 조리시간 훅 추가하고 싶어", "should_trigger": true},
+  {"query": "검색 페이지 메타 description이 SERP에서 잘리는 것 같은데 잘림선 안 넘게 손봐줘", "should_trigger": true},
+  {"query": "큐레이션 페이지 og 카드 제목이 밋밋해서 클릭이 안 나와. 카피 좀 개선해줘", "should_trigger": true},
+  {"query": "recipes/[id] 메타 타이틀에 채널명을 넣을지 말지 고민인데 어떻게 생각해?", "should_trigger": true},
+  {"query": "ingredient 페이지에 generateMetadata 새로 만들어줘. 재료명이랑 보관법 키워드 들어가면 좋겠어", "should_trigger": true},
+  {"query": "ja sitemap에 페이지 누락된 것 같아 확인해줘", "should_trigger": false},
+  {"query": "JSON-LD Recipe 스키마에 video 속성 추가해줘", "should_trigger": false},
+  {"query": "robots.txt에서 youtube 추출기 봇 allow 잘 돼있는지 봐줘", "should_trigger": false},
+  {"query": "랜딩 페이지 히어로 카피 더 자연스럽게 바꿔줘", "should_trigger": false},
+  {"query": "GA4에서 어떤 검색 키워드로 유입되는지 뽑아줘", "should_trigger": false},
+  {"query": "페이지 title 태그가 hydration mismatch 경고 내는 것 좀 고쳐줘", "should_trigger": false}
+]

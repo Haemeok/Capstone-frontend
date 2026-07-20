@@ -1,0 +1,20 @@
+```ts
+const RECIPE_DETAIL_PATH_PATTERN = /^\/recipes\/[^/]+\/?$/;
+
+/**
+ * `/recipes/<id>` 형태의 레시피 상세 경로인지 검사한다.
+ * (`/recipes`, `/recipes/<id>/edit` 등 하위 경로는 제외)
+ */
+export function isRecipeDetailPath(pathname: string): boolean {
+  return RECIPE_DETAIL_PATH_PATTERN.test(pathname);
+}
+
+/**
+ * 레시피 상세 경로에서 id를 추출한다. 상세 경로가 아니면 null을 반환한다.
+ */
+export function getRecipeIdFromPath(pathname: string): string | null {
+  const match = RECIPE_DETAIL_PATH_PATTERN.exec(pathname);
+  if (!match) return null;
+  return pathname.replace(/\/$/, "").split("/")[2] ?? null;
+}
+```

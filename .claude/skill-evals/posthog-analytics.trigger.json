@@ -1,0 +1,13 @@
+[
+  {"query": "어제 오후에 방문자가 갑자기 3배 튀었는데 왜 그런지 PostHog에서 봐줘", "should_trigger": true},
+  {"query": "211.249.46 대역에서 요청이 몰리는데 스크래퍼 같아. 차단해도 될지 확인해줘", "should_trigger": true},
+  {"query": "HogQL로 locale별 이탈률 뽑아줘", "should_trigger": true},
+  {"query": "지난주랑 이번주 플랫폼별(웹/앱) 방문 비교해줘", "should_trigger": true},
+  {"query": "레시피 상세 페이지뷰 상위 20개 뽑아서 표로 정리해줘", "should_trigger": true},
+  {"query": "GA4 실시간 사용자 수가 이상하게 높아. BigQuery에서 교차확인해줘", "should_trigger": false},
+  {"query": "bq로 일별 이벤트 수 추이 뽑아줘", "should_trigger": false},
+  {"query": "네이버 서치어드바이저에서 크롤 통계 확인하는 법 알려줘", "should_trigger": false},
+  {"query": "posthog-js 번들이 First Load에 얼마나 잡히는지 확인해줘", "should_trigger": false},
+  {"query": "PostHog SDK 초기화 코드를 lazy load로 바꿔줘", "should_trigger": false},
+  {"query": "Search Console에서 검색 노출수 데이터 뽑아줘", "should_trigger": false}
+]
