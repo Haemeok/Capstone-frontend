@@ -1,5 +1,6 @@
 import { patchEdgeConfig } from "@/shared/edge-config/patchEdgeConfig";
 import { type Bloom, buildBloom } from "@/shared/lib/bloom";
+import { SEED_ISR_IDS } from "@/shared/lib/bloom/seedIsrIds";
 
 import { fetchRecipeSitemapPage } from "@/entities/recipe/model/api.server";
 
@@ -49,13 +50,15 @@ export async function GET(request: Request) {
     );
   }
 
-  const fitted = buildFittingBloom(ids, Date.now());
+  const merged = [...new Set([...ids, ...SEED_ISR_IDS])];
+
+  const fitted = buildFittingBloom(merged, Date.now());
   if (!fitted) {
     return Response.json(
       {
         ok: false,
         reason: "bloom exceeds Edge Config limit at every FP",
-        n: ids.length,
+        n: merged.length,
       },
       { status: 507 }
     );
@@ -69,7 +72,7 @@ export async function GET(request: Request) {
         ok: false,
         reason: "edge config write failed",
         detail: error instanceof Error ? error.message : String(error),
-        n: ids.length,
+        n: merged.length,
         fp: fitted.fp,
         bytes: fitted.bytes,
       },
@@ -79,7 +82,9 @@ export async function GET(request: Request) {
 
   return Response.json({
     ok: true,
-    n: ids.length,
+    n: merged.length,
+    sitemap: ids.length,
+    seed: SEED_ISR_IDS.length,
     fp: fitted.fp,
     bytes: fitted.bytes,
     m: fitted.bloom.m,
