@@ -26,7 +26,7 @@ A11y / Testing / 주석금지). 룰 위반·불확실·위반 직전이면 해�
 | API · 인증 · WebSocket | `docs/guides/api-and-realtime.md`                                                    |
 | Haptic Feedback 상세   | `.claude/skills/haptic-feedback/SKILL.md` (skill로 자동 호출)                        |
 
-**글쓰기 워크플로 (always-on):** 기술 블로그 글 *설계*가 필요한 시점 (refactor 끝나고 글 쓸 차례, "이거 글로 쓰자" 류) 에는 `writing-thesis → writing-outline → writing-drafting → writing-polish` 체인 사용. 각 단계 사인오프 게이트. velog 호출은 사용자 몫 (별도). 정적 검증은 `bash scripts/check-writing-harness.sh`.
+**글쓰기 워크플로 (always-on):** 기술 블로그 글 *설계*가 필요한 시점 (refactor 끝나고 글 쓸 차례, "이거 글로 쓰자" 류) 에는 `writing-thesis → writing-outline → writing-drafting → writing-polish` 체인 사용. 각 단계 사인오프 게이트. 발행은 1119wj.github.io 블로그(content/posts MDX, main push=배포). 정적 검증은 `bash scripts/check-writing-harness.sh`.
 
 **UI 작업 절대 금지 (다시 묻지 말 것):**
 
