@@ -5,10 +5,11 @@ import { Bell } from "lucide-react";
 import { format, LocalizedLink, plural, useChromeDict } from "@/shared/i18n";
 
 import { useInfiniteNotificationsQuery } from "@/entities/notification";
-import { useUserStore } from "@/entities/user";
+import { useAuthGate, useUserStore } from "@/entities/user";
 
 const NotificationButton = () => {
-  const { unreadCount } = useInfiniteNotificationsQuery();
+  const authGate = useAuthGate();
+  const { unreadCount } = useInfiniteNotificationsQuery({ enabled: authGate });
   const { user } = useUserStore();
   const t = useChromeDict();
 

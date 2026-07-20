@@ -9,11 +9,14 @@ import NotificationButton from "../NotificationButton";
 jest.mock("next/navigation", () => ({ usePathname: jest.fn() }));
 jest.mock("@/entities/user", () => ({
   useUserStore: () => ({ user: { id: "u1" } }),
+  useAuthGate: () => true,
 }));
 
 const mockUnread = jest.fn();
 jest.mock("@/entities/notification", () => ({
-  useInfiniteNotificationsQuery: () => ({ unreadCount: mockUnread() }),
+  useInfiniteNotificationsQuery: (_opts: { enabled: boolean }) => ({
+    unreadCount: mockUnread(),
+  }),
 }));
 
 const setPath = (p: string) => (usePathname as jest.Mock).mockReturnValue(p);

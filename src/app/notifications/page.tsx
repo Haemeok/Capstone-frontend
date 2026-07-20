@@ -16,12 +16,14 @@ import {
   useInfiniteNotificationsQuery,
   useMarkNotificationAsRead,
 } from "@/entities/notification";
+import { useAuthGate } from "@/entities/user";
 
 const NotificationsPage = () => {
   const router = useLocalizedRouter();
   const t = useNotificationsDict();
+  const authGate = useAuthGate();
   const { notifications, hasNextPage, isFetching, isFetchingNextPage, ref } =
-    useInfiniteNotificationsQuery();
+    useInfiniteNotificationsQuery({ enabled: authGate });
 
   const { mutate: deleteAllNotifications } = useDeleteAllNotifications();
   const { mutate: deleteNotification } = useDeleteNotification();

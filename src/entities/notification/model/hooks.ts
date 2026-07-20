@@ -34,7 +34,12 @@ const invalidateNotificationCaches = (qc: QueryClient) => {
   qc.invalidateQueries({ queryKey: NOTIFICATION_QUERY_KEYS.unreadCount });
 };
 
+type AuthGateOptions = {
+  enabled: boolean;
+};
+
 export const useInfiniteNotificationsQuery = (
+  { enabled }: AuthGateOptions,
   params: NotificationsParams = {}
 ) => {
   const { data, error, hasNextPage, isFetching, isFetchingNextPage, ref } =
@@ -50,6 +55,7 @@ export const useInfiniteNotificationsQuery = (
       getNextPageParam: getNextPageParam,
       initialPageParam: 0,
       threshold: 0.8,
+      enabled,
     });
 
   const allNotifications =
@@ -68,12 +74,13 @@ export const useInfiniteNotificationsQuery = (
   };
 };
 
-export const useUnreadNotificationCount = () => {
+export const useUnreadNotificationCount = ({ enabled }: AuthGateOptions) => {
   return useQuery({
     queryKey: NOTIFICATION_QUERY_KEYS.unreadCount,
     queryFn: getUnreadNotificationCount,
     staleTime: 1000 * 60 * 2,
     refetchInterval: 1000 * 60 * 5,
+    enabled,
   });
 };
 

@@ -6,15 +6,18 @@ import { BASE_API_URL } from "@/shared/config/constants/api";
 
 import { useInfiniteNotificationsQuery } from "@/entities/notification";
 import { getNotificationMessage } from "@/entities/notification";
-import { useUserStore } from "@/entities/user";
+import { useAuthGate, useUserStore } from "@/entities/user";
 
 import { useWebSocket } from "@/app/providers/WebSocketProvider";
 
 export const NotificationTest = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { connectionStatus, connect, disconnect } = useWebSocket();
+  const authGate = useAuthGate();
   const { user, isAuthenticated } = useUserStore();
-  const { notifications, unreadCount } = useInfiniteNotificationsQuery();
+  const { notifications, unreadCount } = useInfiniteNotificationsQuery({
+    enabled: authGate,
+  });
 
   if (process.env.NODE_ENV === "production") {
     return null;
