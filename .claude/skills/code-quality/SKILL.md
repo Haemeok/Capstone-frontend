@@ -56,6 +56,7 @@ specific `rules/<prefix>-<topic>.md` file.
 
 - [URL and query strings](rules/policy-url-and-query.md) — `new URL` / `URLSearchParams`
 - [TanStack Query keys](rules/policy-query-key.md) — `[domain, sub, ...ids]` tuple
+- [Authed query gate](rules/policy-authed-query-gate.md) — auth-required queries gate with `enabled` from `useAuthGate`, never conditional render (hooks run before the early return; errored queries refire on focus/remount); entity-layer hooks take `enabled` as a required param so a missed call site is a compile error
 - [Query invalidation vs cache patch](rules/policy-query-invalidation.md) — invalidate refetches every loaded page (storm); patch via `setQueriesData` prefix + `refetchType:none`; refetch only for membership-changing lists
 - [SSR ↔ client query key parity](rules/policy-ssr-client-query-key-parity.md) — SSR prefetch key must byte-match the client hook's key incl. codec/parser defaults, or hydration silently CSR-refetches
 - [i18n type gate misses unextracted literals](rules/policy-i18n-type-gate-misses-unextracted-strings.md) — a typed Dictionary gates missing keys, not unextracted inline strings; grep the localized files for source-language chars after wiring
