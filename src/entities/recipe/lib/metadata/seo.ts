@@ -125,37 +125,6 @@ export const generateYoutubeDescription = (
   return `${lead}\n\n${baseDescription}${detailsSection}`;
 };
 
-export const generateYoutubeKeywords = (
-  recipe: StaticRecipe,
-  youtubeMetadata: YoutubeMetadata
-): string[] => {
-  const keywords: string[] = [];
-
-  keywords.push(...YOUTUBE_SEO.KEYWORDS);
-
-  keywords.push(
-    youtubeMetadata.channelName,
-    `${youtubeMetadata.channelName} 레시피`,
-    `${youtubeMetadata.channelName} 요리`,
-    `${youtubeMetadata.channelName} ${recipe.title}`
-  );
-
-  const subscriberCount = youtubeMetadata.subscriberCount || 0;
-  if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.MILLION) {
-    keywords.push("유명 셰프", "인기 유튜버", "백만 유튜버");
-  } else if (subscriberCount >= YOUTUBE_SEO.SUBSCRIBER_THRESHOLDS.FAMOUS) {
-    keywords.push("인기 요리 채널", "구독자 많은 레시피");
-  }
-
-  keywords.push(
-    `${recipe.title} 유튜브`,
-    `${recipe.title} 만들기 영상`,
-    `${recipe.title} 요리법 유튜브`
-  );
-
-  return keywords;
-};
-
 export const selectOptimalImages = (
   recipe: StaticRecipe,
   youtubeMetadata?: YoutubeMetadata

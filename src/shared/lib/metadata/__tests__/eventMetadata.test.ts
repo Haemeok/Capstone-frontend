@@ -5,7 +5,6 @@ describe("buildEventMetadata locale-aware (T-E04)", () => {
     path: "/events/world-recipes",
     title: "T",
     description: "D",
-    keywords: ["k"],
     ogImage: "/events/world-recipes/hero.png",
     ogImageAlt: "alt",
   };

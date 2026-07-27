@@ -10,9 +10,6 @@ export const category: CategoryDict = {
     titleTemplate: "{emoji} {name} 레시피 모음",
     descriptionTemplate:
       "{name} 카테고리의 인기 레시피를 확인하세요. AI가 추천하는 맞춤형 {name} 요리법으로 집에서 맛있게 해먹어보세요!",
-    keywordRecipe: "{name} 레시피",
-    keywordRecipeMethod: "{name} 요리법",
-    keywordByCategory: "카테고리별 레시피",
     imageAltTemplate: "{name} 레시피 모음",
   },
 };

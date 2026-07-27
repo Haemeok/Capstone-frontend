@@ -48,15 +48,6 @@ export const events: EventsDict = {
       title: "Because recipes have no borders",
       description:
         "Use the country filter to browse YouTube recipes from Korea, Japan, and beyond. Pick the countries you want and discover home cooking from around the world.",
-      keywords: [
-        "world recipes",
-        "international recipes",
-        "youtube recipes",
-        "recipes by country",
-        "japanese recipes",
-        "global recipes",
-        "foreign cuisine",
-      ],
       ogImageAlt:
         "Because recipes have no borders - browse YouTube recipes from around the world",
     },
@@ -108,14 +99,6 @@ export const events: EventsDict = {
       title: "Invite a friend, turn ads off",
       description:
         "Invite a friend and both of you go ad-free. For one month this June, a single invite code clears ads for up to three months.",
-      keywords: [
-        "ad-free",
-        "ad-free recipes",
-        "friend referral campaign",
-        "invite code",
-        "june campaign",
-        "recipio campaign",
-      ],
       ogImageAlt: "Invite a friend, turn ads off - June ad-free campaign",
     },
   },

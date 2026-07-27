@@ -14,36 +14,6 @@ import {
 
 const YOUTUBE_EXTRACTOR_IMAGE = absoluteUrl("web-app-manifest-512x512.png");
 
-const YOUTUBE_EXTRACTOR_KEYWORDS = [
-  "유튜브 레시피 추출",
-  "유튜브 레시피 변환",
-  "유튜브 요리 영상 레시피",
-  "영상 레시피 만들기",
-  "유튜브 쿠킹 레시피",
-  "AI 레시피 분석",
-
-  "YouTube recipe extractor",
-  "YouTube to recipe converter",
-  "extract recipe from YouTube",
-  "YouTube cooking video to recipe",
-  "recipe from video",
-  "YouTube recipe analyzer",
-
-  "유튜브 요리 영상 레시피로 저장",
-  "YouTube 영상 레시피 추출 무료",
-  "요리 유튜브 레시피 자동 생성",
-  "유튜브 레시피 AI 분석",
-  "쿠킹 영상 레시피 변환",
-  "유튜브 요리 영상 텍스트로",
-
-  "레시피 영양 성분 분석",
-  "레시피 재료 가격 계산",
-  "요리 타이머 레시피",
-  "1인분 레시피 변환",
-
-  ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
-];
-
 type HowToStepCopy = { name: string; text: string };
 
 type LocaleCopy = {
@@ -304,7 +274,6 @@ export const createYoutubeExtractorStructuredData = (locale: Locale = "ko") => {
 export const youtubeExtractorMetadata: Metadata = {
   title: COPY.ko.metaTitle,
   description: COPY.ko.metaDescription,
-  keywords: YOUTUBE_EXTRACTOR_KEYWORDS,
   alternates: {
     canonical: absoluteUrl("recipes/new/youtube"),
   },

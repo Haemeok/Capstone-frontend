@@ -26,19 +26,9 @@ export const generateCurationDetailMetadata = (
 
   const ogImage =
     coverImageUrlFromKey(data.coverImageKey) ?? SEO_CONSTANTS.DEFAULT_IMAGE;
-  const keywords = [
-    ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
-    data.title,
-    ...(meta?.keywords ?? []),
-    "레시피 큐레이션",
-    "테마 레시피",
-    "오늘 뭐 먹지",
-  ];
-
   return {
     title,
     description,
-    keywords,
     alternates: { canonical: fullUrl },
     openGraph: {
       title,
@@ -72,15 +62,6 @@ export const generateCurationListMetadata = (
     ? `${meta.description}. 테마별로 큐레이션한 레시피 모음.`
     : "다이어트·집밥·홈파티까지. 테마별로 묶은 레시피 큐레이션을 한 곳에서.";
 
-  const keywords = meta
-    ? [...meta.keywords, "레시피 큐레이션", ...SEO_CONSTANTS.DEFAULT_KEYWORDS]
-    : [
-        ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
-        "레시피 큐레이션",
-        "오늘 뭐 먹지",
-        "테마 레시피",
-      ];
-
   const canonical = valid
     ? absoluteUrl(`curation?category=${encodeURIComponent(valid)}`)
     : absoluteUrl("curation");
@@ -88,7 +69,6 @@ export const generateCurationListMetadata = (
   return {
     title,
     description,
-    keywords,
     alternates: { canonical },
     openGraph: {
       title,

@@ -10,7 +10,6 @@ import { createRecipeStructuredData } from "./schema";
 import {
   determineRecipeType,
   generateYoutubeDescription,
-  generateYoutubeKeywords,
   normalizeChannelName,
   selectOptimalImages,
 } from "./seo";
@@ -27,7 +26,6 @@ export const generateRecipeMetadata = (
     ? SEO_CONSTANTS.SITE_URL.slice(0, -1)
     : SEO_CONSTANTS.SITE_URL;
 
-  const BUDGET_FRIENDLY_THRESHOLD = 5000;
   const AFFORDABLE_THRESHOLD = 10000;
   const QUICK_RECIPE_TIME = 15;
   const EASY_RECIPE_TIME = 30;
@@ -134,43 +132,6 @@ export const generateRecipeMetadata = (
     ? generateYoutubeDescription(recipe, baseDescription, youtubeNarrative)
     : baseDescription;
 
-  const dynamicKeywords: string[] = [];
-
-  if (recipe.totalIngredientCost > 0) {
-    if (recipe.totalIngredientCost <= BUDGET_FRIENDLY_THRESHOLD) {
-      dynamicKeywords.push("가성비요리", "저렴한요리", "3000원요리");
-    } else if (recipe.totalIngredientCost <= AFFORDABLE_THRESHOLD) {
-      dynamicKeywords.push("만원요리", "알뜰요리");
-    }
-  }
-
-  if (recipe.cookingTime <= QUICK_RECIPE_TIME) {
-    dynamicKeywords.push("간단요리", "10분요리", "15분요리", "빠른요리");
-  } else if (recipe.cookingTime <= EASY_RECIPE_TIME) {
-    dynamicKeywords.push("초간단요리", "30분요리", "쉬운요리");
-  }
-
-  const situationKeywords: Record<string, string[]> = {
-    다이어트: ["다이어트요리", "저칼로리", "건강식"],
-    자취: ["자취요리", "자취생레시피", "1인요리"],
-    간편식: ["간편요리", "편의점요리"],
-    야식: ["야식레시피", "살안찌는야식"],
-    도시락: ["도시락메뉴", "도시락반찬"],
-    "1인분": ["1인분요리", "혼밥"],
-  };
-
-  recipe.tags.forEach((tag) => {
-    const keywords = situationKeywords[tag];
-    if (keywords) {
-      dynamicKeywords.push(...keywords);
-    }
-  });
-
-  const youtubeKeywords =
-    youtubeMetadata && recipeType !== "chef-tv-show"
-      ? generateYoutubeKeywords(recipe, youtubeMetadata)
-      : [];
-
   const fullPageUrl = `${baseUrl}/recipes/${recipeId}`;
 
   const images = selectOptimalImages(recipe, youtubeMetadata);
@@ -202,13 +163,6 @@ export const generateRecipeMetadata = (
   const baseMetadata: Metadata = {
     title: defaultTitle,
     description: defaultDescription,
-    keywords: [
-      ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
-      recipe.title,
-      ...recipe.tags,
-      ...dynamicKeywords,
-      ...youtubeKeywords,
-    ],
     robots: {
       index: true,
       follow: true,
@@ -243,18 +197,10 @@ export const generateRecipeMetadata = (
     const chefDescription = recipe.description
       ? `${recipe.description} ${recipe.title} 레시피를 레시피오에서 만나보세요!`
       : `${recipe.title} 셰프 레시피를 레시피오에서 만나보세요!`;
-    const chefKeywords = [
-      "셰프 레시피",
-      "15분레시피",
-      "파인다이닝",
-      ...(baseMetadata.keywords as string[]),
-    ];
-
     return {
       ...baseMetadata,
       title: chefTitle,
       description: chefDescription,
-      keywords: chefKeywords,
       openGraph: {
         ...baseMetadata.openGraph,
         title: chefPageTitle,

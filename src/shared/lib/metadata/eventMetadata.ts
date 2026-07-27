@@ -12,7 +12,6 @@ type EventMetadataParams = {
   locale: Locale;
   title: string;
   description: string;
-  keywords: string[];
   ogImage: string;
   ogImageAlt: string;
 };
@@ -28,7 +27,6 @@ export const buildEventMetadata = ({
   locale,
   title,
   description,
-  keywords,
   ogImage,
   ogImageAlt,
 }: EventMetadataParams): Metadata => {
@@ -42,10 +40,6 @@ export const buildEventMetadata = ({
   return {
     title: fullTitle,
     description,
-    keywords:
-      locale === "ko"
-        ? [...SEO_CONSTANTS.DEFAULT_KEYWORDS, ...keywords]
-        : keywords,
     alternates: {
       canonical,
       languages: buildHreflangAlternates(pathWithoutLocale),

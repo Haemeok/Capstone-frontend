@@ -57,12 +57,6 @@ const buildKoMetadata = (
   const baseMetadata: Metadata = {
     title,
     description,
-    keywords: [
-      ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
-      tagName,
-      `${tagName} 레시피`,
-      "요리 추천",
-    ],
     alternates: {
       canonical: url,
     },
@@ -103,19 +97,6 @@ const buildKoMetadata = (
       ...baseMetadata,
       title: chefTitle,
       description: chefDescription,
-      keywords: [
-        "흑백요리사",
-        "흑백요리사2",
-        "냉장고를부탁해",
-        "15분레시피",
-        "냉장고를부탁해 15분레시피",
-        "셰프 레시피",
-        "파인다이닝",
-        "RECIPIO",
-        "안성재",
-        "최현석",
-        "에드워드 리",
-      ],
       openGraph: {
         ...baseMetadata.openGraph,
         title: chefTitle,

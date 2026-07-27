@@ -516,9 +516,6 @@ export type CategoryDict = {
     fallbackTitle: string;
     titleTemplate: string;
     descriptionTemplate: string;
-    keywordRecipe: string;
-    keywordRecipeMethod: string;
-    keywordByCategory: string;
     imageAltTemplate: string;
   };
 };
@@ -1111,7 +1108,6 @@ export type EventFaqItem = { question: string; answer: string };
 export type EventMeta = {
   title: string;
   description: string;
-  keywords: string[];
   ogImageAlt: string;
 };
 

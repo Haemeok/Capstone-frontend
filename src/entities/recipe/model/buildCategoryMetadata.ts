@@ -33,13 +33,6 @@ export const buildCategoryMetadata = async (
   return {
     title,
     description,
-    keywords: [
-      ...SEO_CONSTANTS.DEFAULT_KEYWORDS,
-      name,
-      format(m.keywordRecipe, { name }),
-      format(m.keywordRecipeMethod, { name }),
-      m.keywordByCategory,
-    ],
     openGraph: {
       title,
       description,

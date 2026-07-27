@@ -63,6 +63,6 @@ describe("buildCategoryMetadata — localized (T-29~32)", () => {
 
     expect(meta.robots).toMatchObject({ index: true });
     expect(meta.title).toContain("흑백요리사");
-    expect(flatten(meta)).toContain("안성재");
+    expect(String(meta.description)).toContain("파인다이닝");
   });
 });

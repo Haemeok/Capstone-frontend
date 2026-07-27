@@ -10,9 +10,6 @@ export const category: CategoryDict = {
     titleTemplate: "{emoji} {name}のレシピ集",
     descriptionTemplate:
       "{name}カテゴリの人気レシピをチェック。AIがおすすめする{name}料理を、おうちで手軽に作ってみましょう。",
-    keywordRecipe: "{name} レシピ",
-    keywordRecipeMethod: "{name} 作り方",
-    keywordByCategory: "カテゴリ別レシピ",
     imageAltTemplate: "{name}のレシピ集",
   },
 };

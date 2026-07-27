@@ -107,6 +107,5 @@ describe("generateCurationListMetadata", () => {
     expect(meta.alternates?.canonical).toBe(
       `https://www.recipio.kr/curation?category=${encodeURIComponent("DIET & LIGHT")}`
     );
-    expect(meta.keywords).toEqual(expect.arrayContaining(["다이어트 레시피"]));
   });
 });
