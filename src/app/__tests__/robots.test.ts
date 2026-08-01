@@ -1,24 +1,39 @@
 import robots from "../robots";
 
-describe("robots ja 사이트맵 등록", () => {
-  it("T-09: sitemap 목록에 ja 레시피·재료 사이트맵이 포함된다", () => {
+describe("robots 사이트맵 등록", () => {
+  it("T-09: sitemap 목록은 ko 사이트맵만 포함한다", () => {
     const result = robots();
-    expect(result.sitemap).toEqual(
-      expect.arrayContaining([
-        "https://www.recipio.kr/ja/recipes/sitemap/0.xml",
-        "https://www.recipio.kr/ja/ingredients/sitemap/0.xml",
-      ])
-    );
+    expect(result.sitemap).toEqual([
+      "https://www.recipio.kr/sitemap/0.xml",
+      "https://www.recipio.kr/recipes/sitemap/0.xml",
+      "https://www.recipio.kr/ingredients/sitemap/0.xml",
+    ]);
   });
 
-  it("T-105: sitemap 목록에 en 레시피·재료 사이트맵이 포함된다", () => {
+  it("T-105: sitemap 목록에 en/ja 사이트맵이 없다", () => {
     const result = robots();
-    expect(result.sitemap).toEqual(
-      expect.arrayContaining([
-        "https://www.recipio.kr/en/recipes/sitemap/0.xml",
-        "https://www.recipio.kr/en/ingredients/sitemap/0.xml",
-      ])
-    );
+    for (const url of result.sitemap as string[]) {
+      expect(url).not.toMatch(/\/(en|ja)\//);
+    }
+  });
+});
+
+describe("robots allow 규칙", () => {
+  it("T-106: allow 목록에 en/ja 경로가 없다", () => {
+    const result = robots();
+    for (const rule of result.rules as { allow?: string[] }[]) {
+      for (const path of rule.allow ?? []) {
+        expect(path).not.toMatch(/^\/(en|ja)\//);
+      }
+    }
+  });
+
+  it("T-107: ko youtube 추출기 allow는 유지된다", () => {
+    const result = robots();
+    const base = (
+      result.rules as { userAgent?: unknown; allow?: string[] }[]
+    ).find((r) => r.userAgent === "*");
+    expect(base?.allow).toEqual(["/", "/recipes/new/youtube"]);
   });
 });
 

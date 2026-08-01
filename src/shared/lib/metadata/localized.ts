@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import type { Locale } from "@/shared/i18n";
 
 const SITE_NAME_BY_LOCALE: Record<Locale, string> = {
@@ -22,3 +24,5 @@ export const alternateLocales = (locale: Locale): string[] =>
 
 export const localizedPath = (locale: Locale, path: string): string =>
   locale === "ko" ? path : `${locale}/${path}`;
+
+export const YETI_NOINDEX: Metadata["other"] = { Yeti: "noindex, follow" };

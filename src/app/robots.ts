@@ -99,14 +99,7 @@ const PRIVATE_PATHS = [
 ];
 
 /** 비공개 prefix 하위지만 크롤 허용해야 하는 공개 경로 (longest-match로 disallow보다 우선) */
-const PUBLIC_PATH_SUFFIXES = ["/recipes/new/youtube"];
-
-const PUBLIC_ALLOW = [
-  "/",
-  ...LOCALE_PREFIXES.flatMap((prefix) =>
-    PUBLIC_PATH_SUFFIXES.map((suffix) => `${prefix}${suffix}`)
-  ),
-];
+const PUBLIC_ALLOW = ["/", "/recipes/new/youtube"];
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -135,10 +128,6 @@ export default function robots(): MetadataRoute.Robots {
       absoluteUrl("sitemap/0.xml"),
       absoluteUrl("recipes/sitemap/0.xml"),
       absoluteUrl("ingredients/sitemap/0.xml"),
-      absoluteUrl("ja/recipes/sitemap/0.xml"),
-      absoluteUrl("ja/ingredients/sitemap/0.xml"),
-      absoluteUrl("en/recipes/sitemap/0.xml"),
-      absoluteUrl("en/ingredients/sitemap/0.xml"),
     ],
   };
 }
