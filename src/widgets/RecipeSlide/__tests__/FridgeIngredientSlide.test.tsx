@@ -14,7 +14,14 @@ jest.mock("@/shared/hooks/useInViewOnce", () => ({
 }));
 let mockUser: unknown = { id: "u1" };
 jest.mock("@/entities/user/model/store", () => ({
-  useUserStore: () => ({ user: mockUser }),
+  useUserStore: (selector?: (state: unknown) => unknown) => {
+    const state = {
+      user: mockUser,
+      isAuthReady: true,
+      isAuthenticated: mockUser !== null,
+    };
+    return selector ? selector(state) : state;
+  },
 }));
 jest.mock("@/shared/i18n", () => ({
   ...jest.requireActual("@/shared/i18n"),
