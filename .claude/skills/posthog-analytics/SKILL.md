@@ -112,6 +112,73 @@ GROUP BY day ORDER BY day
 - 날짜 경계: PostHog 프로젝트 TZ가 KST라 `toDate`/`toStartOfDay`가 KST 기준. `toStartOfDay(now()) - interval 2 day` = 오늘 포함 3 캘린더일.
 - 패턴 의심되면 `properties.$pathname LIKE '%/recipes/%'` 로 실제 경로 샘플 먼저 확인.
 
+### 특정 크롤러의 크롤 예산 분해 (Yeti가 ja/en을 얼마나 긁나)
+
+크롤러를 IP 대역이 아니라 **`properties.$raw_user_agent`로 잡는다** — Yeti는 UA에 `Yeti` 문자열이 그대로 들어있고, IP 대역 3종보다 커버리지가 넓다(21일 기준 UA 184,220 vs IP 182,739 → IP 필터만 쓰면 ~1.5k 누락). 봇 제외 필터를 뒤집어 `LIKE '%Yeti%'`를 조건으로 쓰면 됨.
+
+```sql
+-- 크롤러의 로케일별 히트 + 고유 경로 수 (최근 3주)
+SELECT multiIf(match(properties.$pathname,'^/ja(/|$)'),'ja',
+               match(properties.$pathname,'^/en(/|$)'),'en','ko') AS locale,
+       count() AS hits,
+       count(DISTINCT properties.$pathname) AS unique_paths
+FROM events
+WHERE event='$pageview' AND timestamp > now() - interval 21 day
+  AND properties.$raw_user_agent LIKE '%Yeti%'
+GROUP BY locale ORDER BY hits DESC
+```
+
+- `hits / unique_paths ≈ 1.0` 이면 재크롤이 아니라 **ID 공간 전수 순회 중**(신규 발견 위주). 4~5면 같은 문서 반복 크롤.
+- 경로 종류 분해는 `multiIf(match(...,'^/(ja|en)/recipes/[^/]+$'),'recipe detail', ...)` 로 한 번 더. 예상 밖 경로는 `concat('other: ', properties.$pathname)` 로 흘려서 정체 확인.
+- noindex/robots 변경 효과를 볼 땐 일별 추이로 뽑고 **배포일과 감소 시작일을 대조**. 감소가 배포보다 앞서면 그 변경 때문이 아니다(크롤러 자체 스케줄일 수 있음). 마지막 날은 부분 집계라 감소로 오독 금지.
+
+### 단일 URL 스파이크 원인 추적 ("이 페이지에 N분간 200회, 어떤 놈?")
+
+특정 경로에 짧은 시간 트래픽이 몰렸을 때, **봇이냐 진짜 사람이냐**를 3쿼리로 가른다. 순서 고정:
+
+```sql
+-- 1) 분 단위로 스파이크 모양 + 사람/IP 분산도 확인
+SELECT toStartOfMinute(timestamp) AS min, count() AS hits,
+       count(DISTINCT distinct_id) AS people, count(DISTINCT properties.$ip) AS ips
+FROM events
+WHERE properties.$pathname LIKE '%/recipes/<id>%' AND timestamp > now() - interval 2 day
+GROUP BY min ORDER BY hits DESC LIMIT 20
+```
+
+```sql
+-- 2) 유입원 + 디바이스 (진짜 사람이면 referrer가 검색/SNS로 수렴)
+SELECT properties.$referrer AS ref, properties.$os AS os, properties.$device_type AS device,
+       count() AS hits, count(DISTINCT distinct_id) AS people
+FROM events
+WHERE properties.$pathname LIKE '%/recipes/<id>%'
+  AND timestamp BETWEEN toDateTime('YYYY-MM-DD HH:MM:SS') AND toDateTime('YYYY-MM-DD HH:MM:SS')
+GROUP BY ref, os, device ORDER BY hits DESC LIMIT 30
+```
+
+```sql
+-- 3) 화면폭 분산 + UA 샘플 — 봇/사람 판정의 결정타
+SELECT properties.$screen_width AS w, count() AS hits,
+       count(DISTINCT distinct_id) AS people, count(DISTINCT properties.$ip) AS ips,
+       topK(2)(properties.$raw_user_agent) AS ua_sample
+FROM events
+WHERE properties.$pathname = '/recipes/<id>'
+  AND timestamp BETWEEN toDateTime('...') AND toDateTime('...')
+GROUP BY w ORDER BY hits DESC LIMIT 15
+```
+
+판정 기준:
+
+- **사람**: 화면폭 6종 이상 분산 + UA에 실기기 모델명(`SM-S931N`, `16PRO` 등) + IP가 사람 수만큼 흩어짐 + referrer가 검색엔진.
+- **봇**: 단일 폭 집중 + 일반 UA + `$direct` + 경로 전수 순회(아래 봇 헌팅 절).
+- `people ≈ hits`는 **단독으로는 봇 근거가 안 된다.** 검색 유입 1페이지 이탈도 같은 모양이 나온다 — 반드시 UA·폭 분산과 같이 봐야 한다.
+- `event='$pageview'` 필터를 빼면 스크롤·클릭 등 부가 이벤트까지 세서 3배쯤 부풀려진다. "요청 N회"를 검증할 땐 pageview로 고정.
+- 평시 기준선 대비를 꼭 붙일 것: `toStartOfHour` + `interval 14 day`로 같은 경로 히스토리를 뽑아 "원래 하루 1~3건"을 보여야 스파이크가 스파이크로 읽힌다.
+- 페이지 정체는 `curl -s "https://www.recipio.kr/<path>" | grep -o '<title>[^<]*</title>'`로 확인. 백엔드 `/api/v1/recipes/:id`는 인증 필요라 막힌다.
+
+**네이버 앱 인앱 브라우저 UA 시그니처:** `NAVER(inapp; search; 2100; 12.22.10)` — 안드로이드는 Whale/Crosswalk 문자열이 섞이고, iOS는 끝에 기기명(`16PRO`, `12MINI`)이 붙는다. 이게 보이면 네이버 검색 결과에서 바로 탭한 실사용자다.
+
+**실사례(2026-08-02 21:52 KST):** `/recipes/rBN7OXek`("성시경 신라면 투움바 파스타")에 3분간 pageview 238·사람 215·IP 117+. 99%가 `m.search.naver.com` 유입, 전부 네이버 인앱 UA. 평시 하루 1~3건. 밤 9시대 + 네이버 검색 + 단일 요리 = 방송 노출발 검색 폭증 패턴. 차단 대상 없음.
+
 ### 봇/이상 트래픽 헌팅
 
 봇 시그니처 3종을 순서대로 본다:
