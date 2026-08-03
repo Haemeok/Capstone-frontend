@@ -11,8 +11,8 @@ export const generateViaOpenAI = async (
   extra: ExtraParams = {},
   signal?: AbortSignal
 ): Promise<Result> => {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  const apiKey = process.env.OPENAI_API_KEY_2;
+  if (!apiKey) throw new Error("OPENAI_API_KEY_2 is not set");
 
   const res = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
@@ -53,8 +53,8 @@ export const editViaOpenAI = async (
   extra: ExtraParams = {},
   signal?: AbortSignal
 ): Promise<Result> => {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  const apiKey = process.env.OPENAI_API_KEY_2;
+  if (!apiKey) throw new Error("OPENAI_API_KEY_2 is not set");
   if (referenceDataUrls.length === 0) {
     throw new Error("at least one reference image is required");
   }
@@ -108,8 +108,8 @@ export const generateMultiViaOpenAI = async (
   extra: ExtraParams = {},
   signal?: AbortSignal
 ): Promise<MultiResult> => {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  const apiKey = process.env.OPENAI_API_KEY_2;
+  if (!apiKey) throw new Error("OPENAI_API_KEY_2 is not set");
   const n = extra.n ?? 1;
 
   const res = await fetch("https://api.openai.com/v1/images/generations", {
@@ -154,8 +154,8 @@ export const editMultiViaOpenAI = async (
   extra: ExtraParams = {},
   signal?: AbortSignal
 ): Promise<MultiResult> => {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  const apiKey = process.env.OPENAI_API_KEY_2;
+  if (!apiKey) throw new Error("OPENAI_API_KEY_2 is not set");
   if (referenceDataUrls.length === 0) {
     throw new Error("at least one reference image is required");
   }

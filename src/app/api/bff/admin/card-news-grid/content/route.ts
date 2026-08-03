@@ -25,7 +25,7 @@ export const maxDuration = 60;
 const OPENAI_PREFIX = "openai/";
 const GOOGLE_PREFIX = "google/";
 
-const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
+const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY_2 || "" });
 const geminiStudio = createOpenAI({
   name: "gemini-studio",
   baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
