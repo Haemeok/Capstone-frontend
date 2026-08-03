@@ -21,6 +21,7 @@ export const generateRecipeMetadata = (
 ): Metadata => {
   const youtubeMetadata = extractYoutubeMetadata(recipe);
   const recipeType = determineRecipeType(recipe, youtubeMetadata);
+  const isRemix = recipe.isRemix === true;
 
   const baseUrl = SEO_CONSTANTS.SITE_URL.endsWith("/")
     ? SEO_CONSTANTS.SITE_URL.slice(0, -1)
@@ -164,10 +165,10 @@ export const generateRecipeMetadata = (
     title: defaultTitle,
     description: defaultDescription,
     robots: {
-      index: true,
+      index: !isRemix,
       follow: true,
       googleBot: {
-        index: recipe.isIndexed === true,
+        index: !isRemix && recipe.isIndexed === true,
         follow: true,
       },
     },

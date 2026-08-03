@@ -153,6 +153,7 @@ export type Recipe = {
   };
   isCloneable: boolean;
   isIndexed?: boolean;
+  isRemix?: boolean;
 };
 
 export type RawRecipeResponse = Omit<Recipe, "source" | "youtube"> & {
