@@ -69,7 +69,7 @@ const AI_TRAINING_BOTS = [
 ];
 
 /** 로케일 프리픽스 없이 항상 차단 */
-const ALWAYS_PRIVATE = ["/api/", "/_next/", "/static/"];
+const ALWAYS_PRIVATE = ["/api/", "/static/"];
 
 /** 로케일 프리픽스 대상 비공개 경로 (공개+noindex 경로는 여기서 빼고 메타로 처리) */
 const PRIVATE_PATH_SUFFIXES = [
@@ -99,7 +99,7 @@ const PRIVATE_PATHS = [
 ];
 
 /** 비공개 prefix 하위지만 크롤 허용해야 하는 공개 경로 (longest-match로 disallow보다 우선) */
-const PUBLIC_ALLOW = ["/", "/_next/static/", "/recipes/new/youtube"];
+const PUBLIC_ALLOW = ["/", "/recipes/new/youtube"];
 
 export default function robots(): MetadataRoute.Robots {
   return {

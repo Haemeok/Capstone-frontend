@@ -33,21 +33,22 @@ describe("robots allow 규칙", () => {
     const base = (
       result.rules as { userAgent?: unknown; allow?: string[] }[]
     ).find((r) => r.userAgent === "*");
-    expect(base?.allow).toEqual([
-      "/",
-      "/_next/static/",
-      "/recipes/new/youtube",
-    ]);
+    expect(base?.allow).toEqual(["/", "/recipes/new/youtube"]);
   });
 
-  it("T-108: 모든 크롤러 그룹에서 /_next/static/ 이 allow 된다", () => {
+  it("T-108: 어떤 그룹에도 /_next 규칙이 없다 (렌더 리소스 개방)", () => {
     const result = robots();
-    const crawlable = (
-      result.rules as { allow?: string[]; disallow?: unknown }[]
-    ).filter((r) => r.allow !== undefined);
-    expect(crawlable).not.toHaveLength(0);
-    for (const rule of crawlable) {
-      expect(rule.allow).toContain("/_next/static/");
+    for (const rule of result.rules as {
+      allow?: string[];
+      disallow?: string | string[];
+    }[]) {
+      const paths = [
+        ...(rule.allow ?? []),
+        ...(typeof rule.disallow === "string"
+          ? [rule.disallow]
+          : (rule.disallow ?? [])),
+      ];
+      expect(paths.filter((p) => p.includes("_next"))).toEqual([]);
     }
   });
 });
@@ -122,15 +123,12 @@ describe("robots 로케일 미러 disallow 규칙", () => {
     );
   });
 
-  it("T-21: ALWAYS_PRIVATE(/api, /_next, /static) 회귀 유지", () => {
+  it("T-21: ALWAYS_PRIVATE(/api, /static) 회귀 유지", () => {
     const result = robots();
     const base = (result.rules as unknown[]).find(
       (r: unknown) => (r as Record<string, unknown>).userAgent === "*"
     ) as Record<string, unknown>;
     const disallow = (base?.disallow ?? []) as string[];
-    expect(disallow).toEqual(
-      expect.arrayContaining(["/api/", "/_next/", "/static/"])
-    );
-    expect((base?.allow ?? []) as string[]).toContain("/_next/static/");
+    expect(disallow).toEqual(expect.arrayContaining(["/api/", "/static/"]));
   });
 });
