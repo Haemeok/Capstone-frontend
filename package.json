@@ -25,6 +25,7 @@
     "seo:report": "tsx scripts/seo-report.ts",
     "seo:trend:naver": "tsx scripts/seo-trend-naver.ts",
     "seo:trend:gsc": "tsx scripts/seo-trend-gsc.ts",
+    "seo:index-check": "tsx scripts/gsc-index-check.ts",
     "seo:audit": "tsx scripts/seo-audit.ts",
     "seo:classify": "tsx scripts/seo-classify.ts",
     "seo:health": "tsx scripts/seo-health/run.ts --tier daily",
