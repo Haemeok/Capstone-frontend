@@ -34,13 +34,6 @@ const resolveRecipeTrack = async (id: string): Promise<"isr" | "dynamic"> => {
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
-  if (pathname === "/") {
-    const hasVisited = request.cookies.has("landing_visited");
-    if (!hasVisited) {
-      return NextResponse.redirect(new URL("/landing", request.url));
-    }
-  }
-
   const preferred = request.cookies.get(STORAGE_KEYS.PREFERRED_LOCALE)?.value;
   if (isLocale(preferred)) {
     const { barePath } = stripLocale(pathname);
