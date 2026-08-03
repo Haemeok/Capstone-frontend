@@ -99,7 +99,7 @@ const PRIVATE_PATHS = [
 ];
 
 /** 비공개 prefix 하위지만 크롤 허용해야 하는 공개 경로 (longest-match로 disallow보다 우선) */
-const PUBLIC_ALLOW = ["/", "/recipes/new/youtube"];
+const PUBLIC_ALLOW = ["/", "/_next/static/", "/recipes/new/youtube"];
 
 export default function robots(): MetadataRoute.Robots {
   return {
