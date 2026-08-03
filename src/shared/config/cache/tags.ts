@@ -11,6 +11,7 @@ export const CACHE_TAGS = {
   recipesSitemap: "recipes-sitemap",
   recipesSitemapJa: "recipes-sitemap-ja",
   recipesSitemapEn: "recipes-sitemap-en",
+  recipesSitemapNaver: "recipes-sitemap-naver",
   ingredientDetail: (id: string) => `ingredient-${id}`,
   ingredientsSitemap: "ingredients-sitemap",
   curationArticlesSitemap: "curation-articles-sitemap",

@@ -408,6 +408,42 @@ export const fetchEnRecipeSitemapPage = async (
   }
 };
 
+export const fetchNaverRecipeSitemapPage = async (
+  pageIndex: number,
+  size: number
+): Promise<Array<{ id: string; updatedAt: string }>> => {
+  const query = new URLSearchParams({
+    page: String(pageIndex),
+    size: String(size),
+  });
+  const API_URL = `${BASE_API_URL}/recipes/sitemap/naver?${query}`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: {
+        revalidate: REVALIDATION_TIMES.RECIPES_SITEMAP,
+        tags: [CACHE_TAGS.recipesSitemapNaver],
+      },
+      signal: AbortSignal.timeout(SITEMAP_FETCH_TIMEOUT_MS),
+    });
+
+    if (!res.ok) {
+      console.error(
+        `[fetchNaverRecipeSitemapPage] API Error: ${res.status} ${res.statusText}`
+      );
+      return [];
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(
+      "[fetchNaverRecipeSitemapPage] Failed to fetch recipes:",
+      error
+    );
+    return [];
+  }
+};
+
 export const getStaticRecipesOnServer = async (
   params: RecipeItemsQueryParams
 ): Promise<WithFetchStatus<StaticDetailedRecipesApiResponse>> => {
