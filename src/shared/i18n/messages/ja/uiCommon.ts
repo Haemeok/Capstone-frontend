@@ -18,4 +18,8 @@ export const uiCommon: UiCommonDict = {
   calendar: {
     loading: "カレンダーを読み込み中…",
   },
+  stepFontSize: {
+    toggleAria: "文字サイズを変更（{current}/{total}）",
+    sampleGlyph: "あ",
+  },
 };

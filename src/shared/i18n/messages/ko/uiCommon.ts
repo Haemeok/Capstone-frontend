@@ -18,4 +18,8 @@ export const uiCommon: UiCommonDict = {
   calendar: {
     loading: "달력 로딩 중...",
   },
+  stepFontSize: {
+    toggleAria: "글자 크기 조절 ({current}/{total}단계)",
+    sampleGlyph: "가",
+  },
 };

@@ -18,4 +18,8 @@ export const uiCommon: UiCommonDict = {
   calendar: {
     loading: "Loading calendar…",
   },
+  stepFontSize: {
+    toggleAria: "Change text size ({current} of {total})",
+    sampleGlyph: "A",
+  },
 };

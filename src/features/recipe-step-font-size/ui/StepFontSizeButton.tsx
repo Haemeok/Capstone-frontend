@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import { format, useUiCommonDict } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 
@@ -13,6 +14,7 @@ import {
 const GLYPH_SIZE = ["text-sm", "text-base", "text-lg"];
 
 const StepFontSizeButton = () => {
+  const t = useUiCommonDict().stepFontSize;
   const level = useStepFontSizeStore((state) => state.level);
   const cycle = useStepFontSizeStore((state) => state.cycle);
 
@@ -34,9 +36,12 @@ const StepFontSizeButton = () => {
           ? "bg-olive-light shadow-olive-light/30 text-white"
           : "text-ink-sub bg-gray-100"
       )}
-      aria-label={`글자 크기 조절 (${level + 1}/${STEP_FONT_LEVEL_COUNT}단계)`}
+      aria-label={format(t.toggleAria, {
+        current: level + 1,
+        total: STEP_FONT_LEVEL_COUNT,
+      })}
     >
-      <span className={GLYPH_SIZE[level]}>가</span>
+      <span className={GLYPH_SIZE[level]}>{t.sampleGlyph}</span>
     </button>
   );
 };

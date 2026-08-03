@@ -1303,6 +1303,10 @@ export type UiCommonDict = {
   calendar: {
     loading: string;
   };
+  stepFontSize: {
+    toggleAria: string;
+    sampleGlyph: string;
+  };
 };
 
 export type Dictionary = {
