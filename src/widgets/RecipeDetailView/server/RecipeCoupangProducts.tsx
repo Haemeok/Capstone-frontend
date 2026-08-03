@@ -1,3 +1,4 @@
+import type { RenderTrack } from "@/shared/config/cache";
 import type { CoupangSlideCard } from "@/shared/coupang";
 import {
   CoupangProductSlide,
@@ -6,14 +7,14 @@ import {
 
 type RecipeCoupangProductsProps = {
   recipeId: string;
-  isIndexed: boolean | undefined;
+  renderTrack: RenderTrack;
 };
 
 const RecipeCoupangProducts = async ({
   recipeId,
-  isIndexed,
+  renderTrack,
 }: RecipeCoupangProductsProps) => {
-  const { items } = await fetchRecipeCoupangProducts(recipeId, { isIndexed });
+  const { items } = await fetchRecipeCoupangProducts(recipeId, { renderTrack });
 
   const withProducts = items.filter((item) => item.products.length > 0);
   const cards: CoupangSlideCard[] = withProducts.map((item) => ({

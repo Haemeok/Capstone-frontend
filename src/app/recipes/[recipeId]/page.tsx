@@ -22,5 +22,5 @@ export default async function RecipeDetailPage({
   params,
 }: RecipeDetailPageProps) {
   const { recipeId } = await params;
-  return <RecipeDetailPageView recipeId={recipeId} />;
+  return <RecipeDetailPageView recipeId={recipeId} renderTrack="static" />;
 }

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BottomAnchorAdSlot } from "@/shared/adsense/BottomAnchorAdSlot";
+import type { RenderTrack } from "@/shared/config/cache";
 import { ScrollReset } from "@/shared/ui/ScrollReset";
 
 import { isPrivateRecipe } from "@/entities/recipe";
@@ -34,8 +35,10 @@ export const buildRecipeMetadata = async (
 
 export const RecipeDetailPageView = async ({
   recipeId,
+  renderTrack,
 }: {
   recipeId: string;
+  renderTrack: RenderTrack;
 }) => {
   const staticRecipe = await getStaticrecipionServer(recipeId);
 
@@ -67,7 +70,7 @@ export const RecipeDetailPageView = async ({
           <Suspense fallback={null}>
             <RecipeCoupangProducts
               recipeId={recipeId}
-              isIndexed={staticRecipe.isIndexed}
+              renderTrack={renderTrack}
             />
           </Suspense>
         }
