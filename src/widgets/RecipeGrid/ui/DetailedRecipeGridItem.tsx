@@ -226,10 +226,13 @@ const DetailedRecipeGridItem = ({
         <Link
           href={buildLocalizedRecipeHref(recipe.id, locale)}
           className="rounded-card absolute inset-0"
-          aria-label={format(t.itemViewAria, { title: recipe.title })}
           prefetch={prefetch ? true : null}
           onClick={handleClick}
-        />
+        >
+          <span className="sr-only">
+            {format(t.itemViewAria, { title: recipe.title })}
+          </span>
+        </Link>
 
         {(infoBadge || saveBadge || showCountryFlag) && (
           <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 flex items-start justify-between gap-2 p-2">

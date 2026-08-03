@@ -4,7 +4,7 @@ import React from "react";
 
 import { EllipsisVertical, LockKeyhole } from "lucide-react";
 
-import { LocalizedLink, useRecipeGridDict } from "@/shared/i18n";
+import { format, LocalizedLink, useRecipeGridDict } from "@/shared/i18n";
 import { Image } from "@/shared/ui/image/Image";
 
 import { BaseRecipeGridItem } from "@/entities/recipe/model/types";
@@ -54,10 +54,13 @@ const SimpleRecipeGridItem = ({
       </p>
       <LocalizedLink
         href={href}
-        aria-label={recipe.title}
         prefetch={prefetch ? true : null}
         className="absolute inset-0"
-      />
+      >
+        <span className="sr-only">
+          {format(t.itemViewAria, { title: recipe.title })}
+        </span>
+      </LocalizedLink>
       {isPrivate && (
         <div
           className="pointer-events-none absolute top-1.5 left-1.5 flex h-6 w-6 items-center justify-center rounded-full text-white"
