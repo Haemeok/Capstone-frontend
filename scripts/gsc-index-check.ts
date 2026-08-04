@@ -1,13 +1,18 @@
 import * as fs from "fs";
 import * as path from "path";
 
+import {
+  getAccessToken,
+  type IndexStatus,
+  inspectUrl,
+  listSites,
+  sampleItems,
+} from "./lib/gsc";
 import { DATA_DIR, today } from "./lib/seo-constants";
 
 const SITE_URL = "https://www.recipio.kr";
 const ALLOWLIST_URL =
   "https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com/seo/allowlist.json";
-const INSPECT_API =
-  "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect";
 const CONCURRENCY = 4;
 const REQUEST_GAP_MS = 120;
 
@@ -38,104 +43,6 @@ const parseArgs = (): Args => {
   };
 };
 
-// ── Google Auth: 서비스 계정 JWT 또는 gcloud ADC(authorized_user) ──
-
-type ServiceAccount = { client_email: string; private_key: string };
-type AuthorizedUser = {
-  client_id: string;
-  client_secret: string;
-  refresh_token: string;
-};
-
-const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
-const SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
-
-const createJwt = async (sa: ServiceAccount): Promise<string> => {
-  const header = Buffer.from(
-    JSON.stringify({ alg: "RS256", typ: "JWT" })
-  ).toString("base64url");
-  const now = Math.floor(Date.now() / 1000);
-  const payload = Buffer.from(
-    JSON.stringify({
-      iss: sa.client_email,
-      scope: SCOPE,
-      aud: TOKEN_ENDPOINT,
-      iat: now,
-      exp: now + 3600,
-    })
-  ).toString("base64url");
-
-  const crypto = await import("crypto");
-  const sign = crypto.createSign("RSA-SHA256");
-  sign.update(`${header}.${payload}`);
-  return `${header}.${payload}.${sign.sign(sa.private_key, "base64url")}`;
-};
-
-const postToken = async (body: Record<string, string>): Promise<string> => {
-  const res = await fetch(TOKEN_ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams(body),
-  });
-  if (!res.ok)
-    throw new Error(`Auth failed: ${res.status} ${await res.text()}`);
-  return (await res.json()).access_token;
-};
-
-const adcPath = (): string | null => {
-  const explicit = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-  if (explicit && fs.existsSync(explicit)) return explicit;
-  const appData = process.env.APPDATA;
-  const home = process.env.HOME || process.env.USERPROFILE || "";
-  const candidates = [
-    appData &&
-      path.join(appData, "gcloud", "application_default_credentials.json"),
-    path.join(
-      home,
-      ".config",
-      "gcloud",
-      "application_default_credentials.json"
-    ),
-  ].filter(Boolean) as string[];
-  return candidates.find((p) => fs.existsSync(p)) ?? null;
-};
-
-const getAccessToken = async (): Promise<string> => {
-  const keyPath = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
-  if (keyPath && fs.existsSync(keyPath)) {
-    const sa = JSON.parse(fs.readFileSync(keyPath, "utf-8")) as ServiceAccount;
-    return postToken({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion: await createJwt(sa),
-    });
-  }
-
-  const adc = adcPath();
-  if (adc) {
-    const cred = JSON.parse(fs.readFileSync(adc, "utf-8")) as AuthorizedUser & {
-      type?: string;
-    };
-    if (cred.type === "service_account") {
-      const sa = cred as unknown as ServiceAccount;
-      return postToken({
-        grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-        assertion: await createJwt(sa),
-      });
-    }
-    return postToken({
-      grant_type: "refresh_token",
-      client_id: cred.client_id,
-      client_secret: cred.client_secret,
-      refresh_token: cred.refresh_token,
-    });
-  }
-
-  throw new Error(
-    "No credentials. Set GOOGLE_SERVICE_ACCOUNT_KEY_PATH, or run:\n" +
-      `  gcloud auth application-default login --scopes=openid,${SCOPE}`
-  );
-};
-
 // ── URL 인벤토리 ──
 
 const loadAllowlist = async (source: string): Promise<AllowlistPage[]> => {
@@ -146,11 +53,11 @@ const loadAllowlist = async (source: string): Promise<AllowlistPage[]> => {
   return data.pages ?? [];
 };
 
-const buildUrl = (site: string, params: AllowlistPage): string => {
+const buildUrl = (origin: string, params: AllowlistPage): string => {
   const qs = new URLSearchParams(
     Object.entries(params).map(([k, v]) => [k, String(v)])
   ).toString();
-  return `${site}/search/results?${qs}`;
+  return `${origin}/search/results?${qs}`;
 };
 
 const shapeOf = (params: AllowlistPage): string =>
@@ -158,82 +65,14 @@ const shapeOf = (params: AllowlistPage): string =>
 
 const stratumOf = (params: AllowlistPage): string => {
   const keys = Object.keys(params);
-  if (keys.length === 1 && keys[0] === "q") return "q-only";
-  return "filter-combo";
+  return keys.length === 1 && keys[0] === "q" ? "q-only" : "filter-combo";
 };
 
-// ── 시드 고정 랜덤 표집 ──
-
-const mulberry32 = (seed: number) => () => {
-  seed |= 0;
-  seed = (seed + 0x6d2b79f5) | 0;
-  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
-
-const sample = <T>(items: T[], n: number, seed: number): T[] => {
-  const rand = mulberry32(seed);
-  const idx = items.map((_, i) => i);
-  for (let i = idx.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    [idx[i], idx[j]] = [idx[j], idx[i]];
-  }
-  return idx.slice(0, Math.min(n, items.length)).map((i) => items[i]);
-};
-
-// ── Inspection API ──
-
-type InspectResult = {
+type InspectResult = IndexStatus & {
   url: string;
   stratum: string;
   shape: string;
-  verdict?: string;
-  coverageState?: string;
-  indexingState?: string;
-  robotsTxtState?: string;
-  pageFetchState?: string;
-  lastCrawlTime?: string;
-  googleCanonical?: string;
-  userCanonical?: string;
   error?: string;
-};
-
-const inspect = async (
-  token: string,
-  site: string,
-  url: string
-): Promise<Partial<InspectResult> & { status: number }> => {
-  const res = await fetch(INSPECT_API, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      inspectionUrl: url,
-      siteUrl: site,
-      languageCode: "ko",
-    }),
-  });
-
-  if (!res.ok) {
-    return { status: res.status, error: (await res.text()).slice(0, 300) };
-  }
-
-  const data = await res.json();
-  const idx = data?.inspectionResult?.indexStatusResult ?? {};
-  return {
-    status: 200,
-    verdict: idx.verdict,
-    coverageState: idx.coverageState,
-    indexingState: idx.indexingState,
-    robotsTxtState: idx.robotsTxtState,
-    pageFetchState: idx.pageFetchState,
-    lastCrawlTime: idx.lastCrawlTime,
-    googleCanonical: idx.googleCanonicalUrl,
-    userCanonical: idx.userCanonicalUrl,
-  };
 };
 
 // ── 통계 ──
@@ -257,19 +96,11 @@ const isIndexed = (r: InspectResult): boolean => r.verdict === "PASS";
 
 // ── main ──
 
-const listSites = async (token: string) => {
-  const res = await fetch(
-    "https://searchconsole.googleapis.com/webmasters/v3/sites",
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  console.log(res.status, await res.text());
-};
-
 const main = async () => {
   const args = parseArgs();
 
   if (process.argv.includes("--list-sites")) {
-    await listSites(await getAccessToken());
+    console.log(await listSites(await getAccessToken()));
     return;
   }
 
@@ -282,7 +113,7 @@ const main = async () => {
     shape: shapeOf(p),
   }));
 
-  const picked = sample(inventory, args.limit, args.seed);
+  const picked = sampleItems(inventory, args.limit, args.seed);
   console.log(
     `inventory=${inventory.length} sample=${picked.length} seed=${args.seed}`
   );
@@ -298,13 +129,17 @@ const main = async () => {
       const item = picked[cursor++];
       const n = cursor;
       try {
-        const r = await inspect(token, args.property, item.url);
-        if (r.status === 429) {
+        const { status, ...rest } = await inspectUrl(
+          token,
+          args.property,
+          item.url
+        );
+        if (status === 429) {
           quotaHit = true;
-          console.error(`quota exhausted at ${n}: ${r.error}`);
+          console.error(`quota exhausted at ${n}: ${rest.error}`);
           break;
         }
-        results.push({ ...item, ...r, status: undefined } as InspectResult);
+        results.push({ ...item, ...rest });
       } catch (e) {
         results.push({ ...item, error: String(e) });
       }
