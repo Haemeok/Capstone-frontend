@@ -13,6 +13,11 @@ import {
   normalizeChannelName,
   selectOptimalImages,
 } from "./seo";
+import {
+  resolveTitleAuthor,
+  TITLE_BUDGET,
+  withAuthorSuffix,
+} from "./titleAuthor";
 import { extractYoutubeMetadata } from "./youtube";
 
 export const generateRecipeMetadata = (
@@ -94,7 +99,8 @@ export const generateRecipeMetadata = (
       ? `${recipe.cookingTime}분 완성`
       : "";
 
-  const TITLE_BUDGET = 25;
+  const titleBudget = TITLE_BUDGET.ko;
+  const titleAuthor = resolveTitleAuthor(recipe, youtubeMetadata);
   const normalizedChannel =
     recipeType === "youtube-famous" && youtubeMetadata
       ? normalizeChannelName(youtubeMetadata.channelName)
@@ -105,11 +111,12 @@ export const generateRecipeMetadata = (
   const useChannelTitle =
     !originBracket &&
     channelPrefixedTitle !== null &&
-    channelPrefixedTitle.length <= TITLE_BUDGET;
+    channelPrefixedTitle.length <= titleBudget;
 
-  const pageTitle = useChannelTitle
+  const baseTitle = useChannelTitle
     ? channelPrefixedTitle
     : [titleBracket, recipe.title, timeText].filter(Boolean).join(" ");
+  const pageTitle = withAuthorSuffix(baseTitle, titleAuthor, titleBudget);
   const defaultTitle = `${pageTitle} | ${SEO_CONSTANTS.SITE_NAME}`;
 
   const costInfo = recipe.totalIngredientCost
@@ -193,7 +200,11 @@ export const generateRecipeMetadata = (
   };
 
   if (recipeType === "chef-tv-show" && !originBracket) {
-    const chefPageTitle = `[셰프레시피👨‍🍳] ${recipe.title}`;
+    const chefPageTitle = withAuthorSuffix(
+      `[셰프레시피👨‍🍳] ${recipe.title}`,
+      titleAuthor,
+      titleBudget
+    );
     const chefTitle = `${chefPageTitle} | ${SEO_CONSTANTS.SITE_NAME}`;
     const chefDescription = recipe.description
       ? `${recipe.description} ${recipe.title} 레시피를 레시피오에서 만나보세요!`

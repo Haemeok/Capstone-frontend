@@ -85,7 +85,7 @@ it("T-01 en: og:site_name=Recipio, title 접미사 Recipio", () => {
     translated: true,
   });
   expect(meta.openGraph?.siteName).toBe("Recipio");
-  expect(meta.title).toBe("Oyakodon | Recipio");
+  expect(meta.title).toBe("Oyakodon by きょうの料理 | Recipio");
 });
 
 it("T-02 ja: og:site_name=レシピオ", () => {

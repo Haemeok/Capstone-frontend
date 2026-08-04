@@ -1,7 +1,8 @@
+import { OFFICIAL_ACCOUNT_ID } from "@/shared/config/constants/account";
 import { TOTAL_RECIPE_COUNT } from "@/shared/config/constants/siteStats";
 import type { Locale, TranslatedLocale } from "@/shared/i18n/types";
 
-export const OFFICIAL_ACCOUNT_ID = "Kelb9q6w";
+export { OFFICIAL_ACCOUNT_ID };
 
 type OfficialProfile = {
   nickname: string;

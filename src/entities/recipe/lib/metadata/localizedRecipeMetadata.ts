@@ -13,6 +13,12 @@ import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
 import { generateRecipeJsonLd } from "./recipeMetadata";
+import {
+  resolveTitleAuthor,
+  TITLE_BUDGET,
+  withAuthorSuffix,
+} from "./titleAuthor";
+import { extractYoutubeMetadata } from "./youtube";
 
 export const generateLocalizedRecipeMetadata = (
   recipe: StaticRecipe,
@@ -25,8 +31,13 @@ export const generateLocalizedRecipeMetadata = (
   const siteName = localizedSiteName(locale);
   const canIndex =
     translated && recipe.isIndexed === true && recipe.isRemix !== true;
+  const pageTitle = withAuthorSuffix(
+    recipe.title,
+    resolveTitleAuthor(recipe, extractYoutubeMetadata(recipe)),
+    TITLE_BUDGET[locale]
+  );
   return {
-    title: `${recipe.title} | ${siteName}`,
+    title: `${pageTitle} | ${siteName}`,
     description,
     robots: { index: canIndex, follow: translated },
     ...(canIndex
@@ -38,7 +49,7 @@ export const generateLocalizedRecipeMetadata = (
         }
       : {}),
     openGraph: {
-      title: recipe.title,
+      title: pageTitle,
       description,
       url,
       siteName,
@@ -49,7 +60,7 @@ export const generateLocalizedRecipeMetadata = (
     },
     twitter: {
       card: SEO_CONSTANTS.TWITTER_CARD,
-      title: recipe.title,
+      title: pageTitle,
       description,
       images: [image],
     },

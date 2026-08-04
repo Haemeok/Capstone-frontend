@@ -7,4 +7,5 @@ export * from "./recipeMetadata";
 export * from "./schema";
 export * from "./searchMeta";
 export * from "./seo";
+export * from "./titleAuthor";
 export * from "./youtube";

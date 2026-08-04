@@ -37,7 +37,7 @@ describe("폴백 체인 제목 — 잘림선 안에서 한 훅만 (Slice A)", ()
     const meta = generateRecipeMetadata(recipe, "test-id");
 
     expect(meta.title).not.toContain("90분 완성");
-    expect(meta.title).toBe("김치찌개 | 레시피오");
+    expect(meta.title).toBe("김치찌개 by 요리왕 | 레시피오");
   });
 
   it("T-06: 재료비 1,000원 미만이면 가격 브래킷이 생략된다", () => {
@@ -50,7 +50,7 @@ describe("폴백 체인 제목 — 잘림선 안에서 한 훅만 (Slice A)", ()
     const meta = generateRecipeMetadata(recipe, "test-id");
 
     expect(meta.title).not.toContain("천원");
-    expect(meta.title).toBe("김치찌개 | 레시피오");
+    expect(meta.title).toBe("김치찌개 by 요리왕 | 레시피오");
   });
 
   it("T-08: 재료비 정확히 10,000원이면 [만원💰]", () => {
