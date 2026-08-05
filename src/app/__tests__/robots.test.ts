@@ -19,21 +19,49 @@ describe("robots 사이트맵 등록", () => {
 });
 
 describe("robots allow 규칙", () => {
-  it("T-106: allow 목록에 en/ja 경로가 없다", () => {
+  it("T-106: allow 목록의 en/ja 경로는 생성 도구 경로뿐이다", () => {
     const result = robots();
     for (const rule of result.rules as { allow?: string[] }[]) {
       for (const path of rule.allow ?? []) {
-        expect(path).not.toMatch(/^\/(en|ja)\//);
+        if (!/^\/(en|ja)\//.test(path)) continue;
+        expect(path).toMatch(/^\/(en|ja)\/recipes\/new\/(youtube|ai)$/);
       }
     }
   });
 
-  it("T-107: ko youtube 추출기 allow는 유지된다", () => {
+  it("T-107: youtube·ai 추출기 allow가 전 로케일에 있다", () => {
     const result = robots();
     const base = (
       result.rules as { userAgent?: unknown; allow?: string[] }[]
     ).find((r) => r.userAgent === "*");
-    expect(base?.allow).toEqual(["/", "/recipes/new/youtube"]);
+    expect(base?.allow).toEqual([
+      "/",
+      "/recipes/new/youtube",
+      "/recipes/new/ai",
+      "/en/recipes/new/youtube",
+      "/en/recipes/new/ai",
+      "/ja/recipes/new/youtube",
+      "/ja/recipes/new/ai",
+    ]);
+  });
+
+  it("T-107b: allow 경로는 같은 prefix의 disallow보다 길다 (longest-match 우선)", () => {
+    const result = robots();
+    const base = (
+      result.rules as {
+        userAgent?: unknown;
+        allow?: string[];
+        disallow?: string[];
+      }[]
+    ).find((r) => r.userAgent === "*");
+    for (const allowed of (base?.allow ?? []).filter((p) => p !== "/")) {
+      const blocking = (base?.disallow ?? []).filter((d) =>
+        allowed.startsWith(d)
+      );
+      for (const d of blocking) {
+        expect(allowed.length).toBeGreaterThan(d.length);
+      }
+    }
   });
 
   it("T-108: 어떤 그룹에도 /_next 규칙이 없다 (렌더 리소스 개방)", () => {

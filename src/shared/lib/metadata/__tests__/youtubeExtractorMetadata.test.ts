@@ -34,3 +34,11 @@ it("ja: openGraph.alternateLocale이 ko_KR, en_US 포함", () => {
     expect.arrayContaining(["ko_KR", "en_US"])
   );
 });
+
+it.each(["en", "ja", "ko"] as const)(
+  "%s: 로케일 레이아웃의 Yeti noindex를 index로 덮는다",
+  (locale) => {
+    const m = buildYoutubeExtractorMetadata(locale);
+    expect(m.other).toEqual({ Yeti: "index, follow" });
+  }
+);

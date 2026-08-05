@@ -26,3 +26,5 @@ export const localizedPath = (locale: Locale, path: string): string =>
   locale === "ko" ? path : `${locale}/${path}`;
 
 export const YETI_NOINDEX: Metadata["other"] = { Yeti: "noindex, follow" };
+
+export const YETI_INDEX: Metadata["other"] = { Yeti: "index, follow" };

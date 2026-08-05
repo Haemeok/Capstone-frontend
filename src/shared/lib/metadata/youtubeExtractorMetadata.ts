@@ -10,6 +10,7 @@ import {
   localizedPath,
   localizedSiteName,
   OG_LOCALE,
+  YETI_INDEX,
 } from "./localized";
 
 const YOUTUBE_EXTRACTOR_IMAGE = absoluteUrl("web-app-manifest-512x512.png");
@@ -359,5 +360,6 @@ export const buildYoutubeExtractorMetadata = (locale: Locale): Metadata => {
         "max-snippet": -1,
       },
     },
+    other: YETI_INDEX,
   };
 };
