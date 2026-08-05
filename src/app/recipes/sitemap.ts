@@ -6,7 +6,7 @@ import { localizedPath } from "@/shared/lib/metadata/localized";
 
 import { fetchRecipeSitemapPage } from "@/entities/recipe/model/api.server";
 
-const SITEMAP_CHUNK_SIZE = 20000;
+const SITEMAP_CHUNK_SIZE = 10000;
 const MAX_SITEMAP_CHUNKS = 50;
 
 export async function generateSitemaps() {
