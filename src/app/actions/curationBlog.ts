@@ -62,7 +62,7 @@ export const fetchCurationArticleWithRecipes = async (
   }
 
   const settled = await Promise.all(
-    article.recipeIds.map((id) => getStaticrecipionServer(id))
+    article.recipeIds.map((id) => getStaticrecipionServer(id).catch(() => null))
   );
 
   const recipes: StaticRecipe[] = [];

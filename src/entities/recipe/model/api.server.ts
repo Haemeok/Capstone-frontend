@@ -247,9 +247,12 @@ export const getStaticrecipionServer = async (
       `[getStaticrecipionServer] Failed to fetch recipe ${id}:`,
       error
     );
-    return null;
+    throw error;
   }
 };
+
+const isTransientStatus = (status: number): boolean =>
+  status === 408 || status === 429 || status >= 500;
 
 export const getLocalizedRecipeOnServer = async (
   id: string,
@@ -265,6 +268,10 @@ export const getLocalizedRecipeOnServer = async (
         tags: [CACHE_TAGS.recipe(id)],
       },
     });
+    if (isTransientStatus(res.status)) {
+      throw new Error(`API Error: ${res.status} ${res.statusText}`);
+    }
+
     const body = await res.json().catch(() => null);
     return parseLocalizedRecipeResult(res.status, body);
   } catch (error) {
@@ -272,7 +279,7 @@ export const getLocalizedRecipeOnServer = async (
       `[getLocalizedRecipeOnServer] Failed to fetch recipe ${id} (${locale}):`,
       error
     );
-    return { kind: "notFound" };
+    throw error;
   }
 };
 

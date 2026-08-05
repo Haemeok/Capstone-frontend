@@ -47,7 +47,7 @@ const Page = async ({ params }: Props) => {
   const recipes = await Promise.all(
     data.recipeIds.map(async (id) => {
       const [recipe, status] = await Promise.all([
-        getStaticrecipionServer(id),
+        getStaticrecipionServer(id).catch(() => null),
         getRecipeStatusPublicOnServer(id),
       ]);
       if (!recipe) return null;
