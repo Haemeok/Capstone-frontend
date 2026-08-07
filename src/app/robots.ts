@@ -68,18 +68,28 @@ const AI_TRAINING_BOTS = [
   "Deepseekbot",
 ];
 
-/** 로케일 프리픽스 없이 항상 차단 */
-const ALWAYS_PRIVATE = ["/api/", "/static/"];
+/** 로케일 프리픽스 없이 항상 차단 (admin·dyn·cart·archetype은 ko 전용 라우트) */
+const ALWAYS_PRIVATE = [
+  "/api/",
+  "/static/",
+  "/admin/",
+  "/recipes/admin/",
+  "/recipes/dyn/",
+  "/cart",
+  "/archetype",
+];
 
-/** 로케일 프리픽스 대상 비공개 경로 (공개+noindex 경로는 여기서 빼고 메타로 처리) */
+/** 로케일 프리픽스 대상 크롤 차단 경로 */
 const PRIVATE_PATH_SUFFIXES = [
   "/login",
   "/login/error",
-  "/users/edit",
+  "/users/",
   "/recipes/new",
   "/recipes/*/edit",
   "/recipes/*/rate",
   "/recipes/*/remix",
+  "/recipes/*/comments",
+  "/recipes/private/",
   "/recipes/my-fridge",
   "/recipe-books",
   "/notifications",

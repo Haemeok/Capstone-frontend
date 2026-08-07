@@ -94,8 +94,8 @@ describe("robots 로케일 미러 disallow 규칙", () => {
         "/ja/login",
         "/en/login/error",
         "/ja/login/error",
-        "/en/users/edit",
-        "/ja/users/edit",
+        "/en/users/",
+        "/ja/users/",
         "/en/recipes/new",
         "/ja/recipes/new",
         "/en/recipes/*/edit",
@@ -112,21 +112,26 @@ describe("robots 로케일 미러 disallow 규칙", () => {
     );
   });
 
-  it("T-19b: 공개+noindex 경로(유저 프로필·코멘트)는 disallow하지 않는다", () => {
+  it("T-19c: 코멘트·유저 페이지는 전 로케일·전 UA 그룹에서 disallow한다", () => {
     const result = robots();
-    const base = (result.rules as unknown[]).find(
-      (r: unknown) => (r as Record<string, unknown>).userAgent === "*"
-    ) as Record<string, unknown>;
-    const disallow = (base?.disallow ?? []) as string[];
-    for (const path of [
-      "/users/",
-      "/en/users/",
-      "/ja/users/",
-      "/recipes/*/comments",
-      "/en/recipes/*/comments",
-      "/ja/recipes/*/comments",
-    ]) {
-      expect(disallow).not.toContain(path);
+    const crawlRules = (
+      result.rules as { userAgent?: unknown; disallow?: string[] }[]
+    ).filter((r) => Array.isArray(r.disallow));
+    expect(crawlRules.length).toBeGreaterThanOrEqual(3);
+    for (const rule of crawlRules) {
+      expect(rule.disallow).toEqual(
+        expect.arrayContaining([
+          "/recipes/*/comments",
+          "/en/recipes/*/comments",
+          "/ja/recipes/*/comments",
+          "/users/",
+          "/en/users/",
+          "/ja/users/",
+          "/recipes/private/",
+          "/en/recipes/private/",
+          "/ja/recipes/private/",
+        ])
+      );
     }
   });
 
@@ -140,7 +145,7 @@ describe("robots 로케일 미러 disallow 규칙", () => {
       expect.arrayContaining([
         "/login",
         "/login/error",
-        "/users/edit",
+        "/users/",
         "/recipes/new",
         "/recipes/*/edit",
         "/recipes/*/rate",
@@ -151,12 +156,22 @@ describe("robots 로케일 미러 disallow 규칙", () => {
     );
   });
 
-  it("T-21: ALWAYS_PRIVATE(/api, /static) 회귀 유지", () => {
+  it("T-21: ALWAYS_PRIVATE(/api, /static, admin·dyn·cart·archetype) 회귀 유지", () => {
     const result = robots();
     const base = (result.rules as unknown[]).find(
       (r: unknown) => (r as Record<string, unknown>).userAgent === "*"
     ) as Record<string, unknown>;
     const disallow = (base?.disallow ?? []) as string[];
-    expect(disallow).toEqual(expect.arrayContaining(["/api/", "/static/"]));
+    expect(disallow).toEqual(
+      expect.arrayContaining([
+        "/api/",
+        "/static/",
+        "/admin/",
+        "/recipes/admin/",
+        "/recipes/dyn/",
+        "/cart",
+        "/archetype",
+      ])
+    );
   });
 });
