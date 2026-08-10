@@ -71,6 +71,7 @@ const AI_TRAINING_BOTS = [
 /** 로케일 프리픽스 없이 항상 차단 (admin·dyn·cart·archetype은 ko 전용 라우트) */
 const ALWAYS_PRIVATE = [
   "/api/",
+  "/ingest/",
   "/static/",
   "/admin/",
   "/recipes/admin/",

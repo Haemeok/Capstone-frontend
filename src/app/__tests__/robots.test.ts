@@ -165,6 +165,7 @@ describe("robots 로케일 미러 disallow 규칙", () => {
     expect(disallow).toEqual(
       expect.arrayContaining([
         "/api/",
+        "/ingest/",
         "/static/",
         "/admin/",
         "/recipes/admin/",
@@ -173,5 +174,17 @@ describe("robots 로케일 미러 disallow 규칙", () => {
         "/archetype",
       ])
     );
+  });
+
+  it("T-22: /ingest/(PostHog 프록시)는 모든 UA 그룹에서 disallow한다", () => {
+    const result = robots();
+    const crawlRules = (result.rules as { disallow?: string[] }[]).filter((r) =>
+      Array.isArray(r.disallow)
+    );
+
+    expect(crawlRules.length).toBeGreaterThanOrEqual(3);
+    for (const rule of crawlRules) {
+      expect(rule.disallow).toContain("/ingest/");
+    }
   });
 });
