@@ -275,6 +275,7 @@ export type RecipeQueryParams = NutritionRangeParams & {
 export type RecipeItemsQueryParams = NutritionRangeParams & {
   key: string;
   page?: number;
+  size?: number;
   sort?: string;
   isAiGenerated?: boolean;
   tags?: string[];

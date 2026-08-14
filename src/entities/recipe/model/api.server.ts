@@ -1,7 +1,11 @@
 import { cookies } from "next/headers";
 
 import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
-import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
+import {
+  BASE_API_URL,
+  END_POINTS,
+  PAGE_SIZE,
+} from "@/shared/config/constants/api";
 import type { Locale, TranslatedLocale } from "@/shared/i18n";
 
 import type { LocalizedRecipeResult } from "./localeResult";
@@ -102,7 +106,7 @@ export const getRecipesOnServer = async (
 ): Promise<DetailedRecipesApiResponse> => {
   const query = new URLSearchParams({
     page: String(params.page ?? 0),
-    size: "10",
+    size: String(params.size ?? PAGE_SIZE),
     sort: resolveSortParam(params.sort, "createdAt,desc"),
   });
 
