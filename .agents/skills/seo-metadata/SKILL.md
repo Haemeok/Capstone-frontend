@@ -46,3 +46,7 @@ metadata:
 
 - `keywords` 메타태그는 구글·네이버 모두 무시 — 카피 에너지를 쓰지 말 것. CTR의 진짜 레버는 ① 잘림선 안 첫 문장, ② JSON-LD 리치 결과(별점·video·nutrition).
 - 템플릿 변형(이모지 유무 등)은 추측 영역 — Search Console CTR 기준선 없이 반복 튜닝하지 말 것.
+
+## 추가 규칙
+
+- `metadata-separate-public-and-api-page-numbers` - 페이지네이션 metadata에는 공개 페이지 번호만 전달하고 API의 0-based 번호와 섞지 않는다.
