@@ -268,6 +268,7 @@ type RequestPacer = {
 type InspectionContext = {
   inventory: Inventory;
   token: string;
+  security: SecurityContext;
   events: AuditEvent[];
   pacer: RequestPacer;
   quotaWindow: QuotaWindow;
@@ -281,7 +282,12 @@ type InspectionRequest =
   | { kind: "requested"; response: InspectionResponse }
   | { kind: "recording_timeout" };
 
-type AttemptDecision = "next_url" | "retry" | "stop" | "quota_exhausted";
+type AttemptDecision =
+  | "next_url"
+  | "refresh_auth"
+  | "retry"
+  | "stop"
+  | "quota_exhausted";
 
 type StartedAttempt =
   | { kind: "started"; attempt: ReservedAuditAttempt }
@@ -491,6 +497,7 @@ const getFailureOutcome = (
 };
 
 const getAttemptDecision = (result: AuditResult): AttemptDecision => {
+  if (result.status === 401) return "refresh_auth";
   if (result.outcome === "retryable_error") return "retry";
   if (result.outcome === "rate_limited" || result.outcome === "auth_error") {
     return "stop";
@@ -711,29 +718,106 @@ const getRetryDelay = (retryIndex: number, random: number): number => {
   return base + Math.floor(random * RETRY_JITTER_MS);
 };
 
+const refreshInspectionToken = async (
+  context: InspectionContext,
+  dependencies: AuditDependencies
+): Promise<boolean> => {
+  if (!hasAttemptAllowance(context.quotaWindow, dependencies.clock)) {
+    return false;
+  }
+  context.token = await loadVerifiedToken(dependencies, context.security);
+  return true;
+};
+
+type UrlAttemptState = {
+  hasRefreshedAuth: boolean;
+  networkRetryIndex: number;
+  retryDelay: number;
+};
+
+type FinalAttemptDecision = "next_url" | "quota_exhausted" | "stop";
+
+type UrlAttemptTransition =
+  | { kind: "complete"; decision: FinalAttemptDecision }
+  | { kind: "continue"; state: UrlAttemptState };
+
+const getAuthRefreshTransition = async (
+  context: InspectionContext,
+  state: UrlAttemptState,
+  dependencies: AuditDependencies
+): Promise<UrlAttemptTransition> => {
+  if (state.hasRefreshedAuth) {
+    return { kind: "complete", decision: "stop" };
+  }
+  const refreshed = await refreshInspectionToken(context, dependencies);
+  if (!refreshed) return { kind: "complete", decision: "quota_exhausted" };
+  return {
+    kind: "continue",
+    state: { ...state, hasRefreshedAuth: true, retryDelay: 0 },
+  };
+};
+
+const getNetworkRetryTransition = (
+  state: UrlAttemptState,
+  dependencies: AuditDependencies
+): UrlAttemptTransition => {
+  if (state.networkRetryIndex === RETRY_BASE_MS.length) {
+    return { kind: "complete", decision: "next_url" };
+  }
+  return {
+    kind: "continue",
+    state: {
+      ...state,
+      networkRetryIndex: state.networkRetryIndex + 1,
+      retryDelay: getRetryDelay(
+        state.networkRetryIndex,
+        dependencies.clock.random()
+      ),
+    },
+  };
+};
+
+const getUrlAttemptTransition = async (
+  decision: AttemptDecision,
+  context: InspectionContext,
+  state: UrlAttemptState,
+  dependencies: AuditDependencies
+): Promise<UrlAttemptTransition> => {
+  if (decision === "refresh_auth") {
+    return getAuthRefreshTransition(context, state, dependencies);
+  }
+  if (decision === "retry") {
+    return getNetworkRetryTransition(state, dependencies);
+  }
+  return { kind: "complete", decision };
+};
+
 const inspectPendingUrl = async (
   context: InspectionContext,
   url: string,
   dependencies: AuditDependencies
 ): Promise<AttemptDecision> => {
-  for (
-    let attemptIndex = 0;
-    attemptIndex <= RETRY_BASE_MS.length;
-    attemptIndex += 1
-  ) {
-    const retryDelay =
-      attemptIndex === 0
-        ? 0
-        : getRetryDelay(attemptIndex - 1, dependencies.clock.random());
+  let state: UrlAttemptState = {
+    hasRefreshedAuth: false,
+    networkRetryIndex: 0,
+    retryDelay: 0,
+  };
+  while (true) {
     const decision = await executeAttempt(
       context,
       url,
-      retryDelay,
+      state.retryDelay,
       dependencies
     );
-    if (decision !== "retry") return decision;
+    const transition = await getUrlAttemptTransition(
+      decision,
+      context,
+      state,
+      dependencies
+    );
+    if (transition.kind === "complete") return transition.decision;
+    state = transition.state;
   }
-  return "next_url";
 };
 
 type PendingInspection = {
@@ -776,6 +860,7 @@ const inspectPendingUrls = async (
   const context: InspectionContext = {
     inventory: pending.inventory,
     token,
+    security,
     events: pending.events,
     pacer: { lastStartedAt: null },
     quotaWindow,

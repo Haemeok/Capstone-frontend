@@ -1528,33 +1528,135 @@ describe("recipe GSC index audit walking skeleton", () => {
     expect(await snapshotFiles(fixture.dataDir)).toEqual(before);
   });
 
-  test.each([401, 403])(
-    "T-15: inspect %i는 auth_error 저장 후 다음 URL 없이 중단합니다",
-    async (status) => {
-      const fixture = await createRunFixture(["A", "B"]);
-      directories.push(fixture.dataDir);
-      const inspectedUrls: string[] = [];
-      fixture.dependencies.gsc.inspect = async (_token, _property, url) => {
-        inspectedUrls.push(url);
-        return { status, error: "access denied" };
-      };
+  test("T-21: inspect 401은 토큰을 갱신하고 같은 URL부터 계속합니다", async () => {
+    const fixture = await createRunFixture(["A", "B"]);
+    directories.push(fixture.dataDir);
+    let authenticateCalls = 0;
+    const verifiedTokens: string[] = [];
+    const inspected: Array<{ token: string; url: string }> = [];
+    fixture.dependencies.gsc.authenticate = async () => {
+      authenticateCalls += 1;
+      return authenticateCalls === 1 ? "expired-token" : "refreshed-token";
+    };
+    fixture.dependencies.gsc.verifyProperty = async (token) => {
+      verifiedTokens.push(token);
+    };
+    fixture.dependencies.gsc.inspect = async (token, _property, url) => {
+      inspected.push({ token, url });
+      return token === "expired-token"
+        ? { status: 401, error: "expired" }
+        : createIndexedOutcome(url);
+    };
 
-      await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(
-        0
-      );
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
 
-      const events = await readEvents(getAuditPaths(fixture.dataDir).events);
-      expect(inspectedUrls).toEqual([recipeUrl("A")]);
-      expect(events.filter((event) => event.type === "result")).toEqual([
-        expect.objectContaining({ outcome: "auth_error", status }),
-      ]);
-      expect(await loadSummary(fixture)).toMatchObject({
-        completedUrls: 0,
-        pendingUrls: 2,
-        apiFailureCounts: { auth_error: 1 },
-      });
-    }
-  );
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(authenticateCalls).toBe(2);
+    expect(verifiedTokens).toEqual(["expired-token", "refreshed-token"]);
+    expect(inspected).toEqual([
+      { token: "expired-token", url: recipeUrl("A") },
+      { token: "refreshed-token", url: recipeUrl("A") },
+      { token: "refreshed-token", url: recipeUrl("B") },
+    ]);
+    expect(events.filter((event) => event.type === "result")).toEqual([
+      expect.objectContaining({ outcome: "auth_error", status: 401 }),
+      expect.objectContaining({ outcome: "success", url: recipeUrl("A") }),
+      expect.objectContaining({ outcome: "success", url: recipeUrl("B") }),
+    ]);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 2,
+      pendingUrls: 0,
+      apiFailureCounts: {},
+      recentAttempts: 3,
+    });
+  });
+
+  test("T-21: 갱신한 토큰도 401이면 같은 URL에서 중단합니다", async () => {
+    const fixture = await createRunFixture(["A", "B"]);
+    directories.push(fixture.dataDir);
+    let authenticateCalls = 0;
+    const inspectedUrls: string[] = [];
+    fixture.dependencies.gsc.authenticate = async () => {
+      authenticateCalls += 1;
+      return `access-token-${authenticateCalls}`;
+    };
+    fixture.dependencies.gsc.verifyProperty = async () => undefined;
+    fixture.dependencies.gsc.inspect = async (_token, _property, url) => {
+      inspectedUrls.push(url);
+      return { status: 401, error: "access denied" };
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(authenticateCalls).toBe(2);
+    expect(inspectedUrls).toEqual([recipeUrl("A"), recipeUrl("A")]);
+    expect(events.filter((event) => event.type === "result")).toEqual([
+      expect.objectContaining({ outcome: "auth_error", status: 401 }),
+      expect.objectContaining({ outcome: "auth_error", status: 401 }),
+    ]);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 0,
+      pendingUrls: 2,
+      apiFailureCounts: { auth_error: 1 },
+      recentAttempts: 2,
+    });
+  });
+
+  test("T-21: 401로 마지막 allowance를 쓰면 재인증과 재호출을 하지 않습니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    await appendAttempts(
+      fixture,
+      MAX_ATTEMPTS_24H - 1,
+      "2026-08-13T01:00:00.000Z"
+    );
+    let authenticateCalls = 0;
+    let inspectCalls = 0;
+    fixture.dependencies.gsc.authenticate = async () => {
+      authenticateCalls += 1;
+      return `access-token-${authenticateCalls}`;
+    };
+    fixture.dependencies.gsc.verifyProperty = async () => undefined;
+    fixture.dependencies.gsc.inspect = async () => {
+      inspectCalls += 1;
+      return { status: 401, error: "expired" };
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    expect(authenticateCalls).toBe(1);
+    expect(inspectCalls).toBe(1);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 0,
+      pendingUrls: 1,
+      apiFailureCounts: { auth_error: 1 },
+      recentAttempts: MAX_ATTEMPTS_24H,
+    });
+  });
+
+  test("T-15: inspect 403은 auth_error 저장 후 다음 URL 없이 중단합니다", async () => {
+    const fixture = await createRunFixture(["A", "B"]);
+    directories.push(fixture.dataDir);
+    const inspectedUrls: string[] = [];
+    fixture.dependencies.gsc.inspect = async (_token, _property, url) => {
+      inspectedUrls.push(url);
+      return { status: 403, error: "access denied" };
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(inspectedUrls).toEqual([recipeUrl("A")]);
+    expect(events.filter((event) => event.type === "result")).toEqual([
+      expect.objectContaining({ outcome: "auth_error", status: 403 }),
+    ]);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 0,
+      pendingUrls: 2,
+      apiFailureCounts: { auth_error: 1 },
+    });
+  });
 
   test.each(FAILED_APPEND_EVENT_TYPES)(
     "T-19: %s append 오류는 summary를 보존하고 token을 출력하지 않습니다",
