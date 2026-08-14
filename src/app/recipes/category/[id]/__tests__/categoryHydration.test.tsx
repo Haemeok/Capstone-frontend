@@ -5,11 +5,14 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { getRecipeItems } from "@/entities/recipe";
+import type { DetailedRecipesApiResponse } from "@/entities/recipe/model/types";
 
+import type { CategorySearchParams } from "../categoryPagination";
 import { renderCategoryPage } from "../renderCategoryPage";
 import { makeCategoryPage } from "./categoryTestFixtures";
 
 let mockSetInView: ((inView: boolean) => void) | undefined;
+let mockPathname = "/recipes/category/CHEF_RECIPE";
 
 jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
@@ -21,7 +24,7 @@ jest.mock("next/headers", () => ({
 }));
 
 jest.mock("next/navigation", () => ({
-  usePathname: () => "/recipes/category/CHEF_RECIPE",
+  usePathname: () => mockPathname,
   useParams: () => ({ id: "CHEF_RECIPE" }),
   useRouter: () => ({
     back: jest.fn(),
@@ -79,7 +82,19 @@ const mockedGetRecipeItems = getRecipeItems as jest.MockedFunction<
 >;
 const originalFetch = global.fetch;
 
-const renderHydratedPage = async (serverPage = makeCategoryPage(0, true)) => {
+type HydratedPageOptions = {
+  searchParams?: CategorySearchParams;
+  locale?: "ko" | "ja" | "en";
+  serverPage?: DetailedRecipesApiResponse;
+};
+
+const renderHydratedPage = async ({
+  searchParams = {},
+  locale = "ko",
+  serverPage = makeCategoryPage(0, true),
+}: HydratedPageOptions = {}) => {
+  const localePrefix = locale === "ko" ? "" : `/${locale}`;
+  mockPathname = `${localePrefix}/recipes/category/CHEF_RECIPE`;
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
     json: async () => serverPage,
@@ -87,8 +102,8 @@ const renderHydratedPage = async (serverPage = makeCategoryPage(0, true)) => {
 
   const tree = await renderCategoryPage({
     tagCode: "CHEF_RECIPE",
-    searchParams: {},
-    locale: "ko",
+    searchParams,
+    locale,
   });
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false, staleTime: Infinity } },
@@ -140,6 +155,44 @@ describe("category hydration", () => {
     ).toBeGreaterThan(0);
   });
 
+  it("T-10: 공개 2페이지 끝에서는 API 2페이지를 추가한다", async () => {
+    mockedGetRecipeItems.mockResolvedValue(makeCategoryPage(2, false));
+    await renderHydratedPage({
+      searchParams: { page: "2" },
+      serverPage: makeCategoryPage(1, true),
+    });
+
+    expect(mockedGetRecipeItems).not.toHaveBeenCalled();
+    act(() => mockSetInView?.(true));
+
+    await waitFor(() =>
+      expect(mockedGetRecipeItems).toHaveBeenCalledWith(
+        expect.objectContaining({ pageParam: 2, size: 20 })
+      )
+    );
+  });
+
+  it.each(["ja", "en"] as const)(
+    "T-12: %s 공개 2페이지는 중복 없이 locale API 2페이지를 추가한다",
+    async (locale) => {
+      mockedGetRecipeItems.mockResolvedValue(makeCategoryPage(2, false));
+      await renderHydratedPage({
+        searchParams: { page: "2" },
+        locale,
+        serverPage: makeCategoryPage(1, true),
+      });
+
+      expect(mockedGetRecipeItems).not.toHaveBeenCalled();
+      act(() => mockSetInView?.(true));
+
+      await waitFor(() =>
+        expect(mockedGetRecipeItems).toHaveBeenCalledWith(
+          expect.objectContaining({ pageParam: 2, lang: locale, size: 20 })
+        )
+      );
+    }
+  );
+
   it("T-11: 좋아요순은 별도 query key와 likeCount 정렬을 사용한다", async () => {
     mockedGetRecipeItems.mockResolvedValue(makeCategoryPage(0, false));
     const { queryClient } = await renderHydratedPage();
@@ -171,7 +224,7 @@ describe("category hydration", () => {
   });
 
   it("T-05: 빈 SSR 결과는 빈 상태를 보이고 추가 페이지를 요청하지 않는다", async () => {
-    await renderHydratedPage(makeCategoryPage(0, false, 0));
+    await renderHydratedPage({ serverPage: makeCategoryPage(0, false, 0) });
 
     expect(
       await screen.findByText(/아직 .* 레시피가 없어요/)

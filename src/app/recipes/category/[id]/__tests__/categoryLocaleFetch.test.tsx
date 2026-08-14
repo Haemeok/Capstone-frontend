@@ -12,6 +12,8 @@ type CapturedOptions = {
 let captured: CapturedOptions | null = null;
 let currentPathname = "/recipes/category/CHEF_RECIPE";
 
+jest.mock("next/dynamic", () => () => () => null);
+
 jest.mock("next/navigation", () => ({
   useParams: () => ({ id: "CHEF_RECIPE" }),
   usePathname: () => currentPathname,
@@ -31,17 +33,10 @@ jest.mock("@/shared/hooks/useInfiniteScroll", () => ({
 }));
 
 jest.mock("@/entities/recipe", () => ({
-  getRecipeItems: jest
-    .fn()
-    .mockResolvedValue({
-      content: [],
-      slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
-    }),
-}));
-
-jest.mock("@/shared/ui/SortPicker", () => ({
-  __esModule: true,
-  default: () => null,
+  getRecipeItems: jest.fn().mockResolvedValue({
+    content: [],
+    slice: { size: 0, number: 0, numberOfElements: 0, hasNext: false },
+  }),
 }));
 
 jest.mock("@/widgets/RecipeGrid/ui/RecipeGrid", () => ({
@@ -58,10 +53,17 @@ jest.mock("@/shared/hooks/useSort", () => ({
   }),
 }));
 
-const renderAt = (pathname: string): CapturedOptions => {
-  currentPathname = pathname;
+const renderForLocale = (locale: "ko" | "ja" | "en"): CapturedOptions => {
+  const localePrefix = locale === "ko" ? "" : `/${locale}`;
+  currentPathname = `${localePrefix}/recipes/category/CHEF_RECIPE`;
   captured = null;
-  render(<CategoryDetailClient />);
+  render(
+    <CategoryDetailClient
+      tagCode="CHEF_RECIPE"
+      locale={locale}
+      initialApiPage={1}
+    />
+  );
   if (captured === null) throw new Error("useInfiniteScroll was not called");
   return captured;
 };
@@ -71,29 +73,41 @@ describe("category locale fetch wiring", () => {
     (getRecipeItems as jest.Mock).mockClear();
   });
 
-  it("ja에서 getRecipeItems를 lang:'ja'로 호출한다 (T-27)", async () => {
-    const options = renderAt("/ja/recipes/category/CHEF_RECIPE");
-    await options.queryFn({ pageParam: 0 });
+  it.each(["ja", "en"] as const)(
+    "T-04: %s 카테고리는 locale 언어로 레시피를 요청한다",
+    async (locale) => {
+      const options = renderForLocale(locale);
+      await options.queryFn({ pageParam: 2 });
 
-    expect(getRecipeItems).toHaveBeenCalledWith(
-      expect.objectContaining({ lang: "ja" })
-    );
-  });
+      expect(getRecipeItems).toHaveBeenCalledWith(
+        expect.objectContaining({ pageParam: 2, lang: locale })
+      );
+    }
+  );
 
-  it("ko에서는 lang 파라미터를 보내지 않는다 (T-27 edge)", async () => {
-    const options = renderAt("/recipes/category/CHEF_RECIPE");
-    await options.queryFn({ pageParam: 0 });
+  it("T-04: ko 카테고리는 lang 파라미터 없이 레시피를 요청한다", async () => {
+    const options = renderForLocale("ko");
+    await options.queryFn({ pageParam: 2 });
 
     const call = (getRecipeItems as jest.Mock).mock.calls[0][0];
     expect(call).not.toHaveProperty("lang");
   });
 
-  it("queryKey가 locale을 포함해 ja≠ko로 분리된다 (T-28)", () => {
-    const jaKey = renderAt("/ja/recipes/category/CHEF_RECIPE").queryKey;
-    const koKey = renderAt("/recipes/category/CHEF_RECIPE").queryKey;
+  it.each(["ko", "ja", "en"] as const)(
+    "T-12: %s 공개 2페이지 query key는 locale과 API 1페이지를 구분한다",
+    (locale) => {
+      const queryKey = renderForLocale(locale).queryKey;
 
-    expect(jaKey).toEqual(["recipes", "CHEF_RECIPE", "createdAt,desc", "ja"]);
-    expect(koKey).toEqual(["recipes", "CHEF_RECIPE", "createdAt,desc", "ko"]);
-    expect(jaKey).not.toEqual(koKey);
-  });
+      expect(queryKey).toEqual([
+        "recipes",
+        "category",
+        "CHEF_RECIPE",
+        "createdAt,desc",
+        locale,
+        "USER,AI,YOUTUBE",
+        20,
+        1,
+      ]);
+    }
+  );
 });

@@ -16,6 +16,10 @@ import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 
 import CategoryDetailClient from "./CategoryDetailClient";
 import {
+  type CategorySearchParams,
+  parseCategoryPage,
+} from "./categoryPagination";
+import {
   buildCategoryQueryKey,
   buildCategoryServerQuery,
   CATEGORY_DEFAULT_SORT,
@@ -23,7 +27,7 @@ import {
 
 type RenderCategoryPageArgs = {
   tagCode: TagCode;
-  searchParams: { page?: string };
+  searchParams: CategorySearchParams;
   locale: Locale;
 };
 
@@ -32,10 +36,7 @@ export const renderCategoryPage = async ({
   searchParams,
   locale,
 }: RenderCategoryPageArgs) => {
-  const initialApiPage = Math.max(
-    0,
-    parseInt(searchParams.page || "0", 10) || 0
-  );
+  const { apiPage: initialApiPage } = parseCategoryPage(searchParams.page);
   const context = {
     tagCode,
     sort: CATEGORY_DEFAULT_SORT,
