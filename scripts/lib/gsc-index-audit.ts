@@ -6,6 +6,7 @@ import {
   AUDIT_PROPERTY,
   buildSummary,
   getAuditPaths,
+  getCompletedUrls,
   type Inventory,
   loadInventory,
   readEvents,
@@ -193,6 +194,24 @@ const initializeAudit = async (
   );
 };
 
+const writeSummaryOutput = (
+  summary: ReturnType<typeof buildSummary>,
+  output: AuditOutput
+): void => {
+  const statusCounts = {
+    indexed: summary.indexed,
+    ...summary.coverageStateCounts,
+  };
+  output.stdout(
+    `total=${summary.totalUrls} completed=${summary.completedUrls} pending=${summary.pendingUrls}`
+  );
+  output.stdout(`statusCounts=${JSON.stringify(statusCounts)}`);
+  output.stdout(`apiFailureCounts=${JSON.stringify(summary.apiFailureCounts)}`);
+  output.stdout(
+    `recentAttempts=${summary.recentAttempts} nextAvailableAt=${summary.nextAvailableAt ?? "-"}`
+  );
+};
+
 const saveCurrentSummary = async (
   inventory: Inventory,
   dependencies: AuditDependencies
@@ -205,24 +224,7 @@ const saveCurrentSummary = async (
     dependencies.clock.now().toISOString()
   );
   await saveSummary(paths.summary, summary);
-};
-
-const loadPendingUrl = async (
-  inventory: Inventory,
-  dependencies: AuditDependencies
-): Promise<string | null> => {
-  const events = await readEvents(getAuditPaths(dependencies.dataDir).events);
-  const completedUrls = new Set(
-    events
-      .filter(
-        (event) =>
-          event.type === "result" &&
-          event.outcome === "success" &&
-          event.auditId === inventory.auditId
-      )
-      .map(({ url }) => url)
-  );
-  return inventory.urls.find(({ url }) => !completedUrls.has(url))?.url ?? null;
+  writeSummaryOutput(summary, dependencies.output);
 };
 
 const loadVerifiedToken = async (
@@ -280,37 +282,42 @@ const inspectPendingUrl = async (
   await completeAttempt({ inventory, attemptId, url, token }, dependencies);
 };
 
-const processInspection = async (
-  inventory: Inventory,
-  url: string,
-  dependencies: AuditDependencies
-): Promise<void> => {
-  const token = await loadVerifiedToken(dependencies);
-  await inspectPendingUrl(inventory, url, token, dependencies);
-};
-
 type PendingInspection = {
   inventory: Inventory;
-  url: string | null;
+  urls: string[];
 };
 
 const loadPendingInspection = async (
   dependencies: AuditDependencies
 ): Promise<PendingInspection> => {
-  const inventory = await loadInventory(
-    getAuditPaths(dependencies.dataDir).inventory
-  );
-  const url = await loadPendingUrl(inventory, dependencies);
-  return { inventory, url };
+  const paths = getAuditPaths(dependencies.dataDir);
+  const [inventory, events] = await Promise.all([
+    loadInventory(paths.inventory),
+    readEvents(paths.events),
+  ]);
+  const completedUrls = getCompletedUrls(events, inventory.auditId);
+  const urls = inventory.urls
+    .map(({ url }) => url)
+    .filter((url) => !completedUrls.has(url));
+  return { inventory, urls };
+};
+
+const inspectPendingUrls = async (
+  pending: PendingInspection,
+  dependencies: AuditDependencies
+): Promise<void> => {
+  if (pending.urls.length === 0) return;
+  const token = await loadVerifiedToken(dependencies);
+  for (const url of pending.urls) {
+    await inspectPendingUrl(pending.inventory, url, token, dependencies);
+  }
 };
 
 const processPendingInspection = async (
   pending: PendingInspection,
   dependencies: AuditDependencies
 ): Promise<void> => {
-  if (pending.url !== null) {
-    await processInspection(pending.inventory, pending.url, dependencies);
-  }
+  await inspectPendingUrls(pending, dependencies);
   await saveCurrentSummary(pending.inventory, dependencies);
 };
 

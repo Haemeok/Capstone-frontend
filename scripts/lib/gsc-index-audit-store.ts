@@ -93,6 +93,8 @@ export const SummarySchema = z.object({
   indexed: z.number().int().nonnegative(),
   coverageStateCounts: z.record(z.string(), z.number().int().nonnegative()),
   apiFailureCounts: z.record(z.string(), z.number().int().nonnegative()),
+  firstCheckedAt: z.string().datetime().nullable(),
+  lastCheckedAt: z.string().datetime().nullable(),
   recentAttempts: z.number().int().nonnegative(),
   nextAvailableAt: z.string().datetime().nullable(),
 });
@@ -194,6 +196,29 @@ const getLatestSuccesses = (inventory: Inventory, events: AuditEvent[]) => {
   return successes;
 };
 
+export const getCompletedUrls = (
+  events: AuditEvent[],
+  auditId: string
+): Set<string> =>
+  new Set(
+    events
+      .filter(
+        (event) =>
+          event.type === "result" &&
+          event.outcome === "success" &&
+          event.auditId === auditId
+      )
+      .map(({ url }) => url)
+  );
+
+export const getRecentAttempts = (events: AuditEvent[], now: Date): number => {
+  const cutoff = now.getTime() - 24 * 60 * 60 * 1000;
+  return events.filter(
+    (event) =>
+      event.type === "attempt" && new Date(event.startedAt).getTime() > cutoff
+  ).length;
+};
+
 const getCoverageStateCounts = (
   successes: Map<string, Extract<AuditEvent, { type: "result" }>>
 ): Record<string, number> => {
@@ -206,12 +231,76 @@ const getCoverageStateCounts = (
   return counts;
 };
 
+type AuditResult = Extract<AuditEvent, { type: "result" }>;
+
+const getPendingInventoryUrls = (
+  inventory: Inventory,
+  completedUrls: Set<string>
+): Set<string> =>
+  new Set(
+    inventory.urls
+      .map(({ url }) => url)
+      .filter((url) => !completedUrls.has(url))
+  );
+
+const getLatestFailures = (
+  events: AuditEvent[],
+  auditId: string,
+  pendingUrls: Set<string>
+): Map<string, AuditResult> => {
+  const failures = new Map<string, AuditResult>();
+  events.forEach((event) => {
+    if (
+      event.type === "result" &&
+      event.outcome !== "success" &&
+      event.auditId === auditId &&
+      pendingUrls.has(event.url)
+    ) {
+      failures.set(event.url, event);
+    }
+  });
+  return failures;
+};
+
+const countFailureOutcomes = (
+  failures: Map<string, AuditResult>
+): Record<string, number> => {
+  const counts: Record<string, number> = {};
+  failures.forEach(({ outcome }) => {
+    counts[outcome] = (counts[outcome] ?? 0) + 1;
+  });
+  return counts;
+};
+
+const getApiFailureCounts = (
+  inventory: Inventory,
+  events: AuditEvent[],
+  completedUrls: Set<string>
+): Record<string, number> => {
+  const pendingUrls = getPendingInventoryUrls(inventory, completedUrls);
+  const failures = getLatestFailures(events, inventory.auditId, pendingUrls);
+  return countFailureOutcomes(failures);
+};
+
+const getCheckedAtRange = (
+  successes: Map<string, Extract<AuditEvent, { type: "result" }>>
+): Pick<Summary, "firstCheckedAt" | "lastCheckedAt"> => {
+  const completedAt = [...successes.values()]
+    .map((result) => result.completedAt)
+    .sort((left, right) => Date.parse(left) - Date.parse(right));
+  return {
+    firstCheckedAt: completedAt[0] ?? null,
+    lastCheckedAt: completedAt[completedAt.length - 1] ?? null,
+  };
+};
+
 export const buildSummary = (
   inventory: Inventory,
   events: AuditEvent[],
   generatedAt: string
 ): Summary => {
   const successes = getLatestSuccesses(inventory, events);
+  const completedUrlSet = getCompletedUrls(events, inventory.auditId);
   const completedUrls = successes.size;
   const indexed = [...successes.values()].filter(
     ({ verdict }) => verdict === "PASS"
@@ -225,8 +314,9 @@ export const buildSummary = (
     pendingUrls: inventory.urls.length - completedUrls,
     indexed,
     coverageStateCounts: getCoverageStateCounts(successes),
-    apiFailureCounts: {},
-    recentAttempts: 0,
+    apiFailureCounts: getApiFailureCounts(inventory, events, completedUrlSet),
+    ...getCheckedAtRange(successes),
+    recentAttempts: getRecentAttempts(events, new Date(generatedAt)),
     nextAvailableAt: null,
   });
 };

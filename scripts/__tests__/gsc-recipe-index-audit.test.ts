@@ -14,9 +14,11 @@ import {
   appendEvent,
   AuditEventSchema,
   getAuditPaths,
+  type Inventory,
   InventorySchema,
   loadInventory,
   readEvents,
+  type Summary,
   SummarySchema,
 } from "../lib/gsc-index-audit-store";
 
@@ -27,6 +29,10 @@ type AuditFixture = {
   gscCalls: string[];
   outputMessages: string[];
   sitemapCalls: number[];
+};
+
+type RunFixture = AuditFixture & {
+  inventory: Inventory;
 };
 
 const runCommand: RunAuditCommand = runAuditCommand;
@@ -122,6 +128,151 @@ const loadEvents = async (filePath: string) => {
     .map((line) => AuditEventSchema.parse(JSON.parse(line)));
 };
 
+const createRunFixture = async (ids: string[]): Promise<RunFixture> => {
+  const urls = ids.map(recipeUrl);
+  const fixture = await createFixture([
+    [urls[0]],
+    [urls[1] ?? urls[0]],
+    [urls[2] ?? urls[0]],
+    [urls[3] ?? urls[0]],
+  ]);
+  await runCommand(["--init"], fixture.dependencies);
+  const inventory = await loadInventory(
+    getAuditPaths(fixture.dataDir).inventory
+  );
+  return { ...fixture, inventory };
+};
+
+const loadSummary = async (fixture: AuditFixture): Promise<Summary> =>
+  SummarySchema.parse(await loadJson(getAuditPaths(fixture.dataDir).summary));
+
+type SuccessfulResultInput = {
+  attemptId: string;
+  completedAt: string;
+  coverageState?: string;
+  url: string;
+  verdict: string;
+};
+
+const LATEST_STATUS_RESULTS: SuccessfulResultInput[] = [
+  {
+    attemptId: "success-A",
+    completedAt: "2026-08-13T20:00:00.000Z",
+    coverageState: "Submitted and indexed",
+    url: recipeUrl("A"),
+    verdict: "PASS",
+  },
+  {
+    attemptId: "success-B-old",
+    completedAt: "2026-08-13T21:00:00.000Z",
+    coverageState: "Discovered - currently not indexed",
+    url: recipeUrl("B"),
+    verdict: "NEUTRAL",
+  },
+  {
+    attemptId: "success-B-latest",
+    completedAt: "2026-08-13T22:00:00.000Z",
+    coverageState: "Crawled - currently not indexed",
+    url: recipeUrl("B"),
+    verdict: "NEUTRAL",
+  },
+  {
+    attemptId: "success-C",
+    completedAt: "2026-08-13T23:00:00.000Z",
+    url: recipeUrl("C"),
+    verdict: "NEUTRAL",
+  },
+];
+
+const COMPLETE_STATUS_RESULTS = LATEST_STATUS_RESULTS.filter(
+  ({ attemptId }) => attemptId !== "success-B-old"
+);
+
+const appendSuccessfulResult = async (
+  fixture: RunFixture,
+  input: SuccessfulResultInput
+): Promise<void> =>
+  appendEvent(getAuditPaths(fixture.dataDir).events, {
+    type: "result",
+    auditId: fixture.inventory.auditId,
+    outcome: "success",
+    status: 200,
+    ...input,
+  });
+
+const appendSuccessfulResults = async (
+  fixture: RunFixture,
+  inputs: SuccessfulResultInput[]
+): Promise<void> => {
+  for (const input of inputs) {
+    await appendSuccessfulResult(fixture, input);
+  }
+};
+
+type ApiFailureOutcome =
+  | "rate_limited"
+  | "auth_error"
+  | "request_error"
+  | "retryable_error";
+
+const appendApiFailure = async (
+  fixture: RunFixture,
+  url: string,
+  completedAt: string,
+  outcome: ApiFailureOutcome
+): Promise<void> =>
+  appendEvent(getAuditPaths(fixture.dataDir).events, {
+    type: "result",
+    auditId: fixture.inventory.auditId,
+    attemptId: `failed-${url}`,
+    url,
+    completedAt,
+    outcome,
+    status: 500,
+    error: "request failed",
+  });
+
+const appendRequestError = async (
+  fixture: RunFixture,
+  url: string,
+  completedAt: string
+): Promise<void> =>
+  appendApiFailure(fixture, url, completedAt, "request_error");
+
+const expectLatestStatusSummary = (
+  summary: Summary,
+  inventory: Inventory
+): void => {
+  expect(summary).toEqual({
+    auditId: inventory.auditId,
+    generatedAt: "2026-08-14T00:00:00.000Z",
+    property: "sc-domain:recipio.kr",
+    totalUrls: 4,
+    completedUrls: 3,
+    pendingUrls: 1,
+    indexed: 1,
+    coverageStateCounts: {
+      "Crawled - currently not indexed": 1,
+      "(coverageState 없음)": 1,
+    },
+    apiFailureCounts: { request_error: 1 },
+    firstCheckedAt: "2026-08-13T20:00:00.000Z",
+    lastCheckedAt: "2026-08-13T23:00:00.000Z",
+    recentAttempts: 0,
+    nextAvailableAt: null,
+  });
+};
+
+const expectLatestStatusOutput = (messages: string[]): void => {
+  expect(messages).toEqual([
+    "rows=4 duplicates=0 unique=4",
+    "total=4 completed=3 pending=1",
+    'statusCounts={"indexed":1,"Crawled - currently not indexed":1,"(coverageState 없음)":1}',
+    'apiFailureCounts={"request_error":1}',
+    "recentAttempts=0 nextAvailableAt=-",
+  ]);
+};
+
 describe("recipe GSC index audit walking skeleton", () => {
   const directories: string[] = [];
 
@@ -202,7 +353,7 @@ describe("recipe GSC index audit walking skeleton", () => {
     }
   );
 
-  test("T-03: 첫 미완료 URL 검사 결과를 이벤트와 요약에 반영합니다", async () => {
+  test("T-03: 한 번 실행해 모든 미완료 URL의 결과를 이벤트와 요약에 반영합니다", async () => {
     const fixture = await createFixture([
       [recipeUrl("A")],
       [recipeUrl("B")],
@@ -219,7 +370,16 @@ describe("recipe GSC index audit walking skeleton", () => {
 
     const paths = getAuditPaths(fixture.dataDir);
     const events = await loadEvents(paths.events);
-    expect(events.map(({ type }) => type)).toEqual(["attempt", "result"]);
+    expect(events.map(({ type }) => type)).toEqual([
+      "attempt",
+      "result",
+      "attempt",
+      "result",
+      "attempt",
+      "result",
+      "attempt",
+      "result",
+    ]);
     expect(events[0].attemptId).toBe(events[1].attemptId);
     expect(events[1]).toMatchObject({
       url: recipeUrl("A"),
@@ -230,9 +390,9 @@ describe("recipe GSC index audit walking skeleton", () => {
     const summary = SummarySchema.parse(await loadJson(paths.summary));
     expect(summary).toMatchObject({
       totalUrls: 4,
-      completedUrls: 1,
-      pendingUrls: 3,
-      indexed: 1,
+      completedUrls: 4,
+      pendingUrls: 0,
+      indexed: 4,
     });
   });
 
@@ -292,7 +452,7 @@ describe("recipe GSC index audit walking skeleton", () => {
       `inspect:sc-domain:recipio.kr:${firstUrl}`
     );
     const summary = SummarySchema.parse(await loadJson(paths.summary));
-    expect(summary).toMatchObject({ completedUrls: 1, pendingUrls: 3 });
+    expect(summary).toMatchObject({ completedUrls: 4, pendingUrls: 0 });
   });
 
   test("Task 1: source index가 0부터 3까지 정확히 한 번씩 없으면 inventory를 거부합니다", () => {
@@ -381,5 +541,144 @@ describe("recipe GSC index audit walking skeleton", () => {
     expect(await readFile(paths.inventory)).toEqual(before.inventory);
     expect(await readFile(paths.events)).toEqual(before.events);
     expect(await readFile(paths.summary)).toEqual(before.summary);
+  });
+
+  test("T-06: 재개 시 완료 URL을 건너뛰고 미완료 URL만 검사합니다", async () => {
+    const fixture = await createRunFixture(["A", "B"]);
+    directories.push(fixture.dataDir);
+    await appendSuccessfulResult(fixture, {
+      attemptId: "completed-A",
+      completedAt: "2026-08-13T22:00:00.000Z",
+      coverageState: "Submitted and indexed",
+      url: recipeUrl("A"),
+      verdict: "PASS",
+    });
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    expect(fixture.gscCalls).toEqual([
+      "authenticate",
+      "verify:sc-domain:recipio.kr",
+      `inspect:sc-domain:recipio.kr:${recipeUrl("B")}`,
+    ]);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 2,
+      pendingUrls: 0,
+    });
+    fixture.gscCalls.length = 0;
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    expect(fixture.gscCalls).toEqual([]);
+  });
+
+  test("T-07: 결과 없는 시도는 재검사하고 최근 24시간 시도에 포함합니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    await appendEvent(getAuditPaths(fixture.dataDir).events, {
+      type: "attempt",
+      auditId: fixture.inventory.auditId,
+      attemptId: "orphan-attempt",
+      url: recipeUrl("A"),
+      startedAt: "2026-08-13T23:00:00.000Z",
+    });
+    await appendEvent(getAuditPaths(fixture.dataDir).events, {
+      type: "attempt",
+      auditId: "different-audit",
+      attemptId: "other-audit-attempt",
+      url: recipeUrl("outside-inventory"),
+      startedAt: "2026-08-13T22:00:00.000Z",
+    });
+    await appendEvent(getAuditPaths(fixture.dataDir).events, {
+      type: "attempt",
+      auditId: "different-audit",
+      attemptId: "cutoff-attempt",
+      url: recipeUrl("outside-inventory"),
+      startedAt: "2026-08-13T00:00:00.000Z",
+    });
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    expect(fixture.gscCalls).toContain(
+      `inspect:sc-domain:recipio.kr:${recipeUrl("A")}`
+    );
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 1,
+      pendingUrls: 0,
+      recentAttempts: 3,
+    });
+  });
+
+  test("T-08: 재개 시 sitemap을 다시 읽지 않고 저장된 inventory 순서를 사용합니다", async () => {
+    const fixture = await createRunFixture(["A", "B", "C"]);
+    directories.push(fixture.dataDir);
+    fixture.sitemapCalls.length = 0;
+    fixture.dependencies.sitemap = createSitemapGateway(
+      [[recipeUrl("Z")], [recipeUrl("Z")], [recipeUrl("Z")], [recipeUrl("Z")]],
+      fixture.sitemapCalls
+    );
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    expect(fixture.sitemapCalls).toEqual([]);
+    expect(fixture.gscCalls).toEqual([
+      "authenticate",
+      "verify:sc-domain:recipio.kr",
+      `inspect:sc-domain:recipio.kr:${recipeUrl("A")}`,
+      `inspect:sc-domain:recipio.kr:${recipeUrl("B")}`,
+      `inspect:sc-domain:recipio.kr:${recipeUrl("C")}`,
+    ]);
+  });
+
+  test("T-05: 최신 성공 상태와 미완료 URL의 최신 API 실패만 요약합니다", async () => {
+    const fixture = await createRunFixture(["A", "B", "C", "D"]);
+    directories.push(fixture.dataDir);
+    await appendRequestError(
+      fixture,
+      recipeUrl("A"),
+      "2026-08-13T19:00:00.000Z"
+    );
+    await appendSuccessfulResults(fixture, LATEST_STATUS_RESULTS);
+    await appendApiFailure(
+      fixture,
+      recipeUrl("D"),
+      "2026-08-13T23:15:00.000Z",
+      "retryable_error"
+    );
+    await appendRequestError(
+      fixture,
+      recipeUrl("D"),
+      "2026-08-13T23:30:00.000Z"
+    );
+
+    await expect(runCommand(["--summary"], fixture.dependencies)).resolves.toBe(
+      0
+    );
+
+    expectLatestStatusSummary(await loadSummary(fixture), fixture.inventory);
+    expectLatestStatusOutput(fixture.outputMessages);
+  });
+
+  test("T-09: 완료 시 상태별 개수의 합이 전체 URL 개수와 같습니다", async () => {
+    const fixture = await createRunFixture(["A", "B", "C"]);
+    directories.push(fixture.dataDir);
+    await appendSuccessfulResults(fixture, COMPLETE_STATUS_RESULTS);
+
+    await expect(runCommand(["--summary"], fixture.dependencies)).resolves.toBe(
+      0
+    );
+
+    const summary = await loadSummary(fixture);
+    const coverageTotal = Object.values(summary.coverageStateCounts).reduce(
+      (sum, count) => sum + count,
+      0
+    );
+    expect(summary).toMatchObject({
+      totalUrls: 3,
+      completedUrls: 3,
+      pendingUrls: 0,
+      indexed: 1,
+    });
+    expect(summary.indexed + coverageTotal).toBe(summary.totalUrls);
   });
 });
