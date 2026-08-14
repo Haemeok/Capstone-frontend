@@ -1,0 +1,4 @@
+interface:
+  display_name: "개발 브랜치 마무리"
+  short_description: "검증·통합 선택·정리·교훈 축적으로 개발 작업을 마칩니다"
+  default_prompt: "Use $finishing-a-development-branch to verify and complete this finished development branch safely."

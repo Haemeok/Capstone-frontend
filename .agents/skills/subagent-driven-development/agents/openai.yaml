@@ -1,0 +1,4 @@
+interface:
+  display_name: "병렬 서브에이전트 개발"
+  short_description: "독립적인 구현 계획 작업을 병렬 묶음으로 실행하고 검토합니다"
+  default_prompt: "Use $subagent-driven-development to execute this approved implementation plan in safe parallel batches."

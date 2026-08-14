@@ -1,0 +1,4 @@
+interface:
+  display_name: "기술 글 개요 설계"
+  short_description: "승인된 논지를 섹션 구조와 강조 예산에 맞는 개요로 바꿉니다"
+  default_prompt: "Use $writing-outline to turn this approved thesis into a structured article outline."

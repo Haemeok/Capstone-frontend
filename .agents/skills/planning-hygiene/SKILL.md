@@ -1,0 +1,78 @@
+---
+name: planning-hygiene
+description: Planning-time discipline rules — what to do BEFORE touching code when authoring an implementation plan. Covers fabricating lookup/config/pricing tables instead of reusing existing ones, inventing external-API-controlled values (model IDs, prices), subagent dispatch shape and git staging in a shared worktree, and planning codebase-wide mechanical lint/refactor cleanups (linter-as-oracle, whole-file pre-commit leakage, deferral markers). Reference when scoping a feature that depends on vendor pricing or catalogs, dispatching subagents that commit, or planning a lint/cleanup sweep.
+license: MIT
+metadata:
+  author: recipio
+  version: "0.1.0"
+---
+
+# Planning Hygiene
+
+Plans look professional but ship bugs when they fabricate values that should have been looked up. This skill captures rules for what to do BEFORE writing the plan, not while writing code.
+
+## When to Apply
+
+Reference these guidelines when:
+
+- Authoring an implementation plan that introduces pricing, cost estimation, or per-model configuration.
+- Naming a third-party model, endpoint, or product variant in a plan or code comment.
+- About to write a new `*Pricing.ts`, `*Config.ts`, `models.ts`, or any lookup-table-shaped module.
+- Deciding default values for tunables that map onto real billing or external API contracts.
+
+## Rule Categories
+
+| Prefix      | Topic                                                       |
+| ----------- | ----------------------------------------------------------- |
+| `lookup-`   | Reuse existing lookup tables before authoring parallel ones |
+| `external-` | External-source-of-truth values (vendor IDs, prices, rates) |
+| `scope-`    | Disambiguating user intent before committing to a plan      |
+| `dispatch-` | Subagent dispatch shape and git staging at plan time        |
+| `cleanup-`  | Planning a codebase-wide mechanical lint/refactor cleanup   |
+| `no-`       | Anti-patterns to avoid emitting in plans or generated code  |
+
+## Quick Reference
+
+### Lookup tables
+
+- `lookup-search-before-fabricating` — Before writing a new pricing/config/catalog file, grep the project for an existing table in the same domain. Adjacent admin pages often already encode the values you'd reach for.
+
+### External facts
+
+- `external-no-reasonable-defaults-for-billing` — When a value maps to real billing (per-image cost, per-second rate, model ID), never plug in a "reasonable default" without sourcing it from authoritative docs OR from an existing place in the codebase that already calls the same API. Cite the source in a comment.
+
+### Scope disambiguation
+
+- `scope-confirm-mode-vs-mechanism` — Vague feature requests often have two valid readings: a new mechanism on top of existing flow, OR a mode the underlying API already supports. Read the API surface first; if both readings are valid, ask one disambiguating question rather than committing to a multi-task plan for the bigger reading.
+
+### Subagent dispatch
+
+- `dispatch-mcp-tools-force-sequential-subagents` — MCP servers (Playwright, Vercel, etc.) are session-scoped, not per-subagent. Parallel subagents sharing the same MCP tool will contend on one connection. At plan time, classify each subagent's tools — anything `mcp__*` forces sequential dispatch. Decide in the plan, not at runtime.
+- `dispatch-explicit-staging-shared-worktree` — A subagent commits in the same working tree the user may be editing in parallel. `git add -A` sweeps their unrelated WIP into your commit. Stage only the exact paths the task touched, and tell the subagent to ignore `tsc`/test errors in files it didn't touch (those are the user's WIP).
+- `dispatch-pathspec-leaks-foreign-hunks-in-shared-file` — Even correct per-file staging leaks: `git add <file>` stages the file's whole blob, so a hot shared file (types/`index.ts`/barrel) co-edited in parallel carries the other workstream's hunks into your commit. Before committing a shared file, `git diff <file>` for foreign hunks, `git add -p` only yours, and confirm `git diff --cached <file>`.
+- `dispatch-lint-staged-defeats-partial-staging` — `git add -p` isolation dies under a `lint-staged`/`husky` pre-commit hook that re-`git add`s the whole formatted file (and is interactive, so it won't run in an agent harness anyway). Isolate via remove-commit-restore: edit the foreign hunks out of the working tree, commit your clean full-file delta, then restore them.
+- `dispatch-no-amend-on-parallel-branch` — `git commit --amend` rewrites whatever HEAD points to now; on a branch a parallel session also commits to, HEAD advances mid-check and your amend lands on _their_ commit (rewriting their SHA, absorbing your hunk). Chaining `git log -1 && git commit --amend` defeats the guard. On shared/parallel branches: new commits only, never amend.
+- `dispatch-rebaseline-before-executing-stale-plan` — A long planning chain is authored against a snapshot that keeps moving on a shared branch; by execution time the plan's _architecture_ may be superseded by parallel commits. Before dispatching task 1, `git log`/`git status`/`git grep` the target area; if a divergent pattern already shipped, realign to it (build only the gap) and surface the architecture choice to the user instead of executing the stale plan.
+- `dispatch-lint-forces-out-of-scope-refactor` — `lint-staged` lints the whole touched file, so a one-line edit fails on a _pre-existing_ violation you never triggered. Don't refactor runtime semantics (e.g. effect→event-handler) to clear it inside an unrelated feature commit — a passing rule is a shape check, not a behavior check. Report the blocker, or do a verified behavior-preserving fix and flag it.
+
+### Cleanup planning
+
+- `cleanup-whole-file-hook-leaks-rule-slices` — When a lint cleanup is sliced by rule but a pre-commit hook lints the whole touched file, a file with multiple rules' violations forces the first slice that touches it to silence the others' errors too. Defer out-of-scope rules with a grep-able `-- deferred to #N` marker (suppressed violations vanish from linter output, so the deferred issue's scope = lint errors ∪ grep of the marker).
+- `cleanup-linter-is-the-test-oracle` — For a no-behavior-change lint/refactor cleanup, the linter's rule count is the red→green oracle (red = N, green = 0); existing tests + `tsc` + `build` guard behavior. Don't invent new unit tests to satisfy a TDD gate. Attach a real behavior-preservation review only to behavior-adjacent slices.
+- `cleanup-tsc-is-the-consumer-oracle` — For a shared-type-contract migration (a DTO/alias changing shape), the consumer set is whatever `tsc --noEmit` reports, not your hand-enumerated task list. Change the type first to go red everywhere, then make a full project-wide tsc sweep the mandatory closing gate — it finds the indirect consumers (forwarding hooks, inline fallbacks) enumeration always misses.
+- `cleanup-baseline-freeze-keeps-existing-at-warn` — To freeze remaining violations (block new, tolerate old), set the rule to `error` by default but pin the existing-violation files to `warn` via a generated baseline list — not global `error` (blocks unrelated edits to legacy files) or `off` (hides the debt). Relies on pre-commit/CI failing only on `error`; confirm that asymmetry first.
+
+### Anti-patterns
+
+- `no-file-path-header-comments` — Never write the file's own path as a header comment. It duplicates info the editor shows, lies the moment the file moves, and turns "rename one file" into "fix N comments." Don't bake this into plan templates either; implementers will copy it faithfully.
+
+## How to Use
+
+Read individual rule files for the failure mode, the example, and the heuristic:
+
+```
+rules/lookup-search-before-fabricating.md
+rules/external-no-reasonable-defaults-for-billing.md
+```
+
+Each rule starts with the symptom (what someone almost shipped) and ends with the search-or-source command that would have caught it during planning.

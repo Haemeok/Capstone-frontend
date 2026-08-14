@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub 이슈 흐름"
+  short_description: "별도 추적할 작업을 표준 GitHub 이슈로 만들고 PR에 연결합니다"
+  default_prompt: "Use $github-issue-flow to draft and create a tracked GitHub issue for this out-of-scope item."

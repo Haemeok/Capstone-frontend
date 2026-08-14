@@ -1,0 +1,4 @@
+interface:
+  display_name: "검증된 교훈 축적"
+  short_description: "검증된 디버깅·작업 교훈을 프로젝트 스킬에 축적합니다"
+  default_prompt: "Use $compounding-lessons to capture a verified, reusable lesson from this session."

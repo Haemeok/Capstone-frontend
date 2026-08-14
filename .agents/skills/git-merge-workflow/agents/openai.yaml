@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git 병합 워크플로"
+  short_description: "GitHub 병합 제약과 충돌 상태를 확인해 안전한 통합법을 고릅니다"
+  default_prompt: "Use $git-merge-workflow to diagnose this GitHub merge state and choose a safe integration path."

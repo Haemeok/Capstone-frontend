@@ -1,0 +1,4 @@
+interface:
+  display_name: "GA4 BigQuery 분석"
+  short_description: "Recipio GA4 원시 이벤트를 BigQuery SQL로 분석합니다"
+  default_prompt: "Use $ga4-bigquery to analyze this Recipio GA4 traffic question with BigQuery."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "WebView 햅틱 피드백"
+  short_description: "Recipio 인터랙션에 맞는 햅틱 강도와 호출 시점을 적용합니다"
+  default_prompt: "Use $haptic-feedback to apply the correct WebView haptic behavior to this interaction."

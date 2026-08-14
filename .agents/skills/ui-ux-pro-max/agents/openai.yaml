@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI/UX Pro Max"
+  short_description: "제품 유형과 기술 스택에 맞는 디자인 시스템과 UX 규칙을 제안합니다"
+  default_prompt: "Use $ui-ux-pro-max to create a fitting design system and UX guidance for this interface."

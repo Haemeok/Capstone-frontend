@@ -1,0 +1,4 @@
+interface:
+  display_name: "요구사항 기반 테스트 설계"
+  short_description: "승인된 요구사항을 시나리오와 테스트 추적표로 변환합니다"
+  default_prompt: "Use $designing-tests-from-requirements to map every approved acceptance criterion to concrete tests."

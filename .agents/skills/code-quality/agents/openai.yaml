@@ -1,0 +1,4 @@
+interface:
+  display_name: "Recipio 코드 품질"
+  short_description: "React·Next.js 코드의 저장소 품질 규칙을 점검합니다"
+  default_prompt: "Use $code-quality to review this React or Next.js change against the repository quality rules."

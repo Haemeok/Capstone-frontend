@@ -1,0 +1,4 @@
+interface:
+  display_name: "수직 슬라이스 분해"
+  short_description: "승인된 기능을 사용자 행동 중심 슬라이스와 인수 조건으로 나눕니다"
+  default_prompt: "Use $vertical-slicing to break this approved feature into user-observable slices with acceptance criteria."

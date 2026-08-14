@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vercel React 성능 규칙"
+  short_description: "React·Next.js 코드의 워터폴·번들·렌더링 성능을 점검합니다"
+  default_prompt: "Use $vercel-react-best-practices to review this React or Next.js code for performance issues."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "PostHog 트래픽 분석"
+  short_description: "Recipio 운영 트래픽과 이상 징후를 HogQL로 분석합니다"
+  default_prompt: "Use $posthog-analytics to investigate this Recipio traffic anomaly with the required verification workflow."

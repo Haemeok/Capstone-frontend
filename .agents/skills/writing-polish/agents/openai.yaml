@@ -1,0 +1,4 @@
+interface:
+  display_name: "기술 글 최종 다듬기"
+  short_description: "완성된 초안을 AI 문체·독자 전달력·강조 기준으로 검증합니다"
+  default_prompt: "Use $writing-polish to run the final three-pass polish on this completed technical article draft."

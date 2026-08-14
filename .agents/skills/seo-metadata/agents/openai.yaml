@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEO 메타데이터 카피"
+  short_description: "검색결과와 공유카드에 맞는 제목·설명 메타데이터를 설계합니다"
+  default_prompt: "Use $seo-metadata to improve this page title and description for search results and social sharing."

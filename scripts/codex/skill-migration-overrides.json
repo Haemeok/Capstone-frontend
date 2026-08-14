@@ -1,0 +1,107 @@
+{
+  "brainstorming/scripts/frame-template.html": {
+    "reason": "Codex-neutral embedded content identifier",
+    "sourceSha256": "fb22ba9d47f3b83b56e0a95d52a3c2727db03b0d4365078d92c850293a62457b",
+    "targetSha256": "16528cb0ccd9d5b870c7847a4fedb4820700056c4df7ec1012a5c299224115bf"
+  },
+  "brainstorming/spec-document-reviewer-prompt.md": {
+    "reason": "Codex subagent dispatch syntax",
+    "sourceSha256": "12cb5ed58aef41b8da6fbb505547c71ca3f5658c83b66ca6e556c936308b3189",
+    "targetSha256": "77b04d4e5dcc52e95a596788899e5e46b0373272c3c94e0a4b9cf4f94b0c745f"
+  },
+  "brainstorming/visual-companion.md": {
+    "reason": "Codex process and file-edit tooling",
+    "sourceSha256": "a2bc6fc47d0df1df981d02f707a16225b147f462e7059175ad2bc5e6dd29fcae",
+    "targetSha256": "25a7aee670cf3d5f3ff7fed917478788a85d948dd418613bc083534bee3cc925"
+  },
+  "code-quality/SKILL.md": {
+    "reason": "Codex project path references",
+    "sourceSha256": "9e6d640747589d51c48737ddd5c7832ac8787f8998866e40c4a2f1a14042da35",
+    "targetSha256": "2fd503d7795a2321ce5064486b5bd59be9724ade598e2846bb1d8ca093e88573"
+  },
+  "code-quality/rules/policy-no-comments.md": {
+    "reason": "Codex tool naming",
+    "sourceSha256": "a7aae1fd6d5ca0a545bc3ac412fc95f5fef816e21711eed3a86cd575e4917e57",
+    "targetSha256": "ca3f05d80c4149907abc040161284817efe30ebdcd9c7b72b9f3f92695990402"
+  },
+  "compounding-lessons/SKILL.md": {
+    "reason": "Codex project path references",
+    "sourceSha256": "e0bf5beaf91673ed9b8a928a4cee082e4cad15f5230bd82fd8e4afa23b303f63",
+    "targetSha256": "5a842a06da405ce8038c32a17d4f355a5291ffd43861fd4992624b94e4431ca3"
+  },
+  "finishing-a-development-branch/SKILL.md": {
+    "reason": "Codex workflow naming",
+    "sourceSha256": "db33982cac9af2e2a36204e17cb2820ed0588fc0ccbb39c956ff73118cb55129",
+    "targetSha256": "8459b2fede8a804ccc2f8684f7dc06677572ff1777a5ba36cd450510489ed732"
+  },
+  "github-issue-flow/SKILL.md": {
+    "reason": "Codex state path",
+    "sourceSha256": "b59861105f576f6fc9469257e60e936a2992db13f7c668c1ea32a02a3a347da5",
+    "targetSha256": "a9412a6325072f26b542af224aa7b57539b5ae52e5336801b39dc0b8586044e1"
+  },
+  "haptic-feedback/SKILL.md": {
+    "reason": "Codex project path references",
+    "sourceSha256": "6dcdd469c18faf6a073ef46715a4fcf06187f1246bbdeaf47fd62a7c99e7ed78",
+    "targetSha256": "199ba69fe0cd8a9fa8727f6e547d03150f1dc01968e85e5a43058bcea184e9ec"
+  },
+  "planning-hygiene/rules/dispatch-mcp-tools-force-sequential-subagents.md": {
+    "reason": "Codex subagent terminology",
+    "sourceSha256": "c3f538d0a403a907cf11642d019bd12b8f523621a1f1904ebadd438f300483e8",
+    "targetSha256": "937e4022073b902eb83d095b423b80047f5ff31a2498d4bc338583b92e4b4b3e"
+  },
+  "planning-hygiene/rules/no-file-path-header-comments.md": {
+    "reason": "Codex patch syntax",
+    "sourceSha256": "3c569b94025840d80f9c88418fb515e706c47f080cfc9cc843356586bfbb6d99",
+    "targetSha256": "a2ceea88f6b7d1b8c46b227ad976c7e18d2136ccc50ab6d88fba90154e9b675c"
+  },
+  "posthog-analytics/SKILL.md": {
+    "reason": "Codex project path references",
+    "sourceSha256": "a08a5a9050b0f5c7980e2f610f36c4c170084622be54b7c3cc03296a5a343d7f",
+    "targetSha256": "b01506cdd48db9571f83c012edede52630b352ea4dc1d3522e4559bf17db143d"
+  },
+  "subagent-driven-development/SKILL.md": {
+    "reason": "Codex subagent workflow and GPT model routing",
+    "sourceSha256": "a9a4d894a21c0c2817f666146da7099e71759a7a5813190cbbdf8794a61b6a9f",
+    "targetSha256": "db4dfce1dd16be28c468c0226ec7e8eef3f9cf2e73935ecc11d88b922297b1e6"
+  },
+  "tech-writing/SKILL.md": {
+    "reason": "Codex progressive-disclosure layout",
+    "sourceSha256": "bbd2c8bd6498c08a11eac079ebe937e718e868623e26d249907a391f05115108",
+    "targetSha256": "050f6670f48650d8b90595f357d48d044d53ca7669d557b84b714ebb2e02a790"
+  },
+  "ui-ux-pro-max/scripts/search.py": {
+    "reason": "Codex-neutral agent output wording",
+    "sourceSha256": "e924de555714fe612398d36f30c1d2514339a881d68a018fdbdc0b5589330de3",
+    "targetSha256": "da7403910b6cace366289ecea8ac6429d26c32efb05f8d2ff319181f170541bc"
+  },
+  "writing-drafting/SKILL.md": {
+    "reason": "Codex workflow naming",
+    "sourceSha256": "0b542822849b01ccf760750baf4b9deab5edfc73f7492006123aeddbeacd9de8",
+    "targetSha256": "33109a37c5ed46ff52a709821af00e051ae3944d625eb579bd7ec3260a571623"
+  },
+  "writing-outline/SKILL.md": {
+    "reason": "Codex workflow naming",
+    "sourceSha256": "f2641e36a7bd368d0d01ec587fcf758d25f440987c89249a83e2674262318247",
+    "targetSha256": "0cdd888cb29a99db9e585ae3f9b5d4feea53591e8d2c012edd647e613c7477ba"
+  },
+  "writing-plans/SKILL.md": {
+    "reason": "Codex subagent workflow and git safety",
+    "sourceSha256": "a9da8d592684ffd82eea96146ef1865902dbc52d7779da4650a1c2dbe00073fa",
+    "targetSha256": "5ff216558c94749adbafdab6954959c4f2e67ffe6c9d682684d46b01ec5904c2"
+  },
+  "writing-plans/plan-document-reviewer-prompt.md": {
+    "reason": "Codex subagent dispatch syntax",
+    "sourceSha256": "6fce2aa83c63715697e9dd86050c820716100b91efbd9f12bab8477ecc060256",
+    "targetSha256": "393925b6d7a2fe94be796ee936097a5e61db06e3f8657790af404e8e092d9461"
+  },
+  "writing-polish/SKILL.md": {
+    "reason": "Codex workflow naming",
+    "sourceSha256": "11d8b8ad74feac23732578a50f446f84638659393443bc225bd3b81c68ff1dbf",
+    "targetSha256": "6c15f70813220007d5267a5a891ae7b519f3e34ab50eeda624977ac3e3a455b9"
+  },
+  "writing-thesis/SKILL.md": {
+    "reason": "Codex workflow naming",
+    "sourceSha256": "447c02c272c5d68e265d574daa687c19e53ecfc04afd7d8066b36fbd517e9248",
+    "targetSha256": "c4e317c66c2850a50f51da71766e177c2abf84252904075bf9bb986e0f94fedc"
+  }
+}

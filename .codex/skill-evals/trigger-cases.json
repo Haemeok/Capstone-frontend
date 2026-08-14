@@ -1,0 +1,242 @@
+[
+  {
+    "skill": "brainstorming",
+    "query": "새 냉장고 공유 기능을 만들고 싶은데 요구사항부터 같이 정리해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "brainstorming",
+    "query": "이미 승인된 공유 기능 계획 그대로 구현해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "code-quality",
+    "query": "이 React 컴포넌트 구조와 타입 안전성을 리뷰해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "code-quality",
+    "query": "어제 GA4 방문자 수만 조회해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "compounding-lessons",
+    "query": "이번 디버깅에서 확인한 재발 방지 규칙을 스킬에 남겨줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "compounding-lessons",
+    "query": "현재 브랜치 변경 파일만 보여줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "designing-tests-from-requirements",
+    "query": "승인된 요구사항별로 어떤 테스트가 필요한지 매트릭스를 설계해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "designing-tests-from-requirements",
+    "query": "이 Jest 테스트 실패 원인만 진단해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "finishing-a-development-branch",
+    "query": "구현과 검증이 끝났으니 이 브랜치를 어떻게 마무리할지 진행해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "finishing-a-development-branch",
+    "query": "아직 실패하는 테스트를 고쳐줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "ga4-bigquery",
+    "query": "BigQuery에서 지난주 GA4 locale별 이벤트 수를 뽑아줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "ga4-bigquery",
+    "query": "PostHog에서 어제 방문자 급증 원인을 확인해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "github-issue-flow",
+    "query": "지금 범위 밖인 hydration 버그를 별도 GitHub 이슈로 기록해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "github-issue-flow",
+    "query": "이슈 130번 내용을 요약해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "git-merge-workflow",
+    "query": "GitHub rebase merge가 충돌로 막혔는데 현재 브랜치를 main에 안전하게 통합해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "git-merge-workflow",
+    "query": "최근 커밋 다섯 개만 보여줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "haptic-feedback",
+    "query": "저장 버튼을 추가하고 WebView 햅틱도 맞게 연결해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "haptic-feedback",
+    "query": "정적인 레시피 제목 스타일만 바꿔줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "llm-integration",
+    "query": "AI SDK로 OpenAI를 호출하는 서버 액션 프롬프트와 후처리를 설계해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "llm-integration",
+    "query": "일반 REST 레시피 API DTO를 연결해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "planning-hygiene",
+    "query": "외부 모델 가격표가 들어가는 구현 계획을 세워줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "planning-hygiene",
+    "query": "승인된 단일 컴포넌트의 CSS를 바로 수정해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "posthog-analytics",
+    "query": "PostHog 방문자가 갑자기 세 배 증가한 원인을 HogQL로 분석해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "posthog-analytics",
+    "query": "GA4 BigQuery에서 국가별 사용자 수를 조회해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "seo-metadata",
+    "query": "레시피 generateMetadata 제목에 조리시간 훅을 넣어줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "seo-metadata",
+    "query": "JSON-LD Recipe 스키마에 video 필드를 추가해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "subagent-driven-development",
+    "query": "이 구현 계획의 독립 작업들을 서브에이전트로 실행해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "subagent-driven-development",
+    "query": "아직 요구사항을 정하는 중이니 아이디어만 비교해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "tech-writing",
+    "query": "이 리팩터링 과정을 자연스러운 한국어 기술 블로그 글로 다듬어줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "tech-writing",
+    "query": "TypeScript 컴파일 오류를 고쳐줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "ui-ux-pro-max",
+    "query": "레시피 대시보드의 색상과 타이포, 레이아웃 방향을 설계해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "ui-ux-pro-max",
+    "query": "서버 API 응답 타입만 수정해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "vercel-react-best-practices",
+    "query": "Next.js 페이지의 번들 크기와 데이터 패칭 성능을 리뷰해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "vercel-react-best-practices",
+    "query": "GitHub 이슈 본문을 작성해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "vertical-slicing",
+    "query": "승인된 기능을 타입 API UI 레이어가 아니라 사용자 행동 단위로 분해해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "vertical-slicing",
+    "query": "이미 작성된 테스트 매트릭스를 구현 계획으로 바꿔줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "webview-integration",
+    "query": "Next.js에서 RN WebView 브리지로 딥링크 이동을 추가해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "webview-integration",
+    "query": "일반 데스크톱 웹의 footer 링크를 수정해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "writing-drafting",
+    "query": "승인된 개요를 기준으로 본문 첫 섹션부터 초안을 써줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "writing-drafting",
+    "query": "아직 글의 핵심 주장부터 정해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "writing-outline",
+    "query": "승인된 기술 글의 thesis를 섹션 개요로 구성해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "writing-outline",
+    "query": "완성된 초안의 AI 티를 제거해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "writing-plans",
+    "query": "승인된 스펙과 테스트 매트릭스로 상세 구현 계획을 작성해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "writing-plans",
+    "query": "새 기능 아이디어의 요구사항부터 탐색해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "writing-polish",
+    "query": "완성된 기술 글 초안을 발행 전에 최종 교정해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "writing-polish",
+    "query": "승인된 개요로 본문을 처음 작성해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "writing-thesis",
+    "query": "리팩터링 기록을 바탕으로 기술 블로그의 단일 핵심 주장을 정해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "writing-thesis",
+    "query": "이미 확정된 thesis로 글 개요를 만들어줘",
+    "shouldTrigger": false
+  }
+]

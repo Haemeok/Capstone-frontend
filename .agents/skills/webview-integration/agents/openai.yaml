@@ -1,0 +1,4 @@
+interface:
+  display_name: "WebView 통합 규칙"
+  short_description: "Recipio 웹과 React Native WebView 경계의 동작을 점검합니다"
+  default_prompt: "Use $webview-integration to review this web-to-native WebView flow and its cross-repository invariants."

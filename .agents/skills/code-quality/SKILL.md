@@ -1,0 +1,147 @@
+---
+name: code-quality
+description: >
+  Always-applicable code quality rules for React/Next.js/TypeScript work in this
+  repo. Triggers on ANY code authoring or review — component creation,
+  refactoring, FSD slice placement, Next.js caching decisions, TS strictness,
+  naming, a11y. Read the matching topic file under `rules/` when violating or unsure.
+license: MIT
+metadata:
+  author: recipio
+  version: "0.1.0"
+---
+
+# Code Quality
+
+Tier-2 (on-demand) detail for the always-on self-check block in `AGENTS.md`
+(section "코드 작성 자가체크"). The inline block is the trigger; this folder
+holds the elaboration.
+
+## When to apply
+
+Every code-authoring or code-reviewing task in the repo. The inline self-check
+fires first; if a rule is violated, unclear, or about to be violated, read the
+specific `rules/<prefix>-<topic>.md` file.
+
+## Rule prefixes
+
+| Prefix    | Topic                                                                          |
+| --------- | ------------------------------------------------------------------------------ |
+| `size-`   | Component and function size limits                                             |
+| `fsd-`    | Feature-Sliced Design layer placement                                          |
+| `policy-` | Human-error blockers (URL / env / keys / etc.)                                 |
+| `nextjs-` | Next.js cache, static/dynamic, server/client                                   |
+| `react-`  | React Compiler-era memoization and effect hygiene                              |
+| `ts-`     | TypeScript strictness                                                          |
+| `naming-` | High-payoff naming conventions                                                 |
+| `a11y-`   | Accessibility minimum bar                                                      |
+| `test-`   | Test strategy — layer ownership, mocking boundary, value-vs-constants, pruning |
+
+## Quick reference
+
+### Size
+
+- [Component size limits](rules/size-component.md) — 100/150 hard, SRP signals
+- [Function complexity](rules/size-function.md) — 30 lines + branch / nesting / verb-pair / await flags
+- [Rule of three](rules/size-rule-of-three.md) — extract on 3rd occurrence, not 2nd (premature abstraction prevention)
+
+### FSD
+
+- [4-layer placement](rules/fsd-layer-routing.md) — shared / widget / `_components/` / page
+- [Widget vs page-local](rules/fsd-widget-vs-page-local.md) — single-page → `_components/`, multi-page → `widget/`
+- [Entity vs feature boundary](rules/fsd-entity-feature-boundary.md) — mutations live in features
+- [Extraction surfaces sibling imports](rules/fsd-extract-surfaces-sibling-imports.md) — moving app composition into a widget turns legal `app→widget` imports into `widget→widget` violations; grep `@/widgets/` before the move
+
+### Policy (human-error blockers)
+
+- [URL and query strings](rules/policy-url-and-query.md) — `new URL` / `URLSearchParams`
+- [TanStack Query keys](rules/policy-query-key.md) — `[domain, sub, ...ids]` tuple
+- [Authed query gate](rules/policy-authed-query-gate.md) — auth-required queries gate with `enabled` from `useAuthGate`, never conditional render (hooks run before the early return; errored queries refire on focus/remount); entity-layer hooks take `enabled` as a required param so a missed call site is a compile error
+- [Query invalidation vs cache patch](rules/policy-query-invalidation.md) — invalidate refetches every loaded page (storm); patch via `setQueriesData` prefix + `refetchType:none`; refetch only for membership-changing lists
+- [SSR ↔ client query key parity](rules/policy-ssr-client-query-key-parity.md) — SSR prefetch key must byte-match the client hook's key incl. codec/parser defaults, or hydration silently CSR-refetches
+- [i18n type gate misses unextracted literals](rules/policy-i18n-type-gate-misses-unextracted-strings.md) — a typed Dictionary gates missing keys, not unextracted inline strings; grep the localized files for source-language chars after wiring
+- [i18n chrome vs content axes](rules/policy-i18n-chrome-vs-content-axes.md) — localizing chrome doesn't localize the fetch; plumb the new locale through query key + fetch params + href, never a boundary remap-to-default (masked on SSR page 0)
+- [i18n locale prefix breaks path equality](rules/policy-i18n-locale-prefix-breaks-path-equality.md) — locale-prefixing links breaks active-state/`aria-current` checks that compare raw `usePathname()` to a bare route; normalize via `stripLocale` first (only fails on `/en`·`/ja`, not default locale)
+- [i18n query key vs optimistic mutation](rules/policy-i18n-querykey-vs-optimistic-mutation.md) — appending `locale` to a list `queryKey` silently breaks exact-match `getQueryData`/`setQueryData` optimistic patches (prefix `invalidateQueries` survives); thread locale through the factory+mutation (default source lang) or only add it to keys without exact-match mutations
+- [i18n label doubles as key](rules/policy-i18n-label-doubles-as-key.md) — when a constant's source-language string is also its lookup key/state/comparison, don't migrate the key; leave the constant byte-identical, add a code-keyed locale dict, and resolve display at the render site (source-locale regression becomes structurally impossible)
+- [i18n localize schema via factory](rules/policy-i18n-localize-schema-via-factory.md) — a module-level zod/yup schema with baked-in messages can't be localized in place; convert to `buildSchema(messages)`, build per render with the active-locale dict, and `useMemo` on the dict for resolver-reference stability
+- [i18n CJK word-break](rules/policy-i18n-cjk-word-break.md) — `break-keep`/`word-break: keep-all` forbids all wrapping in space-less Japanese/Chinese; with `line-clamp` (`-webkit-box`) the box grows to max-content and overflows. Drop it or make it `:lang(ko)`-only; default `normal` wraps CJK per-character
+- [i18n imperative nav drops locale](rules/policy-i18n-imperative-nav-drops-locale.md) — a locale-aware `<Link>` doesn't cover `router.push`/raw `next/link`/`redirect`; hardcoded paths drop the prefix and land on the default locale. Add a `useLocalizedRouter` wrapper + lint raw navigation (warn-then-sweep)
+- [i18n dict hook breaks existing mocks](rules/policy-i18n-dict-hook-breaks-existing-mocks.md) — adding a `usePathname`-based `useXxxDict()` to an existing module breaks its pre-existing `next/navigation` test mock (`usePathname is not a function`); the failure dodges `jest i18n` (wrong filename) and `tsc` (untyped mock). Update the mock; run the module's own test by name; don't barrel-mock `@/shared/i18n`
+- [i18n route exists not localized](rules/policy-i18n-route-exists-not-localized.md) — a `/ja`·`/en` mirror-route file (often a bare re-export stub) or a status board's 🟢/🔴 isn't proof of localization; verify from code (route resolves ∧ dict hook wired ∧ no-source-language grep clean), never from the drifting board
+- [i18n preference durable via cookie+middleware](rules/policy-i18n-preference-durable-via-cookie-middleware.md) — "setting persists but doesn't stick": path is the rendering SSOT, but make preference durable in a cookie aligned by middleware redirect (never localStorage as SSOT — server can't read it; never read the cookie in pages — forces dynamic render)
+- [i18n central lang injection needs path fallback](rules/policy-i18n-central-lang-injection-needs-path-fallback.md) — centralizing client API `lang` on the cookie alone drops locale for no-cookie `/en`·`/ja` deep-link visitors (middleware only aligns path when the cookie is present); inject `getLocaleCookie() ?? resolveLocaleFromPath(pathname)` before deleting the "redundant" path-based `lang`
+- [Env via shared/config](rules/policy-env-config.md) — no direct `process.env`
+- [Storage keys](rules/policy-storage-keys.md) — constants module
+- [Z-index tokens](rules/policy-zindex.md) — semantic names, no magic numbers
+- [Dates and numbers](rules/policy-date-number.md) — single library, `Intl.NumberFormat`
+- [Nullish coalescing](rules/policy-nullish-coalescing.md) — `??` for defaults; `||` only for actual falsy semantics
+- [Container layout](rules/policy-container-layout.md) — Container owns bg/max-width/padding; full-bleed/hero pages use `padding={false}`; no double `px`, no nested `bg-white`
+- [Tailwind v4 theme tokens](rules/policy-tailwind-v4-theme-tokens.md) — palette overrides in `@theme` (CSS), not the JS config; @config overrides drop `--color-*` vars and silently break `var()` consumers
+- [No code comments](rules/policy-no-comments.md) — WHAT is the identifier's job; WHY/incident/quirk goes in the commit body. Only `as` and `||`-default markers allowed; shared docs exempt
+- [Absolute badge on inline wrapper](rules/policy-absolute-anchor-inline-wrapper.md) — a `relative` wrapper around an inline child inflates to the line box (70px for a 22px icon), so absolute offsets anchor to the wrong box; make the wrapper `flex` per placement and verify with `getBoundingClientRect`
+- [Sticky vs nearest scroll container](rules/policy-sticky-nearest-scroll-container.md) — sticky `top` resolves against the nearest scrollable ancestor; an inner scroll container that starts below fixed chrome needs `top-0`, not `top-16`; dead `window.scrollTo`/`scrollY:0` is the tell
+
+### Next.js
+
+- [Cache and revalidation](rules/nextjs-cache-and-revalidation.md) — mutation → `revalidate*`; Request Memoization
+- [Dynamic vs static](rules/nextjs-dynamic-vs-static.md) — static is default; recognize triggers
+- [Server vs client boundary](rules/nextjs-server-vs-client-boundary.md) — `'use client'` at the lowest point; `initialData`
+- [Error boundary needs use client](rules/nextjs-error-boundary-use-client.md) — `error.tsx`/`global-error.tsx` must carry `"use client"` on their own file; a bare re-export stub doesn't inherit it and fails `next build` (tsc won't catch)
+- [Build-time sitemap/metadata data](rules/nextjs-sitemap-build-data.md) — paginate per-chunk; one unbounded list fetch crosses the 60s static-gen timeout as data grows; caught-error-`[]` ships a silently empty sitemap
+- [Static-prerender fetch timeout](rules/nextjs-static-prerender-fetch-timeout.md) — wrap build-time page fetches in an `AbortController` timeout + error-safe fallback; `<Suspense>` does NOT let static generation skip a slow fetch (streaming is on-demand only)
+- [Server deps leak via barrels](rules/nextjs-server-deps-leak-via-barrels.md) — a client test failing "Request is not defined" means a barrel chain pulled `next/cache`/api.server into jsdom; mock next/cache now, stop re-exporting server modules from client-consumed barrels for good
+
+### React (Compiler era)
+
+- [Compiler memoization](rules/react-compiler-memoization.md) — three legitimate `useCallback` cases
+- [Compiler context dep extraction](rules/react-compiler-context-dep-extraction.md) — adding a context value (`useT`/store) inside an existing `useCallback` trips `preserve-manual-memoization`; extract the primitive to the body + add to deps, don't wrap in `useMemo`
+- [Effect / state diet](rules/react-effect-discipline.md) — derived computed, events handled, effects only for external sync
+- [Render purity](rules/react-render-purity.md) — no `Date.now()`/random in render; seed time state via lazy `useState(() => …)`; no sync setState in effect body
+- [Optional prop threading](rules/react-optional-prop-threading.md) — an optional prop declared but not forwarded is a silent no-op; `tsc` won't catch it, a leaf behavior test will
+- [Context hook provider coverage](rules/react-context-hook-provider-coverage.md) — converting a shared leaf from prop to a context hook (`useT`/`useContext`) requires a provider at every render site; missing one is a runtime throw `tsc` can't see — grep all render sites first
+- [Static content not gated on enrichment query](rules/react-static-content-not-gated-on-enrichment-query.md) — content you already have (props/SSR) must render with `isLoading={false}`; a secondary enrichment query's `isLoading` (favorite/badge) must not gate it or you flash a skeleton
+- [Reserve height through lazy load](rules/react-reserve-height-through-lazy-load.md) — an in-view section's reserved placeholder height must persist through loading; `if (isLoading) return null` collapses it to 0 → double layout shift; collapse only post-load when empty
+- [Store signal needs production writers](rules/react-store-signal-needs-production-writers.md) — before subscribing new UI to a store field, grep its mutators for non-test call-sites; zero writers = dead signal that state-injection unit tests green-light, and the live pipeline may already surface the event
+
+### TypeScript
+
+- [`any` and `as`](rules/ts-any-and-as.md) — `any` banned; `as` justified with a comment
+- [Non-null and union](rules/ts-non-null-and-union.md) — no `!`; discriminated unions
+- [Discriminated unions at API boundary](rules/ts-discriminated-union-at-boundary.md) — translate correlated optionals into a union once at the seam
+- [Typed mapper extraction](rules/ts-typed-mapper-extraction.md) — inline literals hide dead fields; extract with explicit return type
+- [Type imports — avoid dist paths](rules/ts-type-imports-from-dist.md) — derive from public hook via `ReturnType`, don't reach into `pkg/dist/...`
+- [Nullable fields at fetch boundary](rules/ts-nullable-fields-at-fetch-boundary.md) — write-optional ⇒ read-nullable: doc sample payloads aren't a nullability contract; type the raw wire shape with `| null` and normalize once in the fetch fn, not in consumers
+
+### Naming
+
+- [Booleans, handlers, hooks](rules/naming-boolean-handler-hook.md) — `is/has/can/should`, `on*`/`handle*`, `use*`
+- [Function verbs](rules/naming-function-verbs.md) — `get` / `fetch` / `load`
+- [Ubiquitous language](rules/naming-ubiquitous-language.md) — one concept, one glossary word across AC / code / test; the shared word is the requirement→test trace (no ID tags)
+
+### A11y
+
+- [Interactive elements](rules/a11y-interactive.md) — native button, `cursor-pointer`, `aria-label`
+
+### Testing
+
+- [Layer ownership](rules/test-layer-ownership.md) — one behavior owned by its lowest layer; non-owners justify or delete; store+side-effect = 2 truths + 1 wiring test
+- [Mock at system edge](rules/test-mock-at-system-edge.md) — mock only unowned edges (network/time/random/3rd-party); >3 mocks → extract a pure function; real `QueryClientProvider` over module mock
+- [Invariants, not constants](rules/test-invariants-not-constants.md) — tuning curves get invariants + one snapshot, never N keyframe equalities (change-detectors)
+- [Name is a spec](rules/test-name-is-spec.md) — strip "해야 함"; if no contract remains, the test restates a setter — cut
+- [Risk-weighted depth](rules/test-risk-weighted-depth.md) — depth by blast radius; security/billing adversarial, cosmetic invariants-only
+- [Prune and distrust](rules/test-prune-and-distrust.md) — deletion pass + false-confidence pass; mutation signal over line coverage; agents must be told to cut
+- [No production timing hacks](rules/test-no-production-timing-hacks.md) — never add a setTimeout/delay to production to win a test race; mock the reconciled (post-mutation) server response instead
+- [Hoisted tags → query document](rules/test-react-hoisted-tags.md) — React 19 hoists `<script src>`/`<title>`/`<meta>`/stylesheet to `<head>`; assert on `document`, not RTL `container`
+- [window-gated code → node env](rules/test-window-branch-node-env.md) — `delete global.window` is a no-op in jsdom; test `typeof window` guards under `@jest-environment node` and inject `global.window` for the client case
+- [type-gate needs red-state](rules/test-type-gate-red-state.md) — `@ts-expect-error` type tests are verified by tsc, not jest; name the file `*.type-test.ts` (outside jest glob, inside tsconfig), wrap in a never-called fn, and confirm tsc FAILs with "unused directive" before the type is tightened — that red state is the only proof the gate isn't empty
+- [Optimistic UI needs a deferred mutation](rules/test-optimistic-ui-deferred-mutation.md) — a resolved mutation mock lets onSettled invalidate→refetch restore the fixture before the assertion; keep the mutation pending (deferred promise), assert the optimistic DOM, then resolve in `act()`
+
+## File template
+
+Every rule file uses this four-section shape:
+
+- **Symptom** — what fails when the rule isn't followed
+- **Recommended pattern** — short code example
+- **Anti-pattern** — short code example
+- **Heuristic** — when and how to self-check
