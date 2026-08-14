@@ -75,7 +75,8 @@ const renderInitialHtml = async (
   );
 };
 
-const RECIPE_DETAIL_HREF = /^\/(?:\w{2}\/)?recipes\/(?!category\/)[^/?#]+$/;
+const RECIPE_DETAIL_HREF =
+  /^\/(?:\w{2}\/)?recipes\/(?!(?:admin|category|my-fridge|new)(?:\/|$))[^/?#]+$/;
 
 const getRecipeHrefs = (html: string) => {
   const root = document.createElement("div");
@@ -246,6 +247,44 @@ describe("category initial HTML", () => {
       expect(getPaginationHrefs(html, "next")).toEqual([expectedNext]);
     }
   );
+
+  it("T-06: 공개 2페이지의 빈 Slice는 이전 링크만 노출한다", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => makeCategoryPage(1, false, 0),
+    }) as unknown as typeof fetch;
+
+    const html = await renderInitialHtml({ page: "2" });
+
+    expect(getRecipeHrefs(html)).toEqual([]);
+    expect(getPaginationHrefs(html, "prev")).toEqual([
+      "/recipes/category/CHEF_RECIPE",
+    ]);
+    expect(getPaginationHrefs(html, "next")).toEqual([]);
+  });
+
+  it("T-06: 공개 2페이지의 API 실패 fallback은 이전 링크만 노출한다", async () => {
+    const consoleError = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 500,
+      statusText: "Internal Server Error",
+    }) as unknown as typeof fetch;
+
+    try {
+      const html = await renderInitialHtml({ page: "2" });
+
+      expect(getRecipeHrefs(html)).toEqual([]);
+      expect(getPaginationHrefs(html, "prev")).toEqual([
+        "/recipes/category/CHEF_RECIPE",
+      ]);
+      expect(getPaginationHrefs(html, "next")).toEqual([]);
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
 });
 
 describe("category page href", () => {

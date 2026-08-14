@@ -8,7 +8,7 @@ import type { InfiniteData } from "@tanstack/react-query";
 import type { RecipeSortType, TagCode } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { useSort } from "@/shared/hooks/useSort";
-import type { Locale } from "@/shared/i18n";
+import { type Locale, useRecipeGridDict } from "@/shared/i18n";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { getNextSlicePageParam } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
@@ -50,6 +50,7 @@ const CategoryDetailClient = ({
   nextPageHref,
 }: CategoryDetailClientProps) => {
   const { label } = useTaxonomy();
+  const recipeGridMessages = useRecipeGridDict();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { currentSort, setSort, getSortParam, availableSorts } =
@@ -114,7 +115,19 @@ const CategoryDetailClient = ({
       ) : isFetching ? (
         <RecipeGridSkeleton count={6} />
       ) : (
-        <CategoryEmptyState tagName={tagName} />
+        <>
+          {previousPageHref ? (
+            <a
+              href={previousPageHref}
+              rel="prev"
+              className="sr-only"
+              tabIndex={-1}
+            >
+              {recipeGridMessages.previousPage}
+            </a>
+          ) : null}
+          <CategoryEmptyState tagName={tagName} />
+        </>
       )}
     </Container>
   );
