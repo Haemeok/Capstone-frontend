@@ -24,6 +24,7 @@ export type RecipeGridProps = {
   useLCP?: boolean;
   queryKeyToInvalidate?: unknown[];
   onResetFilters?: () => void;
+  previousPageHref?: string;
   nextPageHref?: string;
   showInFeedAds?: boolean;
   onItemMoreClick?: (id: string) => void;

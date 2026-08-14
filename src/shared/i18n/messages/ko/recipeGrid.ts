@@ -4,6 +4,7 @@ export const recipeGrid: RecipeGridDict = {
   empty: "표시할 레시피가 없습니다.",
   lastPage: "모든 레시피를 다 봤어요!",
   error: "오류가 발생했습니다. 다시 시도해주세요.",
+  previousPage: "이전 페이지",
   nextPage: "다음 페이지",
   filterEmptyTitle: "설정하신 조건에 맞는 레시피가 없어요",
   filterEmptyDesc: "다른 검색어나 필터로 변경해 보세요",

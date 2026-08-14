@@ -1147,6 +1147,7 @@ export type RecipeGridDict = {
   empty: string;
   lastPage: string;
   error: string;
+  previousPage: string;
   nextPage: string;
   filterEmptyTitle: string;
   filterEmptyDesc: string;

@@ -4,6 +4,7 @@ export const recipeGrid: RecipeGridDict = {
   empty: "No recipes to show.",
   lastPage: "You've reached the end!",
   error: "Something went wrong. Please try again.",
+  previousPage: "Previous page",
   nextPage: "Next page",
   filterEmptyTitle: "No recipes match your filters",
   filterEmptyDesc: "Try a different search or filter",

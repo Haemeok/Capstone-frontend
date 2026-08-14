@@ -5,6 +5,7 @@ type GridFooterProps = {
   observerRef?: (node: Element | null) => void;
   hasNextPage?: boolean;
   isFetching?: boolean;
+  previousPageHref?: string;
   nextPageHref?: string;
   showLastPageMessage: boolean;
   lastPageMessage: string;
@@ -14,6 +15,7 @@ const GridFooter = ({
   observerRef,
   hasNextPage,
   isFetching,
+  previousPageHref,
   nextPageHref,
   showLastPageMessage,
   lastPageMessage,
@@ -25,8 +27,18 @@ const GridFooter = ({
         ref={observerRef}
         className="relative mt-2 flex h-10 items-center justify-center"
       >
+        {previousPageHref && (
+          <a
+            href={previousPageHref}
+            rel="prev"
+            className="sr-only"
+            tabIndex={-1}
+          >
+            {t.previousPage}
+          </a>
+        )}
         {nextPageHref && hasNextPage && (
-          <a href={nextPageHref} className="sr-only" tabIndex={-1}>
+          <a href={nextPageHref} rel="next" className="sr-only" tabIndex={-1}>
             {t.nextPage}
           </a>
         )}

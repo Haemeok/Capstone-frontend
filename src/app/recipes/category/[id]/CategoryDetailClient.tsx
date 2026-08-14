@@ -38,6 +38,7 @@ type CategoryDetailClientProps = {
   tagCode: TagCode;
   locale: Locale;
   initialApiPage: number;
+  previousPageHref?: string;
   nextPageHref?: string;
 };
 
@@ -45,6 +46,7 @@ const CategoryDetailClient = ({
   tagCode,
   locale,
   initialApiPage,
+  previousPageHref,
   nextPageHref,
 }: CategoryDetailClientProps) => {
   const { label } = useTaxonomy();
@@ -105,6 +107,7 @@ const CategoryDetailClient = ({
           isFetching={isFetching}
           hasNextPage={hasNextPage}
           observerRef={ref}
+          previousPageHref={previousPageHref}
           nextPageHref={nextPageHref}
           locale={locale}
         />

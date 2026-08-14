@@ -86,6 +86,15 @@ const getRecipeHrefs = (html: string) => {
     .filter((href) => RECIPE_DETAIL_HREF.test(href));
 };
 
+const getPaginationHrefs = (html: string, rel: "prev" | "next") => {
+  const root = document.createElement("div");
+  root.innerHTML = html;
+
+  return Array.from(
+    root.querySelectorAll<HTMLAnchorElement>(`a[rel="${rel}"]`)
+  ).map((anchor) => anchor.getAttribute("href"));
+};
+
 describe("category initial HTML", () => {
   beforeEach(() => {
     installPagedFetch();
@@ -184,6 +193,57 @@ describe("category initial HTML", () => {
       expect(hrefs).toContain(expectedHref);
       expect(requestUrl.searchParams.get("page")).toBe("1");
       expect(requestUrl.searchParams.get("lang")).toBe(expectedLang);
+    }
+  );
+
+  it.each([
+    [{}, [], ["/recipes/category/CHEF_RECIPE?page=2"]],
+    [
+      { page: "2" },
+      ["/recipes/category/CHEF_RECIPE"],
+      ["/recipes/category/CHEF_RECIPE?page=3"],
+    ],
+    [{ page: "3" }, ["/recipes/category/CHEF_RECIPE?page=2"], []],
+  ] as const)(
+    "T-06: 공개 페이지의 초기 HTML은 실제 이전·다음 페이지 링크를 정확히 노출한다",
+    async (searchParams, expectedPrevious, expectedNext) => {
+      const html = await renderInitialHtml(searchParams);
+
+      expect(getPaginationHrefs(html, "prev")).toEqual(expectedPrevious);
+      expect(getPaginationHrefs(html, "next")).toEqual(expectedNext);
+    }
+  );
+
+  it.each(["0", "-1", "1.5", "abc", "", "9007199254740992"])(
+    "T-07: page=%s의 초기 HTML은 공개 1페이지의 다음 링크만 노출한다",
+    async (page) => {
+      const html = await renderInitialHtml({ page });
+
+      expect(getPaginationHrefs(html, "prev")).toEqual([]);
+      expect(getPaginationHrefs(html, "next")).toEqual([
+        "/recipes/category/CHEF_RECIPE?page=2",
+      ]);
+    }
+  );
+
+  it.each([
+    [
+      "ja",
+      "/ja/recipes/category/CHEF_RECIPE",
+      "/ja/recipes/category/CHEF_RECIPE?page=3",
+    ],
+    [
+      "en",
+      "/en/recipes/category/CHEF_RECIPE",
+      "/en/recipes/category/CHEF_RECIPE?page=3",
+    ],
+  ] as const)(
+    "T-08: %s 공개 2페이지의 이전·다음 링크는 locale prefix를 유지한다",
+    async (locale, expectedPrevious, expectedNext) => {
+      const html = await renderInitialHtml({ page: "2" }, locale);
+
+      expect(getPaginationHrefs(html, "prev")).toEqual([expectedPrevious]);
+      expect(getPaginationHrefs(html, "next")).toEqual([expectedNext]);
     }
   );
 });

@@ -50,6 +50,7 @@ const RecipeGrid = ({
   useLCP = true,
   queryKeyToInvalidate,
   onResetFilters,
+  previousPageHref,
   nextPageHref,
   showInFeedAds = false,
   onItemMoreClick,
@@ -142,6 +143,7 @@ const RecipeGrid = ({
         observerRef={observerRef}
         hasNextPage={hasNextPage}
         isFetching={isFetching}
+        previousPageHref={previousPageHref}
         nextPageHref={nextPageHref}
         showLastPageMessage={
           !isFetching &&

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import {
   dehydrate,
   HydrationBoundary,
+  type InfiniteData,
   QueryClient,
 } from "@tanstack/react-query";
 
@@ -11,11 +12,13 @@ import type { Locale } from "@/shared/i18n";
 import { getNextSlicePageParam } from "@/shared/lib/utils";
 
 import { getRecipesOnServer } from "@/entities/recipe/model/api.server";
+import type { DetailedRecipesApiResponse } from "@/entities/recipe/model/types";
 
 import RecipeGridSkeleton from "@/widgets/RecipeGrid/ui/RecipeGridSkeleton";
 
 import CategoryDetailClient from "./CategoryDetailClient";
 import {
+  buildCategoryPageHref,
   type CategorySearchParams,
   parseCategoryPage,
 } from "./categoryPagination";
@@ -36,7 +39,9 @@ export const renderCategoryPage = async ({
   searchParams,
   locale,
 }: RenderCategoryPageArgs) => {
-  const { apiPage: initialApiPage } = parseCategoryPage(searchParams.page);
+  const { publicPage, apiPage: initialApiPage } = parseCategoryPage(
+    searchParams.page
+  );
   const context = {
     tagCode,
     sort: CATEGORY_DEFAULT_SORT,
@@ -55,6 +60,26 @@ export const renderCategoryPage = async ({
     pages: 1,
   });
 
+  const firstPage =
+    queryClient.getQueryData<InfiniteData<DetailedRecipesApiResponse, number>>(
+      queryKey
+    )?.pages[0];
+  const previousPageHref =
+    publicPage > 1
+      ? buildCategoryPageHref({
+          tagCode,
+          locale,
+          publicPage: publicPage - 1,
+        })
+      : undefined;
+  const nextPageHref = firstPage?.slice.hasNext
+    ? buildCategoryPageHref({
+        tagCode,
+        locale,
+        publicPage: publicPage + 1,
+      })
+    : undefined;
+
   return (
     <Suspense fallback={<RecipeGridSkeleton count={6} />}>
       <HydrationBoundary state={dehydrate(queryClient)}>
@@ -62,6 +87,8 @@ export const renderCategoryPage = async ({
           tagCode={tagCode}
           locale={locale}
           initialApiPage={initialApiPage}
+          previousPageHref={previousPageHref}
+          nextPageHref={nextPageHref}
         />
       </HydrationBoundary>
     </Suspense>
