@@ -2,16 +2,22 @@ import { existsSync } from "fs";
 
 import type { InspectOutcome } from "./gsc";
 import {
-  appendEvent,
+  appendQuotaBasisTime,
   AUDIT_PROPERTY,
+  type AuditEvent,
   buildSummary,
+  createQuotaWindow,
   getAuditPaths,
   getCompletedUrls,
+  getQuotaWindowState,
   type Inventory,
   loadInventory,
+  MAX_ATTEMPTS_24H,
+  type QuotaWindow,
   readEvents,
   saveInventory,
   saveSummary,
+  updateLatestQuotaBasisTime,
 } from "./gsc-index-audit-store";
 
 export type AuditMode = "init" | "run" | "summary";
@@ -42,12 +48,17 @@ export type GscGateway = {
   ) => Promise<InspectOutcome>;
 };
 
+export type AuditEventStore = {
+  append: (filePath: string, event: AuditEvent) => Promise<void>;
+};
+
 export type AuditDependencies = {
   dataDir: string;
   clock: AuditClock;
   output: AuditOutput;
   sitemap: SitemapGateway;
   gsc: GscGateway;
+  eventStore: AuditEventStore;
   createId: () => string;
 };
 
@@ -56,11 +67,11 @@ export type RunAuditCommand = (
   dependencies: AuditDependencies
 ) => Promise<number>;
 
-export const MAX_ATTEMPTS_24H = 1800;
 export const MIN_REQUEST_INTERVAL_MS = 250;
-export const RETRY_BASE_MS = [1000, 2000];
+export const RETRY_BASE_MS: [number, number] = [1000, 2000];
 export const RETRY_JITTER_MS = 250;
-export { AUDIT_PROPERTY };
+export const ATTEMPT_RECORDING_SAFETY_MS = 60_000;
+export { AUDIT_PROPERTY, MAX_ATTEMPTS_24H };
 
 const SITEMAP_INDEXES: SitemapIndex[] = [0, 1, 2, 3];
 const RESERVED_RECIPE_SEGMENTS = new Set([
@@ -235,56 +246,288 @@ const loadVerifiedToken = async (
   return token;
 };
 
-type AttemptContext = {
-  inventory: Inventory;
-  attemptId: string;
-  url: string;
-  token: string;
+type AuditResult = Extract<AuditEvent, { type: "result" }>;
+type AuditAttempt = Extract<AuditEvent, { type: "attempt" }>;
+
+type RequestPacer = {
+  lastStartedAt: number | null;
 };
 
-const completeAttempt = async (
-  context: AttemptContext,
+type InspectionContext = {
+  inventory: Inventory;
+  token: string;
+  events: AuditEvent[];
+  pacer: RequestPacer;
+  quotaWindow: QuotaWindow;
+};
+
+type InspectionResponse =
+  | { kind: "received"; outcome: InspectOutcome }
+  | { kind: "network_error"; error: string };
+
+type InspectionRequest =
+  | { kind: "requested"; response: InspectionResponse }
+  | { kind: "recording_timeout" };
+
+type AttemptDecision = "next_url" | "retry" | "stop" | "quota_exhausted";
+
+type StartedAttempt =
+  | { kind: "started"; attempt: ReservedAuditAttempt }
+  | { kind: "quota_exhausted" };
+
+const getErrorMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : String(error);
+
+const sanitizeError = (error: string, token: string): string => {
+  if (token.length === 0) return error.slice(0, 300);
+  return error.split(token).join("[REDACTED]").slice(0, 300);
+};
+
+const getFailureOutcome = (
+  status: number | null
+): Exclude<AuditResult["outcome"], "success"> => {
+  if (status === 429) return "rate_limited";
+  if (status === 401 || status === 403) return "auth_error";
+  if (status === null || status >= 500) return "retryable_error";
+  return "request_error";
+};
+
+const getAttemptDecision = (result: AuditResult): AttemptDecision => {
+  if (result.outcome === "retryable_error") return "retry";
+  if (result.outcome === "rate_limited" || result.outcome === "auth_error") {
+    return "stop";
+  }
+  return "next_url";
+};
+
+type ResultIdentity = Pick<
+  AuditResult,
+  "type" | "auditId" | "attemptId" | "url" | "completedAt"
+>;
+
+const createResultIdentity = (
+  context: InspectionContext,
+  url: string,
+  attemptId: string,
+  completedAt: string
+): ResultIdentity => ({
+  type: "result",
+  auditId: context.inventory.auditId,
+  attemptId,
+  url,
+  completedAt,
+});
+
+const createNetworkErrorResult = (
+  identity: ResultIdentity,
+  error: string,
+  token: string
+): AuditResult => ({
+  ...identity,
+  outcome: "retryable_error",
+  status: null,
+  error: sanitizeError(error, token),
+});
+
+const createReceivedResult = (
+  identity: ResultIdentity,
+  outcome: InspectOutcome,
+  token: string
+): AuditResult => {
+  if (outcome.status === 200) {
+    return { ...identity, outcome: "success", ...outcome };
+  }
+  return {
+    ...identity,
+    outcome: getFailureOutcome(outcome.status),
+    status: outcome.status,
+    error: sanitizeError(
+      outcome.error ?? `GSC inspection failed: ${outcome.status}`,
+      token
+    ),
+  };
+};
+
+const createResultEvent = (
+  context: InspectionContext,
+  url: string,
+  attemptId: string,
+  response: InspectionResponse,
+  completedAt: string
+): AuditResult => {
+  const identity = createResultIdentity(context, url, attemptId, completedAt);
+  if (response.kind === "network_error") {
+    return createNetworkErrorResult(identity, response.error, context.token);
+  }
+  return createReceivedResult(identity, response.outcome, context.token);
+};
+
+const appendTrackedEvent = async (
+  events: AuditEvent[],
+  event: AuditEvent,
   dependencies: AuditDependencies
 ): Promise<void> => {
-  const outcome = await dependencies.gsc.inspect(
-    context.token,
-    AUDIT_PROPERTY,
-    context.url
+  await dependencies.eventStore.append(
+    getAuditPaths(dependencies.dataDir).events,
+    event
   );
-  if (outcome.status !== 200) {
-    throw new Error(`GSC inspection failed: ${outcome.status}`);
+  events.push(event);
+};
+
+const waitForRequestSlot = async (
+  pacer: RequestPacer,
+  clock: AuditClock
+): Promise<void> => {
+  if (pacer.lastStartedAt === null) return;
+  const elapsed = clock.now().getTime() - pacer.lastStartedAt;
+  const waitMs = MIN_REQUEST_INTERVAL_MS - elapsed;
+  if (waitMs > 0) await clock.sleep(waitMs);
+};
+
+const waitForAttemptStart = async (
+  pacer: RequestPacer,
+  retryDelay: number,
+  clock: AuditClock
+): Promise<void> => {
+  if (retryDelay > 0) await clock.sleep(retryDelay);
+  await waitForRequestSlot(pacer, clock);
+};
+
+type ReservedAuditAttempt = AuditAttempt & { quotaBasisAt: string };
+
+const createAttemptEvent = (
+  context: InspectionContext,
+  url: string,
+  attemptId: string,
+  startedAt: string
+): ReservedAuditAttempt => ({
+  type: "attempt",
+  auditId: context.inventory.auditId,
+  attemptId,
+  url,
+  startedAt,
+  quotaBasisAt: new Date(
+    Date.parse(startedAt) + ATTEMPT_RECORDING_SAFETY_MS
+  ).toISOString(),
+});
+
+const startAttempt = async (
+  context: InspectionContext,
+  url: string,
+  retryDelay: number,
+  dependencies: AuditDependencies
+): Promise<StartedAttempt> => {
+  const rateWindow = getQuotaWindowState(
+    context.quotaWindow,
+    dependencies.clock.now(),
+    MAX_ATTEMPTS_24H
+  );
+  if (rateWindow.recentAttempts >= MAX_ATTEMPTS_24H) {
+    return { kind: "quota_exhausted" };
   }
-  await appendEvent(getAuditPaths(dependencies.dataDir).events, {
-    type: "result",
-    auditId: context.inventory.auditId,
-    attemptId: context.attemptId,
-    url: context.url,
-    completedAt: dependencies.clock.now().toISOString(),
-    outcome: "success",
-    ...outcome,
-  });
+  await waitForAttemptStart(context.pacer, retryDelay, dependencies.clock);
+  const attemptId = dependencies.createId();
+  const startedAt = dependencies.clock.now().toISOString();
+  const attempt = createAttemptEvent(context, url, attemptId, startedAt);
+  await appendTrackedEvent(context.events, attempt, dependencies);
+  appendQuotaBasisTime(context.quotaWindow, Date.parse(attempt.quotaBasisAt));
+  return { kind: "started", attempt };
+};
+
+const requestInspection = async (
+  context: InspectionContext,
+  url: string,
+  attempt: ReservedAuditAttempt,
+  dependencies: AuditDependencies
+): Promise<InspectionRequest> => {
+  const actualStartedAt = dependencies.clock.now().getTime();
+  if (actualStartedAt > Date.parse(attempt.quotaBasisAt)) {
+    return { kind: "recording_timeout" };
+  }
+  context.pacer.lastStartedAt = actualStartedAt;
+  try {
+    const outcome = await dependencies.gsc.inspect(
+      context.token,
+      AUDIT_PROPERTY,
+      url
+    );
+    return { kind: "requested", response: { kind: "received", outcome } };
+  } catch (error) {
+    return {
+      kind: "requested",
+      response: { kind: "network_error", error: getErrorMessage(error) },
+    };
+  }
+};
+
+const requestAndRecordAttempt = async (
+  context: InspectionContext,
+  url: string,
+  attempt: ReservedAuditAttempt,
+  dependencies: AuditDependencies
+): Promise<AttemptDecision> => {
+  const request = await requestInspection(context, url, attempt, dependencies);
+  if (request.kind === "recording_timeout") return "stop";
+  const result = createResultEvent(
+    context,
+    url,
+    attempt.attemptId,
+    request.response,
+    dependencies.clock.now().toISOString()
+  );
+  await appendTrackedEvent(context.events, result, dependencies);
+  updateLatestQuotaBasisTime(
+    context.quotaWindow,
+    Date.parse(result.completedAt)
+  );
+  return getAttemptDecision(result);
+};
+
+const executeAttempt = async (
+  context: InspectionContext,
+  url: string,
+  retryDelay: number,
+  dependencies: AuditDependencies
+): Promise<AttemptDecision> => {
+  const started = await startAttempt(context, url, retryDelay, dependencies);
+  if (started.kind === "quota_exhausted") return "quota_exhausted";
+  return requestAndRecordAttempt(context, url, started.attempt, dependencies);
+};
+
+const getRetryDelay = (retryIndex: number, random: number): number => {
+  const base = retryIndex === 0 ? RETRY_BASE_MS[0] : RETRY_BASE_MS[1];
+  return base + Math.floor(random * RETRY_JITTER_MS);
 };
 
 const inspectPendingUrl = async (
-  inventory: Inventory,
+  context: InspectionContext,
   url: string,
-  token: string,
   dependencies: AuditDependencies
-): Promise<void> => {
-  const attemptId = dependencies.createId();
-  await appendEvent(getAuditPaths(dependencies.dataDir).events, {
-    type: "attempt",
-    auditId: inventory.auditId,
-    attemptId,
-    url,
-    startedAt: dependencies.clock.now().toISOString(),
-  });
-  await completeAttempt({ inventory, attemptId, url, token }, dependencies);
+): Promise<AttemptDecision> => {
+  for (
+    let attemptIndex = 0;
+    attemptIndex <= RETRY_BASE_MS.length;
+    attemptIndex += 1
+  ) {
+    const retryDelay =
+      attemptIndex === 0
+        ? 0
+        : getRetryDelay(attemptIndex - 1, dependencies.clock.random());
+    const decision = await executeAttempt(
+      context,
+      url,
+      retryDelay,
+      dependencies
+    );
+    if (decision !== "retry") return decision;
+  }
+  return "next_url";
 };
 
 type PendingInspection = {
   inventory: Inventory;
   urls: string[];
+  events: AuditEvent[];
 };
 
 const loadPendingInspection = async (
@@ -299,17 +542,34 @@ const loadPendingInspection = async (
   const urls = inventory.urls
     .map(({ url }) => url)
     .filter((url) => !completedUrls.has(url));
-  return { inventory, urls };
+  return { inventory, urls, events };
 };
+
+const hasAttemptAllowance = (
+  quotaWindow: QuotaWindow,
+  clock: AuditClock
+): boolean =>
+  getQuotaWindowState(quotaWindow, clock.now(), MAX_ATTEMPTS_24H)
+    .recentAttempts < MAX_ATTEMPTS_24H;
 
 const inspectPendingUrls = async (
   pending: PendingInspection,
   dependencies: AuditDependencies
 ): Promise<void> => {
   if (pending.urls.length === 0) return;
+  const quotaWindow = createQuotaWindow(pending.events);
+  if (!hasAttemptAllowance(quotaWindow, dependencies.clock)) return;
   const token = await loadVerifiedToken(dependencies);
+  const context: InspectionContext = {
+    inventory: pending.inventory,
+    token,
+    events: pending.events,
+    pacer: { lastStartedAt: null },
+    quotaWindow,
+  };
   for (const url of pending.urls) {
-    await inspectPendingUrl(pending.inventory, url, token, dependencies);
+    const decision = await inspectPendingUrl(context, url, dependencies);
+    if (decision === "stop" || decision === "quota_exhausted") return;
   }
 };
 
@@ -317,8 +577,11 @@ const processPendingInspection = async (
   pending: PendingInspection,
   dependencies: AuditDependencies
 ): Promise<void> => {
-  await inspectPendingUrls(pending, dependencies);
-  await saveCurrentSummary(pending.inventory, dependencies);
+  try {
+    await inspectPendingUrls(pending, dependencies);
+  } finally {
+    await saveCurrentSummary(pending.inventory, dependencies);
+  }
 };
 
 const runNextInspection = async (

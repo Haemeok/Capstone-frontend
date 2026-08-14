@@ -6,20 +6,30 @@ import { tmpdir } from "os";
 import path from "path";
 
 import {
+  ATTEMPT_RECORDING_SAFETY_MS,
   type AuditDependencies,
+  MAX_ATTEMPTS_24H,
+  MIN_REQUEST_INTERVAL_MS,
   type RunAuditCommand,
   runAuditCommand,
 } from "../lib/gsc-index-audit";
 import {
   appendEvent,
+  appendQuotaBasisTime,
   AuditEventSchema,
+  createQuotaWindow,
   getAuditPaths,
+  getNextAvailableAt,
+  getQuotaWindowState,
+  getRateWindow,
+  getRecentAttemptEvents,
   type Inventory,
   InventorySchema,
   loadInventory,
   readEvents,
   type Summary,
   SummarySchema,
+  updateLatestQuotaBasisTime,
 } from "../lib/gsc-index-audit-store";
 
 type AuditFixture = {
@@ -29,6 +39,8 @@ type AuditFixture = {
   gscCalls: string[];
   outputMessages: string[];
   sitemapCalls: number[];
+  sleeps: number[];
+  elapsedMs: () => number;
 };
 
 type RunFixture = AuditFixture & {
@@ -91,6 +103,9 @@ const createFixture = async (sitemaps: string[][]): Promise<AuditFixture> => {
   const gscCalls: string[] = [];
   const outputMessages: string[] = [];
   const sitemapCalls: number[] = [];
+  const sleeps: number[] = [];
+  const initialNowMs = Date.parse("2026-08-14T00:00:00.000Z");
+  let nowMs = initialNowMs;
   let id = 0;
 
   return {
@@ -99,12 +114,17 @@ const createFixture = async (sitemaps: string[][]): Promise<AuditFixture> => {
     gscCalls,
     outputMessages,
     sitemapCalls,
+    sleeps,
+    elapsedMs: () => nowMs - initialNowMs,
     dependencies: {
       dataDir,
       clock: {
-        now: () => new Date("2026-08-14T00:00:00.000Z"),
-        sleep: async () => undefined,
-        random: () => 0,
+        now: () => new Date(nowMs),
+        sleep: async (milliseconds) => {
+          sleeps.push(milliseconds);
+          nowMs += milliseconds;
+        },
+        random: () => 0.5,
       },
       output: {
         stdout: (message) => outputMessages.push(message),
@@ -112,6 +132,7 @@ const createFixture = async (sitemaps: string[][]): Promise<AuditFixture> => {
       },
       sitemap: createSitemapGateway(sitemaps, sitemapCalls),
       gsc: createGscGateway(gscCalls),
+      eventStore: { append: appendEvent },
       createId: () => `id-${++id}`,
     },
   };
@@ -145,6 +166,25 @@ const createRunFixture = async (ids: string[]): Promise<RunFixture> => {
 
 const loadSummary = async (fixture: AuditFixture): Promise<Summary> =>
   SummarySchema.parse(await loadJson(getAuditPaths(fixture.dataDir).summary));
+
+const getConsecutiveIntervals = (starts: number[]): number[] =>
+  starts.slice(1).map((startedAt, index) => startedAt - starts[index]);
+
+const appendAttempts = async (
+  fixture: RunFixture,
+  count: number,
+  startedAt: string
+): Promise<void> => {
+  for (let index = 0; index < count; index += 1) {
+    await appendEvent(getAuditPaths(fixture.dataDir).events, {
+      type: "attempt",
+      auditId: fixture.inventory.auditId,
+      attemptId: `existing-attempt-${index}`,
+      url: recipeUrl("A"),
+      startedAt,
+    });
+  }
+};
 
 type SuccessfulResultInput = {
   attemptId: string;
@@ -680,5 +720,414 @@ describe("recipe GSC index audit walking skeleton", () => {
       indexed: 1,
     });
     expect(summary.indexed + coverageTotal).toBe(summary.totalUrls);
+  });
+
+  test("Task 4: quota window는 최초 fold 뒤 cursor와 마지막 basis만 갱신합니다", () => {
+    const events = [
+      {
+        type: "attempt",
+        auditId: "audit-1",
+        attemptId: "expired",
+        url: recipeUrl("expired"),
+        startedAt: "2026-08-12T23:00:00.000Z",
+      },
+      {
+        type: "attempt",
+        auditId: "audit-1",
+        attemptId: "recent-a",
+        url: recipeUrl("A"),
+        startedAt: "2026-08-13T01:00:00.000Z",
+      },
+      {
+        type: "attempt",
+        auditId: "audit-1",
+        attemptId: "recent-b",
+        url: recipeUrl("B"),
+        startedAt: "2026-08-13T02:00:00.000Z",
+      },
+      {
+        type: "result",
+        auditId: "audit-1",
+        attemptId: "recent-b",
+        url: recipeUrl("B"),
+        completedAt: "2026-08-13T03:00:00.000Z",
+        outcome: "retryable_error",
+        status: 500,
+      },
+    ].map((event) => AuditEventSchema.parse(event));
+    const window = createQuotaWindow(events);
+
+    expect(
+      getQuotaWindowState(window, new Date("2026-08-14T00:00:00.000Z"), 2)
+    ).toEqual({
+      recentAttempts: 2,
+      nextAvailableAt: "2026-08-14T01:00:00.000Z",
+    });
+
+    appendQuotaBasisTime(window, Date.parse("2026-08-14T00:01:00.000Z"));
+    updateLatestQuotaBasisTime(window, Date.parse("2026-08-14T00:02:00.000Z"));
+
+    expect(
+      getQuotaWindowState(window, new Date("2026-08-14T00:02:00.000Z"), 1)
+    ).toEqual({
+      recentAttempts: 3,
+      nextAvailableAt: "2026-08-15T00:02:00.000Z",
+    });
+    expect(
+      getQuotaWindowState(window, new Date("2026-08-14T02:00:00.000Z"), 2)
+    ).toEqual({
+      recentAttempts: 2,
+      nextAvailableAt: "2026-08-14T03:00:00.000Z",
+    });
+  });
+
+  test("Task 4: wall clock이 역행하면 만료 cursor와 정렬 순서를 복구합니다", () => {
+    const events = [
+      AuditEventSchema.parse({
+        type: "attempt",
+        auditId: "audit-1",
+        attemptId: "boundary",
+        url: recipeUrl("A"),
+        startedAt: "2026-08-13T00:00:00.000Z",
+      }),
+    ];
+    const window = createQuotaWindow(events);
+
+    expect(
+      getQuotaWindowState(window, new Date("2026-08-14T00:00:01.000Z"), 1)
+        .recentAttempts
+    ).toBe(0);
+    expect(
+      getQuotaWindowState(window, new Date("2026-08-13T23:59:59.000Z"), 1)
+        .recentAttempts
+    ).toBe(1);
+
+    const rolledBackBasis = Date.parse("2026-08-12T23:59:59.500Z");
+    appendQuotaBasisTime(window, rolledBackBasis);
+
+    const state = getQuotaWindowState(
+      window,
+      new Date("2026-08-13T23:59:59.000Z"),
+      2
+    );
+    expect(state.recentAttempts).toBe(2);
+    expect(Date.parse(state.nextAvailableAt ?? "")).toBeGreaterThanOrEqual(
+      rolledBackBasis + 24 * 60 * 60 * 1000
+    );
+  });
+
+  test("Task 4: 만료 영역의 현재 attempt를 완료 시각에 맞춰 반복 재배치합니다", () => {
+    const now = new Date("2026-08-14T00:00:00.000Z");
+    const cutoff = Date.parse("2026-08-13T00:00:00.000Z");
+    const nextBasis = Date.parse("2026-08-13T00:00:10.000Z");
+    const laterBasis = Date.parse("2026-08-13T00:00:20.000Z");
+    const existingEvents = [
+      { attemptId: "cutoff", startedAt: cutoff },
+      { attemptId: "next", startedAt: nextBasis },
+      { attemptId: "later", startedAt: laterBasis },
+    ].map(({ attemptId, startedAt }) =>
+      AuditEventSchema.parse({
+        type: "attempt",
+        auditId: "audit-1",
+        attemptId,
+        url: recipeUrl(attemptId),
+        startedAt: new Date(startedAt).toISOString(),
+      })
+    );
+    const currentAttempt = AuditEventSchema.parse({
+      type: "attempt",
+      auditId: "audit-1",
+      attemptId: "current",
+      url: recipeUrl("current"),
+      startedAt: new Date(cutoff - 1_000).toISOString(),
+      quotaBasisAt: new Date(cutoff).toISOString(),
+    });
+    const window = createQuotaWindow(existingEvents);
+
+    expect(getQuotaWindowState(window, now, 3).recentAttempts).toBe(2);
+    appendQuotaBasisTime(window, cutoff);
+    expect(getQuotaWindowState(window, now, 3).recentAttempts).toBe(2);
+
+    const firstCompletedAt = Date.parse("2026-08-13T00:00:15.000Z");
+    const firstResult = AuditEventSchema.parse({
+      type: "result",
+      auditId: "audit-1",
+      attemptId: "current",
+      url: recipeUrl("current"),
+      completedAt: new Date(firstCompletedAt).toISOString(),
+      outcome: "retryable_error",
+      status: 500,
+    });
+    updateLatestQuotaBasisTime(window, firstCompletedAt);
+
+    expect(getQuotaWindowState(window, now, 3)).toEqual(
+      getRateWindow([...existingEvents, currentAttempt, firstResult], now, 3)
+    );
+    expect(window.basisTimes).toEqual(
+      [...window.basisTimes].sort((left, right) => left - right)
+    );
+
+    const secondCompletedAt = Date.parse("2026-08-13T00:00:30.000Z");
+    const secondResult = AuditEventSchema.parse({
+      ...firstResult,
+      completedAt: new Date(secondCompletedAt).toISOString(),
+    });
+    updateLatestQuotaBasisTime(window, secondCompletedAt);
+
+    const replay = getRateWindow(
+      [...existingEvents, currentAttempt, firstResult, secondResult],
+      now,
+      3
+    );
+    expect(getQuotaWindowState(window, now, 3)).toEqual(replay);
+    expect(window.basisTimes).toEqual(
+      [...window.basisTimes].sort((left, right) => left - right)
+    );
+    expect(window.basisTimes).toContain(laterBasis);
+    expect(window.basisTimes).toContain(secondCompletedAt);
+    expect(window.basisTimes).not.toContain(firstCompletedAt);
+  });
+
+  test("T-12: 연속 Inspection 요청 시작은 최소 250ms 간격을 유지합니다", async () => {
+    const fixture = await createRunFixture(["A", "B", "C"]);
+    directories.push(fixture.dataDir);
+    const inspectStarts: number[] = [];
+    const inspectedUrls: string[] = [];
+    fixture.dependencies.gsc.inspect = async (_token, _property, url) => {
+      inspectStarts.push(fixture.elapsedMs());
+      inspectedUrls.push(url);
+      return createIndexedOutcome(url);
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    expect(inspectedUrls).toEqual([
+      recipeUrl("A"),
+      recipeUrl("B"),
+      recipeUrl("C"),
+    ]);
+    expect(inspectStarts).toHaveLength(3);
+    getConsecutiveIntervals(inspectStarts).forEach((interval) => {
+      expect(interval).toBeGreaterThanOrEqual(MIN_REQUEST_INTERVAL_MS);
+    });
+  });
+
+  test("T-12: attempt 기록이 200ms 걸려도 실제 요청 간격과 quota 만료 시각은 안전합니다", async () => {
+    const fixture = await createRunFixture(["A", "B"]);
+    directories.push(fixture.dataDir);
+    const append = fixture.dependencies.eventStore.append;
+    const inspectStarts: number[] = [];
+    let attemptAppendCount = 0;
+    fixture.dependencies.eventStore.append = async (filePath, event) => {
+      await append(filePath, event);
+      if (event.type === "attempt") {
+        attemptAppendCount += 1;
+        if (attemptAppendCount === 1) {
+          await fixture.dependencies.clock.sleep(200);
+        }
+      }
+    };
+    fixture.dependencies.gsc.inspect = async (_token, _property, url) => {
+      inspectStarts.push(fixture.elapsedMs());
+      return createIndexedOutcome(url);
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    const attempts = events.filter((event) => event.type === "attempt");
+    expect(inspectStarts).toHaveLength(2);
+    expect(inspectStarts[0]).toBeGreaterThanOrEqual(200);
+    getConsecutiveIntervals(inspectStarts).forEach((interval) => {
+      expect(interval).toBeGreaterThanOrEqual(MIN_REQUEST_INTERVAL_MS);
+    });
+    const initialNowMs = Date.parse("2026-08-14T00:00:00.000Z");
+    attempts.forEach(({ quotaBasisAt }, index) => {
+      const actualStartedAt = initialNowMs + (inspectStarts[index] ?? Infinity);
+      expect(Date.parse(quotaBasisAt ?? "")).toBeGreaterThanOrEqual(
+        actualStartedAt
+      );
+    });
+    const nextAvailableAt = getNextAvailableAt(
+      events,
+      fixture.dependencies.clock.now(),
+      2
+    );
+    expect(Date.parse(nextAvailableAt ?? "")).toBeGreaterThanOrEqual(
+      initialNowMs + (inspectStarts[0] ?? Infinity) + 24 * 60 * 60 * 1000
+    );
+  });
+
+  test("T-12: attempt 기록이 safety window를 넘으면 Inspection을 시작하지 않습니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    const append = fixture.dependencies.eventStore.append;
+    fixture.dependencies.eventStore.append = async (filePath, event) => {
+      await append(filePath, event);
+      if (event.type === "attempt") {
+        await fixture.dependencies.clock.sleep(ATTEMPT_RECORDING_SAFETY_MS + 1);
+      }
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(fixture.gscCalls).toEqual([
+      "authenticate",
+      "verify:sc-domain:recipio.kr",
+    ]);
+    const attempts = events.filter((event) => event.type === "attempt");
+    expect(attempts).toHaveLength(1);
+    expect(events.filter((event) => event.type === "result")).toEqual([]);
+    const quotaBasisAt = Date.parse(attempts[0]?.quotaBasisAt ?? "");
+    const nextAvailableAt = getNextAvailableAt(
+      events,
+      fixture.dependencies.clock.now(),
+      1
+    );
+    expect(Date.parse(nextAvailableAt ?? "")).toBeGreaterThanOrEqual(
+      quotaBasisAt + 24 * 60 * 60 * 1000
+    );
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 0,
+      pendingUrls: 1,
+      recentAttempts: 1,
+    });
+  });
+
+  test("T-10: 최근 24시간 한도가 찼으면 인증 없이 다음 가능 시각을 저장합니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    const oldestStartedAt = "2026-08-13T01:00:00.000Z";
+    const nextAvailableAt = "2026-08-14T01:00:00.000Z";
+    await appendAttempts(fixture, MAX_ATTEMPTS_24H, oldestStartedAt);
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(fixture.gscCalls).toEqual([]);
+    expect(
+      getRecentAttemptEvents(events, fixture.dependencies.clock.now())
+    ).toHaveLength(MAX_ATTEMPTS_24H);
+    expect(await loadSummary(fixture)).toMatchObject({
+      recentAttempts: MAX_ATTEMPTS_24H,
+      nextAvailableAt,
+    });
+    expect(fixture.outputMessages).toContain(
+      `recentAttempts=${MAX_ATTEMPTS_24H} nextAvailableAt=${nextAvailableAt}`
+    );
+  });
+
+  test("T-11: 마지막 allowance를 사용한 뒤 다음 URL을 호출하지 않습니다", async () => {
+    const fixture = await createRunFixture(["A", "B"]);
+    directories.push(fixture.dataDir);
+    await appendAttempts(
+      fixture,
+      MAX_ATTEMPTS_24H - 1,
+      "2026-08-13T01:00:00.000Z"
+    );
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(fixture.gscCalls).toEqual([
+      "authenticate",
+      "verify:sc-domain:recipio.kr",
+      `inspect:sc-domain:recipio.kr:${recipeUrl("A")}`,
+    ]);
+    expect(
+      getRecentAttemptEvents(events, fixture.dependencies.clock.now())
+    ).toHaveLength(MAX_ATTEMPTS_24H);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 1,
+      pendingUrls: 1,
+      recentAttempts: MAX_ATTEMPTS_24H,
+      nextAvailableAt: "2026-08-14T01:00:00.000Z",
+    });
+  });
+
+  test("T-11: retry allowance가 없으면 backoff와 재호출 없이 중단합니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    await appendAttempts(
+      fixture,
+      MAX_ATTEMPTS_24H - 1,
+      "2026-08-13T01:00:00.000Z"
+    );
+    let inspectCount = 0;
+    fixture.dependencies.gsc.inspect = async () => {
+      inspectCount += 1;
+      throw new Error("network failed");
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(inspectCount).toBe(1);
+    expect(fixture.sleeps).toEqual([]);
+    expect(
+      getRecentAttemptEvents(events, fixture.dependencies.clock.now())
+    ).toHaveLength(MAX_ATTEMPTS_24H);
+    expect(await loadSummary(fixture)).toMatchObject({
+      pendingUrls: 1,
+      apiFailureCounts: { retryable_error: 1 },
+    });
+  });
+
+  test("T-13: network 및 5xx는 두 번만 backoff 재시도하고 URL을 pending으로 둡니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    let inspectCount = 0;
+    fixture.dependencies.gsc.inspect = async () => {
+      inspectCount += 1;
+      if (inspectCount === 1) {
+        throw new Error("network failed with access-token");
+      }
+      return { status: 500, error: "server failed with access-token" };
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    const results = events.filter((event) => event.type === "result");
+    expect(inspectCount).toBe(3);
+    expect(events.filter((event) => event.type === "attempt")).toHaveLength(3);
+    expect(results).toHaveLength(3);
+    expect(results.map(({ status }) => status)).toEqual([null, 500, 500]);
+    expect(JSON.stringify(results)).not.toContain("access-token");
+    expect(fixture.sleeps).toEqual([1125, 2125]);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 0,
+      pendingUrls: 1,
+      apiFailureCounts: { retryable_error: 1 },
+    });
+  });
+
+  test("T-14: 429 응답은 현재 URL 결과를 기록하고 run을 즉시 중단합니다", async () => {
+    const fixture = await createRunFixture(["A", "B"]);
+    directories.push(fixture.dataDir);
+    const inspectedUrls: string[] = [];
+    fixture.dependencies.gsc.inspect = async (_token, _property, url) => {
+      inspectedUrls.push(url);
+      return { status: 429, error: "quota exhausted" };
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(inspectedUrls).toEqual([recipeUrl("A")]);
+    expect(events.filter((event) => event.type === "attempt")).toHaveLength(1);
+    expect(events.filter((event) => event.type === "result")).toEqual([
+      expect.objectContaining({
+        url: recipeUrl("A"),
+        outcome: "rate_limited",
+        status: 429,
+      }),
+    ]);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 0,
+      pendingUrls: 2,
+      apiFailureCounts: { rate_limited: 1 },
+    });
   });
 });

@@ -3,6 +3,9 @@ import path from "path";
 import { z } from "zod";
 
 export const AUDIT_PROPERTY = "sc-domain:recipio.kr";
+export const MAX_ATTEMPTS_24H = 1800;
+
+const RATE_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 const SitemapIndexSchema = z.union([
   z.literal(0),
@@ -57,6 +60,7 @@ const AuditAttemptSchema = z.object({
   attemptId: z.string().min(1),
   url: z.string().url(),
   startedAt: z.string().datetime(),
+  quotaBasisAt: z.string().datetime().optional(),
 });
 
 const AuditResultSchema = z
@@ -73,7 +77,7 @@ const AuditResultSchema = z
       "request_error",
       "retryable_error",
     ]),
-    status: z.number().int().nonnegative(),
+    status: z.number().int().nonnegative().nullable(),
     error: z.string().optional(),
   })
   .extend(IndexFieldsSchema.shape);
@@ -211,12 +215,198 @@ export const getCompletedUrls = (
       .map(({ url }) => url)
   );
 
-export const getRecentAttempts = (events: AuditEvent[], now: Date): number => {
-  const cutoff = now.getTime() - 24 * 60 * 60 * 1000;
+type AuditAttempt = Extract<AuditEvent, { type: "attempt" }>;
+
+export const getRecentAttemptEvents = (
+  events: AuditEvent[],
+  now: Date
+): AuditAttempt[] => {
+  const cutoff = now.getTime() - RATE_WINDOW_MS;
   return events.filter(
-    (event) =>
+    (event): event is AuditAttempt =>
       event.type === "attempt" && new Date(event.startedAt).getTime() > cutoff
-  ).length;
+  );
+};
+
+export const getRecentAttempts = (events: AuditEvent[], now: Date): number =>
+  getRecentAttemptEvents(events, now).length;
+
+const getAttemptKey = (auditId: string, attemptId: string): string =>
+  JSON.stringify([auditId, attemptId]);
+
+const getResultCompletionTimes = (
+  events: AuditEvent[]
+): Map<string, number> => {
+  const completionTimes = new Map<string, number>();
+  events.forEach((event) => {
+    if (event.type !== "result") return;
+    const key = getAttemptKey(event.auditId, event.attemptId);
+    const completedAt = Date.parse(event.completedAt);
+    const previous = completionTimes.get(key) ?? 0;
+    completionTimes.set(key, Math.max(previous, completedAt));
+  });
+  return completionTimes;
+};
+
+const getQuotaBasisTime = (
+  attempt: AuditAttempt,
+  completionTimes: Map<string, number>
+): number => {
+  const reservedAt = Date.parse(attempt.quotaBasisAt ?? attempt.startedAt);
+  const completedAt =
+    completionTimes.get(getAttemptKey(attempt.auditId, attempt.attemptId)) ?? 0;
+  return Math.max(reservedAt, completedAt);
+};
+
+const getQuotaBasisTimes = (events: AuditEvent[]): number[] => {
+  const completionTimes = getResultCompletionTimes(events);
+  return events
+    .filter((event): event is AuditAttempt => event.type === "attempt")
+    .map((attempt) => getQuotaBasisTime(attempt, completionTimes))
+    .sort((left, right) => left - right);
+};
+
+export type QuotaWindow = {
+  basisTimes: number[];
+  cursor: number;
+  lastCutoffMs: number | null;
+  lastInsertedIndex: number | null;
+};
+
+export const createQuotaWindow = (events: AuditEvent[]): QuotaWindow => ({
+  basisTimes: getQuotaBasisTimes(events),
+  cursor: 0,
+  lastCutoffMs: null,
+  lastInsertedIndex: null,
+});
+
+const findFirstGreaterIndex = (values: number[], target: number): number => {
+  let low = 0;
+  let high = values.length;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (values[middle] <= target) low = middle + 1;
+    else high = middle;
+  }
+  return low;
+};
+
+const expireQuotaBasisTimes = (window: QuotaWindow, now: Date): void => {
+  const cutoff = now.getTime() - RATE_WINDOW_MS;
+  if (window.lastCutoffMs !== null && cutoff < window.lastCutoffMs) {
+    window.cursor = findFirstGreaterIndex(window.basisTimes, cutoff);
+    window.lastCutoffMs = cutoff;
+    return;
+  }
+  while (
+    window.cursor < window.basisTimes.length &&
+    window.basisTimes[window.cursor] <= cutoff
+  ) {
+    window.cursor += 1;
+  }
+  window.lastCutoffMs = cutoff;
+};
+
+const getWindowNextAvailableAt = (
+  window: QuotaWindow,
+  limit: number
+): string | null => {
+  const recentAttempts = window.basisTimes.length - window.cursor;
+  if (recentAttempts < limit) return null;
+  const basis = window.basisTimes[window.basisTimes.length - limit];
+  return new Date(basis + RATE_WINDOW_MS).toISOString();
+};
+
+export const getQuotaWindowState = (
+  window: QuotaWindow,
+  now: Date,
+  limit: number
+): Pick<Summary, "recentAttempts" | "nextAvailableAt"> => {
+  expireQuotaBasisTimes(window, now);
+  return {
+    recentAttempts: window.basisTimes.length - window.cursor,
+    nextAvailableAt: getWindowNextAvailableAt(window, limit),
+  };
+};
+
+export const appendQuotaBasisTime = (
+  window: QuotaWindow,
+  basisTime: number
+): void => {
+  const latest = window.basisTimes[window.basisTimes.length - 1];
+  const insertionIndex =
+    latest === undefined || basisTime >= latest
+      ? window.basisTimes.length
+      : findFirstGreaterIndex(window.basisTimes, basisTime);
+  if (insertionIndex === window.basisTimes.length) {
+    window.basisTimes.push(basisTime);
+  } else {
+    window.basisTimes.splice(insertionIndex, 0, basisTime);
+  }
+  if (window.lastCutoffMs !== null && basisTime <= window.lastCutoffMs) {
+    window.cursor += 1;
+  }
+  window.lastInsertedIndex = insertionIndex;
+};
+
+const removeQuotaBasisTime = (window: QuotaWindow, index: number): void => {
+  const basisTime = window.basisTimes[index];
+  window.basisTimes.splice(index, 1);
+  if (
+    basisTime !== undefined &&
+    window.lastCutoffMs !== null &&
+    basisTime <= window.lastCutoffMs
+  ) {
+    window.cursor = Math.max(0, window.cursor - 1);
+  }
+};
+
+const restoreCursorForUpdatedBasis = (
+  window: QuotaWindow,
+  previous: number,
+  updated: number
+): void => {
+  if (
+    window.lastCutoffMs !== null &&
+    previous <= window.lastCutoffMs &&
+    updated > window.lastCutoffMs
+  ) {
+    window.cursor = Math.max(0, window.cursor - 1);
+  }
+};
+
+export const updateLatestQuotaBasisTime = (
+  window: QuotaWindow,
+  basisTime: number
+): void => {
+  const index = window.lastInsertedIndex;
+  if (index === null) throw new Error("quota window has no appended basis");
+  const latest = window.basisTimes[index];
+  if (latest === undefined) throw new Error("quota window is empty");
+  const updated = Math.max(latest, basisTime);
+  const next = window.basisTimes[index + 1];
+  if (next === undefined || updated <= next) {
+    window.basisTimes[index] = updated;
+    restoreCursorForUpdatedBasis(window, latest, updated);
+    return;
+  }
+  removeQuotaBasisTime(window, index);
+  appendQuotaBasisTime(window, updated);
+};
+
+export const getNextAvailableAt = (
+  events: AuditEvent[],
+  now: Date,
+  limit: number
+): string | null =>
+  getQuotaWindowState(createQuotaWindow(events), now, limit).nextAvailableAt;
+
+export const getRateWindow = (
+  events: AuditEvent[],
+  now: Date,
+  limit: number
+): Pick<Summary, "recentAttempts" | "nextAvailableAt"> => {
+  return getQuotaWindowState(createQuotaWindow(events), now, limit);
 };
 
 const getCoverageStateCounts = (
@@ -316,8 +506,7 @@ export const buildSummary = (
     coverageStateCounts: getCoverageStateCounts(successes),
     apiFailureCounts: getApiFailureCounts(inventory, events, completedUrlSet),
     ...getCheckedAtRange(successes),
-    recentAttempts: getRecentAttempts(events, new Date(generatedAt)),
-    nextAvailableAt: null,
+    ...getRateWindow(events, new Date(generatedAt), MAX_ATTEMPTS_24H),
   });
 };
 
