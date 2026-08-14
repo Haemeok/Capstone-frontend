@@ -71,15 +71,21 @@ const RESERVED_RECIPE_SEGMENTS = new Set([
   "sitemap",
   "dyn",
 ]);
+const MODE_BY_FLAG: Record<string, AuditMode> = {
+  "--init": "init",
+  "--run": "run",
+  "--summary": "summary",
+};
 
 const getSitemapUrl = (index: SitemapIndex): string =>
   `https://www.recipio.kr/recipes/sitemap/${index}.xml`;
 
-const getMode = (args: string[]): AuditMode => {
-  if (args.includes("--init")) return "init";
-  if (args.includes("--run")) return "run";
-  if (args.includes("--summary")) return "summary";
-  throw new Error("--init, --run, --summary 중 하나가 필요합니다.");
+const parseMode = (args: string[]): AuditMode => {
+  if (args.length === 1) {
+    const mode = MODE_BY_FLAG[args[0]];
+    if (mode !== undefined) return mode;
+  }
+  throw new Error("Usage: --init | --run | --summary");
 };
 
 const extractSitemapUrls = (xml: string): string[] =>
@@ -338,7 +344,8 @@ export const runAuditCommand: RunAuditCommand = async (
   dependencies: AuditDependencies
 ) => {
   try {
-    await executeMode(getMode(args), dependencies);
+    const mode = parseMode(args);
+    await executeMode(mode, dependencies);
     return 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

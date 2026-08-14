@@ -327,4 +327,59 @@ describe("recipe GSC index audit walking skeleton", () => {
 
     await expect(readEvents(paths.events)).rejects.toThrow("line 3");
   });
+
+  test.each([[[]], [["--init", "--run"]], [["--unknown"]]])(
+    "T-20: invalid command args %j do not mutate audit files or call gateways",
+    async (args) => {
+      const fixture = await createFixture([
+        [recipeUrl("A")],
+        [recipeUrl("B")],
+        [recipeUrl("C")],
+        [recipeUrl("D")],
+      ]);
+      directories.push(fixture.dataDir);
+      const paths = getAuditPaths(fixture.dataDir);
+      await writeFile(paths.events, "sentinel events\n", "utf8");
+      const beforeEvents = await readFile(paths.events);
+
+      await expect(runCommand(args, fixture.dependencies)).resolves.toBe(1);
+
+      expect(fixture.sitemapCalls).toEqual([]);
+      expect(fixture.gscCalls).toEqual([]);
+      expect(await readFile(paths.events)).toEqual(beforeEvents);
+      expect(existsSync(paths.inventory)).toBe(false);
+      expect(existsSync(paths.summary)).toBe(false);
+      expect(fixture.errors.join("\n")).toContain(
+        "Usage: --init | --run | --summary"
+      );
+    }
+  );
+
+  test("T-02: repeated init preserves existing audit files without fetching sitemaps", async () => {
+    const fixture = await createFixture([
+      [recipeUrl("A")],
+      [recipeUrl("B")],
+      [recipeUrl("C")],
+      [recipeUrl("D")],
+    ]);
+    directories.push(fixture.dataDir);
+    const paths = getAuditPaths(fixture.dataDir);
+
+    await expect(runCommand(["--init"], fixture.dependencies)).resolves.toBe(0);
+    await writeFile(paths.events, "sentinel events\n", "utf8");
+    await writeFile(paths.summary, "sentinel summary\n", "utf8");
+    const before = {
+      inventory: await readFile(paths.inventory),
+      events: await readFile(paths.events),
+      summary: await readFile(paths.summary),
+    };
+    fixture.sitemapCalls.length = 0;
+
+    await expect(runCommand(["--init"], fixture.dependencies)).resolves.toBe(1);
+
+    expect(fixture.sitemapCalls).toEqual([]);
+    expect(await readFile(paths.inventory)).toEqual(before.inventory);
+    expect(await readFile(paths.events)).toEqual(before.events);
+    expect(await readFile(paths.summary)).toEqual(before.summary);
+  });
 });
