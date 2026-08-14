@@ -1,7 +1,14 @@
 /** @jest-environment node */
 
 import { existsSync } from "fs";
-import { mkdtemp, readFile, rm, unlink, writeFile } from "fs/promises";
+import {
+  appendFile,
+  mkdtemp,
+  readFile,
+  rm,
+  unlink,
+  writeFile,
+} from "fs/promises";
 import { tmpdir } from "os";
 import path from "path";
 
@@ -10,12 +17,14 @@ import {
   type AuditDependencies,
   MAX_ATTEMPTS_24H,
   MIN_REQUEST_INTERVAL_MS,
+  redactSensitive,
   type RunAuditCommand,
   runAuditCommand,
 } from "../lib/gsc-index-audit";
 import {
   appendEvent,
   appendQuotaBasisTime,
+  type AuditEvent,
   AuditEventSchema,
   createQuotaWindow,
   getAuditPaths,
@@ -149,6 +158,94 @@ const loadEvents = async (filePath: string) => {
     .map((line) => AuditEventSchema.parse(JSON.parse(line)));
 };
 
+type AuditFileSnapshot = {
+  events: Buffer | null;
+  inventory: Buffer | null;
+  summary: Buffer | null;
+};
+
+const readExistingFile = async (filePath: string): Promise<Buffer | null> =>
+  existsSync(filePath) ? readFile(filePath) : null;
+
+const snapshotFiles = async (dataDir: string): Promise<AuditFileSnapshot> => {
+  const paths = getAuditPaths(dataDir);
+  const [events, inventory, summary] = await Promise.all([
+    readExistingFile(paths.events),
+    readExistingFile(paths.inventory),
+    readExistingFile(paths.summary),
+  ]);
+  return {
+    events,
+    inventory,
+    summary,
+  };
+};
+
+const writeSentinelSummary = async (dataDir: string): Promise<void> =>
+  writeFile(getAuditPaths(dataDir).summary, "sentinel summary\n", "utf8");
+
+const loadAuditText = async (fixture: AuditFixture): Promise<string> => {
+  const paths = getAuditPaths(fixture.dataDir);
+  const files = await Promise.all([
+    readFile(paths.inventory, "utf8"),
+    readFile(paths.events, "utf8"),
+    readFile(paths.summary, "utf8"),
+  ]);
+  return [...files, ...fixture.outputMessages, ...fixture.errors].join("\n");
+};
+
+const expectSensitiveValuesRemoved = (text: string, token: string): void => {
+  expect(text).not.toContain("credential-super-secret");
+  expect(text).not.toContain(token);
+  expect(text).not.toMatch(/Authorization\s*(?::|=)?\s*Bearer/i);
+  expect(text).toContain("[REDACTED]");
+};
+
+const expectSingleRequestError = (events: AuditEvent[], url: string): void => {
+  expect(events.filter((event) => event.url === url)).toHaveLength(2);
+  expect(
+    events.filter((event) => event.type === "result" && event.url === url)
+  ).toEqual([
+    expect.objectContaining({ outcome: "request_error", status: 400 }),
+  ]);
+};
+
+type AuditResultEvent = Extract<AuditEvent, { type: "result" }>;
+
+const getResultForUrl = (
+  events: AuditEvent[],
+  url: string
+): AuditResultEvent => {
+  const result = events.find(
+    (event): event is AuditResultEvent =>
+      event.type === "result" && event.url === url
+  );
+  if (result === undefined) throw new Error(`missing result for ${url}`);
+  return result;
+};
+
+const expectBoundedResultErrors = (events: AuditEvent[]): void => {
+  events
+    .filter((event) => event.type === "result")
+    .forEach(({ error }) => expect(error?.length).toBeLessThanOrEqual(300));
+};
+
+const configureAppendFailure = (
+  fixture: AuditFixture,
+  failedEventType: AuditEvent["type"],
+  token: string
+): void => {
+  const append = fixture.dependencies.eventStore.append;
+  fixture.dependencies.eventStore.append = async (filePath, event) => {
+    if (event.type === failedEventType) {
+      throw new Error(`storage failed ${token}`);
+    }
+    await append(filePath, event);
+  };
+};
+
+const FAILED_APPEND_EVENT_TYPES: AuditEvent["type"][] = ["attempt", "result"];
+
 const createRunFixture = async (ids: string[]): Promise<RunFixture> => {
   const urls = ids.map(recipeUrl);
   const fixture = await createFixture([
@@ -184,6 +281,14 @@ const appendAttempts = async (
       startedAt,
     });
   }
+};
+
+const prepareSentinelRunFiles = async (
+  fixture: RunFixture
+): Promise<AuditFileSnapshot> => {
+  await appendAttempts(fixture, 1, "2026-08-13T23:00:00.000Z");
+  await writeSentinelSummary(fixture.dataDir);
+  return snapshotFiles(fixture.dataDir);
 };
 
 type SuccessfulResultInput = {
@@ -379,17 +484,22 @@ describe("recipe GSC index audit walking skeleton", () => {
     ],
     ["빈 sitemap", [[recipeUrl("A")], [], [recipeUrl("C")], [recipeUrl("D")]]],
   ])(
-    "T-01: %s 입력이면 inventory를 만들지 않습니다",
+    "T-17: %s 입력이면 기존 조사 파일을 보존합니다",
     async (_label, sitemaps) => {
       const fixture = await createFixture(sitemaps);
       directories.push(fixture.dataDir);
+      const paths = getAuditPaths(fixture.dataDir);
+      await writeFile(paths.events, "sentinel events\n", "utf8");
+      await writeSentinelSummary(fixture.dataDir);
+      const before = await snapshotFiles(fixture.dataDir);
 
       await expect(runCommand(["--init"], fixture.dependencies)).resolves.toBe(
         1
       );
 
       expect(fixture.errors).not.toEqual([]);
-      expect(existsSync(getAuditPaths(fixture.dataDir).inventory)).toBe(false);
+      expect(fixture.gscCalls).toEqual([]);
+      expect(await snapshotFiles(fixture.dataDir)).toEqual(before);
     }
   );
 
@@ -1130,4 +1240,342 @@ describe("recipe GSC index audit walking skeleton", () => {
       apiFailureCounts: { rate_limited: 1 },
     });
   });
+
+  test("T-15: property 확인 실패 시 기존 조사 파일을 그대로 보존합니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    await appendAttempts(fixture, 1, "2026-08-13T23:00:00.000Z");
+    await writeSentinelSummary(fixture.dataDir);
+    const before = await snapshotFiles(fixture.dataDir);
+    fixture.dependencies.gsc.verifyProperty = async (_token, property) => {
+      fixture.gscCalls.push(`verify:${property}`);
+      throw new Error("403 denied");
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(1);
+
+    expect(fixture.gscCalls).toEqual([
+      "authenticate",
+      "verify:sc-domain:recipio.kr",
+    ]);
+    expect(await snapshotFiles(fixture.dataDir)).toEqual(before);
+  });
+
+  test("T-16: 400 실패 URL은 pending으로 남기고 다음 URL을 계속 검사합니다", async () => {
+    const fixture = await createRunFixture(["A", "B"]);
+    directories.push(fixture.dataDir);
+    fixture.dependencies.gsc.inspect = async (_token, _property, url) => {
+      fixture.gscCalls.push(`inspect:${url}`);
+      if (url === recipeUrl("A")) {
+        return {
+          status: 400,
+          error: `bad request credential-super-secret Authorization Bearer access-token ${"x".repeat(400)}`,
+        };
+      }
+      return createIndexedOutcome(url);
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expect(fixture.gscCalls).toEqual([
+      "authenticate",
+      "verify:sc-domain:recipio.kr",
+      `inspect:${recipeUrl("A")}`,
+      `inspect:${recipeUrl("B")}`,
+    ]);
+    expectSingleRequestError(events, recipeUrl("A"));
+    const requestError = getResultForUrl(events, recipeUrl("A"));
+    expectSensitiveValuesRemoved(requestError.error ?? "", "access-token");
+    expect(requestError.error?.length).toBeLessThanOrEqual(300);
+    expect(await loadSummary(fixture)).toMatchObject({
+      completedUrls: 1,
+      pendingUrls: 1,
+      apiFailureCounts: { request_error: 1 },
+    });
+  });
+
+  test("T-18: 잘못된 events 3행은 외부 호출과 파일 변경 없이 종료합니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    await appendAttempts(fixture, 2, "2026-08-13T23:00:00.000Z");
+    await appendFile(
+      getAuditPaths(fixture.dataDir).events,
+      "{broken\n",
+      "utf8"
+    );
+    await writeSentinelSummary(fixture.dataDir);
+    const before = await snapshotFiles(fixture.dataDir);
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(1);
+
+    expect(fixture.errors.join("\n")).toContain("events.jsonl line 3");
+    expect(fixture.gscCalls).toEqual([]);
+    expect(await snapshotFiles(fixture.dataDir)).toEqual(before);
+  });
+
+  test("T-19: 검사 오류의 credential과 access token을 어디에도 남기지 않습니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    const token = "token-super-secret";
+    fixture.dependencies.gsc.authenticate = async () => token;
+    fixture.dependencies.gsc.verifyProperty = async () => undefined;
+    fixture.dependencies.gsc.inspect = async () => {
+      throw new Error(
+        `network denied credential-super-secret Authorization: Bearer ${token} ${"x".repeat(400)}`
+      );
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    expectSensitiveValuesRemoved(await loadAuditText(fixture), token);
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    expectBoundedResultErrors(events);
+  });
+
+  test("T-19: property 확인 오류도 비밀값을 지우고 파일을 보존합니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    const token = "token-super-secret";
+    await appendAttempts(fixture, 1, "2026-08-13T23:00:00.000Z");
+    await writeSentinelSummary(fixture.dataDir);
+    const before = await snapshotFiles(fixture.dataDir);
+    fixture.dependencies.gsc.authenticate = async () => token;
+    fixture.dependencies.gsc.verifyProperty = async () => {
+      throw new Error(
+        `property denied credential-super-secret Authorization: Bearer ${token}`
+      );
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(1);
+
+    const combined = [...fixture.outputMessages, ...fixture.errors].join("\n");
+    expectSensitiveValuesRemoved(combined, token);
+    expect(await snapshotFiles(fixture.dataDir)).toEqual(before);
+  });
+
+  test.each([
+    ["Authorization colon", "Authorization: Bearer auth-secret"],
+    ["Authorization space", "Authorization Bearer auth-secret"],
+    ["Authorization equals", "Authorization=Bearer auth-secret"],
+    ["Authorization lowercase", "authorization bearer auth-secret"],
+    ["credential dash", "credential-credential-secret"],
+    ["credential equals", "credential=credential-secret"],
+    ["credentials equals", "credentials=credential-secret"],
+    ["client secret underscore", "client_secret=credential-secret"],
+    ["client secret dash", "client-secret: credential-secret"],
+    ["private key underscore", "private_key=credential-secret"],
+    ["private key dash", "private-key: credential-secret"],
+  ])("T-19: %s 변형을 오류에서 제거합니다", (_label, sensitive) => {
+    expect(redactSensitive(`before ${sensitive} after`)).toBe(
+      "before [REDACTED] after"
+    );
+  });
+
+  test.each([
+    [
+      "Authorization double quote",
+      '{"Authorization":"Bearer alpha123"}',
+      '{"Authorization":"[REDACTED]"}',
+    ],
+    [
+      "client secret double quote",
+      '{"client_secret":"beta456"}',
+      '{"client_secret":"[REDACTED]"}',
+    ],
+    [
+      "private key escaped newline",
+      '{"private_key":"gamma789\\nline-two"}',
+      '{"private_key":"[REDACTED]"}',
+    ],
+    [
+      "credentials single quote",
+      "{'credentials':'delta012'}",
+      "{'credentials':'[REDACTED]'}",
+    ],
+    [
+      "client secret dash single quote",
+      "{'client-secret':'epsilon345'}",
+      "{'client-secret':'[REDACTED]'}",
+    ],
+    [
+      "private key dash single quote",
+      "{'private-key':'zeta678'}",
+      "{'private-key':'[REDACTED]'}",
+    ],
+  ])("T-19: %s JSON 값을 전부 제거합니다", (_label, message, expected) => {
+    expect(redactSensitive(message)).toBe(expected);
+  });
+
+  test("T-19: secret assignment가 아닌 credentials 진단은 보존합니다", () => {
+    const message = "No credentials are configured";
+    expect(redactSensitive(message)).toBe(message);
+  });
+
+  test("T-19: 닫히지 않은 Authorization 인용값도 끝까지 제거합니다", () => {
+    const redacted = redactSensitive(
+      'request failed {"Authorization":"Bearer auth-secret'
+    );
+    expect(redacted).not.toContain("auth-secret");
+    expect(redacted).toContain("[REDACTED]");
+  });
+
+  test("T-19: 닫히지 않은 private key 인용값의 PEM 본문도 제거합니다", () => {
+    const redacted = redactSensitive(
+      '{"private_key":"-----BEGIN PRIVATE KEY-----\\nsecret-body'
+    );
+    expect(redacted).not.toMatch(/PRIVATE KEY|secret-body/);
+    expect(redacted).toContain("[REDACTED]");
+  });
+
+  test("T-19: 비인용 여러 줄 private key를 END marker까지 제거합니다", () => {
+    const redacted = redactSensitive(
+      "private_key=-----BEGIN PRIVATE KEY-----\nsecret-body\n-----END PRIVATE KEY----- trailing"
+    );
+    expect(redacted).not.toMatch(/PRIVATE KEY|secret-body/);
+    expect(redacted).toContain("[REDACTED]");
+    expect(redacted).toContain(" trailing");
+  });
+
+  test("T-19: END marker가 없는 비인용 private key는 문자열 끝까지 제거합니다", () => {
+    const redacted = redactSensitive(
+      "private_key=-----BEGIN PRIVATE KEY-----\nsecret-body"
+    );
+    expect(redacted).not.toMatch(/PRIVATE KEY|secret-body/);
+    expect(redacted).toBe("[REDACTED]");
+  });
+
+  test("T-19: Authorization 뒤 100k 공백의 Basic 진단은 정제하지 않습니다", () => {
+    const message = `Authorization${" ".repeat(100_000)}Basic public-value`;
+    expect(redactSensitive(message)).toBe(message.slice(0, 300));
+  });
+
+  test("T-19: Authorization 뒤 100k 공백의 Bearer secret은 제거합니다", () => {
+    const message = `Authorization${" ".repeat(100_000)}Bearer auth-secret`;
+    const redacted = redactSensitive(message);
+    expect(redacted).not.toContain("auth-secret");
+    expect(redacted).toBe("[REDACTED]");
+  });
+
+  test("T-19: 닫히지 않은 인용값의 연속 backslash payload를 보존하지 않습니다", () => {
+    const payload = `${"\\".repeat(40)}backslash-secret`;
+    const redacted = redactSensitive(`{"private_key":"${payload}`);
+    expect(redacted).not.toContain("backslash-secret");
+    expect(redacted).not.toContain(payload);
+    expect(redacted).toContain("[REDACTED]");
+  });
+
+  test("T-19: HTTP 200 error 필드도 저장 전에 정제합니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    const token = "token-super-secret";
+    fixture.dependencies.gsc.authenticate = async () => token;
+    fixture.dependencies.gsc.verifyProperty = async () => undefined;
+    fixture.dependencies.gsc.inspect = async (_token, _property, url) => ({
+      ...createIndexedOutcome(url),
+      error: `Authorization Bearer ${token} client_secret=credential-secret`,
+    });
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(0);
+
+    const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+    const result = events.find((event) => event.type === "result");
+    const content = JSON.stringify(result);
+    expect(content).not.toContain(token);
+    expect(content).not.toContain("credential-secret");
+    expect(content).not.toMatch(/Authorization\s*Bearer/i);
+    expect(content).toContain("[REDACTED]");
+  });
+
+  test("T-15: authenticate 오류는 기존 파일과 비밀값을 보존하지 않습니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    const before = await prepareSentinelRunFiles(fixture);
+    let appendCalls = 0;
+    let authenticateCalls = 0;
+    fixture.dependencies.gsc.authenticate = async () => {
+      authenticateCalls += 1;
+      throw new Error(
+        'auth failed {"Authorization":"Bearer auth-secret","client_secret":"credential-secret","private_key":"private-secret\\nline"}'
+      );
+    };
+    fixture.dependencies.eventStore.append = async () => {
+      appendCalls += 1;
+    };
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(1);
+
+    const output = [...fixture.outputMessages, ...fixture.errors].join("\n");
+    expect(output).not.toMatch(/auth-secret|credential-secret|private-secret/);
+    expect(authenticateCalls).toBe(1);
+    expect(fixture.gscCalls).toEqual([]);
+    expect(appendCalls).toBe(0);
+    expect(await snapshotFiles(fixture.dataDir)).toEqual(before);
+  });
+
+  test("T-18: invalid inventory는 인증 전에 파일 변경 없이 종료합니다", async () => {
+    const fixture = await createRunFixture(["A"]);
+    directories.push(fixture.dataDir);
+    const paths = getAuditPaths(fixture.dataDir);
+    await appendAttempts(fixture, 1, "2026-08-13T23:00:00.000Z");
+    await writeSentinelSummary(fixture.dataDir);
+    await writeFile(paths.inventory, '{"auditId":"invalid"}\n', "utf8");
+    const before = await snapshotFiles(fixture.dataDir);
+
+    await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(1);
+
+    expect(fixture.gscCalls).toEqual([]);
+    expect(await snapshotFiles(fixture.dataDir)).toEqual(before);
+  });
+
+  test.each([401, 403])(
+    "T-15: inspect %i는 auth_error 저장 후 다음 URL 없이 중단합니다",
+    async (status) => {
+      const fixture = await createRunFixture(["A", "B"]);
+      directories.push(fixture.dataDir);
+      const inspectedUrls: string[] = [];
+      fixture.dependencies.gsc.inspect = async (_token, _property, url) => {
+        inspectedUrls.push(url);
+        return { status, error: "access denied" };
+      };
+
+      await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(
+        0
+      );
+
+      const events = await readEvents(getAuditPaths(fixture.dataDir).events);
+      expect(inspectedUrls).toEqual([recipeUrl("A")]);
+      expect(events.filter((event) => event.type === "result")).toEqual([
+        expect.objectContaining({ outcome: "auth_error", status }),
+      ]);
+      expect(await loadSummary(fixture)).toMatchObject({
+        completedUrls: 0,
+        pendingUrls: 2,
+        apiFailureCounts: { auth_error: 1 },
+      });
+    }
+  );
+
+  test.each(FAILED_APPEND_EVENT_TYPES)(
+    "T-19: %s append 오류는 summary를 보존하고 token을 출력하지 않습니다",
+    async (failedEventType) => {
+      const fixture = await createRunFixture(["A"]);
+      directories.push(fixture.dataDir);
+      const token = "generic-exact-token";
+      await writeSentinelSummary(fixture.dataDir);
+      const summaryPath = getAuditPaths(fixture.dataDir).summary;
+      const beforeSummary = await readFile(summaryPath);
+      fixture.dependencies.gsc.authenticate = async () => token;
+      fixture.dependencies.gsc.verifyProperty = async () => undefined;
+      configureAppendFailure(fixture, failedEventType, token);
+
+      await expect(runCommand(["--run"], fixture.dependencies)).resolves.toBe(
+        1
+      );
+
+      expect(fixture.errors.join("\n")).not.toContain(token);
+      expect(fixture.errors.join("\n")).toContain("[REDACTED]");
+      expect(await readFile(summaryPath)).toEqual(beforeSummary);
+    }
+  );
 });

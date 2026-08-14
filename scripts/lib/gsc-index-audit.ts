@@ -62,6 +62,10 @@ export type AuditDependencies = {
   createId: () => string;
 };
 
+type SecurityContext = {
+  secrets: Set<string>;
+};
+
 export type RunAuditCommand = (
   args: string[],
   dependencies: AuditDependencies
@@ -71,6 +75,7 @@ export const MIN_REQUEST_INTERVAL_MS = 250;
 export const RETRY_BASE_MS: [number, number] = [1000, 2000];
 export const RETRY_JITTER_MS = 250;
 export const ATTEMPT_RECORDING_SAFETY_MS = 60_000;
+export const MAX_ERROR_LENGTH = 300;
 export { AUDIT_PROPERTY, MAX_ATTEMPTS_24H };
 
 const SITEMAP_INDEXES: SitemapIndex[] = [0, 1, 2, 3];
@@ -88,6 +93,21 @@ const MODE_BY_FLAG: Record<string, AuditMode> = {
   "--run": "run",
   "--summary": "summary",
 };
+const DELIMITED_AUTHORIZATION_SECRET_PATTERN =
+  /\bAuthorization\s*[:=]\s*Bearer\s+\S+/gi;
+const SPACED_AUTHORIZATION_SECRET_PATTERN = /\bAuthorization\s+Bearer\s+\S+/gi;
+const NAMED_SECRET_PATTERN =
+  /\b(?:credentials?|client[-_]secret|private[-_]key)\s*[:=\-]\s*\S+/gi;
+const SECRET_KEYS = new Set([
+  "authorization",
+  "credential",
+  "credentials",
+  "client_secret",
+  "client-secret",
+  "private_key",
+  "private-key",
+]);
+const PRIVATE_KEY_END_MARKER = "-----END PRIVATE KEY-----";
 
 const getSitemapUrl = (index: SitemapIndex): string =>
   `https://www.recipio.kr/recipes/sitemap/${index}.xml`;
@@ -238,14 +258,6 @@ const saveCurrentSummary = async (
   writeSummaryOutput(summary, dependencies.output);
 };
 
-const loadVerifiedToken = async (
-  dependencies: AuditDependencies
-): Promise<string> => {
-  const token = await dependencies.gsc.authenticate();
-  await dependencies.gsc.verifyProperty(token, AUDIT_PROPERTY);
-  return token;
-};
-
 type AuditResult = Extract<AuditEvent, { type: "result" }>;
 type AuditAttempt = Extract<AuditEvent, { type: "attempt" }>;
 
@@ -278,9 +290,195 @@ type StartedAttempt =
 const getErrorMessage = (error: unknown): string =>
   error instanceof Error ? error.message : String(error);
 
-const sanitizeError = (error: string, token: string): string => {
-  if (token.length === 0) return error.slice(0, 300);
-  return error.split(token).join("[REDACTED]").slice(0, 300);
+const replaceSecrets = (message: string, secrets: string[]): string =>
+  secrets
+    .filter((secret) => secret.length > 0)
+    .reduce(
+      (redacted, secret) => redacted.split(secret).join("[REDACTED]"),
+      message
+    );
+
+type Quote = '"' | "'";
+
+type QuotedSecretMatch = {
+  valueEnd: number | null;
+  valueQuote: Quote;
+  valueStart: number;
+};
+
+const isQuote = (value: string | undefined): value is Quote =>
+  value === '"' || value === "'";
+
+const findQuotedEnd = (
+  message: string,
+  start: number,
+  quote: Quote
+): number | null => {
+  let index = start + 1;
+  while (index < message.length) {
+    if (message[index] === "\\") {
+      index += 2;
+      continue;
+    }
+    if (message[index] === quote) return index;
+    index += 1;
+  }
+  return null;
+};
+
+const isJsonWhitespace = (value: string | undefined): boolean =>
+  value === " " || value === "\t" || value === "\r" || value === "\n";
+
+const skipJsonWhitespace = (message: string, start: number): number => {
+  let index = start;
+  while (isJsonWhitespace(message[index])) index += 1;
+  return index;
+};
+
+const getQuotedValueStart = (
+  message: string,
+  keyEnd: number
+): number | null => {
+  const colonIndex = skipJsonWhitespace(message, keyEnd + 1);
+  if (message[colonIndex] !== ":") return null;
+  const valueStart = skipJsonWhitespace(message, colonIndex + 1);
+  return isQuote(message[valueStart]) ? valueStart : null;
+};
+
+const shouldRedactQuotedValue = (key: string, value: string): boolean => {
+  if (!SECRET_KEYS.has(key)) return false;
+  if (key !== "authorization") return true;
+  return /^Bearer\s+/i.test(value.trimStart());
+};
+
+const getQuotedSecretMatch = (
+  message: string,
+  keyStart: number,
+  keyEnd: number
+): QuotedSecretMatch | null => {
+  const key = message.slice(keyStart + 1, keyEnd).toLowerCase();
+  const valueStart = getQuotedValueStart(message, keyEnd);
+  if (valueStart === null) return null;
+  const valueQuote = message[valueStart];
+  if (!isQuote(valueQuote)) return null;
+  const valueEnd = findQuotedEnd(message, valueStart, valueQuote);
+  const value = message.slice(valueStart + 1, valueEnd ?? message.length);
+  if (!shouldRedactQuotedValue(key, value)) return null;
+  return { valueEnd, valueQuote, valueStart };
+};
+
+const findNextQuotedSecret = (
+  message: string,
+  start: number
+): QuotedSecretMatch | null => {
+  let index = start;
+  while (index < message.length) {
+    const keyQuote = message[index];
+    if (!isQuote(keyQuote)) {
+      index += 1;
+      continue;
+    }
+    const keyEnd = findQuotedEnd(message, index, keyQuote);
+    if (keyEnd === null) return null;
+    const match = getQuotedSecretMatch(message, index, keyEnd);
+    if (match !== null) return match;
+    index = keyEnd + 1;
+  }
+  return null;
+};
+
+const redactQuotedSecrets = (message: string): string => {
+  const chunks: string[] = [];
+  let cursor = 0;
+  while (cursor < message.length) {
+    const match = findNextQuotedSecret(message, cursor);
+    if (match === null) break;
+    chunks.push(message.slice(cursor, match.valueStart + 1), "[REDACTED]");
+    if (match.valueEnd === null) {
+      cursor = message.length;
+      break;
+    }
+    chunks.push(match.valueQuote);
+    cursor = match.valueEnd + 1;
+  }
+  chunks.push(message.slice(cursor));
+  return chunks.join("");
+};
+
+const redactPrivateKeyPems = (message: string): string => {
+  const chunks: string[] = [];
+  let cursor = 0;
+  const starts = message.matchAll(
+    /\bprivate[-_]key\s*[:=\-]\s*-----BEGIN PRIVATE KEY-----/gi
+  );
+  for (const match of starts) {
+    if (match.index < cursor) continue;
+    const endStart = message.indexOf(
+      PRIVATE_KEY_END_MARKER,
+      match.index + match[0].length
+    );
+    const end =
+      endStart === -1
+        ? message.length
+        : endStart + PRIVATE_KEY_END_MARKER.length;
+    chunks.push(message.slice(cursor, match.index), "[REDACTED]");
+    cursor = end;
+    if (endStart === -1) break;
+  }
+  chunks.push(message.slice(cursor));
+  return chunks.join("");
+};
+
+export const redactSensitive = (
+  message: string,
+  secrets: string[] = []
+): string =>
+  redactPrivateKeyPems(redactQuotedSecrets(replaceSecrets(message, secrets)))
+    .replace(DELIMITED_AUTHORIZATION_SECRET_PATTERN, "[REDACTED]")
+    .replace(SPACED_AUTHORIZATION_SECRET_PATTERN, "[REDACTED]")
+    .replace(NAMED_SECRET_PATTERN, "[REDACTED]")
+    .slice(0, MAX_ERROR_LENGTH);
+
+const getSecuritySecrets = (security: SecurityContext): string[] => [
+  ...security.secrets,
+];
+
+const authenticateGsc = async (
+  dependencies: AuditDependencies,
+  security: SecurityContext
+): Promise<string> => {
+  try {
+    const token = await dependencies.gsc.authenticate();
+    security.secrets.add(token);
+    return token;
+  } catch (error) {
+    throw new Error(
+      redactSensitive(getErrorMessage(error), getSecuritySecrets(security))
+    );
+  }
+};
+
+const verifyGscProperty = async (
+  token: string,
+  dependencies: AuditDependencies,
+  security: SecurityContext
+): Promise<void> => {
+  try {
+    await dependencies.gsc.verifyProperty(token, AUDIT_PROPERTY);
+  } catch (error) {
+    throw new Error(
+      redactSensitive(getErrorMessage(error), getSecuritySecrets(security))
+    );
+  }
+};
+
+const loadVerifiedToken = async (
+  dependencies: AuditDependencies,
+  security: SecurityContext
+): Promise<string> => {
+  const token = await authenticateGsc(dependencies, security);
+  await verifyGscProperty(token, dependencies, security);
+  return token;
 };
 
 const getFailureOutcome = (
@@ -326,8 +524,19 @@ const createNetworkErrorResult = (
   ...identity,
   outcome: "retryable_error",
   status: null,
-  error: sanitizeError(error, token),
+  error: redactSensitive(error, [token]),
 });
+
+const createSuccessResult = (
+  identity: ResultIdentity,
+  outcome: InspectOutcome,
+  token: string
+): AuditResult => {
+  const { error, ...fields } = outcome;
+  const safeError =
+    error === undefined ? {} : { error: redactSensitive(error, [token]) };
+  return { ...identity, outcome: "success", ...fields, ...safeError };
+};
 
 const createReceivedResult = (
   identity: ResultIdentity,
@@ -335,15 +544,15 @@ const createReceivedResult = (
   token: string
 ): AuditResult => {
   if (outcome.status === 200) {
-    return { ...identity, outcome: "success", ...outcome };
+    return createSuccessResult(identity, outcome, token);
   }
   return {
     ...identity,
     outcome: getFailureOutcome(outcome.status),
     status: outcome.status,
-    error: sanitizeError(
+    error: redactSensitive(
       outcome.error ?? `GSC inspection failed: ${outcome.status}`,
-      token
+      [token]
     ),
   };
 };
@@ -455,7 +664,10 @@ const requestInspection = async (
   } catch (error) {
     return {
       kind: "requested",
-      response: { kind: "network_error", error: getErrorMessage(error) },
+      response: {
+        kind: "network_error",
+        error: redactSensitive(getErrorMessage(error), [context.token]),
+      },
     };
   }
 };
@@ -554,12 +766,13 @@ const hasAttemptAllowance = (
 
 const inspectPendingUrls = async (
   pending: PendingInspection,
-  dependencies: AuditDependencies
+  dependencies: AuditDependencies,
+  security: SecurityContext
 ): Promise<void> => {
   if (pending.urls.length === 0) return;
   const quotaWindow = createQuotaWindow(pending.events);
   if (!hasAttemptAllowance(quotaWindow, dependencies.clock)) return;
-  const token = await loadVerifiedToken(dependencies);
+  const token = await loadVerifiedToken(dependencies, security);
   const context: InspectionContext = {
     inventory: pending.inventory,
     token,
@@ -575,20 +788,19 @@ const inspectPendingUrls = async (
 
 const processPendingInspection = async (
   pending: PendingInspection,
-  dependencies: AuditDependencies
+  dependencies: AuditDependencies,
+  security: SecurityContext
 ): Promise<void> => {
-  try {
-    await inspectPendingUrls(pending, dependencies);
-  } finally {
-    await saveCurrentSummary(pending.inventory, dependencies);
-  }
+  await inspectPendingUrls(pending, dependencies, security);
+  await saveCurrentSummary(pending.inventory, dependencies);
 };
 
 const runNextInspection = async (
-  dependencies: AuditDependencies
+  dependencies: AuditDependencies,
+  security: SecurityContext
 ): Promise<void> => {
   const pending = await loadPendingInspection(dependencies);
-  await processPendingInspection(pending, dependencies);
+  await processPendingInspection(pending, dependencies, security);
 };
 
 const regenerateSummary = async (
@@ -602,10 +814,11 @@ const regenerateSummary = async (
 
 const executeMode = async (
   mode: AuditMode,
-  dependencies: AuditDependencies
+  dependencies: AuditDependencies,
+  security: SecurityContext
 ): Promise<void> => {
   if (mode === "init") return initializeAudit(dependencies);
-  if (mode === "run") return runNextInspection(dependencies);
+  if (mode === "run") return runNextInspection(dependencies, security);
   return regenerateSummary(dependencies);
 };
 
@@ -613,13 +826,15 @@ export const runAuditCommand: RunAuditCommand = async (
   args: string[],
   dependencies: AuditDependencies
 ) => {
+  const security: SecurityContext = { secrets: new Set() };
   try {
     const mode = parseMode(args);
-    await executeMode(mode, dependencies);
+    await executeMode(mode, dependencies, security);
     return 0;
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    dependencies.output.stderr(message);
+    dependencies.output.stderr(
+      redactSensitive(getErrorMessage(error), getSecuritySecrets(security))
+    );
     return 1;
   }
 };
