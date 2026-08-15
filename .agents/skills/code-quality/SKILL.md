@@ -124,6 +124,7 @@ specific `rules/<prefix>-<topic>.md` file.
 
 - [Interactive elements](rules/a11y-interactive.md) — native button, `cursor-pointer`, `aria-label`
 - [Filter controls must match their interaction semantics](rules/a11y-filter-button-semantics.md) — use named button groups with `aria-pressed` unless implementing the complete tab keyboard pattern
+- [Preserve Radix-generated description IDs](rules/a11y-radix-description-ids.md) — let primitives own `aria-describedby`; wrappers opt into automatic linkage instead of overriding IDs
 
 ### Testing
 
