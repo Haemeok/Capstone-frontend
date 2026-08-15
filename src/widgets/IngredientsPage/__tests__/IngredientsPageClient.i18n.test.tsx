@@ -15,13 +15,21 @@ const mockUser = jest.fn();
 jest.mock("@/entities/user", () => ({
   useUserStore: () => ({ user: mockUser() }),
 }));
-jest.mock("@/features/ingredient-delete-fridge", () => ({
-  useDeleteIngredientBulkMutation: () => ({ mutate: jest.fn() }),
-}));
-
 const mockManager = jest.fn();
 jest.mock("../hooks/useIngredientsManager", () => ({
   useIngredientsManager: () => mockManager(),
+}));
+jest.mock("../hooks/useFridgeDeleteFlow", () => ({
+  useFridgeDeleteFlow: () => ({
+    isDialogOpen: false,
+    setIsDialogOpen: jest.fn(),
+    selectedIngredientNames: [],
+    isPending: false,
+    error: null,
+    clearErrorOnIntent: jest.fn(),
+    openDialog: jest.fn(),
+    confirmDelete: jest.fn(),
+  }),
 }));
 jest.mock("../hooks/useInfiniteIngredients", () => ({
   useInfiniteIngredients: () => ({
@@ -38,12 +46,15 @@ jest.mock("../hooks/useInfiniteIngredients", () => ({
 }));
 const setSelectedCategory = jest.fn();
 const defaultManager = {
-  isDeleteMode: false,
-  setIsDeleteMode: jest.fn(),
+  mode: "view",
   selectedCategory: "전체",
   setSelectedCategory,
-  selectedIngredientIds: [],
-  setSelectedIngredientIds: jest.fn(),
+  selectedIngredientIds: new Set<string>(),
+  selectedIngredientNames: [],
+  enterManageMode: jest.fn(),
+  exitManageMode: jest.fn(),
+  toggleIngredient: jest.fn(),
+  toggleAll: jest.fn(),
 };
 
 beforeEach(() => {

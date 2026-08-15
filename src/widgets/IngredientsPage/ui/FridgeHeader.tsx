@@ -1,5 +1,7 @@
 "use client";
 
+import type { Ref } from "react";
+
 import { format } from "@/shared/i18n/format";
 import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -11,6 +13,8 @@ type FridgeHeaderProps = {
   isTotalCountPending: boolean;
   isManageMode: boolean;
   isAllSelected: boolean;
+  hasVisibleIngredients: boolean;
+  manageButtonRef: Ref<HTMLButtonElement>;
   onEnterManageMode: () => void;
   onToggleSelectAll: () => void;
   onExitManageMode: () => void;
@@ -25,6 +29,8 @@ export const FridgeHeader = ({
   isTotalCountPending,
   isManageMode,
   isAllSelected,
+  hasVisibleIngredients,
+  manageButtonRef,
   onEnterManageMode,
   onToggleSelectAll,
   onExitManageMode,
@@ -37,8 +43,14 @@ export const FridgeHeader = ({
   };
 
   const handleToggleSelectAll = () => {
+    if (!hasVisibleIngredients) return;
     triggerHaptic("Light");
     onToggleSelectAll();
+  };
+
+  const handleExitManageMode = () => {
+    triggerHaptic("Light");
+    onExitManageMode();
   };
 
   return (
@@ -66,14 +78,15 @@ export const FridgeHeader = ({
         <div className="flex shrink-0 items-center gap-1">
           <button
             type="button"
+            disabled={!hasVisibleIngredients}
             onClick={handleToggleSelectAll}
-            className={actionClassName}
+            className={`${actionClassName} disabled:cursor-default disabled:opacity-40`}
           >
             {isAllSelected ? t.actions.cancel : t.actions.selectAll}
           </button>
           <button
             type="button"
-            onClick={onExitManageMode}
+            onClick={handleExitManageMode}
             className={actionClassName}
           >
             {t.actions.done}
@@ -81,6 +94,7 @@ export const FridgeHeader = ({
         </div>
       ) : (
         <button
+          ref={manageButtonRef}
           type="button"
           onClick={handleEnterManageMode}
           className={actionClassName}

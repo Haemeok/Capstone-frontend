@@ -15,7 +15,7 @@ type FridgeIngredientCardProps = {
   ingredient: IngredientItem;
   isManageMode: boolean;
   isSelected: boolean;
-  onToggle: (ingredientId: string) => void;
+  onToggle: (ingredient: IngredientItem) => void;
 };
 
 const cardClassName =
@@ -75,7 +75,7 @@ export const FridgeIngredientCard = ({
 
   const handleToggle = () => {
     triggerHaptic("Light");
-    onToggle(ingredient.id);
+    onToggle(ingredient);
   };
 
   return (

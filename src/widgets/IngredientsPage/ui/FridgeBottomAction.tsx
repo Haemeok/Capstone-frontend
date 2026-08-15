@@ -1,5 +1,7 @@
 "use client";
 
+import type { Ref } from "react";
+
 import { format, plural } from "@/shared/i18n/format";
 import { LocalizedLink } from "@/shared/i18n/LocalizedLink";
 import { useIngredientsDict } from "@/shared/i18n/useIngredientsDict";
@@ -8,6 +10,7 @@ type FridgeBottomActionProps = {
   isLoggedIn: boolean;
   isManageMode: boolean;
   selectedCount: number;
+  deleteButtonRef: Ref<HTMLButtonElement>;
   onDelete: () => void;
 };
 
@@ -15,6 +18,7 @@ export const FridgeBottomAction = ({
   isLoggedIn,
   isManageMode,
   selectedCount,
+  deleteButtonRef,
   onDelete,
 }: FridgeBottomActionProps) => {
   const t = useIngredientsDict();
@@ -26,6 +30,7 @@ export const FridgeBottomAction = ({
       <div className="mx-auto max-w-4xl">
         {isManageMode ? (
           <button
+            ref={deleteButtonRef}
             type="button"
             onClick={onDelete}
             className="bg-ink focus-visible:ring-ink active:bg-ink/90 pointer-events-auto min-h-12 w-full cursor-pointer rounded-xl px-5 text-base font-semibold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"

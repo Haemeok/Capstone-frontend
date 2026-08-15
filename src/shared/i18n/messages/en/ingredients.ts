@@ -17,8 +17,17 @@ export const ingredients: IngredientsDict = {
     done: "Done",
   },
   deleteFab: {
-    one: "{count} item selected · Delete",
-    other: "{count} items selected · Delete",
+    one: "Delete {count} item",
+    other: "Delete {count} items",
+  },
+  deleteDialog: {
+    title: "Delete selected ingredients?",
+    description: "Ingredients to delete: {summary}",
+    more: "{names} and {count} more",
+    cancel: "Cancel",
+    confirm: "Delete",
+    pending: "Deleting",
+    error: "We couldn't delete the ingredients. Please try again shortly.",
   },
   error: { prefix: "Something went wrong", unknown: "Unknown error" },
   empty: {

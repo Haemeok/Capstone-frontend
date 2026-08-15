@@ -4,11 +4,12 @@ import { Container } from "@/shared/ui/Container";
 
 import { useUserStore } from "@/entities/user";
 
-import { useDeleteIngredientBulkMutation } from "@/features/ingredient-delete-fridge";
-
+import { useFridgeManagementActions } from "./hooks/useFridgeManagementActions";
 import { useInfiniteIngredients } from "./hooks/useInfiniteIngredients";
 import { useIngredientsManager } from "./hooks/useIngredientsManager";
 import { FridgeBottomAction } from "./ui/FridgeBottomAction";
+import { FridgeDeleteDialog } from "./ui/FridgeDeleteDialog";
+import { FridgeDeleteError } from "./ui/FridgeDeleteError";
 import { FridgeHeader } from "./ui/FridgeHeader";
 import { FridgeIngredientGrid } from "./ui/FridgeIngredientGrid";
 import { IngredientAddEntry } from "./ui/IngredientAddEntry";
@@ -17,38 +18,31 @@ import { IngredientCategoryFilter } from "./ui/IngredientCategoryFilter";
 const IngredientsPageClient = () => {
   const { user } = useUserStore();
   const {
-    isDeleteMode,
-    setIsDeleteMode,
+    mode,
     selectedCategory,
-    setSelectedCategory,
     selectedIngredientIds,
-    setSelectedIngredientIds,
+    selectedIngredientNames,
+    setSelectedCategory,
+    enterManageMode,
+    exitManageMode,
+    toggleIngredient,
+    toggleAll,
   } = useIngredientsManager();
-  const deleteMutation = useDeleteIngredientBulkMutation({
-    onSuccess: () => setIsDeleteMode(false),
-  });
   const ingredientsQuery = useInfiniteIngredients({
     category: selectedCategory,
     sort: "asc",
   });
 
   const ingredients = ingredientsQuery.ingredients ?? [];
-  const selectedIds = new Set(selectedIngredientIds);
-  const visibleIds = ingredients.map(({ id }) => id);
-  const isAllSelected =
-    visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
-
-  const handleToggleSelectAll = () => {
-    setSelectedIngredientIds(isAllSelected ? [] : visibleIds);
-  };
-
-  const handleToggleIngredient = (ingredientId: string) => {
-    setSelectedIngredientIds((previous) =>
-      previous.includes(ingredientId)
-        ? previous.filter((id) => id !== ingredientId)
-        : [...previous, ingredientId]
-    );
-  };
+  const management = useFridgeManagementActions({
+    ingredients,
+    selectedIngredientIds,
+    selectedIngredientNames,
+    enterManageMode,
+    exitManageMode,
+    toggleIngredient,
+    toggleAll,
+  });
 
   return (
     <Container padding={false}>
@@ -59,13 +53,15 @@ const IngredientsPageClient = () => {
               totalCount={ingredientsQuery.totalCount}
               isTotalCountError={ingredientsQuery.isTotalCountError}
               isTotalCountPending={ingredientsQuery.isTotalCountPending}
-              isManageMode={isDeleteMode}
-              isAllSelected={isAllSelected}
-              onEnterManageMode={() => setIsDeleteMode(true)}
-              onToggleSelectAll={handleToggleSelectAll}
-              onExitManageMode={() => setIsDeleteMode(false)}
+              isManageMode={mode === "manage"}
+              isAllSelected={management.isAllSelected}
+              hasVisibleIngredients={ingredients.length > 0}
+              manageButtonRef={management.manageButtonRef}
+              onEnterManageMode={management.enterManageMode}
+              onToggleSelectAll={management.toggleAll}
+              onExitManageMode={management.exitManageMode}
             />
-            {!isDeleteMode ? <IngredientAddEntry /> : null}
+            {mode === "view" ? <IngredientAddEntry /> : null}
             <IngredientCategoryFilter
               selectedCategory={selectedCategory}
               onChange={setSelectedCategory}
@@ -76,20 +72,38 @@ const IngredientsPageClient = () => {
         <FridgeIngredientGrid
           ingredients={ingredients}
           isLoggedIn={Boolean(user)}
-          isManageMode={isDeleteMode}
-          selectedIds={selectedIds}
+          isManageMode={mode === "manage"}
+          selectedIds={selectedIngredientIds}
           isPending={ingredientsQuery.isPending}
           isFetchingNextPage={ingredientsQuery.isFetchingNextPage}
           error={ingredientsQuery.error}
           sentinelRef={ingredientsQuery.ref}
-          onToggle={handleToggleIngredient}
+          onToggle={management.toggleIngredient}
+        />
+
+        <FridgeDeleteError
+          isVisible={mode === "manage" && Boolean(management.deleteFlow.error)}
         />
 
         <FridgeBottomAction
           isLoggedIn={Boolean(user)}
-          isManageMode={isDeleteMode}
-          selectedCount={selectedIngredientIds.length}
-          onDelete={() => deleteMutation.mutate(selectedIngredientIds)}
+          isManageMode={mode === "manage"}
+          selectedCount={selectedIngredientIds.size}
+          deleteButtonRef={management.deleteButtonRef}
+          onDelete={management.deleteFlow.openDialog}
+        />
+
+        <FridgeDeleteDialog
+          isOpen={management.deleteFlow.isDialogOpen}
+          isPending={management.deleteFlow.isPending}
+          selectedNames={management.deleteFlow.selectedIngredientNames}
+          returnFocusRef={
+            mode === "manage"
+              ? management.deleteButtonRef
+              : management.manageButtonRef
+          }
+          onOpenChange={management.deleteFlow.setIsDialogOpen}
+          onConfirm={management.deleteFlow.confirmDelete}
         />
       </main>
     </Container>

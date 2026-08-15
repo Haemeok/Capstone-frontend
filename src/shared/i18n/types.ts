@@ -275,6 +275,15 @@ export type IngredientsDict = {
     done: string;
   };
   deleteFab: Plural;
+  deleteDialog: {
+    title: string;
+    description: string;
+    more: string;
+    cancel: string;
+    confirm: string;
+    pending: string;
+    error: string;
+  };
   error: { prefix: string; unknown: string };
   empty: {
     heading: string;

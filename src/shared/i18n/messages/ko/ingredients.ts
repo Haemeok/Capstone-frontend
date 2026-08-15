@@ -17,8 +17,17 @@ export const ingredients: IngredientsDict = {
     done: "완료",
   },
   deleteFab: {
-    one: "{count}개 선택 · 재료 삭제",
-    other: "{count}개 선택 · 재료 삭제",
+    one: "{count}개 삭제",
+    other: "{count}개 삭제",
+  },
+  deleteDialog: {
+    title: "선택한 재료를 삭제할까요?",
+    description: "삭제할 재료: {summary}",
+    more: "{names} 외 {count}개",
+    cancel: "취소",
+    confirm: "삭제",
+    pending: "삭제 중",
+    error: "재료를 삭제하지 못했어요. 잠시 후 다시 시도해 주세요.",
   },
   error: { prefix: "오류 발생", unknown: "알 수 없는 오류" },
   empty: {

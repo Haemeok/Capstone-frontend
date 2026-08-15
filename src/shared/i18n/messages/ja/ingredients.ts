@@ -17,8 +17,18 @@ export const ingredients: IngredientsDict = {
     done: "完了",
   },
   deleteFab: {
-    one: "{count}品選択 · 食材を削除",
-    other: "{count}品選択 · 食材を削除",
+    one: "{count}品を削除",
+    other: "{count}品を削除",
+  },
+  deleteDialog: {
+    title: "選択した食材を削除しますか？",
+    description: "削除する食材：{summary}",
+    more: "{names}ほか{count}品",
+    cancel: "キャンセル",
+    confirm: "削除",
+    pending: "削除中",
+    error:
+      "食材を削除できませんでした。しばらくしてからもう一度お試しください。",
   },
   error: { prefix: "エラーが発生しました", unknown: "不明なエラー" },
   empty: {

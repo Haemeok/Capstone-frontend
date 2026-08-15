@@ -19,7 +19,7 @@ type FridgeIngredientGridProps = {
   isFetchingNextPage: boolean;
   error: Error | null;
   sentinelRef: (node?: Element | null) => void;
-  onToggle: (ingredientId: string) => void;
+  onToggle: (ingredient: IngredientItem) => void;
 };
 
 const FridgeGridSkeleton = () => (
@@ -78,12 +78,14 @@ export const FridgeIngredientGrid = ({
           <p className="text-ink-sub mt-2 text-sm leading-6">
             {t.empty.bodyLine1} {t.empty.bodyLine2}
           </p>
-          <LocalizedLink
-            href="/ingredients/new"
-            className="bg-olive-light focus-visible:ring-olive-light active:bg-olive-dark mt-5 inline-flex min-h-11 cursor-pointer items-center rounded-xl px-5 text-sm font-semibold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            {t.empty.cta}
-          </LocalizedLink>
+          {!isManageMode ? (
+            <LocalizedLink
+              href="/ingredients/new"
+              className="bg-olive-light focus-visible:ring-olive-light active:bg-olive-dark mt-5 inline-flex min-h-11 cursor-pointer items-center rounded-xl px-5 text-sm font-semibold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              {t.empty.cta}
+            </LocalizedLink>
+          ) : null}
         </div>
       )}
 

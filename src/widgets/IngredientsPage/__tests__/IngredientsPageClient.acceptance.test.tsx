@@ -1,8 +1,16 @@
 import { type ReactNode } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type {
   IngredientItem,
@@ -11,6 +19,8 @@ import type {
 import { getIngredients } from "@/entities/ingredient";
 import type { User } from "@/entities/user";
 import { useUserStore } from "@/entities/user/model/store";
+
+import { deleteIngredientBulk } from "@/features/ingredient-delete-fridge/model/api";
 
 import IngredientsPageClient from "../IngredientsPageClient";
 
@@ -26,12 +36,19 @@ jest.mock("react-intersection-observer", () => ({
 
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 
+jest.mock("@/features/ingredient-delete-fridge/model/api", () => ({
+  deleteIngredientBulk: jest.fn(),
+  deleteIngredient: jest.fn(),
+}));
+
 jest.mock("@/entities/ingredient", () => ({
   ...jest.requireActual("@/entities/ingredient"),
   getIngredients: jest.fn(),
 }));
 
 const getIngredientsMock = jest.mocked(getIngredients);
+const deleteIngredientBulkMock = jest.mocked(deleteIngredientBulk);
+const triggerHapticMock = jest.mocked(triggerHaptic);
 
 const authenticatedUser: User = {
   id: "user-1",
@@ -97,9 +114,25 @@ const tomato = ingredient("tomato-1", "토마토", "채소");
 const pork = ingredient("pork-1", "돼지고기", "고기");
 const porkJa = ingredient("pork-1", "豚肉", "肉");
 const onion = ingredient("onion-2", "양파", "채소");
+const egg = ingredient("egg-3", "달걀", "달걀");
+const tofu = ingredient("tofu-4", "두부", "콩류");
+
+const enterManageAndSelect = async (names: string[]) => {
+  const user = userEvent.setup();
+  await user.click(await screen.findByRole("button", { name: "관리" }));
+  for (const name of names) {
+    await user.click(screen.getByRole("checkbox", { name: `${name} 선택` }));
+  }
+  return user;
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
+  deleteIngredientBulkMock.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 it("FRT-01: 냉장고 위계를 제목부터 레시피 액션까지 순서대로 보여 준다", async () => {
@@ -266,7 +299,7 @@ it("FRT-07 contrast contract: 삭제와 오류 상태가 ink 기반 고대비 �
 
   await user.click(await screen.findByRole("button", { name: "관리" }));
   await user.click(screen.getByRole("checkbox", { name: "토마토 선택" }));
-  const deleteAction = screen.getByRole("button", { name: /재료 삭제/ });
+  const deleteAction = screen.getByRole("button", { name: "1개 삭제" });
   expect(deleteAction).toHaveClass("bg-ink", "text-white");
   expect(deleteAction).not.toHaveClass("bg-red-500");
   view.unmount();
@@ -277,4 +310,260 @@ it("FRT-07 contrast contract: 삭제와 오류 상태가 ink 기반 고대비 �
   expect(alert).toHaveAttribute("role", "alert");
   expect(alert).toHaveClass("text-ink-sub");
   expect(alert).not.toHaveClass("text-red-500");
+});
+
+it("FRT-15, FRT-16, FRT-17: 관리 모드와 표시 재료 선택 개수를 동기화한다", async () => {
+  getIngredientsMock.mockResolvedValue(page([tomato, onion, egg]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = userEvent.setup();
+
+  await user.click(await screen.findByRole("button", { name: "관리" }));
+  expect(triggerHapticMock).toHaveBeenLastCalledWith("Light");
+  expect(
+    screen.queryByRole("link", { name: "재료를 검색해서 추가하세요" })
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("link", { name: "이 재료로 레시피 찾기" })
+  ).not.toBeInTheDocument();
+
+  const tomatoCheckbox = screen.getByRole("checkbox", {
+    name: "토마토 선택",
+  });
+  await user.click(tomatoCheckbox);
+  expect(tomatoCheckbox).toHaveAttribute("aria-checked", "true");
+  expect(screen.getByRole("button", { name: "1개 삭제" })).toBeVisible();
+
+  await user.click(screen.getByRole("button", { name: "전체 선택" }));
+  expect(screen.getAllByRole("checkbox", { checked: true })).toHaveLength(3);
+  expect(screen.getByRole("button", { name: "3개 삭제" })).toBeVisible();
+
+  await user.click(tomatoCheckbox);
+  expect(tomatoCheckbox).toHaveAttribute("aria-checked", "false");
+  expect(screen.getByRole("button", { name: "2개 삭제" })).toBeVisible();
+
+  await user.click(screen.getByRole("checkbox", { name: "양파 선택" }));
+  await user.click(screen.getByRole("checkbox", { name: "달걀 선택" }));
+  expect(
+    screen.queryByRole("button", { name: /개 삭제/ })
+  ).not.toBeInTheDocument();
+});
+
+it("FRT-16 교차 카테고리: 숨겨진 선택 이름과 ID를 삭제 확인까지 유지한다", async () => {
+  getIngredientsMock.mockImplementation(async ({ category }) =>
+    category === "고기" ? page([pork]) : page([tomato])
+  );
+  renderFridge("/ingredients", authenticatedUser);
+  const user = userEvent.setup();
+
+  await user.click(await screen.findByRole("button", { name: "관리" }));
+  await user.click(screen.getByRole("checkbox", { name: "토마토 선택" }));
+  await user.click(screen.getByRole("button", { name: "고기" }));
+  await user.click(
+    await screen.findByRole("checkbox", { name: "돼지고기 선택" })
+  );
+
+  await user.click(screen.getByRole("button", { name: "2개 삭제" }));
+  expect(screen.getByRole("dialog")).toHaveTextContent("토마토, 돼지고기");
+  await user.click(screen.getByRole("button", { name: "삭제" }));
+
+  expect(deleteIngredientBulkMock).toHaveBeenCalledWith(["tomato-1", "pork-1"]);
+});
+
+it("삭제 확인 snapshot: dialog 이후 선택 변경이 최초 이름과 payload를 바꾸지 않는다", async () => {
+  getIngredientsMock.mockResolvedValue(page([tomato, onion, egg]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = await enterManageAndSelect(["토마토", "양파"]);
+  const tomatoCheckbox = screen.getByRole("checkbox", {
+    name: "토마토 선택",
+  });
+
+  await user.click(screen.getByRole("button", { name: "2개 삭제" }));
+  fireEvent.click(tomatoCheckbox);
+
+  expect(screen.getByRole("dialog")).toHaveTextContent("토마토, 양파");
+  await user.click(screen.getByRole("button", { name: "삭제" }));
+  expect(deleteIngredientBulkMock).toHaveBeenCalledWith([
+    "tomato-1",
+    "onion-2",
+  ]);
+});
+
+it("빈 관리 모드: 재료 추가 CTA를 숨기고 전체 선택을 비활성화한다", async () => {
+  getIngredientsMock.mockResolvedValue(page([]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = userEvent.setup();
+
+  await user.click(await screen.findByRole("button", { name: "관리" }));
+  const selectAll = screen.getByRole("button", { name: "전체 선택" });
+  expect(selectAll).toBeDisabled();
+  expect(
+    screen.queryByRole("link", { name: /재료.*추가/ })
+  ).not.toBeInTheDocument();
+
+  triggerHapticMock.mockClear();
+  await user.click(selectAll);
+  expect(triggerHapticMock).not.toHaveBeenCalled();
+});
+
+it("관리 완료는 실제 mode 변경에 Light 한 번만 내고 삭제 열기와 취소는 무햅틱이다", async () => {
+  getIngredientsMock.mockResolvedValue(page([tomato]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = userEvent.setup();
+
+  await user.click(await screen.findByRole("button", { name: "관리" }));
+  triggerHapticMock.mockClear();
+  await user.click(screen.getByRole("button", { name: "완료" }));
+  expect(triggerHapticMock).toHaveBeenCalledTimes(1);
+  expect(triggerHapticMock).toHaveBeenCalledWith("Light");
+
+  await user.click(screen.getByRole("button", { name: "관리" }));
+  await user.click(screen.getByRole("checkbox", { name: "토마토 선택" }));
+  triggerHapticMock.mockClear();
+  await user.click(screen.getByRole("button", { name: "1개 삭제" }));
+  await user.click(screen.getByRole("button", { name: "취소" }));
+  expect(triggerHapticMock).not.toHaveBeenCalled();
+});
+
+it("삭제 취소와 Escape는 실제 하단 삭제 버튼으로 focus를 돌려준다", async () => {
+  getIngredientsMock.mockResolvedValue(page([tomato]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = await enterManageAndSelect(["토마토"]);
+  const deleteAction = screen.getByRole("button", { name: "1개 삭제" });
+
+  await user.click(deleteAction);
+  await user.click(screen.getByRole("button", { name: "취소" }));
+  await waitFor(() => expect(deleteAction).toHaveFocus());
+
+  await user.click(deleteAction);
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(deleteAction).toHaveFocus());
+});
+
+it("FRT-18, FRT-19: 완료는 요청 없이 끝나고 삭제 취소는 선택을 유지한다", async () => {
+  getIngredientsMock.mockResolvedValue(page([tomato, onion, egg, tofu]));
+  renderFridge("/ingredients", authenticatedUser);
+
+  let user = await enterManageAndSelect(["토마토"]);
+  await user.click(screen.getByRole("button", { name: "완료" }));
+  expect(deleteIngredientBulkMock).not.toHaveBeenCalled();
+  expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
+
+  user = await enterManageAndSelect(["토마토", "양파", "달걀", "두부"]);
+  await user.click(screen.getByRole("button", { name: "4개 삭제" }));
+  expect(deleteIngredientBulkMock).not.toHaveBeenCalled();
+  expect(screen.getByRole("dialog")).toHaveTextContent("토마토, 양파 외 2개");
+
+  await user.click(screen.getByRole("button", { name: "취소" }));
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  expect(screen.getAllByRole("checkbox", { checked: true })).toHaveLength(4);
+});
+
+it("FRT-20: 확인 후 한 번만 삭제하고 일반 모드로 돌아간다", async () => {
+  const request = deferred<void>();
+  deleteIngredientBulkMock.mockReturnValue(request.promise);
+  getIngredientsMock
+    .mockResolvedValueOnce(page([tomato, onion, egg]))
+    .mockResolvedValue(page([egg]));
+  renderFridge("/ingredients", authenticatedUser);
+
+  const user = await enterManageAndSelect(["토마토", "양파"]);
+  await user.click(screen.getByRole("button", { name: "2개 삭제" }));
+  const confirm = screen.getByRole("button", { name: "삭제" });
+  await user.dblClick(confirm);
+
+  expect(triggerHapticMock).toHaveBeenCalledWith("Medium");
+  expect(deleteIngredientBulkMock).toHaveBeenCalledTimes(1);
+  expect(confirm).toBeDisabled();
+
+  await act(async () => request.resolve(undefined));
+  await waitFor(() =>
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument()
+  );
+  expect(screen.getByRole("button", { name: "관리" })).toHaveFocus();
+  expect(screen.queryByText("토마토")).not.toBeInTheDocument();
+  expect(screen.queryByText("양파")).not.toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /달걀.*상세 보기/ })).toBeVisible();
+});
+
+it("FRT-21: 삭제 실패는 카드·선택·관리 모드와 오류를 복구한다", async () => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  deleteIngredientBulkMock.mockRejectedValue(new Error("500"));
+  getIngredientsMock.mockResolvedValue(page([tomato, onion, egg]));
+  renderFridge("/ingredients", authenticatedUser);
+
+  const user = await enterManageAndSelect(["토마토", "양파"]);
+  await user.click(screen.getByRole("button", { name: "2개 삭제" }));
+  await user.click(screen.getByRole("button", { name: "삭제" }));
+
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "재료를 삭제하지 못했어요"
+  );
+  expect(screen.getByText("토마토")).toBeVisible();
+  expect(screen.getByText("양파")).toBeVisible();
+  expect(screen.getAllByRole("checkbox", { checked: true })).toHaveLength(2);
+  expect(screen.getByRole("button", { name: "2개 삭제" })).toHaveFocus();
+  (console.error as jest.Mock).mockRestore();
+});
+
+it("삭제 실패 뒤 개별 선택은 이전 오류를 지운다", async () => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  deleteIngredientBulkMock.mockRejectedValue(new Error("500"));
+  getIngredientsMock.mockResolvedValue(page([tomato, onion, egg]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = await enterManageAndSelect(["토마토", "양파"]);
+
+  await user.click(screen.getByRole("button", { name: "2개 삭제" }));
+  await user.click(screen.getByRole("button", { name: "삭제" }));
+  expect(await screen.findByRole("alert")).toBeVisible();
+  await user.click(screen.getByRole("checkbox", { name: "달걀 선택" }));
+
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+});
+
+it("삭제 실패 뒤 표시 재료 전체 해제는 이전 오류를 지운다", async () => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  deleteIngredientBulkMock.mockRejectedValue(new Error("500"));
+  getIngredientsMock.mockResolvedValue(page([tomato, onion]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = await enterManageAndSelect(["토마토", "양파"]);
+
+  await user.click(screen.getByRole("button", { name: "2개 삭제" }));
+  await user.click(screen.getByRole("button", { name: "삭제" }));
+  expect(await screen.findByRole("alert")).toBeVisible();
+  await user.click(screen.getByRole("button", { name: "취소" }));
+
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+});
+
+it("삭제 실패 뒤 완료하고 관리에 재진입하면 이전 오류가 다시 나타나지 않는다", async () => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  deleteIngredientBulkMock.mockRejectedValue(new Error("500"));
+  getIngredientsMock.mockResolvedValue(page([tomato]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = await enterManageAndSelect(["토마토"]);
+
+  await user.click(screen.getByRole("button", { name: "1개 삭제" }));
+  await user.click(screen.getByRole("button", { name: "삭제" }));
+  expect(await screen.findByRole("alert")).toBeVisible();
+  await user.click(screen.getByRole("button", { name: "완료" }));
+  await user.click(screen.getByRole("button", { name: "관리" }));
+
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+});
+
+it("삭제 실패 뒤 재시도 dialog를 열면 이전 오류를 지운다", async () => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  deleteIngredientBulkMock.mockRejectedValue(new Error("500"));
+  getIngredientsMock.mockResolvedValue(page([tomato]));
+  renderFridge("/ingredients", authenticatedUser);
+  const user = await enterManageAndSelect(["토마토"]);
+
+  await user.click(screen.getByRole("button", { name: "1개 삭제" }));
+  await user.click(screen.getByRole("button", { name: "삭제" }));
+  expect(await screen.findByRole("alert")).toBeVisible();
+  await user.click(screen.getByRole("button", { name: "1개 삭제" }));
+
+  expect(
+    screen.queryByText("재료를 삭제하지 못했어요. 잠시 후 다시 시도해 주세요.")
+  ).not.toBeInTheDocument();
 });
