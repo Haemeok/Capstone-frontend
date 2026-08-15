@@ -17,7 +17,7 @@ export const CartEmptyState = () => (
     <LocalizedLink
       href="/search/results"
       onClick={() => triggerHaptic("Light")}
-      className="bg-olive-light rounded-full px-5 py-2.5 font-semibold text-white"
+      className="bg-olive-light focus-visible:ring-olive-light inline-flex min-h-11 cursor-pointer items-center rounded-full px-5 font-semibold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
     >
       지금 바로 재료 담으러 가기
     </LocalizedLink>

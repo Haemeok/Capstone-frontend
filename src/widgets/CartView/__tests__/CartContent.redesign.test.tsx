@@ -16,6 +16,7 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import type { CartResponse } from "@/entities/cart";
 import {
   cartFixture,
+  emptyCartFixture,
   sameIngredientCartFixture,
 } from "@/entities/cart/model/__tests__/fixtures";
 
@@ -387,4 +388,38 @@ it("T-48: 레시피 필터는 선택이 실제로 바뀔 때만 햅틱을 낸다
 
   await userEvent.click(kimchiFilter);
   expect(triggerHapticMock).toHaveBeenCalledTimes(1);
+});
+
+it("T-50: 전체 비우기 취소는 장바구니 항목을 유지한다", async () => {
+  renderContent();
+
+  await userEvent.click(screen.getByRole("button", { name: "전체 비우기" }));
+  await userEvent.click(screen.getByRole("button", { name: "취소" }));
+
+  expect(onDeleteItemsMock).not.toHaveBeenCalled();
+  expect(screen.getByText("배추김치")).toBeInTheDocument();
+});
+
+it("T-52: 빈 장바구니는 제목과 레시피 탐색 CTA만 보여준다", () => {
+  renderContent(emptyCartFixture);
+
+  expect(screen.getByRole("heading", { name: "장바구니" })).toHaveClass(
+    "text-2xl"
+  );
+  expect(screen.getByText(/아직 담긴 재료가 없어요/)).toBeInTheDocument();
+  const browseRecipesLink = screen.getByRole("link", {
+    name: /지금 바로 재료 담으러 가기/,
+  });
+  expect(browseRecipesLink).toHaveAttribute("href", "/search/results");
+  expect(browseRecipesLink).toHaveClass(
+    "min-h-11",
+    "cursor-pointer",
+    "focus-visible:ring-2"
+  );
+  expect(
+    screen.queryByRole("group", { name: "레시피 필터" })
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByText(/쿠팡 파트너스 활동의 일환/)
+  ).not.toBeInTheDocument();
 });

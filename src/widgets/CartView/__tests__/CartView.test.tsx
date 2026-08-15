@@ -44,10 +44,10 @@ import { type User, useUserStore } from "@/entities/user";
 
 import CartView from "../index";
 
-const getCartMock = getCart as jest.Mock;
-const deleteOneMock = deleteCartItem as jest.Mock;
-const deleteBulkMock = deleteCartItemsBulk as jest.Mock;
-const coupangMock = getRecipeCoupangProducts as jest.Mock;
+const getCartMock = jest.mocked(getCart);
+const deleteOneMock = jest.mocked(deleteCartItem);
+const deleteBulkMock = jest.mocked(deleteCartItemsBulk);
+const coupangMock = jest.mocked(getRecipeCoupangProducts);
 const triggerHapticMock = jest.mocked(triggerHaptic);
 
 const renderCartView = () => {
@@ -129,12 +129,16 @@ it("병합된 재료 그룹은 삭제 하나로 전체를 지운다 (T-47)", asy
   });
 });
 
-it("T-08: 레시피 탭 클릭 시 해당 항목만 보이고 getCart 재호출이 없다", async () => {
+it("T-08, T-48: 레시피 필터 선택은 해당 항목만 보여주고 getCart를 재호출하지 않는다", async () => {
   getCartMock.mockResolvedValue(cartFixture);
   renderCartView();
   await screen.findByText("배추김치");
 
+  const filterGroup = screen.getByRole("group", { name: "레시피 필터" });
+  const allFilter = within(filterGroup).getByRole("button", { name: "전체 5" });
   const kimchiFilter = screen.getByRole("button", { name: /김치찌개/ });
+  expect(allFilter).toHaveAttribute("aria-pressed", "true");
+  expect(screen.getByText("수제 고추기름")).toBeInTheDocument();
   expect(kimchiFilter).toHaveAttribute("aria-pressed", "false");
 
   await userEvent.click(kimchiFilter);
@@ -142,7 +146,44 @@ it("T-08: 레시피 탭 클릭 시 해당 항목만 보이고 getCart 재호출�
   expect(screen.getByText("배추김치")).toBeInTheDocument();
   expect(screen.queryByText("수제 고추기름")).not.toBeInTheDocument();
   expect(kimchiFilter).toHaveAttribute("aria-pressed", "true");
+  expect(kimchiFilter).toHaveClass("bg-ink", "text-white", "min-h-11");
+  expect(allFilter).toHaveClass("bg-gray-100", "text-ink-sub", "min-h-11");
   expect(getCartMock).toHaveBeenCalledTimes(1);
+});
+
+it("T-49: 선택 레시피의 마지막 항목을 지우면 전체 필터와 남은 재료로 돌아간다", async () => {
+  getCartMock.mockResolvedValue(cartFixture);
+  let resolveDelete: (() => void) | undefined;
+  deleteOneMock.mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        resolveDelete = resolve;
+      })
+  );
+  renderCartView();
+  await screen.findByText("수제 고추기름");
+
+  await userEvent.click(screen.getByRole("button", { name: "마라샹궈 · 1" }));
+  await userEvent.click(
+    screen.getByRole("button", { name: "수제 고추기름 삭제" })
+  );
+
+  await waitFor(() => {
+    expect(
+      screen.queryByRole("button", { name: "마라샹궈 · 1" })
+    ).not.toBeInTheDocument();
+    expect(
+      within(screen.getByRole("group", { name: "레시피 필터" })).getByRole(
+        "button",
+        { name: "전체 4" }
+      )
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("배추김치")).toBeInTheDocument();
+  });
+
+  await act(async () => {
+    resolveDelete?.();
+  });
 });
 
 it("T-10: products가 있는 그룹은 상품 카드를 보여준다", async () => {
@@ -190,7 +231,7 @@ it("레시피 이름을 누르면 해당 레시피 상세로 이동하고, 삭�
   ).not.toBeInTheDocument();
 });
 
-it("T-13: 빈 장바구니면 헤더는 유지되고 인기 레시피 CTA가 보인다", async () => {
+it("T-13, T-52: 빈 장바구니면 헤더는 유지되고 인기 레시피 CTA가 보인다", async () => {
   getCartMock.mockResolvedValue(emptyCartFixture);
   renderCartView();
 
@@ -228,7 +269,7 @@ it("T-16: 행 삭제 버튼 → 단건 DELETE + 즉시 제거", async () => {
   });
 });
 
-it("T-17: 전체 비우기 → 확인 모달 → 모든 항목 bulk 삭제 1회", async () => {
+it("T-17, T-51: 전체 비우기 확인은 모든 항목을 bulk 삭제한다", async () => {
   getCartMock.mockResolvedValue(cartFixture);
   deleteBulkMock.mockResolvedValue(undefined);
   renderCartView();
@@ -250,6 +291,9 @@ it("T-17: 전체 비우기 → 확인 모달 → 모든 항목 bulk 삭제 1회"
       "c5Uv1GhD",
       "c4Qs9NwE",
     ]);
+    expect(
+      screen.queryByText("장바구니를 모두 비울까요?")
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -261,7 +305,7 @@ const guestItem = {
   recipe: { recipeId: "r7KpQ2mA", title: "김치찌개", imageUrl: null },
 };
 
-it("T-31: 게스트 /cart는 쿠팡 재조회로 로그인과 동일한 그룹 규칙을 보여준다", async () => {
+it("T-31, T-53: 게스트 장바구니도 선택된 전체 필터와 같은 그룹 규칙을 보여준다", async () => {
   useUserStore.setState({ user: null, isAuthReady: true });
   useGuestCartStore.setState({ items: [guestItem], isHydrated: true });
   coupangMock.mockResolvedValue({
@@ -284,10 +328,21 @@ it("T-31: 게스트 /cart는 쿠팡 재조회로 로그인과 동일한 그룹 �
   expect(
     screen.getByRole("link", { name: /쿠팡에서 보기/ })
   ).toBeInTheDocument();
+  expect(
+    screen.getByRole("link", { name: "김치찌개 100g 레시피 보기" })
+  ).toHaveAttribute("href", "/recipes/r7KpQ2mA");
+  expect(screen.getByRole("button", { name: "전체 1" })).toHaveClass(
+    "bg-ink",
+    "text-white"
+  );
+  expect(screen.getByRole("button", { name: "전체 1" })).toHaveAttribute(
+    "aria-pressed",
+    "true"
+  );
   expect(getCartMock).not.toHaveBeenCalled();
 });
 
-it("T-33: 게스트 /cart 상단에 로그인 배너가 보인다", async () => {
+it("T-33, T-53: 게스트 로그인 배너의 로그인 버튼은 44px과 visible focus를 제공한다", async () => {
   useUserStore.setState({ user: null, isAuthReady: true });
   useGuestCartStore.setState({ items: [guestItem], isHydrated: true });
   coupangMock.mockResolvedValue({ recipeId: "r7KpQ2mA", items: [] });
@@ -297,19 +352,59 @@ it("T-33: 게스트 /cart 상단에 로그인 배너가 보인다", async () => 
   expect(
     await screen.findByText(/로그인하면 계정에 저장돼요/)
   ).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "로그인" })).toHaveClass(
+    "min-h-11",
+    "cursor-pointer",
+    "focus-visible:ring-2"
+  );
 });
 
-it("T-36: 게스트 삭제는 API 호출 없이 로컬에서 동작한다", async () => {
+it("T-36, T-54: 병합된 게스트 재료 삭제는 두 로컬 항목만 제거한다", async () => {
+  const guestItems = [
+    {
+      ...guestItem,
+      recipeIngredientId: "ri8AbKcQ",
+      name: "신김치",
+      quantity: "200",
+    },
+    {
+      ...guestItem,
+      recipeIngredientId: "ri9CdLmR",
+      name: "신김치",
+      quantity: "100",
+    },
+  ];
   useUserStore.setState({ user: null, isAuthReady: true });
-  useGuestCartStore.setState({ items: [guestItem], isHydrated: true });
-  coupangMock.mockResolvedValue({ recipeId: "r7KpQ2mA", items: [] });
+  useGuestCartStore.setState({ items: guestItems, isHydrated: true });
+  coupangMock.mockResolvedValue({
+    recipeId: "r7KpQ2mA",
+    items: [
+      {
+        recipeIngredientId: "ri8AbKcQ",
+        coupangName: "신김치",
+        landingUrl: "https://link.coupang.com/kimchi",
+        lastCollectedAt: "2026-08-15T00:00:00+09:00",
+        products: [],
+      },
+      {
+        recipeIngredientId: "ri9CdLmR",
+        coupangName: "신김치",
+        landingUrl: "https://link.coupang.com/kimchi",
+        lastCollectedAt: "2026-08-15T00:00:00+09:00",
+        products: [],
+      },
+    ],
+  });
 
   renderCartView();
-  await screen.findByText("배추김치");
+  await screen.findByText("신김치");
 
-  await userEvent.click(screen.getByRole("button", { name: "배추김치 삭제" }));
+  await userEvent.click(screen.getByRole("button", { name: "신김치 삭제" }));
 
   expect(deleteOneMock).not.toHaveBeenCalled();
   expect(deleteBulkMock).not.toHaveBeenCalled();
-  expect(useGuestCartStore.getState().items).toHaveLength(0);
+  await waitFor(() => {
+    expect(useGuestCartStore.getState().items).toHaveLength(0);
+    expect(screen.queryByText("신김치")).not.toBeInTheDocument();
+  });
 });
