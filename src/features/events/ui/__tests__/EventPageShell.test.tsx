@@ -49,6 +49,47 @@ describe("EventPageShell", () => {
     expect(img).toHaveAttribute("src", "/events/sample/hero.png");
   });
 
+  it("custom hero를 기존 hero 자리에서 렌더링한다", () => {
+    render(
+      <EventPageShell
+        title="앱"
+        hero={<div data-testid="custom-hero">hero</div>}
+      >
+        <div />
+      </EventPageShell>
+    );
+    expect(screen.getByTestId("custom-hero")).toBeInTheDocument();
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
+  it("null custom hero에서 이미지 fallback을 렌더링하지 않는다", () => {
+    const { container } = render(
+      <EventPageShell title="앱" hero={null}>
+        <div />
+      </EventPageShell>
+    );
+
+    expect(container.querySelector("img")).not.toBeInTheDocument();
+  });
+
+  it("undefined hero와 이미지 props가 함께 있으면 이미지를 렌더링한다", () => {
+    render(
+      <EventPageShell
+        title="앱"
+        hero={undefined}
+        heroSrc="/events/sample/hero.png"
+        heroAlt="앱 배너"
+      >
+        <div />
+      </EventPageShell>
+    );
+
+    expect(screen.getByRole("img", { name: "앱 배너" })).toHaveAttribute(
+      "src",
+      "/events/sample/hero.png"
+    );
+  });
+
   it("콘텐츠 섹션을 작성 순서대로 렌더한다", () => {
     render(
       <EventPageShell title="t" heroSrc="/x.png" heroAlt="a">

@@ -4,24 +4,28 @@ import PrevButton from "@/shared/ui/PrevButton";
 
 type EventPageShellProps = {
   title: string;
-  heroSrc: string;
-  heroAlt: string;
   children: ReactNode;
-};
+} & (
+  | { hero: ReactNode; heroSrc?: never; heroAlt?: never }
+  | { hero?: never; heroSrc: string; heroAlt: string }
+);
 
-const EventPageShell = ({
-  title,
-  heroSrc,
-  heroAlt,
-  children,
-}: EventPageShellProps) => {
+const EventPageShell = (props: EventPageShellProps) => {
+  const { title, children } = props;
+  const hero =
+    typeof props.heroSrc === "string" ? (
+      <img src={props.heroSrc} alt={props.heroAlt} className="h-auto w-full" />
+    ) : (
+      props.hero
+    );
+
   return (
     <div className="mx-auto min-h-screen w-full max-w-[480px] bg-white md:border-x md:border-gray-100">
       <header className="sticky top-0 z-40 flex items-center gap-2 border-b border-gray-100 bg-white px-3 py-3">
         <PrevButton showOnDesktop />
         <h1 className="text-ink truncate text-base font-semibold">{title}</h1>
       </header>
-      <img src={heroSrc} alt={heroAlt} className="h-auto w-full" />
+      {hero}
       <main className="text-pretty break-keep">{children}</main>
     </div>
   );
