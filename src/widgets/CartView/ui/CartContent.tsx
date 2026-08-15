@@ -1,7 +1,7 @@
 // i18n-ignore-file: 장바구니 ko 전용
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
@@ -32,15 +32,7 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
     cart.recipes.some((recipe) => recipe.recipeId === selectedRecipeId)
       ? selectedRecipeId
       : null;
-  const filtered = useMemo(
-    () => filterCartByRecipe(cart, validRecipeId),
-    [cart, validRecipeId]
-  );
-  const recipeImages = useMemo(
-    () =>
-      new Map(cart.recipes.map((recipe) => [recipe.recipeId, recipe.imageUrl])),
-    [cart.recipes]
-  );
+  const filtered = filterCartByRecipe(cart, validRecipeId);
 
   const clearAll = () => {
     const allIds = [
@@ -97,7 +89,6 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
         <CartGroupSection
           key={group.coupangInfo.coupangName}
           group={group}
-          recipeImages={recipeImages}
           onDelete={handlers.onDeleteItems}
         />
       ))}
@@ -108,7 +99,6 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
         >
           <CartItemList
             items={filtered.unmatchedItems}
-            recipeImages={recipeImages}
             onDelete={handlers.onDeleteItems}
           />
         </section>

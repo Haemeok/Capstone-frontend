@@ -10,13 +10,11 @@ import { CartProductSlider } from "./CartProductSlider";
 
 type CartGroupSectionProps = {
   group: CartGroup;
-  recipeImages: Map<string, string | null>;
   onDelete: (cartItemIds: string[]) => void;
 };
 
 export const CartGroupSection = ({
   group,
-  recipeImages,
   onDelete,
 }: CartGroupSectionProps) => {
   const { coupangInfo, items } = group;
@@ -27,11 +25,7 @@ export const CartGroupSection = ({
       data-testid={`cart-group-${coupangInfo.coupangName}`}
       className="border-t-8 border-gray-100 bg-white px-4 py-5"
     >
-      <CartItemList
-        items={items}
-        recipeImages={recipeImages}
-        onDelete={onDelete}
-      />
+      <CartItemList items={items} onDelete={onDelete} />
       {hasProducts ? (
         <CartProductSlider
           coupangName={coupangInfo.coupangName}

@@ -27,6 +27,7 @@ jest.mock("@/features/auth/ui/LoginDialog", () => ({
 }));
 
 import { getRecipeCoupangProducts } from "@/shared/coupang";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { useGuestCartStore } from "@/entities/cart";
 import {
@@ -47,6 +48,7 @@ const getCartMock = getCart as jest.Mock;
 const deleteOneMock = deleteCartItem as jest.Mock;
 const deleteBulkMock = deleteCartItemsBulk as jest.Mock;
 const coupangMock = getRecipeCoupangProducts as jest.Mock;
+const triggerHapticMock = jest.mocked(triggerHaptic);
 
 const renderCartView = () => {
   const qc = new QueryClient({
@@ -64,6 +66,7 @@ beforeEach(() => {
   deleteOneMock.mockReset();
   deleteBulkMock.mockReset();
   coupangMock.mockReset();
+  triggerHapticMock.mockReset();
   // 테스트 픽스처 — CartView는 로그인 여부만 보므로 부분 User로 캐스트
   useUserStore.setState({ user: { id: "u1" } as User, isAuthReady: true });
   useGuestCartStore.setState({ items: [], isHydrated: true });
@@ -74,7 +77,7 @@ it("T-06: /cart 진입 시 담긴 항목의 이름·수량·단위·출처 레�
   renderCartView();
 
   expect(await screen.findByText("배추김치")).toBeInTheDocument();
-  expect(screen.getByText("100g")).toBeInTheDocument();
+  expect(screen.getAllByText("100g").length).toBeGreaterThan(0);
   expect(screen.getAllByText(/김치찌개/).length).toBeGreaterThan(0);
   expect(screen.getByRole("heading", { name: "장바구니" })).toBeInTheDocument();
   expect(screen.getByText("수제 고추기름")).toBeInTheDocument();
@@ -94,19 +97,35 @@ it("같은 재료를 두 레시피에서 담으면 라벨 1번 + 레시피별 �
   expect(screen.getByText("100g")).toBeInTheDocument();
 });
 
-it("병합된 재료 블록의 삭제 버튼은 하나이고 전체를 지운다", async () => {
+it("병합된 재료 그룹은 삭제 하나로 전체를 지운다 (T-47)", async () => {
   getCartMock.mockResolvedValue(sameIngredientCartFixture);
-  deleteBulkMock.mockResolvedValue(undefined);
+  let resolveDelete: (() => void) | undefined;
+  deleteBulkMock.mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        resolveDelete = resolve;
+      })
+  );
   renderCartView();
   await screen.findByText("신김치");
 
   const deleteButtons = screen.getAllByRole("button", { name: /삭제$/ });
   expect(deleteButtons).toHaveLength(1);
+  expect(screen.getByRole("button", { name: "신김치 삭제" })).toHaveClass(
+    "size-11"
+  );
 
   await userEvent.click(screen.getByRole("button", { name: "신김치 삭제" }));
 
+  expect(triggerHapticMock).toHaveBeenCalledWith("Light");
+
   await waitFor(() => {
     expect(deleteBulkMock).toHaveBeenCalledWith(["c2Fg6JkL", "c3Hj8PqS"]);
+    expect(screen.queryByText("신김치")).not.toBeInTheDocument();
+  });
+
+  await act(async () => {
+    resolveDelete?.();
   });
 });
 
@@ -164,7 +183,7 @@ it("레시피 이름을 누르면 해당 레시피 상세로 이동하고, 삭�
   await screen.findByText("배추김치");
 
   expect(
-    screen.getAllByRole("link", { name: "김치찌개 레시피 보기" })[0]
+    screen.getAllByRole("link", { name: "김치찌개 100g 레시피 보기" })[0]
   ).toHaveAttribute("href", "/recipes/r7KpQ2mA");
   expect(
     screen.queryByRole("link", { name: "김치볶음밥 레시피 보기" })
