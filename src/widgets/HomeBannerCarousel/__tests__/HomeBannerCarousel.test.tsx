@@ -61,7 +61,10 @@ describe("HomeBannerCarousel", () => {
 
     HOME_BANNER_SLIDES.forEach((slide) => {
       if (slide.chip) {
-        expect(screen.getByText(slide.chip)).toBeInTheDocument();
+        const chip = screen.getByText(slide.chip);
+        expect(chip).toBeInTheDocument();
+        expect(chip).toHaveClass("text-ink-sub");
+        expect(chip).not.toHaveClass("text-ink-muted");
       }
       expect(screen.getByText(slide.title)).toBeInTheDocument();
     });

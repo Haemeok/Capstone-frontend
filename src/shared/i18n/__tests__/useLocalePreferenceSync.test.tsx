@@ -53,4 +53,35 @@ describe("useLocalePreferenceSync", () => {
     renderHook(() => useLocalePreferenceSync(null));
     expect(replace).not.toHaveBeenCalled();
   });
+
+  it.each(["en", "ja"] as const)(
+    "한국어 전용 이벤트 경로에서는 account=%s를 저장하고 이동하지 않는다",
+    (locale) => {
+      usePathnameMock.mockReturnValue("/events/app-install");
+
+      renderHook(() => useLocalePreferenceSync(locale));
+
+      expect(getLocaleCookie()).toBe(locale);
+      expect(localStorage.getItem("preferred_locale")).toBe(locale);
+      expect(replace).not.toHaveBeenCalled();
+    }
+  );
+
+  it("한국어 전용 이벤트 경로의 trailing slash에서도 이동하지 않는다", () => {
+    setLocaleCookie("en");
+    usePathnameMock.mockReturnValue("/events/app-install/");
+
+    renderHook(() => useLocalePreferenceSync(null));
+
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it("이름이 비슷한 경로에는 기존 언어 정렬을 적용한다", () => {
+    setLocaleCookie("en");
+    usePathnameMock.mockReturnValue("/events/app-install-extra");
+
+    renderHook(() => useLocalePreferenceSync(null));
+
+    expect(replace).toHaveBeenCalledWith("/en/events/app-install-extra");
+  });
 });

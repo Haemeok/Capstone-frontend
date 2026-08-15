@@ -4,6 +4,7 @@ import { useEffect } from "react";
 // eslint-disable-next-line local/no-raw-router -- 이미 localizedHref로 prefix가 박힌 명시적 경로로 replace하므로 useLocalizedRouter의 재-prefix가 오히려 ko target을 깨뜨림
 import { usePathname, useRouter } from "next/navigation";
 
+import { isNonLocalizedPath } from "./isNonLocalizedPath";
 import { getLocaleCookie, setLocaleCookie } from "./localeCookie";
 import { localizedHref, stripLocale } from "./localizedHref";
 import { getStoredLocale, setStoredLocale } from "./preferredLocale";
@@ -31,6 +32,8 @@ export const useLocalePreferenceSync = (account: Locale | null): void => {
 
     if (getLocaleCookie() !== resolved) setLocaleCookie(resolved);
     if (getStoredLocale() !== resolved) setStoredLocale(resolved);
+
+    if (isNonLocalizedPath(pathname)) return;
 
     if (resolveChromeLocale(pathname) !== resolved) {
       const { barePath } = stripLocale(pathname);
