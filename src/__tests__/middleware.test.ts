@@ -65,6 +65,16 @@ describe("middleware locale align", () => {
     const res = await middleware(req("/en/recipe/abc"));
     expect(res.headers.get("location")).toBeNull();
   });
+
+  it("T-02: 쿠키 없는 앱 설치 이벤트 요청은 redirect하지 않는다", async () => {
+    const res = await middleware(req("/events/app-install"));
+    expect(res.headers.get("location")).toBeNull();
+  });
+
+  it("T-05: 쿠키 없는 / 요청은 /landing으로 redirect하지 않는다", async () => {
+    const res = await middleware(req("/"));
+    expect(res.headers.get("location")).toBeNull();
+  });
 });
 
 describe("middleware recipe render track", () => {

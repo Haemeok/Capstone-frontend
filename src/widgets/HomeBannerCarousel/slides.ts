@@ -2,7 +2,17 @@ import { ICON_BASE_URL } from "@/shared/config/constants/recipe";
 
 import { BannerSlide } from "./types";
 
+export const APP_INSTALL_BANNER_ID = "app-install";
+
 export const HOME_BANNER_SLIDES: BannerSlide[] = [
+  {
+    id: APP_INSTALL_BANNER_ID,
+    chip: "#레시피오 앱",
+    title: "레시피오 앱에서 더 편하게",
+    link: "/events/app-install",
+    backgroundColor: "#f7f4ee",
+    mainImage: "/web-app-manifest-512x512.png",
+  },
   {
     id: "youtube",
     chip: "#유튜브 레시피",
