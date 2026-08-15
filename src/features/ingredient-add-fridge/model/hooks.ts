@@ -5,6 +5,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import { setInFridgeForIds } from "@/entities/ingredient/lib/updateIngredientListCache";
 import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
 import {
@@ -101,6 +103,9 @@ export const useAddIngredientBulkMutation = () => {
         queryClient.setQueryData(key, data);
       });
       console.error("재료 벌크 추가 실패:", error);
+    },
+    onSuccess: () => {
+      triggerHaptic("Success");
     },
     onSettled: () => {
       queryClient.invalidateQueries({

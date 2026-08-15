@@ -2,6 +2,8 @@ import type { IngredientAddDict } from "../../types";
 
 export const ingredientAdd: IngredientAddDict = {
   pageTitle: "食材を追加",
+  catalogHeading: "食材を探す",
+  categoryGroup: "食材カテゴリー",
   searchEntry: "食材を検索して追加",
   searchEntryAria: "食材を検索して追加する",
   packsHeading: "おすすめ食材セット",
@@ -30,4 +32,7 @@ export const ingredientAdd: IngredientAddDict = {
   cardOwned: "追加済み",
   cardCount: "食材{count}品",
   cardDetailAria: "{name}の詳細を見る",
+  packDrawerDescription: "冷蔵庫に追加する食材を選んでください",
+  packIngredientSelect: "{name}を選択",
+  packIngredientOwned: "{name}、追加済み",
 };

@@ -2,6 +2,8 @@ import type { IngredientAddDict } from "../../types";
 
 export const ingredientAdd: IngredientAddDict = {
   pageTitle: "재료 추가",
+  catalogHeading: "재료 둘러보기",
+  categoryGroup: "재료 카테고리",
   searchEntry: "재료를 검색해서 추가하세요",
   searchEntryAria: "재료 검색해서 추가하기",
   packsHeading: "추천 재료 모음",
@@ -30,4 +32,7 @@ export const ingredientAdd: IngredientAddDict = {
   cardOwned: "보유 중",
   cardCount: "재료 {count}개",
   cardDetailAria: "{name} 상세 보기",
+  packDrawerDescription: "냉장고에 추가할 재료를 골라주세요",
+  packIngredientSelect: "{name} 선택",
+  packIngredientOwned: "{name}, 보유 중",
 };

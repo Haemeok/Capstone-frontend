@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { getNextPageParam } from "@/shared/lib/utils";
 
 import { INGREDIENT_QUERY_KEYS } from "@/entities/ingredient/model/queryKeys";
@@ -19,6 +20,9 @@ import {
 } from "../hooks";
 
 jest.mock("../api");
+jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
+
+const triggerHapticMock = jest.mocked(triggerHaptic);
 
 const createWrapper = (queryClient: QueryClient) => {
   const Wrapper = ({ children }: { children: React.ReactNode }) =>
@@ -127,7 +131,7 @@ describe("useAddIngredientMutation (browse single add)", () => {
 });
 
 describe("useAddIngredientBulkMutation (browse bulk add)", () => {
-  it("flips inFridge=true for all selected ids via prefix match (T-06)", async () => {
+  it("flips inFridge=true and emits one success haptic after bulk add (T-06, EXT-02)", async () => {
     (api.addIngredientBulk as jest.Mock).mockResolvedValue(undefined);
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
@@ -156,6 +160,8 @@ describe("useAddIngredientBulkMutation (browse bulk add)", () => {
       pages: { content: { id: string; inFridge: boolean }[] }[];
     }>(INGREDIENT_QUERY_KEYS.browse("전체", ""));
     expect(data?.pages[0].content.every((i) => i.inFridge)).toBe(true);
+    expect(triggerHapticMock).toHaveBeenCalledTimes(1);
+    expect(triggerHapticMock).toHaveBeenCalledWith("Success");
   });
 
   it("does not refetch the browse list after bulk add (T-07)", async () => {

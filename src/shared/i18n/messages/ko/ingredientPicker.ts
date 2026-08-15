@@ -14,6 +14,8 @@ export const ingredientPicker: IngredientPickerDict = {
   myIngredients: "나의 재료",
   cardSelect: "{name} 선택",
   cardDeselect: "{name} 선택 해제",
+  cardOwned: "{name}, 보유 중",
+  owned: "보유 중",
   complete: "완료",
   removeAria: "{name} 제거",
 };

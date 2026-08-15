@@ -13,6 +13,19 @@ const make = (id: string, name = id): IngredientItem => ({
 });
 
 describe("useIngredientSelection", () => {
+  it("accepts the minimal shared selection shape and exposes selected ids", () => {
+    type PackIngredient = { id: string; name: string; imageUrl?: string };
+    const onion: PackIngredient = { id: "onion", name: "양파" };
+    const { result } = renderHook(() =>
+      useIngredientSelection<PackIngredient>()
+    );
+
+    act(() => result.current.toggle(onion));
+
+    expect(result.current.selectedIds).toEqual(new Set(["onion"]));
+    expect(result.current.selectedItems).toEqual([onion]);
+  });
+
   it("toggles an ingredient in and back out", () => {
     const { result } = renderHook(() => useIngredientSelection());
     const carrot = make("1", "당근");

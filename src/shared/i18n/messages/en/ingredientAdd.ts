@@ -2,6 +2,8 @@ import type { IngredientAddDict } from "../../types";
 
 export const ingredientAdd: IngredientAddDict = {
   pageTitle: "Add ingredients",
+  catalogHeading: "Browse ingredients",
+  categoryGroup: "Ingredient categories",
   searchEntry: "Search and add ingredients",
   searchEntryAria: "Search and add ingredients",
   packsHeading: "Recommended sets",
@@ -30,4 +32,7 @@ export const ingredientAdd: IngredientAddDict = {
   cardOwned: "Added",
   cardCount: "{count} ingredients",
   cardDetailAria: "View {name}",
+  packDrawerDescription: "Choose ingredients to add to your fridge",
+  packIngredientSelect: "Select {name}",
+  packIngredientOwned: "{name}, already added",
 };

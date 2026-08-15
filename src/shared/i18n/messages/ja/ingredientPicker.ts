@@ -14,6 +14,8 @@ export const ingredientPicker: IngredientPickerDict = {
   myIngredients: "マイ食材",
   cardSelect: "{name}を選択",
   cardDeselect: "{name}の選択を解除",
+  cardOwned: "{name}、追加済み",
+  owned: "追加済み",
   complete: "完了",
   removeAria: "{name}を削除",
 };

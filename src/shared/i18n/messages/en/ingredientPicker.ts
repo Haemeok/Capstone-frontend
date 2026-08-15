@@ -14,6 +14,8 @@ export const ingredientPicker: IngredientPickerDict = {
   myIngredients: "My ingredients",
   cardSelect: "Select {name}",
   cardDeselect: "Deselect {name}",
+  cardOwned: "{name}, already added",
+  owned: "Added",
   complete: "Done",
   removeAria: "Remove {name}",
 };

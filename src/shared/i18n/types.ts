@@ -231,6 +231,8 @@ export type HomeDict = {
 
 export type IngredientAddDict = {
   pageTitle: string;
+  catalogHeading: string;
+  categoryGroup: string;
   searchEntry: string;
   searchEntryAria: string;
   packsHeading: string;
@@ -259,6 +261,9 @@ export type IngredientAddDict = {
   cardOwned: string;
   cardCount: string;
   cardDetailAria: string;
+  packDrawerDescription: string;
+  packIngredientSelect: string;
+  packIngredientOwned: string;
 };
 
 export type IngredientsDict = {
@@ -841,6 +846,8 @@ export type IngredientPickerDict = {
   myIngredients: string;
   cardSelect: string;
   cardDeselect: string;
+  cardOwned: string;
+  owned: string;
   complete: string;
   removeAria: string;
 };

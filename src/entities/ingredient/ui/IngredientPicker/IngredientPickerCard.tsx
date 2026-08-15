@@ -24,6 +24,11 @@ const IngredientPickerCard = ({
 }: IngredientPickerCardProps) => {
   const t = useIngredientPickerDict();
   const checked = isSelected || isAlreadyAdded;
+  const accessibleLabel = isAlreadyAdded
+    ? format(t.cardOwned, { name: ingredient.name })
+    : format(isSelected ? t.cardDeselect : t.cardSelect, {
+        name: ingredient.name,
+      });
 
   const handleToggle = () => {
     if (isAlreadyAdded) return;
@@ -36,9 +41,8 @@ const IngredientPickerCard = ({
       type="button"
       onClick={handleToggle}
       disabled={isAlreadyAdded}
-      aria-label={format(checked ? t.cardDeselect : t.cardSelect, {
-        name: ingredient.name,
-      })}
+      aria-label={accessibleLabel}
+      aria-pressed={isAlreadyAdded ? undefined : isSelected}
       className={cn(
         "flex w-full flex-col text-left",
         isAlreadyAdded ? "cursor-not-allowed opacity-50" : "cursor-pointer"
@@ -56,21 +60,24 @@ const IngredientPickerCard = ({
         <span
           aria-hidden
           className={cn(
-            "absolute right-1.5 bottom-1.5 flex h-6 w-6 items-center justify-center rounded-full shadow-md transition-colors",
-            checked ? "bg-olive-vivid text-white" : "text-ink-muted bg-white"
+            "absolute right-1.5 bottom-1.5 flex h-6 w-6 items-center justify-center rounded-md shadow-sm transition-colors",
+            checked ? "bg-olive-dark text-white" : "text-ink-muted bg-white"
           )}
         >
           {checked ? <Check size={14} /> : <Plus size={14} />}
         </span>
       </div>
       {ingredient.category && (
-        <span className="mt-2 block text-xs text-gray-400">
+        <span className="text-ink-muted mt-2 block text-xs">
           {ingredient.category}
         </span>
       )}
       <span className="text-ink mt-0.5 block text-sm font-medium">
         {ingredient.name}
       </span>
+      {isAlreadyAdded ? (
+        <span className="text-ink-muted mt-0.5 text-xs">{t.owned}</span>
+      ) : null}
     </button>
   );
 };

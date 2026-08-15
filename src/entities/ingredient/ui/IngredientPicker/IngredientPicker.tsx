@@ -11,8 +11,9 @@ import {
 } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import useSearch from "@/shared/hooks/useSearch";
-import { format, useIngredientPickerDict } from "@/shared/i18n";
+import { format, useApiLocale, useIngredientPickerDict } from "@/shared/i18n";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn, getNextPageParam } from "@/shared/lib/utils";
 import {
   Drawer,
@@ -62,6 +63,7 @@ const IngredientPicker = ({
   onComplete,
 }: IngredientPickerProps) => {
   const t = useIngredientPickerDict();
+  const locale = useApiLocale();
   const { localize } = useTaxonomy();
   const [selectedCategory, setSelectedCategory] =
     useState<RecipeCreateCategoryTab>(initialCategory ?? categories[0]);
@@ -84,15 +86,16 @@ const IngredientPicker = ({
       IngredientsApiResponse,
       Error,
       InfiniteData<IngredientsApiResponse>,
-      [string, string, string],
+      [string, string, string, string],
       number
     >({
-      queryKey: [queryConfig.keyBase, selectedCategory, searchQuery],
+      queryKey: [queryConfig.keyBase, selectedCategory, searchQuery, locale],
       queryFn: ({ pageParam = 0 }) =>
         getIngredients({
           ...queryConfig.getParams(selectedCategory),
           q: searchQuery,
           pageParam,
+          lang: locale,
         }),
       getNextPageParam,
       initialPageParam: 0,
@@ -137,7 +140,7 @@ const IngredientPicker = ({
               ref={inputRef}
               type="text"
               placeholder={t.searchPlaceholder}
-              className="text-ink placeholder:text-ink-muted w-full rounded-full border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus:outline-none"
+              className="text-ink placeholder:text-ink-muted focus-visible:ring-olive-dark w-full rounded-lg border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus-visible:ring-2 focus-visible:outline-none"
               value={inputValue}
               onChange={handleInputChange}
             />
@@ -152,9 +155,14 @@ const IngredientPicker = ({
             <button
               key={category}
               type="button"
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => {
+                if (selectedCategory === category) return;
+                triggerHaptic("Light");
+                setSelectedCategory(category);
+              }}
+              aria-pressed={selectedCategory === category}
               className={cn(
-                "flex-shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-sm transition-colors",
+                "flex-shrink-0 cursor-pointer rounded-md px-4 py-1.5 text-sm transition-colors",
                 selectedCategory === category
                   ? "bg-gray-900 font-medium text-white"
                   : "text-ink-sub bg-gray-100 hover:bg-gray-200"
@@ -171,7 +179,7 @@ const IngredientPicker = ({
           {isPending ? (
             <p className="text-ink-muted text-center">{t.loading}</p>
           ) : status === "error" ? (
-            <p className="text-center text-red-500">
+            <p role="alert" className="text-ink-sub bg-gray-100 p-4 text-sm">
               {format(t.errorPrefix, {
                 message:
                   error instanceof Error ? error.message : t.unknownError,
@@ -192,7 +200,7 @@ const IngredientPicker = ({
               </div>
               <div ref={ref} className="h-10 text-center">
                 {!hasNextPage && (data?.pages[0]?.content?.length ?? 0) > 0 && (
-                  <p className="text-sm text-gray-400">{t.allLoaded}</p>
+                  <p className="text-ink-muted text-sm">{t.allLoaded}</p>
                 )}
               </div>
               {data?.pages[0]?.content?.length === 0 && !isFetching && (

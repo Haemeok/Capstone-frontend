@@ -3,7 +3,6 @@
 import { X } from "lucide-react";
 
 import { format, useIngredientPickerDict } from "@/shared/i18n";
-import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 import { Button } from "@/shared/ui/shadcn/button";
 
@@ -21,11 +20,6 @@ const IngredientSelectionTray = ({
   onComplete,
 }: IngredientSelectionTrayProps) => {
   const t = useIngredientPickerDict();
-  const handleComplete = () => {
-    triggerHaptic("Success");
-    onComplete();
-  };
-
   return (
     <div className="flex items-center gap-3 border-t border-gray-100 bg-white p-3">
       <div className="scrollbar-hide flex flex-1 gap-2 overflow-x-auto px-1 py-2">
@@ -49,7 +43,7 @@ const IngredientSelectionTray = ({
                 type="button"
                 onClick={() => onRemove(item.id)}
                 aria-label={format(t.removeAria, { name: item.name })}
-                className="text-ink-sub absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-200 shadow"
+                className="text-ink-sub absolute -top-1 -right-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-md bg-gray-200 shadow"
               >
                 <X size={12} />
               </button>
@@ -61,9 +55,9 @@ const IngredientSelectionTray = ({
         ))}
       </div>
       <Button
-        onClick={handleComplete}
+        onClick={onComplete}
         disabled={items.length === 0}
-        className="bg-olive-vivid hover:bg-olive-vivid/90 h-12 flex-shrink-0 cursor-pointer px-6 text-base font-semibold text-white disabled:bg-gray-300"
+        className="bg-olive-dark hover:bg-olive h-12 flex-shrink-0 cursor-pointer px-6 text-base font-semibold text-white disabled:bg-gray-300"
       >
         {t.complete}
       </Button>

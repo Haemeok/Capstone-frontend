@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import type { RecipeCreateCategoryTab } from "@/shared/config/constants/recipe";
 import { ingredientPickerMessages } from "@/shared/i18n/ingredientPickerMessages";
 import { taxonomyMessages } from "@/shared/i18n/taxonomyMessages";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type {
   IngredientItem,
@@ -18,12 +19,14 @@ const mockPathname = jest.fn();
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname(),
 }));
+jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 
 type GetIngredientsParams = {
   category: string | null;
   isMine: boolean;
   q: string;
   pageParam: number;
+  lang?: string;
 };
 
 const emptyPage: IngredientsApiResponse = {
@@ -61,7 +64,7 @@ const queryConfig: IngredientPickerQueryConfig = {
 
 const isAlreadyAdded = (_ingredient: IngredientItem) => false;
 
-const renderPicker = () =>
+const renderPicker = (onComplete = (_items: IngredientItem[]) => {}) =>
   render(
     <QueryClientProvider client={new QueryClient()}>
       <IngredientPicker
@@ -70,7 +73,7 @@ const renderPicker = () =>
         categories={CATEGORIES}
         queryConfig={queryConfig}
         isAlreadyAdded={isAlreadyAdded}
-        onComplete={() => {}}
+        onComplete={onComplete}
       />
     </QueryClientProvider>
   );
@@ -78,6 +81,7 @@ const renderPicker = () =>
 describe("IngredientPicker i18n", () => {
   beforeEach(() => {
     getIngredientsMock.mockClear();
+    jest.mocked(triggerHaptic).mockClear();
   });
 
   it("ja에서 chrome과 카테고리 칩이 현지화된 사전/택소노미 값으로 표시된다", () => {
@@ -87,6 +91,9 @@ describe("IngredientPicker i18n", () => {
     expect(
       screen.getByPlaceholderText(ingredientPickerMessages.ja.searchPlaceholder)
     ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(ingredientPickerMessages.ja.searchPlaceholder)
+    ).toHaveClass("focus-visible:ring-2", "focus-visible:ring-olive-dark");
     expect(
       screen.getByText(ingredientPickerMessages.ja.title)
     ).toBeInTheDocument();
@@ -107,6 +114,9 @@ describe("IngredientPicker i18n", () => {
     ).toBeInTheDocument();
 
     expect(container.textContent).not.toMatch(/[가-힣]/);
+    expect(getIngredientsMock).toHaveBeenCalledWith(
+      expect.objectContaining({ lang: "ja" })
+    );
   });
 
   it("ja에서 고기 칩을 눌러도 쿼리에는 ko canonical 카테고리가 전달된다", () => {
@@ -124,6 +134,7 @@ describe("IngredientPicker i18n", () => {
         ([params]) => params.category === "고기"
       )
     ).toBe(true);
+    expect(jest.mocked(triggerHaptic)).toHaveBeenCalledWith("Light");
   });
 
   it("ja에서 마이 식재료 칩의 쿼리는 category 없이 isMine만 전달한다", () => {
@@ -154,5 +165,28 @@ describe("IngredientPicker i18n", () => {
         name: ingredientPickerMessages.ko.myIngredients,
       })
     ).toBeInTheDocument();
+  });
+
+  it("완료 버튼은 서버 성공 전 Success 햅틱을 발생시키지 않는다", async () => {
+    const carrot: IngredientItem = {
+      id: "carrot-1",
+      name: "당근",
+      unit: "개",
+      inFridge: false,
+      calories: 0,
+    };
+    getIngredientsMock.mockResolvedValueOnce({
+      content: [carrot],
+      page: { size: 20, number: 0, totalElements: 1, totalPages: 1 },
+    });
+    mockPathname.mockReturnValue("/recipes/new");
+    const onComplete = jest.fn();
+    renderPicker(onComplete);
+
+    fireEvent.click(await screen.findByRole("button", { name: "당근 선택" }));
+    fireEvent.click(screen.getByRole("button", { name: "완료" }));
+
+    expect(onComplete).toHaveBeenCalledWith([carrot]);
+    expect(jest.mocked(triggerHaptic)).not.toHaveBeenCalledWith("Success");
   });
 });

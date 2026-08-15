@@ -2,14 +2,20 @@ import { useState } from "react";
 
 import type { IngredientItem } from "@/entities/ingredient/model/types";
 
-export const useIngredientSelection = () => {
-  const [selected, setSelected] = useState<Map<string, IngredientItem>>(
-    new Map()
-  );
+export type IngredientSelectionItem = {
+  id: string;
+  name: string;
+  imageUrl?: string;
+};
 
-  const toggle = (ingredient: IngredientItem) => {
-    setSelected((prev) => {
-      const next = new Map(prev);
+export const useIngredientSelection = <
+  T extends IngredientSelectionItem = IngredientItem,
+>() => {
+  const [selected, setSelected] = useState<Map<string, T>>(new Map());
+
+  const toggle = (ingredient: T) => {
+    setSelected((previous) => {
+      const next = new Map(previous);
       if (next.has(ingredient.id)) {
         next.delete(ingredient.id);
       } else {
@@ -20,9 +26,9 @@ export const useIngredientSelection = () => {
   };
 
   const remove = (id: string) => {
-    setSelected((prev) => {
-      if (!prev.has(id)) return prev;
-      const next = new Map(prev);
+    setSelected((previous) => {
+      if (!previous.has(id)) return previous;
+      const next = new Map(previous);
       next.delete(id);
       return next;
     });
@@ -31,7 +37,8 @@ export const useIngredientSelection = () => {
   const clear = () => setSelected(new Map());
 
   return {
-    selectedItems: [...selected.values()],
+    selectedItems: Array.from(selected.values()),
+    selectedIds: new Set(selected.keys()),
     isSelected: (id: string) => selected.has(id),
     count: selected.size,
     toggle,
