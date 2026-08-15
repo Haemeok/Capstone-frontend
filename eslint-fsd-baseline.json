@@ -32,7 +32,6 @@
   "src/features/recipe-complete/model/hooks.ts",
   "src/features/recipe-complete/ui/RecipeCompleteButton.tsx",
   "src/features/recipe-import-youtube/model/jobPollingHandlers.tsx",
-  "src/features/recipe-import-youtube/ui/DuplicateRecipeCard.tsx",
   "src/features/recipe-import-youtube/ui/DuplicateRecipeSection.tsx",
   "src/features/recipe-like/model/hooks.ts",
   "src/features/recipe-like/ui/RecipeLikeButton.tsx",

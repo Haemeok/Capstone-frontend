@@ -160,6 +160,29 @@ describe("DuplicateRecipeSheet", () => {
     );
   });
 
+  it.each([
+    ["direct", true],
+    ["trending", false],
+    [null, false],
+  ] as const)(
+    "T-04: urlSource=%s일 때 direct 저장 안내 표시 여부가 %s이다",
+    (urlSource, shouldShowAdded) => {
+      render(<DuplicateRecipeSheet {...defaultProps} urlSource={urlSource} />);
+
+      const addedMessage = screen.queryByText(
+        youtubeMessages.ko.duplicateAdded
+      );
+
+      if (shouldShowAdded) {
+        expect(addedMessage).toBeInTheDocument();
+        expect(addedMessage).toHaveClass("block", "text-ink-sub");
+        return;
+      }
+
+      expect(addedMessage).not.toBeInTheDocument();
+    }
+  );
+
   it("T-05: 닫은 뒤 같은 key와 recipeId로 rerender해도 닫힘을 유지한다", () => {
     const { rerender } = render(
       <DuplicateRecipeSheet key="recipe-1" {...defaultProps} />

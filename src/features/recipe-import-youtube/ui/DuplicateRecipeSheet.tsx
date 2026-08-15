@@ -18,6 +18,7 @@ type DuplicateRecipeSheetProps = {
   isLoading: boolean;
   isFavorited: boolean;
   onSaveClick: () => void;
+  urlSource?: "direct" | "trending" | null;
 };
 
 type DuplicateRecipeActionsProps = Pick<
@@ -70,6 +71,7 @@ export const DuplicateRecipeSheet = ({
   isLoading,
   isFavorited,
   onSaveClick,
+  urlSource,
 }: DuplicateRecipeSheetProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const common = useCommonDict();
@@ -91,8 +93,13 @@ export const DuplicateRecipeSheet = ({
           <Title className="text-ink text-left text-xl leading-7 font-bold">
             {t.duplicateTitle}
           </Title>
-          <Description className="text-olive-dark text-left text-sm leading-5 font-medium">
-            {t.duplicateNoCredit}
+          <Description className="text-left text-sm leading-5 font-medium">
+            <span className="text-olive-dark block">{t.duplicateNoCredit}</span>
+            {urlSource === "direct" ? (
+              <span className="text-ink-sub mt-1 block">
+                {t.duplicateAdded}
+              </span>
+            ) : null}
           </Description>
           <button
             type="button"

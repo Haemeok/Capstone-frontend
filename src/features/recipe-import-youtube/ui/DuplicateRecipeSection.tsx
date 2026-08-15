@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-import { AnimatePresence } from "motion/react";
-
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import {
@@ -19,8 +17,7 @@ import { useSaveToastWithChange } from "@/features/recipe-save/model/useSaveToas
 
 import { toDetailedRecipeItem } from "../model/duplicateRecipeMapper";
 import { YoutubeMeta } from "../model/types";
-import { DuplicateRecipeCard } from "./DuplicateRecipeCard";
-import { DuplicateRecipeSkeleton } from "./DuplicateRecipeSkeleton";
+import { DuplicateRecipeSheet } from "./DuplicateRecipeSheet";
 
 type UrlSource = "direct" | "trending" | null;
 
@@ -89,19 +86,17 @@ const DuplicateRecipeSection = ({
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        {isLoading ? (
-          <DuplicateRecipeSkeleton />
-        ) : recipeItem ? (
-          <DuplicateRecipeCard
-            recipeId={recipeId}
-            recipeItem={recipeItem}
-            urlSource={urlSource}
-            isFavorited={isFavorited}
-            onSaveClick={handleSaveClick}
-          />
-        ) : null}
-      </AnimatePresence>
+      {isLoading || recipeItem ? (
+        <DuplicateRecipeSheet
+          key={recipeId}
+          recipeId={recipeId}
+          recipeItem={recipeItem}
+          isLoading={isLoading}
+          isFavorited={isFavorited}
+          onSaveClick={handleSaveClick}
+          urlSource={urlSource}
+        />
+      ) : null}
 
       {changeSheet}
     </>
