@@ -35,16 +35,14 @@ export const IngredientAddCatalog = ({
     inputValue,
     handleSearchSubmit,
     handleInputChange,
-    setInputValue,
+    clearSearch,
   } = useSearch();
-  const { data, error, isPending, status, ref } = useIngredientAddCatalog(
-    category,
-    searchQuery
-  );
+  const { data, error, isFetchingNextPage, isPending, ref } =
+    useIngredientAddCatalog(category, searchQuery);
   const handleCategoryChange = (next: IngredientCategoryName) => {
     if (category === next) return;
     triggerHaptic("Light");
-    setInputValue("");
+    clearSearch();
     setCategory(next);
   };
 
@@ -69,8 +67,9 @@ export const IngredientAddCatalog = ({
           <IngredientCatalogResults
             data={data}
             error={error}
+            searchQuery={searchQuery}
+            isFetchingNextPage={isFetchingNextPage}
             isPending={isPending}
-            status={status}
             loadMoreRef={ref}
             ownedIngredientIds={ownedIngredientIds}
             isSelected={isSelected}

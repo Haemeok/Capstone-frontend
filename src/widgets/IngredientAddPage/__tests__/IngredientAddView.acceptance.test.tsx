@@ -1,7 +1,7 @@
 import { act } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -24,6 +24,7 @@ import { IngredientAddView } from "../ui/IngredientAddView";
 
 const mockPathname = jest.fn();
 const replaceMock = jest.fn();
+const mockIsInView = jest.fn(() => false);
 
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname(),
@@ -38,7 +39,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 jest.mock("react-intersection-observer", () => ({
-  useInView: () => ({ ref: jest.fn(), inView: false }),
+  useInView: () => ({ ref: jest.fn(), inView: mockIsInView() }),
 }));
 
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
@@ -147,6 +148,7 @@ const selectCatalogIngredient = async (name: string) => {
 describe("IngredientAddView acceptance", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockIsInView.mockReturnValue(false);
     getMyIngredientIdsMock.mockResolvedValue([]);
     addIngredientBulkMock.mockResolvedValue(undefined);
     getIngredientsMock.mockImplementation(async ({ category, lang, q }) => {
@@ -156,6 +158,10 @@ describe("IngredientAddView acceptance", () => {
       if (q) return page([]);
       return page([tomato, onion, tofu]);
     });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it("FRT-08: 재료 추가는 drawer가 아닌 locale 전체 화면 content다", async () => {
@@ -248,6 +254,148 @@ describe("IngredientAddView acceptance", () => {
     expect(replaceMock).toHaveBeenCalledWith("/ja/ingredients", undefined);
     expect(triggerHapticMock).toHaveBeenCalledTimes(3);
     expect(triggerHapticMock).toHaveBeenLastCalledWith("Success");
+  });
+
+  it("FRT-12: bulk add 실패 후 선택과 전체 화면을 유지하고 오류를 알린다", async () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    addIngredientBulkMock.mockRejectedValue(new Error("503"));
+    renderAddPage("/ingredients/new");
+
+    await selectCatalogIngredient("토마토");
+    await selectCatalogIngredient("양파");
+    await userEvent.click(screen.getByRole("button", { name: "2개 추가하기" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "재료를 추가하지 못했어요"
+    );
+    expect(screen.getByRole("button", { name: "2개 추가하기" })).toBeEnabled();
+    expect(screen.getByRole("heading", { name: "재료 추가" })).toBeVisible();
+    expect(replaceMock).not.toHaveBeenCalled();
+  });
+
+  it("drawer에서 추가 실패를 알리고 닫으면 page에서 다시 알리지 않는다", async () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    addIngredientBulkMock.mockRejectedValue(new Error("503"));
+    renderAddPage("/ingredients/new");
+    await selectCatalogIngredient("토마토");
+    await userEvent.click(
+      screen.getByRole("button", { name: /한식 기본 베이스 상세 보기/ })
+    );
+    await userEvent.click(screen.getByRole("button", { name: "1개 추가하기" }));
+
+    const alert = screen.getByRole("alert");
+    await waitFor(() =>
+      expect(alert).toHaveTextContent("재료를 추가하지 못했어요")
+    );
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
+
+    await userEvent.click(screen.getByRole("button", { name: "닫기" }));
+    await waitFor(() =>
+      expect(screen.getByRole("dialog")).toHaveAttribute("data-state", "closed")
+    );
+
+    expect(screen.queryAllByRole("alert")).toHaveLength(0);
+  });
+
+  it("추가 실패 후 선택을 실제로 변경하면 오류를 지운다", async () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    addIngredientBulkMock.mockRejectedValue(new Error("503"));
+    renderAddPage("/ingredients/new");
+    await selectCatalogIngredient("토마토");
+    await selectCatalogIngredient("양파");
+    await userEvent.click(screen.getByRole("button", { name: "2개 추가하기" }));
+
+    const alert = screen.getByRole("alert");
+    await waitFor(() =>
+      expect(alert).toHaveTextContent("재료를 추가하지 못했어요")
+    );
+    await userEvent.click(screen.getByRole("button", { name: "토마토 제거" }));
+
+    await waitFor(() => expect(screen.queryAllByRole("alert")).toHaveLength(0));
+    expect(screen.getByRole("button", { name: "1개 추가하기" })).toBeEnabled();
+  });
+
+  it("FRT-13: 검색 결과가 없으면 검색어와 다음 행동을 보여 준다", async () => {
+    getIngredientsMock.mockResolvedValue(page([]));
+    renderAddPage("/ingredients/new");
+
+    await userEvent.type(screen.getByRole("searchbox"), "용과");
+    await userEvent.click(screen.getByRole("button", { name: "검색" }));
+
+    expect(
+      await screen.findByText('"용과"에 해당하는 재료가 없어요')
+    ).toBeVisible();
+    expect(screen.getByText("검색어나 카테고리를 바꿔보세요")).toBeVisible();
+  });
+
+  it("검색 결과에서 카테고리를 바꾸면 과거 검색어 없이 바로 조회한다", async () => {
+    renderAddPage("/ingredients/new");
+    await userEvent.type(screen.getByRole("searchbox"), "용과");
+    await userEvent.click(screen.getByRole("button", { name: "검색" }));
+    expect(
+      await screen.findByText('"용과"에 해당하는 재료가 없어요')
+    ).toBeVisible();
+    getIngredientsMock.mockClear();
+
+    await userEvent.click(screen.getByRole("button", { name: "고기" }));
+
+    await waitFor(() => expect(getIngredientsMock).toHaveBeenCalled());
+    expect(getIngredientsMock.mock.calls[0][0]).toEqual(
+      expect.objectContaining({ category: "고기", q: "" })
+    );
+    expect(screen.queryByText('"용과"에 해당하는 재료가 없어요')).toBeNull();
+    expect(
+      await screen.findByRole("button", { name: /돼지고기/ })
+    ).toBeVisible();
+  });
+
+  it("FRT-14: 첫 catalog 요청 동안 최종 3열 공간을 예약한다", () => {
+    getIngredientsMock.mockReturnValue(
+      deferred<IngredientsApiResponse>().promise
+    );
+    renderAddPage("/ingredients/new");
+
+    expect(screen.getByTestId("ingredient-add-skeleton")).toHaveClass(
+      "grid-cols-3"
+    );
+    expect(screen.getAllByTestId("ingredient-add-skeleton-card")).toHaveLength(
+      6
+    );
+  });
+
+  it("다음 catalog 요청 동안 기존 재료 아래 두 칸을 예약한다", async () => {
+    const nextPageRequest = deferred<IngredientsApiResponse>();
+    getIngredientsMock.mockImplementation(({ pageParam }) => {
+      if (pageParam === 1) return nextPageRequest.promise;
+      return Promise.resolve({
+        ...page([tomato]),
+        page: {
+          size: 20,
+          number: 0,
+          totalElements: 2,
+          totalPages: 2,
+        },
+      });
+    });
+    const view = renderAddPage("/ingredients/new");
+    expect(await screen.findByRole("button", { name: /토마토/ })).toBeVisible();
+
+    mockIsInView.mockReturnValue(true);
+    view.rerender(
+      <QueryClientProvider client={view.queryClient}>
+        <IngredientAddView />
+      </QueryClientProvider>
+    );
+
+    const skeletonCards = await screen.findAllByTestId(
+      "ingredient-add-skeleton-card"
+    );
+    const tomatoButton = screen.getByRole("button", { name: /토마토/ });
+    expect(skeletonCards).toHaveLength(2);
+    expect(tomatoButton).toBeVisible();
+    skeletonCards.forEach((card) => {
+      expect(card.parentElement).toBe(tomatoButton.parentElement);
+    });
   });
 
   it("같은 QueryClient에서 ko에서 ja로 전환하면 locale cache를 분리해 다시 조회한다", async () => {

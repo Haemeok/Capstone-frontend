@@ -1,41 +1,22 @@
 "use client";
 
-import { useState } from "react";
-
-import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
-import { useIngredientAddDict, useLocalizedRouter } from "@/shared/i18n";
+import { useIngredientAddDict } from "@/shared/i18n";
 import { Container } from "@/shared/ui/Container";
 import PrevButton from "@/shared/ui/PrevButton";
 
 import { useMyIngredientIds } from "@/entities/ingredient";
-import {
-  type IngredientSelectionItem,
-  useIngredientSelection,
-} from "@/entities/ingredient/ui/IngredientPicker";
 import { useAuthGate } from "@/entities/user";
 
-import { useAddIngredientBulkMutation } from "@/features/ingredient-add-fridge";
-
+import { useIngredientAddFlow } from "../hooks/useIngredientAddFlow";
 import { IngredientAddCatalog } from "./IngredientAddCatalog";
 import { IngredientAddSelectionBar } from "./IngredientAddSelectionBar";
 import { IngredientPackSelectionDrawer } from "./IngredientPackSelectionDrawer";
 
 export const IngredientAddView = () => {
   const dict = useIngredientAddDict();
-  const router = useLocalizedRouter();
   const authGate = useAuthGate();
   const { ingredientIdsSet } = useMyIngredientIds({ enabled: authGate });
-  const selection = useIngredientSelection<IngredientSelectionItem>();
-  const addMutation = useAddIngredientBulkMutation();
-  const [selectedPack, setSelectedPack] = useState<IngredientPack | null>(null);
-
-  const handleSubmit = () => {
-    if (selection.selectedItems.length === 0 || addMutation.isPending) return;
-    addMutation.mutate(
-      selection.selectedItems.map((item) => item.id),
-      { onSuccess: () => router.replace("/ingredients") }
-    );
-  };
+  const flow = useIngredientAddFlow();
 
   return (
     <Container padding={false} className="min-h-screen pb-40">
@@ -49,36 +30,36 @@ export const IngredientAddView = () => {
 
       <IngredientAddCatalog
         ownedIngredientIds={ingredientIdsSet}
-        isSelected={selection.isSelected}
-        onToggle={selection.toggle}
-        onViewPack={setSelectedPack}
+        isSelected={flow.isSelected}
+        onToggle={flow.handleSelectionToggle}
+        onViewPack={flow.setSelectedPack}
       />
 
       <IngredientPackSelectionDrawer
-        pack={selectedPack}
+        pack={flow.selectedPack}
         ownedIngredientIds={ingredientIdsSet}
-        selectedIds={selection.selectedIds}
-        onToggle={selection.toggle}
-        onOpenChange={(open) => {
-          if (!open) setSelectedPack(null);
-        }}
+        selectedIds={flow.selectedIds}
+        onToggle={flow.handleSelectionToggle}
+        onOpenChange={flow.handlePackOpenChange}
         footer={
           <IngredientAddSelectionBar
-            items={selection.selectedItems}
-            isPending={addMutation.isPending}
-            onRemove={selection.remove}
-            onSubmit={handleSubmit}
+            items={flow.selectedItems}
+            isPending={flow.isPending}
+            errorMessage={flow.error ? dict.addError : undefined}
+            onRemove={flow.handleSelectionRemove}
+            onSubmit={flow.handleSubmit}
             placement="drawer"
           />
         }
       />
 
-      {selectedPack === null ? (
+      {flow.selectedPack === null ? (
         <IngredientAddSelectionBar
-          items={selection.selectedItems}
-          isPending={addMutation.isPending}
-          onRemove={selection.remove}
-          onSubmit={handleSubmit}
+          items={flow.selectedItems}
+          isPending={flow.isPending}
+          errorMessage={flow.error ? dict.addError : undefined}
+          onRemove={flow.handleSelectionRemove}
+          onSubmit={flow.handleSubmit}
         />
       ) : null}
     </Container>

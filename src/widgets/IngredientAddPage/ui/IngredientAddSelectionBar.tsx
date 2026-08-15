@@ -17,6 +17,7 @@ import type { IngredientSelectionItem } from "@/entities/ingredient/ui/Ingredien
 type IngredientAddSelectionBarProps = {
   items: IngredientSelectionItem[];
   isPending: boolean;
+  errorMessage?: string;
   onRemove: (id: string) => void;
   onSubmit: () => void;
   placement?: "page" | "drawer";
@@ -25,6 +26,7 @@ type IngredientAddSelectionBarProps = {
 export const IngredientAddSelectionBar = ({
   items,
   isPending,
+  errorMessage,
   onRemove,
   onSubmit,
   placement = "page",
@@ -51,6 +53,14 @@ export const IngredientAddSelectionBar = ({
           : "mt-auto flex-none"
       )}
     >
+      {errorMessage ? (
+        <p
+          role="alert"
+          className="text-ink-sub mx-auto mb-2 max-w-4xl bg-gray-100 px-3 py-2 text-sm"
+        >
+          {errorMessage}
+        </p>
+      ) : null}
       <div className="mx-auto flex max-w-4xl items-center gap-3">
         <div className="scrollbar-hide flex min-w-0 flex-1 gap-2 overflow-x-auto py-1">
           {items.map((item) => (

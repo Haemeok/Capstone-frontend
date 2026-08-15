@@ -24,11 +24,17 @@ const useSearch = () => {
     setInputValue(e.target.value);
   };
 
+  const clearSearch = () => {
+    setInputValue("");
+    setDebouncedSearchQuery("");
+  };
+
   return {
     searchQuery: debouncedSearchQuery,
     inputValue,
     handleSearchSubmit,
     handleInputChange,
+    clearSearch,
     setInputValue,
   };
 };

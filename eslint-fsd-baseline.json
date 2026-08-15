@@ -20,7 +20,6 @@
   "src/features/filter-dish-type/ui/DishTypeFilter.tsx",
   "src/features/filter-sort/ui/SortFilter.tsx",
   "src/features/filter-tags/ui/TagsFilter.tsx",
-  "src/features/ingredient-add-fridge/ui/IngredientSearchDrawer.tsx",
   "src/features/landing/ui/FinalCTA.tsx",
   "src/features/landing/ui/HeroSection.tsx",
   "src/features/level-up/ui/LevelUpModal.tsx",
