@@ -70,15 +70,18 @@ function DrawerContent({
   className,
   children,
   variant,
+  hasDescription,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> &
-  VariantProps<typeof drawerContentVariants>) {
+  VariantProps<typeof drawerContentVariants> & {
+    hasDescription?: boolean;
+  }) {
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
       <DrawerPrimitive.Content
         data-slot="drawer-content"
-        aria-describedby={undefined}
+        {...(hasDescription ? {} : { "aria-describedby": undefined })}
         className={cn(drawerContentVariants({ variant }), className)}
         {...props}
       >
