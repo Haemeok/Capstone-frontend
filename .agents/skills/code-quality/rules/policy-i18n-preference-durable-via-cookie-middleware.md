@@ -36,6 +36,43 @@ if (isLocale(preferred)) {
 
 Then the toggle mirrors the choice into the cookie (alongside localStorage/account), and a client effect reconciles cookie ⟸ localStorage ⟸ account on load (migrating users who chose before the cookie existed) plus one `router.replace` to correct a mismatched path.
 
+If some routes intentionally have no locale-prefixed mirror, the middleware and the client reconciliation effect must share one pure route-policy function. A middleware-only exception appears correct on the first response, then the client effect redirects the hydrated page to a route that does not exist.
+
+**Incorrect — the server and client own different route policies:**
+
+```ts
+// Middleware allows the non-localized route.
+if (pathname !== "/campaign/native-only") {
+  redirectToPreferredLocale();
+}
+
+// Hydration later ignores that exception and creates a 404 URL.
+if (pathLocale !== preferredLocale) {
+  router.replace(localize(pathname, preferredLocale));
+}
+```
+
+**Correct — synchronize the preference, but share the navigation exception:**
+
+```ts
+export const isNonLocalizedPath = (pathname: string) =>
+  pathname === "/campaign/native-only" ||
+  pathname === "/campaign/native-only/";
+
+// middleware
+if (!isNonLocalizedPath(pathname)) {
+  redirectToPreferredLocale();
+}
+
+// client reconciliation
+syncCookieAndStorage(preferredLocale);
+if (!isNonLocalizedPath(pathname) && pathLocale !== preferredLocale) {
+  router.replace(localize(pathname, preferredLocale));
+}
+```
+
+Test the same boundary through both consumers: exact path, supported trailing-slash alias, and a similar prefix that must still follow normal locale alignment. A middleware test alone cannot catch a post-hydration redirect.
+
 Key consequences that make this correct:
 
 - **localStorage cannot be the SSOT.** Flipping the resolver to "localStorage first" only fixes the client; the server still renders path-based → hydration mismatch + server-side search `lang` stays wrong. The server must see the preference → it must be a cookie.
@@ -48,7 +85,10 @@ Key consequences that make this correct:
 - Reading the preference cookie in a route layout/page to pick the dictionary. Works, but silently turns every page dynamic — you traded the bug for a cache regression.
 - Letting an explicit `/en` link permanently flip the preference (path → cookie on every visit). That re-introduces the original bug: one foreign link strands a user in a language they didn't choose. Preference changes only via the explicit toggle; tapping a localized link redirects to the user's language instead.
 - Deriving post-login locale from the `referer` instead of the user's cookie/account — every login can drop a preference-set user onto the wrong locale.
+- Adding a non-localized-path exception only to middleware. The server response succeeds, but a global client preference effect can still redirect after hydration and produce a 404 plus polluted page-view analytics.
 
 ## Heuristic
 
 The tell is "the setting persists but doesn't stick" — it fixes the current screen and reverts on next entry. When locale lives in the URL path, ask: _what reads the saved preference to decide the path, and can the server see it?_ If the answer is "only client code, via localStorage", the preference can't survive a path-prefixed entry. The durable shape is always: preference in a cookie → middleware aligns path → path drives render. Once middleware guarantees path == preference, path-based resolvers (`useApiLocale`, active-tab checks) are automatically correct — see [[policy-i18n-locale-prefix-breaks-path-equality]] and [[policy-i18n-imperative-nav-drops-locale]]. Redirecting to a localized path still requires that route to exist — [[policy-i18n-route-exists-not-localized]].
+
+For every locale-routing exception, grep both server redirects and client `router.replace` effects. If two layers can rewrite the same pathname, they must import the same pure predicate and own matching boundary tests; otherwise the later layer silently undoes the earlier one.
