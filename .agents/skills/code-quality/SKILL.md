@@ -58,6 +58,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [TanStack Query keys](rules/policy-query-key.md) — `[domain, sub, ...ids]` tuple
 - [Authed query gate](rules/policy-authed-query-gate.md) — auth-required queries gate with `enabled` from `useAuthGate`, never conditional render (hooks run before the early return; errored queries refire on focus/remount); entity-layer hooks take `enabled` as a required param so a missed call site is a compile error
 - [Query invalidation vs cache patch](rules/policy-query-invalidation.md) — invalidate refetches every loaded page (storm); patch via `setQueriesData` prefix + `refetchType:none`; refetch only for membership-changing lists
+- [Destructive confirmation snapshot](rules/policy-destructive-confirmation-snapshot.md) — snapshot labels, counts, and request IDs together so the dialog authorizes the exact destructive payload
 - [SSR ↔ client query key parity](rules/policy-ssr-client-query-key-parity.md) — SSR prefetch key must byte-match the client hook's key incl. codec/parser defaults, or hydration silently CSR-refetches
 - [i18n type gate misses unextracted literals](rules/policy-i18n-type-gate-misses-unextracted-strings.md) — a typed Dictionary gates missing keys, not unextracted inline strings; grep the localized files for source-language chars after wiring
 - [i18n chrome vs content axes](rules/policy-i18n-chrome-vs-content-axes.md) — localizing chrome doesn't localize the fetch; plumb the new locale through query key + fetch params + href, never a boundary remap-to-default (masked on SSR page 0)
