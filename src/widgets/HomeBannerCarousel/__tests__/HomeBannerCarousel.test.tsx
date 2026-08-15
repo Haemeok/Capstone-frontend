@@ -4,7 +4,13 @@ import HomeBannerCarousel from "../index";
 import { HOME_BANNER_SLIDES } from "../slides";
 
 let snapIndex = 0;
+let mockIsApp = false;
 const selectHandlers: Array<() => void> = [];
+const reInitHandlers: Array<() => void> = [];
+
+jest.mock("@/shared/hooks/useIsApp", () => ({
+  useIsApp: () => mockIsApp,
+}));
 
 const emblaApi = {
   selectedScrollSnap: () => snapIndex,
@@ -13,6 +19,7 @@ const emblaApi = {
   scrollPrev: jest.fn(),
   on: (evt: string, cb: () => void) => {
     if (evt === "select") selectHandlers.push(cb);
+    if (evt === "reInit") reInitHandlers.push(cb);
   },
   off: jest.fn(),
 };
@@ -26,7 +33,9 @@ jest.mock("embla-carousel-react", () => ({
 
 beforeEach(() => {
   snapIndex = 0;
+  mockIsApp = false;
   selectHandlers.length = 0;
+  reInitHandlers.length = 0;
   emblaCarouselMock.mockClear();
 });
 
@@ -104,5 +113,46 @@ describe("HomeBannerCarousel", () => {
     expect(screen.queryByLabelText("이전 슬라이드")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("다음 슬라이드")).not.toBeInTheDocument();
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  });
+
+  it("T-12: 앱 WebView에서는 앱 설치 배너를 제외한다", () => {
+    mockIsApp = true;
+    render(<HomeBannerCarousel slides={HOME_BANNER_SLIDES} />);
+
+    const links = screen.getAllByRole("link");
+    expect(links[0]).toHaveAttribute("href", "/recipes/new/youtube");
+    expect(links).toHaveLength(3);
+    expect(screen.getByText("1/3")).toBeInTheDocument();
+  });
+
+  it("T-13: 슬라이드가 줄어 재초기화되면 실제 위치를 표시한다", () => {
+    const { rerender } = render(
+      <HomeBannerCarousel slides={HOME_BANNER_SLIDES} />
+    );
+    act(() => {
+      snapIndex = 3;
+      selectHandlers.forEach((handler) => handler());
+    });
+
+    mockIsApp = true;
+    rerender(<HomeBannerCarousel slides={HOME_BANNER_SLIDES} />);
+    act(() => {
+      snapIndex = 0;
+      reInitHandlers.forEach((handler) => handler());
+    });
+
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent("1/3");
+    expect(status).toHaveAccessibleName("슬라이드 3개 중 1번째");
+  });
+
+  it("앱 필터 결과가 비면 캐러셀을 렌더링하지 않는다", () => {
+    mockIsApp = true;
+    const { container } = render(
+      <HomeBannerCarousel slides={[HOME_BANNER_SLIDES[0]]} />
+    );
+
+    expect(container).toBeEmptyDOMElement();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 });

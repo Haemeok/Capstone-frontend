@@ -5,6 +5,12 @@ import {
   PLAY_STORE_URL,
 } from "@/shared/config/constants/appStore";
 
+let mockIsApp = false;
+
+jest.mock("@/shared/hooks/useIsApp", () => ({
+  useIsApp: () => mockIsApp,
+}));
+
 jest.mock("next/navigation", () => ({
   usePathname: () => "/events/app-install",
   useRouter: () => ({ back: jest.fn() }),
@@ -16,6 +22,10 @@ jest.mock("@/shared/lib/bridge", () => ({
 jest.mock("@next/third-parties/google", () => ({ sendGAEvent: jest.fn() }));
 
 import { AppInstallEventView } from "../AppInstallEventView";
+
+beforeEach(() => {
+  mockIsApp = false;
+});
 
 it("T-03/T-04: 두 스토어를 안전한 새 탭 링크로 제공한다", () => {
   render(<AppInstallEventView />);
@@ -106,4 +116,12 @@ it("T-10: 최대 480px 단일 컬럼 shell을 유지한다", () => {
     "w-full",
     "max-w-[480px]"
   );
+});
+
+it("T-14: 앱 WebView에서는 스토어 배지 대신 현재 앱 안내를 보여준다", () => {
+  mockIsApp = true;
+  render(<AppInstallEventView />);
+
+  expect(screen.getAllByText("현재 앱을 이용 중이에요")).toHaveLength(2);
+  expect(screen.queryByRole("link")).not.toBeInTheDocument();
 });

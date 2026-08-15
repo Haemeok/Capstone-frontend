@@ -75,6 +75,25 @@ describe("middleware locale align", () => {
     const res = await middleware(req("/"));
     expect(res.headers.get("location")).toBeNull();
   });
+
+  it.each(["en", "ja"])(
+    "T-15: 쿠키=%s여도 한국어 전용 앱 설치 이벤트는 redirect하지 않는다",
+    async (locale) => {
+      const res = await middleware(
+        req("/events/app-install", { preferred_locale: locale })
+      );
+      expect(res.headers.get("location")).toBeNull();
+    }
+  );
+
+  it("T-16: 이름이 비슷한 경로는 언어 정렬 예외가 아니다", async () => {
+    const res = await middleware(
+      req("/events/app-install-extra", { preferred_locale: "en" })
+    );
+    expect(res.headers.get("location")).toBe(
+      "http://localhost:3000/en/events/app-install-extra"
+    );
+  });
 });
 
 describe("middleware recipe render track", () => {

@@ -1,5 +1,4 @@
-import { StoreBadges } from "@/shared/ui/StoreBadges";
-
+import { AppInstallActions } from "./AppInstallActions";
 import EventPageShell from "./EventPageShell";
 
 const APP_INSTALL_BENEFITS = [
@@ -38,7 +37,7 @@ export const AppInstallEventView = () => (
       <p className="text-ink-sub mt-3 text-base leading-7">
         YouTube 레시피를 정리하고, 저장한 레시피를 필요할 때 바로 꺼내보세요.
       </p>
-      <StoreBadges className="mt-6" />
+      <AppInstallActions className="mt-6" />
     </section>
     <section className="border-t border-gray-100 px-5 py-8">
       <ol>
@@ -59,7 +58,7 @@ export const AppInstallEventView = () => (
       <h2 className="text-ink text-xl font-bold">
         오늘 요리도 레시피오 앱과 함께
       </h2>
-      <StoreBadges className="mt-6" />
+      <AppInstallActions className="mt-6" />
     </section>
   </EventPageShell>
 );

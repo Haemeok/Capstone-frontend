@@ -4,8 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 
 import useEmblaCarousel from "embla-carousel-react";
 
+import { useIsApp } from "@/shared/hooks/useIsApp";
 import { LocalizedLink } from "@/shared/i18n";
 
+import { APP_INSTALL_BANNER_ID } from "./slides";
 import { BannerSlide } from "./types";
 import { useCarouselAutoplay } from "./useCarouselAutoplay";
 
@@ -21,14 +23,22 @@ const HomeBannerCarousel = ({
   slides,
   autoPlayInterval = DEFAULT_AUTOPLAY_INTERVAL,
 }: HomeBannerCarouselProps) => {
-  const isSingleSlide = slides.length === 1;
+  const isInApp = useIsApp();
+  const visibleSlides = isInApp
+    ? slides.filter((slide) => slide.id !== APP_INSTALL_BANNER_ID)
+    : slides;
+  const hasMultipleSlides = visibleSlides.length > 1;
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: !isSingleSlide,
-    watchDrag: !isSingleSlide,
+    loop: hasMultipleSlides,
+    watchDrag: hasMultipleSlides,
   });
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const visibleSelectedIndex = Math.min(
+    selectedIndex,
+    Math.max(visibleSlides.length - 1, 0)
+  );
 
   const scrollNext = useCallback(() => {
     emblaApi?.scrollNext();
@@ -37,7 +47,7 @@ const HomeBannerCarousel = ({
   const { pause, resume, reset } = useCarouselAutoplay({
     onNext: scrollNext,
     interval: autoPlayInterval,
-    isEnabled: !isSingleSlide,
+    isEnabled: hasMultipleSlides,
   });
 
   useEffect(() => {
@@ -47,13 +57,20 @@ const HomeBannerCarousel = ({
       setSelectedIndex(emblaApi.selectedScrollSnap());
       reset();
     };
+    const onReInit = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+    };
 
     emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onReInit);
 
     return () => {
       emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onReInit);
     };
   }, [emblaApi, reset]);
+
+  if (visibleSlides.length === 0) return null;
 
   return (
     <div
@@ -65,7 +82,7 @@ const HomeBannerCarousel = ({
     >
       <div ref={emblaRef} className="overflow-hidden">
         <div className="flex">
-          {slides.map((slide) => {
+          {visibleSlides.map((slide) => {
             const backgroundColor =
               slide.backgroundColor || DEFAULT_BACKGROUND_COLOR;
 
@@ -107,14 +124,14 @@ const HomeBannerCarousel = ({
         </div>
       </div>
 
-      {!isSingleSlide && (
+      {hasMultipleSlides && (
         <div
           role="status"
           aria-live="polite"
-          aria-label={`슬라이드 ${slides.length}개 중 ${selectedIndex + 1}번째`}
+          aria-label={`슬라이드 ${visibleSlides.length}개 중 ${visibleSelectedIndex + 1}번째`}
           className="absolute right-3 bottom-3 z-10 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white tabular-nums backdrop-blur-sm"
         >
-          {selectedIndex + 1}/{slides.length}
+          {visibleSelectedIndex + 1}/{visibleSlides.length}
         </div>
       )}
     </div>

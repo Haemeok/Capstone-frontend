@@ -8,6 +8,8 @@ import { localizedHref, stripLocale } from "@/shared/i18n/localizedHref";
 import { type Locale, LOCALES } from "@/shared/i18n/types";
 import { type Bloom, bloomHas } from "@/shared/lib/bloom";
 
+const NON_LOCALIZED_PATHS = new Set(["/events/app-install"]);
+
 const isLocale = (value: string | undefined): value is Locale =>
   value !== undefined && (LOCALES as readonly string[]).includes(value);
 
@@ -35,7 +37,7 @@ export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   const preferred = request.cookies.get(STORAGE_KEYS.PREFERRED_LOCALE)?.value;
-  if (isLocale(preferred)) {
+  if (!NON_LOCALIZED_PATHS.has(pathname) && isLocale(preferred)) {
     const { barePath } = stripLocale(pathname);
     const target = localizedHref(barePath, preferred);
     if (target !== pathname) {
