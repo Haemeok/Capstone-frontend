@@ -123,6 +123,7 @@ specific `rules/<prefix>-<topic>.md` file.
 ### A11y
 
 - [Interactive elements](rules/a11y-interactive.md) — native button, `cursor-pointer`, `aria-label`
+- [Filter controls must match their interaction semantics](rules/a11y-filter-button-semantics.md) — use named button groups with `aria-pressed` unless implementing the complete tab keyboard pattern
 
 ### Testing
 
