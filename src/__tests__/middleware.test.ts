@@ -12,8 +12,14 @@ jest.mock("@vercel/edge-config", () => ({
 
 import { middleware } from "../middleware";
 
-const req = (path: string, cookies: Record<string, string> = {}) => {
-  const r = new NextRequest(new URL(path, "http://localhost:3000"));
+const req = (
+  path: string,
+  cookies: Record<string, string> = {},
+  headers: HeadersInit = {}
+) => {
+  const r = new NextRequest(new URL(path, "http://localhost:3000"), {
+    headers,
+  });
   Object.entries(cookies).forEach(([k, v]) => r.cookies.set(k, v));
   return r;
 };
@@ -73,6 +79,13 @@ describe("middleware locale align", () => {
 
   it("T-05: 쿠키 없는 / 요청은 /landing으로 redirect하지 않는다", async () => {
     const res = await middleware(req("/"));
+    expect(res.headers.get("location")).toBeNull();
+  });
+
+  it("T-17: Googlebot의 / 요청은 landing으로 redirect하지 않는다", async () => {
+    const res = await middleware(
+      req("/", {}, { "user-agent": "Googlebot/2.1" })
+    );
     expect(res.headers.get("location")).toBeNull();
   });
 

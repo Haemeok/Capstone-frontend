@@ -14,6 +14,10 @@ type EventMetadataParams = {
   description: string;
   ogImage: string;
   ogImageAlt: string;
+  supportedLocales?: Locale[];
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  openGraphTitle?: string;
 };
 
 const OG_LOCALE: Record<Locale, string> = {
@@ -29,6 +33,10 @@ export const buildEventMetadata = ({
   description,
   ogImage,
   ogImageAlt,
+  supportedLocales,
+  ogImageWidth,
+  ogImageHeight,
+  openGraphTitle,
 }: EventMetadataParams): Metadata => {
   const pathWithoutLocale = path.replace(/^\//, "");
   const canonical =
@@ -36,22 +44,37 @@ export const buildEventMetadata = ({
       ? absoluteUrl(pathWithoutLocale)
       : absoluteUrl(`${locale}/${pathWithoutLocale}`);
   const fullTitle = `${title} | ${localizedSiteName(locale)}`;
+  const allLanguages = buildHreflangAlternates(pathWithoutLocale);
+  const languageKeys: Array<Locale | "x-default"> = supportedLocales
+    ? [...supportedLocales, "x-default"]
+    : ["ko", "ja", "en", "x-default"];
+  const languages = Object.fromEntries(
+    languageKeys.map((key) => [key, allLanguages[key]])
+  );
+  const ogTitle = openGraphTitle ?? fullTitle;
 
   return {
     title: fullTitle,
     description,
     alternates: {
       canonical,
-      languages: buildHreflangAlternates(pathWithoutLocale),
+      languages,
     },
     openGraph: {
-      title: fullTitle,
+      title: ogTitle,
       description,
       url: canonical,
       siteName: localizedSiteName(locale),
       type: SEO_CONSTANTS.OG_TYPE.WEBSITE,
       locale: OG_LOCALE[locale],
-      images: [{ url: ogImage, width: 1024, height: 1024, alt: ogImageAlt }],
+      images: [
+        {
+          url: ogImage,
+          width: ogImageWidth ?? 1024,
+          height: ogImageHeight ?? 1024,
+          alt: ogImageAlt,
+        },
+      ],
     },
     twitter: {
       card: SEO_CONSTANTS.TWITTER_CARD,

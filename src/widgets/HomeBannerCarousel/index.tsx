@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { sendGAEvent } from "@next/third-parties/google";
 import useEmblaCarousel from "embla-carousel-react";
 
 import { useIsApp } from "@/shared/hooks/useIsApp";
-import { LocalizedLink } from "@/shared/i18n";
+import { LocalizedLink, useChromeLocale } from "@/shared/i18n";
 
 import { APP_INSTALL_BANNER_ID } from "./slides";
 import { BannerSlide } from "./types";
@@ -24,6 +25,7 @@ const HomeBannerCarousel = ({
   autoPlayInterval = DEFAULT_AUTOPLAY_INTERVAL,
 }: HomeBannerCarouselProps) => {
   const isInApp = useIsApp();
+  const locale = useChromeLocale();
   const visibleSlides = isInApp
     ? slides.filter((slide) => slide.id !== APP_INSTALL_BANNER_ID)
     : slides;
@@ -49,6 +51,15 @@ const HomeBannerCarousel = ({
     interval: autoPlayInterval,
     isEnabled: hasMultipleSlides,
   });
+
+  const handleSlideClick = (slideId: string) => {
+    if (slideId !== APP_INSTALL_BANNER_ID) return;
+
+    sendGAEvent("event", "app_install_banner_click", {
+      source: "home_carousel",
+      locale,
+    });
+  };
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -90,6 +101,7 @@ const HomeBannerCarousel = ({
               <div key={slide.id} className="relative min-w-0 flex-[0_0_100%]">
                 <LocalizedLink
                   href={slide.link}
+                  onClick={() => handleSlideClick(slide.id)}
                   className="relative block aspect-[9/2] w-full overflow-hidden"
                   style={{ backgroundColor }}
                 >

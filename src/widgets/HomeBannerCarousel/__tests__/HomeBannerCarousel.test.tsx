@@ -1,15 +1,19 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 
 import HomeBannerCarousel from "../index";
 import { HOME_BANNER_SLIDES } from "../slides";
 
 let snapIndex = 0;
 let mockIsApp = false;
+const mockSendGAEvent = jest.fn();
 const selectHandlers: Array<() => void> = [];
 const reInitHandlers: Array<() => void> = [];
 
 jest.mock("@/shared/hooks/useIsApp", () => ({
   useIsApp: () => mockIsApp,
+}));
+jest.mock("@next/third-parties/google", () => ({
+  sendGAEvent: (...args: unknown[]) => mockSendGAEvent(...args),
 }));
 
 const emblaApi = {
@@ -37,6 +41,7 @@ beforeEach(() => {
   selectHandlers.length = 0;
   reInitHandlers.length = 0;
   emblaCarouselMock.mockClear();
+  mockSendGAEvent.mockReset();
 });
 
 describe("HomeBannerCarousel", () => {
@@ -154,5 +159,29 @@ describe("HomeBannerCarousel", () => {
 
     expect(container).toBeEmptyDOMElement();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("T-18: 크롤러가 따라갈 수 있는 일반 앵커로 주요 경로를 노출한다", () => {
+    render(<HomeBannerCarousel slides={HOME_BANNER_SLIDES} />);
+    const hrefs = screen
+      .getAllByRole("link")
+      .map((link) => link.getAttribute("href"));
+
+    expect(hrefs).toContain("/events/app-install");
+    expect(hrefs).toContain("/recipes/new/youtube");
+  });
+
+  it("T-21: 앱 설치 배너 클릭 출처와 locale을 기록한다", () => {
+    render(<HomeBannerCarousel slides={HOME_BANNER_SLIDES} />);
+    fireEvent.click(
+      screen.getByRole("link", { name: /레시피오 앱에서 더 편하게/ })
+    );
+
+    expect(mockSendGAEvent).toHaveBeenCalledWith(
+      "event",
+      "app_install_banner_click",
+      { source: "home_carousel", locale: "ko" }
+    );
+    expect(mockSendGAEvent).toHaveBeenCalledTimes(1);
   });
 });

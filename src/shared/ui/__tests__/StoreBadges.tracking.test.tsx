@@ -42,4 +42,26 @@ describe("StoreBadges app_open_click tracking", () => {
       locale: "ja",
     });
   });
+
+  it("T-22: 이벤트 페이지 App Store 선택을 기록한다", () => {
+    mockPathname = "/events/app-install";
+    render(<StoreBadges />);
+    fireEvent.click(screen.getAllByRole("link")[0]);
+    expect(mockSendGAEvent).toHaveBeenCalledWith("event", "app_open_click", {
+      store: "app_store",
+      locale: "ko",
+    });
+    expect(mockSendGAEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it("T-23: 이벤트 페이지 Google Play 선택을 기록한다", () => {
+    mockPathname = "/events/app-install";
+    render(<StoreBadges />);
+    fireEvent.click(screen.getAllByRole("link")[1]);
+    expect(mockSendGAEvent).toHaveBeenCalledWith("event", "app_open_click", {
+      store: "google_play",
+      locale: "ko",
+    });
+    expect(mockSendGAEvent).toHaveBeenCalledTimes(1);
+  });
 });
