@@ -27,7 +27,7 @@ export const CoupangProductCard = ({ product }: CoupangProductCardProps) => {
       href={product.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex w-[132px] shrink-0 flex-col gap-1"
+      className="rounded-card focus-visible:ring-olive-light flex w-[132px] shrink-0 cursor-pointer flex-col gap-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
     >
       <img
         src={product.imageUrl}

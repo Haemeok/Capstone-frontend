@@ -35,6 +35,16 @@ describe("CoupangProductCard", () => {
     expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
   });
 
+  it("상품 링크는 키보드 focus가 보인다 (T-41)", () => {
+    render(<CoupangProductCard product={base} />);
+
+    expect(screen.getByRole("link")).toHaveClass(
+      "cursor-pointer",
+      "focus-visible:ring-2",
+      "focus-visible:ring-olive-light"
+    );
+  });
+
   it("로켓프레시는 프레시 전용 배지 + 도착 문구 (T-02)", async () => {
     render(
       <CoupangProductCard product={{ ...base, deliveryType: "ROCKET_FRESH" }} />

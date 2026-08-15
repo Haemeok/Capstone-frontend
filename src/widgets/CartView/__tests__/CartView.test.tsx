@@ -115,22 +115,15 @@ it("T-08: 레시피 탭 클릭 시 해당 항목만 보이고 getCart 재호출�
   renderCartView();
   await screen.findByText("배추김치");
 
-  await userEvent.click(screen.getByRole("tab", { name: /김치찌개/ }));
+  const kimchiFilter = screen.getByRole("button", { name: /김치찌개/ });
+  expect(kimchiFilter).toHaveAttribute("aria-pressed", "false");
+
+  await userEvent.click(kimchiFilter);
 
   expect(screen.getByText("배추김치")).toBeInTheDocument();
   expect(screen.queryByText("수제 고추기름")).not.toBeInTheDocument();
+  expect(kimchiFilter).toHaveAttribute("aria-pressed", "true");
   expect(getCartMock).toHaveBeenCalledTimes(1);
-});
-
-it("T-09: 삭제된 레시피 탭은 placeholder 썸네일로 표시된다", async () => {
-  getCartMock.mockResolvedValue(cartFixture);
-  renderCartView();
-  await screen.findByText("배추김치");
-
-  const deletedTab = screen.getByRole("tab", { name: /김치볶음밥/ });
-  expect(
-    deletedTab.querySelector('[data-testid="deleted-recipe-placeholder"]')
-  ).toBeInTheDocument();
 });
 
 it("T-10: products가 있는 그룹은 상품 카드를 보여준다", async () => {

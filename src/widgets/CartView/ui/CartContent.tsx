@@ -12,7 +12,7 @@ import { filterCartByRecipe } from "@/entities/cart";
 import { CartEmptyState } from "./CartEmptyState";
 import { CartGroupSection } from "./CartGroupSection";
 import { CartItemList } from "./CartItemList";
-import { RecipeTabBar } from "./RecipeTabBar";
+import { RecipeFilterBar } from "./RecipeFilterBar";
 
 export type CartHandlers = {
   onDeleteItems: (cartItemIds: string[]) => void;
@@ -53,8 +53,11 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
 
   if (cart.totalItemCount === 0) {
     return (
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 pb-24">
-        <div className="-mx-4 bg-white px-4 py-3">
+      <div
+        data-testid="cart-content"
+        className="mx-auto flex w-full max-w-2xl flex-col overflow-x-hidden bg-white pb-24"
+      >
+        <div className="flex min-h-[60px] items-center border-b border-gray-100 px-4">
           <h1 className="text-ink text-2xl font-bold">장바구니</h1>
         </div>
         <CartEmptyState />
@@ -63,9 +66,11 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 pb-24">
-      {/* 스크롤 컨테이너(RootLayout)가 데스크톱 고정 헤더 아래에서 시작하므로 top-0 */}
-      <div className="sticky top-0 z-30 -mx-4 flex items-center justify-between bg-white px-4 py-3">
+    <div
+      data-testid="cart-content"
+      className="mx-auto flex w-full max-w-2xl flex-col overflow-x-hidden bg-white pb-24"
+    >
+      <div className="sticky top-0 z-30 flex min-h-[60px] items-center justify-between border-b border-gray-100 bg-white px-4">
         <h1 className="text-ink text-2xl font-bold">장바구니</h1>
         <button
           type="button"
@@ -73,18 +78,18 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
             triggerHaptic("Light");
             setIsClearConfirmOpen(true);
           }}
-          className="text-ink-muted text-sm"
+          className="text-ink-muted min-h-11 cursor-pointer px-1 text-sm"
         >
           전체 비우기
         </button>
       </div>
-      <RecipeTabBar
+      <RecipeFilterBar
         recipes={cart.recipes}
         totalItemCount={cart.totalItemCount}
         selectedRecipeId={validRecipeId}
         onSelect={setSelectedRecipeId}
       />
-      <p className="text-ink-muted text-[11px] leading-tight font-light break-keep">
+      <p className="text-ink-muted px-4 pb-3 text-[11px] leading-[1.45] font-normal break-keep">
         이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를
         제공받습니다.
       </p>
@@ -96,15 +101,18 @@ export const CartContent = ({ cart, handlers }: CartContentProps) => {
           onDelete={handlers.onDeleteItems}
         />
       ))}
-      {filtered.unmatchedItems.length > 0 && (
-        <section data-testid="cart-unmatched-section">
+      {filtered.unmatchedItems.length > 0 ? (
+        <section
+          data-testid="cart-unmatched-section"
+          className="border-t-8 border-gray-100 bg-white px-4 py-5"
+        >
           <CartItemList
             items={filtered.unmatchedItems}
             recipeImages={recipeImages}
             onDelete={handlers.onDeleteItems}
           />
         </section>
-      )}
+      ) : null}
       <DeleteModal
         open={isClearConfirmOpen}
         onOpenChange={setIsClearConfirmOpen}

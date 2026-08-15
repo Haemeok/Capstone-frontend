@@ -1,17 +1,12 @@
 // i18n-ignore-file: 장바구니 ko 전용
 "use client";
 
-import { useRef } from "react";
-
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
-import { CoupangProductCard } from "@/shared/coupang";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { CartGroup } from "@/entities/cart";
-import { sortCoupangProducts } from "@/entities/cart";
 
 import { CartItemList } from "./CartItemList";
+import { CartProductSlider } from "./CartProductSlider";
 
 type CartGroupSectionProps = {
   group: CartGroup;
@@ -19,77 +14,42 @@ type CartGroupSectionProps = {
   onDelete: (cartItemIds: string[]) => void;
 };
 
-const SCROLL_STEP = 280;
-
 export const CartGroupSection = ({
   group,
   recipeImages,
   onDelete,
 }: CartGroupSectionProps) => {
   const { coupangInfo, items } = group;
-  const products = sortCoupangProducts(coupangInfo.products);
-  const hasProducts = products.length > 0;
-  const sliderRef = useRef<HTMLDivElement>(null);
-
-  const scrollProducts = (direction: -1 | 1) => {
-    sliderRef.current?.scrollBy({
-      left: direction * SCROLL_STEP,
-      behavior: "smooth",
-    });
-  };
+  const hasProducts = coupangInfo.products.length > 0;
 
   return (
-    <section data-testid={`cart-group-${coupangInfo.coupangName}`}>
+    <section
+      data-testid={`cart-group-${coupangInfo.coupangName}`}
+      className="border-t-8 border-gray-100 bg-white px-4 py-5"
+    >
       <CartItemList
         items={items}
         recipeImages={recipeImages}
         onDelete={onDelete}
       />
-      {!hasProducts && coupangInfo.landingUrl && (
-        <div className="flex justify-end">
+      {hasProducts ? (
+        <CartProductSlider
+          coupangName={coupangInfo.coupangName}
+          products={coupangInfo.products}
+        />
+      ) : coupangInfo.landingUrl ? (
+        <div className="mt-3 flex justify-end">
           <a
             href={coupangInfo.landingUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => triggerHaptic("Light")}
-            className="text-olive-dark text-sm font-semibold"
+            className="text-olive-dark focus-visible:ring-olive-light flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-semibold focus-visible:ring-2 focus-visible:outline-none"
           >
             쿠팡에서 보기
           </a>
         </div>
-      )}
-      {hasProducts && (
-        <div className="relative mt-1">
-          <div
-            ref={sliderRef}
-            className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 pb-1"
-          >
-            {products.map((product) => (
-              <CoupangProductCard key={product.rank} product={product} />
-            ))}
-          </div>
-          {products.length > 4 && (
-            <>
-              <button
-                type="button"
-                onClick={() => scrollProducts(-1)}
-                aria-label={`${coupangInfo.coupangName} 상품 이전으로`}
-                className="text-ink-sub absolute top-[66px] -left-4 hidden size-8 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md md:flex"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollProducts(1)}
-                aria-label={`${coupangInfo.coupangName} 상품 다음으로`}
-                className="text-ink-sub absolute top-[66px] -right-4 hidden size-8 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md md:flex"
-              >
-                <ChevronRight size={18} />
-              </button>
-            </>
-          )}
-        </div>
-      )}
+      ) : null}
     </section>
   );
 };
