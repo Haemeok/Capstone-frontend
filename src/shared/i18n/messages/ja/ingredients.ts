@@ -1,10 +1,15 @@
 import type { IngredientsDict } from "../../types";
 
 export const ingredients: IngredientsDict = {
-  headerLoggedIn: "{nickname}さんの冷蔵庫",
-  headerLoggedOut: "ログインして冷蔵庫を管理しましょう",
+  title: "マイ冷蔵庫",
+  ownedCount: "{count}品の食材を保管しています",
+  ownedCountLoading: "食材数を読み込んでいます",
+  ownedCountUnavailable: "食材数を読み込めませんでした",
+  addEntry: "食材を検索して追加しましょう",
+  categoryGroup: "食材カテゴリー",
   fabFindRecipes: "冷蔵庫の食材でレシピを探す",
   actions: {
+    manage: "管理",
     delete: "削除",
     addIngredient: "食材を追加",
     selectAll: "すべて選択",
@@ -23,14 +28,9 @@ export const ingredients: IngredientsDict = {
     cta: "食材を追加する",
   },
   loginCta: {
-    aiHeading: "AIがレシピをおすすめします",
-    aiBody: "冷蔵庫に残った食材で、AIと一緒におすすめレシピを作成できます",
-    searchHeading: "食材からレシピを検索",
-    searchBody:
-      "冷蔵庫の食材を登録すると、手持ちの食材で作れるレシピが見つかります",
+    title: "マイ冷蔵庫",
+    body: "ログインすると、食材をまとめて管理して冷蔵庫に合うレシピを探せます。",
     loginButton: "ログインして始める",
-    signupNote: "登録すると毎日無料のAIレシピ生成チケットがもらえます",
-    searchAlt: "レシピ検索",
   },
   itemAria: { select: "{name}を選択", detail: "{name}の詳細を見る" },
 };

@@ -1,10 +1,15 @@
 import type { IngredientsDict } from "../../types";
 
 export const ingredients: IngredientsDict = {
-  headerLoggedIn: "{nickname}'s fridge",
-  headerLoggedOut: "Log in to manage your fridge",
-  fabFindRecipes: "Find recipes from my fridge",
+  title: "My fridge",
+  ownedCount: "{count} ingredients in your fridge",
+  ownedCountLoading: "Loading ingredient count",
+  ownedCountUnavailable: "Ingredient count is unavailable",
+  addEntry: "Search and add ingredients",
+  categoryGroup: "Ingredient categories",
+  fabFindRecipes: "Find recipes with these ingredients",
   actions: {
+    manage: "Manage",
     delete: "Delete",
     addIngredient: "Add ingredients",
     selectAll: "Select all",
@@ -23,15 +28,9 @@ export const ingredients: IngredientsDict = {
     cta: "Add ingredients",
   },
   loginCta: {
-    aiHeading: "AI recommends recipes for you",
-    aiBody:
-      "Create personalized recipes with AI using what's left in your fridge",
-    searchHeading: "Search recipes by ingredient",
-    searchBody:
-      "Add your fridge ingredients to find recipes you can make with what you have",
+    title: "My fridge",
+    body: "Log in to manage your ingredients and find recipes made for your fridge.",
     loginButton: "Log in to get started",
-    signupNote: "Sign up to get free daily AI recipe credits",
-    searchAlt: "Recipe search",
   },
   itemAria: { select: "Select {name}", detail: "View {name} details" },
 };

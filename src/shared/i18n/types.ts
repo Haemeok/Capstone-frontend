@@ -262,10 +262,15 @@ export type IngredientAddDict = {
 };
 
 export type IngredientsDict = {
-  headerLoggedIn: string;
-  headerLoggedOut: string;
+  title: string;
+  ownedCount: string;
+  ownedCountLoading: string;
+  ownedCountUnavailable: string;
+  addEntry: string;
+  categoryGroup: string;
   fabFindRecipes: string;
   actions: {
+    manage: string;
     delete: string;
     addIngredient: string;
     selectAll: string;
@@ -281,13 +286,9 @@ export type IngredientsDict = {
     cta: string;
   };
   loginCta: {
-    aiHeading: string;
-    aiBody: string;
-    searchHeading: string;
-    searchBody: string;
+    title: string;
+    body: string;
     loginButton: string;
-    signupNote: string;
-    searchAlt: string;
   };
   itemAria: { select: string; detail: string };
 };

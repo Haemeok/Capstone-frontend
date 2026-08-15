@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
-import { format } from "@/shared/i18n/format";
 import { ingredientsMessages } from "@/shared/i18n/ingredientsMessages";
 import { taxonomyMessages } from "@/shared/i18n/taxonomyMessages";
 
@@ -32,15 +31,11 @@ jest.mock("../hooks/useInfiniteIngredients", () => ({
     isPending: false,
     ref: () => {},
     ingredients: [],
+    totalCount: 0,
+    isTotalCountError: false,
+    isTotalCountPending: false,
   }),
 }));
-// FabButton은 gsap(useScrollAnimate) 의존 → href만 검증하도록 경량 모킹
-jest.mock("@/shared/ui/FabButton", () => ({
-  FabButton: ({ to, text }: { to: string; text: string }) => (
-    <a href={to}>{text}</a>
-  ),
-}));
-
 const setSelectedCategory = jest.fn();
 const defaultManager = {
   isDeleteMode: false,
@@ -57,14 +52,12 @@ beforeEach(() => {
 });
 
 describe("IngredientsPageClient i18n", () => {
-  it("T-06: /ja에서 헤더가 일본어 + nickname 치환으로 표시된다", () => {
+  it("T-06: /ja에서 냉장고 제목이 일본어로 표시된다", () => {
     mockPathname.mockReturnValue("/ja/ingredients");
     render(<IngredientsPageClient />);
     expect(
       screen.getByRole("heading", {
-        name: format(ingredientsMessages.ja.headerLoggedIn, {
-          nickname: "유저",
-        }),
+        name: ingredientsMessages.ja.title,
       })
     ).toBeInTheDocument();
   });
@@ -74,9 +67,7 @@ describe("IngredientsPageClient i18n", () => {
     render(<IngredientsPageClient />);
     expect(
       screen.getByRole("heading", {
-        name: format(ingredientsMessages.ko.headerLoggedIn, {
-          nickname: "유저",
-        }),
+        name: ingredientsMessages.ko.title,
       })
     ).toBeInTheDocument();
   });

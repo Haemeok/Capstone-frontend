@@ -16,8 +16,8 @@ describe("IngredientsLoginCTA i18n", () => {
     mockPathname.mockReturnValue("/ingredients");
     render(<IngredientsLoginCTA />);
     const m = ingredientsMessages.ko.loginCta;
-    expect(screen.getByText(m.aiHeading)).toBeInTheDocument();
-    expect(screen.getByText(m.searchHeading)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: m.title })).toBeInTheDocument();
+    expect(screen.getByText(m.body)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: new RegExp(m.loginButton) })
     ).toBeInTheDocument();
@@ -30,11 +30,11 @@ describe("IngredientsLoginCTA i18n", () => {
     mockPathname.mockReturnValue(path);
     const m = ingredientsMessages[loc].loginCta;
     render(<IngredientsLoginCTA />);
-    expect(screen.getByText(m.aiHeading)).toBeInTheDocument();
-    expect(screen.getByText(m.aiBody)).toBeInTheDocument();
-    expect(screen.getByText(m.searchHeading)).toBeInTheDocument();
-    expect(screen.getByText(m.searchBody)).toBeInTheDocument();
-    expect(screen.getByText(m.signupNote)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: m.title })).toBeInTheDocument();
+    expect(screen.getByText(m.body)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: m.loginButton })
+    ).toBeInTheDocument();
   });
 
   it.each([["/ja/ingredients"] as const, ["/en/ingredients"] as const])(
