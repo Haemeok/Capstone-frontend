@@ -237,6 +237,8 @@ export type IngredientAddDict = {
   searchEntryAria: string;
   packsHeading: string;
   packsSubtitle: string;
+  packsOwnershipLoading: string;
+  packsOwnershipUnavailable: string;
   previousPacks: string;
   nextPacks: string;
   searchPlaceholder: string;

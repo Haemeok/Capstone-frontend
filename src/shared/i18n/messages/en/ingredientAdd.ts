@@ -8,6 +8,9 @@ export const ingredientAdd: IngredientAddDict = {
   searchEntryAria: "Search and add ingredients",
   packsHeading: "Recommended sets",
   packsSubtitle: "Pick a set and add everything at once",
+  packsOwnershipLoading: "Checking your ingredients",
+  packsOwnershipUnavailable:
+    "We couldn't check your ingredients, so recommended sets are unavailable. Please select ingredients directly.",
   previousPacks: "Previous recommended sets",
   nextPacks: "Next recommended sets",
   searchPlaceholder: "Search ingredients",

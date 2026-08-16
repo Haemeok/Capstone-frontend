@@ -31,7 +31,7 @@ export const IngredientCatalogSearch = ({
           placeholder={dict.searchPlaceholder}
           value={inputValue}
           onChange={onInputChange}
-          className="text-ink placeholder:text-ink-muted focus-visible:outline-olive-light w-full rounded-lg border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus-visible:outline-2"
+          className="text-ink placeholder:text-ink-muted focus-visible:outline-ink w-full rounded-lg border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus-visible:outline-2"
         />
       </div>
     </form>

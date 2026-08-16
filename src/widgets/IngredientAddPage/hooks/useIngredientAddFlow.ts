@@ -21,6 +21,7 @@ import { useIngredientPackDraft } from "./useIngredientPackDraft";
 
 type UseIngredientAddFlowOptions = {
   ownedIngredientIds: Set<string>;
+  isOwnershipReady: boolean;
 };
 
 type PackSelectedItemsOptions = {
@@ -57,6 +58,7 @@ const getPackSelectedItems = ({
 
 export const useIngredientAddFlow = ({
   ownedIngredientIds,
+  isOwnershipReady,
 }: UseIngredientAddFlowOptions) => {
   const router = useLocalizedRouter();
   const locale = useChromeLocale();
@@ -83,7 +85,7 @@ export const useIngredientAddFlow = ({
   };
 
   const handlePackOpen = (pack: IngredientPack) => {
-    if (addMutation.isPending) return;
+    if (!isOwnershipReady || addMutation.isPending) return;
     if (addMutation.isError) addMutation.reset();
     packDraft.initialize(pack);
     setSelectedPack(pack);

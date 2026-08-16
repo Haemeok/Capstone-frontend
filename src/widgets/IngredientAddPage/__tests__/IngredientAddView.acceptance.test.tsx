@@ -1,7 +1,7 @@
 import { act } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { INGREDIENT_PACKS } from "@/shared/config/constants/ingredientPacks";
@@ -108,6 +108,42 @@ const koreanBasePackWithoutSoupSoySauceIds = koreanBasePack.ingredients
   .filter((ingredient) => ingredient.id !== "8LB17Jkg")
   .map((ingredient) => ingredient.id);
 
+const railLocaleCases: [pathname: string, locale: Locale][] = [
+  ["/ingredients/new", "ko"],
+  ["/en/ingredients/new", "en"],
+  ["/ja/ingredients/new", "ja"],
+];
+
+const ownershipErrorCases: [
+  pathname: string,
+  alertMessage: string,
+  packCardName: RegExp,
+  catalogIngredientName: string,
+  addButtonName: string,
+][] = [
+  [
+    "/ingredients/new",
+    "보유 재료를 확인하지 못해 추천 묶음을 사용할 수 없어요. 직접 재료를 선택해 주세요.",
+    /한식 기본 베이스 상세 보기/,
+    "토마토",
+    "1개 추가하기",
+  ],
+  [
+    "/en/ingredients/new",
+    "We couldn't check your ingredients, so recommended sets are unavailable. Please select ingredients directly.",
+    /View Korean cooking base/,
+    "Onion",
+    "Add 1",
+  ],
+  [
+    "/ja/ingredients/new",
+    "お持ちの食材を確認できないため、おすすめセットは利用できません。食材を直接選んでください。",
+    /韓国料理の基本ベースの詳細を見る/,
+    "トマト",
+    "1品を追加",
+  ],
+];
+
 const page = (content: IngredientItem[]): IngredientsApiResponse => ({
   content,
   page: {
@@ -173,7 +209,23 @@ const getRailLabel = (locale: Locale, key: "previousPacks" | "nextPacks") =>
   ingredientAddMessages[locale][key];
 
 const openKoreanBasePack = async (name = /한식 기본 베이스 상세 보기/) => {
-  await userEvent.click(screen.getByRole("button", { name }));
+  const card = screen.getByRole("button", { name });
+  await waitFor(() => expect(card).toBeEnabled());
+  await userEvent.click(card);
+};
+
+const mockReducedMotion = (matches: boolean) => {
+  const mediaQueryList: MediaQueryList = {
+    matches,
+    media: "(prefers-reduced-motion: reduce)",
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(() => true),
+  };
+  jest.spyOn(window, "matchMedia").mockReturnValue(mediaQueryList);
 };
 
 describe("IngredientAddView acceptance", () => {
@@ -273,6 +325,18 @@ describe("IngredientAddView acceptance", () => {
     renderAddPage("/ingredients/new");
     await selectCatalogIngredient("토마토");
 
+    const searchbox = screen.getByRole("searchbox", { name: /재료를 검색/ });
+    await userEvent.type(searchbox, "용과{Enter}");
+    expect(
+      screen.queryByRole("heading", { name: "추천 재료 모음" })
+    ).not.toBeInTheDocument();
+    await userEvent.clear(searchbox);
+    await userEvent.keyboard("{Enter}");
+    expect(
+      screen.getByRole("heading", { name: "추천 재료 모음" })
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "토마토 제거" })).toBeVisible();
+
     await userEvent.click(screen.getByRole("button", { name: "고기" }));
     expect(
       screen.queryByRole("heading", { name: "추천 재료 모음" })
@@ -292,7 +356,12 @@ describe("IngredientAddView acceptance", () => {
   it("T-05: 보유 재료가 없으면 한식 기본 베이스의 32개 재료를 기본 선택한다", async () => {
     renderAddPage("/ingredients/new");
 
+    triggerHapticMock.mockClear();
     await openKoreanBasePack();
+
+    expect(triggerHapticMock).toHaveBeenCalledTimes(1);
+    expect(triggerHapticMock).toHaveBeenCalledWith("Light");
+    triggerHapticMock.mockClear();
 
     const checkboxes = screen.getAllByRole("checkbox");
     expect(checkboxes).toHaveLength(koreanBasePack.ingredients.length);
@@ -321,16 +390,35 @@ describe("IngredientAddView acceptance", () => {
     expect(screen.getByRole("button", { name: "31개 추가하기" })).toBeEnabled();
   });
 
-  it("보유 ID가 늦게 도착하면 열린 pack의 CTA와 제출 payload에서 즉시 제외한다", async () => {
+  it("보유 ID 조회 전에는 pack을 막고 조회 후 canonical 31개만 제출한다", async () => {
     const ownershipRequest = deferred<string[]>();
     const addRequest = deferred<void>();
     getMyIngredientIdsMock.mockReturnValue(ownershipRequest.promise);
     addIngredientBulkMock.mockReturnValue(addRequest.promise);
     renderAddPage("/ingredients/new");
-    await openKoreanBasePack();
-    expect(screen.getByRole("button", { name: "32개 추가하기" })).toBeEnabled();
+    const packCard = screen.getByRole("button", {
+      name: /한식 기본 베이스 상세 보기/,
+    });
+    const packsSection = screen.getByRole("region", {
+      name: "추천 재료 모음",
+    });
+
+    expect(packCard).toBeDisabled();
+    expect(packsSection).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByText("보유 재료 확인 중")).toHaveAttribute(
+      "role",
+      "status"
+    );
+    triggerHapticMock.mockClear();
+    await userEvent.click(packCard);
+    expect(triggerHapticMock).not.toHaveBeenCalled();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(addIngredientBulkMock).not.toHaveBeenCalled();
 
     await act(async () => ownershipRequest.resolve(["8LB17Jkg"]));
+
+    await waitFor(() => expect(packCard).toBeEnabled());
+    await userEvent.click(packCard);
 
     const ownedSoySauce = await screen.findByRole("checkbox", {
       name: "국간장, 보유 중",
@@ -346,6 +434,32 @@ describe("IngredientAddView acceptance", () => {
 
     await act(async () => addRequest.resolve());
   });
+
+  it.each(ownershipErrorCases)(
+    "%s 보유 ID 조회 실패를 알리고 pack 대신 직접 선택을 유지한다",
+    async (
+      pathname,
+      alertMessage,
+      packCardName,
+      catalogIngredientName,
+      addButtonName
+    ) => {
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      getMyIngredientIdsMock.mockRejectedValue(new Error("ownership failed"));
+      renderAddPage(pathname);
+
+      expect(await screen.findByRole("alert")).toHaveTextContent(alertMessage);
+      const packCard = screen.getByRole("button", { name: packCardName });
+      expect(packCard).toBeDisabled();
+      triggerHapticMock.mockClear();
+      await userEvent.click(packCard);
+      expect(triggerHapticMock).not.toHaveBeenCalled();
+
+      await selectCatalogIngredient(catalogIngredientName);
+      expect(screen.getByRole("button", { name: addButtonName })).toBeEnabled();
+      expect(addIngredientBulkMock).not.toHaveBeenCalled();
+    }
+  );
 
   it("pack 재료를 해제했다가 다시 선택해도 canonical 제출 순서를 유지한다", async () => {
     const request = deferred<void>();
@@ -613,11 +727,7 @@ describe("IngredientAddView acceptance", () => {
     await act(async () => request.resolve());
   });
 
-  it.each([
-    ["/ingredients/new", "ko"],
-    ["/en/ingredients/new", "en"],
-    ["/ja/ingredients/new", "ja"],
-  ] as const)(
+  it.each(railLocaleCases)(
     "%s 추천 묶음 rail에 locale별 이전·다음 탐색 버튼을 연결한다",
     (pathname, locale) => {
       renderAddPage(pathname);
@@ -636,6 +746,7 @@ describe("IngredientAddView acceptance", () => {
   );
 
   it("추천 묶음 탐색 버튼은 rail 너비의 80%씩 양방향으로 이동하고 햅틱을 보내지 않는다", async () => {
+    mockReducedMotion(false);
     renderAddPage("/ingredients/new");
     const rail = screen.getByRole("group", { name: "추천 재료 모음" });
     const scrollBy = jest.fn();
@@ -660,6 +771,62 @@ describe("IngredientAddView acceptance", () => {
       behavior: "smooth",
     });
     expect(triggerHapticMock).not.toHaveBeenCalled();
+  });
+
+  it("감소된 모션 환경에서는 추천 묶음 rail을 즉시 이동한다", async () => {
+    mockReducedMotion(true);
+    renderAddPage("/ingredients/new");
+    const rail = screen.getByRole("group", { name: "추천 재료 모음" });
+    const scrollBy = jest.fn();
+    Object.defineProperty(rail, "clientWidth", { value: 500 });
+    Object.defineProperty(rail, "scrollBy", { value: scrollBy });
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: getRailLabel("ko", "nextPacks"),
+      })
+    );
+
+    expect(scrollBy).toHaveBeenCalledWith({ left: 400, behavior: "auto" });
+  });
+
+  it("추천 묶음 화면의 텍스트와 포커스 표시가 승인된 고대비 토큰을 사용한다", async () => {
+    renderAddPage("/ingredients/new");
+    const searchbox = screen.getByRole("searchbox");
+    const category = screen.getByRole("button", { name: "전체" });
+    const packCard = screen.getByRole("button", {
+      name: /한식 기본 베이스 상세 보기/,
+    });
+    const previous = screen.getByRole("button", {
+      name: getRailLabel("ko", "previousPacks"),
+    });
+    const description = within(packCard).getByText(koreanBasePack.description);
+    const count = within(packCard).getByText("재료 32개");
+
+    [searchbox, category, packCard, previous].forEach((element) => {
+      expect(element).toHaveClass("focus-visible:outline-ink");
+      expect(element).not.toHaveClass("focus-visible:outline-olive-light");
+    });
+    expect(description).toHaveClass("text-ink-sub");
+    expect(count).toHaveClass("text-ink-sub");
+  });
+
+  it("선택 CTA와 pack checkbox가 밝은 배경에서도 읽히는 토큰을 사용한다", async () => {
+    renderAddPage("/ingredients/new");
+    await selectCatalogIngredient("토마토");
+    const directSubmit = screen.getByRole("button", { name: "1개 추가하기" });
+
+    expect(directSubmit).toHaveClass(
+      "bg-olive-light",
+      "hover:bg-olive-medium",
+      "text-ink"
+    );
+    expect(directSubmit).not.toHaveClass("text-white");
+
+    await openKoreanBasePack();
+    const checkbox = screen.getByRole("checkbox", { name: "진간장 선택" });
+    expect(checkbox).toHaveClass("accent-ink");
+    expect(checkbox).not.toHaveClass("accent-olive-light");
   });
 
   it("선택 bar에서 재료를 제거하면 상태 변경과 함께 Light 햅틱을 한 번 보낸다", async () => {

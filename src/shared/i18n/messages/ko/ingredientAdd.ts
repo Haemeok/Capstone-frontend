@@ -8,6 +8,9 @@ export const ingredientAdd: IngredientAddDict = {
   searchEntryAria: "재료 검색해서 추가하기",
   packsHeading: "추천 재료 모음",
   packsSubtitle: "필요한 묶음을 골라 한 번에 추가하세요",
+  packsOwnershipLoading: "보유 재료 확인 중",
+  packsOwnershipUnavailable:
+    "보유 재료를 확인하지 못해 추천 묶음을 사용할 수 없어요. 직접 재료를 선택해 주세요.",
   previousPacks: "이전 추천 재료 모음",
   nextPacks: "다음 추천 재료 모음",
   searchPlaceholder: "재료를 검색해서 추가하세요",

@@ -19,6 +19,9 @@ import { RecommendedPacksSection } from "./RecommendedPacksSection";
 type IngredientAddCatalogProps = {
   ownedIngredientIds: Set<string>;
   isPending: boolean;
+  isOwnershipReady: boolean;
+  isOwnershipPending: boolean;
+  hasOwnershipError: boolean;
   isSelected: (id: string) => boolean;
   onToggle: (ingredient: IngredientSelectionItem) => void;
   onViewPack: (pack: IngredientPack) => void;
@@ -27,6 +30,9 @@ type IngredientAddCatalogProps = {
 export const IngredientAddCatalog = ({
   ownedIngredientIds,
   isPending,
+  isOwnershipReady,
+  isOwnershipPending,
+  hasOwnershipError,
   isSelected,
   onToggle,
   onViewPack,
@@ -68,7 +74,9 @@ export const IngredientAddCatalog = ({
       {shouldShowRecommendedPacks ? (
         <RecommendedPacksSection
           ownedIngredientIds={ownedIngredientIds}
-          isPending={isPending}
+          isDisabled={isPending || !isOwnershipReady}
+          isOwnershipPending={isOwnershipPending}
+          hasOwnershipError={hasOwnershipError}
           onViewPack={onViewPack}
         />
       ) : null}

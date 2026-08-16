@@ -102,7 +102,7 @@ export const IngredientPackSelectionDrawer = ({
                     triggerHaptic("Light");
                     onToggle(ingredient.id);
                   }}
-                  className="accent-olive-light h-5 w-5 cursor-pointer disabled:cursor-not-allowed"
+                  className="accent-ink h-5 w-5 cursor-pointer disabled:cursor-not-allowed"
                 />
               </label>
             );

@@ -8,6 +8,9 @@ export const ingredientAdd: IngredientAddDict = {
   searchEntryAria: "食材を検索して追加する",
   packsHeading: "おすすめ食材セット",
   packsSubtitle: "必要なセットを選んでまとめて追加",
+  packsOwnershipLoading: "お持ちの食材を確認しています",
+  packsOwnershipUnavailable:
+    "お持ちの食材を確認できないため、おすすめセットは利用できません。食材を直接選んでください。",
   previousPacks: "前のおすすめ食材セット",
   nextPacks: "次のおすすめ食材セット",
   searchPlaceholder: "食材名で検索",

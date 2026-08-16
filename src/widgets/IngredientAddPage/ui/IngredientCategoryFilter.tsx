@@ -31,7 +31,7 @@ export const IngredientCategoryFilter = ({
           aria-pressed={category === item}
           onClick={() => onCategoryChange(item)}
           className={cn(
-            "focus-visible:outline-olive-light min-h-11 min-w-11 flex-none cursor-pointer rounded-xl px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
+            "focus-visible:outline-ink min-h-11 min-w-11 flex-none cursor-pointer rounded-xl px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
             category === item
               ? "bg-ink font-semibold text-white"
               : "text-ink-sub bg-gray-100 hover:bg-gray-200"

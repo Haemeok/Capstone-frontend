@@ -14,13 +14,17 @@ import { IngredientPackCard } from "./IngredientPackCard";
 
 type RecommendedPacksSectionProps = {
   ownedIngredientIds: Set<string>;
-  isPending: boolean;
+  isDisabled: boolean;
+  isOwnershipPending: boolean;
+  hasOwnershipError: boolean;
   onViewPack: (pack: IngredientPack) => void;
 };
 
 export const RecommendedPacksSection = ({
   ownedIngredientIds,
-  isPending,
+  isDisabled,
+  isOwnershipPending,
+  hasOwnershipError,
   onViewPack,
 }: RecommendedPacksSectionProps) => {
   const dict = useIngredientAddDict();
@@ -31,13 +35,16 @@ export const RecommendedPacksSection = ({
     if (!rail) return;
     rail.scrollBy({
       left: direction * rail.clientWidth * 0.8,
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
     });
   };
 
   return (
     <section
       aria-labelledby="ingredient-packs-heading"
+      aria-busy={isOwnershipPending}
       className="px-4 pt-5 pb-2 md:px-6"
     >
       <div className="flex items-start justify-between gap-3">
@@ -55,7 +62,7 @@ export const RecommendedPacksSection = ({
             type="button"
             aria-label={dict.previousPacks}
             onClick={() => scrollRail(-1)}
-            className="text-ink-sub focus-visible:outline-olive-light hidden h-11 w-11 cursor-pointer items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 md:flex"
+            className="text-ink-sub focus-visible:outline-ink hidden h-11 w-11 cursor-pointer items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 md:flex"
           >
             <ChevronLeft aria-hidden="true" size={20} />
           </button>
@@ -63,12 +70,25 @@ export const RecommendedPacksSection = ({
             type="button"
             aria-label={dict.nextPacks}
             onClick={() => scrollRail(1)}
-            className="text-ink-sub focus-visible:outline-olive-light hidden h-11 w-11 cursor-pointer items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 md:flex"
+            className="text-ink-sub focus-visible:outline-ink hidden h-11 w-11 cursor-pointer items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 md:flex"
           >
             <ChevronRight aria-hidden="true" size={20} />
           </button>
         </div>
       </div>
+      {isOwnershipPending ? (
+        <p role="status" className="sr-only">
+          {dict.packsOwnershipLoading}
+        </p>
+      ) : null}
+      {hasOwnershipError ? (
+        <p
+          role="alert"
+          className="text-ink-sub mt-3 bg-gray-100 px-3 py-2 text-sm"
+        >
+          {dict.packsOwnershipUnavailable}
+        </p>
+      ) : null}
       <div
         ref={railRef}
         role="group"
@@ -80,7 +100,7 @@ export const RecommendedPacksSection = ({
             key={pack.name}
             pack={pack}
             ownedIngredientIds={ownedIngredientIds}
-            isPending={isPending}
+            isDisabled={isDisabled}
             onViewDetail={onViewPack}
           />
         ))}

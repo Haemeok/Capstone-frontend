@@ -15,8 +15,14 @@ import { IngredientPackSelectionDrawer } from "./IngredientPackSelectionDrawer";
 export const IngredientAddView = () => {
   const dict = useIngredientAddDict();
   const authGate = useAuthGate();
-  const { ingredientIdsSet } = useMyIngredientIds({ enabled: authGate });
-  const flow = useIngredientAddFlow({ ownedIngredientIds: ingredientIdsSet });
+  const ownershipQuery = useMyIngredientIds({ enabled: authGate });
+  const isOwnershipReady = ownershipQuery.data !== undefined;
+  const isOwnershipPending = ownershipQuery.isPending && !isOwnershipReady;
+  const hasOwnershipError = ownershipQuery.isError && !isOwnershipReady;
+  const flow = useIngredientAddFlow({
+    ownedIngredientIds: ownershipQuery.ingredientIdsSet,
+    isOwnershipReady,
+  });
 
   return (
     <Container padding={false} className="min-h-screen pb-40">
@@ -29,8 +35,11 @@ export const IngredientAddView = () => {
       </header>
 
       <IngredientAddCatalog
-        ownedIngredientIds={ingredientIdsSet}
+        ownedIngredientIds={ownershipQuery.ingredientIdsSet}
         isPending={flow.isPending}
+        isOwnershipReady={isOwnershipReady}
+        isOwnershipPending={isOwnershipPending}
+        hasOwnershipError={hasOwnershipError}
         isSelected={flow.isDirectSelected}
         onToggle={flow.handleDirectSelectionToggle}
         onViewPack={flow.handlePackOpen}
@@ -38,7 +47,7 @@ export const IngredientAddView = () => {
 
       <IngredientPackSelectionDrawer
         pack={flow.selectedPack}
-        ownedIngredientIds={ingredientIdsSet}
+        ownedIngredientIds={ownershipQuery.ingredientIdsSet}
         selectedIds={flow.packSelectedIds}
         isPending={flow.isPending}
         onToggle={flow.handlePackToggle}
