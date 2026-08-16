@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+import { INGREDIENT_PACKS } from "@/shared/config/constants/ingredientPacks";
 import { ingredientAddMessages, type Locale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
@@ -92,6 +93,20 @@ const tomatoJa = ingredient("tomato-1", "トマト", "野菜");
 const onionJa = ingredient("onion-2", "玉ねぎ", "野菜");
 const tomatoEn = ingredient("tomato-1", "Tomato", "Vegetables");
 const onionEn = ingredient("onion-2", "Onion", "Vegetables");
+const koreanBasePack = INGREDIENT_PACKS.find(
+  (pack) => pack.name === "한식 기본 베이스"
+);
+
+if (!koreanBasePack) {
+  throw new Error("한식 기본 베이스 fixture를 찾을 수 없습니다");
+}
+
+const koreanBasePackIds = koreanBasePack.ingredients.map(
+  (ingredient) => ingredient.id
+);
+const koreanBasePackWithoutSoupSoySauceIds = koreanBasePack.ingredients
+  .filter((ingredient) => ingredient.id !== "8LB17Jkg")
+  .map((ingredient) => ingredient.id);
 
 const page = (content: IngredientItem[]): IngredientsApiResponse => ({
   content,
@@ -156,6 +171,10 @@ const expectToAppearBefore = (first: HTMLElement, second: HTMLElement) => {
 
 const getRailLabel = (locale: Locale, key: "previousPacks" | "nextPacks") =>
   ingredientAddMessages[locale][key];
+
+const openKoreanBasePack = async (name = /한식 기본 베이스 상세 보기/) => {
+  await userEvent.click(screen.getByRole("button", { name }));
+};
 
 describe("IngredientAddView acceptance", () => {
   beforeEach(() => {
@@ -268,6 +287,209 @@ describe("IngredientAddView acceptance", () => {
       "w-11"
     );
     expect(screen.getByRole("button", { name: "1개 추가하기" })).toBeEnabled();
+  });
+
+  it("T-05: 보유 재료가 없으면 한식 기본 베이스의 32개 재료를 기본 선택한다", async () => {
+    renderAddPage("/ingredients/new");
+
+    await openKoreanBasePack();
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    expect(checkboxes).toHaveLength(koreanBasePack.ingredients.length);
+    checkboxes.forEach((checkbox) => expect(checkbox).toBeChecked());
+    expect(screen.getByRole("button", { name: "32개 추가하기" })).toBeEnabled();
+    expect(replaceMock).not.toHaveBeenCalled();
+  });
+
+  it("T-06: 보유 중인 국간장은 비활성·미선택 상태이며 pack 제출 초안에서 제외한다", async () => {
+    getMyIngredientIdsMock.mockResolvedValue(["8LB17Jkg"]);
+    const { queryClient } = renderAddPage("/ingredients/new");
+    await waitFor(() =>
+      expect(queryClient.getQueryData(INGREDIENT_QUERY_KEYS.myIds)).toEqual([
+        "8LB17Jkg",
+      ])
+    );
+
+    await openKoreanBasePack();
+
+    const ownedSoySauce = screen.getByRole("checkbox", {
+      name: "국간장, 보유 중",
+    });
+    expect(ownedSoySauce).toBeDisabled();
+    expect(ownedSoySauce).not.toBeChecked();
+    expect(screen.getByText("보유중")).toBeVisible();
+    expect(screen.getByRole("button", { name: "31개 추가하기" })).toBeEnabled();
+  });
+
+  it("보유 ID가 늦게 도착하면 열린 pack의 CTA와 제출 payload에서 즉시 제외한다", async () => {
+    const ownershipRequest = deferred<string[]>();
+    const addRequest = deferred<void>();
+    getMyIngredientIdsMock.mockReturnValue(ownershipRequest.promise);
+    addIngredientBulkMock.mockReturnValue(addRequest.promise);
+    renderAddPage("/ingredients/new");
+    await openKoreanBasePack();
+    expect(screen.getByRole("button", { name: "32개 추가하기" })).toBeEnabled();
+
+    await act(async () => ownershipRequest.resolve(["8LB17Jkg"]));
+
+    const ownedSoySauce = await screen.findByRole("checkbox", {
+      name: "국간장, 보유 중",
+    });
+    expect(ownedSoySauce).toBeDisabled();
+    expect(ownedSoySauce).not.toBeChecked();
+    const submit = screen.getByRole("button", { name: "31개 추가하기" });
+    await userEvent.click(submit);
+    expect(addIngredientBulkMock).toHaveBeenCalledTimes(1);
+    expect(addIngredientBulkMock).toHaveBeenCalledWith(
+      koreanBasePackWithoutSoupSoySauceIds
+    );
+
+    await act(async () => addRequest.resolve());
+  });
+
+  it("pack 재료를 해제했다가 다시 선택해도 canonical 제출 순서를 유지한다", async () => {
+    const request = deferred<void>();
+    addIngredientBulkMock.mockReturnValue(request.promise);
+    renderAddPage("/ingredients/new");
+    await openKoreanBasePack();
+    const darkSoySauce = screen.getByRole("checkbox", { name: "진간장 선택" });
+
+    await userEvent.click(darkSoySauce);
+    await userEvent.click(darkSoySauce);
+    await userEvent.click(
+      screen.getByRole("button", { name: "32개 추가하기" })
+    );
+
+    expect(addIngredientBulkMock).toHaveBeenCalledTimes(1);
+    expect(addIngredientBulkMock).toHaveBeenCalledWith(koreanBasePackIds);
+    await act(async () => request.resolve());
+  });
+
+  it("열린 pack의 locale이 바뀌면 selection bar 이름도 현재 locale로 갱신한다", async () => {
+    const view = renderAddPage("/ingredients/new");
+    await openKoreanBasePack();
+    expect(screen.getByRole("button", { name: "진간장 제거" })).toBeVisible();
+
+    mockPathname.mockReturnValue("/ja/ingredients/new");
+    view.rerender(
+      <QueryClientProvider client={view.queryClient}>
+        <IngredientAddView />
+      </QueryClientProvider>
+    );
+
+    expect(
+      screen.getByRole("button", {
+        name: "チンカンジャン（こい口醤油）を削除",
+      })
+    ).toBeVisible();
+  });
+
+  it("T-07: pack 초안을 바꿔도 닫은 뒤 catalog에서 직접 고른 토마토만 유지한다", async () => {
+    renderAddPage("/ingredients/new");
+    await selectCatalogIngredient("토마토");
+    await openKoreanBasePack();
+    expect(screen.getByRole("button", { name: "32개 추가하기" })).toBeEnabled();
+    triggerHapticMock.mockClear();
+
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "진간장 선택" })
+    );
+
+    expect(screen.getByRole("button", { name: "31개 추가하기" })).toBeEnabled();
+    expect(triggerHapticMock).toHaveBeenCalledTimes(1);
+    expect(triggerHapticMock).toHaveBeenCalledWith("Light");
+
+    await userEvent.click(screen.getByRole("button", { name: "닫기" }));
+    await waitFor(() =>
+      expect(screen.getByRole("dialog")).toHaveAttribute("data-state", "closed")
+    );
+    expect(screen.getByLabelText("토마토 제거")).toBeVisible();
+    expect(
+      screen.getByText("1개 추가하기", { selector: "button" })
+    ).toBeEnabled();
+  });
+
+  it("T-08: 보유 재료와 해제 재료를 제외한 정확한 30개 ID를 한 번만 제출한다", async () => {
+    const request = deferred<void>();
+    getMyIngredientIdsMock.mockResolvedValue(["8LB17Jkg"]);
+    addIngredientBulkMock.mockReturnValue(request.promise);
+    const { queryClient } = renderAddPage("/ingredients/new");
+    await waitFor(() =>
+      expect(queryClient.getQueryData(INGREDIENT_QUERY_KEYS.myIds)).toEqual([
+        "8LB17Jkg",
+      ])
+    );
+    await openKoreanBasePack();
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "진간장 선택" })
+    );
+    const submit = screen.getByRole("button", { name: "30개 추가하기" });
+
+    await userEvent.dblClick(submit);
+
+    const expectedIds = koreanBasePack.ingredients
+      .filter(
+        (ingredient) =>
+          ingredient.id !== "8LB17Jkg" && ingredient.id !== "gLe7j1Bx"
+      )
+      .map((ingredient) => ingredient.id);
+    expect(expectedIds).toHaveLength(30);
+    expect(addIngredientBulkMock).toHaveBeenCalledTimes(1);
+    expect(addIngredientBulkMock).toHaveBeenCalledWith(expectedIds);
+    expect(submit).toBeDisabled();
+    await act(async () => request.resolve());
+  });
+
+  it("pack 추가 pending 중에는 닫기와 Escape를 막고 32개 draft를 유지한다", async () => {
+    const request = deferred<void>();
+    addIngredientBulkMock.mockReturnValue(request.promise);
+    renderAddPage("/ingredients/new");
+    await openKoreanBasePack();
+    await userEvent.click(
+      screen.getByRole("button", { name: "32개 추가하기" })
+    );
+    const close = screen.getByRole("button", { name: "닫기" });
+
+    expect(close).toBeDisabled();
+    await userEvent.keyboard("{Escape}");
+    expect(screen.getByRole("dialog")).toHaveAttribute("data-state", "open");
+    expect(screen.getAllByRole("checkbox")).toHaveLength(32);
+
+    await act(async () => request.resolve());
+    expect(
+      await screen.findByRole("button", { name: "32개 추가하기" })
+    ).toBeEnabled();
+  });
+
+  it("직접 추가 pending 중에는 pack 카드를 비활성화하고 Light 햅틱을 보내지 않는다", async () => {
+    const request = deferred<void>();
+    addIngredientBulkMock.mockReturnValue(request.promise);
+    renderAddPage("/ingredients/new");
+    await selectCatalogIngredient("토마토");
+    await userEvent.click(screen.getByRole("button", { name: "1개 추가하기" }));
+    const packCard = screen.getByRole("button", {
+      name: /한식 기본 베이스 상세 보기/,
+    });
+    triggerHapticMock.mockClear();
+
+    expect(packCard).toBeDisabled();
+    await userEvent.click(packCard);
+    expect(triggerHapticMock).not.toHaveBeenCalled();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await act(async () => request.resolve());
+  });
+
+  it("T-09A: pack 추가에 성공하면 locale을 유지한 냉장고 경로로 돌아간다", async () => {
+    renderAddPage("/ja/ingredients/new");
+    await openKoreanBasePack(/韓国料理の基本ベースの詳細を見る/);
+
+    await userEvent.click(screen.getByRole("button", { name: "32品を追加" }));
+
+    expect(addIngredientBulkMock).toHaveBeenCalledWith(koreanBasePackIds);
+    await waitFor(() =>
+      expect(replaceMock).toHaveBeenCalledWith("/ja/ingredients", undefined)
+    );
   });
 
   it.each([
@@ -393,7 +615,9 @@ describe("IngredientAddView acceptance", () => {
     await userEvent.click(
       screen.getByRole("button", { name: /한식 기본 베이스 상세 보기/ })
     );
-    await userEvent.click(screen.getByRole("button", { name: "1개 추가하기" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: "32개 추가하기" })
+    );
 
     const alert = screen.getByRole("alert");
     await waitFor(() =>

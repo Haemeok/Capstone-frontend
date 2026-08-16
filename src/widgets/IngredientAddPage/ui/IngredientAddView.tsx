@@ -16,7 +16,7 @@ export const IngredientAddView = () => {
   const dict = useIngredientAddDict();
   const authGate = useAuthGate();
   const { ingredientIdsSet } = useMyIngredientIds({ enabled: authGate });
-  const flow = useIngredientAddFlow();
+  const flow = useIngredientAddFlow({ ownedIngredientIds: ingredientIdsSet });
 
   return (
     <Container padding={false} className="min-h-screen pb-40">
@@ -30,24 +30,26 @@ export const IngredientAddView = () => {
 
       <IngredientAddCatalog
         ownedIngredientIds={ingredientIdsSet}
-        isSelected={flow.isSelected}
-        onToggle={flow.handleSelectionToggle}
-        onViewPack={flow.setSelectedPack}
+        isPending={flow.isPending}
+        isSelected={flow.isDirectSelected}
+        onToggle={flow.handleDirectSelectionToggle}
+        onViewPack={flow.handlePackOpen}
       />
 
       <IngredientPackSelectionDrawer
         pack={flow.selectedPack}
         ownedIngredientIds={ingredientIdsSet}
-        selectedIds={flow.selectedIds}
-        onToggle={flow.handleSelectionToggle}
+        selectedIds={flow.packSelectedIds}
+        isPending={flow.isPending}
+        onToggle={flow.handlePackToggle}
         onOpenChange={flow.handlePackOpenChange}
         footer={
           <IngredientAddSelectionBar
-            items={flow.selectedItems}
+            items={flow.packSelectedItems}
             isPending={flow.isPending}
             errorMessage={flow.error ? dict.addError : undefined}
-            onRemove={flow.handleSelectionRemove}
-            onSubmit={flow.handleSubmit}
+            onRemove={flow.handlePackRemove}
+            onSubmit={flow.handlePackSubmit}
             placement="drawer"
           />
         }
@@ -55,11 +57,11 @@ export const IngredientAddView = () => {
 
       {flow.selectedPack === null ? (
         <IngredientAddSelectionBar
-          items={flow.selectedItems}
+          items={flow.directSelectedItems}
           isPending={flow.isPending}
           errorMessage={flow.error ? dict.addError : undefined}
-          onRemove={flow.handleSelectionRemove}
-          onSubmit={flow.handleSubmit}
+          onRemove={flow.handleDirectSelectionRemove}
+          onSubmit={flow.handleDirectSubmit}
         />
       ) : null}
     </Container>

@@ -18,6 +18,7 @@ import { RecommendedPacksSection } from "./RecommendedPacksSection";
 
 type IngredientAddCatalogProps = {
   ownedIngredientIds: Set<string>;
+  isPending: boolean;
   isSelected: (id: string) => boolean;
   onToggle: (ingredient: IngredientSelectionItem) => void;
   onViewPack: (pack: IngredientPack) => void;
@@ -25,6 +26,7 @@ type IngredientAddCatalogProps = {
 
 export const IngredientAddCatalog = ({
   ownedIngredientIds,
+  isPending,
   isSelected,
   onToggle,
   onViewPack,
@@ -38,8 +40,13 @@ export const IngredientAddCatalog = ({
     handleInputChange,
     clearSearch,
   } = useSearch();
-  const { data, error, isFetchingNextPage, isPending, ref } =
-    useIngredientAddCatalog(category, searchQuery);
+  const {
+    data,
+    error,
+    isFetchingNextPage,
+    isPending: isCatalogPending,
+    ref,
+  } = useIngredientAddCatalog(category, searchQuery);
   const shouldShowRecommendedPacks = searchQuery === "" && category === "전체";
   const handleCategoryChange = (next: IngredientCategoryName) => {
     if (category === next) return;
@@ -61,6 +68,7 @@ export const IngredientAddCatalog = ({
       {shouldShowRecommendedPacks ? (
         <RecommendedPacksSection
           ownedIngredientIds={ownedIngredientIds}
+          isPending={isPending}
           onViewPack={onViewPack}
         />
       ) : null}
@@ -83,7 +91,7 @@ export const IngredientAddCatalog = ({
             error={error}
             searchQuery={searchQuery}
             isFetchingNextPage={isFetchingNextPage}
-            isPending={isPending}
+            isPending={isCatalogPending}
             loadMoreRef={ref}
             ownedIngredientIds={ownedIngredientIds}
             isSelected={isSelected}

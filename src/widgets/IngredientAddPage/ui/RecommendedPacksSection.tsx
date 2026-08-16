@@ -14,11 +14,13 @@ import { IngredientPackCard } from "./IngredientPackCard";
 
 type RecommendedPacksSectionProps = {
   ownedIngredientIds: Set<string>;
+  isPending: boolean;
   onViewPack: (pack: IngredientPack) => void;
 };
 
 export const RecommendedPacksSection = ({
   ownedIngredientIds,
+  isPending,
   onViewPack,
 }: RecommendedPacksSectionProps) => {
   const dict = useIngredientAddDict();
@@ -78,6 +80,7 @@ export const RecommendedPacksSection = ({
             key={pack.name}
             pack={pack}
             ownedIngredientIds={ownedIngredientIds}
+            isPending={isPending}
             onViewDetail={onViewPack}
           />
         ))}

@@ -23,13 +23,12 @@ import {
   DrawerTitle,
 } from "@/shared/ui/shadcn/drawer";
 
-import type { IngredientSelectionItem } from "@/entities/ingredient/ui/IngredientPicker";
-
 type IngredientPackSelectionDrawerProps = {
   pack: IngredientPack | null;
   ownedIngredientIds: Set<string>;
   selectedIds: Set<string>;
-  onToggle: (ingredient: IngredientSelectionItem) => void;
+  isPending: boolean;
+  onToggle: (id: string) => void;
   onOpenChange: (open: boolean) => void;
   footer: ReactNode;
 };
@@ -38,6 +37,7 @@ export const IngredientPackSelectionDrawer = ({
   pack,
   ownedIngredientIds,
   selectedIds,
+  isPending,
   onToggle,
   onOpenChange,
   footer,
@@ -56,7 +56,8 @@ export const IngredientPackSelectionDrawer = ({
           </DrawerDescription>
           <DrawerClose
             aria-label={dict.close}
-            className="text-ink-sub absolute top-1 right-1 flex h-11 w-11 cursor-pointer items-center justify-center"
+            disabled={isPending}
+            className="text-ink-sub disabled:text-ink-disabled absolute top-1 right-1 flex h-11 w-11 cursor-pointer items-center justify-center disabled:cursor-not-allowed"
           >
             <X aria-hidden="true" size={22} />
           </DrawerClose>
@@ -95,13 +96,13 @@ export const IngredientPackSelectionDrawer = ({
                 <input
                   type="checkbox"
                   aria-label={label}
-                  checked={isSelected || isOwned}
-                  disabled={isOwned}
+                  checked={!isOwned && isSelected}
+                  disabled={isOwned || isPending}
                   onChange={() => {
                     triggerHaptic("Light");
-                    onToggle({ ...ingredient, name: localizedName });
+                    onToggle(ingredient.id);
                   }}
-                  className="accent-olive-dark h-5 w-5 cursor-pointer disabled:cursor-not-allowed"
+                  className="accent-olive-light h-5 w-5 cursor-pointer disabled:cursor-not-allowed"
                 />
               </label>
             );

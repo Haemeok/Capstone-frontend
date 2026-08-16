@@ -9,12 +9,14 @@ import { Image } from "@/shared/ui/image/Image";
 type IngredientPackCardProps = {
   pack: IngredientPack;
   ownedIngredientIds: Set<string>;
+  isPending: boolean;
   onViewDetail: (pack: IngredientPack) => void;
 };
 
 export const IngredientPackCard = ({
   pack,
   ownedIngredientIds,
+  isPending,
   onViewDetail,
 }: IngredientPackCardProps) => {
   const dict = useIngredientAddDict();
@@ -26,6 +28,7 @@ export const IngredientPackCard = ({
   const previewIngredients = pack.ingredients.slice(0, 4);
 
   const handleViewDetail = () => {
+    if (isPending) return;
     triggerHaptic("Light");
     onViewDetail(pack);
   };
@@ -33,9 +36,10 @@ export const IngredientPackCard = ({
   return (
     <button
       type="button"
+      disabled={isPending}
       onClick={handleViewDetail}
       aria-label={format(dict.cardDetailAria, { name: meta.name })}
-      className="focus-visible:outline-olive-light min-h-11 w-56 flex-none cursor-pointer rounded-xl bg-gray-50 p-3 text-left transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 active:bg-gray-100"
+      className="focus-visible:outline-olive-light min-h-11 w-56 flex-none cursor-pointer rounded-xl bg-gray-50 p-3 text-left transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 active:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:bg-gray-50 disabled:active:bg-gray-50"
     >
       <span className="grid grid-cols-4 gap-1" aria-hidden="true">
         {previewIngredients.map((ingredient) => (
