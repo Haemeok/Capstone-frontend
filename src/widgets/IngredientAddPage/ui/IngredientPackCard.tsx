@@ -23,6 +23,7 @@ export const IngredientPackCard = ({
   const allOwned = pack.ingredients.every((ingredient) =>
     ownedIngredientIds.has(ingredient.id)
   );
+  const previewIngredients = pack.ingredients.slice(0, 4);
 
   const handleViewDetail = () => {
     triggerHaptic("Light");
@@ -34,26 +35,29 @@ export const IngredientPackCard = ({
       type="button"
       onClick={handleViewDetail}
       aria-label={format(dict.cardDetailAria, { name: meta.name })}
-      className="flex w-full cursor-pointer items-center gap-3 border-b border-gray-100 py-3 text-left last:border-b-0"
+      className="focus-visible:outline-olive-light min-h-11 w-56 flex-none cursor-pointer rounded-xl bg-gray-50 p-3 text-left transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 active:bg-gray-100"
     >
-      <Image
-        src={pack.ingredients[0].imageUrl}
-        alt=""
-        wrapperClassName="h-16 w-16 flex-none rounded-card bg-gray-100"
-        fit="cover"
-      />
-      <span className="min-w-0 flex-1">
-        <span className="text-ink block truncate text-sm font-semibold">
-          {meta.name}
-        </span>
-        <span className="text-ink-muted mt-1 line-clamp-1 block text-xs">
-          {meta.description}
-        </span>
-        <span className="text-ink-muted mt-1.5 block text-xs">
-          {allOwned
-            ? dict.cardOwned
-            : format(dict.cardCount, { count: pack.ingredients.length })}
-        </span>
+      <span className="grid grid-cols-4 gap-1" aria-hidden="true">
+        {previewIngredients.map((ingredient) => (
+          <Image
+            key={ingredient.id}
+            src={ingredient.imageUrl}
+            alt=""
+            wrapperClassName="w-full rounded-lg bg-gray-100"
+            fit="cover"
+          />
+        ))}
+      </span>
+      <span className="text-ink mt-2.5 block truncate text-sm font-semibold">
+        {meta.name}
+      </span>
+      <span className="text-ink-muted mt-1 line-clamp-1 block text-xs">
+        {meta.description}
+      </span>
+      <span className="text-ink-muted mt-1.5 block text-xs">
+        {allOwned
+          ? dict.cardOwned
+          : format(dict.cardCount, { count: pack.ingredients.length })}
       </span>
     </button>
   );

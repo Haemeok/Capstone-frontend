@@ -237,9 +237,10 @@ export type IngredientAddDict = {
   searchEntryAria: string;
   packsHeading: string;
   packsSubtitle: string;
+  previousPacks: string;
+  nextPacks: string;
   searchPlaceholder: string;
   searchAria: string;
-  searchAction: string;
   loading: string;
   loadingMore: string;
   errorPrefix: string;

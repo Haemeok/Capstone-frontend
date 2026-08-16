@@ -85,7 +85,12 @@ export const IngredientCatalogResults = ({
         ))}
         {isFetchingNextPage ? <IngredientAddSkeletonCards count={2} /> : null}
       </div>
-      <div ref={loadMoreRef} className="h-8" aria-hidden="true" />
+      <div
+        ref={loadMoreRef}
+        data-testid="ingredient-catalog-load-more"
+        className="h-8"
+        aria-hidden="true"
+      />
     </>
   );
 };

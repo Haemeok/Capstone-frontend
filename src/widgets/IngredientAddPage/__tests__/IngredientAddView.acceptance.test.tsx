@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+import { ingredientAddMessages, type Locale } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import {
@@ -89,6 +90,8 @@ const pork = ingredient("pork-1", "돼지고기", "고기");
 const tofu = ingredient("tofu-3", "두부", "콩/두부");
 const tomatoJa = ingredient("tomato-1", "トマト", "野菜");
 const onionJa = ingredient("onion-2", "玉ねぎ", "野菜");
+const tomatoEn = ingredient("tomato-1", "Tomato", "Vegetables");
+const onionEn = ingredient("onion-2", "Onion", "Vegetables");
 
 const page = (content: IngredientItem[]): IngredientsApiResponse => ({
   content,
@@ -145,6 +148,15 @@ const selectCatalogIngredient = async (name: string) => {
   );
 };
 
+const expectToAppearBefore = (first: HTMLElement, second: HTMLElement) => {
+  expect(
+    first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING
+  ).toBeTruthy();
+};
+
+const getRailLabel = (locale: Locale, key: "previousPacks" | "nextPacks") =>
+  ingredientAddMessages[locale][key];
+
 describe("IngredientAddView acceptance", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -153,6 +165,8 @@ describe("IngredientAddView acceptance", () => {
     addIngredientBulkMock.mockResolvedValue(undefined);
     getIngredientsMock.mockImplementation(async ({ category, lang, q }) => {
       if (lang === "ja") return page([tomatoJa, onionJa]);
+      if (lang === "en")
+        return q === "tomato" ? page([tomatoEn]) : page([onionEn]);
       if (q === "토마토") return page([tomato]);
       if (category === "고기" && !q) return page([pork]);
       if (q) return page([]);
@@ -161,18 +175,31 @@ describe("IngredientAddView acceptance", () => {
   });
 
   afterEach(() => {
+    jest.useRealTimers();
     jest.restoreAllMocks();
   });
 
-  it("FRT-08: 재료 추가는 drawer가 아닌 locale 전체 화면 content다", async () => {
+  it("T-01: 재료 추가 화면에서 검색창에 바로 입력할 수 있다", async () => {
+    jest.useFakeTimers();
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     renderAddPage("/en/ingredients/new");
 
+    const searchbox = screen.getByRole("searchbox", {
+      name: /Search ingredients/,
+    });
+    expect(searchbox).toBeVisible();
+    expect(searchbox).toBeEnabled();
     expect(
-      await screen.findByRole("heading", { name: "Add ingredients" })
-    ).toBeVisible();
-    expect(
-      screen.getByRole("searchbox", { name: /Search ingredients/ })
-    ).toBeVisible();
+      screen.queryByRole("button", { name: "Search" })
+    ).not.toBeInTheDocument();
+    getIngredientsMock.mockClear();
+    await user.type(searchbox, "tomato{Enter}");
+    expect(searchbox).toHaveValue("tomato");
+    expect(getIngredientsMock).toHaveBeenCalledWith(
+      expect.objectContaining({ q: "tomato", lang: "en" })
+    );
+    jest.useRealTimers();
+    expect(await screen.findByRole("button", { name: /Tomato/ })).toBeVisible();
     expect(screen.getByRole("button", { name: "All" })).toHaveClass(
       "min-h-11",
       "min-w-11"
@@ -180,31 +207,116 @@ describe("IngredientAddView acceptance", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("FRT-09: 검색·카테고리·추천 묶음이 한 선택 재료 상태를 공유한다", async () => {
+  it("T-02: 기본 상태에서 추천 묶음이 직접 선택 catalog와 load-more보다 먼저 나온다", async () => {
+    renderAddPage("/ingredients/new");
+
+    const packHeading = screen.getByRole("heading", {
+      name: "추천 재료 모음",
+    });
+    const catalogHeading = screen.getByRole("heading", {
+      name: "재료 둘러보기",
+    });
+    await screen.findByRole("button", { name: /토마토/ });
+    const loadMore = screen.getByTestId("ingredient-catalog-load-more");
+
+    expectToAppearBefore(packHeading, catalogHeading);
+    expectToAppearBefore(packHeading, loadMore);
+  });
+
+  it("T-03A: 검색어를 확정하면 추천 묶음을 숨기고 검색 결과를 보여 준다", async () => {
     renderAddPage("/ingredients/new");
 
     await userEvent.type(
       screen.getByRole("searchbox", { name: /재료를 검색/ }),
-      "토마토"
+      "토마토{Enter}"
     );
-    await userEvent.click(screen.getByRole("button", { name: "검색" }));
+
+    expect(
+      screen.queryByRole("heading", { name: "추천 재료 모음" })
+    ).not.toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: /토마토/ })).toBeVisible();
+  });
+
+  it("T-03B: 전체가 아닌 카테고리를 고르면 추천 묶음을 숨기고 결과를 보여 준다", async () => {
+    renderAddPage("/ingredients/new");
+
+    await userEvent.click(screen.getByRole("button", { name: "고기" }));
+
+    expect(
+      screen.queryByRole("heading", { name: "추천 재료 모음" })
+    ).not.toBeInTheDocument();
+    expect(
+      await screen.findByRole("button", { name: /돼지고기/ })
+    ).toBeVisible();
+  });
+
+  it("T-04: 빈 검색어와 전체 카테고리로 돌아오면 추천 묶음과 기존 선택을 유지한다", async () => {
+    renderAddPage("/ingredients/new");
     await selectCatalogIngredient("토마토");
+
+    await userEvent.click(screen.getByRole("button", { name: "고기" }));
+    expect(
+      screen.queryByRole("heading", { name: "추천 재료 모음" })
+    ).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "전체" }));
+
+    expect(
+      screen.getByRole("heading", { name: "추천 재료 모음" })
+    ).toBeVisible();
     expect(screen.getByRole("button", { name: "토마토 제거" })).toHaveClass(
       "h-11",
       "w-11"
     );
-    await userEvent.click(screen.getByRole("button", { name: "고기" }));
-    await selectCatalogIngredient("돼지고기");
-    await userEvent.click(
-      screen.getByRole("button", { name: /한식 기본 베이스 상세 보기/ })
-    );
-    expect(screen.getByRole("button", { name: "닫기" })).toHaveClass(
-      "h-11",
-      "w-11"
-    );
-    await userEvent.click(screen.getByRole("checkbox", { name: "양파 선택" }));
+    expect(screen.getByRole("button", { name: "1개 추가하기" })).toBeEnabled();
+  });
 
-    expect(screen.getByRole("button", { name: "3개 추가하기" })).toBeEnabled();
+  it.each([
+    ["/ingredients/new", "ko"],
+    ["/en/ingredients/new", "en"],
+    ["/ja/ingredients/new", "ja"],
+  ] as const)(
+    "%s 추천 묶음 rail에 locale별 이전·다음 탐색 버튼을 연결한다",
+    (pathname, locale) => {
+      renderAddPage(pathname);
+
+      expect(
+        screen.getByRole("button", {
+          name: getRailLabel(locale, "previousPacks"),
+        })
+      ).toHaveClass("h-11", "w-11", "hidden", "md:flex");
+      expect(
+        screen.getByRole("button", {
+          name: getRailLabel(locale, "nextPacks"),
+        })
+      ).toHaveClass("h-11", "w-11", "hidden", "md:flex");
+    }
+  );
+
+  it("추천 묶음 탐색 버튼은 rail 너비의 80%씩 양방향으로 이동하고 햅틱을 보내지 않는다", async () => {
+    renderAddPage("/ingredients/new");
+    const rail = screen.getByRole("group", { name: "추천 재료 모음" });
+    const scrollBy = jest.fn();
+    Object.defineProperty(rail, "clientWidth", { value: 500 });
+    Object.defineProperty(rail, "scrollBy", { value: scrollBy });
+
+    const previous = screen.getByRole("button", {
+      name: getRailLabel("ko", "previousPacks"),
+    });
+    const next = screen.getByRole("button", {
+      name: getRailLabel("ko", "nextPacks"),
+    });
+    await userEvent.click(previous);
+    await userEvent.click(next);
+
+    expect(scrollBy).toHaveBeenNthCalledWith(1, {
+      left: -400,
+      behavior: "smooth",
+    });
+    expect(scrollBy).toHaveBeenNthCalledWith(2, {
+      left: 400,
+      behavior: "smooth",
+    });
+    expect(triggerHapticMock).not.toHaveBeenCalled();
   });
 
   it("선택 bar에서 재료를 제거하면 상태 변경과 함께 Light 햅틱을 한 번 보낸다", async () => {
@@ -319,8 +431,7 @@ describe("IngredientAddView acceptance", () => {
     getIngredientsMock.mockResolvedValue(page([]));
     renderAddPage("/ingredients/new");
 
-    await userEvent.type(screen.getByRole("searchbox"), "용과");
-    await userEvent.click(screen.getByRole("button", { name: "검색" }));
+    await userEvent.type(screen.getByRole("searchbox"), "용과{Enter}");
 
     expect(
       await screen.findByText('"용과"에 해당하는 재료가 없어요')
@@ -330,8 +441,7 @@ describe("IngredientAddView acceptance", () => {
 
   it("검색 결과에서 카테고리를 바꾸면 과거 검색어 없이 바로 조회한다", async () => {
     renderAddPage("/ingredients/new");
-    await userEvent.type(screen.getByRole("searchbox"), "용과");
-    await userEvent.click(screen.getByRole("button", { name: "검색" }));
+    await userEvent.type(screen.getByRole("searchbox"), "용과{Enter}");
     expect(
       await screen.findByText('"용과"에 해당하는 재료가 없어요')
     ).toBeVisible();
