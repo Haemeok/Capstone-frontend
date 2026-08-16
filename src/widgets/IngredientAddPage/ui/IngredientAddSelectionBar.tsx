@@ -40,6 +40,7 @@ export const IngredientAddSelectionBar = ({
     ? dict.adding
     : format(dict.addCount, { count: items.length });
   const handleRemove = (id: string) => {
+    if (isPending) return;
     triggerHaptic("Light");
     onRemove(id);
   };
@@ -79,8 +80,9 @@ export const IngredientAddSelectionBar = ({
               <button
                 type="button"
                 onClick={() => handleRemove(item.id)}
+                disabled={isPending}
                 aria-label={format(pickerDict.removeAria, { name: item.name })}
-                className="text-ink-sub absolute -top-2 -right-2 flex h-11 w-11 cursor-pointer items-start justify-end rounded-md p-1.5"
+                className="text-ink-sub absolute -top-2 -right-2 flex h-11 w-11 cursor-pointer items-start justify-end rounded-md p-1.5 disabled:cursor-not-allowed"
               >
                 <X aria-hidden="true" size={12} />
               </button>
@@ -91,7 +93,7 @@ export const IngredientAddSelectionBar = ({
           type="button"
           onClick={onSubmit}
           disabled={isPending}
-          className="bg-olive-dark hover:bg-olive h-12 flex-none px-5 text-sm font-bold text-white"
+          className="bg-olive-light hover:bg-olive-medium h-12 flex-none px-5 text-sm font-bold text-white"
         >
           {submitLabel}
         </Button>
