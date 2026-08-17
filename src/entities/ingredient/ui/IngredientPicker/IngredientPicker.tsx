@@ -140,7 +140,7 @@ const IngredientPicker = ({
               ref={inputRef}
               type="text"
               placeholder={t.searchPlaceholder}
-              className="text-ink placeholder:text-ink-muted focus-visible:ring-olive-dark w-full rounded-lg border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus-visible:ring-2 focus-visible:outline-none"
+              className="text-ink placeholder:text-ink-muted focus-visible:ring-olive-light w-full rounded-lg border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus-visible:ring-2 focus-visible:outline-none"
               value={inputValue}
               onChange={handleInputChange}
             />

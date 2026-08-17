@@ -42,7 +42,7 @@ export const FridgeBottomAction = ({
         ) : (
           <LocalizedLink
             href="/recipes/my-fridge"
-            className="bg-olive-light focus-visible:ring-olive-light active:bg-olive-dark pointer-events-auto flex min-h-12 w-full cursor-pointer items-center justify-center rounded-xl px-5 text-base font-semibold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="bg-olive-light focus-visible:ring-olive-light active:bg-olive-medium pointer-events-auto flex min-h-12 w-full cursor-pointer items-center justify-center rounded-xl px-5 text-base font-semibold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             {t.fabFindRecipes}
           </LocalizedLink>

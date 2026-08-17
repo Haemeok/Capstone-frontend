@@ -81,7 +81,7 @@ export const FridgeIngredientGrid = ({
           {!isManageMode ? (
             <LocalizedLink
               href="/ingredients/new"
-              className="bg-olive-light focus-visible:ring-olive-light active:bg-olive-dark mt-5 inline-flex min-h-11 cursor-pointer items-center rounded-xl px-5 text-sm font-semibold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="bg-olive-light focus-visible:ring-olive-light active:bg-olive-medium mt-5 inline-flex min-h-11 cursor-pointer items-center rounded-xl px-5 text-sm font-semibold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               {t.empty.cta}
             </LocalizedLink>

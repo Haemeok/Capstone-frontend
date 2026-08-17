@@ -93,7 +93,7 @@ describe("IngredientPicker i18n", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText(ingredientPickerMessages.ja.searchPlaceholder)
-    ).toHaveClass("focus-visible:ring-2", "focus-visible:ring-olive-dark");
+    ).toHaveClass("focus-visible:ring-2", "focus-visible:ring-olive-light");
     expect(
       screen.getByText(ingredientPickerMessages.ja.title)
     ).toBeInTheDocument();

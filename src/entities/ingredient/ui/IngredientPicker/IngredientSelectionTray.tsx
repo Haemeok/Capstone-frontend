@@ -57,7 +57,7 @@ const IngredientSelectionTray = ({
       <Button
         onClick={onComplete}
         disabled={items.length === 0}
-        className="bg-olive-dark hover:bg-olive h-12 flex-shrink-0 cursor-pointer px-6 text-base font-semibold text-white disabled:bg-gray-300"
+        className="bg-olive-light hover:bg-olive-medium h-12 flex-shrink-0 cursor-pointer px-6 text-base font-semibold text-white disabled:bg-gray-300"
       >
         {t.complete}
       </Button>

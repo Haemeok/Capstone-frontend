@@ -61,7 +61,7 @@ const IngredientPickerCard = ({
           aria-hidden
           className={cn(
             "absolute right-1.5 bottom-1.5 flex h-6 w-6 items-center justify-center rounded-md shadow-sm transition-colors",
-            checked ? "bg-olive-dark text-white" : "text-ink-muted bg-white"
+            checked ? "bg-olive-light text-white" : "text-ink-muted bg-white"
           )}
         >
           {checked ? <Check size={14} /> : <Plus size={14} />}

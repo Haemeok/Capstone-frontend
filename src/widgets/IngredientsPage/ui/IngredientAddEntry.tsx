@@ -17,7 +17,7 @@ export const IngredientAddEntry = () => {
       >
         <Search className="h-4 w-4 shrink-0" aria-hidden />
         <span className="min-w-0 flex-1">{t.addEntry}</span>
-        <Plus className="text-olive-dark h-5 w-5 shrink-0" aria-hidden />
+        <Plus className="text-olive-light h-5 w-5 shrink-0" aria-hidden />
       </LocalizedLink>
     </div>
   );
