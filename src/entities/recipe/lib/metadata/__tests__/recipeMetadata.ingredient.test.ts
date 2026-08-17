@@ -106,4 +106,63 @@ describe("구별 재료 검색 제목", () => {
       "백종원 김치찌개 | 레시피오"
     );
   });
+
+  it.each([
+    [
+      "오징어 간장볶음",
+      [
+        "오징어",
+        "식용유",
+        "맛술",
+        "설탕",
+        "물엿",
+        "진간장",
+        "후추",
+        "다진 마늘",
+        "청양고추",
+      ],
+      "청양고추 오징어 간장볶음 | 레시피오",
+    ],
+    [
+      "여름 양배추 오이 물김치",
+      ["양배추", "오이", "양파", "배"],
+      "배 여름 양배추 오이 물김치 | 레시피오",
+    ],
+  ])(
+    "T-03: 실제 밑재료를 건너뛰어 %s의 구별 재료를 고른다",
+    (title, names, expectedTitle) => {
+      const recipe = withoutAuthor(
+        makeBaseRecipe({
+          title,
+          cookingTime: 45,
+          totalIngredientCost: 0,
+          ingredients: names.map((name, index) =>
+            ingredient(String(index), name)
+          ),
+        })
+      );
+
+      expect(generateRecipeMetadata(recipe, "live-sample").title).toBe(
+        expectedTitle
+      );
+    }
+  );
+
+  it("T-02: 용도 설명이 붙은 주재료는 제목의 같은 재료로 판단한다", () => {
+    const recipe = withoutAuthor(
+      makeBaseRecipe({
+        title: "인생 닭한마리",
+        cookingTime: 45,
+        totalIngredientCost: 0,
+        ingredients: [
+          ingredient("chicken", "닭볶음탕용 닭"),
+          ingredient("potato", "감자"),
+        ],
+      })
+    );
+
+    expect(generateRecipeMetadata(recipe, "chicken").title).toBe(
+      "감자 인생 닭한마리 | 레시피오"
+    );
+  });
 });
