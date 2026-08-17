@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interactive HTML Mockups"
+  short_description: "Build and review interactive UI mockups"
+  default_prompt: "Use $building-interactive-html-mockups to create and review an interactive HTML UI mockup from the project design references."
