@@ -1,13 +1,21 @@
 import type { ReactNode } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 
 import { ApiError } from "@/shared/api/errors";
 
+import type {
+  CookingRecordCreateResponse,
+  ManualCookingRecordCreateInput,
+} from "@/entities/recipe/model/record";
 import { COOKING_RECORD_QUERY_KEYS } from "@/entities/recipe/model/recordQueryKeys";
 
-import { postManualCookingRecord, prepareManualCookingRecord } from "../api";
+import {
+  type ManualCookingRecordDraft,
+  postManualCookingRecord,
+  prepareManualCookingRecord,
+} from "../api";
 import { useCreateManualCookingRecord } from "../hooks";
 
 jest.mock("../api", () => ({
@@ -17,6 +25,25 @@ jest.mock("../api", () => ({
 
 const prepareRecord = jest.mocked(prepareManualCookingRecord);
 const postRecord = jest.mocked(postManualCookingRecord);
+
+const createDeferred = <T,>() => {
+  let resolve = (_value: T) => {};
+  const promise = new Promise<T>((promiseResolve) => {
+    resolve = promiseResolve;
+  });
+  return { promise, resolve };
+};
+
+const manualDraft: ManualCookingRecordDraft = {
+  sourceType: "MANUAL",
+  recordTitle: "제목",
+  images: [
+    {
+      file: new File(["image"], "record.jpg", { type: "image/jpeg" }),
+      purpose: "ORIGINAL",
+    },
+  ],
+};
 
 const createHarness = () => {
   const queryClient = new QueryClient({
@@ -153,4 +180,94 @@ it("생성 후 무한 목록을 첫 페이지로 줄이고 목록·캘린더를 
   });
   expect(queryClient.getQueryState(listKey)?.isInvalidated).toBe(true);
   expect(queryClient.getQueryState(calendarKey)?.isInvalidated).toBe(true);
+});
+
+it("이미지 준비 중부터 최종 생성 완료까지 pending을 유지합니다", async () => {
+  jest.useRealTimers();
+  const deferredPrepare = createDeferred<ManualCookingRecordCreateInput>();
+  const deferredFinal = createDeferred<CookingRecordCreateResponse>();
+  prepareRecord.mockReturnValue(deferredPrepare.promise);
+  postRecord.mockReturnValue(deferredFinal.promise);
+  const { Wrapper } = createHarness();
+  const { result } = renderHook(() => useCreateManualCookingRecord(), {
+    wrapper: Wrapper,
+  });
+
+  let createPromise: Promise<unknown> | undefined;
+  act(() => {
+    createPromise = result.current.createRecord(manualDraft);
+  });
+  await waitFor(() => expect(result.current.isPending).toBe(true));
+  expect(result.current.status).toBe("pending");
+  expect(result.current.isIdle).toBe(false);
+  expect(result.current.isSuccess).toBe(false);
+  expect(postRecord).not.toHaveBeenCalled();
+
+  deferredPrepare.resolve({
+    sourceType: "MANUAL",
+    recordTitle: "제목",
+    image: { originalKey: "image-original" },
+  });
+  await waitFor(() => expect(postRecord).toHaveBeenCalledTimes(1));
+  expect(result.current.isPending).toBe(true);
+
+  deferredFinal.resolve({ recordId: "record-A", message: "created" });
+  await act(async () => {
+    await createPromise;
+  });
+  await waitFor(() => expect(result.current.isPending).toBe(false));
+});
+
+it("이미지 준비 실패를 hook error 상태로 노출하고 최종 생성을 호출하지 않습니다", async () => {
+  jest.useRealTimers();
+  const prepareError = new Error("prepare failed");
+  prepareRecord.mockRejectedValue(prepareError);
+  const { Wrapper } = createHarness();
+  const { result } = renderHook(() => useCreateManualCookingRecord(), {
+    wrapper: Wrapper,
+  });
+
+  let createPromise: Promise<unknown> | undefined;
+  act(() => {
+    createPromise = result.current.createRecord(manualDraft);
+  });
+  await expect(createPromise).rejects.toBe(prepareError);
+
+  await waitFor(() => expect(result.current.isError).toBe(true));
+  expect(result.current.error).toBe(prepareError);
+  expect(postRecord).not.toHaveBeenCalled();
+});
+
+it("이전 성공 뒤 이미지 준비가 실패해도 error와 success를 동시에 노출하지 않습니다", async () => {
+  jest.useRealTimers();
+  postRecord.mockResolvedValue({ recordId: "record-A", message: "created" });
+  const prepareError = new Error("prepare failed");
+  const { Wrapper } = createHarness();
+  const { result } = renderHook(() => useCreateManualCookingRecord(), {
+    wrapper: Wrapper,
+  });
+
+  await act(async () => {
+    await result.current.createRecord(manualDraft);
+  });
+  await waitFor(() => expect(result.current.status).toBe("success"));
+  expect(result.current.isSuccess).toBe(true);
+
+  prepareRecord.mockRejectedValueOnce(prepareError);
+  await act(async () => {
+    await expect(result.current.createRecord(manualDraft)).rejects.toBe(
+      prepareError
+    );
+  });
+  await waitFor(() => expect(result.current.status).toBe("error"));
+  expect(result.current.isError).toBe(true);
+  expect(result.current.isSuccess).toBe(false);
+  expect(result.current.isIdle).toBe(false);
+
+  act(() => result.current.reset());
+  await waitFor(() => expect(result.current.status).toBe("idle"));
+  expect(result.current.isIdle).toBe(true);
+  expect(result.current.isError).toBe(false);
+  expect(result.current.isSuccess).toBe(false);
+  expect(result.current.error).toBeNull();
 });

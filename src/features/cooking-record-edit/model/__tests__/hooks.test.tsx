@@ -17,6 +17,8 @@ import type {
 import { COOKING_RECORD_QUERY_KEYS } from "@/entities/recipe/model/recordQueryKeys";
 
 import {
+  type CookingRecordImageDraft,
+  type CookingRecordImageRequest,
   patchCookingRecordImage,
   prepareCookingRecordImage,
   updateCookingRecordMetadata,
@@ -79,6 +81,16 @@ const detail: CookingRecordDetailResponse = {
   visibility: null,
   isRemix: false,
   createdAt: "2026-08-17T10:00:00+09:00",
+};
+
+const imageDraft: CookingRecordImageDraft = {
+  recordId: "record-A",
+  images: [
+    {
+      file: new File(["image"], "record.jpg", { type: "image/jpeg" }),
+      purpose: "ORIGINAL",
+    },
+  ],
 };
 
 beforeEach(() => {
@@ -279,4 +291,93 @@ it("이미지 수정은 detail refetch를 기다리되 활성 다중-page 목록
     await mutationPromise;
   });
   await waitFor(() => expect(result.current.isPending).toBe(false));
+});
+
+it("이미지 준비 중부터 최종 PATCH 완료까지 pending을 유지합니다", async () => {
+  jest.useRealTimers();
+  const deferredPrepare = createDeferred<CookingRecordImageRequest>();
+  const deferredFinal = createDeferred<{ message: string }>();
+  prepareImage.mockReturnValue(deferredPrepare.promise);
+  patchImage.mockReturnValue(deferredFinal.promise);
+  const { Wrapper } = createWrapper();
+  const { result } = renderHook(() => useReplaceCookingRecordImage(), {
+    wrapper: Wrapper,
+  });
+
+  let replacePromise: Promise<unknown> | undefined;
+  act(() => {
+    replacePromise = result.current.replaceImage(imageDraft);
+  });
+  await waitFor(() => expect(result.current.isPending).toBe(true));
+  expect(result.current.status).toBe("pending");
+  expect(result.current.isIdle).toBe(false);
+  expect(result.current.isSuccess).toBe(false);
+  expect(patchImage).not.toHaveBeenCalled();
+
+  deferredPrepare.resolve({
+    recordId: "record-A",
+    image: { originalKey: "image-original" },
+  });
+  await waitFor(() => expect(patchImage).toHaveBeenCalledTimes(1));
+  expect(result.current.isPending).toBe(true);
+
+  deferredFinal.resolve({ message: "updated" });
+  await act(async () => {
+    await replacePromise;
+  });
+  await waitFor(() => expect(result.current.isPending).toBe(false));
+});
+
+it("이미지 준비 실패를 hook error 상태로 노출하고 최종 PATCH를 호출하지 않습니다", async () => {
+  jest.useRealTimers();
+  const prepareError = new Error("prepare failed");
+  prepareImage.mockRejectedValue(prepareError);
+  const { Wrapper } = createWrapper();
+  const { result } = renderHook(() => useReplaceCookingRecordImage(), {
+    wrapper: Wrapper,
+  });
+
+  let replacePromise: Promise<unknown> | undefined;
+  act(() => {
+    replacePromise = result.current.replaceImage(imageDraft);
+  });
+  await expect(replacePromise).rejects.toBe(prepareError);
+
+  await waitFor(() => expect(result.current.isError).toBe(true));
+  expect(result.current.error).toBe(prepareError);
+  expect(patchImage).not.toHaveBeenCalled();
+});
+
+it("이전 이미지 수정 성공 뒤 준비가 실패해도 error와 success를 동시에 노출하지 않습니다", async () => {
+  jest.useRealTimers();
+  patchImage.mockResolvedValue({ message: "updated" });
+  const prepareError = new Error("prepare failed");
+  const { Wrapper } = createWrapper();
+  const { result } = renderHook(() => useReplaceCookingRecordImage(), {
+    wrapper: Wrapper,
+  });
+
+  await act(async () => {
+    await result.current.replaceImage(imageDraft);
+  });
+  await waitFor(() => expect(result.current.status).toBe("success"));
+  expect(result.current.isSuccess).toBe(true);
+
+  prepareImage.mockRejectedValueOnce(prepareError);
+  await act(async () => {
+    await expect(result.current.replaceImage(imageDraft)).rejects.toBe(
+      prepareError
+    );
+  });
+  await waitFor(() => expect(result.current.status).toBe("error"));
+  expect(result.current.isError).toBe(true);
+  expect(result.current.isSuccess).toBe(false);
+  expect(result.current.isIdle).toBe(false);
+
+  act(() => result.current.reset());
+  await waitFor(() => expect(result.current.status).toBe("idle"));
+  expect(result.current.isIdle).toBe(true);
+  expect(result.current.isError).toBe(false);
+  expect(result.current.isSuccess).toBe(false);
+  expect(result.current.error).toBeNull();
 });

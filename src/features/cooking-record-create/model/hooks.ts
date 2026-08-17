@@ -20,7 +20,11 @@ import {
 
 export const useCreateManualCookingRecord = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation({
+  const prepareMutation = useMutation({
+    mutationFn: prepareManualCookingRecord,
+    retry: false,
+  });
+  const finalMutation = useMutation({
     mutationFn: postManualCookingRecord,
     retry: shouldRetryRecordImageNotReady,
     retryDelay: RECORD_IMAGE_RETRY_DELAY_MS,
@@ -41,9 +45,38 @@ export const useCreateManualCookingRecord = () => {
   });
 
   const createRecord = async (draft: ManualCookingRecordDraft) => {
-    const request = await prepareManualCookingRecord(draft);
-    return mutation.mutateAsync(request);
+    prepareMutation.reset();
+    finalMutation.reset();
+    const request = await prepareMutation.mutateAsync(draft);
+    return finalMutation.mutateAsync(request);
   };
 
-  return { ...mutation, createRecord };
+  const reset = () => {
+    prepareMutation.reset();
+    finalMutation.reset();
+  };
+
+  const isPending = prepareMutation.isPending || finalMutation.isPending;
+  const hasError = prepareMutation.isError || finalMutation.isError;
+  const isError = !isPending && hasError;
+  const isSuccess = !isPending && !isError && finalMutation.isSuccess;
+  const status = isPending
+    ? "pending"
+    : isError
+      ? "error"
+      : isSuccess
+        ? "success"
+        : "idle";
+
+  return {
+    ...finalMutation,
+    createRecord,
+    reset,
+    status,
+    isIdle: status === "idle",
+    isPending,
+    isError,
+    isSuccess,
+    error: isError ? (prepareMutation.error ?? finalMutation.error) : null,
+  };
 };

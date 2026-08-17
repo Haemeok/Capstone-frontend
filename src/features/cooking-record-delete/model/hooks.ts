@@ -5,7 +5,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { keepFirstInfinitePage } from "@/shared/lib/query";
 
+import type { MyCookingReviewsResponse } from "@/entities/cooking-review";
+import { COOKING_REVIEW_QUERY_KEYS } from "@/entities/cooking-review";
 import type { CookingRecordListResponse } from "@/entities/recipe/model/record";
+import { keepFirstRecordsTimelinePages } from "@/entities/recipe/model/recordCache";
 import { COOKING_RECORD_QUERY_KEYS } from "@/entities/recipe/model/recordQueryKeys";
 
 import { deleteCookingRecord } from "./api";
@@ -23,6 +26,11 @@ export const useDeleteCookingRecord = () => {
         { queryKey: COOKING_RECORD_QUERY_KEYS.lists },
         keepFirstInfinitePage
       );
+      keepFirstRecordsTimelinePages(queryClient);
+      queryClient.setQueriesData<InfiniteData<MyCookingReviewsResponse>>(
+        { queryKey: COOKING_REVIEW_QUERY_KEYS.myAll },
+        keepFirstInfinitePage
+      );
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: COOKING_RECORD_QUERY_KEYS.lists,
@@ -32,7 +40,7 @@ export const useDeleteCookingRecord = () => {
         }),
         queryClient.invalidateQueries({ queryKey: ["recordsTimeline"] }),
         queryClient.invalidateQueries({
-          queryKey: ["cooking-review", "my"],
+          queryKey: COOKING_REVIEW_QUERY_KEYS.myAll,
         }),
       ]);
     },

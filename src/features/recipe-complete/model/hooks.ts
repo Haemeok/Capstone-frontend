@@ -9,10 +9,15 @@ import { keepFirstInfinitePage } from "@/shared/lib/query";
 import { trackReviewAction } from "@/shared/lib/review";
 import { useToastStore } from "@/shared/ui/toast";
 
+import {
+  COOKING_REVIEW_QUERY_KEYS,
+  keepFirstCookingReviewPages,
+} from "@/entities/cooking-review";
 import type {
   CookingRecordListResponse,
   RecipeCookingRecordCreateInput,
 } from "@/entities/recipe/model/record";
+import { keepFirstRecordsTimelinePages } from "@/entities/recipe/model/recordCache";
 import {
   RECORD_IMAGE_RETRY_DELAY_MS,
   shouldRetryRecordImageNotReady,
@@ -39,6 +44,7 @@ const invalidateRecipeRecordCaches = async (
     { queryKey: COOKING_RECORD_QUERY_KEYS.lists },
     keepFirstInfinitePage
   );
+  keepFirstRecordsTimelinePages(queryClient);
   const invalidations = [
     COOKING_RECORD_QUERY_KEYS.lists,
     COOKING_RECORD_QUERY_KEYS.calendars,
@@ -50,8 +56,11 @@ const invalidateRecipeRecordCaches = async (
     ["recipe", recipeId],
   ].map((queryKey) => queryClient.invalidateQueries({ queryKey }));
   if (publishReview) {
+    keepFirstCookingReviewPages(queryClient);
     invalidations.push(
-      queryClient.invalidateQueries({ queryKey: ["cooking-review"] })
+      queryClient.invalidateQueries({
+        queryKey: COOKING_REVIEW_QUERY_KEYS.all,
+      })
     );
   }
   await Promise.all(invalidations);

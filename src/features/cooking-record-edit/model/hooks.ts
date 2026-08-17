@@ -50,7 +50,11 @@ export const useUpdateCookingRecordMetadata = () => {
 
 export const useReplaceCookingRecordImage = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation({
+  const prepareMutation = useMutation({
+    mutationFn: prepareCookingRecordImage,
+    retry: false,
+  });
+  const finalMutation = useMutation({
     mutationFn: patchCookingRecordImage,
     retry: shouldRetryRecordImageNotReady,
     retryDelay: RECORD_IMAGE_RETRY_DELAY_MS,
@@ -67,8 +71,35 @@ export const useReplaceCookingRecordImage = () => {
     },
   });
   const replaceImage = async (draft: CookingRecordImageDraft) => {
-    const request = await prepareCookingRecordImage(draft);
-    return mutation.mutateAsync(request);
+    prepareMutation.reset();
+    finalMutation.reset();
+    const request = await prepareMutation.mutateAsync(draft);
+    return finalMutation.mutateAsync(request);
   };
-  return { ...mutation, replaceImage };
+  const reset = () => {
+    prepareMutation.reset();
+    finalMutation.reset();
+  };
+  const isPending = prepareMutation.isPending || finalMutation.isPending;
+  const hasError = prepareMutation.isError || finalMutation.isError;
+  const isError = !isPending && hasError;
+  const isSuccess = !isPending && !isError && finalMutation.isSuccess;
+  const status = isPending
+    ? "pending"
+    : isError
+      ? "error"
+      : isSuccess
+        ? "success"
+        : "idle";
+  return {
+    ...finalMutation,
+    replaceImage,
+    reset,
+    status,
+    isIdle: status === "idle",
+    isPending,
+    isError,
+    isSuccess,
+    error: isError ? (prepareMutation.error ?? finalMutation.error) : null,
+  };
 };
