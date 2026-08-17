@@ -2,10 +2,22 @@
 
 import { useEffect, useState } from "react";
 
+import type { InfiniteData, QueryClient } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { keepFirstInfinitePage } from "@/shared/lib/query";
 import { trackReviewAction } from "@/shared/lib/review";
 import { useToastStore } from "@/shared/ui/toast";
+
+import type {
+  CookingRecordListResponse,
+  RecipeCookingRecordCreateInput,
+} from "@/entities/recipe/model/record";
+import {
+  RECORD_IMAGE_RETRY_DELAY_MS,
+  shouldRetryRecordImageNotReady,
+} from "@/entities/recipe/model/recordMutationPolicy";
+import { COOKING_RECORD_QUERY_KEYS } from "@/entities/recipe/model/recordQueryKeys";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
 
@@ -16,6 +28,49 @@ type UseRecipeCompleteOptions = {
   recipeId: string;
   saveAmount: number;
   onRewardShow?: (saveAmount: number) => void;
+};
+
+const invalidateRecipeRecordCaches = async (
+  queryClient: QueryClient,
+  recipeId: string,
+  publishReview: boolean
+) => {
+  queryClient.setQueriesData<InfiniteData<CookingRecordListResponse>>(
+    { queryKey: COOKING_RECORD_QUERY_KEYS.lists },
+    keepFirstInfinitePage
+  );
+  const invalidations = [
+    COOKING_RECORD_QUERY_KEYS.lists,
+    COOKING_RECORD_QUERY_KEYS.calendars,
+    ["recipeHistory"],
+    ["myInfo"],
+    ["recipeHistoryItems"],
+    ["userStreak"],
+    ["recordsTimeline"],
+    ["recipe", recipeId],
+  ].map((queryKey) => queryClient.invalidateQueries({ queryKey }));
+  if (publishReview) {
+    invalidations.push(
+      queryClient.invalidateQueries({ queryKey: ["cooking-review"] })
+    );
+  }
+  await Promise.all(invalidations);
+};
+
+export const useCreateRecipeCookingRecordMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: RecipeCookingRecordCreateInput) =>
+      createRecipeRecord(input),
+    retry: shouldRetryRecordImageNotReady,
+    retryDelay: RECORD_IMAGE_RETRY_DELAY_MS,
+    onSuccess: (_response, input) =>
+      invalidateRecipeRecordCaches(
+        queryClient,
+        input.recipeId,
+        input.publishReview === true
+      ),
+  });
 };
 
 export const useRecipeComplete = ({
@@ -46,7 +101,9 @@ export const useRecipeComplete = ({
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: () => createRecipeRecord(recipeId),
-    onSuccess: () => {
+    retry: shouldRetryRecordImageNotReady,
+    retryDelay: RECORD_IMAGE_RETRY_DELAY_MS,
+    onSuccess: async () => {
       addCompletedRecipe(recipeId);
       setShowReward(true);
       trackReviewAction("cooking_complete");
@@ -55,11 +112,7 @@ export const useRecipeComplete = ({
         onRewardShow(saveAmount);
       }
 
-      queryClient.invalidateQueries({ queryKey: ["recipeHistory"] });
-      queryClient.invalidateQueries({ queryKey: ["myInfo"] });
-      queryClient.invalidateQueries({ queryKey: ["recipeHistoryItems"] });
-      queryClient.invalidateQueries({ queryKey: ["userStreak"] });
-      queryClient.invalidateQueries({ queryKey: ["recordsTimeline"] });
+      await invalidateRecipeRecordCaches(queryClient, recipeId, false);
     },
     onError: (error: Error) => {
       const errorMessage =

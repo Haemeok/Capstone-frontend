@@ -4,9 +4,6 @@ import { END_POINTS, PAGE_SIZE } from "@/shared/config/constants/api";
 import type { Locale } from "@/shared/i18n";
 import { FileInfoRequest } from "@/shared/types";
 
-import { RecipeHistoryResponse } from "@/entities/user/model/types";
-
-import { RecipeHistoryDetailResponse, RecordTimelineResponse } from "./record";
 import { toRecipe } from "./toRecipe";
 import {
   CategoryPopularResponse,
@@ -34,6 +31,15 @@ import {
 import { RecipePayload } from "./types";
 
 export { toRecipe };
+export {
+  getCookingRecord,
+  getCookingRecordCalendarDate,
+  getCookingRecordCalendarMonth,
+  getCookingRecords,
+  getRecipeHistory,
+  getRecipeHistoryItems,
+  getRecordsTimeline,
+} from "./recordApi";
 
 export const getRecipe = async (id: string) => {
   const raw = await api.get<RawRecipeResponse>(END_POINTS.RECIPE(id));
@@ -144,61 +150,6 @@ export const getTrendingYoutubeRecipes = async (): Promise<
 > => {
   const response = await api.get<TrendingYoutubeRecipe[]>(
     END_POINTS.RECIPE_YOUTUBE_RECOMMEND
-  );
-  return response;
-};
-
-export const getRecipeHistory = async ({
-  year,
-  month,
-}: {
-  year: number;
-  month: number;
-}) => {
-  const response = await api.get<RecipeHistoryResponse>(
-    END_POINTS.RECIPE_HISTORY,
-    {
-      params: {
-        year,
-        month,
-      },
-    }
-  );
-  return response;
-};
-
-export const getRecipeHistoryItems = async (date: string, lang: Locale) => {
-  const response = await api.get<RecipeHistoryDetailResponse[]>(
-    END_POINTS.RECIPE_HISTORY,
-    {
-      params: {
-        date,
-        lang,
-      },
-    }
-  );
-  return response;
-};
-
-export const getRecordsTimeline = async ({
-  page,
-  size,
-  lang,
-}: {
-  page: number;
-  size: number;
-  lang: Locale;
-}) => {
-  const response = await api.get<RecordTimelineResponse>(
-    END_POINTS.RECORDS_TIMELINE,
-    {
-      params: {
-        page,
-        size,
-        sort: "createdAt,desc",
-        lang,
-      },
-    }
   );
   return response;
 };
