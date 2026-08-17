@@ -10,8 +10,8 @@ import type {
 
 const API_ORIGIN = "https://api.recipio.kr/api";
 const SITE_ORIGIN = "https://www.recipio.kr";
-const SAMPLE_SIZE = 10;
-const CANDIDATE_SIZE = 30;
+const SAMPLE_SIZE = 100;
+const CANDIDATE_SIZE = 150;
 
 type SearchResponse = {
   content: Array<{ id: string }>;
