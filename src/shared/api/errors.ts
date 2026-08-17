@@ -118,3 +118,16 @@ export const getErrorData = (error: ApiError): ApiErrorResponse | null => {
   }
   return null;
 };
+
+export const isApiErrorWithCode = (
+  error: unknown,
+  status: number,
+  code: number | string
+): boolean => {
+  if (!ApiError.isApiError(error) || error.status !== status) {
+    return false;
+  }
+
+  const errorData = getErrorData(error);
+  return errorData !== null && String(errorData.code) === String(code);
+};

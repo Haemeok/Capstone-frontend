@@ -10,13 +10,17 @@ export const uploadFileToS3 = async (
   const { presignedUrl, fileKey } = presignedUrlInfo;
 
   try {
-    await fetch(presignedUrl, {
+    const response = await fetch(presignedUrl, {
       method: "PUT",
       body: file,
       headers: {
         "Content-Type": file.type,
       },
     });
+
+    if (!response.ok) {
+      throw new Error(`S3 upload failed with status ${response.status}`);
+    }
 
     if (onProgress) {
       onProgress(fileKey, 100);
