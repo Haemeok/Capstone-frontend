@@ -47,6 +47,8 @@ const FAKE_RECIPE_GAJI: Recipe = {
   marketPrice: 36700,
   imageKey: null,
   ratingInfo: { avgRating: 0, myRating: 0, ratingCount: 0 },
+  reviewCount: 0,
+  hasMyReview: null,
   ingredients: [
     {
       id: "i1",

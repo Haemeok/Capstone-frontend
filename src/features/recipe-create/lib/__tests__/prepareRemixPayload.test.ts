@@ -17,6 +17,8 @@ const baseRecipe = (): Recipe => ({
   ingredients: [],
   steps: [],
   ratingInfo: { avgRating: 4.5, ratingCount: 100, myRating: 0 },
+  reviewCount: 0,
+  hasMyReview: null,
   author: {
     id: "1",
     nickname: "요리왕",
@@ -61,6 +63,13 @@ describe("prepareRemixPayload", () => {
       unknown
     >;
     expect(result).not.toHaveProperty("extractorId");
+  });
+
+  it("strips review response fields from the payload", () => {
+    const result = prepareRemixPayload(baseRecipe(), "ORIGIN_ID");
+
+    expect(result).not.toHaveProperty("reviewCount");
+    expect(result).not.toHaveProperty("hasMyReview");
   });
 
   it("maps nested youtube url into the flat payload field", () => {

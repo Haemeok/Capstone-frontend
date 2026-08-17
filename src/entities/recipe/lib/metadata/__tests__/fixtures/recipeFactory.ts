@@ -94,6 +94,8 @@ export const makeBaseRecipe = (
     ingredients: [],
     steps: [],
     ratingInfo: { avgRating: 4.5, ratingCount: 100, myRating: 0 },
+    reviewCount: 0,
+    hasMyReview: null,
     author: {
       id: "1",
       nickname: "요리왕",

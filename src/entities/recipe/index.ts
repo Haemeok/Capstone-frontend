@@ -27,9 +27,49 @@ export {
   getYoutubeVerifiedRecipes,
 } from "./model/api";
 export {
+  useCookingRecordCalendarDateQuery,
+  useCookingRecordCalendarMonthQuery,
+  useCookingRecordDetailQuery,
+  useCookingRecordsInfiniteQuery,
   useRecipeDetailQuery,
   useTrendingYoutubeRecipesQuery,
 } from "./model/hooks";
+export type {
+  CookingRecordCalendarDailySummary,
+  CookingRecordCalendarDateItem,
+  CookingRecordCalendarMonthResponse,
+  CookingRecordCreateInput,
+  CookingRecordCreateResponse,
+  CookingRecordDetailResponse,
+  CookingRecordListGroup,
+  CookingRecordListItem,
+  CookingRecordListParams,
+  CookingRecordListResponse,
+  CookingRecordMetadataUpdateInput,
+  CookingRecordSuccessResponse,
+  LegacyRecipeHistoryResponse,
+  ManualCookingRecordCreateInput,
+  RecipeCompletionState,
+  RecipeCookingRecordCreateInput,
+  RecipeHistoryDetailResponse,
+  RecipeRecordResponse,
+  RecordImageFile,
+  RecordImageKeys,
+  RecordImagePurpose,
+  RecordImageUploadFileRequest,
+  RecordImageUploadUrlResponse,
+  RecordSourceType,
+  RecordTimelineGroup,
+  RecordTimelineItem,
+  RecordTimelineResponse,
+  StickerStatus,
+} from "./model/record";
+export {
+  getCookingRecord,
+  getCookingRecordCalendarDate,
+  getCookingRecordCalendarMonth,
+  getCookingRecords,
+} from "./model/recordApi";
 export { COOKING_RECORD_QUERY_KEYS } from "./model/recordQueryKeys";
 export type {
   BaseRecipeGridItem,

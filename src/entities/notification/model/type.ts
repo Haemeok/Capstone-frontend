@@ -8,6 +8,7 @@ export type NotificationType =
   | "NEW_RECIPE_LIKE"
   | "NEW_COMMENT_LIKE"
   | "NEW_RECIPE_RATING"
+  | "RECIPE_REVIEW"
   | "REFERRAL_REWARD_GRANTED";
 
 export type RelatedType = "RECIPE" | "COMMENT" | "USER" | "REFERRAL_REDEMPTION";

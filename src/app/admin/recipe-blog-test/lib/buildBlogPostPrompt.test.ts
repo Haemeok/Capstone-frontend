@@ -23,6 +23,8 @@ const FAKE_RECIPE: Recipe = {
   marketPrice: 9000,
   imageKey: null,
   ratingInfo: { avgRating: 0, myRating: 0, ratingCount: 0 },
+  reviewCount: 0,
+  hasMyReview: null,
   ingredients: [],
   steps: [
     {

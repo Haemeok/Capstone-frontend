@@ -46,4 +46,15 @@ describe("toRecipe", () => {
   it("youtube 필드가 없으면 youtube는 undefined다", () => {
     expect(toRecipe({ ...base, source: "USER" }).youtube).toBeUndefined();
   });
+
+  it("reviewCount 0과 hasMyReview null을 그대로 보존합니다", () => {
+    const recipe = toRecipe({
+      ...base,
+      reviewCount: 0,
+      hasMyReview: null,
+    });
+
+    expect(recipe.reviewCount).toBe(0);
+    expect(recipe.hasMyReview).toBeNull();
+  });
 });

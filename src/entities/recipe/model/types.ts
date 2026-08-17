@@ -126,6 +126,8 @@ export type Recipe = {
   marketPrice: number;
   imageKey?: string | null;
   ratingInfo: RatingInfo;
+  reviewCount: number;
+  hasMyReview: boolean | null;
   ingredients: Omit<IngredientItem, "inFridge">[];
   steps: RecipeStep[];
   tags: string[];
@@ -209,6 +211,8 @@ export const defaultRecipeKeys = [
   "likedByCurrentUser",
   "favoriteByCurrentUser",
   "ratingInfo",
+  "reviewCount",
+  "hasMyReview",
   "comments",
   "imageUrl",
   "imageKey",

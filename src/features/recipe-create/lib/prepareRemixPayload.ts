@@ -18,6 +18,8 @@ export const prepareRemixPayload = (
     likedByCurrentUser: _likedByCurrentUser,
     favoriteByCurrentUser: _favoriteByCurrentUser,
     ratingInfo: _ratingInfo,
+    reviewCount: _reviewCount,
+    hasMyReview: _hasMyReview,
     comments: _comments,
     totalCalories: _totalCalories,
     totalIngredientCost: _totalIngredientCost,
