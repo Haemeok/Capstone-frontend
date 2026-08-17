@@ -197,6 +197,34 @@ describe("구별 재료 검색 제목", () => {
     );
   });
 
+  it("T-08: with 재료와 by 작성자는 함께 사용하지 않는다", () => {
+    const recipe = makeBaseRecipe({
+      title: "국",
+      cookingTime: 45,
+      totalIngredientCost: 0,
+      ingredients: [ingredient("potato", "감자")],
+    });
+
+    expect(generateRecipeMetadata(recipe, "without-author").title).toBe(
+      "국 (with 감자) | 레시피오"
+    );
+  });
+
+  it("T-09: with 재료를 확보하고 남은 예산에 브래킷을 앞에 붙인다", () => {
+    const recipe = withoutAuthor(
+      makeBaseRecipe({
+        title: "두부전",
+        cookingTime: 20,
+        totalIngredientCost: 0,
+        ingredients: [ingredient("perilla-leaf", "깻잎")],
+      })
+    );
+
+    expect(generateRecipeMetadata(recipe, "easy-tofu").title).toBe(
+      "[초간단⚡] 두부전 (with 깻잎) | 레시피오"
+    );
+  });
+
   it.each([
     ["정호영 셰프의 참치 무조림", "무"],
     ["팽이버섯 라이스페이퍼 김말이", "김"],

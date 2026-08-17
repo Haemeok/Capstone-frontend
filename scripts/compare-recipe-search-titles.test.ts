@@ -39,7 +39,7 @@ describe("실제 검색 제목 비교 표본 수집", () => {
       recipeTitle: "레시피 2",
       distinctiveIngredient: "재료2",
       beforeSearchTitle: "이전 레시피 2 | 레시피오",
-      afterSearchTitle: "레시피 2 (with 재료2) by 요리왕 | 레시피오",
+      afterSearchTitle: "[초간단⚡] 레시피 2 (with 재료2) | 레시피오",
       beforeLength: 15,
       afterLength: 30,
     });

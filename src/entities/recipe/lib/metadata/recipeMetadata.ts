@@ -117,6 +117,14 @@ export const generateRecipeMetadata = (
   const ingredientSuffixedTitle = distinctiveIngredient
     ? `${recipe.title} (with ${distinctiveIngredient})`
     : null;
+  const bracketedIngredientTitle =
+    titleBracket && ingredientSuffixedTitle
+      ? `${titleBracket} ${ingredientSuffixedTitle}`
+      : null;
+  const prioritizedIngredientTitle =
+    bracketedIngredientTitle && bracketedIngredientTitle.length <= titleBudget
+      ? bracketedIngredientTitle
+      : ingredientSuffixedTitle;
   const useIngredientTitle =
     !originBracket &&
     !useChannelTitle &&
@@ -126,9 +134,11 @@ export const generateRecipeMetadata = (
   const baseTitle = useChannelTitle
     ? channelPrefixedTitle
     : useIngredientTitle
-      ? ingredientSuffixedTitle
+      ? (prioritizedIngredientTitle ?? recipe.title)
       : [titleBracket, recipe.title, timeText].filter(Boolean).join(" ");
-  const pageTitle = withAuthorSuffix(baseTitle, titleAuthor, titleBudget);
+  const pageTitle = useIngredientTitle
+    ? baseTitle
+    : withAuthorSuffix(baseTitle, titleAuthor, titleBudget);
   const defaultTitle = `${pageTitle} | ${SEO_CONSTANTS.SITE_NAME}`;
 
   const costInfo = recipe.totalIngredientCost
