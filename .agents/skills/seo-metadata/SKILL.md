@@ -50,4 +50,4 @@ metadata:
 ## 추가 규칙
 
 - `metadata-separate-public-and-api-page-numbers` - 페이지네이션 metadata에는 공개 페이지 번호만 전달하고 API의 0-based 번호와 섞지 않는다.
-- `metadata-guard-short-ingredient-substrings` - 한 글자 재료를 제목의 더 긴 단어와 단순 부분 문자열로 중복 판정하지 않는다.
+- `metadata-deduplicate-ingredient-substrings` - 글자 수와 관계없이 제목에 겹치는 재료 문자열은 중복으로 제외한다.
