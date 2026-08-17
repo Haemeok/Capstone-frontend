@@ -163,6 +163,23 @@ GROUP BY locale ORDER BY hits DESC
 - 경로 종류 분해는 `multiIf(match(...,'^/(ja|en)/recipes/[^/]+$'),'recipe detail', ...)` 로 한 번 더. 예상 밖 경로는 `concat('other: ', properties.$pathname)` 로 흘려서 정체 확인.
 - noindex/robots 변경 효과를 볼 땐 일별 추이로 뽑고 **배포일과 감소 시작일을 대조**. 감소가 배포보다 앞서면 그 변경 때문이 아니다(크롤러 자체 스케줄일 수 있음). 마지막 날은 부분 집계라 감소로 오독 금지.
 
+### Googlebot 요청을 일별·경로 유형별로 분석
+
+Googlebot은 서버 요청을 해도 PostHog `$pageview`를 보내지 않을 수 있고, GA4는 알려진 봇을 기본 제외하며 IP·원문 UA도 내보내지 않는다. 따라서 PostHog/GA4의 0건은 **크롤 0건이 아니다**. verified Googlebot 요청 수의 기준 소스는 Vercel Edge Request 메트릭이다.
+
+```bash
+vercel metrics schema vercel.request.count --format json
+vercel metrics vercel.request.count \
+  -f "bot_verified eq true and bot_name eq 'Googlebot'" \
+  --group-by request_path \
+  --since 30d --granularity 1d --format json
+```
+
+- 필수 차원: `bot_verified`, `bot_name`, `client_ip`, `request_path`. UA 이름만으로 verified라고 부르지 않는다. Google이 공개한 common crawler CIDR 또는 forward-confirmed `*.googlebot.com` DNS와도 맞는지 확인한다.
+- `vercel metrics`가 `payment_required`를 반환하면 Observability Plus가 없는 상태다. 이때 Runtime Logs로 30일 수치를 대신 만들지 않는다. Runtime Logs JSON에는 `clientUserAgent`, `requestPath`, `requestSearchParams`는 있지만 `client_ip`와 `bot_verified`가 없고, 플랜 보존기간 밖 조회는 `ExceedsBillingLimitError`가 난다.
+- 페이지네이션·구형 필터가 query string으로 구분될 때는 `request_path`만으로 분리할 수 없다. 앞으로 정확히 집계하려면 Log Drain 등으로 `requestSearchParams`와 검증된 bot/IP 신호를 함께 보존해야 한다.
+- 일별 표에는 마지막 날이 부분 집계임을 표시하고, 전체 기간 합계에는 완결일 합계와 당일 누계를 구분한다.
+
 ### 단일 URL 스파이크 원인 추적 ("이 페이지에 N분간 200회, 어떤 놈?")
 
 특정 경로에 짧은 시간 트래픽이 몰렸을 때, **봇이냐 진짜 사람이냐**를 3쿼리로 가른다. 순서 고정:
