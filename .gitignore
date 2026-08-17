@@ -83,5 +83,8 @@ __pycache__/
 # playwright MCP local state
 .playwright-mcp/
 
+# temporary design and agent workflow artifacts
+/.superpowers/
+
 # generated reports
 frontend-api-changes-*.html
