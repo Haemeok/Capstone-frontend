@@ -6,6 +6,7 @@ import { createRecipeBreadcrumb } from "@/shared/lib/metadata/breadcrumbSchema";
 import type { StaticRecipe } from "@/entities/recipe/model/types";
 
 import { SEO_CONSTANTS } from "./constants";
+import { selectDistinctiveIngredient } from "./ingredientTitle";
 import { createRecipeStructuredData } from "./schema";
 import {
   determineRecipeType,
@@ -112,10 +113,21 @@ export const generateRecipeMetadata = (
     !originBracket &&
     channelPrefixedTitle !== null &&
     channelPrefixedTitle.length <= titleBudget;
+  const distinctiveIngredient = selectDistinctiveIngredient(recipe);
+  const ingredientPrefixedTitle = distinctiveIngredient
+    ? `${distinctiveIngredient} ${recipe.title}`
+    : null;
+  const useIngredientTitle =
+    !originBracket &&
+    !useChannelTitle &&
+    ingredientPrefixedTitle !== null &&
+    ingredientPrefixedTitle.length <= titleBudget;
 
   const baseTitle = useChannelTitle
     ? channelPrefixedTitle
-    : [titleBracket, recipe.title, timeText].filter(Boolean).join(" ");
+    : useIngredientTitle
+      ? ingredientPrefixedTitle
+      : [titleBracket, recipe.title, timeText].filter(Boolean).join(" ");
   const pageTitle = withAuthorSuffix(baseTitle, titleAuthor, titleBudget);
   const defaultTitle = `${pageTitle} | ${SEO_CONSTANTS.SITE_NAME}`;
 
