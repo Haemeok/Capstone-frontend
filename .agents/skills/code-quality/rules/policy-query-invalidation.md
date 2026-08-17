@@ -24,10 +24,19 @@ queryClient.setQueriesData(
 );
 queryClient.invalidateQueries({ queryKey: ["things"], refetchType: "none" }); // mark stale, don't refetch now
 
-// Membership-changing change (item must leave/enter the list):
-//   optimistic remove + adjust count, then ONE reconciling refetch.
+// Membership-changing change (item must leave/enter the infinite list):
+//   patch the visible data, discard stale page boundaries, then refetch page 0.
 queryClient.setQueriesData({ queryKey: ["myList"] }, removeIdsAndDecrementTotal(ids));
-queryClient.invalidateQueries({ queryKey: ["myList"] }); // default refetch reconciles page boundaries/counts
+queryClient.setQueriesData({ queryKey: ["myList"] }, (data) =>
+  data
+    ? {
+        ...data,
+        pages: data.pages.slice(0, 1),
+        pageParams: data.pageParams.slice(0, 1),
+      }
+    : data
+);
+queryClient.invalidateQueries({ queryKey: ["myList"] }); // active query refetches page 0 only
 ```
 
 - `setQueriesData` (plural, **prefix** match) reaches all matching queries and all their pages — `setQueryData` (singular, **exact**) does not.
@@ -42,6 +51,6 @@ onSettled: () => queryClient.invalidateQueries({ queryKey: activeListKey }), // 
 
 ## Heuristic
 - Membership-invariant (flag) → pure optimistic, `refetchType:"none"`, zero refetch.
-- Membership-changing (add/remove) → optimistic edit + count fix + **one** reconciling refetch (offset pagination can't be perfectly patched client-side; the single refetch fixes page-boundary drift). One refetch per low-frequency action is fine; per-click refetch of an active list is the storm.
+- Membership-changing (add/remove) → optimistic edit + count fix, then trim both `pages` and `pageParams` to page 0 before invalidating. Offset pagination can't be perfectly patched client-side, and invalidating an untrimmed infinite query refetches every loaded page rather than one page.
 - If your optimistic `onMutate` and your `invalidateQueries` target different keys, one of them is wrong. Both should come from the same key factory.
 - A list patched optimistically and invalidated with `refetchType:"none"` will **not** self-correct on mutation **error** either — so it MUST be rolled back. Snapshot in `onMutate` and restore in `onError`. With `setQueriesData` (many queries at once) capture all of them: `const prev = queryClient.getQueriesData({ queryKey })` → on error `prev.forEach(([key, data]) => queryClient.setQueryData(key, data))`. (A list whose `onSettled` uses a *default* refetch self-heals on error and needs no rollback.)
