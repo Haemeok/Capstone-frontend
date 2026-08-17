@@ -34,11 +34,10 @@ export const CartProductSlider = ({
 
   return (
     <div className="relative mt-4">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2">
         <h3 className="text-ink text-base font-bold">
           이 재료로 많이 담는 상품
         </h3>
-        <span className="text-ink-muted text-xs font-medium">옆으로 보기</span>
       </div>
       <div
         ref={sliderRef}
