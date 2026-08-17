@@ -648,6 +648,72 @@ export type UserPagesDict = {
   };
   calendar: {
     timelineHeading: string;
+    cookingRecord: {
+      pageTitle: string;
+      currentMonthCaption: string;
+      backLabel: string;
+      previousMonthLabel: string;
+      nextMonthLabel: string;
+      changeBackground: string;
+      recordCount: Plural;
+      boardLabel: string;
+      recordLabel: string;
+      addRecord: string;
+      state: {
+        loading: string;
+        emptyTitle: string;
+        emptyDescription: string;
+        error: string;
+        retry: string;
+        loginTitle: string;
+        loginDescription: string;
+        loginAction: string;
+        loadingMore: string;
+      };
+      detail: {
+        title: string;
+        closeLabel: string;
+        moreLabel: string;
+        dishLabel: string;
+        reviewLabel: string;
+        emptyReview: string;
+        changePhoto: string;
+        editReview: string;
+        saveReview: string;
+        viewRecipe: string;
+        deleteRecord: string;
+        loading: string;
+        error: string;
+        retry: string;
+      };
+      background: {
+        title: string;
+        closeLabel: string;
+        monthOnlyLabel: string;
+        intro: string;
+        previewLabel: string;
+        optionsTitle: string;
+        optionsLabel: string;
+        optionLabels: Record<"dot" | "linen" | "tile" | "wood", string>;
+        customBackground: string;
+        apply: string;
+      };
+      delete: {
+        title: string;
+        description: string;
+        cancel: string;
+        confirm: string;
+      };
+      toast: {
+        reviewSaved: string;
+        reviewSaveFailed: string;
+        photoChanged: string;
+        photoChangeFailed: string;
+        recordDeleted: string;
+        recordDeleteFailed: string;
+        backgroundChanged: string;
+      };
+    };
     timelineEmpty: string;
     detailAction: string;
     invalidAccess: string;
