@@ -166,6 +166,24 @@ describe("구별 재료 검색 제목", () => {
     );
   });
 
+  it("T-07: 제목과 두 글자 이상 겹치는 재료를 건너뛰고 다음 재료를 선택한다", () => {
+    const recipe = withoutAuthor(
+      makeBaseRecipe({
+        title: "무반죽 100% 통밀빵",
+        cookingTime: 45,
+        totalIngredientCost: 0,
+        ingredients: [
+          ingredient("whole-wheat-flour", "통밀가루"),
+          ingredient("walnut", "호두"),
+        ],
+      })
+    );
+
+    expect(generateRecipeMetadata(recipe, "whole-wheat-bread").title).toBe(
+      "무반죽 100% 통밀빵 (with 호두) | 레시피오"
+    );
+  });
+
   it("T-06: 구별 재료는 초간단·시간·일반 작성자 훅보다 우선한다", () => {
     const recipe = makeBaseRecipe({
       title: "매콤한 오징어 볶음",

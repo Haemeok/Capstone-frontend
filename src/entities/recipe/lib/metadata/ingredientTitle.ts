@@ -48,6 +48,19 @@ const compact = (value: string): string => value.trim().replace(/\s+/g, "");
 const classify = (value: string): string =>
   compact(value).replace(/\([^)]*\)/g, "");
 
+const hasSharedTitleBigram = (
+  compactTitle: string,
+  compactName: string
+): boolean => {
+  const characters = [...compactName];
+
+  return characters.some(
+    (_, index) =>
+      index < characters.length - 1 &&
+      compactTitle.includes(characters.slice(index, index + 2).join(""))
+  );
+};
+
 const isAlreadyInTitle = (title: string, ingredientName: string): boolean => {
   const compactTitle = compact(title);
   const compactName = compact(ingredientName);
@@ -64,6 +77,7 @@ const isAlreadyInTitle = (title: string, ingredientName: string): boolean => {
   return (
     hasDirectTitleMatch ||
     hasIngredientTokenMatch ||
+    hasSharedTitleBigram(compactTitle, compactName) ||
     (withoutNoodleSuffix.length >= 2 &&
       compactTitle.includes(withoutNoodleSuffix))
   );
