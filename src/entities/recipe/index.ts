@@ -30,6 +30,7 @@ export {
   useRecipeDetailQuery,
   useTrendingYoutubeRecipesQuery,
 } from "./model/hooks";
+export { COOKING_RECORD_QUERY_KEYS } from "./model/recordQueryKeys";
 export type {
   BaseRecipeGridItem,
   BaseRecipesApiResponse,
