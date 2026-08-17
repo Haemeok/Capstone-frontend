@@ -40,10 +40,10 @@ const COMMON_SEASONINGS = new Set([
   "올리고당",
   "식초",
   "고춧가루",
+  "쌀",
 ]);
 
 const compact = (value: string): string => value.trim().replace(/\s+/g, "");
-const SHORT_TITLE_INGREDIENTS = new Set(["밥", "닭", "쌀", "면"]);
 
 const classify = (value: string): string =>
   compact(value).replace(/\([^)]*\)/g, "");
@@ -54,18 +54,12 @@ const isAlreadyInTitle = (title: string, ingredientName: string): boolean => {
   const withoutNoodleSuffix = compactName.endsWith("면")
     ? compactName.slice(0, -1)
     : compactName;
-  const hasDirectTitleMatch =
-    (compactName.length >= 2 || SHORT_TITLE_INGREDIENTS.has(compactName)) &&
-    compactTitle.includes(compactName);
+  const hasDirectTitleMatch = compactTitle.includes(compactName);
   const hasIngredientTokenMatch = ingredientName
     .trim()
     .split(/\s+/)
     .map(compact)
-    .some(
-      (token) =>
-        (token.length >= 2 || SHORT_TITLE_INGREDIENTS.has(token)) &&
-        compactTitle.includes(token)
-    );
+    .some((token) => compactTitle.includes(token));
 
   return (
     hasDirectTitleMatch ||

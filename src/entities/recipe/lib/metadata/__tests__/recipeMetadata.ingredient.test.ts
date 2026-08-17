@@ -126,10 +126,10 @@ describe("구별 재료 검색 제목", () => {
     [
       "여름 양배추 오이 물김치",
       ["양배추", "오이", "양파", "배"],
-      "배 여름 양배추 오이 물김치 | 레시피오",
+      "여름 양배추 오이 물김치 | 레시피오",
     ],
   ])(
-    "T-03: 실제 밑재료를 건너뛰어 %s의 구별 재료를 고른다",
+    "T-03: 실제 밑재료와 제목 중복을 걸러 %s 검색 제목을 만든다",
     (title, names, expectedTitle) => {
       const recipe = withoutAuthor(
         makeBaseRecipe({
@@ -163,6 +163,39 @@ describe("구별 재료 검색 제목", () => {
 
     expect(generateRecipeMetadata(recipe, "chicken").title).toBe(
       "감자 인생 닭한마리 | 레시피오"
+    );
+  });
+
+  it.each([
+    ["정호영 셰프의 참치 무조림", "무"],
+    ["팽이버섯 라이스페이퍼 김말이", "김"],
+  ])("T-02: 한 글자 재료가 %s에 이미 있으면 반복하지 않는다", (title, name) => {
+    const recipe = withoutAuthor(
+      makeBaseRecipe({
+        title,
+        cookingTime: 45,
+        totalIngredientCost: 0,
+        ingredients: [ingredient(name, name)],
+      })
+    );
+
+    expect(generateRecipeMetadata(recipe, "short-ingredient").title).toBe(
+      `${title} | 레시피오`
+    );
+  });
+
+  it("T-03: 쌀뿐이면 기존 검색 제목을 유지한다", () => {
+    const recipe = withoutAuthor(
+      makeBaseRecipe({
+        title: "연어솥밥",
+        cookingTime: 45,
+        totalIngredientCost: 0,
+        ingredients: [ingredient("rice", "쌀")],
+      })
+    );
+
+    expect(generateRecipeMetadata(recipe, "rice").title).toBe(
+      "연어솥밥 | 레시피오"
     );
   });
 });
