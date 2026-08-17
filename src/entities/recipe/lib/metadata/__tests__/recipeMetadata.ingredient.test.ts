@@ -38,8 +38,8 @@ describe("구별 재료 검색 제목", () => {
 
     const meta = generateRecipeMetadata(recipe, "cold-udon");
 
-    expect(meta.title).toBe("라임 정호영 냉우동 만들기 | 레시피오");
-    expect(meta.openGraph?.title).toBe("라임 정호영 냉우동 만들기");
+    expect(meta.title).toBe("정호영 냉우동 만들기 (with 라임) | 레시피오");
+    expect(meta.openGraph?.title).toBe("정호영 냉우동 만들기 (with 라임)");
   });
 
   it("T-02: 제목에 이미 있는 재료와 기본 밑재료는 반복하지 않는다", () => {
@@ -121,7 +121,7 @@ describe("구별 재료 검색 제목", () => {
         "다진 마늘",
         "청양고추",
       ],
-      "청양고추 오징어 간장볶음 | 레시피오",
+      "오징어 간장볶음 (with 청양고추) | 레시피오",
     ],
     [
       "여름 양배추 오이 물김치",
@@ -162,7 +162,20 @@ describe("구별 재료 검색 제목", () => {
     );
 
     expect(generateRecipeMetadata(recipe, "chicken").title).toBe(
-      "감자 인생 닭한마리 | 레시피오"
+      "인생 닭한마리 (with 감자) | 레시피오"
+    );
+  });
+
+  it("T-06: 구별 재료는 초간단·시간·일반 작성자 훅보다 우선한다", () => {
+    const recipe = makeBaseRecipe({
+      title: "매콤한 오징어 볶음",
+      cookingTime: 20,
+      totalIngredientCost: 0,
+      ingredients: [ingredient("chili", "청양고추")],
+    });
+
+    expect(generateRecipeMetadata(recipe, "weak-hooks").title).toBe(
+      "매콤한 오징어 볶음 (with 청양고추) | 레시피오"
     );
   });
 

@@ -114,19 +114,19 @@ export const generateRecipeMetadata = (
     channelPrefixedTitle !== null &&
     channelPrefixedTitle.length <= titleBudget;
   const distinctiveIngredient = selectDistinctiveIngredient(recipe);
-  const ingredientPrefixedTitle = distinctiveIngredient
-    ? `${distinctiveIngredient} ${recipe.title}`
+  const ingredientSuffixedTitle = distinctiveIngredient
+    ? `${recipe.title} (with ${distinctiveIngredient})`
     : null;
   const useIngredientTitle =
     !originBracket &&
     !useChannelTitle &&
-    ingredientPrefixedTitle !== null &&
-    ingredientPrefixedTitle.length <= titleBudget;
+    ingredientSuffixedTitle !== null &&
+    ingredientSuffixedTitle.length <= titleBudget;
 
   const baseTitle = useChannelTitle
     ? channelPrefixedTitle
     : useIngredientTitle
-      ? ingredientPrefixedTitle
+      ? ingredientSuffixedTitle
       : [titleBracket, recipe.title, timeText].filter(Boolean).join(" ");
   const pageTitle = withAuthorSuffix(baseTitle, titleAuthor, titleBudget);
   const defaultTitle = `${pageTitle} | ${SEO_CONSTANTS.SITE_NAME}`;

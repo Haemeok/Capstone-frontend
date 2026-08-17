@@ -39,9 +39,9 @@ describe("실제 검색 제목 비교 표본 수집", () => {
       recipeTitle: "레시피 2",
       distinctiveIngredient: "재료2",
       beforeSearchTitle: "이전 레시피 2 | 레시피오",
-      afterSearchTitle: "재료2 레시피 2 by 요리왕 | 레시피오",
+      afterSearchTitle: "레시피 2 (with 재료2) by 요리왕 | 레시피오",
       beforeLength: 15,
-      afterLength: 23,
+      afterLength: 30,
     });
     expect(result.failures).toEqual([{ id: "1", reason: "404 Not Found" }]);
   });
