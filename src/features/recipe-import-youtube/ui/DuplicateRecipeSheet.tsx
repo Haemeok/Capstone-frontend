@@ -122,7 +122,7 @@ export const DuplicateRecipeSheet = ({
               />
             </div>
             <Footer
-              className={`grid shrink-0 gap-2 border-t border-gray-100 bg-white p-4 sm:grid ${isFavorited ? "grid-cols-1" : "grid-cols-[1fr_1.6fr]"}`}
+              className={`grid shrink-0 gap-2 bg-white px-5 pt-2 pb-4 sm:grid ${isFavorited ? "grid-cols-1" : "grid-cols-[1fr_1.6fr]"}`}
             >
               <DuplicateRecipeActions
                 recipeId={recipeId}

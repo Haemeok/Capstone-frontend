@@ -141,7 +141,11 @@ describe("DuplicateRecipeSheet", () => {
 
       const skeleton = screen.getByTestId("duplicate-recipe-skeleton");
       expect(screen.getByTestId(surfaceTestId)).toContainElement(skeleton);
-      expect(skeleton.firstElementChild).toHaveClass(aspectClass);
+      expect(skeleton.firstElementChild).toHaveClass("px-5");
+      expect(skeleton.firstElementChild?.firstElementChild).toHaveClass(
+        aspectClass,
+        "rounded-card"
+      );
     }
   );
 
