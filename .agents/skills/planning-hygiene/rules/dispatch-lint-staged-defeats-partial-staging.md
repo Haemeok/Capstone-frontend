@@ -1,13 +1,13 @@
 ---
-title: A Pre-Commit Hook That Re-Stages Whole Files Defeats Partial Staging — Isolate via Remove-Commit-Restore
+title: If a Pre-Commit Hook Re-Stages Whole Files, Isolate via Remove-Commit-Restore
 impact: HIGH
 impactDescription: keeps a parallel editor's uncommitted hunks out of your commit even when `lint-staged`/`husky` re-adds the whole touched file
 tags: planning, subagents, git, lint-staged, worktree
 ---
 
-## A Pre-Commit Hook That Re-Stages Whole Files Defeats Partial Staging — Isolate via Remove-Commit-Restore
+## If a Pre-Commit Hook Re-Stages Whole Files, Isolate via Remove-Commit-Restore
 
-The sibling rule `dispatch-pathspec-leaks-foreign-hunks-in-shared-file` prescribes `git add -p` + `git diff --cached` to isolate your hunks in a co-edited shared file. That fix **silently fails the moment a pre-commit hook re-stages whole files** — which is the default for `lint-staged` (and most `husky` setups). `lint-staged` runs a formatter (prettier/eslint --fix) on each staged file and then `git add`s the **entire file** back to restage the formatted result. So the foreign hunks you carefully left unstaged get re-added during the commit, and they land in your commit anyway. The partial-staging step was real but the hook undid it.
+The sibling rule `dispatch-pathspec-leaks-foreign-hunks-in-shared-file` prescribes `git add -p` + `git diff --cached` to isolate your hunks in a co-edited shared file. That fix **silently fails when the installed pre-commit hook re-stages whole files**. Some `lint-staged` versions and configurations hide unstaged hunks from partially staged files and restore them afterward; others run a formatter and re-add the entire file. Verify the actual hook output and resulting commit instead of assuming either behavior.
 
 Two compounding traps: (1) `git add -p` and `git reset -p` are **interactive**, so they don't run at all in a non-interactive/agent harness; (2) even piped non-interactively, or via `git apply --cached`, the result is wiped by the hook's whole-file re-add. Hunk-level staging and a whole-file-restaging hook are fundamentally incompatible.
 
@@ -39,8 +39,8 @@ git diff src/widgets/Foo.tsx            # back to the parallel workstream's WIP,
 
 Key points:
 
-- **A whole-file-restaging hook makes the commit see the working tree, not your index.** `lint-staged`'s `git add <file>` overrides whatever you partially staged. So control the **working tree**, not the index: at `git commit` time the file must differ from HEAD by your change alone.
+- **A whole-file-restaging hook makes the commit see the working tree, not your index.** When the hook runs `git add <file>` without first hiding unstaged hunks, it overrides whatever you partially staged. Control the **working tree**, not the index, for that configuration.
 - **Remove-commit-restore is the hook-proof technique.** Edit out the foreign lines → confirm `git diff <file>` is your delta only → `tsc`/test → commit → edit the foreign lines back. The other workstream's WIP returns to the dirty tree untouched.
 - **Removing foreign lines may need a paired removal.** If a foreign import is only used by a foreign hunk (e.g. `import { AdSlot }` + `<AdSlot/>`), remove **both** so the temporary tree still compiles; restore both afterward. Optional props on the consumer make this safe.
-- **Detect the trap at plan time:** if `.lintstagedrc*` / a `husky` `pre-commit` exists AND your task edits a hot shared file (`types.ts`, barrel `index.ts`, a widget many features touch) inside a parallel-edit window, plan the isolating commit for the **main session via remove-commit-restore** — don't hand `git add -p` to a subagent; the hook will defeat it and the leak is irreversible once a parallel commit lands on top.
+- **Detect the trap at plan time:** if `.lintstagedrc*` / a `husky` `pre-commit` exists and your task edits a hot shared file, run a controlled partial-staging check first. Output such as “Hiding unstaged changes to partially staged files” indicates preservation; otherwise inspect `git show` and switch to remove-commit-restore when whole-file restaging is confirmed.
 - Complements `dispatch-pathspec-leaks-foreign-hunks-in-shared-file` (pathspec is file-level) and `dispatch-explicit-staging-shared-worktree` (blocks `git add -A`). This rule covers the third layer: the hook that undoes correct partial staging.
