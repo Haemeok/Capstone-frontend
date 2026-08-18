@@ -77,4 +77,7 @@ it("T-02: 전체 후기 서버 HTML은 전체 23개와 최신 후기 20건만 �
   expect(requestUrl.searchParams.get("page")).toBe("0");
   expect(requestUrl.searchParams.get("size")).toBe("20");
   expect(requestUrl.searchParams.get("photoOnly")).toBe("false");
+  expect(global.fetch).toHaveBeenCalledWith(expect.any(URL), {
+    cache: "no-store",
+  });
 });

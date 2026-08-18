@@ -233,3 +233,115 @@ it("후기 발행 RECIPE 생성은 후기 목록을 첫 페이지로 줄인 뒤 
     await mutationPromise;
   });
 });
+
+it("T-06: 공개 후기 등록은 상세 미리보기와 전체 후기 목록을 함께 갱신합니다", async () => {
+  createRecord.mockResolvedValue({
+    recordId: "record-A",
+    reviewId: "review-A",
+    message: "created",
+  });
+  const queryClient = new QueryClient();
+  const Wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+  const summaryKey = COOKING_REVIEW_QUERY_KEYS.publicList("recipe-A", false, 1);
+  const photoKey = COOKING_REVIEW_QUERY_KEYS.publicList("recipe-A", true, 3);
+  const listKey = COOKING_REVIEW_QUERY_KEYS.publicList("recipe-A", false, 20);
+  const summaryQueryFn = jest.fn().mockResolvedValue(reviewPages[0]);
+  const photoQueryFn = jest.fn().mockResolvedValue(reviewPages[0]);
+  const listQueryFn = jest.fn().mockResolvedValue(reviewPages[0]);
+
+  const { result } = renderHook(
+    () => {
+      useInfiniteQuery({
+        queryKey: summaryKey,
+        queryFn: summaryQueryFn,
+        initialPageParam: 0,
+        getNextPageParam: () => undefined,
+        initialData: { pages: reviewPages, pageParams: [0, 1] },
+        staleTime: Infinity,
+      });
+      useInfiniteQuery({
+        queryKey: photoKey,
+        queryFn: photoQueryFn,
+        initialPageParam: 0,
+        getNextPageParam: () => undefined,
+        initialData: { pages: reviewPages, pageParams: [0, 1] },
+        staleTime: Infinity,
+      });
+      useInfiniteQuery({
+        queryKey: listKey,
+        queryFn: listQueryFn,
+        initialPageParam: 0,
+        getNextPageParam: () => undefined,
+        initialData: { pages: reviewPages, pageParams: [0, 1] },
+        staleTime: Infinity,
+      });
+      return useCreateRecipeCookingRecordMutation();
+    },
+    { wrapper: Wrapper }
+  );
+
+  await act(async () => {
+    await result.current.mutateAsync({
+      sourceType: "RECIPE",
+      recipeId: "recipe-A",
+      publishReview: true,
+      reviewContent: "맛있어요",
+    });
+  });
+
+  expect(summaryQueryFn).toHaveBeenCalledTimes(1);
+  expect(photoQueryFn).toHaveBeenCalledTimes(1);
+  expect(listQueryFn).toHaveBeenCalledTimes(1);
+  [summaryKey, photoKey, listKey].forEach((queryKey) => {
+    expect(queryClient.getQueryData(queryKey)).toMatchObject({
+      pages: [reviewPages[0]],
+      pageParams: [0],
+    });
+  });
+});
+
+it("T-08: 비공개 요리 기록은 공개 후기 목록을 갱신하지 않습니다", async () => {
+  createRecord.mockResolvedValue({
+    recordId: "record-A",
+    message: "created",
+  });
+  const queryClient = new QueryClient();
+  const Wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+  const reviewKey = COOKING_REVIEW_QUERY_KEYS.publicList("recipe-A", false, 20);
+  const reviewQueryFn = jest.fn().mockResolvedValue(reviewPages[0]);
+
+  const { result } = renderHook(
+    () => {
+      useInfiniteQuery({
+        queryKey: reviewKey,
+        queryFn: reviewQueryFn,
+        initialPageParam: 0,
+        getNextPageParam: () => undefined,
+        initialData: { pages: reviewPages, pageParams: [0, 1] },
+        staleTime: Infinity,
+      });
+      return useCreateRecipeCookingRecordMutation();
+    },
+    { wrapper: Wrapper }
+  );
+
+  await act(async () => {
+    await result.current.mutateAsync({
+      sourceType: "RECIPE",
+      recipeId: "recipe-A",
+      publishReview: false,
+      recordMemo: "나만 보는 기록",
+    });
+  });
+
+  expect(reviewQueryFn).not.toHaveBeenCalled();
+  expect(queryClient.getQueryState(reviewKey)?.isInvalidated).toBe(false);
+  expect(queryClient.getQueryData(reviewKey)).toMatchObject({
+    pages: reviewPages,
+    pageParams: [0, 1],
+  });
+});

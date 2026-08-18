@@ -1,4 +1,3 @@
-import { CACHE_TAGS, REVALIDATION_TIMES } from "@/shared/config/cache";
 import { BASE_API_URL, END_POINTS } from "@/shared/config/constants/api";
 
 import type {
@@ -17,12 +16,7 @@ export const fetchRecipeCookingReviewsOnServer = async ({
   url.searchParams.set("size", String(size));
   url.searchParams.set("photoOnly", String(photoOnly));
 
-  const response = await fetch(url, {
-    next: {
-      revalidate: REVALIDATION_TIMES.COOKING_REVIEWS,
-      tags: [CACHE_TAGS.cookingReviews(recipeId)],
-    },
-  });
+  const response = await fetch(url, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error(`API Error: ${response.status} ${response.statusText}`);
