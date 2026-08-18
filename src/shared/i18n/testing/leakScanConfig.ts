@@ -18,7 +18,6 @@ export const KO_ONLY_DIRS = [
   "src/app/magazine",
   "src/app/archetype",
   "src/app/curation",
-  "src/app/calendar/[date]/components",
   "src/features/archetype",
   "src/features/curation",
   "src/features/recipe-chat",
