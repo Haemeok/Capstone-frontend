@@ -669,6 +669,7 @@ export type UserPagesDict = {
   };
   calendar: {
     timelineHeading: string;
+    dateSectionTitle: string;
     cookingRecord: {
       pageTitle: string;
       currentMonthCaption: string;
@@ -681,6 +682,7 @@ export type UserPagesDict = {
       boardLabel: string;
       recordLabel: string;
       addRecord: string;
+      viewAll: string;
       shareRecord: string;
       summary: {
         ariaLabel: string;

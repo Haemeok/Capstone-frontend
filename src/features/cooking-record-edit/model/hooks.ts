@@ -59,13 +59,19 @@ export const useReplaceCookingRecordImage = () => {
     retry: shouldRetryRecordImageNotReady,
     retryDelay: RECORD_IMAGE_RETRY_DELAY_MS,
     onSuccess: async (_response, input) => {
+      queryClient.setQueriesData<InfiniteData<CookingRecordListResponse>>(
+        { queryKey: COOKING_RECORD_QUERY_KEYS.lists },
+        keepFirstInfinitePage
+      );
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["cooking-record", "detail", input.recordId],
         }),
         queryClient.invalidateQueries({
           queryKey: COOKING_RECORD_QUERY_KEYS.lists,
-          refetchType: "none",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: COOKING_RECORD_QUERY_KEYS.calendars,
         }),
       ]);
     },

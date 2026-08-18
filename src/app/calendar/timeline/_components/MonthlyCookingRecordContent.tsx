@@ -56,7 +56,7 @@ export const MonthlyCookingRecordContent = ({
         onOpenBackground={background.open}
       />
 
-      {records.isMonthComplete ? (
+      {records.isMonthComplete && records.items.length > 0 ? (
         <MonthlyCookingRecordSummarySection
           summary={records.summary}
           copy={copy.summary}
@@ -87,6 +87,7 @@ export const MonthlyCookingRecordContent = ({
         onSelectRecord={(record) => onSelectRecord(record.id)}
         onAddRecord={onAddRecord}
         onShareRecord={onShareRecord}
+        showRecordMeta={!authGate || records.items.length > 0}
       >
         <CookingRecordPageStatus
           isAuthReady={isAuthReady}

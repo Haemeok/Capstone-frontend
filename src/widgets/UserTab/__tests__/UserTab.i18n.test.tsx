@@ -40,7 +40,7 @@ const setLocale = (p: string) => (usePathname as jest.Mock).mockReturnValue(p);
 const jaTabs = getDictionary("ja").userPages.profile.tabs;
 const enTabs = getDictionary("en").userPages.profile.tabs;
 
-test("T-01 ja own profile: localized tabs, calendar present, no Hangul", () => {
+test("T-04 ja own profile: localized tabs, cooking records present, no Hangul", () => {
   setLocale("/ja/users/u1");
   render(<UserTab user={user} isOwnProfile isLoggedIn />);
   expect(
@@ -49,9 +49,7 @@ test("T-01 ja own profile: localized tabs, calendar present, no Hangul", () => {
   expect(
     screen.getByRole("button", { name: jaTabs.saved })
   ).toBeInTheDocument();
-  expect(
-    screen.getByRole("button", { name: jaTabs.calendar })
-  ).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "料理記録" })).toBeInTheDocument();
   const nav = screen
     .getByRole("button", { name: jaTabs.recipes })
     .closest("div")!;
@@ -63,6 +61,15 @@ test("T-02 ko own profile: Korean labels (regression)", () => {
   render(<UserTab user={user} isOwnProfile isLoggedIn />);
   expect(
     screen.getByRole("button", { name: "나의 레시피" })
+  ).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "요리 기록" })).toBeInTheDocument();
+});
+
+test("T-04 en own profile: cooking records tab is localized", () => {
+  setLocale("/en/users/u1");
+  render(<UserTab user={user} isOwnProfile isLoggedIn />);
+  expect(
+    screen.getByRole("button", { name: "Cooking records" })
   ).toBeInTheDocument();
 });
 

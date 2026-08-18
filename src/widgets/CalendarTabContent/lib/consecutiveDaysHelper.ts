@@ -1,7 +1,5 @@
 import { parseISO } from "date-fns";
 
-import { RecipeDailySummary } from "@/entities/user";
-
 import { ConsecutiveRange } from "../types";
 import { getFlameLevel } from "./streakCalculator";
 
@@ -28,7 +26,7 @@ const pushRange = (ranges: ConsecutiveRange[], currentRange: Date[]) => {
 };
 
 export const findConsecutiveRanges = (
-  dailySummaries: RecipeDailySummary[]
+  dailySummaries: { date: string }[]
 ): ConsecutiveRange[] => {
   if (!dailySummaries.length) return [];
 

@@ -257,6 +257,39 @@ describe("MonthlyCookingRecordPageClient", () => {
     expect(screen.getByText("수동 기록 폼")).toBeInTheDocument();
   });
 
+  it("기록이 없는 달은 0회 성과와 공유를 숨기고 배경 위 안내와 추가 버튼만 보여줍니다", async () => {
+    getCookingRecords.mockResolvedValue({
+      background: {
+        backgroundKey: "PAPER_BEIGE",
+        imageUrl: "/backgrounds/paper-beige.webp",
+      },
+      groups: [],
+      hasNext: false,
+    });
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MonthlyCookingRecordPageClient />
+      </QueryClientProvider>
+    );
+
+    const emptyTitle = await screen.findByText("아직 이달의 요리가 없습니다.");
+    expect(
+      screen.queryByText("이번 달 0번 요리했어요")
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("0개의 요리")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "2026년 8월 요리 기록 공유" })
+    ).not.toBeInTheDocument();
+    expect(emptyTitle.parentElement).toHaveClass("bg-white/88", "rounded-card");
+    expect(
+      screen.getByRole("button", { name: "요리 기록 추가" })
+    ).toBeInTheDocument();
+  });
+
   it("배경 선택창을 열 때 서버 목록을 조회하고 선택한 전역 배경을 적용합니다", async () => {
     getCookingRecords.mockResolvedValueOnce({
       background: { backgroundKey: "DEFAULT", imageUrl: null },

@@ -41,7 +41,8 @@ export const StreakModeToggle = ({
       >
         <Image
           src={`${ICON_BASE_URL}record_camera.webp`}
-          alt={t.calendar.recordAlt}
+          alt=""
+          aria-hidden="true"
           wrapperClassName="w-6 h-6"
           lazy={false}
         />
@@ -60,7 +61,8 @@ export const StreakModeToggle = ({
       >
         <Image
           src={`${ICON_BASE_URL}streak_fire.webp`}
-          alt={t.calendar.streakAlt}
+          alt=""
+          aria-hidden="true"
           wrapperClassName="w-6 h-6"
           lazy={false}
         />

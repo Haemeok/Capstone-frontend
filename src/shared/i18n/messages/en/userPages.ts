@@ -31,7 +31,7 @@ export const userPages: UserPagesDict = {
     tabs: {
       recipes: "My Recipes",
       saved: "Saved",
-      calendar: "Calendar",
+      calendar: "Cooking records",
       recipesOther: "Recipes",
     },
     metadata: {
@@ -127,6 +127,7 @@ export const userPages: UserPagesDict = {
   },
   calendar: {
     timelineHeading: "Cooking log",
+    dateSectionTitle: "Records by date",
     cookingRecord: {
       pageTitle: "Cooking log",
       currentMonthCaption: "This month",
@@ -139,6 +140,7 @@ export const userPages: UserPagesDict = {
       boardLabel: "Cooking log for {month}",
       recordLabel: "View {title} from {date}",
       addRecord: "Add a cooking record",
+      viewAll: "View all",
       shareRecord: "Share cooking records for {month}",
       summary: {
         ariaLabel: "Monthly cooking achievements",

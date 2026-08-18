@@ -31,7 +31,7 @@ export const userPages: UserPagesDict = {
     tabs: {
       recipes: "マイレシピ",
       saved: "保存済み",
-      calendar: "カレンダー",
+      calendar: "料理記録",
       recipesOther: "レシピ",
     },
     metadata: {
@@ -128,6 +128,7 @@ export const userPages: UserPagesDict = {
   },
   calendar: {
     timelineHeading: "料理の記録",
+    dateSectionTitle: "日付別の記録",
     cookingRecord: {
       pageTitle: "料理の記録",
       currentMonthCaption: "今月",
@@ -140,6 +141,7 @@ export const userPages: UserPagesDict = {
       boardLabel: "{month}の料理記録",
       recordLabel: "{date}の{title}の記録を見る",
       addRecord: "料理記録を追加",
+      viewAll: "すべて見る",
       shareRecord: "{month}の料理記録を共有",
       summary: {
         ariaLabel: "月間の料理実績",

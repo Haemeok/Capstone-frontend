@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
 
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 import { getDictionary } from "@/shared/i18n";
 
@@ -15,59 +15,43 @@ jest.mock("next/navigation", () => ({
 }));
 
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
-
-jest.mock("@/shared/lib/gsap", () => ({
-  gsap: { to: jest.fn(), fromTo: jest.fn(), set: jest.fn() },
-  ScrollTrigger: { create: jest.fn(), refresh: jest.fn() },
+jest.mock("@/shared/ui/DayPickerDynamic", () => ({
+  DayPickerDynamic: () => <div data-testid="calendar" />,
 }));
-
-jest.mock("@/shared/hooks/useScrollAnimate", () => () => ({
-  targetRef: { current: null },
-  playAnimation: jest.fn(),
+jest.mock("@/features/cooking-record-create", () => ({
+  ManualCookingRecordDrawer: () => null,
 }));
-
 jest.mock("@/widgets/CalendarTabContent/hooks", () => ({
   useUserStreakQuery: () => ({ data: { streak: 0 } }),
-  useRecipeHistoryQuery: () => ({
-    recipeHistorySummary: [],
-    monthlyTotalSavings: 12000,
-    isPending: false,
+  useProfileCookingRecords: () => ({
+    records: [
+      {
+        recordId: "record-1",
+        displayTitle: "된장찌개",
+        stickerImageUrl: "/sticker.webp",
+        imageUrl: "/original.webp",
+      },
+    ],
+    dailySummaries: [],
+    isPreviewPending: false,
+    isPreviewError: false,
+    retryPreview: jest.fn(),
   }),
 }));
 
-jest.mock("@/entities/user", () => ({
-  useUserStore: (sel: (s: { user: { hasFirstRecord: boolean } }) => unknown) =>
-    sel({ user: { hasFirstRecord: true } }),
-}));
-
-jest.mock("@/widgets/MonthlySavingsSummary", () => ({
-  __esModule: true,
-  default: ({ year, month }: { year: number; month: number }) => (
-    <div>
-      {year}년 {month}월 레시피오 서비스로
-    </div>
-  ),
-}));
-
-test("T-11 ja: MonthlySavingsSummary not rendered, calendar still renders", () => {
+test("T-11 ja: 절약 영역 없이 요리 기록 우선 구조를 일본어로 보여줍니다", () => {
   (usePathname as jest.Mock).mockReturnValue("/ja/users/u1");
-  const { queryByText, getByText } = render(<CalendarTabContent />);
-  expect(queryByText(/레시피오 서비스로/)).toBeNull();
-  expect(getByText(ja.viewAllRecords)).toBeInTheDocument();
+  render(<CalendarTabContent />);
+
+  expect(screen.getByText(ja.dateSectionTitle)).toBeInTheDocument();
+  expect(screen.getByText(ja.cookingRecord.viewAll)).toBeInTheDocument();
+  expect(screen.queryByText(/節約|레시피오 서비스로/)).not.toBeInTheDocument();
 });
 
-test("T-12 ko: MonthlySavingsSummary present (over-hide guard)", () => {
+test("T-12 ko: 날짜별 기록과 전체보기 문구를 한국어로 보여줍니다", () => {
   (usePathname as jest.Mock).mockReturnValue("/users/u1");
-  const { getByText } = render(<CalendarTabContent />);
-  expect(getByText(/레시피오 서비스로/)).toBeInTheDocument();
-});
+  render(<CalendarTabContent />);
 
-test("T-17 ja: view-all link localized; ko anchor", () => {
-  (usePathname as jest.Mock).mockReturnValue("/ja/users/u1");
-  const { getByText, queryByText, rerender } = render(<CalendarTabContent />);
-  expect(getByText(ja.viewAllRecords)).toBeInTheDocument();
-  expect(queryByText(ko.viewAllRecords)).toBeNull();
-  (usePathname as jest.Mock).mockReturnValue("/users/u1");
-  rerender(<CalendarTabContent />);
-  expect(getByText(ko.viewAllRecords)).toBeInTheDocument();
+  expect(screen.getByText(ko.dateSectionTitle)).toBeInTheDocument();
+  expect(screen.getByText(ko.cookingRecord.viewAll)).toBeInTheDocument();
 });

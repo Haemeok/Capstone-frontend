@@ -1,217 +1,58 @@
 "use client";
 
 import { useState } from "react";
-import type {
-  DayProps,
-  NextMonthButtonProps,
-  PreviousMonthButtonProps,
-} from "react-day-picker";
 import { usePathname } from "next/navigation";
 
-import { format, parseISO } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { resolveChromeLocale, useUserPagesDict } from "@/shared/i18n";
 
-import {
-  LocalizedLink,
-  resolveChromeLocale,
-  resolveDateFnsLocale,
-  useUserPagesDict,
-} from "@/shared/i18n";
-import { triggerHaptic } from "@/shared/lib/bridge";
-import { getProductByPrice } from "@/shared/lib/recipe";
-import { DayPickerDynamic } from "@/shared/ui/DayPickerDynamic";
-import Box from "@/shared/ui/primitives/Box";
+import { ManualCookingRecordDrawer } from "@/features/cooking-record-create";
 
-import { RecipeDailySummary } from "@/entities/user";
-
-import { cn } from "@/lib/utils";
-
-import MonthlySavingsSummary from "../MonthlySavingsSummary";
-import { CalendarDayEmpty } from "./components/CalendarDayEmpty";
-import { CalendarDayPhoto } from "./components/CalendarDayPhoto";
-import { CalendarDayStreak } from "./components/CalendarDayStreak";
-import { StreakInfoBanner } from "./components/StreakInfoBanner";
-import { StreakModeToggle } from "./components/StreakModeToggle";
-import { useRecipeHistoryQuery, useUserStreakQuery } from "./hooks";
-import {
-  findConsecutiveRanges,
-  getRangeForDay,
-} from "./lib/consecutiveDaysHelper";
-import { CalendarMode } from "./types";
-
-import "react-day-picker/style.css";
+import { CookingRecordCalendar } from "./components/CookingRecordCalendar";
+import { CookingRecordPreview } from "./components/CookingRecordPreview";
+import { useProfileCookingRecords, useUserStreakQuery } from "./hooks";
 
 const CalendarTabContent = () => {
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
-  const [calendarMode, setCalendarMode] = useState<CalendarMode>("photo");
-  const { data: userStreak } = useUserStreakQuery();
+  const [currentMonth, setCurrentMonth] = useState(() => new Date());
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const pathname = usePathname();
   const locale = resolveChromeLocale(pathname ?? "/");
-  const showSavings = locale === "ko";
-  const t = useUserPagesDict();
-
-  const year = currentMonth.getFullYear();
-  const month = currentMonth.getMonth() + 1;
-
-  const { recipeHistorySummary, monthlyTotalSavings, isPending } =
-    useRecipeHistoryQuery({
-      year,
-      month,
-    });
-
-  const getEventForDay = (day: Date): RecipeDailySummary | undefined => {
-    return recipeHistorySummary?.find((summary) => {
-      const summaryDate = parseISO(summary.date);
-      return (
-        summaryDate.getDate() === day?.getDate() &&
-        summaryDate.getMonth() === day?.getMonth() &&
-        summaryDate.getFullYear() === day?.getFullYear()
-      );
-    });
-  };
-
-  const consecutiveRanges = findConsecutiveRanges(recipeHistorySummary ?? []);
-  const product = getProductByPrice(monthlyTotalSavings ?? 0);
+  const copy = useUserPagesDict();
+  const streakQuery = useUserStreakQuery();
+  const recordsQuery = useProfileCookingRecords({
+    year: currentMonth.getFullYear(),
+    month: currentMonth.getMonth() + 1,
+  });
 
   return (
     <div className="w-full pb-8 md:pb-12">
-      {showSavings && (
-        <MonthlySavingsSummary
-          year={year}
-          month={month}
-          monthlyTotalSavings={monthlyTotalSavings}
-          productName={product.name}
-          productImage={product.image}
-          isPending={isPending}
-        />
-      )}
-      <div className="mt-5 flex items-center justify-center px-5">
-        <StreakModeToggle mode={calendarMode} onModeChange={setCalendarMode} />
-      </div>
-      <Box className="mt-4 p-0 px-5">
-        {calendarMode === "streak" ? (
-          <StreakInfoBanner streakCount={userStreak?.streak ?? 0} />
-        ) : null}
-      </Box>
-      <DayPickerDynamic
-        mode="single"
-        showOutsideDays
-        locale={resolveDateFnsLocale(locale)}
+      <CookingRecordPreview
         month={currentMonth}
-        onMonthChange={setCurrentMonth}
-        formatters={{
-          formatCaption: (month: Date) => format(month, "yyyy.M"),
-        }}
-        modifiers={{
-          hasEvent: (date: Date) => getEventForDay(date) !== undefined,
-        }}
-        modifiersClassNames={{
-          hasEvent: "has-event",
-        }}
-        className="w-full px-5"
-        classNames={{
-          months: "flex flex-col sm:flex-row gap-2 relative",
-          month: "flex flex-col gap-4 w-full",
-          month_caption:
-            "flex text-xl font-bold text-center items-center justify-center h-9",
-
-          caption: "flex justify-center pt-1 relative items-center w-full",
-          caption_label: "text-xl font-bold",
-          nav: "absolute w-full flex justify-center items-center gap-16 h-9",
-          week: "flex w-full h-15 md:h-30 text-center items-center",
-          weeks: "flex flex-col w-full",
-          weekdays: "flex w-full",
-          weekday:
-            "text-muted-foreground rounded-md w-8 font-normal text-sm flex-1 text-center",
-
-          disabled: "text-muted-foreground opacity-50",
-          hidden: "invisible",
-        }}
-        components={{
-          Day: ({ day }: DayProps) => {
-            const date = day.date;
-            const dateNumber = date.getDate();
-
-            if (date.getMonth() !== day.displayMonth.getMonth()) {
-              return (
-                <td className="flex h-full w-full items-center justify-center text-sm opacity-30">
-                  {dateNumber}
-                </td>
-              );
-            }
-
-            const summary = getEventForDay(date);
-            const today = new Date();
-            const isToday =
-              date?.getDate() === today.getDate() &&
-              date?.getMonth() === today.getMonth() &&
-              date?.getFullYear() === today.getFullYear();
-
-            if (calendarMode === "streak") {
-              const range = getRangeForDay(date, consecutiveRanges);
-              if (summary) {
-                return (
-                  <CalendarDayStreak
-                    date={date}
-                    dateNumber={dateNumber}
-                    range={range}
-                  />
-                );
-              }
-              return (
-                <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />
-              );
-            } else {
-              if (summary) {
-                return <CalendarDayPhoto date={date} summary={summary} />;
-              }
-              return (
-                <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />
-              );
-            }
-          },
-          PreviousMonthButton: ({
-            className,
-            onClick,
-            ...props
-          }: PreviousMonthButtonProps) => (
-            <button
-              className={cn(className, "flex items-center justify-center")}
-              onClick={(e) => {
-                triggerHaptic("Light");
-                onClick?.(e);
-              }}
-              {...props}
-            >
-              <ChevronLeft className="text-ink-muted size-6" />
-            </button>
-          ),
-          NextMonthButton: ({
-            className,
-            onClick,
-            ...props
-          }: NextMonthButtonProps) => (
-            <button
-              className={cn(className, "flex items-center justify-center")}
-              onClick={(e) => {
-                triggerHaptic("Light");
-                onClick?.(e);
-              }}
-              {...props}
-            >
-              <ChevronRight className="text-ink-muted size-6" />
-            </button>
-          ),
-        }}
+        locale={locale}
+        records={recordsQuery.records}
+        copy={copy.calendar.cookingRecord}
+        isPending={recordsQuery.isPreviewPending}
+        isError={recordsQuery.isPreviewError}
+        onRetry={() => void recordsQuery.retryPreview()}
+        onAddRecord={() => setIsCreateOpen(true)}
       />
-      <LocalizedLink
-        href="/calendar/timeline"
-        onClick={() => triggerHaptic("Light")}
-        className="text-ink-sub hover:text-ink mt-2 flex w-full items-center justify-center gap-1 px-5 py-4 text-sm transition-colors"
-      >
-        {t.calendar.viewAllRecords}
-        <ChevronRight className="size-4" />
-      </LocalizedLink>
+      <div className="mx-5 mt-7 border-t border-gray-100 pt-6">
+        <h2 className="text-ink text-lg font-bold">
+          {copy.calendar.dateSectionTitle}
+        </h2>
+      </div>
+      <CookingRecordCalendar
+        month={currentMonth}
+        locale={locale}
+        summaries={recordsQuery.dailySummaries}
+        streakCount={streakQuery.data?.streak ?? 0}
+        copy={copy.calendar}
+        onMonthChange={setCurrentMonth}
+      />
+      <ManualCookingRecordDrawer
+        isOpen={isCreateOpen}
+        copy={copy.calendar.cookingRecord.create}
+        onOpenChange={setIsCreateOpen}
+      />
     </div>
   );
 };

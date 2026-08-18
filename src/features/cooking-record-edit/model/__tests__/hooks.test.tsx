@@ -240,7 +240,7 @@ it("metadata 수정은 detail refetch가 끝날 때까지 mutation pending을 �
   await waitFor(() => expect(result.current.isPending).toBe(false));
 });
 
-it("이미지 수정은 detail refetch를 기다리되 활성 다중-page 목록을 재요청하지 않습니다", async () => {
+it("이미지 수정은 목록을 첫 페이지로 줄이고 detail·list·calendar를 갱신합니다", async () => {
   jest.useRealTimers();
   prepareImage.mockResolvedValue({
     recordId: "record-A",
@@ -252,10 +252,17 @@ it("이미지 수정은 detail refetch를 기다리되 활성 다중-page 목록
     Promise.resolve(listPages[pageParam] ?? listPages[0])
   );
   const detailQueryFn = jest.fn(() => deferredDetail.promise);
-  const { Wrapper } = createWrapper();
   const listKey = COOKING_RECORD_QUERY_KEYS.list({ size: 30, locale: "ko" });
   const detailKey = COOKING_RECORD_QUERY_KEYS.detail("record-A", "ko");
-
+  const calendarKey = COOKING_RECORD_QUERY_KEYS.calendarMonth(2026, 8, "ko");
+  const { queryClient } = createWrapper();
+  queryClient.setQueryData(calendarKey, {
+    dailySummaries: [],
+    monthlyTotalSavings: 0,
+  });
+  const WrapperWithClient = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
   const { result } = renderHook(
     () => {
       useInfiniteQuery({
@@ -274,7 +281,7 @@ it("이미지 수정은 detail refetch를 기다리되 활성 다중-page 목록
       });
       return useReplaceCookingRecordImage();
     },
-    { wrapper: Wrapper }
+    { wrapper: WrapperWithClient }
   );
 
   let mutationPromise: Promise<unknown> | undefined;
@@ -291,7 +298,12 @@ it("이미지 수정은 detail refetch를 기다리되 활성 다중-page 목록
   });
   await waitFor(() => expect(detailQueryFn).toHaveBeenCalledTimes(1));
 
-  expect(listQueryFn).not.toHaveBeenCalled();
+  await waitFor(() => expect(listQueryFn).toHaveBeenCalledTimes(1));
+  expect(queryClient.getQueryData(listKey)).toMatchObject({
+    pages: [listPages[0]],
+    pageParams: [0],
+  });
+  expect(queryClient.getQueryState(calendarKey)?.isInvalidated).toBe(true);
   expect(result.current.isPending).toBe(true);
 
   deferredDetail.resolve(detail);

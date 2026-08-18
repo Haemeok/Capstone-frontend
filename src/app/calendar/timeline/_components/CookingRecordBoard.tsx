@@ -24,6 +24,7 @@ export type CookingRecordBoardProps = {
   onSelectRecord: (record: CookingRecordStickerItem) => void;
   onAddRecord: () => void;
   onShareRecord: () => void;
+  showRecordMeta?: boolean;
   children?: ReactNode;
 };
 
@@ -39,6 +40,7 @@ export const CookingRecordBoard = (props: CookingRecordBoardProps) => {
     onSelectRecord,
     onAddRecord,
     onShareRecord,
+    showRecordMeta = true,
     children,
   } = props;
 
@@ -77,11 +79,15 @@ export const CookingRecordBoard = (props: CookingRecordBoardProps) => {
           />
         </div>
       ) : null}
-      <div className="relative flex h-10 items-center px-3.5">
-        <span className="text-ink-sub rounded-lg bg-white/85 px-2 py-1 text-xs font-medium shadow-sm backdrop-blur-[2px]">
-          {recordCountLabel}
-        </span>
-      </div>
+      {showRecordMeta ? (
+        <div className="relative flex h-10 items-center px-3.5">
+          <span className="text-ink-sub rounded-lg bg-white/85 px-2 py-1 text-xs font-medium shadow-sm backdrop-blur-[2px]">
+            {recordCountLabel}
+          </span>
+        </div>
+      ) : (
+        <div className="relative h-5" aria-hidden="true" />
+      )}
       <div
         data-testid="cooking-record-sticker-grid"
         className="relative grid grid-cols-4 gap-x-1 gap-y-3 px-3.5 pt-2 pb-32"
@@ -117,6 +123,7 @@ export const CookingRecordBoard = (props: CookingRecordBoardProps) => {
         shareLabel={shareRecordLabel}
         onAdd={onAddRecord}
         onShare={onShareRecord}
+        showShare={showRecordMeta}
       />
     </section>
   );

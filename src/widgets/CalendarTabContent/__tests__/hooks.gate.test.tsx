@@ -3,16 +3,19 @@ import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 
-import { getRecipeHistory } from "@/entities/recipe/model/api";
+import {
+  getCookingRecordCalendarMonth,
+  getCookingRecords,
+} from "@/entities/recipe/model/recordApi";
 import type { User } from "@/entities/user";
 import { getUserStreak } from "@/entities/user/model/api";
 import { useUserStore } from "@/entities/user/model/store";
 
-import { useRecipeHistoryQuery, useUserStreakQuery } from "../hooks";
+import { useProfileCookingRecords, useUserStreakQuery } from "../hooks";
 
-jest.mock("@/entities/recipe/model/api", () => ({
-  ...jest.requireActual("@/entities/recipe/model/api"),
-  getRecipeHistory: jest.fn(),
+jest.mock("@/entities/recipe/model/recordApi", () => ({
+  getCookingRecords: jest.fn(),
+  getCookingRecordCalendarMonth: jest.fn(),
 }));
 
 jest.mock("@/entities/user/model/api", () => ({
@@ -20,7 +23,8 @@ jest.mock("@/entities/user/model/api", () => ({
   getUserStreak: jest.fn(),
 }));
 
-const mockedGetHistory = getRecipeHistory as jest.Mock;
+const mockedGetRecords = jest.mocked(getCookingRecords);
+const mockedGetCalendar = jest.mocked(getCookingRecordCalendarMonth);
 const mockedGetStreak = getUserStreak as jest.Mock;
 
 const createWrapper = () => {
@@ -36,7 +40,15 @@ const createWrapper = () => {
 const HISTORY_PARAMS = { year: 2026, month: 7 };
 
 beforeEach(() => {
-  mockedGetHistory.mockReset().mockResolvedValue({ dailySummaries: [] });
+  mockedGetRecords.mockReset().mockResolvedValue({
+    background: null,
+    groups: [],
+    hasNext: false,
+  });
+  mockedGetCalendar.mockReset().mockResolvedValue({
+    dailySummaries: [],
+    monthlyTotalSavings: 0,
+  });
   mockedGetStreak.mockReset().mockResolvedValue({ current: 0 });
 });
 
@@ -47,11 +59,12 @@ it("비로그인이면 streak·calendar를 호출하지 않는다 (T-12)", () =>
     isAuthReady: true,
   });
   renderHook(() => useUserStreakQuery(), { wrapper: createWrapper() });
-  renderHook(() => useRecipeHistoryQuery(HISTORY_PARAMS), {
+  renderHook(() => useProfileCookingRecords(HISTORY_PARAMS), {
     wrapper: createWrapper(),
   });
   expect(mockedGetStreak).not.toHaveBeenCalled();
-  expect(mockedGetHistory).not.toHaveBeenCalled();
+  expect(mockedGetRecords).not.toHaveBeenCalled();
+  expect(mockedGetCalendar).not.toHaveBeenCalled();
 });
 
 it("로그인이면 streak·calendar를 각 1회 호출한다 (T-18)", async () => {
@@ -61,9 +74,10 @@ it("로그인이면 streak·calendar를 각 1회 호출한다 (T-18)", async () 
     isAuthReady: true,
   });
   renderHook(() => useUserStreakQuery(), { wrapper: createWrapper() });
-  renderHook(() => useRecipeHistoryQuery(HISTORY_PARAMS), {
+  renderHook(() => useProfileCookingRecords(HISTORY_PARAMS), {
     wrapper: createWrapper(),
   });
   await waitFor(() => expect(mockedGetStreak).toHaveBeenCalledTimes(1));
-  await waitFor(() => expect(mockedGetHistory).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(mockedGetRecords).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(mockedGetCalendar).toHaveBeenCalledTimes(1));
 });

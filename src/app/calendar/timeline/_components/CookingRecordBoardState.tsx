@@ -42,7 +42,13 @@ export const CookingRecordBoardState = (
 
   const isActionState = props.kind === "error" || props.kind === "login";
   return (
-    <div className="flex min-h-56 flex-col items-center justify-center px-5 text-center">
+    <div
+      className={`flex min-h-56 flex-col items-center justify-center px-5 text-center ${
+        props.kind === "empty"
+          ? "rounded-card mx-1 bg-white/88 shadow-[0_8px_24px_rgb(34_34_34/0.08)] backdrop-blur-[3px]"
+          : ""
+      }`}
+    >
       <p className="text-ink text-[15px] font-bold">
         {props.kind === "empty"
           ? props.title

@@ -31,7 +31,7 @@ export const userPages: UserPagesDict = {
     tabs: {
       recipes: "나의 레시피",
       saved: "저장",
-      calendar: "캘린더",
+      calendar: "요리 기록",
       recipesOther: "레시피",
     },
     metadata: {
@@ -126,6 +126,7 @@ export const userPages: UserPagesDict = {
   },
   calendar: {
     timelineHeading: "요리 기록",
+    dateSectionTitle: "날짜별 기록",
     cookingRecord: {
       pageTitle: "요리 기록",
       currentMonthCaption: "이번 달",
@@ -138,6 +139,7 @@ export const userPages: UserPagesDict = {
       boardLabel: "{month} 요리 기록",
       recordLabel: "{date} {title} 기록 보기",
       addRecord: "요리 기록 추가",
+      viewAll: "전체보기",
       shareRecord: "{month} 요리 기록 공유",
       summary: {
         ariaLabel: "월간 요리 성과",
