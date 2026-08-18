@@ -20,7 +20,7 @@ export const DailyCookingRecordChips = ({
   }
 
   return (
-    <div className="z-sticky sticky-optimized sticky top-0 bg-white/95 pt-2 pb-3 backdrop-blur-sm">
+    <div className="pt-2 pb-3">
       <div
         role="group"
         aria-label={groupLabel}

@@ -21,6 +21,7 @@ export const useDailyCookingRecordNavigation = (
 ): DailyRecordNavigation => {
   const { motionRef } = useScrollContext();
   const recordElements = useRef(new Map<string, HTMLElement>());
+  const isChipScrollActiveRef = useRef(false);
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
   const recordIds = useMemo(
     () => records.map((record) => record.recordId),
@@ -49,6 +50,7 @@ export const useDailyCookingRecordNavigation = (
       }
 
       triggerHaptic("Light");
+      isChipScrollActiveRef.current = true;
       setSelectedRecordId(recordId);
       recordElements.current.get(recordId)?.scrollIntoView({
         behavior: "smooth",
@@ -64,8 +66,15 @@ export const useDailyCookingRecordNavigation = (
       return;
     }
 
+    const handleScrollEnd = () => {
+      isChipScrollActiveRef.current = false;
+    };
     const observer = new IntersectionObserver(
       (entries) => {
+        if (isChipScrollActiveRef.current) {
+          return;
+        }
+
         const visibleEntry = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
@@ -89,8 +98,12 @@ export const useDailyCookingRecordNavigation = (
         observer.observe(element);
       }
     });
+    root.addEventListener("scrollend", handleScrollEnd);
 
-    return () => observer.disconnect();
+    return () => {
+      root.removeEventListener("scrollend", handleScrollEnd);
+      observer.disconnect();
+    };
   }, [motionRef, recordIds]);
 
   return { activeRecordId, registerRecordElement, selectRecord };

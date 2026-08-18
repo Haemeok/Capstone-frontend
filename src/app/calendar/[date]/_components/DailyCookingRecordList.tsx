@@ -22,20 +22,22 @@ export const DailyCookingRecordList = ({
 
   return (
     <section aria-labelledby="daily-cooking-record-list-title">
-      <div className="px-[18px] pt-6 pb-1">
-        <h2
-          id="daily-cooking-record-list-title"
-          className="text-ink text-lg font-bold"
-        >
-          {copy.heading}
-        </h2>
+      <div className="z-sticky sticky-optimized sticky top-16 bg-white/95 backdrop-blur-sm">
+        <div className="px-[18px] pt-4 pb-1">
+          <h2
+            id="daily-cooking-record-list-title"
+            className="text-ink text-lg font-bold"
+          >
+            {copy.heading}
+          </h2>
+        </div>
+        <DailyCookingRecordChips
+          records={records}
+          activeRecordId={activeRecordId}
+          groupLabel={copy.chipGroupLabel}
+          onSelect={selectRecord}
+        />
       </div>
-      <DailyCookingRecordChips
-        records={records}
-        activeRecordId={activeRecordId}
-        groupLabel={copy.chipGroupLabel}
-        onSelect={selectRecord}
-      />
       <div>
         {records.map((record, index) => (
           <DailyCookingRecordItem

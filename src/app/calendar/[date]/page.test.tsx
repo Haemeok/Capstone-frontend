@@ -25,6 +25,7 @@ const mockScrollIntoView = jest.fn();
 const observe = jest.fn();
 const disconnect = jest.fn();
 let observerCallback: IntersectionObserverCallback;
+let scrollContainer: HTMLDivElement;
 
 class TestIntersectionObserver implements IntersectionObserver {
   readonly root: Element | Document | null;
@@ -231,8 +232,9 @@ const setDetails = (memos: Record<string, string | null> = {}) => {
 };
 
 const renderPage = (): ReturnType<typeof render> => {
+  scrollContainer = document.createElement("div");
   const motionRef = {
-    current: document.createElement("div"),
+    current: scrollContainer,
   } as RefObject<HTMLDivElement | null>;
 
   return render(
@@ -586,6 +588,41 @@ describe("CalendarDetailPage", () => {
     expect(mockedTriggerHaptic).toHaveBeenCalledWith("Light");
   });
 
+  it("T-22 세 번째 칩 이동 중 두 번째 기록이 보여도 클릭한 칩을 유지합니다", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole("button", { name: "가지 튀김 덮밥" }));
+    act(() => {
+      observerCallback(
+        [visibleEntryFor("record-fried-rice")],
+        {} as IntersectionObserver
+      );
+    });
+
+    expect(
+      screen.getByRole("button", { name: "가지 튀김 덮밥" })
+    ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("T-23 칩 이동이 끝나면 직접 스크롤에 맞춰 선택 칩을 다시 바꿉니다", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole("button", { name: "가지 튀김 덮밥" }));
+    act(() => {
+      scrollContainer.dispatchEvent(new Event("scrollend"));
+      observerCallback(
+        [visibleEntryFor("record-fried-rice")],
+        {} as IntersectionObserver
+      );
+    });
+
+    expect(
+      screen.getByRole("button", { name: "대파 계란볶음밥" })
+    ).toHaveAttribute("aria-pressed", "true");
+  });
+
   it("T-17 선택된 칩을 다시 누르면 스크롤과 햅틱이 없습니다", async () => {
     const user = userEvent.setup();
     renderPage();
@@ -613,14 +650,32 @@ describe("CalendarDetailPage", () => {
     expect(mockedTriggerHaptic).not.toHaveBeenCalled();
   });
 
-  it("T-19 칩 그룹은 내부 스크롤 상단에 붙고 버튼 접근성 규칙을 지킵니다", () => {
+  it("T-19 칩 버튼은 터치 영역과 선택 상태 접근성 규칙을 지킵니다", () => {
     renderPage();
 
     const group = screen.getByRole("group", { name: "요리 기록 이동" });
-    expect(group.parentElement).toHaveClass("sticky", "top-0");
     for (const button of within(group).getAllByRole("button")) {
       expect(button).toHaveClass("min-h-11", "cursor-pointer");
       expect(button).toHaveAttribute("aria-pressed");
     }
+  });
+
+  it("T-21 날짜와 요리 기록 탐색 영역이 순서대로 고정되고 기록을 가리지 않습니다", () => {
+    renderPage();
+
+    const dateHeading = screen.getByRole("heading", {
+      name: "8월 17일 월요일",
+    });
+    const listHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "요리 기록",
+    });
+    const chipGroup = screen.getByRole("group", { name: "요리 기록 이동" });
+    const recordNavigation = chipGroup.parentElement?.parentElement;
+
+    expect(dateHeading.parentElement).toHaveClass("sticky", "top-0", "h-16");
+    expect(recordNavigation).toContainElement(listHeading);
+    expect(recordNavigation).toHaveClass("sticky", "top-16");
+    expect(screen.getAllByRole("article")[0]).toHaveClass("scroll-mt-[164px]");
   });
 });
