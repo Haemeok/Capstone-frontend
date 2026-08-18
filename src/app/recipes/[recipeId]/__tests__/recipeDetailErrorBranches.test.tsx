@@ -1,6 +1,8 @@
 /**
  * @jest-environment node
  */
+import { renderToStaticMarkup } from "react-dom/server";
+
 import { getStaticrecipionServer } from "@/entities/recipe/model/api.server";
 
 import {
@@ -51,8 +53,11 @@ jest.mock("@/shared/ui/ScrollReset", () => ({
 jest.mock("../RemixRedirectToast", () => ({ RemixRedirectToast: () => null }));
 
 const { notFound } = jest.requireMock("next/navigation");
-const { generateNotFoundRecipeMetadata, generateRecipeMetadata } =
-  jest.requireMock("@/entities/recipe/lib/metadata");
+const {
+  generateNotFoundRecipeMetadata,
+  generateRecipeJsonLd,
+  generateRecipeMetadata,
+} = jest.requireMock("@/entities/recipe/lib/metadata");
 
 const fetchRecipe = getStaticrecipionServer as jest.MockedFunction<
   typeof getStaticrecipionServer
@@ -127,5 +132,26 @@ describe("buildRecipeMetadata — 분기별 동작", () => {
 
     await expect(buildRecipeMetadata("r1")).rejects.toThrow("API Error: 503");
     expect(generateNotFoundRecipeMetadata).not.toHaveBeenCalled();
+  });
+});
+
+describe("RecipeDetailPageView — 후기 SEO 불변식", () => {
+  afterEach(() => jest.clearAllMocks());
+
+  it("T-04: 후기 UI가 있어도 기존 metadata와 Recipe JSON-LD만 유지한다", async () => {
+    fetchRecipe.mockResolvedValue(publicRecipe as never);
+    generateRecipeJsonLd.mockReturnValue({
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      aggregateRating: { "@type": "AggregateRating", ratingValue: 4.8 },
+    });
+
+    const metadata = await buildRecipeMetadata("r1");
+    const html = renderToStaticMarkup(await render());
+
+    expect(metadata).toEqual({ title: "recipe" });
+    expect(html).toContain('"@type":"Recipe"');
+    expect(html).toContain("AggregateRating");
+    expect(html).not.toContain('"@type":"Review"');
   });
 });
