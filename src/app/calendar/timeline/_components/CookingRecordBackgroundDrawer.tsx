@@ -4,22 +4,30 @@ import { X } from "lucide-react";
 
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
+import type {
+  StickerBookBackground,
+  StickerBookBackgroundOption,
+} from "@/entities/recipe";
+
 import { CookingRecordBackgroundPicker } from "./CookingRecordBackgroundPicker";
 import type {
-  CookingRecordBackground,
   CookingRecordBackgroundCopy,
   CookingRecordStickerItem,
 } from "./cookingRecordUi.types";
 
 export type CookingRecordBackgroundDrawerProps = {
   isOpen: boolean;
-  monthLabel: string;
-  selectedBackground: CookingRecordBackground;
+  backgrounds: StickerBookBackgroundOption[];
+  previewBackground: StickerBookBackground | null;
+  selectedBackgroundKey?: string;
   previewRecords: CookingRecordStickerItem[];
   copy: CookingRecordBackgroundCopy;
+  isListPending: boolean;
+  isListError: boolean;
+  isApplying: boolean;
   onOpenChange: (open: boolean) => void;
-  onSelectBackground: (background: CookingRecordBackground) => void;
-  onCustomImageChange: (file: File) => void;
+  onSelectBackground: (backgroundKey: string) => void;
+  onRetry: () => void;
   onApply: () => void;
 };
 
@@ -28,13 +36,17 @@ export const CookingRecordBackgroundDrawer = (
 ) => {
   const {
     isOpen,
-    monthLabel,
-    selectedBackground,
+    backgrounds,
+    previewBackground,
+    selectedBackgroundKey,
     previewRecords,
     copy,
+    isListPending,
+    isListError,
+    isApplying,
     onOpenChange,
     onSelectBackground,
-    onCustomImageChange,
+    onRetry,
     onApply,
   } = props;
   const { isMobile, Container, Content, Header, Title, Description } =
@@ -62,19 +74,23 @@ export const CookingRecordBackgroundDrawer = (
               {copy.title}
             </Title>
             <Description className="text-ink-muted mt-0.5 truncate text-center text-[11px]">
-              {copy.monthOnlyLabel}
+              {copy.appliesGloballyLabel}
             </Description>
           </div>
           <span aria-hidden="true" />
         </Header>
 
         <CookingRecordBackgroundPicker
-          monthLabel={monthLabel}
-          selectedBackground={selectedBackground}
+          backgrounds={backgrounds}
+          previewBackground={previewBackground}
+          selectedBackgroundKey={selectedBackgroundKey}
           previewRecords={previewRecords}
           copy={copy}
+          isListPending={isListPending}
+          isListError={isListError}
+          isApplying={isApplying}
           onSelectBackground={onSelectBackground}
-          onCustomImageChange={onCustomImageChange}
+          onRetry={onRetry}
           onApply={onApply}
         />
       </Content>
