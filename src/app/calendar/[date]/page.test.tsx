@@ -22,44 +22,33 @@ let mockPathname = "/calendar/2026-08-17";
 const mockBack = jest.fn();
 const mockRefetch = jest.fn();
 const mockScrollIntoView = jest.fn();
-const observe = jest.fn();
-const disconnect = jest.fn();
-let observerCallback: IntersectionObserverCallback;
 let scrollContainer: HTMLDivElement;
-
-class TestIntersectionObserver implements IntersectionObserver {
-  readonly root: Element | Document | null;
-  readonly rootMargin: string;
-  readonly thresholds: ReadonlyArray<number>;
-
-  constructor(
-    callback: IntersectionObserverCallback,
-    options: IntersectionObserverInit = {}
-  ) {
-    observerCallback = callback;
-    this.root = options.root ?? null;
-    this.rootMargin = options.rootMargin ?? "0px";
-    this.thresholds = Array.isArray(options.threshold)
-      ? options.threshold
-      : [options.threshold ?? 0];
-  }
-
-  observe = observe;
-  unobserve = jest.fn();
-  disconnect = disconnect;
-  takeRecords = () => [];
-}
-
-Object.defineProperty(window, "IntersectionObserver", {
-  configurable: true,
-  writable: true,
-  value: TestIntersectionObserver,
-});
+let animationFrames: Map<number, FrameRequestCallback>;
+let nextAnimationFrameId: number;
 
 Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
   configurable: true,
   writable: true,
   value: mockScrollIntoView,
+});
+
+Object.defineProperty(window, "requestAnimationFrame", {
+  configurable: true,
+  writable: true,
+  value: (callback: FrameRequestCallback) => {
+    const frameId = nextAnimationFrameId;
+    nextAnimationFrameId += 1;
+    animationFrames.set(frameId, callback);
+    return frameId;
+  },
+});
+
+Object.defineProperty(window, "cancelAnimationFrame", {
+  configurable: true,
+  writable: true,
+  value: (frameId: number) => {
+    animationFrames.delete(frameId);
+  },
 });
 
 jest.mock("next/navigation", () => ({
@@ -244,27 +233,57 @@ const renderPage = (): ReturnType<typeof render> => {
   );
 };
 
-const visibleEntryFor = (recordId: string): IntersectionObserverEntry => {
-  const target = document.querySelector(`[data-record-id="${recordId}"]`);
-  if (!(target instanceof HTMLElement)) {
-    throw new Error(`${recordId} 기록 요소가 없습니다.`);
-  }
-  const rect = target.getBoundingClientRect();
+const createRect = (top: number, height: number): DOMRect => ({
+  x: 0,
+  y: top,
+  top,
+  right: 390,
+  bottom: top + height,
+  left: 0,
+  width: 390,
+  height,
+  toJSON: () => ({}),
+});
 
-  return {
-    target,
-    isIntersecting: true,
-    intersectionRatio: 1,
-    boundingClientRect: rect,
-    intersectionRect: rect,
-    rootBounds: null,
-    time: 0,
-  };
+const setRecordLayout = () => {
+  const recordTops = new Map([
+    ["record-dongporou", 300],
+    ["record-fried-rice", 600],
+    ["record-eggplant", 900],
+  ]);
+
+  Object.defineProperties(scrollContainer, {
+    clientHeight: { configurable: true, value: 800 },
+    scrollHeight: { configurable: true, value: 1600 },
+  });
+  jest
+    .spyOn(scrollContainer, "getBoundingClientRect")
+    .mockImplementation(() => createRect(0, 800));
+
+  for (const [recordId, contentTop] of recordTops) {
+    const element = document.querySelector(`[data-record-id="${recordId}"]`);
+    if (!(element instanceof HTMLElement)) {
+      throw new Error(`${recordId} 기록 요소가 없습니다.`);
+    }
+    jest
+      .spyOn(element, "getBoundingClientRect")
+      .mockImplementation(() =>
+        createRect(contentTop - scrollContainer.scrollTop, 240)
+      );
+  }
+};
+
+const runAnimationFrame = (timestamp: number) => {
+  const callbacks = Array.from(animationFrames.values());
+  animationFrames.clear();
+  callbacks.forEach((callback) => callback(timestamp));
 };
 
 describe("CalendarDetailPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    animationFrames = new Map();
+    nextAnimationFrameId = 1;
     mockPathname = "/calendar/2026-08-17";
     useUserStore.setState({ isAuthReady: true, isAuthenticated: true });
     setDateQuery();
@@ -570,20 +589,33 @@ describe("CalendarDetailPage", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("T-16 다른 칩을 누르면 선택, smooth scroll, Light 햅틱이 한 번씩 발생합니다", async () => {
+  it("T-16 다른 칩을 누르면 즉시 선택하고 300ms보다 느리고 500ms 안에 이동합니다", async () => {
     const user = userEvent.setup();
     renderPage();
+    setRecordLayout();
 
     await user.click(screen.getByRole("button", { name: "가지 튀김 덮밥" }));
 
     expect(
       screen.getByRole("button", { name: "가지 튀김 덮밥" })
     ).toHaveAttribute("aria-pressed", "true");
-    expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
-    expect(mockScrollIntoView).toHaveBeenCalledWith({
-      behavior: "smooth",
-      block: "start",
+    expect(mockScrollIntoView).not.toHaveBeenCalled();
+
+    act(() => {
+      runAnimationFrame(0);
     });
+    expect(scrollContainer.scrollTop).toBe(0);
+
+    act(() => {
+      runAnimationFrame(300);
+    });
+    expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+    expect(scrollContainer.scrollTop).toBeLessThan(748);
+
+    act(() => {
+      runAnimationFrame(500);
+    });
+    expect(scrollContainer.scrollTop).toBe(748);
     expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
     expect(mockedTriggerHaptic).toHaveBeenCalledWith("Light");
   });
@@ -591,13 +623,13 @@ describe("CalendarDetailPage", () => {
   it("T-22 세 번째 칩 이동 중 두 번째 기록이 보여도 클릭한 칩을 유지합니다", async () => {
     const user = userEvent.setup();
     renderPage();
+    setRecordLayout();
 
     await user.click(screen.getByRole("button", { name: "가지 튀김 덮밥" }));
     act(() => {
-      observerCallback(
-        [visibleEntryFor("record-fried-rice")],
-        {} as IntersectionObserver
-      );
+      scrollContainer.scrollTop = 450;
+      scrollContainer.dispatchEvent(new Event("scroll"));
+      runAnimationFrame(200);
     });
 
     expect(
@@ -608,14 +640,15 @@ describe("CalendarDetailPage", () => {
   it("T-23 칩 이동이 끝나면 직접 스크롤에 맞춰 선택 칩을 다시 바꿉니다", async () => {
     const user = userEvent.setup();
     renderPage();
+    setRecordLayout();
 
     await user.click(screen.getByRole("button", { name: "가지 튀김 덮밥" }));
     act(() => {
-      scrollContainer.dispatchEvent(new Event("scrollend"));
-      observerCallback(
-        [visibleEntryFor("record-fried-rice")],
-        {} as IntersectionObserver
-      );
+      runAnimationFrame(0);
+      runAnimationFrame(500);
+      scrollContainer.scrollTop = 450;
+      scrollContainer.dispatchEvent(new Event("scroll"));
+      runAnimationFrame(600);
     });
 
     expect(
@@ -633,14 +666,24 @@ describe("CalendarDetailPage", () => {
     expect(mockedTriggerHaptic).not.toHaveBeenCalled();
   });
 
-  it("T-18 직접 스크롤로 보이는 기록이 바뀌면 칩만 갱신합니다", () => {
+  it("T-18 아래로 직접 스크롤할 때 기준선을 지난 기록으로만 전진합니다", () => {
     renderPage();
+    setRecordLayout();
 
     act(() => {
-      observerCallback(
-        [visibleEntryFor("record-fried-rice")],
-        {} as IntersectionObserver
-      );
+      scrollContainer.scrollTop = 450;
+      scrollContainer.dispatchEvent(new Event("scroll"));
+      runAnimationFrame(0);
+    });
+
+    expect(
+      screen.getByRole("button", { name: "대파 계란볶음밥" })
+    ).toHaveAttribute("aria-pressed", "true");
+
+    act(() => {
+      scrollContainer.scrollTop = 500;
+      scrollContainer.dispatchEvent(new Event("scroll"));
+      runAnimationFrame(16);
     });
 
     expect(
@@ -682,12 +725,17 @@ describe("CalendarDetailPage", () => {
       (token) => token.startsWith("top-")
     );
 
-    expect(dateHeading.parentElement).toHaveClass("sticky", "top-0");
-    expect(recordNavigation).toContainElement(listHeading);
-    expect(recordNavigation).toHaveClass("sticky", "border-t");
-    expect(navigationTopToken?.replace("top-", "")).toBe(
-      dateHeightToken?.replace("h-", "")
+    expect(dateHeading.parentElement).toHaveClass(
+      "sticky",
+      "top-0",
+      "z-header"
     );
+    expect(dateHeading.parentElement).not.toHaveClass("sticky-optimized");
+    expect(recordNavigation).toContainElement(listHeading);
+    expect(recordNavigation).toHaveClass("sticky", "top-[47px]");
+    expect(recordNavigation).not.toHaveClass("sticky-optimized", "border-t");
+    expect(dateHeightToken).toBe("h-12");
+    expect(navigationTopToken).toBe("top-[47px]");
     expect(screen.getAllByRole("article")[0]?.className).toMatch(
       /(?:^|\s)scroll-mt-/
     );
