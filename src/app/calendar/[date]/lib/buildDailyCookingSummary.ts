@@ -14,6 +14,7 @@ export type DailyCookingSummary = {
   savings: DailySummaryMetric;
   ingredientCost: DailySummaryMetric;
   marketPrice: DailySummaryMetric;
+  hasData: boolean;
   hasPartialData: boolean;
 };
 
@@ -51,6 +52,7 @@ export const buildDailyCookingSummary = (
 
   return {
     ...metrics,
+    hasData: Object.values(metrics).some((metric) => metric.value !== null),
     hasPartialData: Object.values(metrics).some((metric) => metric.isPartial),
   };
 };

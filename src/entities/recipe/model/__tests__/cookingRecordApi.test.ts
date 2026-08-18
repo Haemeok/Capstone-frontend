@@ -63,7 +63,7 @@ it("목록 크기 60을 초과하면 요청 전에 거부합니다", async () =>
 });
 
 it("상세와 월·날짜 캘린더를 계약 경로와 파라미터로 조회합니다", async () => {
-  apiGet.mockResolvedValue({});
+  apiGet.mockResolvedValue([]);
 
   await getCookingRecord("record-A", "ja");
   await getCookingRecordCalendarMonth({ year: 2026, month: 8, locale: "ko" });
@@ -78,6 +78,46 @@ it("상세와 월·날짜 캘린더를 계약 경로와 파라미터로 조회�
   expect(apiGet).toHaveBeenNthCalledWith(3, END_POINTS.RECIPE_HISTORY, {
     params: { date: "2026-08-17", lang: "ja" },
   });
+});
+
+it("날짜 캘린더의 imageUrl과 생략된 MANUAL 수치를 화면용 nullable 필드로 정규화합니다", async () => {
+  apiGet.mockResolvedValue([
+    {
+      recordId: "lJxxrEJA",
+      sourceType: "MANUAL",
+      displayTitle: "쿠키",
+      cookedAt: "2026-08-18T12:22:00+09:00",
+      recipeId: null,
+      recipeAvailable: false,
+      imageUrl: "https://cdn.example.com/cookie.webp",
+      ingredientCost: null,
+      marketPrice: null,
+      nutrition: null,
+      calories: null,
+      visibility: null,
+      isRemix: false,
+    },
+  ]);
+
+  await expect(
+    getCookingRecordCalendarDate({ date: "2026-08-18", locale: "ko" })
+  ).resolves.toEqual([
+    {
+      recordId: "lJxxrEJA",
+      sourceType: "MANUAL",
+      displayTitle: "쿠키",
+      cookedAt: "2026-08-18T12:22:00+09:00",
+      recipeId: null,
+      originalImageUrl: "https://cdn.example.com/cookie.webp",
+      savings: null,
+      ingredientCost: null,
+      marketPrice: null,
+      nutrition: null,
+      calories: null,
+      visibility: null,
+      isRemix: false,
+    },
+  ]);
 });
 
 it("목록 query key는 sourceTypes 순서를 정규화하고 페이지 번호를 제외합니다", () => {

@@ -16,6 +16,46 @@ import type {
 const DEFAULT_RECORD_LIST_SIZE = 30;
 const MAX_RECORD_LIST_SIZE = 60;
 
+type CookingRecordCalendarDateWireItem = Omit<
+  CookingRecordCalendarDateItem,
+  | "originalImageUrl"
+  | "savings"
+  | "ingredientCost"
+  | "marketPrice"
+  | "nutrition"
+  | "calories"
+> & {
+  imageUrl?: string | null;
+  savings?: number | null;
+  ingredientCost?: number | null;
+  marketPrice?: number | null;
+  nutrition?: CookingRecordCalendarDateItem["nutrition"];
+  calories?: number | null;
+  recipeAvailable?: boolean;
+};
+
+const toFiniteNumberOrNull = (value?: number | null): number | null =>
+  typeof value === "number" && Number.isFinite(value) ? value : null;
+
+const normalizeCookingRecordCalendarDateItem = ({
+  imageUrl,
+  savings,
+  ingredientCost,
+  marketPrice,
+  nutrition,
+  calories,
+  recipeAvailable: _recipeAvailable,
+  ...item
+}: CookingRecordCalendarDateWireItem): CookingRecordCalendarDateItem => ({
+  ...item,
+  originalImageUrl: imageUrl ?? null,
+  savings: toFiniteNumberOrNull(savings),
+  ingredientCost: toFiniteNumberOrNull(ingredientCost),
+  marketPrice: toFiniteNumberOrNull(marketPrice),
+  nutrition: nutrition ?? null,
+  calories: toFiniteNumberOrNull(calories),
+});
+
 export const getCookingRecords = async ({
   sourceTypes,
   page = 0,
@@ -67,10 +107,15 @@ export const getCookingRecordCalendarDate = async ({
 }: {
   date: string;
   locale: Locale;
-}): Promise<CookingRecordCalendarDateItem[]> =>
-  api.get<CookingRecordCalendarDateItem[]>(END_POINTS.RECIPE_HISTORY, {
-    params: { date, lang: locale },
-  });
+}): Promise<CookingRecordCalendarDateItem[]> => {
+  const items = await api.get<CookingRecordCalendarDateWireItem[]>(
+    END_POINTS.RECIPE_HISTORY,
+    {
+      params: { date, lang: locale },
+    }
+  );
+  return items.map(normalizeCookingRecordCalendarDateItem);
+};
 
 export const getRecipeHistory = async ({
   year,

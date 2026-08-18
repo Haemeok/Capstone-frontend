@@ -43,6 +43,8 @@ export const DailyCookingRecordSummary = ({
       ? null
       : Math.round((summary.calories.value / 2000) * 100);
 
+  if (!summary.hasData) return null;
+
   const toggleExpanded = () => {
     triggerHaptic("Light");
     setIsExpanded((current) => !current);

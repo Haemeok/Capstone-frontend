@@ -377,6 +377,34 @@ describe("CalendarDetailPage", () => {
     expect(screen.queryByText("탄수 0g")).not.toBeInTheDocument();
   });
 
+  it("T-20 계산 가능한 값이 없는 MANUAL 기록만 있으면 요약을 숨기고 사진은 표시합니다", () => {
+    setDateQuery({
+      data: [
+        createDateRecord({
+          recordId: "manual-cookie",
+          recipeId: null,
+          displayTitle: "쿠키",
+          originalImageUrl: "/records/cookie.webp",
+          savings: null,
+          ingredientCost: null,
+          marketPrice: null,
+          nutrition: null,
+          calories: null,
+          visibility: null,
+          isRemix: false,
+          sourceType: "MANUAL",
+        }),
+      ],
+    });
+
+    renderPage();
+
+    expect(screen.getByRole("img", { name: "쿠키" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "오늘의 요리 요약" })
+    ).not.toBeInTheDocument();
+  });
+
   it("T-07 상세 조회에서 받은 간단한 후기를 해당 요리 기록에 표시합니다", () => {
     setDetails({
       "record-dongporou": "청경채가 아삭해서 동파육과 잘 어울렸어요.",
