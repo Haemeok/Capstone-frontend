@@ -15,7 +15,7 @@ const HomeHeader = () => {
   };
 
   return (
-    <div className="sticky top-0 z-10 -mx-4 mb-2 bg-white px-4 pt-4 pb-2 md:hidden">
+    <div className="z-header sticky top-0 -mx-4 mb-2 bg-white px-4 pt-4 pb-2 md:hidden">
       <div className="flex items-center gap-1">
         <div className="min-w-0 flex-1">
           <SearchInput onFocus={handleSearchFocus} />
