@@ -13,7 +13,7 @@ type Fit = "cover" | "contain";
 
 type ImageProps = Omit<
   React.ImgHTMLAttributes<HTMLImageElement>,
-  "onLoad" | "onError" | "loading" | "src" | "className"
+  "onError" | "loading" | "src" | "className"
 > & {
   src: string;
   lazy?: boolean;
@@ -50,6 +50,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
     skeletonClassName,
     imgClassName,
     onRetry,
+    onLoad,
     ...imgProps
   },
   forwardedRef
@@ -126,7 +127,10 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
             loading={priority ? "eager" : lazy ? "lazy" : undefined}
             fetchPriority={priority ? "high" : undefined}
             decoding="async"
-            onLoad={image.onLoad}
+            onLoad={async (event) => {
+              await image.onLoad(event);
+              onLoad?.(event);
+            }}
             onError={image.onError}
             className={cn(
               "absolute inset-0 h-full w-full",

@@ -2,26 +2,28 @@
 
 import type { ReactNode } from "react";
 
-import { Plus } from "lucide-react";
-
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
-import type {
-  CookingRecordBackground,
-  CookingRecordStickerItem,
-} from "./cookingRecordUi.types";
+import type { StickerBookBackground } from "@/entities/recipe";
+
+import { CookingRecordBottomActions } from "./CookingRecordBottomActions";
+import { CookingRecordStickerImage } from "./CookingRecordStickerImage";
+import type { CookingRecordStickerItem } from "./cookingRecordUi.types";
 import styles from "./MonthlyCookingRecord.module.css";
 
 export type CookingRecordBoardProps = {
   ariaLabel: string;
   records: CookingRecordStickerItem[];
-  background: CookingRecordBackground;
+  background: StickerBookBackground | null;
+  recordCountLabel: string;
   addRecordLabel: string;
+  shareRecordLabel: string;
   getRecordLabel: (record: CookingRecordStickerItem) => string;
   onSelectRecord: (record: CookingRecordStickerItem) => void;
   onAddRecord: () => void;
+  onShareRecord: () => void;
   children?: ReactNode;
 };
 
@@ -30,34 +32,59 @@ export const CookingRecordBoard = (props: CookingRecordBoardProps) => {
     ariaLabel,
     records,
     background,
+    recordCountLabel,
     addRecordLabel,
+    shareRecordLabel,
     getRecordLabel,
     onSelectRecord,
     onAddRecord,
+    onShareRecord,
     children,
   } = props;
-
-  const backgroundClassName = getBackgroundClassName(background);
-  const backgroundStyle =
-    background.kind === "custom"
-      ? {
-          backgroundImage: `linear-gradient(rgb(255 255 255 / 22%), rgb(255 255 255 / 22%)), url(${JSON.stringify(background.imageUrl)})`,
-        }
-      : undefined;
 
   return (
     <section
       role="region"
       aria-label={ariaLabel}
-      style={backgroundStyle}
       className={cn(
-        "relative min-h-[calc(100dvh-10.25rem)] transition-colors duration-200",
-        backgroundClassName
+        "relative flex-1 transition-colors duration-200",
+        !background?.imageUrl && styles.dot
       )}
     >
+      {background?.imageUrl ? (
+        <div
+          data-testid="cooking-record-background-layer"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+        >
+          <Image
+            src={background.imageUrl}
+            alt=""
+            fit="cover"
+            skeleton={
+              <span
+                aria-hidden="true"
+                className={cn("absolute inset-0", styles.dot)}
+              />
+            }
+            errorFallback={
+              <span
+                aria-hidden="true"
+                className={cn("absolute inset-0", styles.dot)}
+              />
+            }
+            wrapperClassName="h-full w-full"
+            imgClassName="object-cover object-top"
+          />
+        </div>
+      ) : null}
+      <div className="relative flex h-10 items-center px-3.5">
+        <span className="text-ink-sub rounded-lg bg-white/85 px-2 py-1 text-xs font-medium shadow-sm backdrop-blur-[2px]">
+          {recordCountLabel}
+        </span>
+      </div>
       <div
         data-testid="cooking-record-sticker-grid"
-        className="grid grid-cols-3 gap-x-1.5 gap-y-4.5 px-3.5 pt-5.5 pb-32"
+        className="relative grid grid-cols-4 gap-x-1 gap-y-3 px-3.5 pt-2 pb-32"
       >
         {records.map((record) => (
           <button
@@ -69,39 +96,28 @@ export const CookingRecordBoard = (props: CookingRecordBoardProps) => {
               onSelectRecord(record);
             }}
             className={cn(
-              "focus-visible:outline-olive-dark min-w-0 cursor-pointer rounded-2xl transition-[opacity,transform] duration-200 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2",
+              "focus-visible:outline-olive-dark relative min-w-0 cursor-pointer rounded-2xl transition-[opacity,transform] duration-200 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2",
               styles.sticker
             )}
           >
-            <Image
+            <CookingRecordStickerImage
               src={record.imageUrl}
               alt={record.imageAlt}
-              aspectRatio="1 / 1"
-              fit="contain"
-              wrapperClassName="mx-auto h-28 w-full overflow-visible"
-              imgClassName="select-none object-contain drop-shadow-[0_6px_6px_rgb(34_34_34/0.14)]"
             />
+            <span className="text-ink pointer-events-none absolute bottom-0 left-1/2 max-w-[calc(100%-0.5rem)] -translate-x-1/2 truncate rounded-full bg-white px-2.5 py-1 text-xs font-semibold shadow-[0_2px_8px_rgb(34_34_34/0.14)]">
+              {record.title}
+            </span>
           </button>
         ))}
         {children ? <div className="col-span-full">{children}</div> : null}
       </div>
 
-      <button
-        type="button"
-        onClick={onAddRecord}
-        className="bg-olive-light active:bg-olive-dark focus-visible:outline-olive-dark sticky bottom-24 z-10 mx-4 mb-4 flex min-h-12.5 w-[calc(100%-2rem)] cursor-pointer items-center justify-center gap-2 rounded-[13px] text-[15px] font-bold text-white shadow-[0_7px_20px_rgb(88_113_79/0.2)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
-      >
-        <Plus aria-hidden="true" className="size-[18px]" />
-        {addRecordLabel}
-      </button>
+      <CookingRecordBottomActions
+        addLabel={addRecordLabel}
+        shareLabel={shareRecordLabel}
+        onAdd={onAddRecord}
+        onShare={onShareRecord}
+      />
     </section>
   );
-};
-
-const getBackgroundClassName = (background: CookingRecordBackground) => {
-  if (background.kind === "dot") return styles.dot;
-  if (background.kind === "linen") return styles.linen;
-  if (background.kind === "tile") return styles.tile;
-  if (background.kind === "wood") return styles.wood;
-  return styles.custom;
 };

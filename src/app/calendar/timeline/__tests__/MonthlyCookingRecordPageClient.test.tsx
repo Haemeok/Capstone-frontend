@@ -1,20 +1,25 @@
 import { type ReactNode } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { useUserStore } from "@/entities/user";
+
+import { useLoginEncourageDrawerStore } from "@/features/auth/ui/LoginEncourageDrawer/model/store";
 
 import { MonthlyCookingRecordPageClient } from "../_components/MonthlyCookingRecordPageClient";
 
 const replace = jest.fn();
+const push = jest.fn();
 const getCookingRecords = jest.fn();
+const getStickerBookBackgrounds = jest.fn();
+const updateStickerBookBackground = jest.fn();
 
 jest.mock("next/navigation", () => ({
   usePathname: () => "/calendar/timeline",
   useSearchParams: () => new URLSearchParams("month=2026-08"),
   useRouter: () => ({
-    push: jest.fn(),
+    push,
     replace,
     back: jest.fn(),
     forward: jest.fn(),
@@ -29,9 +34,21 @@ jest.mock("react-intersection-observer", () => ({
 
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 
+jest.mock("@/features/cooking-record-create", () => ({
+  ManualCookingRecordDrawer: ({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? <div>수동 기록 폼</div> : null,
+}));
+
 jest.mock("@/entities/recipe/model/recordApi", () => ({
   getCookingRecords: (...args: unknown[]) => getCookingRecords(...args),
   getCookingRecord: jest.fn(),
+  getStickerBookBackgrounds: (...args: unknown[]) =>
+    getStickerBookBackgrounds(...args),
+}));
+
+jest.mock("@/features/cooking-record-background/model/api", () => ({
+  updateStickerBookBackground: (...args: unknown[]) =>
+    updateStickerBookBackground(...args),
 }));
 
 jest.mock("@/shared/ui/image/Image", () => ({
@@ -79,7 +96,12 @@ describe("MonthlyCookingRecordPageClient", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useUserStore.setState({ isAuthReady: true, isAuthenticated: true });
+    useLoginEncourageDrawerStore.setState({ isOpen: false });
     getCookingRecords.mockResolvedValue({
+      background: {
+        backgroundKey: "PAPER_BEIGE",
+        imageUrl: "/backgrounds/paper-beige.webp",
+      },
       groups: [
         {
           date: "2026-08-11",
@@ -91,6 +113,20 @@ describe("MonthlyCookingRecordPageClient", () => {
         },
       ],
       hasNext: false,
+    });
+    getStickerBookBackgrounds.mockResolvedValue({
+      items: [
+        { backgroundKey: "DEFAULT", imageUrl: null, selected: true },
+        {
+          backgroundKey: "PAPER_BEIGE",
+          imageUrl: "/backgrounds/paper-beige.webp",
+          selected: false,
+        },
+      ],
+    });
+    updateStickerBookBackground.mockResolvedValue({
+      backgroundKey: "PAPER_BEIGE",
+      imageUrl: "/backgrounds/paper-beige.webp",
     });
   });
 
@@ -110,6 +146,53 @@ describe("MonthlyCookingRecordPageClient", () => {
     expect(screen.queryByRole("img", { name: "냉면" })).not.toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 2, name: "2026년 8월" })
+    ).toBeInTheDocument();
+  });
+
+  it("완성된 월간 성과를 보여주고 선택 월을 유지한 공유 페이지로 이동합니다", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MonthlyCookingRecordPageClient />
+      </QueryClientProvider>
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 2,
+        name: "이번 달 1번 요리했어요",
+      })
+    ).toBeInTheDocument();
+    expect(screen.getByText("1일")).toBeInTheDocument();
+    expect(screen.getByText("1가지")).toBeInTheDocument();
+    expect(screen.getByText("—")).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "2026년 8월 요리 기록 공유" })
+    );
+
+    expect(push).toHaveBeenCalledWith(
+      "/calendar/timeline/share?month=2026-08",
+      undefined
+    );
+  });
+
+  it("기록 목록이 반환한 전역 배경을 기록판에 표시합니다", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <MonthlyCookingRecordPageClient />
+      </QueryClientProvider>
+    );
+
+    await screen.findByRole("img", { name: "동파육" });
+
+    expect(
+      container.querySelector('img[src="/backgrounds/paper-beige.webp"]')
     ).toBeInTheDocument();
   });
 
@@ -150,5 +233,77 @@ describe("MonthlyCookingRecordPageClient", () => {
     expect(
       screen.queryByText("요리 기록을 불러오는 중입니다.")
     ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "2026년 8월 요리 기록 공유" })
+    );
+    expect(useLoginEncourageDrawerStore.getState().isOpen).toBe(true);
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  it("요리 기록 추가 버튼을 누르면 검색 페이지 대신 수동 기록 폼을 엽니다", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MonthlyCookingRecordPageClient />
+      </QueryClientProvider>
+    );
+    await screen.findByRole("img", { name: "동파육" });
+
+    fireEvent.click(screen.getByRole("button", { name: "요리 기록 추가" }));
+
+    expect(screen.getByText("수동 기록 폼")).toBeInTheDocument();
+  });
+
+  it("배경 선택창을 열 때 서버 목록을 조회하고 선택한 전역 배경을 적용합니다", async () => {
+    getCookingRecords.mockResolvedValueOnce({
+      background: { backgroundKey: "DEFAULT", imageUrl: null },
+      groups: [
+        {
+          date: "2026-08-11",
+          records: [makeRecord("august", "동파육", "/august.webp")],
+        },
+      ],
+      hasNext: false,
+    });
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <MonthlyCookingRecordPageClient />
+      </QueryClientProvider>
+    );
+    await screen.findByRole("img", { name: "동파육" });
+
+    expect(getStickerBookBackgrounds).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "배경 바꾸기" }));
+
+    const secondBackground = await screen.findByRole("button", {
+      name: "배경 2",
+    });
+    expect(getStickerBookBackgrounds).toHaveBeenCalledTimes(1);
+    expect(
+      screen.queryByText("내 사진으로 배경 만들기")
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(secondBackground);
+    fireEvent.click(screen.getByRole("button", { name: "이 배경 적용" }));
+
+    await waitFor(() =>
+      expect(updateStickerBookBackground).toHaveBeenCalledWith({
+        backgroundKey: "PAPER_BEIGE",
+      })
+    );
+    await waitFor(() =>
+      expect(
+        container.querySelector('img[src="/backgrounds/paper-beige.webp"]')
+      ).toBeInTheDocument()
+    );
   });
 });

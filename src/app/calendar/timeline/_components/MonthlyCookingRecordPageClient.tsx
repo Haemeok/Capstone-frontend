@@ -2,20 +2,17 @@
 
 import { useState } from "react";
 
-import { format, plural, useUserPagesDict } from "@/shared/i18n";
-import { Container } from "@/shared/ui/Container";
+import { useUserPagesDict } from "@/shared/i18n";
+import { triggerHaptic } from "@/shared/lib/bridge";
 import { useToastStore } from "@/shared/ui/toast";
 
 import { useAuthGate, useUserStore } from "@/entities/user";
 
 import { useLoginEncourageDrawerStore } from "@/features/auth/ui/LoginEncourageDrawer/model/store";
 
-import { CookingRecordBackgroundDrawer } from "./CookingRecordBackgroundDrawer";
-import { CookingRecordBoard } from "./CookingRecordBoard";
-import { CookingRecordDetailController } from "./CookingRecordDetailController";
-import { CookingRecordHeader } from "./CookingRecordHeader";
 import type { MonthlyCookingRecord } from "./cookingRecordPage.lib";
-import { CookingRecordPageStatus } from "./CookingRecordPageStatus";
+import { MonthlyCookingRecordContent } from "./MonthlyCookingRecordContent";
+import { MonthlyCookingRecordDrawers } from "./MonthlyCookingRecordDrawers";
 import { useCookingRecordBackground } from "./useCookingRecordBackground";
 import { useCookingRecordMonth } from "./useCookingRecordMonth";
 import { useMonthlyCookingRecords } from "./useMonthlyCookingRecords";
@@ -31,15 +28,22 @@ export const MonthlyCookingRecordPageClient = () => {
   const month = useCookingRecordMonth();
   const [selectedRecord, setSelectedRecord] =
     useState<MonthlyCookingRecord | null>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const records = useMonthlyCookingRecords({
     enabled: authGate,
     monthKey: month.monthKey,
     locale: month.locale,
   });
   const background = useCookingRecordBackground({
-    monthKey: month.monthKey,
+    enabled: authGate,
+    currentBackground: records.background,
     onApplied: () =>
       addToast({ message: copy.toast.backgroundChanged, variant: "success" }),
+    onError: () =>
+      addToast({
+        message: copy.toast.backgroundChangeFailed,
+        variant: "error",
+      }),
   });
 
   const handleSelectRecord = (recordId: string) => {
@@ -54,88 +58,44 @@ export const MonthlyCookingRecordPageClient = () => {
       openLoginDrawer({ message: copy.state.loginDescription });
       return;
     }
-    month.router.push("/search");
+    triggerHaptic("Light");
+    setIsCreateOpen(true);
+  };
+
+  const handleShareRecord = () => {
+    if (!authGate) {
+      openLoginDrawer({ message: copy.state.loginDescription });
+      return;
+    }
+    month.router.push(`/calendar/timeline/share?month=${month.monthKey}`);
   };
 
   return (
-    <Container padding={false} className="min-h-dvh">
-      <div className="mx-auto min-h-dvh max-w-lg bg-white">
-        <CookingRecordHeader
-          pageTitle={copy.pageTitle}
-          monthLabel={month.monthLabel}
-          monthCaption={
-            month.isCurrentMonth ? copy.currentMonthCaption : undefined
-          }
-          recordCountLabel={format(
-            plural(records.records.length, copy.recordCount),
-            { count: records.records.length }
-          )}
-          backLabel={copy.backLabel}
-          previousMonthLabel={copy.previousMonthLabel}
-          nextMonthLabel={copy.nextMonthLabel}
-          changeBackgroundLabel={copy.changeBackground}
-          onBack={month.router.back}
-          onPreviousMonth={month.moveToPreviousMonth}
-          onNextMonth={month.moveToNextMonth}
-          onOpenBackground={background.open}
-        />
-
-        <CookingRecordBoard
-          ariaLabel={format(copy.boardLabel, { month: month.monthLabel })}
-          records={records.records.map((item) => item.sticker)}
-          background={background.appliedBackground}
-          addRecordLabel={copy.addRecord}
-          getRecordLabel={(record) =>
-            format(copy.recordLabel, {
-              date: record.cookedAtLabel,
-              title: record.title,
-            })
-          }
-          onSelectRecord={(record) => handleSelectRecord(record.id)}
-          onAddRecord={handleAddRecord}
-        >
-          <CookingRecordPageStatus
-            isAuthReady={isAuthReady}
-            authGate={authGate}
-            isPending={records.isPending}
-            isError={records.isError}
-            isFetchingNextPage={records.isFetchingNextPage}
-            shouldFetchNext={records.shouldFetchNext}
-            hasRecords={records.records.length > 0}
-            sentinelRef={records.sentinelRef}
-            copy={copy.state}
-            onRetry={() => void records.retry()}
-            onLogin={() =>
-              openLoginDrawer({ message: copy.state.loginDescription })
-            }
-          />
-        </CookingRecordBoard>
-      </div>
-
-      <CookingRecordBackgroundDrawer
-        isOpen={background.isOpen}
-        monthLabel={month.monthLabel}
-        selectedBackground={background.pendingBackground}
-        previewRecords={records.records.slice(0, 2).map((item) => item.sticker)}
-        copy={{
-          ...copy.background,
-          monthOnlyLabel: format(copy.background.monthOnlyLabel, {
-            month: month.monthLabel,
-          }),
-        }}
-        onOpenChange={background.setIsOpen}
-        onSelectBackground={background.setPendingBackground}
-        onCustomImageChange={background.selectCustomImage}
-        onApply={background.apply}
+    <>
+      <MonthlyCookingRecordContent
+        copy={copy}
+        month={month}
+        records={records}
+        background={background}
+        isAuthReady={isAuthReady}
+        authGate={authGate}
+        onSelectRecord={handleSelectRecord}
+        onAddRecord={handleAddRecord}
+        onShareRecord={handleShareRecord}
+        onLogin={() =>
+          openLoginDrawer({ message: copy.state.loginDescription })
+        }
       />
 
-      {selectedRecord ? (
-        <CookingRecordDetailController
-          selectedRecord={selectedRecord}
-          copy={copy}
-          onClose={() => setSelectedRecord(null)}
-        />
-      ) : null}
-    </Container>
+      <MonthlyCookingRecordDrawers
+        background={background}
+        records={records}
+        copy={copy}
+        isCreateOpen={isCreateOpen}
+        selectedRecord={selectedRecord}
+        onCreateOpenChange={setIsCreateOpen}
+        onCloseRecord={() => setSelectedRecord(null)}
+      />
+    </>
   );
 };

@@ -8,11 +8,11 @@ export type CookingRecordHeaderProps = {
   pageTitle: string;
   monthLabel: string;
   monthCaption?: string;
-  recordCountLabel: string;
   backLabel: string;
   previousMonthLabel: string;
   nextMonthLabel: string;
   changeBackgroundLabel: string;
+  changeBackgroundShortLabel: string;
   isPreviousMonthDisabled?: boolean;
   isNextMonthDisabled?: boolean;
   onBack: () => void;
@@ -26,11 +26,11 @@ export const CookingRecordHeader = (props: CookingRecordHeaderProps) => {
     pageTitle,
     monthLabel,
     monthCaption,
-    recordCountLabel,
     backLabel,
     previousMonthLabel,
     nextMonthLabel,
     changeBackgroundLabel,
+    changeBackgroundShortLabel,
     isPreviousMonthDisabled = false,
     isNextMonthDisabled = false,
     onBack,
@@ -73,46 +73,49 @@ export const CookingRecordHeader = (props: CookingRecordHeaderProps) => {
 
       <nav
         aria-label={`${monthLabel} ${previousMonthLabel} ${nextMonthLabel}`}
-        className="flex h-12 items-center justify-center px-2"
+        className="grid h-11 grid-cols-[64px_minmax(0,1fr)_64px] items-center"
       >
-        <button
-          type="button"
-          aria-label={previousMonthLabel}
-          disabled={isPreviousMonthDisabled}
-          onClick={handlePreviousMonth}
-          className="text-ink focus-visible:outline-olive-dark disabled:text-ink-disabled flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
-        >
-          <ChevronLeft aria-hidden="true" className="size-[18px]" />
-        </button>
-        <div className="flex min-w-36 items-baseline justify-center gap-1.5 px-1">
-          <h2 className="text-ink text-sm font-bold">{monthLabel}</h2>
-          {monthCaption ? (
-            <span className="text-ink-muted text-[11px]">{monthCaption}</span>
-          ) : null}
+        <span aria-hidden="true" />
+        <div className="col-start-2 row-start-1 grid grid-cols-[44px_auto_44px] items-center gap-0.5 justify-self-center">
+          <button
+            type="button"
+            aria-label={previousMonthLabel}
+            disabled={isPreviousMonthDisabled}
+            onClick={handlePreviousMonth}
+            className="text-ink focus-visible:outline-olive-dark disabled:text-ink-disabled flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft aria-hidden="true" className="size-[18px]" />
+          </button>
+          <div className="flex min-w-28 items-baseline justify-center gap-1.5 px-1 max-[359px]:min-w-24">
+            <h2 className="text-ink text-sm font-bold">{monthLabel}</h2>
+            {monthCaption ? (
+              <span className="text-ink-muted text-[11px] max-[359px]:hidden">
+                {monthCaption}
+              </span>
+            ) : null}
+          </div>
+          <button
+            type="button"
+            aria-label={nextMonthLabel}
+            disabled={isNextMonthDisabled}
+            onClick={handleNextMonth}
+            className="text-ink focus-visible:outline-olive-dark disabled:text-ink-disabled flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
+          >
+            <ChevronRight aria-hidden="true" className="size-[18px]" />
+          </button>
         </div>
-        <button
-          type="button"
-          aria-label={nextMonthLabel}
-          disabled={isNextMonthDisabled}
-          onClick={handleNextMonth}
-          className="text-ink focus-visible:outline-olive-dark disabled:text-ink-disabled flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
-        >
-          <ChevronRight aria-hidden="true" className="size-[18px]" />
-        </button>
-      </nav>
-
-      <div className="flex h-11 items-center justify-between px-5">
-        <span className="text-ink-muted text-[13px]">{recordCountLabel}</span>
         <button
           type="button"
           aria-label={changeBackgroundLabel}
           onClick={handleOpenBackground}
-          className="text-ink-sub focus-visible:outline-olive-dark flex min-h-11 cursor-pointer items-center gap-1.5 rounded-xl px-2 text-[13px] font-bold transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="text-ink-sub focus-visible:outline-olive-dark col-start-3 row-start-1 flex min-h-11 min-w-15 cursor-pointer items-center justify-center gap-1 rounded-xl px-1 text-xs font-bold transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 max-[359px]:min-w-11"
         >
-          <ImageIcon aria-hidden="true" className="size-[17px]" />
-          {changeBackgroundLabel}
+          <ImageIcon aria-hidden="true" className="size-4" />
+          <span className="max-[359px]:sr-only">
+            {changeBackgroundShortLabel}
+          </span>
         </button>
-      </div>
+      </nav>
     </header>
   );
 };

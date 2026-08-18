@@ -9,6 +9,7 @@ import { CookingRecordBoard } from "../_components/CookingRecordBoard";
 import { CookingRecordDeleteDialog } from "../_components/CookingRecordDeleteDialog";
 import { CookingRecordDetailDrawer } from "../_components/CookingRecordDetailDrawer";
 import { CookingRecordHeader } from "../_components/CookingRecordHeader";
+import styles from "../_components/MonthlyCookingRecord.module.css";
 
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 
@@ -21,9 +22,21 @@ jest.mock("@/shared/i18n/LocalizedLink", () => ({
 }));
 
 jest.mock("@/shared/ui/image/Image", () => ({
-  Image: ({ src, alt, wrapperClassName, imgClassName }: TestImageProps) => (
+  Image: ({
+    src,
+    alt,
+    wrapperClassName,
+    imgClassName,
+    skeleton,
+    errorFallback,
+    onLoad,
+  }: TestImageProps) => (
     <span className={wrapperClassName}>
-      <img src={src} alt={alt} className={imgClassName} />
+      {skeleton ? <span data-testid="image-skeleton">{skeleton}</span> : null}
+      {errorFallback ? (
+        <span data-testid="image-error-fallback">{errorFallback}</span>
+      ) : null}
+      <img src={src} alt={alt} className={imgClassName} onLoad={onLoad} />
     </span>
   ),
 }));
@@ -74,6 +87,9 @@ type TestImageProps = {
   alt: string;
   wrapperClassName?: string;
   imgClassName?: string;
+  skeleton?: ReactNode;
+  errorFallback?: ReactNode;
+  onLoad?: React.ReactEventHandler<HTMLImageElement>;
 };
 
 const detailCopy = {
@@ -81,11 +97,16 @@ const detailCopy = {
   closeLabel: "요리 기록 상세 닫기",
   moreLabel: "요리 기록 더보기",
   dishLabel: "이날의 요리",
+  dishNameLabel: "요리 이름",
   reviewLabel: "간략 후기",
+  titleRequiredError: "요리 이름을 입력해 주세요.",
+  titleTooLongError: "요리 이름은 30자까지 입력할 수 있어요.",
+  reviewTooLongError: "후기는 500자까지 입력할 수 있어요.",
+  saveError: "요리 기록을 수정하지 못했어요. 다시 시도해 주세요.",
   emptyReview: "아직 남긴 후기가 없습니다.",
   changePhoto: "사진 바꾸기",
-  editReview: "후기 수정",
-  saveReview: "후기 저장",
+  editRecord: "기록 수정",
+  saveRecord: "수정 내용 저장",
   viewRecipe: "실제 레시피 보러가기",
   deleteRecord: "이 기록 삭제",
 };
@@ -112,11 +133,11 @@ describe("CookingRecordHeader", () => {
         pageTitle="요리 기록"
         monthLabel="2026년 8월"
         monthCaption="이번 달"
-        recordCountLabel="8개의 요리"
         backLabel="뒤로 가기"
         previousMonthLabel="이전 달"
         nextMonthLabel="다음 달"
         changeBackgroundLabel="배경 바꾸기"
+        changeBackgroundShortLabel="배경"
         onBack={jest.fn()}
         onPreviousMonth={onPreviousMonth}
         onNextMonth={onNextMonth}
@@ -130,6 +151,15 @@ describe("CookingRecordHeader", () => {
     expect(
       screen.getByRole("heading", { level: 2, name: "2026년 8월" })
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "배경 바꾸기" })
+    ).toHaveTextContent("배경");
+    expect(
+      screen.getByRole("navigation", {
+        name: "2026년 8월 이전 달 다음 달",
+      })
+    ).toHaveClass("grid-cols-[64px_minmax(0,1fr)_64px]");
+    expect(screen.queryByText("8개의 요리")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "이전 달" }));
     fireEvent.click(screen.getByRole("button", { name: "다음 달" }));
@@ -144,7 +174,7 @@ describe("CookingRecordHeader", () => {
 });
 
 describe("CookingRecordBoard", () => {
-  it("문자열 캡션 없이 이미지 스티커만 3열 캔버스에 표시합니다", () => {
+  it("요리 개수와 이름 라벨을 배경 위 4열 스티커북에 표시합니다", () => {
     const onSelectRecord = jest.fn();
     const records = [
       {
@@ -170,7 +200,7 @@ describe("CookingRecordBoard", () => {
       },
       {
         id: "record-4",
-        title: "닭날개 구이",
+        title: "야식으로 먹은 닭날개 구이",
         cookedAtLabel: "8월 11일 · 저녁",
         imageUrl: "/records/chicken.webp",
         imageAlt: "닭날개 구이",
@@ -181,28 +211,170 @@ describe("CookingRecordBoard", () => {
       <CookingRecordBoard
         ariaLabel="2026년 8월 요리 기록"
         records={records}
-        background={{ kind: "dot" }}
+        background={{ backgroundKey: "DEFAULT", imageUrl: null }}
+        recordCountLabel="4개의 요리"
         addRecordLabel="요리 기록 추가"
+        shareRecordLabel="8월 요리 기록 공유"
         getRecordLabel={(record) =>
           `${record.cookedAtLabel} ${record.title} 기록 보기`
         }
         onSelectRecord={onSelectRecord}
         onAddRecord={jest.fn()}
+        onShareRecord={jest.fn()}
       />
     );
 
     const board = screen.getByRole("region", { name: "2026년 8월 요리 기록" });
     expect(within(board).getAllByRole("img")).toHaveLength(4);
-    expect(within(board).queryByText("회")).not.toBeInTheDocument();
+    expect(within(board).getByText("회")).toHaveClass(
+      "truncate",
+      "rounded-full",
+      "bg-white"
+    );
+    expect(within(board).getByText("야식으로 먹은 닭날개 구이")).toHaveClass(
+      "truncate"
+    );
     expect(
       within(board).getByTestId("cooking-record-sticker-grid")
-    ).toHaveClass("grid-cols-3");
+    ).toHaveClass("grid-cols-4");
+    expect(within(board).getByText("4개의 요리")).toHaveClass(
+      "bg-white/85",
+      "shadow-sm"
+    );
+    expect(
+      within(board).getByTestId("cooking-record-bottom-actions")
+    ).toHaveClass("fixed", "bottom-[var(--bottom-nav-h)]", "md:bottom-0");
+    expect(
+      within(board).getByRole("button", { name: "요리 기록 추가" })
+    ).toHaveClass("bg-olive-light");
+    expect(
+      within(board).getByRole("button", { name: "8월 요리 기록 공유" })
+    ).toBeInTheDocument();
 
     fireEvent.click(
       within(board).getByRole("button", { name: "8월 2일 · 저녁 회 기록 보기" })
     );
     expect(onSelectRecord).toHaveBeenCalledWith(records[0]);
     expect(triggerHaptic).toHaveBeenCalledWith("Light");
+  });
+
+  it("서버 배경을 기록 그리드를 밀지 않는 전용 레이어에 표시합니다", () => {
+    render(
+      <CookingRecordBoard
+        ariaLabel="요리 기록"
+        records={[]}
+        background={{
+          backgroundKey: "WOOD",
+          imageUrl: "/backgrounds/wood.webp",
+        }}
+        recordCountLabel="0개의 요리"
+        addRecordLabel="요리 기록 추가"
+        shareRecordLabel="요리 기록 공유"
+        getRecordLabel={() => "요리 기록 보기"}
+        onSelectRecord={jest.fn()}
+        onAddRecord={jest.fn()}
+        onShareRecord={jest.fn()}
+      />
+    );
+
+    const board = screen.getByRole("region", { name: "요리 기록" });
+    const backgroundLayer = within(board).getByTestId(
+      "cooking-record-background-layer"
+    );
+
+    expect(board).not.toHaveClass(styles.dot);
+    expect(backgroundLayer).toHaveClass(
+      "pointer-events-none",
+      "absolute",
+      "inset-0"
+    );
+    expect(within(backgroundLayer).getByRole("presentation")).toHaveAttribute(
+      "src",
+      "/backgrounds/wood.webp"
+    );
+    expect(within(backgroundLayer).getByRole("presentation")).toHaveClass(
+      "object-top"
+    );
+  });
+
+  it("누끼 이미지가 준비되면 원본 위로 자연스럽게 교차 전환합니다", () => {
+    const baseRecord = {
+      id: "record-processing",
+      title: "계란말이",
+      cookedAtLabel: "8월 18일",
+      imageUrl: "/records/original.webp",
+      imageAlt: "계란말이",
+    };
+    const boardProps = {
+      ariaLabel: "요리 기록",
+      background: { backgroundKey: "DEFAULT", imageUrl: null },
+      recordCountLabel: "1개의 요리",
+      addRecordLabel: "요리 기록 추가",
+      shareRecordLabel: "요리 기록 공유",
+      getRecordLabel: () => "계란말이 기록 보기",
+      onSelectRecord: jest.fn(),
+      onAddRecord: jest.fn(),
+      onShareRecord: jest.fn(),
+    };
+    const { rerender } = render(
+      <CookingRecordBoard {...boardProps} records={[baseRecord]} />
+    );
+
+    rerender(
+      <CookingRecordBoard
+        {...boardProps}
+        records={[{ ...baseRecord, imageUrl: "/records/sticker.webp" }]}
+      />
+    );
+
+    const incoming = screen.getByTestId("cooking-record-incoming-image");
+    expect(screen.getAllByAltText("계란말이")).toHaveLength(2);
+    expect(incoming).toHaveClass(
+      "opacity-0",
+      "transition-opacity",
+      "duration-200"
+    );
+
+    fireEvent.load(within(incoming).getByAltText("계란말이"));
+    expect(incoming).toHaveClass("opacity-100");
+
+    fireEvent.transitionEnd(incoming);
+    expect(screen.getAllByAltText("계란말이")).toHaveLength(1);
+    expect(screen.getByAltText("계란말이")).toHaveAttribute(
+      "src",
+      "/records/sticker.webp"
+    );
+  });
+
+  it("서버 배경을 불러오는 중이거나 실패하면 도트 배경만 표시합니다", () => {
+    render(
+      <CookingRecordBoard
+        ariaLabel="요리 기록"
+        records={[]}
+        background={{
+          backgroundKey: "WOOD",
+          imageUrl: "/backgrounds/wood.webp",
+        }}
+        recordCountLabel="0개의 요리"
+        addRecordLabel="요리 기록 추가"
+        shareRecordLabel="요리 기록 공유"
+        getRecordLabel={() => "요리 기록 보기"}
+        onSelectRecord={jest.fn()}
+        onAddRecord={jest.fn()}
+        onShareRecord={jest.fn()}
+      />
+    );
+
+    const backgroundLayer = screen.getByTestId(
+      "cooking-record-background-layer"
+    );
+    const skeleton = within(backgroundLayer).getByTestId("image-skeleton");
+    const errorFallback = within(backgroundLayer).getByTestId(
+      "image-error-fallback"
+    );
+
+    expect(skeleton.firstElementChild).toHaveClass(styles.dot);
+    expect(errorFallback.firstElementChild).toHaveClass(styles.dot);
   });
 });
 
@@ -215,13 +387,11 @@ describe("CookingRecordDetailDrawer", () => {
     loadingLabel: "요리 기록을 불러오는 중",
     errorLabel: "요리 기록을 불러오지 못했습니다",
     retryLabel: "다시 시도",
-    reviewDraft: recordDetail.review,
     isReviewSaving: false,
     isPhotoReplacing: false,
     onOpenChange: jest.fn(),
-    onReviewDraftChange: jest.fn(),
-    onStartReviewEdit: jest.fn(),
-    onSaveReview: jest.fn(),
+    onStartEdit: jest.fn(),
+    onSaveRecord: jest.fn().mockResolvedValue(true),
     onPhotoChange: jest.fn(),
     onDeleteRequest: jest.fn(),
     onRetry: jest.fn(),
@@ -235,15 +405,22 @@ describe("CookingRecordDetailDrawer", () => {
     render(<CookingRecordDetailDrawer {...baseProps} mode="view" />);
 
     const changePhoto = screen.getByText("사진 바꾸기").closest("label");
-    const editReview = screen.getByRole("button", { name: "후기 수정" });
+    const editRecord = screen.getByRole("button", { name: "기록 수정" });
     const recipeLink = screen.getByRole("link", {
       name: "실제 레시피 보러가기",
     });
 
     expect(changePhoto).toBeInTheDocument();
-    expect(editReview.compareDocumentPosition(recipeLink)).toBe(
+    expect(editRecord.compareDocumentPosition(recipeLink)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING
     );
+    const scrollArea = screen.getByTestId("cooking-record-detail-scroll");
+    const actions = screen.getByTestId("cooking-record-detail-actions");
+    expect(scrollArea).not.toContainElement(recipeLink);
+    expect(actions).toContainElement(changePhoto);
+    expect(actions).toContainElement(editRecord);
+    expect(actions).toContainElement(recipeLink);
+    expect(actions).toHaveClass("shrink-0");
     expect(
       screen.getByRole("button", { name: "요리 기록 더보기" })
     ).toBeInTheDocument();
@@ -261,25 +438,28 @@ describe("CookingRecordDetailDrawer", () => {
     expect(screen.getByText("아직 남긴 후기가 없습니다.")).toBeInTheDocument();
   });
 
-  it("후기 수정 상태에서는 후기 입력과 저장만 남기고 다른 관리 행동을 숨깁니다", () => {
-    const onSaveReview = jest.fn();
+  it("기록 수정 상태에서는 제목과 후기 입력 및 저장만 남기고 다른 관리 행동을 숨깁니다", () => {
+    const onSaveRecord = jest.fn().mockResolvedValue(true);
     render(
       <CookingRecordDetailDrawer
         {...baseProps}
-        mode="review-edit"
-        onSaveReview={onSaveReview}
+        mode="edit"
+        onSaveRecord={onSaveRecord}
       />
     );
 
+    expect(screen.getByRole("textbox", { name: "요리 이름" })).toHaveValue(
+      recordDetail.title
+    );
     expect(screen.getByRole("textbox", { name: "간략 후기" })).toHaveValue(
       recordDetail.review
     );
     expect(
-      screen.getByRole("button", { name: "후기 저장" })
+      screen.getByRole("button", { name: "수정 내용 저장" })
     ).toBeInTheDocument();
     expect(screen.queryByText("사진 바꾸기")).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: "후기 수정" })
+      screen.queryByRole("button", { name: "기록 수정" })
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: "실제 레시피 보러가기" })
@@ -288,12 +468,18 @@ describe("CookingRecordDetailDrawer", () => {
       screen.queryByRole("button", { name: "요리 기록 더보기" })
     ).not.toBeInTheDocument();
 
-    const reviewForm = screen
-      .getByRole("button", { name: "후기 저장" })
-      .closest("form");
+    const reviewFormId = screen
+      .getByRole("button", { name: "수정 내용 저장" })
+      .getAttribute("form");
+    const reviewForm = reviewFormId
+      ? document.getElementById(reviewFormId)
+      : null;
     expect(reviewForm).not.toBeNull();
     if (reviewForm) fireEvent.submit(reviewForm);
-    expect(onSaveReview).toHaveBeenCalledWith(recordDetail.review);
+    expect(onSaveRecord).toHaveBeenCalledWith({
+      title: recordDetail.title,
+      review: recordDetail.review,
+    });
   });
 
   it("상세 조회 중에는 관리 행동 대신 로딩 상태를 보여줍니다", () => {
@@ -314,14 +500,12 @@ describe("CookingRecordDetailDrawer", () => {
 
   it("저장이나 사진 교체가 진행 중이면 중복 요청을 막습니다", () => {
     const { rerender } = render(
-      <CookingRecordDetailDrawer
-        {...baseProps}
-        mode="review-edit"
-        isReviewSaving
-      />
+      <CookingRecordDetailDrawer {...baseProps} mode="edit" isReviewSaving />
     );
 
-    expect(screen.getByRole("button", { name: "후기 저장" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "수정 내용 저장" })
+    ).toBeDisabled();
 
     rerender(
       <CookingRecordDetailDrawer {...baseProps} mode="view" isPhotoReplacing />
@@ -331,15 +515,30 @@ describe("CookingRecordDetailDrawer", () => {
 });
 
 describe("CookingRecordBackgroundDrawer", () => {
-  it("선택된 월 배경을 미리 보여주고 다른 배경 선택과 적용을 전달합니다", () => {
+  it("서버가 제공한 전역 배경을 미리 보여주고 다른 배경 선택과 적용을 전달합니다", () => {
     const onSelectBackground = jest.fn();
     const onApply = jest.fn();
 
     render(
       <CookingRecordBackgroundDrawer
         isOpen
-        monthLabel="2026년 8월"
-        selectedBackground={{ kind: "dot" }}
+        backgrounds={[
+          {
+            backgroundKey: "DEFAULT",
+            imageUrl: null,
+            selected: false,
+          },
+          {
+            backgroundKey: "PAPER_BEIGE",
+            imageUrl: "/backgrounds/paper-beige.webp",
+            selected: true,
+          },
+        ]}
+        previewBackground={{
+          backgroundKey: "PAPER_BEIGE",
+          imageUrl: "/backgrounds/paper-beige.webp",
+        }}
+        selectedBackgroundKey="PAPER_BEIGE"
         previewRecords={[
           {
             id: "record-1",
@@ -359,36 +558,42 @@ describe("CookingRecordBackgroundDrawer", () => {
         copy={{
           title: "배경 바꾸기",
           closeLabel: "배경 바꾸기 닫기",
-          monthOnlyLabel: "2026년 8월에만 적용됩니다",
-          intro: "이번 달의 요리와 잘 어울리는 배경을 골라보세요.",
+          appliesGloballyLabel: "전체 요리 기록에 적용됩니다",
+          intro: "요리 기록과 잘 어울리는 배경을 골라보세요.",
           previewLabel: "선택한 배경 미리보기",
           optionsTitle: "준비된 배경",
           optionsLabel: "준비된 배경 선택",
-          optionLabels: {
-            dot: "도트",
-            linen: "리넨",
-            tile: "타일",
-            wood: "우드",
-          },
-          customBackground: "내 사진으로 배경 만들기",
+          optionLabel: "배경 {index}",
+          loading: "배경을 불러오는 중",
+          error: "배경을 불러오지 못했습니다",
+          retry: "다시 시도",
           apply: "이 배경 적용",
+          applying: "적용 중",
         }}
+        isListPending={false}
+        isListError={false}
+        isApplying={false}
         onOpenChange={jest.fn()}
         onSelectBackground={onSelectBackground}
-        onCustomImageChange={jest.fn()}
+        onRetry={jest.fn()}
         onApply={onApply}
       />
     );
 
-    expect(screen.getByRole("button", { name: "도트" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "배경 2" })).toHaveAttribute(
       "aria-pressed",
       "true"
     );
-    fireEvent.click(screen.getByRole("button", { name: "도트" }));
+    expect(
+      within(screen.getByLabelText("선택한 배경 미리보기")).getByRole(
+        "presentation"
+      )
+    ).toHaveClass("object-top");
+    fireEvent.click(screen.getByRole("button", { name: "배경 2" }));
     expect(onSelectBackground).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole("button", { name: "리넨" }));
-    expect(onSelectBackground).toHaveBeenCalledWith({ kind: "linen" });
+    fireEvent.click(screen.getByRole("button", { name: "배경 1" }));
+    expect(onSelectBackground).toHaveBeenCalledWith("DEFAULT");
     expect(triggerHaptic).toHaveBeenCalledWith("Light");
 
     fireEvent.click(screen.getByRole("button", { name: "이 배경 적용" }));

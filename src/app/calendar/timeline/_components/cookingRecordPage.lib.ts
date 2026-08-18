@@ -16,6 +16,11 @@ export type MonthlyCookingRecord = {
   sticker: CookingRecordStickerItem;
 };
 
+export type MonthlyCookingRecordItem = {
+  date: string;
+  record: CookingRecordListItem;
+};
+
 export const getSelectedCookingRecordMonth = (
   monthQuery: string | null,
   fallbackDate: Date
@@ -34,27 +39,41 @@ export const toMonthlyCookingRecords = (
 ): MonthlyCookingRecord[] => {
   const records: MonthlyCookingRecord[] = [];
 
-  for (const group of groups) {
-    if (!group.date.startsWith(monthKey)) continue;
-    const cookedAtLabel = formatRecordDate(group.date, locale);
-
-    for (const record of group.records) {
-      const imageUrl = record.stickerImageUrl ?? record.imageUrl;
-      if (!imageUrl) continue;
-      records.push({
-        record,
-        sticker: {
-          id: record.recordId,
-          title: record.displayTitle,
-          cookedAtLabel,
-          imageUrl,
-          imageAlt: record.displayTitle,
-        },
-      });
-    }
+  for (const { date, record } of getMonthlyCookingRecordItems(
+    groups,
+    monthKey
+  )) {
+    const imageUrl = record.stickerImageUrl ?? record.imageUrl;
+    if (!imageUrl) continue;
+    records.push({
+      record,
+      sticker: {
+        id: record.recordId,
+        title: record.displayTitle,
+        cookedAtLabel: formatRecordDate(date, locale),
+        imageUrl,
+        imageAlt: record.displayTitle,
+      },
+    });
   }
 
   return records;
+};
+
+export const getMonthlyCookingRecordItems = (
+  groups: CookingRecordListGroup[],
+  monthKey: string
+): MonthlyCookingRecordItem[] => {
+  const items: MonthlyCookingRecordItem[] = [];
+
+  for (const group of groups) {
+    if (!group.date.startsWith(monthKey)) continue;
+    for (const record of group.records) {
+      items.push({ date: group.date, record });
+    }
+  }
+
+  return items;
 };
 
 export const shouldFetchNextCookingRecordPage = (
