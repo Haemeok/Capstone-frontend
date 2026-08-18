@@ -59,7 +59,7 @@ export const DailyCookingRecordItem = ({
         )}
 
         <div className={cn("min-w-0 pt-1", !review && "self-center pt-0")}>
-          <span className="text-ink-muted text-[11px]">
+          <span className="text-ink-muted text-xs">
             {format(copy.sequence, { order: index + 1 })}
           </span>
           <h3 className="text-ink mt-1.5 text-xl leading-[1.32] font-bold tracking-[-0.035em]">

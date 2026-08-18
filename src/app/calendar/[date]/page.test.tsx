@@ -684,11 +684,7 @@ describe("CalendarDetailPage", () => {
 
     expect(dateHeading.parentElement).toHaveClass("sticky", "top-0");
     expect(recordNavigation).toContainElement(listHeading);
-    expect(recordNavigation).toHaveClass(
-      "sticky",
-      "before:-top-px",
-      "before:h-px"
-    );
+    expect(recordNavigation).toHaveClass("sticky", "border-t");
     expect(navigationTopToken?.replace("top-", "")).toBe(
       dateHeightToken?.replace("h-", "")
     );

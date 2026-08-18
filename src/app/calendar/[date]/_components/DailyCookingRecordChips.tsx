@@ -36,7 +36,7 @@ export const DailyCookingRecordChips = ({
               aria-pressed={selected}
               onClick={() => onSelect(record.recordId)}
               className={cn(
-                "focus-visible:ring-olive-light min-h-11 shrink-0 cursor-pointer rounded-full px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+                "focus-visible:ring-olive-light min-h-11 shrink-0 cursor-pointer rounded-full px-4 text-sm font-semibold focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
                 selected ? "bg-ink text-white" : "text-ink-sub bg-gray-100"
               )}
             >
