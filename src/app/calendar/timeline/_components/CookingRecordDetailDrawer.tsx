@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 import { MoreVertical, Trash2, X } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -11,33 +13,12 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui/shadcn/dropdown-menu";
 
+import { CookingRecordDetailActions } from "./CookingRecordDetailActions";
 import { CookingRecordDetailContent } from "./CookingRecordDetailContent";
 import { CookingRecordDetailStatus } from "./CookingRecordDetailStatus";
-import type {
-  CookingRecordDetail,
-  CookingRecordDetailCopy,
-} from "./cookingRecordUi.types";
+import type { CookingRecordDetailDrawerProps } from "./cookingRecordUi.types";
 
-export type CookingRecordDetailDrawerProps = {
-  isOpen: boolean;
-  mode: "view" | "review-edit";
-  detail: CookingRecordDetail;
-  copy: CookingRecordDetailCopy;
-  contentStatus: "ready" | "loading" | "error";
-  loadingLabel: string;
-  errorLabel: string;
-  retryLabel: string;
-  reviewDraft: string;
-  isReviewSaving: boolean;
-  isPhotoReplacing: boolean;
-  onOpenChange: (open: boolean) => void;
-  onReviewDraftChange: (review: string) => void;
-  onStartReviewEdit: () => void;
-  onSaveReview: (review: string) => void;
-  onPhotoChange: (file: File) => void;
-  onDeleteRequest: () => void;
-  onRetry: () => void;
-};
+export type { CookingRecordDetailDrawerProps } from "./cookingRecordUi.types";
 
 export const CookingRecordDetailDrawer = (
   props: CookingRecordDetailDrawerProps
@@ -51,19 +32,18 @@ export const CookingRecordDetailDrawer = (
     loadingLabel,
     errorLabel,
     retryLabel,
-    reviewDraft,
     isReviewSaving,
     isPhotoReplacing,
     onOpenChange,
-    onReviewDraftChange,
-    onStartReviewEdit,
-    onSaveReview,
+    onStartEdit,
+    onSaveRecord,
     onPhotoChange,
     onDeleteRequest,
     onRetry,
   } = props;
   const { isMobile, Container, Content, Header, Title, Description } =
     useResponsiveSheet();
+  const reviewFormId = useId();
   const contentClassName = isMobile
     ? "h-[min(700px,92dvh)] max-h-[92dvh] rounded-t-3xl data-[vaul-drawer-direction=bottom]:max-h-[92dvh] data-[vaul-drawer-direction=bottom]:rounded-t-3xl data-[vaul-drawer-direction=bottom]:border-0"
     : "max-h-[calc(100dvh-2rem)] max-w-md rounded-2xl sm:max-w-md";
@@ -87,7 +67,7 @@ export const CookingRecordDetailDrawer = (
             <Title className="text-ink truncate text-center text-base font-bold">
               {copy.title}
             </Title>
-            <Description className="text-ink-muted mt-0.5 truncate text-center text-[11px]">
+            <Description className="text-ink-muted mt-0.5 truncate text-center text-xs">
               {detail.cookedAtLabel}
             </Description>
           </div>
@@ -127,13 +107,9 @@ export const CookingRecordDetailDrawer = (
             mode={mode}
             detail={detail}
             copy={copy}
-            reviewDraft={reviewDraft}
             isReviewSaving={isReviewSaving}
-            isPhotoReplacing={isPhotoReplacing}
-            onReviewDraftChange={onReviewDraftChange}
-            onStartReviewEdit={onStartReviewEdit}
-            onSaveReview={onSaveReview}
-            onPhotoChange={onPhotoChange}
+            formId={reviewFormId}
+            onSaveRecord={onSaveRecord}
           />
         ) : (
           <CookingRecordDetailStatus
@@ -144,6 +120,29 @@ export const CookingRecordDetailDrawer = (
             onRetry={onRetry}
           />
         )}
+
+        {contentStatus === "ready" && mode === "view" ? (
+          <CookingRecordDetailActions
+            detail={detail}
+            copy={copy}
+            isPhotoReplacing={isPhotoReplacing}
+            onStartEdit={onStartEdit}
+            onPhotoChange={onPhotoChange}
+          />
+        ) : null}
+
+        {contentStatus === "ready" && mode === "edit" ? (
+          <div className="shrink-0 border-t border-gray-100 bg-white px-5 pt-3 pb-[max(16px,env(safe-area-inset-bottom))]">
+            <button
+              type="submit"
+              form={reviewFormId}
+              disabled={isReviewSaving}
+              className="bg-olive-light disabled:text-ink-disabled h-12 w-full cursor-pointer rounded-xl text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-100"
+            >
+              {copy.saveRecord}
+            </button>
+          </div>
+        ) : null}
       </Content>
     </Container>
   );

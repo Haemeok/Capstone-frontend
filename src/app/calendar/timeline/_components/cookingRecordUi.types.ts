@@ -11,35 +11,61 @@ export type CookingRecordDetail = CookingRecordStickerItem & {
   recipeHref?: string;
 };
 
-export type CookingRecordBackgroundPreset = "dot" | "linen" | "tile" | "wood";
-
-export type CookingRecordBackground =
-  | { kind: CookingRecordBackgroundPreset }
-  | { kind: "custom"; imageUrl: string };
+export type CookingRecordEditValues = {
+  title: string;
+  review: string;
+};
 
 export type CookingRecordDetailCopy = {
   title: string;
   closeLabel: string;
   moreLabel: string;
   dishLabel: string;
+  dishNameLabel: string;
   reviewLabel: string;
+  titleRequiredError: string;
+  titleTooLongError: string;
+  reviewTooLongError: string;
+  saveError: string;
   emptyReview: string;
   changePhoto: string;
-  editReview: string;
-  saveReview: string;
+  editRecord: string;
+  saveRecord: string;
   viewRecipe: string;
   deleteRecord: string;
+};
+
+export type CookingRecordDetailDrawerProps = {
+  isOpen: boolean;
+  mode: "view" | "edit";
+  detail: CookingRecordDetail;
+  copy: CookingRecordDetailCopy;
+  contentStatus: "ready" | "loading" | "error";
+  loadingLabel: string;
+  errorLabel: string;
+  retryLabel: string;
+  isReviewSaving: boolean;
+  isPhotoReplacing: boolean;
+  onOpenChange: (open: boolean) => void;
+  onStartEdit: () => void;
+  onSaveRecord: (values: CookingRecordEditValues) => Promise<boolean>;
+  onPhotoChange: (file: File) => void;
+  onDeleteRequest: () => void;
+  onRetry: () => void;
 };
 
 export type CookingRecordBackgroundCopy = {
   title: string;
   closeLabel: string;
-  monthOnlyLabel: string;
+  appliesGloballyLabel: string;
   intro: string;
   previewLabel: string;
   optionsTitle: string;
   optionsLabel: string;
-  optionLabels: Record<CookingRecordBackgroundPreset, string>;
-  customBackground: string;
+  optionLabel: string;
+  loading: string;
+  error: string;
+  retry: string;
   apply: string;
+  applying: string;
 };

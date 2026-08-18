@@ -51,21 +51,36 @@ jest.mock("@/shared/ui/image/Image", () => ({
   ),
 }));
 
-jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
-  useResponsiveSheet: () => ({
-    isMobile: true,
-    Container: ({ children, open }: { children: ReactNode; open: boolean }) =>
-      open ? <div>{children}</div> : null,
-    Content: ({ children }: { children: ReactNode }) => (
-      <section role="dialog">{children}</section>
-    ),
-    Header: ({ children }: { children: ReactNode }) => (
-      <header>{children}</header>
-    ),
-    Title: ({ children }: { children: ReactNode }) => <h2>{children}</h2>,
-    Description: ({ children }: { children: ReactNode }) => <p>{children}</p>,
-  }),
-}));
+jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => {
+  const Container = ({
+    children,
+    open,
+  }: {
+    children: ReactNode;
+    open: boolean;
+  }) => (open ? <div>{children}</div> : null);
+  const Content = ({ children }: { children: ReactNode }) => (
+    <section role="dialog">{children}</section>
+  );
+  const Header = ({ children }: { children: ReactNode }) => (
+    <header>{children}</header>
+  );
+  const Title = ({ children }: { children: ReactNode }) => <h2>{children}</h2>;
+  const Description = ({ children }: { children: ReactNode }) => (
+    <p>{children}</p>
+  );
+
+  return {
+    useResponsiveSheet: () => ({
+      isMobile: true,
+      Container,
+      Content,
+      Header,
+      Title,
+      Description,
+    }),
+  };
+});
 
 const selectedRecord = {
   record: {
@@ -145,24 +160,109 @@ describe("CookingRecordDetailController", () => {
     deleteCookingRecord.mockResolvedValue({ message: "ok" });
   });
 
-  it("상세 메모를 수정하면 선택한 기록의 recordMemo 뮤테이션으로 저장합니다", async () => {
+  it("요리 이름과 후기를 함께 수정하면 한 번에 저장하고 보기 화면에 반영합니다", async () => {
     renderController();
 
     expect(
       await screen.findByText("부드럽게 잘 익었습니다.")
     ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "후기 수정" }));
+    fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "요리 이름" }), {
+      target: { value: "매콤 동파육" },
+    });
     fireEvent.change(screen.getByRole("textbox", { name: "간략 후기" }), {
       target: { value: "다음에는 간장을 조금 줄여야겠습니다." },
     });
-    fireEvent.click(screen.getByRole("button", { name: "후기 저장" }));
+    fireEvent.click(screen.getByRole("button", { name: "수정 내용 저장" }));
 
     await waitFor(() =>
       expect(updateCookingRecordMetadata).toHaveBeenCalledWith({
         recordId: "record-a8f",
         sourceType: "RECIPE",
+        recordTitle: "매콤 동파육",
         recordMemo: "다음에는 간장을 조금 줄여야겠습니다.",
       })
+    );
+    expect(await screen.findByText("매콤 동파육")).toBeInTheDocument();
+    expect(
+      screen.getByText("다음에는 간장을 조금 줄여야겠습니다.")
+    ).toBeInTheDocument();
+  });
+
+  it("요리 이름이 공백뿐이면 입력 오류를 보여주고 저장하지 않습니다", async () => {
+    renderController();
+    await screen.findByText("부드럽게 잘 익었습니다.");
+    fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "요리 이름" }), {
+      target: { value: "   " },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "수정 내용 저장" }));
+
+    expect(
+      await screen.findByText("요리 이름을 입력해 주세요.")
+    ).toHaveAttribute("role", "alert");
+    expect(screen.getByRole("textbox", { name: "요리 이름" })).toHaveAttribute(
+      "aria-invalid",
+      "true"
+    );
+    expect(updateCookingRecordMetadata).not.toHaveBeenCalled();
+  });
+
+  it("요리 이름이 30자를 넘으면 길이 오류를 보여주고 저장하지 않습니다", async () => {
+    renderController();
+    await screen.findByText("부드럽게 잘 익었습니다.");
+    fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "요리 이름" }), {
+      target: { value: "가".repeat(31) },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "수정 내용 저장" }));
+
+    expect(
+      await screen.findByText("요리 이름은 30자까지 입력할 수 있어요.")
+    ).toBeInTheDocument();
+    expect(updateCookingRecordMetadata).not.toHaveBeenCalled();
+  });
+
+  it("후기가 500자를 넘으면 길이 오류를 보여주고 저장하지 않습니다", async () => {
+    renderController();
+    await screen.findByText("부드럽게 잘 익었습니다.");
+    fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "간략 후기" }), {
+      target: { value: "가".repeat(501) },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "수정 내용 저장" }));
+
+    expect(
+      await screen.findByText("후기는 500자까지 입력할 수 있어요.")
+    ).toBeInTheDocument();
+    expect(updateCookingRecordMetadata).not.toHaveBeenCalled();
+  });
+
+  it("서버 저장에 실패하면 입력값과 수정 화면을 유지하고 오류를 보여줍니다", async () => {
+    updateCookingRecordMetadata.mockRejectedValueOnce(new Error("failed"));
+    renderController();
+    await screen.findByText("부드럽게 잘 익었습니다.");
+    fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "요리 이름" }), {
+      target: { value: "매콤 동파육" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "수정 내용 저장" }));
+
+    await waitFor(() =>
+      expect(updateCookingRecordMetadata).toHaveBeenCalledWith({
+        recordId: "record-a8f",
+        sourceType: "RECIPE",
+        recordTitle: "매콤 동파육",
+        recordMemo: "부드럽게 잘 익었습니다.",
+      })
+    );
+    expect(
+      await screen.findByText(
+        "요리 기록을 수정하지 못했어요. 다시 시도해 주세요."
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "요리 이름" })).toHaveValue(
+      "매콤 동파육"
     );
   });
 

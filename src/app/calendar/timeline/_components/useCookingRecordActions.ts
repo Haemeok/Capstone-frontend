@@ -12,11 +12,13 @@ import {
   useUpdateCookingRecordMetadata,
 } from "@/features/cooking-record-edit";
 
+import type { CookingRecordEditValues } from "./cookingRecordUi.types";
+
 type UseCookingRecordActionsParams = {
   recordId: string;
   sourceType: RecordSourceType;
   copy: UserPagesDict["calendar"]["cookingRecord"]["toast"];
-  onReviewSaved: (review: string) => void;
+  onMetadataSaved: (values: CookingRecordEditValues) => void;
   onDeleted: () => void;
 };
 
@@ -24,7 +26,7 @@ export const useCookingRecordActions = ({
   recordId,
   sourceType,
   copy,
-  onReviewSaved,
+  onMetadataSaved,
   onDeleted,
 }: UseCookingRecordActionsParams) => {
   const addToast = useToastStore((state) => state.addToast);
@@ -32,13 +34,20 @@ export const useCookingRecordActions = ({
   const imageMutation = useReplaceCookingRecordImage();
   const deleteMutation = useDeleteCookingRecord();
 
-  const saveReview = async (recordMemo: string) => {
+  const saveMetadata = async ({ title, review }: CookingRecordEditValues) => {
     try {
-      await metadataMutation.mutateAsync({ recordId, sourceType, recordMemo });
-      onReviewSaved(recordMemo);
+      await metadataMutation.mutateAsync({
+        recordId,
+        sourceType,
+        recordTitle: title,
+        recordMemo: review,
+      });
+      onMetadataSaved({ title, review });
       notify("Success", copy.reviewSaved, "success");
+      return true;
     } catch {
       notify("Error", copy.reviewSaveFailed, "error");
+      return false;
     }
   };
 
@@ -74,7 +83,7 @@ export const useCookingRecordActions = ({
   };
 
   return {
-    saveReview,
+    saveMetadata,
     changePhoto,
     deleteRecord,
     isReviewSaving: metadataMutation.isPending,
