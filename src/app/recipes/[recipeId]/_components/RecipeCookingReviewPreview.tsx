@@ -1,6 +1,9 @@
 import Link from "next/link";
 
 import { fetchRecipeCookingReviewsOnServer } from "@/entities/cooking-review/model/api.server";
+import type { PublicCookingReviewsResponse } from "@/entities/cooking-review/model/types";
+
+import { RecipeCookingReviewPreviewContent } from "./RecipeCookingReviewPreviewContent";
 
 type RecipeCookingReviewPreviewProps = {
   recipeId: string;
@@ -11,17 +14,31 @@ export const RecipeCookingReviewPreview = async ({
   recipeId,
   fallbackReviewCount,
 }: RecipeCookingReviewPreviewProps) => {
-  const response = await fetchRecipeCookingReviewsOnServer({
-    recipeId,
-    page: 0,
-    size: 1,
-    photoOnly: false,
-  }).catch(() => ({
+  const [summaryResult, photoResult] = await Promise.allSettled([
+    fetchRecipeCookingReviewsOnServer({
+      recipeId,
+      page: 0,
+      size: 1,
+      photoOnly: false,
+    }),
+    fetchRecipeCookingReviewsOnServer({
+      recipeId,
+      page: 0,
+      size: 3,
+      photoOnly: true,
+    }),
+  ]);
+  const fallbackResponse: PublicCookingReviewsResponse = {
     totalCount: fallbackReviewCount,
     items: [],
     hasNext: false,
-  }));
-  const firstReview = response.items[0];
+  };
+  const summaryResponse =
+    summaryResult.status === "fulfilled"
+      ? summaryResult.value
+      : fallbackResponse;
+  const photoResponse =
+    photoResult.status === "fulfilled" ? photoResult.value : undefined;
 
   return (
     <section aria-labelledby="cooking-review-preview-title" className="py-8">
@@ -30,7 +47,7 @@ export const RecipeCookingReviewPreview = async ({
           id="cooking-review-preview-title"
           className="text-ink text-lg font-bold"
         >
-          만들어봤어요 {response.totalCount}
+          만들어봤어요 {summaryResponse.totalCount}
         </h2>
         <Link
           href={`/recipes/${recipeId}/reviews`}
@@ -39,16 +56,11 @@ export const RecipeCookingReviewPreview = async ({
           전체 보기
         </Link>
       </div>
-      {firstReview ? (
-        <div className="mt-4 space-y-1">
-          <p className="text-ink text-sm font-semibold">
-            {firstReview.nickname}
-          </p>
-          <p className="text-ink-sub line-clamp-2 text-sm leading-6">
-            {firstReview.content}
-          </p>
-        </div>
-      ) : null}
+      <RecipeCookingReviewPreviewContent
+        recipeId={recipeId}
+        firstReview={summaryResponse.items[0]}
+        photoResponse={photoResponse}
+      />
     </section>
   );
 };
