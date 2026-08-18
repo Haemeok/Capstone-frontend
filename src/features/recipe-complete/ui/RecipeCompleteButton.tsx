@@ -1,106 +1,115 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
 import { Loader2 } from "lucide-react";
 
 import type { Locale } from "@/shared/i18n";
-import { format, useT } from "@/shared/i18n";
+import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
-import { formatNumber } from "@/shared/lib/format";
-import { shouldShowReviewGate } from "@/shared/lib/review";
-
-import { useNotificationPermissionTrigger } from "@/features/notification-permission";
-import { useRecipeStatus } from "@/features/recipe-status";
-import { scheduleReviewGate } from "@/features/review-gate";
 
 import { cn } from "@/lib/utils";
 
-import { useRecipeComplete } from "../model/hooks";
-import RecipeCompleteCelebrationMessage from "./RecipeCompleteCelebrationMessage";
-
-const LevelUpModal = dynamic(
-  () => import("@/features/level-up").then((mod) => mod.LevelUpModal),
-  { ssr: false }
-);
+import {
+  useCreateRecipeCookingRecordMutation,
+  useRecipeComplete,
+} from "../model/hooks";
+import { toRecipeCookingRecordInput } from "../model/recordDraft";
+import type { RecipeCookingRecordFormDraft } from "./recipeCookingRecord.types";
+import { RecipeCookingRecordFlow } from "./RecipeCookingRecordFlow";
 
 type RecipeCompleteButtonProps = {
   saveAmount: number;
+  recipeId: string;
+  recipeTitle: string;
+  recipeImageUrl: string;
+  onBeforeStart?: () => boolean;
+  onFlowClose?: () => void;
   className?: string;
   locale?: Locale;
 };
 
 const RecipeCompleteButton = ({
   saveAmount,
+  recipeId,
+  recipeTitle,
+  recipeImageUrl,
+  onBeforeStart,
+  onFlowClose,
   className,
   locale = "ko",
 }: RecipeCompleteButtonProps) => {
   const t = useT();
-  const { recipeId } = useRecipeStatus();
-  const { completeRecipe, isCompleted, isLoading, showReward, setShowReward } =
-    useRecipeComplete({ recipeId, saveAmount });
-  const { checkAndTrigger } = useNotificationPermissionTrigger();
-
-  const isInternational = locale !== "ko";
+  const {
+    completeRecipe,
+    isCompleted,
+    showReward,
+    setShowReward,
+    markCompleted,
+  } = useRecipeComplete({ recipeId, saveAmount });
+  const createMutation = useCreateRecipeCookingRecordMutation();
 
   const handleClick = () => {
-    if (isCompleted || isLoading) return;
-    if (!checkAndTrigger("complete")) return;
-    triggerHaptic("Success");
+    if (isCompleted || createMutation.isPending) return;
+    if (onBeforeStart && !onBeforeStart()) return;
+    triggerHaptic("Medium");
     completeRecipe();
   };
 
-  const handleRewardClose = (open: boolean) => {
+  const handleOpenChange = (open: boolean) => {
     setShowReward(open);
-    if (!open && shouldShowReviewGate()) {
-      scheduleReviewGate();
-    }
+    if (!open) onFlowClose?.();
   };
+
+  const handleSubmit = async ({
+    imageFile,
+    ...draft
+  }: RecipeCookingRecordFormDraft) => {
+    const input = toRecipeCookingRecordInput(draft);
+    await createMutation.createRecord({ ...input, imageFile });
+    markCompleted();
+  };
+
+  const buttonLabel =
+    locale === "ko"
+      ? t.recipeDetail.completeCta
+      : t.recipeDetail.completeCtaPlain;
 
   return (
     <>
       <button
+        type="button"
         onClick={handleClick}
-        disabled={isCompleted || isLoading}
+        disabled={isCompleted || createMutation.isPending}
         className={cn(
           "group relative w-full rounded-sm py-4 text-sm font-semibold transition-all",
           isCompleted
             ? "text-ink-muted cursor-not-allowed bg-gray-200"
             : "bg-olive-mint cursor-pointer text-white active:scale-95",
-          isLoading && "opacity-70",
+          createMutation.isPending && "opacity-70",
           className
         )}
       >
-        {isLoading ? (
+        {createMutation.isPending ? (
           <span className="flex items-center justify-center gap-2">
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <Loader2 className="size-5 animate-spin" aria-hidden="true" />
             {t.recipeDetail.completeRecording}
           </span>
         ) : isCompleted ? (
           t.recipeDetail.completeAlready
-        ) : isInternational ? (
-          t.recipeDetail.completeCtaPlain
         ) : (
-          format(t.recipeDetail.completeCta, {
-            amount: formatNumber(saveAmount, ""),
-          })
+          buttonLabel
         )}
       </button>
 
-      {isInternational ? (
-        <RecipeCompleteCelebrationMessage
-          title={t.recipeDetail.completeCelebrationTitle}
-          body={t.recipeDetail.completeCelebrationBody}
-          isOpen={showReward}
-          onClose={() => handleRewardClose(false)}
-        />
-      ) : (
-        <LevelUpModal
-          isOpen={showReward}
-          onOpenChange={handleRewardClose}
-          acquiredAmount={saveAmount}
-        />
-      )}
+      <RecipeCookingRecordFlow
+        isOpen={showReward}
+        saveAmount={saveAmount}
+        recipeId={recipeId}
+        recipeTitle={recipeTitle}
+        recipeImageUrl={recipeImageUrl}
+        copy={t.recipeDetail.cookingRecord}
+        onOpenChange={handleOpenChange}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 };

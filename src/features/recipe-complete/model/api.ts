@@ -1,14 +1,46 @@
 import { api } from "@/shared/api/client";
+import { uploadFileToS3 } from "@/shared/api/file";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 import type {
   RecipeCookingRecordCreateInput,
   RecipeRecordResponse,
+  RecordImageUploadUrlResponse,
 } from "@/entities/recipe/model/record";
 import {
+  toRecordImageKeys,
+  toRecordImageUploadRequests,
+  validateRecordImageFiles,
   validateRecordText,
   validateRecordTitle,
 } from "@/entities/recipe/model/recordValidation";
+
+export type RecipeCookingRecordDraft = RecipeCookingRecordCreateInput & {
+  imageFile?: File;
+};
+
+export const prepareRecipeCookingRecord = async ({
+  imageFile,
+  ...input
+}: RecipeCookingRecordDraft): Promise<RecipeCookingRecordCreateInput> => {
+  if (imageFile === undefined) return input;
+
+  const images = [{ file: imageFile, purpose: "ORIGINAL" as const }];
+  validateRecordImageFiles(images);
+  const uploaded = await api.post<RecordImageUploadUrlResponse[]>(
+    END_POINTS.RECORD_IMAGE_UPLOAD_URLS,
+    { files: toRecordImageUploadRequests(images) }
+  );
+  const upload = uploaded[0];
+  if (upload === undefined) {
+    throw new Error("요리 사진 업로드 URL을 찾을 수 없습니다.");
+  }
+  await uploadFileToS3(imageFile, {
+    presignedUrl: upload.presignedUrl,
+    fileKey: upload.imageKey,
+  });
+  return { ...input, image: toRecordImageKeys(images, uploaded) };
+};
 
 export const createRecipeRecord = async (
   input: string | RecipeCookingRecordCreateInput

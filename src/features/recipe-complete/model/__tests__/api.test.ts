@@ -1,18 +1,78 @@
 import { api } from "@/shared/api/client";
+import { uploadFileToS3 } from "@/shared/api/file";
 import { END_POINTS } from "@/shared/config/constants/api";
 
-import { createRecipeRecord } from "../api";
+import { createRecipeRecord, prepareRecipeCookingRecord } from "../api";
 
 jest.mock("@/shared/api/client", () => ({
   api: { post: jest.fn() },
 }));
+jest.mock("@/shared/api/file", () => ({ uploadFileToS3: jest.fn() }));
 
 const apiPost = jest.mocked(api.post);
+const putS3 = jest.mocked(uploadFileToS3);
 
 beforeEach(() => {
   apiPost.mockReset().mockResolvedValue({
     recordId: "record-A",
     message: "created",
+  });
+  putS3.mockReset().mockResolvedValue("image-original");
+});
+
+it("선택한 요리 사진은 업로드한 imageKey로 RECIPE 요청을 준비합니다", async () => {
+  const imageFile = new File(["image"], "dish.jpg", { type: "image/jpeg" });
+  apiPost.mockResolvedValueOnce([
+    {
+      presignedUrl: "https://s3/original",
+      uploadKey: "upload-original",
+      imageKey: "image-original",
+    },
+  ]);
+
+  const request = await prepareRecipeCookingRecord({
+    sourceType: "RECIPE",
+    recipeId: "recipe-A",
+    recordMemo: "맛있어요",
+    publishReview: false,
+    imageFile,
+  });
+
+  expect(apiPost).toHaveBeenCalledWith(END_POINTS.RECORD_IMAGE_UPLOAD_URLS, {
+    files: [
+      {
+        contentType: "image/jpeg",
+        fileSize: imageFile.size,
+        purpose: "ORIGINAL",
+      },
+    ],
+  });
+  expect(putS3).toHaveBeenCalledWith(imageFile, {
+    presignedUrl: "https://s3/original",
+    fileKey: "image-original",
+  });
+  expect(request).toEqual({
+    sourceType: "RECIPE",
+    recipeId: "recipe-A",
+    recordMemo: "맛있어요",
+    publishReview: false,
+    image: { originalKey: "image-original" },
+  });
+});
+
+it("사진을 선택하지 않으면 기본 레시피 썸네일을 쓰도록 업로드를 생략합니다", async () => {
+  const request = await prepareRecipeCookingRecord({
+    sourceType: "RECIPE",
+    recipeId: "recipe-A",
+    publishReview: true,
+  });
+
+  expect(apiPost).not.toHaveBeenCalled();
+  expect(putS3).not.toHaveBeenCalled();
+  expect(request).toEqual({
+    sourceType: "RECIPE",
+    recipeId: "recipe-A",
+    publishReview: true,
   });
 });
 

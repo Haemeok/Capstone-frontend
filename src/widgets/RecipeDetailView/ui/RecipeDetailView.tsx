@@ -12,13 +12,13 @@ import type { StaticRecipe } from "@/entities/recipe/model/types";
 import RecipeStepList from "@/entities/recipe/ui/RecipeStepList";
 
 import { ChatLauncher } from "@/features/recipe-chat";
-import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { RecipeStatusProvider } from "@/features/recipe-status";
 
 import { CoupangDisclosure } from "./CoupangDisclosure";
 import { NotTranslatedBanner } from "./NotTranslatedBanner";
 import RecentlyViewedTracker from "./RecentlyViewedTracker";
 import RecipeCommentsSection from "./RecipeCommentsSection";
+import { RecipeCompleteSection } from "./RecipeCompleteSection";
 import RecipeComponentsSection from "./RecipeComponentsSection";
 import { RecipeContainer } from "./RecipeContainer";
 import RecipeCookingHelpButton from "./RecipeCookingHelpButton";
@@ -155,7 +155,13 @@ export const RecipeDetailView = ({
               <CoupangDisclosure locale={locale} />
 
               <Reveal className="reveal-subtle">
-                <RecipeCompleteButton saveAmount={saveAmount} locale={locale} />
+                <RecipeCompleteSection
+                  recipeId={recipeId}
+                  saveAmount={saveAmount}
+                  recipeTitle={recipe.title}
+                  recipeImageUrl={recipe.imageUrl}
+                  locale={locale}
+                />
               </Reveal>
 
               {recipe.fineDiningInfo?.components && (

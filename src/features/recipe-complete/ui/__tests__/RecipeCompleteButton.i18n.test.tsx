@@ -11,44 +11,41 @@ const en = getDictionary("en").recipeDetail;
 const mockState = {
   completeRecipe: jest.fn(),
   isCompleted: false,
-  isLoading: false,
   showReward: false,
   setShowReward: jest.fn(),
+  markCompleted: jest.fn(),
 };
 
-jest.mock("next/dynamic", () => ({
-  __esModule: true,
-  default: () => jest.requireMock("@/features/level-up").LevelUpModal,
-}));
 jest.mock("../../model/hooks", () => ({
   useRecipeComplete: () => mockState,
-}));
-jest.mock("@/features/recipe-status", () => ({
-  useRecipeStatus: () => ({ recipeId: "x" }),
-}));
-jest.mock("@/features/notification-permission", () => ({
-  useNotificationPermissionTrigger: () => ({
-    checkAndTrigger: () => true,
+  useCreateRecipeCookingRecordMutation: () => ({
+    createRecord: jest.fn(),
+    isPending: false,
   }),
 }));
-jest.mock("@/features/level-up", () => ({
-  LevelUpModal: ({ isOpen }: { isOpen: boolean }) =>
-    isOpen ? <div data-testid="level-up-modal" /> : null,
+jest.mock("../RecipeCookingRecordFlow", () => ({
+  RecipeCookingRecordFlow: ({
+    isOpen,
+    copy,
+  }: {
+    isOpen: boolean;
+    copy: { formTitle: string };
+  }) => (isOpen ? <div>{copy.formTitle}</div> : null),
 }));
 jest.mock("@/shared/lib/bridge", () => ({
   triggerHaptic: jest.fn(),
-}));
-jest.mock("@/shared/lib/review", () => ({
-  shouldShowReviewGate: () => false,
-}));
-jest.mock("@/features/review-gate", () => ({
-  scheduleReviewGate: jest.fn(),
 }));
 
 const renderWith = (locale: "ja" | "en" | "ko") =>
   render(
     <DictionaryProvider dict={getDictionary(locale)}>
-      <RecipeCompleteButton saveAmount={3000} locale={locale} />
+      <RecipeCompleteButton
+        saveAmount={3000}
+        recipeId="recipe-A"
+        recipeTitle="동파육"
+        recipeImageUrl="/dongpayuk.webp"
+        locale={locale}
+      />
     </DictionaryProvider>
   );
 
@@ -56,7 +53,6 @@ beforeEach(() => {
   mockState.completeRecipe = jest.fn();
   mockState.setShowReward = jest.fn();
   mockState.isCompleted = false;
-  mockState.isLoading = false;
   mockState.showReward = false;
 });
 
@@ -107,17 +103,15 @@ describe("RecipeCompleteButton i18n", () => {
 });
 
 describe("RecipeCompleteButton reward branch", () => {
-  it("T-04: ja showReward -> 축하 모달, LevelUp 아님", () => {
+  it("T-04: ja showReward -> 요리 기록 플로우", () => {
     mockState.showReward = true;
     renderWith("ja");
-    expect(screen.getByText(ja.completeCelebrationTitle)).toBeInTheDocument();
-    expect(screen.queryByTestId("level-up-modal")).toBeNull();
+    expect(screen.getByText(ja.cookingRecord.formTitle)).toBeInTheDocument();
   });
 
-  it("T-08: ko showReward -> LevelUp, 축하 모달 아님", () => {
+  it("T-08: ko showReward -> 동일한 요리 기록 플로우", () => {
     mockState.showReward = true;
     renderWith("ko");
-    expect(screen.getByTestId("level-up-modal")).toBeInTheDocument();
-    expect(screen.queryByText(ko.completeCelebrationTitle)).toBeNull();
+    expect(screen.getByText(ko.cookingRecord.formTitle)).toBeInTheDocument();
   });
 });

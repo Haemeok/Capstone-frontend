@@ -7,7 +7,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { keepFirstInfinitePage } from "@/shared/lib/query";
 import { trackReviewAction } from "@/shared/lib/review";
-import { useToastStore } from "@/shared/ui/toast";
 
 import {
   COOKING_REVIEW_QUERY_KEYS,
@@ -24,9 +23,11 @@ import {
 } from "@/entities/recipe/model/recordMutationPolicy";
 import { COOKING_RECORD_QUERY_KEYS } from "@/entities/recipe/model/recordQueryKeys";
 
-import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
-
-import { createRecipeRecord } from "./api";
+import {
+  createRecipeRecord,
+  prepareRecipeCookingRecord,
+  type RecipeCookingRecordDraft,
+} from "./api";
 import { useRecipeCompleteStore } from "./store";
 
 type UseRecipeCompleteOptions = {
@@ -68,7 +69,11 @@ const invalidateRecipeRecordCaches = async (
 
 export const useCreateRecipeCookingRecordMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation({
+  const prepareMutation = useMutation({
+    mutationFn: prepareRecipeCookingRecord,
+    retry: false,
+  });
+  const finalMutation = useMutation({
     mutationFn: (input: RecipeCookingRecordCreateInput) =>
       createRecipeRecord(input),
     retry: shouldRetryRecordImageNotReady,
@@ -80,6 +85,20 @@ export const useCreateRecipeCookingRecordMutation = () => {
         input.publishReview === true
       ),
   });
+
+  const createRecord = async (draft: RecipeCookingRecordDraft) => {
+    prepareMutation.reset();
+    finalMutation.reset();
+    const request = await prepareMutation.mutateAsync(draft);
+    return finalMutation.mutateAsync(request);
+  };
+
+  return {
+    ...finalMutation,
+    createRecord,
+    isPending: prepareMutation.isPending || finalMutation.isPending,
+    error: prepareMutation.error ?? finalMutation.error,
+  };
 };
 
 export const useRecipeComplete = ({
@@ -88,8 +107,6 @@ export const useRecipeComplete = ({
   onRewardShow,
 }: UseRecipeCompleteOptions) => {
   const [showReward, setShowReward] = useState(false);
-  const queryClient = useQueryClient();
-  const { addToast } = useToastStore();
   const addCompletedRecipe = useRecipeCompleteStore(
     (state) => state.addCompletedRecipe
   );
@@ -108,44 +125,22 @@ export const useRecipeComplete = ({
     }
   }, [isHydrated, hydrateFromStorage]);
 
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: () => createRecipeRecord(recipeId),
-    retry: shouldRetryRecordImageNotReady,
-    retryDelay: RECORD_IMAGE_RETRY_DELAY_MS,
-    onSuccess: async () => {
-      addCompletedRecipe(recipeId);
-      setShowReward(true);
-      trackReviewAction("cooking_complete");
+  const openCompletionFlow = () => {
+    setShowReward(true);
+    onRewardShow?.(saveAmount);
+  };
 
-      if (onRewardShow) {
-        onRewardShow(saveAmount);
-      }
-
-      await invalidateRecipeRecordCaches(queryClient, recipeId, false);
-    },
-    onError: (error: Error) => {
-      const errorMessage =
-        error?.message || "요리 완료 기록에 실패했습니다. 다시 시도해주세요.";
-      addToast({
-        message: errorMessage,
-        variant: "error",
-        position: "bottom",
-      });
-    },
-  });
-
-  const authenticatedCompleteRecipe = useAuthenticatedAction<void, undefined>(
-    mutate,
-    { notifyOnly: true }
-  );
+  const markCompleted = () => {
+    addCompletedRecipe(recipeId);
+    trackReviewAction("cooking_complete");
+  };
 
   return {
-    completeRecipe: authenticatedCompleteRecipe,
+    completeRecipe: openCompletionFlow,
     // hydration 전에는 false 반환 (플래시 방지)
     isCompleted: isHydrated ? hasCompletedRecipe : false,
-    isLoading: isPending,
-    error,
     showReward,
     setShowReward,
+    markCompleted,
   };
 };
