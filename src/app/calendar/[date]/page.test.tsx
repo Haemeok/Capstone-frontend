@@ -22,6 +22,7 @@ let mockPathname = "/calendar/2026-08-17";
 const mockBack = jest.fn();
 const mockRefetch = jest.fn();
 const mockScrollIntoView = jest.fn();
+const mockScrollTo = jest.fn();
 let scrollContainer: HTMLDivElement;
 let animationFrames: Map<number, FrameRequestCallback>;
 let nextAnimationFrameId: number;
@@ -30,6 +31,12 @@ Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
   configurable: true,
   writable: true,
   value: mockScrollIntoView,
+});
+
+Object.defineProperty(HTMLElement.prototype, "scrollTo", {
+  configurable: true,
+  writable: true,
+  value: mockScrollTo,
 });
 
 Object.defineProperty(window, "requestAnimationFrame", {
@@ -739,5 +746,104 @@ describe("CalendarDetailPage", () => {
     expect(screen.getAllByRole("article")[0]?.className).toMatch(
       /(?:^|\s)scroll-mt-/
     );
+  });
+
+  it("T-24 맨 아래에서는 마지막 칩을 선택하고 가로 목록 안으로 이동시킵니다", () => {
+    renderPage();
+    setRecordLayout();
+
+    const chipGroup = screen.getByRole("group", { name: "요리 기록 이동" });
+    const lastChip = screen.getByRole("button", { name: "가지 튀김 덮밥" });
+    Object.defineProperties(chipGroup, {
+      clientWidth: { configurable: true, value: 220 },
+      scrollLeft: { configurable: true, writable: true, value: 0 },
+    });
+    Object.defineProperties(lastChip, {
+      offsetLeft: { configurable: true, value: 340 },
+      offsetWidth: { configurable: true, value: 100 },
+    });
+    mockScrollTo.mockClear();
+
+    act(() => {
+      scrollContainer.scrollTop = 800;
+      scrollContainer.dispatchEvent(new Event("scroll"));
+      runAnimationFrame(0);
+    });
+
+    expect(lastChip).toHaveAttribute("aria-pressed", "true");
+    expect(mockScrollTo).toHaveBeenCalledWith({
+      behavior: "smooth",
+      left: 280,
+    });
+  });
+
+  it("T-25 기존 가로형 기록에서 전체 개수와 수동 기록 여부를 표시합니다", () => {
+    setDateQuery({
+      data: [
+        createDateRecord({
+          recordId: "manual-cookie",
+          recipeId: null,
+          displayTitle: "쿠키",
+          sourceType: "MANUAL",
+          savings: null,
+          ingredientCost: null,
+          marketPrice: null,
+          nutrition: null,
+          calories: null,
+        }),
+        createDateRecord({
+          recordId: "manual-platter",
+          recipeId: null,
+          displayTitle: "플래터",
+          sourceType: "MANUAL",
+          savings: null,
+          ingredientCost: null,
+          marketPrice: null,
+          nutrition: null,
+          calories: null,
+        }),
+      ],
+    });
+
+    renderPage();
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "요리 기록" })
+    ).toHaveTextContent("요리 기록 · 2개");
+    expect(screen.getAllByText("직접 기록", { selector: "span" })).toHaveLength(
+      2
+    );
+    expect(screen.getByText("1번째 요리")).toBeVisible();
+  });
+
+  it("T-26 사용 가능한 기존 레시피 제목만 화살표가 있는 상세 링크로 표시합니다", () => {
+    setDateQuery({
+      data: [
+        createDateRecord(),
+        createDateRecord({
+          recordId: "record-unavailable",
+          recipeId: "recipe-unavailable",
+          displayTitle: "삭제된 레시피 기록",
+        }),
+        createDateRecord({
+          recordId: "manual-cookie",
+          recipeId: null,
+          displayTitle: "쿠키",
+          sourceType: "MANUAL",
+        }),
+      ],
+    });
+
+    renderPage();
+
+    const recipeLink = screen.getByRole("link", { name: "청경채 동파육" });
+    expect(recipeLink).toHaveAttribute("href", "/recipes/recipe-dongporou");
+    expect(recipeLink.querySelector("svg")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "삭제된 레시피 기록" }).closest("a")
+    ).toBeNull();
+    expect(
+      screen.getByRole("heading", { name: "쿠키" }).closest("a")
+    ).toBeNull();
   });
 });

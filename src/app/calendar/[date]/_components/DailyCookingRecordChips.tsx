@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
 import { cn } from "@/shared/lib/utils";
 
 import type { CookingRecordCalendarDateItem } from "@/entities/recipe";
@@ -15,6 +19,31 @@ export const DailyCookingRecordChips = ({
   groupLabel,
   onSelect,
 }: DailyCookingRecordChipsProps) => {
+  const groupRef = useRef<HTMLDivElement>(null);
+  const chipRefs = useRef(new Map<string, HTMLButtonElement>());
+
+  useEffect(() => {
+    if (!activeRecordId) return;
+
+    const group = groupRef.current;
+    const activeChip = chipRefs.current.get(activeRecordId);
+    if (!group || !activeChip) return;
+
+    const chipLeft = activeChip.offsetLeft;
+    const chipRight = chipLeft + activeChip.offsetWidth;
+    const visibleLeft = group.scrollLeft;
+    const visibleRight = visibleLeft + group.clientWidth;
+    if (chipLeft >= visibleLeft && chipRight <= visibleRight) return;
+
+    group.scrollTo({
+      left: Math.max(
+        0,
+        chipLeft - (group.clientWidth - activeChip.offsetWidth) / 2
+      ),
+      behavior: "smooth",
+    });
+  }, [activeRecordId]);
+
   if (records.length < 2) {
     return null;
   }
@@ -22,6 +51,7 @@ export const DailyCookingRecordChips = ({
   return (
     <div className="py-2">
       <div
+        ref={groupRef}
         role="group"
         aria-label={groupLabel}
         className="scrollbar-hide flex gap-2 overflow-x-auto px-[18px]"
@@ -31,6 +61,13 @@ export const DailyCookingRecordChips = ({
 
           return (
             <button
+              ref={(element) => {
+                if (element) {
+                  chipRefs.current.set(record.recordId, element);
+                  return;
+                }
+                chipRefs.current.delete(record.recordId);
+              }}
               key={record.recordId}
               type="button"
               aria-pressed={selected}

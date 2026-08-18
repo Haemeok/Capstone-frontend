@@ -1,7 +1,9 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
+
 import type { UserPagesDict } from "@/shared/i18n";
-import { format } from "@/shared/i18n";
+import { format, LocalizedLink } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
@@ -14,6 +16,7 @@ type DailyCookingRecordItemProps = {
   record: CookingRecordCalendarDateItem;
   index: number;
   detailEnabled: boolean;
+  manualSourceLabel: string;
   copy: UserPagesDict["calendar"]["dailyRecord"]["list"];
   onElementChange: (element: HTMLElement | null) => void;
 };
@@ -22,6 +25,7 @@ export const DailyCookingRecordItem = ({
   record,
   index,
   detailEnabled,
+  manualSourceLabel,
   copy,
   onElementChange,
 }: DailyCookingRecordItemProps) => {
@@ -30,6 +34,10 @@ export const DailyCookingRecordItem = ({
     enabled: detailEnabled,
   });
   const review = detail?.recordMemo?.trim() || null;
+  const recipeHref =
+    detail?.recipeAvailable && detail.recipeId
+      ? `/recipes/${encodeURIComponent(detail.recipeId)}`
+      : null;
 
   return (
     <article
@@ -60,10 +68,29 @@ export const DailyCookingRecordItem = ({
 
         <div className={cn("min-w-0 pt-1", !review && "self-center pt-0")}>
           <span className="text-ink-muted text-xs">
-            {format(copy.sequence, { order: index + 1 })}
+            <span>{format(copy.sequence, { order: index + 1 })}</span>
+            {record.sourceType === "MANUAL" ? (
+              <>
+                <span aria-hidden="true"> · </span>
+                <span>{manualSourceLabel}</span>
+              </>
+            ) : null}
           </span>
           <h3 className="text-ink mt-1.5 text-xl leading-[1.32] font-bold tracking-[-0.035em]">
-            {record.displayTitle}
+            {recipeHref ? (
+              <LocalizedLink
+                href={recipeHref}
+                className="focus-visible:ring-olive-light inline-flex min-h-11 items-center gap-0.5 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <span>{record.displayTitle}</span>
+                <ChevronRight
+                  aria-hidden="true"
+                  className="text-ink-muted size-[18px] shrink-0"
+                />
+              </LocalizedLink>
+            ) : (
+              record.displayTitle
+            )}
           </h3>
           {review ? (
             <p className="text-ink-sub mt-2 line-clamp-3 text-sm leading-[1.55]">

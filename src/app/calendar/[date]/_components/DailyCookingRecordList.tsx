@@ -1,9 +1,11 @@
 import type { UserPagesDict } from "@/shared/i18n";
+import { format, useUserPagesLocale } from "@/shared/i18n";
 
 import type { CookingRecordCalendarDateItem } from "@/entities/recipe";
 
 import { DailyCookingRecordChips } from "./DailyCookingRecordChips";
 import { DailyCookingRecordItem } from "./DailyCookingRecordItem";
+import { getDailyCookingRecordLabels } from "./dailyCookingRecordLabels";
 import { useDailyCookingRecordNavigation } from "./useDailyCookingRecordNavigation";
 
 type DailyCookingRecordListProps = {
@@ -17,6 +19,8 @@ export const DailyCookingRecordList = ({
   detailEnabled,
   copy,
 }: DailyCookingRecordListProps) => {
+  const locale = useUserPagesLocale();
+  const labels = getDailyCookingRecordLabels(locale);
   const { activeRecordId, registerRecordElement, selectRecord } =
     useDailyCookingRecordNavigation(records);
 
@@ -29,6 +33,10 @@ export const DailyCookingRecordList = ({
             className="text-ink text-lg font-bold"
           >
             {copy.heading}
+            <span aria-hidden="true">
+              {" · "}
+              {format(labels.recordCount, { count: records.length })}
+            </span>
           </h2>
         </div>
         <DailyCookingRecordChips
@@ -45,6 +53,7 @@ export const DailyCookingRecordList = ({
             record={record}
             index={index}
             detailEnabled={detailEnabled}
+            manualSourceLabel={labels.manualSource}
             copy={copy}
             onElementChange={(element) =>
               registerRecordElement(record.recordId, element)
