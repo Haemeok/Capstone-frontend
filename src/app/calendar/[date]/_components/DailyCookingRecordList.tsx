@@ -22,8 +22,8 @@ export const DailyCookingRecordList = ({
 
   return (
     <section aria-labelledby="daily-cooking-record-list-title">
-      <div className="z-sticky sticky-optimized sticky top-16 bg-white/95 backdrop-blur-sm">
-        <div className="px-[18px] pt-4 pb-1">
+      <div className="z-sticky sticky-optimized sticky top-12 bg-white/95 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-0 before:-top-px before:h-px before:bg-white/95 before:backdrop-blur-sm before:content-['']">
+        <div className="px-[18px] py-2">
           <h2
             id="daily-cooking-record-list-title"
             className="text-ink text-lg font-bold"

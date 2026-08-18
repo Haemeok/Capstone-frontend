@@ -36,7 +36,7 @@ export const DailyCookingRecordItem = ({
       ref={onElementChange}
       data-record-id={record.recordId}
       aria-label={format(copy.recordAria, { title: record.displayTitle })}
-      className="scroll-mt-[164px] border-t-8 border-gray-50 px-[18px] py-[22px] first:border-t-0 first:pt-3"
+      className="scroll-mt-[152px] border-t-8 border-gray-50 px-[18px] py-[22px] first:border-t-0 first:pt-3"
     >
       <div className="grid grid-cols-[128px_1fr] gap-[15px]">
         {record.originalImageUrl ? (

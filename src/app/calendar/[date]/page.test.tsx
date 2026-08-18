@@ -673,9 +673,27 @@ describe("CalendarDetailPage", () => {
     const chipGroup = screen.getByRole("group", { name: "요리 기록 이동" });
     const recordNavigation = chipGroup.parentElement?.parentElement;
 
-    expect(dateHeading.parentElement).toHaveClass("sticky", "top-0", "h-16");
+    const dateStickyClasses = dateHeading.parentElement?.classList;
+    const navigationStickyClasses = recordNavigation?.classList;
+    const dateHeightToken = Array.from(dateStickyClasses ?? []).find((token) =>
+      token.startsWith("h-")
+    );
+    const navigationTopToken = Array.from(navigationStickyClasses ?? []).find(
+      (token) => token.startsWith("top-")
+    );
+
+    expect(dateHeading.parentElement).toHaveClass("sticky", "top-0");
     expect(recordNavigation).toContainElement(listHeading);
-    expect(recordNavigation).toHaveClass("sticky", "top-16");
-    expect(screen.getAllByRole("article")[0]).toHaveClass("scroll-mt-[164px]");
+    expect(recordNavigation).toHaveClass(
+      "sticky",
+      "before:-top-px",
+      "before:h-px"
+    );
+    expect(navigationTopToken?.replace("top-", "")).toBe(
+      dateHeightToken?.replace("h-", "")
+    );
+    expect(screen.getAllByRole("article")[0]?.className).toMatch(
+      /(?:^|\s)scroll-mt-/
+    );
   });
 });

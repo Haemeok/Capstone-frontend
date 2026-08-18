@@ -48,7 +48,7 @@ export const DailyCookingRecordPageClient = ({
     >
       <div className="mx-auto min-h-[calc(100dvh-var(--main-pb,var(--bottom-nav-h)))] max-w-lg bg-white">
         <DailyCookingRecordHeader title={copy.pageTitle} />
-        <div className="z-sticky sticky-optimized sticky top-0 flex h-16 items-center bg-white px-[18px]">
+        <div className="z-sticky sticky-optimized sticky top-0 flex h-12 items-center bg-white px-[18px] before:pointer-events-none before:absolute before:inset-x-0 before:-top-px before:h-px before:bg-white before:content-['']">
           <h2 className="text-ink text-2xl font-bold">
             {formatDailyCookingRecordDate(date, locale)}
           </h2>

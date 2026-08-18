@@ -49,10 +49,8 @@ export const DailyCookingRecordNutrition = ({
           key={metric.label}
           className="border-l border-gray-200 px-2 first:border-l-0 first:pl-0"
         >
-          <span className="text-ink-muted block text-[10px]">
-            {metric.label}
-          </span>
-          <strong className="text-ink mt-1 block text-xs font-bold">
+          <span className="text-ink-muted block text-xs">{metric.label}</span>
+          <strong className="text-ink mt-1 block text-sm font-bold">
             {metric.value}
           </strong>
         </div>

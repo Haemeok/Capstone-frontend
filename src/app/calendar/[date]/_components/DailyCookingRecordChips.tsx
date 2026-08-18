@@ -20,7 +20,7 @@ export const DailyCookingRecordChips = ({
   }
 
   return (
-    <div className="pt-2 pb-3">
+    <div className="py-2">
       <div
         role="group"
         aria-label={groupLabel}
