@@ -60,6 +60,7 @@ Reference these guidelines when:
 - `server-serialization` - Minimize data passed to client components
 - `server-parallel-fetching` - Restructure components to parallelize fetches
 - `server-after-nonblocking` - Use after() for non-blocking operations
+- `server-isolate-volatile-fetches` - Keep short-lived nested data from lowering a static route's revalidation interval
 
 ### 4. Client-Side Data Fetching (MEDIUM-HIGH)
 
