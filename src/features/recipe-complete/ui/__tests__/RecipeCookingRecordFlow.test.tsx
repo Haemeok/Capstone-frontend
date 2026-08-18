@@ -182,5 +182,11 @@ it("T-12: 폼과 버튼 영역이 안전 영역을 포함한 flex 열 구조를 
   const actions = within(form).getByTestId("cooking-record-actions");
 
   expect(form).toHaveClass("flex", "min-h-0", "flex-1", "flex-col");
-  expect(actions).toHaveClass("pb-[max(4px,env(safe-area-inset-bottom))]");
+  expect(actions).toHaveClass(
+    "border-t",
+    "border-gray-100",
+    "px-5",
+    "pt-3",
+    "pb-[max(16px,env(safe-area-inset-bottom))]"
+  );
 });

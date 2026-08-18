@@ -115,7 +115,7 @@ export const RecipeCookingRecordForm = ({
 
       <div
         data-testid="cooking-record-actions"
-        className="grid shrink-0 grid-cols-[0.78fr_1.55fr] gap-2 bg-white px-5 pt-2 pb-[max(4px,env(safe-area-inset-bottom))]"
+        className="grid shrink-0 grid-cols-[0.78fr_1.55fr] gap-2 border-t border-gray-100 bg-white px-5 pt-3 pb-[max(16px,env(safe-area-inset-bottom))]"
       >
         <button
           type="button"
