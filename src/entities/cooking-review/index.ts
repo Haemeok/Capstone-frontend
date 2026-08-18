@@ -13,3 +13,4 @@ export type {
   PublicCookingReview,
   PublicCookingReviewsResponse,
 } from "./model/types";
+export { CookingReviewAuthorAvatar } from "./ui/CookingReviewAuthorAvatar";

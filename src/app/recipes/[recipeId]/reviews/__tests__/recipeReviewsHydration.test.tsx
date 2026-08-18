@@ -14,7 +14,11 @@ import { COOKING_REVIEW_QUERY_KEYS } from "@/entities/cooking-review/model/query
 import type { PublicCookingReviewsResponse } from "@/entities/cooking-review/model/types";
 
 import { RecipeReviewsPageClient } from "../_components/RecipeReviewsPageClient";
-import { makePhotoReviewPage, makeReviewPage } from "./reviewTestFixtures";
+import {
+  makePhotoReviewPage,
+  makePublicReview,
+  makeReviewPage,
+} from "./reviewTestFixtures";
 
 let inView = false;
 
@@ -193,4 +197,28 @@ it("T-11: 다음 페이지가 있으면 스크롤 감지 시 기존 목록 뒤�
     photoOnly: false,
   });
   expect(screen.getByText("후기 20")).toBeInTheDocument();
+});
+
+it("T-15: 전체 후기 목록은 프로필 이미지와 닉네임 첫 글자 대체를 함께 지원합니다", () => {
+  const queryClient = makeQueryClient();
+  seedReviews(queryClient, {
+    totalCount: 2,
+    items: [
+      {
+        ...makePublicReview(1),
+        profileImageUrl: "https://example.com/profile.jpg",
+      },
+      makePublicReview(2),
+    ],
+    hasNext: false,
+  });
+
+  const { container } = renderPage(queryClient);
+
+  expect(
+    container.querySelector('img[src="https://example.com/profile.jpg"]')
+  ).not.toBeNull();
+  expect(
+    screen.getByLabelText("요리왕 02 프로필 대체 이미지")
+  ).toHaveTextContent("요");
 });

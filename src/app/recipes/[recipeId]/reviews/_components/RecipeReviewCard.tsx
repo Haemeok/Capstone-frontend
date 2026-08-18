@@ -1,6 +1,9 @@
 import { Image } from "@/shared/ui/image/Image";
 
-import type { PublicCookingReview } from "@/entities/cooking-review";
+import {
+  CookingReviewAuthorAvatar,
+  type PublicCookingReview,
+} from "@/entities/cooking-review";
 
 type RecipeReviewCardProps = {
   review: PublicCookingReview;
@@ -16,6 +19,11 @@ export const RecipeReviewCard = ({ review }: RecipeReviewCardProps) => {
   return (
     <article className="space-y-3">
       <div className="flex items-center gap-3">
+        <CookingReviewAuthorAvatar
+          nickname={review.nickname}
+          profileImageUrl={review.profileImageUrl}
+          className="size-[38px]"
+        />
         <div>
           <p className="text-ink text-sm font-semibold">{review.nickname}</p>
           <time className="text-ink-muted text-xs" dateTime={review.createdAt}>

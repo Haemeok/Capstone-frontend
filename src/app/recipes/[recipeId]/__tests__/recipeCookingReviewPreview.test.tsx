@@ -44,11 +44,12 @@ const review = (
   reviewId: string,
   nickname: string,
   content: string,
-  imageUrl?: string
+  imageUrl?: string,
+  profileImageUrl: string | null = null
 ): PublicCookingReview => ({
   reviewId,
   nickname,
-  profileImageUrl: null,
+  profileImageUrl,
   content,
   images: imageUrl ? [{ url: imageUrl }] : [],
   createdAt: "2026-08-18T10:00:00+09:00",
@@ -193,4 +194,42 @@ it("T-05: 후기 조회가 실패해도 섹션 헤더를 유지합니다", async
   ).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "전체 보기" })).toBeInTheDocument();
   expect(screen.queryByText("아직 후기가 없어요")).not.toBeInTheDocument();
+});
+
+it("T-13: 사진 없는 최신 후기는 프로필 이미지와 함께 표시됩니다", async () => {
+  fetchReviewsMock.mockImplementation(async ({ photoOnly }) =>
+    photoOnly
+      ? response(0, [])
+      : response(1, [
+          review(
+            "latest",
+            "요리왕",
+            "간이 딱 맞아요",
+            undefined,
+            "https://example.com/profile.jpg"
+          ),
+        ])
+  );
+
+  const { container } = renderPreview();
+
+  expect(await screen.findByText("간이 딱 맞아요")).toBeInTheDocument();
+  expect(screen.getByText("요리왕")).toBeInTheDocument();
+  expect(
+    container.querySelector('img[src="https://example.com/profile.jpg"]')
+  ).not.toBeNull();
+});
+
+it("T-14: 프로필 주소가 없으면 닉네임 첫 글자를 표시합니다", async () => {
+  fetchReviewsMock.mockImplementation(async ({ photoOnly }) =>
+    photoOnly
+      ? response(0, [])
+      : response(1, [review("latest", "요리왕", "간이 딱 맞아요")])
+  );
+
+  renderPreview();
+
+  expect(
+    await screen.findByLabelText("요리왕 프로필 대체 이미지")
+  ).toHaveTextContent("요");
 });

@@ -38,6 +38,7 @@ type RecipeDetailViewProps = {
   recipeId: string;
   locale: Locale;
   notTranslatedMessage?: string;
+  cookingReviewPreview?: ReactNode;
   bottomSlides?: ReactNode;
   ingredientShopping?: ReactNode;
 };
@@ -47,6 +48,7 @@ export const RecipeDetailView = ({
   recipeId,
   locale,
   notTranslatedMessage,
+  cookingReviewPreview,
   bottomSlides,
   ingredientShopping,
 }: RecipeDetailViewProps) => {
@@ -127,18 +129,11 @@ export const RecipeDetailView = ({
             >
               <InArticleAdSlot />
 
-              <Reveal className="reveal-subtle">
-                <ErrorBoundary
-                  fallback={
-                    <SectionErrorFallback message={t.errors.comments} />
-                  }
-                >
-                  <RecipeCommentsSection
-                    comments={recipe.comments}
-                    locale={locale}
-                  />
-                </ErrorBoundary>
-              </Reveal>
+              {cookingReviewPreview ? (
+                <Reveal className="reveal-subtle">
+                  {cookingReviewPreview}
+                </Reveal>
+              ) : null}
 
               <Reveal className="reveal-subtle">
                 <ErrorBoundary
@@ -212,6 +207,16 @@ export const RecipeDetailView = ({
               tags={recipe.tags}
               locale={locale}
             />
+          </Reveal>
+          <Reveal className="reveal-subtle">
+            <ErrorBoundary
+              fallback={<SectionErrorFallback message={t.errors.comments} />}
+            >
+              <RecipeCommentsSection
+                comments={recipe.comments}
+                locale={locale}
+              />
+            </ErrorBoundary>
           </Reveal>
           {bottomSlides}
         </RecipeContainer>

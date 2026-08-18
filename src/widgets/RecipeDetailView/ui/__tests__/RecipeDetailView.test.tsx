@@ -75,4 +75,34 @@ describe("RecipeDetailView — ko/ja 공유 본문", () => {
     );
     expect(screen.getAllByText("親子丼")[0]).toBeInTheDocument();
   });
+
+  it("T-16: 만들어봤어요, 코멘트, 추천 슬라이드 순서로 표시합니다", () => {
+    const recipe = makeBaseRecipe({ title: "김치찌개" });
+    renderWithProviders(
+      <RecipeDetailView
+        recipe={recipe}
+        recipeId="r1"
+        locale="ko"
+        cookingReviewPreview={
+          <section data-testid="cooking-review-preview">만들어봤어요</section>
+        }
+        bottomSlides={
+          <section data-testid="server-slides">추천 레시피</section>
+        }
+      />
+    );
+
+    const reviewPreview = screen.getByTestId("cooking-review-preview");
+    const comments = screen.getByRole("heading", { name: "코멘트" });
+    const serverSlides = screen.getByTestId("server-slides");
+
+    expect(
+      reviewPreview.compareDocumentPosition(comments) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      comments.compareDocumentPosition(serverSlides) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
 });

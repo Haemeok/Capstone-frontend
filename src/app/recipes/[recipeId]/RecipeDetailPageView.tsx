@@ -64,13 +64,13 @@ export const RecipeDetailPageView = async ({
         recipe={staticRecipe}
         recipeId={recipeId}
         locale="ko"
+        cookingReviewPreview={
+          <Suspense fallback={<div className="h-32" aria-hidden />}>
+            <RecipeCookingReviewPreview recipeId={recipeId} />
+          </Suspense>
+        }
         bottomSlides={
-          <>
-            <Suspense fallback={<div className="h-32" aria-hidden />}>
-              <RecipeCookingReviewPreview recipeId={recipeId} />
-            </Suspense>
-            <RecipeDetailServerSlides recipeId={recipeId} locale="ko" />
-          </>
+          <RecipeDetailServerSlides recipeId={recipeId} locale="ko" />
         }
         ingredientShopping={
           <Suspense fallback={null}>
