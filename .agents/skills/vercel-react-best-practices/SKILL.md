@@ -66,6 +66,7 @@ Reference these guidelines when:
 - `client-swr-dedup` - Use SWR for automatic request deduplication
 - `client-event-listeners` - Deduplicate global event listeners
 - `client-scroll-container-listener` - Subscribe to the actual scroll container, not window, when the app uses a custom scroll wrapper
+- `client-lock-scrollspy-during-programmatic-scroll` - Keep the clicked destination authoritative until programmatic smooth scrolling ends
 - `client-tanstack-prefetch-key-match` - Keep TanStack Query queryKey byte-identical between SSR prefetch and client hook to avoid silent hydration cache miss
 - `client-confirm-response-shape-before-refactor` - Log Object.keys at the fetcher boundary to confirm backend response shape before updating TypeScript types; observed data over typed theory, single source of truth over dual fallback
 - `client-remove-legacy-fields-from-types-first` - When a backend ships legacy + new fields during a transition, drop the legacy from client types immediately so the compiler enumerates every consumer; backend can drop the wire field only after the client provably stops reading it
