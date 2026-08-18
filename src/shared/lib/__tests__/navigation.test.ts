@@ -11,6 +11,9 @@ describe("shouldHideNavbar", () => {
       "/recipes/new/ai/finedining",
       "/recipes/abc123/slide-show",
       "/recipes/abc123",
+      "/calendar/timeline/share",
+      "/en/calendar/timeline/share",
+      "/ja/calendar/timeline/share",
     ])("hides on %s", (path) => {
       expect(shouldHideNavbar(path, { isApp: true })).toBe(true);
       expect(shouldHideNavbar(path, { isApp: false })).toBe(true);

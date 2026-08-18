@@ -5,6 +5,7 @@ export const HIDDEN_NAVBAR_PATHS = [
   "/recipes/new/ai/finedining",
   "/recipes/new/ai/ingredient",
   "/recipes/new/ai/nutrition",
+  "/calendar/timeline/share",
 ] as const;
 
 export const HIDDEN_NAVBAR_PATTERNS_ALWAYS = [

@@ -3,6 +3,7 @@ import {
   HIDDEN_NAVBAR_PATTERNS_ALWAYS,
   HIDDEN_NAVBAR_PATTERNS_APP_ONLY,
 } from "../config/constants/navigation";
+import { stripLocale } from "../i18n/localizedHref";
 import type { HiddenNavbarPath } from "../types";
 
 type ShouldHideNavbarOptions = {
@@ -18,11 +19,12 @@ export const shouldHideNavbar = (
   pathname: string,
   options: ShouldHideNavbarOptions
 ): boolean => {
-  if (isHiddenNavbarPath(pathname)) return true;
-  if (HIDDEN_NAVBAR_PATTERNS_ALWAYS.some((p) => p.test(pathname))) return true;
+  const { barePath } = stripLocale(pathname);
+  if (isHiddenNavbarPath(barePath)) return true;
+  if (HIDDEN_NAVBAR_PATTERNS_ALWAYS.some((p) => p.test(barePath))) return true;
   if (
     options.isApp &&
-    HIDDEN_NAVBAR_PATTERNS_APP_ONLY.some((p) => p.test(pathname))
+    HIDDEN_NAVBAR_PATTERNS_APP_ONLY.some((p) => p.test(barePath))
   ) {
     return true;
   }
