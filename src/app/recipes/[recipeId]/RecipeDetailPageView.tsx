@@ -20,6 +20,7 @@ import { RecipeDetailView } from "@/widgets/RecipeDetailView";
 import RecipeCoupangProducts from "@/widgets/RecipeDetailView/server/RecipeCoupangProducts";
 import { RecipeDetailServerSlides } from "@/widgets/RecipeSlide/server";
 
+import { RecipeCookingReviewPreview } from "./_components/RecipeCookingReviewPreview";
 import { RemixRedirectToast } from "./RemixRedirectToast";
 
 export const buildRecipeMetadata = async (
@@ -64,7 +65,15 @@ export const RecipeDetailPageView = async ({
         recipeId={recipeId}
         locale="ko"
         bottomSlides={
-          <RecipeDetailServerSlides recipeId={recipeId} locale="ko" />
+          <>
+            <Suspense fallback={<div className="h-32" aria-hidden />}>
+              <RecipeCookingReviewPreview
+                recipeId={recipeId}
+                fallbackReviewCount={staticRecipe.reviewCount}
+              />
+            </Suspense>
+            <RecipeDetailServerSlides recipeId={recipeId} locale="ko" />
+          </>
         }
         ingredientShopping={
           <Suspense fallback={null}>

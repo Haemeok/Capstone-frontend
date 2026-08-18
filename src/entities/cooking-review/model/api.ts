@@ -2,16 +2,10 @@ import { api } from "@/shared/api/client";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 import type {
+  FetchRecipeCookingReviewsParams,
   MyCookingReviewsResponse,
   PublicCookingReviewsResponse,
 } from "./types";
-
-export type FetchRecipeCookingReviewsParams = {
-  recipeId: string;
-  page?: number;
-  size?: number;
-  photoOnly?: boolean;
-};
 
 const validatePageSize = (size: number): void => {
   if (size > 50) {

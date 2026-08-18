@@ -22,6 +22,13 @@ export type PublicCookingReviewsResponse = {
   hasNext: boolean;
 };
 
+export type FetchRecipeCookingReviewsParams = {
+  recipeId: string;
+  page?: number;
+  size?: number;
+  photoOnly?: boolean;
+};
+
 export type CookingReviewPublicationStatus = "PUBLISHED" | "PRIVATE";
 
 export type CookingReviewModerationStatus = "VISIBLE" | "HIDDEN";

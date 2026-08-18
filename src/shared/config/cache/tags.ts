@@ -1,5 +1,6 @@
 export const CACHE_TAGS = {
   recipe: (id: string) => `recipe-${id}`,
+  cookingReviews: (recipeId: string) => `cooking-reviews-${recipeId}`,
 
   recipesPopular: "recipes-popular",
   recipesBudget: "recipes-budget",
