@@ -1,44 +1,36 @@
+"use client";
+
 import Link from "next/link";
 
-import { fetchRecipeCookingReviewsOnServer } from "@/entities/cooking-review/model/api.server";
-import type { PublicCookingReviewsResponse } from "@/entities/cooking-review/model/types";
+import { useRecipeCookingReviews } from "@/entities/cooking-review";
 
 import { RecipeCookingReviewPreviewContent } from "./RecipeCookingReviewPreviewContent";
 
 type RecipeCookingReviewPreviewProps = {
   recipeId: string;
-  fallbackReviewCount: number;
 };
 
-export const RecipeCookingReviewPreview = async ({
+export const RecipeCookingReviewPreview = ({
   recipeId,
-  fallbackReviewCount,
 }: RecipeCookingReviewPreviewProps) => {
-  const [summaryResult, photoResult] = await Promise.allSettled([
-    fetchRecipeCookingReviewsOnServer({
-      recipeId,
-      page: 0,
-      size: 1,
-      photoOnly: false,
-    }),
-    fetchRecipeCookingReviewsOnServer({
-      recipeId,
-      page: 0,
-      size: 3,
-      photoOnly: true,
-    }),
-  ]);
-  const fallbackResponse: PublicCookingReviewsResponse = {
-    totalCount: fallbackReviewCount,
-    items: [],
-    hasNext: false,
-  };
-  const summaryResponse =
-    summaryResult.status === "fulfilled"
-      ? summaryResult.value
-      : fallbackResponse;
-  const photoResponse =
-    photoResult.status === "fulfilled" ? photoResult.value : undefined;
+  const summaryQuery = useRecipeCookingReviews({
+    recipeId,
+    photoOnly: false,
+    size: 1,
+    locale: "ko",
+    enabled: true,
+  });
+  const photoQuery = useRecipeCookingReviews({
+    recipeId,
+    photoOnly: true,
+    size: 3,
+    locale: "ko",
+    enabled: true,
+  });
+  const summary = summaryQuery.data?.pages[0];
+  const photos = photoQuery.data?.pages[0];
+  const reviewCount =
+    summary && summary.totalCount > 0 ? ` ${summary.totalCount}` : "";
 
   return (
     <section aria-labelledby="cooking-review-preview-title" className="py-8">
@@ -47,20 +39,29 @@ export const RecipeCookingReviewPreview = async ({
           id="cooking-review-preview-title"
           className="text-ink text-lg font-bold"
         >
-          만들어봤어요 {summaryResponse.totalCount}
+          만들어봤어요{reviewCount}
         </h2>
         <Link
           href={`/recipes/${recipeId}/reviews`}
-          className="text-ink-sub min-h-11 py-3 text-sm font-semibold"
+          className="text-ink-muted min-h-11 py-3 text-sm font-normal"
         >
           전체 보기
         </Link>
       </div>
-      <RecipeCookingReviewPreviewContent
-        recipeId={recipeId}
-        firstReview={summaryResponse.items[0]}
-        photoResponse={photoResponse}
-      />
+      {summaryQuery.isPending ? (
+        <div
+          role="status"
+          aria-label="후기 불러오는 중"
+          className="mt-4 h-[76px] animate-pulse rounded-2xl bg-gray-50"
+        />
+      ) : null}
+      {summary && !summaryQuery.isError ? (
+        <RecipeCookingReviewPreviewContent
+          recipeId={recipeId}
+          firstReview={summary.items[0]}
+          photoResponse={photos}
+        />
+      ) : null}
     </section>
   );
 };

@@ -28,6 +28,17 @@ export const RecipeCookingReviewPreviewContent = ({
   const photos = photoResponse?.items ?? [];
   const photoCount = photoResponse?.totalCount ?? 0;
 
+  if (!firstReview && photos.length === 0) {
+    return (
+      <div className="mt-4 rounded-2xl bg-gray-50 px-4 py-5">
+        <p className="text-ink text-sm font-semibold">아직 후기가 없어요</p>
+        <p className="text-ink-muted mt-1 text-sm">
+          첫 요리 후기를 기다리고 있어요
+        </p>
+      </div>
+    );
+  }
+
   if (photos.length === 1 && firstReview) {
     return (
       <div className="mt-4 flex items-center gap-4">
