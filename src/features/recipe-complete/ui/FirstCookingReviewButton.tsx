@@ -1,0 +1,83 @@
+"use client";
+
+import { useT } from "@/shared/i18n";
+import { triggerHaptic } from "@/shared/lib/bridge";
+
+import {
+  useCreateRecipeCookingRecordMutation,
+  useRecipeComplete,
+} from "../model/hooks";
+import { toRecipeCookingRecordInput } from "../model/recordDraft";
+import type { RecipeCookingRecordFormDraft } from "./recipeCookingRecord.types";
+import { RecipeCookingRecordFlow } from "./RecipeCookingRecordFlow";
+
+type FirstCookingReviewButtonProps = {
+  recipeId: string;
+  recipeTitle: string;
+  recipeImageUrl: string;
+  saveAmount: number;
+  onBeforeStart: () => boolean;
+  onFlowClose?: () => void;
+};
+
+export const FirstCookingReviewButton = ({
+  recipeId,
+  recipeTitle,
+  recipeImageUrl,
+  saveAmount,
+  onBeforeStart,
+  onFlowClose,
+}: FirstCookingReviewButtonProps) => {
+  const t = useT();
+  const { completeRecipe, showReward, setShowReward, markCompleted } =
+    useRecipeComplete({ recipeId, saveAmount });
+  const createMutation = useCreateRecipeCookingRecordMutation();
+
+  const handleStart = () => {
+    if (createMutation.isPending || !onBeforeStart()) {
+      return;
+    }
+
+    triggerHaptic("Medium");
+    completeRecipe();
+  };
+
+  const handleSubmit = async ({
+    imageFile,
+    ...draft
+  }: RecipeCookingRecordFormDraft) => {
+    const input = toRecipeCookingRecordInput(draft);
+    await createMutation.createRecord({ ...input, imageFile });
+    markCompleted();
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    setShowReward(open);
+    if (!open) {
+      onFlowClose?.();
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={handleStart}
+        disabled={createMutation.isPending}
+        className="bg-olive-light disabled:text-ink-disabled h-12 w-full rounded-xl px-4 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-100"
+      >
+        첫 번째 요리 후기 남기기
+      </button>
+      <RecipeCookingRecordFlow
+        isOpen={showReward}
+        saveAmount={saveAmount}
+        recipeId={recipeId}
+        recipeTitle={recipeTitle}
+        recipeImageUrl={recipeImageUrl}
+        copy={t.recipeDetail.cookingRecord}
+        onOpenChange={handleOpenChange}
+        onSubmit={handleSubmit}
+      />
+    </>
+  );
+};

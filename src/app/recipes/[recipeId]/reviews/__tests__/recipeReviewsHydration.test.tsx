@@ -40,6 +40,12 @@ jest.mock("@/shared/ui/image/Image", () => ({
   ),
 }));
 
+jest.mock("../_components/FirstCookingReviewCta", () => ({
+  FirstCookingReviewCta: () => (
+    <button type="button">첫 번째 요리 후기 남기기</button>
+  ),
+}));
+
 const fetchReviewsMock = jest.mocked(fetchRecipeCookingReviews);
 const triggerHapticMock = jest.mocked(triggerHaptic);
 

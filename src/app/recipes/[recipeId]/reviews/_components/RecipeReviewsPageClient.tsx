@@ -8,6 +8,7 @@ import PrevButton from "@/shared/ui/PrevButton";
 
 import { useRecipeCookingReviews } from "@/entities/cooking-review";
 
+import { FirstCookingReviewCta } from "./FirstCookingReviewCta";
 import { PhotoReviewFilterChip } from "./PhotoReviewFilterChip";
 import { RecipeReviewCard } from "./RecipeReviewCard";
 
@@ -20,6 +21,9 @@ type RecipeReviewsPageClientProps = {
 
 export const RecipeReviewsPageClient = ({
   recipeId,
+  recipeTitle,
+  recipeImageUrl,
+  saveAmount,
 }: RecipeReviewsPageClientProps) => {
   const [photoOnly, setPhotoOnly] = useState(false);
   const {
@@ -96,6 +100,23 @@ export const RecipeReviewsPageClient = ({
             <p className="text-ink-muted mt-1 text-sm leading-6">
               필터를 끄면 전체 후기를 볼 수 있어요
             </p>
+          </div>
+        ) : reviews.length === 0 ? (
+          <div className="pt-12">
+            <p className="text-ink text-base font-semibold">
+              아직 만들어 본 후기가 없어요
+            </p>
+            <p className="text-ink-muted mt-1 text-sm leading-6">
+              이 레시피의 첫 번째 요리 후기를 남겨보세요
+            </p>
+            <div className="mt-6">
+              <FirstCookingReviewCta
+                recipeId={recipeId}
+                recipeTitle={recipeTitle}
+                recipeImageUrl={recipeImageUrl}
+                saveAmount={saveAmount}
+              />
+            </div>
           </div>
         ) : (
           <div className="mt-7 space-y-8">
