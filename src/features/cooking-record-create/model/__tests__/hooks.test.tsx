@@ -110,6 +110,52 @@ it("409/807만 2초 고정 간격으로 최초 요청 뒤 최대 세 번 재시�
   expect(prepareRecord).toHaveBeenCalledTimes(1);
 });
 
+it("409/807 재시도 대기 중 이미지 처리 상태를 노출하고 재시도 성공 시 완료합니다", async () => {
+  postRecord
+    .mockRejectedValueOnce(
+      new ApiError(409, "Conflict", { code: 807, message: "not ready" })
+    )
+    .mockResolvedValueOnce({ recordId: "record-A", message: "created" });
+  const { Wrapper } = createHarness();
+  const { result } = renderHook(() => useCreateManualCookingRecord(), {
+    wrapper: Wrapper,
+  });
+
+  let promise: Promise<unknown> | undefined;
+  await act(async () => {
+    promise = result.current.createRecord(manualDraft);
+    await Promise.resolve();
+  });
+  await act(async () => {
+    await jest.advanceTimersByTimeAsync(0);
+  });
+
+  expect(postRecord).toHaveBeenCalledTimes(1);
+  expect(result.current.isImageProcessing).toBe(true);
+
+  await act(async () => {
+    await jest.advanceTimersByTimeAsync(2000);
+    await promise;
+  });
+  await act(async () => {
+    await jest.advanceTimersByTimeAsync(0);
+  });
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+  expect(postRecord).toHaveBeenCalledTimes(2);
+  expect({
+    status: result.current.status,
+    isPending: result.current.isPending,
+    isImageProcessing: result.current.isImageProcessing,
+    isSuccess: result.current.isSuccess,
+  }).toEqual({
+    status: "success",
+    isPending: false,
+    isImageProcessing: false,
+    isSuccess: true,
+  });
+});
+
 it("409/806은 재시도하지 않습니다", async () => {
   postRecord.mockRejectedValue(
     new ApiError(409, "Conflict", { code: 806, message: "invalid key" })
@@ -138,7 +184,7 @@ it("409/806은 재시도하지 않습니다", async () => {
   expect(postRecord).toHaveBeenCalledTimes(1);
 });
 
-it("생성 후 무한 목록을 첫 페이지로 줄이고 목록·캘린더를 무효화합니다", async () => {
+it("생성 후 무한 목록을 첫 페이지로 줄이고 기록·기존 캘린더를 모두 무효화합니다", async () => {
   postRecord.mockResolvedValue({ recordId: "record-A", message: "created" });
   const { queryClient, Wrapper } = createHarness();
   const listKey = COOKING_RECORD_QUERY_KEYS.list({
@@ -146,6 +192,7 @@ it("생성 후 무한 목록을 첫 페이지로 줄이고 목록·캘린더를 
     locale: "ko",
   });
   const calendarKey = COOKING_RECORD_QUERY_KEYS.calendarMonth(2026, 8, "ko");
+  const recipeHistoryKey = ["recipeHistory", 2026, 8] as const;
   queryClient.setQueryData(listKey, {
     pages: [
       { groups: [{ date: "2026-08-17", records: [] }], hasNext: true },
@@ -154,6 +201,10 @@ it("생성 후 무한 목록을 첫 페이지로 줄이고 목록·캘린더를 
     pageParams: [0, 1],
   });
   queryClient.setQueryData(calendarKey, {
+    dailySummaries: [],
+    monthlyTotalSavings: 0,
+  });
+  queryClient.setQueryData(recipeHistoryKey, {
     dailySummaries: [],
     monthlyTotalSavings: 0,
   });
@@ -180,6 +231,7 @@ it("생성 후 무한 목록을 첫 페이지로 줄이고 목록·캘린더를 
   });
   expect(queryClient.getQueryState(listKey)?.isInvalidated).toBe(true);
   expect(queryClient.getQueryState(calendarKey)?.isInvalidated).toBe(true);
+  expect(queryClient.getQueryState(recipeHistoryKey)?.isInvalidated).toBe(true);
 });
 
 it("이미지 준비 중부터 최종 생성 완료까지 pending을 유지합니다", async () => {

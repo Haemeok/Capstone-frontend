@@ -3,6 +3,7 @@
 import type { InfiniteData } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { isApiErrorWithCode } from "@/shared/api/errors";
 import { keepFirstInfinitePage } from "@/shared/lib/query";
 
 import type { CookingRecordListResponse } from "@/entities/recipe/model/record";
@@ -40,6 +41,9 @@ export const useCreateManualCookingRecord = () => {
         queryClient.invalidateQueries({
           queryKey: COOKING_RECORD_QUERY_KEYS.calendars,
         }),
+        queryClient.invalidateQueries({
+          queryKey: COOKING_RECORD_QUERY_KEYS.recipeHistories,
+        }),
       ]);
     },
   });
@@ -57,6 +61,9 @@ export const useCreateManualCookingRecord = () => {
   };
 
   const isPending = prepareMutation.isPending || finalMutation.isPending;
+  const isImageProcessing =
+    finalMutation.isPending &&
+    isApiErrorWithCode(finalMutation.failureReason, 409, 807);
   const hasError = prepareMutation.isError || finalMutation.isError;
   const isError = !isPending && hasError;
   const isSuccess = !isPending && !isError && finalMutation.isSuccess;
@@ -75,6 +82,7 @@ export const useCreateManualCookingRecord = () => {
     status,
     isIdle: status === "idle",
     isPending,
+    isImageProcessing,
     isError,
     isSuccess,
     error: isError ? (prepareMutation.error ?? finalMutation.error) : null,

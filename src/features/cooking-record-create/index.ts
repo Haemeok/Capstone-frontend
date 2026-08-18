@@ -5,3 +5,4 @@ export {
   prepareManualCookingRecord,
 } from "./model/api";
 export { useCreateManualCookingRecord } from "./model/hooks";
+export { ManualCookingRecordDrawer } from "./ui/ManualCookingRecordDrawer";
