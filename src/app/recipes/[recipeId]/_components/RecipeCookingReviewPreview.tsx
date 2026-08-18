@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { cookingReviewPreviewMessages } from "@/shared/i18n";
+
 import { useRecipeCookingReviews } from "@/entities/cooking-review";
 
 import { RecipeCookingReviewPreviewContent } from "./RecipeCookingReviewPreviewContent";
@@ -13,6 +15,7 @@ type RecipeCookingReviewPreviewProps = {
 export const RecipeCookingReviewPreview = ({
   recipeId,
 }: RecipeCookingReviewPreviewProps) => {
+  const copy = cookingReviewPreviewMessages.ko;
   const summaryQuery = useRecipeCookingReviews({
     recipeId,
     photoOnly: false,
@@ -39,19 +42,20 @@ export const RecipeCookingReviewPreview = ({
           id="cooking-review-preview-title"
           className="text-ink text-lg font-bold"
         >
-          만들어봤어요{reviewCount}
+          {copy.heading}
+          {reviewCount}
         </h2>
         <Link
           href={`/recipes/${recipeId}/reviews`}
           className="text-ink-muted min-h-11 py-3 text-sm font-normal"
         >
-          전체 보기
+          {copy.viewAll}
         </Link>
       </div>
       {summaryQuery.isPending ? (
         <div
           role="status"
-          aria-label="후기 불러오는 중"
+          aria-label={copy.loading}
           className="mt-4 h-[76px] animate-pulse rounded-2xl bg-gray-50"
         />
       ) : null}
@@ -60,6 +64,8 @@ export const RecipeCookingReviewPreview = ({
           recipeId={recipeId}
           firstReview={summary.items[0]}
           photoResponse={photos}
+          emptyTitle={copy.emptyTitle}
+          emptyDescription={copy.emptyDescription}
         />
       ) : null}
     </section>
