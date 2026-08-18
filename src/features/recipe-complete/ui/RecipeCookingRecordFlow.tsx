@@ -70,23 +70,24 @@ export const RecipeCookingRecordFlow = ({
 
   return (
     <Container open={isOpen} onOpenChange={handleOpenChange}>
-      <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md [&>[data-slot=dialog-close]]:hidden">
+      <Content className="flex max-h-[80dvh] flex-col overflow-hidden border-0 bg-white shadow-xl sm:max-w-md [&>[data-slot=dialog-close]]:hidden">
         <button
           type="button"
           aria-label={copy.close}
           onClick={close}
-          className="absolute top-5 left-3 z-10 flex size-11 cursor-pointer items-center justify-center rounded-xl"
+          className="absolute top-3 right-3 z-10 flex size-11 cursor-pointer items-center justify-center rounded-xl"
         >
           <X className="size-5" />
         </button>
         <motion.div
           layout
           transition={{ duration: 0.24, ease: "easeOut" }}
-          className="max-h-[80dvh] overflow-y-auto pt-16"
+          className="flex min-h-0 flex-1 flex-col"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={phase}
+              className="flex min-h-0 flex-1 flex-col"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}

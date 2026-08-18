@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 
 import { RecipeCookingRecordFlow } from "../RecipeCookingRecordFlow";
 
@@ -11,9 +11,13 @@ jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
       children: React.ReactNode;
       open: boolean;
     }) => (open ? <div>{children}</div> : null);
-    const Content = ({ children }: { children: React.ReactNode }) => (
-      <section>{children}</section>
-    );
+    const Content = ({
+      children,
+      className,
+    }: {
+      children: React.ReactNode;
+      className?: string;
+    }) => <section className={className}>{children}</section>;
     const Title = ({ children }: { children: React.ReactNode }) => (
       <h2>{children}</h2>
     );
@@ -56,8 +60,8 @@ jest.mock("@/shared/ui/image/Image", () => ({
 const copy = {
   close: "닫기",
   rewardTitle: "요리 완료",
-  rewardKicker: "이번 요리로 아꼈어요",
-  rewardNext: "잠시 후 요리 기록으로 이어집니다",
+  rewardKicker: "이번 요리로 절약했어요",
+  rewardNext: "잠시 뒤 요리 기록으로 이어집니다",
   formTitle: "요리 기록 남기기",
   formDescription: "사진과 후기는 나중에도 바꿀 수 있어요.",
   photoLabel: "요리 사진",
@@ -65,21 +69,19 @@ const copy = {
   defaultPhoto: "기본 레시피 사진",
   addPhoto: "사진 추가",
   reviewLabel: "간단한 후기",
-  reviewPlaceholder: "맛은 어땠는지 남겨보세요.",
+  reviewPlaceholder: "맛과 기억할 점을 남겨보세요",
   publishLabel: "레시피 후기로 공개",
   publishDescription: "레시피 상세에도 공개돼요.",
   skip: "건너뛰기",
-  submit: "기록하기",
-  submitting: "기록하는 중",
+  submit: "등록하기",
+  submitting: "등록하는 중",
   successTitle: "요리 기록을 남겼어요",
-  successDescription: "8월 기록에 추가됐습니다.",
+  successDescription: "기록이 추가됐습니다.",
   successClose: "닫기",
-  error: "기록하지 못했습니다.",
+  error: "등록하지 못했습니다.",
 };
 
-it("금액 안내 다음에 선택 입력 폼을 보여주고 등록 완료까지 진행합니다", async () => {
-  jest.useFakeTimers();
-  const onSubmit = jest.fn().mockResolvedValue(undefined);
+const renderFlow = (onSubmit = jest.fn().mockResolvedValue(undefined)) =>
   render(
     <RecipeCookingRecordFlow
       isOpen
@@ -93,10 +95,26 @@ it("금액 안내 다음에 선택 입력 폼을 보여주고 등록 완료까�
     />
   );
 
+const advanceToForm = () => {
+  act(() => jest.advanceTimersByTime(2000));
+};
+
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
+afterEach(() => {
+  jest.useRealTimers();
+});
+
+it("금액 안내 다음에 입력 폼을 보여주고 등록 완료까지 진행합니다", async () => {
+  const onSubmit = jest.fn().mockResolvedValue(undefined);
+  renderFlow(onSubmit);
+
   const closeButton = screen.getByRole("button", { name: "닫기" });
   expect(screen.getByText("8,400원")).toBeInTheDocument();
 
-  act(() => jest.advanceTimersByTime(2000));
+  advanceToForm();
 
   expect(
     screen.getByRole("heading", { name: "요리 기록 남기기" })
@@ -107,7 +125,7 @@ it("금액 안내 다음에 선택 입력 폼을 보여주고 등록 완료까�
   fireEvent.change(screen.getByLabelText("간단한 후기"), {
     target: { value: "맛있어요" },
   });
-  fireEvent.click(screen.getByRole("button", { name: "기록하기" }));
+  fireEvent.click(screen.getByRole("button", { name: "등록하기" }));
 
   await screen.findByRole("heading", { name: "요리 기록을 남겼어요" });
   expect(onSubmit).toHaveBeenCalledWith({
@@ -116,5 +134,53 @@ it("금액 안내 다음에 선택 입력 폼을 보여주고 등록 완료까�
     isPublic: true,
     imageFile: undefined,
   });
-  jest.useRealTimers();
+});
+
+it("T-09: 닫기 버튼을 우측에 두고 전체 wrapper의 큰 상단 여백을 제거합니다", () => {
+  renderFlow();
+  advanceToForm();
+
+  const closeButton = screen.getByRole("button", { name: "닫기" });
+  const phaseLayout = closeButton.nextElementSibling;
+
+  expect(closeButton).toHaveClass("top-3", "right-3");
+  expect(closeButton).not.toHaveClass("left-3");
+  expect(phaseLayout).toHaveClass("flex", "min-h-0", "flex-1", "flex-col");
+  expect(phaseLayout).not.toHaveClass("pt-16", "overflow-y-auto");
+});
+
+it("T-10: 사진과 후기 입력 본문에만 세로 스크롤을 적용합니다", () => {
+  renderFlow();
+  advanceToForm();
+
+  const form = screen.getByRole("form", { name: "요리 기록 남기기" });
+  const scrollRegion = within(form).getByTestId("cooking-record-scroll-region");
+
+  expect(scrollRegion).toHaveClass("min-h-0", "flex-1", "overflow-y-auto");
+});
+
+it("T-11: 건너뛰기와 등록 버튼을 스크롤 영역 밖에 고정합니다", () => {
+  renderFlow();
+  advanceToForm();
+
+  const form = screen.getByRole("form", { name: "요리 기록 남기기" });
+  const actions = within(form).getByTestId("cooking-record-actions");
+  const scrollRegion = within(form).getByTestId("cooking-record-scroll-region");
+
+  expect(actions).toHaveClass("shrink-0");
+  expect(actions).not.toHaveClass("sticky");
+  expect(scrollRegion).not.toContainElement(
+    within(actions).getByRole("button", { name: "등록하기" })
+  );
+});
+
+it("T-12: 폼과 버튼 영역이 안전 영역을 포함한 flex 열 구조를 사용합니다", () => {
+  renderFlow();
+  advanceToForm();
+
+  const form = screen.getByRole("form", { name: "요리 기록 남기기" });
+  const actions = within(form).getByTestId("cooking-record-actions");
+
+  expect(form).toHaveClass("flex", "min-h-0", "flex-1", "flex-col");
+  expect(actions).toHaveClass("pb-[max(4px,env(safe-area-inset-bottom))]");
 });
