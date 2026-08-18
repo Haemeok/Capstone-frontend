@@ -8,17 +8,20 @@ import {
   getCookingRecordCalendarDate,
   getCookingRecordCalendarMonth,
   getCookingRecords,
+  getStickerBookBackgrounds,
 } from "../../recordApi";
 import { useCookingRecordCalendarDateQuery } from "../useCookingRecordCalendarDateQuery";
 import { useCookingRecordCalendarMonthQuery } from "../useCookingRecordCalendarMonthQuery";
 import { useCookingRecordDetailQuery } from "../useCookingRecordDetailQuery";
 import { useCookingRecordsInfiniteQuery } from "../useCookingRecordsInfiniteQuery";
+import { useStickerBookBackgroundsQuery } from "../useStickerBookBackgroundsQuery";
 
 jest.mock("../../recordApi", () => ({
   getCookingRecord: jest.fn(),
   getCookingRecordCalendarDate: jest.fn(),
   getCookingRecordCalendarMonth: jest.fn(),
   getCookingRecords: jest.fn(),
+  getStickerBookBackgrounds: jest.fn(),
 }));
 
 jest.mock("@/shared/i18n", () => ({
@@ -29,6 +32,7 @@ const mockedList = jest.mocked(getCookingRecords);
 const mockedDetail = jest.mocked(getCookingRecord);
 const mockedMonth = jest.mocked(getCookingRecordCalendarMonth);
 const mockedDate = jest.mocked(getCookingRecordCalendarDate);
+const mockedBackgrounds = jest.mocked(getStickerBookBackgrounds);
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
@@ -51,7 +55,9 @@ const createRetryingWrapper = () => {
 };
 
 beforeEach(() => {
-  mockedList.mockReset().mockResolvedValue({ groups: [], hasNext: false });
+  mockedList
+    .mockReset()
+    .mockResolvedValue({ background: null, groups: [], hasNext: false });
   mockedDetail.mockReset().mockResolvedValue({
     recordId: "record-A",
     recipeId: "recipe-A",
@@ -77,6 +83,20 @@ beforeEach(() => {
     .mockReset()
     .mockResolvedValue({ dailySummaries: [], monthlyTotalSavings: 0 });
   mockedDate.mockReset().mockResolvedValue([]);
+  mockedBackgrounds.mockReset().mockResolvedValue({ items: [] });
+});
+
+it("배경 목록은 선택창이 열릴 때만 조회합니다", async () => {
+  const { rerender } = renderHook(
+    ({ enabled }) => useStickerBookBackgroundsQuery({ enabled }),
+    { initialProps: { enabled: false }, wrapper: createWrapper() }
+  );
+
+  expect(mockedBackgrounds).not.toHaveBeenCalled();
+
+  rerender({ enabled: true });
+
+  await waitFor(() => expect(mockedBackgrounds).toHaveBeenCalledTimes(1));
 });
 
 it("인증 게이트가 닫히면 기록 목록·상세·캘린더를 호출하지 않습니다", () => {
@@ -106,10 +126,12 @@ it("인증 게이트가 닫히면 기록 목록·상세·캘린더를 호출하�
 it("hasNext인 목록은 pageParam만 1 증가시켜 다음 페이지를 조회합니다", async () => {
   mockedList
     .mockResolvedValueOnce({
+      background: null,
       groups: [{ date: "2026-08-17", records: [] }],
       hasNext: true,
     })
     .mockResolvedValueOnce({
+      background: null,
       groups: [{ date: "2026-08-16", records: [] }],
       hasNext: false,
     });

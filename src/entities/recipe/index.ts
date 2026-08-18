@@ -32,6 +32,7 @@ export {
   useCookingRecordDetailQuery,
   useCookingRecordsInfiniteQuery,
   useRecipeDetailQuery,
+  useStickerBookBackgroundsQuery,
   useTrendingYoutubeRecipesQuery,
 } from "./model/hooks";
 export type {
@@ -62,6 +63,10 @@ export type {
   RecordTimelineGroup,
   RecordTimelineItem,
   RecordTimelineResponse,
+  StickerBookBackground,
+  StickerBookBackgroundListResponse,
+  StickerBookBackgroundOption,
+  StickerBookBackgroundUpdateInput,
   StickerStatus,
 } from "./model/record";
 export {
@@ -69,8 +74,13 @@ export {
   getCookingRecordCalendarDate,
   getCookingRecordCalendarMonth,
   getCookingRecords,
+  getStickerBookBackgrounds,
 } from "./model/recordApi";
 export { COOKING_RECORD_QUERY_KEYS } from "./model/recordQueryKeys";
+export {
+  MAX_RECORD_TEXT_LENGTH,
+  MAX_RECORD_TITLE_LENGTH,
+} from "./model/recordValidation";
 export type {
   BaseRecipeGridItem,
   BaseRecipesApiResponse,

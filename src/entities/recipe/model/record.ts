@@ -95,7 +95,25 @@ export type CookingRecordListGroup = {
   records: CookingRecordListItem[];
 };
 
+export type StickerBookBackground = {
+  backgroundKey: string;
+  imageUrl: string | null;
+};
+
+export type StickerBookBackgroundOption = StickerBookBackground & {
+  selected: boolean;
+};
+
+export type StickerBookBackgroundListResponse = {
+  items: StickerBookBackgroundOption[];
+};
+
+export type StickerBookBackgroundUpdateInput = {
+  backgroundKey: string;
+};
+
 export type CookingRecordListResponse = {
+  background: StickerBookBackground | null;
   groups: CookingRecordListGroup[];
   hasNext: boolean;
 };

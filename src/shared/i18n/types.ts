@@ -676,10 +676,80 @@ export type UserPagesDict = {
       previousMonthLabel: string;
       nextMonthLabel: string;
       changeBackground: string;
+      changeBackgroundShort: string;
       recordCount: Plural;
       boardLabel: string;
       recordLabel: string;
       addRecord: string;
+      shareRecord: string;
+      summary: {
+        ariaLabel: string;
+        currentTitle: Plural;
+        selectedMonthTitle: Plural;
+        cookingDaysLabel: string;
+        cookingDaysValue: Plural;
+        savingsLabel: string;
+        savingsValue: string;
+        uniqueDishesLabel: string;
+        uniqueDishesValue: Plural;
+        unavailable: string;
+      };
+      share: {
+        pageTitle: string;
+        backLabel: string;
+        lead: string;
+        description: string;
+        cardAria: string;
+        kicker: string;
+        brand: string;
+        save: string;
+        share: string;
+        preparing: string;
+        generationError: string;
+        retryImage: string;
+        shareTitle: string;
+        shareText: string;
+        saveSuccess: string;
+        shareSuccess: string;
+        downloadFallback: string;
+        actionError: string;
+        state: {
+          loading: string;
+          errorTitle: string;
+          errorDescription: string;
+          retry: string;
+          emptyTitle: string;
+          emptyDescription: string;
+          loginTitle: string;
+          loginDescription: string;
+          loginAction: string;
+        };
+      };
+      create: {
+        title: string;
+        closeLabel: string;
+        description: string;
+        photoLabel: string;
+        photoRequired: string;
+        addPhoto: string;
+        dishTitleLabel: string;
+        dishTitlePlaceholder: string;
+        cookedDateLabel: string;
+        reviewLabel: string;
+        reviewOptional: string;
+        reviewPlaceholder: string;
+        submit: string;
+        submitting: string;
+        processing: string;
+        processingTitle: string;
+        processingDescription: string;
+        successTitle: string;
+        successDescription: string;
+        successClose: string;
+        photoError: string;
+        titleError: string;
+        submitError: string;
+      };
       state: {
         loading: string;
         emptyTitle: string;
@@ -696,11 +766,16 @@ export type UserPagesDict = {
         closeLabel: string;
         moreLabel: string;
         dishLabel: string;
+        dishNameLabel: string;
         reviewLabel: string;
+        titleRequiredError: string;
+        titleTooLongError: string;
+        reviewTooLongError: string;
+        saveError: string;
         emptyReview: string;
         changePhoto: string;
-        editReview: string;
-        saveReview: string;
+        editRecord: string;
+        saveRecord: string;
         viewRecipe: string;
         deleteRecord: string;
         loading: string;
@@ -710,14 +785,17 @@ export type UserPagesDict = {
       background: {
         title: string;
         closeLabel: string;
-        monthOnlyLabel: string;
+        appliesGloballyLabel: string;
         intro: string;
         previewLabel: string;
         optionsTitle: string;
         optionsLabel: string;
-        optionLabels: Record<"dot" | "linen" | "tile" | "wood", string>;
-        customBackground: string;
+        optionLabel: string;
+        loading: string;
+        error: string;
+        retry: string;
         apply: string;
+        applying: string;
       };
       delete: {
         title: string;
@@ -733,6 +811,7 @@ export type UserPagesDict = {
         recordDeleted: string;
         recordDeleteFailed: string;
         backgroundChanged: string;
+        backgroundChangeFailed: string;
       };
     };
     dailyRecord: {

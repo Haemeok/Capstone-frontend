@@ -6,6 +6,7 @@ import {
   getCookingRecordCalendarDate,
   getCookingRecordCalendarMonth,
   getCookingRecords,
+  getStickerBookBackgrounds,
 } from "../recordApi";
 import { COOKING_RECORD_QUERY_KEYS } from "../recordQueryKeys";
 
@@ -53,6 +54,23 @@ it("목록 기본값은 첫 페이지와 날짜 그룹 30개입니다", async ()
   expect(apiGet).toHaveBeenCalledWith(END_POINTS.MY_RECORDS, {
     params: { page: 0, size: 30, lang: "ko" },
   });
+});
+
+it("배경 선택창용 활성 배경 목록을 전용 경로에서 조회합니다", async () => {
+  const response = {
+    items: [
+      { backgroundKey: "DEFAULT", imageUrl: null, selected: true },
+      {
+        backgroundKey: "PAPER_BEIGE",
+        imageUrl: "https://cdn.example.com/paper-beige.webp",
+        selected: false,
+      },
+    ],
+  };
+  apiGet.mockResolvedValue(response);
+
+  await expect(getStickerBookBackgrounds()).resolves.toEqual(response);
+  expect(apiGet).toHaveBeenCalledWith(END_POINTS.STICKER_BOOK_BACKGROUNDS);
 });
 
 it("목록 크기 60을 초과하면 요청 전에 거부합니다", async () => {
@@ -118,6 +136,39 @@ it("날짜 캘린더의 imageUrl과 생략된 MANUAL 수치를 화면용 nullabl
       isRemix: false,
     },
   ]);
+});
+
+it("상세 응답의 id를 프론트 문자열 ID 필드로 정규화합니다", async () => {
+  apiGet.mockResolvedValue({
+    id: 87,
+    recipeId: null,
+    reviewId: 91,
+    displayTitle: "동파육",
+    recordMemo: null,
+    originalImageUrl: null,
+    stickerImageUrl: null,
+    stickerStatus: "NONE",
+    cookedAt: null,
+    sourceType: "RECIPE",
+    recipeAvailable: false,
+    ingredientCost: null,
+    marketPrice: null,
+    nutrition: null,
+    calories: null,
+    savings: null,
+    visibility: null,
+    isRemix: null,
+    createdAt: "2026-08-18T10:00:00+09:00",
+  });
+
+  const detail = await getCookingRecord("87", "ko");
+
+  expect(detail).toMatchObject({
+    recordId: "87",
+    recipeId: null,
+    reviewId: "91",
+  });
+  expect(detail).not.toHaveProperty("id");
 });
 
 it("목록 query key는 sourceTypes 순서를 정규화하고 페이지 번호를 제외합니다", () => {

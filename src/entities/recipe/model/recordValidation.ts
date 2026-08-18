@@ -6,8 +6,8 @@ import type {
   RecordImageUploadUrlResponse,
 } from "./record";
 
-const MAX_RECORD_TITLE_LENGTH = 30;
-const MAX_RECORD_TEXT_LENGTH = 500;
+export const MAX_RECORD_TITLE_LENGTH = 30;
+export const MAX_RECORD_TEXT_LENGTH = 500;
 const MAX_RECORD_IMAGE_SIZE = 10 * 1024 * 1024;
 const MAX_RECORD_IMAGE_COUNT = 2;
 const ALLOWED_RECORD_IMAGE_TYPES = new Set([

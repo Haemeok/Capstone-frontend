@@ -23,9 +23,13 @@ export const COOKING_RECORD_QUERY_KEYS = {
   details: ["cooking-record", "detail"] as const,
   detail: (recordId: string, locale: Locale) =>
     ["cooking-record", "detail", recordId, locale] as const,
+  backgrounds: ["cooking-record", "background", "list"] as const,
   calendars: ["cooking-record", "calendar"] as const,
   calendarMonth: (year: number, month: number, locale: Locale) =>
     ["cooking-record", "calendar", "month", year, month, locale] as const,
   calendarDate: (date: string, locale: Locale) =>
     ["cooking-record", "calendar", "date", date, locale] as const,
+  recipeHistories: ["recipeHistory"] as const,
+  recipeHistory: (year: number, month: number) =>
+    ["recipeHistory", year, month] as const,
 };

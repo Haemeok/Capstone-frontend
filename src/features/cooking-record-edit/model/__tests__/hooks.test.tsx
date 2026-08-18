@@ -57,8 +57,16 @@ const createDeferred = <T,>() => {
 };
 
 const listPages: CookingRecordListResponse[] = [
-  { groups: [{ date: "2026-08-17", records: [] }], hasNext: true },
-  { groups: [{ date: "2026-08-16", records: [] }], hasNext: false },
+  {
+    background: null,
+    groups: [{ date: "2026-08-17", records: [] }],
+    hasNext: true,
+  },
+  {
+    background: null,
+    groups: [{ date: "2026-08-16", records: [] }],
+    hasNext: false,
+  },
 ];
 
 const detail: CookingRecordDetailResponse = {

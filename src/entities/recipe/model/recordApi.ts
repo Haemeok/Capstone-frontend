@@ -11,10 +11,20 @@ import type {
   LegacyRecipeHistoryResponse,
   RecipeHistoryDetailResponse,
   RecordTimelineResponse,
+  StickerBookBackgroundListResponse,
 } from "./record";
 
 const DEFAULT_RECORD_LIST_SIZE = 30;
 const MAX_RECORD_LIST_SIZE = 60;
+
+type CookingRecordDetailWireResponse = Omit<
+  CookingRecordDetailResponse,
+  "recordId" | "recipeId" | "reviewId"
+> & {
+  id: string | number;
+  recipeId: string | number | null;
+  reviewId: string | number | null;
+};
 
 type CookingRecordCalendarDateWireItem = Omit<
   CookingRecordCalendarDateItem,
@@ -33,6 +43,22 @@ type CookingRecordCalendarDateWireItem = Omit<
   calories?: number | null;
   recipeAvailable?: boolean;
 };
+
+const toNullableResourceId = (
+  resourceId: string | number | null
+): string | null => (resourceId === null ? null : String(resourceId));
+
+const normalizeCookingRecordDetail = ({
+  id,
+  recipeId,
+  reviewId,
+  ...detail
+}: CookingRecordDetailWireResponse): CookingRecordDetailResponse => ({
+  ...detail,
+  recordId: String(id),
+  recipeId: toNullableResourceId(recipeId),
+  reviewId: toNullableResourceId(reviewId),
+});
 
 const toFiniteNumberOrNull = (value?: number | null): number | null =>
   typeof value === "number" && Number.isFinite(value) ? value : null;
@@ -83,10 +109,21 @@ export const getCookingRecords = async ({
 export const getCookingRecord = async (
   recordId: string,
   locale: Locale
-): Promise<CookingRecordDetailResponse> =>
-  api.get<CookingRecordDetailResponse>(END_POINTS.MY_RECORD(recordId), {
-    params: { lang: locale },
-  });
+): Promise<CookingRecordDetailResponse> => {
+  const detail = await api.get<CookingRecordDetailWireResponse>(
+    END_POINTS.MY_RECORD(recordId),
+    {
+      params: { lang: locale },
+    }
+  );
+  return normalizeCookingRecordDetail(detail);
+};
+
+export const getStickerBookBackgrounds =
+  async (): Promise<StickerBookBackgroundListResponse> =>
+    api.get<StickerBookBackgroundListResponse>(
+      END_POINTS.STICKER_BOOK_BACKGROUNDS
+    );
 
 export const getCookingRecordCalendarMonth = async ({
   year,

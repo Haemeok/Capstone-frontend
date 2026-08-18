@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { COOKING_RECORD_QUERY_KEYS } from "@/entities/recipe";
 import { getRecipeHistory } from "@/entities/recipe/model/api";
 import { useAuthGate } from "@/entities/user";
 import { getUserStreak } from "@/entities/user/model/api";
@@ -24,7 +25,7 @@ export const useRecipeHistoryQuery = ({
 }) => {
   const authGate = useAuthGate();
   const { data, isLoading, isPending, error } = useQuery({
-    queryKey: ["recipeHistory", year, month],
+    queryKey: COOKING_RECORD_QUERY_KEYS.recipeHistory(year, month),
     queryFn: () => getRecipeHistory({ year, month }),
     enabled: authGate,
   });
