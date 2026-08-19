@@ -22,7 +22,7 @@ type MonthlyCookingRecordShareCardProps = {
   captureRef?: Ref<HTMLDivElement>;
 };
 
-const COLUMN_CLASS_NAMES = {
+const GRID_COLUMN_CLASS_NAMES = {
   1: "grid-cols-1",
   2: "grid-cols-2",
   3: "grid-cols-3",
@@ -34,8 +34,30 @@ const ITEM_SIZE_CLASS_NAMES = {
   hero: "h-32",
   spacious: "h-28",
   regular: "h-20",
-  compact: "h-12",
-  dense: "h-10",
+  roomy: "h-[68px]",
+  compact: "h-[62px]",
+  dense: "h-[54px]",
+  packed: "h-12",
+  maximum: "h-[42px]",
+} as const;
+
+const FLEX_BASIS_CLASS_NAMES = {
+  1: "basis-full",
+  2: "basis-1/2",
+  3: "basis-1/3",
+  4: "basis-1/4",
+  5: "basis-1/5",
+} as const;
+
+const ROW_GAP_CLASS_NAMES = {
+  hero: "gap-y-0",
+  spacious: "gap-y-0",
+  regular: "gap-y-0",
+  roomy: "gap-y-2",
+  compact: "gap-y-1.5",
+  dense: "gap-y-[5px]",
+  packed: "gap-y-[7px]",
+  maximum: "gap-y-1.5",
 } as const;
 
 const ROTATION_CLASS_NAMES = [
@@ -96,8 +118,16 @@ export const MonthlyCookingRecordShareCard = ({
       <div
         data-testid="monthly-cooking-record-share-grid"
         className={cn(
-          "absolute top-18 right-3.5 bottom-7 left-3.5 z-10 grid content-center items-center justify-items-center",
-          COLUMN_CLASS_NAMES[layout.columns]
+          "absolute top-18 right-3.5 bottom-7 left-3.5 z-10 content-center items-center",
+          layout.flow === "grid"
+            ? [
+                "grid justify-items-center",
+                GRID_COLUMN_CLASS_NAMES[layout.columns],
+              ]
+            : [
+                "flex flex-wrap justify-center",
+                ROW_GAP_CLASS_NAMES[layout.density],
+              ]
         )}
       >
         {visibleItems.map((item, index) => (
@@ -105,7 +135,10 @@ export const MonthlyCookingRecordShareCard = ({
             key={item.id}
             data-share-sticker="true"
             className={cn(
-              "flex w-full items-center justify-center",
+              "flex min-w-0 items-center justify-center",
+              layout.flow === "grid"
+                ? "w-full"
+                : ["shrink-0", FLEX_BASIS_CLASS_NAMES[layout.columns]],
               ITEM_SIZE_CLASS_NAMES[layout.density],
               ROTATION_CLASS_NAMES[index % ROTATION_CLASS_NAMES.length]
             )}
