@@ -177,7 +177,9 @@
 
     /* Bottom Drawer safe area 자동 처리 */
     [data-slot="drawer-content"][data-vaul-drawer-direction="bottom"] {
-      padding-bottom: env(safe-area-inset-bottom);
+      padding-bottom: calc(
+        env(safe-area-inset-bottom) + var(--keyboard-height, 0px)
+      );
     }
   }
 
@@ -318,13 +320,10 @@
   }
 
   /* Keyboard-aware bottom (single source: --keyboard-height).
-     KeyboardAwareProvider injects the variable. All sticky bottom inputs/containers
-     should use these utilities; avoid inline styles referencing --keyboard-height. */
+     KeyboardAwareProvider injects the variable. Sticky bottom inputs
+     should use this utility; avoid inline styles referencing --keyboard-height. */
   .kb-bottom {
     bottom: var(--keyboard-height, 0px);
-  }
-  .kb-pb {
-    padding-bottom: var(--keyboard-height, 0px);
   }
 }
 

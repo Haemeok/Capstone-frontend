@@ -85,7 +85,7 @@ describe("useKeyboardSource", () => {
     expect(result.current.source).not.toBe("bridge");
   });
 
-  it("bridge stale 5초 경과 시 viewport로 자동 폴백", () => {
+  it("키보드가 열린 동안 bridge 높이를 시간 제한 없이 유지", () => {
     setupViewport(800, 500);
     const { result } = renderHook(() => useKeyboardSource());
     act(() => {
@@ -98,6 +98,7 @@ describe("useKeyboardSource", () => {
     act(() => {
       jest.advanceTimersByTime(5001);
     });
-    expect(result.current.source).toBe("viewport");
+    expect(result.current.source).toBe("bridge");
+    expect(result.current.height).toBe(320);
   });
 });

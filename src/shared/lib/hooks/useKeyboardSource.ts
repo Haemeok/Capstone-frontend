@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import type {
   AppToWebMessage,
@@ -8,8 +8,6 @@ import type {
 } from "@/shared/lib/bridge/types";
 
 import { useKeyboardHeight } from "./useKeyboardHeight";
-
-const STALE_MS = 5000;
 
 type Result = {
   height: number;
@@ -39,8 +37,6 @@ export const useKeyboardSource = (): Result => {
   const [bridgeHeight, setBridgeHeight] = useState(0);
   const [bridgeOpen, setBridgeOpen] = useState(false);
   const [hasBridgeEverFired, setHasBridgeEverFired] = useState(false);
-  const [bridgeFresh, setBridgeFresh] = useState(false);
-  const staleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -54,11 +50,6 @@ export const useKeyboardSource = (): Result => {
       if (!isKeyboardMessage(parsed)) return;
       const { state, height } = parsed.payload;
       setHasBridgeEverFired(true);
-      setBridgeFresh(true);
-      if (staleTimerRef.current) clearTimeout(staleTimerRef.current);
-      staleTimerRef.current = setTimeout(() => {
-        setBridgeFresh(false);
-      }, STALE_MS);
       if (state === "will-hide" || state === "did-hide") {
         setBridgeHeight(0);
         setBridgeOpen(false);
@@ -68,13 +59,10 @@ export const useKeyboardSource = (): Result => {
       }
     };
     window.addEventListener("message", onMessage);
-    return () => {
-      window.removeEventListener("message", onMessage);
-      if (staleTimerRef.current) clearTimeout(staleTimerRef.current);
-    };
+    return () => window.removeEventListener("message", onMessage);
   }, []);
 
-  if (bridgeFresh) {
+  if (hasBridgeEverFired) {
     return { height: bridgeHeight, isOpen: bridgeOpen, source: "bridge" };
   }
   if (vvOpen) {
@@ -83,6 +71,6 @@ export const useKeyboardSource = (): Result => {
   return {
     height: 0,
     isOpen: false,
-    source: hasBridgeEverFired ? "viewport" : "none",
+    source: "none",
   };
 };
