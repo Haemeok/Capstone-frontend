@@ -51,10 +51,14 @@ it("T-03/T-04: 두 스토어를 안전한 새 탭 링크로 제공한다", () =>
 it("T-06: 세 가지 앱 장점을 정해진 순서로 보여준다", () => {
   render(<AppInstallEventView />);
   const titles = [
-    screen.getByText("링크 하나로 레시피 정리"),
-    screen.getByText("마음에 든 레시피를 한곳에 저장"),
+    screen.getByText("링크만 넣으면 재료와 순서가 한눈에"),
+    screen.getByText("다시 볼 요리는 한곳에"),
     screen.getByText("홈 화면에서 바로 시작"),
   ];
+
+  expect(screen.getByText("영상 정리")).toBeInTheDocument();
+  expect(screen.getByText("레시피 저장")).toBeInTheDocument();
+  expect(screen.getByText("빠른 실행")).toBeInTheDocument();
 
   expect(
     titles[0].compareDocumentPosition(titles[1]) &
@@ -69,7 +73,7 @@ it("T-06: 세 가지 앱 장점을 정해진 순서로 보여준다", () => {
 it("T-07/T-08: 앱 아이콘과 상단·하단 스토어 배지를 배치한다", () => {
   render(<AppInstallEventView />);
   const icon = screen.getByRole("img", { name: "레시피오 앱 아이콘" });
-  const firstBenefit = screen.getByText("링크 하나로 레시피 정리");
+  const firstBenefit = screen.getByText("링크만 넣으면 재료와 순서가 한눈에");
   const lastBenefit = screen.getByText("홈 화면에서 바로 시작");
   const appStoreLinks = screen.getAllByRole("link", {
     name: "App Store에서 다운로드",

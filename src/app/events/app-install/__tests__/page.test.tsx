@@ -16,7 +16,9 @@ it("T-03: route가 앱 설치 이벤트 내용을 직접 렌더링한다", () =>
   render(<Page />);
   expect(screen.getByText("레시피오 앱")).toBeInTheDocument();
   expect(
-    screen.getByText("매일 찾는 레시피, 앱에서 더 편하게")
+    screen.getByRole("heading", {
+      name: "자주 찾는 레시피를 앱에서 바로 꺼내보세요",
+    })
   ).toBeInTheDocument();
 });
 
