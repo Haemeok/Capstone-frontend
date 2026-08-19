@@ -177,9 +177,7 @@
 
     /* Bottom Drawer safe area 자동 처리 */
     [data-slot="drawer-content"][data-vaul-drawer-direction="bottom"] {
-      padding-bottom: calc(
-        env(safe-area-inset-bottom) + var(--keyboard-height, 0px)
-      );
+      padding-bottom: env(safe-area-inset-bottom);
     }
   }
 
@@ -324,6 +322,9 @@
      should use this utility; avoid inline styles referencing --keyboard-height. */
   .kb-bottom {
     bottom: var(--keyboard-height, 0px);
+  }
+  .kb-pb {
+    padding-bottom: var(--keyboard-height, 0px);
   }
 }
 

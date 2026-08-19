@@ -74,7 +74,7 @@ export const CreateRecipeBookSheet = ({ open, onOpenChange }: Props) => {
   const error = form.formState.errors.name?.message;
 
   const Body = (
-    <form onSubmit={onSubmit} className="space-y-4 px-6 pb-6">
+    <form onSubmit={onSubmit} className="kb-pb space-y-4 px-6 pb-6">
       <div>
         <input
           {...form.register("name")}

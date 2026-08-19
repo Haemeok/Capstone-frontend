@@ -41,7 +41,7 @@ export const MissingFormView = ({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.2 }}
-      className="flex max-h-[70vh] flex-col"
+      className="kb-pb flex max-h-[70vh] flex-col"
     >
       <Header>
         <div className="flex items-center gap-2">

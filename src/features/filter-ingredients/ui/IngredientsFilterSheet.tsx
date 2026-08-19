@@ -128,7 +128,7 @@ const IngredientsFilterSheetContent = ({
   };
 
   return (
-    <>
+    <div className="kb-pb flex min-h-0 flex-1 flex-col">
       <Header className="flex-shrink-0 px-4 pt-4 pb-4 sm:px-6 sm:pt-6">
         <Title className="text-ink text-xl font-bold">
           {dict.filters.ingredientsTitle}
@@ -201,6 +201,6 @@ const IngredientsFilterSheetContent = ({
           })}
         </Button>
       </Footer>
-    </>
+    </div>
   );
 };

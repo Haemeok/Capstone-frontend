@@ -85,7 +85,7 @@ export const ReferralSheet = ({ open, onOpenChange }: ReferralSheetProps) => {
           <Title className="text-lg font-bold">{headerText}</Title>
         </Header>
 
-        <div className="px-5 pb-6">
+        <div className="kb-pb px-5 pb-6">
           {isActive && (
             <AdFreeActiveNotice
               remaining={remaining}

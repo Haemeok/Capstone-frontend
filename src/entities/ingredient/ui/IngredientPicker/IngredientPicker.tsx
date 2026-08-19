@@ -117,112 +117,119 @@ const IngredientPicker = ({
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
       <DrawerContent variant="full">
-        <header className="relative flex items-center justify-center border-b border-gray-100 px-4 py-3">
-          <DrawerClose
-            aria-label={t.closeAria}
-            className="text-ink-sub absolute left-3 cursor-pointer"
-          >
-            <X size={24} />
-          </DrawerClose>
-          <DrawerTitle className="text-ink text-base font-bold">
-            {title ?? t.title}
-          </DrawerTitle>
-        </header>
-
-        <form onSubmit={handleSearchSubmit} className="px-4 pt-3">
-          <div className="relative">
-            <Search
-              size={18}
-              className="text-ink-muted pointer-events-none absolute top-1/2 left-4 -translate-y-1/2"
-              aria-hidden="true"
-            />
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder={t.searchPlaceholder}
-              className="text-ink placeholder:text-ink-muted focus-visible:ring-olive-light w-full rounded-lg border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus-visible:ring-2 focus-visible:outline-none"
-              value={inputValue}
-              onChange={handleInputChange}
-            />
-            <button type="submit" aria-label={t.searchAria} className="sr-only">
-              {t.searchAction}
-            </button>
-          </div>
-        </form>
-
-        <div className="scrollbar-hide mt-3 flex gap-2 overflow-x-auto px-4 pb-3">
-          {categories.map((category) => (
-            <button
-              key={category}
-              type="button"
-              onClick={() => {
-                if (selectedCategory === category) return;
-                triggerHaptic("Light");
-                setSelectedCategory(category);
-              }}
-              aria-pressed={selectedCategory === category}
-              className={cn(
-                "flex-shrink-0 cursor-pointer rounded-md px-4 py-1.5 text-sm transition-colors",
-                selectedCategory === category
-                  ? "bg-gray-900 font-medium text-white"
-                  : "text-ink-sub bg-gray-100 hover:bg-gray-200"
-              )}
+        <div className="kb-pb flex min-h-0 flex-1 flex-col">
+          <header className="relative flex items-center justify-center border-b border-gray-100 px-4 py-3">
+            <DrawerClose
+              aria-label={t.closeAria}
+              className="text-ink-sub absolute left-3 cursor-pointer"
             >
-              {category === "나의 재료"
-                ? t.myIngredients
-                : localize(category, "ingredientCategory")}
-            </button>
-          ))}
-        </div>
+              <X size={24} />
+            </DrawerClose>
+            <DrawerTitle className="text-ink text-base font-bold">
+              {title ?? t.title}
+            </DrawerTitle>
+          </header>
 
-        <div className="flex-1 overflow-y-auto p-4">
-          {isPending ? (
-            <p className="text-ink-muted text-center">{t.loading}</p>
-          ) : status === "error" ? (
-            <p role="alert" className="text-ink-sub bg-gray-100 p-4 text-sm">
-              {format(t.errorPrefix, {
-                message:
-                  error instanceof Error ? error.message : t.unknownError,
-              })}
-            </p>
-          ) : (
-            <>
-              <div className="grid grid-cols-3 gap-3">
-                {ingredientItems?.map((ingredient) => (
-                  <IngredientPickerCard
-                    key={ingredient.id}
-                    ingredient={ingredient}
-                    isSelected={isSelected(ingredient.id)}
-                    isAlreadyAdded={isAlreadyAdded(ingredient)}
-                    onToggle={toggle}
-                  />
-                ))}
-              </div>
-              <div ref={ref} className="h-10 text-center">
-                {!hasNextPage && (data?.pages[0]?.content?.length ?? 0) > 0 && (
-                  <p className="text-ink-muted text-sm">{t.allLoaded}</p>
+          <form onSubmit={handleSearchSubmit} className="px-4 pt-3">
+            <div className="relative">
+              <Search
+                size={18}
+                className="text-ink-muted pointer-events-none absolute top-1/2 left-4 -translate-y-1/2"
+                aria-hidden="true"
+              />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder={t.searchPlaceholder}
+                className="text-ink placeholder:text-ink-muted focus-visible:ring-olive-light w-full rounded-lg border-0 bg-gray-100 py-3 pr-4 pl-11 text-sm focus-visible:ring-2 focus-visible:outline-none"
+                value={inputValue}
+                onChange={handleInputChange}
+              />
+              <button
+                type="submit"
+                aria-label={t.searchAria}
+                className="sr-only"
+              >
+                {t.searchAction}
+              </button>
+            </div>
+          </form>
+
+          <div className="scrollbar-hide mt-3 flex gap-2 overflow-x-auto px-4 pb-3">
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => {
+                  if (selectedCategory === category) return;
+                  triggerHaptic("Light");
+                  setSelectedCategory(category);
+                }}
+                aria-pressed={selectedCategory === category}
+                className={cn(
+                  "flex-shrink-0 cursor-pointer rounded-md px-4 py-1.5 text-sm transition-colors",
+                  selectedCategory === category
+                    ? "bg-gray-900 font-medium text-white"
+                    : "text-ink-sub bg-gray-100 hover:bg-gray-200"
                 )}
-              </div>
-              {data?.pages[0]?.content?.length === 0 && !isFetching && (
-                <p className="text-ink-muted py-10 text-center">
-                  {format(t.noResults, {
-                    query:
-                      searchQuery ||
-                      (selectedCategory === "나의 재료"
-                        ? t.myIngredients
-                        : localize(selectedCategory, "ingredientCategory")),
-                  })}
-                </p>
-              )}
-            </>
-          )}
-        </div>
+              >
+                {category === "나의 재료"
+                  ? t.myIngredients
+                  : localize(category, "ingredientCategory")}
+              </button>
+            ))}
+          </div>
 
-        <IngredientSelectionTray
-          items={selectedItems}
-          onRemove={remove}
-          onComplete={handleComplete}
-        />
+          <div className="flex-1 overflow-y-auto p-4">
+            {isPending ? (
+              <p className="text-ink-muted text-center">{t.loading}</p>
+            ) : status === "error" ? (
+              <p role="alert" className="text-ink-sub bg-gray-100 p-4 text-sm">
+                {format(t.errorPrefix, {
+                  message:
+                    error instanceof Error ? error.message : t.unknownError,
+                })}
+              </p>
+            ) : (
+              <>
+                <div className="grid grid-cols-3 gap-3">
+                  {ingredientItems?.map((ingredient) => (
+                    <IngredientPickerCard
+                      key={ingredient.id}
+                      ingredient={ingredient}
+                      isSelected={isSelected(ingredient.id)}
+                      isAlreadyAdded={isAlreadyAdded(ingredient)}
+                      onToggle={toggle}
+                    />
+                  ))}
+                </div>
+                <div ref={ref} className="h-10 text-center">
+                  {!hasNextPage &&
+                    (data?.pages[0]?.content?.length ?? 0) > 0 && (
+                      <p className="text-ink-muted text-sm">{t.allLoaded}</p>
+                    )}
+                </div>
+                {data?.pages[0]?.content?.length === 0 && !isFetching && (
+                  <p className="text-ink-muted py-10 text-center">
+                    {format(t.noResults, {
+                      query:
+                        searchQuery ||
+                        (selectedCategory === "나의 재료"
+                          ? t.myIngredients
+                          : localize(selectedCategory, "ingredientCategory")),
+                    })}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+
+          <IngredientSelectionTray
+            items={selectedItems}
+            onRemove={remove}
+            onComplete={handleComplete}
+          />
+        </div>
       </DrawerContent>
     </Drawer>
   );

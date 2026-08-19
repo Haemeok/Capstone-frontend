@@ -76,7 +76,7 @@ export const ManualCookingRecordDrawer = ({
         <motion.div
           layout
           transition={{ duration: 0.24, ease: "easeOut" }}
-          className="flex min-h-0 flex-1 flex-col"
+          className="kb-pb flex min-h-0 flex-1 flex-col"
         >
           <AnimatePresence mode="wait" initial={false}>
             {isSuccess ? (
