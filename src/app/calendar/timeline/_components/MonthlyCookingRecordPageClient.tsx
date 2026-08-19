@@ -45,6 +45,21 @@ export const MonthlyCookingRecordPageClient = () => {
         message: copy.toast.backgroundChangeFailed,
         variant: "error",
       }),
+    onCustomAdded: () =>
+      addToast({
+        message: copy.toast.customBackgroundAdded,
+        variant: "success",
+      }),
+    onCustomDeleted: () =>
+      addToast({
+        message: copy.toast.customBackgroundDeleted,
+        variant: "success",
+      }),
+    onCustomDeleteError: () =>
+      addToast({
+        message: copy.toast.customBackgroundDeleteFailed,
+        variant: "error",
+      }),
   });
 
   const handleSelectRecord = (recordId: string) => {

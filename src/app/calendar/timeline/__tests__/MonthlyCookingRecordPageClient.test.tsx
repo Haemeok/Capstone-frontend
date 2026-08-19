@@ -102,6 +102,7 @@ describe("MonthlyCookingRecordPageClient", () => {
     getCookingRecords.mockResolvedValue({
       background: {
         backgroundKey: "PAPER_BEIGE",
+        backgroundType: "PRESET",
         imageUrl: "/backgrounds/paper-beige.webp",
       },
       groups: [
@@ -118,9 +119,15 @@ describe("MonthlyCookingRecordPageClient", () => {
     });
     getStickerBookBackgrounds.mockResolvedValue({
       items: [
-        { backgroundKey: "DEFAULT", imageUrl: null, selected: true },
+        {
+          backgroundKey: "DEFAULT",
+          backgroundType: "PRESET",
+          imageUrl: null,
+          selected: true,
+        },
         {
           backgroundKey: "PAPER_BEIGE",
+          backgroundType: "PRESET",
           imageUrl: "/backgrounds/paper-beige.webp",
           selected: false,
         },
@@ -263,6 +270,7 @@ describe("MonthlyCookingRecordPageClient", () => {
     getCookingRecords.mockResolvedValue({
       background: {
         backgroundKey: "PAPER_BEIGE",
+        backgroundType: "PRESET",
         imageUrl: "/backgrounds/paper-beige.webp",
       },
       groups: [],
@@ -297,6 +305,7 @@ describe("MonthlyCookingRecordPageClient", () => {
     getCookingRecords.mockResolvedValue({
       background: {
         backgroundKey: "PAPER_BEIGE",
+        backgroundType: "PRESET",
         imageUrl: "/backgrounds/paper-beige.webp",
       },
       groups: [],
@@ -332,6 +341,7 @@ describe("MonthlyCookingRecordPageClient", () => {
     getCookingRecords.mockResolvedValue({
       background: {
         backgroundKey: "PAPER_BEIGE",
+        backgroundType: "PRESET",
         imageUrl: "/backgrounds/paper-beige.webp",
       },
       groups: [],
@@ -358,7 +368,11 @@ describe("MonthlyCookingRecordPageClient", () => {
 
   it("보기 설정을 열 때 서버 목록을 조회하고 선택한 전역 배경을 적용합니다", async () => {
     getCookingRecords.mockResolvedValueOnce({
-      background: { backgroundKey: "DEFAULT", imageUrl: null },
+      background: {
+        backgroundKey: "DEFAULT",
+        backgroundType: "PRESET",
+        imageUrl: null,
+      },
       groups: [
         {
           date: "2026-08-11",

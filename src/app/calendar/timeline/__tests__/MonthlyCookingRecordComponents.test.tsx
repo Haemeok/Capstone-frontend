@@ -213,7 +213,11 @@ describe("CookingRecordBoard", () => {
       <CookingRecordBoard
         ariaLabel="2026년 8월 요리 기록"
         records={records}
-        background={{ backgroundKey: "DEFAULT", imageUrl: null }}
+        background={{
+          backgroundKey: "DEFAULT",
+          backgroundType: "PRESET",
+          imageUrl: null,
+        }}
         recordCountLabel="4개의 요리"
         addRecordLabel="요리 기록 추가"
         shareRecordLabel="8월 요리 기록 공유"
@@ -267,6 +271,7 @@ describe("CookingRecordBoard", () => {
         records={[]}
         background={{
           backgroundKey: "WOOD",
+          backgroundType: "PRESET",
           imageUrl: "/backgrounds/wood.webp",
         }}
         recordCountLabel="0개의 요리"
@@ -309,7 +314,11 @@ describe("CookingRecordBoard", () => {
     };
     const boardProps = {
       ariaLabel: "요리 기록",
-      background: { backgroundKey: "DEFAULT", imageUrl: null },
+      background: {
+        backgroundKey: "DEFAULT",
+        backgroundType: "PRESET" as const,
+        imageUrl: null,
+      },
       recordCountLabel: "1개의 요리",
       addRecordLabel: "요리 기록 추가",
       shareRecordLabel: "요리 기록 공유",
@@ -355,6 +364,7 @@ describe("CookingRecordBoard", () => {
         records={[]}
         background={{
           backgroundKey: "WOOD",
+          backgroundType: "PRESET",
           imageUrl: "/backgrounds/wood.webp",
         }}
         recordCountLabel="0개의 요리"
@@ -529,17 +539,20 @@ describe("CookingRecordViewSettingsDrawer", () => {
         backgrounds={[
           {
             backgroundKey: "DEFAULT",
+            backgroundType: "PRESET",
             imageUrl: null,
             selected: false,
           },
           {
             backgroundKey: "PAPER_BEIGE",
+            backgroundType: "PRESET",
             imageUrl: "/backgrounds/paper-beige.webp",
             selected: true,
           },
         ]}
         previewBackground={{
           backgroundKey: "PAPER_BEIGE",
+          backgroundType: "PRESET",
           imageUrl: "/backgrounds/paper-beige.webp",
         }}
         selectedBackgroundKey="PAPER_BEIGE"
@@ -567,6 +580,23 @@ describe("CookingRecordViewSettingsDrawer", () => {
           showRecordNamesDescription: "사진에 요리 이름을 표시해요.",
           intro: "배경은 모든 달의 요리 기록에 함께 적용돼요.",
           previewLabel: "선택한 배경 미리보기",
+          customTitle: "내 배경",
+          customOptionsLabel: "내 배경 선택",
+          addCustom: "사진 추가",
+          customLimit: "내 배경 {count}/20",
+          addingCustom: "배경을 추가하는 중",
+          processingCustom: "사진을 처리하는 중",
+          retryCustom: "등록 다시 시도",
+          deleteCustom: "이 배경 삭제",
+          customErrors: {
+            EMPTY_FILE: "빈 파일입니다.",
+            UNSUPPORTED_TYPE: "지원하지 않는 형식입니다.",
+            FILE_TOO_LARGE: "파일이 너무 큽니다.",
+            RESELECT_FILE: "사진을 다시 선택해 주세요.",
+            LIMIT_REACHED: "20개까지 추가할 수 있습니다.",
+            PROCESSING_TIMEOUT: "사진 처리가 늦어지고 있습니다.",
+            UPLOAD_FAILED: "추가하지 못했습니다.",
+          },
           optionsTitle: "준비된 배경",
           optionsLabel: "준비된 배경 선택",
           optionLabel: "배경 {index}",
@@ -578,10 +608,15 @@ describe("CookingRecordViewSettingsDrawer", () => {
         }}
         isListPending={false}
         isListError={false}
+        isAddingCustom={false}
+        isCustomBackgroundProcessing={false}
         isApplying={false}
         onOpenChange={jest.fn()}
         onRecordNameVisibilityChange={onRecordNameVisibilityChange}
         onSelectBackground={onSelectBackground}
+        onAddCustomBackground={jest.fn()}
+        onRetryCustomBackground={jest.fn()}
+        onRequestDeleteCustomBackground={jest.fn()}
         onRetry={jest.fn()}
         onApply={onApply}
       />

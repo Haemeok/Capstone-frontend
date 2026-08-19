@@ -277,6 +277,7 @@ describe("CalendarTabContent cooking record preview", () => {
       ...makeRecordPage(1),
       background: {
         backgroundKey: "WOOD",
+        backgroundType: "PRESET",
         imageUrl: "/backgrounds/wood.webp",
       },
     });

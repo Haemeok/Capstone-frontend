@@ -74,6 +74,10 @@ export const END_POINTS = {
   MY_RECORDS: "/me/records",
   MY_RECORD: (recordId: string) => `/me/records/${recordId}`,
   STICKER_BOOK_BACKGROUNDS: "/me/sticker-book/backgrounds",
+  STICKER_BOOK_BACKGROUND_IMAGE_UPLOAD_URL:
+    "/me/sticker-book/backgrounds/image-upload-url",
+  STICKER_BOOK_BACKGROUND_ITEM: (backgroundKey: string) =>
+    `/me/sticker-book/backgrounds/${encodeURIComponent(backgroundKey)}`,
   STICKER_BOOK_BACKGROUND: "/me/sticker-book/background",
   RECORD_IMAGE: (recordId: string) => `/me/records/${recordId}/image`,
   RECIPE_REVIEWS: (recipeId: string) => `/recipes/${recipeId}/reviews`,

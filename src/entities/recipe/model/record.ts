@@ -95,8 +95,11 @@ export type CookingRecordListGroup = {
   records: CookingRecordListItem[];
 };
 
+export type StickerBookBackgroundType = "PRESET" | "CUSTOM";
+
 export type StickerBookBackground = {
   backgroundKey: string;
+  backgroundType: StickerBookBackgroundType;
   imageUrl: string | null;
 };
 
@@ -110,6 +113,27 @@ export type StickerBookBackgroundListResponse = {
 
 export type StickerBookBackgroundUpdateInput = {
   backgroundKey: string;
+};
+
+export type StickerBookBackgroundUpdateResponse = {
+  backgroundKey: string;
+  imageUrl: string | null;
+};
+
+export type StickerBookBackgroundUploadUrlResponse = {
+  presignedUrl: string;
+  uploadKey: string;
+  imageKey: string;
+};
+
+export type CustomStickerBookBackgroundCreateInput = {
+  imageKey: string;
+};
+
+export type CustomStickerBookBackgroundCreateResponse = {
+  backgroundKey: string;
+  backgroundType: "CUSTOM";
+  imageUrl: string;
 };
 
 export type CookingRecordListResponse = {

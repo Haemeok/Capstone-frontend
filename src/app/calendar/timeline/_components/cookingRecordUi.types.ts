@@ -62,6 +62,24 @@ export type CookingRecordViewSettingsCopy = {
   showRecordNamesDescription: string;
   intro: string;
   previewLabel: string;
+  customTitle: string;
+  customOptionsLabel: string;
+  addCustom: string;
+  customLimit: string;
+  addingCustom: string;
+  processingCustom: string;
+  retryCustom: string;
+  deleteCustom: string;
+  customErrors: Record<
+    | "EMPTY_FILE"
+    | "UNSUPPORTED_TYPE"
+    | "FILE_TOO_LARGE"
+    | "RESELECT_FILE"
+    | "LIMIT_REACHED"
+    | "PROCESSING_TIMEOUT"
+    | "UPLOAD_FAILED",
+    string
+  >;
   optionsTitle: string;
   optionsLabel: string;
   optionLabel: string;

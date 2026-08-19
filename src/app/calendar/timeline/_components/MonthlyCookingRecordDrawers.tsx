@@ -1,6 +1,7 @@
 "use client";
 
 import type { UserPagesDict } from "@/shared/i18n";
+import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
 import { ManualCookingRecordDrawer } from "@/features/cooking-record-create";
 
@@ -44,12 +45,32 @@ export const MonthlyCookingRecordDrawers = ({
       copy={copy.viewSettingsCopy}
       isListPending={background.isListPending}
       isListError={background.isListError}
+      isAddingCustom={background.isAddingCustom}
+      isCustomBackgroundProcessing={background.isCustomBackgroundProcessing}
+      customBackgroundErrorKind={background.customBackgroundErrorKind}
       isApplying={background.isApplying}
       onOpenChange={background.onOpenChange}
       onRecordNameVisibilityChange={onRecordNameVisibilityChange}
       onSelectBackground={background.selectBackground}
+      onAddCustomBackground={(file) =>
+        void background.addCustomBackground(file)
+      }
+      onRetryCustomBackground={() => void background.retryCustomBackground()}
+      onRequestDeleteCustomBackground={background.requestDeleteCustomBackground}
       onRetry={() => void background.retryList()}
       onApply={() => void background.apply()}
+    />
+
+    <DeleteModal
+      open={background.isDeleteCustomBackgroundOpen}
+      onOpenChange={background.onDeleteCustomBackgroundOpenChange}
+      title={copy.customBackgroundDelete.title}
+      description={copy.customBackgroundDelete.description}
+      cancelLabel={copy.customBackgroundDelete.cancel}
+      confirmLabel={copy.customBackgroundDelete.confirm}
+      pendingLabel={copy.customBackgroundDelete.deleting}
+      isPending={background.isDeletingCustomBackground}
+      onConfirm={() => void background.confirmDeleteCustomBackground()}
     />
 
     <ManualCookingRecordDrawer

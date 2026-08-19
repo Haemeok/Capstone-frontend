@@ -59,9 +59,15 @@ it("목록 기본값은 첫 페이지와 날짜 그룹 30개입니다", async ()
 it("배경 선택창용 활성 배경 목록을 전용 경로에서 조회합니다", async () => {
   const response = {
     items: [
-      { backgroundKey: "DEFAULT", imageUrl: null, selected: true },
+      {
+        backgroundKey: "DEFAULT",
+        backgroundType: "PRESET",
+        imageUrl: null,
+        selected: true,
+      },
       {
         backgroundKey: "PAPER_BEIGE",
+        backgroundType: "PRESET",
         imageUrl: "https://cdn.example.com/paper-beige.webp",
         selected: false,
       },

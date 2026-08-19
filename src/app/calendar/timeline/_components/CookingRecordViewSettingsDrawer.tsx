@@ -9,6 +9,8 @@ import type {
   StickerBookBackgroundOption,
 } from "@/entities/recipe";
 
+import type { CustomBackgroundErrorKind } from "@/features/cooking-record-background";
+
 import { CookingRecordBackgroundPicker } from "./CookingRecordBackgroundPicker";
 import { CookingRecordNameVisibilityToggle } from "./CookingRecordNameVisibilityToggle";
 import type {
@@ -26,10 +28,16 @@ export type CookingRecordViewSettingsDrawerProps = {
   copy: CookingRecordViewSettingsCopy;
   isListPending: boolean;
   isListError: boolean;
+  isAddingCustom: boolean;
+  isCustomBackgroundProcessing: boolean;
+  customBackgroundErrorKind?: CustomBackgroundErrorKind | null;
   isApplying: boolean;
   onOpenChange: (open: boolean) => void;
   onRecordNameVisibilityChange: (visible: boolean) => void;
   onSelectBackground: (backgroundKey: string) => void;
+  onAddCustomBackground: (file: File) => void;
+  onRetryCustomBackground: () => void;
+  onRequestDeleteCustomBackground: () => void;
   onRetry: () => void;
   onApply: () => void;
 };
@@ -47,10 +55,16 @@ export const CookingRecordViewSettingsDrawer = (
     copy,
     isListPending,
     isListError,
+    isAddingCustom,
+    isCustomBackgroundProcessing,
+    customBackgroundErrorKind,
     isApplying,
     onOpenChange,
     onRecordNameVisibilityChange,
     onSelectBackground,
+    onAddCustomBackground,
+    onRetryCustomBackground,
+    onRequestDeleteCustomBackground,
     onRetry,
     onApply,
   } = props;
@@ -102,8 +116,14 @@ export const CookingRecordViewSettingsDrawer = (
           copy={copy}
           isListPending={isListPending}
           isListError={isListError}
+          isAddingCustom={isAddingCustom}
+          isCustomBackgroundProcessing={isCustomBackgroundProcessing}
+          customBackgroundErrorKind={customBackgroundErrorKind}
           isApplying={isApplying}
           onSelectBackground={onSelectBackground}
+          onAddCustomBackground={onAddCustomBackground}
+          onRetryCustomBackground={onRetryCustomBackground}
+          onRequestDeleteCustomBackground={onRequestDeleteCustomBackground}
           onRetry={onRetry}
           onApply={onApply}
         />

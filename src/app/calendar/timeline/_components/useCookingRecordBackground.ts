@@ -2,30 +2,48 @@
 
 import { useState } from "react";
 
+import { isApiErrorWithCode } from "@/shared/api/errors";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type { StickerBookBackground } from "@/entities/recipe";
 import { useStickerBookBackgroundsQuery } from "@/entities/recipe";
 
-import { useUpdateStickerBookBackground } from "@/features/cooking-record-background";
+import {
+  getCustomBackgroundErrorKind,
+  useCreateCustomStickerBookBackground,
+  useDeleteCustomStickerBookBackground,
+  useUpdateStickerBookBackground,
+} from "@/features/cooking-record-background";
 
 export const useCookingRecordBackground = ({
   enabled,
   currentBackground,
   onApplied,
   onError,
+  onCustomAdded,
+  onCustomDeleted,
+  onCustomDeleteError,
 }: {
   enabled: boolean;
   currentBackground: StickerBookBackground | null;
   onApplied: () => void;
   onError: () => void;
+  onCustomAdded: () => void;
+  onCustomDeleted: () => void;
+  onCustomDeleteError: () => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string>();
+  const [deleteRequest, setDeleteRequest] = useState<{
+    backgroundKey: string;
+    wasApplied: boolean;
+  }>();
   const backgroundsQuery = useStickerBookBackgroundsQuery({
     enabled: enabled && isOpen,
   });
   const updateMutation = useUpdateStickerBookBackground();
+  const createMutation = useCreateCustomStickerBookBackground();
+  const deleteMutation = useDeleteCustomStickerBookBackground();
   const backgrounds = backgroundsQuery.data?.items ?? [];
   const serverSelectedKey = backgrounds.find(
     (item) => item.selected
@@ -37,6 +55,7 @@ export const useCookingRecordBackground = ({
     currentBackground;
 
   const open = () => {
+    createMutation.reset();
     setSelectedKey(undefined);
     setIsOpen(true);
   };
@@ -56,6 +75,59 @@ export const useCookingRecordBackground = ({
     }
   };
 
+  const addCustomBackground = async (file: File) => {
+    try {
+      const background = await createMutation.createCustomBackground(file);
+      setSelectedKey(background.backgroundKey);
+      triggerHaptic("Success");
+      onCustomAdded();
+    } catch {
+      triggerHaptic("Error");
+    }
+  };
+
+  const retryCustomBackground = async () => {
+    try {
+      const background = await createMutation.retryRegistration();
+      if (background === undefined) return;
+      setSelectedKey(background.backgroundKey);
+      triggerHaptic("Success");
+      onCustomAdded();
+    } catch {
+      triggerHaptic("Error");
+    }
+  };
+
+  const requestDeleteCustomBackground = () => {
+    const selectedBackground = backgrounds.find(
+      (background) => background.backgroundKey === selectedBackgroundKey
+    );
+    if (selectedBackground?.backgroundType !== "CUSTOM") return;
+    setDeleteRequest({
+      backgroundKey: selectedBackground.backgroundKey,
+      wasApplied: selectedBackground.selected,
+    });
+  };
+
+  const confirmDeleteCustomBackground = async () => {
+    if (deleteRequest === undefined) return;
+    try {
+      await deleteMutation.mutateAsync(deleteRequest);
+      setSelectedKey(undefined);
+      setDeleteRequest(undefined);
+      createMutation.reset();
+      triggerHaptic("Success");
+      onCustomDeleted();
+    } catch (error) {
+      if (isApiErrorWithCode(error, 404, 808)) {
+        setSelectedKey(undefined);
+        setDeleteRequest(undefined);
+      }
+      triggerHaptic("Error");
+      onCustomDeleteError();
+    }
+  };
+
   return {
     isOpen,
     open,
@@ -64,10 +136,24 @@ export const useCookingRecordBackground = ({
     selectedBackgroundKey,
     previewBackground,
     selectBackground: setSelectedKey,
+    addCustomBackground,
+    retryCustomBackground,
+    requestDeleteCustomBackground,
+    confirmDeleteCustomBackground,
+    onDeleteCustomBackgroundOpenChange: (open: boolean) => {
+      if (!open && !deleteMutation.isPending) setDeleteRequest(undefined);
+    },
     apply,
     isListPending: backgroundsQuery.isPending,
     isListError: backgroundsQuery.isError,
     retryList: backgroundsQuery.refetch,
     isApplying: updateMutation.isPending,
+    isAddingCustom: createMutation.isPending,
+    isDeleteCustomBackgroundOpen: deleteRequest !== undefined,
+    isDeletingCustomBackground: deleteMutation.isPending,
+    isCustomBackgroundProcessing: createMutation.isImageProcessing,
+    customBackgroundErrorKind: getCustomBackgroundErrorKind(
+      createMutation.error
+    ),
   };
 };

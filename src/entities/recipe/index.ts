@@ -48,6 +48,8 @@ export type {
   CookingRecordListResponse,
   CookingRecordMetadataUpdateInput,
   CookingRecordSuccessResponse,
+  CustomStickerBookBackgroundCreateInput,
+  CustomStickerBookBackgroundCreateResponse,
   LegacyRecipeHistoryResponse,
   ManualCookingRecordCreateInput,
   RecipeCompletionState,
@@ -66,7 +68,10 @@ export type {
   StickerBookBackground,
   StickerBookBackgroundListResponse,
   StickerBookBackgroundOption,
+  StickerBookBackgroundType,
   StickerBookBackgroundUpdateInput,
+  StickerBookBackgroundUpdateResponse,
+  StickerBookBackgroundUploadUrlResponse,
   StickerStatus,
 } from "./model/record";
 export {
