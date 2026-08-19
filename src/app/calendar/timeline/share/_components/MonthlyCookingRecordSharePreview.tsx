@@ -69,7 +69,7 @@ export const MonthlyCookingRecordSharePreview = ({
       </main>
       <MonthlyCookingRecordShareActions
         status={image.status}
-        isPending={actions.isPending}
+        pendingAction={actions.pendingAction}
         copy={copy.share}
         onSave={actions.save}
         onShare={actions.share}

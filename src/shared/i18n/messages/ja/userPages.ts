@@ -173,6 +173,8 @@ export const userPages: UserPagesDict = {
         brand: "RECIPIO",
         save: "画像を保存",
         share: "共有する",
+        saving: "保存中...",
+        sharing: "共有の準備中...",
         preparing: "画像を作成中",
         generationError: "画像を作成できませんでした。",
         retryImage: "画像をもう一度作る",

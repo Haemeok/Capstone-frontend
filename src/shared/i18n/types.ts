@@ -709,6 +709,8 @@ export type UserPagesDict = {
         brand: string;
         save: string;
         share: string;
+        saving: string;
+        sharing: string;
         preparing: string;
         generationError: string;
         retryImage: string;

@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -26,6 +27,22 @@ const mockedIsAppWebView = jest.fn();
 const mockedRequestNativeImageAction = jest.fn();
 const mockedTriggerHaptic = jest.fn();
 const mockedCaptureAnalyticsEvent = jest.fn();
+let captureTarget: HTMLDivElement;
+
+const createDeferred = <T,>() => {
+  let resolvePromise: ((value: T) => void) | undefined;
+  const promise = new Promise<T>((resolve) => {
+    resolvePromise = resolve;
+  });
+
+  return {
+    promise,
+    resolve: (value: T) => {
+      if (!resolvePromise) throw new Error("deferred promise is not ready");
+      resolvePromise(value);
+    },
+  };
+};
 
 jest.mock("@/features/monthly-cooking-record-share", () => {
   const actual = jest.requireActual("@/features/monthly-cooking-record-share");
@@ -106,6 +123,12 @@ const createWrapper = () => {
 describe("MonthlyCookingRecordSharePageClient", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest
+      .spyOn(window, "requestAnimationFrame")
+      .mockImplementation((callback) => {
+        callback(0);
+        return 1;
+      });
     mockedIsAppWebView.mockReturnValue(false);
     mockedRequestNativeImageAction.mockResolvedValue({
       v: 1,
@@ -115,9 +138,10 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     });
     useToastStore.setState({ toastList: [] });
     useUserStore.setState({ isAuthReady: true, isAuthenticated: true });
+    captureTarget = document.createElement("div");
     mockedUseImage.mockReturnValue({
       captureRef: jest.fn(),
-      captureTarget: document.createElement("div"),
+      captureTarget,
       status: "ready",
       blob: new Blob(["png"], { type: "image/png" }),
       error: null,
@@ -159,6 +183,10 @@ describe("MonthlyCookingRecordSharePageClient", () => {
       ],
       hasNext: false,
     });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it("성과 수치 없이 선택 월의 1대1 스티커북을 보여줍니다", async () => {
@@ -328,6 +356,56 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     );
   });
 
+  it("WebView 저장이 끝날 때까지 진행 상태를 표시하고 캡처 영역의 흰 모서리를 제외합니다", async () => {
+    mockedIsAppWebView.mockReturnValue(true);
+    captureTarget.style.borderRadius = "16px";
+    captureTarget.style.boxShadow = "0 8px 24px rgb(34 34 34 / 0.1)";
+    const result = createDeferred<{
+      v: 1;
+      actionId: string;
+      action: "saveImage";
+      status: "saved";
+    }>();
+    mockedRequestNativeImageAction.mockImplementationOnce(() => {
+      expect(captureTarget.style.borderRadius).toBe("0px");
+      expect(captureTarget.style.boxShadow).toBe("none");
+      return result.promise;
+    });
+    const Wrapper = createWrapper();
+    render(
+      <Wrapper>
+        <MonthlyCookingRecordSharePageClient />
+      </Wrapper>
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "이미지 저장" }));
+
+    expect(
+      await screen.findByRole("button", { name: "저장 중..." })
+    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: "공유하기" })).toBeDisabled();
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+
+    await act(async () => {
+      result.resolve({
+        v: 1,
+        actionId: "action-1",
+        action: "saveImage",
+        status: "saved",
+      });
+      await result.promise;
+    });
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "이미지 저장" })).toBeEnabled()
+    );
+    expect(captureTarget.style.borderRadius).toBe("16px");
+    expect(captureTarget.style.boxShadow).toBe(
+      "0 8px 24px rgb(34 34 34 / 0.1)"
+    );
+    expect(mockedTriggerHaptic).toHaveBeenCalledWith("Success");
+  });
+
   it("구버전 WebView는 저장 성공으로 표시하지 않고 앱 업데이트를 안내합니다", async () => {
     mockedIsAppWebView.mockReturnValue(true);
     const unsupportedError = new Error("unsupported");
@@ -396,9 +474,13 @@ describe("MonthlyCookingRecordSharePageClient", () => {
 
   it("WebView 공유 실패는 다운로드로 바꾸지 않고 재시도 가능한 오류를 안내합니다", async () => {
     mockedIsAppWebView.mockReturnValue(true);
-    mockedRequestNativeImageAction.mockRejectedValueOnce(
-      new Error("share failed")
-    );
+    captureTarget.style.borderRadius = "16px";
+    captureTarget.style.boxShadow = "0 8px 24px rgb(34 34 34 / 0.1)";
+    mockedRequestNativeImageAction.mockImplementationOnce(() => {
+      expect(captureTarget.style.borderRadius).toBe("0px");
+      expect(captureTarget.style.boxShadow).toBe("none");
+      return Promise.reject(new Error("share failed"));
+    });
     const Wrapper = createWrapper();
     render(
       <Wrapper>
@@ -418,6 +500,10 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     );
     expect(mockedDownloadImage).not.toHaveBeenCalled();
     expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+    expect(captureTarget.style.borderRadius).toBe("16px");
+    expect(captureTarget.style.boxShadow).toBe(
+      "0 8px 24px rgb(34 34 34 / 0.1)"
+    );
     expect(mockedCaptureAnalyticsEvent).toHaveBeenCalledWith(
       "monthly_share_native_action_diagnostic",
       {

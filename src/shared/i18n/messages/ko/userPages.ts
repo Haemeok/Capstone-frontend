@@ -172,6 +172,8 @@ export const userPages: UserPagesDict = {
         brand: "RECIPIO",
         save: "이미지 저장",
         share: "공유하기",
+        saving: "저장 중...",
+        sharing: "공유 준비 중...",
         preparing: "이미지 만드는 중",
         generationError: "이미지를 만들지 못했어요.",
         retryImage: "이미지 다시 만들기",

@@ -172,6 +172,8 @@ export const userPages: UserPagesDict = {
         brand: "RECIPIO",
         save: "Save image",
         share: "Share",
+        saving: "Saving...",
+        sharing: "Preparing to share...",
         preparing: "Creating image",
         generationError: "We couldn't create the image.",
         retryImage: "Create image again",

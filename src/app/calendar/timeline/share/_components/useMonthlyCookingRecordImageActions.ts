@@ -19,6 +19,8 @@ import {
 
 import type { MonthlyCookingRecordShareCopy } from "./sharePage.types";
 
+type PendingImageAction = "saveImage" | "shareImage";
+
 type Params = {
   blob: Blob | null;
   captureTarget: HTMLElement | null;
@@ -36,23 +38,26 @@ export const useMonthlyCookingRecordImageActions = ({
   shareText,
   copy,
 }: Params) => {
-  const [isPending, setIsPending] = useState(false);
-  const isPendingRef = useRef(false);
+  const [pendingAction, setPendingAction] = useState<PendingImageAction | null>(
+    null
+  );
+  const pendingActionRef = useRef<PendingImageAction | null>(null);
   const addToast = useToastStore((state) => state.addToast);
 
   const runAction = async (
     action: () => Promise<void>,
-    nativeAction?: "saveImage" | "shareImage"
+    currentAction: PendingImageAction,
+    shouldCaptureDiagnostic = false
   ) => {
-    if (isPendingRef.current) return;
-    isPendingRef.current = true;
-    setIsPending(true);
+    if (pendingActionRef.current) return;
+    pendingActionRef.current = currentAction;
+    setPendingAction(currentAction);
     try {
       await action();
     } catch (error) {
-      if (nativeAction) {
+      if (shouldCaptureDiagnostic) {
         captureNativeActionDiagnostic({
-          action: nativeAction,
+          action: currentAction,
           blobSize: blob?.size ?? 0,
           status: "failed",
           errorName: error instanceof Error ? error.name : "unknown",
@@ -65,8 +70,8 @@ export const useMonthlyCookingRecordImageActions = ({
         variant: "error",
       });
     } finally {
-      isPendingRef.current = false;
-      setIsPending(false);
+      pendingActionRef.current = null;
+      setPendingAction(null);
     }
   };
 
@@ -77,38 +82,50 @@ export const useMonthlyCookingRecordImageActions = ({
       showSaveSuccess(addToast, copy.saveSuccess);
       return;
     }
-    void runAction(async () => {
-      await requestNativeImageAction({
-        action: "saveImage",
-        blob,
-        captureTarget,
-        fileName: getMonthlyCookingRecordImageFileName(monthKey),
-      });
-      captureNativeActionDiagnostic({
-        action: "saveImage",
-        blobSize: blob.size,
-        status: "saved",
-      });
-      showSaveSuccess(addToast, copy.saveSuccess);
-    }, "saveImage");
+    void runAction(
+      async () => {
+        await captureSquareImage(captureTarget, () =>
+          requestNativeImageAction({
+            action: "saveImage",
+            blob,
+            captureTarget,
+            fileName: getMonthlyCookingRecordImageFileName(monthKey),
+          })
+        );
+        captureNativeActionDiagnostic({
+          action: "saveImage",
+          blobSize: blob.size,
+          status: "saved",
+        });
+        showSaveSuccess(addToast, copy.saveSuccess);
+      },
+      "saveImage",
+      true
+    );
   };
 
   const share = () => {
     if (!blob) return;
     if (isAppWebView()) {
-      void runAction(async () => {
-        await requestNativeImageAction({
-          action: "shareImage",
-          blob,
-          captureTarget,
-          fileName: getMonthlyCookingRecordImageFileName(monthKey),
-        });
-        captureNativeActionDiagnostic({
-          action: "shareImage",
-          blobSize: blob.size,
-          status: "presented",
-        });
-      }, "shareImage");
+      void runAction(
+        async () => {
+          await captureSquareImage(captureTarget, () =>
+            requestNativeImageAction({
+              action: "shareImage",
+              blob,
+              captureTarget,
+              fileName: getMonthlyCookingRecordImageFileName(monthKey),
+            })
+          );
+          captureNativeActionDiagnostic({
+            action: "shareImage",
+            blobSize: blob.size,
+            status: "presented",
+          });
+        },
+        "shareImage",
+        true
+      );
       return;
     }
     void runAction(async () => {
@@ -126,11 +143,35 @@ export const useMonthlyCookingRecordImageActions = ({
           result === "shared" ? copy.shareSuccess : copy.downloadFallback,
         variant: "success",
       });
-    });
+    }, "shareImage");
   };
 
-  return { save, share, isPending };
+  return { save, share, pendingAction };
 };
+
+const captureSquareImage = async <T>(
+  captureTarget: HTMLElement | null,
+  capture: () => Promise<T>
+): Promise<T> => {
+  if (!captureTarget) return capture();
+  const previousBorderRadius = captureTarget.style.borderRadius;
+  const previousBoxShadow = captureTarget.style.boxShadow;
+  captureTarget.style.borderRadius = "0px";
+  captureTarget.style.boxShadow = "none";
+
+  try {
+    await waitForNextPaint();
+    return await capture();
+  } finally {
+    captureTarget.style.borderRadius = previousBorderRadius;
+    captureTarget.style.boxShadow = previousBoxShadow;
+  }
+};
+
+const waitForNextPaint = (): Promise<void> =>
+  new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+  });
 
 const captureNativeActionDiagnostic = ({
   action,
