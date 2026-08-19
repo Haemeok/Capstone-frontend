@@ -33,12 +33,17 @@ Reference these guidelines when:
 
 - `nav-subframe-passthrough` — Sub-frame loads must always pass the navigation gate; only filter main-frame navigations by domain. Iframe loads don't change the visible page URL, so blocking them just creates white-page external jumps with no security benefit.
 
+### Native image capture
+
+- `bridge-native-capture-bitmap-scale` — Convert WebView CSS coordinates with the captured PNG's measured dimensions; never assume `PixelRatio` or requested capture dimensions equal bitmap pixels.
+
 ## How to Use
 
 Read individual rule files for full context, code examples, and failure modes:
 
 ```
 rules/nav-subframe-passthrough.md
+rules/bridge-native-capture-bitmap-scale.md
 ```
 
 Each rule contains: symptom → root cause → incorrect code → correct code → generalizable principle.
