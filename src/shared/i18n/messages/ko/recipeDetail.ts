@@ -32,6 +32,7 @@ export const recipeDetail: RecipeDetailDict = {
     skip: "건너뛰기",
     submit: "기록하기",
     submitting: "기록하는 중",
+    firstReviewCta: "첫 번째 요리 후기 남기기",
     successTitle: "요리 기록을 남겼어요",
     successDescription: "이번 달 요리 기록에 추가됐습니다.",
     successClose: "닫기",

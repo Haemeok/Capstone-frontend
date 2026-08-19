@@ -32,6 +32,7 @@ export const recipeDetail: RecipeDetailDict = {
     skip: "スキップ",
     submit: "記録する",
     submitting: "記録中",
+    firstReviewCta: "最初の料理レビューを投稿",
     successTitle: "料理記録を残しました",
     successDescription: "今月の料理記録に追加されました。",
     successClose: "閉じる",

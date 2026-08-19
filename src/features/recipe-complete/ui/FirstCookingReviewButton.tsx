@@ -66,7 +66,7 @@ export const FirstCookingReviewButton = ({
         disabled={createMutation.isPending}
         className="bg-olive-light disabled:text-ink-disabled h-12 w-full rounded-xl px-4 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-100"
       >
-        첫 번째 요리 후기 남기기
+        {t.recipeDetail.cookingRecord.firstReviewCta}
       </button>
       <RecipeCookingRecordFlow
         isOpen={showReward}

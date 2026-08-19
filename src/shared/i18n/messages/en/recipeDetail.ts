@@ -32,6 +32,7 @@ export const recipeDetail: RecipeDetailDict = {
     skip: "Skip",
     submit: "Save record",
     submitting: "Saving",
+    firstReviewCta: "Leave the first cooking review",
     successTitle: "Cooking record saved",
     successDescription: "It was added to this month's cooking records.",
     successClose: "Close",

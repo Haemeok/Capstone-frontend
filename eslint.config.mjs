@@ -416,6 +416,16 @@ const eslintConfig = [
     },
   },
   {
+    files: [
+      "docs/learning/react/16-hydration/exercises.tsx",
+      "docs/learning/react/16-hydration/solutions.tsx",
+    ],
+    rules: {
+      "react-hooks/purity": "off",
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
+  {
     files: ["docs/**/*.{js,mjs}"],
     rules: {
       "@typescript-eslint/no-require-imports": "off",

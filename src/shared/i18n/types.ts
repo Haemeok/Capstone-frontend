@@ -119,6 +119,7 @@ export type RecipeDetailDict = {
     skip: string;
     submit: string;
     submitting: string;
+    firstReviewCta: string;
     successTitle: string;
     successDescription: string;
     successClose: string;
