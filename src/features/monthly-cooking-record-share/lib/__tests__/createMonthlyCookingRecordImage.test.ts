@@ -1,16 +1,16 @@
-import { toBlob } from "html-to-image";
+import { toSvg } from "html-to-image";
 
 import { createMonthlyCookingRecordImage } from "../createMonthlyCookingRecordImage";
 
 jest.mock("html-to-image", () => ({
-  toBlob: jest.fn(),
+  toSvg: jest.fn(),
 }));
 
-const mockedToBlob = jest.mocked(toBlob);
+const mockedToSvg = jest.mocked(toSvg);
 
 describe("createMonthlyCookingRecordImage", () => {
   beforeEach(() => {
-    mockedToBlob.mockReset();
+    mockedToSvg.mockReset();
     jest
       .spyOn(window, "requestAnimationFrame")
       .mockImplementation((callback) => {
@@ -41,25 +41,40 @@ describe("createMonthlyCookingRecordImage", () => {
       node.append(image);
     });
     const blob = new Blob(["png"], { type: "image/png" });
-    mockedToBlob.mockImplementation(async (captureNode) => {
+    mockSvgRasterization(blob);
+    mockedToSvg.mockImplementation(async (captureNode) => {
       const capturedPaths = Array.from(
         captureNode.querySelectorAll("img"),
         (image) => new URL(image.src).pathname
       );
       expect(capturedPaths).toEqual(stickerPaths);
-      return blob;
+      return "data:image/svg+xml;charset=utf-8,card";
     });
 
     await expect(createMonthlyCookingRecordImage(node)).resolves.toBe(blob);
 
-    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(2);
-    expect(mockedToBlob).toHaveBeenCalledWith(node, {
+    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(3);
+    expect(mockedToSvg).toHaveBeenCalledWith(node, {
       cacheBust: true,
       canvasHeight: 360,
       canvasWidth: 360,
       pixelRatio: 3,
       skipAutoScale: true,
     });
+  });
+
+  it("SVG 안의 스티커를 동기 디코딩한 뒤 PNG Blob을 만듭니다", async () => {
+    const blob = new Blob(["png"], { type: "image/png" });
+    const { decode, drawImage, rasterImage } = mockSvgRasterization(blob);
+    mockedToSvg.mockResolvedValue("data:image/svg+xml;charset=utf-8,card");
+
+    await expect(
+      createMonthlyCookingRecordImage(document.createElement("div"))
+    ).resolves.toBe(blob);
+
+    expect(rasterImage.decoding).toBe("sync");
+    expect(decode).toHaveBeenCalledTimes(1);
+    expect(drawImage).toHaveBeenCalledWith(rasterImage, 0, 0, 1080, 1080);
   });
 
   it("픽셀이 없는 이미지는 빈 공유 이미지로 처리하지 않습니다", async () => {
@@ -70,19 +85,46 @@ describe("createMonthlyCookingRecordImage", () => {
       naturalWidth: { configurable: true, value: 0 },
     });
     node.append(image);
-    mockedToBlob.mockResolvedValue(new Blob(["png"], { type: "image/png" }));
 
     await expect(createMonthlyCookingRecordImage(node)).rejects.toThrow(
       "MONTHLY_COOKING_RECORD_IMAGE_ASSET_FAILED"
     );
-    expect(mockedToBlob).not.toHaveBeenCalled();
+    expect(mockedToSvg).not.toHaveBeenCalled();
   });
 
   it("이미지 생성 결과가 비어 있으면 실패로 처리합니다", async () => {
-    mockedToBlob.mockResolvedValue(null);
+    mockSvgRasterization(null);
+    mockedToSvg.mockResolvedValue("data:image/svg+xml;charset=utf-8,card");
 
     await expect(
       createMonthlyCookingRecordImage(document.createElement("div"))
     ).rejects.toThrow("MONTHLY_COOKING_RECORD_IMAGE_EMPTY");
   });
 });
+
+const mockSvgRasterization = (blob: Blob | null) => {
+  const rasterImage = document.createElement("img");
+  const decode = jest.fn().mockResolvedValue(undefined);
+  let source = "";
+  rasterImage.decode = decode;
+  Object.defineProperty(rasterImage, "src", {
+    configurable: true,
+    get: () => source,
+    set: (value: string) => {
+      source = value;
+      queueMicrotask(() => rasterImage.onload?.(new Event("load")));
+    },
+  });
+  jest.spyOn(window, "Image").mockImplementation(() => rasterImage);
+  const drawImage = jest.fn();
+  jest
+    .spyOn(HTMLCanvasElement.prototype, "getContext")
+    .mockImplementation(() => {
+      // `as` permitted: the test only exercises drawImage on this canvas context double.
+      return { drawImage } as unknown as CanvasRenderingContext2D;
+    });
+  jest
+    .spyOn(HTMLCanvasElement.prototype, "toBlob")
+    .mockImplementation((callback) => callback(blob));
+  return { decode, drawImage, rasterImage };
+};
