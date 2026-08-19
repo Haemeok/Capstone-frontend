@@ -83,6 +83,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Tailwind v4 theme tokens](rules/policy-tailwind-v4-theme-tokens.md) — palette overrides in `@theme` (CSS), not the JS config; @config overrides drop `--color-*` vars and silently break `var()` consumers
 - [No code comments](rules/policy-no-comments.md) — WHAT is the identifier's job; WHY/incident/quirk goes in the commit body. Only `as` and `||`-default markers allowed; shared docs exempt
 - [Absolute badge on inline wrapper](rules/policy-absolute-anchor-inline-wrapper.md) — a `relative` wrapper around an inline child inflates to the line box (70px for a 22px icon), so absolute offsets anchor to the wrong box; make the wrapper `flex` per placement and verify with `getBoundingClientRect`
+- [DOM capture canvas size](rules/policy-dom-capture-canvas-size.md) — when exporting responsive DOM with html-to-image, resize the canvas rather than the cloned layout or computed child geometry can clip at the edges
 - [Sticky vs nearest scroll container](rules/policy-sticky-nearest-scroll-container.md) — sticky `top` resolves against the nearest scrollable ancestor; an inner scroll container that starts below fixed chrome needs `top-0`, not `top-16`; dead `window.scrollTo`/`scrollY:0` is the tell
 
 ### Next.js
