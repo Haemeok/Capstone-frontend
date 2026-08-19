@@ -29,10 +29,10 @@ describe("createMonthlyCookingRecordImage", () => {
     expect(decode).toHaveBeenCalledTimes(1);
     expect(mockedToBlob).toHaveBeenCalledWith(node, {
       cacheBust: true,
-      height: 360,
+      canvasHeight: 360,
+      canvasWidth: 360,
       pixelRatio: 3,
       skipAutoScale: true,
-      width: 360,
     });
   });
 

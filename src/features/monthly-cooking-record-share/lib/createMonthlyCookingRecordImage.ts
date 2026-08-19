@@ -8,10 +8,10 @@ export const createMonthlyCookingRecordImage = async (
   const { toBlob } = await import("html-to-image");
   const blob = await toBlob(node, {
     cacheBust: true,
-    height: EXPORT_SIZE,
+    canvasHeight: EXPORT_SIZE,
+    canvasWidth: EXPORT_SIZE,
     pixelRatio: EXPORT_PIXEL_RATIO,
     skipAutoScale: true,
-    width: EXPORT_SIZE,
   });
   if (!blob) throw new Error("MONTHLY_COOKING_RECORD_IMAGE_EMPTY");
   return blob;
