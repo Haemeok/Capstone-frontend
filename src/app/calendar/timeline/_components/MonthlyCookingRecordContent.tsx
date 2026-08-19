@@ -58,7 +58,8 @@ export const MonthlyCookingRecordContent = ({
         onOpenSettings={background.open}
       />
 
-      {records.isMonthComplete && records.items.length > 0 ? (
+      {records.isMonthComplete &&
+      (records.items.length > 0 || month.isPastMonth) ? (
         <MonthlyCookingRecordSummarySection
           summary={records.summary}
           copy={copy.summary}

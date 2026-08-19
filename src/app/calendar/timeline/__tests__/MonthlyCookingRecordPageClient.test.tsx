@@ -14,10 +14,11 @@ const push = jest.fn();
 const getCookingRecords = jest.fn();
 const getStickerBookBackgrounds = jest.fn();
 const updateStickerBookBackground = jest.fn();
+let searchParams = "month=2026-08";
 
 jest.mock("next/navigation", () => ({
   usePathname: () => "/calendar/timeline",
-  useSearchParams: () => new URLSearchParams("month=2026-08"),
+  useSearchParams: () => new URLSearchParams(searchParams),
   useRouter: () => ({
     push,
     replace,
@@ -95,6 +96,7 @@ const makeRecord = (recordId: string, title: string, imageUrl: string) => ({
 describe("MonthlyCookingRecordPageClient", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    searchParams = "month=2026-08";
     useUserStore.setState({ isAuthReady: true, isAuthenticated: true });
     useLoginEncourageDrawerStore.setState({ isOpen: false });
     getCookingRecords.mockResolvedValue({
@@ -257,7 +259,7 @@ describe("MonthlyCookingRecordPageClient", () => {
     expect(screen.getByText("수동 기록 폼")).toBeInTheDocument();
   });
 
-  it("기록이 없는 달은 0회 성과와 공유를 숨기고 배경 위 안내와 추가 버튼만 보여줍니다", async () => {
+  it("진행 중인 빈 달은 0회 성과와 공유를 숨기고 배경 위 안내와 추가 버튼만 보여줍니다", async () => {
     getCookingRecords.mockResolvedValue({
       background: {
         backgroundKey: "PAPER_BEIGE",
@@ -288,6 +290,70 @@ describe("MonthlyCookingRecordPageClient", () => {
     expect(
       screen.getByRole("button", { name: "요리 기록 추가" })
     ).toBeInTheDocument();
+  });
+
+  it("과거의 빈 달은 0회 성과를 빈 기록판 위에 보여줍니다", async () => {
+    searchParams = "month=2026-07";
+    getCookingRecords.mockResolvedValue({
+      background: {
+        backgroundKey: "PAPER_BEIGE",
+        imageUrl: "/backgrounds/paper-beige.webp",
+      },
+      groups: [],
+      hasNext: false,
+    });
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MonthlyCookingRecordPageClient />
+      </QueryClientProvider>
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 2,
+        name: "2026년 7월에 0번 요리했어요",
+      })
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("—")).toHaveLength(3);
+    expect(screen.queryByText("0일")).not.toBeInTheDocument();
+    expect(screen.queryByText("0원")).not.toBeInTheDocument();
+    expect(screen.queryByText("0가지")).not.toBeInTheDocument();
+    expect(
+      screen.getByText("아직 이달의 요리가 없습니다.")
+    ).toBeInTheDocument();
+  });
+
+  it("미래의 빈 달은 0회 성과를 보여주지 않습니다", async () => {
+    searchParams = "month=2026-09";
+    getCookingRecords.mockResolvedValue({
+      background: {
+        backgroundKey: "PAPER_BEIGE",
+        imageUrl: "/backgrounds/paper-beige.webp",
+      },
+      groups: [],
+      hasNext: false,
+    });
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MonthlyCookingRecordPageClient />
+      </QueryClientProvider>
+    );
+
+    await screen.findByText("아직 이달의 요리가 없습니다.");
+    expect(
+      screen.queryByRole("heading", {
+        level: 2,
+        name: "2026년 9월에 0번 요리했어요",
+      })
+    ).not.toBeInTheDocument();
   });
 
   it("보기 설정을 열 때 서버 목록을 조회하고 선택한 전역 배경을 적용합니다", async () => {

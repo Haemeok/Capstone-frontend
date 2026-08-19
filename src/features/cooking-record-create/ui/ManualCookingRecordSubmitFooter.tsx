@@ -42,7 +42,7 @@ export const ManualCookingRecordSubmitFooter = ({
       type="submit"
       form={formId}
       disabled={isPending}
-      className="bg-ink focus-visible:outline-ink disabled:text-ink-disabled h-12 w-full cursor-pointer rounded-xl text-sm font-semibold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 active:bg-gray-700 disabled:cursor-not-allowed disabled:bg-gray-100"
+      className="bg-olive-light active:bg-olive-dark focus-visible:outline-olive-dark disabled:text-ink-disabled h-12 w-full cursor-pointer rounded-xl text-sm font-semibold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:bg-gray-100"
     >
       {isImageProcessing
         ? copy.processing

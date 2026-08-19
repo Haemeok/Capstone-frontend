@@ -19,34 +19,42 @@ export const MonthlyCookingRecordSummarySection = ({
   locale,
   monthLabel,
   isCurrentMonth,
-}: MonthlyCookingRecordSummarySectionProps) => (
-  <MonthlyCookingRecordSummary
-    ariaLabel={copy.ariaLabel}
-    title={format(
-      plural(
-        summary.cookingCount,
-        isCurrentMonth ? copy.currentTitle : copy.selectedMonthTitle
-      ),
-      { count: summary.cookingCount, month: monthLabel }
-    )}
-    cookingDays={{
-      value: format(plural(summary.cookingDayCount, copy.cookingDaysValue), {
-        count: summary.cookingDayCount,
-      }),
-      label: copy.cookingDaysLabel,
-    }}
-    savings={{
-      value: getSavingsValue(summary, copy, locale),
-      label: copy.savingsLabel,
-    }}
-    uniqueDishes={{
-      value: format(plural(summary.uniqueDishCount, copy.uniqueDishesValue), {
-        count: summary.uniqueDishCount,
-      }),
-      label: copy.uniqueDishesLabel,
-    }}
-  />
-);
+}: MonthlyCookingRecordSummarySectionProps) => {
+  const emptyValue = summary.cookingCount === 0 ? copy.unavailable : null;
+
+  return (
+    <MonthlyCookingRecordSummary
+      ariaLabel={copy.ariaLabel}
+      title={format(
+        plural(
+          summary.cookingCount,
+          isCurrentMonth ? copy.currentTitle : copy.selectedMonthTitle
+        ),
+        { count: summary.cookingCount, month: monthLabel }
+      )}
+      cookingDays={{
+        value:
+          emptyValue ??
+          format(plural(summary.cookingDayCount, copy.cookingDaysValue), {
+            count: summary.cookingDayCount,
+          }),
+        label: copy.cookingDaysLabel,
+      }}
+      savings={{
+        value: emptyValue ?? getSavingsValue(summary, copy, locale),
+        label: copy.savingsLabel,
+      }}
+      uniqueDishes={{
+        value:
+          emptyValue ??
+          format(plural(summary.uniqueDishCount, copy.uniqueDishesValue), {
+            count: summary.uniqueDishCount,
+          }),
+        label: copy.uniqueDishesLabel,
+      }}
+    />
+  );
+};
 
 const getSavingsValue = (
   summary: Summary,

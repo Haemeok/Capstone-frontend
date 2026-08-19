@@ -1,8 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-import { addMonths, format as formatDate, isSameMonth } from "date-fns";
+import {
+  addMonths,
+  format as formatDate,
+  isBefore,
+  isSameMonth,
+  startOfMonth,
+} from "date-fns";
 
 import {
   resolveDateFnsLocale,
@@ -16,9 +23,10 @@ export const useCookingRecordMonth = () => {
   const searchParams = useSearchParams();
   const router = useLocalizedRouter();
   const locale = useUserPagesLocale();
+  const [today] = useState(() => new Date());
   const selectedMonth = getSelectedCookingRecordMonth(
     searchParams.get("month"),
-    new Date()
+    today
   );
   const monthKey = formatDate(selectedMonth, "yyyy-MM");
   const monthLabelPattern =
@@ -46,7 +54,8 @@ export const useCookingRecordMonth = () => {
     selectedMonth,
     monthKey,
     monthLabel,
-    isCurrentMonth: isSameMonth(selectedMonth, new Date()),
+    isCurrentMonth: isSameMonth(selectedMonth, today),
+    isPastMonth: isBefore(selectedMonth, startOfMonth(today)),
     moveToPreviousMonth: () => moveMonth(-1),
     moveToNextMonth: () => moveMonth(1),
   };

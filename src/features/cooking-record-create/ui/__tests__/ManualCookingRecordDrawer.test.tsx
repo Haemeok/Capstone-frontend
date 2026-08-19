@@ -143,6 +143,12 @@ it("닫기는 우측에 두고 사진은 가운데 정렬하며 제출 버튼은
   const submitButton = screen.getByRole("button", { name: "기록하기" });
   expect(scrollArea).not.toContainElement(submitButton);
   expect(submitButton.parentElement).toHaveClass("shrink-0");
+  expect(submitButton).toHaveClass(
+    "bg-olive-light",
+    "active:bg-olive-dark",
+    "focus-visible:outline-olive-dark"
+  );
+  expect(submitButton).not.toHaveClass("bg-ink");
 
   fireEvent.click(closeButton);
   expect(onOpenChange).toHaveBeenCalledWith(false);
