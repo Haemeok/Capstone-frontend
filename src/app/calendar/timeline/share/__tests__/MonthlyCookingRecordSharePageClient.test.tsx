@@ -25,6 +25,7 @@ const retryImage = jest.fn();
 const mockedIsAppWebView = jest.fn();
 const mockedRequestNativeImageAction = jest.fn();
 const mockedTriggerHaptic = jest.fn();
+const mockedCaptureAnalyticsEvent = jest.fn();
 
 jest.mock("@/features/monthly-cooking-record-share", () => {
   const actual = jest.requireActual("@/features/monthly-cooking-record-share");
@@ -47,6 +48,11 @@ jest.mock("@/shared/lib/bridge", () => ({
   requestNativeImageAction: (...args: unknown[]) =>
     mockedRequestNativeImageAction(...args),
   triggerHaptic: (...args: unknown[]) => mockedTriggerHaptic(...args),
+}));
+
+jest.mock("@/shared/lib/analytics", () => ({
+  captureAnalyticsEvent: (...args: unknown[]) =>
+    mockedCaptureAnalyticsEvent(...args),
 }));
 
 jest.mock("next/navigation", () => ({
@@ -309,6 +315,15 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     );
     expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
     expect(mockedTriggerHaptic).toHaveBeenCalledWith("Success");
+    expect(mockedCaptureAnalyticsEvent).toHaveBeenCalledWith(
+      "monthly_share_native_action_diagnostic",
+      {
+        action: "saveImage",
+        blobSize: 3,
+        captureVersion: 1,
+        status: "saved",
+      }
+    );
   });
 
   it("구버전 WebView는 저장 성공으로 표시하지 않고 앱 업데이트를 안내합니다", async () => {
@@ -365,6 +380,15 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     expect(mockedDownloadImage).not.toHaveBeenCalled();
     expect(mockedTriggerHaptic).not.toHaveBeenCalled();
     expect(useToastStore.getState().toastList).toHaveLength(0);
+    expect(mockedCaptureAnalyticsEvent).toHaveBeenCalledWith(
+      "monthly_share_native_action_diagnostic",
+      {
+        action: "shareImage",
+        blobSize: 3,
+        captureVersion: 1,
+        status: "presented",
+      }
+    );
   });
 
   it("WebView 공유 실패는 다운로드로 바꾸지 않고 재시도 가능한 오류를 안내합니다", async () => {
@@ -391,5 +415,15 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     );
     expect(mockedDownloadImage).not.toHaveBeenCalled();
     expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+    expect(mockedCaptureAnalyticsEvent).toHaveBeenCalledWith(
+      "monthly_share_native_action_diagnostic",
+      {
+        action: "shareImage",
+        blobSize: 3,
+        captureVersion: 1,
+        errorName: "Error",
+        status: "failed",
+      }
+    );
   });
 });

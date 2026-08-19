@@ -10,16 +10,84 @@ const CAPTURE_OPTIONS = {
   skipAutoScale: true,
 };
 
+export type MonthlyCookingRecordImageDiagnostics = {
+  sourceImageCount: number;
+  sourceLoadedImageCount: number;
+  sourceStickerCount: number;
+  sourceLoadedStickerCount: number;
+  svgImageCount: number;
+  svgEmbeddedImageCount: number;
+  svgStickerCount: number;
+  svgEmbeddedStickerCount: number;
+  blobSize: number;
+};
+
+export type MonthlyCookingRecordImageResult = {
+  blob: Blob;
+  diagnostics: MonthlyCookingRecordImageDiagnostics;
+};
+
 export const createMonthlyCookingRecordImage = async (
   node: HTMLElement
-): Promise<Blob> => {
+): Promise<MonthlyCookingRecordImageResult> => {
+  const sourceImages = getSourceImages(node);
   await waitForCardAssets(node);
   const { toSvg } = await import("html-to-image");
   const svg = await toSvg(node, CAPTURE_OPTIONS);
+  const svgDiagnostics = getSvgDiagnostics(svg);
   const image = await loadSvgImage(svg);
   const canvas = drawExportCanvas(image);
-  return createPngBlob(canvas);
+  const blob = await createPngBlob(canvas);
+  return {
+    blob,
+    diagnostics: {
+      sourceImageCount: sourceImages.all.length,
+      sourceLoadedImageCount: sourceImages.all.filter(isLoadedImage).length,
+      sourceStickerCount: sourceImages.stickers.length,
+      sourceLoadedStickerCount:
+        sourceImages.stickers.filter(isLoadedImage).length,
+      ...svgDiagnostics,
+      blobSize: blob.size,
+    },
+  };
 };
+
+const getSourceImages = (node: HTMLElement) => ({
+  all: Array.from(node.querySelectorAll<HTMLImageElement>("img")),
+  stickers: Array.from(
+    node.querySelectorAll<HTMLImageElement>('[data-share-sticker="true"] img')
+  ),
+});
+
+const getSvgDiagnostics = (
+  source: string
+): Pick<
+  MonthlyCookingRecordImageDiagnostics,
+  | "svgImageCount"
+  | "svgEmbeddedImageCount"
+  | "svgStickerCount"
+  | "svgEmbeddedStickerCount"
+> => {
+  const separatorIndex = source.indexOf(",");
+  const markup = decodeURIComponent(source.slice(separatorIndex + 1));
+  const document = new DOMParser().parseFromString(markup, "image/svg+xml");
+  const images = Array.from(document.querySelectorAll("img"));
+  const stickers = images.filter((image) =>
+    image.closest('[data-share-sticker="true"]')
+  );
+  return {
+    svgImageCount: images.length,
+    svgEmbeddedImageCount: images.filter(isEmbeddedImage).length,
+    svgStickerCount: stickers.length,
+    svgEmbeddedStickerCount: stickers.filter(isEmbeddedImage).length,
+  };
+};
+
+const isEmbeddedImage = (image: Element): boolean =>
+  image.getAttribute("src")?.startsWith("data:image/") ?? false;
+
+const isLoadedImage = (image: HTMLImageElement): boolean =>
+  image.complete && image.naturalWidth > 0;
 
 const loadSvgImage = async (source: string): Promise<HTMLImageElement> => {
   const image = new Image();

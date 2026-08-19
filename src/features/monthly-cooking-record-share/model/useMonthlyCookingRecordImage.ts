@@ -2,12 +2,25 @@
 
 import { useEffect, useState } from "react";
 
+import { captureAnalyticsEvent } from "@/shared/lib/analytics";
+import { isAppWebView } from "@/shared/lib/bridge";
+
 import { createMonthlyCookingRecordImage } from "../lib/createMonthlyCookingRecordImage";
 
 type ImageGenerationResult = {
   key: string;
   blob: Blob | null;
   error: Error | null;
+};
+
+const CAPTURE_ERROR_PREFIX = "MONTHLY_COOKING_RECORD_";
+
+const getCaptureErrorCode = (error: unknown): string => {
+  if (!(error instanceof Error)) return "unknown";
+
+  return error.message.startsWith(CAPTURE_ERROR_PREFIX)
+    ? error.message
+    : error.name;
 };
 
 export type MonthlyCookingRecordImageStatus =
@@ -33,11 +46,26 @@ export const useMonthlyCookingRecordImage = ({
     let isActive = true;
 
     void createMonthlyCookingRecordImage(captureNode)
-      .then((blob) => {
-        if (isActive) setResult({ key: requestKey, blob, error: null });
+      .then(({ blob, diagnostics }) => {
+        if (!isActive) return;
+        if (isAppWebView()) {
+          captureAnalyticsEvent("monthly_share_capture_diagnostic", {
+            captureVersion: 1,
+            status: "completed",
+            ...diagnostics,
+          });
+        }
+        setResult({ key: requestKey, blob, error: null });
       })
       .catch((error: unknown) => {
         if (!isActive) return;
+        if (isAppWebView()) {
+          captureAnalyticsEvent("monthly_share_capture_diagnostic", {
+            captureVersion: 1,
+            status: "failed",
+            errorCode: getCaptureErrorCode(error),
+          });
+        }
         setResult({
           key: requestKey,
           blob: null,

@@ -10,6 +10,8 @@ import {
 
 import type { PostHog } from "posthog-js";
 
+import { registerAnalyticsClient } from "@/shared/lib/analytics";
+
 const PostHogClientContext = createContext<PostHog | null>(null);
 
 export const usePostHogClient = () => useContext(PostHogClientContext);
@@ -41,6 +43,7 @@ export const PostHogProvider = ({ children }: { children: ReactNode }) => {
         autocapture: false,
         capture_dead_clicks: false,
       });
+      registerAnalyticsClient(posthog);
       isPostHogInitialized = true;
       setClient(posthog);
     };

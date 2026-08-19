@@ -32,13 +32,16 @@ describe("createMonthlyCookingRecordImage", () => {
     const node = document.createElement("div");
     const stickerPaths = ["/records/sticker-1.webp", "/records/sticker-2.webp"];
     stickerPaths.forEach((src) => {
+      const sticker = document.createElement("div");
+      sticker.dataset.shareSticker = "true";
       const image = document.createElement("img");
       image.src = src;
       Object.defineProperties(image, {
         complete: { configurable: true, value: true },
         naturalWidth: { configurable: true, value: 256 },
       });
-      node.append(image);
+      sticker.append(image);
+      node.append(sticker);
     });
     const blob = new Blob(["png"], { type: "image/png" });
     mockSvgRasterization(blob);
@@ -48,10 +51,23 @@ describe("createMonthlyCookingRecordImage", () => {
         (image) => new URL(image.src).pathname
       );
       expect(capturedPaths).toEqual(stickerPaths);
-      return "data:image/svg+xml;charset=utf-8,card";
+      return createSvgDataUrl(2);
     });
 
-    await expect(createMonthlyCookingRecordImage(node)).resolves.toBe(blob);
+    const result = await createMonthlyCookingRecordImage(node);
+
+    expect(result.blob).toBe(blob);
+    expect(result.diagnostics).toEqual({
+      sourceImageCount: 2,
+      sourceLoadedImageCount: 2,
+      sourceStickerCount: 2,
+      sourceLoadedStickerCount: 2,
+      svgImageCount: 2,
+      svgEmbeddedImageCount: 2,
+      svgStickerCount: 2,
+      svgEmbeddedStickerCount: 2,
+      blobSize: blob.size,
+    });
 
     expect(window.requestAnimationFrame).toHaveBeenCalledTimes(3);
     expect(mockedToSvg).toHaveBeenCalledWith(node, {
@@ -70,7 +86,7 @@ describe("createMonthlyCookingRecordImage", () => {
 
     await expect(
       createMonthlyCookingRecordImage(document.createElement("div"))
-    ).resolves.toBe(blob);
+    ).resolves.toEqual(expect.objectContaining({ blob }));
 
     expect(rasterImage.decoding).toBe("sync");
     expect(decode).toHaveBeenCalledTimes(1);
@@ -127,4 +143,15 @@ const mockSvgRasterization = (blob: Blob | null) => {
     .spyOn(HTMLCanvasElement.prototype, "toBlob")
     .mockImplementation((callback) => callback(blob));
   return { decode, drawImage, rasterImage };
+};
+
+const createSvgDataUrl = (stickerCount: number): string => {
+  const stickers = Array.from(
+    { length: stickerCount },
+    (_, index) =>
+      `<div data-share-sticker="true"><img src="data:image/webp;base64,sticker-${index}" /></div>`
+  ).join("");
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg"><foreignObject>${stickers}</foreignObject></svg>`
+  )}`;
 };

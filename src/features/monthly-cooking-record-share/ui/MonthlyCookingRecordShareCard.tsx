@@ -103,6 +103,7 @@ export const MonthlyCookingRecordShareCard = ({
         {visibleItems.map((item, index) => (
           <div
             key={item.id}
+            data-share-sticker="true"
             className={cn(
               "flex w-full items-center justify-center",
               ITEM_SIZE_CLASS_NAMES[layout.density],

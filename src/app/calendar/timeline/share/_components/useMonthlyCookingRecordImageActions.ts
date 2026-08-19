@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 
+import { captureAnalyticsEvent } from "@/shared/lib/analytics";
 import {
   isAppWebView,
   isNativeImageActionUnsupportedError,
@@ -37,13 +38,24 @@ export const useMonthlyCookingRecordImageActions = ({
   const isPendingRef = useRef(false);
   const addToast = useToastStore((state) => state.addToast);
 
-  const runAction = async (action: () => Promise<void>) => {
+  const runAction = async (
+    action: () => Promise<void>,
+    nativeAction?: "saveImage" | "shareImage"
+  ) => {
     if (isPendingRef.current) return;
     isPendingRef.current = true;
     setIsPending(true);
     try {
       await action();
     } catch (error) {
+      if (nativeAction) {
+        captureNativeActionDiagnostic({
+          action: nativeAction,
+          blobSize: blob?.size ?? 0,
+          status: "failed",
+          errorName: error instanceof Error ? error.name : "unknown",
+        });
+      }
       addToast({
         message: isNativeImageActionUnsupportedError(error)
           ? copy.appUpdateRequired
@@ -69,20 +81,30 @@ export const useMonthlyCookingRecordImageActions = ({
         blob,
         fileName: getMonthlyCookingRecordImageFileName(monthKey),
       });
+      captureNativeActionDiagnostic({
+        action: "saveImage",
+        blobSize: blob.size,
+        status: "saved",
+      });
       showSaveSuccess(addToast, copy.saveSuccess);
-    });
+    }, "saveImage");
   };
 
   const share = () => {
     if (!blob) return;
     if (isAppWebView()) {
-      void runAction(() =>
-        requestNativeImageAction({
+      void runAction(async () => {
+        await requestNativeImageAction({
           action: "shareImage",
           blob,
           fileName: getMonthlyCookingRecordImageFileName(monthKey),
-        }).then(() => undefined)
-      );
+        });
+        captureNativeActionDiagnostic({
+          action: "shareImage",
+          blobSize: blob.size,
+          status: "presented",
+        });
+      }, "shareImage");
       return;
     }
     void runAction(async () => {
@@ -104,6 +126,26 @@ export const useMonthlyCookingRecordImageActions = ({
   };
 
   return { save, share, isPending };
+};
+
+const captureNativeActionDiagnostic = ({
+  action,
+  blobSize,
+  status,
+  errorName,
+}: {
+  action: "saveImage" | "shareImage";
+  blobSize: number;
+  status: "saved" | "presented" | "failed";
+  errorName?: string;
+}): void => {
+  captureAnalyticsEvent("monthly_share_native_action_diagnostic", {
+    captureVersion: 1,
+    action,
+    blobSize,
+    status,
+    ...(errorName ? { errorName } : {}),
+  });
 };
 
 const showSaveSuccess = (
