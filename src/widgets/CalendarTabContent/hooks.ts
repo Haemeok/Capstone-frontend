@@ -69,6 +69,7 @@ export const useProfileCookingRecords = ({
   }, [hasProcessingSticker, listQuery.isFetching, refetch]);
 
   return {
+    background: listQuery.data?.pages[0]?.background ?? null,
     records,
     dailySummaries: calendarQuery.data?.dailySummaries ?? [],
     isPreviewPending:

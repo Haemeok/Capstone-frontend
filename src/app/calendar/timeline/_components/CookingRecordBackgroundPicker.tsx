@@ -10,8 +10,8 @@ import type {
 
 import { CookingRecordBackgroundOptions } from "./CookingRecordBackgroundOptions";
 import type {
-  CookingRecordBackgroundCopy,
   CookingRecordStickerItem,
+  CookingRecordViewSettingsCopy,
 } from "./cookingRecordUi.types";
 import styles from "./MonthlyCookingRecord.module.css";
 
@@ -20,7 +20,7 @@ type CookingRecordBackgroundPickerProps = {
   previewBackground: StickerBookBackground | null;
   selectedBackgroundKey?: string;
   previewRecords: CookingRecordStickerItem[];
-  copy: CookingRecordBackgroundCopy;
+  copy: CookingRecordViewSettingsCopy;
   isListPending: boolean;
   isListError: boolean;
   isApplying: boolean;

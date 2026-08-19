@@ -28,6 +28,7 @@ const CalendarTabContent = () => {
       <CookingRecordPreview
         month={currentMonth}
         locale={locale}
+        background={recordsQuery.background}
         records={recordsQuery.records}
         copy={copy.calendar.cookingRecord}
         isPending={recordsQuery.isPreviewPending}

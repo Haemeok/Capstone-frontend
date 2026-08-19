@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import type {
   CookingRecordCalendarMonthResponse,
@@ -172,6 +172,7 @@ describe("CalendarTabContent cooking record preview", () => {
     expect(
       screen.getAllByTestId("cooking-record-preview-sticker")
     ).toHaveLength(7);
+    expect(screen.queryByText("8개의 요리")).not.toBeInTheDocument();
     expect(screen.queryByText(/절약했어요/)).not.toBeInTheDocument();
     expect(screen.getByText("날짜별 기록")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "기록" })).toBeInTheDocument();
@@ -242,6 +243,26 @@ describe("CalendarTabContent cooking record preview", () => {
 
     renderCalendarTab();
 
+    expect(
+      await screen.findByRole("heading", { name: "이번 달 0번 요리했어요" })
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "전체보기" })).toHaveClass(
+      "text-sm"
+    );
+    expect(screen.getByText("8월에 만든 요리들을 모아봤어요.")).toHaveClass(
+      "text-sm"
+    );
+    const recordBoard = screen.getByRole("region", { name: "8월 요리 기록" });
+    expect(
+      within(recordBoard).queryByText("8월 요리 기록")
+    ).not.toBeInTheDocument();
+    expect(
+      within(recordBoard).queryByText("0개의 요리")
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText("아직 이달의 요리가 없습니다.").parentElement
+    ).toHaveClass("p-5");
+
     fireEvent.click(
       await screen.findByRole("button", { name: "요리 기록 추가" })
     );
@@ -249,5 +270,27 @@ describe("CalendarTabContent cooking record preview", () => {
     expect(screen.getByRole("dialog")).toHaveTextContent(
       "요리 기록 추가 드로어"
     );
+  });
+
+  it("T-06 프로필 요리 기록에 서버에서 선택한 배경을 적용합니다", async () => {
+    getCookingRecords.mockResolvedValue({
+      ...makeRecordPage(1),
+      background: {
+        backgroundKey: "WOOD",
+        imageUrl: "/backgrounds/wood.webp",
+      },
+    });
+
+    renderCalendarTab();
+
+    const backgroundLayer = await screen.findByTestId(
+      "profile-cooking-record-background-layer"
+    );
+    expect(backgroundLayer.querySelector("img")).toHaveAttribute(
+      "src",
+      "/backgrounds/wood.webp"
+    );
+    expect(screen.queryByText("8월 요리 기록")).not.toBeInTheDocument();
+    expect(screen.queryByText("1개의 요리")).not.toBeInTheDocument();
   });
 });

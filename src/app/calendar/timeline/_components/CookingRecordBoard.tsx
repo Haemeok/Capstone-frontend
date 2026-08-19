@@ -25,6 +25,7 @@ export type CookingRecordBoardProps = {
   onAddRecord: () => void;
   onShareRecord: () => void;
   showRecordMeta?: boolean;
+  showRecordNames?: boolean;
   children?: ReactNode;
 };
 
@@ -41,6 +42,7 @@ export const CookingRecordBoard = (props: CookingRecordBoardProps) => {
     onAddRecord,
     onShareRecord,
     showRecordMeta = true,
+    showRecordNames = true,
     children,
   } = props;
 
@@ -110,9 +112,11 @@ export const CookingRecordBoard = (props: CookingRecordBoardProps) => {
               src={record.imageUrl}
               alt={record.imageAlt}
             />
-            <span className="text-ink pointer-events-none absolute bottom-0 left-1/2 max-w-[calc(100%-0.5rem)] -translate-x-1/2 truncate rounded-full bg-white px-2.5 py-1 text-xs font-semibold shadow-[0_2px_8px_rgb(34_34_34/0.14)]">
-              {record.title}
-            </span>
+            {showRecordNames ? (
+              <span className="text-ink pointer-events-none absolute bottom-0 left-1/2 max-w-[calc(100%-0.5rem)] -translate-x-1/2 truncate rounded-full bg-white px-2.5 py-1 text-xs font-semibold shadow-[0_2px_8px_rgb(34_34_34/0.14)]">
+                {record.title}
+              </span>
+            ) : null}
           </button>
         ))}
         {children ? <div className="col-span-full">{children}</div> : null}

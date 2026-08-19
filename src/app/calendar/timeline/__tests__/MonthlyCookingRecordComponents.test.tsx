@@ -4,11 +4,11 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
-import { CookingRecordBackgroundDrawer } from "../_components/CookingRecordBackgroundDrawer";
 import { CookingRecordBoard } from "../_components/CookingRecordBoard";
 import { CookingRecordDeleteDialog } from "../_components/CookingRecordDeleteDialog";
 import { CookingRecordDetailDrawer } from "../_components/CookingRecordDetailDrawer";
 import { CookingRecordHeader } from "../_components/CookingRecordHeader";
+import { CookingRecordViewSettingsDrawer } from "../_components/CookingRecordViewSettingsDrawer";
 import styles from "../_components/MonthlyCookingRecord.module.css";
 
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
@@ -123,10 +123,10 @@ const recordDetail = {
 };
 
 describe("CookingRecordHeader", () => {
-  it("페이지 제목과 월 선택을 다른 위계로 보여주고 월 이동과 배경 변경을 전달합니다", () => {
+  it("페이지 제목과 월 선택을 다른 위계로 보여주고 월 이동과 보기 설정을 전달합니다", () => {
     const onPreviousMonth = jest.fn();
     const onNextMonth = jest.fn();
-    const onOpenBackground = jest.fn();
+    const onOpenSettings = jest.fn();
 
     render(
       <CookingRecordHeader
@@ -136,12 +136,12 @@ describe("CookingRecordHeader", () => {
         backLabel="뒤로 가기"
         previousMonthLabel="이전 달"
         nextMonthLabel="다음 달"
-        changeBackgroundLabel="배경 바꾸기"
-        changeBackgroundShortLabel="배경"
+        settingsLabel="요리 기록 보기 설정"
+        settingsShortLabel="설정"
         onBack={jest.fn()}
         onPreviousMonth={onPreviousMonth}
         onNextMonth={onNextMonth}
-        onOpenBackground={onOpenBackground}
+        onOpenSettings={onOpenSettings}
       />
     );
 
@@ -152,8 +152,8 @@ describe("CookingRecordHeader", () => {
       screen.getByRole("heading", { level: 2, name: "2026년 8월" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "배경 바꾸기" })
-    ).toHaveTextContent("배경");
+      screen.getByRole("button", { name: "요리 기록 보기 설정" })
+    ).toHaveTextContent("설정");
     expect(
       screen.getByRole("navigation", {
         name: "2026년 8월 이전 달 다음 달",
@@ -163,11 +163,13 @@ describe("CookingRecordHeader", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "이전 달" }));
     fireEvent.click(screen.getByRole("button", { name: "다음 달" }));
-    fireEvent.click(screen.getByRole("button", { name: "배경 바꾸기" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "요리 기록 보기 설정" })
+    );
 
     expect(onPreviousMonth).toHaveBeenCalledTimes(1);
     expect(onNextMonth).toHaveBeenCalledTimes(1);
-    expect(onOpenBackground).toHaveBeenCalledTimes(1);
+    expect(onOpenSettings).toHaveBeenCalledTimes(1);
     expect(triggerHaptic).toHaveBeenCalledTimes(3);
     expect(triggerHaptic).toHaveBeenCalledWith("Light");
   });
@@ -514,14 +516,16 @@ describe("CookingRecordDetailDrawer", () => {
   });
 });
 
-describe("CookingRecordBackgroundDrawer", () => {
-  it("서버가 제공한 전역 배경을 미리 보여주고 다른 배경 선택과 적용을 전달합니다", () => {
+describe("CookingRecordViewSettingsDrawer", () => {
+  it("요리 이름 표시를 바꾸고 서버가 제공한 전역 배경 선택과 적용을 전달합니다", () => {
     const onSelectBackground = jest.fn();
     const onApply = jest.fn();
+    const onRecordNameVisibilityChange = jest.fn();
 
     render(
-      <CookingRecordBackgroundDrawer
+      <CookingRecordViewSettingsDrawer
         isOpen
+        isRecordNameVisible
         backgrounds={[
           {
             backgroundKey: "DEFAULT",
@@ -556,10 +560,12 @@ describe("CookingRecordBackgroundDrawer", () => {
           },
         ]}
         copy={{
-          title: "배경 바꾸기",
-          closeLabel: "배경 바꾸기 닫기",
-          appliesGloballyLabel: "전체 요리 기록에 적용됩니다",
-          intro: "요리 기록과 잘 어울리는 배경을 골라보세요.",
+          title: "보기 설정",
+          closeLabel: "보기 설정 닫기",
+          description: "이름 표시와 배경을 바꿀 수 있어요.",
+          showRecordNamesLabel: "요리 이름 표시",
+          showRecordNamesDescription: "사진에 요리 이름을 표시해요.",
+          intro: "배경은 모든 달의 요리 기록에 함께 적용돼요.",
           previewLabel: "선택한 배경 미리보기",
           optionsTitle: "준비된 배경",
           optionsLabel: "준비된 배경 선택",
@@ -574,6 +580,7 @@ describe("CookingRecordBackgroundDrawer", () => {
         isListError={false}
         isApplying={false}
         onOpenChange={jest.fn()}
+        onRecordNameVisibilityChange={onRecordNameVisibilityChange}
         onSelectBackground={onSelectBackground}
         onRetry={jest.fn()}
         onApply={onApply}
@@ -584,6 +591,13 @@ describe("CookingRecordBackgroundDrawer", () => {
       "aria-pressed",
       "true"
     );
+    const nameToggle = screen.getByRole("switch", {
+      name: "요리 이름 표시",
+    });
+    expect(nameToggle).toHaveAttribute("aria-checked", "true");
+    fireEvent.click(nameToggle);
+    expect(onRecordNameVisibilityChange).toHaveBeenCalledWith(false);
+    expect(triggerHaptic).toHaveBeenCalledWith("Light");
     expect(
       within(screen.getByLabelText("선택한 배경 미리보기")).getByRole(
         "presentation"

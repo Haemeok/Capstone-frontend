@@ -10,32 +10,36 @@ import type {
 } from "@/entities/recipe";
 
 import { CookingRecordBackgroundPicker } from "./CookingRecordBackgroundPicker";
+import { CookingRecordNameVisibilityToggle } from "./CookingRecordNameVisibilityToggle";
 import type {
-  CookingRecordBackgroundCopy,
   CookingRecordStickerItem,
+  CookingRecordViewSettingsCopy,
 } from "./cookingRecordUi.types";
 
-export type CookingRecordBackgroundDrawerProps = {
+export type CookingRecordViewSettingsDrawerProps = {
   isOpen: boolean;
+  isRecordNameVisible: boolean;
   backgrounds: StickerBookBackgroundOption[];
   previewBackground: StickerBookBackground | null;
   selectedBackgroundKey?: string;
   previewRecords: CookingRecordStickerItem[];
-  copy: CookingRecordBackgroundCopy;
+  copy: CookingRecordViewSettingsCopy;
   isListPending: boolean;
   isListError: boolean;
   isApplying: boolean;
   onOpenChange: (open: boolean) => void;
+  onRecordNameVisibilityChange: (visible: boolean) => void;
   onSelectBackground: (backgroundKey: string) => void;
   onRetry: () => void;
   onApply: () => void;
 };
 
-export const CookingRecordBackgroundDrawer = (
-  props: CookingRecordBackgroundDrawerProps
+export const CookingRecordViewSettingsDrawer = (
+  props: CookingRecordViewSettingsDrawerProps
 ) => {
   const {
     isOpen,
+    isRecordNameVisible,
     backgrounds,
     previewBackground,
     selectedBackgroundKey,
@@ -45,6 +49,7 @@ export const CookingRecordBackgroundDrawer = (
     isListError,
     isApplying,
     onOpenChange,
+    onRecordNameVisibilityChange,
     onSelectBackground,
     onRetry,
     onApply,
@@ -54,13 +59,22 @@ export const CookingRecordBackgroundDrawer = (
   const contentClassName = isMobile
     ? "max-h-[88dvh] rounded-t-3xl data-[vaul-drawer-direction=bottom]:max-h-[88dvh] data-[vaul-drawer-direction=bottom]:rounded-t-3xl data-[vaul-drawer-direction=bottom]:border-0"
     : "max-h-[calc(100dvh-2rem)] max-w-md rounded-2xl sm:max-w-md";
+
   return (
     <Container open={isOpen} onOpenChange={onOpenChange}>
       <Content
         hasDescription
         className={`flex w-full flex-col overflow-hidden border-0 bg-white p-0 shadow-xl [&>[data-slot=dialog-close]]:hidden [&>button]:hidden ${contentClassName}`}
       >
-        <Header className="grid shrink-0 grid-cols-[44px_1fr_44px] items-center border-b border-gray-100 px-2.5 py-0 text-left">
+        <Header className="grid shrink-0 grid-cols-[1fr_44px] items-center border-b border-gray-100 py-0 pr-2.5 pl-5 text-left">
+          <div className="min-w-0 py-3">
+            <Title className="text-ink truncate text-base font-bold">
+              {copy.title}
+            </Title>
+            <Description className="text-ink-muted mt-0.5 truncate text-xs">
+              {copy.description}
+            </Description>
+          </div>
           <button
             type="button"
             aria-label={copy.closeLabel}
@@ -69,16 +83,16 @@ export const CookingRecordBackgroundDrawer = (
           >
             <X aria-hidden="true" className="size-5" />
           </button>
-          <div className="min-w-0 py-2.5 text-center">
-            <Title className="text-ink truncate text-center text-base font-bold">
-              {copy.title}
-            </Title>
-            <Description className="text-ink-muted mt-0.5 truncate text-center text-[11px]">
-              {copy.appliesGloballyLabel}
-            </Description>
-          </div>
-          <span aria-hidden="true" />
         </Header>
+
+        <div className="shrink-0 px-5 pt-4">
+          <CookingRecordNameVisibilityToggle
+            isVisible={isRecordNameVisible}
+            label={copy.showRecordNamesLabel}
+            description={copy.showRecordNamesDescription}
+            onChange={onRecordNameVisibilityChange}
+          />
+        </div>
 
         <CookingRecordBackgroundPicker
           backgrounds={backgrounds}

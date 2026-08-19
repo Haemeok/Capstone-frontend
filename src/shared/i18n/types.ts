@@ -676,10 +676,12 @@ export type UserPagesDict = {
       backLabel: string;
       previousMonthLabel: string;
       nextMonthLabel: string;
-      changeBackground: string;
-      changeBackgroundShort: string;
+      viewSettings: string;
+      viewSettingsShort: string;
       recordCount: Plural;
       boardLabel: string;
+      previewCaption: string;
+      previewViewAll: string;
       recordLabel: string;
       addRecord: string;
       viewAll: string;
@@ -784,10 +786,12 @@ export type UserPagesDict = {
         error: string;
         retry: string;
       };
-      background: {
+      viewSettingsCopy: {
         title: string;
         closeLabel: string;
-        appliesGloballyLabel: string;
+        description: string;
+        showRecordNamesLabel: string;
+        showRecordNamesDescription: string;
         intro: string;
         previewLabel: string;
         optionsTitle: string;

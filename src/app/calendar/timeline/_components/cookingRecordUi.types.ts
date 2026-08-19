@@ -54,10 +54,12 @@ export type CookingRecordDetailDrawerProps = {
   onRetry: () => void;
 };
 
-export type CookingRecordBackgroundCopy = {
+export type CookingRecordViewSettingsCopy = {
   title: string;
   closeLabel: string;
-  appliesGloballyLabel: string;
+  description: string;
+  showRecordNamesLabel: string;
+  showRecordNamesDescription: string;
   intro: string;
   previewLabel: string;
   optionsTitle: string;

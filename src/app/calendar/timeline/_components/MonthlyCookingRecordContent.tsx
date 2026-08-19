@@ -16,6 +16,7 @@ type MonthlyCookingRecordContentProps = {
   background: ReturnType<typeof useCookingRecordBackground>;
   isAuthReady: boolean;
   authGate: boolean;
+  isRecordNameVisible: boolean;
   onSelectRecord: (recordId: string) => void;
   onAddRecord: () => void;
   onShareRecord: () => void;
@@ -29,6 +30,7 @@ export const MonthlyCookingRecordContent = ({
   background,
   isAuthReady,
   authGate,
+  isRecordNameVisible,
   onSelectRecord,
   onAddRecord,
   onShareRecord,
@@ -48,12 +50,12 @@ export const MonthlyCookingRecordContent = ({
         backLabel={copy.backLabel}
         previousMonthLabel={copy.previousMonthLabel}
         nextMonthLabel={copy.nextMonthLabel}
-        changeBackgroundLabel={copy.changeBackground}
-        changeBackgroundShortLabel={copy.changeBackgroundShort}
+        settingsLabel={copy.viewSettings}
+        settingsShortLabel={copy.viewSettingsShort}
         onBack={month.router.back}
         onPreviousMonth={month.moveToPreviousMonth}
         onNextMonth={month.moveToNextMonth}
-        onOpenBackground={background.open}
+        onOpenSettings={background.open}
       />
 
       {records.isMonthComplete && records.items.length > 0 ? (
@@ -87,6 +89,7 @@ export const MonthlyCookingRecordContent = ({
         onSelectRecord={(record) => onSelectRecord(record.id)}
         onAddRecord={onAddRecord}
         onShareRecord={onShareRecord}
+        showRecordNames={isRecordNameVisible}
         showRecordMeta={!authGate || records.items.length > 0}
       >
         <CookingRecordPageStatus

@@ -29,6 +29,7 @@ export const MonthlyCookingRecordPageClient = () => {
   const [selectedRecord, setSelectedRecord] =
     useState<MonthlyCookingRecord | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isRecordNameVisible, setIsRecordNameVisible] = useState(true);
   const records = useMonthlyCookingRecords({
     enabled: authGate,
     monthKey: month.monthKey,
@@ -70,6 +71,10 @@ export const MonthlyCookingRecordPageClient = () => {
     month.router.push(`/calendar/timeline/share?month=${month.monthKey}`);
   };
 
+  const handleRecordNameVisibilityChange = (visible: boolean) => {
+    setIsRecordNameVisible(visible);
+  };
+
   return (
     <>
       <MonthlyCookingRecordContent
@@ -79,6 +84,7 @@ export const MonthlyCookingRecordPageClient = () => {
         background={background}
         isAuthReady={isAuthReady}
         authGate={authGate}
+        isRecordNameVisible={isRecordNameVisible}
         onSelectRecord={handleSelectRecord}
         onAddRecord={handleAddRecord}
         onShareRecord={handleShareRecord}
@@ -93,7 +99,9 @@ export const MonthlyCookingRecordPageClient = () => {
         copy={copy}
         isCreateOpen={isCreateOpen}
         selectedRecord={selectedRecord}
+        isRecordNameVisible={isRecordNameVisible}
         onCreateOpenChange={setIsCreateOpen}
+        onRecordNameVisibilityChange={handleRecordNameVisibilityChange}
         onCloseRecord={() => setSelectedRecord(null)}
       />
     </>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Settings2 } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
@@ -11,14 +11,14 @@ export type CookingRecordHeaderProps = {
   backLabel: string;
   previousMonthLabel: string;
   nextMonthLabel: string;
-  changeBackgroundLabel: string;
-  changeBackgroundShortLabel: string;
+  settingsLabel: string;
+  settingsShortLabel: string;
   isPreviousMonthDisabled?: boolean;
   isNextMonthDisabled?: boolean;
   onBack: () => void;
   onPreviousMonth: () => void;
   onNextMonth: () => void;
-  onOpenBackground: () => void;
+  onOpenSettings: () => void;
 };
 
 export const CookingRecordHeader = (props: CookingRecordHeaderProps) => {
@@ -29,14 +29,14 @@ export const CookingRecordHeader = (props: CookingRecordHeaderProps) => {
     backLabel,
     previousMonthLabel,
     nextMonthLabel,
-    changeBackgroundLabel,
-    changeBackgroundShortLabel,
+    settingsLabel,
+    settingsShortLabel,
     isPreviousMonthDisabled = false,
     isNextMonthDisabled = false,
     onBack,
     onPreviousMonth,
     onNextMonth,
-    onOpenBackground,
+    onOpenSettings,
   } = props;
 
   const handlePreviousMonth = () => {
@@ -49,9 +49,9 @@ export const CookingRecordHeader = (props: CookingRecordHeaderProps) => {
     onNextMonth();
   };
 
-  const handleOpenBackground = () => {
+  const handleOpenSettings = () => {
     triggerHaptic("Light");
-    onOpenBackground();
+    onOpenSettings();
   };
 
   return (
@@ -106,14 +106,12 @@ export const CookingRecordHeader = (props: CookingRecordHeaderProps) => {
         </div>
         <button
           type="button"
-          aria-label={changeBackgroundLabel}
-          onClick={handleOpenBackground}
+          aria-label={settingsLabel}
+          onClick={handleOpenSettings}
           className="text-ink-sub focus-visible:outline-olive-dark col-start-3 row-start-1 flex min-h-11 min-w-15 cursor-pointer items-center justify-center gap-1 rounded-xl px-1 text-xs font-bold transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 max-[359px]:min-w-11"
         >
-          <ImageIcon aria-hidden="true" className="size-4" />
-          <span className="max-[359px]:sr-only">
-            {changeBackgroundShortLabel}
-          </span>
+          <Settings2 aria-hidden="true" className="size-4" />
+          <span className="max-[359px]:sr-only">{settingsShortLabel}</span>
         </button>
       </nav>
     </header>

@@ -9,13 +9,13 @@ import { Image } from "@/shared/ui/image/Image";
 
 import type { StickerBookBackgroundOption } from "@/entities/recipe";
 
-import type { CookingRecordBackgroundCopy } from "./cookingRecordUi.types";
+import type { CookingRecordViewSettingsCopy } from "./cookingRecordUi.types";
 import styles from "./MonthlyCookingRecord.module.css";
 
 type CookingRecordBackgroundOptionsProps = {
   backgrounds: StickerBookBackgroundOption[];
   selectedBackgroundKey?: string;
-  copy: CookingRecordBackgroundCopy;
+  copy: CookingRecordViewSettingsCopy;
   onSelectBackground: (backgroundKey: string) => void;
 };
 

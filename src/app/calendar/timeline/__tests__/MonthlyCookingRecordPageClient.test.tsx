@@ -290,7 +290,7 @@ describe("MonthlyCookingRecordPageClient", () => {
     ).toBeInTheDocument();
   });
 
-  it("배경 선택창을 열 때 서버 목록을 조회하고 선택한 전역 배경을 적용합니다", async () => {
+  it("보기 설정을 열 때 서버 목록을 조회하고 선택한 전역 배경을 적용합니다", async () => {
     getCookingRecords.mockResolvedValueOnce({
       background: { backgroundKey: "DEFAULT", imageUrl: null },
       groups: [
@@ -315,7 +315,9 @@ describe("MonthlyCookingRecordPageClient", () => {
     await screen.findByRole("img", { name: "동파육" });
 
     expect(getStickerBookBackgrounds).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole("button", { name: "배경 바꾸기" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "요리 기록 보기 설정" })
+    );
 
     const secondBackground = await screen.findByRole("button", {
       name: "배경 2",
@@ -338,5 +340,35 @@ describe("MonthlyCookingRecordPageClient", () => {
         container.querySelector('img[src="/backgrounds/paper-beige.webp"]')
       ).toBeInTheDocument()
     );
+  });
+
+  it("보기 설정에서 요리 이름 표시를 끄면 기록판의 이름 라벨을 숨깁니다", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MonthlyCookingRecordPageClient />
+      </QueryClientProvider>
+    );
+    await screen.findByRole("img", { name: "동파육" });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "요리 기록 보기 설정" })
+    );
+    await screen.findByRole("button", { name: "배경 1" });
+    const nameToggle = screen.getByRole("switch", {
+      name: "요리 이름 표시",
+    });
+
+    expect(nameToggle).toHaveAttribute("aria-checked", "true");
+    fireEvent.click(nameToggle);
+
+    await waitFor(() =>
+      expect(screen.queryByText("동파육")).not.toBeInTheDocument()
+    );
+    expect(
+      screen.getByRole("switch", { name: "요리 이름 표시" })
+    ).toHaveAttribute("aria-checked", "false");
   });
 });
