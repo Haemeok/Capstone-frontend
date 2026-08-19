@@ -71,6 +71,7 @@ export const MonthlyCookingRecordShareCard = ({
           <Image
             src={background.imageUrl}
             alt=""
+            lazy={false}
             fit="cover"
             wrapperClassName="h-full w-full"
             imgClassName="object-cover object-top"
@@ -111,6 +112,7 @@ export const MonthlyCookingRecordShareCard = ({
             <Image
               src={item.imageUrl}
               alt=""
+              lazy={false}
               fit="contain"
               wrapperClassName="h-full w-full overflow-visible"
               imgClassName="select-none object-contain drop-shadow-[0_4px_5px_rgb(34_34_34/0.13)]"

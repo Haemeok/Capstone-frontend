@@ -1,13 +1,9 @@
 "use client";
 
 import { format, plural } from "@/shared/i18n";
-import { triggerHaptic } from "@/shared/lib/bridge";
-import { useToastStore } from "@/shared/ui/toast";
 
 import {
-  downloadMonthlyCookingRecordImage,
   MonthlyCookingRecordShareCard,
-  shareMonthlyCookingRecordImage,
   useMonthlyCookingRecordImage,
 } from "@/features/monthly-cooking-record-share";
 
@@ -16,6 +12,7 @@ import type {
   MonthlyCookingRecordCopy,
   MonthlyCookingRecordShareRecords,
 } from "./sharePage.types";
+import { useMonthlyCookingRecordImageActions } from "./useMonthlyCookingRecordImageActions";
 
 type MonthlyCookingRecordSharePreviewProps = {
   monthKey: string;
@@ -30,42 +27,17 @@ export const MonthlyCookingRecordSharePreview = ({
   copy,
   records,
 }: MonthlyCookingRecordSharePreviewProps) => {
-  const addToast = useToastStore((state) => state.addToast);
   const image = useMonthlyCookingRecordImage({
     enabled: records.isReady && records.totalCount > 0,
     generationKey: getGenerationKey(monthKey, records),
   });
-
-  const handleSave = () => {
-    if (!image.blob) return;
-    downloadMonthlyCookingRecordImage(image.blob, monthKey);
-    triggerHaptic("Success");
-    addToast({ message: copy.share.saveSuccess, variant: "success" });
-  };
-
-  const handleShare = async () => {
-    if (!image.blob) return;
-    try {
-      const result = await shareMonthlyCookingRecordImage({
-        blob: image.blob,
-        monthKey,
-        title: format(copy.share.shareTitle, { month: monthLabel }),
-        text: copy.share.shareText,
-        downloadFallback: downloadMonthlyCookingRecordImage,
-      });
-      if (result === "cancelled") return;
-      triggerHaptic("Success");
-      addToast({
-        message:
-          result === "shared"
-            ? copy.share.shareSuccess
-            : copy.share.downloadFallback,
-        variant: "success",
-      });
-    } catch {
-      addToast({ message: copy.share.actionError, variant: "error" });
-    }
-  };
+  const actions = useMonthlyCookingRecordImageActions({
+    blob: image.blob,
+    monthKey,
+    shareTitle: format(copy.share.shareTitle, { month: monthLabel }),
+    shareText: copy.share.shareText,
+    copy: copy.share,
+  });
 
   return (
     <>
@@ -96,9 +68,10 @@ export const MonthlyCookingRecordSharePreview = ({
       </main>
       <MonthlyCookingRecordShareActions
         status={image.status}
+        isPending={actions.isPending}
         copy={copy.share}
-        onSave={handleSave}
-        onShare={() => void handleShare()}
+        onSave={actions.save}
+        onShare={actions.share}
         onRetry={image.retry}
       />
     </>

@@ -182,6 +182,7 @@ export const userPages: UserPagesDict = {
         downloadFallback:
           "The image was saved because file sharing is unavailable.",
         actionError: "We couldn't process the image. Please try again.",
+        appUpdateRequired: "Update the app to save or share this image.",
         state: {
           loading: "Preparing your share image.",
           errorTitle: "We couldn't load your cooking records",
@@ -261,6 +262,23 @@ export const userPages: UserPagesDict = {
         showRecordNamesDescription: "Display each dish name on its photo.",
         intro: "The background applies to every month of cooking records.",
         previewLabel: "Selected background preview",
+        customTitle: "My backgrounds",
+        customOptionsLabel: "Choose one of my backgrounds",
+        addCustom: "Add photo",
+        customLimit: "My backgrounds {count}/20",
+        addingCustom: "Adding your background.",
+        processingCustom: "Processing your photo.",
+        retryCustom: "Retry registration",
+        deleteCustom: "Delete this background",
+        customErrors: {
+          EMPTY_FILE: "Choose a photo that is not empty.",
+          UNSUPPORTED_TYPE: "Choose a JPG, PNG, or WEBP file.",
+          FILE_TOO_LARGE: "Choose a photo up to 10 MB.",
+          RESELECT_FILE: "Please choose the photo again.",
+          LIMIT_REACHED: "You can add up to 20 backgrounds.",
+          PROCESSING_TIMEOUT: "The photo is taking longer to process.",
+          UPLOAD_FAILED: "We couldn't add the background. Try again.",
+        },
         optionsTitle: "Backgrounds",
         optionsLabel: "Choose a background",
         optionLabel: "Background {index}",
@@ -269,6 +287,14 @@ export const userPages: UserPagesDict = {
         retry: "Try again",
         apply: "Apply this background",
         applying: "Applying",
+      },
+      customBackgroundDelete: {
+        title: "Delete this background?",
+        description:
+          "It will be removed from your backgrounds permanently. If it is currently applied, the default background will be restored.",
+        cancel: "Cancel",
+        confirm: "Delete",
+        deleting: "Deleting",
       },
       delete: {
         title: "Delete this record?",
@@ -286,6 +312,9 @@ export const userPages: UserPagesDict = {
         recordDeleteFailed: "We couldn't delete the cooking record.",
         backgroundChanged: "The cooking record background was changed.",
         backgroundChangeFailed: "We couldn't change the background.",
+        customBackgroundAdded: "The photo was added to your backgrounds.",
+        customBackgroundDeleted: "The photo was removed from your backgrounds.",
+        customBackgroundDeleteFailed: "We couldn't delete the background.",
       },
     },
     dailyRecord: {

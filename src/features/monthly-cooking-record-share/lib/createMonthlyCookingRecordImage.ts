@@ -19,9 +19,20 @@ export const createMonthlyCookingRecordImage = async (
 
 const waitForCardAssets = async (node: HTMLElement): Promise<void> => {
   const fontReady = document.fonts?.ready ?? Promise.resolve();
-  const imageReady = Array.from(node.querySelectorAll("img")).map((image) => {
-    if (image.complete) return Promise.resolve();
-    return image.decode().catch(() => undefined);
-  });
+  const imageReady = Array.from(node.querySelectorAll("img")).map(waitForImage);
   await Promise.all([fontReady, ...imageReady]);
+  await waitForNextPaint();
+  await waitForNextPaint();
 };
+
+const waitForImage = async (image: HTMLImageElement): Promise<void> => {
+  if (typeof image.decode === "function") {
+    await image.decode().catch(() => undefined);
+  }
+  if (!image.complete || image.naturalWidth === 0) {
+    throw new Error("MONTHLY_COOKING_RECORD_IMAGE_ASSET_FAILED");
+  }
+};
+
+const waitForNextPaint = (): Promise<void> =>
+  new Promise((resolve) => requestAnimationFrame(() => resolve()));

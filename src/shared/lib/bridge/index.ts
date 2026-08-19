@@ -1,6 +1,12 @@
 // core
 export { AppWebViewDetector } from "./AppWebViewDetector";
 export { isAppWebView, postMessage } from "./client";
+export {
+  isNativeImageActionUnsupportedError,
+  NativeImageActionError,
+  NativeImageActionUnsupportedError,
+  requestNativeImageAction,
+} from "./imageAction";
 export { useAppMessageListener } from "./useAppMessage";
 export { useAuthDiagBridge } from "./useAuthDiagBridge";
 
@@ -28,5 +34,9 @@ export type {
   BridgeMessage,
   BridgeMessageType,
   HapticStyle,
+  ImageActionPayload,
+  ImageActionResultPayload,
+  NativeImageAction,
+  NativeImageActionErrorCode,
   NotificationStatus,
 } from "./types";

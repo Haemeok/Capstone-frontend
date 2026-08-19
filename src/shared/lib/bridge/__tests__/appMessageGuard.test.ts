@@ -93,4 +93,92 @@ describe("parseAppToWebMessage", () => {
       ).toBeNull();
     });
   });
+
+  describe("IMAGE_ACTION_RESULT", () => {
+    it.each([
+      ["saveImage", "accepted"],
+      ["saveImage", "saved"],
+      ["shareImage", "accepted"],
+      ["shareImage", "presented"],
+    ])("%s 작업의 %s 상태 응답을 통과시킵니다", (action, status) => {
+      const message = {
+        type: "IMAGE_ACTION_RESULT",
+        payload: {
+          v: 1,
+          actionId: "action-1",
+          action,
+          status,
+        },
+      };
+
+      expect(parseAppToWebMessage(message)).toEqual(message);
+    });
+
+    it.each([
+      ["saveImage", "presented"],
+      ["shareImage", "saved"],
+    ])("%s 작업과 맞지 않는 %s 상태를 거부합니다", (action, status) => {
+      expect(
+        parseAppToWebMessage({
+          type: "IMAGE_ACTION_RESULT",
+          payload: { v: 1, actionId: "action-1", action, status },
+        })
+      ).toBeNull();
+    });
+
+    it("실패 응답은 허용된 errorCode가 있어야 통과시킵니다", () => {
+      const message = {
+        type: "IMAGE_ACTION_RESULT",
+        payload: {
+          v: 1,
+          actionId: "action-1",
+          action: "shareImage",
+          status: "failed",
+          errorCode: "SHARE_FAILED",
+        },
+      };
+
+      expect(parseAppToWebMessage(message)).toEqual(message);
+      expect(
+        parseAppToWebMessage({
+          ...message,
+          payload: { ...message.payload, errorCode: undefined },
+        })
+      ).toBeNull();
+    });
+
+    it("버전·요청 ID·작업·상태가 계약과 다르면 거부합니다", () => {
+      const validPayload = {
+        v: 1,
+        actionId: "action-1",
+        action: "saveImage",
+        status: "saved",
+      };
+
+      expect(
+        parseAppToWebMessage({
+          type: "IMAGE_ACTION_RESULT",
+          payload: { ...validPayload, v: 2 },
+        })
+      ).toBeNull();
+      expect(
+        parseAppToWebMessage({
+          type: "IMAGE_ACTION_RESULT",
+          payload: { ...validPayload, actionId: "" },
+        })
+      ).toBeNull();
+      expect(
+        parseAppToWebMessage({
+          type: "IMAGE_ACTION_RESULT",
+          payload: { ...validPayload, action: "download" },
+        })
+      ).toBeNull();
+      expect(
+        parseAppToWebMessage({
+          type: "IMAGE_ACTION_RESULT",
+          payload: { ...validPayload, status: "done" },
+        })
+      ).toBeNull();
+    });
+  });
 });

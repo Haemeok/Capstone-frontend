@@ -1,4 +1,7 @@
-export { downloadMonthlyCookingRecordImage } from "./lib/downloadMonthlyCookingRecordImage";
+export {
+  downloadMonthlyCookingRecordImage,
+  getMonthlyCookingRecordImageFileName,
+} from "./lib/downloadMonthlyCookingRecordImage";
 export { shareMonthlyCookingRecordImage } from "./lib/shareMonthlyCookingRecordImage";
 export type { MonthlyCookingRecordShareItem } from "./model/types";
 export type { MonthlyCookingRecordImageStatus } from "./model/useMonthlyCookingRecordImage";

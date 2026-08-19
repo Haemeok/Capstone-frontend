@@ -182,6 +182,8 @@ export const userPages: UserPagesDict = {
         shareSuccess: "料理記録の画像を共有しました。",
         downloadFallback: "共有の代わりに画像を保存しました。",
         actionError: "画像を処理できませんでした。もう一度お試しください。",
+        appUpdateRequired:
+          "画像を保存または共有するには、アプリを更新してください。",
         state: {
           loading: "共有画像を準備しています。",
           errorTitle: "料理記録を読み込めませんでした",
@@ -260,6 +262,23 @@ export const userPages: UserPagesDict = {
         showRecordNamesDescription: "写真に料理名を表示します。",
         intro: "背景はすべての月の料理記録に適用されます。",
         previewLabel: "選択した背景のプレビュー",
+        customTitle: "マイ背景",
+        customOptionsLabel: "マイ背景を選択",
+        addCustom: "写真を追加",
+        customLimit: "マイ背景 {count}/20",
+        addingCustom: "背景を追加しています。",
+        processingCustom: "写真を処理しています。",
+        retryCustom: "登録を再試行",
+        deleteCustom: "この背景を削除",
+        customErrors: {
+          EMPTY_FILE: "空のファイルは追加できません。",
+          UNSUPPORTED_TYPE: "JPG、PNG、WEBPファイルを選んでください。",
+          FILE_TOO_LARGE: "10MB以下の写真を選んでください。",
+          RESELECT_FILE: "写真をもう一度選んでください。",
+          LIMIT_REACHED: "マイ背景は20件まで追加できます。",
+          PROCESSING_TIMEOUT: "写真の処理に時間がかかっています。",
+          UPLOAD_FAILED: "背景を追加できませんでした。もう一度お試しください。",
+        },
         optionsTitle: "背景",
         optionsLabel: "背景を選ぶ",
         optionLabel: "背景 {index}",
@@ -268,6 +287,14 @@ export const userPages: UserPagesDict = {
         retry: "もう一度試す",
         apply: "この背景を適用",
         applying: "適用中",
+      },
+      customBackgroundDelete: {
+        title: "この背景を削除しますか？",
+        description:
+          "マイ背景から完全に削除されます。適用中の場合は、デフォルトの背景に戻ります。",
+        cancel: "キャンセル",
+        confirm: "削除",
+        deleting: "削除中",
       },
       delete: {
         title: "この記録を削除しますか？",
@@ -284,6 +311,9 @@ export const userPages: UserPagesDict = {
         recordDeleteFailed: "料理記録を削除できませんでした。",
         backgroundChanged: "料理記録全体の背景を変更しました。",
         backgroundChangeFailed: "背景を変更できませんでした。",
+        customBackgroundAdded: "写真をマイ背景に追加しました。",
+        customBackgroundDeleted: "写真をマイ背景から削除しました。",
+        customBackgroundDeleteFailed: "背景を削除できませんでした。",
       },
     },
     dailyRecord: {

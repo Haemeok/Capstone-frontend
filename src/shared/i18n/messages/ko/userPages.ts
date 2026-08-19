@@ -164,8 +164,9 @@ export const userPages: UserPagesDict = {
       share: {
         pageTitle: "공유 이미지 미리보기",
         backLabel: "요리 기록으로 돌아가기",
-        lead: "이번 달 요리를 한 장에 담았어요",
-        description: "월과 요리 개수, 스티커만 공유합니다.",
+        lead: "이번 달 요리 기록이 완성됐어요",
+        description:
+          "직접 만든 요리를 한 장의 이미지로 저장하거나 공유해보세요.",
         cardAria: "{month} 요리 기록 공유 이미지",
         kicker: "나의 요리 기록",
         brand: "RECIPIO",
@@ -180,6 +181,8 @@ export const userPages: UserPagesDict = {
         shareSuccess: "요리 기록 이미지를 공유했습니다.",
         downloadFallback: "공유 대신 이미지를 저장했습니다.",
         actionError: "이미지를 처리하지 못했습니다. 다시 시도해 주세요.",
+        appUpdateRequired:
+          "이미지를 저장하거나 공유하려면 앱을 업데이트해 주세요.",
         state: {
           loading: "공유 이미지를 준비하고 있어요.",
           errorTitle: "요리 기록을 불러오지 못했어요",
@@ -259,6 +262,23 @@ export const userPages: UserPagesDict = {
         showRecordNamesDescription: "사진에 요리 이름을 표시해요.",
         intro: "배경은 모든 달의 요리 기록에 함께 적용돼요.",
         previewLabel: "선택한 배경 미리보기",
+        customTitle: "내 배경",
+        customOptionsLabel: "내 배경 선택",
+        addCustom: "사진 추가",
+        customLimit: "내 배경 {count}/20",
+        addingCustom: "배경을 추가하는 중입니다.",
+        processingCustom: "사진을 처리하는 중입니다.",
+        retryCustom: "등록 다시 시도",
+        deleteCustom: "이 배경 삭제",
+        customErrors: {
+          EMPTY_FILE: "빈 파일은 추가할 수 없습니다.",
+          UNSUPPORTED_TYPE: "JPG, PNG, WEBP 파일만 추가할 수 있습니다.",
+          FILE_TOO_LARGE: "10MB 이하 사진을 선택해 주세요.",
+          RESELECT_FILE: "사진을 다시 선택해 주세요.",
+          LIMIT_REACHED: "내 배경은 20개까지 추가할 수 있습니다.",
+          PROCESSING_TIMEOUT: "사진 처리가 늦어지고 있습니다.",
+          UPLOAD_FAILED: "배경을 추가하지 못했습니다. 다시 시도해 주세요.",
+        },
         optionsTitle: "준비된 배경",
         optionsLabel: "준비된 배경 선택",
         optionLabel: "배경 {index}",
@@ -267,6 +287,14 @@ export const userPages: UserPagesDict = {
         retry: "다시 시도",
         apply: "이 배경 적용",
         applying: "적용하는 중",
+      },
+      customBackgroundDelete: {
+        title: "이 배경을 삭제할까요?",
+        description:
+          "내 배경에서 삭제되며 되돌릴 수 없습니다. 적용 중인 배경이면 기본 배경으로 바뀝니다.",
+        cancel: "취소",
+        confirm: "삭제",
+        deleting: "삭제하는 중",
       },
       delete: {
         title: "이 기록을 삭제할까요?",
@@ -284,6 +312,9 @@ export const userPages: UserPagesDict = {
         recordDeleteFailed: "요리 기록을 삭제하지 못했습니다.",
         backgroundChanged: "전체 요리 기록 배경을 바꿨습니다.",
         backgroundChangeFailed: "배경을 바꾸지 못했습니다.",
+        customBackgroundAdded: "내 배경에 사진을 추가했습니다.",
+        customBackgroundDeleted: "내 배경에서 사진을 삭제했습니다.",
+        customBackgroundDeleteFailed: "배경을 삭제하지 못했습니다.",
       },
     },
     dailyRecord: {

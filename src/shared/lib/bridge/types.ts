@@ -13,6 +13,7 @@ export type BridgeMessageType =
   | "HAPTIC"
   | "NAVIGATION"
   | "SHARE"
+  | "IMAGE_ACTION"
   | "STORAGE"
   | "NOTIFICATION"
   | "REQUEST_REVIEW";
@@ -27,7 +28,34 @@ export type AppToWebMessageType =
   | "NOTIFICATION_STATUS"
   | "AUTH_DIAG"
   | "KEYBOARD_STATE"
-  | "APP_CONTEXT";
+  | "APP_CONTEXT"
+  | "IMAGE_ACTION_RESULT";
+
+export type NativeImageAction = "saveImage" | "shareImage";
+
+export type NativeImageActionErrorCode =
+  | "INVALID_PAYLOAD"
+  | "FILE_WRITE_FAILED"
+  | "PHOTO_SAVE_FAILED"
+  | "SHARE_UNAVAILABLE"
+  | "SHARE_FAILED";
+
+export type ImageActionPayload = {
+  v: 1;
+  actionId: string;
+  action: NativeImageAction;
+  fileName: string;
+  mimeType: "image/png";
+  base64: string;
+};
+
+export type ImageActionResultPayload = {
+  v: 1;
+  actionId: string;
+  action: NativeImageAction;
+  status: "accepted" | "saved" | "presented" | "failed";
+  errorCode?: NativeImageActionErrorCode;
+};
 
 export type AuthDiagBridgePayload = {
   phase: string;
@@ -64,7 +92,8 @@ export type AppToWebMessage =
   | { type: "NOTIFICATION_STATUS"; payload: { status: NotificationStatus } }
   | { type: "AUTH_DIAG"; payload: AuthDiagBridgePayload }
   | { type: "KEYBOARD_STATE"; payload: KeyboardStatePayload }
-  | { type: "APP_CONTEXT"; payload: AppContextPayload };
+  | { type: "APP_CONTEXT"; payload: AppContextPayload }
+  | { type: "IMAGE_ACTION_RESULT"; payload: ImageActionResultPayload };
 
 // auth state
 export type AuthStatePayload = {

@@ -2,10 +2,12 @@ import { render, screen, within } from "@testing-library/react";
 
 import { MonthlyCookingRecordShareCard } from "../MonthlyCookingRecordShareCard";
 
-jest.mock("@/shared/ui/image/Image", () => ({
-  Image: ({ src, alt }: { src: string; alt: string }) => (
-    <img src={src} alt={alt} />
-  ),
+jest.mock("next/navigation", () => ({
+  usePathname: () => "/calendar/timeline/share",
+}));
+
+jest.mock("@/shared/hooks/useInViewOnce", () => ({
+  useInViewOnce: () => ({ ref: jest.fn(), inView: false }),
 }));
 
 const items = Array.from({ length: 18 }, (_, index) => ({
@@ -25,7 +27,11 @@ describe("MonthlyCookingRecordShareCard", () => {
         recordCountLabel="18개의 요리"
         brandLabel="RECIPIO"
         items={items}
-        background={{ backgroundKey: "DEFAULT", imageUrl: null }}
+        background={{
+          backgroundKey: "DEFAULT",
+          backgroundType: "PRESET",
+          imageUrl: null,
+        }}
       />
     );
 
@@ -64,11 +70,39 @@ describe("MonthlyCookingRecordShareCard", () => {
         recordCountLabel="31개의 요리"
         brandLabel="RECIPIO"
         items={manyItems}
-        background={{ backgroundKey: "DEFAULT", imageUrl: null }}
+        background={{
+          backgroundKey: "DEFAULT",
+          backgroundType: "PRESET",
+          imageUrl: null,
+        }}
       />
     );
 
     expect(screen.getAllByRole("presentation")).toHaveLength(30);
     expect(screen.queryByText("더 있어요")).not.toBeInTheDocument();
+  });
+
+  it("viewport 밖에서도 공유 카드 스티커와 배경 이미지 로드를 시작합니다", () => {
+    render(
+      <MonthlyCookingRecordShareCard
+        ariaLabel="2026년 8월 요리 기록 공유 이미지"
+        kicker="나의 요리 기록"
+        monthLabel="2026년 8월"
+        recordCountLabel="2개의 요리"
+        brandLabel="RECIPIO"
+        items={items.slice(0, 2)}
+        background={{
+          backgroundKey: "PAPER_BEIGE",
+          backgroundType: "PRESET",
+          imageUrl: "/backgrounds/paper-beige.webp",
+        }}
+      />
+    );
+
+    expect(document.querySelector('img[src="/records/1.webp"]')).not.toBeNull();
+    expect(document.querySelector('img[src="/records/2.webp"]')).not.toBeNull();
+    expect(
+      document.querySelector('img[src="/backgrounds/paper-beige.webp"]')
+    ).not.toBeNull();
   });
 });

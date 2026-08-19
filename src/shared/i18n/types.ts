@@ -718,6 +718,7 @@ export type UserPagesDict = {
         shareSuccess: string;
         downloadFallback: string;
         actionError: string;
+        appUpdateRequired: string;
         state: {
           loading: string;
           errorTitle: string;
@@ -795,6 +796,23 @@ export type UserPagesDict = {
         showRecordNamesDescription: string;
         intro: string;
         previewLabel: string;
+        customTitle: string;
+        customOptionsLabel: string;
+        addCustom: string;
+        customLimit: string;
+        addingCustom: string;
+        processingCustom: string;
+        retryCustom: string;
+        deleteCustom: string;
+        customErrors: {
+          EMPTY_FILE: string;
+          UNSUPPORTED_TYPE: string;
+          FILE_TOO_LARGE: string;
+          RESELECT_FILE: string;
+          LIMIT_REACHED: string;
+          PROCESSING_TIMEOUT: string;
+          UPLOAD_FAILED: string;
+        };
         optionsTitle: string;
         optionsLabel: string;
         optionLabel: string;
@@ -803,6 +821,13 @@ export type UserPagesDict = {
         retry: string;
         apply: string;
         applying: string;
+      };
+      customBackgroundDelete: {
+        title: string;
+        description: string;
+        cancel: string;
+        confirm: string;
+        deleting: string;
       };
       delete: {
         title: string;
@@ -819,6 +844,9 @@ export type UserPagesDict = {
         recordDeleteFailed: string;
         backgroundChanged: string;
         backgroundChangeFailed: string;
+        customBackgroundAdded: string;
+        customBackgroundDeleted: string;
+        customBackgroundDeleteFailed: string;
       };
     };
     dailyRecord: {

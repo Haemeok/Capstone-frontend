@@ -9,6 +9,10 @@ import {
   within,
 } from "@testing-library/react";
 
+import { userPages as enUserPages } from "@/shared/i18n/messages/en/userPages";
+import { userPages as jaUserPages } from "@/shared/i18n/messages/ja/userPages";
+import { useToastStore } from "@/shared/ui/toast";
+
 import { useUserStore } from "@/entities/user";
 
 import { MonthlyCookingRecordSharePageClient } from "../_components/MonthlyCookingRecordSharePageClient";
@@ -18,6 +22,9 @@ const mockedDownloadImage = jest.fn();
 const mockedShareImage = jest.fn();
 const mockedUseImage = jest.fn();
 const retryImage = jest.fn();
+const mockedIsAppWebView = jest.fn();
+const mockedRequestNativeImageAction = jest.fn();
+const mockedTriggerHaptic = jest.fn();
 
 jest.mock("@/features/monthly-cooking-record-share", () => {
   const actual = jest.requireActual("@/features/monthly-cooking-record-share");
@@ -32,7 +39,15 @@ jest.mock("@/features/monthly-cooking-record-share", () => {
   };
 });
 
-jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
+jest.mock("@/shared/lib/bridge", () => ({
+  isAppWebView: () => mockedIsAppWebView(),
+  isNativeImageActionUnsupportedError: (error: unknown) =>
+    error instanceof Error &&
+    error.name === "NativeImageActionUnsupportedError",
+  requestNativeImageAction: (...args: unknown[]) =>
+    mockedRequestNativeImageAction(...args),
+  triggerHaptic: (...args: unknown[]) => mockedTriggerHaptic(...args),
+}));
 
 jest.mock("next/navigation", () => ({
   usePathname: () => "/calendar/timeline/share",
@@ -85,6 +100,14 @@ const createWrapper = () => {
 describe("MonthlyCookingRecordSharePageClient", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockedIsAppWebView.mockReturnValue(false);
+    mockedRequestNativeImageAction.mockResolvedValue({
+      v: 1,
+      actionId: "action-1",
+      action: "saveImage",
+      status: "saved",
+    });
+    useToastStore.setState({ toastList: [] });
     useUserStore.setState({ isAuthReady: true, isAuthenticated: true });
     mockedUseImage.mockReturnValue({
       captureRef: jest.fn(),
@@ -97,6 +120,7 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     getCookingRecords.mockResolvedValue({
       background: {
         backgroundKey: "PAPER_BEIGE",
+        backgroundType: "PRESET",
         imageUrl: "/backgrounds/paper-beige.webp",
       },
       groups: [
@@ -227,5 +251,145 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     expect(
       screen.queryByRole("button", { name: "공유하기" })
     ).not.toBeInTheDocument();
+  });
+
+  it("한국어 공유 화면은 기록 완성과 저장·공유 행동을 안내합니다", async () => {
+    const Wrapper = createWrapper();
+    render(
+      <Wrapper>
+        <MonthlyCookingRecordSharePageClient />
+      </Wrapper>
+    );
+
+    expect(
+      await screen.findByText("이번 달 요리 기록이 완성됐어요")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "직접 만든 요리를 한 장의 이미지로 저장하거나 공유해보세요."
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("영어와 일본어 공유 문구는 기존 값을 유지합니다", () => {
+    expect(enUserPages.calendar.cookingRecord.share.lead).toBe(
+      "Your month of cooking, in one image"
+    );
+    expect(jaUserPages.calendar.cookingRecord.share.lead).toBe(
+      "今月の料理を一枚にまとめました"
+    );
+  });
+
+  it("WebView 이미지 저장은 현재 PNG를 네이티브 saveImage 작업으로 보냅니다", async () => {
+    mockedIsAppWebView.mockReturnValue(true);
+    const Wrapper = createWrapper();
+    render(
+      <Wrapper>
+        <MonthlyCookingRecordSharePageClient />
+      </Wrapper>
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "이미지 저장" }));
+
+    await waitFor(() =>
+      expect(mockedRequestNativeImageAction).toHaveBeenCalledWith({
+        action: "saveImage",
+        blob: expect.any(Blob),
+        fileName: "recipio-cooking-record-2026-08.png",
+      })
+    );
+    expect(mockedDownloadImage).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(useToastStore.getState().toastList).toEqual([
+        expect.objectContaining({
+          message: "요리 기록 이미지를 저장했습니다.",
+          variant: "success",
+        }),
+      ])
+    );
+    expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
+    expect(mockedTriggerHaptic).toHaveBeenCalledWith("Success");
+  });
+
+  it("구버전 WebView는 저장 성공으로 표시하지 않고 앱 업데이트를 안내합니다", async () => {
+    mockedIsAppWebView.mockReturnValue(true);
+    const unsupportedError = new Error("unsupported");
+    unsupportedError.name = "NativeImageActionUnsupportedError";
+    mockedRequestNativeImageAction.mockRejectedValueOnce(unsupportedError);
+    const Wrapper = createWrapper();
+    render(
+      <Wrapper>
+        <MonthlyCookingRecordSharePageClient />
+      </Wrapper>
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "이미지 저장" }));
+
+    await waitFor(() =>
+      expect(useToastStore.getState().toastList).toEqual([
+        expect.objectContaining({
+          message: "이미지를 저장하거나 공유하려면 앱을 업데이트해 주세요.",
+          variant: "error",
+        }),
+      ])
+    );
+    expect(mockedDownloadImage).not.toHaveBeenCalled();
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+  });
+
+  it("WebView 공유는 PNG 네이티브 작업만 요청하고 완료 안내를 추정하지 않습니다", async () => {
+    mockedIsAppWebView.mockReturnValue(true);
+    mockedRequestNativeImageAction.mockResolvedValueOnce({
+      v: 1,
+      actionId: "action-2",
+      action: "shareImage",
+      status: "presented",
+    });
+    const Wrapper = createWrapper();
+    render(
+      <Wrapper>
+        <MonthlyCookingRecordSharePageClient />
+      </Wrapper>
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "공유하기" }));
+
+    await waitFor(() =>
+      expect(mockedRequestNativeImageAction).toHaveBeenCalledWith({
+        action: "shareImage",
+        blob: expect.any(Blob),
+        fileName: "recipio-cooking-record-2026-08.png",
+      })
+    );
+    expect(mockedShareImage).not.toHaveBeenCalled();
+    expect(mockedDownloadImage).not.toHaveBeenCalled();
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+    expect(useToastStore.getState().toastList).toHaveLength(0);
+  });
+
+  it("WebView 공유 실패는 다운로드로 바꾸지 않고 재시도 가능한 오류를 안내합니다", async () => {
+    mockedIsAppWebView.mockReturnValue(true);
+    mockedRequestNativeImageAction.mockRejectedValueOnce(
+      new Error("share failed")
+    );
+    const Wrapper = createWrapper();
+    render(
+      <Wrapper>
+        <MonthlyCookingRecordSharePageClient />
+      </Wrapper>
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "공유하기" }));
+
+    await waitFor(() =>
+      expect(useToastStore.getState().toastList).toEqual([
+        expect.objectContaining({
+          message: "이미지를 처리하지 못했습니다. 다시 시도해 주세요.",
+          variant: "error",
+        }),
+      ])
+    );
+    expect(mockedDownloadImage).not.toHaveBeenCalled();
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
   });
 });
