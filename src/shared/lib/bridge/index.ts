@@ -6,6 +6,7 @@ export {
   NativeImageActionError,
   NativeImageActionUnsupportedError,
   requestNativeImageAction,
+  setNativeImageCaptureCapability,
 } from "./imageAction";
 export { useAppMessageListener } from "./useAppMessage";
 export { useAuthDiagBridge } from "./useAuthDiagBridge";

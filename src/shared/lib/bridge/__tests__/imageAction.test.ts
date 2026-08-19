@@ -4,6 +4,7 @@ import {
   isNativeImageActionUnsupportedError,
   NativeImageActionError,
   requestNativeImageAction,
+  setNativeImageCaptureCapability,
 } from "../imageAction";
 import type {
   ImageActionPayload,
@@ -19,7 +20,9 @@ const createInput = (action: ImageActionPayload["action"]) => ({
   fileName: "recipio-cooking-record-2026-08.png",
 });
 
-const getPostedPayload = async (): Promise<ImageActionPayload> => {
+type PostedImageAction = Pick<ImageActionPayload, "actionId" | "action">;
+
+const getPostedPayload = async (): Promise<PostedImageAction> => {
   await waitFor(() => expect(postMessage).toHaveBeenCalledTimes(1));
   const message: unknown = JSON.parse(postMessage.mock.calls[0][0]);
   if (
@@ -39,17 +42,13 @@ const getPostedPayload = async (): Promise<ImageActionPayload> => {
     throw new Error("invalid payload");
   }
   return {
-    v: 1,
     actionId: String(payload.actionId),
     action: payload.action === "shareImage" ? "shareImage" : "saveImage",
-    fileName: "recipio-cooking-record-2026-08.png",
-    mimeType: "image/png",
-    base64: "cG5n",
   };
 };
 
 const dispatchResult = (
-  payload: ImageActionPayload,
+  payload: PostedImageAction,
   status: ImageActionResultPayload["status"],
   errorCode?: NativeImageActionErrorCode
 ) => {
@@ -72,6 +71,7 @@ const dispatchResult = (
 describe("requestNativeImageAction", () => {
   beforeEach(() => {
     postMessage.mockReset();
+    setNativeImageCaptureCapability(null);
     window.ReactNativeWebView = { postMessage };
   });
 
@@ -106,6 +106,47 @@ describe("requestNativeImageAction", () => {
       });
     }
   );
+
+  it("native-crop-v1 앱에는 base64 대신 카드 좌표가 든 버전 2 payload를 보냅니다", async () => {
+    setNativeImageCaptureCapability("native-crop-v1");
+    const captureTarget = document.createElement("div");
+    jest.spyOn(captureTarget, "getBoundingClientRect").mockReturnValue({
+      x: 20,
+      y: 80,
+      left: 20,
+      top: 80,
+      width: 360,
+      height: 360,
+      right: 380,
+      bottom: 440,
+      toJSON: () => ({}),
+    });
+
+    const resultPromise = requestNativeImageAction({
+      ...createInput("saveImage"),
+      captureTarget,
+    });
+    const payload = await getPostedPayload();
+
+    expect(JSON.parse(postMessage.mock.calls[0][0])).toEqual({
+      type: "IMAGE_ACTION",
+      payload: {
+        v: 2,
+        actionId: expect.any(String),
+        action: "saveImage",
+        fileName: "recipio-cooking-record-2026-08.png",
+        mimeType: "image/png",
+        capture: {
+          viewport: { width: window.innerWidth, height: window.innerHeight },
+          rect: { x: 20, y: 80, width: 360, height: 360 },
+        },
+      },
+    });
+
+    dispatchResult(payload, "accepted");
+    dispatchResult(payload, "saved");
+    await expect(resultPromise).resolves.toMatchObject({ status: "saved" });
+  });
 
   it("accepted 응답만으로 완료하지 않고 같은 요청의 최종 응답을 기다립니다", async () => {
     let isSettled = false;

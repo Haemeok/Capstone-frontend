@@ -33,6 +33,7 @@ export const MonthlyCookingRecordSharePreview = ({
   });
   const actions = useMonthlyCookingRecordImageActions({
     blob: image.blob,
+    captureTarget: image.captureTarget,
     monthKey,
     shareTitle: format(copy.share.shareTitle, { month: monthLabel }),
     shareText: copy.share.shareText,

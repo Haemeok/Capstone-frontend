@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo } from "react";
 
-import { isAppWebView, useAppMessageListener } from "@/shared/lib/bridge";
+import {
+  isAppWebView,
+  setNativeImageCaptureCapability,
+  useAppMessageListener,
+} from "@/shared/lib/bridge";
 
 import { setAnalyticsUserProperties } from "./setAnalyticsUserProperties";
 
@@ -11,7 +15,12 @@ export function AppContextBridge() {
     () => ({
       APP_CONTEXT: (
         payload: Parameters<typeof setAnalyticsUserProperties>[0]
-      ) => setAnalyticsUserProperties(payload),
+      ) => {
+        setNativeImageCaptureCapability(
+          payload.capabilities?.imageCapture ?? null
+        );
+        setAnalyticsUserProperties(payload);
+      },
     }),
     []
   );

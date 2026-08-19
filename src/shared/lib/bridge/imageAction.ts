@@ -33,25 +33,88 @@ type RequestNativeImageActionParams = {
   action: NativeImageAction;
   blob: Blob;
   fileName: string;
+  captureTarget?: HTMLElement | null;
+};
+
+type NativeImageCaptureCapability = "native-crop-v1";
+
+let nativeImageCaptureCapability: NativeImageCaptureCapability | null = null;
+
+export const setNativeImageCaptureCapability = (
+  capability: NativeImageCaptureCapability | null
+): void => {
+  nativeImageCaptureCapability = capability;
 };
 
 export const requestNativeImageAction = async ({
   action,
   blob,
   fileName,
+  captureTarget,
 }: RequestNativeImageActionParams): Promise<ImageActionResultPayload> => {
   if (!isAppWebView()) throw new NativeImageActionUnsupportedError();
-  const payload: ImageActionPayload = {
-    v: 1,
-    actionId: createActionId(),
+  const payload = await createImageActionPayload({
     action,
+    blob,
     fileName,
-    mimeType: "image/png",
-    base64: await blobToBase64(blob),
-  };
+    captureTarget,
+  });
   const response = waitForImageActionResult(payload.actionId, payload.action);
   postMessage("IMAGE_ACTION", payload);
   return response;
+};
+
+const createImageActionPayload = async ({
+  action,
+  blob,
+  fileName,
+  captureTarget,
+}: RequestNativeImageActionParams): Promise<ImageActionPayload> => {
+  const mimeType = "image/png" as const;
+  const commonPayload = {
+    actionId: createActionId(),
+    action,
+    fileName,
+    mimeType,
+  };
+  if (nativeImageCaptureCapability === "native-crop-v1" && captureTarget) {
+    return {
+      v: 2,
+      ...commonPayload,
+      capture: getNativeCaptureGeometry(captureTarget),
+    };
+  }
+  return {
+    v: 1,
+    ...commonPayload,
+    base64: await blobToBase64(blob),
+  };
+};
+
+const getNativeCaptureGeometry = (
+  captureTarget: HTMLElement
+): Extract<ImageActionPayload, { v: 2 }>["capture"] => {
+  const viewport = { width: window.innerWidth, height: window.innerHeight };
+  const bounds = captureTarget.getBoundingClientRect();
+  const rect = {
+    x: bounds.left,
+    y: bounds.top,
+    width: bounds.width,
+    height: bounds.height,
+  };
+  if (
+    viewport.width <= 0 ||
+    viewport.height <= 0 ||
+    rect.x < 0 ||
+    rect.y < 0 ||
+    rect.width <= 0 ||
+    rect.height <= 0 ||
+    rect.x + rect.width > viewport.width ||
+    rect.y + rect.height > viewport.height
+  ) {
+    throw new NativeImageActionError("IMAGE_CAPTURE_FAILED");
+  }
+  return { viewport, rect };
 };
 
 const waitForImageActionResult = (

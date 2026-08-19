@@ -36,11 +36,12 @@ export type NativeImageAction = "saveImage" | "shareImage";
 export type NativeImageActionErrorCode =
   | "INVALID_PAYLOAD"
   | "FILE_WRITE_FAILED"
+  | "IMAGE_CAPTURE_FAILED"
   | "PHOTO_SAVE_FAILED"
   | "SHARE_UNAVAILABLE"
   | "SHARE_FAILED";
 
-export type ImageActionPayload = {
+export type Base64ImageActionPayload = {
   v: 1;
   actionId: string;
   action: NativeImageAction;
@@ -48,6 +49,22 @@ export type ImageActionPayload = {
   mimeType: "image/png";
   base64: string;
 };
+
+export type NativeCaptureImageActionPayload = {
+  v: 2;
+  actionId: string;
+  action: NativeImageAction;
+  fileName: string;
+  mimeType: "image/png";
+  capture: {
+    viewport: { width: number; height: number };
+    rect: { x: number; y: number; width: number; height: number };
+  };
+};
+
+export type ImageActionPayload =
+  | Base64ImageActionPayload
+  | NativeCaptureImageActionPayload;
 
 export type ImageActionResultPayload = {
   v: 1;
@@ -86,6 +103,9 @@ export type AppContextPayload = {
   deviceModel: string;
   pushPermission: "granted" | "denied" | "not_determined";
   locale: string;
+  capabilities?: {
+    imageCapture?: "native-crop-v1";
+  };
 };
 
 export type AppToWebMessage =

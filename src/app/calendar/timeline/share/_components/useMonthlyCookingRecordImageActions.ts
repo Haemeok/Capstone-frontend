@@ -21,6 +21,7 @@ import type { MonthlyCookingRecordShareCopy } from "./sharePage.types";
 
 type Params = {
   blob: Blob | null;
+  captureTarget: HTMLElement | null;
   monthKey: string;
   shareTitle: string;
   shareText: string;
@@ -29,6 +30,7 @@ type Params = {
 
 export const useMonthlyCookingRecordImageActions = ({
   blob,
+  captureTarget,
   monthKey,
   shareTitle,
   shareText,
@@ -79,6 +81,7 @@ export const useMonthlyCookingRecordImageActions = ({
       await requestNativeImageAction({
         action: "saveImage",
         blob,
+        captureTarget,
         fileName: getMonthlyCookingRecordImageFileName(monthKey),
       });
       captureNativeActionDiagnostic({
@@ -97,6 +100,7 @@ export const useMonthlyCookingRecordImageActions = ({
         await requestNativeImageAction({
           action: "shareImage",
           blob,
+          captureTarget,
           fileName: getMonthlyCookingRecordImageFileName(monthKey),
         });
         captureNativeActionDiagnostic({

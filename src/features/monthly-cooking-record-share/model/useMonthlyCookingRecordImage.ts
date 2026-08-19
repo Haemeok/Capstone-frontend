@@ -89,6 +89,7 @@ export const useMonthlyCookingRecordImage = ({
 
   return {
     captureRef: setCaptureNode,
+    captureTarget: captureNode,
     status,
     blob: status === "ready" ? (result?.blob ?? null) : null,
     error: status === "error" ? (result?.error ?? null) : null,

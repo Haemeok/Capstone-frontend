@@ -117,6 +117,7 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     useUserStore.setState({ isAuthReady: true, isAuthenticated: true });
     mockedUseImage.mockReturnValue({
       captureRef: jest.fn(),
+      captureTarget: document.createElement("div"),
       status: "ready",
       blob: new Blob(["png"], { type: "image/png" }),
       error: null,
@@ -301,6 +302,7 @@ describe("MonthlyCookingRecordSharePageClient", () => {
       expect(mockedRequestNativeImageAction).toHaveBeenCalledWith({
         action: "saveImage",
         blob: expect.any(Blob),
+        captureTarget: expect.any(HTMLElement),
         fileName: "recipio-cooking-record-2026-08.png",
       })
     );
@@ -373,6 +375,7 @@ describe("MonthlyCookingRecordSharePageClient", () => {
       expect(mockedRequestNativeImageAction).toHaveBeenCalledWith({
         action: "shareImage",
         blob: expect.any(Blob),
+        captureTarget: expect.any(HTMLElement),
         fileName: "recipio-cooking-record-2026-08.png",
       })
     );

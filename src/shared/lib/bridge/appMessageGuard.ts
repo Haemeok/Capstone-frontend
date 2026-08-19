@@ -27,6 +27,7 @@ const IMAGE_ACTION_STATUSES: readonly string[] = [
 const IMAGE_ACTION_ERROR_CODES: readonly string[] = [
   "INVALID_PAYLOAD",
   "FILE_WRITE_FAILED",
+  "IMAGE_CAPTURE_FAILED",
   "PHOTO_SAVE_FAILED",
   "SHARE_UNAVAILABLE",
   "SHARE_FAILED",
@@ -51,18 +52,29 @@ const isKeyboardStatePayload = (p: unknown): p is KeyboardStatePayload =>
   typeof p.state === "string" &&
   typeof p.height === "number";
 
-const isAppContextPayload = (p: unknown): p is AppContextPayload =>
-  isObject(p) &&
-  p.v === 1 &&
-  p.isNativeApp === true &&
-  typeof p.appVersion === "string" &&
-  typeof p.platform === "string" &&
-  PLATFORMS.includes(p.platform) &&
-  typeof p.osVersion === "string" &&
-  typeof p.deviceModel === "string" &&
-  typeof p.pushPermission === "string" &&
-  NOTIFICATION_STATUSES.includes(p.pushPermission) &&
-  typeof p.locale === "string";
+const isAppContextPayload = (p: unknown): p is AppContextPayload => {
+  if (
+    !isObject(p) ||
+    p.v !== 1 ||
+    p.isNativeApp !== true ||
+    typeof p.appVersion !== "string" ||
+    typeof p.platform !== "string" ||
+    !PLATFORMS.includes(p.platform) ||
+    typeof p.osVersion !== "string" ||
+    typeof p.deviceModel !== "string" ||
+    typeof p.pushPermission !== "string" ||
+    !NOTIFICATION_STATUSES.includes(p.pushPermission) ||
+    typeof p.locale !== "string"
+  ) {
+    return false;
+  }
+  if (p.capabilities === undefined) return true;
+  return (
+    isObject(p.capabilities) &&
+    (p.capabilities.imageCapture === undefined ||
+      p.capabilities.imageCapture === "native-crop-v1")
+  );
+};
 
 const isImageActionResultPayload = (
   payload: unknown
