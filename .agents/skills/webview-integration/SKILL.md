@@ -25,6 +25,7 @@ Reference these guidelines when:
 |---|---|
 | `nav-` | Navigation gate semantics — what to allow/block, frame-type checks |
 | `bridge-` | postMessage / injectJavaScript bridge patterns (future) |
+| `cookie-` | Cookie site boundaries across browser, Preview, localhost, and WebView API calls |
 | `script-` | Third-party scripts (AdSense, analytics) loading inside WebView (future) |
 
 ## Quick Reference
@@ -37,6 +38,10 @@ Reference these guidelines when:
 
 - `bridge-native-capture-bitmap-scale` — Convert WebView CSS coordinates with the captured PNG's measured dimensions; never assume `PixelRatio` or requested capture dimensions equal bitmap pixels.
 
+### Cookie-authenticated API routing
+
+- `cookie-api-routing-by-site` — Route direct browser APIs only where the frontend and backend are same-site; keep a same-origin proxy for localhost and Preview, and never bypass authentication, cache-invalidation, or server-secret BFF routes.
+
 ## How to Use
 
 Read individual rule files for full context, code examples, and failure modes:
@@ -44,6 +49,7 @@ Read individual rule files for full context, code examples, and failure modes:
 ```
 rules/nav-subframe-passthrough.md
 rules/bridge-native-capture-bitmap-scale.md
+rules/cookie-api-routing-by-site.md
 ```
 
 Each rule contains: symptom → root cause → incorrect code → correct code → generalizable principle.
