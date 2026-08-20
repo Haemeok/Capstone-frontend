@@ -1,3 +1,4 @@
+import { resolveClientApiBaseURL } from "@/shared/config/apiRouting";
 import { BASE_API_URL } from "@/shared/config/constants/api";
 import { resolveClientRequestLocale } from "@/shared/i18n/resolveClientRequestLocale";
 import { captureException as sentryCaptureException } from "@/shared/lib/sentry";
@@ -24,7 +25,9 @@ export async function apiClient<T = unknown>(
     ...restOptions
   } = options;
 
-  const defaultBaseURL = isServer ? BASE_API_URL : API_CONFIG.baseURL;
+  const defaultBaseURL = isServer
+    ? BASE_API_URL
+    : resolveClientApiBaseURL(url, API_CONFIG.baseURL);
   const fullUrl = url.startsWith("http")
     ? url
     : `${baseURL || defaultBaseURL}${url}`;

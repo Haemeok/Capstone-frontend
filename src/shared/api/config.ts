@@ -1,3 +1,4 @@
+import { SAME_ORIGIN_API_BASE_URL } from "../config/apiRouting";
 import type { ApiConfig, Environment } from "./types";
 
 export const isServer = typeof window === "undefined";
@@ -8,6 +9,6 @@ export const getCurrentEnvironment = (): Environment => {
 };
 
 export const API_CONFIG: ApiConfig = {
-  baseURL: "/api",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL ?? SAME_ORIGIN_API_BASE_URL,
   timeout: 15000,
 } as const;

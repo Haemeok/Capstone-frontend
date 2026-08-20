@@ -1,17 +1,22 @@
 import createBundleAnalyzer from "@next/bundle-analyzer";
 
+import { resolveApiRouting } from "./src/shared/config/apiRouting";
+
 const withBundleAnalyzer = createBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+const apiRouting = resolveApiRouting(process.env.VERCEL_ENV);
+
+const apiRewrite = {
+  source: "/api/:path((?!bff).*)*",
+  destination: "https://api.recipio.kr/api/:path*",
+};
+
 const appConfig = {
   async rewrites() {
     return [
-      {
-        // Exclude /api/bff/* from rewrite - these go to Next.js API routes
-        source: "/api/:path((?!bff).*)*",
-        destination: "https://api.recipio.kr/api/:path*",
-      },
+      ...(apiRouting.shouldProxyApiRequests ? [apiRewrite] : []),
       {
         source: "/ws/:path*",
         destination: "https://api.recipio.kr/ws/:path*",
@@ -34,6 +39,9 @@ const appConfig = {
         destination: "https://us.i.posthog.com/:path*",
       },
     ];
+  },
+  env: {
+    NEXT_PUBLIC_API_BASE_URL: apiRouting.clientBaseURL,
   },
   // Required for PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,

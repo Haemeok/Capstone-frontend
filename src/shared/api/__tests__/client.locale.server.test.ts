@@ -7,6 +7,7 @@ const fetchMock = jest.fn();
 // jest 환경의 global.fetch는 fetch 오버로드 시그니처를 강제하므로 double-cast
 global.fetch = fetchMock as unknown as typeof fetch;
 
+import { BASE_API_URL } from "@/shared/config/constants/api";
 import { LOCALE_COOKIE } from "@/shared/i18n/localeCookie";
 
 import { api } from "../client";
@@ -25,7 +26,8 @@ describe("apiClient 서버 경로 — 쿠키 자동 주입 안 함", () => {
   });
 
   it("T-A7: isServer면 쿠키가 있어도 lang 자동 주입 없음", async () => {
-    await api.get("/x", { baseURL: "https://api.recipio.kr/api" });
+    await api.get("/x");
+    expect(fetchMock.mock.calls[0][0]).toBe(`${BASE_API_URL}/x`);
     expect(String(fetchMock.mock.calls[0][0])).not.toContain("lang=");
   });
 });

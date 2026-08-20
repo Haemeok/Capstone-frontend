@@ -26,6 +26,13 @@ A11y / Testing / 주석금지). 룰 위반·불확실·위반 직전이면 해�
 | API · 인증 · WebSocket | `docs/guides/api-and-realtime.md`                                                    |
 | Haptic Feedback 상세   | `.agents/skills/haptic-feedback/SKILL.md` (skill로 자동 호출)                        |
 
+### API routing · Cookie 계약 (always-on)
+
+- `VERCEL_ENV=production` 브라우저의 일반 REST API는 `https://api.recipio.kr/api`로 직통한다. 운영 웹과 API는 같은 site이므로 `Domain=.recipio.kr; SameSite=Lax` 쿠키를 `credentials: "include"`와 credentialed CORS로 공유한다.
+- localhost와 Vercel Preview는 `recipio.kr`와 cross-site다. 일반 API는 same-origin `/api`와 `next.config.ts` rewrite를 유지한다. Preview도 `NODE_ENV=production`이므로 배포 구분에는 `VERCEL_ENV`를 사용한다.
+- 인증 BFF, 레시피 캐시 무효화 BFF, Admin/AI·cron처럼 서버 비밀을 사용하는 `/api/bff/*`는 운영에서도 직통 대상이 아니다.
+- rewrite 변경 시 `next.config.ts`와 `vercel.json`을 함께 확인한다. 정적 Vercel 설정이 환경별 routing을 다시 덮지 않아야 한다.
+
 **글쓰기 워크플로 (always-on):** 기술 블로그 글 *설계*가 필요한 시점 (refactor 끝나고 글 쓸 차례, "이거 글로 쓰자" 류) 에는 `writing-thesis → writing-outline → writing-drafting → writing-polish` 체인 사용. 각 단계 사인오프 게이트. 발행은 1119wj.github.io 블로그(content/posts MDX, main push=배포). 정적 검증은 `bash scripts/check-writing-harness.sh`.
 
 **UI 작업 절대 금지 (다시 묻지 말 것):**
