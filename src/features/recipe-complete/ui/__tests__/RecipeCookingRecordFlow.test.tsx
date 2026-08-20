@@ -81,7 +81,11 @@ const copy = {
   error: "등록하지 못했습니다.",
 };
 
-const renderFlow = (onSubmit = jest.fn().mockResolvedValue(undefined)) =>
+const renderFlow = (
+  onSubmit = jest.fn().mockResolvedValue(undefined),
+  onSkip = jest.fn().mockResolvedValue(undefined),
+  onOpenChange = jest.fn()
+) =>
   render(
     <RecipeCookingRecordFlow
       isOpen
@@ -90,8 +94,9 @@ const renderFlow = (onSubmit = jest.fn().mockResolvedValue(undefined)) =>
       recipeTitle="동파육"
       recipeImageUrl="/dongpayuk.webp"
       copy={copy}
-      onOpenChange={jest.fn()}
+      onOpenChange={onOpenChange}
       onSubmit={onSubmit}
+      onSkip={onSkip}
     />
   );
 
@@ -134,6 +139,21 @@ it("금액 안내 다음에 입력 폼을 보여주고 등록 완료까지 진�
     isPublic: true,
     imageFile: undefined,
   });
+});
+
+it("건너뛰기는 후기 등록 대신 완료 전용 작업 후 흐름을 닫습니다", async () => {
+  const onSubmit = jest.fn().mockResolvedValue(undefined);
+  const onSkip = jest.fn().mockResolvedValue(undefined);
+  const onOpenChange = jest.fn();
+  renderFlow(onSubmit, onSkip, onOpenChange);
+  advanceToForm();
+
+  fireEvent.click(screen.getByRole("button", { name: copy.skip }));
+
+  await act(async () => Promise.resolve());
+  expect(onSkip).toHaveBeenCalledTimes(1);
+  expect(onSubmit).not.toHaveBeenCalled();
+  expect(onOpenChange).toHaveBeenCalledWith(false);
 });
 
 it("T-09: 닫기 버튼을 우측에 두고 전체 wrapper의 큰 상단 여백을 제거합니다", () => {

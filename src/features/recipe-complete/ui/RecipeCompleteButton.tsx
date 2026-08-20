@@ -68,6 +68,11 @@ const RecipeCompleteButton = ({
     markCompleted();
   };
 
+  const handleSkip = async () => {
+    await createMutation.completeWithoutDetails(recipeId);
+    markCompleted();
+  };
+
   const buttonLabel =
     locale === "ko"
       ? t.recipeDetail.completeCta
@@ -109,6 +114,7 @@ const RecipeCompleteButton = ({
         copy={t.recipeDetail.cookingRecord}
         onOpenChange={handleOpenChange}
         onSubmit={handleSubmit}
+        onSkip={handleSkip}
       />
     </>
   );

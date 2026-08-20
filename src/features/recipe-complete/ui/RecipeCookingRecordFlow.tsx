@@ -8,10 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
-import type {
-  RecipeCookingRecordFlowProps,
-  RecipeCookingRecordFormDraft,
-} from "./recipeCookingRecord.types";
+import type { RecipeCookingRecordFlowProps } from "./recipeCookingRecord.types";
 import { RecipeCookingRecordForm } from "./RecipeCookingRecordForm";
 import {
   RecipeCookingRecordRewardPhase,
@@ -29,6 +26,7 @@ export const RecipeCookingRecordFlow = ({
   copy,
   onOpenChange,
   onSubmit,
+  onSkip,
 }: RecipeCookingRecordFlowProps) => {
   const { Container, Content, Title, Description } = useResponsiveSheet();
   const [phase, setPhase] = useState<Phase>("reward");
@@ -41,25 +39,28 @@ export const RecipeCookingRecordFlow = ({
     return () => window.clearTimeout(timer);
   }, [isOpen, phase]);
 
-  const submit = async (draft: RecipeCookingRecordFormDraft) => {
-    setIsSubmitting(true);
-    setErrorMessage(undefined);
-    try {
-      await onSubmit(draft);
-      triggerHaptic("Success");
-      setPhase("success");
-    } catch {
-      setErrorMessage(copy.error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
     if (!open) {
       setPhase("reward");
       setErrorMessage(undefined);
+    }
+  };
+
+  const runAction = async (
+    action: () => Promise<void>,
+    handleSuccess: () => void
+  ) => {
+    setIsSubmitting(true);
+    setErrorMessage(undefined);
+    try {
+      await action();
+      triggerHaptic("Success");
+      handleSuccess();
+    } catch {
+      setErrorMessage(copy.error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -113,9 +114,14 @@ export const RecipeCookingRecordFlow = ({
                   copy={copy}
                   isSubmitting={isSubmitting}
                   errorMessage={errorMessage}
-                  onSubmit={(draft) => void submit(draft)}
+                  onSubmit={(draft) =>
+                    void runAction(
+                      () => onSubmit(draft),
+                      () => setPhase("success")
+                    )
+                  }
                   onSkip={() =>
-                    void submit({ recipeId, review: "", isPublic: true })
+                    void runAction(onSkip, () => handleOpenChange(false))
                   }
                 />
               ) : null}

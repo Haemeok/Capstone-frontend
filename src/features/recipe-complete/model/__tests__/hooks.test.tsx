@@ -40,6 +40,26 @@ const reviewPages: PublicCookingReviewsResponse[] = [
   { totalCount: 2, items: [], hasNext: false },
 ];
 
+it("건너뛰기는 recipeId만으로 완료 기록을 생성합니다", async () => {
+  createRecord.mockResolvedValue({
+    recordId: "record-A",
+    message: "created",
+  });
+  const queryClient = new QueryClient();
+  const Wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+  const { result } = renderHook(() => useCreateRecipeCookingRecordMutation(), {
+    wrapper: Wrapper,
+  });
+
+  await act(async () => {
+    await result.current.completeWithoutDetails("recipe-A");
+  });
+
+  expect(createRecord).toHaveBeenLastCalledWith("recipe-A");
+});
+
 it("RECIPE 생성은 기록·legacy·recipe detail과 발행 후기 캐시를 갱신합니다", async () => {
   createRecord.mockResolvedValue({
     recordId: "record-A",

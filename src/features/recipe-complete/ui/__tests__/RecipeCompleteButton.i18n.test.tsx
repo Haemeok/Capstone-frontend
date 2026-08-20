@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 
@@ -7,6 +7,7 @@ import RecipeCompleteButton from "../RecipeCompleteButton";
 const ko = getDictionary("ko").recipeDetail;
 const ja = getDictionary("ja").recipeDetail;
 const en = getDictionary("en").recipeDetail;
+const completeWithoutDetailsMock = jest.fn();
 
 const mockState = {
   completeRecipe: jest.fn(),
@@ -20,6 +21,7 @@ jest.mock("../../model/hooks", () => ({
   useRecipeComplete: () => mockState,
   useCreateRecipeCookingRecordMutation: () => ({
     createRecord: jest.fn(),
+    completeWithoutDetails: completeWithoutDetailsMock,
     isPending: false,
   }),
 }));
@@ -27,10 +29,20 @@ jest.mock("../RecipeCookingRecordFlow", () => ({
   RecipeCookingRecordFlow: ({
     isOpen,
     copy,
+    onSkip,
   }: {
     isOpen: boolean;
-    copy: { formTitle: string };
-  }) => (isOpen ? <div>{copy.formTitle}</div> : null),
+    copy: { formTitle: string; skip: string };
+    onSkip?: () => Promise<void>;
+  }) =>
+    isOpen ? (
+      <div>
+        {copy.formTitle}
+        <button type="button" onClick={() => void onSkip?.()}>
+          {copy.skip}
+        </button>
+      </div>
+    ) : null,
 }));
 jest.mock("@/shared/lib/bridge", () => ({
   triggerHaptic: jest.fn(),
@@ -50,8 +62,10 @@ const renderWith = (locale: "ja" | "en" | "ko") =>
   );
 
 beforeEach(() => {
+  completeWithoutDetailsMock.mockReset().mockResolvedValue(undefined);
   mockState.completeRecipe = jest.fn();
   mockState.setShowReward = jest.fn();
+  mockState.markCompleted = jest.fn();
   mockState.isCompleted = false;
   mockState.showReward = false;
 });
@@ -113,5 +127,19 @@ describe("RecipeCompleteButton reward branch", () => {
     mockState.showReward = true;
     renderWith("ko");
     expect(screen.getByText(ko.cookingRecord.formTitle)).toBeInTheDocument();
+  });
+
+  it("건너뛰기는 상세 없는 완료 기록을 저장하고 완료 상태를 반영합니다", async () => {
+    mockState.showReward = true;
+    renderWith("ko");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: ko.cookingRecord.skip })
+    );
+
+    await waitFor(() =>
+      expect(completeWithoutDetailsMock).toHaveBeenCalledWith("recipe-A")
+    );
+    expect(mockState.markCompleted).toHaveBeenCalledTimes(1);
   });
 });

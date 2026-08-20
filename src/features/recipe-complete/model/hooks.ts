@@ -74,16 +74,16 @@ export const useCreateRecipeCookingRecordMutation = () => {
     retry: false,
   });
   const finalMutation = useMutation({
-    mutationFn: (input: RecipeCookingRecordCreateInput) =>
+    mutationFn: (input: string | RecipeCookingRecordCreateInput) =>
       createRecipeRecord(input),
     retry: shouldRetryRecordImageNotReady,
     retryDelay: RECORD_IMAGE_RETRY_DELAY_MS,
-    onSuccess: (_response, input) =>
-      invalidateRecipeRecordCaches(
-        queryClient,
-        input.recipeId,
-        input.publishReview === true
-      ),
+    onSuccess: (_response, input) => {
+      const recipeId = typeof input === "string" ? input : input.recipeId;
+      const publishReview =
+        typeof input === "string" ? false : input.publishReview === true;
+      return invalidateRecipeRecordCaches(queryClient, recipeId, publishReview);
+    },
   });
 
   const createRecord = async (draft: RecipeCookingRecordDraft) => {
@@ -93,9 +93,16 @@ export const useCreateRecipeCookingRecordMutation = () => {
     return finalMutation.mutateAsync(request);
   };
 
+  const completeWithoutDetails = async (recipeId: string) => {
+    prepareMutation.reset();
+    finalMutation.reset();
+    return finalMutation.mutateAsync(recipeId);
+  };
+
   return {
     ...finalMutation,
     createRecord,
+    completeWithoutDetails,
     isPending: prepareMutation.isPending || finalMutation.isPending,
     error: prepareMutation.error ?? finalMutation.error,
   };

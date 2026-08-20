@@ -51,6 +51,11 @@ export const FirstCookingReviewButton = ({
     markCompleted();
   };
 
+  const handleSkip = async () => {
+    await createMutation.completeWithoutDetails(recipeId);
+    markCompleted();
+  };
+
   const handleOpenChange = (open: boolean) => {
     setShowReward(open);
     if (!open) {
@@ -77,6 +82,7 @@ export const FirstCookingReviewButton = ({
         copy={t.recipeDetail.cookingRecord}
         onOpenChange={handleOpenChange}
         onSubmit={handleSubmit}
+        onSkip={handleSkip}
       />
     </>
   );

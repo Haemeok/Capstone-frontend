@@ -38,4 +38,5 @@ export type RecipeCookingRecordFlowProps = {
   copy: RecipeCookingRecordCopy;
   onOpenChange: (open: boolean) => void;
   onSubmit: (draft: RecipeCookingRecordFormDraft) => Promise<void>;
+  onSkip: () => Promise<void>;
 };
