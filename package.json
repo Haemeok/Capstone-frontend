@@ -20,6 +20,7 @@
     "test:ssr": "jest --config jest.ssr.config.js --runInBand",
     "lhci": "lhci autorun",
     "analyze": "ANALYZE=true NEXT_TELEMETRY_DISABLED=1 next build",
+    "analytics:recipe-retention": "node scripts/posthog-query.mjs --file scripts/analytics/app-first-recipe-retention.sql",
     "seo:discover": "tsx scripts/seo-discover.ts",
     "seo:discover:full": "tsx scripts/seo-discover.ts --full",
     "seo:discover:keywords": "tsx scripts/seo-discover-keywords.ts",

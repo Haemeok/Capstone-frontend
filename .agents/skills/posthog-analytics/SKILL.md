@@ -92,6 +92,21 @@ GROUP BY os, device ORDER BY pageviews DESC
 
 같은 쿼리를 `timestamp BETWEEN` 두 구간으로 두 번 돌려 diff를 표로 보고. 변화율 ±20% 넘는 항목만 하이라이트.
 
+### 앱 첫 레시피 상세 방문자의 7일 재방문율
+
+추가 이벤트 없이 기존 `$pageview`만 사용한다. 최근 21일 중 7일 관찰이 끝난 앞 14일을 코호트 기간으로 삼는다. 이 기간에 앱에서 레시피 상세를 본 익명 기기 가운데 과거 1년 레시피 상세 이력이 없는 기기만 분모에 포함한다. 최초 방문 다음 날부터 7일 안에 앱의 아무 페이지나 다시 본 기기 비율을 계산한다.
+
+```bash
+npm run analytics:recipe-retention
+```
+
+실행 SQL은 `scripts/analytics/app-first-recipe-retention.sql`에 둔다. 시작 이벤트와 재방문 이벤트 모두 `is_native_app = true`인 `$pageview`만 인정한다. 기존 사용자 제외 단계에서는 앱 표시가 도입되기 전의 같은 기기 이력도 잡기 위해 `is_native_app` 여부와 무관하게 같은 `distinct_id`의 레시피 상세 이력을 확인한다.
+
+- 동일 사용자는 로그인 회원이 아니라 PostHog `distinct_id`가 유지되는 브라우저·앱 설치본 기준이다.
+- 재설치하거나 앱 저장 공간을 지우면 새 `distinct_id`가 생기므로 새 기기로 집계될 수 있다.
+- 결과의 `cohort_start_date`와 `cohort_end_date`가 완결 코호트 기간이며, `d1_to_d7_return_rate_pct`가 D1~D7 중 한 번이라도 앱에 다시 온 비율이다. 첫 방문 당일의 추가 행동은 재방문으로 세지 않는다.
+- 과거 이력 확인 범위는 365일이다. 현재 프로젝트는 이 범위 안에 PostHog 수집을 시작했으므로 전체 수집 이력을 포함하지만, 운영 기간이 1년을 넘으면 조회 범위와 비용을 다시 결정한다.
+
 ### 로케일별 페이지뷰 (ja/en은 프리픽스, ko는 나머지)
 
 ja·en은 `/ja`·`/en` 라우터 프리픽스가 있지만 **ko는 프리픽스 없는 기본**이라, ko = 전체에서 ja·en 빼야 한다. 예약 단일세그먼트(`new`·`my-fridge`)는 상세로 오인되니 제외. 카테고리·생성 하위경로는 `[^/]+$` 가 알아서 거른다(세그먼트 더 있음).
