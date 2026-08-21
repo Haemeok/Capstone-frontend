@@ -92,7 +92,7 @@ export const CookingRecordBoard = (props: CookingRecordBoardProps) => {
       )}
       <div
         data-testid="cooking-record-sticker-grid"
-        className="relative grid grid-cols-4 gap-x-1 gap-y-3 px-3.5 pt-2 pb-32"
+        className="relative grid grid-cols-3 gap-0 px-2 pt-2 pb-32"
       >
         {records.map((record) => (
           <button

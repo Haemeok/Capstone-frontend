@@ -47,18 +47,6 @@
   background-size: cover;
 }
 
-.sticker:nth-child(2n) {
-  transform: rotate(1.7deg);
-}
-
-.sticker:nth-child(3n) {
-  transform: rotate(-1.3deg);
-}
-
-.sticker:nth-child(5n) {
-  transform: rotate(0.8deg);
-}
-
 .sticker:active {
   transform: translateY(1px);
 }

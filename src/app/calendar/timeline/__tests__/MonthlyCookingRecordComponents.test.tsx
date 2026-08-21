@@ -176,7 +176,7 @@ describe("CookingRecordHeader", () => {
 });
 
 describe("CookingRecordBoard", () => {
-  it("요리 개수와 이름 라벨을 배경 위 4열 스티커북에 표시합니다", () => {
+  it("요리 개수와 이름 라벨을 배경 위 촘촘한 3열 스티커북에 표시합니다", () => {
     const onSelectRecord = jest.fn();
     const records = [
       {
@@ -242,7 +242,16 @@ describe("CookingRecordBoard", () => {
     );
     expect(
       within(board).getByTestId("cooking-record-sticker-grid")
-    ).toHaveClass("grid-cols-4");
+    ).toHaveClass("grid-cols-3", "gap-0", "px-2");
+    expect(
+      within(
+        within(board).getByRole("button", {
+          name: "8월 2일 · 저녁 회 기록 보기",
+        })
+      )
+        .getByRole("img")
+        .closest("div")
+    ).toHaveClass("h-[122px]");
     expect(within(board).getByText("4개의 요리")).toHaveClass(
       "bg-white/85",
       "shadow-sm"

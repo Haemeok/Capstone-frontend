@@ -31,7 +31,7 @@ export const CookingRecordStickerImage = ({
   };
 
   return (
-    <div className="relative mx-auto h-24 w-full">
+    <div className="relative mx-auto h-[122px] w-full">
       <Image
         src={displayedSrc}
         alt={alt}

@@ -1,6 +1,5 @@
 import type { Ref } from "react";
 
-import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
 import type { StickerBookBackground } from "@/entities/recipe";
@@ -22,51 +21,6 @@ type MonthlyCookingRecordShareCardProps = {
   captureRef?: Ref<HTMLDivElement>;
 };
 
-const GRID_COLUMN_CLASS_NAMES = {
-  1: "grid-cols-1",
-  2: "grid-cols-2",
-  3: "grid-cols-3",
-  4: "grid-cols-4",
-  5: "grid-cols-5",
-} as const;
-
-const ITEM_SIZE_CLASS_NAMES = {
-  hero: "h-32",
-  spacious: "h-28",
-  regular: "h-20",
-  roomy: "h-[68px]",
-  compact: "h-[62px]",
-  dense: "h-[54px]",
-  packed: "h-12",
-  maximum: "h-[42px]",
-} as const;
-
-const FLEX_BASIS_CLASS_NAMES = {
-  1: "basis-full",
-  2: "basis-1/2",
-  3: "basis-1/3",
-  4: "basis-1/4",
-  5: "basis-1/5",
-} as const;
-
-const ROW_GAP_CLASS_NAMES = {
-  hero: "gap-y-0",
-  spacious: "gap-y-0",
-  regular: "gap-y-0",
-  roomy: "gap-y-2",
-  compact: "gap-y-1.5",
-  dense: "gap-y-[5px]",
-  packed: "gap-y-[7px]",
-  maximum: "gap-y-1.5",
-} as const;
-
-const ROTATION_CLASS_NAMES = [
-  "-rotate-2",
-  "rotate-2",
-  "-rotate-1",
-  "rotate-1",
-] as const;
-
 export const MonthlyCookingRecordShareCard = ({
   ariaLabel,
   kicker,
@@ -79,6 +33,8 @@ export const MonthlyCookingRecordShareCard = ({
 }: MonthlyCookingRecordShareCardProps) => {
   const visibleItems = selectMonthlyShareItems(items);
   const layout = getMonthlyShareLayout(visibleItems.length);
+  const layoutWidth =
+    layout.columns * layout.itemSize + Math.max(layout.columns - 1, 0);
 
   return (
     <div
@@ -115,44 +71,34 @@ export const MonthlyCookingRecordShareCard = ({
         </span>
       </div>
 
-      <div
-        data-testid="monthly-cooking-record-share-grid"
-        className={cn(
-          "absolute top-18 right-3.5 bottom-7 left-3.5 z-10 content-center items-center",
-          layout.flow === "grid"
-            ? [
-                "grid justify-items-center",
-                GRID_COLUMN_CLASS_NAMES[layout.columns],
-              ]
-            : [
-                "flex flex-wrap justify-center",
-                ROW_GAP_CLASS_NAMES[layout.density],
-              ]
-        )}
-      >
-        {visibleItems.map((item, index) => (
-          <div
-            key={item.id}
-            data-share-sticker="true"
-            className={cn(
-              "flex min-w-0 items-center justify-center",
-              layout.flow === "grid"
-                ? "w-full"
-                : ["shrink-0", FLEX_BASIS_CLASS_NAMES[layout.columns]],
-              ITEM_SIZE_CLASS_NAMES[layout.density],
-              ROTATION_CLASS_NAMES[index % ROTATION_CLASS_NAMES.length]
-            )}
-          >
-            <Image
-              src={item.imageUrl}
-              alt=""
-              lazy={false}
-              fit="contain"
-              wrapperClassName="h-full w-full overflow-visible"
-              imgClassName="select-none object-contain drop-shadow-[0_4px_5px_rgb(34_34_34/0.13)]"
-            />
-          </div>
-        ))}
+      <div className="absolute top-[68px] right-1.5 bottom-[26px] left-1.5 z-10 flex items-center justify-center">
+        <div
+          data-testid="monthly-cooking-record-share-grid"
+          className="flex max-w-full flex-wrap content-center justify-center gap-px"
+          style={{ width: layoutWidth }}
+        >
+          {visibleItems.map((item) => (
+            <div
+              key={item.id}
+              data-share-sticker="true"
+              className="flex shrink-0 items-center justify-center"
+              style={{
+                flexBasis: layout.itemSize,
+                width: layout.itemSize,
+                height: layout.itemSize,
+              }}
+            >
+              <Image
+                src={item.imageUrl}
+                alt=""
+                lazy={false}
+                fit="contain"
+                wrapperClassName="h-full w-full overflow-visible"
+                imgClassName="select-none object-contain drop-shadow-[0_4px_5px_rgb(34_34_34/0.13)]"
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       <span className="text-ink-sub absolute right-3.5 bottom-2.5 z-10 text-xs font-bold tracking-[0.05em]">

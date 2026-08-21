@@ -79,7 +79,7 @@ describe("MonthlyCookingRecordShareCard", () => {
     expect(screen.queryByText("더 있어요")).not.toBeInTheDocument();
   });
 
-  it("9개까지는 기존 3열 Grid와 스티커 크기를 유지합니다", () => {
+  it("9개를 1px 간격의 3열 정렬로 촘촘하게 표시합니다", () => {
     render(
       <MonthlyCookingRecordShareCard
         ariaLabel="공유 이미지"
@@ -95,30 +95,60 @@ describe("MonthlyCookingRecordShareCard", () => {
     const layout = screen.getByTestId("monthly-cooking-record-share-grid");
     const firstSticker = layout.querySelector('[data-share-sticker="true"]');
 
-    expect(layout).toHaveClass("grid", "grid-cols-3");
-    expect(firstSticker).toHaveClass("w-full", "h-20");
+    expect(layout).toHaveClass("flex", "flex-wrap", "gap-px");
+    expect(layout).toHaveStyle({ width: "254px" });
+    expect(firstSticker).toHaveStyle({
+      width: "84px",
+      height: "84px",
+      flexBasis: "84px",
+    });
+    expect(firstSticker?.className).not.toMatch(/rotate/);
   });
 
-  it("10개 이상은 마지막 줄을 가운데 정렬하는 4열 줄바꿈 배치를 사용합니다", () => {
-    render(
-      <MonthlyCookingRecordShareCard
-        ariaLabel="공유 이미지"
-        kicker="나의 요리 기록"
-        monthLabel="2026년 8월"
-        recordCountLabel="11개의 요리"
-        brandLabel="RECIPIO"
-        items={items.slice(0, 11)}
-        background={null}
-      />
-    );
+  it.each([
+    [11, 315, 78],
+    [20, 314, 62],
+    [30, 305, 50],
+  ])(
+    "%i개를 행 너비 %ipx, 스티커 %ipx의 가운데 정렬로 표시합니다",
+    (count, layoutWidth, itemSize) => {
+      const layoutItems = Array.from({ length: count }, (_, index) => ({
+        id: `layout-record-${index}`,
+        title: `요리 ${index + 1}`,
+        imageUrl: `/records/layout-${index + 1}.webp`,
+        imageAlt: `요리 ${index + 1}`,
+      }));
 
-    const layout = screen.getByTestId("monthly-cooking-record-share-grid");
-    const firstSticker = layout.querySelector('[data-share-sticker="true"]');
+      render(
+        <MonthlyCookingRecordShareCard
+          ariaLabel="공유 이미지"
+          kicker="나의 요리 기록"
+          monthLabel="2026년 8월"
+          recordCountLabel={`${count}개의 요리`}
+          brandLabel="RECIPIO"
+          items={layoutItems}
+          background={null}
+        />
+      );
 
-    expect(layout).toHaveClass("flex", "flex-wrap", "justify-center");
-    expect(layout).not.toHaveClass("grid");
-    expect(firstSticker).toHaveClass("basis-1/4", "h-[68px]");
-  });
+      const layout = screen.getByTestId("monthly-cooking-record-share-grid");
+      const firstSticker = layout.querySelector('[data-share-sticker="true"]');
+
+      expect(layout).toHaveClass(
+        "flex",
+        "flex-wrap",
+        "justify-center",
+        "gap-px"
+      );
+      expect(layout).not.toHaveClass("grid");
+      expect(layout).toHaveStyle({ width: `${layoutWidth}px` });
+      expect(firstSticker).toHaveStyle({
+        width: `${itemSize}px`,
+        height: `${itemSize}px`,
+        flexBasis: `${itemSize}px`,
+      });
+    }
+  );
 
   it("viewport 밖에서도 공유 카드 스티커와 배경 이미지 로드를 시작합니다", () => {
     render(

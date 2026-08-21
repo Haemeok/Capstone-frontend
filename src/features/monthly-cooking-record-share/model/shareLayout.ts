@@ -1,36 +1,24 @@
 const MAX_SHARE_ITEM_COUNT = 30;
 
 export type MonthlyShareLayout = {
-  columns: 1 | 2 | 3 | 4 | 5;
-  density:
-    | "hero"
-    | "spacious"
-    | "regular"
-    | "roomy"
-    | "compact"
-    | "dense"
-    | "packed"
-    | "maximum";
-  flow: "grid" | "centered-wrap";
+  columns: 1 | 2 | 3 | 4 | 5 | 6;
+  itemSize: 50 | 62 | 78 | 84 | 104 | 126 | 142 | 180;
 };
 
 export const getMonthlyShareLayout = (
   itemCount: number
 ): MonthlyShareLayout => {
-  if (itemCount <= 1) return { columns: 1, density: "hero", flow: "grid" };
-  if (itemCount === 2) return { columns: 2, density: "spacious", flow: "grid" };
-  if (itemCount === 3) return { columns: 3, density: "regular", flow: "grid" };
-  if (itemCount === 4) return { columns: 2, density: "regular", flow: "grid" };
-  if (itemCount <= 9) return { columns: 3, density: "regular", flow: "grid" };
-  if (itemCount <= 12)
-    return { columns: 4, density: "roomy", flow: "centered-wrap" };
-  if (itemCount <= 16)
-    return { columns: 4, density: "compact", flow: "centered-wrap" };
-  if (itemCount <= 20)
-    return { columns: 4, density: "dense", flow: "centered-wrap" };
-  if (itemCount <= 25)
-    return { columns: 5, density: "packed", flow: "centered-wrap" };
-  return { columns: 5, density: "maximum", flow: "centered-wrap" };
+  if (itemCount <= 1) return { columns: 1, itemSize: 180 };
+  if (itemCount === 2) return { columns: 2, itemSize: 142 };
+  if (itemCount === 3) return { columns: 3, itemSize: 104 };
+  if (itemCount === 4) return { columns: 2, itemSize: 126 };
+  if (itemCount <= 6) return { columns: 3, itemSize: 104 };
+  if (itemCount <= 9) return { columns: 3, itemSize: 84 };
+  if (itemCount <= 12) return { columns: 4, itemSize: 78 };
+  if (itemCount <= 16) return { columns: 4, itemSize: 62 };
+  if (itemCount <= 20) return { columns: 5, itemSize: 62 };
+  if (itemCount <= 25) return { columns: 5, itemSize: 50 };
+  return { columns: 6, itemSize: 50 };
 };
 
 export const selectMonthlyShareItems = <T>(items: T[]): T[] =>
