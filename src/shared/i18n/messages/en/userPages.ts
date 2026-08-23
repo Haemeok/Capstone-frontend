@@ -384,7 +384,11 @@ export const userPages: UserPagesDict = {
     recipeListHeading: "What you cooked",
     recipeListEmpty: "Nothing logged yet",
     daySummaryEmpty: "Nothing logged yet",
-    daySummaryRecipeCount: "{count} recipes",
+    daySummaryRecipeCount: {
+      one: "{count} recipe",
+      other: "{count} recipes",
+    },
+    dayCountBadge: "{count}",
     daySummarySavedSuffix: "saved",
     toggleRecord: "Record",
     toggleStreak: "Streak",

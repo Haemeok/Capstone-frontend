@@ -385,7 +385,11 @@ export const userPages: UserPagesDict = {
     recipeListHeading: "오늘 먹은 레시피",
     recipeListEmpty: "아직 기록된 레시피가 없어요",
     daySummaryEmpty: "아직 기록이 없어요",
-    daySummaryRecipeCount: "레시피 {count}개",
+    daySummaryRecipeCount: {
+      one: "레시피 {count}개",
+      other: "레시피 {count}개",
+    },
+    dayCountBadge: "{count}개",
     daySummarySavedSuffix: "절약",
     toggleRecord: "기록",
     toggleStreak: "스트릭",

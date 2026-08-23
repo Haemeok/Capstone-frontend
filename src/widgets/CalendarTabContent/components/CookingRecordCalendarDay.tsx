@@ -1,6 +1,8 @@
 import type { DayProps } from "react-day-picker";
 
-import { format } from "date-fns";
+import { format as formatDate } from "date-fns";
+
+import { format as formatMessage, type Plural, plural } from "@/shared/i18n";
 
 import type { CookingRecordCalendarDailySummary } from "@/entities/recipe";
 
@@ -15,14 +17,19 @@ type CookingRecordCalendarDayProps = DayProps & {
   summary?: CookingRecordCalendarDailySummary;
   ranges: ConsecutiveRange[];
   recordLabel: string;
+  recipeCountTemplate: Plural;
+  dayCountBadgeTemplate: string;
 };
 
 export const CookingRecordCalendarDay = ({
   day,
+  modifiers,
   mode,
   summary,
   ranges,
   recordLabel,
+  recipeCountTemplate,
+  dayCountBadgeTemplate,
 }: CookingRecordCalendarDayProps) => {
   const date = day.date;
   const dateNumber = date.getDate();
@@ -35,8 +42,7 @@ export const CookingRecordCalendarDay = ({
     );
   }
 
-  const today = new Date();
-  const isToday = date.toDateString() === today.toDateString();
+  const isToday = modifiers.today;
   if (!summary) {
     return <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />;
   }
@@ -49,11 +55,21 @@ export const CookingRecordCalendarDay = ({
       />
     );
   }
+  const recipeCountLabel = formatMessage(
+    plural(summary.totalCount, recipeCountTemplate),
+    { count: summary.totalCount }
+  );
+  const dayCountBadgeLabel = formatMessage(dayCountBadgeTemplate, {
+    count: summary.totalCount,
+  });
+
   return (
     <CalendarDayPhoto
       date={date}
       summary={summary}
-      recordAlt={`${format(date, "yyyy-MM-dd")} ${recordLabel}`}
+      isToday={isToday}
+      dayCountBadgeLabel={dayCountBadgeLabel}
+      recordAlt={`${formatDate(date, "yyyy-MM-dd")} ${recordLabel} ${recipeCountLabel}`}
     />
   );
 };
