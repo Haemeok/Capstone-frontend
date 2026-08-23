@@ -914,7 +914,8 @@ export type UserPagesDict = {
     recipeListHeading: string;
     recipeListEmpty: string;
     daySummaryEmpty: string;
-    daySummaryRecipeCount: string;
+    daySummaryRecipeCount: Plural;
+    dayCountBadge: string;
     daySummarySavedSuffix: string;
     toggleRecord: string;
     toggleStreak: string;

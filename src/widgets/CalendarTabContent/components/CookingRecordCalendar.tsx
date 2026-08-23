@@ -96,6 +96,8 @@ export const CookingRecordCalendar = ({
               summary={getSummary(props.day.date)}
               ranges={ranges}
               recordLabel={copy.timelineHeading}
+              recipeCountTemplate={copy.daySummaryRecipeCount}
+              dayCountBadgeTemplate={copy.dayCountBadge}
             />
           ),
           PreviousMonthButton,
