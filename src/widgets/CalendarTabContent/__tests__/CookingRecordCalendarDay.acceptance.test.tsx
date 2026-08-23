@@ -41,6 +41,7 @@ type RenderDayOptions = {
   locale?: Locale;
   date?: Date;
   isToday?: boolean;
+  hasSummary?: boolean;
 };
 
 type LocaleExpectation = [
@@ -61,6 +62,7 @@ const renderDay = ({
   locale = "ko",
   date = new Date(2026, 7, 17),
   isToday = false,
+  hasSummary = true,
 }: RenderDayOptions) => {
   const copy = getDictionary(locale).userPages.calendar;
   const summary: CookingRecordCalendarDailySummary = {
@@ -78,7 +80,7 @@ const renderDay = ({
             day={new CalendarDay(date, new Date(2026, 7, 1))}
             modifiers={{ today: isToday }}
             mode="photo"
-            summary={summary}
+            summary={hasSummary ? summary : undefined}
             ranges={[]}
             recordLabel={copy.timelineHeading}
             recipeCountTemplate={copy.daySummaryRecipeCount}
@@ -191,6 +193,28 @@ describe("CookingRecordCalendarDay 기록 셀", () => {
       "bg-olive-dark"
     );
     expect(button.className).not.toContain("violet");
+  });
+
+  it("T-23 기록 없는 오늘도 테두리 없이 olive 날짜와 작은 점으로 표시합니다", () => {
+    renderDay({
+      totalCount: 0,
+      firstImageUrl: null,
+      date: new Date(2026, 7, 18),
+      isToday: true,
+      hasSummary: false,
+    });
+
+    const dateNumber = screen.getByText("18");
+
+    expect(dateNumber).toHaveClass("text-olive-dark", "font-semibold");
+    expect(dateNumber).not.toHaveClass(
+      "border-2",
+      "border-violet-500",
+      "rounded-full"
+    );
+    expect(screen.getByTestId("calendar-day-today-dot")).toHaveClass(
+      "bg-olive-dark"
+    );
   });
 
   it.each([0, 1])("T-24 기록이 %d개면 개수 배지를 숨깁니다", (totalCount) => {

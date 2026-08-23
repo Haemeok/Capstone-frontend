@@ -24,7 +24,10 @@ export const PreviousMonthButton = ({
   ...props
 }: PreviousMonthButtonProps) => (
   <button
-    className={cn(className, "flex items-center justify-center")}
+    className={cn(
+      className,
+      "flex h-11 w-11 cursor-pointer items-center justify-center"
+    )}
     onClick={(event) => handleMonthClick(event, onClick)}
     {...props}
   >
@@ -38,7 +41,10 @@ export const NextMonthButton = ({
   ...props
 }: NextMonthButtonProps) => (
   <button
-    className={cn(className, "flex items-center justify-center")}
+    className={cn(
+      className,
+      "flex h-11 w-11 cursor-pointer items-center justify-center"
+    )}
     onClick={(event) => handleMonthClick(event, onClick)}
     {...props}
   >
