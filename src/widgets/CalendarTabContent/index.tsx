@@ -36,11 +36,6 @@ const CalendarTabContent = () => {
         onRetry={() => void recordsQuery.retryPreview()}
         onAddRecord={() => setIsCreateOpen(true)}
       />
-      <div className="mx-5 mt-7 border-t border-gray-100 pt-6">
-        <h2 className="text-ink text-lg font-bold">
-          {copy.calendar.dateSectionTitle}
-        </h2>
-      </div>
       <CookingRecordCalendar
         month={currentMonth}
         locale={locale}

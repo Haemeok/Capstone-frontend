@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 type CalendarDayEmptyProps = {
   dateNumber: number;
@@ -13,11 +13,18 @@ export const CalendarDayEmpty = ({
     <td className="flex h-full w-full items-center justify-center">
       <p
         className={cn(
-          "flex h-10 w-10 items-center justify-center rounded-full text-center text-sm",
-          isToday && "border-2 border-violet-500"
+          "text-ink-sub relative flex min-h-11 min-w-11 items-center justify-center text-center text-sm",
+          isToday && "text-olive-dark font-semibold"
         )}
       >
         {dateNumber}
+        {isToday ? (
+          <span
+            data-testid="calendar-day-today-dot"
+            aria-hidden="true"
+            className="bg-olive-dark absolute top-8 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full"
+          />
+        ) : null}
       </p>
     </td>
   );

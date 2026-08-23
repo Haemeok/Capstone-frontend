@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import type { DayProps } from "react-day-picker";
 
-import { format, parseISO } from "date-fns";
+import { format as formatDate, parseISO } from "date-fns";
 
 import {
+  format as formatMessage,
   type Locale,
+  plural,
   resolveDateFnsLocale,
   type UserPagesDict,
 } from "@/shared/i18n";
@@ -17,6 +19,7 @@ import type { CookingRecordCalendarDailySummary } from "@/entities/recipe";
 
 import { findConsecutiveRanges } from "../lib/consecutiveDaysHelper";
 import type { CalendarMode } from "../types";
+import { CalendarCaptionLabel } from "./CalendarCaptionLabel";
 import {
   NextMonthButton,
   PreviousMonthButton,
@@ -36,6 +39,16 @@ type CookingRecordCalendarProps = {
   onMonthChange: (month: Date) => void;
 };
 
+type CalendarDayPickerStyle = CSSProperties & {
+  "--rdp-nav_button-height": string;
+  "--rdp-nav_button-width": string;
+};
+
+const CALENDAR_DAY_PICKER_STYLE: CalendarDayPickerStyle = {
+  "--rdp-nav_button-height": "2.75rem",
+  "--rdp-nav_button-width": "2.75rem",
+};
+
 export const CookingRecordCalendar = ({
   month,
   locale,
@@ -46,6 +59,14 @@ export const CookingRecordCalendar = ({
 }: CookingRecordCalendarProps) => {
   const [mode, setMode] = useState<CalendarMode>("photo");
   const ranges = findConsecutiveRanges(summaries);
+  const recordCount = summaries.reduce(
+    (total, summary) => total + summary.totalCount,
+    0
+  );
+  const recordCountLabel = formatMessage(
+    plural(recordCount, copy.cookingRecord.recordCount),
+    { count: recordCount }
+  );
   const getSummary = (date: Date) =>
     summaries.find((summary) => {
       const summaryDate = parseISO(summary.date);
@@ -53,11 +74,12 @@ export const CookingRecordCalendar = ({
     });
 
   return (
-    <>
-      <div className="mt-5 flex items-center justify-center px-5">
+    <section className="mx-5 mt-7 border-t border-gray-100 pt-6">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-ink text-lg font-bold">{copy.dateSectionTitle}</h2>
         <StreakModeToggle mode={mode} onModeChange={setMode} />
       </div>
-      <Box className="mt-4 p-0 px-5">
+      <Box className="mt-4 p-0">
         {mode === "streak" ? (
           <StreakInfoBanner streakCount={streakCount} />
         ) : null}
@@ -68,27 +90,33 @@ export const CookingRecordCalendar = ({
         locale={resolveDateFnsLocale(locale)}
         month={month}
         onMonthChange={onMonthChange}
-        formatters={{ formatCaption: (value: Date) => format(value, "yyyy.M") }}
+        formatters={{
+          formatCaption: (value: Date) => formatDate(value, "yyyy.M"),
+        }}
         modifiers={{ hasEvent: (date: Date) => getSummary(date) !== undefined }}
         modifiersClassNames={{ hasEvent: "has-event" }}
-        className="w-full px-5"
+        className="mt-5 w-full"
+        style={CALENDAR_DAY_PICKER_STYLE}
         classNames={{
           months: "relative flex flex-col gap-2 sm:flex-row",
-          month: "flex w-full flex-col gap-4",
-          month_caption:
-            "flex h-9 items-center justify-center text-xl font-bold",
-          caption: "relative flex w-full items-center justify-center pt-1",
+          month: "flex w-full flex-col gap-3",
+          month_caption: "flex h-11 items-center",
           caption_label: "text-xl font-bold",
-          nav: "absolute flex h-9 w-full items-center justify-center gap-16",
-          week: "flex h-15 w-full items-center text-center md:h-30",
+          nav: "absolute right-0 z-10 flex h-11 items-center gap-1",
+          week: "rdp-week flex h-16 w-full items-center text-center md:h-20",
           weeks: "flex w-full flex-col",
-          weekdays: "flex w-full",
-          weekday:
-            "text-muted-foreground flex-1 rounded-md text-center text-sm font-normal",
+          weekdays: "flex w-full border-b border-gray-100 pb-1",
+          weekday: "text-ink-muted flex-1 text-center text-xs font-normal",
           disabled: "text-muted-foreground opacity-50",
           hidden: "invisible",
         }}
         components={{
+          CaptionLabel: (props) => (
+            <CalendarCaptionLabel
+              {...props}
+              recordCountLabel={recordCountLabel}
+            />
+          ),
           Day: (props: DayProps) => (
             <CookingRecordCalendarDay
               {...props}
@@ -104,6 +132,6 @@ export const CookingRecordCalendar = ({
           NextMonthButton,
         }}
       />
-    </>
+    </section>
   );
 };

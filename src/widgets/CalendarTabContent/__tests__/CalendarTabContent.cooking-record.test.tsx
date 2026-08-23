@@ -2,7 +2,15 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
+
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import type {
   CookingRecordCalendarMonthResponse,
@@ -82,6 +90,14 @@ jest.mock("@/entities/user/model/api", () => ({
 }));
 
 const mockedGetUserStreak = jest.mocked(getUserStreak);
+const mockedTriggerHaptic = jest.mocked(triggerHaptic);
+
+type CaptionLocaleExpectation = [pathname: string, recordCountLabel: string];
+
+const captionLocaleExpectations: CaptionLocaleExpectation[] = [
+  ["/en/users/u1", "8 dishes"],
+  ["/ja/users/u1", "料理 8品"],
+];
 
 const makeRecord = (index: number): CookingRecordListItem => ({
   recordId: `record-${index}`,
@@ -121,14 +137,15 @@ const makeRecordPage = (count: number): CookingRecordListResponse => ({
 });
 
 const makeCalendarMonth = (
-  count: number
+  count: number,
+  date = "2026-08-17"
 ): CookingRecordCalendarMonthResponse => ({
   dailySummaries:
     count === 0
       ? []
       : [
           {
-            date: "2026-08-17",
+            date,
             totalSavings: 0,
             totalCount: count,
             firstImageUrl: "/sticker-0.webp",
@@ -172,7 +189,6 @@ describe("CalendarTabContent cooking record preview", () => {
     expect(
       screen.getAllByTestId("cooking-record-preview-sticker")
     ).toHaveLength(7);
-    expect(screen.queryByText("8개의 요리")).not.toBeInTheDocument();
     expect(screen.queryByText(/절약했어요/)).not.toBeInTheDocument();
     expect(screen.getByText("날짜별 기록")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "기록" })).toBeInTheDocument();
@@ -190,7 +206,9 @@ describe("CalendarTabContent cooking record preview", () => {
       screen.getAllByTestId("cooking-record-preview-sticker")
     ).toHaveLength(1);
     expect(
-      screen.getByRole("button", { name: "2026-08-17 요리 기록" })
+      screen.getByRole("button", {
+        name: "2026-08-17 요리 기록 레시피 1개",
+      })
     ).toBeInTheDocument();
   });
 
@@ -233,7 +251,9 @@ describe("CalendarTabContent cooking record preview", () => {
       await screen.findByText("요리 기록을 불러오지 못했습니다.")
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "2026-08-17 요리 기록" })
+      screen.getByRole("button", {
+        name: "2026-08-17 요리 기록 레시피 1개",
+      })
     ).toBeInTheDocument();
   });
 
@@ -293,5 +313,107 @@ describe("CalendarTabContent cooking record preview", () => {
     );
     expect(screen.queryByText("8월 요리 기록")).not.toBeInTheDocument();
     expect(screen.queryByText("1개의 요리")).not.toBeInTheDocument();
+  });
+
+  it("T-27 날짜별 기록 도구 행과 월별 요리 수를 한 캘린더 구조로 보여줍니다", async () => {
+    renderCalendarTab();
+
+    const heading = await screen.findByRole("heading", {
+      name: "날짜별 기록",
+    });
+    const toolbar = heading.parentElement;
+    if (!toolbar) throw new Error("날짜별 기록 도구 행을 찾지 못했습니다.");
+    expect(
+      within(toolbar).getByRole("button", { name: "기록" })
+    ).toBeInTheDocument();
+
+    const caption = screen.getByTestId("calendar-caption");
+    expect(caption).toHaveTextContent("2026.8");
+    expect(caption).toHaveTextContent("8개의 요리");
+
+    const previousButton = screen.getByRole("button", {
+      name: "Go to the Previous Month",
+    });
+    const navigation = previousButton.parentElement;
+    expect(navigation).toHaveClass("right-0");
+    expect(caption.closest(".rdp-root")).toContainElement(navigation);
+  });
+
+  it("T-28 날짜 셀과 월 탐색에 44px 터치 영역을 유지합니다", async () => {
+    renderCalendarTab();
+
+    const recordDay = await screen.findByRole("button", {
+      name: "2026-08-17 요리 기록 레시피 8개",
+    });
+    expect(recordDay).toHaveClass("min-h-11");
+
+    const previousButton = screen.getByRole("button", {
+      name: "Go to the Previous Month",
+    });
+    const nextButton = screen.getByRole("button", {
+      name: "Go to the Next Month",
+    });
+    expect(previousButton).toHaveClass("h-11", "w-11");
+    expect(nextButton).toHaveClass("h-11", "w-11");
+
+    const week = document.querySelector(".rdp-week");
+    expect(week).toHaveClass("h-16", "md:h-20");
+    expect(week).not.toHaveClass("md:h-30");
+
+    const calendarRoot = screen
+      .getByTestId("calendar-caption")
+      .closest(".rdp-root");
+    expect(calendarRoot).toHaveStyle("--rdp-nav_button-height: 2.75rem");
+    expect(calendarRoot).toHaveStyle("--rdp-nav_button-width: 2.75rem");
+  });
+
+  it.each(captionLocaleExpectations)(
+    "T-30 %s 캘린더 캡션의 월 총 요리 수를 현지화합니다",
+    async (pathname, recordCountLabel) => {
+      renderCalendarTab(pathname);
+
+      await waitFor(() =>
+        expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+          recordCountLabel
+        )
+      );
+    }
+  );
+
+  it("T-29 월과 스트릭 모드 전환 시 데이터와 Light 햅틱을 함께 갱신합니다", async () => {
+    getCookingRecordCalendarMonth
+      .mockResolvedValueOnce(makeCalendarMonth(8))
+      .mockResolvedValueOnce(makeCalendarMonth(2, "2026-07-20"));
+    getCookingRecords.mockResolvedValue({
+      background: null,
+      groups: [
+        { date: "2026-08-17", records: [makeRecord(0)] },
+        { date: "2026-07-20", records: [makeRecord(1), makeRecord(2)] },
+      ],
+      hasNext: false,
+    });
+
+    renderCalendarTab();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Go to the Previous Month" })
+    );
+
+    expect(
+      await screen.findByRole("button", {
+        name: "2026-07-20 요리 기록 레시피 2개",
+      })
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+      "2개의 요리"
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "스트릭" }));
+
+    expect(
+      await screen.findByText("오늘부터 직접 요리하며 식비를 절약해보세요!")
+    ).toBeInTheDocument();
+    expect(mockedTriggerHaptic).toHaveBeenCalledTimes(2);
+    expect(mockedTriggerHaptic).toHaveBeenNthCalledWith(1, "Light");
+    expect(mockedTriggerHaptic).toHaveBeenNthCalledWith(2, "Light");
   });
 });
