@@ -34,6 +34,7 @@ type CookingRecordCalendarProps = {
   month: Date;
   locale: Locale;
   summaries: CookingRecordCalendarDailySummary[];
+  hasCalendarData: boolean;
   streakCount: number;
   copy: UserPagesDict["calendar"];
   onMonthChange: (month: Date) => void;
@@ -53,6 +54,7 @@ export const CookingRecordCalendar = ({
   month,
   locale,
   summaries,
+  hasCalendarData,
   streakCount,
   copy,
   onMonthChange,
@@ -114,7 +116,7 @@ export const CookingRecordCalendar = ({
           CaptionLabel: (props) => (
             <CalendarCaptionLabel
               {...props}
-              recordCountLabel={recordCountLabel}
+              recordCountLabel={hasCalendarData ? recordCountLabel : undefined}
             />
           ),
           Day: (props: DayProps) => (

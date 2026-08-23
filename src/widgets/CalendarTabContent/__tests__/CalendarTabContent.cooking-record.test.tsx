@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -154,6 +155,25 @@ const makeCalendarMonth = (
   monthlyTotalSavings: 0,
 });
 
+const createDeferred = <T,>() => {
+  let resolvePromise: (value: T) => void = (value) => {
+    throw new Error(
+      `Promise가 생성되기 전에 ${String(value)}로 resolve됐습니다.`
+    );
+  };
+  let rejectPromise: (reason?: unknown) => void = (reason) => {
+    throw new Error(
+      `Promise가 생성되기 전에 ${String(reason)}으로 reject됐습니다.`
+    );
+  };
+  const promise = new Promise<T>((resolve, reject) => {
+    resolvePromise = resolve;
+    rejectPromise = reject;
+  });
+
+  return { promise, resolve: resolvePromise, reject: rejectPromise };
+};
+
 const renderCalendarTab = (pathname = "/users/u1") => {
   (usePathname as jest.Mock).mockReturnValue(pathname);
   const queryClient = new QueryClient({
@@ -162,7 +182,8 @@ const renderCalendarTab = (pathname = "/users/u1") => {
   const Wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
-  return render(<CalendarTabContent />, { wrapper: Wrapper });
+  const renderResult = render(<CalendarTabContent />, { wrapper: Wrapper });
+  return { ...renderResult, queryClient };
 };
 
 describe("CalendarTabContent cooking record preview", () => {
@@ -415,5 +436,117 @@ describe("CalendarTabContent cooking record preview", () => {
     expect(mockedTriggerHaptic).toHaveBeenCalledTimes(2);
     expect(mockedTriggerHaptic).toHaveBeenNthCalledWith(1, "Light");
     expect(mockedTriggerHaptic).toHaveBeenNthCalledWith(2, "Light");
+  });
+
+  it("T-31 월 이동 응답을 기다리는 동안 빈 달 개수를 숨기고 완료 후 실제 개수를 보여줍니다", async () => {
+    const julyCalendar = createDeferred<CookingRecordCalendarMonthResponse>();
+    getCookingRecordCalendarMonth
+      .mockResolvedValueOnce(makeCalendarMonth(8))
+      .mockReturnValueOnce(julyCalendar.promise);
+
+    renderCalendarTab();
+
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+        "8개의 요리"
+      )
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Go to the Previous Month" })
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent("2026.7")
+    );
+    expect(screen.getByTestId("calendar-caption")).not.toHaveTextContent(
+      "0개의 요리"
+    );
+    expect(screen.getByTestId("calendar-caption")).not.toHaveTextContent(
+      "8개의 요리"
+    );
+
+    await act(async () => {
+      julyCalendar.resolve(makeCalendarMonth(2, "2026-07-20"));
+    });
+
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+        "2개의 요리"
+      )
+    );
+  });
+
+  it("T-32 월 이동 요청이 실패하면 오류 정착 후에도 빈 달 개수를 표시하지 않습니다", async () => {
+    const julyCalendar = createDeferred<CookingRecordCalendarMonthResponse>();
+    getCookingRecordCalendarMonth
+      .mockResolvedValueOnce(makeCalendarMonth(8))
+      .mockReturnValueOnce(julyCalendar.promise);
+
+    const { queryClient } = renderCalendarTab();
+
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+        "8개의 요리"
+      )
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Go to the Previous Month" })
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent("2026.7")
+    );
+
+    await act(async () => {
+      julyCalendar.reject(new Error("calendar failed"));
+      await expect(julyCalendar.promise).rejects.toThrow("calendar failed");
+    });
+
+    await waitFor(() =>
+      expect(
+        queryClient.getQueryState([
+          "cooking-record",
+          "calendar",
+          "month",
+          2026,
+          7,
+          "ko",
+        ])?.status
+      ).toBe("error")
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).not.toHaveTextContent(
+        "0개의 요리"
+      )
+    );
+  });
+
+  it("T-33 월 이동 요청이 빈 배열로 성공하면 0개의 요리를 표시합니다", async () => {
+    const julyCalendar = createDeferred<CookingRecordCalendarMonthResponse>();
+    getCookingRecordCalendarMonth
+      .mockResolvedValueOnce(makeCalendarMonth(8))
+      .mockReturnValueOnce(julyCalendar.promise);
+
+    renderCalendarTab();
+
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+        "8개의 요리"
+      )
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Go to the Previous Month" })
+    );
+
+    await act(async () => {
+      julyCalendar.resolve(makeCalendarMonth(0));
+      await julyCalendar.promise;
+    });
+
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+        "2026.70개의 요리"
+      )
+    );
   });
 });

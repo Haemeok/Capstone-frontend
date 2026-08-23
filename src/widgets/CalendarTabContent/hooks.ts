@@ -72,6 +72,7 @@ export const useProfileCookingRecords = ({
     background: listQuery.data?.pages[0]?.background ?? null,
     records,
     dailySummaries: calendarQuery.data?.dailySummaries ?? [],
+    hasCalendarData: calendarQuery.data !== undefined,
     isPreviewPending:
       listQuery.isPending || shouldFetchNext || listQuery.isFetchingNextPage,
     isPreviewError: listQuery.isError,
