@@ -3,7 +3,7 @@ import type { CaptionLabelProps } from "react-day-picker";
 import { cn } from "@/shared/lib/utils";
 
 type CalendarCaptionLabelProps = CaptionLabelProps & {
-  recordCountLabel: string;
+  recordCountLabel?: string;
 };
 
 export const CalendarCaptionLabel = ({
@@ -18,8 +18,10 @@ export const CalendarCaptionLabel = ({
     className={cn(className, "flex items-baseline gap-2")}
   >
     <span className="text-ink text-xl font-bold">{children}</span>
-    <span className="text-ink-muted text-sm font-normal">
-      {recordCountLabel}
-    </span>
+    {recordCountLabel !== undefined ? (
+      <span className="text-ink-muted text-sm font-normal">
+        {recordCountLabel}
+      </span>
+    ) : null}
   </span>
 );
