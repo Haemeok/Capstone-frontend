@@ -1,4 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+
+import { getDictionary, type Locale } from "@/shared/i18n";
 
 jest.mock("@/shared/adsense", () => ({
   HomeHeaderAnchorAdSlot: () => <div data-testid="home-header-ad" />,
@@ -39,14 +41,6 @@ jest.mock("@/entities/recipe/model/api.server", () => ({
     fetchFailed: false,
   }),
 }));
-
-jest.mock(
-  "@/widgets/CategoryTabs",
-  () =>
-    function MockCategoryTabs() {
-      return <div data-testid="category-tabs" />;
-    }
-);
 
 jest.mock("@/widgets/Footer/DesktopFooter", () => () => null);
 
@@ -90,7 +84,41 @@ jest.mock("@/widgets/ToastDebugPanel", () => ({
   ToastDebugButton: () => null,
 }));
 
-import HomePage from "../page";
+import EnHomePage from "../en/page";
+import JaHomePage from "../ja/page";
+import KoHomePage from "../page";
+
+type HomeCase = {
+  locale: Locale;
+  renderPage: () => ReturnType<typeof KoHomePage>;
+  chefHref: string;
+  youtubeHref: string;
+  trendHref: string;
+};
+
+const HOME_CASES: HomeCase[] = [
+  {
+    locale: "ko",
+    renderPage: KoHomePage,
+    chefHref: "/recipes/category/CHEF_RECIPE",
+    youtubeHref: "/search/results?types=YOUTUBE",
+    trendHref: "/search/results?types=YOUTUBE&sort=createdAt%2CDESC",
+  },
+  {
+    locale: "en",
+    renderPage: EnHomePage,
+    chefHref: "/en/recipes/category/CHEF_RECIPE",
+    youtubeHref: "/en/search/results?types=YOUTUBE",
+    trendHref: "/en/search/results?types=YOUTUBE&sort=createdAt%2CDESC",
+  },
+  {
+    locale: "ja",
+    renderPage: JaHomePage,
+    chefHref: "/ja/recipes/category/CHEF_RECIPE",
+    youtubeHref: "/ja/search/results?types=YOUTUBE",
+    trendHref: "/ja/search/results?types=YOUTUBE&sort=createdAt%2CDESC",
+  },
+];
 
 const expectBefore = (current: HTMLElement, next: HTMLElement) => {
   expect(
@@ -98,24 +126,47 @@ const expectBefore = (current: HTMLElement, next: HTMLElement) => {
   ).toBeTruthy();
 };
 
-describe("한국어 홈 탐색 흐름", () => {
-  it("검색 헤더 다음에 배너와 빠른 탐색을 연속 배치하고 광고와 레시피는 그 아래 둔다", async () => {
-    render(await HomePage());
+describe.each(HOME_CASES)("$locale 홈 빠른 탐색 흐름", (homeCase) => {
+  it("헤더부터 기존 레시피 피드까지 새 탐색 순서로 연결한다", async () => {
+    render(await homeCase.renderPage());
 
+    const quickNavMessages = getDictionary(homeCase.locale).home.quickNav;
     const header = screen.getByTestId("home-header");
     const banner = screen.getByTestId("home-banner");
     const quickNav = screen.getByRole("navigation", {
-      name: "레시피 바로가기",
+      name: quickNavMessages.ariaLabel,
     });
     const headerAd = screen.getByTestId("home-header-ad");
     const anchorAd = screen.getByTestId("home-anchor-ad");
     const recipeFeed = screen.getAllByTestId("recipe-feed")[0];
 
-    expect(screen.queryByTestId("category-tabs")).not.toBeInTheDocument();
     expectBefore(header, banner);
     expectBefore(banner, quickNav);
     expectBefore(quickNav, headerAd);
     expectBefore(headerAd, anchorAd);
     expectBefore(anchorAd, recipeFeed);
+  });
+
+  it("현재 언어의 이름과 경로를 빠른 탐색에 연결한다", async () => {
+    render(await homeCase.renderPage());
+
+    const quickNavMessages = getDictionary(homeCase.locale).home.quickNav;
+    const quickNav = screen.getByRole("navigation", {
+      name: quickNavMessages.ariaLabel,
+    });
+
+    expect(
+      within(quickNav).getByRole("link", {
+        name: quickNavMessages.items.chef,
+      })
+    ).toHaveAttribute("href", homeCase.chefHref);
+    expect(
+      within(quickNav).getByRole("link", {
+        name: quickNavMessages.items.youtube,
+      })
+    ).toHaveAttribute("href", homeCase.youtubeHref);
+    expect(
+      within(quickNav).getByRole("link", { name: quickNavMessages.trendMore })
+    ).toHaveAttribute("href", homeCase.trendHref);
   });
 });
