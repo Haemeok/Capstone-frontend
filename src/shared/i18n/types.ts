@@ -242,12 +242,31 @@ export type IngredientDetailDict = {
 };
 
 export type HomeDict = {
-  categoryTitle: string;
   bannerError: string;
   popularSectionTitle: string;
   budgetSectionTitle: string;
   youtubeBannerChip: string;
   youtubeBannerTitle: string;
+  quickNav: {
+    ariaLabel: string;
+    trendMore: string;
+    items: {
+      chef: string;
+      youtube: string;
+      quick: string;
+      lateNight: string;
+      diet: string;
+      solo: string;
+      kids: string;
+      hangover: string;
+      holiday: string;
+      airFryer: string;
+    };
+    compactItems: {
+      chef: string;
+      youtube: string;
+    };
+  };
   meta: { title: string; description: string; ogImageAlt: string };
 };
 

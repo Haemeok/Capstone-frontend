@@ -46,6 +46,7 @@ export type {
   Dictionary,
   EventsDict,
   FridgeDict,
+  HomeDict,
   IngredientAddDict,
   IngredientPickerDict,
   LandingDict,
