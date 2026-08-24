@@ -34,6 +34,7 @@ type CookingRecordCalendarProps = {
   month: Date;
   locale: Locale;
   summaries: CookingRecordCalendarDailySummary[];
+  stickerImageUrlByDate: Record<string, string>;
   hasCalendarData: boolean;
   streakCount: number;
   copy: UserPagesDict["calendar"];
@@ -54,6 +55,7 @@ export const CookingRecordCalendar = ({
   month,
   locale,
   summaries,
+  stickerImageUrlByDate,
   hasCalendarData,
   streakCount,
   copy,
@@ -93,7 +95,11 @@ export const CookingRecordCalendar = ({
         month={month}
         onMonthChange={onMonthChange}
         formatters={{
-          formatCaption: (value: Date) => formatDate(value, "yyyy.M"),
+          formatCaption: (value: Date) =>
+            new Intl.DateTimeFormat(locale, {
+              year: "numeric",
+              month: "long",
+            }).format(value),
         }}
         modifiers={{ hasEvent: (date: Date) => getSummary(date) !== undefined }}
         modifiersClassNames={{ hasEvent: "has-event" }}
@@ -103,11 +109,13 @@ export const CookingRecordCalendar = ({
           months: "relative flex flex-col gap-2 sm:flex-row",
           month: "flex w-full flex-col gap-3",
           month_caption: "flex h-11 items-center",
+          month_grid:
+            "rdp-month_grid -mx-3 w-[calc(100%+1.5rem)] md:mx-0 md:w-full",
           caption_label: "text-xl font-bold",
           nav: "absolute right-0 z-10 flex h-11 items-center gap-1",
-          week: "rdp-week flex h-16 w-full items-center text-center md:h-20",
+          week: "rdp-week flex h-[72px] w-full items-center text-center md:h-24",
           weeks: "flex w-full flex-col",
-          weekdays: "flex w-full border-b border-gray-100 pb-1",
+          weekdays: "flex h-7 w-full border-b border-gray-100 pb-1",
           weekday: "text-ink-muted flex-1 text-center text-xs font-normal",
           disabled: "text-muted-foreground opacity-50",
           hidden: "invisible",
@@ -124,6 +132,11 @@ export const CookingRecordCalendar = ({
               {...props}
               mode={mode}
               summary={getSummary(props.day.date)}
+              stickerImageUrl={
+                stickerImageUrlByDate[
+                  formatDate(props.day.date, "yyyy-MM-dd")
+                ] ?? null
+              }
               ranges={ranges}
               recordLabel={copy.timelineHeading}
               recipeCountTemplate={copy.daySummaryRecipeCount}

@@ -149,7 +149,7 @@ const makeCalendarMonth = (
             date,
             totalSavings: 0,
             totalCount: count,
-            firstImageUrl: "/sticker-0.webp",
+            firstImageUrl: "/calendar-original.webp",
           },
         ],
   monthlyTotalSavings: 0,
@@ -349,8 +349,15 @@ describe("CalendarTabContent cooking record preview", () => {
     ).toBeInTheDocument();
 
     const caption = screen.getByTestId("calendar-caption");
-    expect(caption).toHaveTextContent("2026.8");
+    expect(caption).toHaveTextContent("2026년 8월");
     expect(caption).toHaveTextContent("8개의 요리");
+    expect(caption).toHaveClass("flex-col", "items-start");
+
+    const modeToggle = screen.getByRole("button", {
+      name: "기록",
+    }).parentElement;
+    expect(modeToggle).toHaveClass("bg-gray-100", "p-1");
+    expect(modeToggle?.querySelector("img")).not.toBeInTheDocument();
 
     const previousButton = screen.getByRole("button", {
       name: "Go to the Previous Month",
@@ -378,8 +385,15 @@ describe("CalendarTabContent cooking record preview", () => {
     expect(nextButton).toHaveClass("h-11", "w-11");
 
     const week = document.querySelector(".rdp-week");
-    expect(week).toHaveClass("h-16", "md:h-20");
-    expect(week).not.toHaveClass("md:h-30");
+    expect(week).toHaveClass("h-[72px]", "md:h-24");
+
+    const monthGrid = document.querySelector(".rdp-month_grid");
+    expect(monthGrid).toHaveClass(
+      "-mx-3",
+      "w-[calc(100%+1.5rem)]",
+      "md:mx-0",
+      "md:w-full"
+    );
 
     const calendarRoot = screen
       .getByTestId("calendar-caption")
@@ -400,6 +414,18 @@ describe("CalendarTabContent cooking record preview", () => {
       );
     }
   );
+
+  it("T-34 캘린더 원본 사진 대신 같은 날짜의 READY 누끼 이미지를 사용합니다", async () => {
+    renderCalendarTab();
+
+    const recordDay = await screen.findByRole("button", {
+      name: "2026-08-17 요리 기록 레시피 8개",
+    });
+    const image = recordDay.querySelector("img");
+
+    expect(image).toHaveAttribute("src", "/sticker-0.webp");
+    expect(image).not.toHaveAttribute("src", "/calendar-original.webp");
+  });
 
   it("T-29 월과 스트릭 모드 전환 시 데이터와 Light 햅틱을 함께 갱신합니다", async () => {
     getCookingRecordCalendarMonth
@@ -457,7 +483,9 @@ describe("CalendarTabContent cooking record preview", () => {
     );
 
     await waitFor(() =>
-      expect(screen.getByTestId("calendar-caption")).toHaveTextContent("2026.7")
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+        "2026년 7월"
+      )
     );
     expect(screen.getByTestId("calendar-caption")).not.toHaveTextContent(
       "0개의 요리"
@@ -494,7 +522,9 @@ describe("CalendarTabContent cooking record preview", () => {
       screen.getByRole("button", { name: "Go to the Previous Month" })
     );
     await waitFor(() =>
-      expect(screen.getByTestId("calendar-caption")).toHaveTextContent("2026.7")
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+        "2026년 7월"
+      )
     );
 
     await act(async () => {
@@ -545,7 +575,7 @@ describe("CalendarTabContent cooking record preview", () => {
 
     await waitFor(() =>
       expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
-        "2026.70개의 요리"
+        "0개의 요리"
       )
     );
   });

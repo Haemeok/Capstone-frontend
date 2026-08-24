@@ -15,11 +15,11 @@ export const CalendarCaptionLabel = ({
   <span
     {...props}
     data-testid="calendar-caption"
-    className={cn(className, "flex items-baseline gap-2")}
+    className={cn(className, "flex flex-col items-start gap-0.5")}
   >
-    <span className="text-ink text-xl font-bold">{children}</span>
+    <span className="text-ink text-base font-bold">{children}</span>
     {recordCountLabel !== undefined ? (
-      <span className="text-ink-muted text-sm font-normal">
+      <span className="text-ink-muted text-xs font-normal">
         {recordCountLabel}
       </span>
     ) : null}
