@@ -15,6 +15,7 @@ type RecipeSlideWithErrorBoundaryProps = {
   metaName?: string | null;
   emphasizeTime?: boolean;
   fetchFailed?: boolean;
+  prefetch?: boolean | null;
 };
 
 const RecipeSlideWithErrorBoundary = ({
@@ -26,6 +27,7 @@ const RecipeSlideWithErrorBoundary = ({
   metaName,
   emphasizeTime,
   fetchFailed = false,
+  prefetch,
 }: RecipeSlideWithErrorBoundaryProps) => {
   if (
     !fetchFailed &&
@@ -63,6 +65,7 @@ const RecipeSlideWithErrorBoundary = ({
         error={fetchFailed ? new Error("slide fetch failed") : null}
         locale={locale}
         emphasizeTime={emphasizeTime}
+        prefetch={prefetch}
       />
     </ErrorBoundary>
   );

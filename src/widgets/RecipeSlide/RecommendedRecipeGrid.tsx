@@ -126,7 +126,7 @@ const RecommendedRecipeGrid = ({
               >
                 <DetailedRecipeGridItem
                   recipe={recipe}
-                  prefetch
+                  prefetch={false}
                   hideCookingTime
                   locale={locale}
                   infoBadge={getInfoBadge(recipe)}

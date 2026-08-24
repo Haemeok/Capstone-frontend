@@ -5,7 +5,13 @@ import { getCountryPopularOnServer } from "@/entities/recipe/model/api.server";
 import RecipeSlideWithErrorBoundary from "../RecipeSlideWithErrorBoundary";
 import { buildCountryTitle } from "./buildSlideTitle";
 
-const CountryPopularServerSlide = async ({ locale }: { locale: Locale }) => {
+const CountryPopularServerSlide = async ({
+  locale,
+  prefetch,
+}: {
+  locale: Locale;
+  prefetch?: boolean | null;
+}) => {
   const { countryCode, content, fetchFailed } =
     await getCountryPopularOnServer(locale);
   const metaName = content.length > 0 ? countryCode : null;
@@ -17,6 +23,7 @@ const CountryPopularServerSlide = async ({ locale }: { locale: Locale }) => {
       requiresMeta
       metaName={metaName}
       fetchFailed={fetchFailed}
+      prefetch={prefetch}
     />
   );
 };

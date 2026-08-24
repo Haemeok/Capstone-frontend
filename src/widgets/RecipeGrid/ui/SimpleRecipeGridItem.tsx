@@ -13,7 +13,7 @@ type SimpleRecipeGridItemProps = {
   recipe: BaseRecipeGridItem;
   setIsDrawerOpen?: (id: string) => void;
   priority?: boolean;
-  prefetch?: boolean;
+  prefetch?: boolean | null;
   isPrivate?: boolean;
 };
 
@@ -54,7 +54,7 @@ const SimpleRecipeGridItem = ({
       </p>
       <LocalizedLink
         href={href}
-        prefetch={prefetch ? true : null}
+        prefetch={prefetch}
         className="absolute inset-0"
       >
         <span className="sr-only">

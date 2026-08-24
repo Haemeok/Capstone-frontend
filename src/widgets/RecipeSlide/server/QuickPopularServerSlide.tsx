@@ -5,7 +5,13 @@ import { getQuickPopularOnServer } from "@/entities/recipe/model/api.server";
 import RecipeSlideWithErrorBoundary from "../RecipeSlideWithErrorBoundary";
 import { buildQuickTitle } from "./buildSlideTitle";
 
-const QuickPopularServerSlide = async ({ locale }: { locale: Locale }) => {
+const QuickPopularServerSlide = async ({
+  locale,
+  prefetch,
+}: {
+  locale: Locale;
+  prefetch?: boolean | null;
+}) => {
   const { maxCookingTime, content, fetchFailed } =
     await getQuickPopularOnServer(locale);
   const metaName =
@@ -19,6 +25,7 @@ const QuickPopularServerSlide = async ({ locale }: { locale: Locale }) => {
       metaName={metaName}
       emphasizeTime
       fetchFailed={fetchFailed}
+      prefetch={prefetch}
     />
   );
 };

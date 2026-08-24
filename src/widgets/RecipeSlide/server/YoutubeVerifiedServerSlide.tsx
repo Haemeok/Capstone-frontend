@@ -5,7 +5,13 @@ import { getYoutubeVerifiedOnServer } from "@/entities/recipe/model/api.server";
 
 import RecipeSlideWithErrorBoundary from "../RecipeSlideWithErrorBoundary";
 
-const YoutubeVerifiedServerSlide = async ({ locale }: { locale: Locale }) => {
+const YoutubeVerifiedServerSlide = async ({
+  locale,
+  prefetch,
+}: {
+  locale: Locale;
+  prefetch?: boolean | null;
+}) => {
   const { content, fetchFailed } = await getYoutubeVerifiedOnServer(locale);
   return (
     <RecipeSlideWithErrorBoundary
@@ -13,6 +19,7 @@ const YoutubeVerifiedServerSlide = async ({ locale }: { locale: Locale }) => {
       staticRecipes={content}
       locale={locale}
       fetchFailed={fetchFailed}
+      prefetch={prefetch}
     />
   );
 };

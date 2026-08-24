@@ -46,7 +46,7 @@ type DetailedRecipeGridItemProps = {
   recipe: DetailedRecipeGridItemType;
   className?: string;
   priority?: boolean;
-  prefetch?: boolean;
+  prefetch?: boolean | null;
   infoBadge?: React.ReactNode;
   saveBadge?: React.ReactNode;
   onImageRetry?: () => void;
@@ -226,7 +226,7 @@ const DetailedRecipeGridItem = ({
         <Link
           href={buildLocalizedRecipeHref(recipe.id, locale)}
           className="rounded-card absolute inset-0"
-          prefetch={prefetch ? true : null}
+          prefetch={prefetch}
           onClick={handleClick}
         >
           <span className="sr-only">

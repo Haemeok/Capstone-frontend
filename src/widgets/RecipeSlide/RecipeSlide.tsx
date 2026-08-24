@@ -32,6 +32,7 @@ type RecipeSlideProps = {
   error: Error | null;
   locale?: "ko" | "ja" | "en";
   emphasizeTime?: boolean;
+  prefetch?: boolean | null;
 };
 
 const getRecipeRightBadge = (
@@ -83,6 +84,7 @@ const RecipeSlide = ({
   error,
   locale,
   emphasizeTime,
+  prefetch = false,
 }: RecipeSlideProps) => {
   const t = useSearchDiscoveryDict();
 
@@ -109,7 +111,7 @@ const RecipeSlide = ({
             >
               <DetailedRecipeGridItem
                 recipe={item}
-                prefetch
+                prefetch={prefetch}
                 hideCookingTime
                 locale={locale}
                 infoBadge={
