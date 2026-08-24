@@ -17,11 +17,11 @@ import {
 } from "@/entities/recipe/lib/metadata/schema";
 import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
 
-import CategoryTabs from "@/widgets/CategoryTabs";
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
 import { selectHomeBannerSlides } from "@/widgets/HomeBannerCarousel/selectSlides";
+import HomeQuickNav from "@/widgets/HomeQuickNav";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
 import {
   CategoryPopularServerSlide,
@@ -84,15 +84,15 @@ const HomePage = async () => {
           <HomeHeader />
         </Suspense>
         <div className="text-ink flex flex-col items-center justify-center bg-white">
-          <HomeHeaderAnchorAdSlot className="my-2" />
-
-          <CategoryTabs title={dict.home.categoryTitle} />
-
           <ErrorBoundary
             fallback={<SectionErrorFallback message={dict.home.bannerError} />}
           >
             <HomeBannerCarousel slides={slides} />
           </ErrorBoundary>
+
+          <HomeQuickNav locale="en" messages={dict.home.quickNav} />
+
+          <HomeHeaderAnchorAdSlot className="my-2" />
 
           <WebOnlyAdSlot>
             <HomeAnchorAdSlot className="my-2" />
