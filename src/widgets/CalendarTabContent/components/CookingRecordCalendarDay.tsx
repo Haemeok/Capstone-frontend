@@ -15,6 +15,7 @@ import { CalendarDayStreak } from "./CalendarDayStreak";
 type CookingRecordCalendarDayProps = DayProps & {
   mode: CalendarMode;
   summary?: CookingRecordCalendarDailySummary;
+  stickerImageUrl: string | null;
   ranges: ConsecutiveRange[];
   recordLabel: string;
   recipeCountTemplate: Plural;
@@ -26,6 +27,7 @@ export const CookingRecordCalendarDay = ({
   modifiers,
   mode,
   summary,
+  stickerImageUrl,
   ranges,
   recordLabel,
   recipeCountTemplate,
@@ -36,8 +38,10 @@ export const CookingRecordCalendarDay = ({
 
   if (date.getMonth() !== day.displayMonth.getMonth()) {
     return (
-      <td className="flex h-full w-full items-center justify-center text-sm opacity-30">
-        {dateNumber}
+      <td className="relative h-full w-full text-xs opacity-30">
+        <span className="absolute top-1 left-1/2 -translate-x-1/2">
+          {dateNumber}
+        </span>
       </td>
     );
   }
@@ -67,6 +71,7 @@ export const CookingRecordCalendarDay = ({
     <CalendarDayPhoto
       date={date}
       summary={summary}
+      imageUrl={stickerImageUrl}
       isToday={isToday}
       dayCountBadgeLabel={dayCountBadgeLabel}
       recordAlt={`${formatDate(date, "yyyy-MM-dd")} ${recordLabel} ${recipeCountLabel}`}

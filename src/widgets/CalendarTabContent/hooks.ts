@@ -45,6 +45,20 @@ export const useProfileCookingRecords = ({
   const records = groups.flatMap((group) =>
     group.date.startsWith(monthKey) ? group.records : []
   );
+  const stickerImageUrlByDate: Record<string, string> = {};
+
+  for (const group of groups) {
+    if (!group.date.startsWith(monthKey)) continue;
+
+    const firstReadySticker = group.records.find(
+      (record) =>
+        record.stickerStatus === "READY" && record.stickerImageUrl !== null
+    );
+
+    if (firstReadySticker?.stickerImageUrl) {
+      stickerImageUrlByDate[group.date] = firstReadySticker.stickerImageUrl;
+    }
+  }
   const oldestMonth = getOldestLoadedMonth(groups.map((group) => group.date));
   const shouldFetchNext =
     Boolean(listQuery.hasNextPage) &&
@@ -71,6 +85,7 @@ export const useProfileCookingRecords = ({
   return {
     background: listQuery.data?.pages[0]?.background ?? null,
     records,
+    stickerImageUrlByDate,
     dailySummaries: calendarQuery.data?.dailySummaries ?? [],
     hasCalendarData: calendarQuery.data !== undefined,
     isPreviewPending:

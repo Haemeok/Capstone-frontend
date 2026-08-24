@@ -10,6 +10,7 @@ import type { CookingRecordCalendarDailySummary } from "@/entities/recipe";
 type CalendarDayPhotoProps = {
   date: Date;
   summary: CookingRecordCalendarDailySummary;
+  imageUrl: string | null;
   isToday: boolean;
   dayCountBadgeLabel: string;
   recordAlt: string;
@@ -18,6 +19,7 @@ type CalendarDayPhotoProps = {
 export const CalendarDayPhoto = ({
   date,
   summary,
+  imageUrl,
   isToday,
   dayCountBadgeLabel,
   recordAlt,
@@ -53,14 +55,14 @@ export const CalendarDayPhoto = ({
             className="bg-olive-dark absolute top-5 left-1/2 z-10 h-1 w-1 -translate-x-1/2 rounded-full"
           />
         ) : null}
-        {summary.firstImageUrl ? (
-          <span className="absolute right-1 bottom-0 left-1 h-[calc(100%-1.25rem)]">
+        {imageUrl ? (
+          <span className="absolute top-5 right-0.5 bottom-0 left-0.5">
             <Image
-              src={summary.firstImageUrl}
+              src={imageUrl}
               alt=""
               aria-hidden="true"
               wrapperClassName="h-full w-full"
-              imgClassName="transition-opacity duration-200 group-active:opacity-80"
+              imgClassName="drop-shadow-sm transition-opacity duration-200 group-active:opacity-80"
               fit="contain"
               lazy={true}
               skeleton={<span aria-hidden="true" />}

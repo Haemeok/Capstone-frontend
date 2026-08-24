@@ -10,10 +10,10 @@ export const CalendarDayEmpty = ({
   isToday,
 }: CalendarDayEmptyProps) => {
   return (
-    <td className="flex h-full w-full items-center justify-center">
-      <p
+    <td className="relative h-full w-full">
+      <span
         className={cn(
-          "text-ink-sub relative flex min-h-11 min-w-11 items-center justify-center text-center text-sm",
+          "text-ink-sub absolute top-1 left-1/2 -translate-x-1/2 text-xs",
           isToday && "text-olive-dark font-semibold"
         )}
       >
@@ -22,10 +22,10 @@ export const CalendarDayEmpty = ({
           <span
             data-testid="calendar-day-today-dot"
             aria-hidden="true"
-            className="bg-olive-dark absolute top-8 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full"
+            className="bg-olive-dark absolute top-4 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full"
           />
         ) : null}
-      </p>
+      </span>
     </td>
   );
 };

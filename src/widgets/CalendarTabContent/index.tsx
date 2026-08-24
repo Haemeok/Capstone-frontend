@@ -40,6 +40,7 @@ const CalendarTabContent = () => {
         month={currentMonth}
         locale={locale}
         summaries={recordsQuery.dailySummaries}
+        stickerImageUrlByDate={recordsQuery.stickerImageUrlByDate}
         hasCalendarData={recordsQuery.hasCalendarData}
         streakCount={streakQuery.data?.streak ?? 0}
         copy={copy.calendar}

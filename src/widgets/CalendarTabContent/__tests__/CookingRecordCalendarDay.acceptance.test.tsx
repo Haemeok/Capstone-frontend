@@ -81,6 +81,7 @@ const renderDay = ({
             modifiers={{ today: isToday }}
             mode="photo"
             summary={hasSummary ? summary : undefined}
+            stickerImageUrl={firstImageUrl}
             ranges={[]}
             recordLabel={copy.timelineHeading}
             recipeCountTemplate={copy.daySummaryRecipeCount}
@@ -122,9 +123,10 @@ describe("CookingRecordCalendarDay 기록 셀", () => {
     expect(imageRoot).not.toHaveClass("absolute");
     expect(positioningWrapper).toHaveClass(
       "absolute",
-      "right-1",
+      "top-5",
+      "right-0.5",
       "bottom-0",
-      "left-1"
+      "left-0.5"
     );
 
     fireEvent.load(image);
@@ -206,7 +208,12 @@ describe("CookingRecordCalendarDay 기록 셀", () => {
 
     const dateNumber = screen.getByText("18");
 
-    expect(dateNumber).toHaveClass("text-olive-dark", "font-semibold");
+    expect(dateNumber).toHaveClass(
+      "text-olive-dark",
+      "font-semibold",
+      "absolute",
+      "top-1"
+    );
     expect(dateNumber).not.toHaveClass(
       "border-2",
       "border-violet-500",
@@ -215,6 +222,51 @@ describe("CookingRecordCalendarDay 기록 셀", () => {
     expect(screen.getByTestId("calendar-day-today-dot")).toHaveClass(
       "bg-olive-dark"
     );
+  });
+
+  it("T-23 기록 없는 날짜와 다른 달 날짜도 숫자를 셀 상단에 맞춥니다", () => {
+    const copy = getDictionary("ko").userPages.calendar;
+    const { rerender } = render(
+      <table>
+        <tbody>
+          <tr>
+            <CookingRecordCalendarDay
+              day={new CalendarDay(new Date(2026, 7, 19), new Date(2026, 7, 1))}
+              modifiers={{}}
+              mode="photo"
+              stickerImageUrl={null}
+              ranges={[]}
+              recordLabel={copy.timelineHeading}
+              recipeCountTemplate={copy.daySummaryRecipeCount}
+              dayCountBadgeTemplate={copy.dayCountBadge}
+            />
+          </tr>
+        </tbody>
+      </table>
+    );
+
+    expect(screen.getByText("19")).toHaveClass("absolute", "top-1");
+
+    rerender(
+      <table>
+        <tbody>
+          <tr>
+            <CookingRecordCalendarDay
+              day={new CalendarDay(new Date(2026, 6, 31), new Date(2026, 7, 1))}
+              modifiers={{}}
+              mode="photo"
+              stickerImageUrl={null}
+              ranges={[]}
+              recordLabel={copy.timelineHeading}
+              recipeCountTemplate={copy.daySummaryRecipeCount}
+              dayCountBadgeTemplate={copy.dayCountBadge}
+            />
+          </tr>
+        </tbody>
+      </table>
+    );
+
+    expect(screen.getByText("31")).toHaveClass("absolute", "top-1");
   });
 
   it.each([0, 1])("T-24 기록이 %d개면 개수 배지를 숨깁니다", (totalCount) => {
@@ -234,15 +286,19 @@ describe("CookingRecordCalendarDay 기록 셀", () => {
     (totalCount, expectedLabel) => {
       renderDay({ totalCount, firstImageUrl: "/sticker.webp" });
 
-      expect(screen.getByTestId("calendar-day-count-badge")).toHaveTextContent(
-        expectedLabel
-      );
-      expect(screen.getByTestId("calendar-day-count-badge")).toHaveClass(
+      const button = screen.getByRole("button");
+      const badge = screen.getByTestId("calendar-day-count-badge");
+
+      expect(badge).toHaveTextContent(expectedLabel);
+      expect(badge).toHaveClass(
         "bg-ink/80",
         "rounded-md",
         "right-0.5",
-        "bottom-1"
+        "bottom-1",
+        "z-20"
       );
+      expect(badge.parentElement).toBe(button);
+      expect(button.querySelector("img")).toBeInTheDocument();
     }
   );
 
