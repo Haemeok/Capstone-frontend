@@ -15,8 +15,17 @@ const SAMPLE = {
 
 jest.mock("next/link", () => ({
   __esModule: true,
-  default: ({ children, ...props }: { children: React.ReactNode }) => (
-    <a {...props}>{children}</a>
+  default: ({
+    children,
+    prefetch,
+    ...props
+  }: {
+    children: React.ReactNode;
+    prefetch?: boolean | null;
+  }) => (
+    <a {...props} data-prefetch={prefetch === null ? "null" : String(prefetch)}>
+      {children}
+    </a>
   ),
 }));
 jest.mock("@/shared/ui/image/Image", () => ({
@@ -37,6 +46,30 @@ import RecipeSlideWithErrorBoundary from "../RecipeSlideWithErrorBoundary";
 
 const firstRecipeHref = (c: HTMLElement) =>
   c.querySelector("a[href*='/recipes/abc123']")?.getAttribute("href");
+
+const firstRecipePrefetch = (c: HTMLElement) =>
+  c.querySelector("a[href*='/recipes/abc123']")?.getAttribute("data-prefetch");
+
+it("T-PREFETCH-2: 홈 이외 슬라이드는 보이는 카드도 미리 요청하지 않는다", () => {
+  const { container } = render(
+    <RecipeSlideWithErrorBoundary title="인기" staticRecipes={[SAMPLE]} />
+  );
+
+  expect(firstRecipePrefetch(container)).toBe("false");
+});
+
+it("T-PREFETCH-1: 홈 슬라이드는 보이는 카드만 자동으로 미리 요청한다", () => {
+  const { container } = render(
+    <RecipeSlideWithErrorBoundary
+      title="인기"
+      staticRecipes={[SAMPLE]}
+      prefetch={null}
+    />
+  );
+
+  expect(firstRecipePrefetch(container)).toBe("null");
+  expect(firstRecipeHref(container)).toBe("/recipes/abc123");
+});
 
 it("T-17a: RecipeSlideWithErrorBoundary(locale=ja)가 locale을 카드 href로 관통한다", () => {
   const { container } = render(

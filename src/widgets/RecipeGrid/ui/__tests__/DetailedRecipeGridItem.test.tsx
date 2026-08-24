@@ -2,8 +2,17 @@ import { render, screen } from "@testing-library/react";
 
 jest.mock("next/link", () => ({
   __esModule: true,
-  default: ({ children, ...props }: { children: React.ReactNode }) => (
-    <a {...props}>{children}</a>
+  default: ({
+    children,
+    prefetch,
+    ...props
+  }: {
+    children: React.ReactNode;
+    prefetch?: boolean | null;
+  }) => (
+    <a {...props} data-prefetch={prefetch === null ? "null" : String(prefetch)}>
+      {children}
+    </a>
   ),
 }));
 jest.mock("@/shared/ui/image/Image", () => ({

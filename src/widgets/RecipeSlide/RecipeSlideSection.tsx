@@ -16,6 +16,7 @@ type RecipeSlideSectionProps = {
   error: Error | null;
   locale?: "ko" | "ja" | "en";
   emphasizeTime?: boolean;
+  prefetch?: boolean | null;
 };
 
 const RecipeSlideSection = ({
@@ -26,6 +27,7 @@ const RecipeSlideSection = ({
   error,
   locale,
   emphasizeTime,
+  prefetch,
 }: RecipeSlideSectionProps) => {
   const recipeIds = recipes.map((recipe) => recipe.id);
   const { data: statusData } = useRecipesStatusQuery(recipeIds);
@@ -47,6 +49,7 @@ const RecipeSlideSection = ({
       error={error}
       locale={locale}
       emphasizeTime={emphasizeTime}
+      prefetch={prefetch}
     />
   );
 };

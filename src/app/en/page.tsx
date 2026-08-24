@@ -103,24 +103,26 @@ const HomePage = async () => {
             staticRecipes={staticPopularRecipes.content}
             locale="en"
             fetchFailed={staticPopularRecipes.fetchFailed}
+            prefetch={null}
           />
 
-          <YoutubeVerifiedServerSlide locale="en" />
+          <YoutubeVerifiedServerSlide locale="en" prefetch={null} />
 
-          <SeasonalPopularServerSlide locale="en" />
+          <SeasonalPopularServerSlide locale="en" prefetch={null} />
 
-          <CountryPopularServerSlide locale="en" />
+          <CountryPopularServerSlide locale="en" prefetch={null} />
 
-          <QuickPopularServerSlide locale="en" />
+          <QuickPopularServerSlide locale="en" prefetch={null} />
 
           <RecipeSlideWithErrorBoundary
             title={dict.home.budgetSectionTitle}
             staticRecipes={staticBudgetRecipes.content}
             locale="en"
             fetchFailed={staticBudgetRecipes.fetchFailed}
+            prefetch={null}
           />
 
-          <CategoryPopularServerSlide locale="en" />
+          <CategoryPopularServerSlide locale="en" prefetch={null} />
         </div>
       </Container>
       <DesktopFooter />
