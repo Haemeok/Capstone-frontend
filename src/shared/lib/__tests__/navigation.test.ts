@@ -14,6 +14,7 @@ describe("shouldHideNavbar", () => {
       "/calendar/timeline/share",
       "/en/calendar/timeline/share",
       "/ja/calendar/timeline/share",
+      "/events/cooking-record",
     ])("hides on %s", (path) => {
       expect(shouldHideNavbar(path, { isApp: true })).toBe(true);
       expect(shouldHideNavbar(path, { isApp: false })).toBe(true);
