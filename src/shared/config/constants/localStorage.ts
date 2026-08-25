@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   REVIEW_GATE_DECLINED: "review_gate_declined",
   SMART_APP_BANNER_DISMISSED: "smart_app_banner_dismissed",
   PREFERRED_LOCALE: "preferred_locale",
+  COOKING_RECORD_LAUNCH_SEEN: "recipio:cooking-record-launch:seen:v2026-08",
 } as const;
 
 export const MAX_RECENT_AI_RECIPES = 10;

@@ -17,6 +17,8 @@ import {
 } from "@/entities/recipe/lib/metadata/schema";
 import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
 
+import { CookingRecordLaunchDrawer } from "@/features/cooking-record-launch";
+
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
@@ -115,6 +117,7 @@ const HomePage = async () => {
       </Container>
       <DesktopFooter />
       <ToastDebugButton />
+      <CookingRecordLaunchDrawer />
     </>
   );
 };
