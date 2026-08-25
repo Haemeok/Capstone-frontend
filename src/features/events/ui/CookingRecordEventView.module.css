@@ -1,0 +1,38 @@
+.heroPaper,
+.recordCard {
+  background-color: #fffef8;
+  background-image: radial-gradient(
+    rgb(116 125 105 / 16%) 1px,
+    transparent 1px
+  );
+  background-size: 12px 12px;
+}
+
+.heroPaper {
+  box-shadow: 0 18px 40px rgb(57 67 53 / 12%);
+  transform: rotate(-1.5deg);
+}
+
+.heroSticker {
+  filter: drop-shadow(0 8px 10px rgb(57 67 53 / 14%));
+}
+
+.recordCard {
+  box-shadow: 0 12px 28px rgb(34 34 34 / 8%);
+}
+
+.stickerBook {
+  background:
+    linear-gradient(
+      90deg,
+      transparent 49%,
+      rgb(103 113 94 / 10%) 50%,
+      transparent 51%
+    ),
+    #f5f0e5;
+  box-shadow: 0 12px 28px rgb(34 34 34 / 8%);
+}
+
+.calendar {
+  box-shadow: 0 12px 28px rgb(34 34 34 / 8%);
+}
