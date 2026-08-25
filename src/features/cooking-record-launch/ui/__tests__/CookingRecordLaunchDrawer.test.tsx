@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
 
@@ -32,12 +32,36 @@ describe("CookingRecordLaunchDrawer", () => {
   it("T-02: 요리기록 CTA를 누르면 확인 상태를 저장합니다", async () => {
     render(<CookingRecordLaunchDrawer />);
 
-    fireEvent.click(
-      await screen.findByRole("link", { name: "요리기록 시작하기" })
-    );
+    const link = await screen.findByRole("link", {
+      name: "요리기록 시작하기",
+    });
+    link.addEventListener("click", (event) => event.preventDefault());
+    fireEvent.click(link);
 
     expect(
       window.localStorage.getItem(STORAGE_KEYS.COOKING_RECORD_LAUNCH_SEEN)
     ).toBe("true");
+  });
+
+  it("T-04: 안내를 닫은 뒤 다시 렌더해도 드로어를 보여주지 않습니다", async () => {
+    const { unmount } = render(<CookingRecordLaunchDrawer />);
+
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "요리기록 출시 안내 닫기",
+      })
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(
+        document.querySelector('[data-slot="drawer-overlay"]')
+      ).not.toBeInTheDocument();
+    });
+
+    unmount();
+    render(<CookingRecordLaunchDrawer />);
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });

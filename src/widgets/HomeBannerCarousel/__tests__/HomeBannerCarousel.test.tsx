@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 
 import HomeBannerCarousel from "../index";
-import { HOME_BANNER_SLIDES } from "../slides";
+import { APP_INSTALL_BANNER_ID, HOME_BANNER_SLIDES } from "../slides";
 
 let snapIndex = 0;
 let mockIsApp = false;
@@ -45,6 +45,16 @@ beforeEach(() => {
 });
 
 describe("HomeBannerCarousel", () => {
+  it("T-05: 요리기록 배너가 안내 페이지 링크와 승인된 배경색을 사용합니다", () => {
+    render(<HomeBannerCarousel slides={HOME_BANNER_SLIDES} />);
+
+    const link = screen.getByRole("link", {
+      name: /요리한 날을 차곡차곡 모아보세요/,
+    });
+    expect(link).toHaveAttribute("href", "/events/cooking-record");
+    expect(link).toHaveStyle({ backgroundColor: "#edf4eb" });
+  });
+
   // T-01
   it("설정대로 슬라이드를 렌더하고 각 링크와 텍스트, 이미지, 배경색을 노출한다", () => {
     const { container } = render(
@@ -55,7 +65,7 @@ describe("HomeBannerCarousel", () => {
     expect(links.map((a) => a.getAttribute("href"))).toEqual(
       HOME_BANNER_SLIDES.map((slide) => slide.link)
     );
-    expect(links[0]).toHaveAttribute("href", "/events/app-install");
+    expect(links[0]).toHaveAttribute("href", "/events/cooking-record");
     expect(screen.getByText("#레시피오 앱")).toBeInTheDocument();
     expect(screen.getByText("레시피오 앱에서 더 편하게")).toBeInTheDocument();
 
@@ -128,9 +138,9 @@ describe("HomeBannerCarousel", () => {
     render(<HomeBannerCarousel slides={HOME_BANNER_SLIDES} />);
 
     const links = screen.getAllByRole("link");
-    expect(links[0]).toHaveAttribute("href", "/recipes/new/youtube");
-    expect(links).toHaveLength(3);
-    expect(screen.getByText("1/3")).toBeInTheDocument();
+    expect(links[0]).toHaveAttribute("href", "/events/cooking-record");
+    expect(links).toHaveLength(4);
+    expect(screen.getByText("1/4")).toBeInTheDocument();
   });
 
   it("T-13: 슬라이드가 줄어 재초기화되면 실제 위치를 표시한다", () => {
@@ -150,14 +160,18 @@ describe("HomeBannerCarousel", () => {
     });
 
     const status = screen.getByRole("status");
-    expect(status).toHaveTextContent("1/3");
-    expect(status).toHaveAccessibleName("슬라이드 3개 중 1번째");
+    expect(status).toHaveTextContent("1/4");
+    expect(status).toHaveAccessibleName("슬라이드 4개 중 1번째");
   });
 
   it("앱 필터 결과가 비면 캐러셀을 렌더링하지 않는다", () => {
     mockIsApp = true;
+    const appInstallSlide = HOME_BANNER_SLIDES.find(
+      (slide) => slide.id === APP_INSTALL_BANNER_ID
+    );
+    expect(appInstallSlide).toBeDefined();
     const { container } = render(
-      <HomeBannerCarousel slides={[HOME_BANNER_SLIDES[0]]} />
+      <HomeBannerCarousel slides={[appInstallSlide!]} />
     );
 
     expect(container).toBeEmptyDOMElement();

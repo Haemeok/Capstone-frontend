@@ -42,6 +42,10 @@ jest.mock("@/entities/recipe/model/api.server", () => ({
   }),
 }));
 
+jest.mock("@/features/cooking-record-launch", () => ({
+  CookingRecordLaunchDrawer: () => <div data-testid="cooking-record-launch" />,
+}));
+
 jest.mock("@/widgets/Footer/DesktopFooter", () => () => null);
 
 jest.mock(
@@ -168,5 +172,24 @@ describe.each(HOME_CASES)("$locale 홈 빠른 탐색 흐름", (homeCase) => {
     expect(
       within(quickNav).getByRole("link", { name: quickNavMessages.trendMore })
     ).toHaveAttribute("href", homeCase.trendHref);
+  });
+});
+
+describe("요리기록 출시 안내 조합", () => {
+  it("T-03: 한국어 홈에만 출시 드로어를 조합합니다", async () => {
+    const ko = render(await KoHomePage());
+    expect(screen.getByTestId("cooking-record-launch")).toBeInTheDocument();
+    ko.unmount();
+
+    const en = render(await EnHomePage());
+    expect(
+      screen.queryByTestId("cooking-record-launch")
+    ).not.toBeInTheDocument();
+    en.unmount();
+
+    render(await JaHomePage());
+    expect(
+      screen.queryByTestId("cooking-record-launch")
+    ).not.toBeInTheDocument();
   });
 });
