@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "CookingRecordLaunchJalnan";
+  src: url("/fonts/Jalnan2TTF.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.label {
+  font-family: "CookingRecordLaunchJalnan", var(--font-pretendard), sans-serif;
+}
+
+.foodCluster {
+  filter: drop-shadow(0 10px 14px rgb(57 67 53 / 12%));
+}
