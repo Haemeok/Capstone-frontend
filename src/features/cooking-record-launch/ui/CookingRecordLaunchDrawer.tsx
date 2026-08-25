@@ -17,6 +17,8 @@ import styles from "./CookingRecordLaunchDrawer.module.css";
 export const CookingRecordLaunchDrawer = () => {
   const { isOpen, dismiss } = useCookingRecordLaunch();
 
+  if (!isOpen) return null;
+
   return (
     <Drawer
       open={isOpen}
