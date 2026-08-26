@@ -96,6 +96,7 @@ Reference these guidelines when:
 - `rendering-conditional-render` - Use ternary, not && for conditionals
 - `rendering-framer-motion-fixed-width` - Animate Framer Motion width between fixed pixel values, not to "auto" (prevents spring jitter and first-render flicker)
 - `rendering-radix-popover-trigger-anchor` - Anchor a controlled Radix Popover to its real trigger, never an empty placeholder (prevents detached popovers and skewed flex layouts)
+- `rendering-defer-auto-open-overlays` - Wait for page load and an idle turn before opening non-essential portal overlays (prevents sibling hydration corruption)
 
 ### 7. JavaScript Performance (LOW-MEDIUM)
 
