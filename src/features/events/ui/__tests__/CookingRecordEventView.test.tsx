@@ -1,4 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { type User, useUserStore } from "@/entities/user";
 
@@ -7,6 +9,9 @@ import { CookingRecordEventView } from "../CookingRecordEventView";
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ back: jest.fn() }),
   usePathname: () => "/events/cooking-record",
+}));
+jest.mock("@/shared/lib/bridge", () => ({
+  triggerHaptic: jest.fn(),
 }));
 
 const user: User = {
@@ -24,6 +29,7 @@ beforeEach(() => {
     isAuthenticated: false,
     isAuthReady: false,
   });
+  jest.mocked(triggerHaptic).mockClear();
 });
 
 describe("CookingRecordEventView", () => {
@@ -90,5 +96,22 @@ describe("CookingRecordEventView", () => {
       screen.getByRole("button", { name: "내 요리기록 보러 가기" })
     ).toBeDisabled();
     expect(document.body.textContent).not.toMatch(/users\/(undefined|null)/);
+  });
+
+  it("T-11: 요리기록 이동 링크는 일반 탐색으로 동작하고 햅틱을 쓰지 않습니다", () => {
+    useUserStore.setState({
+      user,
+      isAuthenticated: true,
+      isAuthReady: true,
+    });
+    render(<CookingRecordEventView />);
+    const link = screen.getByRole("link", {
+      name: "내 요리기록 보러 가기",
+    });
+    link.addEventListener("click", (event) => event.preventDefault());
+
+    fireEvent.click(link);
+
+    expect(triggerHaptic).not.toHaveBeenCalled();
   });
 });

@@ -6,7 +6,7 @@ import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "@/lib/utils";
 
 const drawerContentVariants = cva(
-  "group/drawer-content bg-background pointer-events-auto fixed z-50 flex flex-col outline-none",
+  "group/drawer-content bg-background pointer-events-auto fixed z-50 flex flex-col outline-none motion-reduce:animate-none",
   {
     variants: {
       variant: {
@@ -58,7 +58,7 @@ function DrawerOverlay({
     <DrawerPrimitive.Overlay
       data-slot="drawer-overlay"
       className={cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 motion-reduce:animate-none",
         className
       )}
       {...props}
