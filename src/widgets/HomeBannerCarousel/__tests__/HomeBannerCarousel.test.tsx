@@ -1,5 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 
+import { triggerHaptic } from "@/shared/lib/bridge";
+
 import HomeBannerCarousel from "../index";
 import { APP_INSTALL_BANNER_ID, HOME_BANNER_SLIDES } from "../slides";
 
@@ -14,6 +16,9 @@ jest.mock("@/shared/hooks/useIsApp", () => ({
 }));
 jest.mock("@next/third-parties/google", () => ({
   sendGAEvent: (...args: unknown[]) => mockSendGAEvent(...args),
+}));
+jest.mock("@/shared/lib/bridge", () => ({
+  triggerHaptic: jest.fn(),
 }));
 
 const emblaApi = {
@@ -42,6 +47,7 @@ beforeEach(() => {
   reInitHandlers.length = 0;
   emblaCarouselMock.mockClear();
   mockSendGAEvent.mockReset();
+  jest.mocked(triggerHaptic).mockClear();
 });
 
 describe("HomeBannerCarousel", () => {
@@ -53,6 +59,9 @@ describe("HomeBannerCarousel", () => {
     });
     expect(link).toHaveAttribute("href", "/events/cooking-record");
     expect(link).toHaveStyle({ backgroundColor: "#edf4eb" });
+    link.addEventListener("click", (event) => event.preventDefault());
+    fireEvent.click(link);
+    expect(triggerHaptic).not.toHaveBeenCalled();
   });
 
   // T-01

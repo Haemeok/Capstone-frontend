@@ -1,15 +1,20 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { CookingRecordLaunchDrawer } from "../CookingRecordLaunchDrawer";
 
 jest.mock("next/navigation", () => ({
   usePathname: () => "/",
 }));
+jest.mock("@/shared/lib/bridge", () => ({
+  triggerHaptic: jest.fn(),
+}));
 
 beforeEach(() => {
   window.localStorage.clear();
+  jest.mocked(triggerHaptic).mockClear();
 });
 
 describe("CookingRecordLaunchDrawer", () => {
@@ -63,5 +68,38 @@ describe("CookingRecordLaunchDrawer", () => {
     render(<CookingRecordLaunchDrawer />);
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("T-11: 설명과 충분한 닫기 영역을 제공하고 닫기·이동에 햅틱을 쓰지 않습니다", async () => {
+    const firstRender = render(<CookingRecordLaunchDrawer />);
+    const dialog = await screen.findByRole("dialog", {
+      name: "오늘 먹은 음식, 사진으로 남겨요",
+    });
+    const closeButton = screen.getByRole("button", {
+      name: "요리기록 출시 안내 닫기",
+    });
+
+    expect(dialog).toHaveAccessibleDescription(
+      "한 줄 메모를 더하면 나만의 요리 달력이 완성돼요."
+    );
+    expect(closeButton).toHaveClass("size-11");
+    expect(dialog).toHaveClass("motion-reduce:animate-none");
+    expect(document.querySelector('[data-slot="drawer-overlay"]')).toHaveClass(
+      "motion-reduce:animate-none"
+    );
+
+    fireEvent.click(closeButton);
+    expect(triggerHaptic).not.toHaveBeenCalled();
+
+    firstRender.unmount();
+    window.localStorage.clear();
+    render(<CookingRecordLaunchDrawer />);
+    const link = await screen.findByRole("link", {
+      name: "요리기록 시작하기",
+    });
+    link.addEventListener("click", (event) => event.preventDefault());
+    fireEvent.click(link);
+
+    expect(triggerHaptic).not.toHaveBeenCalled();
   });
 });
