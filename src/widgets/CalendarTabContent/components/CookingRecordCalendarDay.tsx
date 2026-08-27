@@ -20,6 +20,9 @@ type CookingRecordCalendarDayProps = DayProps & {
   recordLabel: string;
   recipeCountTemplate: Plural;
   dayCountBadgeTemplate: string;
+  emptyDayAddRecordTemplate: string;
+  canAddRecord: boolean;
+  onAddRecord: (date: Date) => void;
 };
 
 export const CookingRecordCalendarDay = ({
@@ -32,6 +35,9 @@ export const CookingRecordCalendarDay = ({
   recordLabel,
   recipeCountTemplate,
   dayCountBadgeTemplate,
+  emptyDayAddRecordTemplate,
+  canAddRecord,
+  onAddRecord,
 }: CookingRecordCalendarDayProps) => {
   const date = day.date;
   const dateNumber = date.getDate();
@@ -48,7 +54,20 @@ export const CookingRecordCalendarDay = ({
 
   const isToday = modifiers.today;
   if (!summary) {
-    return <CalendarDayEmpty dateNumber={dateNumber} isToday={isToday} />;
+    const addRecordLabel = canAddRecord
+      ? formatMessage(emptyDayAddRecordTemplate, {
+          date: formatDate(date, "yyyy-MM-dd"),
+        })
+      : undefined;
+
+    return (
+      <CalendarDayEmpty
+        dateNumber={dateNumber}
+        isToday={isToday}
+        addRecordLabel={addRecordLabel}
+        onAddRecord={canAddRecord ? () => onAddRecord(date) : undefined}
+      />
+    );
   }
   if (mode === "streak") {
     return (

@@ -717,6 +717,7 @@ export type UserPagesDict = {
   calendar: {
     timelineHeading: string;
     dateSectionTitle: string;
+    emptyDayAddRecord: string;
     cookingRecord: {
       pageTitle: string;
       currentMonthCaption: string;

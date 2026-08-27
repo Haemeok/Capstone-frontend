@@ -129,6 +129,7 @@ export const userPages: UserPagesDict = {
   calendar: {
     timelineHeading: "料理の記録",
     dateSectionTitle: "日付別の記録",
+    emptyDayAddRecord: "{date}に料理記録を追加",
     cookingRecord: {
       pageTitle: "料理の記録",
       currentMonthCaption: "今月",

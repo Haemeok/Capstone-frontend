@@ -3,7 +3,7 @@
 import { type CSSProperties, useState } from "react";
 import type { DayProps } from "react-day-picker";
 
-import { format as formatDate, parseISO } from "date-fns";
+import { format as formatDate, isAfter, parseISO, startOfDay } from "date-fns";
 
 import {
   format as formatMessage,
@@ -39,6 +39,7 @@ type CookingRecordCalendarProps = {
   streakCount: number;
   copy: UserPagesDict["calendar"];
   onMonthChange: (month: Date) => void;
+  onAddRecord: (date: Date) => void;
 };
 
 type CalendarDayPickerStyle = CSSProperties & {
@@ -60,8 +61,10 @@ export const CookingRecordCalendar = ({
   streakCount,
   copy,
   onMonthChange,
+  onAddRecord,
 }: CookingRecordCalendarProps) => {
   const [mode, setMode] = useState<CalendarMode>("photo");
+  const [today] = useState(() => startOfDay(new Date()));
   const ranges = findConsecutiveRanges(summaries);
   const recordCount = summaries.reduce(
     (total, summary) => total + summary.totalCount,
@@ -141,6 +144,11 @@ export const CookingRecordCalendar = ({
               recordLabel={copy.timelineHeading}
               recipeCountTemplate={copy.daySummaryRecipeCount}
               dayCountBadgeTemplate={copy.dayCountBadge}
+              emptyDayAddRecordTemplate={copy.emptyDayAddRecord}
+              canAddRecord={
+                hasCalendarData && !isAfter(startOfDay(props.day.date), today)
+              }
+              onAddRecord={onAddRecord}
             />
           ),
           PreviousMonthButton,

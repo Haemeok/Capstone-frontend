@@ -19,6 +19,7 @@ import { ManualCookingRecordSubmitFooter } from "./ManualCookingRecordSubmitFoot
 
 export const ManualCookingRecordDrawer = ({
   isOpen,
+  initialCookedDate,
   copy,
   onOpenChange,
 }: ManualCookingRecordDrawerProps) => {
@@ -119,6 +120,7 @@ export const ManualCookingRecordDrawer = ({
                   </div>
                   <ManualCookingRecordForm
                     formId={formId}
+                    initialCookedDate={initialCookedDate}
                     copy={copy}
                     isDisabled={mutation.isPending}
                     submitError={submitError}

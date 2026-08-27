@@ -128,6 +128,7 @@ export const userPages: UserPagesDict = {
   calendar: {
     timelineHeading: "Cooking log",
     dateSectionTitle: "Records by date",
+    emptyDayAddRecord: "Add a cooking record for {date}",
     cookingRecord: {
       pageTitle: "Cooking log",
       currentMonthCaption: "This month",

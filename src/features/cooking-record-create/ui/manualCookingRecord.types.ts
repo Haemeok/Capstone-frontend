@@ -12,6 +12,7 @@ export type ManualCookingRecordFormValues = {
 
 export type ManualCookingRecordDrawerProps = {
   isOpen: boolean;
+  initialCookedDate?: string;
   copy: ManualCookingRecordCopy;
   onOpenChange: (open: boolean) => void;
 };

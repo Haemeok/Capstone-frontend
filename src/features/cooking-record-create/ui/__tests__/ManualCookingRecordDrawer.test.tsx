@@ -155,6 +155,19 @@ it("닫기는 우측에 두고 사진은 가운데 정렬하며 제출 버튼은
   expect(mockedTriggerHaptic).not.toHaveBeenCalled();
 });
 
+it("선택한 빈 날짜를 초기 요리 날짜로 보여줍니다", () => {
+  render(
+    <ManualCookingRecordDrawer
+      isOpen
+      initialCookedDate="2026-08-12"
+      copy={copy}
+      onOpenChange={jest.fn()}
+    />
+  );
+
+  expect(screen.getByLabelText("요리한 날짜")).toHaveValue("2026-08-12");
+});
+
 it("수동 기록은 이름과 사진을 받아 기존 MANUAL 생성 훅으로 전달합니다", async () => {
   createRecord.mockResolvedValue({ recordId: "record-A" });
   render(
