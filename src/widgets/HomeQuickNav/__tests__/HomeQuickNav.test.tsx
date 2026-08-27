@@ -134,24 +134,31 @@ describe("HomeQuickNav", () => {
     const navigation = screen.getByRole("navigation", {
       name: "레시피 바로가기",
     });
-    const links = within(navigation).getAllByRole("link");
+    const mobileLinks = within(
+      within(navigation).getByRole("list")
+    ).getAllByRole("link");
 
-    expect(links[0]).toHaveAttribute(
+    expect(mobileLinks[0]).toHaveAttribute(
       "href",
       "/ja/recipes/category/CHEF_RECIPE"
     );
-    expect(links[1]).toHaveAttribute(
+    expect(mobileLinks[1]).toHaveAttribute(
       "href",
       "/ja/search/results?types=YOUTUBE"
     );
-    expect(links[9]).toHaveAttribute("href", "/ja/recipes/category/AIR_FRYER");
-    expect(links[10]).toHaveAttribute(
+    expect(mobileLinks[9]).toHaveAttribute(
+      "href",
+      "/ja/recipes/category/AIR_FRYER"
+    );
+    expect(
+      screen.getByRole("link", { name: "트렌드 레시피 더보기" })
+    ).toHaveAttribute(
       "href",
       "/ja/search/results?types=YOUTUBE&sort=createdAt%2CDESC"
     );
   });
 
-  it("모바일 5열에서 데스크톱 10열로 바뀌며 각 항목은 충분한 클릭 영역을 갖는다", () => {
+  it("모바일은 5열, 데스크톱은 10열로 보이며 각 항목은 충분한 클릭 영역을 갖는다", () => {
     render(<HomeQuickNav locale="ko" messages={koMessages} />);
 
     const navigation = screen.getByRole("navigation", {
@@ -161,12 +168,24 @@ describe("HomeQuickNav", () => {
     const itemLinks = within(itemList).getAllByRole("link");
 
     expect(itemList).toHaveClass("grid-cols-5", "md:grid-cols-10");
+    expect(itemList).not.toHaveClass("md:hidden");
     itemLinks.forEach((link) => {
       expect(link).toHaveClass("min-h-11");
     });
-    expect(
-      navigation.querySelectorAll('[data-icon-badge="true"]')
-    ).toHaveLength(10);
+    const iconBadges = navigation.querySelectorAll('[data-icon-badge="true"]');
+    expect(iconBadges).toHaveLength(10);
+    iconBadges.forEach((badge) => {
+      expect(badge).toHaveClass(
+        "h-[60px]",
+        "w-[60px]",
+        "md:h-[72px]",
+        "md:w-[72px]"
+      );
+    });
+    expect(itemLinks[0].querySelector('[aria-hidden="true"]')).toHaveClass(
+      "text-[11.5px]",
+      "md:text-[13px]"
+    );
   });
 
   it("트렌드 더보기는 굵거나 밑줄 친 제목이 아닌 가운데 정렬 링크로 제공된다", () => {
@@ -181,11 +200,15 @@ describe("HomeQuickNav", () => {
       "/search/results?types=YOUTUBE&sort=createdAt%2CDESC"
     );
     expect(trendLink).toHaveClass(
-      "min-h-13",
+      "min-h-11",
       "justify-center",
-      "font-medium",
+      "text-[15px]",
       "no-underline"
     );
+    expect(
+      screen.getByRole("navigation", { name: "레시피 바로가기" })
+    ).toHaveClass("md:border-b-0");
+    expect(screen.getByText("트렌드 레시피 더보기")).toHaveClass("font-medium");
     expect(trendLink.querySelector("strong")).toBeNull();
   });
 
@@ -216,8 +239,17 @@ describe("HomeQuickNav", () => {
       const navigation = screen.getByRole("navigation", {
         name: messages.ariaLabel,
       });
+      const itemLinks = within(
+        within(navigation).getByRole("list")
+      ).getAllByRole("link");
 
+      expect(itemLinks).toHaveLength(10);
       expect(within(navigation).getAllByRole("link")).toHaveLength(11);
+      expect(
+        within(navigation).queryByRole("heading", {
+          name: getDictionary(locale).searchDiscovery.contentSectionTitle,
+        })
+      ).not.toBeInTheDocument();
       if (locale !== "ko") {
         expect(/[가-힣]/.test(container.textContent ?? "")).toBe(false);
       }

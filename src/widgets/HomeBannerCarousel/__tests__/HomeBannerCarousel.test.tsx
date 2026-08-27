@@ -74,7 +74,7 @@ describe("HomeBannerCarousel", () => {
     expect(links.map((a) => a.getAttribute("href"))).toEqual(
       HOME_BANNER_SLIDES.map((slide) => slide.link)
     );
-    expect(links[0]).toHaveAttribute("href", "/events/cooking-record");
+    expect(links[0]).toHaveAttribute("href", "/events/app-install");
     expect(screen.getByText("#레시피오 앱")).toBeInTheDocument();
     expect(screen.getByText("레시피오 앱에서 더 편하게")).toBeInTheDocument();
 

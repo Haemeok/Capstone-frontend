@@ -52,9 +52,9 @@ export const events: EventsDict = {
         "Because recipes have no borders - browse YouTube recipes from around the world",
     },
   },
-  adFreeJune: {
+  adFreeSeptember: {
     headerTitle: "Invite a friend, turn ads off",
-    heroAlt: "June ad-free campaign",
+    heroAlt: "September ad-free campaign",
     event1: {
       label: "Event 1",
       title: "Everyone who joins gets up to 3 months ad-free",
@@ -83,7 +83,7 @@ export const events: EventsDict = {
       {
         question: "Who can enter an invite code?",
         answer:
-          "Anyone who signed up on or after June 1, 2026 can enter one within 30 days of signing up — once in a lifetime.",
+          "Anyone who signed up on or after September 1, 2026 can enter one within 30 days of signing up — once in a lifetime.",
       },
       {
         question: "Can existing members join?",
@@ -98,8 +98,8 @@ export const events: EventsDict = {
     meta: {
       title: "Invite a friend, turn ads off",
       description:
-        "Invite a friend and both of you go ad-free. For one month this June, a single invite code clears ads for up to three months.",
-      ogImageAlt: "Invite a friend, turn ads off - June ad-free campaign",
+        "Invite a friend and both of you go ad-free. For one month this September, a single invite code clears ads for up to three months.",
+      ogImageAlt: "Invite a friend, turn ads off - September ad-free campaign",
     },
   },
 };

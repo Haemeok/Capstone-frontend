@@ -1,11 +1,15 @@
 import robots from "../robots";
 
 describe("robots 사이트맵 등록", () => {
-  it("T-09: sitemap 목록은 ko 사이트맵만 포함한다", () => {
+  it("T-09: sitemap 목록은 ko 정적·재료와 레시피 0~4번을 포함한다", () => {
     const result = robots();
     expect(result.sitemap).toEqual([
       "https://www.recipio.kr/sitemap/0.xml",
       "https://www.recipio.kr/recipes/sitemap/0.xml",
+      "https://www.recipio.kr/recipes/sitemap/1.xml",
+      "https://www.recipio.kr/recipes/sitemap/2.xml",
+      "https://www.recipio.kr/recipes/sitemap/3.xml",
+      "https://www.recipio.kr/recipes/sitemap/4.xml",
       "https://www.recipio.kr/ingredients/sitemap/0.xml",
     ]);
   });

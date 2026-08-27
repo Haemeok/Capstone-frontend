@@ -77,7 +77,9 @@ export const useMonthlyCookingRecordImageActions = ({
 
   const save = () => {
     if (!blob) return;
-    if (!isAppWebView()) {
+    const isWebView = isAppWebView();
+    captureMonthlyShareActionClick("saveImage", isWebView);
+    if (!isWebView) {
       downloadMonthlyCookingRecordImage(blob, monthKey);
       showSaveSuccess(addToast, copy.saveSuccess);
       return;
@@ -106,7 +108,9 @@ export const useMonthlyCookingRecordImageActions = ({
 
   const share = () => {
     if (!blob) return;
-    if (isAppWebView()) {
+    const isWebView = isAppWebView();
+    captureMonthlyShareActionClick("shareImage", isWebView);
+    if (isWebView) {
       void runAction(
         async () => {
           await captureSquareImage(captureTarget, () =>
@@ -147,6 +151,16 @@ export const useMonthlyCookingRecordImageActions = ({
   };
 
   return { save, share, pendingAction };
+};
+
+const captureMonthlyShareActionClick = (
+  action: PendingImageAction,
+  isWebView: boolean
+): void => {
+  captureAnalyticsEvent("monthly_share_action_clicked", {
+    action,
+    platform: isWebView ? "appWebView" : "web",
+  });
 };
 
 const captureSquareImage = async <T>(

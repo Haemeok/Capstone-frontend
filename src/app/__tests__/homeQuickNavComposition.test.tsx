@@ -1,11 +1,31 @@
 import { render, screen, within } from "@testing-library/react";
 
 import { getDictionary, type Locale } from "@/shared/i18n";
+import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
+
+import { CONTENT_PAGES } from "@/entities/recipe/lib/content-pages";
 
 jest.mock("@/shared/adsense", () => ({
   HomeHeaderAnchorAdSlot: () => <div data-testid="home-header-ad" />,
   HomeAnchorAdSlot: () => <div data-testid="home-anchor-ad" />,
-  WebOnlyAdSlot: ({ children }: { children: React.ReactNode }) => children,
+  WebOnlyAdSlot: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="web-only-home-ads">{children}</div>
+  ),
+}));
+
+jest.mock("@/app/_components/HomeAdsGate", () => ({
+  HomeAdsGate: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="home-ads-gate">{children}</div>
+  ),
+}));
+
+jest.mock("@/app/_components/DesktopYoutubeImportHero", () => ({
+  DesktopYoutubeImportHero: () => (
+    <section
+      data-testid="desktop-youtube-import-hero"
+      className="hidden md:block"
+    />
+  ),
 }));
 
 jest.mock("@/shared/lib/metadata", () => ({
@@ -60,7 +80,7 @@ jest.mock(
   "@/widgets/HomeBannerCarousel",
   () =>
     function MockHomeBannerCarousel() {
-      return <div data-testid="home-banner" />;
+      return <div data-testid="home-banner" className="md:hidden" />;
     }
 );
 
@@ -134,21 +154,52 @@ describe.each(HOME_CASES)("$locale 홈 빠른 탐색 흐름", (homeCase) => {
   it("헤더부터 기존 레시피 피드까지 새 탐색 순서로 연결한다", async () => {
     render(await homeCase.renderPage());
 
-    const quickNavMessages = getDictionary(homeCase.locale).home.quickNav;
+    const homeMessages = getDictionary(homeCase.locale).home;
+    const quickNavMessages = homeMessages.quickNav;
     const header = screen.getByTestId("home-header");
+    const hero = screen.getByTestId("desktop-youtube-import-hero");
     const banner = screen.getByTestId("home-banner");
     const quickNav = screen.getByRole("navigation", {
       name: quickNavMessages.ariaLabel,
     });
-    const headerAd = screen.getByTestId("home-header-ad");
-    const anchorAd = screen.getByTestId("home-anchor-ad");
+    const categoryTabsTitle = screen.getByRole("heading", {
+      name: homeMessages.categoryTitle,
+    });
+    const categoryTabs = categoryTabsTitle.closest("section");
+    expect(categoryTabs).not.toBeNull();
+    const categoryLinks = within(categoryTabs!).getAllByRole("link");
+    expect(categoryLinks).toHaveLength(12);
+    CONTENT_PAGES.forEach((page, index) => {
+      const copy = getDictionary(homeCase.locale).searchDiscovery.contentPages[
+        page.id
+      ];
+      expect(categoryLinks[index]).toHaveAccessibleName(copy.title);
+      expect(categoryLinks[index]).toHaveAttribute(
+        "href",
+        buildSearchResultsUrl(page.searchParams)
+      );
+    });
+    const homeAdsGate = screen.getByTestId("home-ads-gate");
+    const webOnlyHomeAds = screen.getByTestId("web-only-home-ads");
+    const headerAd = within(webOnlyHomeAds).getByTestId("home-header-ad");
+    const anchorAd = within(webOnlyHomeAds).getByTestId("home-anchor-ad");
     const recipeFeed = screen.getAllByTestId("recipe-feed")[0];
 
-    expectBefore(header, banner);
+    expectBefore(header, hero);
+    expectBefore(hero, banner);
     expectBefore(banner, quickNav);
-    expectBefore(quickNav, headerAd);
+    expectBefore(quickNav, categoryTabs!);
+    expectBefore(categoryTabs!, webOnlyHomeAds);
+    expectBefore(quickNav, webOnlyHomeAds);
     expectBefore(headerAd, anchorAd);
-    expectBefore(anchorAd, recipeFeed);
+    expectBefore(webOnlyHomeAds, recipeFeed);
+    expect(within(homeAdsGate).getByTestId("home-banner")).toBe(banner);
+    expect(within(homeAdsGate).getAllByTestId("recipe-feed")[0]).toBe(
+      recipeFeed
+    );
+    expect(hero).toHaveClass("hidden", "md:block");
+    expect(banner).toHaveClass("md:hidden");
+    expect(categoryTabs).toHaveClass("hidden", "md:block");
   });
 
   it("현재 언어의 이름과 경로를 빠른 탐색에 연결한다", async () => {

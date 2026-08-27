@@ -15,6 +15,19 @@ jest.mock("@/shared/lib/bridge", () => ({
 beforeEach(() => {
   window.localStorage.clear();
   jest.mocked(triggerHaptic).mockClear();
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: jest.fn().mockImplementation(() => ({
+      matches: false,
+      media: "(max-width: 768px)",
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
 });
 
 describe("CookingRecordLaunchDrawer", () => {
@@ -84,9 +97,6 @@ describe("CookingRecordLaunchDrawer", () => {
     );
     expect(closeButton).toHaveClass("size-11");
     expect(dialog).toHaveClass("motion-reduce:animate-none");
-    expect(document.querySelector('[data-slot="drawer-overlay"]')).toHaveClass(
-      "motion-reduce:animate-none"
-    );
 
     fireEvent.click(closeButton);
     expect(triggerHaptic).not.toHaveBeenCalled();
@@ -101,5 +111,57 @@ describe("CookingRecordLaunchDrawer", () => {
     fireEvent.click(link);
 
     expect(triggerHaptic).not.toHaveBeenCalled();
+  });
+
+  it("T-12: 데스크톱에서는 가운데 Dialog로 표시하고 배경 DOM을 변경하지 않습니다", async () => {
+    render(
+      <>
+        <div data-testid="home-header" />
+        <CookingRecordLaunchDrawer />
+      </>
+    );
+
+    await screen.findByRole("dialog", {
+      name: "오늘 먹은 음식, 사진으로 남겨요",
+    });
+
+    expect(
+      document.querySelector('[data-slot="dialog-content"]')
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-slot="drawer-content"]')
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("home-header")).not.toHaveAttribute(
+      "aria-hidden"
+    );
+    expect(screen.getByTestId("home-header")).not.toHaveAttribute(
+      "data-aria-hidden"
+    );
+  });
+
+  it("T-13: 모바일에서는 하단 Drawer로 표시합니다", async () => {
+    jest.mocked(window.matchMedia).mockImplementation(() => ({
+      matches: true,
+      media: "(max-width: 768px)",
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+
+    render(<CookingRecordLaunchDrawer />);
+
+    await screen.findByRole("dialog", {
+      name: "오늘 먹은 음식, 사진으로 남겨요",
+    });
+
+    expect(
+      document.querySelector('[data-slot="drawer-content"]')
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-slot="dialog-content"]')
+    ).not.toBeInTheDocument();
   });
 });

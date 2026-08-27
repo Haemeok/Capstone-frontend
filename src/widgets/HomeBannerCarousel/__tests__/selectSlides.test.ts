@@ -9,13 +9,13 @@ describe("selectHomeBannerSlides", () => {
     }
   });
 
-  it("T-05: ko 홈은 요리기록 배너를 첫 번째로 표시한다", () => {
+  it("T-06: ko 홈은 요청한 자동 롤링 순서로 배너를 표시한다", () => {
     expect(selectHomeBannerSlides("ko").map((slide) => slide.id)).toEqual([
-      "cooking-record-launch",
       "app-install",
+      "cooking-record-launch",
+      "ad-free-september",
       "youtube",
       "world-recipes",
-      "ad-free-june",
     ]);
   });
 });

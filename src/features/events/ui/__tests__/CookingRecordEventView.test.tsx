@@ -114,4 +114,19 @@ describe("CookingRecordEventView", () => {
 
     expect(triggerHaptic).not.toHaveBeenCalled();
   });
+
+  it("T-05: 히어로 음식 예시는 서로 다른 스티커 8개로 빽빽하게 채웁니다", () => {
+    const { container } = render(<CookingRecordEventView />);
+    const stickerGrid = container.querySelector(
+      '[data-slot="cooking-record-hero-stickers"]'
+    );
+
+    const images = Array.from(stickerGrid?.querySelectorAll("img") ?? []);
+
+    expect(stickerGrid).toHaveClass("grid");
+    expect(images).toHaveLength(8);
+    expect(new Set(images.map((image) => image.getAttribute("src"))).size).toBe(
+      8
+    );
+  });
 });

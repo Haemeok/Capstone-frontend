@@ -51,9 +51,9 @@ export const events: EventsDict = {
       ogImageAlt: "レシピに国境はないから - 世界中のYouTubeレシピを見てみる",
     },
   },
-  adFreeJune: {
+  adFreeSeptember: {
     headerTitle: "友だち招待で広告OFF",
-    heroAlt: "6月の広告オフキャンペーン",
+    heroAlt: "9月の広告オフキャンペーン",
     event1: {
       label: "Event 1",
       title: "参加者全員、広告を最大3か月オフ",
@@ -82,7 +82,7 @@ export const events: EventsDict = {
       {
         question: "招待コードは誰が入力できますか?",
         answer:
-          "2026年6月1日以降に登録した方が、登録から30日以内に、一生に一度だけ入力できます。",
+          "2026年9月1日以降に登録した方が、登録から30日以内に、一生に一度だけ入力できます。",
       },
       {
         question: "既存の会員も参加できますか?",
@@ -97,8 +97,8 @@ export const events: EventsDict = {
     meta: {
       title: "友だち招待で広告OFF",
       description:
-        "友だちを招待すると、参加者と友だちの両方で広告が消えます。6月の1か月間、招待コード一つで最大3か月まで広告をオフに。",
-      ogImageAlt: "友だち招待で広告OFF - 6月の広告オフキャンペーン",
+        "友だちを招待すると、参加者と友だちの両方で広告が消えます。9月の1か月間、招待コード一つで最大3か月まで広告をオフに。",
+      ogImageAlt: "友だち招待で広告OFF - 9月の広告オフキャンペーン",
     },
   },
 };

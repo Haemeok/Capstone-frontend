@@ -17,6 +17,7 @@ import {
 } from "@/entities/recipe/lib/metadata/schema";
 import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
 
+import CategoryTabs from "@/widgets/CategoryTabs";
 import DesktopFooter from "@/widgets/Footer/DesktopFooter";
 import HomeHeader from "@/widgets/Header/HomeHeader";
 import HomeBannerCarousel from "@/widgets/HomeBannerCarousel";
@@ -31,6 +32,9 @@ import {
   YoutubeVerifiedServerSlide,
 } from "@/widgets/RecipeSlide/server";
 import { ToastDebugButton } from "@/widgets/ToastDebugPanel";
+
+import { DesktopYoutubeImportHero } from "../_components/DesktopYoutubeImportHero";
+import { HomeAdsGate } from "../_components/HomeAdsGate";
 
 export const metadata = buildHomeMetadata("ja");
 
@@ -79,54 +83,66 @@ const HomePage = async () => {
           __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <Container className="pt-0">
-        <Suspense fallback={<div className="h-14 md:hidden" />}>
-          <HomeHeader />
-        </Suspense>
-        <div className="text-ink flex flex-col items-center justify-center bg-white">
-          <ErrorBoundary
-            fallback={<SectionErrorFallback message={dict.home.bannerError} />}
-          >
-            <HomeBannerCarousel slides={slides} />
-          </ErrorBoundary>
+      <HomeAdsGate>
+        <Container className="pt-0" maxWidth="6xl">
+          <Suspense fallback={<div className="h-14 md:hidden" />}>
+            <HomeHeader />
+          </Suspense>
+          <div className="text-ink flex flex-col items-center justify-center bg-white">
+            <DesktopYoutubeImportHero
+              messages={dict.home.desktopYoutubeImport}
+            />
 
-          <HomeQuickNav locale="ja" messages={dict.home.quickNav} />
+            <ErrorBoundary
+              fallback={
+                <SectionErrorFallback message={dict.home.bannerError} />
+              }
+            >
+              <HomeBannerCarousel slides={slides} />
+            </ErrorBoundary>
 
-          <HomeHeaderAnchorAdSlot className="my-2" />
+            <HomeQuickNav locale="ja" messages={dict.home.quickNav} />
 
-          <WebOnlyAdSlot>
-            <HomeAnchorAdSlot className="my-2" />
-          </WebOnlyAdSlot>
+            <CategoryTabs
+              title={dict.home.categoryTitle}
+              copy={dict.searchDiscovery.contentPages}
+            />
 
-          <RecipeSlideWithErrorBoundary
-            title={dict.home.popularSectionTitle}
-            staticRecipes={staticPopularRecipes.content}
-            locale="ja"
-            fetchFailed={staticPopularRecipes.fetchFailed}
-            prefetch={null}
-          />
+            <WebOnlyAdSlot>
+              <HomeHeaderAnchorAdSlot className="my-2" />
+              <HomeAnchorAdSlot className="my-2" />
+            </WebOnlyAdSlot>
 
-          <YoutubeVerifiedServerSlide locale="ja" prefetch={null} />
+            <RecipeSlideWithErrorBoundary
+              title={dict.home.popularSectionTitle}
+              staticRecipes={staticPopularRecipes.content}
+              locale="ja"
+              fetchFailed={staticPopularRecipes.fetchFailed}
+              prefetch={null}
+            />
 
-          <SeasonalPopularServerSlide locale="ja" prefetch={null} />
+            <YoutubeVerifiedServerSlide locale="ja" prefetch={null} />
 
-          <CountryPopularServerSlide locale="ja" prefetch={null} />
+            <SeasonalPopularServerSlide locale="ja" prefetch={null} />
 
-          <QuickPopularServerSlide locale="ja" prefetch={null} />
+            <CountryPopularServerSlide locale="ja" prefetch={null} />
 
-          <RecipeSlideWithErrorBoundary
-            title={dict.home.budgetSectionTitle}
-            staticRecipes={staticBudgetRecipes.content}
-            locale="ja"
-            fetchFailed={staticBudgetRecipes.fetchFailed}
-            prefetch={null}
-          />
+            <QuickPopularServerSlide locale="ja" prefetch={null} />
 
-          <CategoryPopularServerSlide locale="ja" prefetch={null} />
-        </div>
-      </Container>
-      <DesktopFooter />
-      <ToastDebugButton />
+            <RecipeSlideWithErrorBoundary
+              title={dict.home.budgetSectionTitle}
+              staticRecipes={staticBudgetRecipes.content}
+              locale="ja"
+              fetchFailed={staticBudgetRecipes.fetchFailed}
+              prefetch={null}
+            />
+
+            <CategoryPopularServerSlide locale="ja" prefetch={null} />
+          </div>
+        </Container>
+        <DesktopFooter />
+        <ToastDebugButton />
+      </HomeAdsGate>
     </>
   );
 };

@@ -1,11 +1,43 @@
 import type { HomeDict } from "../../types";
 
 export const home: HomeDict = {
+  categoryTitle: "カテゴリー",
   bannerError: "バナーを読み込めませんでした",
   popularSectionTitle: "今週の人気レシピ",
   budgetSectionTitle: "ワンコインで作る節約レシピ",
   youtubeBannerChip: "#YouTubeレシピ",
   youtubeBannerTitle: "リンクを貼るだけでレシピが完成",
+  desktopYoutubeImport: {
+    ariaLabel: "YouTube動画をレシピに変換",
+    eyebrow: "YouTubeレシピを取り込む",
+    titleLine1: "見ていた料理動画を、",
+    titleLine2: "読みやすいレシピに変えましょう",
+    description: "動画リンクを貼るだけで、材料と調理手順を見やすくまとめます。",
+    inputLabel: "YouTube URL",
+    placeholder: "YouTubeリンクを貼り付けてください",
+    submit: "レシピを作る",
+    helper: "youtube.comとyoutu.beのリンクに対応しています。",
+    invalidUrl: "正しいYouTubeリンクを入力してください",
+    previewAlt: "複数の料理が映ったYouTube料理動画の例",
+    sourceTitle: "旨辛豆腐煮込みの作り方",
+    sourceMeta: "料理動画 · 8分24秒",
+    resultLabel: "レシピにまとめました",
+    resultTitle: "旨辛豆腐煮込み",
+    ingredients: [
+      { name: "豆腐", amount: "1丁" },
+      { name: "唐辛子粉", amount: "大さじ1" },
+      { name: "醤油", amount: "大さじ2" },
+      { name: "長ねぎ", amount: "1/2本" },
+    ],
+    summary: {
+      ingredientValue: "4品",
+      ingredientLabel: "材料",
+      stepValue: "5段階",
+      stepLabel: "調理",
+      timeValue: "12分",
+      timeLabel: "目安",
+    },
+  },
   quickNav: {
     ariaLabel: "レシピのショートカット",
     trendMore: "トレンドレシピをもっと見る",
