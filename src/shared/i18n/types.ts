@@ -242,11 +242,38 @@ export type IngredientDetailDict = {
 };
 
 export type HomeDict = {
+  categoryTitle: string;
   bannerError: string;
   popularSectionTitle: string;
   budgetSectionTitle: string;
   youtubeBannerChip: string;
   youtubeBannerTitle: string;
+  desktopYoutubeImport: {
+    ariaLabel: string;
+    eyebrow: string;
+    titleLine1: string;
+    titleLine2: string;
+    description: string;
+    inputLabel: string;
+    placeholder: string;
+    submit: string;
+    helper: string;
+    invalidUrl: string;
+    previewAlt: string;
+    sourceTitle: string;
+    sourceMeta: string;
+    resultLabel: string;
+    resultTitle: string;
+    ingredients: { name: string; amount: string }[];
+    summary: {
+      ingredientValue: string;
+      ingredientLabel: string;
+      stepValue: string;
+      stepLabel: string;
+      timeValue: string;
+      timeLabel: string;
+    };
+  };
   quickNav: {
     ariaLabel: string;
     trendMore: string;
@@ -1411,7 +1438,7 @@ export type EventsDict = {
     faq: EventFaqItem[];
     meta: EventMeta;
   };
-  adFreeJune: {
+  adFreeSeptember: {
     headerTitle: string;
     heroAlt: string;
     event1: { label: string; title: string; body: string };

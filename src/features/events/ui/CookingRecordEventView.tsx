@@ -5,6 +5,8 @@ import styles from "./CookingRecordEventView.module.css";
 import EventPageShell from "./EventPageShell";
 
 const STICKER_BASE_PATH = "/events/cooking-record";
+
+const HERO_STICKERS = ["01", "02", "03", "04", "05", "06", "07", "08"] as const;
 const CALENDAR_STICKERS: Record<number, string> = {
   3: `${STICKER_BASE_PATH}/sticker-03.webp`,
   8: `${STICKER_BASE_PATH}/sticker-05.webp`,
@@ -38,23 +40,20 @@ const FeatureSection = ({
 
 const HeroStickerPaper = () => (
   <div
-    className={`${styles.heroPaper} relative mx-auto mt-8 h-[230px] w-full max-w-[340px] overflow-hidden rounded-[22px]`}
+    data-slot="cooking-record-hero-stickers"
+    className={`${styles.heroPaper} mx-auto mt-8 grid h-[230px] w-full max-w-[340px] grid-cols-4 grid-rows-2 gap-x-1 gap-y-2 overflow-hidden rounded-[22px] px-2 py-3`}
     aria-hidden="true"
   >
-    {[
-      ["01", "left-1 top-3 h-32 -rotate-6"],
-      ["03", "right-3 top-1 h-28 rotate-6"],
-      ["05", "bottom-0 left-14 h-28 rotate-3"],
-      ["06", "right-9 bottom-0 h-24 -rotate-3"],
-    ].map(([number, className]) => (
-      <img
-        key={number}
-        src={`${STICKER_BASE_PATH}/sticker-${number}.webp`}
-        alt=""
-        width={160}
-        height={160}
-        className={`${styles.heroSticker} absolute w-auto object-contain ${className}`}
-      />
+    {HERO_STICKERS.map((number) => (
+      <div key={number} className={`${styles.heroStickerItem} min-w-0`}>
+        <img
+          src={`${STICKER_BASE_PATH}/sticker-${number}.webp`}
+          alt=""
+          width={160}
+          height={160}
+          className={`${styles.heroSticker} h-full w-full object-contain`}
+        />
+      </div>
     ))}
   </div>
 );

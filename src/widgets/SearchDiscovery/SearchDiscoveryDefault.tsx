@@ -56,7 +56,7 @@ const SearchDiscoveryDefault = ({
           <h3 className="text-ink text-lg font-bold">
             {t.contentSectionTitle}
           </h3>
-          <ContentPageGrid />
+          <ContentPageGrid copy={t.contentPages} />
         </section>
 
         <section className="space-y-4">

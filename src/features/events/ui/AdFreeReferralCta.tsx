@@ -21,7 +21,7 @@ const AdFreeReferralCta = ({ locale }: { locale: Locale }) => {
   const openReferralSheet = useReferralSheetStore((state) => state.open);
   const { data } = useReferralInfoQuery(isAuthenticated);
 
-  const labels = eventsMessages[locale].adFreeJune.referralCta;
+  const labels = eventsMessages[locale].adFreeSeptember.referralCta;
   const label = getReferralCtaLabel(data?.redeemStatus.status, labels);
 
   return <EventCtaButton label={label} onClick={openReferralSheet} />;

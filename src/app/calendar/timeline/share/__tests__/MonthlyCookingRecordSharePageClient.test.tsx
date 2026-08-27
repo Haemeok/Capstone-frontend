@@ -261,6 +261,47 @@ describe("MonthlyCookingRecordSharePageClient", () => {
     );
   });
 
+  it.each([
+    {
+      buttonName: "이미지 저장",
+      action: "saveImage",
+      isWebView: false,
+      platform: "web",
+    },
+    {
+      buttonName: "공유하기",
+      action: "shareImage",
+      isWebView: true,
+      platform: "appWebView",
+    },
+  ])(
+    "$buttonName 클릭은 $platform 월간 공유 액션으로 기록합니다",
+    async ({ buttonName, action, isWebView, platform }) => {
+      mockedIsAppWebView.mockReturnValue(isWebView);
+      const Wrapper = createWrapper();
+      render(
+        <Wrapper>
+          <MonthlyCookingRecordSharePageClient />
+        </Wrapper>
+      );
+      await screen.findByRole("img", {
+        name: "2026년 8월 요리 기록 공유 이미지",
+      });
+
+      const actionButton = screen.getByRole("button", { name: buttonName });
+      fireEvent.click(actionButton);
+
+      if (isWebView) {
+        await waitFor(() => expect(actionButton).toBeEnabled());
+      }
+
+      expect(mockedCaptureAnalyticsEvent).toHaveBeenCalledWith(
+        "monthly_share_action_clicked",
+        { action, platform }
+      );
+    }
+  );
+
   it("이미지 생성에 실패하면 하단 액션 대신 다시 만들기를 제공합니다", async () => {
     mockedUseImage.mockReturnValue({
       captureRef: jest.fn(),

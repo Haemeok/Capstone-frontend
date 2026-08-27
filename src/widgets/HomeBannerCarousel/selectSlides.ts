@@ -11,7 +11,7 @@ const KO_ONLY_BANNER_IDS = new Set([
   APP_INSTALL_BANNER_ID,
   COOKING_RECORD_LAUNCH_BANNER_ID,
   "world-recipes",
-  "ad-free-june",
+  "ad-free-september",
 ]);
 
 export const selectHomeBannerSlides = (locale: Locale): BannerSlide[] =>

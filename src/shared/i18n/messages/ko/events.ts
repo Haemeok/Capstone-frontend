@@ -51,9 +51,9 @@ export const events: EventsDict = {
       ogImageAlt: "레시피에 국경은 없으니까 - 전 세계 유튜브 레시피 둘러보기",
     },
   },
-  adFreeJune: {
+  adFreeSeptember: {
     headerTitle: "친구 초대하고 광고 OFF",
-    heroAlt: "6월 광고제거 이벤트",
+    heroAlt: "9월 광고 제거 이벤트",
     event1: {
       label: "Event 1",
       title: "참여자 전원, 광고 최대 3개월 제거",
@@ -82,7 +82,7 @@ export const events: EventsDict = {
       {
         question: "초대코드는 누가 입력할 수 있나요?",
         answer:
-          "2026년 6월 1일 이후 가입한 분이 가입 후 30일 이내에, 평생 한 번 입력할 수 있어요.",
+          "2026년 9월 1일 이후 가입한 분이 가입 후 30일 이내에, 평생 한 번 입력할 수 있어요.",
       },
       {
         question: "기존 회원도 참여할 수 있나요?",
@@ -97,8 +97,8 @@ export const events: EventsDict = {
     meta: {
       title: "친구 초대하고 광고 OFF",
       description:
-        "친구를 초대하면 참여자와 친구 모두 광고가 사라져요. 6월 한 달, 초대코드 한 번으로 최대 3개월까지 광고를 없애보세요.",
-      ogImageAlt: "친구 초대하고 광고 OFF - 6월 광고제거 이벤트",
+        "친구를 초대하면 참여자와 친구 모두 광고가 사라져요. 9월 한 달, 초대코드 한 번으로 최대 3개월까지 광고를 없애보세요.",
+      ogImageAlt: "친구 초대하고 광고 OFF - 9월 광고 제거 이벤트",
     },
   },
 };
