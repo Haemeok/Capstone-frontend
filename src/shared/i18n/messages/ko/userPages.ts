@@ -127,6 +127,7 @@ export const userPages: UserPagesDict = {
   calendar: {
     timelineHeading: "요리 기록",
     dateSectionTitle: "날짜별 기록",
+    emptyDayAddRecord: "{date}에 요리 기록 추가",
     cookingRecord: {
       pageTitle: "요리 기록",
       currentMonthCaption: "이번 달",

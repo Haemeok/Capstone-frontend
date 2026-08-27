@@ -15,6 +15,7 @@ type FormState = Omit<ManualCookingRecordFormValues, "imageFile"> & {
 
 type ManualCookingRecordFormProps = {
   formId: string;
+  initialCookedDate?: string;
   copy: ManualCookingRecordCopy;
   isDisabled: boolean;
   submitError?: string;
@@ -31,6 +32,7 @@ const getTodayValue = () => {
 
 export const ManualCookingRecordForm = ({
   formId,
+  initialCookedDate,
   copy,
   isDisabled,
   submitError,
@@ -46,7 +48,11 @@ export const ManualCookingRecordForm = ({
     control,
     formState: { errors },
   } = useForm<FormState>({
-    defaultValues: { title: "", cookedDate: getTodayValue(), review: "" },
+    defaultValues: {
+      title: "",
+      cookedDate: initialCookedDate ?? getTodayValue(),
+      review: "",
+    },
   });
   const imageFile = useWatch({ control, name: "imageFile" });
   const title = useWatch({ control, name: "title" });

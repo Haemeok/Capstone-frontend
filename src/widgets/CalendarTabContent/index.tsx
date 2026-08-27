@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
+import { format as formatDate } from "date-fns";
+
 import { resolveChromeLocale, useUserPagesDict } from "@/shared/i18n";
 
 import { ManualCookingRecordDrawer } from "@/features/cooking-record-create";
@@ -14,6 +16,7 @@ import { useProfileCookingRecords, useUserStreakQuery } from "./hooks";
 const CalendarTabContent = () => {
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [initialCookedDate, setInitialCookedDate] = useState<string>();
   const pathname = usePathname();
   const locale = resolveChromeLocale(pathname ?? "/");
   const copy = useUserPagesDict();
@@ -34,7 +37,10 @@ const CalendarTabContent = () => {
         isPending={recordsQuery.isPreviewPending}
         isError={recordsQuery.isPreviewError}
         onRetry={() => void recordsQuery.retryPreview()}
-        onAddRecord={() => setIsCreateOpen(true)}
+        onAddRecord={() => {
+          setInitialCookedDate(undefined);
+          setIsCreateOpen(true);
+        }}
       />
       <CookingRecordCalendar
         month={currentMonth}
@@ -45,9 +51,14 @@ const CalendarTabContent = () => {
         streakCount={streakQuery.data?.streak ?? 0}
         copy={copy.calendar}
         onMonthChange={setCurrentMonth}
+        onAddRecord={(date) => {
+          setInitialCookedDate(formatDate(date, "yyyy-MM-dd"));
+          setIsCreateOpen(true);
+        }}
       />
       <ManualCookingRecordDrawer
         isOpen={isCreateOpen}
+        initialCookedDate={initialCookedDate}
         copy={copy.calendar.cookingRecord.create}
         onOpenChange={setIsCreateOpen}
       />

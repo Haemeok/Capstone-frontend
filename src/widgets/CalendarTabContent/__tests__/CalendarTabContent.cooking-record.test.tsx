@@ -71,8 +71,18 @@ jest.mock("@/widgets/MonthlySavingsSummary", () => ({
 }));
 
 jest.mock("@/features/cooking-record-create", () => ({
-  ManualCookingRecordDrawer: ({ isOpen }: { isOpen: boolean }) =>
-    isOpen ? <div role="dialog">요리 기록 추가 드로어</div> : null,
+  ManualCookingRecordDrawer: ({
+    isOpen,
+    initialCookedDate,
+  }: {
+    isOpen: boolean;
+    initialCookedDate?: string;
+  }) =>
+    isOpen ? (
+      <div role="dialog" data-initial-cooked-date={initialCookedDate}>
+        요리 기록 추가 드로어
+      </div>
+    ) : null,
 }));
 
 jest.mock("@/entities/recipe/model/recordApi", () => ({
@@ -199,6 +209,10 @@ describe("CalendarTabContent cooking record preview", () => {
     mockedGetUserStreak.mockResolvedValue({ streak: 0, cookedToday: false });
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it("T-01 기록 8개 중 스티커 미리보기 7개를 날짜별 기록보다 먼저 보여줍니다", async () => {
     renderCalendarTab();
 
@@ -311,6 +325,31 @@ describe("CalendarTabContent cooking record preview", () => {
     expect(screen.getByRole("dialog")).toHaveTextContent(
       "요리 기록 추가 드로어"
     );
+  });
+
+  it("기록 없는 지난 날짜를 누르면 해당 날짜로 요리 기록 추가 드로어를 엽니다", async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2026, 7, 27, 12));
+    getCookingRecords.mockResolvedValue(makeRecordPage(0));
+    getCookingRecordCalendarMonth.mockResolvedValue(makeCalendarMonth(0));
+
+    renderCalendarTab();
+
+    const emptyDay = await screen.findByRole("button", {
+      name: "2026-08-12에 요리 기록 추가",
+    });
+    fireEvent.click(emptyDay);
+
+    expect(screen.getByRole("dialog")).toHaveAttribute(
+      "data-initial-cooked-date",
+      "2026-08-12"
+    );
+    expect(mockedTriggerHaptic).toHaveBeenCalledWith("Light");
+    expect(
+      screen.queryByRole("button", {
+        name: "2026-08-28에 요리 기록 추가",
+      })
+    ).not.toBeInTheDocument();
   });
 
   it("T-06 프로필 요리 기록에 서버에서 선택한 배경을 적용합니다", async () => {

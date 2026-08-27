@@ -42,6 +42,8 @@ type RenderDayOptions = {
   date?: Date;
   isToday?: boolean;
   hasSummary?: boolean;
+  canAddRecord?: boolean;
+  onAddRecord?: (date: Date) => void;
 };
 
 type LocaleExpectation = [
@@ -63,6 +65,8 @@ const renderDay = ({
   date = new Date(2026, 7, 17),
   isToday = false,
   hasSummary = true,
+  canAddRecord = false,
+  onAddRecord = jest.fn(),
 }: RenderDayOptions) => {
   const copy = getDictionary(locale).userPages.calendar;
   const summary: CookingRecordCalendarDailySummary = {
@@ -86,6 +90,9 @@ const renderDay = ({
             recordLabel={copy.timelineHeading}
             recipeCountTemplate={copy.daySummaryRecipeCount}
             dayCountBadgeTemplate={copy.dayCountBadge}
+            emptyDayAddRecordTemplate={copy.emptyDayAddRecord}
+            canAddRecord={canAddRecord}
+            onAddRecord={onAddRecord}
           />
         </tr>
       </tbody>
@@ -224,6 +231,28 @@ describe("CookingRecordCalendarDay 기록 셀", () => {
     );
   });
 
+  it("빈 날짜를 선택하면 Light 햅틱과 함께 해당 날짜 추가를 요청합니다", () => {
+    const onAddRecord = jest.fn();
+    renderDay({
+      totalCount: 0,
+      firstImageUrl: null,
+      date: new Date(2026, 7, 12),
+      hasSummary: false,
+      canAddRecord: true,
+      onAddRecord,
+    });
+
+    const addButton = screen.getByRole("button", {
+      name: "2026-08-12에 요리 기록 추가",
+    });
+    expect(addButton).toHaveClass("min-h-11", "cursor-pointer");
+
+    fireEvent.click(addButton);
+
+    expect(triggerHaptic).toHaveBeenCalledWith("Light");
+    expect(onAddRecord).toHaveBeenCalledWith(new Date(2026, 7, 12));
+  });
+
   it("T-23 기록 없는 날짜와 다른 달 날짜도 숫자를 셀 상단에 맞춥니다", () => {
     const copy = getDictionary("ko").userPages.calendar;
     const { rerender } = render(
@@ -239,6 +268,9 @@ describe("CookingRecordCalendarDay 기록 셀", () => {
               recordLabel={copy.timelineHeading}
               recipeCountTemplate={copy.daySummaryRecipeCount}
               dayCountBadgeTemplate={copy.dayCountBadge}
+              emptyDayAddRecordTemplate={copy.emptyDayAddRecord}
+              canAddRecord={false}
+              onAddRecord={jest.fn()}
             />
           </tr>
         </tbody>
@@ -260,6 +292,9 @@ describe("CookingRecordCalendarDay 기록 셀", () => {
               recordLabel={copy.timelineHeading}
               recipeCountTemplate={copy.daySummaryRecipeCount}
               dayCountBadgeTemplate={copy.dayCountBadge}
+              emptyDayAddRecordTemplate={copy.emptyDayAddRecord}
+              canAddRecord={false}
+              onAddRecord={jest.fn()}
             />
           </tr>
         </tbody>
