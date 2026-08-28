@@ -258,7 +258,7 @@ it("완료 드로어를 닫는 동안 작성 화면 닫기 버튼을 다시 보�
   ).not.toBeInTheDocument();
 });
 
-it("오늘 기록은 현재 시각을 넘지 않는 cookedAt으로 전달합니다", async () => {
+it("오늘 기록은 실행 환경 타임존과 무관하게 현재 시각을 넘지 않는 cookedAt으로 전달합니다", async () => {
   jest.useFakeTimers();
   jest.setSystemTime(new Date("2026-08-18T00:26:11+09:00"));
   createRecord.mockResolvedValue({ recordId: "record-A" });
@@ -276,11 +276,10 @@ it("오늘 기록은 현재 시각을 넘지 않는 cookedAt으로 전달합니�
   fireEvent.click(screen.getByRole("button", { name: "기록하기" }));
 
   await waitFor(() => expect(createRecord).toHaveBeenCalledTimes(1));
-  expect(createRecord).toHaveBeenCalledWith(
-    expect.objectContaining({
-      cookedAt: "2026-08-18T00:26+09:00",
-    })
-  );
+  const cookedAt = createRecord.mock.calls[0][0].cookedAt;
+
+  expect(Date.parse(cookedAt)).toBe(Date.parse("2026-08-17T15:26:00Z"));
+  expect(Date.parse(cookedAt)).toBeLessThanOrEqual(Date.now());
 });
 
 it("자동 재요청이 최종 실패하면 작성값을 유지한 채 오류를 보여줍니다", async () => {
