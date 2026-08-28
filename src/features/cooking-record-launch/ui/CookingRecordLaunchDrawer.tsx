@@ -1,7 +1,5 @@
 "use client";
 
-import { X } from "lucide-react";
-
 import { LocalizedLink } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
@@ -10,7 +8,7 @@ import styles from "./CookingRecordLaunchDrawer.module.css";
 
 export const CookingRecordLaunchDrawer = () => {
   const { isOpen, dismiss } = useCookingRecordLaunch();
-  const { isMobile, Container, Content, Title, Description, Close } =
+  const { isMobile, Container, Content, Title, Description } =
     useResponsiveSheet();
 
   if (!isOpen) return null;
@@ -31,10 +29,12 @@ export const CookingRecordLaunchDrawer = () => {
       ) : null}
       <Content
         hasDescription
+        closeLabel="요리기록 출시 안내 닫기"
+        closeButtonClassName="top-3.5 right-3.5 rounded-full border border-black/10 bg-white/95 shadow-sm hover:bg-white"
         className={`mx-auto h-[374px] max-w-[480px] overflow-hidden border-0 bg-[#eef3e9] motion-reduce:animate-none ${
           isMobile
             ? "rounded-t-[22px] [&>div:first-child]:hidden"
-            : "rounded-[22px] shadow-xl [&>button]:hidden"
+            : "rounded-[22px] shadow-xl"
         }`}
       >
         <img
@@ -44,29 +44,6 @@ export const CookingRecordLaunchDrawer = () => {
           height={960}
           className={`${styles.foodCluster} pointer-events-none absolute -top-20 -right-14 h-[495px] w-[330px] object-contain`}
         />
-
-        {isMobile && Close ? (
-          <Close asChild>
-            <button
-              type="button"
-              aria-label="요리기록 출시 안내 닫기"
-              className="absolute top-3.5 right-3.5 z-20 grid size-11 place-items-center rounded-full border border-black/10 bg-white/95 shadow-sm"
-            >
-              <X aria-hidden="true" className="size-5" />
-            </button>
-          </Close>
-        ) : (
-          <div className="absolute top-3.5 right-3.5 z-20">
-            <button
-              type="button"
-              aria-label="요리기록 출시 안내 닫기"
-              onClick={dismiss}
-              className="grid size-11 place-items-center rounded-full border border-black/10 bg-white/95 shadow-sm"
-            >
-              <X aria-hidden="true" className="size-5" />
-            </button>
-          </div>
-        )}
 
         <div className="relative z-10 w-[200px] px-6 pt-8">
           <span className={`${styles.label} text-ink-sub text-xs`}>

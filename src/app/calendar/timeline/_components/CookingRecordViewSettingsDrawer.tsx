@@ -1,7 +1,5 @@
 "use client";
 
-import { X } from "lucide-react";
-
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import type {
@@ -78,7 +76,8 @@ export const CookingRecordViewSettingsDrawer = (
     <Container open={isOpen} onOpenChange={onOpenChange}>
       <Content
         hasDescription
-        className={`flex w-full flex-col overflow-hidden border-0 bg-white p-0 shadow-xl [&>[data-slot=dialog-close]]:hidden [&>button]:hidden ${contentClassName}`}
+        closeLabel={copy.closeLabel}
+        className={`flex w-full flex-col overflow-hidden border-0 bg-white p-0 shadow-xl ${contentClassName}`}
       >
         <Header className="grid shrink-0 grid-cols-[1fr_44px] items-center border-b border-gray-100 py-0 pr-2.5 pl-5 text-left">
           <div className="min-w-0 py-3">
@@ -89,14 +88,7 @@ export const CookingRecordViewSettingsDrawer = (
               {copy.description}
             </Description>
           </div>
-          <button
-            type="button"
-            aria-label={copy.closeLabel}
-            onClick={() => onOpenChange(false)}
-            className="text-ink focus-visible:outline-olive-dark flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            <X aria-hidden="true" className="size-5" />
-          </button>
+          <span aria-hidden="true" />
         </Header>
 
         <div className="shrink-0 px-5 pt-4">

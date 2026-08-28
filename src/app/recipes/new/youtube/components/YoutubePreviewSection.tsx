@@ -1,42 +1,25 @@
 "use client";
 
-import { useState } from "react";
 import dynamic from "next/dynamic";
 
 import { AnimatePresence, motion } from "motion/react";
 
-import { ApiError, getErrorData } from "@/shared/api/errors";
 import { useAutoScrollOnMobile } from "@/shared/hooks/useAutoScrollOnMobile";
-import {
-  useApiLocale,
-  useLocalizedRouter,
-  useYoutubeDict,
-} from "@/shared/i18n";
+import { useYoutubeDict } from "@/shared/i18n";
 import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import { Skeleton } from "@/shared/ui/shadcn/skeleton";
 
-import { useMyInfoQuery } from "@/entities/user/model/hooks";
-
-import { mapJobFailureMessage } from "@/features/recipe-import-youtube/lib/errors";
-import { createExtractionJobV2 } from "@/features/recipe-import-youtube/model/api";
-import {
-  useYoutubeDuplicateCheck,
-  useYoutubeMeta,
-} from "@/features/recipe-import-youtube/model/hooks";
-import { useYoutubeImportStoreV2 } from "@/features/recipe-import-youtube/model/store";
-import { jobByUrlSelector } from "@/features/recipe-import-youtube/model/storeSelectors";
+import { useYoutubeImportFlow } from "@/features/recipe-import-youtube/model/useYoutubeImportFlow";
 import { YoutubePreviewCard } from "@/features/recipe-import-youtube/ui/YoutubePreviewCard";
+
+import UsageLimitBanner from "@/widgets/AIRecipeForm/UsageLimitBanner";
+
+import { useYoutubeUrl } from "./YoutubeUrlProvider";
 
 const DuplicateRecipeSection = dynamic(
   () => import("@/features/recipe-import-youtube/ui/DuplicateRecipeSection"),
   { ssr: false }
 );
-
-import { useToastStore } from "@/shared/ui/toast";
-
-import UsageLimitBanner from "@/widgets/AIRecipeForm/UsageLimitBanner";
-
-import { useYoutubeUrl } from "./YoutubeUrlProvider";
 
 const SCROLL_DELAY_MS = 500;
 
@@ -99,119 +82,30 @@ type YoutubePreviewSectionProps = {
 export const YoutubePreviewSection = ({
   onLoginRequired,
 }: YoutubePreviewSectionProps) => {
-  const router = useLocalizedRouter();
-  const addToast = useToastStore((state) => state.addToast);
-  const { user } = useMyInfoQuery();
   const { validatedUrl, videoId, urlSource } = useYoutubeUrl();
-  const locale = useApiLocale();
   const t = useYoutubeDict();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const hasNoQuota = !!user && (user.remainingYoutubeQuota ?? 0) < 2;
-
   const {
-    data: youtubeMeta,
-    isLoading: isLoadingMeta,
-    isFetching: isFetchingMeta,
-  } = useYoutubeMeta(validatedUrl);
+    youtubeMeta,
+    duplicateCheck,
+    isLoading,
+    isDuplicate,
+    hasYoutubeData,
+    isMetaError,
+    hasNoQuota,
+    isImporting,
+    confirmImport,
+  } = useYoutubeImportFlow({
+    validatedUrl,
+    videoId,
+    onLoginRequired,
+  });
 
-  const {
-    data: duplicateCheck,
-    isLoading: isCheckingDuplicate,
-    isFetching: isFetchingDuplicate,
-  } = useYoutubeDuplicateCheck(validatedUrl);
-
-  const createJob = useYoutubeImportStoreV2((state) => state.createJob);
-  const setJobId = useYoutubeImportStoreV2((state) => state.setJobId);
-  const failJob = useYoutubeImportStoreV2((state) => state.failJob);
-  const existingJob = useYoutubeImportStoreV2(
-    validatedUrl ? jobByUrlSelector(validatedUrl) : () => undefined
-  );
-
-  const isImporting =
-    isSubmitting ||
-    existingJob?.state === "creating" ||
-    existingJob?.state === "polling";
-  const isDuplicate = duplicateCheck?.recipeId !== undefined;
-
-  const hasYoutubeData =
-    youtubeMeta &&
-    !isLoadingMeta &&
-    !isFetchingMeta &&
-    !isCheckingDuplicate &&
-    !isFetchingDuplicate;
-
-  const isShowingPreviewSection =
-    isLoadingMeta ||
-    isFetchingMeta ||
-    isCheckingDuplicate ||
-    isFetchingDuplicate ||
-    (validatedUrl && !youtubeMeta) ||
-    hasYoutubeData;
+  const isShowingPreviewSection = isLoading || isMetaError || hasYoutubeData;
 
   const previewSectionRef = useAutoScrollOnMobile(
     !!isShowingPreviewSection,
     SCROLL_DELAY_MS
   );
-
-  const isLoading =
-    isLoadingMeta ||
-    isFetchingMeta ||
-    isCheckingDuplicate ||
-    isFetchingDuplicate;
-
-  const handleConfirmImport = async () => {
-    if (!validatedUrl || !videoId || !youtubeMeta) return;
-
-    if (!user) {
-      onLoginRequired();
-      return;
-    }
-
-    if (existingJob) {
-      router.push(`/users/${user.id}?tab=saved`);
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    const idempotencyKey = createJob(validatedUrl, youtubeMeta, locale);
-
-    router.push(`/users/${user.id}?tab=saved`);
-    addToast({
-      message: t.sectionAnalyzingToast,
-      variant: "info",
-    });
-
-    try {
-      const { jobId } = await createExtractionJobV2(
-        validatedUrl,
-        idempotencyKey,
-        undefined,
-        locale
-      );
-      setJobId(idempotencyKey, jobId);
-    } catch (error) {
-      const errorData = ApiError.isApiError(error) ? getErrorData(error) : null;
-      const errorMessage = errorData
-        ? mapJobFailureMessage(
-            {
-              code: String(errorData.code),
-              message: errorData.message,
-              retryAfter: errorData.retryAfter,
-            },
-            t
-          )
-        : t.sectionExtractionFailed;
-      failJob(idempotencyKey, undefined, errorMessage);
-      addToast({
-        message: errorMessage,
-        variant: "error",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div ref={previewSectionRef}>
@@ -229,7 +123,7 @@ export const YoutubePreviewSection = ({
           </motion.div>
         )}
 
-        {!isLoading && validatedUrl && !youtubeMeta && (
+        {isMetaError && (
           <motion.div
             key="error"
             variants={sectionVariants}
@@ -242,26 +136,29 @@ export const YoutubePreviewSection = ({
           </motion.div>
         )}
 
-        {hasYoutubeData && isDuplicate && duplicateCheck?.recipeId && (
-          <motion.div
-            key={`duplicate-${duplicateCheck.recipeId}`}
-            variants={sectionVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={sectionTransition}
-          >
-            <ErrorBoundary fallback={<DuplicateRecipeErrorFallback />}>
-              <DuplicateRecipeSection
-                recipeId={duplicateCheck.recipeId}
-                youtubeMeta={youtubeMeta}
-                urlSource={urlSource}
-              />
-            </ErrorBoundary>
-          </motion.div>
-        )}
+        {hasYoutubeData &&
+          youtubeMeta &&
+          isDuplicate &&
+          duplicateCheck?.recipeId && (
+            <motion.div
+              key={`duplicate-${duplicateCheck.recipeId}`}
+              variants={sectionVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={sectionTransition}
+            >
+              <ErrorBoundary fallback={<DuplicateRecipeErrorFallback />}>
+                <DuplicateRecipeSection
+                  recipeId={duplicateCheck.recipeId}
+                  youtubeMeta={youtubeMeta}
+                  urlSource={urlSource}
+                />
+              </ErrorBoundary>
+            </motion.div>
+          )}
 
-        {hasYoutubeData && !isDuplicate && (
+        {hasYoutubeData && youtubeMeta && !isDuplicate && (
           <motion.div
             key="preview"
             variants={sectionVariants}
@@ -275,7 +172,7 @@ export const YoutubePreviewSection = ({
             )}
             <YoutubePreviewCard
               meta={youtubeMeta}
-              onConfirm={handleConfirmImport}
+              onConfirm={confirmImport}
               isLoading={isImporting}
               disabled={hasNoQuota}
             />

@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 import { youtubeMessages } from "@/shared/i18n";
 
@@ -9,6 +9,7 @@ import { DuplicateRecipeSheet } from "../DuplicateRecipeSheet";
 const mockPathname = jest.fn();
 const mockUseMediaQuery = jest.fn();
 let consoleWarnSpy: jest.SpiedFunction<typeof console.warn>;
+let consoleErrorSpy: jest.SpiedFunction<typeof console.error>;
 
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname(),
@@ -60,6 +61,7 @@ const renderSheet = () =>
       recipeItem={recipeItem}
       isLoading={false}
       isFavorited={false}
+      wasAutoSaved={false}
       onSaveClick={jest.fn()}
     />
   );
@@ -96,6 +98,7 @@ describe("DuplicateRecipeSheet 실제 responsive primitive 통합", () => {
     jest.clearAllMocks();
     mockPathname.mockReturnValue("/recipes/new/youtube");
     consoleWarnSpy = jest.spyOn(console, "warn");
+    consoleErrorSpy = jest.spyOn(console, "error");
   });
 
   afterEach(() => jest.restoreAllMocks());
@@ -123,6 +126,27 @@ describe("DuplicateRecipeSheet 실제 responsive primitive 통합", () => {
     );
     expect(consoleWarnSpy).not.toHaveBeenCalled();
   });
+
+  it.each([
+    ["데스크톱 Dialog", false],
+    ["모바일 Drawer", true],
+  ] as const)(
+    "%s는 닫기 버튼을 정확히 하나만 표시한다",
+    (_surfaceName, isMobile) => {
+      mockUseMediaQuery.mockReturnValue(isMobile);
+      renderSheet();
+
+      const closeButtons = screen.getAllByRole("button", {
+        name: /^(닫기|Close)$/,
+      });
+      expect(closeButtons).toHaveLength(1);
+      expect(closeButtons[0]).toHaveAttribute(
+        "data-slot",
+        isMobile ? "drawer-close" : "dialog-close"
+      );
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    }
+  );
 
   it("모바일 Drawer도 실제 content와 description, 스크롤/footer를 연결한다", () => {
     mockUseMediaQuery.mockReturnValue(true);

@@ -7,8 +7,11 @@ type MockSheetProps = {
   recipeItem: { id: string } | null;
   isLoading: boolean;
   isFavorited: boolean;
+  wasAutoSaved: boolean;
   onSaveClick: () => void;
-  urlSource?: "direct" | "trending" | null;
+  isEmbedded?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 let mockUser: MockUser;
@@ -63,12 +66,17 @@ jest.mock("../DuplicateRecipeSheet", () => {
     DuplicateRecipeSheet: (props: MockSheetProps) => {
       const [isOpen, setIsOpen] = React.useState(true);
       mockSheetProps = props;
+      const resolvedOpen = props.open ?? isOpen;
+      const handleOpenChange = props.onOpenChange ?? setIsOpen;
 
-      if (!isOpen) return null;
+      if (!resolvedOpen) return null;
+      if (props.isEmbedded) {
+        return <div data-testid="duplicate-recipe-embedded-content" />;
+      }
 
       return (
         <div data-testid="duplicate-recipe-sheet">
-          <button type="button" onClick={() => setIsOpen(false)}>
+          <button type="button" onClick={() => handleOpenChange(false)}>
             시트 닫기
           </button>
           <button type="button" onClick={props.onSaveClick}>
@@ -101,7 +109,50 @@ it("T-01 wiring: direct 중복 결과를 반응형 시트에 전달한다", () =
     recipeItem: { id: "rec-1" },
     isLoading: false,
     isFavorited: false,
-    urlSource: "direct",
+    wasAutoSaved: false,
+  });
+});
+
+it("T-10 wiring: 홈에서 받은 open 상태와 변경 콜백을 중복 시트에 전달한다", () => {
+  const onOpenChange = jest.fn();
+
+  render(
+    <DuplicateRecipeSection
+      recipeId="recipe-sheet"
+      urlSource="direct"
+      open
+      onOpenChange={onOpenChange}
+    />
+  );
+
+  expect(mockSheetProps?.open).toBe(true);
+  expect(mockSheetProps?.onOpenChange).toBe(onOpenChange);
+  fireEvent.click(screen.getByRole("button", { name: "시트 닫기" }));
+  expect(onOpenChange).toHaveBeenCalledWith(false);
+});
+
+it("T-13 wiring: 홈에 포함될 때 별도 시트 없이 중복 내용을 렌더링한다", () => {
+  render(
+    <DuplicateRecipeSection
+      recipeId="recipe-embedded"
+      urlSource="direct"
+      isEmbedded
+    />
+  );
+
+  expect(
+    screen.getByTestId("duplicate-recipe-embedded-content")
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByTestId("duplicate-recipe-sheet")
+  ).not.toBeInTheDocument();
+  expect(mockSheetProps).toMatchObject({
+    recipeId: "recipe-embedded",
+    recipeItem: { id: "rec-1" },
+    isLoading: false,
+    isFavorited: false,
+    wasAutoSaved: false,
+    isEmbedded: true,
   });
 });
 
@@ -167,18 +218,25 @@ it("T-09: 저장 요청 성공 시 mutation·Success 햅틱·토스트가 한 �
 });
 
 describe("T-11: direct 자동 저장 가드", () => {
-  it("로그인 + direct + 미저장 → 자동 저장 1회", () => {
+  it("로그인 + direct + 미저장 → 자동 저장 1회, 성공 뒤 완료 문구 상태 전달", () => {
     mockUser = { id: "u1" };
+    mockToggleFavorite.mockImplementation(
+      (_value: undefined, options: { onSuccess: () => void }) => {
+        options.onSuccess();
+      }
+    );
 
     render(<DuplicateRecipeSection recipeId="rec-1" urlSource="direct" />);
 
     expect(mockToggleFavorite).toHaveBeenCalledTimes(1);
+    expect(mockSheetProps).toMatchObject({ wasAutoSaved: true });
   });
 
   it("비로그인 + direct + 미저장 → 자동 저장 호출되지 않음", () => {
     render(<DuplicateRecipeSection recipeId="rec-1" urlSource="direct" />);
 
     expect(mockToggleFavorite).not.toHaveBeenCalled();
+    expect(mockSheetProps).toMatchObject({ wasAutoSaved: false });
   });
 
   it("로그인 + trending 진입 → 자동 저장 호출되지 않음", () => {
@@ -196,5 +254,6 @@ describe("T-11: direct 자동 저장 가드", () => {
     render(<DuplicateRecipeSection recipeId="rec-1" urlSource="direct" />);
 
     expect(mockToggleFavorite).not.toHaveBeenCalled();
+    expect(mockSheetProps).toMatchObject({ wasAutoSaved: false });
   });
 });

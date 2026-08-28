@@ -29,9 +29,23 @@ jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => {
   }: {
     children: React.ReactNode;
     open: boolean;
-  }) => <div data-state={open ? "open" : "closed"}>{children}</div>;
-  const Content = ({ children }: { children: React.ReactNode }) => (
-    <section>{children}</section>
+  }) => (open ? <div data-state="open">{children}</div> : null);
+  const Content = ({
+    children,
+    closeLabel,
+  }: {
+    children: React.ReactNode;
+    closeLabel?: string;
+  }) => (
+    <section>
+      {children}
+      <button
+        type="button"
+        data-slot="dialog-close"
+        aria-label={closeLabel ?? "Close"}
+        className="absolute top-2.5 right-2.5 h-11 w-11"
+      />
+    </section>
   );
   const Title = ({ children }: { children: React.ReactNode }) => (
     <h2>{children}</h2>
@@ -128,15 +142,18 @@ it("807 자동 재요청 중에는 이미지 처리 안내를 보여주고 입�
 });
 
 it("닫기는 우측에 두고 사진은 가운데 정렬하며 제출 버튼은 스크롤 밖에 고정합니다", () => {
-  const onOpenChange = jest.fn();
   render(
-    <ManualCookingRecordDrawer isOpen copy={copy} onOpenChange={onOpenChange} />
+    <ManualCookingRecordDrawer isOpen copy={copy} onOpenChange={jest.fn()} />
   );
 
   const closeButton = screen.getByRole("button", {
     name: "요리 기록 추가 닫기",
   });
-  expect(closeButton).toHaveClass("right-3");
+  expect(closeButton).toHaveAttribute("data-slot", "dialog-close");
+  expect(closeButton).toHaveClass("right-2.5");
+  expect(
+    screen.getAllByRole("button", { name: "요리 기록 추가 닫기" })
+  ).toHaveLength(1);
   expect(screen.getByText("사진 추가").closest("label")).toHaveClass("mx-auto");
 
   const scrollArea = screen.getByTestId("manual-cooking-record-scroll");
@@ -150,8 +167,6 @@ it("닫기는 우측에 두고 사진은 가운데 정렬하며 제출 버튼은
   );
   expect(submitButton).not.toHaveClass("bg-ink");
 
-  fireEvent.click(closeButton);
-  expect(onOpenChange).toHaveBeenCalledWith(false);
   expect(mockedTriggerHaptic).not.toHaveBeenCalled();
 });
 

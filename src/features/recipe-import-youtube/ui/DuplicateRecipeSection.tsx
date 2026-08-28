@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
@@ -25,12 +25,18 @@ type DuplicateRecipeSectionProps = {
   recipeId: string;
   youtubeMeta?: YoutubeMeta;
   urlSource?: UrlSource;
+  isEmbedded?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 const DuplicateRecipeSection = ({
   recipeId,
   youtubeMeta,
   urlSource,
+  isEmbedded = false,
+  open,
+  onOpenChange,
 }: DuplicateRecipeSectionProps) => {
   const { user } = useMyInfoQuery();
   const { recipeData, isLoading } = useRecipeDetailQuery(recipeId);
@@ -44,12 +50,20 @@ const DuplicateRecipeSection = ({
   const { notifySaved, changeSheet } = useSaveToastWithChange(recipeId);
 
   const isFavorited = recipeStatus?.favoriteByCurrentUser ?? false;
-  const hasAutoSavedRef = useRef(false);
+  const autoSaveAttemptedRecipeIdRef = useRef<string | null>(null);
+  const [autoSavedRecipeId, setAutoSavedRecipeId] = useState<string | null>(
+    null
+  );
 
   const handleSaveSuccess = useCallback(() => {
     triggerHaptic("Success");
     notifySaved(defaultBook);
   }, [notifySaved, defaultBook]);
+
+  const handleAutoSaveSuccess = useCallback(() => {
+    setAutoSavedRecipeId(recipeId);
+    handleSaveSuccess();
+  }, [handleSaveSuccess, recipeId]);
 
   const handleSaveClick = () => {
     toggleFavorite(undefined, {
@@ -64,20 +78,21 @@ const DuplicateRecipeSection = ({
       !!user &&
       urlSource === "direct" &&
       !isFavorited &&
-      !hasAutoSavedRef.current;
+      autoSaveAttemptedRecipeIdRef.current !== recipeId;
 
     if (!shouldAutoSave) return;
 
-    hasAutoSavedRef.current = true;
-    toggleFavorite(undefined, { onSuccess: handleSaveSuccess });
+    autoSaveAttemptedRecipeIdRef.current = recipeId;
+    toggleFavorite(undefined, { onSuccess: handleAutoSaveSuccess });
   }, [
     isLoading,
     recipeStatus,
     user,
     urlSource,
     isFavorited,
+    recipeId,
     toggleFavorite,
-    handleSaveSuccess,
+    handleAutoSaveSuccess,
   ]);
 
   const recipeItem = recipeData
@@ -93,8 +108,11 @@ const DuplicateRecipeSection = ({
           recipeItem={recipeItem}
           isLoading={isLoading}
           isFavorited={isFavorited}
+          wasAutoSaved={autoSavedRecipeId === recipeId}
           onSaveClick={handleSaveClick}
-          urlSource={urlSource}
+          isEmbedded={isEmbedded}
+          open={open}
+          onOpenChange={onOpenChange}
         />
       ) : null}
 

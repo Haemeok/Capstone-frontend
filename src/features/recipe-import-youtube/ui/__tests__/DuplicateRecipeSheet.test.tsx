@@ -15,47 +15,73 @@ jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname(),
 }));
 
-jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
-  useResponsiveSheet: () => ({
-    isMobile: mockIsMobile,
-    Container: ({
-      children,
-      open,
-    }: {
-      children: ReactNode;
-      open: boolean;
-      onOpenChange: (isOpen: boolean) => void;
-    }) => (open ? <div>{children}</div> : null),
-    Content: ({
-      children,
-      className,
-    }: {
-      children: ReactNode;
-      className?: string;
-    }) => (
-      <section
-        role="dialog"
-        data-testid={mockIsMobile ? "drawer-surface" : "dialog-surface"}
-        className={className}
-      >
-        {children}
-      </section>
-    ),
-    Header: ({ children, className }: TestPrimitiveProps) => (
-      <header className={className}>{children}</header>
-    ),
-    Title: ({ children, className }: TestPrimitiveProps) => (
-      <h2 className={className}>{children}</h2>
-    ),
-    Description: ({ children, className }: TestPrimitiveProps) => (
-      <p className={className}>{children}</p>
-    ),
-    Footer: ({ children, className }: TestPrimitiveProps) => (
-      <footer className={className}>{children}</footer>
-    ),
-    Close: undefined,
-  }),
-}));
+jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => {
+  const React = jest.requireActual<typeof import("react")>("react");
+  const OpenChangeContext = React.createContext<(open: boolean) => void>(
+    () => undefined
+  );
+
+  return {
+    useResponsiveSheet: () => ({
+      isMobile: mockIsMobile,
+      Container: ({
+        children,
+        open,
+        onOpenChange,
+      }: {
+        children: ReactNode;
+        open: boolean;
+        onOpenChange: (isOpen: boolean) => void;
+      }) =>
+        open ? (
+          <OpenChangeContext.Provider value={onOpenChange}>
+            <div>{children}</div>
+          </OpenChangeContext.Provider>
+        ) : null,
+      Content: ({
+        children,
+        className,
+        closeLabel,
+      }: {
+        children: ReactNode;
+        className?: string;
+        closeLabel?: string;
+      }) => {
+        const onOpenChange = React.useContext(OpenChangeContext);
+
+        return (
+          <section
+            role="dialog"
+            data-testid={mockIsMobile ? "drawer-surface" : "dialog-surface"}
+            className={className}
+          >
+            {children}
+            <button
+              type="button"
+              data-slot={mockIsMobile ? "drawer-close" : "dialog-close"}
+              aria-label={closeLabel ?? "Close"}
+              onClick={() => onOpenChange(false)}
+              className="text-ink-sub focus-visible:outline-olive-dark h-11 w-11 cursor-pointer focus-visible:outline-2"
+            />
+          </section>
+        );
+      },
+      Header: ({ children, className }: TestPrimitiveProps) => (
+        <header className={className}>{children}</header>
+      ),
+      Title: ({ children, className }: TestPrimitiveProps) => (
+        <h2 className={className}>{children}</h2>
+      ),
+      Description: ({ children, className }: TestPrimitiveProps) => (
+        <p className={className}>{children}</p>
+      ),
+      Footer: ({ children, className }: TestPrimitiveProps) => (
+        <footer className={className}>{children}</footer>
+      ),
+      Close: undefined,
+    }),
+  };
+});
 
 jest.mock("@/shared/ui/image/Image", () => ({
   Image: ({
@@ -95,6 +121,7 @@ const defaultProps = {
   recipeItem,
   isLoading: false,
   isFavorited: false,
+  wasAutoSaved: false,
   onSaveClick: jest.fn(),
 };
 
@@ -126,6 +153,20 @@ describe("DuplicateRecipeSheet", () => {
       "sm:max-w-md",
       "rounded-2xl"
     );
+  });
+
+  it("T-13: 홈에 포함될 때 별도 Dialog 없이 중복 내용을 표시한다", () => {
+    mockIsMobile = false;
+    render(<DuplicateRecipeSheet {...defaultProps} isEmbedded />);
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByText(youtubeMessages.ko.duplicateTitle)).toBeVisible();
+    expect(screen.getByRole("img", { name: "토마토 파스타" })).toBeVisible();
+    expect(
+      screen.getByRole("link", {
+        name: youtubeMessages.ko.duplicateViewButton,
+      })
+    ).toBeVisible();
   });
 
   it.each([
@@ -164,20 +205,18 @@ describe("DuplicateRecipeSheet", () => {
     );
   });
 
-  it.each([
-    ["direct", true],
-    ["trending", false],
-    [null, false],
-  ] as const)(
-    "T-04: urlSource=%s일 때 direct 저장 안내 표시 여부가 %s이다",
-    (urlSource, shouldShowAdded) => {
-      render(<DuplicateRecipeSheet {...defaultProps} urlSource={urlSource} />);
+  it.each([true, false])(
+    "T-04: 자동 저장 성공 상태가 %s일 때만 저장 완료 문구를 표시한다",
+    (wasAutoSaved) => {
+      render(
+        <DuplicateRecipeSheet {...defaultProps} wasAutoSaved={wasAutoSaved} />
+      );
 
       const addedMessage = screen.queryByText(
         youtubeMessages.ko.duplicateAdded
       );
 
-      if (shouldShowAdded) {
+      if (wasAutoSaved) {
         expect(addedMessage).toBeInTheDocument();
         expect(addedMessage).toHaveClass("block", "text-ink-sub");
         return;
@@ -196,6 +235,32 @@ describe("DuplicateRecipeSheet", () => {
     );
 
     rerender(<DuplicateRecipeSheet key="recipe-1" {...defaultProps} />);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("T-10: controlled 상태에서는 닫기 요청을 상위 모달 상태에 전달한다", () => {
+    const onOpenChange = jest.fn();
+    const { rerender } = render(
+      <DuplicateRecipeSheet
+        {...defaultProps}
+        open
+        onOpenChange={onOpenChange}
+      />
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: commonMessages.ko.actions.close })
+    );
+
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+
+    rerender(
+      <DuplicateRecipeSheet
+        {...defaultProps}
+        open={false}
+        onOpenChange={onOpenChange}
+      />
+    );
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 

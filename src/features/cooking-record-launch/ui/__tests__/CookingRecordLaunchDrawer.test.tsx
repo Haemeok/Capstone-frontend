@@ -95,7 +95,13 @@ describe("CookingRecordLaunchDrawer", () => {
     expect(dialog).toHaveAccessibleDescription(
       "한 줄 메모를 더하면 나만의 요리 달력이 완성돼요."
     );
-    expect(closeButton).toHaveClass("size-11");
+    expect(closeButton).toHaveClass("h-11", "w-11");
+    expect(closeButton).toHaveAttribute("data-slot", "dialog-close");
+    expect(
+      screen.getAllByRole("button", {
+        name: "요리기록 출시 안내 닫기",
+      })
+    ).toHaveLength(1);
     expect(dialog).toHaveClass("motion-reduce:animate-none");
 
     fireEvent.click(closeButton);
