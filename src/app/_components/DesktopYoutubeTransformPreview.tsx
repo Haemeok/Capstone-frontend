@@ -5,10 +5,19 @@ import YouTubeIconBadge from "@/shared/ui/badge/YouTubeIconBadge";
 
 type DesktopYoutubeTransformPreviewProps = {
   messages: HomeDict["desktopYoutubeImport"];
+  source?: {
+    title: string;
+    channelName: string;
+    thumbnailUrl: string;
+  };
 };
+
+const TRANSPARENT_PIXEL =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
 export const DesktopYoutubeTransformPreview = ({
   messages,
+  source,
 }: DesktopYoutubeTransformPreviewProps) => {
   const summaryItems = [
     {
@@ -32,19 +41,33 @@ export const DesktopYoutubeTransformPreview = ({
         className="flex h-56 min-w-0 flex-col overflow-hidden rounded-[18px] border border-gray-100 bg-white shadow-[0_12px_30px_rgb(34_34_34/0.08)]"
       >
         <div className="relative min-h-36 flex-1 overflow-hidden">
-          <img
-            src="/events/cooking-record/food-cluster.webp"
-            alt={messages.previewAlt}
-            className="h-full w-full object-cover"
-          />
+          {source ? (
+            <img
+              src={source.thumbnailUrl}
+              alt={source.title}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <picture className="block h-full w-full">
+              <source
+                media="(min-width: 768px)"
+                srcSet="/events/cooking-record/food-cluster.webp"
+              />
+              <img
+                src={TRANSPARENT_PIXEL}
+                alt={messages.previewAlt}
+                className="h-full w-full object-cover"
+              />
+            </picture>
+          )}
           <YouTubeIconBadge className="absolute top-1/2 left-1/2 h-11 w-11 -translate-x-1/2 -translate-y-1/2 drop-shadow-md" />
         </div>
         <div className="px-4 py-3">
           <strong className="text-ink block truncate text-sm leading-[1.35]">
-            {messages.sourceTitle}
+            {source?.title ?? messages.sourceTitle}
           </strong>
           <span className="text-ink-muted mt-1 block text-[11px]">
-            {messages.sourceMeta}
+            {source?.channelName ?? messages.sourceMeta}
           </span>
         </div>
       </article>
