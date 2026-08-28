@@ -55,6 +55,10 @@ export const completePollingJob = (
 
   deps.storeActions.completeJob(idempotencyKey, recipeId);
 
+  deps.queryClient.setQueryData(
+    ["youtube-duplicate-check", job.url, job.locale],
+    { recipeId }
+  );
   deps.queryClient.invalidateQueries({ queryKey: ["recipes"] });
   deps.queryClient.invalidateQueries({ queryKey: ["recipe-books"] });
   deps.queryClient.invalidateQueries({

@@ -20,6 +20,7 @@ const meta: YoutubeMeta = {
 const makeDeps = (): JobPollingDeps => ({
   queryClient: {
     invalidateQueries: jest.fn(),
+    setQueryData: jest.fn(),
   } as unknown as JobPollingDeps["queryClient"], // 테스트: 사용 메서드만 stub
   addToast: jest.fn(),
   router: { push: jest.fn() } as unknown as JobPollingDeps["router"], // 테스트: push만 사용
@@ -68,6 +69,20 @@ describe("jobPollingHandlers i18n", () => {
       expect.objectContaining({
         richContent: expect.objectContaining({ subtitle: meta.title }),
       })
+    );
+  });
+
+  it("T-14: 추출 완료 시 같은 URL·locale의 중복 검사 캐시를 갱신", () => {
+    const key = useYoutubeImportStoreV2
+      .getState()
+      .createJob(meta.url, meta, "ja");
+    const deps = makeDeps();
+
+    completePollingJob(deps, key, "recipe-1");
+
+    expect(deps.queryClient.setQueryData).toHaveBeenCalledWith(
+      ["youtube-duplicate-check", meta.url, "ja"],
+      { recipeId: "recipe-1" }
     );
   });
 
