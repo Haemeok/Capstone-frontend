@@ -16,27 +16,59 @@ jest.mock("../../model/api", () => ({
   createRecipeRecord: jest.fn(),
 }));
 
-jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
-  useResponsiveSheet: (() => {
-    const Container = ({
-      children,
-      open,
-    }: {
-      children: React.ReactNode;
-      open: boolean;
-    }) => (open ? <div>{children}</div> : null);
-    const Content = ({ children }: { children: React.ReactNode }) => (
-      <section>{children}</section>
-    );
-    const Title = ({ children }: { children: React.ReactNode }) => (
-      <h2>{children}</h2>
-    );
-    const Description = ({ children }: { children: React.ReactNode }) => (
-      <p>{children}</p>
-    );
-    return () => ({ Container, Content, Title, Description });
-  })(),
-}));
+jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => {
+  const React = jest.requireActual<typeof import("react")>("react");
+  const OpenChangeContext = React.createContext<(open: boolean) => void>(
+    () => undefined
+  );
+
+  return {
+    useResponsiveSheet: (() => {
+      const Container = ({
+        children,
+        open,
+        onOpenChange,
+      }: {
+        children: React.ReactNode;
+        open: boolean;
+        onOpenChange: (open: boolean) => void;
+      }) =>
+        open ? (
+          <OpenChangeContext.Provider value={onOpenChange}>
+            <div>{children}</div>
+          </OpenChangeContext.Provider>
+        ) : null;
+      const Content = ({
+        children,
+        closeLabel,
+      }: {
+        children: React.ReactNode;
+        closeLabel?: string;
+      }) => {
+        const onOpenChange = React.useContext(OpenChangeContext);
+
+        return (
+          <section>
+            {children}
+            <button
+              type="button"
+              data-slot="dialog-close"
+              aria-label={closeLabel ?? "Close"}
+              onClick={() => onOpenChange(false)}
+            />
+          </section>
+        );
+      };
+      const Title = ({ children }: { children: React.ReactNode }) => (
+        <h2>{children}</h2>
+      );
+      const Description = ({ children }: { children: React.ReactNode }) => (
+        <p>{children}</p>
+      );
+      return () => ({ Container, Content, Title, Description });
+    })(),
+  };
+});
 
 jest.mock("motion/react", () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => (

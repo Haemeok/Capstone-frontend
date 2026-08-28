@@ -57,7 +57,7 @@ export const FridgeDeleteDialog = ({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         onCloseAutoFocus={handleCloseAutoFocus}
-        className="max-w-sm border-gray-200 bg-white [&>button]:hidden"
+        className="max-w-sm border-gray-200 bg-white"
       >
         <DialogHeader className="text-left">
           <DialogTitle className="text-ink">{t.title}</DialogTitle>

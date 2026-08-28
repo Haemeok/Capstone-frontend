@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cva, type VariantProps } from "class-variance-authority";
+import { XIcon } from "lucide-react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
@@ -71,10 +72,16 @@ function DrawerContent({
   children,
   variant,
   hasDescription,
+  closeLabel = "Close",
+  closeButtonClassName,
+  closeDisabled = false,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> &
   VariantProps<typeof drawerContentVariants> & {
     hasDescription?: boolean;
+    closeLabel?: string;
+    closeButtonClassName?: string;
+    closeDisabled?: boolean;
   }) {
   return (
     <DrawerPortal data-slot="drawer-portal">
@@ -89,6 +96,16 @@ function DrawerContent({
           <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
         )}
         {children}
+        <DrawerClose
+          disabled={closeDisabled}
+          className={cn(
+            "text-ink-sub focus-visible:outline-olive-dark disabled:text-ink-disabled absolute top-2.5 right-2.5 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+            closeButtonClassName
+          )}
+        >
+          <XIcon aria-hidden="true" className="h-5 w-5" />
+          <span className="sr-only">{closeLabel}</span>
+        </DrawerClose>
       </DrawerPrimitive.Content>
     </DrawerPortal>
   );

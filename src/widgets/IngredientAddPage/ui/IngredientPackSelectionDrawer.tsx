@@ -2,8 +2,6 @@
 
 import type { ReactNode } from "react";
 
-import { X } from "lucide-react";
-
 import type { IngredientPack } from "@/shared/config/constants/ingredientPacks";
 import {
   format,
@@ -16,7 +14,6 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { Image } from "@/shared/ui/image/Image";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
@@ -47,20 +44,25 @@ export const IngredientPackSelectionDrawer = ({
   const meta = pack ? localizePack(pack, locale) : null;
 
   return (
-    <Drawer handleOnly open={pack !== null} onOpenChange={onOpenChange}>
-      <DrawerContent hasDescription className="mx-auto max-w-2xl bg-white">
+    <Drawer
+      handleOnly
+      open={pack !== null}
+      onOpenChange={(open) => {
+        if (!open && isPending) return;
+        onOpenChange(open);
+      }}
+    >
+      <DrawerContent
+        hasDescription
+        closeLabel={dict.close}
+        closeDisabled={isPending}
+        className="mx-auto max-w-2xl bg-white"
+      >
         <DrawerHeader className="relative border-b border-gray-100 pr-12">
           <DrawerTitle className="text-ink">{meta?.name}</DrawerTitle>
           <DrawerDescription className="text-ink-muted">
             {dict.packDrawerDescription}
           </DrawerDescription>
-          <DrawerClose
-            aria-label={dict.close}
-            disabled={isPending}
-            className="text-ink-sub disabled:text-ink-disabled absolute top-1 right-1 flex h-11 w-11 cursor-pointer items-center justify-center disabled:cursor-not-allowed"
-          >
-            <X aria-hidden="true" size={22} />
-          </DrawerClose>
         </DrawerHeader>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">

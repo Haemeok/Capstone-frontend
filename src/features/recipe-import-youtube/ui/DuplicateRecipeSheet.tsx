@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 
-import { Bookmark, X } from "lucide-react";
-
-import { LocalizedLink, useCommonDict, useYoutubeDict } from "@/shared/i18n";
+import { useCommonDict, useYoutubeDict } from "@/shared/i18n";
 import { useResponsiveSheet } from "@/shared/lib/hooks/useResponsiveSheet";
 
 import type { DetailedRecipeGridItem } from "@/entities/recipe/model/types";
 
+import { DuplicateRecipeActions } from "./DuplicateRecipeActions";
+import { DuplicateRecipeEmbeddedContent } from "./DuplicateRecipeEmbeddedContent";
 import { DuplicateRecipeSheetSkeleton } from "./DuplicateRecipeSheetSkeleton";
 import { DuplicateRecipeSummary } from "./DuplicateRecipeSummary";
 
@@ -17,52 +17,11 @@ type DuplicateRecipeSheetProps = {
   recipeItem: DetailedRecipeGridItem | null;
   isLoading: boolean;
   isFavorited: boolean;
+  wasAutoSaved: boolean;
   onSaveClick: () => void;
-  urlSource?: "direct" | "trending" | null;
-};
-
-type DuplicateRecipeActionsProps = Pick<
-  DuplicateRecipeSheetProps,
-  "recipeId" | "isFavorited" | "onSaveClick"
->;
-
-const actionFocusClass =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-olive-dark";
-
-const DuplicateRecipeActions = ({
-  recipeId,
-  isFavorited,
-  onSaveClick,
-}: DuplicateRecipeActionsProps) => {
-  const common = useCommonDict();
-  const t = useYoutubeDict();
-
-  return (
-    <>
-      {isFavorited ? (
-        <p className="text-ink-sub text-center text-sm font-medium">
-          {t.duplicateAlreadySaved}
-        </p>
-      ) : (
-        <button
-          type="button"
-          aria-label={t.duplicateSaveButton}
-          onClick={onSaveClick}
-          className={`text-ink-sub flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl bg-gray-100 px-3 text-sm font-semibold transition-colors active:bg-gray-200 ${actionFocusClass}`}
-        >
-          <Bookmark aria-hidden="true" className="h-5 w-5 shrink-0" />
-          {common.actions.save}
-        </button>
-      )}
-
-      <LocalizedLink
-        href={`/recipes/${recipeId}`}
-        className={`bg-olive-light active:bg-olive-dark flex h-12 cursor-pointer items-center justify-center rounded-xl px-4 text-center text-base font-bold text-white transition-colors ${actionFocusClass}`}
-      >
-        {t.duplicateViewButton}
-      </LocalizedLink>
-    </>
-  );
+  isEmbedded?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export const DuplicateRecipeSheet = ({
@@ -70,24 +29,43 @@ export const DuplicateRecipeSheet = ({
   recipeItem,
   isLoading,
   isFavorited,
+  wasAutoSaved,
   onSaveClick,
-  urlSource,
+  isEmbedded = false,
+  open,
+  onOpenChange,
 }: DuplicateRecipeSheetProps) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [internalOpen, setInternalOpen] = useState(true);
   const common = useCommonDict();
   const t = useYoutubeDict();
   const { isMobile, Container, Content, Header, Title, Description, Footer } =
     useResponsiveSheet();
+  const resolvedOpen = open ?? internalOpen;
+  const handleOpenChange = onOpenChange ?? setInternalOpen;
+
+  if (isEmbedded) {
+    return (
+      <DuplicateRecipeEmbeddedContent
+        recipeId={recipeId}
+        recipeItem={recipeItem}
+        isLoading={isLoading}
+        isFavorited={isFavorited}
+        wasAutoSaved={wasAutoSaved}
+        onSaveClick={onSaveClick}
+      />
+    );
+  }
 
   const contentClassName = isMobile
     ? "max-h-[90dvh] w-full rounded-t-3xl data-[vaul-drawer-direction=bottom]:max-h-[90dvh] data-[vaul-drawer-direction=bottom]:rounded-t-3xl data-[vaul-drawer-direction=bottom]:border-0"
     : "max-h-[calc(100dvh-2rem)] w-full max-w-md rounded-2xl sm:max-w-md";
 
   return (
-    <Container open={isOpen} onOpenChange={setIsOpen}>
+    <Container open={resolvedOpen} onOpenChange={handleOpenChange}>
       <Content
         hasDescription
-        className={`flex flex-col overflow-hidden border-0 bg-white p-0 shadow-xl [&>[data-slot=dialog-close]]:hidden [&>button]:hidden ${contentClassName}`}
+        closeLabel={common.actions.close}
+        className={`flex flex-col overflow-hidden border-0 bg-white p-0 shadow-xl ${contentClassName}`}
       >
         <Header className="relative shrink-0 px-5 pt-5 pr-16 pb-4 text-left">
           <Title className="text-ink text-left text-xl leading-7 font-bold">
@@ -95,20 +73,12 @@ export const DuplicateRecipeSheet = ({
           </Title>
           <Description className="text-left text-sm leading-5 font-medium">
             <span className="text-olive-dark block">{t.duplicateNoCredit}</span>
-            {urlSource === "direct" ? (
+            {wasAutoSaved ? (
               <span className="text-ink-sub mt-1 block">
                 {t.duplicateAdded}
               </span>
             ) : null}
           </Description>
-          <button
-            type="button"
-            aria-label={common.actions.close}
-            onClick={() => setIsOpen(false)}
-            className={`text-ink-sub absolute top-2.5 right-2.5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 ${actionFocusClass}`}
-          >
-            <X aria-hidden="true" className="h-5 w-5" />
-          </button>
         </Header>
 
         {isLoading && recipeItem === null ? (

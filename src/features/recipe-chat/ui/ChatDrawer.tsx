@@ -200,10 +200,13 @@ const ChatDrawer = ({ recipeId, isOpen, onOpenChange }: ChatDrawerProps) => {
 
   return (
     <Container open={isOpen} onOpenChange={onOpenChange}>
-      <Content className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md [&>button]:hidden">
+      <Content
+        closeLabel="챗봇 닫기"
+        className="overflow-hidden border-0 bg-white shadow-xl sm:max-w-md"
+      >
         <Title className="sr-only">레시피 챗봇</Title>
         <div className="kb-pb flex h-[80dvh] max-h-[640px] flex-col sm:h-[70dvh]">
-          <ChatHeader quota={quota} onClose={() => onOpenChange(false)} />
+          <ChatHeader quota={quota} />
           {fallbackView ? (
             <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
               <p className="text-ink text-lg font-bold">{fallbackView.title}</p>

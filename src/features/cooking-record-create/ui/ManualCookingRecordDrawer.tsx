@@ -2,7 +2,6 @@
 
 import { useId, useState } from "react";
 
-import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -62,18 +61,10 @@ export const ManualCookingRecordDrawer = ({
 
   return (
     <Container open={isOpen} onOpenChange={handleOpenChange}>
-      <Content className="flex max-h-[92dvh] flex-col overflow-hidden border-0 bg-white shadow-xl sm:max-w-md [&>[data-slot=dialog-close]]:hidden">
-        {isOpen && !isSuccess ? (
-          <button
-            type="button"
-            aria-label={copy.closeLabel}
-            onClick={() => handleOpenChange(false)}
-            className="absolute top-3 right-3 z-10 flex size-11 cursor-pointer items-center justify-center rounded-xl"
-          >
-            <X className="size-5" aria-hidden="true" />
-          </button>
-        ) : null}
-
+      <Content
+        closeLabel={copy.closeLabel}
+        className="flex max-h-[92dvh] flex-col overflow-hidden border-0 bg-white shadow-xl sm:max-w-md"
+      >
         <motion.div
           layout
           transition={{ duration: 0.24, ease: "easeOut" }}

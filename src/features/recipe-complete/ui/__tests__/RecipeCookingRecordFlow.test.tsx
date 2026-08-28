@@ -14,10 +14,22 @@ jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
     const Content = ({
       children,
       className,
+      closeLabel,
     }: {
       children: React.ReactNode;
       className?: string;
-    }) => <section className={className}>{children}</section>;
+      closeLabel?: string;
+    }) => (
+      <section className={className}>
+        {children}
+        <button
+          type="button"
+          data-slot="dialog-close"
+          aria-label={closeLabel ?? "Close"}
+          className="absolute top-2.5 right-2.5 h-11 w-11"
+        />
+      </section>
+    );
     const Title = ({ children }: { children: React.ReactNode }) => (
       <h2>{children}</h2>
     );
@@ -161,10 +173,12 @@ it("T-09: 닫기 버튼을 우측에 두고 전체 wrapper의 큰 상단 여백�
   advanceToForm();
 
   const closeButton = screen.getByRole("button", { name: "닫기" });
-  const phaseLayout = closeButton.nextElementSibling;
+  const phaseLayout = closeButton.parentElement?.firstElementChild;
 
-  expect(closeButton).toHaveClass("top-3", "right-3");
+  expect(closeButton).toHaveAttribute("data-slot", "dialog-close");
+  expect(closeButton).toHaveClass("top-2.5", "right-2.5");
   expect(closeButton).not.toHaveClass("left-3");
+  expect(screen.getAllByRole("button", { name: "닫기" })).toHaveLength(1);
   expect(phaseLayout).toHaveClass("flex", "min-h-0", "flex-1", "flex-col");
   expect(phaseLayout).not.toHaveClass("pt-16", "overflow-y-auto");
 });

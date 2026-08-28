@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
@@ -64,22 +63,12 @@ export const RecipeCookingRecordFlow = ({
     }
   };
 
-  const close = () => {
-    triggerHaptic("Light");
-    handleOpenChange(false);
-  };
-
   return (
     <Container open={isOpen} onOpenChange={handleOpenChange}>
-      <Content className="flex max-h-[80dvh] flex-col overflow-hidden border-0 bg-white shadow-xl sm:max-w-md [&>[data-slot=dialog-close]]:hidden">
-        <button
-          type="button"
-          aria-label={copy.close}
-          onClick={close}
-          className="absolute top-3 right-3 z-10 flex size-11 cursor-pointer items-center justify-center rounded-xl"
-        >
-          <X className="size-5" />
-        </button>
+      <Content
+        closeLabel={copy.close}
+        className="flex max-h-[80dvh] flex-col overflow-hidden border-0 bg-white shadow-xl sm:max-w-md"
+      >
         <motion.div
           layout
           transition={{ duration: 0.24, ease: "easeOut" }}
@@ -136,7 +125,7 @@ export const RecipeCookingRecordFlow = ({
                       {copy.successDescription}
                     </Description>
                   }
-                  onClose={close}
+                  onClose={() => handleOpenChange(false)}
                 />
               ) : null}
             </motion.div>

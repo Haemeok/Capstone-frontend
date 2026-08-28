@@ -30,7 +30,7 @@ export const CookingRecordDeleteDialog = (
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[318px] gap-0 rounded-[18px] border-0 bg-white p-5 shadow-xl [&>button]:hidden">
+      <DialogContent className="max-w-[318px] gap-0 rounded-[18px] border-0 bg-white p-5 shadow-xl">
         <DialogHeader className="text-left">
           <DialogTitle className="text-ink text-lg leading-6 font-bold">
             {copy.title}

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { InfiniteData } from "@tanstack/react-query";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 
 import {
   type IngredientCategoryName,
@@ -15,12 +15,7 @@ import { format, useApiLocale, useIngredientPickerDict } from "@/shared/i18n";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn, getNextPageParam } from "@/shared/lib/utils";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTitle,
-} from "@/shared/ui/shadcn/drawer";
+import { Drawer, DrawerContent, DrawerTitle } from "@/shared/ui/shadcn/drawer";
 
 import { getIngredients } from "@/entities/ingredient/model/api";
 import type {
@@ -116,15 +111,13 @@ const IngredientPicker = ({
 
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
-      <DrawerContent variant="full">
+      <DrawerContent
+        variant="full"
+        closeLabel={t.closeAria}
+        closeButtonClassName="left-3 right-auto"
+      >
         <div className="kb-pb flex min-h-0 flex-1 flex-col">
           <header className="relative flex items-center justify-center border-b border-gray-100 px-4 py-3">
-            <DrawerClose
-              aria-label={t.closeAria}
-              className="text-ink-sub absolute left-3 cursor-pointer"
-            >
-              <X size={24} />
-            </DrawerClose>
             <DrawerTitle className="text-ink text-base font-bold">
               {title ?? t.title}
             </DrawerTitle>
