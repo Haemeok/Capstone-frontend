@@ -8,6 +8,7 @@ type UserState = {
   isLoggingOut: boolean;
   isAuthReady: boolean;
   setUser: (user: User | null) => void;
+  markAuthReady: () => void;
   logoutAction: () => void;
 };
 
@@ -23,6 +24,8 @@ export const useUserStore = create<UserState>((set, get) => ({
       isAuthenticated: !!user,
       isAuthReady: true,
     }),
+
+  markAuthReady: () => set({ isAuthReady: true }),
 
   logoutAction: () => {
     const { isLoggingOut } = get();
