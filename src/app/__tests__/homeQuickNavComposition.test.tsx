@@ -91,8 +91,17 @@ jest.mock("@/widgets/HomeBannerCarousel/slides", () => ({
 jest.mock(
   "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary",
   () =>
-    function MockRecipeSlide() {
-      return <div data-testid="recipe-feed" />;
+    function MockRecipeSlide({
+      prioritizeFirstImage,
+    }: {
+      prioritizeFirstImage?: boolean;
+    }) {
+      return (
+        <div
+          data-testid="recipe-feed"
+          data-prioritize-first-image={String(!!prioritizeFirstImage)}
+        />
+      );
     }
 );
 
@@ -196,6 +205,15 @@ describe.each(HOME_CASES)("$locale 홈 빠른 탐색 흐름", (homeCase) => {
     expect(within(homeAdsGate).getByTestId("home-banner")).toBe(banner);
     expect(within(homeAdsGate).getAllByTestId("recipe-feed")[0]).toBe(
       recipeFeed
+    );
+    const recipeFeeds = within(homeAdsGate).getAllByTestId("recipe-feed");
+    expect(recipeFeeds[0]).toHaveAttribute(
+      "data-prioritize-first-image",
+      "true"
+    );
+    expect(recipeFeeds[1]).toHaveAttribute(
+      "data-prioritize-first-image",
+      "false"
     );
     expect(hero).toHaveClass("hidden", "md:block");
     expect(banner).toHaveClass("md:hidden");

@@ -33,6 +33,7 @@ type RecipeSlideProps = {
   locale?: "ko" | "ja" | "en";
   emphasizeTime?: boolean;
   prefetch?: boolean | null;
+  prioritizeFirstImage?: boolean;
 };
 
 const getRecipeRightBadge = (
@@ -85,6 +86,7 @@ const RecipeSlide = ({
   locale,
   emphasizeTime,
   prefetch = false,
+  prioritizeFirstImage = false,
 }: RecipeSlideProps) => {
   const t = useSearchDiscoveryDict();
 
@@ -104,13 +106,14 @@ const RecipeSlide = ({
         className="w-full"
       >
         <CarouselContent className="-ml-3">
-          {recipes.map((item) => (
+          {recipes.map((item, index) => (
             <CarouselItem
               key={item.id}
               className="basis-2/5 pl-3 sm:basis-[200px]"
             >
               <DetailedRecipeGridItem
                 recipe={item}
+                priority={prioritizeFirstImage && index === 0}
                 prefetch={prefetch}
                 hideCookingTime
                 locale={locale}

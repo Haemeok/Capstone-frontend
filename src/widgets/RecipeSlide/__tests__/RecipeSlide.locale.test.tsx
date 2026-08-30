@@ -30,7 +30,13 @@ jest.mock("next/link", () => ({
 }));
 jest.mock("@/shared/ui/image/Image", () => ({
   __esModule: true,
-  Image: ({ alt }: { alt?: string }) => <img alt={alt ?? ""} />,
+  Image: ({ alt, priority }: { alt?: string; priority?: boolean }) => (
+    <img
+      alt={alt ?? ""}
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : undefined}
+    />
+  ),
 }));
 jest.mock("next/navigation", () => ({
   usePathname: () => "/ja",
@@ -98,4 +104,33 @@ it("T-18: locale 미전달(기본)이면 카드 href가 /recipes/{id} (ko 회귀
     <RecipeSlideWithErrorBoundary title="인기" staticRecipes={[SAMPLE]} />
   );
   expect(firstRecipeHref(container)).toBe("/recipes/abc123");
+});
+
+it("T-HOME-LCP-1: 지정한 홈 슬라이드의 첫 레시피 이미지만 우선 로드한다", () => {
+  const { container } = render(
+    <RecipeSlideWithErrorBoundary
+      title="인기"
+      staticRecipes={[
+        SAMPLE,
+        { ...SAMPLE, id: "second", title: "두 번째 레시피" },
+      ]}
+      prioritizeFirstImage
+    />
+  );
+
+  const images = container.querySelectorAll("img");
+  expect(images[0]).toHaveAttribute("loading", "eager");
+  expect(images[0]).toHaveAttribute("fetchpriority", "high");
+  expect(images[1]).toHaveAttribute("loading", "lazy");
+  expect(images[1]).not.toHaveAttribute("fetchpriority");
+});
+
+it("T-HOME-LCP-2: 우선 로드 대상으로 지정하지 않은 슬라이드는 첫 이미지도 lazy를 유지한다", () => {
+  const { container } = render(
+    <RecipeSlideWithErrorBoundary title="추천" staticRecipes={[SAMPLE]} />
+  );
+
+  const image = container.querySelector("img");
+  expect(image).toHaveAttribute("loading", "lazy");
+  expect(image).not.toHaveAttribute("fetchpriority");
 });
