@@ -1,3 +1,4 @@
+export { default as BudgetServerSlide } from "./BudgetServerSlide";
 export { default as CategoryPopularServerSlide } from "./CategoryPopularServerSlide";
 export { default as CookedPopularServerSlide } from "./CookedPopularServerSlide";
 export { default as CountryPopularServerSlide } from "./CountryPopularServerSlide";

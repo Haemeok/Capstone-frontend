@@ -1,22 +1,27 @@
 import type { Locale } from "@/shared/i18n";
 import { searchDiscoveryMessages } from "@/shared/i18n/searchDiscoveryMessages";
 
-import { getYoutubeVerifiedOnServer } from "@/entities/recipe/model/api.server";
+import type { StaticDetailedRecipeGridItem } from "@/entities/recipe";
 
 import RecipeSlideWithErrorBoundary from "../RecipeSlideWithErrorBoundary";
 
-const YoutubeVerifiedServerSlide = async ({
-  locale,
-  prefetch,
-}: {
+type YoutubeVerifiedServerSlideProps = {
   locale: Locale;
+  staticRecipes: StaticDetailedRecipeGridItem[];
+  fetchFailed: boolean;
   prefetch?: boolean | null;
-}) => {
-  const { content, fetchFailed } = await getYoutubeVerifiedOnServer(locale);
+};
+
+const YoutubeVerifiedServerSlide = ({
+  locale,
+  staticRecipes,
+  fetchFailed,
+  prefetch,
+}: YoutubeVerifiedServerSlideProps) => {
   return (
     <RecipeSlideWithErrorBoundary
       title={searchDiscoveryMessages[locale].youtubeVerifiedTitle}
-      staticRecipes={content}
+      staticRecipes={staticRecipes}
       locale={locale}
       fetchFailed={fetchFailed}
       prefetch={prefetch}

@@ -4,6 +4,10 @@ import { getDictionary, type Locale } from "@/shared/i18n";
 import { buildSearchResultsUrl } from "@/shared/lib/search/buildSearchResultsUrl";
 
 import { CONTENT_PAGES } from "@/entities/recipe/lib/content-pages";
+import {
+  getStaticRecipesOnServer,
+  getYoutubeVerifiedOnServer,
+} from "@/entities/recipe/model/api.server";
 
 jest.mock("@/shared/adsense", () => ({
   HomeHeaderAnchorAdSlot: () => <div data-testid="home-header-ad" />,
@@ -56,11 +60,18 @@ jest.mock("@/entities/recipe/lib/metadata/schema", () => ({
 }));
 
 jest.mock("@/entities/recipe/model/api.server", () => ({
-  getStaticRecipesOnServer: async () => ({
+  getStaticRecipesOnServer: jest.fn(async () => ({
     content: [],
     fetchFailed: false,
-  }),
+  })),
+  getYoutubeVerifiedOnServer: jest.fn(async () => ({
+    content: [],
+    fetchFailed: false,
+  })),
 }));
+
+const mockGetStaticRecipesOnServer = jest.mocked(getStaticRecipesOnServer);
+const mockGetYoutubeVerifiedOnServer = jest.mocked(getYoutubeVerifiedOnServer);
 
 jest.mock("@/features/cooking-record-launch", () => ({
   CookingRecordLaunchDrawer: () => <div data-testid="cooking-record-launch" />,
@@ -98,7 +109,8 @@ jest.mock(
     }) {
       return (
         <div
-          data-testid="recipe-feed"
+          data-testid="home-recipe-slide"
+          data-slide={prioritizeFirstImage ? "popular" : "budget"}
           data-prioritize-first-image={String(!!prioritizeFirstImage)}
         />
       );
@@ -106,11 +118,48 @@ jest.mock(
 );
 
 jest.mock("@/widgets/RecipeSlide/server", () => ({
-  CategoryPopularServerSlide: () => null,
-  CountryPopularServerSlide: () => null,
-  QuickPopularServerSlide: () => null,
-  SeasonalPopularServerSlide: () => null,
-  YoutubeVerifiedServerSlide: () => null,
+  BudgetServerSlide: () => (
+    <div
+      data-testid="home-recipe-slide"
+      data-slide="budget"
+      data-prioritize-first-image="false"
+    />
+  ),
+  CategoryPopularServerSlide: () => (
+    <div
+      data-testid="home-recipe-slide"
+      data-slide="category"
+      data-prioritize-first-image="false"
+    />
+  ),
+  CountryPopularServerSlide: () => (
+    <div
+      data-testid="home-recipe-slide"
+      data-slide="country"
+      data-prioritize-first-image="false"
+    />
+  ),
+  QuickPopularServerSlide: () => (
+    <div
+      data-testid="home-recipe-slide"
+      data-slide="quick"
+      data-prioritize-first-image="false"
+    />
+  ),
+  SeasonalPopularServerSlide: () => (
+    <div
+      data-testid="home-recipe-slide"
+      data-slide="seasonal"
+      data-prioritize-first-image="false"
+    />
+  ),
+  YoutubeVerifiedServerSlide: () => (
+    <div
+      data-testid="home-recipe-slide"
+      data-slide="youtube"
+      data-prioritize-first-image="false"
+    />
+  ),
 }));
 
 jest.mock("@/widgets/ToastDebugPanel", () => ({
@@ -160,6 +209,11 @@ const expectBefore = (current: HTMLElement, next: HTMLElement) => {
 };
 
 describe.each(HOME_CASES)("$locale 홈 빠른 탐색 흐름", (homeCase) => {
+  beforeEach(() => {
+    mockGetStaticRecipesOnServer.mockClear();
+    mockGetYoutubeVerifiedOnServer.mockClear();
+  });
+
   it("헤더부터 기존 레시피 피드까지 새 탐색 순서로 연결한다", async () => {
     render(await homeCase.renderPage());
 
@@ -192,7 +246,7 @@ describe.each(HOME_CASES)("$locale 홈 빠른 탐색 흐름", (homeCase) => {
     const webOnlyHomeAds = screen.getByTestId("web-only-home-ads");
     const headerAd = within(webOnlyHomeAds).getByTestId("home-header-ad");
     const anchorAd = within(webOnlyHomeAds).getByTestId("home-anchor-ad");
-    const recipeFeed = screen.getAllByTestId("recipe-feed")[0];
+    const recipeFeed = screen.getAllByTestId("home-recipe-slide")[0];
 
     expectBefore(header, hero);
     expectBefore(hero, banner);
@@ -203,10 +257,10 @@ describe.each(HOME_CASES)("$locale 홈 빠른 탐색 흐름", (homeCase) => {
     expectBefore(headerAd, anchorAd);
     expectBefore(webOnlyHomeAds, recipeFeed);
     expect(within(homeAdsGate).getByTestId("home-banner")).toBe(banner);
-    expect(within(homeAdsGate).getAllByTestId("recipe-feed")[0]).toBe(
+    expect(within(homeAdsGate).getAllByTestId("home-recipe-slide")[0]).toBe(
       recipeFeed
     );
-    const recipeFeeds = within(homeAdsGate).getAllByTestId("recipe-feed");
+    const recipeFeeds = within(homeAdsGate).getAllByTestId("home-recipe-slide");
     expect(recipeFeeds[0]).toHaveAttribute(
       "data-prioritize-first-image",
       "true"
@@ -218,6 +272,39 @@ describe.each(HOME_CASES)("$locale 홈 빠른 탐색 흐름", (homeCase) => {
     expect(hero).toHaveClass("hidden", "md:block");
     expect(banner).toHaveClass("md:hidden");
     expect(categoryTabs).toHaveClass("hidden", "md:block");
+  });
+
+  it("T-HOME-ORDER-01: 주간 인기와 유튜브 조회수를 선행 요청합니다", async () => {
+    render(await homeCase.renderPage());
+
+    expect(mockGetStaticRecipesOnServer).toHaveBeenCalledTimes(1);
+    expect(mockGetStaticRecipesOnServer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        period: "weekly",
+        key: "popular-recipes",
+      })
+    );
+    expect(mockGetYoutubeVerifiedOnServer).toHaveBeenCalledWith(
+      homeCase.locale
+    );
+  });
+
+  it("T-HOME-ORDER-02: 기존 홈 슬라이드 순서를 유지합니다", async () => {
+    render(await homeCase.renderPage());
+
+    expect(
+      screen
+        .getAllByTestId("home-recipe-slide")
+        .map((slide) => slide.dataset.slide)
+    ).toEqual([
+      "popular",
+      "youtube",
+      "seasonal",
+      "country",
+      "quick",
+      "budget",
+      "category",
+    ]);
   });
 
   it("현재 언어의 이름과 경로를 빠른 탐색에 연결한다", async () => {

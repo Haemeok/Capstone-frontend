@@ -476,16 +476,16 @@ export const getStaticRecipesOnServer = async (
 
   let endpoint: string = END_POINTS.RECIPE_SEARCH;
   let cacheTags: string[] = [];
-  let revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
+  let revalidateTime = REVALIDATION_TIMES.HOME_RECIPE_SLIDES;
 
   if (params.key === "budget-recipes") {
     endpoint = END_POINTS.RECIPE_BUDGET;
     cacheTags = [CACHE_TAGS.recipesBudget];
-    revalidateTime = REVALIDATION_TIMES.RECIPES_BUDGET;
+    revalidateTime = REVALIDATION_TIMES.HOME_RECIPE_SLIDES;
   } else if (params.key === "popular-recipes") {
     endpoint = END_POINTS.RECIPE_POPULAR;
     cacheTags = [CACHE_TAGS.recipesPopular];
-    revalidateTime = REVALIDATION_TIMES.RECIPES_POPULAR;
+    revalidateTime = REVALIDATION_TIMES.HOME_RECIPE_SLIDES;
   } else if (params.key === "recommended-recipes" && params.recipeId) {
     endpoint = END_POINTS.RECIPE_RECOMMENDATIONS(params.recipeId);
     cacheTags = [CACHE_TAGS.recipesRecommended(params.recipeId)];
@@ -583,7 +583,7 @@ export const getYoutubeVerifiedOnServer = (
   locale: Locale
 ): Promise<WithFetchStatus<YoutubeVerifiedResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_YOUTUBE_VERIFIED, locale), {
-    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    revalidate: REVALIDATION_TIMES.HOME_RECIPE_SLIDES,
     tags: [CACHE_TAGS.recipesDiscovery("youtube-verified")],
     fallback: { content: [] },
   });
@@ -592,7 +592,7 @@ export const getQuickPopularOnServer = (
   locale: Locale
 ): Promise<WithFetchStatus<QuickPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_QUICK_POPULAR, locale), {
-    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    revalidate: REVALIDATION_TIMES.HOME_RECIPE_SLIDES,
     tags: [CACHE_TAGS.recipesDiscovery("quick-popular")],
     fallback: { maxCookingTime: 0, content: [] },
   });
@@ -601,7 +601,7 @@ export const getCountryPopularOnServer = (
   locale: Locale
 ): Promise<WithFetchStatus<CountryPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_COUNTRY_POPULAR, locale), {
-    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    revalidate: REVALIDATION_TIMES.HOME_RECIPE_SLIDES,
     tags: [CACHE_TAGS.recipesDiscovery("country-popular")],
     fallback: { countryCode: "US", countryName: "", content: [] },
   });
@@ -610,7 +610,7 @@ export const getSeasonalPopularOnServer = (
   locale: Locale
 ): Promise<WithFetchStatus<SeasonalPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_SEASONAL_POPULAR, locale), {
-    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    revalidate: REVALIDATION_TIMES.HOME_RECIPE_SLIDES,
     tags: [CACHE_TAGS.recipesDiscovery("seasonal-popular")],
     fallback: { seasonalIngredientName: null, content: [] },
   });
@@ -619,7 +619,7 @@ export const getCategoryPopularOnServer = (
   locale: Locale
 ): Promise<WithFetchStatus<CategoryPopularResponse>> =>
   safeFetchJson(withLang(END_POINTS.RECIPE_CATEGORY_POPULAR, locale), {
-    revalidate: REVALIDATION_TIMES.RECIPES_DISCOVERY,
+    revalidate: REVALIDATION_TIMES.HOME_RECIPE_SLIDES,
     tags: [CACHE_TAGS.recipesDiscovery("category-popular")],
     fallback: { categoryCode: "RICE", content: [] },
   });
