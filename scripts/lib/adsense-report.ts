@@ -66,6 +66,12 @@ export type PageReport = {
   pages: GroupedPage[];
 };
 
+export type ParsedPagesArguments = {
+  period: ReportPeriod;
+  isJson: boolean;
+  account?: string;
+};
+
 type Decimal = {
   coefficient: bigint;
   scale: number;
@@ -81,6 +87,14 @@ type MutableGroupedPage = {
 
 const TEN = 10n;
 const RPM_SCALE = 6;
+const NAMED_RANGES = new Set<NamedRange>([
+  "TODAY",
+  "YESTERDAY",
+  "MONTH_TO_DATE",
+  "YEAR_TO_DATE",
+  "LAST_7_DAYS",
+  "LAST_30_DAYS",
+]);
 
 const pow10 = (exponent: number): bigint => TEN ** BigInt(exponent);
 
@@ -148,6 +162,88 @@ const getHeaderIndex = (headers: AdsenseHeader[], name: string): number => {
   const index = headers.findIndex((header) => header.name === name);
   if (index === -1) throw new Error(`Missing report header: ${name}`);
   return index;
+};
+
+const isCalendarDate = (value: string): boolean => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
+};
+
+const readOptionValue = (args: string[], index: number): string => {
+  const value = args[index + 1];
+  if (value === undefined || value.startsWith("--")) {
+    throw new Error(`${args[index]} 옵션에 값이 필요합니다`);
+  }
+  return value;
+};
+
+export const parsePagesArguments = (args: string[]): ParsedPagesArguments => {
+  let range: string | undefined;
+  let start: string | undefined;
+  let end: string | undefined;
+  let account: string | undefined;
+  let isJson = false;
+
+  for (let index = 0; index < args.length; index += 1) {
+    const argument = args[index];
+    if (argument === "--json") {
+      isJson = true;
+      continue;
+    }
+    if (
+      argument !== "--range" &&
+      argument !== "--start" &&
+      argument !== "--end" &&
+      argument !== "--account"
+    ) {
+      throw new Error(`지원하지 않는 옵션입니다: ${argument}`);
+    }
+    const value = readOptionValue(args, index);
+    index += 1;
+    if (argument === "--range") range = value;
+    if (argument === "--start") start = value;
+    if (argument === "--end") end = value;
+    if (argument === "--account") account = value;
+  }
+
+  if (range !== undefined && (start !== undefined || end !== undefined)) {
+    throw new Error("--range와 --start/--end는 함께 사용할 수 없습니다");
+  }
+  if ((start === undefined) !== (end === undefined)) {
+    throw new Error("custom period에는 --start와 --end가 모두 필요합니다");
+  }
+  if (range !== undefined) {
+    if (!NAMED_RANGES.has(range as NamedRange)) {
+      throw new Error(`지원하지 않는 named range입니다: ${range}`);
+    }
+    return {
+      period: { kind: "named", value: range as NamedRange },
+      isJson,
+      ...(account === undefined ? {} : { account }),
+    };
+  }
+  if (start !== undefined && end !== undefined) {
+    if (!isCalendarDate(start))
+      throw new Error(`잘못된 시작 날짜입니다: ${start}`);
+    if (!isCalendarDate(end)) throw new Error(`잘못된 종료 날짜입니다: ${end}`);
+    if (start > end) throw new Error("시작일은 종료일보다 늦을 수 없습니다");
+    return {
+      period: { kind: "custom", start, end },
+      isJson,
+      ...(account === undefined ? {} : { account }),
+    };
+  }
+  return {
+    period: { kind: "named", value: "LAST_30_DAYS" },
+    isJson,
+    ...(account === undefined ? {} : { account }),
+  };
 };
 
 export const normalizePageUrl = (rawUrl: string): string => {
@@ -289,3 +385,6 @@ export const renderHumanPageReport = (report: PageReport): string => {
   );
   return lines.join("\n");
 };
+
+export const renderJsonPageReport = (report: PageReport): string =>
+  JSON.stringify(report, null, 2);

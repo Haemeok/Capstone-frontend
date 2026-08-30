@@ -1,7 +1,9 @@
 import {
   type AdsenseReportResponse,
   mapPageReport,
+  parsePagesArguments,
   renderHumanPageReport,
+  renderJsonPageReport,
   type ReportPeriod,
 } from "./lib/adsense-report";
 
@@ -17,16 +19,12 @@ export type PagesDependencies = {
   stderr: (message: string) => void;
 };
 
-const DEFAULT_PERIOD: ReportPeriod = {
-  kind: "named",
-  value: "LAST_30_DAYS",
-};
-
 export const runAdsensePagesCommand = async (
-  _args: string[],
+  args: string[],
   dependencies: PagesDependencies
 ): Promise<number> => {
   try {
+    const options = parsePagesArguments(args);
     const accessToken = await dependencies.getAccessToken();
     const accounts = await dependencies.listAccounts(accessToken);
     const account = accounts[0];
@@ -35,10 +33,14 @@ export const runAdsensePagesCommand = async (
     const response = await dependencies.generateReport(
       accessToken,
       account,
-      DEFAULT_PERIOD
+      options.period
     );
-    const report = mapPageReport(account, DEFAULT_PERIOD, response);
-    dependencies.stdout(renderHumanPageReport(report));
+    const report = mapPageReport(account, options.period, response);
+    dependencies.stdout(
+      options.isJson
+        ? renderJsonPageReport(report)
+        : renderHumanPageReport(report)
+    );
     return 0;
   } catch (error) {
     dependencies.stderr(error instanceof Error ? error.message : String(error));
