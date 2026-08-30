@@ -1,4 +1,9 @@
-import { redactSensitive } from "./lib/adsense-client";
+import path from "node:path";
+
+import {
+  createDefaultAdsenseClient,
+  redactSensitive,
+} from "./lib/adsense-client";
 import {
   type AdsenseReportResponse,
   mapPageReport,
@@ -79,3 +84,17 @@ export const runAdsensePagesCommand = async (
     return 1;
   }
 };
+
+const isCommandEntry =
+  path.basename(process.argv[1] ?? "") === "adsense-pages.ts";
+
+if (isCommandEntry) {
+  const client = createDefaultAdsenseClient();
+  void runAdsensePagesCommand(process.argv.slice(2), {
+    ...client,
+    stdout: console.log,
+    stderr: console.error,
+  }).then((exitCode) => {
+    process.exitCode = exitCode;
+  });
+}
