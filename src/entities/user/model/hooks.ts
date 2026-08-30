@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { ApiError } from "@/shared/api/errors";
 import { notifyAuthState } from "@/shared/lib/bridge/authStateBridge";
 
 import { getMyInfo, getUserInfo } from "./api";
@@ -35,6 +36,7 @@ export const useUserQuery = (userId: string, isOtherProfile: boolean) => {
 
 export const useMyInfoQuery = () => {
   const setUser = useUserStore((state) => state.setUser);
+  const markAuthReady = useUserStore((state) => state.markAuthReady);
   const {
     data: userData,
     isLoading,
@@ -46,8 +48,7 @@ export const useMyInfoQuery = () => {
     queryFn: getMyInfo,
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error) => {
-      // query error is unknown; read optional HTTP status off it
-      if ((error as { status?: number })?.status === 401) {
+      if (ApiError.isUnauthorized(error)) {
         return false;
       }
 
@@ -65,11 +66,13 @@ export const useMyInfoQuery = () => {
         notifyAuthState("login");
         lastUserIdRef.current = userData.id;
       }
-    } else if (isError) {
+    } else if (isError && ApiError.isUnauthorized(error)) {
       setUser(null);
       lastUserIdRef.current = null;
+    } else if (isError) {
+      markAuthReady();
     }
-  }, [userData, isError, setUser]);
+  }, [error, isError, markAuthReady, setUser, userData]);
 
   return {
     user: userData,

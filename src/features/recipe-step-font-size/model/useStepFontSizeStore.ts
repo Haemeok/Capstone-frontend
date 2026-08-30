@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+import { stepFontSizeStorage } from "./stepFontSizeStorage";
+
 export const STEP_FONT_LEVEL_COUNT = 3;
 
 export const STEP_FONT_CLASS = [
@@ -33,7 +35,7 @@ export const useStepFontSizeStore = create<StepFontSizeState>()(
     }),
     {
       name: "recipe-step-font-size",
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => stepFontSizeStorage),
       skipHydration: true,
     }
   )
