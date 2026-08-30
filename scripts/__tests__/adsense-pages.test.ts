@@ -8,6 +8,7 @@ import {
   type AdsenseReportResponse,
   mapPageReport,
   normalizePageUrl,
+  parsePagesArguments,
 } from "../lib/adsense-report";
 
 const pageRow = (
@@ -44,26 +45,39 @@ const createReportResponse = (
 
 type PagesFixture = {
   dependencies: PagesDependencies;
+  networkCalls: { count: number };
   requestedPeriods: unknown[];
+  stderr: string[];
   stdout: string[];
 };
 
 const createPagesFixture = (report: AdsenseReportResponse): PagesFixture => {
   const requestedPeriods: unknown[] = [];
+  const stderr: string[] = [];
   const stdout: string[] = [];
+  const networkCalls = { count: 0 };
 
   return {
+    networkCalls,
     requestedPeriods,
+    stderr,
     stdout,
     dependencies: {
-      getAccessToken: async () => "access-token",
-      listAccounts: async () => ["accounts/pub-111"],
+      getAccessToken: async () => {
+        networkCalls.count += 1;
+        return "access-token";
+      },
+      listAccounts: async () => {
+        networkCalls.count += 1;
+        return ["accounts/pub-111"];
+      },
       generateReport: async (_accessToken, _account, period) => {
+        networkCalls.count += 1;
         requestedPeriods.push(period);
         return report;
       },
       stdout: (message) => stdout.push(message),
-      stderr: () => undefined,
+      stderr: (message) => stderr.push(message),
     },
   };
 };
@@ -132,4 +146,113 @@ test("U-02: returned-page total은 소수 수익을 정확히 더하고 weighted
 
   expect(report.summary.estimatedEarnings).toBe("1234.867890");
   expect(report.summary.pageViewsRpm).toBe("1234.867890");
+});
+
+test("T-05: named range를 지정하면 기본 기간 대신 해당 기간을 요청합니다", async () => {
+  const fixture = createPagesFixture(createReportResponse([]));
+
+  await expect(
+    runAdsensePagesCommand(["--range", "YEAR_TO_DATE"], fixture.dependencies)
+  ).resolves.toBe(0);
+
+  expect(fixture.requestedPeriods).toEqual([
+    { kind: "named", value: "YEAR_TO_DATE" },
+  ]);
+});
+
+test("T-06: custom period를 30일 제한 없이 정확한 inclusive 날짜로 요청합니다", async () => {
+  const fixture = createPagesFixture(createReportResponse([]));
+
+  await expect(
+    runAdsensePagesCommand(
+      ["--start", "2024-01-01", "--end", "2024-12-31"],
+      fixture.dependencies
+    )
+  ).resolves.toBe(0);
+
+  expect(fixture.requestedPeriods).toEqual([
+    { kind: "custom", start: "2024-01-01", end: "2024-12-31" },
+  ]);
+});
+
+test.each([
+  [["--start", "2025-01-01"], "--end"],
+  [["--start", "2025-02-30", "--end", "2025-03-01"], "2025-02-30"],
+  [["--start", "2025-03-02", "--end", "2025-03-01"], "시작일"],
+  [
+    ["--range", "LAST_7_DAYS", "--start", "2025-03-01", "--end", "2025-03-02"],
+    "함께",
+  ],
+])(
+  "T-07: 잘못된 기간 %j은 API 요청 전에 거부됩니다",
+  async (args, expectedMessage) => {
+    const fixture = createPagesFixture(createReportResponse([]));
+
+    await expect(
+      runAdsensePagesCommand(args, fixture.dependencies)
+    ).resolves.toBe(1);
+
+    expect(fixture.networkCalls.count).toBe(0);
+    expect(fixture.stderr.join("\n")).toContain(expectedMessage);
+  }
+);
+
+test("T-08: JSON 출력은 동일한 report 계약과 모든 grouped page를 보존합니다", async () => {
+  const fixture = createPagesFixture(
+    createReportResponse(
+      [
+        pageRow("https://recipio.kr/recipes/a?from=x", "1.00", "10", "1"),
+        pageRow("https://recipio.kr/recipes/a?from=y", "2.00", "20", "2"),
+        pageRow("https://recipio.kr/search", "0.50", "5", "0"),
+      ],
+      ["Some rows were omitted"]
+    )
+  );
+
+  await expect(
+    runAdsensePagesCommand(["--json"], fixture.dependencies)
+  ).resolves.toBe(0);
+
+  expect(fixture.stdout).toHaveLength(1);
+  const output = JSON.parse(fixture.stdout[0]) as {
+    account: string;
+    currency: string;
+    groupedPageCount: number;
+    isTruncated: boolean;
+    pages: Array<{ sourceUrls: string[] }>;
+    requestedPeriod: unknown;
+    summary: { estimatedEarnings: string };
+    warnings: string[];
+  };
+  expect(output).toMatchObject({
+    account: "accounts/pub-111",
+    requestedPeriod: { kind: "named", value: "LAST_30_DAYS" },
+    currency: "KRW",
+    groupedPageCount: 2,
+    isTruncated: false,
+    summary: { estimatedEarnings: "3.50" },
+    warnings: ["Some rows were omitted"],
+  });
+  expect(output.pages[0].sourceUrls).toEqual([
+    "https://recipio.kr/recipes/a?from=x",
+    "https://recipio.kr/recipes/a?from=y",
+  ]);
+});
+
+test.each([
+  "TODAY",
+  "YESTERDAY",
+  "MONTH_TO_DATE",
+  "YEAR_TO_DATE",
+  "LAST_7_DAYS",
+  "LAST_30_DAYS",
+])("U-03: %s는 지원하는 named range입니다", (range) => {
+  expect(parsePagesArguments(["--range", range]).period).toEqual({
+    kind: "named",
+    value: range,
+  });
+});
+
+test("U-03: 지원하지 않는 named range는 API 요청 전에 거부됩니다", () => {
+  expect(() => parsePagesArguments(["--range", "FOREVER"])).toThrow("FOREVER");
 });
