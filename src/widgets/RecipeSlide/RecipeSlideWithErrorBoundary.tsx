@@ -16,6 +16,7 @@ type RecipeSlideWithErrorBoundaryProps = {
   emphasizeTime?: boolean;
   fetchFailed?: boolean;
   prefetch?: boolean | null;
+  prioritizeFirstImage?: boolean;
 };
 
 const RecipeSlideWithErrorBoundary = ({
@@ -28,6 +29,7 @@ const RecipeSlideWithErrorBoundary = ({
   emphasizeTime,
   fetchFailed = false,
   prefetch,
+  prioritizeFirstImage,
 }: RecipeSlideWithErrorBoundaryProps) => {
   if (
     !fetchFailed &&
@@ -66,6 +68,7 @@ const RecipeSlideWithErrorBoundary = ({
         locale={locale}
         emphasizeTime={emphasizeTime}
         prefetch={prefetch}
+        prioritizeFirstImage={prioritizeFirstImage}
       />
     </ErrorBoundary>
   );

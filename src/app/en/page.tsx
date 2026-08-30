@@ -119,6 +119,7 @@ const HomePage = async () => {
               locale="en"
               fetchFailed={staticPopularRecipes.fetchFailed}
               prefetch={null}
+              prioritizeFirstImage
             />
 
             <YoutubeVerifiedServerSlide locale="en" prefetch={null} />

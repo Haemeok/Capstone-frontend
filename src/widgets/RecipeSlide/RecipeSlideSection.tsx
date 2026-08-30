@@ -17,6 +17,7 @@ type RecipeSlideSectionProps = {
   locale?: "ko" | "ja" | "en";
   emphasizeTime?: boolean;
   prefetch?: boolean | null;
+  prioritizeFirstImage?: boolean;
 };
 
 const RecipeSlideSection = ({
@@ -28,6 +29,7 @@ const RecipeSlideSection = ({
   locale,
   emphasizeTime,
   prefetch,
+  prioritizeFirstImage,
 }: RecipeSlideSectionProps) => {
   const recipeIds = recipes.map((recipe) => recipe.id);
   const { data: statusData } = useRecipesStatusQuery(recipeIds);
@@ -50,6 +52,7 @@ const RecipeSlideSection = ({
       locale={locale}
       emphasizeTime={emphasizeTime}
       prefetch={prefetch}
+      prioritizeFirstImage={prioritizeFirstImage}
     />
   );
 };
