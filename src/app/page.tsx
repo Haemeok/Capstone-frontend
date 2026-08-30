@@ -15,7 +15,10 @@ import {
   createOrganizationStructuredData,
   createWebsiteStructuredData,
 } from "@/entities/recipe/lib/metadata/schema";
-import { getStaticRecipesOnServer } from "@/entities/recipe/model/api.server";
+import {
+  getStaticRecipesOnServer,
+  getYoutubeVerifiedOnServer,
+} from "@/entities/recipe/model/api.server";
 
 import { CookingRecordLaunchDrawer } from "@/features/cooking-record-launch";
 
@@ -27,6 +30,7 @@ import { HOME_BANNER_SLIDES } from "@/widgets/HomeBannerCarousel/slides";
 import HomeQuickNav from "@/widgets/HomeQuickNav";
 import RecipeSlideWithErrorBoundary from "@/widgets/RecipeSlide/RecipeSlideWithErrorBoundary";
 import {
+  BudgetServerSlide,
   CategoryPopularServerSlide,
   CountryPopularServerSlide,
   QuickPopularServerSlide,
@@ -39,21 +43,18 @@ import { DesktopYoutubeImportHero } from "./_components/DesktopYoutubeImportHero
 import { HomeAdsGate } from "./_components/HomeAdsGate";
 
 export const metadata = buildHomeMetadata("ko");
+export const revalidate = 259200;
 
 const HomePage = async () => {
   const dict = getDictionary("ko");
 
-  const [staticPopularRecipes, staticBudgetRecipes] = await Promise.all([
+  const [staticPopularRecipes, youtubeVerifiedRecipes] = await Promise.all([
     getStaticRecipesOnServer({
       period: "weekly",
       sort: "desc",
       key: "popular-recipes",
     }),
-    getStaticRecipesOnServer({
-      maxCost: 10000,
-      sort: "desc",
-      key: "budget-recipes",
-    }),
+    getYoutubeVerifiedOnServer("ko"),
   ]);
 
   const jsonLd = createWebsiteStructuredData("ko");
@@ -112,7 +113,12 @@ const HomePage = async () => {
               prioritizeFirstImage
             />
 
-            <YoutubeVerifiedServerSlide locale="ko" prefetch={null} />
+            <YoutubeVerifiedServerSlide
+              locale="ko"
+              staticRecipes={youtubeVerifiedRecipes.content}
+              fetchFailed={youtubeVerifiedRecipes.fetchFailed}
+              prefetch={null}
+            />
 
             <SeasonalPopularServerSlide locale="ko" prefetch={null} />
 
@@ -120,11 +126,9 @@ const HomePage = async () => {
 
             <QuickPopularServerSlide locale="ko" prefetch={null} />
 
-            <RecipeSlideWithErrorBoundary
+            <BudgetServerSlide
               title={dict.home.budgetSectionTitle}
-              staticRecipes={staticBudgetRecipes.content}
               locale="ko"
-              fetchFailed={staticBudgetRecipes.fetchFailed}
               prefetch={null}
             />
 
