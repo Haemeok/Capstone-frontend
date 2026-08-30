@@ -1,9 +1,15 @@
 /** @jest-environment node */
 
+import { z } from "zod";
+
 import {
   type PagesDependencies,
   runAdsensePagesCommand,
 } from "../adsense-pages";
+import {
+  buildReportSearchParams,
+  createAdsenseClient,
+} from "../lib/adsense-client";
 import {
   type AdsenseReportResponse,
   mapPageReport,
@@ -214,16 +220,18 @@ test("T-08: JSON 출력은 동일한 report 계약과 모든 grouped page를 보
   ).resolves.toBe(0);
 
   expect(fixture.stdout).toHaveLength(1);
-  const output = JSON.parse(fixture.stdout[0]) as {
-    account: string;
-    currency: string;
-    groupedPageCount: number;
-    isTruncated: boolean;
-    pages: Array<{ sourceUrls: string[] }>;
-    requestedPeriod: unknown;
-    summary: { estimatedEarnings: string };
-    warnings: string[];
-  };
+  const output = z
+    .object({
+      account: z.string(),
+      currency: z.string(),
+      groupedPageCount: z.number(),
+      isTruncated: z.boolean(),
+      pages: z.array(z.object({ sourceUrls: z.array(z.string()) })),
+      requestedPeriod: z.unknown(),
+      summary: z.object({ estimatedEarnings: z.string() }),
+      warnings: z.array(z.string()),
+    })
+    .parse(JSON.parse(fixture.stdout[0]));
   expect(output).toMatchObject({
     account: "accounts/pub-111",
     requestedPeriod: { kind: "named", value: "LAST_30_DAYS" },
@@ -255,4 +263,188 @@ test.each([
 
 test("U-03: 지원하지 않는 named range는 API 요청 전에 거부됩니다", () => {
   expect(() => parsePagesArguments(["--range", "FOREVER"])).toThrow("FOREVER");
+});
+
+test.each([
+  ["OAuth client 파일이 없습니다", "client-secret-123"],
+  ["OAuth client JSON 형식이 올바르지 않습니다", "refresh-secret-456"],
+  ["OAuth token 파일이 없습니다", "client-secret-123"],
+  ["invalid_grant: refresh token expired", "refresh-secret-456"],
+])(
+  "T-03: %s 오류는 비밀값 없이 해결 방법을 보여줍니다",
+  async (message, secret) => {
+    const fixture = createPagesFixture(createReportResponse([]));
+    fixture.dependencies.getAccessToken = async () => {
+      throw new Error(`${message}; client_secret=${secret}`);
+    };
+
+    await expect(
+      runAdsensePagesCommand([], fixture.dependencies)
+    ).resolves.toBe(1);
+
+    const output = fixture.stderr.join("\n");
+    expect(output).toContain(message);
+    expect(output).not.toContain(secret);
+    expect(output).toContain("[REDACTED]");
+  }
+);
+
+test("T-03: AdSense 계정이 없으면 보고서를 요청하지 않고 종료합니다", async () => {
+  const fixture = createPagesFixture(createReportResponse([]));
+  fixture.dependencies.listAccounts = async () => [];
+
+  await expect(runAdsensePagesCommand([], fixture.dependencies)).resolves.toBe(
+    1
+  );
+
+  expect(fixture.requestedPeriods).toEqual([]);
+  expect(fixture.stderr.join("\n")).toContain("AdSense 계정");
+});
+
+test("T-04: 여러 계정이 있으면 명시적으로 선택할 account 이름을 보여줍니다", async () => {
+  const fixture = createPagesFixture(createReportResponse([]));
+  fixture.dependencies.listAccounts = async () => [
+    "accounts/pub-111",
+    "accounts/pub-222",
+  ];
+
+  await expect(runAdsensePagesCommand([], fixture.dependencies)).resolves.toBe(
+    1
+  );
+
+  expect(fixture.requestedPeriods).toEqual([]);
+  const output = fixture.stderr.join("\n");
+  expect(output).toContain("--account");
+  expect(output).toContain("accounts/pub-111");
+  expect(output).toContain("accounts/pub-222");
+});
+
+test("T-04: 여러 계정 중 지정한 account만 조회합니다", async () => {
+  const fixture = createPagesFixture(createReportResponse([]));
+  const requestedAccounts: string[] = [];
+  fixture.dependencies.listAccounts = async () => [
+    "accounts/pub-111",
+    "accounts/pub-222",
+  ];
+  fixture.dependencies.generateReport = async (
+    _accessToken,
+    account,
+    period
+  ) => {
+    requestedAccounts.push(account);
+    fixture.requestedPeriods.push(period);
+    return createReportResponse([]);
+  };
+
+  await expect(
+    runAdsensePagesCommand(
+      ["--account", "accounts/pub-222"],
+      fixture.dependencies
+    )
+  ).resolves.toBe(0);
+
+  expect(requestedAccounts).toEqual(["accounts/pub-222"]);
+});
+
+test("T-09: AdSense API 오류는 비밀값 없이 원문 메시지를 보존합니다", async () => {
+  const fixture = createPagesFixture(createReportResponse([]));
+  fixture.dependencies.generateReport = async () => {
+    throw new Error(
+      "Requested date range is not supported for PAGE_URL; Authorization: Bearer access-secret"
+    );
+  };
+
+  await expect(runAdsensePagesCommand([], fixture.dependencies)).resolves.toBe(
+    1
+  );
+
+  const output = fixture.stderr.join("\n");
+  expect(output).toContain(
+    "Requested date range is not supported for PAGE_URL"
+  );
+  expect(output).not.toContain("access-secret");
+});
+
+test.each([{ args: [] }, { args: ["--json"] }])(
+  "T-10: truncated report는 partial data를 출력하지만 성공으로 끝나지 않습니다 ($args)",
+  async ({ args }) => {
+    const response = createReportResponse([
+      pageRow("https://recipio.kr/recipes/a", "1.00", "10", "1"),
+    ]);
+    response.totalMatchedRows = "2";
+    const fixture = createPagesFixture(response);
+
+    await expect(
+      runAdsensePagesCommand(args, fixture.dependencies)
+    ).resolves.toBe(1);
+
+    const output = fixture.stdout.join("\n");
+    expect(output).toContain("https://recipio.kr/recipes/a");
+    expect(output).toContain(
+      args.includes("--json") ? '"isTruncated": true' : "잘림"
+    );
+    expect(fixture.stderr.join("\n")).toContain("완전한 합계가 아닙니다");
+  }
+);
+
+test("T-06: native client가 custom period를 AdSense v2 query 계약으로 변환합니다", async () => {
+  let requestedUrl: URL | undefined;
+  const client = createAdsenseClient({
+    credentialDirectory: ".adsense-test",
+    readFile: async () => "{}",
+    fetch: async (input) => {
+      requestedUrl = new URL(String(input));
+      return new Response(JSON.stringify(createReportResponse([])), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    },
+  });
+
+  await client.generateReport("access-token", "accounts/pub-111", {
+    kind: "custom",
+    start: "2024-01-01",
+    end: "2024-12-31",
+  });
+
+  expect(requestedUrl?.pathname).toBe("/v2/accounts/pub-111/reports:generate");
+  expect(requestedUrl?.searchParams.getAll("dimensions")).toEqual(["PAGE_URL"]);
+  expect(requestedUrl?.searchParams.getAll("metrics")).toEqual([
+    "ESTIMATED_EARNINGS",
+    "PAGE_VIEWS",
+    "CLICKS",
+  ]);
+  expect(requestedUrl?.searchParams.get("dateRange")).toBe("CUSTOM");
+  expect(requestedUrl?.searchParams.get("startDate.year")).toBe("2024");
+  expect(requestedUrl?.searchParams.get("startDate.month")).toBe("1");
+  expect(requestedUrl?.searchParams.get("startDate.day")).toBe("1");
+  expect(requestedUrl?.searchParams.get("endDate.year")).toBe("2024");
+  expect(requestedUrl?.searchParams.get("endDate.month")).toBe("12");
+  expect(requestedUrl?.searchParams.get("endDate.day")).toBe("31");
+  expect(requestedUrl?.searchParams.get("limit")).toBe("100000");
+});
+
+test("T-05: named range query에는 custom date 필드가 없습니다", () => {
+  const params = buildReportSearchParams({
+    kind: "named",
+    value: "YEAR_TO_DATE",
+  });
+
+  expect(params.get("dateRange")).toBe("YEAR_TO_DATE");
+  expect(params.has("startDate.year")).toBe(false);
+  expect(params.has("endDate.year")).toBe(false);
+});
+
+test("T-03: native client는 없는 local credentials의 정확한 위치를 안내합니다", async () => {
+  const client = createAdsenseClient({
+    credentialDirectory: ".adsense-test",
+    readFile: async () => {
+      throw new Error("ENOENT");
+    },
+    fetch: async () => new Response(null, { status: 500 }),
+  });
+
+  await expect(client.getAccessToken()).rejects.toThrow(
+    ".adsense-test/client-secret.json"
+  );
 });

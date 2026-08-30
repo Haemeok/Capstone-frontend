@@ -85,16 +85,38 @@ type MutableGroupedPage = {
   clicks: number;
 };
 
-const TEN = 10n;
+type RawPagesOptions = {
+  range?: string;
+  start?: string;
+  end?: string;
+  account?: string;
+  isJson: boolean;
+};
+
+type ReportIndexes = {
+  pageUrl: number;
+  earnings: number;
+  pageViews: number;
+  clicks: number;
+};
+
+type ParsedPageRow = Omit<MutableGroupedPage, "sourceUrls"> & {
+  sourceUrl: string;
+};
+
+const ZERO = BigInt(0);
+const ONE = BigInt(1);
+const TEN = BigInt(10);
+const THOUSAND = BigInt(1000);
 const RPM_SCALE = 6;
-const NAMED_RANGES = new Set<NamedRange>([
+const NAMED_RANGES: readonly NamedRange[] = [
   "TODAY",
   "YESTERDAY",
   "MONTH_TO_DATE",
   "YEAR_TO_DATE",
   "LAST_7_DAYS",
   "LAST_30_DAYS",
-]);
+];
 
 const pow10 = (exponent: number): bigint => TEN ** BigInt(exponent);
 
@@ -102,7 +124,7 @@ const parseDecimal = (value: string): Decimal => {
   const match = /^(-?)(\d+)(?:\.(\d+))?$/.exec(value);
   if (match === null) throw new Error(`Invalid decimal value: ${value}`);
   const fraction = match[3] ?? "";
-  const sign = match[1] === "-" ? -1n : 1n;
+  const sign = match[1] === "-" ? -ONE : ONE;
   return {
     coefficient: sign * BigInt(`${match[2]}${fraction}`),
     scale: fraction.length,
@@ -124,11 +146,11 @@ const compareDecimal = (left: Decimal, right: Decimal): number => {
     coefficient: -right.coefficient,
     scale: right.scale,
   }).coefficient;
-  return difference < 0n ? -1 : difference > 0n ? 1 : 0;
+  return difference < ZERO ? -1 : difference > ZERO ? 1 : 0;
 };
 
 const formatDecimal = ({ coefficient, scale }: Decimal): string => {
-  const isNegative = coefficient < 0n;
+  const isNegative = coefficient < ZERO;
   const digits = (isNegative ? -coefficient : coefficient).toString();
   if (scale === 0) return `${isNegative ? "-" : ""}${digits}`;
   const padded = digits.padStart(scale + 1, "0");
@@ -138,9 +160,9 @@ const formatDecimal = ({ coefficient, scale }: Decimal): string => {
 };
 
 const calculateRpm = (earnings: Decimal, pageViews: number): Decimal => {
-  if (pageViews === 0) return { coefficient: 0n, scale: RPM_SCALE };
+  if (pageViews === 0) return { coefficient: ZERO, scale: RPM_SCALE };
   const coefficient =
-    (earnings.coefficient * 1000n * pow10(RPM_SCALE)) /
+    (earnings.coefficient * THOUSAND * pow10(RPM_SCALE)) /
     (BigInt(pageViews) * pow10(earnings.scale));
   return { coefficient, scale: RPM_SCALE };
 };
@@ -183,17 +205,16 @@ const readOptionValue = (args: string[], index: number): string => {
   return value;
 };
 
-export const parsePagesArguments = (args: string[]): ParsedPagesArguments => {
-  let range: string | undefined;
-  let start: string | undefined;
-  let end: string | undefined;
-  let account: string | undefined;
-  let isJson = false;
+const isNamedRange = (value: string): value is NamedRange =>
+  NAMED_RANGES.some((namedRange) => namedRange === value);
+
+const parseRawPagesOptions = (args: string[]): RawPagesOptions => {
+  const options: RawPagesOptions = { isJson: false };
 
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     if (argument === "--json") {
-      isJson = true;
+      options.isJson = true;
       continue;
     }
     if (
@@ -206,12 +227,19 @@ export const parsePagesArguments = (args: string[]): ParsedPagesArguments => {
     }
     const value = readOptionValue(args, index);
     index += 1;
-    if (argument === "--range") range = value;
-    if (argument === "--start") start = value;
-    if (argument === "--end") end = value;
-    if (argument === "--account") account = value;
+    if (argument === "--range") options.range = value;
+    if (argument === "--start") options.start = value;
+    if (argument === "--end") options.end = value;
+    if (argument === "--account") options.account = value;
   }
+  return options;
+};
 
+const resolveReportPeriod = ({
+  range,
+  start,
+  end,
+}: RawPagesOptions): ReportPeriod => {
   if (range !== undefined && (start !== undefined || end !== undefined)) {
     throw new Error("--range와 --start/--end는 함께 사용할 수 없습니다");
   }
@@ -219,30 +247,27 @@ export const parsePagesArguments = (args: string[]): ParsedPagesArguments => {
     throw new Error("custom period에는 --start와 --end가 모두 필요합니다");
   }
   if (range !== undefined) {
-    if (!NAMED_RANGES.has(range as NamedRange)) {
+    if (!isNamedRange(range)) {
       throw new Error(`지원하지 않는 named range입니다: ${range}`);
     }
-    return {
-      period: { kind: "named", value: range as NamedRange },
-      isJson,
-      ...(account === undefined ? {} : { account }),
-    };
+    return { kind: "named", value: range };
   }
   if (start !== undefined && end !== undefined) {
     if (!isCalendarDate(start))
       throw new Error(`잘못된 시작 날짜입니다: ${start}`);
     if (!isCalendarDate(end)) throw new Error(`잘못된 종료 날짜입니다: ${end}`);
     if (start > end) throw new Error("시작일은 종료일보다 늦을 수 없습니다");
-    return {
-      period: { kind: "custom", start, end },
-      isJson,
-      ...(account === undefined ? {} : { account }),
-    };
+    return { kind: "custom", start, end };
   }
+  return { kind: "named", value: "LAST_30_DAYS" };
+};
+
+export const parsePagesArguments = (args: string[]): ParsedPagesArguments => {
+  const options = parseRawPagesOptions(args);
   return {
-    period: { kind: "named", value: "LAST_30_DAYS" },
-    isJson,
-    ...(account === undefined ? {} : { account }),
+    period: resolveReportPeriod(options),
+    isJson: options.isJson,
+    ...(options.account === undefined ? {} : { account: options.account }),
   };
 };
 
@@ -254,71 +279,90 @@ export const normalizePageUrl = (rawUrl: string): string => {
   return url.toString();
 };
 
-export const mapPageReport = (
-  account: string,
-  requestedPeriod: ReportPeriod,
-  response: AdsenseReportResponse
-): PageReport => {
-  const pageUrlIndex = getHeaderIndex(response.headers, "PAGE_URL");
-  const earningsIndex = getHeaderIndex(response.headers, "ESTIMATED_EARNINGS");
-  const pageViewsIndex = getHeaderIndex(response.headers, "PAGE_VIEWS");
-  const clicksIndex = getHeaderIndex(response.headers, "CLICKS");
+const getReportIndexes = (headers: AdsenseHeader[]): ReportIndexes => ({
+  pageUrl: getHeaderIndex(headers, "PAGE_URL"),
+  earnings: getHeaderIndex(headers, "ESTIMATED_EARNINGS"),
+  pageViews: getHeaderIndex(headers, "PAGE_VIEWS"),
+  clicks: getHeaderIndex(headers, "CLICKS"),
+});
+
+const readPageRow = (
+  { cells }: AdsenseRow,
+  indexes: ReportIndexes
+): ParsedPageRow => {
+  const sourceUrl = cells[indexes.pageUrl]?.value;
+  const earnings = cells[indexes.earnings]?.value;
+  const pageViews = cells[indexes.pageViews]?.value;
+  const clicks = cells[indexes.clicks]?.value;
+  if (
+    sourceUrl === undefined ||
+    earnings === undefined ||
+    pageViews === undefined ||
+    clicks === undefined
+  ) {
+    throw new Error("Report row does not match its headers");
+  }
+  return {
+    sourceUrl,
+    url: normalizePageUrl(sourceUrl),
+    estimatedEarnings: parseDecimal(earnings),
+    pageViews: parseTally(pageViews, "PAGE_VIEWS"),
+    clicks: parseTally(clicks, "CLICKS"),
+  };
+};
+
+const mergePageRow = (
+  groups: Map<string, MutableGroupedPage>,
+  row: ParsedPageRow
+): void => {
+  const current = groups.get(row.url);
+  if (current === undefined) {
+    groups.set(row.url, {
+      url: row.url,
+      sourceUrls: new Set([row.sourceUrl]),
+      estimatedEarnings: row.estimatedEarnings,
+      pageViews: row.pageViews,
+      clicks: row.clicks,
+    });
+    return;
+  }
+  current.sourceUrls.add(row.sourceUrl);
+  current.estimatedEarnings = addDecimal(
+    current.estimatedEarnings,
+    row.estimatedEarnings
+  );
+  current.pageViews += row.pageViews;
+  current.clicks += row.clicks;
+};
+
+const groupPageRows = (
+  rows: AdsenseRow[],
+  indexes: ReportIndexes
+): MutableGroupedPage[] => {
   const groups = new Map<string, MutableGroupedPage>();
-
-  response.rows.forEach(({ cells }) => {
-    const sourceUrl = cells[pageUrlIndex]?.value;
-    const earningsValue = cells[earningsIndex]?.value;
-    const pageViewsValue = cells[pageViewsIndex]?.value;
-    const clicksValue = cells[clicksIndex]?.value;
-    if (
-      sourceUrl === undefined ||
-      earningsValue === undefined ||
-      pageViewsValue === undefined ||
-      clicksValue === undefined
-    ) {
-      throw new Error("Report row does not match its headers");
-    }
-    const url = normalizePageUrl(sourceUrl);
-    const earnings = parseDecimal(earningsValue);
-    const pageViews = parseTally(pageViewsValue, "PAGE_VIEWS");
-    const clicks = parseTally(clicksValue, "CLICKS");
-    const current = groups.get(url);
-    if (current === undefined) {
-      groups.set(url, {
-        url,
-        sourceUrls: new Set([sourceUrl]),
-        estimatedEarnings: earnings,
-        pageViews,
-        clicks,
-      });
-      return;
-    }
-    current.sourceUrls.add(sourceUrl);
-    current.estimatedEarnings = addDecimal(current.estimatedEarnings, earnings);
-    current.pageViews += pageViews;
-    current.clicks += clicks;
-  });
-
-  const mutablePages = [...groups.values()].sort((left, right) => {
+  rows.forEach((row) => mergePageRow(groups, readPageRow(row, indexes)));
+  return [...groups.values()].sort((left, right) => {
     const earningsOrder = compareDecimal(
       right.estimatedEarnings,
       left.estimatedEarnings
     );
-    return earningsOrder !== 0
-      ? earningsOrder
-      : left.url.localeCompare(right.url);
+    return earningsOrder || left.url.localeCompare(right.url);
   });
-  const pages = mutablePages.map<GroupedPage>((page) => ({
-    url: page.url,
-    sourceUrls: [...page.sourceUrls].sort(),
-    estimatedEarnings: formatDecimal(page.estimatedEarnings),
-    pageViews: page.pageViews,
-    clicks: page.clicks,
-    pageViewsRpm: formatDecimal(
-      calculateRpm(page.estimatedEarnings, page.pageViews)
-    ),
-  }));
-  const summaryValues = mutablePages.reduce(
+};
+
+const toGroupedPage = (page: MutableGroupedPage): GroupedPage => ({
+  url: page.url,
+  sourceUrls: [...page.sourceUrls].sort(),
+  estimatedEarnings: formatDecimal(page.estimatedEarnings),
+  pageViews: page.pageViews,
+  clicks: page.clicks,
+  pageViewsRpm: formatDecimal(
+    calculateRpm(page.estimatedEarnings, page.pageViews)
+  ),
+});
+
+const summarizePages = (pages: MutableGroupedPage[]): PageReportSummary => {
+  const values = pages.reduce(
     (summary, page) => ({
       estimatedEarnings: addDecimal(
         summary.estimatedEarnings,
@@ -328,11 +372,29 @@ export const mapPageReport = (
       clicks: summary.clicks + page.clicks,
     }),
     {
-      estimatedEarnings: { coefficient: 0n, scale: 0 },
+      estimatedEarnings: { coefficient: ZERO, scale: 0 },
       pageViews: 0,
       clicks: 0,
     }
   );
+  return {
+    estimatedEarnings: formatDecimal(values.estimatedEarnings),
+    pageViews: values.pageViews,
+    clicks: values.clicks,
+    pageViewsRpm: formatDecimal(
+      calculateRpm(values.estimatedEarnings, values.pageViews)
+    ),
+  };
+};
+
+export const mapPageReport = (
+  account: string,
+  requestedPeriod: ReportPeriod,
+  response: AdsenseReportResponse
+): PageReport => {
+  const indexes = getReportIndexes(response.headers);
+  const mutablePages = groupPageRows(response.rows, indexes);
+  const pages = mutablePages.map(toGroupedPage);
   const totalMatchedRows = parseTally(
     response.totalMatchedRows,
     "totalMatchedRows"
@@ -344,19 +406,12 @@ export const mapPageReport = (
     startDate: formatDate(response.startDate),
     endDate: formatDate(response.endDate),
     currency:
-      response.headers[earningsIndex]?.currencyCode ?? "UNKNOWN_CURRENCY",
+      response.headers[indexes.earnings]?.currencyCode ?? "UNKNOWN_CURRENCY",
     rawPageRowCount: response.rows.length,
     groupedPageCount: pages.length,
     totalMatchedRows,
     isTruncated: totalMatchedRows > response.rows.length,
-    summary: {
-      estimatedEarnings: formatDecimal(summaryValues.estimatedEarnings),
-      pageViews: summaryValues.pageViews,
-      clicks: summaryValues.clicks,
-      pageViewsRpm: formatDecimal(
-        calculateRpm(summaryValues.estimatedEarnings, summaryValues.pageViews)
-      ),
-    },
+    summary: summarizePages(mutablePages),
     warnings: response.warnings,
     pages,
   };
@@ -375,6 +430,11 @@ export const renderHumanPageReport = (report: PageReport): string => {
   ];
   if (report.warnings.length > 0) {
     lines.push("경고:", ...report.warnings.map((warning) => `- ${warning}`));
+  }
+  if (report.isTruncated) {
+    lines.push(
+      `잘림: ${report.totalMatchedRows}개 중 ${report.rawPageRowCount}개 page row만 반환됨`
+    );
   }
   lines.push(
     "페이지:",
