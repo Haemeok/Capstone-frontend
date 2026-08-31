@@ -448,3 +448,22 @@ test("T-03: native client는 없는 local credentials의 정확한 위치를 안
     ".adsense-test/client-secret.json"
   );
 });
+
+test("T-11: Google이 0인 totalMatchedRows를 생략하면 빈 보고서로 처리합니다", async () => {
+  const emptyResponse = createReportResponse([]);
+  const { totalMatchedRows: _omitted, ...responseWithoutMatchedRows } =
+    emptyResponse;
+  const client = createAdsenseClient({
+    credentialDirectory: ".adsense-test",
+    readFile: async () => "{}",
+    fetch: async () =>
+      new Response(JSON.stringify(responseWithoutMatchedRows), { status: 200 }),
+  });
+
+  await expect(
+    client.generateReport("access-token", "accounts/pub-111", {
+      kind: "named",
+      value: "LAST_30_DAYS",
+    })
+  ).resolves.toMatchObject({ totalMatchedRows: "0", rows: [] });
+});

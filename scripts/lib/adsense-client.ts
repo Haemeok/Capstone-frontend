@@ -36,7 +36,7 @@ const AdsenseDateSchema = z.object({
 });
 
 const AdsenseReportSchema = z.object({
-  totalMatchedRows: z.string(),
+  totalMatchedRows: z.string().default("0"),
   headers: z.array(
     z.object({
       name: z.string(),
