@@ -169,6 +169,9 @@ type ValueOf<T> = T[keyof T];
 
 export type TagCode = ValueOf<typeof TAG_CODES>;
 
+export const isTagCode = (value: string): value is TagCode =>
+  Object.hasOwn(TAGS_BY_CODE, value);
+
 export const SORT_TYPES = ["인기순", "최신순", "오래된순"];
 
 export type SortType = keyof typeof SORT_TYPE_CODES;

@@ -25,7 +25,9 @@ const subscribeToOverflowMeasurements = (
   };
 };
 
-export const useCategoryOverflow = () => {
+type CategoryMeasureHandler = (scroller: HTMLDivElement) => void;
+
+export const useCategoryOverflow = (onMeasure?: CategoryMeasureHandler) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [hasHiddenItemsRight, setHasHiddenItemsRight] = useState(false);
   const updateOverflowState = useCallback(() => {
@@ -39,12 +41,19 @@ export const useCategoryOverflow = () => {
         : nextHasHiddenItemsRight
     );
   }, []);
+  const measureOverflow = useCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    onMeasure?.(scroller);
+    updateOverflowState();
+  }, [onMeasure, updateOverflowState]);
 
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
-    return subscribeToOverflowMeasurements(scroller, updateOverflowState);
-  }, [updateOverflowState]);
+    return subscribeToOverflowMeasurements(scroller, measureOverflow);
+  }, [measureOverflow]);
 
   return {
     scrollerRef,

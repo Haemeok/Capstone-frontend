@@ -92,7 +92,9 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
     >
       {/* 로딩 중 스켈레톤 */}
       {image.status !== "loaded" &&
-        (skeleton ?? <Skeleton className="absolute inset-0" />)}
+        (skeleton ?? (
+          <Skeleton className={cn("absolute inset-0", skeletonClassName)} />
+        ))}
 
       {/* 에러 폴백 */}
       {image.status === "error" &&
