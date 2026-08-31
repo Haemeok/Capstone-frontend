@@ -1,8 +1,12 @@
 /** @jest-environment node */
 
+import { once } from "node:events";
+import { createConnection } from "node:net";
+
 import {
   ADSENSE_READONLY_SCOPE,
   type AuthDependencies,
+  createDefaultAuthDependencies,
   runAdsenseAuthCommand,
 } from "../lib/adsense-auth";
 
@@ -58,6 +62,9 @@ test("T-01: read-only OAuth 승인 후 refresh token을 로컬에 저장합니�
     ADSENSE_READONLY_SCOPE
   );
   expect(authorizationUrl.searchParams.get("access_type")).toBe("offline");
+  expect(authorizationUrl.searchParams.get("prompt")).toBe(
+    "select_account consent"
+  );
   expect(authorizationUrl.searchParams.get("state")).toBe("random-state");
   expect(stderr).toEqual([]);
   expect(stdout.join("\n")).not.toContain("desktop-client-secret");
@@ -89,4 +96,33 @@ test("T-01: refresh token이 없으면 인증 성공으로 처리하지 않습�
 
   expect(stderr.join("\n")).toContain("refresh token");
   expect(stderr.join("\n")).not.toContain("desktop-client-secret");
+});
+
+test("T-12: 브라우저 선연결 소켓이 남아 있어도 OAuth 서버를 종료합니다", async () => {
+  const dependencies = createDefaultAuthDependencies();
+  const callback = await dependencies.startCallback("expected-state");
+  const callbackUrl = new URL(callback.redirectUri);
+  const lingeringSocket = createConnection({
+    host: callbackUrl.hostname,
+    port: Number(callbackUrl.port),
+  });
+  await once(lingeringSocket, "connect");
+  const codePromise = callback.waitForCode();
+  callbackUrl.search = new URLSearchParams({
+    state: "expected-state",
+    code: "authorization-code",
+  }).toString();
+  const response = await fetch(callbackUrl);
+  await response.text();
+  await expect(codePromise).resolves.toBe("authorization-code");
+
+  const closePromise = callback.close();
+  const closedPromptly = await Promise.race([
+    closePromise.then(() => true),
+    new Promise<false>((resolve) => setTimeout(() => resolve(false), 200)),
+  ]);
+  lingeringSocket.destroy();
+  await closePromise;
+
+  expect(closedPromptly).toBe(true);
 });
