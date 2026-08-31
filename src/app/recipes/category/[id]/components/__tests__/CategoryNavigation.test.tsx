@@ -44,9 +44,11 @@ const mockedTriggerHaptic = jest.mocked(triggerHaptic);
 let resizeObserverCallback: ResizeObserverCallback | undefined;
 let resizeObserverInstance: ResizeObserver | undefined;
 let animationFrameCallback: FrameRequestCallback | undefined;
+let mockScrollerClientWidth = 390;
 const mockObserve = jest.fn();
 const mockDisconnect = jest.fn();
 const INITIAL_MEASUREMENT_FRAME_ID = 17;
+const SCROLLER_CONTENT_PADDING_PX = 12;
 const mockRequestAnimationFrame = jest.fn((callback: FrameRequestCallback) => {
   animationFrameCallback = callback;
   return INITIAL_MEASUREMENT_FRAME_ID;
@@ -106,12 +108,122 @@ const runInitialMeasurement = () => {
   });
 };
 
-const preventAnchorNavigation = (anchor: HTMLElement) => {
+const preventAnchorNavigationAfterReact = () => {
   const handleClick = (event: MouseEvent) => {
-    event.preventDefault();
+    if (event.target instanceof HTMLAnchorElement) {
+      event.preventDefault();
+    }
   };
 
-  anchor.addEventListener("click", handleClick, { capture: true, once: true });
+  document.addEventListener("click", handleClick, { once: true });
+};
+
+const installNavigationGeometry = () => {
+  const originalGetBoundingClientRect =
+    HTMLElement.prototype.getBoundingClientRect;
+  const descriptors = {
+    clientWidth: Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      "clientWidth"
+    ),
+    scrollWidth: Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      "scrollWidth"
+    ),
+    offsetLeft: Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      "offsetLeft"
+    ),
+    offsetWidth: Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      "offsetWidth"
+    ),
+  };
+
+  Object.defineProperties(HTMLElement.prototype, {
+    clientWidth: {
+      configurable: true,
+      get() {
+        return this.dataset.testid === "category-scroller"
+          ? mockScrollerClientWidth
+          : 0;
+      },
+    },
+    scrollWidth: {
+      configurable: true,
+      get() {
+        return this.dataset.testid === "category-scroller" ? 1072 : 0;
+      },
+    },
+    offsetLeft: {
+      configurable: true,
+      get() {
+        const itemIndex = EXPECTED_CODES.findIndex(
+          (code) => code === this.dataset.categoryCode
+        );
+        return itemIndex >= 0 ? itemIndex * 70 : 0;
+      },
+    },
+    offsetWidth: {
+      configurable: true,
+      get() {
+        return this.dataset.categoryCode ? 68 : 0;
+      },
+    },
+  });
+  HTMLElement.prototype.getBoundingClientRect = function () {
+    if (this.dataset.testid === "category-scroller") {
+      return new DOMRect(0, 0, mockScrollerClientWidth, 82);
+    }
+
+    const scroller = this.closest('[data-testid="category-scroller"]');
+    const scrollLeft =
+      scroller instanceof HTMLElement ? scroller.scrollLeft : 0;
+    if (this.dataset.categoryCode) {
+      const itemIndex = EXPECTED_CODES.findIndex(
+        (code) => code === this.dataset.categoryCode
+      );
+      return new DOMRect(
+        SCROLLER_CONTENT_PADDING_PX + itemIndex * 70 - scrollLeft,
+        0,
+        68,
+        74
+      );
+    }
+
+    if (this.hasAttribute("data-category-indicator")) {
+      const currentLink = this.parentElement?.querySelector(
+        'a[aria-current="page"]'
+      );
+      const activeItem = currentLink?.closest("li");
+      const activeCode =
+        activeItem instanceof HTMLElement
+          ? activeItem.dataset.categoryCode
+          : undefined;
+      const activeIndex = EXPECTED_CODES.findIndex(
+        (code) => code === activeCode
+      );
+      return new DOMRect(
+        SCROLLER_CONTENT_PADDING_PX + activeIndex * 70 + 8 - scrollLeft,
+        0,
+        52,
+        3
+      );
+    }
+
+    return originalGetBoundingClientRect.call(this);
+  };
+
+  return () => {
+    HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+    Object.entries(descriptors).forEach(([property, descriptor]) => {
+      if (descriptor) {
+        Object.defineProperty(HTMLElement.prototype, property, descriptor);
+      } else {
+        Reflect.deleteProperty(HTMLElement.prototype, property);
+      }
+    });
+  };
 };
 
 jest.mock("next/navigation", () => ({
@@ -187,6 +299,7 @@ describe("CategoryNavigation", () => {
     resizeObserverCallback = undefined;
     resizeObserverInstance = undefined;
     animationFrameCallback = undefined;
+    mockScrollerClientWidth = 390;
     mockObserve.mockClear();
     mockDisconnect.mockClear();
     mockRequestAnimationFrame.mockClear();
@@ -307,7 +420,7 @@ describe("CategoryNavigation", () => {
         );
       });
 
-    preventAnchorNavigation(inactiveLink);
+    preventAnchorNavigationAfterReact();
     fireEvent.click(inactiveLink);
 
     expect(screen.getByRole("link", { current: "page" })).toBe(
@@ -330,7 +443,7 @@ describe("CategoryNavigation", () => {
     const indicator = navigation.querySelector("[data-category-indicator]");
     const targetLink = screen.getByRole("link", { name: jaTags.HOME_PARTY });
 
-    preventAnchorNavigation(targetLink);
+    preventAnchorNavigationAfterReact();
     await user.click(targetLink);
 
     expect(targetLink.querySelector("span:last-child")).toHaveClass(
@@ -357,7 +470,7 @@ describe("CategoryNavigation", () => {
     const indicator = navigation.querySelector("[data-category-indicator]");
     const activeLink = screen.getByRole("link", { current: "page" });
 
-    preventAnchorNavigation(activeLink);
+    preventAnchorNavigationAfterReact();
     await user.click(activeLink);
 
     expect(screen.getByRole("link", { current: "page" })).toBe(activeLink);
@@ -372,7 +485,7 @@ describe("CategoryNavigation", () => {
     const { result, rerender } = renderHook(
       ({ currentCode }: { currentCode: TagCode }) =>
         useCategoryNavigation(currentCode),
-      { initialProps: { currentCode: "CHEF_RECIPE" as TagCode } }
+      { initialProps: { currentCode: "CHEF_RECIPE" } }
     );
 
     act(() => {
@@ -397,7 +510,7 @@ describe("CategoryNavigation", () => {
     const targetLink = screen.getByRole("link", { name: jaTags.HOME_PARTY });
     const indicator = navigation.querySelector("[data-category-indicator]");
 
-    preventAnchorNavigation(targetLink);
+    preventAnchorNavigationAfterReact();
     await user.click(targetLink);
 
     expect(targetLink.querySelector("span:last-child")).toHaveClass(
@@ -413,6 +526,177 @@ describe("CategoryNavigation", () => {
       JSON.stringify({ duration: 0 })
     );
     expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
+  });
+
+  it("후반 카테고리 직접 진입 시 활성 링크와 인디케이터가 rail viewport 안으로 이동한다", () => {
+    const restoreGeometry = installNavigationGeometry();
+
+    try {
+      render(<CategoryNavigation currentCode="HANGOVER" />);
+
+      expect(screen.getByTestId("category-scroller")).toHaveProperty(
+        "scrollLeft",
+        682
+      );
+      expect(screen.queryByTestId("category-fade")).not.toBeInTheDocument();
+    } finally {
+      restoreGeometry();
+    }
+  });
+
+  it("첫 카테고리 직접 진입은 scroller의 12px content padding 정렬을 유지한다", () => {
+    const restoreGeometry = installNavigationGeometry();
+
+    try {
+      render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+
+      const activeItem = screen
+        .getByRole("link", { current: "page" })
+        .closest("li");
+      const indicator = screen
+        .getByRole("navigation")
+        .querySelector("[data-category-indicator]");
+
+      expect(screen.getByTestId("category-scroller")).toHaveProperty(
+        "scrollLeft",
+        0
+      );
+      expect(activeItem?.getBoundingClientRect().left).toBe(12);
+      expect(indicator?.getBoundingClientRect().left).toBe(20);
+    } finally {
+      restoreGeometry();
+    }
+  });
+
+  it("뒤 항목이 남는 DRINK 직접 진입 시 활성 항목과 인디케이터가 48px 페이드 왼쪽에 온전히 드러난다", () => {
+    const restoreGeometry = installNavigationGeometry();
+
+    try {
+      render(<CategoryNavigation currentCode="DRINK" />);
+
+      const scroller = screen.getByTestId("category-scroller");
+      const activeLink = screen.getByRole("link", { current: "page" });
+      const activeItem = activeLink.closest("li");
+      const indicator = screen
+        .getByRole("navigation")
+        .querySelector("[data-category-indicator]");
+      const fadeSafeRight = scroller.getBoundingClientRect().right - 48;
+
+      expect(screen.getByTestId("category-fade")).toBeInTheDocument();
+      expect(activeItem?.getBoundingClientRect().right).toBeLessThanOrEqual(
+        fadeSafeRight
+      );
+      expect(indicator?.getBoundingClientRect().right).toBeLessThanOrEqual(
+        fadeSafeRight
+      );
+    } finally {
+      restoreGeometry();
+    }
+  });
+
+  it("route prop이 후반 카테고리로 바뀌면 rail을 이동하되 같은 prop 재렌더는 사용자의 수동 스크롤을 되돌리지 않는다", () => {
+    const restoreGeometry = installNavigationGeometry();
+
+    try {
+      const { rerender } = render(
+        <CategoryNavigation currentCode="CHEF_RECIPE" />
+      );
+      const scroller = screen.getByTestId("category-scroller");
+
+      rerender(<CategoryNavigation currentCode="HANGOVER" />);
+      expect(scroller.scrollLeft).toBe(682);
+
+      scroller.scrollLeft = 240;
+      rerender(<CategoryNavigation currentCode="HANGOVER" />);
+      expect(scroller.scrollLeft).toBe(240);
+    } finally {
+      restoreGeometry();
+    }
+  });
+
+  it("같은 HANGOVER route에서 rail 너비가 줄면 ResizeObserver가 활성 항목과 인디케이터를 다시 노출한다", () => {
+    mockScrollerClientWidth = 1200;
+    const restoreGeometry = installNavigationGeometry();
+
+    try {
+      render(<CategoryNavigation currentCode="HANGOVER" />);
+      const scroller = screen.getByTestId("category-scroller");
+      const activeItem = screen
+        .getByRole("link", { current: "page" })
+        .closest("li");
+      const indicator = screen
+        .getByRole("navigation")
+        .querySelector("[data-category-indicator]");
+      expect(scroller.scrollLeft).toBe(0);
+
+      mockScrollerClientWidth = 390;
+      notifyResize();
+
+      const fadeWidth = screen.queryByTestId("category-fade") ? 48 : 0;
+      const safeRight = scroller.getBoundingClientRect().right - fadeWidth;
+      expect(activeItem?.getBoundingClientRect().right).toBeLessThanOrEqual(
+        safeRight
+      );
+      expect(indicator?.getBoundingClientRect().right).toBeLessThanOrEqual(
+        safeRight
+      );
+    } finally {
+      restoreGeometry();
+    }
+  });
+
+  it("ResizeObserver 측정 시 활성 항목이 이미 안전 영역에 있으면 사용자의 scrollLeft를 유지한다", () => {
+    const restoreGeometry = installNavigationGeometry();
+
+    try {
+      render(<CategoryNavigation currentCode="BRUNCH" />);
+      const scroller = screen.getByTestId("category-scroller");
+      scroller.scrollLeft = 40;
+
+      notifyResize();
+
+      expect(scroller.scrollLeft).toBe(40);
+    } finally {
+      restoreGeometry();
+    }
+  });
+
+  it.each([
+    ["Ctrl 클릭", { ctrlKey: true }],
+    ["Meta 클릭", { metaKey: true }],
+    ["Shift 클릭", { shiftKey: true }],
+    ["Alt 클릭", { altKey: true }],
+    ["중간 버튼 클릭", { button: 1 }],
+  ])("%s은 optimistic 선택과 haptic을 발생시키지 않는다", (_label, init) => {
+    render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+    const targetLink = screen.getByRole("link", { name: jaTags.HOME_PARTY });
+
+    fireEvent.click(targetLink, init);
+
+    expect(within(targetLink).getByText(jaTags.HOME_PARTY)).toHaveClass(
+      "text-ink-sub",
+      "font-medium"
+    );
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+  });
+
+  it("이미 preventDefault된 클릭은 optimistic 선택과 haptic을 발생시키지 않는다", () => {
+    render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+    const targetLink = screen.getByRole("link", { name: jaTags.HOME_PARTY });
+    const clickEvent = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+    });
+    clickEvent.preventDefault();
+
+    targetLink.dispatchEvent(clickEvent);
+
+    expect(within(targetLink).getByText(jaTags.HOME_PARTY)).toHaveClass(
+      "text-ink-sub",
+      "font-medium"
+    );
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
   });
 
   it("T-08: 오른쪽에 숨은 항목이 있으면 스크롤을 막지 않는 페이드를 표시한다", () => {

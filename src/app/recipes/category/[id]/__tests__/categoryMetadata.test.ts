@@ -26,7 +26,7 @@ const flatten = (value: unknown): string => {
 describe("buildCategoryMetadata — localized (T-29~32)", () => {
   it("T-04 en 카테고리: title 접미사 Recipio + og:locale alternate", () => {
     const m = buildCategoryMetadata({
-      id: "DIET",
+      id: "HEALTHY",
       publicPage: 1,
       locale: "en",
     });

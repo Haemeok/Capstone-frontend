@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { absoluteUrl } from "@/shared/config/constants/api";
 import {
   CATEGORY_BASE_URL,
-  TagCode,
+  type TagCode,
   TAGS_BY_CODE,
   TAGS_IMAGE_KEYS,
 } from "@/shared/config/constants/recipe";
@@ -20,7 +20,7 @@ import {
 import { buildCategoryPageHref } from "./categoryPagination";
 
 type BuildCategoryMetadataArgs = {
-  id: string;
+  id: TagCode;
   publicPage: number;
   locale: Locale;
 };
@@ -179,20 +179,17 @@ export const buildCategoryMetadata = ({
   publicPage,
   locale,
 }: BuildCategoryMetadataArgs): Metadata => {
-  const tagCode = id as TagCode;
-  const tagImageKey = TAGS_IMAGE_KEYS[tagCode];
-  const imageUrl = tagImageKey
-    ? `${CATEGORY_BASE_URL}${tagImageKey}`
-    : SEO_CONSTANTS.DEFAULT_IMAGE;
+  const tagImageKey = TAGS_IMAGE_KEYS[id];
+  const imageUrl = `${CATEGORY_BASE_URL}${tagImageKey}`;
   const url = absoluteUrl(
     buildCategoryPageHref({ tagCode: id, locale, publicPage })
   );
 
   if (locale === "ko") {
-    const tagName = TAGS_BY_CODE[tagCode]?.name ?? "레시피";
+    const tagName = TAGS_BY_CODE[id].name;
     return buildKoMetadata(id, tagName, publicPage, imageUrl, url);
   }
 
-  const tagName = taxonomyMessages[locale].tags[tagCode] ?? id;
+  const tagName = taxonomyMessages[locale].tags[id];
   return buildLocalizedMetadata(id, locale, tagName, publicPage, imageUrl, url);
 };

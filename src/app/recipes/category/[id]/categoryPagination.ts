@@ -1,3 +1,4 @@
+import type { TagCode } from "@/shared/config/constants/recipe";
 import type { Locale } from "@/shared/i18n";
 
 export type CategorySearchParams = {
@@ -32,7 +33,7 @@ export const buildCategoryPageHref = ({
   locale,
   publicPage,
 }: {
-  tagCode: string;
+  tagCode: TagCode;
   locale: Locale;
   publicPage: number;
 }): string => {

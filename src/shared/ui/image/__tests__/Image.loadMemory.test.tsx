@@ -15,6 +15,39 @@ const skeletonOf = (container: HTMLElement) =>
   container.querySelector('[data-slot="skeleton"]');
 
 describe("Image 로드 기억", () => {
+  test("기본 Skeleton은 skeletonClassName으로 아이콘의 accent 배경과 둥근 모서리를 제거한다", () => {
+    const { container } = render(
+      <Image
+        src="https://cdn.recipio.kr/transparent-icon.png"
+        lazy={false}
+        alt="투명 아이콘"
+        skeletonClassName="rounded-none bg-transparent"
+      />
+    );
+
+    const skeleton = skeletonOf(container);
+    expect(skeleton).toHaveClass("rounded-none", "bg-transparent");
+    expect(skeleton).not.toHaveClass("rounded-md", "bg-accent");
+  });
+
+  test("사용자 제공 skeleton에는 skeletonClassName을 주입하지 않는다", () => {
+    render(
+      <Image
+        src="https://cdn.recipio.kr/custom-skeleton.png"
+        lazy={false}
+        alt="커스텀 스켈레톤"
+        skeleton={<span data-testid="custom-skeleton" className="custom" />}
+        skeletonClassName="rounded-none bg-transparent"
+      />
+    );
+
+    expect(screen.getByTestId("custom-skeleton")).toHaveClass("custom");
+    expect(screen.getByTestId("custom-skeleton")).not.toHaveClass(
+      "rounded-none",
+      "bg-transparent"
+    );
+  });
+
   test("T-03: 최초 로드 이미지는 스켈레톤 → 로드 후 표시 순서를 유지한다", async () => {
     const src = "https://cdn.recipio.kr/first.jpg";
     const { container } = render(

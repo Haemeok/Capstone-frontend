@@ -55,11 +55,15 @@ const CategoryNavigation = ({ currentCode }: CategoryNavigationProps) => {
               const iconConfig = CATEGORY_ICON_CONFIG[tag.code];
 
               return (
-                <li key={tag.code} className="w-[68px] shrink-0">
+                <li
+                  key={tag.code}
+                  data-category-code={tag.code}
+                  className="w-[68px] shrink-0"
+                >
                   <LocalizedLink
                     href={`/recipes/category/${tag.code}`}
                     aria-current={isRouteCurrent ? "page" : undefined}
-                    onClick={() => handleSelect(tag.code)}
+                    onClick={(event) => handleSelect(tag.code, event)}
                     className="focus-visible:ring-olive-light relative flex min-h-[74px] cursor-pointer flex-col items-center rounded-xl px-1 pt-0.5 focus-visible:ring-2 focus-visible:outline-none"
                   >
                     <span
@@ -71,7 +75,7 @@ const CategoryNavigation = ({ currentCode }: CategoryNavigationProps) => {
                         alt=""
                         fit="contain"
                         wrapperClassName="h-11 w-11 bg-transparent"
-                        skeletonClassName="bg-transparent"
+                        skeletonClassName="rounded-none bg-transparent"
                         imgClassName={cn("p-0.5", iconConfig.imageClassName)}
                       />
                     </span>
