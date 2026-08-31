@@ -41,6 +41,70 @@ const jaTags = taxonomyMessages.ja.tags;
 let mockPathname = "/ja/recipes/category/CHEF_RECIPE";
 let mockReducedMotion = false;
 const mockedTriggerHaptic = jest.mocked(triggerHaptic);
+let resizeObserverCallback: ResizeObserverCallback | undefined;
+let resizeObserverInstance: ResizeObserver | undefined;
+let animationFrameCallback: FrameRequestCallback | undefined;
+const mockObserve = jest.fn();
+const mockDisconnect = jest.fn();
+const INITIAL_MEASUREMENT_FRAME_ID = 17;
+const mockRequestAnimationFrame = jest.fn((callback: FrameRequestCallback) => {
+  animationFrameCallback = callback;
+  return INITIAL_MEASUREMENT_FRAME_ID;
+});
+const mockCancelAnimationFrame = jest.fn();
+
+const ControllableResizeObserver = jest.fn(
+  (callback: ResizeObserverCallback) => {
+    const observer: ResizeObserver = {
+      observe: mockObserve,
+      unobserve: jest.fn(),
+      disconnect: mockDisconnect,
+    };
+    resizeObserverCallback = callback;
+    resizeObserverInstance = observer;
+    return observer;
+  }
+);
+
+type ScrollerMetrics = {
+  clientWidth: number;
+  scrollWidth: number;
+  scrollLeft: number;
+};
+
+const setScrollerMetrics = (
+  element: HTMLElement,
+  { clientWidth, scrollWidth, scrollLeft }: ScrollerMetrics
+) => {
+  Object.defineProperties(element, {
+    clientWidth: { configurable: true, value: clientWidth },
+    scrollWidth: { configurable: true, value: scrollWidth },
+    scrollLeft: { configurable: true, value: scrollLeft, writable: true },
+  });
+};
+
+const notifyResize = () => {
+  const callback = resizeObserverCallback;
+  const observer = resizeObserverInstance;
+  if (!callback || !observer) {
+    throw new Error("ResizeObserver가 생성되지 않았습니다.");
+  }
+
+  act(() => {
+    callback([], observer);
+  });
+};
+
+const runInitialMeasurement = () => {
+  const callback = animationFrameCallback;
+  if (!callback) {
+    throw new Error("초기 측정 RAF가 예약되지 않았습니다.");
+  }
+
+  act(() => {
+    callback(0);
+  });
+};
 
 const preventAnchorNavigation = (anchor: HTMLElement) => {
   const handleClick = (event: MouseEvent) => {
@@ -88,10 +152,75 @@ jest.mock("@/shared/lib/bridge", () => ({
 }));
 
 describe("CategoryNavigation", () => {
+  const originalResizeObserver = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "ResizeObserver"
+  );
+  const originalRequestAnimationFrame = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "requestAnimationFrame"
+  );
+  const originalCancelAnimationFrame = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "cancelAnimationFrame"
+  );
+
+  beforeAll(() => {
+    Object.defineProperty(globalThis, "ResizeObserver", {
+      configurable: true,
+      value: ControllableResizeObserver,
+    });
+    Object.defineProperty(globalThis, "requestAnimationFrame", {
+      configurable: true,
+      value: mockRequestAnimationFrame,
+    });
+    Object.defineProperty(globalThis, "cancelAnimationFrame", {
+      configurable: true,
+      value: mockCancelAnimationFrame,
+    });
+  });
+
   beforeEach(() => {
     mockPathname = "/ja/recipes/category/CHEF_RECIPE";
     mockReducedMotion = false;
     mockedTriggerHaptic.mockClear();
+    resizeObserverCallback = undefined;
+    resizeObserverInstance = undefined;
+    animationFrameCallback = undefined;
+    mockObserve.mockClear();
+    mockDisconnect.mockClear();
+    mockRequestAnimationFrame.mockClear();
+    mockCancelAnimationFrame.mockClear();
+  });
+
+  afterAll(() => {
+    if (originalResizeObserver) {
+      Object.defineProperty(
+        globalThis,
+        "ResizeObserver",
+        originalResizeObserver
+      );
+    } else {
+      Reflect.deleteProperty(globalThis, "ResizeObserver");
+    }
+    if (originalRequestAnimationFrame) {
+      Object.defineProperty(
+        globalThis,
+        "requestAnimationFrame",
+        originalRequestAnimationFrame
+      );
+    } else {
+      Reflect.deleteProperty(globalThis, "requestAnimationFrame");
+    }
+    if (originalCancelAnimationFrame) {
+      Object.defineProperty(
+        globalThis,
+        "cancelAnimationFrame",
+        originalCancelAnimationFrame
+      );
+    } else {
+      Reflect.deleteProperty(globalThis, "cancelAnimationFrame");
+    }
   });
 
   it("T-02: 일본어 경로에서 15개 카테고리를 정의 순서와 현지화된 링크로 렌더링한다", () => {
@@ -284,5 +413,126 @@ describe("CategoryNavigation", () => {
       JSON.stringify({ duration: 0 })
     );
     expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
+  });
+
+  it("T-08: 오른쪽에 숨은 항목이 있으면 스크롤을 막지 않는 페이드를 표시한다", () => {
+    const { unmount } = render(
+      <CategoryNavigation currentCode="CHEF_RECIPE" />
+    );
+
+    const scroller = screen.getByTestId("category-scroller");
+    setScrollerMetrics(scroller, {
+      clientWidth: 390,
+      scrollWidth: 960,
+      scrollLeft: 0,
+    });
+    runInitialMeasurement();
+
+    const fade = screen.getByTestId("category-fade");
+    expect(fade).toHaveAttribute("aria-hidden", "true");
+    expect(fade).toHaveClass(
+      "pointer-events-none",
+      "absolute",
+      "inset-y-0",
+      "right-0",
+      "w-12",
+      "bg-gradient-to-l",
+      "from-white",
+      "via-white/85",
+      "to-transparent"
+    );
+    expect(mockObserve).toHaveBeenCalledTimes(1);
+    expect(mockObserve).toHaveBeenCalledWith(scroller);
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+
+    unmount();
+    expect(mockDisconnect).toHaveBeenCalledTimes(1);
+    expect(mockCancelAnimationFrame).toHaveBeenCalledWith(
+      INITIAL_MEASUREMENT_FRAME_ID
+    );
+  });
+
+  it("T-09: 오른쪽 끝과 1px 이내에 도달하면 페이드를 제거한다", () => {
+    render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+
+    const scroller = screen.getByTestId("category-scroller");
+    setScrollerMetrics(scroller, {
+      clientWidth: 390,
+      scrollWidth: 960,
+      scrollLeft: 0,
+    });
+    notifyResize();
+    expect(screen.getByTestId("category-fade")).toBeInTheDocument();
+
+    scroller.scrollLeft = 570;
+    fireEvent.scroll(scroller);
+    expect(screen.queryByTestId("category-fade")).not.toBeInTheDocument();
+
+    scroller.scrollLeft = 0;
+    fireEvent.scroll(scroller);
+    expect(screen.getByTestId("category-fade")).toBeInTheDocument();
+
+    scroller.scrollLeft = 569.5;
+    fireEvent.scroll(scroller);
+    expect(screen.queryByTestId("category-fade")).not.toBeInTheDocument();
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+  });
+
+  it("T-09: 가로 overflow가 없으면 처음부터 페이드를 표시하지 않는다", () => {
+    render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+
+    const scroller = screen.getByTestId("category-scroller");
+    setScrollerMetrics(scroller, {
+      clientWidth: 960,
+      scrollWidth: 960,
+      scrollLeft: 0,
+    });
+    notifyResize();
+
+    expect(screen.queryByTestId("category-fade")).not.toBeInTheDocument();
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+  });
+
+  it("T-09: ResizeObserver가 없어도 RAF로 초기 overflow를 측정하고 정리한다", () => {
+    const resizeObserverDescriptor = Object.getOwnPropertyDescriptor(
+      globalThis,
+      "ResizeObserver"
+    );
+    Object.defineProperty(globalThis, "ResizeObserver", {
+      configurable: true,
+      value: undefined,
+    });
+
+    try {
+      const { unmount } = render(
+        <CategoryNavigation currentCode="CHEF_RECIPE" />
+      );
+      const scroller = screen.getByTestId("category-scroller");
+      setScrollerMetrics(scroller, {
+        clientWidth: 390,
+        scrollWidth: 960,
+        scrollLeft: 0,
+      });
+
+      runInitialMeasurement();
+
+      expect(screen.getByTestId("category-fade")).toBeInTheDocument();
+      expect(mockObserve).not.toHaveBeenCalled();
+      unmount();
+      expect(mockDisconnect).not.toHaveBeenCalled();
+      expect(mockCancelAnimationFrame).toHaveBeenCalledWith(
+        INITIAL_MEASUREMENT_FRAME_ID
+      );
+    } finally {
+      if (resizeObserverDescriptor) {
+        Object.defineProperty(
+          globalThis,
+          "ResizeObserver",
+          resizeObserverDescriptor
+        );
+      } else {
+        Reflect.deleteProperty(globalThis, "ResizeObserver");
+      }
+    }
   });
 });

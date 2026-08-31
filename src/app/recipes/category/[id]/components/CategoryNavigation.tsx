@@ -27,6 +27,7 @@ const CategoryNavigation = ({ currentCode }: CategoryNavigationProps) => {
   const {
     activeCode,
     scrollerRef,
+    hasHiddenItemsRight,
     handleScroll,
     handleSelect,
     indicatorTransition,
@@ -42,6 +43,7 @@ const CategoryNavigation = ({ currentCode }: CategoryNavigationProps) => {
     >
       <div
         ref={scrollerRef}
+        data-testid="category-scroller"
         onScroll={handleScroll}
         className="scrollbar-hide overflow-x-auto overscroll-x-contain px-3"
       >
@@ -98,6 +100,13 @@ const CategoryNavigation = ({ currentCode }: CategoryNavigationProps) => {
           />
         </div>
       </div>
+      {hasHiddenItemsRight ? (
+        <div
+          data-testid="category-fade"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white via-white/85 to-transparent"
+        />
+      ) : null}
     </nav>
   );
 };

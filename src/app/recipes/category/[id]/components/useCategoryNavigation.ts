@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { useReducedMotion } from "framer-motion";
 
 import type { TagCode } from "@/shared/config/constants/recipe";
 import { triggerHaptic } from "@/shared/lib/bridge";
+
+import { useCategoryOverflow } from "./useCategoryOverflow";
 
 type CategoryIndicatorTransition =
   | {
@@ -25,10 +27,10 @@ const SPRING_TRANSITION: CategoryIndicatorTransition = {
 const IMMEDIATE_TRANSITION: CategoryIndicatorTransition = { duration: 0 };
 
 export const useCategoryNavigation = (currentCode: TagCode) => {
-  const scrollerRef = useRef<HTMLDivElement>(null);
   const [activeCode, setActiveCode] = useState(currentCode);
   const [syncedCode, setSyncedCode] = useState(currentCode);
   const reducedMotion = useReducedMotion();
+  const overflow = useCategoryOverflow();
 
   if (syncedCode !== currentCode) {
     setSyncedCode(currentCode);
@@ -41,13 +43,9 @@ export const useCategoryNavigation = (currentCode: TagCode) => {
     setActiveCode(code);
   };
 
-  const handleScroll = () => undefined;
-
   return {
     activeCode,
-    scrollerRef,
-    hasHiddenItemsRight: false,
-    handleScroll,
+    ...overflow,
     handleSelect,
     indicatorTransition: reducedMotion
       ? IMMEDIATE_TRANSITION
