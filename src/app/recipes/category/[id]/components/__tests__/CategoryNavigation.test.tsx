@@ -1,12 +1,22 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  within,
+} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { CATEGORY_ICON_CONFIG } from "@/shared/config/categoryNavigation";
 import type { TagCode } from "@/shared/config/constants/recipe";
 import { taxonomyMessages } from "@/shared/i18n/taxonomyMessages";
+import { triggerHaptic } from "@/shared/lib/bridge";
 
 import CategoryNavigation from "../CategoryNavigation";
+import { useCategoryNavigation } from "../useCategoryNavigation";
 
 const EXPECTED_CODES: readonly TagCode[] = [
   "CHEF_RECIPE",
@@ -29,6 +39,16 @@ const HANGUL = /[가-힣]/;
 const jaTags = taxonomyMessages.ja.tags;
 
 let mockPathname = "/ja/recipes/category/CHEF_RECIPE";
+let mockReducedMotion = false;
+const mockedTriggerHaptic = jest.mocked(triggerHaptic);
+
+const preventAnchorNavigation = (anchor: HTMLElement) => {
+  const handleClick = (event: MouseEvent) => {
+    event.preventDefault();
+  };
+
+  anchor.addEventListener("click", handleClick, { capture: true, once: true });
+};
 
 jest.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
@@ -50,6 +70,7 @@ type MotionSpanProps = HTMLAttributes<HTMLSpanElement> & {
 };
 
 jest.mock("framer-motion", () => ({
+  useReducedMotion: () => mockReducedMotion,
   motion: {
     span: ({ animate, initial, transition, ...props }: MotionSpanProps) => (
       <span
@@ -62,9 +83,15 @@ jest.mock("framer-motion", () => ({
   },
 }));
 
+jest.mock("@/shared/lib/bridge", () => ({
+  triggerHaptic: jest.fn(),
+}));
+
 describe("CategoryNavigation", () => {
   beforeEach(() => {
     mockPathname = "/ja/recipes/category/CHEF_RECIPE";
+    mockReducedMotion = false;
+    mockedTriggerHaptic.mockClear();
   });
 
   it("T-02: 일본어 경로에서 15개 카테고리를 정의 순서와 현지화된 링크로 렌더링한다", () => {
@@ -151,6 +178,7 @@ describe("CategoryNavigation", () => {
         );
       });
 
+    preventAnchorNavigation(inactiveLink);
     fireEvent.click(inactiveLink);
 
     expect(screen.getByRole("link", { current: "page" })).toBe(
@@ -164,5 +192,97 @@ describe("CategoryNavigation", () => {
     expect(
       navigation.querySelector("[data-category-indicator]")
     ).toHaveAttribute("data-animate", JSON.stringify({ x: 70 }));
+  });
+  it("T-05: selecting another category moves the active indicator with the profile spring and sends one Light haptic", async () => {
+    const user = userEvent.setup();
+    render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+
+    const navigation = screen.getByRole("navigation");
+    const indicator = navigation.querySelector("[data-category-indicator]");
+    const targetLink = screen.getByRole("link", { name: jaTags.HOME_PARTY });
+
+    preventAnchorNavigation(targetLink);
+    await user.click(targetLink);
+
+    expect(targetLink.querySelector("span:last-child")).toHaveClass(
+      "text-ink",
+      "font-bold"
+    );
+    expect(indicator).toHaveAttribute(
+      "data-animate",
+      JSON.stringify({ x: 70 })
+    );
+    expect(indicator).toHaveAttribute(
+      "data-transition",
+      JSON.stringify({ type: "spring", stiffness: 700, damping: 40 })
+    );
+    expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
+    expect(mockedTriggerHaptic).toHaveBeenCalledWith("Light");
+  });
+
+  it("T-06: selecting the current category keeps the indicator node and sends no haptic", async () => {
+    const user = userEvent.setup();
+    render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+
+    const navigation = screen.getByRole("navigation");
+    const indicator = navigation.querySelector("[data-category-indicator]");
+    const activeLink = screen.getByRole("link", { current: "page" });
+
+    preventAnchorNavigation(activeLink);
+    await user.click(activeLink);
+
+    expect(screen.getByRole("link", { current: "page" })).toBe(activeLink);
+    expect(navigation.querySelector("[data-category-indicator]")).toBe(
+      indicator
+    );
+    expect(indicator).toHaveAttribute("data-animate", JSON.stringify({ x: 0 }));
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+  });
+
+  it("T-06: scrolling and route prop synchronization never send haptic", () => {
+    const { result, rerender } = renderHook(
+      ({ currentCode }: { currentCode: TagCode }) =>
+        useCategoryNavigation(currentCode),
+      { initialProps: { currentCode: "CHEF_RECIPE" as TagCode } }
+    );
+
+    act(() => {
+      result.current.handleScroll();
+    });
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+
+    act(() => {
+      rerender({ currentCode: "HOME_PARTY" });
+    });
+
+    expect(result.current.activeCode).toBe("HOME_PARTY");
+    expect(mockedTriggerHaptic).not.toHaveBeenCalled();
+  });
+
+  it("T-07: reduced motion uses an immediate transition while still selecting and sending one haptic", async () => {
+    mockReducedMotion = true;
+    const user = userEvent.setup();
+    render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+
+    const navigation = screen.getByRole("navigation");
+    const targetLink = screen.getByRole("link", { name: jaTags.HOME_PARTY });
+    const indicator = navigation.querySelector("[data-category-indicator]");
+
+    preventAnchorNavigation(targetLink);
+    await user.click(targetLink);
+
+    expect(targetLink.querySelector("span:last-child")).toHaveClass(
+      "text-ink",
+      "font-bold"
+    );
+    expect(indicator).toHaveAttribute(
+      "data-animate",
+      JSON.stringify({ x: 70 })
+    );
+    expect(indicator).toHaveAttribute(
+      "data-transition",
+      JSON.stringify({ duration: 0 })
+    );
+    expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
   });
 });
