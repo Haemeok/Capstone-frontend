@@ -31,10 +31,10 @@ import {
   buildCategoryClientQuery,
   buildCategoryQueryKey,
 } from "./categoryQuery";
-import CategoryChips from "./components/CategoryChips";
 import CategoryContentHeader from "./components/CategoryContentHeader";
 import CategoryEmptyState from "./components/CategoryEmptyState";
 import CategoryHeader from "./components/CategoryHeader";
+import CategoryNavigation from "./components/CategoryNavigation";
 
 const SortPicker = dynamic(() => import("@/shared/ui/SortPicker"), {
   ssr: false,
@@ -88,7 +88,7 @@ const CategoryDetailClient = ({
   return (
     <Container padding={false}>
       <CategoryHeader />
-      <CategoryChips currentCode={tagCode} />
+      <CategoryNavigation currentCode={tagCode} />
 
       <CategoryContentHeader
         title={tagName}
