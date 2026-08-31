@@ -21,6 +21,17 @@ type CategoryNavigationProps = {
 
 const CATEGORY_NAV_ITEM_PITCH_PX = 70;
 
+const getRotatedCategoryDefinitions = (currentCode: TagCode) => {
+  const currentIndex = TAG_DEFINITIONS.findIndex(
+    ({ code }) => code === currentCode
+  );
+
+  return [
+    ...TAG_DEFINITIONS.slice(currentIndex),
+    ...TAG_DEFINITIONS.slice(0, currentIndex),
+  ];
+};
+
 const CategoryNavigation = ({ currentCode }: CategoryNavigationProps) => {
   const dict = useCategoryDict();
   const { label } = useTaxonomy();
@@ -32,8 +43,9 @@ const CategoryNavigation = ({ currentCode }: CategoryNavigationProps) => {
     handleSelect,
     indicatorTransition,
   } = useCategoryNavigation(currentCode);
-  const activeIndex = TAG_DEFINITIONS.findIndex(
-    (tag) => tag.code === activeCode
+  const orderedCategories = getRotatedCategoryDefinitions(currentCode);
+  const activeIndex = orderedCategories.findIndex(
+    ({ code }) => code === activeCode
   );
 
   return (
@@ -49,7 +61,7 @@ const CategoryNavigation = ({ currentCode }: CategoryNavigationProps) => {
       >
         <div className="relative w-max">
           <ul className="flex w-max gap-0.5 py-2">
-            {TAG_DEFINITIONS.map((tag) => {
+            {orderedCategories.map((tag) => {
               const isRouteCurrent = tag.code === currentCode;
               const isVisuallyActive = tag.code === activeCode;
               const iconConfig = CATEGORY_ICON_CONFIG[tag.code];
