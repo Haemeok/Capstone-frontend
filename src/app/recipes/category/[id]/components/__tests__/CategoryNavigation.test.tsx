@@ -118,6 +118,19 @@ const preventAnchorNavigationAfterReact = () => {
   document.addEventListener("click", handleClick, { once: true });
 };
 
+const getRenderedCategoryCodes = () =>
+  within(screen.getByRole("navigation"))
+    .getAllByRole("link")
+    .map((link) => link.getAttribute("href")?.split("/").at(-1));
+
+const getSiblingIndex = (element: HTMLElement | null) => {
+  if (!element?.parentElement) {
+    return -1;
+  }
+
+  return Array.from(element.parentElement.children).indexOf(element);
+};
+
 const installNavigationGeometry = () => {
   const originalGetBoundingClientRect =
     HTMLElement.prototype.getBoundingClientRect;
@@ -158,9 +171,9 @@ const installNavigationGeometry = () => {
     offsetLeft: {
       configurable: true,
       get() {
-        const itemIndex = EXPECTED_CODES.findIndex(
-          (code) => code === this.dataset.categoryCode
-        );
+        const itemIndex = this.dataset.categoryCode
+          ? getSiblingIndex(this)
+          : -1;
         return itemIndex >= 0 ? itemIndex * 70 : 0;
       },
     },
@@ -180,9 +193,7 @@ const installNavigationGeometry = () => {
     const scrollLeft =
       scroller instanceof HTMLElement ? scroller.scrollLeft : 0;
     if (this.dataset.categoryCode) {
-      const itemIndex = EXPECTED_CODES.findIndex(
-        (code) => code === this.dataset.categoryCode
-      );
+      const itemIndex = getSiblingIndex(this);
       return new DOMRect(
         SCROLLER_CONTENT_PADDING_PX + itemIndex * 70 - scrollLeft,
         0,
@@ -196,13 +207,8 @@ const installNavigationGeometry = () => {
         'a[aria-current="page"]'
       );
       const activeItem = currentLink?.closest("li");
-      const activeCode =
-        activeItem instanceof HTMLElement
-          ? activeItem.dataset.categoryCode
-          : undefined;
-      const activeIndex = EXPECTED_CODES.findIndex(
-        (code) => code === activeCode
-      );
+      const activeIndex =
+        activeItem instanceof HTMLElement ? getSiblingIndex(activeItem) : -1;
       return new DOMRect(
         SCROLLER_CONTENT_PADDING_PX + activeIndex * 70 + 8 - scrollLeft,
         0,
@@ -528,17 +534,94 @@ describe("CategoryNavigation", () => {
     expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
   });
 
-  it("후반 카테고리 직접 진입 시 활성 링크와 인디케이터가 rail viewport 안으로 이동한다", () => {
+  it("T-11: starts the HANGOVER route with the current category", () => {
+    render(<CategoryNavigation currentCode="HANGOVER" />);
+
+    const links = within(screen.getByRole("navigation")).getAllByRole("link");
+
+    expect(getRenderedCategoryCodes().slice(0, 3)).toEqual([
+      "HANGOVER",
+      "CHEF_RECIPE",
+      "HOME_PARTY",
+    ]);
+    expect(links[0]).toHaveAttribute("aria-current", "page");
+  });
+
+  it("T-12: rotates all categories without mutating the canonical order", () => {
+    const drinkOrder: readonly TagCode[] = [
+      "DRINK",
+      "AIR_FRYER",
+      "HANGOVER",
+      "CHEF_RECIPE",
+      "HOME_PARTY",
+      "BRUNCH",
+      "QUICK",
+      "LATE_NIGHT",
+      "LUNCHBOX",
+      "PICNIC",
+      "CAMPING",
+      "HEALTHY",
+      "KIDS",
+      "SOLO",
+      "HOLIDAY",
+    ];
+    const { unmount } = render(<CategoryNavigation currentCode="DRINK" />);
+    const renderedDrinkOrder = getRenderedCategoryCodes();
+
+    expect(renderedDrinkOrder).toEqual(drinkOrder);
+    expect(new Set(renderedDrinkOrder).size).toBe(EXPECTED_CODES.length);
+
+    unmount();
+    render(<CategoryNavigation currentCode="CHEF_RECIPE" />);
+
+    expect(getRenderedCategoryCodes()).toEqual(EXPECTED_CODES);
+  });
+
+  it("T-13: reorders only after the route prop confirms the selection", () => {
+    const { rerender } = render(
+      <CategoryNavigation currentCode="CHEF_RECIPE" />
+    );
+    const drinkLink = screen.getByRole("link", { name: jaTags.DRINK });
+    preventAnchorNavigationAfterReact();
+
+    fireEvent.click(drinkLink);
+
+    expect(getRenderedCategoryCodes()).toEqual(EXPECTED_CODES);
+    expect(drinkLink.querySelector("span:last-child")).toHaveClass("font-bold");
+    expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
+
+    rerender(<CategoryNavigation currentCode="DRINK" />);
+
+    const navigation = screen.getByRole("navigation");
+    const links = within(navigation).getAllByRole("link");
+    expect(getRenderedCategoryCodes()[0]).toBe("DRINK");
+    expect(links[0]).toHaveAttribute("aria-current", "page");
+    expect(
+      navigation.querySelector("[data-category-indicator]")
+    ).toHaveAttribute("data-animate", JSON.stringify({ x: 0 }));
+    expect(mockedTriggerHaptic).toHaveBeenCalledTimes(1);
+  });
+
+  it("HANGOVER 직접 진입 시 현재 카테고리를 첫 위치에 두고 오른쪽 페이드를 표시한다", () => {
     const restoreGeometry = installNavigationGeometry();
 
     try {
       render(<CategoryNavigation currentCode="HANGOVER" />);
 
+      const activeItem = screen
+        .getByRole("link", { current: "page" })
+        .closest("li");
+      const indicator = screen
+        .getByRole("navigation")
+        .querySelector("[data-category-indicator]");
+
       expect(screen.getByTestId("category-scroller")).toHaveProperty(
         "scrollLeft",
-        682
+        0
       );
-      expect(screen.queryByTestId("category-fade")).not.toBeInTheDocument();
+      expect(activeItem?.getBoundingClientRect().left).toBe(12);
+      expect(indicator?.getBoundingClientRect().left).toBe(20);
+      expect(screen.getByTestId("category-fade")).toBeInTheDocument();
     } finally {
       restoreGeometry();
     }
@@ -568,7 +651,7 @@ describe("CategoryNavigation", () => {
     }
   });
 
-  it("뒤 항목이 남는 DRINK 직접 진입 시 활성 항목과 인디케이터가 48px 페이드 왼쪽에 온전히 드러난다", () => {
+  it("DRINK 직접 진입 시 현재 카테고리를 첫 위치에 두고 뒤 항목을 페이드로 예고한다", () => {
     const restoreGeometry = installNavigationGeometry();
 
     try {
@@ -580,21 +663,17 @@ describe("CategoryNavigation", () => {
       const indicator = screen
         .getByRole("navigation")
         .querySelector("[data-category-indicator]");
-      const fadeSafeRight = scroller.getBoundingClientRect().right - 48;
 
       expect(screen.getByTestId("category-fade")).toBeInTheDocument();
-      expect(activeItem?.getBoundingClientRect().right).toBeLessThanOrEqual(
-        fadeSafeRight
-      );
-      expect(indicator?.getBoundingClientRect().right).toBeLessThanOrEqual(
-        fadeSafeRight
-      );
+      expect(scroller.scrollLeft).toBe(0);
+      expect(activeItem?.getBoundingClientRect().left).toBe(12);
+      expect(indicator?.getBoundingClientRect().left).toBe(20);
     } finally {
       restoreGeometry();
     }
   });
 
-  it("route prop이 후반 카테고리로 바뀌면 rail을 이동하되 같은 prop 재렌더는 사용자의 수동 스크롤을 되돌리지 않는다", () => {
+  it("route prop이 바뀌면 현재 카테고리를 첫 위치로 옮기되 같은 prop 재렌더는 수동 스크롤을 유지한다", () => {
     const restoreGeometry = installNavigationGeometry();
 
     try {
@@ -604,7 +683,7 @@ describe("CategoryNavigation", () => {
       const scroller = screen.getByTestId("category-scroller");
 
       rerender(<CategoryNavigation currentCode="HANGOVER" />);
-      expect(scroller.scrollLeft).toBe(682);
+      expect(scroller.scrollLeft).toBe(0);
 
       scroller.scrollLeft = 240;
       rerender(<CategoryNavigation currentCode="HANGOVER" />);
@@ -645,7 +724,7 @@ describe("CategoryNavigation", () => {
     }
   });
 
-  it("ResizeObserver 측정 시 활성 항목이 이미 안전 영역에 있으면 사용자의 scrollLeft를 유지한다", () => {
+  it("ResizeObserver 측정 시 숨겨진 첫 활성 항목을 다시 노출한다", () => {
     const restoreGeometry = installNavigationGeometry();
 
     try {
@@ -655,7 +734,7 @@ describe("CategoryNavigation", () => {
 
       notifyResize();
 
-      expect(scroller.scrollLeft).toBe(40);
+      expect(scroller.scrollLeft).toBe(0);
     } finally {
       restoreGeometry();
     }
