@@ -1,6 +1,8 @@
 import type { CategoryDict } from "../../types";
 
 export const category: CategoryDict = {
+  pageTitle: "レシピカテゴリー",
+  summaryTemplate: "{tagName}をまとめて見られます",
   navAriaLabel: "カテゴリー",
   emptyTitle: "{tagName}のレシピはまだありません",
   emptySubtitle: "最初のレシピを作ってみましょう。",

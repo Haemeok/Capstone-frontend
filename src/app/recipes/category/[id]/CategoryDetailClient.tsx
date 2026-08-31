@@ -8,7 +8,12 @@ import type { InfiniteData } from "@tanstack/react-query";
 import type { RecipeSortType, TagCode } from "@/shared/config/constants/recipe";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { useSort } from "@/shared/hooks/useSort";
-import { type Locale, useRecipeGridDict } from "@/shared/i18n";
+import {
+  format,
+  type Locale,
+  useCategoryDict,
+  useRecipeGridDict,
+} from "@/shared/i18n";
 import { useTaxonomy } from "@/shared/i18n/useTaxonomy";
 import { getNextSlicePageParam } from "@/shared/lib/utils";
 import { Container } from "@/shared/ui/Container";
@@ -27,8 +32,9 @@ import {
   buildCategoryQueryKey,
 } from "./categoryQuery";
 import CategoryChips from "./components/CategoryChips";
+import CategoryContentHeader from "./components/CategoryContentHeader";
 import CategoryEmptyState from "./components/CategoryEmptyState";
-import CategoryHero from "./components/CategoryHero";
+import CategoryHeader from "./components/CategoryHeader";
 
 const SortPicker = dynamic(() => import("@/shared/ui/SortPicker"), {
   ssr: false,
@@ -50,6 +56,7 @@ const CategoryDetailClient = ({
   nextPageHref,
 }: CategoryDetailClientProps) => {
   const { label } = useTaxonomy();
+  const categoryMessages = useCategoryDict();
   const recipeGridMessages = useRecipeGridDict();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -80,27 +87,32 @@ const CategoryDetailClient = ({
 
   return (
     <Container padding={false}>
-      <CategoryHero tagCode={tagCode} />
+      <CategoryHeader />
       <CategoryChips currentCode={tagCode} />
 
-      <div className="flex items-center justify-end px-4 py-3">
-        <div className="flex items-center">
-          <RecipeSortButton
-            currentSort={currentSort}
-            onClick={() => setIsDrawerOpen(true)}
-          />
-          <SortPicker
-            open={isDrawerOpen}
-            onOpenChange={setIsDrawerOpen}
-            currentSort={currentSort}
-            availableSorts={availableSorts}
-            onSortChange={(newSort) =>
-              // SortPicker emits string; availableSorts are RecipeSortType
-              setSort(newSort as RecipeSortType)
-            }
-          />
-        </div>
-      </div>
+      <CategoryContentHeader
+        title={tagName}
+        description={format(categoryMessages.summaryTemplate, { tagName })}
+        sortControl={
+          <div className="flex items-center">
+            <RecipeSortButton
+              currentSort={currentSort}
+              onClick={() => setIsDrawerOpen(true)}
+              className="min-h-11 cursor-pointer"
+            />
+            <SortPicker
+              open={isDrawerOpen}
+              onOpenChange={setIsDrawerOpen}
+              currentSort={currentSort}
+              availableSorts={availableSorts}
+              onSortChange={(newSort) =>
+                // SortPicker emits string; availableSorts are RecipeSortType
+                setSort(newSort as RecipeSortType)
+              }
+            />
+          </div>
+        }
+      />
 
       {recipes.length > 0 ? (
         <RecipeGrid

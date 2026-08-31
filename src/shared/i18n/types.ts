@@ -586,6 +586,8 @@ export type LoginPromotionDict = {
 };
 
 export type CategoryDict = {
+  pageTitle: string;
+  summaryTemplate: string;
   navAriaLabel: string;
   emptyTitle: string;
   emptySubtitle: string;
