@@ -116,7 +116,7 @@ export const buildAuthorizationUrl = (
     response_type: "code",
     scope: ADSENSE_READONLY_SCOPE,
     access_type: "offline",
-    prompt: "consent",
+    prompt: "select_account consent",
     state,
   }).toString();
   return url;
@@ -211,6 +211,7 @@ const closeServer = (server: ReturnType<typeof createServer>): Promise<void> =>
       return;
     }
     server.close((error) => (error === undefined ? resolve() : reject(error)));
+    server.closeAllConnections();
   });
 
 const startCallback = async (
