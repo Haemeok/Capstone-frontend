@@ -12,6 +12,11 @@ jest.mock("@vercel/edge-config", () => ({
 
 import { middleware } from "../middleware";
 
+const mockInfo = jest.spyOn(console, "info").mockImplementation();
+
+beforeEach(() => mockInfo.mockClear());
+afterAll(() => mockInfo.mockRestore());
+
 const req = (
   path: string,
   cookies: Record<string, string> = {},
@@ -159,5 +164,73 @@ describe("middleware recipe render track", () => {
 
     expect(res.headers.get("x-middleware-rewrite")).toBeNull();
     expect(mockGet).not.toHaveBeenCalled();
+  });
+});
+
+describe("middleware recipe request country log", () => {
+  beforeEach(() => mockGet.mockReset());
+
+  it("T-18: 레시피 요청은 국가와 클라이언트 식별 정보를 구조화해 기록한다", async () => {
+    await middleware(
+      req(
+        "/recipes/recipeId",
+        {},
+        {
+          "user-agent": "Crawler/1.0",
+          "x-forwarded-for": "203.0.113.7, 10.0.0.1",
+          "x-vercel-id": "icn1::request-id",
+          "x-vercel-ip-country": "SG",
+          "x-vercel-ja4-digest": "ja4-digest",
+        }
+      )
+    );
+
+    expect(mockInfo).toHaveBeenCalledWith(
+      JSON.stringify({
+        event: "recipe_request_country",
+        country: "SG",
+        path: "/recipes/recipeId",
+        method: "GET",
+        clientIp: "203.0.113.7",
+        userAgent: "Crawler/1.0",
+        ja4Digest: "ja4-digest",
+        requestId: "icn1::request-id",
+      })
+    );
+  });
+
+  it.each(["/en/recipes/recipeId", "/ja/recipes/recipeId"])(
+    "T-19: 다국어 레시피 요청 %s도 국가 로그에 기록한다",
+    async (path) => {
+      await middleware(req(path, {}, { "x-vercel-ip-country": "US" }));
+
+      expect(mockInfo).toHaveBeenCalledTimes(1);
+      expect(mockInfo).toHaveBeenCalledWith(
+        expect.stringContaining(`"country":"US","path":"${path}"`)
+      );
+    }
+  );
+
+  it("T-20: 레시피가 아닌 요청은 국가 로그에 기록하지 않는다", async () => {
+    await middleware(req("/search", {}, { "x-vercel-ip-country": "KR" }));
+
+    expect(mockInfo).not.toHaveBeenCalled();
+  });
+
+  it("T-21: 식별 헤더가 없는 레시피 요청은 unknown으로 기록한다", async () => {
+    await middleware(req("/recipes/recipeId"));
+
+    expect(mockInfo).toHaveBeenCalledWith(
+      JSON.stringify({
+        event: "recipe_request_country",
+        country: "unknown",
+        path: "/recipes/recipeId",
+        method: "GET",
+        clientIp: "unknown",
+        userAgent: "unknown",
+        ja4Digest: "unknown",
+        requestId: "unknown",
+      })
+    );
   });
 });

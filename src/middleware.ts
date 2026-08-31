@@ -22,6 +22,33 @@ const RESERVED_RECIPE_SEGMENTS = new Set([
   "dyn",
 ]);
 
+const RECIPE_REQUEST_PATH = /^\/(?:(?:en|ja)\/)?recipes(?:\/|$)/;
+
+const getClientIp = (request: NextRequest): string => {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  return forwardedFor?.split(",")[0]?.trim() || "unknown";
+};
+
+const logRecipeRequestCountry = (
+  request: NextRequest,
+  pathname: string
+): void => {
+  if (!RECIPE_REQUEST_PATH.test(pathname)) return;
+
+  console.info(
+    JSON.stringify({
+      event: "recipe_request_country",
+      country: request.headers.get("x-vercel-ip-country") ?? "unknown",
+      path: pathname,
+      method: request.method,
+      clientIp: getClientIp(request),
+      userAgent: request.headers.get("user-agent") ?? "unknown",
+      ja4Digest: request.headers.get("x-vercel-ja4-digest") ?? "unknown",
+      requestId: request.headers.get("x-vercel-id") ?? "unknown",
+    })
+  );
+};
+
 const resolveRecipeTrack = async (id: string): Promise<"isr" | "dynamic"> => {
   try {
     const bloom = await get<Bloom>("indexedBloom");
@@ -34,6 +61,7 @@ const resolveRecipeTrack = async (id: string): Promise<"isr" | "dynamic"> => {
 
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+  logRecipeRequestCountry(request, pathname);
 
   const preferred = request.cookies.get(STORAGE_KEYS.PREFERRED_LOCALE)?.value;
   if (!isNonLocalizedPath(pathname) && isLocale(preferred)) {
