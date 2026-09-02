@@ -46,7 +46,7 @@ Reference these guidelines when:
 
 ### 2. Bundle Size Optimization (CRITICAL)
 
-- `bundle-barrel-imports` - Import directly, avoid barrel files
+- `bundle-barrel-imports` - Avoid barrel costs, but keep deep ESM imports within the test runner's transform boundary
 - `bundle-no-self-barrel-import` - Never import a layer's own barrel from inside that layer (Turbopack dynamic_imports.rs panic in route handlers / server actions)
 - `bundle-dynamic-imports` - Use next/dynamic for heavy components
 - `bundle-defer-third-party` - Load analytics/logging after hydration
