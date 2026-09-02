@@ -114,8 +114,10 @@ export type {
   StaticDetailedRecipesApiResponse,
   TitleKeywordResponse,
   TrendingYoutubeRecipe,
+  YoutubeChannelBadgeType,
   YoutubeVerifiedResponse,
 } from "./model/types";
 export { CountryFlagGlyph } from "./ui/CountryFlagGlyph";
 export { CreatorCountryFlag } from "./ui/CreatorCountryFlag";
 export { default as RecipeStepList } from "./ui/RecipeStepList";
+export { YoutubeChannelBadge } from "./ui/YoutubeChannelBadge";

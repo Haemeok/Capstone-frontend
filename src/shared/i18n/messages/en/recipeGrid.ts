@@ -13,6 +13,11 @@ export const recipeGrid: RecipeGridDict = {
   ctaAi: "Generate an AI recipe",
   ctaYoutube: "Import from YouTube",
   aiGenerated: "AI-made",
+  youtubeChannelBadge: {
+    chef: "Chef recipe",
+    popularCreator: "Popular creator",
+    popularCreatorShort: "Popular",
+  },
   cookingTime: "{n} min",
   itemPrivate: "Private recipe",
   itemMenuAria: "Recipe options",

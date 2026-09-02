@@ -13,6 +13,11 @@ export const recipeGrid: RecipeGridDict = {
   ctaAi: "AIレシピを生成",
   ctaYoutube: "YouTubeから取り込む",
   aiGenerated: "AI生成",
+  youtubeChannelBadge: {
+    chef: "シェフレシピ",
+    popularCreator: "人気クリエイター",
+    popularCreatorShort: "人気",
+  },
   cookingTime: "{n}分",
   itemPrivate: "非公開レシピ",
   itemMenuAria: "レシピのオプション",
