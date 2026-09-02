@@ -56,4 +56,34 @@ Direct imports provide 15-70% faster dev boot, 28% faster builds, 40% faster col
 
 Libraries commonly affected: `lucide-react`, `@mui/material`, `@mui/icons-material`, `@tabler/icons-react`, `react-icons`, `@headlessui/react`, `@radix-ui/react-*`, `lodash`, `ramda`, `date-fns`, `rxjs`, `react-use`.
 
+### Keep deep imports inside the test runner's transform boundary
+
+Some packages expose direct files only as ESM under paths such as `dist/esm`. A Jest setup that ignores `node_modules` during transforms can load the package entry point correctly while failing on those direct files with `Cannot use import statement outside a module`. In that setup, replacing a working package import with a deep ESM import breaks every test that reaches the component.
+
+**Incorrect — deep ESM path bypasses Jest transforms:**
+
+```tsx
+import ChefHat from "lucide-react/dist/esm/icons/chef-hat";
+```
+
+**Correct — keep the compatible import and optimize it at the Next.js boundary:**
+
+```tsx
+import { ChefHat } from "lucide-react";
+```
+
+```ts
+const nextConfig = {
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
+  },
+};
+```
+
+Key points:
+
+- Before converting a package import to a deep path, run the owning Jest suite and confirm the package subpath is transformed.
+- Prefer `optimizePackageImports` when the framework can rewrite compatible package imports without exposing raw ESM files to Jest.
+- Changing Jest's `transformIgnorePatterns` is a repository-wide test decision. Do not expand it as a side effect of one component optimization.
+
 Reference: [How we optimized package imports in Next.js](https://vercel.com/blog/how-we-optimized-package-imports-in-next-js)
