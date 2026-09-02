@@ -1465,6 +1465,11 @@ export type RecipeGridDict = {
   ctaAi: string;
   ctaYoutube: string;
   aiGenerated: string;
+  youtubeChannelBadge: {
+    chef: string;
+    popularCreator: string;
+    popularCreatorShort: string;
+  };
   cookingTime: string;
   itemPrivate: string;
   itemMenuAria: string;

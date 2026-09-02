@@ -25,6 +25,7 @@ import {
   isAiRecipe,
   isUserRecipe,
   isYoutubeRecipe,
+  YoutubeChannelBadge,
 } from "@/entities/recipe";
 import { DetailedRecipeGridItem as DetailedRecipeGridItemType } from "@/entities/recipe/model/types";
 
@@ -139,9 +140,12 @@ const DetailedRecipeGridItem = ({
           <div className="flex items-center gap-1 overflow-hidden px-0.5 pt-1.5">
             {showYoutubeRow && (
               <>
+                <YoutubeChannelBadge
+                  badgeType={recipe.youtubeChannelBadgeType}
+                />
                 <YoutubeGlyph />
                 {recipe.youtubeChannelName && (
-                  <span className="text-ink-muted truncate text-[13px]">
+                  <span className="text-ink-muted min-w-0 truncate text-[13px]">
                     {recipe.youtubeChannelName}
                   </span>
                 )}

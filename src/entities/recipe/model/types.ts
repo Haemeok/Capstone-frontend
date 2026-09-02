@@ -6,6 +6,7 @@ import { User } from "@/entities/user";
 
 export type Visibility = "PUBLIC" | "PRIVATE" | "RESTRICTED";
 export type RecipeSource = "USER" | "AI" | "YOUTUBE" | "REELS";
+export type YoutubeChannelBadgeType = "CHEF" | "POPULAR_CREATOR";
 
 export type RecipeYoutubeMeta = {
   url: string;
@@ -71,6 +72,7 @@ export type DetailedRecipeGridItem = BaseRecipeGridItem & {
   marketPrice?: number;
   ingredientCost?: number;
   youtubeChannelName?: string;
+  youtubeChannelBadgeType?: YoutubeChannelBadgeType;
   favoriteCount?: number;
   youtubeVideoViewCount?: number;
   tags?: string[];
