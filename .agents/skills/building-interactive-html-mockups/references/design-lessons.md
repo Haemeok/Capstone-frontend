@@ -40,3 +40,10 @@ Before adding an entry:
 - **Mechanism:** Removing supporting copy without recalibrating the container padding leaves stacked vertical gaps, making the remaining heading look larger than it is.
 - **Rule:** Preserve a heading that matches its semantic type token, then remove obsolete copy and tighten the adjacent section spacing before considering a font-size override.
 - **Verification:** Compare desktop and mobile renders before and after spacing changes; confirm the heading retains its intended hierarchy while reading as part of the following content group.
+
+## Reserve Grid Gaps Before Dividing the Available Width
+
+- **Symptom:** The last grid item touches or crosses the container edge even though the container has visible horizontal padding.
+- **Mechanism:** Percentage columns that already total 100% consume the full content width; a separate `gap` is added on top and forces the grid past its padded area.
+- **Rule:** Use fractional tracks such as `minmax(0, 2fr) minmax(0, 3fr)` when columns should share the space remaining after gaps, or subtract fixed gaps explicitly before assigning percentage widths.
+- **Verification:** Render the narrowest and widest supported layouts, compare the first and last item edges with the container content box, and confirm both horizontal paddings remain visible without clipping or overflow.
