@@ -5,11 +5,14 @@ import { usePathname } from "next/navigation";
 
 import { ScrollContext } from "@/shared/lib/ScrollContext";
 
+import { useScrollDiagnostics } from "./scroll-diagnostics/useScrollDiagnostics";
+
 const SCROLL_SAVE_DEBOUNCE_MS = 150;
 
 export const ScrollProvider = ({ children }: { children: ReactNode }) => {
   const motionRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const recordScrollDiagnostic = useScrollDiagnostics(motionRef, pathname);
   const scrollSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrollLockRef = useRef<number | null>(null);
   const rafRef = useRef(0);
@@ -34,6 +37,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
         rafRef.current = requestAnimationFrame(() => {
           if (scrollLockRef.current !== null) {
             scrollContainer.scrollTop = scrollLockRef.current;
+            recordScrollDiagnostic("input_restore");
           }
           scrollLockRef.current = null;
         });
@@ -45,7 +49,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
       scrollContainer.removeEventListener("input", handleInput, {
         capture: true,
       });
-  }, []);
+  }, [recordScrollDiagnostic]);
 
   useEffect(() => {
     const scrollContainer = motionRef.current;
@@ -80,7 +84,8 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
 
     const savedScrollY = sessionStorage.getItem(`scroll_position_${pathname}`);
     scrollContainer.scrollTo(0, savedScrollY ? parseInt(savedScrollY, 10) : 0);
-  }, [pathname]);
+    recordScrollDiagnostic("route_restore");
+  }, [pathname, recordScrollDiagnostic]);
 
   return (
     <ScrollContext.Provider value={{ motionRef }}>
