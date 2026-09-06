@@ -14,7 +14,7 @@ UI chrome and fetched content are two independent localization axes. Wiring the 
 
 ## Recommended pattern
 
-Plumb the new locale through the data layer as a first-class value the same way the existing non-default locale is plumbed — key suffix, fetch param, and href builder all get the real locale.
+Plumb the real locale through fetch params and href builders. For cache key inclusion and optimistic updates, use the canonical [locale cache rule](policy-i18n-querykey-vs-optimistic-mutation.md): locale-dependent responses need separate keys; locale-independent responses may share a key.
 
 ```ts
 // ❌ remap the new locale to default at the data boundary

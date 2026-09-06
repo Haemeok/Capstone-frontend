@@ -1,5 +1,55 @@
 [
   {
+    "skill": "building-interactive-html-mockups",
+    "query": "스크린샷을 참고해 모바일 drawer 상태들을 비교할 인터랙티브 HTML 목업을 만들어줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "building-interactive-html-mockups",
+    "query": "기존 React drawer의 API 응답 타입만 수정해줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "code-quality",
+    "query": "useMutation이 없는 검색 필터 feature를 어디에 둘지 코드 기준으로 리뷰해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "code-quality",
+    "query": "이 Jest 테스트에서 중복 검증을 줄이되 서로 다른 실패는 놓치지 않게 수정해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "code-quality",
+    "query": "locale을 query key에 추가하면서 SSR과 낙관적 업데이트도 맞춰줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "code-quality",
+    "query": "저장 버튼의 접근성 이름과 TypeScript props를 점검해줘",
+    "shouldTrigger": true
+  },
+  {
+    "skill": "code-quality",
+    "query": "React 리뷰 회의 시간을 한국어로 안내하는 문장만 다듬어줘. 코드 검토는 필요 없어",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "code-quality",
+    "query": "어제 실패한 테스트 개수만 CI 보고서에서 집계해줘. 원인 진단이나 코드는 보지 마",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "code-quality",
+    "query": "Next.js 관련 커밋 메시지 다섯 개만 보여줘",
+    "shouldTrigger": false
+  },
+  {
+    "skill": "code-quality",
+    "query": "사용자 설문에 나온 검색 필터 불편 의견을 요약해줘. 구현 검토는 나중에 할게",
+    "shouldTrigger": false
+  },
+  {
     "skill": "brainstorming",
     "query": "새 냉장고 공유 기능을 만들고 싶은데 요구사항부터 같이 정리해줘",
     "shouldTrigger": true

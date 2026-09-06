@@ -1,7 +1,7 @@
 ---
 title: Discriminated Unions for Correlated Optional Fields
 prefix: ts
-trigger: A type has 3+ optional fields whose presence is governed by a `status`/`type`/`kind` discriminator.
+trigger: Field presence is governed by a `status`/`type`/`kind` discriminator, allowing invalid state combinations to compile.
 ---
 
 ## Symptom
@@ -10,7 +10,7 @@ A type collects optional fields whose presence is **correlated**: each appears o
 When the consumer is JSX, the defenses snowball — every conditional render needs its own narrow, every prop drill loses information, and the team eventually stops trusting the type and reads the backend docs to remember which field is set when.
 
 ## Recommended pattern
-If **3+ optional fields** depend on the same discriminator, promote the shape to a discriminated union. The consumer narrows once with `switch` on the discriminator and TypeScript hands them the right fields with no `?`.
+When field presence depends on a discriminator, represent the valid combinations as a discriminated union. Even one success-only field can justify it; optional-field count is not the deciding criterion. The consumer narrows once with `switch` and receives the fields belonging to that state.
 
 ```ts
 type Job = PersistedJob & (
@@ -57,7 +57,7 @@ switch (job.state) {
 ```
 
 ## When NOT to do this
-- Fewer than 3 optional fields, or fields with **no correlation** (`User { nickname?, profileImage? }` — both independently optional, no shared discriminator). Keep them as plain `?`.
+- Fields with **no correlation** (`User { nickname?, profileImage? }` — both independently optional, no shared discriminator). Keep them as plain `?`.
 - A field that's "always there but with a sensible default" — make it required in the client type and fill the default at the boundary, no union needed (`progress: number` defaulting to 0).
 
 ## Where validation belongs
@@ -82,6 +82,6 @@ type Job = {
 The type lets the wrong combination compile (`state: "completed"` without `resultRecipeId`). Bugs hide in invalid combinations; consumers carry the defensive weight forever.
 
 ## Heuristic
-- Count optional fields on a type. ≥3 + correlated discriminator → discriminated union.
+- Ask whether the flat shape permits invalid state/field combinations. If so, model that correlation with a discriminated union.
 - Translation lives in **one** function at the API boundary. Stores hold the narrowed type; components see only the narrowed type.
 - `switch` on the discriminator + `never`-typed default. The two together turn a future new variant into a compile error rather than a silent fall-through.

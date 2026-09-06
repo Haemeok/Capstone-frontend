@@ -1,0 +1,85 @@
+{
+  "skill": "code-quality",
+  "cases": [
+    {
+      "id": "tool-directives",
+      "request": "node 환경 Jest 파일의 /** @jest-environment node */와 음수 타입 테스트의 // @ts-expect-error reason을 주석 금지 때문에 삭제해야 하나요?",
+      "expect": [
+        "필수 도구 지시문을 유지합니다.",
+        "일반 TODO/설명 주석과 구분합니다."
+      ]
+    },
+    {
+      "id": "cohesive-awaits",
+      "request": "80줄 React 컴포넌트에서 한 이벤트 핸들러의 await 3개가 예약→요청→결과저장을 직렬 실행합니다. 다른 책임이나 재사용은 없습니다. 줄 수나 await 개수만으로 분리해야 하나요?",
+      "expect": [
+        "개수만으로 분리를 강제하지 않습니다.",
+        "컴포넌트 본문과 일반 함수 기준을 구분하고 실제 책임을 검토합니다."
+      ]
+    },
+    {
+      "id": "sibling-widget",
+      "request": "app의 섹션은 여러 widgets를 import합니다. 다른 라우트에서도 쓰기 위해 widgets로 옮기고 형제 import 위반은 이슈로 남겨도 될까요? 프로젝트 지침은 같은 레이어 cross-import 금지입니다.",
+      "expect": [
+        "새 같은 레이어 위반을 허용하지 않습니다.",
+        "app composition/props 전달 또는 적절한 하위 레이어로 의존성 재배치를 제안합니다."
+      ]
+    },
+    {
+      "id": "locale-key-shape",
+      "request": "목록 key ['items', q]에 locale='ko' 기본값을 추가해 ['items',q,locale]로 바꿨습니다. 인자를 생략한 기존 호출의 key 형태가 유지되나요? 낙관적 업데이트도 사용합니다.",
+      "expect": [
+        "기존 key 형태는 유지되지 않는다고 답합니다.",
+        "factory, exact-match 읽기/쓰기, SSR을 함께 맞춥니다."
+      ]
+    },
+    {
+      "id": "locale-cache-cost",
+      "request": "언어에 따라 API 응답의 이름이 달라집니다. optimistic mutation에 locale 연결이 번거로운데 fetch에만 lang을 넣고 key는 공유해도 될까요? 언어 전환 시 컴포넌트는 remount됩니다.",
+      "expect": [
+        "응답이 locale에 의존하므로 cache key를 분리합니다.",
+        "remount나 구현 비용을 예외로 삼지 않습니다."
+      ]
+    },
+    {
+      "id": "i18n-completion",
+      "request": "/ja 컴포넌트 제목 하나는 사전에서 읽고 버튼에는 한국어 리터럴이 남았습니다. ja 제목 렌더 테스트 1개와 사전 한글 검사가 통과했으니 번역 완료인가요?",
+      "expect": [
+        "완료로 보지 않습니다.",
+        "렌더 트리의 미추출 문자열과 독립 연결 경로를 확인합니다."
+      ]
+    },
+    {
+      "id": "page-local-size",
+      "request": "140줄인 단일 라우트 섹션을 두 번 렌더합니다. 다른 라우트 재사용 계획은 없습니다. widgets로 옮겨야 하나요?",
+      "expect": [
+        "렌더 횟수나 크기만으로 widgets로 승격하지 않습니다.",
+        "서로 다른 소비 라우트를 기준으로 app/_components에 둡니다."
+      ]
+    },
+    {
+      "id": "dedup-vs-policy",
+      "request": "두 mutation의 콜백 모양은 비슷하지만 업무는 다릅니다. 한편 두 요청에서 같은 과금 상한 정책 값을 중복 정의했습니다. 둘 다 세 번째 사용처까지 추출을 미뤄야 하나요?",
+      "expect": [
+        "모양만 유사한 콜백은 성급히 일반화하지 않습니다.",
+        "동일하게 유지해야 하는 정책은 중복 횟수 예외로 중앙화합니다."
+      ]
+    },
+    {
+      "id": "test-distinct-wiring",
+      "request": "store.add의 persistence 연결 테스트가 있습니다. store.remove는 별도 코드 경로에서 persistence를 호출합니다. collaborator 쌍당 테스트 1개 규칙으로 remove 연결 테스트를 삭제할까요?",
+      "expect": [
+        "별도 연결 실패를 잡는 remove 테스트는 유지합니다.",
+        "persistence 내부 동작의 중복 단언과 구분합니다."
+      ]
+    },
+    {
+      "id": "feature-without-mutation",
+      "request": "사용자가 검색 조건을 선택하고 로컬 상태에 반영하는 search-filter 슬라이스에 useMutation이 없습니다. 이 이유만으로 feature에서 내려야 하나요?",
+      "expect": [
+        "useMutation 부재만으로 feature를 부정하지 않습니다.",
+        "사용자 행동 소유권을 기준으로 판단합니다."
+      ]
+    }
+  ]
+}

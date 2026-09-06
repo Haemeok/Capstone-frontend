@@ -10,7 +10,7 @@ Tests only ever get added, never removed, so a suite silently fills with change-
 ## Recommended pattern
 Run two explicit review passes over any test file before calling it done — one subtractive, one adversarial.
 
-- **Deletion pass:** for each test, ask (a) *would this break under a legitimate refactor that keeps behavior?* (change-detector) and (b) *is this a copy of another test's coverage?* (duplicate). Either → cut or merge. Default to removing; a test must earn its lifetime maintenance.
+- **Deletion pass:** inspect the actual assertions and ask (a) *would this break under a legitimate refactor that keeps behavior?* and (b) *does another test catch the same failure?* Rework brittle assertions while preserving a unique contract; merge or remove genuine duplicates. A weak name, mock count, or shared collaborator alone is not grounds for deletion. Use [layer ownership](test-layer-ownership.md) to distinguish duplicate assertions from independent connection failures.
 - **False-confidence pass:** ask *what bug could ship that no test here would catch?* Then add that one. (In this slice the answer was backend error-code drift — see the cross-repo contract gap.)
 
 Use the right **signal**, not line coverage. Line coverage rewards the keyframe tests (they execute the line) and never detects false confidence. Mutation testing — deliberately break the code and check a test fails — measures the thing that matters: *does this suite fail when behavior breaks?* Prefer it as the agent's target metric over a coverage percentage.

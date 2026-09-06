@@ -23,7 +23,7 @@ rg "@/widgets/" app/(route)/_components/    # ← every hit becomes a widget→w
 
 - Genuinely shared primitive (Toast, carousel shell, header chrome) → lift to `shared/ui` first, then both widgets consume it.
 - Composition that only the page should own → inject via `children`/props from the app layer instead of importing the sibling widget inside the new widget.
-- If lifting is out of scope for the current task, **file the violation as a tracked issue and accept it as a warning** — but surface the consequence at planning time, not as a surprise at lint.
+- If relocating the dependency is out of scope, keep composition in `app` or inject it through props. Do not introduce a sibling import and waive it as a warning. Existing violations may be reported separately; tracking one does not authorize a new violation or permission to create an external issue.
 
 ## Anti-pattern
 

@@ -24,5 +24,5 @@ Name the **observable contract**, not the mechanism. Good names survive the stri
 Naming by `<함수명> + <동사> + 해야 함`. It guarantees the name carries no information the code doesn't already show, and it's a reliable marker that the assertion is trivial.
 
 ## Heuristic
-- **Strip "해야 함 / should / 한다" from the name.** If a meaningful contract sentence doesn't remain, the test is a restatement — cut it or merge it into a behavior test that does carry a contract.
+- **Strip "해야 함 / should / 한다" from the name.** If a meaningful contract sentence doesn't remain, inspect the assertions before deciding. Rename a valuable behavior test; a weak name alone does not justify deletion. Apply the [test review passes](test-prune-and-distrust.md) for removal decisions.
 - If you can't name the behavior without naming the function, you're probably testing the function's existence, not its behavior. Ask what would be *observably wrong* if this were broken, and name that.
