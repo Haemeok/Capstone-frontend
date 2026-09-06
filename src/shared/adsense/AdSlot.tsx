@@ -20,7 +20,6 @@ declare global {
   }
 }
 
-const ADBLOCK_DETECTION_TIMEOUT_MS = 7000;
 const DEFAULT_INS_STYLE: CSSProperties = { display: "block" };
 
 type AdSlotProps = {
@@ -35,7 +34,7 @@ type AdSlotProps = {
   onFillChange?: (filled: boolean) => void;
 };
 
-export const AdSlot = ({
+const MountedAdSlot = ({
   slotId,
   minHeight,
   className,
@@ -45,11 +44,9 @@ export const AdSlot = ({
   fullWidthResponsive,
   skeleton,
   onFillChange,
-}: AdSlotProps) => {
-  const { enabled } = useAdsGate();
-  const wrapperRef = useRef<HTMLDivElement>(null);
+}: AdSlotProps & { slotId: string }) => {
   const insRef = useRef<HTMLModElement>(null);
-  const [isFilled, setIsFilled] = useState(false);
+  const [adStatus, setAdStatus] = useState<string | null>(null);
   const pushedRef = useRef(false);
   const onFillChangeRef = useRef(onFillChange);
 
@@ -71,73 +68,40 @@ export const AdSlot = ({
   }, [slotId]);
 
   useEffect(() => {
-    const wrapper = wrapperRef.current;
     const ins = insRef.current;
-    if (!wrapper || !ins) return;
-    const markFilled = () => {
-      setIsFilled(true);
-      onFillChangeRef.current?.(true);
+    if (!ins) return;
+    let isActive = true;
+    const updateStatus = () => {
+      if (!isActive) return;
+      const status = ins.getAttribute("data-ad-status");
+      setAdStatus(status);
+      onFillChangeRef.current?.(status === "filled");
     };
-    if (ins.firstChild) {
-      queueMicrotask(markFilled);
+    if (ins.hasAttribute("data-ad-status")) {
+      queueMicrotask(updateStatus);
     }
-    const observer = new MutationObserver(() => {
-      if (ins.firstChild) {
-        markFilled();
-        observer.disconnect();
-      }
+    const observer = new MutationObserver(updateStatus);
+    observer.observe(ins, {
+      attributes: true,
+      attributeFilter: ["data-ad-status"],
     });
-    observer.observe(ins, { childList: true });
-
-    let timer: number | undefined;
-    const startAdblockTimer = () => {
-      if (timer !== undefined) return;
-      timer = window.setTimeout(() => {
-        if (!ins.firstChild) {
-          wrapper.style.display = "none";
-        }
-        observer.disconnect();
-      }, ADBLOCK_DETECTION_TIMEOUT_MS);
-    };
-
-    let viewportObserver: IntersectionObserver | undefined;
-    if (typeof IntersectionObserver === "function") {
-      viewportObserver = new IntersectionObserver(
-        (entries) => {
-          if (!entries.some((entry) => entry.isIntersecting)) return;
-          viewportObserver?.disconnect();
-          startAdblockTimer();
-        },
-        { rootMargin: "200px" }
-      );
-      viewportObserver.observe(wrapper);
-    } else {
-      startAdblockTimer();
-    }
 
     return () => {
-      if (timer !== undefined) window.clearTimeout(timer);
+      isActive = false;
       observer.disconnect();
-      viewportObserver?.disconnect();
       onFillChangeRef.current?.(false);
     };
   }, []);
 
-  if (!enabled) return null;
-
-  if (!slotId) {
-    return IS_AD_TEST_MODE ? (
-      <AdPlaceholder minHeight={minHeight} className={className} />
-    ) : null;
-  }
-
   return (
     <div
-      ref={wrapperRef}
       className={cn("relative max-w-full overflow-x-clip", className)}
-      style={{ minHeight }}
+      style={{
+        minHeight,
+        display: adStatus === "unfilled" ? "none" : undefined,
+      }}
     >
-      {!isFilled && skeleton ? (
+      {adStatus === null && skeleton ? (
         <div aria-hidden className="pointer-events-none absolute inset-0">
           {skeleton}
         </div>
@@ -155,4 +119,17 @@ export const AdSlot = ({
       />
     </div>
   );
+};
+
+export const AdSlot = (props: AdSlotProps) => {
+  const { enabled } = useAdsGate();
+  if (!enabled) return null;
+
+  if (!props.slotId) {
+    return IS_AD_TEST_MODE ? (
+      <AdPlaceholder minHeight={props.minHeight} className={props.className} />
+    ) : null;
+  }
+
+  return <MountedAdSlot key={props.slotId} {...props} slotId={props.slotId} />;
 };

@@ -1,4 +1,4 @@
-import { act } from "react";
+import { act, StrictMode } from "react";
 
 import { render, screen } from "@testing-library/react";
 
@@ -75,23 +75,90 @@ describe("AdSlot", () => {
     expect((window.adsbygoogle as unknown[]).length).toBe(1);
   });
 
-  it("뷰포트 진입 후 타임아웃까지 <ins> 빈 상태면 wrapper display:none 처리 (애드블록 대비)", () => {
-    const { container } = render(<AdSlot slotId="9999" minHeight={280} />);
-    const wrapper = container.firstChild as HTMLElement | null;
-    expect(wrapper?.style.display).not.toBe("none");
-    enterViewport();
-    act(() => {
-      jest.advanceTimersByTime(7100);
-    });
-    expect(wrapper?.style.display).toBe("none");
+  it("첫 진입에서 광고가 활성화되면 모든 슬롯을 한 번씩 요청한다", () => {
+    mockedUseAdsGate.mockReturnValue({ enabled: false, isTestUser: false });
+    const slots = ["article-1", "article-2", "steps", "bottom"];
+    const ads = () =>
+      slots.map((slotId) => (
+        <AdSlot key={slotId} slotId={slotId} minHeight={70} />
+      ));
+    const { container, rerender } = render(<>{ads()}</>);
+    expect(window.adsbygoogle).toBeUndefined();
+    mockedUseAdsGate.mockReturnValue({ enabled: true, isTestUser: false });
+    rerender(<>{ads()}</>);
+    expect(container.querySelectorAll("ins")).toHaveLength(4);
+    expect(window.adsbygoogle).toHaveLength(4);
   });
 
-  it("뷰포트 진입 전이면 타임아웃이 지나도 wrapper 숨기지 않음 (lazy-load 슬롯 보호)", () => {
-    const { container } = render(<AdSlot slotId="9999" minHeight={280} />);
-    const wrapper = container.firstChild as HTMLElement | null;
+  it("Strict Mode와 재렌더에서는 중복 요청하지 않고 새 슬롯 DOM만 다시 요청한다", () => {
+    const ad = (slotId: string) => (
+      <StrictMode>
+        <AdSlot slotId={slotId} minHeight={70} />
+      </StrictMode>
+    );
+    const { container, rerender } = render(ad("bottom"));
+    const original = container.querySelector("ins");
+    rerender(ad("bottom"));
+    expect(window.adsbygoogle).toHaveLength(1);
+    mockedUseAdsGate.mockReturnValue({ enabled: false, isTestUser: false });
+    rerender(ad("bottom"));
+    expect(container).toBeEmptyDOMElement();
+    mockedUseAdsGate.mockReturnValue({ enabled: true, isTestUser: false });
+    rerender(ad("bottom"));
+    expect(container.querySelector("ins")).not.toBe(original);
+    expect(window.adsbygoogle).toHaveLength(2);
+    const previous = container.querySelector("ins");
+    rerender(ad("replacement"));
+    expect(container.querySelector("ins")).not.toBe(previous);
+    expect(window.adsbygoogle).toHaveLength(3);
+  });
+
+  it("화면 안에서 30초 뒤 광고가 도착해도 숨기지 않고 filled를 알린다", async () => {
+    const onFillChange = jest.fn();
+    const { container } = render(
+      <AdSlot slotId="bottom" minHeight={70} onFillChange={onFillChange} />
+    );
+    const ins = container.querySelector("ins");
+    if (!ins) throw new Error("Missing ad slot");
+    enterViewport();
     act(() => {
-      jest.advanceTimersByTime(7100);
+      jest.advanceTimersByTime(30000);
     });
-    expect(wrapper?.style.display).not.toBe("none");
+    expect(ins).toBeVisible();
+    await act(async () => {
+      ins.append(document.createElement("iframe"));
+      ins.setAttribute("data-ad-status", "filled");
+    });
+    expect(ins).toBeVisible();
+    expect(onFillChange).toHaveBeenLastCalledWith(true);
+  });
+
+  it("iframe 생성만으로 filled가 되지 않고 Google 응답에 따라 숨김과 복구를 처리한다", async () => {
+    const onFillChange = jest.fn();
+    const { container, unmount } = render(
+      <AdSlot slotId="bottom" minHeight={70} onFillChange={onFillChange} />
+    );
+    const ins = container.querySelector("ins");
+    if (!ins) throw new Error("Missing ad slot");
+    await act(async () => {
+      ins.append(document.createElement("iframe"));
+    });
+    expect(onFillChange).not.toHaveBeenCalledWith(true);
+    await act(async () => ins.setAttribute("data-ad-status", "unfilled"));
+    expect(ins).not.toBeVisible();
+    expect(onFillChange).toHaveBeenLastCalledWith(false);
+    await act(async () =>
+      ins.setAttribute("data-ad-status", "unfill-optimized")
+    );
+    expect(ins).toBeVisible();
+    expect(onFillChange).toHaveBeenLastCalledWith(false);
+    await act(async () => ins.setAttribute("data-ad-status", "filled"));
+    expect(ins).toBeVisible();
+    expect(onFillChange).toHaveBeenLastCalledWith(true);
+    unmount();
+    expect(onFillChange).toHaveBeenLastCalledWith(false);
+    onFillChange.mockClear();
+    await act(async () => ins.setAttribute("data-ad-status", "unfilled"));
+    expect(onFillChange).not.toHaveBeenCalled();
   });
 });
