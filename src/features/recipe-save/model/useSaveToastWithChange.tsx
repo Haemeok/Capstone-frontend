@@ -1,11 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
 import { format, useRecipeActionsDict } from "@/shared/i18n";
 import { useToastStore } from "@/shared/ui/toast";
 
-import { ChangeBookSheet } from "@/features/recipe-book-change";
+const ChangeBookSheet = dynamic(
+  () =>
+    import("@/features/recipe-book-change").then((mod) => mod.ChangeBookSheet),
+  { ssr: false }
+);
 
 type NotifyTarget = { id: string; name: string } | undefined;
 
@@ -13,6 +18,7 @@ export const useSaveToastWithChange = (recipeId: string) => {
   const { addToast } = useToastStore();
   const t = useRecipeActionsDict();
   const [changeOpen, setChangeOpen] = useState(false);
+  const [hasOpenedChange, setHasOpenedChange] = useState(false);
   const [currentBookId, setCurrentBookId] = useState<string | undefined>();
 
   const showSaveToast = (bookName: string | undefined) => {
@@ -24,7 +30,10 @@ export const useSaveToastWithChange = (recipeId: string) => {
       position: "bottom",
       action: {
         label: t.changeBookAction,
-        onClick: () => setChangeOpen(true),
+        onClick: () => {
+          setHasOpenedChange(true);
+          setChangeOpen(true);
+        },
       },
     });
   };
@@ -39,7 +48,7 @@ export const useSaveToastWithChange = (recipeId: string) => {
     showSaveToast(toBookName);
   };
 
-  const changeSheet = (
+  const changeSheet = hasOpenedChange ? (
     <ChangeBookSheet
       open={changeOpen}
       onOpenChange={setChangeOpen}
@@ -47,7 +56,7 @@ export const useSaveToastWithChange = (recipeId: string) => {
       fromBookId={currentBookId}
       onMoveComplete={handleMoveComplete}
     />
-  );
+  ) : null;
 
   return { notifySaved, changeSheet };
 };

@@ -48,6 +48,7 @@ export const ChangeBookSheet = ({
   const moveMutation = useMoveRecipes();
   const addToast = useToastStore((s) => s.addToast);
   const [createOpen, setCreateOpen] = useState(false);
+  const [hasOpenedCreate, setHasOpenedCreate] = useState(false);
 
   const defaultBook = books?.find((b) => b.isDefault);
   const sortedBooks = [...(books ?? [])].sort(
@@ -94,7 +95,10 @@ export const ChangeBookSheet = ({
         <button
           type="button"
           className="flex w-full items-center gap-3 rounded-xl px-4 py-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100"
-          onClick={() => setCreateOpen(true)}
+          onClick={() => {
+            setHasOpenedCreate(true);
+            setCreateOpen(true);
+          }}
         >
           <span className="bg-olive-light/10 text-olive-light flex h-8 w-8 items-center justify-center rounded-full">
             <PlusIcon size={18} />
@@ -140,7 +144,9 @@ export const ChangeBookSheet = ({
           {Body}
         </Content>
       </Container>
-      <CreateRecipeBookSheet open={createOpen} onOpenChange={setCreateOpen} />
+      {hasOpenedCreate && (
+        <CreateRecipeBookSheet open={createOpen} onOpenChange={setCreateOpen} />
+      )}
     </>
   );
 };

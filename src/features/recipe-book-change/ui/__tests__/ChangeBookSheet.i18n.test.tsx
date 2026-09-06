@@ -34,7 +34,17 @@ jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
 }));
 
 jest.mock("@/features/recipe-book-create", () => ({
-  CreateRecipeBookSheet: () => null,
+  CreateRecipeBookSheet: ({
+    open,
+    onOpenChange,
+  }: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+  }) => (
+    <div data-testid="create-sheet" data-open={open}>
+      <button onClick={() => onOpenChange(false)}>close-create</button>
+    </div>
+  ),
 }));
 
 const mockMutateAsync = jest.fn().mockResolvedValue(undefined);
@@ -56,6 +66,31 @@ beforeEach(() => {
 });
 
 describe("ChangeBookSheet i18n", () => {
+  it("defers the create sheet until requested and keeps it mounted when closed", async () => {
+    mockPathname.mockReturnValue("/recipes/r1");
+    useRecipeBooks.mockReturnValue({ data: [] });
+    render(<ChangeBookSheet open onOpenChange={() => {}} recipeId="r1" />);
+    expect(screen.queryByTestId("create-sheet")).not.toBeInTheDocument();
+    await userEvent.click(
+      screen.getByText(userPagesMessages.ko.recipeBooks.move.createNew)
+    );
+    expect(await screen.findByTestId("create-sheet")).toHaveAttribute(
+      "data-open",
+      "true"
+    );
+    await userEvent.click(screen.getByText("close-create"));
+    expect(screen.getByTestId("create-sheet")).toHaveAttribute(
+      "data-open",
+      "false"
+    );
+    await userEvent.click(
+      screen.getByText(userPagesMessages.ko.recipeBooks.move.createNew)
+    );
+    expect(screen.getByTestId("create-sheet")).toHaveAttribute(
+      "data-open",
+      "true"
+    );
+  });
   it("T-29: ja heading 현지어 + createNew 현지어 + baseElement 한글 0 (라틴 책 이름)", () => {
     mockPathname.mockReturnValue("/ja/recipes/r1");
     useRecipeBooks.mockReturnValue({
