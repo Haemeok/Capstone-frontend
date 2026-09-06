@@ -21,7 +21,7 @@ After wiring a subtree to the dictionary, grep the subtree for source-language c
 
 # ✅ prove extraction-completeness by sweeping the actual files
 git grep -nP "[\x{AC00}-\x{D7A3}]" -- 'src/widgets/Foo/ui/*.tsx' \
-  | grep -vE "__tests__|className=|aria-label|<intentionally-deferred>"
+  | grep -vE "__tests__|<intentionally-deferred>"
 # every remaining hit is either a key to extract or a documented DEFER/EXCLUDE
 ```
 

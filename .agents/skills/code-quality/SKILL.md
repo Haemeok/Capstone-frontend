@@ -8,7 +8,7 @@ description: >
 license: MIT
 metadata:
   author: recipio
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Code Quality
@@ -22,6 +22,15 @@ holds the elaboration.
 Every code-authoring or code-reviewing task in the repo. The inline self-check
 fires first; if a rule is violated, unclear, or about to be violated, read the
 specific `rules/<prefix>-<topic>.md` file.
+
+## Applying the rules
+
+User instructions and `AGENTS.md` take precedence over these rules. A past
+incident or lint warning does not create an exception to those instructions.
+Read a linked canonical rule for the decision; topic examples illustrate it,
+not an independent policy. Numeric review signals are not hard limits unless
+the rule explicitly says so. Report a concrete failure mode before proposing
+a refactor; do not rewrite unrelated or already-correct code to satisfy a smell.
 
 ## Rule prefixes
 
@@ -41,13 +50,13 @@ specific `rules/<prefix>-<topic>.md` file.
 
 ### Size
 
-- [Component size limits](rules/size-component.md) — 100/150 hard, SRP signals
-- [Function complexity](rules/size-function.md) — 30 lines + branch / nesting / verb-pair / await flags
+- [Component size limits](rules/size-component.md) — body >100 lines starts review; >150 requires a responsibility-based split
+- [Function complexity](rules/size-function.md) — non-component body size / branch / nesting / await counts prompt review, not automatic extraction
 - [Rule of three](rules/size-rule-of-three.md) — extract on 3rd occurrence, not 2nd (premature abstraction prevention)
 
 ### FSD
 
-- [4-layer placement](rules/fsd-layer-routing.md) — shared / widget / `_components/` / page
+- [Component placement](rules/fsd-layer-routing.md) — canonical shared / widgets / app placement table
 - [Widget vs page-local](rules/fsd-widget-vs-page-local.md) — single-page → `_components/`, multi-page → `widget/`
 - [Entity vs feature boundary](rules/fsd-entity-feature-boundary.md) — mutations live in features
 - [Extraction surfaces sibling imports](rules/fsd-extract-surfaces-sibling-imports.md) — moving app composition into a widget turns legal `app→widget` imports into `widget→widget` violations; grep `@/widgets/` before the move
@@ -64,7 +73,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [i18n type gate misses unextracted literals](rules/policy-i18n-type-gate-misses-unextracted-strings.md) — a typed Dictionary gates missing keys, not unextracted inline strings; grep the localized files for source-language chars after wiring
 - [i18n chrome vs content axes](rules/policy-i18n-chrome-vs-content-axes.md) — localizing chrome doesn't localize the fetch; plumb the new locale through query key + fetch params + href, never a boundary remap-to-default (masked on SSR page 0)
 - [i18n locale prefix breaks path equality](rules/policy-i18n-locale-prefix-breaks-path-equality.md) — locale-prefixing links breaks active-state/`aria-current` checks that compare raw `usePathname()` to a bare route; normalize via `stripLocale` first (only fails on `/en`·`/ja`, not default locale)
-- [i18n query key vs optimistic mutation](rules/policy-i18n-querykey-vs-optimistic-mutation.md) — appending `locale` to a list `queryKey` silently breaks exact-match `getQueryData`/`setQueryData` optimistic patches (prefix `invalidateQueries` survives); thread locale through the factory+mutation (default source lang) or only add it to keys without exact-match mutations
+- [i18n query key vs optimistic mutation](rules/policy-i18n-querykey-vs-optimistic-mutation.md) — locale-dependent responses need separate keys; update factory, exact-match readers/writers, and SSR together; a default argument does not preserve the old key shape
 - [i18n label doubles as key](rules/policy-i18n-label-doubles-as-key.md) — when a constant's source-language string is also its lookup key/state/comparison, don't migrate the key; leave the constant byte-identical, add a code-keyed locale dict, and resolve display at the render site (source-locale regression becomes structurally impossible)
 - [i18n localize schema via factory](rules/policy-i18n-localize-schema-via-factory.md) — a module-level zod/yup schema with baked-in messages can't be localized in place; convert to `buildSchema(messages)`, build per render with the active-locale dict, and `useMemo` on the dict for resolver-reference stability
 - [i18n CJK word-break](rules/policy-i18n-cjk-word-break.md) — `break-keep`/`word-break: keep-all` forbids all wrapping in space-less Japanese/Chinese; with `line-clamp` (`-webkit-box`) the box grows to max-content and overflows. Drop it or make it `:lang(ko)`-only; default `normal` wraps CJK per-character
@@ -81,7 +90,7 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Nullish coalescing](rules/policy-nullish-coalescing.md) — `??` for defaults; `||` only for actual falsy semantics
 - [Container layout](rules/policy-container-layout.md) — Container owns bg/max-width/padding; full-bleed/hero pages use `padding={false}`; no double `px`, no nested `bg-white`
 - [Tailwind v4 theme tokens](rules/policy-tailwind-v4-theme-tokens.md) — palette overrides in `@theme` (CSS), not the JS config; @config overrides drop `--color-*` vars and silently break `var()` consumers
-- [No code comments](rules/policy-no-comments.md) — WHAT is the identifier's job; WHY/incident/quirk goes in the commit body. Only `as` and `||`-default markers allowed; shared docs exempt
+- [No code comments](rules/policy-no-comments.md) — prose belongs in names/commit bodies; `as` and `||` intent notes, necessary tool directives, and required notices are exempt
 - [Absolute badge on inline wrapper](rules/policy-absolute-anchor-inline-wrapper.md) — a `relative` wrapper around an inline child inflates to the line box (70px for a 22px icon), so absolute offsets anchor to the wrong box; make the wrapper `flex` per placement and verify with `getBoundingClientRect`
 - [DOM capture canvas size](rules/policy-dom-capture-canvas-size.md) — when exporting responsive DOM with html-to-image, resize the canvas rather than the cloned layout or computed child geometry can clip at the edges
 - [Sticky vs nearest scroll container](rules/policy-sticky-nearest-scroll-container.md) — sticky `top` resolves against the nearest scrollable ancestor; an inner scroll container that starts below fixed chrome needs `top-0`, not `top-16`; dead `window.scrollTo`/`scrollY:0` is the tell
@@ -132,11 +141,11 @@ specific `rules/<prefix>-<topic>.md` file.
 
 ### Testing
 
-- [Layer ownership](rules/test-layer-ownership.md) — one behavior owned by its lowest layer; non-owners justify or delete; store+side-effect = 2 truths + 1 wiring test
+- [Layer ownership](rules/test-layer-ownership.md) — behavior belongs at its lowest owning layer; verify distinct wiring failures without repeating the owner's assertions
 - [Mock at system edge](rules/test-mock-at-system-edge.md) — mock only unowned edges (network/time/random/3rd-party); >3 mocks → extract a pure function; real `QueryClientProvider` over module mock
 - [Invariants, not constants](rules/test-invariants-not-constants.md) — tuning curves get invariants + one snapshot, never N keyframe equalities (change-detectors)
 - [Compare instants, not time zone representations](rules/test-timezone-instants.md) — local date getters follow the runner time zone; compare epoch milliseconds unless the offset string is the contract
-- [Name is a spec](rules/test-name-is-spec.md) — strip "해야 함"; if no contract remains, the test restates a setter — cut
+- [Name is a spec](rules/test-name-is-spec.md) — name the observable contract; a weak name calls for assertion review, not automatic deletion
 - [Risk-weighted depth](rules/test-risk-weighted-depth.md) — depth by blast radius; security/billing adversarial, cosmetic invariants-only
 - [Prune and distrust](rules/test-prune-and-distrust.md) — deletion pass + false-confidence pass; mutation signal over line coverage; agents must be told to cut
 - [No production timing hacks](rules/test-no-production-timing-hacks.md) — never add a setTimeout/delay to production to win a test race; mock the reconciled (post-mutation) server response instead
@@ -146,10 +155,12 @@ specific `rules/<prefix>-<topic>.md` file.
 - [Layout mocks follow rendered order](rules/test-layout-mocks-follow-rendered-order.md) — reordered lists must derive mocked geometry from actual DOM siblings; canonical arrays create impossible coordinates and false-green scroll tests
 - [type-gate needs red-state](rules/test-type-gate-red-state.md) — `@ts-expect-error` type tests are verified by tsc, not jest; name the file `*.type-test.ts` (outside jest glob, inside tsconfig), wrap in a never-called fn, and confirm tsc FAILs with "unused directive" before the type is tightened — that red state is the only proof the gate isn't empty
 - [Optimistic UI needs a deferred mutation](rules/test-optimistic-ui-deferred-mutation.md) — a resolved mutation mock lets onSettled invalidate→refetch restore the fixture before the assertion; keep the mutation pending (deferred promise), assert the optimistic DOM, then resolve in `act()`
+- [i18n assertions](rules/test-i18n-assert-wiring-not-copy.md) — dictionary/sentinel assertions in every language; representative wiring tests do not prove all strings were extracted
 
 ## File template
 
-Every rule file uses this four-section shape:
+Use these core sections when applicable; focused routing references may be shorter,
+and a rule may add Root cause or Exceptions when needed:
 
 - **Symptom** — what fails when the rule isn't followed
 - **Recommended pattern** — short code example

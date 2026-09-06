@@ -7,14 +7,14 @@ trigger: The same behavior is asserted at more than one layer (pure function AND
 ## Symptom
 A requirement gets tested everywhere it passes *through*, not where it *lives*. The behavior "907 → 유튜브 링크만 가능해요" is pure string mapping owned by `lib/errors.ts`, yet it's asserted three times: in `errors.test.ts`, again in `errors.test.ts` for the sibling function, and a third time through the hook in `useJobPolling.test.tsx:153`. The hook adds nothing to that mapping — `jobStatusMapper.ts:24` just calls the pure function — so two of the three assertions buy zero extra coverage and triple the refactor cost.
 
-Same shape with side effects: `persistence.test.ts` fully owns "save to localStorage", but `storeV2.test.ts` re-asserts it on nearly every reducer (`:40`, `:84`, `:138`, `:176`). The store's only new behavior there is "it calls persistence" — worth proving **once**, not per mutation.
+Same shape with side effects: `persistence.test.ts` owns how data is written to localStorage. Store tests should prove which state transitions invoke persistence, including independently wired add/remove paths, without re-testing persistence's storage implementation on every reducer.
 
 ## Recommended pattern
 For each requirement, find the **lowest layer where the behavior actually originates** and make that layer the owner. Mark it in the test-design matrix `Layer` column. Higher layers get a test only when they catch something the owner structurally cannot.
 
 - Pure transformation (copy mapping, status mapping) → **unit (pure function)** owns it. `jobStatusMapper.test.ts` is the model: owner is obvious, zero mocks.
 - Emergent behavior (polling idempotency, "already completed → don't reprocess") → **hook** owns it, because no pure function or reducer can exhibit a loop.
-- Stateful module + side effect → **two solitary truths + one wiring test**: test the pure state transition alone, test the side-effect module (`persistence`) alone, write exactly **one** sociable test proving they're connected.
+- Stateful module + side effect: test the state transition and side-effect behavior at their owners, then verify their connection. One wiring test is a starting point; independently wired methods, failure handling, or timing paths may need additional cases.
 
 ## Anti-pattern
 ```ts
@@ -28,6 +28,6 @@ it("localStorage에서 job을 제거해야 함", ...)   // ... and this
 ```
 
 ## Heuristic
-- For every test ask: **"does the owner layer already prove this?"** If yes, delete unless this layer exercises a distinct failure mode (integration, timing, concurrency).
+- For every test ask: **"does the owner layer already prove this?"** Record any distinct failure mode (integration, timing, concurrency), then use the [test review passes](test-prune-and-distrust.md) to decide whether to keep, merge, or remove it.
 - A non-owner test must be able to answer "what do I catch that the owner can't?" in one sentence. No answer → cut or merge.
-- One wiring test per collaborator pair is the budget. "Store calls persistence" needs one example, not one-per-method.
+- Count distinct connection paths, not collaborator pairs or methods. Do not repeat a shared persistence implementation assertion, but do verify a separately wired delete action when an add-action test cannot detect its missing persistence call.

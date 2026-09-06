@@ -91,3 +91,8 @@ __pycache__/
 
 # generated reports
 frontend-api-changes-*.html
+/.codex/reports/
+
+# temporary browser capture profiles
+/.tmp-recipio-capture-profile/
+/.tmp-recipio-chrome-capture-profile/

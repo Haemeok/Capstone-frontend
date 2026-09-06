@@ -14,7 +14,7 @@ Non-null `!` is a runtime lie. The compiler asks "are you sure?" and you reply "
   if (!user) return null;  // explicit narrow
   user.profile.email;      // now non-null without `!`
   ```
-- **Discriminated unions** over flat optionals.
+- For fields correlated with a status, use the canonical [discriminated union rule](ts-discriminated-union-at-boundary.md). Example:
   ```ts
   type AsyncState<T> =
     | { status: 'idle' }
@@ -42,4 +42,4 @@ type AsyncState<T> = {
 
 ## Heuristic
 - `grep "!\." src/` and `grep "!;" src/` — any hit needs review.
-- If a type has ≥3 optional fields whose presence is correlated, model it as a discriminated union.
+- Optional fields governed by a shared discriminator follow [discriminated unions](ts-discriminated-union-at-boundary.md); independent optionals do not require a union.

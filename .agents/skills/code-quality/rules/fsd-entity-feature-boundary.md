@@ -9,7 +9,7 @@ Mutations leaking into `entities/` blurs the layer's purpose. The entity slice b
 
 ## Recommended pattern
 - **Entity**: data + presentation only. Read queries (`useRecipe(id)`, `RecipeCard`). No mutations.
-- **Feature**: one user action per slice. Mutation lives here. Names follow verb-noun (`recipe-create`, `comment-like`).
+- **Feature**: one user action per slice. Mutations live here, but are not required: search, filtering, and local state interactions can also be features. Names follow verb-noun (`recipe-create`, `comment-like`).
 
 ```ts
 // entities/recipe/model/api.ts — read only
@@ -30,4 +30,4 @@ export const useDeleteRecipe = () => useMutation({ /* ... */ });  // ← belongs
 ```
 
 ## Heuristic
-Scanning a slice's `model/api.ts`: count `useMutation`. If ≥1 in `entities/`, that mutation should leave. Inverse test: a feature with zero `useMutation` is suspicious — either it has the wrong layer, or it's pure presentation and belongs in `_components/`.
+Scanning a slice's `model/api.ts`: a `useMutation` in `entities/` needs feature ownership. The reverse does not follow: absence of `useMutation` says nothing about feature ownership. Identify the user action first. Pure presentation follows [component placement](fsd-layer-routing.md).

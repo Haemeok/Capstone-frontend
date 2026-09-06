@@ -50,6 +50,6 @@ Before extracting, count:
 2. Do they all use the same code path, or do they share *most* of it with small differences?
 3. If you delete the shared abstraction, would each caller's inline version stay essentially identical, or would they each grow their own variation?
 
-If (1) < 3 and you can't point to a special-case rule above — leave inline. Add a `// TODO: extract on 3rd occurrence` comment only if the pattern is genuinely policy-bearing.
+If (1) < 3 and you can't point to a special-case rule above, leave inline. If it is policy-bearing, use the policy exception now; do not add an extraction TODO. This count applies to deduplication, not to separating responsibilities or enforcing a typed boundary.
 
-The line "*Three similar lines is better than a premature abstraction*" in the root system prompt is this rule restated. Use the count, not the smell of duplication, as the trigger.
+Use the count together with the exceptions, not resemblance alone, as the deduplication trigger.

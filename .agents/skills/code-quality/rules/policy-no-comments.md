@@ -26,11 +26,16 @@ const result = tokens.filter((t) => t.expiresAt < now);
 
 ## Heuristic
 
-Banned everywhere in code. Exactly two allowed comments, both mechanical markers
-forced by other rules:
+Prose comments are banned in application and test code, except these intent notes:
 
 - a one-line reason next to an `as` cast (`ts-any-and-as`)
 - a one-line intent note on a `||` default fallthrough (`policy-nullish-coalescing`)
+
+Tool directives are not prose comments. Preserve necessary `@ts-expect-error`
+with its reason, `@jest-environment`, and existing narrowly scoped compiler,
+linter, coverage, or bundler directives. Do not add suppressions merely to make
+a quality check pass. Required license notices and generated-file markers are
+also exempt. A TODO about future extraction is not an exception.
 
 Shared docs (`AGENTS.md`, `docs/`, `SKILL.md`) are not code — this rule does not
 apply to them.

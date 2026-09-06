@@ -1,7 +1,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 
-const EXPECTED_SKILL_COUNT = 24;
+const EXPECTED_SKILL_COUNT = 25;
 const MAX_AGENTS_BYTES = 32 * 1024;
 const projectRoot = process.cwd();
 const skillsRoot = path.join(projectRoot, ".agents", "skills");

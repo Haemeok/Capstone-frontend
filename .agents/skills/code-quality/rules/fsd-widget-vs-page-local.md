@@ -8,8 +8,7 @@ trigger: A page-section component is ≥100 lines but currently used in only one
 Two parallel placement instincts compete: "this is big enough to be a widget" vs "this is only used here, it should sit next to the page." Without an explicit rule, the same kind of file lands in both places randomly.
 
 ## Recommended pattern
-- **Single-page use** → `app/(route)/_components/<Name>.tsx`. Flat. Underscore prefix marks it private to the route (Next.js convention — not routed).
-- **Multi-page use** OR strong cross-feature reuse intent → `widget/<Name>/` with its own slice structure (`ui/`, `model/`, `lib/`).
+Use the canonical [component placement table](fsd-layer-routing.md). Size alone does not promote a section to `widgets/`; a second consuming route does. Keep page-local `_components/` flat.
 
 ```
 app/
@@ -27,8 +26,8 @@ widgets/
 ```
 
 ## Anti-pattern
-- Nesting `_components/_internal/...` because a `_components/` file got large. Promote the inner pieces to a widget or feature instead.
+- Nesting `_components/_internal/...` because a file got large. Split page-local pieces into sibling files; use a feature only for a user action, or a widget when the placement table calls for one.
 - Treating "uses multiple entities" as the sole widget signal. A single-route hero that touches three entities is still a `_components/` file if no other page imports it.
 
 ## Heuristic
-Count the import sites. 1 = `_components/`. ≥2 = `widget/`. When the count changes, move on the next touch.
+Count routes using [component placement](fsd-layer-routing.md), then check imports before moving. Do not infer reuse from component size or nested folders.

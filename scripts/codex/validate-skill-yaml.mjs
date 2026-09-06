@@ -2,7 +2,7 @@ import yaml from "js-yaml";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
-const EXPECTED_SKILL_COUNT = 24;
+const EXPECTED_SKILL_COUNT = 25;
 const SKILL_KEYS = new Set([
   "name",
   "description",

@@ -1,0 +1,92 @@
+{
+  "skill": "code-quality",
+  "version": "0.2.0",
+  "date": "2026-09-06",
+  "ruleSnapshotSha256": "e474d483b7210d1ae0878da98625a754fa435be21718b3910e744c2dec6b2dcd",
+  "snapshotAlgorithm": "SHA256 of sorted SKILL.md and rules/*.md; each relative path + LF + LF-normalized contents + LF",
+  "method": "독립 에이전트에 요청과 스킬 경로를 제공하고 기대 답·이전 결과는 숨겼습니다. 주 에이전트가 응답을 읽고 expect 전체와 대조했습니다. 아래 observed는 응답 요약입니다.",
+  "repetitions": 1,
+  "baseline": {
+    "kind": "수정 전 진단 평가 5개, 통제된 A/B 평가가 아닙니다.",
+    "caveat": "주석 규칙을 먼저 수정해 평가자에게 수정 전 예외 문구를 별도 전달했습니다. 수정 전후 일부 요청 표현도 다르므로 성공률 차이를 산출하지 않습니다.",
+    "failureQuote": "현재 규칙은 await 3개만으로 분리를 강제합니다.",
+    "otherFindings": "주석·FSD·key 기본값 문구의 모순을 지적했고 i18n 미완료를 판별했습니다."
+  },
+  "cases": [
+    {
+      "id": "tool-directives",
+      "status": "pass",
+      "observed": "삭제하지 않습니다. 필요한 @jest-environment node와 이유를 포함한 @ts-expect-error는 일반 설명 주석과 구분되는 도구 지시문입니다."
+    },
+    {
+      "id": "cohesive-awaits",
+      "status": "pass",
+      "observed": "await 개수만으로 분리하지 않습니다. 예약→요청→결과저장이 한 직렬 작업이고 독립 책임이 없다면 순서를 그대로 드러냅니다."
+    },
+    {
+      "id": "sibling-widget",
+      "status": "pass",
+      "observed": "이슈로 남겨도 형제 widget import를 허용할 수 없습니다. app에서 children/props로 조합하거나 실제 공통 primitive를 shared로 옮겨야 합니다."
+    },
+    {
+      "id": "locale-key-shape",
+      "status": "pass",
+      "observed": "이전 key 형태는 유지되지 않습니다. factory뿐 아니라 낙관적 업데이트의 정확 일치 읽기·쓰기와 SSR prefetch를 함께 맞춰야 합니다."
+    },
+    {
+      "id": "locale-cache-cost",
+      "status": "pass",
+      "observed": "cache key를 공유하면 안 됩니다. 응답 이름이 언어별로 다르므로 locale별 캐시가 필요합니다. 연결 비용이나 remount는 예외가 아닙니다."
+    },
+    {
+      "id": "i18n-completion",
+      "status": "pass",
+      "observed": "i18n 완료가 아닙니다. 실제 렌더 트리를 검사하고 남은 버튼 문구를 사전에 연결해야 합니다."
+    },
+    {
+      "id": "page-local-size",
+      "status": "pass",
+      "observed": "widgets로 옮기지 않습니다. 단일 라우트의 _components에 두고 140줄은 별도 책임이 있는지 검토합니다."
+    },
+    {
+      "id": "dedup-vs-policy",
+      "status": "pass",
+      "observed": "모양만 비슷하고 업무가 다른 mutation 콜백은 유지합니다. 동일 과금 상한 정책은 두 번만 중복되어도 공통화합니다."
+    },
+    {
+      "id": "test-distinct-wiring",
+      "status": "pass",
+      "observed": "remove 연결 테스트를 삭제하지 않습니다. add 테스트로는 remove의 persistence 호출 누락을 발견할 수 없습니다."
+    },
+    {
+      "id": "feature-without-mutation",
+      "status": "pass",
+      "observed": "feature에 유지합니다. 검색 조건 선택과 로컬 상태 반영은 사용자 행동입니다. useMutation은 feature의 필수 조건이 아닙니다."
+    }
+  ],
+  "followup": {
+    "cases": ["locale-cache-cost", "test-distinct-wiring"],
+    "reason": "평가자가 찾아낸 제목/Heuristic과 Symptom의 잔여 충돌을 정리했습니다.",
+    "status": "pass",
+    "observed": "같은 평가자가 두 문서를 다시 읽고 두 사례의 판단과 문구 일치를 확인했습니다."
+  },
+  "triggerEvaluation": {
+    "cases": 10,
+    "status": "not_run",
+    "note": "code-quality 긍정 5개·부정 5개를 작성하고 구조만 검증했습니다. 실제 자동 스킬 선택은 실행하지 않았습니다."
+  },
+  "validation": {
+    "quickValidate": "pass",
+    "yaml": "pass: 25 skills",
+    "migrationStructure": "pass: 25 skills, 58 trigger cases",
+    "migrationValidatorTests": "pass",
+    "ruleIndexAndLinks": "pass: 82 rules",
+    "typecheck": "failed: 이번에 변경하지 않은 TypeScript 파일에서 8개 오류",
+    "legacyParity": "failed: 이번 수정 대상의 fingerprint는 갱신했으며, 무관한 기존 내용 차이/추가 파일은 남겨 두었습니다."
+  },
+  "limitations": [
+    "10개 사례 각각 1회 실행이므로 안정적인 성공률을 뜻하지 않습니다.",
+    "실제 애플리케이션 코드를 생성하거나 실행하는 종단간 평가는 아닙니다.",
+    "평가 기대값 작성자와 최종 채점자가 동일한 주 에이전트입니다."
+  ]
+}

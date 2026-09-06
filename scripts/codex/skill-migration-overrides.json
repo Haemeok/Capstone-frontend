@@ -15,14 +15,14 @@
     "targetSha256": "25a7aee670cf3d5f3ff7fed917478788a85d948dd418613bc083534bee3cc925"
   },
   "code-quality/SKILL.md": {
-    "reason": "Codex project path references",
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
     "sourceSha256": "9e6d640747589d51c48737ddd5c7832ac8787f8998866e40c4a2f1a14042da35",
-    "targetSha256": "2fd503d7795a2321ce5064486b5bd59be9724ade598e2846bb1d8ca093e88573"
+    "targetSha256": "019597ecab5073b7de3ce9ec678bce44fb11035eb1ee2278271a3a3c1cff0dc0"
   },
   "code-quality/rules/policy-no-comments.md": {
-    "reason": "Codex tool naming",
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
     "sourceSha256": "a7aae1fd6d5ca0a545bc3ac412fc95f5fef816e21711eed3a86cd575e4917e57",
-    "targetSha256": "ca3f05d80c4149907abc040161284817efe30ebdcd9c7b72b9f3f92695990402"
+    "targetSha256": "a731ea8bbbb7bf49e00968f718c82a6cd8e46de454aa7178b26739da3cb0f6ca"
   },
   "compounding-lessons/SKILL.md": {
     "reason": "Codex project path references",
@@ -103,5 +103,85 @@
     "reason": "Codex workflow naming",
     "sourceSha256": "447c02c272c5d68e265d574daa687c19e53ecfc04afd7d8066b36fbd517e9248",
     "targetSha256": "c4e317c66c2850a50f51da71766e177c2abf84252904075bf9bb986e0f94fedc"
+  },
+  "code-quality/rules/fsd-entity-feature-boundary.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "c491f7749a5d3d7404ab8bf942560f1a77a7846e3eaab08ce9426961d83c0864",
+    "targetSha256": "0a3eff6ecd387ff7f29a57bba8021dc6b781fe4eb22cec3eb824aa73bcb85571"
+  },
+  "code-quality/rules/fsd-extract-surfaces-sibling-imports.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "e9127c8764cbc4b44ec8394678a4995208caf1d31bca47dce1a0ff5eed2ecabf",
+    "targetSha256": "7feae023659a694746332594d7979eeb6b978bee7cefe9314da3c3f10490bad3"
+  },
+  "code-quality/rules/fsd-layer-routing.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "178e75f2ab3fdcef6a7b49c8c0da18d610745a3803eb17e00cc8c76b87836d96",
+    "targetSha256": "5783c5c6a3b81aa3d29258c8d1c0487749870cf99bf98753d097bbfbdbe61f0a"
+  },
+  "code-quality/rules/fsd-widget-vs-page-local.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "4c98a1a66a3331318303dd5c85634206b99b8cea7be080bb4bcfd0af08004d25",
+    "targetSha256": "b6180f6cca9181a42d5cd5090bc31bcbcd8dd8fb4fc3fa64737ca997756a4e65"
+  },
+  "code-quality/rules/policy-i18n-chrome-vs-content-axes.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "d5352004a1e1fa4a38a4c68426478395505c7d9e93c57f339efe138f59b408c4",
+    "targetSha256": "8f6503579cc140258e9eda9215efc290b6837d89876220172ca1f45284f1bcb0"
+  },
+  "code-quality/rules/policy-i18n-querykey-vs-optimistic-mutation.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "d4d9f6c377c2da9a5c72a077a29f91a4197e2bc6268c3b7f87aec02407876ea1",
+    "targetSha256": "c5fa9f3c8d221f39106d3467486db3d788bda7a87d57eeabb933dfa1a61711a1"
+  },
+  "code-quality/rules/policy-i18n-type-gate-misses-unextracted-strings.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "2d5cbb1e5fcb761305435b1ceab1ccc3f701303481f5b6ce64d9a5eda70c6cea",
+    "targetSha256": "ef8355b1425de48fff429bbf73b01863e35b0030b3b954db0a4a051f59cf1e85"
+  },
+  "code-quality/rules/size-component.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "aaea108e6ef615f91b324739958a176273b305915c48b23d0848a32fd5214149",
+    "targetSha256": "d7842c03eb8de61e8f11dce275bf8dfc12c44e939f7c3c04d72293fb38911cd8"
+  },
+  "code-quality/rules/size-function.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "43b915df2c80473b31c329e0f630fc8550c6860b1350ab3792201dddfb515d21",
+    "targetSha256": "77f65562dd5d9fd010d75bce72b84a20ec8a020b934e8d7970e5c9084284e99f"
+  },
+  "code-quality/rules/size-rule-of-three.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "451ef5aa28df7fe7b51a2c6bf436fe36560abda3d984f1c4eb507784bedaa5cc",
+    "targetSha256": "51da24bfa04cfa85c05e06fd818b1f36e331c12a1534a4f2472910692d33cfa7"
+  },
+  "code-quality/rules/test-i18n-assert-wiring-not-copy.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "bdf9ff118c35fb20a6cbe1ce483cf66807d8dc62daa65a835e30a3a0dbddc2de",
+    "targetSha256": "1039ae6d810ce7a64b73072551123ce22b5090e4cd64df9bc661885afb8a6ac1"
+  },
+  "code-quality/rules/test-layer-ownership.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "d1e51474a1e5bb74dd9b74790e832b7af70f2dc36f66ee42acf7b2efe9a90386",
+    "targetSha256": "0af16e2ae5cfc70e5b9c3273f2fa7e7862334d5f135743f54b8f45f9cebd8cc0"
+  },
+  "code-quality/rules/test-name-is-spec.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "46081c69d7d6ba0eac201cca8e91040cc975ab4b1c30838e4c4ae2226f582786",
+    "targetSha256": "18fc53c40d4dbf62b48b6ba5d97bb37f164390fbdc7fdd2cc7c3839706d0355b"
+  },
+  "code-quality/rules/test-prune-and-distrust.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "7fac98d65712d69e06bd9e3fb1607c23409fdff3ee136a33afa68a3fb3cf3e46",
+    "targetSha256": "ead3af8eb98645ae7429b85c01055c297533a33f91ca1d9de83ad7eb4f212c61"
+  },
+  "code-quality/rules/ts-discriminated-union-at-boundary.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "c1cd27be579b6b896fe3426536bc746477f93fa9075ffaf86953b48cbe54360d",
+    "targetSha256": "f9c606097e881b1377563e123e0da35068328eca8eaae12a4eec672c6900c883"
+  },
+  "code-quality/rules/ts-non-null-and-union.md": {
+    "reason": "User-approved code-quality audit: canonical decisions, explicit exceptions, and reduced duplicate rules",
+    "sourceSha256": "c49fc093f711469d8425a511d1b2dafe274489b4c29ded34c8bcdcf0178f1a21",
+    "targetSha256": "6f3dbc659efd7db3c9dcdf88f9ff32f94a8f98c087d28f05b98351022d7b9856"
   }
 }
