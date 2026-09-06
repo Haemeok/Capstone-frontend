@@ -95,6 +95,7 @@ const makeRecord = (recordId: string, title: string, imageUrl: string) => ({
 
 describe("MonthlyCookingRecordPageClient", () => {
   beforeEach(() => {
+    jest.useFakeTimers({ now: new Date(2026, 7, 27, 12) });
     jest.clearAllMocks();
     searchParams = "month=2026-08";
     useUserStore.setState({ isAuthReady: true, isAuthenticated: true });
@@ -137,6 +138,10 @@ describe("MonthlyCookingRecordPageClient", () => {
       backgroundKey: "PAPER_BEIGE",
       imageUrl: "/backgrounds/paper-beige.webp",
     });
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it("month 쿼리에 해당하는 이미지 스티커만 월별 보드에 보여줍니다", async () => {

@@ -9,7 +9,7 @@ describe("iOS scroll diagnostics", () => {
   let container: HTMLDivElement;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    jest.useFakeTimers({ doNotFake: ["performance"] });
     capture.mockReset();
     registerAnalyticsClient({ capture });
     jest.spyOn(console, "log").mockImplementation(() => undefined);

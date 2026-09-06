@@ -198,6 +198,7 @@ const renderCalendarTab = (pathname = "/users/u1") => {
 
 describe("CalendarTabContent cooking record preview", () => {
   beforeEach(() => {
+    jest.useFakeTimers({ now: new Date(2026, 7, 27, 12) });
     jest.clearAllMocks();
     useUserStore.setState({
       isAuthReady: true,
@@ -387,9 +388,13 @@ describe("CalendarTabContent cooking record preview", () => {
       within(toolbar).getByRole("button", { name: "기록" })
     ).toBeInTheDocument();
 
+    await waitFor(() =>
+      expect(screen.getByTestId("calendar-caption")).toHaveTextContent(
+        "8개의 요리"
+      )
+    );
     const caption = screen.getByTestId("calendar-caption");
     expect(caption).toHaveTextContent("2026년 8월");
-    expect(caption).toHaveTextContent("8개의 요리");
     expect(caption).toHaveClass("flex-col", "items-start");
 
     const modeToggle = screen.getByRole("button", {
