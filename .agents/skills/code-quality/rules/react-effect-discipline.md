@@ -50,3 +50,26 @@ function SaveButton({ draft, isDirty }: Props) {
 ## Heuristic
 Before writing `useEffect`, ask: "is this synchronizing with something outside React?" No → it's probably a handler or a computation.
 Before writing `useState`, ask: "is the source of truth elsewhere?" Yes → don't store; compute.
+
+## Conditional DOM and external SDK initialization
+
+An effect depending only on a resource ID can run while a hydration or permission gate returns null. When the gate opens, the DOM appears but the ID has not changed, so initialization never runs. Direct entry can fail while client navigation works.
+
+Incorrect: keep the SDK effect in a component that conditionally returns null.
+
+```tsx
+useEffect(() => {
+  if (!elementRef.current) return;
+  initialize(elementRef.current);
+}, [resourceId]);
+if (!enabled) return null;
+```
+
+Prefer making the enabled DOM lifetime own its effects, refs and state:
+
+```tsx
+const Slot = ({ enabled, resourceId }: Props) =>
+  enabled ? <MountedSlot key={resourceId} resourceId={resourceId} /> : null;
+```
+
+Keep SDK initialization and cleanup inside `MountedSlot`. Test server hydration or a disabled-to-enabled transition, re-enabling, resource replacement, and Strict Mode duplicate prevention. A generic SDK queue push may initialize the first pending element rather than the caller's element: count per-slot requests, not just whether one banner appeared. A fixed timeout or an iframe child does not prove the SDK returned content; observe the documented response status and retain observation for late responses.
