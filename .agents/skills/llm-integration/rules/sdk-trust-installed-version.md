@@ -9,7 +9,15 @@ tags: llm, ai-sdk, versioning, tooling, false-positive
 
 Automated validation hooks (and your own training priors) often assume the *latest* major version of a library. When a hook fires `ERROR: generateObject was removed in AI SDK v6 — use generateText + Output.object instead`, it is asserting a fact about v6 that may be false for the version this repo actually installs. Acting on it blindly rewrites working code into a different API, diverging from every other call site and breaking at runtime. The hook is a prompt, not ground truth.
 
-This repo pins `ai` to v5 (`5.0.x`), where `generateObject` / `generateText` from `"ai"` are the correct, supported structured-output APIs and are used in ~8 files (`app/actions/curation`, `grok`, `recipeBlog`, …). The v6 `generateText({ output: Output.object({ schema }) })` shape does **not** apply here.
+This repo's lockfile selects `ai` v5, where `generateObject` / `generateText` from `"ai"` are the supported APIs used by the existing call sites (`app/actions/curation`, `grok`, `recipeBlog`, …). A newer API shape from another major version does not establish a migration requirement here.
+
+An installed version describes the local environment, not necessarily the project's intended dependencies. Compare it with `package-lock.json` before adapting source code to newly rejected options or changed callback signatures. A newer local minor or patch release can change types and make unrelated tests fail together. Stop running project processes, restore the locked dependencies with `npm ci`, and rerun the failing checks before deciding which source changes are needed. Keep a deliberate dependency upgrade separate from this restoration.
+
+```bash
+node -e "const lock = require('./package-lock.json'); console.log('locked', lock.packages['node_modules/ai'].version, 'installed', require('ai/package.json').version)"
+npm ci
+npx tsc --noEmit
+```
 
 **Incorrect — "migrating" because the hook said so:**
 
