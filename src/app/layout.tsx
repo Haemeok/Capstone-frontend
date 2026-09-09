@@ -1,17 +1,7 @@
 // i18n-ignore-file: 루트 레이아웃 — ko 홈 기본 OG 메타(페이지별 override), 사용자 본문 카피 없음
 import type { Metadata, Viewport } from "next";
 
-import { AdSenseScript } from "@/shared/adsense";
-import { AppContextBridge } from "@/shared/lib/analytics";
-import { AppWebViewDetector } from "@/shared/lib/bridge";
-
-import { BottomLayoutController } from "@/widgets/Footer/BottomLayoutController";
-import BottomNavBar from "@/widgets/Footer/BottomNavBar";
-import DesktopHeader from "@/widgets/Header/DesktopHeader";
-
-import GlobalDrawers from "./GlobalDrawers";
-import GoogleAnalytics from "./GoogleAnalytics";
-import { AppProviders } from "./providers/AppProviders";
+import { RootShell } from "./RootShell";
 
 import "./globals.css";
 
@@ -62,16 +52,6 @@ export default async function RootLayout({
           href="https://haemeok-s3-bucket.s3.ap-northeast-2.amazonaws.com"
         />
         <link
-          rel="preconnect"
-          href="https://pagead2.googlesyndication.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://googleads.g.doubleclick.net"
-          crossOrigin="anonymous"
-        />
-        <link
           rel="alternate"
           type="application/rss+xml"
           title="Recipio – All"
@@ -84,20 +64,8 @@ export default async function RootLayout({
           href="/feed/recipes.xml"
         />
       </head>
-      <body className="font-sans bg-white">
-        <AppWebViewDetector />
-        <AppProviders>
-          <DesktopHeader />
-          <main className="flex w-full flex-1 flex-col pb-[var(--main-pb,var(--bottom-nav-h))] md:pb-0">
-            {children}
-          </main>
-          <BottomNavBar />
-          <BottomLayoutController />
-          <GlobalDrawers />
-          <AdSenseScript />
-        </AppProviders>
-        <GoogleAnalytics />
-        <AppContextBridge />
+      <body className="bg-white font-sans">
+        <RootShell>{children}</RootShell>
       </body>
     </html>
   );

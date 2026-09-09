@@ -1,4 +1,6 @@
 const NON_LOCALIZED_PATHS = new Set([
+  "/ad-report",
+  "/ad-report/",
   "/events/app-install",
   "/events/app-install/",
 ]);

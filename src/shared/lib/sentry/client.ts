@@ -1,3 +1,5 @@
+import { isPrivateReportDocument } from "@/shared/config/privateRoutes";
+
 import type { SentryUser } from "./types";
 
 type SentryModule = typeof import("@sentry/browser");
@@ -30,11 +32,12 @@ const flushErrorQueue = () => {
 };
 
 const initSentry = async () => {
-  if (isInitialized || !SENTRY_DSN) return;
+  if (isInitialized || !SENTRY_DSN || isPrivateReportDocument()) return;
 
   try {
     const Sentry = await import("@sentry/browser");
     const { isIgnoredError, isOfflineError } = await import("./filters");
+    if (isPrivateReportDocument()) return;
     sentryModule = Sentry;
 
     Sentry.init({
@@ -42,6 +45,7 @@ const initSentry = async () => {
       sampleRate: 1.0,
       environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || "production",
       beforeSend(event) {
+        if (isPrivateReportDocument()) return null;
         if (isIgnoredError(event)) return null;
         if (
           isOfflineError(event) &&
@@ -83,6 +87,7 @@ const scheduleInit = () => {
 };
 
 const captureException = (error: unknown, tags?: Record<string, string>) => {
+  if (isPrivateReportDocument()) return;
   if (!sentryModule) {
     if (errorQueue.length < MAX_ERROR_QUEUE_SIZE) {
       errorQueue.push({ error, tags });

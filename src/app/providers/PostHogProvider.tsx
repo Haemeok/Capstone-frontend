@@ -10,6 +10,7 @@ import {
 
 import type { PostHog } from "posthog-js";
 
+import { isPrivateReportDocument } from "@/shared/config/privateRoutes";
 import { registerAnalyticsClient } from "@/shared/lib/analytics";
 
 const PostHogClientContext = createContext<PostHog | null>(null);
@@ -31,8 +32,11 @@ export const PostHogProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
+    let cancelled = false;
     const initPostHog = async () => {
+      if (cancelled || isPrivateReportDocument()) return;
       const { default: posthog } = await import("posthog-js");
+      if (cancelled || isPrivateReportDocument()) return;
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
         api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "/ingest",
         ui_host: "https://us.posthog.com",
@@ -42,6 +46,7 @@ export const PostHogProvider = ({ children }: { children: ReactNode }) => {
         disable_session_recording: true,
         autocapture: false,
         capture_dead_clicks: false,
+        before_send: (event) => (isPrivateReportDocument() ? null : event),
       });
       registerAnalyticsClient(posthog);
       isPostHogInitialized = true;
@@ -53,6 +58,9 @@ export const PostHogProvider = ({ children }: { children: ReactNode }) => {
     } else {
       setTimeout(() => initPostHog(), 2000);
     }
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (

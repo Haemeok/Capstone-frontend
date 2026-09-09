@@ -1,3 +1,5 @@
+import { isPrivateReportDocument } from "@/shared/config/privateRoutes";
+
 type AnalyticsEventProperties = Record<
   string,
   string | number | boolean | null
@@ -20,6 +22,7 @@ export const captureAnalyticsEvent = (
   event: string,
   properties: AnalyticsEventProperties
 ): void => {
+  if (isPrivateReportDocument()) return;
   if (analyticsClient) {
     analyticsClient.capture(event, properties);
     return;
