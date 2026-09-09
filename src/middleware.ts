@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { get } from "@vercel/edge-config";
 
 import { STORAGE_KEYS } from "@/shared/config/constants/localStorage";
+import { isAdReportPath } from "@/shared/config/privateRoutes";
 import { isNonLocalizedPath } from "@/shared/i18n/isNonLocalizedPath";
 import { localizedHref, stripLocale } from "@/shared/i18n/localizedHref";
 import { type Locale, LOCALES } from "@/shared/i18n/types";
@@ -61,6 +62,13 @@ const resolveRecipeTrack = async (id: string): Promise<"isr" | "dynamic"> => {
 
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+  if (isAdReportPath(pathname)) {
+    const response = NextResponse.next();
+    response.headers.set("Cache-Control", "private, no-store, max-age=0");
+    response.headers.set("Referrer-Policy", "no-referrer");
+    response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+    return response;
+  }
   logRecipeRequestCountry(request, pathname);
 
   const preferred = request.cookies.get(STORAGE_KEYS.PREFERRED_LOCALE)?.value;

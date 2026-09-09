@@ -29,6 +29,16 @@ const req = (
   return r;
 };
 
+describe("광고 리포트 문서 경계", () => {
+  it("직접 진입은 언어 리다이렉트 없이 비공개 문서를 반환한다", async () => {
+    const res = await middleware(req("/ad-report", { preferred_locale: "ja" }));
+    expect(res.headers.get("location")).toBeNull();
+    expect(res.headers.get("Cache-Control")).toContain("no-store");
+    expect(res.headers.get("Referrer-Policy")).toBe("no-referrer");
+    expect(res.headers.get("X-Robots-Tag")).toContain("noindex");
+  });
+});
+
 describe("middleware locale align", () => {
   beforeEach(() => mockGet.mockReset());
 
