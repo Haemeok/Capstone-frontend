@@ -14,6 +14,19 @@ const apiRewrite = {
 };
 
 const appConfig = {
+  async headers() {
+    return [
+      {
+        source: "/fonts/pretendard/1.3.9/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return [
       ...(apiRouting.shouldProxyApiRequests ? [apiRewrite] : []),

@@ -1,9 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./fonts/pretendard-variable-subset.css";
 
 @config "../../tailwind.config.js";
 
 @custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-pretendard: "Pretendard Variable", system-ui, "Noto Sans KR",
+    "Noto Serif KR", sans-serif, "Apple SD Gothic Neo", "Segoe UI", "Roboto";
+}
 
 @theme {
   --color-gray-50: #fafafa;
