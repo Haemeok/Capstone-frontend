@@ -9,7 +9,6 @@ import { BottomLayoutController } from "@/widgets/Footer/BottomLayoutController"
 import BottomNavBar from "@/widgets/Footer/BottomNavBar";
 import DesktopHeader from "@/widgets/Header/DesktopHeader";
 
-import { pretendard } from "./fonts";
 import GlobalDrawers from "./GlobalDrawers";
 import GoogleAnalytics from "./GoogleAnalytics";
 import { AppProviders } from "./providers/AppProviders";
@@ -52,7 +51,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={`scroll-smooth ${pretendard.variable}`}>
+    <html lang="ko" className="scroll-smooth">
       <head>
         <link
           rel="preconnect"
@@ -85,7 +84,7 @@ export default async function RootLayout({
           href="/feed/recipes.xml"
         />
       </head>
-      <body className={`${pretendard.className} bg-white`}>
+      <body className="font-sans bg-white">
         <AppWebViewDetector />
         <AppProviders>
           <DesktopHeader />
