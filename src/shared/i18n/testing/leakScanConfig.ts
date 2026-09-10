@@ -9,6 +9,7 @@ export const KO_ONLY_DIRS = [
   "src/shared/api",
   "src/shared/hooks",
   "src/app/admin",
+  "src/app/ad-report/",
   "src/app/recipes/admin",
   "src/app/api",
   "src/app/actions",
