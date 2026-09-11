@@ -31,14 +31,16 @@ type SelectedIngredient = {
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialIngredients: SelectedIngredient[];
+  initialSelectedIds: string[];
+  ingredientNames?: SelectedIngredient[];
   onApply: (selectedIds: string[]) => void;
 };
 
 export const IngredientsFilterSheet = ({
   open,
   onOpenChange,
-  initialIngredients,
+  initialSelectedIds,
+  ingredientNames = [],
   onApply,
 }: Props) => {
   const { Container, Content, Header, Title, Description, Footer, Close } =
@@ -49,8 +51,8 @@ export const IngredientsFilterSheet = ({
       <Content className="flex h-[85vh] w-full flex-col md:h-auto md:max-h-[80vh] md:max-w-2xl">
         {open && (
           <IngredientsFilterSheetContent
-            key={initialIngredients.map((i) => i.id).join(",")}
-            initialIngredients={initialIngredients}
+            initialSelectedIds={initialSelectedIds}
+            ingredientNames={ingredientNames}
             onApply={onApply}
             onClose={() => onOpenChange(false)}
             Header={Header}
@@ -66,7 +68,8 @@ export const IngredientsFilterSheet = ({
 };
 
 type ContentProps = {
-  initialIngredients: SelectedIngredient[];
+  initialSelectedIds: string[];
+  ingredientNames: SelectedIngredient[];
   onApply: (selectedIds: string[]) => void;
   onClose: () => void;
   Header: ReturnType<typeof useResponsiveSheet>["Header"];
@@ -77,7 +80,8 @@ type ContentProps = {
 };
 
 const IngredientsFilterSheetContent = ({
-  initialIngredients,
+  initialSelectedIds,
+  ingredientNames,
   onApply,
   onClose,
   Header,
@@ -88,7 +92,7 @@ const IngredientsFilterSheetContent = ({
 }: ContentProps) => {
   const { dict } = useTaxonomy();
   const common = useCommonDict();
-  const selection = useIngredientSelection(initialIngredients);
+  const selection = useIngredientSelection(initialSelectedIds, ingredientNames);
   const [category, setCategory] = useState<IngredientCategoryName>("전체");
   const scrollRef = useRef<HTMLDivElement>(null);
 

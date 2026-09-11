@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
@@ -10,11 +10,20 @@ type SelectedIngredient = {
 };
 
 export const useIngredientSelection = (
-  initialData: SelectedIngredient[] = []
+  initialSelectedIds: string[] = [],
+  ingredientNames: SelectedIngredient[] = []
 ) => {
-  const [selected, setSelected] = useState<SelectedIngredient[]>(initialData);
+  const [selected, setSelected] = useState<SelectedIngredient[]>(() =>
+    initialSelectedIds.map((id) => ({ id, name: "" }))
+  );
 
-  const toggle = useCallback((id: string, name: string) => {
+  const namesById = new Map(ingredientNames.map(({ id, name }) => [id, name]));
+  const selectedWithNames = selected.map((item) => ({
+    ...item,
+    name: namesById.get(item.id) ?? item.name,
+  }));
+
+  const toggle = (id: string, name: string) => {
     triggerHaptic("Light");
     setSelected((prev) => {
       const exists = prev.some((item) => item.id === id);
@@ -23,26 +32,23 @@ export const useIngredientSelection = (
       }
       return [...prev, { id, name }];
     });
-  }, []);
+  };
 
-  const remove = useCallback((id: string) => {
+  const remove = (id: string) => {
     triggerHaptic("Light");
     setSelected((prev) => prev.filter((item) => item.id !== id));
-  }, []);
+  };
 
-  const reset = useCallback(() => {
+  const reset = () => {
     triggerHaptic("Light");
     setSelected([]);
-  }, []);
+  };
 
   const selectedIds = selected.map((item) => item.id);
-  const isSelected = useCallback(
-    (id: string) => selected.some((item) => item.id === id),
-    [selected]
-  );
+  const isSelected = (id: string) => selected.some((item) => item.id === id);
 
   return {
-    selected,
+    selected: selectedWithNames,
     selectedIds,
     isSelected,
     toggle,

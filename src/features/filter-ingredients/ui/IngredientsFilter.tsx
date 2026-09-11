@@ -33,20 +33,18 @@ const IngredientsFilterSheet = dynamic(
 );
 
 export const IngredientsFilter = () => {
-  const [selectedIngredients, setSavedIngredients] = useIngredientsFilter();
+  const [selectedIngredientsIds, setSavedIngredients] = useIngredientsFilter();
   const [isOpen, setIsOpen] = useState(false);
   const locale = useChromeLocale();
 
   const { data: ingredientNames } = useQuery({
-    queryKey: ["ingredientNames", selectedIngredients],
-    queryFn: () => getIngredientNames(selectedIngredients),
-    enabled: selectedIngredients.length > 0,
+    queryKey: ["ingredientNames", selectedIngredientsIds],
+    queryFn: () => getIngredientNames(selectedIngredientsIds),
+    enabled: selectedIngredientsIds.length > 0,
     staleTime: 5 * 60 * 1000,
   });
 
-  const initialIngredients = ingredientNames?.content ?? [];
-
-  const count = selectedIngredients.length;
+  const count = selectedIngredientsIds.length;
   const ingredientsLabel = INGREDIENTS_LABEL[locale];
   const displayText =
     count > 0
@@ -67,7 +65,8 @@ export const IngredientsFilter = () => {
       <IngredientsFilterSheet
         open={isOpen}
         onOpenChange={setIsOpen}
-        initialIngredients={initialIngredients}
+        initialSelectedIds={selectedIngredientsIds}
+        ingredientNames={ingredientNames?.content ?? []}
         onApply={handleApply}
       />
     </>
