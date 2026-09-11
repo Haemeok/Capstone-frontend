@@ -28,7 +28,8 @@ const renderSheet = (initial = [] as { id: string; name: string }[]) => {
       <IngredientsFilterSheet
         open
         onOpenChange={() => {}}
-        initialIngredients={initial}
+        initialSelectedIds={initial.map(({ id }) => id)}
+        ingredientNames={initial}
         onApply={() => {}}
       />
     </QueryClientProvider>

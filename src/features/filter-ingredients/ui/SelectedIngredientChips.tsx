@@ -11,11 +11,12 @@ type Props = {
 };
 
 export const SelectedIngredientChips = ({ items, onRemove }: Props) => {
-  if (items.length === 0) return null;
+  const selected = items.filter((item) => item.name !== "");
+  if (selected.length === 0) return null;
 
   return (
     <div className="scrollbar-hide flex gap-2 overflow-x-auto">
-      {items.map(({ id, name }) => (
+      {selected.map(({ id, name }) => (
         <div
           key={id}
           className="bg-olive-light/10 text-olive-light flex flex-shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium"
