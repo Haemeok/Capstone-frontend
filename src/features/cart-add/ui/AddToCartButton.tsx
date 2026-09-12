@@ -1,88 +1,42 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
 import { Check, ShoppingBasketIcon } from "lucide-react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
-import { convertIngredientQuantity } from "@/shared/lib/ingredientConversion";
 import { useToastStore } from "@/shared/ui/toast";
 
-import {
-  CART_MAX_ITEMS,
-  CART_MESSAGES,
-  useAddCartItems,
-  useGuestCartStore,
-} from "@/entities/cart";
-import { useUserStore } from "@/entities/user";
+import { CART_MESSAGES } from "@/entities/cart";
 
-import { buildAddPayload } from "../model/buildAddPayload";
+import type { AddCartItemArgs } from "../model/types";
+import { useAddCartItems } from "../model/useAddCartItems";
 
-type CartRecipeSource = {
-  recipeId: string;
-  title: string;
-  imageUrl: string | null;
-};
-
-type AddToCartButtonProps = {
-  recipeIngredientId: string;
-  name: string;
-  quantity?: string;
-  unit: string;
-  servingRatio: number;
-  recipe: CartRecipeSource;
-};
-
-export const AddToCartButton = ({
-  recipeIngredientId,
-  name,
-  quantity,
-  unit,
-  servingRatio,
-  recipe,
-}: AddToCartButtonProps) => {
-  const { user } = useUserStore();
+export const AddToCartButton = (item: AddCartItemArgs) => {
   const [isAdded, setIsAdded] = useState(false);
-  const { mutate: addItems, isPending } = useAddCartItems();
-  const addGuestItems = useGuestCartStore((s) => s.addItems);
-  const addToast = useToastStore((s) => s.addToast);
+  const addToast = useToastStore((state) => state.addToast);
+  const { handleAddItems, isPending } = useAddCartItems(item);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     triggerHaptic("Light");
-    if (!user) {
-      const converted = convertIngredientQuantity(quantity, unit, servingRatio);
-      const result = addGuestItems([
-        {
-          recipeIngredientId,
-          name,
-          quantity: converted.quantity,
-          unit: converted.unit,
-          recipe,
-        },
-      ]);
-      if (result.addedCount > 0) {
+    const result = await handleAddItems();
+
+    switch (result.status) {
+      case "added":
+        setIsAdded(true);
         triggerHaptic("Success");
         addToast({ message: CART_MESSAGES.added, variant: "success" });
-        setIsAdded(true);
-      } else {
-        const isFull =
-          useGuestCartStore.getState().items.length >= CART_MAX_ITEMS;
-        addToast({
-          message: isFull
-            ? CART_MESSAGES.limitExceeded
-            : CART_MESSAGES.alreadyInCart,
-          variant: isFull ? "warning" : "info",
-        });
-      }
-      return;
+        break;
+      case "duplicate":
+        addToast({ message: CART_MESSAGES.alreadyInCart, variant: "info" });
+        break;
+      case "limitExceeded":
+        addToast({ message: CART_MESSAGES.limitExceeded, variant: "warning" });
+        break;
+      case "failed":
+        addToast({ message: CART_MESSAGES.addFailed, variant: "error" });
+        break;
     }
-    const payload = buildAddPayload({
-      recipeIngredientId,
-      quantity,
-      unit,
-      servingRatio,
-    });
-    addItems({ items: [payload] }, { onSuccess: () => setIsAdded(true) });
   };
 
   return (
