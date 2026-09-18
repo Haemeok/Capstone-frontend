@@ -1,5 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 
+import type { CookingRecordListItem } from "@/entities/recipe";
+
 import { MonthlyCookingRecordShareCard } from "../MonthlyCookingRecordShareCard";
 
 jest.mock("next/navigation", () => ({
@@ -17,7 +19,71 @@ const items = Array.from({ length: 18 }, (_, index) => ({
   imageAlt: `요리 ${index + 1}`,
 }));
 
+const dishRecord: CookingRecordListItem = {
+  recordId: "dish-record",
+  recipeId: null,
+  displayTitle: "접시 카레",
+  ingredientCost: null,
+  marketPrice: null,
+  nutrition: null,
+  calories: null,
+  imageUrl: "/records/dish-original.webp",
+  visibility: null,
+  stickerImageUrl: null,
+  stickerStatus: "NONE",
+  cookedAt: "2026-08-17T12:00:00+09:00",
+  createdAt: "2026-08-17T12:00:00+09:00",
+  sourceType: "MANUAL",
+  reviewId: null,
+  recipeAvailable: false,
+  savings: null,
+  isRemix: null,
+  displayMode: "DISH",
+  croppedImageUrl: "/records/dish-cropped.webp",
+  displayStyle: {
+    plateId: "plate-1",
+    plateImageUrl: "/plates/plate-1.webp",
+    maskShape: "CIRCLE",
+    crop: { centerX: 0.5, centerY: 0.5, zoom: 1 },
+  },
+};
+
 describe("MonthlyCookingRecordShareCard", () => {
+  it("접시 기록을 공유 이미지에서도 접시와 완성 사진으로 합성합니다", () => {
+    render(
+      <MonthlyCookingRecordShareCard
+        ariaLabel="공유 이미지"
+        kicker="나의 요리 기록"
+        monthLabel="2026년 8월"
+        recordCountLabel="1개의 요리"
+        brandLabel="RECIPIO"
+        items={[
+          {
+            id: dishRecord.recordId,
+            title: dishRecord.displayTitle,
+            imageUrl: dishRecord.imageUrl ?? "",
+            imageAlt: dishRecord.displayTitle,
+            record: dishRecord,
+          },
+        ]}
+        background={null}
+      />
+    );
+
+    const item = screen.getByTestId("saved-cooking-record-dish");
+    expect(
+      item.querySelector('img[src="/records/dish-cropped.webp"]')
+    ).not.toBeNull();
+    expect(
+      screen
+        .getByTestId("saved-cooking-record-plate")
+        .querySelector('img[src="/plates/plate-1.webp"]')
+    ).not.toBeNull();
+    expect(
+      document.querySelector('img[src="/records/dish-original.webp"]')
+    ).toBeNull();
+  });
+
   it("월·전체 개수·스티커·12px 브랜드만 1대1 카드에 표시합니다", () => {
     render(
       <MonthlyCookingRecordShareCard

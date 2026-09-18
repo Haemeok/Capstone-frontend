@@ -79,6 +79,38 @@ describe("createMonthlyCookingRecordImage", () => {
     });
   });
 
+  it("사진이 나타나는 애니메이션이 끝나기 전에는 PNG 캡처를 시작하지 않습니다", async () => {
+    const node = document.createElement("div");
+    let finish: () => void = () => undefined;
+    const finished = new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    let markAnimationsRead: () => void = () => undefined;
+    const animationsRead = new Promise<void>((resolve) => {
+      markAnimationsRead = resolve;
+    });
+    Object.defineProperty(node, "getAnimations", {
+      value: () => {
+        markAnimationsRead();
+        return [
+          {
+            effect: { getComputedTiming: () => ({ endTime: 300 }) },
+            finished,
+          },
+        ];
+      },
+    });
+    const blob = new Blob(["png"], { type: "image/png" });
+    mockSvgRasterization(blob);
+    mockedToSvg.mockResolvedValue(createSvgDataUrl(0));
+    const capture = createMonthlyCookingRecordImage(node);
+    await animationsRead;
+    expect(mockedToSvg).not.toHaveBeenCalled();
+    finish();
+    await expect(capture).resolves.toEqual(expect.objectContaining({ blob }));
+    expect(mockedToSvg).toHaveBeenCalledTimes(1);
+  });
+
   it("SVG 안의 스티커를 동기 디코딩한 뒤 PNG Blob을 만듭니다", async () => {
     const blob = new Blob(["png"], { type: "image/png" });
     const { decode, drawImage, rasterImage } = mockSvgRasterization(blob);
