@@ -21,6 +21,7 @@ type DeleteModalProps = {
   confirmLabel?: string;
   isPending?: boolean;
   pendingLabel?: string;
+  closeButtonClassName?: string;
 };
 
 export const DeleteModal = ({
@@ -33,6 +34,7 @@ export const DeleteModal = ({
   confirmLabel,
   isPending = false,
   pendingLabel,
+  closeButtonClassName,
 }: DeleteModalProps) => {
   const t = useCommonDict();
   const resolvedDescription = description ?? t.modal.delete.description;
@@ -41,7 +43,10 @@ export const DeleteModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm pb-0 sm:pb-6">
+      <DialogContent
+        className="max-w-sm pb-0 sm:pb-6"
+        closeButtonClassName={closeButtonClassName}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{resolvedDescription}</DialogDescription>

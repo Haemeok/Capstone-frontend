@@ -53,6 +53,7 @@ export const BulkDeleteConfirmModal = ({
   return (
     <DeleteModal
       open={open}
+      closeButtonClassName="hidden"
       onOpenChange={onOpenChange}
       title={format(t.title, { count })}
       description={t.description}
