@@ -44,7 +44,7 @@ export const CookingRecordPhoto = ({
         </div>
       ) : null}
       <div
-        className={`relative aspect-square ${plate ? "w-[57%]" : "w-[88%]"}`}
+        className={`relative aspect-square ${plate ? "w-[62%]" : "w-[88%]"}`}
       >
         {src && isSticker ? (
           <Image
