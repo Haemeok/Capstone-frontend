@@ -152,7 +152,7 @@ export const SavedCookingRecordPhoto = ({
             <div
               data-testid="saved-cooking-record-dish"
               className={`absolute top-1/2 left-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 ${
-                plateImageUrl ? "w-[62%]" : "w-[88%]"
+                plateImageUrl ? "w-[68.2%]" : "w-[88%]"
               }`}
             >
               <SavedDishSource
