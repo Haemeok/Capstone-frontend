@@ -16,6 +16,7 @@ import { MonthlyCookingRecordDrawers } from "./MonthlyCookingRecordDrawers";
 import { useCookingRecordBackground } from "./useCookingRecordBackground";
 import { useCookingRecordMonth } from "./useCookingRecordMonth";
 import { useMonthlyCookingRecords } from "./useMonthlyCookingRecords";
+import { useRecordNameVisibility } from "./useRecordNameVisibility";
 
 export const MonthlyCookingRecordPageClient = () => {
   const copy = useUserPagesDict().calendar.cookingRecord;
@@ -29,7 +30,10 @@ export const MonthlyCookingRecordPageClient = () => {
   const [selectedRecord, setSelectedRecord] =
     useState<MonthlyCookingRecord | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isRecordNameVisible, setIsRecordNameVisible] = useState(true);
+  const {
+    isVisible: isRecordNameVisible,
+    changeVisibility: handleRecordNameVisibilityChange,
+  } = useRecordNameVisibility();
   const records = useMonthlyCookingRecords({
     enabled: authGate,
     monthKey: month.monthKey,
@@ -84,10 +88,6 @@ export const MonthlyCookingRecordPageClient = () => {
       return;
     }
     month.router.push(`/calendar/timeline/share?month=${month.monthKey}`);
-  };
-
-  const handleRecordNameVisibilityChange = (visible: boolean) => {
-    setIsRecordNameVisible(visible);
   };
 
   return (

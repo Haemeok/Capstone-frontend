@@ -1,4 +1,5 @@
 export const STORAGE_KEYS = {
+  COOKING_RECORD_NAMES_VISIBLE: "recipio:cooking-record:names-visible",
   AI_RECENT_RECIPES: "ai_recent_recipes",
   AI_CREDIT_PROMPTED: "ai_credit_prompted",
   YOUTUBE_EXTRACTION_PROMPTED: "youtube_extraction_prompted",
