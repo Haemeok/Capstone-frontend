@@ -13,6 +13,7 @@ import type {
   RecordPlateCategory,
 } from "../model/recordPhoto.types";
 import { CookingRecordShapeOptions } from "./CookingRecordShapeOptions";
+import { RecordPhotoOptionRow } from "./RecordPhotoOptionRow";
 
 type Props = {
   value: RecordPhotoDraft;
@@ -100,11 +101,7 @@ export const CookingRecordPhotoOptions = ({
               </button>
             ))}
         </div>
-        <div
-          role="group"
-          aria-label={copy.plates}
-          className="flex gap-2 overflow-x-auto overscroll-x-contain pb-2"
-        >
+        <RecordPhotoOptionRow label={copy.plates}>
           <button
             type="button"
             disabled={disabled}
@@ -143,7 +140,7 @@ export const CookingRecordPhotoOptions = ({
                 </span>
               </button>
             ))}
-        </div>
+        </RecordPhotoOptionRow>
         {catalog.status !== "ready" ? (
           <p role="status" className="text-ink-muted mt-2 text-sm">
             {catalog.status === "loading" ? copy.loading : copy.error}
