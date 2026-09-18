@@ -6,6 +6,7 @@ import type {
   RecordPhotoCatalog,
   RecordPhotoDraft,
 } from "../model/recordPhoto.types";
+import { RecordPhotoOptionRow } from "./RecordPhotoOptionRow";
 type Props = {
   value: RecordPhotoDraft;
   shapes: RecordPhotoCatalog["maskShapes"];
@@ -24,11 +25,7 @@ export const CookingRecordShapeOptions = ({
 }: Props) => (
   <section aria-label={copy.shape}>
     <h3 className="text-ink mb-2 text-sm font-semibold">{copy.shape}</h3>
-    <div
-      role="group"
-      aria-label={copy.shape}
-      className="flex gap-2 overflow-x-auto overscroll-x-contain pb-2"
-    >
+    <RecordPhotoOptionRow label={copy.shape}>
       {shapes.map((shape) => (
         <button
           type="button"
@@ -55,6 +52,6 @@ export const CookingRecordShapeOptions = ({
           </svg>
         </button>
       ))}
-    </div>
+    </RecordPhotoOptionRow>
   </section>
 );
