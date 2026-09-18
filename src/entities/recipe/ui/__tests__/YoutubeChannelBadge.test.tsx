@@ -15,10 +15,10 @@ describe("YoutubeChannelBadge", () => {
     mockUsePathname.mockReturnValue("/");
   });
 
-  it("T-01: CHEF는 셰프 모자와 피스타치오 셰프 레시피 뱃지를 표시한다", () => {
+  it("T-01: CHEF는 셰프 모자와 피스타치오 셰프 뱃지를 표시한다", () => {
     render(<YoutubeChannelBadge badgeType="CHEF" />);
 
-    const label = screen.getByText("셰프 레시피");
+    const label = screen.getByText("셰프");
     const badge = label.parentElement;
 
     expect(badge).toHaveClass(
@@ -29,10 +29,10 @@ describe("YoutubeChannelBadge", () => {
     expect(badge?.querySelector("svg")).toHaveClass("lucide-chef-hat");
   });
 
-  it("T-02: POPULAR_CREATOR는 왕관과 망고 유명 크리에이터 뱃지를 표시한다", () => {
+  it("T-02: POPULAR_CREATOR는 왕관과 망고 유명 뱃지를 표시한다", () => {
     render(<YoutubeChannelBadge badgeType="POPULAR_CREATOR" />);
 
-    const label = screen.getByText("유명 크리에이터");
+    const label = screen.getAllByText("유명")[0];
     const badge = label.parentElement;
 
     expect(badge).toHaveClass(
@@ -55,7 +55,7 @@ describe("YoutubeChannelBadge", () => {
   });
 
   it.each([
-    ["/", "유명 크리에이터"],
+    ["/", "유명"],
     ["/en", "Popular creator"],
     ["/ja", "人気クリエイター"],
   ])("T-06: %s 경로에서 현지화된 문구를 표시한다", (pathname, label) => {
@@ -63,14 +63,13 @@ describe("YoutubeChannelBadge", () => {
 
     render(<YoutubeChannelBadge badgeType="POPULAR_CREATOR" />);
 
-    expect(screen.getByText(label)).toBeInTheDocument();
+    expect(screen.getAllByText(label)[0]).toBeInTheDocument();
   });
 
   it("T-07: 뱃지는 줄어들지 않고 359px 이하에서 짧은 문구를 사용한다", () => {
     render(<YoutubeChannelBadge badgeType="POPULAR_CREATOR" />);
 
-    const fullLabel = screen.getByText("유명 크리에이터");
-    const shortLabel = screen.getByText("유명");
+    const [fullLabel, shortLabel] = screen.getAllByText("유명");
 
     expect(fullLabel.parentElement).toHaveClass("shrink-0");
     expect(fullLabel).toHaveClass("max-[359px]:hidden");

@@ -98,10 +98,10 @@ describe("DetailedRecipeGridItem 국가 국기", () => {
 });
 
 describe("DetailedRecipeGridItem 유튜브 채널 뱃지", () => {
-  it("T-04: 셰프 레시피 뱃지를 YouTube 아이콘과 채널명 앞에 표시한다", () => {
+  it("T-04: 셰프 뱃지를 YouTube 아이콘과 채널명 앞에 표시한다", () => {
     render(<DetailedRecipeGridItem recipe={badgeRecipe} />);
 
-    const badgeLabel = screen.getByText("셰프 레시피");
+    const badgeLabel = screen.getByText("셰프");
     const channelName = screen.getByText("백수남편");
     const channelRow = channelName.parentElement;
 
@@ -122,8 +122,8 @@ describe("DetailedRecipeGridItem 유튜브 채널 뱃지", () => {
     );
 
     expect(screen.getByText("백수남편")).toBeInTheDocument();
-    expect(screen.queryByText("셰프 레시피")).not.toBeInTheDocument();
-    expect(screen.queryByText("유명 크리에이터")).not.toBeInTheDocument();
+    expect(screen.queryByText("셰프")).not.toBeInTheDocument();
+    expect(screen.queryByText("유명")).not.toBeInTheDocument();
   });
 
   it("T-05: 비유튜브 레시피에는 뱃지 값이 있어도 표시하지 않는다", () => {
@@ -136,6 +136,6 @@ describe("DetailedRecipeGridItem 유튜브 채널 뱃지", () => {
       />
     );
 
-    expect(screen.queryByText("셰프 레시피")).not.toBeInTheDocument();
+    expect(screen.queryByText("셰프")).not.toBeInTheDocument();
   });
 });

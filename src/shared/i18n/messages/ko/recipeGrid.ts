@@ -14,8 +14,8 @@ export const recipeGrid: RecipeGridDict = {
   ctaYoutube: "유튜브 레시피 추출하기",
   aiGenerated: "AI 생성",
   youtubeChannelBadge: {
-    chef: "셰프 레시피",
-    popularCreator: "유명 크리에이터",
+    chef: "셰프",
+    popularCreator: "유명",
     popularCreatorShort: "유명",
   },
   cookingTime: "{n}분",
