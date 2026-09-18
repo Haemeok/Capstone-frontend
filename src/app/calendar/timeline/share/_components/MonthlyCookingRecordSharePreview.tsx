@@ -87,5 +87,18 @@ const getGenerationKey = (
     monthKey,
     records.background?.backgroundKey ?? "DEFAULT",
     records.background?.imageUrl ?? "",
-    ...records.shareItems.map((item) => `${item.id}@${item.imageUrl}`),
+    ...records.shareItems.map((item) =>
+      [
+        item.id,
+        item.imageUrl,
+        item.record?.displayMode ?? "",
+        item.record?.croppedImageUrl ?? "",
+        item.record?.displayStyle?.plateId ?? "",
+        item.record?.displayStyle?.plateImageUrl ?? "",
+        item.record?.displayStyle?.maskShape ?? "",
+        item.record?.displayStyle?.crop?.centerX ?? "",
+        item.record?.displayStyle?.crop?.centerY ?? "",
+        item.record?.displayStyle?.crop?.zoom ?? "",
+      ].join("@")
+    ),
   ].join(":");

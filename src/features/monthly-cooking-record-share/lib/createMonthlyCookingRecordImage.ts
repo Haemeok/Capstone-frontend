@@ -136,6 +136,14 @@ const waitForCardAssets = async (node: HTMLElement): Promise<void> => {
   await Promise.all([fontReady, ...imageReady]);
   await waitForNextPaint();
   await waitForNextPaint();
+  const animations = node.getAnimations?.({ subtree: true }) ?? [];
+  await Promise.all(
+    animations
+      .filter((animation) =>
+        Number.isFinite(animation.effect?.getComputedTiming().endTime)
+      )
+      .map((animation) => animation.finished.catch(() => undefined))
+  );
 };
 
 const waitForImage = async (image: HTMLImageElement): Promise<void> => {

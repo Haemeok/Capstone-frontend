@@ -41,11 +41,12 @@ export const useMonthlyCookingRecordShareRecords = ({
   return {
     background: query.data?.pages[0]?.background ?? null,
     totalCount: items.length,
-    shareItems: records.map(({ sticker }) => ({
+    shareItems: records.map(({ record, sticker }) => ({
       id: sticker.id,
       title: sticker.title,
       imageUrl: sticker.imageUrl,
       imageAlt: sticker.imageAlt,
+      record,
     })),
     isReady:
       !query.isPending &&

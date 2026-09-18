@@ -2,7 +2,10 @@ import type { Ref } from "react";
 
 import { Image } from "@/shared/ui/image/Image";
 
-import type { StickerBookBackground } from "@/entities/recipe";
+import {
+  SavedCookingRecordPhoto,
+  type StickerBookBackground,
+} from "@/entities/recipe";
 
 import {
   getMonthlyShareLayout,
@@ -88,14 +91,18 @@ export const MonthlyCookingRecordShareCard = ({
                 height: layout.itemSize,
               }}
             >
-              <Image
-                src={item.imageUrl}
-                alt=""
-                lazy={false}
-                fit="contain"
-                wrapperClassName="h-full w-full overflow-visible"
-                imgClassName="select-none object-contain drop-shadow-[0_4px_5px_rgb(34_34_34/0.13)]"
-              />
+              {item.record ? (
+                <SavedCookingRecordPhoto record={item.record} alt="" />
+              ) : (
+                <Image
+                  src={item.imageUrl}
+                  alt=""
+                  lazy={false}
+                  fit="contain"
+                  wrapperClassName="h-full w-full overflow-visible"
+                  imgClassName="select-none object-contain drop-shadow-[0_4px_5px_rgb(34_34_34/0.13)]"
+                />
+              )}
             </div>
           ))}
         </div>
