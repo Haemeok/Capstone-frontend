@@ -129,12 +129,31 @@ const renderController = () => {
 
 describe("CookingRecordDetailController", () => {
   beforeEach(() => {
+    jest.spyOn(window, "Image").mockImplementation(() => {
+      const image = document.createElement("img");
+      Object.defineProperties(image, {
+        naturalWidth: { value: 800 },
+        naturalHeight: { value: 600 },
+      });
+      Object.defineProperty(image, "src", {
+        set() {
+          queueMicrotask(() => image.dispatchEvent(new Event("load")));
+        },
+      });
+      return image;
+    });
+
     jest.clearAllMocks();
     getCookingRecord.mockResolvedValue({
       recordId: "record-a8f",
       recipeId: "recipe-a8f",
       displayTitle: "동파육",
       recordMemo: "부드럽게 잘 익었습니다.",
+      imageEdit: {
+        originalKey: "original-key",
+        stickerKey: "sticker-key",
+        croppedKey: null,
+      },
       originalImageUrl: "/records/original.webp",
       stickerImageUrl: "/records/sticker.webp",
       stickerStatus: "READY",
@@ -167,6 +186,7 @@ describe("CookingRecordDetailController", () => {
       await screen.findByText("부드럽게 잘 익었습니다.")
     ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    await screen.findByRole("textbox", { name: "요리 이름" });
     fireEvent.change(screen.getByRole("textbox", { name: "요리 이름" }), {
       target: { value: "매콤 동파육" },
     });
@@ -193,6 +213,7 @@ describe("CookingRecordDetailController", () => {
     renderController();
     await screen.findByText("부드럽게 잘 익었습니다.");
     fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    await screen.findByRole("textbox", { name: "요리 이름" });
     fireEvent.change(screen.getByRole("textbox", { name: "요리 이름" }), {
       target: { value: "   " },
     });
@@ -212,6 +233,7 @@ describe("CookingRecordDetailController", () => {
     renderController();
     await screen.findByText("부드럽게 잘 익었습니다.");
     fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    await screen.findByRole("textbox", { name: "요리 이름" });
     fireEvent.change(screen.getByRole("textbox", { name: "요리 이름" }), {
       target: { value: "가".repeat(31) },
     });
@@ -227,6 +249,7 @@ describe("CookingRecordDetailController", () => {
     renderController();
     await screen.findByText("부드럽게 잘 익었습니다.");
     fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    await screen.findByRole("textbox", { name: "요리 이름" });
     fireEvent.change(screen.getByRole("textbox", { name: "간략 후기" }), {
       target: { value: "가".repeat(501) },
     });
@@ -243,6 +266,7 @@ describe("CookingRecordDetailController", () => {
     renderController();
     await screen.findByText("부드럽게 잘 익었습니다.");
     fireEvent.click(screen.getByRole("button", { name: "기록 수정" }));
+    await screen.findByRole("textbox", { name: "요리 이름" });
     fireEvent.change(screen.getByRole("textbox", { name: "요리 이름" }), {
       target: { value: "매콤 동파육" },
     });
@@ -266,19 +290,26 @@ describe("CookingRecordDetailController", () => {
     );
   });
 
-  it("사진을 선택하면 원본 사진 교체 뮤테이션을 시작합니다", async () => {
+  it("사진 바꾸기는 편집 화면을 열고 저장 전에는 서버 사진을 바꾸지 않습니다", async () => {
     renderController();
     await screen.findByText("부드럽게 잘 익었습니다.");
-    const file = new File(["image"], "dinner.webp", { type: "image/webp" });
-
-    fireEvent.change(screen.getByLabelText("사진 바꾸기"), {
-      target: { files: [file] },
-    });
-
+    fireEvent.click(screen.getByRole("button", { name: "사진 바꾸기" }));
+    expect(
+      await screen.findByRole("button", { name: "스티커로 만들기" })
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(prepareCookingRecordImage).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "접시에 담기" }));
+    fireEvent.click(screen.getByRole("button", { name: "수정 내용 저장" }));
     await waitFor(() =>
       expect(prepareCookingRecordImage).toHaveBeenCalledWith({
         recordId: "record-a8f",
-        images: [{ file, purpose: "ORIGINAL" }],
+        image: { originalKey: "original-key" },
+        displayMode: "DISH",
+        displayStyle: {
+          plateId: null,
+          maskShape: "CIRCLE",
+          crop: { centerX: 0.5, centerY: 0.5, zoom: 1 },
+        },
       })
     );
   });

@@ -20,18 +20,21 @@ export const ManualCookingRecordDrawer = ({
   isOpen,
   initialCookedDate,
   copy,
+  photoEditor,
   onOpenChange,
 }: ManualCookingRecordDrawerProps) => {
   const { Container, Content, Title, Description } = useResponsiveSheet();
   const formId = useId();
   const mutation = useCreateManualCookingRecord();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isPhotoBusy, setIsPhotoBusy] = useState(false);
   const [submitError, setSubmitError] = useState<string>();
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
     if (!open) {
       setIsSuccess(false);
+      setIsPhotoBusy(false);
       setSubmitError(undefined);
       mutation.reset?.();
     }
@@ -42,6 +45,7 @@ export const ManualCookingRecordDrawer = ({
     cookedDate,
     review,
     imageFile,
+    photo,
   }: ManualCookingRecordFormValues) => {
     setSubmitError(undefined);
     try {
@@ -51,6 +55,7 @@ export const ManualCookingRecordDrawer = ({
         ...(review.trim() ? { recordMemo: review.trim() } : {}),
         cookedAt: toCookingRecordOffsetDateTime(cookedDate),
         images: [{ file: imageFile, purpose: "ORIGINAL" }],
+        ...(photo ? { photo } : {}),
       });
       triggerHaptic("Success");
       setIsSuccess(true);
@@ -101,7 +106,7 @@ export const ManualCookingRecordDrawer = ({
               >
                 <div
                   data-testid="manual-cooking-record-scroll"
-                  className="min-h-0 flex-1 overflow-y-auto"
+                  className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto"
                 >
                   <div className="px-5 pb-4">
                     <Title className="text-[23px]">{copy.title}</Title>
@@ -115,6 +120,8 @@ export const ManualCookingRecordDrawer = ({
                     copy={copy}
                     isDisabled={mutation.isPending}
                     submitError={submitError}
+                    photoEditor={photoEditor}
+                    onPhotoBusyChange={setIsPhotoBusy}
                     onSubmit={(values) => void handleSubmit(values)}
                   />
                 </div>
@@ -123,6 +130,7 @@ export const ManualCookingRecordDrawer = ({
                   copy={copy}
                   isPending={mutation.isPending}
                   isImageProcessing={mutation.isImageProcessing}
+                  isDisabled={mutation.isPending || isPhotoBusy}
                 />
               </motion.div>
             )}

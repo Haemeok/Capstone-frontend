@@ -1,8 +1,16 @@
+import type { ComponentType } from "react";
+
+import type {
+  RecordPhotoDraft,
+  RecordPhotoEditorProps,
+} from "@/entities/recipe/model/recordPhoto.types";
+
 export type RecipeCookingRecordFormDraft = {
   recipeId: string;
   review: string;
   isPublic: boolean;
   imageFile?: File;
+  photo?: RecordPhotoDraft;
 };
 
 export type RecipeCookingRecordCopy = {
@@ -36,6 +44,7 @@ export type RecipeCookingRecordFlowProps = {
   recipeTitle: string;
   recipeImageUrl: string;
   copy: RecipeCookingRecordCopy;
+  photoEditor?: ComponentType<RecordPhotoEditorProps>;
   onOpenChange: (open: boolean) => void;
   onSubmit: (draft: RecipeCookingRecordFormDraft) => Promise<void>;
   onSkip: () => Promise<void>;

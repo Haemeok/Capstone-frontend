@@ -4,6 +4,7 @@ import type { Locale } from "@/shared/i18n";
 import { shouldShowReviewGate } from "@/shared/lib/review";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
+import { ConnectedCookingRecordPhotoField } from "@/features/cooking-record-photo-edit";
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 import { RecipeCompleteButton } from "@/features/recipe-complete";
 import { scheduleReviewGate } from "@/features/review-gate";
@@ -40,6 +41,7 @@ export const RecipeCompleteSection = ({
       recipeImageUrl={recipeImageUrl}
       saveAmount={saveAmount}
       locale={locale}
+      photoEditor={ConnectedCookingRecordPhotoField}
       onBeforeStart={() => startIfAuthenticated() === true}
       onFlowClose={handleFlowClose}
     />

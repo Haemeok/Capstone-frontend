@@ -7,6 +7,7 @@ import { DictionaryProvider, getDictionary } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
 
 import { COOKING_REVIEW_QUERY_KEYS } from "@/entities/cooking-review";
+import type { RecordPhotoEditorProps } from "@/entities/recipe/model/recordPhoto.types";
 
 import { createRecipeRecord } from "../../model/api";
 import { FirstCookingReviewButton } from "../FirstCookingReviewButton";
@@ -105,7 +106,10 @@ jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 const createRecordMock = jest.mocked(createRecipeRecord);
 const triggerHapticMock = jest.mocked(triggerHaptic);
 
-const renderButton = (onBeforeStart = () => true) => {
+const renderButton = (
+  onBeforeStart = () => true,
+  photoEditor?: React.ComponentType<RecordPhotoEditorProps>
+) => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -132,6 +136,7 @@ const renderButton = (onBeforeStart = () => true) => {
           recipeImageUrl="/cold-udon.webp"
           saveAmount={5300}
           onBeforeStart={onBeforeStart}
+          photoEditor={photoEditor}
         />
       </DictionaryProvider>
     </QueryClientProvider>
@@ -139,6 +144,25 @@ const renderButton = (onBeforeStart = () => true) => {
 
   return queryClient;
 };
+
+const IntegratedPhotoEditor = ({ value, onChange }: RecordPhotoEditorProps) => (
+  <button
+    type="button"
+    onClick={() => {
+      const file = new File(["dish"], "first-review-dish.jpg", {
+        type: "image/jpeg",
+      });
+      onChange({
+        ...value,
+        originalFile: file,
+        originalUrl: "/first-review-dish.jpg",
+        plateId: "plate-3",
+      });
+    }}
+  >
+    후기 사진 선택
+  </button>
+);
 
 const openFormAndSubmit = async () => {
   jest.useFakeTimers();
@@ -219,6 +243,32 @@ it("T-15: 공개 후기 저장은 Success 햅틱과 전체·사진 캐시 갱신
       COOKING_REVIEW_QUERY_KEYS.publicList("recipe-a", true, 20)
     )?.isInvalidated
   ).toBe(true);
+});
+
+it("실제 사진 편집기 선택값을 레시피 완료 생성 요청까지 전달합니다", async () => {
+  createRecordMock.mockResolvedValue({
+    recordId: "record-photo",
+    message: "created",
+  });
+  renderButton(() => true, IntegratedPhotoEditor);
+  jest.useFakeTimers();
+  fireEvent.click(
+    screen.getByRole("button", { name: "첫 번째 요리 후기 남기기" })
+  );
+  act(() => jest.advanceTimersByTime(1800));
+  fireEvent.click(screen.getByRole("button", { name: "후기 사진 선택" }));
+  fireEvent.click(screen.getByRole("button", { name: "기록하기" }));
+  await act(async () => Promise.resolve());
+  jest.useRealTimers();
+
+  expect(createRecordMock).toHaveBeenCalledWith(
+    expect.objectContaining({
+      photo: expect.objectContaining({
+        shape: { kind: "mask", value: "CIRCLE" },
+        plateId: "plate-3",
+      }),
+    })
+  );
 });
 
 it("T-16: 저장 실패는 오류를 보이고 닫은 뒤 CTA를 다시 열 수 있다", async () => {

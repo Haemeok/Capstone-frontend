@@ -4,6 +4,7 @@ import type { UserPagesDict } from "@/shared/i18n";
 import { DeleteModal } from "@/shared/ui/modal/DeleteModal";
 
 import { ManualCookingRecordDrawer } from "@/features/cooking-record-create";
+import { ConnectedCookingRecordPhotoField } from "@/features/cooking-record-photo-edit";
 
 import { CookingRecordDetailController } from "./CookingRecordDetailController";
 import type { MonthlyCookingRecord } from "./cookingRecordPage.lib";
@@ -76,6 +77,7 @@ export const MonthlyCookingRecordDrawers = ({
     <ManualCookingRecordDrawer
       isOpen={isCreateOpen}
       copy={copy.create}
+      photoEditor={ConnectedCookingRecordPhotoField}
       onOpenChange={onCreateOpenChange}
     />
 

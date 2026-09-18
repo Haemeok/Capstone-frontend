@@ -36,8 +36,25 @@ jest.mock("react-intersection-observer", () => ({
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 
 jest.mock("@/features/cooking-record-create", () => ({
-  ManualCookingRecordDrawer: ({ isOpen }: { isOpen: boolean }) =>
-    isOpen ? <div>수동 기록 폼</div> : null,
+  ManualCookingRecordDrawer: ({
+    isOpen,
+    photoEditor,
+  }: {
+    isOpen: boolean;
+    photoEditor?: React.ComponentType;
+  }) =>
+    isOpen ? (
+      <div
+        data-testid="manual-record-form"
+        data-has-photo-editor={Boolean(photoEditor)}
+      >
+        수동 기록 폼
+      </div>
+    ) : null,
+}));
+
+jest.mock("@/features/cooking-record-photo-edit", () => ({
+  ConnectedCookingRecordPhotoField: () => null,
 }));
 
 jest.mock("@/entities/recipe/model/recordApi", () => ({
@@ -269,6 +286,10 @@ describe("MonthlyCookingRecordPageClient", () => {
     fireEvent.click(screen.getByRole("button", { name: "요리 기록 추가" }));
 
     expect(screen.getByText("수동 기록 폼")).toBeInTheDocument();
+    expect(screen.getByTestId("manual-record-form")).toHaveAttribute(
+      "data-has-photo-editor",
+      "true"
+    );
   });
 
   it("진행 중인 빈 달은 0회 성과와 공유를 숨기고 배경 위 안내와 추가 버튼만 보여줍니다", async () => {

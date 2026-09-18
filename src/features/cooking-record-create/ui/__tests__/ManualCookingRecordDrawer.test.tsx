@@ -4,7 +4,10 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
+import type { RecordPhotoEditorProps } from "@/entities/recipe/model/recordPhoto.types";
+
 import { ManualCookingRecordDrawer } from "../ManualCookingRecordDrawer";
+import { ManualCookingRecordForm } from "../ManualCookingRecordForm";
 
 const createRecord = jest.fn();
 const mockedTriggerHaptic = jest.mocked(triggerHaptic);
@@ -122,6 +125,127 @@ const copy = {
   submitError: "기록하지 못했습니다.",
 };
 
+const IntegratedPhotoEditor = ({
+  value,
+  onChange,
+  onBusyChange,
+}: RecordPhotoEditorProps) => (
+  <div>
+    <span data-testid="photo-mode">{value.shape.kind}</span>
+    <button
+      type="button"
+      onClick={() => {
+        const file = new File(["dish"], "integrated-dish.jpg", {
+          type: "image/jpeg",
+        });
+        onChange({
+          ...value,
+          originalFile: file,
+          originalUrl: "/integrated-dish.jpg",
+          plateId: "plate-1",
+        });
+      }}
+    >
+      실제 사진 선택
+    </button>
+    <button type="button" onClick={() => onBusyChange?.(true)}>
+      사진 처리 시작
+    </button>
+  </div>
+);
+
+it("사진 필드 슬롯이 필수 오류와 선택 파일을 폼에 연결합니다", async () => {
+  const onSubmit = jest.fn();
+  const imageFile = new File(["image"], "custom-dish.jpg", {
+    type: "image/jpeg",
+  });
+
+  render(
+    <ManualCookingRecordForm
+      formId="manual-record-form"
+      copy={copy}
+      isDisabled={false}
+      photoField={({ file, onChange, error }) => (
+        <div>
+          <button type="button" onClick={() => onChange(imageFile)}>
+            맞춤 사진 선택
+          </button>
+          <span>{file?.name}</span>
+          {error ? <span role="alert">{error}</span> : null}
+        </div>
+      )}
+      onSubmit={onSubmit}
+    />
+  );
+
+  fireEvent.change(screen.getByLabelText("요리 이름"), {
+    target: { value: "맞춤 볶음밥" },
+  });
+  const form = document.getElementById("manual-record-form");
+  expect(form).not.toBeNull();
+  if (!form) return;
+  fireEvent.submit(form);
+
+  expect(await screen.findByRole("alert")).toHaveTextContent(copy.photoError);
+  expect(onSubmit).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "맞춤 사진 선택" }));
+  expect(screen.getByText("custom-dish.jpg")).toBeInTheDocument();
+  fireEvent.submit(form);
+
+  await waitFor(() =>
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ imageFile, title: "맞춤 볶음밥" })
+    )
+  );
+});
+
+it("실제 사진 편집기는 접시 모드로 시작하고 선택값을 생성 요청까지 전달합니다", async () => {
+  createRecord.mockResolvedValue({ recordId: "record-A" });
+  render(
+    <ManualCookingRecordDrawer
+      isOpen
+      copy={copy}
+      photoEditor={IntegratedPhotoEditor}
+      onOpenChange={jest.fn()}
+    />
+  );
+
+  expect(screen.getByTestId("photo-mode")).toHaveTextContent("mask");
+  fireEvent.click(screen.getByRole("button", { name: "실제 사진 선택" }));
+  fireEvent.change(screen.getByLabelText("요리 이름"), {
+    target: { value: "접시에 담은 볶음밥" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "기록하기" }));
+
+  await waitFor(() => expect(createRecord).toHaveBeenCalledTimes(1));
+  const request = createRecord.mock.calls[0][0];
+  expect(request.photo).toEqual(
+    expect.objectContaining({
+      originalFile: request.images?.[0]?.file,
+      shape: { kind: "mask", value: "CIRCLE" },
+      plateId: "plate-1",
+    })
+  );
+});
+
+it("사진 처리 중에는 제출만 막고 기록 입력은 계속 허용합니다", () => {
+  render(
+    <ManualCookingRecordDrawer
+      isOpen
+      copy={copy}
+      photoEditor={IntegratedPhotoEditor}
+      onOpenChange={jest.fn()}
+    />
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "사진 처리 시작" }));
+
+  expect(screen.getByRole("button", { name: "기록하기" })).toBeDisabled();
+  expect(screen.getByLabelText("요리 이름")).not.toBeDisabled();
+  expect(screen.getByLabelText("간단한 후기")).not.toBeDisabled();
+});
+
 it("807 자동 재요청 중에는 이미지 처리 안내를 보여주고 입력을 잠급니다", () => {
   mutationState.isPending = true;
   mutationState.isImageProcessing = true;
@@ -162,10 +286,12 @@ it("닫기는 우측에 두고 사진은 가운데 정렬하며 제출 버튼은
   expect(submitButton.parentElement).toHaveClass("shrink-0");
   expect(submitButton).toHaveClass(
     "bg-olive-light",
+    "text-white",
     "active:bg-olive-dark",
     "focus-visible:outline-olive-dark"
   );
   expect(submitButton).not.toHaveClass("bg-ink");
+  expect(submitButton).not.toHaveClass("text-ink");
 
   expect(mockedTriggerHaptic).not.toHaveBeenCalled();
 });

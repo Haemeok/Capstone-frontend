@@ -1,6 +1,16 @@
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
+
+import type { RecordPhotoEditorProps } from "@/entities/recipe/model/recordPhoto.types";
 
 import { RecipeCookingRecordFlow } from "../RecipeCookingRecordFlow";
+import { RecipeCookingRecordForm } from "../RecipeCookingRecordForm";
 
 jest.mock("@/shared/lib/hooks/useResponsiveSheet", () => ({
   useResponsiveSheet: (() => {
@@ -92,6 +102,149 @@ const copy = {
   successClose: "닫기",
   error: "등록하지 못했습니다.",
 };
+
+const IntegratedPhotoEditor = ({
+  value,
+  onChange,
+  onBusyChange,
+  fallbackImageUrl,
+  fallbackImageAlt,
+  requireUpload,
+}: RecordPhotoEditorProps) => (
+  <div>
+    <span data-testid="photo-mode">{value.shape.kind}</span>
+    <span data-testid="fallback-photo-url">{fallbackImageUrl}</span>
+    <span data-testid="fallback-photo-alt">{fallbackImageAlt}</span>
+    <span data-testid="requires-photo-upload">{String(requireUpload)}</span>
+    <button
+      type="button"
+      onClick={() => {
+        const file = new File(["dish"], "recipe-integrated.jpg", {
+          type: "image/jpeg",
+        });
+        onChange({
+          ...value,
+          originalFile: file,
+          originalUrl: "/recipe-integrated.jpg",
+          plateId: "plate-2",
+        });
+      }}
+    >
+      실제 레시피 사진 선택
+    </button>
+    <button type="button" onClick={() => onBusyChange?.(true)}>
+      레시피 사진 처리 시작
+    </button>
+  </div>
+);
+
+it("사진 필드 슬롯이 선택 파일을 레시피 기록 초안에 연결합니다", async () => {
+  const onSubmit = jest.fn();
+  const imageFile = new File(["image"], "recipe-dish.jpg", {
+    type: "image/jpeg",
+  });
+
+  render(
+    <RecipeCookingRecordForm
+      recipeId="recipe-slot"
+      recipeTitle="동파육"
+      recipeImageUrl="/dongpayuk.webp"
+      copy={copy}
+      isSubmitting={false}
+      photoField={({ file, onChange }) => (
+        <button type="button" onClick={() => onChange(imageFile)}>
+          {file?.name ?? "맞춤 사진 선택"}
+        </button>
+      )}
+      onSubmit={onSubmit}
+      onSkip={jest.fn()}
+    />
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "맞춤 사진 선택" }));
+  expect(
+    screen.getByRole("button", { name: "recipe-dish.jpg" })
+  ).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: copy.submit }));
+
+  await waitFor(() =>
+    expect(onSubmit).toHaveBeenCalledWith({
+      recipeId: "recipe-slot",
+      review: "",
+      isPublic: true,
+      imageFile,
+    })
+  );
+});
+
+it("실제 사진 편집기의 접시 선택과 원본 파일을 레시피 기록 초안에 연결합니다", async () => {
+  const onSubmit = jest.fn();
+
+  render(
+    <RecipeCookingRecordForm
+      recipeId="recipe-integrated"
+      recipeTitle="동파육"
+      recipeImageUrl="/dongpayuk.webp"
+      copy={copy}
+      isSubmitting={false}
+      photoEditor={IntegratedPhotoEditor}
+      onSubmit={onSubmit}
+      onSkip={jest.fn()}
+    />
+  );
+
+  expect(screen.getByTestId("photo-mode")).toHaveTextContent("mask");
+  expect(screen.getByTestId("fallback-photo-url")).toHaveTextContent(
+    "/dongpayuk.webp"
+  );
+  expect(screen.getByTestId("fallback-photo-alt")).toHaveTextContent("동파육");
+  expect(screen.getByTestId("requires-photo-upload")).toHaveTextContent("true");
+  expect(screen.getByText(copy.defaultPhoto)).toBeInTheDocument();
+  fireEvent.click(
+    screen.getByRole("button", { name: "실제 레시피 사진 선택" })
+  );
+  expect(screen.queryByText(copy.defaultPhoto)).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: copy.submit }));
+
+  await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+  const draft = onSubmit.mock.calls[0][0];
+  expect(draft.photo).toEqual(
+    expect.objectContaining({
+      originalFile: draft.imageFile,
+      shape: { kind: "mask", value: "CIRCLE" },
+      plateId: "plate-2",
+    })
+  );
+});
+
+it("레시피 사진 처리 중에는 제출만 막고 후기와 건너뛰기는 유지합니다", () => {
+  render(
+    <RecipeCookingRecordForm
+      recipeId="recipe-integrated"
+      recipeTitle="동파육"
+      recipeImageUrl="/dongpayuk.webp"
+      copy={copy}
+      isSubmitting={false}
+      photoEditor={IntegratedPhotoEditor}
+      onSubmit={jest.fn()}
+      onSkip={jest.fn()}
+    />
+  );
+
+  fireEvent.click(
+    screen.getByRole("button", { name: "레시피 사진 처리 시작" })
+  );
+
+  expect(screen.getByRole("button", { name: copy.submit })).toBeDisabled();
+  expect(screen.getByRole("button", { name: copy.submit })).toHaveClass(
+    "text-white"
+  );
+  expect(screen.getByRole("button", { name: copy.submit })).not.toHaveClass(
+    "text-ink"
+  );
+  expect(screen.getByLabelText(copy.reviewLabel)).not.toBeDisabled();
+  expect(screen.getByRole("button", { name: copy.skip })).not.toBeDisabled();
+});
 
 const renderFlow = (
   onSubmit = jest.fn().mockResolvedValue(undefined),
