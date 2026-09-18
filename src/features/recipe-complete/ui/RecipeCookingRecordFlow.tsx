@@ -23,6 +23,7 @@ export const RecipeCookingRecordFlow = ({
   recipeTitle,
   recipeImageUrl,
   copy,
+  photoEditor,
   onOpenChange,
   onSubmit,
   onSkip,
@@ -103,6 +104,7 @@ export const RecipeCookingRecordFlow = ({
                   copy={copy}
                   isSubmitting={isSubmitting}
                   errorMessage={errorMessage}
+                  photoEditor={photoEditor}
                   onSubmit={(draft) =>
                     void runAction(
                       () => onSubmit(draft),

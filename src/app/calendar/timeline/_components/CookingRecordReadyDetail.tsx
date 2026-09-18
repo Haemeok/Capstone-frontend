@@ -9,6 +9,9 @@ import type {
   CookingRecordDetailResponse,
   RecordSourceType,
 } from "@/entities/recipe";
+import { SavedCookingRecordPhoto } from "@/entities/recipe/ui/SavedCookingRecordPhoto";
+
+import { ConnectedCookingRecordPhotoField } from "@/features/cooking-record-photo-edit";
 
 import { CookingRecordDeleteDialog } from "./CookingRecordDeleteDialog";
 import { CookingRecordDetailDrawer } from "./CookingRecordDetailDrawer";
@@ -18,6 +21,7 @@ import type {
   CookingRecordStickerItem,
 } from "./cookingRecordUi.types";
 import { useCookingRecordActions } from "./useCookingRecordActions";
+import { useCookingRecordPhotoEdit } from "./useCookingRecordPhotoEdit";
 
 type CookingRecordReadyDetailProps = {
   detail?: CookingRecordDetailResponse;
@@ -46,6 +50,7 @@ export const CookingRecordReadyDetail = ({
   onRetry,
 }: CookingRecordReadyDetailProps) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
+  const photoEditor = useCookingRecordPhotoEdit(detail);
   const [savedTitle, setSavedTitle] = useState<string>();
   const [savedReview, setSavedReview] = useState<string>();
   const [deleteSnapshot, setDeleteSnapshot] = useState<DeleteSnapshot | null>(
@@ -72,12 +77,20 @@ export const CookingRecordReadyDetail = ({
     title: savedTitle ?? detail?.displayTitle ?? fallback.title,
     cookedAtLabel: fallback.cookedAtLabel,
     imageUrl:
-      detail?.originalImageUrl ?? detail?.stickerImageUrl ?? fallback.imageUrl,
+      detail?.stickerImageUrl ?? detail?.originalImageUrl ?? fallback.imageUrl,
     imageAlt: detail?.displayTitle ?? fallback.imageAlt,
     review: currentReview,
     ...(detail?.recipeAvailable && detail.recipeId
       ? { recipeHref: `/recipes/${encodeURIComponent(detail.recipeId)}` }
       : null),
+  };
+
+  const startEdit = async () => {
+    if (await photoEditor.start()) setMode("edit");
+  };
+  const saveRecord = async (values: CookingRecordEditValues) => {
+    if (!(await photoEditor.save())) return false;
+    return actions.saveMetadata(values);
   };
 
   const handleConfirmDelete = () => {
@@ -96,15 +109,41 @@ export const CookingRecordReadyDetail = ({
         loadingLabel={copy.detail.loading}
         errorLabel={copy.detail.error}
         retryLabel={copy.detail.retry}
-        isReviewSaving={actions.isReviewSaving}
-        isPhotoReplacing={actions.isPhotoReplacing}
+        isReviewSaving={
+          actions.isReviewSaving ||
+          photoEditor.isSaving ||
+          photoEditor.isReading
+        }
+        isPhotoReplacing={actions.isPhotoReplacing || photoEditor.isReading}
+        photoView={
+          mode === "edit" ? null : detail ? (
+            <div className="flex h-64 items-center justify-center bg-gray-50">
+              <div className="h-52 w-52">
+                <SavedCookingRecordPhoto
+                  record={detail}
+                  alt={uiDetail.imageAlt}
+                />
+              </div>
+            </div>
+          ) : undefined
+        }
+        editPhotoField={
+          photoEditor.photo ? (
+            <ConnectedCookingRecordPhotoField
+              value={photoEditor.photo}
+              requireUpload={!detail?.imageEdit?.originalKey}
+              onChange={photoEditor.setPhoto}
+              disabled={photoEditor.isSaving || actions.isReviewSaving}
+              onBusyChange={photoEditor.setIsReading}
+            />
+          ) : undefined
+        }
+        onEditPhoto={() => void startEdit()}
         onOpenChange={(open) => {
           if (!open) onClose();
         }}
-        onStartEdit={() => setMode("edit")}
-        onSaveRecord={(values: CookingRecordEditValues) =>
-          actions.saveMetadata(values)
-        }
+        onStartEdit={() => void startEdit()}
+        onSaveRecord={(values: CookingRecordEditValues) => saveRecord(values)}
         onPhotoChange={(file) => void actions.changePhoto(file)}
         onDeleteRequest={() =>
           setDeleteSnapshot({

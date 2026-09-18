@@ -18,6 +18,7 @@ type CookingRecordDetailActionsProps = {
   isPhotoReplacing: boolean;
   onStartEdit: () => void;
   onPhotoChange: (file: File) => void;
+  onEditPhoto?: () => void;
 };
 
 export const CookingRecordDetailActions = ({
@@ -26,6 +27,7 @@ export const CookingRecordDetailActions = ({
   isPhotoReplacing,
   onStartEdit,
   onPhotoChange,
+  onEditPhoto,
 }: CookingRecordDetailActionsProps) => {
   const photoInputId = useId();
 
@@ -40,22 +42,39 @@ export const CookingRecordDetailActions = ({
       className="shrink-0 border-t border-gray-100 bg-white px-5 pt-3 pb-[max(16px,env(safe-area-inset-bottom))]"
     >
       <div className="grid grid-cols-2 gap-2.5">
-        <label
-          htmlFor={photoInputId}
-          aria-disabled={isPhotoReplacing}
-          className="text-ink-sub focus-within:outline-olive-dark flex min-h-12 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white text-[13px] font-bold transition-colors focus-within:outline-2 focus-within:outline-offset-2 hover:bg-gray-100 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-        >
-          <ImageIcon aria-hidden="true" className="size-[17px]" />
-          {copy.changePhoto}
-        </label>
-        <input
-          id={photoInputId}
-          type="file"
-          accept="image/*"
-          disabled={isPhotoReplacing}
-          onChange={handlePhotoChange}
-          className="sr-only"
-        />
+        {onEditPhoto ? (
+          <button
+            type="button"
+            disabled={isPhotoReplacing}
+            onClick={() => {
+              triggerHaptic("Light");
+              onEditPhoto();
+            }}
+            className="text-ink-sub flex min-h-12 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-gray-200 text-[13px] font-semibold disabled:opacity-50"
+          >
+            <ImageIcon aria-hidden="true" className="size-[17px]" />
+            {copy.changePhoto}
+          </button>
+        ) : (
+          <>
+            <label
+              htmlFor={photoInputId}
+              aria-disabled={isPhotoReplacing}
+              className="text-ink-sub focus-within:outline-olive-dark flex min-h-12 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white text-[13px] font-bold transition-colors focus-within:outline-2 focus-within:outline-offset-2 hover:bg-gray-100 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+            >
+              <ImageIcon aria-hidden="true" className="size-[17px]" />
+              {copy.changePhoto}
+            </label>
+            <input
+              id={photoInputId}
+              type="file"
+              accept="image/*"
+              disabled={isPhotoReplacing}
+              onChange={handlePhotoChange}
+              className="sr-only"
+            />
+          </>
+        )}
         <button
           type="button"
           onClick={() => {

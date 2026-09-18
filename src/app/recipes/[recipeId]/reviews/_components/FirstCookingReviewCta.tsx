@@ -3,6 +3,7 @@
 import { shouldShowReviewGate } from "@/shared/lib/review";
 
 import useAuthenticatedAction from "@/features/auth/model/hooks/useAuthenticatedAction";
+import { ConnectedCookingRecordPhotoField } from "@/features/cooking-record-photo-edit";
 import { useNotificationPermissionTrigger } from "@/features/notification-permission";
 import { FirstCookingReviewButton } from "@/features/recipe-complete";
 import { scheduleReviewGate } from "@/features/review-gate";
@@ -30,6 +31,7 @@ export const FirstCookingReviewCta = (props: FirstCookingReviewCtaProps) => {
   return (
     <FirstCookingReviewButton
       {...props}
+      photoEditor={ConnectedCookingRecordPhotoField}
       onBeforeStart={() => startIfAuthenticated() === true}
       onFlowClose={handleFlowClose}
     />

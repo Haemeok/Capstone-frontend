@@ -1,7 +1,11 @@
 "use client";
 
+import type { ComponentType } from "react";
+
 import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
+
+import type { RecordPhotoEditorProps } from "@/entities/recipe/model/recordPhoto.types";
 
 import {
   useCreateRecipeCookingRecordMutation,
@@ -18,6 +22,7 @@ type FirstCookingReviewButtonProps = {
   saveAmount: number;
   onBeforeStart: () => boolean;
   onFlowClose?: () => void;
+  photoEditor?: ComponentType<RecordPhotoEditorProps>;
 };
 
 export const FirstCookingReviewButton = ({
@@ -27,6 +32,7 @@ export const FirstCookingReviewButton = ({
   saveAmount,
   onBeforeStart,
   onFlowClose,
+  photoEditor,
 }: FirstCookingReviewButtonProps) => {
   const t = useT();
   const { completeRecipe, showReward, setShowReward, markCompleted } =
@@ -44,10 +50,11 @@ export const FirstCookingReviewButton = ({
 
   const handleSubmit = async ({
     imageFile,
+    photo,
     ...draft
   }: RecipeCookingRecordFormDraft) => {
     const input = toRecipeCookingRecordInput(draft);
-    await createMutation.createRecord({ ...input, imageFile });
+    await createMutation.createRecord({ ...input, imageFile, photo });
     markCompleted();
   };
 
@@ -80,6 +87,7 @@ export const FirstCookingReviewButton = ({
         recipeTitle={recipeTitle}
         recipeImageUrl={recipeImageUrl}
         copy={t.recipeDetail.cookingRecord}
+        photoEditor={photoEditor}
         onOpenChange={handleOpenChange}
         onSubmit={handleSubmit}
         onSkip={handleSkip}

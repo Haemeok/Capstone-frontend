@@ -105,6 +105,8 @@ export const CookingRecordDetailDrawer = (
               copy={copy}
               isReviewSaving={isReviewSaving}
               formId={reviewFormId}
+              photoView={props.photoView}
+              editPhotoField={props.editPhotoField}
               onSaveRecord={onSaveRecord}
             />
           ) : (
@@ -124,6 +126,7 @@ export const CookingRecordDetailDrawer = (
               isPhotoReplacing={isPhotoReplacing}
               onStartEdit={onStartEdit}
               onPhotoChange={onPhotoChange}
+              onEditPhoto={props.onEditPhoto}
             />
           ) : null}
 

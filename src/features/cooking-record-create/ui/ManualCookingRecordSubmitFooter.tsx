@@ -9,6 +9,7 @@ type ManualCookingRecordSubmitFooterProps = {
   copy: ManualCookingRecordCopy;
   isPending: boolean;
   isImageProcessing: boolean;
+  isDisabled?: boolean;
 };
 
 export const ManualCookingRecordSubmitFooter = ({
@@ -16,6 +17,7 @@ export const ManualCookingRecordSubmitFooter = ({
   copy,
   isPending,
   isImageProcessing,
+  isDisabled = isPending,
 }: ManualCookingRecordSubmitFooterProps) => (
   <div className="shrink-0 border-t border-gray-100 bg-white px-5 pt-3 pb-[max(16px,env(safe-area-inset-bottom))]">
     {isImageProcessing ? (
@@ -41,7 +43,7 @@ export const ManualCookingRecordSubmitFooter = ({
     <button
       type="submit"
       form={formId}
-      disabled={isPending}
+      disabled={isDisabled}
       className="bg-olive-light active:bg-olive-dark focus-visible:outline-olive-dark disabled:text-ink-disabled h-12 w-full cursor-pointer rounded-xl text-sm font-semibold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:bg-gray-100"
     >
       {isImageProcessing

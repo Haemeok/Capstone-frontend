@@ -1,8 +1,15 @@
 "use client";
 
+import { type ComponentType, type ReactNode, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
+
+import type {
+  RecordPhotoDraft,
+  RecordPhotoEditorProps,
+} from "@/entities/recipe/model/recordPhoto.types";
+import { createEmptyPhotoDraft } from "@/entities/recipe/model/recordPhotoView";
 
 import type {
   RecipeCookingRecordCopy,
@@ -19,13 +26,21 @@ type FormValues = {
   imageFile?: File;
 };
 
-type RecipeCookingRecordFormProps = {
+export type RecipeCookingRecordPhotoFieldProps = {
+  file: File | undefined;
+  onChange: (file: File) => void;
+  error?: string;
+};
+
+export type RecipeCookingRecordFormProps = {
   recipeId: string;
   recipeTitle: string;
   recipeImageUrl: string;
   copy: RecipeCookingRecordCopy;
   isSubmitting: boolean;
   errorMessage?: string;
+  photoField?: (field: RecipeCookingRecordPhotoFieldProps) => ReactNode;
+  photoEditor?: ComponentType<RecordPhotoEditorProps>;
   onSubmit: (draft: RecipeCookingRecordFormDraft) => void;
   onSkip: () => void;
 };
@@ -37,29 +52,47 @@ export const RecipeCookingRecordForm = ({
   copy,
   isSubmitting,
   errorMessage,
+  photoField,
+  photoEditor: PhotoEditor,
   onSubmit,
   onSkip,
 }: RecipeCookingRecordFormProps) => {
+  const [photo, setPhoto] = useState(createEmptyPhotoDraft);
+  const [isPhotoBusy, setIsPhotoBusy] = useState(false);
   const { register, handleSubmit, setValue, control } = useForm<FormValues>({
     defaultValues: { review: "", isPublic: true },
   });
   const imageFile = useWatch({ control, name: "imageFile" });
   const isPublic = useWatch({ control, name: "isPublic" });
 
+  const handlePhotoChange = (file: File) =>
+    setValue("imageFile", file, { shouldDirty: true });
+
+  const handlePhotoDraftChange = (nextPhoto: RecordPhotoDraft) => {
+    setPhoto(nextPhoto);
+    if (nextPhoto.originalFile) handlePhotoChange(nextPhoto.originalFile);
+  };
+
   const handleValidSubmit = (values: FormValues) => {
+    if (isPhotoBusy) return;
     triggerHaptic("Medium");
-    onSubmit({ recipeId, ...values });
+    onSubmit({
+      recipeId,
+      ...values,
+      ...(PhotoEditor && photo.originalFile ? { photo } : {}),
+    });
   };
 
   return (
     <form
       aria-labelledby="cooking-record-form-title"
       onSubmit={handleSubmit(handleValidSubmit)}
-      className="flex min-h-0 flex-1 flex-col"
+      aria-busy={isSubmitting || isPhotoBusy}
+      className="flex min-h-0 min-w-0 flex-1 flex-col"
     >
       <div
         data-testid="cooking-record-scroll-region"
-        className="min-h-0 flex-1 overflow-y-auto px-5 pt-5 pb-6"
+        className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-5 pt-5 pb-6"
       >
         <div className="space-y-6">
           <div className="pr-12">
@@ -74,15 +107,34 @@ export const RecipeCookingRecordForm = ({
             </p>
           </div>
 
-          <RecipeCookingRecordPhotoField
-            recipeTitle={recipeTitle}
-            recipeImageUrl={recipeImageUrl}
-            imageFile={imageFile}
-            copy={copy}
-            onChange={(file) =>
-              setValue("imageFile", file, { shouldDirty: true })
-            }
-          />
+          {PhotoEditor ? (
+            <div className="min-w-0">
+              <PhotoEditor
+                value={photo}
+                onChange={handlePhotoDraftChange}
+                disabled={isSubmitting}
+                fallbackImageUrl={recipeImageUrl}
+                fallbackImageAlt={recipeTitle}
+                requireUpload
+                onBusyChange={setIsPhotoBusy}
+              />
+              {!photo.originalFile ? (
+                <p className="text-ink-muted mt-1 text-center text-xs">
+                  {copy.defaultPhoto}
+                </p>
+              ) : null}
+            </div>
+          ) : photoField ? (
+            photoField({ file: imageFile, onChange: handlePhotoChange })
+          ) : (
+            <RecipeCookingRecordPhotoField
+              recipeTitle={recipeTitle}
+              recipeImageUrl={recipeImageUrl}
+              imageFile={imageFile}
+              copy={copy}
+              onChange={handlePhotoChange}
+            />
+          )}
 
           <label className="block text-sm font-semibold">
             {copy.reviewLabel}
@@ -130,7 +182,7 @@ export const RecipeCookingRecordForm = ({
         </button>
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPhotoBusy}
           className="bg-olive-light disabled:text-ink-disabled h-12 cursor-pointer rounded-xl text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-100"
         >
           {isSubmitting ? copy.submitting : copy.submit}

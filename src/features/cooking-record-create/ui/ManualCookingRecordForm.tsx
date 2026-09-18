@@ -1,7 +1,13 @@
 "use client";
 
-import { useId } from "react";
+import { type ComponentType, type ReactNode, useId, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+
+import type {
+  RecordPhotoDraft,
+  RecordPhotoEditorProps,
+} from "@/entities/recipe/model/recordPhoto.types";
+import { createEmptyPhotoDraft } from "@/entities/recipe/model/recordPhotoView";
 
 import type {
   ManualCookingRecordCopy,
@@ -13,12 +19,21 @@ type FormState = Omit<ManualCookingRecordFormValues, "imageFile"> & {
   imageFile?: File;
 };
 
-type ManualCookingRecordFormProps = {
+export type ManualCookingRecordPhotoFieldProps = {
+  file: File | undefined;
+  onChange: (file: File) => void;
+  error?: string;
+};
+
+export type ManualCookingRecordFormProps = {
   formId: string;
   initialCookedDate?: string;
   copy: ManualCookingRecordCopy;
   isDisabled: boolean;
   submitError?: string;
+  photoField?: (field: ManualCookingRecordPhotoFieldProps) => ReactNode;
+  photoEditor?: ComponentType<RecordPhotoEditorProps>;
+  onPhotoBusyChange?: (busy: boolean) => void;
   onSubmit: (values: ManualCookingRecordFormValues) => void;
 };
 
@@ -36,9 +51,14 @@ export const ManualCookingRecordForm = ({
   copy,
   isDisabled,
   submitError,
+  photoField,
+  photoEditor: PhotoEditor,
+  onPhotoBusyChange,
   onSubmit,
 }: ManualCookingRecordFormProps) => {
   const reviewInputId = useId();
+  const [photo, setPhoto] = useState(createEmptyPhotoDraft);
+  const [isPhotoBusy, setIsPhotoBusy] = useState(false);
   const {
     register,
     handleSubmit,
@@ -57,32 +77,68 @@ export const ManualCookingRecordForm = ({
   const imageFile = useWatch({ control, name: "imageFile" });
   const title = useWatch({ control, name: "title" });
 
+  const handlePhotoChange = (file: File) => {
+    setValue("imageFile", file, { shouldDirty: true });
+    clearErrors("imageFile");
+  };
+
+  const handlePhotoDraftChange = (nextPhoto: RecordPhotoDraft) => {
+    setPhoto(nextPhoto);
+    if (nextPhoto.originalFile) handlePhotoChange(nextPhoto.originalFile);
+  };
+
+  const handlePhotoBusyChange = (busy: boolean) => {
+    setIsPhotoBusy(busy);
+    onPhotoBusyChange?.(busy);
+  };
+
   const handleValidSubmit = (values: FormState) => {
+    if (isPhotoBusy) return;
     if (values.imageFile === undefined) {
       setError("imageFile", { message: copy.photoError });
       return;
     }
-    onSubmit({ ...values, imageFile: values.imageFile });
+    onSubmit({
+      ...values,
+      imageFile: values.imageFile,
+      ...(PhotoEditor ? { photo } : {}),
+    });
   };
 
   return (
     <form
       id={formId}
       onSubmit={handleSubmit(handleValidSubmit)}
-      aria-busy={isDisabled}
-      className="px-5 pb-6"
+      aria-busy={isDisabled || isPhotoBusy}
+      className="min-w-0 px-5 pb-6"
     >
-      <fieldset disabled={isDisabled} className="space-y-5 border-0 p-0">
-        <ManualCookingRecordPhotoField
-          copy={copy}
-          file={imageFile}
-          title={title}
-          error={errors.imageFile?.message}
-          onChange={(file) => {
-            setValue("imageFile", file, { shouldDirty: true });
-            clearErrors("imageFile");
-          }}
-        />
+      <fieldset
+        disabled={isDisabled}
+        className="min-w-0 space-y-5 border-0 p-0"
+      >
+        {PhotoEditor ? (
+          <PhotoEditor
+            value={photo}
+            onChange={handlePhotoDraftChange}
+            disabled={isDisabled}
+            error={errors.imageFile?.message}
+            onBusyChange={handlePhotoBusyChange}
+          />
+        ) : photoField ? (
+          photoField({
+            file: imageFile,
+            onChange: handlePhotoChange,
+            error: errors.imageFile?.message,
+          })
+        ) : (
+          <ManualCookingRecordPhotoField
+            copy={copy}
+            file={imageFile}
+            title={title}
+            error={errors.imageFile?.message}
+            onChange={handlePhotoChange}
+          />
+        )}
 
         <label className="block text-sm font-semibold">
           {copy.dishTitleLabel}

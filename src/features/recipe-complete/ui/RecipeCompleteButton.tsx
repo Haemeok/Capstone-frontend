@@ -1,10 +1,14 @@
 "use client";
 
+import type { ComponentType } from "react";
+
 import { Loader2 } from "lucide-react";
 
 import type { Locale } from "@/shared/i18n";
 import { useT } from "@/shared/i18n";
 import { triggerHaptic } from "@/shared/lib/bridge";
+
+import type { RecordPhotoEditorProps } from "@/entities/recipe/model/recordPhoto.types";
 
 import { cn } from "@/lib/utils";
 
@@ -25,6 +29,7 @@ type RecipeCompleteButtonProps = {
   onFlowClose?: () => void;
   className?: string;
   locale?: Locale;
+  photoEditor?: ComponentType<RecordPhotoEditorProps>;
 };
 
 const RecipeCompleteButton = ({
@@ -36,6 +41,7 @@ const RecipeCompleteButton = ({
   onFlowClose,
   className,
   locale = "ko",
+  photoEditor,
 }: RecipeCompleteButtonProps) => {
   const t = useT();
   const {
@@ -61,10 +67,11 @@ const RecipeCompleteButton = ({
 
   const handleSubmit = async ({
     imageFile,
+    photo,
     ...draft
   }: RecipeCookingRecordFormDraft) => {
     const input = toRecipeCookingRecordInput(draft);
-    await createMutation.createRecord({ ...input, imageFile });
+    await createMutation.createRecord({ ...input, imageFile, photo });
     markCompleted();
   };
 
@@ -88,7 +95,7 @@ const RecipeCompleteButton = ({
           "group relative w-full rounded-sm py-4 text-sm font-semibold transition-all",
           isCompleted
             ? "text-ink-muted cursor-not-allowed bg-gray-200"
-            : "bg-olive-mint cursor-pointer text-white active:scale-95",
+            : "bg-olive-mint text-ink cursor-pointer active:scale-95",
           createMutation.isPending && "opacity-70",
           className
         )}
@@ -112,6 +119,7 @@ const RecipeCompleteButton = ({
         recipeTitle={recipeTitle}
         recipeImageUrl={recipeImageUrl}
         copy={t.recipeDetail.cookingRecord}
+        photoEditor={photoEditor}
         onOpenChange={handleOpenChange}
         onSubmit={handleSubmit}
         onSkip={handleSkip}
