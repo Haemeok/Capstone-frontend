@@ -120,4 +120,8 @@ export type {
 export { CountryFlagGlyph } from "./ui/CountryFlagGlyph";
 export { CreatorCountryFlag } from "./ui/CreatorCountryFlag";
 export { default as RecipeStepList } from "./ui/RecipeStepList";
+export {
+  type SavedCookingRecord,
+  SavedCookingRecordPhoto,
+} from "./ui/SavedCookingRecordPhoto";
 export { YoutubeChannelBadge } from "./ui/YoutubeChannelBadge";

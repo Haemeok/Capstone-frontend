@@ -51,11 +51,13 @@ function DialogContent({
   closeLabel = "Close",
   closeButtonClassName,
   closeDisabled = false,
+  showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   closeLabel?: string;
   closeButtonClassName?: string;
   closeDisabled?: boolean;
+  showCloseButton?: boolean;
 }) {
   return (
     <DialogPortal data-slot="dialog-portal">
@@ -69,16 +71,18 @@ function DialogContent({
         {...props}
       >
         {children}
-        <DialogClose
-          disabled={closeDisabled}
-          className={cn(
-            "text-ink-sub focus-visible:outline-olive-dark disabled:text-ink-disabled absolute top-2.5 right-2.5 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
-            closeButtonClassName
-          )}
-        >
-          <XIcon aria-hidden="true" className="h-5 w-5" />
-          <span className="sr-only">{closeLabel}</span>
-        </DialogClose>
+        {showCloseButton ? (
+          <DialogClose
+            disabled={closeDisabled}
+            className={cn(
+              "text-ink-sub focus-visible:outline-olive-dark disabled:text-ink-disabled absolute top-2.5 right-2.5 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+              closeButtonClassName
+            )}
+          >
+            <XIcon aria-hidden="true" className="h-5 w-5" />
+            <span className="sr-only">{closeLabel}</span>
+          </DialogClose>
+        ) : null}
       </DialogPrimitive.Content>
     </DialogPortal>
   );
