@@ -1,5 +1,4 @@
 import { api } from "@/shared/api/client";
-import { uploadFileToS3 } from "@/shared/api/file";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 import type {
@@ -7,23 +6,23 @@ import type {
   CookingRecordSuccessResponse,
   RecordImageFile,
   RecordImageKeys,
-  RecordImageUploadUrlResponse,
 } from "@/entities/recipe/model/record";
+import { uploadRecordImages } from "@/entities/recipe/model/recordImageUpload";
+import type { RecordDisplayInput } from "@/entities/recipe/model/recordPhoto.types";
 import {
-  toRecordImageKeys,
-  toRecordImageUploadRequests,
   validateCookedAt,
-  validateRecordImageFiles,
   validateRecordText,
   validateRecordTitle,
 } from "@/entities/recipe/model/recordValidation";
 
-export type CookingRecordImageDraft = {
+export type CookingRecordImageDraft = RecordDisplayInput & {
   recordId: string;
-  images: RecordImageFile[];
-};
+} & (
+    | { images: RecordImageFile[]; image?: never }
+    | { image: RecordImageKeys; images?: never }
+  );
 
-export type CookingRecordImageRequest = {
+export type CookingRecordImageRequest = RecordDisplayInput & {
   recordId: string;
   image: RecordImageKeys;
 };
@@ -64,35 +63,23 @@ export const updateCookingRecordMetadata = async (
 export const prepareCookingRecordImage = async ({
   recordId,
   images,
-}: CookingRecordImageDraft): Promise<CookingRecordImageRequest> => {
-  validateRecordImageFiles(images);
-  const uploaded = await api.post<RecordImageUploadUrlResponse[]>(
-    END_POINTS.RECORD_IMAGE_UPLOAD_URLS,
-    { files: toRecordImageUploadRequests(images) }
-  );
-  await Promise.all(
-    uploaded.map((response, index) => {
-      const image = images[index];
-      if (image === undefined) {
-        throw new Error("업로드할 기록 이미지를 찾을 수 없습니다.");
-      }
-      return uploadFileToS3(image.file, {
-        presignedUrl: response.presignedUrl,
-        fileKey: response.imageKey,
-      });
-    })
-  );
-  return { recordId, image: toRecordImageKeys(images, uploaded) };
-};
+  image,
+  ...display
+}: CookingRecordImageDraft): Promise<CookingRecordImageRequest> => ({
+  recordId,
+  image: image ?? (await uploadRecordImages(images)),
+  ...display,
+});
 
 export const patchCookingRecordImage = async ({
   recordId,
   image,
+  ...display
 }: CookingRecordImageRequest): Promise<CookingRecordSuccessResponse> =>
-  api.patch<CookingRecordSuccessResponse>(
-    END_POINTS.RECORD_IMAGE(recordId),
-    image
-  );
+  api.patch<CookingRecordSuccessResponse>(END_POINTS.RECORD_IMAGE(recordId), {
+    ...image,
+    ...display,
+  });
 
 export const replaceCookingRecordImage = async (
   draft: CookingRecordImageDraft

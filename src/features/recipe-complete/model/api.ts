@@ -7,6 +7,8 @@ import type {
   RecipeRecordResponse,
   RecordImageUploadUrlResponse,
 } from "@/entities/recipe/model/record";
+import type { RecordPhotoDraft } from "@/entities/recipe/model/recordPhoto.types";
+import { prepareRecordPhoto } from "@/entities/recipe/model/recordPhotoRequest";
 import {
   toRecordImageKeys,
   toRecordImageUploadRequests,
@@ -17,12 +19,16 @@ import {
 
 export type RecipeCookingRecordDraft = RecipeCookingRecordCreateInput & {
   imageFile?: File;
+  photo?: RecordPhotoDraft;
 };
 
 export const prepareRecipeCookingRecord = async ({
   imageFile,
+  photo,
   ...input
 }: RecipeCookingRecordDraft): Promise<RecipeCookingRecordCreateInput> => {
+  if (photo)
+    return { ...input, ...(await prepareRecordPhoto(photo, input.image)) };
   if (imageFile === undefined) return input;
 
   const images = [{ file: imageFile, purpose: "ORIGINAL" as const }];
