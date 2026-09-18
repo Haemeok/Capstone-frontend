@@ -6,6 +6,8 @@ import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
 
+import { useDrawerKeyboardRestore } from "./useDrawerKeyboardRestore";
+
 const drawerContentVariants = cva(
   "group/drawer-content bg-background pointer-events-auto fixed z-50 flex flex-col outline-none motion-reduce:animate-none",
   {
@@ -83,10 +85,12 @@ function DrawerContent({
     closeButtonClassName?: string;
     closeDisabled?: boolean;
   }) {
+  const contentRef = useDrawerKeyboardRestore(props.style);
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
       <DrawerPrimitive.Content
+        ref={contentRef}
         data-slot="drawer-content"
         {...(hasDescription ? {} : { "aria-describedby": undefined })}
         className={cn(drawerContentVariants({ variant }), className)}
