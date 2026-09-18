@@ -1,5 +1,9 @@
 import type { Locale } from "@/shared/i18n";
 
+import type {
+  RecordDisplayInput,
+  RecordDisplayResponse,
+} from "./recordPhoto.types";
 import { Nutrition, Visibility } from "./types";
 
 export type RecordSourceType = "RECIPE" | "MANUAL";
@@ -30,7 +34,7 @@ export type RecordImageFile = {
   purpose: RecordImagePurpose;
 };
 
-export type RecipeCookingRecordCreateInput = {
+export type RecipeCookingRecordCreateInput = RecordDisplayInput & {
   sourceType: "RECIPE";
   recipeId: string;
   image?: RecordImageKeys;
@@ -41,7 +45,7 @@ export type RecipeCookingRecordCreateInput = {
   cookedAt?: never;
 };
 
-export type ManualCookingRecordCreateInput = {
+export type ManualCookingRecordCreateInput = RecordDisplayInput & {
   sourceType: "MANUAL";
   recipeId?: never;
   recordTitle: string;
@@ -69,7 +73,7 @@ export type CookingRecordListParams = {
   locale: Locale;
 };
 
-export type CookingRecordListItem = {
+export type CookingRecordListItem = RecordDisplayResponse & {
   recordId: string;
   recipeId: string | null;
   displayTitle: string;
@@ -142,7 +146,12 @@ export type CookingRecordListResponse = {
   hasNext: boolean;
 };
 
-export type CookingRecordDetailResponse = {
+export type CookingRecordDetailResponse = RecordDisplayResponse & {
+  imageEdit?: {
+    originalKey: string;
+    stickerKey: string | null;
+    croppedKey: string | null;
+  } | null;
   recordId: string;
   recipeId: string | null;
   displayTitle: string;
@@ -186,7 +195,9 @@ export type LegacyRecipeHistoryResponse = {
   monthlyTotalSavings: number;
 };
 
-export type CookingRecordCalendarDateItem = {
+export type CookingRecordCalendarDateItem = RecordDisplayResponse & {
+  imageUrl?: string | null;
+  stickerImageUrl?: string | null;
   recordId: string;
   recipeId: string | null;
   displayTitle: string;

@@ -73,6 +73,7 @@ export const END_POINTS = {
   RECORD_IMAGE_UPLOAD_URLS: "/me/records/image-upload-urls",
   MY_RECORDS: "/me/records",
   MY_RECORD: (recordId: string) => `/me/records/${recordId}`,
+  STICKER_BOOK_PLATES: "/me/sticker-book/plates",
   STICKER_BOOK_BACKGROUNDS: "/me/sticker-book/backgrounds",
   STICKER_BOOK_BACKGROUND_IMAGE_UPLOAD_URL:
     "/me/sticker-book/backgrounds/image-upload-url",
