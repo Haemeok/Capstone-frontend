@@ -97,6 +97,20 @@ frontend-api-changes-*.html
 /.tmp-recipio-capture-profile/
 /.tmp-recipio-chrome-capture-profile/
 
-# local cover-letter writing skills
-/.agents/skills/tech-writing/SKILL.md
-/.agents/skills/tech-writing/references/jasoseo-*.md
+# local Toss research and cover-letter writing skills
+/docs/research/toss-thinking/
+/.agents/skills/tech-writing/
+/.claude/skills/tech-writing/
+
+# local personal blog drafts and writing tools
+*.mdx
+/.tmp/blog-*/
+/.agents/skills/writing-thesis/
+/.agents/skills/writing-outline/
+/.agents/skills/writing-drafting/
+/.agents/skills/writing-polish/
+/.claude/skills/writing-thesis/
+/.claude/skills/writing-outline/
+/.claude/skills/writing-drafting/
+/.claude/skills/writing-polish/
+/scripts/check-writing-harness.sh

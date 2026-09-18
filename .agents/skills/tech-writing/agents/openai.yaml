@@ -1,4 +1,0 @@
-interface:
-  display_name: "한국어 개발자 글쓰기"
-  short_description: "기술 블로그·포트폴리오·자소서를 자연스러운 한국어로 다듬습니다"
-  default_prompt: "Use $tech-writing to rewrite this Korean developer content in the appropriate human voice and format."
