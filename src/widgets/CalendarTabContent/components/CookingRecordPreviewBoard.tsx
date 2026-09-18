@@ -124,7 +124,7 @@ export const CookingRecordPreviewBoard = ({
           </p>
           <button
             type="button"
-            className="bg-olive-light active:bg-olive-dark text-ink mt-4 min-h-11 rounded-xl px-6 text-sm font-bold"
+            className="bg-olive-light active:bg-olive-dark mt-4 min-h-11 rounded-xl px-6 text-sm font-bold text-white"
             onClick={() => {
               triggerHaptic("Medium");
               onAddRecord();
