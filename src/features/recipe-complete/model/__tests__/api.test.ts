@@ -175,7 +175,7 @@ it.each(["DISH", "STICKER"] as const)(
         },
       });
       expect(fetchMock).toHaveBeenCalledWith(
-        "https://images.example/recipe.webp"
+        `/api/bff/record-photo-source?${new URLSearchParams({ url: "https://images.example/recipe.webp" })}`
       );
       expect(putS3).toHaveBeenCalledWith(
         expect.any(File),
