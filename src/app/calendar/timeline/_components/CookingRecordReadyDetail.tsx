@@ -131,7 +131,6 @@ export const CookingRecordReadyDetail = ({
           photoEditor.photo ? (
             <ConnectedCookingRecordPhotoField
               value={photoEditor.photo}
-              requireUpload={!detail?.imageEdit?.originalKey}
               onChange={photoEditor.setPhoto}
               disabled={photoEditor.isSaving || actions.isReviewSaving}
               onBusyChange={photoEditor.setIsReading}
