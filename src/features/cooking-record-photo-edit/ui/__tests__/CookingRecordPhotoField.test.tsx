@@ -24,7 +24,7 @@ import type {
 import { CookingRecordPhotoField } from "../CookingRecordPhotoField";
 
 jest.mock("next/navigation", () => ({
-  usePathname: () => "/dev/cooking-record-ui",
+  usePathname: () => "/calendar/timeline",
 }));
 const catalog: RecordPhotoCatalogState = {
   status: "ready",
