@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { type BaseSyntheticEvent, useEffect, useMemo, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,7 @@ export const useRecipeEditForm = (recipeId: string) => {
     useRecipeDetailQuery(recipeId);
 
   const originalIngredientsRef = useRef<IngredientPayload[]>([]);
+  const initializedRecipeIdRef = useRef<string | null>(null);
 
   const defaultFormValues = useMemo<RecipeFormValues>(
     () => ({
@@ -71,17 +72,12 @@ export const useRecipeEditForm = (recipeId: string) => {
   });
 
   useEffect(() => {
-    if (isRecipeLoaded && recipe) {
-      const originalIngredients = recipe.ingredients.map((ingredient) => ({
-        ingredientId: ingredient.id ?? "",
-        name: ingredient.name ?? "",
-        quantity: ingredient.quantity || "",
-        unit: ingredient.unit || "",
-      }));
-      originalIngredientsRef.current = originalIngredients;
-      methods.reset(defaultFormValues);
-    }
-  }, [isRecipeLoaded, defaultFormValues, methods, recipe]);
+    if (!isRecipeLoaded || initializedRecipeIdRef.current === recipeId) return;
+
+    originalIngredientsRef.current = defaultFormValues.ingredients;
+    methods.reset(defaultFormValues);
+    initializedRecipeIdRef.current = recipeId;
+  }, [isRecipeLoaded, defaultFormValues, methods, recipeId]);
 
   const checkIngredientsModified = (
     original: IngredientPayload[],
@@ -91,7 +87,12 @@ export const useRecipeEditForm = (recipeId: string) => {
 
     return original.some((orig, index) => {
       const curr = current[index];
-      return orig.name !== curr.name || orig.quantity !== curr.quantity;
+      return (
+        orig.name !== curr.name ||
+        orig.quantity !== curr.quantity ||
+        orig.unit !== curr.unit ||
+        orig.ingredientId !== curr.ingredientId
+      );
     });
   };
 
@@ -127,7 +128,7 @@ export const useRecipeEditForm = (recipeId: string) => {
   };
 
   const handleMainIngredientRemoved = (ingredientName: string) => {
-    const currentSteps = methods.watch("steps");
+    const currentSteps = methods.getValues("steps");
     const updatedSteps = currentSteps.map((step) => {
       const newStepIngredients = (step.ingredients || []).filter(
         (ing) => ing.name !== ingredientName
@@ -145,7 +146,8 @@ export const useRecipeEditForm = (recipeId: string) => {
 
   return {
     methods,
-    onSubmit: methods.handleSubmit(onSubmit),
+    onSubmit: (event?: BaseSyntheticEvent) =>
+      methods.handleSubmit(onSubmit)(event),
     isLoading: isPending,
     error,
     handleMainIngredientRemoved,
