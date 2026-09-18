@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
+import { markImageLoaded } from "@/shared/lib/loadedImageRegistry";
+
 import { RECORD_MASK_PATHS } from "../../model/recordMaskShapes";
 import { SavedCookingRecordPhoto } from "../SavedCookingRecordPhoto";
 
@@ -39,7 +41,8 @@ describe("SavedCookingRecordPhoto", () => {
     expect(photo.querySelector("clipPath")).toBeNull();
   });
 
-  it("완성 이미지가 없으면 원본의 실제 비율과 저장한 모양·구도로 합성합니다", async () => {
+  it("캐시된 원본도 실제 비율과 저장한 구도 계산이 끝난 뒤 표시합니다", async () => {
+    markImageLoaded("/wide.webp");
     render(
       <div className="size-40">
         <SavedCookingRecordPhoto
@@ -61,6 +64,7 @@ describe("SavedCookingRecordPhoto", () => {
       'img[src="/wide.webp"]'
     );
     expect(source).not.toBeNull();
+    expect(source).not.toBeVisible();
     expect(photo.querySelector("clipPath path")).toHaveAttribute(
       "d",
       RECORD_MASK_PATHS.ROUNDED_HEXAGON
@@ -79,6 +83,7 @@ describe("SavedCookingRecordPhoto", () => {
         height: "150%",
       })
     );
+    expect(source).toBeVisible();
   });
 
   it("스티커 기록은 스티커 이미지를 원본보다 우선합니다", () => {

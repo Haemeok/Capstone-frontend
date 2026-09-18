@@ -43,10 +43,7 @@ const SavedDishSource = ({
   isCropped: boolean;
 }) => {
   const clipPathId = `saved-record-mask-${useId().replaceAll(":", "")}`;
-  const [imageSize, setImageSize] = useState<ImageSize>({
-    width: 1,
-    height: 1,
-  });
+  const [imageSize, setImageSize] = useState<ImageSize | null>(null);
 
   if (isCropped) {
     return (
@@ -72,7 +69,10 @@ const SavedDishSource = ({
   };
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div
+      className="relative h-full w-full overflow-hidden"
+      style={{ visibility: imageSize ? "visible" : "hidden" }}
+    >
       <svg aria-hidden="true" className="absolute h-0 w-0">
         <defs>
           <clipPath id={clipPathId} clipPathUnits="objectBoundingBox">
@@ -96,7 +96,7 @@ const SavedDishSource = ({
           imgClassName="pointer-events-none select-none"
           skeleton={<span />}
           errorFallback={<span />}
-          style={getCropImageStyle(imageSize, crop)}
+          style={imageSize ? getCropImageStyle(imageSize, crop) : undefined}
         />
       </div>
     </div>
