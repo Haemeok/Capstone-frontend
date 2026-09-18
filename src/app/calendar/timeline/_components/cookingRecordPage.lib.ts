@@ -53,6 +53,7 @@ export const toMonthlyCookingRecords = (
         cookedAtLabel: formatRecordDate(date, locale),
         imageUrl,
         imageAlt: record.displayTitle,
+        displayRecord: record,
       },
     });
   }

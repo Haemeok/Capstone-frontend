@@ -1,7 +1,10 @@
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
-import type { StickerBookBackground } from "@/entities/recipe";
+import {
+  SavedCookingRecordPhoto,
+  type StickerBookBackground,
+} from "@/entities/recipe";
 
 import type { CookingRecordStickerItem } from "./cookingRecordUi.types";
 import styles from "./MonthlyCookingRecord.module.css";
@@ -36,20 +39,31 @@ export const CookingRecordBackgroundPreview = ({
       />
     ) : null}
     {records.slice(0, 2).map((record, index) => (
-      <Image
+      <div
         key={record.id}
-        src={record.imageUrl}
-        alt={record.imageAlt}
-        aspectRatio="1 / 1"
-        fit="contain"
-        wrapperClassName={cn(
-          "absolute z-10 h-20 w-24 overflow-visible",
+        className={cn(
+          "absolute z-10 h-20 w-24",
           index === 0
             ? "top-5 left-[22%] -rotate-3"
             : "right-[20%] bottom-4 rotate-3"
         )}
-        imgClassName="object-contain drop-shadow-[0_5px_6px_rgb(34_34_34/0.16)]"
-      />
+      >
+        {record.displayRecord ? (
+          <SavedCookingRecordPhoto
+            record={record.displayRecord}
+            alt={record.imageAlt}
+          />
+        ) : (
+          <Image
+            src={record.imageUrl}
+            alt={record.imageAlt}
+            aspectRatio="1 / 1"
+            fit="contain"
+            wrapperClassName="h-full w-full overflow-visible"
+            imgClassName="object-contain drop-shadow-[0_5px_6px_rgb(34_34_34/0.16)]"
+          />
+        )}
+      </div>
     ))}
   </div>
 );

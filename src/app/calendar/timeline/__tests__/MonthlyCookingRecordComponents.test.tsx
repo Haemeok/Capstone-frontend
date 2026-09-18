@@ -4,12 +4,15 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import { triggerHaptic } from "@/shared/lib/bridge";
 
+import { CookingRecordDetailContent } from "@/entities/recipe/ui/record-form";
+
+import boardStyles from "@/widgets/CookingRecordBoard/CookingRecordBoard.module.css";
+
 import { CookingRecordBoard } from "../_components/CookingRecordBoard";
 import { CookingRecordDeleteDialog } from "../_components/CookingRecordDeleteDialog";
 import { CookingRecordDetailDrawer } from "../_components/CookingRecordDetailDrawer";
 import { CookingRecordHeader } from "../_components/CookingRecordHeader";
 import { CookingRecordViewSettingsDrawer } from "../_components/CookingRecordViewSettingsDrawer";
-import styles from "../_components/MonthlyCookingRecord.module.css";
 
 jest.mock("@/shared/lib/bridge", () => ({ triggerHaptic: jest.fn() }));
 
@@ -176,6 +179,64 @@ describe("CookingRecordHeader", () => {
 });
 
 describe("CookingRecordBoard", () => {
+  it("사진 렌더 슬롯에 각 기록을 전달하고 기존 선택 동작을 유지합니다", () => {
+    const record = {
+      id: "record-slot",
+      title: "비빔밥",
+      cookedAtLabel: "8월 20일 · 저녁",
+      imageUrl: "/records/bibimbap.webp",
+      imageAlt: "비빔밥",
+    };
+    const onSelectRecord = jest.fn();
+
+    render(
+      <CookingRecordBoard
+        ariaLabel="요리 기록"
+        records={[record]}
+        background={null}
+        recordCountLabel="1개의 요리"
+        addRecordLabel="요리 기록 추가"
+        shareRecordLabel="요리 기록 공유"
+        getRecordLabel={(item) => `${item.title} 기록 보기`}
+        onSelectRecord={onSelectRecord}
+        onAddRecord={jest.fn()}
+        onShareRecord={jest.fn()}
+        renderPhoto={(item) => (
+          <span data-testid="custom-record-photo">{item.imageUrl}</span>
+        )}
+      />
+    );
+
+    expect(screen.getByTestId("custom-record-photo")).toHaveTextContent(
+      record.imageUrl
+    );
+    expect(screen.queryByRole("img", { name: record.imageAlt })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "비빔밥 기록 보기" }));
+    expect(onSelectRecord).toHaveBeenCalledWith(record);
+  });
+
+  it("contained 액션은 보드 안쪽 하단에 배치합니다", () => {
+    render(
+      <CookingRecordBoard
+        ariaLabel="미리보기 요리 기록"
+        records={[]}
+        background={null}
+        recordCountLabel="0개의 요리"
+        addRecordLabel="요리 기록 추가"
+        shareRecordLabel="요리 기록 공유"
+        getRecordLabel={() => "요리 기록 보기"}
+        onSelectRecord={jest.fn()}
+        onAddRecord={jest.fn()}
+        onShareRecord={jest.fn()}
+        actionsPosition="contained"
+      />
+    );
+
+    const actions = screen.getByTestId("cooking-record-bottom-actions");
+    expect(actions).toHaveClass("absolute", "bottom-0");
+    expect(actions).not.toHaveClass("fixed");
+  });
+
   it("요리 개수와 이름 라벨을 배경 위 촘촘한 3열 스티커북에 표시합니다", () => {
     const onSelectRecord = jest.fn();
     const records = [
@@ -298,7 +359,7 @@ describe("CookingRecordBoard", () => {
       "cooking-record-background-layer"
     );
 
-    expect(board).not.toHaveClass(styles.dot);
+    expect(board).not.toHaveClass(boardStyles.dot);
     expect(backgroundLayer).toHaveClass(
       "pointer-events-none",
       "absolute",
@@ -394,8 +455,31 @@ describe("CookingRecordBoard", () => {
       "image-error-fallback"
     );
 
-    expect(skeleton.firstElementChild).toHaveClass(styles.dot);
-    expect(errorFallback.firstElementChild).toHaveClass(styles.dot);
+    expect(skeleton.firstElementChild).toHaveClass(boardStyles.dot);
+    expect(errorFallback.firstElementChild).toHaveClass(boardStyles.dot);
+  });
+});
+
+describe("CookingRecordDetailContent", () => {
+  it("사진 보기와 수정 사진 필드 슬롯을 각각 표시합니다", () => {
+    render(
+      <CookingRecordDetailContent
+        mode="edit"
+        detail={recordDetail}
+        copy={detailCopy}
+        isReviewSaving={false}
+        formId="record-edit-form"
+        photoView={<div>맞춤 상세 사진</div>}
+        editPhotoField={<div>맞춤 사진 수정 필드</div>}
+        onSaveRecord={jest.fn().mockResolvedValue(true)}
+      />
+    );
+
+    expect(screen.getByText("맞춤 상세 사진")).toBeInTheDocument();
+    expect(screen.getByText("맞춤 사진 수정 필드")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("img", { name: recordDetail.imageAlt })
+    ).toBeNull();
   });
 });
 

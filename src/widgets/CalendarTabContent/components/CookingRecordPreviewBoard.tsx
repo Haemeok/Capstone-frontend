@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { ChevronRight } from "lucide-react";
 
 import { format, LocalizedLink, type UserPagesDict } from "@/shared/i18n";
@@ -11,6 +13,7 @@ import type {
   CookingRecordListItem,
   StickerBookBackground,
 } from "@/entities/recipe";
+import { SavedCookingRecordPhoto } from "@/entities/recipe";
 
 import styles from "./CookingRecordPreview.module.css";
 
@@ -22,6 +25,8 @@ type CookingRecordPreviewBoardProps = {
   background: StickerBookBackground | null;
   copy: UserPagesDict["calendar"]["cookingRecord"];
   onAddRecord: () => void;
+  renderPhoto?: (record: CookingRecordListItem) => ReactNode;
+  onViewAll?: () => void;
 };
 
 export const CookingRecordPreviewBoard = ({
@@ -32,6 +37,8 @@ export const CookingRecordPreviewBoard = ({
   background,
   copy,
   onAddRecord,
+  renderPhoto,
+  onViewAll,
 }: CookingRecordPreviewBoardProps) => {
   const href = `/calendar/timeline?month=${monthKey}`;
   return (
@@ -82,14 +89,25 @@ export const CookingRecordPreviewBoard = ({
                 styles.sticker
               )}
             >
-              <Image
-                src={record.stickerImageUrl ?? record.imageUrl ?? ""}
-                alt={record.displayTitle}
-                fit="contain"
-                lazy={false}
-                wrapperClassName="mx-auto h-16 w-full overflow-visible"
-                imgClassName="drop-shadow-[0_5px_5px_rgb(34_34_34/0.14)]"
-              />
+              {renderPhoto ? (
+                renderPhoto(record)
+              ) : record.displayMode === "DISH" ? (
+                <div className="mx-auto h-16 w-full">
+                  <SavedCookingRecordPhoto
+                    record={record}
+                    alt={record.displayTitle}
+                  />
+                </div>
+              ) : (
+                <Image
+                  src={record.stickerImageUrl ?? record.imageUrl ?? ""}
+                  alt={record.displayTitle}
+                  fit="contain"
+                  lazy={false}
+                  wrapperClassName="mx-auto h-16 w-full overflow-visible"
+                  imgClassName="drop-shadow-[0_5px_5px_rgb(34_34_34/0.14)]"
+                />
+              )}
               <span className="text-ink absolute bottom-1 left-1/2 max-w-[calc(100%-0.25rem)] -translate-x-1/2 truncate rounded-full bg-white px-2 py-1 text-xs font-semibold shadow-[0_2px_8px_rgb(34_34_34/0.14)]">
                 {record.displayTitle}
               </span>
@@ -106,7 +124,7 @@ export const CookingRecordPreviewBoard = ({
           </p>
           <button
             type="button"
-            className="bg-olive-light active:bg-olive-dark mt-4 min-h-11 rounded-xl px-6 text-sm font-bold text-white"
+            className="bg-olive-light active:bg-olive-dark text-ink mt-4 min-h-11 rounded-xl px-6 text-sm font-bold"
             onClick={() => {
               triggerHaptic("Medium");
               onAddRecord();
@@ -120,7 +138,13 @@ export const CookingRecordPreviewBoard = ({
       {totalRecordCount > 0 ? (
         <LocalizedLink
           href={href}
-          onClick={() => triggerHaptic("Light")}
+          onClick={(event) => {
+            triggerHaptic("Light");
+            if (onViewAll) {
+              event.preventDefault();
+              onViewAll();
+            }
+          }}
           className="border-ink/10 text-ink-sub relative mt-2 flex min-h-10 items-center justify-center gap-0.5 border-t px-2 pt-2 text-sm font-semibold"
         >
           {copy.previewViewAll}

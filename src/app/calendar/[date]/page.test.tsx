@@ -74,6 +74,29 @@ jest.mock("next/navigation", () => ({
 jest.mock("@/entities/recipe", () => ({
   useCookingRecordCalendarDateQuery: jest.fn(),
   useCookingRecordDetailQuery: jest.fn(),
+  SavedCookingRecordPhoto: ({
+    record,
+    alt,
+  }: {
+    record: {
+      croppedImageUrl?: string | null;
+      stickerImageUrl?: string | null;
+      originalImageUrl?: string | null;
+      imageUrl?: string | null;
+    };
+    alt: string;
+  }) => (
+    <img
+      src={
+        record.croppedImageUrl ??
+        record.stickerImageUrl ??
+        record.originalImageUrl ??
+        record.imageUrl ??
+        ""
+      }
+      alt={alt}
+    />
+  ),
 }));
 
 jest.mock("@/entities/recipe/model/hooks", () => ({
