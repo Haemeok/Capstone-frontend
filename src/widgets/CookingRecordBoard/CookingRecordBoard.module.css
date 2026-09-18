@@ -1,0 +1,9 @@
+.dot {
+  background-color: #f7f7f4;
+  background-image: radial-gradient(circle, #d7d8d1 1.15px, transparent 1.25px);
+  background-size: 15px 15px;
+}
+
+.sticker:active {
+  transform: translateY(1px);
+}

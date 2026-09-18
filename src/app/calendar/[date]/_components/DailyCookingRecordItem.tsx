@@ -5,10 +5,12 @@ import { ChevronRight } from "lucide-react";
 import type { UserPagesDict } from "@/shared/i18n";
 import { format, LocalizedLink } from "@/shared/i18n";
 import { cn } from "@/shared/lib/utils";
-import { Image } from "@/shared/ui/image/Image";
 
 import type { CookingRecordCalendarDateItem } from "@/entities/recipe";
-import { useCookingRecordDetailQuery } from "@/entities/recipe";
+import {
+  SavedCookingRecordPhoto,
+  useCookingRecordDetailQuery,
+} from "@/entities/recipe";
 
 import { DailyCookingRecordNutrition } from "./DailyCookingRecordNutrition";
 
@@ -34,6 +36,13 @@ export const DailyCookingRecordItem = ({
     enabled: detailEnabled,
   });
   const review = detail?.recordMemo?.trim() || null;
+  const photoRecord = record;
+  const hasPhoto = Boolean(
+    record.stickerImageUrl ??
+    record.croppedImageUrl ??
+    record.imageUrl ??
+    record.originalImageUrl
+  );
   const recipeHref =
     detail?.recipeAvailable && detail.recipeId
       ? `/recipes/${encodeURIComponent(detail.recipeId)}`
@@ -47,13 +56,16 @@ export const DailyCookingRecordItem = ({
       className="scroll-mt-[152px] border-t-8 border-gray-50 px-[18px] py-[22px] first:border-t-0 first:pt-3"
     >
       <div className="grid grid-cols-[128px_1fr] gap-[15px]">
-        {record.originalImageUrl ? (
-          <Image
-            src={record.originalImageUrl}
-            alt={record.displayTitle}
-            aspectRatio="1 / 1"
-            wrapperClassName="size-32 rounded-xl"
-          />
+        {hasPhoto ? (
+          <div
+            className="size-32 overflow-hidden rounded-xl"
+            style={{ aspectRatio: "1 / 1" }}
+          >
+            <SavedCookingRecordPhoto
+              record={photoRecord}
+              alt={record.displayTitle}
+            />
+          </div>
         ) : (
           <div
             role="img"

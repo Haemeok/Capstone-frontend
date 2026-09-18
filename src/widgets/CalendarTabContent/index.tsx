@@ -8,6 +8,7 @@ import { format as formatDate } from "date-fns";
 import { resolveChromeLocale, useUserPagesDict } from "@/shared/i18n";
 
 import { ManualCookingRecordDrawer } from "@/features/cooking-record-create";
+import { ConnectedCookingRecordPhotoField } from "@/features/cooking-record-photo-edit";
 
 import { CookingRecordCalendar } from "./components/CookingRecordCalendar";
 import { CookingRecordPreview } from "./components/CookingRecordPreview";
@@ -47,6 +48,7 @@ const CalendarTabContent = () => {
         locale={locale}
         summaries={recordsQuery.dailySummaries}
         stickerImageUrlByDate={recordsQuery.stickerImageUrlByDate}
+        displayRecordByDate={recordsQuery.displayRecordByDate}
         hasCalendarData={recordsQuery.hasCalendarData}
         streakCount={streakQuery.data?.streak ?? 0}
         copy={copy.calendar}
@@ -60,6 +62,7 @@ const CalendarTabContent = () => {
         isOpen={isCreateOpen}
         initialCookedDate={initialCookedDate}
         copy={copy.calendar.cookingRecord.create}
+        photoEditor={ConnectedCookingRecordPhotoField}
         onOpenChange={setIsCreateOpen}
       />
     </div>

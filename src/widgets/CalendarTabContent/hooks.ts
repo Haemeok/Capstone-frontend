@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import {
+  type CookingRecordListItem,
   useCookingRecordCalendarMonthQuery,
   useCookingRecordsInfiniteQuery,
 } from "@/entities/recipe";
@@ -46,6 +47,7 @@ export const useProfileCookingRecords = ({
     group.date.startsWith(monthKey) ? group.records : []
   );
   const stickerImageUrlByDate: Record<string, string> = {};
+  const displayRecordByDate: Record<string, CookingRecordListItem> = {};
 
   for (const group of groups) {
     if (!group.date.startsWith(monthKey)) continue;
@@ -58,6 +60,14 @@ export const useProfileCookingRecords = ({
     if (firstReadySticker?.stickerImageUrl) {
       stickerImageUrlByDate[group.date] = firstReadySticker.stickerImageUrl;
     }
+
+    const firstDisplayRecord = group.records.find((record) =>
+      Boolean(
+        record.croppedImageUrl ?? record.stickerImageUrl ?? record.imageUrl
+      )
+    );
+    if (firstDisplayRecord)
+      displayRecordByDate[group.date] = firstDisplayRecord;
   }
   const oldestMonth = getOldestLoadedMonth(groups.map((group) => group.date));
   const shouldFetchNext =
@@ -86,6 +96,7 @@ export const useProfileCookingRecords = ({
     background: listQuery.data?.pages[0]?.background ?? null,
     records,
     stickerImageUrlByDate,
+    displayRecordByDate,
     dailySummaries: calendarQuery.data?.dailySummaries ?? [],
     hasCalendarData: calendarQuery.data !== undefined,
     isPreviewPending:

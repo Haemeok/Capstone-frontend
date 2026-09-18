@@ -5,12 +5,17 @@ import { triggerHaptic } from "@/shared/lib/bridge";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image/Image";
 
-import type { CookingRecordCalendarDailySummary } from "@/entities/recipe";
+import {
+  type CookingRecordCalendarDailySummary,
+  type CookingRecordListItem,
+  SavedCookingRecordPhoto,
+} from "@/entities/recipe";
 
 type CalendarDayPhotoProps = {
   date: Date;
   summary: CookingRecordCalendarDailySummary;
   imageUrl: string | null;
+  displayRecord?: CookingRecordListItem;
   isToday: boolean;
   dayCountBadgeLabel: string;
   recordAlt: string;
@@ -20,6 +25,7 @@ export const CalendarDayPhoto = ({
   date,
   summary,
   imageUrl,
+  displayRecord,
   isToday,
   dayCountBadgeLabel,
   recordAlt,
@@ -55,19 +61,23 @@ export const CalendarDayPhoto = ({
             className="bg-olive-dark absolute top-5 left-1/2 z-10 h-1 w-1 -translate-x-1/2 rounded-full"
           />
         ) : null}
-        {imageUrl ? (
+        {displayRecord || imageUrl ? (
           <span className="absolute top-5 right-0.5 bottom-0 left-0.5">
-            <Image
-              src={imageUrl}
-              alt=""
-              aria-hidden="true"
-              wrapperClassName="h-full w-full"
-              imgClassName="drop-shadow-sm transition-opacity duration-200 group-active:opacity-80"
-              fit="contain"
-              lazy={true}
-              skeleton={<span aria-hidden="true" />}
-              errorFallback={<span aria-hidden="true" />}
-            />
+            {displayRecord ? (
+              <SavedCookingRecordPhoto record={displayRecord} alt="" />
+            ) : imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt=""
+                aria-hidden="true"
+                wrapperClassName="h-full w-full"
+                imgClassName="drop-shadow-sm transition-opacity duration-200 group-active:opacity-80"
+                fit="contain"
+                lazy={true}
+                skeleton={<span aria-hidden="true" />}
+                errorFallback={<span aria-hidden="true" />}
+              />
+            ) : null}
           </span>
         ) : null}
         {summary.totalCount > 1 ? (

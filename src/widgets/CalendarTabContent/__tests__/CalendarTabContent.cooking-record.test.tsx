@@ -74,15 +74,25 @@ jest.mock("@/features/cooking-record-create", () => ({
   ManualCookingRecordDrawer: ({
     isOpen,
     initialCookedDate,
+    photoEditor,
   }: {
     isOpen: boolean;
     initialCookedDate?: string;
+    photoEditor?: React.ComponentType;
   }) =>
     isOpen ? (
-      <div role="dialog" data-initial-cooked-date={initialCookedDate}>
+      <div
+        role="dialog"
+        data-initial-cooked-date={initialCookedDate}
+        data-has-photo-editor={Boolean(photoEditor)}
+      >
         요리 기록 추가 드로어
       </div>
     ) : null,
+}));
+
+jest.mock("@/features/cooking-record-photo-edit", () => ({
+  ConnectedCookingRecordPhotoField: () => null,
 }));
 
 jest.mock("@/entities/recipe/model/recordApi", () => ({
@@ -325,6 +335,10 @@ describe("CalendarTabContent cooking record preview", () => {
 
     expect(screen.getByRole("dialog")).toHaveTextContent(
       "요리 기록 추가 드로어"
+    );
+    expect(screen.getByRole("dialog")).toHaveAttribute(
+      "data-has-photo-editor",
+      "true"
     );
   });
 

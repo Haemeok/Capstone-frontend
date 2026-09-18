@@ -4,7 +4,10 @@ import { format as formatDate } from "date-fns";
 
 import { format as formatMessage, type Plural, plural } from "@/shared/i18n";
 
-import type { CookingRecordCalendarDailySummary } from "@/entities/recipe";
+import type {
+  CookingRecordCalendarDailySummary,
+  CookingRecordListItem,
+} from "@/entities/recipe";
 
 import { getRangeForDay } from "../lib/consecutiveDaysHelper";
 import type { CalendarMode, ConsecutiveRange } from "../types";
@@ -16,6 +19,7 @@ type CookingRecordCalendarDayProps = DayProps & {
   mode: CalendarMode;
   summary?: CookingRecordCalendarDailySummary;
   stickerImageUrl: string | null;
+  displayRecord?: CookingRecordListItem;
   ranges: ConsecutiveRange[];
   recordLabel: string;
   recipeCountTemplate: Plural;
@@ -31,6 +35,7 @@ export const CookingRecordCalendarDay = ({
   mode,
   summary,
   stickerImageUrl,
+  displayRecord,
   ranges,
   recordLabel,
   recipeCountTemplate,
@@ -91,6 +96,7 @@ export const CookingRecordCalendarDay = ({
       date={date}
       summary={summary}
       imageUrl={stickerImageUrl}
+      displayRecord={displayRecord}
       isToday={isToday}
       dayCountBadgeLabel={dayCountBadgeLabel}
       recordAlt={`${formatDate(date, "yyyy-MM-dd")} ${recordLabel} ${recipeCountLabel}`}

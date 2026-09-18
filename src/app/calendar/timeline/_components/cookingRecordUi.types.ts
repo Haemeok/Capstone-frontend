@@ -1,19 +1,22 @@
+import type { ReactNode } from "react";
+
+import type { CookingRecordListItem } from "@/entities/recipe";
+import type { CookingRecordEditValues } from "@/entities/recipe/ui/record-form";
+
+export type { CookingRecordEditValues } from "@/entities/recipe/ui/record-form";
+
 export type CookingRecordStickerItem = {
   id: string;
   title: string;
   cookedAtLabel: string;
   imageUrl: string;
   imageAlt: string;
+  displayRecord?: CookingRecordListItem;
 };
 
 export type CookingRecordDetail = CookingRecordStickerItem & {
   review: string;
   recipeHref?: string;
-};
-
-export type CookingRecordEditValues = {
-  title: string;
-  review: string;
 };
 
 export type CookingRecordDetailCopy = {
@@ -36,6 +39,9 @@ export type CookingRecordDetailCopy = {
 };
 
 export type CookingRecordDetailDrawerProps = {
+  photoView?: ReactNode;
+  editPhotoField?: ReactNode;
+  onEditPhoto?: () => void;
   isOpen: boolean;
   mode: "view" | "edit";
   detail: CookingRecordDetail;

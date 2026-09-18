@@ -71,6 +71,7 @@ describe("월별 요리 기록 변환", () => {
     ]);
     expect(records[0]?.sticker.imageUrl).toBe("/records/sticker.webp");
     expect(records[1]?.sticker.imageUrl).toBe("/records/original.webp");
+    expect(records[0]?.sticker.displayRecord).toBe(records[0]?.record);
   });
 
   it("선택한 월까지 아직 내려가지 못했을 때만 다음 기록 페이지를 요청합니다", () => {

@@ -15,7 +15,10 @@ import {
 import { DayPickerDynamic } from "@/shared/ui/DayPickerDynamic";
 import Box from "@/shared/ui/primitives/Box";
 
-import type { CookingRecordCalendarDailySummary } from "@/entities/recipe";
+import type {
+  CookingRecordCalendarDailySummary,
+  CookingRecordListItem,
+} from "@/entities/recipe";
 
 import { findConsecutiveRanges } from "../lib/consecutiveDaysHelper";
 import type { CalendarMode } from "../types";
@@ -35,6 +38,7 @@ type CookingRecordCalendarProps = {
   locale: Locale;
   summaries: CookingRecordCalendarDailySummary[];
   stickerImageUrlByDate: Record<string, string>;
+  displayRecordByDate?: Record<string, CookingRecordListItem>;
   hasCalendarData: boolean;
   streakCount: number;
   copy: UserPagesDict["calendar"];
@@ -57,6 +61,7 @@ export const CookingRecordCalendar = ({
   locale,
   summaries,
   stickerImageUrlByDate,
+  displayRecordByDate = {},
   hasCalendarData,
   streakCount,
   copy,
@@ -139,6 +144,9 @@ export const CookingRecordCalendar = ({
                 stickerImageUrlByDate[
                   formatDate(props.day.date, "yyyy-MM-dd")
                 ] ?? null
+              }
+              displayRecord={
+                displayRecordByDate[formatDate(props.day.date, "yyyy-MM-dd")]
               }
               ranges={ranges}
               recordLabel={copy.timelineHeading}
