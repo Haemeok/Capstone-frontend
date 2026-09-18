@@ -132,7 +132,7 @@ export const CookingRecordPhotoOptions = ({
                 aria-pressed={value.plateId === plate.plateId}
                 onClick={() => select({ ...value, plateId: plate.plateId })}
               >
-                <span className="pointer-events-none absolute -inset-[14%]">
+                <span className="pointer-events-none absolute inset-0">
                   <Image
                     src={plate.imageUrl}
                     alt=""
