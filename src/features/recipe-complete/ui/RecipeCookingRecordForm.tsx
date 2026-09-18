@@ -57,7 +57,10 @@ export const RecipeCookingRecordForm = ({
   onSubmit,
   onSkip,
 }: RecipeCookingRecordFormProps) => {
-  const [photo, setPhoto] = useState(createEmptyPhotoDraft);
+  const [photo, setPhoto] = useState(() => ({
+    ...createEmptyPhotoDraft(),
+    originalUrl: recipeImageUrl || null,
+  }));
   const [isPhotoBusy, setIsPhotoBusy] = useState(false);
   const { register, handleSubmit, setValue, control } = useForm<FormValues>({
     defaultValues: { review: "", isPublic: true },
@@ -79,7 +82,7 @@ export const RecipeCookingRecordForm = ({
     onSubmit({
       recipeId,
       ...values,
-      ...(PhotoEditor && photo.originalFile ? { photo } : {}),
+      ...(PhotoEditor && photo.originalUrl ? { photo } : {}),
     });
   };
 
@@ -113,9 +116,6 @@ export const RecipeCookingRecordForm = ({
                 value={photo}
                 onChange={handlePhotoDraftChange}
                 disabled={isSubmitting}
-                fallbackImageUrl={recipeImageUrl}
-                fallbackImageAlt={recipeTitle}
-                requireUpload
                 onBusyChange={setIsPhotoBusy}
               />
               {!photo.originalFile ? (

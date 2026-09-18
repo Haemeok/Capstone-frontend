@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 
 import type { RecordPhotoCopy } from "@/shared/i18n/recordPhotoMessages";
 import { triggerHaptic } from "@/shared/lib/bridge";
-import { Image } from "@/shared/ui/image/Image";
 
 import type {
   RecordPhotoCatalogState,
@@ -17,6 +16,7 @@ import { CookingRecordPhotoOptions } from "@/entities/recipe/ui/CookingRecordPho
 
 import type { RecordStickerSession } from "../model/recordStickerPreview.types";
 import { usePhotoEditorDraft } from "../model/usePhotoEditorDraft";
+import { usePhotoSourceDimensions } from "../model/usePhotoSourceDimensions";
 import { useRecordPhotoMode } from "../model/useRecordPhotoMode";
 import { useRecordStickerPreview } from "../model/useRecordStickerPreview";
 import { RecordPhotoEditorDialog } from "./RecordPhotoEditorDialog";
@@ -24,9 +24,6 @@ import { RecordPhotoModeSelector } from "./RecordPhotoModeSelector";
 import { RecordStickerPreviewStatus } from "./RecordStickerPreviewStatus";
 
 type Props = {
-  fallbackImageUrl?: string;
-  fallbackImageAlt?: string;
-  requireUpload?: boolean;
   value: RecordPhotoDraft;
   catalog: RecordPhotoCatalogState;
   copy: RecordPhotoCopy;
@@ -39,7 +36,7 @@ type Props = {
   stickerProcessingMode?: "preview" | "after-save";
 };
 export const CookingRecordPhotoField = ({
-  value,
+  value: sourceValue,
   catalog,
   copy,
   onChange,
@@ -49,24 +46,23 @@ export const CookingRecordPhotoField = ({
   onBusyChange,
   stickerSession,
   stickerProcessingMode = "preview",
-  fallbackImageUrl,
-  fallbackImageAlt,
-  requireUpload = false,
 }: Props) => {
   const input = useRef<HTMLInputElement>(null);
   const editButton = useRef<HTMLButtonElement>(null);
   const [category, setCategory] = useState<RecordPlateCategory | "all">("all");
+  const source = usePhotoSourceDimensions(sourceValue);
+  const value = source.photo;
   const editor = usePhotoEditorDraft(value, onChange);
   const { mode, selectMode } = useRecordPhotoMode(value, onChange);
-  const needsUpload = requireUpload && !value.originalFile;
-  const canCrop =
-    !needsUpload && (mode === "dish" || stickerProcessingMode === "preview");
+  const canCrop = mode === "dish" || stickerProcessingMode === "preview";
   const sticker = useRecordStickerPreview({
     photo: editor.draft ?? value,
     session: stickerSession,
     onChange: editor.draft ? editor.setDraft : onChange,
   });
   const isSaveBlocked =
+    source.isLoading ||
+    source.hasError ||
     editor.isReading ||
     (stickerProcessingMode === "preview" && sticker.isBlocked);
   useEffect(() => {
@@ -85,7 +81,7 @@ export const CookingRecordPhotoField = ({
       <RecordPhotoModeSelector
         mode={mode}
         onChange={selectMode}
-        disabled={disabled || editor.isReading || needsUpload}
+        disabled={disabled || editor.isReading}
         copy={copy}
       />
       <input
@@ -103,30 +99,23 @@ export const CookingRecordPhotoField = ({
         }}
       />
       <div className="relative mx-auto w-44">
-        {!value.originalUrl && fallbackImageUrl ? (
-          <Image
-            src={fallbackImageUrl}
-            alt={fallbackImageAlt ?? copy.photo}
-            aspectRatio={1}
-            fit="contain"
-          />
-        ) : (
+        <div className={source.isLoading ? "invisible" : undefined}>
           <CookingRecordPhoto
             view={toRecordPhotoView(value, plates)}
             alt={copy.photo}
             emptyLabel=""
           />
-        )}
+        </div>
         <div
-          className={`absolute inset-x-0 flex justify-center ${value.originalUrl || fallbackImageUrl ? "bottom-0" : "inset-y-0 items-center"}`}
+          className={`absolute inset-x-0 flex justify-center ${value.originalUrl ? "bottom-0" : "inset-y-0 items-center"}`}
         >
           <button
             ref={editButton}
             type="button"
-            disabled={disabled || editor.isReading}
+            disabled={disabled || editor.isReading || source.isLoading}
             className="text-ink min-h-11 cursor-pointer rounded-full border border-gray-200 bg-white/95 px-4 text-sm font-medium shadow-sm disabled:opacity-50"
             onClick={() => {
-              if (value.originalUrl && canCrop) {
+              if (value.originalUrl && canCrop && !source.hasError) {
                 triggerHaptic("Light");
                 editor.open();
               } else pickFile();
@@ -140,11 +129,6 @@ export const CookingRecordPhotoField = ({
           </button>
         </div>
       </div>
-      {needsUpload ? (
-        <p className="text-ink-muted text-center text-xs leading-5">
-          {copy.uploadToStyle}
-        </p>
-      ) : null}
       {!draft && stickerProcessingMode === "preview" ? (
         <RecordStickerPreviewStatus
           {...sticker}
@@ -159,9 +143,9 @@ export const CookingRecordPhotoField = ({
           {copy.stickerAfterSave}
         </p>
       ) : null}
-      {!draft && (editor.hasError || error) ? (
+      {!draft && (editor.hasError || source.hasError || error) ? (
         <p role="alert" className="text-sm text-red-600">
-          {editor.hasError ? copy.invalidFile : error}
+          {editor.hasError || source.hasError ? copy.invalidFile : error}
         </p>
       ) : null}
       {mode === "dish" ? (
@@ -173,7 +157,7 @@ export const CookingRecordPhotoField = ({
           onCategoryChange={setCategory}
           onChange={onChange}
           onRetry={onRetry}
-          disabled={disabled || editor.isReading || needsUpload}
+          disabled={disabled || editor.isReading}
         />
       ) : null}
       <RecordPhotoEditorDialog

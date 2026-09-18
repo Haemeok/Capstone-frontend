@@ -49,9 +49,6 @@ export type RecordPhotoView = {
 };
 
 export type RecordPhotoEditorProps = {
-  fallbackImageUrl?: string;
-  fallbackImageAlt?: string;
-  requireUpload?: boolean;
   value: RecordPhotoDraft;
   onChange: (photo: RecordPhotoDraft) => void;
   disabled?: boolean;

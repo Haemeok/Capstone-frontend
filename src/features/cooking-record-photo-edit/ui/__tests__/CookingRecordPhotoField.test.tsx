@@ -211,18 +211,114 @@ test("저장 후 처리하는 스티커는 저장을 막지 않고 서버가 지
   ).toBeVisible();
 });
 
-test("수정 가능한 원본이 없으면 사진 추가 전 스타일 선택만 막고 파일 변경은 허용합니다", () => {
+test("T-01: URL 원본도 파일 선택 없이 접시와 모양을 편집할 수 있습니다", () => {
   render(
     <CookingRecordPhotoField
       value={initial}
       catalog={catalog}
-      requireUpload
       copy={recordPhotoMessages.en}
       onChange={jest.fn()}
       onRetry={jest.fn()}
     />
   );
-  expect(screen.getByRole("button", { name: "Make a sticker" })).toBeDisabled();
-  expect(screen.getByRole("button", { name: "Sample plate" })).toBeDisabled();
-  expect(screen.getByRole("button", { name: "Change photo" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Make a sticker" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Sample plate" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Edit photo" })).toBeEnabled();
+});
+
+test("T-02: resolves recipe image dimensions before cropping without resetting selected plate", async () => {
+  const image = document.createElement("img");
+  Object.defineProperties(image, {
+    naturalWidth: { value: 1600 },
+    naturalHeight: { value: 800 },
+  });
+  const imageConstructor = jest
+    .spyOn(window, "Image")
+    .mockImplementation(() => image);
+  const busy = jest.fn();
+  try {
+    render(
+      <Harness
+        photo={{ ...createEmptyPhotoDraft(), originalUrl: "/recipe.webp" }}
+        onBusyChange={busy}
+      />
+    );
+    expect(busy).toHaveBeenLastCalledWith(true);
+    fireEvent.click(screen.getByRole("button", { name: "Sample plate" }));
+    await act(async () => {
+      fireEvent.load(image);
+    });
+    expect(busy).toHaveBeenLastCalledWith(false);
+    fireEvent.click(screen.getByRole("button", { name: "Edit photo" }));
+    fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    expect(screen.getByLabelText("Draft")).toHaveTextContent(
+      '"imageSize":{"width":1600,"height":800}'
+    );
+    expect(screen.getByLabelText("Draft")).toHaveTextContent(
+      '"plateId":"plate-1"'
+    );
+  } finally {
+    imageConstructor.mockRestore();
+  }
+});
+test("T-02: a late default image load cannot overwrite a replacement photo", async () => {
+  const image = document.createElement("img");
+  Object.defineProperties(image, {
+    naturalWidth: { value: 1600 },
+    naturalHeight: { value: 800 },
+  });
+  const imageConstructor = jest
+    .spyOn(window, "Image")
+    .mockImplementation(() => image);
+  const onChange = jest.fn();
+  const renderField = (value: RecordPhotoDraft) => (
+    <CookingRecordPhotoField
+      value={value}
+      catalog={catalog}
+      copy={recordPhotoMessages.en}
+      onChange={onChange}
+      onRetry={jest.fn()}
+    />
+  );
+  try {
+    const { rerender } = render(
+      renderField({ ...createEmptyPhotoDraft(), originalUrl: "/recipe.webp" })
+    );
+    rerender(renderField({ ...initial, originalUrl: "/replacement.webp" }));
+    await act(async () => {
+      fireEvent.load(image);
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Sample plate" }));
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        originalUrl: "/replacement.webp",
+        imageSize: { width: 1200, height: 900 },
+      })
+    );
+  } finally {
+    imageConstructor.mockRestore();
+  }
+});
+test("T-02: an unreadable default image blocks saving but allows photo replacement", async () => {
+  const image = document.createElement("img");
+  const imageConstructor = jest
+    .spyOn(window, "Image")
+    .mockImplementation(() => image);
+  const busy = jest.fn();
+  try {
+    render(
+      <Harness
+        photo={{ ...createEmptyPhotoDraft(), originalUrl: "/broken.webp" }}
+        onBusyChange={busy}
+      />
+    );
+    await act(async () => {
+      fireEvent.error(image);
+    });
+    expect(screen.getByRole("alert")).toBeVisible();
+    expect(busy).toHaveBeenLastCalledWith(true);
+    expect(screen.getByRole("button", { name: "Edit photo" })).toBeEnabled();
+  } finally {
+    imageConstructor.mockRestore();
+  }
 });

@@ -107,15 +107,22 @@ const IntegratedPhotoEditor = ({
   value,
   onChange,
   onBusyChange,
-  fallbackImageUrl,
-  fallbackImageAlt,
-  requireUpload,
 }: RecordPhotoEditorProps) => (
   <div>
     <span data-testid="photo-mode">{value.shape.kind}</span>
-    <span data-testid="fallback-photo-url">{fallbackImageUrl}</span>
-    <span data-testid="fallback-photo-alt">{fallbackImageAlt}</span>
-    <span data-testid="requires-photo-upload">{String(requireUpload)}</span>
+    <span data-testid="source-photo-url">{value.originalUrl}</span>
+    <button
+      type="button"
+      onClick={() =>
+        onChange({
+          ...value,
+          plateId: "default-plate",
+          shape: { kind: "mask", value: "WAVY_CIRCLE_6" },
+        })
+      }
+    >
+      Style default photo
+    </button>
     <button
       type="button"
       onClick={() => {
@@ -194,11 +201,9 @@ it("실제 사진 편집기의 접시 선택과 원본 파일을 레시피 기�
   );
 
   expect(screen.getByTestId("photo-mode")).toHaveTextContent("mask");
-  expect(screen.getByTestId("fallback-photo-url")).toHaveTextContent(
+  expect(screen.getByTestId("source-photo-url")).toHaveTextContent(
     "/dongpayuk.webp"
   );
-  expect(screen.getByTestId("fallback-photo-alt")).toHaveTextContent("동파육");
-  expect(screen.getByTestId("requires-photo-upload")).toHaveTextContent("true");
   expect(screen.getByText(copy.defaultPhoto)).toBeInTheDocument();
   fireEvent.click(
     screen.getByRole("button", { name: "실제 레시피 사진 선택" })
@@ -375,5 +380,38 @@ it("T-12: 폼과 버튼 영역이 안전 영역을 포함한 flex 열 구조를 
     "px-5",
     "pt-3",
     "pb-[max(16px,env(safe-area-inset-bottom))]"
+  );
+});
+
+it("T-01: submits the styled recipe image without selecting a file", async () => {
+  const onSubmit = jest.fn();
+  render(
+    <RecipeCookingRecordForm
+      recipeId="recipe-default"
+      recipeTitle="Recipe"
+      recipeImageUrl="/recipe.webp"
+      copy={copy}
+      isSubmitting={false}
+      photoEditor={IntegratedPhotoEditor}
+      onSubmit={onSubmit}
+      onSkip={jest.fn()}
+    />
+  );
+  expect(screen.getByTestId("source-photo-url")).toHaveTextContent(
+    "/recipe.webp"
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Style default photo" }));
+  fireEvent.click(screen.getByRole("button", { name: copy.submit }));
+  await waitFor(() =>
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        photo: expect.objectContaining({
+          originalUrl: "/recipe.webp",
+          originalFile: null,
+          plateId: "default-plate",
+          shape: { kind: "mask", value: "WAVY_CIRCLE_6" },
+        }),
+      })
+    )
   );
 });
