@@ -1,3 +1,4 @@
+import { readRecordPhotoSource } from "./readRecordPhotoSource";
 import type { RecordImageKeys } from "./record";
 import { uploadRecordImages } from "./recordImageUpload";
 import type { RecordDisplayInput, RecordPhotoDraft } from "./recordPhoto.types";
@@ -20,13 +21,15 @@ export const prepareRecordPhoto = async (
   photo: RecordPhotoDraft,
   existingImage?: RecordImageKeys
 ): Promise<RecordDisplayInput & { image?: RecordImageKeys }> => {
-  const image =
-    photo.preparedImage ??
-    (photo.originalFile
-      ? await uploadRecordImages([
-          { file: photo.originalFile, purpose: "ORIGINAL" },
-        ])
-      : existingImage);
+  let image = photo.preparedImage ?? existingImage;
+  if (!photo.preparedImage && (photo.originalFile || !image)) {
+    const file =
+      photo.originalFile ??
+      (photo.originalUrl
+        ? await readRecordPhotoSource(photo.originalUrl)
+        : null);
+    if (file) image = await uploadRecordImages([{ file, purpose: "ORIGINAL" }]);
+  }
   return {
     ...getRecordDisplayInput(photo),
     ...(image

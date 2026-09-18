@@ -2,12 +2,16 @@ import { api } from "@/shared/api/client";
 import { uploadFileToS3 } from "@/shared/api/file";
 import { END_POINTS } from "@/shared/config/constants/api";
 
+import { createEmptyPhotoDraft } from "@/entities/recipe/model/recordPhotoView";
+
 import { createRecipeRecord, prepareRecipeCookingRecord } from "../api";
 
 jest.mock("@/shared/api/client", () => ({
   api: { post: jest.fn() },
 }));
 jest.mock("@/shared/api/file", () => ({ uploadFileToS3: jest.fn() }));
+
+globalThis.fetch = jest.fn();
 
 const apiPost = jest.mocked(api.post);
 const putS3 = jest.mocked(uploadFileToS3);
@@ -144,4 +148,127 @@ it("RECIPE 제목·메모·후기 길이 제한은 네트워크 전에 검증합
   ).rejects.toThrow("500");
 
   expect(apiPost).not.toHaveBeenCalled();
+});
+
+it.each(["DISH", "STICKER"] as const)(
+  "T-03: prepares the default recipe photo for %s without user file selection",
+  async (mode) => {
+    const fetchMock = jest.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      blob: async () => new Blob(["recipe"], { type: "image/webp" }),
+    } as Response);
+    apiPost.mockResolvedValueOnce([
+      { presignedUrl: "https://s3/original", imageKey: "default-original" },
+    ]);
+    try {
+      const request = await prepareRecipeCookingRecord({
+        sourceType: "RECIPE",
+        recipeId: "recipe-A",
+        photo: {
+          ...createEmptyPhotoDraft(),
+          originalUrl: "https://images.example/recipe.webp",
+          shape:
+            mode === "DISH"
+              ? { kind: "mask", value: "WAVY_CIRCLE_6" }
+              : { kind: "sticker" },
+          plateId: "plate-A",
+        },
+      });
+      expect(fetchMock).toHaveBeenCalledWith(
+        "https://images.example/recipe.webp"
+      );
+      expect(putS3).toHaveBeenCalledWith(
+        expect.any(File),
+        expect.objectContaining({ fileKey: "default-original" })
+      );
+      expect(request).toEqual(
+        expect.objectContaining({
+          image: { originalKey: "default-original" },
+          displayMode: mode,
+        })
+      );
+      if (mode === "DISH")
+        expect(request.displayStyle).toEqual(
+          expect.objectContaining({
+            plateId: "plate-A",
+            maskShape: "WAVY_CIRCLE_6",
+            crop: { centerX: 0.5, centerY: 0.5, zoom: 1 },
+          })
+        );
+    } finally {
+      fetchMock.mockRestore();
+    }
+  }
+);
+it("T-04: does not upload or create a record if the default photo download fails", async () => {
+  const fetchMock = jest
+    .spyOn(globalThis, "fetch")
+    .mockResolvedValue({ ok: false, status: 403 } as Response);
+  try {
+    await expect(
+      prepareRecipeCookingRecord({
+        sourceType: "RECIPE",
+        recipeId: "recipe-A",
+        photo: {
+          ...createEmptyPhotoDraft(),
+          originalUrl: "https://images.example/recipe.webp",
+        },
+      })
+    ).rejects.toThrow();
+    expect(apiPost).not.toHaveBeenCalled();
+    expect(putS3).not.toHaveBeenCalled();
+  } finally {
+    fetchMock.mockRestore();
+  }
+});
+
+it("T-04: preserves an existing original without downloading the preview URL", async () => {
+  const fetchMock = jest.spyOn(globalThis, "fetch");
+  try {
+    const request = await prepareRecipeCookingRecord({
+      sourceType: "RECIPE",
+      recipeId: "recipe-A",
+      image: { originalKey: "existing-original" },
+      photo: {
+        ...createEmptyPhotoDraft(),
+        originalUrl: "https://images.example/recipe.webp",
+        plateId: "plate-B",
+      },
+    });
+    expect(request.image).toEqual({ originalKey: "existing-original" });
+    expect(request.displayStyle?.plateId).toBe("plate-B");
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(apiPost).not.toHaveBeenCalled();
+  } finally {
+    fetchMock.mockRestore();
+  }
+});
+it("T-04: a selected file replaces the existing original without downloading its URL", async () => {
+  const file = new File(["replacement"], "replacement.png", {
+    type: "image/png",
+  });
+  const fetchMock = jest.spyOn(globalThis, "fetch");
+  apiPost.mockResolvedValueOnce([
+    { presignedUrl: "https://s3/new", imageKey: "replacement-original" },
+  ]);
+  try {
+    const request = await prepareRecipeCookingRecord({
+      sourceType: "RECIPE",
+      recipeId: "recipe-A",
+      image: { originalKey: "existing-original" },
+      photo: {
+        ...createEmptyPhotoDraft(),
+        originalFile: file,
+        originalUrl: "data:image/png;base64,replacement",
+      },
+    });
+    expect(request.image).toEqual({ originalKey: "replacement-original" });
+    expect(putS3).toHaveBeenCalledWith(
+      file,
+      expect.objectContaining({ fileKey: "replacement-original" })
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
+  } finally {
+    fetchMock.mockRestore();
+  }
 });
