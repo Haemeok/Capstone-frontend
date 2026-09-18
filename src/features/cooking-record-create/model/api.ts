@@ -1,18 +1,17 @@
 import { api } from "@/shared/api/client";
-import { uploadFileToS3 } from "@/shared/api/file";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 import type {
   CookingRecordCreateResponse,
   ManualCookingRecordCreateInput,
   RecordImageFile,
-  RecordImageUploadUrlResponse,
+  RecordImageKeys,
 } from "@/entities/recipe/model/record";
+import { uploadRecordImages } from "@/entities/recipe/model/recordImageUpload";
+import type { RecordPhotoDraft } from "@/entities/recipe/model/recordPhoto.types";
+import { prepareRecordPhoto } from "@/entities/recipe/model/recordPhotoRequest";
 import {
-  toRecordImageKeys,
-  toRecordImageUploadRequests,
   validateCookedAt,
-  validateRecordImageFiles,
   validateRecordText,
   validateRecordTitle,
 } from "@/entities/recipe/model/recordValidation";
@@ -20,29 +19,10 @@ import {
 export type ManualCookingRecordDraft = Omit<
   ManualCookingRecordCreateInput,
   "image"
-> & {
-  images: RecordImageFile[];
-};
-
-const uploadManualRecordImages = async (images: RecordImageFile[]) => {
-  const uploaded = await api.post<RecordImageUploadUrlResponse[]>(
-    END_POINTS.RECORD_IMAGE_UPLOAD_URLS,
-    { files: toRecordImageUploadRequests(images) }
+> & { photo?: RecordPhotoDraft } & (
+    | { images: RecordImageFile[]; image?: never }
+    | { image: RecordImageKeys; images?: never }
   );
-  await Promise.all(
-    uploaded.map((response, index) => {
-      const image = images[index];
-      if (image === undefined) {
-        throw new Error("업로드할 기록 이미지를 찾을 수 없습니다.");
-      }
-      return uploadFileToS3(image.file, {
-        presignedUrl: response.presignedUrl,
-        fileKey: response.imageKey,
-      });
-    })
-  );
-  return toRecordImageKeys(images, uploaded);
-};
 
 export const prepareManualCookingRecord = async ({
   sourceType,
@@ -50,13 +30,37 @@ export const prepareManualCookingRecord = async ({
   recordMemo,
   cookedAt,
   images,
+  image: preparedImage,
+  photo,
+  displayMode,
+  displayStyle,
 }: ManualCookingRecordDraft): Promise<ManualCookingRecordCreateInput> => {
   validateRecordTitle(recordTitle, true);
   validateRecordText(recordMemo);
   validateCookedAt(cookedAt);
-  validateRecordImageFiles(images);
-  const image = await uploadManualRecordImages(images);
-  return { sourceType, recordTitle, recordMemo, cookedAt, image };
+  const prepared = photo
+    ? await prepareRecordPhoto(photo, preparedImage)
+    : undefined;
+  const image =
+    prepared?.image ??
+    preparedImage ??
+    (await uploadRecordImages(images ?? []));
+  return {
+    sourceType,
+    recordTitle,
+    recordMemo,
+    cookedAt,
+    image,
+    ...(photo
+      ? {
+          displayMode: prepared?.displayMode,
+          displayStyle: prepared?.displayStyle,
+        }
+      : {
+          ...(displayMode ? { displayMode } : {}),
+          ...(displayStyle !== undefined ? { displayStyle } : {}),
+        }),
+  };
 };
 
 export const postManualCookingRecord = async ({

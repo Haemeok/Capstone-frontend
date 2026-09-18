@@ -3,6 +3,7 @@ import { uploadFileToS3 } from "@/shared/api/file";
 import { END_POINTS } from "@/shared/config/constants/api";
 
 import type { RecordImageFile } from "@/entities/recipe/model/record";
+import { createEmptyPhotoDraft } from "@/entities/recipe/model/recordPhotoView";
 
 import { createManualCookingRecord } from "../api";
 
@@ -19,6 +20,22 @@ const putS3 = jest.mocked(uploadFileToS3);
 
 const makeFile = (type = "image/jpeg", size = 10) =>
   new File([new Uint8Array(size)], "record-image", { type });
+
+it("미리보기에서 준비된 원본과 스티커 키로 재업로드 없이 저장합니다", async () => {
+  apiPost.mockResolvedValue({ recordId: "record-ready", message: "created" });
+  const image = { originalKey: "original-ready", stickerKey: "sticker-ready" };
+  await createManualCookingRecord({
+    sourceType: "MANUAL",
+    recordTitle: "요리",
+    image,
+  });
+  expect(apiPost).toHaveBeenCalledTimes(1);
+  expect(apiPost).toHaveBeenCalledWith(
+    END_POINTS.MY_RECORDS,
+    expect.objectContaining({ image })
+  );
+  expect(putS3).not.toHaveBeenCalled();
+});
 
 beforeEach(() => {
   apiPost.mockReset();
@@ -168,4 +185,35 @@ it("MANUAL 계약 오류는 네트워크 전에 거부합니다", async () => {
     })
   ).rejects.toThrow("미래");
   expect(apiPost).not.toHaveBeenCalled();
+});
+
+it("접시에 담기 선택은 파일 재업로드 없이 접시 모양과 구도를 저장합니다", async () => {
+  const image = {
+    originalKey: "original-ready",
+    stickerKey: "obsolete-sticker",
+  };
+  await createManualCookingRecord({
+    sourceType: "MANUAL",
+    recordTitle: "접시 요리",
+    image,
+    photo: {
+      ...createEmptyPhotoDraft(),
+      plateId: "plate-a",
+      shape: { kind: "mask", value: "WAVY_CIRCLE_6" },
+      crop: { centerX: 0.6, centerY: 0.4, zoom: 2 },
+    },
+  });
+  expect(apiPost).toHaveBeenCalledWith(
+    END_POINTS.MY_RECORDS,
+    expect.objectContaining({
+      image: { originalKey: "original-ready" },
+      displayMode: "DISH",
+      displayStyle: {
+        plateId: "plate-a",
+        maskShape: "WAVY_CIRCLE_6",
+        crop: { centerX: 0.6, centerY: 0.4, zoom: 2 },
+      },
+    })
+  );
+  expect(putS3).not.toHaveBeenCalled();
 });

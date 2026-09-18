@@ -21,6 +21,17 @@ const putS3 = jest.mocked(uploadFileToS3);
 const makeFile = () =>
   new File([new Uint8Array(10)], "record.jpg", { type: "image/jpeg" });
 
+it("미리보기에서 준비된 이미지 키를 재업로드 없이 수정 요청에 사용합니다", async () => {
+  const image = { originalKey: "original-ready", stickerKey: "sticker-ready" };
+  await replaceCookingRecordImage({ recordId: "record-ready", image });
+  expect(apiPatch).toHaveBeenCalledWith(
+    END_POINTS.RECORD_IMAGE("record-ready"),
+    image
+  );
+  expect(apiPost).not.toHaveBeenCalled();
+  expect(putS3).not.toHaveBeenCalled();
+});
+
 beforeEach(() => {
   apiPost.mockReset();
   apiPatch.mockReset().mockResolvedValue({ message: "updated" });
@@ -144,4 +155,23 @@ it("사진 S3 업로드 실패 시 최종 PATCH를 보내지 않습니다", asyn
     })
   ).rejects.toThrow("S3 failed");
   expect(apiPatch).not.toHaveBeenCalled();
+});
+
+it("접시 변경은 기존 원본 키와 함께 평평한 사진 교체 본문으로 저장합니다", async () => {
+  const displayStyle = {
+    plateId: "plate-next",
+    maskShape: "CIRCLE" as const,
+    crop: { centerX: 0.5, centerY: 0.4, zoom: 2 },
+  };
+  await replaceCookingRecordImage({
+    recordId: "record-dish",
+    image: { originalKey: "existing-original" },
+    displayMode: "DISH",
+    displayStyle,
+  });
+  expect(apiPatch).toHaveBeenCalledWith(
+    END_POINTS.RECORD_IMAGE("record-dish"),
+    { originalKey: "existing-original", displayMode: "DISH", displayStyle }
+  );
+  expect(api.post).not.toHaveBeenCalled();
 });
