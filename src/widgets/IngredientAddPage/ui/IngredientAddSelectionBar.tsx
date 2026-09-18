@@ -93,7 +93,7 @@ export const IngredientAddSelectionBar = ({
           type="button"
           onClick={onSubmit}
           disabled={isPending}
-          className="bg-olive-light hover:bg-olive-medium text-ink h-12 flex-none px-5 text-sm font-bold"
+          className="bg-olive-light hover:bg-olive-medium h-12 flex-none px-5 text-sm font-bold text-white"
         >
           {submitLabel}
         </Button>

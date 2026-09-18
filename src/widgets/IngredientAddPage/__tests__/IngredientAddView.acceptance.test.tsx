@@ -811,7 +811,7 @@ describe("IngredientAddView acceptance", () => {
     expect(count).toHaveClass("text-ink-sub");
   });
 
-  it("선택 CTA와 pack checkbox가 밝은 배경에서도 읽히는 토큰을 사용한다", async () => {
+  it("선택 CTA는 흰색 글자를 사용하고 pack checkbox의 선택 색은 유지한다", async () => {
     renderAddPage("/ingredients/new");
     await selectCatalogIngredient("토마토");
     const directSubmit = screen.getByRole("button", { name: "1개 추가하기" });
@@ -819,9 +819,9 @@ describe("IngredientAddView acceptance", () => {
     expect(directSubmit).toHaveClass(
       "bg-olive-light",
       "hover:bg-olive-medium",
-      "text-ink"
+      "text-white"
     );
-    expect(directSubmit).not.toHaveClass("text-white");
+    expect(directSubmit).not.toHaveClass("text-ink");
 
     await openKoreanBasePack();
     const checkbox = screen.getByRole("checkbox", { name: "진간장 선택" });

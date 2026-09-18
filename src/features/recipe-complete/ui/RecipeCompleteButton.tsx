@@ -95,7 +95,7 @@ const RecipeCompleteButton = ({
           "group relative w-full rounded-sm py-4 text-sm font-semibold transition-all",
           isCompleted
             ? "text-ink-muted cursor-not-allowed bg-gray-200"
-            : "bg-olive-mint text-ink cursor-pointer active:scale-95",
+            : "bg-olive-mint cursor-pointer text-white active:scale-95",
           createMutation.isPending && "opacity-70",
           className
         )}
