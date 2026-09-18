@@ -175,7 +175,8 @@ it.each(["DISH", "STICKER"] as const)(
         },
       });
       expect(fetchMock).toHaveBeenCalledWith(
-        `/api/bff/record-photo-source?${new URLSearchParams({ url: "https://images.example/recipe.webp" })}`
+        "https://images.example/recipe.webp",
+        { cache: "no-store" }
       );
       expect(putS3).toHaveBeenCalledWith(
         expect.any(File),
@@ -268,6 +269,32 @@ it("T-04: a selected file replaces the existing original without downloading its
       expect.objectContaining({ fileKey: "replacement-original" })
     );
     expect(fetchMock).not.toHaveBeenCalled();
+  } finally {
+    fetchMock.mockRestore();
+  }
+});
+
+it("does not fall back to a server proxy when browser CORS rejects a photo", async () => {
+  const fetchMock = jest
+    .spyOn(globalThis, "fetch")
+    .mockRejectedValue(new TypeError("Failed to fetch"));
+  try {
+    await expect(
+      prepareRecipeCookingRecord({
+        sourceType: "RECIPE",
+        recipeId: "recipe-A",
+        photo: {
+          ...createEmptyPhotoDraft(),
+          originalUrl: "https://images.example/recipe.webp",
+        },
+      })
+    ).rejects.toThrow("Failed to fetch");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://images.example/recipe.webp",
+      { cache: "no-store" }
+    );
+    expect(apiPost).not.toHaveBeenCalled();
   } finally {
     fetchMock.mockRestore();
   }
